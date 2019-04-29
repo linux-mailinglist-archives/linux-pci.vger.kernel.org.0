@@ -2,103 +2,273 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 38F3CE559
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Apr 2019 16:51:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AC22E632
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Apr 2019 17:24:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbfD2OvH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Apr 2019 10:51:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55166 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728320AbfD2OvG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 29 Apr 2019 10:51:06 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 56FD9307D96F;
-        Mon, 29 Apr 2019 14:51:06 +0000 (UTC)
-Received: from x1.home (ovpn-116-122.phx2.redhat.com [10.3.116.122])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 39DC328982;
-        Mon, 29 Apr 2019 14:51:05 +0000 (UTC)
-Date:   Mon, 29 Apr 2019 08:51:04 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     mr.nuke.me@gmail.com, linux-pci@vger.kernel.org,
-        austin_bolen@dell.com, alex_gagniuc@dellteam.com,
-        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
-        okaya@kernel.org, torvalds@linux-foundation.org,
+        id S1728629AbfD2PXt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Apr 2019 11:23:49 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:43203 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728253AbfD2PXt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Apr 2019 11:23:49 -0400
+X-Originating-IP: 88.190.179.123
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id E33971BF208;
+        Mon, 29 Apr 2019 15:23:45 +0000 (UTC)
+Date:   Mon, 29 Apr 2019 17:32:35 +0200
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ellie Reeves <ellierevves@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add link_change error handler and vfio-pci user
-Message-ID: <20190429085104.728aee75@x1.home>
-In-Reply-To: <20190424175758.GC244134@google.com>
-References: <155605909349.3575.13433421148215616375.stgit@gimli.home>
-        <20190424175758.GC244134@google.com>
-Organization: Red Hat
+Subject: Re: [PATCH v2] PCI: aardvark: Use LTSSM state to build link training
+ flag
+Message-ID: <20190429153234.GS2754@voidbox.localdomain>
+References: <20190316161243.29517-1-repk@triplefau.lt>
+ <20190425110830.GC10833@e121166-lin.cambridge.arm.com>
+ <20190425142353.GO2754@voidbox.localdomain>
+ <20190425150640.GA20770@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 29 Apr 2019 14:51:06 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190425150640.GA20770@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 24 Apr 2019 12:57:58 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+Hi Lorenzo,
 
-> On Tue, Apr 23, 2019 at 04:42:28PM -0600, Alex Williamson wrote:
-> > The PCIe bandwidth notification service generates logging any time a
-> > link changes speed or width to a state that is considered downgraded.
-> > Unfortunately, it cannot differentiate signal integrity related link
-> > changes from those intentionally initiated by an endpoint driver,
-> > including drivers that may live in userspace or VMs when making use
-> > of vfio-pci.  Therefore, allow the driver to have a say in whether
-> > the link is indeed downgraded and worth noting in the log, or if the
-> > change is perhaps intentional.
-> > 
-> > For vfio-pci, we don't know the intentions of the user/guest driver
-> > either, but we do know that GPU drivers in guests actively manage
-> > the link state and therefore trigger the bandwidth notification for
-> > what appear to be entirely intentional link changes.
-> > 
-> > Fixes: e8303bb7a75c PCI/LINK: Report degraded links via link bandwidth notification
-> > Link: https://lore.kernel.org/linux-pci/155597243666.19387.1205950870601742062.stgit@gimli.home/T/#u
-> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> > ---
-> > 
-> > Changing to pci_dbg() logging is not super usable, so let's try the
-> > previous idea of letting the driver handle link change events as they
-> > see fit.  Ideally this might be two patches, but for easier handling,
-> > folding the pci and vfio-pci bits together.  Comments?  Thanks,  
-> 
-> I'm a little uneasy about the bandwidth notification logging as a
-> whole.  Messages in dmesg don't seem like a solid base for building
-> management tools.
-> 
-> I assume the eventual goal would be some sort of digested notification
-> along the lines of "hey mr/ms administrator, the link to device X
-> unexpectedly became slower, you might want to check that out."
-> 
-> If I were building that, I don't think I would use dmesg.  I might
-> write a daemon that polls /sys/.../current_link_{speed,width}, or
-> maybe use some sort of netlink event.  Maybe it would be useful to
-> have the admin designate devices of interest.
-> 
-> I'm hesitant about adding a .link_change() handler.  If there's
-> something useful a driver could do with it, that's one thing.  But
-> using it merely to suppress a message doesn't really seem worth the
-> trouble, and it seems unfriendly to ask drivers to add it when they
-> didn't ask for it and get no benefit from it.
+Sorry for duplicates I forgot to include everyone.
 
-So where do we go from here?  I agree that dmesg is not necessarily a
-great choice for these sorts of events and if they went somewhere else,
-maybe I wouldn't have the same concerns about them generating user
-confusion or contributing to DoS vectors from userspace drivers.  As it
-is though, we have known cases where benign events generate confusing
-logging messages, which seems like a regression.  Drivers didn't ask
-for a link_change handler, but nor did they ask that the link state to
-their device be monitored so closely.  Maybe this not only needs some
-sort of change to the logging mechanism, but also an opt-in by the
-driver if they don't expect runtime link changes.  Thanks,
+On Thu, Apr 25, 2019 at 04:06:40PM +0100, Lorenzo Pieralisi wrote:
+> On Thu, Apr 25, 2019 at 04:23:53PM +0200, Remi Pommarel wrote:
+> > Hi Lorenzo,
+> > 
+> > On Thu, Apr 25, 2019 at 12:08:30PM +0100, Lorenzo Pieralisi wrote:
+> > > On Sat, Mar 16, 2019 at 05:12:43PM +0100, Remi Pommarel wrote:
+> > > > The PCI_EXP_LNKSTA_LT flag in the emulated root device's PCI_EXP_LNKSTA
+> > > > config register does not reflect the actual link training state and is
+> > > > always cleared. The Link Training and Status State Machine (LTSSM) flag
+> > > > in LMI config register could be used as a link training indicator.
+> > > > Indeed if the LTSSM is in L0 or upper state then link training has
+> > > > completed (see [1]).
+> > > > 
+> > > > Unfortunately because setting the PCI_EXP_LINCTL_RL flag does not
+> > > > instantly imply a LTSSM state change (e.g. L0s to recovery state
+> > > > transition takes some time), LTSSM can be in L0 but link training has
+> > > > not finished yet. Thus a lower L0 LTSSM state followed by a L0 or upper
+> > > > state sequence has to be seen to be sure that link training has been
+> > > > done.
+> > > 
+> > > Hi Remi,
+> > > 
+> > > I am a bit confused, so you are saying that the LTSSM flag in the
+> > > LMI config register can't be used to detect when training is completed ?
+> > 
+> > Not exactly, I am saying that PCI_EXP_LNKSTA_LT from PCI_EXP_LNKSTA
+> > register can't be used with this hardware, but can be emulated with
+> > LTSSM flag.
+> > 
+> > > 
+> > > Certainly it can't be used by ASPM core that relies on:
+> > > 
+> > > PCI_EXP_LNKSTA_LT flag
+> > > 
+> > > in the PCI_EXP_LNKSTA register, and that's what you are setting through
+> > > this timeout mechanism IIUC.
+> > > 
+> > > Please elaborate on that.
+> > 
+> > The problem here is that the hardware does not change PCI_EXP_LNKSTA_LT
+> > at all. So in order to support link re-training feature we need to
+> > emulate this flag. To do so LTSSM flag can be used.
+> 
+> Understood.
+> 
+> > Indeed we can set the emulated PCI_EXP_LNKSTA_LT as soon as re-training
+> > is asked and wait for LTSSM flag to be back to a configured state
+> > (e.g. L0, L0s) before clearing it.
+> 
+> The check for the LTSSM is carried out through advk_pcie_link_up()
+> (ie register CFG_REG), correct ?
+> 
 
-Alex
+Yes that is correct.
+
+> > The problem with that is that LTSSM flag does not change instantly after
+> > link re-training has been asked, and will stay in configured state for a
+> > small amount of time. So the idea is to poll the LTSSM flag and wait for
+> > it to enter a recovery state then waiting for it to be back in
+> > configured state.
+> 
+> When you say "poll" you mean checking advk_pcie_link_up() ?
+> 
+
+I mean checking advk_pcie_link_up() in a loop. This loop is done by the
+user (e.g. ASPM core). ASPM core waits for PCI_EXP_LNKSTA_LT to be
+cleared in pcie_aspm_configure_common_clock() just after it has set
+PCI_EXP_LNKCTL_RL.
+
+So the idea was to check advk_pcie_link_up() each time ASPM core checks
+the PCI_EXP_LNKSTA_LT flag. Please see below patch for an alternative
+to that.
+
+> More below on the code.
+> 
+> > The timeout is only here as a fallback in the unlikely event that we
+> > missed the LTSSM flag entering recovery state.
+> > 
+> > > 
+> > > I am picking Bjorn's brain on this patch since what you are doing
+> > > seems quite arbitrary and honestly it is a bit of a hack.
+> > 
+> > Yes, sorry, it is a bit of a hack because I try to workaround a
+> > hardware issue.
+> 
+> No problems, it is not your fault.
+> > 
+> > Please note that vendor has been contacted about this in the meantime
+> > and answered the following:
+> > 
+> > "FW can poll LTSSM state equals any of the following values: 0xB or 0xD
+> > or 0xC or 0xE. After that, polls for LTSSM equals 0x10. For your
+> > information, LTSSM will transit from 0x10 -> 0xB -> 0xD -> 0xC or 0xE
+> > ........... -> 0x10".
+> > 
+> > It is basically what this patch does, I've just added a timeout fallback
+> > to not poll LTSSM state forever if its transition to 0xB, 0xD, 0xC or
+> > 0xE has been missed.
+> 
+> When you say "missed" you mean advk_pcie_link_up() returning true, right ?
+> 
+
+Not exactly, I mean that LTSSM had the time to go down and back up
+between advk_pcie_link_up() because, for example, ASPM core loop took
+too much time between two PCI_EXP_LNKSTA_LT flag checks.
+
+> [...]
+> 
+> > > > +static int advk_pcie_link_retraining(struct advk_pcie *pcie)
+> > > > +{
+> > > > +	if (!advk_pcie_link_up(pcie)) {
+> 
+> That's the bit I find confusing. Is this check here to detect if the
+> link went through the sequence below ? Should not it be carried
+> out only if (pcie->rl_asked == 1) ?
+> 
+> "... LTSSM will transit from 0x10 -> 0xB -> 0xD -> 0xC or 0xE
+>  ........... -> 0x10".
+
+Yes it is the check to detect the sequence. advk_pcie_link_up() returns
+false if LTSSM <= 0x10.
+
+This cannot be done only if (pcie->rl_asked == 1) because I still
+want this function to return 1 if link is still down.
+
+> 
+> > > > +		pcie->rl_asked = 0;
+> 
+> Why ?
+> 
+
+rl_asked is not a good name, I could have called it
+pcie->wait_for_link_down instead. So if advk_pcie_link_up() returns
+false that means that we don't need to wait for link being down any more
+and just wait for (LTSSM >= 0x10). In this case the delay is not needed.
+
+> > > > +		return 1;
+> > > > +	}
+> > > > +
+> > > > +	if (pcie->rl_asked && time_before(jiffies, pcie->rl_deadline))
+> > > > +		return 1;
+> 
+> This ensures that if the LTSSM >= 0x10 we still wait for a delay before
+> considering the link up (because I suppose, after asking a retraining
+> it takes a while for the LTSSM state to become < 0x10), correct ?
+
+Yes it takes a while to become < 0x10 after retraining hence the delay.
+But here we don't need to always wait for a delay. Indeed if we've
+already seen the link being < 0x10 (i.e if "pcie->rl_asked == 0") and
+if after that link is >= 0x10 then we know that retraining process has
+finished.
+
+Anyway I did it this way because I wanted to keep
+advk_pci_bridge_emul_pcie_conf_write() from polling. But this is
+obviously a bad reason as it makes the code way too complex and relies
+on user (ASPM core) to do the poll instead.
+
+So if you find the following better I'll send a v3 with that:
+
+---
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index eb58dfdaba1b..67e8ae4e313e 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -180,6 +180,9 @@
+ #define LINK_WAIT_MAX_RETRIES		10
+ #define LINK_WAIT_USLEEP_MIN		90000
+ #define LINK_WAIT_USLEEP_MAX		100000
++#define RETRAIN_WAIT_MAX_RETRIES	20
++#define RETRAIN_WAIT_USLEEP_MIN		2000
++#define RETRAIN_WAIT_USLEEP_MAX		5000
+ 
+ #define MSI_IRQ_NUM			32
+ 
+@@ -239,6 +242,17 @@ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
+ 	return -ETIMEDOUT;
+ }
+ 
++static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
++{
++	size_t retries;
++
++	for (retries = 0; retries < RETRAIN_WAIT_MAX_RETRIES; ++retries) {
++		if (!advk_pcie_link_up(pcie))
++			break;
++		usleep_range(RETRAIN_WAIT_USLEEP_MIN, RETRAIN_WAIT_USLEEP_MAX);
++	}
++}
++
+ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ {
+ 	u32 reg;
+@@ -426,11 +440,19 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+ 		return PCI_BRIDGE_EMUL_HANDLED;
+ 	}
+ 
++	case PCI_EXP_LNKCTL: {
++		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
++			~(PCI_EXP_LNKSTA_LT << 16);
++		if (!advk_pcie_link_up(pcie))
++			val |= (PCI_EXP_LNKSTA_LT << 16);
++		*value = val;
++		return PCI_BRIDGE_EMUL_HANDLED;
++	}
++
+ 	case PCI_CAP_LIST_ID:
+ 	case PCI_EXP_DEVCAP:
+ 	case PCI_EXP_DEVCTL:
+ 	case PCI_EXP_LNKCAP:
+-	case PCI_EXP_LNKCTL:
+ 		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
+ 		return PCI_BRIDGE_EMUL_HANDLED;
+ 	default:
+@@ -447,8 +469,13 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+ 
+ 	switch (reg) {
+ 	case PCI_EXP_DEVCTL:
++		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
++		break;
++
+ 	case PCI_EXP_LNKCTL:
+ 		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
++		if (new & PCI_EXP_LNKCTL_RL)
++			advk_pcie_wait_for_retrain(pcie);
+ 		break;
+ 
+ 	case PCI_EXP_RTCTL:
