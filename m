@@ -2,106 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 99E9BDDB9
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Apr 2019 10:28:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D49E4DE13
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Apr 2019 10:38:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbfD2I1x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Apr 2019 04:27:53 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:45690 "EHLO inva021.nxp.com"
+        id S1727560AbfD2IiD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Apr 2019 04:38:03 -0400
+Received: from mga18.intel.com ([134.134.136.126]:64691 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727444AbfD2I1w (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 29 Apr 2019 04:27:52 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 745D62001A3;
-        Mon, 29 Apr 2019 10:27:50 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 73F2920024C;
-        Mon, 29 Apr 2019 10:27:41 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 833DE4030F;
-        Mon, 29 Apr 2019 16:27:30 +0800 (SGT)
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
-        lorenzo.pieralisi@arm.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
-        mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org,
-        pombredanne@nexb.com, shawn.lin@rock-chips.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH 2/2] PCI: layerscape: EP and RC drivers are compiled separately
-Date:   Mon, 29 Apr 2019 16:19:57 +0800
-Message-Id: <20190429081957.47945-2-xiaowei.bao@nxp.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <20190429081957.47945-1-xiaowei.bao@nxp.com>
-References: <20190429081957.47945-1-xiaowei.bao@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1727517AbfD2IiD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 29 Apr 2019 04:38:03 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 01:38:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,409,1549958400"; 
+   d="diff'?scan'208";a="341737777"
+Received: from mylly.fi.intel.com (HELO [10.237.72.79]) ([10.237.72.79])
+  by fmsmga006.fm.intel.com with ESMTP; 29 Apr 2019 01:37:59 -0700
+Subject: Re: [Bug 203297] Synaptics touchpad TM-3127 functionality broken by
+ PCI runtime power management patch on 4.20.2
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Keijo Vaara <ferdasyn@rocketmail.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>
+References: <20190422130814.GJ173520@google.com>
+ <3a1139ef-10ed-6923-73c5-30fbf0c065c3@linux.intel.com>
+ <CAO-hwJKvXO6L7m0g1D6wycFP=Wu_qLDyLXTtmm0TkpxT5Z8ygw@mail.gmail.com>
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Message-ID: <e96a7220-974f-1df6-70ee-695ee815057f@linux.intel.com>
+Date:   Mon, 29 Apr 2019 11:36:16 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAO-hwJKvXO6L7m0g1D6wycFP=Wu_qLDyLXTtmm0TkpxT5Z8ygw@mail.gmail.com>
+Content-Type: multipart/mixed;
+ boundary="------------004E56005F75F0C34870FB19"
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Compile the EP and RC drivers separately with different configuration
-options, this looks clearer.
+This is a multi-part message in MIME format.
+--------------004E56005F75F0C34870FB19
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
----
- drivers/pci/controller/dwc/Kconfig  |   20 ++++++++++++++++++--
- drivers/pci/controller/dwc/Makefile |    3 ++-
- 2 files changed, 20 insertions(+), 3 deletions(-)
+On 4/29/19 10:45 AM, Benjamin Tissoires wrote:
+>> I would like to ask help from input subsystem experts what kind of SMBus
+>> power state dependency Synaptics RMI4 SMBus devices have since it cease
+>> to work if SMBus controllers idles between transfers and how this is
+>> best to fix?
+> 
+> Hmm, I am not sure there is such an existing architecture you could
+> use in a simple patch.
+> 
+> rmi-driver.c does indeed create an input device we could use to toggle
+> on/off the PM state, but those callbacks are not wired to the
+> transport driver (rmi_smbus.c), so it would required a little bit of
+> extra work. And then, there are other RMI4 functions (firmware
+> upgrade) that would not be happy if PM is in suspend while there is no
+> open input node.
+> 
+I see.
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 9061823..84f8906 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -131,13 +131,29 @@ config PCI_KEYSTONE_EP
- 	 implement the driver.
- 
- config PCI_LAYERSCAPE
--	bool "Freescale Layerscape PCIe controller"
-+	bool "Freescale Layerscape PCIe controller - Host mode"
- 	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select MFD_SYSCON
- 	select PCIE_DW_HOST
- 	help
--	  Say Y here if you want PCIe controller support on Layerscape SoCs.
-+	  Say Y here if you want to enable PCIe controller support on Layerscape
-+	  SoCs to work in Host mode.
-+	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-+	  determines which PCIe controller works in EP mode and which PCIe
-+	  controller works in RC mode.
-+
-+config PCI_LAYERSCAPE_EP
-+	bool "Freescale Layerscape PCIe controller - Endpoint mode"
-+	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
-+	depends on PCI_ENDPOINT
-+	select PCIE_DW_EP
-+	help
-+	  Say Y here if you want to enable PCIe controller support on Layerscape
-+	  SoCs to work in Endpoint mode.
-+	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-+	  determines which PCIe controller works in EP mode and which PCIe
-+	  controller works in RC mode.
- 
- config PCI_HISI
- 	depends on OF && (ARM64 || COMPILE_TEST)
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index b085dfd..824fde7 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -8,7 +8,8 @@ obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
- obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
- obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
- obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
--obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o pci-layerscape-ep.o
-+obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
-+obj-$(CONFIG_PCI_LAYERSCAPE_EP) += pci-layerscape-ep.o
- obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
+I got another thought about this. I noticed these input drivers need 
+SMBus Host Notify, maybe that explain the PM dependency? If that's the 
+only dependency then we could prevent the controller suspend if there is 
+a client needing host notify mechanism. IMHO that's less hack than the 
+patch to rmi_smbus.c.
+
+Keijo: care to test does this idea would fix the issue (without the 
+previous patch)? I also attached the diff.
+
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 38af18645133..d54eafad7727 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -327,6 +327,8 @@ static int i2c_device_probe(struct device *dev)
+
+  		if (client->flags & I2C_CLIENT_HOST_NOTIFY) {
+  			dev_dbg(dev, "Using Host Notify IRQ\n");
++			/* Adapter should not suspend for Host Notify */
++			pm_runtime_get_sync(&client->adapter->dev);
+  			irq = i2c_smbus_host_notify_to_irq(client);
+  		} else if (dev->of_node) {
+  			irq = of_irq_get_byname(dev->of_node, "irq");
+@@ -431,6 +433,8 @@ static int i2c_device_remove(struct device *dev)
+  	device_init_wakeup(&client->dev, false);
+
+  	client->irq = client->init_irq;
++	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
++		pm_runtime_put(&client->adapter->dev);
+
+  	return status;
+  }
+
+> So I think this "hack" (with Mika's comments addressed) should go in
+> until someone starts propagating the PM states correctly.
+> 
+I guess you mean the Rafael's pm_runtime_get_sync() comment?
+
 -- 
-1.7.1
+Jarkko
 
+--------------004E56005F75F0C34870FB19
+Content-Type: text/x-patch;
+ name="i2c-core-host-notify-pm.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="i2c-core-host-notify-pm.diff"
+
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 38af18645133..d54eafad7727 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -327,6 +327,8 @@ static int i2c_device_probe(struct device *dev)
+ 
+ 		if (client->flags & I2C_CLIENT_HOST_NOTIFY) {
+ 			dev_dbg(dev, "Using Host Notify IRQ\n");
++			/* Adapter should not suspend for Host Notify */
++			pm_runtime_get_sync(&client->adapter->dev);
+ 			irq = i2c_smbus_host_notify_to_irq(client);
+ 		} else if (dev->of_node) {
+ 			irq = of_irq_get_byname(dev->of_node, "irq");
+@@ -431,6 +433,8 @@ static int i2c_device_remove(struct device *dev)
+ 	device_init_wakeup(&client->dev, false);
+ 
+ 	client->irq = client->init_irq;
++	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
++		pm_runtime_put(&client->adapter->dev);
+ 
+ 	return status;
+ }
+
+--------------004E56005F75F0C34870FB19--
