@@ -2,131 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A5CD10255
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2019 00:25:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 187A11031D
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2019 01:09:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbfD3WZr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Apr 2019 18:25:47 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35741 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbfD3WZr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Apr 2019 18:25:47 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g24so8851808otq.2
-        for <linux-pci@vger.kernel.org>; Tue, 30 Apr 2019 15:25:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fredlawl-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZmBG3hM4lGU6ZmXmSmggSOXpEizpcpagPEE7Vhmbuvs=;
-        b=oefuz6OnRRxk8/mLQrXe07mu7tqQkeBedTZ2WiHugxjObG+KoJLqG9xkKKJgGuLx9A
-         IjhB+nR8q5tGG1e1wd5ogRlqNAKvr9Nn59vrrHCM5YFM3X8OWThLAEKBsWXqgtdBFaPS
-         9BAYNcoJ21xdnceaUmFwkit60XJJ3YioEEVPzoj9Rezrl8xQxH/h0Mz9YHFtQ3gsq3Ik
-         K3g2NGXpRRGgHmEG7WCgvpAUfJXsrnmwbZKYCMYa3Hy32Qb8SK9oQSwxahwvbPfmNSMN
-         H7cUOj+g9C/p+ikMDEA336PQDwJoX8USUwgrgjF6Zocmuee8a8CpqbXFAf8y3F9eA84v
-         o9Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZmBG3hM4lGU6ZmXmSmggSOXpEizpcpagPEE7Vhmbuvs=;
-        b=TXY/loWJhB8bzmEqi4MYJS23YFwJ+ipeULjKMWaDqWUrjkieAmjc7dOkUalbX0/Omy
-         uZulQMyM0M6nmU9BDIEMV0GCMUgwRlHLknwVRk87hVOk7NpxwTpbyRGNCpMatM/NcpIt
-         /2pRWaOOEbl51WVeB4JFCk6hFnBWjVmF7bl3E0WH5e0JnNmXQRf4UHJ76G/Ggj7iCdvl
-         MdWptR1urmpvWZgWM+fvDlWJcp3tQ5yZ7Yk7EHL6KvGqdgy0lrtC8f3O6r7iuXA3VrAf
-         13UFpxqy84kp83bZRIgQTXZk9oAuHAQVvv+1Z3ptiIJcIGjgOuSqtdkVDMUJb0PORHnJ
-         NoUA==
-X-Gm-Message-State: APjAAAVmFjDjoINM77yehh8BFw3awnk+Lf3Ch18/5SMzrSxbvQOAKOpG
-        7KmKGV19SiPhFLVdq1kB0G1+Sg==
-X-Google-Smtp-Source: APXvYqz1gCRDHfb1sDmOtyctdeSQ9SceBv6EjONrVNfjJC0L/rdUvcgkuDj3iKUf2l3hH9D78aWeQQ==
-X-Received: by 2002:a9d:5d0b:: with SMTP id b11mr4169059oti.80.1556663146354;
-        Tue, 30 Apr 2019 15:25:46 -0700 (PDT)
-Received: from Fredericks-MacBook-Pro.local ([2600:1700:18a0:11d0:99ba:d92:93c8:8fb9])
-        by smtp.gmail.com with ESMTPSA id h8sm15482635oti.64.2019.04.30.15.25.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 15:25:45 -0700 (PDT)
-Subject: Re: [PATCH 1/4] PCI: Replace dev_*() printk wrappers with pci_*()
- printk wrappers
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mika.westerberg@linux.intel.com, lukas@wunner.de,
-        andriy.shevchenko@linux.intel.com, keith.busch@intel.com,
-        mr.nuke.me@gmail.com, liudongdong3@huawei.com, thesven73@gmail.com
-References: <20190427191304.32502-1-fred@fredlawl.com>
- <20190427191304.32502-2-fred@fredlawl.com>
- <20190429000258.GK14616@google.com> <20190429005222.GO14616@google.com>
-From:   Frederick Lawler <fred@fredlawl.com>
-Message-ID: <d68b1e74-dc52-28dc-0e14-de17594f39ca@fredlawl.com>
-Date:   Tue, 30 Apr 2019 17:26:25 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 PostboxApp/6.1.14
+        id S1726115AbfD3XJl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Apr 2019 19:09:41 -0400
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:33607 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfD3XJl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Apr 2019 19:09:41 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 6CC8C300002A0;
+        Wed,  1 May 2019 01:09:39 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 21B39C2785; Wed,  1 May 2019 01:09:39 +0200 (CEST)
+Date:   Wed, 1 May 2019 01:09:39 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Alex G <mr.nuke.me@gmail.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Shyam Iyer <Shyam_Iyer@dell.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "PCI/LINK: Report degraded links via link
+ bandwidth notification"
+Message-ID: <20190430230939.5bn5ktirkbrx3vhy@wunner.de>
+References: <20190429185611.121751-1-helgaas@kernel.org>
+ <20190429185611.121751-2-helgaas@kernel.org>
+ <d902522e-f788-5e12-6b63-18ac5d5fa955@gmail.com>
+ <20190430161151.GB145057@google.com>
+ <20190430180508.GB25654@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20190429005222.GO14616@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430180508.GB25654@localhost.localdomain>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Bjorn,
+On Tue, Apr 30, 2019 at 12:05:09PM -0600, Keith Busch wrote:
+> On Tue, Apr 30, 2019 at 11:11:51AM -0500, Bjorn Helgaas wrote:
+> > > I'm not convinced a revert is the best call.
+> > 
+> > I have very limited options at this stage of the release, but I'd be
+> > glad to hear suggestions.  My concern is that if we release v5.1
+> > as-is, we'll spend a lot of energy on those false positives.
+> 
+> May be too late now if the revert is queued up, but I think this feature
+> should have been a default 'false' Kconfig bool rather than always on.
 
-Bjorn Helgaas wrote on 4/28/19 7:52 PM:
-> On Sun, Apr 28, 2019 at 07:02:58PM -0500, Bjorn Helgaas wrote:
->> On Sat, Apr 27, 2019 at 02:13:01PM -0500, fred@fredlawl.com wrote:
->>> From: Frederick Lawler <fred@fredlawl.com>
->>>
->>> Replace remaining instances of dev_*() printk wrappers with pci_*()
->>> printk wrappers. No functional change intended.
->>>
->>> Signed-off-by: Frederick Lawler <fred@fredlawl.com>
->>> ---
->>>   drivers/pci/pcie/aer.c        | 13 ++++++-------
->>>   drivers/pci/pcie/aer_inject.c |  4 ++--
->>>   drivers/pci/pcie/dpc.c        | 27 ++++++++++++---------------
->>>   3 files changed, 20 insertions(+), 24 deletions(-)
-> 
->>>   	aer_enable_rootport(rpc);
->>> -	dev_info(device, "AER enabled with IRQ %d\n", dev->irq);
->>> +	pci_info(pdev, "AER enabled with IRQ %d\n", dev->irq);
->>
->> And this, and many others below.  *This* patch should only convert
->>
->>    - pci_printk(KERN_DEBUG, pdev, ...)
->>    + pci_info(pdev, ...)
->>
->> and
->>
->>    - dev_printk(KERN_DEBUG, pcie_dev, ...)
->>    + dev_info(pcie_dev, ...)
-> 
-> Just to clarify, I do *want* both changes, just in separate patches.
-> So we'd have
-> 
->    1) Convert KERN_DEBUG uses to pci_info() for pci_dev usage and to
->       dev_info() for pcie_device usage.  I think pciehp is probably an
->       exception to this; this patch shouldn't touch ctrl_dbg().
-> 
->    2) Convert "dev_info(pcie_device)" to "pci_info(pci_dev)".  It might
->       be worth doing this in separate patches for each service.  If we
->       decide they're simple enough to combine, that's trivial for me to
->       do.  It's a little more hassle to split things up afterwards.
-> 
->       In pciehp, if you do this in the ctrl_*() definitions, it will
->       make the patch much smaller.
-> 
->    3) In pciehp, ctrl_dbg() could probably be changed to use pci_dbg()
->       so we'd use the standard kernel dynamic debug stuff instead of
->       having the pciehp-specific module parameter.
-> 
-> Thanks a lot for working on all this.  I think it will make the user
-> experience significantly simpler.
-> 
-> Bjorn
-> 
+Good idea, this would seem to be a less harsh solution than a revert.
 
-Will do, thanks!
+Enabling the feature by default for everyone was probably overly confident.
+I recall I did bring up in a review comment that all other port services
+have a Kconfig option.  Alex replied that he's not using one because
+on device enumeration, downtraining is checked unconditionally as well.
 
-Frederick Lawler
+Bandwidth notification might be a feature that's not used by many operating
+systems.  Such features don't get much real world exposure or aren't even
+validated by manufacturers.  Inevitably, unpleasant side effects occur
+once Linux supports them.
 
+However if we keep the code and default to "N" in Kconfig, at least people
+get a chance to test and validate the functionality and hopefully this
+will lead to either better hardware or better driver support in the future.
+
+Thanks,
+
+Lukas
