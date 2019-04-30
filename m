@@ -2,74 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 14EA4FF45
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2019 20:05:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88FAFFF6D
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2019 20:11:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726073AbfD3SFH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Apr 2019 14:05:07 -0400
-Received: from mga18.intel.com ([134.134.136.126]:49225 "EHLO mga18.intel.com"
+        id S1726061AbfD3SK7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Apr 2019 14:10:59 -0400
+Received: from mga07.intel.com ([134.134.136.100]:46938 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725950AbfD3SFH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Apr 2019 14:05:07 -0400
+        id S1725950AbfD3SK7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 30 Apr 2019 14:10:59 -0400
 X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 11:05:06 -0700
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 11:10:58 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
-   d="scan'208";a="138785887"
 Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga008.jf.intel.com with ESMTP; 30 Apr 2019 11:05:05 -0700
-Date:   Tue, 30 Apr 2019 11:59:17 -0600
+  by orsmga002.jf.intel.com with ESMTP; 30 Apr 2019 11:10:57 -0700
+Date:   Tue, 30 Apr 2019 12:05:09 -0600
 From:   Keith Busch <kbusch@kernel.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Sinan Kaya <Okaya@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-        mr.nuke.me@gmail.com, linux-pci@vger.kernel.org,
-        austin_bolen@dell.com, alex_gagniuc@dellteam.com,
-        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add link_change error handler and vfio-pci user
-Message-ID: <20190430175917.GA25654@localhost.localdomain>
-References: <155605909349.3575.13433421148215616375.stgit@gimli.home>
- <20190424175758.GC244134@google.com>
- <20190429085104.728aee75@x1.home>
- <76169da9-36cd-6754-41e7-47c8ef668648@kernel.org>
- <20190429105926.209d17d3@x1.home>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Alex G <mr.nuke.me@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Shyam Iyer <Shyam_Iyer@dell.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "PCI/LINK: Report degraded links via link
+ bandwidth notification"
+Message-ID: <20190430180508.GB25654@localhost.localdomain>
+References: <20190429185611.121751-1-helgaas@kernel.org>
+ <20190429185611.121751-2-helgaas@kernel.org>
+ <d902522e-f788-5e12-6b63-18ac5d5fa955@gmail.com>
+ <20190430161151.GB145057@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190429105926.209d17d3@x1.home>
+In-Reply-To: <20190430161151.GB145057@google.com>
 User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 10:59:26AM -0600, Alex Williamson wrote:
-> On Mon, 29 Apr 2019 09:45:28 -0700
-> Sinan Kaya <Okaya@kernel.org> wrote:
+On Tue, Apr 30, 2019 at 11:11:51AM -0500, Bjorn Helgaas wrote:
+> > I'm not convinced a revert is the best call.
 > 
-> > On 4/29/2019 10:51 AM, Alex Williamson wrote:
-> > > So where do we go from here?  I agree that dmesg is not necessarily a
-> > > great choice for these sorts of events and if they went somewhere else,
-> > > maybe I wouldn't have the same concerns about them generating user
-> > > confusion or contributing to DoS vectors from userspace drivers.  As it
-> > > is though, we have known cases where benign events generate confusing
-> > > logging messages, which seems like a regression.  Drivers didn't ask
-> > > for a link_change handler, but nor did they ask that the link state to
-> > > their device be monitored so closely.  Maybe this not only needs some
-> > > sort of change to the logging mechanism, but also an opt-in by the
-> > > driver if they don't expect runtime link changes.  Thanks,  
-> > 
-> > Is there anyway to detect autonomous hardware management support and
-> > not report link state changes in that situation?
-> > 
-> > I thought there were some capability bits for these.
-> 
-> Not that we can find, this doesn't trigger the separate autonomous
-> bandwidth notification interrupt.  Thanks,
+> I have very limited options at this stage of the release, but I'd be
+> glad to hear suggestions.  My concern is that if we release v5.1
+> as-is, we'll spend a lot of energy on those false positives.
 
-I think the only control is to disable automomous lane and link rate
-changes. When set, any changes to either should only be in response to
-errors, so enabling those controls might be the right thing to do with
-this feature.
+May be too late now if the revert is queued up, but I think this feature
+should have been a default 'false' Kconfig bool rather than always on.
