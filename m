@@ -2,64 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 94AE3101CD
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2019 23:28:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78FAD1024B
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2019 00:24:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbfD3V17 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Apr 2019 17:27:59 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:41262 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726086AbfD3V17 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Apr 2019 17:27:59 -0400
-Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=[172.20.5.36])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hLaI8-00075l-Am; Tue, 30 Apr 2019 15:27:57 -0600
-To:     Eric Pilmore <epilmore@gigaio.com>,
-        linux-ntb <linux-ntb@googlegroups.com>, linux-pci@vger.kernel.org
-Cc:     Armen Baloyan <abaloyan@gigaio.com>, D Meyer <dmeyer@gigaio.com>,
-        S Taylor <staylor@gigaio.com>
-References: <CAOQPn8vMn4h=oGWWKa3Uge7WYMkmRAmTyhR6RPjGVtrR1hfhOQ@mail.gmail.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <4389bccb-6993-4a86-b4e4-202e971e2080@deltatee.com>
-Date:   Tue, 30 Apr 2019 15:27:53 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726155AbfD3WYf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Apr 2019 18:24:35 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33043 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfD3WYf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Apr 2019 18:24:35 -0400
+Received: by mail-oi1-f196.google.com with SMTP id l1so10776428oib.0
+        for <linux-pci@vger.kernel.org>; Tue, 30 Apr 2019 15:24:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fredlawl-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uZ1PM87ohnji9r872rj74D6Fq0/brGlUbTKwwr5a4q4=;
+        b=nFOLQnmPRb0/JY/yvlCkC3oJJBGeUK8FlyZN3L1GY5xyfkwe9bli7sUi3VEPO0lwe2
+         mUvOrBq5ZhzEytWPtts8NVsji1tKsp9ntb1GB2V94eNJFLbmJcM2nzBUFMoXykIJqvXm
+         DNLV4wmm4WP9NaQX8R5aHTil2Wmo7jbh9D0/eg3OcAm7oQGfPcVHnuMKVPV7ZyAz0Qe0
+         /aWIjUnObS1IiTkkwNenowUmzwYGwnYi+Y05WmQG+MPEfQvE20qs1AWTaAiUdHOk2m9a
+         LRg0JdbAzKMXlJs9AkugORRXVQi03QBKd3aKOrm2Jo9GSe2PeFnNh6aEAHgbJ11WeQwe
+         nTBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uZ1PM87ohnji9r872rj74D6Fq0/brGlUbTKwwr5a4q4=;
+        b=VbAhsEUNYFo69lc0XXOcDrK7DgUIjSH3PlS5vFMWn+Dj34NFqvADIvZhsNZwxImLIB
+         kUvDZ9wftkcr/9grm1rmdbrusTeT8cedoCcLBis+8WHRUJyavYtD6oWQp01Ok8flwkNv
+         NUvM/Dg3zi1hGoLRGm6D4h/sAJYBK4rMzwNV2DfCz+FYvzO6LEfwo7tZ4sgZKutmFAZ9
+         Ons7rVZlbDPQLSaBrAsn8x+oKslhlnSsfdMtxVkVpWsRpZDgb0cV9Do7atQTZ51/wQPJ
+         7oqXprdXP0t9a8t75odKNQ8NxymkairGht5OecgutT6RImiRzya3g/Qv+gr/jJIRu0Qu
+         rlwA==
+X-Gm-Message-State: APjAAAXu+IAfDbTbeP4xvbRs0y5/2L/3L1Jp7hJIymHKeU30PdcIC4VP
+        b9YyXrWAIZf0lvkKfNJSbCv7GA==
+X-Google-Smtp-Source: APXvYqyz6UUC1VeOH+MU0VesR8d3jpajolEW8TlyLuBJR+0sciV/7J3SsuS7ITWRFimevejVWQBOVg==
+X-Received: by 2002:aca:c696:: with SMTP id w144mr1836254oif.126.1556663074332;
+        Tue, 30 Apr 2019 15:24:34 -0700 (PDT)
+Received: from Fredericks-MacBook-Pro.local ([2600:1700:18a0:11d0:99ba:d92:93c8:8fb9])
+        by smtp.gmail.com with ESMTPSA id k65sm16084979oia.16.2019.04.30.15.24.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Apr 2019 15:24:33 -0700 (PDT)
+Subject: Re: [PATCH 1/4] PCI: Replace dev_*() printk wrappers with pci_*()
+ printk wrappers
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mika.westerberg@linux.intel.com,
+        lukas@wunner.de, keith.busch@intel.com, mr.nuke.me@gmail.com,
+        liudongdong3@huawei.com, thesven73@gmail.com
+References: <20190427191304.32502-1-fred@fredlawl.com>
+ <20190427191304.32502-2-fred@fredlawl.com>
+ <20190428154339.GT9224@smile.fi.intel.com>
+From:   Frederick Lawler <fred@fredlawl.com>
+Message-ID: <a15490fb-3afc-868a-117e-351cd9726bf2@fredlawl.com>
+Date:   Tue, 30 Apr 2019 17:25:08 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 PostboxApp/6.1.14
 MIME-Version: 1.0
-In-Reply-To: <CAOQPn8vMn4h=oGWWKa3Uge7WYMkmRAmTyhR6RPjGVtrR1hfhOQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190428154339.GT9224@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 173.228.226.134
-X-SA-Exim-Rcpt-To: staylor@gigaio.com, dmeyer@gigaio.com, abaloyan@gigaio.com, linux-pci@vger.kernel.org, linux-ntb@googlegroups.com, epilmore@gigaio.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=5.0 tests=ALL_TRUSTED,BAYES_00
-        autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: NVMe peer2peer TLPs over NTB getting split
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Andy,
 
-
-On 2019-04-24 4:46 p.m., Eric Pilmore wrote:
-> Hi Folks,
+Andy Shevchenko wrote on 4/28/19 10:43 AM:
+> On Sat, Apr 27, 2019 at 02:13:01PM -0500, fred@fredlawl.com wrote:
+>> From: Frederick Lawler <fred@fredlawl.com>
+>>
+>> Replace remaining instances of dev_*() printk wrappers with pci_*()
+>> printk wrappers. No functional change intended.
 > 
-> Does anybody know why a Host Bridge might break up a full-sized (max
-> payload) TLP into single byte TLPs when those TLPs are traveling from
-> peer-to-peer?
+>> -		pci_printk(KERN_DEBUG, parent, "can't find device of ID%04x\n",
+>> -			   e_info->id);
+>> +		pci_dbg(parent, "can't find device of ID%04x\n", e_info->id);
+> 
+> These are not equivalent.
+> 
+>> -		dev_printk(KERN_DEBUG, device, "alloc AER rpc failed\n");
+>> +		pci_dbg(pdev, "alloc AER rpc failed\n");
+> 
+> Ditto.
+> 
+>> -		dev_printk(KERN_DEBUG, device, "request AER IRQ %d failed\n",
+>> -			   dev->irq);
+>> +		pci_dbg(pdev, "request AER IRQ %d failed\n", dev->irq);
+> 
+> Ditto.
+> 
+> And so on.
+> 
 
-Host bridges can't be relied on to do the right thing with respect to
-P2P. This is why the p2pdma code explicitly rejects them. Bad
-performance is often the symptom and splitting may be the cause (I've
-never bothered to stick an analyzer on it. There are patches floating
-around to add a whitelist to p2pdma which would be what you'd want to do
-and avoid anything that doesn't go through a switch.
+Thanks for the review. Clearly this was an oversight on my part and I'll 
+have that corrected. Thanks!
 
-Logan
+
+Frederick Lawler
+
