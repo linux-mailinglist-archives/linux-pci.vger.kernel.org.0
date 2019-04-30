@@ -2,81 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C551EFF21
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2019 19:53:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14EA4FF45
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2019 20:05:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725950AbfD3RxG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Apr 2019 13:53:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55724 "EHLO mail.kernel.org"
+        id S1726073AbfD3SFH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Apr 2019 14:05:07 -0400
+Received: from mga18.intel.com ([134.134.136.126]:49225 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfD3RxG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Apr 2019 13:53:06 -0400
-Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 854F221670;
-        Tue, 30 Apr 2019 17:53:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556646785;
-        bh=uaA3gKddXQ40WR5eBSunCDRDXdKyXN0GHfcQ06mZD/A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iEE3R8ikYIUcyARGFIWIgKbrNhnMzSP7Xrdm2tMB/p1h8vv0cIgM/BPuNnGbWQp7A
-         ohiiIvADfgK0qwahTqWOnxMpz9JdOKoDKeS/ucW2dee7DjNcFoiEf2Y/4dSHSbL2G7
-         b5cst1evJIcFrL9qmRq0kf4l5pY0EqWEJ2amk+9Q=
-Date:   Tue, 30 Apr 2019 12:53:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Frederick Lawler <fred@fredlawl.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH RFC 3/3] PCI/ASPM: add sysfs attribute for controlling
- ASPM
-Message-ID: <20190430175304.GC145057@google.com>
-References: <e63cec92-cfb1-d0c4-f21e-350b4b289849@gmail.com>
- <a0a39450-1f23-f5a0-d669-3d722e5b71dd@gmail.com>
+        id S1725950AbfD3SFH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 30 Apr 2019 14:05:07 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 11:05:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
+   d="scan'208";a="138785887"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by orsmga008.jf.intel.com with ESMTP; 30 Apr 2019 11:05:05 -0700
+Date:   Tue, 30 Apr 2019 11:59:17 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Sinan Kaya <Okaya@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+        mr.nuke.me@gmail.com, linux-pci@vger.kernel.org,
+        austin_bolen@dell.com, alex_gagniuc@dellteam.com,
+        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add link_change error handler and vfio-pci user
+Message-ID: <20190430175917.GA25654@localhost.localdomain>
+References: <155605909349.3575.13433421148215616375.stgit@gimli.home>
+ <20190424175758.GC244134@google.com>
+ <20190429085104.728aee75@x1.home>
+ <76169da9-36cd-6754-41e7-47c8ef668648@kernel.org>
+ <20190429105926.209d17d3@x1.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a0a39450-1f23-f5a0-d669-3d722e5b71dd@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190429105926.209d17d3@x1.home>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Apr 13, 2019 at 11:12:41AM +0200, Heiner Kallweit wrote:
-> Background of this extension is a problem with the r8169 network driver.
-> Several combinations of board chipsets and network chip versions have
-> problems if ASPM is enabled, therefore we have to disable ASPM per
-> default. However especially on notebooks ASPM can provide significant
-> power-saving, therefore we want to give users the option to enable
-> ASPM. With the new sysfs attribute users can control which ASPM
-> link-states are disabled.
+On Mon, Apr 29, 2019 at 10:59:26AM -0600, Alex Williamson wrote:
+> On Mon, 29 Apr 2019 09:45:28 -0700
+> Sinan Kaya <Okaya@kernel.org> wrote:
+> 
+> > On 4/29/2019 10:51 AM, Alex Williamson wrote:
+> > > So where do we go from here?  I agree that dmesg is not necessarily a
+> > > great choice for these sorts of events and if they went somewhere else,
+> > > maybe I wouldn't have the same concerns about them generating user
+> > > confusion or contributing to DoS vectors from userspace drivers.  As it
+> > > is though, we have known cases where benign events generate confusing
+> > > logging messages, which seems like a regression.  Drivers didn't ask
+> > > for a link_change handler, but nor did they ask that the link state to
+> > > their device be monitored so closely.  Maybe this not only needs some
+> > > sort of change to the logging mechanism, but also an opt-in by the
+> > > driver if they don't expect runtime link changes.  Thanks,  
+> > 
+> > Is there anyway to detect autonomous hardware management support and
+> > not report link state changes in that situation?
+> > 
+> > I thought there were some capability bits for these.
+> 
+> Not that we can find, this doesn't trigger the separate autonomous
+> bandwidth notification interrupt.  Thanks,
 
-> +void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev);
-> +void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev);
->  #else
->  static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
->  static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
->  static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
->  static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
-> -#endif
-> -
-> -#ifdef CONFIG_PCIEASPM_DEBUG
-> -void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev);
-> -void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev);
-> -#else
-
-I like the idea of exposing these sysfs control files all the time,
-instead of only when CONFIG_PCIEASPM_DEBUG=y, but I think when we do
-that, we should put the files at the downstream end of the link (e.g.,
-an endpoint) instead of at the upstream end (e.g., a root port or
-switch downstream port).  We had some conversation about this here:
-
-https://lore.kernel.org/lkml/20180727202619.GD173328@bhelgaas-glaptop.roam.corp.google.com
-
-Doing it at the downstream end would require more changes, of course,
-and probably raises some locking issues, but I think we have a small
-window of opportunity here where we can tweak the sysfs structure
-before we're committed to supporting something forever.
-
-Bjorn
+I think the only control is to disable automomous lane and link rate
+changes. When set, any changes to either should only be in response to
+errors, so enabling those controls might be the right thing to do with
+this feature.
