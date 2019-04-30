@@ -2,115 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27E95FD8E
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2019 18:11:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C551EFF21
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2019 19:53:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfD3QLz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Apr 2019 12:11:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43480 "EHLO mail.kernel.org"
+        id S1725950AbfD3RxG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Apr 2019 13:53:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfD3QLy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:11:54 -0400
+        id S1725942AbfD3RxG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 30 Apr 2019 13:53:06 -0400
 Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D126820835;
-        Tue, 30 Apr 2019 16:11:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 854F221670;
+        Tue, 30 Apr 2019 17:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556640713;
-        bh=KyJDGavjSpp4AuaU07L+2c6XypQvQiHt5+bPye/hGks=;
+        s=default; t=1556646785;
+        bh=uaA3gKddXQ40WR5eBSunCDRDXdKyXN0GHfcQ06mZD/A=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bqsZ5BoME8haEyekKzM65WyuYHNiOijsLhfWQkt+MUOiL/MqQ1H0yg94wEIj5ekmB
-         +iSYf1rtA4JbjPbspm9HA7YRmWpOl3alprs/1Kzpe/o6LeT8wwzN/2ZgGu/FPJRuJL
-         HdNv22y9V1h1RcGzVYFi67ja4OxASysmlk4fa1n0=
-Date:   Tue, 30 Apr 2019 11:11:51 -0500
+        b=iEE3R8ikYIUcyARGFIWIgKbrNhnMzSP7Xrdm2tMB/p1h8vv0cIgM/BPuNnGbWQp7A
+         ohiiIvADfgK0qwahTqWOnxMpz9JdOKoDKeS/ucW2dee7DjNcFoiEf2Y/4dSHSbL2G7
+         b5cst1evJIcFrL9qmRq0kf4l5pY0EqWEJ2amk+9Q=
+Date:   Tue, 30 Apr 2019 12:53:04 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alex G <mr.nuke.me@gmail.com>
-Cc:     Lukas Wunner <lukas@wunner.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Shyam Iyer <Shyam_Iyer@dell.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "PCI/LINK: Report degraded links via link
- bandwidth notification"
-Message-ID: <20190430161151.GB145057@google.com>
-References: <20190429185611.121751-1-helgaas@kernel.org>
- <20190429185611.121751-2-helgaas@kernel.org>
- <d902522e-f788-5e12-6b63-18ac5d5fa955@gmail.com>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Frederick Lawler <fred@fredlawl.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH RFC 3/3] PCI/ASPM: add sysfs attribute for controlling
+ ASPM
+Message-ID: <20190430175304.GC145057@google.com>
+References: <e63cec92-cfb1-d0c4-f21e-350b4b289849@gmail.com>
+ <a0a39450-1f23-f5a0-d669-3d722e5b71dd@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d902522e-f788-5e12-6b63-18ac5d5fa955@gmail.com>
+In-Reply-To: <a0a39450-1f23-f5a0-d669-3d722e5b71dd@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 08:07:53PM -0500, Alex G wrote:
-> On 4/29/19 1:56 PM, Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > This reverts commit e8303bb7a75c113388badcc49b2a84b4121c1b3e.
-> > 
-> > e8303bb7a75c added logging whenever a link changed speed or width to a
-> > state that is considered degraded.  Unfortunately, it cannot differentiate
-> > signal integrity-related link changes from those intentionally initiated by
-> > an endpoint driver, including drivers that may live in userspace or VMs
-> > when making use of vfio-pci.  Some GPU drivers actively manage the link
-> > state to save power, which generates a stream of messages like this:
-> > 
-> >    vfio-pci 0000:07:00.0: 32.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s x16 link at 0000:00:02.0 (capable of 64.000 Gb/s with 5 GT/s x16 link)
-> > 
-> > We really *do* want to be alerted when the link bandwidth is reduced
-> > because of hardware failures, but degradation by intentional link state
-> > management is probably far more common, so the signal-to-noise ratio is
-> > currently low.
-> > 
-> > Until we figure out a way to identify the real problems or silence the
-> > intentional situations, revert the following commits, which include the
-> > initial implementation (e8303bb7a75c) and subsequent fixes:
-> 
-> I think we're overreacting to a bit of perceived verbosity in the system
-> log. Intentional degradation does not seem to me to be as common as
-> advertised. I have not observed this with either radeon, nouveau, or amdgpu,
-> and the proper mechanism to save power at the link level is ASPM. I stand to
-> be corrected and we have on CC some very knowledgeable fellows that I am
-> certain will jump at the opportunity to do so.
+On Sat, Apr 13, 2019 at 11:12:41AM +0200, Heiner Kallweit wrote:
+> Background of this extension is a problem with the r8169 network driver.
+> Several combinations of board chipsets and network chip versions have
+> problems if ASPM is enabled, therefore we have to disable ASPM per
+> default. However especially on notebooks ASPM can provide significant
+> power-saving, therefore we want to give users the option to enable
+> ASPM. With the new sysfs attribute users can control which ASPM
+> link-states are disabled.
 
-I can't quantify how common it is, but the verbosity is definitely
-*there*, and it seems unlikely to me that a hardware failure is more
-common than any intentional driver-driven degradation.
+> +void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev);
+> +void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev);
+>  #else
+>  static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
+> -#endif
+> -
+> -#ifdef CONFIG_PCIEASPM_DEBUG
+> -void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev);
+> -void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev);
+> -#else
 
-If we can reliably distinguish hardware failures from benign changes,
-we should certainly log the failures.  But in this case even the
-failures are fully functional, albeit at lower performance, so if the
-messages end up being 99% false positives, I think it'll just be
-confusing for users.
+I like the idea of exposing these sysfs control files all the time,
+instead of only when CONFIG_PCIEASPM_DEBUG=y, but I think when we do
+that, we should put the files at the downstream end of the link (e.g.,
+an endpoint) instead of at the upstream end (e.g., a root port or
+switch downstream port).  We had some conversation about this here:
 
-> What it seems like to me is that a proprietary driver running in a VM is
-> initiating these changes. And if that is the case then it seems this is a
-> virtualization problem. A quick glance over GPU drivers in linux did not
-> reveal any obvious places where we intentionally downgrade a link.
+https://lore.kernel.org/lkml/20180727202619.GD173328@bhelgaas-glaptop.roam.corp.google.com
 
-I'm not 100% on board with the idea of drivers directly manipulating
-the link because it seems like the PCI core might need to be at least
-aware of this.  But some drivers certainly do manipulate it today for
-ASPM, gen2/gen3 retraining, etc.
-
-If we treat this as a virtualization problem, I guess you're
-suggesting the host kernel should prevent that sort of link
-manipulation?  We could have a conversation about that, but it
-doesn't seem like the immediate solution to this problem.
-
-> I'm not convinced a revert is the best call.
-
-I have very limited options at this stage of the release, but I'd be
-glad to hear suggestions.  My concern is that if we release v5.1
-as-is, we'll spend a lot of energy on those false positives.
+Doing it at the downstream end would require more changes, of course,
+and probably raises some locking issues, but I think we have a small
+window of opportunity here where we can tweak the sysfs structure
+before we're committed to supporting something forever.
 
 Bjorn
