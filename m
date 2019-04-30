@@ -2,168 +2,291 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 66B46F417
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2019 12:20:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E13BF5C1
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2019 13:34:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfD3KTx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Apr 2019 06:19:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42712 "EHLO mx1.redhat.com"
+        id S1726202AbfD3Lef (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Apr 2019 07:34:35 -0400
+Received: from foss.arm.com ([217.140.101.70]:45112 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbfD3KTx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Apr 2019 06:19:53 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 678E185360;
-        Tue, 30 Apr 2019 10:19:52 +0000 (UTC)
-Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A57386152B;
-        Tue, 30 Apr 2019 10:19:48 +0000 (UTC)
-Subject: Re: [PATCH v4 3/3] PCI: iproc: Add sorted dma ranges resource entries
- to host bridge
-To:     Srinath Mannam <srinath.mannam@broadcom.com>,
+        id S1726129AbfD3Lef (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:34:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75CEE80D;
+        Tue, 30 Apr 2019 04:34:34 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0F5693F5C1;
+        Tue, 30 Apr 2019 04:34:32 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 12:34:27 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        poza@codeaurora.org, Ray Jui <rjui@broadcom.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-References: <1555038815-31916-1-git-send-email-srinath.mannam@broadcom.com>
- <1555038815-31916-4-git-send-email-srinath.mannam@broadcom.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <53a7463f-0b31-42ad-96a1-a3f40f02b119@redhat.com>
-Date:   Tue, 30 Apr 2019 12:19:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Ellie Reeves <ellierevves@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: aardvark: Use LTSSM state to build link training
+ flag
+Message-ID: <20190430113427.GA18742@e121166-lin.cambridge.arm.com>
+References: <20190316161243.29517-1-repk@triplefau.lt>
+ <20190425110830.GC10833@e121166-lin.cambridge.arm.com>
+ <20190425142353.GO2754@voidbox.localdomain>
+ <20190425150640.GA20770@e121166-lin.cambridge.arm.com>
+ <20190429153234.GS2754@voidbox.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <1555038815-31916-4-git-send-email-srinath.mannam@broadcom.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 30 Apr 2019 10:19:52 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190429153234.GS2754@voidbox.localdomain>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Srinath,
-
-On 4/12/19 5:13 AM, Srinath Mannam wrote:
-> IPROC host has the limitation that it can use only those address ranges
-> given by dma-ranges property as inbound address. So that the memory
-> address holes in dma-ranges should be reserved to allocate as DMA address.
+On Mon, Apr 29, 2019 at 05:32:35PM +0200, Remi Pommarel wrote:
+> Hi Lorenzo,
 > 
-> Inbound address of host accessed by PCIe devices will not be translated
-> before it comes to IOMMU or directly to PE. But the limitation of this
-> host is, access to few address ranges are ignored. So that IOVA ranges
-> for these address ranges have to be reserved.
+> Sorry for duplicates I forgot to include everyone.
 > 
-> All allowed address ranges are listed in dma-ranges DT parameter. These
-> address ranges are converted as resource entries and listed in sorted
-> order add added to dma_ranges list of PCI host bridge structure.
-s/add added/and added
+> On Thu, Apr 25, 2019 at 04:06:40PM +0100, Lorenzo Pieralisi wrote:
+> > On Thu, Apr 25, 2019 at 04:23:53PM +0200, Remi Pommarel wrote:
+> > > Hi Lorenzo,
+> > > 
+> > > On Thu, Apr 25, 2019 at 12:08:30PM +0100, Lorenzo Pieralisi wrote:
+> > > > On Sat, Mar 16, 2019 at 05:12:43PM +0100, Remi Pommarel wrote:
+> > > > > The PCI_EXP_LNKSTA_LT flag in the emulated root device's PCI_EXP_LNKSTA
+> > > > > config register does not reflect the actual link training state and is
+> > > > > always cleared. The Link Training and Status State Machine (LTSSM) flag
+> > > > > in LMI config register could be used as a link training indicator.
+> > > > > Indeed if the LTSSM is in L0 or upper state then link training has
+> > > > > completed (see [1]).
+> > > > > 
+> > > > > Unfortunately because setting the PCI_EXP_LINCTL_RL flag does not
+> > > > > instantly imply a LTSSM state change (e.g. L0s to recovery state
+> > > > > transition takes some time), LTSSM can be in L0 but link training has
+> > > > > not finished yet. Thus a lower L0 LTSSM state followed by a L0 or upper
+> > > > > state sequence has to be seen to be sure that link training has been
+> > > > > done.
+> > > > 
+> > > > Hi Remi,
+> > > > 
+> > > > I am a bit confused, so you are saying that the LTSSM flag in the
+> > > > LMI config register can't be used to detect when training is completed ?
+> > > 
+> > > Not exactly, I am saying that PCI_EXP_LNKSTA_LT from PCI_EXP_LNKSTA
+> > > register can't be used with this hardware, but can be emulated with
+> > > LTSSM flag.
+> > > 
+> > > > 
+> > > > Certainly it can't be used by ASPM core that relies on:
+> > > > 
+> > > > PCI_EXP_LNKSTA_LT flag
+> > > > 
+> > > > in the PCI_EXP_LNKSTA register, and that's what you are setting through
+> > > > this timeout mechanism IIUC.
+> > > > 
+> > > > Please elaborate on that.
+> > > 
+> > > The problem here is that the hardware does not change PCI_EXP_LNKSTA_LT
+> > > at all. So in order to support link re-training feature we need to
+> > > emulate this flag. To do so LTSSM flag can be used.
+> > 
+> > Understood.
+> > 
+> > > Indeed we can set the emulated PCI_EXP_LNKSTA_LT as soon as re-training
+> > > is asked and wait for LTSSM flag to be back to a configured state
+> > > (e.g. L0, L0s) before clearing it.
+> > 
+> > The check for the LTSSM is carried out through advk_pcie_link_up()
+> > (ie register CFG_REG), correct ?
+> > 
 > 
-> Ex:
-> dma-ranges = < \
->   0x43000000 0x00 0x80000000 0x00 0x80000000 0x00 0x80000000 \
->   0x43000000 0x08 0x00000000 0x08 0x00000000 0x08 0x00000000 \
->   0x43000000 0x80 0x00000000 0x80 0x00000000 0x40 0x00000000>
+> Yes that is correct.
 > 
-> In the above example of dma-ranges, memory address from
-> 0x0 - 0x80000000,
-> 0x100000000 - 0x800000000,
-> 0x1000000000 - 0x8000000000 and
-> 0x10000000000 - 0xffffffffffffffff.
-> are not allowed to use as inbound addresses.
-s/to use/to be used
+> > > The problem with that is that LTSSM flag does not change instantly after
+> > > link re-training has been asked, and will stay in configured state for a
+> > > small amount of time. So the idea is to poll the LTSSM flag and wait for
+> > > it to enter a recovery state then waiting for it to be back in
+> > > configured state.
+> > 
+> > When you say "poll" you mean checking advk_pcie_link_up() ?
+> > 
 > 
-> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
-> Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
-
-
+> I mean checking advk_pcie_link_up() in a loop. This loop is done by the
+> user (e.g. ASPM core). ASPM core waits for PCI_EXP_LNKSTA_LT to be
+> cleared in pcie_aspm_configure_common_clock() just after it has set
+> PCI_EXP_LNKCTL_RL.
+> 
+> So the idea was to check advk_pcie_link_up() each time ASPM core checks
+> the PCI_EXP_LNKSTA_LT flag. Please see below patch for an alternative
+> to that.
+> 
+> > More below on the code.
+> > 
+> > > The timeout is only here as a fallback in the unlikely event that we
+> > > missed the LTSSM flag entering recovery state.
+> > > 
+> > > > 
+> > > > I am picking Bjorn's brain on this patch since what you are doing
+> > > > seems quite arbitrary and honestly it is a bit of a hack.
+> > > 
+> > > Yes, sorry, it is a bit of a hack because I try to workaround a
+> > > hardware issue.
+> > 
+> > No problems, it is not your fault.
+> > > 
+> > > Please note that vendor has been contacted about this in the meantime
+> > > and answered the following:
+> > > 
+> > > "FW can poll LTSSM state equals any of the following values: 0xB or 0xD
+> > > or 0xC or 0xE. After that, polls for LTSSM equals 0x10. For your
+> > > information, LTSSM will transit from 0x10 -> 0xB -> 0xD -> 0xC or 0xE
+> > > ........... -> 0x10".
+> > > 
+> > > It is basically what this patch does, I've just added a timeout fallback
+> > > to not poll LTSSM state forever if its transition to 0xB, 0xD, 0xC or
+> > > 0xE has been missed.
+> > 
+> > When you say "missed" you mean advk_pcie_link_up() returning true, right ?
+> > 
+> 
+> Not exactly, I mean that LTSSM had the time to go down and back up
+> between advk_pcie_link_up() because, for example, ASPM core loop took
+> too much time between two PCI_EXP_LNKSTA_LT flag checks.
+> 
+> > [...]
+> > 
+> > > > > +static int advk_pcie_link_retraining(struct advk_pcie *pcie)
+> > > > > +{
+> > > > > +	if (!advk_pcie_link_up(pcie)) {
+> > 
+> > That's the bit I find confusing. Is this check here to detect if the
+> > link went through the sequence below ? Should not it be carried
+> > out only if (pcie->rl_asked == 1) ?
+> > 
+> > "... LTSSM will transit from 0x10 -> 0xB -> 0xD -> 0xC or 0xE
+> >  ........... -> 0x10".
+> 
+> Yes it is the check to detect the sequence. advk_pcie_link_up() returns
+> false if LTSSM <= 0x10.
+> 
+> This cannot be done only if (pcie->rl_asked == 1) because I still
+> want this function to return 1 if link is still down.
+> 
+> > 
+> > > > > +		pcie->rl_asked = 0;
+> > 
+> > Why ?
+> > 
+> 
+> rl_asked is not a good name, I could have called it
+> pcie->wait_for_link_down instead. So if advk_pcie_link_up() returns
+> false that means that we don't need to wait for link being down any more
+> and just wait for (LTSSM >= 0x10). In this case the delay is not needed.
+> 
+> > > > > +		return 1;
+> > > > > +	}
+> > > > > +
+> > > > > +	if (pcie->rl_asked && time_before(jiffies, pcie->rl_deadline))
+> > > > > +		return 1;
+> > 
+> > This ensures that if the LTSSM >= 0x10 we still wait for a delay before
+> > considering the link up (because I suppose, after asking a retraining
+> > it takes a while for the LTSSM state to become < 0x10), correct ?
+> 
+> Yes it takes a while to become < 0x10 after retraining hence the delay.
+> But here we don't need to always wait for a delay. Indeed if we've
+> already seen the link being < 0x10 (i.e if "pcie->rl_asked == 0") and
+> if after that link is >= 0x10 then we know that retraining process has
+> finished.
+> 
+> Anyway I did it this way because I wanted to keep
+> advk_pci_bridge_emul_pcie_conf_write() from polling. But this is
+> obviously a bad reason as it makes the code way too complex and relies
+> on user (ASPM core) to do the poll instead.
+> 
+> So if you find the following better I'll send a v3 with that:
+> 
 > ---
->  drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 43 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> index c20fd6b..94ba5c0 100644
-> --- a/drivers/pci/controller/pcie-iproc.c
-> +++ b/drivers/pci/controller/pcie-iproc.c
-> @@ -1146,11 +1146,43 @@ static int iproc_pcie_setup_ib(struct iproc_pcie *pcie,
->  	return ret;
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index eb58dfdaba1b..67e8ae4e313e 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -180,6 +180,9 @@
+>  #define LINK_WAIT_MAX_RETRIES		10
+>  #define LINK_WAIT_USLEEP_MIN		90000
+>  #define LINK_WAIT_USLEEP_MAX		100000
+> +#define RETRAIN_WAIT_MAX_RETRIES	20
+> +#define RETRAIN_WAIT_USLEEP_MIN		2000
+> +#define RETRAIN_WAIT_USLEEP_MAX		5000
+>  
+>  #define MSI_IRQ_NUM			32
+>  
+> @@ -239,6 +242,17 @@ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
+>  	return -ETIMEDOUT;
 >  }
 >  
-> +static int
-> +iproc_pcie_add_dma_range(struct device *dev, struct list_head *resources,
-> +			 struct of_pci_range *range)
+> +static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
 > +{
-> +	struct resource *res;
-> +	struct resource_entry *entry, *tmp;
-> +	struct list_head *head = resources;
+> +	size_t retries;
 > +
-> +	res = devm_kzalloc(dev, sizeof(struct resource), GFP_KERNEL);
-> +	if (!res)
-> +		return -ENOMEM;
-> +
-> +	resource_list_for_each_entry(tmp, resources) {
-> +		if (tmp->res->start < range->cpu_addr)
-> +			head = &tmp->node;
+> +	for (retries = 0; retries < RETRAIN_WAIT_MAX_RETRIES; ++retries) {
+> +		if (!advk_pcie_link_up(pcie))
+> +			break;
+> +		usleep_range(RETRAIN_WAIT_USLEEP_MIN, RETRAIN_WAIT_USLEEP_MAX);
 > +	}
-> +
-> +	res->start = range->cpu_addr;
-> +	res->end = res->start + range->size - 1;
-> +
-> +	entry = resource_list_create_entry(res, 0);
-> +	if (!entry)
-> +		return -ENOMEM;
-> +
-> +	entry->offset = res->start - range->cpu_addr;
-> +	resource_list_add(entry, head);
-> +
-> +	return 0;
 > +}
 > +
->  static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
+>  static void advk_pcie_setup_hw(struct advk_pcie *pcie)
 >  {
-> +	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
->  	struct of_pci_range range;
->  	struct of_pci_range_parser parser;
->  	int ret;
-> +	LIST_HEAD(resources);
->  
->  	/* Get the dma-ranges from DT */
->  	ret = of_pci_dma_range_parser_init(&parser, pcie->dev->of_node);
-> @@ -1158,13 +1190,23 @@ static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
->  		return ret;
->  
->  	for_each_of_pci_range(&parser, &range) {
-> +		ret = iproc_pcie_add_dma_range(pcie->dev,
-> +					       &resources,
-> +					       &range);
-> +		if (ret)
-> +			goto out;
->  		/* Each range entry corresponds to an inbound mapping region */
->  		ret = iproc_pcie_setup_ib(pcie, &range, IPROC_PCIE_IB_MAP_MEM);
->  		if (ret)
-> -			return ret;
-> +			goto out;
+>  	u32 reg;
+> @@ -426,11 +440,19 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+>  		return PCI_BRIDGE_EMUL_HANDLED;
 >  	}
 >  
-> +	list_splice_init(&resources, &host->dma_ranges);
+> +	case PCI_EXP_LNKCTL: {
+> +		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
+> +			~(PCI_EXP_LNKSTA_LT << 16);
+> +		if (!advk_pcie_link_up(pcie))
+
+Is this correct ?
+
+"PCI Express Base Specification Rev4.0 Version 1.0" page 758
+
+"Link Training: this read-only bit indicates that
+the physical layer LTSSM is in the Configuration or
+Recovery state or that 1b was written to the Retrain
+Link..."
+
+Isn't that a subset of states for which !advk_pcie_link_up()
+return true ?
+
+Lorenzo
+
+> +			val |= (PCI_EXP_LNKSTA_LT << 16);
+> +		*value = val;
+> +		return PCI_BRIDGE_EMUL_HANDLED;
+> +	}
 > +
->  	return 0;
-> +out:
-> +	pci_free_resource_list(&resources);
-> +	return ret;
->  }
+>  	case PCI_CAP_LIST_ID:
+>  	case PCI_EXP_DEVCAP:
+>  	case PCI_EXP_DEVCTL:
+>  	case PCI_EXP_LNKCAP:
+> -	case PCI_EXP_LNKCTL:
+>  		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
+>  		return PCI_BRIDGE_EMUL_HANDLED;
+>  	default:
+> @@ -447,8 +469,13 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
 >  
->  static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
-> 
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-
-Thanks
-
-Eric
+>  	switch (reg) {
+>  	case PCI_EXP_DEVCTL:
+> +		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+> +		break;
+> +
+>  	case PCI_EXP_LNKCTL:
+>  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+> +		if (new & PCI_EXP_LNKCTL_RL)
+> +			advk_pcie_wait_for_retrain(pcie);
+>  		break;
+>  
+>  	case PCI_EXP_RTCTL:
