@@ -2,149 +2,367 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F1373EE2C
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2019 03:12:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B324EEF65
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2019 06:23:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbfD3BMr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Apr 2019 21:12:47 -0400
-Received: from mail-eopbgr00077.outbound.protection.outlook.com ([40.107.0.77]:51212
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729238AbfD3BMr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 29 Apr 2019 21:12:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FubN0aNsVXAU9Q8kCGaDTTrgP0G31k56QmtkO7tSaKI=;
- b=CeVPWMhFlxYhmFyOSIXBfpDDfFJXQCNVQodumPAfDxvUxVfVBr7DS6q4Wkn0Wcl7Tb67AAFKfTgJjf3sv0BCK6q+ah4iZV7z6LRfwVdLWVHJs4KsMYfUymnJI8EU+NGyuqz48fLJc+oYptnLo25CxKqtjjmk9De1Y3GwVD3ZjGc=
-Received: from VI1PR04MB5792.eurprd04.prod.outlook.com (20.178.204.10) by
- VI1PR04MB5904.eurprd04.prod.outlook.com (20.178.205.78) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Tue, 30 Apr 2019 01:12:41 +0000
-Received: from VI1PR04MB5792.eurprd04.prod.outlook.com
- ([fe80::3830:3e3d:cf09:ba7]) by VI1PR04MB5792.eurprd04.prod.outlook.com
- ([fe80::3830:3e3d:cf09:ba7%2]) with mapi id 15.20.1835.018; Tue, 30 Apr 2019
- 01:12:40 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [EXT] Re: [PATCHv5 1/6] PCI: mobiveil: Refactor Mobiveil PCIe
- Host Bridge IP driver
-Thread-Topic: [EXT] Re: [PATCHv5 1/6] PCI: mobiveil: Refactor Mobiveil PCIe
- Host Bridge IP driver
-Thread-Index: AQHU8RVxwCgqbmUIs0+mzKQDP7R+kqZK3O0AgAkbXEA=
-Date:   Tue, 30 Apr 2019 01:12:40 +0000
-Message-ID: <VI1PR04MB5792C90E4DE2D75863DCDD49843A0@VI1PR04MB5792.eurprd04.prod.outlook.com>
-References: <20190412095332.41370-1-Zhiqiang.Hou@nxp.com>
- <20190412095332.41370-2-Zhiqiang.Hou@nxp.com>
- <CAFZiPx3AygiX7tDL0DTVB-JYd+7SZ9NL6ZE0RH-=n0Z=VqhyLw@mail.gmail.com>
-In-Reply-To: <CAFZiPx3AygiX7tDL0DTVB-JYd+7SZ9NL6ZE0RH-=n0Z=VqhyLw@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f2c43d56-9806-454b-57e2-08d6cd08f12d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5904;
-x-ms-traffictypediagnostic: VI1PR04MB5904:
-x-microsoft-antispam-prvs: <VI1PR04MB59048FE8177E88F98C2FF845843A0@VI1PR04MB5904.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 00235A1EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(376002)(366004)(136003)(396003)(54534003)(13464003)(189003)(199004)(6116002)(97736004)(53936002)(52536014)(71190400001)(71200400001)(5660300002)(76176011)(64756008)(66556008)(66476007)(4326008)(76116006)(7416002)(73956011)(7696005)(66446008)(66946007)(9686003)(6916009)(7736002)(99286004)(68736007)(74316002)(305945005)(14454004)(316002)(229853002)(25786009)(6436002)(86362001)(476003)(256004)(186003)(486006)(26005)(53546011)(5024004)(14444005)(8676002)(102836004)(81156014)(11346002)(8936002)(446003)(81166006)(66066001)(6246003)(6506007)(478600001)(55016002)(54906003)(2906002)(33656002)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5904;H:VI1PR04MB5792.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: EJeYmGiHM67Ds61Mh6BX08XWHFqD6r2c38e7adr76HL2muJz60nB4gc8KB/JBLklzAB4mvGBOwzo4rX5qT+OqXeSi/RAex++5mSq7IvXYcyg3P0V06iCd+XUWnthKiK1zYeVygogbYpF9s+Wm0/oPj+xHLLex/NpLeHJGQByHAO0SmKeazgulersiwt0RsbPxsd9bcEnQGrgHUqhiabI0PRpoMcYqN9UxgQv9cnXHfQAJrD/8et1jD/toBBJKQvs0ZLYVwxSa/Ffwcy78ya24kzLgiX9GBuUMVnuC5lcx5uVWu1NXu3JZ5DdmecQN+rx6B6+QcVAEDTfP2gh847ycdaVEF+UbY8V/K9Wr2+0RiILKkJm8b049uyUEvqdF4uIgzXnw4mlFow41bUXaEo8/dufq1fD5yjEtWdZaAKI76w=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1725554AbfD3EXG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Apr 2019 00:23:06 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:53620 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbfD3EXG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Apr 2019 00:23:06 -0400
+Received: by mail-it1-f195.google.com with SMTP id z4so2578047itc.3
+        for <linux-pci@vger.kernel.org>; Mon, 29 Apr 2019 21:23:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o2slRh9TET5ekToJXqk2NUH3nM++xivNoqCUhSr0SCs=;
+        b=n1dnmh2ZPNUr8GpXNgQgCYYHLgwcl1b5bph3R3lBS5Dizg03TmJ1LPH4fBSM/HGhCn
+         5xxkXUhj571uy/7H8tQCxRfqE+6dTJ3erfP7D4EGR0NDXjzlfA6tgWPkJxQPJd/0eMcW
+         44sZbspGfbVWA8Qo6UW87VpZSkmXJyFjCJl9itAseq13RblW47vQUG36/1mTsCYiC52Z
+         cVu3GuwR6ZlhlR8QeF2gnEWZ/Vrn+LskLqciNhuQ1nrB6xWF9AIpBEkPuUrl3YVc6MQe
+         Hv/oCSu3218aKulQcYbppnDEkgVUjMjOiW65oUdASD0waZuuk0pCOo5rgzhmP7cjLI1B
+         VH7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o2slRh9TET5ekToJXqk2NUH3nM++xivNoqCUhSr0SCs=;
+        b=AAo5btiNZa+dVHJGLHTOUoiF0K5e5MlMIBtsgzWiJz0Dgcya6YEPpKAnJCN/5Sk9sr
+         YMF5Gocv0RXtQDIOO+RoEAlltue6S09GcuMDTCOHpPZbEU6y1lHeuocWFYNdmJTs4af4
+         /m3cyoaaQKqq+XBs42vLbjwHyzzqjVwIR6h2ytZYMYI1tY/+p0CW9bQXHICwpn2LxPu8
+         HMW+3qPJfWBn5LNh6iYvsNfSXKdCBT00y8It1hI5fgUzjWVSpUXFXXqBnUJiuXXg/mBc
+         aZlQFMbj7YkqCJ1pyU0kC9VCfhQ+SVFbsropG/WTnNJp3U9pIDw8usBYTIeMEgq5M383
+         k7ow==
+X-Gm-Message-State: APjAAAVufp9sOxq+1nEwOufT0fNSudfMJfhaBii4JXCapgSCKTN/R8nR
+        d7RWZhbj1bIH6Mhpc1o0/7e9Dy9jrTJUUfMb8mo=
+X-Google-Smtp-Source: APXvYqxwoq1b3F8w81yugISReTBOKS0SEOx8bLZaTLUjBxoFYmsjCrIC96mBWWfJpxXh2CzJQf+P0IwucbWxd3fsDok=
+X-Received: by 2002:a02:1384:: with SMTP id 126mr41450685jaz.72.1556598185310;
+ Mon, 29 Apr 2019 21:23:05 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f2c43d56-9806-454b-57e2-08d6cd08f12d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2019 01:12:40.6975
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5904
+References: <20190311115233.6514-1-s.miroshnichenko@yadro.com> <20190311115233.6514-2-s.miroshnichenko@yadro.com>
+In-Reply-To: <20190311115233.6514-2-s.miroshnichenko@yadro.com>
+From:   Oliver <oohall@gmail.com>
+Date:   Tue, 30 Apr 2019 14:22:53 +1000
+Message-ID: <CAOSf1CGKrb6tnGpanuUL3Bt8kyqqV6D4o5TLF9ncny3MRBN=ng@mail.gmail.com>
+Subject: Re: [PATCH v5 1/8] powerpc/pci: Access PCI config space directly w/o pci_dn
+To:     Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-pci@vger.kernel.org,
+        Stewart Smith <stewart@linux.vnet.ibm.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Russell Currey <ruscur@russell.cc>, linux@yadro.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgU3ViYnUsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU3VicmFo
-bWFueWEgTGluZ2FwcGEgW21haWx0bzpsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNvLmluXQ0KPiBT
-ZW50OiAyMDE55bm0NOaciDI05pelIDEzOjM2DQo+IFRvOiBaLnEuIEhvdSA8emhpcWlhbmcuaG91
-QG54cC5jb20+DQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyByb2Jo
-K2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiBzaGF3bmd1b0BrZXJuZWwu
-b3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47DQo+IGxvcmVuem8ucGllcmFsaXNpQGFy
-bS5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOw0KPiB3aWxsLmRlYWNvbkBhcm0uY29tOyBN
-aW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBNLmguIExpYW4NCj4gPG1pbmdodWFuLmxp
-YW5AbnhwLmNvbT47IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBTdWJqZWN0
-OiBbRVhUXSBSZTogW1BBVENIdjUgMS82XSBQQ0k6IG1vYml2ZWlsOiBSZWZhY3RvciBNb2JpdmVp
-bCBQQ0llIEhvc3QNCj4gQnJpZGdlIElQIGRyaXZlcg0KPiANCj4gV0FSTklORzogVGhpcyBlbWFp
-bCB3YXMgY3JlYXRlZCBvdXRzaWRlIG9mIE5YUC4gRE8gTk9UIENMSUNLIGxpbmtzIG9yDQo+IGF0
-dGFjaG1lbnRzIHVubGVzcyB5b3UgcmVjb2duaXplIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNv
-bnRlbnQgaXMgc2FmZS4NCj4gDQo+IA0KPiANCj4gWlEsDQo+IA0KPiBPbiBGcmksIEFwciAxMiwg
-MjAxOSBhdCAzOjIyIFBNIFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4gd3JvdGU6DQo+
-ID4NCj4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+DQo+
-ID4gUmVmYWN0b3IgdGhlIE1vYml2ZWlsIFBDSWUgSG9zdCBCcmlkZ2UgSVAgZHJpdmVyIHRvIG1h
-a2UNCj4gPiBpdCBlYXNpZXIgdG8gYWRkIHN1cHBvcnQgZm9yIGJvdGggUkMgYW5kIEVQIG1vZGUg
-ZHJpdmVyLg0KPiA+IFRoaXMgcGF0Y2ggbW92ZWQgdGhlIE1vYml2ZWlsIGRyaXZlciB0byBhbiBu
-ZXcgZGlyZWN0b3J5DQo+ID4gJ2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwnIGFuZCBy
-ZWZhY3RvciBpdCBhY2NvcmRpbmcNCj4gPiB0byB0aGUgUkMgYW5kIEVQIGFic3RyYWN0aW9uLg0K
-PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNv
-bT4NCj4gPiBSZXZpZXdlZC1ieTogTWluZ2h1YW4gTGlhbiA8TWluZ2h1YW4uTGlhbkBueHAuY29t
-Pg0KPiA+IFJldmlld2VkLWJ5OiBTdWJyYWhtYW55YSBMaW5nYXBwYSA8bC5zdWJyYWhtYW55YUBt
-b2JpdmVpbC5jby5pbj4NCj4gPiAtLS0NCj4gPiBWNToNCj4gPiAgLSBSZWdlbmVyYXRlZCB0aGlz
-IHBhdGNoIG9uIHRoZSBuZXcgYmFzZS4NCj4gPiAgLSBSZXRvdWNoZWQgdGhlIGNoYW5nZWxvZy4N
-Cj4gPiAgLSBVcGRhdGVkIHRoZSBDb3B5cmlnaHQuDQo+ID4NCj4gPiAgTUFJTlRBSU5FUlMgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICstDQo+ID4gIGRyaXZlcnMvcGNp
-L2NvbnRyb2xsZXIvS2NvbmZpZyAgICAgICAgICAgICAgICB8ICAxMSArLQ0KPiA+ICBkcml2ZXJz
-L3BjaS9jb250cm9sbGVyL01ha2VmaWxlICAgICAgICAgICAgICAgfCAgIDIgKy0NCj4gPiAgZHJp
-dmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9LY29uZmlnICAgICAgIHwgIDI0ICsNCj4gPiAg
-ZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9NYWtlZmlsZSAgICAgIHwgICA0ICsNCj4g
-PiAgLi4uL3BjaWUtbW9iaXZlaWwtaG9zdC5jfSAgICAgICAgICAgICAgICAgICAgIHwgNTcwICsr
-Ky0tLS0tLS0tLS0tLS0tLQ0KPiA+ICAuLi4vY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2
-ZWlsLXBsYXQuYyAgfCAgNTYgKysNCj4gPiAgLi4uL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3Bj
-aWUtbW9iaXZlaWwuYyAgIHwgMjQ4ICsrKysrKysrDQo+ID4gIC4uLi9wY2kvY29udHJvbGxlci9t
-b2JpdmVpbC9wY2llLW1vYml2ZWlsLmggICB8IDIxMSArKysrKysrDQo+ID4gIDkgZmlsZXMgY2hh
-bmdlZCwgNjM2IGluc2VydGlvbnMoKyksIDQ5MiBkZWxldGlvbnMoLSkNCj4gPiAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvS2NvbmZpZw0KPiA+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9NYWtlZmls
-ZQ0KPiA+ICByZW5hbWUgZHJpdmVycy9wY2kvY29udHJvbGxlci97cGNpZS1tb2JpdmVpbC5jID0+
-DQo+IG1vYml2ZWlsL3BjaWUtbW9iaXZlaWwtaG9zdC5jfSAoNTMlKQ0KPiA+ICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLXBs
-YXQuYw0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2Jp
-dmVpbC9wY2llLW1vYml2ZWlsLmMNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGNp
-L2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC5oDQo+ID4NCj4gPiBkaWZmIC0tZ2l0
-IGEvTUFJTlRBSU5FUlMgYi9NQUlOVEFJTkVSUw0KPiA+IGluZGV4IDFlNjQyNzlmMzM4YS4uMTAx
-M2U3NGIxNGYyIDEwMDY0NA0KPiA+IC0tLSBhL01BSU5UQUlORVJTDQo+ID4gKysrIGIvTUFJTlRB
-SU5FUlMNCj4gPiBAQCAtMTE4NzcsNyArMTE4NzcsNyBAQCBNOiAgICAgIFN1YnJhaG1hbnlhIExp
-bmdhcHBhDQo+IDxsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNvLmluPg0KPiA+ICBMOiAgICAgbGlu
-dXgtcGNpQHZnZXIua2VybmVsLm9yZw0KPiA+ICBTOiAgICAgU3VwcG9ydGVkDQo+ID4gIEY6ICAg
-ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL21vYml2ZWlsLXBjaWUudHh0
-DQo+ID4gLUY6ICAgICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0KPiA+
-ICtGOiAgICAgZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsKg0K
-PiA+DQo+IA0KPiBQbGVhc2UgYWRkIHlvdXJzZWxmIGFzIGNvLW1haW50YWluZXIgb2YgdGhlIG1v
-Yml2ZWlsIGRyaXZlci4NCg0KVGhhbmtzIGZvciB5b3VyIGludml0ZSwgd2lsbCBhZGQgaW4gdjYu
-DQoNClJlZ2FyZHMsDQpaaGlxaWFuZw0K
+On Mon, Mar 11, 2019 at 10:52 PM Sergey Miroshnichenko
+<s.miroshnichenko@yadro.com> wrote:
+>
+> To fetch an updated DT for the newly hotplugged device, OS must explicitly
+> request it from the firmware via the pnv_php driver.
+>
+> If pnv_php wasn't triggered/loaded, it is still possible to discover new
+> devices if PCIe I/O will not stop in absence of the pci_dn structure.
+>
+> Signed-off-by: Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
+> ---
+>  arch/powerpc/kernel/rtas_pci.c       | 97 +++++++++++++++++++---------
+>  arch/powerpc/platforms/powernv/pci.c | 64 ++++++++++++------
+>  2 files changed, 109 insertions(+), 52 deletions(-)
+>
+> diff --git a/arch/powerpc/kernel/rtas_pci.c b/arch/powerpc/kernel/rtas_pci.c
+> index c2b148b1634a..f675b5ecb5bc 100644
+> --- a/arch/powerpc/kernel/rtas_pci.c
+> +++ b/arch/powerpc/kernel/rtas_pci.c
+> @@ -55,10 +55,26 @@ static inline int config_access_valid(struct pci_dn *dn, int where)
+>         return 0;
+>  }
+>
+> -int rtas_read_config(struct pci_dn *pdn, int where, int size, u32 *val)
+> +static int rtas_read_raw_config(unsigned long buid, int busno, unsigned int devfn,
+> +                               int where, int size, u32 *val)
+>  {
+>         int returnval = -1;
+> -       unsigned long buid, addr;
+> +       unsigned long addr = rtas_config_addr(busno, devfn, where);
+> +       int ret;
+> +
+> +       if (buid) {
+> +               ret = rtas_call(ibm_read_pci_config, 4, 2, &returnval,
+> +                               addr, BUID_HI(buid), BUID_LO(buid), size);
+> +       } else {
+> +               ret = rtas_call(read_pci_config, 2, 2, &returnval, addr, size);
+> +       }
+> +       *val = returnval;
+> +
+> +       return ret;
+> +}
+> +
+> +int rtas_read_config(struct pci_dn *pdn, int where, int size, u32 *val)
+> +{
+>         int ret;
+>
+>         if (!pdn)
+> @@ -71,16 +87,8 @@ int rtas_read_config(struct pci_dn *pdn, int where, int size, u32 *val)
+>                 return PCIBIOS_SET_FAILED;
+>  #endif
+>
+> -       addr = rtas_config_addr(pdn->busno, pdn->devfn, where);
+> -       buid = pdn->phb->buid;
+> -       if (buid) {
+> -               ret = rtas_call(ibm_read_pci_config, 4, 2, &returnval,
+> -                               addr, BUID_HI(buid), BUID_LO(buid), size);
+> -       } else {
+> -               ret = rtas_call(read_pci_config, 2, 2, &returnval, addr, size);
+> -       }
+> -       *val = returnval;
+> -
+> +       ret = rtas_read_raw_config(pdn->phb->buid, pdn->busno, pdn->devfn,
+> +                                  where, size, val);
+>         if (ret)
+>                 return PCIBIOS_DEVICE_NOT_FOUND;
+>
+> @@ -98,18 +106,44 @@ static int rtas_pci_read_config(struct pci_bus *bus,
+>
+>         pdn = pci_get_pdn_by_devfn(bus, devfn);
+>
+> -       /* Validity of pdn is checked in here */
+> -       ret = rtas_read_config(pdn, where, size, val);
+> -       if (*val == EEH_IO_ERROR_VALUE(size) &&
+> -           eeh_dev_check_failure(pdn_to_eeh_dev(pdn)))
+> -               return PCIBIOS_DEVICE_NOT_FOUND;
+> +       if (pdn) {
+> +               /* Validity of pdn is checked in here */
+> +               ret = rtas_read_config(pdn, where, size, val);
+> +
+> +               if (*val == EEH_IO_ERROR_VALUE(size) &&
+> +                   eeh_dev_check_failure(pdn_to_eeh_dev(pdn)))
+> +                       ret = PCIBIOS_DEVICE_NOT_FOUND;
+> +       } else {
+> +               struct pci_controller *phb = pci_bus_to_host(bus);
+> +
+> +               ret = rtas_read_raw_config(phb->buid, bus->number, devfn,
+> +                                          where, size, val);
+> +       }
+>
+>         return ret;
+>  }
+>
+> +static int rtas_write_raw_config(unsigned long buid, int busno, unsigned int devfn,
+> +                                int where, int size, u32 val)
+> +{
+> +       unsigned long addr = rtas_config_addr(busno, devfn, where);
+> +       int ret;
+> +
+> +       if (buid) {
+> +               ret = rtas_call(ibm_write_pci_config, 5, 1, NULL, addr,
+> +                               BUID_HI(buid), BUID_LO(buid), size, (ulong)val);
+> +       } else {
+> +               ret = rtas_call(write_pci_config, 3, 1, NULL, addr, size, (ulong)val);
+> +       }
+> +
+> +       if (ret)
+> +               return PCIBIOS_DEVICE_NOT_FOUND;
+> +
+> +       return PCIBIOS_SUCCESSFUL;
+> +}
+> +
+>  int rtas_write_config(struct pci_dn *pdn, int where, int size, u32 val)
+>  {
+> -       unsigned long buid, addr;
+>         int ret;
+>
+>         if (!pdn)
+> @@ -122,15 +156,8 @@ int rtas_write_config(struct pci_dn *pdn, int where, int size, u32 val)
+>                 return PCIBIOS_SET_FAILED;
+>  #endif
+>
+> -       addr = rtas_config_addr(pdn->busno, pdn->devfn, where);
+> -       buid = pdn->phb->buid;
+> -       if (buid) {
+> -               ret = rtas_call(ibm_write_pci_config, 5, 1, NULL, addr,
+> -                       BUID_HI(buid), BUID_LO(buid), size, (ulong) val);
+> -       } else {
+> -               ret = rtas_call(write_pci_config, 3, 1, NULL, addr, size, (ulong)val);
+> -       }
+> -
+> +       ret = rtas_write_raw_config(pdn->phb->buid, pdn->busno, pdn->devfn,
+> +                                   where, size, val);
+>         if (ret)
+>                 return PCIBIOS_DEVICE_NOT_FOUND;
+>
+> @@ -141,12 +168,20 @@ static int rtas_pci_write_config(struct pci_bus *bus,
+>                                  unsigned int devfn,
+>                                  int where, int size, u32 val)
+>  {
+> -       struct pci_dn *pdn;
+> +       struct pci_dn *pdn = pci_get_pdn_by_devfn(bus, devfn);
+> +       int ret;
+>
+> -       pdn = pci_get_pdn_by_devfn(bus, devfn);
+> +       if (pdn) {
+> +               /* Validity of pdn is checked in here. */
+> +               ret = rtas_write_config(pdn, where, size, val);
+> +       } else {
+> +               struct pci_controller *phb = pci_bus_to_host(bus);
+>
+> -       /* Validity of pdn is checked in here. */
+> -       return rtas_write_config(pdn, where, size, val);
+> +               ret = rtas_write_raw_config(phb->buid, bus->number, devfn,
+> +                                           where, size, val);
+> +       }
+> +
+> +       return ret;
+>  }
+>
+>  static struct pci_ops rtas_pci_ops = {
+> diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
+> index ef9448a907c6..41a381dfc2a1 100644
+> --- a/arch/powerpc/platforms/powernv/pci.c
+> +++ b/arch/powerpc/platforms/powernv/pci.c
+> @@ -652,30 +652,29 @@ static void pnv_pci_config_check_eeh(struct pci_dn *pdn)
+>         }
+>  }
+>
+> -int pnv_pci_cfg_read(struct pci_dn *pdn,
+> -                    int where, int size, u32 *val)
+> +static int pnv_pci_cfg_read_raw(u64 phb_id, int busno, unsigned int devfn,
+> +                               int where, int size, u32 *val)
+>  {
+> -       struct pnv_phb *phb = pdn->phb->private_data;
+> -       u32 bdfn = (pdn->busno << 8) | pdn->devfn;
+> +       u32 bdfn = (busno << 8) | devfn;
+>         s64 rc;
+>
+>         switch (size) {
+>         case 1: {
+>                 u8 v8;
+> -               rc = opal_pci_config_read_byte(phb->opal_id, bdfn, where, &v8);
+> +               rc = opal_pci_config_read_byte(phb_id, bdfn, where, &v8);
+>                 *val = (rc == OPAL_SUCCESS) ? v8 : 0xff;
+>                 break;
+>         }
+>         case 2: {
+>                 __be16 v16;
+> -               rc = opal_pci_config_read_half_word(phb->opal_id, bdfn, where,
+> -                                                  &v16);
+> +               rc = opal_pci_config_read_half_word(phb_id, bdfn, where,
+> +                                                   &v16);
+>                 *val = (rc == OPAL_SUCCESS) ? be16_to_cpu(v16) : 0xffff;
+>                 break;
+>         }
+>         case 4: {
+>                 __be32 v32;
+> -               rc = opal_pci_config_read_word(phb->opal_id, bdfn, where, &v32);
+> +               rc = opal_pci_config_read_word(phb_id, bdfn, where, &v32);
+>                 *val = (rc == OPAL_SUCCESS) ? be32_to_cpu(v32) : 0xffffffff;
+>                 break;
+>         }
+> @@ -684,27 +683,28 @@ int pnv_pci_cfg_read(struct pci_dn *pdn,
+>         }
+>
+>         pr_devel("%s: bus: %x devfn: %x +%x/%x -> %08x\n",
+> -                __func__, pdn->busno, pdn->devfn, where, size, *val);
+> +                __func__, busno, devfn, where, size, *val);
+> +
+>         return PCIBIOS_SUCCESSFUL;
+>  }
+>
+> -int pnv_pci_cfg_write(struct pci_dn *pdn,
+> -                     int where, int size, u32 val)
+> +static int pnv_pci_cfg_write_raw(u64 phb_id, int busno, unsigned int devfn,
+> +                                int where, int size, u32 val)
+>  {
+> -       struct pnv_phb *phb = pdn->phb->private_data;
+> -       u32 bdfn = (pdn->busno << 8) | pdn->devfn;
+> +       u32 bdfn = (busno << 8) | devfn;
+>
+>         pr_devel("%s: bus: %x devfn: %x +%x/%x -> %08x\n",
+> -                __func__, pdn->busno, pdn->devfn, where, size, val);
+> +                __func__, busno, devfn, where, size, val);
+> +
+>         switch (size) {
+>         case 1:
+> -               opal_pci_config_write_byte(phb->opal_id, bdfn, where, val);
+> +               opal_pci_config_write_byte(phb_id, bdfn, where, val);
+>                 break;
+>         case 2:
+> -               opal_pci_config_write_half_word(phb->opal_id, bdfn, where, val);
+> +               opal_pci_config_write_half_word(phb_id, bdfn, where, val);
+>                 break;
+>         case 4:
+> -               opal_pci_config_write_word(phb->opal_id, bdfn, where, val);
+> +               opal_pci_config_write_word(phb_id, bdfn, where, val);
+>                 break;
+>         default:
+>                 return PCIBIOS_FUNC_NOT_SUPPORTED;
+> @@ -713,6 +713,24 @@ int pnv_pci_cfg_write(struct pci_dn *pdn,
+>         return PCIBIOS_SUCCESSFUL;
+>  }
+>
+> +int pnv_pci_cfg_read(struct pci_dn *pdn,
+> +                    int where, int size, u32 *val)
+> +{
+> +       struct pnv_phb *phb = pdn->phb->private_data;
+> +
+> +       return pnv_pci_cfg_read_raw(phb->opal_id, pdn->busno, pdn->devfn,
+> +                                   where, size, val);
+> +}
+> +
+> +int pnv_pci_cfg_write(struct pci_dn *pdn,
+> +                     int where, int size, u32 val)
+> +{
+> +       struct pnv_phb *phb = pdn->phb->private_data;
+> +
+> +       return pnv_pci_cfg_write_raw(phb->opal_id, pdn->busno, pdn->devfn,
+> +                                    where, size, val);
+> +}
+> +
+>  #if CONFIG_EEH
+>  static bool pnv_pci_cfg_check(struct pci_dn *pdn)
+>  {
+> @@ -748,13 +766,15 @@ static int pnv_pci_read_config(struct pci_bus *bus,
+>                                int where, int size, u32 *val)
+>  {
+>         struct pci_dn *pdn;
+> -       struct pnv_phb *phb;
+> +       struct pci_controller *hose = pci_bus_to_host(bus);
+> +       struct pnv_phb *phb = hose->private_data;
+>         int ret;
+>
+>         *val = 0xFFFFFFFF;
+>         pdn = pci_get_pdn_by_devfn(bus, devfn);
+>         if (!pdn)
+> -               return PCIBIOS_DEVICE_NOT_FOUND;
+> +               return pnv_pci_cfg_read_raw(phb->opal_id, bus->number, devfn,
+> +                                           where, size, val);
+>
+>         if (!pnv_pci_cfg_check(pdn))
+>                 return PCIBIOS_DEVICE_NOT_FOUND;
+> @@ -777,12 +797,14 @@ static int pnv_pci_write_config(struct pci_bus *bus,
+>                                 int where, int size, u32 val)
+>  {
+>         struct pci_dn *pdn;
+> -       struct pnv_phb *phb;
+> +       struct pci_controller *hose = pci_bus_to_host(bus);
+> +       struct pnv_phb *phb = hose->private_data;
+>         int ret;
+>
+>         pdn = pci_get_pdn_by_devfn(bus, devfn);
+>         if (!pdn)
+> -               return PCIBIOS_DEVICE_NOT_FOUND;
+> +               return pnv_pci_cfg_write_raw(phb->opal_id, bus->number, devfn,
+> +                                            where, size, val);
+>
+>         if (!pnv_pci_cfg_check(pdn))
+>                 return PCIBIOS_DEVICE_NOT_FOUND;
+> --
+> 2.20.1
+>
+
+Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
