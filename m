@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 38E9310A15
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2019 17:32:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0367310A3B
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2019 17:44:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfEAPco (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 May 2019 11:32:44 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40909 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbfEAPco (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 May 2019 11:32:44 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h4so24985919wre.7
-        for <linux-pci@vger.kernel.org>; Wed, 01 May 2019 08:32:42 -0700 (PDT)
+        id S1726797AbfEAPoU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 May 2019 11:44:20 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39345 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbfEAPoU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 May 2019 11:44:20 -0400
+Received: by mail-wr1-f66.google.com with SMTP id a9so25029495wrp.6
+        for <linux-pci@vger.kernel.org>; Wed, 01 May 2019 08:44:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Bc+88LNCGPhcKuTHpLbNRlZ4s3Qvo4tvElVwnp97sOM=;
-        b=JsP8JCpFanRtIn2BKY6FRVQJBziPR8jAh6Zm0ODvRcCIKJuyOcAAPKb6kkkv7wY8DV
-         isC9TDa1aXCwuCVpCvl0LTOUASYXbdzj9lSMYdFo5U/6FKlmblWNE0RgGREO4aAGX2c3
-         A+7NoL02RKVXP4+PsTcOVc56/7DiM0sQMr95Q=
+        bh=ihqeIyGh+Y0PhIVYUkh50s+LpirgFvDtjhB/Se6zeC8=;
+        b=gNkzwNiArWy5yewD/+hCc/NoNCTC4qqIVgOLD0Em21KOQs330a4EVeaHeS52tSmWif
+         zhUZJP4XmgDWOwMejTM0kSJpYHbwQJPL8hEKaH7qArPj7UoNmCoPoeXBGsx5gYT4a5wl
+         9i57NGYnzfI6HOk9fkB/GcNW1pbqu40Ii6kHk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Bc+88LNCGPhcKuTHpLbNRlZ4s3Qvo4tvElVwnp97sOM=;
-        b=qy9Ux8XHpc0+Tvr8stnVSsRcSo2wbzswxgobxPz7RmrGSAc++yO3SUB3tpzcMYoBvT
-         lUP4i+mqb3B17lccCtguLU21H53ArmRrbuoC+dG+U/yg0Pzn9q/NdSSdEDUUgRueSwaK
-         Jgc/RgHGeT0TAaUzmYkjf0AoeDRnMTB6sOLZsif8Mdw/4WmxYnsBg8Ddf623X2Kv67Z1
-         42oqgSkcEfFMyBS+5XiiK1cIoAZdA8ISNfE86icuFphjsiLameU2mga2IblHonMkjA9j
-         d1zAu2304jD5w5YvvbYLB2sHNKDnB7RFG65+rGdIq9QnSxfH7Dlq4PwxX+zCMDQG4fCh
-         M25A==
-X-Gm-Message-State: APjAAAXgKWRqgs2004M9g0vwKP47xaKWirSQJlUiQLng2DrWFUL0GGWx
-        Xw7K++FIf/7bT9qm00dlGucvU2jg4cECap6TEVgRKw==
-X-Google-Smtp-Source: APXvYqwm4dF+ilypzwhJxCFpqR/YdSrKNU6TMcP6g6SaCODNwK+8KyS/sCAdDKibwHfpnUOEbNMevJmVhTKnZxhR+0Y=
-X-Received: by 2002:adf:fcc8:: with SMTP id f8mr34845110wrs.250.1556724761543;
- Wed, 01 May 2019 08:32:41 -0700 (PDT)
+        bh=ihqeIyGh+Y0PhIVYUkh50s+LpirgFvDtjhB/Se6zeC8=;
+        b=JJkXTvxGPay5c4yPYlBv3i9IcvOPkP/u6w753O0bCxPWtZh53IpMY+SL+opcvclmVn
+         7z3YMNP+QjC6XTZtDuGyOUwiF3qZYgjNrkMhiG9xXELrDxqwX3IbO47VmuQfiqjC+QYL
+         WbB71k2PojR6dXhCZ1MJaeZhOEYhCzrmqObAcyBeaWFVvLQtGLXtC3TVGA7QCTmiSSBj
+         Gg1MYHUb/ug/SaWssxXtRqYd3JQBvXjKMdr+Q1oWrbYfYVJan2mumHNIM5DCX/J6s2WH
+         ITR+vr1R87ogCeAEfJbPCvKCapbifOTTijx/MZ2qXBU6leAGaBkyYQUnDwEOHrlI53Wa
+         IyYw==
+X-Gm-Message-State: APjAAAXbOIHjALuN0UoY1J5hNOYIRUjz59JoyddlBoehgdDN8Sy80jSf
+        I9+NRxlUQVpiAcjcCkNpj2bkNCpBi0TMBoO4UU5Jpw==
+X-Google-Smtp-Source: APXvYqxXc5jGnGaJFZyfJ2rjjTdiDutg0T5xSEPxqrkoHXM+EaLYQMJpSL5Z/eCSoYW68v9gMTV6cUYlNz/ZT9sBNR0=
+X-Received: by 2002:a5d:4fc3:: with SMTP id h3mr8375115wrw.54.1556725458010;
+ Wed, 01 May 2019 08:44:18 -0700 (PDT)
 MIME-Version: 1.0
 References: <1555038815-31916-1-git-send-email-srinath.mannam@broadcom.com>
- <20190501113038.GA7961@e121166-lin.cambridge.arm.com> <20190501125530.GA15590@google.com>
- <119be78f-34f5-c19b-d41b-f7279e968b46@arm.com> <20190501135422.GA10726@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190501135422.GA10726@e121166-lin.cambridge.arm.com>
+ <1555038815-31916-4-git-send-email-srinath.mannam@broadcom.com> <20190501143742.GA13089@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20190501143742.GA13089@e121166-lin.cambridge.arm.com>
 From:   Srinath Mannam <srinath.mannam@broadcom.com>
-Date:   Wed, 1 May 2019 21:02:30 +0530
-Message-ID: <CABe79T7Oqs4KcX+m3EWXioDHAZ0xnRi+D0riPDDKWA4u1=nu+g@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] PCIe Host request to reserve IOVA
+Date:   Wed, 1 May 2019 21:14:06 +0530
+Message-ID: <CABe79T58F+xikMGthd4wc19qQzC3=Q4znaaf6qDMjBXn+PBpfw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] PCI: iproc: Add sorted dma ranges resource entries
+ to host bridge
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
         Joerg Roedel <joro@8bytes.org>, poza@codeaurora.org,
         Ray Jui <rjui@broadcom.com>,
         BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
@@ -62,103 +62,136 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi Lorenzo,
 
-Thanks a lot. Please see my reply below.
+Please see my reply below.
 
-On Wed, May 1, 2019 at 7:24 PM Lorenzo Pieralisi
+On Wed, May 1, 2019 at 8:07 PM Lorenzo Pieralisi
 <lorenzo.pieralisi@arm.com> wrote:
 >
-> On Wed, May 01, 2019 at 02:20:56PM +0100, Robin Murphy wrote:
-> > On 2019-05-01 1:55 pm, Bjorn Helgaas wrote:
-> > > On Wed, May 01, 2019 at 12:30:38PM +0100, Lorenzo Pieralisi wrote:
-> > > > On Fri, Apr 12, 2019 at 08:43:32AM +0530, Srinath Mannam wrote:
-> > > > > Few SOCs have limitation that their PCIe host can't allow few inbound
-> > > > > address ranges. Allowed inbound address ranges are listed in dma-ranges
-> > > > > DT property and this address ranges are required to do IOVA mapping.
-> > > > > Remaining address ranges have to be reserved in IOVA mapping.
-> > > > >
-> > > > > PCIe Host driver of those SOCs has to list resource entries of allowed
-> > > > > address ranges given in dma-ranges DT property in sorted order. This
-> > > > > sorted list of resources will be processed and reserve IOVA address for
-> > > > > inaccessible address holes while initializing IOMMU domain.
-> > > > >
-> > > > > This patch set is based on Linux-5.0-rc2.
-> > > > >
-> > > > > Changes from v3:
-> > > > >    - Addressed Robin Murphy review comments.
-> > > > >      - pcie-iproc: parse dma-ranges and make sorted resource list.
-> > > > >      - dma-iommu: process list and reserve gaps between entries
-> > > > >
-> > > > > Changes from v2:
-> > > > >    - Patch set rebased to Linux-5.0-rc2
-> > > > >
-> > > > > Changes from v1:
-> > > > >    - Addressed Oza review comments.
-> > > > >
-> > > > > Srinath Mannam (3):
-> > > > >    PCI: Add dma_ranges window list
-> > > > >    iommu/dma: Reserve IOVA for PCIe inaccessible DMA address
-> > > > >    PCI: iproc: Add sorted dma ranges resource entries to host bridge
-> > > > >
-> > > > >   drivers/iommu/dma-iommu.c           | 19 ++++++++++++++++
-> > > > >   drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
-> > > > >   drivers/pci/probe.c                 |  3 +++
-> > > > >   include/linux/pci.h                 |  1 +
-> > > > >   4 files changed, 66 insertions(+), 1 deletion(-)
-> > > >
-> > > > Bjorn, Joerg,
-> > > >
-> > > > this series should not affect anything in the mainline other than its
-> > > > consumer (ie patch 3); if that's the case should we consider it for v5.2
-> > > > and if yes how are we going to merge it ?
-> > >
-> > > I acked the first one
-> > >
-> > > Robin reviewed the second
-> > > (https://lore.kernel.org/lkml/e6c812d6-0cad-4cfd-defd-d7ec427a6538@arm.com)
-> > > (though I do agree with his comment about DMA_BIT_MASK()), Joerg was OK
-> > > with it if Robin was
-> > > (https://lore.kernel.org/lkml/20190423145721.GH29810@8bytes.org).
-> > >
-> > > Eric reviewed the third (and pointed out a typo).
-> > >
-> > > My Kconfiggery never got fully answered -- it looks to me as though it's
-> > > possible to build pcie-iproc without the DMA hole support, and I thought
-> > > the whole point of this series was to deal with those holes
-> > > (https://lore.kernel.org/lkml/20190418234241.GF126710@google.com).  I would
-> > > have expected something like making pcie-iproc depend on IOMMU_SUPPORT.
-> > > But Srinath didn't respond to that, so maybe it's not an issue and it
-> > > should only affect pcie-iproc anyway.
+> On Fri, Apr 12, 2019 at 08:43:35AM +0530, Srinath Mannam wrote:
+> > IPROC host has the limitation that it can use only those address ranges
+> > given by dma-ranges property as inbound address. So that the memory
+> > address holes in dma-ranges should be reserved to allocate as DMA address.
 > >
-> > Hmm, I'm sure I had at least half-written a reply on that point, but I
-> > can't seem to find it now... anyway, the gist is that these inbound
-> > windows are generally set up to cover the physical address ranges of DRAM
-> > and anything else that devices might need to DMA to. Thus if you're not
-> > using an IOMMU, the fact that devices can't access the gaps in between
-> > doesn't matter because there won't be anything there anyway; it only
-> > needs mitigating if you do use an IOMMU and start giving arbitrary
-> > non-physical addresses to the endpoint.
+> > Inbound address of host accessed by PCIe devices will not be translated
+> > before it comes to IOMMU or directly to PE.
 >
-> So basically there is no strict IOMMU_SUPPORT dependency.
-Yes, without IOMMU_SUPPORT, all inbound addresses will fall inside dma-ranges.
-Issue is only in the case of IOMMU enable, this patch will address by
-reserving non-allowed
-address (holes of dma-ranges) by reserving them.
+> What does that mean "directly to PE" ?
+In general, with IOMMU enable case, inbound address access of endpoint
+will come to IOMMU.
+If IOMMU disable then it comes to PE (processing element - ARM).
 >
-> > > So bottom line, I'm fine with merging it for v5.2.  Do you want to merge
-> > > it, Lorenzo, or ...?
-> >
-> > This doesn't look like it will conflict with the other DMA ops and MSI
-> > mapping changes currently in-flight for iommu-dma, so I have no
-> > objection to it going through the PCI tree for 5.2.
->
-> I will update the DMA_BIT_MASK() according to your review and fix the
-> typo Eric pointed out and push out a branch - we shall see if we can
-> include it for v5.2.
-I will send new patches with the change DMA_BIT_MASK() and typo along
-with Bjorn's comment in PATCH-1.
-
+> IIUC all you want to say is that there is no entity translating
+> PCI memory transactions addresses before they it the PCI host
+> controller inbound regions address decoder.
+In our SOC we have an entity (Inside PCIe RC) which will translate
+inbound address before it goes to
+IOMMU or PE. In other SOCs this will not be the case, all inbound
+address access will go to IOMMU or
+PE.
 Regards,
 Srinath.
 >
-> Thanks,
-> Lorenzo
+> > But the limitation of this host is, access to few address ranges are
+> > ignored. So that IOVA ranges for these address ranges have to be
+> > reserved.
+> >
+> > All allowed address ranges are listed in dma-ranges DT parameter. These
+> > address ranges are converted as resource entries and listed in sorted
+> > order add added to dma_ranges list of PCI host bridge structure.
+> >
+> > Ex:
+> > dma-ranges = < \
+> >   0x43000000 0x00 0x80000000 0x00 0x80000000 0x00 0x80000000 \
+> >   0x43000000 0x08 0x00000000 0x08 0x00000000 0x08 0x00000000 \
+> >   0x43000000 0x80 0x00000000 0x80 0x00000000 0x40 0x00000000>
+> >
+> > In the above example of dma-ranges, memory address from
+> > 0x0 - 0x80000000,
+> > 0x100000000 - 0x800000000,
+> > 0x1000000000 - 0x8000000000 and
+> > 0x10000000000 - 0xffffffffffffffff.
+> > are not allowed to use as inbound addresses.
+> >
+> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> > Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
+> > Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
+> > ---
+> >  drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 43 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> > index c20fd6b..94ba5c0 100644
+> > --- a/drivers/pci/controller/pcie-iproc.c
+> > +++ b/drivers/pci/controller/pcie-iproc.c
+> > @@ -1146,11 +1146,43 @@ static int iproc_pcie_setup_ib(struct iproc_pcie *pcie,
+> >       return ret;
+> >  }
+> >
+> > +static int
+> > +iproc_pcie_add_dma_range(struct device *dev, struct list_head *resources,
+> > +                      struct of_pci_range *range)
+> > +{
+> > +     struct resource *res;
+> > +     struct resource_entry *entry, *tmp;
+> > +     struct list_head *head = resources;
+> > +
+> > +     res = devm_kzalloc(dev, sizeof(struct resource), GFP_KERNEL);
+> > +     if (!res)
+> > +             return -ENOMEM;
+> > +
+> > +     resource_list_for_each_entry(tmp, resources) {
+> > +             if (tmp->res->start < range->cpu_addr)
+> > +                     head = &tmp->node;
+> > +     }
+> > +
+> > +     res->start = range->cpu_addr;
+> > +     res->end = res->start + range->size - 1;
+> > +
+> > +     entry = resource_list_create_entry(res, 0);
+> > +     if (!entry)
+> > +             return -ENOMEM;
+> > +
+> > +     entry->offset = res->start - range->cpu_addr;
+> > +     resource_list_add(entry, head);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
+> >  {
+> > +     struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
+> >       struct of_pci_range range;
+> >       struct of_pci_range_parser parser;
+> >       int ret;
+> > +     LIST_HEAD(resources);
+> >
+> >       /* Get the dma-ranges from DT */
+> >       ret = of_pci_dma_range_parser_init(&parser, pcie->dev->of_node);
+> > @@ -1158,13 +1190,23 @@ static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
+> >               return ret;
+> >
+> >       for_each_of_pci_range(&parser, &range) {
+> > +             ret = iproc_pcie_add_dma_range(pcie->dev,
+> > +                                            &resources,
+> > +                                            &range);
+> > +             if (ret)
+> > +                     goto out;
+> >               /* Each range entry corresponds to an inbound mapping region */
+> >               ret = iproc_pcie_setup_ib(pcie, &range, IPROC_PCIE_IB_MAP_MEM);
+> >               if (ret)
+> > -                     return ret;
+> > +                     goto out;
+> >       }
+> >
+> > +     list_splice_init(&resources, &host->dma_ranges);
+> > +
+> >       return 0;
+> > +out:
+> > +     pci_free_resource_list(&resources);
+> > +     return ret;
+> >  }
+> >
+> >  static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
+> > --
+> > 2.7.4
+> >
