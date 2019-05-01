@@ -2,172 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DF71A10C17
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2019 19:37:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73D1710C8B
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2019 20:01:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfEARhS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 May 2019 13:37:18 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37421 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726019AbfEARhS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 May 2019 13:37:18 -0400
-Received: by mail-ed1-f65.google.com with SMTP id w37so15504685edw.4
-        for <linux-pci@vger.kernel.org>; Wed, 01 May 2019 10:37:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Ax6W8oR/LKpnpvm9+BdZQ4COcLSu6HmYx3pNJLAuU8g=;
-        b=cUf6xcDZO0zeRRKPcX3zT3wtCPz/pkDZyrdTIv5OoPwwCqQWBtRWEufz5txdgRE06Q
-         zj/lKfg5dR/zrATFrE2bQiz90VYSyN6rtEXj+S9iUvmNqC1gw5OaIspwgjQmGUMxj0FT
-         pXwWJD6kXv+h0ZCVEciD4DUaiWD8v/2kQFGF8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Ax6W8oR/LKpnpvm9+BdZQ4COcLSu6HmYx3pNJLAuU8g=;
-        b=Fguqlicl3/xclwU9IvHnByzUFSXYB5ARW3oltmnOnGMZ/Lo4uUpKpTKu6ucsfO5Vmf
-         M5nMaJju54HWOeP+tNo+4T/J84FAcN15GBaQwBQQQC2UhQ5Xr91JrvnpE2I7bgOZgjCi
-         0Sjml5pxmPyAyAvtENv9RniGyTxIfo8AxlJore5xHuETm+fXNqvuqKn7lfgdXkcuMdVT
-         4QIaKB6Rn6Xf1+6WTJ2UkCAapgHFO9cZex+PxXE/uo+gkfD8Enh8PBqMxq6Vvsj6SX+V
-         +COtOe6/z43eq5CaO7tAhpemamAYxju49acdekliOTvGxnRr1M0nkeGYjRC1tsrnxbZL
-         K7+g==
-X-Gm-Message-State: APjAAAVQwgX5pOVDQZOt3LSe2F2dlwkPYys6wMMFbrbipRHwrcIFvjQD
-        YPxnIwcCE6fB+WLVEEaMuetGxQ==
-X-Google-Smtp-Source: APXvYqxvTmdFByFxL1w4pHspctPX+YRxQcowPlRPGwXZlaSHhqy7ThNL9K/rQTMfCpMDUxaJgeL6sg==
-X-Received: by 2002:a50:a389:: with SMTP id s9mr10033513edb.113.1556732236330;
-        Wed, 01 May 2019 10:37:16 -0700 (PDT)
-Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id s6sm2462671eji.13.2019.05.01.10.37.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 01 May 2019 10:37:15 -0700 (PDT)
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        poza@codeaurora.org, Ray Jui <rjui@broadcom.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v5 3/3] PCI: iproc: Add sorted dma ranges resource entries to host bridge
-Date:   Wed,  1 May 2019 23:06:26 +0530
-Message-Id: <1556732186-21630-4-git-send-email-srinath.mannam@broadcom.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556732186-21630-1-git-send-email-srinath.mannam@broadcom.com>
-References: <1556732186-21630-1-git-send-email-srinath.mannam@broadcom.com>
+        id S1726069AbfEASBc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 May 2019 14:01:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726019AbfEASBc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 1 May 2019 14:01:32 -0400
+Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 877A02089E;
+        Wed,  1 May 2019 18:01:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556733691;
+        bh=qA8hFYpfD/GK5NUPgh1PBCjGxpjqeSIyPpWHoad3VIQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vtKgTvpkH2e0iqJ/8cTEmi3qzZW0E9cmb48NFC7IZkKjJsm+1K3/+GDKusrZmkJ3J
+         TAK49DakAqVRw89DmJ59QwParvbf6AhizuGxF7k80xjusTvXJdZ6gupL+nEV2/2+3t
+         BFWv2cnsd15a26Qoa3NMfPkp1rHUrNgKZTxfrAyk=
+Date:   Wed, 1 May 2019 13:01:29 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Keith Busch <keith.busch@intel.com>
+Cc:     linux-pci@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <alex_gagniuc@dellteam.com>
+Subject: Re: [PATCHv2] PCI/LINK: Add Kconfig option (default off)
+Message-ID: <20190501180129.GA36824@google.com>
+References: <20190501142942.26972-1-keith.busch@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190501142942.26972-1-keith.busch@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-IPROC host has the limitation that it can use only those address ranges
-given by dma-ranges property as inbound address. So that the memory
-address holes in dma-ranges should be reserved to allocate as DMA address.
+On Wed, May 01, 2019 at 08:29:42AM -0600, Keith Busch wrote:
+> e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth
+> notification") added dmesg logging whenever a link changes speed or width
+> to a state that is considered degraded.  Unfortunately, it cannot
+> differentiate signal integrity-related link changes from those
+> intentionally initiated by an endpoint driver, including drivers that may
+> live in userspace or VMs when making use of vfio-pci.  Some GPU drivers
+> actively manage the link state to save power, which generates a stream of
+> messages like this:
+> 
+>   vfio-pci 0000:07:00.0: 32.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s x16 link at 0000:00:02.0 (capable of 64.000 Gb/s with 5 GT/s x16 link)
+> 
+> Since we can't distinguish the intentional changes from the signal
+> integrity issues, leave the reporting turned off by default.  Add a Kconfig
+> option to turn it on if desired.
+> 
+> Fixes: e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth notification")
+> Signed-off-by: Keith Busch <keith.busch@intel.com>
 
-Inbound address of host accessed by PCIe devices will not be translated
-before it comes to IOMMU or directly to PE. But the limitation of this
-host is, access to few address ranges are ignored. So that IOVA ranges
-for these address ranges have to be reserved.
+Applied to for-linus for v5.1, thanks!
 
-All allowed address ranges are listed in dma-ranges DT parameter. These
-address ranges are converted as resource entries and listed in sorted
-order and added to dma_ranges list of PCI host bridge structure.
-
-Ex:
-dma-ranges = < \
-  0x43000000 0x00 0x80000000 0x00 0x80000000 0x00 0x80000000 \
-  0x43000000 0x08 0x00000000 0x08 0x00000000 0x08 0x00000000 \
-  0x43000000 0x80 0x00000000 0x80 0x00000000 0x40 0x00000000>
-
-In the above example of dma-ranges, memory address from
-0x0 - 0x80000000,
-0x100000000 - 0x800000000,
-0x1000000000 - 0x8000000000 and
-0x10000000000 - 0xffffffffffffffff.
-are not allowed to be used as inbound addresses.
-
-Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
-Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
----
- drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 43 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-index c20fd6b..94ba5c0 100644
---- a/drivers/pci/controller/pcie-iproc.c
-+++ b/drivers/pci/controller/pcie-iproc.c
-@@ -1146,11 +1146,43 @@ static int iproc_pcie_setup_ib(struct iproc_pcie *pcie,
- 	return ret;
- }
- 
-+static int
-+iproc_pcie_add_dma_range(struct device *dev, struct list_head *resources,
-+			 struct of_pci_range *range)
-+{
-+	struct resource *res;
-+	struct resource_entry *entry, *tmp;
-+	struct list_head *head = resources;
-+
-+	res = devm_kzalloc(dev, sizeof(struct resource), GFP_KERNEL);
-+	if (!res)
-+		return -ENOMEM;
-+
-+	resource_list_for_each_entry(tmp, resources) {
-+		if (tmp->res->start < range->cpu_addr)
-+			head = &tmp->node;
-+	}
-+
-+	res->start = range->cpu_addr;
-+	res->end = res->start + range->size - 1;
-+
-+	entry = resource_list_create_entry(res, 0);
-+	if (!entry)
-+		return -ENOMEM;
-+
-+	entry->offset = res->start - range->cpu_addr;
-+	resource_list_add(entry, head);
-+
-+	return 0;
-+}
-+
- static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
- {
-+	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
- 	struct of_pci_range range;
- 	struct of_pci_range_parser parser;
- 	int ret;
-+	LIST_HEAD(resources);
- 
- 	/* Get the dma-ranges from DT */
- 	ret = of_pci_dma_range_parser_init(&parser, pcie->dev->of_node);
-@@ -1158,13 +1190,23 @@ static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
- 		return ret;
- 
- 	for_each_of_pci_range(&parser, &range) {
-+		ret = iproc_pcie_add_dma_range(pcie->dev,
-+					       &resources,
-+					       &range);
-+		if (ret)
-+			goto out;
- 		/* Each range entry corresponds to an inbound mapping region */
- 		ret = iproc_pcie_setup_ib(pcie, &range, IPROC_PCIE_IB_MAP_MEM);
- 		if (ret)
--			return ret;
-+			goto out;
- 	}
- 
-+	list_splice_init(&resources, &host->dma_ranges);
-+
- 	return 0;
-+out:
-+	pci_free_resource_list(&resources);
-+	return ret;
- }
- 
- static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
--- 
-2.7.4
-
+> ---
+>  drivers/pci/pcie/Kconfig   | 8 ++++++++
+>  drivers/pci/pcie/Makefile  | 2 +-
+>  drivers/pci/pcie/portdrv.h | 4 ++++
+>  3 files changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+> index 5cbdbca904ac..a70efdffe647 100644
+> --- a/drivers/pci/pcie/Kconfig
+> +++ b/drivers/pci/pcie/Kconfig
+> @@ -142,3 +142,11 @@ config PCIE_PTM
+>  
+>  	  This is only useful if you have devices that support PTM, but it
+>  	  is safe to enable even if you don't.
+> +
+> +config PCIE_BW
+> +	bool "PCI Express Bandwidth Change Notification"
+> +	depends on PCIEPORTBUS
+> +	help
+> +	  This enables PCI Express Bandwidth Change Notification. If
+> +	  you know link width or rate changes occur only to correct
+> +	  unreliable links, you may answer Y.
+> diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
+> index f1d7bc1e5efa..efb9d2e71e9e 100644
+> --- a/drivers/pci/pcie/Makefile
+> +++ b/drivers/pci/pcie/Makefile
+> @@ -3,7 +3,6 @@
+>  # Makefile for PCI Express features and port driver
+>  
+>  pcieportdrv-y			:= portdrv_core.o portdrv_pci.o err.o
+> -pcieportdrv-y			+= bw_notification.o
+>  
+>  obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o
+>  
+> @@ -13,3 +12,4 @@ obj-$(CONFIG_PCIEAER_INJECT)	+= aer_inject.o
+>  obj-$(CONFIG_PCIE_PME)		+= pme.o
+>  obj-$(CONFIG_PCIE_DPC)		+= dpc.o
+>  obj-$(CONFIG_PCIE_PTM)		+= ptm.o
+> +obj-$(CONFIG_PCIE_BW)		+= bw_notification.o
+> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+> index 1d50dc58ac40..944827a8c7d3 100644
+> --- a/drivers/pci/pcie/portdrv.h
+> +++ b/drivers/pci/pcie/portdrv.h
+> @@ -49,7 +49,11 @@ int pcie_dpc_init(void);
+>  static inline int pcie_dpc_init(void) { return 0; }
+>  #endif
+>  
+> +#ifdef CONFIG_PCIE_BW
+>  int pcie_bandwidth_notification_init(void);
+> +#else
+> +static inline int pcie_bandwidth_notification_init(void) { return 0; }
+> +#endif
+>  
+>  /* Port Type */
+>  #define PCIE_ANY_PORT			(~0)
+> -- 
+> 2.14.4
+> 
