@@ -2,122 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 73D1710C8B
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2019 20:01:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5909E10D3C
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2019 21:32:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726069AbfEASBc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 May 2019 14:01:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbfEASBc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 1 May 2019 14:01:32 -0400
-Received: from localhost (odyssey.drury.edu [64.22.249.253])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 877A02089E;
-        Wed,  1 May 2019 18:01:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556733691;
-        bh=qA8hFYpfD/GK5NUPgh1PBCjGxpjqeSIyPpWHoad3VIQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vtKgTvpkH2e0iqJ/8cTEmi3qzZW0E9cmb48NFC7IZkKjJsm+1K3/+GDKusrZmkJ3J
-         TAK49DakAqVRw89DmJ59QwParvbf6AhizuGxF7k80xjusTvXJdZ6gupL+nEV2/2+3t
-         BFWv2cnsd15a26Qoa3NMfPkp1rHUrNgKZTxfrAyk=
-Date:   Wed, 1 May 2019 13:01:29 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Keith Busch <keith.busch@intel.com>
-Cc:     linux-pci@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <alex_gagniuc@dellteam.com>
-Subject: Re: [PATCHv2] PCI/LINK: Add Kconfig option (default off)
-Message-ID: <20190501180129.GA36824@google.com>
-References: <20190501142942.26972-1-keith.busch@intel.com>
+        id S1726285AbfEATch (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 May 2019 15:32:37 -0400
+Received: from mail-wm1-f51.google.com ([209.85.128.51]:52298 "EHLO
+        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfEATcg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 May 2019 15:32:36 -0400
+Received: by mail-wm1-f51.google.com with SMTP id j13so244856wmh.2
+        for <linux-pci@vger.kernel.org>; Wed, 01 May 2019 12:32:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gigaio-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hN7pPfFuA5DAqdy1xA+mZ+vwXrbfEuaD/a9O9EtXWTI=;
+        b=iP7UPBc0+cXioclu5w12nOCUDrmEPTsrT7rwKSYir8mOF61cKui2joTwd+1/VGNvYz
+         Vkg9lyQKyabuZtAH1yIyFVQHk765tI6UGjXRp82GwrCq+uFLY5syIMpJLp693O2LbuKD
+         M1IsRpxJCZHGxIoMPCNEq9FVu+4mCoSupWDGPkdTRnJWNpYBxajImuUKqgTD/gHWGr9Y
+         aZUtnkZaHCKkfXk9YTAAZMSWocrcNhjPkR/h0wBoWwxkRskOiXbAXlcH5QcCZ21UE7BG
+         CETWH1lNF7Rvtxx8Em+NEkO3uJ8YSbRmW5xjKhRJ3S15SEPPQCHuPzAm9eu6tgRces6G
+         qSyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hN7pPfFuA5DAqdy1xA+mZ+vwXrbfEuaD/a9O9EtXWTI=;
+        b=lHY2Af5WlmneAVH1QdKGACsc6FYEEhLEw8jq+pkdaihNzLtU6sji+79uqS+n+p2RMs
+         nwhzGJj6j6oPj/WyS3yhrQolA24gg1h9l1j6JNsv4FYD05dvlfPkv7G/C/8yxqatnLSt
+         KS9dpnZPjV/O9XMjaI1/kIUczZjapyLwcOXHzXbCunNaGusnmkokuQsHvmn6GgRQkgz4
+         mMIR3k5h/4l9b0AbYf/r2A7h54rwza6p4550mOO4NKQNDMNuDKEEw85h5ez0BI2RU7J4
+         2ab5OwAp5G9SLk0VumUg+O5Jj2y3sPp6HPvFPk0Gj9outeAEbKMGoHRQjdhk5HqMvU1R
+         JVkw==
+X-Gm-Message-State: APjAAAWRmz30zQZNo2iIAO5OG1VawYirjjIV/QjIp7yi59xUrBymDDqv
+        P1iFySdM+drcbAqw4sR8gRdZOI9qeUUPAGQoFCyPrg==
+X-Google-Smtp-Source: APXvYqxq04GzATRqvz8juOs4DErCb6yZuH7I1bIHu8kD23NR8MWxjXWG7pIMqLEW9U4YBl+EewPEc64CLO74BxGqXe4=
+X-Received: by 2002:a1c:ef08:: with SMTP id n8mr7814108wmh.85.1556739155024;
+ Wed, 01 May 2019 12:32:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190501142942.26972-1-keith.busch@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAOQPn8vMn4h=oGWWKa3Uge7WYMkmRAmTyhR6RPjGVtrR1hfhOQ@mail.gmail.com>
+ <4389bccb-6993-4a86-b4e4-202e971e2080@deltatee.com> <20190501155813.GB26910@localhost.localdomain>
+In-Reply-To: <20190501155813.GB26910@localhost.localdomain>
+From:   Eric Pilmore <epilmore@gigaio.com>
+Date:   Wed, 1 May 2019 12:32:23 -0700
+Message-ID: <CAOQPn8sbDjafaop2+bhB5PrxrhMWOOJ4Y5YMy6Se7+A9zrhrFg@mail.gmail.com>
+Subject: Re: NVMe peer2peer TLPs over NTB getting split
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-ntb <linux-ntb@googlegroups.com>,
+        linux-pci@vger.kernel.org, Armen Baloyan <abaloyan@gigaio.com>,
+        D Meyer <dmeyer@gigaio.com>, S Taylor <staylor@gigaio.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 01, 2019 at 08:29:42AM -0600, Keith Busch wrote:
-> e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth
-> notification") added dmesg logging whenever a link changes speed or width
-> to a state that is considered degraded.  Unfortunately, it cannot
-> differentiate signal integrity-related link changes from those
-> intentionally initiated by an endpoint driver, including drivers that may
-> live in userspace or VMs when making use of vfio-pci.  Some GPU drivers
-> actively manage the link state to save power, which generates a stream of
-> messages like this:
-> 
->   vfio-pci 0000:07:00.0: 32.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s x16 link at 0000:00:02.0 (capable of 64.000 Gb/s with 5 GT/s x16 link)
-> 
-> Since we can't distinguish the intentional changes from the signal
-> integrity issues, leave the reporting turned off by default.  Add a Kconfig
-> option to turn it on if desired.
-> 
-> Fixes: e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth notification")
-> Signed-off-by: Keith Busch <keith.busch@intel.com>
+On Wed, May 1, 2019 at 9:04 AM Keith Busch <kbusch@kernel.org> wrote:
+>
 
-Applied to for-linus for v5.1, thanks!
+> Note that Max Payload Size may not be the same across root ports,
+> so splitting transactions may be the correct thing to do under some
+> circumstances. Kernel parameter "pci=pcie_bus_peer2peer" should make
+> all MPS settings the same, though I doubt that will help for the
+> hardware desribed here.
 
-> ---
->  drivers/pci/pcie/Kconfig   | 8 ++++++++
->  drivers/pci/pcie/Makefile  | 2 +-
->  drivers/pci/pcie/portdrv.h | 4 ++++
->  3 files changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-> index 5cbdbca904ac..a70efdffe647 100644
-> --- a/drivers/pci/pcie/Kconfig
-> +++ b/drivers/pci/pcie/Kconfig
-> @@ -142,3 +142,11 @@ config PCIE_PTM
->  
->  	  This is only useful if you have devices that support PTM, but it
->  	  is safe to enable even if you don't.
-> +
-> +config PCIE_BW
-> +	bool "PCI Express Bandwidth Change Notification"
-> +	depends on PCIEPORTBUS
-> +	help
-> +	  This enables PCI Express Bandwidth Change Notification. If
-> +	  you know link width or rate changes occur only to correct
-> +	  unreliable links, you may answer Y.
-> diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
-> index f1d7bc1e5efa..efb9d2e71e9e 100644
-> --- a/drivers/pci/pcie/Makefile
-> +++ b/drivers/pci/pcie/Makefile
-> @@ -3,7 +3,6 @@
->  # Makefile for PCI Express features and port driver
->  
->  pcieportdrv-y			:= portdrv_core.o portdrv_pci.o err.o
-> -pcieportdrv-y			+= bw_notification.o
->  
->  obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o
->  
-> @@ -13,3 +12,4 @@ obj-$(CONFIG_PCIEAER_INJECT)	+= aer_inject.o
->  obj-$(CONFIG_PCIE_PME)		+= pme.o
->  obj-$(CONFIG_PCIE_DPC)		+= dpc.o
->  obj-$(CONFIG_PCIE_PTM)		+= ptm.o
-> +obj-$(CONFIG_PCIE_BW)		+= bw_notification.o
-> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-> index 1d50dc58ac40..944827a8c7d3 100644
-> --- a/drivers/pci/pcie/portdrv.h
-> +++ b/drivers/pci/pcie/portdrv.h
-> @@ -49,7 +49,11 @@ int pcie_dpc_init(void);
->  static inline int pcie_dpc_init(void) { return 0; }
->  #endif
->  
-> +#ifdef CONFIG_PCIE_BW
->  int pcie_bandwidth_notification_init(void);
-> +#else
-> +static inline int pcie_bandwidth_notification_init(void) { return 0; }
-> +#endif
->  
->  /* Port Type */
->  #define PCIE_ANY_PORT			(~0)
-> -- 
-> 2.14.4
-> 
+This is an interesting point which I had not considered before. The
+TLPs coming directly from the NVMe drive are on a MaxPayLoad path of
+256 bytes. When the TLPs get relayed from the Host Bridge, the
+originating Host Bridge (BDF=00:00.0) has a MaxPayload of 128 bytes.
+So, perhaps understandable that the TLPs would get broken up, although
+going from 256 bytes to 1 byte TLPs is rather extreme, but perhaps
+that's how this bridge deals with it.
+
+Thanks,
+Eric
