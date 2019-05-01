@@ -2,43 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C1D410C11
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2019 19:37:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B09510C14
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2019 19:37:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbfEARg7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 May 2019 13:36:59 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:37401 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfEARg7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 May 2019 13:36:59 -0400
-Received: by mail-ed1-f66.google.com with SMTP id w37so15504111edw.4
-        for <linux-pci@vger.kernel.org>; Wed, 01 May 2019 10:36:58 -0700 (PDT)
+        id S1726079AbfEARhJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 May 2019 13:37:09 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37408 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbfEARhF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 May 2019 13:37:05 -0400
+Received: by mail-ed1-f65.google.com with SMTP id w37so15504287edw.4
+        for <linux-pci@vger.kernel.org>; Wed, 01 May 2019 10:37:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=WQh6+iJ1c5LV37hewjiOUJ2VVaJB8K0iqnjk0rOcMbE=;
-        b=CEjb4MdJxi08K/sHDaK0eh5tzCmNnbKo8l7lks3hzoghFBcg/r6yFxaG++ZgfgWdOW
-         yhDjocgFxXdRp2TXI0xdQdK5/myMxON+Mu0JLn+NQ1dTx8bFetH/46D3fX3SPvCsbFnq
-         MJg+fKzdyXBskAw+hqszBABaL0ctbb+ffQuas=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=aFszwaQY5oH4KxJcDNAltHmQUtC7DYEBegh+wY9ZhAU=;
+        b=cNeTm+C8Sqi5mAJCHuRT7Oc0+dO/63ZhzRkoYfADHFXz8zh3Pndmn65kGUCDlaz81t
+         J1j2eYjGQGPsgGjy3R6Bsi/O4r3Zanvv/sQbLPmkG44qaK4qFSP4oGbz3udaTje1EMYY
+         2vcMpgjUgXXa577nrS8MTreZN9ECfSQLgLE4A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WQh6+iJ1c5LV37hewjiOUJ2VVaJB8K0iqnjk0rOcMbE=;
-        b=WFZK2RSNsBlh79GsSjdsqPuzyvOt3PvoOVu0QwlVRoLqJZuyzgd2t/EidQJwy3nQHj
-         urVdVtb0Ct4IAnu9hH8OgCI/DNtwTRXB89vkZ0IbJ7yJBftKSZOsivS1QBMCxQGrMt3e
-         ruD7y4HxR/506b7VsbctGLB0gvJ6sclRsoNYCND/h80dKh2jDosnn7WR653aOnMAhrwg
-         7iPK5v6Y2S75hnx+fFRpCSElndSxBAnEWaHIhKLBKRXfoU7FjXYeWo0wimZ72G4FNAGO
-         YJGko28qHDj29wtM2jQbWxeAaTY3pJeUvvV4fEtDxL9R3FDeqpfPlE/a0p9bLC4HEaAb
-         +goQ==
-X-Gm-Message-State: APjAAAXZ+dWIoVx1suT8OyrJho4H4YFDbIL8EvQpdZO+5aktQgaPDx7M
-        Fb6pLAIgEWrsHCe1gF9cZ3dPUA==
-X-Google-Smtp-Source: APXvYqyT8CYAd7eurrFrFI8PfzHJPMcWdZ7fq9QHDpPRgQBgROfDRCybBxqF9//b4tm21qJoRt4Byg==
-X-Received: by 2002:a17:906:e10e:: with SMTP id gj14mr15158656ejb.285.1556732217818;
-        Wed, 01 May 2019 10:36:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=aFszwaQY5oH4KxJcDNAltHmQUtC7DYEBegh+wY9ZhAU=;
+        b=hPq6hdIgnWmq3WrsMlKrsQDHVKmERdd/D48Eiigc2g8+sARx8Gv+DJTfkJx307PTnT
+         8u41vr1uUo/7xmCE+qp8AZrVtbDtH8WpqGzYC1GKdoEjYP6bwpakm6PipCNXwCNf/tFx
+         JWV9q0UEISr/B83rwucXF7/q0B2P19iZbfyozFehT9/WE86qHJ97C1WyAHLrF0tfplYl
+         jrZTqMfoHHYO8gAbUBPFlg0bH/VO3iAnFxqBbYjaWzfElrJT8Jqidw1ukuCaGPAjud47
+         r1P7VTyvREVKpzTz/26DCplDWFjsY+hjmdoLVSPre+YAXN9FM8B0o9rVAVcGt8of43uu
+         KPSQ==
+X-Gm-Message-State: APjAAAV/HTk2uW1W3h8S6kMzOtqrjKxDu6zWX841UQSrYlpv/7IUG8cr
+        WiJrWTWfMmvxaf6qxDKb5pN9hw==
+X-Google-Smtp-Source: APXvYqxGBQcZ/qykETC1CAlXAsxs7RgZAz0rpL8xixum/V2QqoCz8gnlSBK3/rkrc2PtiS9UiScFoQ==
+X-Received: by 2002:a17:906:2301:: with SMTP id l1mr25776880eja.121.1556732223856;
+        Wed, 01 May 2019 10:37:03 -0700 (PDT)
 Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id s6sm2462671eji.13.2019.05.01.10.36.51
+        by smtp.gmail.com with ESMTPSA id s6sm2462671eji.13.2019.05.01.10.36.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 01 May 2019 10:36:56 -0700 (PDT)
+        Wed, 01 May 2019 10:37:03 -0700 (PDT)
 From:   Srinath Mannam <srinath.mannam@broadcom.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -49,54 +50,74 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
 Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v5 0/3] PCIe Host request to reserve IOVA
-Date:   Wed,  1 May 2019 23:06:23 +0530
-Message-Id: <1556732186-21630-1-git-send-email-srinath.mannam@broadcom.com>
+Subject: [PATCH v5 1/3] PCI: Add dma_ranges window list
+Date:   Wed,  1 May 2019 23:06:24 +0530
+Message-Id: <1556732186-21630-2-git-send-email-srinath.mannam@broadcom.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1556732186-21630-1-git-send-email-srinath.mannam@broadcom.com>
+References: <1556732186-21630-1-git-send-email-srinath.mannam@broadcom.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Few SOCs have limitation that their PCIe host can't allow few inbound
-address ranges. Allowed inbound address ranges are listed in dma-ranges
-DT property and this address ranges are required to do IOVA mapping.
-Remaining address ranges have to be reserved in IOVA mapping.
+Add a dma_ranges field in PCI host bridge structure to hold resource
+entries list of memory regions in sorted order given through dma-ranges
+DT property.
 
-PCIe Host driver of those SOCs has to list resource entries of allowed
-address ranges given in dma-ranges DT property in sorted order. This
-sorted list of resources will be processed and reserve IOVA address for
-inaccessible address holes while initializing IOMMU domain.
+While initializing IOMMU domain of PCI EPs connected to that host bridge,
+this list of resources will be processed and IOVAs for the address holes
+will be reserved.
 
-This patch set is based on Linux-5.1-rc3.
+Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
+Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/pci/probe.c | 3 +++
+ include/linux/pci.h | 1 +
+ 2 files changed, 4 insertions(+)
 
-Changes from v4:
-  - Addressed Bjorn, Robin Murphy and Auger Eric review comments.
-    - Commit message modification.
-    - Change DMA_BIT_MASK to "~(dma_addr_t)0".
-
-Changes from v3:
-  - Addressed Robin Murphy review comments.
-    - pcie-iproc: parse dma-ranges and make sorted resource list.
-    - dma-iommu: process list and reserve gaps between entries
-
-Changes from v2:
-  - Patch set rebased to Linux-5.0-rc2
-
-Changes from v1:
-  - Addressed Oza review comments.
-
-Srinath Mannam (3):
-  PCI: Add dma_ranges window list
-  iommu/dma: Reserve IOVA for PCIe inaccessible DMA address
-  PCI: iproc: Add sorted dma ranges resource entries to host bridge
-
- drivers/iommu/dma-iommu.c           | 19 ++++++++++++++++
- drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
- drivers/pci/probe.c                 |  3 +++
- include/linux/pci.h                 |  1 +
- 4 files changed, 66 insertions(+), 1 deletion(-)
-
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 7e12d01..72563c1 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -595,6 +595,7 @@ struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
+ 		return NULL;
+ 
+ 	INIT_LIST_HEAD(&bridge->windows);
++	INIT_LIST_HEAD(&bridge->dma_ranges);
+ 	bridge->dev.release = pci_release_host_bridge_dev;
+ 
+ 	/*
+@@ -623,6 +624,7 @@ struct pci_host_bridge *devm_pci_alloc_host_bridge(struct device *dev,
+ 		return NULL;
+ 
+ 	INIT_LIST_HEAD(&bridge->windows);
++	INIT_LIST_HEAD(&bridge->dma_ranges);
+ 	bridge->dev.release = devm_pci_release_host_bridge_dev;
+ 
+ 	return bridge;
+@@ -632,6 +634,7 @@ EXPORT_SYMBOL(devm_pci_alloc_host_bridge);
+ void pci_free_host_bridge(struct pci_host_bridge *bridge)
+ {
+ 	pci_free_resource_list(&bridge->windows);
++	pci_free_resource_list(&bridge->dma_ranges);
+ 
+ 	kfree(bridge);
+ }
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 7744821..bba0a29 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -490,6 +490,7 @@ struct pci_host_bridge {
+ 	void		*sysdata;
+ 	int		busnr;
+ 	struct list_head windows;	/* resource_entry */
++	struct list_head dma_ranges;	/* dma ranges resource list */
+ 	u8 (*swizzle_irq)(struct pci_dev *, u8 *); /* Platform IRQ swizzler */
+ 	int (*map_irq)(const struct pci_dev *, u8, u8);
+ 	void (*release_fn)(struct pci_host_bridge *);
 -- 
 2.7.4
 
