@@ -2,131 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 391B0103D5
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2019 04:12:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5D2E1070C
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2019 12:40:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfEACMx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Apr 2019 22:12:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726123AbfEACMw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Apr 2019 22:12:52 -0400
-Received: from localhost (104.sub-174-234-128.myvzw.com [174.234.128.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83D9E21734;
-        Wed,  1 May 2019 02:12:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556676771;
-        bh=lB4/aFNGpFTPYT+2MM7qes/8i6/9JWncrFE5ixUZcw0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0SfrUdY4tAMwBEy1M3fwZCtpcWSqWCpLPQ20HeKHUfuXUDF5tKPRx2EWpvZ8PU2KA
-         r7fACImZYsRKZ56VzrMrU2Lsg18s5vWrI23zC3KJa5UaxlGLu1O/mR7Ue+Ljglb4RF
-         3N6lvvrVRC1Z+Zl8CJky2PiKjN+ko2D14L38CS78=
-Date:   Tue, 30 Apr 2019 21:12:49 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Alex G <mr.nuke.me@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Shyam Iyer <Shyam_Iyer@dell.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "PCI/LINK: Report degraded links via link
- bandwidth notification"
-Message-ID: <20190501021249.GD145057@google.com>
-References: <20190429185611.121751-1-helgaas@kernel.org>
- <20190429185611.121751-2-helgaas@kernel.org>
- <d902522e-f788-5e12-6b63-18ac5d5fa955@gmail.com>
- <20190430161151.GB145057@google.com>
- <20190430180508.GB25654@localhost.localdomain>
- <20190430181813.GC25654@localhost.localdomain>
+        id S1725995AbfEAKkF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 May 2019 06:40:05 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57756 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725782AbfEAKkF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 1 May 2019 06:40:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A01EE80D;
+        Wed,  1 May 2019 03:40:04 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 76D6F3F719;
+        Wed,  1 May 2019 03:40:02 -0700 (PDT)
+Date:   Wed, 1 May 2019 11:39:56 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "A.s. Dong" <aisheng.dong@nxp.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/11] i.MX6, DesignWare PCI improvements
+Message-ID: <20190501103956.GA3100@e121166-lin.cambridge.arm.com>
+References: <20190415004632.5907-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190430181813.GC25654@localhost.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190415004632.5907-1-andrew.smirnov@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 12:18:13PM -0600, Keith Busch wrote:
-> On Tue, Apr 30, 2019 at 12:05:09PM -0600, Keith Busch wrote:
-> > On Tue, Apr 30, 2019 at 11:11:51AM -0500, Bjorn Helgaas wrote:
-> > > > I'm not convinced a revert is the best call.
-> > > 
-> > > I have very limited options at this stage of the release, but I'd be
-> > > glad to hear suggestions.  My concern is that if we release v5.1
-> > > as-is, we'll spend a lot of energy on those false positives.
-> > 
-> > May be too late now if the revert is queued up, but I think this feature
-> > should have been a default 'false' Kconfig bool rather than always on.
+On Sun, Apr 14, 2019 at 05:46:21PM -0700, Andrey Smirnov wrote:
+> Everyone:
+> 
+> This is the series containing various small improvements that I made
+> while reading the code and researching commit history of pci-imx6.c
+> and pcie-designware*.c files. All changes are optional, so commits
+> that don't seem like an improvement can be easily dropped. Hopefully
+> each patch is self-explanatory.
+> 
+> I tested this series on i.MX6Q, i.MX7D and i.MX8MQ.
 
-Since this feature currently just adds a message in dmesg, which we
-don't really consider a stable API, I think a Kconfig switch is a
-reasonable option.
+Applied with Lucas' tags to pci/imx, hopefully we can squeeze this
+in for the v5.2 merge window.
 
-If you send me a signed-off-by for the following patch, I can apply it:
+Lorenzo
 
-commit 302b77157e66
-Author: Keith Busch <kbusch@kernel.org>
-Date:   Tue Apr 30 12:18:13 2019 -0600
-
-    PCI/LINK: Add Kconfig option (default off)
-    
-    e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth
-    notification") added dmesg logging whenever a link changes speed or width
-    to a state that is considered degraded.  Unfortunately, it cannot
-    differentiate signal integrity-related link changes from those
-    intentionally initiated by an endpoint driver, including drivers that may
-    live in userspace or VMs when making use of vfio-pci.  Some GPU drivers
-    actively manage the link state to save power, which generates a stream of
-    messages like this:
-    
-      vfio-pci 0000:07:00.0: 32.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s x16 link at 0000:00:02.0 (capable of 64.000 Gb/s with 5 GT/s x16 link)
-    
-    Since we can't distinguish the intentional changes from the signal
-    integrity issues, leave the reporting turned off by default.  Add a Kconfig
-    option to turn it on if desired.
-    
-    Fixes: e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth
-    notification")
-
-diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-index 5cbdbca904ac..4a094f0d2856 100644
---- a/drivers/pci/pcie/Kconfig
-+++ b/drivers/pci/pcie/Kconfig
-@@ -142,3 +142,12 @@ config PCIE_PTM
- 
- 	  This is only useful if you have devices that support PTM, but it
- 	  is safe to enable even if you don't.
-+
-+config PCIE_BW
-+	bool "PCI Express Bandwidth Change Notification"
-+	default n
-+	depends on PCIEPORTBUS
-+	help
-+	  This enables PCI Express Bandwidth Change Notification.  If
-+	  you know link width or rate changes occur only to correct
-+	  unreliable links, you may answer Y.
-diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
-index f1d7bc1e5efa..d356a5bdb158 100644
---- a/drivers/pci/pcie/Makefile
-+++ b/drivers/pci/pcie/Makefile
-@@ -3,7 +3,6 @@
- # Makefile for PCI Express features and port driver
- 
- pcieportdrv-y			:= portdrv_core.o portdrv_pci.o err.o
--pcieportdrv-y			+= bw_notification.o
- 
- obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o
- 
-@@ -13,3 +12,4 @@ obj-$(CONFIG_PCIEAER_INJECT)	+= aer_inject.o
- obj-$(CONFIG_PCIE_PME)		+= pme.o
- obj-$(CONFIG_PCIE_DPC)		+= dpc.o
- obj-$(CONFIG_PCIE_PTM)		+= ptm.o
-+obj-$(CONFIG_PCIE_BW)		:= bw_notification.o
+> Feedback is welcome!
+> 
+> Thanks,
+> Andrey Smirnov
+> 
+> Chagnes since [v3]:
+> 
+>     - Collected Reviewed-by from Lucas for most of the patches
+> 
+>     - Converted "PCI: imx6: Replace calls to udelay() with
+>       usleep_range()" to "PCI: imx6: Use usleep_range() in
+>       imx6_pcie_enable_ref_clk()"
+>       
+>     - Converted "PCI: imx6: Remove redundant debug tracing" to "PCI:
+>       imx6: Drop imx6_pcie_wait_for_link()"
+>       
+>     - Converted all of the callers of pcie_phy_poll_ack() to use
+>       true/false in "PCI: imx6: Simplify pcie_phy_poll_ack()"
+> 
+> Changes since [v2]:
+> 
+>     - All non i.MX6 patches dropped, since they were accepted as a
+>       seprarte series
+>       
+>     - Series rebased on latest 'dwc-pci' branch of PCI tree
+>     
+>     - Patches "PCI: imx6: Use flags to indicate support for suspend"
+>       and "PCI: imx6: Replace calls to udelay() with usleep_range()"
+>       added to the series
+> 
+> Changes since [v1]:
+> 
+>   - Dropped "PCI: imx6: Drop imx6_pcie_link_up()" due to the matter
+>     already having been addressed by "PCI: imx6: Fix link training
+>     status detection in link up check" from Trent Piepho
+> 
+>   - Changed "designware" -> "dwc" for all subject lines
+> 
+>   - Collected Acked-by's from Gustavo Pimentel
+> 
+> [v3] lkml.kernel.org/r/20190401042547.14067-1-andrew.smirnov@gmail.com
+> [v2] lkml.kernel.org/r/20190104174925.17153-1-andrew.smirnov@gmail.com
+> [v1] lkml.kernel.org/r/20181221072716.29017-1-andrew.smirnov@gmail.com
+> 
+> Andrey Smirnov (11):
+>   PCI: imx6: Simplify imx7d_pcie_wait_for_phy_pll_lock()
+>   PCI: imx6: Drop imx6_pcie_wait_for_link()
+>   PCI: imx6: Return -ETIMEOUT from imx6_pcie_wait_for_speed_change()
+>   PCI: imx6: Remove PCIE_PL_PFLR_* constants
+>   PCI: dwc: imx6: Share PHY debug register definitions
+>   PCI: imx6: Make use of BIT() in constant definitions
+>   PCI: imx6: Simplify bit operations in PHY functions
+>   PCI: imx6: Simplify pcie_phy_poll_ack()
+>   PCI: imx6: Restrict PHY register data to 16-bit
+>   PCI: imx6: Use flags to indicate support for suspend
+>   PCI: imx6: Use usleep_range() in imx6_pcie_enable_ref_clk()
+> 
+>  drivers/pci/controller/dwc/pci-imx6.c        | 143 ++++++++-----------
+>  drivers/pci/controller/dwc/pcie-designware.c |  12 +-
+>  drivers/pci/controller/dwc/pcie-designware.h |   3 +
+>  3 files changed, 62 insertions(+), 96 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
