@@ -2,102 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3029B11BF8
-	for <lists+linux-pci@lfdr.de>; Thu,  2 May 2019 17:00:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E597A11FE9
+	for <lists+linux-pci@lfdr.de>; Thu,  2 May 2019 18:15:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfEBPAG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 May 2019 11:00:06 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45688 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfEBPAG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 May 2019 11:00:06 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i21so1169911pgi.12
-        for <linux-pci@vger.kernel.org>; Thu, 02 May 2019 08:00:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+h3hw8s9AtbUTxjsRg8h8D8msF/wrKXAgqEpw8EeNOA=;
-        b=jlPMKdBldP3f4gKDgtqtVH6KYU8BBSCgulAP9KFpHF3ggzd6GSvZz16mK18TthOsMB
-         1vIdQs+yeoBsgHJk6YekXKdpVP9K50gEgw25xuVBTGoxyyoHb29xzJ1Ag7owhc4iWbJH
-         3vtoFqsW+jMQOE51MrgTIxpPqNuJeob2IO2cLCizNlQi3tIitPvtK0sQj6ZbAjSSmi7Q
-         How1Fdr5GunZ9wIhUNpe8lJnwvz4fLYdBh0eoo7nwRiWBdB4lO/rCUKPbZYMYOEWstK6
-         X9eprPBu7iBiQdu2/W6KBPXy8NJJCdW7KNyEh5OU4DREjJDfxop3p+3u0QEieu4jXfUx
-         qsOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+h3hw8s9AtbUTxjsRg8h8D8msF/wrKXAgqEpw8EeNOA=;
-        b=qPEmip2My1ggVXyADGqKz0f2sgOWJ6rpCRqg+oRkB5ucEqVAZbsH7QckTGNZK2Ytg+
-         Fm73QNPlPtV3KxoloRreQurm5aR5jOt8WbxHPh3IMy6dZnUChq2KowHI8icY8H9OSKZU
-         ndXGG95R1DoBJJyTTjnixTX8Rv+/G6S7SoH19elbJIt05AHG+idCK4zImg5nXK1rmXPP
-         fkrbojPMy6c6V/5ApXwXb+dZ+qgMc6w4GlJ5IjEWyMu2L9+hF/52ZBtbO6b47nTvzEu6
-         adXyMLz7KskoTGmRCCbQfG+oDvYPFGt+O3WUr8oaBABA89JBL2KNiFY3i1N78n0XeZ2r
-         B8OA==
-X-Gm-Message-State: APjAAAVw+AUsTEVZyvL6XCC9pX4VnXyp0Ls/3NsOMQYb64MVo6grPcIi
-        OJ72zYF5WLuLjqyi5d4xwi8gFw==
-X-Google-Smtp-Source: APXvYqxWyfb9Mb0R98oD1S3XalY5sExRiMmQ78TIyJ0AR6QKTKJB4fZ9Az+LDCDt3uqkWQ2xI1kwEg==
-X-Received: by 2002:aa7:9242:: with SMTP id 2mr1888978pfp.230.1556809205168;
-        Thu, 02 May 2019 08:00:05 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id i3sm60549129pfa.90.2019.05.02.08.00.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 May 2019 08:00:03 -0700 (PDT)
-Date:   Thu, 2 May 2019 08:00:06 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        id S1726278AbfEBQPF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 May 2019 12:15:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726544AbfEBQPE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 2 May 2019 12:15:04 -0400
+Subject: Re: [GIT PULL] PCI fixes for v5.1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556813704;
+        bh=wo0T+i0/yTZST/FKctVVAfz0yPcbLbsb2iLsgbMQRWM=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=YOYH6T3jP+T0gniTK8g8PoZ8RzyBh7+5qkYBFFCCpkd2gm0iSSZWL7Z18GXO5Onhx
+         kL5ScO6zhZVDdd2iUqlOrXNDCPN3XvI1be9qW8jL+UtxoXJNZEF5e2ZsOFeVvsgkjc
+         nV68Z2niGaoe+H76JBva5fN6d/8XN3u6zerwLF7Q=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190502135538.GB11579@google.com>
+References: <20190502135538.GB11579@google.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190502135538.GB11579@google.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
+ tags/pci-v5.1-fixes-3
+X-PR-Tracked-Commit-Id: 2078e1e7f7e0e21bd0291908f3037c39e666d27b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b7a5b22b05472704ca3e891a3a3c7769c057413a
+Message-Id: <155681370399.16515.9939074321887955249.pr-tracker-bot@kernel.org>
+Date:   Thu, 02 May 2019 16:15:03 +0000
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] PCI: qcom: Use clk_bulk API for 2.4.0 controllers
-Message-ID: <20190502150006.GL2938@tuxbook-pro>
-References: <20190502001955.10575-1-bjorn.andersson@linaro.org>
- <20190502001955.10575-2-bjorn.andersson@linaro.org>
- <20190502115351.GM3845@vkoul-mobl.Dlink>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502115351.GM3845@vkoul-mobl.Dlink>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <alex.gagniuc@dellteam.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Logan Gunthorpe <logang@deltatee.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu 02 May 04:53 PDT 2019, Vinod Koul wrote:
-> On 01-05-19, 17:19, Bjorn Andersson wrote:
-[..]
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 0ed235d560e3..d740cbe0e56d 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -112,10 +112,10 @@ struct qcom_pcie_resources_2_3_2 {
-> >  	struct regulator_bulk_data supplies[QCOM_PCIE_2_3_2_MAX_SUPPLY];
-> >  };
-> >  
-> > +#define QCOM_PCIE_2_4_0_MAX_CLOCKS	3
-> 
-> empty line after the define please
-> 
+The pull request you sent on Thu, 2 May 2019 08:55:38 -0500:
 
-This follows the style of QCOM_PCIE_2_3_2_MAX_SUPPLY one block up, so
-I think this is the way we want it.
+> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.1-fixes-3
 
-> >  struct qcom_pcie_resources_2_4_0 {
-[..]
-> 
-> 
-> rest lgtm:
-> 
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b7a5b22b05472704ca3e891a3a3c7769c057413a
 
-Thanks!
+Thank you!
 
-Regards,
-Bjorn
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
