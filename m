@@ -2,92 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A835116AF
-	for <lists+linux-pci@lfdr.de>; Thu,  2 May 2019 11:43:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F215C116C2
+	for <lists+linux-pci@lfdr.de>; Thu,  2 May 2019 11:54:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbfEBJmm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 May 2019 05:42:42 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:38882 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbfEBJmm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 2 May 2019 05:42:42 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 0F33521186;
-        Thu,  2 May 2019 11:42:40 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id EB2B120BAF;
-        Thu,  2 May 2019 11:42:39 +0200 (CEST)
-Subject: Re: [RFC PATCH v1] PCI: qcom: Use quirk to override incorrect device
- class
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-References: <94bb3f22-c5a7-1891-9d89-42a520e9a592@free.fr>
- <65321fe3-ca29-c454-63ae-98a46c2e5158@mm-sol.com>
- <1205cbfb-ac06-63a5-9401-75d4e68b15b5@free.fr>
- <38ad143b-3b07-4d19-8ccd-ca39fb51e53d@free.fr>
- <20190430140621.GB18742@e121166-lin.cambridge.arm.com>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <042b5c87-388f-3d61-de62-4c379bc23abb@free.fr>
-Date:   Thu, 2 May 2019 11:42:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190430140621.GB18742@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
+        id S1726231AbfEBJyy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 May 2019 05:54:54 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:24742 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726127AbfEBJyy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 May 2019 05:54:54 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-130-Ng2ipl1kM4iX0CK2opXBrA-1; Thu, 02 May 2019 10:54:50 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu,
+ 2 May 2019 10:54:50 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 2 May 2019 10:54:50 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Srinath Mannam' <srinath.mannam@broadcom.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "poza@codeaurora.org" <poza@codeaurora.org>,
+        Ray Jui <rjui@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4 0/3] PCIe Host request to reserve IOVA
+Thread-Topic: [PATCH v4 0/3] PCIe Host request to reserve IOVA
+Thread-Index: AQHVADHM3KBPKKWjuUy35ge+uHQL0KZXmYKw
+Date:   Thu, 2 May 2019 09:54:50 +0000
+Message-ID: <7c44526aebb6403890bab8e252c16375@AcuMS.aculab.com>
+References: <1555038815-31916-1-git-send-email-srinath.mannam@broadcom.com>
+ <20190501113038.GA7961@e121166-lin.cambridge.arm.com>
+ <20190501125530.GA15590@google.com>
+ <CABe79T5w4hb572KHUhyrwAN7+Xxnz2jF9OGLpfTmAdHuLuO2Fw@mail.gmail.com>
+In-Reply-To: <CABe79T5w4hb572KHUhyrwAN7+Xxnz2jF9OGLpfTmAdHuLuO2Fw@mail.gmail.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu May  2 11:42:40 2019 +0200 (CEST)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: Ng2ipl1kM4iX0CK2opXBrA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 30/04/2019 16:06, Lorenzo Pieralisi wrote:
+RnJvbTogU3JpbmF0aCBNYW5uYW0NCj4gU2VudDogMDEgTWF5IDIwMTkgMTY6MjMNCi4uLg0KPiA+
+ID4gT24gRnJpLCBBcHIgMTIsIDIwMTkgYXQgMDg6NDM6MzJBTSArMDUzMCwgU3JpbmF0aCBNYW5u
+YW0gd3JvdGU6DQo+ID4gPiA+IEZldyBTT0NzIGhhdmUgbGltaXRhdGlvbiB0aGF0IHRoZWlyIFBD
+SWUgaG9zdCBjYW4ndCBhbGxvdyBmZXcgaW5ib3VuZA0KPiA+ID4gPiBhZGRyZXNzIHJhbmdlcy4g
+QWxsb3dlZCBpbmJvdW5kIGFkZHJlc3MgcmFuZ2VzIGFyZSBsaXN0ZWQgaW4gZG1hLXJhbmdlcw0K
+PiA+ID4gPiBEVCBwcm9wZXJ0eSBhbmQgdGhpcyBhZGRyZXNzIHJhbmdlcyBhcmUgcmVxdWlyZWQg
+dG8gZG8gSU9WQSBtYXBwaW5nLg0KPiA+ID4gPiBSZW1haW5pbmcgYWRkcmVzcyByYW5nZXMgaGF2
+ZSB0byBiZSByZXNlcnZlZCBpbiBJT1ZBIG1hcHBpbmcuDQoNCllvdSBwcm9iYWJseSB3YW50IHRv
+IGZpeCB0aGUgZW5nbGlzaCBpbiB0aGUgZmlyc3Qgc2VudGVuY2UuDQpUaGUgc2Vuc2UgaXMgcmV2
+ZXJzZWQuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1s
+ZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJh
+dGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-> On Tue, Mar 12, 2019 at 06:34:55PM +0100, Marc Gonzalez wrote:
->
->> On 12/03/2019 18:18, Marc Gonzalez wrote:
->>
->>> On 12/03/2019 13:42, Stanimir Varbanov wrote:
->>>
->>>> I wonder, in case that dw_pcie_setup_rc() already has a write to
->>>> PCI_CLASS_DEVICE configuration register to set it as a bridge do we
->>>> still need to do the above fixup?
->>>
->>> I don't know, I don't have an affected device. Unless the msm8998 /is/ affected,
->>> and dw_pcie_setup_rc() actually fixes it?
->>
->> I think you hit the nail on the head...
->>
->> If I comment out
->> //dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
->> from dw_pcie_setup_rc()
->> then pci_class() returns 0xff000000 instead of 0x6040000
->>
->> So perhaps you're right: the quirk can be omitted altogether.
->> Unless it is not possible to program the device class on older chips?
-> 
-> Marc,
-> 
-> I would drop this patch from the PCI queue since in a different
-> form it was already merged, please let me know if I am wrong.
-
-I'm confused because you speak of *dropping* this patch (v1) -- but v1 was never
-picked up AFAIK.
-
-You picked up v5 on March 29:
-https://patchwork.kernel.org/patch/10869519/
-
-I see it in linux-next as 915347f67d41857a514bed77053b212f3696e8a3
-
-Will Bjorn send it to LT during the merge window for 5.2?
-
-Regards.
