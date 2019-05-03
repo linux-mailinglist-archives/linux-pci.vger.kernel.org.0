@@ -2,47 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A6250126A1
-	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2019 06:00:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B30EE126A0
+	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2019 06:00:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfECEAw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 May 2019 00:00:52 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34946 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbfECEAd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 May 2019 00:00:33 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w197so3493206oia.2
-        for <linux-pci@vger.kernel.org>; Thu, 02 May 2019 21:00:33 -0700 (PDT)
+        id S1726531AbfECEAk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 May 2019 00:00:40 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40213 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726503AbfECEAg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 May 2019 00:00:36 -0400
+Received: by mail-ot1-f67.google.com with SMTP id w6so4153474otl.7
+        for <linux-pci@vger.kernel.org>; Thu, 02 May 2019 21:00:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fredlawl-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=1/+exJcDLfJMbpm+cistYabfcZnJTfblqaDhmOStGDc=;
-        b=nvECSvThLrCazQlaGUsoBn+Ui6ihMBY7wWIM7KpRqGCHm3faImkNGEAOL4e0hphmqf
-         Rtjac3o7G3pGAA3LCozC6SpisiJ1HdY3eONMMeKxwbwpIBT8T4GqX12NwX2yG4YbE6CZ
-         fBPB4BJGzvtbZFMwOlAdOgwWli2RinSwCeqqxbwCMJ5ItvZWhtRCwGufz8Wn7KOaCyJT
-         x58XK1qYNc+nuBqNe25MngzYJF34fGol1JOlNatFnGG/iZS3/BFOB94UjqWPu41UN/dD
-         oCx1W6Kuf7/97ba3R5F0NPEOoYaRFCFEZl/lTvS9xXwTQgTam9YH4FgUIV3tR3cbSpyu
-         xRNg==
+        bh=dEuYGj0O58tspSnt+ZpOw9dKatfC4l7Bo34N+ze4Knk=;
+        b=V87dHIKzVmPP/S0N0PyA7zHPHu0mXweFGmROyi7cgyoDDCiEgvvPCV1HYDxGPuTgqY
+         Fd0xLFcmafP2TOblvOznWvEiq8HGfuM8kpfMV30SO+9XOjgWLgzOX7UkmZPhrK6QdMWb
+         JsTKAZT5PVeh3jytdlz9OXYKFhHxSpUIMiHE3iHwGdQp6MyfvQz2W74HXZVPMSGLGtd9
+         elAW+vDgI8ucFakopyD18+qJH3mIxBmJnhFe7Xkcyrk3K3IwUUATHj9KrfNe4tDqC+Yb
+         WN3GhwaDYl4h7nJ2VZfGLeBaT7CZXew5/WDttJw4x5R1q/buXnq04zYNfj5wNG0jAlKG
+         C4/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=1/+exJcDLfJMbpm+cistYabfcZnJTfblqaDhmOStGDc=;
-        b=YFcH1/2wqi48Km0lv/CI3GtAyJomgjoyGkxMy7klEumGnHw7N9XKqNyk+htXQGnJzT
-         hLpqiXzFwh6+e+Eq4+Lk1nMezLj0v64q70/ltcPj2q+WXqjHW0vyvfDmIKpkREz83Vxb
-         IbUL3KNJepOskirjP4PdA5hyC69nbLr2m1NPxO3h00USRxcOmSyH3WgVf3Ltq9e67hqg
-         zWdh2YYnfGAwmhsiwnKPkcLLCXB90cjOJaZAvvyXw0WsAgg26fxSWviuaHUM71FIpMFh
-         u8IepNdSWeTKRaabx0S2b1eGlIiyL7JKrWhi+CwQsocrGC+X3pwuE0cvVEXHqvw4+rMT
-         V3yA==
-X-Gm-Message-State: APjAAAV9PAwCxpirnw/0/z8lX1kcqPt6T2hJgBYIW9kdaIGBQ8fqYsHf
-        mBm90sQ9oV/wr/T5aPcOIwAM2w==
-X-Google-Smtp-Source: APXvYqzysSZUgZOYjxjq7yOGcMiYONz8+nQQcIn82iUWKC0XQTzAVNNXOmRBcrrUbGjGGTyRjiJsEA==
-X-Received: by 2002:aca:cc90:: with SMTP id c138mr1851704oig.97.1556856033029;
-        Thu, 02 May 2019 21:00:33 -0700 (PDT)
+        bh=dEuYGj0O58tspSnt+ZpOw9dKatfC4l7Bo34N+ze4Knk=;
+        b=BE/VMniYBIfoYL58rd2gF9hyGvd5hyXx+tY2ZGup1om2twzQ8mQytiNveLJsFUBeuk
+         nWlT6K+4bBYNkJa6ZyOc5rnoj99lWJoEJlc3K5aJWY4llPw9/PViI1+jb5hWx33y3MNV
+         Hho+RENPNlqPWya/yUKMMftGZT79Lg46zykQvottWBd9uq/nU30w5PJtH5JT4Aa3GHJi
+         tOPp7Svlp/A8qdTltQn0xORSRzv10xjK6bLPnA0Q8Hnj6X+S2kdPvY2wrLBmoZ30BCTM
+         1Ok6yWw9q8WsG1/ZAb8fSi42cWIG3WTm8m9V5UIsmogGj47n7nlo8H4VcALKmkHxcH8X
+         9rWw==
+X-Gm-Message-State: APjAAAUN5NyiOyxxmVJnkurKrRMEPKcnkxrEyvF8HVUUUWjYRVpJS2C5
+        hAzM1+DRQmRsCjLxHPuJWZT8ow==
+X-Google-Smtp-Source: APXvYqyBqDNVdOgBq9t2LsPo/+tMkFG2FU+eo+9lqaRWS7Ru1tZs8aXOCtkYVJOKUbsZm7r5P4ZaIQ==
+X-Received: by 2002:a9d:609e:: with SMTP id m30mr4650287otj.337.1556856035626;
+        Thu, 02 May 2019 21:00:35 -0700 (PDT)
 Received: from linux.fredlawl.com ([2600:1700:18a0:11d0:5518:38b8:ef25:393a])
-        by smtp.gmail.com with ESMTPSA id b23sm403696otl.55.2019.05.02.21.00.32
+        by smtp.gmail.com with ESMTPSA id d78sm543523oib.15.2019.05.02.21.00.34
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 May 2019 21:00:32 -0700 (PDT)
+        Thu, 02 May 2019 21:00:34 -0700 (PDT)
 From:   Frederick Lawler <fred@fredlawl.com>
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -50,9 +50,9 @@ Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         andriy.shevchenko@linux.intel.com, keith.busch@intel.com,
         mr.nuke.me@gmail.com, liudongdong3@huawei.com, thesven73@gmail.com,
         Frederick Lawler <fred@fredlawl.com>
-Subject: [PATCH v2 7/9] PCI: hotplug: Prefer CONFIG_DYNAMIC_DEBUG/DEBUG for dmesg logs
-Date:   Thu,  2 May 2019 22:59:44 -0500
-Message-Id: <20190503035946.23608-8-fred@fredlawl.com>
+Subject: [PATCH v2 8/9] PCI: hotplug: Remove unnecessary dbg/err/info/warn() printk() wrappers
+Date:   Thu,  2 May 2019 22:59:45 -0500
+Message-Id: <20190503035946.23608-9-fred@fredlawl.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190503035946.23608-1-fred@fredlawl.com>
 References: <20190503035946.23608-1-fred@fredlawl.com>
@@ -61,48 +61,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-dbg() and ctrl_dbg() requires pciehp_debug module parameter to be set
-for debug log purposes. There are niche situations in pciehp_hpc.c where
-pciehp_debug is used: dbg_ctrl(), and pci_bus_check_dev().
-
-Enabling CONFIG_DYNAMIC_DEBUG/DEBUG is well known for logging debug
-information. Therefore, prefer pr/pci_dbg() for debug information, and
-reserve pciehp_debug for niche situations.
+Remove unnecessary deb/err/info/warn() printk() wrappers.
 
 Signed-off-by: Frederick Lawler <fred@fredlawl.com>
 ---
- drivers/pci/hotplug/pciehp.h | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ drivers/pci/hotplug/pciehp.h      | 9 ---------
+ drivers/pci/hotplug/pciehp_core.c | 4 ++--
+ 2 files changed, 2 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index 78325c8d961e..e852aa478802 100644
+index e852aa478802..06ff9d31405e 100644
 --- a/drivers/pci/hotplug/pciehp.h
 +++ b/drivers/pci/hotplug/pciehp.h
-@@ -32,10 +32,7 @@ extern int pciehp_poll_time;
+@@ -31,15 +31,6 @@ extern bool pciehp_poll_mode;
+ extern int pciehp_poll_time;
  extern bool pciehp_debug;
  
- #define dbg(format, arg...)						\
--do {									\
--	if (pciehp_debug)						\
--		pr_info(format, ## arg);				\
--} while (0)
-+	pr_debug(format, ## arg);
- #define err(format, arg...)						\
- 	pr_err(format, ## arg)
- #define info(format, arg...)						\
-@@ -44,11 +41,7 @@ do {									\
- 	pr_warn(format, ## arg)
- 
+-#define dbg(format, arg...)						\
+-	pr_debug(format, ## arg);
+-#define err(format, arg...)						\
+-	pr_err(format, ## arg)
+-#define info(format, arg...)						\
+-	pr_info(format, ## arg)
+-#define warn(format, arg...)						\
+-	pr_warn(format, ## arg)
+-
  #define ctrl_dbg(ctrl, format, arg...)					\
--	do {								\
--		if (pciehp_debug)					\
--			pci_info(ctrl->pcie->port,			\
--				 format, ## arg);			\
--	} while (0)
-+	pci_dbg(ctrl->pcie->port, format, ## arg)
+ 	pci_dbg(ctrl->pcie->port, format, ## arg)
  #define ctrl_err(ctrl, format, arg...)					\
- 	pci_err(ctrl->pcie->port, format, ## arg)
- #define ctrl_info(ctrl, format, arg...)					\
+diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+index 7e06a0f9e644..67d024b7f476 100644
+--- a/drivers/pci/hotplug/pciehp_core.c
++++ b/drivers/pci/hotplug/pciehp_core.c
+@@ -331,9 +331,9 @@ int __init pcie_hp_init(void)
+ 	int retval = 0;
+ 
+ 	retval = pcie_port_service_register(&hpdriver_portdrv);
+-	dbg("pcie_port_service_register = %d\n", retval);
++	pr_debug("pcie_port_service_register = %d\n", retval);
+ 	if (retval)
+-		dbg("Failure to register service\n");
++		pr_debug("Failure to register service\n");
+ 
+ 	return retval;
+ }
 -- 
 2.17.1
 
