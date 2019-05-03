@@ -2,253 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CDE6112B79
-	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2019 12:30:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A63B12BF0
+	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2019 13:02:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbfECKax (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 May 2019 06:30:53 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42512 "EHLO
+        id S1726679AbfECLCE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 May 2019 07:02:04 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34203 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbfECKax (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 May 2019 06:30:53 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l2so7194778wrb.9
-        for <linux-pci@vger.kernel.org>; Fri, 03 May 2019 03:30:52 -0700 (PDT)
+        with ESMTP id S1726396AbfECLCD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 May 2019 07:02:03 -0400
+Received: by mail-wr1-f67.google.com with SMTP id e9so7360022wrc.1;
+        Fri, 03 May 2019 04:02:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5Zb69raiwquVqA7b+h9rr/HvkOLhohvYFruSLqccMD8=;
-        b=GmbDZQnYssCy1L9J0iPQreRaTHGcKtf4LGocIOgmlXEo/w7uu4IzDpZRXCmNNj0/11
-         PdadyQi9oZaNnj6njMBY7VSnuqZyACsqO80wgBmUcUiAccb5SQxcLVmt/mu1vlfQXSPr
-         pS1DZUt6hN3SH5LIXjZGWsKz+s/2Z9DwoPpFo=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nGfgCQXG08efjjx2XWvqXdQV7y9Ll65hvnLfZn3O1ag=;
+        b=bgWOxyzuPG//QO2JUiLSKloKw++xzOzO4bBxyiHmHbyJIK1PggjN3UQ+TaymK810Pu
+         Ancw4z6IABPZColxV3nbSsFbOyh5GLhSpSSw3CcxpiFmLREAr0XkGyTwp2aZgpSXUISA
+         zfX9l/hrJ76Yfj8mqDKmpiKkuCkPyBGZ+HwABA/fWnKh1fjMML4dburNQSZqC/HrmEnI
+         nMxegD0LT1/WjgLYeT64jzkKSvOGBSwr0Ph2m7wQW57c7eQf3VpYUyuGzUnN2/NI/2V8
+         jCn3gLgzIZFg1KsovV8Xb5h8ciQI159W0G/hsmnIV5aroqKatBfhcuqDIrlK1RV72dMH
+         k7qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5Zb69raiwquVqA7b+h9rr/HvkOLhohvYFruSLqccMD8=;
-        b=CnXMx724Yzkl49WkMS5f++eSCIY6qIFUemuzDY5i3MEkVK6373DvI+wxs4A6EMb5Ik
-         4eDlk3VqjX3j8kk+8HIezup9bFRA+KFX7/wwkkn7NFEj5WoSES7LozVCpfLrl/t1P0BR
-         kW9gOntkkY1z4WBWw1rCCYC5+vmFebaS3HUjZHKvx92Y7+0uRztKeeOgB6aRRLCg9KBP
-         G1/M70dZm6xWHDF9ZAzioK2S98zU7OnayUM1MV+HAShL17oSzFYlwMb98XtWLMDNbbW+
-         NVCCTqI27gyYLOwJbRpM9BadAAkR0o5G8nKn2mThfc0xVmXJRuVfPlmqRGKQvuggxXUP
-         zA4g==
-X-Gm-Message-State: APjAAAUUhQIGuv+Gl8xM0BBSiX3HJXsSKbBbr9xsmtVTyvMjCIjzzsdT
-        a23E+LW1ljXVW12NG5ChwMAjhf11IxDzSFl5HBUbzg==
-X-Google-Smtp-Source: APXvYqzAjs6RzDesBMoQ0b7QqkjHoszjU4WMwET3QD93wCh8P0ek/i1piGMUVKhkfMKR3MTBJVuXLarBWRLaO5gzFUI=
-X-Received: by 2002:a5d:5092:: with SMTP id a18mr6832736wrt.112.1556879451254;
- Fri, 03 May 2019 03:30:51 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nGfgCQXG08efjjx2XWvqXdQV7y9Ll65hvnLfZn3O1ag=;
+        b=LBJujmcLeO6/jEOmLcZMiNBwLI7F96ZmgvHAqxbn8WszH9lCgCEdK8oSG+wDnp7pe2
+         A8OxbfTZo5Fk4IaDmydDP9sOxHEV86KPmrXhG08Ur5XZgk6OQvJ6D/jlBl1xvdA/3N+V
+         Ox6YAAE+2jM4Dk3okKWf04kdt1c123/nMICI7l5UNevZrIcX14oQrD7WDRDGlAsZy/ne
+         XL/piQRBZVjmqgPN9XM4kjgarV8MZ3LbljvfuLyVQGW/05eg0jykEdtmUwAhiQPLavn/
+         6ehIPMtbpLEk5ZtRe25CgRPbpV6cnWCvYNTcTW2fWIPOWUTlfYiTZ4G0mTZgHAYIxUTt
+         56yg==
+X-Gm-Message-State: APjAAAXECwt3BUKdzSNszVz/gMJmrSbxnL6W+XF1/iM/Y9OWp8CWLymz
+        q9aGCOZEmVpcv1yzMDoH1XE=
+X-Google-Smtp-Source: APXvYqyZrCi9BgSuSGPoKfa+sfrnKJfwljqkgF9FkpEdGOxfOe/jX4Ra5F+4c3H7nv9LPTNjKbL2ZQ==
+X-Received: by 2002:a05:6000:9:: with SMTP id h9mr6692149wrx.194.1556881321143;
+        Fri, 03 May 2019 04:02:01 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id x18sm1635766wrw.14.2019.05.03.04.01.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 May 2019 04:02:00 -0700 (PDT)
+Date:   Fri, 3 May 2019 13:01:59 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V5 02/16] PCI/PME: Export pcie_pme_disable_msi() &
+ pcie_pme_no_msi() APIs
+Message-ID: <20190503110159.GB32400@ulmo>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-3-vidyas@nvidia.com>
 MIME-Version: 1.0
-References: <1556732186-21630-1-git-send-email-srinath.mannam@broadcom.com>
- <1556732186-21630-3-git-send-email-srinath.mannam@broadcom.com>
- <20190502110152.GA7313@e121166-lin.cambridge.arm.com> <2f4b9492-0caf-d6e3-e727-e3c869eefb58@arm.com>
- <20190502130624.GA10470@e121166-lin.cambridge.arm.com> <b4420901-60d4-69ab-6ed0-5d2fa9449595@arm.com>
- <CABe79T7CgtLG=DZTFy8efVocPMLi-MDtyUT5rToy7xj8GHkBSA@mail.gmail.com> <0b58c031-28c4-b577-ef0f-dbb111cc991b@arm.com>
-In-Reply-To: <0b58c031-28c4-b577-ef0f-dbb111cc991b@arm.com>
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-Date:   Fri, 3 May 2019 16:00:39 +0530
-Message-ID: <CABe79T7hrv+MXJq+0hpEBXqbm4XBajOLTa4q0h-o9Tw0aXOg1w@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] iommu/dma: Reserve IOVA for PCIe inaccessible DMA address
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, poza@codeaurora.org,
-        Ray Jui <rjui@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ZfOjI3PrQbgiZnxM"
+Content-Disposition: inline
+In-Reply-To: <20190424052004.6270-3-vidyas@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Robin,
 
+--ZfOjI3PrQbgiZnxM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 3, 2019 at 3:58 PM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 03/05/2019 06:23, Srinath Mannam wrote:
-> > Hi Robin, Lorenzo,
-> >
-> > Thanks for review and guidance.
-> > AFAIU, conclusion of discussion is, to return error if dma-ranges list
-> > is not sorted.
-> >
-> > So that, Can I send a new patch with below change to return error if
-> > dma-ranges list is not sorted?
-> >
-> > -static void iova_reserve_pci_windows(struct pci_dev *dev,
-> > +static int iova_reserve_pci_windows(struct pci_dev *dev,
-> >                  struct iova_domain *iovad)
-> >   {
-> >          struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
-> > @@ -227,11 +227,15 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
-> >          resource_list_for_each_entry(window, &bridge->dma_ranges) {
-> >                  end = window->res->start - window->offset;
-> >   resv_iova:
-> > -               if (end - start) {
-> > +               if (end > start) {
-> >                          lo = iova_pfn(iovad, start);
-> >                          hi = iova_pfn(iovad, end);
-> >                          reserve_iova(iovad, lo, hi);
-> > +               } else {
-> > +                       dev_err(&dev->dev, "Unsorted dma_ranges list\n");
-> > +                       return -EINVAL;
-> >                  }
-> > +
-> >
-> > Please provide your inputs if any more changes required. Thank you,
->
-> You also need to handle and return this error where
-> iova_reserve_pci_windows() is called from iova_reserve_iommu_regions().
-Thank you. I am doing this.
+On Wed, Apr 24, 2019 at 10:49:50AM +0530, Vidya Sagar wrote:
+> Export pcie_pme_disable_msi() & pcie_pme_no_msi() APIs to enable drivers
+> using this API be able to build as loadable modules.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes from [v4]:
+> * None
+>=20
+> Changes from [v3]:
+> * None
+>=20
+> Changes from [v2]:
+> * Exported pcie_pme_no_msi() API after making pcie_pme_msi_disabled a sta=
+tic
+>=20
+> Changes from [v1]:
+> * This is a new patch in v2 series
+>=20
+>  drivers/pci/pcie/pme.c     | 14 +++++++++++++-
+>  drivers/pci/pcie/portdrv.h | 16 +++-------------
+>  2 files changed, 16 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
+> index 54d593d10396..d5e0ea4a62fc 100644
+> --- a/drivers/pci/pcie/pme.c
+> +++ b/drivers/pci/pcie/pme.c
+> @@ -25,7 +25,19 @@
+>   * that using MSI for PCIe PME signaling doesn't play well with PCIe PME=
+-based
+>   * wake-up from system sleep states.
+>   */
+> -bool pcie_pme_msi_disabled;
+> +static bool pcie_pme_msi_disabled;
+> +
+> +void pcie_pme_disable_msi(void)
+> +{
+> +	pcie_pme_msi_disabled =3D true;
+> +}
+> +EXPORT_SYMBOL_GPL(pcie_pme_disable_msi);
+> +
+> +bool pcie_pme_no_msi(void)
+> +{
+> +	return pcie_pme_msi_disabled;
+> +}
+> +EXPORT_SYMBOL_GPL(pcie_pme_no_msi);
+> =20
+>  static int __init pcie_pme_setup(char *str)
+>  {
+> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+> index 1d50dc58ac40..7c8c3da4bd58 100644
+> --- a/drivers/pci/pcie/portdrv.h
+> +++ b/drivers/pci/pcie/portdrv.h
+> @@ -125,22 +125,12 @@ void pcie_port_bus_unregister(void);
+>  struct pci_dev;
+> =20
+>  #ifdef CONFIG_PCIE_PME
+> -extern bool pcie_pme_msi_disabled;
+> -
+> -static inline void pcie_pme_disable_msi(void)
+> -{
+> -	pcie_pme_msi_disabled =3D true;
+> -}
+> -
+> -static inline bool pcie_pme_no_msi(void)
+> -{
+> -	return pcie_pme_msi_disabled;
+> -}
+> -
+> +void pcie_pme_disable_msi(void);
+> +bool pcie_pme_no_msi(void);
+>  void pcie_pme_interrupt_enable(struct pci_dev *dev, bool enable);
+>  #else /* !CONFIG_PCIE_PME */
+>  static inline void pcie_pme_disable_msi(void) {}
+> -static inline bool pcie_pme_no_msi(void) { return false; }
+> +static inline bool pcie_pme_no_msi(void) {}
 
-Regards,
-Srinath.
->
-> Robin.
->
-> > Regards,
-> > Srinath.
-> >
-> > On Thu, May 2, 2019 at 7:45 PM Robin Murphy <robin.murphy@arm.com> wrote:
-> >>
-> >> On 02/05/2019 14:06, Lorenzo Pieralisi wrote:
-> >>> On Thu, May 02, 2019 at 12:27:02PM +0100, Robin Murphy wrote:
-> >>>> Hi Lorenzo,
-> >>>>
-> >>>> On 02/05/2019 12:01, Lorenzo Pieralisi wrote:
-> >>>>> On Wed, May 01, 2019 at 11:06:25PM +0530, Srinath Mannam wrote:
-> >>>>>> dma_ranges field of PCI host bridge structure has resource entries in
-> >>>>>> sorted order of address range given through dma-ranges DT property. This
-> >>>>>> list is the accessible DMA address range. So that this resource list will
-> >>>>>> be processed and reserve IOVA address to the inaccessible address holes in
-> >>>>>> the list.
-> >>>>>>
-> >>>>>> This method is similar to PCI IO resources address ranges reserving in
-> >>>>>> IOMMU for each EP connected to host bridge.
-> >>>>>>
-> >>>>>> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> >>>>>> Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
-> >>>>>> Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
-> >>>>>> Acked-by: Robin Murphy <robin.murphy@arm.com>
-> >>>>>> ---
-> >>>>>>     drivers/iommu/dma-iommu.c | 19 +++++++++++++++++++
-> >>>>>>     1 file changed, 19 insertions(+)
-> >>>>>>
-> >>>>>> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> >>>>>> index 77aabe6..da94844 100644
-> >>>>>> --- a/drivers/iommu/dma-iommu.c
-> >>>>>> +++ b/drivers/iommu/dma-iommu.c
-> >>>>>> @@ -212,6 +212,7 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
-> >>>>>>             struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
-> >>>>>>             struct resource_entry *window;
-> >>>>>>             unsigned long lo, hi;
-> >>>>>> +  phys_addr_t start = 0, end;
-> >>>>>>             resource_list_for_each_entry(window, &bridge->windows) {
-> >>>>>>                     if (resource_type(window->res) != IORESOURCE_MEM)
-> >>>>>> @@ -221,6 +222,24 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
-> >>>>>>                     hi = iova_pfn(iovad, window->res->end - window->offset);
-> >>>>>>                     reserve_iova(iovad, lo, hi);
-> >>>>>>             }
-> >>>>>> +
-> >>>>>> +  /* Get reserved DMA windows from host bridge */
-> >>>>>> +  resource_list_for_each_entry(window, &bridge->dma_ranges) {
-> >>>>>
-> >>>>> If this list is not sorted it seems to me the logic in this loop is
-> >>>>> broken and you can't rely on callers to sort it because it is not a
-> >>>>> written requirement and it is not enforced (you know because you
-> >>>>> wrote the code but any other developer is not supposed to guess
-> >>>>> it).
-> >>>>>
-> >>>>> Can't we rewrite this loop so that it does not rely on list
-> >>>>> entries order ?
-> >>>>
-> >>>> The original idea was that callers should be required to provide a sorted
-> >>>> list, since it keeps things nice and simple...
-> >>>
-> >>> I understand, if it was self-contained in driver code that would be fine
-> >>> but in core code with possible multiple consumers this must be
-> >>> documented/enforced, somehow.
-> >>>
-> >>>>> I won't merge this series unless you sort it, no pun intended.
-> >>>>>
-> >>>>> Lorenzo
-> >>>>>
-> >>>>>> +          end = window->res->start - window->offset;
-> >>>>
-> >>>> ...so would you consider it sufficient to add
-> >>>>
-> >>>>               if (end < start)
-> >>>>                       dev_err(...);
-> >>>
-> >>> We should also revert any IOVA reservation we did prior to this
-> >>> error, right ?
-> >>
-> >> I think it would be enough to propagate an error code back out through
-> >> iommu_dma_init_domain(), which should then end up aborting the whole
-> >> IOMMU setup - reserve_iova() isn't really designed to be undoable, but
-> >> since this is the kind of error that should only ever be hit during
-> >> driver or DT development, as long as we continue booting such that the
-> >> developer can clearly see what's gone wrong, I don't think we need
-> >> bother spending too much effort tidying up inside the unused domain.
-> >>
-> >>> Anyway, I think it is best to ensure it *is* sorted.
-> >>>
-> >>>> here, plus commenting the definition of pci_host_bridge::dma_ranges
-> >>>> that it must be sorted in ascending order?
-> >>>
-> >>> I don't think that commenting dma_ranges would help much, I am more
-> >>> keen on making it work by construction.
-> >>>
-> >>>> [ I guess it might even make sense to factor out the parsing and list
-> >>>> construction from patch #3 into an of_pci core helper from the beginning, so
-> >>>> that there's even less chance of another driver reimplementing it
-> >>>> incorrectly in future. ]
-> >>>
-> >>> This makes sense IMO and I would like to take this approach if you
-> >>> don't mind.
-> >>
-> >> Sure - at some point it would be nice to wire this up to
-> >> pci-host-generic for Juno as well (with a parallel version for ACPI
-> >> _DMA), so from that viewpoint, the more groundwork in place the better :)
-> >>
-> >> Thanks,
-> >> Robin.
-> >>
-> >>>
-> >>> Either this or we move the whole IOVA reservation and dma-ranges
-> >>> parsing into PCI IProc.
-> >>>
-> >>>> Failing that, although I do prefer the "simple by construction"
-> >>>> approach, I'd have no objection to just sticking a list_sort() call in
-> >>>> here instead, if you'd rather it be entirely bulletproof.
-> >>>
-> >>> I think what you outline above is a sensible way forward - if we
-> >>> miss the merge window so be it.
-> >>>
-> >>> Thanks,
-> >>> Lorenzo
-> >>>
-> >>>> Robin.
-> >>>>
-> >>>>>> +resv_iova:
-> >>>>>> +          if (end - start) {
-> >>>>>> +                  lo = iova_pfn(iovad, start);
-> >>>>>> +                  hi = iova_pfn(iovad, end);
-> >>>>>> +                  reserve_iova(iovad, lo, hi);
-> >>>>>> +          }
-> >>>>>> +          start = window->res->end - window->offset + 1;
-> >>>>>> +          /* If window is last entry */
-> >>>>>> +          if (window->node.next == &bridge->dma_ranges &&
-> >>>>>> +              end != ~(dma_addr_t)0) {
-> >>>>>> +                  end = ~(dma_addr_t)0;
-> >>>>>> +                  goto resv_iova;
-> >>>>>> +          }
-> >>>>>> +  }
-> >>>>>>     }
-> >>>>>>     static int iova_reserve_iommu_regions(struct device *dev,
-> >>>>>> --
-> >>>>>> 2.7.4
-> >>>>>>
+This looks wrong.
+
+Thierry
+
+--ZfOjI3PrQbgiZnxM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzMH6YACgkQ3SOs138+
+s6E4xw//dFTo8a4I8XRjFuw8mmRxoi0ZrVcgaoQ/hqpIqu/cew7PXc9XaqiB0JIK
+KJjArrSz8XHoez/vrmk4CBNk5ECEAeVV6Eyrm3R99fPoBuBihH+B3QYkeMALa6hh
+l2WUQRuDIYbRF71GjZlcgslAqZ8Bde19bxdwPg1T9kyOZmQrAiFq/PsRUPGscz1T
+b5EVJMR+GiKQ/dceyluUz1bqp0JFpdX6Ae6IgCKrw2Z1plVvGi39Pzix1Za1Q3pY
+EAlwOo6cebEhx0D7j/W/PLQM8+nQhBBAZiUWlwCOq/lsaL8Gt3r0RoLZchbX11Fp
+hOmz1535bjHaUx/NT6zz2QgKvJ8tErCCooq+RUlubv6QLdOTIegaLDVpCAa4CsTv
+wByyM7+oWwCvmIkWmv+nfllINKUiRFZOWASJ7aXAQh/1GGpx6wU/eaI+fbGMI/XJ
+c0n031xH/GPAL5fx9BnX5M0mYBUkxTEWWvMuAwrodEtJEqc++RIs9CHGXNICSqPs
+39NNzOS3tlhFDdR/KMe86vNYl8vfhjbM7m5v+8hmLwi4tOFO2KYY4KUXHNSgfnIi
+tMbUOjs3ojI3E3vvLqiYYPQ1F0xLCuY1KshgaZ/V7tdqn/pzPQtYaEedA3jh7XVd
+FVqPM1w7coRP7ty0PfJtfkUjOiV16jmSZdeMbzIJUqd7+9u5h74=
+=+xfr
+-----END PGP SIGNATURE-----
+
+--ZfOjI3PrQbgiZnxM--
