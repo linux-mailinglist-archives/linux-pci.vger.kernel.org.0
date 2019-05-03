@@ -2,86 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DB0D913433
-	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2019 21:56:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42BC413449
+	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2019 22:04:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725798AbfECTz7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 May 2019 15:55:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44418 "EHLO mail.kernel.org"
+        id S1726320AbfECUEl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 May 2019 16:04:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbfECTz7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 3 May 2019 15:55:59 -0400
+        id S1725793AbfECUEk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 3 May 2019 16:04:40 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF6FD206BB;
-        Fri,  3 May 2019 19:55:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AA49206BB;
+        Fri,  3 May 2019 20:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556913359;
-        bh=2fH2M5sQ8jmDxxjHYOTc0EzT1IE1mBjRWKLvF07ZDJI=;
+        s=default; t=1556913879;
+        bh=bqpiuHplciGYYVGXRGGsx5652IaGTS8bIlknkgj/3Wk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QdlolEb/sTaBBzVCoGSEAnP7QrwOe2EBUEJgSzjARmEhUFjyZ+OxRoYJzYZe4mHr8
-         /QG0y2Ey0lDoO+ZhYS8ah17XQ4oP0SNWorijg5Sp/9MnjAW/+R+7IYy8oYIM3UhCMl
-         AvxcLyHa4yoMIIurgg8fhK/vBdXDW6wtedLRjdVs=
-Date:   Fri, 3 May 2019 14:55:57 -0500
+        b=bF31MeNhhlnxwUgjxB340PgJUfm+LawbTZhFeBmncbZV2YSaRIXPxuhW+UVi4LtHn
+         v+lAuY2ZDjoEYg6HQxlRMaU0NjHNKCORxUyiY36jjSLJd8HGPFt2pAqX3An/XaP3OQ
+         tUaVelBDzQvccek3gd5VAbNoRJxrbEwXHXvBTGEg=
+Date:   Fri, 3 May 2019 15:04:37 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Frederick Lawler <fred@fredlawl.com>
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         mika.westerberg@linux.intel.com, lukas@wunner.de,
         andriy.shevchenko@linux.intel.com, keith.busch@intel.com,
         mr.nuke.me@gmail.com, liudongdong3@huawei.com, thesven73@gmail.com
-Subject: Re: [PATCH v2 3/9] PCI/PME: Prefix dmesg logs with PCIe service name
-Message-ID: <20190503195557.GC180403@google.com>
+Subject: Re: [PATCH v2 6/9] PCI: hotplug: Prefix dmesg logs with PCIe service
+ name
+Message-ID: <20190503200437.GD180403@google.com>
 References: <20190503035946.23608-1-fred@fredlawl.com>
- <20190503035946.23608-4-fred@fredlawl.com>
+ <20190503035946.23608-7-fred@fredlawl.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190503035946.23608-4-fred@fredlawl.com>
+In-Reply-To: <20190503035946.23608-7-fred@fredlawl.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 02, 2019 at 10:59:40PM -0500, Frederick Lawler wrote:
+On Thu, May 02, 2019 at 10:59:43PM -0500, Frederick Lawler wrote:
 > Prefix dmesg logs with PCIe service name.
-
-... to make it consistent with other PCIe services.
-
-It's interesting that there are three uses here:
-
-  pci_dbg(port, "PME interrupt generated for non-existent device ...")
-  pci_dbg(port, "Spurious native PME interrupt!\n")
-  pci_info(port, "Signaling PME with IRQ %d\n", srv->irq)
-
-The first two use pci_dbg(), so whether it goes anywhere depends on
-CONFIG_DYNAMIC_DEBUG and DEBUG.  To me they seem interesting enough to
-become pci_info().
-
-And all three already include "PME", so I could go either way with
-adding the prefix.  But I agree that having it consistent with the
-other services is probably a nice small hint that this is a PCIe port
-thing, not an endpoint thing.
-
+> 
 > Signed-off-by: Frederick Lawler <fred@fredlawl.com>
 > ---
->  drivers/pci/pcie/pme.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/pci/hotplug/pciehp.h      | 18 +++++++++---------
+>  drivers/pci/hotplug/pciehp_core.c |  7 +++++--
+>  drivers/pci/hotplug/pciehp_ctrl.c |  2 ++
+>  drivers/pci/hotplug/pciehp_hpc.c  |  4 +++-
+>  drivers/pci/hotplug/pciehp_pci.c  |  2 ++
+>  5 files changed, 21 insertions(+), 12 deletions(-)
 > 
-> diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-> index 54d593d10396..d6698423a6d6 100644
-> --- a/drivers/pci/pcie/pme.c
-> +++ b/drivers/pci/pcie/pme.c
-> @@ -7,6 +7,8 @@
->   * Copyright (C) 2009 Rafael J. Wysocki <rjw@sisk.pl>, Novell Inc.
+> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+> index 506e1d923a1f..78325c8d961e 100644
+> --- a/drivers/pci/hotplug/pciehp.h
+> +++ b/drivers/pci/hotplug/pciehp.h
+> @@ -34,27 +34,27 @@ extern bool pciehp_debug;
+>  #define dbg(format, arg...)						\
+>  do {									\
+>  	if (pciehp_debug)						\
+> -		printk(KERN_DEBUG "%s: " format, MY_NAME, ## arg);	\
+> +		pr_info(format, ## arg);				\
+
+This and
+
+>  #define ctrl_dbg(ctrl, format, arg...)					\
+>  	do {								\
+>  		if (pciehp_debug)					\
+> -			dev_printk(KERN_DEBUG, &ctrl->pcie->device,	\
+> -					format, ## arg);		\
+> +			pci_info(ctrl->pcie->port,			\
+> +				 format, ## arg);			\
+
+this are not like the others.  I think replacing the special-purpose
+pciehp_debug with the generic dynamic debug thing is a good thing, but
+I'd do it in a separate patch, e.g.,
+
+  - if (pciehp_debug)
+  -   printk(KERN_DEBUG ...);
+  + pr_dbg(...);
+
+And that patch should also remove the pciehp_debug module parameter
+and documentation at the same time, of course.
+
+And the commit log should include an example of how to turn on these
+messages, boot with "dyndbg='...'".  I don't know what the magic
+string there needs to be, so it'd be nice to have it in the commit log
+and in a comment near the dbg() and ctrl_dbg() definitions.
+
+>  	} while (0)
+>  #define ctrl_err(ctrl, format, arg...)					\
+> -	dev_err(&ctrl->pcie->device, format, ## arg)
+> +	pci_err(ctrl->pcie->port, format, ## arg)
+>  #define ctrl_info(ctrl, format, arg...)					\
+> -	dev_info(&ctrl->pcie->device, format, ## arg)
+> +	pci_info(ctrl->pcie->port, format, ## arg)
+>  #define ctrl_warn(ctrl, format, arg...)					\
+> -	dev_warn(&ctrl->pcie->device, format, ## arg)
+> +	pci_warn(ctrl->pcie->port, format, ## arg)
+>  
+>  #define SLOT_NAME_SIZE 10
+>  
+> diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+> index fc5366b50e95..7e06a0f9e644 100644
+> --- a/drivers/pci/hotplug/pciehp_core.c
+> +++ b/drivers/pci/hotplug/pciehp_core.c
+> @@ -17,6 +17,9 @@
+>   *   Dely Sy <dely.l.sy@intel.com>"
 >   */
 >  
-> +#define dev_fmt(fmt) "PME: " fmt
-> +
->  #include <linux/pci.h>
->  #include <linux/kernel.h>
->  #include <linux/errno.h>
-> -- 
-> 2.17.1
-> 
+> +#define pr_fmt(fmt) "pciehp: " fmt
+> +#define dev_fmt pr_fmt
+
+Can these go in pciehp.h?
