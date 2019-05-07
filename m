@@ -2,181 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 927E916190
-	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2019 11:57:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2FC216194
+	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2019 11:58:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbfEGJ5C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 May 2019 05:57:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39228 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726399AbfEGJ5C (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 7 May 2019 05:57:02 -0400
-Received: from localhost (unknown [106.200.210.185])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB1E42053B;
-        Tue,  7 May 2019 09:56:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557223020;
-        bh=qZCkGMVfQi6XdZaHQrcvVPt8ch7IBWjlhqotMuwf81s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SePrwzWCiyuzYrqHfbOjeHP3FeY928pydbXrc05iyqRb0HvQZzEvyJ6CErb/F2MlT
-         VsmySCaS74w3z2qMSJvE2FDRElfpfOjvOTJF5P4wS6rPLX0ugX7VT0TGzsTpYe4miF
-         vdu6Pl8HocKcKdx/C5jezcDjh1fYk1DRIVBo3Qfk=
-Date:   Tue, 7 May 2019 15:26:54 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [RFC v6 1/6] dmaengine: Add Synopsys eDMA IP core driver
-Message-ID: <20190507095654.GH16052@vkoul-mobl>
-References: <cover.1556043127.git.gustavo.pimentel@synopsys.com>
- <0e877ac0115d37e466ac234f47c51cb1cae7f292.1556043127.git.gustavo.pimentel@synopsys.com>
- <20190506112001.GE3845@vkoul-mobl.Dlink>
- <305100E33629484CBB767107E4246BBB0A238675@de02wembxa.internal.synopsys.com>
- <20190507050310.GA16052@vkoul-mobl>
- <305100E33629484CBB767107E4246BBB0A238D2C@de02wembxa.internal.synopsys.com>
+        id S1726399AbfEGJ6G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 May 2019 05:58:06 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:13774 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbfEGJ6F (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 May 2019 05:58:05 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cd1568a0000>; Tue, 07 May 2019 02:57:30 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 07 May 2019 02:58:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 07 May 2019 02:58:04 -0700
+Received: from [10.25.73.250] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 May
+ 2019 09:57:59 +0000
+Subject: Re: [PATCH V5 11/16] dt-bindings: PHY: P2U: Add Tegra 194 P2U block
+To:     Rob Herring <robh@kernel.org>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-12-vidyas@nvidia.com> <20190426154519.GA19329@bogus>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <c13db22f-0557-8e98-0a1d-00ee4405e6db@nvidia.com>
+Date:   Tue, 7 May 2019 15:27:56 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <305100E33629484CBB767107E4246BBB0A238D2C@de02wembxa.internal.synopsys.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190426154519.GA19329@bogus>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557223050; bh=yMsBiV1fEe9A1TMMLA2KOVpdo0cNL5OaDWCKWRUAWd4=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=E0KqgTbmZdwQUPOTRizQDdy3EywsHpf0ZNQ/rMVFPenqr4vkGKS9bmSfTG6rwBIk8
+         Ea2Io3f6vj7Gdq3hXuiUi9RUu2bn5qCONy0tpr6/7sC6qPgGbCYmcTiZhAQKKm8WIs
+         DO+utS9tWBXG+o3Vq/ntx5qhTKP9q+nI50yl5PduUNBKLegReyTi8J6oR/1Yem6a06
+         swD6Gn+/eAKc6A8vdqurZvej2kDFZsRaonKz25ZUcLgKTjIV27zDa7Lf/CUMz+DDVD
+         L4LPmCa17kdDUbPgdDFCOb99OidYusHCPLhppOtk6zIaLR4WVKV0WM2WvIpNz5lS51
+         Rsx9dyningPNQ==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 07-05-19, 09:08, Gustavo Pimentel wrote:
-> On Tue, May 7, 2019 at 6:3:10, Vinod Koul <vkoul@kernel.org> wrote:
-> > On 06-05-19, 16:42, Gustavo Pimentel wrote:
-
-> > > > > +static struct dma_async_tx_descriptor *
-> > > > > +dw_edma_device_transfer(struct dw_edma_transfer *xfer)
-> > > > > +{
-> > > > > +	struct dw_edma_chan *chan = dchan2dw_edma_chan(xfer->dchan);
-> > > > > +	enum dma_transfer_direction direction = xfer->direction;
-> > > > > +	phys_addr_t src_addr, dst_addr;
-> > > > > +	struct scatterlist *sg = NULL;
-> > > > > +	struct dw_edma_chunk *chunk;
-> > > > > +	struct dw_edma_burst *burst;
-> > > > > +	struct dw_edma_desc *desc;
-> > > > > +	u32 cnt;
-> > > > > +	int i;
-> > > > > +
-> > > > > +	if ((direction == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_WRITE) ||
-> > > > > +	    (direction == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ))
-> > > > > +		return NULL;
-> > > > > +
-> > > > > +	if (xfer->cyclic) {
-> > > > > +		if (!xfer->xfer.cyclic.len || !xfer->xfer.cyclic.cnt)
-> > > > > +			return NULL;
-> > > > > +	} else {
-> > > > > +		if (xfer->xfer.sg.len < 1)
-> > > > > +			return NULL;
-> > > > > +	}
-> > > > > +
-> > > > > +	if (!chan->configured)
-> > > > > +		return NULL;
-> > > > > +
-> > > > > +	desc = dw_edma_alloc_desc(chan);
-> > > > > +	if (unlikely(!desc))
-> > > > > +		goto err_alloc;
-> > > > > +
-> > > > > +	chunk = dw_edma_alloc_chunk(desc);
-> > > > > +	if (unlikely(!chunk))
-> > > > > +		goto err_alloc;
-> > > > > +
-> > > > > +	src_addr = chan->config.src_addr;
-> > > > > +	dst_addr = chan->config.dst_addr;
-> > > > > +
-> > > > > +	if (xfer->cyclic) {
-> > > > > +		cnt = xfer->xfer.cyclic.cnt;
-> > > > > +	} else {
-> > > > > +		cnt = xfer->xfer.sg.len;
-> > > > > +		sg = xfer->xfer.sg.sgl;
-> > > > > +	}
-> > > > > +
-> > > > > +	for (i = 0; i < cnt; i++) {
-> > > > > +		if (!xfer->cyclic && !sg)
-> > > > > +			break;
-> > > > > +
-> > > > > +		if (chunk->bursts_alloc == chan->ll_max) {
-> > > > > +			chunk = dw_edma_alloc_chunk(desc);
-> > > > > +			if (unlikely(!chunk))
-> > > > > +				goto err_alloc;
-> > > > > +		}
-> > > > > +
-> > > > > +		burst = dw_edma_alloc_burst(chunk);
-> > > > > +		if (unlikely(!burst))
-> > > > > +			goto err_alloc;
-> > > > > +
-> > > > > +		if (xfer->cyclic)
-> > > > > +			burst->sz = xfer->xfer.cyclic.len;
-> > > > > +		else
-> > > > > +			burst->sz = sg_dma_len(sg);
-> > > > > +
-> > > > > +		chunk->ll_region.sz += burst->sz;
-> > > > > +		desc->alloc_sz += burst->sz;
-> > > > > +
-> > > > > +		if (direction == DMA_DEV_TO_MEM) {
-> > > > > +			burst->sar = src_addr;
-> > > > 
-> > > > We are device to mem, so src is peripheral.. okay
-> > > > 
-> > > > > +			if (xfer->cyclic) {
-> > > > > +				burst->dar = xfer->xfer.cyclic.paddr;
-> > > > > +			} else {
-> > > > > +				burst->dar = sg_dma_address(sg);
-> > > > > +				src_addr += sg_dma_len(sg);
-> > > > 
-> > > > and we increment the src, doesn't make sense to me!
-> > > > 
-> > > > > +			}
-> > > > > +		} else {
-> > > > > +			burst->dar = dst_addr;
-> > > > > +			if (xfer->cyclic) {
-> > > > > +				burst->sar = xfer->xfer.cyclic.paddr;
-> > > > > +			} else {
-> > > > > +				burst->sar = sg_dma_address(sg);
-> > > > > +				dst_addr += sg_dma_len(sg);
-> > > > 
-> > > > same here as well
-> > > 
-> > > This is hard to explain in words...
-> > > Well, in my perspective I want to transfer a piece of memory from the 
-> > > peripheral into local RAM
-> > 
-> > Right and most of the case RAM address (sg) needs to increment whereas
-> > peripheral is a constant one
-> > 
-> > > Through the DMA client API I'll break this piece of memory in several 
-> > > small parts and add all into a list (scatter-gather), right?
-> > > Each element of the scatter-gather has the sg_dma_address (in the 
-> > > DMA_DEV_TO_MEM case will be the destination address) and the 
-> > > corresponding size.
-> > 
-> > Correct
-> > 
-> > > However, I still need the other address (in the DMA_DEV_TO_MEM case will 
-> > > be the source address) for that small part of memory.
-> > > Since I get that address from the config, I still need to increment the 
-> > > source address in the same proportion of the destination address, in 
-> > > other words, the increment will be the part size.
-> > 
-> > I don't think so. Typically the device address is a FIFO, which does not
-> > increment and you keep pushing data at same address. It is not a memory
+On 4/26/2019 9:15 PM, Rob Herring wrote:
+> On Wed, Apr 24, 2019 at 10:49:59AM +0530, Vidya Sagar wrote:
+>> Add support for Tegra194 P2U (PIPE to UPHY) module block which is a glue
+>> module instantiated one for each PCIe lane between Synopsys Designware core
+>> based PCIe IP and Universal PHY block.
 > 
-> In my use case, it's a memory, perhaps that is what is causing this 
-> confusing.
-> I'm copying "plain and flat" data from point A to B, with the 
-> particularity that the peripheral memory is always continuous and the CPU 
-> memory can be constituted by scatter-gather chunks of contiguous memory
+> Missing Sob.
+Done.
 
-Then why should it be slave transfer, it should be treated as memcpy
-with src and dst sg lists..
--- 
-~Vinod
+> 
+>> ---
+>> Changes since [v4]:
+>> * None
+>>
+>> Changes since [v3]:
+>> * None
+>>
+>> Changes since [v2]:
+>> * Changed node label to reflect new format that includes either 'hsio' or
+>>    'nvhs' in its name to reflect which UPHY brick they belong to
+>>
+>> Changes since [v1]:
+>> * This is a new patch in v2 series
+>>
+>>   .../bindings/phy/phy-tegra194-p2u.txt         | 28 +++++++++++++++++++
+>>   1 file changed, 28 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+>> new file mode 100644
+>> index 000000000000..8b543cba483b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+>> @@ -0,0 +1,28 @@
+>> +NVIDIA Tegra194 P2U binding
+>> +
+>> +Tegra194 has two PHY bricks namely HSIO (High Speed IO) and NVHS (NVIDIA High
+>> +Speed) each interfacing with 12 and 8 P2U instances respectively.
+>> +A P2U instance is a glue logic between Synopsys DesignWare Core PCIe IP's PIPE
+>> +interface and PHY of HSIO/NVHS bricks. Each P2U instance represents one PCIe
+>> +lane.
+>> +
+>> +Required properties:
+>> +- compatible: For Tegra19x, must contain "nvidia,tegra194-p2u".
+>> +- reg: Should be the physical address space and length of respective each P2U
+>> +       instance.
+>> +- reg-names: Must include the entry "ctl".
+> 
+> -names is pointless when there is only 1.
+I did it this way to make it future proof as there could be more regions that might get
+added at a later point of time.
+
+> 
+>> +
+>> +Required properties for PHY port node:
+>> +- #phy-cells: Defined by generic PHY bindings.  Must be 0.
+>> +
+>> +Refer to phy/phy-bindings.txt for the generic PHY binding properties.
+>> +
+>> +Example:
+>> +
+>> +p2u_hsio_0: p2u@3e10000 {
+> 
+> phy@...
+Done.
+
+> 
+>> +	compatible = "nvidia,tegra194-p2u";
+>> +	reg = <0x03e10000 0x10000>;
+>> +	reg-names = "ctl";
+>> +
+>> +	#phy-cells = <0>;
+>> +};
+>> -- 
+>> 2.17.1
+>>
+
