@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E7BA2161B4
-	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2019 12:10:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3B7E161BF
+	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2019 12:12:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfEGKK2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 May 2019 06:10:28 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:14359 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbfEGKK2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 May 2019 06:10:28 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cd159700000>; Tue, 07 May 2019 03:09:53 -0700
+        id S1726369AbfEGKMC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 May 2019 06:12:02 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:19486 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbfEGKMC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 May 2019 06:12:02 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cd159ed0000>; Tue, 07 May 2019 03:11:57 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 May 2019 03:10:27 -0700
+  Tue, 07 May 2019 03:12:01 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 May 2019 03:10:27 -0700
+        by hqpgpgate101.nvidia.com on Tue, 07 May 2019 03:12:01 -0700
 Received: from [10.25.73.250] (172.20.13.39) by HQMAIL101.nvidia.com
  (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 May
- 2019 10:10:22 +0000
-Subject: Re: [PATCH V5 12/16] arm64: tegra: Add P2U and PCIe controller nodes
- to Tegra194 DT
+ 2019 10:11:54 +0000
+Subject: Re: [PATCH V5 13/16] arm64: tegra: Enable PCIe slots in P2972-0000
+ board
 To:     Thierry Reding <thierry.reding@gmail.com>
 CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
         <robh+dt@kernel.org>, <mark.rutland@arm.com>,
@@ -34,15 +34,15 @@ CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
         <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
         <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
 References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-13-vidyas@nvidia.com> <20190503112637.GF32400@ulmo>
+ <20190424052004.6270-14-vidyas@nvidia.com> <20190503112751.GG32400@ulmo>
 X-Nvconfidentiality: public
 From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <d2c6dedd-05ed-d8f8-4e3a-e782e5d3806e@nvidia.com>
-Date:   Tue, 7 May 2019 15:40:19 +0530
+Message-ID: <ed191c29-a10e-e420-2bc0-55cefdecf6ee@nvidia.com>
+Date:   Tue, 7 May 2019 15:41:51 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190503112637.GF32400@ulmo>
+In-Reply-To: <20190503112751.GG32400@ulmo>
 X-Originating-IP: [172.20.13.39]
 X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
  HQMAIL101.nvidia.com (172.20.187.10)
@@ -50,28 +50,30 @@ Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557223793; bh=I7FKGwlXUUIi3Ic8/bqewqRmtRJND8Hs1jm4hHNZSVM=;
+        t=1557223917; bh=vq50Jt+k6FTdyIXHkyAqZgXq1yOp1zXcB8xjDiE9XEU=;
         h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
          Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
          X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
          Content-Transfer-Encoding;
-        b=ZPB44Zla0Hj6jvONalz/wZSPhhaBAYtPa8kjQQSqVqWBU2SmihsmZB9V6xdg+Yx8N
-         lVEuLvk02RTLft8E7zc6OVbyun28y0wxzIyYLmAaDTcb0L9ZDEVDrGyoU5/RF59PeG
-         Twz5ho4omO9hHiyOSIbgh7eYKlb+esqBrkfFIOUEnwCNF0DPYJETBbi2O/dGWy+cTv
-         nP0kIWKfkt+ZDtGFIwR3gOb5MZkaKUIOSNfTHkyBQzK1j5BfZrsqJr5WV1HAnlUJST
-         7l6HFXPHBbCAcc3HuZtDkucg8jOLtPZegeZ5W9BN1xMo0q4ZZORFe3LV1l19u0Uf7+
-         9CDFsL/MbZ0tw==
+        b=gjV+r7YKL4OGCshwVRXkMzkPIrMJxasj/gy8YXmNPclvZ9VRpSBWAycpFPiNrUAGX
+         zL4WVEsuRQnqAWk30Yphy56oZT1zr01UTeIWM+xguz7yj70LDTxWliL5xdt/058Hnh
+         GWZa3YaMfzuSBX2iLSJRgD1nzdGoCnMUnRZHEfa1kpRKdBTLX16RCYAKDJDd1fJsB8
+         nVeHRaUjtHpuArdRcc8qIeL8Xzd4mKK1ZxnDdUyW9gh4stdgIDT/NZqmGXBUNyh88H
+         5MC9oHyIe4xXUrJ4rVhdoON+QbkhB4DNDfcgxcp/A74Bach3EZzZfK8uBf4Wx6L2Xi
+         fk5yiIzFpTJrA==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 5/3/2019 4:56 PM, Thierry Reding wrote:
-> On Wed, Apr 24, 2019 at 10:50:00AM +0530, Vidya Sagar wrote:
->> Add P2U (PIPE to UPHY) and PCIe controller nodes to device tree.
->> The Tegra194 SoC contains six PCIe controllers and twenty P2U instances
->> grouped into two different PHY bricks namely High-Speed IO (HSIO-12 P2Us)
->> and NVIDIA High Speed (NVHS-8 P2Us) respectively.
+On 5/3/2019 4:57 PM, Thierry Reding wrote:
+> On Wed, Apr 24, 2019 at 10:50:01AM +0530, Vidya Sagar wrote:
+>> Enable PCIe controller nodes to enable respective PCIe slots on
+>> P2972-0000 board. Following is the ownership of slots by different
+>> PCIe controllers.
+>> Controller-0 : M.2 Key-M slot
+>> Controller-1 : On-board Marvell eSATA controller
+>> Controller-3 : M.2 Key-E slot
 >>
 >> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 >> ---
@@ -82,44 +84,45 @@ On 5/3/2019 4:56 PM, Thierry Reding wrote:
 >> * None
 >>
 >> Changes since [v2]:
->> * Included 'hsio' or 'nvhs' in P2U node's label names to reflect which brick
->>    they belong to
->> * Removed leading zeros in unit address
+>> * Changed P2U label names to reflect new format that includes 'hsio'/'nvhs'
+>>    strings to reflect UPHY brick they belong to
 >>
 >> Changes since [v1]:
->> * Flattened all P2U nodes by removing 'hsio-p2u' and 'nvhs-p2u' super nodes
->> * Changed P2U nodes compatible string from 'nvidia,tegra194-phy-p2u' to 'nvidia,tegra194-p2u'
->> * Changed reg-name from 'base' to 'ctl'
->> * Updated all PCIe nodes according to the changes made to DT documentation file
+>> * Dropped 'pcie-' from phy-names property strings
 >>
->>   arch/arm64/boot/dts/nvidia/tegra194.dtsi | 449 +++++++++++++++++++++++
->>   1 file changed, 449 insertions(+)
+>>   .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |  2 +-
+>>   .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 41 +++++++++++++++++++
+>>   2 files changed, 42 insertions(+), 1 deletion(-)
 >>
->> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
->> index c77ca211fa8f..dc433b446ff5 100644
->> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
->> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> [...]
+>> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+>> index 0fd5bd29fbf9..30a83d4c5b69 100644
+>> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+>> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+>> @@ -191,7 +191,7 @@
+>>   						regulator-boot-on;
+>>   					};
+>>   
+>> -					sd3 {
+>> +					vdd_1v8ao: sd3 {
+>>   						regulator-name = "VDD_1V8AO";
+>>   						regulator-min-microvolt = <1800000>;
+>>   						regulator-max-microvolt = <1800000>;
+>> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+>> index b62e96945846..7411c64e24a6 100644
+>> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+>> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+>> @@ -169,4 +169,45 @@
+>>   			};
+>>   		};
+>>   	};
+>> +
 >> +	pcie@14180000 {
 > [...]
->> +		ranges = <0x81000000 0x0 0x38100000 0x0 0x38100000 0x0 0x00100000    /* downstream I/O (1MB) */
->> +			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000  /* prefetchable memory (13GB) */
->> +			  0x82000000 0x0 0x40000000 0x1B 0x40000000 0x0 0xC0000000>; /* non-prefetchable memory (3GB) */
-> 
-> Please be consistent in the capitalization of hexadecimal numbers. You
-> use lowercase hexdigits in one place and upprecase in others. Just stick
-> to one (preferably lowercase since that's already used elsewhere in this
-> file).
-Ok.
-
-> 
->> +	};
->> +
 >> +	pcie@14100000 {
+> [...]
 > 
-> Also, entries should be sorted by unit-address, so controller 0 above
-> needs to go further down.
-Ok.
+> Again, these should be sorted by unit-address.
+Done.
 
 > 
 > Thierry
