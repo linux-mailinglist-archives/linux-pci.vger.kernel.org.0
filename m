@@ -2,188 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 02A6C16C06
-	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2019 22:13:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4538B16DA2
+	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2019 00:51:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfEGUM7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 May 2019 16:12:59 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36720 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfEGUM7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 May 2019 16:12:59 -0400
-Received: by mail-wr1-f65.google.com with SMTP id o4so24052037wra.3
-        for <linux-pci@vger.kernel.org>; Tue, 07 May 2019 13:12:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RROi8SlwMJ02bHieui3zTPkNYxQoLW/1VbRtWb7o0cQ=;
-        b=XWRKbRGTcO9fbaLOPYb+J+eZiaoDCjDanT8OlwufM9m8HwOJq3ClJ5xn2hsdjmnUBy
-         wMg2EW3LVtw6+67MFjF20sUa2bFNuwE4s6NsAVf7bYzew+ZCzZxJpO9WrW7NS7xdyQpf
-         vP86Zz74kW+/r2p/hzhcswqNGJ0PldcVxve//OdSHtSnXbu2t1bvSo2p2/3S2Td4W4bT
-         04MJMUoMOzdnCTCM47WKcdFnJWRnvBRgCIXeboyZ405QtkYrnhbt0urHrCglW5+rIf7C
-         bJU/s4ykKwuvU0g3ARHcsM+aT98szGdOnqWTO/toRknMFyHqzFtNwfb3fu/DQg5wxDNo
-         IMFQ==
-X-Gm-Message-State: APjAAAUDqI3GMn39JFaMybvKSfzsDlRvTqifffdPuaUpRE4lUdvqO10C
-        L3K0vh7vbGzvDj1wmKfjaiuBXQ==
-X-Google-Smtp-Source: APXvYqyO80NngiFbIywObAHb8DiWkgblM37tAnYiuApiyBX1bXCJMfqXmCbQilfWDxpHgNxw1gaU+Q==
-X-Received: by 2002:adf:e3c8:: with SMTP id k8mr23786304wrm.329.1557259977546;
-        Tue, 07 May 2019 13:12:57 -0700 (PDT)
-Received: from kherbst.pingu.com ([2a02:8308:b0be:6900:ac7d:46be:871b:a956])
-        by smtp.gmail.com with ESMTPSA id c10sm31816882wrd.69.2019.05.07.13.12.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 13:12:56 -0700 (PDT)
-From:   Karol Herbst <kherbst@redhat.com>
-To:     nouveau@lists.freedesktop.org
-Cc:     Lyude Paul <lyude@redhat.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Karol Herbst <kherbst@redhat.com>
-Subject: [PATCH v2 4/4] pci: save the boot pcie link speed and restore it on fini
-Date:   Tue,  7 May 2019 22:12:45 +0200
-Message-Id: <20190507201245.9295-5-kherbst@redhat.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190507201245.9295-1-kherbst@redhat.com>
-References: <20190507201245.9295-1-kherbst@redhat.com>
+        id S1726313AbfEGWup (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 May 2019 18:50:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725843AbfEGWuo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 7 May 2019 18:50:44 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F12C20825;
+        Tue,  7 May 2019 22:50:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557269443;
+        bh=ofR3gf9a2nJrY32VNWR52pwsavGPKy11KlcaF1ruQMg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=q8HzuDChdiOCMVNfo6MM2W2+skr7rZ7yqDAdrkY5qs9eIMnRp9/T266gImhjkjwOH
+         XGyOFGjN0XQBobQTOEpjMAbDqoANwEm/Livn+aRBsNBBgJQ2QxuleZvvEdB/6d3ZOA
+         RvQaju98/7G49oPyocYm9tfnBfnN6/JwMtxT5xao=
+Date:   Tue, 7 May 2019 17:50:40 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mohan Kumar <mohankumar718@gmail.com>
+Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] PCI: Cleanup printk logging
+Message-ID: <20190507225040.GF156478@google.com>
+References: <1555733026-19609-1-git-send-email-mohankumar718@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555733026-19609-1-git-send-email-mohankumar718@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Apperantly things go south if we suspend the device with a different PCIE
-link speed set than it got booted with. Fixes runtime suspend on my gp107.
+Hi Mohan,
 
-This all looks like some bug inside the pci subsystem and I would prefer a
-fix there instead of nouveau, but maybe there is no real nice way of doing
-that outside of drivers?
+On Sat, Apr 20, 2019 at 07:03:46AM +0300, Mohan Kumar wrote:
+> Replace printk with pr_* to avoid checkpatch warnings.
 
-v2: squashed together patch 4 and 5
+This looks fine, and I applied it to pci/printk with the intent of
+putting it in v5.2.  I squashed in some pieces of your second patch,
+and I'll respond to that one with the details.
 
-Signed-off-by: Karol Herbst <kherbst@redhat.com>
-Reviewed-by: Lyude Paul <lyude@redhat.com>
----
- drm/nouveau/include/nvkm/subdev/pci.h |  5 +++--
- drm/nouveau/nvkm/subdev/pci/base.c    |  9 +++++++--
- drm/nouveau/nvkm/subdev/pci/pcie.c    | 24 ++++++++++++++++++++----
- drm/nouveau/nvkm/subdev/pci/priv.h    |  2 ++
- 4 files changed, 32 insertions(+), 8 deletions(-)
+When you post more than one patch in a series, it's nice to include a
+cover letter where I can respond to the series as a whole.
 
-diff --git a/drm/nouveau/include/nvkm/subdev/pci.h b/drm/nouveau/include/nvkm/subdev/pci.h
-index 1fdf3098..b23793a2 100644
---- a/drm/nouveau/include/nvkm/subdev/pci.h
-+++ b/drm/nouveau/include/nvkm/subdev/pci.h
-@@ -26,8 +26,9 @@ struct nvkm_pci {
- 	} agp;
- 
- 	struct {
--		enum nvkm_pcie_speed speed;
--		u8 width;
-+		enum nvkm_pcie_speed cur_speed;
-+		enum nvkm_pcie_speed def_speed;
-+		u8 cur_width;
- 	} pcie;
- 
- 	bool msi;
-diff --git a/drm/nouveau/nvkm/subdev/pci/base.c b/drm/nouveau/nvkm/subdev/pci/base.c
-index ee2431a7..d9fb5a83 100644
---- a/drm/nouveau/nvkm/subdev/pci/base.c
-+++ b/drm/nouveau/nvkm/subdev/pci/base.c
-@@ -90,6 +90,8 @@ nvkm_pci_fini(struct nvkm_subdev *subdev, bool suspend)
- 
- 	if (pci->agp.bridge)
- 		nvkm_agp_fini(pci);
-+	else if (pci_is_pcie(pci->pdev))
-+		nvkm_pcie_fini(pci);
- 
- 	return 0;
- }
-@@ -100,6 +102,8 @@ nvkm_pci_preinit(struct nvkm_subdev *subdev)
- 	struct nvkm_pci *pci = nvkm_pci(subdev);
- 	if (pci->agp.bridge)
- 		nvkm_agp_preinit(pci);
-+	else if (pci_is_pcie(pci->pdev))
-+		nvkm_pcie_preinit(pci);
- 	return 0;
- }
- 
-@@ -193,8 +197,9 @@ nvkm_pci_new_(const struct nvkm_pci_func *func, struct nvkm_device *device,
- 	pci->func = func;
- 	pci->pdev = device->func->pci(device)->pdev;
- 	pci->irq = -1;
--	pci->pcie.speed = -1;
--	pci->pcie.width = -1;
-+	pci->pcie.cur_speed = -1;
-+	pci->pcie.def_speed = -1;
-+	pci->pcie.cur_width = -1;
- 
- 	if (device->type == NVKM_DEVICE_AGP)
- 		nvkm_agp_ctor(pci);
-diff --git a/drm/nouveau/nvkm/subdev/pci/pcie.c b/drm/nouveau/nvkm/subdev/pci/pcie.c
-index 70ccbe0d..731dd30e 100644
---- a/drm/nouveau/nvkm/subdev/pci/pcie.c
-+++ b/drm/nouveau/nvkm/subdev/pci/pcie.c
-@@ -85,6 +85,13 @@ nvkm_pcie_oneinit(struct nvkm_pci *pci)
- 	return 0;
- }
- 
-+int
-+nvkm_pcie_preinit(struct nvkm_pci *pci)
-+{
-+	pci->pcie.def_speed = nvkm_pcie_get_speed(pci);
-+	return 0;
-+}
-+
- int
- nvkm_pcie_init(struct nvkm_pci *pci)
- {
-@@ -105,12 +112,21 @@ nvkm_pcie_init(struct nvkm_pci *pci)
- 	if (pci->func->pcie.init)
- 		pci->func->pcie.init(pci);
- 
--	if (pci->pcie.speed != -1)
--		nvkm_pcie_set_link(pci, pci->pcie.speed, pci->pcie.width);
-+	if (pci->pcie.cur_speed != -1)
-+		nvkm_pcie_set_link(pci, pci->pcie.cur_speed,
-+				   pci->pcie.cur_width);
- 
- 	return 0;
- }
- 
-+int
-+nvkm_pcie_fini(struct nvkm_pci *pci)
-+{
-+	if (!IS_ERR_VALUE(pci->pcie.def_speed))
-+		return nvkm_pcie_set_link(pci, pci->pcie.def_speed, 16);
-+	return 0;
-+}
-+
- int
- nvkm_pcie_set_link(struct nvkm_pci *pci, enum nvkm_pcie_speed speed, u8 width)
- {
-@@ -146,8 +162,8 @@ nvkm_pcie_set_link(struct nvkm_pci *pci, enum nvkm_pcie_speed speed, u8 width)
- 		speed = max_speed;
- 	}
- 
--	pci->pcie.speed = speed;
--	pci->pcie.width = width;
-+	pci->pcie.cur_speed = speed;
-+	pci->pcie.cur_width = width;
- 
- 	if (speed == cur_speed) {
- 		nvkm_debug(subdev, "requested matches current speed\n");
-diff --git a/drm/nouveau/nvkm/subdev/pci/priv.h b/drm/nouveau/nvkm/subdev/pci/priv.h
-index a0d4c007..e7744671 100644
---- a/drm/nouveau/nvkm/subdev/pci/priv.h
-+++ b/drm/nouveau/nvkm/subdev/pci/priv.h
-@@ -60,5 +60,7 @@ enum nvkm_pcie_speed gk104_pcie_max_speed(struct nvkm_pci *);
- int gk104_pcie_version_supported(struct nvkm_pci *);
- 
- int nvkm_pcie_oneinit(struct nvkm_pci *);
-+int nvkm_pcie_preinit(struct nvkm_pci *);
- int nvkm_pcie_init(struct nvkm_pci *);
-+int nvkm_pcie_fini(struct nvkm_pci *);
- #endif
--- 
-2.21.0
-
+> Signed-off-by: Mohan Kumar <mohankumar718@gmail.com>
+> ---
+>  drivers/pci/pci-acpi.c | 11 ++++-------
+>  drivers/pci/quirks.c   |  2 +-
+>  2 files changed, 5 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index e1949f7..3ada026 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -140,8 +140,7 @@ static acpi_status decode_type0_hpx_record(union acpi_object *record,
+>  		hpx->t0->enable_perr     = fields[5].integer.value;
+>  		break;
+>  	default:
+> -		printk(KERN_WARNING
+> -		       "%s: Type 0 Revision %d record not supported\n",
+> +		pr_warn("%s: Type 0 Revision %d record not supported\n",
+>  		       __func__, revision);
+>  		return AE_ERROR;
+>  	}
+> @@ -169,8 +168,7 @@ static acpi_status decode_type1_hpx_record(union acpi_object *record,
+>  		hpx->t1->tot_max_split = fields[4].integer.value;
+>  		break;
+>  	default:
+> -		printk(KERN_WARNING
+> -		       "%s: Type 1 Revision %d record not supported\n",
+> +		pr_warn("%s: Type 1 Revision %d record not supported\n",
+>  		       __func__, revision);
+>  		return AE_ERROR;
+>  	}
+> @@ -211,8 +209,7 @@ static acpi_status decode_type2_hpx_record(union acpi_object *record,
+>  		hpx->t2->sec_unc_err_mask_or   = fields[17].integer.value;
+>  		break;
+>  	default:
+> -		printk(KERN_WARNING
+> -		       "%s: Type 2 Revision %d record not supported\n",
+> +		pr_warn("%s: Type 2 Revision %d record not supported\n",
+>  		       __func__, revision);
+>  		return AE_ERROR;
+>  	}
+> @@ -272,7 +269,7 @@ static acpi_status acpi_run_hpx(acpi_handle handle, struct hotplug_params *hpx)
+>  				goto exit;
+>  			break;
+>  		default:
+> -			printk(KERN_ERR "%s: Type %d record not supported\n",
+> +			pr_err("%s: Type %d record not supported\n",
+>  			       __func__, type);
+>  			status = AE_ERROR;
+>  			goto exit;
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index f9cd4d4..06af0c3 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2613,7 +2613,7 @@ static void nvbridge_check_legacy_irq_routing(struct pci_dev *dev)
+>  	pci_read_config_dword(dev, 0x74, &cfg);
+>  
+>  	if (cfg & ((1 << 2) | (1 << 15))) {
+> -		printk(KERN_INFO "Rewriting IRQ routing register on MCP55\n");
+> +		pr_info("Rewriting IRQ routing register on MCP55\n");
+>  		cfg &= ~((1 << 2) | (1 << 15));
+>  		pci_write_config_dword(dev, 0x74, cfg);
+>  	}
+> -- 
+> 2.7.4
+> 
