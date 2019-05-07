@@ -2,92 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F22D716B8C
-	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2019 21:41:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4210116C02
+	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2019 22:13:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbfEGTkp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 May 2019 15:40:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50552 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbfEGTkp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 7 May 2019 15:40:45 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75E5620578;
-        Tue,  7 May 2019 19:40:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557258044;
-        bh=q4p8BSBd7boB2NNiicg9dMmmMuiglR8h4wTorhca6oI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oU2zu9f6uOqjoXgFnMjBRGcqHDid1yHNQsDHfbzP9LQXyc0C2yZKc6d2fryqlXs09
-         K5qKCEPtYtOfCS0IQikDrSqFoydscmazV0wMPLgz8cm1Dgvn1lbHRRjeN/nfNLKRx4
-         pbNzzq/S3BYN5uYpbsjlwEvKlNrN9ShGQmSnWtYY=
-Date:   Tue, 7 May 2019 14:40:37 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Oliver O'Halloran <oohall@gmail.com>
-Cc:     linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add a comment for the is_physfn field
-Message-ID: <20190507194037.GE156478@google.com>
-References: <20190410074455.26964-1-oohall@gmail.com>
+        id S1726513AbfEGUMw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 May 2019 16:12:52 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35639 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbfEGUMw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 May 2019 16:12:52 -0400
+Received: by mail-wm1-f68.google.com with SMTP id y197so201137wmd.0
+        for <linux-pci@vger.kernel.org>; Tue, 07 May 2019 13:12:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nKyf6025ESUlz44iZjTU3xgvh1d2L7dl/tSUxUygF54=;
+        b=jxUWPsa/nwhQMD1Up0ro9gYVLBTsB69QCBtelpvkkHH/U4WltTqU+TeW2ReEvy8q9q
+         sX0kyRBTwNnL7SwllYk6023asNEv2PsMkCFs5l0dCatWIrbjQ3J4hwmw1BHP42EoFyc/
+         Av29i9t7RJo6BF7qUggdx3GWTUW60la8w1M29FIrSF0INObmExX23zsEPiewVq04DvJR
+         uH3DkpQbixgNOTvmYUh3GIrQOZ2pJRgr4LHyg3+6zTLz8EC+SqY0l2J/X6MDzhKsx7P9
+         AoeO11RsKV0sVD+CWvKhdWnt64EfN4aLxKEiKaxtHZFa6o4sHMnT2rgEeYHc/2eUirp3
+         5EbQ==
+X-Gm-Message-State: APjAAAX5Ta5vDvrh9/xFb8ZxwzkXCRWHZXd1aCgRe1uPHLb4eVnn4x9y
+        dVX3ASm+sZAuKmnPRlOqKctPtA==
+X-Google-Smtp-Source: APXvYqwZRrRSjcME6wz3K5cp6UgzFBiTNBrzm2raKXWh189lYmXlU/yFHjMwGfGrR5YMDOa7yLG/1A==
+X-Received: by 2002:a1c:ce:: with SMTP id 197mr129846wma.105.1557259970785;
+        Tue, 07 May 2019 13:12:50 -0700 (PDT)
+Received: from kherbst.pingu.com ([2a02:8308:b0be:6900:ac7d:46be:871b:a956])
+        by smtp.gmail.com with ESMTPSA id c10sm31816882wrd.69.2019.05.07.13.12.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 13:12:49 -0700 (PDT)
+From:   Karol Herbst <kherbst@redhat.com>
+To:     nouveau@lists.freedesktop.org
+Cc:     Lyude Paul <lyude@redhat.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Karol Herbst <kherbst@redhat.com>
+Subject: [PATCH v2 0/4] Potential fix for runpm issues on various laptops
+Date:   Tue,  7 May 2019 22:12:41 +0200
+Message-Id: <20190507201245.9295-1-kherbst@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410074455.26964-1-oohall@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Oliver,
+CCing linux-pci and Bjorn Helgaas. Maybe we could get better insights on
+how a reasonable fix would look like.
 
-On Wed, Apr 10, 2019 at 05:44:55PM +1000, Oliver O'Halloran wrote:
-> The meaning of is_physfn and how it's different to is_virtfn really
-> isn't clear unless you do a bit of digging. Add a comment to help out
-> the unaware.
-> 
-> Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-> ---
->  include/linux/pci.h | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 77448215ef5b..88bf71bfa757 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -393,6 +393,10 @@ struct pci_dev {
->  	unsigned int	is_managed:1;
->  	unsigned int	needs_freset:1;		/* Requires fundamental reset */
->  	unsigned int	state_saved:1;
-> +	/*
-> +	 * is_physfn indicates that the function can be used to host VFs.
-> +	 * It is only set when both the kernel and the device support IOV.
-> +	 */
+Anyway, to me this entire issue looks like something which has to be fixed
+on a PCI level instead of inside a driver, so it makes sense to ask the
+pci folks if they have any better suggestions.
 
-The comment is certainly accurate, no question there, but it sounds
-like the reason for adding it is because you stumbled over something
-in the confusing SR-IOV/PF/VF infrastructure.  If we can, I'd really
-like to improve that infrastructure so it's less confusing in the
-first place.
+Original cover letter:
+While investigating the runpm issues on my GP107 I noticed that something
+inside devinit makes runpm break. If Nouveau loads up to the point right
+before doing devinit, runpm works without any issues, if devinit is ran,
+not anymore.
 
-It seems like part of the problem is that "is_physfn" is telling us
-more than one thing: "CONFIG_PCI_IOV=y" and "pdev has an SR-IOV
-capability" and "pdev is a PF".
+Out of curiousity I even tried to "bisect" devinit by not running it on
+vbios provided signed PMU image, but on the devinit parser we have inside
+Nouveau.
+Allthough this one isn't as feature complete as the vbios one, I was able
+to reproduce the runpm issues as well. From that point I was able to only
+run a certain amount of commands until I got to some PCIe initialization
+code inside devinit which trigger those runpm issues.
 
-Many of the uses of "is_physfn" are in powerpc code that tests
-"!pdev->is_physfn", and the negation of those multiple things makes it
-a little confusing to figure out what the real purpose it.
+Devinit on my GPU was changing the PCIe link from 8.0 to 2.5, reversing
+that on the fini path makes runpm work again.
 
-Maybe we should cache the PCI_EXT_CAP_ID_SRIOV location in the
-pci_dev.  That would simplify some drivers slightly, and if we had
-"pdev->sriov_cap" and "pdev->is_virtfn", I think we could drop
-"is_physfn".  But I don't understand the powerpc uses well enough to
-know whether that would make things easier or harder.
+There are a few other things going on, but with my limited knowledge about
+PCIe in general, the change in the link speed sounded like it could cause
+issues on resume if the controller and the device disagree on the actual
+link.
 
->  	unsigned int	is_physfn:1;
->  	unsigned int	is_virtfn:1;
->  	unsigned int	reset_fn:1;
-> -- 
-> 2.20.1
-> 
+Maybe this is just a bug within the PCI subsystem inside linux instead and
+the controller has to be forced to do _something_?
+
+Anyway, with this runpm seems to work nicely on my machine. Secure booting
+the gr (even with my workaround applied I need anyway) might fail after
+the GPU got runtime resumed though...
+
+Karol Herbst (4):
+  drm: don't set the pci power state if the pci subsystem handles the
+    ACPI bits
+  pci: enable pcie link changes for pascal
+  pci: add nvkm_pcie_get_speed
+  pci: save the boot pcie link speed and restore it on fini
+
+ drm/nouveau/include/nvkm/subdev/pci.h |  6 +++--
+ drm/nouveau/nouveau_acpi.c            |  7 +++++-
+ drm/nouveau/nouveau_acpi.h            |  2 ++
+ drm/nouveau/nouveau_drm.c             | 14 +++++++++---
+ drm/nouveau/nouveau_drv.h             |  2 ++
+ drm/nouveau/nvkm/subdev/pci/base.c    |  9 ++++++--
+ drm/nouveau/nvkm/subdev/pci/gk104.c   |  8 +++----
+ drm/nouveau/nvkm/subdev/pci/gp100.c   | 10 +++++++++
+ drm/nouveau/nvkm/subdev/pci/pcie.c    | 32 +++++++++++++++++++++++----
+ drm/nouveau/nvkm/subdev/pci/priv.h    |  7 ++++++
+ 10 files changed, 81 insertions(+), 16 deletions(-)
+
+-- 
+2.21.0
+
