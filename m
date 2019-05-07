@@ -2,143 +2,181 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 037441618C
-	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2019 11:56:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 927E916190
+	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2019 11:57:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfEGJ4J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 May 2019 05:56:09 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38044 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbfEGJ4J (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 May 2019 05:56:09 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v11so1276741wru.5
-        for <linux-pci@vger.kernel.org>; Tue, 07 May 2019 02:56:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IHeTau53rhyWfO0CEZaf8TCogPgsV/f85c5XRY2FpLM=;
-        b=I06S5IOarXEB/Rf8KhJ8SfEAoJrkDpxZTo6cDWUP6nlceF4XGWjqb6oVabXf17/jUj
-         LwuNPrwM+Whj3lIPAaHPJ3jeSY+nd7ayIM0Jii1WlRfCzjzPzgnqnLvMVdCiDu28lUcR
-         1tEx7wuMaIeQEHTxZmxuTBi7ssyBnNcxWS1lc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IHeTau53rhyWfO0CEZaf8TCogPgsV/f85c5XRY2FpLM=;
-        b=jDbPOgSIfZjgVXriZOwDxaYHmkVbvL2tydPjg/rtAv9ZL1iRxcDttnLtBkyKK6kbMS
-         tjZIeJ+8nvnJ7O000z1/upy39fULsFwPvgDbPk+7NkpvCek5RVPCUIXbL6Zu4/i3rwMD
-         Udbgj9kd+CD6ta3lLU3W4RSEU3pLbLZXXXsgBIV4UJMnPDNEkCzG7vcrpAtbOR4j2GzU
-         c2w2o/o+dzBO7Xe2x3WxNutu2LtzaA8RAQb1gu0+IskHkTlLQBQxKRin6sz9p51huJXy
-         Cng9ZB1Gn2axwrsw4qvfBPcCx4CWe81b9kKrcOH3zIwCQ9M1L58sFIqr3bIxlxBKfXgN
-         mqag==
-X-Gm-Message-State: APjAAAVhxc732ZmGKFpg/TyTwPt1PlFt2fyNuYqWy3IFEg2rdHf955KJ
-        u4F5hB9zYzNzuDSMPbcdyt29D46zs8cMkX7uJoEl+w==
-X-Google-Smtp-Source: APXvYqwpyZql/DVaMZQlJQ4tp1wmaegr8/4zAmfIGvL/FFytGrVm3guHpUfKnCBrOcV6rhqM2oVmzL4885QLHRebxks=
-X-Received: by 2002:adf:fcc8:: with SMTP id f8mr21425833wrs.250.1557222966866;
- Tue, 07 May 2019 02:56:06 -0700 (PDT)
+        id S1726416AbfEGJ5C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 May 2019 05:57:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726399AbfEGJ5C (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 7 May 2019 05:57:02 -0400
+Received: from localhost (unknown [106.200.210.185])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB1E42053B;
+        Tue,  7 May 2019 09:56:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557223020;
+        bh=qZCkGMVfQi6XdZaHQrcvVPt8ch7IBWjlhqotMuwf81s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SePrwzWCiyuzYrqHfbOjeHP3FeY928pydbXrc05iyqRb0HvQZzEvyJ6CErb/F2MlT
+         VsmySCaS74w3z2qMSJvE2FDRElfpfOjvOTJF5P4wS6rPLX0ugX7VT0TGzsTpYe4miF
+         vdu6Pl8HocKcKdx/C5jezcDjh1fYk1DRIVBo3Qfk=
+Date:   Tue, 7 May 2019 15:26:54 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [RFC v6 1/6] dmaengine: Add Synopsys eDMA IP core driver
+Message-ID: <20190507095654.GH16052@vkoul-mobl>
+References: <cover.1556043127.git.gustavo.pimentel@synopsys.com>
+ <0e877ac0115d37e466ac234f47c51cb1cae7f292.1556043127.git.gustavo.pimentel@synopsys.com>
+ <20190506112001.GE3845@vkoul-mobl.Dlink>
+ <305100E33629484CBB767107E4246BBB0A238675@de02wembxa.internal.synopsys.com>
+ <20190507050310.GA16052@vkoul-mobl>
+ <305100E33629484CBB767107E4246BBB0A238D2C@de02wembxa.internal.synopsys.com>
 MIME-Version: 1.0
-References: <1556892334-16270-1-git-send-email-srinath.mannam@broadcom.com>
- <1556892334-16270-4-git-send-email-srinath.mannam@broadcom.com>
- <20190506211208.GA156478@google.com> <20190507094102.GA10964@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190507094102.GA10964@e121166-lin.cambridge.arm.com>
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-Date:   Tue, 7 May 2019 15:25:55 +0530
-Message-ID: <CABe79T5d-H8XYmDz0463oqS6pF5X8=zi+1YSRLVASuGdjHZgXQ@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] PCI: iproc: Add sorted dma ranges resource entries
- to host bridge
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Eric Auger <eric.auger@redhat.com>, poza@codeaurora.org,
-        Ray Jui <rjui@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <305100E33629484CBB767107E4246BBB0A238D2C@de02wembxa.internal.synopsys.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+On 07-05-19, 09:08, Gustavo Pimentel wrote:
+> On Tue, May 7, 2019 at 6:3:10, Vinod Koul <vkoul@kernel.org> wrote:
+> > On 06-05-19, 16:42, Gustavo Pimentel wrote:
 
-Thank you.
+> > > > > +static struct dma_async_tx_descriptor *
+> > > > > +dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+> > > > > +{
+> > > > > +	struct dw_edma_chan *chan = dchan2dw_edma_chan(xfer->dchan);
+> > > > > +	enum dma_transfer_direction direction = xfer->direction;
+> > > > > +	phys_addr_t src_addr, dst_addr;
+> > > > > +	struct scatterlist *sg = NULL;
+> > > > > +	struct dw_edma_chunk *chunk;
+> > > > > +	struct dw_edma_burst *burst;
+> > > > > +	struct dw_edma_desc *desc;
+> > > > > +	u32 cnt;
+> > > > > +	int i;
+> > > > > +
+> > > > > +	if ((direction == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_WRITE) ||
+> > > > > +	    (direction == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ))
+> > > > > +		return NULL;
+> > > > > +
+> > > > > +	if (xfer->cyclic) {
+> > > > > +		if (!xfer->xfer.cyclic.len || !xfer->xfer.cyclic.cnt)
+> > > > > +			return NULL;
+> > > > > +	} else {
+> > > > > +		if (xfer->xfer.sg.len < 1)
+> > > > > +			return NULL;
+> > > > > +	}
+> > > > > +
+> > > > > +	if (!chan->configured)
+> > > > > +		return NULL;
+> > > > > +
+> > > > > +	desc = dw_edma_alloc_desc(chan);
+> > > > > +	if (unlikely(!desc))
+> > > > > +		goto err_alloc;
+> > > > > +
+> > > > > +	chunk = dw_edma_alloc_chunk(desc);
+> > > > > +	if (unlikely(!chunk))
+> > > > > +		goto err_alloc;
+> > > > > +
+> > > > > +	src_addr = chan->config.src_addr;
+> > > > > +	dst_addr = chan->config.dst_addr;
+> > > > > +
+> > > > > +	if (xfer->cyclic) {
+> > > > > +		cnt = xfer->xfer.cyclic.cnt;
+> > > > > +	} else {
+> > > > > +		cnt = xfer->xfer.sg.len;
+> > > > > +		sg = xfer->xfer.sg.sgl;
+> > > > > +	}
+> > > > > +
+> > > > > +	for (i = 0; i < cnt; i++) {
+> > > > > +		if (!xfer->cyclic && !sg)
+> > > > > +			break;
+> > > > > +
+> > > > > +		if (chunk->bursts_alloc == chan->ll_max) {
+> > > > > +			chunk = dw_edma_alloc_chunk(desc);
+> > > > > +			if (unlikely(!chunk))
+> > > > > +				goto err_alloc;
+> > > > > +		}
+> > > > > +
+> > > > > +		burst = dw_edma_alloc_burst(chunk);
+> > > > > +		if (unlikely(!burst))
+> > > > > +			goto err_alloc;
+> > > > > +
+> > > > > +		if (xfer->cyclic)
+> > > > > +			burst->sz = xfer->xfer.cyclic.len;
+> > > > > +		else
+> > > > > +			burst->sz = sg_dma_len(sg);
+> > > > > +
+> > > > > +		chunk->ll_region.sz += burst->sz;
+> > > > > +		desc->alloc_sz += burst->sz;
+> > > > > +
+> > > > > +		if (direction == DMA_DEV_TO_MEM) {
+> > > > > +			burst->sar = src_addr;
+> > > > 
+> > > > We are device to mem, so src is peripheral.. okay
+> > > > 
+> > > > > +			if (xfer->cyclic) {
+> > > > > +				burst->dar = xfer->xfer.cyclic.paddr;
+> > > > > +			} else {
+> > > > > +				burst->dar = sg_dma_address(sg);
+> > > > > +				src_addr += sg_dma_len(sg);
+> > > > 
+> > > > and we increment the src, doesn't make sense to me!
+> > > > 
+> > > > > +			}
+> > > > > +		} else {
+> > > > > +			burst->dar = dst_addr;
+> > > > > +			if (xfer->cyclic) {
+> > > > > +				burst->sar = xfer->xfer.cyclic.paddr;
+> > > > > +			} else {
+> > > > > +				burst->sar = sg_dma_address(sg);
+> > > > > +				dst_addr += sg_dma_len(sg);
+> > > > 
+> > > > same here as well
+> > > 
+> > > This is hard to explain in words...
+> > > Well, in my perspective I want to transfer a piece of memory from the 
+> > > peripheral into local RAM
+> > 
+> > Right and most of the case RAM address (sg) needs to increment whereas
+> > peripheral is a constant one
+> > 
+> > > Through the DMA client API I'll break this piece of memory in several 
+> > > small parts and add all into a list (scatter-gather), right?
+> > > Each element of the scatter-gather has the sg_dma_address (in the 
+> > > DMA_DEV_TO_MEM case will be the destination address) and the 
+> > > corresponding size.
+> > 
+> > Correct
+> > 
+> > > However, I still need the other address (in the DMA_DEV_TO_MEM case will 
+> > > be the source address) for that small part of memory.
+> > > Since I get that address from the config, I still need to increment the 
+> > > source address in the same proportion of the destination address, in 
+> > > other words, the increment will be the part size.
+> > 
+> > I don't think so. Typically the device address is a FIFO, which does not
+> > increment and you keep pushing data at same address. It is not a memory
+> 
+> In my use case, it's a memory, perhaps that is what is causing this 
+> confusing.
+> I'm copying "plain and flat" data from point A to B, with the 
+> particularity that the peripheral memory is always continuous and the CPU 
+> memory can be constituted by scatter-gather chunks of contiguous memory
 
-Regards,
-Srinath.
-
-On Tue, May 7, 2019 at 3:11 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Mon, May 06, 2019 at 04:12:08PM -0500, Bjorn Helgaas wrote:
-> > On Fri, May 03, 2019 at 07:35:34PM +0530, Srinath Mannam wrote:
-> > > The IPROC host controller allows only a subset of physical address space
-> > > as target of inbound PCI memory transactions addresses.
-> > >
-> > > PCIe devices memory transactions targeting memory regions that
-> > > are not allowed for inbound transactions in the host controller
-> > > are rejected by the host controller and cannot reach the upstream
-> > > buses.
-> > >
-> > > Firmware device tree description defines the DMA ranges that are
-> > > addressable by devices DMA transactions; parse the device tree
-> > > dma-ranges property and add its ranges to the PCI host bridge dma_ranges
-> > > list; the iova_reserve_pci_windows() call in the driver will reserve the
-> > > IOVA address ranges that are not addressable (ie memory holes in the
-> > > dma-ranges set) so that they are not allocated to PCI devices for DMA
-> > > transfers.
-> > >
-> > > All allowed address ranges are listed in dma-ranges DT parameter.
-> > >
-> > > Example:
-> > >
-> > > dma-ranges = < \
-> > >   0x43000000 0x00 0x80000000 0x00 0x80000000 0x00 0x80000000 \
-> > >   0x43000000 0x08 0x00000000 0x08 0x00000000 0x08 0x00000000 \
-> > >   0x43000000 0x80 0x00000000 0x80 0x00000000 0x40 0x00000000>
-> > >
-> > > In the above example of dma-ranges, memory address from
-> > >
-> > > 0x0 - 0x80000000,
-> > > 0x100000000 - 0x800000000,
-> > > 0x1000000000 - 0x8000000000 and
-> > > 0x10000000000 - 0xffffffffffffffff.
-> > >
-> > > are not allowed to be used as inbound addresses.
-> > >
-> > > Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
-> > > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> > > [lorenzo.pieralisi@arm.com: updated commit log]
-> > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
-> > > Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> > > ---
-> > >  drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
-> > >  1 file changed, 43 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> > > index c20fd6b..94ba5c0 100644
-> > > --- a/drivers/pci/controller/pcie-iproc.c
-> > > +++ b/drivers/pci/controller/pcie-iproc.c
-> > > @@ -1146,11 +1146,43 @@ static int iproc_pcie_setup_ib(struct iproc_pcie *pcie,
-> > >     return ret;
-> > >  }
-> > >
-> > > +static int
-> > > +iproc_pcie_add_dma_range(struct device *dev, struct list_head *resources,
-> > > +                    struct of_pci_range *range)
-> >
-> > Just FYI, I cherry-picked these commits from Lorenzo's branch to fix
-> > the formatting of this prototype to match the rest of the file, e.g.:
->
-> Thank you, I noticed too but I forgot to update it before merging
-> v6 from the list.
->
-> Thanks,
-> Lorenzo
->
-> > >  static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
-> > > ...
-> > >  static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
+Then why should it be slave transfer, it should be treated as memcpy
+with src and dst sg lists..
+-- 
+~Vinod
