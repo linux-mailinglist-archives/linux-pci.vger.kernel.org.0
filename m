@@ -2,46 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4210116C02
+	by mail.lfdr.de (Postfix) with ESMTP id AC5E616C03
 	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2019 22:13:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfEGUMw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 May 2019 16:12:52 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35639 "EHLO
+        id S1726808AbfEGUMy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 May 2019 16:12:54 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40867 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbfEGUMw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 May 2019 16:12:52 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y197so201137wmd.0
-        for <linux-pci@vger.kernel.org>; Tue, 07 May 2019 13:12:51 -0700 (PDT)
+        with ESMTP id S1726495AbfEGUMy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 May 2019 16:12:54 -0400
+Received: by mail-wm1-f68.google.com with SMTP id h11so170409wmb.5
+        for <linux-pci@vger.kernel.org>; Tue, 07 May 2019 13:12:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nKyf6025ESUlz44iZjTU3xgvh1d2L7dl/tSUxUygF54=;
-        b=jxUWPsa/nwhQMD1Up0ro9gYVLBTsB69QCBtelpvkkHH/U4WltTqU+TeW2ReEvy8q9q
-         sX0kyRBTwNnL7SwllYk6023asNEv2PsMkCFs5l0dCatWIrbjQ3J4hwmw1BHP42EoFyc/
-         Av29i9t7RJo6BF7qUggdx3GWTUW60la8w1M29FIrSF0INObmExX23zsEPiewVq04DvJR
-         uH3DkpQbixgNOTvmYUh3GIrQOZ2pJRgr4LHyg3+6zTLz8EC+SqY0l2J/X6MDzhKsx7P9
-         AoeO11RsKV0sVD+CWvKhdWnt64EfN4aLxKEiKaxtHZFa6o4sHMnT2rgEeYHc/2eUirp3
-         5EbQ==
-X-Gm-Message-State: APjAAAX5Ta5vDvrh9/xFb8ZxwzkXCRWHZXd1aCgRe1uPHLb4eVnn4x9y
-        dVX3ASm+sZAuKmnPRlOqKctPtA==
-X-Google-Smtp-Source: APXvYqwZRrRSjcME6wz3K5cp6UgzFBiTNBrzm2raKXWh189lYmXlU/yFHjMwGfGrR5YMDOa7yLG/1A==
-X-Received: by 2002:a1c:ce:: with SMTP id 197mr129846wma.105.1557259970785;
-        Tue, 07 May 2019 13:12:50 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=B7vQgzwv4uXlKby5Paph4wAB3fX2oc2PrYOm1U17jks=;
+        b=eR68EHYsMTJiiuqG25TiAedi3NPOZXyJ0NQ/syYTuFA7LuP9oxl1m0jBwZMi8UrBdI
+         omU8EoUiMXtpT7ktt82/hS2iraZQ21359tfdEey0zWL8YaBrv4DJNMUC7HUVz8mwXIoU
+         MhoHEeuePJnCVg+qsIDvhfe7jL8cRBYJSoExJZGLi7P5JPibt6XmrBFJo4/A1A8h5whp
+         o7xX4I7IPJsGa8FSk3pWNTyD8pIgi6hSTD/acXpxzvmsLMaM+8jSv8HlOh4hrzAtzL23
+         GGpiZehX683AIoOSKTxVi3qY7JYWm6p6Dr9s7vqawZXl9ipT3yT2SDqeQu682dtPQGJo
+         2EdA==
+X-Gm-Message-State: APjAAAVBHVnk7gKnzQRZJcLXQWL7iHvH/lqUiZqugeoD7SNTdFzkvxyH
+        MUwPKxytAUQ1LOF3n0Tm+NlGjQ==
+X-Google-Smtp-Source: APXvYqxTZrgYn7okJTfZqenmFLflUZFE0xEygyJX/FFiyeqoxsIYqRAvn9iCeKQ3gyTxcPKGb+EYsA==
+X-Received: by 2002:a05:600c:2051:: with SMTP id p17mr133037wmg.125.1557259972238;
+        Tue, 07 May 2019 13:12:52 -0700 (PDT)
 Received: from kherbst.pingu.com ([2a02:8308:b0be:6900:ac7d:46be:871b:a956])
-        by smtp.gmail.com with ESMTPSA id c10sm31816882wrd.69.2019.05.07.13.12.49
+        by smtp.gmail.com with ESMTPSA id c10sm31816882wrd.69.2019.05.07.13.12.50
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 13:12:49 -0700 (PDT)
+        Tue, 07 May 2019 13:12:51 -0700 (PDT)
 From:   Karol Herbst <kherbst@redhat.com>
 To:     nouveau@lists.freedesktop.org
 Cc:     Lyude Paul <lyude@redhat.com>, linux-pci@vger.kernel.org,
         Bjorn Helgaas <helgaas@kernel.org>,
         Karol Herbst <kherbst@redhat.com>
-Subject: [PATCH v2 0/4] Potential fix for runpm issues on various laptops
-Date:   Tue,  7 May 2019 22:12:41 +0200
-Message-Id: <20190507201245.9295-1-kherbst@redhat.com>
+Subject: [PATCH v2 1/4] drm: don't set the pci power state if the pci subsystem handles the ACPI bits
+Date:   Tue,  7 May 2019 22:12:42 +0200
+Message-Id: <20190507201245.9295-2-kherbst@redhat.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190507201245.9295-1-kherbst@redhat.com>
+References: <20190507201245.9295-1-kherbst@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -49,61 +51,132 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-CCing linux-pci and Bjorn Helgaas. Maybe we could get better insights on
-how a reasonable fix would look like.
+v2: rework detection of if Nouveau calling a DSM method or not
 
-Anyway, to me this entire issue looks like something which has to be fixed
-on a PCI level instead of inside a driver, so it makes sense to ask the
-pci folks if they have any better suggestions.
+Signed-off-by: Karol Herbst <kherbst@redhat.com>
+---
+ drm/nouveau/nouveau_acpi.c |  7 ++++++-
+ drm/nouveau/nouveau_acpi.h |  2 ++
+ drm/nouveau/nouveau_drm.c  | 14 +++++++++++---
+ drm/nouveau/nouveau_drv.h  |  2 ++
+ 4 files changed, 21 insertions(+), 4 deletions(-)
 
-Original cover letter:
-While investigating the runpm issues on my GP107 I noticed that something
-inside devinit makes runpm break. If Nouveau loads up to the point right
-before doing devinit, runpm works without any issues, if devinit is ran,
-not anymore.
-
-Out of curiousity I even tried to "bisect" devinit by not running it on
-vbios provided signed PMU image, but on the devinit parser we have inside
-Nouveau.
-Allthough this one isn't as feature complete as the vbios one, I was able
-to reproduce the runpm issues as well. From that point I was able to only
-run a certain amount of commands until I got to some PCIe initialization
-code inside devinit which trigger those runpm issues.
-
-Devinit on my GPU was changing the PCIe link from 8.0 to 2.5, reversing
-that on the fini path makes runpm work again.
-
-There are a few other things going on, but with my limited knowledge about
-PCIe in general, the change in the link speed sounded like it could cause
-issues on resume if the controller and the device disagree on the actual
-link.
-
-Maybe this is just a bug within the PCI subsystem inside linux instead and
-the controller has to be forced to do _something_?
-
-Anyway, with this runpm seems to work nicely on my machine. Secure booting
-the gr (even with my workaround applied I need anyway) might fail after
-the GPU got runtime resumed though...
-
-Karol Herbst (4):
-  drm: don't set the pci power state if the pci subsystem handles the
-    ACPI bits
-  pci: enable pcie link changes for pascal
-  pci: add nvkm_pcie_get_speed
-  pci: save the boot pcie link speed and restore it on fini
-
- drm/nouveau/include/nvkm/subdev/pci.h |  6 +++--
- drm/nouveau/nouveau_acpi.c            |  7 +++++-
- drm/nouveau/nouveau_acpi.h            |  2 ++
- drm/nouveau/nouveau_drm.c             | 14 +++++++++---
- drm/nouveau/nouveau_drv.h             |  2 ++
- drm/nouveau/nvkm/subdev/pci/base.c    |  9 ++++++--
- drm/nouveau/nvkm/subdev/pci/gk104.c   |  8 +++----
- drm/nouveau/nvkm/subdev/pci/gp100.c   | 10 +++++++++
- drm/nouveau/nvkm/subdev/pci/pcie.c    | 32 +++++++++++++++++++++++----
- drm/nouveau/nvkm/subdev/pci/priv.h    |  7 ++++++
- 10 files changed, 81 insertions(+), 16 deletions(-)
-
+diff --git a/drm/nouveau/nouveau_acpi.c b/drm/nouveau/nouveau_acpi.c
+index ffb19585..92dfc900 100644
+--- a/drm/nouveau/nouveau_acpi.c
++++ b/drm/nouveau/nouveau_acpi.c
+@@ -358,6 +358,12 @@ void nouveau_register_dsm_handler(void)
+ 	vga_switcheroo_register_handler(&nouveau_dsm_handler, 0);
+ }
+ 
++bool nouveau_runpm_calls_dsm(void)
++{
++	return nouveau_dsm_priv.optimus_detected &&
++		!nouveau_dsm_priv.optimus_skip_dsm;
++}
++
+ /* Must be called for Optimus models before the card can be turned off */
+ void nouveau_switcheroo_optimus_dsm(void)
+ {
+@@ -371,7 +377,6 @@ void nouveau_switcheroo_optimus_dsm(void)
+ 
+ 	nouveau_optimus_dsm(nouveau_dsm_priv.dhandle, NOUVEAU_DSM_OPTIMUS_CAPS,
+ 		NOUVEAU_DSM_OPTIMUS_SET_POWERDOWN, &result);
+-
+ }
+ 
+ void nouveau_unregister_dsm_handler(void)
+diff --git a/drm/nouveau/nouveau_acpi.h b/drm/nouveau/nouveau_acpi.h
+index b86294fc..0f5d7aa0 100644
+--- a/drm/nouveau/nouveau_acpi.h
++++ b/drm/nouveau/nouveau_acpi.h
+@@ -13,6 +13,7 @@ void nouveau_switcheroo_optimus_dsm(void);
+ int nouveau_acpi_get_bios_chunk(uint8_t *bios, int offset, int len);
+ bool nouveau_acpi_rom_supported(struct device *);
+ void *nouveau_acpi_edid(struct drm_device *, struct drm_connector *);
++bool nouveau_runpm_calls_dsm(void);
+ #else
+ static inline bool nouveau_is_optimus(void) { return false; };
+ static inline bool nouveau_is_v1_dsm(void) { return false; };
+@@ -22,6 +23,7 @@ static inline void nouveau_switcheroo_optimus_dsm(void) {}
+ static inline bool nouveau_acpi_rom_supported(struct device *dev) { return false; }
+ static inline int nouveau_acpi_get_bios_chunk(uint8_t *bios, int offset, int len) { return -EINVAL; }
+ static inline void *nouveau_acpi_edid(struct drm_device *dev, struct drm_connector *connector) { return NULL; }
++static inline bool nouveau_runpm_calls_dsm(void) { return false; }
+ #endif
+ 
+ #endif
+diff --git a/drm/nouveau/nouveau_drm.c b/drm/nouveau/nouveau_drm.c
+index 5020265b..09e68e61 100644
+--- a/drm/nouveau/nouveau_drm.c
++++ b/drm/nouveau/nouveau_drm.c
+@@ -556,6 +556,7 @@ nouveau_drm_device_init(struct drm_device *dev)
+ 	nouveau_fbcon_init(dev);
+ 	nouveau_led_init(dev);
+ 
++	drm->runpm_dsm = nouveau_runpm_calls_dsm();
+ 	if (nouveau_pmops_runtime()) {
+ 		pm_runtime_use_autosuspend(dev->dev);
+ 		pm_runtime_set_autosuspend_delay(dev->dev, 5000);
+@@ -903,6 +904,7 @@ nouveau_pmops_runtime_suspend(struct device *dev)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct drm_device *drm_dev = pci_get_drvdata(pdev);
++	struct nouveau_drm *drm = nouveau_drm(drm_dev);
+ 	int ret;
+ 
+ 	if (!nouveau_pmops_runtime()) {
+@@ -910,12 +912,15 @@ nouveau_pmops_runtime_suspend(struct device *dev)
+ 		return -EBUSY;
+ 	}
+ 
++	drm_dev->switch_power_state = DRM_SWITCH_POWER_CHANGING;
+ 	nouveau_switcheroo_optimus_dsm();
+ 	ret = nouveau_do_suspend(drm_dev, true);
+ 	pci_save_state(pdev);
+ 	pci_disable_device(pdev);
+ 	pci_ignore_hotplug(pdev);
+-	pci_set_power_state(pdev, PCI_D3cold);
++	if (drm->runpm_dsm)
++		pci_set_power_state(pdev, PCI_D3cold);
++
+ 	drm_dev->switch_power_state = DRM_SWITCH_POWER_DYNAMIC_OFF;
+ 	return ret;
+ }
+@@ -925,7 +930,8 @@ nouveau_pmops_runtime_resume(struct device *dev)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct drm_device *drm_dev = pci_get_drvdata(pdev);
+-	struct nvif_device *device = &nouveau_drm(drm_dev)->client.device;
++	struct nouveau_drm *drm = nouveau_drm(drm_dev);
++	struct nvif_device *device = &drm->client.device;
+ 	int ret;
+ 
+ 	if (!nouveau_pmops_runtime()) {
+@@ -933,7 +939,9 @@ nouveau_pmops_runtime_resume(struct device *dev)
+ 		return -EBUSY;
+ 	}
+ 
+-	pci_set_power_state(pdev, PCI_D0);
++	drm_dev->switch_power_state = DRM_SWITCH_POWER_CHANGING;
++	if (drm->runpm_dsm)
++		pci_set_power_state(pdev, PCI_D0);
+ 	pci_restore_state(pdev);
+ 	ret = pci_enable_device(pdev);
+ 	if (ret)
+diff --git a/drm/nouveau/nouveau_drv.h b/drm/nouveau/nouveau_drv.h
+index da847244..941600e9 100644
+--- a/drm/nouveau/nouveau_drv.h
++++ b/drm/nouveau/nouveau_drv.h
+@@ -214,6 +214,8 @@ struct nouveau_drm {
+ 	struct nouveau_svm *svm;
+ 
+ 	struct nouveau_dmem *dmem;
++
++	bool runpm_dsm;
+ };
+ 
+ static inline struct nouveau_drm *
 -- 
 2.21.0
 
