@@ -2,150 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B306C158C7
-	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2019 07:11:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C761315AE1
+	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2019 07:50:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbfEGFLn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 May 2019 01:11:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbfEGFLn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 7 May 2019 01:11:43 -0400
-Received: from localhost (unknown [106.200.210.185])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BCD620825;
-        Tue,  7 May 2019 05:11:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557205902;
-        bh=DhGcLuNPmEe+wui1gUyB30BTjYJWqF5WS3OUjoUnFNA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=elaAKIyLZawJXjWixh6NrJpXsyL6MHcA60hoFLKdBW5Dw+c5GPCj3vuY8oHe2II+k
-         o3JCTrGvaFVhGtszsj09NpHw9+uTumMOQmOZySZ1YdL0sBz1Rni5RN8d7TzJiRe56n
-         AiPkX0YKwLnGjScpveq4Wh+bI+JSZ66Fut4Lj428=
-Date:   Tue, 7 May 2019 10:41:36 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [RFC v6 3/6] dmaengine: Add Synopsys eDMA IP version 0 debugfs
- support
-Message-ID: <20190507051136.GB16052@vkoul-mobl>
-References: <cover.1556043127.git.gustavo.pimentel@synopsys.com>
- <ba56a34f11c4bb699079946ca51bb11244ac713e.1556043127.git.gustavo.pimentel@synopsys.com>
- <20190506120710.GG3845@vkoul-mobl.Dlink>
- <305100E33629484CBB767107E4246BBB0A2386A1@de02wembxa.internal.synopsys.com>
+        id S1727916AbfEGFte (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 May 2019 01:49:34 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:3565 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728741AbfEGFtd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 May 2019 01:49:33 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cd11c660000>; Mon, 06 May 2019 22:49:26 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 06 May 2019 22:49:30 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 06 May 2019 22:49:30 -0700
+Received: from [10.25.73.250] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 May
+ 2019 05:49:26 +0000
+Subject: Re: [PATCH V4 1/2] PCI: dwc: Add API support to de-initialize host
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <bhelgaas@google.com>, <Jisheng.Zhang@synaptics.com>,
+        <thierry.reding@gmail.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190502170426.28688-1-vidyas@nvidia.com>
+ <20190503112338.GA25649@e121166-lin.cambridge.arm.com>
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <dec5ecb2-863e-a1db-10c9-2d91f860a2c6@nvidia.com>
+Date:   Tue, 7 May 2019 11:19:23 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <305100E33629484CBB767107E4246BBB0A2386A1@de02wembxa.internal.synopsys.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190503112338.GA25649@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557208166; bh=h4y5AspHzpR5hMnPnArQaBrOHd071Amx3x9LkcnbiH0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=oLchWHAf8WWeQD6Xf0dnnznFCwCOsZRN3ZAkaaARmNEhUuul77v2/Zdm6b6twwK0Z
+         BLQ3GJ/8jMeCTrQVjQZ/GpeE6axHnesUZGbSMyfuHzd4InJXji+PkgCTqgIEh1cbT0
+         R2xln7zEdjesaxzgA6HmJVKgWX1s8/1FAPKXbGwUXtN1MvdezPXx1LK94OtkQG93mM
+         onP6dEEAwqehc0fu/wKjMMmdx0XDZ7TPRysOrz9FVMQDRsdJHNcq2ahLxK/QjyYKqe
+         HNXLwYTs1o/sGUPXkjz+bTNRyfZDzSWbqcvC82L/GqGlaScMC2O7kGV3ZLwooEz7x0
+         KLB0ZXb5R43aQ==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 06-05-19, 17:09, Gustavo Pimentel wrote:
-> Hi Vinod,
+On 5/3/2019 4:53 PM, Lorenzo Pieralisi wrote:
+> On Thu, May 02, 2019 at 10:34:25PM +0530, Vidya Sagar wrote:
+>> Add an API to group all the tasks to be done to de-initialize host which
+>> can then be called by any DesignWare core based driver implementations
+>> while adding .remove() support in their respective drivers.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> ---
+>> Changes from v3:
+>> * Added check if (pci_msi_enabled() && !pp->ops->msi_host_init) before calling
+>>    dw_pcie_free_msi() API to mimic init path
+>>
+>> Changes from v2:
+>> * Rebased on top of linux-next top of the tree branch
+>>
+>> Changes from v1:
+>> * s/Designware/DesignWare
+>>
+>>   drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
+>>   drivers/pci/controller/dwc/pcie-designware.h      | 5 +++++
+>>   2 files changed, 13 insertions(+)
 > 
-> On Mon, May 6, 2019 at 13:7:10, Vinod Koul <vkoul@kernel.org> wrote:
+> Series doesn't apply to v5.1-rc1, what's based on ? I suspect
+> there is a dependency on pci/keystone, given the tight timeline
+> for the merge window, would you mind postponing it to v5.3 ?
 > 
-> > On 23-04-19, 20:30, Gustavo Pimentel wrote:
-> > 
-> > >  int dw_edma_v0_core_debugfs_on(struct dw_edma_chip *chip)
-> > >  {
-> > > -	return 0;
-> > > +	return dw_edma_v0_debugfs_on(chip);
-> > 
-> > who calls this?
+> I do not think it is urgent, I am happy to create a branch
+> for it as soon as v5.2-rc1 is released.
+I rebased my changes on top of linux-next. I see that they have conflicts
+on top of v5.1-rc1. Do you want me to rebase them on top of v5.1-rc1 instead
+of linux-next?
+I'm fine with v5.2-rc1 as well.
+
 > 
-> The main driver. This was done like this for 2 reasons:
-> 1) To not break the patch #1 compilation
-> 2) Since the code it's to extensive, I decided to break it in another 
-> patch.
-
-Hmm I guess I missed that one. I was actually looking at usage and not
-questioning split :)
-
-> > > +static int dw_edma_debugfs_u32_get(void *data, u64 *val)
-> > > +{
-> > > +	if (dw->mode == EDMA_MODE_LEGACY &&
-> > > +	    data >= (void *)&regs->type.legacy.ch) {
-> > > +		void *ptr = (void *)&regs->type.legacy.ch;
-> > > +		u32 viewport_sel = 0;
-> > > +		unsigned long flags;
-> > > +		u16 ch;
-> > > +
-> > > +		for (ch = 0; ch < dw->wr_ch_cnt; ch++)
-> > > +			if (lim[0][ch].start >= data && data < lim[0][ch].end) {
-> > > +				ptr += (data - lim[0][ch].start);
-> > > +				goto legacy_sel_wr;
-> > > +			}
-> > > +
-> > > +		for (ch = 0; ch < dw->rd_ch_cnt; ch++)
-> > > +			if (lim[1][ch].start >= data && data < lim[1][ch].end) {
-> > > +				ptr += (data - lim[1][ch].start);
-> > > +				goto legacy_sel_rd;
-> > > +			}
-> > > +
-> > > +		return 0;
-> > > +legacy_sel_rd:
-> > > +		viewport_sel = BIT(31);
-> > > +legacy_sel_wr:
-> > > +		viewport_sel |= FIELD_PREP(EDMA_V0_VIEWPORT_MASK, ch);
-> > > +
-> > > +		raw_spin_lock_irqsave(&dw->lock, flags);
-> > > +
-> > > +		writel(viewport_sel, &regs->type.legacy.viewport_sel);
-> > > +		*val = readl((u32 *)ptr);
-> > 
-> > why do you need the cast?
+> Thanks,
+> Lorenzo
 > 
-> I can't tell from my head, but I think checkpatch or some code analysis 
-> tool was complaining about not having that.
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+>> index 77db32529319..d069e4290180 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>> @@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>>   	return ret;
+>>   }
+>>   
+>> +void dw_pcie_host_deinit(struct pcie_port *pp)
+>> +{
+>> +	pci_stop_root_bus(pp->root_bus);
+>> +	pci_remove_root_bus(pp->root_bus);
+>> +	if (pci_msi_enabled() && !pp->ops->msi_host_init)
+>> +		dw_pcie_free_msi(pp);
+>> +}
+>> +
+>>   static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+>>   				     u32 devfn, int where, int size, u32 *val,
+>>   				     bool write)
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>> index deab426affd3..4f48ec78c7b9 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -348,6 +348,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
+>>   void dw_pcie_free_msi(struct pcie_port *pp);
+>>   void dw_pcie_setup_rc(struct pcie_port *pp);
+>>   int dw_pcie_host_init(struct pcie_port *pp);
+>> +void dw_pcie_host_deinit(struct pcie_port *pp);
+>>   int dw_pcie_allocate_domains(struct pcie_port *pp);
+>>   #else
+>>   static inline irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+>> @@ -372,6 +373,10 @@ static inline int dw_pcie_host_init(struct pcie_port *pp)
+>>   	return 0;
+>>   }
+>>   
+>> +static inline void dw_pcie_host_deinit(struct pcie_port *pp)
+>> +{
+>> +}
+>> +
+>>   static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
+>>   {
+>>   	return 0;
+>> -- 
+>> 2.17.1
+>>
 
-ptr is void, so there is no need for casts to or away from void.
-
-> > > +static int dw_edma_debugfs_regs(void)
-> > > +{
-> > > +	const struct debugfs_entries debugfs_regs[] = {
-> > > +		REGISTER(ctrl_data_arb_prior),
-> > > +		REGISTER(ctrl),
-> > > +	};
-> > > +	struct dentry *regs_dir;
-> > > +	int nr_entries, err;
-> > > +
-> > > +	regs_dir = debugfs_create_dir(REGISTERS_STR, base_dir);
-> > > +	if (!regs_dir)
-> > > +		return -EPERM;
-> > > +
-> > > +	nr_entries = ARRAY_SIZE(debugfs_regs);
-> > > +	err = dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, regs_dir);
-> > > +	if (err)
-> > > +		return err;
-> > > +
-> > > +	err = dw_edma_debugfs_regs_wr(regs_dir);
-> > > +	if (err)
-> > > +		return err;
-> > > +
-> > > +	err = dw_edma_debugfs_regs_rd(regs_dir);
-> > > +	if (err)
-> > > +		return err;
-> > > +
-> > > +	return 0;
-> > 
-> > single return err would suffice right?
-> 
-> By looking now to this code, I decided to remove the err variable and 
-> perform the if immediately on the function, if the result is different 
-> from 0 it goes directly to a return -EPERM. 
-
-And one more things, we do not need to check errors on debugfs calls,
-and if it fails it fails...
-
--- 
-~Vinod
