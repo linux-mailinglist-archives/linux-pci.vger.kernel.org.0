@@ -2,86 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 708CE16DD7
-	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2019 01:32:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D077616F38
+	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2019 04:51:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfEGXcP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 May 2019 19:32:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbfEGXcN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 7 May 2019 19:32:13 -0400
-Received: from localhost (unknown [69.71.4.100])
+        id S1726672AbfEHCvB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 May 2019 22:51:01 -0400
+Received: from alpha.anastas.io ([104.248.188.109]:42583 "EHLO
+        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbfEHCvA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 May 2019 22:51:00 -0400
+Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3DE7204FD;
-        Tue,  7 May 2019 23:32:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557271932;
-        bh=L7g4Lilcm1/YGr3V/gsofl8sG/YJE+vd1ca/w3DLfsA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Go474YudmVWHyYGAo8j2S+CHmWKPwqetHfQcqT4vGQxdvo/V7AcNmkkHB3WKMMoxN
-         Xmg90IGH7g7triujtfpHN4mVOMKd8QzGWdmXXGJFFbm0ArcsdcO7R2ghNxAoRyqoOZ
-         TVlZ25/iEL2nE/mVlRM3GWrTB/lb4JJVKOX7NCx0=
-Date:   Tue, 7 May 2019 18:32:10 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>
-Subject: Re: [PATCH v5 0/5] PCI: Patch series to support Thunderbolt without
- any BIOS support
-Message-ID: <20190507233209.GH156478@google.com>
-References: <PS2P216MB064229018EE9B0CE03EE274380370@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
+        by alpha.anastas.io (Postfix) with ESMTPSA id B61BD7F8E3;
+        Tue,  7 May 2019 21:41:54 -0500 (CDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
+        t=1557283315; bh=8orPcionj8a/WeLlzN3wptup1VKMYBcY/b1HFvVLX70=;
+        h=From:To:Cc:Subject:Date:From;
+        b=R/A4leu+vRiMikAXWpu2C3HR+BO71GEB3XYAfcpJL13bKaCUPPVme7jVnJ+oIvzNT
+         +vZubFMxFfG8NQUPtxCfQ0Z69O4GZF1hRrRYt/eChu+6j2eLd8WW/LuSth5tH21G9K
+         MZn4JO0HY4D8hwbzd5VilOqD4PlH/dhxBGy80Ou9PnBXBwuinfhLnwjn0/fjOy9Z/K
+         3wwDFvU8SLN6hY+o4raWQ2UD4ckCulln+4Km+9JP6KWpH7kXOE7yRD4y14NprSeBcl
+         5HTWijc6K2lJXBz6/oEKMAC6faLONzxwrad1cf+TrqqaBL7uTt64xYyO493Jcse7eR
+         vJyEO14DZsbIg==
+From:   Shawn Anastasio <shawn@anastas.io>
+To:     bhelgaas@google.com
+Cc:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        sbobroff@linux.ibm.com, xyjxie@linux.vnet.ibm.com,
+        rppt@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 0/3] Allow custom PCI resource alignment on pseries
+Date:   Tue,  7 May 2019 21:41:48 -0500
+Message-Id: <20190508024151.5690-1-shawn@anastas.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PS2P216MB064229018EE9B0CE03EE274380370@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, May 05, 2019 at 02:40:20PM +0000, Nicholas Johnson wrote:
-> Since PATCH v4:
-> 
-> I have added some of the evidence and bug reports into the applicable
-> patches.
-> 
-> Users of pci=hpmemsize should not notice any changes in functionality
-> with this patch series when upgrading the kernel. I realised I could
-> make the variable to achieve this reside in pci_setup, rather than
-> globally.
-> 
-> Please let me know if anything else needs changing.
-> 
-> Nicholas Johnson (5):
->   PCI: Consider alignment of hot-added bridges when distributing
->     resources
->   PCI: Modify extend_bridge_window() to set resource size directly
->   PCI: Fix bug resulting in double hpmemsize being assigned to MMIO
->     window
->   PCI: Add pci=hpmemprefsize parameter to set MMIO_PREF size
->     independently
+(Resent to include relevant mailing lists - sorry about that!)
 
-I didn't have time to go through the actual important stuff above,
+Hello all,
 
->   PCI: Cleanup block comments in setup-bus.c to match kernel style
+This patch set implements support for user-specified PCI resource
+alignment on the pseries platform for hotplugged PCI devices.
+Currently on pseries, PCI resource alignments specified with the
+pci=resource_alignment commandline argument are ignored, since
+the firmware is in charge of managing the PCI resources. In the
+case of hotplugged devices, though, the kernel is in charge of 
+configuring the resources and should obey alignment requirements.
 
-but I applied this one to pci/trivial for v5.2 to get it out of the
-way for the next cycle.
+The current behavior of ignoring the alignment for hotplugged devices
+results in sub-page BARs landing between page boundaries and
+becoming un-mappable from userspace via the VFIO framework.
+This issue was observed on a pseries KVM guest with hotplugged
+ivshmem devices.
+ 
+With these changes, users can specify an appropriate
+pci=resource_alignment argument on boot for devices they wish to use 
+with VFIO.
 
-I also have patches from Logan and Mika in the same area, so I'll have
-to look at all of these together.
+In the future, this could be extended to provide page-aligned
+resources by default for hotplugged devices, similar to what is done
+on powernv by commit 382746376993 ("powerpc/powernv: Override
+pcibios_default_alignment() to force PCI devices to be page aligned").
 
->  .../admin-guide/kernel-parameters.txt         |   7 +-
->  drivers/pci/pci.c                             |  18 +-
->  drivers/pci/setup-bus.c                       | 568 +++++++++---------
->  include/linux/pci.h                           |   3 +-
->  4 files changed, 317 insertions(+), 279 deletions(-)
-> 
-> -- 
-> 2.19.1
-> 
+Feedback is appreciated.
+
+Thanks,
+Shawn
+
+Shawn Anastasio (3):
+  PCI: Introduce pcibios_ignore_alignment_request
+  powerpc/64: Enable pcibios_after_init hook on ppc64
+  powerpc/pseries: Allow user-specified PCI resource alignment after
+    init
+
+ arch/powerpc/include/asm/machdep.h     |  6 ++++--
+ arch/powerpc/kernel/pci-common.c       |  9 +++++++++
+ arch/powerpc/kernel/pci_64.c           |  4 ++++
+ arch/powerpc/platforms/pseries/setup.c | 22 ++++++++++++++++++++++
+ drivers/pci/pci.c                      |  9 +++++++--
+ 5 files changed, 46 insertions(+), 4 deletions(-)
+
+-- 
+2.20.1
+
