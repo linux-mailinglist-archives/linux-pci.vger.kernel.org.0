@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B03C418B80
-	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2019 16:17:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3050518B81
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2019 16:17:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfEIOPI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 May 2019 10:15:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50030 "EHLO mail.kernel.org"
+        id S1726979AbfEIOPM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 May 2019 10:15:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbfEIOPH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 May 2019 10:15:07 -0400
+        id S1726881AbfEIOPJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 May 2019 10:15:09 -0400
 Received: from localhost (50-81-63-4.client.mchsi.com [50.81.63.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36A8521479;
-        Thu,  9 May 2019 14:15:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BD262173B;
+        Thu,  9 May 2019 14:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557411307;
-        bh=PPIcD3rVSMrCxILX0QXCxh8mpXZl7+htbG5v2DOUouk=;
+        s=default; t=1557411308;
+        bh=WIKCzbiln2ryVc0ZJl9EtTNS6DNS8zJk67eaHWlgcpc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CBuO2pWfE37aHz4k6BXlZTHC7TFgiqac06CBdtDdysbbSuGbAXgvYe3qErfrAYSjm
-         QfAq7Y1TbbjmSOQClwJ21JcXTy+XYbr2ituIniayDYKfH6jAhQh5Kd17oTrpW6kbaC
-         PzTqHcdI61NnwPTT/kRY5M2+EUCaPoTqGJ1t4WDo=
+        b=Vds5aSwvcHZAlbJqICKIpaiqiXkLVscokxxFAlQ2x/U7+UD6nkoiG9MvQLFAXOBRL
+         ddD3rHN0LkaI4QzcMNldxTMBzOcMyPmHIUne/9+uE9CscsPktDBTBYD12N7Jqyc430
+         xqrRyZLlyUHk81vn7hwXgttC7slsBLrgsdZ+BiuA=
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Frederick Lawler <fred@fredlawl.com>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -33,9 +33,9 @@ Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sven Van Asbroeck <thesven73@gmail.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 01/10] PCI/AER: Replace dev_printk(KERN_DEBUG) with dev_info()
-Date:   Thu,  9 May 2019 09:14:47 -0500
-Message-Id: <20190509141456.223614-2-helgaas@kernel.org>
+Subject: [PATCH 02/10] PCI/PME: Replace dev_printk(KERN_DEBUG) with dev_info()
+Date:   Thu,  9 May 2019 09:14:48 -0500
+Message-Id: <20190509141456.223614-3-helgaas@kernel.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 In-Reply-To: <20190509141456.223614-1-helgaas@kernel.org>
 References: <20190509141456.223614-1-helgaas@kernel.org>
@@ -55,62 +55,58 @@ These could be converted to dev_dbg(), but that depends on
 CONFIG_DYNAMIC_DEBUG and DEBUG, and we want most of these messages to
 *always* be in the dmesg log.
 
-Also remove a redundant kzalloc() failure message.
+Also, use dev_fmt() to add the service name.  Example output change:
 
-Link: https://lore.kernel.org/lkml/20190503035946.23608-2-fred@fredlawl.com
+  - pcieport 0000:80:10.0: Signaling PME with IRQ ...
+  + pcieport 0000:80:10.0: PME: Signaling with IRQ ...
+
+Link: https://lore.kernel.org/lkml/20190503035946.23608-4-fred@fredlawl.com
 Signed-off-by: Frederick Lawler <fred@fredlawl.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/pcie/aer.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/pci/pcie/pme.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index f8fc2114ad39..74f872e4e0cc 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -964,8 +964,8 @@ static bool find_source_device(struct pci_dev *parent,
- 	pci_walk_bus(parent->subordinate, find_device_iter, e_info);
+diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
+index 54d593d10396..f38e6c19dd50 100644
+--- a/drivers/pci/pcie/pme.c
++++ b/drivers/pci/pcie/pme.c
+@@ -7,6 +7,8 @@
+  * Copyright (C) 2009 Rafael J. Wysocki <rjw@sisk.pl>, Novell Inc.
+  */
  
- 	if (!e_info->error_dev_num) {
--		pci_printk(KERN_DEBUG, parent, "can't find device of ID%04x\n",
--			   e_info->id);
-+		pci_info(parent, "can't find device of ID%04x\n",
-+			 e_info->id);
- 		return false;
- 	}
- 	return true;
-@@ -1379,18 +1379,17 @@ static int aer_probe(struct pcie_device *dev)
- 	struct device *device = &dev->device;
- 
- 	rpc = devm_kzalloc(device, sizeof(struct aer_rpc), GFP_KERNEL);
--	if (!rpc) {
--		dev_printk(KERN_DEBUG, device, "alloc AER rpc failed\n");
-+	if (!rpc)
- 		return -ENOMEM;
--	}
++#define dev_fmt(fmt) "PME: " fmt
 +
- 	rpc->rpd = dev->port;
- 	set_service_data(dev, rpc);
- 
- 	status = devm_request_threaded_irq(device, dev->irq, aer_irq, aer_isr,
- 					   IRQF_SHARED, "aerdrv", dev);
- 	if (status) {
--		dev_printk(KERN_DEBUG, device, "request AER IRQ %d failed\n",
--			   dev->irq);
-+		dev_err(device, "request AER IRQ %d failed\n",
-+			dev->irq);
- 		return status;
+ #include <linux/pci.h>
+ #include <linux/kernel.h>
+ #include <linux/errno.h>
+@@ -194,14 +196,14 @@ static void pcie_pme_handle_request(struct pci_dev *port, u16 req_id)
+ 		 * assuming that the PME was reported by a PCIe-PCI bridge that
+ 		 * used devfn different from zero.
+ 		 */
+-		pci_dbg(port, "PME interrupt generated for non-existent device %02x:%02x.%d\n",
+-			busnr, PCI_SLOT(devfn), PCI_FUNC(devfn));
++		pci_info(port, "interrupt generated for non-existent device %02x:%02x.%d\n",
++			 busnr, PCI_SLOT(devfn), PCI_FUNC(devfn));
+ 		found = pcie_pme_from_pci_bridge(bus, 0);
  	}
  
-@@ -1419,7 +1418,7 @@ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
- 	pci_write_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, reg32);
+  out:
+ 	if (!found)
+-		pci_dbg(port, "Spurious native PME interrupt!\n");
++		pci_info(port, "Spurious native interrupt!\n");
+ }
  
- 	rc = pci_bus_error_reset(dev);
--	pci_printk(KERN_DEBUG, dev, "Root Port link has been reset\n");
-+	pci_info(dev, "Root Port link has been reset\n");
+ /**
+@@ -341,7 +343,7 @@ static int pcie_pme_probe(struct pcie_device *srv)
+ 		return ret;
+ 	}
  
- 	/* Clear Root Error Status */
- 	pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &reg32);
+-	pci_info(port, "Signaling PME with IRQ %d\n", srv->irq);
++	pci_info(port, "Signaling with IRQ %d\n", srv->irq);
+ 
+ 	pcie_pme_mark_devices(port);
+ 	pcie_pme_interrupt_enable(port, true);
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
