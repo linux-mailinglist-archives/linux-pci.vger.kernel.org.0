@@ -2,78 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3733A19037
-	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2019 20:31:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31CA9192E2
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2019 21:27:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfEISbl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 May 2019 14:31:41 -0400
-Received: from smtprelay0050.hostedemail.com ([216.40.44.50]:48919 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726632AbfEISbl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 May 2019 14:31:41 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 6492A180A8136;
-        Thu,  9 May 2019 18:31:39 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::::::::::::::::::,RULES_HIT:41:355:379:599:800:960:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:1801:2393:2553:2559:2562:2828:2900:2904:3138:3139:3140:3141:3142:3352:3622:3865:3866:3867:3868:3870:3874:4250:4321:4605:5007:6119:7875:9040:10004:10400:10848:11026:11232:11473:11658:11914:12114:12296:12438:12740:12760:12895:13069:13311:13357:13439:14181:14659:14721:21080:21433:21451:21627:30029:30054:30060:30070:30090:30091,0,RBL:172.58.22.140:@perches.com:.lbl8.mailshell.net-62.8.0.180 64.201.201.201,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:fn,MSBL:0,DNSBL:neutral,Custom_rules:0:0:0,LFtime:27,LUA_SUMMARY:none
-X-HE-Tag: cable42_65347f630c056
-X-Filterd-Recvd-Size: 2443
-Received: from XPS-9350 (unknown [172.58.22.140])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  9 May 2019 18:31:35 +0000 (UTC)
-Message-ID: <69ff0a66d8c68f9e1adc8308847541e9566fe23e.camel@perches.com>
-Subject: Re: [PATCH 02/10] PCI/PME: Replace dev_printk(KERN_DEBUG) with
- dev_info()
-From:   Joe Perches <joe@perches.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Frederick Lawler <fred@fredlawl.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Dongdong Liu <liudongdong3@huawei.com>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Date:   Thu, 09 May 2019 11:31:04 -0700
-In-Reply-To: <CAHp75Ve9-659N5N=f7pPb-9amvbGbi+zWxL9p-BnYocvXJPwZg@mail.gmail.com>
-References: <20190509141456.223614-1-helgaas@kernel.org>
-         <20190509141456.223614-3-helgaas@kernel.org>
-         <CAHp75Ve9-659N5N=f7pPb-9amvbGbi+zWxL9p-BnYocvXJPwZg@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
+        id S1726753AbfEIT1d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 May 2019 15:27:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38898 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726721AbfEIT1c (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 May 2019 15:27:32 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 91B2E81112;
+        Thu,  9 May 2019 19:27:32 +0000 (UTC)
+Received: from gimli.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8CEBD5C582;
+        Thu,  9 May 2019 19:27:22 +0000 (UTC)
+Subject: [PATCH] PCI: Always allow probing with driver_override
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     linux-pci@vger.kernel.org
+Cc:     bhelgaas@google.com, linux-kernel@vger.kernel.org,
+        myron.stowe@redhat.com, bodong@mellanox.com, eli@mellanox.com,
+        laine@redhat.com
+Date:   Thu, 09 May 2019 13:27:22 -0600
+Message-ID: <155742996741.21878.569845487290798703.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 09 May 2019 19:27:32 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 2019-05-09 at 20:35 +0300, Andy Shevchenko wrote:
-> On Thu, May 9, 2019 at 5:18 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > Replace dev_printk(KERN_DEBUG) with dev_info() or dev_err() to be more
-> > consistent with other logging.
-> > 
-> > These could be converted to dev_dbg(), but that depends on
-> > CONFIG_DYNAMIC_DEBUG and DEBUG, and we want most of these messages to
-> > *always* be in the dmesg log.
-> > 
-> > Also, use dev_fmt() to add the service name.  Example output change:
-> > 
-> >   - pcieport 0000:80:10.0: Signaling PME with IRQ ...
-> >   + pcieport 0000:80:10.0: PME: Signaling with IRQ ...
-> > +               pci_info(port, "interrupt generated for non-existent device %02x:%02x.%d\n",
-> 
-> Can we be slightly more consistent here, i.e. start from Capital letter?
-> 
-> > +                        busnr, PCI_SLOT(devfn), PCI_FUNC(devfn));
-> > +               pci_info(port, "Spurious native interrupt!\n");
-> > +       pci_info(port, "Signaling with IRQ %d\n", srv->irq);
+Commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control
+VF driver binding") introduced the sriov_drivers_autoprobe attribute
+which allows users to prevent the kernel from automatically probing a
+driver for new VFs as they are created.  This allows VFs to be spawned
+without automatically binding the new device to a host driver, such as
+in cases where the user intends to use the device only with a meta
+driver like vfio-pci.  However, the current implementation prevents any
+use of drivers_probe with the VF while sriov_drivers_autoprobe=0.  This
+blocks the now current general practice of setting driver_override
+followed by using drivers_probe to bind a device to a specified driver.
 
-Why change the logging level?
-Why not use #define DEBUG and use pci_dbg ?
+The kernel never automatically sets a driver_override therefore it seems
+we can assume a driver_override reflects the intent of the user.  Also,
+probing a device using a driver_override match seems outside the scope
+of the 'auto' part of sriov_drivers_autoprobe.  Therefore, let's allow
+driver_override matches regardless of sriov_drivers_autoprobe, which we
+can do by simply testing if a driver_override is set for a device as a
+'can probe' condition.
 
+Fixes: 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
+Link: https://lore.kernel.org/linux-pci/155672991496.20698.4279330795743262888.stgit@gimli.home/T/#u
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+---
+
+ drivers/pci/pci-driver.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index da7b82e56c83..9b9e9c63cde8 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -399,7 +399,8 @@ void __weak pcibios_free_irq(struct pci_dev *dev)
+ #ifdef CONFIG_PCI_IOV
+ static inline bool pci_device_can_probe(struct pci_dev *pdev)
+ {
+-	return (!pdev->is_virtfn || pdev->physfn->sriov->drivers_autoprobe);
++	return (!pdev->is_virtfn || pdev->physfn->sriov->drivers_autoprobe ||
++		pdev->driver_override);
+ }
+ #else
+ static inline bool pci_device_can_probe(struct pci_dev *pdev)
 
