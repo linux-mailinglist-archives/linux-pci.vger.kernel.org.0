@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 15FED18F63
-	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2019 19:40:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3C4118F72
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2019 19:42:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfEIRjl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 May 2019 13:39:41 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37601 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbfEIRjk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 May 2019 13:39:40 -0400
-Received: by mail-pf1-f196.google.com with SMTP id g3so1687947pfi.4;
-        Thu, 09 May 2019 10:39:40 -0700 (PDT)
+        id S1726739AbfEIRmW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 May 2019 13:42:22 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36677 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfEIRmW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 May 2019 13:42:22 -0400
+Received: by mail-pg1-f194.google.com with SMTP id a3so1573845pgb.3;
+        Thu, 09 May 2019 10:42:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=G488tD19TVWHIOWsjCdbHdhwCsIhFZLwFL+fr08o8yY=;
-        b=DWc7+YOLeKjZcWm01IV8h1YnJP1hiMBzcwboBwpZtqdZ8Kum8i1u9sl2nzvG8XWtMw
-         pQRcvpvWkVfRnHmysa7W0d3lo1e7K6LVn3HhmblUHAe2rJrWCx3aoeJrlwMiPC7EfDS1
-         1ehLLzz5lhswSLpPn/+XVz4o52FoAGPCBCIH/52E+Av+0I6BB+vqnexXsbqw5gT1fGO/
-         yf/+a020oHz6vNDJvNXjJ++BSruR/u8sCaVx0IaqjSypiVimilzFLX5uthqx6norQGjI
-         p50FqRt+aMJpAK1wFzEHWnhljXaXq6xZmqKgME7w7MYbWar8FodFXzx+R6/Hp+e8nP8L
-         hwLA==
+        bh=8fEOGAbvInx43YwIyxg7wo5ceer9dojABtC1T6Go3JM=;
+        b=P5LIg2P48x2cbRp5A2hjkNNgl6QwI58yHdjDTy5iER1tSajiIhxbkb3WvfDbOkaiem
+         AL99DccJ4N5g7m/ctULJzKK7mInjlOEgoz2ZtRwFeLveD8rXJJUgOyUxI0fy4alNzmh4
+         4JPyJx6zhH0jM0LmobKtsXKGhD5q3zFRfu2Qd93fWGp4juKjgYp1sP/itq4Gub3qsSDl
+         mARfwp5i3xsd4rTWYlhK5XwqCkCHpp22XaBtWoypjztMM46QNvxTdOa9PY99/Nk/Qmq6
+         RjrQy4eoT2xx3bvp7pNFNE9DDbisABIaI+VPBbXNoLEgZLcWsprDZQtjE8k4AS23IzFm
+         m4Cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=G488tD19TVWHIOWsjCdbHdhwCsIhFZLwFL+fr08o8yY=;
-        b=VzzcXL+KyJ1X4H2/U7pohtaRjSWUMZlWwO/CY1P1Dv94qOecTv+UFvkjqENHiSE8Et
-         S40J1JezgWphgMs2ENdZ5ZljgG9uEasDJhkdAty+MqOOw6f/kGhDmC/z5PXT2eOy74xZ
-         eRtO+d/eNxmAOTjX0fet6uFth0jb4tDUDZDHxxsRrAYne0dqYTc2CDzfNVETDQvXxbxg
-         8TkgVAjBajQgFq6xj0nPUIoLzwkxtlVAnggLO2o9hq47RI9AsbcmSRpkltcdizavBE6m
-         DLhtgeBLyMUyi09rjc8Tkw75RdqJ4gBchFUhTk9aRgffOC6xwaM3Vba/dTZTskDRI6e9
-         nlVA==
-X-Gm-Message-State: APjAAAVMDmI0RR581AdX8LwHjBUPUvzF69kpQ9wFVhG3o9r0YLbC/mB0
-        L1aB5513aSpR/LLoFun7s7eaTVXBmcqnlXnzdydWReHv
-X-Google-Smtp-Source: APXvYqybBsI5M5pIlHneeTgkKElb1tKBLhckJ3TJ+ZTU0oRNNydY760+OhWLcqcERf/d8hA3KxMjmxek5UUh3jRRY74=
-X-Received: by 2002:a62:ee04:: with SMTP id e4mr7018095pfi.232.1557423579900;
- Thu, 09 May 2019 10:39:39 -0700 (PDT)
+        bh=8fEOGAbvInx43YwIyxg7wo5ceer9dojABtC1T6Go3JM=;
+        b=VzlY3n7z821ySJ0vT2ONzKWDou2T5B6fCOtXaNrdKPMNWhz1VTPk69vvH9ikRPVcNO
+         pYwJ/Xohue5/lNBQkVaawstHMEiT4LTMWLMwbopE5D1BqzMkxypPrEQppuVu76YKvQ5D
+         M2ZHWy3bAcrtwGfAjep1Eha1Pc56tB86lXZ/YLGg9jdslivBGrGxBcdb5DRJiTGnojhQ
+         D+p9yQqQeEGBbzi+vagBAByVDw1WstxQ1+oQ15uugXKqqvVKWm8OH2tWwEhtFTJ2XmJd
+         VgPqYPxN1CiTDRvdci3mqKhppDDtIFRMcfRj67EvV08+y5cfAUpNgAz2wqnG/ggEZcZT
+         pkeg==
+X-Gm-Message-State: APjAAAUAIGIeXAVDfztIFOdE+jmsPGNfE6bYs9a9leT+IrIm69tQ0R9s
+        n7RXOxsObSFxjZAC4WPS7bTi+Dc6vXI+S0bqB1CWYMZ6
+X-Google-Smtp-Source: APXvYqzbA4A4wY1XN4H36J/UnWtDF7rTJsk21FMXPdMTixrrKCZsHXOVhFxHa7DOKPGePdkoeIcClPZVvZIqjb8RXQc=
+X-Received: by 2002:a63:dd58:: with SMTP id g24mr7243223pgj.161.1557423741562;
+ Thu, 09 May 2019 10:42:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190509141456.223614-1-helgaas@kernel.org> <20190509141456.223614-4-helgaas@kernel.org>
-In-Reply-To: <20190509141456.223614-4-helgaas@kernel.org>
+References: <20190509141456.223614-1-helgaas@kernel.org> <20190509141456.223614-5-helgaas@kernel.org>
+In-Reply-To: <20190509141456.223614-5-helgaas@kernel.org>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 9 May 2019 20:39:28 +0300
-Message-ID: <CAHp75Vd=fm4Sdc_ymiPgXnrCsU_9gBF16TsP0VX=ghDrbvk1Yw@mail.gmail.com>
-Subject: Re: [PATCH 03/10] PCI/DPC: Log messages with pci_dev, not pcie_device
+Date:   Thu, 9 May 2019 20:42:10 +0300
+Message-ID: <CAHp75Vfk0gftuSMQBzZUgoeBPLeUOUkcdKJFbXKq3-joDgT0fw@mail.gmail.com>
+Subject: Re: [PATCH 04/10] PCI/AER: Log messages with pci_dev, not pcie_device
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Frederick Lawler <fred@fredlawl.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -64,31 +64,24 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 9, 2019 at 5:18 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Thu, May 9, 2019 at 5:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 > Log messages with pci_dev, not pcie_device.  Factor out common message
 > prefixes with dev_fmt().
 >
 > Example output change:
 >
->   - dpc 0000:00:01.1:pcie008: DPC error containment capabilities...
->   + pcieport 0000:00:01.1: DPC: error containment capabilities...
+>   - aer 0000:00:00.0:pci002: AER enabled with IRQ ...
+>   + pcieport 0000:00:00.0: AER: enabled with IRQ ...
 
-Overall same question about Capitalizing sentences.
+> +               pci_err(port, "request AER IRQ %d failed\n",
+>                         dev->irq);
 
-> +       pci_err(pdev, "rp_pio_status: %#010x, rp_pio_mask: %#010x\n",
+Possible to be on one line?
 
-And here perhaps RP PIO status: ... mask: ... ?
-See below I left examples from this patch.
+> +                       pci_warn(edev->port,
+> +                                "AER service is not initialized\n");
 
->                 status, mask);
-
-> +       pci_err(pdev, "RP PIO severity=%#010x, syserror=%#010x, exception=%#010x\n",
->                 sev, syserr, exc);
-
-> +       pci_err(pdev, "RP PIO ImpSpec Log %#010x\n", log);
-
-> +                       pci_err(pdev, "RP PIO log size %u is invalid\n",
->                                 dpc->rp_log_size);
+checkpatch won't complain if it would be on one line.
 
 -- 
 With Best Regards,
