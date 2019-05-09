@@ -2,192 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E28C118046
-	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2019 21:10:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD82918B27
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2019 16:02:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfEHTKn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 May 2019 15:10:43 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46519 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727624AbfEHTKn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 May 2019 15:10:43 -0400
-Received: by mail-qk1-f196.google.com with SMTP id a132so13023417qkb.13
-        for <linux-pci@vger.kernel.org>; Wed, 08 May 2019 12:10:42 -0700 (PDT)
+        id S1726753AbfEIOCx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 May 2019 10:02:53 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43917 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726583AbfEIOCw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 May 2019 10:02:52 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r4so3207589wro.10;
+        Thu, 09 May 2019 07:02:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HNoXaNV1qBkGpwMuiuD1EF2zj1FqN5YTgxnrdjR1Y+E=;
+        b=bNk0zLrzPxvNcqvQqsw3NvvN9mgFKnowH0hYYdX6XYHkVI+3YFifVzAhJ0drkgyhnq
+         3kjkoClOiBLQs/+1fuPOF+TmF3+CF8Ob8gkMKs3gNuHBHRza+0BSioY1aG6KIFxBdx2n
+         F/wN5t40/VEpseSXgkhUt8pjds9r/B95uhbyuaWRdu6iEivreOgiQlcMtGuBU0chREe2
+         xD4c4D6zZvUyijF4ye+mbfQWpbGDxn9TpXTZaEgz5x4pdh5dw6r0ms7d/pcsq5HCsq+q
+         suEzRvahGD/yowYPK85yL+rllrjlpXjsM5KKGeSlCJxxcLIoC1lWkAfz6ayYZQcu/aBQ
+         +1Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=vV003PLEaBn/KG12s5VcOX/aojC+TH41Cbg8YZMkcAk=;
-        b=XHvZDBVsvnOXc0uhmWCsKzssSbBuZFVKfYYcaE1DdZdWs3Agvw7fSZWBvalG6KFCu+
-         YzMUrdgMCnEPLpoCWTHyKM9yTFjbWfwX3CZKWnaJEb8luldbujgpTB+aETYDuUMsdYCc
-         6jKM1pnXbk651SBRoXjzXXw0GOQLuWkgwBx5MRJdxMWQyPdqfgfRk8iDXhskMfwVCu4G
-         vFYN0JF10TdRyMdQzEKhejNdveXyz+E1n4tMl9qPdIOUNywQowh9mv5FJtx1cg5KrpVQ
-         IHCyrYoCfV1aaghkv4I2UloVveqbEdGXLi8Fyj3mytrH7nVhVT1HD9g09EH6rtN6KYId
-         C/Og==
-X-Gm-Message-State: APjAAAW93z7zcxWTt2CrwxsBEwZhpLssshHYoRjXkA8ISerOnMNMn+TN
-        kMkNcZG87ILzgHeaKv8LdqBHksK1ZsUh4Q==
-X-Google-Smtp-Source: APXvYqy14RkpbSqH0QpporGNEQqNp01BEXkPh0TIm1hUbOOlmY939xb27+DObgfY6FHEEA1VBD+67w==
-X-Received: by 2002:a05:620a:15fb:: with SMTP id p27mr30212701qkm.286.1557342641870;
-        Wed, 08 May 2019 12:10:41 -0700 (PDT)
-Received: from dhcp-10-20-1-11.bss.redhat.com ([144.121.20.162])
-        by smtp.gmail.com with ESMTPSA id t55sm12018762qth.59.2019.05.08.12.10.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 08 May 2019 12:10:41 -0700 (PDT)
-Message-ID: <70bd607ac14d19b023834853a44af40d9dee1942.camel@redhat.com>
-Subject: Re: [PATCH v2 1/4] drm: don't set the pci power state if the pci
- subsystem handles the ACPI bits
-From:   Lyude Paul <lyude@redhat.com>
-To:     Karol Herbst <kherbst@redhat.com>, nouveau@lists.freedesktop.org
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Date:   Wed, 08 May 2019 15:10:40 -0400
-In-Reply-To: <20190507201245.9295-2-kherbst@redhat.com>
-References: <20190507201245.9295-1-kherbst@redhat.com>
-         <20190507201245.9295-2-kherbst@redhat.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HNoXaNV1qBkGpwMuiuD1EF2zj1FqN5YTgxnrdjR1Y+E=;
+        b=WMaK2KzD/Y3N7qUc78rZ5fRAeumcZOihqU/T+R6S4J8js96o+/nYdrERpc279skCQi
+         0DYUwsIwerZS1RLXZMK8lG2PhvBaAmDu9W7g10LNm6EsxaiYwhKCQMjlhTlczz8qlGnW
+         ilMI6LMxg7ifx3k+1qkFSC8leLDsn3O9TMbtu6b9kobW6ce9aKc8RI8aA1XWchp/FSZs
+         I0vWuY06jyWLow3BSjT0XZSseZxuCYCkBhERY4WRIROD1YMtGFBwAEFXm/2JbUvmGgRN
+         uIa9VqUCCQ9WUhxwqzHS0HHSaNt/5DuTmtDpV1AgDvvvOTJymRHr003KnSLeQpL1+fLt
+         mV4g==
+X-Gm-Message-State: APjAAAUwooxgxqy9WUJwJY54QIkjrHG4CjlEt8vGqdUqWORmSoki88zw
+        7w3TXY+QruJPiSkT/sZPZyNI8fBSk0U=
+X-Google-Smtp-Source: APXvYqzKnLJvIGU4e9eAFYPHSnEi/qYg6RE6Ka6v+mvu7EKyv0TYR/v3G9p6bU+FfqJ7VAUMezmUjg==
+X-Received: by 2002:adf:f488:: with SMTP id l8mr1636437wro.287.1557410570267;
+        Thu, 09 May 2019 07:02:50 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id y7sm7338385wrg.45.2019.05.09.07.02.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 May 2019 07:02:48 -0700 (PDT)
+Date:   Thu, 9 May 2019 16:02:47 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com,
+        lorenzo.pieralisi@arm.com, vidyas@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V2 01/28] soc/tegra: pmc: Export
+ tegra_powergate_power_on()
+Message-ID: <20190509140247.GA8907@ulmo>
+References: <20190423092825.759-1-mmaddireddy@nvidia.com>
+ <20190423092825.759-2-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
+Content-Disposition: inline
+In-Reply-To: <20190423092825.759-2-mmaddireddy@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Reviewed-by: Lyude Paul <lyude@redhat.com>
 
-On Tue, 2019-05-07 at 22:12 +0200, Karol Herbst wrote:
-> v2: rework detection of if Nouveau calling a DSM method or not
-> 
-> Signed-off-by: Karol Herbst <kherbst@redhat.com>
+--M9NhX3UHpAaciwkO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Apr 23, 2019 at 02:57:58PM +0530, Manikanta Maddireddy wrote:
+> tegra_powergate_sequence_power_up() powers up partition and also enables
+> clock & reset. However, if a controller like PCIe have multiple clocks
+> & resets and they need to be enabled in a sequence, driver must use
+> standalone function tegra_powergate_power_on() to power up partition.
+>=20
+> Export tegra_powergate_power_on() to allow Tegra controller drivers to
+> unpower gate partition independent to clock & reset.
+>=20
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 > ---
->  drm/nouveau/nouveau_acpi.c |  7 ++++++-
->  drm/nouveau/nouveau_acpi.h |  2 ++
->  drm/nouveau/nouveau_drm.c  | 14 +++++++++++---
->  drm/nouveau/nouveau_drv.h  |  2 ++
->  4 files changed, 21 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drm/nouveau/nouveau_acpi.c b/drm/nouveau/nouveau_acpi.c
-> index ffb19585..92dfc900 100644
-> --- a/drm/nouveau/nouveau_acpi.c
-> +++ b/drm/nouveau/nouveau_acpi.c
-> @@ -358,6 +358,12 @@ void nouveau_register_dsm_handler(void)
->  	vga_switcheroo_register_handler(&nouveau_dsm_handler, 0);
+> V2: No change
+>=20
+>  drivers/soc/tegra/pmc.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index 0c5f79528e5f..cb3de81348bd 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -701,6 +701,7 @@ int tegra_powergate_power_on(unsigned int id)
+> =20
+>  	return tegra_powergate_set(pmc, id, true);
 >  }
->  
-> +bool nouveau_runpm_calls_dsm(void)
-> +{
-> +	return nouveau_dsm_priv.optimus_detected &&
-> +		!nouveau_dsm_priv.optimus_skip_dsm;
-> +}
-> +
->  /* Must be called for Optimus models before the card can be turned off */
->  void nouveau_switcheroo_optimus_dsm(void)
->  {
-> @@ -371,7 +377,6 @@ void nouveau_switcheroo_optimus_dsm(void)
->  
->  	nouveau_optimus_dsm(nouveau_dsm_priv.dhandle,
-> NOUVEAU_DSM_OPTIMUS_CAPS,
->  		NOUVEAU_DSM_OPTIMUS_SET_POWERDOWN, &result);
-> -
->  }
->  
->  void nouveau_unregister_dsm_handler(void)
-> diff --git a/drm/nouveau/nouveau_acpi.h b/drm/nouveau/nouveau_acpi.h
-> index b86294fc..0f5d7aa0 100644
-> --- a/drm/nouveau/nouveau_acpi.h
-> +++ b/drm/nouveau/nouveau_acpi.h
-> @@ -13,6 +13,7 @@ void nouveau_switcheroo_optimus_dsm(void);
->  int nouveau_acpi_get_bios_chunk(uint8_t *bios, int offset, int len);
->  bool nouveau_acpi_rom_supported(struct device *);
->  void *nouveau_acpi_edid(struct drm_device *, struct drm_connector *);
-> +bool nouveau_runpm_calls_dsm(void);
->  #else
->  static inline bool nouveau_is_optimus(void) { return false; };
->  static inline bool nouveau_is_v1_dsm(void) { return false; };
-> @@ -22,6 +23,7 @@ static inline void nouveau_switcheroo_optimus_dsm(void) {}
->  static inline bool nouveau_acpi_rom_supported(struct device *dev) { return
-> false; }
->  static inline int nouveau_acpi_get_bios_chunk(uint8_t *bios, int offset,
-> int len) { return -EINVAL; }
->  static inline void *nouveau_acpi_edid(struct drm_device *dev, struct
-> drm_connector *connector) { return NULL; }
-> +static inline bool nouveau_runpm_calls_dsm(void) { return false; }
->  #endif
->  
->  #endif
-> diff --git a/drm/nouveau/nouveau_drm.c b/drm/nouveau/nouveau_drm.c
-> index 5020265b..09e68e61 100644
-> --- a/drm/nouveau/nouveau_drm.c
-> +++ b/drm/nouveau/nouveau_drm.c
-> @@ -556,6 +556,7 @@ nouveau_drm_device_init(struct drm_device *dev)
->  	nouveau_fbcon_init(dev);
->  	nouveau_led_init(dev);
->  
-> +	drm->runpm_dsm = nouveau_runpm_calls_dsm();
->  	if (nouveau_pmops_runtime()) {
->  		pm_runtime_use_autosuspend(dev->dev);
->  		pm_runtime_set_autosuspend_delay(dev->dev, 5000);
-> @@ -903,6 +904,7 @@ nouveau_pmops_runtime_suspend(struct device *dev)
->  {
->  	struct pci_dev *pdev = to_pci_dev(dev);
->  	struct drm_device *drm_dev = pci_get_drvdata(pdev);
-> +	struct nouveau_drm *drm = nouveau_drm(drm_dev);
->  	int ret;
->  
->  	if (!nouveau_pmops_runtime()) {
-> @@ -910,12 +912,15 @@ nouveau_pmops_runtime_suspend(struct device *dev)
->  		return -EBUSY;
->  	}
->  
-> +	drm_dev->switch_power_state = DRM_SWITCH_POWER_CHANGING;
->  	nouveau_switcheroo_optimus_dsm();
->  	ret = nouveau_do_suspend(drm_dev, true);
->  	pci_save_state(pdev);
->  	pci_disable_device(pdev);
->  	pci_ignore_hotplug(pdev);
-> -	pci_set_power_state(pdev, PCI_D3cold);
-> +	if (drm->runpm_dsm)
-> +		pci_set_power_state(pdev, PCI_D3cold);
-> +
->  	drm_dev->switch_power_state = DRM_SWITCH_POWER_DYNAMIC_OFF;
->  	return ret;
->  }
-> @@ -925,7 +930,8 @@ nouveau_pmops_runtime_resume(struct device *dev)
->  {
->  	struct pci_dev *pdev = to_pci_dev(dev);
->  	struct drm_device *drm_dev = pci_get_drvdata(pdev);
-> -	struct nvif_device *device = &nouveau_drm(drm_dev)->client.device;
-> +	struct nouveau_drm *drm = nouveau_drm(drm_dev);
-> +	struct nvif_device *device = &drm->client.device;
->  	int ret;
->  
->  	if (!nouveau_pmops_runtime()) {
-> @@ -933,7 +939,9 @@ nouveau_pmops_runtime_resume(struct device *dev)
->  		return -EBUSY;
->  	}
->  
-> -	pci_set_power_state(pdev, PCI_D0);
-> +	drm_dev->switch_power_state = DRM_SWITCH_POWER_CHANGING;
-> +	if (drm->runpm_dsm)
-> +		pci_set_power_state(pdev, PCI_D0);
->  	pci_restore_state(pdev);
->  	ret = pci_enable_device(pdev);
->  	if (ret)
-> diff --git a/drm/nouveau/nouveau_drv.h b/drm/nouveau/nouveau_drv.h
-> index da847244..941600e9 100644
-> --- a/drm/nouveau/nouveau_drv.h
-> +++ b/drm/nouveau/nouveau_drv.h
-> @@ -214,6 +214,8 @@ struct nouveau_drm {
->  	struct nouveau_svm *svm;
->  
->  	struct nouveau_dmem *dmem;
-> +
-> +	bool runpm_dsm;
->  };
->  
->  static inline struct nouveau_drm *
--- 
-Cheers,
-	Lyude Paul
+> +EXPORT_SYMBOL(tegra_powergate_power_on);
+> =20
+>  /**
+>   * tegra_powergate_power_off() - power off partition
 
+If the sequence for the PCI power partition is becoming non-standard,
+this is going to hamper our efforts to move to generic PM domains. But
+it is what it is, so let's do this for now. We might need to revise this
+later on if/when we come up with a better solution.
+
+Bjorn, do you want to pick this up as part of this series, given the
+build dependency? If so:
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+Alternatively I could provide a stable branch for you to pull in. But I
+don't think it'd be necessary, the PMC driver is a fairly slow-moving
+target these days.
+
+Thierry
+
+--M9NhX3UHpAaciwkO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUMwMACgkQ3SOs138+
+s6HprA/9F4gXqL3jv8cXkVNJm079C4WLCBNlKQk0065YfmbsRGwyqJgSkMQcQybk
+N9At6Dmh4fAUPh5xwJ8yQ5eOphdPtbpci1cPMJk6Ze/tuQTtObDjHeggFz3Zx6M7
++R/AmRcbiyBomUrcey7bO398IFSF6bhpaKXxmJxzwlNY2JAzRS77jo1JcCnYolh2
+2WZypuJmC6Vp9Z9yC8u+nGdZRu2ca9VYDezV9yVrTN0mG+YYN/eFyjUcuRypLScF
+lm2hoAXu5M3RywjACzJltQgJd1+y2looqmrTlBxXm5xlNq7DdHK8d7KVLrtb2Qn5
+ml3BtQ540YQmzaWyeukbP3XGxJ2/gIkKhjQ249u0AV8Op+LcDuaduHzhTUjeIFTL
+1o/Vhc5FO+uqlyF7ete2R3jejJF99dPIbB2qq3E1H7Wt2EBiNpMVeCYD4cwRH9R+
+xsgEb9SjshqMoAbr3sx+9AumfGchj33Mf0WIDCmZYXzk2L4pERBMi4PtMABd2NY5
+XHbKEBy7iYnQCmDnKqcf+3+8Y+EZx6voh9ntDQiZBcCEhpaPKVOFiUuP9naEar8K
+ue23LYfeIOFjZyeI6Cbj9FmS3JDtSNcciymoVOGdby3n6rDh+2FrHkhpbkbA9C+3
+fA0BNLhVJl7lQJ8SwdQqEbIbiVzw5lNlvPFW8CthRf12SmR7keI=
+=Bhb3
+-----END PGP SIGNATURE-----
+
+--M9NhX3UHpAaciwkO--
