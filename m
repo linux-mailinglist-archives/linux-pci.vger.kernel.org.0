@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3817018B6E
-	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2019 16:15:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A465118B82
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2019 16:17:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfEIOPM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 May 2019 10:15:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50134 "EHLO mail.kernel.org"
+        id S1726791AbfEIOQA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 May 2019 10:16:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbfEIOPL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 May 2019 10:15:11 -0400
+        id S1726839AbfEIOPN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 May 2019 10:15:13 -0400
 Received: from localhost (50-81-63-4.client.mchsi.com [50.81.63.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E77A2175B;
-        Thu,  9 May 2019 14:15:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8626F2173C;
+        Thu,  9 May 2019 14:15:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557411310;
-        bh=KgP1iC3RQeOa98BidEwWEDVB/LKZqMorxMgNDOS57/s=;
+        s=default; t=1557411311;
+        bh=4nwEVs4HpuVLEW1H4P+gCJQ+1ahy8T18SlcqTYAoWCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O10LYy/DrCVeFBc1FovNtawHF2vv7UAKx7M0B16m1oKVq2Eul4hUPPYPbuIT4Q7DY
-         T6Nc6PdnoH6Lg0aOPlf8kb2kbvunMqEWonOHqyrQJhBHetMpvMTXoVpaTSIS+2G9dg
-         Sebp35SPgYsILSgJJ0e7+aPi3AFhicn0nQGPUlAY=
+        b=JZdD4UIYnD6o9Sirz5PyUvkIA8NXrvBTCSDcy5QOKPBYh8Q3s2jyBGTir8WnCJhKF
+         eYLZajPH3OSzDDq+XqjQwMHAaI9X91lvqm8aZzd7BpoCSkpXHRUXlEBOk6YchvJGcP
+         X0DMHjLJ9Isvk3fgtZl9kS52eWXHcchCiiKYHGg8=
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Frederick Lawler <fred@fredlawl.com>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -33,9 +33,9 @@ Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sven Van Asbroeck <thesven73@gmail.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 03/10] PCI/DPC: Log messages with pci_dev, not pcie_device
-Date:   Thu,  9 May 2019 09:14:49 -0500
-Message-Id: <20190509141456.223614-4-helgaas@kernel.org>
+Subject: [PATCH 04/10] PCI/AER: Log messages with pci_dev, not pcie_device
+Date:   Thu,  9 May 2019 09:14:50 -0500
+Message-Id: <20190509141456.223614-5-helgaas@kernel.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 In-Reply-To: <20190509141456.223614-1-helgaas@kernel.org>
 References: <20190509141456.223614-1-helgaas@kernel.org>
@@ -53,157 +53,157 @@ prefixes with dev_fmt().
 
 Example output change:
 
-  - dpc 0000:00:01.1:pcie008: DPC error containment capabilities...
-  + pcieport 0000:00:01.1: DPC: error containment capabilities...
+  - aer 0000:00:00.0:pci002: AER enabled with IRQ ...
+  + pcieport 0000:00:00.0: AER: enabled with IRQ ...
 
-Link: https://lore.kernel.org/lkml/20190503035946.23608-3-fred@fredlawl.com
+Link: https://lore.kernel.org/lkml/20190503035946.23608-6-fred@fredlawl.com
 Signed-off-by: Frederick Lawler <fred@fredlawl.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/pcie/dpc.c | 37 ++++++++++++++++++-------------------
- 1 file changed, 18 insertions(+), 19 deletions(-)
+ drivers/pci/pcie/aer.c        | 19 ++++++++++++-------
+ drivers/pci/pcie/aer_inject.c | 22 ++++++++++++----------
+ 2 files changed, 24 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 7b77754a82de..a32ec3487a8d 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -6,6 +6,8 @@
-  * Copyright (C) 2016 Intel Corp.
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 74f872e4e0cc..20a68e8546cc 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -12,6 +12,9 @@
+  *    Andrew Patterson <andrew.patterson@hp.com>
   */
  
-+#define dev_fmt(fmt) "DPC: " fmt
++#define pr_fmt(fmt) "AER: " fmt
++#define dev_fmt pr_fmt
 +
- #include <linux/aer.h>
- #include <linux/delay.h>
- #include <linux/interrupt.h>
-@@ -100,7 +102,6 @@ static int dpc_wait_rp_inactive(struct dpc_dev *dpc)
- {
- 	unsigned long timeout = jiffies + HZ;
- 	struct pci_dev *pdev = dpc->dev->port;
--	struct device *dev = &dpc->dev->device;
- 	u16 cap = dpc->cap_pos, status;
+ #include <linux/cper.h>
+ #include <linux/pci.h>
+ #include <linux/pci-acpi.h>
+@@ -779,10 +782,11 @@ static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info)
+ 	u8 bus = info->id >> 8;
+ 	u8 devfn = info->id & 0xff;
  
- 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
-@@ -110,7 +111,7 @@ static int dpc_wait_rp_inactive(struct dpc_dev *dpc)
- 		pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
- 	}
- 	if (status & PCI_EXP_DPC_RP_BUSY) {
--		dev_warn(dev, "DPC root port still busy\n");
-+		pci_warn(pdev, "root port still busy\n");
- 		return -EBUSY;
- 	}
- 	return 0;
-@@ -148,7 +149,6 @@ static pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
+-	pci_info(dev, "AER: %s%s error received: %04x:%02x:%02x.%d\n",
+-		info->multi_error_valid ? "Multiple " : "",
+-		aer_error_severity_string[info->severity],
+-		pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn), PCI_FUNC(devfn));
++	pci_info(dev, "%s%s error received: %04x:%02x:%02x.%d\n",
++		 info->multi_error_valid ? "Multiple " : "",
++		 aer_error_severity_string[info->severity],
++		 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
++		 PCI_FUNC(devfn));
+ }
  
- static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
- {
--	struct device *dev = &dpc->dev->device;
- 	struct pci_dev *pdev = dpc->dev->port;
- 	u16 cap = dpc->cap_pos, dpc_status, first_error;
- 	u32 status, mask, sev, syserr, exc, dw0, dw1, dw2, dw3, log, prefix;
-@@ -156,13 +156,13 @@ static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
+ #ifdef CONFIG_ACPI_APEI_PCIEAER
+@@ -1377,24 +1381,25 @@ static int aer_probe(struct pcie_device *dev)
+ 	int status;
+ 	struct aer_rpc *rpc;
+ 	struct device *device = &dev->device;
++	struct pci_dev *port = dev->port;
  
- 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_STATUS, &status);
- 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_MASK, &mask);
--	dev_err(dev, "rp_pio_status: %#010x, rp_pio_mask: %#010x\n",
-+	pci_err(pdev, "rp_pio_status: %#010x, rp_pio_mask: %#010x\n",
- 		status, mask);
+ 	rpc = devm_kzalloc(device, sizeof(struct aer_rpc), GFP_KERNEL);
+ 	if (!rpc)
+ 		return -ENOMEM;
  
- 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_SEVERITY, &sev);
- 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_SYSERROR, &syserr);
- 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_EXCEPTION, &exc);
--	dev_err(dev, "RP PIO severity=%#010x, syserror=%#010x, exception=%#010x\n",
-+	pci_err(pdev, "RP PIO severity=%#010x, syserror=%#010x, exception=%#010x\n",
- 		sev, syserr, exc);
+-	rpc->rpd = dev->port;
++	rpc->rpd = port;
+ 	set_service_data(dev, rpc);
  
- 	/* Get First Error Pointer */
-@@ -171,7 +171,7 @@ static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
- 
- 	for (i = 0; i < ARRAY_SIZE(rp_pio_error_string); i++) {
- 		if ((status & ~mask) & (1 << i))
--			dev_err(dev, "[%2d] %s%s\n", i, rp_pio_error_string[i],
-+			pci_err(pdev, "[%2d] %s%s\n", i, rp_pio_error_string[i],
- 				first_error == i ? " (First)" : "");
- 	}
- 
-@@ -185,18 +185,18 @@ static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
- 			      &dw2);
- 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_HEADER_LOG + 12,
- 			      &dw3);
--	dev_err(dev, "TLP Header: %#010x %#010x %#010x %#010x\n",
-+	pci_err(pdev, "TLP Header: %#010x %#010x %#010x %#010x\n",
- 		dw0, dw1, dw2, dw3);
- 
- 	if (dpc->rp_log_size < 5)
- 		goto clear_status;
- 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_IMPSPEC_LOG, &log);
--	dev_err(dev, "RP PIO ImpSpec Log %#010x\n", log);
-+	pci_err(pdev, "RP PIO ImpSpec Log %#010x\n", log);
- 
- 	for (i = 0; i < dpc->rp_log_size - 5; i++) {
- 		pci_read_config_dword(pdev,
- 			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG, &prefix);
--		dev_err(dev, "TLP Prefix Header: dw%d, %#010x\n", i, prefix);
-+		pci_err(pdev, "TLP Prefix Header: dw%d, %#010x\n", i, prefix);
- 	}
-  clear_status:
- 	pci_write_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_STATUS, status);
-@@ -229,18 +229,17 @@ static irqreturn_t dpc_handler(int irq, void *context)
- 	struct aer_err_info info;
- 	struct dpc_dev *dpc = context;
- 	struct pci_dev *pdev = dpc->dev->port;
--	struct device *dev = &dpc->dev->device;
- 	u16 cap = dpc->cap_pos, status, source, reason, ext_reason;
- 
- 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
- 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
- 
--	dev_info(dev, "DPC containment event, status:%#06x source:%#06x\n",
-+	pci_info(pdev, "containment event, status:%#06x source:%#06x\n",
- 		 status, source);
- 
- 	reason = (status & PCI_EXP_DPC_STATUS_TRIGGER_RSN) >> 1;
- 	ext_reason = (status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT) >> 5;
--	dev_warn(dev, "DPC %s detected\n",
-+	pci_warn(pdev, "%s detected\n",
- 		 (reason == 0) ? "unmasked uncorrectable error" :
- 		 (reason == 1) ? "ERR_NONFATAL" :
- 		 (reason == 2) ? "ERR_FATAL" :
-@@ -307,7 +306,7 @@ static int dpc_probe(struct pcie_device *dev)
- 					   dpc_handler, IRQF_SHARED,
- 					   "pcie-dpc", dpc);
+ 	status = devm_request_threaded_irq(device, dev->irq, aer_irq, aer_isr,
+ 					   IRQF_SHARED, "aerdrv", dev);
  	if (status) {
--		dev_warn(device, "request IRQ%d failed: %d\n", dev->irq,
-+		pci_warn(pdev, "request IRQ%d failed: %d\n", dev->irq,
- 			 status);
+-		dev_err(device, "request AER IRQ %d failed\n",
++		pci_err(port, "request AER IRQ %d failed\n",
+ 			dev->irq);
  		return status;
  	}
-@@ -319,7 +318,7 @@ static int dpc_probe(struct pcie_device *dev)
- 	if (dpc->rp_extensions) {
- 		dpc->rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
- 		if (dpc->rp_log_size < 4 || dpc->rp_log_size > 9) {
--			dev_err(device, "RP PIO log size %u is invalid\n",
-+			pci_err(pdev, "RP PIO log size %u is invalid\n",
- 				dpc->rp_log_size);
- 			dpc->rp_log_size = 0;
+ 
+ 	aer_enable_rootport(rpc);
+-	dev_info(device, "AER enabled with IRQ %d\n", dev->irq);
++	pci_info(port, "enabled with IRQ %d\n", dev->irq);
+ 	return 0;
+ }
+ 
+diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
+index 95d4759664b3..b05f0d728be8 100644
+--- a/drivers/pci/pcie/aer_inject.c
++++ b/drivers/pci/pcie/aer_inject.c
+@@ -12,6 +12,8 @@
+  *     Huang Ying <ying.huang@intel.com>
+  */
+ 
++#define dev_fmt(fmt) "aer_inject: " fmt
++
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/irq.h>
+@@ -332,14 +334,14 @@ static int aer_inject(struct aer_error_inj *einj)
+ 		return -ENODEV;
+ 	rpdev = pcie_find_root_port(dev);
+ 	if (!rpdev) {
+-		pci_err(dev, "aer_inject: Root port not found\n");
++		pci_err(dev, "Root port not found\n");
+ 		ret = -ENODEV;
+ 		goto out_put;
+ 	}
+ 
+ 	pos_cap_err = dev->aer_cap;
+ 	if (!pos_cap_err) {
+-		pci_err(dev, "aer_inject: Device doesn't support AER\n");
++		pci_err(dev, "Device doesn't support AER\n");
+ 		ret = -EPROTONOSUPPORT;
+ 		goto out_put;
+ 	}
+@@ -350,7 +352,7 @@ static int aer_inject(struct aer_error_inj *einj)
+ 
+ 	rp_pos_cap_err = rpdev->aer_cap;
+ 	if (!rp_pos_cap_err) {
+-		pci_err(rpdev, "aer_inject: Root port doesn't support AER\n");
++		pci_err(rpdev, "Root port doesn't support AER\n");
+ 		ret = -EPROTONOSUPPORT;
+ 		goto out_put;
+ 	}
+@@ -398,14 +400,14 @@ static int aer_inject(struct aer_error_inj *einj)
+ 	if (!aer_mask_override && einj->cor_status &&
+ 	    !(einj->cor_status & ~cor_mask)) {
+ 		ret = -EINVAL;
+-		pci_warn(dev, "aer_inject: The correctable error(s) is masked by device\n");
++		pci_warn(dev, "The correctable error(s) is masked by device\n");
+ 		spin_unlock_irqrestore(&inject_lock, flags);
+ 		goto out_put;
+ 	}
+ 	if (!aer_mask_override && einj->uncor_status &&
+ 	    !(einj->uncor_status & ~uncor_mask)) {
+ 		ret = -EINVAL;
+-		pci_warn(dev, "aer_inject: The uncorrectable error(s) is masked by device\n");
++		pci_warn(dev, "The uncorrectable error(s) is masked by device\n");
+ 		spin_unlock_irqrestore(&inject_lock, flags);
+ 		goto out_put;
+ 	}
+@@ -460,19 +462,19 @@ static int aer_inject(struct aer_error_inj *einj)
+ 	if (device) {
+ 		edev = to_pcie_device(device);
+ 		if (!get_service_data(edev)) {
+-			dev_warn(&edev->device,
+-				 "aer_inject: AER service is not initialized\n");
++			pci_warn(edev->port,
++				 "AER service is not initialized\n");
+ 			ret = -EPROTONOSUPPORT;
+ 			goto out_put;
  		}
-@@ -328,11 +327,11 @@ static int dpc_probe(struct pcie_device *dev)
- 	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
- 	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
- 
--	dev_info(device, "DPC error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
--		cap & PCI_EXP_DPC_IRQ, FLAG(cap, PCI_EXP_DPC_CAP_RP_EXT),
--		FLAG(cap, PCI_EXP_DPC_CAP_POISONED_TLP),
--		FLAG(cap, PCI_EXP_DPC_CAP_SW_TRIGGER), dpc->rp_log_size,
--		FLAG(cap, PCI_EXP_DPC_CAP_DL_ACTIVE));
-+	pci_info(pdev, "error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
-+		 cap & PCI_EXP_DPC_IRQ, FLAG(cap, PCI_EXP_DPC_CAP_RP_EXT),
-+		 FLAG(cap, PCI_EXP_DPC_CAP_POISONED_TLP),
-+		 FLAG(cap, PCI_EXP_DPC_CAP_SW_TRIGGER), dpc->rp_log_size,
-+		 FLAG(cap, PCI_EXP_DPC_CAP_DL_ACTIVE));
- 
- 	pci_add_ext_cap_save_buffer(pdev, PCI_EXT_CAP_ID_DPC, sizeof(u16));
- 	return status;
+-		dev_info(&edev->device,
+-			 "aer_inject: Injecting errors %08x/%08x into device %s\n",
++		pci_info(edev->port,
++			 "Injecting errors %08x/%08x into device %s\n",
+ 			 einj->cor_status, einj->uncor_status, pci_name(dev));
+ 		local_irq_disable();
+ 		generic_handle_irq(edev->irq);
+ 		local_irq_enable();
+ 	} else {
+-		pci_err(rpdev, "aer_inject: AER device not found\n");
++		pci_err(rpdev, "AER device not found\n");
+ 		ret = -ENODEV;
+ 	}
+ out_put:
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
