@@ -2,86 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C1386196A8
-	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2019 04:22:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBC7419851
+	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2019 08:21:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfEJCWW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 May 2019 22:22:22 -0400
-Received: from smtprelay0074.hostedemail.com ([216.40.44.74]:35196 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726835AbfEJCWW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 May 2019 22:22:22 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id F0A9C1802912A;
-        Fri, 10 May 2019 02:22:20 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::::::::::::::::,RULES_HIT:41:355:379:599:800:960:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:1801:2393:2553:2559:2562:2828:2900:2904:3138:3139:3140:3141:3142:3353:3622:3865:3866:3867:3868:3870:3872:3874:4250:4321:4605:5007:6119:7875:9040:10004:10400:10848:11026:11232:11473:11658:11914:12114:12296:12438:12740:12760:12895:13069:13311:13357:13439:14040:14181:14659:14721:21080:21433:21451:21627:30029:30054:30060:30070:30090:30091,0,RBL:23.242.196.136:@perches.com:.lbl8.mailshell.net-62.14.0.180 64.201.201.201,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:fn,MSBL:0,DNSBL:neutral,Custom_rules:0:0:0,LFtime:28,LUA_SUMMARY:none
-X-HE-Tag: death90_88875195d6303
-X-Filterd-Recvd-Size: 2829
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 10 May 2019 02:22:18 +0000 (UTC)
-Message-ID: <ec920830acb6145f9fa57d6adb36a448ffb1918c.camel@perches.com>
-Subject: Re: [PATCH 02/10] PCI/PME: Replace dev_printk(KERN_DEBUG) with
- dev_info()
-From:   Joe Perches <joe@perches.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Dongdong Liu <liudongdong3@huawei.com>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Thu, 09 May 2019 19:22:16 -0700
-In-Reply-To: <20190509211226.GC235064@google.com>
-References: <20190509141456.223614-1-helgaas@kernel.org>
-         <20190509141456.223614-3-helgaas@kernel.org>
-         <CAHp75Ve9-659N5N=f7pPb-9amvbGbi+zWxL9p-BnYocvXJPwZg@mail.gmail.com>
-         <69ff0a66d8c68f9e1adc8308847541e9566fe23e.camel@perches.com>
-         <20190509211226.GC235064@google.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
+        id S1727010AbfEJGVg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 May 2019 02:21:36 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:5013 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfEJGVg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 May 2019 02:21:36 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cd518480000>; Thu, 09 May 2019 23:20:56 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 09 May 2019 23:21:33 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 09 May 2019 23:21:33 -0700
+Received: from [10.24.47.55] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 May
+ 2019 06:21:27 +0000
+Subject: RE: [PATCH V5 03/16] PCI: Export pcie_bus_config symbol
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Krishna Thota <kthota@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-4-vidyas@nvidia.com> <20190503110732.GC32400@ulmo>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <80616ff5-d7a5-84a4-a71b-569e340d128c@nvidia.com>
+Date:   Fri, 10 May 2019 11:51:24 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190503110732.GC32400@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557469257; bh=24uok8Emgfq8JqLYEmA9il4vmwDxuvY2qeXLWgy1Ux8=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=VGPaDZPU6RodfRcYpWevyox/CweWPCBp2FZ9famAhFSxmUmLYCqoxomnKy3VUay8+
+         BzMmFoE5yCRMN4THPY6r8HObhAtdLkjZ1FFvmHhAh5NDKaq5SmDigH/E0+PxNknxjN
+         GAb9d7nnGvIWMUWovvD2NALS935C9Af05oRJyiGb+x0saF9s4ch+FkwJ8nOeM6UF5n
+         bbycgvMnkvjCQW2ElsYBymdx5+RWWDbQn2NuFwb6Hxk3tG0mTb1cT/u+bcyPH5ahrP
+         wOnRr+ELEdu/+/RZEAJuMkkjUhagK8PK5+gy2jJqkJxdjOf1B3F31MaTnpYKmsCmMI
+         WmQxUames0JFQ==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 2019-05-09 at 16:12 -0500, Bjorn Helgaas wrote:
-> On Thu, May 09, 2019 at 11:31:04AM -0700, Joe Perches wrote:
-> > On Thu, 2019-05-09 at 20:35 +0300, Andy Shevchenko wrote:
-> > > On Thu, May 9, 2019 at 5:18 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > Replace dev_printk(KERN_DEBUG) with dev_info() or dev_err() to be more
-> > > > consistent with other logging.
-> > > > 
-> > > > These could be converted to dev_dbg(), but that depends on
-> > > > CONFIG_DYNAMIC_DEBUG and DEBUG, and we want most of these messages to
-> > > > *always* be in the dmesg log.
-> > > > 
-> > > > Also, use dev_fmt() to add the service name.  Example output change:
-> > > > 
-> > > >   - pcieport 0000:80:10.0: Signaling PME with IRQ ...
-> > > >   + pcieport 0000:80:10.0: PME: Signaling with IRQ ...
-> > > > +               pci_info(port, "interrupt generated for non-existent device %02x:%02x.%d\n",
-> > > > +                        busnr, PCI_SLOT(devfn), PCI_FUNC(devfn));
-> > > > +               pci_info(port, "Spurious native interrupt!\n");
-> > > > +       pci_info(port, "Signaling with IRQ %d\n", srv->irq);
-> > 
-> > Why change the logging level?
-> > Why not use #define DEBUG and use pci_dbg ?
+
+
+> -----Original Message-----
+> From: linux-pci-owner@vger.kernel.org <linux-pci-owner@vger.kernel.org> On
+> Behalf Of Thierry Reding
+> Sent: Friday, May 3, 2019 4:38 PM
+> To: Vidya Sagar <vidyas@nvidia.com>
+> Cc: lorenzo.pieralisi@arm.com; bhelgaas@google.com; robh+dt@kernel.org;
+> mark.rutland@arm.com; Jonathan Hunter <jonathanh@nvidia.com>;
+> kishon@ti.com; catalin.marinas@arm.com; will.deacon@arm.com;
+> jingoohan1@gmail.com; gustavo.pimentel@synopsys.com; Mikko Perttunen
+> <mperttunen@nvidia.com>; linux-pci@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-tegra@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; Krishna Thota
+> <kthota@nvidia.com>; Manikanta Maddireddy <mmaddireddy@nvidia.com>;
+> sagar.tv@gmail.com
+> Subject: Re: [PATCH V5 03/16] PCI: Export pcie_bus_config symbol
 > 
-> What would the benefit of using DEBUG be?
+> On Wed, Apr 24, 2019 at 10:49:51AM +0530, Vidya Sagar wrote:
+> > Export pcie_bus_config to enable host controller drivers setting it to
+> > a specific configuration be able to build as loadable modules
+> >
+> > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > ---
+> > Changes since [v4]:
+> > * None
+> >
+> > Changes since [v3]:
+> > * None
+> >
+> > Changes since [v2]:
+> > * None
+> >
+> > Changes since [v1]:
+> > * This is a new patch in v2 series
+> >
+> >  drivers/pci/pci.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> 
+> It doesn't look to me like this is something that host controller drivers are
+> supposed to change. This is set via the pci kernel command- line parameter,
+> meaning it's a way of tuning the system configuration.
+> Drivers should not be allowed to override this after the fact.
+> 
+> Why do we need to set this?
+Here is the reason I'm doing it.
+First things first, Tegra194 supports MPS up to 256 bytes.
+Assume there are two endpoints with MPS supported up to
+a) 128 bytes (Ex:- Realtek NIC with 8168 controller)
+b) 256 bytes (Ex:- Kingston NVMe drive)
+Now, leaving "pcie_bus_config" untouched in the driver sets it to
+PCIE_BUS_DEFAULT by default. With this setting, for both (a) and (b),
+MPS is set to 128, which means, even though Tegra194 supports 256 MPS, it is not
+set to 256 even in case of (b) thereby not using RP's 256 MPS feature.
+If I explicitly set pcie_bus_config=PCIE_BUS_PERFORMACE in the code, then 256 MPS is set when
+(b) is connected, but when (a) is connected, for root port MPS 256 is set and for
+endpoint MPS 128 is set, because of which root port tries to send packets with 256
+payload that breaks functionality of Realtek NIC card.
+The best option I've found out is that when I set 256 in PCI_EXP_DEVCTL of root port
+explicitly before link up and use pcie_bus_config=PCIE_BUS_SAFE, then, I get the best of both
+PCIE_BUS_DEFAULT and PCIE_BUS_PERFORMANCE i.e. with (a) connected, MPS is set to 128 in both RP
+and EP and with (b) connected, MPS is set to 256 in both RP and EP.
 
-It makes the <foo>_dbg output unconditional or
-possible to be disabled via dynamic_debug
+So, is it like, pcie_bus_config shouldn't be set to anything explicitly in the driver and depending on the
+platform and what is connected to root port, kernel parameter can be passed with appropriate setting?
 
-> I don't want these
-> particular messages to be conditional.
-
-
+> 
+> Thierry
+> 
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c index
+> > f5ff01dc4b13..731f78508601 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -94,6 +94,7 @@ unsigned long pci_hotplug_mem_size =
+> > DEFAULT_HOTPLUG_MEM_SIZE;  unsigned long pci_hotplug_bus_size =
+> > DEFAULT_HOTPLUG_BUS_SIZE;
+> >
+> >  enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_DEFAULT;
+> > +EXPORT_SYMBOL_GPL(pcie_bus_config);
+> >
+> >  /*
+> >   * The default CLS is used if arch didn't set CLS explicitly and not
+> > --
+> > 2.17.1
+> >
