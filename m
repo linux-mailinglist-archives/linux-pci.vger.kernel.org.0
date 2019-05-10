@@ -2,113 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BD0019F3F
-	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2019 16:34:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6374F1A19A
+	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2019 18:35:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbfEJOeU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 May 2019 10:34:20 -0400
-Received: from mga14.intel.com ([192.55.52.115]:32461 "EHLO mga14.intel.com"
+        id S1727660AbfEJQfy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 May 2019 12:35:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727248AbfEJOeT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 10 May 2019 10:34:19 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 May 2019 07:34:16 -0700
-X-ExtLoop1: 1
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga002.jf.intel.com with ESMTP; 10 May 2019 07:34:08 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hP6b9-0004Sg-Pc; Fri, 10 May 2019 17:34:07 +0300
-Date:   Fri, 10 May 2019 17:34:07 +0300
-From:   "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-rpi-kernel@lists.infradead.org" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 03/16] lib,treewide: add new match_string() helper/macro
-Message-ID: <20190510143407.GA9224@smile.fi.intel.com>
-References: <20190508112842.11654-1-alexandru.ardelean@analog.com>
- <20190508112842.11654-5-alexandru.ardelean@analog.com>
- <20190508131128.GL9224@smile.fi.intel.com>
- <20190508131856.GB10138@kroah.com>
- <b2440bc9485456a7a90a488c528997587b22088b.camel@analog.com>
- <4df165bc4247e60aa4952fd55cb0c77e60712767.camel@analog.com>
+        id S1727496AbfEJQfy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 10 May 2019 12:35:54 -0400
+Received: from localhost (50-81-62-123.client.mchsi.com [50.81.62.123])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77C9921479;
+        Fri, 10 May 2019 16:35:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557506153;
+        bh=k3Ms6Wn4UON0Tqh2UFjVeKLXcaZSVeAREDPXexDcuGM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=g4Jn1JnpqhIgoEiVmeMjiPasn2u2Fw0Om4KatZACO0J2C+339sTKvDUaQ+lquvV54
+         Wnwi6nY0vkW3nRTubpeGRSwSkw5fbBfWJIsExrceGZU0AqYVS/7aTx7cDrBpgxr574
+         mHut5v+Kv5EsLAa09bjKJnoIDXlSi6T+6FzGjxeU=
+Date:   Fri, 10 May 2019 11:35:51 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Hou Zhiqiang <zhiqiang.hou@nxp.com>,
+        Karthikeyan M <m.karthikeyan@mobiveil.co.in>
+Cc:     Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
+        linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com
+Subject: Re: [PATCH 1/1] PCI: mobiveil: Update maintainers list
+Message-ID: <20190510163551.GH235064@google.com>
+References: <1557229516-6870-1-git-send-email-l.subrahmanya@mobiveil.co.in>
+ <20190510134811.GG235064@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4df165bc4247e60aa4952fd55cb0c77e60712767.camel@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20190510134811.GG235064@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 10, 2019 at 09:15:27AM +0000, Ardelean, Alexandru wrote:
-> On Wed, 2019-05-08 at 16:22 +0300, Alexandru Ardelean wrote:
-> > On Wed, 2019-05-08 at 15:18 +0200, Greg KH wrote:
-> > > On Wed, May 08, 2019 at 04:11:28PM +0300, Andy Shevchenko wrote:
-> > > > On Wed, May 08, 2019 at 02:28:29PM +0300, Alexandru Ardelean wrote:
-
-> > > > Can you split include/linux/ change from the rest?
-> > > 
-> > > That would break the build, why do you want it split out?  This makes
-> > > sense all as a single patch to me.
-> > > 
+On Fri, May 10, 2019 at 08:48:11AM -0500, Bjorn Helgaas wrote:
+> On Tue, May 07, 2019 at 07:45:16AM -0400, Subrahmanya Lingappa wrote:
+> > Add Karthikeyan M and Z.Q. Hou as new maintainers of Mobiveil controller
+> > driver.
 > > 
-> > Not really.
-> > It would be just be the new match_string() helper/macro in a new commit.
-> > And the conversions of the simple users of match_string() (the ones using
-> > ARRAY_SIZE()) in another commit.
-> > 
+> > Signed-off-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 > 
-> I should have asked in my previous reply.
-> Leave this as-is or re-formulate in 2 patches ?
+> I'd like to include this ASAP so patches get sent to the right place,
+> and I want to make sure we spell the names and email addresses
+> correctly.
+> 
+> Zhiqiang, you consistently use "Hou Zhiqiang <Zhiqiang.Hou@nxp.com>"
+> for sign-offs [1] (except for "Z.q. Hou" in email headers).  Can you
+> ack that the updated patch below is correct for you?
+> 
+> Karthikeyan, I don't see any email or commits from you yet, so I'd really
+> like your ack along with the canonical name/email address you prefer.
+> There is another Karthikeyan already in MAINTAINERS, so hopefully we can
+> avoid any confusion.
+> 
+> [1] git log --format="%an <%ae>" --author=[Zz]hiqiang
 
-Depends on on what you would like to spend your time: collecting Acks for all
-pieces in treewide patch or send new API first followed up by per driver /
-module update in next cycle.
+I went ahead and applied the patch below for v5.2, but if you want to
+tweak the names/addresses, I can update them if you tell me soon.
 
-I also have no strong preference.
-And I think it's good to add Heikki Krogerus to Cc list for both patch series,
-since he is the author of sysfs variant and may have something to comment on
-the rest.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> commit d260ff8d3353
+> Author: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> Date:   Tue May 7 07:45:16 2019 -0400
+> 
+>     MAINTAINERS: Add Karthikeyan M and Hou Zhiqiang for Mobiveil PCI
+>     
+>     Add Karthikeyan M and Hou Zhiqiang as new maintainers of Mobiveil
+>     controller driver.
+>     
+>     Link: https://lore.kernel.org/linux-pci/1557229516-6870-1-git-send-email-l.subrahmanya@mobiveil.co.in
+>     Signed-off-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+>     [bhelgaas: update names/email addresses to match usage in git history]
+>     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e17ebf70b548..42d7f44cc0e1 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11880,7 +11880,8 @@ F:	include/linux/switchtec.h
+>  F:	drivers/ntb/hw/mscc/
+>  
+>  PCI DRIVER FOR MOBIVEIL PCIE IP
+> -M:	Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> +M:	Karthikeyan M <m.karthikeyan@mobiveil.co.in>
+> +M:	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>  L:	linux-pci@vger.kernel.org
+>  S:	Supported
+>  F:	Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
