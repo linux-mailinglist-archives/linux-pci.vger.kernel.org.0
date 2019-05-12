@@ -2,127 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9171C1AD76
-	for <lists+linux-pci@lfdr.de>; Sun, 12 May 2019 19:15:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19F2A1AE19
+	for <lists+linux-pci@lfdr.de>; Sun, 12 May 2019 22:17:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfELRPV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 12 May 2019 13:15:21 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37309 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbfELRPV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 May 2019 13:15:21 -0400
-Received: by mail-qk1-f195.google.com with SMTP id d10so607306qko.4
-        for <linux-pci@vger.kernel.org>; Sun, 12 May 2019 10:15:20 -0700 (PDT)
+        id S1726922AbfELURj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 12 May 2019 16:17:39 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:35508 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbfELURj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 May 2019 16:17:39 -0400
+Received: by mail-it1-f195.google.com with SMTP id u186so17197955ith.0
+        for <linux-pci@vger.kernel.org>; Sun, 12 May 2019 13:17:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fredlawl-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DSBm5hTnVx+7dwCFzA5fliIxja1q/A/MZRb7WbAzM94=;
+        b=pwYdxpnlhNwn2jvDkRjr7/7FWeDjTDe+Hozfre99whNdXsRBhtYPkMZ5Uf/380/ZXR
+         NZEkLjpRtMjLrpi6r0FY7jYq+vtTiMwXm61D6xdNNaLvlrPm05tlrTw1ZYHusJvchObN
+         iZ/Em2Ekbzxtpinc1CIFg4iMYCkRQ+Widmpu05SwJO1z1LNBGXqhsIz/K031JktjBpwK
+         jcszZpYCntHf6jGE1J7SlnWShY7BhEZcAfhflaZ0fgoxfOAQ/Zx/4q+9MI1uFf0iMbQ/
+         SgEruU8oX1GJlv0SBk2+gedJXRq3SjoG1AZLpeP7akWsGbtmbXD1vNAT8Pt/dypUogdb
+         wYWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Sz6oXhk1MUAcDMqhVgJnZ+u8Zwtmv3OV0JGi1Y8CWDw=;
-        b=RBjeLojj4nDywDPlmvIyH9iASYxTlm7T/vhRhVD8eAZ0kY4dCIfrVqdeZcblB/6n0c
-         0nK74GXAEQmqUvg7w2HPIXO0swlFyXp6qY/c9LbjME7XMahsIZFhYJT27wsVjKk+I/kv
-         m58/T2mkIqah4M9GJuAd5mLEqjm/MxNhZj4YeMHTsm7vBXv7ZV3sHWb2pLD8SFiDwA+l
-         dc/xGIB7LmzbH6+1MNUnAgTISxfEgu1FT/3xV+p7vkhTHxUikvwqTdNHK6SKcAiSyJZz
-         dsbqTat6T/oN8uxm4MGsiaPXADAbyFl/iN2S5Igzepr/JhSGID7wx4xEaXhPkegG7NDf
-         xD8A==
-X-Gm-Message-State: APjAAAVAShit2i/zyhe2UgQtUZeOLQb6bjYVNtjAOYTiqP5gf6DFHBdT
-        +6298CvjU/IppNwPFsKhR9aRSdfZT90=
-X-Google-Smtp-Source: APXvYqxLzieYropX9DXBLnvbsudc9FJW0WQmQVUd/9WRnEbpC2BiYAyAKTnxKUBxw7ns2tMNztADiw==
-X-Received: by 2002:a37:b3c5:: with SMTP id c188mr18807278qkf.97.1557681320186;
-        Sun, 12 May 2019 10:15:20 -0700 (PDT)
-Received: from redhat.com (pool-173-76-105-71.bstnma.fios.verizon.net. [173.76.105.71])
-        by smtp.gmail.com with ESMTPSA id c32sm6064980qte.2.2019.05.12.10.15.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 12 May 2019 10:15:19 -0700 (PDT)
-Date:   Sun, 12 May 2019 13:15:16 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, joro@8bytes.org,
-        jasowang@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        bhelgaas@google.com, frowand.list@gmail.com,
-        kvmarm@lists.cs.columbia.edu, eric.auger@redhat.com,
-        tnowicki@caviumnetworks.com, kevin.tian@intel.com,
-        marc.zyngier@arm.com, robin.murphy@arm.com, will.deacon@arm.com,
-        lorenzo.pieralisi@arm.com, bharat.bhushan@nxp.com
-Subject: Re: [PATCH v7 0/7] Add virtio-iommu driver
-Message-ID: <20190512131500-mutt-send-email-mst@kernel.org>
-References: <20190115121959.23763-1-jean-philippe.brucker@arm.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DSBm5hTnVx+7dwCFzA5fliIxja1q/A/MZRb7WbAzM94=;
+        b=jpmfCBO+TqOHBMjvKr7uVTIGddGxqEBMYtsMAnArjfCl3tWgVcP2x+88f5M/iRMRyU
+         KRF6SHc+D0mM1N1zKHMU2jMEFOXfQMR8W0Lu/xlW4jHMqDkz3qLShF5w92c1QPCbDBLj
+         SDJYWrqB1sTaGVJx3LRNhD4c+/2Uc4NE93KQbT2cSx4TjW9jNvUZw6KbYpD8rWo/AGAl
+         /vallFRwAGJy8U+fXmd0CdWpoFWOwnIy4rmxcP/1xPWpdRXG1c5YBQddcAqfBdHNS5CM
+         ++jKcHC5ee+/QGWXyOu3GWmG1mulaWyDR/AQQ3K+OO3jw7q84KorYPu/s4O0mwM8apjl
+         hkJQ==
+X-Gm-Message-State: APjAAAWkf1Svd8oKxn/Hr1flq0HEQtPaUXsec425eVmZdIzi0sE76AfK
+        Ki8XR3HafEBdch2QQ4OgcZ4i1kW0wAk=
+X-Google-Smtp-Source: APXvYqz7TpET9fzs9E1TMXoR3qu3K+pxRKqZN63i0UfY1jyuGvevpGo+lc/OnQCVsL4nGuTB022aLg==
+X-Received: by 2002:a02:bb02:: with SMTP id y2mr16978369jan.105.1557692257905;
+        Sun, 12 May 2019 13:17:37 -0700 (PDT)
+Received: from Fredericks-MacBook-Pro.local (173-17-200-179.client.mchsi.com. [173.17.200.179])
+        by smtp.gmail.com with ESMTPSA id x77sm649362ita.1.2019.05.12.13.17.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 12 May 2019 13:17:36 -0700 (PDT)
+Subject: Re: [PATCH RFC v2 3/3] PCI/ASPM: add sysfs attribute for controlling
+ ASPM
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <e041842a-55ed-91e3-75c2-c1a0267b74e5@gmail.com>
+ <773b6a8a-00ac-a275-c80b-d5909ca58f19@gmail.com>
+ <d8e271e0-d83f-14f9-00d6-ad63a56d8959@fredlawl.com>
+ <4370c154-7e0b-26ac-4660-bb254cef7425@gmail.com>
+From:   Frederick Lawler <fred@fredlawl.com>
+Message-ID: <d69eb045-4a20-7f75-799e-5a374cd5424b@fredlawl.com>
+Date:   Sun, 12 May 2019 15:18:35 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 PostboxApp/6.1.16.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190115121959.23763-1-jean-philippe.brucker@arm.com>
+In-Reply-To: <4370c154-7e0b-26ac-4660-bb254cef7425@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 15, 2019 at 12:19:52PM +0000, Jean-Philippe Brucker wrote:
-> Implement the virtio-iommu driver, following specification v0.9 [1].
-> 
-> This is a simple rebase onto Linux v5.0-rc2. We now use the
-> dev_iommu_fwspec_get() helper introduced in v5.0 instead of accessing
-> dev->iommu_fwspec, but there aren't any functional change from v6 [2].
-> 
-> Our current goal for virtio-iommu is to get a paravirtual IOMMU working
-> on Arm, and enable device assignment to guest userspace. In this
-> use-case the mappings are static, and don't require optimal performance,
-> so this series tries to keep things simple. However there is plenty more
-> to do for features and optimizations, and having this base in v5.1 would
-> be good. Given that most of the changes are to drivers/iommu, I believe
-> the driver and future changes should go via the IOMMU tree.
-> 
-> You can find Linux driver and kvmtool device on v0.9.2 branches [3],
-> module and x86 support on virtio-iommu/devel. Also tested with Eric's
-> QEMU device [4]. Please note that the series depends on Robin's
-> probe-deferral fix [5], which will hopefully land in v5.0.
-> 
-> [1] Virtio-iommu specification v0.9, sources and pdf
->     git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.9
->     http://jpbrucker.net/virtio-iommu/spec/v0.9/virtio-iommu-v0.9.pdf
-> 
-> [2] [PATCH v6 0/7] Add virtio-iommu driver
->     https://lists.linuxfoundation.org/pipermail/iommu/2018-December/032127.html
-> 
-> [3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.9.2
->     git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.9.2
-> 
-> [4] [RFC v9 00/17] VIRTIO-IOMMU device
->     https://www.mail-archive.com/qemu-devel@nongnu.org/msg575578.html
-> 
-> [5] [PATCH] iommu/of: Fix probe-deferral
->     https://www.spinics.net/lists/arm-kernel/msg698371.html
+Heiner Kallweit wrote on 5/12/19 9:03 AM:
+> On 12.05.2019 03:02, Frederick Lawler wrote:
+>> Evening,
+>>
+>> Heiner Kallweit wrote on 5/11/19 10:33 AM:> +static ssize_t aspm_disable_link_state_show(struct device *dev,
+> [..]
+>>
+>> Since we're introducing a new sysfs interface, would it be more appropriate to rename the sysfs files to aspm_set_link_state (or something to that effect)?
+>>
+>> The syntax as it stands, means that to enable a state, a double negative must be used:
+>>
+>> echo "-L1.1" > ./aspm_disable_link_state"
+>> vs
+>> echo "+L1.1" > ./aspm_set_link_state
+>>
+>> If we avoid the double negative, the documentation about to be written will be more clear and use of the sysfs file will be more intuitive.
+>>
+> In addition to these more formal parts: Can you test the functionality?
 
-For virtio things:
+I don't have enough hardware to fully test things out. I just have 1 
+device with ASPM support and no switches.
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+I'll have a go tonight with the v3 patches and report back.
 
-
-
-> Jean-Philippe Brucker (7):
->   dt-bindings: virtio-mmio: Add IOMMU description
->   dt-bindings: virtio: Add virtio-pci-iommu node
->   of: Allow the iommu-map property to omit untranslated devices
->   PCI: OF: Initialize dev->fwnode appropriately
->   iommu: Add virtio-iommu driver
->   iommu/virtio: Add probe request
->   iommu/virtio: Add event queue
 > 
->  .../devicetree/bindings/virtio/iommu.txt      |   66 +
->  .../devicetree/bindings/virtio/mmio.txt       |   30 +
->  MAINTAINERS                                   |    7 +
->  drivers/iommu/Kconfig                         |   11 +
->  drivers/iommu/Makefile                        |    1 +
->  drivers/iommu/virtio-iommu.c                  | 1158 +++++++++++++++++
->  drivers/of/base.c                             |   10 +-
->  drivers/pci/of.c                              |    7 +
->  include/uapi/linux/virtio_ids.h               |    1 +
->  include/uapi/linux/virtio_iommu.h             |  161 +++
->  10 files changed, 1449 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
->  create mode 100644 drivers/iommu/virtio-iommu.c
->  create mode 100644 include/uapi/linux/virtio_iommu.h
+>> Thanks,
+>> Frederick Lawler
+>>
+>>
+> Heiner
 > 
-> -- 
-> 2.19.1
+
+Frederick Lawler
+
