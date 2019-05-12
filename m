@@ -2,92 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C1D4F1AC8F
-	for <lists+linux-pci@lfdr.de>; Sun, 12 May 2019 16:03:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2ACF1AC9C
+	for <lists+linux-pci@lfdr.de>; Sun, 12 May 2019 16:22:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfELODQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 12 May 2019 10:03:16 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46866 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbfELODP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 May 2019 10:03:15 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r7so11737152wrr.13
-        for <linux-pci@vger.kernel.org>; Sun, 12 May 2019 07:03:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zfzjLuVD+6xxt9wpoY7JOTo4QllwmFNlQrbIdPFDh9Q=;
-        b=WMFF7EhqYT8cMep2EuUBPnpIwYOMoo1cbgnppVKY/TN7dBNCVlqYfDlOfQldRCbDka
-         nIu9+8IAN0v6nXTL5BQwusiBomTAKLP1DHdi/Q4WPWh6sEM/NfXg+nFXaKtMJKp6kban
-         peYUR8ryquglvr22PXbc5ZlFKjbgtKrHKfTQl1ciwPy9mxugJGI/L+rVfK4++YpGrdCd
-         Jx9uuqVorqFtuXX+GzRVkEOjTvHseiZDUnJzYMXhGL3JkN+iP8jy9/MhiVrcQWEDzaLG
-         d4vBieZaoOKNdeaOvu0a36b/BXVGxK+lXzMpS4+oEKBeNeN07niYxcBgN2DOQv2QTAoR
-         gNkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zfzjLuVD+6xxt9wpoY7JOTo4QllwmFNlQrbIdPFDh9Q=;
-        b=UOSBQrdm3OSzlL3zRAtn/kfSeT1KavM6ol5iLwyoLerlFTdIhp3IRpPt5b/wiv0Qar
-         gW9Tjqu3klb3ky9yDGT5CJGMT50eAJFTWm+br1+gZgpHjUoli2snu9Sw/gLV7hXI/6Kk
-         3D0gi70fwAYyX1iyFWtFYVki9zTrv7Sx7i519QMCr46X2WXgnE59Bj0i7mCgAfvr0TkR
-         Pvw/5cwjVX5id4jhpz0Wyze+vKh+UtLp3YiBLKyxAfzJPFHHbDxZfcpF+nVm6sgE0Aa4
-         FMxoU7Gv747DO94REDX63+fmNLP9bdJXCx+mRE444hDCTGeqoBXiK+qHJ+YTfRe8EW/6
-         gIoQ==
-X-Gm-Message-State: APjAAAW+mf+/hg7/WVjP5x/vxYsui5rffPd/HwixgT8reycUfILLXx4Y
-        c4xnEqib1cGGIGE9GASuMkDWXYB2y4w=
-X-Google-Smtp-Source: APXvYqwhIPiNqZu+r8LpN4qevCl7hkhQF55zNPrNyuY8Vba6RgfXTfa7dgEqfr1PXGvqZvgQHxaUOQ==
-X-Received: by 2002:adf:9042:: with SMTP id h60mr14074109wrh.248.1557669794176;
-        Sun, 12 May 2019 07:03:14 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8bd4:5700:9c27:51d8:9ed5:dad3? (p200300EA8BD457009C2751D89ED5DAD3.dip0.t-ipconnect.de. [2003:ea:8bd4:5700:9c27:51d8:9ed5:dad3])
-        by smtp.googlemail.com with ESMTPSA id s3sm17676366wre.97.2019.05.12.07.03.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 12 May 2019 07:03:13 -0700 (PDT)
-Subject: Re: [PATCH RFC v2 3/3] PCI/ASPM: add sysfs attribute for controlling
- ASPM
-To:     Frederick Lawler <fred@fredlawl.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <e041842a-55ed-91e3-75c2-c1a0267b74e5@gmail.com>
- <773b6a8a-00ac-a275-c80b-d5909ca58f19@gmail.com>
- <d8e271e0-d83f-14f9-00d6-ad63a56d8959@fredlawl.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <4370c154-7e0b-26ac-4660-bb254cef7425@gmail.com>
-Date:   Sun, 12 May 2019 16:03:07 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <d8e271e0-d83f-14f9-00d6-ad63a56d8959@fredlawl.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        id S1726604AbfELOWS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 12 May 2019 10:22:18 -0400
+Received: from smtprelay0012.hostedemail.com ([216.40.44.12]:59433 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726442AbfELOWS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 May 2019 10:22:18 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 86C44182CF666;
+        Sun, 12 May 2019 14:22:16 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::::::::,RULES_HIT:41:355:379:599:800:960:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1539:1593:1594:1711:1714:1730:1747:1777:1792:2393:2559:2562:2828:2895:3138:3139:3140:3141:3142:3351:3622:3865:3867:3868:3871:3872:4250:4321:5007:6119:6120:7514:7809:8957:10004:10400:10848:11232:11658:11914:12043:12114:12555:12740:12760:12895:13069:13161:13229:13311:13357:13439:14181:14659:14721:21080:21433:21451:21619:30054:30070:30091,0,RBL:23.242.196.136:@perches.com:.lbl8.mailshell.net-62.14.0.180 64.201.201.201,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:fn,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:26,LUA_SUMMARY:none
+X-HE-Tag: skin28_8819c53057e61
+X-Filterd-Recvd-Size: 1760
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 12 May 2019 14:22:15 +0000 (UTC)
+Message-ID: <d00c1c42689e08df0ce7cd8b2c796eee5b9f5642.camel@perches.com>
+Subject: Re: [PATCH v4 07/12] Documentation: PCI: convert
+ pci-error-recovery.txt to reST
+From:   Joe Perches <joe@perches.com>
+To:     Changbin Du <changbin.du@gmail.com>, bhelgaas@google.com,
+        corbet@lwn.net
+Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org
+Date:   Sun, 12 May 2019 07:22:13 -0700
+In-Reply-To: <20190512125009.32079-8-changbin.du@gmail.com>
+References: <20190512125009.32079-1-changbin.du@gmail.com>
+         <20190512125009.32079-8-changbin.du@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12.05.2019 03:02, Frederick Lawler wrote:
-> Evening,
-> 
-> Heiner Kallweit wrote on 5/11/19 10:33 AM:> +static ssize_t aspm_disable_link_state_show(struct device *dev,
-[..]
-> 
-> Since we're introducing a new sysfs interface, would it be more appropriate to rename the sysfs files to aspm_set_link_state (or something to that effect)?
-> 
-> The syntax as it stands, means that to enable a state, a double negative must be used:
-> 
-> echo "-L1.1" > ./aspm_disable_link_state"
-> vs
-> echo "+L1.1" > ./aspm_set_link_state
-> 
-> If we avoid the double negative, the documentation about to be written will be more clear and use of the sysfs file will be more intuitive.
-> 
-In addition to these more formal parts: Can you test the functionality?
+On Sun, 2019-05-12 at 20:50 +0800, Changbin Du wrote:
+> This converts the plain text documentation to reStructuredText format and
+> add it to Sphinx TOC tree. No essential content change.
+[]
+> diff --git a/MAINTAINERS b/MAINTAINERS
+[]
+> @@ -12100,7 +12100,7 @@ M:	Sam Bobroff <sbobroff@linux.ibm.com>
+>  M:	Oliver O'Halloran <oohall@gmail.com>
+>  L:	linuxppc-dev@lists.ozlabs.org
+>  S:	Supported
+> -F:	Documentation/PCI/pci-error-recovery.txt
+> +F:	Documentation/PCI/pci-error-recovery.rst
+>  F:	drivers/pci/pcie/aer.c
+>  F:	drivers/pci/pcie/dpc.c
+>  F:	drivers/pci/pcie/err.c
 
-> Thanks,
-> Frederick Lawler
-> 
-> 
-Heiner
+There is another section to update as well:
+
+PCI ERROR RECOVERY
+M:	Linas Vepstas <linasvepstas@gmail.com>
+L:	linux-pci@vger.kernel.org
+S:	Supported
+F:	Documentation/PCI/pci-error-recovery.txt
+
+
