@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 83ED91AD0B
-	for <lists+linux-pci@lfdr.de>; Sun, 12 May 2019 18:32:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9171C1AD76
+	for <lists+linux-pci@lfdr.de>; Sun, 12 May 2019 19:15:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfELQcE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 12 May 2019 12:32:04 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38848 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbfELQcE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 May 2019 12:32:04 -0400
-Received: by mail-qt1-f195.google.com with SMTP id d13so5032923qth.5
-        for <linux-pci@vger.kernel.org>; Sun, 12 May 2019 09:32:03 -0700 (PDT)
+        id S1726529AbfELRPV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 12 May 2019 13:15:21 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37309 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbfELRPV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 May 2019 13:15:21 -0400
+Received: by mail-qk1-f195.google.com with SMTP id d10so607306qko.4
+        for <linux-pci@vger.kernel.org>; Sun, 12 May 2019 10:15:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=gWQWmUQnTtpdS1fW9lGpRk2GMG2DyCbjfZMrbY3ehBg=;
-        b=nbFFbbgeUeiBRfAmV40L7u8FsJKqzVkg7s3iwb9DWXm+jdurior5YlOY6eme5oi1Bk
-         oX9/y1GIf1I3g3RUUPwBIZCFyLPz78W6VSsH8bh6aWZhurUzqiRanattVfKKf5sNZnj/
-         ctxfDw9eShApKVcZA++T46uS0Pvm+fCk2+T2pwj/uRUIHGwYKNKeF5q1vc3EBW9pAlqT
-         gQ2ClgXJ3iBpRKtxcaihcet+zb19d06gQnjSgdCk5JKxz1RWd0fDzXl0bcKyYCozO4xR
-         LFKgt+34tnCk1id0F7wqvllijgFatB9bmv4VhbdEI74D9yCP6V8hyu7DlcyaYk+pG+pJ
-         jzXA==
-X-Gm-Message-State: APjAAAX99AAgI+9MKLZJp9F/RBlUVF9cKSCfCVrSm/MYxVFaeLc4oGye
-        EUVk+3tpox6O2lcethd7SE33LQ==
-X-Google-Smtp-Source: APXvYqzhmWo+UkRgVkqDTpvr2NwI5n1SCQUPFdJ0CANhQ8AuAx0/rktx5J0cdUejuh99dU3DdW4fsQ==
-X-Received: by 2002:aed:3fd8:: with SMTP id w24mr20147558qth.64.1557678723231;
-        Sun, 12 May 2019 09:32:03 -0700 (PDT)
+        bh=Sz6oXhk1MUAcDMqhVgJnZ+u8Zwtmv3OV0JGi1Y8CWDw=;
+        b=RBjeLojj4nDywDPlmvIyH9iASYxTlm7T/vhRhVD8eAZ0kY4dCIfrVqdeZcblB/6n0c
+         0nK74GXAEQmqUvg7w2HPIXO0swlFyXp6qY/c9LbjME7XMahsIZFhYJT27wsVjKk+I/kv
+         m58/T2mkIqah4M9GJuAd5mLEqjm/MxNhZj4YeMHTsm7vBXv7ZV3sHWb2pLD8SFiDwA+l
+         dc/xGIB7LmzbH6+1MNUnAgTISxfEgu1FT/3xV+p7vkhTHxUikvwqTdNHK6SKcAiSyJZz
+         dsbqTat6T/oN8uxm4MGsiaPXADAbyFl/iN2S5Igzepr/JhSGID7wx4xEaXhPkegG7NDf
+         xD8A==
+X-Gm-Message-State: APjAAAVAShit2i/zyhe2UgQtUZeOLQb6bjYVNtjAOYTiqP5gf6DFHBdT
+        +6298CvjU/IppNwPFsKhR9aRSdfZT90=
+X-Google-Smtp-Source: APXvYqxLzieYropX9DXBLnvbsudc9FJW0WQmQVUd/9WRnEbpC2BiYAyAKTnxKUBxw7ns2tMNztADiw==
+X-Received: by 2002:a37:b3c5:: with SMTP id c188mr18807278qkf.97.1557681320186;
+        Sun, 12 May 2019 10:15:20 -0700 (PDT)
 Received: from redhat.com (pool-173-76-105-71.bstnma.fios.verizon.net. [173.76.105.71])
-        by smtp.gmail.com with ESMTPSA id h62sm5582800qkd.92.2019.05.12.09.32.01
+        by smtp.gmail.com with ESMTPSA id c32sm6064980qte.2.2019.05.12.10.15.18
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 12 May 2019 09:32:02 -0700 (PDT)
-Date:   Sun, 12 May 2019 12:31:59 -0400
+        Sun, 12 May 2019 10:15:19 -0700 (PDT)
+Date:   Sun, 12 May 2019 13:15:16 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 Cc:     iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
@@ -47,7 +47,7 @@ Cc:     iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
         marc.zyngier@arm.com, robin.murphy@arm.com, will.deacon@arm.com,
         lorenzo.pieralisi@arm.com, bharat.bhushan@nxp.com
 Subject: Re: [PATCH v7 0/7] Add virtio-iommu driver
-Message-ID: <20190512123022-mutt-send-email-mst@kernel.org>
+Message-ID: <20190512131500-mutt-send-email-mst@kernel.org>
 References: <20190115121959.23763-1-jean-philippe.brucker@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -94,13 +94,10 @@ On Tue, Jan 15, 2019 at 12:19:52PM +0000, Jean-Philippe Brucker wrote:
 > [5] [PATCH] iommu/of: Fix probe-deferral
 >     https://www.spinics.net/lists/arm-kernel/msg698371.html
 
+For virtio things:
 
-OK this has been in next for a while.
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
 
-Last time IOMMU maintainers objected. Are objections
-still in force?
-
-If not could we get acks please?
 
 
 > Jean-Philippe Brucker (7):
