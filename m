@@ -2,69 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C2ACF1AC9C
-	for <lists+linux-pci@lfdr.de>; Sun, 12 May 2019 16:22:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83ED91AD0B
+	for <lists+linux-pci@lfdr.de>; Sun, 12 May 2019 18:32:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfELOWS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 12 May 2019 10:22:18 -0400
-Received: from smtprelay0012.hostedemail.com ([216.40.44.12]:59433 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726442AbfELOWS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 May 2019 10:22:18 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 86C44182CF666;
-        Sun, 12 May 2019 14:22:16 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::::::::,RULES_HIT:41:355:379:599:800:960:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1539:1593:1594:1711:1714:1730:1747:1777:1792:2393:2559:2562:2828:2895:3138:3139:3140:3141:3142:3351:3622:3865:3867:3868:3871:3872:4250:4321:5007:6119:6120:7514:7809:8957:10004:10400:10848:11232:11658:11914:12043:12114:12555:12740:12760:12895:13069:13161:13229:13311:13357:13439:14181:14659:14721:21080:21433:21451:21619:30054:30070:30091,0,RBL:23.242.196.136:@perches.com:.lbl8.mailshell.net-62.14.0.180 64.201.201.201,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:fn,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:26,LUA_SUMMARY:none
-X-HE-Tag: skin28_8819c53057e61
-X-Filterd-Recvd-Size: 1760
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 12 May 2019 14:22:15 +0000 (UTC)
-Message-ID: <d00c1c42689e08df0ce7cd8b2c796eee5b9f5642.camel@perches.com>
-Subject: Re: [PATCH v4 07/12] Documentation: PCI: convert
- pci-error-recovery.txt to reST
-From:   Joe Perches <joe@perches.com>
-To:     Changbin Du <changbin.du@gmail.com>, bhelgaas@google.com,
-        corbet@lwn.net
-Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org
-Date:   Sun, 12 May 2019 07:22:13 -0700
-In-Reply-To: <20190512125009.32079-8-changbin.du@gmail.com>
-References: <20190512125009.32079-1-changbin.du@gmail.com>
-         <20190512125009.32079-8-changbin.du@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726605AbfELQcE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 12 May 2019 12:32:04 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38848 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbfELQcE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 May 2019 12:32:04 -0400
+Received: by mail-qt1-f195.google.com with SMTP id d13so5032923qth.5
+        for <linux-pci@vger.kernel.org>; Sun, 12 May 2019 09:32:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gWQWmUQnTtpdS1fW9lGpRk2GMG2DyCbjfZMrbY3ehBg=;
+        b=nbFFbbgeUeiBRfAmV40L7u8FsJKqzVkg7s3iwb9DWXm+jdurior5YlOY6eme5oi1Bk
+         oX9/y1GIf1I3g3RUUPwBIZCFyLPz78W6VSsH8bh6aWZhurUzqiRanattVfKKf5sNZnj/
+         ctxfDw9eShApKVcZA++T46uS0Pvm+fCk2+T2pwj/uRUIHGwYKNKeF5q1vc3EBW9pAlqT
+         gQ2ClgXJ3iBpRKtxcaihcet+zb19d06gQnjSgdCk5JKxz1RWd0fDzXl0bcKyYCozO4xR
+         LFKgt+34tnCk1id0F7wqvllijgFatB9bmv4VhbdEI74D9yCP6V8hyu7DlcyaYk+pG+pJ
+         jzXA==
+X-Gm-Message-State: APjAAAX99AAgI+9MKLZJp9F/RBlUVF9cKSCfCVrSm/MYxVFaeLc4oGye
+        EUVk+3tpox6O2lcethd7SE33LQ==
+X-Google-Smtp-Source: APXvYqzhmWo+UkRgVkqDTpvr2NwI5n1SCQUPFdJ0CANhQ8AuAx0/rktx5J0cdUejuh99dU3DdW4fsQ==
+X-Received: by 2002:aed:3fd8:: with SMTP id w24mr20147558qth.64.1557678723231;
+        Sun, 12 May 2019 09:32:03 -0700 (PDT)
+Received: from redhat.com (pool-173-76-105-71.bstnma.fios.verizon.net. [173.76.105.71])
+        by smtp.gmail.com with ESMTPSA id h62sm5582800qkd.92.2019.05.12.09.32.01
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 12 May 2019 09:32:02 -0700 (PDT)
+Date:   Sun, 12 May 2019 12:31:59 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        virtio-dev@lists.oasis-open.org, joro@8bytes.org,
+        jasowang@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        bhelgaas@google.com, frowand.list@gmail.com,
+        kvmarm@lists.cs.columbia.edu, eric.auger@redhat.com,
+        tnowicki@caviumnetworks.com, kevin.tian@intel.com,
+        marc.zyngier@arm.com, robin.murphy@arm.com, will.deacon@arm.com,
+        lorenzo.pieralisi@arm.com, bharat.bhushan@nxp.com
+Subject: Re: [PATCH v7 0/7] Add virtio-iommu driver
+Message-ID: <20190512123022-mutt-send-email-mst@kernel.org>
+References: <20190115121959.23763-1-jean-philippe.brucker@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190115121959.23763-1-jean-philippe.brucker@arm.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 2019-05-12 at 20:50 +0800, Changbin Du wrote:
-> This converts the plain text documentation to reStructuredText format and
-> add it to Sphinx TOC tree. No essential content change.
-[]
-> diff --git a/MAINTAINERS b/MAINTAINERS
-[]
-> @@ -12100,7 +12100,7 @@ M:	Sam Bobroff <sbobroff@linux.ibm.com>
->  M:	Oliver O'Halloran <oohall@gmail.com>
->  L:	linuxppc-dev@lists.ozlabs.org
->  S:	Supported
-> -F:	Documentation/PCI/pci-error-recovery.txt
-> +F:	Documentation/PCI/pci-error-recovery.rst
->  F:	drivers/pci/pcie/aer.c
->  F:	drivers/pci/pcie/dpc.c
->  F:	drivers/pci/pcie/err.c
+On Tue, Jan 15, 2019 at 12:19:52PM +0000, Jean-Philippe Brucker wrote:
+> Implement the virtio-iommu driver, following specification v0.9 [1].
+> 
+> This is a simple rebase onto Linux v5.0-rc2. We now use the
+> dev_iommu_fwspec_get() helper introduced in v5.0 instead of accessing
+> dev->iommu_fwspec, but there aren't any functional change from v6 [2].
+> 
+> Our current goal for virtio-iommu is to get a paravirtual IOMMU working
+> on Arm, and enable device assignment to guest userspace. In this
+> use-case the mappings are static, and don't require optimal performance,
+> so this series tries to keep things simple. However there is plenty more
+> to do for features and optimizations, and having this base in v5.1 would
+> be good. Given that most of the changes are to drivers/iommu, I believe
+> the driver and future changes should go via the IOMMU tree.
+> 
+> You can find Linux driver and kvmtool device on v0.9.2 branches [3],
+> module and x86 support on virtio-iommu/devel. Also tested with Eric's
+> QEMU device [4]. Please note that the series depends on Robin's
+> probe-deferral fix [5], which will hopefully land in v5.0.
+> 
+> [1] Virtio-iommu specification v0.9, sources and pdf
+>     git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.9
+>     http://jpbrucker.net/virtio-iommu/spec/v0.9/virtio-iommu-v0.9.pdf
+> 
+> [2] [PATCH v6 0/7] Add virtio-iommu driver
+>     https://lists.linuxfoundation.org/pipermail/iommu/2018-December/032127.html
+> 
+> [3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.9.2
+>     git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.9.2
+> 
+> [4] [RFC v9 00/17] VIRTIO-IOMMU device
+>     https://www.mail-archive.com/qemu-devel@nongnu.org/msg575578.html
+> 
+> [5] [PATCH] iommu/of: Fix probe-deferral
+>     https://www.spinics.net/lists/arm-kernel/msg698371.html
 
-There is another section to update as well:
 
-PCI ERROR RECOVERY
-M:	Linas Vepstas <linasvepstas@gmail.com>
-L:	linux-pci@vger.kernel.org
-S:	Supported
-F:	Documentation/PCI/pci-error-recovery.txt
+OK this has been in next for a while.
+
+Last time IOMMU maintainers objected. Are objections
+still in force?
+
+If not could we get acks please?
 
 
+> Jean-Philippe Brucker (7):
+>   dt-bindings: virtio-mmio: Add IOMMU description
+>   dt-bindings: virtio: Add virtio-pci-iommu node
+>   of: Allow the iommu-map property to omit untranslated devices
+>   PCI: OF: Initialize dev->fwnode appropriately
+>   iommu: Add virtio-iommu driver
+>   iommu/virtio: Add probe request
+>   iommu/virtio: Add event queue
+> 
+>  .../devicetree/bindings/virtio/iommu.txt      |   66 +
+>  .../devicetree/bindings/virtio/mmio.txt       |   30 +
+>  MAINTAINERS                                   |    7 +
+>  drivers/iommu/Kconfig                         |   11 +
+>  drivers/iommu/Makefile                        |    1 +
+>  drivers/iommu/virtio-iommu.c                  | 1158 +++++++++++++++++
+>  drivers/of/base.c                             |   10 +-
+>  drivers/pci/of.c                              |    7 +
+>  include/uapi/linux/virtio_ids.h               |    1 +
+>  include/uapi/linux/virtio_iommu.h             |  161 +++
+>  10 files changed, 1449 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
+>  create mode 100644 drivers/iommu/virtio-iommu.c
+>  create mode 100644 include/uapi/linux/virtio_iommu.h
+> 
+> -- 
+> 2.19.1
