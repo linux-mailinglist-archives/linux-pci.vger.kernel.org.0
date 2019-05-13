@@ -2,130 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F70D1AF8F
-	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2019 06:51:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7362F1AFA3
+	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2019 07:06:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbfEMEvD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 May 2019 00:51:03 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39232 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727506AbfEMEvD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 May 2019 00:51:03 -0400
-Received: by mail-lj1-f196.google.com with SMTP id a10so1678421ljf.6
-        for <linux-pci@vger.kernel.org>; Sun, 12 May 2019 21:51:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mobiveil.co.in; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YlAcIbOm9cOOgJWgxxTvpeiMi7ci4Lup4RJ0/GgX7yI=;
-        b=OmT7TNB7fSBbjYwVHvuyyI0Euklh0bh78yjpC+8k0cIf9x1gDJ5DldDKoRwEzwbbtN
-         zAgGxR0TDLogIBSUIbtKlkjjX56300FtC4JSl6HRU7TsyJ3YQ2MLWK7UwTpxsV3+MfXP
-         LCWe4Qopi0saHl8YqKH44y/cwHimNRscbttEI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YlAcIbOm9cOOgJWgxxTvpeiMi7ci4Lup4RJ0/GgX7yI=;
-        b=VPNFsLFjpbQds9rbvpCC3M1OH7bghfPjwmdIouKFTon7ohG5jWDbzvC/w60OtPyFxA
-         CnYIyOakVhXWcU6R31GKcp+N27sm3ZBRIVwEJt8hvfQ4PIXgOZlky147HcsxhUVKYSww
-         sLLiHmktsbizfRBIj+qK9ks3RQmfmDTVgBvbRPeAjDxoIYFDRgaMzgsBbcjcNuVpMSh7
-         lJjeMxVW79jonQBgvjK4dl3vRgQ2VjqDA662XhsUaPscgCqcUU5HLy+8pDHC2bggYNmh
-         bY853I46LPma1ru2a5yCNbjAY5DUKOEviT8SlE9Cm6Qf7yEe2sHwtHJteQk70piynTM1
-         mEYQ==
-X-Gm-Message-State: APjAAAXLxsmT33kOjbp5Xmkd2T0HwVyNyP8T2K1mPn3BY6g094uQ8pRm
-        c+H4tsI+dKNcXpeRsheOng/6/AnJg7JMYhdtxsoXWLPxYa9RMwFdneROA5g9bGKvyUhO2AOY40m
-        TaHc+IezqGIhFC6bTb/pCUcVi1fwjcA==
-X-Google-Smtp-Source: APXvYqzRS8gfw06zJb1XTHSDLQ3jz8DDhNt+DpKglTt9FVeMc0yQUY0JnJTNVBWgaRbhcO6dQoORa09AOE8i9jp5MiM=
-X-Received: by 2002:a2e:2b81:: with SMTP id r1mr11419826ljr.138.1557723061597;
- Sun, 12 May 2019 21:51:01 -0700 (PDT)
+        id S1727528AbfEMFGi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 May 2019 01:06:38 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:16827 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727481AbfEMFGi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 May 2019 01:06:38 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cd8fb630000>; Sun, 12 May 2019 22:06:43 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sun, 12 May 2019 22:06:36 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Sun, 12 May 2019 22:06:36 -0700
+Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 May
+ 2019 05:06:35 +0000
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by hqmail110.nvidia.com
+ (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 May
+ 2019 05:06:35 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 13 May 2019 05:06:35 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cd8fb560000>; Sun, 12 May 2019 22:06:35 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
+CC:     <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V6 00/15] Add Tegra194 PCIe support
+Date:   Mon, 13 May 2019 10:36:11 +0530
+Message-ID: <20190513050626.14991-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <1557229516-6870-1-git-send-email-l.subrahmanya@mobiveil.co.in>
- <20190510134811.GG235064@google.com> <20190510163551.GH235064@google.com> <CAKnKUHHkRw3pLyeyMN6oA=nxtA0+sF2sJjBKiee17OZP_eFjFA@mail.gmail.com>
-In-Reply-To: <CAKnKUHHkRw3pLyeyMN6oA=nxtA0+sF2sJjBKiee17OZP_eFjFA@mail.gmail.com>
-From:   Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
-Date:   Mon, 13 May 2019 10:20:50 +0530
-Message-ID: <CAKnKUHHsDrecejdBFq8AGX=1BL948j7y4vcu-69i6vGAjqPyCw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] PCI: mobiveil: Update maintainers list
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Hou Zhiqiang <zhiqiang.hou@nxp.com>,
-        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
-        linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557724003; bh=xWG0V3ZMuvtipmob5YakqMZyzY8swTAv30VFsQpP3I8=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=Ro9kxymc+d+a7iywykkyLsrnMz10BNzDA8iKRaN39i1gMRj7dkhRW3Ea1uD/jKh2G
+         tdn3ochyLaGfW+X8C1RVbcM3OEQyWCOngpsH/RJOFu3Nc3LCHCR/NoUs//kP+Y9nI/
+         J//soip8X2gQ4yFk9cYKY1WCMbrwS95ivxVOwDyv4Tk8HNRgTiUmX0pOKysGH7BBlu
+         oMcjLR0+Rzw+SzhfgbsJCBZn7LHaBnhHFhV+CuDUInxjHSPb/zjFQbOlSMmBA2md53
+         mKc+uZ2Wkh0Xjk01U7QhX2uYoBqmMxYSNJCvbY+iaD/XhahoshzH1aVH4OwpDOnJJk
+         MV9qCG0gBpvhA==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Acked-by: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
+There are two Universal PHY (UPHY) blocks with each supporting 12(HSIO:
+Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
+Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 uses
+UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each PCIe
+controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
+core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is used
+to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bricks)
+to PCIe controller
+This patch series
+- Adds support for P2U PHY driver
+- Adds support for PCIe host controller
+- Adds device tree nodes each PCIe controllers
+- Enables nodes applicable to p2972-0000 platform
+- Adds helper APIs in Designware core driver to get capability regs offset
+- Adds defines for new feature registers of PCIe spec revision 4
+- Makes changes in DesignWare core driver to get Tegra194 PCIe working
 
-On Mon, May 13, 2019 at 10:03 AM Karthikeyan Mitran
-<m.karthikeyan@mobiveil.co.in> wrote:
->
-> Acked-by: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
->
-> On Fri, May 10, 2019 at 10:05 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->>
->> On Fri, May 10, 2019 at 08:48:11AM -0500, Bjorn Helgaas wrote:
->> > On Tue, May 07, 2019 at 07:45:16AM -0400, Subrahmanya Lingappa wrote:
->> > > Add Karthikeyan M and Z.Q. Hou as new maintainers of Mobiveil controller
->> > > driver.
->> > >
->> > > Signed-off-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
->> >
->> > I'd like to include this ASAP so patches get sent to the right place,
->> > and I want to make sure we spell the names and email addresses
->> > correctly.
->> >
->> > Zhiqiang, you consistently use "Hou Zhiqiang <Zhiqiang.Hou@nxp.com>"
->> > for sign-offs [1] (except for "Z.q. Hou" in email headers).  Can you
->> > ack that the updated patch below is correct for you?
->> >
->> > Karthikeyan, I don't see any email or commits from you yet, so I'd really
->> > like your ack along with the canonical name/email address you prefer.
->> > There is another Karthikeyan already in MAINTAINERS, so hopefully we can
->> > avoid any confusion.
->> >
->> > [1] git log --format="%an <%ae>" --author=[Zz]hiqiang
->>
->> I went ahead and applied the patch below for v5.2, but if you want to
->> tweak the names/addresses, I can update them if you tell me soon.
->>
->> > commit d260ff8d3353
->> > Author: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
->> > Date:   Tue May 7 07:45:16 2019 -0400
->> >
->> >     MAINTAINERS: Add Karthikeyan M and Hou Zhiqiang for Mobiveil PCI
->> >
->> >     Add Karthikeyan M and Hou Zhiqiang as new maintainers of Mobiveil
->> >     controller driver.
->> >
->> >     Link: https://lore.kernel.org/linux-pci/1557229516-6870-1-git-send-email-l.subrahmanya@mobiveil.co.in
->> >     Signed-off-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
->> >     [bhelgaas: update names/email addresses to match usage in git history]
->> >     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->> >
->> > diff --git a/MAINTAINERS b/MAINTAINERS
->> > index e17ebf70b548..42d7f44cc0e1 100644
->> > --- a/MAINTAINERS
->> > +++ b/MAINTAINERS
->> > @@ -11880,7 +11880,8 @@ F:    include/linux/switchtec.h
->> >  F:   drivers/ntb/hw/mscc/
->> >
->> >  PCI DRIVER FOR MOBIVEIL PCIE IP
->> > -M:   Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
->> > +M:   Karthikeyan M <m.karthikeyan@mobiveil.co.in>
->> > +M:   Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
->> >  L:   linux-pci@vger.kernel.org
->> >  S:   Supported
->> >  F:   Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
->
->
->
+Testing done on P2972-0000 platform
+- Able to get PCIe link up with on-board Marvel eSATA controller
+- Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
+- Able to do data transfers with both SATA drives and NVMe cards
+
+Note
+- Enabling x8 slot on P2972-0000 platform requires pinmux driver for Tegra194.
+  It is being worked on currently and hence Controller:5 (i.e. x8 slot) is
+  disabled in this patch series. A future patch series would enable this.
+- This series is based on top of the following series
+  Jisheng's patches to add support to .remove() in Designware sub-system
+  https://patchwork.kernel.org/project/linux-pci/list/?series=98559
+  (Jisheng's patches are now accepted and applied for v5.2)
+  My patches made on top of Jisheng's patches to export various symbols
+  https://patchwork.kernel.org/project/linux-pci/list/?series=101259
+
+Changes since [v5]:
+* Removed patch that exports pcie_bus_config symbol
+* Took care of review comments from Thierry and Rob
+
+Changes since [v4]:
+* Removed redundant APIs in pcie-designware-ep.c file after moving them
+  to pcie-designware.c file based on Bjorn's review comments
+
+Changes since [v3]:
+* Rebased on top of linux-next top of the tree
+* Addressed Gustavo's comments and added his Ack for some of the changes.
+
+Changes since [v2]:
+* Addressed review comments from Thierry
+
+Changes since [v1]:
+* Addressed review comments from Bjorn, Thierry, Jonathan, Rob & Kishon
+* Added more patches in v2 series
+
+Vidya Sagar (15):
+  PCI: Add #defines for some of PCIe spec r4.0 features
+  PCI/PME: Export pcie_pme_disable_msi() & pcie_pme_no_msi() APIs
+  PCI: dwc: Perform dbi regs write lock towards the end
+  PCI: dwc: Move config space capability search API
+  PCI: dwc: Add ext config space capability search API
+  dt-bindings: PCI: designware: Add binding for CDM register check
+  PCI: dwc: Add support to enable CDM register check
+  dt-bindings: Add PCIe supports-clkreq property
+  dt-bindings: PCI: tegra: Add device tree support for Tegra194
+  dt-bindings: PHY: P2U: Add Tegra194 P2U block
+  arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT
+  arm64: tegra: Enable PCIe slots in P2972-0000 board
+  phy: tegra: Add PCIe PIPE2UPHY support
+  PCI: tegra: Add Tegra194 PCIe support
+  arm64: Add Tegra194 PCIe driver to defconfig
+
+ .../bindings/pci/designware-pcie.txt          |    5 +
+ .../bindings/pci/nvidia,tegra194-pcie.txt     |  164 ++
+ Documentation/devicetree/bindings/pci/pci.txt |    5 +
+ .../bindings/phy/phy-tegra194-p2u.txt         |   28 +
+ .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |    2 +-
+ .../boot/dts/nvidia/tegra194-p2972-0000.dts   |   41 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  449 +++++
+ arch/arm64/configs/defconfig                  |    1 +
+ drivers/pci/controller/dwc/Kconfig            |   10 +
+ drivers/pci/controller/dwc/Makefile           |    1 +
+ .../pci/controller/dwc/pcie-designware-ep.c   |   37 +-
+ .../pci/controller/dwc/pcie-designware-host.c |   14 +-
+ drivers/pci/controller/dwc/pcie-designware.c  |   87 +
+ drivers/pci/controller/dwc/pcie-designware.h  |   12 +
+ drivers/pci/controller/dwc/pcie-tegra194.c    | 1678 +++++++++++++++++
+ drivers/pci/pcie/pme.c                        |   14 +-
+ drivers/pci/pcie/portdrv.h                    |   14 +-
+ drivers/phy/tegra/Kconfig                     |    7 +
+ drivers/phy/tegra/Makefile                    |    1 +
+ drivers/phy/tegra/pcie-p2u-tegra194.c         |  109 ++
+ include/uapi/linux/pci_regs.h                 |   22 +-
+ 21 files changed, 2645 insertions(+), 56 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+ create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
+ create mode 100644 drivers/phy/tegra/pcie-p2u-tegra194.c
 
 -- 
-Mobiveil INC., CONFIDENTIALITY NOTICE: This e-mail message, including any 
-attachments, is for the sole use of the intended recipient(s) and may 
-contain proprietary confidential or privileged information or otherwise be 
-protected by law. Any unauthorized review, use, disclosure or distribution 
-is prohibited. If you are not the intended recipient, please notify the 
-sender and destroy all copies and the original message.
+2.17.1
+
