@@ -2,57 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A1B5E1B806
-	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2019 16:20:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E060C1B809
+	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2019 16:20:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730190AbfEMOUS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 May 2019 10:20:18 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34673 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730152AbfEMOUS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 May 2019 10:20:18 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w7so6584883plz.1;
-        Mon, 13 May 2019 07:20:17 -0700 (PDT)
+        id S1730204AbfEMOUW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 May 2019 10:20:22 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42197 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730152AbfEMOUW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 May 2019 10:20:22 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 145so6856654pgg.9;
+        Mon, 13 May 2019 07:20:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NlhYJ90ofQ2Zr9Y+SOGQmX2unDhBRzK1V3FREqlRH+I=;
-        b=AKMtRnklH+seg+WEw3Qyba/aDLReD06wyiitmqq4ZD72fRzwB9b0cyu/YszACKxEPb
-         uZGiAcKFqzsrKiaBoZdiozfUVwhQbIATQ/zuSwZ58m+qPgyKZCW5gVbvZXI2AnD8SKly
-         n9n7ujMAkzGD7x2eM2bxYsWMTra3iTj4ZsIaEEo+LRGxc/6dnW9cqI2k8PmVt1Nc2qVY
-         nxPyfWHo58yxv7cYUfxneIKyFRCRhDxqVCfyD33WG+Xtkc830urXfXEhUgGnYzNFnHM4
-         pOXKu7x5Vho6c+WHsR1WEviXiYit7VEiefjoeOPnnJiDNpBHe2JXW/L9kZpgCykQ4nQj
-         Cj+w==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Ea7nruMQN3xltZvYgCBaDR2hEGB3xQK7d3rHkYgLjnc=;
+        b=G+q5VZQbO7eXufp4kJSVBf0ME6AnkUHOR8rZIkypYQa9tS6EFlXYyPAysc5X8BQQO/
+         +bKz7nycBXIRIpHR6f2KKrHiWQc5i/FZ2y1Y0aLIyMpkOLqMlsn3NZiatUSzFA211oMF
+         z6izXeniDyPJ53anykZ6cWRXJWymYN0ljn/yUg+1kK/U5u3B4nDQQXVbno/TFVfzObBw
+         WQbb+gSzyNtETNrpZPBKLzXTAG4tnUcQbfBjDcBlxu7OR4jnssUxWm97YW451YyQnPLC
+         7+lGCezFuqEUIB4vPPtuTZl4PVss0/ZqTaQKk1LiVFhsW7WJgufK8rRNrj2HV9M3DKII
+         hW5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NlhYJ90ofQ2Zr9Y+SOGQmX2unDhBRzK1V3FREqlRH+I=;
-        b=piDFPkula0ZYJ/w7Vz5yWMlJU+Ir4k6acRnDv0/a8hg/OZqjMx897Sr1Y/Ci9oh688
-         cPSa+LXxcKe5NA7mNQXu76PM+YlnlXX6Ktbd6e3dixTAYvl/Bl2T4ad5Aqa/LeajVSm+
-         cwHwvqTkoSpsXibmIyx01ibjMuVs4QvsShVvfhchVS6QNho+COqfjjhabiBqSOJVdfD1
-         HQW/RSvytqe9OZgiLAMOdX37EHQuVIR3fkZ8DfBqcFjGA1TFT79YveUcee6DhJARxKnj
-         uWhC9UK0OHgrkwB08hp/1bM5+R6YOtZ6+kRDATUG71kt8mUH4SNbxyPhSbxD5JtSiJMQ
-         h9JQ==
-X-Gm-Message-State: APjAAAXkvVwNVlZfyMJK3nrwVZJx6V2xCFrNmDfhrfDZUPiw5mIJFrAE
-        X/hiizvg3KpVkUT6sgMz9+sNAGC+
-X-Google-Smtp-Source: APXvYqyk4gV/sp19JogOd/chm45Y4hPNu2PzX9sLqdp1AeoZk6HbnY0K43/n73YnCjAjLcw83NK8jw==
-X-Received: by 2002:a17:902:b412:: with SMTP id x18mr31197262plr.304.1557757216857;
-        Mon, 13 May 2019 07:20:16 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Ea7nruMQN3xltZvYgCBaDR2hEGB3xQK7d3rHkYgLjnc=;
+        b=HXIXdBVveJxQZ8C9avV2F5TxzcIllXG9lCtN1G/G+LC7Zh5EUZwEZerPasiso29dgk
+         iA1vljnWRAvCqGg5PiOQ8PJ+TvbsAkXpcpTa29zkyp5MavpILQqhhzB6te1IubpIx6hy
+         djA979sb2TvdDsaeSEBPLd/XHZESojMaLB2lQF6LlC2hLH5eN1jsZA/QVulB1myjVu2O
+         rS6+qz5wL04RKN3BkCP1CJN9NirFMFzDTCENYVJccF9V0Nqb+QhZT1RokuLwa8NikmhU
+         1+mRM9bhGdkF0TTTS4q34urf+n/g2StQpUU7/ETNFs2U+0cq5StrMjmqyH5hxECp6CSZ
+         XJwg==
+X-Gm-Message-State: APjAAAVLK9koHmteKkD3Dwi24imdmXLoXxmUrWKTZUrRigxm2npAqJRU
+        cdX2OmIkfMWnqGcFC8BvbzI=
+X-Google-Smtp-Source: APXvYqz2Lzq0ADqofSD1kaYKWyyKE8scQV+qXjYsX0bEreGuZyw8Nj5qwgr4T+noOYWRAIMspg2Bxw==
+X-Received: by 2002:a63:fd50:: with SMTP id m16mr31726847pgj.192.1557757221391;
+        Mon, 13 May 2019 07:20:21 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id x30sm15382513pgl.76.2019.05.13.07.20.12
+        by smtp.gmail.com with ESMTPSA id x30sm15382513pgl.76.2019.05.13.07.20.17
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 13 May 2019 07:20:16 -0700 (PDT)
+        Mon, 13 May 2019 07:20:20 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     bhelgaas@google.com, corbet@lwn.net
 Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
         Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v5 00/12] Include linux PCI docs into Sphinx TOC tree
-Date:   Mon, 13 May 2019 22:19:48 +0800
-Message-Id: <20190513142000.3524-1-changbin.du@gmail.com>
+Subject: [PATCH v5 01/12] Documentation: add Linux PCI to Sphinx TOC tree
+Date:   Mon, 13 May 2019 22:19:49 +0800
+Message-Id: <20190513142000.3524-2-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190513142000.3524-1-changbin.du@gmail.com>
+References: <20190513142000.3524-1-changbin.du@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -60,68 +62,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi all,
+Add a index.rst for PCI subsystem. More docs will be added later.
 
-The kernel now uses Sphinx to generate intelligent and beautiful documentation
-from reStructuredText files. I converted most of the Linux PCI docs to rst
-format in this serias.
-
-For you to preview, please visit below url:
-http://www.bytemem.com:8080/kernel-doc/PCI/index.html
-
-Thank you!
-
-v2: trivial style update.
-v3: update titles. (Bjorn Helgaas)
-v4: fix comments from Mauro Carvalho Chehab
-v5: update MAINTAINERS (Joe Perches)
-
-Changbin Du (12):
-  Documentation: add Linux PCI to Sphinx TOC tree
-  Documentation: PCI: convert pci.txt to reST
-  Documentation: PCI: convert PCIEBUS-HOWTO.txt to reST
-  Documentation: PCI: convert pci-iov-howto.txt to reST
-  Documentation: PCI: convert MSI-HOWTO.txt to reST
-  Documentation: PCI: convert acpi-info.txt to reST
-  Documentation: PCI: convert pci-error-recovery.txt to reST
-  Documentation: PCI: convert pcieaer-howto.txt to reST
-  Documentation: PCI: convert endpoint/pci-endpoint.txt to reST
-  Documentation: PCI: convert endpoint/pci-endpoint-cfs.txt to reST
-  Documentation: PCI: convert endpoint/pci-test-function.txt to reST
-  Documentation: PCI: convert endpoint/pci-test-howto.txt to reST
-
- .../PCI/{acpi-info.txt => acpi-info.rst}      |  15 +-
- Documentation/PCI/endpoint/index.rst          |  13 +
- ...-endpoint-cfs.txt => pci-endpoint-cfs.rst} |  99 ++---
- .../{pci-endpoint.txt => pci-endpoint.rst}    |  96 +++--
- ...est-function.txt => pci-test-function.rst} |  34 +-
- ...{pci-test-howto.txt => pci-test-howto.rst} |  81 ++--
- Documentation/PCI/index.rst                   |  18 +
- .../PCI/{MSI-HOWTO.txt => msi-howto.rst}      |  85 +++--
- ...or-recovery.txt => pci-error-recovery.rst} | 287 +++++++-------
- .../{pci-iov-howto.txt => pci-iov-howto.rst}  | 161 ++++----
- Documentation/PCI/{pci.txt => pci.rst}        | 356 ++++++++----------
- .../{pcieaer-howto.txt => pcieaer-howto.rst}  | 156 +++++---
- .../{PCIEBUS-HOWTO.txt => picebus-howto.rst}  | 140 ++++---
- Documentation/index.rst                       |   1 +
- MAINTAINERS                                   |   4 +-
- include/linux/mod_devicetable.h               |  19 +
- include/linux/pci.h                           |  37 ++
- 17 files changed, 913 insertions(+), 689 deletions(-)
- rename Documentation/PCI/{acpi-info.txt => acpi-info.rst} (96%)
- create mode 100644 Documentation/PCI/endpoint/index.rst
- rename Documentation/PCI/endpoint/{pci-endpoint-cfs.txt => pci-endpoint-cfs.rst} (64%)
- rename Documentation/PCI/endpoint/{pci-endpoint.txt => pci-endpoint.rst} (82%)
- rename Documentation/PCI/endpoint/{pci-test-function.txt => pci-test-function.rst} (84%)
- rename Documentation/PCI/endpoint/{pci-test-howto.txt => pci-test-howto.rst} (78%)
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ Documentation/PCI/index.rst | 9 +++++++++
+ Documentation/index.rst     | 1 +
+ 2 files changed, 10 insertions(+)
  create mode 100644 Documentation/PCI/index.rst
- rename Documentation/PCI/{MSI-HOWTO.txt => msi-howto.rst} (88%)
- rename Documentation/PCI/{pci-error-recovery.txt => pci-error-recovery.rst} (67%)
- rename Documentation/PCI/{pci-iov-howto.txt => pci-iov-howto.rst} (63%)
- rename Documentation/PCI/{pci.txt => pci.rst} (68%)
- rename Documentation/PCI/{pcieaer-howto.txt => pcieaer-howto.rst} (72%)
- rename Documentation/PCI/{PCIEBUS-HOWTO.txt => picebus-howto.rst} (70%)
 
+diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
+new file mode 100644
+index 000000000000..c2f8728d11cf
+--- /dev/null
++++ b/Documentation/PCI/index.rst
+@@ -0,0 +1,9 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=======================
++Linux PCI Bus Subsystem
++=======================
++
++.. toctree::
++   :maxdepth: 2
++   :numbered:
+diff --git a/Documentation/index.rst b/Documentation/index.rst
+index 9e01aace4f48..fb6477a692b8 100644
+--- a/Documentation/index.rst
++++ b/Documentation/index.rst
+@@ -101,6 +101,7 @@ needed).
+    filesystems/index
+    vm/index
+    bpf/index
++   PCI/index
+    misc-devices/index
+ 
+ Architecture-specific documentation
 -- 
 2.20.1
 
