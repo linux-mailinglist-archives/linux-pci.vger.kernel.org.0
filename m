@@ -2,44 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A4011B9B2
-	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2019 17:16:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E4CF1B9CB
+	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2019 17:21:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729476AbfEMPQA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 May 2019 11:16:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49038 "EHLO mail.kernel.org"
+        id S1731243AbfEMPVE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 May 2019 11:21:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727437AbfEMPQA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 13 May 2019 11:16:00 -0400
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+        id S1729374AbfEMPVE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 13 May 2019 11:21:04 -0400
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1AE4208C3;
-        Mon, 13 May 2019 15:15:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDB0E2168B;
+        Mon, 13 May 2019 15:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557760558;
-        bh=OymGSOMK0re+Yot/v38njtC9uTP6U8c73FKxT8tC/Ms=;
+        s=default; t=1557760863;
+        bh=SYgBc1HBac/X+vUHcByqrS9pPjJfIUqdOtc9N7yxPdk=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qf4M0C9fGFnIt0Q4eTa6NkglegZSn+xlWJ65AAgdpHeRGmU9YdVFlqvTzUdWsFz7s
-         NbFeWVZeHa7gRy72D9Sm9xinRKkbMMmCAfhtNzjb5iIHmukzZjYt18VA6xFSfFMGVd
-         bSZWQM8VGa7vd0ujpjo/tmFDo4NGrgQ+4y9eRBgo=
-Received: by mail-qk1-f171.google.com with SMTP id d4so8207626qkc.9;
-        Mon, 13 May 2019 08:15:58 -0700 (PDT)
-X-Gm-Message-State: APjAAAXXapN4NR1DFituNfGKCH1mCTDVK+n5TyJYR+5izT8s5foWW9rq
-        O403rF2wZBQpus3LWWCmkCZHolV1FqKXdQDmEg==
-X-Google-Smtp-Source: APXvYqwCUcsN930OQbfEHdiCeZNxxMRjVQYZxsmDH3L7i6qyIbXFFz68ravs5bTeXrnotA6KjQjMS9kSXpzcUdQ9LXc=
-X-Received: by 2002:a37:5c81:: with SMTP id q123mr14710095qkb.29.1557760558100;
- Mon, 13 May 2019 08:15:58 -0700 (PDT)
+        b=jRkigaEcwIHxg0BisI/v8xkHnLJtivkb6bvrdiTatmnpJHuU+p6Zl7I+BzFwxM1rq
+         fDzNBhBoJbAwnm3H/mN1ePxFYS7NNR3OEGVHSWDKMgX/+pZ/4PYBax42tp+CK8btCQ
+         +Yjb4x6/GgedTznMSnXpEIDLuo381sZO7T8U26Zw=
+Received: by mail-qt1-f173.google.com with SMTP id y22so11734091qtn.8;
+        Mon, 13 May 2019 08:21:02 -0700 (PDT)
+X-Gm-Message-State: APjAAAVP507rlX5/fwiAILmJrobkVPtQ2TxBFaqECZSL67KtmWxQs75n
+        +2zQ2jDoLNO43IByqNCUGtKPwhwtkhnfcYPZCg==
+X-Google-Smtp-Source: APXvYqzX2L5FoRWF0zW2HYeRpIyyhRcBgYtEPjBnonNXCdUdc3d0qH4FJ9S/BaZ6kGLKiYPsCDVif2zcxQZTRnvQNiU=
+X-Received: by 2002:a0c:9066:: with SMTP id o93mr23169009qvo.246.1557760862035;
+ Mon, 13 May 2019 08:21:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190424052004.6270-1-vidyas@nvidia.com> <20190424052004.6270-8-vidyas@nvidia.com>
- <20190426143247.GA25107@bogus> <031df2ca-27de-2388-5f23-078320203f5d@nvidia.com>
-In-Reply-To: <031df2ca-27de-2388-5f23-078320203f5d@nvidia.com>
+References: <20190424052004.6270-1-vidyas@nvidia.com> <20190424052004.6270-11-vidyas@nvidia.com>
+ <20190426154306.GA16455@bogus> <504abd8f-9eb3-1089-953c-a6372c34b346@nvidia.com>
+In-Reply-To: <504abd8f-9eb3-1089-953c-a6372c34b346@nvidia.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 13 May 2019 10:15:46 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKvES6OuPRgu8A009j6L4rkc11rB9TyxPe1iUJhvk1O8w@mail.gmail.com>
-Message-ID: <CAL_JsqKvES6OuPRgu8A009j6L4rkc11rB9TyxPe1iUJhvk1O8w@mail.gmail.com>
-Subject: Re: [PATCH V5 07/16] dt-bindings: PCI: designware: Add binding for
- CDM register check
+Date:   Mon, 13 May 2019 10:20:50 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLEw+HAeqd2TD33cSVBjwDUNMb5amk2wGsW9m_4Z6CucQ@mail.gmail.com>
+Message-ID: <CAL_JsqLEw+HAeqd2TD33cSVBjwDUNMb5amk2wGsW9m_4Z6CucQ@mail.gmail.com>
+Subject: Re: [PATCH V5 10/16] dt-bindings: PCI: tegra: Add device tree support
+ for T194
 To:     Vidya Sagar <vidyas@nvidia.com>
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -65,55 +65,47 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 7, 2019 at 3:25 AM Vidya Sagar <vidyas@nvidia.com> wrote:
+On Tue, May 7, 2019 at 4:20 AM Vidya Sagar <vidyas@nvidia.com> wrote:
 >
-> On 4/26/2019 8:02 PM, Rob Herring wrote:
-> > On Wed, Apr 24, 2019 at 10:49:55AM +0530, Vidya Sagar wrote:
-> >> Add support to enable CDM (Configuration Dependent Module) registers check
-> >> for any data corruption. CDM registers include standard PCIe configuration
-> >> space registers, Port Logic registers and iATU and DMA registers.
-> >> Refer Section S.4 of Synopsys DesignWare Cores PCI Express Controller Databook
-> >> Version 4.90a
+> On 4/26/2019 9:13 PM, Rob Herring wrote:
+> > On Wed, Apr 24, 2019 at 10:49:58AM +0530, Vidya Sagar wrote:
+> >> Add support for Tegra194 PCIe controllers. These controllers are based
+> >> on Synopsys DesignWare core IP.
 > >>
 > >> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > >> ---
-> >> Changes since [v4]:
-> >> * None
-> >>
-> >> Changes since [v3]:
-> >> * None
-> >>
-> >> Changes since [v2]:
-> >> * Changed flag name from 'cdm-check' to 'enable-cdm-check'
-> >> * Added info about Port Logic and DMA registers being part of CDM
-> >>
-> >> Changes since [v1]:
-> >> * This is a new patch in v2 series
-> >>
-> >>   Documentation/devicetree/bindings/pci/designware-pcie.txt | 5 +++++
-> >>   1 file changed, 5 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> >> index 5561a1c060d0..85b872c42a9f 100644
-> >> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> >> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> >> @@ -34,6 +34,11 @@ Optional properties:
-> >>   - clock-names: Must include the following entries:
-> >>      - "pcie"
-> >>      - "pcie_bus"
-> >> +- enable-cdm-check: This is a boolean property and if present enables
+
+> >> +- nvidia,bpmp: Must contain a phandle to BPMP controller node.
+> >> +- nvidia,controller-id : Controller specific ID
+> >> +    0: C0
+> >> +    1: C1
+> >> +    2: C2
+> >> +    3: C3
+> >> +    4: C4
+> >> +    5: C5
 > >
-> > This needs a vendor prefix.
-> Why only for this? Since this whole file is for Synopsys DesignWare core based PCIe IP,
-> I thought there is specific prefix required. Am I wrong? Also, CDM checking is a feature
-> of IP and DWC based implementations can choose either to enable this feature at hardware level
-> or not. And whoever enabled it at hardware level (like Tegra194) can set this flag to
-> enable corresponding software support.
+> > We don't normal put device indexes into DT. Why do you need this.
+> > Perhaps for accessing the BPMP? If so, make nvidia,bpmp a phandle+cell.
+> BPMP needs to know the controller number to enable it hence it needs to be
+> passed to BPMP. Just for accessing BPMP, I already added 'nvidia,bpmp' property.
 
-TBC, I meant a Synopsys vendor prefix, not NVIDIA.
+Then make nvidia,bpmp take the phandle and this number.
 
-Any property that's not from a common binding should have a vendor
-prefix. That hasn't always happened, so we do have lots of examples
-without.
+
+> >> +- nvidia,disable-aspm-states: Controls advertisement of ASPM states
+> >> +    bit-0 to '1': Disables advertisement of ASPM-L0s
+> >> +    bit-1 to '1': Disables advertisement of ASPM-L1. This also disables
+> >> +                   advertisement of ASPM-L1.1 and ASPM-L1.2
+> >> +    bit-2 to '1': Disables advertisement of ASPM-L1.1
+> >> +    bit-3 to '1': Disables advertisement of ASPM-L1.2
+> >
+> > Can't this cover what 'supports-clkreq' does?
+> Well, they are related partially. i.e. if a platform doesn't have 'supports-clkreq' set,
+> then, by definition, it can't advertise support for ASPM L1.1 and L1.2 states. But, ASPM-L0s
+> and ASPM-L1 states don't depend on 'supports-clkreq' property.
+> Having this property gives more granularity as to support for which particular ASPM state
+> shouldn't be advertised by the root port.
+
+Okay, then it should be a common property then.
 
 Rob
