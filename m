@@ -2,135 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 93AB11C1DC
-	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2019 07:29:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E04CD1C1E5
+	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2019 07:35:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfENF3m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 May 2019 01:29:42 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:18457 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbfENF3l (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 May 2019 01:29:41 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cda521b0000>; Mon, 13 May 2019 22:28:59 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 13 May 2019 22:29:39 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 13 May 2019 22:29:39 -0700
-Received: from [10.24.47.172] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 May
- 2019 05:29:34 +0000
-Subject: Re: [PATCH V5 07/16] dt-bindings: PCI: designware: Add binding for
- CDM register check
-To:     Rob Herring <robh@kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        <sagar.tv@gmail.com>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-8-vidyas@nvidia.com> <20190426143247.GA25107@bogus>
- <031df2ca-27de-2388-5f23-078320203f5d@nvidia.com>
- <CAL_JsqKvES6OuPRgu8A009j6L4rkc11rB9TyxPe1iUJhvk1O8w@mail.gmail.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <f340cb14-a6df-340b-ce37-227685f78b80@nvidia.com>
-Date:   Tue, 14 May 2019 10:59:31 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726676AbfENFfR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 May 2019 01:35:17 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43819 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfENFfR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 May 2019 01:35:17 -0400
+Received: by mail-io1-f68.google.com with SMTP id v7so12014893iob.10;
+        Mon, 13 May 2019 22:35:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BUOydJOYKqfw1vGDoYoy/mQ+7TBt6hmzNJDpw1eO9Yc=;
+        b=a2cBsCTVrgJJ6cLQ137IbO1f9p0YKaVA25kngwav0+++ixE/mtgJVYepJQmMK1OM9F
+         fMNdfmsG9hTQwosk4jm36dp7KWKwusa8CHzZ9h2WJz91liJLKd7iIsXnEZ3ztUDls8Nw
+         kj69obXgXvYFqJeoFqdvjkipitqp0HJFuvJzDisDKCwHx8IHj0Cqub2twXE3GMpvuhrD
+         nTEYCp0c4A5+yraginrF0vv+up/me39UpGh8Atngi96Nvz6VcTlWFPzeSAZD28pvUkSf
+         WVm6Fh6IqPu6c4PLri8creybLmLMs1f6Cerwifn7CChiXH/oiaNwdJ+4wVNQEw+oEN5h
+         xliw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BUOydJOYKqfw1vGDoYoy/mQ+7TBt6hmzNJDpw1eO9Yc=;
+        b=UeIhbnNyUkRm8Mtl5qJen54Mu5dL6HH8CU4ByErrSRZfhWzFKD+brT7X3LlNw/ULnp
+         rjfPL2qVa2e0peezSQIIUsBn8xafnwkVZfBAfI+a3YFi+lPO+e+zTWzPSKFMKU4hGJ2e
+         ITDJd6cRBtSO23/4UC7GSw6kI5KIQVKW2/dKnmleRAfC5zndTACYS1rAVV63nRdtE+b5
+         Wo3g/xdGz4VM/WlDY39Rjki4K+zP0ukL/ck6Av1FM0RQUg5adE20ZUnUl7jJyxGtltth
+         0ytXTrXzJGwHVtCwn3Pyqp/4y/4hgpAWEE88ASKk0ECawcLi6iR2hLRB6g9bGJGvJtcD
+         TxPg==
+X-Gm-Message-State: APjAAAUPJAeKRskTQYvFy/Uf0kXjlamh8Enuv7cx6JCvj8NVyecZhaMO
+        WapYjqTplD1BvWmoAU3cNIk8YjRlmHls9Pa9kdQ=
+X-Google-Smtp-Source: APXvYqyHn+m4/xZ2S0LEWr5O8zaD/17JTlmgQUuknIjDU4KdlgAjVV5WFsK/3Wau/abLjGcTEo3lTL+BzjRounSYhYc=
+X-Received: by 2002:a5e:a51a:: with SMTP id 26mr11296309iog.171.1557812116707;
+ Mon, 13 May 2019 22:35:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKvES6OuPRgu8A009j6L4rkc11rB9TyxPe1iUJhvk1O8w@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557811740; bh=cqJjsaktR+J8Rzac06BPbRbkXCQMRbYeXEjs18+haNc=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=DqVGD9SpIGwB+ICy+zXbqihOzxwZF83U/SQ2oW9SUGBCiTUWbFM2evWjeZaNNRcXp
-         OUdYxDyeRXV/BmgAiiVD8BOefyvDaY7i6G3qmcv8B1QWNg9oUGJEloYXLeAlR6GTP+
-         5ft4GbFstcouTV1VmsB5acuJkkQpCXPpm4vYhS6kxxYf7AeOYnfOn77cwsU7UEU5BC
-         qecBcnP7PkPZzkcP0DGTgZ5euLnpKNLHgMv25PXeahLET5puUlat8Tgp13WbKdDq3L
-         cc4MwKxr2dL0MMXQGuzeZT8NQi4r0U/0uogEF/Q9Fd3KDRQCoVbAwAvbR2vJzBSjH8
-         j4wCRmXxcqTew==
+References: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
+In-Reply-To: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
+From:   Ley Foon Tan <lftan.linux@gmail.com>
+Date:   Tue, 14 May 2019 13:35:05 +0800
+Message-ID: <CAFiDJ5-4vquVtrqpjgk8D6yhng3RFHN6dF4Kh_PGYe_doZtvqw@mail.gmail.com>
+Subject: Re: [PATCH] PCI: altera: Allow building as module
+To:     Ley Foon Tan <ley.foon.tan@intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-kernel@vger.kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 5/13/2019 8:45 PM, Rob Herring wrote:
-> On Tue, May 7, 2019 at 3:25 AM Vidya Sagar <vidyas@nvidia.com> wrote:
->>
->> On 4/26/2019 8:02 PM, Rob Herring wrote:
->>> On Wed, Apr 24, 2019 at 10:49:55AM +0530, Vidya Sagar wrote:
->>>> Add support to enable CDM (Configuration Dependent Module) registers check
->>>> for any data corruption. CDM registers include standard PCIe configuration
->>>> space registers, Port Logic registers and iATU and DMA registers.
->>>> Refer Section S.4 of Synopsys DesignWare Cores PCI Express Controller Databook
->>>> Version 4.90a
->>>>
->>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>>> ---
->>>> Changes since [v4]:
->>>> * None
->>>>
->>>> Changes since [v3]:
->>>> * None
->>>>
->>>> Changes since [v2]:
->>>> * Changed flag name from 'cdm-check' to 'enable-cdm-check'
->>>> * Added info about Port Logic and DMA registers being part of CDM
->>>>
->>>> Changes since [v1]:
->>>> * This is a new patch in v2 series
->>>>
->>>>    Documentation/devicetree/bindings/pci/designware-pcie.txt | 5 +++++
->>>>    1 file changed, 5 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->>>> index 5561a1c060d0..85b872c42a9f 100644
->>>> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
->>>> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->>>> @@ -34,6 +34,11 @@ Optional properties:
->>>>    - clock-names: Must include the following entries:
->>>>       - "pcie"
->>>>       - "pcie_bus"
->>>> +- enable-cdm-check: This is a boolean property and if present enables
->>>
->>> This needs a vendor prefix.
->> Why only for this? Since this whole file is for Synopsys DesignWare core based PCIe IP,
->> I thought there is specific prefix required. Am I wrong? Also, CDM checking is a feature
->> of IP and DWC based implementations can choose either to enable this feature at hardware level
->> or not. And whoever enabled it at hardware level (like Tegra194) can set this flag to
->> enable corresponding software support.
-> 
-> TBC, I meant a Synopsys vendor prefix, not NVIDIA.
-> 
-> Any property that's not from a common binding should have a vendor
-> prefix. That hasn't always happened, so we do have lots of examples
-> without.
-Ok. got it. I'm going to take care of this in V7 series.
+On Wed, Apr 24, 2019 at 12:57 PM Ley Foon Tan <ley.foon.tan@intel.com> wrote:
+>
+> Altera PCIe Rootport IP is a soft IP and is only available after
+> FPGA image is programmed.
+>
+> Make driver modulable to support use case FPGA image is programmed
+> after kernel is booted. User proram FPGA image in kernel then only load
+> PCIe driver module.
+>
+> Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
+> ---
+>  drivers/pci/controller/Kconfig       |  2 +-
+>  drivers/pci/controller/pcie-altera.c | 28 ++++++++++++++++++++++++++--
+>  2 files changed, 27 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index 6012f3059acd..4b550f9cdd56 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -174,7 +174,7 @@ config PCIE_IPROC_MSI
+>           PCIe controller
+>
+>  config PCIE_ALTERA
+> -       bool "Altera PCIe controller"
+> +       tristate "Altera PCIe controller"
+>         depends on ARM || NIOS2 || ARM64 || COMPILE_TEST
+>         help
+>           Say Y here if you want to enable PCIe controller support on Altera
+> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+> index 27edcebd1726..6c86bc69ace8 100644
+> --- a/drivers/pci/controller/pcie-altera.c
+> +++ b/drivers/pci/controller/pcie-altera.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/irqchip/chained_irq.h>
+>  #include <linux/init.h>
+> +#include <linux/module.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_device.h>
+>  #include <linux/of_irq.h>
+> @@ -705,6 +706,13 @@ static int altera_pcie_init_irq_domain(struct altera_pcie *pcie)
+>         return 0;
+>  }
+>
+> +static int altera_pcie_irq_teardown(struct altera_pcie *pcie)
+> +{
+> +       irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+> +       irq_domain_remove(pcie->irq_domain);
+> +       irq_dispose_mapping(pcie->irq);
+> +}
+> +
+>  static int altera_pcie_parse_dt(struct altera_pcie *pcie)
+>  {
+>         struct device *dev = &pcie->pdev->dev;
+> @@ -798,6 +806,7 @@ static int altera_pcie_probe(struct platform_device *pdev)
+>
+>         pcie = pci_host_bridge_priv(bridge);
+>         pcie->pdev = pdev;
+> +       platform_set_drvdata(pdev, pcie);
+>
+>         match = of_match_device(altera_pcie_of_match, &pdev->dev);
+>         if (!match)
+> @@ -855,13 +864,28 @@ static int altera_pcie_probe(struct platform_device *pdev)
+>         return ret;
+>  }
+>
+> +static int altera_pcie_remove(struct platform_device *pdev)
+> +{
+> +       struct altera_pcie *pcie = platform_get_drvdata(pdev);
+> +       struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+> +
+> +       pci_stop_root_bus(bridge->bus);
+> +       pci_remove_root_bus(bridge->bus);
+> +       pci_free_resource_list(&pcie->resources);
+> +       altera_pcie_irq_teardown(pcie);
+> +
+> +       return 0;
+> +}
+> +
+>  static struct platform_driver altera_pcie_driver = {
+>         .probe          = altera_pcie_probe,
+> +       .remove         = altera_pcie_remove,
+>         .driver = {
+>                 .name   = "altera-pcie",
+>                 .of_match_table = altera_pcie_of_match,
+> -               .suppress_bind_attrs = true,
+>         },
+>  };
+>
+> -builtin_platform_driver(altera_pcie_driver);
+> +MODULE_DEVICE_TABLE(of, altera_pcie_of_match);
+> +module_platform_driver(altera_pcie_driver);
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.19.0
+>
+Hi
 
-> 
-> Rob
-> 
+Any comment for this patch?
 
+Regards
+Ley Foon
