@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E04CD1C1E5
-	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2019 07:35:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCE401C1E7
+	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2019 07:35:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfENFfR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 May 2019 01:35:17 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43819 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbfENFfR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 May 2019 01:35:17 -0400
-Received: by mail-io1-f68.google.com with SMTP id v7so12014893iob.10;
-        Mon, 13 May 2019 22:35:17 -0700 (PDT)
+        id S1726735AbfENFfc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 May 2019 01:35:32 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:55164 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfENFfc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 May 2019 01:35:32 -0400
+Received: by mail-it1-f196.google.com with SMTP id a190so2931935ite.4;
+        Mon, 13 May 2019 22:35:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BUOydJOYKqfw1vGDoYoy/mQ+7TBt6hmzNJDpw1eO9Yc=;
-        b=a2cBsCTVrgJJ6cLQ137IbO1f9p0YKaVA25kngwav0+++ixE/mtgJVYepJQmMK1OM9F
-         fMNdfmsG9hTQwosk4jm36dp7KWKwusa8CHzZ9h2WJz91liJLKd7iIsXnEZ3ztUDls8Nw
-         kj69obXgXvYFqJeoFqdvjkipitqp0HJFuvJzDisDKCwHx8IHj0Cqub2twXE3GMpvuhrD
-         nTEYCp0c4A5+yraginrF0vv+up/me39UpGh8Atngi96Nvz6VcTlWFPzeSAZD28pvUkSf
-         WVm6Fh6IqPu6c4PLri8creybLmLMs1f6Cerwifn7CChiXH/oiaNwdJ+4wVNQEw+oEN5h
-         xliw==
+        bh=ROnZBNUjavEPATCp1Opo+Fi0jSzmWi2jvW4E1gcmmR8=;
+        b=NSzdQDwpBBa362njSlwhNhs7vhCUxNwQXNRTOlCPRAPNS9KafxL6jwlRy2Is17dycj
+         hX4TGdEniOVVubcDUedCX9kkhYYY69ejq00y7sGbZQnABZ9N7sYOxyXN1VOo+oISiH7R
+         FU24vSJxTGTcXC9C42x3CKoUhfNM9LNCx2qAUiYuP4WSrEAlLT/+uLVv8VEKepsti7z/
+         Ls90/YuQNDHnAkP/I2CT4E5vR4g5DNPQ6ZOrNlXOFRwZg0bc74UCajaYqZ7sb1Wxjgsa
+         3JkLtl+o8teimJehJScWHcU6MCqKae0gSGz0wO70ydEFOEf7DfR1pOXzrc5OhGkqTYfw
+         tJeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BUOydJOYKqfw1vGDoYoy/mQ+7TBt6hmzNJDpw1eO9Yc=;
-        b=UeIhbnNyUkRm8Mtl5qJen54Mu5dL6HH8CU4ByErrSRZfhWzFKD+brT7X3LlNw/ULnp
-         rjfPL2qVa2e0peezSQIIUsBn8xafnwkVZfBAfI+a3YFi+lPO+e+zTWzPSKFMKU4hGJ2e
-         ITDJd6cRBtSO23/4UC7GSw6kI5KIQVKW2/dKnmleRAfC5zndTACYS1rAVV63nRdtE+b5
-         Wo3g/xdGz4VM/WlDY39Rjki4K+zP0ukL/ck6Av1FM0RQUg5adE20ZUnUl7jJyxGtltth
-         0ytXTrXzJGwHVtCwn3Pyqp/4y/4hgpAWEE88ASKk0ECawcLi6iR2hLRB6g9bGJGvJtcD
-         TxPg==
-X-Gm-Message-State: APjAAAUPJAeKRskTQYvFy/Uf0kXjlamh8Enuv7cx6JCvj8NVyecZhaMO
-        WapYjqTplD1BvWmoAU3cNIk8YjRlmHls9Pa9kdQ=
-X-Google-Smtp-Source: APXvYqyHn+m4/xZ2S0LEWr5O8zaD/17JTlmgQUuknIjDU4KdlgAjVV5WFsK/3Wau/abLjGcTEo3lTL+BzjRounSYhYc=
-X-Received: by 2002:a5e:a51a:: with SMTP id 26mr11296309iog.171.1557812116707;
- Mon, 13 May 2019 22:35:16 -0700 (PDT)
+        bh=ROnZBNUjavEPATCp1Opo+Fi0jSzmWi2jvW4E1gcmmR8=;
+        b=aIjcd2nj0mTsTqjW//fwo1IwW0QSvj/qtv9RSpHBKhS60Bqgp2CtHgym7nAfzOBSIX
+         dzOtmt1x7VmZ1z0fgRI1N8J+A7fOt2ROSxEUap+TCdW9fSPN5tByN2Mmq1gUMVyTvqeV
+         0F2SwV5P8s3w5LyFF+oFiYos8TOY2hbP+hzAfj9ka6x4YCDxvvzqVB1IO5aYsI4QyTMl
+         KOABjaWnyKN3yCze/GJCvyrw46WL8Jufu7Y+Zm5GrnwWoeUtyrnxOZXWANSfsHDv19n8
+         TBSz9/Xpx0M0u1gFQMgzJhnIDgxY11Tny90S824pfMnq6m7US8AsppL83V8E+kEc7vCM
+         f5rw==
+X-Gm-Message-State: APjAAAWCe1/M63t7AkYTJiLd1Xa+OWfu0uGAhnQiyxvNACRdduo790QZ
+        Rn3YDoZWCkgxwmEb//VHyJRxxz9DcfaBxXVylsw=
+X-Google-Smtp-Source: APXvYqxnsVMo5UM99fUX1eUTegiPxPCSWcQI/OUdYd83fAERf0SMkvw1yLaPmTNFqHa//Hxs45go0UzItmWlHF32tbU=
+X-Received: by 2002:a02:741c:: with SMTP id o28mr21283892jac.144.1557812131236;
+ Mon, 13 May 2019 22:35:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
-In-Reply-To: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
+References: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com> <1556081835-12921-2-git-send-email-ley.foon.tan@intel.com>
+In-Reply-To: <1556081835-12921-2-git-send-email-ley.foon.tan@intel.com>
 From:   Ley Foon Tan <lftan.linux@gmail.com>
-Date:   Tue, 14 May 2019 13:35:05 +0800
-Message-ID: <CAFiDJ5-4vquVtrqpjgk8D6yhng3RFHN6dF4Kh_PGYe_doZtvqw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: altera: Allow building as module
+Date:   Tue, 14 May 2019 13:35:20 +0800
+Message-ID: <CAFiDJ59Pi6fxyE=0ifNJRoGc4QBX3XKJ=L7FXjJ_a6Vyh8otMg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: altera-msi: Allow building as module
 To:     Ley Foon Tan <ley.foon.tan@intel.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -60,96 +60,57 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 On Wed, Apr 24, 2019 at 12:57 PM Ley Foon Tan <ley.foon.tan@intel.com> wrote:
 >
-> Altera PCIe Rootport IP is a soft IP and is only available after
+> Altera MSI IP is a soft IP and is only available after
 > FPGA image is programmed.
 >
 > Make driver modulable to support use case FPGA image is programmed
 > after kernel is booted. User proram FPGA image in kernel then only load
-> PCIe driver module.
+> MSI driver module.
 >
 > Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
 > ---
->  drivers/pci/controller/Kconfig       |  2 +-
->  drivers/pci/controller/pcie-altera.c | 28 ++++++++++++++++++++++++++--
->  2 files changed, 27 insertions(+), 3 deletions(-)
+>  drivers/pci/controller/Kconfig           |  2 +-
+>  drivers/pci/controller/pcie-altera-msi.c | 10 ++++++++++
+>  2 files changed, 11 insertions(+), 1 deletion(-)
 >
 > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 6012f3059acd..4b550f9cdd56 100644
+> index 4b550f9cdd56..920546cb84e2 100644
 > --- a/drivers/pci/controller/Kconfig
 > +++ b/drivers/pci/controller/Kconfig
-> @@ -174,7 +174,7 @@ config PCIE_IPROC_MSI
->           PCIe controller
+> @@ -181,7 +181,7 @@ config PCIE_ALTERA
+>           FPGA.
 >
->  config PCIE_ALTERA
-> -       bool "Altera PCIe controller"
-> +       tristate "Altera PCIe controller"
->         depends on ARM || NIOS2 || ARM64 || COMPILE_TEST
+>  config PCIE_ALTERA_MSI
+> -       bool "Altera PCIe MSI feature"
+> +       tristate "Altera PCIe MSI feature"
+>         depends on PCIE_ALTERA
+>         depends on PCI_MSI_IRQ_DOMAIN
 >         help
->           Say Y here if you want to enable PCIe controller support on Altera
-> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-> index 27edcebd1726..6c86bc69ace8 100644
-> --- a/drivers/pci/controller/pcie-altera.c
-> +++ b/drivers/pci/controller/pcie-altera.c
+> diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
+> index 025ef7d9a046..16d938920ca5 100644
+> --- a/drivers/pci/controller/pcie-altera-msi.c
+> +++ b/drivers/pci/controller/pcie-altera-msi.c
 > @@ -10,6 +10,7 @@
 >  #include <linux/interrupt.h>
 >  #include <linux/irqchip/chained_irq.h>
 >  #include <linux/init.h>
 > +#include <linux/module.h>
+>  #include <linux/msi.h>
 >  #include <linux/of_address.h>
->  #include <linux/of_device.h>
 >  #include <linux/of_irq.h>
-> @@ -705,6 +706,13 @@ static int altera_pcie_init_irq_domain(struct altera_pcie *pcie)
->         return 0;
->  }
->
-> +static int altera_pcie_irq_teardown(struct altera_pcie *pcie)
-> +{
-> +       irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
-> +       irq_domain_remove(pcie->irq_domain);
-> +       irq_dispose_mapping(pcie->irq);
-> +}
-> +
->  static int altera_pcie_parse_dt(struct altera_pcie *pcie)
+> @@ -288,4 +289,13 @@ static int __init altera_msi_init(void)
 >  {
->         struct device *dev = &pcie->pdev->dev;
-> @@ -798,6 +806,7 @@ static int altera_pcie_probe(struct platform_device *pdev)
->
->         pcie = pci_host_bridge_priv(bridge);
->         pcie->pdev = pdev;
-> +       platform_set_drvdata(pdev, pcie);
->
->         match = of_match_device(altera_pcie_of_match, &pdev->dev);
->         if (!match)
-> @@ -855,13 +864,28 @@ static int altera_pcie_probe(struct platform_device *pdev)
->         return ret;
+>         return platform_driver_register(&altera_msi_driver);
 >  }
->
-> +static int altera_pcie_remove(struct platform_device *pdev)
+> +
+> +static void __exit altera_msi_exit(void)
 > +{
-> +       struct altera_pcie *pcie = platform_get_drvdata(pdev);
-> +       struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> +
-> +       pci_stop_root_bus(bridge->bus);
-> +       pci_remove_root_bus(bridge->bus);
-> +       pci_free_resource_list(&pcie->resources);
-> +       altera_pcie_irq_teardown(pcie);
-> +
-> +       return 0;
+> +       platform_driver_unregister(&altera_msi_driver);
 > +}
 > +
->  static struct platform_driver altera_pcie_driver = {
->         .probe          = altera_pcie_probe,
-> +       .remove         = altera_pcie_remove,
->         .driver = {
->                 .name   = "altera-pcie",
->                 .of_match_table = altera_pcie_of_match,
-> -               .suppress_bind_attrs = true,
->         },
->  };
->
-> -builtin_platform_driver(altera_pcie_driver);
-> +MODULE_DEVICE_TABLE(of, altera_pcie_of_match);
-> +module_platform_driver(altera_pcie_driver);
+>  subsys_initcall(altera_msi_init);
+> +MODULE_DEVICE_TABLE(of, altera_msi_of_match);
+> +module_exit(altera_msi_exit);
 > +MODULE_LICENSE("GPL v2");
 > --
 > 2.19.0
