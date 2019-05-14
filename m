@@ -2,56 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C81D61CAC8
-	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2019 16:48:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D8BD1CAC9
+	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2019 16:48:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbfENOsY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 May 2019 10:48:24 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37418 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbfENOsU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 May 2019 10:48:20 -0400
-Received: by mail-pf1-f193.google.com with SMTP id g3so9271258pfi.4;
-        Tue, 14 May 2019 07:48:19 -0700 (PDT)
+        id S1726876AbfENOsl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 May 2019 10:48:41 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43804 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726706AbfENOsY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 May 2019 10:48:24 -0400
+Received: by mail-pl1-f196.google.com with SMTP id n8so8383830plp.10;
+        Tue, 14 May 2019 07:48:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=b/Y+ncH2RPQ7WPNTjKYarl28Ee8gzLuA374D+ObE5d4=;
-        b=kEihEZ2m1JXXHWsZJv9hrvglutFYYopynDOg1MVObTiBaN0y9+BwTB3+rRsoRbwsYg
-         kaw1jCejL8Sz76mj3vgxYGcPqiK9CX4+RLI6RFbgtP1OYkMOj2ftaKpbId8v0Y97YJUx
-         vNFqBNUAPKcVzWQVc2j6hVNABSrYoEKKG1eQwPFyzJXmrB40n8oaeFudTpVHa5iTaoKJ
-         GFLuMGW8keq0/MZK6oG6gyOtASK2P3NZZjYGfzZ4XXCjAfBJrnQEw+hn0Q5LwvagmvXr
-         aVEVXmbIDl1W9WmgjCGKonXoa+0YRsKwhiLy9nYlk4NYhbIjribW9DamWnWpDVr0QYYc
-         xG5g==
+        bh=lK1xlzj9XVgEphYMHzXNXMIFEbFxUpOQnQC8+zBIUE8=;
+        b=lJD3Ov27c9VH3vWvtix/2KOW14mKXb/6Q9t+Zavy2Rwh77z5wMuzoJQRDlbVqV8usk
+         9PXRehB/0uaQEugrXmTMwwV1Lwu5LJ1u3hQ03dxC/ZnEFOPWP90/CSsKlXUw+/7x3ULC
+         YEASJogUhOxyFu4hbuzvO0DaFf8qPWEuj28YYE+0hoYUFoQs37y4iKwUx93x7LkquXZx
+         grREBAaR6P5isXMc5TFcTKGnkxgKev3vs/nSWyHVfk/0akuX9GetSHzuzJyvlavgpcdG
+         cgXyRjFoMvayOBR/iUw42vXuaaeRnMUgfKe701RfcUJj0OvDCSUZSYID7JHRlC8KtYN+
+         pJgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=b/Y+ncH2RPQ7WPNTjKYarl28Ee8gzLuA374D+ObE5d4=;
-        b=OTHZqeVMIsz/DRdORoHa0ANzwf/9rIxxOShb33lhuyuiVgxdjHnlukVkFtkO/MGQY6
-         CyRUrajBwqY2Bh6dE+AlM69GNqzMHn85TDcp5/lB+k0msbVo8UUACwfDc3AjantexDhs
-         NkzAKdbpAGFpNG+tCW2JXk9617kr/OGVZS+iUQlO4SokCVi/Sbhi++zl5IRy9m9ZzIKo
-         gAL/FW2EMyTS2xH+DeGOaX3AJQuahwlQFCzclfqdhgrWu7LwhIy3OcnFBqIS39rSBe+o
-         NcZ8kSwL+qztIGaVEyF8xq0zvpGgrHFNWwU2gbrq0hf+XyIgogYeCg+IDN00eoacLpZu
-         bcVw==
-X-Gm-Message-State: APjAAAXHphTy+aLP1D8RYiuWdR+ka7BpQKpu3jz8QGtYvmH5EauwBCXJ
-        69PAqrfylGo/fS2r4bQ2rOc=
-X-Google-Smtp-Source: APXvYqwU4XV3Sutz5JSyvs6SexvHw/fIFaOiFrCA9FZ1K7kZuugX+Gw9Xq1GswtOxXIKyTB3ZJ3ILA==
-X-Received: by 2002:a62:56c3:: with SMTP id h64mr40527393pfj.163.1557845299473;
-        Tue, 14 May 2019 07:48:19 -0700 (PDT)
+        bh=lK1xlzj9XVgEphYMHzXNXMIFEbFxUpOQnQC8+zBIUE8=;
+        b=Xy7p6DbNNUNOyIIwqb3FVTNqjAnRuaY9ZI2JKX/3GSXYbUgVZrEOHSXjzhvY9hyODy
+         WglvYGJeMIzwOsRq1T/8dHK3nF5834Y8zpdicQd7HqVikgej8Jv/UOiPF+N3mMOyytlG
+         nfSKLG05OGGEcgqe7IW+YeT6cunvF1b1JuCB5Zzu3DiPwQ4/QqNqmnYDgcJiVNF7cMv9
+         tCI8CarsBm/1QySj1v9eYmVeEsAGN86JvatV8blMLtxw86x/MUxMAcgHBxiEUA6BwGn4
+         +PLLvTiRda5M+VBTwb9DnPcZwPnmSLVV3TXXXQr5BBWPymG6Thypk/M4yKohfaVO2nGJ
+         WHfQ==
+X-Gm-Message-State: APjAAAXHlyxFBucSq6vS8VJiUaJlffytaEhvMtqhgHjYAG4Ejcuf/7x7
+        /otz4vG7tK7THmUBarNNdsQ=
+X-Google-Smtp-Source: APXvYqwVMWPA37MiGapzQ6y3XYUwQ9SLAIkcEtRaZPZ/xMlUTgm8v7VSwIaos84vAugbbwC9fBkMvA==
+X-Received: by 2002:a17:902:f096:: with SMTP id go22mr39345068plb.49.1557845303778;
+        Tue, 14 May 2019 07:48:23 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id j12sm20461415pff.148.2019.05.14.07.48.16
+        by smtp.gmail.com with ESMTPSA id j12sm20461415pff.148.2019.05.14.07.48.20
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 14 May 2019 07:48:19 -0700 (PDT)
+        Tue, 14 May 2019 07:48:23 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     bhelgaas@google.com, corbet@lwn.net
 Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
         Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v6 10/12] Documentation: PCI: convert endpoint/pci-endpoint-cfs.txt to reST
-Date:   Tue, 14 May 2019 22:47:32 +0800
-Message-Id: <20190514144734.19760-11-changbin.du@gmail.com>
+Subject: [PATCH v6 11/12] Documentation: PCI: convert endpoint/pci-test-function.txt to reST
+Date:   Tue, 14 May 2019 22:47:33 +0800
+Message-Id: <20190514144734.19760-12-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190514144734.19760-1-changbin.du@gmail.com>
 References: <20190514144734.19760-1-changbin.du@gmail.com>
@@ -70,172 +70,148 @@ Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
  Documentation/PCI/endpoint/index.rst          |  1 +
- ...-endpoint-cfs.txt => pci-endpoint-cfs.rst} | 99 +++++++++++--------
- 2 files changed, 57 insertions(+), 43 deletions(-)
- rename Documentation/PCI/endpoint/{pci-endpoint-cfs.txt => pci-endpoint-cfs.rst} (64%)
+ ...est-function.txt => pci-test-function.rst} | 84 +++++++++++--------
+ 2 files changed, 51 insertions(+), 34 deletions(-)
+ rename Documentation/PCI/endpoint/{pci-test-function.txt => pci-test-function.rst} (55%)
 
 diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-index 0db4f2fcd7f0..3951de9f923c 100644
+index 3951de9f923c..b680a3fc4fec 100644
 --- a/Documentation/PCI/endpoint/index.rst
 +++ b/Documentation/PCI/endpoint/index.rst
-@@ -8,3 +8,4 @@ PCI Endpoint Framework
-    :maxdepth: 2
+@@ -9,3 +9,4 @@ PCI Endpoint Framework
  
     pci-endpoint
-+   pci-endpoint-cfs
-diff --git a/Documentation/PCI/endpoint/pci-endpoint-cfs.txt b/Documentation/PCI/endpoint/pci-endpoint-cfs.rst
-similarity index 64%
-rename from Documentation/PCI/endpoint/pci-endpoint-cfs.txt
-rename to Documentation/PCI/endpoint/pci-endpoint-cfs.rst
-index d740f29960a4..b6d39cdec56e 100644
---- a/Documentation/PCI/endpoint/pci-endpoint-cfs.txt
-+++ b/Documentation/PCI/endpoint/pci-endpoint-cfs.rst
-@@ -1,41 +1,51 @@
--                   CONFIGURING PCI ENDPOINT USING CONFIGFS
--                    Kishon Vijay Abraham I <kishon@ti.com>
+    pci-endpoint-cfs
++   pci-test-function
+diff --git a/Documentation/PCI/endpoint/pci-test-function.txt b/Documentation/PCI/endpoint/pci-test-function.rst
+similarity index 55%
+rename from Documentation/PCI/endpoint/pci-test-function.txt
+rename to Documentation/PCI/endpoint/pci-test-function.rst
+index 5916f1f592bb..3c8521d7aa31 100644
+--- a/Documentation/PCI/endpoint/pci-test-function.txt
++++ b/Documentation/PCI/endpoint/pci-test-function.rst
+@@ -1,5 +1,10 @@
+-				PCI TEST
+-		    Kishon Vijay Abraham I <kishon@ti.com>
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+=======================================
-+Configuring PCI Endpoint Using CONFIGFS
-+=======================================
++=================
++PCI Test Function
++=================
 +
 +:Author: Kishon Vijay Abraham I <kishon@ti.com>
  
- The PCI Endpoint Core exposes configfs entry (pci_ep) to configure the
- PCI endpoint function and to bind the endpoint function
- with the endpoint controller. (For introducing other mechanisms to
- configure the PCI Endpoint Function refer to [1]).
+ Traditionally PCI RC has always been validated by using standard
+ PCI cards like ethernet PCI cards or USB PCI cards or SATA PCI cards.
+@@ -23,65 +28,76 @@ The PCI endpoint test device has the following registers:
+ 	8) PCI_ENDPOINT_TEST_IRQ_TYPE
+ 	9) PCI_ENDPOINT_TEST_IRQ_NUMBER
  
--*) Mounting configfs
-+Mounting configfs
-+=================
+-*) PCI_ENDPOINT_TEST_MAGIC
++* PCI_ENDPOINT_TEST_MAGIC
  
- The PCI Endpoint Core layer creates pci_ep directory in the mounted configfs
--directory. configfs can be mounted using the following command.
-+directory. configfs can be mounted using the following command::
+ This register will be used to test BAR0. A known pattern will be written
+ and read back from MAGIC register to verify BAR0.
  
- 	mount -t configfs none /sys/kernel/config
+-*) PCI_ENDPOINT_TEST_COMMAND:
++* PCI_ENDPOINT_TEST_COMMAND
  
--*) Directory Structure
-+Directory Structure
-+===================
+ This register will be used by the host driver to indicate the function
+ that the endpoint device must perform.
  
- The pci_ep configfs has two directories at its root: controllers and
- functions. Every EPC device present in the system will have an entry in
- the *controllers* directory and and every EPF driver present in the system
- will have an entry in the *functions* directory.
-+::
+-Bitfield Description:
+-  Bit 0		: raise legacy IRQ
+-  Bit 1		: raise MSI IRQ
+-  Bit 2		: raise MSI-X IRQ
+-  Bit 3		: read command (read data from RC buffer)
+-  Bit 4		: write command (write data to RC buffer)
+-  Bit 5		: copy command (copy data from one RC buffer to another
+-		  RC buffer)
++========	================================================================
++Bitfield	Description
++========	================================================================
++Bit 0		raise legacy IRQ
++Bit 1		raise MSI IRQ
++Bit 2		raise MSI-X IRQ
++Bit 3		read command (read data from RC buffer)
++Bit 4		write command (write data to RC buffer)
++Bit 5		copy command (copy data from one RC buffer to another RC buffer)
++========	================================================================
  
--/sys/kernel/config/pci_ep/
--	.. controllers/
--	.. functions/
-+	/sys/kernel/config/pci_ep/
-+		.. controllers/
-+		.. functions/
+-*) PCI_ENDPOINT_TEST_STATUS
++* PCI_ENDPOINT_TEST_STATUS
  
--*) Creating EPF Device
-+Creating EPF Device
-+===================
+ This register reflects the status of the PCI endpoint device.
  
- Every registered EPF driver will be listed in controllers directory. The
- entries corresponding to EPF driver will be created by the EPF core.
-+::
- 
--/sys/kernel/config/pci_ep/functions/
--	.. <EPF Driver1>/
--		... <EPF Device 11>/
--		... <EPF Device 21>/
--	.. <EPF Driver2>/
--		... <EPF Device 12>/
--		... <EPF Device 22>/
-+	/sys/kernel/config/pci_ep/functions/
-+		.. <EPF Driver1>/
-+			... <EPF Device 11>/
-+			... <EPF Device 21>/
-+		.. <EPF Driver2>/
-+			... <EPF Device 12>/
-+			... <EPF Device 22>/
- 
- In order to create a <EPF device> of the type probed by <EPF Driver>, the
- user has to create a directory inside <EPF DriverN>.
-@@ -44,34 +54,37 @@ Every <EPF device> directory consists of the following entries that can be
- used to configure the standard configuration header of the endpoint function.
- (These entries are created by the framework when any new <EPF Device> is
- created)
+-Bitfield Description:
+-  Bit 0		: read success
+-  Bit 1		: read fail
+-  Bit 2		: write success
+-  Bit 3		: write fail
+-  Bit 4		: copy success
+-  Bit 5		: copy fail
+-  Bit 6		: IRQ raised
+-  Bit 7		: source address is invalid
+-  Bit 8		: destination address is invalid
 -
--	.. <EPF Driver1>/
--		... <EPF Device 11>/
--			... vendorid
--			... deviceid
--			... revid
--			... progif_code
--			... subclass_code
--			... baseclass_code
--			... cache_line_size
--			... subsys_vendor_id
--			... subsys_id
--			... interrupt_pin
--
--*) EPC Device
-+::
+-*) PCI_ENDPOINT_TEST_SRC_ADDR
++========	==============================
++Bitfield	Description
++========	==============================
++Bit 0		read success
++Bit 1		read fail
++Bit 2		write success
++Bit 3		write fail
++Bit 4		copy success
++Bit 5		copy fail
++Bit 6		IRQ raised
++Bit 7		source address is invalid
++Bit 8		destination address is invalid
++========	==============================
 +
-+		.. <EPF Driver1>/
-+			... <EPF Device 11>/
-+				... vendorid
-+				... deviceid
-+				... revid
-+				... progif_code
-+				... subclass_code
-+				... baseclass_code
-+				... cache_line_size
-+				... subsys_vendor_id
-+				... subsys_id
-+				... interrupt_pin
++* PCI_ENDPOINT_TEST_SRC_ADDR
+ 
+ This register contains the source address (RC buffer address) for the
+ COPY/READ command.
+ 
+-*) PCI_ENDPOINT_TEST_DST_ADDR
++* PCI_ENDPOINT_TEST_DST_ADDR
+ 
+ This register contains the destination address (RC buffer address) for
+ the COPY/WRITE command.
+ 
+-*) PCI_ENDPOINT_TEST_IRQ_TYPE
++* PCI_ENDPOINT_TEST_IRQ_TYPE
+ 
+ This register contains the interrupt type (Legacy/MSI) triggered
+ for the READ/WRITE/COPY and raise IRQ (Legacy/MSI) commands.
+ 
+ Possible types:
+- - Legacy	: 0
+- - MSI		: 1
+- - MSI-X	: 2
+ 
+-*) PCI_ENDPOINT_TEST_IRQ_NUMBER
++======	==
++Legacy	0
++MSI	1
++MSI-X	2
++======	==
 +
-+EPC Device
-+==========
++* PCI_ENDPOINT_TEST_IRQ_NUMBER
  
- Every registered EPC device will be listed in controllers directory. The
- entries corresponding to EPC device will be created by the EPC core.
--
--/sys/kernel/config/pci_ep/controllers/
--	.. <EPC Device1>/
--		... <Symlink EPF Device11>/
--		... <Symlink EPF Device12>/
--		... start
--	.. <EPC Device2>/
--		... <Symlink EPF Device21>/
--		... <Symlink EPF Device22>/
--		... start
-+::
+ This register contains the triggered ID interrupt.
+ 
+ Admissible values:
+- - Legacy	: 0
+- - MSI		: [1 .. 32]
+- - MSI-X	: [1 .. 2048]
 +
-+	/sys/kernel/config/pci_ep/controllers/
-+		.. <EPC Device1>/
-+			... <Symlink EPF Device11>/
-+			... <Symlink EPF Device12>/
-+			... start
-+		.. <EPC Device2>/
-+			... <Symlink EPF Device21>/
-+			... <Symlink EPF Device22>/
-+			... start
- 
- The <EPC Device> directory will have a list of symbolic links to
- <EPF Device>. These symbolic links should be created by the user to
-@@ -81,7 +94,7 @@ The <EPC Device> directory will also have a *start* field. Once
- "1" is written to this field, the endpoint device will be ready to
- establish the link with the host. This is usually done after
- all the EPF devices are created and linked with the EPC device.
--
-+::
- 
- 			 | controllers/
- 				| <Directory: EPC name>/
-@@ -102,4 +115,4 @@ all the EPF devices are created and linked with the EPC device.
- 						| interrupt_pin
- 						| function
- 
--[1] -> Documentation/PCI/endpoint/pci-endpoint.txt
-+[1] :doc:`pci-endpoint`
++======	===========
++Legacy	0
++MSI	[1 .. 32]
++MSI-X	[1 .. 2048]
++======	===========
 -- 
 2.20.1
 
