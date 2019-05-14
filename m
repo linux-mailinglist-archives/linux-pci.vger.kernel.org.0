@@ -2,297 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A9E31CAE6
-	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2019 16:52:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C30761CAAB
+	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2019 16:45:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726009AbfENOwO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 May 2019 10:52:14 -0400
-Received: from mta-01.yadro.com ([89.207.88.251]:42242 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbfENOwO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 May 2019 10:52:14 -0400
-X-Greylist: delayed 483 seconds by postgrey-1.27 at vger.kernel.org; Tue, 14 May 2019 10:52:12 EDT
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 63E064118F;
-        Tue, 14 May 2019 14:44:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:content-language:content-type
-        :content-type:in-reply-to:mime-version:user-agent:date:date
-        :message-id:from:from:references:subject:subject:received
-        :received:received; s=mta-01; t=1557845046; x=1559659447; bh=2DM
-        NvVFklfNCEeLSPZjU9tmmNt9I98RYHGlfcmQvVrc=; b=PQg2qfdfhJbhPGashi1
-        fGfH2auksfC/D0dtUUy4wM6e2/mwOsqq9AjKhqfdOR2fs6flc5y4LK56vdda4//T
-        LAwVWZmWygWoip0/BTLXuz3teUp7IuDmecuTOMoGf6xNCXAuFR5dHwxqwFgBwO38
-        4lT4fCAlE7JKHOf5Mvz3vTzI=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id sNS5FgSOHzSl; Tue, 14 May 2019 17:44:06 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id E941E404CB;
-        Tue, 14 May 2019 17:44:05 +0300 (MSK)
-Received: from [172.17.15.60] (172.17.15.60) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Tue, 14
- May 2019 17:44:05 +0300
-Subject: Re: [PATCH v5 5/8] powerpc/pci/IOV: Add support for runtime enabling
- the VFs
-To:     Oliver O'Halloran <oohall@gmail.com>
-CC:     <linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>,
-        Stewart Smith <stewart@linux.vnet.ibm.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Russell Currey <ruscur@russell.cc>, <linux@yadro.com>
-References: <20190311115233.6514-1-s.miroshnichenko@yadro.com>
- <20190311115233.6514-6-s.miroshnichenko@yadro.com>
- <e27c1caebdbc4dc71fb8d132db24f04fa65a7a69.camel@gmail.com>
-From:   Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=s.miroshnichenko@yadro.com; prefer-encrypt=mutual; keydata=
- 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
- lHi50np+KDDPzZS51tw=
-Message-ID: <9c452718-089a-e408-0e7d-4ea2c67f1019@yadro.com>
-Date:   Tue, 14 May 2019 17:44:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1725901AbfENOpA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 May 2019 10:45:00 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35840 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfENOpA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 May 2019 10:45:00 -0400
+Received: by mail-pg1-f195.google.com with SMTP id a3so8757449pgb.3;
+        Tue, 14 May 2019 07:45:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=M5gD5bOk+ivXRl6ir7PdHTTwAW2YSmsqQ0Eg23Ei5OU=;
+        b=uFs9wWBU7EuqOsDKvz+cVP5WgvZBLERAglZL1D1EkqgHFgsJFcJNyXUC4W/qD+DUa3
+         8wFk9QcPgy/7h0uKjPtKVTNXdaXwmBvISl6mRaVEvHW5ncRYa8bYA0efya5vogZZwjbv
+         ZZRfTT3sEw+11xOiYQgrMVJGZTnGUAR9nA2Oo6SyWt/RcHjjZjVImXlPL1/GTCpYKl+7
+         L4Y1bYP3a6NGTaOnfB2l0+o1sgCKRuDIpw0WMivnlUpPI75zzCsw/Lxv0C8FAiZSoJP1
+         KNPUcCAFyCXlofgYR6a3aCUoUI0ptZW0NEwo1L4oFkfpkqQhM/wr56mneob9Q1UemtAG
+         iDTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=M5gD5bOk+ivXRl6ir7PdHTTwAW2YSmsqQ0Eg23Ei5OU=;
+        b=ldN8rdtaLYyR4j8+pXLvpnPRXnvwVsgi2H01IHWYqbZy2XBMTFb+psjvPtNLYsy7vK
+         uSSqyqdykp7JMLmlPPNVxa9yZR4QuWLbu3c9sVdUO6FEJLdujiiOj0fpLQ8ulroFdIml
+         MEK9BGIjlBRzD2nZIL5Viq0cFOlE/KU8oP8P1frZDvnmk4owlTd/0PRfW/5K+KLVQqlQ
+         8xb6Xa+PcKyJ3XU3593HXTgfL3ABi514ChWVDqMvOLceUdYi9AICsSroAaU3S125RwmJ
+         VIWYn1PefmmCIw7meiK04eNAMHsOMmY8+ejyzWHDsGQOVCUDjqAydOVYOKOpTTVxuxg8
+         ZMtQ==
+X-Gm-Message-State: APjAAAVjWN/eCsfbGa2A4PtnOa0cwf2CzDeYzbV8o6/vxSKeIEMjLHwm
+        JEnrX3dq7FMYCz3t9ZqhhsXNPecQBdM=
+X-Google-Smtp-Source: APXvYqyszJva4EMMR5heKptgP1XLXDlVskpU1wnd/h+BaPS711IH58DJGKfAXnRBxzL0lGTgN6E4rg==
+X-Received: by 2002:a63:465b:: with SMTP id v27mr38671882pgk.38.1557845099636;
+        Tue, 14 May 2019 07:44:59 -0700 (PDT)
+Received: from mail.google.com ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id u12sm2119425pfl.159.2019.05.14.07.44.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 14 May 2019 07:44:59 -0700 (PDT)
+Date:   Tue, 14 May 2019 22:44:53 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>, bhelgaas@google.com,
+        corbet@lwn.net, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 11/12] Documentation: PCI: convert
+ endpoint/pci-test-function.txt to reST
+Message-ID: <20190514144451.uxa4bkipmltllv5k@mail.google.com>
+References: <20190513142000.3524-1-changbin.du@gmail.com>
+ <20190513142000.3524-12-changbin.du@gmail.com>
+ <20190513120423.159b971f@coco.lan>
 MIME-Version: 1.0
-In-Reply-To: <e27c1caebdbc4dc71fb8d132db24f04fa65a7a69.camel@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.17.15.60]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513120423.159b971f@coco.lan>
+User-Agent: NeoMutt/20180716
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 4/30/19 9:00 AM, Oliver O'Halloran wrote:
-> On Mon, 2019-03-11 at 14:52 +0300, Sergey Miroshnichenko wrote:
+On Mon, May 13, 2019 at 12:04:23PM -0300, Mauro Carvalho Chehab wrote:
+> Em Mon, 13 May 2019 22:19:59 +0800
+> Changbin Du <changbin.du@gmail.com> escreveu:
 > 
->> When called within pcibios_sriov_enable(), the pci_sriov_get_totalvfs(pdev)
->> returns zero, because the device is yet preparing to enable the VFs.
+> > This converts the plain text documentation to reStructuredText format and
+> > add it to Sphinx TOC tree. No essential content change.
+> > 
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > ---
+> >  Documentation/PCI/endpoint/index.rst          |  1 +
+> >  ...est-function.txt => pci-test-function.rst} | 34 ++++++++++++-------
+> >  2 files changed, 22 insertions(+), 13 deletions(-)
+> >  rename Documentation/PCI/endpoint/{pci-test-function.txt => pci-test-function.rst} (84%)
+> > 
+> > diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
+> > index 3951de9f923c..b680a3fc4fec 100644
+> > --- a/Documentation/PCI/endpoint/index.rst
+> > +++ b/Documentation/PCI/endpoint/index.rst
+> > @@ -9,3 +9,4 @@ PCI Endpoint Framework
+> >  
+> >     pci-endpoint
+> >     pci-endpoint-cfs
+> > +   pci-test-function
+> > diff --git a/Documentation/PCI/endpoint/pci-test-function.txt b/Documentation/PCI/endpoint/pci-test-function.rst
+> > similarity index 84%
+> > rename from Documentation/PCI/endpoint/pci-test-function.txt
+> > rename to Documentation/PCI/endpoint/pci-test-function.rst
+> > index 5916f1f592bb..63148df97232 100644
+> > --- a/Documentation/PCI/endpoint/pci-test-function.txt
+> > +++ b/Documentation/PCI/endpoint/pci-test-function.rst
+> > @@ -1,5 +1,10 @@
+> > -				PCI TEST
+> > -		    Kishon Vijay Abraham I <kishon@ti.com>
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +=================
+> > +PCI Test Function
+> > +=================
+> > +
+> > +:Author: Kishon Vijay Abraham I <kishon@ti.com>
+> >  
+> >  Traditionally PCI RC has always been validated by using standard
+> >  PCI cards like ethernet PCI cards or USB PCI cards or SATA PCI cards.
+> > @@ -23,30 +28,31 @@ The PCI endpoint test device has the following registers:
+> >  	8) PCI_ENDPOINT_TEST_IRQ_TYPE
+> >  	9) PCI_ENDPOINT_TEST_IRQ_NUMBER
+> >  
+> > -*) PCI_ENDPOINT_TEST_MAGIC
+> > +* PCI_ENDPOINT_TEST_MAGIC
+> >  
+> >  This register will be used to test BAR0. A known pattern will be written
+> >  and read back from MAGIC register to verify BAR0.
+> >  
+> > -*) PCI_ENDPOINT_TEST_COMMAND:
+> > +* PCI_ENDPOINT_TEST_COMMAND
+> >  
+> >  This register will be used by the host driver to indicate the function
+> >  that the endpoint device must perform.
+> >  
+> > -Bitfield Description:
+> > +Bitfield Description::
+> > +
+> >    Bit 0		: raise legacy IRQ
+> >    Bit 1		: raise MSI IRQ
+> >    Bit 2		: raise MSI-X IRQ
+> >    Bit 3		: read command (read data from RC buffer)
+> >    Bit 4		: write command (write data to RC buffer)
+> > -  Bit 5		: copy command (copy data from one RC buffer to another
+> > -		  RC buffer)
+> > +  Bit 5		: copy command (copy data from one RC buffer to another RC buffer)
 > 
-> I don't think this is correct. The earliest pcibios_sriov_enable() can
-> be called is during a driver probe function. The totalvfs field is
-> initialised by pci_iov_init() which is called before the device has
-> been added to the bus. If it's returning zero then maybe the driver
-> limited the number of VFs to zero?
+> Why not use a table instead?
+>
+hmm, table looks better.
+> >  
+> > -*) PCI_ENDPOINT_TEST_STATUS
+> > +* PCI_ENDPOINT_TEST_STATUS
+> >  
+> >  This register reflects the status of the PCI endpoint device.
+> >  
+> > -Bitfield Description:
+> > +Bitfield Description::
+> > +
+> >    Bit 0		: read success
+> >    Bit 1		: read fail
+> >    Bit 2		: write success
+> > @@ -57,31 +63,33 @@ Bitfield Description:
+> >    Bit 7		: source address is invalid
+> >    Bit 8		: destination address is invalid
 > 
-> That said, you need to reset numvfs to zero before changing the value. 
-> So limiting the number of pci_dns that are created to the number
-> actually required rather than totalvfs doesn't hurt.
+> Same here.
 > 
->> With this patch it becomes possible to enable VFs via sysfs "sriov_numvfs"
->> on PowerNV.
+> If you replace the two bitfield descriptions to table:
+> 	Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 > 
-> I tested on a few of our lab systems with random kernel versions
-> spanning from 4.15 to 5.0 and sriov_numvfs seemed to work fine on all
-> of them. Is there a specific configuration you're testing that needed
-> this change?
-> 
+sure.
 
-Thanks a lot for the review and testing!
+> >  
+> > -*) PCI_ENDPOINT_TEST_SRC_ADDR
+> > +* PCI_ENDPOINT_TEST_SRC_ADDR
+> >  
+> >  This register contains the source address (RC buffer address) for the
+> >  COPY/READ command.
+> >  
+> > -*) PCI_ENDPOINT_TEST_DST_ADDR
+> > +* PCI_ENDPOINT_TEST_DST_ADDR
+> >  
+> >  This register contains the destination address (RC buffer address) for
+> >  the COPY/WRITE command.
+> >  
+> > -*) PCI_ENDPOINT_TEST_IRQ_TYPE
+> > +* PCI_ENDPOINT_TEST_IRQ_TYPE
+> >  
+> >  This register contains the interrupt type (Legacy/MSI) triggered
+> >  for the READ/WRITE/COPY and raise IRQ (Legacy/MSI) commands.
+> >  
+> >  Possible types:
+> > +
+> >   - Legacy	: 0
+> >   - MSI		: 1
+> >   - MSI-X	: 2
+> >
+Also take this as table.
 
-I've just received back the hardware (Mellanox ConnectX-4 -
-drivers/net/ethernet/mellanox/mlx5), and got surprised: the issue with the
-pci_sriov_get_totalvfs(pdev) returning zero can't be reproduced anymore :/ I've rechecked
-the code and don't know how could this even happen. I'm sorry about that; if it will
-happen again, I have to investigate deeper.
-
-The PCI subsystem doesn't let the number of VFs to be changed from non-zero value to
-another non-zero value: it needs to sriov_disable() first. I guess we can rely on that and
-don't reset the numvfs to zero explicitly.
-
-I'll change the patch description and resend it in v6 with other fixes of this patchset.
-
-Best regards,
-Serge
-
->> Signed-off-by: Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
->> ---
->>  arch/powerpc/include/asm/pci-bridge.h     |  4 +--
->>  arch/powerpc/kernel/pci_dn.c              | 32 ++++++++++++++---------
->>  arch/powerpc/platforms/powernv/pci-ioda.c |  4 +--
->>  arch/powerpc/platforms/pseries/pci.c      |  4 +--
->>  4 files changed, 25 insertions(+), 19 deletions(-)
->>
->> diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
->> index fc188e0e9179..6479bc96e0b6 100644
->> --- a/arch/powerpc/include/asm/pci-bridge.h
->> +++ b/arch/powerpc/include/asm/pci-bridge.h
->> @@ -225,8 +225,8 @@ struct pci_dn {
->>  extern struct pci_dn *pci_get_pdn_by_devfn(struct pci_bus *bus,
->>  					   int devfn);
->>  extern struct pci_dn *pci_get_pdn(struct pci_dev *pdev);
->> -extern struct pci_dn *add_dev_pci_data(struct pci_dev *pdev);
->> -extern void remove_dev_pci_data(struct pci_dev *pdev);
->> +extern struct pci_dn *pci_create_vf_pdns(struct pci_dev *pdev, int num_vfs);
->> +extern void pci_destroy_vf_pdns(struct pci_dev *pdev);
->>  extern struct pci_dn *pci_add_device_node_info(struct pci_controller *hose,
->>  					       struct device_node *dn);
->>  extern void pci_remove_device_node_info(struct device_node *dn);
->> diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
->> index 7f12882d8882..7fa362f8038d 100644
->> --- a/arch/powerpc/kernel/pci_dn.c
->> +++ b/arch/powerpc/kernel/pci_dn.c
->> @@ -222,18 +222,19 @@ static struct pci_dn *pci_create_pdn_from_dev(struct pci_dev *pdev,
->>  	return pdn;
->>  }
->>  
->> -struct pci_dn *add_dev_pci_data(struct pci_dev *pdev)
->> +struct pci_dn *pci_create_vf_pdns(struct pci_dev *pdev, int num_vfs)
->>  {
->> +	struct pci_dn *pdn = pci_get_pdn(pdev);
->> +
->>  #ifdef CONFIG_PCI_IOV
->> -	struct pci_dn *parent, *pdn;
->> +	struct pci_dn *parent;
->>  	int i;
->>  
->>  	/* Only support IOV for now */
->>  	if (!pdev->is_physfn)
->> -		return pci_get_pdn(pdev);
->> +		return pdn;
->>  
->>  	/* Check if VFs have been populated */
->> -	pdn = pci_get_pdn(pdev);
->>  	if (!pdn || (pdn->flags & PCI_DN_FLAG_IOV_VF))
->>  		return NULL;
->>  
->> @@ -242,33 +243,38 @@ struct pci_dn *add_dev_pci_data(struct pci_dev *pdev)
->>  	if (!parent)
->>  		return NULL;
->>  
->> -	for (i = 0; i < pci_sriov_get_totalvfs(pdev); i++) {
->> +	for (i = 0; i < num_vfs; i++) {
->>  		struct eeh_dev *edev __maybe_unused;
->> +		struct pci_dn *vpdn;
->>  
->> -		pdn = pci_alloc_pdn(parent,
->> -				    pci_iov_virtfn_bus(pdev, i),
->> -				    pci_iov_virtfn_devfn(pdev, i));
->> -		if (!pdn) {
->> +		vpdn = pci_alloc_pdn(parent,
->> +				     pci_iov_virtfn_bus(pdev, i),
->> +				     pci_iov_virtfn_devfn(pdev, i));
->> +		if (!vpdn) {
->>  			dev_warn(&pdev->dev, "%s: Cannot create firmware data for VF#%d\n",
->>  				 __func__, i);
->>  			return NULL;
->>  		}
->>  
->> -		pdn->vf_index = i;
->> +		vpdn->vf_index = i;
->> +		vpdn->vendor_id = pdn->vendor_id;
->> +		vpdn->device_id = pdn->device_id;
->> +		vpdn->class_code = pdn->class_code;
->> +		vpdn->pci_ext_config_space = 0;
->>  
->>  #ifdef CONFIG_EEH
->>  		/* Create the EEH device for the VF */
->> -		edev = eeh_dev_init(pdn);
->> +		edev = eeh_dev_init(vpdn);
->>  		BUG_ON(!edev);
->>  		edev->physfn = pdev;
->>  #endif /* CONFIG_EEH */
->>  	}
->>  #endif /* CONFIG_PCI_IOV */
->>  
->> -	return pci_get_pdn(pdev);
->> +	return pdn;
->>  }
->>  
->> -void remove_dev_pci_data(struct pci_dev *pdev)
->> +void pci_destroy_vf_pdns(struct pci_dev *pdev)
->>  {
->>  #ifdef CONFIG_PCI_IOV
->>  	struct pci_dn *parent;
->> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->> index ed500f51d449..979c901535f2 100644
->> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
->> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->> @@ -1720,14 +1720,14 @@ int pnv_pcibios_sriov_disable(struct pci_dev *pdev)
->>  	pnv_pci_sriov_disable(pdev);
->>  
->>  	/* Release PCI data */
->> -	remove_dev_pci_data(pdev);
->> +	pci_destroy_vf_pdns(pdev);
->>  	return 0;
->>  }
->>  
->>  int pnv_pcibios_sriov_enable(struct pci_dev *pdev, u16 num_vfs)
->>  {
->>  	/* Allocate PCI data */
->> -	add_dev_pci_data(pdev);
->> +	pci_create_vf_pdns(pdev, num_vfs);
->>  
->>  	return pnv_pci_sriov_enable(pdev, num_vfs);
->>  }
->> diff --git a/arch/powerpc/platforms/pseries/pci.c b/arch/powerpc/platforms/pseries/pci.c
->> index 37a77e57893e..5e87596903a6 100644
->> --- a/arch/powerpc/platforms/pseries/pci.c
->> +++ b/arch/powerpc/platforms/pseries/pci.c
->> @@ -205,7 +205,7 @@ int pseries_pci_sriov_enable(struct pci_dev *pdev, u16 num_vfs)
->>  int pseries_pcibios_sriov_enable(struct pci_dev *pdev, u16 num_vfs)
->>  {
->>  	/* Allocate PCI data */
->> -	add_dev_pci_data(pdev);
->> +	pci_create_vf_pdns(pdev, num_vfs);
->>  	return pseries_pci_sriov_enable(pdev, num_vfs);
->>  }
->>  
->> @@ -217,7 +217,7 @@ int pseries_pcibios_sriov_disable(struct pci_dev *pdev)
->>  	/* Releasing pe_num_map */
->>  	kfree(pdn->pe_num_map);
->>  	/* Release PCI data */
->> -	remove_dev_pci_data(pdev);
->> +	pci_destroy_vf_pdns(pdev);
->>  	pci_vf_drivers_autoprobe(pdev, true);
->>  	return 0;
->>  }
+> > -*) PCI_ENDPOINT_TEST_IRQ_NUMBER
+> > +* PCI_ENDPOINT_TEST_IRQ_NUMBER
+> >  
+> >  This register contains the triggered ID interrupt.
+> >  
+> >  Admissible values:
+> > +
+> >   - Legacy	: 0
+> >   - MSI		: [1 .. 32]
+> >   - MSI-X	: [1 .. 2048]
 > 
+> 
+> 
+> Thanks,
+> Mauro
+
+-- 
+Cheers,
+Changbin Du
