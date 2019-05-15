@@ -2,97 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D96C01E9C3
-	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2019 10:05:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66C5E1F61A
+	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2019 15:59:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725937AbfEOIFh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 May 2019 04:05:37 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:39781 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfEOIFh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 May 2019 04:05:37 -0400
-Received: by mail-qk1-f195.google.com with SMTP id z128so931249qkb.6;
-        Wed, 15 May 2019 01:05:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q+ccq2l1YBXRacKh6NL0gv9RFQ3XL6hLCYeRFYOlzPA=;
-        b=UkS/ONOvFGrWAFYD7mnzpauai+AHYBQQNKgOY6g1o8HWGrHG/GAxTmksYfT4sWpuCv
-         iUn6l9lORkUYBNkn2uPo5Yq8LnHw+Mbm2Ynpi4SELKCj/YyTlAoVa3wWlg1vN2IBQ+29
-         4zqKXtDQES5LnLIfV1k4eE4Siq50D7iXV7kDzG8CzGk95OwkQMlLPls6XT/zIJGjsM7w
-         x46DkBZU8V7qXP/CqHrD5meO8RK1l+GWc6IjjDdjNTAwRre/AFg94GLbFM1Nflxf3+4Y
-         CtmlCwpeZuzoXEoh+h8drBZTwvgwM7XjBMk9t0ITcf9cwNSMEHM6abpIdX7SXDysDFpp
-         yr0w==
-X-Gm-Message-State: APjAAAWoYwZlGzDI+cTHGvfiGrPDuYfYHZyEtDH2cF27ZfaBBmkReu0R
-        9wUC+qJw+5U0T28iVvsHe5CRu9DXzeIstOagVCs=
-X-Google-Smtp-Source: APXvYqyIH5XViMS1a+4nEhLjKpZlbMQT/F6wM51bbNHL491ybxO9CDxjXoTFt4avIv9Jz3PVxDBDwzIn6dZ25APRqtI=
-X-Received: by 2002:a37:c441:: with SMTP id h1mr5276612qkm.291.1557907536423;
- Wed, 15 May 2019 01:05:36 -0700 (PDT)
+        id S1726739AbfEON7i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 May 2019 09:59:38 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45026 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725953AbfEON7h (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 May 2019 09:59:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7000D374;
+        Wed, 15 May 2019 06:59:37 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C2E33F5AF;
+        Wed, 15 May 2019 06:59:36 -0700 (PDT)
+Date:   Wed, 15 May 2019 14:59:33 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Ley Foon Tan <lftan.linux@gmail.com>
+Cc:     Ley Foon Tan <ley.foon.tan@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH] PCI: altera-msi: Allow building as module
+Message-ID: <20190515135933.GB30985@e121166-lin.cambridge.arm.com>
+References: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
+ <1556081835-12921-2-git-send-email-ley.foon.tan@intel.com>
+ <CAFiDJ59Pi6fxyE=0ifNJRoGc4QBX3XKJ=L7FXjJ_a6Vyh8otMg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190515072747.39941-1-xiaowei.bao@nxp.com> <20190515072747.39941-2-xiaowei.bao@nxp.com>
-In-Reply-To: <20190515072747.39941-2-xiaowei.bao@nxp.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 15 May 2019 10:05:19 +0200
-Message-ID: <CAK8P3a3AXRp_v_7hkoJA28tUCiSh1eYzbk4Q4h29OqL6y-KL8A@mail.gmail.com>
-Subject: Re: [PATCH 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
-        Kishon <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        gregkh <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFiDJ59Pi6fxyE=0ifNJRoGc4QBX3XKJ=L7FXjJ_a6Vyh8otMg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 15, 2019 at 9:36 AM Xiaowei Bao <xiaowei.bao@nxp.com> wrote:
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   52 ++++++++++++++++++++++++
->  1 files changed, 52 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index b045812..50b579b 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -398,6 +398,58 @@
->                         status = "disabled";
->                 };
->
-> +               pcie@3400000 {
-> +                       compatible = "fsl,ls1028a-pcie";
-> +                       reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
-> +                              0x80 0x00000000 0x0 0x00002000>; /* configuration space */
-> +                       reg-names = "regs", "config";
-> +                       interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-> +                                    <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
-> +                       interrupt-names = "pme", "aer";
-> +                       #address-cells = <3>;
-> +                       #size-cells = <2>;
-> +                       device_type = "pci";
-> +                       dma-coherent;
-> +                       num-lanes = <4>;
-> +                       bus-range = <0x0 0xff>;
-> +                       ranges = <0x81000000 0x0 0x00000000 0x80 0x00010000 0x0 0x00010000   /* downstream I/O */
-> +                                 0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
+On Tue, May 14, 2019 at 01:35:20PM +0800, Ley Foon Tan wrote:
+> On Wed, Apr 24, 2019 at 12:57 PM Ley Foon Tan <ley.foon.tan@intel.com> wrote:
+> >
+> > Altera MSI IP is a soft IP and is only available after
+> > FPGA image is programmed.
+> >
+> > Make driver modulable to support use case FPGA image is programmed
+> > after kernel is booted. User proram FPGA image in kernel then only load
+> > MSI driver module.
+> >
+> > Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
+> > ---
+> >  drivers/pci/controller/Kconfig           |  2 +-
+> >  drivers/pci/controller/pcie-altera-msi.c | 10 ++++++++++
+> >  2 files changed, 11 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> > index 4b550f9cdd56..920546cb84e2 100644
+> > --- a/drivers/pci/controller/Kconfig
+> > +++ b/drivers/pci/controller/Kconfig
+> > @@ -181,7 +181,7 @@ config PCIE_ALTERA
+> >           FPGA.
+> >
+> >  config PCIE_ALTERA_MSI
+> > -       bool "Altera PCIe MSI feature"
+> > +       tristate "Altera PCIe MSI feature"
+> >         depends on PCIE_ALTERA
+> >         depends on PCI_MSI_IRQ_DOMAIN
+> >         help
+> > diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
+> > index 025ef7d9a046..16d938920ca5 100644
+> > --- a/drivers/pci/controller/pcie-altera-msi.c
+> > +++ b/drivers/pci/controller/pcie-altera-msi.c
+> > @@ -10,6 +10,7 @@
+> >  #include <linux/interrupt.h>
+> >  #include <linux/irqchip/chained_irq.h>
+> >  #include <linux/init.h>
+> > +#include <linux/module.h>
+> >  #include <linux/msi.h>
+> >  #include <linux/of_address.h>
+> >  #include <linux/of_irq.h>
+> > @@ -288,4 +289,13 @@ static int __init altera_msi_init(void)
+> >  {
+> >         return platform_driver_register(&altera_msi_driver);
+> >  }
+> > +
+> > +static void __exit altera_msi_exit(void)
+> > +{
+> > +       platform_driver_unregister(&altera_msi_driver);
+> > +}
+> > +
+> >  subsys_initcall(altera_msi_init);
+> > +MODULE_DEVICE_TABLE(of, altera_msi_of_match);
+> > +module_exit(altera_msi_exit);
+> > +MODULE_LICENSE("GPL v2");
+> > --
+> > 2.19.0
+> >
+> Hi
+> 
+> Any comment for this patch?
 
-Are you sure there is no support for 64-bit BARs or prefetchable memory?
+I will get to these patches for the next merge window, thanks.
 
-Is this a hardware bug, or something that can be fixed in firmware?
-
-       Arnd
+Lorenzo
