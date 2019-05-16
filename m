@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 03E83205BA
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2019 13:58:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD367205D9
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2019 13:58:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727493AbfEPLjy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 May 2019 07:39:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47936 "EHLO mail.kernel.org"
+        id S1727856AbfEPLko (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 May 2019 07:40:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727485AbfEPLjx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 May 2019 07:39:53 -0400
+        id S1727853AbfEPLkn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 May 2019 07:40:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3DDC2089E;
-        Thu, 16 May 2019 11:39:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A87AD20833;
+        Thu, 16 May 2019 11:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006793;
-        bh=Anoh9xdY8HHEQE8H4Fo0vsBCQwnkQmV1/a4MRT0gwvQ=;
+        s=default; t=1558006843;
+        bh=r7nnwI+HvDXg+ImLSt4ZAXpJMRrhBsAaw98ka5+lgnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gJyDzA8kqkIDRSAgpNYICpmSEzotW27o2BujG6J/zHT87+quKLJzS/fHmSMipofFn
-         5omzhgj+BJJHSWnzvdQJ1q2LBpUedCMDPhDcP7c+tWUUT+EYAv8GfaTFA3xB4YNhp1
-         xYvJv1Qxy5thBlnRlUcG1vtxIGmn5zbYc23GLU14=
+        b=WgtrNL7LwicreP2tQTMZaeGnKVifE5IxkmWA6gq0EPt3Pmj7oA3ALC7R2NHAXJvHh
+         Ohei5/CC7/CF7Ad7iMf3rZ7upVy4bDU1Jk6PgdxW+Can/UVlefQ26yHb8z7LD4Owhc
+         PvJL2pupaChMtUE4nfQrrjgHqSPK9XofSgCMrBmo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Logan Gunthorpe <logang@deltatee.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 16/34] PCI: Fix issue with "pci=disable_acs_redir" parameter being ignored
-Date:   Thu, 16 May 2019 07:39:13 -0400
-Message-Id: <20190516113932.8348-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 12/25] PCI: Fix issue with "pci=disable_acs_redir" parameter being ignored
+Date:   Thu, 16 May 2019 07:40:15 -0400
+Message-Id: <20190516114029.8682-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190516113932.8348-1-sashal@kernel.org>
-References: <20190516113932.8348-1-sashal@kernel.org>
+In-Reply-To: <20190516114029.8682-1-sashal@kernel.org>
+References: <20190516114029.8682-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -65,10 +65,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 17 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e91005d0f20c7..3f77bab698ced 100644
+index 30649addc6252..61f2ef28ea1c7 100644
 --- a/drivers/pci/pci.c
 +++ b/drivers/pci/pci.c
-@@ -6266,8 +6266,7 @@ static int __init pci_setup(char *str)
+@@ -6135,8 +6135,7 @@ static int __init pci_setup(char *str)
  			} else if (!strncmp(str, "pcie_scan_all", 13)) {
  				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
  			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
@@ -78,7 +78,7 @@ index e91005d0f20c7..3f77bab698ced 100644
  			} else {
  				printk(KERN_ERR "PCI: Unknown option `%s'\n",
  						str);
-@@ -6278,3 +6277,19 @@ static int __init pci_setup(char *str)
+@@ -6147,3 +6146,19 @@ static int __init pci_setup(char *str)
  	return 0;
  }
  early_param("pci", pci_setup);
