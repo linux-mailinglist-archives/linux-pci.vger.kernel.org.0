@@ -2,102 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD367205D9
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2019 13:58:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D653B207BF
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2019 15:13:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbfEPLko (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 May 2019 07:40:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49120 "EHLO mail.kernel.org"
+        id S1727386AbfEPNNA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 May 2019 09:13:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727853AbfEPLkn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 May 2019 07:40:43 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726703AbfEPNNA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 May 2019 09:13:00 -0400
+Received: from localhost (50-82-73-190.client.mchsi.com [50.82.73.190])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A87AD20833;
-        Thu, 16 May 2019 11:40:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79C2C20848;
+        Thu, 16 May 2019 13:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006843;
-        bh=r7nnwI+HvDXg+ImLSt4ZAXpJMRrhBsAaw98ka5+lgnw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WgtrNL7LwicreP2tQTMZaeGnKVifE5IxkmWA6gq0EPt3Pmj7oA3ALC7R2NHAXJvHh
-         Ohei5/CC7/CF7Ad7iMf3rZ7upVy4bDU1Jk6PgdxW+Can/UVlefQ26yHb8z7LD4Owhc
-         PvJL2pupaChMtUE4nfQrrjgHqSPK9XofSgCMrBmo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/25] PCI: Fix issue with "pci=disable_acs_redir" parameter being ignored
-Date:   Thu, 16 May 2019 07:40:15 -0400
-Message-Id: <20190516114029.8682-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190516114029.8682-1-sashal@kernel.org>
-References: <20190516114029.8682-1-sashal@kernel.org>
+        s=default; t=1558012379;
+        bh=ZtQao7hvDrKa3RULUBUe6l06x0fudhcp2vfY9dv/TwA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R74n4upAT6jcFRwHCLqrGU91b4HuDhe6V+oMHyK2HgGs7zE6CGHrz9W2qM/iAl0rN
+         2A7cECUDsaf8EriTHBNsDAo0iNh0xXbWQ2crDRTP+DlUH/sKtKA6ltWxUJ9MekxL2W
+         jzzuQhwSiPmnlurXuRopKEq8UCgRjXm1//zmVeXQ=
+Date:   Thu, 16 May 2019 08:12:57 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V4 00/28] Enable Tegra PCIe root port features
+Message-ID: <20190516131257.GA101793@google.com>
+References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+On Thu, May 16, 2019 at 11:22:39AM +0530, Manikanta Maddireddy wrote:
+> This series of patches adds,
+> - Tegra root port features like Gen2, AER, etc
+> - Power and perf optimizations
+> - Fixes like "power up sequence", "dev_err prints", etc
 
-[ Upstream commit d5bc73f34cc97c4b4b9202cc93182c2515076edf ]
+Please:
 
-In most cases, kmalloc() will not be available early in boot when
-pci_setup() is called.  Thus, the kstrdup() call that was added to fix the
-__initdata bug with the disable_acs_redir parameter usually returns NULL,
-so the parameter is discarded and has no effect.
+  1) Put the brakes on.  You posted v3 of these 30 patches on May 13
+     and v4 on May 16.  There's no hurry; the merge window is still
+     open and nothing will be added to -next until at least next week.
+     If you space these out a little, people will have time to digest
+     them.
 
-To fix this, store the string that's in initdata until an initcall function
-can allocate the memory appropriately.  This way we don't need any
-additional static memory.
+  2) Mention in the cover letter what changed between v3 and v4 so
+     people know where to spend their effort.
 
-Fixes: d2fd6e81912a ("PCI: Fix __initdata issue with "pci=disable_acs_redir" parameter")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/pci.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 30649addc6252..61f2ef28ea1c7 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6135,8 +6135,7 @@ static int __init pci_setup(char *str)
- 			} else if (!strncmp(str, "pcie_scan_all", 13)) {
- 				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
- 			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
--				disable_acs_redir_param =
--					kstrdup(str + 18, GFP_KERNEL);
-+				disable_acs_redir_param = str + 18;
- 			} else {
- 				printk(KERN_ERR "PCI: Unknown option `%s'\n",
- 						str);
-@@ -6147,3 +6146,19 @@ static int __init pci_setup(char *str)
- 	return 0;
- }
- early_param("pci", pci_setup);
-+
-+/*
-+ * 'disable_acs_redir_param' is initialized in pci_setup(), above, to point
-+ * to data in the __initdata section which will be freed after the init
-+ * sequence is complete. We can't allocate memory in pci_setup() because some
-+ * architectures do not have any memory allocation service available during
-+ * an early_param() call. So we allocate memory and copy the variable here
-+ * before the init section is freed.
-+ */
-+static int __init pci_realloc_setup_params(void)
-+{
-+	disable_acs_redir_param = kstrdup(disable_acs_redir_param, GFP_KERNEL);
-+
-+	return 0;
-+}
-+pure_initcall(pci_realloc_setup_params);
--- 
-2.20.1
-
+> This series of patches are tested on Tegra186 based Jetson-TX2, Tegra210
+> based Jetson-TX1, T124 based Jetson-TK1 platforms, Tegra20 and Tegra30
+> platforms.
+> 
+> Manikanta Maddireddy (28):
+>   soc/tegra: pmc: Export tegra_powergate_power_on()
+>   PCI: tegra: Handle failure cases in tegra_pcie_power_on()
+>   PCI: tegra: Rearrange Tegra PCIe driver functions
+>   PCI: tegra: Mask AFI_INTR in runtime suspend
+>   PCI: tegra: Fix PCIe host power up sequence
+>   PCI: tegra: Add PCIe Gen2 link speed support
+>   PCI: tegra: Advertise PCIe Advanced Error Reporting (AER) capability
+>   PCI: tegra: Program UPHY electrical settings for Tegra210
+>   PCI: tegra: Enable opportunistic UpdateFC and ACK
+>   PCI: tegra: Disable AFI dynamic clock gating
+>   PCI: tegra: Process pending DLL transactions before entering L1 or L2
+>   PCI: tegra: Enable PCIe xclk clock clamping
+>   PCI: tegra: Increase the deskew retry time
+>   PCI: tegra: Add SW fixup for RAW violations
+>   PCI: tegra: Update flow control timer frequency in Tegra210
+>   PCI: tegra: Set target speed as Gen1 before starting LTSSM
+>   PCI: tegra: Fix PLLE power down issue due to CLKREQ# signal
+>   PCI: tegra: Program AFI_CACHE* registers only for Tegra20
+>   PCI: tegra: Change PRSNT_SENSE IRQ log to debug
+>   PCI: tegra: Use legacy IRQ for port service drivers
+>   PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of soc struct
+>   PCI: tegra: Access endpoint config only if PCIe link is up
+>   dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
+>   arm64: tegra: Add PEX DPD states as pinctrl properties
+>   PCI: tegra: Put PEX CLK & BIAS pads in DPD mode
+>   PCI: Add DT binding for "reset-gpios" property
+>   PCI: tegra: Add support for GPIO based PERST#
+>   PCI: tegra: Change link retry log level to debug
+> 
+>  .../bindings/pci/nvidia,tegra20-pcie.txt      |   8 +
+>  Documentation/devicetree/bindings/pci/pci.txt |   3 +
+>  arch/arm64/boot/dts/nvidia/tegra210.dtsi      |  19 +
+>  drivers/pci/controller/pci-tegra.c            | 615 +++++++++++++++---
+>  drivers/soc/tegra/pmc.c                       |   1 +
+>  5 files changed, 566 insertions(+), 80 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
