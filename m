@@ -2,28 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29EA31FEE6
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2019 07:53:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BEB01FEE9
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2019 07:53:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbfEPFxQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 May 2019 01:53:16 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:19723 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbfEPFxP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 May 2019 01:53:15 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cdcfaa10000>; Wed, 15 May 2019 22:52:33 -0700
+        id S1726352AbfEPFxT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 May 2019 01:53:19 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:8888 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbfEPFxT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 May 2019 01:53:19 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cdcfad50000>; Wed, 15 May 2019 22:53:25 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 15 May 2019 22:53:14 -0700
+  Wed, 15 May 2019 22:53:18 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 15 May 2019 22:53:14 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 May
- 2019 05:53:14 +0000
+        by hqpgpgate101.nvidia.com on Wed, 15 May 2019 22:53:18 -0700
+Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 May
+ 2019 05:53:18 +0000
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by hqmail110.nvidia.com
+ (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 May
+ 2019 05:53:17 +0000
 Received: from manikanta-bm2.nvidia.com (10.124.1.5) by HQMAIL101.nvidia.com
  (172.20.187.10) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
- Transport; Thu, 16 May 2019 05:53:11 +0000
+ Transport; Thu, 16 May 2019 05:53:14 +0000
 From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
 To:     <thierry.reding@gmail.com>, <bhelgaas@google.com>,
         <robh+dt@kernel.org>, <mark.rutland@arm.com>,
@@ -32,74 +35,63 @@ To:     <thierry.reding@gmail.com>, <bhelgaas@google.com>,
 CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <devicetree@vger.kernel.org>,
         Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V4 00/28] Enable Tegra PCIe root port features
-Date:   Thu, 16 May 2019 11:22:39 +0530
-Message-ID: <20190516055307.25737-1-mmaddireddy@nvidia.com>
+Subject: [PATCH V4 01/28] soc/tegra: pmc: Export tegra_powergate_power_on()
+Date:   Thu, 16 May 2019 11:22:40 +0530
+Message-ID: <20190516055307.25737-2-mmaddireddy@nvidia.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
+References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
 X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557985953; bh=hAuYDUXZ1q9af++JkNxJ4RQxWEZz+pn39ijht/uOncw=;
+        t=1557986005; bh=6APKzMSZRpzI1awpaf9edpQ8Rcrz4hkmGWWPwPTktdk=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=iI4p71F+JiF6ogYKDvXX9ssTZibb40kjSplzG1fVms7JM0UynJFPbs5eM0SONosCX
-         R28s4m2Hy0PL0ZP42kOfUuqgVYtM8QMgMO88Qd1RZTRjsNviRcgat9ikBFYPWsewrc
-         fWWkSkUjdcwKogfo8CbGILB+97LrCYAcIHW+rQkM8mtIsMlYRoSwKQ7YsLkggaSVs3
-         o1NPrFd+B0NuNIAY0MA11/gPZmGbVw+W+fzXcV4LJTPWISWPb19vN/upKNP2/L3UZj
-         owZrJhgHmvcCkfPktgfQeQZzsVpoVOkKtUkhlf7daw7VPUcOuwEagL+WndNEYKbfk5
-         YCC47BL+jNMCg==
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=dw6mLKUDSa74uIQTQZVvY4ugHeJHQW209hnP6Jt/c8eAtQgNnDNuBlZV5AeEJpdK5
+         iEhN6gfYYEL1RI9xtzEqfxW5esMtRf2wPukPhPq/n/jZW57xej0wZCRKhTfHcWymkw
+         4CZ10hQe5oCryA7+IUo75RZ94SRYK2Z7BunNUTRx+zlmsXzOtUpQ77Fb0TWR+FcDvs
+         ZUZWY++h9YnUFMVefAFG8UY1cnsSJuy19EOSsNwBlsTRm04078j0waysaa+3Gg5XaM
+         GCtDwwusAutrzP4HC3t2ym18oLivvPsF5QgOric/0T9r4ADpiHP5npywM79s+V8BC9
+         Mx8G0376A8qVw==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This series of patches adds,
-- Tegra root port features like Gen2, AER, etc
-- Power and perf optimizations
-- Fixes like "power up sequence", "dev_err prints", etc
+tegra_powergate_sequence_power_up() powers up partition and also enables
+clock & reset. However, if a controller like PCIe have multiple clocks
+& resets and they need to be enabled in a sequence, driver must use
+standalone function tegra_powergate_power_on() to power up partition.
 
-This series of patches are tested on Tegra186 based Jetson-TX2, Tegra210
-based Jetson-TX1, T124 based Jetson-TK1 platforms, Tegra20 and Tegra30
-platforms.
+Export tegra_powergate_power_on() to allow Tegra controller drivers to
+unpower gate partition independent to clock & reset.
 
-Manikanta Maddireddy (28):
-  soc/tegra: pmc: Export tegra_powergate_power_on()
-  PCI: tegra: Handle failure cases in tegra_pcie_power_on()
-  PCI: tegra: Rearrange Tegra PCIe driver functions
-  PCI: tegra: Mask AFI_INTR in runtime suspend
-  PCI: tegra: Fix PCIe host power up sequence
-  PCI: tegra: Add PCIe Gen2 link speed support
-  PCI: tegra: Advertise PCIe Advanced Error Reporting (AER) capability
-  PCI: tegra: Program UPHY electrical settings for Tegra210
-  PCI: tegra: Enable opportunistic UpdateFC and ACK
-  PCI: tegra: Disable AFI dynamic clock gating
-  PCI: tegra: Process pending DLL transactions before entering L1 or L2
-  PCI: tegra: Enable PCIe xclk clock clamping
-  PCI: tegra: Increase the deskew retry time
-  PCI: tegra: Add SW fixup for RAW violations
-  PCI: tegra: Update flow control timer frequency in Tegra210
-  PCI: tegra: Set target speed as Gen1 before starting LTSSM
-  PCI: tegra: Fix PLLE power down issue due to CLKREQ# signal
-  PCI: tegra: Program AFI_CACHE* registers only for Tegra20
-  PCI: tegra: Change PRSNT_SENSE IRQ log to debug
-  PCI: tegra: Use legacy IRQ for port service drivers
-  PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of soc struct
-  PCI: tegra: Access endpoint config only if PCIe link is up
-  dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
-  arm64: tegra: Add PEX DPD states as pinctrl properties
-  PCI: tegra: Put PEX CLK & BIAS pads in DPD mode
-  PCI: Add DT binding for "reset-gpios" property
-  PCI: tegra: Add support for GPIO based PERST#
-  PCI: tegra: Change link retry log level to debug
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+---
+V4: No change
 
- .../bindings/pci/nvidia,tegra20-pcie.txt      |   8 +
- Documentation/devicetree/bindings/pci/pci.txt |   3 +
- arch/arm64/boot/dts/nvidia/tegra210.dtsi      |  19 +
- drivers/pci/controller/pci-tegra.c            | 615 +++++++++++++++---
- drivers/soc/tegra/pmc.c                       |   1 +
- 5 files changed, 566 insertions(+), 80 deletions(-)
+V3: No change
 
+V2: No change
+
+ drivers/soc/tegra/pmc.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+index 0c5f79528e5f..cb3de81348bd 100644
+--- a/drivers/soc/tegra/pmc.c
++++ b/drivers/soc/tegra/pmc.c
+@@ -701,6 +701,7 @@ int tegra_powergate_power_on(unsigned int id)
+ 
+ 	return tegra_powergate_set(pmc, id, true);
+ }
++EXPORT_SYMBOL(tegra_powergate_power_on);
+ 
+ /**
+  * tegra_powergate_power_off() - power off partition
 -- 
 2.17.1
 
