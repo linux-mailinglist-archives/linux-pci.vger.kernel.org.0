@@ -2,31 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AAA91FF1F
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2019 07:54:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89EBC1FF22
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2019 07:54:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbfEPFyX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 May 2019 01:54:23 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:15072 "EHLO
+        id S1726578AbfEPFy0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 May 2019 01:54:26 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:15080 "EHLO
         hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbfEPFyX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 May 2019 01:54:23 -0400
+        with ESMTP id S1726277AbfEPFy0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 May 2019 01:54:26 -0400
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cdcfb0a0000>; Wed, 15 May 2019 22:54:18 -0700
+        id <B5cdcfb0d0000>; Wed, 15 May 2019 22:54:21 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 15 May 2019 22:54:22 -0700
+  Wed, 15 May 2019 22:54:25 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 15 May 2019 22:54:22 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 May
- 2019 05:54:21 +0000
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 May
- 2019 05:54:21 +0000
+        by hqpgpgate101.nvidia.com on Wed, 15 May 2019 22:54:25 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 May
+ 2019 05:54:25 +0000
 Received: from manikanta-bm2.nvidia.com (10.124.1.5) by HQMAIL101.nvidia.com
  (172.20.187.10) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
- Transport; Thu, 16 May 2019 05:54:18 +0000
+ Transport; Thu, 16 May 2019 05:54:22 +0000
 From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
 To:     <thierry.reding@gmail.com>, <bhelgaas@google.com>,
         <robh+dt@kernel.org>, <mark.rutland@arm.com>,
@@ -35,9 +32,9 @@ To:     <thierry.reding@gmail.com>, <bhelgaas@google.com>,
 CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <devicetree@vger.kernel.org>,
         Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V4 19/28] PCI: tegra: Change PRSNT_SENSE IRQ log to debug
-Date:   Thu, 16 May 2019 11:22:58 +0530
-Message-ID: <20190516055307.25737-20-mmaddireddy@nvidia.com>
+Subject: [PATCH V4 20/28] PCI: tegra: Use legacy IRQ for port service drivers
+Date:   Thu, 16 May 2019 11:22:59 +0530
+Message-ID: <20190516055307.25737-21-mmaddireddy@nvidia.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
 References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
@@ -45,52 +42,70 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557986058; bh=pEGwObITWv0uVkupSvmM1RZYJLFffjd5Al7GJ/gSh/s=;
+        t=1557986061; bh=dPCOd5yuVmrp2ii5aVlnL0dVYLKhSLCb6C4CmS+O4+M=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=N1RwPL97n89CzZHgPelf1U5jFA1syzrGpw3G21558/OooMzCCEUCZ+shMeTag9/as
-         faQaJ8BHoWZq3cV+grMWAueqcNc5LAL8Nrum6KixnFAYwrw/yLAOk0uLUqVu61x9rJ
-         NPjObLDd5+p/Hre4O2uzXmALw3uHxoZyAxQ7grDWmwx6OhUDBtsDr31mRBnu1qR+I4
-         gJqnqM23aggQZ1OIbP16jIAS6yUX/Xle+V2edTPxoCZWXYhe5BvvoJEe0YDrwaLtkM
-         XwSBckbASRq9aw1ntQSFnVJNu8Lznk3WGeUAlRHHGqOINZrJMPnLleZ45brTL3+D9I
-         R0wNh8fP34G6g==
+        b=UNzm7PNoNQ/Uj1mM0amLoaFgdTcK2zZ/fLpPeuPWBEZpVjZVxnbCkA5iBbeDgI5u+
+         W0oplADffW6W3eacDXEXT1LUT82V6L7QfvcdDBGAF80XELcgQcq5lQR9SZIUEjJnv8
+         kzpHubEi3YqlO28DTI7Vl4WH1axfEoS88nLx8CAFts+Mmu7Cn8NOAVnn39+MjuuQ4M
+         IV5PA84e7xr9g9DMJ414XDU3H/FvB3TeIHqkg3ycmhDpFaEotx/G9rOvLux7Qb/VPD
+         NEIQSU07sibALmbgN/ZX9ejtRQgpgy5vKce1/dj7pgxWQWw7h14VreV1n7OPZx3Pml
+         o4f8vhIh54Pgg==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PRSNT_MAP bit field is programmed to update the slot present status.
-PRSNT_SENSE IRQ is triggered when this bit field is programmed, which is
-not an error. Add a new if condition to trap PRSNT_SENSE code and print it
-with debug log level.
+Tegra signals PCIe services like AER, PME, etc. over legacy IRQ line.
+By default, service drivers register interrupt routine over MSI IRQ line.
+Use pcie_pme_disable_msi() function to disable MSI for service drivers.
+
+PME and AER interrupts registered to MSI without this change,
+cat /proc/interrupts | grep -i pci
+36: 21 0 0 0 0 0 GICv2 104 Level       PCIE
+37: 35 0 0 0 0 0 GICv2 105 Level       Tegra PCIe MSI
+76: 0  0 0 0 0 0 Tegra PCIe MSI 0 Edge PCIe PME, aerdrv, PCIe BW notif
+
+PME and AER interrupts registered to legacy IRQ with this change,
+cat /proc/interrupts | grep -i pci
+36: 33 0 0 0 0 0 GICv2 104 Level      PCIE, PCIe PME, aerdrv, PCIe BW notif
+37: 52 0 0 0 0 0 GICv2 105 Level      Tegra PCIe MSI
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 Acked-by: Thierry Reding <treding@nvidia.com>
 ---
 V4: No change
 
-V3: Correct typos in commit log
+V3: Corrected typo in commit log
 
-V2: If-else to switch-case conversion patch is dropped, this patch is
-rebased to stay with if-else statements
+V2: No change
 
- drivers/pci/controller/pci-tegra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/pci-tegra.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 0f02f54f8a61..ac57c5badd9b 100644
+index ac57c5badd9b..0024bc42b400 100644
 --- a/drivers/pci/controller/pci-tegra.c
 +++ b/drivers/pci/controller/pci-tegra.c
-@@ -864,7 +864,7 @@ static irqreturn_t tegra_pcie_isr(int irq, void *arg)
- 	 * do not pollute kernel log with master abort reports since they
- 	 * happen a lot during enumeration
- 	 */
--	if (code == AFI_INTR_MASTER_ABORT)
-+	if (code == AFI_INTR_MASTER_ABORT || code == AFI_INTR_PE_PRSNT_SENSE)
- 		dev_dbg(dev, "%s, signature: %08x\n", err_msg[code], signature);
- 	else
- 		dev_err(dev, "%s, signature: %08x\n", err_msg[code], signature);
+@@ -41,6 +41,7 @@
+ #include <soc/tegra/pmc.h>
+ 
+ #include "../pci.h"
++#include "../pcie/portdrv.h"
+ 
+ #define INT_PCI_MSI_NR (8 * 32)
+ 
+@@ -2725,6 +2726,9 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+ 		goto put_resources;
+ 	}
+ 
++	/* Switch to legacy IRQ for PCIe services like AER, PME*/
++	pcie_pme_disable_msi();
++
+ 	pm_runtime_enable(pcie->dev);
+ 	err = pm_runtime_get_sync(pcie->dev);
+ 	if (err) {
 -- 
 2.17.1
 
