@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CABE1FF10
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2019 07:54:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C2561FF12
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2019 07:54:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbfEPFyG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 May 2019 01:54:06 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:8950 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbfEPFyG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 May 2019 01:54:06 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cdcfb020000>; Wed, 15 May 2019 22:54:10 -0700
+        id S1726618AbfEPFyI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 May 2019 01:54:08 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:19784 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbfEPFyI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 May 2019 01:54:08 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cdcfad60001>; Wed, 15 May 2019 22:53:26 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 15 May 2019 22:54:03 -0700
+  Wed, 15 May 2019 22:54:07 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 15 May 2019 22:54:03 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 May
- 2019 05:54:02 +0000
+        by hqpgpgate101.nvidia.com on Wed, 15 May 2019 22:54:07 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL103.nvidia.com
+ (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 May
+ 2019 05:54:06 +0000
 Received: from manikanta-bm2.nvidia.com (10.124.1.5) by HQMAIL101.nvidia.com
  (172.20.187.10) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
- Transport; Thu, 16 May 2019 05:54:00 +0000
+ Transport; Thu, 16 May 2019 05:54:04 +0000
 From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
 To:     <thierry.reding@gmail.com>, <bhelgaas@google.com>,
         <robh+dt@kernel.org>, <mark.rutland@arm.com>,
@@ -32,9 +32,9 @@ To:     <thierry.reding@gmail.com>, <bhelgaas@google.com>,
 CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <devicetree@vger.kernel.org>,
         Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V4 14/28] PCI: tegra: Add SW fixup for RAW violations
-Date:   Thu, 16 May 2019 11:22:53 +0530
-Message-ID: <20190516055307.25737-15-mmaddireddy@nvidia.com>
+Subject: [PATCH V4 15/28] PCI: tegra: Update flow control timer frequency in Tegra210
+Date:   Thu, 16 May 2019 11:22:54 +0530
+Message-ID: <20190516055307.25737-16-mmaddireddy@nvidia.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
 References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
@@ -42,32 +42,27 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557986050; bh=zqmE4t8V19eiI5yziOubUirOMFuETI6kbRcowqoE2Ec=;
+        t=1557986006; bh=eLZrU3bcJVGUHLh91X4YKlhbFb6GQ1A/7Dh8riBypZo=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=AgDIM7MeXcYW7xopddVekkQXvxFganVND9EYE0ez9kPAzcxyRZXUP8oGJXA6fMlfZ
-         G65qlIzNRUXITcfh5ib3JUKEWgbUnusH3IpzTMB8IUR89Q8yYB+UEvklkk/GSz4ndA
-         cDb9l1Q9R1vu6g+Ez0gK7gG6/rooqMyORTTfd2gVnGVQ+lwFv/QMlzxsYADqZXD3tR
-         s5pUNBOw2M92fyP4nKe/6Yl3qgTWOLmWxP16BrErJI/unWgCYtqvl+6KXkBkOf4DuG
-         VtMj1VQAHfI8oh0rj3AuSFXXGCks7rEZQTKpNJXRpMhH56pbNeiYyAKIvPxyRLzZiI
-         SOhSDFHaeS3ZQ==
+        b=R3y4JFtJAzhNHtXEAvIbxlvf5NIlKwTxCbCcNbUTQAenIbBxeQdvXgGrpq8rt47v6
+         it22+zoCWlTfvh/cYZcYyAX3CjIJeDQkMQx6D/P4EUzXg06TkEKLNYqrP4n3ihh5XR
+         A1+RZsaNNIsSWSRNBwCi+tFJq4r7aLS/TGworXnIJSurvkSazmihfRlUC2AP5DKvLR
+         jULDXV8lKEz5ZNJmXc50nCtKvPW0OaH6aG9ijG4VnYmUYK7UhJylT6ZtkGBlYg4Fno
+         qIWB7JqBxi7iYfY+Ccj7JDQAyUopQfBdPIVeau/B+7+vP2q//IDoHITtIawZD0y8Iv
+         4Mt43JwQQWUNg==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The logic which blocks read requests till AFI gets ACK for all outstanding
-writes from memory controller does not behave correctly when number of
-outstanding writes become more than 32 in Tegra124 and Tegra132.
-
-SW fixup is to prevent writes from accumulating more than 32 by,
- - limiting outstanding posted writes to 14
- - modifying Gen1 and Gen2 UpdateFC timer frequency
+Recommended UpdateFC threshold in Tegra210 is 0x60 for best performance
+of x1 link. Setting this to 0x60 provides the best balance between number
+of UpdateFC packets and read data sent over the link.
 
 UpdateFC timer frequency is equal to twice the value of register content
-in nsec. These settings are recommended after stress testing with different
-values.
+in nsec, i.e (2 * 0x60) = 192 nsec.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 Acked-by: Thierry Reding <treding@nvidia.com>
@@ -78,67 +73,27 @@ V3: No change
 
 V2: Changed update_fc_val to update_fc_threshold
 
- drivers/pci/controller/pci-tegra.c | 34 ++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ drivers/pci/controller/pci-tegra.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 9c28f1d9f177..be39f28a7a28 100644
+index be39f28a7a28..16d4d3cba3ff 100644
 --- a/drivers/pci/controller/pci-tegra.c
 +++ b/drivers/pci/controller/pci-tegra.c
-@@ -178,6 +178,13 @@
- 
- #define AFI_PEXBIAS_CTRL_0		0x168
- 
-+#define RP_PRIV_XP_DL		0x00000494
-+#define  RP_PRIV_XP_DL_GEN2_UPD_FC_TSHOLD	(0x1ff << 1)
-+
-+#define RP_RX_HDR_LIMIT		0x00000e00
-+#define  RP_RX_HDR_LIMIT_PW_MASK	(0xff << 8)
-+#define  RP_RX_HDR_LIMIT_PW		(0x0e << 8)
-+
- #define RP_ECTL_2_R1	0x00000e84
- #define  RP_ECTL_2_R1_RX_CTLE_1C_MASK		0xffff
- 
-@@ -208,6 +215,7 @@
- #define  RP_VEND_XP_DL_UP			(1 << 30)
- #define  RP_VEND_XP_OPPORTUNISTIC_ACK		(1 << 27)
- #define  RP_VEND_XP_OPPORTUNISTIC_UPDATEFC	(1 << 28)
-+#define  RP_VEND_XP_UPDATE_FC_THRESHOLD_MASK	(0xff << 18)
- 
- #define RP_VEND_CTL0	0x00000f44
- #define  RP_VEND_CTL0_DSK_RST_PULSE_WIDTH_MASK	(0xf << 12)
-@@ -301,6 +309,7 @@ struct tegra_pcie_soc {
- 	u32 tx_ref_sel;
- 	u32 pads_refclk_cfg0;
- 	u32 pads_refclk_cfg1;
-+	u32 update_fc_threshold;
- 	bool has_pex_clkreq_en;
- 	bool has_pex_bias_ctrl;
- 	bool has_intr_prsnt_sense;
-@@ -310,6 +319,7 @@ struct tegra_pcie_soc {
- 	bool program_uphy;
+@@ -320,6 +320,7 @@ struct tegra_pcie_soc {
  	bool update_clamp_threshold;
  	bool program_deskew_time;
-+	bool raw_violation_fixup;
+ 	bool raw_violation_fixup;
++	bool update_fc_timer;
  	struct {
  		struct {
  			u32 rp_ectl_2_r1;
-@@ -641,6 +651,23 @@ static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
- 		value |= RP_VEND_CTL0_DSK_RST_PULSE_WIDTH;
- 		writel(value, port->base + RP_VEND_CTL0);
+@@ -668,6 +669,13 @@ static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
+ 		value |= soc->update_fc_threshold;
+ 		writel(value, port->base + RP_VEND_XP);
  	}
 +
-+	/* Fixup for read after write violation. */
-+	if (soc->raw_violation_fixup) {
-+		value = readl(port->base + RP_RX_HDR_LIMIT);
-+		value &= ~RP_RX_HDR_LIMIT_PW_MASK;
-+		value |= RP_RX_HDR_LIMIT_PW;
-+		writel(value, port->base + RP_RX_HDR_LIMIT);
-+
-+		value = readl(port->base + RP_PRIV_XP_DL);
-+		value |= RP_PRIV_XP_DL_GEN2_UPD_FC_TSHOLD;
-+		writel(value, port->base + RP_PRIV_XP_DL);
-+
++	if (soc->update_fc_timer) {
 +		value = readl(port->base + RP_VEND_XP);
 +		value &= ~RP_VEND_XP_UPDATE_FC_THRESHOLD_MASK;
 +		value |= soc->update_fc_threshold;
@@ -147,52 +102,52 @@ index 9c28f1d9f177..be39f28a7a28 100644
  }
  
  static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
-@@ -2382,6 +2409,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
- 	.program_uphy = true,
+@@ -2410,6 +2418,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
  	.update_clamp_threshold = false,
  	.program_deskew_time = false,
-+	.raw_violation_fixup = false,
+ 	.raw_violation_fixup = false,
++	.update_fc_timer = false,
  	.ectl.enable = false,
  };
  
-@@ -2408,6 +2436,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
- 	.program_uphy = true,
+@@ -2437,6 +2446,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
  	.update_clamp_threshold = false,
  	.program_deskew_time = false,
-+	.raw_violation_fixup = false,
+ 	.raw_violation_fixup = false,
++	.update_fc_timer = false,
  	.ectl.enable = false,
  };
  
-@@ -2418,6 +2447,8 @@ static const struct tegra_pcie_soc tegra124_pcie = {
+@@ -2459,6 +2469,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
+ 	.update_clamp_threshold = true,
+ 	.program_deskew_time = false,
+ 	.raw_violation_fixup = true,
++	.update_fc_timer = false,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2469,6 +2480,8 @@ static const struct tegra_pcie_soc tegra210_pcie = {
  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
- 	.pads_refclk_cfg0 = 0x44ac44ac,
+ 	.pads_refclk_cfg0 = 0x90b890b8,
 +	/* FC threshold is bit[25:18] */
-+	.update_fc_threshold = 0x03fc0000,
++	.update_fc_threshold = 0x01800000,
  	.has_pex_clkreq_en = true,
  	.has_pex_bias_ctrl = true,
  	.has_intr_prsnt_sense = true,
-@@ -2427,6 +2458,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
- 	.program_uphy = true,
- 	.update_clamp_threshold = true,
- 	.program_deskew_time = false,
-+	.raw_violation_fixup = true,
- 	.ectl.enable = false,
- };
- 
-@@ -2446,6 +2478,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
- 	.program_uphy = true,
+@@ -2479,6 +2492,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
  	.update_clamp_threshold = true,
  	.program_deskew_time = true,
-+	.raw_violation_fixup = false,
+ 	.raw_violation_fixup = false,
++	.update_fc_timer = true,
  	.ectl = {
  		.regs = {
  			.rp_ectl_2_r1 = 0x0000000f,
-@@ -2484,6 +2517,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
- 	.program_uphy = false,
+@@ -2518,6 +2532,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
  	.update_clamp_threshold = false,
  	.program_deskew_time = false,
-+	.raw_violation_fixup = false,
+ 	.raw_violation_fixup = false,
++	.update_fc_timer = false,
  	.ectl.enable = false,
  };
  
