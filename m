@@ -2,147 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CD471FA6B
-	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2019 21:26:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43CF41FDB0
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2019 04:13:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfEOT0Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 May 2019 15:26:25 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40007 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbfEOT0Z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 May 2019 15:26:25 -0400
-Received: by mail-io1-f68.google.com with SMTP id s20so526427ioj.7
-        for <linux-pci@vger.kernel.org>; Wed, 15 May 2019 12:26:24 -0700 (PDT)
+        id S1726270AbfEPCNF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 May 2019 22:13:05 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41011 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfEPCNF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 May 2019 22:13:05 -0400
+Received: by mail-io1-f67.google.com with SMTP id a17so1280692iot.8;
+        Wed, 15 May 2019 19:13:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=GqGY8+LfaCH2Vr4cHFwojZthP1NA2Vgfu6kJrTHfE+A=;
-        b=Ko73wbyLTOjwRmcq8dh8mTCjKeeel/IvkxBE1E81PIJ2MT8Ndvs0+36hePPyf+ecH6
-         6BmTFMOwS0U7h4el7K4+AtklUU1w2dTHILbRvBPYXgOf8cxDEc1XDrQx3vCVSKfN4CFU
-         Ou08/1yP4eaK+Z9A9LbN0/aqgL+/Up8ET1YFnkRXzvQRNd3/2eiPyjBMjYKQX1xl2MKz
-         6Mr7Zhhmy/e+M91MX7Dc4ClUoAIwZE4IwjxnAT+OOr8gvVW6n7J3k4kW+4N8HNVq2V9m
-         gpYvSF24oTju3lH7Jwbre4WFSzC6gGJb+j/8eZLtrsyfZLf44hTGwFo4wfcJHlLWQEhm
-         R2tg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M0BxXB4zPDiOOfyC+NP7YQ7W9WygH1f8j4Ibdj5jSx8=;
+        b=S76E8BnFTqJFfu4hITlNf4d9W8fnZzuEvA185DDima+mNpq308pzJ3COKZlx0J5AOA
+         Os2N/tdsun3xbqzO0VtqpNYCR71Q8NKBWpZdSWN9qZ/K5OhWVjP2Vr+m2bJ5qZaC1jsa
+         XI+CbBrdGuEi6jUEipw8Ihhc/ctiy8WSB9nX/TM6OclzQPdQkMFTYQ20mj1P7b3SuFtx
+         io16V5Zj2rPbRknnTwjvyg5tvPwve/eFqoLN/fL0hwZ57z5h4l6SJ5latqEABdoGuaCx
+         1uOHk8RWuFqI8fwHiygyyUuhcID24gsu8mY46dvZLEN++WMjEGRvldJjLb5cgOEbl15j
+         tZHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=GqGY8+LfaCH2Vr4cHFwojZthP1NA2Vgfu6kJrTHfE+A=;
-        b=rSwX0SjcGMySO8bh6emmivuDwyX7GmL2ncf0G2LZsSN/cPMP7c4rSx+r4RMaAZ4yeB
-         e6HwD2V7zecy4Mo6h5GDPdSQw7qUCMgqo8H/FxawMd9hsLgxdHZG9b9QhgwYNTvfFSqj
-         9zyx4ulOcTyBCnQaDqtsYsFuJfX56f5jXDgSxXWQMfYRIibMiqidMVuQ+E90Vhgykl3h
-         UNQ3oBVK2g0tLlECDBXDTNFtSQ4pEXanjUiyj2VtNuHJuLVZVVAagEKNZD+DB2BJvz1u
-         QINQ0HpSFgBBULbCVWiw52yjK8DXUcrDwNgsK8o9ddYclxz4p9GI+sY/tFH2HJqL7xT5
-         WFBw==
-X-Gm-Message-State: APjAAAVTDHfph/AvsceVOawz3Zf8IHMuPMm4mgC7Bdjf9XSNcPnbt62l
-        QcAZBlk3Z/9PgCSlvIQS7EjtE/+eRt8Uuwyp1eBHt+Yf
-X-Google-Smtp-Source: APXvYqwwCpWdw7PgEjpLD522vmCciFRZnaO1uU6t4k3dMygx3uewtw4644Yk9LH7hSKu9YQ9DF6F3KAXuKjsveP/qII=
-X-Received: by 2002:a6b:5814:: with SMTP id m20mr24590643iob.293.1557948384200;
- Wed, 15 May 2019 12:26:24 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M0BxXB4zPDiOOfyC+NP7YQ7W9WygH1f8j4Ibdj5jSx8=;
+        b=hX9g+MlcHdEY3A44njUHALkH7sJg6+a8DItF9Iq5kRHx15nPLbfiWoYn+irjBgYAK5
+         Q7X0b74m0GBJ+Fm1JEUFWmbY0R0J6y4cWKrWbla4+bOYXO8b7jfw8kjQlW3l8MZyAVgu
+         g8QCE+ZCBNdL71Z6BP8BIvzbW1OzyN63Zxn87Tyna8Kw3+AFIzob49KPcsPuTpume5/M
+         Yi7aBMZEQuqiDdzQyy8K7nc6zIYaFzzaQnCthJeYAcG8q8DjdzZvLGzuIovYsWgyKf9r
+         ZQ2h62+pkBsLNw08UGKTvnuZDAvZRCqJE6WHgfwqcIyARDy7+p6YMQVimCsD9+w1imW/
+         rTfg==
+X-Gm-Message-State: APjAAAVdvGnOQlvnhBPao13I7FfsEfqOnE+G9gwQeOdOXAtO3Q2dGoTN
+        LOuLUkbZ2wWWq3bTmeTOk6/IO0PXuP51I9jqsRw=
+X-Google-Smtp-Source: APXvYqyGzb4bjvcMT/XOKjMi0fgaWNblLuDguikeY9TTnJZwbOxuhHcZ1BRdqU1QMJBVWgJnwJJtH3xGoTQZxCc45tg=
+X-Received: by 2002:a5e:a51a:: with SMTP id 26mr19026953iog.171.1557972783813;
+ Wed, 15 May 2019 19:13:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <bug-203485-193951@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-203485-193951@https.bugzilla.kernel.org/>
-Reply-To: bjorn@helgaas.com
-From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
-Date:   Wed, 15 May 2019 14:26:13 -0500
-Message-ID: <CABhMZUWcS0x+E42T3dqzio72wea32pr2GuULXc=+62T+rLAgmQ@mail.gmail.com>
-Subject: Fwd: [Bug 203485] New: PCI can't map correct memory resource if the
- BAR is 64-bit and then leads to system hang during booting up
-To:     linux-pci@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        AceLan Kao <acelan@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
+References: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
+ <1556081835-12921-2-git-send-email-ley.foon.tan@intel.com>
+ <CAFiDJ59Pi6fxyE=0ifNJRoGc4QBX3XKJ=L7FXjJ_a6Vyh8otMg@mail.gmail.com> <20190515135933.GB30985@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20190515135933.GB30985@e121166-lin.cambridge.arm.com>
+From:   Ley Foon Tan <lftan.linux@gmail.com>
+Date:   Thu, 16 May 2019 10:12:52 +0800
+Message-ID: <CAFiDJ5-1YncDFFES+vj2bnaRwq74RT=s0KB9FBpYFt-r9T+a2g@mail.gmail.com>
+Subject: Re: [PATCH] PCI: altera-msi: Allow building as module
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Ley Foon Tan <ley.foon.tan@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I should have forwarded this to the list earlier.  Maybe somebody
-wants to work on this?
+On Wed, May 15, 2019 at 9:59 PM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> On Tue, May 14, 2019 at 01:35:20PM +0800, Ley Foon Tan wrote:
+> > On Wed, Apr 24, 2019 at 12:57 PM Ley Foon Tan <ley.foon.tan@intel.com> wrote:
+> > >
+> > > Altera MSI IP is a soft IP and is only available after
+> > > FPGA image is programmed.
+> > >
+> > > Make driver modulable to support use case FPGA image is programmed
+> > > after kernel is booted. User proram FPGA image in kernel then only load
+> > > MSI driver module.
+> > >
+> > > Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
+> > > ---
+> > >  drivers/pci/controller/Kconfig           |  2 +-
+> > >  drivers/pci/controller/pcie-altera-msi.c | 10 ++++++++++
+> > >  2 files changed, 11 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> > > index 4b550f9cdd56..920546cb84e2 100644
+> > > --- a/drivers/pci/controller/Kconfig
+> > > +++ b/drivers/pci/controller/Kconfig
+> > > @@ -181,7 +181,7 @@ config PCIE_ALTERA
+> > >           FPGA.
+> > >
+> > >  config PCIE_ALTERA_MSI
+> > > -       bool "Altera PCIe MSI feature"
+> > > +       tristate "Altera PCIe MSI feature"
+> > >         depends on PCIE_ALTERA
+> > >         depends on PCI_MSI_IRQ_DOMAIN
+> > >         help
+> > > diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
+> > > index 025ef7d9a046..16d938920ca5 100644
+> > > --- a/drivers/pci/controller/pcie-altera-msi.c
+> > > +++ b/drivers/pci/controller/pcie-altera-msi.c
+> > > @@ -10,6 +10,7 @@
+> > >  #include <linux/interrupt.h>
+> > >  #include <linux/irqchip/chained_irq.h>
+> > >  #include <linux/init.h>
+> > > +#include <linux/module.h>
+> > >  #include <linux/msi.h>
+> > >  #include <linux/of_address.h>
+> > >  #include <linux/of_irq.h>
+> > > @@ -288,4 +289,13 @@ static int __init altera_msi_init(void)
+> > >  {
+> > >         return platform_driver_register(&altera_msi_driver);
+> > >  }
+> > > +
+> > > +static void __exit altera_msi_exit(void)
+> > > +{
+> > > +       platform_driver_unregister(&altera_msi_driver);
+> > > +}
+> > > +
+> > >  subsys_initcall(altera_msi_init);
+> > > +MODULE_DEVICE_TABLE(of, altera_msi_of_match);
+> > > +module_exit(altera_msi_exit);
+> > > +MODULE_LICENSE("GPL v2");
+> > > --
+> > > 2.19.0
+> > >
+> > Hi
+> >
+> > Any comment for this patch?
+>
+> I will get to these patches for the next merge window, thanks.
 
-I *think* the problem is:
+Thanks.
 
-  - BIOS sets MTRR for 0x40_00000000-0x5f_ffffffff to be write-combining (WC)
-  - That covers part of this PCI aperture: root bus resource [mem
-0x40_00000000-0x7f_ffffffff window]
-  - That aperture includes a frame buffer: pci 0000:00:02.0: reg 0x18:
-[mem 0x40_00000000-0x40_0fffffff 64bit pref]
-  - Linux assigned an LPSS BAR to the WC area: pci 0000:00:15.0: BAR
-0: assigned [mem 0x40_10000000-0x40_10000fff 64bit]
-  - The LPSS device doesn't work if MMIO accesses to it are combined via WC
-
-I'm not an x86/MTRR/PAT expert, but I think we should be able to make
-this work correctly by changing that MTRR from WC to UC (I don't know
-if there are BIOS/OS interface implications with this), or maybe using
-PAT to override the MTRR WC setting to be UC for part or all of that
-aperture.  The frame buffer driver should be smart enough to request
-WC if it wants it.
-
-
----------- Forwarded message ---------
-From: <bugzilla-daemon@bugzilla.kernel.org>
-Date: Fri, May 3, 2019 at 3:31 AM
-Subject: [Bug 203485] New: PCI can't map correct memory resource if
-the BAR is 64-bit and then leads to system hang during booting up
-To: <bugzilla.pci@gmail.com>
-
-
-https://bugzilla.kernel.org/show_bug.cgi?id=203485
-
-            Bug ID: 203485
-           Summary: PCI can't map correct memory resource if the BAR is
-                    64-bit and then leads to system hang during booting up
-           Product: Drivers
-           Version: 2.5
-    Kernel Version: v5.1-rc7
-          Hardware: All
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: PCI
-          Assignee: drivers_pci@kernel-bugs.osdl.org
-          Reporter: acelan@gmail.com
-        Regression: No
-
-Created attachment 282597
-  --> https://bugzilla.kernel.org/attachment.cgi?id=282597&action=edit
-dmesg.log
-
-This issue has been found on loading intel-lpss-pci driver, the pdev->resource
-passing to its probe function is not correct. And it leads to system hangs
-while loading the driver.
-
-This is the memory addresses driver got, the start and end are more like the
-region declared in BAR
-
-[    0.718591] pci 0000:00:15.0: BAR 0: assigned [mem 0x4010000000-0x4010000fff
-64bit]
-[    0.718613] pci 0000:00:15.1: BAR 0: assigned [mem 0x4010001000-0x4010001fff
-64bit]
-[    0.718626] pci 0000:00:1d.0: BAR 13: assigned [io  0x4000-0x6fff]
-[    0.718634] pci 0000:00:1e.0: BAR 0: assigned [mem 0x4010002000-0x4010002fff
-64bit]
-
-[  154.417550] [/home/acelan/linux/drivers/mfd/intel-lpss-pci.c:31]
-intel_lpss_pci_probe(): 0000:00:15.0 - mem = 0x0000000047753398, mem->start =
-0x0000000010000000, mem->end = 0x0000000010000FFF
-[  154.417571] [/home/acelan/linux/drivers/mfd/intel-lpss-pci.c:31]
-intel_lpss_pci_probe(): 0000:00:15.1 - mem = 0x0000000047754398, mem->start =
-0x0000000010001000, mem->end = 0x0000000010001FFF
-[  154.417587] [/home/acelan/linux/drivers/mfd/intel-lpss-pci.c:31]
-intel_lpss_pci_probe(): 0000:00:1e.0 - mem = 0x000000004775A398, mem->start =
-0x0000000010002000, mem->end = 0x0000000010002FFF
-
-Below is the correct one I copy from 32-Bit BAR
-[    3.511100] [/home/acelan/bionic/drivers/mfd/intel-lpss-pci.c:47]
-intel_lpss_pci_probe(): 0000:00:15.0 - mem = 0x00000000AB282380, mem->start =
-0x00000000ED137000, mem->end = 0x00000000ED137FFF
-
---
-You are receiving this mail because:
-You are watching the assignee of the bug.
+Regards
+Ley Foon
