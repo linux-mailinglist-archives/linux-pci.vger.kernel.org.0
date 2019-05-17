@@ -2,141 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 531D921571
-	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2019 10:39:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4390215D1
+	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2019 10:58:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbfEQIjQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 May 2019 04:39:16 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:12616 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727530AbfEQIjP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 May 2019 04:39:15 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cde73380000>; Fri, 17 May 2019 01:39:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 17 May 2019 01:39:14 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 17 May 2019 01:39:14 -0700
-Received: from [10.24.192.74] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 May
- 2019 08:39:10 +0000
-Subject: Re: [PATCH V4 00/28] Enable Tegra PCIe root port features
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <jonathanh@nvidia.com>,
-        <lorenzo.pieralisi@arm.com>, <vidyas@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
- <20190516131257.GA101793@google.com>
-X-Nvconfidentiality: public
-From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Message-ID: <1d6b0b74-5b66-c936-a374-3a19dc7637e5@nvidia.com>
-Date:   Fri, 17 May 2019 14:08:48 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1727899AbfEQI6z convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 17 May 2019 04:58:55 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43033 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727826AbfEQI6z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 May 2019 04:58:55 -0400
+Received: by mail-qt1-f194.google.com with SMTP id i26so7087045qtr.10;
+        Fri, 17 May 2019 01:58:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=lUdOq+gx0nXT1b9GsinnX5s7hPrX6YoGJqW2/FU2LMQ=;
+        b=RpFOr0oULuR1MRqxeLyOGuqnuiWmU7o6cdQmtSQp/pycQhETac42PTjvn6/ofo1spL
+         Daby4SFcb06zg15P6ZQF2Rz6H6NpLXDUgJCa4dj7VLi5MTJwMNUFyeqSFE5CJ92px9Ea
+         5PI3QaoE+c/QzQipbrGJC88aCXF2V9/7Jf5SxHFZgcuebS4/crD996H4bhSIeAJyH40+
+         xD54ooqmEtJrjVAMmN/goOX0OYwSLQAh/d2g+vk4/dM6vTYnq69KmcefPCbVyDsN+NFz
+         dlTjl7SbXa4A4pn6bVvV9xoMCBUZOIMWS1FZm9VYQgOqiTEfjEWRbicHlnXyUctHzGBa
+         KE6w==
+X-Gm-Message-State: APjAAAXzbiusdx1c0HgvWDtVkYxDT+WrPOb4RW53MWOVLFRCHoQcQXPu
+        K3+Uc+JtSwgGx8KNe36Jorai0/woxKU8/Qo3/rw=
+X-Google-Smtp-Source: APXvYqwNxbxFr/vzS1RXQZDBTDKL/hVCvagOotGDm724YF5ym/q8RL/him/sN27hB8O1MZtVcEFf95bHEOo3m0FhXo8=
+X-Received: by 2002:ac8:2a05:: with SMTP id k5mr30063052qtk.304.1558083534352;
+ Fri, 17 May 2019 01:58:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190516131257.GA101793@google.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558082360; bh=/jrQrO///siHbFc4ykM7TVozt7ZVpbBa5aVFmESL/8c=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:
-         Content-Transfer-Encoding:Content-Language;
-        b=eBMrJzFeQwkLrPW6pIhZ3QRoBsjaWiRLFLbLhN85urszZ2rI0RMlin2ed3QAe38Jm
-         7UFc01/M99lguZvcA15avzdYYH6SHAekHctZU4YYUVEOxkCuThXh9um/KwBl495FDz
-         voURdvCm10KcQmDRd0QSqlFDVPxEmvcKD+/0gudx2+0p4IFWBWwrgCjj02vUhqqncM
-         hg3Igw68pdAzG98I31X/2HRsnrKuGqs/SMJAHshhCSU5cRwK/Gf06yg1AxNPlXXesK
-         UGu0epPe/QOFjeBlWMgIUqaRv5V/R4TMdj2VvKOm2F8KgMWnl2QxRuAYDAJ0g55mnQ
-         g84eq+tD0/hZw==
+References: <20190515072747.39941-1-xiaowei.bao@nxp.com> <20190515072747.39941-2-xiaowei.bao@nxp.com>
+ <CAK8P3a3AXRp_v_7hkoJA28tUCiSh1eYzbk4Q4h29OqL6y-KL8A@mail.gmail.com> <AM5PR04MB329934765FB8EB1828743D79F50B0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+In-Reply-To: <AM5PR04MB329934765FB8EB1828743D79F50B0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 17 May 2019 10:58:37 +0200
+Message-ID: <CAK8P3a0kKb7njiJvUkwJYwf-yc-hEyErSiWcvbdf0XnMoctzrg@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        Kishon <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        gregkh <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 16-May-19 6:42 PM, Bjorn Helgaas wrote:
-> On Thu, May 16, 2019 at 11:22:39AM +0530, Manikanta Maddireddy wrote:
->> This series of patches adds,
->> - Tegra root port features like Gen2, AER, etc
->> - Power and perf optimizations
->> - Fixes like "power up sequence", "dev_err prints", etc
-> Please:
+On Fri, May 17, 2019 at 5:21 AM Xiaowei Bao <xiaowei.bao@nxp.com> wrote:
+> -----Original Message-----
+> From: Arnd Bergmann <arnd@arndb.de>
+> On Wed, May 15, 2019 at 9:36 AM Xiaowei Bao <xiaowei.bao@nxp.com> wrote:
+> > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > ---
+> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   52 ++++++++++++++++++++++++
+> >  1 files changed, 52 insertions(+), 0 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > index b045812..50b579b 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > @@ -398,6 +398,58 @@
+> >                         status = "disabled";
+> >                 };
+> >
+> > +               pcie@3400000 {
+> > +                       compatible = "fsl,ls1028a-pcie";
+> > +                       reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
+> > +                              0x80 0x00000000 0x0 0x00002000>; /* configuration space */
+> > +                       reg-names = "regs", "config";
+> > +                       interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
+> > +                                    <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
+> > +                       interrupt-names = "pme", "aer";
+> > +                       #address-cells = <3>;
+> > +                       #size-cells = <2>;
+> > +                       device_type = "pci";
+> > +                       dma-coherent;
+> > +                       num-lanes = <4>;
+> > +                       bus-range = <0x0 0xff>;
+> > +                       ranges = <0x81000000 0x0 0x00000000 0x80 0x00010000 0x0 0x00010000   /* downstream I/O */
+> > +                                 0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
 >
->   1) Put the brakes on.  You posted v3 of these 30 patches on May 13
->      and v4 on May 16.  There's no hurry; the merge window is still
->      open and nothing will be added to -next until at least next week.
->      If you space these out a little, people will have time to digest
->      them.
->
->   2) Mention in the cover letter what changed between v3 and v4 so
->      people know where to spend their effort.
+> Are you sure there is no support for 64-bit BARs or prefetchable memory?
+> [Xiaowei Bao] sorry for late reply, Thought that our Layerscape platform has not added prefetchable memory support in DTS, so this platform has not been added, I will submit a separate patch to add prefetchable memory support for all Layerscape platforms.
 
-Reason for sending v4 quickly is because one of the patches deviated from
-Rob & Thierry's comments in v2. To address this I published v4 and marked
-v3 series as superseded. 
+Ok, thanks.
 
-I will follow these two points from next time, meanwhile updating the
-changes from v3 to v4 below,
+> Of course, the prefetchable PCIE device can work in our boards, because the RC will
+> assign non-prefetchable memory for this device. We reserve 1G no-prefetchable
+> memory for PCIE device, it is enough for general devices.
 
-Changes from v3 to v4:
- - Patch [V3,27/29] is dropped
- - Patch [V3,28/29]: devm_gpiod_get_from_of_node() is directly used in
-   pci-tegra driver instead of of_get_pci* wrapper function defined in
-   Patch [V3,27/29].
+Sure, many devices work just fine, this is mostly a question of supporting those
+devices that do require multiple gigabytes, or that need prefetchable memory
+semantics to get the expected performance. GPUs are the obvious example,
+but I think there are others (infiniband?).
 
-Manikanta 
-
->> This series of patches are tested on Tegra186 based Jetson-TX2, Tegra210
->> based Jetson-TX1, T124 based Jetson-TK1 platforms, Tegra20 and Tegra30
->> platforms.
->>
->> Manikanta Maddireddy (28):
->>   soc/tegra: pmc: Export tegra_powergate_power_on()
->>   PCI: tegra: Handle failure cases in tegra_pcie_power_on()
->>   PCI: tegra: Rearrange Tegra PCIe driver functions
->>   PCI: tegra: Mask AFI_INTR in runtime suspend
->>   PCI: tegra: Fix PCIe host power up sequence
->>   PCI: tegra: Add PCIe Gen2 link speed support
->>   PCI: tegra: Advertise PCIe Advanced Error Reporting (AER) capability
->>   PCI: tegra: Program UPHY electrical settings for Tegra210
->>   PCI: tegra: Enable opportunistic UpdateFC and ACK
->>   PCI: tegra: Disable AFI dynamic clock gating
->>   PCI: tegra: Process pending DLL transactions before entering L1 or L2
->>   PCI: tegra: Enable PCIe xclk clock clamping
->>   PCI: tegra: Increase the deskew retry time
->>   PCI: tegra: Add SW fixup for RAW violations
->>   PCI: tegra: Update flow control timer frequency in Tegra210
->>   PCI: tegra: Set target speed as Gen1 before starting LTSSM
->>   PCI: tegra: Fix PLLE power down issue due to CLKREQ# signal
->>   PCI: tegra: Program AFI_CACHE* registers only for Tegra20
->>   PCI: tegra: Change PRSNT_SENSE IRQ log to debug
->>   PCI: tegra: Use legacy IRQ for port service drivers
->>   PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of soc struct
->>   PCI: tegra: Access endpoint config only if PCIe link is up
->>   dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
->>   arm64: tegra: Add PEX DPD states as pinctrl properties
->>   PCI: tegra: Put PEX CLK & BIAS pads in DPD mode
->>   PCI: Add DT binding for "reset-gpios" property
->>   PCI: tegra: Add support for GPIO based PERST#
->>   PCI: tegra: Change link retry log level to debug
->>
->>  .../bindings/pci/nvidia,tegra20-pcie.txt      |   8 +
->>  Documentation/devicetree/bindings/pci/pci.txt |   3 +
->>  arch/arm64/boot/dts/nvidia/tegra210.dtsi      |  19 +
->>  drivers/pci/controller/pci-tegra.c            | 615 +++++++++++++++---
->>  drivers/soc/tegra/pmc.c                       |   1 +
->>  5 files changed, 566 insertions(+), 80 deletions(-)
->>
->> -- 
->> 2.17.1
->>
-
+      Arnd
