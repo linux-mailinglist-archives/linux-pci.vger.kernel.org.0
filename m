@@ -2,85 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D0B221D8D
-	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2019 20:40:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D479421DBD
+	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2019 20:48:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbfEQSke (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 May 2019 14:40:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727298AbfEQSke (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 May 2019 14:40:34 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2CFD218AD;
-        Fri, 17 May 2019 18:40:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558118433;
-        bh=v5VdbvByT5Kbm6ftnFHwsT3AnG9Byib1XRr5zOj7l/o=;
+        id S1726554AbfEQSsW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 May 2019 14:48:22 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53562 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726286AbfEQSsW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 May 2019 14:48:22 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id C2F5A61892; Fri, 17 May 2019 18:48:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558118900;
+        bh=35zZ5q4uMp/3q4Z0JDCSvFDAAIE0REjNe04GsZlSd9s=;
         h=From:To:Cc:Subject:Date:From;
-        b=mG3oR6R3yzrYegIzcAWgaCFiwGW9sSzTg+zdm7SeHKcNmr+6IC8yHumjDTJ5H9Y+W
-         JkjRxrvJw1iexO5HdrHIXwhJJC/2RLLfqLeymabVlOxuC0pb0RfoeOTjLXZxTj00Rv
-         p1ITo02pWFMlbpvJzzA73Ki+IDGcAVCu5ECsKa2g=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Martin Mares <mj@ucw.cz>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] lspci: Reorder Express Root Complex registers to Cap, Ctl, Sta
-Date:   Fri, 17 May 2019 13:40:22 -0500
-Message-Id: <20190517184022.79914-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        b=aJziovqK9JqfOz+VdzLUlLoZzJq7MpPBgTKdfPh4KjQN1WlFQdJrcVmdyDgeBFuDn
+         rbo6VsoEGhC0sfP5CHF5kBvY8jSYbN4swXbH29meixv5Pzt7opn32mZcMG/H+WQkhR
+         PsF/k7nTKCeSTHpc3TD7cvKDW401LvWHOmYHnUXY=
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        pdx-caf-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
+        version=3.4.0
+Received: from isaacm-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: isaacm@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 736716179C;
+        Fri, 17 May 2019 18:48:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558118891;
+        bh=35zZ5q4uMp/3q4Z0JDCSvFDAAIE0REjNe04GsZlSd9s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SOz/6r03g7SCcJGbSThbJKQnFy/ydy//GRaazg08v/2nnzbeA2kfwt+7DU/h5VOl4
+         xXmNB0yQSIchcnRZzMOY3UoRMEbtrWtzv2tggQZPxIPf3+VznmC4rVcRLPMToj7grj
+         pn7Xia0PvsazfTd/chmiqRi5k+mz1Ap3FJqYLL18=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 736716179C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=isaacm@codeaurora.org
+From:   "Isaac J. Manjarres" <isaacm@codeaurora.org>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     "Isaac J. Manjarres" <isaacm@codeaurora.org>, robh+dt@kernel.org,
+        frowand.list@gmail.com, bhelgaas@google.com, joro@8bytes.org,
+        robin.murphy@arm.com, will.deacon@arm.com, kernel-team@android.com,
+        pratikp@codeaurora.org, lmark@codeaurora.org
+Subject: [RFC/PATCH 0/4] Initial support for modular IOMMU drivers
+Date:   Fri, 17 May 2019 11:47:33 -0700
+Message-Id: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+This series adds initial support for being able to use the ARM
+SMMU driver as a loadable kernel module. The series also adds
+to the IOMMU framework, so that it can defer probing for devices
+that depend on an IOMMU driver that may be a loadable module.
 
-Registers in the PCI Express Capability come in sets of three (Capability,
-Control, Status), and we typically print them in that order.  The Root
-Complex-related registers were an exception: we printed them in the
-(Control, Capability, Status) order.
+The primary reason behind these changes is that having the ARM
+SMMU driver as a module allows for the same kernel image to be
+used across different platforms. For example, if one platform
+contains an IOMMU that implements one version of the ARM SMMU
+specification, and another platform simply does not have an
+IOMMU, the only way that these platforms can share the same
+kernel image is if the ARM SMMU driver is compiled into the
+kernel image.
 
-Decode the RootCap, RootCtl, and RootSta registers in the usual order.
+This solution is not scalable, as it will lead to bloating the
+kernel image with support for several future versions of the
+SMMU specification to maintain a common kernel image that works
+across all platforms. Having the ARM SMMU driver as a module allows
+for a common kernel image to be supported across all platforms,
+while yielding a smaller kernel image size, since the correct
+SMMU driver can be loaded at runtime, if necessary.
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- ls-caps.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+Patchset Summary:
 
-diff --git a/ls-caps.c b/ls-caps.c
-index a739f46..f1f325d 100644
---- a/ls-caps.c
-+++ b/ls-caps.c
-@@ -897,7 +897,13 @@ static void cap_express_slot(struct device *d, int where)
- 
- static void cap_express_root(struct device *d, int where)
- {
--  u32 w = get_conf_word(d, where + PCI_EXP_RTCTL);
-+  u32 w;
-+
-+  w = get_conf_word(d, where + PCI_EXP_RTCAP);
-+  printf("\t\tRootCap: CRSVisible%c\n",
-+	FLAG(w, PCI_EXP_RTCAP_CRSVIS));
-+
-+  w = get_conf_word(d, where + PCI_EXP_RTCTL);
-   printf("\t\tRootCtl: ErrCorrectable%c ErrNon-Fatal%c ErrFatal%c PMEIntEna%c CRSVisible%c\n",
- 	FLAG(w, PCI_EXP_RTCTL_SECEE),
- 	FLAG(w, PCI_EXP_RTCTL_SENFEE),
-@@ -905,10 +911,6 @@ static void cap_express_root(struct device *d, int where)
- 	FLAG(w, PCI_EXP_RTCTL_PMEIE),
- 	FLAG(w, PCI_EXP_RTCTL_CRSVIS));
- 
--  w = get_conf_word(d, where + PCI_EXP_RTCAP);
--  printf("\t\tRootCap: CRSVisible%c\n",
--	FLAG(w, PCI_EXP_RTCAP_CRSVIS));
--
-   w = get_conf_long(d, where + PCI_EXP_RTSTA);
-   printf("\t\tRootSta: PME ReqID %04x, PMEStatus%c PMEPending%c\n",
- 	w & PCI_EXP_RTSTA_PME_REQID,
+1. Since the ARM SMMU driver depends on symbols being exported from
+several subsystems, the first three patches are dedicated to exporting
+the necessary symbols.
+
+2. Similar to how the pinctrl framework handles deferring probes,
+the subsequent patch makes it so that the IOMMU framework will defer
+probes indefinitely if there is a chance that the IOMMU driver that a
+device is waiting for is a module. Otherwise, it upholds the current
+behavior of stopping probe deferrals once all of the builtin drivers
+have finished probing.
+
+The ARM SMMU driver currently has support for the deprecated
+"mmu-masters" binding, which relies on the notion of initcall
+ordering for setting the bus ops to ensure that all SMMU devices
+have been bound to the driver. This poses a problem with
+making the driver a module, as there is no such notion with
+loadable modules. Will support for this be completely deprecated?
+If not, might it be useful to leverage the device tree ordering,
+and assign a property to the last SMMU device, and set the bus ops
+at that point? Or perhaps have some deferred timer based approach
+to know when to set the bus ops? 
+
+Thanks,
+Isaac
+
+Isaac J. Manjarres (4):
+  of: Export of_phandle_iterator_args() to modules
+  PCI: Export PCI ACS and DMA searching functions to modules
+  iommu: Export core IOMMU functions to kernel modules
+  iommu: Add probe deferral support for IOMMU kernel modules
+
+ drivers/iommu/iommu-sysfs.c | 3 +++
+ drivers/iommu/iommu.c       | 6 ++++++
+ drivers/iommu/of_iommu.c    | 8 ++++++--
+ drivers/of/base.c           | 1 +
+ drivers/pci/pci.c           | 1 +
+ drivers/pci/search.c        | 1 +
+ 6 files changed, 18 insertions(+), 2 deletions(-)
+
 -- 
-2.21.0.1020.gf2820cf01a-goog
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
