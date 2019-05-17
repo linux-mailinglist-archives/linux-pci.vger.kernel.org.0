@@ -2,107 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D9FB821888
-	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2019 14:42:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D7E9218A3
+	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2019 14:53:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbfEQMlc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 May 2019 08:41:32 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:19117 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728474AbfEQMlc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 May 2019 08:41:32 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cdeabf70000>; Fri, 17 May 2019 05:41:27 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 17 May 2019 05:41:31 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 17 May 2019 05:41:31 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 May
- 2019 12:41:31 +0000
-Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 May
- 2019 12:41:31 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 17 May 2019 12:41:31 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cdeabf40001>; Fri, 17 May 2019 05:41:30 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
-CC:     <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V7 15/15] arm64: Add Tegra194 PCIe driver to defconfig
-Date:   Fri, 17 May 2019 18:08:46 +0530
-Message-ID: <20190517123846.3708-16-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190517123846.3708-1-vidyas@nvidia.com>
-References: <20190517123846.3708-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        id S1728430AbfEQMxX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 May 2019 08:53:23 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54797 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728472AbfEQMxS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 May 2019 08:53:18 -0400
+Received: by mail-wm1-f66.google.com with SMTP id i3so6848055wml.4
+        for <linux-pci@vger.kernel.org>; Fri, 17 May 2019 05:53:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zcYe+aG05w2UO1ZXKc7jrJL+Ovz86Hm2R29bKoYuqSk=;
+        b=FTHo35TdEfRpOvLXv+pT5cGeQ2f+MdB7347X2StGrPCzRUBwiMket+1T6L3T9E6Xvq
+         9gtotIVK2HrHUJPu9CpHJaoHIgYNXVGCaO3ZL2ScRM+CcgGVyVDtpL8HFb2Ks5JWegeN
+         JyTyhlaCT0Y5Pb8gfww3I+xGlje/yVywyQvQC58fhCDKRwox05ecAWJ8t/x1S7VMQcL9
+         f41d+JAt35dy8s5waM6jTPjDDK4g36KxR3StdpHYXJ/a04TeWphHCOwE8YqCu7E6UWP4
+         H3rj7I51hJq8QZiS47fFOnpWje4QM6AiIQdn8BlPkqNdghkgX4WoQ+alyxhzuGNnTfxR
+         ZCaQ==
+X-Gm-Message-State: APjAAAW0+TMLLmzbUVjUmh+IKDGc2e8Io09EO9CYptcff8WJgNPDUGfw
+        LTULKwvAWEXabWH1qao1E/00zQ==
+X-Google-Smtp-Source: APXvYqzvQo4PLIOLgEYS45mThRlVYeoSKfB0i310BFOLRFwKSRuu+NOfl46fdrqxPtJzbnmADzwaFw==
+X-Received: by 2002:a1c:7dcf:: with SMTP id y198mr2040524wmc.94.1558097596479;
+        Fri, 17 May 2019 05:53:16 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.174.33])
+        by smtp.gmail.com with ESMTPSA id q3sm6514366wrr.16.2019.05.17.05.53.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 May 2019 05:53:15 -0700 (PDT)
+Date:   Fri, 17 May 2019 14:53:13 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [ANNOUNCE][CFP] Power Management and Scheduling in the Linux
+ Kernel III edition (OSPM-summit 2019)
+Message-ID: <20190517125313.GJ14991@localhost.localdomain>
+References: <20190114161910.GB5581@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558096887; bh=3I0dFJgkWUIouEt8VwRg9ELWDkCaZOAqdLpchvKr2cw=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=QVyFuPCYvl/VEkP3fMlCCv6oRIiC0cLnn8vJQRbVguaXX1mpaKfJV7Ir8vM33Sy7z
-         C7R6pZk0P46PJ8F8JQCWMZI0S65Gja4bCzJTMPuy9pRy4W66jppi8PcIO8Nu35mmdc
-         umn1w4K06FhKuzFjXIDJfaV6G0JXiKzcSz7cDjv9NTpCNdeZbJJv3MaglO00Lq6PXL
-         9QsDueoDyaI2hfWDsitseSBe/DD1zVXIVcPqG6lwLXu7figM6tnP3iS3FR+DyL7/j+
-         cVhinCh1h86czn5UgREpA8+LKqtBDd2BTdhiB5xt+DRhBH2P3VU3hVvFEQgT+or/9U
-         IPb0pKfALPSHA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190114161910.GB5581@localhost.localdomain>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add PCIe host controller driver for DesignWare core based
-PCIe controller IP present in Tegra194.
+Hi,
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
----
-Changes since [v6]:
-* None
+On 14/01/19 17:19, Juri Lelli wrote:
+> Power Management and Scheduling in the Linux Kernel (OSPM-summit) III edition
+> May 20-22, 2019
+> Scuola Superiore Sant'Anna
+> Pisa, Italy
+> 
+> ---
+> 
+> .:: FOCUS
+> 
+> The III edition of the Power Management and Scheduling in the Linux
+> Kernel (OSPM) summit aims at fostering discussions on power management
+> and (real-time) scheduling techniques. Summit will be held in Pisa
+> (Italy) on May 20-22, 2019.
 
-Changes since [v5]:
-* None
+Next week!
 
-Changes since [v4]:
-* None
+FYI, final schedule is online (Italy (GMT+2)):
 
-Changes since [v3]:
-* None
+http://retis.sssup.it/ospm-summit/program.html
 
-Changes since [v2]:
-* None
+Live streaming events have been created and are accessible both from the
+summit schedule ("live streaming" links) and at:
 
-Changes since [v1]:
-* Changed CONFIG_PCIE_TEGRA194 from 'y' to 'm'
+https://bit.ly/2Vz3yKg
 
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Best,
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 8871cf7aaba9..52105b2c2418 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -195,6 +195,7 @@ CONFIG_PCIE_QCOM=y
- CONFIG_PCIE_ARMADA_8K=y
- CONFIG_PCIE_KIRIN=y
- CONFIG_PCIE_HISI_STB=y
-+CONFIG_PCIE_TEGRA194=m
- CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
--- 
-2.17.1
-
+- Juri
