@@ -2,30 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CAF372187B
-	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2019 14:41:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8E932187D
+	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2019 14:41:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbfEQMlK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 May 2019 08:41:10 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:9792 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728100AbfEQMlK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 May 2019 08:41:10 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cdeabbb0000>; Fri, 17 May 2019 05:40:27 -0700
+        id S1728425AbfEQMlU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 May 2019 08:41:20 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:6684 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728474AbfEQMlU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 May 2019 08:41:20 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cdeabf40000>; Fri, 17 May 2019 05:41:24 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 17 May 2019 05:41:09 -0700
+  Fri, 17 May 2019 05:41:17 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 17 May 2019 05:41:09 -0700
-Received: from HQMAIL103.nvidia.com (172.20.187.11) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 May
- 2019 12:41:08 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 17 May 2019 12:41:09 +0000
+        by hqpgpgate101.nvidia.com on Fri, 17 May 2019 05:41:17 -0700
+Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL103.nvidia.com
+ (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 May
+ 2019 12:41:17 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 17 May 2019 12:41:17 +0000
 Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cdeabdf0007>; Fri, 17 May 2019 05:41:09 -0700
+        id <B5cdeabe70000>; Fri, 17 May 2019 05:41:17 -0700
 From:   Vidya Sagar <vidyas@nvidia.com>
 To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
         <robh+dt@kernel.org>, <mark.rutland@arm.com>,
@@ -37,9 +37,9 @@ CC:     <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
         <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V7 12/15] arm64: tegra: Enable PCIe slots in P2972-0000 board
-Date:   Fri, 17 May 2019 18:08:43 +0530
-Message-ID: <20190517123846.3708-13-vidyas@nvidia.com>
+Subject: [PATCH V7 13/15] phy: tegra: Add PCIe PIPE2UPHY support
+Date:   Fri, 17 May 2019 18:08:44 +0530
+Message-ID: <20190517123846.3708-14-vidyas@nvidia.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190517123846.3708-1-vidyas@nvidia.com>
 References: <20190517123846.3708-1-vidyas@nvidia.com>
@@ -47,27 +47,26 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558096827; bh=nKdanpuDu7meUKM0BYAeL8JBj4V01Gc7TU02Ot/i/pM=;
+        t=1558096884; bh=ZW8IGPScpMHdaXmZBYnxcCNOtw5lRrCLGi3OCgfeBuY=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=Sylr84Bpv79bHDRn2kPZ88meCZlJvcndPGcALXYk7osgIa1/4b/p0f4WhfJDtv7H7
-         N2tS43ELhTPSPTajFlZUhyJPIxJS1DLAzHxmiJnQswPgOjXLQWffPmzet0EM3FiGdc
-         gwk2pMd4qtxxu+XJu9OJyBNXa9RNS4FRx5Q9sociIX7zcPCQlMX2D0aew+IjcSe4ig
-         X1rWQqUYZnhX+nBgh8dQtiTch/di+rS9KlEsQT5A7DQNM0Cc+w1GZGVZGw+yEj4+yg
-         P0bIeioEQFZjGpEXzyfDlrWxwXkJDyOkw7uZ5TZBoNALyxgaIW21nWg5E1U3dLTevp
-         haE6TtzibjkDQ==
+        b=hpmFKy14xuvmzvkCqp2SA/pHH4K62Q1QCHO4VQu9yIkYHAkFwBvJ1WoBuQC9vNl7v
+         I7fdkP3TgyXtNjGCFJ5PFvahAHHavvdxWggCvyA9bCExPHXhjgqnA4EQyFql5gCdFG
+         qUicCNWMtEtZIT6qOCjgQn0fdB/7QI/icnco6T7lWhNpLCH1pT0nDO/jAer1sXr7nk
+         kKVj6nEBXnxUT4LfX9u28vAgMrszAs8w9ZpghSEBsH4cLs2AdMthEFf8RdmTP2DCZ/
+         dbxnIsuQOhNCIC4Au0LHbUIQ9I1iQIbaO/vxSp/Wh6S3wAGeMrVKAnLVautvLoShac
+         v4NwGKndAKaFA==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Enable PCIe controller nodes to enable respective PCIe slots on
-P2972-0000 board. Following is the ownership of slots by different
-PCIe controllers.
-Controller-0 : M.2 Key-M slot
-Controller-1 : On-board Marvell eSATA controller
-Controller-3 : M.2 Key-E slot
+Synopsys DesignWare core based PCIe controllers in Tegra 194 SoC interface
+with Universal PHY (UPHY) module through a PIPE2UPHY (P2U) module.
+For each PCIe lane of a controller, there is a P2U unit instantiated at
+hardware level. This driver provides support for the programming required
+for each P2U that is going to be used for a PCIe controller.
 
 Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 ---
@@ -75,88 +74,168 @@ Changes since [v6]:
 * None
 
 Changes since [v5]:
-* Arranged PCIe nodes in the order of their addresses
+* Addressed review comments from Thierry
 
 Changes since [v4]:
 * None
 
 Changes since [v3]:
-* None
+* Rebased on top of linux-next top of the tree
 
 Changes since [v2]:
-* Changed P2U label names to reflect new format that includes 'hsio'/'nvhs'
-  strings to reflect UPHY brick they belong to
+* Replaced spaces with tabs in Kconfig file
+* Sorted header file inclusion alphabetically
 
 Changes since [v1]:
-* Dropped 'pcie-' from phy-names property strings
+* Added COMPILE_TEST in Kconfig
+* Removed empty phy_ops implementations
+* Modified code according to DT documentation file modifications
 
- .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |  2 +-
- .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 41 +++++++++++++++++++
- 2 files changed, 42 insertions(+), 1 deletion(-)
+ drivers/phy/tegra/Kconfig             |   7 ++
+ drivers/phy/tegra/Makefile            |   1 +
+ drivers/phy/tegra/pcie-p2u-tegra194.c | 109 ++++++++++++++++++++++++++
+ 3 files changed, 117 insertions(+)
+ create mode 100644 drivers/phy/tegra/pcie-p2u-tegra194.c
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-index 0fd5bd29fbf9..30a83d4c5b69 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-@@ -191,7 +191,7 @@
- 						regulator-boot-on;
- 					};
+diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
+index a3b1de953fb7..06d423fa85b4 100644
+--- a/drivers/phy/tegra/Kconfig
++++ b/drivers/phy/tegra/Kconfig
+@@ -6,3 +6,10 @@ config PHY_TEGRA_XUSB
  
--					sd3 {
-+					vdd_1v8ao: sd3 {
- 						regulator-name = "VDD_1V8AO";
- 						regulator-min-microvolt = <1800000>;
- 						regulator-max-microvolt = <1800000>;
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-index 73801b48d1d8..a22704e76a84 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-@@ -167,4 +167,45 @@
- 			};
- 		};
- 	};
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called phy-tegra-xusb.
 +
-+	pcie@14100000 {
-+		status = "okay";
++config PHY_TEGRA194_PCIE_P2U
++	tristate "NVIDIA Tegra P2U PHY Driver"
++	depends on ARCH_TEGRA || COMPILE_TEST
++	select GENERIC_PHY
++	help
++	  Enable this to support the P2U (PIPE to UPHY) that is part of Tegra 19x SOCs.
+diff --git a/drivers/phy/tegra/Makefile b/drivers/phy/tegra/Makefile
+index a93cd9a499b2..1aaca794f40c 100644
+--- a/drivers/phy/tegra/Makefile
++++ b/drivers/phy/tegra/Makefile
+@@ -5,3 +5,4 @@ phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_124_SOC) += xusb-tegra124.o
+ phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_132_SOC) += xusb-tegra124.o
+ phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_210_SOC) += xusb-tegra210.o
+ phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_186_SOC) += xusb-tegra186.o
++obj-$(CONFIG_PHY_TEGRA194_PCIE_P2U) += pcie-p2u-tegra194.o
+diff --git a/drivers/phy/tegra/pcie-p2u-tegra194.c b/drivers/phy/tegra/pcie-p2u-tegra194.c
+new file mode 100644
+index 000000000000..fae2afe1a1aa
+--- /dev/null
++++ b/drivers/phy/tegra/pcie-p2u-tegra194.c
+@@ -0,0 +1,109 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * P2U (PIPE to UPHY) driver for Tegra T194 SoC
++ *
++ * Copyright (C) 2019 NVIDIA Corporation.
++ *
++ * Author: Vidya Sagar <vidyas@nvidia.com>
++ */
 +
-+		vddio-pex-ctl-supply = <&vdd_1v8ao>;
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/phy/phy.h>
 +
-+		phys = <&p2u_hsio_0>;
-+		phy-names = "p2u-0";
-+	};
++#define P2U_PERIODIC_EQ_CTRL_GEN3	0xc0
++#define P2U_PERIODIC_EQ_CTRL_GEN3_PERIODIC_EQ_EN		BIT(0)
++#define P2U_PERIODIC_EQ_CTRL_GEN3_INIT_PRESET_EQ_TRAIN_EN	BIT(1)
++#define P2U_PERIODIC_EQ_CTRL_GEN4	0xc4
++#define P2U_PERIODIC_EQ_CTRL_GEN4_INIT_PRESET_EQ_TRAIN_EN	BIT(1)
 +
-+	pcie@14140000 {
-+		status = "okay";
++#define P2U_RX_DEBOUNCE_TIME				0xa4
++#define P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_MASK	0xffff
++#define P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_VAL		160
 +
-+		vddio-pex-ctl-supply = <&vdd_1v8ao>;
++struct tegra_p2u {
++	void __iomem *base;
++};
 +
-+		phys = <&p2u_hsio_7>;
-+		phy-names = "p2u-0";
-+	};
++static int tegra_p2u_power_on(struct phy *x)
++{
++	struct tegra_p2u *phy = phy_get_drvdata(x);
++	u32 val;
 +
-+	pcie@14180000 {
-+		status = "okay";
++	val = readl(phy->base + P2U_PERIODIC_EQ_CTRL_GEN3);
++	val &= ~P2U_PERIODIC_EQ_CTRL_GEN3_PERIODIC_EQ_EN;
++	val |= P2U_PERIODIC_EQ_CTRL_GEN3_INIT_PRESET_EQ_TRAIN_EN;
++	writel(val, phy->base + P2U_PERIODIC_EQ_CTRL_GEN3);
 +
-+		vddio-pex-ctl-supply = <&vdd_1v8ao>;
++	val = readl(phy->base + P2U_PERIODIC_EQ_CTRL_GEN4);
++	val |= P2U_PERIODIC_EQ_CTRL_GEN4_INIT_PRESET_EQ_TRAIN_EN;
++	writel(val, phy->base + P2U_PERIODIC_EQ_CTRL_GEN4);
 +
-+		phys = <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
-+		       <&p2u_hsio_5>;
-+		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3";
-+	};
++	val = readl(phy->base + P2U_RX_DEBOUNCE_TIME);
++	val &= ~P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_MASK;
++	val |= P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_VAL;
++	writel(val, phy->base + P2U_RX_DEBOUNCE_TIME);
 +
-+	pcie@141a0000 {
-+		status = "disabled";
++	return 0;
++}
 +
-+		vddio-pex-ctl-supply = <&vdd_1v8ao>;
++static const struct phy_ops ops = {
++	.power_on = tegra_p2u_power_on,
++	.owner = THIS_MODULE,
++};
 +
-+		phys = <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
-+		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
-+		       <&p2u_nvhs_6>, <&p2u_nvhs_7>;
++static int tegra_p2u_probe(struct platform_device *pdev)
++{
++	struct phy_provider *phy_provider;
++	struct device *dev = &pdev->dev;
++	struct phy *generic_phy;
++	struct tegra_p2u *phy;
++	struct resource *res;
 +
-+		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
-+			    "p2u-5", "p2u-6", "p2u-7";
-+	};
- };
++	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
++	if (!phy)
++		return -ENOMEM;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ctl");
++	phy->base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(phy->base))
++		return PTR_ERR_OR_ZERO(phy->base);
++
++	platform_set_drvdata(pdev, phy);
++
++	generic_phy = devm_phy_create(dev, NULL, &ops);
++	if (IS_ERR(generic_phy))
++		return PTR_ERR_OR_ZERO(generic_phy);
++
++	phy_set_drvdata(generic_phy, phy);
++
++	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
++	if (IS_ERR(phy_provider))
++		return PTR_ERR_OR_ZERO(phy_provider);
++
++	return 0;
++}
++
++static const struct of_device_id tegra_p2u_id_table[] = {
++	{
++		.compatible = "nvidia,tegra194-p2u",
++	},
++	{}
++};
++MODULE_DEVICE_TABLE(of, tegra_p2u_id_table);
++
++static struct platform_driver tegra_p2u_driver = {
++	.probe = tegra_p2u_probe,
++	.driver = {
++		.name = "tegra194-p2u",
++		.of_match_table = tegra_p2u_id_table,
++	},
++};
++module_platform_driver(tegra_p2u_driver);
++
++MODULE_AUTHOR("Vidya Sagar <vidyas@nvidia.com>");
++MODULE_DESCRIPTION("NVIDIA Tegra PIPE2UPHY PHY driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.17.1
 
