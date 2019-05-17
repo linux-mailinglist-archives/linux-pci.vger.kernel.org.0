@@ -2,157 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3245B21726
-	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2019 12:44:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6871F21840
+	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2019 14:39:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbfEQKog (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 May 2019 06:44:36 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:35258 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728264AbfEQKog (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 May 2019 06:44:36 -0400
-Received: by mail-it1-f195.google.com with SMTP id u186so11236706ith.0
-        for <linux-pci@vger.kernel.org>; Fri, 17 May 2019 03:44:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Ae6y0KuXzMG1pHLjgX5VAMMTwD/mpdbSQHyUYqpGa1Y=;
-        b=R6RUDRe47ZibIlkhxQWfsIgH9dt5pFYOUAFW/3Asfdh4QE7ekEXvUMeji89niTUt1k
-         ThSHvMS8k3bXzi1VUy39vktMv6CElxov+TYUYhnWCWo/JeHIl+5X5uTCE/JPXOr9SNxF
-         itX9zP/rxln7zlf7HwFmVYDMS5/xp2TFIkV0GGNN+/7PfpTnpEPE+hJBb0z/BNOLkuD8
-         fM8SBe/WyYf0Wg2moOirFS03wLy6/d548Y2nMjbiOokDeRXQUbUn7dr6gtDP/bnIa6mx
-         aaatnT+JDGwhVfUdZh/oAQz/iZ67xf1VLuE9Sq/dNCVBEWfSOEzycF2eMKOKgKqVT9/q
-         Fw2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ae6y0KuXzMG1pHLjgX5VAMMTwD/mpdbSQHyUYqpGa1Y=;
-        b=cPfNGdkdzeNTU/g1RmzHdujk7iitxwHBMxX20lroX9Kp7COxmphSg5CspFNf/4X1SQ
-         yTncOvOhXN6RVqiks+TcCtYNiAMuy/kdTFo8gNA43wEiCQb9K6UczPpdfmDGO1w+eASw
-         gwAe7p8CJsdCj2+btwY7bk1/Lf3jMQwwo9j39Q3P7NYmYVuOZB6i6TxJK4ODjrRxIOFV
-         LKIMhABkrGp3FSXfPjUEBssdGWe1i6M9oI1AtQekAm5toU5Ug/DCWO0AIWp7HzJUJE+L
-         Ulgc3VwLE1MR24E0AgqgKbQ3O1bOAtDbbzya0haxvbJnFmfhfoJmSwhj3H3yIfNHD3EA
-         3u8A==
-X-Gm-Message-State: APjAAAUugYlZoBuIsTL2qZbrXu6acldFoUkB2qB8GBXBWVHWKf+zmE+0
-        rrwQwLuDFWcJsI3v8Lwa/FQZ5j3LA1XcPmGb8mE2Jg==
-X-Google-Smtp-Source: APXvYqx3JP27Nk1tvOQBMDUThEQjHMC4TS5L3KtmWKuKzLoARJahORDrcr3fbLBY/dMbMzQj6L5PkULqhdgPoVo6Vr4=
-X-Received: by 2002:a02:1dc7:: with SMTP id 190mr34241024jaj.62.1558089874890;
- Fri, 17 May 2019 03:44:34 -0700 (PDT)
+        id S1728464AbfEQMjJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 May 2019 08:39:09 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:18913 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728169AbfEQMjJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 May 2019 08:39:09 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cdeab660000>; Fri, 17 May 2019 05:39:02 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 17 May 2019 05:39:06 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 17 May 2019 05:39:06 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 May
+ 2019 12:39:06 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 17 May 2019 12:39:06 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cdeab640002>; Fri, 17 May 2019 05:39:06 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
+CC:     <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V7 00/15] Add Tegra194 PCIe support
+Date:   Fri, 17 May 2019 18:08:31 +0530
+Message-ID: <20190517123846.3708-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <20190515072747.39941-1-xiaowei.bao@nxp.com> <20190515072747.39941-2-xiaowei.bao@nxp.com>
- <CAK8P3a3AXRp_v_7hkoJA28tUCiSh1eYzbk4Q4h29OqL6y-KL8A@mail.gmail.com>
- <AM5PR04MB329934765FB8EB1828743D79F50B0@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <CAK8P3a0kKb7njiJvUkwJYwf-yc-hEyErSiWcvbdf0XnMoctzrg@mail.gmail.com>
-In-Reply-To: <CAK8P3a0kKb7njiJvUkwJYwf-yc-hEyErSiWcvbdf0XnMoctzrg@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 17 May 2019 12:44:22 +0200
-Message-ID: <CAKv+Gu-WVcVvqPoH3gsz8G3Dwizne81MAQAUGNnGrpthvUiSnw@mail.gmail.com>
-Subject: Re: [EXT] Re: [PATCH 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Roy Zang <roy.zang@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kishon <kishon@ti.com>, "M.h. Lian" <minghuan.lian@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558096742; bh=u/4AQVGziCNrQ2xZIY5ClKkgupD/qrSZhq0/kL2pPfY=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=RlvE92GtZrhBCY5g6Zd8L8lpTh6FL8fuplUsYjbi5BSy9ScwKBrvN11R3mRdl9HdH
+         7iQRI8frfo7GYejfKff64JwMbMRDXL1k7B+jHH1coNx4EGm13piclFjAyZC+7+lsVX
+         wW815Q800kLvqm9T30tPDnAnsbcheqr0gR9NPHOcwkDb669Sy3fhhw2eoF8ceI7+3S
+         URa8bN6CYWnfs3RViOT8gzSB6BFtbApcy54NhmIAo/PZw1I1p+eguHOHQ4LJbKp4oI
+         1bPYzm4K21l/5jW7Qhj5jnPNkkdpTvdifqT7FQQmQWA+Qgmp9ahc+LFM/NdblLQLuj
+         FZOyNnlbTjqAA==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 17 May 2019 at 10:59, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Fri, May 17, 2019 at 5:21 AM Xiaowei Bao <xiaowei.bao@nxp.com> wrote:
-> > -----Original Message-----
-> > From: Arnd Bergmann <arnd@arndb.de>
-> > On Wed, May 15, 2019 at 9:36 AM Xiaowei Bao <xiaowei.bao@nxp.com> wrote=
-:
-> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > ---
-> > >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   52 ++++++++++++++=
-++++++++++
-> > >  1 files changed, 52 insertions(+), 0 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/ar=
-m64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > > index b045812..50b579b 100644
-> > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > > @@ -398,6 +398,58 @@
-> > >                         status =3D "disabled";
-> > >                 };
-> > >
-> > > +               pcie@3400000 {
-> > > +                       compatible =3D "fsl,ls1028a-pcie";
-> > > +                       reg =3D <0x00 0x03400000 0x0 0x00100000   /* =
-controller registers */
-> > > +                              0x80 0x00000000 0x0 0x00002000>; /* co=
-nfiguration space */
-> > > +                       reg-names =3D "regs", "config";
-> > > +                       interrupts =3D <GIC_SPI 108 IRQ_TYPE_LEVEL_HI=
-GH>, /* PME interrupt */
-> > > +                                    <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH=
->; /* aer interrupt */
-> > > +                       interrupt-names =3D "pme", "aer";
-> > > +                       #address-cells =3D <3>;
-> > > +                       #size-cells =3D <2>;
-> > > +                       device_type =3D "pci";
-> > > +                       dma-coherent;
-> > > +                       num-lanes =3D <4>;
-> > > +                       bus-range =3D <0x0 0xff>;
-> > > +                       ranges =3D <0x81000000 0x0 0x00000000 0x80 0x=
-00010000 0x0 0x00010000   /* downstream I/O */
-> > > +                                 0x82000000 0x0 0x40000000 0x80 0x40=
-000000 0x0 0x40000000>; /* non-prefetchable memory */
-> >
-> > Are you sure there is no support for 64-bit BARs or prefetchable memory=
-?
-> > [Xiaowei Bao] sorry for late reply, Thought that our Layerscape platfor=
-m has not added prefetchable memory support in DTS, so this platform has no=
-t been added, I will submit a separate patch to add prefetchable memory sup=
-port for all Layerscape platforms.
->
-> Ok, thanks.
->
-> > Of course, the prefetchable PCIE device can work in our boards, because=
- the RC will
-> > assign non-prefetchable memory for this device. We reserve 1G no-prefet=
-chable
-> > memory for PCIE device, it is enough for general devices.
->
-> Sure, many devices work just fine, this is mostly a question of supportin=
-g those
-> devices that do require multiple gigabytes, or that need prefetchable mem=
-ory
-> semantics to get the expected performance. GPUs are the obvious example,
-> but I think there are others (infiniband?).
->
+Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
+There are two Universal PHY (UPHY) blocks with each supporting 12(HSIO:
+Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
+Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 uses
+UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each PCIe
+controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
+core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is used
+to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bricks)
+to PCIe controller
+This patch series
+- Adds support for P2U PHY driver
+- Adds support for PCIe host controller
+- Adds device tree nodes each PCIe controllers
+- Enables nodes applicable to p2972-0000 platform
+- Adds helper APIs in Designware core driver to get capability regs offset
+- Adds defines for new feature registers of PCIe spec revision 4
+- Makes changes in DesignWare core driver to get Tegra194 PCIe working
 
-Some implementations of the Synopsys dw PCIe IP contain a 'root port'
-(within quotes because it is not actually a root port but an arbitrary
-set of MMIO registers that looks like a type 01 config region) that
-does not permit the prefetchable bridge window BAR to be written (a
-thing which is apparently permitted by the PCIe spec). So while the
-host bridge is capable of supporting more than one MMIO BAR window,
-the OS visible software interface does not expose this functionality
+Testing done on P2972-0000 platform
+- Able to get PCIe link up with on-board Marvel eSATA controller
+- Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
+- Able to do data transfers with both SATA drives and NVMe cards
 
-In practice, it probably doesn't matter, since the driver uses the
-same iATU attributes for prefetchable and non-prefetchable windows,
-but I guess 1 GB of MMIO BAR space is a bit restrictive for modern
-systems.
+Note
+- Enabling x8 slot on P2972-0000 platform requires pinmux driver for Tegra194.
+  It is being worked on currently and hence Controller:5 (i.e. x8 slot) is
+  disabled in this patch series. A future patch series would enable this.
+- This series is based on top of the following series
+  Jisheng's patches to add support to .remove() in Designware sub-system
+  https://patchwork.kernel.org/project/linux-pci/list/?series=98559
+  (Jisheng's patches are now accepted and applied for v5.2)
+  My patches made on top of Jisheng's patches to export various symbols
+  https://patchwork.kernel.org/project/linux-pci/list/?series=101259
+
+Changes since [v6]:
+* Took care of review comments from Rob
+* Added a quirk to disable MSI for root ports
+* Removed using pcie_pme_disable_msi() API in host controller driver
+
+Changes since [v5]:
+* Removed patch that exports pcie_bus_config symbol
+* Took care of review comments from Thierry and Rob
+
+Changes since [v4]:
+* Removed redundant APIs in pcie-designware-ep.c file after moving them
+  to pcie-designware.c file based on Bjorn's review comments
+
+Changes since [v3]:
+* Rebased on top of linux-next top of the tree
+* Addressed Gustavo's comments and added his Ack for some of the changes.
+
+Changes since [v2]:
+* Addressed review comments from Thierry
+
+Changes since [v1]:
+* Addressed review comments from Bjorn, Thierry, Jonathan, Rob & Kishon
+* Added more patches in v2 series
+
+Vidya Sagar (15):
+  PCI: Add #defines for some of PCIe spec r4.0 features
+  PCI: Disable MSI for Tegra194 root port
+  PCI: dwc: Perform dbi regs write lock towards the end
+  PCI: dwc: Move config space capability search API
+  PCI: dwc: Add ext config space capability search API
+  dt-bindings: PCI: designware: Add binding for CDM register check
+  PCI: dwc: Add support to enable CDM register check
+  dt-bindings: Add PCIe supports-clkreq property
+  dt-bindings: PCI: tegra: Add device tree support for Tegra194
+  dt-bindings: PHY: P2U: Add Tegra194 P2U block
+  arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT
+  arm64: tegra: Enable PCIe slots in P2972-0000 board
+  phy: tegra: Add PCIe PIPE2UPHY support
+  PCI: tegra: Add Tegra194 PCIe support
+  arm64: Add Tegra194 PCIe driver to defconfig
+
+ .../bindings/pci/designware-pcie.txt          |    5 +
+ .../bindings/pci/nvidia,tegra194-pcie.txt     |  158 ++
+ Documentation/devicetree/bindings/pci/pci.txt |    5 +
+ .../bindings/phy/phy-tegra194-p2u.txt         |   28 +
+ .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |    2 +-
+ .../boot/dts/nvidia/tegra194-p2972-0000.dts   |   41 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  437 +++++
+ arch/arm64/configs/defconfig                  |    1 +
+ drivers/pci/controller/dwc/Kconfig            |   10 +
+ drivers/pci/controller/dwc/Makefile           |    1 +
+ .../pci/controller/dwc/pcie-designware-ep.c   |   37 +-
+ .../pci/controller/dwc/pcie-designware-host.c |   14 +-
+ drivers/pci/controller/dwc/pcie-designware.c  |   88 +
+ drivers/pci/controller/dwc/pcie-designware.h  |   12 +
+ drivers/pci/controller/dwc/pcie-tegra194.c    | 1620 +++++++++++++++++
+ drivers/pci/quirks.c                          |   14 +
+ drivers/phy/tegra/Kconfig                     |    7 +
+ drivers/phy/tegra/Makefile                    |    1 +
+ drivers/phy/tegra/pcie-p2u-tegra194.c         |  109 ++
+ include/uapi/linux/pci_regs.h                 |   22 +-
+ 20 files changed, 2569 insertions(+), 43 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+ create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
+ create mode 100644 drivers/phy/tegra/pcie-p2u-tegra194.c
+
+-- 
+2.17.1
+
