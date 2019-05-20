@@ -2,138 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB9FD22BE4
-	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2019 08:10:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1C6622E13
+	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2019 10:12:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbfETGKR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 May 2019 02:10:17 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43548 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfETGKR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 May 2019 02:10:17 -0400
-Received: by mail-pg1-f194.google.com with SMTP id t22so6229662pgi.10;
-        Sun, 19 May 2019 23:10:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EtCrzdF26Only4uUvmUSQS6DqLBRvSsL0zNTScPkmCA=;
-        b=S5GgdV/JlgWXgEzAK5a6Fs1L8HVPSgtNmWwZ1fLgEQbPK6mKX2B7Qz1TybIVsdHYRj
-         PGLn5Xqc4X3qS0Y2rLNS3kZePMLn1sXbnoCVEx7NEGiWS/VAgItngZ5Yur6A/D1MhQze
-         nZ7sGQXyO/rIIvxrsCng3hjDv3Xr4m3KK/blQcZdZLXKw4+HoSktKC5t24yOnGhVHkwQ
-         kZhomS5aMVQYkPUjT+JX6/Li51j44O4p6bMQnZsl2VZ0Zrrn0aZIL7QqOmx3Aj/X3mLp
-         lh8IrYe8DU1cWuDXl5ved9UTWdeAMwGkut+DhkYcEaRoBdIXI5U0DAvF9sceuZlHiieG
-         O1KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EtCrzdF26Only4uUvmUSQS6DqLBRvSsL0zNTScPkmCA=;
-        b=FgCikrgWXmFYGi214R8dAlBta2pEeuVbi0JMiSVgWqW9rPxFxyaaQVLd2hGBTBXNL5
-         rnueJDu/wmv5Fy8Rg+y5sxyMzHeQ1gDNVYkWpZM6rAjmqaRamxatCa4arO+65IcDtVbR
-         +9upj8bAyX5IQm9Pg/Sla6ZHnbwBhzFqD4jm6pBwBKBpunBoexIJWW6KI/almWb8dWvz
-         Y7Ejh0qr4VcA9Z7eDphmR2s6SqMFZNOdqPqeqAGWylEMnIiYmJreVILWxD2QaILPQKaj
-         RakLugiGYMDI7+74iIBVlx6ogKa3y8TMFqHtWLjXPQxK2i2RPDTHwSt39apXhv0xxLsj
-         165g==
-X-Gm-Message-State: APjAAAW2ZvIQWXrPjESwvcnPdCXig97Ax6FoCNA4Xhly+yc57QjNgoa9
-        nho/sD5ETSqQmIuaMq6Ii0E=
-X-Google-Smtp-Source: APXvYqx2+ES/Zm6mJG5Ui9U/ofzrn8oYSPp+hHXhmZR0UKq0PWWOZ4+HuGiv4oMvYgBzG5bsJ6oFTw==
-X-Received: by 2002:aa7:8a11:: with SMTP id m17mr55997757pfa.122.1558332616888;
-        Sun, 19 May 2019 23:10:16 -0700 (PDT)
-Received: from mail.google.com ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id a9sm24734044pgw.72.2019.05.19.23.10.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 19 May 2019 23:10:16 -0700 (PDT)
-Date:   Mon, 20 May 2019 06:10:15 +0000
-From:   Changbin Du <changbin.du@gmail.com>
-To:     bhelgaas@google.com, corbet@lwn.net
-Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
-        changbin.du@gmail.com
-Subject: Re: [PATCH v6 00/12] Include linux PCI docs into Sphinx TOC tree
-Message-ID: <20190520061014.qtq6tc366pnnqcio@mail.google.com>
-References: <20190514144734.19760-1-changbin.du@gmail.com>
+        id S1728551AbfETIMM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 May 2019 04:12:12 -0400
+Received: from mail-eopbgr80045.outbound.protection.outlook.com ([40.107.8.45]:43914
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730445AbfETIML (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 20 May 2019 04:12:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QO6v2+9Q+oADiaXWyc2Lm1KtzVYLG6nKk2XzKVg3ow4=;
+ b=Xou2uT1hbXirRseG/wIeBmHzAusiVnGCea2K3qi6b9EbfqZN+kInJZdvLFVoDJu+QzT1KHVsMnVDziKKdciYbYs9FWFqAds+ZhZZ3BajzfJlep8CXSxlNdJBaTUi2dc+yCWrG/QugdZP/78VXFX3tFeU1wW5iLbrz2QwGdib/so=
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
+ AM5PR04MB3185.eurprd04.prod.outlook.com (10.173.255.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.17; Mon, 20 May 2019 08:12:06 +0000
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::15e3:bb28:7e33:1adb]) by AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::15e3:bb28:7e33:1adb%7]) with mapi id 15.20.1900.020; Mon, 20 May 2019
+ 08:12:06 +0000
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        Kishon <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        gregkh <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: RE: [EXT] Re: [PATCH 2/3] arm64: dts: ls1028a: Add PCIe controller DT
+ nodes
+Thread-Topic: [EXT] Re: [PATCH 2/3] arm64: dts: ls1028a: Add PCIe controller
+ DT nodes
+Thread-Index: AQHVCvDcQiDXhQiDJU+q/k8vTUL4F6Zr0/6AgALH2dCAAGu0gIAEp57w
+Date:   Mon, 20 May 2019 08:12:06 +0000
+Message-ID: <AM5PR04MB329911C71C671C52925495B6F5060@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190515072747.39941-1-xiaowei.bao@nxp.com>
+ <20190515072747.39941-2-xiaowei.bao@nxp.com>
+ <CAK8P3a3AXRp_v_7hkoJA28tUCiSh1eYzbk4Q4h29OqL6y-KL8A@mail.gmail.com>
+ <AM5PR04MB329934765FB8EB1828743D79F50B0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <CAK8P3a0kKb7njiJvUkwJYwf-yc-hEyErSiWcvbdf0XnMoctzrg@mail.gmail.com>
+In-Reply-To: <CAK8P3a0kKb7njiJvUkwJYwf-yc-hEyErSiWcvbdf0XnMoctzrg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaowei.bao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fed7f85d-fc29-45da-a19e-08d6dcfad97c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM5PR04MB3185;
+x-ms-traffictypediagnostic: AM5PR04MB3185:
+x-microsoft-antispam-prvs: <AM5PR04MB3185B66690DB51613E170726F5060@AM5PR04MB3185.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 004395A01C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(136003)(346002)(39860400002)(396003)(189003)(199004)(13464003)(8676002)(99286004)(44832011)(25786009)(53546011)(6436002)(6506007)(86362001)(229853002)(316002)(54906003)(66946007)(52536014)(5660300002)(53936002)(9686003)(68736007)(6916009)(76116006)(73956011)(66446008)(64756008)(66556008)(66476007)(256004)(74316002)(2906002)(305945005)(14444005)(66066001)(7416002)(14454004)(33656002)(186003)(7736002)(4326008)(446003)(11346002)(102836004)(71200400001)(55016002)(8936002)(476003)(81156014)(478600001)(81166006)(486006)(7696005)(76176011)(6116002)(71190400001)(3846002)(26005)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3185;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: eR1bepXtERoaalI8zAbub3pAfqDDAdbnJ9ub/IzLfZ/Za8kPLsyMrItjzEC2iPySi0FH7bhKX//5/NUxdAfqXQiaTr8n2NIKeb0QxtUBR+edWIAonVsqXswgI94sAz074Zg8TGqI8ihm/+PfVSB/673oZuIBlUcGiiXwdBh16V45oLoZDyMq9vDlBGGYVvmrJqNdiU9p1Rn9GnSYfa4DtK0iEjrwwX71UxD56RcFiejYDw2jvAlhAn4cEypof2Geu4bz/2PKYblLlo79A8k389cKvnkxcscmfGK8P7qGLkdUpy56+MWq5vRf1cvOntVrVLobR60/VttP18oSMfyrTUPJDAZ6SMpurD3FqK5RkX9sVxtR3NS1JD4q+nYctpYeYp2rYl9azLwXhHaOy2KUlpYF3y3WnLIsVrDdRcvu74k=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514144734.19760-1-changbin.du@gmail.com>
-User-Agent: NeoMutt/20180716-508-7c9a6d
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fed7f85d-fc29-45da-a19e-08d6dcfad97c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2019 08:12:06.7732
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3185
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Bjorn and Jonathan,
-Could we consider to merge this serias now? Thanks.
-
-On Tue, May 14, 2019 at 10:47:22PM +0800, Changbin Du wrote:
-> Hi all,
-> 
-> The kernel now uses Sphinx to generate intelligent and beautiful documentation
-> from reStructuredText files. I converted most of the Linux PCI docs to rst
-> format in this serias.
-> 
-> For you to preview, please visit below url:
-> http://www.bytemem.com:8080/kernel-doc/PCI/index.html
-> 
-> Thank you!
-> 
-> v2: trivial style update.
-> v3: update titles. (Bjorn Helgaas)
-> v4: fix comments from Mauro Carvalho Chehab
-> v5: update MAINTAINERS (Joe Perches)
-> v6: fix comments.
-> 
-> Changbin Du (12):
->   Documentation: add Linux PCI to Sphinx TOC tree
->   Documentation: PCI: convert pci.txt to reST
->   Documentation: PCI: convert PCIEBUS-HOWTO.txt to reST
->   Documentation: PCI: convert pci-iov-howto.txt to reST
->   Documentation: PCI: convert MSI-HOWTO.txt to reST
->   Documentation: PCI: convert acpi-info.txt to reST
->   Documentation: PCI: convert pci-error-recovery.txt to reST
->   Documentation: PCI: convert pcieaer-howto.txt to reST
->   Documentation: PCI: convert endpoint/pci-endpoint.txt to reST
->   Documentation: PCI: convert endpoint/pci-endpoint-cfs.txt to reST
->   Documentation: PCI: convert endpoint/pci-test-function.txt to reST
->   Documentation: PCI: convert endpoint/pci-test-howto.txt to reST
-> 
->  .../PCI/{acpi-info.txt => acpi-info.rst}      |  15 +-
->  Documentation/PCI/endpoint/index.rst          |  13 +
->  ...-endpoint-cfs.txt => pci-endpoint-cfs.rst} |  99 ++---
->  .../{pci-endpoint.txt => pci-endpoint.rst}    |  92 +++--
->  ...est-function.txt => pci-test-function.rst} |  84 +++--
->  ...{pci-test-howto.txt => pci-test-howto.rst} |  81 ++--
->  Documentation/PCI/index.rst                   |  18 +
->  .../PCI/{MSI-HOWTO.txt => msi-howto.rst}      |  85 +++--
->  ...or-recovery.txt => pci-error-recovery.rst} | 287 +++++++-------
->  .../{pci-iov-howto.txt => pci-iov-howto.rst}  | 161 ++++----
->  Documentation/PCI/{pci.txt => pci.rst}        | 356 ++++++++----------
->  .../{pcieaer-howto.txt => pcieaer-howto.rst}  | 156 +++++---
->  .../{PCIEBUS-HOWTO.txt => picebus-howto.rst}  | 140 ++++---
->  Documentation/index.rst                       |   1 +
->  MAINTAINERS                                   |   4 +-
->  include/linux/mod_devicetable.h               |  19 +
->  include/linux/pci.h                           |  37 ++
->  17 files changed, 938 insertions(+), 710 deletions(-)
->  rename Documentation/PCI/{acpi-info.txt => acpi-info.rst} (96%)
->  create mode 100644 Documentation/PCI/endpoint/index.rst
->  rename Documentation/PCI/endpoint/{pci-endpoint-cfs.txt => pci-endpoint-cfs.rst} (64%)
->  rename Documentation/PCI/endpoint/{pci-endpoint.txt => pci-endpoint.rst} (83%)
->  rename Documentation/PCI/endpoint/{pci-test-function.txt => pci-test-function.rst} (55%)
->  rename Documentation/PCI/endpoint/{pci-test-howto.txt => pci-test-howto.rst} (78%)
->  create mode 100644 Documentation/PCI/index.rst
->  rename Documentation/PCI/{MSI-HOWTO.txt => msi-howto.rst} (88%)
->  rename Documentation/PCI/{pci-error-recovery.txt => pci-error-recovery.rst} (67%)
->  rename Documentation/PCI/{pci-iov-howto.txt => pci-iov-howto.rst} (63%)
->  rename Documentation/PCI/{pci.txt => pci.rst} (68%)
->  rename Documentation/PCI/{pcieaer-howto.txt => pcieaer-howto.rst} (72%)
->  rename Documentation/PCI/{PCIEBUS-HOWTO.txt => picebus-howto.rst} (70%)
-> 
-> -- 
-> 2.20.1
-> 
-
--- 
-Cheers,
-Changbin Du
+SGkgQXJuZHTvvIwNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEFybmQgQmVy
+Z21hbm4gPGFybmRAYXJuZGIuZGU+IA0KU2VudDogMjAxOeW5tDXmnIgxN+aXpSAxNjo1OQ0KVG86
+IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KQ2M6IEJqb3JuIEhlbGdhYXMgPGJo
+ZWxnYWFzQGdvb2dsZS5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFy
+ayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFNoYXduIEd1byA8c2hhd25ndW9Aa2Vy
+bmVsLm9yZz47IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgS2lzaG9uIDxraXNob25AdGku
+Y29tPjsgTG9yZW56byBQaWVyYWxpc2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+OyBncmVn
+a2ggPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPjsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFu
+QG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kgWmFuZyA8cm95
+LnphbmdAbnhwLmNvbT47IEthdGUgU3Rld2FydCA8a3N0ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9y
+Zz47IFBoaWxpcHBlIE9tYnJlZGFubmUgPHBvbWJyZWRhbm5lQG5leGIuY29tPjsgU2hhd24gTGlu
+IDxzaGF3bi5saW5Acm9jay1jaGlwcy5jb20+OyBsaW51eC1wY2kgPGxpbnV4LXBjaUB2Z2VyLmtl
+cm5lbC5vcmc+OyBEVE1MIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IExpbnV4IEtlcm5l
+bCBNYWlsaW5nIExpc3QgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBMaW51eCBBUk0g
+PGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz47IGxpbnV4cHBjLWRldiA8bGlu
+dXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc+DQpTdWJqZWN0OiBSZTogW0VYVF0gUmU6IFtQQVRD
+SCAyLzNdIGFybTY0OiBkdHM6IGxzMTAyOGE6IEFkZCBQQ0llIGNvbnRyb2xsZXIgRFQgbm9kZXMN
+Cg0KQ2F1dGlvbjogRVhUIEVtYWlsDQoNCk9uIEZyaSwgTWF5IDE3LCAyMDE5IGF0IDU6MjEgQU0g
+WGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+IHdyb3RlOg0KPiAtLS0tLU9yaWdpbmFs
+IE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPg0KPiBP
+biBXZWQsIE1heSAxNSwgMjAxOSBhdCA5OjM2IEFNIFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0Bu
+eHAuY29tPiB3cm90ZToNCj4gPiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5i
+YW9AbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
+ZnNsLWxzMTAyOGEuZHRzaSB8ICAgNTIgKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEg
+ZmlsZXMgY2hhbmdlZCwgNTIgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+
+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5k
+dHNpIA0KPiA+IGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRz
+aQ0KPiA+IGluZGV4IGIwNDU4MTIuLjUwYjU3OWIgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02
+NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gPiBAQCAtMzk4LDYgKzM5
+OCw1OCBAQA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7
+DQo+ID4gICAgICAgICAgICAgICAgIH07DQo+ID4NCj4gPiArICAgICAgICAgICAgICAgcGNpZUAz
+NDAwMDAwIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImZzbCxs
+czEwMjhhLXBjaWUiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDAwIDB4
+MDM0MDAwMDAgMHgwIDB4MDAxMDAwMDAgICAvKiBjb250cm9sbGVyIHJlZ2lzdGVycyAqLw0KPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDgwIDB4MDAwMDAwMDAgMHgwIDB4MDAw
+MDIwMDA+OyAvKiBjb25maWd1cmF0aW9uIHNwYWNlICovDQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgcmVnLW5hbWVzID0gInJlZ3MiLCAiY29uZmlnIjsNCj4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTA4IElSUV9UWVBFX0xFVkVMX0hJR0g+LCAv
+KiBQTUUgaW50ZXJydXB0ICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIDxHSUNfU1BJIDEwOSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsgLyogYWVyIGludGVycnVwdCAq
+Lw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdC1uYW1lcyA9ICJwbWUiLCAi
+YWVyIjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwzPjsN
+Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDwyPjsNCj4gPiArICAg
+ICAgICAgICAgICAgICAgICAgICBkZXZpY2VfdHlwZSA9ICJwY2kiOw0KPiA+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIGRtYS1jb2hlcmVudDsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBu
+dW0tbGFuZXMgPSA8ND47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgYnVzLXJhbmdlID0g
+PDB4MCAweGZmPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByYW5nZXMgPSA8MHg4MTAw
+MDAwMCAweDAgMHgwMDAwMDAwMCAweDgwIDB4MDAwMTAwMDAgMHgwIDB4MDAwMTAwMDAgICAvKiBk
+b3duc3RyZWFtIEkvTyAqLw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAw
+eDgyMDAwMDAwIDB4MCAweDQwMDAwMDAwIDB4ODAgDQo+ID4gKyAweDQwMDAwMDAwIDB4MCAweDQw
+MDAwMDAwPjsgLyogbm9uLXByZWZldGNoYWJsZSBtZW1vcnkgKi8NCj4NCj4gQXJlIHlvdSBzdXJl
+IHRoZXJlIGlzIG5vIHN1cHBvcnQgZm9yIDY0LWJpdCBCQVJzIG9yIHByZWZldGNoYWJsZSBtZW1v
+cnk/DQo+IFtYaWFvd2VpIEJhb10gc29ycnkgZm9yIGxhdGUgcmVwbHksIFRob3VnaHQgdGhhdCBv
+dXIgTGF5ZXJzY2FwZSBwbGF0Zm9ybSBoYXMgbm90IGFkZGVkIHByZWZldGNoYWJsZSBtZW1vcnkg
+c3VwcG9ydCBpbiBEVFMsIHNvIHRoaXMgcGxhdGZvcm0gaGFzIG5vdCBiZWVuIGFkZGVkLCBJIHdp
+bGwgc3VibWl0IGEgc2VwYXJhdGUgcGF0Y2ggdG8gYWRkIHByZWZldGNoYWJsZSBtZW1vcnkgc3Vw
+cG9ydCBmb3IgYWxsIExheWVyc2NhcGUgcGxhdGZvcm1zLg0KDQpPaywgdGhhbmtzLg0KDQo+IE9m
+IGNvdXJzZSwgdGhlIHByZWZldGNoYWJsZSBQQ0lFIGRldmljZSBjYW4gd29yayBpbiBvdXIgYm9h
+cmRzLCANCj4gYmVjYXVzZSB0aGUgUkMgd2lsbCBhc3NpZ24gbm9uLXByZWZldGNoYWJsZSBtZW1v
+cnkgZm9yIHRoaXMgZGV2aWNlLiBXZSANCj4gcmVzZXJ2ZSAxRyBuby1wcmVmZXRjaGFibGUgbWVt
+b3J5IGZvciBQQ0lFIGRldmljZSwgaXQgaXMgZW5vdWdoIGZvciBnZW5lcmFsIGRldmljZXMuDQoN
+ClN1cmUsIG1hbnkgZGV2aWNlcyB3b3JrIGp1c3QgZmluZSwgdGhpcyBpcyBtb3N0bHkgYSBxdWVz
+dGlvbiBvZiBzdXBwb3J0aW5nIHRob3NlIGRldmljZXMgdGhhdCBkbyByZXF1aXJlIG11bHRpcGxl
+IGdpZ2FieXRlcywgb3IgdGhhdCBuZWVkIHByZWZldGNoYWJsZSBtZW1vcnkgc2VtYW50aWNzIHRv
+IGdldCB0aGUgZXhwZWN0ZWQgcGVyZm9ybWFuY2UuIEdQVXMgYXJlIHRoZSBvYnZpb3VzIGV4YW1w
+bGUsIGJ1dCBJIHRoaW5rIHRoZXJlIGFyZSBvdGhlcnMgKGluZmluaWJhbmQ/KS4NCltYaWFvd2Vp
+IEJhb10gc29ycnksIEkgZG9uJ3Qga25vdyBtdWNoIGFib3V0IGluZmluaWJhbmQgYW5kIEdQVSwg
+YXMgeW91IHNhaWQsIEkgdGhpbmsgbWFueSBkZXZpY2VzIHdvcmtzIGZpbmUgd2l0aCB0aGlzIERU
+UywgSSB3aWxsIGFkZCB0aGUgcHJlZmV0Y2hhYmxlIG1lbW9yeSBlbnRyeSBpbiBEVFMgZnV0dXJl
+IGFuZCBzdWJtaXQgYW5vdGhlciBwYXRjaC4NCg0KICAgICAgQXJuZA0K
