@@ -2,132 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AA1124B25
-	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2019 11:07:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BDED24CA2
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2019 12:27:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbfEUJH2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 May 2019 05:07:28 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:15932 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbfEUJH2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 May 2019 05:07:28 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce3bfcf0000>; Tue, 21 May 2019 02:07:27 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 21 May 2019 02:07:27 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 21 May 2019 02:07:27 -0700
-Received: from [10.24.192.74] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 May
- 2019 09:07:23 +0000
-Subject: Re: [PATCH V4 20/28] PCI: tegra: Use legacy IRQ for port service
- drivers
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <jonathanh@nvidia.com>,
-        <lorenzo.pieralisi@arm.com>, <vidyas@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
- <20190516055307.25737-21-mmaddireddy@nvidia.com>
- <20190520203731.GA54609@google.com>
-X-Nvconfidentiality: public
-From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Message-ID: <41397458-c97b-fb38-49ba-8f3bb9ec3ded@nvidia.com>
-Date:   Tue, 21 May 2019 14:37:00 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1727606AbfEUK1e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 May 2019 06:27:34 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45212 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726344AbfEUK1e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 May 2019 06:27:34 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b18so17902049wrq.12;
+        Tue, 21 May 2019 03:27:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0u/cElypM0FGg3NqoZhyM4kF6/Suy0Ma6wulSB8WXxk=;
+        b=D8LItHFK56peyyh2BjRqAE0QSAEGdSuOdY3ELK8p1Hhn5BM9FXVbU86E6K/HZsME4Q
+         kHxex2HC0xFWg1SKMIR4tfPjBRgdVtKvZrgxhcFOegMcSlR6PXY1ltWAeq30PVJW+5pr
+         JyGEHwl5V5uQgY8SL3EobnEVHoXBqeCE+qrDisHX2aNXlYhLWWBe2pFQ0Pdv+YfVLUa+
+         DjCnkr7yZEpXOUcbGJ2XDk7rxsCR7+0WMQH4rHinDXNYEg7lkKw9htiyCO5h/M8RKIHU
+         bzpH+S2sOLpNaDPHgHaMqdCRpquZokbZZ5HGDmMmeP4MNYNkdDvDntLPD1bS6T1SYkY0
+         UtfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0u/cElypM0FGg3NqoZhyM4kF6/Suy0Ma6wulSB8WXxk=;
+        b=K+7ej3yHs+pI2QTaIDdwaG2hE3Rjk5eef5dv4Kc3WGglfFKk+vlmJjtf7GzGcU+Oy9
+         Ep7AiMSDh2gaWyDlmVFeLZ8zOMm7bMs59MuIvMimUa7PtYaa9YAmB04I6UWlOt2SXTys
+         cu2koDkztSyBS5JVaVcOP4TRrz/merRF8zLjv9vpviPub5va9V5yeVueuWhrqY6EOr64
+         DgO1CZQtFroHEpRUZ0VpaW7qtc/ZhYlqhrusRQcVuih823vyPku1ZfKuIrAWD7yPo+2+
+         hK4TKd1dpHyqSJuKlRZE9GVP99VGuTIOi2+4unFuq3zRcowk+wf5JpP9GpmZdDcMD5va
+         nCXw==
+X-Gm-Message-State: APjAAAV0mJM76Nng3mBv8OCP7zexnhyWlfcCmhGnHDQgflJLQRY30xaF
+        zB2rnz12symFsFgta0iaQ+E=
+X-Google-Smtp-Source: APXvYqzN0aFxhFPXBCSNKpdXBwYkCaswfe1f/2Sol7iXRMG9CaRzPkEF9jISqZ9I4geyOBywAICB0Q==
+X-Received: by 2002:adf:cf05:: with SMTP id o5mr34219199wrj.262.1558434451659;
+        Tue, 21 May 2019 03:27:31 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id k8sm7135873wrp.74.2019.05.21.03.27.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 May 2019 03:27:30 -0700 (PDT)
+Date:   Tue, 21 May 2019 12:27:29 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V7 02/15] PCI: Disable MSI for Tegra194 root port
+Message-ID: <20190521102729.GB29166@ulmo>
+References: <20190517123846.3708-1-vidyas@nvidia.com>
+ <20190517123846.3708-3-vidyas@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20190520203731.GA54609@google.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558429647; bh=YH9+7V7n0rvwG/qLHf412QIldM73k0ye/xO6T188+V8=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:
-         Content-Transfer-Encoding:Content-Language;
-        b=RXxA38OOkYUgl3RMYLatODXVk8IdOwNWbC90iUR3WUp9rHWyYQDLTeE7VQXD7b+dc
-         gGxjqCibHRo0ixmmrRyi7lqV9Mqiv37ydR5EVehxUO3I8kKWIshnR532opPPkCykmE
-         ZBCo8qgvLzWcqSPT6LTgQ3BhVIdjkrpDyoT84P9bGE4A2x/eT0Qf4H9OqFY08Jh9II
-         k5okmNuP79tl/t83countd7vBsz2ioEoKsP8GHEyJsZHHzMtjNuEURkqG9u6Swvsta
-         NAuBOUE8neYHnuJAvoJa1Pkj9YxuEzzbMRpN4thxoQCOo8pSgEykOUuKWWhcTP14BJ
-         SZ4v9AnXJWTgA==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hHWLQfXTYDoKhP50"
+Content-Disposition: inline
+In-Reply-To: <20190517123846.3708-3-vidyas@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
+--hHWLQfXTYDoKhP50
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 21-May-19 2:07 AM, Bjorn Helgaas wrote:
-> On Thu, May 16, 2019 at 11:22:59AM +0530, Manikanta Maddireddy wrote:
->> Tegra signals PCIe services like AER, PME, etc. over legacy IRQ line.
->> By default, service drivers register interrupt routine over MSI IRQ line.
->> Use pcie_pme_disable_msi() function to disable MSI for service drivers.
-> I think this device is not quite spec-compliant:
->
->   https://lore.kernel.org/linux-pci/20190520175729.GC49425@google.com/
->
-> and you should work around this with a quirk that sets pdev->no_msi so
-> we don't use MSI for it at all.
+On Fri, May 17, 2019 at 06:08:33PM +0530, Vidya Sagar wrote:
+> Tegra194 rootports don't generate MSI interrupts for PME events and hence
+> MSI needs to be disabled for them to avoid root ports service drivers
+> registering their respective ISRs with MSI interrupt.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes since [v6]:
+> * This is a new patch
+>=20
+>  drivers/pci/quirks.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>=20
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 0f16acc323c6..28f9a0380df5 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2592,6 +2592,20 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA,
+>  			PCI_DEVICE_ID_NVIDIA_NVENET_15,
+>  			nvenet_msi_disable);
+> =20
+> +/*
+> + * Tegra194's PCIe root ports don't generate MSI interrupts for PME even=
+ts
+> + * instead legacy interrupts are generated. Hence, to avoid service driv=
+ers
+> + * registering their respective ISRs for MSIs, need to disable MSI inter=
+rupts
+> + * for root ports.
+> + */
+> +static void disable_tegra194_rp_msi(struct pci_dev *dev)
+> +{
+> +	dev->no_msi =3D 1;
+> +}
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad0, disable_tegra194_r=
+p_msi);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad1, disable_tegra194_r=
+p_msi);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad2, disable_tegra194_r=
+p_msi);
+> +
 
-OK, I will update in next version. 
+Later functions in this file seem to use a more consistent naming
+pattern, according to which the name for this would become:
 
-Manikanta
+	pci_quirk_nvidia_tegra194_disable_rp_msi
 
->
->> PME and AER interrupts registered to MSI without this change,
->> cat /proc/interrupts | grep -i pci
->> 36: 21 0 0 0 0 0 GICv2 104 Level       PCIE
->> 37: 35 0 0 0 0 0 GICv2 105 Level       Tegra PCIe MSI
->> 76: 0  0 0 0 0 0 Tegra PCIe MSI 0 Edge PCIe PME, aerdrv, PCIe BW notif
->>
->> PME and AER interrupts registered to legacy IRQ with this change,
->> cat /proc/interrupts | grep -i pci
->> 36: 33 0 0 0 0 0 GICv2 104 Level      PCIE, PCIe PME, aerdrv, PCIe BW notif
->> 37: 52 0 0 0 0 0 GICv2 105 Level      Tegra PCIe MSI
->>
->> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
->> Acked-by: Thierry Reding <treding@nvidia.com>
->> ---
->> V4: No change
->>
->> V3: Corrected typo in commit log
->>
->> V2: No change
->>
->>  drivers/pci/controller/pci-tegra.c | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
->> index ac57c5badd9b..0024bc42b400 100644
->> --- a/drivers/pci/controller/pci-tegra.c
->> +++ b/drivers/pci/controller/pci-tegra.c
->> @@ -41,6 +41,7 @@
->>  #include <soc/tegra/pmc.h>
->>  
->>  #include "../pci.h"
->> +#include "../pcie/portdrv.h"
->>  
->>  #define INT_PCI_MSI_NR (8 * 32)
->>  
->> @@ -2725,6 +2726,9 @@ static int tegra_pcie_probe(struct platform_device *pdev)
->>  		goto put_resources;
->>  	}
->>  
->> +	/* Switch to legacy IRQ for PCIe services like AER, PME*/
->> +	pcie_pme_disable_msi();
->> +
->>  	pm_runtime_enable(pcie->dev);
->>  	err = pm_runtime_get_sync(pcie->dev);
->>  	if (err) {
->> -- 
->> 2.17.1
->>
+Might be worth considering making this consistent.
 
+This could also be moved to the DWC driver to restrict this to where it
+is needed. In either case, this seems like a good solution, so:
+
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+
+--hHWLQfXTYDoKhP50
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzj0pEACgkQ3SOs138+
+s6GqcxAAjaEUM9FTNPbKl4kQsquEnKIrVyDWV9lxJqFh1YaQGK005Nk/f1oJcuOn
+CEP8HrtYIpZk1wn1cUsT+ec9j7qxlu9ihEhKBXxsFOf6njXoBnc+QjscO28UJ4tu
+HYHDpvEK98bDBRMJhaZuBEClqBuFAH5Zrp8909NaUgaka7ut6PZqQC6XymRa6aX8
+5z8GSfR/FSNdUnhJ0gboYdliYQc+/co73YJUPVWKimKkRKnfD6OYNjR9+YfncIPU
+cFkBWnqCFzLVg6NIIOXpcEftFstLcTSJeC4XZ4bVa442Wbnz2dsgqHJMBy2wuR1z
+vwtnw+94Coa8E7Zsa5NCwTOiqyqhjsJGsS5IcI3OEbjh2aue7ScypriufK4Dyept
+hITWFgp0ZX1UxT2/QCLHfue3qNgSdOTYtomYFATqyHPD3BrgDAG8XZKKSDUVty8h
+PE7MLQfsgWWdqFn0SaHeiCGMlc/1n5JvBRzfO04dPNH62G80YoJ5/WqkZ15pTQFW
+FCbfApM2DekXpRsJaQvkPuXOAJOsUhR//WSLEMJQWfTl2pfRq2HPwWbSAgriL++k
+VnsA4LBL4dKx8eqQJO/6SGJHmeHEjEnugbm9vsxQmiajUFl3LdVt6PfGeaSMq9oy
+ggLSXlC+pTaWmPnBKEKh5aLNtSCCz+lT2cKkLq24YbX3YnLaC4g=
+=PTXE
+-----END PGP SIGNATURE-----
+
+--hHWLQfXTYDoKhP50--
