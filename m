@@ -2,279 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BCBA5253D8
-	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2019 17:26:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2165A254DE
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2019 18:07:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbfEUPZ7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 May 2019 11:25:59 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:56913 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728103AbfEUPZ7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 May 2019 11:25:59 -0400
-X-Originating-IP: 88.190.179.123
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 8049960013;
-        Tue, 21 May 2019 15:25:51 +0000 (UTC)
-Date:   Tue, 21 May 2019 17:34:11 +0200
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ellie Reeves <ellierevves@gmail.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: aardvark: Use LTSSM state to build link training
- flag
-Message-ID: <20190521153410.GB2754@voidbox.localdomain>
-References: <20190316161243.29517-1-repk@triplefau.lt>
- <20190425110830.GC10833@e121166-lin.cambridge.arm.com>
- <20190425142353.GO2754@voidbox.localdomain>
- <20190425150640.GA20770@e121166-lin.cambridge.arm.com>
- <20190429153234.GS2754@voidbox.localdomain>
- <20190430113427.GA18742@e121166-lin.cambridge.arm.com>
+        id S1728055AbfEUQHp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 May 2019 12:07:45 -0400
+Received: from foss.arm.com ([217.140.101.70]:37874 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727044AbfEUQHp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 21 May 2019 12:07:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CAF7F15A2;
+        Tue, 21 May 2019 09:07:44 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A22B3F718;
+        Tue, 21 May 2019 09:07:42 -0700 (PDT)
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [RFC/PATCH 0/4] Initial support for modular IOMMU drivers
+To:     "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     kernel-team@android.com, robin.murphy@arm.com, joro@8bytes.org,
+        will.deacon@arm.com, lmark@codeaurora.org, robh+dt@kernel.org,
+        bhelgaas@google.com, frowand.list@gmail.com, pratikp@codeaurora.org
+References: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
+Message-ID: <2379c1cf-be1b-503f-7dbc-51110650e91f@arm.com>
+Date:   Tue, 21 May 2019 17:07:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430113427.GA18742@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo,
+Hi Isaac,
 
-On Tue, Apr 30, 2019 at 12:34:27PM +0100, Lorenzo Pieralisi wrote:
-> On Mon, Apr 29, 2019 at 05:32:35PM +0200, Remi Pommarel wrote:
-> > Hi Lorenzo,
-> > 
-> > Sorry for duplicates I forgot to include everyone.
-> > 
-> > On Thu, Apr 25, 2019 at 04:06:40PM +0100, Lorenzo Pieralisi wrote:
-> > > On Thu, Apr 25, 2019 at 04:23:53PM +0200, Remi Pommarel wrote:
-> > > > Hi Lorenzo,
-> > > > 
-> > > > On Thu, Apr 25, 2019 at 12:08:30PM +0100, Lorenzo Pieralisi wrote:
-> > > > > On Sat, Mar 16, 2019 at 05:12:43PM +0100, Remi Pommarel wrote:
-> > > > > > The PCI_EXP_LNKSTA_LT flag in the emulated root device's PCI_EXP_LNKSTA
-> > > > > > config register does not reflect the actual link training state and is
-> > > > > > always cleared. The Link Training and Status State Machine (LTSSM) flag
-> > > > > > in LMI config register could be used as a link training indicator.
-> > > > > > Indeed if the LTSSM is in L0 or upper state then link training has
-> > > > > > completed (see [1]).
-> > > > > > 
-> > > > > > Unfortunately because setting the PCI_EXP_LINCTL_RL flag does not
-> > > > > > instantly imply a LTSSM state change (e.g. L0s to recovery state
-> > > > > > transition takes some time), LTSSM can be in L0 but link training has
-> > > > > > not finished yet. Thus a lower L0 LTSSM state followed by a L0 or upper
-> > > > > > state sequence has to be seen to be sure that link training has been
-> > > > > > done.
-> > > > > 
-> > > > > Hi Remi,
-> > > > > 
-> > > > > I am a bit confused, so you are saying that the LTSSM flag in the
-> > > > > LMI config register can't be used to detect when training is completed ?
-> > > > 
-> > > > Not exactly, I am saying that PCI_EXP_LNKSTA_LT from PCI_EXP_LNKSTA
-> > > > register can't be used with this hardware, but can be emulated with
-> > > > LTSSM flag.
-> > > > 
-> > > > > 
-> > > > > Certainly it can't be used by ASPM core that relies on:
-> > > > > 
-> > > > > PCI_EXP_LNKSTA_LT flag
-> > > > > 
-> > > > > in the PCI_EXP_LNKSTA register, and that's what you are setting through
-> > > > > this timeout mechanism IIUC.
-> > > > > 
-> > > > > Please elaborate on that.
-> > > > 
-> > > > The problem here is that the hardware does not change PCI_EXP_LNKSTA_LT
-> > > > at all. So in order to support link re-training feature we need to
-> > > > emulate this flag. To do so LTSSM flag can be used.
-> > > 
-> > > Understood.
-> > > 
-> > > > Indeed we can set the emulated PCI_EXP_LNKSTA_LT as soon as re-training
-> > > > is asked and wait for LTSSM flag to be back to a configured state
-> > > > (e.g. L0, L0s) before clearing it.
-> > > 
-> > > The check for the LTSSM is carried out through advk_pcie_link_up()
-> > > (ie register CFG_REG), correct ?
-> > > 
-> > 
-> > Yes that is correct.
-> > 
-> > > > The problem with that is that LTSSM flag does not change instantly after
-> > > > link re-training has been asked, and will stay in configured state for a
-> > > > small amount of time. So the idea is to poll the LTSSM flag and wait for
-> > > > it to enter a recovery state then waiting for it to be back in
-> > > > configured state.
-> > > 
-> > > When you say "poll" you mean checking advk_pcie_link_up() ?
-> > > 
-> > 
-> > I mean checking advk_pcie_link_up() in a loop. This loop is done by the
-> > user (e.g. ASPM core). ASPM core waits for PCI_EXP_LNKSTA_LT to be
-> > cleared in pcie_aspm_configure_common_clock() just after it has set
-> > PCI_EXP_LNKCTL_RL.
-> > 
-> > So the idea was to check advk_pcie_link_up() each time ASPM core checks
-> > the PCI_EXP_LNKSTA_LT flag. Please see below patch for an alternative
-> > to that.
-> > 
-> > > More below on the code.
-> > > 
-> > > > The timeout is only here as a fallback in the unlikely event that we
-> > > > missed the LTSSM flag entering recovery state.
-> > > > 
-> > > > > 
-> > > > > I am picking Bjorn's brain on this patch since what you are doing
-> > > > > seems quite arbitrary and honestly it is a bit of a hack.
-> > > > 
-> > > > Yes, sorry, it is a bit of a hack because I try to workaround a
-> > > > hardware issue.
-> > > 
-> > > No problems, it is not your fault.
-> > > > 
-> > > > Please note that vendor has been contacted about this in the meantime
-> > > > and answered the following:
-> > > > 
-> > > > "FW can poll LTSSM state equals any of the following values: 0xB or 0xD
-> > > > or 0xC or 0xE. After that, polls for LTSSM equals 0x10. For your
-> > > > information, LTSSM will transit from 0x10 -> 0xB -> 0xD -> 0xC or 0xE
-> > > > ........... -> 0x10".
-> > > > 
-> > > > It is basically what this patch does, I've just added a timeout fallback
-> > > > to not poll LTSSM state forever if its transition to 0xB, 0xD, 0xC or
-> > > > 0xE has been missed.
-> > > 
-> > > When you say "missed" you mean advk_pcie_link_up() returning true, right ?
-> > > 
-> > 
-> > Not exactly, I mean that LTSSM had the time to go down and back up
-> > between advk_pcie_link_up() because, for example, ASPM core loop took
-> > too much time between two PCI_EXP_LNKSTA_LT flag checks.
-> > 
-> > > [...]
-> > > 
-> > > > > > +static int advk_pcie_link_retraining(struct advk_pcie *pcie)
-> > > > > > +{
-> > > > > > +	if (!advk_pcie_link_up(pcie)) {
-> > > 
-> > > That's the bit I find confusing. Is this check here to detect if the
-> > > link went through the sequence below ? Should not it be carried
-> > > out only if (pcie->rl_asked == 1) ?
-> > > 
-> > > "... LTSSM will transit from 0x10 -> 0xB -> 0xD -> 0xC or 0xE
-> > >  ........... -> 0x10".
-> > 
-> > Yes it is the check to detect the sequence. advk_pcie_link_up() returns
-> > false if LTSSM <= 0x10.
-> > 
-> > This cannot be done only if (pcie->rl_asked == 1) because I still
-> > want this function to return 1 if link is still down.
-> > 
-> > > 
-> > > > > > +		pcie->rl_asked = 0;
-> > > 
-> > > Why ?
-> > > 
-> > 
-> > rl_asked is not a good name, I could have called it
-> > pcie->wait_for_link_down instead. So if advk_pcie_link_up() returns
-> > false that means that we don't need to wait for link being down any more
-> > and just wait for (LTSSM >= 0x10). In this case the delay is not needed.
-> > 
-> > > > > > +		return 1;
-> > > > > > +	}
-> > > > > > +
-> > > > > > +	if (pcie->rl_asked && time_before(jiffies, pcie->rl_deadline))
-> > > > > > +		return 1;
-> > > 
-> > > This ensures that if the LTSSM >= 0x10 we still wait for a delay before
-> > > considering the link up (because I suppose, after asking a retraining
-> > > it takes a while for the LTSSM state to become < 0x10), correct ?
-> > 
-> > Yes it takes a while to become < 0x10 after retraining hence the delay.
-> > But here we don't need to always wait for a delay. Indeed if we've
-> > already seen the link being < 0x10 (i.e if "pcie->rl_asked == 0") and
-> > if after that link is >= 0x10 then we know that retraining process has
-> > finished.
-> > 
-> > Anyway I did it this way because I wanted to keep
-> > advk_pci_bridge_emul_pcie_conf_write() from polling. But this is
-> > obviously a bad reason as it makes the code way too complex and relies
-> > on user (ASPM core) to do the poll instead.
-> > 
-> > So if you find the following better I'll send a v3 with that:
-> > 
-> > ---
-> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > index eb58dfdaba1b..67e8ae4e313e 100644
-> > --- a/drivers/pci/controller/pci-aardvark.c
-> > +++ b/drivers/pci/controller/pci-aardvark.c
-> > @@ -180,6 +180,9 @@
-> >  #define LINK_WAIT_MAX_RETRIES		10
-> >  #define LINK_WAIT_USLEEP_MIN		90000
-> >  #define LINK_WAIT_USLEEP_MAX		100000
-> > +#define RETRAIN_WAIT_MAX_RETRIES	20
-> > +#define RETRAIN_WAIT_USLEEP_MIN		2000
-> > +#define RETRAIN_WAIT_USLEEP_MAX		5000
-> >  
-> >  #define MSI_IRQ_NUM			32
-> >  
-> > @@ -239,6 +242,17 @@ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
-> >  	return -ETIMEDOUT;
-> >  }
-> >  
-> > +static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
-> > +{
-> > +	size_t retries;
-> > +
-> > +	for (retries = 0; retries < RETRAIN_WAIT_MAX_RETRIES; ++retries) {
-> > +		if (!advk_pcie_link_up(pcie))
-> > +			break;
-> > +		usleep_range(RETRAIN_WAIT_USLEEP_MIN, RETRAIN_WAIT_USLEEP_MAX);
-> > +	}
-> > +}
-> > +
-> >  static void advk_pcie_setup_hw(struct advk_pcie *pcie)
-> >  {
-> >  	u32 reg;
-> > @@ -426,11 +440,19 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
-> >  		return PCI_BRIDGE_EMUL_HANDLED;
-> >  	}
-> >  
-> > +	case PCI_EXP_LNKCTL: {
-> > +		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
-> > +			~(PCI_EXP_LNKSTA_LT << 16);
-> > +		if (!advk_pcie_link_up(pcie))
+On 17/05/2019 19:47, Isaac J. Manjarres wrote:
+> This series adds initial support for being able to use the ARM
+> SMMU driver as a loadable kernel module. The series also adds
+> to the IOMMU framework, so that it can defer probing for devices
+> that depend on an IOMMU driver that may be a loadable module.
 > 
-> Is this correct ?
+> The primary reason behind these changes is that having the ARM
+> SMMU driver as a module allows for the same kernel image to be
+> used across different platforms. For example, if one platform
+> contains an IOMMU that implements one version of the ARM SMMU
+> specification, and another platform simply does not have an
+> IOMMU, the only way that these platforms can share the same
+> kernel image is if the ARM SMMU driver is compiled into the
+> kernel image.
 > 
-> "PCI Express Base Specification Rev4.0 Version 1.0" page 758
-> 
-> "Link Training: this read-only bit indicates that
-> the physical layer LTSSM is in the Configuration or
-> Recovery state or that 1b was written to the Retrain
-> Link..."
-> 
-> Isn't that a subset of states for which !advk_pcie_link_up()
-> return true ?
+> This solution is not scalable, as it will lead to bloating the
+> kernel image with support for several future versions of the
+> SMMU specification to maintain a common kernel image that works
+> across all platforms. Having the ARM SMMU driver as a module allows
+> for a common kernel image to be supported across all platforms,
+> while yielding a smaller kernel image size, since the correct
+> SMMU driver can be loaded at runtime, if necessary.
 
-Yes you are right, unfortunately I don't know exactly what the LTSSM
-value for Configuration or Recovery states. All I can observe is that
-LTSSM goes to 0xb which is likely either Recovery or Configuration
-state.
+It can also be useful if IOMMU drivers want to rely on components that
+distros usually build as modules. I have that problem with virtio-iommu,
+where the whole virtio transport is usually modular.
 
-Sorry for long response delay, I was waiting for Marvell answer on that
-specific subject but I don't think it is going to come anytime soon. So
-in the meantime I suggest we could either use !advk_pcie_link_up() or
-check for LTSSM != 0xb. Would you be ok with that ?
+> Patchset Summary:
+> 
+> 1. Since the ARM SMMU driver depends on symbols being exported from
+> several subsystems, the first three patches are dedicated to exporting
+> the necessary symbols.
+> 
+> 2. Similar to how the pinctrl framework handles deferring probes,
+> the subsequent patch makes it so that the IOMMU framework will defer
+> probes indefinitely if there is a chance that the IOMMU driver that a
+> device is waiting for is a module. Otherwise, it upholds the current
+> behavior of stopping probe deferrals once all of the builtin drivers
+> have finished probing.
+> 
+> The ARM SMMU driver currently has support for the deprecated
+> "mmu-masters" binding, which relies on the notion of initcall
+> ordering for setting the bus ops to ensure that all SMMU devices
+> have been bound to the driver. This poses a problem with
+> making the driver a module, as there is no such notion with
+> loadable modules. Will support for this be completely deprecated?
+> If not, might it be useful to leverage the device tree ordering,
+> and assign a property to the last SMMU device, and set the bus ops
+> at that point? Or perhaps have some deferred timer based approach
+> to know when to set the bus ops? 
+
+Another problem is module unloading: if the user calls rmmod on an IOMMU
+module, we have to ensure that endpoints aren't performing DMA anymore.
+It could be solved by declaring consumers of an IOMMU with
+device_link_add(), so that device drivers are unbound before the IOMMU
+module is unloaded.
 
 Thanks,
+Jean
 
--- 
-Remi
+> 
+> Thanks,
+> Isaac
+> 
+> Isaac J. Manjarres (4):
+>   of: Export of_phandle_iterator_args() to modules
+>   PCI: Export PCI ACS and DMA searching functions to modules
+>   iommu: Export core IOMMU functions to kernel modules
+>   iommu: Add probe deferral support for IOMMU kernel modules
+> 
+>  drivers/iommu/iommu-sysfs.c | 3 +++
+>  drivers/iommu/iommu.c       | 6 ++++++
+>  drivers/iommu/of_iommu.c    | 8 ++++++--
+>  drivers/of/base.c           | 1 +
+>  drivers/pci/pci.c           | 1 +
+>  drivers/pci/search.c        | 1 +
+>  6 files changed, 18 insertions(+), 2 deletions(-)
+> 
+
