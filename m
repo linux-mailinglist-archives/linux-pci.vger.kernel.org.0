@@ -2,49 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EB01D24CB4
-	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2019 12:29:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BA8C24CB9
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2019 12:30:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbfEUK3I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 May 2019 06:29:08 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33563 "EHLO
+        id S1726692AbfEUKaD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 May 2019 06:30:03 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35210 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfEUK3I (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 May 2019 06:29:08 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c66so1995093wme.0;
-        Tue, 21 May 2019 03:29:06 -0700 (PDT)
+        with ESMTP id S1726466AbfEUKaD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 May 2019 06:30:03 -0400
+Received: by mail-wm1-f65.google.com with SMTP id q15so2328714wmj.0;
+        Tue, 21 May 2019 03:30:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=i0as0vN7D4i2ID/z1L3403i8uDeXi4TTz+AjZfb51fM=;
-        b=SnrP67dbJsJ5V/2SMxKmpCWHPheHYf3g6WgtG7WT71f6kpPPXZwA+A5+5Nd3RsOrp1
-         Eqxp6unRSFoqJaHdU7UsA7xY/OSljTB8gN8xFw/REQdXGIS7ymFcqUivgkHfsN4QNqJO
-         sp+SqLTbkhWI+yVRiiFJndtjdQ31C1wGDR0MIC4DbWfNXu2G2bOsnM/Sy5SvZrLfBpsu
-         wk4RIzfJWuGXf+PvLQCg7VaQf4LS111TUgf1Lmw8+2qQ8g/gu/Wmh1bQOCX8PxtOEvB8
-         YDwZJGPBR6V6119l5vXPhRDj2rPbSFbwqUHfraY6r9x4hizhSFic9McgKdX9QdAs9xVe
-         7wkA==
+        bh=rELwzUOME0nlXCIo3VT64vICZ+hEYunauyHNK3UtMYc=;
+        b=J49fNcrbf1jjE+Q+vGOqxez9Ao4CNjCedtLwf1SqxU2wwJOJKoEYvdGCMsmwCz5pL9
+         xTpqIcvF7Wx3LOP2kDfW7apVSfpppmMEZvS8lMzps3oqI0/3rvePn3lLR5DV5/pjdd2R
+         cIuia49ANqKngtTbH9uckKIHfjSSgxKseNLmwXgyp/qTqs/HhIeJ7iNuGtlOUVHxDJ7L
+         0ZkLI17STbKVMfw/4ee1VIoJ2g/71jb6CUofBaab+xqeGNXs9keyqznSjYnS5mc60ZGz
+         1RUiPGOIK8q5rnIVWhH7x1p00o9689XH6293wxwtIVRo1mYzvo/ZSkz/+qSxvHNcH0vC
+         Z5qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=i0as0vN7D4i2ID/z1L3403i8uDeXi4TTz+AjZfb51fM=;
-        b=mv3GJjm3WsAfnQfjrPGFCY2y/ZTx+If5cMrbOWadndGnJ1xHXxApccTPr+9WL2rCaP
-         6uxHcDpZ/s/eVN1Tl3JFtqmoVgqkAwiz6dvD7cGWPDIpMuASB4TVphJqyO1VE1d4256x
-         BEuBDfd3izG6aQTJJkH2+ePBt1YA2TqvDqLyyYl6YM+w4s8wAg5fFgAnv5XJB0Ygmoam
-         qrGhN+66c83aP0exYTkAOMJkDZgI8itr4/19W8eLN4sHU48LPzxpVFBRmeWt4MfKxX8H
-         XfKiHMBHEr7lD9SpM5rsanpQrvZ1j2vOyrTxYy5rEJOcglVS1VyP/S9Q1vBfrcNk8y68
-         zZ5Q==
-X-Gm-Message-State: APjAAAUd5pi8ZxPhNReopFZwBK+nsms9z8iftEfhDgXxKAW2LEvKbgs/
-        +lpyICMxqaDBUwuLSghUSy0=
-X-Google-Smtp-Source: APXvYqzFY2W87G2XKblwh9OOAK6rHD5rjloo7s4t8aFeVEtSUWaJ/9tLang+7WHGIvY7iFcgQ7pUbQ==
-X-Received: by 2002:a1c:c104:: with SMTP id r4mr2834393wmf.133.1558434545301;
-        Tue, 21 May 2019 03:29:05 -0700 (PDT)
+        bh=rELwzUOME0nlXCIo3VT64vICZ+hEYunauyHNK3UtMYc=;
+        b=tQ5hQjtM0lZ1izLfZuNd9Lvm6wDwpECRUdMpGlNgjOap7dKT+7OOTUIZxC+SNmDSaX
+         N/DbiGu/RjxFewS7WHbycSTaSnKl3eG3f59kXOPMhWroWfX6XiJ8bm7tXZTSpN1idyW5
+         /ekg/G0k+1f7e5/Sdlwf0f4ZOUhQ7Bt7ZS84AorBJ1129bKV3bRr682QVg62cUVtCjoS
+         B/x6dLgTpu8RM0rtbPENBTZANtD0a3uqAsztVfrK6ZILmIfloB4zJhJybuzJ/nZCVdov
+         tN1lrJ8AkO8kU7xVet/FEwDr25XMk5+eef6QCF5NB4cbUju0E2P4dCRDrf67urw0hvI5
+         WmUA==
+X-Gm-Message-State: APjAAAUwL8IJ6YpU0WFpENfDMFr7jsWqo2V4cBjdg3HwpZ/wGKfmlXa0
+        zIj4Q4/YVwNAk7bHDf4z6J4=
+X-Google-Smtp-Source: APXvYqy9UeRYtG1/M1PRspNpKIbKeyoSPzcQxlWSbDUvnaFhZtLU4xlrNZOzT2PDdg4PlNIhhN+Jkg==
+X-Received: by 2002:a1c:ef05:: with SMTP id n5mr2922416wmh.149.1558434600856;
+        Tue, 21 May 2019 03:30:00 -0700 (PDT)
 Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id t6sm5239538wmt.34.2019.05.21.03.29.04
+        by smtp.gmail.com with ESMTPSA id h17sm2683157wrq.79.2019.05.21.03.29.59
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 03:29:04 -0700 (PDT)
-Date:   Tue, 21 May 2019 12:29:03 +0200
+        Tue, 21 May 2019 03:30:00 -0700 (PDT)
+Date:   Tue, 21 May 2019 12:29:59 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Vidya Sagar <vidyas@nvidia.com>
 Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
@@ -55,16 +55,16 @@ Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
         mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V7 03/15] PCI: dwc: Perform dbi regs write lock towards
- the end
-Message-ID: <20190521102903.GC29166@ulmo>
+Subject: Re: [PATCH V7 04/15] PCI: dwc: Move config space capability search
+ API
+Message-ID: <20190521102959.GD29166@ulmo>
 References: <20190517123846.3708-1-vidyas@nvidia.com>
- <20190517123846.3708-4-vidyas@nvidia.com>
+ <20190517123846.3708-5-vidyas@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ZmUaFz6apKcXQszQ"
+        protocol="application/pgp-signature"; boundary="5p8PegU4iirBW1oA"
 Content-Disposition: inline
-In-Reply-To: <20190517123846.3708-4-vidyas@nvidia.com>
+In-Reply-To: <20190517123846.3708-5-vidyas@nvidia.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
@@ -72,120 +72,63 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---ZmUaFz6apKcXQszQ
+--5p8PegU4iirBW1oA
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 17, 2019 at 06:08:34PM +0530, Vidya Sagar wrote:
-> Remove multiple write enable and disable sequences of dbi registers as
-> Tegra194 implements writes to BAR-0 register (offset: 0x10) controlled by
-> DBI write-lock enable bit thereby not allowing any further writes to BAR-0
-> register in config space to take place. Hence enabling write permission at
-> the start of function and disabling the same only towards the end.
+On Fri, May 17, 2019 at 06:08:35PM +0530, Vidya Sagar wrote:
+> Move PCIe config space capability search API to common DesignWare file
+> as this can be used by both host and ep mode codes.
 >=20
 > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 > ---
 > Changes since [v6]:
-> * None
+> * Exported dw_pcie_find_capability() API
 >=20
 > Changes since [v5]:
-> * Moved write enable to the beginning of the API and write disable to the=
- end
+> * None
 >=20
 > Changes since [v4]:
-> * None
+> * Removed redundant APIs in pcie-designware-ep.c file after moving them
+>   to pcie-designware.c file based on Bjorn's comments.
 >=20
 > Changes since [v3]:
-> * None
+> * Rebased to linux-next top of the tree
 >=20
 > Changes since [v2]:
 > * None
 >=20
 > Changes since [v1]:
-> * None
+> * Removed dw_pcie_find_next_ext_capability() API from here and made a
+>   separate patch for that
 >=20
->  drivers/pci/controller/dwc/pcie-designware-host.c | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
-
-Looks good to me:
+>  .../pci/controller/dwc/pcie-designware-ep.c   | 37 +----------------
+>  drivers/pci/controller/dwc/pcie-designware.c  | 40 +++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h  |  2 +
+>  3 files changed, 44 insertions(+), 35 deletions(-)
 
 Reviewed-by: Thierry Reding <treding@nvidia.com>
 
-Thierry
-
->=20
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/=
-pci/controller/dwc/pcie-designware-host.c
-> index f93252d0da5b..d3156446ff27 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -628,6 +628,12 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
->  	u32 val, ctrl, num_ctrls;
->  	struct dw_pcie *pci =3D to_dw_pcie_from_pp(pp);
-> =20
-> +	/*
-> +	 * Enable DBI read-only registers for writing/updating configuration.
-> +	 * Write permission gets disabled towards the end of this function.
-> +	 */
-> +	dw_pcie_dbi_ro_wr_en(pci);
-> +
->  	dw_pcie_setup(pci);
-> =20
->  	if (!pp->ops->msi_host_init) {
-> @@ -650,12 +656,10 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
->  	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
-> =20
->  	/* Setup interrupt pins */
-> -	dw_pcie_dbi_ro_wr_en(pci);
->  	val =3D dw_pcie_readl_dbi(pci, PCI_INTERRUPT_LINE);
->  	val &=3D 0xffff00ff;
->  	val |=3D 0x00000100;
->  	dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
-> -	dw_pcie_dbi_ro_wr_dis(pci);
-> =20
->  	/* Setup bus numbers */
->  	val =3D dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
-> @@ -687,15 +691,13 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
-> =20
->  	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
-> =20
-> -	/* Enable write permission for the DBI read-only register */
-> -	dw_pcie_dbi_ro_wr_en(pci);
->  	/* Program correct class for RC */
->  	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
-> -	/* Better disable write permission right after the update */
-> -	dw_pcie_dbi_ro_wr_dis(pci);
-> =20
->  	dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, &val);
->  	val |=3D PORT_LOGIC_SPEED_CHANGE;
->  	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
-> +
-> +	dw_pcie_dbi_ro_wr_dis(pci);
->  }
->  EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
-> --=20
-> 2.17.1
->=20
-
---ZmUaFz6apKcXQszQ
+--5p8PegU4iirBW1oA
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzj0u8ACgkQ3SOs138+
-s6EJCxAAnfv9ugCWZBC133ybiQYMaRJDUdLgGhyHZVX1/ZdmY5GToImZM6vjRujM
-WlozE5s76t1gP0g6h1EhQqKoayUTSpKsqYHN8/H6SqPOZNlJLxELi2ZeIj66fcAC
-/CahfKX4LFBR1Nb8QESoVaKPz0luor5SfwJmZsxHJTbfI+kXgs/4CYfXuhI3mRRU
-NHSNushq/sxYks4IXV9oaMq4G8VVcmzGilKTiU65mYaQLYmFUpvkYLnBZlsig7qT
-wYx1X34PPcO1/hg+dy55Kb2+TPU+tiMbIWKhhD/7efmoTobK77eNe3kcvylMier5
-h6rzvmY8Vg2yJUlz498PO/0Vt6KTDC09fbTIQCELwak64CEfdIaR1K+gUXAp2YaL
-lgjJFZtMpwGd8/DiC3gaIaiJQaYEMYj0cVyE+zpvDYTrue7l4ohkQjoyE/VbFhv+
-PkIvP49aEiu0cm6FOEn1o64d7rzuXHUAK14ePYB5zmaovQ+7dEnS8NTo7cxAB5TB
-EqkeWiHLrC32T/q0S01MO07/+3uX4sRUByRUgCjxPcgI2pJQM28SzxoQDGiozdYC
-DiQW/JxNkL8+VWvPaZxBW6ywShWqzfXk9j8XoNOs0GLoArxiokfBjpigxJpF//Fs
-CxDzv0ERBk2rPlTXg3GitfuOjs7H1wdZzHjJmLwfaQx1oPPaHL4=
-=ZY4e
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzj0ycACgkQ3SOs138+
+s6Et4BAAkzOyahrHoqB04OU7kbCFa+2VAYqoXjgDQvu1RjouQbsh+UdAzNrLWTeX
+ChYzsu6i3jeymB0oD/WAOCtHx9SbLP/4YEwlBQ5Y9U5SoHy16bSiC1fJ2+IrTKoj
+2G50K3ILtwZHuDFBL9D/NRtwdrGxu4txjtB6ch6sJDKRvr8UbtXvLO1Rija3oaut
+31nP2HoCqZ8ZW+Ku7D15BPxdcLYidJJqWELWw251PitQkixGV2JEjv/MYoKBMIhD
+jCIo+b5o1yS36PUf5I0Piuz4vbDmiJOUjKsjMbkKniN+l9bBtNwPepBdSxxYl+CN
+QbYbDw1mPUBLP/mlhEsMgBGDUp+auR+vMrCsXaK+BQIoLHQeslhKpWwIsGOBZDka
+5iNo8zxXK2FC8yHNjgz7sIWI9dfA4dX+8YJEnEVRjuhcQG+aE5B5NXDrqtTMYN1Z
+Hoe+q16UNDLmsq2siAD6r7ENyzUVzaCdjg/q/P8v3H7PZWFgPO49v+xZdDq37cqi
+j/Z5/gTH0v07hu5dtXQLfQ5+8KszcexKRfkGlYCBYG8BFVTdMmF3sR7XIY4tE2lt
+muOCI7ajeYAq/bDP9vibl1O7o7Myry716uTwfGGAB8w9/g+Fm7BKpa+Wj9MuZWtW
+CYi8auqMTnAh11SDNQeakXNHranXpLvBhMKpfIBfNYaUDFbjdd8=
+=LWc3
 -----END PGP SIGNATURE-----
 
---ZmUaFz6apKcXQszQ--
+--5p8PegU4iirBW1oA--
