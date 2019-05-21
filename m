@@ -2,245 +2,228 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C06E9258AA
-	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2019 22:12:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02A97259CF
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2019 23:18:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727765AbfEUUL6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 May 2019 16:11:58 -0400
-Received: from mail-wm1-f46.google.com ([209.85.128.46]:37686 "EHLO
-        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbfEUUL6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 May 2019 16:11:58 -0400
-Received: by mail-wm1-f46.google.com with SMTP id 7so4134449wmo.2
-        for <linux-pci@vger.kernel.org>; Tue, 21 May 2019 13:11:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kbK0pia+ZUDJFT5WiIJjh6XhzKexwGnWuOXpHluHwUM=;
-        b=r1FyPMSyCECwO0EflXzfCEbOTpQIWVJEEdxo8Oafi8OnP4T7BNuPXG/QHCzjAi4GyN
-         3JtGpbbHqo8oU9ODKSdq8MjehLFHWhU+Eq25y7z/s3T/zjO1yNntwI9djMr6RkOQ1W3v
-         QlfZKHlW4ANn2rcgEGLtuuRYK68c1vHpRb5cmaiIohlhNYd+bqEeziTjUCv6r8DWmE5G
-         KOLCqtm9R+Ah+PiQEgL5E1Dg6lsy0+rtiIpyEqAytJQSbAnEaaQ/AIhuFQtvqOHU4K/E
-         naSqKZScOk/PoOVxCdYGexWED+GKIhEigvlO4kd+A8awmMquPBNF9U7LjExEYZJEucvM
-         MiFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kbK0pia+ZUDJFT5WiIJjh6XhzKexwGnWuOXpHluHwUM=;
-        b=j7/0YPG7a/QhsXmj2JgDtA6trsMMI5ewaoSToaYPsyIfXbVK46gIcXC4MgGJ8atq7I
-         mIUciqLGB3AVFCPdpZoPVS6um8thHcXD/1435qnBqzOhACj0gMi+DzKJi5IUBNCr4srn
-         L06Hw4KsVyneqoAlxsc8rOsFdxd83BDzt5Fi278DAhkOmJUHtswQWvV+llUlIg4MCOfL
-         V7wdpIXBv7IEncV2AFjnqeXTYJG06MXIf4PwJ22JsUcssMbl4UDY6q7GvCG38vNoJE31
-         dxF/5GeBZGFXUB9C37Fi/frwGONMCTQyw2bipx9IUtGqvjU+JFmhctr2o5Q1gmqxuMjH
-         T6rA==
-X-Gm-Message-State: APjAAAUCTzjT0q0MoAJKAuDWLMSaln6hxGwmAvK/tOFk/8YUFtYxIHPA
-        qsF4ioL3XoLfbn1SFkTx0w79hauLPXT5Q7rZ3bvc
-X-Google-Smtp-Source: APXvYqxXgW9AEuNY3PScwG3i6Igm4s1VJZ3ih1j4Bn0tLG5lLgcp3KibUfFsx8CkCdUPOkoYknfbe3pZtTK4SzI7J94=
-X-Received: by 2002:a1c:c1c8:: with SMTP id r191mr4228057wmf.99.1558469514761;
- Tue, 21 May 2019 13:11:54 -0700 (PDT)
+        id S1727560AbfEUVSB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 May 2019 17:18:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727156AbfEUVSA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 21 May 2019 17:18:00 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15AE32182B;
+        Tue, 21 May 2019 21:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558473479;
+        bh=sO7tsMO1dfbZAmsHGSTl+WO/0jX0F6m8LrfVkLA/Lhc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EyiR7NAn3vzSlQJVG+H81BwJeskPuhc3Ay/zpUnKqEXv+sQoQRLvlMw5KxNKjyu48
+         U2PrZ4GkhRBBX9QTdS1VpuYHACDq4PRW5iwSPxInmCcker9RPrY9u68+1vJTc86GZo
+         Pb50jnOgkopQAwwE42y209RaTiOQuLKOJnCVpmwU=
+Date:   Tue, 21 May 2019 16:17:57 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
+        will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V7 04/15] PCI: dwc: Move config space capability search
+ API
+Message-ID: <20190521211757.GF57618@google.com>
+References: <20190517123846.3708-1-vidyas@nvidia.com>
+ <20190517123846.3708-5-vidyas@nvidia.com>
 MIME-Version: 1.0
-References: <B5B745A3-96B4-46ED-8F3F-D3636A96057F@marvell.com> <CAErSpo5qy6WuUe9cz1vTBBnc5P_uZaPzc-Yqbag2eBBxzi+ENg@mail.gmail.com>
-In-Reply-To: <CAErSpo5qy6WuUe9cz1vTBBnc5P_uZaPzc-Yqbag2eBBxzi+ENg@mail.gmail.com>
-From:   Bjorn Helgaas <bhelgaas@google.com>
-Date:   Tue, 21 May 2019 15:11:38 -0500
-Message-ID: <CAErSpo45bCV7geSPAwBjy5fdQqzDcX61Ybksk65c=intfTWFZQ@mail.gmail.com>
-Subject: Re: VPD access Blocked by commit 0d5370d1d85251e5893ab7c90a429464de2e140b
-To:     Himanshu Madhani <hmadhani@marvell.com>
-Cc:     Andrew Vasquez <andrewv@marvell.com>,
-        Girish Basrur <gbasrur@marvell.com>,
-        Giridhar Malavali <gmalavali@marvell.com>,
-        Myron Stowe <mstowe@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Quinn Tran <quinn.tran@qlogic.com>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190517123846.3708-5-vidyas@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[fix linux-pci, remove ethan.zhao (bounces)]
+On Fri, May 17, 2019 at 06:08:35PM +0530, Vidya Sagar wrote:
+> Move PCIe config space capability search API to common DesignWare file
+> as this can be used by both host and ep mode codes.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> ---
+> Changes since [v6]:
+> * Exported dw_pcie_find_capability() API
+> 
+> Changes since [v5]:
+> * None
+> 
+> Changes since [v4]:
+> * Removed redundant APIs in pcie-designware-ep.c file after moving them
+>   to pcie-designware.c file based on Bjorn's comments.
+> 
+> Changes since [v3]:
+> * Rebased to linux-next top of the tree
+> 
+> Changes since [v2]:
+> * None
+> 
+> Changes since [v1]:
+> * Removed dw_pcie_find_next_ext_capability() API from here and made a
+>   separate patch for that
+> 
+>  .../pci/controller/dwc/pcie-designware-ep.c   | 37 +----------------
+>  drivers/pci/controller/dwc/pcie-designware.c  | 40 +++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h  |  2 +
+>  3 files changed, 44 insertions(+), 35 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 2bf5a35c0570..65f479250087 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -40,39 +40,6 @@ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+>  	__dw_pcie_ep_reset_bar(pci, bar, 0);
+>  }
+>  
+> -static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+> -			      u8 cap)
+> -{
+> -	u8 cap_id, next_cap_ptr;
+> -	u16 reg;
+> -
+> -	if (!cap_ptr)
+> -		return 0;
+> -
+> -	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+> -	cap_id = (reg & 0x00ff);
+> -
+> -	if (cap_id > PCI_CAP_ID_MAX)
+> -		return 0;
+> -
+> -	if (cap_id == cap)
+> -		return cap_ptr;
+> -
+> -	next_cap_ptr = (reg & 0xff00) >> 8;
+> -	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+> -}
+> -
+> -static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
+> -{
+> -	u8 next_cap_ptr;
+> -	u16 reg;
+> -
+> -	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+> -	next_cap_ptr = (reg & 0x00ff);
+> -
+> -	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+> -}
+> -
+>  static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no,
+>  				   struct pci_epf_header *hdr)
+>  {
+> @@ -612,9 +579,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+>  		return -ENOMEM;
+>  	}
+> -	ep->msi_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSI);
+> +	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+>  
+> -	ep->msix_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSIX);
+> +	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
+>  
+>  	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+>  	if (offset) {
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 83cdd2ce2486..8f53ce63d17e 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -14,6 +14,46 @@
+>  
+>  #include "pcie-designware.h"
+>  
+> +/*
+> + * These APIs are different from standard pci_find_*capability() APIs in the
+> + * sense that former can only be used post device enumeration as they require
+> + * 'struct pci_dev *' pointer whereas these APIs require 'struct dw_pcie *'
+> + * pointer and can be used before link up also.
 
-From: Bjorn Helgaas <bhelgaas@google.com>
-Date: Tue, May 21, 2019 at 3:02 PM
-To: Himanshu Madhani
-Cc: ethan.zhao@oracle.com, Andrew Vasquez, Girish Basrur, Giridhar
-Malavali, Myron Stowe, <linux-pci@kernel.org>, Linux Kernel Mailing
-List, Quinn Tran
+I think this comment is slightly misleading because it suggests the
+reason we need these DW interfaces is because we're doing something
+before a pci_dev pointer is available.
 
-> [+cc Myron, Quinn, linux-pci, linux-kernel]
->
-> From: Himanshu Madhani <hmadhani@marvell.com>
-> Date: Fri, May 17, 2019 at 5:21 PM
-> To: ethan.zhao@oracle.com, bhelgaas@google.com
-> Cc: Andrew Vasquez, Girish Basrur, Giridhar Malavali
->
-> > Hi Ethan,
-> >
-> > Our OEM partners reported to us that VPD access with latest distros wer=
-e returning I/O error for them. They indicated this to be issue only with n=
-ewer kernels.
-> >
-> > One of the distro vendor pointed out patch posted by you to be reason f=
-or IO error trying to VPD. The patch looks like blocks access to VPD by bla=
-cklisting ISP.
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
-it/?id=3D0d5370d1d85251e5893ab7c90a429464de2e140b=EF=BB=BF
-> >
-> > I setup PCIe analyzer to reproduce this in our lab to root cause it and=
- discovered that after reverting the patch.  I am able to get VPD data okay=
- with upstream 5.1.0 and I used RHEL8.
-> >
-> > I also used  "lspci" and "cat" to dump out VPD data and do not see any =
-issue.
-> >
-> > # lspci -vvv -s 03:00.0
-> > 03:00.0 Fibre Channel: QLogic Corp. ISP2722-based 16/32Gb Fibre Channel=
- to PCIe Adapter (rev 01)
-> >                 Subsystem: QLogic Corp. QLE2742 Dual Port 32Gb Fibre Ch=
-annel to PCIe Adapter
-> >                 Physical Slot: 15
-> >                 Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASn=
-oop- ParErr+ Stepping- SERR+ FastB2B- DisINTx-
-> >                 Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=3Dfast=
- >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-> >                 Latency: 0, Cache Line Size: 64 bytes
-> >                 Interrupt: pin A routed to IRQ 67
-> >                 NUMA node: 0
-> >                 Region 0: Memory at fbe05000 (64-bit, prefetchable) [si=
-ze=3D4K]
-> >                 Region 2: Memory at fbe02000 (64-bit, prefetchable) [si=
-ze=3D8K]
-> >                 Region 4: Memory at fbd00000 (64-bit, prefetchable) [si=
-ze=3D1M]
-> >                 Expansion ROM at fb540000 [disabled] [size=3D256K]
-> >                 Capabilities: [44] Power Management version 3
-> >                                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=
-=3D0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-> >                                 Status: D0 NoSoftRst+ PME-Enable- DSel=
-=3D0 DScale=3D0 PME-
-> >                 Capabilities: [4c] Express (v2) Endpoint, MSI 00
-> >                                 DevCap:                MaxPayload 2048 =
-bytes, PhantFunc 0, Latency L0s <4us, L1 <1us
-> >                                                 ExtTag- AttnBtn- AttnIn=
-d- PwrInd- RBE+ FLReset+ SlotPowerLimit 0.000W
-> >                                 DevCtl:  Report errors: Correctable+ No=
-n-Fatal+ Fatal+ Unsupported+
-> >                                                 RlxdOrd- ExtTag- PhantF=
-unc- AuxPwr- NoSnoop+ FLReset-
-> >                                                 MaxPayload 256 bytes, M=
-axReadReq 4096 bytes
-> >                                 DevSta: CorrErr+ UncorrErr- FatalErr- U=
-nsuppReq+ AuxPwr- TransPend-
-> >                                 LnkCap: Port #0, Speed 8GT/s, Width x8,=
- ASPM L0s L1, Exit Latency L0s <512ns, L1 <2us
-> >                                                 ClockPM- Surprise- LLAc=
-tRep- BwNot- ASPMOptComp+
-> >                                 LnkCtl:  ASPM Disabled; RCB 64 bytes Di=
-sabled- CommClk+
-> >                                                 ExtSynch- ClockPM- AutW=
-idDis- BWInt- AutBWInt-
-> >                                 LnkSta:  Speed 8GT/s, Width x8, TrErr- =
-Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
-> >                                 DevCap2: Completion Timeout: Range B, T=
-imeoutDis+, LTR-, OBFF Not Supported
-> >                                                 AtomicOpsCap: 32bit- 64=
-bit- 128bitCAS-
-> >                                 DevCtl2: Completion Timeout: 50us to 50=
-ms, TimeoutDis-, LTR-, OBFF Disabled
-> >                                                 AtomicOpsCtl: ReqEn-
-> >                                 LnkCtl2: Target Link Speed: 8GT/s, Ente=
-rCompliance- SpeedDis-
-> >                                                 Transmit Margin: Normal=
- Operating Range, EnterModifiedCompliance- ComplianceSOS-
-> >                                                 Compliance De-emphasis:=
- -6dB
-> >                                 LnkSta2: Current De-emphasis Level: -6d=
-B, EqualizationComplete+, EqualizationPhase1+
-> >                                                 EqualizationPhase2+, Eq=
-ualizationPhase3+, LinkEqualizationRequest-
-> >                 Capabilities: [88] Vital Product Data
-> >                                 Product Name: QLogic 32Gb 2-port FC to =
-PCIe Gen3 x8 Adapter
-> >                                 Read-only fields:
-> >                                                 [PN] Part number: QLE27=
-42
-> >                                                 [SN] Serial number: RFD=
-1706R22611
-> >                                                 [EC] Engineering change=
-s: BK3210408-05 04
-> >                                                 [V9] Vendor specific: 0=
-10189
-> >                                                 [RV] Reserved: checksum=
- good, 0 byte(s) reserved
-> >                                 End
-> >                 Capabilities: [90] MSI-X: Enable+ Count=3D16 Masked-
-> >                                 Vector table: BAR=3D2 offset=3D00000000
-> >                                 PBA: BAR=3D2 offset=3D00001000
-> >                 Capabilities: [9c] Vendor Specific Information: Len=3D0=
-c <?>
-> >                 Capabilities: [100 v1] Advanced Error Reporting
-> >                                 UESta:   DLP- SDES- TLP- FCP- CmpltTO- =
-CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-> >                                 UEMsk: DLP- SDES- TLP- FCP- CmpltTO- Cm=
-pltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-> >                                 UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- C=
-mpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
-> >                                 CESta:   RxErr- BadTLP- BadDLLP- Rollov=
-er- Timeout- NonFatalErr-
-> >                                 CEMsk: RxErr- BadTLP- BadDLLP- Rollover=
-- Timeout- NonFatalErr+
-> >                                 AERCap:               First Error Point=
-er: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
-> >                                                 MultHdrRecCap- MultHdrR=
-ecEn- TLPPfxPres- HdrLogCap-
-> >                                 HeaderLog: 00000000 00000000 00000000 0=
-0000000
-> >                 Capabilities: [154 v1] Alternative Routing-ID Interpret=
-ation (ARI)
-> >                                 ARICap: MFVC- ACS-, Next Function: 1
-> >                                 ARICtl:   MFVC- ACS-, Function Group: 0
-> >                 Capabilities: [1c0 v1] #19
-> >                 Capabilities: [1f4 v1] Vendor Specific Information: ID=
-=3D0001 Rev=3D1 Len=3D014 <?>
-> >                 Kernel driver in use: qla2xxx
-> >                 Kernel modules: qla2xxx
-> >
-> > # cat /sys/bus/pci/devices/0000\:03\:00.0/vpd
-> > RFD1706R22611ECBK3210408-05 04V9010189RV=EF=BF=BDx
-> >
-> > Can you share some more insight into where you encountered issue? I am =
-in process of reverting this patch from upstream kernel but wanted to reach=
- out and find out if you still have setup to provide more context.
->
-> 0d5370d1d852 ("PCI: Prevent VPD access for QLogic ISP2722") prevented
-> a panic while reading VPD, so we can't simply revert it.
->
-> Since you don't see a panic while reading VPD from that device, it's
-> possible that a QLogic firmware change fixed the VPD format so Linux
-> no longer reads the area that caused the problem.  Or possibly your
-> system doesn't handle the config read error the same way Ethan's HP
-> DL380 does.  Unfortunately we don't have an actual PCIe analyzer trace
-> from Ethan's system, so we don't know exactly what happened on PCIe.
->
-> I suggest that you capture the entire VPD area and hexdump it, e.g.,
-> with "xxd", and look at its structure.  pci_vpd_size() parses it and
-> computes the valid size based on a PCI_VPD_STIN_END tag, and
-> pci_vpd_read() should not read past that size.
->
-> And you *do* have an analyzer trace.  If new QLogic firmware fixed the
-> VPD format, the trace should show that Linux read only the valid part
-> of VPD, and there should be no errors in the trace.  Then it might
-> just be a question of tweaking the quirk so it allows VPD reads if the
-> firmware is new enough.
->
-> But if the trace does show config reads with errors, then it might be
-> that your system just tolerates the errors while the DL380 did not.
-> Then we'd have to figure out exactly what the error was and how to
-> deal with it so things work on both your system and Ethan's.
->
-> Bjorn
+But these DW interfaces are used on devices that will *never* have a
+pci_dev pointer because they are not PCI devices.  They're used on
+host controller devices, which have a PCIe link on the downstream
+side, but the host controller driver operates them using their
+upstream, non-PCI interfaces.  Logically, I think they would be
+considered parts of Root Complexes, not Root Ports.
+
+There's actually no reason why that upstream interface should look
+anything like PCI; it doesn't need to organize registers into
+capability lists at all.  It might be convenient for the hardware to
+do that and share things with a Root Port device, which *is* a PCI
+device, but it's not required.
+
+It also really has nothing to do with whether the link is up.  This
+code operates on hardware that is upstream from the link, so we can
+reach it regardless of the link.
+
+> + */
+> +static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+> +				  u8 cap)
+> +{
+> +	u8 cap_id, next_cap_ptr;
+> +	u16 reg;
+> +
+> +	if (!cap_ptr)
+> +		return 0;
+> +
+> +	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+> +	cap_id = (reg & 0x00ff);
+> +
+> +	if (cap_id > PCI_CAP_ID_MAX)
+> +		return 0;
+> +
+> +	if (cap_id == cap)
+> +		return cap_ptr;
+> +
+> +	next_cap_ptr = (reg & 0xff00) >> 8;
+> +	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
+> +}
+> +
+> +u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+> +{
+> +	u8 next_cap_ptr;
+> +	u16 reg;
+> +
+> +	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+> +	next_cap_ptr = (reg & 0x00ff);
+> +
+> +	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
+> +}
+> +EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
+> +
+>  int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+>  {
+>  	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 14762e262758..6cb978132469 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -251,6 +251,8 @@ struct dw_pcie {
+>  #define to_dw_pcie_from_ep(endpoint)   \
+>  		container_of((endpoint), struct dw_pcie, ep)
+>  
+> +u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
+> +
+>  int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+>  int dw_pcie_write(void __iomem *addr, int size, u32 val);
+>  
+> -- 
+> 2.17.1
+> 
