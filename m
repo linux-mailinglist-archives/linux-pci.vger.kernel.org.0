@@ -2,46 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2165A254DE
-	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2019 18:07:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CE03254E6
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2019 18:08:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbfEUQHp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 May 2019 12:07:45 -0400
-Received: from foss.arm.com ([217.140.101.70]:37874 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727044AbfEUQHp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 21 May 2019 12:07:45 -0400
+        id S1727999AbfEUQIg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 May 2019 12:08:36 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37928 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727941AbfEUQIg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 21 May 2019 12:08:36 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CAF7F15A2;
-        Tue, 21 May 2019 09:07:44 -0700 (PDT)
-Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A22B3F718;
-        Tue, 21 May 2019 09:07:42 -0700 (PDT)
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9D3D374;
+        Tue, 21 May 2019 09:08:35 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B4E83F718;
+        Tue, 21 May 2019 09:08:33 -0700 (PDT)
 Subject: Re: [RFC/PATCH 0/4] Initial support for modular IOMMU drivers
 To:     "Isaac J. Manjarres" <isaacm@codeaurora.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
         linux-arm-kernel@lists.infradead.org
-Cc:     kernel-team@android.com, robin.murphy@arm.com, joro@8bytes.org,
-        will.deacon@arm.com, lmark@codeaurora.org, robh+dt@kernel.org,
-        bhelgaas@google.com, frowand.list@gmail.com, pratikp@codeaurora.org
+Cc:     robh+dt@kernel.org, frowand.list@gmail.com, bhelgaas@google.com,
+        joro@8bytes.org, will.deacon@arm.com, kernel-team@android.com,
+        pratikp@codeaurora.org, lmark@codeaurora.org
 References: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
-Message-ID: <2379c1cf-be1b-503f-7dbc-51110650e91f@arm.com>
-Date:   Tue, 21 May 2019 17:07:18 +0100
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <375bd035-23a5-15d0-0629-b11b32a5adfd@arm.com>
+Date:   Tue, 21 May 2019 17:08:31 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
 In-Reply-To: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
-
-Hi Isaac,
 
 On 17/05/2019 19:47, Isaac J. Manjarres wrote:
 > This series adds initial support for being able to use the ARM
@@ -61,14 +59,22 @@ On 17/05/2019 19:47, Isaac J. Manjarres wrote:
 > This solution is not scalable, as it will lead to bloating the
 > kernel image with support for several future versions of the
 > SMMU specification to maintain a common kernel image that works
-> across all platforms. Having the ARM SMMU driver as a module allows
+> across all platforms.
+
+There are currently two versions of the SMMU spec: v2 (which forms a 
+superset of v1), and v3 which is the current architecture. Given how 
+closely I work with the SMMU architecture team, I'm particularly 
+interested to hear more about these "future versions"... :)
+
+> Having the ARM SMMU driver as a module allows
 > for a common kernel image to be supported across all platforms,
 > while yielding a smaller kernel image size, since the correct
 > SMMU driver can be loaded at runtime, if necessary.
 
-It can also be useful if IOMMU drivers want to rely on components that
-distros usually build as modules. I have that problem with virtio-iommu,
-where the whole virtio transport is usually modular.
+arm-smmu and arm-smmu-v3 aren't *all* that much bigger than any of the 
+other IOMMU drivers that are also present in a multiplatform build, and 
+already share quite a bit of common code, so while I can guess at what 
+you might really mean, it's a pretty weak argument as stated.
 
 > Patchset Summary:
 > 
@@ -92,33 +98,41 @@ where the whole virtio transport is usually modular.
 > If not, might it be useful to leverage the device tree ordering,
 > and assign a property to the last SMMU device, and set the bus ops
 > at that point? Or perhaps have some deferred timer based approach
-> to know when to set the bus ops? 
+> to know when to set the bus ops?
 
-Another problem is module unloading: if the user calls rmmod on an IOMMU
-module, we have to ensure that endpoints aren't performing DMA anymore.
-It could be solved by declaring consumers of an IOMMU with
-device_link_add(), so that device drivers are unbound before the IOMMU
-module is unloaded.
+Unfortunately, I believe the old binding is still deployed in production 
+firmwares which may well never get updated, and thus needs to remain 
+functional (I've already had one report of the default bypass behaviour 
+breaking it in 5.2 which I need to fix somehow...)
 
-Thanks,
-Jean
+Rather than just the trivial "export a bunch of symbols which won't 
+actually be needed yet", from the title I was hoping to see some patches 
+really making drivers modular and proposing solutions to those difficult 
+problems of making it work robustly. It's very easy to make it 'work' as 
+a proof-of-concept (locally I still have a patch dated 2016 based on the 
+original probe-deferral work), but those questions really want answering 
+to some degree before it's worth doing any of this in mainline.
+
+Robin.
+
+(now starting to wonder whether this might be my own fault for 
+mentioning it at LPC... :P)
 
 > 
 > Thanks,
 > Isaac
 > 
 > Isaac J. Manjarres (4):
->   of: Export of_phandle_iterator_args() to modules
->   PCI: Export PCI ACS and DMA searching functions to modules
->   iommu: Export core IOMMU functions to kernel modules
->   iommu: Add probe deferral support for IOMMU kernel modules
+>    of: Export of_phandle_iterator_args() to modules
+>    PCI: Export PCI ACS and DMA searching functions to modules
+>    iommu: Export core IOMMU functions to kernel modules
+>    iommu: Add probe deferral support for IOMMU kernel modules
 > 
->  drivers/iommu/iommu-sysfs.c | 3 +++
->  drivers/iommu/iommu.c       | 6 ++++++
->  drivers/iommu/of_iommu.c    | 8 ++++++--
->  drivers/of/base.c           | 1 +
->  drivers/pci/pci.c           | 1 +
->  drivers/pci/search.c        | 1 +
->  6 files changed, 18 insertions(+), 2 deletions(-)
+>   drivers/iommu/iommu-sysfs.c | 3 +++
+>   drivers/iommu/iommu.c       | 6 ++++++
+>   drivers/iommu/of_iommu.c    | 8 ++++++--
+>   drivers/of/base.c           | 1 +
+>   drivers/pci/pci.c           | 1 +
+>   drivers/pci/search.c        | 1 +
+>   6 files changed, 18 insertions(+), 2 deletions(-)
 > 
-
