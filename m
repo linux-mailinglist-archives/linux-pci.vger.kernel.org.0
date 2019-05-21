@@ -2,49 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CE5E24CE6
-	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2019 12:37:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9B8024CEF
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2019 12:38:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbfEUKhd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 May 2019 06:37:33 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37608 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfEUKhd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 May 2019 06:37:33 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 7so2348268wmo.2;
-        Tue, 21 May 2019 03:37:31 -0700 (PDT)
+        id S1727633AbfEUKi2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 May 2019 06:38:28 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37605 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727408AbfEUKi2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 May 2019 06:38:28 -0400
+Received: by mail-wr1-f66.google.com with SMTP id e15so18013618wrs.4;
+        Tue, 21 May 2019 03:38:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Pk9/EDdjZxONgrYI8kAOhGJWxmtEFhA7kOzCkkQmWqI=;
-        b=qLQd9mwVZtT+4gIOwW5cnFjudOkGkzk/EjRdPXDv1cdLKRlfES7p5y5G/QZUc8PEsO
-         e2837BkCoWNpD15ZBU2Vh/cePuiz7sOKHLQWaYvwK9/23RdR8NtwbzZLS2p8lMUgQ+I6
-         VsM7QpxAG4kzLDIuHNaZTuSwf6euSTICBc2vYq8+avBAP9R6xt9fK66oEjOoxVksTx8C
-         4m8MJFUXuzWHONm+XZYLpQ70gHpzOXK5Bmv3+MOjQPbnpm+WqCDHLlVbfSMDxb21RLlg
-         BFJm3ZWiFJm1aZ14Y8drr82W7UgNWxI5ikF6apGHUuWBaJ52kYB/cOUpqWxKUZ5o/d7k
-         p/dg==
+        bh=5cHZAThEhwYXg0mdwF8qSQfljsG3YRHFcTgp/N5AQao=;
+        b=qkXnY8AKr9vUsT95SCGCcXRgoMuebbIIgTalyt6CCBhB7kw2gOcWMYB17h4wjCtjxe
+         /VeYphbYeG1vkS5JGAOZfn8xicSlANIH/2gIc0WVz7a7MUjLRrJS6g/77vlvAaha4F7+
+         xHmfOBxlmIV+674x1v7O4wnulkYfHlTfh/VwYJOhj7WixVc/B1oP9AKrDn4ihC5cx17l
+         ye6yP6LZmalDEj3DUkyYvxuzfRbiAYUy/PC1OFXL6OzKkABpUQagVfSSlU/8Y/9Zcuq1
+         2rYUy96MCpCR9rx7A+3NmDcJKlx+zyZy3pCsgSG68PB9mAUx7rN3E/hkfnBWpowbVUL0
+         b0Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Pk9/EDdjZxONgrYI8kAOhGJWxmtEFhA7kOzCkkQmWqI=;
-        b=PiX+04un2vG5NRKdCU/xyqaAnqiEk8pTVfwF0FbtkshSz2D9pe0YcCfPO3H4g9YQJY
-         /5kajPfLEUfe03BIM5Y7WrSC9+xfAir72TkvE4+MDhdj6vBLTGAx8h4FOnmmCyM/b3ZZ
-         7otB/GQmN6GWEL5YzAh+PS7ozivH4PuWPwmlDFn7VBj9W9RmkICdJ8r7jehggLzt/5sp
-         EJJHYuC/JVUhobxKpiWY718J4Zr/pNAnZOuOHk4gSzqxuV5sGxW6ThTq4wr7m8ugEZFk
-         KdtIKiRwdseIxKOmR++gUBazSthfwRW8L/RaSBO+qraMbel0QxGopHJ7Y8VX+f91WUWT
-         DT3w==
-X-Gm-Message-State: APjAAAVyGaLusWDLAMxFmI1dYy7Kl3eSlf+kSe3sGJ5/DqeIKYSqqnZJ
-        xUUI1IcXSMpx5RSCEUqKP1Q=
-X-Google-Smtp-Source: APXvYqyUlgdCPheRHL9v7ZLgwsBoKSkVYrYEIyqFLP0XC4W1deVNp6iynS+CfGy17wTGpq5IPR4DAg==
-X-Received: by 2002:a1c:1d46:: with SMTP id d67mr2734396wmd.98.1558435050841;
-        Tue, 21 May 2019 03:37:30 -0700 (PDT)
+        bh=5cHZAThEhwYXg0mdwF8qSQfljsG3YRHFcTgp/N5AQao=;
+        b=ZsNJCvb7R7EGaspOeuL6vZaDRdicVg7x6EveSRUXKNhitL6AVLxWOuaSCgiTbakqYi
+         2ck7BHJlMw3vSKY569gUpwZdNy/n1ODmcK/zIOoSIhcD0WsNTwpu4oDPuO1pd3uGkkdH
+         xxFmqOyW64+w4mnwkMhlNo4P/RifQgDDGiD3rm4RjYZXxcwm3J+VQekovGApHx7NS9AT
+         dPMhjESt/BLwi0h3HXopgy4CB4YwjgfhQKrokfida7Ovf6lXXgYSQ/23GVyjZX62+8Ut
+         P96rgpIFNL9iO7oOatfFiRnxkHzKIIGTAwgY69fOxnf2wrK1oqMgurzak4qgEL6NVYFf
+         LHww==
+X-Gm-Message-State: APjAAAW4EIEpyjZvM558d6j8egEFJUoGoKhv4y8u2NrJsiIBG6IeyzHo
+        Dg+mR/uF5RbOTSGrPSQiEBw=
+X-Google-Smtp-Source: APXvYqzZKh2+vlDE2a1Mrz0XQxxaUOnMxe2hSuwIkeRzhNSIVh2DUrUxliLVNc217oqmX8bwpz643A==
+X-Received: by 2002:a5d:4b07:: with SMTP id v7mr21489249wrq.106.1558435106456;
+        Tue, 21 May 2019 03:38:26 -0700 (PDT)
 Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id n63sm2934211wmn.38.2019.05.21.03.37.29
+        by smtp.gmail.com with ESMTPSA id i9sm1529322wmf.43.2019.05.21.03.38.25
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 03:37:30 -0700 (PDT)
-Date:   Tue, 21 May 2019 12:37:29 +0200
+        Tue, 21 May 2019 03:38:25 -0700 (PDT)
+Date:   Tue, 21 May 2019 12:38:24 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Vidya Sagar <vidyas@nvidia.com>
 Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
@@ -55,16 +55,16 @@ Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
         mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V7 06/15] dt-bindings: PCI: designware: Add binding for
- CDM register check
-Message-ID: <20190521103729.GF29166@ulmo>
+Subject: Re: [PATCH V7 07/15] PCI: dwc: Add support to enable CDM register
+ check
+Message-ID: <20190521103824.GG29166@ulmo>
 References: <20190517123846.3708-1-vidyas@nvidia.com>
- <20190517123846.3708-7-vidyas@nvidia.com>
+ <20190517123846.3708-8-vidyas@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rMWmSaSbD7nr+du9"
+        protocol="application/pgp-signature"; boundary="rV8arf8D5Dod9UkK"
 Content-Disposition: inline
-In-Reply-To: <20190517123846.3708-7-vidyas@nvidia.com>
+In-Reply-To: <20190517123846.3708-8-vidyas@nvidia.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
@@ -72,20 +72,18 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---rMWmSaSbD7nr+du9
+--rV8arf8D5Dod9UkK
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 17, 2019 at 06:08:37PM +0530, Vidya Sagar wrote:
-> Add support to enable CDM (Configuration Dependent Module) registers check
-> for any data corruption. CDM registers include standard PCIe configuration
-> space registers, Port Logic registers and iATU and DMA registers.
-> Refer Section S.4 of Synopsys DesignWare Cores PCI Express Controller Dat=
-abook
-> Version 4.90a
+On Fri, May 17, 2019 at 06:08:38PM +0530, Vidya Sagar wrote:
+> Add support to enable CDM (Configuration Dependent Module) register check
+> for any data corruption based on the device-tree flag 'snps,enable-cdm-ch=
+eck'.
 >=20
 > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 > ---
 > Changes since [v6]:
 > * Changed "enable-cdm-check" to "snps,enable-cdm-check"
@@ -100,35 +98,36 @@ abook
 > * None
 >=20
 > Changes since [v2]:
-> * Changed flag name from 'cdm-check' to 'enable-cdm-check'
-> * Added info about Port Logic and DMA registers being part of CDM
+> * Changed code and commit description to reflect change in flag from
+>   'cdm-check' to 'enable-cdm-check'
 >=20
 > Changes since [v1]:
 > * This is a new patch in v2 series
 >=20
->  Documentation/devicetree/bindings/pci/designware-pcie.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+>  drivers/pci/controller/dwc/pcie-designware.c | 7 +++++++
+>  drivers/pci/controller/dwc/pcie-designware.h | 9 +++++++++
+>  2 files changed, 16 insertions(+)
 
 Reviewed-by: Thierry Reding <treding@nvidia.com>
 
---rMWmSaSbD7nr+du9
+--rV8arf8D5Dod9UkK
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzj1OkACgkQ3SOs138+
-s6G8OA//Za/2suTnOQbvbpSyc5opGe1KwSkFsUP0RGg8aT54pvHnF+SvsLGd8Omu
-Pqo0DCbxzEvfYkmdfEseSR3I60FCNYlMU7L/6OYFkAvpI5fYk8TGwyCssXEXHjwz
-1BG7cy4oobxCkoNVwqCSm99hxFmTDj33HOYIDyQPt3mNKT/9pWD+V3AMaMPZ0dgx
-wRWX4kvxKl355XimcWwspONm9Sk3PV3LEV4Evvr7otXgaD3nNWpLHdBjqBRQtgoe
-ZZh1S7mHtc/kLBaHTXy1RBjHFf2Wkw9z3wm7iV/x8xkqroTkQoNnZV4HPOzHEyq4
-xYFprccqToWaaXSVz41pzCRI0SoKELJawKakQFDEZ2wZkWAzeY53ORaJNT+EPYtK
-uYo8B6ZBu/ikvmzPx9aMQMCzT3WOSWUkgt9jb02BQpcwI78rRHAhYqb1dqMO1mQJ
-TD3UI+GZju6Fftt5Wmp02NKlJwJTgRTZZpJpU/+zcbPyYqJrLb4jYfM491wxR3lV
-CGSUHMM9rYKBkgHJ81FFOECLV5CF1lwCQfeFGKpyiqHEUerm7qLeOC4Dq099InQd
-rwhv6UwVuEU4Al8w+xK7fAqwkigZwgv13hGOsXDEIGurWptMPyfN4MIR4ya+kH52
-8LBpB5J+9mNo/vaCXektWciSu/iOusTkXvnzF5K0rRVtcUnNsBc=
-=HI8b
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzj1SAACgkQ3SOs138+
+s6FzehAAj26+Vd/E7W30W6r5t7V5VvOWhcFf3Jmp59yLidN65C8DRR41Qhw7YEyK
+/2glrrtwu+zYgwWKSDLqCrfiQ+DhsYH+XP6S8t/YVwRN6uMF9IcYK216kVu2vAS0
+ielsNNQOzGWWOWZPzhNZMpApcyeD7X+MyNGpaEfE0ddLHTxmnhDj4V2jOH1d5Ax7
+1hnpU64dNMX0eH0zjA746QXoAhtrwtGwSBMQMkxEhkGmt0UKJFKabWXgvk3zhZX3
+8U6Beasycz9+hkm0GEpyXcb+S30lVxQWen+i5ZvyfhHQ7+RsREY/SQu1go997YEs
+yLsYeRtsd3wNliiJu1l4PNhJY9bI1i1OthM+NuH08cbAHBm9s0+eTX/Ko4s0gf3n
+ICptVCYsVN6o6QkKnj14uWpbZ0Z2vQ4VeP4bs6vqy7sGruFWGuA9iZ85MQe+bEjU
+AcaosScNT/X3g7TRgVQTGuZixEpGJg2Llv4fbYdkA3JRDiJxw2ewSxoLGpZnlGM2
+Toodt5B961wBAOfv3p2gXTPqliyDJwCYGYkt8uTuSMiwfn3GyQSamFQWuLz8uRrA
+LFiU26ht43GDUFhwjXCYJ1uIZRoyzl7HuM+WxySx2hYevDz3L4EdGiJf6qe8SBHH
+RYMmHHYHxRbwR3Mfpm+sBCQgIFKDokaptNjuxiMkwVlgtGuW8hc=
+=GXch
 -----END PGP SIGNATURE-----
 
---rMWmSaSbD7nr+du9--
+--rV8arf8D5Dod9UkK--
