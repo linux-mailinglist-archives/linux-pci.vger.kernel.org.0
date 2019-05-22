@@ -2,90 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CF612714C
-	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2019 23:00:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A27FE2718F
+	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2019 23:26:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbfEVVAk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 May 2019 17:00:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729686AbfEVVAk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 May 2019 17:00:40 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FF2121019;
-        Wed, 22 May 2019 21:00:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558558839;
-        bh=DAAiD6IH0KlDghAVNPmVbeERdOtKivo01YxuNAw7Lv4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NMu4b6BJ6eGOg5zZMYjFoMJPEjwWgJzXYlUFNL/cVGdMfzr6eLQQV4fTw0oerv/D+
-         RP2brANDVsvcMxhzfOECmHSJFZ8Ghm4KstXuGdGVc+DEa3jtgRa2btaLFFe575w+TH
-         4i9jAAXLgNkFwSgCIMEOX1dAXlJtDolPRrkjQVhw=
-Date:   Wed, 22 May 2019 16:00:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Isaac J. Manjarres" <isaacm@codeaurora.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
-        frowand.list@gmail.com, joro@8bytes.org, robin.murphy@arm.com,
-        will.deacon@arm.com, kernel-team@android.com,
-        pratikp@codeaurora.org, lmark@codeaurora.org
-Subject: Re: [RFC/PATCH 2/4] PCI: Export PCI ACS and DMA searching functions
- to modules
-Message-ID: <20190522210038.GE79339@google.com>
-References: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
- <1558118857-16912-3-git-send-email-isaacm@codeaurora.org>
+        id S1728958AbfEVV0P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 May 2019 17:26:15 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:34895 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728761AbfEVV0O (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 May 2019 17:26:14 -0400
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id A7F9A240009;
+        Wed, 22 May 2019 21:26:08 +0000 (UTC)
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Ellie Reeves <ellierevves@gmail.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH] PCI: aardvark: Fix PCI_EXP_RTCTL conf register writing
+Date:   Wed, 22 May 2019 23:33:49 +0200
+Message-Id: <20190522213351.21366-1-repk@triplefau.lt>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558118857-16912-3-git-send-email-isaacm@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 17, 2019 at 11:47:35AM -0700, Isaac J. Manjarres wrote:
-> IOMMU drivers that can be compiled as modules may
-> want to use pci_for_each_dma_alias() and pci_request_acs(),
-> so export those functions.
-> 
-> Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+PCI_EXP_RTCTL is used to activate PME interrupt only, so writing into it
+should not modify other interrupts' mask (such as ISR0).
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: 6302bf3ef78d ("PCI: Init PCIe feature bits for managed host bridge alloc")
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+---
+Please note that I will unlikely be able to answer any comments from May
+24th to June 10th.
+---
+ drivers/pci/controller/pci-aardvark.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-> ---
->  drivers/pci/pci.c    | 1 +
->  drivers/pci/search.c | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 766f577..3f354c1 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3124,6 +3124,7 @@ void pci_request_acs(void)
->  {
->  	pci_acs_enable = 1;
->  }
-> +EXPORT_SYMBOL_GPL(pci_request_acs);
->  
->  static const char *disable_acs_redir_param;
->  
-> diff --git a/drivers/pci/search.c b/drivers/pci/search.c
-> index 2b5f720..cf9ede9 100644
-> --- a/drivers/pci/search.c
-> +++ b/drivers/pci/search.c
-> @@ -111,6 +111,7 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
->  
->  	return ret;
->  }
-> +EXPORT_SYMBOL_GPL(pci_for_each_dma_alias);
->  
->  static struct pci_bus *pci_do_find_bus(struct pci_bus *bus, unsigned char busnr)
->  {
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 134e0306ff00..27102d3b4f9c 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -451,10 +451,14 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+ 		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+ 		break;
+ 
+-	case PCI_EXP_RTCTL:
+-		new = (new & PCI_EXP_RTCTL_PMEIE) << 3;
+-		advk_writel(pcie, new, PCIE_ISR0_MASK_REG);
++	case PCI_EXP_RTCTL: {
++		/* Only mask/unmask PME interrupt */
++		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG) &
++			~PCIE_MSG_PM_PME_MASK;
++		val |= (new & PCI_EXP_RTCTL_PMEIE) << 3;
++		advk_writel(pcie, val, PCIE_ISR0_MASK_REG);
+ 		break;
++	}
+ 
+ 	case PCI_EXP_RTSTA:
+ 		new = (new & PCI_EXP_RTSTA_PME) >> 9;
+-- 
+2.20.1
+
