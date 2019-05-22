@@ -2,20 +2,20 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2596027191
-	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2019 23:26:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBECA27194
+	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2019 23:26:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729720AbfEVV0c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 May 2019 17:26:32 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:59269 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728761AbfEVV0c (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 May 2019 17:26:32 -0400
+        id S1729947AbfEVV0i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 May 2019 17:26:38 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:57285 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728761AbfEVV0i (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 May 2019 17:26:38 -0400
 X-Originating-IP: 88.190.179.123
 Received: from localhost (unknown [88.190.179.123])
         (Authenticated sender: repk@triplefau.lt)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 5D16DFF805;
-        Wed, 22 May 2019 21:26:25 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id D473020004;
+        Wed, 22 May 2019 21:26:29 +0000 (UTC)
 From:   Remi Pommarel <repk@triplefau.lt>
 To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -23,9 +23,9 @@ To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 Cc:     Ellie Reeves <ellierevves@gmail.com>, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Remi Pommarel <repk@triplefau.lt>
-Subject: [PATCH v2] PCI: aardvark: Wait for endpoint to be ready before training link
-Date:   Wed, 22 May 2019 23:33:50 +0200
-Message-Id: <20190522213351.21366-2-repk@triplefau.lt>
+Subject: [PATCH v3] PCI: aardvark: Use LTSSM state to build link training flag
+Date:   Wed, 22 May 2019 23:33:51 +0200
+Message-Id: <20190522213351.21366-3-repk@triplefau.lt>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -34,58 +34,105 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When configuring pcie reset pin from gpio (e.g. initially set by
-u-boot) to pcie function this pin goes low for a brief moment
-asserting the PERST# signal. Thus connected device enters fundamental
-reset process and link configuration can only begin after a minimal
-100ms delay (see [1]).
+Aardvark's PCI_EXP_LNKSTA_LT flag in its link status register is not
+implemented and does not reflect the actual link training state (the
+flag is always set to 0). In order to support link re-training feature
+this flag has to be emulated. The Link Training and Status State
+Machine (LTSSM) flag in Aardvark LMI config register could be used as
+a link training indicator. Indeed if the LTSSM is in L0 or upper state
+then link training has completed (see [1]).
 
-Because the pin configuration comes from the "default" pinctrl it is
-implicitly configured before the probe callback is called:
-
-driver_probe_device()
-  really_probe()
-    ...
-    pinctrl_bind_pins() /* Here pin goes from gpio to PCIE reset
-                           function and PERST# is asserted */
-    ...
-    drv->probe()
+Unfortunately because after asking a link retraining it takes a while
+for the LTSSM state to become less than 0x10 (due to L0s to recovery
+state transition delays), LTSSM can still be in L0 while link training
+has not finished yet. So this waits for link to be in recovery or lesser
+state before returning after asking for a link retrain.
 
 [1] "PCI Express Base Specification", REV. 4.0
-    PCI Express, February 19 2014, 6.6.1 Conventional Reset
+    PCI Express, February 19 2014, Table 4-14
 
 Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 ---
 Changes since v1:
-  - Add a comment about pinctrl implicit pin configuration
-  - Use more legible msleep
-  - Use PCI_PM_D3COLD_WAIT macro
+  - Rename retraining flag field
+  - Fix DEVCTL register writing
+
+Changes since v2:
+  - Rewrite patch logic so it is more legible
 
 Please note that I will unlikely be able to answer any comments from May
 24th to June 10th.
 ---
- drivers/pci/controller/pci-aardvark.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/pci/controller/pci-aardvark.c | 29 ++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 134e0306ff00..d998c2b9cd04 100644
+index 134e0306ff00..8803083b2174 100644
 --- a/drivers/pci/controller/pci-aardvark.c
 +++ b/drivers/pci/controller/pci-aardvark.c
-@@ -324,6 +324,14 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 	reg |= PIO_CTRL_ADDR_WIN_DISABLE;
- 	advk_writel(pcie, reg, PIO_CTRL);
+@@ -180,6 +180,8 @@
+ #define LINK_WAIT_MAX_RETRIES		10
+ #define LINK_WAIT_USLEEP_MIN		90000
+ #define LINK_WAIT_USLEEP_MAX		100000
++#define RETRAIN_WAIT_MAX_RETRIES	10
++#define RETRAIN_WAIT_USLEEP_US		2000
  
-+	/*
-+	 * PERST# signal could have been asserted by pinctrl subsystem before
-+	 * probe() callback has been called, making the endpoint going into
-+	 * fundamental reset. As required by PCI Express spec a delay for at
-+	 * least 100ms after such a reset before link training is needed.
-+	 */
-+	msleep(PCI_PM_D3COLD_WAIT);
+ #define MSI_IRQ_NUM			32
+ 
+@@ -239,6 +241,17 @@ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
+ 	return -ETIMEDOUT;
+ }
+ 
++static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
++{
++	size_t retries;
 +
- 	/* Start link training */
- 	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
- 	reg |= PCIE_CORE_LINK_TRAINING;
++	for (retries = 0; retries < RETRAIN_WAIT_MAX_RETRIES; ++retries) {
++		if (!advk_pcie_link_up(pcie))
++			break;
++		udelay(RETRAIN_WAIT_USLEEP_US);
++	}
++}
++
+ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ {
+ 	u32 reg;
+@@ -426,11 +439,20 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+ 		return PCI_BRIDGE_EMUL_HANDLED;
+ 	}
+ 
++	case PCI_EXP_LNKCTL: {
++		/* u32 contains both PCI_EXP_LNKCTL and PCI_EXP_LNKSTA */
++		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
++			~(PCI_EXP_LNKSTA_LT << 16);
++		if (!advk_pcie_link_up(pcie))
++			val |= (PCI_EXP_LNKSTA_LT << 16);
++		*value = val;
++		return PCI_BRIDGE_EMUL_HANDLED;
++	}
++
+ 	case PCI_CAP_LIST_ID:
+ 	case PCI_EXP_DEVCAP:
+ 	case PCI_EXP_DEVCTL:
+ 	case PCI_EXP_LNKCAP:
+-	case PCI_EXP_LNKCTL:
+ 		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
+ 		return PCI_BRIDGE_EMUL_HANDLED;
+ 	default:
+@@ -447,8 +469,13 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+ 
+ 	switch (reg) {
+ 	case PCI_EXP_DEVCTL:
++		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
++		break;
++
+ 	case PCI_EXP_LNKCTL:
+ 		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
++		if (new & PCI_EXP_LNKCTL_RL)
++			advk_pcie_wait_for_retrain(pcie);
+ 		break;
+ 
+ 	case PCI_EXP_RTCTL:
 -- 
 2.20.1
 
