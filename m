@@ -2,80 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 274332699B
-	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2019 20:12:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24CF9269F9
+	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2019 20:39:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbfEVSMJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 May 2019 14:12:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727975AbfEVSMI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 May 2019 14:12:08 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C75C120863;
-        Wed, 22 May 2019 18:12:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558548728;
-        bh=3WQ3M9QP+2THWg2C9BAXf4+415QJkdpmvuQ16XUxwCE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l2iwC/N/iNoycLsezLmlaQWwbnSnNqiiwUoDCjjUFf2zie3wDN0zyfYi9cuSVEt6q
-         g+XZzv9XD2GR+hX8iP6OWjycEA06Uk9GWGtaFDaB62SCrlgfm4ze5MURwPulf9+XrF
-         Umc0gS/Op9bK2i+4Q5i6uNAfAAchOhVX0BLmSp0E=
-Date:   Wed, 22 May 2019 13:11:57 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        id S1728674AbfEVSj6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 May 2019 14:39:58 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:56410 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728272AbfEVSj5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 May 2019 14:39:57 -0400
+Received: (qmail 10090 invoked by uid 2102); 22 May 2019 14:39:56 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 22 May 2019 14:39:56 -0400
+Date:   Wed, 22 May 2019 14:39:56 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     Kai Heng Feng <kai.heng.feng@canonical.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
         Mathias Nyman <mathias.nyman@intel.com>,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH] PCI / PM: Don't runtime suspend when device only
- supports wakeup from D0
-Message-ID: <20190522181157.GC79339@google.com>
-References: <20190521163104.15759-1-kai.heng.feng@canonical.com>
- <20190521222300.GG57618@google.com>
- <AE3B21D0-5BD9-40A5-B5A1-3E9A8B8E1327@canonical.com>
- <20190522134854.GA79339@google.com>
- <D5DC20F1-6B8F-466F-BAE7-65F0C8FB3D1D@canonical.com>
+        <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH] PCI / PM: Don't runtime suspend when device only supports
+ wakeup from D0
+In-Reply-To: <20190522181157.GC79339@google.com>
+Message-ID: <Pine.LNX.4.44L0.1905221433310.1410-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <D5DC20F1-6B8F-466F-BAE7-65F0C8FB3D1D@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 22, 2019 at 11:46:25PM +0800, Kai Heng Feng wrote:
-> > On May 22, 2019, at 9:48 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Wed, May 22, 2019 at 11:42:14AM +0800, Kai Heng Feng wrote:
-> >> at 6:23 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >>> On Wed, May 22, 2019 at 12:31:04AM +0800, Kai-Heng Feng wrote:
-> >>>> There's an xHC device that doesn't wake when a USB device gets plugged
-> >>>> to its USB port. The driver's own runtime suspend callback was called,
-> >>>> PME signaling was enabled, but it stays at PCI D0.
+On Wed, 22 May 2019, Bjorn Helgaas wrote:
 
-> > ...
-> > And I guess this patch basically means we wouldn't call the driver's
-> > suspend callback if we're merely going to stay at D0, so the driver
-> > would have no idea anything happened.  That might match
-> > Documentation/power/pci.txt better, because it suggests that the
-> > suspend callback is related to putting a device in a low-power state,
-> > and D0 is not a low-power state.
+> On Wed, May 22, 2019 at 11:46:25PM +0800, Kai Heng Feng wrote:
+> > > On May 22, 2019, at 9:48 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Wed, May 22, 2019 at 11:42:14AM +0800, Kai Heng Feng wrote:
+> > >> at 6:23 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >>> On Wed, May 22, 2019 at 12:31:04AM +0800, Kai-Heng Feng wrote:
+> > >>>> There's an xHC device that doesn't wake when a USB device gets plugged
+> > >>>> to its USB port. The driver's own runtime suspend callback was called,
+> > >>>> PME signaling was enabled, but it stays at PCI D0.
 > 
-> Yes, the patch is to let the device stay at D0 and don’t run driver’s own
-> runtime suspend routine.
+> > > ...
+> > > And I guess this patch basically means we wouldn't call the driver's
+> > > suspend callback if we're merely going to stay at D0, so the driver
+> > > would have no idea anything happened.  That might match
+> > > Documentation/power/pci.txt better, because it suggests that the
+> > > suspend callback is related to putting a device in a low-power state,
+> > > and D0 is not a low-power state.
+> > 
+> > Yes, the patch is to let the device stay at D0 and don’t run driver’s own
+> > runtime suspend routine.
+> > 
+> > I guess I’ll just proceed to send a V2 with updated commit message?
 > 
-> I guess I’ll just proceed to send a V2 with updated commit message?
+> Now that I understand what "runtime suspended to D0" means, help me
+> understand what's actually wrong.
 
-Now that I understand what "runtime suspended to D0" means, help me
-understand what's actually wrong.
+Kai's point is that the xhci-hcd driver thinks the device is now in 
+runtime suspend, because the runtime_suspend method has been executed.  
+But in fact the device is still in D0, and as a result, PME signalling 
+may not work correctly.
 
-The PCI core apparently *does* enable PME when we "suspend to D0".
-But somehow calling the xHCI runtime suspend callback makes the driver
-unable to notice when the PME is signaled?
+On the other hand, it wasn't clear from the patch description whether
+this actually causes a problem on real systems.  The description only
+said that the problem was theoretical.
 
-Bjorn
+> The PCI core apparently *does* enable PME when we "suspend to D0".
+> But somehow calling the xHCI runtime suspend callback makes the driver
+> unable to notice when the PME is signaled?
+
+According to Kai, PME signalling doesn't work in D0 -- or at least, it
+is _documented_ not to work in D0 -- even though it is enabled and the
+device claims to support it.
+
+In any case, I don't really see any point in "runtime suspending" a 
+device while leaving it in D0.  We might as well just leave it alone.
+
+Alan Stern
+
