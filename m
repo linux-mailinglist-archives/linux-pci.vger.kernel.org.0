@@ -2,19 +2,20 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A27FE2718F
-	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2019 23:26:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2596027191
+	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2019 23:26:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbfEVV0P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 May 2019 17:26:15 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:34895 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728761AbfEVV0O (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 May 2019 17:26:14 -0400
+        id S1729720AbfEVV0c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 May 2019 17:26:32 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:59269 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728761AbfEVV0c (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 May 2019 17:26:32 -0400
+X-Originating-IP: 88.190.179.123
 Received: from localhost (unknown [88.190.179.123])
         (Authenticated sender: repk@triplefau.lt)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id A7F9A240009;
-        Wed, 22 May 2019 21:26:08 +0000 (UTC)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 5D16DFF805;
+        Wed, 22 May 2019 21:26:25 +0000 (UTC)
 From:   Remi Pommarel <repk@triplefau.lt>
 To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -22,9 +23,9 @@ To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 Cc:     Ellie Reeves <ellierevves@gmail.com>, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Remi Pommarel <repk@triplefau.lt>
-Subject: [PATCH] PCI: aardvark: Fix PCI_EXP_RTCTL conf register writing
-Date:   Wed, 22 May 2019 23:33:49 +0200
-Message-Id: <20190522213351.21366-1-repk@triplefau.lt>
+Subject: [PATCH v2] PCI: aardvark: Wait for endpoint to be ready before training link
+Date:   Wed, 22 May 2019 23:33:50 +0200
+Message-Id: <20190522213351.21366-2-repk@triplefau.lt>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -33,40 +34,58 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCI_EXP_RTCTL is used to activate PME interrupt only, so writing into it
-should not modify other interrupts' mask (such as ISR0).
+When configuring pcie reset pin from gpio (e.g. initially set by
+u-boot) to pcie function this pin goes low for a brief moment
+asserting the PERST# signal. Thus connected device enters fundamental
+reset process and link configuration can only begin after a minimal
+100ms delay (see [1]).
 
-Fixes: 6302bf3ef78d ("PCI: Init PCIe feature bits for managed host bridge alloc")
+Because the pin configuration comes from the "default" pinctrl it is
+implicitly configured before the probe callback is called:
+
+driver_probe_device()
+  really_probe()
+    ...
+    pinctrl_bind_pins() /* Here pin goes from gpio to PCIE reset
+                           function and PERST# is asserted */
+    ...
+    drv->probe()
+
+[1] "PCI Express Base Specification", REV. 4.0
+    PCI Express, February 19 2014, 6.6.1 Conventional Reset
+
 Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 ---
+Changes since v1:
+  - Add a comment about pinctrl implicit pin configuration
+  - Use more legible msleep
+  - Use PCI_PM_D3COLD_WAIT macro
+
 Please note that I will unlikely be able to answer any comments from May
 24th to June 10th.
 ---
- drivers/pci/controller/pci-aardvark.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pci-aardvark.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 134e0306ff00..27102d3b4f9c 100644
+index 134e0306ff00..d998c2b9cd04 100644
 --- a/drivers/pci/controller/pci-aardvark.c
 +++ b/drivers/pci/controller/pci-aardvark.c
-@@ -451,10 +451,14 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
- 		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
- 		break;
+@@ -324,6 +324,14 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ 	reg |= PIO_CTRL_ADDR_WIN_DISABLE;
+ 	advk_writel(pcie, reg, PIO_CTRL);
  
--	case PCI_EXP_RTCTL:
--		new = (new & PCI_EXP_RTCTL_PMEIE) << 3;
--		advk_writel(pcie, new, PCIE_ISR0_MASK_REG);
-+	case PCI_EXP_RTCTL: {
-+		/* Only mask/unmask PME interrupt */
-+		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG) &
-+			~PCIE_MSG_PM_PME_MASK;
-+		val |= (new & PCI_EXP_RTCTL_PMEIE) << 3;
-+		advk_writel(pcie, val, PCIE_ISR0_MASK_REG);
- 		break;
-+	}
- 
- 	case PCI_EXP_RTSTA:
- 		new = (new & PCI_EXP_RTSTA_PME) >> 9;
++	/*
++	 * PERST# signal could have been asserted by pinctrl subsystem before
++	 * probe() callback has been called, making the endpoint going into
++	 * fundamental reset. As required by PCI Express spec a delay for at
++	 * least 100ms after such a reset before link training is needed.
++	 */
++	msleep(PCI_PM_D3COLD_WAIT);
++
+ 	/* Start link training */
+ 	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
+ 	reg |= PCIE_CORE_LINK_TRAINING;
 -- 
 2.20.1
 
