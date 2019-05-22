@@ -2,89 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 93489270ED
-	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2019 22:41:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5C3B27122
+	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2019 22:52:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729762AbfEVUlY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 May 2019 16:41:24 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:52802 "EHLO ale.deltatee.com"
+        id S1729868AbfEVUwe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 May 2019 16:52:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729528AbfEVUlY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 May 2019 16:41:24 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.141])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hTY33-0003ne-TI; Wed, 22 May 2019 14:41:18 -0600
-To:     "Koenig, Christian" <Christian.Koenig@amd.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <a98bff67-a76e-4ddc-a317-96f2bdc9af72@email.android.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <97aa52fc-f062-acf1-0e0c-5a4d1d505777@deltatee.com>
-Date:   Wed, 22 May 2019 14:41:16 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1729528AbfEVUwe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 22 May 2019 16:52:34 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B37220675;
+        Wed, 22 May 2019 20:52:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558558353;
+        bh=bhpBHeEEilTJAKuT5Mz1T+jvRriCi/QY/aaDhmaV7JI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ouHOrgyYGR6Ej2mSKFz/3tkEsldkGSNiCr50YNVhTymWt2/NSkU5IZLSv5wHzIHey
+         yfJCtejVdReX1qKpbB02KMuX1ladLoJjzMV47fSNX14NzIFTNC7O2HJsIfig+Dgxa+
+         EdwV7TDs99XEyF6g7uXFcv7KEVI02A4FvjQ/pdmU=
+Date:   Wed, 22 May 2019 15:52:31 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Kai Heng Feng <kai.heng.feng@canonical.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH] PCI / PM: Don't runtime suspend when device only
+ supports wakeup from D0
+Message-ID: <20190522205231.GD79339@google.com>
+References: <20190522181157.GC79339@google.com>
+ <Pine.LNX.4.44L0.1905221433310.1410-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <a98bff67-a76e-4ddc-a317-96f2bdc9af72@email.android.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: bhelgaas@google.com, linux-pci@vger.kernel.org, Christian.Koenig@amd.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=5.0 tests=ALL_TRUSTED,BAYES_00
-        autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH] PCI/P2PDMA: Root complex whitelist should not apply when
- an IOMMU is present
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Pine.LNX.4.44L0.1905221433310.1410-100000@iolanthe.rowland.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2019-05-22 2:30 p.m., Koenig, Christian wrote:
-> Hi Logan,
+On Wed, May 22, 2019 at 02:39:56PM -0400, Alan Stern wrote:
+> On Wed, 22 May 2019, Bjorn Helgaas wrote:
+> > On Wed, May 22, 2019 at 11:46:25PM +0800, Kai Heng Feng wrote:
+> > > > On May 22, 2019, at 9:48 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Wed, May 22, 2019 at 11:42:14AM +0800, Kai Heng Feng wrote:
+> > > >> at 6:23 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > >>> On Wed, May 22, 2019 at 12:31:04AM +0800, Kai-Heng Feng wrote:
+> > > >>>> There's an xHC device that doesn't wake when a USB device gets plugged
+> > > >>>> to its USB port. The driver's own runtime suspend callback was called,
+> > > >>>> PME signaling was enabled, but it stays at PCI D0.
+> > 
+> > > > ...
+> > > > And I guess this patch basically means we wouldn't call the driver's
+> > > > suspend callback if we're merely going to stay at D0, so the driver
+> > > > would have no idea anything happened.  That might match
+> > > > Documentation/power/pci.txt better, because it suggests that the
+> > > > suspend callback is related to putting a device in a low-power state,
+> > > > and D0 is not a low-power state.
+> > > 
+> > > Yes, the patch is to let the device stay at D0 and don’t run driver’s own
+> > > runtime suspend routine.
+> > > 
+> > > I guess I’ll just proceed to send a V2 with updated commit message?
+> > 
+> > Now that I understand what "runtime suspended to D0" means, help me
+> > understand what's actually wrong.
 > 
-> Am 22.05.2019 22:12 schrieb Logan Gunthorpe <logang@deltatee.com>:
+> Kai's point is that the xhci-hcd driver thinks the device is now in 
+> runtime suspend, because the runtime_suspend method has been executed.  
+> But in fact the device is still in D0, and as a result, PME signalling 
+> may not work correctly.
+
+The device claims to be able to signal PME from D0 (this is from the lspci
+in https://bugzilla.kernel.org/show_bug.cgi?id=203673):
+
+  00:10.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller (rev 20) (prog-if 30 [XHCI])
+    Capabilities: [50] Power Management version 3
+      Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+
+From the xHCI spec r1.0, sec 4.15.2.3, it looks like a connect
+detected while in D0 should assert PME# if enabled (and WCE is set).
+
+> On the other hand, it wasn't clear from the patch description whether
+> this actually causes a problem on real systems.  The description only
+> said that the problem was theoretical.
+
+Kai did say nothing happens when hot-adding a USB device, so I think
+there really is a problem.  This should be an obvious problem that
+lots of people would trip over, so I expect there should be reports in
+launchpad, etc.  I'd really like to have those bread crumbs.  Kai, can
+you add a complete dmesg log to the bugzilla?  Hints from the log,
+like the platform name, can help find related reports.
+
+> > The PCI core apparently *does* enable PME when we "suspend to D0".
+> > But somehow calling the xHCI runtime suspend callback makes the
+> > driver unable to notice when the PME is signaled?
 > 
->     [CAUTION: External Email]
-> 
->     Presently, there is no path to DMA map P2PDMA memory, so if a TLP
->     targeting this memory hits the root complex and an IOMMU is present,
->     the IOMMU will reject the transaction, even if the RC would support
->     P2PDMA.
-> 
->     So until the kernel knows to map these DMA addresses in the IOMMU,
->     we should not enable the whitelist when an IOMMU is present.
-> 
-> 
-> Well NAK, cause that is exactly what we are doing.
+> According to Kai, PME signalling doesn't work in D0 -- or at least,
+> it is _documented_ not to work in D0 -- even though it is enabled
+> and the device claims to support it.
 
-Are you DMA-mapping the addresses outside the P2PDMA code? If so there's 
-a huge mismatch with the existing users of P2PDMA (nvme-fabrics). If 
-you're not dma-mapping then I can't see how it could work because the 
-IOMMU should reject any requests to access those addresses.
+I didn't understand this part.  From a PCI perspective, PME signaling
+while in D0 is an optional feature and should work if the device
+advertises support for it.  If it doesn't work on this device, we
+should have a quirk to indicate that.
 
-By adding the whitelist in this way you will break any user that 
-attempts to use P2P in nvme-fabrics on whitelisted RCs with an IOMMU 
-enabled.
+But I thought Kai said the device *can* signal PME from D0, but for
+some reason we don't handle it correctly if we have called the xHCI
+suspend callback.
 
-Currently, the users of P2PDMA use pci_p2pdma_map_sg() which only 
-returns the PCI bus address. If P2PDMA transactions can now go through 
-an IOMMU, then this is wrong and broken.
+That's the part I don't understand.  Is this an xHCI driver issue?
+Should the suspend callback do something different if we're staying in
+D0?  I'm not sure the callback even knows what Dx state we're going
+to.
 
-We need to ensure that all users of P2PDMA map this memory in the same 
-way. Which means, if the TLPs will go through an IOMMU they get 
-dma-map'd and, if they don't, they use the PCI Bus address (as the 
-current code does).
-
-Without the change proposed in this patch, I have to retract my review 
-and NAK your patch until we can sort out the mapping issues.
-
-Logan
+Bjorn
