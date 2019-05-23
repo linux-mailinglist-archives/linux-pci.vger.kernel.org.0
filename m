@@ -2,183 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CC292753A
-	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2019 06:39:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71A76277BA
+	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2019 10:12:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725873AbfEWEjb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 May 2019 00:39:31 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38125 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbfEWEjb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 May 2019 00:39:31 -0400
-Received: from mail-pl1-f199.google.com ([209.85.214.199])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hTfVo-0006qM-TB
-        for linux-pci@vger.kernel.org; Thu, 23 May 2019 04:39:29 +0000
-Received: by mail-pl1-f199.google.com with SMTP id b69so2718188plb.9
-        for <linux-pci@vger.kernel.org>; Wed, 22 May 2019 21:39:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=N2Cryd12l6XdE1v5HeEzZ2LEH60y6s0KvcwUQwn47uU=;
-        b=dsvyjFl4kNXJZt8oQHUQuI4eFsNBb9IOBc1EY/PYIRjg3mIULJpjk9hOXt7XGG8LN8
-         i9SlB4OReFdKjxeywE+ak/MkXLF3iazWsVvwLbzZRAVTKcoiRBjWgwC+SvqYuS0rJlVa
-         vVSjLJ3qNcGGJAHmXBGKYhFdI4hNWML7ZW0o2sjS6pgNrdU/8DbowORzi90XNZOs9pXO
-         aGIynjdHJSbTS3o98dVQDpbkr6fN5ejIYwCzDNtEvjmoUARqprmRd3OcfEg/FoDQfkR2
-         KepfFW1YVY94bHpxpbv9wn7XLNOdaz4JCvoRDAM2vZdy8+LSOIF3HIw9wL553IgQ0Sfc
-         /+UA==
-X-Gm-Message-State: APjAAAUcBSo/ofEXtqYMal3J4aduBxcPKRuZXJUght6rsq8nHe0i3Nv5
-        tf/dzViVZA9qaLsDK+CJeU5WV7o7fQirW/9EmTzUto+fSBvPBChMFzu/So6SMUW/C7J+RrakKaz
-        CABsQQAWiDZkP3EprS2floMsj1qpPbuwa9Z2XeA==
-X-Received: by 2002:a62:128a:: with SMTP id 10mr100194244pfs.225.1558586367562;
-        Wed, 22 May 2019 21:39:27 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyrPG0z1duPKpO4cbTDxCLxWSzIR/wnV9OiZUrJRE/swS+01DwEmV0AvQYR5l0wVqtiIlfTWw==
-X-Received: by 2002:a62:128a:: with SMTP id 10mr100194206pfs.225.1558586367174;
-        Wed, 22 May 2019 21:39:27 -0700 (PDT)
-Received: from 2001-b011-380f-14b9-35e2-b960-d580-9726.dynamic-ip6.hinet.net (2001-b011-380f-14b9-35e2-b960-d580-9726.dynamic-ip6.hinet.net. [2001:b011:380f:14b9:35e2:b960:d580:9726])
-        by smtp.gmail.com with ESMTPSA id s137sm39984426pfc.119.2019.05.22.21.39.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 21:39:26 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] PCI / PM: Don't runtime suspend when device only supports
- wakeup from D0
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20190522205231.GD79339@google.com>
-Date:   Thu, 23 May 2019 12:39:23 +0800
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-usb@vger.kernel.org
-Content-Transfer-Encoding: 8bit
-Message-Id: <010C1D41-C66D-45C0-8AFF-6F746306CE29@canonical.com>
-References: <20190522181157.GC79339@google.com>
- <Pine.LNX.4.44L0.1905221433310.1410-100000@iolanthe.rowland.org>
- <20190522205231.GD79339@google.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.11)
+        id S1726230AbfEWIMW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 May 2019 04:12:22 -0400
+Received: from mail-eopbgr680054.outbound.protection.outlook.com ([40.107.68.54]:27713
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726070AbfEWIMW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 23 May 2019 04:12:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ox1Olqo2wH12CS1agPlKZPH000DxlZu3F1E2w+bl8pI=;
+ b=jDvfvpOdGaEWb2yGnuMo/k/jURGpUMay5H2q2J/20c32RxQ0eOZ08PSCwsb1HTtcu/5mjPKjzKv+/yMFGTYBwjTqlXegnnx3nIavnFSfcv+npDDo/Sbr6+Zo7ueq5IPxdzG5aJuzjFsuWXxg3FgVZQNjJ2WQ8cJxBqucUrj2scM=
+Received: from CY4PR12MB1543.namprd12.prod.outlook.com (10.172.70.20) by
+ CY4PR12MB1751.namprd12.prod.outlook.com (10.175.62.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.17; Thu, 23 May 2019 08:12:19 +0000
+Received: from CY4PR12MB1543.namprd12.prod.outlook.com
+ ([fe80::c43a:8684:a852:2124]) by CY4PR12MB1543.namprd12.prod.outlook.com
+ ([fe80::c43a:8684:a852:2124%7]) with mapi id 15.20.1900.020; Thu, 23 May 2019
+ 08:12:19 +0000
+From:   "Koenig, Christian" <Christian.Koenig@amd.com>
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        Christoph Hellwig <hch@lst.de>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI/P2PDMA: Root complex whitelist should not apply when
+ an IOMMU is present
+Thread-Topic: [PATCH] PCI/P2PDMA: Root complex whitelist should not apply when
+ an IOMMU is present
+Thread-Index: AQHVEN0qInr5CdI4G0a9LdC26elwGqZ3m6wAgADBDAA=
+Date:   Thu, 23 May 2019 08:12:18 +0000
+Message-ID: <b9e94126-8686-4306-77c3-bd0b96680775@amd.com>
+References: <a98bff67-a76e-4ddc-a317-96f2bdc9af72@email.android.com>
+ <97aa52fc-f062-acf1-0e0c-5a4d1d505777@deltatee.com>
+In-Reply-To: <97aa52fc-f062-acf1-0e0c-5a4d1d505777@deltatee.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+x-clientproxiedby: AM6P192CA0007.EURP192.PROD.OUTLOOK.COM
+ (2603:10a6:209:83::20) To CY4PR12MB1543.namprd12.prod.outlook.com
+ (2603:10b6:910:c::20)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 35b33058-dc9f-4b3f-e127-08d6df565fbf
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:CY4PR12MB1751;
+x-ms-traffictypediagnostic: CY4PR12MB1751:
+x-microsoft-antispam-prvs: <CY4PR12MB175109FB7ED91279D0EE0B9483010@CY4PR12MB1751.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 00462943DE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(136003)(39860400002)(396003)(366004)(189003)(199004)(316002)(64126003)(52116002)(305945005)(86362001)(7736002)(76176011)(2906002)(53936002)(54906003)(14444005)(31686004)(486006)(6116002)(5660300002)(53546011)(256004)(8676002)(65956001)(31696002)(386003)(81156014)(81166006)(110136005)(99286004)(58126008)(8936002)(65806001)(6506007)(73956011)(66946007)(25786009)(446003)(66476007)(4326008)(229853002)(11346002)(102836004)(186003)(66446008)(64756008)(66556008)(46003)(6486002)(71190400001)(6246003)(36756003)(2616005)(6436002)(65826007)(68736007)(6512007)(14454004)(71200400001)(476003)(72206003)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1751;H:CY4PR12MB1543.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: tBpGvKItlj4d1MFnLjh5v+bHtV/ZyDn6LaowlsbOFuH/MoGf/llWqLCt1+8uA2xYKm015m3IkeW4bU2iapAJOvMoLZ4cvwk2IxBsdoHqvalRMKrV6FV+9DDUvO1F0xW5HqzA1PSocBTLqrJwX87IQZ7v5mv8UDXjMT6+UHH+XJUstV+gVP50wkrl9ViD8/bPkdQqxcAAAWMaIYqIHPq+qkfxRBIbrQOwu8kvmfhZtHHYOryl8cOKNKvpi4/aud4AgeEcYh4AHZI9vO3827yBXDf1GncPeo4KX2njfPjSfyGxV23VTWkh7NWBbsQkwAmB3jC+V4gH6XIq3UPc4GzhElfpqShwgrZMf8hh835cXnuuJ+9A/793c+MmFB8/GkuVHEbkxCFYAAQOSk123Dif1skP9rbvOthDQYbS0mOKyOs=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <29996BA9CD17E24EB741804BF2BEB5DA@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 35b33058-dc9f-4b3f-e127-08d6df565fbf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 08:12:18.8998
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1751
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-at 04:52, Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> On Wed, May 22, 2019 at 02:39:56PM -0400, Alan Stern wrote:
->> On Wed, 22 May 2019, Bjorn Helgaas wrote:
->>> On Wed, May 22, 2019 at 11:46:25PM +0800, Kai Heng Feng wrote:
->>>>> On May 22, 2019, at 9:48 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
->>>>> On Wed, May 22, 2019 at 11:42:14AM +0800, Kai Heng Feng wrote:
->>>>>> at 6:23 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
->>>>>>> On Wed, May 22, 2019 at 12:31:04AM +0800, Kai-Heng Feng wrote:
->>>>>>>> There's an xHC device that doesn't wake when a USB device gets  
->>>>>>>> plugged
->>>>>>>> to its USB port. The driver's own runtime suspend callback was  
->>>>>>>> called,
->>>>>>>> PME signaling was enabled, but it stays at PCI D0.
->>>
->>>>> ...
->>>>> And I guess this patch basically means we wouldn't call the driver's
->>>>> suspend callback if we're merely going to stay at D0, so the driver
->>>>> would have no idea anything happened.  That might match
->>>>> Documentation/power/pci.txt better, because it suggests that the
->>>>> suspend callback is related to putting a device in a low-power state,
->>>>> and D0 is not a low-power state.
->>>>
->>>> Yes, the patch is to let the device stay at D0 and don’t run driver’s  
->>>> own
->>>> runtime suspend routine.
->>>>
->>>> I guess I’ll just proceed to send a V2 with updated commit message?
->>>
->>> Now that I understand what "runtime suspended to D0" means, help me
->>> understand what's actually wrong.
->>
->> Kai's point is that the xhci-hcd driver thinks the device is now in
->> runtime suspend, because the runtime_suspend method has been executed.
->> But in fact the device is still in D0, and as a result, PME signalling
->> may not work correctly.
->
-> The device claims to be able to signal PME from D0 (this is from the lspci
-> in https://bugzilla.kernel.org/show_bug.cgi?id=203673):
->
->   00:10.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller (rev 20) (prog-if 30 [XHCI])
->     Capabilities: [50] Power Management version 3
->       Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
->
-> From the xHCI spec r1.0, sec 4.15.2.3, it looks like a connect
-> detected while in D0 should assert PME# if enabled (and WCE is set).
-
-I think section 4.15.2.3 is about S3 wake up, no S0 we are discussing here.
-
->
->> On the other hand, it wasn't clear from the patch description whether
->> this actually causes a problem on real systems.  The description only
->> said that the problem was theoretical.
->
-> Kai did say nothing happens when hot-adding a USB device, so I think
-> there really is a problem.  This should be an obvious problem that
-> lots of people would trip over, so I expect there should be reports in
-> launchpad, etc.  I'd really like to have those bread crumbs.  Kai, can
-> you add a complete dmesg log to the bugzilla?  Hints from the log,
-> like the platform name, can help find related reports.
-
-It’s a platform in development so the name can’t be disclosed.
-
->
->>> The PCI core apparently *does* enable PME when we "suspend to D0".
->>> But somehow calling the xHCI runtime suspend callback makes the
->>> driver unable to notice when the PME is signaled?
->>
->> According to Kai, PME signalling doesn't work in D0 -- or at least,
->> it is _documented_ not to work in D0 -- even though it is enabled
->> and the device claims to support it.
->
-> I didn't understand this part.  From a PCI perspective, PME signaling
-> while in D0 is an optional feature and should work if the device
-> advertises support for it.  If it doesn't work on this device, we
-> should have a quirk to indicate that.
-
-The only document I can find is the "Device Working State D0” from Microsoft.
-It says:
-"As a best practice, the driver should configure the device to generate  
-interrupts only when the device is in D0, and to generate wake signals only  
-when the device is in a low-power Dx state.”
-
-Wake-up capability
-Not applicable.
-
-Unfortunately PCI spec isn’t publicly available so I can only refer to  
-Microsoft document.
-
->
-> But I thought Kai said the device *can* signal PME from D0, but for
-> some reason we don't handle it correctly if we have called the xHCI
-> suspend callback.
-
-Sorry, what I meant is PME signaling is enabled, i.e.
-"Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-“
-
-But no signal was actually regenerated when USB device gets plugged to the  
-port.
-So there’s no wake up event to let PCI know it should runtime resume the  
-device.
-
->
-> That's the part I don't understand.  Is this an xHCI driver issue?
-> Should the suspend callback do something different if we're staying in
-> D0?  I'm not sure the callback even knows what Dx state we're going
-> to.
-
-As there’s no PME signal to wakeup event to signal PCI to runtime resume, I  
-don’t think it’s an xHCI bug.
-
-Kai-Heng
-
+QW0gMjIuMDUuMTkgdW0gMjI6NDEgc2NocmllYiBMb2dhbiBHdW50aG9ycGU6DQo+IFtDQVVUSU9O
+OiBFeHRlcm5hbCBFbWFpbF0NCj4NCj4gT24gMjAxOS0wNS0yMiAyOjMwIHAubS4sIEtvZW5pZywg
+Q2hyaXN0aWFuIHdyb3RlOg0KPj4gSGkgTG9nYW4sDQo+Pg0KPj4gQW0gMjIuMDUuMjAxOSAyMjox
+MiBzY2hyaWViIExvZ2FuIEd1bnRob3JwZSA8bG9nYW5nQGRlbHRhdGVlLmNvbT46DQo+Pg0KPj4g
+wqDCoMKgIFtDQVVUSU9OOiBFeHRlcm5hbCBFbWFpbF0NCj4+DQo+PiDCoMKgwqAgUHJlc2VudGx5
+LCB0aGVyZSBpcyBubyBwYXRoIHRvIERNQSBtYXAgUDJQRE1BIG1lbW9yeSwgc28gaWYgYSBUTFAN
+Cj4+IMKgwqDCoCB0YXJnZXRpbmcgdGhpcyBtZW1vcnkgaGl0cyB0aGUgcm9vdCBjb21wbGV4IGFu
+ZCBhbiBJT01NVSBpcyBwcmVzZW50LA0KPj4gwqDCoMKgIHRoZSBJT01NVSB3aWxsIHJlamVjdCB0
+aGUgdHJhbnNhY3Rpb24sIGV2ZW4gaWYgdGhlIFJDIHdvdWxkIHN1cHBvcnQNCj4+IMKgwqDCoCBQ
+MlBETUEuDQo+Pg0KPj4gwqDCoMKgIFNvIHVudGlsIHRoZSBrZXJuZWwga25vd3MgdG8gbWFwIHRo
+ZXNlIERNQSBhZGRyZXNzZXMgaW4gdGhlIElPTU1VLA0KPj4gwqDCoMKgIHdlIHNob3VsZCBub3Qg
+ZW5hYmxlIHRoZSB3aGl0ZWxpc3Qgd2hlbiBhbiBJT01NVSBpcyBwcmVzZW50Lg0KPj4NCj4+DQo+
+PiBXZWxsIE5BSywgY2F1c2UgdGhhdCBpcyBleGFjdGx5IHdoYXQgd2UgYXJlIGRvaW5nLg0KPg0K
+PiBBcmUgeW91IERNQS1tYXBwaW5nIHRoZSBhZGRyZXNzZXMgb3V0c2lkZSB0aGUgUDJQRE1BIGNv
+ZGU/IElmIHNvIHRoZXJlJ3MNCj4gYSBodWdlIG1pc21hdGNoIHdpdGggdGhlIGV4aXN0aW5nIHVz
+ZXJzIG9mIFAyUERNQSAobnZtZS1mYWJyaWNzKS4gSWYNCj4geW91J3JlIG5vdCBkbWEtbWFwcGlu
+ZyB0aGVuIEkgY2FuJ3Qgc2VlIGhvdyBpdCBjb3VsZCB3b3JrIGJlY2F1c2UgdGhlDQo+IElPTU1V
+IHNob3VsZCByZWplY3QgYW55IHJlcXVlc3RzIHRvIGFjY2VzcyB0aG9zZSBhZGRyZXNzZXMuDQoN
+CldlbGwsIHdlIGFyZSB1c2luZyB0aGUgRE1BIEFQSSAoZG1hX21hcF9yZXNvdXJjZSkgZm9yIHRo
+aXMuIElmIHRoZSBQMlAgDQpjb2RlIGlzIG5vdCB1c2luZyB0aGlzIHRoZW4gSSB3b3VsZCByYXRo
+ZXIgc2F5IHRoYXQgdGhlIFAyUCBjb2RlIGlzIA0KYWN0dWFsbHkgYnJva2VuLg0KDQpBZGRpbmcg
+Q2hyaXN0b3BoIGFzIHdlbGwsIGNhdXNlIGhlIGlzIHVzdWFsbHkgdGhlIG9uZSBkaXNjdXNzaW9u
+IHN0dWZmIA0KbGlrZSB0aGF0IHdpdGggbWUuDQoNCj4gQnkgYWRkaW5nIHRoZSB3aGl0ZWxpc3Qg
+aW4gdGhpcyB3YXkgeW91IHdpbGwgYnJlYWsgYW55IHVzZXIgdGhhdA0KPiBhdHRlbXB0cyB0byB1
+c2UgUDJQIGluIG52bWUtZmFicmljcyBvbiB3aGl0ZWxpc3RlZCBSQ3Mgd2l0aCBhbiBJT01NVQ0K
+PiBlbmFibGVkLg0KPg0KPiBDdXJyZW50bHksIHRoZSB1c2VycyBvZiBQMlBETUEgdXNlIHBjaV9w
+MnBkbWFfbWFwX3NnKCkgd2hpY2ggb25seQ0KPiByZXR1cm5zIHRoZSBQQ0kgYnVzIGFkZHJlc3Mu
+IElmIFAyUERNQSB0cmFuc2FjdGlvbnMgY2FuIG5vdyBnbyB0aHJvdWdoDQo+IGFuIElPTU1VLCB0
+aGVuIHRoaXMgaXMgd3JvbmcgYW5kIGJyb2tlbi4NCj4NCj4gV2UgbmVlZCB0byBlbnN1cmUgdGhh
+dCBhbGwgdXNlcnMgb2YgUDJQRE1BIG1hcCB0aGlzIG1lbW9yeSBpbiB0aGUgc2FtZQ0KPiB3YXku
+IFdoaWNoIG1lYW5zLCBpZiB0aGUgVExQcyB3aWxsIGdvIHRocm91Z2ggYW4gSU9NTVUgdGhleSBn
+ZXQNCj4gZG1hLW1hcCdkIGFuZCwgaWYgdGhleSBkb24ndCwgdGhleSB1c2UgdGhlIFBDSSBCdXMg
+YWRkcmVzcyAoYXMgdGhlDQo+IGN1cnJlbnQgY29kZSBkb2VzKS4NCg0KV2VsbCB0aGF0IGlzIGV4
+YWN0bHkgd2hhdCBkbWFfbWFwX3Jlc291cmNlKCkgYWxyZWFkeSBkb2VzLCBzbyB3ZSBzaG91bGQg
+DQpwcm9iYWJseSBqdXN0IG1ha2UgdXNpbmcgdGhlIERNQSBBUEkgbWFuZGF0b3J5Lg0KDQo+IFdp
+dGhvdXQgdGhlIGNoYW5nZSBwcm9wb3NlZCBpbiB0aGlzIHBhdGNoLCBJIGhhdmUgdG8gcmV0cmFj
+dCBteSByZXZpZXcNCj4gYW5kIE5BSyB5b3VyIHBhdGNoIHVudGlsIHdlIGNhbiBzb3J0IG91dCB0
+aGUgbWFwcGluZyBpc3N1ZXMuDQoNClllYWgsIGNvbXBsZXRlbHkgYWdyZWUgd2UgY2FuJ3QgZG8g
+dGhhdCByaWdodCBub3cuDQoNClJlZ2FyZHMsDQpDaHJpc3RpYW4uDQoNCj4NCj4NCj4gTG9nYW4N
+Cg0K
