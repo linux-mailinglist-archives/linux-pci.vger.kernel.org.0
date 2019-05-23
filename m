@@ -2,95 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7753128B65
-	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2019 22:15:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E554428B7E
+	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2019 22:29:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387615AbfEWUOw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 May 2019 16:14:52 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43833 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387786AbfEWUOv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 May 2019 16:14:51 -0400
-Received: by mail-pl1-f195.google.com with SMTP id gn7so3170267plb.10
-        for <linux-pci@vger.kernel.org>; Thu, 23 May 2019 13:14:51 -0700 (PDT)
+        id S2387897AbfEWU3j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 May 2019 16:29:39 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:55672 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387835AbfEWU3j (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 May 2019 16:29:39 -0400
+Received: by mail-it1-f196.google.com with SMTP id g24so5160610iti.5
+        for <linux-pci@vger.kernel.org>; Thu, 23 May 2019 13:29:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=5G1ZPvgTrdgyW2PxGOXC6vH5P8E8ivAkNJzVwGirtqo=;
-        b=AKnEDntflvnhyaBSvVK099GiNRlWgGmribqV0Gw/VdWTjwxzjpNafTbPuqKigoe2V5
-         FttiilstLFzz13VHtqQ9Ow5qJWcSTmkZod1V/o67Oz7JpP4zndSuIOsjZEnzgLgC45Dg
-         1OBKSki/z8keLPmKvajpOynSqHY7geZI+K/YsdtLyEKBdPCcZVy7j/HKpK1eqApnmVRU
-         B6d9wKjRuRWn4waIsXQHcEJCqUAi1LCpXsW0bGQxXG81fDN09MqYT2dprU1jScxQcw8k
-         jZAoSGnyRTN6nFsLblRD2D74d6EvdPLSc5r6ch8s3TeUUG7GD2LjrY8535TP8yf89ZX9
-         Yk5A==
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=b890wSvSu6wn7E/uDIjk2vqaDgCqNzWOhAkC3m9/u2s=;
+        b=Oh21H9o532d2n/TnnynzsE2ljIHzgvh1GxeZTfW2qHwe3qovfNr5GvwkMjmzzVASMz
+         Ia9juX5Ktr3S8qTF/YJHNxCt6CaUVoykR+EYa013yQLepgHgtg0j0znllhIvqIAShZDw
+         4WUocTAH0WMfZVqIMAevGQTiRV3Q7Wo1FYCD7Idb8bWJrytQ9B+mCrvaW/Y9kb3ddC8w
+         qi0s1otayOcCHqXNqVEvIuOiPH3oe2ibsYGcrmU1UywHhpLR8LdjYq0apUM74Ra8RS3F
+         T+zDEyFLJBLLEUvOaReB2N4eiDd3iTFZgg/vvjmfyoNCZXwF2JsBICr3Dggkrv/bqkih
+         e3TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=5G1ZPvgTrdgyW2PxGOXC6vH5P8E8ivAkNJzVwGirtqo=;
-        b=r3kfYuIgO71/RFjgXlcBMhjGXMjjRy47aodrCG7j+s3Q/8CJ2pSVjHciThOAFkRhun
-         g2sag+7p9sPxNc2mGIh3soj+M+DHLLi4eaKfGga/QkUBwX1PlVvzU2avsJVULSPsL0wg
-         97YONFtPeL7xiU8id8dtLrdK+9jrviN19ZctUYKmKEiRG8qwTBc+gDw/IEXSoZg9NPoU
-         sCnpN5ULqM8JGIXdXpHbesh+ZDc1Wyoty+i0wC9PHHhhuD1fMPnmt7ZROYqlHOODl0gr
-         R5YFjBP/8IlvVQWrWjWquYsrnV0x9WfWE4tWOsUbI8uN+/sunaya2aHxENcz63p3ufSU
-         zGvg==
-X-Gm-Message-State: APjAAAXCD1MQ+xV0uRVCBNzfArTX9oWxOgUOWAmn+LtwbZw8fTZ0kxq1
-        rY4pQGOA0P0RK7L4GLs7vZ4wQ7ZEK4U=
-X-Google-Smtp-Source: APXvYqyocPUBK+x86to4bFHTsugKXVdIxgBB30akfZUKLbQ4YlaRtHksF4iUavWEP335zXjgDmppXQ==
-X-Received: by 2002:a17:902:59c3:: with SMTP id d3mr29255894plj.273.1558642490753;
-        Thu, 23 May 2019 13:14:50 -0700 (PDT)
-Received: from nuc7.sifive.com ([12.206.222.2])
-        by smtp.gmail.com with ESMTPSA id i12sm180839pgb.61.2019.05.23.13.14.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 23 May 2019 13:14:50 -0700 (PDT)
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=b890wSvSu6wn7E/uDIjk2vqaDgCqNzWOhAkC3m9/u2s=;
+        b=fZ4q/A2QWHM2a13koOTLDytvFcjPM6NtQ5XplV5XlO/IRln/Ys+6kstFbl+69hi69C
+         LkdCdrZgk162SdEnZ/RufghVltme8oako2JCGYliZOplxlifn0B9MRTVE4poz7EtSXD5
+         JiLw0sDaMBHPMcJy2m3W1aDomxILBOkzGfEMyMTXdT9zzY+6k3RjEkHNEbcV2i4MqziR
+         AKfT4HnOncfb5S7v7yihyuh9beMCk0vBEpBZ1OOgsU4hbl28lgRv6VZ0qGPWexFt4OCj
+         5MzRGh5VjfpVtv1o56s79YMwQSdlPjZSxUEVUaIwXKcDtHekYVRmkFLj4wAkapRnyMfz
+         m6Ag==
+X-Gm-Message-State: APjAAAW8epLLyxaJD6OqeYKC++MIe6gUYdDWTLQwfda+lb1/UANkBOot
+        +XcHjUwAZr+46/g74/6PKtjDYQ==
+X-Google-Smtp-Source: APXvYqwoBcWiq9kt8e9AFxHiOgATa2Rx2JHeWpNLhTfaKeetKbRVbLGHjaraqPj3ixUZof8y8n2B5A==
+X-Received: by 2002:a24:d43:: with SMTP id 64mr7541897itx.114.1558643378930;
+        Thu, 23 May 2019 13:29:38 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id i25sm194019ioi.42.2019.05.23.13.29.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 13:29:38 -0700 (PDT)
+Date:   Thu, 23 May 2019 13:29:37 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Alan Mikhak <alan.mikhak@sifive.com>
+cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         kishon@ti.com, lorenzo.pieralisi@arm.com,
-        linux-riscv@lists.infradead.org, palmer@sifive.com,
-        paul.walmsley@sifive.com
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>
-Subject: [PATCH 2/2] tools: PCI: Fix compiler warning in pcitest
-Date:   Thu, 23 May 2019 13:14:24 -0700
-Message-Id: <1558642464-9946-3-git-send-email-alan.mikhak@sifive.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1558642464-9946-1-git-send-email-alan.mikhak@sifive.com>
-References: <1558642464-9946-1-git-send-email-alan.mikhak@sifive.com>
+        linux-riscv@lists.infradead.org, palmer@sifive.com
+Subject: Re: [PATCH 1/2] tools: PCI: Fix broken pcitest compilation
+In-Reply-To: <1558642464-9946-2-git-send-email-alan.mikhak@sifive.com>
+Message-ID: <alpine.DEB.2.21.9999.1905231329130.31734@viisi.sifive.com>
+References: <1558642464-9946-1-git-send-email-alan.mikhak@sifive.com> <1558642464-9946-2-git-send-email-alan.mikhak@sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
+On Thu, 23 May 2019, Alan Mikhak wrote:
 
-Fixes: fbca0b284bd0 ("tools: PCI: Add 'h' in optstring of getopt()")
+> From: Alan Mikhak <alan.mikhak@sifive.com>
 
-Fix the following compiler warning in pcitest:
+Please drop this line.
 
-pcitest.c: In function main:
-pcitest.c:214:4: warning: too many arguments for
-format [-Wformat-extra-args]
-    "usage: %s [options]\n"
+> Fixes: fef31ecaaf2c ("tools: PCI: Fix compilation warnings")
 
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
----
- tools/pci/pcitest.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This goes down below with the Signed-off-by: lines.
 
-diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
-index 6dce894667f6..6f1303104d84 100644
---- a/tools/pci/pcitest.c
-+++ b/tools/pci/pcitest.c
-@@ -223,7 +223,7 @@ int main(int argc, char **argv)
- 			"\t-r			Read buffer test\n"
- 			"\t-w			Write buffer test\n"
- 			"\t-c			Copy buffer test\n"
--			"\t-s <size>		Size of buffer {default: 100KB}\n",
-+			"\t-s <size>		Size of buffer {default: 100KB}\n"
- 			"\t-h			Print this help message\n",
- 			argv[0]);
- 		return -EINVAL;
--- 
-2.7.4
 
+- Paul
