@@ -2,46 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C8A3B28CA6
-	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2019 23:48:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41A1C28CBA
+	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2019 23:55:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388335AbfEWVsM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 May 2019 17:48:12 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34054 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388404AbfEWVsL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 May 2019 17:48:11 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w7so3270380plz.1
-        for <linux-pci@vger.kernel.org>; Thu, 23 May 2019 14:48:11 -0700 (PDT)
+        id S2387535AbfEWVz4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 May 2019 17:55:56 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36492 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387616AbfEWVzy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 May 2019 17:55:54 -0400
+Received: by mail-pg1-f194.google.com with SMTP id a3so3824344pgb.3
+        for <linux-pci@vger.kernel.org>; Thu, 23 May 2019 14:55:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=cRjsWIBkFu7xChKc5ODPWxRtyAuuqlLwnhGlual1d7o=;
-        b=Zhdv63Etq9ZqvxrpKVb9soHIGj0Q24oISvjDjej3wPUUd/Cnb+UldZiZtfrDTaIgu4
-         k/3l6z4swcOXGNbr7U7MmMkvFFMhvHlsvYBN1lmFjkeK6VbWXm5sjP1aWe9DSHu1k1fH
-         +cN0PVDMxA8slbCi7HJThOcm7ANy2YsLJFyrzLpf3iC3NXZ/pUASClHd3DQAmJYekNSX
-         u5PpK/415fxUlaYwU1eLb6sqZCWwrUM4eIeYNMam/BkP+B1PYCzfQsTmmVxb+B6ApH+H
-         bd7TG4fOrpjsWnsZoHWIFNl/habsr+Nqb1HSaXiq0no7Go4qLaX7JC+frOnhw9DqukLe
-         ySFw==
+        bh=PurhQGxmOt5OgX95ziE8Uz5xXLYO1YnGDYcH4NyaAV8=;
+        b=KmwMdbusxLFDrj22KnPcx5BKzA583dV/GrebLLNnmUsihWE/QMWs3lTIAouKLUwaop
+         LwgmVJQGVUg2aA+8mx4KJjU7bAF7LtGSr8FiMglX9PLU180cgIynnL0/9TXMA3mSW1M+
+         /UmO8YBNF1bNKg2+C2Nb60imYJGTKVl+XkH4yQ6Fxqbenfjbl/IPPANZqo6DAu95G16f
+         3MfFyVw8gm66EwDQbIfgC6fEkCdxWH+Uwd6/EWrWkuO+20grvDS8y/Fis3sO7q93IPon
+         ggEp6LFhzmrCxLh6InSejc0sfAGzRbxlvvT1/+7Z6b9W8sM4GU4RF8/D8lGBbGXY4321
+         unfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=cRjsWIBkFu7xChKc5ODPWxRtyAuuqlLwnhGlual1d7o=;
-        b=GiwDqwWWHgqCSHCF1a+02EmqDu5z7B1BWSHMgoNQapW/nenQhfpctCOiH0A7af32yi
-         spOmlGeSfyHbx9ShsnH0g8NLyRWvdZs0Rnu6e7e/oY9a89aHK+6mqPhl5ml7NoXNrYm1
-         zbT880SHBNjDBTmPDBZbp0f2AEhbMcPOXSBejiBZVrAEhg1/7goE20bW+KD/0yqdKAGD
-         xAJZj9Ozc3b5kn33b/P4KC48TkkPkrb0eQ4WHou6MV56uTD3ehrMecyl9onXB2/GGj5z
-         0Lazy3L1SHh6ZI3iNjFItvCIypbm+K5zz8TWA6/j2gEZMX7j/Y5hVmD5NAgeSXbtbjOD
-         dGtA==
-X-Gm-Message-State: APjAAAUsDANBBkgGOaj6HLInrSp9sCZmLXclyQ4VTxvWfREJLZceiuS0
-        88nuCnQmGV392LjGB6Etgch3fhSDxzc=
-X-Google-Smtp-Source: APXvYqwYpmQE4QulweV//CaaANh0ZzjwCj5mOtvZC5LJ9Go4sqfKX4lZUjjLrMyvaVKS4b5H7zgJWw==
-X-Received: by 2002:a17:902:4e:: with SMTP id 72mr49493273pla.80.1558648091144;
-        Thu, 23 May 2019 14:48:11 -0700 (PDT)
+        bh=PurhQGxmOt5OgX95ziE8Uz5xXLYO1YnGDYcH4NyaAV8=;
+        b=E7x4moX63t+vINzxabx0XIT8hW1HuiJ3imDSYJnoHutwOaRbEboAN4LCPGf6AKqzCJ
+         nUS++wQArW6Rz63/BFOCupA+q7GFwtVhp7zTuzFWe4rpuPtPp+qFu8y2to4h+smSf/+P
+         f5ixO92L/AV5e2k28WjKG3GdkyBA6TjoKQItq+DaOvRpKnEVooO66JcYscWFgkdjMkVK
+         VtSdZBYPB2rFhtEv6Bsc2b/jObcpmxkqbhHV+YXoMx03+RGJXmmuSVyxu7JGNKO7fHOf
+         JklZStnwr3o/tAM+rhmCAsnoarjKuqbEDcRVCUTUL089ZlezbHuXwnG/2rg3o/XgAZ24
+         P2QQ==
+X-Gm-Message-State: APjAAAVGgfIF6XU71Ral4hvGzWvzInuNYr6mq1vwVgY7/XX1GeNZC4DX
+        caxY5zPca4Y3zCa0vVUrVRJbZ+IZpBg=
+X-Google-Smtp-Source: APXvYqxfZfJf2dgCCL/DsR8P6LzvbOxJ1paNuXirPE+CZvt+G3bi+/s0Wd3kQSCpvTmI4e02K3NZLg==
+X-Received: by 2002:a63:903:: with SMTP id 3mr86725371pgj.400.1558648553134;
+        Thu, 23 May 2019 14:55:53 -0700 (PDT)
 Received: from nuc7.sifive.com ([12.206.222.2])
-        by smtp.gmail.com with ESMTPSA id f22sm280757pgl.25.2019.05.23.14.48.09
+        by smtp.gmail.com with ESMTPSA id q75sm422403pfa.175.2019.05.23.14.55.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 23 May 2019 14:48:10 -0700 (PDT)
+        Thu, 23 May 2019 14:55:52 -0700 (PDT)
 From:   Alan Mikhak <alan.mikhak@sifive.com>
 X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
 To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -49,48 +49,102 @@ To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-riscv@lists.infradead.org, palmer@sifive.com,
         paul.walmsley@sifive.com
 Cc:     Alan Mikhak <alan.mikhak@sifive.com>
-Subject: [PATCH v2] PCI: endpoint: Allocate enough space for fixed size BAR
-Date:   Thu, 23 May 2019 14:47:59 -0700
-Message-Id: <1558648079-13893-1-git-send-email-alan.mikhak@sifive.com>
+Subject: [PATCH v2] PCI: endpoint: Skip odd BAR when skipping 64bit BAR
+Date:   Thu, 23 May 2019 14:55:40 -0700
+Message-Id: <1558648540-14239-1-git-send-email-alan.mikhak@sifive.com>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCI endpoint test function code should honor the .bar_fixed_size parameter
-from underlying endpoint controller drivers or results may be unexpected.
+Always skip odd bar when skipping 64bit BARs in pci_epf_test_set_bar()
+and pci_epf_test_alloc_space().
 
-In pci_epf_test_alloc_space(), check if BAR being used for test register
-space is a fixed size BAR. If so, allocate the required fixed size.
+Otherwise, pci_epf_test_set_bar() will call pci_epc_set_bar() on odd loop
+index when skipping reserved 64bit BAR. Moreover, pci_epf_test_alloc_space()
+will call pci_epf_alloc_space() on bind for odd loop index when BAR is 64bit
+but leaks on subsequent unbind by not calling pci_epf_free_space().
 
 Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
 ---
- drivers/pci/endpoint/functions/pci-epf-test.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/pci/endpoint/functions/pci-epf-test.c | 25 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 27806987e93b..7d41e6684b87 100644
+index 27806987e93b..96156a537922 100644
 --- a/drivers/pci/endpoint/functions/pci-epf-test.c
 +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -434,10 +434,16 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
- 	int bar;
- 	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
- 	const struct pci_epc_features *epc_features;
-+	size_t test_reg_size;
+@@ -389,7 +389,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
+ 
+ static int pci_epf_test_set_bar(struct pci_epf *epf)
+ {
+-	int bar;
++	int bar, add;
+ 	int ret;
+ 	struct pci_epf_bar *epf_bar;
+ 	struct pci_epc *epc = epf->epc;
+@@ -400,8 +400,14 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
  
  	epc_features = epf_test->epc_features;
  
--	base = pci_epf_alloc_space(epf, sizeof(struct pci_epf_test_reg),
-+	if (epc_features->bar_fixed_size[test_reg_bar])
-+		test_reg_size = bar_size[test_reg_bar];
-+	else
-+		test_reg_size = sizeof(struct pci_epf_test_reg);
+-	for (bar = BAR_0; bar <= BAR_5; bar++) {
++	for (bar = BAR_0; bar <= BAR_5; bar += add) {
+ 		epf_bar = &epf->bar[bar];
++		/*
++		 * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
++		 * if the specific implementation required a 64-bit BAR,
++		 * even if we only requested a 32-bit BAR.
++		 */
++		add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
+ 
+ 		if (!!(epc_features->reserved_bar & (1 << bar)))
+ 			continue;
+@@ -413,13 +419,6 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+ 			if (bar == test_reg_bar)
+ 				return ret;
+ 		}
+-		/*
+-		 * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
+-		 * if the specific implementation required a 64-bit BAR,
+-		 * even if we only requested a 32-bit BAR.
+-		 */
+-		if (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
+-			bar++;
+ 	}
+ 
+ 	return 0;
+@@ -431,7 +430,7 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+ 	struct device *dev = &epf->dev;
+ 	struct pci_epf_bar *epf_bar;
+ 	void *base;
+-	int bar;
++	int bar, add;
+ 	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+ 	const struct pci_epc_features *epc_features;
+ 
+@@ -445,8 +444,10 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+ 	}
+ 	epf_test->reg[test_reg_bar] = base;
+ 
+-	for (bar = BAR_0; bar <= BAR_5; bar++) {
++	for (bar = BAR_0; bar <= BAR_5; bar += add) {
+ 		epf_bar = &epf->bar[bar];
++		add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
 +
-+	base = pci_epf_alloc_space(epf, test_reg_size,
- 				   test_reg_bar, epc_features->align);
- 	if (!base) {
- 		dev_err(dev, "Failed to allocated register space\n");
+ 		if (bar == test_reg_bar)
+ 			continue;
+ 
+@@ -459,8 +460,6 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+ 			dev_err(dev, "Failed to allocate space for BAR%d\n",
+ 				bar);
+ 		epf_test->reg[bar] = base;
+-		if (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
+-			bar++;
+ 	}
+ 
+ 	return 0;
 -- 
 2.7.4
 
