@@ -2,47 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DAB228C42
-	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2019 23:19:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 108FC28C96
+	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2019 23:46:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388206AbfEWVTX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 May 2019 17:19:23 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42326 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388214AbfEWVTS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 May 2019 17:19:18 -0400
-Received: by mail-pf1-f194.google.com with SMTP id r22so1070805pfh.9
-        for <linux-pci@vger.kernel.org>; Thu, 23 May 2019 14:19:18 -0700 (PDT)
+        id S2388359AbfEWVqI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 May 2019 17:46:08 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34602 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388220AbfEWVqI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 May 2019 17:46:08 -0400
+Received: by mail-pg1-f196.google.com with SMTP id h2so753046pgg.1
+        for <linux-pci@vger.kernel.org>; Thu, 23 May 2019 14:46:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=3mPZbZy5W6TvTMZ2rRqZtQoG8zcRtTAtXl0w7I9OmsQ=;
-        b=lb3Q3VCg/m5117JLuMa++JSdLvUGL28gMgBpbCyPzainZo4R3yf4FezR3ton+QBWBw
-         qbeUryIWnJ9EGSDWTVYxazT+GKhtA4PQ8IkI88idnCrVl9ABOgf+CprD4PwCxIY/PqkG
-         dGeRnERPTtsc7zs8hF2gN4WFv+YtuuI3kpCPAUMO8JYEfqtKOyf2xL+Aa/kMTW2MqPZJ
-         LDjpO72fc3/0lYdTAynbfbGvjsfyZjkr1iqa5UcQCwQGfe956GQR9J8QTyqisW7eQygv
-         irTUjf7y5dKeCnUj+QeYsppmE/YYlpufepBl+z44jiWSRr5kzZvrIqj+3ONbJggMDFLp
-         KAXg==
+        h=from:to:cc:subject:date:message-id;
+        bh=jLaVtK3dTIBGULW9LqgDdHPCnDBMlxzNCTE/sRHoa70=;
+        b=ShEJArcL1KurA1638gz4USiZ00iMtMSug5yVVcXiRtq5yuXns/UC6ym+0dTJvdOUoj
+         78DW7v4DCsJEVZi7VsL+DUQGnYD/1Gw8cYLRnzV2fIY9cvZHx4JmP8dJBZ/CkrOvy/r6
+         hi6huQyiN4IcB8uajCWgiy5jB/ADDU4MVssRWpr3I9BmE61Qbz5XtRDsAnlSFWRDu5DV
+         sPy2ijb70+9EyYSeZQxR5v5/w559ski9jk2+HKGKlMcSUeFIRbXFkN2eGJ3NZx0sXHnv
+         YduhiMCdIg52qX7KfA1u3Patzl0qE9lP7Gnrb1Jxs3NK9JufLOthzMFXYm5Ta+3oh9K1
+         nr4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=3mPZbZy5W6TvTMZ2rRqZtQoG8zcRtTAtXl0w7I9OmsQ=;
-        b=ibtwZZQ+juQQKPaF1N4YqWv/xucdbeLLqpSlzEWtPwHVUyYBjnetcjIvPA07Zz3xCx
-         w9SUei87XywrK9OnbOvMcvsuNrOJmUs+vpG56Aaf11uak5gRG+oAORxs74QKq2ua1W5G
-         uUFT0QX6wPPQSFq3icm8r6GW6bG2T0KDTF7A7w+QdoVonvfa+SB/GT9zkdAVIt5Rk3Y1
-         Bn7lEyNM6XJ2j4B88ZJzAq9EgEZ+ta1QZ7yGP01yfxKRP5zo5U8hBy+O0oXfajhB9r6d
-         6gNnJEsUNKJE6P8GIdhcosPuHRa+V3uA56AOM/nTJbPFa6Q32DkcHLiTupndrXm8LOMF
-         ZKeA==
-X-Gm-Message-State: APjAAAUmkwvye13lh3gEE8PssyWwt+DlxaQ/kZTykpdlfQr1Ynxq3GSo
-        crHwcpoZBOD0z6oSTXd4jVj9on+CHcA=
-X-Google-Smtp-Source: APXvYqxQNjLfbHXgT+sdqJIbUkJkB8mHB9tn8FD82DR8EhIiruAY6NJjRaQU9tkKBoJLN+Z8vmgFzw==
-X-Received: by 2002:a63:c64a:: with SMTP id x10mr99748450pgg.195.1558646357415;
-        Thu, 23 May 2019 14:19:17 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jLaVtK3dTIBGULW9LqgDdHPCnDBMlxzNCTE/sRHoa70=;
+        b=doRFrJOvASUdlvnPkYell80pNux1N4gKixLrxM+88UfX+b5/mdL7w+ES59BRL0qqra
+         hNcUmG4ZM8vyPbOwQaUuA5YSf4wJjHEkSbWUQyJNCkGeXa2ZlctwIaUUeBO2HwPUfd+j
+         qJDcC8/wQPG0Aaw9e8gYrDaNxfCZB98cQPyo9Il9GzJW5a+zrP40Xw3sdWPmeXJvb0Sd
+         pZF2YiQMTEPBzh4vY4Nph90ylm0XtuOH+sf3jEvSfxwAB3rr/erf/6IHMiJmdZUpt342
+         AyE2bgXdpNAXR6M/n9pmKzk8v9vtxP4b3yRm63+bEy1gKY822qV5teM8xACCQGSEXdBK
+         UEAA==
+X-Gm-Message-State: APjAAAVBxDELB1gHbBhf0+YjCxcroA7cRJirWstrfCxPthkkUtPwj3nU
+        0NCNDdzYAN91WOKDMP91dYtTnxJrA/I=
+X-Google-Smtp-Source: APXvYqynmmrSYP3AvQ6rwIRLvBAGL2pYB9a1i/aJMnlDC2kN1XI9/kUmEwXDShzjnRKLI1X8+9HLCQ==
+X-Received: by 2002:a63:5211:: with SMTP id g17mr69897684pgb.405.1558647967581;
+        Thu, 23 May 2019 14:46:07 -0700 (PDT)
 Received: from nuc7.sifive.com ([12.206.222.2])
-        by smtp.gmail.com with ESMTPSA id t5sm234092pgn.80.2019.05.23.14.19.16
+        by smtp.gmail.com with ESMTPSA id q10sm376519pff.132.2019.05.23.14.46.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 23 May 2019 14:19:16 -0700 (PDT)
+        Thu, 23 May 2019 14:46:06 -0700 (PDT)
 From:   Alan Mikhak <alan.mikhak@sifive.com>
 X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
 To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -50,44 +49,43 @@ To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-riscv@lists.infradead.org, palmer@sifive.com,
         paul.walmsley@sifive.com
 Cc:     Alan Mikhak <alan.mikhak@sifive.com>
-Subject: [PATCH v2 2/2] tools: PCI: Fix compiler warning in pcitest
-Date:   Thu, 23 May 2019 14:18:01 -0700
-Message-Id: <1558646281-12676-3-git-send-email-alan.mikhak@sifive.com>
+Subject: [PATCH v2] PCI: endpoint: Set endpoint controller pointer to null
+Date:   Thu, 23 May 2019 14:45:44 -0700
+Message-Id: <1558647944-13816-1-git-send-email-alan.mikhak@sifive.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1558646281-12676-1-git-send-email-alan.mikhak@sifive.com>
-References: <1558646281-12676-1-git-send-email-alan.mikhak@sifive.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fix the following compiler warning in pcitest:
+Set endpoint controller pointer to null in pci_epc_remove_epf()
+to avoid -EBUSY on subsequent call to pci_epc_add_epf().
 
-pcitest.c: In function main:
-pcitest.c:214:4: warning: too many arguments for
-format [-Wformat-extra-args]
-    "usage: %s [options]\n"
+Requires checking for null endpoint function pointer.
 
 Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-Fixes: fbca0b284bd0 ("tools: PCI: Add 'h' in optstring of getopt()")
-Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
 ---
- tools/pci/pcitest.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/endpoint/pci-epc-core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
-index 6dce894667f6..6f1303104d84 100644
---- a/tools/pci/pcitest.c
-+++ b/tools/pci/pcitest.c
-@@ -223,7 +223,7 @@ int main(int argc, char **argv)
- 			"\t-r			Read buffer test\n"
- 			"\t-w			Write buffer test\n"
- 			"\t-c			Copy buffer test\n"
--			"\t-s <size>		Size of buffer {default: 100KB}\n",
-+			"\t-s <size>		Size of buffer {default: 100KB}\n"
- 			"\t-h			Print this help message\n",
- 			argv[0]);
- 		return -EINVAL;
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index e4712a0f249c..2091508c1620 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -519,11 +519,12 @@ void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf)
+ {
+ 	unsigned long flags;
+ 
+-	if (!epc || IS_ERR(epc))
++	if (!epc || IS_ERR(epc) || !epf)
+ 		return;
+ 
+ 	spin_lock_irqsave(&epc->lock, flags);
+ 	list_del(&epf->list);
++	epf->epc = NULL;
+ 	spin_unlock_irqrestore(&epc->lock, flags);
+ }
+ EXPORT_SYMBOL_GPL(pci_epc_remove_epf);
 -- 
 2.7.4
 
