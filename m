@@ -2,100 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A7FB28E1A
-	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2019 01:56:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3B4828E1D
+	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2019 01:58:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388345AbfEWX4V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 May 2019 19:56:21 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38951 "EHLO
+        id S2388232AbfEWX6G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 May 2019 19:58:06 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39022 "EHLO
         mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388635AbfEWX4T (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 May 2019 19:56:19 -0400
-Received: by mail-lj1-f193.google.com with SMTP id a10so7064243ljf.6
-        for <linux-pci@vger.kernel.org>; Thu, 23 May 2019 16:56:18 -0700 (PDT)
+        with ESMTP id S2388423AbfEWX6F (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 May 2019 19:58:05 -0400
+Received: by mail-lj1-f193.google.com with SMTP id a10so7066317ljf.6
+        for <linux-pci@vger.kernel.org>; Thu, 23 May 2019 16:58:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=Rwcv7ftRka+X8HiYdZS3z2oKZ4APHYrkaB4F2nbQq/A=;
-        b=AnLJrehX/9SKzLuWRrRIqP+/yUIsQFZcIiCHKFCoKVjJLszzRW631gMNPPgRA8tOP1
-         wrqfXWhHRRoqYvBwzWiiheJDTGkKdbcNN+ngCaynpJWye/aRivH1AzTDYkZsRNUu7XfN
-         Hzogg9u4Z5W+AR7yKg7u5qHSEeRnmQkCh0b3VhGWXUmBZ+yBgXFGWM1CQrCPUYaKuyHT
-         dGVRDU156ornBXx5rdkou5+WPU/hu7WGJdKQ1X81ezANzfm5ub1f9DQNvAR0T+WQUqB4
-         8w9RzQRnOTfbvcIe+5gkLnKMB7IZcjZ1IAmhe3nznq8L+Sfaz0nuOiW1V0H+zHcEx/UE
-         OWkg==
+        bh=XOaG+GEFquIWc8ZqL+TFm0HU4q3YYIEJg9ZNEaLldJA=;
+        b=e+/gloxcunIS64ypJ+CKWxOR6GHBOe89ee8OezcPnTixwXbrsj4kCp/H/qB/aRRzIh
+         QByPd96mLzxgV0ur/42UdEdAgLZta9m8/n8uZwMOjeSb+TCAnc5IAjCkYySrExJSMb2d
+         5Z95YKknKuZcNyY2ZBYmfV86byhj48xIMZADt3C/Bsyc5/tMvZzKhPLYGPDo19Yqvmjv
+         Fud3GSHNHsFt1hu/P7rIEGw5vTXg2484c7fMGi49h6KWxersG0QgNTO1cpjLK/UmrfDl
+         qsm3ycA+ZCK/MN4Cc9W533cBQNXDsSoSEJKuP2E1y+UuI6XDwek9p6GetycEEkiOPmfm
+         YvEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to;
-        bh=Rwcv7ftRka+X8HiYdZS3z2oKZ4APHYrkaB4F2nbQq/A=;
-        b=CkCTR9AvTyt6Kod2zoKaUSTyZcVdmksBexB0Lxv/9waZswFRdct9zr6CAPAHAM0+rJ
-         +JLSccJyIdrDtXe2jtl3cQb4qyHs8R/Tx81NbtXAuDd4B4KeqPqT+MA+mMxQm9tSv7Nz
-         bNyIgIub215iCjeAaG9kcTDO8JUBgpCWSZ//7mKKEK8jFpYUvTVWK+njV0e5wDbVUoX6
-         p4W4ntQMehcNf0IsZuYYJBjgGq73pl3jDXiWuhsoETltJj8xKO1+2/cop5AbuqYH/kJP
-         +wTxah75Azu1caGKNYKQBUMsGV1qt5rFMGAYJA9L+510YsyH7mrVMfhOZ4/E8SHICY83
-         ESzQ==
-X-Gm-Message-State: APjAAAXmnUZqpWkwVwBA5KyAMnQVmrobSqQ8B8B0CLST9G1NvaRdz2fz
-        Aho88NVHqwrK8FWoiFclUwZQ0e+zdNJb33q30obhMJcAuXk=
-X-Google-Smtp-Source: APXvYqzYv7m8kDn0KpeHZdh5ZzlR7YUak9Qm+XHYYicHUR74JCz6mwG62iVCuLEISNmZxFqT3y6cpf3pLq0Fp50gAM0=
-X-Received: by 2002:a2e:655b:: with SMTP id z88mr46764454ljb.108.1558655777580;
- Thu, 23 May 2019 16:56:17 -0700 (PDT)
+        bh=XOaG+GEFquIWc8ZqL+TFm0HU4q3YYIEJg9ZNEaLldJA=;
+        b=oR/Rizr5OUSUe8ayveLa8Y3H9oTjGafIJXBefVL4dzdXpSzj9oJIDif8NYxtcKRr8s
+         w6pu19IA2r/UKffh2vrBW9poXRHxowY7+g89yFmsc1kbZG45dCDDV+DLeK07mJgfT1KD
+         VTvcurU2/RajrLWKQzr/SQDn9++HoBw5lf8bMTzEqpH6whMVoKja4syjeAIlIqZCf8+3
+         FdKBduPyOZ+RNf/pT370XNsBYV3KWHe+iC7wMwdNWoA+mPrbSeU7Y+yQmozQwM8zJWcJ
+         RLWt2lYBT7vHc+KVLaWRbNG0sjsE7U8t5I8yKklt7xIig8BFLACiZUYSaCyYm4qu/cZo
+         Juww==
+X-Gm-Message-State: APjAAAXm7KWbQ0md1TxXA+s6630hEJc3C4kU+TTxCQg1Pca231P5Ouzc
+        ohgDzcQanpOfGlkMvZlEZUp0L6V74czdxFStm+iBeQKuc3Q=
+X-Google-Smtp-Source: APXvYqz7QckuaSLcN3Ux3XggQtq3/yHHrcwrhdr4OBzCv7p72vzW4vje4uHz3AT/cEgJbPkLOntoCGlEE9G8OL+e5sI=
+X-Received: by 2002:a2e:874b:: with SMTP id q11mr22243701ljj.48.1558655883455;
+ Thu, 23 May 2019 16:58:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <1558648079-13893-1-git-send-email-alan.mikhak@sifive.com>
-In-Reply-To: <1558648079-13893-1-git-send-email-alan.mikhak@sifive.com>
+References: <1558647944-13816-1-git-send-email-alan.mikhak@sifive.com>
+In-Reply-To: <1558647944-13816-1-git-send-email-alan.mikhak@sifive.com>
 From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Thu, 23 May 2019 16:56:06 -0700
-Message-ID: <CABEDWGxMXg7RAgrUL-7W6vgC0BpCj9ys+i7myjxdBgn3vn_P6Q@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: endpoint: Allocate enough space for fixed size BAR
+Date:   Thu, 23 May 2019 16:57:52 -0700
+Message-ID: <CABEDWGyb3zTaiRqt7-mvrS6Dvhu0Fkhjp4nvaJ-vaJrD3n=0_Q@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: endpoint: Set endpoint controller pointer to null
 To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         kishon@ti.com, lorenzo.pieralisi@arm.com,
         linux-riscv@lists.infradead.org,
         Palmer Dabbelt <palmer@sifive.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        gustavo.pimentel@synopsys.com, wen.yang99@zte.com.cn, kjlu@umn.edu
+        Bjorn Helgaas <bhelgaas@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+Bjorn Helgaas, +Gustavo Pimentel, +Wen Yang, +Kangjie Lu
++Bjorn Helgaas
 
-On Thu, May 23, 2019 at 2:48 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
+On Thu, May 23, 2019 at 2:46 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
 >
-> PCI endpoint test function code should honor the .bar_fixed_size parameter
-> from underlying endpoint controller drivers or results may be unexpected.
+> Set endpoint controller pointer to null in pci_epc_remove_epf()
+> to avoid -EBUSY on subsequent call to pci_epc_add_epf().
 >
-> In pci_epf_test_alloc_space(), check if BAR being used for test register
-> space is a fixed size BAR. If so, allocate the required fixed size.
+> Requires checking for null endpoint function pointer.
 >
 > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
 > ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+>  drivers/pci/endpoint/pci-epc-core.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 >
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 27806987e93b..7d41e6684b87 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -434,10 +434,16 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
->         int bar;
->         enum pci_barno test_reg_bar = epf_test->test_reg_bar;
->         const struct pci_epc_features *epc_features;
-> +       size_t test_reg_size;
+> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+> index e4712a0f249c..2091508c1620 100644
+> --- a/drivers/pci/endpoint/pci-epc-core.c
+> +++ b/drivers/pci/endpoint/pci-epc-core.c
+> @@ -519,11 +519,12 @@ void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf)
+>  {
+>         unsigned long flags;
 >
->         epc_features = epf_test->epc_features;
+> -       if (!epc || IS_ERR(epc))
+> +       if (!epc || IS_ERR(epc) || !epf)
+>                 return;
 >
-> -       base = pci_epf_alloc_space(epf, sizeof(struct pci_epf_test_reg),
-> +       if (epc_features->bar_fixed_size[test_reg_bar])
-> +               test_reg_size = bar_size[test_reg_bar];
-> +       else
-> +               test_reg_size = sizeof(struct pci_epf_test_reg);
-> +
-> +       base = pci_epf_alloc_space(epf, test_reg_size,
->                                    test_reg_bar, epc_features->align);
->         if (!base) {
->                 dev_err(dev, "Failed to allocated register space\n");
+>         spin_lock_irqsave(&epc->lock, flags);
+>         list_del(&epf->list);
+> +       epf->epc = NULL;
+>         spin_unlock_irqrestore(&epc->lock, flags);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_remove_epf);
 > --
 > 2.7.4
 >
