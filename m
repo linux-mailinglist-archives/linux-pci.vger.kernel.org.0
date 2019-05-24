@@ -2,86 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D592629FA2
-	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2019 22:16:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8984129FC7
+	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2019 22:23:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403868AbfEXUQS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 May 2019 16:16:18 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:33764 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403762AbfEXUQS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 May 2019 16:16:18 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hUGbu-00032T-HJ; Fri, 24 May 2019 14:16:17 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hUGbu-00026Y-Ct; Fri, 24 May 2019 14:16:14 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Fri, 24 May 2019 14:16:10 -0600
-Message-Id: <20190524201610.8039-4-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190524201610.8039-1-logang@deltatee.com>
-References: <20190524201610.8039-1-logang@deltatee.com>
+        id S2404010AbfEXUXs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 May 2019 16:23:48 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40502 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403762AbfEXUXr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 May 2019 16:23:47 -0400
+Received: by mail-ot1-f65.google.com with SMTP id u11so9821760otq.7;
+        Fri, 24 May 2019 13:23:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yoB0L3qe36S2IhBoaOpwEJu+NSznEiRoc0Yquw1YBGY=;
+        b=P3eXJvDoJn+fgNCnmKj6jTepCycuoFfWmIcg8dodiBorpp7EaMwbgawn8VJdvkHMAN
+         i1JBNExBsqttLHiyhSLfsme8onhFnCLKoV7BsxtTDg6cDbR62M4cRGkXQxHpZYj+TQlj
+         8IFWAHr5ug73oCSQnfQdhTwlw75tWwhLTabYzA0oCxdj+V+5QZkxn8bRT53yyCyLHCan
+         MUjAANQ1PkkACrTdeK/YblZGBJsHK2yln8+llU4rxjwv2yKRAivvfBEncgOdPJvk2CDS
+         v6zz64O6IBigNAs/6kYpC6JrVJFl/Gbd1HOy98HC/KaOhUjEBPXUhACfbUKfn+/V7kME
+         XFgg==
+X-Gm-Message-State: APjAAAWWDOh+xU/rhaBv+5kipoO6P25otz2MDamXou0jdAGFhyO7maqG
+        A/TRY4r5Njjpc615sTnTVw==
+X-Google-Smtp-Source: APXvYqx0cRVBGu29WLtO7LQL9zHXwDoo3Y1496B2qClf9uMx1CjkdOw+AKOuxaRyoDl6F19tKtn2HA==
+X-Received: by 2002:a9d:6a10:: with SMTP id g16mr64874698otn.203.1558729426956;
+        Fri, 24 May 2019 13:23:46 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r205sm1371259oig.0.2019.05.24.13.23.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 May 2019 13:23:46 -0700 (PDT)
+Date:   Fri, 24 May 2019 15:23:45 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
+        will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, vidyas@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V7 06/15] dt-bindings: PCI: designware: Add binding for
+ CDM register check
+Message-ID: <20190524202345.GA24243@bogus>
+References: <20190517123846.3708-1-vidyas@nvidia.com>
+ <20190517123846.3708-7-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,MYRULES_NO_TEXT autolearn=ham autolearn_force=no
-        version=3.4.2
-Subject: [PATCH 3/3] PCI: Force trailing new line to resource_alignment_param in sysfs
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190517123846.3708-7-vidyas@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When 'pci=resource_alignment=' is specified on the command line, there
-is no trailing new line.  Then, when it's read through the corresponding
-sysfs attribute, there will be no newline and a cat command will not
-show correctly in a shell. If the parameter is set through sysfs
-a new line will be stored and it will 'cat' correctly.
+On Fri, 17 May 2019 18:08:37 +0530, Vidya Sagar wrote:
+> Add support to enable CDM (Configuration Dependent Module) registers check
+> for any data corruption. CDM registers include standard PCIe configuration
+> space registers, Port Logic registers and iATU and DMA registers.
+> Refer Section S.4 of Synopsys DesignWare Cores PCI Express Controller Databook
+> Version 4.90a
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes since [v6]:
+> * Changed "enable-cdm-check" to "snps,enable-cdm-check"
+> 
+> Changes since [v5]:
+> * None
+> 
+> Changes since [v4]:
+> * None
+> 
+> Changes since [v3]:
+> * None
+> 
+> Changes since [v2]:
+> * Changed flag name from 'cdm-check' to 'enable-cdm-check'
+> * Added info about Port Logic and DMA registers being part of CDM
+> 
+> Changes since [v1]:
+> * This is a new patch in v2 series
+> 
+>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
 
-To solve this, append a new line character in the show function if
-one does not already exist.
-
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/pci.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 3e71e161f18b..99d130ac6b96 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6090,6 +6090,16 @@ static ssize_t resource_alignment_show(struct bus_type *bus, char *buf)
- 		count = snprintf(buf, PAGE_SIZE, "%s", resource_alignment_param);
- 	spin_unlock(&resource_alignment_lock);
- 
-+	/*
-+	 * When set by the command line, resource_alignment_param will not
-+	 * have a trailing line feed, which is ugly. So conditionally add
-+	 * it here.
-+	 */
-+	if (count >= 2 && buf[count - 2] != '\n' && count < PAGE_SIZE - 1) {
-+		buf[count - 1] = '\n';
-+		buf[count++] = 0;
-+	}
-+
- 	return count;
- }
- 
--- 
-2.20.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
