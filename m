@@ -2,124 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C816290C2
-	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2019 08:07:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A9B5292BD
+	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2019 10:14:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388260AbfEXGHm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 May 2019 02:07:42 -0400
-Received: from mga18.intel.com ([134.134.136.126]:13073 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388070AbfEXGHm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 May 2019 02:07:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 23:07:41 -0700
-X-ExtLoop1: 1
-Received: from lftan-mobl.gar.corp.intel.com (HELO ubuntu) ([10.226.248.59])
-  by orsmga004.jf.intel.com with SMTP; 23 May 2019 23:07:38 -0700
-Received: by ubuntu (sSMTP sendmail emulation); Fri, 24 May 2019 14:07:36 +0800
-From:   Ley Foon Tan <ley.foon.tan@intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        lftan.linux@gmail.com, Ley Foon Tan <ley.foon.tan@intel.com>
-Subject: [PATCH 2/2] PCI: altera: Remove cfgrdX and cfgwrX
-Date:   Fri, 24 May 2019 14:07:26 +0800
-Message-Id: <1558678046-4052-3-git-send-email-ley.foon.tan@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1558678046-4052-1-git-send-email-ley.foon.tan@intel.com>
-References: <1558678046-4052-1-git-send-email-ley.foon.tan@intel.com>
+        id S2389238AbfEXIO4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 May 2019 04:14:56 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43479 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389234AbfEXIO4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 May 2019 04:14:56 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hU5Lj-0005XE-T3; Fri, 24 May 2019 08:14:48 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com, rafael.j.wysocki@intel.com
+Cc:     stern@rowland.harvard.edu, lukas@wunner.de,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH v2] PCI / PM: Don't runtime suspend when device only supports wakeup from D0
+Date:   Fri, 24 May 2019 16:14:44 +0800
+Message-Id: <20190524081444.9115-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-No longer need cfgrdX and cfgwrX since we have separate defines for
-TLP_CFG*_DW0 and S10_TLP_CFG*_DW0, so remove them.
+There's an xHCI device that doesn't wake when a USB device gets plugged
+to its USB port. The driver's own runtime suspend callback was called,
+PME signaling was enabled, but it stays at PCI D0:
+  Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
 
-Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
+A PCI device can be runtime suspended while still stays at D0 when it
+supports D0 PME and its _S0W reports D0. Theoretically this should work,
+but as [1] specifies, D0 doesn't have wakeup capability.
+
+To avoid this problematic situation, we should avoid runtime suspend if
+D0 is the only state that can wake up the device. If the deivce doesn't
+require wakeup capability, carry out driver's runtime suspend as usual,
+which may have logic to save its power internally.
+
+[1] https://docs.microsoft.com/en-us/windows-hardware/drivers/kernel/device-working-state-d0
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 ---
- drivers/pci/controller/pcie-altera.c | 33 +++++++---------------------
- 1 file changed, 8 insertions(+), 25 deletions(-)
+v2:
+ - Changes wording
+ - Keep old behaviour for devices can't wakeup.
 
-diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-index 047bcc214f9b..d96980a4e327 100644
---- a/drivers/pci/controller/pcie-altera.c
-+++ b/drivers/pci/controller/pcie-altera.c
-@@ -58,20 +58,20 @@
- #define RP_DEVFN			0
- #define TLP_REQ_ID(bus, devfn)		(((bus) << 8) | (devfn))
- #define TLP_CFGRD_DW0(pcie, bus)					\
--	((((bus == pcie->root_bus_nr) ? pcie->pcie_data->cfgrd0		\
--				: pcie->pcie_data->cfgrd1) << 24) |	\
-+	((((bus == pcie->root_bus_nr) ? TLP_FMTTYPE_CFGRD0		\
-+				: TLP_FMTTYPE_CFGRD1) << 24) |	\
- 				TLP_PAYLOAD_SIZE)
- #define TLP_CFGWR_DW0(pcie, bus)					\
--	((((bus == pcie->root_bus_nr) ? pcie->pcie_data->cfgwr0		\
--				: pcie->pcie_data->cfgwr1) << 24) |	\
-+	((((bus == pcie->root_bus_nr) ? TLP_FMTTYPE_CFGWR0		\
-+				: TLP_FMTTYPE_CFGWR1) << 24) |	\
- 				TLP_PAYLOAD_SIZE)
- #define S10_TLP_CFGRD_DW0(pcie, bus)					\
--	(((((bus) > S10_RP_SECONDARY(pcie)) ? pcie->pcie_data->cfgrd0	\
--				: pcie->pcie_data->cfgrd1) << 24) |	\
-+	(((((bus) > S10_RP_SECONDARY(pcie)) ? TLP_FMTTYPE_CFGRD1	\
-+				: TLP_FMTTYPE_CFGRD0) << 24) |	\
- 				TLP_PAYLOAD_SIZE)
- #define S10_TLP_CFGWR_DW0(pcie, bus)					\
--	(((((bus) > S10_RP_SECONDARY(pcie)) ? pcie->pcie_data->cfgwr0	\
--				: pcie->pcie_data->cfgwr1) << 24) |	\
-+	(((((bus) > S10_RP_SECONDARY(pcie)) ? TLP_FMTTYPE_CFGWR1	\
-+				: TLP_FMTTYPE_CFGWR0) << 24) |	\
- 				TLP_PAYLOAD_SIZE)
- #define TLP_CFG_DW1(pcie, tag, be)	\
- 	(((TLP_REQ_ID(pcie->root_bus_nr,  RP_DEVFN)) << 16) | (tag << 8) | (be))
-@@ -87,11 +87,6 @@
+ drivers/pci/pci-driver.c | 6 ++++++
+ drivers/pci/pci.c        | 2 +-
+ include/linux/pci.h      | 3 +++
+ 3 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index cae630fe6387..e3fac1d2a265 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -1239,6 +1239,7 @@ static int pci_pm_runtime_suspend(struct device *dev)
+ 	struct pci_dev *pci_dev = to_pci_dev(dev);
+ 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+ 	pci_power_t prev = pci_dev->current_state;
++	bool wakeup = device_can_wakeup(dev);
+ 	int error;
  
- #define DWORD_MASK			3
+ 	/*
+@@ -1251,6 +1252,11 @@ static int pci_pm_runtime_suspend(struct device *dev)
+ 		return 0;
+ 	}
  
--#define S10_TLP_FMTTYPE_CFGRD0		0x05
--#define S10_TLP_FMTTYPE_CFGRD1		0x04
--#define S10_TLP_FMTTYPE_CFGWR0		0x45
--#define S10_TLP_FMTTYPE_CFGWR1		0x44
--
- enum altera_pcie_version {
- 	ALTERA_PCIE_V1 = 0,
- 	ALTERA_PCIE_V2,
-@@ -124,10 +119,6 @@ struct altera_pcie_data {
- 	const struct altera_pcie_ops *ops;
- 	enum altera_pcie_version version;
- 	u32 cap_offset;		/* PCIe capability structure register offset */
--	u32 cfgrd0;
--	u32 cfgrd1;
--	u32 cfgwr0;
--	u32 cfgwr1;
- };
++	if (wakeup && pci_target_state(pci_dev, wakeup) == PCI_D0) {
++		dev_dbg(dev, "D0 doesn't have wakeup capability\n");
++		return -EBUSY;
++	}
++
+ 	pci_dev->state_saved = false;
+ 	if (pm && pm->runtime_suspend) {
+ 		error = pm->runtime_suspend(dev);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 8abc843b1615..ceee6efbbcfe 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -2294,7 +2294,7 @@ EXPORT_SYMBOL(pci_wake_from_d3);
+  * If the platform can't manage @dev, return the deepest state from which it
+  * can generate wake events, based on any available PME info.
+  */
+-static pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
++pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
+ {
+ 	pci_power_t target_state = PCI_D3hot;
  
- struct tlp_rp_regpair_t {
-@@ -784,20 +775,12 @@ static const struct altera_pcie_data altera_pcie_1_0_data = {
- 	.ops = &altera_pcie_ops_1_0,
- 	.cap_offset = 0x80,
- 	.version = ALTERA_PCIE_V1,
--	.cfgrd0 = TLP_FMTTYPE_CFGRD0,
--	.cfgrd1 = TLP_FMTTYPE_CFGRD1,
--	.cfgwr0 = TLP_FMTTYPE_CFGWR0,
--	.cfgwr1 = TLP_FMTTYPE_CFGWR1,
- };
- 
- static const struct altera_pcie_data altera_pcie_2_0_data = {
- 	.ops = &altera_pcie_ops_2_0,
- 	.version = ALTERA_PCIE_V2,
- 	.cap_offset = 0x70,
--	.cfgrd0 = S10_TLP_FMTTYPE_CFGRD0,
--	.cfgrd1 = S10_TLP_FMTTYPE_CFGRD1,
--	.cfgwr0 = S10_TLP_FMTTYPE_CFGWR0,
--	.cfgwr1 = S10_TLP_FMTTYPE_CFGWR1,
- };
- 
- static const struct of_device_id altera_pcie_of_match[] = {
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 4a5a84d7bdd4..91e8dc4d04aa 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1188,6 +1188,7 @@ bool pci_pme_capable(struct pci_dev *dev, pci_power_t state);
+ void pci_pme_active(struct pci_dev *dev, bool enable);
+ int pci_enable_wake(struct pci_dev *dev, pci_power_t state, bool enable);
+ int pci_wake_from_d3(struct pci_dev *dev, bool enable);
++pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup);
+ int pci_prepare_to_sleep(struct pci_dev *dev);
+ int pci_back_from_sleep(struct pci_dev *dev);
+ bool pci_dev_run_wake(struct pci_dev *dev);
+@@ -1672,6 +1673,8 @@ static inline int pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+ { return 0; }
+ static inline int pci_wake_from_d3(struct pci_dev *dev, bool enable)
+ { return 0; }
++pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
++{ return PCI_D0; }
+ static inline pci_power_t pci_choose_state(struct pci_dev *dev,
+ 					   pm_message_t state)
+ { return PCI_D0; }
 -- 
-2.19.0
+2.17.1
 
