@@ -2,143 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 993FB29E3C
-	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2019 20:41:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 357DC29E73
+	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2019 20:51:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfEXSlP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 May 2019 14:41:15 -0400
-Received: from libmpq.org ([85.25.94.4]:52300 "EHLO mail.libmpq.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbfEXSlO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 May 2019 14:41:14 -0400
-Received: from libmpq.org (homer.theraso.int [172.16.50.110])
-        by mail.libmpq.org (Postfix) with ESMTPSA id 45AF3395A5D;
-        Fri, 24 May 2019 20:41:13 +0200 (CEST)
-Date:   Fri, 24 May 2019 20:41:13 +0200
-From:   Maik Broemme <mbroemme@libmpq.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        vfio-users <vfio-users@redhat.com>
-Subject: Re: [PATCH] PCI: Mark Intel bridge on SuperMicro Atom C3xxx
- motherboards to avoid bus reset
-Message-ID: <20190524184113.GK1654@libmpq.org>
-References: <20190524153118.GA12862@libmpq.org>
- <20190524104003.2f7f1363@x1.home>
+        id S1728920AbfEXSu5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 May 2019 14:50:57 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33100 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729597AbfEXSuz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 May 2019 14:50:55 -0400
+Received: by mail-lj1-f193.google.com with SMTP id w1so9585738ljw.0
+        for <linux-pci@vger.kernel.org>; Fri, 24 May 2019 11:50:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QOpX777PdKYx2FzNZIOtxcAjmxm00VhvM8DiVIi+gic=;
+        b=Kbigf6+x+ocH2AyNwOQs10+zTlWsKMDO9/R3dOcVtJEsfBiTdREjTIWj0JV6CHVW+P
+         0bdYxs0w5RFKDgoUO42v7CMvChE8nv/xYh1q2Pwve6NgLoq5FqSTUgD1HUm1NblF3zzo
+         BjoFzOiEbYKqPd3c1BR5RbEaQi/NryGeokfcK84JXj1XAGhH9MoyYskyhgnH8RaQ5CLj
+         WR79xxBWypA2Q46vSqio9b+1968KuT6l05TTPXDmyXuLIWiHRatJxbPHbSsn6J0rCafx
+         di0JDLlRn6HJQZ0l2MVpuMDllwCLWJhHUj1Dq8BE8n0Ik7OugIwaEmocHbbgpECtINYi
+         FFiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QOpX777PdKYx2FzNZIOtxcAjmxm00VhvM8DiVIi+gic=;
+        b=pfk8rt7jmUgdRiRF+QN4bj5N8xHwGbufk2EgkpLC635HPz4+OZ49CpBXfKAQCQ6owd
+         V2+yNHWrZNFVJh3Imb6XBB50m9FTVU/xrFcpbz0aVB7k7xTeQbTvi94GrpaSGkPLuEeL
+         z9iN0ky54XUGfrZq72ggmTh2bLr8H3mWDeojIprpUpeqQl6y4rJzq5lreZoC41v30kT7
+         p83fQgUKGBwSvUQEJNdkLUfxgTpZuDp7PzMqeJFWyKpfoLEUHckuKUo7yfIDaubNZQ30
+         vo/FjZcQ1JD9iqEl9h5XqcClisAL1pEHaapHAYLUx+c25yPrbkKiopdiWx+r/4s7RmVu
+         AS0w==
+X-Gm-Message-State: APjAAAX0HK0m3nZHwY/mg/USxawRmSarPwFrS/dLQOf6n1nGDp2C2n52
+        ClQLUiZLDkzYuj0xdBpSkvNTcOj5RWsBQG+XrQKrXg==
+X-Google-Smtp-Source: APXvYqz/OD3h7LRiuXDBvHSt/uffjWkPCJB8DeQ107a3CO6oNwjqh3hQPyFQHG0JlC8k7s8e1Xhc+GQxDqy1yZ0LoCQ=
+X-Received: by 2002:a2e:8587:: with SMTP id b7mr42887354lji.101.1558723852754;
+ Fri, 24 May 2019 11:50:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524104003.2f7f1363@x1.home>
-X-Operating-System: Linux homer.theraso.int 5.1.4-arch1-1-ARCH 
-X-PGP-Key-FingerPrint: 109D 0AC6 86CF 06BD 4890  17B0 8FB9 9971 4EEB 31F1
-Organization: Personal
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <1558648540-14239-1-git-send-email-alan.mikhak@sifive.com>
+ <CABEDWGzHkt4p_byEihOAs9g97t450h9-Z0Qu2b2-O1pxCNPX+A@mail.gmail.com> <baa68439-f703-a453-34a2-24387bb9112d@ti.com>
+In-Reply-To: <baa68439-f703-a453-34a2-24387bb9112d@ti.com>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Fri, 24 May 2019 11:50:41 -0700
+Message-ID: <CABEDWGyJpfX=DzBgXAGwu29rEwmY3s_P9QPC0eJOJ3KBysRWtA@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: endpoint: Skip odd BAR when skipping 64bit BAR
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        gustavo.pimentel@synopsys.com, wen.yang99@zte.com.cn, kjlu@umn.edu
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Alex,
+Hi Kishon,
 
-On May 24, 2019, at 18:49, Alex Williamson <alex.williamson@redhat.com> wrote:
-> On Fri, 24 May 2019 17:31:18 +0200
-> Maik Broemme <mbroemme@libmpq.org> wrote:
-> 
-> > The Intel PCI bridge on SuperMicro Atom C3xxx motherboards do not
-> > successfully complete a bus reset when used with certain child devices.
-> 
-> What are these 'certain child devices'?  We can't really regression
-> test to know if/when the problem might be resolved if we don't know
-> what to test.
+Yes. This change is still applicable even when the platform specifies
+that it only supports 64-bit BARs by setting the bar_fixed_64bit
+member of epc_features.
 
-I tried the following devices:
+The issue being fixed is this: If the 'continue' statement is executed
+within the loop, the loop index 'bar' needs to advanced by two, not
+one, when the BAR is 64-bit. Otherwise the next loop iteration will be
+on an odd BAR which doesn't exist.
 
-- Digital Devices GmbH Octopus DVB Adapter
-- Digital Devices GmbH Cine S2 V6.5
-- Digital Devices GmbH Cine S2 V7
-- RealTek RTL8111D
-- RealTek RTL8168B
-- Intel I210-T1
+The PCI_BASE_ADDRESS_MEM_TYPE_64 flag in epf_bar->flag reflects the
+value set by the platform in the bar_fixed_64bit member of
+epc_features.
 
-> Do these devices reset properly in other systems?
+This patch moves the checking of  PCI_BASE_ADDRESS_MEM_TYPE_64 in
+epf_bar->flags to before the 'continue' statement to advance the 'bar'
+loop index accordingly. The comment you see about 'pci_epc_set_bar()'
+preceding the moved code is the original comment and was also moved
+along with the code.
 
-All these cards survive VFIO reset and VM reboot cycles in another
-motherboard (SuperMicro X11SPM-F). They only fail in the SuperMicro
-A2SDi-*C-HLN4F series. I have a 8 core and 16 core version of this
-motherboard.
+Regards,
+Alan Mikhak
 
-I've tried a passive Mini PCI-E adapter (MikroTik RB11E) in the slot
-with several wireless adapters (don't remember them all) and the
-'Digital Devices GmbH Octopus DVB Adapter' which is Mini PCI-E. They all
-produced the same error 'Failed to return from FLR' and '!!! Unknown
-header type 7f'
-
-Also I've tried a PCI-E switch from PLX technology, sold by MikroTik, the
-RouterBoard RB14eU. It is exports 4 Mini PCI ports in one PCI-E port and
-I tried it with one card and multiple cards.
-
-All these devices start to work once I enabled the bus reset quirk. The
-RB14eU even allows to assign the individual Mini PCI-E ports to
-different VMs and survive independent resets behind the PLX bridge.
-
-> Are there any devices that can do a bus reset properly on this system?
-
-I'm pretty sure not, of course I can test only devices I own and at
-least the Intel I210-T1 supports all functionality to do a proper reset.
-
-I own these motherboards since ~2 years and tried almost any device I
-had during this time.
-
-> We'd really only want to blacklist bus reset on this root port(?) if this is
-> a systemic problem with the root port, which is not clearly proven
-> here.  Thanks,
-
-I can rework the patch and apply the quirk only to my tested devices but
-I strongly believe that it is an issue on the root port, independent
-from the device.
-
-> 
-> Alex
-> 
-> > After the reset, config accesses to the child may fail. If assigning
-> > such device via VFIO it will immediately fail with:
-> > 
-> >   vfio-pci 0000:01:00.0: Failed to return from FLR
-> >   vfio-pci 0000:01:00.0: timed out waiting for pending transaction;
-> >   performing function level reset anyway
-> > 
-> > Device will disappear from PCI device list:
-> > 
-> >   !!! Unknown header type 7f
-> >   Kernel driver in use: vfio-pci
-> >   Kernel modules: ddbridge
-> > 
-> > The attached patch will mark the root port as incapable of doing a
-> > bus level reset. After that all my tested devices survive a VFIO
-> > assignment and several VM reboot cycles.
-> > 
-> > Signed-off-by: Maik Broemme <mbroemme@libmpq.org>
-> > ---
-> >  drivers/pci/quirks.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index 0f16acc323c6..86cd42872708 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -3433,6 +3433,13 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
-> >   */
-> >  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CAVIUM, 0xa100, quirk_no_bus_reset);
-> >  
-> > +/*
-> > + * Root port on some SuperMicro Atom C3xxx motherboards do not successfully
-> > + * complete a bus reset when used with certain child devices. After the
-> > + * reset, config accesses to the child may fail.
-> > + */
-> > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x19a4, quirk_no_bus_reset);
-> > +
-> >  static void quirk_no_pm_reset(struct pci_dev *dev)
-> >  {
-> >  	/*
-> 
-
---Maik
+On Fri, May 24, 2019 at 1:51 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> Hi,
+>
+> On 24/05/19 5:25 AM, Alan Mikhak wrote:
+> > +Bjorn Helgaas, +Gustavo Pimentel, +Wen Yang, +Kangjie Lu
+> >
+> > On Thu, May 23, 2019 at 2:55 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
+> >>
+> >> Always skip odd bar when skipping 64bit BARs in pci_epf_test_set_bar()
+> >> and pci_epf_test_alloc_space().
+> >>
+> >> Otherwise, pci_epf_test_set_bar() will call pci_epc_set_bar() on odd loop
+> >> index when skipping reserved 64bit BAR. Moreover, pci_epf_test_alloc_space()
+> >> will call pci_epf_alloc_space() on bind for odd loop index when BAR is 64bit
+> >> but leaks on subsequent unbind by not calling pci_epf_free_space().
+> >>
+> >> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> >> Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
+> >> ---
+> >>  drivers/pci/endpoint/functions/pci-epf-test.c | 25 ++++++++++++-------------
+> >>  1 file changed, 12 insertions(+), 13 deletions(-)
+> >>
+> >> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> >> index 27806987e93b..96156a537922 100644
+> >> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> >> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> >> @@ -389,7 +389,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
+> >>
+> >>  static int pci_epf_test_set_bar(struct pci_epf *epf)
+> >>  {
+> >> -       int bar;
+> >> +       int bar, add;
+> >>         int ret;
+> >>         struct pci_epf_bar *epf_bar;
+> >>         struct pci_epc *epc = epf->epc;
+> >> @@ -400,8 +400,14 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+> >>
+> >>         epc_features = epf_test->epc_features;
+> >>
+> >> -       for (bar = BAR_0; bar <= BAR_5; bar++) {
+> >> +       for (bar = BAR_0; bar <= BAR_5; bar += add) {
+> >>                 epf_bar = &epf->bar[bar];
+> >> +               /*
+> >> +                * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
+> >> +                * if the specific implementation required a 64-bit BAR,
+> >> +                * even if we only requested a 32-bit BAR.
+> >> +                */
+>
+> set_bar shouldn't set PCI_BASE_ADDRESS_MEM_TYPE_64. If a platform supports only
+> 64-bit BAR, that should be specified in epc_features bar_fixed_64bit member.
+>
+> Thanks
+> Kishon
