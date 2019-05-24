@@ -2,94 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D3B4828E1D
-	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2019 01:58:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32C1028F09
+	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2019 04:15:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388232AbfEWX6G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 May 2019 19:58:06 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39022 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388423AbfEWX6F (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 May 2019 19:58:05 -0400
-Received: by mail-lj1-f193.google.com with SMTP id a10so7066317ljf.6
-        for <linux-pci@vger.kernel.org>; Thu, 23 May 2019 16:58:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=XOaG+GEFquIWc8ZqL+TFm0HU4q3YYIEJg9ZNEaLldJA=;
-        b=e+/gloxcunIS64ypJ+CKWxOR6GHBOe89ee8OezcPnTixwXbrsj4kCp/H/qB/aRRzIh
-         QByPd96mLzxgV0ur/42UdEdAgLZta9m8/n8uZwMOjeSb+TCAnc5IAjCkYySrExJSMb2d
-         5Z95YKknKuZcNyY2ZBYmfV86byhj48xIMZADt3C/Bsyc5/tMvZzKhPLYGPDo19Yqvmjv
-         Fud3GSHNHsFt1hu/P7rIEGw5vTXg2484c7fMGi49h6KWxersG0QgNTO1cpjLK/UmrfDl
-         qsm3ycA+ZCK/MN4Cc9W533cBQNXDsSoSEJKuP2E1y+UuI6XDwek9p6GetycEEkiOPmfm
-         YvEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=XOaG+GEFquIWc8ZqL+TFm0HU4q3YYIEJg9ZNEaLldJA=;
-        b=oR/Rizr5OUSUe8ayveLa8Y3H9oTjGafIJXBefVL4dzdXpSzj9oJIDif8NYxtcKRr8s
-         w6pu19IA2r/UKffh2vrBW9poXRHxowY7+g89yFmsc1kbZG45dCDDV+DLeK07mJgfT1KD
-         VTvcurU2/RajrLWKQzr/SQDn9++HoBw5lf8bMTzEqpH6whMVoKja4syjeAIlIqZCf8+3
-         FdKBduPyOZ+RNf/pT370XNsBYV3KWHe+iC7wMwdNWoA+mPrbSeU7Y+yQmozQwM8zJWcJ
-         RLWt2lYBT7vHc+KVLaWRbNG0sjsE7U8t5I8yKklt7xIig8BFLACiZUYSaCyYm4qu/cZo
-         Juww==
-X-Gm-Message-State: APjAAAXm7KWbQ0md1TxXA+s6630hEJc3C4kU+TTxCQg1Pca231P5Ouzc
-        ohgDzcQanpOfGlkMvZlEZUp0L6V74czdxFStm+iBeQKuc3Q=
-X-Google-Smtp-Source: APXvYqz7QckuaSLcN3Ux3XggQtq3/yHHrcwrhdr4OBzCv7p72vzW4vje4uHz3AT/cEgJbPkLOntoCGlEE9G8OL+e5sI=
-X-Received: by 2002:a2e:874b:: with SMTP id q11mr22243701ljj.48.1558655883455;
- Thu, 23 May 2019 16:58:03 -0700 (PDT)
+        id S2387720AbfEXCP6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 May 2019 22:15:58 -0400
+Received: from mga04.intel.com ([192.55.52.120]:21267 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387732AbfEXCP6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 23 May 2019 22:15:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 19:15:56 -0700
+X-ExtLoop1: 1
+Received: from lftan-mobl.gar.corp.intel.com (HELO ubuntu) ([10.226.248.59])
+  by orsmga006.jf.intel.com with SMTP; 23 May 2019 19:15:53 -0700
+Received: by ubuntu (sSMTP sendmail emulation); Fri, 24 May 2019 10:15:52 +0800
+From:   Ley Foon Tan <ley.foon.tan@intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        lftan.linux@gmail.com, Ley Foon Tan <ley.foon.tan@intel.com>
+Subject: [PATCH] PCI: altera: Fix no return warning for altera_pcie_irq_teardown()
+Date:   Fri, 24 May 2019 10:15:51 +0800
+Message-Id: <1558664151-2584-1-git-send-email-ley.foon.tan@intel.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <1558647944-13816-1-git-send-email-alan.mikhak@sifive.com>
-In-Reply-To: <1558647944-13816-1-git-send-email-alan.mikhak@sifive.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Thu, 23 May 2019 16:57:52 -0700
-Message-ID: <CABEDWGyb3zTaiRqt7-mvrS6Dvhu0Fkhjp4nvaJ-vaJrD3n=0_Q@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: endpoint: Set endpoint controller pointer to null
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kishon@ti.com, lorenzo.pieralisi@arm.com,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+Bjorn Helgaas
+Fix compilation warning caused by patch "PCI: altera: Allow building as module".
 
-On Thu, May 23, 2019 at 2:46 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
->
-> Set endpoint controller pointer to null in pci_epc_remove_epf()
-> to avoid -EBUSY on subsequent call to pci_epc_add_epf().
->
-> Requires checking for null endpoint function pointer.
->
-> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> ---
->  drivers/pci/endpoint/pci-epc-core.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index e4712a0f249c..2091508c1620 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -519,11 +519,12 @@ void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf)
->  {
->         unsigned long flags;
->
-> -       if (!epc || IS_ERR(epc))
-> +       if (!epc || IS_ERR(epc) || !epf)
->                 return;
->
->         spin_lock_irqsave(&epc->lock, flags);
->         list_del(&epf->list);
-> +       epf->epc = NULL;
->         spin_unlock_irqrestore(&epc->lock, flags);
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_remove_epf);
-> --
-> 2.7.4
->
+drivers/pci/controller/pcie-altera.c: In function ‘altera_pcie_irq_teardown’:
+drivers/pci/controller/pcie-altera.c:723:1: warning: no return statement in function returning non-void [-Wreturn-type]
+ }
+
+Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
+---
+ drivers/pci/controller/pcie-altera.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+index 6c86bc69ace8..27222071ace7 100644
+--- a/drivers/pci/controller/pcie-altera.c
++++ b/drivers/pci/controller/pcie-altera.c
+@@ -706,7 +706,7 @@ static int altera_pcie_init_irq_domain(struct altera_pcie *pcie)
+ 	return 0;
+ }
+ 
+-static int altera_pcie_irq_teardown(struct altera_pcie *pcie)
++static void altera_pcie_irq_teardown(struct altera_pcie *pcie)
+ {
+ 	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+ 	irq_domain_remove(pcie->irq_domain);
+-- 
+2.19.0
+
