@@ -2,71 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 512BC29BFB
-	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2019 18:18:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56C4B29C6F
+	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2019 18:40:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390163AbfEXQSr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 May 2019 12:18:47 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:56422 "EHLO ale.deltatee.com"
+        id S2390314AbfEXQkJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 May 2019 12:40:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34758 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389588AbfEXQSr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 May 2019 12:18:47 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.141])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hUCu5-0007Vc-Jm; Fri, 24 May 2019 10:18:46 -0600
-To:     Christoph Hellwig <hch@lst.de>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <a98bff67-a76e-4ddc-a317-96f2bdc9af72@email.android.com>
- <97aa52fc-f062-acf1-0e0c-5a4d1d505777@deltatee.com>
- <b9e94126-8686-4306-77c3-bd0b96680775@amd.com>
- <20190523094322.GA14986@lst.de>
- <fa941625-ef65-74fa-e232-705ea5acefa3@amd.com>
- <20190523095057.GA15185@lst.de>
- <252313a9-9af4-14bd-1bfa-1c2327baf2b2@deltatee.com>
- <20190523155922.GA21552@lst.de>
- <c5b050f4-0584-8262-9285-f1c628ed4e27@amd.com>
- <20190524141215.GB23514@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <8aedfd92-a5a4-485a-42c3-8e26ac87c3ba@deltatee.com>
-Date:   Fri, 24 May 2019 10:18:44 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S2390210AbfEXQkJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 24 May 2019 12:40:09 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EB3EF59450;
+        Fri, 24 May 2019 16:40:08 +0000 (UTC)
+Received: from x1.home (ovpn-117-37.phx2.redhat.com [10.3.117.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4324E18C78;
+        Fri, 24 May 2019 16:40:05 +0000 (UTC)
+Date:   Fri, 24 May 2019 10:40:03 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Maik Broemme <mbroemme@libmpq.org>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        vfio-users <vfio-users@redhat.com>
+Subject: Re: [PATCH] PCI: Mark Intel bridge on SuperMicro Atom C3xxx
+ motherboards to avoid bus reset
+Message-ID: <20190524104003.2f7f1363@x1.home>
+In-Reply-To: <20190524153118.GA12862@libmpq.org>
+References: <20190524153118.GA12862@libmpq.org>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <20190524141215.GB23514@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: bhelgaas@google.com, linux-pci@vger.kernel.org, Christian.Koenig@amd.com, hch@lst.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH] PCI/P2PDMA: Root complex whitelist should not apply when
- an IOMMU is present
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 24 May 2019 16:40:08 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, 24 May 2019 17:31:18 +0200
+Maik Broemme <mbroemme@libmpq.org> wrote:
 
+> The Intel PCI bridge on SuperMicro Atom C3xxx motherboards do not
+> successfully complete a bus reset when used with certain child devices.
 
-On 2019-05-24 8:12 a.m., Christoph Hellwig wrote:
-> I think we've got two escalation levels here:
+What are these 'certain child devices'?  We can't really regression
+test to know if/when the problem might be resolved if we don't know
+what to test.  Do these devices reset properly in other systems?  Are
+there any devices that can do a bus reset properly on this system?  We'd
+really only want to blacklist bus reset on this root port(?) if this is
+a systemic problem with the root port, which is not clearly proven
+here.  Thanks,
+
+Alex
+
+> After the reset, config accesses to the child may fail. If assigning
+> such device via VFIO it will immediately fail with:
 > 
->  (1) fix the NVMe/RDMA p2p breakage for 5.2-rc - for that we just need
->      the above fix in the p2p map_sg routine (and add an unmap_sg
->      routine there)
+>   vfio-pci 0000:01:00.0: Failed to return from FLR
+>   vfio-pci 0000:01:00.0: timed out waiting for pending transaction;
+>   performing function level reset anyway
+> 
+> Device will disappear from PCI device list:
+> 
+>   !!! Unknown header type 7f
+>   Kernel driver in use: vfio-pci
+>   Kernel modules: ddbridge
+> 
+> The attached patch will mark the root port as incapable of doing a
+> bus level reset. After that all my tested devices survive a VFIO
+> assignment and several VM reboot cycles.
+> 
+> Signed-off-by: Maik Broemme <mbroemme@libmpq.org>
+> ---
+>  drivers/pci/quirks.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 0f16acc323c6..86cd42872708 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3433,6 +3433,13 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
+>   */
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CAVIUM, 0xa100, quirk_no_bus_reset);
+>  
+> +/*
+> + * Root port on some SuperMicro Atom C3xxx motherboards do not successfully
+> + * complete a bus reset when used with certain child devices. After the
+> + * reset, config accesses to the child may fail.
+> + */
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x19a4, quirk_no_bus_reset);
+> +
+>  static void quirk_no_pm_reset(struct pci_dev *dev)
+>  {
+>  	/*
 
-Yes, fixing the p2p_map_sg routine or add the check if the iommu is
-present (as I did in the patch that started this discussion) until we
-can get the map stuff sorted out.
-
-Logan
