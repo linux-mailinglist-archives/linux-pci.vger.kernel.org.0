@@ -2,98 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56C4B29C6F
-	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2019 18:40:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90AA329DB8
+	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2019 20:07:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390314AbfEXQkJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 May 2019 12:40:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34758 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390210AbfEXQkJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 May 2019 12:40:09 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EB3EF59450;
-        Fri, 24 May 2019 16:40:08 +0000 (UTC)
-Received: from x1.home (ovpn-117-37.phx2.redhat.com [10.3.117.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4324E18C78;
-        Fri, 24 May 2019 16:40:05 +0000 (UTC)
-Date:   Fri, 24 May 2019 10:40:03 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Maik Broemme <mbroemme@libmpq.org>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        vfio-users <vfio-users@redhat.com>
-Subject: Re: [PATCH] PCI: Mark Intel bridge on SuperMicro Atom C3xxx
- motherboards to avoid bus reset
-Message-ID: <20190524104003.2f7f1363@x1.home>
-In-Reply-To: <20190524153118.GA12862@libmpq.org>
-References: <20190524153118.GA12862@libmpq.org>
-Organization: Red Hat
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 24 May 2019 16:40:08 +0000 (UTC)
+        id S1727316AbfEXSH0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 May 2019 14:07:26 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55576 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726909AbfEXSH0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 May 2019 14:07:26 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hUEbA-0004vM-1b; Fri, 24 May 2019 18:07:20 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com, rafael.j.wysocki@intel.com
+Cc:     stern@rowland.harvard.edu, lukas@wunner.de,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH v3] PCI / PM: Don't runtime suspend when device only supports wakeup from D0
+Date:   Sat, 25 May 2019 02:07:16 +0800
+Message-Id: <20190524180716.13124-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 24 May 2019 17:31:18 +0200
-Maik Broemme <mbroemme@libmpq.org> wrote:
+There's an xHCI device that doesn't wake when a USB device gets plugged
+to its USB port. The driver's own runtime suspend callback was called,
+PME signaling was enabled, but it stays at PCI D0:
+  Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
 
-> The Intel PCI bridge on SuperMicro Atom C3xxx motherboards do not
-> successfully complete a bus reset when used with certain child devices.
+A PCI device can be runtime suspended while still stays at D0 when it
+supports D0 PME and its _S0W reports D0. Theoretically this should work,
+but as [1] specifies, D0 doesn't have wakeup capability.
 
-What are these 'certain child devices'?  We can't really regression
-test to know if/when the problem might be resolved if we don't know
-what to test.  Do these devices reset properly in other systems?  Are
-there any devices that can do a bus reset properly on this system?  We'd
-really only want to blacklist bus reset on this root port(?) if this is
-a systemic problem with the root port, which is not clearly proven
-here.  Thanks,
+To avoid this problematic situation, we should avoid runtime suspend if
+D0 is the only state that can wake up the device. If the deivce doesn't
+require wakeup capability, carry out driver's runtime suspend as usual,
+which may have logic to save its power internally.
 
-Alex
+[1] https://docs.microsoft.com/en-us/windows-hardware/drivers/kernel/device-working-state-d0
 
-> After the reset, config accesses to the child may fail. If assigning
-> such device via VFIO it will immediately fail with:
-> 
->   vfio-pci 0000:01:00.0: Failed to return from FLR
->   vfio-pci 0000:01:00.0: timed out waiting for pending transaction;
->   performing function level reset anyway
-> 
-> Device will disappear from PCI device list:
-> 
->   !!! Unknown header type 7f
->   Kernel driver in use: vfio-pci
->   Kernel modules: ddbridge
-> 
-> The attached patch will mark the root port as incapable of doing a
-> bus level reset. After that all my tested devices survive a VFIO
-> assignment and several VM reboot cycles.
-> 
-> Signed-off-by: Maik Broemme <mbroemme@libmpq.org>
-> ---
->  drivers/pci/quirks.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 0f16acc323c6..86cd42872708 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -3433,6 +3433,13 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
->   */
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CAVIUM, 0xa100, quirk_no_bus_reset);
->  
-> +/*
-> + * Root port on some SuperMicro Atom C3xxx motherboards do not successfully
-> + * complete a bus reset when used with certain child devices. After the
-> + * reset, config accesses to the child may fail.
-> + */
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x19a4, quirk_no_bus_reset);
-> +
->  static void quirk_no_pm_reset(struct pci_dev *dev)
->  {
->  	/*
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203673
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v3:
+ - Add Bugzilla link
+v2:
+ - Changes wording
+ - Keep old behaviour for devices can't wakeup.
+
+ drivers/pci/pci-driver.c | 6 ++++++
+ drivers/pci/pci.c        | 2 +-
+ include/linux/pci.h      | 3 +++
+ 3 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index cae630fe6387..e3fac1d2a265 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -1239,6 +1239,7 @@ static int pci_pm_runtime_suspend(struct device *dev)
+ 	struct pci_dev *pci_dev = to_pci_dev(dev);
+ 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+ 	pci_power_t prev = pci_dev->current_state;
++	bool wakeup = device_can_wakeup(dev);
+ 	int error;
+ 
+ 	/*
+@@ -1251,6 +1252,11 @@ static int pci_pm_runtime_suspend(struct device *dev)
+ 		return 0;
+ 	}
+ 
++	if (wakeup && pci_target_state(pci_dev, wakeup) == PCI_D0) {
++		dev_dbg(dev, "D0 doesn't have wakeup capability\n");
++		return -EBUSY;
++	}
++
+ 	pci_dev->state_saved = false;
+ 	if (pm && pm->runtime_suspend) {
+ 		error = pm->runtime_suspend(dev);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 8abc843b1615..ceee6efbbcfe 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -2294,7 +2294,7 @@ EXPORT_SYMBOL(pci_wake_from_d3);
+  * If the platform can't manage @dev, return the deepest state from which it
+  * can generate wake events, based on any available PME info.
+  */
+-static pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
++pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
+ {
+ 	pci_power_t target_state = PCI_D3hot;
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 4a5a84d7bdd4..91e8dc4d04aa 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1188,6 +1188,7 @@ bool pci_pme_capable(struct pci_dev *dev, pci_power_t state);
+ void pci_pme_active(struct pci_dev *dev, bool enable);
+ int pci_enable_wake(struct pci_dev *dev, pci_power_t state, bool enable);
+ int pci_wake_from_d3(struct pci_dev *dev, bool enable);
++pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup);
+ int pci_prepare_to_sleep(struct pci_dev *dev);
+ int pci_back_from_sleep(struct pci_dev *dev);
+ bool pci_dev_run_wake(struct pci_dev *dev);
+@@ -1672,6 +1673,8 @@ static inline int pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+ { return 0; }
+ static inline int pci_wake_from_d3(struct pci_dev *dev, bool enable)
+ { return 0; }
++pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
++{ return PCI_D0; }
+ static inline pci_power_t pci_choose_state(struct pci_dev *dev,
+ 					   pm_message_t state)
+ { return PCI_D0; }
+-- 
+2.17.1
 
