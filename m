@@ -2,107 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB25E2A842
-	for <lists+linux-pci@lfdr.de>; Sun, 26 May 2019 06:40:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 550E52A894
+	for <lists+linux-pci@lfdr.de>; Sun, 26 May 2019 07:48:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfEZEkH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 26 May 2019 00:40:07 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:8154 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727185AbfEZEkH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 26 May 2019 00:40:07 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cea18a60000>; Sat, 25 May 2019 21:40:06 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 25 May 2019 21:40:06 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 25 May 2019 21:40:06 -0700
-Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 26 May
- 2019 04:40:05 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sun, 26 May 2019 04:40:05 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cea18a10000>; Sat, 25 May 2019 21:40:05 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
-CC:     <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V8 15/15] arm64: Add Tegra194 PCIe driver to defconfig
-Date:   Sun, 26 May 2019 10:07:51 +0530
-Message-ID: <20190526043751.12729-16-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190526043751.12729-1-vidyas@nvidia.com>
-References: <20190526043751.12729-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        id S1727546AbfEZFsv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 26 May 2019 01:48:51 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36483 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbfEZFsv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 26 May 2019 01:48:51 -0400
+Received: by mail-pg1-f195.google.com with SMTP id a3so7271674pgb.3
+        for <linux-pci@vger.kernel.org>; Sat, 25 May 2019 22:48:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/1mbn5gY5Ly2COk6hSx+B8iGsTtL0c4swiFd6dIhVpI=;
+        b=q32mHuXkhsVRJi5P75fk+cYqfmL5FYaU2EF/MxwHcRp5689RwAVCmsRikxIY4pi5Os
+         jRC09tMdpss013NPDY6S/WUfPWL/Q+Fde/yTlTluNTt0rXSlTGXLfUE7ubdjuCu5yruQ
+         N66RDYti9ea4YxawCDNI2wj6sa/l37+gmuYQN4xreG+KF7xRwiaOUyW6Psf//3Kioyuy
+         H1FuCPNP0nvU2h11Ous1UzCDezt+ypwRxbsDWqTxH8oyux37LYhSw3guRTKJ6rKoPqi+
+         92w9tBRnCMs52U4X7eRsGGWbD0nd4H7+sM1tutRdYHz8P1oDsn12KcKpriutYq8xhwul
+         QhGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/1mbn5gY5Ly2COk6hSx+B8iGsTtL0c4swiFd6dIhVpI=;
+        b=gpScSK/xsdBm/x4CERAqTAxffyUJBMdDkOV71/uygm+ofnlFNJBBYuCKCXu1rBiNhP
+         aVP4rOHNdub45qZjEX8lZgs+aiiOA5TQinUGakPmxzz3V6XisGyuh1tuisa2SsNIe0B9
+         +k7kFzvg7FWOeEw9Jjt3OJG/JkgCEeIYdgXnfX1FyhsVPXp5eEemlmRR5IlF3cFULI1r
+         EZIRPQLJO+kcoj5il0T3g990becMKE4PtbMU8naTFsqumWL7xfuQWjrNcjh7AoiWS6MW
+         SWxzO53RWiqJLO0s/pZApcpdtq6E7aZK9Ci5twieNBKAvra4TXa9uSAzlXfMNEBd0qi8
+         opaQ==
+X-Gm-Message-State: APjAAAXkQuYIHmry39tc+6zJoFJvd039U+xVHhi7u1a0k1mDoAI8Y95x
+        7rOeeo+NOYQlo66SlU7luGSQMRIwSCE=
+X-Google-Smtp-Source: APXvYqyM+DyIl1ulyTQdPYLeGn3PVr/zhEVyeU3tLpnb4G+2GjthBdDn8D9fu4Zczwn8At2enmO1NQ==
+X-Received: by 2002:a62:82c1:: with SMTP id w184mr11245400pfd.171.1558849730290;
+        Sat, 25 May 2019 22:48:50 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id a64sm6011216pgc.53.2019.05.25.22.48.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 25 May 2019 22:48:49 -0700 (PDT)
+Date:   Sat, 25 May 2019 22:49:18 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: qcom: Ensure that PERST is asserted for at least
+ 100 ms
+Message-ID: <20190526054918.GK2085@tuxbook-pro>
+References: <20190523194409.17718-1-niklas.cassel@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558845606; bh=jKp2Rlg39I5yuNkDTP+nvGTq26lS/D1UJs7eSaA/A/M=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=I1+KtyS56dE/+1pQqY8wCWP5AQG+JrKilE89Y+4eqryUQWqwEPOYW4I/y/DGd+X+v
-         Tn59WBnJfGyOQt7IfMXvS3jTbf2crU07Ps6m0dtewCKG6tHKbCdB6NPgiUIqWNOdL7
-         U5XTwfZ2StAcRfg61iovp9TpWLSLnyEpa8zONb0Ce9Id3Ls3OzQAV7QgyhwdKzoF3Q
-         2pbwAUVLz5BeTXxjpFZgOxttluQxdgJAXfdbpRg8hGVeD9tLwMvyzGNgHPPLsdjd/c
-         +YxCoorpW88oHq6d+8fST4Ci77Hj6WAD1Svpxy+G0Ldhn4koH/QNiDTEn3d2qB77vZ
-         raBBhSXDGLsvQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523194409.17718-1-niklas.cassel@linaro.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add PCIe host controller driver for DesignWare core based
-PCIe controller IP present in Tegra194.
+On Thu 23 May 12:44 PDT 2019, Niklas Cassel wrote:
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
----
-Changes since [v7]:
-* None
+> Currently, there is only a 1 ms sleep after asserting PERST.
+> 
+> Reading the datasheets for different endpoints, some require PERST to be
+> asserted for 10 ms in order for the endpoint to perform a reset, others
+> require it to be asserted for 50 ms.
+> 
+> Several SoCs using this driver uses PCIe Mini Card, where we don't know
+> what endpoint will be plugged in.
+> 
+> The PCI Express Card Electromechanical Specification specifies:
+> "On power up, the deassertion of PERST# is delayed 100 ms (TPVPERL) from
+> the power rails achieving specified operating limits."
+> 
+> Add a sleep of 100 ms before deasserting PERST, in order to ensure that
+> we are compliant with the spec.
+> 
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 
-Changes since [v6]:
-* None
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Changes since [v5]:
-* None
-
-Changes since [v4]:
-* None
-
-Changes since [v3]:
-* None
-
-Changes since [v2]:
-* None
-
-Changes since [v1]:
-* Changed CONFIG_PCIE_TEGRA194 from 'y' to 'm'
-
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 8871cf7aaba9..52105b2c2418 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -195,6 +195,7 @@ CONFIG_PCIE_QCOM=y
- CONFIG_PCIE_ARMADA_8K=y
- CONFIG_PCIE_KIRIN=y
- CONFIG_PCIE_HISI_STB=y
-+CONFIG_PCIE_TEGRA194=m
- CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
--- 
-2.17.1
-
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 0ed235d560e3..cae24376237c 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1110,6 +1110,8 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
+>  	if (IS_ENABLED(CONFIG_PCI_MSI))
+>  		dw_pcie_msi_init(pp);
+>  
+> +	/* Ensure that PERST has been asserted for at least 100 ms */
+> +	msleep(100);
+>  	qcom_ep_reset_deassert(pcie);
+>  
+>  	ret = qcom_pcie_establish_link(pcie);
+> -- 
+> 2.21.0
+> 
