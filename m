@@ -2,38 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 510532BC38
-	for <lists+linux-pci@lfdr.de>; Tue, 28 May 2019 00:55:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0975E2BC3F
+	for <lists+linux-pci@lfdr.de>; Tue, 28 May 2019 00:55:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbfE0Wz3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 May 2019 18:55:29 -0400
-Received: from alpha.anastas.io ([104.248.188.109]:50915 "EHLO
+        id S1727468AbfE0Wza (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 May 2019 18:55:30 -0400
+Received: from alpha.anastas.io ([104.248.188.109]:38665 "EHLO
         alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726931AbfE0Wz3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 May 2019 18:55:29 -0400
+        with ESMTP id S1726931AbfE0Wza (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 May 2019 18:55:30 -0400
 Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by alpha.anastas.io (Postfix) with ESMTPSA id A62387F8EF;
-        Mon, 27 May 2019 17:55:27 -0500 (CDT)
+        by alpha.anastas.io (Postfix) with ESMTPSA id AF8CF7F8F7;
+        Mon, 27 May 2019 17:55:28 -0500 (CDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
-        t=1558997728; bh=Fkmg//rw0SZv0cbWNfledPODm9FWrb76L5Rv9PgTLBY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=KYnxCoTKhTuTLyhPQ9l7D0X2LQ1u9/v9EF6WIjyAIkGsxZapfKdJfCpKuzldE9/tV
-         4R3gruWPlNmAWyW2HDhIwadCiXQ8ZuZWcEHfZ2O0Eu0FC5/1CMb72muXchdDkApBTn
-         +dSD3EsJxF/uk8LU8FNzBOKp03olHpsMHRbNEBbRjWuhXAnxKa/XH1g88+woGtTm2K
-         i2BEWoeceJ/18T8pi9UBuSzYOP52bNSlukwMM6N35d5PV5+5Xw4hnPAnfYT1t3TfSv
-         BdPyDgZ3Qe/Wf3VRiIuZc8RHmxNUN78giREcHNxNCyogASoHwzMugE37WnzBnq7c+X
-         mcEW2jKASskmA==
+        t=1558997729; bh=n/m3RzZx6edSehbm6HYEDIVIHMhjvUbaff76ByAx8Dw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=h8PxsGte3Ax3bOzCUpo3miG+rEFcVJY6C6qrI9gbdp+EeCf3uvO6vf+rCjGk89UKp
+         09Jbmhv+Qs6I3oJqhQzyl6HqMGhZZOOch6ErwXFehKlNbPlanS7KnPxvH7LgwOtTeh
+         ZtGrMWbe2gY3MalzBUWDW8awynGhk5GM9hnrCOc7HnGIwZJUQpTfd+v3ZtLsFzt8l2
+         Pc9eYsbUhqT2tGgzUvBxzbdQffyDXjmsn+HwXJ25tFzamPSZ9k45qfT+Ah5ZmFUr9M
+         MNN/QjTcMzCq6q05zxX5mkEmGbtxaSnOyyOeilahKpLalN5fbGQkT3IWQMcEQB1d63
+         E/6FMv3smWlqA==
 From:   Shawn Anastasio <shawn@anastas.io>
 To:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 Cc:     bhelgaas@google.com, benh@kernel.crashing.org, paulus@samba.org,
         mpe@ellerman.id.au, sbobroff@linux.ibm.com,
         xyjxie@linux.vnet.ibm.com, rppt@linux.ibm.com,
         linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH 0/3] Allow custom PCI resource alignment on pseries
-Date:   Mon, 27 May 2019 17:55:18 -0500
-Message-Id: <20190527225521.5884-1-shawn@anastas.io>
+Subject: [RESEND PATCH 1/3] PCI: Introduce pcibios_ignore_alignment_request
+Date:   Mon, 27 May 2019 17:55:19 -0500
+Message-Id: <20190527225521.5884-2-shawn@anastas.io>
+In-Reply-To: <20190527225521.5884-1-shawn@anastas.io>
+References: <20190527225521.5884-1-shawn@anastas.io>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -41,49 +43,47 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello all,
+Introduce a new pcibios function pcibios_ignore_alignment_request
+which allows the PCI core to defer to platform-specific code to
+determine whether or not to ignore alignment requests for PCI resources.
 
-This patch set implements support for user-specified PCI resource
-alignment on the pseries platform for hotplugged PCI devices.
-Currently on pseries, PCI resource alignments specified with the
-pci=resource_alignment commandline argument are ignored, since
-the firmware is in charge of managing the PCI resources. In the
-case of hotplugged devices, though, the kernel is in charge of 
-configuring the resources and should obey alignment requirements.
+The existing behavior is to simply ignore alignment requests when
+PCI_PROBE_ONLY is set. This is behavior is maintained by the
+default implementation of pcibios_ignore_alignment_request.
 
-The current behavior of ignoring the alignment for hotplugged devices
-results in sub-page BARs landing between page boundaries and
-becoming un-mappable from userspace via the VFIO framework.
-This issue was observed on a pseries KVM guest with hotplugged
-ivshmem devices.
+Signed-off-by: Shawn Anastasio <shawn@anastas.io>
+---
+ drivers/pci/pci.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 8abc843b1615..8207a09085d1 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5882,6 +5882,11 @@ resource_size_t __weak pcibios_default_alignment(void)
+ 	return 0;
+ }
  
-With these changes, users can specify an appropriate
-pci=resource_alignment argument on boot for devices they wish to use 
-with VFIO.
-
-In the future, this could be extended to provide page-aligned
-resources by default for hotplugged devices, similar to what is done
-on powernv by commit 382746376993 ("powerpc/powernv: Override
-pcibios_default_alignment() to force PCI devices to be page aligned").
-
-Feedback is appreciated.
-
-Thanks,
-Shawn
-
-Shawn Anastasio (3):
-  PCI: Introduce pcibios_ignore_alignment_request
-  powerpc/64: Enable pcibios_after_init hook on ppc64
-  powerpc/pseries: Allow user-specified PCI resource alignment after
-    init
-
- arch/powerpc/include/asm/machdep.h     |  6 ++++--
- arch/powerpc/kernel/pci-common.c       |  9 +++++++++
- arch/powerpc/kernel/pci_64.c           |  4 ++++
- arch/powerpc/platforms/pseries/setup.c | 22 ++++++++++++++++++++++
- drivers/pci/pci.c                      |  9 +++++++--
- 5 files changed, 46 insertions(+), 4 deletions(-)
-
++int __weak pcibios_ignore_alignment_request(void)
++{
++	return pci_has_flag(PCI_PROBE_ONLY);
++}
++
+ #define RESOURCE_ALIGNMENT_PARAM_SIZE COMMAND_LINE_SIZE
+ static char resource_alignment_param[RESOURCE_ALIGNMENT_PARAM_SIZE] = {0};
+ static DEFINE_SPINLOCK(resource_alignment_lock);
+@@ -5906,9 +5911,9 @@ static resource_size_t pci_specified_resource_alignment(struct pci_dev *dev,
+ 	p = resource_alignment_param;
+ 	if (!*p && !align)
+ 		goto out;
+-	if (pci_has_flag(PCI_PROBE_ONLY)) {
++	if (pcibios_ignore_alignment_request()) {
+ 		align = 0;
+-		pr_info_once("PCI: Ignoring requested alignments (PCI_PROBE_ONLY)\n");
++		pr_info_once("PCI: Ignoring requested alignments\n");
+ 		goto out;
+ 	}
+ 
 -- 
 2.20.1
 
