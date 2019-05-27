@@ -2,57 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CD332B140
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2019 11:26:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4190E2B2A6
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2019 13:01:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725973AbfE0J0H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 May 2019 05:26:07 -0400
-Received: from 8bytes.org ([81.169.241.247]:40176 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbfE0J0G (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 May 2019 05:26:06 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id BF9BB26B; Mon, 27 May 2019 11:26:04 +0200 (CEST)
-Date:   Mon, 27 May 2019 11:26:04 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, jasowang@redhat.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, bhelgaas@google.com,
-        frowand.list@gmail.com, kvmarm@lists.cs.columbia.edu,
-        eric.auger@redhat.com, tnowicki@caviumnetworks.com,
-        kevin.tian@intel.com, marc.zyngier@arm.com, robin.murphy@arm.com,
-        will.deacon@arm.com, lorenzo.pieralisi@arm.com,
-        bharat.bhushan@nxp.com
-Subject: Re: [PATCH v7 0/7] Add virtio-iommu driver
-Message-ID: <20190527092604.GB21613@8bytes.org>
-References: <20190115121959.23763-1-jean-philippe.brucker@arm.com>
- <20190512123022-mutt-send-email-mst@kernel.org>
+        id S1726451AbfE0LBt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 May 2019 07:01:49 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:60702 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbfE0LBs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 May 2019 07:01:48 -0400
+Received: from 79.184.255.36.ipv4.supernova.orange.pl (79.184.255.36) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id ddc5e43952daf46d; Mon, 27 May 2019 13:01:46 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH] ACPI/PCI: PM: Add missing wakeup.flags.valid checks
+Date:   Mon, 27 May 2019 13:01:45 +0200
+Message-ID: <1872097.3m3ZAFDl4C@kreacher>
+In-Reply-To: <2091978.9z20bSIm3T@kreacher>
+References: <2091978.9z20bSIm3T@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190512123022-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, May 12, 2019 at 12:31:59PM -0400, Michael S. Tsirkin wrote:
-> OK this has been in next for a while.
+On Thursday, May 16, 2019 12:42:20 PM CEST Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> Last time IOMMU maintainers objected. Are objections
-> still in force?
+> Both acpi_pci_need_resume() and acpi_dev_needs_resume() check if the
+> current ACPI wakeup configuration of the device matches what is
+> expected as far as system wakeup from sleep states is concerned, as
+> reflected by the device_may_wakeup() return value for the device.
 > 
-> If not could we get acks please?
+> However, they only should do that if wakeup.flags.valid is set for
+> the device's ACPI companion, because otherwise the wakeup.prepare_count
+> value for it is meaningless.
+> 
+> Add the missing wakeup.flags.valid checks to these functions.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/acpi/device_pm.c |    4 ++--
+>  drivers/pci/pci-acpi.c   |    3 ++-
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+> 
+> Index: linux-pm/drivers/pci/pci-acpi.c
+> ===================================================================
+> --- linux-pm.orig/drivers/pci/pci-acpi.c
+> +++ linux-pm/drivers/pci/pci-acpi.c
+> @@ -666,7 +666,8 @@ static bool acpi_pci_need_resume(struct
+>  	if (!adev || !acpi_device_power_manageable(adev))
+>  		return false;
+>  
+> -	if (device_may_wakeup(&dev->dev) != !!adev->wakeup.prepare_count)
+> +	if (adev->wakeup.flags.valid &&
+> +	    device_may_wakeup(&dev->dev) != !!adev->wakeup.prepare_count)
+>  		return true;
+>  
+>  	if (acpi_target_system_state() == ACPI_STATE_S0)
+> Index: linux-pm/drivers/acpi/device_pm.c
+> ===================================================================
+> --- linux-pm.orig/drivers/acpi/device_pm.c
+> +++ linux-pm/drivers/acpi/device_pm.c
+> @@ -952,8 +952,8 @@ static bool acpi_dev_needs_resume(struct
+>  	u32 sys_target = acpi_target_system_state();
+>  	int ret, state;
+>  
+> -	if (!pm_runtime_suspended(dev) || !adev ||
+> -	    device_may_wakeup(dev) != !!adev->wakeup.prepare_count)
+> +	if (!pm_runtime_suspended(dev) || !adev || (adev->wakeup.flags.valid &&
+> +	    device_may_wakeup(dev) != !!adev->wakeup.prepare_count))
+>  		return true;
+>  
+>  	if (sys_target == ACPI_STATE_S0)
 
-No objections against the code, I only hesitated because the Spec was
-not yet official.
+Bjorn, I've assumed no concerns or objections from you regarding this one and
+queued this up.
 
-So for the code:
+If that assumption is incorrect, please let me know.
 
-	Acked-by: Joerg Roedel <jroedel@suse.de>
+
+
 
