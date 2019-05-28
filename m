@@ -2,49 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 445352D07D
-	for <lists+linux-pci@lfdr.de>; Tue, 28 May 2019 22:36:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBD0E2D093
+	for <lists+linux-pci@lfdr.de>; Tue, 28 May 2019 22:42:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfE1UgT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 May 2019 16:36:19 -0400
-Received: from ns.mm-sol.com ([37.157.136.199]:43612 "EHLO extserv.mm-sol.com"
+        id S1727379AbfE1UmS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 May 2019 16:42:18 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:43768 "EHLO extserv.mm-sol.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726683AbfE1UgT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 28 May 2019 16:36:19 -0400
-Received: from [192.168.1.6] (hst-221-75.medicom.bg [84.238.221.75])
+        id S1726492AbfE1UmS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 28 May 2019 16:42:18 -0400
+Received: from [192.168.1.6] (hst-221-77.medicom.bg [84.238.221.77])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id D61BDCE7A;
-        Tue, 28 May 2019 23:36:15 +0300 (EEST)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id 7CF61CE7C;
+        Tue, 28 May 2019 23:42:15 +0300 (EEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1559075775; bh=g+Hfg4posZg3AUYJ3It3ByOqzPQB98FnrethUDe+8Xg=;
+        t=1559076135; bh=sGsg/qLXUK4RWVjSX2z2nrH/IEOd2T0BBE97JwegLYk=;
         h=Subject:To:Cc:From:Date:From;
-        b=TBXkb60YPLkal0//XJbR3vlXRAvOxWsHpZaXB5HIpivsJ/8xI51yryQ2k14pdbSVJ
-         rr5avRAE01zaNaCQ3T1j+45NagX9o7tHZACFkdi5LuB9sFzIlcrR7PC+Yu483ldOZX
-         GvJ7LdRtxrB3wsLMEZMWllixayCalR39FozLoizCokOCfCoyvNoAQ7F8NWpUX09QYy
-         qpzQIVkzMJMlD0G+F3D7183tv92az6htxnGVWPzO1JmAhYhP1w0TtQylL/ODKshUxZ
-         +4DxazuU+g2HbN9fpt0cWHdwOeJWX9pMEFgbohTAb1phDhO5xF0dok6iAViTjpjjlW
-         IFb4H9F7yDXVw==
-Subject: Re: [PATCH] PCI: qcom: Ensure that PERST is asserted for at least 100
- ms
-To:     Niklas Cassel <niklas.cassel@linaro.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Andy Gross <agross@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        b=M2ft+CH5DGzAV8OAppNWlqZK0d/9EMwBrlIc8Ys0f2nuc/F9nvROwzpNs9H+biPAA
+         mOSHDXZsHc44EZH0QZpNmdmZgy/whmxYV+jBLKlz7k+XIRj7CVGUUzIzVi+Ca/H0WB
+         yo+v1xY1BvaWtxzXfPe3dw7BQPemjq4y/isKgSWFdqmjkhNaAi0idh2cQ8KSffNKBe
+         sKKK+NnfmYtmMlm4sKX17jtJ1C6+EM0ddHWrNPvW9SG3rsghw9f9N+3Mo0RT3Ke6Eq
+         f0ZMwMjycwLLT9nnw0WjkrOy/n6kZhxbi+Knr6m1CbDbfPfsf4D2k9Y6AIOYsmOoyx
+         ezC+2Gar88H/A==
+Subject: Re: [PATCH v3 1/3] PCI: qcom: Use clk_bulk API for 2.4.0 controllers
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190523194409.17718-1-niklas.cassel@linaro.org>
- <5d743969-e763-95c5-6763-171a8ecf66d8@free.fr>
- <20190527171521.GA7936@centauri>
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190502001955.10575-1-bjorn.andersson@linaro.org>
+ <20190502001955.10575-2-bjorn.andersson@linaro.org>
+ <fcfcd3b4-99d2-7b10-e82d-b92e6bf37a33@mm-sol.com>
+ <20190528151330.GA28649@redmoon>
 From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Message-ID: <0fa706f8-1aae-4cf6-08c9-6f12ba342eab@mm-sol.com>
-Date:   Tue, 28 May 2019 23:36:12 +0300
+Message-ID: <89e9be83-a91c-510c-87cf-b5db9c6e1b23@mm-sol.com>
+Date:   Tue, 28 May 2019 23:42:12 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190527171521.GA7936@centauri>
+In-Reply-To: <20190528151330.GA28649@redmoon>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -53,77 +52,134 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Niklas,
+Hi Lorenzo,
 
-
-On 27.05.19 г. 20:15 ч., Niklas Cassel wrote:
-> On Fri, May 24, 2019 at 02:43:00PM +0200, Marc Gonzalez wrote:
->> On 23/05/2019 21:44, Niklas Cassel wrote:
+On 28.05.19 г. 18:13 ч., Lorenzo Pieralisi wrote:
+> On Thu, May 16, 2019 at 12:14:04PM +0300, Stanimir Varbanov wrote:
+>> Hi Bjorn,
 >>
->>> Currently, there is only a 1 ms sleep after asserting PERST.
+>> On 5/2/19 3:19 AM, Bjorn Andersson wrote:
+>>> Before introducing the QCS404 platform, which uses the same PCIe
+>>> controller as IPQ4019, migrate this to use the bulk clock API, in order
+>>> to make the error paths slighly cleaner.
 >>>
->>> Reading the datasheets for different endpoints, some require PERST to be
->>> asserted for 10 ms in order for the endpoint to perform a reset, others
->>> require it to be asserted for 50 ms.
->>>
->>> Several SoCs using this driver uses PCIe Mini Card, where we don't know
->>> what endpoint will be plugged in.
->>>
->>> The PCI Express Card Electromechanical Specification specifies:
->>> "On power up, the deassertion of PERST# is delayed 100 ms (TPVPERL) from
->>> the power rails achieving specified operating limits."
->>>
->>> Add a sleep of 100 ms before deasserting PERST, in order to ensure that
->>> we are compliant with the spec.
->>>
->>> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+>>> Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+>>> Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 >>> ---
->>>   drivers/pci/controller/dwc/pcie-qcom.c | 2 ++
->>>   1 file changed, 2 insertions(+)
+>>>
+>>> Changes since v2:
+>>> - Defined QCOM_PCIE_2_4_0_MAX_CLOCKS
+>>>
+>>>   drivers/pci/controller/dwc/pcie-qcom.c | 49 ++++++++------------------
+>>>   1 file changed, 14 insertions(+), 35 deletions(-)
 >>>
 >>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
->>> index 0ed235d560e3..cae24376237c 100644
+>>> index 0ed235d560e3..d740cbe0e56d 100644
 >>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
 >>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->>> @@ -1110,6 +1110,8 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
->>>   	if (IS_ENABLED(CONFIG_PCI_MSI))
->>>   		dw_pcie_msi_init(pp);
+>>> @@ -112,10 +112,10 @@ struct qcom_pcie_resources_2_3_2 {
+>>>   	struct regulator_bulk_data supplies[QCOM_PCIE_2_3_2_MAX_SUPPLY];
+>>>   };
 >>>   
->>> +	/* Ensure that PERST has been asserted for at least 100 ms */
->>> +	msleep(100);
->>>   	qcom_ep_reset_deassert(pcie);
+>>> +#define QCOM_PCIE_2_4_0_MAX_CLOCKS	3
+>>>   struct qcom_pcie_resources_2_4_0 {
+>>> -	struct clk *aux_clk;
+>>> -	struct clk *master_clk;
+>>> -	struct clk *slave_clk;
+>>> +	struct clk_bulk_data clks[QCOM_PCIE_2_4_0_MAX_CLOCKS];
+>>> +	int num_clks;
+>>>   	struct reset_control *axi_m_reset;
+>>>   	struct reset_control *axi_s_reset;
+>>>   	struct reset_control *pipe_reset;
+>>> @@ -638,18 +638,17 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
+>>>   	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
+>>>   	struct dw_pcie *pci = pcie->pci;
+>>>   	struct device *dev = pci->dev;
+>>> +	int ret;
 >>>   
->>>   	ret = qcom_pcie_establish_link(pcie);
+>>> -	res->aux_clk = devm_clk_get(dev, "aux");
+>>> -	if (IS_ERR(res->aux_clk))
+>>> -		return PTR_ERR(res->aux_clk);
+>>> +	res->clks[0].id = "aux";
+>>> +	res->clks[1].id = "master_bus";
+>>> +	res->clks[2].id = "slave_bus";
+>>>   
+>>> -	res->master_clk = devm_clk_get(dev, "master_bus");
+>>> -	if (IS_ERR(res->master_clk))
+>>> -		return PTR_ERR(res->master_clk);
+>>> +	res->num_clks = 3;
 >>
->> Currently, qcom_ep_reset_assert() and qcom_ep_reset_deassert() both include
->> a call to usleep_range() of 1.0 to 1.5 ms
+>> Use the new fresh define QCOM_PCIE_2_4_0_MAX_CLOCKS?
 >>
->> Can we git rid of both if we sleep 100 ms before qcom_ep_reset_deassert?
-> 
-> These two sleeps after asserting/deasserting reset in qcom_ep_reset_assert()/
-> qcom_ep_reset_deassert() matches the sleeps in:
-> https://source.codeaurora.org/quic/la/kernel/msm-4.14/tree/drivers/pci/host/pci-msm.c?h=LA.UM.7.1.r1-14000-sm8150.0#n1942
-> 
-> and
-> 
-> https://source.codeaurora.org/quic/la/kernel/msm-4.14/tree/drivers/pci/host/pci-msm.c?h=LA.UM.7.1.r1-14000-sm8150.0#n1949
-> 
-> I would rather not remove these since that might affect existing devices.
-> 
-> 
-> This new sleep matches matches the sleep in:
-> https://source.codeaurora.org/quic/la/kernel/msm-4.14/tree/drivers/pci/host/pci-msm.c?h=LA.UM.7.1.r1-14000-sm8150.0#n3926
-> 
+>>>   
+>>> -	res->slave_clk = devm_clk_get(dev, "slave_bus");
+>>> -	if (IS_ERR(res->slave_clk))
+>>> -		return PTR_ERR(res->slave_clk);
+>>> +	ret = devm_clk_bulk_get(dev, res->num_clks, res->clks);
+>>> +	if (ret < 0)
+>>> +		return ret;
+>>>   
+>>>   	res->axi_m_reset = devm_reset_control_get_exclusive(dev, "axi_m");
+>>>   	if (IS_ERR(res->axi_m_reset))
+>>> @@ -719,9 +718,7 @@ static void qcom_pcie_deinit_2_4_0(struct qcom_pcie *pcie)
+>>>   	reset_control_assert(res->axi_m_sticky_reset);
+>>>   	reset_control_assert(res->pwr_reset);
+>>>   	reset_control_assert(res->ahb_reset);
+>>> -	clk_disable_unprepare(res->aux_clk);
+>>> -	clk_disable_unprepare(res->master_clk);
+>>> -	clk_disable_unprepare(res->slave_clk);
+>>> +	clk_bulk_disable_unprepare(res->num_clks, res->clks);
+>>>   }
+>>>   
+>>>   static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+>>> @@ -850,23 +847,9 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+>>>   
+>>>   	usleep_range(10000, 12000);
+>>>   
+>>> -	ret = clk_prepare_enable(res->aux_clk);
+>>> -	if (ret) {
+>>> -		dev_err(dev, "cannot prepare/enable iface clock\n");
+>>> +	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
+>>> +	if (ret)
+>>>   		goto err_clk_aux;
 >>
->> Should the msleep() call be included in one of the two wrappers?
+>> Maybe you have to change the name of the label too?
+>>
+>>> -	}
+>>> -
+>>> -	ret = clk_prepare_enable(res->master_clk);
+>>> -	if (ret) {
+>>> -		dev_err(dev, "cannot prepare/enable core clock\n");
+>>> -		goto err_clk_axi_m;
+>>> -	}
+>>> -
+>>> -	ret = clk_prepare_enable(res->slave_clk);
+>>> -	if (ret) {
+>>> -		dev_err(dev, "cannot prepare/enable phy clock\n");
+>>> -		goto err_clk_axi_s;
+>>> -	}
+>>>   
+>>>   	/* enable PCIe clocks and resets */
+>>>   	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+>>> @@ -891,10 +874,6 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+>>>   
+>>>   	return 0;
+>>>   
+>>> -err_clk_axi_s:
+>>> -	clk_disable_unprepare(res->master_clk);
+>>> -err_clk_axi_m:
+>>> -	clk_disable_unprepare(res->aux_clk);
+>>>   err_clk_aux:
+>>>   	reset_control_assert(res->ahb_reset);
+>>>   err_rst_ahb:
 > 
-> This new sleep could be moved into qcom_ep_reset_deassert(),
-> added before the gpiod_set_value_cansleep(pcie->reset, 0) call,
-> if Stanimir prefers it to be placed there instead.
+> Hi Bjorn, Stanimir,
+> 
+> can I merge the series as-is or we need a v4 for the requested
+> updates ? Please let me know.
 
-yes, please move the sleep in qcom_ep_reset_deassert()
-
-with that:
+I'm fine with either way:
 
 Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 
