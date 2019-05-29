@@ -2,186 +2,244 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BEE0E2E91F
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 01:26:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71C8B2E94C
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 01:26:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbfE2XY0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 May 2019 19:24:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49236 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbfE2XYD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 May 2019 19:24:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=StJ6LM8sQHkYI5UThzShneAjra5wi5bo/RYRsdxPQsA=; b=V2B9Vgs83dRLjIuQnd2C2vgYZ
-        +JgyOXeO1GKHOK9c4tRnNUqThik6tzysID2WPnKRr+36Nqy1H2ECRX9ShWnHkjcDarRRE36sMjLp8
-        rMBiNxdP14bOP1wi/jaweQN4P3parh4up8rfOPsYIJGMzClSMcNhqm2YUZ7FfQaCciCjPJlpLJJ9c
-        aeXT61eHnnOWKaxRn+HXRc3LwC2Y8Shpt7KozKcXuJxu6PITTqtbQgKa7rv4JBRtqJqIYr0SPtFcn
-        /5RDAzsKEfsB7oXgNPBlX7TDbPq/0Xg+hPhZkg4J+5oeanlc8QNxz2G9sF0j0yZAp7oTlogcPh66P
-        SAaTMxt+g==;
-Received: from 177.132.232.81.dynamic.adsl.gvt.net.br ([177.132.232.81] helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hW7vL-0005Rx-II; Wed, 29 May 2019 23:23:59 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hW7vI-0007wg-Fn; Wed, 29 May 2019 20:23:56 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        xen-devel@lists.xenproject.org, linux-kselftest@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-pm@vger.kernel.org, devel@driverdev.osuosl.org,
-        keyrings@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-integrity@vger.kernel.org, linux-mtd@lists.infradead.org,
-        patches@opensource.cirrus.com, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        devel@acpica.org, virtualization@lists.linux-foundation.org,
-        linux-mm@kvack.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-security-module@vger.kernel.org, linux-i2c@vger.kernel.org,
-        kvm@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org
-Subject: [PATCH 00/22] Some documentation fixes
-Date:   Wed, 29 May 2019 20:23:31 -0300
-Message-Id: <cover.1559171394.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
+        id S1726741AbfE2XZ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 May 2019 19:25:58 -0400
+Received: from mga03.intel.com ([134.134.136.65]:62140 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726735AbfE2XZ6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 May 2019 19:25:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 16:25:57 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 29 May 2019 16:25:56 -0700
+Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
+        by linux.intel.com (Postfix) with ESMTP id DE0F55802C9;
+        Wed, 29 May 2019 16:25:56 -0700 (PDT)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v2 1/5] PCI/ATS: Add PRI support for PCIe VF devices
+To:     "Raj, Ashok" <ashok.raj@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keith.busch@intel.com
+References: <cover.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <f773440c0eee2a8d4e5d6e2856717404ac836458.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190529225714.GE28250@google.com>
+ <20190529230426.GB5108@araj-mobl1.jf.intel.com>
+From:   sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <e93c7b6b-c414-6e0f-7983-9a46c67acb92@linux.intel.com>
+Date:   Wed, 29 May 2019 16:24:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190529230426.GB5108@araj-mobl1.jf.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fix several warnings and broken links.
 
-This series was generated against linux-next, but was rebased to be applied at
-docs-next. It should apply cleanly on either tree.
+On 5/29/19 4:04 PM, Raj, Ashok wrote:
+> On Wed, May 29, 2019 at 05:57:14PM -0500, Bjorn Helgaas wrote:
+>> On Mon, May 06, 2019 at 10:20:03AM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>
+>>> When IOMMU tries to enable PRI for VF device in
+>>> iommu_enable_dev_iotlb(), it always fails because PRI support for PCIe
+>>> VF device is currently broken in PCIE driver. Current implementation
+>>> expects the given PCIe device (PF & VF) to implement PRI capability
+>>> before enabling the PRI support. But this assumption is incorrect. As
+>>> per PCIe spec r4.0, sec 9.3.7.11, all VFs associated with PF can only
+>>> use the Page Request Interface (PRI) of the PF and not implement it.
+>>> Hence we need to create exception for handling the PRI support for PCIe
+>>> VF device.
+>>>
+>>> Since PRI is shared between PF/VF devices, following rules should apply.
+>>>
+>>> 1. Enable PRI in VF only if its already enabled in PF.
+>>> 2. When enabling/disabling PRI for VF, instead of configuring the
+>>> registers just increase/decrease the usage count (pri_ref_cnt) of PF.
+>>> 3. Disable PRI in PF only if pr_ref_cnt is zero.
+>> s/pr_ref_cnt/pri_ref_cnt/
+>>
+>>> Cc: Ashok Raj <ashok.raj@intel.com>
+>>> Cc: Keith Busch <keith.busch@intel.com>
+>>> Suggested-by: Ashok Raj <ashok.raj@intel.com>
+>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>> ---
+>>>   drivers/pci/ats.c   | 53 +++++++++++++++++++++++++++++++++++++++++++--
+>>>   include/linux/pci.h |  1 +
+>>>   2 files changed, 52 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+>>> index 97c08146534a..5582e5d83a3f 100644
+>>> --- a/drivers/pci/ats.c
+>>> +++ b/drivers/pci/ats.c
+>>> @@ -181,12 +181,39 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
+>>>   	u16 control, status;
+>>>   	u32 max_requests;
+>>>   	int pos;
+>>> +	struct pci_dev *pf;
+>>>   
+>>>   	if (WARN_ON(pdev->pri_enabled))
+>>>   		return -EBUSY;
+>>>   
+>>>   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
+>>> -	if (!pos)
+>>> +
+>>> +	if (pdev->is_virtfn) {
+>>> +		/*
+>>> +		 * Per PCIe r4.0, sec 9.3.7.11, VF must not implement PRI
+>>> +		 * Capability.
+>>> +		 */
+>>> +		if (pos) {
+>>> +			dev_err(&pdev->dev, "VF must not implement PRI");
+>>> +			return -EINVAL;
+>>> +		}
+>> This seems gratuitous.  It finds implementation errors, but since we
+>> correctly use the PF here anyway, it doesn't *need* to prevent PRI on
+>> the VF from working.
+>>
+>> I think you should just have:
+>>
+>>    if (pdev->is_virtfn) {
+>>      pf = pci_physfn(pdev);
+>>      if (!pf->pri_enabled)
+>>        return -EINVAL;
+> This would be incorrect. Since if we never did any bind_mm to the PF
+> PRI would not have been enabled. Currently this is done in the IOMMU
+> driver, and not in the device driver.
+>
+> I suppose we should enable PF capability if its not enabled. Same
+> comment would be applicable for PASID as well.
 
-There's a git tree with all of them applied on the top of docs/docs-next
-at:
+I am currently working on a fix to handle the bind issue (VF binding 
+before PF). My next version will have this update.
 
-https://git.linuxtv.org/mchehab/experimental.git/log/?h=fix_doc_links_v2
+But, regarding VF spec compliance checks, Is there any issue in having 
+them in enable code ? Perhaps I can change dev_err to dev_warn and not 
+return error if it found implementation errors. I found it useful to 
+have them because it helped me in finding some faulty devices during my 
+testing. Let me know your comments.
 
-
-Mauro Carvalho Chehab (21):
-  ABI: sysfs-devices-system-cpu: point to the right docs
-  isdn: mISDN: remove a bogus reference to a non-existing doc
-  dt: fix broken references to nand.txt
-  docs: zh_CN: get rid of basic_profiling.txt
-  doc: it_IT: fix reference to magic-number.rst
-  docs: mm: numaperf.rst: get rid of a build warning
-  docs: bpf: get rid of two warnings
-  docs: mark orphan documents as such
-  docs: amd-memory-encryption.rst get rid of warnings
-  gpu: amdgpu: fix broken amdgpu_dma_buf.c references
-  gpu: i915.rst: Fix references to renamed files
-  docs: zh_CN: avoid duplicate citation references
-  docs: vm: hmm.rst: fix some warnings
-  docs: it: license-rules.rst: get rid of warnings
-  docs: gpio: driver.rst: fix a bad tag
-  docs: soundwire: locking: fix tags for a code-block
-  docs: security: trusted-encrypted.rst: fix code-block tag
-  docs: security: core.rst: Fix several warnings
-  docs: net: dpio-driver.rst: fix two codeblock warnings
-  docs: net: sja1105.rst: fix table format
-  docs: fix broken documentation links
-
-Otto Sabart (1):
-  mfd: madera: Fix bad reference to pinctrl.txt file
-
- .../ABI/testing/sysfs-devices-system-cpu      |  3 +-
- Documentation/accelerators/ocxl.rst           |  2 +
- Documentation/acpi/dsd/leds.txt               |  2 +-
- .../admin-guide/kernel-parameters.rst         |  6 +-
- .../admin-guide/kernel-parameters.txt         | 16 ++---
- Documentation/admin-guide/mm/numaperf.rst     |  5 +-
- Documentation/admin-guide/ras.rst             |  2 +-
- Documentation/arm/stm32/overview.rst          |  2 +
- .../arm/stm32/stm32f429-overview.rst          |  2 +
- .../arm/stm32/stm32f746-overview.rst          |  2 +
- .../arm/stm32/stm32f769-overview.rst          |  2 +
- .../arm/stm32/stm32h743-overview.rst          |  2 +
- .../arm/stm32/stm32mp157-overview.rst         |  2 +
- Documentation/bpf/btf.rst                     |  2 +
- .../bindings/mtd/amlogic,meson-nand.txt       |  2 +-
- .../devicetree/bindings/mtd/gpmc-nand.txt     |  2 +-
- .../devicetree/bindings/mtd/marvell-nand.txt  |  2 +-
- .../devicetree/bindings/mtd/tango-nand.txt    |  2 +-
- .../devicetree/bindings/net/fsl-enetc.txt     |  7 +-
- .../bindings/pci/amlogic,meson-pcie.txt       |  2 +-
- .../regulator/qcom,rpmh-regulator.txt         |  2 +-
- .../devicetree/booting-without-of.txt         |  2 +-
- Documentation/driver-api/gpio/board.rst       |  2 +-
- Documentation/driver-api/gpio/consumer.rst    |  2 +-
- Documentation/driver-api/gpio/driver.rst      |  2 +-
- .../driver-api/soundwire/locking.rst          |  4 +-
- .../firmware-guide/acpi/enumeration.rst       |  2 +-
- .../firmware-guide/acpi/method-tracing.rst    |  2 +-
- Documentation/gpu/amdgpu.rst                  |  4 +-
- Documentation/gpu/i915.rst                    |  6 +-
- Documentation/gpu/msm-crash-dump.rst          |  2 +
- Documentation/i2c/instantiating-devices       |  2 +-
- Documentation/interconnect/interconnect.rst   |  2 +
- Documentation/laptops/lg-laptop.rst           |  2 +
- .../freescale/dpaa2/dpio-driver.rst           |  4 +-
- Documentation/networking/dsa/sja1105.rst      |  6 +-
- Documentation/powerpc/isa-versions.rst        |  2 +
- Documentation/security/keys/core.rst          | 16 +++--
- .../security/keys/trusted-encrypted.rst       |  4 +-
- Documentation/sysctl/kernel.txt               |  4 +-
- .../translations/it_IT/process/howto.rst      |  2 +-
- .../it_IT/process/license-rules.rst           | 28 ++++----
- .../it_IT/process/magic-number.rst            |  2 +-
- .../it_IT/process/stable-kernel-rules.rst     |  4 +-
- .../translations/zh_CN/basic_profiling.txt    | 71 -------------------
- .../translations/zh_CN/process/4.Coding.rst   |  2 +-
- .../zh_CN/process/management-style.rst        |  4 +-
- .../zh_CN/process/programming-language.rst    | 28 ++++----
- .../virtual/kvm/amd-memory-encryption.rst     |  5 ++
- Documentation/virtual/kvm/vcpu-requests.rst   |  2 +
- Documentation/vm/hmm.rst                      |  9 ++-
- Documentation/x86/x86_64/5level-paging.rst    |  2 +-
- Documentation/x86/x86_64/boot-options.rst     |  4 +-
- .../x86/x86_64/fake-numa-for-cpusets.rst      |  2 +-
- MAINTAINERS                                   |  6 +-
- arch/arm/Kconfig                              |  2 +-
- arch/arm64/kernel/kexec_image.c               |  2 +-
- arch/powerpc/Kconfig                          |  2 +-
- arch/x86/Kconfig                              | 16 ++---
- arch/x86/Kconfig.debug                        |  2 +-
- arch/x86/boot/header.S                        |  2 +-
- arch/x86/entry/entry_64.S                     |  2 +-
- arch/x86/include/asm/bootparam_utils.h        |  2 +-
- arch/x86/include/asm/page_64_types.h          |  2 +-
- arch/x86/include/asm/pgtable_64_types.h       |  2 +-
- arch/x86/kernel/cpu/microcode/amd.c           |  2 +-
- arch/x86/kernel/kexec-bzimage64.c             |  2 +-
- arch/x86/kernel/pci-dma.c                     |  2 +-
- arch/x86/mm/tlb.c                             |  2 +-
- arch/x86/platform/pvh/enlighten.c             |  2 +-
- drivers/acpi/Kconfig                          | 10 +--
- drivers/isdn/mISDN/dsp_core.c                 |  2 -
- drivers/net/ethernet/faraday/ftgmac100.c      |  2 +-
- .../fieldbus/Documentation/fieldbus_dev.txt   |  4 +-
- drivers/vhost/vhost.c                         |  2 +-
- include/acpi/acpi_drivers.h                   |  2 +-
- include/linux/fs_context.h                    |  2 +-
- include/linux/lsm_hooks.h                     |  2 +-
- include/linux/mfd/madera/pdata.h              |  3 +-
- mm/Kconfig                                    |  2 +-
- security/Kconfig                              |  2 +-
- tools/include/linux/err.h                     |  2 +-
- .../Documentation/stack-validation.txt        |  4 +-
- tools/testing/selftests/x86/protection_keys.c |  2 +-
- 84 files changed, 183 insertions(+), 212 deletions(-)
- delete mode 100644 Documentation/translations/zh_CN/basic_profiling.txt
-
+>
+>
+>>      pdev->pri_enabled = 1;
+>>      atomic_inc(&pf->pri_ref_cnt);
+>>    }
+>>
+>>    pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
+>>    if (!pos)
+>>      return -EINVAL;
+>>
+>>> +		pf = pci_physfn(pdev);
+>>> +
+>>> +		/* If VF config does not match with PF, return error */
+>>> +		if (!pf->pri_enabled)
+>>> +			return -EINVAL;
+>>> +
+>>> +		pdev->pri_reqs_alloc = pf->pri_reqs_alloc;
+>> Is there any point in setting vf->pri_reqs_alloc?  I don't think it's
+>> used for anything since pri_reqs_alloc is only used to write the PF
+>> capability, and we only do that for the PF.
+>>
+>>> +		pdev->pri_enabled = 1;
+>>> +
+>>> +		/* Increment PF PRI refcount */
+>> Superfluous comment, since that's exactly what the code says.  It's
+>> always good when the code is so clear that it doesn't require comments :)
+>>
+>>> +		atomic_inc(&pf->pri_ref_cnt);
+>>> +
+>>> +		return 0;
+>>> +	}
+>>> +
+>>> +	if (pdev->is_physfn && !pos)
+>>>   		return -EINVAL;
+>>>   
+>>>   	pci_read_config_word(pdev, pos + PCI_PRI_STATUS, &status);
+>>> @@ -202,7 +229,6 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
+>>>   	pci_write_config_word(pdev, pos + PCI_PRI_CTRL, control);
+>>>   
+>>>   	pdev->pri_enabled = 1;
+>>> -
+>>>   	return 0;
+>>>   }
+>>>   EXPORT_SYMBOL_GPL(pci_enable_pri);
+>>> @@ -217,10 +243,27 @@ void pci_disable_pri(struct pci_dev *pdev)
+>>>   {
+>>>   	u16 control;
+>>>   	int pos;
+>>> +	struct pci_dev *pf;
+>>>   
+>>>   	if (WARN_ON(!pdev->pri_enabled))
+>>>   		return;
+>>>   
+>>> +	/* All VFs should be disabled before disabling PF */
+>>> +	if (atomic_read(&pdev->pri_ref_cnt))
+>>> +		return;
+>>> +
+>>> +	if (pdev->is_virtfn) {
+>>> +		/* Since VF shares PRI with PF, use PF config. */
+>>> +		pf = pci_physfn(pdev);
+>>> +
+>>> +		/* Decrement PF PRI refcount */
+>>> +		atomic_dec(&pf->pri_ref_cnt);
+>>> +
+>>> +		pdev->pri_enabled = 0;
+>>> +
+>>> +		return;
+>>> +	}
+>>> +
+>>>   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
+>>>   	if (!pos)
+>>>   		return;
+>>> @@ -246,6 +289,9 @@ void pci_restore_pri_state(struct pci_dev *pdev)
+>>>   	if (!pdev->pri_enabled)
+>>>   		return;
+>>>   
+>>> +	if (pdev->is_virtfn)
+>>> +		return;
+>>> +
+>>>   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
+>>>   	if (!pos)
+>>>   		return;
+>>> @@ -270,6 +316,9 @@ int pci_reset_pri(struct pci_dev *pdev)
+>>>   	if (WARN_ON(pdev->pri_enabled))
+>>>   		return -EBUSY;
+>>>   
+>>> +	if (pdev->is_virtfn)
+>>> +		return 0;
+>>> +
+>>>   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
+>>>   	if (!pos)
+>>>   		return -EINVAL;
+>>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>>> index 77448215ef5b..699c79c99a39 100644
+>>> --- a/include/linux/pci.h
+>>> +++ b/include/linux/pci.h
+>>> @@ -450,6 +450,7 @@ struct pci_dev {
+>>>   #endif
+>>>   #ifdef CONFIG_PCI_PRI
+>>>   	u32		pri_reqs_alloc; /* Number of PRI requests allocated */
+>>> +	atomic_t	pri_ref_cnt;	/* Number of VFs with PRI enabled */
+>>>   #endif
+>>>   #ifdef CONFIG_PCI_PASID
+>>>   	u16		pasid_features;
+>>> -- 
+>>> 2.20.1
+>>>
 -- 
-2.21.0
-
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
 
