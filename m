@@ -2,161 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BFD162DF14
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2019 16:02:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37C922E24D
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2019 18:32:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbfE2OC6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 May 2019 10:02:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37570 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727269AbfE2OC6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 May 2019 10:02:58 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A8B823402;
-        Wed, 29 May 2019 14:02:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559138577;
-        bh=0tSTYoMlHTVZxSrDog0lJVqBtj8J4qQgEtdzSomSTZ4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hwPE3sV0wXedjVr2aCpquvp1LlpXrqHZxg6pcjxrIWPJnAL89WxJloIzstRSR3/fP
-         qVENpoMlU08Pz8ufgiUfRIDhOJejZEckw5R5QAGerIRKFXdg9N74E2PtvMpan7kL2K
-         9Vn44KtWtwtDC4BiiJqeIgClHffjxPlDQz3boADc=
-Date:   Wed, 29 May 2019 09:02:56 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shawn Anastasio <shawn@anastas.io>
-Cc:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        sbobroff@linux.ibm.com, xyjxie@linux.vnet.ibm.com,
-        rppt@linux.ibm.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] powerpc/pseries: Allow user-specified PCI
- resource alignment after init
-Message-ID: <20190529140256.GC28250@google.com>
-References: <20190528040313.35582-1-shawn@anastas.io>
- <20190528040313.35582-4-shawn@anastas.io>
+        id S1726860AbfE2QcD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 May 2019 12:32:03 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49158 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726062AbfE2QcD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 May 2019 12:32:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6B0E341;
+        Wed, 29 May 2019 09:32:02 -0700 (PDT)
+Received: from redmoon (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 37B3A3F5AF;
+        Wed, 29 May 2019 09:32:01 -0700 (PDT)
+Date:   Wed, 29 May 2019 17:31:55 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/3] Qualcomm QCS404 PCIe support
+Message-ID: <20190529163155.GA24655@redmoon>
+References: <20190529005710.23950-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190528040313.35582-4-shawn@anastas.io>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190529005710.23950-1-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 27, 2019 at 11:03:13PM -0500, Shawn Anastasio wrote:
-> On pseries, custom PCI resource alignment specified with the commandline
-> argument pci=resource_alignment is disabled due to PCI resources being
-> managed by the firmware. However, in the case of PCI hotplug the
-> resources are managed by the kernel, so custom alignments should be
-> honored in these cases. This is done by only honoring custom
-> alignments after initial PCI initialization is done, to ensure that
-> all devices managed by the firmware are excluded.
+On Tue, May 28, 2019 at 05:57:07PM -0700, Bjorn Andersson wrote:
+> This series adds support for the PCIe controller in the Qualcomm QCS404
+> platform.
 > 
-> Without this ability, sub-page BARs sometimes get mapped in between
-> page boundaries for hotplugged devices and are therefore unusable
-> with the VFIO framework. This change allows users to request
-> page alignment for devices they wish to access via VFIO using
-> the pci=resource_alignment commandline argument.
+> Bjorn Andersson (3):
+>   PCI: qcom: Use clk_bulk API for 2.4.0 controllers
+>   dt-bindings: PCI: qcom: Add QCS404 to the binding
+>   PCI: qcom: Add QCS404 PCIe controller support
 > 
-> In the future, this could be extended to provide page-aligned
-> resources by default for hotplugged devices, similar to what is
-> done on powernv by commit 382746376993 ("powerpc/powernv: Override
-> pcibios_default_alignment() to force PCI devices to be page aligned")
-> 
-> Signed-off-by: Shawn Anastasio <shawn@anastas.io>
-> ---
->  arch/powerpc/include/asm/machdep.h     |  3 +++
->  arch/powerpc/kernel/pci-common.c       |  9 +++++++++
->  arch/powerpc/platforms/pseries/setup.c | 22 ++++++++++++++++++++++
->  3 files changed, 34 insertions(+)
-> 
-> diff --git a/arch/powerpc/include/asm/machdep.h b/arch/powerpc/include/asm/machdep.h
-> index 2fbfaa9176ed..46eb62c0954e 100644
-> --- a/arch/powerpc/include/asm/machdep.h
-> +++ b/arch/powerpc/include/asm/machdep.h
-> @@ -179,6 +179,9 @@ struct machdep_calls {
->  
->  	resource_size_t (*pcibios_default_alignment)(void);
->  
-> +	/* Called when determining PCI resource alignment */
-> +	int (*pcibios_ignore_alignment_request)(void);
-> +
->  #ifdef CONFIG_PCI_IOV
->  	void (*pcibios_fixup_sriov)(struct pci_dev *pdev);
->  	resource_size_t (*pcibios_iov_resource_alignment)(struct pci_dev *, int resno);
-> diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-> index ff4b7539cbdf..8e0d73b4c188 100644
-> --- a/arch/powerpc/kernel/pci-common.c
-> +++ b/arch/powerpc/kernel/pci-common.c
-> @@ -238,6 +238,15 @@ resource_size_t pcibios_default_alignment(void)
->  	return 0;
->  }
->  
-> +int pcibios_ignore_alignment_request(void)
-> +{
-> +	if (ppc_md.pcibios_ignore_alignment_request)
-> +		return ppc_md.pcibios_ignore_alignment_request();
-> +
-> +	/* Fall back to default method of checking PCI_PROBE_ONLY */
-> +	return pci_has_flag(PCI_PROBE_ONLY);
-> +}
-> +
->  #ifdef CONFIG_PCI_IOV
->  resource_size_t pcibios_iov_resource_alignment(struct pci_dev *pdev, int resno)
->  {
-> diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-> index e4f0dfd4ae33..07f03be02afe 100644
-> --- a/arch/powerpc/platforms/pseries/setup.c
-> +++ b/arch/powerpc/platforms/pseries/setup.c
-> @@ -82,6 +82,8 @@ EXPORT_SYMBOL(CMO_PageSize);
->  
->  int fwnmi_active;  /* TRUE if an FWNMI handler is present */
->  
-> +static int initial_pci_init_done; /* TRUE if initial pcibios init has completed */
-> +
->  static void pSeries_show_cpuinfo(struct seq_file *m)
->  {
->  	struct device_node *root;
-> @@ -749,6 +751,23 @@ static resource_size_t pseries_pci_iov_resource_alignment(struct pci_dev *pdev,
->  }
->  #endif
->  
-> +static void pseries_after_init(void)
-> +{
-> +	initial_pci_init_done = 1;
-> +}
-> +
-> +static int pseries_ignore_alignment_request(void)
-> +{
-> +	if (initial_pci_init_done)
-> +		/*
-> +		 * Allow custom alignments after init for things
-> +		 * like PCI hotplugging.
-> +		 */
-> +		return 0;
+>  .../devicetree/bindings/pci/qcom,pcie.txt     |  25 +++-
+>  drivers/pci/controller/dwc/pcie-qcom.c        | 113 ++++++++----------
+>  2 files changed, 75 insertions(+), 63 deletions(-)
 
-Hmm, if there's any way to avoid this sort of early/late flag, that
-would be nicer.
+Applied to pci/qcom for v5.3, thanks.
 
-> +
-> +	return pci_has_flag(PCI_PROBE_ONLY);
-> +}
-> +
->  static void __init pSeries_setup_arch(void)
->  {
->  	set_arch_panic_timeout(10, ARCH_PANIC_TIMEOUT);
-> @@ -797,6 +816,9 @@ static void __init pSeries_setup_arch(void)
->  	}
->  
->  	ppc_md.pcibios_root_bridge_prepare = pseries_root_bridge_prepare;
-> +	ppc_md.pcibios_after_init = pseries_after_init;
-> +	ppc_md.pcibios_ignore_alignment_request =
-> +		pseries_ignore_alignment_request;
->  }
->  
->  static void pseries_panic(char *str)
-> -- 
-> 2.20.1
-> 
+Lorenzo
