@@ -2,204 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CE322D2FA
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2019 02:57:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22DE02D304
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2019 02:58:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbfE2A5X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 May 2019 20:57:23 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43799 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfE2A5S (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 May 2019 20:57:18 -0400
-Received: by mail-pl1-f193.google.com with SMTP id gn7so262075plb.10
-        for <linux-pci@vger.kernel.org>; Tue, 28 May 2019 17:57:18 -0700 (PDT)
+        id S1726069AbfE2A64 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 May 2019 20:58:56 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35030 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbfE2A6z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 May 2019 20:58:55 -0400
+Received: by mail-pl1-f195.google.com with SMTP id p1so276551plo.2
+        for <linux-pci@vger.kernel.org>; Tue, 28 May 2019 17:58:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Wzk0rvDelDnq+wIqmO8ngZJJ8/wBww612QEapc+1RXA=;
-        b=MfPVeryc778PT7zEV1xwpuPGTGjyYqJxhIvyGN3adsXOhm4REcLbOrAnhV3ZcsOHpI
-         gQ/DLRkrdv+/GU4j24r7uB7NKASh7DJ0K5JERM7KnH47fVoqJB3aTGF6BL6KoMflmINz
-         U2amAfWuTyTeYrFVWp53pPo0IOYq1TFCxUJJUgch8vVd+J8LOBhEzbmtYPa4FocRqAUK
-         NshTzPDnE3dDp/zKdte+n9rl8wgtc7sc+iFUTUvGBh0ngQitetDsQ4gc8CGDyKWirU48
-         SAu22vSHsrv6kaFKDFiRNdqFvciWiBQJ5cIFZ3zoQRXdhRZLO8cN50mpmJeYGgHeMcSb
-         1SmQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dB5GfLc57cH6bwtQrAmsQw+qYEcHdnY9B3siLBUP8uk=;
+        b=tLFATLFYr4475dDD6gdRPblwkVp37ut14jAhMGAKgDqy/FEKqbNCpymi8UgGLXX0yc
+         ubeAhI9iPxmQHwjCNZ91dSqb3zokbVjGyh1avWonTN/AdxsPbQov+N9nBdITLIN30V6W
+         dnkWfainrxBlolQas37BhgY0HEx9GJ1wYUlFvPhEjPJycBTTMPXXQFwZJDn54kw2i4fK
+         A5dHihK96brpHAlFxR+FCRKmGnzSlDcq1vTQHIaJpJovkwOXj0CvmsJEanudE0DxjPDc
+         sUzR+c6lF/pOuJgirMBTDNB9FEWj+Bh8/RMQNjHT06KfX0Oz7bTPxMXdGt5P8VELGzQP
+         bvYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Wzk0rvDelDnq+wIqmO8ngZJJ8/wBww612QEapc+1RXA=;
-        b=hx7FJw4HwzGglIL3gnlfw9Tebw0MSpg7Si7u5rZM2jUZ7hTlgjHthffghrX+vyc0NK
-         baqUrxUcqYKyCgRQx+Uz7TrfeUgyOEjBbswpM2BGs3CqCh3Hu3gSQEqQzA+P+Xx76mMV
-         JCTO/RQGXuc3ySXJT2Q87bpK02QjKdf85LeqXXNW0p/BeWQW564UpmEECJAkJPnLkPrz
-         i3aHaJdJRnXBOuYqq6bkoHb0n/X6+7+dVhPv37YnygNUCyp43lNF3lo/HV7vF9Msvjwy
-         cHfv20AEzysq9hQNEdeRJ5pf6+t6wJkYElw6ATtEHTGd2efVzoFSIpdyL7zlNDe/iMD6
-         k7tA==
-X-Gm-Message-State: APjAAAUtpzaHLBlY3c4adoi15HSrXfaYIQRNEGUVE5uNrariFPzbqVvi
-        y8IhqifIbvJD8eRvgfi2xoZGnw==
-X-Google-Smtp-Source: APXvYqzJIIa0oyam4g8SFZ/c8RStRJjA/g8v7wvBbHPTNBnJwg2uYNrbctrf9bCW+d8PNJi7ftp2tA==
-X-Received: by 2002:a17:902:7c08:: with SMTP id x8mr924104pll.159.1559091437527;
-        Tue, 28 May 2019 17:57:17 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id p16sm15434824pff.35.2019.05.28.17.57.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 17:57:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dB5GfLc57cH6bwtQrAmsQw+qYEcHdnY9B3siLBUP8uk=;
+        b=UQJvjw0qJlEEgpMQHFMr7GGoVHPW0kMhihyRlbQPvo2Q9fNyEfYimi4tZ+T0HkwYgD
+         BJ77n2EfP75RlBhsv289iWVs8CydVZ8uhcL1m/VIUDgwSqIaTDhazMQ64+8gjpRqE3gz
+         9c/tbHCiiyEc/1glPtSuwjWI1UiYpoZq36LQ8wuXPkpHuyeKkGWBitJUSIDVNH61T0sg
+         CWxcZ4hAnnm3Wuka4t9PBEHkMJGyax4VwIiobAXdpzneTuohhd9ouRUUutQDOjv7FJoQ
+         tm2q+lP8FIhOrc9Zh9wt3HgVeUBuVtmHlfPLCOhqjI94jnRI4YBsYuCzUBLXEPzGeTBR
+         2UBQ==
+X-Gm-Message-State: APjAAAVJfyCL8zouhSOtUQnFz8TvPGbORMp6lyS5jO/HWSZF1m3YWjNN
+        6SFh4LaCfT9MitZzt/s/qbiJlw==
+X-Google-Smtp-Source: APXvYqwxh6jDK5DVOgkaZM5rVzp3+LyBXrFZZTjYOOYOzEtNmwHBrNbU2n5KLBLmmwYvFxPSAjRXeQ==
+X-Received: by 2002:a17:902:704a:: with SMTP id h10mr47656719plt.294.1559091535018;
+        Tue, 28 May 2019 17:58:55 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id z4sm16431588pfa.142.2019.05.28.17.58.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 May 2019 17:58:53 -0700 (PDT)
+Date:   Tue, 28 May 2019 17:58:51 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Stanimir Varbanov <svarbanov@mm-sol.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 3/3] PCI: qcom: Add QCS404 PCIe controller support
-Date:   Tue, 28 May 2019 17:57:10 -0700
-Message-Id: <20190529005710.23950-4-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20190529005710.23950-1-bjorn.andersson@linaro.org>
-References: <20190529005710.23950-1-bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 1/3] PCI: qcom: Use clk_bulk API for 2.4.0 controllers
+Message-ID: <20190529005851.GA3923@builder>
+References: <20190502001955.10575-1-bjorn.andersson@linaro.org>
+ <20190502001955.10575-2-bjorn.andersson@linaro.org>
+ <fcfcd3b4-99d2-7b10-e82d-b92e6bf37a33@mm-sol.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fcfcd3b4-99d2-7b10-e82d-b92e6bf37a33@mm-sol.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The QCS404 platform contains a PCIe controller of version 2.4.0 and a
-Qualcomm PCIe2 PHY. The driver already supports version 2.4.0, for the
-IPQ4019, but this support touches clocks and resets related to the PHY
-as well, and there's no upstream driver for the PHY.
+On Thu 16 May 02:14 PDT 2019, Stanimir Varbanov wrote:
 
-On QCS404 we must initialize the PHY, so a separate PHY driver is
-implemented to take care of this and the controller driver is updated to
-not require the PHY related resources. This is done by relying on the
-fact that operations in both the clock and reset framework are nops when
-passed NULL, so we can isolate this change to only the get_resource
-function.
+> Hi Bjorn,
+> 
+> On 5/2/19 3:19 AM, Bjorn Andersson wrote:
+> > Before introducing the QCS404 platform, which uses the same PCIe
+> > controller as IPQ4019, migrate this to use the bulk clock API, in order
+> > to make the error paths slighly cleaner.
+> > 
+> > Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> > Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> > 
+> > Changes since v2:
+> > - Defined QCOM_PCIE_2_4_0_MAX_CLOCKS
+> > 
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 49 ++++++++------------------
+> >  1 file changed, 14 insertions(+), 35 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 0ed235d560e3..d740cbe0e56d 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -112,10 +112,10 @@ struct qcom_pcie_resources_2_3_2 {
+> >  	struct regulator_bulk_data supplies[QCOM_PCIE_2_3_2_MAX_SUPPLY];
+> >  };
+> >  
+> > +#define QCOM_PCIE_2_4_0_MAX_CLOCKS	3
+> >  struct qcom_pcie_resources_2_4_0 {
+> > -	struct clk *aux_clk;
+> > -	struct clk *master_clk;
+> > -	struct clk *slave_clk;
+> > +	struct clk_bulk_data clks[QCOM_PCIE_2_4_0_MAX_CLOCKS];
+> > +	int num_clks;
+> >  	struct reset_control *axi_m_reset;
+> >  	struct reset_control *axi_s_reset;
+> >  	struct reset_control *pipe_reset;
+> > @@ -638,18 +638,17 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
+> >  	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
+> >  	struct dw_pcie *pci = pcie->pci;
+> >  	struct device *dev = pci->dev;
+> > +	int ret;
+> >  
+> > -	res->aux_clk = devm_clk_get(dev, "aux");
+> > -	if (IS_ERR(res->aux_clk))
+> > -		return PTR_ERR(res->aux_clk);
+> > +	res->clks[0].id = "aux";
+> > +	res->clks[1].id = "master_bus";
+> > +	res->clks[2].id = "slave_bus";
+> >  
+> > -	res->master_clk = devm_clk_get(dev, "master_bus");
+> > -	if (IS_ERR(res->master_clk))
+> > -		return PTR_ERR(res->master_clk);
+> > +	res->num_clks = 3;
+> 
+> Use the new fresh define QCOM_PCIE_2_4_0_MAX_CLOCKS?
+> 
 
-For QCS404 we also need to enable the AHB (iface) clock, in order to
-access the register space of the controller, but as this is not part of
-the IPQ4019 DT binding this is only added for new users of the 2.4.0
-controller.
+As I replace it in patch 3/3 with a value different from "max clocks", I
+don't think it makes sense to use the define here. So I'm leaving this
+as is.
 
-Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+> >  
+> > -	res->slave_clk = devm_clk_get(dev, "slave_bus");
+> > -	if (IS_ERR(res->slave_clk))
+> > -		return PTR_ERR(res->slave_clk);
+> > +	ret = devm_clk_bulk_get(dev, res->num_clks, res->clks);
+> > +	if (ret < 0)
+> > +		return ret;
+> >  
+> >  	res->axi_m_reset = devm_reset_control_get_exclusive(dev, "axi_m");
+> >  	if (IS_ERR(res->axi_m_reset))
+> > @@ -719,9 +718,7 @@ static void qcom_pcie_deinit_2_4_0(struct qcom_pcie *pcie)
+> >  	reset_control_assert(res->axi_m_sticky_reset);
+> >  	reset_control_assert(res->pwr_reset);
+> >  	reset_control_assert(res->ahb_reset);
+> > -	clk_disable_unprepare(res->aux_clk);
+> > -	clk_disable_unprepare(res->master_clk);
+> > -	clk_disable_unprepare(res->slave_clk);
+> > +	clk_bulk_disable_unprepare(res->num_clks, res->clks);
+> >  }
+> >  
+> >  static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+> > @@ -850,23 +847,9 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+> >  
+> >  	usleep_range(10000, 12000);
+> >  
+> > -	ret = clk_prepare_enable(res->aux_clk);
+> > -	if (ret) {
+> > -		dev_err(dev, "cannot prepare/enable iface clock\n");
+> > +	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
+> > +	if (ret)
+> >  		goto err_clk_aux;
+> 
+> Maybe you have to change the name of the label too?
+> 
 
-Changes since v4:
-- Picked up Vinod's r-b and Stanimir's a-b
+Updated this and posted v5. Should be good to be merged now.
 
- drivers/pci/controller/dwc/pcie-qcom.c | 64 +++++++++++++++-----------
- 1 file changed, 38 insertions(+), 26 deletions(-)
+Thanks for your reviews!
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 23dc01212508..da5dd3639a49 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -112,7 +112,7 @@ struct qcom_pcie_resources_2_3_2 {
- 	struct regulator_bulk_data supplies[QCOM_PCIE_2_3_2_MAX_SUPPLY];
- };
- 
--#define QCOM_PCIE_2_4_0_MAX_CLOCKS	3
-+#define QCOM_PCIE_2_4_0_MAX_CLOCKS	4
- struct qcom_pcie_resources_2_4_0 {
- 	struct clk_bulk_data clks[QCOM_PCIE_2_4_0_MAX_CLOCKS];
- 	int num_clks;
-@@ -638,13 +638,16 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
- 	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
- 	struct dw_pcie *pci = pcie->pci;
- 	struct device *dev = pci->dev;
-+	bool is_ipq = of_device_is_compatible(dev->of_node, "qcom,pcie-ipq4019");
- 	int ret;
- 
- 	res->clks[0].id = "aux";
- 	res->clks[1].id = "master_bus";
- 	res->clks[2].id = "slave_bus";
-+	res->clks[3].id = "iface";
- 
--	res->num_clks = 3;
-+	/* qcom,pcie-ipq4019 is defined without "iface" */
-+	res->num_clks = is_ipq ? 3 : 4;
- 
- 	ret = devm_clk_bulk_get(dev, res->num_clks, res->clks);
- 	if (ret < 0)
-@@ -658,27 +661,33 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
- 	if (IS_ERR(res->axi_s_reset))
- 		return PTR_ERR(res->axi_s_reset);
- 
--	res->pipe_reset = devm_reset_control_get_exclusive(dev, "pipe");
--	if (IS_ERR(res->pipe_reset))
--		return PTR_ERR(res->pipe_reset);
--
--	res->axi_m_vmid_reset = devm_reset_control_get_exclusive(dev,
--								 "axi_m_vmid");
--	if (IS_ERR(res->axi_m_vmid_reset))
--		return PTR_ERR(res->axi_m_vmid_reset);
--
--	res->axi_s_xpu_reset = devm_reset_control_get_exclusive(dev,
--								"axi_s_xpu");
--	if (IS_ERR(res->axi_s_xpu_reset))
--		return PTR_ERR(res->axi_s_xpu_reset);
--
--	res->parf_reset = devm_reset_control_get_exclusive(dev, "parf");
--	if (IS_ERR(res->parf_reset))
--		return PTR_ERR(res->parf_reset);
--
--	res->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
--	if (IS_ERR(res->phy_reset))
--		return PTR_ERR(res->phy_reset);
-+	if (is_ipq) {
-+		/*
-+		 * These resources relates to the PHY or are secure clocks, but
-+		 * are controlled here for IPQ4019
-+		 */
-+		res->pipe_reset = devm_reset_control_get_exclusive(dev, "pipe");
-+		if (IS_ERR(res->pipe_reset))
-+			return PTR_ERR(res->pipe_reset);
-+
-+		res->axi_m_vmid_reset = devm_reset_control_get_exclusive(dev,
-+									 "axi_m_vmid");
-+		if (IS_ERR(res->axi_m_vmid_reset))
-+			return PTR_ERR(res->axi_m_vmid_reset);
-+
-+		res->axi_s_xpu_reset = devm_reset_control_get_exclusive(dev,
-+									"axi_s_xpu");
-+		if (IS_ERR(res->axi_s_xpu_reset))
-+			return PTR_ERR(res->axi_s_xpu_reset);
-+
-+		res->parf_reset = devm_reset_control_get_exclusive(dev, "parf");
-+		if (IS_ERR(res->parf_reset))
-+			return PTR_ERR(res->parf_reset);
-+
-+		res->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
-+		if (IS_ERR(res->phy_reset))
-+			return PTR_ERR(res->phy_reset);
-+	}
- 
- 	res->axi_m_sticky_reset = devm_reset_control_get_exclusive(dev,
- 								   "axi_m_sticky");
-@@ -698,9 +707,11 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
- 	if (IS_ERR(res->ahb_reset))
- 		return PTR_ERR(res->ahb_reset);
- 
--	res->phy_ahb_reset = devm_reset_control_get_exclusive(dev, "phy_ahb");
--	if (IS_ERR(res->phy_ahb_reset))
--		return PTR_ERR(res->phy_ahb_reset);
-+	if (is_ipq) {
-+		res->phy_ahb_reset = devm_reset_control_get_exclusive(dev, "phy_ahb");
-+		if (IS_ERR(res->phy_ahb_reset))
-+			return PTR_ERR(res->phy_ahb_reset);
-+	}
- 
- 	return 0;
- }
-@@ -1268,6 +1279,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-msm8996", .data = &ops_2_3_2 },
- 	{ .compatible = "qcom,pcie-ipq8074", .data = &ops_2_3_3 },
- 	{ .compatible = "qcom,pcie-ipq4019", .data = &ops_2_4_0 },
-+	{ .compatible = "qcom,pcie-qcs404", .data = &ops_2_4_0 },
- 	{ }
- };
- 
--- 
-2.18.0
-
+Regards,
+Bjorn
