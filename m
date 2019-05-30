@@ -2,127 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B3F83001B
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 18:22:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 347AB30099
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 19:12:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbfE3QW3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 May 2019 12:22:29 -0400
-Received: from foss.arm.com ([217.140.101.70]:39348 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbfE3QW2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 May 2019 12:22:28 -0400
+        id S1726280AbfE3RMg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 May 2019 13:12:36 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40078 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727049AbfE3RMg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 May 2019 13:12:36 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 13CAF341;
-        Thu, 30 May 2019 09:22:28 -0700 (PDT)
-Received: from redmoon (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23AA43F5AF;
-        Thu, 30 May 2019 09:22:26 -0700 (PDT)
-Date:   Thu, 30 May 2019 17:22:23 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Alan Mikhak <alan.mikhak@sifive.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        gustavo.pimentel@synopsys.com, wen.yang99@zte.com.cn, kjlu@umn.edu
-Subject: Re: [PATCH v2] PCI: endpoint: Skip odd BAR when skipping 64bit BAR
-Message-ID: <20190530162223.GG13993@redmoon>
-References: <1558648540-14239-1-git-send-email-alan.mikhak@sifive.com>
- <CABEDWGzHkt4p_byEihOAs9g97t450h9-Z0Qu2b2-O1pxCNPX+A@mail.gmail.com>
- <baa68439-f703-a453-34a2-24387bb9112d@ti.com>
- <CABEDWGyJpfX=DzBgXAGwu29rEwmY3s_P9QPC0eJOJ3KBysRWtA@mail.gmail.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F071341;
+        Thu, 30 May 2019 10:12:35 -0700 (PDT)
+Received: from ostrya.cambridge.arm.com (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 365663F5AF;
+        Thu, 30 May 2019 10:12:32 -0700 (PDT)
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+To:     joro@8bytes.org, mst@redhat.com
+Cc:     iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        virtio-dev@lists.oasis-open.org, jasowang@redhat.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Lorenzo.Pieralisi@arm.com, robin.murphy@arm.com,
+        bhelgaas@google.com, frowand.list@gmail.com,
+        kvmarm@lists.cs.columbia.edu, eric.auger@redhat.com,
+        tnowicki@caviumnetworks.com, kevin.tian@intel.com,
+        bauerman@linux.ibm.com
+Subject: [PATCH v8 0/7] Add virtio-iommu driver
+Date:   Thu, 30 May 2019 18:09:22 +0100
+Message-Id: <20190530170929.19366-1-jean-philippe.brucker@arm.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABEDWGyJpfX=DzBgXAGwu29rEwmY3s_P9QPC0eJOJ3KBysRWtA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 24, 2019 at 11:50:41AM -0700, Alan Mikhak wrote:
-> Hi Kishon,
-> 
-> Yes. This change is still applicable even when the platform specifies
-> that it only supports 64-bit BARs by setting the bar_fixed_64bit
-> member of epc_features.
-> 
-> The issue being fixed is this: If the 'continue' statement is executed
-> within the loop, the loop index 'bar' needs to advanced by two, not
-> one, when the BAR is 64-bit. Otherwise the next loop iteration will be
-> on an odd BAR which doesn't exist.
-> 
-> The PCI_BASE_ADDRESS_MEM_TYPE_64 flag in epf_bar->flag reflects the
-> value set by the platform in the bar_fixed_64bit member of
-> epc_features.
-> 
-> This patch moves the checking of  PCI_BASE_ADDRESS_MEM_TYPE_64 in
-> epf_bar->flags to before the 'continue' statement to advance the 'bar'
-> loop index accordingly. The comment you see about 'pci_epc_set_bar()'
-> preceding the moved code is the original comment and was also moved
-> along with the code.
+Implement the virtio-iommu driver, following specification v0.12 [1].
+Since last version [2] we've worked on improving the specification,
+which resulted in the following changes to the interface:
+* Remove the EXEC flag.
+* Add feature bit for the MMIO flag.
+* Change domain_bits to domain_range.
 
-@Kishon, I would need your ACK to merge this patch.
+Given that there were small changes to patch 5/7, I removed the review
+and test tags. Please find the code at [3].
 
-Thanks,
-Lorenzo
+[1] Virtio-iommu specification v0.12, sources and pdf
+    git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.12
+    http://jpbrucker.net/virtio-iommu/spec/v0.12/virtio-iommu-v0.12.pdf
+    http://jpbrucker.net/virtio-iommu/spec/diffs/virtio-iommu-dev-diff-v0.11-v0.12.pdf
 
-> Regards,
-> Alan Mikhak
-> 
-> On Fri, May 24, 2019 at 1:51 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> >
-> > Hi,
-> >
-> > On 24/05/19 5:25 AM, Alan Mikhak wrote:
-> > > +Bjorn Helgaas, +Gustavo Pimentel, +Wen Yang, +Kangjie Lu
-> > >
-> > > On Thu, May 23, 2019 at 2:55 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
-> > >>
-> > >> Always skip odd bar when skipping 64bit BARs in pci_epf_test_set_bar()
-> > >> and pci_epf_test_alloc_space().
-> > >>
-> > >> Otherwise, pci_epf_test_set_bar() will call pci_epc_set_bar() on odd loop
-> > >> index when skipping reserved 64bit BAR. Moreover, pci_epf_test_alloc_space()
-> > >> will call pci_epf_alloc_space() on bind for odd loop index when BAR is 64bit
-> > >> but leaks on subsequent unbind by not calling pci_epf_free_space().
-> > >>
-> > >> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> > >> Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
-> > >> ---
-> > >>  drivers/pci/endpoint/functions/pci-epf-test.c | 25 ++++++++++++-------------
-> > >>  1 file changed, 12 insertions(+), 13 deletions(-)
-> > >>
-> > >> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > >> index 27806987e93b..96156a537922 100644
-> > >> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> > >> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > >> @@ -389,7 +389,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
-> > >>
-> > >>  static int pci_epf_test_set_bar(struct pci_epf *epf)
-> > >>  {
-> > >> -       int bar;
-> > >> +       int bar, add;
-> > >>         int ret;
-> > >>         struct pci_epf_bar *epf_bar;
-> > >>         struct pci_epc *epc = epf->epc;
-> > >> @@ -400,8 +400,14 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
-> > >>
-> > >>         epc_features = epf_test->epc_features;
-> > >>
-> > >> -       for (bar = BAR_0; bar <= BAR_5; bar++) {
-> > >> +       for (bar = BAR_0; bar <= BAR_5; bar += add) {
-> > >>                 epf_bar = &epf->bar[bar];
-> > >> +               /*
-> > >> +                * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
-> > >> +                * if the specific implementation required a 64-bit BAR,
-> > >> +                * even if we only requested a 32-bit BAR.
-> > >> +                */
-> >
-> > set_bar shouldn't set PCI_BASE_ADDRESS_MEM_TYPE_64. If a platform supports only
-> > 64-bit BAR, that should be specified in epc_features bar_fixed_64bit member.
-> >
-> > Thanks
-> > Kishon
+[2] [PATCH v7 0/7] Add virtio-iommu driver
+    https://lore.kernel.org/linux-pci/0ba215f5-e856-bf31-8dd9-a85710714a7a@arm.com/T/
+
+[3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.12
+    git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.12
+
+Jean-Philippe Brucker (7):
+  dt-bindings: virtio-mmio: Add IOMMU description
+  dt-bindings: virtio: Add virtio-pci-iommu node
+  of: Allow the iommu-map property to omit untranslated devices
+  PCI: OF: Initialize dev->fwnode appropriately
+  iommu: Add virtio-iommu driver
+  iommu/virtio: Add probe request
+  iommu/virtio: Add event queue
+
+ .../devicetree/bindings/virtio/iommu.txt      |   66 +
+ .../devicetree/bindings/virtio/mmio.txt       |   30 +
+ MAINTAINERS                                   |    7 +
+ drivers/iommu/Kconfig                         |   11 +
+ drivers/iommu/Makefile                        |    1 +
+ drivers/iommu/virtio-iommu.c                  | 1176 +++++++++++++++++
+ drivers/of/base.c                             |   10 +-
+ drivers/pci/of.c                              |    6 +
+ include/uapi/linux/virtio_ids.h               |    1 +
+ include/uapi/linux/virtio_iommu.h             |  165 +++
+ 10 files changed, 1470 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
+ create mode 100644 drivers/iommu/virtio-iommu.c
+ create mode 100644 include/uapi/linux/virtio_iommu.h
+
+-- 
+2.21.0
+
