@@ -2,163 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 780023012F
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 19:45:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A01AD30156
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 19:56:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfE3Rpi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 May 2019 13:45:38 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:46674 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfE3Rpi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 May 2019 13:45:38 -0400
-Received: by mail-qt1-f194.google.com with SMTP id z19so7961866qtz.13
-        for <linux-pci@vger.kernel.org>; Thu, 30 May 2019 10:45:37 -0700 (PDT)
+        id S1726518AbfE3R4Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 May 2019 13:56:25 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45435 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfE3R4Y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 May 2019 13:56:24 -0400
+Received: by mail-lf1-f67.google.com with SMTP id m14so5698274lfp.12
+        for <linux-pci@vger.kernel.org>; Thu, 30 May 2019 10:56:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Kznmoz7C+qs9+fS1R4x2KVGpxZXkzNDQtpMYN/bgS0w=;
+        b=JT/fEl27W7OW7rJcwHTFEDIgpayKw/JcKZrccKW+R06f8yFn9Sfmqh1Y1+4eFFmINj
+         APEMuKyil8NOFpMdzz9O3cIulvqjkdaZ2tOVr4o7IKRKHWjlMU10TWN403QDqTiF8GE+
+         YMUDO7iGJIUsV3W1TTBlJHn341cr9XU4HEjMADWS4Hwpvt+DlNAxnMEGK68wm14STPK3
+         V6OlCCKBbjh8qEkuB8VASZ4IEKTRT8ja3iIGVWU1VQ5qEJm8cjXWDNruPlhZRD2G2JfP
+         wqXec1kI3sSfJPSkEVYF+NXpHw36TbeTGAPmx4rdsXx16WXyPtJjTNzE5VZuZKQPqe0F
+         k/FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UgEoJIEOWgKSmNpnwJapd7xKMVBGEnMvpNqFuwdcHSY=;
-        b=c14cNQY7a7g0KXxtQrpzFvgD33XZOwjo02Sgk8gXEjAhOUM5uAegj2VxSwtgIdexuF
-         TavwAF8sGn2/r1Vl7GZfleqKaL4FhUv6Quz6PxhFQDP1X33Ht7n0y3zBOdiXBmIM5rJf
-         qv6zFooaCSIVIB8Gt9vMO6lWjuX2C51L1N2stLILuaNRHiK6ejERPJ/dqF7L8tu1c8GA
-         whCEgtz/oBC1ehtNUh5pM2xXMr9VmxMM8wgs4PBL56Gp7eY3a5h191wdwZ7fqi2CBbKf
-         4ohBJRXkfoMzCVSgsgUB2UhgvRWRBtqORTQ42cIw09wkKaRc8Yqj5SEIN1pMjUDjYNe3
-         qCgg==
-X-Gm-Message-State: APjAAAWLZ2ZeDWW1jYm4JXLEqQgXKB7SH1miWXQT1FqbJus7g0iNKewl
-        LHHNO9WxgXNpu0B8sd75OE/eEQ==
-X-Google-Smtp-Source: APXvYqy9DfCkbHWFwnoJIZhnJEIk9jBDmoJOESod/F/vQr9Iv7gjOGLceZ55BmbRJubgQEOI/tivJw==
-X-Received: by 2002:aed:3b5a:: with SMTP id q26mr4641355qte.158.1559238337003;
-        Thu, 30 May 2019 10:45:37 -0700 (PDT)
-Received: from redhat.com (pool-100-0-197-103.bstnma.fios.verizon.net. [100.0.197.103])
-        by smtp.gmail.com with ESMTPSA id r186sm691141qkb.9.2019.05.30.10.45.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 30 May 2019 10:45:35 -0700 (PDT)
-Date:   Thu, 30 May 2019 13:45:32 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     joro@8bytes.org, iommu@lists.linux-foundation.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, jasowang@redhat.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        Lorenzo.Pieralisi@arm.com, robin.murphy@arm.com,
-        bhelgaas@google.com, frowand.list@gmail.com,
-        kvmarm@lists.cs.columbia.edu, eric.auger@redhat.com,
-        tnowicki@caviumnetworks.com, kevin.tian@intel.com,
-        bauerman@linux.ibm.com
-Subject: Re: [PATCH v8 2/7] dt-bindings: virtio: Add virtio-pci-iommu node
-Message-ID: <20190530133523-mutt-send-email-mst@kernel.org>
-References: <20190530170929.19366-1-jean-philippe.brucker@arm.com>
- <20190530170929.19366-3-jean-philippe.brucker@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kznmoz7C+qs9+fS1R4x2KVGpxZXkzNDQtpMYN/bgS0w=;
+        b=m5zCjK54tZ9DqiefIbrCk3ZNaHFmuPSLUh4ItB2sF4oMa9swgVSI69X/MXLW8sYOyx
+         Vu0nqTkY+Vfha6eznG713ZOf68F/duPZMK6qdSImISwCExKjV8hR2v/pupt30kw2reCF
+         0mt57pcjuJ9V+XfVWQp8T2Pf5Gj0ImBfmlVABzghogiM1hTIOEM5pURMyfehlO6srWCb
+         vRrAJWKkDxKo+s3bxjnd/6RvpMqKzwWPBlSowv43kmH+k7H27FH7gDRkNS5kHbv1xWFZ
+         6QovtKpVMV3wZvor2yq3V1nHQowEmKYSJuL/EoJnTzuBEuUvvwVsccWG+61wEeYU3ddU
+         jmLg==
+X-Gm-Message-State: APjAAAVTDjjoGrsVnnTgcF4YzAMeJdHkHxY0zAdyf/h+m4YRp2NvSQ2o
+        zUOxQAHy8ypbSSXrwFWatzAaYZQckTNO0n349XuazQ==
+X-Google-Smtp-Source: APXvYqyQiWOytOWvETmZ/lX6mjAxJtO7J/9HNjyUp8rLndIVDE+TYfD/IMExAYni2I/+EKIHlCwpa/JO2Z2EXi0B4Gc=
+X-Received: by 2002:ac2:4c84:: with SMTP id d4mr2829996lfl.1.1559238981944;
+ Thu, 30 May 2019 10:56:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190530170929.19366-3-jean-philippe.brucker@arm.com>
+References: <1558650258-15050-1-git-send-email-alan.mikhak@sifive.com>
+ <305100E33629484CBB767107E4246BBB0A6FAFFD@DE02WEMBXB.internal.synopsys.com>
+ <CABEDWGxsQ9NXrN7W_8HVrXQBb9HiBd+d1dNfv+cXmoBpXQnLwA@mail.gmail.com>
+ <305100E33629484CBB767107E4246BBB0A6FC308@DE02WEMBXB.internal.synopsys.com>
+ <CABEDWGxL-WYz1BY7yXJ6eKULgVtKeo67XhgHZjvtm5Ka5foKiA@mail.gmail.com> <192e3a19-8b69-dfaf-aa5c-45c7087548cc@ti.com>
+In-Reply-To: <192e3a19-8b69-dfaf-aa5c-45c7087548cc@ti.com>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Thu, 30 May 2019 10:56:10 -0700
+Message-ID: <CABEDWGxLeD-K8PjkD5hPSTFGJKs2hxEaAVO+nE5eC9Nx2yw=ig@mail.gmail.com>
+Subject: Re: [PATCH] PCI: endpoint: Add DMA to Linux PCI EP Framework
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "wen.yang99@zte.com.cn" <wen.yang99@zte.com.cn>,
+        "kjlu@umn.edu" <kjlu@umn.edu>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        Vinod Koul <vkoul@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 30, 2019 at 06:09:24PM +0100, Jean-Philippe Brucker wrote:
-> Some systems implement virtio-iommu as a PCI endpoint. The operating
-> system needs to discover the relationship between IOMMU and masters long
-> before the PCI endpoint gets probed. Add a PCI child node to describe the
-> virtio-iommu device.
-> 
-> The virtio-pci-iommu is conceptually split between a PCI programming
-> interface and a translation component on the parent bus. The latter
-> doesn't have a node in the device tree. The virtio-pci-iommu node
-> describes both, by linking the PCI endpoint to "iommus" property of DMA
-> master nodes and to "iommu-map" properties of bus nodes.
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+On Wed, May 29, 2019 at 10:48 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> +Vinod Koul
+>
+> Hi,
+>
+> >>> On Fri, May 24, 2019 at 1:59 AM Gustavo Pimentel
+> >>> <Gustavo.Pimentel@synopsys.com> wrote:
+> >>>>
+> >>>> Hi Alan,
+> >>>>
+> >>>> This patch implementation is very HW implementation dependent and
+> >>>> requires the DMA to exposed through PCIe BARs, which aren't always the
+> >>>> case. Besides, you are defining some control bits on
+> >>>> include/linux/pci-epc.h that may not have any meaning to other types of
+> >>>> DMA.
+> >>>>
+> >>>> I don't think this was what Kishon had in mind when he developed the
+> >>>> pcitest, but let see what Kishon was to say about it.
+> >>>>
+> >>>> I've developed a DMA driver for DWC PCI using Linux Kernel DMAengine API
+> >>>> and which I submitted some days ago.
+> >>>> By having a DMA driver which implemented using DMAengine API, means the
+> >>>> pcitest can use the DMAengine client API, which will be completely
+> >>>> generic to any other DMA implementation.
+>
+> right, my initial thought process was to use only dmaengine APIs in
+> pci-epf-test so that the system DMA or DMA within the PCIe controller can be
+> used transparently. But can we register DMA within the PCIe controller to the
+> DMA subsystem? AFAIK only system DMA should register with the DMA subsystem.
+> (ADMA in SDHCI doesn't use dmaengine). Vinod Koul can confirm.
+>
+> If DMA within the PCIe controller cannot be registered in DMA subsystem, we
+> should use something like what Alan has done in this patch with dma_read ops.
+> The dma_read ops implementation in the EP controller can either use dmaengine
+> APIs or use the DMA within the PCIe controller.
+>
+> I'll review the patch separately.
+>
+> Thanks
+> Kishon
 
-So this is just an example right?
-We are not defining any new properties or anything like that.
+Hi Kishon,
 
-I think down the road for non dt platforms we want to put this
-info in the config space of the device. I do not think ACPI
-is the best option for this since not all systems have it.
-But that can wait.
+I have some improvements in mind for a v2 patch in response to
+feedback from Gustavo Pimentel that the current implementation is HW
+specific. I hesitate from submitting a v2 patch because it seems best
+to seek comment on possible directions this may be taking.
 
-> ---
->  .../devicetree/bindings/virtio/iommu.txt      | 66 +++++++++++++++++++
->  1 file changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/virtio/iommu.txt b/Documentation/devicetree/bindings/virtio/iommu.txt
-> new file mode 100644
-> index 000000000000..2407fea0651c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/virtio/iommu.txt
-> @@ -0,0 +1,66 @@
-> +* virtio IOMMU PCI device
-> +
-> +When virtio-iommu uses the PCI transport, its programming interface is
-> +discovered dynamically by the PCI probing infrastructure. However the
-> +device tree statically describes the relation between IOMMU and DMA
-> +masters. Therefore, the PCI root complex that hosts the virtio-iommu
-> +contains a child node representing the IOMMU device explicitly.
-> +
-> +Required properties:
-> +
-> +- compatible:	Should be "virtio,pci-iommu"
-> +- reg:		PCI address of the IOMMU. As defined in the PCI Bus
-> +		Binding reference [1], the reg property is a five-cell
-> +		address encoded as (phys.hi phys.mid phys.lo size.hi
-> +		size.lo). phys.hi should contain the device's BDF as
-> +		0b00000000 bbbbbbbb dddddfff 00000000. The other cells
-> +		should be zero.
-> +- #iommu-cells:	Each platform DMA master managed by the IOMMU is assigned
-> +		an endpoint ID, described by the "iommus" property [2].
-> +		For virtio-iommu, #iommu-cells must be 1.
-> +
-> +Notes:
-> +
-> +- DMA from the IOMMU device isn't managed by another IOMMU. Therefore the
-> +  virtio-iommu node doesn't have an "iommus" property, and is omitted from
-> +  the iommu-map property of the root complex.
-> +
-> +Example:
-> +
-> +pcie@10000000 {
-> +	compatible = "pci-host-ecam-generic";
-> +	...
-> +
-> +	/* The IOMMU programming interface uses slot 00:01.0 */
-> +	iommu0: iommu@0008 {
-> +		compatible = "virtio,pci-iommu";
-> +		reg = <0x00000800 0 0 0 0>;
-> +		#iommu-cells = <1>;
-> +	};
-> +
-> +	/*
-> +	 * The IOMMU manages all functions in this PCI domain except
-> +	 * itself. Omit BDF 00:01.0.
-> +	 */
-> +	iommu-map = <0x0 &iommu0 0x0 0x8>
-> +		    <0x9 &iommu0 0x9 0xfff7>;
-> +};
-> +
-> +pcie@20000000 {
-> +	compatible = "pci-host-ecam-generic";
-> +	...
-> +	/*
-> +	 * The IOMMU also manages all functions from this domain,
-> +	 * with endpoint IDs 0x10000 - 0x1ffff
-> +	 */
-> +	iommu-map = <0x0 &iommu0 0x10000 0x10000>;
-> +};
-> +
-> +ethernet@fe001000 {
-> +	...
-> +	/* The IOMMU manages this platform device with endpoint ID 0x20000 */
-> +	iommus = <&iommu0 0x20000>;
-> +};
-> +
-> +[1] Documentation/devicetree/bindings/pci/pci.txt
-> +[2] Documentation/devicetree/bindings/iommu/iommu.txt
-> -- 
-> 2.21.0
+One alternative is to wait for or modify test functions in
+pci-epf-test.c to call DMAengine client APIs, if possible. I imagine
+pci-epf-test.c test functions would still allocate the necessary local
+buffer on the endpoint side for the same canned tests for everyone to
+use. They would prepare the buffer in the existing manner by filling
+it with random bytes and calculate CRC in the case of a write test.
+However, they would then initiate DMA operations by using DMAengine
+client APIs in a generic way instead of calling memcpy_toio() and
+memcpy_fromio(). They would post-process the buffer in the existing
+manner such as the checking for CRC in the case of a read test.
+Finally, they would release the resources and report results back to
+the user of pcitest across the PCIe bus through the existing methods.
+
+Another alternative I have in mind for v2 is to change the struct
+pci_epc_dma that this patch added to pci-epc.h from the following:
+
+struct pci_epc_dma {
+        u32     control;
+        u32     size;
+        u64     sar;
+        u64     dar;
+};
+
+to something similar to the following:
+
+struct pci_epc_dma {
+        size_t  size;
+        void *buffer;
+        int flags;
+};
+
+The 'flags' field can be a bit field or separate boolean values to
+specify such things as linked-list mode vs single-block, etc.
+Associated #defines would be removed from pci-epc.h to be replaced if
+needed with something generic. The 'size' field specifies the size of
+DMA transfer that can fit in the buffer.
+
+That way the dma test functions in pci-epf-test.c can simply kmalloc
+and prepare a local buffer on the endpoint side for the DMA transfer
+and pass its pointer down the stack using the 'buffer' field to lower
+layers. This would allow different PCIe controller drivers to
+implement DMA or not according to their needs. Each implementer can
+decide to use DMAengine client API, which would be preferable, or
+directly read or write to DMA hardware registers to suit their needs.
+
+I would appreciate feedback and comment on such choices as part of this review.
+
+Regards,
+Alan Mikhak
