@@ -2,125 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FBB02FF60
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 17:25:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 683282FFA2
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 17:49:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfE3PZx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 May 2019 11:25:53 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38712 "EHLO
+        id S1727216AbfE3Ptb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 May 2019 11:49:31 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38924 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbfE3PZx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 May 2019 11:25:53 -0400
+        id S1725961AbfE3Ptb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 May 2019 11:49:31 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F61E341;
-        Thu, 30 May 2019 08:25:52 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D74CC341;
+        Thu, 30 May 2019 08:49:30 -0700 (PDT)
 Received: from redmoon (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D0CC3F59C;
-        Thu, 30 May 2019 08:25:51 -0700 (PDT)
-Date:   Thu, 30 May 2019 16:25:48 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 393A33F59C;
+        Thu, 30 May 2019 08:49:29 -0700 (PDT)
+Date:   Thu, 30 May 2019 16:49:26 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Ley Foon Tan <ley.foon.tan@intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, lftan.linux@gmail.com
-Subject: Re: [PATCH 1/2] PCI: altera: Fix configuration type based on
- secondary number
-Message-ID: <20190530152548.GD13993@redmoon>
-References: <1558678046-4052-1-git-send-email-ley.foon.tan@intel.com>
- <1558678046-4052-2-git-send-email-ley.foon.tan@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>, stable@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: qcom: Ensure that PERST is asserted for at least
+ 100 ms
+Message-ID: <20190530154926.GE13993@redmoon>
+References: <20190529094352.5961-1-niklas.cassel@linaro.org>
+ <20190529125232.GA28250@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1558678046-4052-2-git-send-email-ley.foon.tan@intel.com>
+In-Reply-To: <20190529125232.GA28250@google.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 24, 2019 at 02:07:25PM +0800, Ley Foon Tan wrote:
-> This fix issue when access config from PCIe switch.
+On Wed, May 29, 2019 at 07:52:32AM -0500, Bjorn Helgaas wrote:
+> On Wed, May 29, 2019 at 11:43:52AM +0200, Niklas Cassel wrote:
+> > Currently, there is only a 1 ms sleep after asserting PERST.
+> > 
+> > Reading the datasheets for different endpoints, some require PERST to be
+> > asserted for 10 ms in order for the endpoint to perform a reset, others
+> > require it to be asserted for 50 ms.
+> > 
+> > Several SoCs using this driver uses PCIe Mini Card, where we don't know
+> > what endpoint will be plugged in.
 > 
-> Stratix 10 PCIe controller does not support Type 1 to Type 0 conversion
-> as previous version (V1) does.
+> I think this patch is absolutely the right thing to do.  We don't know
+> what might be plugged in, so we should support arbitrary endpoints.
 > 
-> The PCIe controller need to send Type 0 config TLP if the targeting bus
-> matches with the secondary bus number, which is when the TLP is targeting
-> the immediate device on the link.
+> One could imagine some sort of DT property to identify closed
+> environments where there is no need to support arbitrary endpoints and
+> it might be desirable to reduce the delay.  But that should wait
+> until there's a need for it and if the need *does* arise, hopefully
+> the definition of such a property could be generic across all SoCs.
 > 
-> The PCIe controller send Type 1 config TLP if the targeting bus is
-> larger than the secondary bus, which is when the TLP is targeting the
-> device not immediate on the link.
+> > The PCI Express Card Electromechanical Specification specifies:
+> > "On power up, the deassertion of PERST# is delayed 100 ms (TPVPERL) from
+> > the power rails achieving specified operating limits."
 > 
-> Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
-> ---
->  drivers/pci/controller/pcie-altera.c | 22 ++++++++++++++++++++--
->  1 file changed, 20 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-> index 27222071ace7..047bcc214f9b 100644
-> --- a/drivers/pci/controller/pcie-altera.c
-> +++ b/drivers/pci/controller/pcie-altera.c
-> @@ -44,6 +44,8 @@
->  #define S10_RP_RXCPL_STATUS		0x200C
->  #define S10_RP_CFG_ADDR(pcie, reg)	\
->  	(((pcie)->hip_base) + (reg) + (1 << 20))
-> +#define S10_RP_SECONDARY(pcie)		\
-> +	readb(S10_RP_CFG_ADDR(pcie, PCI_SECONDARY_BUS))
->  
->  /* TLP configuration type 0 and 1 */
->  #define TLP_FMTTYPE_CFGRD0		0x04	/* Configuration Read Type 0 */
-> @@ -63,6 +65,14 @@
->  	((((bus == pcie->root_bus_nr) ? pcie->pcie_data->cfgwr0		\
->  				: pcie->pcie_data->cfgwr1) << 24) |	\
->  				TLP_PAYLOAD_SIZE)
-> +#define S10_TLP_CFGRD_DW0(pcie, bus)					\
-> +	(((((bus) > S10_RP_SECONDARY(pcie)) ? pcie->pcie_data->cfgrd0	\
-> +				: pcie->pcie_data->cfgrd1) << 24) |	\
-> +				TLP_PAYLOAD_SIZE)
-> +#define S10_TLP_CFGWR_DW0(pcie, bus)					\
-> +	(((((bus) > S10_RP_SECONDARY(pcie)) ? pcie->pcie_data->cfgwr0	\
-> +				: pcie->pcie_data->cfgwr1) << 24) |	\
-> +				TLP_PAYLOAD_SIZE)
->  #define TLP_CFG_DW1(pcie, tag, be)	\
->  	(((TLP_REQ_ID(pcie->root_bus_nr,  RP_DEVFN)) << 16) | (tag << 8) | (be))
->  #define TLP_CFG_DW2(bus, devfn, offset)	\
-> @@ -327,7 +337,11 @@ static int tlp_cfg_dword_read(struct altera_pcie *pcie, u8 bus, u32 devfn,
->  {
->  	u32 headers[TLP_HDR_SIZE];
->  
-> -	headers[0] = TLP_CFGRD_DW0(pcie, bus);
-> +	if (pcie->pcie_data->version == ALTERA_PCIE_V1)
-> +		headers[0] = TLP_CFGRD_DW0(pcie, bus);
-> +	else
-> +		headers[0] = S10_TLP_CFGRD_DW0(pcie, bus);
-> +
->  	headers[1] = TLP_CFG_DW1(pcie, TLP_READ_TAG, byte_en);
->  	headers[2] = TLP_CFG_DW2(bus, devfn, where);
->  
-> @@ -342,7 +356,11 @@ static int tlp_cfg_dword_write(struct altera_pcie *pcie, u8 bus, u32 devfn,
->  	u32 headers[TLP_HDR_SIZE];
->  	int ret;
->  
-> -	headers[0] = TLP_CFGWR_DW0(pcie, bus);
-> +	if (pcie->pcie_data->version == ALTERA_PCIE_V1)
-> +		headers[0] = TLP_CFGWR_DW0(pcie, bus);
-> +	else
-> +		headers[0] = S10_TLP_CFGWR_DW0(pcie, bus);
-> +
+> It'd be nice to include the complete citation, i.e., "PCI Express Card
+> Electromechanical Specification r2.0, sec 2.2"
 
-Why don't you rewrite all these macros as an eg:
+I will add it and merge the patch.
 
-static inline u32 get_tlp_header()
-{}
-
-where you can also handle the version and everything needed to
-detect what header should be set-up ?
-
+Thanks,
 Lorenzo
 
->  	headers[1] = TLP_CFG_DW1(pcie, TLP_WRITE_TAG, byte_en);
->  	headers[2] = TLP_CFG_DW2(bus, devfn, where);
->  
-> -- 
-> 2.19.0
-> 
+> > Add a sleep of 100 ms before deasserting PERST, in order to ensure that
+> > we are compliant with the spec.
+> > 
+> > Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
+> > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> > Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> > Cc: stable@vger.kernel.org # 4.5+
+> > ---
+> > Changes since v1:
+> > Move the sleep into qcom_ep_reset_deassert()
+> > 
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 0ed235d560e3..5d1713069d14 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -178,6 +178,8 @@ static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
+> >  
+> >  static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
+> >  {
+> > +	/* Ensure that PERST has been asserted for at least 100 ms */
+> > +	msleep(100);
+> >  	gpiod_set_value_cansleep(pcie->reset, 0);
+> >  	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
+> >  }
+> > -- 
+> > 2.21.0
+> > 
