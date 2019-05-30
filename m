@@ -2,250 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D3AB300BA
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 19:13:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF4B1300DA
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 19:20:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbfE3RM7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 May 2019 13:12:59 -0400
-Received: from foss.arm.com ([217.140.101.70]:40306 "EHLO foss.arm.com"
+        id S1726518AbfE3RU5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 May 2019 13:20:57 -0400
+Received: from mga18.intel.com ([134.134.136.126]:48336 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726887AbfE3RM7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 May 2019 13:12:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFD2619F6;
-        Thu, 30 May 2019 10:12:58 -0700 (PDT)
-Received: from ostrya.cambridge.arm.com (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C7D9E3F5AF;
-        Thu, 30 May 2019 10:12:55 -0700 (PDT)
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-To:     joro@8bytes.org, mst@redhat.com
-Cc:     iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, jasowang@redhat.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        Lorenzo.Pieralisi@arm.com, robin.murphy@arm.com,
-        bhelgaas@google.com, frowand.list@gmail.com,
-        kvmarm@lists.cs.columbia.edu, eric.auger@redhat.com,
-        tnowicki@caviumnetworks.com, kevin.tian@intel.com,
-        bauerman@linux.ibm.com
-Subject: [PATCH v8 7/7] iommu/virtio: Add event queue
-Date:   Thu, 30 May 2019 18:09:29 +0100
-Message-Id: <20190530170929.19366-8-jean-philippe.brucker@arm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530170929.19366-1-jean-philippe.brucker@arm.com>
-References: <20190530170929.19366-1-jean-philippe.brucker@arm.com>
+        id S1725961AbfE3RU4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 May 2019 13:20:56 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 10:20:56 -0700
+X-ExtLoop1: 1
+Received: from araj-mobl1.jf.intel.com ([10.251.6.93])
+  by orsmga002.jf.intel.com with ESMTP; 30 May 2019 10:20:55 -0700
+Date:   Thu, 30 May 2019 10:20:55 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keith.busch@intel.com, Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v2 1/5] PCI/ATS: Add PRI support for PCIe VF devices
+Message-ID: <20190530172055.GB18559@araj-mobl1.jf.intel.com>
+References: <cover.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <f773440c0eee2a8d4e5d6e2856717404ac836458.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190529225714.GE28250@google.com>
+ <20190529230426.GB5108@araj-mobl1.jf.intel.com>
+ <20190530131738.GK28250@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530131738.GK28250@google.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The event queue offers a way for the device to report access faults from
-endpoints. It is implemented on virtqueue #1. Whenever the host needs to
-signal a fault, it fills one of the buffers offered by the guest and
-interrupts it.
+On Thu, May 30, 2019 at 08:17:38AM -0500, Bjorn Helgaas wrote:
+> On Wed, May 29, 2019 at 04:04:27PM -0700, Raj, Ashok wrote:
+> > On Wed, May 29, 2019 at 05:57:14PM -0500, Bjorn Helgaas wrote:
+> > > On Mon, May 06, 2019 at 10:20:03AM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > 
+> > > > When IOMMU tries to enable PRI for VF device in
+> > > > iommu_enable_dev_iotlb(), it always fails because PRI support for PCIe
+> > > > VF device is currently broken in PCIE driver. Current implementation
+> > > > expects the given PCIe device (PF & VF) to implement PRI capability
+> > > > before enabling the PRI support. But this assumption is incorrect. As
+> > > > per PCIe spec r4.0, sec 9.3.7.11, all VFs associated with PF can only
+> > > > use the Page Request Interface (PRI) of the PF and not implement it.
+> > > > Hence we need to create exception for handling the PRI support for PCIe
+> > > > VF device.
+> > > > 
+> > > > Since PRI is shared between PF/VF devices, following rules should apply.
+> > > > 
+> > > > 1. Enable PRI in VF only if its already enabled in PF.
+> > > > 2. When enabling/disabling PRI for VF, instead of configuring the
+> > > > registers just increase/decrease the usage count (pri_ref_cnt) of PF.
+> > > > 3. Disable PRI in PF only if pr_ref_cnt is zero.
+> > > 
+> > > s/pr_ref_cnt/pri_ref_cnt/
+> > > 
+> > > > Cc: Ashok Raj <ashok.raj@intel.com>
+> > > > Cc: Keith Busch <keith.busch@intel.com>
+> > > > Suggested-by: Ashok Raj <ashok.raj@intel.com>
+> > > > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > ---
+> > > >  drivers/pci/ats.c   | 53 +++++++++++++++++++++++++++++++++++++++++++--
+> > > >  include/linux/pci.h |  1 +
+> > > >  2 files changed, 52 insertions(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> > > > index 97c08146534a..5582e5d83a3f 100644
+> > > > --- a/drivers/pci/ats.c
+> > > > +++ b/drivers/pci/ats.c
+> > > > @@ -181,12 +181,39 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
+> > > >  	u16 control, status;
+> > > >  	u32 max_requests;
+> > > >  	int pos;
+> > > > +	struct pci_dev *pf;
+> > > >  
+> > > >  	if (WARN_ON(pdev->pri_enabled))
+> > > >  		return -EBUSY;
+> > > >  
+> > > >  	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
+> > > > -	if (!pos)
+> > > > +
+> > > > +	if (pdev->is_virtfn) {
+> > > > +		/*
+> > > > +		 * Per PCIe r4.0, sec 9.3.7.11, VF must not implement PRI
+> > > > +		 * Capability.
+> > > > +		 */
+> > > > +		if (pos) {
+> > > > +			dev_err(&pdev->dev, "VF must not implement PRI");
+> > > > +			return -EINVAL;
+> > > > +		}
+> > > 
+> > > This seems gratuitous.  It finds implementation errors, but since we
+> > > correctly use the PF here anyway, it doesn't *need* to prevent PRI on
+> > > the VF from working.
+> > > 
+> > > I think you should just have:
+> > > 
+> > >   if (pdev->is_virtfn) {
+> > >     pf = pci_physfn(pdev);
+> > >     if (!pf->pri_enabled)
+> > >       return -EINVAL;
+> > 
+> > This would be incorrect. Since if we never did any bind_mm to the PF
+> > PRI would not have been enabled. Currently this is done in the IOMMU 
+> > driver, and not in the device driver. 
+> 
+> This is functionally the same as the original patch, only omitting the
+> "VF must not implement PRI" check.
+> 
+> > I suppose we should enable PF capability if its not enabled. Same
+> > comment would be applicable for PASID as well.
+> 
+> Operating on a device other than the one the driver owns opens the
+> issue of mutual exclusion and races, so would require careful
+> scrutiny.  Are PRI/PASID things that could be *always* enabled for the
+> PF at enumeration-time, or do we have to wait until a driver claims
+> the VF?  If the latter, are there coordination issues between drivers
+> of different VFs?
 
-Acked-by: Joerg Roedel <jroedel@suse.de>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
----
- drivers/iommu/virtio-iommu.c      | 115 +++++++++++++++++++++++++++---
- include/uapi/linux/virtio_iommu.h |  19 +++++
- 2 files changed, 125 insertions(+), 9 deletions(-)
+I suppose that's a reasonably good alternative. You mean we could 
+do this when VF's are being created? Otherwise we can do this as its
+done today, on demand for all normal PF's. 
 
-diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-index 5d4947c47420..2688cdcac6e5 100644
---- a/drivers/iommu/virtio-iommu.c
-+++ b/drivers/iommu/virtio-iommu.c
-@@ -29,7 +29,8 @@
- #define MSI_IOVA_LENGTH			0x100000
- 
- #define VIOMMU_REQUEST_VQ		0
--#define VIOMMU_NR_VQS			1
-+#define VIOMMU_EVENT_VQ			1
-+#define VIOMMU_NR_VQS			2
- 
- struct viommu_dev {
- 	struct iommu_device		iommu;
-@@ -41,6 +42,7 @@ struct viommu_dev {
- 	struct virtqueue		*vqs[VIOMMU_NR_VQS];
- 	spinlock_t			request_lock;
- 	struct list_head		requests;
-+	void				*evts;
- 
- 	/* Device configuration */
- 	struct iommu_domain_geometry	geometry;
-@@ -86,6 +88,15 @@ struct viommu_request {
- 	char				buf[];
- };
- 
-+#define VIOMMU_FAULT_RESV_MASK		0xffffff00
-+
-+struct viommu_event {
-+	union {
-+		u32			head;
-+		struct virtio_iommu_fault fault;
-+	};
-+};
-+
- #define to_viommu_domain(domain)	\
- 	container_of(domain, struct viommu_domain, domain)
- 
-@@ -509,6 +520,68 @@ static int viommu_probe_endpoint(struct viommu_dev *viommu, struct device *dev)
- 	return ret;
- }
- 
-+static int viommu_fault_handler(struct viommu_dev *viommu,
-+				struct virtio_iommu_fault *fault)
-+{
-+	char *reason_str;
-+
-+	u8 reason	= fault->reason;
-+	u32 flags	= le32_to_cpu(fault->flags);
-+	u32 endpoint	= le32_to_cpu(fault->endpoint);
-+	u64 address	= le64_to_cpu(fault->address);
-+
-+	switch (reason) {
-+	case VIRTIO_IOMMU_FAULT_R_DOMAIN:
-+		reason_str = "domain";
-+		break;
-+	case VIRTIO_IOMMU_FAULT_R_MAPPING:
-+		reason_str = "page";
-+		break;
-+	case VIRTIO_IOMMU_FAULT_R_UNKNOWN:
-+	default:
-+		reason_str = "unknown";
-+		break;
-+	}
-+
-+	/* TODO: find EP by ID and report_iommu_fault */
-+	if (flags & VIRTIO_IOMMU_FAULT_F_ADDRESS)
-+		dev_err_ratelimited(viommu->dev, "%s fault from EP %u at %#llx [%s%s%s]\n",
-+				    reason_str, endpoint, address,
-+				    flags & VIRTIO_IOMMU_FAULT_F_READ ? "R" : "",
-+				    flags & VIRTIO_IOMMU_FAULT_F_WRITE ? "W" : "",
-+				    flags & VIRTIO_IOMMU_FAULT_F_EXEC ? "X" : "");
-+	else
-+		dev_err_ratelimited(viommu->dev, "%s fault from EP %u\n",
-+				    reason_str, endpoint);
-+	return 0;
-+}
-+
-+static void viommu_event_handler(struct virtqueue *vq)
-+{
-+	int ret;
-+	unsigned int len;
-+	struct scatterlist sg[1];
-+	struct viommu_event *evt;
-+	struct viommu_dev *viommu = vq->vdev->priv;
-+
-+	while ((evt = virtqueue_get_buf(vq, &len)) != NULL) {
-+		if (len > sizeof(*evt)) {
-+			dev_err(viommu->dev,
-+				"invalid event buffer (len %u != %zu)\n",
-+				len, sizeof(*evt));
-+		} else if (!(evt->head & VIOMMU_FAULT_RESV_MASK)) {
-+			viommu_fault_handler(viommu, &evt->fault);
-+		}
-+
-+		sg_init_one(sg, evt, sizeof(*evt));
-+		ret = virtqueue_add_inbuf(vq, sg, 1, evt, GFP_ATOMIC);
-+		if (ret)
-+			dev_err(viommu->dev, "could not add event buffer\n");
-+	}
-+
-+	virtqueue_kick(vq);
-+}
-+
- /* IOMMU API */
- 
- static struct iommu_domain *viommu_domain_alloc(unsigned type)
-@@ -895,16 +968,35 @@ static struct iommu_ops viommu_ops = {
- static int viommu_init_vqs(struct viommu_dev *viommu)
- {
- 	struct virtio_device *vdev = dev_to_virtio(viommu->dev);
--	const char *name = "request";
--	void *ret;
-+	const char *names[] = { "request", "event" };
-+	vq_callback_t *callbacks[] = {
-+		NULL, /* No async requests */
-+		viommu_event_handler,
-+	};
- 
--	ret = virtio_find_single_vq(vdev, NULL, name);
--	if (IS_ERR(ret)) {
--		dev_err(viommu->dev, "cannot find VQ\n");
--		return PTR_ERR(ret);
--	}
-+	return virtio_find_vqs(vdev, VIOMMU_NR_VQS, viommu->vqs, callbacks,
-+			       names, NULL);
-+}
- 
--	viommu->vqs[VIOMMU_REQUEST_VQ] = ret;
-+static int viommu_fill_evtq(struct viommu_dev *viommu)
-+{
-+	int i, ret;
-+	struct scatterlist sg[1];
-+	struct viommu_event *evts;
-+	struct virtqueue *vq = viommu->vqs[VIOMMU_EVENT_VQ];
-+	size_t nr_evts = vq->num_free;
-+
-+	viommu->evts = evts = devm_kmalloc_array(viommu->dev, nr_evts,
-+						 sizeof(*evts), GFP_KERNEL);
-+	if (!evts)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < nr_evts; i++) {
-+		sg_init_one(sg, &evts[i], sizeof(*evts));
-+		ret = virtqueue_add_inbuf(vq, sg, 1, &evts[i], GFP_KERNEL);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	return 0;
- }
-@@ -981,6 +1073,11 @@ static int viommu_probe(struct virtio_device *vdev)
- 
- 	virtio_device_ready(vdev);
- 
-+	/* Populate the event queue with buffers */
-+	ret = viommu_fill_evtq(viommu);
-+	if (ret)
-+		goto err_free_vqs;
-+
- 	ret = iommu_device_sysfs_add(&viommu->iommu, dev, NULL, "%s",
- 				     virtio_bus_name(vdev));
- 	if (ret)
-diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
-index 20ead0cadced..237e36a280cb 100644
---- a/include/uapi/linux/virtio_iommu.h
-+++ b/include/uapi/linux/virtio_iommu.h
-@@ -143,4 +143,23 @@ struct virtio_iommu_req_probe {
- 	 */
- };
- 
-+/* Fault types */
-+#define VIRTIO_IOMMU_FAULT_R_UNKNOWN		0
-+#define VIRTIO_IOMMU_FAULT_R_DOMAIN		1
-+#define VIRTIO_IOMMU_FAULT_R_MAPPING		2
-+
-+#define VIRTIO_IOMMU_FAULT_F_READ		(1 << 0)
-+#define VIRTIO_IOMMU_FAULT_F_WRITE		(1 << 1)
-+#define VIRTIO_IOMMU_FAULT_F_EXEC		(1 << 2)
-+#define VIRTIO_IOMMU_FAULT_F_ADDRESS		(1 << 8)
-+
-+struct virtio_iommu_fault {
-+	__u8					reason;
-+	__u8					reserved[3];
-+	__le32					flags;
-+	__le32					endpoint;
-+	__u8					reserved2[4];
-+	__le64					address;
-+};
-+
- #endif
--- 
-2.21.0
 
+Cheers,
+Ashok
