@@ -2,53 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E3C3327F9
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2019 07:29:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E0E7304CE
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2019 00:33:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbfFCF3W convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 3 Jun 2019 01:29:22 -0400
-Received: from mail.palitramed.ru ([84.53.237.5]:41746 "EHLO
-        mail.palitramed.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbfFCF3V (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Jun 2019 01:29:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.palitramed.ru (Postfix) with ESMTP id D7A2520896B6
-        for <linux-pci@vger.kernel.org>; Mon,  3 Jun 2019 08:29:19 +0300 (MSK)
-Received: from mail.palitramed.ru ([127.0.0.1])
-        by localhost (mail.palitramed.ru [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id WJ4I5dXT_eJT for <linux-pci@vger.kernel.org>;
-        Mon,  3 Jun 2019 08:29:19 +0300 (MSK)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.palitramed.ru (Postfix) with ESMTP id BE59820E0CC4
-        for <linux-pci@vger.kernel.org>; Fri, 31 May 2019 06:45:11 +0300 (MSK)
-X-Virus-Scanned: amavisd-new at palitramed.ru
-Received: from mail.palitramed.ru ([127.0.0.1])
-        by localhost (mail.palitramed.ru [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id bB3WIcDmwbb7 for <linux-pci@vger.kernel.org>;
-        Fri, 31 May 2019 06:45:11 +0300 (MSK)
-Received: from [185.234.218.135] (unknown [185.234.218.135])
-        by mail.palitramed.ru (Postfix) with ESMTPA id BBA502084AED
-        for <linux-pci@vger.kernel.org>; Fri, 31 May 2019 00:23:56 +0300 (MSK)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1726106AbfE3WdJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 May 2019 18:33:09 -0400
+Received: from alpha.anastas.io ([104.248.188.109]:53149 "EHLO
+        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfE3WdJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 May 2019 18:33:09 -0400
+Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by alpha.anastas.io (Postfix) with ESMTPSA id 72F8B7F8BF;
+        Thu, 30 May 2019 17:33:07 -0500 (CDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
+        t=1559255588; bh=3ZOWYrFYbkF4GORGQ+Tfp7UoyviSixFiW9Lo/7bz6do=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=M+lxrRvMT6PV/3q7mqKTyEQq6Y/Bq0qvZpo8+0gEZ8xNqXCwiXB4vzvl6XfoXL0im
+         KtCT7SK67s8LIKoPP/0gbjLJE7dIj8tWfyhbVgiCsajhsMNxZtP20aDvHRz3RhTekW
+         uIeqYh6LZakkKsWQKGrO4YtmAZcKttqsVfePLHEo5G41dXiaVGkUf0Ng43ltcuY2tU
+         jr3JFJWd6xmJCJAyl5WYiPaJhVtnNo0ULrVVUxFxbOUm3u74KpqUrM9LT5bHQXpZAt
+         5+EKsu9zGSOViXVcgGKlsdkYpzlGprPWwmKJ2PyhRhtY9XvnI41EVATsr4Fi+N0E8i
+         RS29W2UNAkjBg==
+Subject: Re: [EXTERNAL] Re: [PATCH v3 1/3] PCI: Introduce
+ pcibios_ignore_alignment_request
+To:     Sam Bobroff <sbobroff@linux.ibm.com>, Oliver <oohall@gmail.com>
+Cc:     linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        rppt@linux.ibm.com, Paul Mackerras <paulus@samba.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, xyjxie@linux.vnet.ibm.com,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+References: <20190528040313.35582-1-shawn@anastas.io>
+ <20190528040313.35582-2-shawn@anastas.io>
+ <CAOSf1CEFfbmwfvmdqT1xdt8SFb=tYdYXLfXeyZ8=iRnhg4a3Pg@mail.gmail.com>
+ <20190530065556.GA29428@tungsten.ozlabs.ibm.com>
+From:   Shawn Anastasio <shawn@anastas.io>
+Message-ID: <8785226a-b2eb-8157-e724-d575c66b7bef@anastas.io>
+Date:   Thu, 30 May 2019 17:33:05 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: In A Nutshell
-To:     linux-pci@vger.kernel.org
-From:   "Emissary" <info@hikari-international.com>
-Date:   Thu, 30 May 2019 14:23:56 -0700
-Reply-To: "Emissary" <dannuar4@gmail.com>
-Message-Id: <20190530212357.BBA502084AED@mail.palitramed.ru>
+In-Reply-To: <20190530065556.GA29428@tungsten.ozlabs.ibm.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello, 
 
-We have a private business proposition for you,contact me for more details. 
 
-Thank you,     
+On 5/30/19 1:55 AM, Sam Bobroff wrote:
+> On Tue, May 28, 2019 at 03:36:34PM +1000, Oliver wrote:
+>> On Tue, May 28, 2019 at 2:03 PM Shawn Anastasio <shawn@anastas.io> wrote:
+>>>
+>>> Introduce a new pcibios function pcibios_ignore_alignment_request
+>>> which allows the PCI core to defer to platform-specific code to
+>>> determine whether or not to ignore alignment requests for PCI resources.
+>>>
+>>> The existing behavior is to simply ignore alignment requests when
+>>> PCI_PROBE_ONLY is set. This is behavior is maintained by the
+>>> default implementation of pcibios_ignore_alignment_request.
+>>>
+>>> Signed-off-by: Shawn Anastasio <shawn@anastas.io>
+>>> ---
+>>>   drivers/pci/pci.c   | 9 +++++++--
+>>>   include/linux/pci.h | 1 +
+>>>   2 files changed, 8 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>>> index 8abc843b1615..8207a09085d1 100644
+>>> --- a/drivers/pci/pci.c
+>>> +++ b/drivers/pci/pci.c
+>>> @@ -5882,6 +5882,11 @@ resource_size_t __weak pcibios_default_alignment(void)
+>>>          return 0;
+>>>   }
+>>>
+>>> +int __weak pcibios_ignore_alignment_request(void)
+>>> +{
+>>> +       return pci_has_flag(PCI_PROBE_ONLY);
+>>> +}
+>>> +
+>>>   #define RESOURCE_ALIGNMENT_PARAM_SIZE COMMAND_LINE_SIZE
+>>>   static char resource_alignment_param[RESOURCE_ALIGNMENT_PARAM_SIZE] = {0};
+>>>   static DEFINE_SPINLOCK(resource_alignment_lock);
+>>> @@ -5906,9 +5911,9 @@ static resource_size_t pci_specified_resource_alignment(struct pci_dev *dev,
+>>>          p = resource_alignment_param;
+>>>          if (!*p && !align)
+>>>                  goto out;
+>>> -       if (pci_has_flag(PCI_PROBE_ONLY)) {
+>>> +       if (pcibios_ignore_alignment_request()) {
+>>>                  align = 0;
+>>> -               pr_info_once("PCI: Ignoring requested alignments (PCI_PROBE_ONLY)\n");
+>>> +               pr_info_once("PCI: Ignoring requested alignments\n");
+>>>                  goto out;
+>>>          }
+>>
+>> I think the logic here is questionable to begin with. If the user has
+>> explicitly requested re-aligning a resource via the command line then
+>> we should probably do it even if PCI_PROBE_ONLY is set. When it breaks
+>> they get to keep the pieces.
+>>
+>> That said, the real issue here is that PCI_PROBE_ONLY probably
+>> shouldn't be set under qemu/kvm. Under the other hypervisor (PowerVM)
+>> hotplugged devices are configured by firmware before it's passed to
+>> the guest and we need to keep the FW assignments otherwise things
+>> break. QEMU however doesn't do any BAR assignments and relies on that
+>> being handled by the guest. At boot time this is done by SLOF, but
+>> Linux only keeps SLOF around until it's extracted the device-tree.
+>> Once that's done SLOF gets blown away and the kernel needs to do it's
+>> own BAR assignments. I'm guessing there's a hack in there to make it
+>> work today, but it's a little surprising that it works at all...
+>>
+>> IIRC Sam Bobroff was looking at hotplug under pseries recently so he
+>> might have something to add. He's sick at the moment, but I'll ask him
+>> to take a look at this once he's back among the living
+> 
+> There seems to be some code already in the kernel that will disable
+> PCI_PROBE_ONLY based on a device tree property, so I did a quick test
+> today and it seems to work. Only a trivial tweak is needed in QEMU to
+> do it (have spapr_dt_chosen() add a node called "linux,pci-probe-only"
+> with a value of 0), and that would allow us to set it only for QEMU (and
+> not PowerVM) if that's what we want to do. Is that useful?
+> 
+> (I haven't done any real testing yet but the guest booted up OK.)
 
-Datuk.
-5.30.19/135p/28wwe.5
+It was my understanding that PCI_PROBE_ONLY should actually be set
+initially so that Linux uses SLOF's BAR assignments. The issue here
+is that PCI_PROBE_ONLY shouldn't be honored after initial bringup
+on KVM so that hotplugged PCI devices can have custom BAR alignments.
+
+Of course, if there's no need to honor SLOF's initial assignments,
+I assume disabling PCI_PROBE_ONLY would work fine. In fact, I'm
+not entirely sure why it's done in the first place. Does anybody
+know?
+
+If there is actually a valid reason for preserving SLOF's initial
+assignments, then it seems like the correct solution is to disable
+PCI_PROBE_ONLY after initial PCI bringup or ignore it in
+pci_specified_resource_alignment() like I do in this patch set.
+
+Bjorn Helgaas also suggested marking individual resources provided
+by SLOF/PHYP with IORESOURCE_PCI_FIXED which would remove the need
+to use PCI_PROBE_ONLY altogether.
+
+Any thoughts?
+
+- Shawn
