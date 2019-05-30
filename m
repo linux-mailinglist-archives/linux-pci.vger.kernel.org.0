@@ -2,122 +2,200 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F6572F73F
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 07:48:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3CC92F7A2
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 08:57:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbfE3Fsn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 May 2019 01:48:43 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53810 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbfE3Fsn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 May 2019 01:48:43 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4U5mMax004090;
-        Thu, 30 May 2019 00:48:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559195302;
-        bh=BULubM0Khr8oCYN7XRSztHJqd8sQCkB0CspkSrcCSs8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JqMSTQDEN3DD/f9IU93pGQi+pxbGR0gUzru9HPsXlFgonVjBktxFmcA4HKjqyMNKk
-         3LUDpm3n1yShUoMl+NBe8T6vJg/pY1uHqqBtUBKkbAdq0AbrMM5qsNIZj5bFFw/w6y
-         WtNki2NsNBuoG13U6/MsP4mBxk/K0Lt5Pe81ojQ4=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4U5mM6w010753
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 30 May 2019 00:48:22 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 30
- May 2019 00:48:21 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 30 May 2019 00:48:22 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4U5mGmj071595;
-        Thu, 30 May 2019 00:48:17 -0500
-Subject: Re: [PATCH] PCI: endpoint: Add DMA to Linux PCI EP Framework
-To:     Alan Mikhak <alan.mikhak@sifive.com>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "wen.yang99@zte.com.cn" <wen.yang99@zte.com.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        Vinod Koul <vkoul@kernel.org>
-References: <1558650258-15050-1-git-send-email-alan.mikhak@sifive.com>
- <305100E33629484CBB767107E4246BBB0A6FAFFD@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxsQ9NXrN7W_8HVrXQBb9HiBd+d1dNfv+cXmoBpXQnLwA@mail.gmail.com>
- <305100E33629484CBB767107E4246BBB0A6FC308@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxL-WYz1BY7yXJ6eKULgVtKeo67XhgHZjvtm5Ka5foKiA@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <192e3a19-8b69-dfaf-aa5c-45c7087548cc@ti.com>
-Date:   Thu, 30 May 2019 11:16:57 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726743AbfE3G4J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 May 2019 02:56:09 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57204 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727487AbfE3G4I (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 May 2019 02:56:08 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4U6pnEb040534
+        for <linux-pci@vger.kernel.org>; Thu, 30 May 2019 02:56:07 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2st8a5d1bf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-pci@vger.kernel.org>; Thu, 30 May 2019 02:56:07 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-pci@vger.kernel.org> from <sbobroff@linux.ibm.com>;
+        Thu, 30 May 2019 07:56:05 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 30 May 2019 07:56:01 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4U6u0qM52101362
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 06:56:00 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 436004204C;
+        Thu, 30 May 2019 06:56:00 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A2D304204B;
+        Thu, 30 May 2019 06:55:59 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 30 May 2019 06:55:59 +0000 (GMT)
+Received: from tungsten.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 635B3A01EA;
+        Thu, 30 May 2019 16:55:58 +1000 (AEST)
+Date:   Thu, 30 May 2019 16:55:57 +1000
+From:   Sam Bobroff <sbobroff@linux.ibm.com>
+To:     Oliver <oohall@gmail.com>
+Cc:     Shawn Anastasio <shawn@anastas.io>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        rppt@linux.ibm.com, Paul Mackerras <paulus@samba.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, xyjxie@linux.vnet.ibm.com,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [EXTERNAL] Re: [PATCH v3 1/3] PCI: Introduce
+ pcibios_ignore_alignment_request
+References: <20190528040313.35582-1-shawn@anastas.io>
+ <20190528040313.35582-2-shawn@anastas.io>
+ <CAOSf1CEFfbmwfvmdqT1xdt8SFb=tYdYXLfXeyZ8=iRnhg4a3Pg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CABEDWGxL-WYz1BY7yXJ6eKULgVtKeo67XhgHZjvtm5Ka5foKiA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
+Content-Disposition: inline
+In-Reply-To: <CAOSf1CEFfbmwfvmdqT1xdt8SFb=tYdYXLfXeyZ8=iRnhg4a3Pg@mail.gmail.com>
+User-Agent: Mutt/1.9.3 (2018-01-21)
+X-TM-AS-GCONF: 00
+x-cbid: 19053006-0028-0000-0000-00000372DD29
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19053006-0029-0000-0000-00002432A459
+Message-Id: <20190530065556.GA29428@tungsten.ozlabs.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905300051
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+Vinod Koul
 
-Hi,
+--TB36FDmn/VVEgNH/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 30/05/19 4:07 AM, Alan Mikhak wrote:
-> On Mon, May 27, 2019 at 2:09 AM Gustavo Pimentel
-> <Gustavo.Pimentel@synopsys.com> wrote:
->>
->> On Fri, May 24, 2019 at 20:42:43, Alan Mikhak <alan.mikhak@sifive.com>
->> wrote:
->>
->> Hi Alan,
->>
->>> On Fri, May 24, 2019 at 1:59 AM Gustavo Pimentel
->>> <Gustavo.Pimentel@synopsys.com> wrote:
->>>>
->>>> Hi Alan,
->>>>
->>>> This patch implementation is very HW implementation dependent and
->>>> requires the DMA to exposed through PCIe BARs, which aren't always the
->>>> case. Besides, you are defining some control bits on
->>>> include/linux/pci-epc.h that may not have any meaning to other types of
->>>> DMA.
->>>>
->>>> I don't think this was what Kishon had in mind when he developed the
->>>> pcitest, but let see what Kishon was to say about it.
->>>>
->>>> I've developed a DMA driver for DWC PCI using Linux Kernel DMAengine API
->>>> and which I submitted some days ago.
->>>> By having a DMA driver which implemented using DMAengine API, means the
->>>> pcitest can use the DMAengine client API, which will be completely
->>>> generic to any other DMA implementation.
+On Tue, May 28, 2019 at 03:36:34PM +1000, Oliver wrote:
+> On Tue, May 28, 2019 at 2:03 PM Shawn Anastasio <shawn@anastas.io> wrote:
+> >
+> > Introduce a new pcibios function pcibios_ignore_alignment_request
+> > which allows the PCI core to defer to platform-specific code to
+> > determine whether or not to ignore alignment requests for PCI resources.
+> >
+> > The existing behavior is to simply ignore alignment requests when
+> > PCI_PROBE_ONLY is set. This is behavior is maintained by the
+> > default implementation of pcibios_ignore_alignment_request.
+> >
+> > Signed-off-by: Shawn Anastasio <shawn@anastas.io>
+> > ---
+> >  drivers/pci/pci.c   | 9 +++++++--
+> >  include/linux/pci.h | 1 +
+> >  2 files changed, 8 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 8abc843b1615..8207a09085d1 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -5882,6 +5882,11 @@ resource_size_t __weak pcibios_default_alignment=
+(void)
+> >         return 0;
+> >  }
+> >
+> > +int __weak pcibios_ignore_alignment_request(void)
+> > +{
+> > +       return pci_has_flag(PCI_PROBE_ONLY);
+> > +}
+> > +
+> >  #define RESOURCE_ALIGNMENT_PARAM_SIZE COMMAND_LINE_SIZE
+> >  static char resource_alignment_param[RESOURCE_ALIGNMENT_PARAM_SIZE] =
+=3D {0};
+> >  static DEFINE_SPINLOCK(resource_alignment_lock);
+> > @@ -5906,9 +5911,9 @@ static resource_size_t pci_specified_resource_ali=
+gnment(struct pci_dev *dev,
+> >         p =3D resource_alignment_param;
+> >         if (!*p && !align)
+> >                 goto out;
+> > -       if (pci_has_flag(PCI_PROBE_ONLY)) {
+> > +       if (pcibios_ignore_alignment_request()) {
+> >                 align =3D 0;
+> > -               pr_info_once("PCI: Ignoring requested alignments (PCI_P=
+ROBE_ONLY)\n");
+> > +               pr_info_once("PCI: Ignoring requested alignments\n");
+> >                 goto out;
+> >         }
+>=20
+> I think the logic here is questionable to begin with. If the user has
+> explicitly requested re-aligning a resource via the command line then
+> we should probably do it even if PCI_PROBE_ONLY is set. When it breaks
+> they get to keep the pieces.
+>=20
+> That said, the real issue here is that PCI_PROBE_ONLY probably
+> shouldn't be set under qemu/kvm. Under the other hypervisor (PowerVM)
+> hotplugged devices are configured by firmware before it's passed to
+> the guest and we need to keep the FW assignments otherwise things
+> break. QEMU however doesn't do any BAR assignments and relies on that
+> being handled by the guest. At boot time this is done by SLOF, but
+> Linux only keeps SLOF around until it's extracted the device-tree.
+> Once that's done SLOF gets blown away and the kernel needs to do it's
+> own BAR assignments. I'm guessing there's a hack in there to make it
+> work today, but it's a little surprising that it works at all...
+>=20
+> IIRC Sam Bobroff was looking at hotplug under pseries recently so he
+> might have something to add. He's sick at the moment, but I'll ask him
+> to take a look at this once he's back among the living
 
-right, my initial thought process was to use only dmaengine APIs in
-pci-epf-test so that the system DMA or DMA within the PCIe controller can be
-used transparently. But can we register DMA within the PCIe controller to the
-DMA subsystem? AFAIK only system DMA should register with the DMA subsystem.
-(ADMA in SDHCI doesn't use dmaengine). Vinod Koul can confirm.
+There seems to be some code already in the kernel that will disable
+PCI_PROBE_ONLY based on a device tree property, so I did a quick test
+today and it seems to work. Only a trivial tweak is needed in QEMU to
+do it (have spapr_dt_chosen() add a node called "linux,pci-probe-only"
+with a value of 0), and that would allow us to set it only for QEMU (and
+not PowerVM) if that's what we want to do. Is that useful?
 
-If DMA within the PCIe controller cannot be registered in DMA subsystem, we
-should use something like what Alan has done in this patch with dma_read ops.
-The dma_read ops implementation in the EP controller can either use dmaengine
-APIs or use the DMA within the PCIe controller.
+(I haven't done any real testing yet but the guest booted up OK.)
 
-I'll review the patch separately.
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 4a5a84d7bdd4..47471dcdbaf9 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -1990,6 +1990,7 @@ static inline void pcibios_penalize_isa_irq(int i=
+rq, int active) {}
+> >  int pcibios_alloc_irq(struct pci_dev *dev);
+> >  void pcibios_free_irq(struct pci_dev *dev);
+> >  resource_size_t pcibios_default_alignment(void);
+> > +int pcibios_ignore_alignment_request(void);
+> >
+> >  #ifdef CONFIG_HIBERNATE_CALLBACKS
+> >  extern struct dev_pm_ops pcibios_pm_ops;
+> > --
+> > 2.20.1
+> >
+>=20
 
-Thanks
-Kishon
+--TB36FDmn/VVEgNH/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEELWWF8pdtWK5YQRohMX8w6AQl/iIFAlzvfnUACgkQMX8w6AQl
+/iLbOwf/d0gNgnSqs8kTnw36ULHdsfnYqJ1nnP1JdurEmTRvPQmXzeIHWFqDcs8O
+IQGdXSiM2A+K53DAppyOR+VA11rlk1xPPMllSjR5OYGXBqRIEnILf2775KVAVFRO
+xBbuLwoaf5ALbncD47CUZIQrj/SCcm5eaQTG/gFZplYfGQXybiSzvAEWCpNglC34
+7m/jfyQHxJ6jlxU9dllz/RlFChiE4Opv2G2romtnL+Ysf+NwLccArSz0LC6ZQ1Gk
+2Ar3LGpWIPwnXYVC9vUJMDwxYRL9dWX1I7WiksD/P0021gjVpe0XkntRqvhILmbb
+AkPDkvXYmBkoEMYSPunaff28TpkXdQ==
+=pvCZ
+-----END PGP SIGNATURE-----
+
+--TB36FDmn/VVEgNH/--
+
