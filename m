@@ -2,200 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A3CC92F7A2
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 08:57:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8223D2FBE4
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 15:04:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfE3G4J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 May 2019 02:56:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57204 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727487AbfE3G4I (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 May 2019 02:56:08 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4U6pnEb040534
-        for <linux-pci@vger.kernel.org>; Thu, 30 May 2019 02:56:07 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2st8a5d1bf-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-pci@vger.kernel.org>; Thu, 30 May 2019 02:56:07 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-pci@vger.kernel.org> from <sbobroff@linux.ibm.com>;
-        Thu, 30 May 2019 07:56:05 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 30 May 2019 07:56:01 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4U6u0qM52101362
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 06:56:00 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 436004204C;
-        Thu, 30 May 2019 06:56:00 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A2D304204B;
-        Thu, 30 May 2019 06:55:59 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 30 May 2019 06:55:59 +0000 (GMT)
-Received: from tungsten.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        id S1726708AbfE3NEJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 May 2019 09:04:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725919AbfE3NEI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 May 2019 09:04:08 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 635B3A01EA;
-        Thu, 30 May 2019 16:55:58 +1000 (AEST)
-Date:   Thu, 30 May 2019 16:55:57 +1000
-From:   Sam Bobroff <sbobroff@linux.ibm.com>
-To:     Oliver <oohall@gmail.com>
-Cc:     Shawn Anastasio <shawn@anastas.io>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        rppt@linux.ibm.com, Paul Mackerras <paulus@samba.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, xyjxie@linux.vnet.ibm.com,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [EXTERNAL] Re: [PATCH v3 1/3] PCI: Introduce
- pcibios_ignore_alignment_request
-References: <20190528040313.35582-1-shawn@anastas.io>
- <20190528040313.35582-2-shawn@anastas.io>
- <CAOSf1CEFfbmwfvmdqT1xdt8SFb=tYdYXLfXeyZ8=iRnhg4a3Pg@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 14EC425945;
+        Thu, 30 May 2019 13:04:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559221448;
+        bh=k3Go0/VjoRePfOIkwYY5BwatXzbg2FsH2u8FcDlRKFM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FhO5mVtSSmTcf9VNmJ7aR+BQE7/uJc2lpymo3nie3NH0Cs1EO13BbnIROZqR2OAi6
+         pZv5R0G5PbCzF9k9VlnqrjMMtc9pRtHxVGzmlBlG67yssp04MQVS0tL5A+/Rhcsl5J
+         92u2eBIAnTLY6DvjwAEH6/fbARJhYgFdxfG7WuMw=
+Date:   Thu, 30 May 2019 08:04:07 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Changbin Du <changbin.du@gmail.com>, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mchehab+samsung@kernel.org
+Subject: Re: [PATCH v6 00/12] Include linux PCI docs into Sphinx TOC tree
+Message-ID: <20190530130407.GJ28250@google.com>
+References: <20190514144734.19760-1-changbin.du@gmail.com>
+ <20190520061014.qtq6tc366pnnqcio@mail.google.com>
+ <20190529163510.3dd4dc2d@lwn.net>
+ <20190530030139.GI28250@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOSf1CEFfbmwfvmdqT1xdt8SFb=tYdYXLfXeyZ8=iRnhg4a3Pg@mail.gmail.com>
-User-Agent: Mutt/1.9.3 (2018-01-21)
-X-TM-AS-GCONF: 00
-x-cbid: 19053006-0028-0000-0000-00000372DD29
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19053006-0029-0000-0000-00002432A459
-Message-Id: <20190530065556.GA29428@tungsten.ozlabs.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905300051
+In-Reply-To: <20190530030139.GI28250@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, May 29, 2019 at 10:01:39PM -0500, Bjorn Helgaas wrote:
+> On Wed, May 29, 2019 at 04:35:10PM -0600, Jonathan Corbet wrote:
+> > On Mon, 20 May 2019 06:10:15 +0000
+> > Changbin Du <changbin.du@gmail.com> wrote:
+> > 
+> > > Bjorn and Jonathan,
+> > > Could we consider to merge this serias now? Thanks.
+> > 
+> > Somewhat belatedly, but I think we could.  Bjorn, do you have a preference
+> > for which tree this goes through?  I don't remember if we'd come to an
+> > agreement on that or not, sorry...
+> 
+> Actually, let me at least take a look at these.  I noticed that
+> renames caused some of the ACPI docs to end up with lines >80 columns,
+> and I'd prefer to avoid that.  So maybe I'll take these after all if
+> that's OK.
 
---TB36FDmn/VVEgNH/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, May 28, 2019 at 03:36:34PM +1000, Oliver wrote:
-> On Tue, May 28, 2019 at 2:03 PM Shawn Anastasio <shawn@anastas.io> wrote:
-> >
-> > Introduce a new pcibios function pcibios_ignore_alignment_request
-> > which allows the PCI core to defer to platform-specific code to
-> > determine whether or not to ignore alignment requests for PCI resources.
-> >
-> > The existing behavior is to simply ignore alignment requests when
-> > PCI_PROBE_ONLY is set. This is behavior is maintained by the
-> > default implementation of pcibios_ignore_alignment_request.
-> >
-> > Signed-off-by: Shawn Anastasio <shawn@anastas.io>
-> > ---
-> >  drivers/pci/pci.c   | 9 +++++++--
-> >  include/linux/pci.h | 1 +
-> >  2 files changed, 8 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 8abc843b1615..8207a09085d1 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -5882,6 +5882,11 @@ resource_size_t __weak pcibios_default_alignment=
-(void)
-> >         return 0;
-> >  }
-> >
-> > +int __weak pcibios_ignore_alignment_request(void)
-> > +{
-> > +       return pci_has_flag(PCI_PROBE_ONLY);
-> > +}
-> > +
-> >  #define RESOURCE_ALIGNMENT_PARAM_SIZE COMMAND_LINE_SIZE
-> >  static char resource_alignment_param[RESOURCE_ALIGNMENT_PARAM_SIZE] =
-=3D {0};
-> >  static DEFINE_SPINLOCK(resource_alignment_lock);
-> > @@ -5906,9 +5911,9 @@ static resource_size_t pci_specified_resource_ali=
-gnment(struct pci_dev *dev,
-> >         p =3D resource_alignment_param;
-> >         if (!*p && !align)
-> >                 goto out;
-> > -       if (pci_has_flag(PCI_PROBE_ONLY)) {
-> > +       if (pcibios_ignore_alignment_request()) {
-> >                 align =3D 0;
-> > -               pr_info_once("PCI: Ignoring requested alignments (PCI_P=
-ROBE_ONLY)\n");
-> > +               pr_info_once("PCI: Ignoring requested alignments\n");
-> >                 goto out;
-> >         }
->=20
-> I think the logic here is questionable to begin with. If the user has
-> explicitly requested re-aligning a resource via the command line then
-> we should probably do it even if PCI_PROBE_ONLY is set. When it breaks
-> they get to keep the pieces.
->=20
-> That said, the real issue here is that PCI_PROBE_ONLY probably
-> shouldn't be set under qemu/kvm. Under the other hypervisor (PowerVM)
-> hotplugged devices are configured by firmware before it's passed to
-> the guest and we need to keep the FW assignments otherwise things
-> break. QEMU however doesn't do any BAR assignments and relies on that
-> being handled by the guest. At boot time this is done by SLOF, but
-> Linux only keeps SLOF around until it's extracted the device-tree.
-> Once that's done SLOF gets blown away and the kernel needs to do it's
-> own BAR assignments. I'm guessing there's a hack in there to make it
-> work today, but it's a little surprising that it works at all...
->=20
-> IIRC Sam Bobroff was looking at hotplug under pseries recently so he
-> might have something to add. He's sick at the moment, but I'll ask him
-> to take a look at this once he's back among the living
-
-There seems to be some code already in the kernel that will disable
-PCI_PROBE_ONLY based on a device tree property, so I did a quick test
-today and it seems to work. Only a trivial tweak is needed in QEMU to
-do it (have spapr_dt_chosen() add a node called "linux,pci-probe-only"
-with a value of 0), and that would allow us to set it only for QEMU (and
-not PowerVM) if that's what we want to do. Is that useful?
-
-(I haven't done any real testing yet but the guest booted up OK.)
-
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 4a5a84d7bdd4..47471dcdbaf9 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -1990,6 +1990,7 @@ static inline void pcibios_penalize_isa_irq(int i=
-rq, int active) {}
-> >  int pcibios_alloc_irq(struct pci_dev *dev);
-> >  void pcibios_free_irq(struct pci_dev *dev);
-> >  resource_size_t pcibios_default_alignment(void);
-> > +int pcibios_ignore_alignment_request(void);
-> >
-> >  #ifdef CONFIG_HIBERNATE_CALLBACKS
-> >  extern struct dev_pm_ops pcibios_pm_ops;
-> > --
-> > 2.20.1
-> >
->=20
-
---TB36FDmn/VVEgNH/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEELWWF8pdtWK5YQRohMX8w6AQl/iIFAlzvfnUACgkQMX8w6AQl
-/iLbOwf/d0gNgnSqs8kTnw36ULHdsfnYqJ1nnP1JdurEmTRvPQmXzeIHWFqDcs8O
-IQGdXSiM2A+K53DAppyOR+VA11rlk1xPPMllSjR5OYGXBqRIEnILf2775KVAVFRO
-xBbuLwoaf5ALbncD47CUZIQrj/SCcm5eaQTG/gFZplYfGQXybiSzvAEWCpNglC34
-7m/jfyQHxJ6jlxU9dllz/RlFChiE4Opv2G2romtnL+Ysf+NwLccArSz0LC6ZQ1Gk
-2Ar3LGpWIPwnXYVC9vUJMDwxYRL9dWX1I7WiksD/P0021gjVpe0XkntRqvhILmbb
-AkPDkvXYmBkoEMYSPunaff28TpkXdQ==
-=pvCZ
------END PGP SIGNATURE-----
-
---TB36FDmn/VVEgNH/--
-
+I applied these to pci/docs for v5.3, thanks!
