@@ -2,244 +2,188 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 71C8B2E94C
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 01:26:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA5572EA5C
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 03:49:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfE2XZ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 May 2019 19:25:58 -0400
-Received: from mga03.intel.com ([134.134.136.65]:62140 "EHLO mga03.intel.com"
+        id S1727336AbfE3BtM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 May 2019 21:49:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54892 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726735AbfE2XZ6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 May 2019 19:25:58 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 16:25:57 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 29 May 2019 16:25:56 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id DE0F55802C9;
-        Wed, 29 May 2019 16:25:56 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v2 1/5] PCI/ATS: Add PRI support for PCIe VF devices
-To:     "Raj, Ashok" <ashok.raj@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keith.busch@intel.com
-References: <cover.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <f773440c0eee2a8d4e5d6e2856717404ac836458.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190529225714.GE28250@google.com>
- <20190529230426.GB5108@araj-mobl1.jf.intel.com>
-From:   sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <e93c7b6b-c414-6e0f-7983-9a46c67acb92@linux.intel.com>
-Date:   Wed, 29 May 2019 16:24:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726527AbfE3BtM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 May 2019 21:49:12 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 05E6C3084212;
+        Thu, 30 May 2019 01:49:12 +0000 (UTC)
+Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5636060BF0;
+        Thu, 30 May 2019 01:49:09 +0000 (UTC)
+Date:   Wed, 29 May 2019 19:49:08 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Maik Broemme <mbroemme@libmpq.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        vfio-users <vfio-users@redhat.com>
+Subject: Re: [PATCH] PCI: Mark Intel bridge on SuperMicro Atom C3xxx
+ motherboards to avoid bus reset
+Message-ID: <20190529194908.1f8d24d3@x1.home>
+In-Reply-To: <20190529220307.GD28250@google.com>
+References: <20190524153118.GA12862@libmpq.org>
+        <20190529220307.GD28250@google.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <20190529230426.GB5108@araj-mobl1.jf.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 30 May 2019 01:49:12 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, 29 May 2019 17:03:07 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-On 5/29/19 4:04 PM, Raj, Ashok wrote:
-> On Wed, May 29, 2019 at 05:57:14PM -0500, Bjorn Helgaas wrote:
->> On Mon, May 06, 2019 at 10:20:03AM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>
->>> When IOMMU tries to enable PRI for VF device in
->>> iommu_enable_dev_iotlb(), it always fails because PRI support for PCIe
->>> VF device is currently broken in PCIE driver. Current implementation
->>> expects the given PCIe device (PF & VF) to implement PRI capability
->>> before enabling the PRI support. But this assumption is incorrect. As
->>> per PCIe spec r4.0, sec 9.3.7.11, all VFs associated with PF can only
->>> use the Page Request Interface (PRI) of the PF and not implement it.
->>> Hence we need to create exception for handling the PRI support for PCIe
->>> VF device.
->>>
->>> Since PRI is shared between PF/VF devices, following rules should apply.
->>>
->>> 1. Enable PRI in VF only if its already enabled in PF.
->>> 2. When enabling/disabling PRI for VF, instead of configuring the
->>> registers just increase/decrease the usage count (pri_ref_cnt) of PF.
->>> 3. Disable PRI in PF only if pr_ref_cnt is zero.
->> s/pr_ref_cnt/pri_ref_cnt/
->>
->>> Cc: Ashok Raj <ashok.raj@intel.com>
->>> Cc: Keith Busch <keith.busch@intel.com>
->>> Suggested-by: Ashok Raj <ashok.raj@intel.com>
->>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>> ---
->>>   drivers/pci/ats.c   | 53 +++++++++++++++++++++++++++++++++++++++++++--
->>>   include/linux/pci.h |  1 +
->>>   2 files changed, 52 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
->>> index 97c08146534a..5582e5d83a3f 100644
->>> --- a/drivers/pci/ats.c
->>> +++ b/drivers/pci/ats.c
->>> @@ -181,12 +181,39 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
->>>   	u16 control, status;
->>>   	u32 max_requests;
->>>   	int pos;
->>> +	struct pci_dev *pf;
->>>   
->>>   	if (WARN_ON(pdev->pri_enabled))
->>>   		return -EBUSY;
->>>   
->>>   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
->>> -	if (!pos)
->>> +
->>> +	if (pdev->is_virtfn) {
->>> +		/*
->>> +		 * Per PCIe r4.0, sec 9.3.7.11, VF must not implement PRI
->>> +		 * Capability.
->>> +		 */
->>> +		if (pos) {
->>> +			dev_err(&pdev->dev, "VF must not implement PRI");
->>> +			return -EINVAL;
->>> +		}
->> This seems gratuitous.  It finds implementation errors, but since we
->> correctly use the PF here anyway, it doesn't *need* to prevent PRI on
->> the VF from working.
->>
->> I think you should just have:
->>
->>    if (pdev->is_virtfn) {
->>      pf = pci_physfn(pdev);
->>      if (!pf->pri_enabled)
->>        return -EINVAL;
-> This would be incorrect. Since if we never did any bind_mm to the PF
-> PRI would not have been enabled. Currently this is done in the IOMMU
-> driver, and not in the device driver.
->
-> I suppose we should enable PF capability if its not enabled. Same
-> comment would be applicable for PASID as well.
+> [+cc Alex]
+> 
+> On Fri, May 24, 2019 at 05:31:18PM +0200, Maik Broemme wrote:
+> > The Intel PCI bridge on SuperMicro Atom C3xxx motherboards do not
+> > successfully complete a bus reset when used with certain child devices.
+> > After the reset, config accesses to the child may fail. If assigning
+> > such device via VFIO it will immediately fail with:
+> > 
+> >   vfio-pci 0000:01:00.0: Failed to return from FLR
+> >   vfio-pci 0000:01:00.0: timed out waiting for pending transaction;
+> >   performing function level reset anyway  
+> 
+> I guess these messages are from v4.13 or earlier, since the "Failed to
+> return from FLR" text was removed by 821cdad5c46c ("PCI: Wait up to 60
+> seconds for device to become ready after FLR"), which appeared in
+> v4.14.
+> 
+> I suppose a current kernel would fail similarly, but could you try it?
+> I think a current kernel would give more informative messages like:
+> 
+>   not ready XXms after FLR, giving up
+>   not ready XXms after bus reset, giving up
+> 
+> I don't understand the connection here: the messages you quote are
+> related to FLR, but the quirk isn't related to FLR.  The quirk
+> prevents a secondary bus reset.  So is it the case that we try FLR
+> first, it fails, then we try a secondary bus reset (does this succeed?
+> you don't mention an error from it), and the device remains
+> unresponsive and VFIO assignment fails?
+> 
+> And with the quirk, I assume we still try FLR, and it still fails.
+> But we *don't* try a secondary bus reset, and the device magically
+> works?  That's confusing to me.
 
-I am currently working on a fix to handle the bind issue (VF binding 
-before PF). My next version will have this update.
+As a counter point, I found a system with this root port in our test
+environment.  It's not ideal as this root port has a PCIe-to-PCI bridge
+downstream of it with a Matrox graphics downstream of that.  I can't
+use vfio-pci to reset this hierarchy, but I can use setpci, ex:
 
-But, regarding VF spec compliance checks, Is there any issue in having 
-them in enable code ? Perhaps I can change dev_err to dev_warn and not 
-return error if it found implementation errors. I found it useful to 
-have them because it helped me in finding some faulty devices during my 
-testing. Let me know your comments.
+# lspci -nnvs 00:09.0
+00:09.0 PCI bridge [0604]: Intel Corporation Device [8086:19a4] (rev 11) (prog-if 00 [Normal decode])
+	Flags: bus master, fast devsel, latency 0, IRQ 26
+	Memory at 1080000000 (64-bit, non-prefetchable) [size=128K]
+	Bus: primary=00, secondary=03, subordinate=04, sec-latency=0
+	I/O behind bridge: None
+	Memory behind bridge: 84000000-848fffff [size=9M]
+	Prefetchable memory behind bridge: 0000000082000000-0000000083ffffff [size=32M]
+# lspci -nnvs 03:00.0
+03:00.0 PCI bridge [0604]: Texas Instruments XIO2000(A)/XIO2200A PCI Express-to-PCI Bridge [104c:8231] (rev 03) (prog-if 00 [Normal decode])
+	Flags: fast devsel
+	Bus: primary=00, secondary=00, subordinate=00, sec-latency=0
+	I/O behind bridge: 00000000-00000fff [size=4K]
+	Memory behind bridge: 00000000-000fffff [size=1M]
+	Prefetchable memory behind bridge: 0000000000000000-00000000000fffff [size=1M]
 
->
->
->>      pdev->pri_enabled = 1;
->>      atomic_inc(&pf->pri_ref_cnt);
->>    }
->>
->>    pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
->>    if (!pos)
->>      return -EINVAL;
->>
->>> +		pf = pci_physfn(pdev);
->>> +
->>> +		/* If VF config does not match with PF, return error */
->>> +		if (!pf->pri_enabled)
->>> +			return -EINVAL;
->>> +
->>> +		pdev->pri_reqs_alloc = pf->pri_reqs_alloc;
->> Is there any point in setting vf->pri_reqs_alloc?  I don't think it's
->> used for anything since pri_reqs_alloc is only used to write the PF
->> capability, and we only do that for the PF.
->>
->>> +		pdev->pri_enabled = 1;
->>> +
->>> +		/* Increment PF PRI refcount */
->> Superfluous comment, since that's exactly what the code says.  It's
->> always good when the code is so clear that it doesn't require comments :)
->>
->>> +		atomic_inc(&pf->pri_ref_cnt);
->>> +
->>> +		return 0;
->>> +	}
->>> +
->>> +	if (pdev->is_physfn && !pos)
->>>   		return -EINVAL;
->>>   
->>>   	pci_read_config_word(pdev, pos + PCI_PRI_STATUS, &status);
->>> @@ -202,7 +229,6 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
->>>   	pci_write_config_word(pdev, pos + PCI_PRI_CTRL, control);
->>>   
->>>   	pdev->pri_enabled = 1;
->>> -
->>>   	return 0;
->>>   }
->>>   EXPORT_SYMBOL_GPL(pci_enable_pri);
->>> @@ -217,10 +243,27 @@ void pci_disable_pri(struct pci_dev *pdev)
->>>   {
->>>   	u16 control;
->>>   	int pos;
->>> +	struct pci_dev *pf;
->>>   
->>>   	if (WARN_ON(!pdev->pri_enabled))
->>>   		return;
->>>   
->>> +	/* All VFs should be disabled before disabling PF */
->>> +	if (atomic_read(&pdev->pri_ref_cnt))
->>> +		return;
->>> +
->>> +	if (pdev->is_virtfn) {
->>> +		/* Since VF shares PRI with PF, use PF config. */
->>> +		pf = pci_physfn(pdev);
->>> +
->>> +		/* Decrement PF PRI refcount */
->>> +		atomic_dec(&pf->pri_ref_cnt);
->>> +
->>> +		pdev->pri_enabled = 0;
->>> +
->>> +		return;
->>> +	}
->>> +
->>>   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
->>>   	if (!pos)
->>>   		return;
->>> @@ -246,6 +289,9 @@ void pci_restore_pri_state(struct pci_dev *pdev)
->>>   	if (!pdev->pri_enabled)
->>>   		return;
->>>   
->>> +	if (pdev->is_virtfn)
->>> +		return;
->>> +
->>>   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
->>>   	if (!pos)
->>>   		return;
->>> @@ -270,6 +316,9 @@ int pci_reset_pri(struct pci_dev *pdev)
->>>   	if (WARN_ON(pdev->pri_enabled))
->>>   		return -EBUSY;
->>>   
->>> +	if (pdev->is_virtfn)
->>> +		return 0;
->>> +
->>>   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
->>>   	if (!pos)
->>>   		return -EINVAL;
->>> diff --git a/include/linux/pci.h b/include/linux/pci.h
->>> index 77448215ef5b..699c79c99a39 100644
->>> --- a/include/linux/pci.h
->>> +++ b/include/linux/pci.h
->>> @@ -450,6 +450,7 @@ struct pci_dev {
->>>   #endif
->>>   #ifdef CONFIG_PCI_PRI
->>>   	u32		pri_reqs_alloc; /* Number of PRI requests allocated */
->>> +	atomic_t	pri_ref_cnt;	/* Number of VFs with PRI enabled */
->>>   #endif
->>>   #ifdef CONFIG_PCI_PASID
->>>   	u16		pasid_features;
->>> -- 
->>> 2.20.1
->>>
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+(resources are reset from previous experiments)
+
+# setpci -s 00:09.0 3e.w=40:40
+# lspci -nnvs 03:00.0
+03:00.0 PCI bridge [0604]: Texas Instruments XIO2000(A)/XIO2200A PCI Express-to-PCI Bridge [104c:8231] (rev ff) (prog-if ff)
+	!!! Unknown header type 7f
+
+(bus in reset, config space unavailable, EXPECTED)
+
+# setpci -s 00:09.0 3e.w=0:40
+[root@intel-harrisonville-01 devices]# lspci -nnvs 03:00.0
+03:00.0 PCI bridge [0604]: Texas Instruments XIO2000(A)/XIO2200A PCI Express-to-PCI Bridge [104c:8231] (rev 03) (prog-if 00 [Normal decode])
+	Flags: fast devsel
+	Bus: primary=00, secondary=00, subordinate=00, sec-latency=0
+	I/O behind bridge: 00000000-00000fff [size=4K]
+	Memory behind bridge: 00000000-000fffff [size=1M]
+	Prefetchable memory behind bridge: 0000000000000000-00000000000fffff [size=1M]
+
+(bus out of reset, downstream config space is available again)
+
+I'm also confused about the description of this device:
+
+On Fri, 24 May 2019 20:41:13 +0200 Maik Broemme <mbroemme@libmpq.org> wrote:
+> Also I've tried a PCI-E switch from PLX technology, sold by MikroTik, the
+> RouterBoard RB14eU. It is exports 4 Mini PCI ports in one PCI-E port and
+> I tried it with one card and multiple cards.
+> 
+> All these devices start to work once I enabled the bus reset quirk. The
+> RB14eU even allows to assign the individual Mini PCI-E ports to
+> different VMs and survive independent resets behind the PLX bridge.
+
+To me this describes a topology like:
+
+[RP]---[US]-+-[DS]--[EP]
+            +-[DS]--[EP]
+            +-[DS]--[EP]
+            \-[DS]--[EP]
+
+(RootPort/UpstreamSwitch/DownstreamSwitch/EndPoint)
+
+We can only assigned endpoints to VMs through vfio, therefore if we
+need to reset the EP via a bus reset, that reset would occur at the
+downstream switch point, not the root port.  It doesn't make sense that
+a quirk at the RP would resolve anything about this use case.
+
+Also, per the Intel datasheet, this is not the only root port in this
+processor and presumably they'd all work the same way, so handling one
+ID as a special case seems wrong regardless.  Thanks,
+
+Alex
+
+> > Device will disappear from PCI device list:
+> > 
+> >   !!! Unknown header type 7f
+> >   Kernel driver in use: vfio-pci
+> >   Kernel modules: ddbridge
+> > 
+> > The attached patch will mark the root port as incapable of doing a
+> > bus level reset. After that all my tested devices survive a VFIO
+> > assignment and several VM reboot cycles.
+> > 
+> > Signed-off-by: Maik Broemme <mbroemme@libmpq.org>
+> > ---
+> >  drivers/pci/quirks.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index 0f16acc323c6..86cd42872708 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -3433,6 +3433,13 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
+> >   */
+> >  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CAVIUM, 0xa100, quirk_no_bus_reset);
+> >  
+> > +/*
+> > + * Root port on some SuperMicro Atom C3xxx motherboards do not successfully
+> > + * complete a bus reset when used with certain child devices. After the
+> > + * reset, config accesses to the child may fail.
+> > + */
+> > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x19a4, quirk_no_bus_reset);
+> > +
+> >  static void quirk_no_pm_reset(struct pci_dev *dev)
+> >  {
+> >  	/*
+> > -- 
+> > 2.21.0  
 
