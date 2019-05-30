@@ -2,144 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 23F8E2FDE4
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 16:33:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 190A32FE98
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 16:56:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbfE3Odm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 May 2019 10:33:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48496 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726250AbfE3Odl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 May 2019 10:33:41 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8DBEB7EBAE;
-        Thu, 30 May 2019 14:33:41 +0000 (UTC)
-Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E90310027B6;
-        Thu, 30 May 2019 14:33:36 +0000 (UTC)
-Date:   Thu, 30 May 2019 08:33:35 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        myron.stowe@redhat.com, bodong@mellanox.com, eli@mellanox.com,
-        laine@redhat.com
-Subject: Re: [PATCH] PCI: Return error if cannot probe VF
-Message-ID: <20190530083335.4f16a9bc@x1.home>
-In-Reply-To: <20190530134727.GM28250@google.com>
-References: <155672991496.20698.4279330795743262888.stgit@gimli.home>
-        <20190530134727.GM28250@google.com>
-Organization: Red Hat
+        id S1727180AbfE3Oyi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 May 2019 10:54:38 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37898 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725934AbfE3Oyi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 May 2019 10:54:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4E37341;
+        Thu, 30 May 2019 07:54:37 -0700 (PDT)
+Received: from redmoon (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D51E43F59C;
+        Thu, 30 May 2019 07:54:36 -0700 (PDT)
+Date:   Thu, 30 May 2019 15:54:31 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Ley Foon Tan <lftan.linux@gmail.com>
+Cc:     Ley Foon Tan <ley.foon.tan@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH] PCI: altera: Fix no return warning for
+ altera_pcie_irq_teardown()
+Message-ID: <20190530145411.GA13993@redmoon>
+References: <1558664151-2584-1-git-send-email-ley.foon.tan@intel.com>
+ <CAFiDJ5_HCeY0hf8W-HiEMLFWgjYNspXuH9dBV1kKY-YEvMLAeA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 30 May 2019 14:33:41 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFiDJ5_HCeY0hf8W-HiEMLFWgjYNspXuH9dBV1kKY-YEvMLAeA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 30 May 2019 08:47:27 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> On Wed, May 01, 2019 at 11:00:16AM -0600, Alex Williamson wrote:
-> > Commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control
-> > VF driver binding") allows the user to specify that drivers for VFs of
-> > a PF should not be probed, but it actually causes pci_device_probe() to
-> > return success back to the driver core in this case.  Therefore by all
-> > sysfs appearances the device is bound to a driver, the driver link from
-> > the device exists as does the device link back from the driver, yet the
-> > driver's probe function is never called on the device.  We also fail to
-> > do any sort of cleanup when we're prohibited from probing the device,
-> > the irq setup remains in place and we even hold a device reference.
-> > 
-> > Instead, abort with errno before any setup or references are taken when
-> > pci_device_can_probe() prevents us from trying to probe the device.
-> > 
-> > Fixes: 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
-> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>  
-> 
-> Applied to pci/enumeration for v5.3, thanks!
-> 
-> The scenario you describe, Laine, indeed sounds cumbersome.  If you
-> want to propose an alternate or additional patch to address that, or
-> if you think Alex's patch will make it harder to clean up that
-> scenario, I'm all ears.  But it seems like Alex's patch is an
-> improvement even if it leaves some problems unsolved.
-
-Hi Bjorn,
-
-It's probably deeper in your queue, but I've posted:
-
-https://patchwork.kernel.org/patch/10937577/
-
-which allows devices with a driver_override to always probe.  I think
-it gives us the more desirable usage model.  Thanks,
-
-Alex
-
-
+On Fri, May 24, 2019 at 10:17:28AM +0800, Ley Foon Tan wrote:
+> On Fri, May 24, 2019 at 10:15 AM Ley Foon Tan <ley.foon.tan@intel.com> wrote:
+> >
+> > Fix compilation warning caused by patch "PCI: altera: Allow building as module".
+> >
+> > drivers/pci/controller/pcie-altera.c: In function ‘altera_pcie_irq_teardown’:
+> > drivers/pci/controller/pcie-altera.c:723:1: warning: no return statement in function returning non-void [-Wreturn-type]
+> >  }
+> >
+> > Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
 > > ---
-> > 
-> > This issue is easily tested by disabling sriov_drivers_autoprobe and
-> > creating VFs:
-> > 
-> > # echo 0 > sriov_drivers_autoprobe
-> > # echo 3 > sriov_numvfs
-> > # readlink -f virtfn*/driver
-> > /sys/bus/pci/drivers/iavf
-> > /sys/bus/pci/drivers/iavf
-> > /sys/bus/pci/drivers/iavf
-> > (yet no netdevs exist for these VFs)
-> > 
-> > The semantics of this autoprobe disabling are a bit strange for the
-> > user as well, I suppose it works if we force a bind through a driver's
-> > bind attribute, but tools like libvirt and driverctl expect to bind
-> > devices by setting the driver_override and then pushing the device
-> > through driver_probe on the bus.  Is the intention of disabling
-> > "autoprobe" that a driver_override should still work?  Otherwise the
-> > user needs to set the driver_override for each VF, re-enable
-> > sriov_drivers_autoprobe on the PF, and then probe the VFs.  Thus maybe
-> > pci_device_can_probe() should allow probes of the driver_override
-> > driver?  Thanks,
-> > 
-> > Alex
-> > 
-> >  drivers/pci/pci-driver.c |   13 +++++++------
-> >  1 file changed, 7 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > index 71853befd435..da7b82e56c83 100644
-> > --- a/drivers/pci/pci-driver.c
-> > +++ b/drivers/pci/pci-driver.c
-> > @@ -414,6 +414,9 @@ static int pci_device_probe(struct device *dev)
-> >  	struct pci_dev *pci_dev = to_pci_dev(dev);
-> >  	struct pci_driver *drv = to_pci_driver(dev->driver);
-> >  
-> > +	if (!pci_device_can_probe(pci_dev))
-> > +		return -ENODEV;
-> > +
-> >  	pci_assign_irq(pci_dev);
-> >  
-> >  	error = pcibios_alloc_irq(pci_dev);
-> > @@ -421,12 +424,10 @@ static int pci_device_probe(struct device *dev)
-> >  		return error;
-> >  
-> >  	pci_dev_get(pci_dev);
-> > -	if (pci_device_can_probe(pci_dev)) {
-> > -		error = __pci_device_probe(drv, pci_dev);
-> > -		if (error) {
-> > -			pcibios_free_irq(pci_dev);
-> > -			pci_dev_put(pci_dev);
-> > -		}
-> > +	error = __pci_device_probe(drv, pci_dev);
-> > +	if (error) {
-> > +		pcibios_free_irq(pci_dev);
-> > +		pci_dev_put(pci_dev);
-> >  	}
-> >  
-> >  	return error;
-> >   
+> >  drivers/pci/controller/pcie-altera.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+> > index 6c86bc69ace8..27222071ace7 100644
+> > --- a/drivers/pci/controller/pcie-altera.c
+> > +++ b/drivers/pci/controller/pcie-altera.c
+> > @@ -706,7 +706,7 @@ static int altera_pcie_init_irq_domain(struct altera_pcie *pcie)
+> >         return 0;
+> >  }
+> >
+> > -static int altera_pcie_irq_teardown(struct altera_pcie *pcie)
+> > +static void altera_pcie_irq_teardown(struct altera_pcie *pcie)
+> >  {
+> >         irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+> >         irq_domain_remove(pcie->irq_domain);
+> > --
+> > 2.19.0
+> >
+> Hi
+> 
+> You can squash this patch to this https://lkml.org/lkml/2019/4/24/18
+> "PCI: altera: Allow building as module" if want.
 
+Done, thanks.
+
+Lorenzo
