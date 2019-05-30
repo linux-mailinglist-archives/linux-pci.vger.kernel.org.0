@@ -2,170 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6ECAF30123
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 19:41:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 780023012F
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 19:45:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725961AbfE3Rl3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 May 2019 13:41:29 -0400
-Received: from mga04.intel.com ([192.55.52.120]:26068 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726307AbfE3Rl3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 May 2019 13:41:29 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 10:41:28 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 30 May 2019 10:41:28 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id A26095804BA;
-        Thu, 30 May 2019 10:41:27 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v2 1/5] PCI/ATS: Add PRI support for PCIe VF devices
-To:     "Raj, Ashok" <ashok.raj@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keith.busch@intel.com
-References: <cover.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <f773440c0eee2a8d4e5d6e2856717404ac836458.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190529225714.GE28250@google.com>
- <20190529230426.GB5108@araj-mobl1.jf.intel.com>
- <20190530131738.GK28250@google.com>
- <20190530172055.GB18559@araj-mobl1.jf.intel.com>
-From:   sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <b531ba10-0776-a5d0-77e4-b0bcaba1b558@linux.intel.com>
-Date:   Thu, 30 May 2019 10:39:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726684AbfE3Rpi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 May 2019 13:45:38 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46674 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfE3Rpi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 May 2019 13:45:38 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z19so7961866qtz.13
+        for <linux-pci@vger.kernel.org>; Thu, 30 May 2019 10:45:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UgEoJIEOWgKSmNpnwJapd7xKMVBGEnMvpNqFuwdcHSY=;
+        b=c14cNQY7a7g0KXxtQrpzFvgD33XZOwjo02Sgk8gXEjAhOUM5uAegj2VxSwtgIdexuF
+         TavwAF8sGn2/r1Vl7GZfleqKaL4FhUv6Quz6PxhFQDP1X33Ht7n0y3zBOdiXBmIM5rJf
+         qv6zFooaCSIVIB8Gt9vMO6lWjuX2C51L1N2stLILuaNRHiK6ejERPJ/dqF7L8tu1c8GA
+         whCEgtz/oBC1ehtNUh5pM2xXMr9VmxMM8wgs4PBL56Gp7eY3a5h191wdwZ7fqi2CBbKf
+         4ohBJRXkfoMzCVSgsgUB2UhgvRWRBtqORTQ42cIw09wkKaRc8Yqj5SEIN1pMjUDjYNe3
+         qCgg==
+X-Gm-Message-State: APjAAAWLZ2ZeDWW1jYm4JXLEqQgXKB7SH1miWXQT1FqbJus7g0iNKewl
+        LHHNO9WxgXNpu0B8sd75OE/eEQ==
+X-Google-Smtp-Source: APXvYqy9DfCkbHWFwnoJIZhnJEIk9jBDmoJOESod/F/vQr9Iv7gjOGLceZ55BmbRJubgQEOI/tivJw==
+X-Received: by 2002:aed:3b5a:: with SMTP id q26mr4641355qte.158.1559238337003;
+        Thu, 30 May 2019 10:45:37 -0700 (PDT)
+Received: from redhat.com (pool-100-0-197-103.bstnma.fios.verizon.net. [100.0.197.103])
+        by smtp.gmail.com with ESMTPSA id r186sm691141qkb.9.2019.05.30.10.45.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 30 May 2019 10:45:35 -0700 (PDT)
+Date:   Thu, 30 May 2019 13:45:32 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     joro@8bytes.org, iommu@lists.linux-foundation.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        virtio-dev@lists.oasis-open.org, jasowang@redhat.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Lorenzo.Pieralisi@arm.com, robin.murphy@arm.com,
+        bhelgaas@google.com, frowand.list@gmail.com,
+        kvmarm@lists.cs.columbia.edu, eric.auger@redhat.com,
+        tnowicki@caviumnetworks.com, kevin.tian@intel.com,
+        bauerman@linux.ibm.com
+Subject: Re: [PATCH v8 2/7] dt-bindings: virtio: Add virtio-pci-iommu node
+Message-ID: <20190530133523-mutt-send-email-mst@kernel.org>
+References: <20190530170929.19366-1-jean-philippe.brucker@arm.com>
+ <20190530170929.19366-3-jean-philippe.brucker@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190530172055.GB18559@araj-mobl1.jf.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530170929.19366-3-jean-philippe.brucker@arm.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, May 30, 2019 at 06:09:24PM +0100, Jean-Philippe Brucker wrote:
+> Some systems implement virtio-iommu as a PCI endpoint. The operating
+> system needs to discover the relationship between IOMMU and masters long
+> before the PCI endpoint gets probed. Add a PCI child node to describe the
+> virtio-iommu device.
+> 
+> The virtio-pci-iommu is conceptually split between a PCI programming
+> interface and a translation component on the parent bus. The latter
+> doesn't have a node in the device tree. The virtio-pci-iommu node
+> describes both, by linking the PCI endpoint to "iommus" property of DMA
+> master nodes and to "iommu-map" properties of bus nodes.
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 
-On 5/30/19 10:20 AM, Raj, Ashok wrote:
-> On Thu, May 30, 2019 at 08:17:38AM -0500, Bjorn Helgaas wrote:
->> On Wed, May 29, 2019 at 04:04:27PM -0700, Raj, Ashok wrote:
->>> On Wed, May 29, 2019 at 05:57:14PM -0500, Bjorn Helgaas wrote:
->>>> On Mon, May 06, 2019 at 10:20:03AM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>>
->>>>> When IOMMU tries to enable PRI for VF device in
->>>>> iommu_enable_dev_iotlb(), it always fails because PRI support for PCIe
->>>>> VF device is currently broken in PCIE driver. Current implementation
->>>>> expects the given PCIe device (PF & VF) to implement PRI capability
->>>>> before enabling the PRI support. But this assumption is incorrect. As
->>>>> per PCIe spec r4.0, sec 9.3.7.11, all VFs associated with PF can only
->>>>> use the Page Request Interface (PRI) of the PF and not implement it.
->>>>> Hence we need to create exception for handling the PRI support for PCIe
->>>>> VF device.
->>>>>
->>>>> Since PRI is shared between PF/VF devices, following rules should apply.
->>>>>
->>>>> 1. Enable PRI in VF only if its already enabled in PF.
->>>>> 2. When enabling/disabling PRI for VF, instead of configuring the
->>>>> registers just increase/decrease the usage count (pri_ref_cnt) of PF.
->>>>> 3. Disable PRI in PF only if pr_ref_cnt is zero.
->>>> s/pr_ref_cnt/pri_ref_cnt/
->>>>
->>>>> Cc: Ashok Raj <ashok.raj@intel.com>
->>>>> Cc: Keith Busch <keith.busch@intel.com>
->>>>> Suggested-by: Ashok Raj <ashok.raj@intel.com>
->>>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>> ---
->>>>>   drivers/pci/ats.c   | 53 +++++++++++++++++++++++++++++++++++++++++++--
->>>>>   include/linux/pci.h |  1 +
->>>>>   2 files changed, 52 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
->>>>> index 97c08146534a..5582e5d83a3f 100644
->>>>> --- a/drivers/pci/ats.c
->>>>> +++ b/drivers/pci/ats.c
->>>>> @@ -181,12 +181,39 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
->>>>>   	u16 control, status;
->>>>>   	u32 max_requests;
->>>>>   	int pos;
->>>>> +	struct pci_dev *pf;
->>>>>   
->>>>>   	if (WARN_ON(pdev->pri_enabled))
->>>>>   		return -EBUSY;
->>>>>   
->>>>>   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
->>>>> -	if (!pos)
->>>>> +
->>>>> +	if (pdev->is_virtfn) {
->>>>> +		/*
->>>>> +		 * Per PCIe r4.0, sec 9.3.7.11, VF must not implement PRI
->>>>> +		 * Capability.
->>>>> +		 */
->>>>> +		if (pos) {
->>>>> +			dev_err(&pdev->dev, "VF must not implement PRI");
->>>>> +			return -EINVAL;
->>>>> +		}
->>>> This seems gratuitous.  It finds implementation errors, but since we
->>>> correctly use the PF here anyway, it doesn't *need* to prevent PRI on
->>>> the VF from working.
->>>>
->>>> I think you should just have:
->>>>
->>>>    if (pdev->is_virtfn) {
->>>>      pf = pci_physfn(pdev);
->>>>      if (!pf->pri_enabled)
->>>>        return -EINVAL;
->>> This would be incorrect. Since if we never did any bind_mm to the PF
->>> PRI would not have been enabled. Currently this is done in the IOMMU
->>> driver, and not in the device driver.
->> This is functionally the same as the original patch, only omitting the
->> "VF must not implement PRI" check.
->>
->>> I suppose we should enable PF capability if its not enabled. Same
->>> comment would be applicable for PASID as well.
->> Operating on a device other than the one the driver owns opens the
->> issue of mutual exclusion and races, so would require careful
->> scrutiny.  Are PRI/PASID things that could be *always* enabled for the
->> PF at enumeration-time, or do we have to wait until a driver claims
->> the VF?  If the latter, are there coordination issues between drivers
->> of different VFs?
-> I suppose that's a reasonably good alternative. You mean we could
-> do this when VF's are being created? Otherwise we can do this as its
-> done today, on demand for all normal PF's.
+So this is just an example right?
+We are not defining any new properties or anything like that.
 
-If we are going to enable it with default features then its doable. But 
-for cases with custom requirements, it will become complicated. For 
-example, in following code, IOMMU sets PRI Outstanding Page Allocation 
-quota as 32 or 1 based on errata info. So if we just enable it by 
-default then we may not be able to take these requirements into 
-consideration.
+I think down the road for non dt platforms we want to put this
+info in the config space of the device. I do not think ACPI
+is the best option for this since not all systems have it.
+But that can wait.
 
-2051 static int pdev_iommuv2_enable(struct pci_dev *pdev)
-2052 {
-2053         bool reset_enable;
-2054         int reqs, ret;
-2055
-2056         /* FIXME: Hardcode number of outstanding requests for now */
-2057         reqs = 32;
-2058         if (pdev_pri_erratum(pdev, AMD_PRI_DEV_ERRATUM_LIMIT_REQ_ONE))
-2059                 reqs = 1;
-2060         reset_enable = pdev_pri_erratum(pdev, 
-AMD_PRI_DEV_ERRATUM_ENABLE_RESET);
-
-2073         ret = pci_enable_pri(pdev, reqs);
-
-
->
->
-> Cheers,
-> Ashok
->
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
-
+> ---
+>  .../devicetree/bindings/virtio/iommu.txt      | 66 +++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/virtio/iommu.txt b/Documentation/devicetree/bindings/virtio/iommu.txt
+> new file mode 100644
+> index 000000000000..2407fea0651c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/virtio/iommu.txt
+> @@ -0,0 +1,66 @@
+> +* virtio IOMMU PCI device
+> +
+> +When virtio-iommu uses the PCI transport, its programming interface is
+> +discovered dynamically by the PCI probing infrastructure. However the
+> +device tree statically describes the relation between IOMMU and DMA
+> +masters. Therefore, the PCI root complex that hosts the virtio-iommu
+> +contains a child node representing the IOMMU device explicitly.
+> +
+> +Required properties:
+> +
+> +- compatible:	Should be "virtio,pci-iommu"
+> +- reg:		PCI address of the IOMMU. As defined in the PCI Bus
+> +		Binding reference [1], the reg property is a five-cell
+> +		address encoded as (phys.hi phys.mid phys.lo size.hi
+> +		size.lo). phys.hi should contain the device's BDF as
+> +		0b00000000 bbbbbbbb dddddfff 00000000. The other cells
+> +		should be zero.
+> +- #iommu-cells:	Each platform DMA master managed by the IOMMU is assigned
+> +		an endpoint ID, described by the "iommus" property [2].
+> +		For virtio-iommu, #iommu-cells must be 1.
+> +
+> +Notes:
+> +
+> +- DMA from the IOMMU device isn't managed by another IOMMU. Therefore the
+> +  virtio-iommu node doesn't have an "iommus" property, and is omitted from
+> +  the iommu-map property of the root complex.
+> +
+> +Example:
+> +
+> +pcie@10000000 {
+> +	compatible = "pci-host-ecam-generic";
+> +	...
+> +
+> +	/* The IOMMU programming interface uses slot 00:01.0 */
+> +	iommu0: iommu@0008 {
+> +		compatible = "virtio,pci-iommu";
+> +		reg = <0x00000800 0 0 0 0>;
+> +		#iommu-cells = <1>;
+> +	};
+> +
+> +	/*
+> +	 * The IOMMU manages all functions in this PCI domain except
+> +	 * itself. Omit BDF 00:01.0.
+> +	 */
+> +	iommu-map = <0x0 &iommu0 0x0 0x8>
+> +		    <0x9 &iommu0 0x9 0xfff7>;
+> +};
+> +
+> +pcie@20000000 {
+> +	compatible = "pci-host-ecam-generic";
+> +	...
+> +	/*
+> +	 * The IOMMU also manages all functions from this domain,
+> +	 * with endpoint IDs 0x10000 - 0x1ffff
+> +	 */
+> +	iommu-map = <0x0 &iommu0 0x10000 0x10000>;
+> +};
+> +
+> +ethernet@fe001000 {
+> +	...
+> +	/* The IOMMU manages this platform device with endpoint ID 0x20000 */
+> +	iommus = <&iommu0 0x20000>;
+> +};
+> +
+> +[1] Documentation/devicetree/bindings/pci/pci.txt
+> +[2] Documentation/devicetree/bindings/iommu/iommu.txt
+> -- 
+> 2.21.0
