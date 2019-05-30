@@ -2,21 +2,21 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 347AB30099
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 19:12:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A0643009E
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2019 19:12:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726280AbfE3RMg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 May 2019 13:12:36 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40078 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727049AbfE3RMg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 May 2019 13:12:36 -0400
+        id S1727485AbfE3RMj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 May 2019 13:12:39 -0400
+Received: from foss.arm.com ([217.140.101.70]:40108 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727049AbfE3RMj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 May 2019 13:12:39 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F071341;
-        Thu, 30 May 2019 10:12:35 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8CD315AD;
+        Thu, 30 May 2019 10:12:38 -0700 (PDT)
 Received: from ostrya.cambridge.arm.com (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 365663F5AF;
-        Thu, 30 May 2019 10:12:32 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8B5EA3F5AF;
+        Thu, 30 May 2019 10:12:35 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 To:     joro@8bytes.org, mst@redhat.com
 Cc:     iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
@@ -29,10 +29,12 @@ Cc:     iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
         kvmarm@lists.cs.columbia.edu, eric.auger@redhat.com,
         tnowicki@caviumnetworks.com, kevin.tian@intel.com,
         bauerman@linux.ibm.com
-Subject: [PATCH v8 0/7] Add virtio-iommu driver
-Date:   Thu, 30 May 2019 18:09:22 +0100
-Message-Id: <20190530170929.19366-1-jean-philippe.brucker@arm.com>
+Subject: [PATCH v8 1/7] dt-bindings: virtio-mmio: Add IOMMU description
+Date:   Thu, 30 May 2019 18:09:23 +0100
+Message-Id: <20190530170929.19366-2-jean-philippe.brucker@arm.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190530170929.19366-1-jean-philippe.brucker@arm.com>
+References: <20190530170929.19366-1-jean-philippe.brucker@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -40,51 +42,67 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Implement the virtio-iommu driver, following specification v0.12 [1].
-Since last version [2] we've worked on improving the specification,
-which resulted in the following changes to the interface:
-* Remove the EXEC flag.
-* Add feature bit for the MMIO flag.
-* Change domain_bits to domain_range.
+The nature of a virtio-mmio node is discovered by the virtio driver at
+probe time. However the DMA relation between devices must be described
+statically. When a virtio-mmio node is a virtio-iommu device, it needs an
+"#iommu-cells" property as specified by bindings/iommu/iommu.txt.
 
-Given that there were small changes to patch 5/7, I removed the review
-and test tags. Please find the code at [3].
+Otherwise, the virtio-mmio device may perform DMA through an IOMMU, which
+requires an "iommus" property. Describe these requirements in the
+device-tree bindings documentation.
 
-[1] Virtio-iommu specification v0.12, sources and pdf
-    git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.12
-    http://jpbrucker.net/virtio-iommu/spec/v0.12/virtio-iommu-v0.12.pdf
-    http://jpbrucker.net/virtio-iommu/spec/diffs/virtio-iommu-dev-diff-v0.11-v0.12.pdf
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+---
+ .../devicetree/bindings/virtio/mmio.txt       | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-[2] [PATCH v7 0/7] Add virtio-iommu driver
-    https://lore.kernel.org/linux-pci/0ba215f5-e856-bf31-8dd9-a85710714a7a@arm.com/T/
-
-[3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.12
-    git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.12
-
-Jean-Philippe Brucker (7):
-  dt-bindings: virtio-mmio: Add IOMMU description
-  dt-bindings: virtio: Add virtio-pci-iommu node
-  of: Allow the iommu-map property to omit untranslated devices
-  PCI: OF: Initialize dev->fwnode appropriately
-  iommu: Add virtio-iommu driver
-  iommu/virtio: Add probe request
-  iommu/virtio: Add event queue
-
- .../devicetree/bindings/virtio/iommu.txt      |   66 +
- .../devicetree/bindings/virtio/mmio.txt       |   30 +
- MAINTAINERS                                   |    7 +
- drivers/iommu/Kconfig                         |   11 +
- drivers/iommu/Makefile                        |    1 +
- drivers/iommu/virtio-iommu.c                  | 1176 +++++++++++++++++
- drivers/of/base.c                             |   10 +-
- drivers/pci/of.c                              |    6 +
- include/uapi/linux/virtio_ids.h               |    1 +
- include/uapi/linux/virtio_iommu.h             |  165 +++
- 10 files changed, 1470 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
- create mode 100644 drivers/iommu/virtio-iommu.c
- create mode 100644 include/uapi/linux/virtio_iommu.h
-
+diff --git a/Documentation/devicetree/bindings/virtio/mmio.txt b/Documentation/devicetree/bindings/virtio/mmio.txt
+index 5069c1b8e193..21af30fbb81f 100644
+--- a/Documentation/devicetree/bindings/virtio/mmio.txt
++++ b/Documentation/devicetree/bindings/virtio/mmio.txt
+@@ -8,10 +8,40 @@ Required properties:
+ - reg:		control registers base address and size including configuration space
+ - interrupts:	interrupt generated by the device
+ 
++Required properties for virtio-iommu:
++
++- #iommu-cells:	When the node corresponds to a virtio-iommu device, it is
++		linked to DMA masters using the "iommus" or "iommu-map"
++		properties [1][2]. #iommu-cells specifies the size of the
++		"iommus" property. For virtio-iommu #iommu-cells must be
++		1, each cell describing a single endpoint ID.
++
++Optional properties:
++
++- iommus:	If the device accesses memory through an IOMMU, it should
++		have an "iommus" property [1]. Since virtio-iommu itself
++		does not access memory through an IOMMU, the "virtio,mmio"
++		node cannot have both an "#iommu-cells" and an "iommus"
++		property.
++
+ Example:
+ 
+ 	virtio_block@3000 {
+ 		compatible = "virtio,mmio";
+ 		reg = <0x3000 0x100>;
+ 		interrupts = <41>;
++
++		/* Device has endpoint ID 23 */
++		iommus = <&viommu 23>
+ 	}
++
++	viommu: iommu@3100 {
++		compatible = "virtio,mmio";
++		reg = <0x3100 0x100>;
++		interrupts = <42>;
++
++		#iommu-cells = <1>
++	}
++
++[1] Documentation/devicetree/bindings/iommu/iommu.txt
++[2] Documentation/devicetree/bindings/pci/pci-iommu.txt
 -- 
 2.21.0
 
