@@ -2,102 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 76B263130D
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2019 18:52:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DFF531327
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2019 18:55:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfEaQwo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 31 May 2019 12:52:44 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34332 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbfEaQwo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 May 2019 12:52:44 -0400
-Received: by mail-lj1-f196.google.com with SMTP id j24so10305564ljg.1
-        for <linux-pci@vger.kernel.org>; Fri, 31 May 2019 09:52:43 -0700 (PDT)
+        id S1726640AbfEaQz0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 31 May 2019 12:55:26 -0400
+Received: from mail-ed1-f43.google.com ([209.85.208.43]:33016 "EHLO
+        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfEaQz0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 May 2019 12:55:26 -0400
+Received: by mail-ed1-f43.google.com with SMTP id n17so15523390edb.0
+        for <linux-pci@vger.kernel.org>; Fri, 31 May 2019 09:55:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v6H5MAo72kBrswxB03BJ2HpgepSBZLZhL5ogd8zupLU=;
-        b=OG1KV6FZLFhvOSN7fp5zLXlrz323yy7uJi4Is23x/8ff/t7fSs6pfOXJAFwM3v/wC6
-         b9K7GkitQpHZawyKE3kZzpHbUuUtubBxLFGtKQ2iRJuiB3CI/MtfFoiCW29iMCQ8dHlN
-         QW4ksaLmQ68g1benk9nLF3YHPQ85XFEH5RDoUn+xKSZoOZtOcUIY2YJIT/2lrQR9EcJX
-         bNwq2XPMP9F+dNHBk8DrarZ3IP1HCvYQ4wsw6VYNZrPGenSK8cfmfLXlkbFLnLqByxJP
-         OENBIcoFg7Xni3OlGtxAWkC4nxDOrxtqSZecSg+B09IXvXCPXiIzA7QrmluirCajIzO0
-         LhkA==
+        d=broadcom.com; s=google;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=oUmJLGYIlDcjHPU6CDOuvAbbBVkZyLFD3hAzoMXIXeE=;
+        b=bHlnR2GrJOsXuhrmcqLb21kQ6//M/okXq8Y5yB81FrBYrVS28tlNJXlQsRQV29F5x7
+         VK7j4eN89LQQjrY/IRDzbM2U43OP/CvNAjNJIidfIi2qQnECMbE0jCCxI3+0Nr4GfUSi
+         sYHiq4MoW9BZW+gyPenDoxRZ0PE+zsrUkjxYY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v6H5MAo72kBrswxB03BJ2HpgepSBZLZhL5ogd8zupLU=;
-        b=FdBkhqKI7s9GpuwIrjQA1SLuopyX8K76jpYv0LWnJI2YhQLH4cVDHqp8bohPwMXMGp
-         NvvmwBJ2D2XyUwV/M1CdW/jO/6mC/L4P0XiXyZUkMcfvPOsvHlcyQ2Z//Pfduq4zaHit
-         qzvLn01Aurx9ddHEKJ68O9OqrBKHAkM76Bh9yZeLvY0/uZ5i1XBY2Hg3e1JPLlGa4e7n
-         QeAeGauy299rwGD62XvMgFVf1Emo3egj/L8N/JQm/RUgo3L1AP5V3XNaWC5ottds8pXI
-         2iBmQbF+CSafJtDFhEU72PFz1Z63U4KyDzrtyeWDs2qyvGTpK78M//07Ey826dHM/wPI
-         qqPA==
-X-Gm-Message-State: APjAAAVrxLLXdFTxgPtqqKhy6YmHj0rHtKkDJToxHTePGJS6F8Ps8Sme
-        QeT9sdx7fQD+lCIciUWxfnWaaBAOtUC8goqRIsGiyQ==
-X-Google-Smtp-Source: APXvYqx+7FWVD3TK8yBjAqQZMlMkuV+lN5tCxVL10+M37w8cNW4yMIcMcmxP3Kt1PI37oQbyVpTXf/64SZ+48DwdR9o=
-X-Received: by 2002:a2e:864e:: with SMTP id i14mr6485594ljj.141.1559321562622;
- Fri, 31 May 2019 09:52:42 -0700 (PDT)
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=oUmJLGYIlDcjHPU6CDOuvAbbBVkZyLFD3hAzoMXIXeE=;
+        b=SbKcAHaYoCiRetnNFkZx912vDxHI5zY7AnleAgVwNw4Sysoitq1CrM09DrZXudwlVO
+         JJQtlofuqPIhuzNFU4g24rNGCpjbChcKtSHV+SX46aPmEcFaM06sfjORoY4YlVVJ2+wU
+         FyZQ1W7z2Lv8qHS5S6iFQZAzVo2/9TSGF7jkg30hQEKRbcL3etDBkd04hVoHXfskuUo5
+         qmsbQabVdqcflIbClhv9BmYlmJaVRA+HUGuy7LCqnQnQgAHEzmM0GhaCrbBDF8SuzfXo
+         Mz6yTK8hbVDKgPjIBIgjspqEzBA0LJiXbyCzWQf6FvhDO3Bjy+MVhuL79G1WCkxZYepT
+         V3JQ==
+X-Gm-Message-State: APjAAAVhfdG749ltSL7cBVM7z71j1qwH6NHy5IDi/X58vNeoOFAmQvJ4
+        C3h85lyJzZpiWRXqpnsbSH9GEA==
+X-Google-Smtp-Source: APXvYqwwDwTEoCkgJEPEoPazQjIBbYEMnhdEYGKq+DPL80N6+FFl00jlBEnhSxTmH48aVzC2lQ+lcw==
+X-Received: by 2002:a17:906:4995:: with SMTP id p21mr10334271eju.140.1559321724720;
+        Fri, 31 May 2019 09:55:24 -0700 (PDT)
+Received: from [10.136.8.140] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id p17sm1720105edr.94.2019.05.31.09.55.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 May 2019 09:55:23 -0700 (PDT)
+From:   JD Zheng <jiandong.zheng@broadcom.com>
+Subject: SSD surprise removal leads to long wait inside pci_dev_wait() and FLR
+ 65s timeout
+To:     linux-pci@vger.kernel.org
+Cc:     bhelgaas@google.com, keith.busch@intel.com,
+        bcm-kernel-feedback-list@broadcom.com
+Message-ID: <8f2d88a5-9524-c4c3-a61f-7d55d97e1c18@broadcom.com>
+Date:   Fri, 31 May 2019 09:55:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1558648540-14239-1-git-send-email-alan.mikhak@sifive.com>
- <CABEDWGzHkt4p_byEihOAs9g97t450h9-Z0Qu2b2-O1pxCNPX+A@mail.gmail.com>
- <baa68439-f703-a453-34a2-24387bb9112d@ti.com> <CABEDWGyJpfX=DzBgXAGwu29rEwmY3s_P9QPC0eJOJ3KBysRWtA@mail.gmail.com>
- <96365941-512b-dfb2-05b7-0780e8961f6c@ti.com>
-In-Reply-To: <96365941-512b-dfb2-05b7-0780e8961f6c@ti.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Fri, 31 May 2019 09:52:31 -0700
-Message-ID: <CABEDWGyQHh=8fmZFAK6acecDSF_-pfpa9NCZOQ--WDhZiZPihw@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: endpoint: Skip odd BAR when skipping 64bit BAR
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lorenzo.pieralisi@arm.com, linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        wen.yang99@zte.com.cn, kjlu@umn.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 30, 2019 at 9:37 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Hi Alan,
->
-> On 25/05/19 12:20 AM, Alan Mikhak wrote:
-> > Hi Kishon,
-> >
-> > Yes. This change is still applicable even when the platform specifies
-> > that it only supports 64-bit BARs by setting the bar_fixed_64bit
-> > member of epc_features.
-> >
-> > The issue being fixed is this: If the 'continue' statement is executed
-> > within the loop, the loop index 'bar' needs to advanced by two, not
-> > one, when the BAR is 64-bit. Otherwise the next loop iteration will be
-> > on an odd BAR which doesn't exist.
->
-> IIUC you are fixing the case where the BAR is "reserved" (specified in
-> epc_features) and is also a 64-bit BAR?
+Hello,
 
-Correct. If BAR0 is specified in epc_features as reserved and also
-64-bit, the loop would skip BAR0 by executing the 'continue'
-statement. In this scenario, BAR1 doesn't exist since the 64-bit BAR0
-spans the two 32-bit BAR0 and BAR1. The loop index 'bar' would be
-advanced by 2 in this case so on the next iteration the loop would
-process BAR2.
+I am running DPDK 18.11+SPDK 19.04 with v5.1 kernel. DPDK/SPDK uses SSD 
+vfio devices and after running SPDK's nvmf_tgt, unplugging a SSD cause 
+kernel to print out following:
+[  105.426952] vfio-pci 0000:04:00.0: not ready 2047ms after FLR; waiting
+[  107.698953] vfio-pci 0000:04:00.0: not ready 4095ms after FLR; waiting
+[  112.050960] vfio-pci 0000:04:00.0: not ready 8191ms after FLR; waiting
+[  120.498953] vfio-pci 0000:04:00.0: not ready 16383ms after FLR; waiting
+[  138.418957] vfio-pci 0000:04:00.0: not ready 32767ms after FLR; waiting
+[  173.234953] vfio-pci 0000:04:00.0: not ready 65535ms after FLR; giving up
 
-> If 2 consecutive BARs are marked as reserved in reserved_bar of epc_features,
-> the result should be the same right?
+Looks like it is a PCI hotplug racing condition between DPDK's 
+eal-intr-thread thread and kernel's pciehp thread. And it causes lockup 
+in pci_dev_wait() at kernel side.
 
-If both BAR0 and BAR2 are reserved and also 64-bit, the loop would
-check BAR0 on its first iteration and skip BAR0 and BAR1, check BAR2
-on its second iteration and skip BAR2 and BAR3, then check BAR4 on its
-third iteration. If BAR4 is also 64-bit and reserved, the loop would
-skip BAR4 and BAR5 and that would be the final iteration of the loop.
+When SSD is removed, eal-intr-thread immediately receives 
+RTE_INTR_HANDLE_ALARM and handler calls rte_pci_detach_dev() and at 
+kernel side vfio_pci_release() is triggered to release this vfio device, 
+which calls pci_try_reset_function(), then _pci_reset_function_locked(). 
+pci_try_reset_function acquires the device lock but 
+_pci_reset_function_locked() doesn't return, therefore lock is NOT released.
 
-Regards,
-Alan
+Inside _pci_reset_function_locked(), pcie_has_flr(), pci_pm_reset(), 
+etc. call pci_dev_wait() at the end but it doesn't return and print out 
+above message until 65s timeout.
+
+At kernel pciehp side, it also detects the removal but doesn't run 
+immediately as it is configured as "pciehp.pciehp_poll_time=5". So a 
+couple of seconds later, it calls pciehp_unconfigure_device -> 
+pci_walk_bus -> pci_dev_set_disconnected. pci_dev_set_disconnected() 
+couldn't get the device lock and is stuck too because the lock is hold 
+by eal-intr-thread.
+
+The first issue is in pci_dev_wait(). It calls pci_read_config_dword() 
+and only when id is not all ones, it can return. But when SSD is 
+physically removed, id retrieved is always all ones therefore, it has to 
+wait for FLR 65s timeout to return.
+
+I did the following to check return value of pci_read_config_dword() to 
+fix this:
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4439,7 +4439,11 @@ static int pci_dev_wait(struct pci_dev *dev, char 
+*reset_type, int timeout)
+
+                 msleep(delay);
+                 delay *= 2;
+-               pci_read_config_dword(dev, PCI_COMMAND, &id);
++               if (pci_read_config_dword(dev, PCI_COMMAND, &id) ==
++                   PCIBIOS_DEVICE_NOT_FOUND) {
++                       pci_info(dev, "device disconnected\n");
++                       return -ENODEV;
++               }
+         }
+
+         if (delay > 1000)
+
+The second issue is that due to lock up described above, the 
+pci_dev_set_disconnected() is stuck and pci_read_config_dword() won't 
+return PCIBIOS_DEVICE_NOT_FOUND.
+
+I didn't find a easy way to fix it. Maybe use device lock in 
+pci_dev_set_disconnected() is too coarse and we need a finer device 
+err_state lock?
+
+BTW, pci_dev_set_disconnected wasn't using device lock until this change 
+a6bd101b8f.
+
+Any suggestions to fix this problem?
+
+Thanks,
+JD Zheng
