@@ -2,134 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DFF531327
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2019 18:55:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00F2631387
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2019 19:12:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfEaQz0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 31 May 2019 12:55:26 -0400
-Received: from mail-ed1-f43.google.com ([209.85.208.43]:33016 "EHLO
-        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfEaQz0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 May 2019 12:55:26 -0400
-Received: by mail-ed1-f43.google.com with SMTP id n17so15523390edb.0
-        for <linux-pci@vger.kernel.org>; Fri, 31 May 2019 09:55:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=oUmJLGYIlDcjHPU6CDOuvAbbBVkZyLFD3hAzoMXIXeE=;
-        b=bHlnR2GrJOsXuhrmcqLb21kQ6//M/okXq8Y5yB81FrBYrVS28tlNJXlQsRQV29F5x7
-         VK7j4eN89LQQjrY/IRDzbM2U43OP/CvNAjNJIidfIi2qQnECMbE0jCCxI3+0Nr4GfUSi
-         sYHiq4MoW9BZW+gyPenDoxRZ0PE+zsrUkjxYY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=oUmJLGYIlDcjHPU6CDOuvAbbBVkZyLFD3hAzoMXIXeE=;
-        b=SbKcAHaYoCiRetnNFkZx912vDxHI5zY7AnleAgVwNw4Sysoitq1CrM09DrZXudwlVO
-         JJQtlofuqPIhuzNFU4g24rNGCpjbChcKtSHV+SX46aPmEcFaM06sfjORoY4YlVVJ2+wU
-         FyZQ1W7z2Lv8qHS5S6iFQZAzVo2/9TSGF7jkg30hQEKRbcL3etDBkd04hVoHXfskuUo5
-         qmsbQabVdqcflIbClhv9BmYlmJaVRA+HUGuy7LCqnQnQgAHEzmM0GhaCrbBDF8SuzfXo
-         Mz6yTK8hbVDKgPjIBIgjspqEzBA0LJiXbyCzWQf6FvhDO3Bjy+MVhuL79G1WCkxZYepT
-         V3JQ==
-X-Gm-Message-State: APjAAAVhfdG749ltSL7cBVM7z71j1qwH6NHy5IDi/X58vNeoOFAmQvJ4
-        C3h85lyJzZpiWRXqpnsbSH9GEA==
-X-Google-Smtp-Source: APXvYqwwDwTEoCkgJEPEoPazQjIBbYEMnhdEYGKq+DPL80N6+FFl00jlBEnhSxTmH48aVzC2lQ+lcw==
-X-Received: by 2002:a17:906:4995:: with SMTP id p21mr10334271eju.140.1559321724720;
-        Fri, 31 May 2019 09:55:24 -0700 (PDT)
-Received: from [10.136.8.140] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id p17sm1720105edr.94.2019.05.31.09.55.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 09:55:23 -0700 (PDT)
-From:   JD Zheng <jiandong.zheng@broadcom.com>
-Subject: SSD surprise removal leads to long wait inside pci_dev_wait() and FLR
- 65s timeout
-To:     linux-pci@vger.kernel.org
-Cc:     bhelgaas@google.com, keith.busch@intel.com,
-        bcm-kernel-feedback-list@broadcom.com
-Message-ID: <8f2d88a5-9524-c4c3-a61f-7d55d97e1c18@broadcom.com>
-Date:   Fri, 31 May 2019 09:55:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726924AbfEaRMY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 31 May 2019 13:12:24 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:38126 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726652AbfEaRMW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 31 May 2019 13:12:22 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hWl4l-0005iv-Dq; Fri, 31 May 2019 11:12:21 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hWl4k-0005Lu-Lb; Fri, 31 May 2019 11:12:18 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Kit Chow <kchow@gigaio.com>, Yinghai Lu <yinghai@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Fri, 31 May 2019 11:12:14 -0600
+Message-Id: <20190531171216.20532-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, kchow@gigaio.com, yinghai@kernel.org, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,MYRULES_NO_TEXT autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: [PATCH v3 0/2] Fix a pair of setup bus bugs
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
+Hey,
 
-I am running DPDK 18.11+SPDK 19.04 with v5.1 kernel. DPDK/SPDK uses SSD 
-vfio devices and after running SPDK's nvmf_tgt, unplugging a SSD cause 
-kernel to print out following:
-[  105.426952] vfio-pci 0000:04:00.0: not ready 2047ms after FLR; waiting
-[  107.698953] vfio-pci 0000:04:00.0: not ready 4095ms after FLR; waiting
-[  112.050960] vfio-pci 0000:04:00.0: not ready 8191ms after FLR; waiting
-[  120.498953] vfio-pci 0000:04:00.0: not ready 16383ms after FLR; waiting
-[  138.418957] vfio-pci 0000:04:00.0: not ready 32767ms after FLR; waiting
-[  173.234953] vfio-pci 0000:04:00.0: not ready 65535ms after FLR; giving up
+This is another resend to get some more attention. Nothing has changed
+since v2.
 
-Looks like it is a PCI hotplug racing condition between DPDK's 
-eal-intr-thread thread and kernel's pciehp thread. And it causes lockup 
-in pci_dev_wait() at kernel side.
+For the first patch, there's a lot more information in the original
+thread here[1] including instructions on how to reproduce it in QEMU.
 
-When SSD is removed, eal-intr-thread immediately receives 
-RTE_INTR_HANDLE_ALARM and handler calls rte_pci_detach_dev() and at 
-kernel side vfio_pci_release() is triggered to release this vfio device, 
-which calls pci_try_reset_function(), then _pci_reset_function_locked(). 
-pci_try_reset_function acquires the device lock but 
-_pci_reset_function_locked() doesn't return, therefore lock is NOT released.
-
-Inside _pci_reset_function_locked(), pcie_has_flr(), pci_pm_reset(), 
-etc. call pci_dev_wait() at the end but it doesn't return and print out 
-above message until 65s timeout.
-
-At kernel pciehp side, it also detects the removal but doesn't run 
-immediately as it is configured as "pciehp.pciehp_poll_time=5". So a 
-couple of seconds later, it calls pciehp_unconfigure_device -> 
-pci_walk_bus -> pci_dev_set_disconnected. pci_dev_set_disconnected() 
-couldn't get the device lock and is stuck too because the lock is hold 
-by eal-intr-thread.
-
-The first issue is in pci_dev_wait(). It calls pci_read_config_dword() 
-and only when id is not all ones, it can return. But when SSD is 
-physically removed, id retrieved is always all ones therefore, it has to 
-wait for FLR 65s timeout to return.
-
-I did the following to check return value of pci_read_config_dword() to 
-fix this:
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4439,7 +4439,11 @@ static int pci_dev_wait(struct pci_dev *dev, char 
-*reset_type, int timeout)
-
-                 msleep(delay);
-                 delay *= 2;
--               pci_read_config_dword(dev, PCI_COMMAND, &id);
-+               if (pci_read_config_dword(dev, PCI_COMMAND, &id) ==
-+                   PCIBIOS_DEVICE_NOT_FOUND) {
-+                       pci_info(dev, "device disconnected\n");
-+                       return -ENODEV;
-+               }
-         }
-
-         if (delay > 1000)
-
-The second issue is that due to lock up described above, the 
-pci_dev_set_disconnected() is stuck and pci_read_config_dword() won't 
-return PCIBIOS_DEVICE_NOT_FOUND.
-
-I didn't find a easy way to fix it. Maybe use device lock in 
-pci_dev_set_disconnected() is too coarse and we need a finer device 
-err_state lock?
-
-BTW, pci_dev_set_disconnected wasn't using device lock until this change 
-a6bd101b8f.
-
-Any suggestions to fix this problem?
+The second patch fixes an unrelated bug, with similar symptoms, in
+the same code. It was a lot easier to debug and the reasoning should
+hopefully be easier to follow, but I don't think it was reviewed much
+during the first posting due to the nightmare in the first patch.
 
 Thanks,
-JD Zheng
+
+Logan
+
+[1] https://lore.kernel.org/lkml/de3e34d8-2ac3-e89b-30f1-a18826ce5d7d@deltatee.com/T/#m96ba95de4678146ed46b602e8bfd6ac08a588fa2
+
+--
+
+Changes in v3:
+
+* Rebased onto v5.2-rc2 (no changes)
+
+Changes in v2:
+
+* Rebased onto v5.1-rc6 (no changes)
+* Reworked the commit message in the first commit to try and explain
+  it better.
+
+--
+
+Logan Gunthorpe (2):
+  PCI: Prevent 64-bit resources from being counted in 32-bit bridge
+    region
+  PCI: Fix disabling of bridge BARs when assigning bus resources
+
+ drivers/pci/setup-bus.c | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
+
+--
+2.20.1
