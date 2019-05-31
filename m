@@ -2,104 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 817A230B55
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2019 11:22:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA95630C05
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2019 11:49:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfEaJWJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 31 May 2019 05:22:09 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37781 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbfEaJWJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 May 2019 05:22:09 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r10so8520248otd.4;
-        Fri, 31 May 2019 02:22:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=ZmrjcTQQbB0JQZLmh1TVPDsN8UglFZ3+RMTJhU5OjIc=;
-        b=QS/DLuCASwSPZDty8XIYWQRqBRNHUOz9crdECIR7GqAcL3ApTSdp/nUyrid7aJsvb1
-         2F/FhjS82VQKHIJSHrXNkf/y2I6tF2Ijc+qwRzdVaa6JAyq2ZN9tVFioCGG06enmM2pF
-         /ebWRgoX0Xy//gaySdaqExgrXiNcCmyRRu78/wMDQ+IfpUlPpYjOEE/sD8wQyIUeVabt
-         5onxC9pXF2O8xkEd7L4fKLbm8bws5JeFc3WSGYHdRrwMiqHGVTSS/5bMav5QiUIuHjAy
-         yBTKOctmwCkU0LS6SklyPLzNL/pFjno1hPR97oDQdi6Hi/0/Q5Q0z66fxQAlYj7YcGwG
-         oWIQ==
-X-Gm-Message-State: APjAAAXj814XAp7dIYnRMeFM0otBNJbKGYXWvSFvril3BTf5uxQHHIZL
-        6kSHrmiBIdEh4cYuGZsqCc+E4saGJAtzFtZ8feAe57c1
-X-Google-Smtp-Source: APXvYqzqfwl9QjluHmd3fDEh8DMTSFn24beKN/U0UmB9vwHpTF6jfEYs6fPDtDfvsiuZobYbtmpwlolHi83/lykF9Wk=
-X-Received: by 2002:a9d:6b98:: with SMTP id b24mr971451otq.189.1559294528593;
- Fri, 31 May 2019 02:22:08 -0700 (PDT)
-MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 31 May 2019 11:21:57 +0200
-Message-ID: <CAJZ5v0j_uQxWZRjJ_=S1b=NRpLfyf_0KHfyPwSj30SRWr9RzHg@mail.gmail.com>
-Subject: [GIT PULL] Power management fixes for v5.2-rc3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        id S1726307AbfEaJtd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 31 May 2019 05:49:33 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:52996 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfEaJtc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 May 2019 05:49:32 -0400
+Received: from 79.184.255.225.ipv4.supernova.orange.pl (79.184.255.225) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 812f32bff0215906; Fri, 31 May 2019 11:49:30 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PCI <linux-pci@vger.kernel.org>
 Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] PCI: PM: Avoid resuming devices in D3hot during system suspend
+Date:   Fri, 31 May 2019 11:49:30 +0200
+Message-ID: <4561083.VtDMOnK5Me@kreacher>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Linus,
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Please pull from the tag
+The current code resumes devices in D3hot during system suspend if
+the target power state for them is D3cold, but that is not necessary
+in general.  It only is necessary to do that if the platform firmware
+requires the device to be resumed, but that should be covered by
+the platform_pci_need_resume() check anyway, so rework
+pci_dev_keep_suspended() to avoid returning 'false' for devices
+in D3hot which need not be resumed due to platform firmware
+requirements.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.2-rc3
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/pci/pci.c |   15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-with top-most commit d491f2b75237ef37d8867830ab7fad8d9659e853
-
- PCI: PM: Avoid possible suspend-to-idle issue
-
-on top of commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07
-
- Linux 5.2-rc2
-
-to receive power management fixes for 5.2-rc3.
-
-These fix three issues in the system-wide suspend and hibernation
-area related to PCI device PM handling by suspend-to-idle, device
-wakeup optimizations and arbitrary differences between suspend and
-hiberantion.
-
-Specifics:
-
- - Modify the PCI bus type's PM code to avoid putting devices left
-   by their drivers in D0 on purpose during suspend to idle into
-   low-power states as doing that may confuse the system resume
-   callbacks of the drivers in question (Rafael Wysocki).
-
- - Avoid checking ACPI wakeup configuration during system-wide
-   suspend for suspended devices that do not use ACPI-based wakeup
-   to allow them to stay in suspend more often (Rafael Wysocki).
-
- - The last phase of hibernation is analogous to system-wide suspend
-   also because on platforms with ACPI it passes control to the
-   platform firmware to complete the transision, so make it indicate
-   that by calling pm_set_suspend_via_firmware() to allow the drivers
-   that care about this to do the right thing (Rafael Wysocki).
-
-Thanks!
+Index: linux-pm/drivers/pci/pci.c
+===================================================================
+--- linux-pm.orig/drivers/pci/pci.c
++++ linux-pm/drivers/pci/pci.c
+@@ -2474,10 +2474,19 @@ bool pci_dev_keep_suspended(struct pci_d
+ {
+ 	struct device *dev = &pci_dev->dev;
+ 	bool wakeup = device_may_wakeup(dev);
++	pci_power_t target_state;
+ 
+-	if (!pm_runtime_suspended(dev)
+-	    || pci_target_state(pci_dev, wakeup) != pci_dev->current_state
+-	    || platform_pci_need_resume(pci_dev))
++	if (!pm_runtime_suspended(dev) || platform_pci_need_resume(pci_dev))
++		return false;
++
++	target_state = pci_target_state(pci_dev, wakeup);
++	/*
++	 * If the earlier platform check has not triggered, D3cold is just power
++	 * removal on top of D3hot, so no need to resume the device in that
++	 * case.
++	 */
++	if (target_state != pci_dev->current_state &&
++	    target_state != PCI_D3cold && pci_dev->current_state != PCI_D3hot)
+ 		return false;
+ 
+ 	/*
 
 
----------------
 
-Rafael J. Wysocki (3):
-      ACPI/PCI: PM: Add missing wakeup.flags.valid checks
-      ACPI: PM: Call pm_set_suspend_via_firmware() during hibernation
-      PCI: PM: Avoid possible suspend-to-idle issue
-
----------------
-
- drivers/acpi/device_pm.c |  4 ++--
- drivers/acpi/sleep.c     | 39 ++++++++++++++++++++++++---------------
- drivers/pci/pci-acpi.c   |  3 ++-
- drivers/pci/pci-driver.c | 17 ++++++++++++++++-
- include/linux/pci.h      |  1 +
- include/linux/suspend.h  |  2 +-
- kernel/power/hibernate.c |  4 ++--
- 7 files changed, 48 insertions(+), 22 deletions(-)
