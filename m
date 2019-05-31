@@ -2,102 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EEA36311FA
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2019 18:10:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76B263130D
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2019 18:52:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfEaQKB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 31 May 2019 12:10:01 -0400
-Received: from foss.arm.com ([217.140.101.70]:53860 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbfEaQKB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 31 May 2019 12:10:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CA07341;
-        Fri, 31 May 2019 09:10:00 -0700 (PDT)
-Received: from redmoon (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 459BB3F59C;
-        Fri, 31 May 2019 09:09:59 -0700 (PDT)
-Date:   Fri, 31 May 2019 17:09:56 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        rgummal@xilinx.com, marc.zyngier@arm.com
-Subject: Re: [PATCH v3] PCI: xilinx-nwl: Fix Multi MSI data programming
-Message-ID: <20190531160956.GB9356@redmoon>
-References: <1559133469-11981-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+        id S1726678AbfEaQwo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 31 May 2019 12:52:44 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34332 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbfEaQwo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 May 2019 12:52:44 -0400
+Received: by mail-lj1-f196.google.com with SMTP id j24so10305564ljg.1
+        for <linux-pci@vger.kernel.org>; Fri, 31 May 2019 09:52:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v6H5MAo72kBrswxB03BJ2HpgepSBZLZhL5ogd8zupLU=;
+        b=OG1KV6FZLFhvOSN7fp5zLXlrz323yy7uJi4Is23x/8ff/t7fSs6pfOXJAFwM3v/wC6
+         b9K7GkitQpHZawyKE3kZzpHbUuUtubBxLFGtKQ2iRJuiB3CI/MtfFoiCW29iMCQ8dHlN
+         QW4ksaLmQ68g1benk9nLF3YHPQ85XFEH5RDoUn+xKSZoOZtOcUIY2YJIT/2lrQR9EcJX
+         bNwq2XPMP9F+dNHBk8DrarZ3IP1HCvYQ4wsw6VYNZrPGenSK8cfmfLXlkbFLnLqByxJP
+         OENBIcoFg7Xni3OlGtxAWkC4nxDOrxtqSZecSg+B09IXvXCPXiIzA7QrmluirCajIzO0
+         LhkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v6H5MAo72kBrswxB03BJ2HpgepSBZLZhL5ogd8zupLU=;
+        b=FdBkhqKI7s9GpuwIrjQA1SLuopyX8K76jpYv0LWnJI2YhQLH4cVDHqp8bohPwMXMGp
+         NvvmwBJ2D2XyUwV/M1CdW/jO/6mC/L4P0XiXyZUkMcfvPOsvHlcyQ2Z//Pfduq4zaHit
+         qzvLn01Aurx9ddHEKJ68O9OqrBKHAkM76Bh9yZeLvY0/uZ5i1XBY2Hg3e1JPLlGa4e7n
+         QeAeGauy299rwGD62XvMgFVf1Emo3egj/L8N/JQm/RUgo3L1AP5V3XNaWC5ottds8pXI
+         2iBmQbF+CSafJtDFhEU72PFz1Z63U4KyDzrtyeWDs2qyvGTpK78M//07Ey826dHM/wPI
+         qqPA==
+X-Gm-Message-State: APjAAAVrxLLXdFTxgPtqqKhy6YmHj0rHtKkDJToxHTePGJS6F8Ps8Sme
+        QeT9sdx7fQD+lCIciUWxfnWaaBAOtUC8goqRIsGiyQ==
+X-Google-Smtp-Source: APXvYqx+7FWVD3TK8yBjAqQZMlMkuV+lN5tCxVL10+M37w8cNW4yMIcMcmxP3Kt1PI37oQbyVpTXf/64SZ+48DwdR9o=
+X-Received: by 2002:a2e:864e:: with SMTP id i14mr6485594ljj.141.1559321562622;
+ Fri, 31 May 2019 09:52:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559133469-11981-1-git-send-email-bharat.kumar.gogada@xilinx.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1558648540-14239-1-git-send-email-alan.mikhak@sifive.com>
+ <CABEDWGzHkt4p_byEihOAs9g97t450h9-Z0Qu2b2-O1pxCNPX+A@mail.gmail.com>
+ <baa68439-f703-a453-34a2-24387bb9112d@ti.com> <CABEDWGyJpfX=DzBgXAGwu29rEwmY3s_P9QPC0eJOJ3KBysRWtA@mail.gmail.com>
+ <96365941-512b-dfb2-05b7-0780e8961f6c@ti.com>
+In-Reply-To: <96365941-512b-dfb2-05b7-0780e8961f6c@ti.com>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Fri, 31 May 2019 09:52:31 -0700
+Message-ID: <CABEDWGyQHh=8fmZFAK6acecDSF_-pfpa9NCZOQ--WDhZiZPihw@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: endpoint: Skip odd BAR when skipping 64bit BAR
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        wen.yang99@zte.com.cn, kjlu@umn.edu
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+Marc]
+On Thu, May 30, 2019 at 9:37 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> Hi Alan,
+>
+> On 25/05/19 12:20 AM, Alan Mikhak wrote:
+> > Hi Kishon,
+> >
+> > Yes. This change is still applicable even when the platform specifies
+> > that it only supports 64-bit BARs by setting the bar_fixed_64bit
+> > member of epc_features.
+> >
+> > The issue being fixed is this: If the 'continue' statement is executed
+> > within the loop, the loop index 'bar' needs to advanced by two, not
+> > one, when the BAR is 64-bit. Otherwise the next loop iteration will be
+> > on an odd BAR which doesn't exist.
+>
+> IIUC you are fixing the case where the BAR is "reserved" (specified in
+> epc_features) and is also a 64-bit BAR?
 
-On Wed, May 29, 2019 at 06:07:49PM +0530, Bharat Kumar Gogada wrote:
-> The current Multi MSI data programming fails if multiple end points
-> requesting MSI and multi MSI are connected with switch, i.e the current
-> multi MSI data being given is not considering the number of vectors
-> being requested in case of multi MSI.
-> Ex: Two EP's connected via switch, EP1 requesting single MSI first,
-> EP2 requesting Multi MSI of count four. The current code gives
-> MSI data 0x0 to EP1 and 0x1 to EP2, but EP2 can modify lower two bits
-> due to which EP2 also sends interrupt with MSI data 0x0 which results
-> in always invoking virq of EP1 due to which EP2 MSI interrupt never
-> gets handled.
+Correct. If BAR0 is specified in epc_features as reserved and also
+64-bit, the loop would skip BAR0 by executing the 'continue'
+statement. In this scenario, BAR1 doesn't exist since the 64-bit BAR0
+spans the two 32-bit BAR0 and BAR1. The loop index 'bar' would be
+advanced by 2 in this case so on the next iteration the loop would
+process BAR2.
 
-If this is a problem it is not the only driver where it should be fixed
-it seems. CC'ed Marc in case I have missed something in relation to MSI
-IRQs but AFAIU it looks like HW is allowed to toggled bits (according to
-bits[6:4] in Message Control for MSI) in the MSI data, given that the
-data written is the hwirq number (in this specific MSI controller)
-it ought to be fixed.
+> If 2 consecutive BARs are marked as reserved in reserved_bar of epc_features,
+> the result should be the same right?
 
-The commit log and patch should be rewritten (I will do that) but
-first I would like to understand if there are more drivers to be
-updated.
+If both BAR0 and BAR2 are reserved and also 64-bit, the loop would
+check BAR0 on its first iteration and skip BAR0 and BAR1, check BAR2
+on its second iteration and skip BAR2 and BAR3, then check BAR4 on its
+third iteration. If BAR4 is also 64-bit and reserved, the loop would
+skip BAR4 and BAR5 and that would be the final iteration of the loop.
 
-Lorenzo
-
-> Fix Multi MSI data programming with required alignment by
-> using number of vectors being requested.
-> 
-> Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe
-> Host Controller")
-> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> ---
-> V3:
->  - Added example description of the issue
-> ---
->  drivers/pci/controller/pcie-xilinx-nwl.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-> index 81538d7..8efcb8a 100644
-> --- a/drivers/pci/controller/pcie-xilinx-nwl.c
-> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-> @@ -483,7 +483,16 @@ static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
->  	int i;
->  
->  	mutex_lock(&msi->lock);
-> -	bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
-> +
-> +	/*
-> +	 * Multi MSI count is requested in power of two
-> +	 * Check if multi msi is requested
-> +	 */
-> +	if (nr_irqs % 2 == 0)
-> +		bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
-> +					 nr_irqs, nr_irqs - 1);
-> +	else
-> +		bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
->  					 nr_irqs, 0);
->  	if (bit >= INT_PCI_MSI_NR) {
->  		mutex_unlock(&msi->lock);
-> -- 
-> 2.7.4
-> 
+Regards,
+Alan
