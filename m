@@ -2,78 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DA95630C05
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2019 11:49:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F33330D21
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2019 13:14:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbfEaJtd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 31 May 2019 05:49:33 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:52996 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfEaJtc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 May 2019 05:49:32 -0400
-Received: from 79.184.255.225.ipv4.supernova.orange.pl (79.184.255.225) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id 812f32bff0215906; Fri, 31 May 2019 11:49:30 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PCI <linux-pci@vger.kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] PCI: PM: Avoid resuming devices in D3hot during system suspend
-Date:   Fri, 31 May 2019 11:49:30 +0200
-Message-ID: <4561083.VtDMOnK5Me@kreacher>
+        id S1726403AbfEaLON (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 31 May 2019 07:14:13 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50240 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726240AbfEaLON (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 31 May 2019 07:14:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A8B6341;
+        Fri, 31 May 2019 04:14:13 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E6DF3F5AF;
+        Fri, 31 May 2019 04:14:10 -0700 (PDT)
+Subject: Re: [virtio-dev] Re: [PATCH v8 2/7] dt-bindings: virtio: Add
+ virtio-pci-iommu node
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     "joro@8bytes.org" <joro@8bytes.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "virtio-dev@lists.oasis-open.org" <virtio-dev@lists.oasis-open.org>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "frowand.list@gmail.com" <frowand.list@gmail.com>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "tnowicki@caviumnetworks.com" <tnowicki@caviumnetworks.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "bauerman@linux.ibm.com" <bauerman@linux.ibm.com>
+References: <20190530170929.19366-1-jean-philippe.brucker@arm.com>
+ <20190530170929.19366-3-jean-philippe.brucker@arm.com>
+ <20190530133523-mutt-send-email-mst@kernel.org>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <c3cd5dba-123d-e808-98b1-731ac2d4b950@arm.com>
+Date:   Fri, 31 May 2019 12:13:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20190530133523-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 30/05/2019 18:45, Michael S. Tsirkin wrote:
+> On Thu, May 30, 2019 at 06:09:24PM +0100, Jean-Philippe Brucker wrote:
+>> Some systems implement virtio-iommu as a PCI endpoint. The operating
+>> system needs to discover the relationship between IOMMU and masters long
+>> before the PCI endpoint gets probed. Add a PCI child node to describe the
+>> virtio-iommu device.
+>>
+>> The virtio-pci-iommu is conceptually split between a PCI programming
+>> interface and a translation component on the parent bus. The latter
+>> doesn't have a node in the device tree. The virtio-pci-iommu node
+>> describes both, by linking the PCI endpoint to "iommus" property of DMA
+>> master nodes and to "iommu-map" properties of bus nodes.
+>>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+>> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> 
+> So this is just an example right?
+> We are not defining any new properties or anything like that.
 
-The current code resumes devices in D3hot during system suspend if
-the target power state for them is D3cold, but that is not necessary
-in general.  It only is necessary to do that if the platform firmware
-requires the device to be resumed, but that should be covered by
-the platform_pci_need_resume() check anyway, so rework
-pci_dev_keep_suspended() to avoid returning 'false' for devices
-in D3hot which need not be resumed due to platform firmware
-requirements.
+Yes it's just an example. The properties already exist but it's good to
+describe how to put them together for this particular case, because
+there isn't a precedent describing the topology for an IOMMU that
+appears on the PCI bus.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/pci/pci.c |   15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+> I think down the road for non dt platforms we want to put this
+> info in the config space of the device. I do not think ACPI
+> is the best option for this since not all systems have it.
+> But that can wait.
 
-Index: linux-pm/drivers/pci/pci.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci.c
-+++ linux-pm/drivers/pci/pci.c
-@@ -2474,10 +2474,19 @@ bool pci_dev_keep_suspended(struct pci_d
- {
- 	struct device *dev = &pci_dev->dev;
- 	bool wakeup = device_may_wakeup(dev);
-+	pci_power_t target_state;
- 
--	if (!pm_runtime_suspended(dev)
--	    || pci_target_state(pci_dev, wakeup) != pci_dev->current_state
--	    || platform_pci_need_resume(pci_dev))
-+	if (!pm_runtime_suspended(dev) || platform_pci_need_resume(pci_dev))
-+		return false;
-+
-+	target_state = pci_target_state(pci_dev, wakeup);
-+	/*
-+	 * If the earlier platform check has not triggered, D3cold is just power
-+	 * removal on top of D3hot, so no need to resume the device in that
-+	 * case.
-+	 */
-+	if (target_state != pci_dev->current_state &&
-+	    target_state != PCI_D3cold && pci_dev->current_state != PCI_D3hot)
- 		return false;
- 
- 	/*
+There is the probe order problem - PCI needs this info before starting
+to probe devices on the bus. Maybe we could store the info in a separate
+memory region, that is referenced on the command-line and that the guest
+can read early.
 
-
-
+Thanks,
+Jean
