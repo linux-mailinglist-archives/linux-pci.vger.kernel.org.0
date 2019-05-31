@@ -2,145 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AD283163A
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2019 22:39:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFD193167B
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2019 23:16:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfEaUjL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 31 May 2019 16:39:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55234 "EHLO mail.kernel.org"
+        id S1727196AbfEaVQv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 31 May 2019 17:16:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726711AbfEaUjL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 31 May 2019 16:39:11 -0400
+        id S1726719AbfEaVQv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 31 May 2019 17:16:51 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDFE626EAA;
-        Fri, 31 May 2019 20:39:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C017926F38;
+        Fri, 31 May 2019 21:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559335150;
-        bh=0HQst+0fKJNxhhK6HyvWrG2LQu7CnOIDA2z+zG4RBrI=;
+        s=default; t=1559337410;
+        bh=c2pv3UGEvPHler4RZI9AO4XMMtkbISSMYlJ167PAtPE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nXGB11sOFweqgSBdu+PiCNu+F9xDoJOdlrcoFTVwdlNywa/wrg6nmiwz+TCdKLZMj
-         L6e/0EURXi5SEDep9yncxz7Mx9aQc0/VHR4px9GmiLWYnPAPUPt4/12AGVG1Be+0Qz
-         mNBd7sW3ycKdBcLIkxwpafcUBnPKzUvW47xQqHGY=
-Date:   Fri, 31 May 2019 15:39:08 -0500
+        b=LdBjFu6KfciYCDWWmv+DuahF7VCnvl9Odv8PL7Kuy3LLohhYqw2h1hmvEo7l35v9H
+         XbrSSTcz5TCAN5taXh0JwSvcrqspZYxIZgF+qItCAPe3XV9qm8svY7UoKYiwMsEW3v
+         sWGFOkmBMAerGoooJXv92W12ZYlUkNmBBVuKNClU=
+Date:   Fri, 31 May 2019 16:16:48 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Abhishek Sahu <abhsahu@nvidia.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH 2/2] PCI: Create device link for NVIDIA GPU
-Message-ID: <20190531203908.GA58810@google.com>
-References: <20190531050109.16211-1-abhsahu@nvidia.com>
- <20190531050109.16211-3-abhsahu@nvidia.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PCI: PM: Avoid resuming devices in D3hot during system
+ suspend
+Message-ID: <20190531211648.GB58810@google.com>
+References: <4561083.VtDMOnK5Me@kreacher>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190531050109.16211-3-abhsahu@nvidia.com>
+In-Reply-To: <4561083.VtDMOnK5Me@kreacher>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Lukas, author of 07f4f97d7b4b ("vga_switcheroo: Use device link
-for HDA controller")]
-
-On Fri, May 31, 2019 at 10:31:09AM +0530, Abhishek Sahu wrote:
-> NVIDIA Turing GPUs include hardware support for USB Type-C and
-> VirtualLink. It helps in delivering the power, display, and data
-> required to power VR headsets through a single USB Type-C connector.
-> The Turing GPU is a multi-function PCI device has the following
-> four functions:
+On Fri, May 31, 2019 at 11:49:30AM +0200, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> 	- VGA display controller (Function 0)
-> 	- Audio controller (Function 1)
-> 	- USB xHCI Host controller (Function 2)
-> 	- USB Type-C USCI controller (Function 3)
+> The current code resumes devices in D3hot during system suspend if
+> the target power state for them is D3cold, but that is not necessary
+> in general.  It only is necessary to do that if the platform firmware
+> requires the device to be resumed, but that should be covered by
+> the platform_pci_need_resume() check anyway, so rework
+> pci_dev_keep_suspended() to avoid returning 'false' for devices
+> in D3hot which need not be resumed due to platform firmware
+> requirements.
 > 
-> The function 0 is tightly coupled with other functions in the
-> hardware. When function 0 goes in runtime suspended state,
-
-"Runtime suspended" is a Linux concept, not a PCI concept.  Please
-replace this with the appropriate PCI term, e.g., "D3hot" or whatever
-it is.
-
-> then it will do power gating for most of the hardware blocks.
-> Some of these hardware blocks are used by other functions which
-> leads to functional failure. So if any of these functions (1/2/3)
-> are active, then function 0 should also be in active state.
-
-Instead of "active" and "active state", please use the specific states
-required in terms of PCI.
-
-> 'commit 07f4f97d7b4b ("vga_switcheroo: Use device link for
-> HDA controller")' creates the device link from function 1 to
-> function 0. A similar kind of device link needs to be created
-> between function 0 and functions 2 and 3 for NVIDIA Turing GPU.
-
-I can't point to language that addresses this, but this sounds like a
-case of the GPU not conforming to the PCI spec.  The general
-assumption is that the OS should be able to discover everything it
-needs to do power management directly from the architected PCI config
-space.
-
-It is definitely not ideal to have to add quirks like this for devices
-designed this way.  Such quirks force us to do otherwise unnecessary
-OS updates as new devices are released.
-
-If all the devices in a multi-function device were connected
-intimately enough that they all had to be managed by the same driver,
-I could imagine putting these non-discoverable dependencies in the
-driver.  But these devices don't seem to be related in that way.
-
-If there *is* spec language that allows dependencies like this, please
-include the citation in your commit log.
-
-> This patch does the same and create the required device links. It
-> will make function 0 to be runtime PM active if other functions
-> are still active.
-> 
-> Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > ---
->  drivers/pci/quirks.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+>  drivers/pci/pci.c |   15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index a20f7771a323..afdbc199efc5 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4967,6 +4967,29 @@ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMD, PCI_ANY_ID,
->  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
->  			      PCI_CLASS_MULTIMEDIA_HD_AUDIO, 8, quirk_gpu_hda);
+> Index: linux-pm/drivers/pci/pci.c
+> ===================================================================
+> --- linux-pm.orig/drivers/pci/pci.c
+> +++ linux-pm/drivers/pci/pci.c
+> @@ -2474,10 +2474,19 @@ bool pci_dev_keep_suspended(struct pci_d
+>  {
+>  	struct device *dev = &pci_dev->dev;
+>  	bool wakeup = device_may_wakeup(dev);
+> +	pci_power_t target_state;
 >  
-> +/* Create device link for NVIDIA GPU with integrated USB controller to VGA. */
-> +static void quirk_gpu_usb(struct pci_dev *usb)
-> +{
-> +	pci_create_device_link_with_vga(usb, 2);
-> +}
-> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
-> +			      PCI_CLASS_SERIAL_USB, 8, quirk_gpu_usb);
+> -	if (!pm_runtime_suspended(dev)
+> -	    || pci_target_state(pci_dev, wakeup) != pci_dev->current_state
+> -	    || platform_pci_need_resume(pci_dev))
+> +	if (!pm_runtime_suspended(dev) || platform_pci_need_resume(pci_dev))
+> +		return false;
 > +
-> +/*
-> + * Create device link for NVIDIA GPU with integrated Type-C UCSI controller
-> + * to VGA. Currently there is no class code defined for UCSI device over PCI
-> + * so using UNKNOWN class for now and it will be updated when UCSI
-> + * over PCI gets a class code.
+> +	target_state = pci_target_state(pci_dev, wakeup);
 
-Ugh.  Here's a good example of having to do yet another OS update.
+Nit, add a blank line here.
 
-> + */
-> +#define PCI_CLASS_SERIAL_UNKNOWN	0x0c80
-> +static void quirk_gpu_usb_typec_ucsi(struct pci_dev *ucsi)
-> +{
-> +	pci_create_device_link_with_vga(ucsi, 3);
-> +}
-> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
-> +			      PCI_CLASS_SERIAL_UNKNOWN, 8,
-> +			      quirk_gpu_usb_typec_ucsi);
-> +
->  /*
->   * Some IDT switches incorrectly flag an ACS Source Validation error on
->   * completions for config read requests even though PCIe r4.0, sec
-> -- 
-> 2.17.1
-> 
+> +	/*
+> +	 * If the earlier platform check has not triggered, D3cold is just power
+> +	 * removal on top of D3hot, so no need to resume the device in that
+> +	 * case.
+> +	 */
+> +	if (target_state != pci_dev->current_state &&
+> +	    target_state != PCI_D3cold && pci_dev->current_state != PCI_D3hot)
+>  		return false;
+
+This is more a comment on the existing code than on this particular
+patch, but I find this whole function hard to understand, and I think
+one reason is that there are a lot of negative conditions, both in
+this function and in its callers.  This "target_state != ... &&
+target_state != ...  && current_state != ..." is one example.  Another
+is the function name itself.  It might be easier to read as something
+like this:
+
+  bool pci_dev_need_resume(...)
+  {
+    if (!pm_runtime_suspended(...))
+      return true;
+
+    if (platform_pci_need_resume(...))
+      return true;
+
+    if (target_state != current_state)
+      return true;
+
+    ...
+
+Another reason I think it's hard to read is that
+"pci_dev_keep_suspended" suggests that this is a pure boolean function
+without side-effects, but in fact it also fiddles with the PME state
+in some cases.  I don't have any ideas for that part.
+
+Bjorn
