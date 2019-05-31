@@ -2,186 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 969B23147F
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2019 20:17:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AD283163A
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2019 22:39:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfEaSQ7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 31 May 2019 14:16:59 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34298 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbfEaSQ7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 May 2019 14:16:59 -0400
-Received: by mail-lj1-f193.google.com with SMTP id j24so10538166ljg.1
-        for <linux-pci@vger.kernel.org>; Fri, 31 May 2019 11:16:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mMKtgmWbW8xYAGhBwAG4c8b4zuI5g6VzqZjp1pMjfUg=;
-        b=TSgZ8KSuC8Uh58feLuA2QmX3LpgiOCKvOAfRY8zwRYZZsWEog8DDbJslbbYif12yFl
-         9QxkArhnQZY7+fOQo4Tk7jI6vHsOtddSAbU/CiK4w9329KysTnC1NMLUI3PJLpkKoYBd
-         vHlK890XEuNv6cYqTLxqksKmYyl9sTMpSMmy3HAlGhPDq+C9s8cVpkezs8LcrrbvnQNu
-         /zS3BaFkKBxPF1Q3rn6mOjMyMFSX2mxYbhgEew3wRsL2GOScavdE+SbI9WTP1c/X3Gof
-         4VLgMOU7ffGPB+HUW115BIIw9JvtIpssUl6Q2lLuWT7c5CrtiJHS5cM2PQdMJWbb1Jz8
-         e2pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mMKtgmWbW8xYAGhBwAG4c8b4zuI5g6VzqZjp1pMjfUg=;
-        b=nQO6WkDpAiVcZbqdO/J1DM1Aw0a0v2RBvYVTJOpu1F/t2sydNMvxcTrUdVzXKhQg2p
-         rUAbvv6+FrRI0l2yOZe0SYcckQXxwWCgIge6FT22cO/LezSPIr3ZxCE0WnaRKh1Yp8qC
-         tZxeZRFn3V0b0jsWVhzOtAOTEHrXpj87Xi3blF2Hk4sbOdTcp+/1n3wqf9N+xR5MqxFc
-         VEWWmQ2ehpQTKX5BRdbcnm/Q5rHOY4YmWj9DLCCpLmKLqhEx+6WZAP5bvz+T1wZ+iaqD
-         5dbgOjG3UX4VURA9s/yZf57VVYKZ2qvDZySUiImRfbipIA1j2CjPmZDkz7Y3DhlOMltr
-         zP1Q==
-X-Gm-Message-State: APjAAAWmq3qSbWh8Xz7ziDHOtQ3+kTi2siW92V+4smcN8KhenC8lMC0W
-        Su/evZsCkrModmYozDyaeF4S0ey4IFVZVq+6+/l2Kg==
-X-Google-Smtp-Source: APXvYqxtHw0FLL/5LL6+uKZaUo8UTHEM9pyFRWVXtoz6RHQ9WnvCDZHxV3XOVaoKoFIbWWrVdMOLUlR3ZRO8fhjVXzQ=
-X-Received: by 2002:a2e:80d5:: with SMTP id r21mr6619039ljg.43.1559326617481;
- Fri, 31 May 2019 11:16:57 -0700 (PDT)
+        id S1727210AbfEaUjL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 31 May 2019 16:39:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726711AbfEaUjL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 31 May 2019 16:39:11 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDFE626EAA;
+        Fri, 31 May 2019 20:39:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559335150;
+        bh=0HQst+0fKJNxhhK6HyvWrG2LQu7CnOIDA2z+zG4RBrI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nXGB11sOFweqgSBdu+PiCNu+F9xDoJOdlrcoFTVwdlNywa/wrg6nmiwz+TCdKLZMj
+         L6e/0EURXi5SEDep9yncxz7Mx9aQc0/VHR4px9GmiLWYnPAPUPt4/12AGVG1Be+0Qz
+         mNBd7sW3ycKdBcLIkxwpafcUBnPKzUvW47xQqHGY=
+Date:   Fri, 31 May 2019 15:39:08 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Abhishek Sahu <abhsahu@nvidia.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH 2/2] PCI: Create device link for NVIDIA GPU
+Message-ID: <20190531203908.GA58810@google.com>
+References: <20190531050109.16211-1-abhsahu@nvidia.com>
+ <20190531050109.16211-3-abhsahu@nvidia.com>
 MIME-Version: 1.0
-References: <1558650258-15050-1-git-send-email-alan.mikhak@sifive.com>
- <305100E33629484CBB767107E4246BBB0A6FAFFD@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxsQ9NXrN7W_8HVrXQBb9HiBd+d1dNfv+cXmoBpXQnLwA@mail.gmail.com>
- <305100E33629484CBB767107E4246BBB0A6FC308@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxL-WYz1BY7yXJ6eKULgVtKeo67XhgHZjvtm5Ka5foKiA@mail.gmail.com>
- <192e3a19-8b69-dfaf-aa5c-45c7087548cc@ti.com> <CABEDWGxLeD-K8PjkD5hPSTFGJKs2hxEaAVO+nE5eC9Nx2yw=ig@mail.gmail.com>
- <75d578c2-a98c-d1ef-1633-6dc5dc3b0913@ti.com>
-In-Reply-To: <75d578c2-a98c-d1ef-1633-6dc5dc3b0913@ti.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Fri, 31 May 2019 11:16:46 -0700
-Message-ID: <CABEDWGxBxmiKjoPUSUaUBXUhKkUTXVX0U9ooRou8tcWJojb52g@mail.gmail.com>
-Subject: Re: [PATCH] PCI: endpoint: Add DMA to Linux PCI EP Framework
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "wen.yang99@zte.com.cn" <wen.yang99@zte.com.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        Vinod Koul <vkoul@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190531050109.16211-3-abhsahu@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 30, 2019 at 10:08 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> Hi Alan,
-> >
-> > Hi Kishon,
-> >
-> > I have some improvements in mind for a v2 patch in response to
-> > feedback from Gustavo Pimentel that the current implementation is HW
-> > specific. I hesitate from submitting a v2 patch because it seems best
-> > to seek comment on possible directions this may be taking.
-> >
-> > One alternative is to wait for or modify test functions in
-> > pci-epf-test.c to call DMAengine client APIs, if possible. I imagine
-> > pci-epf-test.c test functions would still allocate the necessary local
-> > buffer on the endpoint side for the same canned tests for everyone to
-> > use. They would prepare the buffer in the existing manner by filling
-> > it with random bytes and calculate CRC in the case of a write test.
-> > However, they would then initiate DMA operations by using DMAengine
-> > client APIs in a generic way instead of calling memcpy_toio() and
-> > memcpy_fromio(). They would post-process the buffer in the existing
->
-> No, you can't remove memcpy_toio/memcpy_fromio APIs. There could be platforms
-> without system DMA or they could have system DMA but without MEMCOPY channels
-> or without DMA in their PCI controller.
+[+cc Lukas, author of 07f4f97d7b4b ("vga_switcheroo: Use device link
+for HDA controller")]
 
-I agree. I wouldn't remove memcpy_toio/fromio. That is the reason this
-patch introduces the '-d' flag for pcitest to communicate that user
-intent across the PCIe bus to pci-epf-test so the endpoint can
-initiate the transfer using either memcpy_toio/fromio or DMA.
+On Fri, May 31, 2019 at 10:31:09AM +0530, Abhishek Sahu wrote:
+> NVIDIA Turing GPUs include hardware support for USB Type-C and
+> VirtualLink. It helps in delivering the power, display, and data
+> required to power VR headsets through a single USB Type-C connector.
+> The Turing GPU is a multi-function PCI device has the following
+> four functions:
+> 
+> 	- VGA display controller (Function 0)
+> 	- Audio controller (Function 1)
+> 	- USB xHCI Host controller (Function 2)
+> 	- USB Type-C USCI controller (Function 3)
+> 
+> The function 0 is tightly coupled with other functions in the
+> hardware. When function 0 goes in runtime suspended state,
 
-> > manner such as the checking for CRC in the case of a read test.
-> > Finally, they would release the resources and report results back to
-> > the user of pcitest across the PCIe bus through the existing methods.
-> >
-> > Another alternative I have in mind for v2 is to change the struct
-> > pci_epc_dma that this patch added to pci-epc.h from the following:
-> >
-> > struct pci_epc_dma {
-> >         u32     control;
-> >         u32     size;
-> >         u64     sar;
-> >         u64     dar;
-> > };
-> >
-> > to something similar to the following:
-> >
-> > struct pci_epc_dma {
-> >         size_t  size;
-> >         void *buffer;
-> >         int flags;
-> > };
-> >
-> > The 'flags' field can be a bit field or separate boolean values to
-> > specify such things as linked-list mode vs single-block, etc.
-> > Associated #defines would be removed from pci-epc.h to be replaced if
-> > needed with something generic. The 'size' field specifies the size of
-> > DMA transfer that can fit in the buffer.
->
-> I still have to look closer into your DMA patch but linked-list mode or single
-> block mode shouldn't be an user select-able option but should be determined by
-> the size of transfer.
+"Runtime suspended" is a Linux concept, not a PCI concept.  Please
+replace this with the appropriate PCI term, e.g., "D3hot" or whatever
+it is.
 
-Please consider the following when taking a closer look at this patch.
+> then it will do power gating for most of the hardware blocks.
+> Some of these hardware blocks are used by other functions which
+> leads to functional failure. So if any of these functions (1/2/3)
+> are active, then function 0 should also be in active state.
 
-In my specific use case, I need to verify that any valid block size,
-including a one byte transfer, can be transferred across the PCIe bus
-by memcpy_toio/fromio() or by DMA either as a single block or as
-linked-list. That is why, instead of deciding based on transfer size,
-this patch introduces the '-L' flag for pcitest to communicate the
-user intent across the PCIe bus to pci-epf-test so the endpoint can
-initiate the DMA transfer using a single block or in linked-list mode.
+Instead of "active" and "active state", please use the specific states
+required in terms of PCI.
 
-When user issues 'pcitest -r' to perform a read buffer test,
-pci-epf-test calls pci_epf_test_write() which uses memcpy_toio(). As
-before, a read from the user point of view is a write from the
-endpoint point of view.
-When user issues 'pcitest -r -d', pci-epf-test calls a new function
-pci_epf_test_write_dma() to initiate a single block DMA transfer.
-When user issues 'pcitest -r -d -L', pci-epf-test calls a new function
-pci_epf_test_write_dma_list() to initiate a linked-list DMA transfer.
+> 'commit 07f4f97d7b4b ("vga_switcheroo: Use device link for
+> HDA controller")' creates the device link from function 1 to
+> function 0. A similar kind of device link needs to be created
+> between function 0 and functions 2 and 3 for NVIDIA Turing GPU.
 
-The '-d' and '-L' flags also apply to the '-w' flag when the user
-performs a write buffer test. The user can specify any valid transfer
-size for any of the above examples using the '-s' flag as before.
+I can't point to language that addresses this, but this sounds like a
+case of the GPU not conforming to the PCI spec.  The general
+assumption is that the OS should be able to discover everything it
+needs to do power management directly from the architected PCI config
+space.
 
-> > That way the dma test functions in pci-epf-test.c can simply kmalloc
-> > and prepare a local buffer on the endpoint side for the DMA transfer
-> > and pass its pointer down the stack using the 'buffer' field to lower
-> > layers. This would allow different PCIe controller drivers to
-> > implement DMA or not according to their needs. Each implementer can
-> > decide to use DMAengine client API, which would be preferable, or
-> > directly read or write to DMA hardware registers to suit their needs.
->
-> yes, that would be my preferred method as well. In fact I had implemented
-> pci_epf_tx() in [1], as a way for pci-epf-test to pass buffer address to
-> endpoint controller driver. I had also implemented helpers for platforms using
-> system DMA (i.e uses DMAengine).
->
-> Thanks
-> Kishon
->
-> [1] ->
-> http://git.ti.com/cgit/cgit.cgi/ti-linux-kernel/ti-linux-kernel.git/tree/drivers/pci/endpoint/pci-epf-core.c?h=ti-linux-4.19.y
-> >
-> > I would appreciate feedback and comment on such choices as part of this review.
+It is definitely not ideal to have to add quirks like this for devices
+designed this way.  Such quirks force us to do otherwise unnecessary
+OS updates as new devices are released.
 
-Thanks for all your comments and providing the link to your
-implementation of pci_epf_tx() in [1] above. It clarifies a lot and
-provides a very useful reference.
+If all the devices in a multi-function device were connected
+intimately enough that they all had to be managed by the same driver,
+I could imagine putting these non-discoverable dependencies in the
+driver.  But these devices don't seem to be related in that way.
 
-Regards,
-Alan Mikhak
+If there *is* spec language that allows dependencies like this, please
+include the citation in your commit log.
+
+> This patch does the same and create the required device links. It
+> will make function 0 to be runtime PM active if other functions
+> are still active.
+> 
+> Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
+> ---
+>  drivers/pci/quirks.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index a20f7771a323..afdbc199efc5 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4967,6 +4967,29 @@ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMD, PCI_ANY_ID,
+>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
+>  			      PCI_CLASS_MULTIMEDIA_HD_AUDIO, 8, quirk_gpu_hda);
+>  
+> +/* Create device link for NVIDIA GPU with integrated USB controller to VGA. */
+> +static void quirk_gpu_usb(struct pci_dev *usb)
+> +{
+> +	pci_create_device_link_with_vga(usb, 2);
+> +}
+> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
+> +			      PCI_CLASS_SERIAL_USB, 8, quirk_gpu_usb);
+> +
+> +/*
+> + * Create device link for NVIDIA GPU with integrated Type-C UCSI controller
+> + * to VGA. Currently there is no class code defined for UCSI device over PCI
+> + * so using UNKNOWN class for now and it will be updated when UCSI
+> + * over PCI gets a class code.
+
+Ugh.  Here's a good example of having to do yet another OS update.
+
+> + */
+> +#define PCI_CLASS_SERIAL_UNKNOWN	0x0c80
+> +static void quirk_gpu_usb_typec_ucsi(struct pci_dev *ucsi)
+> +{
+> +	pci_create_device_link_with_vga(ucsi, 3);
+> +}
+> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
+> +			      PCI_CLASS_SERIAL_UNKNOWN, 8,
+> +			      quirk_gpu_usb_typec_ucsi);
+> +
+>  /*
+>   * Some IDT switches incorrectly flag an ACS Source Validation error on
+>   * completions for config read requests even though PCIe r4.0, sec
+> -- 
+> 2.17.1
+> 
