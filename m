@@ -2,118 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CFD193167B
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2019 23:16:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12EE331F09
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Jun 2019 15:41:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfEaVQv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 31 May 2019 17:16:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58608 "EHLO mail.kernel.org"
+        id S1728066AbfFANTE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 1 Jun 2019 09:19:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726719AbfEaVQv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 31 May 2019 17:16:51 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728063AbfFANTD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:19:03 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C017926F38;
-        Fri, 31 May 2019 21:16:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AEA5229EB;
+        Sat,  1 Jun 2019 13:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559337410;
-        bh=c2pv3UGEvPHler4RZI9AO4XMMtkbISSMYlJ167PAtPE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LdBjFu6KfciYCDWWmv+DuahF7VCnvl9Odv8PL7Kuy3LLohhYqw2h1hmvEo7l35v9H
-         XbrSSTcz5TCAN5taXh0JwSvcrqspZYxIZgF+qItCAPe3XV9qm8svY7UoKYiwMsEW3v
-         sWGFOkmBMAerGoooJXv92W12ZYlUkNmBBVuKNClU=
-Date:   Fri, 31 May 2019 16:16:48 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: PM: Avoid resuming devices in D3hot during system
- suspend
-Message-ID: <20190531211648.GB58810@google.com>
-References: <4561083.VtDMOnK5Me@kreacher>
+        s=default; t=1559395143;
+        bh=EC9c2GInWSKJ2OTfHtjz/c/OUO0ekHNd7+59xQ4zdUo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ATVlVPOiu6YXFKhVypG3ijNqni909tGd6xlnGZ5YFqdOTrYidz5XDVdUjv3mTQO+A
+         qsV1pu7VMzANu3NfV+X81VcK+cboe7D258NKt7qiChqmPtXEFtEKuMLbwMaCa+9+fm
+         79dOCHphAFEzlIvrDcXQXfyCKkh/fzX6+v/KtEaE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 063/186] PCI: dwc: Free MSI in dw_pcie_host_init() error path
+Date:   Sat,  1 Jun 2019 09:14:39 -0400
+Message-Id: <20190601131653.24205-63-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
+References: <20190601131653.24205-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4561083.VtDMOnK5Me@kreacher>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 31, 2019 at 11:49:30AM +0200, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> The current code resumes devices in D3hot during system suspend if
-> the target power state for them is D3cold, but that is not necessary
-> in general.  It only is necessary to do that if the platform firmware
-> requires the device to be resumed, but that should be covered by
-> the platform_pci_need_resume() check anyway, so rework
-> pci_dev_keep_suspended() to avoid returning 'false' for devices
-> in D3hot which need not be resumed due to platform firmware
-> requirements.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/pci/pci.c |   15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
-> 
-> Index: linux-pm/drivers/pci/pci.c
-> ===================================================================
-> --- linux-pm.orig/drivers/pci/pci.c
-> +++ linux-pm/drivers/pci/pci.c
-> @@ -2474,10 +2474,19 @@ bool pci_dev_keep_suspended(struct pci_d
->  {
->  	struct device *dev = &pci_dev->dev;
->  	bool wakeup = device_may_wakeup(dev);
-> +	pci_power_t target_state;
->  
-> -	if (!pm_runtime_suspended(dev)
-> -	    || pci_target_state(pci_dev, wakeup) != pci_dev->current_state
-> -	    || platform_pci_need_resume(pci_dev))
-> +	if (!pm_runtime_suspended(dev) || platform_pci_need_resume(pci_dev))
-> +		return false;
-> +
-> +	target_state = pci_target_state(pci_dev, wakeup);
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-Nit, add a blank line here.
+[ Upstream commit 9e2b5de5604a6ff2626c51e77014d92c9299722c ]
 
-> +	/*
-> +	 * If the earlier platform check has not triggered, D3cold is just power
-> +	 * removal on top of D3hot, so no need to resume the device in that
-> +	 * case.
-> +	 */
-> +	if (target_state != pci_dev->current_state &&
-> +	    target_state != PCI_D3cold && pci_dev->current_state != PCI_D3hot)
->  		return false;
+If we ever did MSI-related initializations, we need to call
+dw_pcie_free_msi() in the error code path.
 
-This is more a comment on the existing code than on this particular
-patch, but I find this whole function hard to understand, and I think
-one reason is that there are a lot of negative conditions, both in
-this function and in its callers.  This "target_state != ... &&
-target_state != ...  && current_state != ..." is one example.  Another
-is the function name itself.  It might be easier to read as something
-like this:
+Remove the IS_ENABLED(CONFIG_PCI_MSI) check for MSI init because
+pci_msi_enabled() already has a stub for !CONFIG_PCI_MSI.
 
-  bool pci_dev_need_resume(...)
-  {
-    if (!pm_runtime_suspended(...))
-      return true;
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/controller/dwc/pcie-designware-host.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-    if (platform_pci_need_resume(...))
-      return true;
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 25087d3c9a823..acd185b4661e1 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -439,7 +439,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	if (ret)
+ 		pci->num_viewport = 2;
+ 
+-	if (IS_ENABLED(CONFIG_PCI_MSI) && pci_msi_enabled()) {
++	if (pci_msi_enabled()) {
+ 		/*
+ 		 * If a specific SoC driver needs to change the
+ 		 * default number of vectors, it needs to implement
+@@ -477,7 +477,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	if (pp->ops->host_init) {
+ 		ret = pp->ops->host_init(pp);
+ 		if (ret)
+-			goto error;
++			goto err_free_msi;
+ 	}
+ 
+ 	pp->root_bus_nr = pp->busn->start;
+@@ -491,7 +491,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 
+ 	ret = pci_scan_root_bus_bridge(bridge);
+ 	if (ret)
+-		goto error;
++		goto err_free_msi;
+ 
+ 	bus = bridge->bus;
+ 
+@@ -507,6 +507,9 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	pci_bus_add_devices(bus);
+ 	return 0;
+ 
++err_free_msi:
++	if (pci_msi_enabled() && !pp->ops->msi_host_init)
++		dw_pcie_free_msi(pp);
+ error:
+ 	pci_free_host_bridge(bridge);
+ 	return ret;
+-- 
+2.20.1
 
-    if (target_state != current_state)
-      return true;
-
-    ...
-
-Another reason I think it's hard to read is that
-"pci_dev_keep_suspended" suggests that this is a pure boolean function
-without side-effects, but in fact it also fiddles with the PME state
-in some cases.  I don't have any ideas for that part.
-
-Bjorn
