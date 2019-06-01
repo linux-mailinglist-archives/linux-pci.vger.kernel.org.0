@@ -2,36 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E10D632086
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Jun 2019 20:42:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F515320DD
+	for <lists+linux-pci@lfdr.de>; Sun,  2 Jun 2019 00:27:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbfFASmU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 1 Jun 2019 14:42:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726075AbfFASmU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 1 Jun 2019 14:42:20 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE0572778F;
-        Sat,  1 Jun 2019 18:42:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559414539;
-        bh=ylnKia+EXLW9UtRpuoBndbxg1FaaVmOOmXi44ieoevU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=vnqPgUaDzPJBjIlMCH529iITpLub312OLe1uqC160m3zYVgOwFPiQkuczuxPoBzh2
-         th081fLvjEZn2+u3zzngf5tycTi3Pzf5Tdl+QNPRQF328ekR7/z/LGwvdvnihc0Rvp
-         DVuHYF6TpXx22H7d4zv7fccAke6dAjJmlFFEFQXQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     lorenzo.pieralisi@arm.com, bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>, stable@kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH] PCI: hv: Detect and fix Hyper-V PCI domain number collision
-Date:   Sat,  1 Jun 2019 14:42:11 -0400
-Message-Id: <20190601184211.8733-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        id S1726485AbfFAW1r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 1 Jun 2019 18:27:47 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36286 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfFAW1q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 1 Jun 2019 18:27:46 -0400
+Received: by mail-pg1-f194.google.com with SMTP id a3so6058840pgb.3
+        for <linux-pci@vger.kernel.org>; Sat, 01 Jun 2019 15:27:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aBGnU4B8yz6TY7rs1ttpv6dYzM78JOOLHwHJBrwnlj0=;
+        b=CQwWpjN2M/JQgAh0nRmAFns5qtmUi/CfZMZrB2mQoTB9+Qo1tSEc1Kpz0C1BNh1MMF
+         Qoe6ipWnbmIlLMqdCsoERG9eceVDsizaAa+20vynwx8xh51jXlOaCvVKdu7AF8PI2hsW
+         7P7wjWs83oqjTUezNSxGTAR88321VMSmNnCfo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aBGnU4B8yz6TY7rs1ttpv6dYzM78JOOLHwHJBrwnlj0=;
+        b=NmXs7NBOo3qNGLNNJb0YhqWaN/K9wK9S/QPzQLsr72CsOi2V+qQUmxaDM3z177dVgL
+         kNXTDFzgWvDGT+OjoP9QfhTqzUc2Ma1THpkN0ZLKcrF/08A7aYU8LMm3DC/5LmJolFXR
+         MX8AEBPTObVyvLNv/XP1hr6zJHr1VNY7vydUNdgKDBL7FppwZP2PfMD5L+ND+cwoNPdD
+         3/+CEOOMzC882P2wu868edOhmBNExYlpG7znUdvQf/+OyhMh2m8FwPYPLX+QAMVNzc0x
+         D1Xt3qFt4s8cdbfZeDj7UbzT+ARSiOiVESSPyavwoHAVs4zJicRnXqQJt2IQfUESE6Zg
+         UNUw==
+X-Gm-Message-State: APjAAAUIpeRgvTmYTTmy12bOSXlbAPnQxP+UnPfbnrNzf4zoA66hj6xS
+        jrt/Ng0Tgr7grxTqtsUeq8XFQA==
+X-Google-Smtp-Source: APXvYqz+bu0xK6K2Pq1cv50i7dezdioX7vQ1voWVoSyrcm+9lGNu615sW37T90U6U6uGuDCkx76uoA==
+X-Received: by 2002:a63:6848:: with SMTP id d69mr18759474pgc.0.1559428065507;
+        Sat, 01 Jun 2019 15:27:45 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id t33sm9908018pjb.1.2019.06.01.15.27.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 01 Jun 2019 15:27:44 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+Subject: [RFC 0/6] Harden list_for_each_entry_rcu() and family
+Date:   Sat,  1 Jun 2019 18:27:32 -0400
+Message-Id: <20190601222738.6856-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -39,177 +76,69 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+Hi,
+Please consider this as an RFC / proof-of-concept to gather some feedback. This
+series aims to provide lockdep checking to RCU list macros.
 
-Due to Azure host agent settings, the device instance ID's bytes 8 and 9
-are no longer unique. This causes some of the PCI devices not showing up
-in VMs with multiple passthrough devices, such as GPUs. So, as recommended
-by Azure host team, we now use the bytes 4 and 5 which usually provide
-unique numbers.
+RCU has a number of primitives for "consumption" of an RCU protected pointer.
+Most of the time, these consumers make sure that such accesses are under a RCU
+reader-section (such as rcu_dereference{,sched,bh} or under a lock, such as
+with rcu_dereference_protected()).
 
-In the rare cases of collision, we will detect and find another number
-that is not in use.
-Thanks to Michael Kelley <mikelley@microsoft.com> for proposing this idea.
+However, there are other ways to consume RCU pointers, such as by
+list_for_each_enry_rcu or hlist_for_each_enry_rcu. Unlike the rcu_dereference
+family, these consumers do no lockdep checking at all. And with the growing
+number of RCU list uses, it is possible for bugs to creep in and go unnoticed
+which lockdep checks can catch.
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: stable@kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/controller/pci-hyperv.c | 91 ++++++++++++++++++++++++-----
- 1 file changed, 78 insertions(+), 13 deletions(-)
+Since RCU consolidation efforts last year, the different traditional RCU
+flavors (preempt, bh, sched) are all consolidated. In other words, any of these
+flavors can cause a reader section to occur and all of them must cease before
+the reader section is considered to be unlocked.
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 82acd6155adf3..6b9cc6e60a040 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -37,6 +37,8 @@
-  * the PCI back-end driver in Hyper-V.
-  */
- 
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-@@ -2507,6 +2509,47 @@ static void put_hvpcibus(struct hv_pcibus_device *hbus)
- 		complete(&hbus->remove_event);
- }
- 
-+#define HVPCI_DOM_MAP_SIZE (64 * 1024)
-+static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
-+
-+/* PCI domain number 0 is used by emulated devices on Gen1 VMs, so define 0
-+ * as invalid for passthrough PCI devices of this driver.
-+ */
-+#define HVPCI_DOM_INVALID 0
-+
-+/**
-+ * hv_get_dom_num() - Get a valid PCI domain number
-+ * Check if the PCI domain number is in use, and return another number if
-+ * it is in use.
-+ *
-+ * @dom: Requested domain number
-+ *
-+ * return: domain number on success, HVPCI_DOM_INVALID on failure
-+ */
-+static u16 hv_get_dom_num(u16 dom)
-+{
-+	unsigned int i;
-+
-+	if (test_and_set_bit(dom, hvpci_dom_map) == 0)
-+		return dom;
-+
-+	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
-+		if (test_and_set_bit(i, hvpci_dom_map) == 0)
-+			return i;
-+	}
-+
-+	return HVPCI_DOM_INVALID;
-+}
-+
-+/**
-+ * hv_put_dom_num() - Mark the PCI domain number as free
-+ * @dom: Domain number to be freed
-+ */
-+static void hv_put_dom_num(u16 dom)
-+{
-+	clear_bit(dom, hvpci_dom_map);
-+}
-+
- /**
-  * hv_pci_probe() - New VMBus channel probe, for a root PCI bus
-  * @hdev:	VMBus's tracking struct for this root PCI bus
-@@ -2518,6 +2561,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- 			const struct hv_vmbus_device_id *dev_id)
- {
- 	struct hv_pcibus_device *hbus;
-+	u16 dom_req, dom;
- 	int ret;
- 
- 	/*
-@@ -2532,19 +2576,32 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	hbus->state = hv_pcibus_init;
- 
- 	/*
--	 * The PCI bus "domain" is what is called "segment" in ACPI and
--	 * other specs.  Pull it from the instance ID, to get something
--	 * unique.  Bytes 8 and 9 are what is used in Windows guests, so
--	 * do the same thing for consistency.  Note that, since this code
--	 * only runs in a Hyper-V VM, Hyper-V can (and does) guarantee
--	 * that (1) the only domain in use for something that looks like
--	 * a physical PCI bus (which is actually emulated by the
--	 * hypervisor) is domain 0 and (2) there will be no overlap
--	 * between domains derived from these instance IDs in the same
--	 * VM.
-+	 * The PCI bus "domain" is what is called "segment" in ACPI and other
-+	 * specs. Pull it from the instance ID, to get something usually
-+	 * unique. In rare cases of collision, we will find out another number
-+	 * not in use.
-+	 * Note that, since this code only runs in a Hyper-V VM, Hyper-V
-+	 * together with this guest driver can guarantee that (1) The only
-+	 * domain used by Gen1 VMs for something that looks like a physical
-+	 * PCI bus (which is actually emulated by the hypervisor) is domain 0.
-+	 * (2) There will be no overlap between domains (after fixing possible
-+	 * collisions) in the same VM.
- 	 */
--	hbus->sysdata.domain = hdev->dev_instance.b[9] |
--			       hdev->dev_instance.b[8] << 8;
-+	dom_req = hdev->dev_instance.b[5] << 8 | hdev->dev_instance.b[4];
-+	dom = hv_get_dom_num(dom_req);
-+
-+	if (dom == HVPCI_DOM_INVALID) {
-+		pr_err("Unable to use dom# 0x%hx or other numbers",
-+		       dom_req);
-+		ret = -EINVAL;
-+		goto free_bus;
-+	}
-+
-+	if (dom != dom_req)
-+		pr_info("PCI dom# 0x%hx has collision, using 0x%hx",
-+			dom_req, dom);
-+
-+	hbus->sysdata.domain = dom;
- 
- 	hbus->hdev = hdev;
- 	refcount_set(&hbus->remove_lock, 1);
-@@ -2559,7 +2616,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- 					   hbus->sysdata.domain);
- 	if (!hbus->wq) {
- 		ret = -ENOMEM;
--		goto free_bus;
-+		goto free_dom;
- 	}
- 
- 	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
-@@ -2636,6 +2693,8 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	vmbus_close(hdev->channel);
- destroy_wq:
- 	destroy_workqueue(hbus->wq);
-+free_dom:
-+	hv_put_dom_num(hbus->sysdata.domain);
- free_bus:
- 	free_page((unsigned long)hbus);
- 	return ret;
-@@ -2717,6 +2776,9 @@ static int hv_pci_remove(struct hv_device *hdev)
- 	put_hvpcibus(hbus);
- 	wait_for_completion(&hbus->remove_event);
- 	destroy_workqueue(hbus->wq);
-+
-+	hv_put_dom_num(hbus->sysdata.domain);
-+
- 	free_page((unsigned long)hbus);
- 	return 0;
- }
-@@ -2744,6 +2806,9 @@ static void __exit exit_hv_pci_drv(void)
- 
- static int __init init_hv_pci_drv(void)
- {
-+	/* Set the invalid domain number's bit, so it will not be used */
-+	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
-+
- 	return vmbus_driver_register(&hv_pci_drv);
- }
- 
--- 
-2.20.1
+Now, the list_for_each_entry_rcu and family are different from the
+rcu_dereference family in that, there is no _bh or _sched version of this
+macro. They are used under many different RCU reader flavors, and also SRCU.
+This series adds a new internal function rcu_read_lock_any_held() which checks
+if any reader section is active at all, when these macros are called. If no
+reader section exists, then the optional fourth argument to
+list_for_each_entry_rcu() can be a lockdep expression which is evaluated
+(similar to how rcu_dereference_check() works).
+
+The optional argument trick to list_for_each_entry_rcu() can also be used in
+the future to possibly remove rcu_dereference_{,bh,sched}_protected() API and
+we can pass an optional lockdep expression to rcu_dereference() itself. Thus
+eliminating 3 more RCU APIs.
+
+Note that some list macro wrappers already do their own lockdep checking in the
+caller side. These can be eliminated in favor of the built-in lockdep checking
+in the list macro that this series adds. For example, workqueue code has a
+assert_rcu_or_wq_mutex() function which is called in for_each_wq().  This
+series replaces that in favor of the built-in one.
+
+Also in the future, we can extend these checks to list_entry_rcu() and other
+list macros as well.
+
+Joel Fernandes (Google) (6):
+rcu: Add support for consolidated-RCU reader checking
+ipv4: add lockdep condition to fix for_each_entry
+driver/core: Convert to use built-in RCU list checking
+workqueue: Convert for_each_wq to use built-in list check
+x86/pci: Pass lockdep condition to pcm_mmcfg_list iterator
+acpi: Use built-in RCU list checking for acpi_ioremaps list
+
+arch/x86/pci/mmconfig-shared.c |  5 +++--
+drivers/acpi/osl.c             |  6 +++--
+drivers/base/base.h            |  1 +
+drivers/base/core.c            | 10 +++++++++
+drivers/base/power/runtime.c   | 15 ++++++++-----
+include/linux/rculist.h        | 40 ++++++++++++++++++++++++++++++----
+include/linux/rcupdate.h       |  7 ++++++
+kernel/rcu/update.c            | 26 ++++++++++++++++++++++
+kernel/workqueue.c             |  5 ++---
+net/ipv4/fib_frontend.c        |  3 ++-
+10 files changed, 101 insertions(+), 17 deletions(-)
+
+--
+2.22.0.rc1.311.g5d7573a151-goog
 
