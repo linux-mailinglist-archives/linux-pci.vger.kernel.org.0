@@ -2,208 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8516433930
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2019 21:42:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 838DD33A85
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2019 23:59:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfFCTmP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Jun 2019 15:42:15 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43392 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfFCTmO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Jun 2019 15:42:14 -0400
-Received: by mail-pg1-f196.google.com with SMTP id f25so8854958pgv.10
-        for <linux-pci@vger.kernel.org>; Mon, 03 Jun 2019 12:42:14 -0700 (PDT)
+        id S1726697AbfFCV7a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Jun 2019 17:59:30 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44706 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbfFCV7a (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Jun 2019 17:59:30 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n2so9032056pgp.11
+        for <linux-pci@vger.kernel.org>; Mon, 03 Jun 2019 14:59:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=a+lhr9Q+24Qfza3c4uXpEdm8TyEjYoUavdn6rBgETA0=;
-        b=v57zkdukOzYOvhfiKNqk2b/GOjkFP1SHWP5I5eo7SiatQZoyLWIBR+84HSu7EA2L8f
-         /Txa/lSthx5I4+d0+ItNuTqwsJewXfi+56sABsg3JwRHrqq33I7sTzcN+0Twcbb6KpI7
-         +Pr2kvxYQLWF4bCfr03Db/6neBgFbrX8K2sXo=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jsqt76+/tC7lNIGkBOfSxOR0w7kTsY9VRuEizjLylaM=;
+        b=lWohiKBqCPBenj/eJUzVHOJpCdAi91g5TtT2pyrV0FfesO2LcED3e8srNOon8Iibg8
+         XtIVB4yvu8opanO7FhZdkXkw4qrcWHepKTZehjxMhdJDV96SRObFjXSOJ7rGU53BIOCP
+         amFtVM8IVZTgsTynPUL6wWPlqXYRwRZZzxCbIY9Ee0e3Vl33p4qUyAVxj8FpxZ60liZ+
+         tlqBRl6mtiIkFKWFCab1uDZBalnO4+vn2OxS13m7xXU6v0FU5TV28RkCj9ovOInxVDww
+         AAHmWcMNk0lFA89DRsCsZY4WJwkQ6CMV6qh3KnKzsG3YvEUYZUc8GLtbMBr5SeewywTj
+         cL0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a+lhr9Q+24Qfza3c4uXpEdm8TyEjYoUavdn6rBgETA0=;
-        b=Eqygd8gU09wY94hwnEWFpF8R92A2bybfYop4qhMvzQSIYfnY2gEydLRqfrIsHpj4cr
-         au3Ae+xIX6nw8e2r1G4CoHehJyTPhODixk1jCuHjvE71BllMh9x6G7gnJc/9IZYF4RJ3
-         9VjPhHRsOStQFMpnlmMIjzZua7i6T6g/jiZmpGHIG3Z6FSLbiUEhFD6IJgE/fKb3AWSx
-         7tGa1dZsAqLVyMW0xokqp9dKCo7+/nqROSF2QUxjCRr+5Rnnu5cyefl29Y3D8p9IoWTW
-         wfBAS9VoJ2JPZ2PF1Z7UE/OmXrIP1QTbB96oG7VNz565r20l+t1RPe6vhXWr5lff+vmy
-         5a0A==
-X-Gm-Message-State: APjAAAX3Tv1rqXCMn+PIbhRn+F6FHmJOOafV27tlLXeQB5GBNahfk6F6
-        MXDgL2Aih/veYQJiUEI/Hmjv/g==
-X-Google-Smtp-Source: APXvYqxWMwntCJiOP/Rg6qilGaE0r4tvP3xYpgRSB5zm6o29WMIRTYv7JT5/hpFHq7FY7Jh/PBhQ6A==
-X-Received: by 2002:a63:e10d:: with SMTP id z13mr9626011pgh.116.1559590933600;
-        Mon, 03 Jun 2019 12:42:13 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id o2sm13442018pgm.51.2019.06.03.12.42.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 12:42:12 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 15:42:11 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [RFC 1/6] rcu: Add support for consolidated-RCU reader checking
-Message-ID: <20190603194211.GA228607@google.com>
-References: <20190601222738.6856-1-joel@joelfernandes.org>
- <20190601222738.6856-2-joel@joelfernandes.org>
- <20190603080128.GA3436@hirez.programming.kicks-ass.net>
- <20190603141847.GA94186@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jsqt76+/tC7lNIGkBOfSxOR0w7kTsY9VRuEizjLylaM=;
+        b=MFBbGpRO2SwJ5dXaCUTmNZoe8PiAsjHUj4QsDZ9EdJ3tDUBL8Us7m+BF6pHG5WQ7Gq
+         xCsDR8DOJZ0SYHQxxNMlJY/gl3IOMaBtvBsELhfeF8q3nwbFpNnGLEoCoz/HgP/Dme/6
+         8TSIEN56wEByQKeWz8qdzPRiE0zP7f3QitKkE2oaFFUTF/D50qN16J8dCVySkb6iluI8
+         NVzSeMcw2Rm+i8NhEtCdoRcVzOtJI6mwQzeB9tlm8TBunFtuy4yBAArG7hJ853r/7ZhO
+         uQ0YIaZVJzfqPnhFslBVnCa2oKub+bja7n1zbpg9iarvUXG7Fx7Z2OzMB2oINcv9bn48
+         r12g==
+X-Gm-Message-State: APjAAAURt0R9LYqoiq4SzdtHvPt+nzAb/qkrmvV/xpjXaMCKMDsLlMrt
+        woyv4B+1DHhV7QJ8T0LAHPHK/IO4XWydTOlhUCSWLRepdh4=
+X-Google-Smtp-Source: APXvYqwtRDahz95jt5ckTsuH+i7KTn9MRTd6CF+6hpsuPoa7lkdPVCsC5gUhiu+y1T7oPa6/2fCZnPaB/OkOvv8EDa4=
+X-Received: by 2002:a17:90a:bf02:: with SMTP id c2mr5763850pjs.73.1559596083400;
+ Mon, 03 Jun 2019 14:08:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190603141847.GA94186@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190603174323.48251-1-natechancellor@gmail.com>
+In-Reply-To: <20190603174323.48251-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 3 Jun 2019 14:07:50 -0700
+Message-ID: <CAKwvOdkQzdZezwf51UddFVGQh0mRFMEexr1cMHx=va88T515YQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: rpaphp: Avoid a sometimes-uninitialized warning
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 10:18:47AM -0400, Joel Fernandes wrote:
-> On Mon, Jun 03, 2019 at 10:01:28AM +0200, Peter Zijlstra wrote:
-> > On Sat, Jun 01, 2019 at 06:27:33PM -0400, Joel Fernandes (Google) wrote:
-> > > +#define list_for_each_entry_rcu(pos, head, member, cond...)		\
-> > > +	if (COUNT_VARGS(cond) != 0) {					\
-> > > +		__list_check_rcu_cond(0, ## cond);			\
-> > > +	} else {							\
-> > > +		__list_check_rcu();					\
-> > > +	}								\
-> > > +	for (pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
-> > > +		&pos->member != (head);					\
-> > >  		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
-> > >  
-> > >  /**
-> > > @@ -621,7 +648,12 @@ static inline void hlist_add_behind_rcu(struct hlist_node *n,
-> > >   * the _rcu list-mutation primitives such as hlist_add_head_rcu()
-> > >   * as long as the traversal is guarded by rcu_read_lock().
-> > >   */
-> > > +#define hlist_for_each_entry_rcu(pos, head, member, cond...)		\
-> > > +	if (COUNT_VARGS(cond) != 0) {					\
-> > > +		__list_check_rcu_cond(0, ## cond);			\
-> > > +	} else {							\
-> > > +		__list_check_rcu();					\
-> > > +	}								\
-> > >  	for (pos = hlist_entry_safe (rcu_dereference_raw(hlist_first_rcu(head)),\
-> > >  			typeof(*(pos)), member);			\
-> > >  		pos;							\
-> > 
-> > 
-> > This breaks code like:
-> > 
-> > 	if (...)
-> > 		list_for_each_entry_rcu(...);
-> > 
-> > as they are no longer a single statement. You'll have to frob it into
-> > the initializer part of the for statement.
-> 
-> Thanks a lot for that. I fixed it as below (diff is on top of the patch):
-> 
-> If not for that '##' , I could have abstracted the whole if/else
-> expression into its own macro and called it from list_for_each_entry_rcu() to
-> keep it more clean.
+On Mon, Jun 3, 2019 at 10:44 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+> Looking at the loop in a vacuum as clang would, fndit could be
+> uninitialized if entries was ever zero or the if statement was
+> always true within the loop. Regardless of whether or not this
+> warning is a problem in practice, "found" variables should always
+> be initialized to false so that there is no possibility of
+> undefined behavior.
 
-Actually was able to roll the if/else into its own macro as well, thus
-keeping it clean. thanks!
+Thanks for the patch Nathan.  fndit isn't really being used for
+anything other than a print statement outside of the loop.  How about:
 
----8<-----------------------
+```
+diff --git a/drivers/pci/hotplug/rpaphp_core.c
+b/drivers/pci/hotplug/rpaphp_core.c
+index bcd5d357ca23..c3899ee1db99 100644
+--- a/drivers/pci/hotplug/rpaphp_core.c
++++ b/drivers/pci/hotplug/rpaphp_core.c
+@@ -230,7 +230,7 @@ static int rpaphp_check_drc_props_v2(struct
+device_node *dn, char *drc_name,
+  struct of_drc_info drc;
+  const __be32 *value;
+  char cell_drc_name[MAX_DRC_NAME_LEN];
+- int j, fndit;
++ int j;
 
-diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-index b641fdd9f1a2..cc9c382b080c 100644
---- a/include/linux/rculist.h
-+++ b/include/linux/rculist.h
-@@ -43,7 +43,11 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
- /*
-  * Check during list traversal that we are within an RCU reader
-  */
--#define __list_check_rcu()						\
-+
-+#define SIXTH_ARG(a1, a2, a3, a4, a5, a6, ...) a6
-+#define COUNT_VARGS(...) SIXTH_ARG(dummy, ## __VA_ARGS__, 4, 3, 2, 1, 0)
-+
-+#define __list_check_rcu_nocond()					\
- 	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),			\
- 			 "RCU-list traversed in non-reader section!")
- 
-@@ -59,6 +63,16 @@ static inline void __list_check_rcu_cond(int dummy, ...)
- 	RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(),
- 			 "RCU-list traversed in non-reader section!");
- }
-+
-+#define __list_check_rcu(cond...)				\
-+     ({								\
-+	if (COUNT_VARGS(cond) != 0) {				\
-+		__list_check_rcu_cond(0, ## cond);		\
-+	} else {						\
-+		__list_check_rcu_nocond();			\
-+	}							\
-+      })
-+
- /*
-  * Insert a new entry between two known consecutive entries.
-  *
-@@ -357,9 +371,6 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
- 						  member) : NULL; \
- })
- 
--#define SIXTH_ARG(a1, a2, a3, a4, a5, a6, ...) a6
--#define COUNT_VARGS(...) SIXTH_ARG(dummy, ## __VA_ARGS__, 4, 3, 2, 1, 0)
+  info = of_find_property(dn->parent, "ibm,drc-info", NULL);
+  if (info == NULL)
+@@ -245,17 +245,13 @@ static int rpaphp_check_drc_props_v2(struct
+device_node *dn, char *drc_name,
+
+  /* Should now know end of current entry */
+
+- if (my_index > drc.last_drc_index)
+- continue;
 -
- /**
-  * list_for_each_entry_rcu	-	iterate over rcu list of given type
-  * @pos:	the type * to use as a loop cursor.
-@@ -371,12 +382,8 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
-  * as long as the traversal is guarded by rcu_read_lock().
-  */
- #define list_for_each_entry_rcu(pos, head, member, cond...)		\
--	if (COUNT_VARGS(cond) != 0) {					\
--		__list_check_rcu_cond(0, ## cond);			\
--	} else {							\
--		__list_check_rcu();					\
--	}								\
--	for (pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
-+	for (__list_check_rcu(cond),					\
-+	     pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
- 		&pos->member != (head);					\
- 		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
- 
-@@ -649,12 +656,8 @@ static inline void hlist_add_behind_rcu(struct hlist_node *n,
-  * as long as the traversal is guarded by rcu_read_lock().
-  */
- #define hlist_for_each_entry_rcu(pos, head, member, cond...)		\
--	if (COUNT_VARGS(cond) != 0) {					\
--		__list_check_rcu_cond(0, ## cond);			\
--	} else {							\
--		__list_check_rcu();					\
--	}								\
--	for (pos = hlist_entry_safe (rcu_dereference_raw(hlist_first_rcu(head)),\
-+	for (__list_check_rcu(cond),					\
-+	     pos = hlist_entry_safe (rcu_dereference_raw(hlist_first_rcu(head)),\
- 			typeof(*(pos)), member);			\
- 		pos;							\
- 		pos = hlist_entry_safe(rcu_dereference_raw(hlist_next_rcu(\
--- 
-2.22.0.rc1.311.g5d7573a151-goog
+- fndit = 1;
+- break;
++ /* Found it */
++ if (my_index <= drc.last_drc_index) {
++ sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
++ my_index);
++ break;
++ }
+  }
+- /* Found it */
+-
+- if (fndit)
+- sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
+- my_index);
 
+  if (((drc_name == NULL) ||
+       (drc_name && !strcmp(drc_name, cell_drc_name))) &&
+```
+(not sure my tabs were pasted properly in the above...)
+
+-- 
+Thanks,
+~Nick Desaulniers
