@@ -2,193 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AA5F732691
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2019 04:23:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5001532769
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2019 06:26:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfFCCX6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 2 Jun 2019 22:23:58 -0400
-Received: from alpha.anastas.io ([104.248.188.109]:39131 "EHLO
-        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbfFCCX5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 2 Jun 2019 22:23:57 -0400
-Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by alpha.anastas.io (Postfix) with ESMTPSA id 015087F6B4;
-        Sun,  2 Jun 2019 21:23:55 -0500 (CDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
-        t=1559528636; bh=+/duAU9XL92ctEZ3sNHy++gGMbn1xWFWJV4PdCXDBhA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=gqRwvu8il7GnTct/LxLSowY39wiUUMkDD7jPiEpdnuJwmcOR66zYMIiwszSDxsXIV
-         MFCh1p95YTFv4nHSS1gSCkxlceCkz8y8YK084uiCVd/HT8cXmYaayjnlWee4aPGN/Y
-         l33Pfb/3cuH4XSwszOcs06ShaHi7AOHnHGUy0AS6o3Kbz7CJ1hpNUWS+cHf0Oa07jL
-         Kj5Iuy57TBqGzsKK+ZoQX6RqnVRvxJkC+XguKZyjemh+3lcKI/k92MvnQDEqSbU1k5
-         PKGzt2goLxkMzBT0RDVWXWE39WJnwhjHbOLnnvDTzPkCS5rUcxnVi/xg1lSq8e3hcp
-         N7bn9y2/NOu4g==
-Subject: Re: [PATCH v3 1/3] PCI: Introduce pcibios_ignore_alignment_request
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>, Oliver <oohall@gmail.com>
-Cc:     Sam Bobroff <sbobroff@linux.ibm.com>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        rppt@linux.ibm.com, Paul Mackerras <paulus@samba.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, xyjxie@linux.vnet.ibm.com,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-References: <20190528040313.35582-1-shawn@anastas.io>
- <20190528040313.35582-2-shawn@anastas.io>
- <CAOSf1CEFfbmwfvmdqT1xdt8SFb=tYdYXLfXeyZ8=iRnhg4a3Pg@mail.gmail.com>
- <b0a38504-24c3-77bc-b308-7b498f07760a@ozlabs.ru>
- <bccfec8f-c8a4-fac1-7e96-be84113b9a73@anastas.io>
- <3e6b9d7d-5d18-645e-5ef9-6b8a77fa62e9@ozlabs.ru>
- <985681e4-1236-fff7-e9e7-189a340487dd@anastas.io>
- <81a015ed-2c99-7ca8-c5ad-cede93aeba97@ozlabs.ru>
-From:   Shawn Anastasio <shawn@anastas.io>
-Message-ID: <bdc914aa-9aab-1377-c036-cca4710ef233@anastas.io>
-Date:   Sun, 2 Jun 2019 21:23:54 -0500
+        id S1726221AbfFCE0I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Jun 2019 00:26:08 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:56612 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbfFCE0H (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Jun 2019 00:26:07 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x534PnwV015194;
+        Sun, 2 Jun 2019 23:25:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559535949;
+        bh=U1QCwRlEhwv7rziVzxtrUAAJTnyoVC6b1KNsx66xn1Y=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=KTGfi1N7r6pXKFh2PyV35FKGuy1ELmDFQbE9OxChaUXF0gOFrw25+IvegRkoT0En/
+         ojrcoK+2b91d0fsTQTS6bs2NK3R+PDyF9/nntq0F3b6qNv455atkXMYBCQRF9c0sFB
+         Lw+XaXm/7Z1/8QWpft8bpS72Tw+FIk38xlIR/B1Y=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x534PnVQ074967
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 2 Jun 2019 23:25:49 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sun, 2 Jun
+ 2019 23:25:48 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Sun, 2 Jun 2019 23:25:48 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x534PfNv118820;
+        Sun, 2 Jun 2019 23:25:43 -0500
+Subject: Re: [PATCH] PCI: endpoint: Add DMA to Linux PCI EP Framework
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Alan Mikhak <alan.mikhak@sifive.com>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "wen.yang99@zte.com.cn" <wen.yang99@zte.com.cn>,
+        "kjlu@umn.edu" <kjlu@umn.edu>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+References: <1558650258-15050-1-git-send-email-alan.mikhak@sifive.com>
+ <305100E33629484CBB767107E4246BBB0A6FAFFD@DE02WEMBXB.internal.synopsys.com>
+ <CABEDWGxsQ9NXrN7W_8HVrXQBb9HiBd+d1dNfv+cXmoBpXQnLwA@mail.gmail.com>
+ <305100E33629484CBB767107E4246BBB0A6FC308@DE02WEMBXB.internal.synopsys.com>
+ <CABEDWGxL-WYz1BY7yXJ6eKULgVtKeo67XhgHZjvtm5Ka5foKiA@mail.gmail.com>
+ <192e3a19-8b69-dfaf-aa5c-45c7087548cc@ti.com>
+ <20190531050727.GO15118@vkoul-mobl>
+ <d2d8a904-d796-f9f2-8f4a-61e857355a4f@ti.com>
+ <20190531063247.GP15118@vkoul-mobl>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <400a7c28-39b1-f242-7810-a1d38aa51446@ti.com>
+Date:   Mon, 3 Jun 2019 09:54:20 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <81a015ed-2c99-7ca8-c5ad-cede93aeba97@ozlabs.ru>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190531063247.GP15118@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Vinod,
 
-
-On 5/30/19 10:56 PM, Alexey Kardashevskiy wrote:
-> 
-> 
-> On 31/05/2019 08:49, Shawn Anastasio wrote:
->> On 5/29/19 10:39 PM, Alexey Kardashevskiy wrote:
->>>
->>>
->>> On 28/05/2019 17:39, Shawn Anastasio wrote:
->>>>
->>>>
->>>> On 5/28/19 1:27 AM, Alexey Kardashevskiy wrote:
->>>>>
->>>>>
->>>>> On 28/05/2019 15:36, Oliver wrote:
->>>>>> On Tue, May 28, 2019 at 2:03 PM Shawn Anastasio <shawn@anastas.io>
->>>>>> wrote:
->>>>>>>
->>>>>>> Introduce a new pcibios function pcibios_ignore_alignment_request
->>>>>>> which allows the PCI core to defer to platform-specific code to
->>>>>>> determine whether or not to ignore alignment requests for PCI
->>>>>>> resources.
->>>>>>>
->>>>>>> The existing behavior is to simply ignore alignment requests when
->>>>>>> PCI_PROBE_ONLY is set. This is behavior is maintained by the
->>>>>>> default implementation of pcibios_ignore_alignment_request.
->>>>>>>
->>>>>>> Signed-off-by: Shawn Anastasio <shawn@anastas.io>
->>>>>>> ---
->>>>>>>     drivers/pci/pci.c   | 9 +++++++--
->>>>>>>     include/linux/pci.h | 1 +
->>>>>>>     2 files changed, 8 insertions(+), 2 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>>>>>> index 8abc843b1615..8207a09085d1 100644
->>>>>>> --- a/drivers/pci/pci.c
->>>>>>> +++ b/drivers/pci/pci.c
->>>>>>> @@ -5882,6 +5882,11 @@ resource_size_t __weak
->>>>>>> pcibios_default_alignment(void)
->>>>>>>            return 0;
->>>>>>>     }
->>>>>>>
->>>>>>> +int __weak pcibios_ignore_alignment_request(void)
->>>>>>> +{
->>>>>>> +       return pci_has_flag(PCI_PROBE_ONLY);
->>>>>>> +}
->>>>>>> +
->>>>>>>     #define RESOURCE_ALIGNMENT_PARAM_SIZE COMMAND_LINE_SIZE
->>>>>>>     static char
->>>>>>> resource_alignment_param[RESOURCE_ALIGNMENT_PARAM_SIZE] = {0};
->>>>>>>     static DEFINE_SPINLOCK(resource_alignment_lock);
->>>>>>> @@ -5906,9 +5911,9 @@ static resource_size_t
->>>>>>> pci_specified_resource_alignment(struct pci_dev *dev,
->>>>>>>            p = resource_alignment_param;
->>>>>>>            if (!*p && !align)
->>>>>>>                    goto out;
->>>>>>> -       if (pci_has_flag(PCI_PROBE_ONLY)) {
->>>>>>> +       if (pcibios_ignore_alignment_request()) {
->>>>>>>                    align = 0;
->>>>>>> -               pr_info_once("PCI: Ignoring requested alignments
->>>>>>> (PCI_PROBE_ONLY)\n");
->>>>>>> +               pr_info_once("PCI: Ignoring requested alignments\n");
->>>>>>>                    goto out;
->>>>>>>            }
->>>>>>
->>>>>> I think the logic here is questionable to begin with. If the user has
->>>>>> explicitly requested re-aligning a resource via the command line then
->>>>>> we should probably do it even if PCI_PROBE_ONLY is set. When it breaks
->>>>>> they get to keep the pieces.
->>>>>>
->>>>>> That said, the real issue here is that PCI_PROBE_ONLY probably
->>>>>> shouldn't be set under qemu/kvm. Under the other hypervisor (PowerVM)
->>>>>> hotplugged devices are configured by firmware before it's passed to
->>>>>> the guest and we need to keep the FW assignments otherwise things
->>>>>> break. QEMU however doesn't do any BAR assignments and relies on that
->>>>>> being handled by the guest. At boot time this is done by SLOF, but
->>>>>> Linux only keeps SLOF around until it's extracted the device-tree.
->>>>>> Once that's done SLOF gets blown away and the kernel needs to do it's
->>>>>> own BAR assignments. I'm guessing there's a hack in there to make it
->>>>>> work today, but it's a little surprising that it works at all...
->>>>>
->>>>>
->>>>> The hack is to run a modified qemu-aware "/usr/sbin/rtas_errd" in the
->>>>> guest which receives an event from qemu (RAS_EPOW from
->>>>> /proc/interrupts), fetches device tree chunks (and as I understand it -
->>>>> they come with BARs from phyp but without from qemu) and writes "1" to
->>>>> "/sys/bus/pci/rescan" which calls pci_assign_resource() eventually:
->>>>
->>>> Interesting. Does this mean that the PHYP hotplug path doesn't
->>>> call pci_assign_resource?
->>>
->>>
->>> I'd expect dlpar_add_slot() to be called under phyp and eventually
->>> pci_device_add() which (I think) may or may not trigger later
->>> reassignment.
->>>
->>>
->>>> If so it means the patch may not
->>>> break that platform after all, though it still may not be
->>>> the correct way of doing things.
->>>
->>>
->>> We should probably stop enforcing the PCI_PROBE_ONLY flag - it seems
->>> that (unless resource_alignment= is used) the pseries guest should just
->>> walk through all allocated resources and leave them unchanged.
+On 31/05/19 12:02 PM, Vinod Koul wrote:
+> On 31-05-19, 10:50, Kishon Vijay Abraham I wrote:
+>> Hi Vinod,
 >>
->> If we add a pcibios_default_alignment() implementation like was
->> suggested earlier, then it will behave as if the user has
->> specified resource_alignment= by default and SLOF's assignments
->> won't be honored (I think).
+>> On 31/05/19 10:37 AM, Vinod Koul wrote:
+>>> Hi Kishon,
+>>>
+>>> On 30-05-19, 11:16, Kishon Vijay Abraham I wrote:
+>>>> +Vinod Koul
+>>>>
+>>>> Hi,
+>>>>
+>>>> On 30/05/19 4:07 AM, Alan Mikhak wrote:
+>>>>> On Mon, May 27, 2019 at 2:09 AM Gustavo Pimentel
+>>>>> <Gustavo.Pimentel@synopsys.com> wrote:
+>>>>>>
+>>>>>> On Fri, May 24, 2019 at 20:42:43, Alan Mikhak <alan.mikhak@sifive.com>
+>>>>>> wrote:
+>>>>>>
+>>>>>> Hi Alan,
+>>>>>>
+>>>>>>> On Fri, May 24, 2019 at 1:59 AM Gustavo Pimentel
+>>>>>>> <Gustavo.Pimentel@synopsys.com> wrote:
+>>>>>>>>
+>>>>>>>> Hi Alan,
+>>>>>>>>
+>>>>>>>> This patch implementation is very HW implementation dependent and
+>>>>>>>> requires the DMA to exposed through PCIe BARs, which aren't always the
+>>>>>>>> case. Besides, you are defining some control bits on
+>>>>>>>> include/linux/pci-epc.h that may not have any meaning to other types of
+>>>>>>>> DMA.
+>>>>>>>>
+>>>>>>>> I don't think this was what Kishon had in mind when he developed the
+>>>>>>>> pcitest, but let see what Kishon was to say about it.
+>>>>>>>>
+>>>>>>>> I've developed a DMA driver for DWC PCI using Linux Kernel DMAengine API
+>>>>>>>> and which I submitted some days ago.
+>>>>>>>> By having a DMA driver which implemented using DMAengine API, means the
+>>>>>>>> pcitest can use the DMAengine client API, which will be completely
+>>>>>>>> generic to any other DMA implementation.
+>>>>
+>>>> right, my initial thought process was to use only dmaengine APIs in
+>>>> pci-epf-test so that the system DMA or DMA within the PCIe controller can be
+>>>> used transparently. But can we register DMA within the PCIe controller to the
+>>>> DMA subsystem? AFAIK only system DMA should register with the DMA subsystem.
+>>>> (ADMA in SDHCI doesn't use dmaengine). Vinod Koul can confirm.
+>>>
+>>> So would this DMA be dedicated for PCI and all PCI devices on the bus?
+>>
+>> Yes, this DMA will be used only by PCI ($patch is w.r.t PCIe device mode. So
+>> all endpoint functions both physical and virtual functions will use the DMA in
+>> the controller).
+>>> If so I do not see a reason why this cannot be using dmaengine. The use
+>>
+>> Thanks for clarifying. I was under the impression any DMA within a peripheral
+>> controller shouldn't use DMAengine.
 > 
+> That is indeed a correct assumption. The dmaengine helps in cases where
+> we have a dma controller with multiple users, for a single user case it
+> might be overhead to setup dma driver and then use it thru framework.
 > 
-> I removed pci_add_flags(PCI_PROBE_ONLY) from pSeries_setup_arch and
-> tried booting with and without pci=resource_alignment= and I can see no
-> difference - BARs are still aligned to 64K as programmed in SLOF; if I
-> hack SLOF to align to 4K or 32K - BARs get packed and the guest leaves
-> them unchanged.
-> 
-> 
->> I guess it boils down to one question - is it important that we
->> observe SLOF's initial BAR assignments?
-> 
-> It isn't if it's SLOF but it is if it's phyp. It used to not
-> allow/support BAR reassignment and even if it does not, I'd rather avoid
-> touching them.
+> Someone needs to see the benefit and cost of using the framework and
+> decide.
 
-A quick update. I tried removing pci_add_flags(PCI_PROBE_ONLY) which
-worked, but if I add an implementation of pcibios_default_alignment
-which simply returns PAGE_SIZE, my VM fails to boot and many errors
-from the virtio disk driver are printed to the console.
+The DMA within the endpoint controller can indeed be used by multiple users for
+e.g in the case of multi function EP devices or SR-IOV devices, all the
+function drivers can use the DMA in the endpoint controller.
 
-After some investigation, it seems that with pcibios_default_alignment
-present, Linux will reallocate all resources provided by SLOF on
-boot. I'm still not sure why exactly this causes the virtio driver
-to fail, but it does indicate that there is a reason to keep
-SLOF's initial assignments.
+I think it makes sense to use dmaengine for DMA within the endpoint controller.
+> 
+>>> case would be memcpy for DMA right or mem to device (vice versa) transfers?
+>>
+>> The device is memory mapped so it would be only memcopy.
+>>>
+>>> Btw many driver in sdhci do use dmaengine APIs and yes we are missing
+>>> support in framework than individual drivers
+>>
+>> I think dmaengine APIs is used only when the platform uses system DMA and not
+>> ADMA within the SDHCI controller. IOW there is no dma_async_device_register()
+>> to register ADMA in SDHCI with DMA subsystem.
+> 
+> We are looking it from the different point of view. You are looking for
+> dmaengine drivers in that (which would be in drivers/dma/) and I am
+> pointing to users of dmaengine in that.
+> 
+> So the users in mmc would be ones using dmaengine APIs:
+> $git grep -l dmaengine_prep_* drivers/mmc/
+> 
+> which tells me 17 drivers!
 
-Anybody have an idea what's causing this?
+right. For the endpoint case, drivers/pci/controller should register with the
+dmaengine i.e if the controller has aN embedded DMA (I think it should be okay
+to keep that in drivers/pci/controller itself instead of drivers/dma) and
+drivers/pci/endpoint/functions/ should use dmaengine API's (Depending on the
+platform, this will either use system DMA or DMA within the PCI controller).
+
+Thanks
+Kishon
