@@ -2,101 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F017433B83
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 00:40:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 866BD33BB2
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 01:05:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726163AbfFCWkp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Jun 2019 18:40:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35084 "EHLO mx1.redhat.com"
+        id S1726216AbfFCXFP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Jun 2019 19:05:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbfFCWko (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 3 Jun 2019 18:40:44 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726163AbfFCXFP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 3 Jun 2019 19:05:15 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1DDA130018E9;
-        Mon,  3 Jun 2019 22:40:44 +0000 (UTC)
-Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 395545B684;
-        Mon,  3 Jun 2019 22:40:43 +0000 (UTC)
-Date:   Mon, 3 Jun 2019 16:40:42 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 5945626A4C;
+        Mon,  3 Jun 2019 23:05:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559603114;
+        bh=HTEBGGiuzJwUClfshDH32ho4zeOOAnP/iWlJw3BK9q0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iIkMrXzwjV7SjLQS8j1ZzCkxYfQyK+19r86dNS3oCjwAIthbFgrfRDE7/CoIKxZHX
+         0w2v5ZmrS9/1tPBSeVJsDW9Nwp/JSf9QQnFdrh7mt6w07bkiRYAArAjvmn+flKqf7I
+         9/DrPwIGvkCqsethBx6UR4NnNHuzGP2qCKWtLk0Y=
+Date:   Mon, 3 Jun 2019 18:05:12 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     JD Zheng <jiandong.zheng@broadcom.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        keith.busch@intel.com, bcm-kernel-feedback-list@broadcom.com,
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        linux-pci@vger.kernel.org, keith.busch@intel.com,
+        bcm-kernel-feedback-list@broadcom.com,
         Lukas Wunner <lukas@wunner.de>
 Subject: Re: SSD surprise removal leads to long wait inside pci_dev_wait()
  and FLR 65s timeout
-Message-ID: <20190603164042.2276076d@x1.home>
-In-Reply-To: <78f95dfe-ac2b-408f-0e2a-b3b9d69575dd@broadcom.com>
+Message-ID: <20190603230512.GD58810@google.com>
 References: <8f2d88a5-9524-c4c3-a61f-7d55d97e1c18@broadcom.com>
-        <20190603004414.GA189360@google.com>
-        <20190602194011.51ceaa23@x1.home>
-        <78f95dfe-ac2b-408f-0e2a-b3b9d69575dd@broadcom.com>
-Organization: Red Hat
+ <20190603004414.GA189360@google.com>
+ <20190602194011.51ceaa23@x1.home>
+ <78f95dfe-ac2b-408f-0e2a-b3b9d69575dd@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 03 Jun 2019 22:40:44 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <78f95dfe-ac2b-408f-0e2a-b3b9d69575dd@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 3 Jun 2019 14:17:36 -0700
-JD Zheng <jiandong.zheng@broadcom.com> wrote:
-
-> On 6/2/19 6:40 PM, Alex Williamson wrote:
+On Mon, Jun 03, 2019 at 02:17:36PM -0700, JD Zheng wrote:
 > > On Sun, 2 Jun 2019 19:44:14 -0500
 > > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >   
-> >> [+cc Alex, Lukas]
-> >>
-> >> On Fri, May 31, 2019 at 09:55:20AM -0700, JD Zheng wrote:  
-> >>> Hello,
-> >>>
-> >>> I am running DPDK 18.11+SPDK 19.04 with v5.1 kernel. DPDK/SPDK uses SSD vfio
-> >>> devices and after running SPDK's nvmf_tgt, unplugging a SSD cause kernel to
-> >>> print out following:
-> >>> [  105.426952] vfio-pci 0000:04:00.0: not ready 2047ms after FLR; waiting
-> >>> [  107.698953] vfio-pci 0000:04:00.0: not ready 4095ms after FLR; waiting
-> >>> [  112.050960] vfio-pci 0000:04:00.0: not ready 8191ms after FLR; waiting
-> >>> [  120.498953] vfio-pci 0000:04:00.0: not ready 16383ms after FLR; waiting
-> >>> [  138.418957] vfio-pci 0000:04:00.0: not ready 32767ms after FLR; waiting
-> >>> [  173.234953] vfio-pci 0000:04:00.0: not ready 65535ms after FLR; giving up
-> >>>
-> >>> Looks like it is a PCI hotplug racing condition between DPDK's
-> >>> eal-intr-thread thread and kernel's pciehp thread. And it causes lockup in
-> >>> pci_dev_wait() at kernel side.
-> >>>
-> >>> When SSD is removed, eal-intr-thread immediately receives
-> >>> RTE_INTR_HANDLE_ALARM and handler calls rte_pci_detach_dev() and at kernel
-> >>> side vfio_pci_release() is triggered to release this vfio device, which
-> >>> calls pci_try_reset_function(), then _pci_reset_function_locked().
-> >>> pci_try_reset_function acquires the device lock but
-> >>> _pci_reset_function_locked() doesn't return, therefore lock is NOT released.  
-> > 
-> > To what extent does vfio-pci need to learn about surprise hotplug?  My
-> > expectation is that the current state of the code would only support
-> > cooperative hotplug.  When a device is surprise removed, what backs a
-> > user's mmaps?  AIUI, we don't have a revoke interface to invalidate
-> > these.  We should probably start with an RFE or some development effort
-> > to harden vfio-pci for surprise hotplug, it's not surprising it doesn't
-> > just work TBH.  Thanks,
-> > 
-> > Alex
-> > 
-> >   
-> 
-> I did see other issues that DPDK unmap vifo device memory was stuck due 
-> to surprise removal.
-> 
-> Are you saying that vfio-pci surprise removal is not fully implemented yet?
 
-Has not even been evaluated for that use case afaik.  You are in
-unknown and expected broken territory.  If this is an area you'd like
-to contribute, great, but expect more than a bug fix here and there.
-Thanks,
+> > > Would you mind opening a report at https://bugzilla.kernel.org and
+> > > attaching the complete dmesg log and "lspci -vv" output?
+> 
+> I submitted one as https://bugzilla.kernel.org/show_bug.cgi?id=203797
+> 
+> > > Out of curiosity, why do you use "pciehp.pciehp_poll_time=5"?
+> 
+> This was chosen by other engineer. I tried shorter polling time, which
+> doesn't make difference.
+> 
+> I also tried pciehp.pciehp_poll_mode=0 but hotplug doesn't seem working.
+> Should I use poll mode or not?
 
-Alex
+This is just a tangent to the real issue you're working; I'm not
+suggesting any changes here to fix that issue.
+
+In my mind, the existence of the pciehp.pciehp_poll_mode and
+pciehp.pciehp_poll_time parameters is a defect in pciehp.  I would far
+rather that pciehp figured out by itself whether it needed to poll.  I
+don't know whether that's actually feasible, or if there's some reason
+why pciehp can't be that smart.
+
+Bjorn
