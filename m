@@ -2,337 +2,614 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 30AF133032
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2019 14:50:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CB84330D0
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2019 15:19:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbfFCMuE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Jun 2019 08:50:04 -0400
-Received: from mail-eopbgr130073.outbound.protection.outlook.com ([40.107.13.73]:29955
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726855AbfFCMuE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:50:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U743IyRSRUgzb5q3qelEMoxByx7tXa+xhJrOgYaKUlw=;
- b=O1wBxMzULrzG3nxolOIbuRNtxDrrO7dPcE+IFogafNRyAHNJV+bMYBxGOf/63TtQyaY5/9L5x8JnsIpArUVpUAfnMWux2Q7j5Lj4vDa591Py4pfhedxanegI175bFa8MsPcFLF6MQl+IhhTq7+cFrKT7nrz1ImfNcHfWIU8+lTY=
-Received: from AM6PR04MB5781.eurprd04.prod.outlook.com (20.179.3.19) by
- AM6PR04MB4792.eurprd04.prod.outlook.com (20.177.32.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.22; Mon, 3 Jun 2019 12:49:55 +0000
-Received: from AM6PR04MB5781.eurprd04.prod.outlook.com
- ([fe80::7802:2937:f7e9:20ed]) by AM6PR04MB5781.eurprd04.prod.outlook.com
- ([fe80::7802:2937:f7e9:20ed%4]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
- 12:49:55 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCHv6 5/6] arm64: dts: lx2160a: Add PCIe controller DT nodes
-Thread-Topic: [PATCHv6 5/6] arm64: dts: lx2160a: Add PCIe controller DT nodes
-Thread-Index: AQHVFSGl3meyBFqLK0uVITlDpjdEh6aJa6KAgABTP2A=
-Date:   Mon, 3 Jun 2019 12:49:55 +0000
-Message-ID: <AM6PR04MB578147FD591EB0059646023D84140@AM6PR04MB5781.eurprd04.prod.outlook.com>
-References: <20190528065129.8769-1-Zhiqiang.Hou@nxp.com>
- <20190528065129.8769-6-Zhiqiang.Hou@nxp.com>
- <CAKnKUHH8JU2Bqgq90rfgZ8r0xxB_RMRj16DBBLDhMpg3mwFU2Q@mail.gmail.com>
-In-Reply-To: <CAKnKUHH8JU2Bqgq90rfgZ8r0xxB_RMRj16DBBLDhMpg3mwFU2Q@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c90722d0-42d2-46f6-8849-08d6e821fac9
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM6PR04MB4792;
-x-ms-traffictypediagnostic: AM6PR04MB4792:
-x-microsoft-antispam-prvs: <AM6PR04MB4792901B4EED3C0E5400E1D684140@AM6PR04MB4792.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0057EE387C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(396003)(39860400002)(376002)(366004)(189003)(199004)(13464003)(53936002)(6246003)(52536014)(14454004)(9686003)(25786009)(4326008)(478600001)(102836004)(55016002)(99286004)(11346002)(6436002)(229853002)(3846002)(53546011)(6116002)(6506007)(5660300002)(7696005)(76176011)(54906003)(76116006)(6916009)(5024004)(74316002)(305945005)(486006)(7736002)(14444005)(256004)(186003)(2906002)(446003)(476003)(68736007)(26005)(66556008)(7416002)(316002)(33656002)(8936002)(71200400001)(71190400001)(66446008)(66476007)(64756008)(8676002)(66066001)(73956011)(81166006)(86362001)(81156014)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4792;H:AM6PR04MB5781.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 8isiii4g0OM0AhbZQIe1cMBgRACw//mOBmSD0nyrMWpYNegB5h2fO8yUlWP+NvTgGHcbVYxYXi3Bg+kuCAiYj3+561lJCHiB5UGPAgKfdvqw9+rSMBOHRaUQL3D8vRobii25Dx8iZk8N3QdBLRkNLhrzImBkUl3mtLLhET6P6OktW/L01rLld0r4xeUNvus5eDnDwaRBsq4Ef5R3QVG6qpH+w9zw1xhaadw9hbHt8UzWn1fZb0Ys1RK8Z7KLhwvvyLSCnRAGncC6wdXss42VF7eikXWrt+5TwsW8L89XJdgK+96WzSyfGawv6fi+QpUqLjgGY+fXw5tn9kogcQbbRDXMtoY98phDwPUsJ8/A1i/ccqlhq3ljkxnNwvqwXZHZSVEeljfoktY6Ty1wxSPg+lYUkV7dGhUqvM/3x58lzCs=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1727316AbfFCNTK convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 3 Jun 2019 09:19:10 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:50483 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfFCNTK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Jun 2019 09:19:10 -0400
+Received: by mail-it1-f193.google.com with SMTP id a186so27348084itg.0
+        for <linux-pci@vger.kernel.org>; Mon, 03 Jun 2019 06:19:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PS1yFL3t0EZDN7Qj6pBoG+AkALsjZfkbmfg/hHWuceo=;
+        b=ohzJHr3TqRu870zr0qTVm3H9MaSNecZHSbpbsjzgC0CyDg98GGx7dAJzhADXC5FP3k
+         Jga0qdoR8I+cIBBGHiWKHt25IFuARp+FMfNqKWOrIiQ7NlVzD3SuYCMxxlXf/2BpCULU
+         707p0s5cFnr0eIs7wwuAZEM/oJ+iZ8U9ZBhe4r+H+0shOScW+cx0O0d/4BwD9gDwhcGh
+         fujm3jZXldJ9aZvZ4/qVPWp8xxHZxutJLj1jy7QVuLl7DUlPwaZLN1tN3aMJfSeaSaBt
+         sG18+iPZAlxNSqfL9eWJl7R6JJ/rKhvDMToG//lgUrt+8eLYzZt33T8djh7XwN6tMW+q
+         P2Kw==
+X-Gm-Message-State: APjAAAV2AGpj4cnKnPEW/6PfJ7VLJNOkFYcT2d+Wpifxe/V4FVJdM9Re
+        I6tAVHkBa+rPU5I4uB7jxCdYODDbKwJUc9msKIIsMA==
+X-Google-Smtp-Source: APXvYqylWOBVzoqNFFj1dPR0fpmaftMt2cpVGYbH4LDgJjwXGokLgnTxo8QMHNuG0Xs99WdVGJUQxP6LH337Xe7G0x4=
+X-Received: by 2002:a24:5a45:: with SMTP id v66mr17145691ita.140.1559567948232;
+ Mon, 03 Jun 2019 06:19:08 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c90722d0-42d2-46f6-8849-08d6e821fac9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 12:49:55.7201
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zhiqiang.hou@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4792
+References: <20190507201245.9295-1-kherbst@redhat.com> <20190507201245.9295-5-kherbst@redhat.com>
+ <20190520211933.GA57618@google.com> <CACO55tsHi+4gRMC=XqOypJttztKNe5oKxxk0eqEVxGZoMzS+4Q@mail.gmail.com>
+ <20190521131033.GC57618@google.com> <CACO55ts=u7aZ1uZYJ4eMZPvSycwYpzr-W6Xn8oDBLrxsivLOAw@mail.gmail.com>
+ <20190521141317.GD57618@google.com> <CACO55tvVzugMpFFNbnxgsfkXNXcN-PqoaXkjWHL0et=fAcThhg@mail.gmail.com>
+ <CACO55tv2nnAxNAr=DTd2EzQXmQ5KLT1TR04J+WhVsnkV2_gBnw@mail.gmail.com> <CACO55tsdev_gXMRcRBtxs0ee3exoxRFS7z-di6PD87FWJyb=yw@mail.gmail.com>
+In-Reply-To: <CACO55tsdev_gXMRcRBtxs0ee3exoxRFS7z-di6PD87FWJyb=yw@mail.gmail.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Mon, 3 Jun 2019 15:18:56 +0200
+Message-ID: <CACO55ttv4f_XkCgOdCbnuBiXqYjs9p1Q2LEczv7FNYxogqWTfg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] pci: save the boot pcie link speed and restore it
+ on fini
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     nouveau <nouveau@lists.freedesktop.org>,
+        Lyude Paul <lyude@redhat.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgS2FydGhpa2V5YW4sDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCg0KPiAt
-LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBLYXJ0aGlrZXlhbiBNaXRyYW4gW21h
-aWx0bzptLmthcnRoaWtleWFuQG1vYml2ZWlsLmNvLmluXQ0KPiBTZW50OiAyMDE55bm0NuaciDPm
-l6UgMTM6MTMNCj4gVG86IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxp
-bnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc7DQo+IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgYXJu
-ZEBhcm5kYi5kZTsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IGwuc3VicmFobWFueWFAbW9iaXZl
-aWwuY28uaW47DQo+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAu
-Y29tPjsNCj4gbG9yZW56by5waWVyYWxpc2lAYXJtLmNvbTsgY2F0YWxpbi5tYXJpbmFzQGFybS5j
-b207DQo+IHdpbGwuZGVhY29uQGFybS5jb207IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNv
-bT47IE0uaC4gTGlhbg0KPiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgWGlhb3dlaSBCYW8gPHhp
-YW93ZWkuYmFvQG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2NiA1LzZdIGFybTY0OiBk
-dHM6IGx4MjE2MGE6IEFkZCBQQ0llIGNvbnRyb2xsZXIgRFQgbm9kZXMNCj4gDQo+IEhpIEhvdSBa
-aGlxaWFuZw0KPiAgICBUd28gaW5zdGFuY2VzIFtAMzYwMDAwMCBhbmQgQDM4MDAwMDBdIG9mIHRo
-ZSBzaXggaGFzIGEgZGlmZmVyZW50DQo+IHdpbmRvdyBjb3VudCwgdGhlIFJDIGNhbiBub3QgaGF2
-ZSBtb3JlIHRoYW4gOCB3aW5kb3dzLg0KPiBhcGlvLXdpbnMgPSA8MjU2PjsgIC8vQ2FuIHdlIGNo
-YW5nZSBpdCB0byA4DQo+IHBwaW8td2lucyA9IDwyND47ICAgIC8vQ2FuIHdlIGNoYW5nZSBpdCB0
-byA4DQo+IA0KDQpJIGNoZWNrZWQgd2l0aCBoYXJkd2FyZSB0ZWFtLCB0aGUgUENJZSBjb250cm9s
-bGVycyBAMzYwMDAwMCBhbmQgQDM4MDAwMDAgc3VwcG9ydA0KdXAgdG8geDggYW5kIFNSSU9WLCB0
-aGVzZSAyIGNvbnRyb2xsZXJzIGhhdmUgZGlmZmVyZW50IG51bWJlciBvZiBpbmJvdW5kIGFuZCBv
-dXRib3VuZA0Kd2luZG93cyBmcm9tIHRoZSBvdGhlciA0IFBDSWUgY29udHJvbGxlcnMgd2hpY2gg
-YXJlIHN1cHBvcnQgdXAgdG8geDQgYW5kIG5vdCBzdXBwb3J0DQpTUklPVi4NCg0KPiBPbiBUdWUs
-IE1heSAyOCwgMjAxOSBhdCAxMjoyMCBQTSBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+
-IHdyb3RlOg0KPiA+DQo+ID4gRnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNv
-bT4NCj4gPg0KPiA+IFRoZSBMWDIxNjBBIGludGVncmF0ZWQgNiBQQ0llIEdlbjQgY29udHJvbGxl
-cnMuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBu
-eHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBNaW5naHVhbiBMaWFuIDxNaW5naHVhbi5MaWFuQG54
-cC5jb20+DQo+ID4gLS0tDQo+ID4gVjY6DQo+ID4gIC0gTm8gY2hhbmdlLg0KPiA+DQo+ID4gIC4u
-Li9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWx4MjE2MGEuZHRzaSB8IDE2Mw0KPiA+ICsr
-KysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTYzIGluc2VydGlvbnMoKykN
-Cj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
-bHgyMTYwYS5kdHNpDQo+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHgy
-MTYwYS5kdHNpDQo+ID4gaW5kZXggMTI1YThjYzJjNWIzLi43YTJiOTFmZjFmYmMgMTAwNjQ0DQo+
-ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWx4MjE2MGEuZHRzaQ0K
-PiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1seDIxNjBhLmR0c2kN
-Cj4gPiBAQCAtOTY0LDUgKzk2NCwxNjggQEANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIH07DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPiAgICAgICAgICAg
-ICAgICAgfTsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIHBjaWVAMzQwMDAwMCB7DQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHgyMTYwYS1wY2llIjsN
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgwMCAweDAzNDAwMDAwIDB4MCAw
-eDAwMTAwMDAwDQo+IC8qIGNvbnRyb2xsZXIgcmVnaXN0ZXJzICovDQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIDB4ODAgMHgwMDAwMDAwMCAweDAgMHgwMDAwMTAwMD47DQo+IC8q
-IGNvbmZpZ3VyYXRpb24gc3BhY2UgKi8NCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZWct
-bmFtZXMgPSAiY3NyX2F4aV9zbGF2ZSIsDQo+ICJjb25maWdfYXhpX3NsYXZlIjsNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTA4DQo+IElSUV9UWVBF
-X0xFVkVMX0hJR0g+LCAvKiBBRVIgaW50ZXJydXB0ICovDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIDxHSUNfU1BJIDEwOA0KPiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwg
-LyogUE1FIGludGVycnVwdCAqLw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICA8R0lDX1NQSSAxMDgNCj4gSVJRX1RZUEVfTEVWRUxfSElHSD47IC8qIGNvbnRyb2xsZXIg
-aW50ZXJydXB0ICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0LW5hbWVz
-ID0gImFlciIsICJwbWUiLCAiaW50ciI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI2Fk
-ZHJlc3MtY2VsbHMgPSA8Mz47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2Vs
-bHMgPSA8Mj47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAicGNp
-IjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBkbWEtY29oZXJlbnQ7DQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgYXBpby13aW5zID0gPDg+Ow0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIHBwaW8td2lucyA9IDw4PjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBidXMt
-cmFuZ2UgPSA8MHgwIDB4ZmY+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJhbmdlcyA9
-IDwweDgyMDAwMDAwIDB4MCAweDQwMDAwMDAwIDB4ODANCj4gMHg0MDAwMDAwMCAweDAgMHg0MDAw
-MDAwMD47IC8qIG5vbi1wcmVmZXRjaGFibGUgbWVtb3J5ICovDQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgbXNpLXBhcmVudCA9IDwmaXRzPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAjaW50ZXJydXB0LWNlbGxzID0gPDE+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGlu
-dGVycnVwdC1tYXAtbWFzayA9IDwwIDAgMCA3PjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICBpbnRlcnJ1cHQtbWFwID0gPDAwMDAgMCAwIDEgJmdpYyAwIDAgR0lDX1NQSQ0KPiAxMDkgSVJR
-X1RZUEVfTEVWRUxfSElHSD4sDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIDwwMDAwIDAgMCAyICZnaWMgMCAwDQo+IEdJQ19TUEkgMTEwIElSUV9UWVBFX0xFVkVM
-X0hJR0g+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MDAw
-MCAwIDAgMyAmZ2ljIDAgMA0KPiBHSUNfU1BJIDExMSBJUlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4g
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDAwMDAgMCAwIDQgJmdp
-YyAwIDANCj4gR0lDX1NQSSAxMTIgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiArICAgICAgICAgICAgICAg
-fTsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIHBjaWVAMzUwMDAwMCB7DQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHgyMTYwYS1wY2llIjsNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgwMCAweDAzNTAwMDAwIDB4MCAweDAwMTAw
-MDAwDQo+IC8qIGNvbnRyb2xsZXIgcmVnaXN0ZXJzICovDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIDB4ODggMHgwMDAwMDAwMCAweDAgMHgwMDAwMTAwMD47DQo+IC8qIGNvbmZp
-Z3VyYXRpb24gc3BhY2UgKi8NCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZWctbmFtZXMg
-PSAiY3NyX2F4aV9zbGF2ZSIsDQo+ICJjb25maWdfYXhpX3NsYXZlIjsNCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTEzDQo+IElSUV9UWVBFX0xFVkVM
-X0hJR0g+LCAvKiBBRVIgaW50ZXJydXB0ICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIDxHSUNfU1BJIDExMw0KPiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwgLyogUE1F
-IGludGVycnVwdCAqLw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8
-R0lDX1NQSSAxMTMNCj4gSVJRX1RZUEVfTEVWRUxfSElHSD47IC8qIGNvbnRyb2xsZXIgaW50ZXJy
-dXB0ICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0LW5hbWVzID0gImFl
-ciIsICJwbWUiLCAiaW50ciI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3Mt
-Y2VsbHMgPSA8Mz47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8
-Mj47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAicGNpIjsNCj4g
-PiArICAgICAgICAgICAgICAgICAgICAgICBkbWEtY29oZXJlbnQ7DQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgYXBpby13aW5zID0gPDg+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IHBwaW8td2lucyA9IDw4PjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBidXMtcmFuZ2Ug
-PSA8MHgwIDB4ZmY+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJhbmdlcyA9IDwweDgy
-MDAwMDAwIDB4MCAweDQwMDAwMDAwIDB4ODgNCj4gMHg0MDAwMDAwMCAweDAgMHg0MDAwMDAwMD47
-IC8qIG5vbi1wcmVmZXRjaGFibGUgbWVtb3J5ICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgbXNpLXBhcmVudCA9IDwmaXRzPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAjaW50
-ZXJydXB0LWNlbGxzID0gPDE+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVw
-dC1tYXAtbWFzayA9IDwwIDAgMCA3PjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBpbnRl
-cnJ1cHQtbWFwID0gPDAwMDAgMCAwIDEgJmdpYyAwIDAgR0lDX1NQSQ0KPiAxMTQgSVJRX1RZUEVf
-TEVWRUxfSElHSD4sDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IDwwMDAwIDAgMCAyICZnaWMgMCAwDQo+IEdJQ19TUEkgMTE1IElSUV9UWVBFX0xFVkVMX0hJR0g+
-LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MDAwMCAwIDAg
-MyAmZ2ljIDAgMA0KPiBHSUNfU1BJIDExNiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDAwMDAgMCAwIDQgJmdpYyAwIDAN
-Cj4gR0lDX1NQSSAxMTcgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiArICAgICAgICAgICAgICAgfTsNCj4g
-PiArDQo+ID4gKyAgICAgICAgICAgICAgIHBjaWVAMzYwMDAwMCB7DQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHgyMTYwYS1wY2llIjsNCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICByZWcgPSA8MHgwMCAweDAzNjAwMDAwIDB4MCAweDAwMTAwMDAwDQo+
-IC8qIGNvbnRyb2xsZXIgcmVnaXN0ZXJzICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIDB4OTAgMHgwMDAwMDAwMCAweDAgMHgwMDAwMTAwMD47DQo+IC8qIGNvbmZpZ3VyYXRp
-b24gc3BhY2UgKi8NCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZWctbmFtZXMgPSAiY3Ny
-X2F4aV9zbGF2ZSIsDQo+ICJjb25maWdfYXhpX3NsYXZlIjsNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTE4DQo+IElSUV9UWVBFX0xFVkVMX0hJR0g+
-LCAvKiBBRVIgaW50ZXJydXB0ICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIDxHSUNfU1BJIDExOA0KPiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwgLyogUE1FIGludGVy
-cnVwdCAqLw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8R0lDX1NQ
-SSAxMTgNCj4gSVJRX1RZUEVfTEVWRUxfSElHSD47IC8qIGNvbnRyb2xsZXIgaW50ZXJydXB0ICov
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0LW5hbWVzID0gImFlciIsICJw
-bWUiLCAiaW50ciI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMg
-PSA8Mz47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8Mj47DQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAicGNpIjsNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICBkbWEtY29oZXJlbnQ7DQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgYXBpby13aW5zID0gPDI1Nj47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcHBp
-by13aW5zID0gPDI0PjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBidXMtcmFuZ2UgPSA8
-MHgwIDB4ZmY+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJhbmdlcyA9IDwweDgyMDAw
-MDAwIDB4MCAweDQwMDAwMDAwIDB4OTANCj4gMHg0MDAwMDAwMCAweDAgMHg0MDAwMDAwMD47IC8q
-IG5vbi1wcmVmZXRjaGFibGUgbWVtb3J5ICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-bXNpLXBhcmVudCA9IDwmaXRzPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAjaW50ZXJy
-dXB0LWNlbGxzID0gPDE+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdC1t
-YXAtbWFzayA9IDwwIDAgMCA3PjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1
-cHQtbWFwID0gPDAwMDAgMCAwIDEgJmdpYyAwIDAgR0lDX1NQSQ0KPiAxMTkgSVJRX1RZUEVfTEVW
-RUxfSElHSD4sDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDww
-MDAwIDAgMCAyICZnaWMgMCAwDQo+IEdJQ19TUEkgMTIwIElSUV9UWVBFX0xFVkVMX0hJR0g+LA0K
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MDAwMCAwIDAgMyAm
-Z2ljIDAgMA0KPiBHSUNfU1BJIDEyMSBJUlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDAwMDAgMCAwIDQgJmdpYyAwIDANCj4g
-R0lDX1NQSSAxMjIgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiArICAgICAgICAgICAgICAgfTsNCj4gPiAr
-DQo+ID4gKyAgICAgICAgICAgICAgIHBjaWVAMzcwMDAwMCB7DQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHgyMTYwYS1wY2llIjsNCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICByZWcgPSA8MHgwMCAweDAzNzAwMDAwIDB4MCAweDAwMTAwMDAwDQo+IC8q
-IGNvbnRyb2xsZXIgcmVnaXN0ZXJzICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIDB4OTggMHgwMDAwMDAwMCAweDAgMHgwMDAwMTAwMD47DQo+IC8qIGNvbmZpZ3VyYXRpb24g
-c3BhY2UgKi8NCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZWctbmFtZXMgPSAiY3NyX2F4
-aV9zbGF2ZSIsDQo+ICJjb25maWdfYXhpX3NsYXZlIjsNCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTIzDQo+IElSUV9UWVBFX0xFVkVMX0hJR0g+LCAv
-KiBBRVIgaW50ZXJydXB0ICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIDxHSUNfU1BJIDEyMw0KPiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwgLyogUE1FIGludGVycnVw
-dCAqLw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8R0lDX1NQSSAx
-MjMNCj4gSVJRX1RZUEVfTEVWRUxfSElHSD47IC8qIGNvbnRyb2xsZXIgaW50ZXJydXB0ICovDQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0LW5hbWVzID0gImFlciIsICJwbWUi
-LCAiaW50ciI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8
-Mz47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8Mj47DQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAicGNpIjsNCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICBkbWEtY29oZXJlbnQ7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgYXBpby13aW5zID0gPDg+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHBwaW8td2lu
-cyA9IDw4PjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBidXMtcmFuZ2UgPSA8MHgwIDB4
-ZmY+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJhbmdlcyA9IDwweDgyMDAwMDAwIDB4
-MCAweDQwMDAwMDAwIDB4OTgNCj4gMHg0MDAwMDAwMCAweDAgMHg0MDAwMDAwMD47IC8qIG5vbi1w
-cmVmZXRjaGFibGUgbWVtb3J5ICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgbXNpLXBh
-cmVudCA9IDwmaXRzPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAjaW50ZXJydXB0LWNl
-bGxzID0gPDE+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdC1tYXAtbWFz
-ayA9IDwwIDAgMCA3PjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHQtbWFw
-ID0gPDAwMDAgMCAwIDEgJmdpYyAwIDAgR0lDX1NQSQ0KPiAxMjQgSVJRX1RZUEVfTEVWRUxfSElH
-SD4sDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwwMDAwIDAg
-MCAyICZnaWMgMCAwDQo+IEdJQ19TUEkgMTI1IElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MDAwMCAwIDAgMyAmZ2ljIDAg
-MA0KPiBHSUNfU1BJIDEyNiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgPDAwMDAgMCAwIDQgJmdpYyAwIDANCj4gR0lDX1NQ
-SSAxMjcgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-c3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiArICAgICAgICAgICAgICAgfTsNCj4gPiArDQo+ID4g
-KyAgICAgICAgICAgICAgIHBjaWVAMzgwMDAwMCB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgY29tcGF0aWJsZSA9ICJmc2wsbHgyMTYwYS1wY2llIjsNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICByZWcgPSA8MHgwMCAweDAzODAwMDAwIDB4MCAweDAwMTAwMDAwDQo+IC8qIGNvbnRy
-b2xsZXIgcmVnaXN0ZXJzICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4
-YTAgMHgwMDAwMDAwMCAweDAgMHgwMDAwMTAwMD47DQo+IC8qIGNvbmZpZ3VyYXRpb24gc3BhY2Ug
-Ki8NCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZWctbmFtZXMgPSAiY3NyX2F4aV9zbGF2
-ZSIsDQo+ICJjb25maWdfYXhpX3NsYXZlIjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBp
-bnRlcnJ1cHRzID0gPEdJQ19TUEkgMTI4DQo+IElSUV9UWVBFX0xFVkVMX0hJR0g+LCAvKiBBRVIg
-aW50ZXJydXB0ICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxH
-SUNfU1BJIDEyOA0KPiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwgLyogUE1FIGludGVycnVwdCAqLw0K
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8R0lDX1NQSSAxMjgNCj4g
-SVJRX1RZUEVfTEVWRUxfSElHSD47IC8qIGNvbnRyb2xsZXIgaW50ZXJydXB0ICovDQo+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0LW5hbWVzID0gImFlciIsICJwbWUiLCAiaW50
-ciI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8Mz47DQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8Mj47DQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAicGNpIjsNCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICBkbWEtY29oZXJlbnQ7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgYXBp
-by13aW5zID0gPDI1Nj47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcHBpby13aW5zID0g
-PDI0PjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBidXMtcmFuZ2UgPSA8MHgwIDB4ZmY+
-Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJhbmdlcyA9IDwweDgyMDAwMDAwIDB4MCAw
-eDQwMDAwMDAwIDB4YTANCj4gMHg0MDAwMDAwMCAweDAgMHg0MDAwMDAwMD47IC8qIG5vbi1wcmVm
-ZXRjaGFibGUgbWVtb3J5ICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgbXNpLXBhcmVu
-dCA9IDwmaXRzPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAjaW50ZXJydXB0LWNlbGxz
-ID0gPDE+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdC1tYXAtbWFzayA9
-IDwwIDAgMCA3PjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHQtbWFwID0g
-PDAwMDAgMCAwIDEgJmdpYyAwIDAgR0lDX1NQSQ0KPiAxMjkgSVJRX1RZUEVfTEVWRUxfSElHSD4s
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwwMDAwIDAgMCAy
-ICZnaWMgMCAwDQo+IEdJQ19TUEkgMTMwIElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MDAwMCAwIDAgMyAmZ2ljIDAgMA0K
-PiBHSUNfU1BJIDEzMSBJUlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgPDAwMDAgMCAwIDQgJmdpYyAwIDANCj4gR0lDX1NQSSAx
-MzIgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgc3Rh
-dHVzID0gImRpc2FibGVkIjsNCj4gPiArICAgICAgICAgICAgICAgfTsNCj4gPiArDQo+ID4gKyAg
-ICAgICAgICAgICAgIHBjaWVAMzkwMDAwMCB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-Y29tcGF0aWJsZSA9ICJmc2wsbHgyMTYwYS1wY2llIjsNCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICByZWcgPSA8MHgwMCAweDAzOTAwMDAwIDB4MCAweDAwMTAwMDAwDQo+IC8qIGNvbnRyb2xs
-ZXIgcmVnaXN0ZXJzICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4YTgg
-MHgwMDAwMDAwMCAweDAgMHgwMDAwMTAwMD47DQo+IC8qIGNvbmZpZ3VyYXRpb24gc3BhY2UgKi8N
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZWctbmFtZXMgPSAiY3NyX2F4aV9zbGF2ZSIs
-DQo+ICJjb25maWdfYXhpX3NsYXZlIjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBpbnRl
-cnJ1cHRzID0gPEdJQ19TUEkgMTAzDQo+IElSUV9UWVBFX0xFVkVMX0hJR0g+LCAvKiBBRVIgaW50
-ZXJydXB0ICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNf
-U1BJIDEwMw0KPiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwgLyogUE1FIGludGVycnVwdCAqLw0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8R0lDX1NQSSAxMDMNCj4gSVJR
-X1RZUEVfTEVWRUxfSElHSD47IC8qIGNvbnRyb2xsZXIgaW50ZXJydXB0ICovDQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgaW50ZXJydXB0LW5hbWVzID0gImFlciIsICJwbWUiLCAiaW50ciI7
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8Mz47DQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8Mj47DQo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAicGNpIjsNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICBkbWEtY29oZXJlbnQ7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgYXBpby13
-aW5zID0gPDg+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHBwaW8td2lucyA9IDw4PjsN
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICBidXMtcmFuZ2UgPSA8MHgwIDB4ZmY+Ow0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgIHJhbmdlcyA9IDwweDgyMDAwMDAwIDB4MCAweDQwMDAw
-MDAwIDB4YTgNCj4gMHg0MDAwMDAwMCAweDAgMHg0MDAwMDAwMD47IC8qIG5vbi1wcmVmZXRjaGFi
-bGUgbWVtb3J5ICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgbXNpLXBhcmVudCA9IDwm
-aXRzPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAjaW50ZXJydXB0LWNlbGxzID0gPDE+
-Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdC1tYXAtbWFzayA9IDwwIDAg
-MCA3PjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHQtbWFwID0gPDAwMDAg
-MCAwIDEgJmdpYyAwIDAgR0lDX1NQSQ0KPiAxMDQgSVJRX1RZUEVfTEVWRUxfSElHSD4sDQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwwMDAwIDAgMCAyICZnaWMg
-MCAwDQo+IEdJQ19TUEkgMTA1IElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MDAwMCAwIDAgMyAmZ2ljIDAgMA0KPiBHSUNf
-U1BJIDEwNiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgPDAwMDAgMCAwIDQgJmdpYyAwIDANCj4gR0lDX1NQSSAxMDcgSVJR
-X1RZUEVfTEVWRUxfSElHSD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgc3RhdHVzID0g
-ImRpc2FibGVkIjsNCj4gPiArICAgICAgICAgICAgICAgfTsNCj4gPiArDQo+ID4gICAgICAgICB9
-Ow0KPiA+ICB9Ow0KPiA+IC0tDQo+ID4gMi4xNy4xDQo+ID4NCj4gDQo+IA0KPiAtLQ0KPiBUaGFu
-a3MsDQo+IFJlZ2FyZHMsDQo+IEthcnRoaWtleWFuIE1pdHJhbg0KPiANCj4gLS0NCj4gTW9iaXZl
-aWwgSU5DLiwgQ09ORklERU5USUFMSVRZIE5PVElDRTogVGhpcyBlLW1haWwgbWVzc2FnZSwgaW5j
-bHVkaW5nIGFueQ0KPiBhdHRhY2htZW50cywgaXMgZm9yIHRoZSBzb2xlIHVzZSBvZiB0aGUgaW50
-ZW5kZWQgcmVjaXBpZW50KHMpIGFuZCBtYXkgY29udGFpbg0KPiBwcm9wcmlldGFyeSBjb25maWRl
-bnRpYWwgb3IgcHJpdmlsZWdlZCBpbmZvcm1hdGlvbiBvciBvdGhlcndpc2UgYmUgcHJvdGVjdGVk
-DQo+IGJ5IGxhdy4gQW55IHVuYXV0aG9yaXplZCByZXZpZXcsIHVzZSwgZGlzY2xvc3VyZSBvciBk
-aXN0cmlidXRpb24gaXMgcHJvaGliaXRlZC4gSWYNCj4geW91IGFyZSBub3QgdGhlIGludGVuZGVk
-IHJlY2lwaWVudCwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIGFuZCBkZXN0cm95IGFsbA0KPiBj
-b3BpZXMgYW5kIHRoZSBvcmlnaW5hbCBtZXNzYWdlLg0KDQpUaGFua3MsDQpaaGlxaWFuZw0K
+@bjorn: any further ideas? Otherwise I'd like to just go ahead and fix
+this issue inside Nouveau and leave it there until we have a better
+understanding or non Nouveau cases of this issue.
+
+On Tue, May 21, 2019 at 7:48 PM Karol Herbst <kherbst@redhat.com> wrote:
+>
+> doing the same on the bridge controller with my workarounds applied:
+>
+> please note some differences:
+> LnkSta: Speed 8GT/s (ok) vs Speed 2.5GT/s (downgraded)
+> SltSta: PresDet+ vs PresDet-
+> LnkSta2: Equalization stuff
+> Virtual channel: NegoPending- vs NegoPending+
+>
+> both times I executed lspci while the GPU was still suspended.
+>
+> 00:01.0 PCI bridge: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th
+> Gen Core Processor PCIe Controller (x16) (rev 05) (prog-if 00 [Normal
+> decode])
+>         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
+> ParErr- Stepping- SERR- FastB2B- DisINTx-
+>         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+> <TAbort- <MAbort- >SERR- <PERR- INTx-
+>         Latency: 0
+>         Interrupt: pin A routed to IRQ 16
+>         Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
+>         I/O behind bridge: 0000e000-0000efff [size=4K]
+>         Memory behind bridge: ec000000-ed0fffff [size=17M]
+>         Prefetchable memory behind bridge:
+> 00000000c0000000-00000000d1ffffff [size=288M]
+>         Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort-
+> <TAbort- <MAbort+ <SERR- <PERR-
+>         BridgeCtl: Parity- SERR- NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
+>                 PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+>         Capabilities: [88] Subsystem: Dell Device 07be
+>         Capabilities: [80] Power Management version 3
+>                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA
+> PME(D0+,D1-,D2-,D3hot+,D3cold+)
+>                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+>         Capabilities: [90] MSI: Enable- Count=1/1 Maskable- 64bit-
+>                 Address: 00000000  Data: 0000
+>         Capabilities: [a0] Express (v2) Root Port (Slot+), MSI 00
+>                 DevCap: MaxPayload 256 bytes, PhantFunc 0
+>                         ExtTag- RBE+
+>                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+>                         RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
+>                         MaxPayload 256 bytes, MaxReadReq 128 bytes
+>                 DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+> AuxPwr- TransPend-
+>                 LnkCap: Port #2, Speed 8GT/s, Width x16, ASPM L0s L1,
+> Exit Latency L0s <256ns, L1 <8us
+>                         ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
+>                 LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk+
+>                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+>                 LnkSta: Speed 8GT/s (ok), Width x16 (ok)
+>                         TrErr- Train- SlotClk+ DLActive- BWMgmt+ ABWMgmt+
+>                 SltCap: AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd-
+> HotPlug- Surprise-
+>                         Slot #1, PowerLimit 75.000W; Interlock- NoCompl+
+>                 SltCtl: Enable: AttnBtn- PwrFlt- MRL- PresDet-
+> CmdCplt- HPIrq- LinkChg-
+>                         Control: AttnInd Unknown, PwrInd Unknown,
+> Power- Interlock-
+>                 SltSta: Status: AttnBtn- PowerFlt- MRL- CmdCplt-
+> PresDet+ Interlock-
+>                         Changed: MRL- PresDet+ LinkState-
+>                 RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal-
+> PMEIntEna- CRSVisible-
+>                 RootCap: CRSVisible-
+>                 RootSta: PME ReqID 0000, PMEStatus- PMEPending-
+>                 DevCap2: Completion Timeout: Not Supported,
+> TimeoutDis-, LTR+, OBFF Via WAKE# ARIFwd-
+>                          AtomicOpsCap: Routing- 32bit+ 64bit+ 128bitCAS+
+>                 DevCtl2: Completion Timeout: 50us to 50ms,
+> TimeoutDis-, LTR+, OBFF Via WAKE# ARIFwd-
+>                          AtomicOpsCtl: ReqEn- EgressBlck-
+>                 LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
+>                          Transmit Margin: Normal Operating Range,
+> EnterModifiedCompliance- ComplianceSOS-
+>                          Compliance De-emphasis: -6dB
+>                 LnkSta2: Current De-emphasis Level: -6dB,
+> EqualizationComplete+, EqualizationPhase1+
+>                          EqualizationPhase2+, EqualizationPhase3+,
+> LinkEqualizationRequest-
+>         Capabilities: [100 v1] Virtual Channel
+>                 Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1
+>                 Arb:    Fixed- WRR32- WRR64- WRR128-
+>                 Ctrl:   ArbSelect=Fixed
+>                 Status: InProgress-
+>                 VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
+>                         Arb:    Fixed+ WRR32- WRR64- WRR128- TWRR128- WRR256-
+>                         Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
+>                         Status: NegoPending- InProgress-
+>         Capabilities: [140 v1] Root Complex Link
+>                 Desc:   PortNumber=02 ComponentID=01 EltType=Config
+>                 Link0:  Desc:   TargetPort=00 TargetComponent=01
+> AssocRCRB- LinkType=MemMapped LinkValid+
+>                         Addr:   00000000fed19000
+>         Capabilities: [d94 v1] Secondary PCI Express <?>
+>         Kernel driver in use: pcieport
+> 00: 86 80 01 19 07 00 10 00 05 00 04 06 00 00 81 00
+> 10: 00 00 00 00 00 00 00 00 00 01 01 00 e0 e0 00 20
+> 20: 00 ec 00 ed 01 c0 f1 d1 00 00 00 00 00 00 00 00
+> 30: 00 00 00 00 88 00 00 00 00 00 00 00 ff 01 10 00
+> 40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 70: 00 00 00 00 00 00 00 00 00 62 17 00 00 00 00 0a
+> 80: 01 90 03 c8 08 00 00 00 0d 80 00 00 28 10 be 07
+> 90: 05 a0 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> a0: 10 00 42 01 01 80 00 00 20 00 00 00 03 ad 61 02
+> b0: 40 00 03 d1 80 25 0c 00 00 00 48 00 00 00 00 00
+> c0: 00 00 00 00 80 0b 08 00 00 64 00 00 0e 00 00 00
+> d0: 43 00 1e 00 00 00 00 00 00 00 00 00 00 00 00 00
+> e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> f0: 00 00 00 84 4e 01 01 20 00 00 00 00 e0 00 10 00
+>
+> On Tue, May 21, 2019 at 7:35 PM Karol Herbst <kherbst@redhat.com> wrote:
+> >
+> > was able to get the lspci prints via ssh. Machine rebooted
+> > automatically each time though.
+> >
+> > relevant dmesg:
+> > kernel: nouveau 0000:01:00.0: Refused to change power state, currently in D3
+> > kernel: nouveau 0000:01:00.0: Refused to change power state, currently in D3
+> > kernel: nouveau 0000:01:00.0: Refused to change power state, currently in D3
+> > kernel: nouveau 0000:01:00.0: tmr: stalled at ffffffffffffffff
+> >
+> > (last one is a 64 bit mmio read to get the on GPU timer value)
+> >
+> > # lspci -vvxxx -s 0:01.00
+> > 00:01.0 PCI bridge: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th
+> > Gen Core Processor PCIe Controller (x16) (rev 05) (prog-if 00 [Normal
+> > decode])
+> >        Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
+> > ParErr- Stepping- SERR- FastB2B- DisINTx-
+> >        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+> > <TAbort- <MAbort- >SERR- <PERR- INTx-
+> >        Latency: 0
+> >        Interrupt: pin A routed to IRQ 16
+> >        Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
+> >        I/O behind bridge: 0000e000-0000efff [size=4K]
+> >        Memory behind bridge: ec000000-ed0fffff [size=17M]
+> >        Prefetchable memory behind bridge:
+> > 00000000c0000000-00000000d1ffffff [size=288M]
+> >        Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort-
+> > <TAbort- <MAbort+ <SERR- <PERR-
+> >        BridgeCtl: Parity- SERR- NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
+> >                PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+> >        Capabilities: [88] Subsystem: Dell Device 07be
+> >        Capabilities: [80] Power Management version 3
+> >                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA
+> > PME(D0+,D1-,D2-,D3hot+,D3cold+)
+> >                Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+> >        Capabilities: [90] MSI: Enable- Count=1/1 Maskable- 64bit-
+> >                Address: 00000000  Data: 0000
+> >        Capabilities: [a0] Express (v2) Root Port (Slot+), MSI 00
+> >                DevCap: MaxPayload 256 bytes, PhantFunc 0
+> >                        ExtTag- RBE+
+> >                DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+> >                        RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
+> >                        MaxPayload 256 bytes, MaxReadReq 128 bytes
+> >                DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+> > AuxPwr- TransPend-
+> >                LnkCap: Port #2, Speed 8GT/s, Width x16, ASPM L0s L1,
+> > Exit Latency L0s <256ns, L1 <8us
+> >                        ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
+> >                LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk+
+> >                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+> >                LnkSta: Speed 2.5GT/s (downgraded), Width x16 (ok)
+> >                        TrErr- Train- SlotClk+ DLActive- BWMgmt+ ABWMgmt+
+> >                SltCap: AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd-
+> > HotPlug- Surprise-
+> >                        Slot #1, PowerLimit 75.000W; Interlock- NoCompl+
+> >                SltCtl: Enable: AttnBtn- PwrFlt- MRL- PresDet- CmdCplt-
+> > HPIrq- LinkChg-
+> >                        Control: AttnInd Unknown, PwrInd Unknown,
+> > Power- Interlock-
+> >                SltSta: Status: AttnBtn- PowerFlt- MRL- CmdCplt-
+> > PresDet- Interlock-
+> >                        Changed: MRL- PresDet+ LinkState-
+> >                RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal-
+> > PMEIntEna- CRSVisible-
+> >                RootCap: CRSVisible-
+> >                RootSta: PME ReqID 0000, PMEStatus- PMEPending-
+> >                DevCap2: Completion Timeout: Not Supported,
+> > TimeoutDis-, LTR+, OBFF Via WAKE# ARIFwd-
+> >                         AtomicOpsCap: Routing- 32bit+ 64bit+ 128bitCAS+
+> >                DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-,
+> > LTR+, OBFF Via WAKE# ARIFwd-
+> >                         AtomicOpsCtl: ReqEn- EgressBlck-
+> >                LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
+> >                         Transmit Margin: Normal Operating Range,
+> > EnterModifiedCompliance- ComplianceSOS-
+> >                         Compliance De-emphasis: -6dB
+> >                LnkSta2: Current De-emphasis Level: -6dB,
+> > EqualizationComplete-, EqualizationPhase1-
+> >                         EqualizationPhase2-, EqualizationPhase3-,
+> > LinkEqualizationRequest-
+> >        Capabilities: [100 v1] Virtual Channel
+> >                Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1
+> >                Arb:    Fixed- WRR32- WRR64- WRR128-
+> >                Ctrl:   ArbSelect=Fixed
+> >                Status: InProgress-
+> >                VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
+> >                        Arb:    Fixed+ WRR32- WRR64- WRR128- TWRR128- WRR256-
+> >                        Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
+> >                        Status: NegoPending+ InProgress-
+> >        Capabilities: [140 v1] Root Complex Link
+> >                Desc:   PortNumber=02 ComponentID=01 EltType=Config
+> >                Link0:  Desc:   TargetPort=00 TargetComponent=01
+> > AssocRCRB- LinkType=MemMapped LinkValid+
+> >                        Addr:   00000000fed19000
+> >        Capabilities: [d94 v1] Secondary PCI Express <?>
+> >        Kernel driver in use: pcieport
+> > 00: 86 80 01 19 07 00 10 00 05 00 04 06 00 00 81 00
+> > 10: 00 00 00 00 00 00 00 00 00 01 01 00 e0 e0 00 20
+> > 20: 00 ec 00 ed 01 c0 f1 d1 00 00 00 00 00 00 00 00
+> > 30: 00 00 00 00 88 00 00 00 00 00 00 00 ff 01 10 00
+> > 40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > 50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > 60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > 70: 00 00 00 00 00 00 00 00 00 62 17 00 00 00 00 0a
+> > 80: 01 90 03 c8 08 00 00 00 0d 80 00 00 28 10 be 07
+> > 90: 05 a0 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > a0: 10 00 42 01 01 80 00 00 20 00 00 00 03 ad 61 02
+> > b0: 40 00 01 d1 80 25 0c 00 00 00 08 00 00 00 00 00
+> > c0: 00 00 00 00 80 0b 08 00 00 64 00 00 0e 00 00 00
+> > d0: 43 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > f0: 00 40 01 00 4e 01 01 22 00 00 00 00 e0 00 10 00
+> >
+> > lspci -vvxxx -s 1:00.00
+> > 01:00.0 3D controller: NVIDIA Corporation GP107M [GeForce GTX 1050
+> > Mobile] (rev ff) (prog-if ff)
+> >        !!! Unknown header type 7f
+> >        Kernel driver in use: nouveau
+> >        Kernel modules: nouveau
+> > 00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > 10: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > 20: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > 30: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > 40: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > 50: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > 60: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > 70: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > 80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > 90: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > a0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > b0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > c0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > d0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > e0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > f0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> >
+> > On Tue, May 21, 2019 at 4:30 PM Karol Herbst <kherbst@redhat.com> wrote:
+> > >
+> > > On Tue, May 21, 2019 at 4:13 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > >
+> > > > On Tue, May 21, 2019 at 03:28:48PM +0200, Karol Herbst wrote:
+> > > > > On Tue, May 21, 2019 at 3:11 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > On Tue, May 21, 2019 at 12:30:38AM +0200, Karol Herbst wrote:
+> > > > > > > On Mon, May 20, 2019 at 11:20 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > > > On Tue, May 07, 2019 at 10:12:45PM +0200, Karol Herbst wrote:
+> > > > > > > > > Apperantly things go south if we suspend the device with a different PCIE
+> > > > > > > > > link speed set than it got booted with. Fixes runtime suspend on my gp107.
+> > > > > > > > >
+> > > > > > > > > This all looks like some bug inside the pci subsystem and I would prefer a
+> > > > > > > > > fix there instead of nouveau, but maybe there is no real nice way of doing
+> > > > > > > > > that outside of drivers?
+> > > > > > > >
+> > > > > > > > I agree it would be nice to fix this in the PCI core if that's
+> > > > > > > > feasible.
+> > > > > > > >
+> > > > > > > > It looks like this driver changes the PCIe link speed using some
+> > > > > > > > device-specific mechanism.  When we suspend, we put the device in
+> > > > > > > > D3cold, so it loses all its state.  When we resume, the link probably
+> > > > > > > > comes up at the boot speed because nothing did that device-specific
+> > > > > > > > magic to change it, so you probably end up with the link being slow
+> > > > > > > > but the driver thinking it's configured to be fast, and maybe that
+> > > > > > > > combination doesn't work.
+> > > > > > > >
+> > > > > > > > If it requires something device-specific to change that link speed, I
+> > > > > > > > don't know how to put that in the PCI core.  But maybe I'm missing
+> > > > > > > > something?
+> > > > > > > >
+> > > > > > > > Per the PCIe spec (r4.0, sec 1.2):
+> > > > > > > >
+> > > > > > > >   Initialization – During hardware initialization, each PCI Express
+> > > > > > > >   Link is set up following a negotiation of Lane widths and frequency
+> > > > > > > >   of operation by the two agents at each end of the Link. No firmware
+> > > > > > > >   or operating system software is involved.
+> > > > > > > >
+> > > > > > > > I have been assuming that this means device-specific link speed
+> > > > > > > > management is out of spec, but it seems pretty common that devices
+> > > > > > > > don't come up by themselves at the fastest possible link speed.  So
+> > > > > > > > maybe the spec just intends that devices can operate at *some* valid
+> > > > > > > > speed.
+> > > > > > >
+> > > > > > > I would expect that devices kind of have to figure out what they can
+> > > > > > > operate on and the operating system kind of just checks what the
+> > > > > > > current state is and doesn't try to "restore" the old state or
+> > > > > > > something?
+> > > > > >
+> > > > > > The devices at each end of the link negotiate the width and speed of
+> > > > > > the link.  This is done directly by the hardware without any help from
+> > > > > > the OS.
+> > > > > >
+> > > > > > The OS can read the current link state (Current Link Speed and
+> > > > > > Negotiated Link Width, both in the Link Status register).  The OS has
+> > > > > > very little control over that state.  It can't directly restore the
+> > > > > > state because the hardware has to negotiate a width & speed that
+> > > > > > result in reliable operation.
+> > > > > >
+> > > > > > > We don't do anything in the driver after the device was suspended. And
+> > > > > > > the 0x88000 is a mirror of the PCI config space, but we also got some
+> > > > > > > PCIe stuff at 0x8c000 which is used by newer GPUs for gen3 stuff
+> > > > > > > essentially. I have no idea how much of this is part of the actual pci
+> > > > > > > standard and how much is driver specific. But the driver also wants to
+> > > > > > > have some control over the link speed as it's tight to performance
+> > > > > > > states on GPU.
+> > > > > >
+> > > > > > As far as I'm aware, there is no generic PCIe way for the OS to
+> > > > > > influence the link width or speed.  If the GPU driver needs to do
+> > > > > > that, it would be via some device-specific mechanism.
+> > > > > >
+> > > > > > > The big issue here is just, that the GPU boots with 8.0, some on-gpu
+> > > > > > > init mechanism decreases it to 2.5. If we suspend, the GPU or at least
+> > > > > > > the communication with the controller is broken. But if we set it to
+> > > > > > > the boot speed, resuming the GPU just works. So my assumption was,
+> > > > > > > that _something_ (might it be the controller or the pci subsystem)
+> > > > > > > tries to force to operate on an invalid link speed and because the
+> > > > > > > bridge controller is actually powered down as well (as all children
+> > > > > > > are in D3cold) I could imagine that something in the pci subsystem
+> > > > > > > actually restores the state which lets the controller fail to
+> > > > > > > establish communication again?
+> > > > > >
+> > > > > >   1) At boot-time, the Port and the GPU hardware negotiate 8.0 GT/s
+> > > > > >      without OS/driver intervention.
+> > > > > >
+> > > > > >   2) Some mechanism reduces link speed to 2.5 GT/s.  This probably
+> > > > > >      requires driver intervention or at least some ACPI method.
+> > > > >
+> > > > > there is no driver intervention and Nouveau doesn't care at all. It's
+> > > > > all done on the GPU. We just upload a script and some firmware on to
+> > > > > the GPU. The script runs then on the PMU inside the GPU and this
+> > > > > script also causes changing the PCIe link settings. But from a Nouveau
+> > > > > point of view we don't care about the link before or after that script
+> > > > > was invoked. Also there is no ACPI method involved.
+> > > > >
+> > > > > But if there is something we should notify pci core about, maybe
+> > > > > that's something we have to do then?
+> > > >
+> > > > I don't think there's anything the PCI core could do with that
+> > > > information anyway.  The PCI core doesn't care at all about the link
+> > > > speed, and it really can't influence it directly.
+> > > >
+> > > > > >   3) Suspend puts GPU into D3cold (powered off).
+> > > > > >
+> > > > > >   4) Resume restores GPU to D0, and the Port and GPU hardware again
+> > > > > >      negotiate 8.0 GT/s without OS/driver intervention, just like at
+> > > > > >      initial boot.
+> > > > >
+> > > > > No, that negotiation fails apparently as any attempt to read anything
+> > > > > from the device just fails inside pci core. Or something goes wrong
+> > > > > when resuming the bridge controller.
+> > > >
+> > > > I'm surprised the negotiation would fail even after a power cycle of
+> > > > the device.  But if you can avoid the issue by running another script
+> > > > on the PMU before suspend, that's probably what you'll have to do.
+> > > >
+> > >
+> > > there is none as far as we know. Or at least nothing inside the vbios.
+> > > We still have to get signed PMU firmware images from Nvidia for full
+> > > support, but this still would be a hacky issue as we would depend on
+> > > those then (and without having those in  redistributable form, there
+> > > isn't much we can do about except fixing it on the kernel side).
+> > >
+> > > > > >   5) Now the driver thinks the GPU is at 2.5 GT/s but it's actually at
+> > > > > >      8.0 GT/s.
+> > > > >
+> > > > > what is actually meant by "driver" here? The pci subsystem or Nouveau?
+> > > >
+> > > > I was thinking Nouveau because the PCI core doesn't care about the
+> > > > link speed.
+> > > >
+> > > > > > Without knowing more about the transition to 2.5 GT/s, I can't guess
+> > > > > > why the GPU wouldn't work after resume.  From a PCIe point of view,
+> > > > > > the link is supposed to work and the device should be reachable
+> > > > > > independent of the link speed.  But maybe there's some weird
+> > > > > > dependency between the GPU and the driver here.
+> > > > >
+> > > > > but the device isn't reachable at all, not even from the pci
+> > > > > subsystem. All reads fail/return a default error value (0xffffffff).
+> > > >
+> > > > Are these PCI config reads that return 0xffffffff?  Or MMIO reads?
+> > > > "lspci -vvxxxx" of the bridge and the GPU might have a clue about
+> > > > whether a PCI error occurred.
+> > > >
+> > >
+> > > that's kind of problematic as it might just lock up my machine... but
+> > > let me try that.
+> > >
+> > > > > > It sounds like things work if you return to 8.0 GT/s before suspend,
+> > > > > > things work.  That would make sense to me because then the driver's
+> > > > > > idea of the link state after resume would match the actual state.
+> > > > >
+> > > > > depends on what is meant by the driver here. Inside Nouveau we don't
+> > > > > care one bit about the current link speed, so I assume you mean
+> > > > > something inside the pci core code?
+> > > > >
+> > > > > > But I don't see a way to deal with this in the PCI core.  The PCI core
+> > > > > > does save and restore most of the architected config space around
+> > > > > > suspend/resume, but since this appears to be a device-specific thing,
+> > > > > > the PCI core would have no idea how to save/restore it.
+> > > > >
+> > > > > if we assume that the negotiation on a device level works as intended,
+> > > > > then I would expect this to be a pci core issue, which might actually
+> > > > > be not fixable there. But if it's not, then we would have to put
+> > > > > something like that inside the runpm documentation to tell drivers
+> > > > > they have to do something about it.
+> > > > >lspci -vvxxxx
+> > > > > But again, for me it just sounds like the negotiation on the device
+> > > > > level fails or something inside pci core messes it up.
+> > > >
+> > > > To me it sounds like the PMU script messed something up, and the PCI
+> > > > core has no way to know what that was or how to fix it.
+> > > >
+> > >
+> > > sure, I am mainly wondering why it doesn't work after we power cycled
+> > > the GPU and the host bridge controller, because no matter what the
+> > > state was before, we have to reprobe instead of relying on a known
+> > > state, no?
+> > >
+> > > > > > > > > Signed-off-by: Karol Herbst <kherbst@redhat.com>
+> > > > > > > > > Reviewed-by: Lyude Paul <lyude@redhat.com>
+> > > > > > > > > ---
+> > > > > > > > >  drm/nouveau/include/nvkm/subdev/pci.h |  5 +++--
+> > > > > > > > >  drm/nouveau/nvkm/subdev/pci/base.c    |  9 +++++++--
+> > > > > > > > >  drm/nouveau/nvkm/subdev/pci/pcie.c    | 24 ++++++++++++++++++++----
+> > > > > > > > >  drm/nouveau/nvkm/subdev/pci/priv.h    |  2 ++
+> > > > > > > > >  4 files changed, 32 insertions(+), 8 deletions(-)
+> > > > > > > > >
+> > > > > > > > > diff --git a/drm/nouveau/include/nvkm/subdev/pci.h b/drm/nouveau/include/nvkm/subdev/pci.h
+> > > > > > > > > index 1fdf3098..b23793a2 100644
+> > > > > > > > > --- a/drm/nouveau/include/nvkm/subdev/pci.h
+> > > > > > > > > +++ b/drm/nouveau/include/nvkm/subdev/pci.h
+> > > > > > > > > @@ -26,8 +26,9 @@ struct nvkm_pci {
+> > > > > > > > >       } agp;
+> > > > > > > > >
+> > > > > > > > >       struct {
+> > > > > > > > > -             enum nvkm_pcie_speed speed;
+> > > > > > > > > -             u8 width;
+> > > > > > > > > +             enum nvkm_pcie_speed cur_speed;
+> > > > > > > > > +             enum nvkm_pcie_speed def_speed;
+> > > > > > > > > +             u8 cur_width;
+> > > > > > > > >       } pcie;
+> > > > > > > > >
+> > > > > > > > >       bool msi;
+> > > > > > > > > diff --git a/drm/nouveau/nvkm/subdev/pci/base.c b/drm/nouveau/nvkm/subdev/pci/base.c
+> > > > > > > > > index ee2431a7..d9fb5a83 100644
+> > > > > > > > > --- a/drm/nouveau/nvkm/subdev/pci/base.c
+> > > > > > > > > +++ b/drm/nouveau/nvkm/subdev/pci/base.c
+> > > > > > > > > @@ -90,6 +90,8 @@ nvkm_pci_fini(struct nvkm_subdev *subdev, bool suspend)
+> > > > > > > > >
+> > > > > > > > >       if (pci->agp.bridge)
+> > > > > > > > >               nvkm_agp_fini(pci);
+> > > > > > > > > +     else if (pci_is_pcie(pci->pdev))
+> > > > > > > > > +             nvkm_pcie_fini(pci);
+> > > > > > > > >
+> > > > > > > > >       return 0;
+> > > > > > > > >  }
+> > > > > > > > > @@ -100,6 +102,8 @@ nvkm_pci_preinit(struct nvkm_subdev *subdev)
+> > > > > > > > >       struct nvkm_pci *pci = nvkm_pci(subdev);
+> > > > > > > > >       if (pci->agp.bridge)
+> > > > > > > > >               nvkm_agp_preinit(pci);
+> > > > > > > > > +     else if (pci_is_pcie(pci->pdev))
+> > > > > > > > > +             nvkm_pcie_preinit(pci);
+> > > > > > > > >       return 0;
+> > > > > > > > >  }
+> > > > > > > > >
+> > > > > > > > > @@ -193,8 +197,9 @@ nvkm_pci_new_(const struct nvkm_pci_func *func, struct nvkm_device *device,
+> > > > > > > > >       pci->func = func;
+> > > > > > > > >       pci->pdev = device->func->pci(device)->pdev;
+> > > > > > > > >       pci->irq = -1;
+> > > > > > > > > -     pci->pcie.speed = -1;
+> > > > > > > > > -     pci->pcie.width = -1;
+> > > > > > > > > +     pci->pcie.cur_speed = -1;
+> > > > > > > > > +     pci->pcie.def_speed = -1;
+> > > > > > > > > +     pci->pcie.cur_width = -1;
+> > > > > > > > >
+> > > > > > > > >       if (device->type == NVKM_DEVICE_AGP)
+> > > > > > > > >               nvkm_agp_ctor(pci);
+> > > > > > > > > diff --git a/drm/nouveau/nvkm/subdev/pci/pcie.c b/drm/nouveau/nvkm/subdev/pci/pcie.c
+> > > > > > > > > index 70ccbe0d..731dd30e 100644
+> > > > > > > > > --- a/drm/nouveau/nvkm/subdev/pci/pcie.c
+> > > > > > > > > +++ b/drm/nouveau/nvkm/subdev/pci/pcie.c
+> > > > > > > > > @@ -85,6 +85,13 @@ nvkm_pcie_oneinit(struct nvkm_pci *pci)
+> > > > > > > > >       return 0;
+> > > > > > > > >  }
+> > > > > > > > >
+> > > > > > > > > +int
+> > > > > > > > > +nvkm_pcie_preinit(struct nvkm_pci *pci)
+> > > > > > > > > +{
+> > > > > > > > > +     pci->pcie.def_speed = nvkm_pcie_get_speed(pci);
+> > > > > > > > > +     return 0;
+> > > > > > > > > +}
+> > > > > > > > > +
+> > > > > > > > >  int
+> > > > > > > > >  nvkm_pcie_init(struct nvkm_pci *pci)
+> > > > > > > > >  {
+> > > > > > > > > @@ -105,12 +112,21 @@ nvkm_pcie_init(struct nvkm_pci *pci)
+> > > > > > > > >       if (pci->func->pcie.init)
+> > > > > > > > >               pci->func->pcie.init(pci);
+> > > > > > > > >
+> > > > > > > > > -     if (pci->pcie.speed != -1)
+> > > > > > > > > -             nvkm_pcie_set_link(pci, pci->pcie.speed, pci->pcie.width);
+> > > > > > > > > +     if (pci->pcie.cur_speed != -1)
+> > > > > > > > > +             nvkm_pcie_set_link(pci, pci->pcie.cur_speed,
+> > > > > > > > > +                                pci->pcie.cur_width);
+> > > > > > > > >
+> > > > > > > > >       return 0;
+> > > > > > > > >  }
+> > > > > > > > >
+> > > > > > > > > +int
+> > > > > > > > > +nvkm_pcie_fini(struct nvkm_pci *pci)
+> > > > > > > > > +{
+> > > > > > > > > +     if (!IS_ERR_VALUE(pci->pcie.def_speed))
+> > > > > > > > > +             return nvkm_pcie_set_link(pci, pci->pcie.def_speed, 16);
+> > > > > > > > > +     return 0;
+> > > > > > > > > +}
+> > > > > > > > > +
+> > > > > > > > >  int
+> > > > > > > > >  nvkm_pcie_set_link(struct nvkm_pci *pci, enum nvkm_pcie_speed speed, u8 width)
+> > > > > > > > >  {
+> > > > > > > > > @@ -146,8 +162,8 @@ nvkm_pcie_set_link(struct nvkm_pci *pci, enum nvkm_pcie_speed speed, u8 width)
+> > > > > > > > >               speed = max_speed;
+> > > > > > > > >       }
+> > > > > > > > >
+> > > > > > > > > -     pci->pcie.speed = speed;
+> > > > > > > > > -     pci->pcie.width = width;
+> > > > > > > > > +     pci->pcie.cur_speed = speed;
+> > > > > > > > > +     pci->pcie.cur_width = width;
+> > > > > > > > >
+> > > > > > > > >       if (speed == cur_speed) {
+> > > > > > > > >               nvkm_debug(subdev, "requested matches current speed\n");
+> > > > > > > > > diff --git a/drm/nouveau/nvkm/subdev/pci/priv.h b/drm/nouveau/nvkm/subdev/pci/priv.h
+> > > > > > > > > index a0d4c007..e7744671 100644
+> > > > > > > > > --- a/drm/nouveau/nvkm/subdev/pci/priv.h
+> > > > > > > > > +++ b/drm/nouveau/nvkm/subdev/pci/priv.h
+> > > > > > > > > @@ -60,5 +60,7 @@ enum nvkm_pcie_speed gk104_pcie_max_speed(struct nvkm_pci *);
+> > > > > > > > >  int gk104_pcie_version_supported(struct nvkm_pci *);
+> > > > > > > > >
+> > > > > > > > >  int nvkm_pcie_oneinit(struct nvkm_pci *);
+> > > > > > > > > +int nvkm_pcie_preinit(struct nvkm_pci *);
+> > > > > > > > >  int nvkm_pcie_init(struct nvkm_pci *);
+> > > > > > > > > +int nvkm_pcie_fini(struct nvkm_pci *);
+> > > > > > > > >  #endif
+> > > > > > > > > --
+> > > > > > > > > 2.21.0
+> > > > > > > > >
