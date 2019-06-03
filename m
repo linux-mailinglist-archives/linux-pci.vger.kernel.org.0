@@ -2,282 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C6F1327E5
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2019 07:12:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77BCE328A7
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2019 08:42:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbfFCFMt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Jun 2019 01:12:49 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35475 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726223AbfFCFMt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Jun 2019 01:12:49 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h11so14911370ljb.2
-        for <linux-pci@vger.kernel.org>; Sun, 02 Jun 2019 22:12:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mobiveil.co.in; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1hhBDceAp7DealibgpzRgQkbsVjG+SPyfDmMhWMC+1k=;
-        b=jG9jP4nThSDZwaD/kp6Xib4Vyzog5fkGaOB9Mcgv4DXEGXAX3fPA+ceqLabquL17Cy
-         7tX1tYLDfASqHNZdWw9421ZUVBGDAvLcloFKmmp0yrGGjo8RmoLOehp9xgiAKKaLYiez
-         8RIVCutou53+Y/XUepTtiE9JghvqzS/w1te3s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1hhBDceAp7DealibgpzRgQkbsVjG+SPyfDmMhWMC+1k=;
-        b=uZBp07BrCF251XqRhS2aJ9HPEHL315yzPdOuuaEoIQMNikK3D+IRtlXLrFS+oPqFfl
-         WmFle3ivemhjbATy7lp6K3+k2xxss5ytJb69XcIgisrdC5KQBn4vH7hsX8hNBORt/zUT
-         Acg2yaZwxmqv4N9irvKMS5/xq9flI7mOJRAelBF9CIyN/kJkF7V+T0eUmizYAL++cGaK
-         11ozXOETdLXmp56pvb1ctJ8hYAuzaY0ECnPS6O1jNFaB+Ti2jSTQlbKc8BjGYWIpwqC3
-         +qZH1Fq+yw0yqJ1vvhrT8IrYP/a2XGNobW8ZX44M37Z9kW/C6O9epJueW9SLMqBml4f+
-         s5Fg==
-X-Gm-Message-State: APjAAAU8Gjlj75OP43kItfxlSb2TDNKyeGl4SUIiGjUfIMQrAtER23oT
-        2vdX653N4YJndrrMd9OyM/6YdjedF+ba1E+Fd9SXG6RBudWylcgGU1DSams20cp28TsQj0vI/a2
-        8dxjM7ZLo/2boNe9/2HDjEaMDb/utng==
-X-Google-Smtp-Source: APXvYqyWjAc8SYG4ta2+f5Ybndd/TXrp1FQlRY75lQ4TqUbou9Kfolc0l0Jje5R6RKuhzCRFDrhia/kPvTtHFiIVU30=
-X-Received: by 2002:a2e:8555:: with SMTP id u21mr12390145ljj.133.1559538766557;
- Sun, 02 Jun 2019 22:12:46 -0700 (PDT)
+        id S1727209AbfFCGmQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Jun 2019 02:42:16 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:53347 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727194AbfFCGmQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Jun 2019 02:42:16 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 72C3D80295; Mon,  3 Jun 2019 08:42:03 +0200 (CEST)
+Date:   Mon, 3 Jun 2019 08:42:12 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Pavel Machek <pavel@denx.de>, LKML <linux-kernel@vger.kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Neil Brown <neilb@suse.com>, netdev <netdev@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zilstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, rcu <rcu@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [RFC 2/6] ipv4: add lockdep condition to fix for_each_entry
+Message-ID: <20190603064212.GA7400@amd>
+References: <20190601222738.6856-1-joel@joelfernandes.org>
+ <20190601222738.6856-3-joel@joelfernandes.org>
+ <20190602070014.GA543@amd>
+ <CAEXW_YT3t4Hb6wKsjXPGng+YbA5rhNRa7OSdZwdN4AKGfVkX3g@mail.gmail.com>
+ <CAEXW_YSM2wwah2Q7LKmUO1Dp7GG62ciQA1nZ7GLw3m6cyuXXTw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190528065129.8769-1-Zhiqiang.Hou@nxp.com> <20190528065129.8769-6-Zhiqiang.Hou@nxp.com>
-In-Reply-To: <20190528065129.8769-6-Zhiqiang.Hou@nxp.com>
-From:   Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
-Date:   Mon, 3 Jun 2019 10:42:33 +0530
-Message-ID: <CAKnKUHH8JU2Bqgq90rfgZ8r0xxB_RMRj16DBBLDhMpg3mwFU2Q@mail.gmail.com>
-Subject: Re: [PATCHv6 5/6] arm64: dts: lx2160a: Add PCIe controller DT nodes
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+Content-Disposition: inline
+In-Reply-To: <CAEXW_YSM2wwah2Q7LKmUO1Dp7GG62ciQA1nZ7GLw3m6cyuXXTw@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Hou Zhiqiang
-   Two instances [@3600000 and @3800000] of the six has a different
-window count, the RC can not have more than 8 windows.
-apio-wins = <256>;  //Can we change it to 8
-ppio-wins = <24>;    //Can we change it to 8
 
-On Tue, May 28, 2019 at 12:20 PM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
->
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
->
-> The LX2160A integrated 6 PCIe Gen4 controllers.
->
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> ---
-> V6:
->  - No change.
->
->  .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 163 ++++++++++++++++++
->  1 file changed, 163 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> index 125a8cc2c5b3..7a2b91ff1fbc 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> @@ -964,5 +964,168 @@
->                                 };
->                         };
->                 };
-> +
-> +               pcie@3400000 {
-> +                       compatible = "fsl,lx2160a-pcie";
-> +                       reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
-> +                              0x80 0x00000000 0x0 0x00001000>; /* configuration space */
-> +                       reg-names = "csr_axi_slave", "config_axi_slave";
-> +                       interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-> +                                    <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-> +                                    <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-> +                       interrupt-names = "aer", "pme", "intr";
-> +                       #address-cells = <3>;
-> +                       #size-cells = <2>;
-> +                       device_type = "pci";
-> +                       dma-coherent;
-> +                       apio-wins = <8>;
-> +                       ppio-wins = <8>;
-> +                       bus-range = <0x0 0xff>;
-> +                       ranges = <0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-> +                       msi-parent = <&its>;
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-map-mask = <0 0 0 7>;
-> +                       interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <0000 0 0 2 &gic 0 0 GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               pcie@3500000 {
-> +                       compatible = "fsl,lx2160a-pcie";
-> +                       reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
-> +                              0x88 0x00000000 0x0 0x00001000>; /* configuration space */
-> +                       reg-names = "csr_axi_slave", "config_axi_slave";
-> +                       interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-> +                                    <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-> +                                    <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-> +                       interrupt-names = "aer", "pme", "intr";
-> +                       #address-cells = <3>;
-> +                       #size-cells = <2>;
-> +                       device_type = "pci";
-> +                       dma-coherent;
-> +                       apio-wins = <8>;
-> +                       ppio-wins = <8>;
-> +                       bus-range = <0x0 0xff>;
-> +                       ranges = <0x82000000 0x0 0x40000000 0x88 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-> +                       msi-parent = <&its>;
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-map-mask = <0 0 0 7>;
-> +                       interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <0000 0 0 2 &gic 0 0 GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <0000 0 0 3 &gic 0 0 GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <0000 0 0 4 &gic 0 0 GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               pcie@3600000 {
-> +                       compatible = "fsl,lx2160a-pcie";
-> +                       reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
-> +                              0x90 0x00000000 0x0 0x00001000>; /* configuration space */
-> +                       reg-names = "csr_axi_slave", "config_axi_slave";
-> +                       interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-> +                                    <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-> +                                    <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-> +                       interrupt-names = "aer", "pme", "intr";
-> +                       #address-cells = <3>;
-> +                       #size-cells = <2>;
-> +                       device_type = "pci";
-> +                       dma-coherent;
-> +                       apio-wins = <256>;
-> +                       ppio-wins = <24>;
-> +                       bus-range = <0x0 0xff>;
-> +                       ranges = <0x82000000 0x0 0x40000000 0x90 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-> +                       msi-parent = <&its>;
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-map-mask = <0 0 0 7>;
-> +                       interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <0000 0 0 2 &gic 0 0 GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <0000 0 0 3 &gic 0 0 GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <0000 0 0 4 &gic 0 0 GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               pcie@3700000 {
-> +                       compatible = "fsl,lx2160a-pcie";
-> +                       reg = <0x00 0x03700000 0x0 0x00100000   /* controller registers */
-> +                              0x98 0x00000000 0x0 0x00001000>; /* configuration space */
-> +                       reg-names = "csr_axi_slave", "config_axi_slave";
-> +                       interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-> +                                    <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-> +                                    <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-> +                       interrupt-names = "aer", "pme", "intr";
-> +                       #address-cells = <3>;
-> +                       #size-cells = <2>;
-> +                       device_type = "pci";
-> +                       dma-coherent;
-> +                       apio-wins = <8>;
-> +                       ppio-wins = <8>;
-> +                       bus-range = <0x0 0xff>;
-> +                       ranges = <0x82000000 0x0 0x40000000 0x98 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-> +                       msi-parent = <&its>;
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-map-mask = <0 0 0 7>;
-> +                       interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <0000 0 0 2 &gic 0 0 GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <0000 0 0 3 &gic 0 0 GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <0000 0 0 4 &gic 0 0 GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               pcie@3800000 {
-> +                       compatible = "fsl,lx2160a-pcie";
-> +                       reg = <0x00 0x03800000 0x0 0x00100000   /* controller registers */
-> +                              0xa0 0x00000000 0x0 0x00001000>; /* configuration space */
-> +                       reg-names = "csr_axi_slave", "config_axi_slave";
-> +                       interrupts = <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-> +                                    <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-> +                                    <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-> +                       interrupt-names = "aer", "pme", "intr";
-> +                       #address-cells = <3>;
-> +                       #size-cells = <2>;
-> +                       device_type = "pci";
-> +                       dma-coherent;
-> +                       apio-wins = <256>;
-> +                       ppio-wins = <24>;
-> +                       bus-range = <0x0 0xff>;
-> +                       ranges = <0x82000000 0x0 0x40000000 0xa0 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-> +                       msi-parent = <&its>;
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-map-mask = <0 0 0 7>;
-> +                       interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <0000 0 0 2 &gic 0 0 GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <0000 0 0 3 &gic 0 0 GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <0000 0 0 4 &gic 0 0 GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               pcie@3900000 {
-> +                       compatible = "fsl,lx2160a-pcie";
-> +                       reg = <0x00 0x03900000 0x0 0x00100000   /* controller registers */
-> +                              0xa8 0x00000000 0x0 0x00001000>; /* configuration space */
-> +                       reg-names = "csr_axi_slave", "config_axi_slave";
-> +                       interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-> +                                    <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-> +                                    <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-> +                       interrupt-names = "aer", "pme", "intr";
-> +                       #address-cells = <3>;
-> +                       #size-cells = <2>;
-> +                       device_type = "pci";
-> +                       dma-coherent;
-> +                       apio-wins = <8>;
-> +                       ppio-wins = <8>;
-> +                       bus-range = <0x0 0xff>;
-> +                       ranges = <0x82000000 0x0 0x40000000 0xa8 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-> +                       msi-parent = <&its>;
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-map-mask = <0 0 0 7>;
-> +                       interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <0000 0 0 2 &gic 0 0 GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <0000 0 0 3 &gic 0 0 GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <0000 0 0 4 &gic 0 0 GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-> +                       status = "disabled";
-> +               };
-> +
->         };
->  };
-> --
-> 2.17.1
->
+--SLDf9lqlvOQaIe6s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Sun 2019-06-02 08:24:35, Joel Fernandes wrote:
+> On Sun, Jun 2, 2019 at 8:20 AM Joel Fernandes <joel@joelfernandes.org> wr=
+ote:
+> >
+> > On Sun, Jun 2, 2019 at 3:00 AM Pavel Machek <pavel@denx.de> wrote:
+> > >
+> > > On Sat 2019-06-01 18:27:34, Joel Fernandes (Google) wrote:
+> > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > >
+> > > This really needs to be merged to previous patch, you can't break
+> > > compilation in middle of series...
+> > >
+> > > Or probably you need hlist_for_each_entry_rcu_lockdep() macro with
+> > > additional argument, and switch users to it.
+> >
+> > Good point. I can also just add a temporary transition macro, and then
+> > remove it in the last patch. That way no new macro is needed.
+>=20
+> Actually, no. There is no compilation break so I did not follow what
+> you mean. The fourth argument to the hlist_for_each_entry_rcu is
+> optional. The only thing that happens is new lockdep warnings will
+> arise which later parts of the series fix by passing in that fourth
+> argument.
 
--- 
-Thanks,
-Regards,
-Karthikeyan Mitran
+Sorry, I missed that subtlety. Might be worth it enabling the lockdep
+warning last in the series...
 
--- 
-Mobiveil INC., CONFIDENTIALITY NOTICE: This e-mail message, including any 
-attachments, is for the sole use of the intended recipient(s) and may 
-contain proprietary confidential or privileged information or otherwise be 
-protected by law. Any unauthorized review, use, disclosure or distribution 
-is prohibited. If you are not the intended recipient, please notify the 
-sender and destroy all copies and the original message.
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--SLDf9lqlvOQaIe6s
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlz0wUQACgkQMOfwapXb+vJZhACeMv6qy1KMl8fpAmSRbXsFU5yP
+LY8Ani5H9/TBihxu13cOJbn7mJJ9RWkQ
+=hotv
+-----END PGP SIGNATURE-----
+
+--SLDf9lqlvOQaIe6s--
