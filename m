@@ -2,177 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 06F04331E3
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2019 16:18:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CB263364D
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2019 19:16:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbfFCOSu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Jun 2019 10:18:50 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45166 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728985AbfFCOSu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Jun 2019 10:18:50 -0400
-Received: by mail-pf1-f195.google.com with SMTP id s11so10692014pfm.12
-        for <linux-pci@vger.kernel.org>; Mon, 03 Jun 2019 07:18:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wino6sk3VdZE6+hAQNM1PvtsWBqO77h9pHog6R+saB4=;
-        b=ILFGoBB8mLMqVVtS8/R/M5XmKpli9djqbjha1UCLJ1dh/6QP3UUReHWHDiD4kff4T7
-         9/EuFMLCU7KEekS2AIMDnGtUJRZ7MQJimC/aYCot7tPs1eoHEET2YsyCOXT26R5TB610
-         BnMntKUbojtA1j1WCh9KSm7cLhDJ39hgwOFSU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wino6sk3VdZE6+hAQNM1PvtsWBqO77h9pHog6R+saB4=;
-        b=Lwv8qDvjxzOAUkEyEyZSd4yQZt0K5K0m+dSuo6QD/HFdZgtYBL62Vksrg926kKpv/E
-         tm9S8ajrLnRDOWebrOnFP2lFIeqlfLbrAVKRq304pFqkNhSr569RB+DmZolFUK46HkZM
-         yhaKkJffV9wDm2wwcTuYNoalNivrg+V6vvwYlk3f3UpbvPYQGn3CFS8NxPJPlmV7AiUZ
-         c05X1la1BlBTfY36St8HyUyfL6Z4ggzujyygAlAgV4UuZVdP+TqtbcZ2YmQABIf+XPZl
-         BVUl6eqcKTpL21b8ruPypTzdH5bw58C+sFaipQ2w2mZu+RfXousgq1QGtHPsJg6QUEy7
-         Fv2A==
-X-Gm-Message-State: APjAAAWovYFbU78Cnbj4z4Rt451kWqN4gZDSgqx0h8kYz6xAqZUxIrEJ
-        EsmYbyNkuMXhcTtTbEM/eTOk1A==
-X-Google-Smtp-Source: APXvYqyKAjR/D78/kGgs8thHzTfUR/LOLb5cBxjo6X/LlWYPb4MJB9cnaSwLt+1e5dELPHpdsRQU0Q==
-X-Received: by 2002:a63:6157:: with SMTP id v84mr14697278pgb.36.1559571529472;
-        Mon, 03 Jun 2019 07:18:49 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id d2sm13148346pfh.115.2019.06.03.07.18.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 07:18:48 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 10:18:47 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [RFC 1/6] rcu: Add support for consolidated-RCU reader checking
-Message-ID: <20190603141847.GA94186@google.com>
-References: <20190601222738.6856-1-joel@joelfernandes.org>
- <20190601222738.6856-2-joel@joelfernandes.org>
- <20190603080128.GA3436@hirez.programming.kicks-ass.net>
+        id S1728992AbfFCRP4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Jun 2019 13:15:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58924 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726823AbfFCRP4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 3 Jun 2019 13:15:56 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57F13275EA;
+        Mon,  3 Jun 2019 17:15:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559582154;
+        bh=2h+RgAo0T6Nw45DtDKzzxaVU7MlALt05Scf5Fgt49lk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MvZWeWA/8epHjqHuL6VTVUApc4IZNGyNZsVJltEL26ScletXNr8OHi7br7PtN3ckx
+         +sOtvoXrv3FO3yOIVuol3GsDJeZsQV8opd2LgfOetfr1do6a6tb/72Ogah+znW515S
+         1maFoGxeVbW4jAmBC56rm9Uex3K31EmupO8DqX78=
+Date:   Mon, 3 Jun 2019 12:15:52 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Abhishek Sahu <abhsahu@nvidia.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH 1/2] PCI: Code reorganization for VGA device link
+Message-ID: <20190603171552.GB189360@google.com>
+References: <20190531050109.16211-1-abhsahu@nvidia.com>
+ <20190531050109.16211-2-abhsahu@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190603080128.GA3436@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190531050109.16211-2-abhsahu@nvidia.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 10:01:28AM +0200, Peter Zijlstra wrote:
-> On Sat, Jun 01, 2019 at 06:27:33PM -0400, Joel Fernandes (Google) wrote:
-> > +#define list_for_each_entry_rcu(pos, head, member, cond...)		\
-> > +	if (COUNT_VARGS(cond) != 0) {					\
-> > +		__list_check_rcu_cond(0, ## cond);			\
-> > +	} else {							\
-> > +		__list_check_rcu();					\
-> > +	}								\
-> > +	for (pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
-> > +		&pos->member != (head);					\
-> >  		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
-> >  
-> >  /**
-> > @@ -621,7 +648,12 @@ static inline void hlist_add_behind_rcu(struct hlist_node *n,
-> >   * the _rcu list-mutation primitives such as hlist_add_head_rcu()
-> >   * as long as the traversal is guarded by rcu_read_lock().
-> >   */
-> > +#define hlist_for_each_entry_rcu(pos, head, member, cond...)		\
-> > +	if (COUNT_VARGS(cond) != 0) {					\
-> > +		__list_check_rcu_cond(0, ## cond);			\
-> > +	} else {							\
-> > +		__list_check_rcu();					\
-> > +	}								\
-> >  	for (pos = hlist_entry_safe (rcu_dereference_raw(hlist_first_rcu(head)),\
-> >  			typeof(*(pos)), member);			\
-> >  		pos;							\
+[+cc Lukas]
+
+On Fri, May 31, 2019 at 10:31:08AM +0530, Abhishek Sahu wrote:
+> This patch does minor code reorganization. It introduces a helper
+> function which creates device link from the non-VGA controller
+> (consumer) to the VGA (supplier) and uses this helper function for
+> creating device link from integrated HDA controller to VGA. It will
+> help in subsequent patches which require a similar kind of device
+> link from USB/Type-C USCI controller to VGA.
 > 
+> Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
+> ---
+>  drivers/pci/quirks.c | 44 +++++++++++++++++++++++++++++---------------
+>  1 file changed, 29 insertions(+), 15 deletions(-)
 > 
-> This breaks code like:
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index a077f67fe1da..a20f7771a323 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4916,36 +4916,50 @@ static void quirk_fsl_no_msi(struct pci_dev *pdev)
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, PCI_ANY_ID, quirk_fsl_no_msi);
+>  
+>  /*
+> - * GPUs with integrated HDA controller for streaming audio to attached displays
+> - * need a device link from the HDA controller (consumer) to the GPU (supplier)
+> - * so that the GPU is powered up whenever the HDA controller is accessed.
+> - * The GPU and HDA controller are functions 0 and 1 of the same PCI device.
+> - * The device link stays in place until shutdown (or removal of the PCI device
+> - * if it's hotplugged).  Runtime PM is allowed by default on the HDA controller
+> - * to prevent it from permanently keeping the GPU awake.
+> + * GPUs can be multi-function PCI device which can contain controllers other
+> + * than VGA (like Audio, USB, etc.). Internally in the hardware, these non-VGA
+> + * controllers are tightly coupled with VGA controller. Whenever these
+> + * controllers are runtime active, the VGA controller should also be in active
+> + * state. Normally, in these GPUs, the VGA controller is present at function 0.
+> + *
+> + * This is a helper function which creates device link from the non-VGA
+> + * controller (consumer) to the VGA (supplier). The device link stays in place
+> + * until shutdown (or removal of the PCI device if it's hotplugged).
+> + * Runtime PM is allowed by default on these non-VGA controllers to prevent
+> + * it from permanently keeping the GPU awake.
+>   */
+> -static void quirk_gpu_hda(struct pci_dev *hda)
+> +static void
+> +pci_create_device_link_with_vga(struct pci_dev *pdev, unsigned int devfn)
+
+There's nothing in this functionality that depends on VGA, so let's
+remove "GPU, "VGA", etc from the description, the function name, the
+local variable name, and the log message.  Maybe you need to allow the
+caller to supply the class type (PCI_BASE_CLASS_DISPLAY for current
+users, but Lukas mentioned a NIC that might be able to use this too).
+
+Follow the prevailing indentation style, with return type and function
+name on the same line, i.e.,
+
+  static void pci_create_device_link(...)
+
+>  {
+>  	struct pci_dev *gpu;
+>  
+> -	if (PCI_FUNC(hda->devfn) != 1)
+> +	if (PCI_FUNC(pdev->devfn) != devfn)
+>  		return;
+>  
+> -	gpu = pci_get_domain_bus_and_slot(pci_domain_nr(hda->bus),
+> -					  hda->bus->number,
+> -					  PCI_DEVFN(PCI_SLOT(hda->devfn), 0));
+> +	gpu = pci_get_domain_bus_and_slot(pci_domain_nr(pdev->bus),
+> +					  pdev->bus->number,
+> +					  PCI_DEVFN(PCI_SLOT(pdev->devfn), 0));
+>  	if (!gpu || (gpu->class >> 16) != PCI_BASE_CLASS_DISPLAY) {
+>  		pci_dev_put(gpu);
+>  		return;
+>  	}
+>  
+> -	if (!device_link_add(&hda->dev, &gpu->dev,
+> +	if (!device_link_add(&pdev->dev, &gpu->dev,
+>  			     DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME))
+> -		pci_err(hda, "cannot link HDA to GPU %s\n", pci_name(gpu));
+> +		pci_err(pdev, "cannot link with VGA %s\n", pci_name(gpu));
+
+I think we should emit a message in the success case, too.  There is
+one in device_link_add(), but it's a dev_dbg() so we can't count on it
+being in the log.  I'd like a pci_info() that we can count on.
+
+> -	pm_runtime_allow(&hda->dev);
+> +	pm_runtime_allow(&pdev->dev);
+>  	pci_dev_put(gpu);
+>  }
+> +
+> +/*
+> + * Create device link for GPUs with integrated HDA controller for streaming
+> + * audio to attached displays.
+> + */
+> +static void quirk_gpu_hda(struct pci_dev *hda)
+> +{
+> +	pci_create_device_link_with_vga(hda, 1);
+> +}
+>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
+>  			      PCI_CLASS_MULTIMEDIA_HD_AUDIO, 8, quirk_gpu_hda);
+>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMD, PCI_ANY_ID,
+> -- 
+> 2.17.1
 > 
-> 	if (...)
-> 		list_for_each_entry_rcu(...);
-> 
-> as they are no longer a single statement. You'll have to frob it into
-> the initializer part of the for statement.
-
-Thanks a lot for that. I fixed it as below (diff is on top of the patch):
-
-If not for that '##' , I could have abstracted the whole if/else
-expression into its own macro and called it from list_for_each_entry_rcu() to
-keep it more clean.
-
----8<-----------------------
-
-diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-index b641fdd9f1a2..cc742d294bb0 100644
---- a/include/linux/rculist.h
-+++ b/include/linux/rculist.h
-@@ -371,12 +372,15 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
-  * as long as the traversal is guarded by rcu_read_lock().
-  */
- #define list_for_each_entry_rcu(pos, head, member, cond...)		\
--	if (COUNT_VARGS(cond) != 0) {					\
--		__list_check_rcu_cond(0, ## cond);			\
--	} else {							\
--		__list_check_rcu();					\
--	}								\
--	for (pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
-+	for (								\
-+	     ({								\
-+		if (COUNT_VARGS(cond) != 0) {				\
-+			__list_check_rcu_cond(0, ## cond);		\
-+		} else {						\
-+			__list_check_rcu_nocond();			\
-+		}							\
-+	      }),							\
-+	     pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
- 		&pos->member != (head);					\
- 		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
- 
-@@ -649,12 +653,15 @@ static inline void hlist_add_behind_rcu(struct hlist_node *n,
-  * as long as the traversal is guarded by rcu_read_lock().
-  */
- #define hlist_for_each_entry_rcu(pos, head, member, cond...)		\
--	if (COUNT_VARGS(cond) != 0) {					\
--		__list_check_rcu_cond(0, ## cond);			\
--	} else {							\
--		__list_check_rcu();					\
--	}								\
--	for (pos = hlist_entry_safe (rcu_dereference_raw(hlist_first_rcu(head)),\
-+	for (								\
-+	     ({								\
-+		if (COUNT_VARGS(cond) != 0) {				\
-+			__list_check_rcu_cond(0, ## cond);		\
-+		} else {						\
-+			__list_check_rcu_nocond();			\
-+		}							\
-+	     }),							\
-+	     pos = hlist_entry_safe (rcu_dereference_raw(hlist_first_rcu(head)),\
- 			typeof(*(pos)), member);			\
- 		pos;							\
- 		pos = hlist_entry_safe(rcu_dereference_raw(hlist_next_rcu(\
--- 
-2.22.0.rc1.311.g5d7573a151-goog
-
