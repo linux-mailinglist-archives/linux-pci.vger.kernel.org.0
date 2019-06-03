@@ -2,206 +2,244 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BA80132B1D
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2019 10:49:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21EAF32C48
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2019 11:17:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbfFCItp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Jun 2019 04:49:45 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46566 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbfFCItp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 3 Jun 2019 04:49:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CD4AA374;
-        Mon,  3 Jun 2019 01:49:44 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 982DD3F690;
-        Mon,  3 Jun 2019 01:49:43 -0700 (PDT)
-Subject: Re: [PATCH v3] PCI: xilinx-nwl: Fix Multi MSI data programming
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        rgummal@xilinx.com
-References: <1559133469-11981-1-git-send-email-bharat.kumar.gogada@xilinx.com>
- <20190531160956.GB9356@redmoon>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <5de53585-e90f-77d2-bd96-025e1b39a573@arm.com>
-Date:   Mon, 3 Jun 2019 09:49:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1728610AbfFCJMS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Jun 2019 05:12:18 -0400
+Received: from alpha.anastas.io ([104.248.188.109]:46139 "EHLO
+        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728606AbfFCJMR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Jun 2019 05:12:17 -0400
+Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by alpha.anastas.io (Postfix) with ESMTPSA id 96F27808B8;
+        Mon,  3 Jun 2019 04:12:15 -0500 (CDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
+        t=1559553136; bh=qJnfDDzz4DgW5+Ag559cHbbNjOf/DlUtH7AzqY69aiA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=SmF0L0dskQ1MJbih5rNVzg+tVHtmU/zlfVvYEUmq92M0OhrXOUy/d5uuQMk+Wmrkx
+         +269Ntl6yHMwBJmUTDbfNbiVEDJmWzTUyQvetEgSF9YNI0nqcdmnes9OqKy73POI5Q
+         pzZ59z6ZMElAapcl+4jKLv31Mq2dxT2WSuRRhOhBV3/FkRiEiffPgtthLhoq4OBnyZ
+         S1RAXEVNL2hZwkQxVRSrdX8IokIk+FnUeyPRpzVpPxVrZTFW82b2Duijb5C1uNMkFs
+         J0Vp95wbcSPb3iFYYBoMS94F1BAHZesbnxCuw9t7i8dnr/3pW6fnqIFC7+x7Kj0h0d
+         5U6IMSUPhWPZg==
+Subject: Re: [PATCH v3 1/3] PCI: Introduce pcibios_ignore_alignment_request
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     Oliver <oohall@gmail.com>, Sam Bobroff <sbobroff@linux.ibm.com>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        rppt@linux.ibm.com, Paul Mackerras <paulus@samba.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, xyjxie@linux.vnet.ibm.com,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+References: <20190528040313.35582-1-shawn@anastas.io>
+ <20190528040313.35582-2-shawn@anastas.io>
+ <CAOSf1CEFfbmwfvmdqT1xdt8SFb=tYdYXLfXeyZ8=iRnhg4a3Pg@mail.gmail.com>
+ <b0a38504-24c3-77bc-b308-7b498f07760a@ozlabs.ru>
+ <bccfec8f-c8a4-fac1-7e96-be84113b9a73@anastas.io>
+ <3e6b9d7d-5d18-645e-5ef9-6b8a77fa62e9@ozlabs.ru>
+ <985681e4-1236-fff7-e9e7-189a340487dd@anastas.io>
+ <81a015ed-2c99-7ca8-c5ad-cede93aeba97@ozlabs.ru>
+ <bdc914aa-9aab-1377-c036-cca4710ef233@anastas.io>
+ <2f4185ac-d19f-6668-7b3e-a300ce3b9e00@ozlabs.ru>
+ <bab59b8e-f1fc-f92a-36bb-4ff471e6da24@ozlabs.ru>
+From:   Shawn Anastasio <shawn@anastas.io>
+Message-ID: <419bf151-401d-231e-649e-22ddf53c4fcc@anastas.io>
+Date:   Mon, 3 Jun 2019 04:12:14 -0500
 MIME-Version: 1.0
-In-Reply-To: <20190531160956.GB9356@redmoon>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <bab59b8e-f1fc-f92a-36bb-4ff471e6da24@ozlabs.ru>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 31/05/2019 17:09, Lorenzo Pieralisi wrote:
-> [+Marc]
-> 
-> On Wed, May 29, 2019 at 06:07:49PM +0530, Bharat Kumar Gogada wrote:
->> The current Multi MSI data programming fails if multiple end points
->> requesting MSI and multi MSI are connected with switch, i.e the current
->> multi MSI data being given is not considering the number of vectors
->> being requested in case of multi MSI.
->> Ex: Two EP's connected via switch, EP1 requesting single MSI first,
->> EP2 requesting Multi MSI of count four. The current code gives
->> MSI data 0x0 to EP1 and 0x1 to EP2, but EP2 can modify lower two bits
->> due to which EP2 also sends interrupt with MSI data 0x0 which results
->> in always invoking virq of EP1 due to which EP2 MSI interrupt never
->> gets handled.
-> 
-> If this is a problem it is not the only driver where it should be fixed
-> it seems. CC'ed Marc in case I have missed something in relation to MSI
-> IRQs but AFAIU it looks like HW is allowed to toggled bits (according to
-> bits[6:4] in Message Control for MSI) in the MSI data, given that the
-> data written is the hwirq number (in this specific MSI controller)
-> it ought to be fixed.
 
-Yeah, it looks like a number of MSI controllers could be quite broken
-in this particular area.
 
+On 6/3/19 3:35 AM, Alexey Kardashevskiy wrote:
 > 
-> The commit log and patch should be rewritten (I will do that) but
-> first I would like to understand if there are more drivers to be
-> updated.
 > 
-> Lorenzo
-> 
->> Fix Multi MSI data programming with required alignment by
->> using number of vectors being requested.
+> On 03/06/2019 15:02, Alexey Kardashevskiy wrote:
 >>
->> Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe
->> Host Controller")
->> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
->> ---
->> V3:
->>  - Added example description of the issue
->> ---
->>  drivers/pci/controller/pcie-xilinx-nwl.c | 11 ++++++++++-
->>  1 file changed, 10 insertions(+), 1 deletion(-)
 >>
->> diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
->> index 81538d7..8efcb8a 100644
->> --- a/drivers/pci/controller/pcie-xilinx-nwl.c
->> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
->> @@ -483,7 +483,16 @@ static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
->>  	int i;
->>  
->>  	mutex_lock(&msi->lock);
->> -	bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
->> +
->> +	/*
->> +	 * Multi MSI count is requested in power of two
->> +	 * Check if multi msi is requested
->> +	 */
->> +	if (nr_irqs % 2 == 0)
->> +		bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
->> +					 nr_irqs, nr_irqs - 1);
->> +	else
->> +		bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
->>  					 nr_irqs, 0);
->>  	if (bit >= INT_PCI_MSI_NR) {
->>  		mutex_unlock(&msi->lock);
->> -- 
->> 2.7.4
+>> On 03/06/2019 12:23, Shawn Anastasio wrote:
+>>>
+>>>
+>>> On 5/30/19 10:56 PM, Alexey Kardashevskiy wrote:
+>>>>
+>>>>
+>>>> On 31/05/2019 08:49, Shawn Anastasio wrote:
+>>>>> On 5/29/19 10:39 PM, Alexey Kardashevskiy wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 28/05/2019 17:39, Shawn Anastasio wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>> On 5/28/19 1:27 AM, Alexey Kardashevskiy wrote:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On 28/05/2019 15:36, Oliver wrote:
+>>>>>>>>> On Tue, May 28, 2019 at 2:03 PM Shawn Anastasio <shawn@anastas.io>
+>>>>>>>>> wrote:
+>>>>>>>>>>
+>>>>>>>>>> Introduce a new pcibios function pcibios_ignore_alignment_request
+>>>>>>>>>> which allows the PCI core to defer to platform-specific code to
+>>>>>>>>>> determine whether or not to ignore alignment requests for PCI
+>>>>>>>>>> resources.
+>>>>>>>>>>
+>>>>>>>>>> The existing behavior is to simply ignore alignment requests when
+>>>>>>>>>> PCI_PROBE_ONLY is set. This is behavior is maintained by the
+>>>>>>>>>> default implementation of pcibios_ignore_alignment_request.
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Shawn Anastasio <shawn@anastas.io>
+>>>>>>>>>> ---
+>>>>>>>>>>      drivers/pci/pci.c   | 9 +++++++--
+>>>>>>>>>>      include/linux/pci.h | 1 +
+>>>>>>>>>>      2 files changed, 8 insertions(+), 2 deletions(-)
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>>>>>>>>>> index 8abc843b1615..8207a09085d1 100644
+>>>>>>>>>> --- a/drivers/pci/pci.c
+>>>>>>>>>> +++ b/drivers/pci/pci.c
+>>>>>>>>>> @@ -5882,6 +5882,11 @@ resource_size_t __weak
+>>>>>>>>>> pcibios_default_alignment(void)
+>>>>>>>>>>             return 0;
+>>>>>>>>>>      }
+>>>>>>>>>>
+>>>>>>>>>> +int __weak pcibios_ignore_alignment_request(void)
+>>>>>>>>>> +{
+>>>>>>>>>> +       return pci_has_flag(PCI_PROBE_ONLY);
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>>      #define RESOURCE_ALIGNMENT_PARAM_SIZE COMMAND_LINE_SIZE
+>>>>>>>>>>      static char
+>>>>>>>>>> resource_alignment_param[RESOURCE_ALIGNMENT_PARAM_SIZE] = {0};
+>>>>>>>>>>      static DEFINE_SPINLOCK(resource_alignment_lock);
+>>>>>>>>>> @@ -5906,9 +5911,9 @@ static resource_size_t
+>>>>>>>>>> pci_specified_resource_alignment(struct pci_dev *dev,
+>>>>>>>>>>             p = resource_alignment_param;
+>>>>>>>>>>             if (!*p && !align)
+>>>>>>>>>>                     goto out;
+>>>>>>>>>> -       if (pci_has_flag(PCI_PROBE_ONLY)) {
+>>>>>>>>>> +       if (pcibios_ignore_alignment_request()) {
+>>>>>>>>>>                     align = 0;
+>>>>>>>>>> -               pr_info_once("PCI: Ignoring requested alignments
+>>>>>>>>>> (PCI_PROBE_ONLY)\n");
+>>>>>>>>>> +               pr_info_once("PCI: Ignoring requested
+>>>>>>>>>> alignments\n");
+>>>>>>>>>>                     goto out;
+>>>>>>>>>>             }
+>>>>>>>>>
+>>>>>>>>> I think the logic here is questionable to begin with. If the user
+>>>>>>>>> has
+>>>>>>>>> explicitly requested re-aligning a resource via the command line
+>>>>>>>>> then
+>>>>>>>>> we should probably do it even if PCI_PROBE_ONLY is set. When it
+>>>>>>>>> breaks
+>>>>>>>>> they get to keep the pieces.
+>>>>>>>>>
+>>>>>>>>> That said, the real issue here is that PCI_PROBE_ONLY probably
+>>>>>>>>> shouldn't be set under qemu/kvm. Under the other hypervisor
+>>>>>>>>> (PowerVM)
+>>>>>>>>> hotplugged devices are configured by firmware before it's passed to
+>>>>>>>>> the guest and we need to keep the FW assignments otherwise things
+>>>>>>>>> break. QEMU however doesn't do any BAR assignments and relies on
+>>>>>>>>> that
+>>>>>>>>> being handled by the guest. At boot time this is done by SLOF, but
+>>>>>>>>> Linux only keeps SLOF around until it's extracted the device-tree.
+>>>>>>>>> Once that's done SLOF gets blown away and the kernel needs to do
+>>>>>>>>> it's
+>>>>>>>>> own BAR assignments. I'm guessing there's a hack in there to make it
+>>>>>>>>> work today, but it's a little surprising that it works at all...
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> The hack is to run a modified qemu-aware "/usr/sbin/rtas_errd" in the
+>>>>>>>> guest which receives an event from qemu (RAS_EPOW from
+>>>>>>>> /proc/interrupts), fetches device tree chunks (and as I understand
+>>>>>>>> it -
+>>>>>>>> they come with BARs from phyp but without from qemu) and writes
+>>>>>>>> "1" to
+>>>>>>>> "/sys/bus/pci/rescan" which calls pci_assign_resource() eventually:
+>>>>>>>
+>>>>>>> Interesting. Does this mean that the PHYP hotplug path doesn't
+>>>>>>> call pci_assign_resource?
+>>>>>>
+>>>>>>
+>>>>>> I'd expect dlpar_add_slot() to be called under phyp and eventually
+>>>>>> pci_device_add() which (I think) may or may not trigger later
+>>>>>> reassignment.
+>>>>>>
+>>>>>>
+>>>>>>> If so it means the patch may not
+>>>>>>> break that platform after all, though it still may not be
+>>>>>>> the correct way of doing things.
+>>>>>>
+>>>>>>
+>>>>>> We should probably stop enforcing the PCI_PROBE_ONLY flag - it seems
+>>>>>> that (unless resource_alignment= is used) the pseries guest should just
+>>>>>> walk through all allocated resources and leave them unchanged.
+>>>>>
+>>>>> If we add a pcibios_default_alignment() implementation like was
+>>>>> suggested earlier, then it will behave as if the user has
+>>>>> specified resource_alignment= by default and SLOF's assignments
+>>>>> won't be honored (I think).
+>>>>
+>>>>
+>>>> I removed pci_add_flags(PCI_PROBE_ONLY) from pSeries_setup_arch and
+>>>> tried booting with and without pci=resource_alignment= and I can see no
+>>>> difference - BARs are still aligned to 64K as programmed in SLOF; if I
+>>>> hack SLOF to align to 4K or 32K - BARs get packed and the guest leaves
+>>>> them unchanged.
+>>>>
+>>>>
+>>>>> I guess it boils down to one question - is it important that we
+>>>>> observe SLOF's initial BAR assignments?
+>>>>
+>>>> It isn't if it's SLOF but it is if it's phyp. It used to not
+>>>> allow/support BAR reassignment and even if it does not, I'd rather avoid
+>>>> touching them.
+>>>
+>>> A quick update. I tried removing pci_add_flags(PCI_PROBE_ONLY) which
+>>> worked, but if I add an implementation of pcibios_default_alignment
+>>> which simply returns PAGE_SIZE, my VM fails to boot and many errors
+>>> from the virtio disk driver are printed to the console.
+>>>
+>>> After some investigation, it seems that with pcibios_default_alignment
+>>> present, Linux will reallocate all resources provided by SLOF on
+>>> boot. I'm still not sure why exactly this causes the virtio driver
+>>> to fail, but it does indicate that there is a reason to keep
+>>> SLOF's initial assignments.
+>>>
+>>> Anybody have an idea what's causing this?
 >>
+>> With your changes the guest feels the urge to reassign bars (no idea why
+>> but ok), when it does so, it puts both BARs (one is prefetchable) into
+>> the 32bit non-prefetchable window of the PHB (SLOF puts the prefetchable
+>> bar to a 64bit prefetchable window, I have no idea why the guest does it
+>> different either but this must still work) and then qemu does not
+>> emulate something properly - unassigned_mem_accepts() is triggered on
+>> the bar access - no idea why - I am debugging it right now.
+> 
+> 
+> Sooo the problem is that resouce::flags has 2 bits to describe 64bit
+> BARs - PCI_BASE_ADDRESS_MEM_TYPE_64 and IORESOURCE_MEM_64 - and we don't
+> set IORESOURCE_MEM_64 for 64bit BARs when parsing the fdt.
+> 
+> So the BAR reallocator moves the BAR to 32bit window (which is not
+> desirable but permitted, I still have to chase it) and then
+> pci_std_update_resource() writes BAR back but since now it is 32bit BAR,
+> it does not write to the upper 32bits so that half remains 0x2100, QEMU
+> does not move BAR to the right window and the MMIO stops working.
+> 
+> Try this in the guest kernel, it seems to keep bars where they were
+> after slof.
 
-This doesn't look like the best fix. The only case where nr_irqs is not 
-set to 1 is when using Multi-MSI, so the '% 2' case actually covers all 
-cases. Now, and in the interest of consistency, other drivers use a 
-construct such as:
+Nice debugging work! With your patch the VM does boot. I'm not sure
+if SLOF's original allocations are being kept or if Linux is redoing
+them (how do you check?), but MMIO works and the system boots anyways.
 
-offset = bitmap_find_free_region(bitmap, bitmap_size,
-				 get_count_order(nr_irqs));
-
-which has the advantage of dealing with the bitmap setting as well.
-
-I'd suggest something like this (completely untested):
-
-diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-index 3b031f00a94a..8b9b58909e7c 100644
---- a/drivers/pci/controller/pcie-xilinx-nwl.c
-+++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-@@ -482,15 +482,13 @@ static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 	int i;
- 
- 	mutex_lock(&msi->lock);
--	bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
--					 nr_irqs, 0);
--	if (bit >= INT_PCI_MSI_NR) {
-+	bit = bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
-+				      get_count_order(nr_irqs));
-+	if (bit < 0) {
- 		mutex_unlock(&msi->lock);
- 		return -ENOSPC;
- 	}
- 
--	bitmap_set(msi->bitmap, bit, nr_irqs);
--
- 	for (i = 0; i < nr_irqs; i++) {
- 		irq_domain_set_info(domain, virq + i, bit + i, &nwl_irq_chip,
- 				domain->host_data, handle_simple_irq,
-@@ -508,7 +506,7 @@ static void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 	struct nwl_msi *msi = &pcie->msi;
- 
- 	mutex_lock(&msi->lock);
--	bitmap_clear(msi->bitmap, data->hwirq, nr_irqs);
-+	bitmap_release_region(msi->bitmap, data->hwirq, get_count_order(nr_irqs));
- 	mutex_unlock(&msi->lock);
- }
- 
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+I've also tested hotplug and the BAR allocations are page-aligned too,
+as expected.
