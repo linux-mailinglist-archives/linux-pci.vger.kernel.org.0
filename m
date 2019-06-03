@@ -2,107 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 715DB33B81
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 00:40:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F017433B83
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 00:40:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbfFCWke (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Jun 2019 18:40:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40770 "EHLO mail.kernel.org"
+        id S1726163AbfFCWkp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Jun 2019 18:40:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35084 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbfFCWke (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 3 Jun 2019 18:40:34 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726025AbfFCWko (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 3 Jun 2019 18:40:44 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1DBE26A32;
-        Mon,  3 Jun 2019 22:40:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559601633;
-        bh=4VVHVVBJYOrtfjQmkmfX4km6vna4lr6Ms9TIAd0Y6EU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rVmbs/zsxjB0l+JVVvUWDeQ857KCgbfN2xMCzG5JWVRitgEAEdAaKwqbzVCPyJTRG
-         k/KjK7RbzDxuGCQ3fGSg2oBsyQ8OAmaC29aasEdfWAJrvc8YudmpTNIQ9I0iLFYmaf
-         ZnZBErOfUIqgTR/54n8QWeEJV0eUGdRWiuKo8m00=
-Date:   Mon, 3 Jun 2019 17:40:29 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Himanshu Madhani <hmadhani@marvell.com>
-Cc:     Andrew Vasquez <andrewv@marvell.com>,
-        Girish Basrur <gbasrur@marvell.com>,
-        Giridhar Malavali <gmalavali@marvell.com>,
-        Myron Stowe <mstowe@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Quinn Tran <quinn.tran@qlogic.com>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: [EXT] VPD access Blocked by commit
- 0d5370d1d85251e5893ab7c90a429464de2e140b
-Message-ID: <20190603224029.GC58810@google.com>
-References: <B5B745A3-96B4-46ED-8F3F-D3636A96057F@marvell.com>
- <CAErSpo5qy6WuUe9cz1vTBBnc5P_uZaPzc-Yqbag2eBBxzi+ENg@mail.gmail.com>
- <CAErSpo45bCV7geSPAwBjy5fdQqzDcX61Ybksk65c=intfTWFZQ@mail.gmail.com>
- <D8764654-E2A0-43B8-97D9-6644F2BC8D0E@marvell.com>
- <20190530205823.GA45696@google.com>
- <DFF05429-6C84-4DBD-B3D0-14A0BD209E38@marvell.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 1DDA130018E9;
+        Mon,  3 Jun 2019 22:40:44 +0000 (UTC)
+Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 395545B684;
+        Mon,  3 Jun 2019 22:40:43 +0000 (UTC)
+Date:   Mon, 3 Jun 2019 16:40:42 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     JD Zheng <jiandong.zheng@broadcom.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        keith.busch@intel.com, bcm-kernel-feedback-list@broadcom.com,
+        Lukas Wunner <lukas@wunner.de>
+Subject: Re: SSD surprise removal leads to long wait inside pci_dev_wait()
+ and FLR 65s timeout
+Message-ID: <20190603164042.2276076d@x1.home>
+In-Reply-To: <78f95dfe-ac2b-408f-0e2a-b3b9d69575dd@broadcom.com>
+References: <8f2d88a5-9524-c4c3-a61f-7d55d97e1c18@broadcom.com>
+        <20190603004414.GA189360@google.com>
+        <20190602194011.51ceaa23@x1.home>
+        <78f95dfe-ac2b-408f-0e2a-b3b9d69575dd@broadcom.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DFF05429-6C84-4DBD-B3D0-14A0BD209E38@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 03 Jun 2019 22:40:44 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 09:30:50PM +0000, Himanshu Madhani wrote:
-> On May 30, 2019, at 1:58 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
->> On Thu, May 30, 2019 at 07:33:01PM +0000, Himanshu Madhani wrote:
->>> We are able to successfully read VPD config data using lspci and cat
->>> command
+On Mon, 3 Jun 2019 14:17:36 -0700
+JD Zheng <jiandong.zheng@broadcom.com> wrote:
 
-> Missed the request for xxd output. I got access back today for the system 
-> and captured it for you
+> On 6/2/19 6:40 PM, Alex Williamson wrote:
+> > On Sun, 2 Jun 2019 19:44:14 -0500
+> > Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >   
+> >> [+cc Alex, Lukas]
+> >>
+> >> On Fri, May 31, 2019 at 09:55:20AM -0700, JD Zheng wrote:  
+> >>> Hello,
+> >>>
+> >>> I am running DPDK 18.11+SPDK 19.04 with v5.1 kernel. DPDK/SPDK uses SSD vfio
+> >>> devices and after running SPDK's nvmf_tgt, unplugging a SSD cause kernel to
+> >>> print out following:
+> >>> [  105.426952] vfio-pci 0000:04:00.0: not ready 2047ms after FLR; waiting
+> >>> [  107.698953] vfio-pci 0000:04:00.0: not ready 4095ms after FLR; waiting
+> >>> [  112.050960] vfio-pci 0000:04:00.0: not ready 8191ms after FLR; waiting
+> >>> [  120.498953] vfio-pci 0000:04:00.0: not ready 16383ms after FLR; waiting
+> >>> [  138.418957] vfio-pci 0000:04:00.0: not ready 32767ms after FLR; waiting
+> >>> [  173.234953] vfio-pci 0000:04:00.0: not ready 65535ms after FLR; giving up
+> >>>
+> >>> Looks like it is a PCI hotplug racing condition between DPDK's
+> >>> eal-intr-thread thread and kernel's pciehp thread. And it causes lockup in
+> >>> pci_dev_wait() at kernel side.
+> >>>
+> >>> When SSD is removed, eal-intr-thread immediately receives
+> >>> RTE_INTR_HANDLE_ALARM and handler calls rte_pci_detach_dev() and at kernel
+> >>> side vfio_pci_release() is triggered to release this vfio device, which
+> >>> calls pci_try_reset_function(), then _pci_reset_function_locked().
+> >>> pci_try_reset_function acquires the device lock but
+> >>> _pci_reset_function_locked() doesn't return, therefore lock is NOT released.  
+> > 
+> > To what extent does vfio-pci need to learn about surprise hotplug?  My
+> > expectation is that the current state of the code would only support
+> > cooperative hotplug.  When a device is surprise removed, what backs a
+> > user's mmaps?  AIUI, we don't have a revoke interface to invalidate
+> > these.  We should probably start with an RFE or some development effort
+> > to harden vfio-pci for surprise hotplug, it's not surprising it doesn't
+> > just work TBH.  Thanks,
+> > 
+> > Alex
+> > 
+> >   
 > 
-> # cat /sys/class/pci_bus/0000\:13/device/0000\:13\:00.0/vpd  | xxd
-> 00000000: 822d 0051 4c6f 6769 6320 3332 4762 2032  .-.QLogic 32Gb 2
-> 00000010: 2d70 6f72 7420 4643 2074 6f20 5043 4965  -port FC to PCIe
-> 00000020: 2047 656e 3320 7838 2041 6461 7074 6572   Gen3 x8 Adapter
-> 00000030: 9039 0050 4e07 514c 4532 3734 3253 4e0d  .9.PN.QLE2742SN.
-> 00000040: 4146 4431 3533 3359 3032 3939 3945 430f  AFD1533Y02999EC.
-> 00000050: 424b 3332 3130 3430 372d 3035 2030 3356  BK3210407-05 03V
-> 00000060: 3906 3031 3031 3839 5256 01a0 78         9.010189RV..x
+> I did see other issues that DPDK unmap vifo device memory was stuck due 
+> to surprise removal.
 > 
-> PCIe trace also confirmed there are no READ errors. 
-> (if you need i can attach .pex file for review)
+> Are you saying that vfio-pci surprise removal is not fully implemented yet?
 
-Thank you!  It would be really excellent to have a report at
-https://bugzilla.kernel.org with these details (hex VPD dump, .pex
-file, QLogic firmware version info) attached.  Your patch commit log
-could then include the bugzilla URL.
+Has not even been evaluated for that use case afaik.  You are in
+unknown and expected broken territory.  If this is an area you'd like
+to contribute, great, but expect more than a bug fix here and there.
+Thanks,
 
-If we had this sort of information for Ethan's original patch, we
-would have a good start at making a smarter quirk.  But we don't, so I
-think all we can assume at this point is that all QLogic firmware
-older than your current version is broken and we shouldn't try reading
-VPD.
-
->> If a QLogic firmware update indeed fixed the VPD format, I suggest
->> that you ask the folks responsible for the firmware to identify the
->> specific version where that was fixed and how the OS can figure that
->> out.
-
-> Still waiting on this data. 
-
-Don't hold your breath :)
-
-> Since major OEMs are having issues using adapter to extract VPD data, We 
-> would like to get them relief first and then approach this issue with more
-> detailed fix if needed. 
-
-I don't think it's a good idea to simply revert 0d5370d1d852.  That
-would mean any users that have the same QLogic firmware version Ethan
-had would start seeing panics.
-
-But I think you could certainly make a quirk that allows VPD access
-for the firmware version you have on your card (or newer), leaving the
-original "no VPD at all" behavior for older versions.
-
-Bjorn
+Alex
