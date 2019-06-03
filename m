@@ -2,113 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 47E6F336FB
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2019 19:42:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9043933706
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2019 19:44:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbfFCRms (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Jun 2019 13:42:48 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46368 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbfFCRmr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Jun 2019 13:42:47 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m15so8762842ljg.13
-        for <linux-pci@vger.kernel.org>; Mon, 03 Jun 2019 10:42:46 -0700 (PDT)
+        id S1727588AbfFCRo4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Jun 2019 13:44:56 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:35688 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727415AbfFCRo4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Jun 2019 13:44:56 -0400
+Received: by mail-ed1-f66.google.com with SMTP id p26so28067198edr.2;
+        Mon, 03 Jun 2019 10:44:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BS0Zh3jyjSb17eotilocZwY1GzUHeKUqjyq+4Kft1pQ=;
-        b=NLVEIvLReVVSzUzdDGbor2dZ8ubeUlpmhNjUd82WAFgUKIBO7BoTaJIz44rPbkJPrM
-         JJz4js2fDKmejIAwjlAnvQUcKyHnNvReqS52dXsAbD52WeR9RocU/fFCzu8ITS9tQb+D
-         sjdkFNrjpp4ImFYc4Kuo0V3DKMhlkSDsj4aV0PqjKBhap8WtjQEFx4oGPrufWt9qZt13
-         IDkqSzV1VP9Tf7KZJTXe3BxwI+so/wNAIi1UwJ/LM5p+TAe/TOZwfJ7kqtY5LqqbxW1q
-         FsUPRQuHOQNPJr0m9+/rAnq/VlACSBwzANEDY+HFEiaFoP6z/PllCBlxwNNdkyJvoWe+
-         4odQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UvPJ0pMiZoixpn1vorRDAMa+r0PwCmpA/CAl7+RUBFU=;
+        b=mDpQCM0tAqeODReAP8OTV9DQoxN3yLTrbJtlUsVjnmtI/1iuLx7p9FbWDiC0DYh6UQ
+         Y0jCK+ksupdzG1tNrJR5ovgGWsKJ78pddBKDrQ33b4nE4T0Iw58uPk+joii9Zs8Fj7tA
+         UFLSIUl8IF4g9SukjZM3OHserAnn95viimi3WLCbD1Q2sx2tghWyqFQFfOWOgCLR8sk+
+         J5e7xvriKldbYic86yWsDLSX8O+We57jRa9t30ZRAN79w2hxdd3Ts2NDWXdaC3si33zD
+         +fd75c1OaYBe1maShaI11cbdIvM7wrX0TRoEYAXqBQW2Aw1PvXbI2y4M5QySroTMvWmp
+         33ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BS0Zh3jyjSb17eotilocZwY1GzUHeKUqjyq+4Kft1pQ=;
-        b=ACAzv6FIZeiVhykBT/Ub3ittFqopw7uE2m6wE4RkjgfkxJADJegUEfQWwcwHUKfYrK
-         Db9T6rfnlUt2/nbYRRkM8WADTIriYgTDaBygy+FYPFHbpGZwExleRAWXp+AWXEfzQJuG
-         waFPSg7hbzKfZ/iymDok1g/oAls17cc9ug997SJNJFCtkAnEZcyng//W1M+FfaacaA58
-         Q8aPI3xlfeId58YKPz58L0KV6fzrTqFbTPZhbDVJEreNTj4vTmH1Ta7obV93zlRISYIf
-         koFpIfVgQSIVaghAo8rT5EchyV7+krWVPN/v4i+ZLpb39/rhj2hgUJsSb4zzx9b+KzM6
-         f+sg==
-X-Gm-Message-State: APjAAAXrHPCsv78OPSBUstsbvj4GyIMrWJIHKV8DCfpp+4Q3+bZCx7Qw
-        GvmhIn3OL2EY61iPg9pLPa4BKdhzkCki11bwUV2Cwg==
-X-Google-Smtp-Source: APXvYqy7436P4CRHoCyJ2XXuGEbIzmE7qmlHxfIe0H476OtQDIN20Vza1a6fj3+LTeOrwhyyTraNzBYtaxJteM56H8U=
-X-Received: by 2002:a2e:8587:: with SMTP id b7mr14668645lji.101.1559583766018;
- Mon, 03 Jun 2019 10:42:46 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UvPJ0pMiZoixpn1vorRDAMa+r0PwCmpA/CAl7+RUBFU=;
+        b=PlKiAmyiO6SsAOsF5rBhpNK4Vs8z0G17c9q8bXuHJd40+bZ3wIaYYo/zPNOlR9W8FU
+         XYtHulO6wuLWaGCwkwSzf9qhnqi9AEIyEN7+Q3tzTV3h5h6DL+2LV38+trBIKHsa6ftq
+         giuu2vagx4GJ/D1RkTY2afiH7Pe6tU2peLszlLOKl9eLd06y3ZNVo40JHWsUiiNVEUsi
+         LGGyxmRvJJSKpClBPqXNMAyG1+iet9xjbCVGmltcrfpF/GYQzI/nqYEmNppHgp9Qh8Ej
+         E6+0epcthni28ZptPQWF65kPm3yE5CldIQ4un3XTmWAGk5x5g1ttiGmeEr79NZziqoLG
+         Vmdg==
+X-Gm-Message-State: APjAAAWvYj7csnULFpNEM/eSFo8gSWgGgIjoie4aZYb4Sl8DK4k7gOJz
+        mQ9PxNW8/Iw2ndQQxB0Gk2s=
+X-Google-Smtp-Source: APXvYqwYAH8FNbjJRPVG0DUMG7ZcBF+6mEqLYoc4xqQXZ9P5ym/vMa4fHhFVqcDLNjjZ9ibMHPZOTA==
+X-Received: by 2002:a17:906:951:: with SMTP id j17mr23314130ejd.174.1559583894230;
+        Mon, 03 Jun 2019 10:44:54 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id i31sm266996edd.90.2019.06.03.10.44.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 10:44:53 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] PCI: rpaphp: Avoid a sometimes-uninitialized warning
+Date:   Mon,  3 Jun 2019 10:43:23 -0700
+Message-Id: <20190603174323.48251-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0.rc2
 MIME-Version: 1.0
-References: <1558650258-15050-1-git-send-email-alan.mikhak@sifive.com>
- <305100E33629484CBB767107E4246BBB0A6FAFFD@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxsQ9NXrN7W_8HVrXQBb9HiBd+d1dNfv+cXmoBpXQnLwA@mail.gmail.com>
- <305100E33629484CBB767107E4246BBB0A6FC308@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxL-WYz1BY7yXJ6eKULgVtKeo67XhgHZjvtm5Ka5foKiA@mail.gmail.com>
- <192e3a19-8b69-dfaf-aa5c-45c7087548cc@ti.com> <CABEDWGxLeD-K8PjkD5hPSTFGJKs2hxEaAVO+nE5eC9Nx2yw=ig@mail.gmail.com>
- <75d578c2-a98c-d1ef-1633-6dc5dc3b0913@ti.com> <CABEDWGxBxmiKjoPUSUaUBXUhKkUTXVX0U9ooRou8tcWJojb52g@mail.gmail.com>
- <6e692ff6-e64f-e651-c8ae-34d0034ad7b9@ti.com>
-In-Reply-To: <6e692ff6-e64f-e651-c8ae-34d0034ad7b9@ti.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Mon, 3 Jun 2019 10:42:34 -0700
-Message-ID: <CABEDWGx2N66L=27JY6Ywbfny78UaxENkxBTqxU37PfuQO-ZMZw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: endpoint: Add DMA to Linux PCI EP Framework
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "wen.yang99@zte.com.cn" <wen.yang99@zte.com.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        Vinod Koul <vkoul@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jun 2, 2019 at 9:43 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> Hi Alan,
-> On 31/05/19 11:46 PM, Alan Mikhak wrote:
-> > On Thu, May 30, 2019 at 10:08 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> >> Hi Alan,
-> >>> Hi Kishon,
-> >>
-> >> I still have to look closer into your DMA patch but linked-list mode or single
-> >> block mode shouldn't be an user select-able option but should be determined by
-> >> the size of transfer.
-> >
-> > Please consider the following when taking a closer look at this patch.
->
-> After seeing comments from Vinod and Arnd, it looks like the better way of
-> adding DMA support would be to register DMA within PCI endpoint controller to
-> DMA subsystem (as dmaengine) and use only dmaengine APIs in pci_epf_test.
+When building with -Wsometimes-uninitialized, clang warns:
 
-Thanks Kishon. That makes it clear where these pieces should go.
+drivers/pci/hotplug/rpaphp_core.c:243:14: warning: variable 'fndit' is
+used uninitialized whenever 'for' loop exits because its condition is
+false [-Wsometimes-uninitialized]
+        for (j = 0; j < entries; j++) {
+                    ^~~~~~~~~~~
+drivers/pci/hotplug/rpaphp_core.c:256:6: note: uninitialized use occurs
+here
+        if (fndit)
+            ^~~~~
+drivers/pci/hotplug/rpaphp_core.c:243:14: note: remove the condition if
+it is always true
+        for (j = 0; j < entries; j++) {
+                    ^~~~~~~~~~~
+drivers/pci/hotplug/rpaphp_core.c:233:14: note: initialize the variable
+'fndit' to silence this warning
+        int j, fndit;
+                    ^
+                     = 0
 
-> > In my specific use case, I need to verify that any valid block size,
-> > including a one byte transfer, can be transferred across the PCIe bus
-> > by memcpy_toio/fromio() or by DMA either as a single block or as
-> > linked-list. That is why, instead of deciding based on transfer size,
-> > this patch introduces the '-L' flag for pcitest to communicate the
-> > user intent across the PCIe bus to pci-epf-test so the endpoint can
-> > initiate the DMA transfer using a single block or in linked-list mode.
-> The -L option seems to select an internal DMA configuration which might be
-> specific to one implementation. As Gustavo already pointed, we should have only
-> generic options in pcitest. This would no longer be applicable when we move to
-> dmaengine.
+Looking at the loop in a vacuum as clang would, fndit could be
+uninitialized if entries was ever zero or the if statement was
+always true within the loop. Regardless of whether or not this
+warning is a problem in practice, "found" variables should always
+be initialized to false so that there is no possibility of
+undefined behavior.
 
-Single-block DMA seemed as generic as linked-list DMA and
-memcpy_toio/fromio. It remains unclear how else to communicate that
-intent to pci_epf_test each time I invoke pcitest.
+Link: https://github.com/ClangBuiltLinux/linux/issues/504
+Fixes: 2fcf3ae508c2 ("hotplug/drc-info: Add code to search ibm,drc-info property")
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/pci/hotplug/rpaphp_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards,
-Alan
+diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
+index bcd5d357ca23..07b56bf2886f 100644
+--- a/drivers/pci/hotplug/rpaphp_core.c
++++ b/drivers/pci/hotplug/rpaphp_core.c
+@@ -230,7 +230,7 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
+ 	struct of_drc_info drc;
+ 	const __be32 *value;
+ 	char cell_drc_name[MAX_DRC_NAME_LEN];
+-	int j, fndit;
++	int j, fndit = 0;
+ 
+ 	info = of_find_property(dn->parent, "ibm,drc-info", NULL);
+ 	if (info == NULL)
+-- 
+2.22.0.rc2
+
