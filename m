@@ -2,180 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4186B33A28
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2019 23:50:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6817A33B68
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 00:33:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbfFCVuW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Jun 2019 17:50:22 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35962 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfFCVuT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Jun 2019 17:50:19 -0400
-Received: by mail-pf1-f195.google.com with SMTP id u22so11366448pfm.3
-        for <linux-pci@vger.kernel.org>; Mon, 03 Jun 2019 14:50:19 -0700 (PDT)
+        id S1726658AbfFCWcq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Jun 2019 18:32:46 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:52012 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726642AbfFCWcp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Jun 2019 18:32:45 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x53LVJA4001819;
+        Mon, 3 Jun 2019 14:31:20 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=lQsGdy/BvG5BoOv67juD7MT2P/UTEXI8nnmVOKePQLU=;
+ b=jTx5egSH0FwhtDk5uROP1SCOs60om43G2GuD1wc3U5BqZt0SopdevlQIBH239NoYTwcS
+ PgQhpdR2EQvRayd7QYZIO6YMN4h/+TlJbOGSsCQUESVyYgMs5cMDDiW3AtCHBlTes1cU
+ jBrAPSd0TSqz294h7OhfCyz8KN1p6dbrA9LExpCu83RXCac/0osmDCZFEoczOCUn7dLE
+ xGoIhU0c46kpvc0DYXyxjbW4IchqmzlShXHrub13hqI4n1jSQwFHKJwRku3mGnBmIFv3
+ 4nxrMPPvkfxfX08VeNsFWsuwayz111p3G3MhLXeWgLbNprCvfkTmS1evPwsjS0H2bYTF +g== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2sw79ps1a7-13
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 03 Jun 2019 14:31:20 -0700
+Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 3 Jun
+ 2019 14:30:55 -0700
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com (104.47.42.52) by
+ SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Mon, 3 Jun 2019 14:30:55 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QXe1q2zoQhM8mrIXiP1zmtjet7FIsQQVo+jNhQzIKKY=;
-        b=fuItLAVWVd3R4wiL7seEnIKyn3cimQpacQ5KyC3muYyd5ND/Anuj8lVgOcUF83Cwo/
-         KYTINCBVoor6OacJJA142/HPZhJUNO37/FFKGMLA14GNOS+M1Y6P+/1XzhDfUUsmtATU
-         q9Sm3TfvT6Ra9zBytNZ66mb4uaOHYAjfVEpPE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QXe1q2zoQhM8mrIXiP1zmtjet7FIsQQVo+jNhQzIKKY=;
-        b=EHagyad4Ok9JHsN1Ze9zfJU2X2IEHINhvwCG+rq2XKFhE7YGM/7OJHcssL/8DONZxr
-         /hDrE69pyxb6Y/ay+b/voUKWs5BsJR3opY/aOZ3118DGWiXv44vDDlJYc0G7K4QSUF4O
-         vBwsdipmP3cSLNBvfkbCdGRc8wvmrZ2/Uj1BZ3eD0HtTvWu3idF4GrmGx4xqdMGuwJG3
-         rsxZUJF6N036LEyOAau/u4EFBQYSGijCPan22MOOfVT7VShxLeVdD1xJU7kipzb/g84U
-         dBkkqkG8w0buXopRCbgirRXT+DvAMk85GTaQS3fjnfVzfnqKBTc02TBiCMErgvg6lAMb
-         tydA==
-X-Gm-Message-State: APjAAAUnv5ZyEfNesstm7ucWi9yadOSDXS/63HVGz+wu1oR+2NnLa9/2
-        Z12ujZOpQuUQCLpmdj24FHnjL6xLGVc=
-X-Google-Smtp-Source: APXvYqzFWBT/QzNj4YFy2RIkKCvg29kMSvPLG8SXnlZPedHNDkj+gC+CaVMGmB8lc4w88mXTFfVNFg==
-X-Received: by 2002:a17:90a:1911:: with SMTP id 17mr7751513pjg.113.1559596660707;
-        Mon, 03 Jun 2019 14:17:40 -0700 (PDT)
-Received: from [10.136.8.140] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id o192sm9299232pgo.74.2019.06.03.14.17.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 14:17:39 -0700 (PDT)
-Subject: Re: SSD surprise removal leads to long wait inside pci_dev_wait() and
- FLR 65s timeout
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, keith.busch@intel.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lukas Wunner <lukas@wunner.de>
-References: <8f2d88a5-9524-c4c3-a61f-7d55d97e1c18@broadcom.com>
- <20190603004414.GA189360@google.com> <20190602194011.51ceaa23@x1.home>
-From:   JD Zheng <jiandong.zheng@broadcom.com>
-Message-ID: <78f95dfe-ac2b-408f-0e2a-b3b9d69575dd@broadcom.com>
-Date:   Mon, 3 Jun 2019 14:17:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190602194011.51ceaa23@x1.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lQsGdy/BvG5BoOv67juD7MT2P/UTEXI8nnmVOKePQLU=;
+ b=bb+nssQUqqe1Czn9ngHHcHXSC8Y1KTT27XZsuCv1EbP9oDOAGIaE2nbv83Oc+vEFg/eDNM7A6GAMDMYB+mnLVUMDbKarjPkoVpZPWkPHFlTKIvDoHKx59xXg0/a7NehHryK9FcwoNULBBUnRJZ0T20RBOAgnUuESLL+ZjjCg6rw=
+Received: from MN2PR18MB2719.namprd18.prod.outlook.com (20.178.255.156) by
+ MN2PR18MB2944.namprd18.prod.outlook.com (20.179.22.203) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.22; Mon, 3 Jun 2019 21:30:50 +0000
+Received: from MN2PR18MB2719.namprd18.prod.outlook.com
+ ([fe80::7150:ff4e:d634:ac16]) by MN2PR18MB2719.namprd18.prod.outlook.com
+ ([fe80::7150:ff4e:d634:ac16%4]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
+ 21:30:50 +0000
+From:   Himanshu Madhani <hmadhani@marvell.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Andrew Vasquez <andrewv@marvell.com>,
+        Girish Basrur <gbasrur@marvell.com>,
+        Giridhar Malavali <gmalavali@marvell.com>,
+        Myron Stowe <mstowe@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Quinn Tran <quinn.tran@qlogic.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [EXT] VPD access Blocked by commit
+ 0d5370d1d85251e5893ab7c90a429464de2e140b
+Thread-Topic: [EXT] VPD access Blocked by commit
+ 0d5370d1d85251e5893ab7c90a429464de2e140b
+Thread-Index: AQHVFx5+bJqdlvMLuEaUREG4NUyQAKaEJpmAgAZSY4A=
+Date:   Mon, 3 Jun 2019 21:30:50 +0000
+Message-ID: <DFF05429-6C84-4DBD-B3D0-14A0BD209E38@marvell.com>
+References: <B5B745A3-96B4-46ED-8F3F-D3636A96057F@marvell.com>
+ <CAErSpo5qy6WuUe9cz1vTBBnc5P_uZaPzc-Yqbag2eBBxzi+ENg@mail.gmail.com>
+ <CAErSpo45bCV7geSPAwBjy5fdQqzDcX61Ybksk65c=intfTWFZQ@mail.gmail.com>
+ <D8764654-E2A0-43B8-97D9-6644F2BC8D0E@marvell.com>
+ <20190530205823.GA45696@google.com>
+In-Reply-To: <20190530205823.GA45696@google.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.11)
+x-originating-ip: [198.186.1.7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fd61acaa-1b69-47d5-f77e-08d6e86ac022
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2944;
+x-ms-traffictypediagnostic: MN2PR18MB2944:
+x-microsoft-antispam-prvs: <MN2PR18MB2944A9964340A40678BD8165D6140@MN2PR18MB2944.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0057EE387C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(346002)(396003)(366004)(39860400002)(199004)(189003)(102836004)(6512007)(15650500001)(36756003)(6916009)(26005)(54906003)(486006)(256004)(14444005)(186003)(446003)(99286004)(6506007)(6246003)(82746002)(11346002)(66446008)(76116006)(53936002)(66946007)(64756008)(66476007)(91956017)(68736007)(4326008)(2616005)(476003)(53546011)(66556008)(73956011)(76176011)(71200400001)(86362001)(478600001)(229853002)(25786009)(14454004)(5660300002)(50226002)(2906002)(33656002)(8936002)(316002)(81156014)(81166006)(66066001)(8676002)(7736002)(6436002)(6486002)(6116002)(83716004)(71190400001)(57306001)(3846002)(5024004)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2944;H:MN2PR18MB2719.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: I/H6BpCDf1+rsiWQFVqwR6T2iKUQLjpOuKg99BbvNd9j8TzbSCfG7dTkXwxXwbaXhnGXhDyEeIUPZm+qxop4qenwvFePnLjKurnc3dettPerA1K6pH7C2brqtncioDPZ7F/gCGFxgo1/OfoxOxKEWSgmvzVicAyE5puIPEdf9NFiZpeklCrXZU7JKmvJpB6MKIAjuqnbPuMOGQpP6dqmFX3282lej+mEbr9kced6wUW3Kga0DGjQv+24M08r/rZ0H79xvZ0ool3YSXw7/u1OcgVA40hveL0f3zKeWsizn5buTQM9APKHj1U6rJZRLqI6OAOQGw/eNc81qMt48zPVbO2PDPNBuXr2hXWepVkGix4FMXdD8jhInwEc3kloWD3996rqk2POU7rqBpCBDLEzMORcP7HHep2zIt4hVEboQOg=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2BCD98764AA87146BB5FAA87E6955DCA@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd61acaa-1b69-47d5-f77e-08d6e86ac022
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 21:30:50.5629
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hmadhani@marvell.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2944
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_17:,,
+ signatures=0
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 6/2/19 6:40 PM, Alex Williamson wrote:
-> On Sun, 2 Jun 2019 19:44:14 -0500
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> 
->> [+cc Alex, Lukas]
->>
->> On Fri, May 31, 2019 at 09:55:20AM -0700, JD Zheng wrote:
->>> Hello,
->>>
->>> I am running DPDK 18.11+SPDK 19.04 with v5.1 kernel. DPDK/SPDK uses SSD vfio
->>> devices and after running SPDK's nvmf_tgt, unplugging a SSD cause kernel to
->>> print out following:
->>> [  105.426952] vfio-pci 0000:04:00.0: not ready 2047ms after FLR; waiting
->>> [  107.698953] vfio-pci 0000:04:00.0: not ready 4095ms after FLR; waiting
->>> [  112.050960] vfio-pci 0000:04:00.0: not ready 8191ms after FLR; waiting
->>> [  120.498953] vfio-pci 0000:04:00.0: not ready 16383ms after FLR; waiting
->>> [  138.418957] vfio-pci 0000:04:00.0: not ready 32767ms after FLR; waiting
->>> [  173.234953] vfio-pci 0000:04:00.0: not ready 65535ms after FLR; giving up
->>>
->>> Looks like it is a PCI hotplug racing condition between DPDK's
->>> eal-intr-thread thread and kernel's pciehp thread. And it causes lockup in
->>> pci_dev_wait() at kernel side.
->>>
->>> When SSD is removed, eal-intr-thread immediately receives
->>> RTE_INTR_HANDLE_ALARM and handler calls rte_pci_detach_dev() and at kernel
->>> side vfio_pci_release() is triggered to release this vfio device, which
->>> calls pci_try_reset_function(), then _pci_reset_function_locked().
->>> pci_try_reset_function acquires the device lock but
->>> _pci_reset_function_locked() doesn't return, therefore lock is NOT released.
-> 
-> To what extent does vfio-pci need to learn about surprise hotplug?  My
-> expectation is that the current state of the code would only support
-> cooperative hotplug.  When a device is surprise removed, what backs a
-> user's mmaps?  AIUI, we don't have a revoke interface to invalidate
-> these.  We should probably start with an RFE or some development effort
-> to harden vfio-pci for surprise hotplug, it's not surprising it doesn't
-> just work TBH.  Thanks,
-> 
-> Alex
-> 
-> 
-
-I did see other issues that DPDK unmap vifo device memory was stuck due 
-to surprise removal.
-
-Are you saying that vfio-pci surprise removal is not fully implemented yet?
-
->>> Inside _pci_reset_function_locked(), pcie_has_flr(), pci_pm_reset(), etc.
->>> call pci_dev_wait() at the end but it doesn't return and print out above
->>> message until 65s timeout.
->>>
->>> At kernel pciehp side, it also detects the removal but doesn't run
->>> immediately as it is configured as "pciehp.pciehp_poll_time=5". So a couple
->>> of seconds later, it calls pciehp_unconfigure_device -> pci_walk_bus ->
->>> pci_dev_set_disconnected. pci_dev_set_disconnected() couldn't get the device
->>> lock and is stuck too because the lock is hold by eal-intr-thread.
->>>
->>> The first issue is in pci_dev_wait(). It calls pci_read_config_dword() and
->>> only when id is not all ones, it can return. But when SSD is physically
->>> removed, id retrieved is always all ones therefore, it has to wait for FLR
->>> 65s timeout to return.
->>>
->>> I did the following to check return value of pci_read_config_dword() to fix
->>> this:
->>> --- a/drivers/pci/pci.c
->>> +++ b/drivers/pci/pci.c
->>> @@ -4439,7 +4439,11 @@ static int pci_dev_wait(struct pci_dev *dev, char
->>> *reset_type, int timeout)
->>>
->>>                  msleep(delay);
->>>                  delay *= 2;
->>> -               pci_read_config_dword(dev, PCI_COMMAND, &id);
->>> +               if (pci_read_config_dword(dev, PCI_COMMAND, &id) ==
->>> +                   PCIBIOS_DEVICE_NOT_FOUND) {
->>> +                       pci_info(dev, "device disconnected\n");
->>> +                       return -ENODEV;
->>> +               }
->>>          }
->>>
->>>          if (delay > 1000)
->>>
->>> The second issue is that due to lock up described above, the
->>> pci_dev_set_disconnected() is stuck and pci_read_config_dword() won't return
->>> PCIBIOS_DEVICE_NOT_FOUND.
->>>
->>> I didn't find a easy way to fix it. Maybe use device lock in
->>> pci_dev_set_disconnected() is too coarse and we need a finer device
->>> err_state lock?
->>>
->>> BTW, pci_dev_set_disconnected wasn't using device lock until this change
->>> a6bd101b8f.
->>>
->>> Any suggestions to fix this problem?
->>
->> Would you mind opening a report at https://bugzilla.kernel.org and
->> attaching the complete dmesg log and "lspci -vv" output?
-
-I submitted one as https://bugzilla.kernel.org/show_bug.cgi?id=203797
-
->>
->> Out of curiosity, why do you use "pciehp.pciehp_poll_time=5"?
-
-This was chosen by other engineer. I tried shorter polling time, which 
-doesn't make difference.
-
-I also tried pciehp.pciehp_poll_mode=0 but hotplug doesn't seem working.
-Should I use poll mode or not?
-
->>
->> Bjorn
-> 
+SGkgQmpvcm4sIA0KDQo+IE9uIE1heSAzMCwgMjAxOSwgYXQgMTo1OCBQTSwgQmpvcm4gSGVsZ2Fh
+cyA8aGVsZ2Fhc0BrZXJuZWwub3JnPiB3cm90ZToNCj4gDQo+IE9uIFRodSwgTWF5IDMwLCAyMDE5
+IGF0IDA3OjMzOjAxUE0gKzAwMDAsIEhpbWFuc2h1IE1hZGhhbmkgd3JvdGU6DQo+IA0KPj4gV2Ug
+YXJlIGFibGUgdG8gc3VjY2Vzc2Z1bGx5IHJlYWQgVlBEIGNvbmZpZyBkYXRhIHVzaW5nIGxzcGNp
+IGFuZCBjYXQNCj4+IGNvbW1hbmQNCj4gDQo+IFllcywgeW91IG1lbnRpb25lZCB0aGF0IGluIHRo
+ZSB2ZXJ5IGZpcnN0IGVtYWlsLiAgSSB3YXMgaG9waW5nIHlvdQ0KPiB3b3VsZCBpbmNsdWRlIHRo
+ZSBhY3R1YWwgZGF0YSwgZS5nLiwgImNhdCB2cGQgfCB4eGQiLiAgVGhhdCB3b3VsZCBoZWxwDQo+
+IHVzIGZpZ3VyZSBvdXQgd2h5IHlvdSBkb24ndCBzZWUgdGhlIHBhbmljIGFueSBtb3JlLiAgSSBz
+dXNwZWN0IGVpdGhlcjoNCj4gDQoNCk1pc3NlZCB0aGUgcmVxdWVzdCBmb3IgeHhkIG91dHB1dC4g
+SSBnb3QgYWNjZXNzIGJhY2sgdG9kYXkgZm9yIHRoZSBzeXN0ZW0gDQphbmQgY2FwdHVyZWQgaXQg
+Zm9yIHlvdQ0KDQojIGNhdCAvc3lzL2NsYXNzL3BjaV9idXMvMDAwMFw6MTMvZGV2aWNlLzAwMDBc
+OjEzXDowMC4wL3ZwZCAgfCB4eGQNCjAwMDAwMDAwOiA4MjJkIDAwNTEgNGM2ZiA2NzY5IDYzMjAg
+MzMzMiA0NzYyIDIwMzIgIC4tLlFMb2dpYyAzMkdiIDINCjAwMDAwMDEwOiAyZDcwIDZmNzIgNzQy
+MCA0NjQzIDIwNzQgNmYyMCA1MDQzIDQ5NjUgIC1wb3J0IEZDIHRvIFBDSWUNCjAwMDAwMDIwOiAy
+MDQ3IDY1NmUgMzMyMCA3ODM4IDIwNDEgNjQ2MSA3MDc0IDY1NzIgICBHZW4zIHg4IEFkYXB0ZXIN
+CjAwMDAwMDMwOiA5MDM5IDAwNTAgNGUwNyA1MTRjIDQ1MzIgMzczNCAzMjUzIDRlMGQgIC45LlBO
+LlFMRTI3NDJTTi4NCjAwMDAwMDQwOiA0MTQ2IDQ0MzEgMzUzMyAzMzU5IDMwMzIgMzkzOSAzOTQ1
+IDQzMGYgIEFGRDE1MzNZMDI5OTlFQy4NCjAwMDAwMDUwOiA0MjRiIDMzMzIgMzEzMCAzNDMwIDM3
+MmQgMzAzNSAyMDMwIDMzNTYgIEJLMzIxMDQwNy0wNSAwM1YNCjAwMDAwMDYwOiAzOTA2IDMwMzEg
+MzAzMSAzODM5IDUyNTYgMDFhMCA3OCAgICAgICAgIDkuMDEwMTg5UlYuLngNCg0KDQpQQ0llIHRy
+YWNlIGFsc28gY29uZmlybWVkIHRoZXJlIGFyZSBubyBSRUFEIGVycm9ycy4gDQooaWYgeW91IG5l
+ZWQgaSBjYW4gYXR0YWNoIC5wZXggZmlsZSBmb3IgcmV2aWV3KQ0KDQoNCj4gIC0gbmV3IFFMb2dp
+YyBmaXJtd2FyZSBmaXhlZCB0aGUgc3RydWN0dXJlIG9mIHRoZSBWUEQgZGF0YSBzbyBMaW51eA0K
+PiAgICBubyBsb25nZXIgYXR0ZW1wdHMgdG8gcmVhZCBwYXN0IHRoZSBlbmQgb2YgdGhlIGltcGxl
+bWVudGVkIHJlZ2lvbiwNCj4gICAgb3IsDQo+IA0KPiAgLSB3ZSBzdGlsbCByZWFkIHBhc3QgdGhl
+IGVuZCBvZiB0aGUgaW1wbGVtZW50ZWQgVlBEIHJlZ2lvbiwgYnV0IHRoZQ0KPiAgICBkZXZpY2Ug
+ZG9lc24ndCByZXBvcnQgYW4gZXJyb3Igb3IgdGhlIHBsYXRmb3JtIGRlYWxzIHdpdGggdGhlDQo+
+ICAgIGVycm9yIHdpdGhvdXQgY2F1c2luZyBhIHBhbmljLg0KPiANCj4+IFdlIGFsc28gdmVyaWZp
+ZWQgdGhpcyBzYW1lIGNvbmZpZ3VyYXRpb24gb24gYSBTdXBlck1pY3JvIFgxMFNSQS1GDQo+PiBz
+ZXJ2ZXIgKHdoaWNoIGkgaGFkIHNlbnQgaW4gZWFybGllciBlbWFpbCnigJkgYW5kIHdlcmUgYWJs
+ZSB0byB2ZXJpZnkNCj4+IHRoYXQgdGhlIFZQRCByZWFkIHdhcyBnb29kIGFuZCB0aGVyZSB3ZXJl
+IG5vIGVycm9ycyBvbiBQQ0llIHRyYWNlLg0KPiANCj4gU2luY2UgeW91IHNhdyBubyBQQ0llIGVy
+cm9ycyBoZXJlLCB0aGlzIHN1Z2dlc3RzIHRoYXQgbmV3IGZpcm13YXJlIGhhcw0KPiBjaGFuZ2Vk
+IHRoZSBmb3JtYXQgb2YgdGhlIFZQRCBkYXRhLg0KPiANCj4+IEdpdmVuIHRoaXMgaW5mb3JtYXRp
+b24sIFBsZWFzZSBjb25zaWRlciByZXZlcnRpbmcgdGhlIHBhdGNoIHVudGlsIHdlDQo+PiBmdXJ0
+aGVyIGRlYnVnIHRoZSBpc3N1ZSBhbmQgcmVzb2x2ZSBhcyBpdCBpcyBhZmZlY3RpbmcgZ2VuZXJh
+bA0KPj4gYXZhaWxhYmlsaXR5IG9mIG91ciBhZGFwdGVyLg0KPiANCj4gMSkgVGhlIHdheSBMaW51
+eCB3b3JrcyBpcyB0aGF0IHlvdSB3b3VsZCBwb3N0IGEgcGF0Y2ggdGhhdCBkb2VzIHRoZQ0KPiBy
+ZXZlcnQgeW91J2QgbGlrZSB0byBzZWUgZG9uZS4NCj4gDQoNCkNvcnJlY3QuIEkgd2FzIHRyeWlu
+ZyBnZXQgeW91ciBidXktaW4gYmVmb3JlIGkgc2VuZCBvdXQgcGF0Y2guDQoNCj4gMikgSXQncyB1
+bmxpa2VseSB0aGF0IGEgc2ltcGxlIHJldmVydCBvZiAwZDUzNzBkMWQ4NTIgKCJQQ0k6IFByZXZl
+bnQNCj4gVlBEIGFjY2VzcyBmb3IgUUxvZ2ljIElTUDI3MjIiKSBpcyB0aGUgcmlnaHQgYW5zd2Vy
+IGJlY2F1c2UgdGhhdCB3b3VsZA0KPiBtYWtlIEV0aGFuJ3MgbWFjaGluZSBwYW5pYyBhZ2Fpbi4g
+IEl0J3MgcG9zc2libGUgdGhhdCBhIFFMb2dpYw0KPiBmaXJtd2FyZSB1cGRhdGUgd291bGQgYXZv
+aWQgdGhlIHBhbmljLCBidXQgd2UgY2FuJ3Qgc2ltcGx5IHJldmVydCB0aGUNCj4gcGF0Y2ggYW5k
+IGZvcmNlIHVzZXJzIHRvIGRvIHRoYXQgdXBkYXRlLg0KPiANCg0KSSBkaWQgcmVhY2hlZCBvdXQg
+dG8gT3JhY2xlIHRvIGhlbHAgbG9jYXRlIG9yaWdpbmFsIGNhcmQgd2hlcmUgRXRoYW4gaGFkDQpp
+c3N1ZSBhbmQgaSBsZWFybmVkIHRoYXQgaGUgaXMgbm8gbG9uZ2VyIHdpdGggT3JhY2xlLiANCg0K
+PiBJZiBhIFFMb2dpYyBmaXJtd2FyZSB1cGRhdGUgaW5kZWVkIGZpeGVkIHRoZSBWUEQgZm9ybWF0
+LCBJIHN1Z2dlc3QNCj4gdGhhdCB5b3UgYXNrIHRoZSBmb2xrcyByZXNwb25zaWJsZSBmb3IgdGhl
+IGZpcm13YXJlIHRvIGlkZW50aWZ5IHRoZQ0KPiBzcGVjaWZpYyB2ZXJzaW9uIHdoZXJlIHRoYXQg
+d2FzIGZpeGVkIGFuZCBob3cgdGhlIE9TIGNhbiBmaWd1cmUgdGhhdA0KPiBvdXQuDQo+IA0KDQpT
+dGlsbCB3YWl0aW5nIG9uIHRoaXMgZGF0YS4gDQoNCj4gVGhlbiB5b3UgY291bGQgbWFrZSBhIG5l
+dyBxdWlyayBzcGVjaWZpYyB0byB0aGlzIGRldmljZSB0aGF0IGFsbG93cw0KPiBWUEQgcmVhZHMg
+aWYgdGhlIGFkYXB0ZXIgaGFzIG5ldyBlbm91Z2ggZmlybXdhcmUuICBJZiBpdCBmaW5kcyBvbGRl
+cg0KPiBmaXJtd2FyZSwgaXQgY291bGQgZXZlbiBwcmludCBhIG1lc3NhZ2Ugc3VnZ2VzdGluZyB0
+aGF0IHVzZXJzIGNvdWxkDQo+IHVwZGF0ZSB0aGUgZmlybXdhcmUgaWYgdGhleSBuZWVkIHRvIHJl
+YWQgVlBEIGRhdGEuDQo+IA0KPiBCam9ybg0KDQpTaW5jZSBtYWpvciBPRU1zIGFyZSBoYXZpbmcg
+aXNzdWVzIHVzaW5nIGFkYXB0ZXIgdG8gZXh0cmFjdCBWUEQgZGF0YSwgV2UgDQp3b3VsZCBsaWtl
+IHRvIGdldCB0aGVtIHJlbGllZiBmaXJzdCBhbmQgdGhlbiBhcHByb2FjaCB0aGlzIGlzc3VlIHdp
+dGggbW9yZQ0KZGV0YWlsZWQgZml4IGlmIG5lZWRlZC4gDQoNClRoYW5rcywNCkhpbWFuc2h1
