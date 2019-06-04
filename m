@@ -2,145 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 139ED351B5
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 23:16:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B81E35483
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2019 01:47:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbfFDVQI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jun 2019 17:16:08 -0400
-Received: from mail-wm1-f48.google.com ([209.85.128.48]:38050 "EHLO
-        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfFDVQI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 17:16:08 -0400
-Received: by mail-wm1-f48.google.com with SMTP id t5so183236wmh.3
-        for <linux-pci@vger.kernel.org>; Tue, 04 Jun 2019 14:16:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gigaio-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/LhLSypOW9eEI9FrLebgFNQ023mgsanhRlBmqRqaKH8=;
-        b=DB1f081XOEIYiO+XPUFzSHj+wTzFUlTQyO/mCt6sXG2zzgQq6gKxoRBmidaLihy7md
-         Y/oKCJIK3rznJw+x4YC567yHM5+Qjnemes/tW4nMzcAnkT/UTQcFp/gHGQ0nlbjIBpkV
-         ou3wDNEFgn5ZKdCDagPh+cq/3D229OcNLbqG3WTVknlmTDOFxyV+XFBSS+hHUqFcNrNS
-         YT23YwGIZlbTKHXoUdcKnIjpCt+vYDmHIf16z3vhoBAaPSekGC74N6EcsO7ZDhDjj3L/
-         SQF/tEKDGWkPIB+abSziCAqCWd2xvU12p2eKSVUWkkWra2x9XnMantgNqHpVBeIxjABr
-         SAAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/LhLSypOW9eEI9FrLebgFNQ023mgsanhRlBmqRqaKH8=;
-        b=ZZlTIM3aAJdAakN5Lr7qc4798seo6GNpTn4fQSfNOhXih6oJ7B0y+TCcaNeolpNAkJ
-         qGfUuCYtqEFmUzASFAVNBu9GbhEzpzrRi9ZWY+qAkJibONOqBB/GVSZclSFa/SunYe6a
-         cuLgVE5guJwiMlpumUp4FZmbUFgs79wFs+d/gnt+yiCs457iX3H28Weiv8Cs7PPCpC0Z
-         dHxCAJSNqAeKP+zJ3cBsYjtI3aI30qTgb/C34WKg9DqAOZNSFCJMehB/pwViYYFcm+Ri
-         yNyei6rLwsE3thWuZcQEjb2KPcjxyp4m9ApycGmjuhMSarWzMh3nw2yfAU5SQDtN/1/b
-         4TIg==
-X-Gm-Message-State: APjAAAWntUqiOFX7SzBnO5YFyj5nexHqp2JbfMVl4OQxy//KjLcEuxeh
-        4+JIlb8q0zRD07ngHvUC22Yot+lnzOQiHn8NDCBFnTQkS6s=
-X-Google-Smtp-Source: APXvYqxvUTJEkr1DnaWygDWy/4qusF2MNIC7WBZ9dpXPnc0TcjVY0az8H0+7pUI3bOxF3Ri/Z/T8zEr08JZb61B2z9M=
-X-Received: by 2002:a1c:40c6:: with SMTP id n189mr19170911wma.118.1559682965882;
- Tue, 04 Jun 2019 14:16:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAOQPn8sX2G-Db-ZiFpP2SMKbkQnPyk63UZijAY0we+DoZsmDtQ@mail.gmail.com>
- <CAADLhr49ke_3s25gW11qZ+H-Jjje-E00WMHiMDbKU=mcCQtb3g@mail.gmail.com>
- <cdcd00e9-056b-3364-cfbc-5bcb5bcff91e@amd.com> <CAOQPn8sQ+B97UptHpxJgdmcMxBZrqGynQR8qTc3q77fAODRH-A@mail.gmail.com>
- <8e4ccf44-9e4f-8007-ddcc-431440f9d533@amd.com>
-In-Reply-To: <8e4ccf44-9e4f-8007-ddcc-431440f9d533@amd.com>
-From:   Eric Pilmore <epilmore@gigaio.com>
-Date:   Tue, 4 Jun 2019 14:15:54 -0700
-Message-ID: <CAOQPn8vE4SbDBt_fu3YsqysHspjZ9rumsDHT9RQe+ZT7HUfKCQ@mail.gmail.com>
-Subject: Re: Fwd: AMD IO_PAGE_FAULT w/NTB on Write ops?
-To:     Gary R Hook <ghook@amd.com>
-Cc:     "Mehta, Sanju" <Sanju.Mehta@amd.com>,
-        S Taylor <staylor@gigaio.com>, D Meyer <dmeyer@gigaio.com>,
-        linux-ntb <linux-ntb@googlegroups.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+        id S1726354AbfFDXrS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jun 2019 19:47:18 -0400
+Received: from gate.crashing.org ([63.228.1.57]:40263 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726269AbfFDXrR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:47:17 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x54Nl3in020903;
+        Tue, 4 Jun 2019 18:47:03 -0500
+Message-ID: <a1c90cfb9ce4062b4823c6647d7709baf1c5534f.camel@kernel.crashing.org>
+Subject: Re: Bug report: AER driver deadlock
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Sinan Kaya <Okaya@kernel.org>,
+        "Fangjian (Turing)" <f.fangjian@huawei.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Date:   Wed, 05 Jun 2019 09:47:02 +1000
+In-Reply-To: <CAK9iUCPREGruU7zGqnkS9w_x8Q7iE8twveEp2dn8ArupTTQyHA@mail.gmail.com>
+References: <a7dcc378-6101-ac08-ec8e-be7d5c183b49@huawei.com>
+         <CAK9iUCPREGruU7zGqnkS9w_x8Q7iE8twveEp2dn8ArupTTQyHA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 9, 2019 at 1:03 PM Gary R Hook <ghook@amd.com> wrote:
->
-> On 4/24/19 5:04 PM, Eric Pilmore wrote:
-> >
-> > Thanks the for the response.  We are using the correct device for the
-> > dma_alloc_coherent(). Upon further investigation what we are finding
-> > is that apparently the AMD IOMMU support can only manage one alias, as
-> > opposed to Intel IOMMU support which can support multiple. Not clear
-> > at this time if it's a software limitation in the AMD IOMMU kernel
-> > support or an imposed limitation of the hardware. Still investigating.
->
-> Please define 'alias'?
+On Tue, 2019-06-04 at 10:34 -0400, Sinan Kaya wrote:
+> On 6/3/19, Fangjian (Turing) <f.fangjian@huawei.com> wrote:
+> > Hi, We met a deadlock triggered by a NONFATAL AER event during a sysfs
+> > "sriov_numvfs" operation. Any suggestion to fix such deadlock ?
+> > 
+> >   enable one VF
+> >   # echo 1 > /sys/devices/pci0000:74/0000:74:00.0/0000:75:00.0/sriov_numvfs
+> > 
+> >   The sysfs "sriov_numvfs" side is:
+> > 
+> >     sriov_numvfs_store
+> >       device_lock                               # hold the device_lock
+> >         ...
+> >         pci_enable_sriov
+> >           sriov_enable
+> >             ...
+> >             pci_device_add
+> >               down_write(&pci_bus_sem) 	        # wait for
+> > up_read(&pci_bus_sem)
+> > 
+> >   The AER side is:
+> > 
+> >     pcie_do_recovery
+> >       pci_walk_bus
+> >         down_read(&pci_bus_sem)                 # hold the rw_semaphore
+> >         report_resume
+> 
+> Should we replace these device lock with try lock loop with some sleep
+> statements. This could solve the immediate deadlock issues until
+> someone implements granular locking in pci.
 
-Hi Gary,
+That won't necessarily solve this AB->BA problem. I think the issue
+here is that sriov shouldn't device_lock before doing something that
+can take the pci_bus_sem.
 
-I appreciate the response. Sorry for the late reply. Got sidetracked
-with other stuff.
-
-I will try to answer this as best I can. Sorry if my terminology might
-be off as I'm still a relative newbie with some of this.
-
-The "alias" is basically another BDF (or ProxyID) that wants to be
-associated with the same IOMMU resources as some primary BDF.
-Reference <drivers/pci/quirks.c>. In the scenario that we have we are
-utilizing NTB and through this bridge will come requests (TLPs) that
-will not necessarily have the ReqID as the BDF of the switch device
-that contains this bridge. Instead, the ReqID will be a "translated"
-(Proxy) BDF of sourcing devices on the other side of the
-Non-Transparent Bridge. In our case our NTB is a Switchtec device and
-the quirk quirk_switchtec_ntb_dma_alias() is used as a means of
-associating these aliases (aka ProxyID or Translated ReqID) with the
-NT endpoint in the local host. On Xeon platforms, the framework
-supports allowing multiple aliases to be defined for a particular
-IOMMU and everything works great. However, with the AMD cpu, it
-appears the IOMMU framework is only accepting just one alias. Note
-Logan's earlier response @ Mon, Apr 22, 10:31 AM. In our case the one
-that is accepted is via the path for a processor Read, but Processor
-Writes go through a slightly different path resulting in a different
-ReqID. As Logan points out it seems since the AMD IOMMU code is only
-accepting one alias, the Write ReqID looks foreign and thus results in
-the IOMMU faults.
-
->
-> The IO_PAGE_FAULT error is described on page 142 of the AMD IOMMU spec,
-> document #48882. Easily found via a search.
->
-> The flags value of 0x0070 translates to PE, RW, PR. The page was
-> present, the transaction was a write, and the peripheral didn't have
-> permission. That implies that mapping hadn't been done.
->
-> Not being sure how that device presents, or what you're doing with IVHD
-> info, I can't comment further. I can say that the AMD IOMMU provides for
-> a single exclusion range, but as many unity ranges as you wish.
-
-I'm currently not doing anything with IVHD. The devices on the other
-side of the NTB that need to be aliased can be anything from a remote
-Host processor, NVMe drive, GPU, etc., anything that wants to send a
-memory transaction to the local host.
-
-If you have any insight into how the AMD IOMMU support in the kernel
-could be extended for multiple aliases, or whether there is a hardware
-limitation that restricts it to just one, that would be greatly
-appreciated.
-
-Thanks,
-Eric
+Ben.
 
 
+> >           device_lock                           # wait for device_unlock()
+> > 
+> > The calltrace is as below:
+> > 
+> > [  258.411464] INFO: task kworker/0:1:13 blocked for more than 120 seconds.
+> > [  258.418139]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
+> > [  258.424379] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables
+> > this message.
+> > [  258.432172] kworker/0:1     D    0    13      2 0x00000028
+> > [  258.437640] Workqueue: events aer_recover_work_func
+> > [  258.442496] Call trace:
+> > [  258.444933]  __switch_to+0xb4/0x1b8
+> > [  258.448409]  __schedule+0x1ec/0x720
+> > [  258.451884]  schedule+0x38/0x90
+> > [  258.455012]  schedule_preempt_disabled+0x20/0x38
+> > [  258.459610]  __mutex_lock.isra.1+0x150/0x518
+> > [  258.463861]  __mutex_lock_slowpath+0x10/0x18
+> > [  258.468112]  mutex_lock+0x34/0x40
+> > [  258.471413]  report_resume+0x1c/0x78
+> > [  258.474973]  pci_walk_bus+0x58/0xb0
+> > [  258.478451]  pcie_do_recovery+0x18c/0x248
+> > [  258.482445]  aer_recover_work_func+0xe0/0x118
+> > [  258.486783]  process_one_work+0x1e4/0x468
+> > [  258.490776]  worker_thread+0x40/0x450
+> > [  258.494424]  kthread+0x128/0x130
+> > [  258.497639]  ret_from_fork+0x10/0x1c
+> > [  258.501329] INFO: task flr.sh:4534 blocked for more than 120 seconds.
+> > [  258.507742]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
+> > [  258.513980] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables
+> > this message.
+> > [  258.521774] flr.sh          D    0  4534   4504 0x00000000
+> > [  258.527235] Call trace:
+> > [  258.529671]  __switch_to+0xb4/0x1b8
+> > [  258.533146]  __schedule+0x1ec/0x720
+> > [  258.536619]  schedule+0x38/0x90
+> > [  258.539749]  rwsem_down_write_failed+0x14c/0x210
+> > [  258.544347]  down_write+0x48/0x60
+> > [  258.547648]  pci_device_add+0x1a0/0x290
+> > [  258.551469]  pci_iov_add_virtfn+0x190/0x358
+> > [  258.555633]  sriov_enable+0x24c/0x480
+> > [  258.559279]  pci_enable_sriov+0x14/0x28
+> > [  258.563101]  hisi_zip_sriov_configure+0x64/0x100 [hisi_zip]
+> > [  258.568649]  sriov_numvfs_store+0xc4/0x190
+> > [  258.572728]  dev_attr_store+0x18/0x28
+> > [  258.576375]  sysfs_kf_write+0x3c/0x50
+> > [  258.580024]  kernfs_fop_write+0x114/0x1d8
+> > [  258.584018]  __vfs_write+0x18/0x38
+> > [  258.587404]  vfs_write+0xa4/0x1b0
+> > [  258.590705]  ksys_write+0x60/0xd8
+> > [  258.594007]  __arm64_sys_write+0x18/0x20
+> > [  258.597914]  el0_svc_common+0x5c/0x100
+> > [  258.601646]  el0_svc_handler+0x2c/0x80
+> > [  258.605381]  el0_svc+0x8/0xc
+> > [  379.243461] INFO: task kworker/0:1:13 blocked for more than 241 seconds.
+> > [  379.250134]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
+> > [  379.256373] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables
+> > this message.
+> > 
+> > 
+> > Thank you,
+> > Jay
+> > 
+> > 
 
-
--- 
-Eric Pilmore
-epilmore@gigaio.com
-http://gigaio.com
-Phone: (858) 775 2514
-
-This e-mail message is intended only for the individual(s) to whom
-it is addressed and may contain information that is privileged,
-confidential, proprietary, or otherwise exempt from disclosure under
-applicable law. If you believe you have received this message in
-error, please advise the sender by return e-mail and delete it from
-your mailbox.
-Thank you.
