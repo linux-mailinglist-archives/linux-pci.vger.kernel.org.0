@@ -2,43 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FF8C3458A
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 13:38:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77FCE345BA
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 13:43:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfFDLil (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jun 2019 07:38:41 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:2599 "EHLO
+        id S1727269AbfFDLnL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jun 2019 07:43:11 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:2792 "EHLO
         hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfFDLil (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 07:38:41 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf6583e0000>; Tue, 04 Jun 2019 04:38:38 -0700
+        with ESMTP id S1727249AbfFDLnK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 07:43:10 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf6594c0000>; Tue, 04 Jun 2019 04:43:08 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 04 Jun 2019 04:38:38 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 04 Jun 2019 04:43:08 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 04 Jun 2019 04:38:38 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Jun
- 2019 11:38:38 +0000
+        by hqpgpgate101.nvidia.com on Tue, 04 Jun 2019 04:43:08 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Jun
+ 2019 11:43:08 +0000
 Received: from [10.24.216.245] (10.124.1.5) by DRHQMAIL107.nvidia.com
  (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Jun 2019
- 11:38:36 +0000
-Subject: Re: [PATCH 1/2] PCI: Code reorganization for VGA device link
+ 11:43:06 +0000
+Subject: Re: [PATCH 2/2] PCI: Create device link for NVIDIA GPU
 To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>
+CC:     <linux-kernel@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        <linux-pci@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
 References: <20190531050109.16211-1-abhsahu@nvidia.com>
- <20190531050109.16211-2-abhsahu@nvidia.com>
- <20190603171552.GB189360@google.com>
-X-Nvconfidentiality: public
+ <20190531050109.16211-3-abhsahu@nvidia.com>
+ <20190531203908.GA58810@google.com>
+ <d0824334-99f2-d42e-3a5e-3bdc4c1c37c8@nvidia.com>
+ <20190603172246.GC189360@google.com>
 From:   Abhishek Sahu <abhsahu@nvidia.com>
-Message-ID: <9b15f919-583b-a445-3d47-6a2dbfc9cbb3@nvidia.com>
-Date:   Tue, 4 Jun 2019 17:08:33 +0530
+X-Nvconfidentiality: public
+Message-ID: <4b4876eb-b3a0-6796-9d7a-af518a396689@nvidia.com>
+Date:   Tue, 4 Jun 2019 17:13:03 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190603171552.GB189360@google.com>
+In-Reply-To: <20190603172246.GC189360@google.com>
 X-Originating-IP: [10.124.1.5]
 X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
  DRHQMAIL107.nvidia.com (10.27.9.16)
@@ -46,17 +49,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559648318; bh=qNGxiWS2QRLeAyI8fjEvPOChZL49AO194zOzra25Fys=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+        t=1559648588; bh=6bS/IO5bk7Trmz3av9AdQK8DCTTtSrwKry5+scglc1k=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
          Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
          X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
          Content-Transfer-Encoding;
-        b=Vt0CXTF9zaE69sEciDiQw0/zZ6kEXe2OXK7q8sQ3+9ThA2XO8AvhU9oWkuKL84RQe
-         nRhliecJxxyc8vX8LoKovAZIFZWUDG2FRXkYAWN9WbAQLYhjQn/ihx4n7lOiX36K4n
-         9cWu5fTIRKWhbbRsaBaMMmHr5toJTvGmPeURecgdZcs04MGJGLVUJKwxUCGQ8+APYj
-         MEA1l7CMEnTdF7mNKQ9YFYKnsWX4Ieu+2Zb4ErLqbNDA4MeONCDpliWZUUVSyNIP4j
-         22QEg54QHTYW9SNKUoJHGBHcF5zSSKMvJxPfK1Frh/Jo8QvZAtuoDgKugPGGSl29YM
-         PuiUpWp9VN7AA==
+        b=qN3fENpIcYGhVNEXzRi76oHABsVUm8dOBkVtveqTV6gwvUJfPc0JD7CcHoDoasDgc
+         RR4OF3BILpkhwZJSEq3huwKmMKuho1iPca7DBgbyzh6na+5oSKde5oK/nYGIR8lDVT
+         AAv5OdsBIywfrvzRcPX3+EOx2r1b9BAWRouxnD5RRVZbi9bApCgcqFqoiSplpT5j8a
+         4JtM0FB6RoM+E9COTHrkREqkcxZqZcDuBm/yhqjRUGcRCGk21JVwD8Kfxx159JePOB
+         IGXnCnIYiZVCYlP0NWWGZVum/KxcpsXzRFCn/rFPw/z7hDs3nBoHjR8vK6Cx812ATR
+         XLOaGaRKc4Y6w==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
@@ -64,124 +67,86 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 6/3/2019 10:45 PM, Bjorn Helgaas wrote:
-> [+cc Lukas]
+On 6/3/2019 10:52 PM, Bjorn Helgaas wrote:
+> [+cc Rafael, just FYI]
 > 
-> On Fri, May 31, 2019 at 10:31:08AM +0530, Abhishek Sahu wrote:
->> This patch does minor code reorganization. It introduces a helper
->> function which creates device link from the non-VGA controller
->> (consumer) to the VGA (supplier) and uses this helper function for
->> creating device link from integrated HDA controller to VGA. It will
->> help in subsequent patches which require a similar kind of device
->> link from USB/Type-C USCI controller to VGA.
+> On Mon, Jun 03, 2019 at 01:30:51PM +0530, Abhishek Sahu wrote:
+>> On 6/1/2019 2:09 AM, Bjorn Helgaas wrote:
+>>> On Fri, May 31, 2019 at 10:31:09AM +0530, Abhishek Sahu wrote:
+>>>> NVIDIA Turing GPUs include hardware support for USB Type-C and
+>>>> VirtualLink. It helps in delivering the power, display, and data
+>>>> required to power VR headsets through a single USB Type-C connector.
+>>>> The Turing GPU is a multi-function PCI device has the following
+>>>> four functions:
+>>>>
+>>>> 	- VGA display controller (Function 0)
+>>>> 	- Audio controller (Function 1)
+>>>> 	- USB xHCI Host controller (Function 2)
+>>>> 	- USB Type-C USCI controller (Function 3)
+>>>>
+>>>> The function 0 is tightly coupled with other functions in the
+>>>> hardware. When function 0 goes in runtime suspended state,
+>>>> then it will do power gating for most of the hardware blocks.
+>>>> Some of these hardware blocks are used by other functions which
+>>>> leads to functional failure. So if any of these functions (1/2/3)
+>>>> are active, then function 0 should also be in active state.
+>>>
+>>>> 'commit 07f4f97d7b4b ("vga_switcheroo: Use device link for
+>>>> HDA controller")' creates the device link from function 1 to
+>>>> function 0. A similar kind of device link needs to be created
+>>>> between function 0 and functions 2 and 3 for NVIDIA Turing GPU.
+>>>
+>>> I can't point to language that addresses this, but this sounds like a
+>>> case of the GPU not conforming to the PCI spec.  The general
+>>> assumption is that the OS should be able to discover everything it
+>>> needs to do power management directly from the architected PCI config
+>>> space.
 >>
->> Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
->> ---
->>  drivers/pci/quirks.c | 44 +++++++++++++++++++++++++++++---------------
->>  1 file changed, 29 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index a077f67fe1da..a20f7771a323 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -4916,36 +4916,50 @@ static void quirk_fsl_no_msi(struct pci_dev *pdev)
->>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, PCI_ANY_ID, quirk_fsl_no_msi);
->>  
->>  /*
->> - * GPUs with integrated HDA controller for streaming audio to attached displays
->> - * need a device link from the HDA controller (consumer) to the GPU (supplier)
->> - * so that the GPU is powered up whenever the HDA controller is accessed.
->> - * The GPU and HDA controller are functions 0 and 1 of the same PCI device.
->> - * The device link stays in place until shutdown (or removal of the PCI device
->> - * if it's hotplugged).  Runtime PM is allowed by default on the HDA controller
->> - * to prevent it from permanently keeping the GPU awake.
->> + * GPUs can be multi-function PCI device which can contain controllers other
->> + * than VGA (like Audio, USB, etc.). Internally in the hardware, these non-VGA
->> + * controllers are tightly coupled with VGA controller. Whenever these
->> + * controllers are runtime active, the VGA controller should also be in active
->> + * state. Normally, in these GPUs, the VGA controller is present at function 0.
->> + *
->> + * This is a helper function which creates device link from the non-VGA
->> + * controller (consumer) to the VGA (supplier). The device link stays in place
->> + * until shutdown (or removal of the PCI device if it's hotplugged).
->> + * Runtime PM is allowed by default on these non-VGA controllers to prevent
->> + * it from permanently keeping the GPU awake.
->>   */
->> -static void quirk_gpu_hda(struct pci_dev *hda)
->> +static void
->> +pci_create_device_link_with_vga(struct pci_dev *pdev, unsigned int devfn)
+>>  The GPU is following PCIe spec but following is the implementation
+>>  from HW side
 > 
-> There's nothing in this functionality that depends on VGA, so let's
-> remove "GPU, "VGA", etc from the description, the function name, the
-> local variable name, and the log message.  Maybe you need to allow the
-
- Thanks. Then we can make this function generic where we can pass
- device link supplier and supplier pci class mask. It will help
- in creating device link from one function (other than 0 also) to
- any another function. Later on, same can be used by non
- GPUs devices also, if required.
-
-> caller to supply the class type (PCI_BASE_CLASS_DISPLAY for current
-> users, but Lukas mentioned a NIC that might be able to use this too).
-> 
-> Follow the prevailing indentation style, with return type and function
-> name on the same line, i.e.,
+> Unless you can find spec language that talks about D-state
+> dependencies between functions, I claim this is not following the
+> PCIe spec.  For example, PCIe r5.0, sec 1.4, says "the PCI/PCIe
+> hardware/software model includes architectural constructs necessary to
+> discover, configure, and use a Function, without needing Function-
+> specific knowledge." Sec 5.1 says "D states are associated with a
+> particular Function" and "PM provides ... a mechanism to identify
+> power management capabilities of a given Function [and] the ability to
+> transition a Function into a certain power management state."
 > 
 
- I will fix in v2.
+ Thanks Bjorn. Here in case of GPU's these functions are not
+ completely independent so it is not following PCIe spec in
+ that aspect.
 
->   static void pci_create_device_link(...)
+> If there *is* something about dependencies between functions in the
+> spec, we should improve the generic PCI core to pay attention to that,
+> and then we wouldn't need this quirk.
 > 
->>  {
->>  	struct pci_dev *gpu;
->>  
->> -	if (PCI_FUNC(hda->devfn) != 1)
->> +	if (PCI_FUNC(pdev->devfn) != devfn)
->>  		return;
->>  
->> -	gpu = pci_get_domain_bus_and_slot(pci_domain_nr(hda->bus),
->> -					  hda->bus->number,
->> -					  PCI_DEVFN(PCI_SLOT(hda->devfn), 0));
->> +	gpu = pci_get_domain_bus_and_slot(pci_domain_nr(pdev->bus),
->> +					  pdev->bus->number,
->> +					  PCI_DEVFN(PCI_SLOT(pdev->devfn), 0));
->>  	if (!gpu || (gpu->class >> 16) != PCI_BASE_CLASS_DISPLAY) {
->>  		pci_dev_put(gpu);
->>  		return;
->>  	}
->>  
->> -	if (!device_link_add(&hda->dev, &gpu->dev,
->> +	if (!device_link_add(&pdev->dev, &gpu->dev,
->>  			     DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME))
->> -		pci_err(hda, "cannot link HDA to GPU %s\n", pci_name(gpu));
->> +		pci_err(pdev, "cannot link with VGA %s\n", pci_name(gpu));
-> 
-> I think we should emit a message in the success case, too.  There is
-> one in device_link_add(), but it's a dev_dbg() so we can't count on it
-> being in the log.  I'd like a pci_info() that we can count on.
+> If the spec doesn't provide a way to discover them, these dependencies
+> are exceptions from the spec, and we have to handle them as hardware
+> defects, using quirks like this.  That's fine, but let's not pretend
+> that this is a conforming device and that adding quirks is the
+> expected process.  Just call a spade a spade and say we're working
+> around a defect in this particular device.
 > 
 
- I will add this in v2.
+ Yes. I am agree with that we need to be very careful in
+ adding quirks like this. I will communicate the same to
+ HW team so they can explore other options to handle this
+ in HW design side for future chips.
+
+> I think the best path forward would be to add this quirk for the
+> existing device, and then pursue a spec change to add something like
+> a new PCIe capability to describe the dependencies.  Then we could
+> enhance the PCI core once and power management for future devices
+> would "Just Work" without having to add quirks.
+> 
+
+ Yes. It will be long term process. If other HW has similar
+ requirement then it would be good to have this.
 
  Regards,
  Abhishek
 
->> -	pm_runtime_allow(&hda->dev);
->> +	pm_runtime_allow(&pdev->dev);
->>  	pci_dev_put(gpu);
->>  }
->> +
->> +/*
->> + * Create device link for GPUs with integrated HDA controller for streaming
->> + * audio to attached displays.
->> + */
->> +static void quirk_gpu_hda(struct pci_dev *hda)
->> +{
->> +	pci_create_device_link_with_vga(hda, 1);
->> +}
->>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
->>  			      PCI_CLASS_MULTIMEDIA_HD_AUDIO, 8, quirk_gpu_hda);
->>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMD, PCI_ANY_ID,
->> -- 
->> 2.17.1
->>
