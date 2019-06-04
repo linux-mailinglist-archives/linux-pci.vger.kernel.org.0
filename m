@@ -2,90 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BC92334874
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 15:20:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2146A3483C
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 15:20:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727493AbfFDNUW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jun 2019 09:20:22 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55300 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727153AbfFDNUW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 09:20:22 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DJWAs028463;
-        Tue, 4 Jun 2019 08:19:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559654372;
-        bh=v8mkOQlj6ZUtE+6KavYFNHYT3JmxgtDfIA3TqfNwJt8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=JS7LGnlKVoepjTyrc5BULAMKzps2ynnHiT+iX2qyeiH5smSSWUYojVAN1Qtv429bR
-         TOyZ2BoQeDbgrVWdG2zcpvAMfPFq8pmnuZIUmhlBDKa7tx1ysjxN/1YL3loHqQU40W
-         NToo66TKTov/SdeKR0f0JVJV7omF03IH00npvrOo=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DJWRK055289
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Jun 2019 08:19:32 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
- 2019 08:19:31 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 4 Jun 2019 08:19:31 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DGdGk098972;
-        Tue, 4 Jun 2019 08:19:26 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Jingoo Han <jingoohan1@gmail.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 30/30] misc: pci_endpoint_test: Enable legacy interrupt
-Date:   Tue, 4 Jun 2019 18:45:16 +0530
-Message-ID: <20190604131516.13596-31-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190604131516.13596-1-kishon@ti.com>
-References: <20190604131516.13596-1-kishon@ti.com>
+        id S1727827AbfFDNSv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jun 2019 09:18:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56650 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727182AbfFDNSu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 4 Jun 2019 09:18:50 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B3242199C;
+        Tue,  4 Jun 2019 13:18:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559654329;
+        bh=kstaWkEOjz4sGnvduRYtac82iKRZqlwD3wYOfYdZAJU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ne0yes6lGitXgq3FdEvA/6cW2YR77DufQi52Gox4dH+56J4CFagViIAsuRlw+SY1h
+         GeQJt2hA7XSzmQP1p1M+2CIZZKq/BL7Y+B9v74X6DxRsjFb3vBQaL3elhp51Wu0q/L
+         /lWNsSEXnx/Kduvzcs5X43uAwHfOAN0pyqHu50Vo=
+Date:   Tue, 4 Jun 2019 08:18:48 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ley Foon Tan <ley.foon.tan@intel.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, lftan.linux@gmail.com
+Subject: Re: [PATCH] PCI: altera: Allow building as module
+Message-ID: <20190604131848.GA40122@google.com>
+References: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCI core does not enable legacy interrupt if it finds MSI or MSIX interrupt.
-Explicitly enable legacy interrupt here in order to perform legacy
-interrupt tests.
+On Wed, Apr 24, 2019 at 12:57:14PM +0800, Ley Foon Tan wrote:
+> Altera PCIe Rootport IP is a soft IP and is only available after
+> FPGA image is programmed.
+> 
+> Make driver modulable to support use case FPGA image is programmed
+> after kernel is booted. User proram FPGA image in kernel then only load
+> PCIe driver module.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/misc/pci_endpoint_test.c | 1 +
- 1 file changed, 1 insertion(+)
+I'm not objecting to these patches, but help me understand how this
+works.  The "usual" scenario is that if a driver is loaded before a
+matching device is available, i.e., either the driver is built
+statically or it is loaded before a device is hot-added, the event of
+the device being available causes the driver's probe method to be
+called.
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 2a6cd9e65e67..e12a3845ad2e 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -697,6 +697,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
- 	}
- 
- 	pci_set_master(pdev);
-+	pci_intx(pdev, true);
- 
- 	if (!pci_endpoint_test_alloc_irq_vectors(test, irq_type))
- 		goto err_disable_irq;
--- 
-2.17.1
+This seems to be a more manual process of programming the FPGA which
+results in a new "altera-pcie" platform device.  And then apparently
+you need to load the appropriate module by hand?  Is there no
+"hot-add" type of event for this platform device that automatically
+looks for the driver?
 
+Bjorn
