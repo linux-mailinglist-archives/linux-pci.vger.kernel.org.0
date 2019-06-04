@@ -2,113 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 356F634892
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 15:23:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD2FE348A7
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 15:29:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbfFDNW7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jun 2019 09:22:59 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56111 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbfFDNW7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 09:22:59 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 16so20234wmg.5;
-        Tue, 04 Jun 2019 06:22:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yTXjE3DyGnzh3mUQCwTWjsUXUr+7mBrootKOJ/1rR7Y=;
-        b=Kk38JklNyGB2JU3VCr8PV9QIp6qB/aOd5e3AVfnbIVfXvhEH3oMEElGdErgmCdQ95g
-         3sr3wKmDNqP0jU/CnFogQhZ12DPGDvaO+h+q3dNeN/ghR9hiJWzGtRXovOsDuh4Wnq+w
-         /7Vb7EfPFBTyXYNTBOnthe/9xQQzCjKlkO65fljVUtNEMDtSyO0GBJWTmHCRj5mLy4Cj
-         X9C/cSLppes07D3kHXA6WefpE1q/elBLYL+3nNFWTVxIjRhw8pXv/ZvzPIx//dwtlolD
-         0lCAj/z4JPg+p2Y17KxCRHXfR9C+W7nkKpxZrGk3WISOcCE4ZhpOuieEytV09DyqnAmz
-         fmiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yTXjE3DyGnzh3mUQCwTWjsUXUr+7mBrootKOJ/1rR7Y=;
-        b=J2f0RFYSXInmpWPC4Mm2hNwdjHuFwnq4/Ta0FMbiiifHfvSU8wXyJtE7NuTSSu8LAt
-         HqPu9y/33yuH+r+sjgV6pcMyW+l3Vk3IxuIyqGpDUOIILQdPUzteqcoJifBJA+h5N6s/
-         K0fpK52cseeBzFC3ii6gg6xQ1/gxIc+Mqnr9njKPTP0kTwshgGUkgEjIrfwj5zVxAEx5
-         8I4YE9Mo7qOY4Ld6j0/DrE9TZqEuLWJBsWSHSvjuTko9noWRBChBPf6UmGcX3Ih/sYVY
-         REiH1bBKLbncGsMkisPkXxfR0lHYZLDnCNRlrZ74NwaCCgwDHCZpvCpOR1FGPwA7pgrj
-         JmfQ==
-X-Gm-Message-State: APjAAAXmBO3Halg7Q1cy33Z3JRoS/0yVW6u3pLFeFGZEooMBdxol2Vqg
-        fooiaygAG0E7ISXojRJ4LT+N9Aax
-X-Google-Smtp-Source: APXvYqz04o0c48ru37D9lXxMyiFeP8r3dkJ2gUAm1fe9Q/3v4SP3QZMwTy3fJI0QKfftHcJYDpVO6A==
-X-Received: by 2002:a1c:7ec8:: with SMTP id z191mr5985020wmc.66.1559654576723;
-        Tue, 04 Jun 2019 06:22:56 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id z17sm10507895wru.21.2019.06.04.06.22.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 06:22:55 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 15:22:54 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V4 28/28] PCI: tegra: Change link retry log level to debug
-Message-ID: <20190604132254.GU16519@ulmo>
-References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
- <20190516055307.25737-29-mmaddireddy@nvidia.com>
+        id S1727482AbfFDN3c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jun 2019 09:29:32 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:53124 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727470AbfFDN3b (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 09:29:31 -0400
+Received: from mailhost.synopsys.com (unknown [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E8AA0C1E9B;
+        Tue,  4 Jun 2019 13:29:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1559654981; bh=tJ5U5V5ukKoh37DG0nUj49vWOPDvxzuXMRZdBJAy5Lw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Af8cLjj9mV9A0c0VDl9mdEMudOGWMGPlHTJzNT4v3LVGv3gU9Eeu2xQcrkSsBy+W/
+         nOU0hdOhvvXZ/3KF3GVywh/7XVE8rLfqjuBF0QSDdeImfmQ/tKvIhDnpV5z5MCQKIE
+         GTFxyVNgCr9GYe+p0dXysNXTRhu5N6kD6MrgNzykgeQzZLFUhi2hkbrWbSbRk3cgU7
+         aB0ePY405tzUY5MWSh4Ar5jDTzC+rja+4Ssw4LCtBa2Q+HuBFQMH4KbWpdZF+7kw/P
+         +TyYf6f9xmDUXuvhEO4zO1zb2LwxL1Tt1i+Aht/rqwALaa/46J1SbsVVNY2rd68fgj
+         qo5ASBryUHOPw==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 326F2A0234;
+        Tue,  4 Jun 2019 13:29:28 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id D609D3FAC7;
+        Tue,  4 Jun 2019 15:29:28 +0200 (CEST)
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     linux-pci@vger.kernel.org, dmaengine@vger.kernel.org
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Subject: [PATCH v2 0/6] dmaengine: Add Synopsys eDMA IP driver (version 0)
+Date:   Tue,  4 Jun 2019 15:29:21 +0200
+Message-Id: <cover.1559654565.git.gustavo.pimentel@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kSOhxpxUsM1s2qz/"
-Content-Disposition: inline
-In-Reply-To: <20190516055307.25737-29-mmaddireddy@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Add Synopsys eDMA IP driver (version 0 and for EP side only) to Linux
+kernel. This IP is generally distributed with Synopsys PCIe EndPoint IP
+(depends of the use and licensing agreement), which supports:
+ - legacy and unroll modes
+ - 16 independent and concurrent channels (8 write + 8 read)
+ - supports linked list (scatter-gather) transfer
+ - each linked list descriptor can transfer from 1 byte to 4 Gbytes
+ - supports cyclic transfer
+ - PCIe EndPoint glue-logic
 
---kSOhxpxUsM1s2qz/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch series contains:
+ - eDMA core + eDMA core v0 driver (implements the interface with
+ DMAengine controller APIs and interfaces with eDMA HW block)
+ - eDMA PCIe glue-logic reference driver (attaches to Synopsys EP and
+ provides memory access to eDMA core driver)
 
-On Thu, May 16, 2019 at 11:23:07AM +0530, Manikanta Maddireddy wrote:
-> Driver checks for link up three times before giving up, each retry attempt
-> is printed as an error. Letting users know that PCIe link is down and in =
-the
-> process of being brought up again is for debug, not an error condition.
->=20
-> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-> ---
-> V4: No change
->=20
-> V3: Changed dev_err to dev_dbg
->=20
-> V2: Updated commit log
->=20
->  drivers/pci/controller/pci-tegra.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Gustavo Pimentel (6):
+  dmaengine: Add Synopsys eDMA IP core driver
+  dmaengine: Add Synopsys eDMA IP version 0 support
+  dmaengine: Add Synopsys eDMA IP version 0 debugfs support
+  PCI: Add Synopsys endpoint EDDA Device ID
+  dmaengine: Add Synopsys eDMA IP PCIe glue-logic
+  MAINTAINERS: Add Synopsys eDMA IP driver maintainer
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+ MAINTAINERS                              |   7 +
+ drivers/dma/Kconfig                      |   2 +
+ drivers/dma/Makefile                     |   1 +
+ drivers/dma/dw-edma/Kconfig              |  18 +
+ drivers/dma/dw-edma/Makefile             |   7 +
+ drivers/dma/dw-edma/dw-edma-core.c       | 937 +++++++++++++++++++++++++++++++
+ drivers/dma/dw-edma/dw-edma-core.h       | 165 ++++++
+ drivers/dma/dw-edma/dw-edma-pcie.c       | 229 ++++++++
+ drivers/dma/dw-edma/dw-edma-v0-core.c    | 354 ++++++++++++
+ drivers/dma/dw-edma/dw-edma-v0-core.h    |  28 +
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 310 ++++++++++
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.h |  27 +
+ drivers/dma/dw-edma/dw-edma-v0-regs.h    | 158 ++++++
+ drivers/misc/pci_endpoint_test.c         |   2 +-
+ include/linux/dma/edma.h                 |  47 ++
+ include/linux/pci_ids.h                  |   1 +
+ 16 files changed, 2292 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/dma/dw-edma/Kconfig
+ create mode 100644 drivers/dma/dw-edma/Makefile
+ create mode 100644 drivers/dma/dw-edma/dw-edma-core.c
+ create mode 100644 drivers/dma/dw-edma/dw-edma-core.h
+ create mode 100644 drivers/dma/dw-edma/dw-edma-pcie.c
+ create mode 100644 drivers/dma/dw-edma/dw-edma-v0-core.c
+ create mode 100644 drivers/dma/dw-edma/dw-edma-v0-core.h
+ create mode 100644 drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+ create mode 100644 drivers/dma/dw-edma/dw-edma-v0-debugfs.h
+ create mode 100644 drivers/dma/dw-edma/dw-edma-v0-regs.h
+ create mode 100644 include/linux/dma/edma.h
 
---kSOhxpxUsM1s2qz/
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.7.4
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz2cK4ACgkQ3SOs138+
-s6HOaQ//aYSYk26RIhZPjP4NCUdL8P7gXfov4RmSEnWQWJ21VBAHzfBdmcpKd9S/
-JiEiYtnCpR9gHrKHOqR5TTbFaOcCZ4mgHfp58iXJvchMKvrxPSbaoN17TFl0nDy/
-oMS3gCBsI9AMF9D+c1P/98jFydG1Wjr26fg+ROtG9+jZ93Cc9bdBp2IgHG5OLKvC
-B5ZpOP0DVW1b98xovgUpWFOXnOke86owLa6oLVsoFhc+SnRuqzERycHcEBuRvFph
-Q7d8UfWPhdS5JONqb1hs8qF3LFWSgFoHS4sgR7Lm+eoXl+pV33pNhsHF6Ab2LdBo
-JTLbJCrmFkAWGy8DIk06GO25wdURUutKgDKCV1+hzLc+S4QHvtnaQta5R2LcPLul
-/RoXgppX/8oKwWtVlNJtDRwyutA2tNEindB5WftJEnuPo1jvFCb2Wba7gEROuSxp
-4tHWivdeRdgINTiSFE4jo4dkY6grXvwwcupZnTH9i4yu1UQs4cMF1qAIf1Smz5bX
-3lkdp+ZLNQi7VLs86e6mAZIPJUz13WQPZPnamiiJucmCiXUbUWHW80qUb1Wn2oW+
-qlPWd6k/pB3r36j5gVCyvdeJQAdSxIU0yd5oIifqYUG6WPrwyFUJC0Kk8L9oy4lf
-66GaZEHYX+iH7IOlQ7e+ceANSlcCfGe1+M1EUr+4ijJ1amNHV+A=
-=0bFR
------END PGP SIGNATURE-----
-
---kSOhxpxUsM1s2qz/--
