@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2185734804
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 15:18:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AA2D34835
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 15:20:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbfFDNR7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jun 2019 09:17:59 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54942 "EHLO
+        id S1727770AbfFDNSm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jun 2019 09:18:42 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:55042 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727608AbfFDNR7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 09:17:59 -0400
+        with ESMTP id S1727221AbfFDNSl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 09:18:41 -0400
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DHZbs028030;
-        Tue, 4 Jun 2019 08:17:35 -0500
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DHf13028057;
+        Tue, 4 Jun 2019 08:17:41 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559654255;
-        bh=NQisG6of0th5e5nh0dWxjvqkrQFUAwxLaJ6uQ3mRLhk=;
+        s=ti-com-17Q1; t=1559654261;
+        bh=RElHPxtACkCdk4rLufC/bmJZmseWFYOIIvYrh7aFO/8=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=p/w+dePUAOZBdhfQ0h69WotHcCUiE55mkIh05kVLvDhwP57FXWOS0v2PQ6GB0z8oC
-         Ns6QDwgoGcD3juTUBM6xVmTZQPxxn6BDTSRI/PTavSeixh1+Sxn+walG/sXKZKphGO
-         ByoDc+Hj6QGTVHa+raGna/KVWeHm4VUgqn4VBy50=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DHZFO052752
+        b=ctcAw7L7QUByHCOouvIbfAiWv5Zee8mbXY3jZXhr2OTNddfQLtmVD7zJnqx/VdTyr
+         lC1MgB43JIWeJjcT739mZpUBUOpgDiQwkfxViuPTLl3GsgePCdIvDMwpmCh+CjaqWG
+         lqtruagGs6y45G+xx4UhzoFRKD5nWMZRXj0nSwfY=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DHeFX052834
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Jun 2019 08:17:35 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 4 Jun 2019 08:17:40 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
- 2019 08:17:35 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 08:17:40 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 4 Jun 2019 08:17:34 -0500
+ Frontend Transport; Tue, 4 Jun 2019 08:17:40 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DGdGP098972;
-        Tue, 4 Jun 2019 08:17:30 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DGdGQ098972;
+        Tue, 4 Jun 2019 08:17:35 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Tom Joseph <tjoseph@cadence.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -51,9 +51,9 @@ CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-omap@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 09/30] PCI: cadence: Add platform_data to start link and check link status
-Date:   Tue, 4 Jun 2019 18:44:55 +0530
-Message-ID: <20190604131516.13596-10-kishon@ti.com>
+Subject: [RFC PATCH 10/30] PCI: cadence: Use *_start_link() and *_wait_for_link() to establish link
+Date:   Tue, 4 Jun 2019 18:44:56 +0530
+Message-ID: <20190604131516.13596-11-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190604131516.13596-1-kishon@ti.com>
 References: <20190604131516.13596-1-kishon@ti.com>
@@ -65,148 +65,94 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add support in cadence driver to read platform_data passed to it from
-platform specific drivers. The platform_data right now contains two
-ops, one to start link and the other to check the link status.
-This is required since the registers for starting a link and for
-checking link status is in the wrapper and not in Cadence PCIe core.
+Use cdns_pcie_start_link() to start link training and
+cdns_pcie_wait_for_link() in order to wait to establish the link.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/controller/pcie-cadence-ep.c   |  1 +
- drivers/pci/controller/pcie-cadence-host.c |  1 +
- drivers/pci/controller/pcie-cadence.c      | 41 ++++++++++++++++++++++
- drivers/pci/controller/pcie-cadence.h      | 13 +++++++
- 4 files changed, 56 insertions(+)
+ drivers/pci/controller/pcie-cadence-ep.c   | 11 ++++++++++-
+ drivers/pci/controller/pcie-cadence-host.c | 11 +++++++++++
+ 2 files changed, 21 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/pcie-cadence-ep.c
-index 07f840cfba23..b044167071e6 100644
+index b044167071e6..825a515821c3 100644
 --- a/drivers/pci/controller/pcie-cadence-ep.c
 +++ b/drivers/pci/controller/pcie-cadence-ep.c
-@@ -462,6 +462,7 @@ static int cdns_pcie_ep_probe(struct platform_device *pdev)
+@@ -21,6 +21,7 @@
+ /**
+  * struct cdns_pcie_ep - private data for this PCIe endpoint controller driver
+  * @pcie: Cadence PCIe controller
++ * @dev: pointer to PCIe EP device
+  * @max_regions: maximum number of regions supported by hardware
+  * @ob_region_map: bitmask of mapped outbound regions
+  * @ob_addr: base addresses in the AXI bus where the outbound regions start
+@@ -37,6 +38,7 @@
+  */
+ struct cdns_pcie_ep {
+ 	struct cdns_pcie		pcie;
++	struct device			*dev;
+ 	u32				max_regions;
+ 	unsigned long			ob_region_map;
+ 	phys_addr_t			*ob_addr;
+@@ -386,6 +388,7 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+ 	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct cdns_pcie *pcie = &ep->pcie;
+ 	struct pci_epf *epf;
++	int ret = 0;
+ 	u32 cfg;
  
- 	pcie = &ep->pcie;
- 	pcie->is_rc = false;
-+	pcie->plat_data = pdev->dev.platform_data;
+ 	/*
+@@ -397,7 +400,11 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+ 		cfg |= BIT(epf->func_no);
+ 	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, cfg);
  
- 	data = (struct cdns_pcie_ep_data *)match->data;
- 	if (data) {
-diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/pcie-cadence-host.c
-index ab6491b23775..2363f05e7c58 100644
---- a/drivers/pci/controller/pcie-cadence-host.c
-+++ b/drivers/pci/controller/pcie-cadence-host.c
-@@ -304,6 +304,7 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
- 	rc->dev = dev;
- 
- 	pcie = &rc->pcie;
-+	pcie->plat_data = pdev->dev.platform_data;
- 	pcie->is_rc = true;
- 
- 	data = (struct cdns_pcie_host_data *)match->data;
-diff --git a/drivers/pci/controller/pcie-cadence.c b/drivers/pci/controller/pcie-cadence.c
-index de5b3b06f2d0..5ac42b19bb63 100644
---- a/drivers/pci/controller/pcie-cadence.c
-+++ b/drivers/pci/controller/pcie-cadence.c
-@@ -3,6 +3,7 @@
- // Cadence PCIe controller driver.
- // Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
- 
-+#include <linux/delay.h>
- #include <linux/kernel.h>
- 
- #include "pcie-cadence.h"
-@@ -47,6 +48,46 @@ void cdns_pcie_write32(void __iomem *addr, int size, u32 value)
- 	writel(val, aligned_addr);
+-	return 0;
++	ret = cdns_pcie_start_link(pcie, true);
++	if (ret)
++		dev_err(ep->dev, "Failed to start link\n");
++
++	return ret;
  }
  
-+int cdns_pcie_start_link(struct cdns_pcie *pci, bool start)
-+{
-+	struct cdns_pcie_plat_data *plat_data;
+ static const struct pci_epc_features cdns_pcie_epc_features = {
+@@ -460,6 +467,8 @@ static int cdns_pcie_ep_probe(struct platform_device *pdev)
+ 	if (!ep)
+ 		return -ENOMEM;
+ 
++	ep->dev = dev;
 +
-+	plat_data = pci->plat_data;
-+	if (!plat_data)
-+		return 0;
-+
-+	return plat_data->start_link(plat_data, start);
-+}
-+
-+static bool cdns_pcie_is_link_up(struct cdns_pcie *pci)
-+{
-+	struct cdns_pcie_plat_data *plat_data;
-+
-+	plat_data = pci->plat_data;
-+	if (!plat_data)
-+		return true;
-+
-+	return plat_data->is_link_up(plat_data);
-+}
-+
-+int cdns_pcie_wait_for_link(struct device *dev, struct cdns_pcie *pci)
-+{
-+	int retries;
-+
-+	/* Check if the link is up or not */
-+	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
-+		if (cdns_pcie_is_link_up(pci)) {
-+			dev_info(dev, "Link up\n");
-+			return 0;
-+		}
-+		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+ 	pcie = &ep->pcie;
+ 	pcie->is_rc = false;
+ 	pcie->plat_data = pdev->dev.platform_data;
+diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/pcie-cadence-host.c
+index 2363f05e7c58..4ad8f2ece6e2 100644
+--- a/drivers/pci/controller/pcie-cadence-host.c
++++ b/drivers/pci/controller/pcie-cadence-host.c
+@@ -365,6 +365,14 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
+ 		goto err_get_sync;
+ 	}
+ 
++	ret = cdns_pcie_start_link(pcie, true);
++	if (ret) {
++		dev_err(dev, "Failed to start link\n");
++		goto err_start_link;
 +	}
 +
-+	dev_err(dev, "Phy link never came up\n");
++	cdns_pcie_wait_for_link(dev, pcie);
 +
-+	return -ETIMEDOUT;
-+}
-+
- void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 fn,
- 				   u32 r, bool is_io,
- 				   u64 cpu_addr, u64 pci_addr, size_t size)
-diff --git a/drivers/pci/controller/pcie-cadence.h b/drivers/pci/controller/pcie-cadence.h
-index d157bf5eabd5..3cef398b50da 100644
---- a/drivers/pci/controller/pcie-cadence.h
-+++ b/drivers/pci/controller/pcie-cadence.h
-@@ -10,6 +10,11 @@
- #include <linux/pci.h>
- #include <linux/phy/phy.h>
+ 	ret = cdns_pcie_host_init(dev, &resources, rc);
+ 	if (ret)
+ 		goto err_init;
+@@ -386,6 +394,9 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
+ 	pci_free_resource_list(&resources);
  
-+/* Parameters for the waiting for link up routine */
-+#define LINK_WAIT_MAX_RETRIES	10
-+#define LINK_WAIT_USLEEP_MIN	90000
-+#define LINK_WAIT_USLEEP_MAX	100000
+  err_init:
++	cdns_pcie_start_link(pcie, false);
 +
- /*
-  * Local Management Registers
-  */
-@@ -221,6 +226,11 @@ enum cdns_pcie_msg_routing {
- 	MSG_ROUTING_GATHER,
- };
++ err_start_link:
+ 	pm_runtime_put_sync(dev);
  
-+struct cdns_pcie_plat_data {
-+	int (*start_link)(struct cdns_pcie_plat_data *data, bool start);
-+	bool (*is_link_up)(struct cdns_pcie_plat_data *data);
-+};
-+
- /**
-  * struct cdns_pcie - private data for Cadence PCIe controller drivers
-  * @reg_base: IO mapped register base
-@@ -236,6 +246,7 @@ struct cdns_pcie {
- 	int			phy_count;
- 	struct phy		**phy;
- 	struct device_link	**link;
-+	struct cdns_pcie_plat_data *plat_data;
- 	u32 (*read)(void __iomem *addr, int size);
- 	void (*write)(void __iomem *addr, int size, u32 value);
- };
-@@ -408,6 +419,8 @@ int cdns_pcie_enable_phy(struct cdns_pcie *pcie);
- int cdns_pcie_init_phy(struct device *dev, struct cdns_pcie *pcie);
- u32 cdns_pcie_read32(void __iomem *addr, int size);
- void cdns_pcie_write32(void __iomem *addr, int size, u32 value);
-+int cdns_pcie_start_link(struct cdns_pcie *pci, bool start);
-+int cdns_pcie_wait_for_link(struct device *dev, struct cdns_pcie *pci);
- extern const struct dev_pm_ops cdns_pcie_pm_ops;
- 
- #endif /* _PCIE_CADENCE_H */
+  err_get_sync:
 -- 
 2.17.1
 
