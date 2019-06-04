@@ -2,151 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 77FCE345BA
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 13:43:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E1B234743
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 14:50:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfFDLnL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jun 2019 07:43:11 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:2792 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727249AbfFDLnK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 07:43:10 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf6594c0000>; Tue, 04 Jun 2019 04:43:08 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 04 Jun 2019 04:43:08 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 04 Jun 2019 04:43:08 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Jun
- 2019 11:43:08 +0000
-Received: from [10.24.216.245] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Jun 2019
- 11:43:06 +0000
-Subject: Re: [PATCH 2/2] PCI: Create device link for NVIDIA GPU
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-References: <20190531050109.16211-1-abhsahu@nvidia.com>
- <20190531050109.16211-3-abhsahu@nvidia.com>
- <20190531203908.GA58810@google.com>
- <d0824334-99f2-d42e-3a5e-3bdc4c1c37c8@nvidia.com>
- <20190603172246.GC189360@google.com>
-From:   Abhishek Sahu <abhsahu@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <4b4876eb-b3a0-6796-9d7a-af518a396689@nvidia.com>
-Date:   Tue, 4 Jun 2019 17:13:03 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1727394AbfFDMuC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jun 2019 08:50:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56102 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727709AbfFDMuC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 4 Jun 2019 08:50:02 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0A1524987;
+        Tue,  4 Jun 2019 12:50:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559652600;
+        bh=udv/dQ6YJS+atkXMO+YxFcd9zvnACwlkmkV1qGkYerc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=N41MKdUeXCYE20qfwZpokqSq3uqzon5edhhHzH0+qKFECLuscpe18iGcHy/JwVlIn
+         ueWfTcL28NpVsTD3yBLNF9+rIFrGaB9qWhAHpuMuIx7Yd7vPhBPFYkSXE5AYLEYZvt
+         7oWCDTaY/MD+hldvz2IhrGTH/nq3y8c1qtRq7zS0=
+Date:   Tue, 4 Jun 2019 07:49:59 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sinan Kaya <okaya@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "Zilberman, Zeev" <zeev@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>
+Subject: Re: [RFC] ARM64 PCI resource survey issue(s)
+Message-ID: <20190604124959.GF189360@google.com>
+References: <56715377f941f1953be43b488c2203ec090079a1.camel@kernel.crashing.org>
+ <20190604014945.GE189360@google.com>
+ <960c94eb151ba1d066090774621cf6ca6566d135.camel@kernel.crashing.org>
 MIME-Version: 1.0
-In-Reply-To: <20190603172246.GC189360@google.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559648588; bh=6bS/IO5bk7Trmz3av9AdQK8DCTTtSrwKry5+scglc1k=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=qN3fENpIcYGhVNEXzRi76oHABsVUm8dOBkVtveqTV6gwvUJfPc0JD7CcHoDoasDgc
-         RR4OF3BILpkhwZJSEq3huwKmMKuho1iPca7DBgbyzh6na+5oSKde5oK/nYGIR8lDVT
-         AAv5OdsBIywfrvzRcPX3+EOx2r1b9BAWRouxnD5RRVZbi9bApCgcqFqoiSplpT5j8a
-         4JtM0FB6RoM+E9COTHrkREqkcxZqZcDuBm/yhqjRUGcRCGk21JVwD8Kfxx159JePOB
-         IGXnCnIYiZVCYlP0NWWGZVum/KxcpsXzRFCn/rFPw/z7hDs3nBoHjR8vK6Cx812ATR
-         XLOaGaRKc4Y6w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <960c94eb151ba1d066090774621cf6ca6566d135.camel@kernel.crashing.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Jun 04, 2019 at 01:32:11PM +1000, Benjamin Herrenschmidt wrote:
+> On Mon, 2019-06-03 at 20:49 -0500, Bjorn Helgaas wrote:
 
-
-On 6/3/2019 10:52 PM, Bjorn Helgaas wrote:
-> [+cc Rafael, just FYI]
+> > This could be done with either Enhanced Allocation capabilities or
+> > via ACPI _DSM function #5.  My preference would be to do this at
+> > the lowest possible level of the PCI hierarchy.  IIRC, EA can do
+> > it for individual BARs, and _DSM can be supplied for any
+> > individual device (or bridge, but I'd prefer to do it on the
+> > device because that gives us more information about exactly what
+> > needs to be preserved).
 > 
-> On Mon, Jun 03, 2019 at 01:30:51PM +0530, Abhishek Sahu wrote:
->> On 6/1/2019 2:09 AM, Bjorn Helgaas wrote:
->>> On Fri, May 31, 2019 at 10:31:09AM +0530, Abhishek Sahu wrote:
->>>> NVIDIA Turing GPUs include hardware support for USB Type-C and
->>>> VirtualLink. It helps in delivering the power, display, and data
->>>> required to power VR headsets through a single USB Type-C connector.
->>>> The Turing GPU is a multi-function PCI device has the following
->>>> four functions:
->>>>
->>>> 	- VGA display controller (Function 0)
->>>> 	- Audio controller (Function 1)
->>>> 	- USB xHCI Host controller (Function 2)
->>>> 	- USB Type-C USCI controller (Function 3)
->>>>
->>>> The function 0 is tightly coupled with other functions in the
->>>> hardware. When function 0 goes in runtime suspended state,
->>>> then it will do power gating for most of the hardware blocks.
->>>> Some of these hardware blocks are used by other functions which
->>>> leads to functional failure. So if any of these functions (1/2/3)
->>>> are active, then function 0 should also be in active state.
->>>
->>>> 'commit 07f4f97d7b4b ("vga_switcheroo: Use device link for
->>>> HDA controller")' creates the device link from function 1 to
->>>> function 0. A similar kind of device link needs to be created
->>>> between function 0 and functions 2 and 3 for NVIDIA Turing GPU.
->>>
->>> I can't point to language that addresses this, but this sounds like a
->>> case of the GPU not conforming to the PCI spec.  The general
->>> assumption is that the OS should be able to discover everything it
->>> needs to do power management directly from the architected PCI config
->>> space.
->>
->>  The GPU is following PCIe spec but following is the implementation
->>  from HW side
+> _DSM #5 seems to be working the other way around, it tells us to ignore
+> the FW setting. So the "intent" here is that unless that things is
+> present and says "1", we should just leave things alone as long as they
+> don't conflict.
+
+I wish you'd been involved in the recent effort to revise the _DSM #5
+documentation.  The language in PCI FW r3.2 makes the implicit
+assumption that by default, in the absence of _DSM, the OS must
+preserve all window and BAR assignments.  But nobody has ever been
+able to come up with a spec reference to support that assumption and I
+think it is invalid.
+
+The ECN under consideration ("Clarifications to _DSM Function 5",
+March 26, 2019, currently posted for member review at
+https://members.pcisig.com/wg/PCI-SIG-WG_Members/document/13014)
+changes some of that language to basically say "if _DSM #5 exists and
+returns 0, the OS must preserve the settings of this device and its
+children; otherwise the OS is free to modify things."
+
+> What you seem to want to do is to go a step beyond and if present and
+> 0, force everything to be fixed. I'm not completely comfortable with
+> that approach. Let's see what others think.
+
+I'm not grasping the distinction you're making here.  What you
+describe seems be what _DSM #5 requires.
+
+> > Of course, _DSM *can* be higher, e.g., at the host bridge, but then we
+> > lose the information about what specifically must be immutable, and
+> > that means the OS cannot ever move *anything*, even if it becomes
+> > capable of moving things around to accommodate hot-added devices.
 > 
-> Unless you can find spec language that talks about D-state
-> dependencies between functions, I claim this is not following the
-> PCIe spec.  For example, PCIe r5.0, sec 1.4, says "the PCI/PCIe
-> hardware/software model includes architectural constructs necessary to
-> discover, configure, and use a Function, without needing Function-
-> specific knowledge." Sec 5.1 says "D states are associated with a
-> particular Function" and "PM provides ... a mechanism to identify
-> power management capabilities of a given Function [and] the ability to
-> transition a Function into a certain power management state."
+> Well, in our case at least this is a non-issue, we don't want the OS to
+> move anything or change anything and there is no hotplug.
 > 
-
- Thanks Bjorn. Here in case of GPU's these functions are not
- completely independent so it is not following PCIe spec in
- that aspect.
-
-> If there *is* something about dependencies between functions in the
-> spec, we should improve the generic PCI core to pay attention to that,
-> and then we wouldn't need this quirk.
+> That said, the two aren't exclusive. The presence at the host bridge
+> level can be honored, and if absent, we can also honor at a finer
+> granularity.
 > 
-> If the spec doesn't provide a way to discover them, these dependencies
-> are exceptions from the spec, and we have to handle them as hardware
-> defects, using quirks like this.  That's fine, but let's not pretend
-> that this is a conforming device and that adding quirks is the
-> expected process.  Just call a spade a spade and say we're working
-> around a defect in this particular device.
+> However, as I said above, I'm not completely comfortable with treating
+> _DSM #5 = 0 as meaning "must be fixed". This is not what it means.
+
+The existing language in PCI FW r3.2 is "if _DSM #5 does not exist or
+it exists and returns 0, the OS must not ignore PCI configuration done
+by firmware."
+
+> > I'm not aware of anything in DT that would correspond to DSM #5, but
+> > it could be added.
 > 
-
- Yes. I am agree with that we need to be very careful in
- adding quirks like this. I will communicate the same to
- HW team so they can explore other options to handle this
- in HW design side for future chips.
-
-> I think the best path forward would be to add this quirk for the
-> existing device, and then pursue a spec change to add something like
-> a new PCIe capability to describe the dependencies.  Then we could
-> enhance the PCI core once and power management for future devices
-> would "Just Work" without having to add quirks.
+> Yes, we could. On DT what we tend to do in those cases on powerpc and
+> sparc is to "manufacture" the pci_dev structures based on the info in
+> the DT, and only use config space to fill the remaining blanks. Let's
+> look at the ACPI issue for now though, we can handle DT later.
 > 
+> > > Taking a step back I think (and I suspect we generally agree based on
+> > > followup discussions I've seen) that the "right" thing to do is to have
+> > > our default behaviour be:
+> > > 
+> > >    - Claim what the FW established if it's not obviously broken
+> > > 
+> > >    - Call pci_assign_unassigned_resources() to assign what the FW
+> > > didn't assign
+> > > 
+> > > Which is more or less what powerpc and x86 do today, but using a
+> > > different mechanism than what's in pci_bus_claim_resources() (they are
+> > > similar to each other, I wrote the current powerpc one loosely based on
+> > > the x86 one at the time). That leads to a side question (which we
+> > > should probably discuss in a separate thread) of whether we want to
+> > > consolidate all that.
+> > > 
+> > > That said, we also know this is going to break *some* existing
+> > > platforms that have known broken FW assignment. The question is then
+> > > can we sufficiently detect the breakage and re-assign in those cases
+> > > (like x86 does fairly successfully in a number of cases), or do we need
+> > > to add some board/platform quirks to force the full re-assigment on
+> > > known broken platforms ?
+> > 
+> > I don't know how to parse this.  What does "known broken FW
+> > assignment" mean?  Are you saying the assignment from FW *looks* valid
+> > (all BARs contain valid addresses and are inside windows of upstream
+> > bridges), but it doesn't work for some reason? 
+> 
+> Yes... I am not personally aware of such a case but I was led to
+> believe based on prior conversations that such setups do exist,
+> especially in the non-ACPI ARM64 world. Which is why I would suggest
+> initially changing the default only on ACPI, at least until we have a
+> bit better visibility.
 
- Yes. It will be long term process. If other HW has similar
- requirement then it would be good to have this.
+If a resource assignment that is valid in terms of all the PCI rules
+(BARs are valid, BARs are inside upstream bridge windows, etc) doesn't
+work, we would need more information in order to fix anything.  We'd
+need to know exactly *what* doesn't work and *why* so we can avoid it.
+The current blanket statement of "reassign everything and hope it
+works better" is useless.
 
- Regards,
- Abhishek
-
+Bjorn
