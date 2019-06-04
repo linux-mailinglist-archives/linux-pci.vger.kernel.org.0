@@ -2,82 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1436834D2C
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 18:24:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9102B34EBA
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 19:26:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727562AbfFDQYu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jun 2019 12:24:50 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:60084 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727385AbfFDQYu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 12:24:50 -0400
-Received: from mailhost.synopsys.com (unknown [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1725933AbfFDR0u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jun 2019 13:26:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59076 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbfFDR0u (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 4 Jun 2019 13:26:50 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id DB019C2133;
-        Tue,  4 Jun 2019 16:24:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559665500; bh=czCMv4VDHjb9NxzJ/Sl1krDNAgnoR08uZa33ipOrNaY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gt8bb6LqTv1Ehqop+cwayEyWYzix3mZcRgmn4noPcaa+b7AehHvj8EQomrbMQVO/M
-         vl+CLpgNTq4+t7OOj7kbBvpc/0U4wUtvhOnUtpkb1A2Wvrh+izeOcMn1ZDMfiUTp5L
-         RugiCN4/JOzwARxzs+2q2Z6+iz748Y1963tvxzSSZ/IOmScdkCuORzNoe43SIag0Lt
-         51cD0MJJyDSQQThaQ9VM5RJ8+sn5/uftJMIvQH9OvZmn9ZFTpCusVeF1vFML6EoiYf
-         DdT5/PGozmyCvNjXtugfPPbAQ8rMLKl+SxWDClawG7tP12lkUISCP6Sj2D9J/sd0Fs
-         SvbKTTn+MSbRA==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 19719A022F;
-        Tue,  4 Jun 2019 16:24:48 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 07D113D06B;
-        Tue,  4 Jun 2019 18:24:48 +0200 (CEST)
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     mj@ucw.cz, bhelgaas@google.com, linux-pci@vger.kernel.org
-Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: [PATCH v2] lspci: Add PCIe 5.0 data rate (32 GT/s) support
-Date:   Tue,  4 Jun 2019 18:24:46 +0200
-Message-Id: <ed2a31df07262f5776c92c538da3079bb22aa9bf.1559665071.git.gustavo.pimentel@synopsys.com>
-X-Mailer: git-send-email 2.7.4
+        by mx1.redhat.com (Postfix) with ESMTPS id 5618813AA9;
+        Tue,  4 Jun 2019 17:26:45 +0000 (UTC)
+Received: from gimli.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C0890607C5;
+        Tue,  4 Jun 2019 17:26:42 +0000 (UTC)
+Subject: [PATCH] PCI/IOV: Fix VF cfg_size
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     linux-pci@vger.kernel.org
+Cc:     KarimAllah Ahmed <karahmed@amazon.de>, bhelgaas@google.com,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 04 Jun 2019 11:26:42 -0600
+Message-ID: <155966918965.10361.16228304474160813310.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 04 Jun 2019 17:26:50 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This enables "lspci" to show PCIe 5.0 data rate (32 GT/s) properly
-according to the contents in register PCI_EXP_LNKCAP, PCI_EXP_LNKSTA
-and PCI_EXP_LNKCTL2.
+Commit 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for
+other VFs") attempts to cache the config space size of VF0 to re-use
+for all other VFs, but the cache is setup before the call to
+pci_setup_device(), where we use set_pcie_port_type() to setup the
+pcie_cap field on the struct pci_dev.  Without pcie_cap configured,
+pci_cfg_space_size() returns PCI_CFG_SPACE_SIZE for the size.  VF0
+has a bypass through pci_cfg_space_size(), so its size is reported
+correctly, but all subsequent VFs incorrectly report 256 bytes of
+config space.
 
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Resolve by delaying pci_read_vf_config_common() until after
+pci_setup_device().
+
+Fixes: 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for other VFs")
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=1714978
+Cc: KarimAllah Ahmed <karahmed@amazon.de>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 ---
-Changes:
-v1 -> v2
- - Rebase patch
+ drivers/pci/iov.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-ls-caps.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/ls-caps.c b/ls-caps.c
-index 88964ce..8a00aa4 100644
---- a/ls-caps.c
-+++ b/ls-caps.c
-@@ -742,6 +742,8 @@ static char *link_speed(int speed)
- 	return "8GT/s";
-       case 4:
-         return "16GT/s";
-+      case 5:
-+        return "32GT/s";
-       default:
- 	return "unknown";
-     }
-@@ -1160,6 +1162,8 @@ static const char *cap_express_link2_speed(int type)
- 	return "8GT/s";
-       case 4:
-         return "16GT/s";
-+      case 5:
-+        return "32GT/s";
-       default:
- 	return "Unknown";
-     }
--- 
-2.7.4
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index 3aa115ed3a65..34b1f78f4d31 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -161,13 +161,13 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+ 	virtfn->is_virtfn = 1;
+ 	virtfn->physfn = pci_dev_get(dev);
+ 
+-	if (id == 0)
+-		pci_read_vf_config_common(virtfn);
+-
+ 	rc = pci_setup_device(virtfn);
+ 	if (rc)
+ 		goto failed1;
+ 
++	if (id == 0)
++		pci_read_vf_config_common(virtfn);
++
+ 	virtfn->dev.parent = dev->dev.parent;
+ 	virtfn->multifunction = 0;
+ 
 
