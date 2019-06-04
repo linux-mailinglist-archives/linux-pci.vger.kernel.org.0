@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C798347E5
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 15:17:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D29C2347E9
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 15:17:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfFDNRJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jun 2019 09:17:09 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50156 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727371AbfFDNRJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 09:17:09 -0400
+        id S1727404AbfFDNRR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jun 2019 09:17:17 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39046 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727371AbfFDNRR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 09:17:17 -0400
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DGukr082106;
-        Tue, 4 Jun 2019 08:16:56 -0500
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DH3DU119626;
+        Tue, 4 Jun 2019 08:17:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559654216;
-        bh=nc++VgWIvob4LW2QEELa3deaCr9PvSSNdgJuXE/Ycag=;
+        s=ti-com-17Q1; t=1559654223;
+        bh=JE6qETej25St2h/Tbzot2sPw2x/y91yK0ZVgB4HQ7cI=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=aZlvQ/bIUzqgkTr74NpXIqJkFm1N+iAI98Q5NdpbJbXMaoq9eLj2B9mWIs/RAaQco
-         Hz5yjx5EEwCXjqOAIDEbgrRTJs01FPjaqJFSkKD0lJy0y0uQwxqwxkuEmdBidSETpt
-         vNnoVwMtmm3GyEGBuSNRcJnEeLDvcTyYd7cEoTCU=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DGuSm000439
+        b=lxaduQ80o4uU0a3SAS2KUliRuDzxKptUX+z12/xLUQcpGunDKO1XLQGtjqE5yWrUs
+         2OpX+lScsGvIoQGpyrBwcRxmiYrObITtUyPttHhwVO7WyQ+sIZJXp/NMr7qoXATq5r
+         ArtKKH89UL2taT6etYXWuMd0i9k3CqLZRnAXg78M=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DH2be000548
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Jun 2019 08:16:56 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 4 Jun 2019 08:17:02 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
- 2019 08:16:56 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 08:17:01 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 4 Jun 2019 08:16:56 -0500
+ Frontend Transport; Tue, 4 Jun 2019 08:17:01 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DGdGI098972;
-        Tue, 4 Jun 2019 08:16:51 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DGdGJ098972;
+        Tue, 4 Jun 2019 08:16:56 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Tom Joseph <tjoseph@cadence.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -51,9 +51,9 @@ CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-omap@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 02/30] dt-bindings: PCI: cadence: Add binding to reset PERST#
-Date:   Tue, 4 Jun 2019 18:44:48 +0530
-Message-ID: <20190604131516.13596-3-kishon@ti.com>
+Subject: [RFC PATCH 03/30] dt-bindings: PCI: cadence: Update host DT bindings with TI specific compatible
+Date:   Tue, 4 Jun 2019 18:44:49 +0530
+Message-ID: <20190604131516.13596-4-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190604131516.13596-1-kishon@ti.com>
 References: <20190604131516.13596-1-kishon@ti.com>
@@ -65,7 +65,8 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add binding to reset PERST# connected to a GPIO.
+Update DT bindings for Cadence PCIe host controller with TI specific
+compatible.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
@@ -73,17 +74,17 @@ Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-index f02cccd1e0c5..cbd16519ae13 100644
+index cbd16519ae13..afebfec102af 100644
 --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
 +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-@@ -28,6 +28,7 @@ Optional properties:
-   than one in the list.  If only one PHY listed it must manage all lanes. 
- - phy-names:  List of names to identify the PHY.
- - iommu-map: As specified in Documentation/devicetree/bindings/pci/pci-iommu.txt
-+- reset-gpios: GPIO specifier for the PERST# signal
+@@ -5,6 +5,7 @@ host-generic-pci.txt.
  
- Example:
- 
+ Required properties:
+ - compatible: Should contain "cdns,cdns-pcie-host" to identify the IP used.
++	      Should contain "ti,j721e-cdns-pcie-host" for TI platforms.
+ - reg: Should contain the controller register base address, PCIe configuration
+   window base address, and AXI interface region base address respectively.
+ - reg-names: Must be "reg", "cfg" and "mem" respectively.
 -- 
 2.17.1
 
