@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 14DC234806
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 15:18:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C83534809
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 15:18:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbfFDNSE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jun 2019 09:18:04 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50382 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727265AbfFDNSE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 09:18:04 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DHktZ082389;
-        Tue, 4 Jun 2019 08:17:46 -0500
+        id S1727670AbfFDNSG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jun 2019 09:18:06 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54960 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727654AbfFDNSF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 09:18:05 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DHqo6028086;
+        Tue, 4 Jun 2019 08:17:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559654266;
-        bh=t0jA6IyzaKFpaRxG+xMzbQ3TeSZ/biJLiuqhdnBH3TQ=;
+        s=ti-com-17Q1; t=1559654272;
+        bh=tBDM4Tz2keIVpXtq26vbu3y4+Vw3eoGfX9HaWTYVoeQ=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=KZr/Yb1n2JCx1xdXk+5fWxz251JLI16pKngaDfG2QC6hGXVLV4i5gvy6cCgIsJMjP
-         c4WNdd1kbTd+yYCRuS/k+h6OJjnmI4OPZi0H3EJWyU1J15IIwDqImxqx57wu5Udo9Z
-         bvFpZC/srm1v2Mm4BAhsZsXo0/fnO3zxZwm++kmk=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DHkn2042937
+        b=R+8zqLaxd2c02V5uk6F4Sppd2D+1gsFYEkhM62sv+mxRho62Gx4HsxMmbgDSTsIG7
+         2KQHA8NCWHr299PML9hkzkXL402hArTl9rKprSd4RFTVcHr5T6xwtloib6PitOt4U3
+         v1gZhJGxWsVfEk/FMed58unQBaGz0DF2Sx8860bM=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DHqGl052946
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Jun 2019 08:17:46 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 4 Jun 2019 08:17:52 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
- 2019 08:17:46 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 08:17:51 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 4 Jun 2019 08:17:46 -0500
+ Frontend Transport; Tue, 4 Jun 2019 08:17:51 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DGdGR098972;
-        Tue, 4 Jun 2019 08:17:41 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DGdGS098972;
+        Tue, 4 Jun 2019 08:17:46 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Tom Joseph <tjoseph@cadence.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -51,9 +51,9 @@ CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-omap@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 11/30] PCI: cadence: Add support to drive PERST# line using GPIO
-Date:   Tue, 4 Jun 2019 18:44:57 +0530
-Message-ID: <20190604131516.13596-12-kishon@ti.com>
+Subject: [RFC PATCH 12/30] PCI: cadence: Make "mem" an optional memory resource
+Date:   Tue, 4 Jun 2019 18:44:58 +0530
+Message-ID: <20190604131516.13596-13-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190604131516.13596-1-kishon@ti.com>
 References: <20190604131516.13596-1-kishon@ti.com>
@@ -65,75 +65,87 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In platforms like TI's J721E EVM, the PERST# line is connected to a
-GPIO line and PERST# should be driven high to indicate the clocks are
-stable (As per Figure 2-10: Power Up of the PCIe CEM spec 3.0).
-
-Add support to make GPIO drive PERST# line.
+Cadence driver uses "mem" memory resource to obtain the offset of
+configuration space address region, memory space address region and
+message space address region. The obtained offset is used to program
+the Address Translation Unit (ATU). However certain platforms like TI's
+J721E SoC require the absolute address to be programmed in the and not
+just the offset. Make "mem" an optional memory resource and use it
+only for platforms that populate it.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/controller/pcie-cadence-host.c | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/pci/controller/pcie-cadence-ep.c   | 6 ++----
+ drivers/pci/controller/pcie-cadence-host.c | 5 +++--
+ drivers/pci/controller/pcie-cadence.c      | 6 ++++--
+ 3 files changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/pcie-cadence-host.c
-index 4ad8f2ece6e2..8b3b9827a8d6 100644
---- a/drivers/pci/controller/pcie-cadence-host.c
-+++ b/drivers/pci/controller/pcie-cadence-host.c
-@@ -3,6 +3,8 @@
- // Cadence PCIe host controller driver.
- // Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
- 
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/kernel.h>
- #include <linux/of_address.h>
- #include <linux/of_device.h>
-@@ -287,6 +289,7 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
- 	struct pci_host_bridge *bridge;
- 	struct list_head resources;
- 	struct cdns_pcie_rc *rc;
-+	struct gpio_desc *gpiod;
- 	struct cdns_pcie *pcie;
- 	struct resource *res;
- 	int ret;
-@@ -349,13 +352,36 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
- 		dev_err(dev, "missing \"mem\"\n");
- 		return -EINVAL;
+diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/pcie-cadence-ep.c
+index 825a515821c3..23aa5aba1c86 100644
+--- a/drivers/pci/controller/pcie-cadence-ep.c
++++ b/drivers/pci/controller/pcie-cadence-ep.c
+@@ -489,10 +489,8 @@ static int cdns_pcie_ep_probe(struct platform_device *pdev)
  	}
-+
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mem");
+-	if (!res) {
+-		dev_err(dev, "missing \"mem\"\n");
+-		return -EINVAL;
+-	}
++	if (!res)
++		dev_dbg(dev, "missing \"mem\"\n");
  	pcie->mem_res = res;
  
-+	gpiod = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(gpiod)) {
-+		ret = PTR_ERR(gpiod);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get reset GPIO\n");
-+		return ret;
-+	}
-+
- 	ret = cdns_pcie_init_phy(dev, pcie);
- 	if (ret) {
- 		dev_err(dev, "failed to init phy\n");
- 		return ret;
- 	}
-+
-+	/*
-+	 * "Power Sequencing and Reset Signal Timings" table in
-+	 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
-+	 * indicates PERST# should be deasserted after minimum of 100us
-+	 * once REFCLK is stable. The REFCLK to the connector in RC
-+	 * mode is selected while enabling the PHY. So deassert PERST#
-+	 * after 100 us.
-+	 */
-+	if (gpiod) {
-+		usleep_range(100, 200);
-+		gpiod_set_value_cansleep(gpiod, 1);
-+	}
-+
- 	platform_set_drvdata(pdev, pcie);
+ 	ret = of_property_read_u32(np, "cdns,max-outbound-regions",
+diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/pcie-cadence-host.c
+index 8b3b9827a8d6..14a54f6a11de 100644
+--- a/drivers/pci/controller/pcie-cadence-host.c
++++ b/drivers/pci/controller/pcie-cadence-host.c
+@@ -188,9 +188,9 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+ 	struct device *dev = rc->dev;
+ 	struct device_node *np = dev->of_node;
+ 	struct of_pci_range_parser parser;
++	u64 cpu_addr = cfg_res->start;
+ 	struct of_pci_range range;
+ 	u32 addr0, addr1, desc1;
+-	u64 cpu_addr;
+ 	int r, err;
  
- 	pm_runtime_enable(dev);
+ 	/*
+@@ -203,7 +203,8 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+ 	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR1(0), addr1);
+ 	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(0), desc1);
+ 
+-	cpu_addr = cfg_res->start - mem_res->start;
++	if (mem_res)
++		cpu_addr -= mem_res->start;
+ 	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(12) |
+ 		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
+ 	addr1 = upper_32_bits(cpu_addr);
+diff --git a/drivers/pci/controller/pcie-cadence.c b/drivers/pci/controller/pcie-cadence.c
+index 5ac42b19bb63..86282e9a26f7 100644
+--- a/drivers/pci/controller/pcie-cadence.c
++++ b/drivers/pci/controller/pcie-cadence.c
+@@ -154,7 +154,8 @@ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 fn,
+ 	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(r), desc1);
+ 
+ 	/* Set the CPU address */
+-	cpu_addr -= pcie->mem_res->start;
++	if (pcie->mem_res)
++		cpu_addr -= pcie->mem_res->start;
+ 	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(nbits) |
+ 		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
+ 	addr1 = upper_32_bits(cpu_addr);
+@@ -181,7 +182,8 @@ void cdns_pcie_set_outbound_region_for_normal_msg(struct cdns_pcie *pcie, u8 fn,
+ 	}
+ 
+ 	/* Set the CPU address */
+-	cpu_addr -= pcie->mem_res->start;
++	if (pcie->mem_res)
++		cpu_addr -= pcie->mem_res->start;
+ 	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(17) |
+ 		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
+ 	addr1 = upper_32_bits(cpu_addr);
 -- 
 2.17.1
 
