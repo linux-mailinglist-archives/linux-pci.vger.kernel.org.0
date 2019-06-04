@@ -2,176 +2,200 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 77F95349AF
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 16:01:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2F5A349CB
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 16:10:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbfFDOBH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jun 2019 10:01:07 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34077 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727450AbfFDOBH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 10:01:07 -0400
-Received: by mail-lj1-f195.google.com with SMTP id j24so19827508ljg.1
-        for <linux-pci@vger.kernel.org>; Tue, 04 Jun 2019 07:01:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cCCcfuCqU/qdREtoEDzLnVLy4LPKMGX0jGv9c5Rh1B8=;
-        b=HJSNN4aGaVf75WsJzCiqd24YGmv+eZuyGZvznilJ1e+2a0cE9WH+E2w1582cVJHoki
-         7R15HFWDhBVWJe95YMNP8tx/FFttEqVFVHJwcCY7JKwNjDsvxC0GDd1Fsj1omDTbMOYV
-         9NMNrqjplqfUQr+pP71ijNH1O1RSDigcSsd0c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cCCcfuCqU/qdREtoEDzLnVLy4LPKMGX0jGv9c5Rh1B8=;
-        b=ikcoIXBxxI3vChNEI9vpcPVv2wEyjWFRP7vUnxyiyGARGsX/QHhJbOUisypsVG6n1i
-         IRQlsuhPwdXnL2TNkCgO+HvrqcXghSOc8nxsK6GwY8RFHjHxLo8i4E/PfJ5qKEShfzBZ
-         Prjgeb0R7xt51uAL4QxhiI1DlD9AerPynuB53xM8Enl2ft7/hNBC8y69hHD4tMSDMhul
-         PoTYOsOktWqe+2X2T4hyMeaKbOV0UfnWeG3GL4a7qJeS0FIhPfYyCw+5XxHatqrWpeC/
-         Vz6ZeIc3NcewSniXIkxxkP5j8FTXUN/2fBVAEvit7Lldzpy0aR/4HC/rZfRXrWKoHlY2
-         51wQ==
-X-Gm-Message-State: APjAAAW5GU+HxM3+okfEa8dLmQ1PaeNMRKNc40ixwsjzA2bPX2TLZ4yw
-        qUMH2C1xIX7U49uBQ720nRQRgg==
-X-Google-Smtp-Source: APXvYqwG4oEZZFnE0bcH3TRJ/Wba3p5uDNigTPmrPwm+Ag78TvQVmitBkN+Um1v3cCkDe6yNMmLSRw==
-X-Received: by 2002:a2e:834f:: with SMTP id l15mr13058888ljh.56.1559656863956;
-        Tue, 04 Jun 2019 07:01:03 -0700 (PDT)
-Received: from [172.16.11.26] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id x27sm3831041ljm.52.2019.06.04.07.01.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 07:01:03 -0700 (PDT)
-Subject: Re: [RFC 1/6] rcu: Add support for consolidated-RCU reader checking
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-References: <20190601222738.6856-1-joel@joelfernandes.org>
- <20190601222738.6856-2-joel@joelfernandes.org>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <0ff9e0e3-b9fb-8953-1f76-807102f785ee@rasmusvillemoes.dk>
-Date:   Tue, 4 Jun 2019 16:01:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1727137AbfFDOKb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jun 2019 10:10:31 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:1228 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbfFDOKb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 10:10:31 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf67bc80000>; Tue, 04 Jun 2019 07:10:16 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 04 Jun 2019 07:10:29 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 04 Jun 2019 07:10:29 -0700
+Received: from [10.24.192.32] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Jun
+ 2019 14:10:25 +0000
+Subject: Re: [PATCH V4 22/28] PCI: tegra: Access endpoint config only if PCIe
+ link is up
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <jonathanh@nvidia.com>,
+        <lorenzo.pieralisi@arm.com>, <vidyas@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
+ <20190516055307.25737-23-mmaddireddy@nvidia.com>
+ <20190604131436.GS16519@ulmo>
+X-Nvconfidentiality: public
+From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Message-ID: <09bcc121-eaca-3866-d0ef-7806503e883f@nvidia.com>
+Date:   Tue, 4 Jun 2019 19:40:00 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190601222738.6856-2-joel@joelfernandes.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190604131436.GS16519@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559657416; bh=e8fq9MpMuIFTNejCHaVxMSMSN3rhrW0rCYiIMJL4v58=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:
+         Content-Transfer-Encoding:Content-Language;
+        b=aHG7sdhriXAHkcHW0sAQZ4NsYP8jZKtaPRPo2Fv7SI10LSWMulwb7d4zPJNpUrc1D
+         bJGC17YGNK+4UgbdHC3Fziaa1qOY3edBY0l2cbRuOJ+5/Xw9F/CWzHSYPyz1jP78JZ
+         LgQ80vvicsYRuMHmsj0mX9oSYdH4rCXnUug9fDMKuhVkmO7uGTa5qmNA5PDzHYqXhF
+         PFdMR8R5wE0p5MVRikSZ3BHLc03cYB5/9qrVqvcUwCv2+ECDZH8kYKdeM6/lhlZkXK
+         MX7U1+WGMMUTZvNTeiEMPIJUIGavbxQO6rdpdK+pVV2cfndFhZxdqEyIZNo6esenjB
+         yqxD9RdG+vu1w==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 02/06/2019 00.27, Joel Fernandes (Google) wrote:
-> This patch adds support for checking RCU reader sections in list
-> traversal macros. Optionally, if the list macro is called under SRCU or
-> other lock/mutex protection, then appropriate lockdep expressions can be
-> passed to make the checks pass.
-> 
-> Existing list_for_each_entry_rcu() invocations don't need to pass the
-> optional fourth argument (cond) unless they are under some non-RCU
-> protection and needs to make lockdep check pass.
-> 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  include/linux/rculist.h  | 40 ++++++++++++++++++++++++++++++++++++----
->  include/linux/rcupdate.h |  7 +++++++
->  kernel/rcu/update.c      | 26 ++++++++++++++++++++++++++
->  3 files changed, 69 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-> index e91ec9ddcd30..b641fdd9f1a2 100644
-> --- a/include/linux/rculist.h
-> +++ b/include/linux/rculist.h
-> @@ -40,6 +40,25 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
->   */
->  #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
->  
-> +/*
-> + * Check during list traversal that we are within an RCU reader
-> + */
-> +#define __list_check_rcu()						\
-> +	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),			\
-> +			 "RCU-list traversed in non-reader section!")
-> +
-> +static inline void __list_check_rcu_cond(int dummy, ...)
-> +{
-> +	va_list ap;
-> +	int cond;
-> +
-> +	va_start(ap, dummy);
-> +	cond = va_arg(ap, int);
-> +	va_end(ap);
-> +
-> +	RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(),
-> +			 "RCU-list traversed in non-reader section!");
-> +}
->  /*
->   * Insert a new entry between two known consecutive entries.
->   *
-> @@ -338,6 +357,9 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
->  						  member) : NULL; \
->  })
->  
-> +#define SIXTH_ARG(a1, a2, a3, a4, a5, a6, ...) a6
-> +#define COUNT_VARGS(...) SIXTH_ARG(dummy, ## __VA_ARGS__, 4, 3, 2, 1, 0)
-> +>  /**
->   * list_for_each_entry_rcu	-	iterate over rcu list of given type
->   * @pos:	the type * to use as a loop cursor.
-> @@ -348,9 +370,14 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
->   * the _rcu list-mutation primitives such as list_add_rcu()
->   * as long as the traversal is guarded by rcu_read_lock().
->   */
-> -#define list_for_each_entry_rcu(pos, head, member) \
-> -	for (pos = list_entry_rcu((head)->next, typeof(*pos), member); \
-> -		&pos->member != (head); \
-> +#define list_for_each_entry_rcu(pos, head, member, cond...)		\
-> +	if (COUNT_VARGS(cond) != 0) {					\
-> +		__list_check_rcu_cond(0, ## cond);			\
-> +	} else {							\
-> +		__list_check_rcu();					\
-> +	}								\
-> +	for (pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
-> +		&pos->member != (head);					\
->  		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
 
-Wouldn't something as simple as
 
-#define __list_check_rcu(dummy, cond, ...) \
-       RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(), \
-			 "RCU-list traversed in non-reader section!");
+On 04-Jun-19 6:44 PM, Thierry Reding wrote:
+> On Thu, May 16, 2019 at 11:23:01AM +0530, Manikanta Maddireddy wrote:
+>> Few endpoints like Wi-Fi supports power on/off and to leverage that
+>> root port must support hot-plug and hot-unplug. Tegra PCIe doesn't
+>> support hot-plug and hot-unplug, however it supports endpoint power
+>> on/off feature as follows,
+>>  - Power off sequence:
+>>    - Transition of PCIe link to L2
+>>    - Power off endpoint
+>>    - Leave root port in power up state with the link in L2
+>>  - Power on sequence:
+>>    - Power on endpoint
+>>    - Apply hot reset to get PCIe link up
+>>
+>> PCIe client driver stops accessing PCIe endpoint config and BAR registers
+>> after endpoint is powered off. However, software applications like x11
+>> server or lspci can access endpoint config registers in which case
+>> host controller raises "response decoding" errors. To avoid this scenario,
+>> add PCIe link up check in config read and write callback functions before
+>> accessing endpoint config registers.
+>>
+>> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+>> ---
+>> V4: No change
+>>
+>> V3: Update the commit log with explanation for the need of this patch
+>>
+>> V2: Change tegra_pcie_link_status() to tegra_pcie_link_up()
+>>
+>>  drivers/pci/controller/pci-tegra.c | 38 ++++++++++++++++++++++++++++++
+>>  1 file changed, 38 insertions(+)
+> This still doesn't look right to me conceptually. If somebody wants to
+> access the PCI devices after the kernel has powered them off, why can't
+> we just power the devices back on so that we allow userspace to properly
+> access the devices?
 
-for ( ({ __list_check_rcu(junk, ##cond, 0); }), pos = ... )
+1. WiFi devices provides power-off feature for power saving in mobiles.
+When WiFi is turned off we shouldn't power on the HW back without user
+turning it back on.
+2. When ever user process tries to access config space, it'll end up
+in these functions. We cannot have is_powered_on check in config read/write
+callbacks.
+3. WiFi power on/off is device specific feature, we shouldn't handle it
+in PCI subsystem or host controller driver.
 
-work just as well (i.e., no need for two list_check_rcu and
-list_check_rcu_cond variants)? If there's an optional cond, we use that,
-if not, we pick the trailing 0, so !cond disappears and it reduces to
-your __list_check_rcu(). Moreover, this ensures the RCU_LOCKDEP_WARN
-expansion actually picks up the __LINE__ and __FILE__ where the for loop
-is used, and not the __FILE__ and __LINE__ of the static inline function
-from the header file. It also makes it a bit more type safe/type generic
-(if the cond expression happened to have type long or u64 something
-rather odd could happen with the inline vararg function).
+>
+> Or if that's not what we want, shouldn't we add something to the core
+> PCI infrastructure to let us deal with this? It seems like this is some
+> general problem that would apply to every PCI device and host bridge
+> driver. Having each driver implement this logic separately doesn't seem
+> like a good idea to me.
+>
+> Thierry
 
-Rasmus
+This should be handled by hotplug feature, whenever endpoint is powered-off/
+removed from the slot, hot unplug event should take care of it. Unfortunately
+Tegra PCIe doesn't support hotplug feature.
+
+Manikanta
+
+>> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+>> index d20c88a79e00..33f4dfab9e35 100644
+>> --- a/drivers/pci/controller/pci-tegra.c
+>> +++ b/drivers/pci/controller/pci-tegra.c
+>> @@ -428,6 +428,14 @@ static inline u32 pads_readl(struct tegra_pcie *pcie, unsigned long offset)
+>>  	return readl(pcie->pads + offset);
+>>  }
+>>  
+>> +static bool tegra_pcie_link_up(struct tegra_pcie_port *port)
+>> +{
+>> +	u32 value;
+>> +
+>> +	value = readl(port->base + RP_LINK_CONTROL_STATUS);
+>> +	return !!(value & RP_LINK_CONTROL_STATUS_DL_LINK_ACTIVE);
+>> +}
+>> +
+>>  /*
+>>   * The configuration space mapping on Tegra is somewhat similar to the ECAM
+>>   * defined by PCIe. However it deviates a bit in how the 4 bits for extended
+>> @@ -493,20 +501,50 @@ static void __iomem *tegra_pcie_map_bus(struct pci_bus *bus,
+>>  static int tegra_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
+>>  				  int where, int size, u32 *value)
+>>  {
+>> +	struct tegra_pcie *pcie = bus->sysdata;
+>> +	struct pci_dev *bridge;
+>> +	struct tegra_pcie_port *port;
+>> +
+>>  	if (bus->number == 0)
+>>  		return pci_generic_config_read32(bus, devfn, where, size,
+>>  						 value);
+>>  
+>> +	bridge = pcie_find_root_port(bus->self);
+>> +
+>> +	list_for_each_entry(port, &pcie->ports, list)
+>> +		if (port->index + 1 == PCI_SLOT(bridge->devfn))
+>> +			break;
+>> +
+>> +	/* If there is no link, then there is no device */
+>> +	if (!tegra_pcie_link_up(port)) {
+>> +		*value = 0xffffffff;
+>> +		return PCIBIOS_DEVICE_NOT_FOUND;
+>> +	}
+>> +
+>>  	return pci_generic_config_read(bus, devfn, where, size, value);
+>>  }
+>>  
+>>  static int tegra_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
+>>  				   int where, int size, u32 value)
+>>  {
+>> +	struct tegra_pcie *pcie = bus->sysdata;
+>> +	struct tegra_pcie_port *port;
+>> +	struct pci_dev *bridge;
+>> +
+>>  	if (bus->number == 0)
+>>  		return pci_generic_config_write32(bus, devfn, where, size,
+>>  						  value);
+>>  
+>> +	bridge = pcie_find_root_port(bus->self);
+>> +
+>> +	list_for_each_entry(port, &pcie->ports, list)
+>> +		if (port->index + 1 == PCI_SLOT(bridge->devfn))
+>> +			break;
+>> +
+>> +	/* If there is no link, then there is no device */
+>> +	if (!tegra_pcie_link_up(port))
+>> +		return PCIBIOS_DEVICE_NOT_FOUND;
+>> +
+>>  	return pci_generic_config_write(bus, devfn, where, size, value);
+>>  }
+>>  
+>> -- 
+>> 2.17.1
+>>
+
