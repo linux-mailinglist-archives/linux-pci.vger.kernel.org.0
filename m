@@ -2,152 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E73DE33EF2
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 08:24:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99AC933F54
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 08:56:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfFDGYo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jun 2019 02:24:44 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:13319 "EHLO pegase1.c-s.fr"
+        id S1726578AbfFDG4U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jun 2019 02:56:20 -0400
+Received: from gate.crashing.org ([63.228.1.57]:55730 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726595AbfFDGYo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 4 Jun 2019 02:24:44 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45J22c6Rwqz9vDbl;
-        Tue,  4 Jun 2019 08:24:40 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id bLXlcgVXjjBG; Tue,  4 Jun 2019 08:24:40 +0200 (CEST)
-Received: from vm-hermes.si.c-s.fr (vm-hermes.si.c-s.fr [192.168.25.253])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45J22c5XHVz9vDbk;
-        Tue,  4 Jun 2019 08:24:40 +0200 (CEST)
-Received: by vm-hermes.si.c-s.fr (Postfix, from userid 33)
-        id B90D1843; Tue,  4 Jun 2019 08:24:39 +0200 (CEST)
-Received: from 37-165-91-81.coucou-networks.fr
- (37-165-91-81.coucou-networks.fr [37.165.91.81]) by messagerie.c-s.fr (Horde
- Framework) with HTTP; Tue, 04 Jun 2019 08:24:39 +0200
-Date:   Tue, 04 Jun 2019 08:24:39 +0200
-Message-ID: <20190604082439.Horde.tWsSNlWiTjwbZIMIFhnFcQ5@messagerie.c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] PCI: rpaphp: Avoid a sometimes-uninitialized warning
-In-Reply-To: <20190603174323.48251-1-natechancellor@gmail.com>
-User-Agent: Internet Messaging Program (IMP) H5 (6.2.3)
-Content-Type: text/plain; charset=UTF-8; format=flowed; DelSp=Yes
-MIME-Version: 1.0
-Content-Disposition: inline
+        id S1726547AbfFDG4T (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 4 Jun 2019 02:56:19 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x546u4cN002022;
+        Tue, 4 Jun 2019 01:56:05 -0500
+Message-ID: <cb98d303c09d802f4173a33b4c33ece5d25f9748.camel@kernel.crashing.org>
+Subject: Re: [RFC] ARM64 PCI resource survey issue(s)
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sinan Kaya <okaya@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "Zilberman, Zeev" <zeev@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>
+Date:   Tue, 04 Jun 2019 16:56:04 +1000
+In-Reply-To: <960c94eb151ba1d066090774621cf6ca6566d135.camel@kernel.crashing.org>
+References: <56715377f941f1953be43b488c2203ec090079a1.camel@kernel.crashing.org>
+         <20190604014945.GE189360@google.com>
+         <960c94eb151ba1d066090774621cf6ca6566d135.camel@kernel.crashing.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, 2019-06-04 at 13:32 +1000, Benjamin Herrenschmidt wrote:
+> 
+> > I would like to handle these individual devices that cannot be moved
+> > the same way we handle legacy (IDE, VGA) devices, i.e., mark the BARs
+> > with IORESOURCE_IO_FIXED.
+> 
+> A bit more messy but doable. However....
 
-Quoting Nathan Chancellor <natechancellor@gmail.com>:
+Sooo.... I spent some quality whisky getting my head around the current
+state of setup-bus.c and setup-res.c ... gosh, what a mess ! Anyway, I
+have some concerns about the use of IORESOURCE_IO_FIXED in the context
+of an arch like arm64 that just blindly does:
 
-> When building with -Wsometimes-uninitialized, clang warns:
->
-> drivers/pci/hotplug/rpaphp_core.c:243:14: warning: variable 'fndit' is
-> used uninitialized whenever 'for' loop exits because its condition is
-> false [-Wsometimes-uninitialized]
->         for (j = 0; j < entries; j++) {
->                     ^~~~~~~~~~~
-> drivers/pci/hotplug/rpaphp_core.c:256:6: note: uninitialized use occurs
-> here
->         if (fndit)
->             ^~~~~
-> drivers/pci/hotplug/rpaphp_core.c:243:14: note: remove the condition if
-> it is always true
->         for (j = 0; j < entries; j++) {
->                     ^~~~~~~~~~~
-> drivers/pci/hotplug/rpaphp_core.c:233:14: note: initialize the variable
-> 'fndit' to silence this warning
->         int j, fndit;
->                     ^
->                      = 0
->
-> Looking at the loop in a vacuum as clang would, fndit could be
-> uninitialized if entries was ever zero or the if statement was
-> always true within the loop. Regardless of whether or not this
-> warning is a problem in practice, "found" variables should always
-> be initialized to false so that there is no possibility of
-> undefined behavior.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/504
-> Fixes: 2fcf3ae508c2 ("hotplug/drc-info: Add code to search  
-> ibm,drc-info property")
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->  drivers/pci/hotplug/rpaphp_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/hotplug/rpaphp_core.c  
-> b/drivers/pci/hotplug/rpaphp_core.c
-> index bcd5d357ca23..07b56bf2886f 100644
-> --- a/drivers/pci/hotplug/rpaphp_core.c
-> +++ b/drivers/pci/hotplug/rpaphp_core.c
-> @@ -230,7 +230,7 @@ static int rpaphp_check_drc_props_v2(struct  
-> device_node *dn, char *drc_name,
->  	struct of_drc_info drc;
->  	const __be32 *value;
->  	char cell_drc_name[MAX_DRC_NAME_LEN];
-> -	int j, fndit;
-> +	int j, fndit = 0;
+        pci_bus_size_bridges(bus);
+        pci_bus_assign_resources(bus);
 
-Not sure fndit is needed at all. Looking into the full function code,  
-fndit only serves as doing a single action. That action could be done  
-in the loop directly, see below
+Unless I'm missing something (please correct me if I am), this is all
+extremely fragile and will only work under some very specific
+circumstances:
 
-And while you are at it, I guess you should also handle the  
-initialisation of cell_drc_name.
-In the current code, it looks like content of cell_drc_name is  
-undefined when doing the strcmp when fndit is not 1.
+First, the big issue is that having individual devices with such
+"Fixed" BAR doesn't work in isolation. There is no chance in hell the
+code in setup-bus.c will manage to configure the enclosing bridges
+etc... to accomodate such fixed devices, it would require a major
+refactoring of our entire resource allocation scheme.
 
->
->  	info = of_find_property(dn->parent, "ibm,drc-info", NULL);
->  	if (info == NULL)
-> --
-> 2.22.0.rc2
+pci_bus_size_bridges() does all the calculation for sizing up bridges
+and ... completely ignores fixed BARs. Later pci_bus_assign_resources()
+will assign bridges a location, again, completely ignoring children
+fixed BARs if any.
 
-diff --git a/drivers/pci/hotplug/rpaphp_core.c  
-b/drivers/pci/hotplug/rpaphp_core.c
-index bcd5d357ca23..87113419a44f 100644
---- a/drivers/pci/hotplug/rpaphp_core.c
-+++ b/drivers/pci/hotplug/rpaphp_core.c
-@@ -230,7 +230,7 @@ static int rpaphp_check_drc_props_v2(struct  
-device_node *dn, char *drc_name,
-  	struct of_drc_info drc;
-  	const __be32 *value;
-  	char cell_drc_name[MAX_DRC_NAME_LEN];
--	int j, fndit;
-+	int j;
+Chances that we successfully land the fixed BARs in the resulting
+allocation are slim at best.
 
-  	info = of_find_property(dn->parent, "ibm,drc-info", NULL);
-  	if (info == NULL)
-@@ -248,14 +248,10 @@ static int rpaphp_check_drc_props_v2(struct  
-device_node *dn, char *drc_name,
-  		if (my_index > drc.last_drc_index)
-  			continue;
+So at the very least, to have a chance of working, if any endpoint has
+fixed BARs, then all of it's parent chain must also be fixed, because
+we won't be able to deal with it otherwise, at least not via the
+"blunt" assignment code path.
 
--		fndit = 1;
-+		/* Found it */
-+		sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix, my_index);
-  		break;
-  	}
--	/* Found it */
--
--	if (fndit)
--		sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
--			my_index);
+But there seem to be more damage here (though that one maybe easier to
+fix) from looking at the code: Unless I'm mistaken in my reading of the
+code, for a given "level" of the bus tree, __pci_bus_assign_resources()
+will *first* assign all the non-fixed devices by calling
+pbus_assign_resources_sorted(), and *then* try to claim the fixed
+resources of any device at that level using
+pdev_assign_fixed_resources().
 
-  	if (((drc_name == NULL) ||
-  	     (drc_name && !strcmp(drc_name, cell_drc_name))) &&
+Again, even if we had the parent bridge by design (fixed too) or by
+chance, covering the space where the fixed BAR is, chances that a
+sibling non-fixed device will be given that slot before we have a
+chance to claim it.
 
-Christophe
+So in practice, IORESOURCE_IO_FIXED only works if all parents and
+siblings are also IORESOURCE_IO_FIXED (either that or I just
+misunderstood the code). The sibling case might be fixable by changing
+the order inside __pci_bus_assign_resources().
+
+There's more gunk too ... for example for IORESOURCE_IO_FIXED to work
+on bridges one must call pci_read_bridge_bases() first which the
+generic code doesn't do. So here comes an arch pcibios_fixup_bus ...
+yuck.
+
+There's also an oddball test about enabled bridges in
+__pci_bus_assign_resources() that __pci_bridge_assign_resources()
+doesn't have (yet another almost identical but not quite set of
+functions just to confuse people) which might make snse
+
+I looked at Lorenzo patches in his git repo for trying to deal with
+_DSM #5 via IORESOURCE_IO_FIXED and I don't like what I see in that
+context either :)
+
+So at this stage, I think we are better off solving the immediate
+issues of platforms that have good allocations coming from FW by using
+Ard's old patch at the host brigde level (possibly changing the default
+in absence of _DSM #5).
+
+Taking on step back here and trying to think more long term, I am
+concerned that we have how many different methods of doing the resource
+allocation depending on the arch that go through different (sometime
+majorly, sometimes subltly) path in the generic code, this doesn't seem
+particularily maintainable...
+
+It used to be that pci_bus_assign_resources() basically meant "force
+reassign everything". If you throw IORESOURCE_IO_FIXED in the mix then
+it's no longer that. It's now starting to look a bit more (but not
+quite) like pci_assign_unassigned_bus_resources() except that we don't
+have a generic 2-pass survey of existing resources like x86 has.
+
+We do have pci_bus_claim_resources() but that one seems more targetted
+as the opposite where we trust everything setup by FW and don't
+reassign anything. It doesn't seem to have provisions for detecting
+unsassigned resources unless I missed another bit here.
+
+Then we have pci_host_probe() that some archs use (but not arm64),
+which seems to be yet a different combination, which either trusts
+firmware completely (pci_bus_claim_resources) or not at all
+(pci_bus_size_bridges+pci_bus_assign_resources) based on a single
+global flag (shouldn't it be per-host bridge ?).
+
+Cheers,
+Ben.
+
+
