@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AA2D34835
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 15:20:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14DC234806
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 15:18:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfFDNSm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jun 2019 09:18:42 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55042 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727221AbfFDNSl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 09:18:41 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DHf13028057;
-        Tue, 4 Jun 2019 08:17:41 -0500
+        id S1727608AbfFDNSE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jun 2019 09:18:04 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50382 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727265AbfFDNSE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 09:18:04 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DHktZ082389;
+        Tue, 4 Jun 2019 08:17:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559654261;
-        bh=RElHPxtACkCdk4rLufC/bmJZmseWFYOIIvYrh7aFO/8=;
+        s=ti-com-17Q1; t=1559654266;
+        bh=t0jA6IyzaKFpaRxG+xMzbQ3TeSZ/biJLiuqhdnBH3TQ=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ctcAw7L7QUByHCOouvIbfAiWv5Zee8mbXY3jZXhr2OTNddfQLtmVD7zJnqx/VdTyr
-         lC1MgB43JIWeJjcT739mZpUBUOpgDiQwkfxViuPTLl3GsgePCdIvDMwpmCh+CjaqWG
-         lqtruagGs6y45G+xx4UhzoFRKD5nWMZRXj0nSwfY=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DHeFX052834
+        b=KZr/Yb1n2JCx1xdXk+5fWxz251JLI16pKngaDfG2QC6hGXVLV4i5gvy6cCgIsJMjP
+         c4WNdd1kbTd+yYCRuS/k+h6OJjnmI4OPZi0H3EJWyU1J15IIwDqImxqx57wu5Udo9Z
+         bvFpZC/srm1v2Mm4BAhsZsXo0/fnO3zxZwm++kmk=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DHkn2042937
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Jun 2019 08:17:40 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 4 Jun 2019 08:17:46 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
- 2019 08:17:40 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 08:17:46 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 4 Jun 2019 08:17:40 -0500
+ Frontend Transport; Tue, 4 Jun 2019 08:17:46 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DGdGQ098972;
-        Tue, 4 Jun 2019 08:17:35 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DGdGR098972;
+        Tue, 4 Jun 2019 08:17:41 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Tom Joseph <tjoseph@cadence.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -51,9 +51,9 @@ CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-omap@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 10/30] PCI: cadence: Use *_start_link() and *_wait_for_link() to establish link
-Date:   Tue, 4 Jun 2019 18:44:56 +0530
-Message-ID: <20190604131516.13596-11-kishon@ti.com>
+Subject: [RFC PATCH 11/30] PCI: cadence: Add support to drive PERST# line using GPIO
+Date:   Tue, 4 Jun 2019 18:44:57 +0530
+Message-ID: <20190604131516.13596-12-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190604131516.13596-1-kishon@ti.com>
 References: <20190604131516.13596-1-kishon@ti.com>
@@ -65,94 +65,75 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Use cdns_pcie_start_link() to start link training and
-cdns_pcie_wait_for_link() in order to wait to establish the link.
+In platforms like TI's J721E EVM, the PERST# line is connected to a
+GPIO line and PERST# should be driven high to indicate the clocks are
+stable (As per Figure 2-10: Power Up of the PCIe CEM spec 3.0).
+
+Add support to make GPIO drive PERST# line.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/controller/pcie-cadence-ep.c   | 11 ++++++++++-
- drivers/pci/controller/pcie-cadence-host.c | 11 +++++++++++
- 2 files changed, 21 insertions(+), 1 deletion(-)
+ drivers/pci/controller/pcie-cadence-host.c | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/pcie-cadence-ep.c
-index b044167071e6..825a515821c3 100644
---- a/drivers/pci/controller/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/pcie-cadence-ep.c
-@@ -21,6 +21,7 @@
- /**
-  * struct cdns_pcie_ep - private data for this PCIe endpoint controller driver
-  * @pcie: Cadence PCIe controller
-+ * @dev: pointer to PCIe EP device
-  * @max_regions: maximum number of regions supported by hardware
-  * @ob_region_map: bitmask of mapped outbound regions
-  * @ob_addr: base addresses in the AXI bus where the outbound regions start
-@@ -37,6 +38,7 @@
-  */
- struct cdns_pcie_ep {
- 	struct cdns_pcie		pcie;
-+	struct device			*dev;
- 	u32				max_regions;
- 	unsigned long			ob_region_map;
- 	phys_addr_t			*ob_addr;
-@@ -386,6 +388,7 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
- 	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
- 	struct cdns_pcie *pcie = &ep->pcie;
- 	struct pci_epf *epf;
-+	int ret = 0;
- 	u32 cfg;
- 
- 	/*
-@@ -397,7 +400,11 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
- 		cfg |= BIT(epf->func_no);
- 	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, cfg);
- 
--	return 0;
-+	ret = cdns_pcie_start_link(pcie, true);
-+	if (ret)
-+		dev_err(ep->dev, "Failed to start link\n");
-+
-+	return ret;
- }
- 
- static const struct pci_epc_features cdns_pcie_epc_features = {
-@@ -460,6 +467,8 @@ static int cdns_pcie_ep_probe(struct platform_device *pdev)
- 	if (!ep)
- 		return -ENOMEM;
- 
-+	ep->dev = dev;
-+
- 	pcie = &ep->pcie;
- 	pcie->is_rc = false;
- 	pcie->plat_data = pdev->dev.platform_data;
 diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/pcie-cadence-host.c
-index 2363f05e7c58..4ad8f2ece6e2 100644
+index 4ad8f2ece6e2..8b3b9827a8d6 100644
 --- a/drivers/pci/controller/pcie-cadence-host.c
 +++ b/drivers/pci/controller/pcie-cadence-host.c
-@@ -365,6 +365,14 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
- 		goto err_get_sync;
- 	}
+@@ -3,6 +3,8 @@
+ // Cadence PCIe host controller driver.
+ // Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
  
-+	ret = cdns_pcie_start_link(pcie, true);
-+	if (ret) {
-+		dev_err(dev, "Failed to start link\n");
-+		goto err_start_link;
++#include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/kernel.h>
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
+@@ -287,6 +289,7 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
+ 	struct pci_host_bridge *bridge;
+ 	struct list_head resources;
+ 	struct cdns_pcie_rc *rc;
++	struct gpio_desc *gpiod;
+ 	struct cdns_pcie *pcie;
+ 	struct resource *res;
+ 	int ret;
+@@ -349,13 +352,36 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
+ 		dev_err(dev, "missing \"mem\"\n");
+ 		return -EINVAL;
+ 	}
++
+ 	pcie->mem_res = res;
+ 
++	gpiod = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
++	if (IS_ERR(gpiod)) {
++		ret = PTR_ERR(gpiod);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "Failed to get reset GPIO\n");
++		return ret;
 +	}
 +
-+	cdns_pcie_wait_for_link(dev, pcie);
+ 	ret = cdns_pcie_init_phy(dev, pcie);
+ 	if (ret) {
+ 		dev_err(dev, "failed to init phy\n");
+ 		return ret;
+ 	}
 +
- 	ret = cdns_pcie_host_init(dev, &resources, rc);
- 	if (ret)
- 		goto err_init;
-@@ -386,6 +394,9 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
- 	pci_free_resource_list(&resources);
- 
-  err_init:
-+	cdns_pcie_start_link(pcie, false);
++	/*
++	 * "Power Sequencing and Reset Signal Timings" table in
++	 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
++	 * indicates PERST# should be deasserted after minimum of 100us
++	 * once REFCLK is stable. The REFCLK to the connector in RC
++	 * mode is selected while enabling the PHY. So deassert PERST#
++	 * after 100 us.
++	 */
++	if (gpiod) {
++		usleep_range(100, 200);
++		gpiod_set_value_cansleep(gpiod, 1);
++	}
 +
-+ err_start_link:
- 	pm_runtime_put_sync(dev);
+ 	platform_set_drvdata(pdev, pcie);
  
-  err_get_sync:
+ 	pm_runtime_enable(dev);
 -- 
 2.17.1
 
