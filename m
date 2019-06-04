@@ -2,200 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B2F5A349CB
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 16:10:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1F1F34A7F
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 16:34:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfFDOKb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jun 2019 10:10:31 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:1228 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfFDOKb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 10:10:31 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf67bc80000>; Tue, 04 Jun 2019 07:10:16 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 04 Jun 2019 07:10:29 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 04 Jun 2019 07:10:29 -0700
-Received: from [10.24.192.32] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Jun
- 2019 14:10:25 +0000
-Subject: Re: [PATCH V4 22/28] PCI: tegra: Access endpoint config only if PCIe
- link is up
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <jonathanh@nvidia.com>,
-        <lorenzo.pieralisi@arm.com>, <vidyas@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
- <20190516055307.25737-23-mmaddireddy@nvidia.com>
- <20190604131436.GS16519@ulmo>
-X-Nvconfidentiality: public
-From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Message-ID: <09bcc121-eaca-3866-d0ef-7806503e883f@nvidia.com>
-Date:   Tue, 4 Jun 2019 19:40:00 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1727204AbfFDOeR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jun 2019 10:34:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49582 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727169AbfFDOeR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 4 Jun 2019 10:34:17 -0400
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AB0824A3B
+        for <linux-pci@vger.kernel.org>; Tue,  4 Jun 2019 14:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559658856;
+        bh=UntfhH8l0ccgDRl9YHHwrJYIlaIvptT94h07xeG7854=;
+        h=In-Reply-To:References:From:Date:Subject:To:Cc:From;
+        b=ayZZ5lYqIdOerA/6UnZ8DZorQv/VVWoyqlkqdHfgqUppS6vVEZGOSprDoVLIUMhnG
+         c63MitrWmcN6aPBJ4ld4HOK6DPHXoraR1Jj9Y2907ywCKwtZ4qbn5jN5E3znU2qSw/
+         yeu2tFVVUimoTHG6LFIroBcCtxVCfAMzQHA+qwZw=
+Received: by mail-oi1-f175.google.com with SMTP id b21so11774369oic.8
+        for <linux-pci@vger.kernel.org>; Tue, 04 Jun 2019 07:34:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAUqcKj4lo54kVw9tDOFNpU5QRVVyaywYc31NjvVcAj24hsJDyRQ
+        OWQG1MCrQ7MQthmqR7uU1QPxtto1gGinBtHLQYY=
+X-Google-Smtp-Source: APXvYqxBIodGF9yl/ISpoOd5z/HUiarTpPQv1JQAUQ62/1K9/gjw5YcPBBHx4QsSOk/N0e06FOrCtoA3suzDF5piBr8=
+X-Received: by 2002:aca:3942:: with SMTP id g63mr4261579oia.48.1559658855636;
+ Tue, 04 Jun 2019 07:34:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190604131436.GS16519@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559657416; bh=e8fq9MpMuIFTNejCHaVxMSMSN3rhrW0rCYiIMJL4v58=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:
-         Content-Transfer-Encoding:Content-Language;
-        b=aHG7sdhriXAHkcHW0sAQZ4NsYP8jZKtaPRPo2Fv7SI10LSWMulwb7d4zPJNpUrc1D
-         bJGC17YGNK+4UgbdHC3Fziaa1qOY3edBY0l2cbRuOJ+5/Xw9F/CWzHSYPyz1jP78JZ
-         LgQ80vvicsYRuMHmsj0mX9oSYdH4rCXnUug9fDMKuhVkmO7uGTa5qmNA5PDzHYqXhF
-         PFdMR8R5wE0p5MVRikSZ3BHLc03cYB5/9qrVqvcUwCv2+ECDZH8kYKdeM6/lhlZkXK
-         MX7U1+WGMMUTZvNTeiEMPIJUIGavbxQO6rdpdK+pVV2cfndFhZxdqEyIZNo6esenjB
-         yqxD9RdG+vu1w==
+Received: by 2002:a4a:9d45:0:0:0:0:0 with HTTP; Tue, 4 Jun 2019 07:34:15 -0700 (PDT)
+In-Reply-To: <a7dcc378-6101-ac08-ec8e-be7d5c183b49@huawei.com>
+References: <a7dcc378-6101-ac08-ec8e-be7d5c183b49@huawei.com>
+From:   Sinan Kaya <Okaya@kernel.org>
+Date:   Tue, 4 Jun 2019 10:34:15 -0400
+X-Gmail-Original-Message-ID: <CAK9iUCPREGruU7zGqnkS9w_x8Q7iE8twveEp2dn8ArupTTQyHA@mail.gmail.com>
+Message-ID: <CAK9iUCPREGruU7zGqnkS9w_x8Q7iE8twveEp2dn8ArupTTQyHA@mail.gmail.com>
+Subject: Re: Bug report: AER driver deadlock
+To:     "Fangjian (Turing)" <f.fangjian@huawei.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 04-Jun-19 6:44 PM, Thierry Reding wrote:
-> On Thu, May 16, 2019 at 11:23:01AM +0530, Manikanta Maddireddy wrote:
->> Few endpoints like Wi-Fi supports power on/off and to leverage that
->> root port must support hot-plug and hot-unplug. Tegra PCIe doesn't
->> support hot-plug and hot-unplug, however it supports endpoint power
->> on/off feature as follows,
->>  - Power off sequence:
->>    - Transition of PCIe link to L2
->>    - Power off endpoint
->>    - Leave root port in power up state with the link in L2
->>  - Power on sequence:
->>    - Power on endpoint
->>    - Apply hot reset to get PCIe link up
->>
->> PCIe client driver stops accessing PCIe endpoint config and BAR registers
->> after endpoint is powered off. However, software applications like x11
->> server or lspci can access endpoint config registers in which case
->> host controller raises "response decoding" errors. To avoid this scenario,
->> add PCIe link up check in config read and write callback functions before
->> accessing endpoint config registers.
->>
->> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
->> ---
->> V4: No change
->>
->> V3: Update the commit log with explanation for the need of this patch
->>
->> V2: Change tegra_pcie_link_status() to tegra_pcie_link_up()
->>
->>  drivers/pci/controller/pci-tegra.c | 38 ++++++++++++++++++++++++++++++
->>  1 file changed, 38 insertions(+)
-> This still doesn't look right to me conceptually. If somebody wants to
-> access the PCI devices after the kernel has powered them off, why can't
-> we just power the devices back on so that we allow userspace to properly
-> access the devices?
-
-1. WiFi devices provides power-off feature for power saving in mobiles.
-When WiFi is turned off we shouldn't power on the HW back without user
-turning it back on.
-2. When ever user process tries to access config space, it'll end up
-in these functions. We cannot have is_powered_on check in config read/write
-callbacks.
-3. WiFi power on/off is device specific feature, we shouldn't handle it
-in PCI subsystem or host controller driver.
-
+On 6/3/19, Fangjian (Turing) <f.fangjian@huawei.com> wrote:
+> Hi, We met a deadlock triggered by a NONFATAL AER event during a sysfs
+> "sriov_numvfs" operation. Any suggestion to fix such deadlock ?
 >
-> Or if that's not what we want, shouldn't we add something to the core
-> PCI infrastructure to let us deal with this? It seems like this is some
-> general problem that would apply to every PCI device and host bridge
-> driver. Having each driver implement this logic separately doesn't seem
-> like a good idea to me.
+>   enable one VF
+>   # echo 1 > /sys/devices/pci0000:74/0000:74:00.0/0000:75:00.0/sriov_numvfs
 >
-> Thierry
+>   The sysfs "sriov_numvfs" side is:
+>
+>     sriov_numvfs_store
+>       device_lock                               # hold the device_lock
+>         ...
+>         pci_enable_sriov
+>           sriov_enable
+>             ...
+>             pci_device_add
+>               down_write(&pci_bus_sem) 	        # wait for
+> up_read(&pci_bus_sem)
+>
+>   The AER side is:
+>
+>     pcie_do_recovery
+>       pci_walk_bus
+>         down_read(&pci_bus_sem)                 # hold the rw_semaphore
+>         report_resume
 
-This should be handled by hotplug feature, whenever endpoint is powered-off/
-removed from the slot, hot unplug event should take care of it. Unfortunately
-Tegra PCIe doesn't support hotplug feature.
+Should we replace these device lock with try lock loop with some sleep
+statements. This could solve the immediate deadlock issues until
+someone implements granular locking in pci.
 
-Manikanta
-
->> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
->> index d20c88a79e00..33f4dfab9e35 100644
->> --- a/drivers/pci/controller/pci-tegra.c
->> +++ b/drivers/pci/controller/pci-tegra.c
->> @@ -428,6 +428,14 @@ static inline u32 pads_readl(struct tegra_pcie *pcie, unsigned long offset)
->>  	return readl(pcie->pads + offset);
->>  }
->>  
->> +static bool tegra_pcie_link_up(struct tegra_pcie_port *port)
->> +{
->> +	u32 value;
->> +
->> +	value = readl(port->base + RP_LINK_CONTROL_STATUS);
->> +	return !!(value & RP_LINK_CONTROL_STATUS_DL_LINK_ACTIVE);
->> +}
->> +
->>  /*
->>   * The configuration space mapping on Tegra is somewhat similar to the ECAM
->>   * defined by PCIe. However it deviates a bit in how the 4 bits for extended
->> @@ -493,20 +501,50 @@ static void __iomem *tegra_pcie_map_bus(struct pci_bus *bus,
->>  static int tegra_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
->>  				  int where, int size, u32 *value)
->>  {
->> +	struct tegra_pcie *pcie = bus->sysdata;
->> +	struct pci_dev *bridge;
->> +	struct tegra_pcie_port *port;
->> +
->>  	if (bus->number == 0)
->>  		return pci_generic_config_read32(bus, devfn, where, size,
->>  						 value);
->>  
->> +	bridge = pcie_find_root_port(bus->self);
->> +
->> +	list_for_each_entry(port, &pcie->ports, list)
->> +		if (port->index + 1 == PCI_SLOT(bridge->devfn))
->> +			break;
->> +
->> +	/* If there is no link, then there is no device */
->> +	if (!tegra_pcie_link_up(port)) {
->> +		*value = 0xffffffff;
->> +		return PCIBIOS_DEVICE_NOT_FOUND;
->> +	}
->> +
->>  	return pci_generic_config_read(bus, devfn, where, size, value);
->>  }
->>  
->>  static int tegra_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
->>  				   int where, int size, u32 value)
->>  {
->> +	struct tegra_pcie *pcie = bus->sysdata;
->> +	struct tegra_pcie_port *port;
->> +	struct pci_dev *bridge;
->> +
->>  	if (bus->number == 0)
->>  		return pci_generic_config_write32(bus, devfn, where, size,
->>  						  value);
->>  
->> +	bridge = pcie_find_root_port(bus->self);
->> +
->> +	list_for_each_entry(port, &pcie->ports, list)
->> +		if (port->index + 1 == PCI_SLOT(bridge->devfn))
->> +			break;
->> +
->> +	/* If there is no link, then there is no device */
->> +	if (!tegra_pcie_link_up(port))
->> +		return PCIBIOS_DEVICE_NOT_FOUND;
->> +
->>  	return pci_generic_config_write(bus, devfn, where, size, value);
->>  }
->>  
->> -- 
->> 2.17.1
->>
-
+>           device_lock                           # wait for device_unlock()
+>
+> The calltrace is as below:
+>
+> [  258.411464] INFO: task kworker/0:1:13 blocked for more than 120 seconds.
+> [  258.418139]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
+> [  258.424379] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables
+> this message.
+> [  258.432172] kworker/0:1     D    0    13      2 0x00000028
+> [  258.437640] Workqueue: events aer_recover_work_func
+> [  258.442496] Call trace:
+> [  258.444933]  __switch_to+0xb4/0x1b8
+> [  258.448409]  __schedule+0x1ec/0x720
+> [  258.451884]  schedule+0x38/0x90
+> [  258.455012]  schedule_preempt_disabled+0x20/0x38
+> [  258.459610]  __mutex_lock.isra.1+0x150/0x518
+> [  258.463861]  __mutex_lock_slowpath+0x10/0x18
+> [  258.468112]  mutex_lock+0x34/0x40
+> [  258.471413]  report_resume+0x1c/0x78
+> [  258.474973]  pci_walk_bus+0x58/0xb0
+> [  258.478451]  pcie_do_recovery+0x18c/0x248
+> [  258.482445]  aer_recover_work_func+0xe0/0x118
+> [  258.486783]  process_one_work+0x1e4/0x468
+> [  258.490776]  worker_thread+0x40/0x450
+> [  258.494424]  kthread+0x128/0x130
+> [  258.497639]  ret_from_fork+0x10/0x1c
+> [  258.501329] INFO: task flr.sh:4534 blocked for more than 120 seconds.
+> [  258.507742]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
+> [  258.513980] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables
+> this message.
+> [  258.521774] flr.sh          D    0  4534   4504 0x00000000
+> [  258.527235] Call trace:
+> [  258.529671]  __switch_to+0xb4/0x1b8
+> [  258.533146]  __schedule+0x1ec/0x720
+> [  258.536619]  schedule+0x38/0x90
+> [  258.539749]  rwsem_down_write_failed+0x14c/0x210
+> [  258.544347]  down_write+0x48/0x60
+> [  258.547648]  pci_device_add+0x1a0/0x290
+> [  258.551469]  pci_iov_add_virtfn+0x190/0x358
+> [  258.555633]  sriov_enable+0x24c/0x480
+> [  258.559279]  pci_enable_sriov+0x14/0x28
+> [  258.563101]  hisi_zip_sriov_configure+0x64/0x100 [hisi_zip]
+> [  258.568649]  sriov_numvfs_store+0xc4/0x190
+> [  258.572728]  dev_attr_store+0x18/0x28
+> [  258.576375]  sysfs_kf_write+0x3c/0x50
+> [  258.580024]  kernfs_fop_write+0x114/0x1d8
+> [  258.584018]  __vfs_write+0x18/0x38
+> [  258.587404]  vfs_write+0xa4/0x1b0
+> [  258.590705]  ksys_write+0x60/0xd8
+> [  258.594007]  __arm64_sys_write+0x18/0x20
+> [  258.597914]  el0_svc_common+0x5c/0x100
+> [  258.601646]  el0_svc_handler+0x2c/0x80
+> [  258.605381]  el0_svc+0x8/0xc
+> [  379.243461] INFO: task kworker/0:1:13 blocked for more than 241 seconds.
+> [  379.250134]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
+> [  379.256373] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables
+> this message.
+>
+>
+> Thank you,
+> Jay
+>
+>
