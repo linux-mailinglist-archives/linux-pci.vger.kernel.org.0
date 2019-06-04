@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 26572347FE
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 15:18:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6F5A34819
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 15:18:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbfFDNRu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jun 2019 09:17:50 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50334 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727149AbfFDNRt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 09:17:49 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DHOCZ082297;
-        Tue, 4 Jun 2019 08:17:24 -0500
+        id S1727719AbfFDNS1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jun 2019 09:18:27 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35302 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727710AbfFDNS0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 09:18:26 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DHUwP091935;
+        Tue, 4 Jun 2019 08:17:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559654244;
-        bh=r7Ei7rsj5lX30OaH2FuRyDzaWU4cllou71wNl6pyjGU=;
+        s=ti-com-17Q1; t=1559654250;
+        bh=T5pkgbPtfeYhwC2XYU7uxdS1O66/LVXpQwXXprThbgo=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=LSVcOA+Yvgp5r4q37wsXmkUbV/VfLRgfiNv3EB13v74k4jJgbghcsXk7Gnb59nUyf
-         jSgBO6w/fIVnaXDF1mZkeFCQcxOtdDnsWypr0fkDmTYMDir+xvtwJ6WCRweqfrkiJy
-         cZC3MNhpjHt2TvSlI8WXEamLJPJiycennA//lZtg=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DHOIc042670
+        b=oLZn9E4EQCSED8upH9gju2LbBt/+J0Y8RfNaABd8mWwDs+2AVvyWfnxH0ZFZZvODz
+         yTzp2gGDRCi+k2WR02CLGV28NqOIRQhftLzWw8TnpdWV2+CBdZ3phLy3WjG3SWyZvs
+         psjAghz2htn9X9FJ/jKV7UnHLp8B+eNgZAX5DHdI=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DHUeM008068
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Jun 2019 08:17:24 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 4 Jun 2019 08:17:30 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
- 2019 08:17:24 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 08:17:29 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 4 Jun 2019 08:17:24 -0500
+ Frontend Transport; Tue, 4 Jun 2019 08:17:29 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DGdGN098972;
-        Tue, 4 Jun 2019 08:17:19 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DGdGO098972;
+        Tue, 4 Jun 2019 08:17:24 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Tom Joseph <tjoseph@cadence.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -51,9 +51,9 @@ CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-omap@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 07/30] PCI: cadence: Add read and write accessors to perform only 32-bit accesses
-Date:   Tue, 4 Jun 2019 18:44:53 +0530
-Message-ID: <20190604131516.13596-8-kishon@ti.com>
+Subject: [RFC PATCH 08/30] PCI: cadence: Add support to use PCIe in J721E SoC
+Date:   Tue, 4 Jun 2019 18:44:54 +0530
+Message-ID: <20190604131516.13596-9-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190604131516.13596-1-kishon@ti.com>
 References: <20190604131516.13596-1-kishon@ti.com>
@@ -65,80 +65,99 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Certain platforms like TI's J721E allows only 32-bit register accesses.
-Add read and write accessor to perform only 32-bit accesses in order to
-support platfroms like TI's J721E.
+Use J721E specific compatible in pcie-cadence-* drivers. Since PCIe in
+J721E SoC has a restriction that allows only 32-bit register access,
+use the 32-bit accessors for read and write.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/controller/pcie-cadence.c | 40 +++++++++++++++++++++++++++
- drivers/pci/controller/pcie-cadence.h |  2 ++
- 2 files changed, 42 insertions(+)
+ drivers/pci/controller/pcie-cadence-ep.c   | 12 +++++-
+ drivers/pci/controller/pcie-cadence-host.c | 47 +++++++++++++++++++++-
+ 2 files changed, 55 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-cadence.c b/drivers/pci/controller/pcie-cadence.c
-index cd795f6fc1e2..de5b3b06f2d0 100644
---- a/drivers/pci/controller/pcie-cadence.c
-+++ b/drivers/pci/controller/pcie-cadence.c
-@@ -7,6 +7,46 @@
+diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/pcie-cadence-ep.c
+index 64ab5c53afb1..07f840cfba23 100644
+--- a/drivers/pci/controller/pcie-cadence-ep.c
++++ b/drivers/pci/controller/pcie-cadence-ep.c
+@@ -425,9 +425,17 @@ static const struct pci_epc_ops cdns_pcie_epc_ops = {
+ 	.get_features	= cdns_pcie_ep_get_features,
+ };
  
- #include "pcie-cadence.h"
+-static const struct of_device_id cdns_pcie_ep_of_match[] = {
+-	{ .compatible = "cdns,cdns-pcie-ep" },
++static struct cdns_pcie_ep_data cdns_ti_pcie_ep_data = {
++	.read = cdns_pcie_read32,
++	.write = cdns_pcie_write32,
++};
  
-+u32 cdns_pcie_read32(void __iomem *addr, int size)
++static const struct of_device_id cdns_pcie_ep_of_match[] = {
++	{ .compatible = "cdns,cdns-pcie-ep",
++	},
++	{ .compatible = "ti,j721e-cdns-pcie-ep",
++	  .data = &cdns_ti_pcie_ep_data,
++	},
+ 	{ },
+ };
+ 
+diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/pcie-cadence-host.c
+index 75cf3c312ed2..ab6491b23775 100644
+--- a/drivers/pci/controller/pcie-cadence-host.c
++++ b/drivers/pci/controller/pcie-cadence-host.c
+@@ -93,9 +93,52 @@ static struct pci_ops cdns_pcie_host_ops = {
+ 	.write		= pci_generic_config_write,
+ };
+ 
+-static const struct of_device_id cdns_pcie_host_of_match[] = {
+-	{ .compatible = "cdns,cdns-pcie-host" },
++static int cdns_ti_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
++				    int where, int size, u32 *value)
 +{
-+	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
-+	unsigned int offset = (unsigned long)addr & 0x3;
-+	u32 val = readl(aligned_addr);
++	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
++	struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
++	unsigned int busn = bus->number;
 +
-+	if (!IS_ALIGNED((uintptr_t)addr, size)) {
-+		pr_err("Invalid Address in function:%s\n", __func__);
-+		return 0;
-+	}
++	if (busn == rc->bus_range->start)
++		return pci_generic_config_read32(bus, devfn, where, size,
++						 value);
 +
-+	if (size > 2)
-+		return val;
-+
-+	return (val >> (8 * offset)) & ((1 << (size * 8)) - 1);
++	return pci_generic_config_read(bus, devfn, where, size, value);
 +}
 +
-+void cdns_pcie_write32(void __iomem *addr, int size, u32 value)
++static int cdns_ti_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
++				     int where, int size, u32 value)
 +{
-+	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
-+	unsigned int offset = (unsigned long)addr & 0x3;
-+	u32 mask;
-+	u32 val;
++	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
++	struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
++	unsigned int busn = bus->number;
 +
-+	if (!IS_ALIGNED((uintptr_t)addr, size)) {
-+		pr_err("Invalid Address in function:%s\n", __func__);
-+		return;
-+	}
++	if (busn == rc->bus_range->start)
++		return pci_generic_config_write32(bus, devfn, where, size,
++						  value);
 +
-+	if (size > 2) {
-+		writel(value, addr);
-+		return;
-+	}
-+
-+	mask = ~(((1 << (size * 8)) - 1) << (offset * 8));
-+	val = readl(aligned_addr) & mask;
-+	val |= value << (offset * 8);
-+	writel(val, aligned_addr);
++	return pci_generic_config_write(bus, devfn, where, size, value);
 +}
 +
- void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 fn,
- 				   u32 r, bool is_io,
- 				   u64 cpu_addr, u64 pci_addr, size_t size)
-diff --git a/drivers/pci/controller/pcie-cadence.h b/drivers/pci/controller/pcie-cadence.h
-index 0134c1b1ad65..d157bf5eabd5 100644
---- a/drivers/pci/controller/pcie-cadence.h
-+++ b/drivers/pci/controller/pcie-cadence.h
-@@ -406,6 +406,8 @@ void cdns_pcie_reset_outbound_region(struct cdns_pcie *pcie, u32 r);
- void cdns_pcie_disable_phy(struct cdns_pcie *pcie);
- int cdns_pcie_enable_phy(struct cdns_pcie *pcie);
- int cdns_pcie_init_phy(struct device *dev, struct cdns_pcie *pcie);
-+u32 cdns_pcie_read32(void __iomem *addr, int size);
-+void cdns_pcie_write32(void __iomem *addr, int size, u32 value);
- extern const struct dev_pm_ops cdns_pcie_pm_ops;
++static struct pci_ops cdns_ti_pcie_host_ops = {
++	.map_bus	= cdns_pci_map_bus,
++	.read		= cdns_ti_pcie_config_read,
++	.write		= cdns_ti_pcie_config_write,
++};
++
++static struct cdns_pcie_host_data cdns_ti_pcie_host_data = {
++	.read = cdns_pcie_read32,
++	.write = cdns_pcie_write32,
++	.ops = &cdns_ti_pcie_host_ops,
++};
  
- #endif /* _PCIE_CADENCE_H */
++static const struct of_device_id cdns_pcie_host_of_match[] = {
++	{ .compatible = "cdns,cdns-pcie-host",
++	},
++	{ .compatible = "ti,j721e-cdns-pcie-host",
++	  .data = &cdns_ti_pcie_host_data,
++	},
+ 	{ },
+ };
+ 
 -- 
 2.17.1
 
