@@ -2,142 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C1F1F34A7F
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 16:34:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40CE334D2B
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 18:24:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727204AbfFDOeR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jun 2019 10:34:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49582 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727169AbfFDOeR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:34:17 -0400
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727408AbfFDQYt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jun 2019 12:24:49 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:60080 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727385AbfFDQYt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 12:24:49 -0400
+Received: from mailhost.synopsys.com (unknown [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AB0824A3B
-        for <linux-pci@vger.kernel.org>; Tue,  4 Jun 2019 14:34:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559658856;
-        bh=UntfhH8l0ccgDRl9YHHwrJYIlaIvptT94h07xeG7854=;
-        h=In-Reply-To:References:From:Date:Subject:To:Cc:From;
-        b=ayZZ5lYqIdOerA/6UnZ8DZorQv/VVWoyqlkqdHfgqUppS6vVEZGOSprDoVLIUMhnG
-         c63MitrWmcN6aPBJ4ld4HOK6DPHXoraR1Jj9Y2907ywCKwtZ4qbn5jN5E3znU2qSw/
-         yeu2tFVVUimoTHG6LFIroBcCtxVCfAMzQHA+qwZw=
-Received: by mail-oi1-f175.google.com with SMTP id b21so11774369oic.8
-        for <linux-pci@vger.kernel.org>; Tue, 04 Jun 2019 07:34:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAUqcKj4lo54kVw9tDOFNpU5QRVVyaywYc31NjvVcAj24hsJDyRQ
-        OWQG1MCrQ7MQthmqR7uU1QPxtto1gGinBtHLQYY=
-X-Google-Smtp-Source: APXvYqxBIodGF9yl/ISpoOd5z/HUiarTpPQv1JQAUQ62/1K9/gjw5YcPBBHx4QsSOk/N0e06FOrCtoA3suzDF5piBr8=
-X-Received: by 2002:aca:3942:: with SMTP id g63mr4261579oia.48.1559658855636;
- Tue, 04 Jun 2019 07:34:15 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a4a:9d45:0:0:0:0:0 with HTTP; Tue, 4 Jun 2019 07:34:15 -0700 (PDT)
-In-Reply-To: <a7dcc378-6101-ac08-ec8e-be7d5c183b49@huawei.com>
-References: <a7dcc378-6101-ac08-ec8e-be7d5c183b49@huawei.com>
-From:   Sinan Kaya <Okaya@kernel.org>
-Date:   Tue, 4 Jun 2019 10:34:15 -0400
-X-Gmail-Original-Message-ID: <CAK9iUCPREGruU7zGqnkS9w_x8Q7iE8twveEp2dn8ArupTTQyHA@mail.gmail.com>
-Message-ID: <CAK9iUCPREGruU7zGqnkS9w_x8Q7iE8twveEp2dn8ArupTTQyHA@mail.gmail.com>
-Subject: Re: Bug report: AER driver deadlock
-To:     "Fangjian (Turing)" <f.fangjian@huawei.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Content-Type: text/plain; charset="UTF-8"
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 42C65C00D6;
+        Tue,  4 Jun 2019 16:24:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1559665499; bh=Z5knSwzfDyOQC0KtFQddwe2paagbYdxhRAUwXuNmts0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Vqwh3DMGF1XYObsbOe0Wro+2QkJIMTgrEYdeWcp8507uTxa9tJD3XDutMesW8Brgp
+         bj+hH+pFLmyYb7cDcqIND9n3OQ/PTSxGXzYIiXrKeSmmhJwSWb2DNb/4w/6uEEdocs
+         b6/QDfHiIMh2ZnvxznZ1TeDJ32nvxKcgU/rcJQWjq42zeDVt856vuVO/Kwjrzqm0EU
+         e1ELgAo6bP+DjxMQiV8Py6ANmpYJzSm1hIwYSOww/HtDWXdxs9oyVkF1MGWKkSbP6q
+         tDkcmDY4Y8lXIK518K5LXmflncjmKQE9ZBeKXCKc3IaUP8i+GsN7ncKmWB9LHxitwm
+         bs4NrIiAlbVbA==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 03E2BA022E;
+        Tue,  4 Jun 2019 16:24:45 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id DAA163D05A;
+        Tue,  4 Jun 2019 18:24:45 +0200 (CEST)
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     bhelgaas@google.com, mj@ucw.cz, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Subject: [PATCH v2] PCI: Add PCIe 5.0 data rate (32 GT/s) support
+Date:   Tue,  4 Jun 2019 18:24:43 +0200
+Message-Id: <92365e3caf0fc559f9ab14bcd053bfc92d4f661c.1559664969.git.gustavo.pimentel@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/3/19, Fangjian (Turing) <f.fangjian@huawei.com> wrote:
-> Hi, We met a deadlock triggered by a NONFATAL AER event during a sysfs
-> "sriov_numvfs" operation. Any suggestion to fix such deadlock ?
->
->   enable one VF
->   # echo 1 > /sys/devices/pci0000:74/0000:74:00.0/0000:75:00.0/sriov_numvfs
->
->   The sysfs "sriov_numvfs" side is:
->
->     sriov_numvfs_store
->       device_lock                               # hold the device_lock
->         ...
->         pci_enable_sriov
->           sriov_enable
->             ...
->             pci_device_add
->               down_write(&pci_bus_sem) 	        # wait for
-> up_read(&pci_bus_sem)
->
->   The AER side is:
->
->     pcie_do_recovery
->       pci_walk_bus
->         down_read(&pci_bus_sem)                 # hold the rw_semaphore
->         report_resume
+PCIe 5.0 allows an effective 32.0 GT/s speed per lane.
 
-Should we replace these device lock with try lock loop with some sleep
-statements. This could solve the immediate deadlock issues until
-someone implements granular locking in pci.
+Currently if you read a PCIe 5.0 EP link data rate through sysfs, the
+resulting output will be "Unknown speed" instead of "32.0 GT/s" as we
+would be expect.
 
->           device_lock                           # wait for device_unlock()
->
-> The calltrace is as below:
->
-> [  258.411464] INFO: task kworker/0:1:13 blocked for more than 120 seconds.
-> [  258.418139]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
-> [  258.424379] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables
-> this message.
-> [  258.432172] kworker/0:1     D    0    13      2 0x00000028
-> [  258.437640] Workqueue: events aer_recover_work_func
-> [  258.442496] Call trace:
-> [  258.444933]  __switch_to+0xb4/0x1b8
-> [  258.448409]  __schedule+0x1ec/0x720
-> [  258.451884]  schedule+0x38/0x90
-> [  258.455012]  schedule_preempt_disabled+0x20/0x38
-> [  258.459610]  __mutex_lock.isra.1+0x150/0x518
-> [  258.463861]  __mutex_lock_slowpath+0x10/0x18
-> [  258.468112]  mutex_lock+0x34/0x40
-> [  258.471413]  report_resume+0x1c/0x78
-> [  258.474973]  pci_walk_bus+0x58/0xb0
-> [  258.478451]  pcie_do_recovery+0x18c/0x248
-> [  258.482445]  aer_recover_work_func+0xe0/0x118
-> [  258.486783]  process_one_work+0x1e4/0x468
-> [  258.490776]  worker_thread+0x40/0x450
-> [  258.494424]  kthread+0x128/0x130
-> [  258.497639]  ret_from_fork+0x10/0x1c
-> [  258.501329] INFO: task flr.sh:4534 blocked for more than 120 seconds.
-> [  258.507742]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
-> [  258.513980] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables
-> this message.
-> [  258.521774] flr.sh          D    0  4534   4504 0x00000000
-> [  258.527235] Call trace:
-> [  258.529671]  __switch_to+0xb4/0x1b8
-> [  258.533146]  __schedule+0x1ec/0x720
-> [  258.536619]  schedule+0x38/0x90
-> [  258.539749]  rwsem_down_write_failed+0x14c/0x210
-> [  258.544347]  down_write+0x48/0x60
-> [  258.547648]  pci_device_add+0x1a0/0x290
-> [  258.551469]  pci_iov_add_virtfn+0x190/0x358
-> [  258.555633]  sriov_enable+0x24c/0x480
-> [  258.559279]  pci_enable_sriov+0x14/0x28
-> [  258.563101]  hisi_zip_sriov_configure+0x64/0x100 [hisi_zip]
-> [  258.568649]  sriov_numvfs_store+0xc4/0x190
-> [  258.572728]  dev_attr_store+0x18/0x28
-> [  258.576375]  sysfs_kf_write+0x3c/0x50
-> [  258.580024]  kernfs_fop_write+0x114/0x1d8
-> [  258.584018]  __vfs_write+0x18/0x38
-> [  258.587404]  vfs_write+0xa4/0x1b0
-> [  258.590705]  ksys_write+0x60/0xd8
-> [  258.594007]  __arm64_sys_write+0x18/0x20
-> [  258.597914]  el0_svc_common+0x5c/0x100
-> [  258.601646]  el0_svc_handler+0x2c/0x80
-> [  258.605381]  el0_svc+0x8/0xc
-> [  379.243461] INFO: task kworker/0:1:13 blocked for more than 241 seconds.
-> [  379.250134]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
-> [  379.256373] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables
-> this message.
->
->
-> Thank you,
-> Jay
->
->
+Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+---
+Changes:
+v1 -> v2
+ - Rebase patch
+
+ drivers/pci/pci-sysfs.c       | 3 +++
+ drivers/pci/pci.c             | 4 +++-
+ drivers/pci/probe.c           | 2 +-
+ drivers/pci/slot.c            | 1 +
+ include/linux/pci.h           | 1 +
+ include/uapi/linux/pci_regs.h | 4 ++++
+ 6 files changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 6d27475..d52d304 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -182,6 +182,9 @@ static ssize_t current_link_speed_show(struct device *dev,
+ 		return -EINVAL;
+ 
+ 	switch (linkstat & PCI_EXP_LNKSTA_CLS) {
++	case PCI_EXP_LNKSTA_CLS_32_0GB:
++		speed = "32 GT/s";
++		break;
+ 	case PCI_EXP_LNKSTA_CLS_16_0GB:
+ 		speed = "16 GT/s";
+ 		break;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 8abc843..4729a7c 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5621,7 +5621,9 @@ enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev)
+ 	 */
+ 	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP2, &lnkcap2);
+ 	if (lnkcap2) { /* PCIe r3.0-compliant */
+-		if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_16_0GB)
++		if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_32_0GB)
++			return PCIE_SPEED_32_0GT;
++		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_16_0GB)
+ 			return PCIE_SPEED_16_0GT;
+ 		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_8_0GB)
+ 			return PCIE_SPEED_8_0GT;
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 0e8e2c1..c5f27c8 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -668,7 +668,7 @@ const unsigned char pcie_link_speed[] = {
+ 	PCIE_SPEED_5_0GT,		/* 2 */
+ 	PCIE_SPEED_8_0GT,		/* 3 */
+ 	PCIE_SPEED_16_0GT,		/* 4 */
+-	PCI_SPEED_UNKNOWN,		/* 5 */
++	PCIE_SPEED_32_0GT,		/* 5 */
+ 	PCI_SPEED_UNKNOWN,		/* 6 */
+ 	PCI_SPEED_UNKNOWN,		/* 7 */
+ 	PCI_SPEED_UNKNOWN,		/* 8 */
+diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
+index f4d92b1..ae4aa0e 100644
+--- a/drivers/pci/slot.c
++++ b/drivers/pci/slot.c
+@@ -75,6 +75,7 @@ static const char *pci_bus_speed_strings[] = {
+ 	"5.0 GT/s PCIe",	/* 0x15 */
+ 	"8.0 GT/s PCIe",	/* 0x16 */
+ 	"16.0 GT/s PCIe",	/* 0x17 */
++	"32.0 GT/s PCIe",	/* 0x18 */
+ };
+ 
+ static ssize_t bus_speed_read(enum pci_bus_speed speed, char *buf)
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 4a5a84d..2173e6b 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -258,6 +258,7 @@ enum pci_bus_speed {
+ 	PCIE_SPEED_5_0GT		= 0x15,
+ 	PCIE_SPEED_8_0GT		= 0x16,
+ 	PCIE_SPEED_16_0GT		= 0x17,
++	PCIE_SPEED_32_0GT		= 0x18,
+ 	PCI_SPEED_UNKNOWN		= 0xff,
+ };
+ 
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index 2716476..f28e562 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -528,6 +528,7 @@
+ #define  PCI_EXP_LNKCAP_SLS_5_0GB 0x00000002 /* LNKCAP2 SLS Vector bit 1 */
+ #define  PCI_EXP_LNKCAP_SLS_8_0GB 0x00000003 /* LNKCAP2 SLS Vector bit 2 */
+ #define  PCI_EXP_LNKCAP_SLS_16_0GB 0x00000004 /* LNKCAP2 SLS Vector bit 3 */
++#define  PCI_EXP_LNKCAP_SLS_32_0GB 0x00000005 /* LNKCAP2 SLS Vector bit 4 */
+ #define  PCI_EXP_LNKCAP_MLW	0x000003f0 /* Maximum Link Width */
+ #define  PCI_EXP_LNKCAP_ASPMS	0x00000c00 /* ASPM Support */
+ #define  PCI_EXP_LNKCAP_L0SEL	0x00007000 /* L0s Exit Latency */
+@@ -556,6 +557,7 @@
+ #define  PCI_EXP_LNKSTA_CLS_5_0GB 0x0002 /* Current Link Speed 5.0GT/s */
+ #define  PCI_EXP_LNKSTA_CLS_8_0GB 0x0003 /* Current Link Speed 8.0GT/s */
+ #define  PCI_EXP_LNKSTA_CLS_16_0GB 0x0004 /* Current Link Speed 16.0GT/s */
++#define  PCI_EXP_LNKSTA_CLS_32_0GB 0x0005 /* Current Link Speed 32.0GT/s */
+ #define  PCI_EXP_LNKSTA_NLW	0x03f0	/* Negotiated Link Width */
+ #define  PCI_EXP_LNKSTA_NLW_X1	0x0010	/* Current Link Width x1 */
+ #define  PCI_EXP_LNKSTA_NLW_X2	0x0020	/* Current Link Width x2 */
+@@ -661,6 +663,7 @@
+ #define  PCI_EXP_LNKCAP2_SLS_5_0GB	0x00000004 /* Supported Speed 5GT/s */
+ #define  PCI_EXP_LNKCAP2_SLS_8_0GB	0x00000008 /* Supported Speed 8GT/s */
+ #define  PCI_EXP_LNKCAP2_SLS_16_0GB	0x00000010 /* Supported Speed 16GT/s */
++#define  PCI_EXP_LNKCAP2_SLS_32_0GB	0x00000020 /* Supported Speed 32GT/s */
+ #define  PCI_EXP_LNKCAP2_CROSSLINK	0x00000100 /* Crosslink supported */
+ #define PCI_EXP_LNKCTL2		48	/* Link Control 2 */
+ #define  PCI_EXP_LNKCTL2_TLS		0x000f
+@@ -668,6 +671,7 @@
+ #define  PCI_EXP_LNKCTL2_TLS_5_0GT	0x0002 /* Supported Speed 5GT/s */
+ #define  PCI_EXP_LNKCTL2_TLS_8_0GT	0x0003 /* Supported Speed 8GT/s */
+ #define  PCI_EXP_LNKCTL2_TLS_16_0GT	0x0004 /* Supported Speed 16GT/s */
++#define  PCI_EXP_LNKCTL2_TLS_32_0GT	0x0005 /* Supported Speed 32GT/s */
+ #define PCI_EXP_LNKSTA2		50	/* Link Status 2 */
+ #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	52	/* v2 endpoints with link end here */
+ #define PCI_EXP_SLTCAP2		52	/* Slot Capabilities 2 */
+-- 
+2.7.4
+
