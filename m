@@ -2,96 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AD4435118
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 22:36:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 242A935131
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2019 22:41:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbfFDUgY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jun 2019 16:36:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34042 "EHLO mx1.redhat.com"
+        id S1726354AbfFDUle (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jun 2019 16:41:34 -0400
+Received: from gate.crashing.org ([63.228.1.57]:33068 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfFDUgY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 4 Jun 2019 16:36:24 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 36F60C1EB1EC;
-        Tue,  4 Jun 2019 20:36:19 +0000 (UTC)
-Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BE9F519C69;
-        Tue,  4 Jun 2019 20:36:17 +0000 (UTC)
-Date:   Tue, 4 Jun 2019 14:36:17 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     linux-pci@vger.kernel.org
-Cc:     KarimAllah Ahmed <karahmed@amazon.de>, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/IOV: Fix VF cfg_size
-Message-ID: <20190604143617.0a226555@x1.home>
-In-Reply-To: <155966918965.10361.16228304474160813310.stgit@gimli.home>
-References: <155966918965.10361.16228304474160813310.stgit@gimli.home>
-Organization: Red Hat
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1726033AbfFDUle (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 4 Jun 2019 16:41:34 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x54KfGAB012090;
+        Tue, 4 Jun 2019 15:41:17 -0500
+Message-ID: <e520a4269224ac54798314798a80c080832e68b1.camel@kernel.crashing.org>
+Subject: Re: [RFC] ARM64 PCI resource survey issue(s)
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sinan Kaya <okaya@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "Zilberman, Zeev" <zeev@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>
+Date:   Wed, 05 Jun 2019 06:41:16 +1000
+In-Reply-To: <20190604124959.GF189360@google.com>
+References: <56715377f941f1953be43b488c2203ec090079a1.camel@kernel.crashing.org>
+         <20190604014945.GE189360@google.com>
+         <960c94eb151ba1d066090774621cf6ca6566d135.camel@kernel.crashing.org>
+         <20190604124959.GF189360@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 04 Jun 2019 20:36:24 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 04 Jun 2019 11:26:42 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
+On Tue, 2019-06-04 at 07:49 -0500, Bjorn Helgaas wrote:
+> > Yes... I am not personally aware of such a case but I was led to
+> > believe based on prior conversations that such setups do exist,
+> > especially in the non-ACPI ARM64 world. Which is why I would suggest
+> > initially changing the default only on ACPI, at least until we have a
+> > bit better visibility.
+> 
+> If a resource assignment that is valid in terms of all the PCI rules
+> (BARs are valid, BARs are inside upstream bridge windows, etc) doesn't
+> work, we would need more information in order to fix anything.  We'd
+> need to know exactly *what* doesn't work and *why* so we can avoid it.
+> The current blanket statement of "reassign everything and hope it
+> works better" is useless.
 
-> Commit 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for
-> other VFs") attempts to cache the config space size of VF0 to re-use
-> for all other VFs, but the cache is setup before the call to
-> pci_setup_device(), where we use set_pcie_port_type() to setup the
-> pcie_cap field on the struct pci_dev.  Without pcie_cap configured,
-> pci_cfg_space_size() returns PCI_CFG_SPACE_SIZE for the size.  VF0
-> has a bypass through pci_cfg_space_size(), so its size is reported
-> correctly, but all subsequent VFs incorrectly report 256 bytes of
-> config space.
-> 
-> Resolve by delaying pci_read_vf_config_common() until after
-> pci_setup_device().
-> 
-> Fixes: 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for other VFs")
-> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1714978
-> Cc: KarimAllah Ahmed <karahmed@amazon.de>
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> ---
->  drivers/pci/iov.c |    6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index 3aa115ed3a65..34b1f78f4d31 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -161,13 +161,13 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
->  	virtfn->is_virtfn = 1;
->  	virtfn->physfn = pci_dev_get(dev);
->  
-> -	if (id == 0)
-> -		pci_read_vf_config_common(virtfn);
-> -
->  	rc = pci_setup_device(virtfn);
->  	if (rc)
->  		goto failed1;
->  
-> +	if (id == 0)
-> +		pci_read_vf_config_common(virtfn);
-> +
->  	virtfn->dev.parent = dev->dev.parent;
->  	virtfn->multifunction = 0;
->  
-> 
+I agree and I assume the problem stems from BIOSes creating either
+invalid or incomplete assignments but as I said, I don't know for sure
+as our platforms dont have that problem.
 
-Would it actually make more sense to revert 975bb8b4dc93 and just
-assume any is_virtfn device has PCI_CFG_SPACE_EXP_SIZE for cfg_size?
-Per the SR-IOV spec, VFs are required to implement a PCIe capability,
-which should imply 4K of config space.  The reachability of that
-extended config space seems unnecessary to test if we assume that it
-has the same characteristics as the PF, which must be reachable if
-we're able to enable SR-IOV.  Thoughts?  Thanks,
+Cheers,
+Ben.
 
-Alex
+
