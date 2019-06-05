@@ -2,197 +2,231 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B67235C27
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2019 13:57:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBE2235C31
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2019 14:02:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbfFEL52 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Jun 2019 07:57:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727183AbfFEL52 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 5 Jun 2019 07:57:28 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42D092075B;
-        Wed,  5 Jun 2019 11:57:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559735846;
-        bh=pOJC3GeHUz1Mg6J9DuTR5RaVhxfBT9Uwdefo5hiwznI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=166hd/QGEm5mnxjRiMGDaRmwNYuJNK4Li5kvh+BVZZrKIz0z/qcaRpGxBhRGmIhhU
-         MLtjAFE5Hgm2Mno7Slc5uTsuyFtRAsyqxspWxubBn6yVvL65/yP7JRdlarSfiPqiG+
-         mOom5ErwZabd+eR+WLYoVwVdg7mFnvjsMZ9HnEoQ=
-Date:   Wed, 5 Jun 2019 06:57:25 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH] PCI / PM: Don't runtime suspend when device only
- supports wakeup from D0
-Message-ID: <20190605115724.GE84290@google.com>
-References: <20190522181157.GC79339@google.com>
- <Pine.LNX.4.44L0.1905221433310.1410-100000@iolanthe.rowland.org>
- <20190522205231.GD79339@google.com>
- <010C1D41-C66D-45C0-8AFF-6F746306CE29@canonical.com>
- <20190527165747.GF79339@google.com>
+        id S1727298AbfFEMCE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Jun 2019 08:02:04 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33642 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFEMCE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jun 2019 08:02:04 -0400
+Received: by mail-oi1-f195.google.com with SMTP id q186so17995960oia.0;
+        Wed, 05 Jun 2019 05:02:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HdLoeXvGK64UnKYqEfACEboUnaTqdKxgDmgaDBJkjwc=;
+        b=t50Oeu1dzVTMaZbpSeWeBkXcPZwasR7boersmNNro65BoQEG1urFZWdL2sx1W/QDkJ
+         GzrFdI36giqjIvOgOwJ7+jcZ5eeA1nI6aBLxEK0zuDefR0VbCz/WEOGhFsy1Uhn/xPWZ
+         YQE7W1zNK8+5vSwzIA5w3oDcyypFNE+Z+Z2Jsqw478oZC1qberB1UMZeiQtN6SSDoFKI
+         0Kzps9fIjb4f90xJOsXIoexI8KBmofCEDmWZWGQoZaFDmVnJpUNJ6tGEo3ktEbBkjxTg
+         w3Qscjv4O6iY7xEL/UQsggw6x+zBIY7ySUUZZ+bgbP+TbBfd1zmUcBAU7OgPszX0XIKi
+         q3LA==
+X-Gm-Message-State: APjAAAXYzDYqQ8DyAOQpYOKBPG0Zsb1qtgxZTtvFJyB3FC/c2822o1NM
+        b+sKlllKOCZhGQslNWC+uAZLY5syrwfY5/aCHX2F0Q==
+X-Google-Smtp-Source: APXvYqxC3+yS1W3DjhMQWqlDnjo2YLFj0GHQ5scS5vsj+eQyAOThBzuJKuI7PKmnjzcMRqD+2qD413si+w9d0hvOjGw=
+X-Received: by 2002:aca:3256:: with SMTP id y83mr8361607oiy.110.1559736123091;
+ Wed, 05 Jun 2019 05:02:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190527165747.GF79339@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <4561083.VtDMOnK5Me@kreacher> <20190531211648.GB58810@google.com>
+ <1855172.0PEGphScmv@kreacher> <20190605113635.GD84290@google.com>
+In-Reply-To: <20190605113635.GD84290@google.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 5 Jun 2019 14:01:52 +0200
+Message-ID: <CAJZ5v0gmisuuzEJYxzMZpr-swSaCByRak1UQV8ttQh9wMXMOZA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: PM: Avoid resuming devices in D3hot during system suspend
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 27, 2019 at 11:57:47AM -0500, Bjorn Helgaas wrote:
-> On Thu, May 23, 2019 at 12:39:23PM +0800, Kai-Heng Feng wrote:
-> > at 04:52, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Wed, May 22, 2019 at 02:39:56PM -0400, Alan Stern wrote:
-> > > > On Wed, 22 May 2019, Bjorn Helgaas wrote:
-> > > > > On Wed, May 22, 2019 at 11:46:25PM +0800, Kai Heng Feng wrote:
-> > > > > > > On May 22, 2019, at 9:48 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > > On Wed, May 22, 2019 at 11:42:14AM +0800, Kai Heng Feng wrote:
-> > > > > > > > at 6:23 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > > > > On Wed, May 22, 2019 at 12:31:04AM +0800, Kai-Heng Feng wrote:
-> > > > > > > > > > There's an xHC device that doesn't wake when
-> > > > > > > > > > a USB device gets plugged
-> > > > > > > > > > to its USB port. The driver's own runtime
-> > > > > > > > > > suspend callback was called,
-> > > > > > > > > > PME signaling was enabled, but it stays at PCI D0.
-> > > > > 
-> > > > > > > ...
-> > > > > > > And I guess this patch basically means we wouldn't call
-> > > > > > > the driver's suspend callback if we're merely going to
-> > > > > > > stay at D0, so the driver would have no idea anything
-> > > > > > > happened.  That might match Documentation/power/pci.txt
-> > > > > > > better, because it suggests that the suspend callback is
-> > > > > > > related to putting a device in a low-power state, and D0
-> > > > > > > is not a low-power state.
-> > > > > > 
-> > > > > > Yes, the patch is to let the device stay at D0 and don’t run
-> > > > > > driver’s own runtime suspend routine.
-> > > > > > 
-> > > > > > I guess I’ll just proceed to send a V2 with updated commit message?
-> > > > > 
-> > > > > Now that I understand what "runtime suspended to D0" means, help me
-> > > > > understand what's actually wrong.
-> > > > 
-> > > > Kai's point is that the xhci-hcd driver thinks the device is now
-> > > > in runtime suspend, because the runtime_suspend method has been
-> > > > executed.  But in fact the device is still in D0, and as a
-> > > > result, PME signalling may not work correctly.
-> > > 
-> > > The device claims to be able to signal PME from D0 (this is from the lspci
-> > > in https://bugzilla.kernel.org/show_bug.cgi?id=203673):
-> > > 
-> > >   00:10.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller (rev 20) (prog-if 30 [XHCI])
-> > >     Capabilities: [50] Power Management version 3
-> > >       Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-> > > 
-> > > From the xHCI spec r1.0, sec 4.15.2.3, it looks like a connect
-> > > detected while in D0 should assert PME# if enabled (and WCE is
-> > > set).
-> > 
-> > I think section 4.15.2.3 is about S3 wake up, no S0 we are
-> > discussing here.
-> 
-> S0 and S3 are system-level ideas and have no meaning to an individual
-> PCI device.  The xHC is a PCI device and can't tell whether the system
-> as a whole is in S0 or S3.  If a PCI device claims to be able to
-> generate PME while in D0, that applies regardless of the system state.
-> 
-> xHCI r1.0, sec A.1 says "The host controller should be capable of
-> asserting PME# when in any supported device state."  In sec 4.19.2,
-> Figure 42 says PME# should be asserted whenever PMCSR.PME_En=1 and
-> WCE=1 and a connection is detected.
-> 
-> Figure 42 also shows that CSC (Connect Status Change) and related bits
-> feed into Port Status Change Event Generation.  So I assume the xhci
-> driver normally detects connect/disconnect via CSC, but the runtime
-> suspend method makes it use PME# instead?
-> 
-> And the way your patch works is by avoiding that xhci runtime suspend
-> method, so it *always* uses CSC and never uses PME#?  If that's the
-> case, we're just papering over a problem without really understanding
-> it.
-> 
-> I'm wondering if this platform has a firmware defect.  Here's my
-> thinking.  The xHC is a Root Complex Integrated Endpoint, so its PME
-> signaling is a little unusual.
-> 
-> The typical scenario is that a PCIe device is below a Root Port.  In
-> that case, it would send a PME Message upstream to the Root Port.  Per
-> PCIe r4.0, sec 6.1.6, when configured for native PME support (for ACPI
-> systems, I assume this means "when firmware has granted PME control to
-> the OS via _OSC"), the Root Port would generate a normal PCI INTx or
-> MSI interrupt:
-> 
->   PCI Express-aware software can enable a mode where the Root Complex
->   signals PME via an interrupt. When configured for native PME
->   support, a Root Port receives the PME Message and sets the PME
->   Status bit in its Root Status register. If software has set the PME
->   Interrupt Enable bit in the Root Control register to 1b, the Root
->   Port then generates an interrupt.
-> 
-> But on this platform the xHC is a Root Complex Integrated Endpoint, so
-> there is no Root Port upstream from it, and that mechanism can't be
-> used.  Per PCIe r4.0, sec 1.3.2.3, RCiEPs signal PME via "the same
-> mechanism as PCI systems" or via Root Complex Event Collectors:
-> 
->   An RCiEP must signal PME and error conditions through the same
->   mechanisms used on PCI systems. If a Root Complex Event Collector is
->   implemented, an RCiEP may optionally signal PME and error conditions
->   through a Root Complex Event Collector.
-> 
-> This platform has no Root Complex Event Collectors, so the xHC should
-> signal PME via the same mechanism as PCI systems, i.e., asserting a
-> PME# signal.  I think this means the OS cannot use native PCIe PME
-> control because it doesn't know what interrupt PME# is connected to.
-> The PCI Firmware Spec r3.2, sec 4.5.1 (also quoted in ACPI v6.2, sec
-> 6.2.11.3), says:
-> 
->   PCI Express Native Power Management Events control
-> 
->   The firmware sets this bit to 1 to grant control over PCI Express
->   native power management event interrupts (PMEs). If firmware
->   allows the operating system control of this feature, then in the
->   context of the _OSC method, it must ensure that all PMEs are
->   routed to root port interrupts as described in the PCI Express
->   Base Specification.
-> 
-> This platform cannot route all PMEs to Root Port interrupts because
-> the xHC RCiEP cannot report PME via a Root Port, so I think its _OSC
-> method should not grant control of PCIe Native Power Management Events
-> to the OS, and I think that would mean we have to use the ACPI
-> mechanism for PME on this platform.
-> 
-> Can you confirm or deny any of this line of reasoning?  I'm wondering
-> if there's something wrong with the platform's _OSC, so Linux thinks
-> it can use native PME, but that doesn't work for this device.
-> 
-> > It’s a platform in development so the name can’t be disclosed.
-> 
-> Please attach a complete dmesg log to the bugzilla.  You can remove
-> identifying details like the platform name, but I want to see the
-> results of the _OSC negotiation.
+On Wed, Jun 5, 2019 at 1:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Mon, Jun 03, 2019 at 12:10:28PM +0200, Rafael J. Wysocki wrote:
+> > On Friday, May 31, 2019 11:16:48 PM CEST Bjorn Helgaas wrote:
+> > > On Fri, May 31, 2019 at 11:49:30AM +0200, Rafael J. Wysocki wrote:
+> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > >
+> > > > The current code resumes devices in D3hot during system suspend if
+> > > > the target power state for them is D3cold, but that is not necessary
+> > > > in general.  It only is necessary to do that if the platform firmware
+> > > > requires the device to be resumed, but that should be covered by
+> > > > the platform_pci_need_resume() check anyway, so rework
+> > > > pci_dev_keep_suspended() to avoid returning 'false' for devices
+> > > > in D3hot which need not be resumed due to platform firmware
+> > > > requirements.
+> > > >
+> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > ---
+> > > >  drivers/pci/pci.c |   15 ++++++++++++---
+> > > >  1 file changed, 12 insertions(+), 3 deletions(-)
+> > > >
+> > > > Index: linux-pm/drivers/pci/pci.c
+> > > > ===================================================================
+> > > > --- linux-pm.orig/drivers/pci/pci.c
+> > > > +++ linux-pm/drivers/pci/pci.c
+> > > > @@ -2474,10 +2474,19 @@ bool pci_dev_keep_suspended(struct pci_d
+> > > >  {
+> > > >   struct device *dev = &pci_dev->dev;
+> > > >   bool wakeup = device_may_wakeup(dev);
+> > > > + pci_power_t target_state;
+> > > >
+> > > > - if (!pm_runtime_suspended(dev)
+> > > > -     || pci_target_state(pci_dev, wakeup) != pci_dev->current_state
+> > > > -     || platform_pci_need_resume(pci_dev))
+> > > > + if (!pm_runtime_suspended(dev) || platform_pci_need_resume(pci_dev))
+> > > > +         return false;
+> > > > +
+> > > > + target_state = pci_target_state(pci_dev, wakeup);
+> > >
+> > > Nit, add a blank line here.
+> >
+> > OK
+> >
+> > > > + /*
+> > > > +  * If the earlier platform check has not triggered, D3cold is just power
+> > > > +  * removal on top of D3hot, so no need to resume the device in that
+> > > > +  * case.
+> > > > +  */
+> > > > + if (target_state != pci_dev->current_state &&
+> > > > +     target_state != PCI_D3cold && pci_dev->current_state != PCI_D3hot)
+> > > >           return false;
+> > >
+> > > This is more a comment on the existing code than on this particular
+> > > patch, but I find this whole function hard to understand, and I think
+> > > one reason is that there are a lot of negative conditions, both in
+> > > this function and in its callers.  This "target_state != ... &&
+> > > target_state != ...  && current_state != ..." is one example.  Another
+> > > is the function name itself.  It might be easier to read as something
+> > > like this:
+> > >
+> > >   bool pci_dev_need_resume(...)
+> > >   {
+> > >     if (!pm_runtime_suspended(...))
+> > >       return true;
+> > >
+> > >     if (platform_pci_need_resume(...))
+> > >       return true;
+> > >
+> > >     if (target_state != current_state)
+> > >       return true;
+> >
+> > Please see the appended (untested) patch on top of the $subject one.
+>
+> I like it a lot, thanks!  I think it makes it a lot more readable.
+>
+> > > Another reason I think it's hard to read is that
+> > > "pci_dev_keep_suspended" suggests that this is a pure boolean function
+> > > without side-effects, but in fact it also fiddles with the PME state
+> > > in some cases.  I don't have any ideas for that part.
+> >
+> > Well, I can only propose to put the PME adjustment part into a separate function like
+> > in the patch below.
+> >
+> > ---
+> >  drivers/pci/pci-driver.c |   21 ++++++++++++++++---
+> >  drivers/pci/pci.c        |   50 ++++++++++++++++++++++++-----------------------
+> >  drivers/pci/pci.h        |    3 +-
+> >  3 files changed, 46 insertions(+), 28 deletions(-)
+> >
+> > Index: linux-pm/drivers/pci/pci.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/pci/pci.c
+> > +++ linux-pm/drivers/pci/pci.c
+> > @@ -2459,54 +2459,56 @@ bool pci_dev_run_wake(struct pci_dev *de
+> >  EXPORT_SYMBOL_GPL(pci_dev_run_wake);
+> >
+> >  /**
+> > - * pci_dev_keep_suspended - Check if the device can stay in the suspended state.
+> > + * pci_dev_need_resume - Check if the device can stay in the suspended state.
+> >   * @pci_dev: Device to check.
+> >   *
+> > - * Return 'true' if the device is runtime-suspended, it doesn't have to be
+> > + * Return 'false' if the device is runtime-suspended, it doesn't have to be
+> >   * reconfigured due to wakeup settings difference between system and runtime
+> >   * suspend and the current power state of it is suitable for the upcoming
+> >   * (system) transition.
+> > - *
+> > - * If the device is not configured for system wakeup, disable PME for it before
+> > - * returning 'true' to prevent it from waking up the system unnecessarily.
+> >   */
+> > -bool pci_dev_keep_suspended(struct pci_dev *pci_dev)
+> > +bool pci_dev_need_resume(struct pci_dev *pci_dev)
+> >  {
+> >       struct device *dev = &pci_dev->dev;
+> > -     bool wakeup = device_may_wakeup(dev);
+> >       pci_power_t target_state;
+> >
+> >       if (!pm_runtime_suspended(dev) || platform_pci_need_resume(pci_dev))
+> > -             return false;
+> > +             return true;
+> >
+> > -     target_state = pci_target_state(pci_dev, wakeup);
+> > +     target_state = pci_target_state(pci_dev, device_may_wakeup(dev));
+> >       /*
+> >        * If the earlier platform check has not triggered, D3cold is just power
+> >        * removal on top of D3hot, so no need to resume the device in that
+> >        * case.
+> >        */
+> > -     if (target_state != pci_dev->current_state &&
+> > -         target_state != PCI_D3cold && pci_dev->current_state != PCI_D3hot)
+> > -             return false;
+> > +     return target_state != pci_dev->current_state &&
+> > +             target_state != PCI_D3cold &&
+> > +             pci_dev->current_state != PCI_D3hot;
+> > +}
+> > +
+> > +/**
+> > + * pci_dev_adjust_pme - Adjust PME setting for a suspended device.
+> > + * @pci_dev: Device to check.
+> > + *
+> > + * If the device is not configured for system wakeup, disable PME for it to
+> > + * prevent it from waking up the system unnecessarily.
+> > + */
+> > +void pci_dev_adjust_pme(struct pci_dev *pci_dev)
+> > +{
+> > +     struct device *dev = &pci_dev->dev;
+> >
+> > -     /*
+> > -      * At this point the device is good to go unless it's been configured
+> > -      * to generate PME at the runtime suspend time, but it is not supposed
+> > -      * to wake up the system.  In that case, simply disable PME for it
+> > -      * (it will have to be re-enabled on exit from system resume).
+> > -      *
+> > -      * If the device's power state is D3cold and the platform check above
+> > -      * hasn't triggered, the device's configuration is suitable and we don't
+> > -      * need to manipulate it at all.
+> > -      */
+> >       spin_lock_irq(&dev->power.lock);
+> >
+> > +     /*
+> > +      * If the device's power state is D3cold and the platform check in
+> > +      * pci_dev_need_resume() hasn't triggered, the device's configuration is
+> > +      * suitable and it need not be touched.
+>
+> I guess "it need not be touched" == "we don't need to disable PME"?
 
-Thanks for the dmesg log
-(https://bugzilla.kernel.org/attachment.cgi?id=283109).  It shows:
+That's correct.
 
-  acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
-  acpi PNP0A08:00: _OSC: platform does not support [SHPCHotplug LTR]
-  acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME AER PCIeCapability]
+I'll try to improve the wording in the final version of the patch.
 
-I think it is incorrect for the platform to give the OS native control
-over PME because the OS has no way to know how the RCiEP PMEs are
-routed.  But it would be interesting to know how BIOSes on other
-platforms with RCiEPs handle this, and I did post a question to the
-PCI-SIG to see if there's any guidance there.
-
-Bjorn
+> > +      */
+> >       if (pm_runtime_suspended(dev) && pci_dev->current_state < PCI_D3cold &&
+> > -         !wakeup)
+> > +         !device_may_wakeup(dev))
+> >               __pci_pme_active(pci_dev, false);
+> >
+> >       spin_unlock_irq(&dev->power.lock);
+> > -     return true;
+> >  }
+> >
+> >  /**
