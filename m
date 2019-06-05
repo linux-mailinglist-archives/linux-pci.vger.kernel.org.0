@@ -2,178 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 10F6535493
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2019 01:57:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 907ED354D2
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2019 02:59:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfFDX5j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jun 2019 19:57:39 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33748 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbfFDX5i (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 19:57:38 -0400
-Received: by mail-pg1-f195.google.com with SMTP id h17so11321916pgv.0
-        for <linux-pci@vger.kernel.org>; Tue, 04 Jun 2019 16:57:38 -0700 (PDT)
+        id S1726317AbfFEA7h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jun 2019 20:59:37 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:35312 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfFEA7h (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jun 2019 20:59:37 -0400
+Received: by mail-yw1-f68.google.com with SMTP id k128so9738468ywf.2
+        for <linux-pci@vger.kernel.org>; Tue, 04 Jun 2019 17:59:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1RoeYwTbHJ5uZrqzOkCL/eOap3xEJq8UUohxtmtls+0=;
-        b=Zj/4RsKSPEX80sxrowiW9yJRYHKyPgNTX80646pPhD24cF78L+/cbq0AbaGX9N2dlW
-         NbcaJdsi+uqQaXkEEuBCyBbDTXEvFRlnvVcH9GuGiMzwzkWU5HOPuyPDk8tLI4VkyyJv
-         /DfRIx8bv02qOCZ6ndDiCIPf3hcKSC8m4VzgQ=
+        d=gmail.com; s=20161025;
+        h=sender:from:subject:to:cc:references:openpgp:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yKKrkMgWSq93zEFxYWV4MSSzOa4VPaOPkq02QeLRp94=;
+        b=sliTTHHSxf3af10w+qICyDLZ8w6SKEHDKZbiqkmu1hFnbO3RXpWDqE6UAwZgI3S1ML
+         EQI+rHla9pA+eTffctaSdiRZrq6vAyxoGzlgw/dG5Pp3asn5niVNvrpPM5TVcFlQ6UX1
+         /uBCG1RjBB3wksKAOZS0demXCELqbI1HqKgsHJfYv7NWq3Mdg4z1E0WXRlhyvZ0c80JJ
+         Osqit6xyBQQj1XTdOHzAwWqp/wu4F6X9g/wZHRCgGSqquAzE8GmEk4Rv8G0+Zad65/tZ
+         8z32yPunIoTPrZ2GYmsaKPYzGCwj9usafT+UBtzMNmt4wCxT5VMqoj0977IlEq3VoH7R
+         APaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1RoeYwTbHJ5uZrqzOkCL/eOap3xEJq8UUohxtmtls+0=;
-        b=Y6tCQBIC18aFD2s4dKSVEJ/UEuDLrKNlBrQ1NHKcGVp5dZRM9OvKXadD3vbj9S8G5+
-         m2J3IlbN7feKLeoFEvPbLzSQ8ehfz64J76bHEU2+MZXNdPBZ2uiikk14Zm7hSh37Bxme
-         Ny2RUEW4RENmqATFRB4aIfEu2uvkrbkzJlo8AtBqMQHKXz5JLNsO6OLzAAZGxlJ6nw7j
-         rs/dIrgfM8s6fgmsRq8znbZXHEuPem1EnU6tWgn7wW8nOFtez3fyTeM7dLX7Gj2YSNvY
-         YXc/4WeQu6wuQoWC3+aYQvvZlmajZJf4Ww6dYS/j0kRVtLbd2BHDbNsicpsca5j1ZTr0
-         E8AA==
-X-Gm-Message-State: APjAAAWs8ECf+8Jkrq4oDyk+Fs+zLwZ0oj+rHUaPwM67bQrx220gooJw
-        nucDYWrvxQ43x4+MkebmM8enAg==
-X-Google-Smtp-Source: APXvYqwkrc7X/bmQxCzpV30LpH7ErQ3xZfm3AlJzfVuoa5nXjkO6dIGfsOoh599VuAPN4rqorLCkOA==
-X-Received: by 2002:a17:90a:a790:: with SMTP id f16mr40544193pjq.27.1559692657614;
-        Tue, 04 Jun 2019 16:57:37 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id q13sm34687078pjc.1.2019.06.04.16.57.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Jun 2019 16:57:36 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 19:57:35 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [RFC 1/6] rcu: Add support for consolidated-RCU reader checking
-Message-ID: <20190604235735.GA254287@google.com>
-References: <20190601222738.6856-1-joel@joelfernandes.org>
- <20190601222738.6856-2-joel@joelfernandes.org>
- <0ff9e0e3-b9fb-8953-1f76-807102f785ee@rasmusvillemoes.dk>
+        h=x-gm-message-state:sender:from:subject:to:cc:references:openpgp
+         :autocrypt:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=yKKrkMgWSq93zEFxYWV4MSSzOa4VPaOPkq02QeLRp94=;
+        b=Mn6anY7wuTLgj4rQYBfrVl+Tw+sMA2QPIA2awmc/uSm9YVFKlwzujH4powbJhOznyx
+         HgLv08NuNLB6vDrXyJ07AIgphU/XlKU9noLAWzY/4EgsoaZiDSvlXl+i3TFgcEOcCu11
+         jvjzsk6gGRbFaGjY7YYnnKZXU3III2V2GND+fU38uGMgO8NjMJVa19Y2IORBAl3Pip3l
+         MpGAeRgeAcu3+1t7PD9mEEeZXMZqfUikd9NAhqETuRHlq2vbxmTt5T8ihxun9lr20eRN
+         GEH/d/dDcLmehARGciwYGT9kSJAP0zCflHmA8T45uARTdx/JNZodn/eX/jUTBqb+gD3c
+         Dg9A==
+X-Gm-Message-State: APjAAAWLi7el1sBRC1whwC70jonMU1NK5OPjtuY2uyNcrreaJv6gfI6A
+        COeYYaY3zQKRFX7YZPv9VDk5yD1Q
+X-Google-Smtp-Source: APXvYqyqG1q9VJ6QTE4WgLmRWXpPLmN1V7oACOUPP1OqfuQob3GLN1miAEms0Iek9skWl7Qhljo4og==
+X-Received: by 2002:a81:4b92:: with SMTP id y140mr8640877ywa.264.1559696376451;
+        Tue, 04 Jun 2019 17:59:36 -0700 (PDT)
+Received: from [192.168.1.74] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net. [75.58.59.55])
+        by smtp.gmail.com with ESMTPSA id u65sm4734547ywa.39.2019.06.04.17.59.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 17:59:35 -0700 (PDT)
+From:   Sinan Kaya <Okaya@kernel.org>
+X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
+Subject: Re: Bug report: AER driver deadlock
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        "Fangjian (Turing)" <f.fangjian@huawei.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+References: <a7dcc378-6101-ac08-ec8e-be7d5c183b49@huawei.com>
+ <CAK9iUCPREGruU7zGqnkS9w_x8Q7iE8twveEp2dn8ArupTTQyHA@mail.gmail.com>
+ <a1c90cfb9ce4062b4823c6647d7709baf1c5534f.camel@kernel.crashing.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <80014307-a6f0-7177-7af6-fb2f14e28b0c@kernel.org>
+Date:   Tue, 4 Jun 2019 20:59:34 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0ff9e0e3-b9fb-8953-1f76-807102f785ee@rasmusvillemoes.dk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <a1c90cfb9ce4062b4823c6647d7709baf1c5534f.camel@kernel.crashing.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 04:01:00PM +0200, Rasmus Villemoes wrote:
-> On 02/06/2019 00.27, Joel Fernandes (Google) wrote:
-> > This patch adds support for checking RCU reader sections in list
-> > traversal macros. Optionally, if the list macro is called under SRCU or
-> > other lock/mutex protection, then appropriate lockdep expressions can be
-> > passed to make the checks pass.
-> > 
-> > Existing list_for_each_entry_rcu() invocations don't need to pass the
-> > optional fourth argument (cond) unless they are under some non-RCU
-> > protection and needs to make lockdep check pass.
-> > 
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > ---
-> >  include/linux/rculist.h  | 40 ++++++++++++++++++++++++++++++++++++----
-> >  include/linux/rcupdate.h |  7 +++++++
-> >  kernel/rcu/update.c      | 26 ++++++++++++++++++++++++++
-> >  3 files changed, 69 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-> > index e91ec9ddcd30..b641fdd9f1a2 100644
-> > --- a/include/linux/rculist.h
-> > +++ b/include/linux/rculist.h
-> > @@ -40,6 +40,25 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
-> >   */
-> >  #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
-> >  
-> > +/*
-> > + * Check during list traversal that we are within an RCU reader
-> > + */
-> > +#define __list_check_rcu()						\
-> > +	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),			\
-> > +			 "RCU-list traversed in non-reader section!")
-> > +
-> > +static inline void __list_check_rcu_cond(int dummy, ...)
-> > +{
-> > +	va_list ap;
-> > +	int cond;
-> > +
-> > +	va_start(ap, dummy);
-> > +	cond = va_arg(ap, int);
-> > +	va_end(ap);
-> > +
-> > +	RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(),
-> > +			 "RCU-list traversed in non-reader section!");
-> > +}
-> >  /*
-> >   * Insert a new entry between two known consecutive entries.
-> >   *
-> > @@ -338,6 +357,9 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
-> >  						  member) : NULL; \
-> >  })
-> >  
-> > +#define SIXTH_ARG(a1, a2, a3, a4, a5, a6, ...) a6
-> > +#define COUNT_VARGS(...) SIXTH_ARG(dummy, ## __VA_ARGS__, 4, 3, 2, 1, 0)
-> > +>  /**
-> >   * list_for_each_entry_rcu	-	iterate over rcu list of given type
-> >   * @pos:	the type * to use as a loop cursor.
-> > @@ -348,9 +370,14 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
-> >   * the _rcu list-mutation primitives such as list_add_rcu()
-> >   * as long as the traversal is guarded by rcu_read_lock().
-> >   */
-> > -#define list_for_each_entry_rcu(pos, head, member) \
-> > -	for (pos = list_entry_rcu((head)->next, typeof(*pos), member); \
-> > -		&pos->member != (head); \
-> > +#define list_for_each_entry_rcu(pos, head, member, cond...)		\
-> > +	if (COUNT_VARGS(cond) != 0) {					\
-> > +		__list_check_rcu_cond(0, ## cond);			\
-> > +	} else {							\
-> > +		__list_check_rcu();					\
-> > +	}								\
-> > +	for (pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
-> > +		&pos->member != (head);					\
-> >  		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
+On 6/4/2019 7:47 PM, Benjamin Herrenschmidt wrote:
+>> Should we replace these device lock with try lock loop with some sleep
+>> statements. This could solve the immediate deadlock issues until
+>> someone implements granular locking in pci.
+> That won't necessarily solve this AB->BA problem. I think the issue
+> here is that sriov shouldn't device_lock before doing something that
+> can take the pci_bus_sem.
 > 
-> Wouldn't something as simple as
-> 
-> #define __list_check_rcu(dummy, cond, ...) \
->        RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(), \
-> 			 "RCU-list traversed in non-reader section!");
-> 
-> for ( ({ __list_check_rcu(junk, ##cond, 0); }), pos = ... )
-> 
-> work just as well (i.e., no need for two list_check_rcu and
-> list_check_rcu_cond variants)? If there's an optional cond, we use that,
-> if not, we pick the trailing 0, so !cond disappears and it reduces to
-> your __list_check_rcu(). Moreover, this ensures the RCU_LOCKDEP_WARN
-> expansion actually picks up the __LINE__ and __FILE__ where the for loop
-> is used, and not the __FILE__ and __LINE__ of the static inline function
-> from the header file. It also makes it a bit more type safe/type generic
-> (if the cond expression happened to have type long or u64 something
-> rather odd could happen with the inline vararg function).
 
-This is much better. I will do it this way. Thank you!
-
- - Joel
-
+I agree. I found out about lock ordering issue after reading the email
+one more time.
