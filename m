@@ -2,131 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E0AE36FC1
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2019 11:23:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97F1337231
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2019 12:55:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbfFFJXD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jun 2019 05:23:03 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:2731 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727540AbfFFJXA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jun 2019 05:23:00 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf8db720000>; Thu, 06 Jun 2019 02:22:58 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 06 Jun 2019 02:22:59 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 06 Jun 2019 02:22:59 -0700
-Received: from localhost.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
- 2019 09:22:56 +0000
-From:   Abhishek Sahu <abhsahu@nvidia.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lukas@wunner.de>, Abhishek Sahu <abhsahu@nvidia.com>
-Subject: [PATCH v2 2/2] PCI: Create device link for NVIDIA GPU
-Date:   Thu, 6 Jun 2019 14:52:25 +0530
-Message-ID: <20190606092225.17960-3-abhsahu@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190606092225.17960-1-abhsahu@nvidia.com>
-References: <20190606092225.17960-1-abhsahu@nvidia.com>
-X-NVConfidentiality: public
-MIME-Version: 1.0
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559812978; bh=nVd2P0ATmq+CVftqZEL7Xt9ORioWEGscgVthbBvMCSU=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type;
-        b=Vmnlq/zhvunelvhHKeTWlNCLH9Rgr3raiPJfAux+ibhOlgJDe/HtpQE1wRx+B+5dp
-         5O+0+fzA8DpPXSHxmIgl82OlrsRwuTlILlkAuuKcvACG8/i422OYRFHtSl3NFhb0ez
-         qr5YwmykKyFP6QsCajxu6ljmUmM+nUVEHEFs5th+JBklqvHOjz/K+8xEyPRNj29oMz
-         UiZoeBxu6jMN5XL7AlalVXr2anOLJN23e0s3MTc5pxAjmn09CQ7BiJ5XDcQHuXui0y
-         0YVLbkIsaT+uggUYWy0Y7HyHa1v2NpXankKXDJLIGPtvIfK5lDVt2b3MKxW/m9XDpt
-         n1LXy+Te2PdNw==
+        id S1726738AbfFFKz3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jun 2019 06:55:29 -0400
+Received: from gate.crashing.org ([63.228.1.57]:50408 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726040AbfFFKz3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Jun 2019 06:55:29 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x56At7ja032099;
+        Thu, 6 Jun 2019 05:55:08 -0500
+Message-ID: <4b956e0679b4b4f4d0f0967522590324d15593fb.camel@kernel.crashing.org>
+Subject: Re: [PATCH/RESEND] arm64: acpi/pci: invoke _DSM whether to preserve
+ firmware PCI setup
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Sinan Kaya <okaya@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "Zilberman, Zeev" <zeev@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>
+Date:   Thu, 06 Jun 2019 20:55:07 +1000
+In-Reply-To: <CAKv+Gu_3Nb5mPZgRfx+wQSz+eWM+FSbw_14fHm+u=v2EbuYoGQ@mail.gmail.com>
+References: <56715377f941f1953be43b488c2203ec090079a1.camel@kernel.crashing.org>
+         <20190604014945.GE189360@google.com>
+         <960c94eb151ba1d066090774621cf6ca6566d135.camel@kernel.crashing.org>
+         <20190604124959.GF189360@google.com>
+         <e520a4269224ac54798314798a80c080832e68b1.camel@kernel.crashing.org>
+         <d53fc77e1e754ddbd9af555ed5b344c5fa523154.camel@kernel.crashing.org>
+         <CAKv+Gu_3Nb5mPZgRfx+wQSz+eWM+FSbw_14fHm+u=v2EbuYoGQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-NVIDIA Turing GPUs include hardware support for USB Type-C and
-VirtualLink. It helps in delivering the power, display, and data
-required to power VR headsets through a single USB Type-C connector.
-The Turing GPU is a multi-function PCI device. It has the following
-four functions:
+On Thu, 2019-06-06 at 11:13 +0200, Ard Biesheuvel wrote:
+> > Bjorn: I haven't made the claim path the default in absence of _DSM #5 yet.
+> > I suggest we do that as a separate patch in case it breaks somebody, thus
+> > making bisection more meaningful. It will also make this one more palatable
+> > to distros since it won't change the behaviour on systems without _DSM #5,
+> > and we verified nobody has it except Seattle which returns 1.
+> > 
+> 
+> FYI Seattle is broken in any case since it returns Package(1) rather
+> than just an int.
 
-	- VGA display controller (Function 0)
-	- Audio controller (Function 1)
-	- USB xHCI Host controller (Function 2)
-	- USB Type-C USCI controller (Function 3)
+Great .... not. Do we care ?
 
-The function 0 is tightly coupled with other functions in the
-hardware. When function 0 goes in D3 state, then it will do
-power gating for most of the hardware blocks. Some of these
-hardware blocks are being used by other functions which
-leads to functional failure. So if any of these functions (1/2/3)
-are in D0 state, then function 0 should also be in D0 state.
+> The problem with this patch is that currently, the PCI fw spec permits
+> _DSM #5 everywhere *except* on the host bridge device object itself,
+> and this is in the process of being changed.
 
-'commit 07f4f97d7b4b ("vga_switcheroo: Use device link for
-HDA controller")' creates the device link from function 1 to
-function 0. A similar kind of device link needs to be created
-between function 0 and functions 2 and 3 for NVIDIA Turing GPU.
+Yes, I'm indirectly aware of that :)
 
-This patch does the same and creates the required device links. It
-will make function 0 to be D0 state if any other function is in D0
-state.
+> I will leave it up to the maintainers to decide whether we can take
+> this patch in anticipation of that, even though it doesn't deal with
+> _DSM #5 on nodes anywhere else in the PCIe tree.
 
-Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
----
-* Changes from v1:
+Right, so the problem at this point is that dealing with it elsewhere
+in the tree is very fragile and problematic (see my other messages).
+Doing it at the host bridge level fixes the immediate problem for us
+(provided we are ok anticipating the spec update), and doesn't preclude
+also honoring it for individual devices later on.
 
-  1. Minor changes in commit log
-  2. used pci_create_device_link() helper function
+My thinking is if we converge everybody toward the x86 method of doing
+a 2 pass survey of existing resources followed by assign_unassigned,
+and have that the main generic code path (with added quirks to force a
+full assignment and keeping probe_only around but that's easy, we have
+that on powerpc and our code is originally based on the x86 one), then
+we'll have a much easier time supporting IORESOURCE_PCI_FIXED on
+portions of the tree as well (though it also becomes less critical to
+do so since we will no longer reallocate unless we have to).
 
- drivers/pci/quirks.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+That said we need to understand what "fixed" means and why we do it.
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 379cd7fbcb12..b9182c4e5e42 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4966,6 +4966,32 @@ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMD, PCI_ANY_ID,
- DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
- 			      PCI_CLASS_MULTIMEDIA_HD_AUDIO, 8, quirk_gpu_hda);
- 
-+/*
-+ * Create device link for NVIDIA GPU with integrated USB xHCI Host
-+ * controller to VGA.
-+ */
-+static void quirk_gpu_usb(struct pci_dev *usb)
-+{
-+	pci_create_device_link(usb, 2, 0, PCI_BASE_CLASS_DISPLAY, 16);
-+}
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
-+			      PCI_CLASS_SERIAL_USB, 8, quirk_gpu_usb);
-+
-+/*
-+ * Create device link for NVIDIA GPU with integrated Type-C UCSI controller
-+ * to VGA. Currently there is no class code defined for UCSI device over PCI
-+ * so using UNKNOWN class for now and it will be updated when UCSI
-+ * over PCI gets a class code.
-+ */
-+#define PCI_CLASS_SERIAL_UNKNOWN	0x0c80
-+static void quirk_gpu_usb_typec_ucsi(struct pci_dev *ucsi)
-+{
-+	pci_create_device_link(ucsi, 3, 0, PCI_BASE_CLASS_DISPLAY, 16);
-+}
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
-+			      PCI_CLASS_SERIAL_UNKNOWN, 8,
-+			      quirk_gpu_usb_typec_ucsi);
-+
- /*
-  * Some IDT switches incorrectly flag an ACS Source Validation error on
-  * completions for config read requests even though PCIe r4.0, sec
--- 
-2.17.1
+IE, If an endpoint somehere has "fixed" BARs for example, that means
+all parent bridge must be setup to enclose that range.
+
+Now our allocator for bridge windows cannot handle that and probably
+never will, so we have to rely on the existing window established by
+the FW being reasonable and use it. We can still *extend" bridge
+windows (and we have code to do that) if necessary but we cannot move
+them if they contain a fixed BAR device.
+
+There is a much bigger discussion to be had around that concept of
+fixed device anyway, maybe at Plumbers ? Why is the BAR fixed ? Because
+the EFI FB is on it ? Because HW bugs ? Because FW might access it from
+SMM or ARM equivalent ? Because ACPI will poke at it based on its
+initial address ? etc...
+
+Some of the answers to the above questions imply more than the need to
+fix the BAR: Does it also mean that disabling access to that BAR, even
+temporarily, isn't safe ? However that's what we do today when we
+probe, if anything, to do the BAR sizing...
+
+This isn't a new problem. We had issues like that dating back 15 years
+on powerpc for example, where a big ASIC hanging off PCI had all the
+Apple gunk including the interrupt controller, which was initialized
+from the DT way before PCI probing. If you took an interrupt at the
+"wrong" time during BAR sizing, kaboom ! If you had debug printk's in
+the wrong place in the PCI probing code, kaboom ! etc....
+
+If we want to solve that properly in the long run, we'll probably want
+ACPI to tell us the BAR sizes and use that instead of doing manual
+sizing on such "system" devices. We similarily have ways to "construct"
+pci_dev's from the OF tree on sparc64 and powerpc, limiting direct
+config access to populate stuff we can't get from FW.
+
+Cheers,
+Ben.
+
 
