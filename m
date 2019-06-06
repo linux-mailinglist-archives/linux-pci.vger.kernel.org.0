@@ -2,121 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 97F1337231
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2019 12:55:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00FFE372AB
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2019 13:21:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfFFKz3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jun 2019 06:55:29 -0400
-Received: from gate.crashing.org ([63.228.1.57]:50408 "EHLO gate.crashing.org"
+        id S1726699AbfFFLV1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jun 2019 07:21:27 -0400
+Received: from mga01.intel.com ([192.55.52.88]:37376 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbfFFKz3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 6 Jun 2019 06:55:29 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x56At7ja032099;
-        Thu, 6 Jun 2019 05:55:08 -0500
-Message-ID: <4b956e0679b4b4f4d0f0967522590324d15593fb.camel@kernel.crashing.org>
-Subject: Re: [PATCH/RESEND] arm64: acpi/pci: invoke _DSM whether to preserve
- firmware PCI setup
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Sinan Kaya <okaya@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "Zilberman, Zeev" <zeev@amazon.com>,
-        "Saidi, Ali" <alisaidi@amazon.com>
-Date:   Thu, 06 Jun 2019 20:55:07 +1000
-In-Reply-To: <CAKv+Gu_3Nb5mPZgRfx+wQSz+eWM+FSbw_14fHm+u=v2EbuYoGQ@mail.gmail.com>
-References: <56715377f941f1953be43b488c2203ec090079a1.camel@kernel.crashing.org>
-         <20190604014945.GE189360@google.com>
-         <960c94eb151ba1d066090774621cf6ca6566d135.camel@kernel.crashing.org>
-         <20190604124959.GF189360@google.com>
-         <e520a4269224ac54798314798a80c080832e68b1.camel@kernel.crashing.org>
-         <d53fc77e1e754ddbd9af555ed5b344c5fa523154.camel@kernel.crashing.org>
-         <CAKv+Gu_3Nb5mPZgRfx+wQSz+eWM+FSbw_14fHm+u=v2EbuYoGQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726066AbfFFLV1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Jun 2019 07:21:27 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 04:21:27 -0700
+X-ExtLoop1: 1
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 06 Jun 2019 04:21:23 -0700
+Received: by lahna (sSMTP sendmail emulation); Thu, 06 Jun 2019 14:21:23 +0300
+Date:   Thu, 6 Jun 2019 14:21:23 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/3] PCI: Do not poll for PME if the device is in D3cold
+Message-ID: <20190606112123.GX2781@lahna.fi.intel.com>
+References: <20190605145820.37169-1-mika.westerberg@linux.intel.com>
+ <20190605145820.37169-3-mika.westerberg@linux.intel.com>
+ <20190605190557.mbklbuq4fgwbi3wp@wunner.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605190557.mbklbuq4fgwbi3wp@wunner.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 2019-06-06 at 11:13 +0200, Ard Biesheuvel wrote:
-> > Bjorn: I haven't made the claim path the default in absence of _DSM #5 yet.
-> > I suggest we do that as a separate patch in case it breaks somebody, thus
-> > making bisection more meaningful. It will also make this one more palatable
-> > to distros since it won't change the behaviour on systems without _DSM #5,
-> > and we verified nobody has it except Seattle which returns 1.
+On Wed, Jun 05, 2019 at 09:05:57PM +0200, Lukas Wunner wrote:
+> On Wed, Jun 05, 2019 at 05:58:19PM +0300, Mika Westerberg wrote:
+> > PME polling does not take into account that a device that is directly
+> > connected to the host bridge may go into D3cold as well. This leads to a
+> > situation where the PME poll thread reads from a config space of a
+> > device that is in D3cold and gets incorrect information because the
+> > config space is not accessible.
 > > 
+> > Here is an example from Intel Ice Lake system where two PCIe root ports
+> > are in D3cold (I've instrumented the kernel to log the PMCSR register
+> > contents):
+> > 
+> >   [   62.971442] pcieport 0000:00:07.1: Check PME status, PMCSR=0xffff
+> >   [   62.971504] pcieport 0000:00:07.0: Check PME status, PMCSR=0xffff
+> > 
+> > Since 0xffff is interpreted so that PME is pending, the root ports will
+> > be runtime resumed. This repeats over and over again essentially
+> > blocking all runtime power management.
+> > 
+> > Prevent this from happening by checking whether the device is in D3cold
+> > before its PME status is read.
 > 
-> FYI Seattle is broken in any case since it returns Package(1) rather
-> than just an int.
+> There's more broken here.  The below patch fixes a PME polling race
+> and should also fix the issue you're witnessing, could you verify that?
 
-Great .... not. Do we care ?
+It fixes the issue but I needed to tune it a bit ->
 
-> The problem with this patch is that currently, the PCI fw spec permits
-> _DSM #5 everywhere *except* on the host bridge device object itself,
-> and this is in the process of being changed.
+> The patch has been rotting on my development branch for several months,
+> I just didn't get around to posting it, my apologies.
 
-Yes, I'm indirectly aware of that :)
+Better late than never :)
 
-> I will leave it up to the maintainers to decide whether we can take
-> this patch in anticipation of that, even though it doesn't deal with
-> _DSM #5 on nodes anywhere else in the PCIe tree.
+> -- >8 --
+> Subject: [PATCH] PCI / PM: Fix race on PME polling
+> 
+> Since commit df17e62e5bff ("PCI: Add support for polling PME state on
+> suspended legacy PCI devices"), the work item pci_pme_list_scan() polls
+> the PME status flag of devices and wakes them up if the bit is set.
+> 
+> The function performs a check whether a device's upstream bridge is in
+> D0 for otherwise the device is inaccessible, rendering PME polling
+> impossible.  However the check is racy because it is performed before
+> polling the device.  If the upstream bridge runtime suspends to D3hot
+> after pci_pme_list_scan() checks its power state and before it invokes
+> pci_pme_wakeup(), the latter will read the PMCSR as "all ones" and
+> mistake it for a set PME status flag.  I am seeing this race play out as
+> a Thunderbolt controller going to D3cold and occasionally immediately
+> going to D0 again because PM polling was performed at just the wrong
+> time.
+> 
+> Avoid by checking for an "all ones" PMCSR in pci_check_pme_status().
+> 
+> Fixes: 58ff463396ad ("PCI PM: Add function for checking PME status of devices")
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Cc: stable@vger.kernel.org # v2.6.34+
+> ---
+>  drivers/pci/pci.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b98a564..2e05348 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1753,6 +1753,8 @@ bool pci_check_pme_status(struct pci_dev *dev)
+>  	pci_read_config_word(dev, pmcsr_pos, &pmcsr);
+>  	if (!(pmcsr & PCI_PM_CTRL_PME_STATUS))
+>  		return false;
+> +	if (pmcsr == ~0)
 
-Right, so the problem at this point is that dealing with it elsewhere
-in the tree is very fragile and problematic (see my other messages).
-Doing it at the host bridge level fixes the immediate problem for us
-(provided we are ok anticipating the spec update), and doesn't preclude
-also honoring it for individual devices later on.
+<- Here I needed to do
 
-My thinking is if we converge everybody toward the x86 method of doing
-a 2 pass survey of existing resources followed by assign_unassigned,
-and have that the main generic code path (with added quirks to force a
-full assignment and keeping probe_only around but that's easy, we have
-that on powerpc and our code is originally based on the x86 one), then
-we'll have a much easier time supporting IORESOURCE_PCI_FIXED on
-portions of the tree as well (though it also becomes less critical to
-do so since we will no longer reallocate unless we have to).
+	if (pmcsr == (u16)~0)
 
-That said we need to understand what "fixed" means and why we do it.
+I think it is because pmcsr is u16 so we end up comparing:
 
-IE, If an endpoint somehere has "fixed" BARs for example, that means
-all parent bridge must be setup to enclose that range.
+	0xffff == 0xffffffff
 
-Now our allocator for bridge windows cannot handle that and probably
-never will, so we have to rely on the existing window established by
-the FW being reasonable and use it. We can still *extend" bridge
-windows (and we have code to do that) if necessary but we cannot move
-them if they contain a fixed BAR device.
-
-There is a much bigger discussion to be had around that concept of
-fixed device anyway, maybe at Plumbers ? Why is the BAR fixed ? Because
-the EFI FB is on it ? Because HW bugs ? Because FW might access it from
-SMM or ARM equivalent ? Because ACPI will poke at it based on its
-initial address ? etc...
-
-Some of the answers to the above questions imply more than the need to
-fix the BAR: Does it also mean that disabling access to that BAR, even
-temporarily, isn't safe ? However that's what we do today when we
-probe, if anything, to do the BAR sizing...
-
-This isn't a new problem. We had issues like that dating back 15 years
-on powerpc for example, where a big ASIC hanging off PCI had all the
-Apple gunk including the interrupt controller, which was initialized
-from the DT way before PCI probing. If you took an interrupt at the
-"wrong" time during BAR sizing, kaboom ! If you had debug printk's in
-the wrong place in the PCI probing code, kaboom ! etc....
-
-If we want to solve that properly in the long run, we'll probably want
-ACPI to tell us the BAR sizes and use that instead of doing manual
-sizing on such "system" devices. We similarily have ways to "construct"
-pci_dev's from the OF tree on sparc64 and powerpc, limiting direct
-config access to populate stuff we can't get from FW.
-
-Cheers,
-Ben.
-
-
+> +		return false;
+>  
+>  	/* Clear PME status. */
+>  	pmcsr |= PCI_PM_CTRL_PME_STATUS;
+> -- 
+> 2.20.1
