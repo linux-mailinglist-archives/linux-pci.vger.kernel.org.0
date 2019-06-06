@@ -2,93 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 112A336F2F
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2019 10:54:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2701936F53
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2019 11:01:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbfFFIyy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jun 2019 04:54:54 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45105 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727471AbfFFIyy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jun 2019 04:54:54 -0400
-Received: by mail-oi1-f196.google.com with SMTP id m206so1000437oib.12;
-        Thu, 06 Jun 2019 01:54:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LnbnhMxsZs4dx92it5UfNw/Rc2l0benHICZRoQ84E/w=;
-        b=KkxgDbU3kFm3xFWPR1tfRcfGD4TAsx5rGfeyZRPdXmuc/meThpMpLglxVW9OiGTQ29
-         pIv+ZjrEtXM9jdz8f5qsvWb8C3eI9mvAEEm1oUaqarnWunvR0nB83mYeNVtfapeVg6ta
-         8l2aSmYuavZv3uGAt01vO9wv/Ei3AD8aGo9y5T95EQJS5fSBfxvrJqW7W6tgi3mcfcFM
-         XHlRckknrscxWVAC89efMCNG8tWIXeL2KkiUwQ4YNiRhvPMDg4iHafflSlAMzH9+NWzt
-         ZlzGu3Wj7tjfAaWA0Kak3pyBD8wgTTPKGOTPpLbTaydIXdSvA2uUA+rluQOOwKHwgFG2
-         Hbyw==
-X-Gm-Message-State: APjAAAWspXSoDKtmYjrzrJuG0UiI2jMM+FODZkp268K20RYgVZaN3yvT
-        fJtCCgza/UeD4soTU1gBApn3NkDDvANkTyIhxy8h3Q==
-X-Google-Smtp-Source: APXvYqzUP6KPESKe0BBP7i26M6tHRBWmHyRKvI03SDZ/5eli3BhHIvvDy2vNWqHe4fo2eqOp3T8aIz10/wCFEg/7okI=
-X-Received: by 2002:aca:5b43:: with SMTP id p64mr11113922oib.68.1559811293096;
- Thu, 06 Jun 2019 01:54:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190605145820.37169-1-mika.westerberg@linux.intel.com> <20190605145820.37169-4-mika.westerberg@linux.intel.com>
-In-Reply-To: <20190605145820.37169-4-mika.westerberg@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 6 Jun 2019 10:54:40 +0200
-Message-ID: <CAJZ5v0iGu8f6H68082RGDmDCQsmQZNTULLwnb5JzpKA7m1QvVA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] PCI / ACPI: Handle sibling devices sharing power resources
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>
+        id S1727480AbfFFJAc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jun 2019 05:00:32 -0400
+Received: from gate.crashing.org ([63.228.1.57]:40798 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727450AbfFFJAb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Jun 2019 05:00:31 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5690DKJ025744;
+        Thu, 6 Jun 2019 04:00:13 -0500
+Message-ID: <d53fc77e1e754ddbd9af555ed5b344c5fa523154.camel@kernel.crashing.org>
+Subject: [PATCH/RESEND] arm64: acpi/pci: invoke _DSM whether to preserve
+ firmware PCI setup
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sinan Kaya <okaya@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "Zilberman, Zeev" <zeev@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>
+Date:   Thu, 06 Jun 2019 19:00:12 +1000
+In-Reply-To: <e520a4269224ac54798314798a80c080832e68b1.camel@kernel.crashing.org>
+References: <56715377f941f1953be43b488c2203ec090079a1.camel@kernel.crashing.org>
+         <20190604014945.GE189360@google.com>
+         <960c94eb151ba1d066090774621cf6ca6566d135.camel@kernel.crashing.org>
+         <20190604124959.GF189360@google.com>
+         <e520a4269224ac54798314798a80c080832e68b1.camel@kernel.crashing.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 4:58 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> Intel Ice Lake has an interated Thunderbolt controller which means that
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-integrated
+On arm64 ACPI systems, we unconditionally reconfigure the entire PCI
+hierarchy at boot. This is a departure from what is customary on ACPI
+systems, and may break assumptions in some places (e.g., EFIFB), that
+the kernel will leave BARs of enabled PCI devices where they are.
 
-> the PCIe topology is extended directly from the two root ports (RP0 and
-> RP1). Power management is handled by ACPI power resources that are
-> shared between the root ports, Thunderbolt controller (NHI) and xHCI
-> controller.
->
-> The topology with the power resources (marked with []) looks like:
->
->   Host bridge
->       |
->       +- RP0 ---\
->       +- RP1 ---|--+--> [TBT]
->       +- NHI --/   |
->       |            |
->       |            v
->       +- xHCI --> [D3C]
->
-> Here TBT and D3C are the shared ACPI power resources. ACPI _PR3() method
-> returns either TBT or D3C or both.
->
-> Say we runtime suspend first the root ports RP0 and RP1, then NHI. Now
-> since the TBT power resource is still on when the root ports are runtime
-> suspended their dev->current_state is set to D3hot. When NHI is runtime
-> suspended TBT is finally turned off but state of the root ports remain
-> to be D3hot.
+Given that PCI already specifies a device specific ACPI method (_DSM)
+for PCI root bridge nodes that tells us whether the firmware thinks
+the configuration should be left alone, let's sidestep the entire
+policy debate about whether the PCI configuration should be preserved
+or not, and put it under the control of the firmware instead.
 
-It looks like this problem will affect all ACPI devices using power
-resources and _PR3 in general, so fixing it just for PCI is not
-sufficient IMO.
+[BenH: Added pci_assign_unassigned_root_bus_resources()]
 
-An alternative approach may be to set the state of a device that
-dropped its references to power resources listed in _PR3 to D3cold
-even though those power resources may be physically "on" at that time.
-Everything else (including this patch AFAICS) will be racy this way or
-another.
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+---
+
+So I would like this variant rather than mucking around with
+IORESOURCE_PCI_FIXED at this stage to fix the problem with our platforms.
+
+See my other email, IORESOURCE_PCI_FIXED doesn't really work terribly well
+when using pci_bus_size_bridges and pci_bus_assign_resources, and the
+resulting patches are ugly and add more mess.
+
+Long run, I propose to start working on consolidating all those various
+resource survey mechanisms around what x86 does, unless people strongly
+object... (with the addition of the probe only and force reassign quirks
+so platforms can still chose that).
+
+Note: I haven't tested the effect of pci_assign_unassigned_root_bus_resources
+as our platforms don't leave anything unassigned. I'm not entirely sure how
+well pci_bus_claim_resources() will deal with a partially assigned setup...
+
+We do want to support partial assignment by BIOS though, it's a trend to
+reduce boot time, people seem to want BIOSes to only assign what's critical
+for booting.
+
+Bjorn: I haven't made the claim path the default in absence of _DSM #5 yet.
+I suggest we do that as a separate patch in case it breaks somebody, thus
+making bisection more meaningful. It will also make this one more palatable
+to distros since it won't change the behaviour on systems without _DSM #5,
+and we verified nobody has it except Seattle which returns 1. 
+
+ arch/arm64/kernel/pci.c  | 23 +++++++++++++++++++++--
+ include/linux/pci-acpi.h |  7 ++++---
+ 2 files changed, 25 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+index bb85e2f4603f..6358e1cb4f9f 100644
+--- a/arch/arm64/kernel/pci.c
++++ b/arch/arm64/kernel/pci.c
+@@ -168,6 +168,7 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
+ 	struct acpi_pci_generic_root_info *ri;
+ 	struct pci_bus *bus, *child;
+ 	struct acpi_pci_root_ops *root_ops;
++	union acpi_object *obj;
+ 
+ 	ri = kzalloc(sizeof(*ri), GFP_KERNEL);
+ 	if (!ri)
+@@ -193,8 +194,26 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
+ 	if (!bus)
+ 		return NULL;
+ 
+-	pci_bus_size_bridges(bus);
+-	pci_bus_assign_resources(bus);
++	/*
++	 * Invoke the PCI device specific method (_DSM) #5 'Ignore PCI Boot
++	 * Configuration', which tells us whether the firmware wants us to
++	 * preserve the configuration of the PCI resource tree for this root
++	 * bridge.
++	 */
++	obj = acpi_evaluate_dsm(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 1,
++	                        IGNORE_PCI_BOOT_CONFIG_DSM, NULL);
++	if (obj && obj->type == ACPI_TYPE_INTEGER && obj->integer.value == 0) {
++		/* preserve existing resource assignment */
++		pci_bus_claim_resources(bus);
++
++		/* Assign anything that might have been left out */
++		pci_assign_unassigned_root_bus_resources(bus);
++	} else {
++		/* reconfigure the resource tree from scratch */
++		pci_bus_size_bridges(bus);
++		pci_bus_assign_resources(bus);
++	}
++	ACPI_FREE(obj);
+ 
+ 	list_for_each_entry(child, &bus->children, node)
+ 		pcie_bus_configure_settings(child);
+diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
+index 8082b612f561..62b7fdcc661c 100644
+--- a/include/linux/pci-acpi.h
++++ b/include/linux/pci-acpi.h
+@@ -107,9 +107,10 @@ static inline void acpiphp_check_host_bridge(struct acpi_device *adev) { }
+ #endif
+ 
+ extern const guid_t pci_acpi_dsm_guid;
+-#define DEVICE_LABEL_DSM	0x07
+-#define RESET_DELAY_DSM		0x08
+-#define FUNCTION_DELAY_DSM	0x09
++#define IGNORE_PCI_BOOT_CONFIG_DSM	0x05
++#define DEVICE_LABEL_DSM		0x07
++#define RESET_DELAY_DSM			0x08
++#define FUNCTION_DELAY_DSM		0x09
+ 
+ #else	/* CONFIG_ACPI */
+ static inline void acpi_pci_add_bus(struct pci_bus *bus) { }
+
+
