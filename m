@@ -2,114 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B6BE2363B9
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2019 21:06:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ECDF36A83
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2019 05:34:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbfFETGB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Jun 2019 15:06:01 -0400
-Received: from bmailout1.hostsharing.net ([83.223.95.100]:40609 "EHLO
-        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726543AbfFETGA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jun 2019 15:06:00 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id B11E23000BA08;
-        Wed,  5 Jun 2019 21:05:57 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 7B9E64B204; Wed,  5 Jun 2019 21:05:57 +0200 (CEST)
-Date:   Wed, 5 Jun 2019 21:05:57 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/3] PCI: Do not poll for PME if the device is in D3cold
-Message-ID: <20190605190557.mbklbuq4fgwbi3wp@wunner.de>
-References: <20190605145820.37169-1-mika.westerberg@linux.intel.com>
- <20190605145820.37169-3-mika.westerberg@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605145820.37169-3-mika.westerberg@linux.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        id S1726541AbfFFDee (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Jun 2019 23:34:34 -0400
+Received: from ozlabs.ru ([107.173.13.209]:53092 "EHLO ozlabs.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726331AbfFFDee (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 5 Jun 2019 23:34:34 -0400
+X-Greylist: delayed 514 seconds by postgrey-1.27 at vger.kernel.org; Wed, 05 Jun 2019 23:34:34 EDT
+Received: from fstn1-p1.ozlabs.ibm.com (localhost [IPv6:::1])
+        by ozlabs.ru (Postfix) with ESMTP id 4315FAE80017;
+        Wed,  5 Jun 2019 23:25:59 -0400 (EDT)
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>, linux-doc@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Subject: PCI: Correct the resource_alignment parameter example
+Date:   Thu,  6 Jun 2019 13:25:57 +1000
+Message-Id: <20190606032557.107542-1-aik@ozlabs.ru>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 05:58:19PM +0300, Mika Westerberg wrote:
-> PME polling does not take into account that a device that is directly
-> connected to the host bridge may go into D3cold as well. This leads to a
-> situation where the PME poll thread reads from a config space of a
-> device that is in D3cold and gets incorrect information because the
-> config space is not accessible.
-> 
-> Here is an example from Intel Ice Lake system where two PCIe root ports
-> are in D3cold (I've instrumented the kernel to log the PMCSR register
-> contents):
-> 
->   [   62.971442] pcieport 0000:00:07.1: Check PME status, PMCSR=0xffff
->   [   62.971504] pcieport 0000:00:07.0: Check PME status, PMCSR=0xffff
-> 
-> Since 0xffff is interpreted so that PME is pending, the root ports will
-> be runtime resumed. This repeats over and over again essentially
-> blocking all runtime power management.
-> 
-> Prevent this from happening by checking whether the device is in D3cold
-> before its PME status is read.
+The option description requires an order and so does the option
+parsing code, however the example uses a size, fix this.
 
-There's more broken here.  The below patch fixes a PME polling race
-and should also fix the issue you're witnessing, could you verify that?
-
-The patch has been rotting on my development branch for several months,
-I just didn't get around to posting it, my apologies.
-
--- >8 --
-Subject: [PATCH] PCI / PM: Fix race on PME polling
-
-Since commit df17e62e5bff ("PCI: Add support for polling PME state on
-suspended legacy PCI devices"), the work item pci_pme_list_scan() polls
-the PME status flag of devices and wakes them up if the bit is set.
-
-The function performs a check whether a device's upstream bridge is in
-D0 for otherwise the device is inaccessible, rendering PME polling
-impossible.  However the check is racy because it is performed before
-polling the device.  If the upstream bridge runtime suspends to D3hot
-after pci_pme_list_scan() checks its power state and before it invokes
-pci_pme_wakeup(), the latter will read the PMCSR as "all ones" and
-mistake it for a set PME status flag.  I am seeing this race play out as
-a Thunderbolt controller going to D3cold and occasionally immediately
-going to D0 again because PM polling was performed at just the wrong
-time.
-
-Avoid by checking for an "all ones" PMCSR in pci_check_pme_status().
-
-Fixes: 58ff463396ad ("PCI PM: Add function for checking PME status of devices")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: stable@vger.kernel.org # v2.6.34+
+Fixes: 8b078c603249 ("PCI: Update "pci=resource_alignment" documentation")
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
 ---
- drivers/pci/pci.c | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/admin-guide/kernel-parameters.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index b98a564..2e05348 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1753,6 +1753,8 @@ bool pci_check_pme_status(struct pci_dev *dev)
- 	pci_read_config_word(dev, pmcsr_pos, &pmcsr);
- 	if (!(pmcsr & PCI_PM_CTRL_PME_STATUS))
- 		return false;
-+	if (pmcsr == ~0)
-+		return false;
- 
- 	/* Clear PME status. */
- 	pmcsr |= PCI_PM_CTRL_PME_STATUS;
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 2b8ee90bb644..dcb53d64ad74 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3340,27 +3340,28 @@
+ 		resource_alignment=
+ 				Format:
+ 				[<order of align>@]<pci_dev>[; ...]
+ 				Specifies alignment and device to reassign
+ 				aligned memory resources. How to
+ 				specify the device is described above.
+ 				If <order of align> is not specified,
+ 				PAGE_SIZE is used as alignment.
+ 				PCI-PCI bridge can be specified, if resource
+ 				windows need to be expanded.
+ 				To specify the alignment for several
+ 				instances of a device, the PCI vendor,
+ 				device, subvendor, and subdevice may be
+-				specified, e.g., 4096@pci:8086:9c22:103c:198f
++				specified, e.g., 12@pci:8086:9c22:103c:198f
++				for the 4096 alignment.
+ 		ecrc=		Enable/disable PCIe ECRC (transaction layer
+ 				end-to-end CRC checking).
+ 				bios: Use BIOS/firmware settings. This is the
+ 				the default.
+ 				off: Turn ECRC off
+ 				on: Turn ECRC on.
+ 		hpiosize=nn[KMG]	The fixed amount of bus space which is
+ 				reserved for hotplug bridge's IO window.
+ 				Default size is 256 bytes.
+ 		hpmemsize=nn[KMG]	The fixed amount of bus space which is
+ 				reserved for hotplug bridge's memory window.
+ 				Default size is 2 megabytes.
+ 		hpbussize=nn	The minimum amount of additional bus numbers
 -- 
-2.20.1
+2.17.1
 
