@@ -2,60 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 24236384BC
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2019 09:08:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47E99388CB
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2019 13:17:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfFGHIS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jun 2019 03:08:18 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:62260 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726711AbfFGHIS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jun 2019 03:08:18 -0400
-X-IronPort-AV: E=Sophos;i="5.60,562,1549897200"; 
-   d="scan'208";a="18059289"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 07 Jun 2019 16:08:15 +0900
-Received: from be1yocto.ree.adwin.renesas.com (unknown [172.29.43.62])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 51D1A400B9D0;
-        Fri,  7 Jun 2019 16:08:13 +0900 (JST)
-From:   Biju Das <biju.das@bp.renesas.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Biju Das <biju.das@bp.renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH] dt-bindings: PCI: rcar: Add device tree support for r8a774a1
-Date:   Fri,  7 Jun 2019 08:03:36 +0100
-Message-Id: <1559891016-56157-1-git-send-email-biju.das@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
+        id S1728116AbfFGLRm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jun 2019 07:17:42 -0400
+Received: from mga17.intel.com ([192.55.52.151]:36806 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728073AbfFGLRm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 7 Jun 2019 07:17:42 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 04:17:42 -0700
+X-ExtLoop1: 1
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 07 Jun 2019 04:17:39 -0700
+Received: by lahna (sSMTP sendmail emulation); Fri, 07 Jun 2019 14:17:39 +0300
+Date:   Fri, 7 Jun 2019 14:17:39 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] PCI: PM: Avoid resuming devices in D3hot during
+ system suspend
+Message-ID: <20190607111739.GT2781@lahna.fi.intel.com>
+References: <2958812.87Qy2A3tJo@kreacher>
+ <3078848.tiz3m2NLmW@kreacher>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3078848.tiz3m2NLmW@kreacher>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add PCIe support for the RZ/G2M (a.k.a. R8A774A1).
+On Fri, Jun 07, 2019 at 12:30:58AM +0200, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> The current code resumes devices in D3hot during system suspend if
+> the target power state for them is D3cold, but that is not necessary
+> in general.  It only is necessary to do that if the platform firmware
+> requires the device to be resumed, but that should be covered by
+> the platform_pci_need_resume() check anyway, so rework
+> pci_dev_keep_suspended() to avoid returning 'false' for devices
+> in D3hot which need not be resumed due to platform firmware
+> requirements.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-index 6904882..45bba9f 100644
---- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-@@ -3,6 +3,7 @@
- Required properties:
- compatible: "renesas,pcie-r8a7743" for the R8A7743 SoC;
- 	    "renesas,pcie-r8a7744" for the R8A7744 SoC;
-+	    "renesas,pcie-r8a774a1" for the R8A774A1 SoC;
- 	    "renesas,pcie-r8a774c0" for the R8A774C0 SoC;
- 	    "renesas,pcie-r8a7779" for the R8A7779 SoC;
- 	    "renesas,pcie-r8a7790" for the R8A7790 SoC;
--- 
-2.7.4
-
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
