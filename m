@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0076439DDC
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Jun 2019 13:44:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B53DA39E37
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Jun 2019 13:47:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbfFHLof (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 8 Jun 2019 07:44:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60852 "EHLO mail.kernel.org"
+        id S1729208AbfFHLr0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 8 Jun 2019 07:47:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728764AbfFHLna (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:43:30 -0400
+        id S1729233AbfFHLrZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:47:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ABF1216C4;
-        Sat,  8 Jun 2019 11:43:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F298521530;
+        Sat,  8 Jun 2019 11:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994209;
-        bh=ZLLShTtUBrOnW/b5fc8VWjR98PKOGJuRSeWTS8qGz3Q=;
+        s=default; t=1559994444;
+        bh=2hXKE5D9c+8naLVRZy80JT2Dh17PpGbYanYln6RyBPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G3XijrGrmOSsLvMksGbJ7O0D6bRA7/lAhfmRWECrFeq2sN1akY4b9He6YvconEtZI
-         1p7D+3znX2MhSqYJb8yiVQhKtf2SdQW/JUKWGnBvq37kumvLLTW3KtzXGKe1BNEaFE
-         NBvLCs67iW5Q1oCLrkl8wP4oqr2iELaPa2b+RmN8=
+        b=k61BY1+rH7ub4Lk4Oi2RUrG9bmhtB+P2+gTS/9FLSDL42W3aQdfUy9UWodUs+q3zO
+         NRMT09RHYZWBan8IKTlzuxFL9dm93ZJtls+Y0rlONe92bZ8Dm/K4PvZxdCPisZ1Sq6
+         7zFHsDeKC71CPb8BBr+MkMG9wDx9qSJv8DbHHkjo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Keith Busch <keith.busch@intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 21/49] PCI: PM: Avoid possible suspend-to-idle issue
-Date:   Sat,  8 Jun 2019 07:42:02 -0400
-Message-Id: <20190608114232.8731-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 15/31] PCI: PM: Avoid possible suspend-to-idle issue
+Date:   Sat,  8 Jun 2019 07:46:26 -0400
+Message-Id: <20190608114646.9415-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
-References: <20190608114232.8731-1-sashal@kernel.org>
+In-Reply-To: <20190608114646.9415-1-sashal@kernel.org>
+References: <20190608114646.9415-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -79,10 +79,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 17 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 33f3f475e5c6..7430f993567f 100644
+index ea69b4dbab66..f5d66335fe53 100644
 --- a/drivers/pci/pci-driver.c
 +++ b/drivers/pci/pci-driver.c
-@@ -734,6 +734,8 @@ static int pci_pm_suspend(struct device *dev)
+@@ -726,6 +726,8 @@ static int pci_pm_suspend(struct device *dev)
  	struct pci_dev *pci_dev = to_pci_dev(dev);
  	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
  
@@ -91,7 +91,7 @@ index 33f3f475e5c6..7430f993567f 100644
  	if (pci_has_legacy_pm_support(pci_dev))
  		return pci_legacy_suspend(dev, PMSG_SUSPEND);
  
-@@ -827,7 +829,20 @@ static int pci_pm_suspend_noirq(struct device *dev)
+@@ -799,7 +801,20 @@ static int pci_pm_suspend_noirq(struct device *dev)
  		}
  	}
  
@@ -114,10 +114,10 @@ index 33f3f475e5c6..7430f993567f 100644
  		if (pci_power_manageable(pci_dev))
  			pci_prepare_to_sleep(pci_dev);
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index b1f297f4b7b0..94853094b6ef 100644
+index 59f4d10568c6..430f3c335446 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -342,6 +342,7 @@ struct pci_dev {
+@@ -346,6 +346,7 @@ struct pci_dev {
  						   D3cold, not set for devices
  						   powered on/off by the
  						   corresponding bridge */
