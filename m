@@ -2,112 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1601639654
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2019 22:00:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B5A0399F2
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Jun 2019 02:28:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731116AbfFGUAg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jun 2019 16:00:36 -0400
-Received: from mga05.intel.com ([192.55.52.43]:60493 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728727AbfFGUAg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 7 Jun 2019 16:00:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 13:00:36 -0700
-X-ExtLoop1: 1
-Received: from jderrick-mobl.amr.corp.intel.com ([10.232.115.162])
-  by fmsmga006.fm.intel.com with ESMTP; 07 Jun 2019 13:00:35 -0700
-From:   Jon Derrick <jonathan.derrick@intel.com>
-To:     <linux-pci@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] PCI/VMD: Fix config addressing with bus offsets
-Date:   Fri,  7 Jun 2019 14:00:34 -0600
-Message-Id: <20190607200034.19562-1-jonathan.derrick@intel.com>
-X-Mailer: git-send-email 2.20.1
+        id S1729042AbfFHA2r convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 7 Jun 2019 20:28:47 -0400
+Received: from rdslmr.btconnect.com ([62.239.164.79]:25611 "EHLO
+        mail.btconnect.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729685AbfFHA2r (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jun 2019 20:28:47 -0400
+Received: from mail.btconnect.com (rd11780omr12.iuser.iroot.adidom.com [10.187.89.173])
+        by rd11780slr11.dci.bt.com (MOS 4.4.8-GA)
+        with ESMTP id AOS29704;
+        Sat, 8 Jun 2019 01:22:41 +0100
+Received: (from localhost [127.0.0.1])
+        by rd11780omr12.dci.bt.com (MOS 4.4.8-GA)
+        id CMA57396;
+        Sat,  8 Jun 2019 01:22:41 +0100 (BST)
+Received: from host81-142-175-179.in-addr.btopenworld.com (EHLO btconnect.com) ([81.142.175.179])
+        by rd11780omr12.dci.bt.com
+        with ESMTP id CMA57386;
+        Sat, 08 Jun 2019 01:22:41 +0100 (BST)
+Reply-To: jmridgeway2@gmail.com
+From:   "United States Department of Homeland Security" 
+        <eileenwhite@btconnect.com>
+To:     linux-pci@vger.kernel.org
+Subject: Have You Received Your Funds?
+Date:   08 Jun 2019 01:22:41 +0100
+Message-ID: <20190608012241.F97B813782997704@btconnect.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-Mirapoint-IP-Reputation: reputation=Good-1,
+        source=Queried,
+        refid=tid=0001.0A0B0303.5CFAFC68.00E6,
+        actions=TAG
+X-Junkmail: UCE(55)
+X-Junkmail-Status: score=55/50, host=rd11780omr12.dci.bt.com
+X-Junkmail-Signature-Raw: score=bulk(5),
+        refid=str=0001.0A0B0203.5CFAFA32.0010,ss=3,sh,re=0.000,recu=0.000,reip=0.000,cl=3,cld=1,fgs=0,
+        ip=0.0.0.0,
+        so=2016-11-06 16:00:04,
+        dmn=2013-03-21 17:37:32,
+        mode=multiengine
+X-Junkmail-IWF: false
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-VMD config space addressing relies on mapping the BDF of the target into
-the VMD config bar. When using bus number offsets to number the VMD
-domain, the offset needs to be ignored in order to correctly map devices
-to their config space.
+Good Day ,
 
-Fixes: 2a5a9c9a20f9 ("PCI: vmd: Add offset to bus numbers if necessary")
-Cc: <stable@vger.kernel.org> # v4.18+
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
----
- drivers/pci/controller/vmd.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+Have you received your funds of $10.5 Million dollars from the 
+IRS / Homeland office? If not contact the information below; This 
+Mail has been securely verified from the office of the United 
+States Department Of Treasury.
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 999a5509e57e..6c80b9098dd0 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -94,6 +94,7 @@ struct vmd_dev {
- 	struct resource		resources[3];
- 	struct irq_domain	*irq_domain;
- 	struct pci_bus		*bus;
-+	u8			busn_start;
- 
- 	struct dma_map_ops	dma_ops;
- 	struct dma_domain	dma_domain;
-@@ -440,7 +441,8 @@ static char __iomem *vmd_cfg_addr(struct vmd_dev *vmd, struct pci_bus *bus,
- 				  unsigned int devfn, int reg, int len)
- {
- 	char __iomem *addr = vmd->cfgbar +
--			     (bus->number << 20) + (devfn << 12) + reg;
-+			     ((bus->number - vmd->busn_start) << 20) +
-+			     (devfn << 12) + reg;
- 
- 	if ((addr - vmd->cfgbar) + len >=
- 	    resource_size(&vmd->dev->resource[VMD_CFGBAR]))
-@@ -563,7 +565,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 	unsigned long flags;
- 	LIST_HEAD(resources);
- 	resource_size_t offset[2] = {0};
--	resource_size_t membar2_offset = 0x2000, busn_start = 0;
-+	resource_size_t membar2_offset = 0x2000;
- 	struct pci_bus *child;
- 
- 	/*
-@@ -606,14 +608,14 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 		pci_read_config_dword(vmd->dev, PCI_REG_VMCONFIG, &vmconfig);
- 		if (BUS_RESTRICT_CAP(vmcap) &&
- 		    (BUS_RESTRICT_CFG(vmconfig) == 0x1))
--			busn_start = 128;
-+			vmd->busn_start = 128;
- 	}
- 
- 	res = &vmd->dev->resource[VMD_CFGBAR];
- 	vmd->resources[0] = (struct resource) {
- 		.name  = "VMD CFGBAR",
--		.start = busn_start,
--		.end   = busn_start + (resource_size(res) >> 20) - 1,
-+		.start = vmd->busn_start,
-+		.end   = vmd->busn_start + (resource_size(res) >> 20) - 1,
- 		.flags = IORESOURCE_BUS | IORESOURCE_PCI_FIXED,
- 	};
- 
-@@ -681,8 +683,8 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 	pci_add_resource_offset(&resources, &vmd->resources[1], offset[0]);
- 	pci_add_resource_offset(&resources, &vmd->resources[2], offset[1]);
- 
--	vmd->bus = pci_create_root_bus(&vmd->dev->dev, busn_start, &vmd_ops,
--				       sd, &resources);
-+	vmd->bus = pci_create_root_bus(&vmd->dev->dev, vmd->busn_start,
-+				       &vmd_ops, sd, &resources);
- 	if (!vmd->bus) {
- 		pci_free_resource_list(&resources);
- 		irq_domain_remove(vmd->irq_domain);
--- 
-2.20.1
+We are happy to inform you that our office in Washington 
+recovered funds from Africa, Asia, United Kingdom and here in the 
+State from internet fraudster with the help of international 
+Criminal Committee and the {F.B.I}.Reason for contacting you is 
+that we have found your email worthy of the people assigned to be 
+compensated with the sum above as your email and name has fallen 
+among our list of credible funds recipient. You don't have to 
+worry as long as you follow the right instruction from Mrs 
+Kirstjen Nielsen who is to approve and direct your payment/funds 
+to you.
 
+We have informed Mrs Kirstjen Nielsen to make arrangements of 
+your payment to you which we believe is ready and has been 
+confirmed. As soon as you contact her, there should not be any 
+delay or problem on this, as it is highly legitimate.The IRS / 
+Homeland have been waiting for you to get in touch,we see no 
+reason why you should abandon your funds. Also make sure you Re-
+confirm your information to the IRS / Homeland to avoid any 
+mistake.
+
+You can confirm your information below;
+
+Full Name :
+
+Full Home Address :
+
+Tel Phone Number :
+
+Valid ID CARD:
+
+Contact the IRS / Homeland as soon as this mail gets to you, to 
+avoid any delay of your payment. Mrs. Charity Donalds received 
+her funds of $10.5 Million a week ago. Your email will be 
+responded to as soon as you confirm your information as we will 
+treat your case urgent and release your payment of Ten Million 
+five hundred thousand United State dollars ($10.5 Million ) to 
+you. Please you are only advised to contact us if you have not 
+received your payment.
+
+Homeland Security US Department
+Federal Government Office
+300 7th St SW
