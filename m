@@ -2,118 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 53BC13AE4C
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2019 06:45:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CC683AFDA
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2019 09:45:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387471AbfFJEpi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jun 2019 00:45:38 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:15394 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387457AbfFJEpi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jun 2019 00:45:38 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cfde0720000>; Sun, 09 Jun 2019 21:45:38 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 09 Jun 2019 21:45:37 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 09 Jun 2019 21:45:37 -0700
-Received: from [10.24.192.30] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Jun
- 2019 04:45:34 +0000
-Subject: Re: [PATCH V4 00/28] Enable Tegra PCIe root port features
-To:     <lorenzo.pieralisi@arm.com>
-CC:     <thierry.reding@gmail.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <jonathanh@nvidia.com>, <vidyas@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
-X-Nvconfidentiality: public
-From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Message-ID: <b7d09498-b97e-3428-02bd-ecd7c7f3e733@nvidia.com>
-Date:   Mon, 10 Jun 2019 10:15:07 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S2388248AbfFJHpz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jun 2019 03:45:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387781AbfFJHpy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 10 Jun 2019 03:45:54 -0400
+Received: from localhost (unknown [122.178.227.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D6C620859;
+        Mon, 10 Jun 2019 07:45:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560152754;
+        bh=ENaV0hH+t6dBvquoHYccnSfqO4CQH7u4IkveLe6qZzM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ff8vzlj0sGdqchlj/ZcmdtKkv94kfs1E7RptUp7cFN5X074GV6fliy9+tFCtS5uA6
+         R6dIV28R/XdvcvnN9sRoBBtwS6V2yRgi2GLm/EaQcXC721U55GCxvvyTtRZpz+dj61
+         o4dZE+9QbQYVzGO60bvF4IKXj0Cg0lhLcKVfSeFc=
+Date:   Mon, 10 Jun 2019 13:12:45 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     linux-pci@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] dmaengine: Add Synopsys eDMA IP driver (version 0)
+Message-ID: <20190610074245.GM9160@vkoul-mobl.Dlink>
+References: <cover.1559654565.git.gustavo.pimentel@synopsys.com>
 MIME-Version: 1.0
-In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560141938; bh=FeQxk6Y7Q3iWQDKE8GqrWcSd5AwpIOFyggnY35Qf2UQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:
-         Content-Transfer-Encoding:Content-Language;
-        b=W2r9PBki5XORQUfhgA6GCXTX68SweSJjbiuEzpd75Ra843jXMrP5yNqRY96mFrY91
-         e/zP8FHP1DMfSgO5Toey3orz73d2KBXCYwU1l1W+1cS7yWcOd+RbmjOARjHkL1GdIW
-         uZjZRyvzpwDIDW1qPZloySDaz75sntBqwlCCAtW2d+Ny3znybZqQSKtSAb48S8q6ta
-         tlkAleCJWtUF63/Ttnk5n33zoMYohQ99vfrJ96uoMLyWmh/iTskEjbMZQWXUzhQfUV
-         32JOuBXpSuop+KquP/hq//N/cs3SLppa78qR5UsL5leP63xsgnIy+SnqP5YhpgbPSF
-         NY32mmTGkT/tg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1559654565.git.gustavo.pimentel@synopsys.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo,
+On 04-06-19, 15:29, Gustavo Pimentel wrote:
+> Add Synopsys eDMA IP driver (version 0 and for EP side only) to Linux
+> kernel. This IP is generally distributed with Synopsys PCIe EndPoint IP
+> (depends of the use and licensing agreement), which supports:
+>  - legacy and unroll modes
+>  - 16 independent and concurrent channels (8 write + 8 read)
+>  - supports linked list (scatter-gather) transfer
+>  - each linked list descriptor can transfer from 1 byte to 4 Gbytes
+>  - supports cyclic transfer
+>  - PCIe EndPoint glue-logic
+> 
+> This patch series contains:
+>  - eDMA core + eDMA core v0 driver (implements the interface with
+>  DMAengine controller APIs and interfaces with eDMA HW block)
+>  - eDMA PCIe glue-logic reference driver (attaches to Synopsys EP and
+>  provides memory access to eDMA core driver)
 
-Thierry Ack'ed most of the patches, I am planning to address the review
-comments for remaining two patches and publish V5. If you can review the
-series, I will consolidate both the comments and address in V5.
+Applied all, thanks
 
-Manikanta
-
-
-On 16-May-19 11:22 AM, Manikanta Maddireddy wrote:
-> This series of patches adds,
-> - Tegra root port features like Gen2, AER, etc
-> - Power and perf optimizations
-> - Fixes like "power up sequence", "dev_err prints", etc
->
-> This series of patches are tested on Tegra186 based Jetson-TX2, Tegra210
-> based Jetson-TX1, T124 based Jetson-TK1 platforms, Tegra20 and Tegra30
-> platforms.
->
-> Manikanta Maddireddy (28):
->   soc/tegra: pmc: Export tegra_powergate_power_on()
->   PCI: tegra: Handle failure cases in tegra_pcie_power_on()
->   PCI: tegra: Rearrange Tegra PCIe driver functions
->   PCI: tegra: Mask AFI_INTR in runtime suspend
->   PCI: tegra: Fix PCIe host power up sequence
->   PCI: tegra: Add PCIe Gen2 link speed support
->   PCI: tegra: Advertise PCIe Advanced Error Reporting (AER) capability
->   PCI: tegra: Program UPHY electrical settings for Tegra210
->   PCI: tegra: Enable opportunistic UpdateFC and ACK
->   PCI: tegra: Disable AFI dynamic clock gating
->   PCI: tegra: Process pending DLL transactions before entering L1 or L2
->   PCI: tegra: Enable PCIe xclk clock clamping
->   PCI: tegra: Increase the deskew retry time
->   PCI: tegra: Add SW fixup for RAW violations
->   PCI: tegra: Update flow control timer frequency in Tegra210
->   PCI: tegra: Set target speed as Gen1 before starting LTSSM
->   PCI: tegra: Fix PLLE power down issue due to CLKREQ# signal
->   PCI: tegra: Program AFI_CACHE* registers only for Tegra20
->   PCI: tegra: Change PRSNT_SENSE IRQ log to debug
->   PCI: tegra: Use legacy IRQ for port service drivers
->   PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of soc struct
->   PCI: tegra: Access endpoint config only if PCIe link is up
->   dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
->   arm64: tegra: Add PEX DPD states as pinctrl properties
->   PCI: tegra: Put PEX CLK & BIAS pads in DPD mode
->   PCI: Add DT binding for "reset-gpios" property
->   PCI: tegra: Add support for GPIO based PERST#
->   PCI: tegra: Change link retry log level to debug
->
->  .../bindings/pci/nvidia,tegra20-pcie.txt      |   8 +
->  Documentation/devicetree/bindings/pci/pci.txt |   3 +
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi      |  19 +
->  drivers/pci/controller/pci-tegra.c            | 615 +++++++++++++++---
->  drivers/soc/tegra/pmc.c                       |   1 +
->  5 files changed, 566 insertions(+), 80 deletions(-)
->
-
+-- 
+~Vinod
