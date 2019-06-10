@@ -2,68 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D16B73B8CF
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2019 18:02:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E70E63BB06
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2019 19:34:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391375AbfFJQAn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jun 2019 12:00:43 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39646 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389356AbfFJQAn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jun 2019 12:00:43 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z23so8696445wma.4;
-        Mon, 10 Jun 2019 09:00:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MhW3IQp2kxp2WT1udPSFigogxSZG4DD8hbZhEXJzbNM=;
-        b=JttkhtuJpnp8/3mKYAP9FX6ZEhZDtPhV1qxLZqEoyxaqTClzBbTE8mNvx6McK0tsLD
-         ZjzW+6RwjnPV9k7+OJFsAC4PfgauIkhX+nIaU52boLtE7gurMr9oRzg/XlDAAiuDXnZ4
-         L3aWan/PNGTkGgZgN5G7NQOYuQUrGwq/Ug5vIXr3vY9XT8aeZ8hSADGHjESGHcU3C8Il
-         0Jode0lCd1Tvd3acp/lvM5u0IiR15nHpL9jeaXuauJDnKNDoj3UQv0xZVwG41KgFEw6/
-         /DPjfLDp0f4JqdyBSAgfh54iPoomChh5uwItMcuUIdtu0JdlN691uphnutTSx/3U0ZYW
-         STcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MhW3IQp2kxp2WT1udPSFigogxSZG4DD8hbZhEXJzbNM=;
-        b=pxageWItzJrVbkJ0RrSKJiRA4/GA4vAr6/Xq6n+alb8QeMpMu1nRLrc8GL/JfTMF2T
-         i23dmk/NR8L5zz/NfErWnTPuGOvtVWSWpDH8GkNvhl0IhdvZlf3xfIYjo0t2AHXXP974
-         Qn0jcIHFDqJCK/BKW9rd5oAygQMhInKlEnldc4Ms4SS2Uv/4a1R6AsF/CgIXCAQ38Qb5
-         iKb2bbv5F8GHxWgFXweyMjO44KRUmafMuaGwRbQ6PJrJ+W0u9H3Rsg0a7ZI+DnQdpgqD
-         SQL6249dSfBKucY8DsIjPJaAIvfffU2Oy5Nqeo9y+kwkZ9Y8YlYNct2KhBr+M2eAVxz0
-         RP5Q==
-X-Gm-Message-State: APjAAAXdkvtylcwzvIHjpQEJRzjF1mpcJ+rKqgWCC851l/JLOOVR7GAD
-        lf2QqJzr9Kc9NkqftPhjUEal26m9Jwk8IIpSWS8=
-X-Google-Smtp-Source: APXvYqwP5gOmUVTPPKtavKrK8n/uGxVtTooANi2L7IbER7pYjep9UeDVtH2Tdsw9KlCt/brAB0JyQYC/SUM+Ayft/tI=
-X-Received: by 2002:a1c:4484:: with SMTP id r126mr14508368wma.27.1560182441396;
- Mon, 10 Jun 2019 09:00:41 -0700 (PDT)
+        id S2387495AbfFJReC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jun 2019 13:34:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:46788 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387492AbfFJReC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 10 Jun 2019 13:34:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 940F9337;
+        Mon, 10 Jun 2019 10:34:01 -0700 (PDT)
+Received: from redmoon (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E77D3F246;
+        Mon, 10 Jun 2019 10:34:00 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 18:33:54 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc:     thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, jonathanh@nvidia.com, vidyas@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V4 00/28] Enable Tegra PCIe root port features
+Message-ID: <20190610173354.GA12678@redmoon>
+References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
+ <b7d09498-b97e-3428-02bd-ecd7c7f3e733@nvidia.com>
 MIME-Version: 1.0
-References: <20190610074456.2761-1-drake@endlessm.com>
-In-Reply-To: <20190610074456.2761-1-drake@endlessm.com>
-From:   Keith Busch <keith.busch@gmail.com>
-Date:   Mon, 10 Jun 2019 10:00:30 -0600
-Message-ID: <CAOSXXT7OFzHeTxNqZ1sS6giRxhDcrUUnVjURWBiFUc5T_8p=MA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Add Intel remapped NVMe device support
-To:     Daniel Drake <drake@endlessm.com>
-Cc:     bhelgaas@google.com, Jens Axboe <axboe@kernel.dk>,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>, linux-pci@vger.kernel.org,
-        linux-ide@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>, linux@endlessm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b7d09498-b97e-3428-02bd-ecd7c7f3e733@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 1:45 AM Daniel Drake <drake@endlessm.com> wrote:
-> +       /* We don't support sharing MSI interrupts between these devices */
-> +       nrdev->bus->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
+On Mon, Jun 10, 2019 at 10:15:07AM +0530, Manikanta Maddireddy wrote:
+> Hi Lorenzo,
+> 
+> Thierry Ack'ed most of the patches, I am planning to address the review
+> comments for remaining two patches and publish V5. If you can review the
+> series, I will consolidate both the comments and address in V5.
 
-And this is a problem, isn't it? Since we don't have an option to open
-the MSI implementation in RAID mode, your experience will be much
-better to disable this mode when using Linux as per the current
-recommendation rather than limping along with legacy IRQ.
+It will take me some time to get to this series but it is on my
+radar, start preparing v5 but wait before posting it, I should
+be able to comment shortly.
+
+Lorenzo
+
+> Manikanta
+> 
+> 
+> On 16-May-19 11:22 AM, Manikanta Maddireddy wrote:
+> > This series of patches adds,
+> > - Tegra root port features like Gen2, AER, etc
+> > - Power and perf optimizations
+> > - Fixes like "power up sequence", "dev_err prints", etc
+> >
+> > This series of patches are tested on Tegra186 based Jetson-TX2, Tegra210
+> > based Jetson-TX1, T124 based Jetson-TK1 platforms, Tegra20 and Tegra30
+> > platforms.
+> >
+> > Manikanta Maddireddy (28):
+> >   soc/tegra: pmc: Export tegra_powergate_power_on()
+> >   PCI: tegra: Handle failure cases in tegra_pcie_power_on()
+> >   PCI: tegra: Rearrange Tegra PCIe driver functions
+> >   PCI: tegra: Mask AFI_INTR in runtime suspend
+> >   PCI: tegra: Fix PCIe host power up sequence
+> >   PCI: tegra: Add PCIe Gen2 link speed support
+> >   PCI: tegra: Advertise PCIe Advanced Error Reporting (AER) capability
+> >   PCI: tegra: Program UPHY electrical settings for Tegra210
+> >   PCI: tegra: Enable opportunistic UpdateFC and ACK
+> >   PCI: tegra: Disable AFI dynamic clock gating
+> >   PCI: tegra: Process pending DLL transactions before entering L1 or L2
+> >   PCI: tegra: Enable PCIe xclk clock clamping
+> >   PCI: tegra: Increase the deskew retry time
+> >   PCI: tegra: Add SW fixup for RAW violations
+> >   PCI: tegra: Update flow control timer frequency in Tegra210
+> >   PCI: tegra: Set target speed as Gen1 before starting LTSSM
+> >   PCI: tegra: Fix PLLE power down issue due to CLKREQ# signal
+> >   PCI: tegra: Program AFI_CACHE* registers only for Tegra20
+> >   PCI: tegra: Change PRSNT_SENSE IRQ log to debug
+> >   PCI: tegra: Use legacy IRQ for port service drivers
+> >   PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of soc struct
+> >   PCI: tegra: Access endpoint config only if PCIe link is up
+> >   dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
+> >   arm64: tegra: Add PEX DPD states as pinctrl properties
+> >   PCI: tegra: Put PEX CLK & BIAS pads in DPD mode
+> >   PCI: Add DT binding for "reset-gpios" property
+> >   PCI: tegra: Add support for GPIO based PERST#
+> >   PCI: tegra: Change link retry log level to debug
+> >
+> >  .../bindings/pci/nvidia,tegra20-pcie.txt      |   8 +
+> >  Documentation/devicetree/bindings/pci/pci.txt |   3 +
+> >  arch/arm64/boot/dts/nvidia/tegra210.dtsi      |  19 +
+> >  drivers/pci/controller/pci-tegra.c            | 615 +++++++++++++++---
+> >  drivers/soc/tegra/pmc.c                       |   1 +
+> >  5 files changed, 566 insertions(+), 80 deletions(-)
+> >
+> 
