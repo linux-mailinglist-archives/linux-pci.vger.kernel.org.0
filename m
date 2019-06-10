@@ -2,103 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A4E9D3B322
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2019 12:27:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 403683B38D
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2019 12:57:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388734AbfFJK1U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jun 2019 06:27:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:40070 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388685AbfFJK1U (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:27:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79140346;
-        Mon, 10 Jun 2019 03:27:19 -0700 (PDT)
-Received: from redmoon (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 530563F557;
-        Mon, 10 Jun 2019 03:29:00 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 11:27:16 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Bharat Kumar Gogada <bharatku@xilinx.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ravikiran Gummaluri <rgummal@xilinx.com>
-Subject: Re: [PATCH v3] PCI: xilinx-nwl: Fix Multi MSI data programming
-Message-ID: <20190610102716.GD25976@redmoon>
-References: <1559133469-11981-1-git-send-email-bharat.kumar.gogada@xilinx.com>
- <20190531160956.GB9356@redmoon>
- <5de53585-e90f-77d2-bd96-025e1b39a573@arm.com>
- <CH2PR02MB6453666163FAF313746EC9C4A5170@CH2PR02MB6453.namprd02.prod.outlook.com>
- <86lfyfgp1a.wl-marc.zyngier@arm.com>
+        id S2388489AbfFJK5s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jun 2019 06:57:48 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:58448 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388100AbfFJK5s (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jun 2019 06:57:48 -0400
+Received: from 79.184.253.190.ipv4.supernova.orange.pl (79.184.253.190) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 88e807b607143e00; Mon, 10 Jun 2019 12:57:46 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Len Brown <lenb@kernel.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 3/3] PCI / ACPI: Handle sibling devices sharing power resources
+Date:   Mon, 10 Jun 2019 12:57:45 +0200
+Message-ID: <3235484.ejFT65BlB1@kreacher>
+In-Reply-To: <20190609185835.cqjbgzfwajbg4kks@wunner.de>
+References: <20190605145820.37169-1-mika.westerberg@linux.intel.com> <CAJZ5v0gwqMd0W43KQoU80=fdYooLkgPg1n0cbbAWjPqrOepYsg@mail.gmail.com> <20190609185835.cqjbgzfwajbg4kks@wunner.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86lfyfgp1a.wl-marc.zyngier@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 08:18:25AM +0100, Marc Zyngier wrote:
-> On Thu, 06 Jun 2019 05:49:45 +0100,
-> Bharat Kumar Gogada <bharatku@xilinx.com> wrote:
+On Sunday, June 9, 2019 8:58:35 PM CEST Lukas Wunner wrote:
+> On Thu, Jun 06, 2019 at 04:27:21PM +0200, Rafael J. Wysocki wrote:
+> > On Thu, Jun 6, 2019 at 4:17 PM Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+> > > On Thu, Jun 06, 2019 at 04:08:11PM +0200, Rafael J. Wysocki wrote:
+> > > > That isn't necessary IMO as long as the device are not accessed.  If
+> > > > the kernel thinks that a given device is in D3cold and doesn't access
+> > > > it, then it really doesn't matter too much what state the device is in
+> > > > physically.  On the first access the device should be reinitialized
+> > > > anyway.
+> > >
+> > > But if the device is configured to wake. For example when it detects a
+> > > hotplug that state is gone when it goes to D0unitialized.
 > > 
-> > > On 31/05/2019 17:09, Lorenzo Pieralisi wrote:
-> > > > [+Marc]
-> > > >
-> > > > On Wed, May 29, 2019 at 06:07:49PM +0530, Bharat Kumar Gogada wrote:
-> > > >> The current Multi MSI data programming fails if multiple end points
-> > > >> requesting MSI and multi MSI are connected with switch, i.e the
-> > > >> current multi MSI data being given is not considering the number of
-> > > >> vectors being requested in case of multi MSI.
-> > > >> Ex: Two EP's connected via switch, EP1 requesting single MSI first,
-> > > >> EP2 requesting Multi MSI of count four. The current code gives MSI
-> > > >> data 0x0 to EP1 and 0x1 to EP2, but EP2 can modify lower two bits due
-> > > >> to which EP2 also sends interrupt with MSI data 0x0 which results in
-> > > >> always invoking virq of EP1 due to which EP2 MSI interrupt never gets
-> > > >> handled.
-> > > >
-> > > > If this is a problem it is not the only driver where it should be
-> > > > fixed it seems. CC'ed Marc in case I have missed something in relation
-> > > > to MSI IRQs but AFAIU it looks like HW is allowed to toggled bits
-> > > > (according to bits[6:4] in Message Control for MSI) in the MSI data,
-> > > > given that the data written is the hwirq number (in this specific MSI
-> > > > controller) it ought to be fixed.
-> > > 
-> > > Yeah, it looks like a number of MSI controllers could be quite broken in this
-> > > particular area.
-> > > 
-> > > >
-> > > > The commit log and patch should be rewritten (I will do that) but
-> > > > first I would like to understand if there are more drivers to be
-> > > > updated.
-> > > >
-> > > > 
-> > Hi Lorenzo and Marc, thanks for your time.
-> > Marc, I'm yet to test the below suggested solution,
-> > GIC v2m and GIC v3 supports multi MSI, do we see above issue in
-> > these MSI controllers ?
+> > For this we'll need a pm_runtime_resume() of the dependent device on
+> > the resource going "on".
+> > 
+> > That means we need a list of devices to resume when the resource goes
+> > "on" after being taken "off".
 > 
-> To the best of my knowledge, these drivers do support MultiMSI
-> correctly. GICv2m actually gained the support pretty recently (see
-> de337ee30142). The GICv3 ITS never ha an issue with that, given that
-> per device EventIDs are always 0-based.
+> An idea would be to model every ACPI power resource as a struct device
+> and automatically set up a device link from the devices using that
+> power resource (consumers).  After all dependent devices runtime suspend,
+> the power resource "device" runtime suspends by turning itself off
+> (and updating the PCI current_state of dependent devices to D3cold).
+> When the power resource runtime resumes, it schedules a runtime resume
+> of all dependent devices.
 
-AFAIU I think the issues is only present in controllers that use the
-hwirq as MSI data and bitmap allocation that is not a power of two and
-that's what Marc suggested as fix. There is still some chasing to do to
-fix other MSI controllers in the kernel where this subtle issue went
-undetected (and the driver has the same bitmap allocation issues as
-this one).
+The sharing of power resources is covered already.  That's not the problem here.
 
-@Bharat, please test Marc's patch and post it on completion, I will
-rewrite your commit log because I want it to be clear so that we
-have a reference to the issue linked to the specs.
+The missing part is the runtime resume of dependent devices and I'm not even sure
+if it needs to be done in general or for PCI devices only.  At least it doesn't need to be
+done for devices that are not configured for wakeup, even on a PCI bus.
 
 Thanks,
-Lorenzo
+Rafael
+
+
+
