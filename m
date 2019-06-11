@@ -2,132 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CF713D430
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2019 19:30:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2C573D738
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2019 21:52:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406083AbfFKR3x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jun 2019 13:29:53 -0400
-Received: from foss.arm.com ([217.140.110.172]:38582 "EHLO foss.arm.com"
+        id S2404882AbfFKTw6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jun 2019 15:52:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405786AbfFKR3x (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:29:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE6E8337;
-        Tue, 11 Jun 2019 10:29:52 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7AFF93F73C;
-        Tue, 11 Jun 2019 10:29:50 -0700 (PDT)
-Subject: Re: [PATCHv5 04/20] PCI: mobiveil: Remove the flag
- MSI_FLAG_MULTI_PCI_MSI
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-5-Zhiqiang.Hou@nxp.com>
- <20190611165935.GA22836@redmoon>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
- Z46HaNmN2hZS/oJ69c1DI5Rcww==
-Organization: ARM Ltd
-Message-ID: <3b883516-1d63-1504-bdc9-22ac9c6f2d46@arm.com>
-Date:   Tue, 11 Jun 2019 18:29:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S2404282AbfFKTw6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 11 Jun 2019 15:52:58 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58ED820883;
+        Tue, 11 Jun 2019 19:52:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560282776;
+        bh=0CA6nGYQ/ToZnu4NcBoqKhbEm0DpVVUDuW9mvjoONPY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z3+L6uZ/jqpeIZFFKA9KkS7JROD6XRokUklWr6M0oNalePt64+bQhN42uwGBetAB1
+         8iaO1HxlyqJjEagyJ2tTGD5hC/99YPCVbcT3hRqajhvdqhM3baFcbIVWVNUKf1ntEe
+         oLJkDQGRx+JtqfwmqxSOIf6mTw5hoy6fcZDr9Dd0=
+Date:   Tue, 11 Jun 2019 14:52:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Daniel Drake <drake@endlessm.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        linux-ide@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH] PCI: Add Intel remapped NVMe device support
+Message-ID: <20190611195254.GB768@google.com>
+References: <20190610074456.2761-1-drake@endlessm.com>
+ <20190610211628.GA68572@google.com>
+ <CAD8Lp47BmOtEgFUDCMyLrDpoPZSxcWmbrXEbh4PXS0FSG8ukLA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190611165935.GA22836@redmoon>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD8Lp47BmOtEgFUDCMyLrDpoPZSxcWmbrXEbh4PXS0FSG8ukLA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/06/2019 17:59, Lorenzo Pieralisi wrote:
-> On Fri, Apr 12, 2019 at 08:35:36AM +0000, Z.q. Hou wrote:
->> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
->>
->> The current code does not support multiple MSIs, so remove
->> the corresponding flag from the msi_domain_info structure.
+On Tue, Jun 11, 2019 at 11:25:55AM +0800, Daniel Drake wrote:
+> On Tue, Jun 11, 2019 at 5:16 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > Ugh.  Is there a spec that details what's actually going on here?
 > 
-> Please explain me what's the problem before removing multi MSI
-> support.
+> Unfortunately there isn't a great spec to go on.
+> https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/100-series-chipset-datasheet-vol-2.pdf
+> has some details on the VS_CAP register (section 14.2.10).
+> Beyond that, Intel contributed patches to enable support for these
+> devices previously:
+> https://marc.info/?l=linux-ide&m=147709610621480&w=2
+> and stated that "The patch contents are [the spec]".
+> https://marc.info/?l=linux-ide&m=147733119300691&w=2
 
-The reason seems to be the following code in the allocator:
+It also said (three years ago) that there was some hope of opening the
+specs.  But I guess that hasn't happened.
 
-        WARN_ON(nr_irqs != 1);
-        mutex_lock(&msi->lock);
+I'd much prefer lore.kernel.org links, but unfortunately lore doesn't
+seem to have linux-ide archives.  If marc.info is the best we can do,
+maybe at least include Message-IDs so there's some useful info in the
+event marc.info disappears.
 
-        bit = find_first_zero_bit(msi->msi_irq_in_use, msi->num_of_vectors);
-        if (bit >= msi->num_of_vectors) {
-                mutex_unlock(&msi->lock);
-                return -ENOSPC;
-        }
+> > I think this creates a fake PCI host bridge, but not an actual PCIe
+> > Root Port, right?  I.e., "lspci" doesn't show a new Root Port device,
+> > does it?
+> > ...
+> 
+> I appreciate your input here as I don't frequently go down to this
+> level of detail with PCI. I'm trying to follow the previous
+> suggestions from Christoph Hellwig, and further clarification on the
+> most appropriate way to do this would be appreciated:
+> 
+> https://marc.info/?l=linux-ide&m=147923593001525&w=2
+> "implementing a bridge driver like VMD"
+> http://lists.infradead.org/pipermail/linux-nvme/2017-October/013325.html
+> "The right way to do this would be to expose a fake PCIe root port
+> that both the AHCI and NVMe driver bind to."
+> 
+> I'm not completely clear regarding the difference between a PCI host
+> bridge and a PCIe root port, but indeed, after my patch, when running
+> lspci, you see:
+> 
+> 1. The original RAID controller, now claimed by this new intel-nvme-remap driver
+> 
+> 0000:00:17.0 RAID bus controller: Intel Corporation 82801 Mobile SATA
+> Controller [RAID mode] (rev 30)
+>     Memory at b4390000 (32-bit, non-prefetchable) [size=32K]
 
-        set_bit(bit, msi->msi_irq_in_use);
+> 2. The RAID controller presented by intel-nvme-remap on a new bus,
+> with the cfg space tweaked in a way that it gets probed & accepted by
+> the ahci driver:
+> 
+> 10000:00:00.0 SATA controller: Intel Corporation 82801 Mobile SATA
+> Controller [RAID mode] (rev 30) (prog-if 01 [AHCI 1.0])
+>     Memory at b4390000 (32-bit, non-prefetchable) [size=32K]
 
-So instead of fixing the allocator, the author prefers disabling
-the feature. I'm not sure whether that is an acceptable outcome...
+Exposing the same device in two different places (0000:00:17.0 and
+10000:00:00.0) is definitely an architectural issue.  Logically we're
+saying that accesses to b4390000 are claimed by two different devices.
 
-Thanks,
+> 3. The (previously inaccessible) NVMe device as presented on the new
+> bus by intel-nvme-remap, probed by the nvme driver
+> 
+> 10000:00:01.0 Non-Volatile memory controller: Intel Corporation Device
+> 0000 (prog-if 02 [NVM Express])
+>     Memory at b430c000 (64-bit, non-prefetchable) [size=16K]
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+From a hardware point of view, I think it *was* previously accessible.
+Maybe not in a convenient, driver-bindable way, but I don't think your
+patch flips any PCI_COMMAND or similar register enable bits.
+Everything should have been accessible before if you knew where to
+look.
+
+> I think Christoph's suggestion does ultimately require us to do some
+> PCI pretending in some form, but let me know if there are more
+> accepable ways to do this. If you'd like to see this appear more like
+> a PCIe root port then I guess I can use pci-bridge-emul.c to do this,
+> although having a fake root bridge appear in lspci output feels like
+> I'd be doing even more pretending.
+
+Maybe exposing a Root Port would help rationalize some of the issues,
+but I wasn't suggesting that you *need* to expose a Root Port.  I was
+just trying to point out that the comment inaccurately claimed you
+were.
+
+> Also happy to experiment with alternative approaches if you have any
+> suggestions? 
+
+Why do you need these to be PCI devices?  It looks like the main thing
+you get is a hook to bind the driver to.  Could you accomplish
+something similar by doing some coordination between the ahci and nvme
+drivers directly, without involving PCI?
+
+I assume that whatever magic Intel is doing with this "RST Optane"
+mode, the resulting platform topology is at least compliant with the
+PCI spec, so all the standard things in the spec like AER, DPC, power
+management, etc, still work.
+
+> With the decreasing cost of NVMe SSDs, we're seeing an
+> influx of upcoming consumer PC products that will ship with the NVMe
+> disk being the only storage device, combined with the BIOS default of
+> "RST Optane" mode which will prevent Linux from seeing it at all, 
+> so I'm really keen to swiftly find a way forward here.
+
+This all sounds urgent, but without details of what this "RST Optane"
+mode means actually means, I don't know what to do with it.  I want to
+avoid the voodoo programming of "we don't know *why* we're doing this,
+but it seems to work."
+
+Bjorn
