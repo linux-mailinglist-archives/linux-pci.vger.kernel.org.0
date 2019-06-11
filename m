@@ -2,99 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E7F13C156
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2019 04:46:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26C483C188
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2019 05:26:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390740AbfFKCqp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jun 2019 22:46:45 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44853 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390244AbfFKCqo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jun 2019 22:46:44 -0400
-Received: by mail-qt1-f195.google.com with SMTP id x47so12773622qtk.11
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jun 2019 19:46:44 -0700 (PDT)
+        id S2390893AbfFKD0I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jun 2019 23:26:08 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44293 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390856AbfFKD0I (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jun 2019 23:26:08 -0400
+Received: by mail-qt1-f194.google.com with SMTP id x47so12847711qtk.11
+        for <linux-pci@vger.kernel.org>; Mon, 10 Jun 2019 20:26:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=endlessm-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0m35NGQgea2Dtho1tkMpAy982wOOgH1ICR+Vwx3GZeE=;
-        b=B7mV3IItGXU3TGMF4QJRflUaAgL4S43JkzhIxxw0iqm4+OLzf9fKB8j2JP2dVCDPil
-         sW384G7A11k2gPbEjKGTOv5X2Z3ryeV9M6ryiSLro3IxjT9OZyDo3pObjYM7A1rlex5o
-         JM/lbTbVKx0jeE+Hz8BQ5+xUiAB+RIJKjWpmOGWMVU2PHOUFA3YILO2buWSMwliLUQET
-         D1qvaiKdx5eSJQsH2Z8ksyja4hIH3EWjs1jAF4U61bv0JbaavY2pVTYjrZaqFU5vAwOY
-         NK/8qG5MN2Gn1DUikSm2ti8MCRGEJwUYBqBSQCGhBK+/QkiLzAuqnJRCDVqUQDsWMwXP
-         O3jg==
+        bh=JOm+EW5Vwdsl47rTW4cXuPENFumxPeVaKVG65fDZz5k=;
+        b=pMAFsOszb9ubT5a74uVuMtyTEVOKR17uVYjpZVQMZ7XBmiRmRxrAW1Obv++8dmI7HA
+         FcgRElyTxqC4MbQ06y9gnVDWn4zeUbLx/kDUS6n1g3YnogQVFnSK68EThnEuxDAbSQh8
+         uxHSqM/B4nlqH+b6X5VDkJrvreXGR3HDZsjsmkw3uG9fzuFefMbOo49yS1KrUhreczHl
+         0IDxiLDh03rSimZNcCOAXQJe/XRdfqbI92OJJwwi2SxZkMYXV3EiaTXk9fyjuq4YQEZg
+         XitWI/oOZPC3KO+fUNIwDXhmXdIDYWf1v5G24Fdjf20mLv2TIv4KHlV9de9kimSWt+12
+         ST0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0m35NGQgea2Dtho1tkMpAy982wOOgH1ICR+Vwx3GZeE=;
-        b=iiQqgK5bhd9eUy994QHejFdReiWB5AXolQASD4uiSSrlnT6S9UqvX8eaxGDqeijZI5
-         5qTfXfwd46sN6dS/vF83qiCVmeDRgfQlGtyQRTnGHDMgma4Y/N9fhFjFibPxKxe1RVwu
-         ebx5YSF8aQS2g3Nb39YIPqduVBLT+Q3pxU2c7WiHO/3ldGzMSK4loDxozwow3EWdIYcn
-         GUKxJXFde69BmLbJwaF//9+ITJmba8OiTuFo85D3efkFGplCzcvNBETqDhVqigk521nq
-         OUFvB4eUd/YUNUejbp8CMFpI2ZUOrsL9KFnUicgSJzb13+dsZT2b59Zj+Zt38UmTs0lb
-         Jz/A==
-X-Gm-Message-State: APjAAAWvxp6dz9KetU4WLsllEWUusgh7eQBVS14wTUedTYVtOu25Ijyo
-        MApKeXyvhqJOsKx2DmGwYBPcfEVTtK7Wb4qHudFCVw==
-X-Google-Smtp-Source: APXvYqx/p8Wk437d+ei9zOMYRa2j+hTRwjg4+eaMD3R6/xZEyIIMKtLlMd2J9aaBFx62GGYjdo6hkJN+cGx/sK9kwI4=
-X-Received: by 2002:ac8:2ec3:: with SMTP id i3mr17155681qta.110.1560221203710;
- Mon, 10 Jun 2019 19:46:43 -0700 (PDT)
+        bh=JOm+EW5Vwdsl47rTW4cXuPENFumxPeVaKVG65fDZz5k=;
+        b=ZgzwlilkiXR8v1bcwAKSZII7XOY1mVANI2qY/dK2LQRBz9FlPZx0X67rD9zTXls/Gh
+         HxrMW1YTvrOwgPDsLF+VDJ7YVPAjbRhGv6+5cSKoVJExoIYQEBGS0nuTJGbAe8gWuar/
+         Gg0e/NkNfWoYlQ9r+0W2PCiHBTrG7508/VyGZ5qFJ5Ae9O7lrDA1F6xKkRnUa4kGJHoK
+         4kzmnGqsVXPrKDHiCt9uGux+6z1FC2kDhneLY2QLQPNk6R3Mq7SD1J3QFUkP7cTZPwgr
+         H31ohVE71tNPKo+Ff/AMb3pnC06tvtQa6nFPAXNnqDrN0rMqM5n10iQlfFWMb0iYS0NP
+         4Ufw==
+X-Gm-Message-State: APjAAAWaH1fy1IEOZIxVOZQTpyaKqTgZgxW3GYhO1qMDwCtApm7FEVsW
+        6pIiJAK8Pkgr9B8TiRuI1p4mrXl2obzglhFh7hrfhw==
+X-Google-Smtp-Source: APXvYqwkZIvL2PSu1IV5dcWJ7noBUngNZyepyZbZfIdg8F8DRyNz5xcNtt3TN8mTKxkBYK+fndH4UmS/RdTvd+iLprs=
+X-Received: by 2002:ac8:2ec3:: with SMTP id i3mr17263276qta.110.1560223567138;
+ Mon, 10 Jun 2019 20:26:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190610074456.2761-1-drake@endlessm.com> <CAOSXXT7OFzHeTxNqZ1sS6giRxhDcrUUnVjURWBiFUc5T_8p=MA@mail.gmail.com>
-In-Reply-To: <CAOSXXT7OFzHeTxNqZ1sS6giRxhDcrUUnVjURWBiFUc5T_8p=MA@mail.gmail.com>
+References: <20190610074456.2761-1-drake@endlessm.com> <20190610211628.GA68572@google.com>
+In-Reply-To: <20190610211628.GA68572@google.com>
 From:   Daniel Drake <drake@endlessm.com>
-Date:   Tue, 11 Jun 2019 10:46:32 +0800
-Message-ID: <CAD8Lp45djPU_Ur8uCO2Y5Sbek_5N9QKkxLXdKNVcvkr6rFPLUQ@mail.gmail.com>
+Date:   Tue, 11 Jun 2019 11:25:55 +0800
+Message-ID: <CAD8Lp47BmOtEgFUDCMyLrDpoPZSxcWmbrXEbh4PXS0FSG8ukLA@mail.gmail.com>
 Subject: Re: [PATCH] PCI: Add Intel remapped NVMe device support
-To:     Keith Busch <keith.busch@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Jens Axboe <axboe@kernel.dk>,
-        Keith Busch <kbusch@kernel.org>,
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
         Christoph Hellwig <hch@lst.de>,
         Linux PCI <linux-pci@vger.kernel.org>,
-        linux-ide@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
         linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
+        linux-ide@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 12:00 AM Keith Busch <keith.busch@gmail.com> wrote:
->
-> On Mon, Jun 10, 2019 at 1:45 AM Daniel Drake <drake@endlessm.com> wrote:
-> > +       /* We don't support sharing MSI interrupts between these devices */
-> > +       nrdev->bus->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
->
-> And this is a problem, isn't it? Since we don't have an option to open
-> the MSI implementation in RAID mode your experience will be much
-> better to disable this mode when using Linux as per the current
-> recommendation rather than limping along with legacy IRQ.
+Hi Bjorn,
 
-What's the specific problem that you see here? Is it that the
-interrupt delivery mechanism is legacy wire instead of MSI, or is the
-problem that the interrupt is shared over the whole set of storage
-devices?
+Thanks for the quick feedback. You raise some good questions that I'll
+be sure to clarify in the next revision. To focus on some of the
+pending details here:
 
-I installed Windows 10 on this product in RAID mode and it is using
-the legacy interrupt too. Also, on Linux, MSI interrupts have already
-been disabled on the AHCI part of such setups for a good while now:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f723fa4e69920f6a5dd5fa0d10ce90e2f14d189c
+On Tue, Jun 11, 2019 at 5:16 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> Ugh.  Is there a spec that details what's actually going on here?
 
-The earlier patches from Dan Williams also had the design of sharing
-the legacy interrupt:
+Unfortunately there isn't a great spec to go on.
+https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/100-series-chipset-datasheet-vol-2.pdf
+has some details on the VS_CAP register (section 14.2.10).
+Beyond that, Intel contributed patches to enable support for these
+devices previously:
 https://marc.info/?l=linux-ide&m=147709610621480&w=2
+and stated that "The patch contents are [the spec]".
+https://marc.info/?l=linux-ide&m=147733119300691&w=2
+Later in the thread it was also stated unequivocally that the
+interrupt is shared & the original NVMe dev config space is
+unavailable.
+I'll add references to these details in the next revision.
 
-I think some kind of MSI support may be possible, perhaps something
-similar to what is done by drivers/pci/controller/vmd.c, but it needs
-a bit more thought, and I was hoping that we could get the base device
-support in place before investigating MSI as a separate step. However,
-if the concern you are raising is regarding the sharing of interrupts,
-I think that cannot change because the NVMe devices PCI config space
-is totally inaccessible when in this mode. That means there is no way
-we can configure a per-device MSI message, so the interrupt will
-continue to be shared regardless of delivery mechanism.
+> This driver makes a lot of assumptions about how this works, e.g.,
+> apparently there's an AHCI BAR that covers "hidden devices" plus some
+> other stuff of some magic size, whatever is special about device 0,
+> etc, but I don't see the source of those assumptions.
 
-Thanks,
+The AHCI BAR covering hidden devices is sort-of covered in the VS_CAP
+spec so I can at least reference that.
+
+> I'm not really keen on the precedent this sets about pretending things
+> are PCI when they're not.  This seems like a bit of a kludge that
+> might happen to work now but could easily break in the future because
+> it's not based on any spec we can rely on.  Plus it makes future PCI
+> maintenance harder because we have to worry about how these differ
+> from real PCI devices.
+>
+> I think this creates a fake PCI host bridge, but not an actual PCIe
+> Root Port, right?  I.e., "lspci" doesn't show a new Root Port device,
+> does it?
+>
+> But I suppose "lspci" *does* show new NVMe devices that seem to be
+> PCIe endpoints?  But they probably don't *work* like PCIe endpoints,
+> e.g., we can't control ASPM, can't use AER, etc?
+
+I appreciate your input here as I don't frequently go down to this
+level of detail with PCI. I'm trying to follow the previous
+suggestions from Christoph Hellwig, and further clarification on the
+most appropriate way to do this would be appreciated:
+
+https://marc.info/?l=linux-ide&m=147923593001525&w=2
+"implementing a bridge driver like VMD"
+http://lists.infradead.org/pipermail/linux-nvme/2017-October/013325.html
+"The right way to do this would be to expose a fake PCIe root port
+that both the AHCI and NVMe driver bind to."
+
+I'm not completely clear regarding the difference between a PCI host
+bridge and a PCIe root port, but indeed, after my patch, when running
+lspci, you see:
+
+1. The original RAID controller, now claimed by this new intel-nvme-remap driver
+
+0000:00:17.0 RAID bus controller: Intel Corporation 82801 Mobile SATA
+Controller [RAID mode] (rev 30)
+    Subsystem: ASUSTeK Computer Inc. 82801 Mobile SATA Controller [RAID mode]
+    Flags: bus master, 66MHz, medium devsel, latency 0, IRQ 16
+    Memory at b4390000 (32-bit, non-prefetchable) [size=32K]
+    Memory at b43aa000 (32-bit, non-prefetchable) [size=256]
+    I/O ports at 4090 [size=8]
+    I/O ports at 4080 [size=4]
+    I/O ports at 4060 [size=32]
+    Memory at b4300000 (32-bit, non-prefetchable) [size=512K]
+    Capabilities: [d0] MSI-X: Enable- Count=20 Masked-
+    Capabilities: [70] Power Management version 3
+    Capabilities: [a8] SATA HBA v1.0
+    Kernel driver in use: intel-nvme-remap
+
+2. The RAID controller presented by intel-nvme-remap on a new bus,
+with the cfg space tweaked in a way that it gets probed & accepted by
+the ahci driver:
+
+10000:00:00.0 SATA controller: Intel Corporation 82801 Mobile SATA
+Controller [RAID mode] (rev 30) (prog-if 01 [AHCI 1.0])
+    Subsystem: ASUSTeK Computer Inc. 82801 Mobile SATA Controller [RAID mode]
+    Flags: bus master, 66MHz, medium devsel, latency 0, IRQ 16, NUMA node 0
+    Memory at b4390000 (32-bit, non-prefetchable) [size=32K]
+    Memory at b43aa000 (32-bit, non-prefetchable) [size=256]
+    I/O ports at 4090 [size=8]
+    I/O ports at 4080 [size=4]
+    I/O ports at 4060 [size=32]
+    Memory at b4300000 (32-bit, non-prefetchable) [size=16K]
+    Capabilities: [d0] MSI-X: Enable- Count=20 Masked-
+    Capabilities: [70] Power Management version 3
+    Capabilities: [a8] SATA HBA v1.0
+    Kernel driver in use: ahci
+
+3. The (previously inaccessible) NVMe device as presented on the new
+bus by intel-nvme-remap, probed by the nvme driver
+
+10000:00:01.0 Non-Volatile memory controller: Intel Corporation Device
+0000 (prog-if 02 [NVM Express])
+    Flags: bus master, fast Back2Back, fast devsel, latency 0, IRQ 16,
+NUMA node 0
+    Memory at b430c000 (64-bit, non-prefetchable) [size=16K]
+    Kernel driver in use: nvme
+
+I think Christoph's suggestion does ultimately require us to do some
+PCI pretending in some form, but let me know if there are more
+accepable ways to do this. If you'd like to see this appear more like
+a PCIe root port then I guess I can use pci-bridge-emul.c to do this,
+although having a fake root bridge appear in lspci output feels like
+I'd be doing even more pretending.
+
+Also happy to experiment with alternative approaches if you have any
+suggestions? With the decreasing cost of NVMe SSDs, we're seeing an
+influx of upcoming consumer PC products that will ship with the NVMe
+disk being the only storage device, combined with the BIOS default of
+"RST Optane" mode which will prevent Linux from seeing it at all, so
+I'm really keen to swiftly find a way forward here.
+
+Thanks!
 Daniel
