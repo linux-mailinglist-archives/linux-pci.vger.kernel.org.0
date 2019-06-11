@@ -2,297 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 34C284184C
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2019 00:40:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 507F04188C
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2019 01:05:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbfFKWke (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jun 2019 18:40:34 -0400
-Received: from gate.crashing.org ([63.228.1.57]:44790 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728264AbfFKWke (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:40:34 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5BMeIum021056;
-        Tue, 11 Jun 2019 17:40:19 -0500
-Message-ID: <27b895a87e4ee2df98663fb15d59889eb57131c2.camel@kernel.crashing.org>
-Subject: Re: [PATCH/RESEND] arm64: acpi/pci: invoke _DSM whether to preserve
- firmware PCI setup
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Sinan Kaya <okaya@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "Zilberman, Zeev" <zeev@amazon.com>,
-        "Saidi, Ali" <alisaidi@amazon.com>
-Date:   Wed, 12 Jun 2019 08:40:18 +1000
-In-Reply-To: <CAKv+Gu_bPW8otGWotA7R6HGEvWUuAozF-r1CeZN9fGEiV0iroA@mail.gmail.com>
-References: <56715377f941f1953be43b488c2203ec090079a1.camel@kernel.crashing.org>
-         <20190604014945.GE189360@google.com>
-         <960c94eb151ba1d066090774621cf6ca6566d135.camel@kernel.crashing.org>
-         <20190604124959.GF189360@google.com>
-         <e520a4269224ac54798314798a80c080832e68b1.camel@kernel.crashing.org>
-         <d53fc77e1e754ddbd9af555ed5b344c5fa523154.camel@kernel.crashing.org>
-         <CAKv+Gu_3Nb5mPZgRfx+wQSz+eWM+FSbw_14fHm+u=v2EbuYoGQ@mail.gmail.com>
-         <4b956e0679b4b4f4d0f0967522590324d15593fb.camel@kernel.crashing.org>
-         <20190611143111.GA11736@redmoon>
-         <f1d610d79fbb3a98c9cc80210c64cb21679daf33.camel@kernel.crashing.org>
-         <CAKv+Gu_bPW8otGWotA7R6HGEvWUuAozF-r1CeZN9fGEiV0iroA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+        id S2436922AbfFKXFP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jun 2019 19:05:15 -0400
+Received: from sed198n136.SEDSystems.ca ([198.169.180.136]:44139 "EHLO
+        sed198n136.sedsystems.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436837AbfFKXFP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jun 2019 19:05:15 -0400
+Received: from barney.sedsystems.ca (barney [198.169.180.121])
+        by sed198n136.sedsystems.ca  with ESMTP id x5BN54PH000950
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Jun 2019 17:05:04 -0600 (CST)
+Received: from eng1n65.eng.sedsystems.ca (eng1n65.eng.sedsystems.ca [172.21.1.65])
+        by barney.sedsystems.ca (8.14.7/8.14.4) with ESMTP id x5BN53No005843
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Tue, 11 Jun 2019 17:05:03 -0600
+Subject: Re: iMX6 5.2-rc3 boot failure due to "PCI: imx6: Allow asynchronous
+ probing"
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <f297c15c-af4f-e4b3-feac-ca313f46f13e@sedsystems.ca>
+ <74703679-96d4-b759-a332-c3f3bff9a7c7@sedsystems.ca>
+ <CAOMZO5C9fu_h5Ct-rbSuTQ149JFT6tH-iN_r8dnYaDxE7gL+UQ@mail.gmail.com>
+From:   Robert Hancock <hancock@sedsystems.ca>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hancock@sedsystems.ca; prefer-encrypt=mutual; keydata=
+ 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
+Organization: SED Systems
+Message-ID: <857036e0-769b-11bd-2083-5451670bd645@sedsystems.ca>
+Date:   Tue, 11 Jun 2019 17:05:03 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAOMZO5C9fu_h5Ct-rbSuTQ149JFT6tH-iN_r8dnYaDxE7gL+UQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.64 on 198.169.180.136
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2019-06-12 at 00:34 +0200, Ard Biesheuvel wrote:
-
-> EDK2 based code is typically very fork heavy, in the sense that,
-> instead of upstreaming a change, a driver gets forked and changes are
-> applied locally, which then need to be carried into perpetuity. That
-> means that 'recent' ports could still display behavior that was
-> removed from the generic code a long time ago. All the open source
-> arm64 platforms now use the generic PCI host bridge driver (which is
-> in charge of the bus enumeration and resource allocation) and so
-> hopefully, future platforms will not deviate too much from that.
+On 2019-06-11 2:40 p.m., Fabio Estevam wrote:
+> Hi Robert,
 > 
-> In particular, EDK2 has some PCD tunables for things like PCIe
-> hotplug
-> and SR-IOV support, which affects the number of spare buses that get
-> allocated for hotplug capable root ports, and for SR-IOV capable
-> endpoints.
+> On Tue, Jun 11, 2019 at 4:02 PM Robert Hancock <hancock@sedsystems.ca> wrote:
 > 
-> As Lorenzo mentions, we don't actively reassign bus numbers from
-> scratch, but I am not sure if that is 100% true. I think you do get
-> some errors when booting with hotplug capable root ports that don't
-> have 'pci_hotplug_bus_size' spare bus numbers available.
+>>> [   13.193578] imx6q-pcie 1ffc000.pcie: host bridge /soc/pcie@1ffc000
+>>> ranges:
+>>> [   13.200635] imx6q-pcie 1ffc000.pcie:    IO 0x01f80000..0x01f8ffff ->
+>>> 0x00000000
+>>> [   13.201454] imx-sdma 20ec000.sdma: loaded firmware 3.3
 > 
-> Also note that EDK2 leaves ROM BARs unassigned.
+> Does this problem happen if you don't load an external SDMA firmware?
 
-This is all somewhat reasonable. x86 is in the same situation which is
-why I'm really keen on trying to consolidate the two approaches.
+Based on some tests, it appears that may help - however it is hard to be
+conclusive since the behavior is somewhat random, it doesn't fail every
+time. The first few times I booted this version, I didn't see the
+problem, but after that it was consistently happening every time until I
+reverted the patch.
 
-> > > It is kind of orthogonal (but not really), bus numbers assignment
-> > > is _not_ in line with resource assignment at the moment and I
-> > > want
-> > > to change it.
-> > 
-> > Hrm. We should probably reassign bus numbers if we reassign
-> > resources
-> > yes, but then I'd like us to not reassign resources unless we have
-> > to
-> > :-)
-> > 
-> > > Since ACPI on ARM64 is still at its inception maybe we should
-> > > have
-> > > a stab at patching the kernel so that it reassigns bus numbers by
-> > > default and toggle that behaviour on _DSM #5 == 0 detection.
-> > > 
-> > > I doubt that reassigning bus numbers by default can trigger
-> > > regressions on existing platforms but the only way to figure
-> > > it out is by testing it.
-> > > 
-> > > > My thinking is if we converge everybody toward the x86 method
-> > > > of
-> > > > doing
-> > > > a 2 pass survey of existing resources followed by
-> > > > assign_unassigned,
-> > > 
-> > > I am not entirely sure we need a 2-pass survey,
-> > > 
-> > > pci_bus_claim_resources()
-> > > 
-> > > should be enough; if it is not we update it.
-> > 
-> > So it's not so much about the 2 passes per-se, though they have
-> > value,
-> > it's more about consolidating archs to do the same thing. Chances
-> > that
-> > we change x86 are nil. But we can change powerpc and arm64 to do
-> > like
-> > x86 and move that code to generic.
-> > 
-> > pci_bus_claim_resources() seems to be a "lightweight" variant of
-> > the
-> > survey done by x86. The main differences I can see are:
-> > 
-> >  - The 2 passes thing which we may or may not care about, its main
-> > purpose is to favor resources that are already enabled by the BIOS
-> > in
-> > case of conflicts as far as I understand.
-> > 
-> >  - pci_read_bridge_bases() is done by pci_bus_claim_resources(),
-> > while
-> > x86 (and powerpc and others) do it in their pcibios_fixup_bus. That
-> > one
-> > is interesting... Any reason why we shouldn't unconditionally read
-> > the
-> > bridges while probing ? Bjorn ?
-> > 
-> >  - When allocating bridge resources, there are interesting
-> > differences:
-> > 
-> >   * x86 (and powerpc to some extent): If one has a 0 start or we
-> > fail
-> > to claim it, x86 will wipe out the resource struct (including
-> > flags). I
-> > assume that pci_assign_unassign_* will restore bridges when needed
-> > but
-> > I haven't verified.
-> > 
-> >   * pci_bus_claim_resources() is dumber in that regard. It will
-> > call
-> > pci_claim_bridge_resources() blindly try to claim whatever is there
-> > even if res->start is 0. This could be a problem with partially
-> > assigned trees. It also doesn't wipe the resource in case of
-> > failure to
-> > claim which could be a problem going down the tree and letting
-> > children
-> > attach to the non-claimed resource, thus potentially causing the
-> > reassign pass to fail.
-> > 
-> > The r->start == 0 test is interesting ... the generic claim code
-> > will
-> > honor IORESOURCE_UNSET but we don't seem to set that generically
-> > unless
-> > we hit some of the specific pass for explicit resource alignment,
-> > or
-> > during the reassignment phases.
-> > 
-> >  - When allocating device resources, the main difference other than
-> > the
-> > 2 passes is that x86 will "0 base" the resource (r->end -= r-
-> > >start; r-
-> > > start = 0) for later reassignment. The claim path we use won't do
-> > 
-> > that. Note: none sets IORESOURCE_UNSET... Additionally x86 has some
-> > oddball code to save the original FW values and restore them if
-> > assignment later fails, which is somewhat odd since there's a
-> > conflict
-> > but probably helps really broken setups.
-> > 
-> >  - x86 will not claim ROMs in that pass, it does a 3rd pass just
-> > for
-> > them (it's common I think to not have room for all the ROMs). It
-> > also
-> > disables them in config space during the survey.
-> > pci_bus_claim_resources() will claim everything and leave ROMs
-> > enabled.
-> > 
-> > So as a somewhat temprary conclusion, I think the main difference
-> > here
-> > is what happens when claim fails (also the res->start = 0 case
-> > which we
-> > need to look at more closely) and whether we should make the
-> > generic
-> > code also "0-base" the resource.
-> > 
-> > The question for me really is, do we want to just "upgrade" (if
-> > necessary) pci_bus_claim_resources() and continue having x86 do its
-> > own
-> > thing for ever, or do we want to consolidate around what is
-> > probably
-> > the most tested platform when it comes to PCI :-)
-> > 
-> > And if we consolidate, I think that won't be by changing what x86
-> > does,
-> > that code is the result of decades of fiddling to get things right
-> > with
-> > all sorts of broken BIOSes...
-> > 
-> > > > and have that the main generic code path (with added quirks to
-> > > > force a
-> > > > full assignment and keeping probe_only around but that's easy,
-> > > > we have
-> > > > that on powerpc and our code is originally based on the x86
-> > > > one), then
-> > > > we'll have a much easier time supporting IORESOURCE_PCI_FIXED
-> > > > on
-> > > > portions of the tree as well (though it also becomes less
-> > > > critical to
-> > > > do so since we will no longer reallocate unless we have to).
-> > > > 
-> > > > That said we need to understand what "fixed" means and why we
-> > > > do it.
-> > > 
-> > > Agree, totally and I want to make it clear how a BAR is fixed in
-> > > the kernel, there are too many discrepancies in the resource
-> > > management code already.
-> > > 
-> > > > IE, If an endpoint somehere has "fixed" BARs for example, that
-> > > > means
-> > > > all parent bridge must be setup to enclose that range.
-> > > > 
-> > > > Now our allocator for bridge windows cannot handle that and
-> > > > probably
-> > > > never will, so we have to rely on the existing window
-> > > > established by
-> > > > the FW being reasonable and use it. We can still *extend"
-> > > > bridge
-> > > > windows (and we have code to do that) if necessary but we
-> > > > cannot move
-> > > > them if they contain a fixed BAR device.
-> > > > 
-> > > > There is a much bigger discussion to be had around that concept
-> > > > of
-> > > > fixed device anyway, maybe at Plumbers ? Why is the BAR fixed ?
-> > > > Because
-> > > > the EFI FB is on it ? Because HW bugs ? Because FW might access
-> > > > it from
-> > > > SMM or ARM equivalent ? Because ACPI will poke at it based on
-> > > > its
-> > > > initial address ? etc...
-> > > 
-> > > Consider a slot booked at LPC PCI uconf for this discussion.
-> > 
-> > Excellent.
-> > 
-> > > > Some of the answers to the above questions imply more than the
-> > > > need to
-> > > > fix the BAR: Does it also mean that disabling access to that
-> > > > BAR, even
-> > > > temporarily, isn't safe ? However that's what we do today when
-> > > > we
-> > > > probe, if anything, to do the BAR sizing...
-> > > 
-> > > Eh, another question that came up already should be debated.
-> > 
-> > Yup.
-> > 
-> > > > This isn't a new problem. We had issues like that dating back
-> > > > 15 years
-> > > > on powerpc for example, where a big ASIC hanging off PCI had
-> > > > all the
-> > > > Apple gunk including the interrupt controller, which was
-> > > > initialized
-> > > > from the DT way before PCI probing. If you took an interrupt at
-> > > > the
-> > > > "wrong" time during BAR sizing, kaboom ! If you had debug
-> > > > printk's in
-> > > > the wrong place in the PCI probing code, kaboom ! etc....
-> > > > 
-> > > > If we want to solve that properly in the long run, we'll
-> > > > probably want
-> > > > ACPI to tell us the BAR sizes and use that instead of doing
-> > > > manual
-> > > > sizing on such "system" devices. We similarily have ways to
-> > > > "construct"
-> > > > pci_dev's from the OF tree on sparc64 and powerpc, limiting
-> > > > direct
-> > > > config access to populate stuff we can't get from FW.
-> > > 
-> > > 
-https://lore.kernel.org/linux-pci/20190121174225.15835-1-mr.nuke.me@gmail.com/
-> > > 
-> > > ?
-> > 
-> > Ah I don't know enough about ACPI yet, on my reading list :-)
-> > 
-> > Cheers,
-> > Ben.
-> > 
-> > 
+Is there potentially a dependency where the PCIe controller doesn't like
+some other activity that's occurring on the iMX during its
+initialization sequence?
 
+-- 
+Robert Hancock
+Senior Software Developer
+SED Systems, a division of Calian Ltd.
+Email: hancock@sedsystems.ca
