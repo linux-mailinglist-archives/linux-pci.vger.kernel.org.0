@@ -2,178 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 961773D1A8
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2019 18:04:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3213D3D248
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2019 18:30:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390180AbfFKQDo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jun 2019 12:03:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:36744 "EHLO foss.arm.com"
+        id S2391589AbfFKQaE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jun 2019 12:30:04 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:37770 "EHLO ns.iliad.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390351AbfFKQDo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 11 Jun 2019 12:03:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 365AB337;
-        Tue, 11 Jun 2019 09:03:44 -0700 (PDT)
-Received: from redmoon (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 688543F246;
-        Tue, 11 Jun 2019 09:03:43 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 17:03:41 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] PCI: armada8k: Add PHYs support
-Message-ID: <20190611160341.GB18411@redmoon>
-References: <20190401131239.17008-1-miquel.raynal@bootlin.com>
+        id S2390889AbfFKQaE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 11 Jun 2019 12:30:04 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 09EB02077F;
+        Tue, 11 Jun 2019 18:30:03 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id C7A882046B;
+        Tue, 11 Jun 2019 18:30:02 +0200 (CEST)
+Subject: Re: [PATCH v1 0/3] PCIe and AR8151 on APQ8098/MSM8998
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        iommu <iommu@lists.linux-foundation.org>
+References: <5eedbe6d-f440-1a77-8a7e-81a920e3a0e7@free.fr>
+ <20190611155521.GA18411@redmoon>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <5af21357-5050-ee30-ddf9-df114d183fca@free.fr>
+Date:   Tue, 11 Jun 2019 18:30:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190401131239.17008-1-miquel.raynal@bootlin.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190611155521.GA18411@redmoon>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue Jun 11 18:30:03 2019 +0200 (CEST)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 03:12:39PM +0200, Miquel Raynal wrote:
-> Bring PHY support for the Armada8k driver.
-> 
-> The Armada8k IP only supports x1, x2 or x4 link widths. Iterate over
-> the DT 'phys' entries and configure them one by one. Use
-> phy_set_mode_ext() to make use of the submode parameter (initially
-> introduced for Ethernet modes). For PCI configuration, let the submode
-> be the width (1, 2, 4, etc) so that the PHY driver knows how many
-> lanes are bundled. Do not error out in case of error for compatibility
-> reasons.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  drivers/pci/controller/dwc/pcie-armada8k.c | 82 +++++++++++++++++++++-
->  1 file changed, 81 insertions(+), 1 deletion(-)
+[ Trimming recipients list ]
 
-I need Thomas' ACK to proceed if this is still valid.
+On 11/06/2019 17:55, Lorenzo Pieralisi wrote:
 
-Lorenzo
-
-> diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
-> index 0c389a30ef5d..e567a7cfa3d7 100644
-> --- a/drivers/pci/controller/dwc/pcie-armada8k.c
-> +++ b/drivers/pci/controller/dwc/pcie-armada8k.c
-> @@ -25,10 +25,14 @@
->  
->  #include "pcie-designware.h"
->  
-> +#define ARMADA8K_PCIE_MAX_LANES PCIE_LNK_X4
-> +
->  struct armada8k_pcie {
->  	struct dw_pcie *pci;
->  	struct clk *clk;
->  	struct clk *clk_reg;
-> +	struct phy *phy[ARMADA8K_PCIE_MAX_LANES];
-> +	unsigned int phy_count;
->  };
->  
->  #define PCIE_VENDOR_REGS_OFFSET		0x8000
-> @@ -67,6 +71,76 @@ struct armada8k_pcie {
->  
->  #define to_armada8k_pcie(x)	dev_get_drvdata((x)->dev)
->  
-> +static void armada8k_pcie_disable_phys(struct armada8k_pcie *pcie)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < ARMADA8K_PCIE_MAX_LANES; i++) {
-> +		phy_power_off(pcie->phy[i]);
-> +		phy_exit(pcie->phy[i]);
-> +	}
-> +}
-> +
-> +static int armada8k_pcie_enable_phys(struct armada8k_pcie *pcie)
-> +{
-> +	int ret;
-> +	int i;
-> +
-> +	for (i = 0; i < ARMADA8K_PCIE_MAX_LANES; i++) {
-> +		ret = phy_init(pcie->phy[i]);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = phy_set_mode_ext(pcie->phy[i], PHY_MODE_PCIE,
-> +				       pcie->phy_count);
-> +		if (ret) {
-> +			phy_exit(pcie->phy[i]);
-> +			return ret;
-> +		}
-> +
-> +		ret = phy_power_on(pcie->phy[i]);
-> +		if (ret) {
-> +			phy_exit(pcie->phy[i]);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int armada8k_pcie_setup_phys(struct armada8k_pcie *pcie)
-> +{
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct device *dev = pci->dev;
-> +	struct device_node *node = dev->of_node;
-> +	int ret = 0;
-> +	int i;
-> +
-> +	for (i = 0; i < ARMADA8K_PCIE_MAX_LANES; i++) {
-> +		pcie->phy[i] = devm_of_phy_get_by_index(dev, node, i);
-> +		if (IS_ERR(pcie->phy[i]) &&
-> +		    (PTR_ERR(pcie->phy[i]) == -EPROBE_DEFER))
-> +			return PTR_ERR(pcie->phy[i]);
-> +
-> +		if (IS_ERR(pcie->phy[i])) {
-> +			pcie->phy[i] = NULL;
-> +			continue;
-> +		}
-> +
-> +		pcie->phy_count++;
-> +	}
-> +
-> +	/* Old bindings miss the PHY handle, so just warn if there is no PHY */
-> +	if (!pcie->phy_count)
-> +		dev_warn(dev, "No available PHY\n");
-> +
-> +	ret = armada8k_pcie_enable_phys(pcie);
-> +	if (ret)
-> +		dev_err(dev, "Failed to initialize PHY(s) (%d)\n", ret);
-> +
-> +	return ret;
-> +}
-> +
->  static int armada8k_pcie_link_up(struct dw_pcie *pci)
->  {
->  	u32 reg;
-> @@ -249,14 +323,20 @@ static int armada8k_pcie_probe(struct platform_device *pdev)
->  		goto fail_clkreg;
->  	}
->  
-> +	ret = armada8k_pcie_setup_phys(pcie);
-> +	if (ret)
-> +		goto fail_clkreg;
-> +
->  	platform_set_drvdata(pdev, pcie);
->  
->  	ret = armada8k_add_pcie_port(pcie, pdev);
->  	if (ret)
-> -		goto fail_clkreg;
-> +		goto disable_phy;
->  
->  	return 0;
->  
-> +disable_phy:
-> +	armada8k_pcie_disable_phys(pcie);
->  fail_clkreg:
->  	clk_disable_unprepare(pcie->clk_reg);
->  fail:
-> -- 
-> 2.19.1
+> On Thu, Mar 28, 2019 at 05:59:48PM +0100, Marc Gonzalez wrote:
 > 
+>> After a lot of poking, I am finally able to use the AR8151 ethernet on the APQ8098 board.
+>> The magic bits are the iommu-map prop and the PCIE20_PARF_BDF_TRANSLATE_N setup.
+>>
+>> The WIP thread is archived here:
+>> https://marc.info/?t=155059539200004&r=1&w=2
+>>
+>>
+>> Marc Gonzalez (3):
+>>   PCI: qcom: Setup PCIE20_PARF_BDF_TRANSLATE_N
+>>   arm64: dts: qcom: msm8998: Add PCIe SMMU node
+>>   arm64: dts: qcom: msm8998: Add PCIe PHY and RC nodes
+>>
+>>  arch/arm64/boot/dts/qcom/msm8998.dtsi  | 93 ++++++++++++++++++++++++++
+>>  drivers/pci/controller/dwc/pcie-qcom.c |  4 ++
+>>  2 files changed, 97 insertions(+)
+> 
+> Marc,
+> 
+> what's the plan with this series ? Please let me know so that
+> I can handle it correctly in the PCI patch queue, I am not
+> sure by reading comments it has evolved much since posting.
+
+Hello Lorenzo,
+
+You can ignore/drop this series, it has been superseded; FWIW, the latest
+patches no longer touch drivers/pci
+
+The hold-up was finding an acceptable work-around for the $&#! bug in qcom's
+SMMU emulation code. I hope Joerg will push it ASAP into linux-next so it can
+receive some testing before 5.3-rc1.
+
+The current incarnation of the PCIe PHY and RC nodes is:
+https://patchwork.kernel.org/patch/10895341/
+
+Regards.
