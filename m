@@ -2,137 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B5C641C5E
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2019 08:42:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 304AF41E43
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2019 09:52:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730957AbfFLGmI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jun 2019 02:42:08 -0400
-Received: from mga03.intel.com ([134.134.136.65]:46990 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbfFLGmI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 12 Jun 2019 02:42:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 23:42:06 -0700
-X-ExtLoop1: 1
-Received: from lftan-mobl.gar.corp.intel.com (HELO ubuntu) ([10.226.248.70])
-  by FMSMGA003.fm.intel.com with SMTP; 11 Jun 2019 23:42:04 -0700
-Received: by ubuntu (sSMTP sendmail emulation); Wed, 12 Jun 2019 14:42:02 +0800
-From:   Ley Foon Tan <ley.foon.tan@intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        lftan.linux@gmail.com, Ley Foon Tan <ley.foon.tan@intel.com>
-Subject: [PATCH v2] PCI: altera: Fix configuration type based on secondary number
-Date:   Wed, 12 Jun 2019 14:42:00 +0800
-Message-Id: <1560321720-4083-1-git-send-email-ley.foon.tan@intel.com>
-X-Mailer: git-send-email 2.7.4
+        id S1729257AbfFLHwT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jun 2019 03:52:19 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34998 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726568AbfFLHwS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jun 2019 03:52:18 -0400
+Received: by mail-lj1-f195.google.com with SMTP id x25so9617374ljh.2;
+        Wed, 12 Jun 2019 00:52:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sHAiVBtI4wTRr/mIaxFBqtCpECcSlQ7YSDG2J1NlBOE=;
+        b=uSUiwkbSkpAx9D2wqxReGVfnlLBU5wqk2FDoGu1/Q13WdnLKhQFliQWPFz7enbEw7M
+         EJG0QokvF5S/l0I8sFeX071cudNfY4xZ+bvrRJl85xrDlsLEQkoAqg0CsuUvB6GD2gwh
+         tfIFd5+th6na0GqBcNvfg6vZe5X1XVWZ6Y4PmCh2UjDEIqICD1X3Ihm7bNb7w6GhnLjT
+         FLQcqNyo1m5L5xC8+HUD+Fvzn/xVNVnDjOx5eftLdbV5/yZr6Me94HVLbpf2bgAXjzME
+         5FgAe9/8bGkzdKjZzSPXmCDOunOGP2YDZorngLJqi9Ls/8XY0ES+ojECqJa4NLMbOahp
+         9x5g==
+X-Gm-Message-State: APjAAAXub8NgLAGOJbo5XuPeTHHF8/DkGENUr/nHB8TrqK8pn897dFWW
+        PjG3169LIGXYZ9/y1hRhxkJ4j/hrGt4TJe6aFOQ=
+X-Google-Smtp-Source: APXvYqyvS1HtmoeUVU1qWAovQA9z2SrohqY0mW414kk/CrLu86gLlSpsg1lYfW4xpd516YTxz/WXuYe6YPfVc7afNec=
+X-Received: by 2002:a2e:2b8d:: with SMTP id r13mr31669052ljr.145.1560325936859;
+ Wed, 12 Jun 2019 00:52:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <1559891016-56157-1-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1559891016-56157-1-git-send-email-biju.das@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 12 Jun 2019 09:52:04 +0200
+Message-ID: <CAMuHMdW3GxjF-MPRDkJorLpAzPKSNx3bE+sHAGgUHrV1d9pD0w@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: PCI: rcar: Add device tree support for r8a774a1
+To:     Biju Das <biju.das@bp.renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This fix issue when access config from PCIe switch.
+On Fri, Jun 7, 2019 at 9:08 AM Biju Das <biju.das@bp.renesas.com> wrote:
+> Add PCIe support for the RZ/G2M (a.k.a. R8A774A1).
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-Stratix 10 PCIe controller does not support Type 1 to Type 0 conversion
-as previous version (V1) does.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-The PCIe controller need to send Type 0 config TLP if the targeting bus
-matches with the secondary bus number, which is when the TLP is targeting
-the immediate device on the link.
+Gr{oetje,eeting}s,
 
-The PCIe controller send Type 1 config TLP if the targeting bus is
-larger than the secondary bus, which is when the TLP is targeting the
-device not immediate on the link.
+                        Geert
 
-Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
-
----
-v2:
-- Add get_tlp_header() function.
----
- drivers/pci/controller/pcie-altera.c | 41 ++++++++++++++++++----------
- 1 file changed, 27 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-index 27222071ace7..d2497ca43828 100644
---- a/drivers/pci/controller/pcie-altera.c
-+++ b/drivers/pci/controller/pcie-altera.c
-@@ -44,6 +44,8 @@
- #define S10_RP_RXCPL_STATUS		0x200C
- #define S10_RP_CFG_ADDR(pcie, reg)	\
- 	(((pcie)->hip_base) + (reg) + (1 << 20))
-+#define S10_RP_SECONDARY(pcie)		\
-+	readb(S10_RP_CFG_ADDR(pcie, PCI_SECONDARY_BUS))
- 
- /* TLP configuration type 0 and 1 */
- #define TLP_FMTTYPE_CFGRD0		0x04	/* Configuration Read Type 0 */
-@@ -55,14 +57,9 @@
- #define TLP_WRITE_TAG			0x10
- #define RP_DEVFN			0
- #define TLP_REQ_ID(bus, devfn)		(((bus) << 8) | (devfn))
--#define TLP_CFGRD_DW0(pcie, bus)					\
--	((((bus == pcie->root_bus_nr) ? pcie->pcie_data->cfgrd0		\
--				: pcie->pcie_data->cfgrd1) << 24) |	\
--				TLP_PAYLOAD_SIZE)
--#define TLP_CFGWR_DW0(pcie, bus)					\
--	((((bus == pcie->root_bus_nr) ? pcie->pcie_data->cfgwr0		\
--				: pcie->pcie_data->cfgwr1) << 24) |	\
--				TLP_PAYLOAD_SIZE)
-+#define TLP_CFG_DW0(pcie, cfg)		\
-+		(((cfg) << 24) |	\
-+		  TLP_PAYLOAD_SIZE)
- #define TLP_CFG_DW1(pcie, tag, be)	\
- 	(((TLP_REQ_ID(pcie->root_bus_nr,  RP_DEVFN)) << 16) | (tag << 8) | (be))
- #define TLP_CFG_DW2(bus, devfn, offset)	\
-@@ -322,14 +319,31 @@ static void s10_tlp_write_packet(struct altera_pcie *pcie, u32 *headers,
- 	s10_tlp_write_tx(pcie, data, RP_TX_EOP);
- }
- 
-+static void get_tlp_header(struct altera_pcie *pcie, u8 bus, u32 devfn,
-+			   int where, u8 byte_en, bool read, u32 *headers)
-+{
-+	u8 cfg;
-+	u8 cfg0 = read ? pcie->pcie_data->cfgrd0 : pcie->pcie_data->cfgwr0;
-+	u8 cfg1 = read ? pcie->pcie_data->cfgrd1 : pcie->pcie_data->cfgwr1;
-+	u8 tag = read ? TLP_READ_TAG : TLP_WRITE_TAG;
-+
-+	if (pcie->pcie_data->version == ALTERA_PCIE_V1)
-+		cfg = (bus == pcie->root_bus_nr) ? cfg0 : cfg1;
-+	else
-+		cfg = (bus > S10_RP_SECONDARY(pcie)) ? cfg0 : cfg1;
-+
-+	headers[0] = TLP_CFG_DW0(pcie, cfg);
-+	headers[1] = TLP_CFG_DW1(pcie, tag, byte_en);
-+	headers[2] = TLP_CFG_DW2(bus, devfn, where);
-+}
-+
- static int tlp_cfg_dword_read(struct altera_pcie *pcie, u8 bus, u32 devfn,
- 			      int where, u8 byte_en, u32 *value)
- {
- 	u32 headers[TLP_HDR_SIZE];
- 
--	headers[0] = TLP_CFGRD_DW0(pcie, bus);
--	headers[1] = TLP_CFG_DW1(pcie, TLP_READ_TAG, byte_en);
--	headers[2] = TLP_CFG_DW2(bus, devfn, where);
-+	get_tlp_header(pcie, bus, devfn, where, byte_en, true,
-+		       headers);
- 
- 	pcie->pcie_data->ops->tlp_write_pkt(pcie, headers, 0, false);
- 
-@@ -342,9 +356,8 @@ static int tlp_cfg_dword_write(struct altera_pcie *pcie, u8 bus, u32 devfn,
- 	u32 headers[TLP_HDR_SIZE];
- 	int ret;
- 
--	headers[0] = TLP_CFGWR_DW0(pcie, bus);
--	headers[1] = TLP_CFG_DW1(pcie, TLP_WRITE_TAG, byte_en);
--	headers[2] = TLP_CFG_DW2(bus, devfn, where);
-+	get_tlp_header(pcie, bus, devfn, where, byte_en, false,
-+		       headers);
- 
- 	/* check alignment to Qword */
- 	if ((where & 0x7) == 0)
 -- 
-2.19.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
