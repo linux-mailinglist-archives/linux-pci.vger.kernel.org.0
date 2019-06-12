@@ -2,158 +2,193 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC0DF42229
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2019 12:18:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A93E4224F
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2019 12:23:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbfFLKSZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jun 2019 06:18:25 -0400
-Received: from mail-eopbgr710043.outbound.protection.outlook.com ([40.107.71.43]:51904
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727068AbfFLKSY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:18:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3ww0h4Y4wwqCr7hq535Bf8l55yWkFHzZbMgT7dFq35A=;
- b=kuRRr2Bf3GV4MbEZnZyaq91emvWQmVrt0VmgTbG1zIBYYVqQ8D4RhfovqI/Lqte80a9NAuQLvYlsUWnXxaOzNKvlE10IsVdySKow7NH3SVcwIECIdNw9G7TvFp/SySGf2Xj7fG476DYBJqG/EzzstxSGHpPCz5SvKtaSPxha05U=
-Received: from MWHPR0201CA0023.namprd02.prod.outlook.com
- (2603:10b6:301:74::36) by DM6PR02MB4938.namprd02.prod.outlook.com
- (2603:10b6:5:11::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.17; Wed, 12 Jun
- 2019 10:18:20 +0000
-Received: from CY1NAM02FT062.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::205) by MWHPR0201CA0023.outlook.office365.com
- (2603:10b6:301:74::36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1965.15 via Frontend
- Transport; Wed, 12 Jun 2019 10:18:19 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; lists.infradead.org; dkim=none (message not signed)
- header.d=none;lists.infradead.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT062.mail.protection.outlook.com (10.152.75.60) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1987.11
- via Frontend Transport; Wed, 12 Jun 2019 10:18:19 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <bharat.kumar.gogada@xilinx.com>)
-        id 1hb0Kg-0005W0-S5; Wed, 12 Jun 2019 03:18:18 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <bharat.kumar.gogada@xilinx.com>)
-        id 1hb0Kb-0005wx-Oj; Wed, 12 Jun 2019 03:18:13 -0700
-Received: from xsj-pvapsmtp01 (smtp.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x5CAI94P020337;
-        Wed, 12 Jun 2019 03:18:09 -0700
-Received: from [172.23.37.224] (helo=xhdbharatku40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <bharat.kumar.gogada@xilinx.com>)
-        id 1hb0KW-0005un-KI; Wed, 12 Jun 2019 03:18:09 -0700
-From:   Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lorenzo.pieralisi@arm.com
-Cc:     marc.zyngier@arm.com, bhelgaas@google.com,
-        linux-arm-kernel@lists.infradead.org, rgummal@xilinx.com,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: [PATCH v4] PCI: xilinx-nwl: Fix Multi MSI data programming
-Date:   Wed, 12 Jun 2019 15:47:59 +0530
-Message-Id: <1560334679-9206-1-git-send-email-bharat.kumar.gogada@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(396003)(136003)(346002)(376002)(2980300002)(199004)(189003)(106002)(48376002)(70206006)(50466002)(63266004)(9786002)(2906002)(26005)(50226002)(47776003)(478600001)(316002)(77096007)(126002)(36386004)(476003)(4326008)(2616005)(107886003)(14444005)(186003)(81166006)(8936002)(7696005)(356004)(486006)(81156014)(8676002)(6666004)(51416003)(16586007)(336012)(70586007)(5660300002)(36756003)(305945005)(426003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB4938;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+        id S2407999AbfFLKVy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jun 2019 06:21:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:49584 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407987AbfFLKVy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 Jun 2019 06:21:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 70A84337;
+        Wed, 12 Jun 2019 03:21:53 -0700 (PDT)
+Received: from redmoon (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D60F3F246;
+        Wed, 12 Jun 2019 03:23:35 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 11:21:49 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Sinan Kaya <okaya@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "Zilberman, Zeev" <zeev@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>
+Subject: Re: [PATCH/RESEND] arm64: acpi/pci: invoke _DSM whether to preserve
+ firmware PCI setup
+Message-ID: <20190612102149.GC6506@redmoon>
+References: <56715377f941f1953be43b488c2203ec090079a1.camel@kernel.crashing.org>
+ <20190604014945.GE189360@google.com>
+ <960c94eb151ba1d066090774621cf6ca6566d135.camel@kernel.crashing.org>
+ <20190604124959.GF189360@google.com>
+ <e520a4269224ac54798314798a80c080832e68b1.camel@kernel.crashing.org>
+ <d53fc77e1e754ddbd9af555ed5b344c5fa523154.camel@kernel.crashing.org>
+ <CAKv+Gu_3Nb5mPZgRfx+wQSz+eWM+FSbw_14fHm+u=v2EbuYoGQ@mail.gmail.com>
+ <4b956e0679b4b4f4d0f0967522590324d15593fb.camel@kernel.crashing.org>
+ <20190611143111.GA11736@redmoon>
+ <f1d610d79fbb3a98c9cc80210c64cb21679daf33.camel@kernel.crashing.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 34f1684d-7705-4e57-0e8d-08d6ef1f4abe
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:DM6PR02MB4938;
-X-MS-TrafficTypeDiagnostic: DM6PR02MB4938:
-X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-Microsoft-Antispam-PRVS: <DM6PR02MB4938DCF10BA1118EC15D9769A5EC0@DM6PR02MB4938.namprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0066D63CE6
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: W8rnwIyfJ+6DmiH11JqnQa8Gati5tROpk/cZoFkG3vyu8M37jg4ygANpf+Fk8v63aADq+HMfgVyM98K4pMuMOptMh6cPhhNb3k6VwIUqOV3LhCidCxue2m8f07ZK18yfh/lcOl3XqBTkzxE6Axvs5Anmqs39RUTB/NqEy1Ocn913v78z2f2tbTP74Hf2C3rp7zUAgah+FGqWUY41/cF50xJuCdgf/mjqeD+lp390liKAJSOI1IB5gfz13O9jaQC5s8BWYGdOebOOGnmv7zDzst5qba2xDwEQSJJaDAT4VG1uJHfmbhbmiK/OZFqap2/4Gm11m4tjGgGm56+M8IIv+jtsGPFfrQDJ5bBlQjBOC0cb1hvGxWdbZxH3PxI41WDYTekwWtZWOIWBiGgZPpwieKSEmx8MdxHUTiyXT7IYx0Y=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2019 10:18:19.3122
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 34f1684d-7705-4e57-0e8d-08d6ef1f4abe
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4938
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f1d610d79fbb3a98c9cc80210c64cb21679daf33.camel@kernel.crashing.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The current Multi MSI data programming fails if multiple end points
-requesting MSI and multi MSI are connected with switch, i.e the current
-multi MSI data being given is not considering the number of vectors
-being requested in case of multi MSI.
-Ex: Two EP's connected via switch, EP1 requesting single MSI first,
-EP2 requesting Multi MSI of count four. The current code gives
-MSI data 0x0 to EP1 and 0x1 to EP2, but EP2 can modify lower two bits
-due to which EP2 also sends interrupt with MSI data 0x0 which results
-in always invoking virq of EP1 due to which EP2 MSI interrupt never
-gets handled.
+On Wed, Jun 12, 2019 at 08:09:01AM +1000, Benjamin Herrenschmidt wrote:
+> On Tue, 2019-06-11 at 15:31 +0100, Lorenzo Pieralisi wrote:
+> > 
+> > True, minus specs update schedule, I can't change that and merging
+> > this patch (and firmware thereof) relies on specifications that
+> > are intent changes till they become an ECN (~another merge window,
+> > so this patch could land at v5.4).
+> 
+> Hrm... annoying for us but I understand your reasoning.
 
-Fix Multi MSI data programming with required alignment by
-using number of vectors being requested.
+If we can wait it is better, also because it gives us time to
+bring this discussion to completion.
 
-Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe
-Host Controller")
+> > The other option is doing what this patch does *without* relying
+> > on _DSM #5, we may have regressions unfortunately though.
+> 
+> We could work around regressions with quirks I suppose. It does make
+> sense to assume that if you have ACPI and UEFI, you have a decent PCI
+> BAR assignment at boot in the "general case". That said, we need to
+> double check first that pci_bus_claim_resources() will not do horrible
+> things on partially assigned setups, since there's a real interest in
+> doing that in the field.
+> 
+> > It is kind of orthogonal (but not really), bus numbers assignment
+> > is _not_ in line with resource assignment at the moment and I want
+> > to change it.
+> 
+> Hrm. We should probably reassign bus numbers if we reassign resources
+> yes, but then I'd like us to not reassign resources unless we have to
+> :-)
 
-Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
----
-V4:
- - Using a different bitmap registration API whcih serves single and multi
-   MSI requests.
----
- drivers/pci/controller/pcie-xilinx-nwl.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+But for that we can use _DSM #5 returning 0, at least we would
+be consistent.
 
-diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-index 81538d7..a9e07b8 100644
---- a/drivers/pci/controller/pcie-xilinx-nwl.c
-+++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-@@ -483,15 +483,13 @@ static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 	int i;
- 
- 	mutex_lock(&msi->lock);
--	bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
--					 nr_irqs, 0);
--	if (bit >= INT_PCI_MSI_NR) {
-+	bit = bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
-+				      get_count_order(nr_irqs));
-+	if (bit < 0) {
- 		mutex_unlock(&msi->lock);
- 		return -ENOSPC;
- 	}
- 
--	bitmap_set(msi->bitmap, bit, nr_irqs);
--
- 	for (i = 0; i < nr_irqs; i++) {
- 		irq_domain_set_info(domain, virq + i, bit + i, &nwl_irq_chip,
- 				domain->host_data, handle_simple_irq,
-@@ -509,7 +507,8 @@ static void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 	struct nwl_msi *msi = &pcie->msi;
- 
- 	mutex_lock(&msi->lock);
--	bitmap_clear(msi->bitmap, data->hwirq, nr_irqs);
-+	bitmap_release_region(msi->bitmap, data->hwirq,
-+			      get_count_order(nr_irqs));
- 	mutex_unlock(&msi->lock);
- }
- 
--- 
-2.7.4
+Current situation is inconsistent and that bothers me I can put
+together a separate patch and send it as an RFT, there are not
+that many ARM64 PCI ACPI platforms to test it on.
 
+> > a stab at patching the kernel so that it reassigns bus numbers by
+> > default and toggle that behaviour on _DSM #5 == 0 detection.
+> > 
+> > I doubt that reassigning bus numbers by default can trigger
+> > regressions on existing platforms but the only way to figure
+> > it out is by testing it.
+> >
+> > > My thinking is if we converge everybody toward the x86 method of
+> > > doing
+> > > a 2 pass survey of existing resources followed by
+> > > assign_unassigned,
+> > 
+> > I am not entirely sure we need a 2-pass survey,
+> >
+> > pci_bus_claim_resources()
+> > 
+> > should be enough; if it is not we update it.
+> 
+> So it's not so much about the 2 passes per-se, though they have value,
+> it's more about consolidating archs to do the same thing. Chances that
+> we change x86 are nil. But we can change powerpc and arm64 to do like
+> x86 and move that code to generic.
+
+Agree on that.
+
+> pci_bus_claim_resources() seems to be a "lightweight" variant of the
+> survey done by x86. The main differences I can see are:
+> 
+>  - The 2 passes thing which we may or may not care about, its main
+> purpose is to favor resources that are already enabled by the BIOS in
+> case of conflicts as far as I understand.
+
+Yes.
+
+>  - pci_read_bridge_bases() is done by pci_bus_claim_resources(), while
+> x86 (and powerpc and others) do it in their pcibios_fixup_bus. That one
+> is interesting... Any reason why we shouldn't unconditionally read the
+> bridges while probing ? Bjorn ?
+
+I tried and failed miserably:
+
+https://lore.kernel.org/linux-pci/20150916085850.GA17510@red-moon/
+
+>  - When allocating bridge resources, there are interesting differences:
+> 
+>   * x86 (and powerpc to some extent): If one has a 0 start or we fail
+> to claim it, x86 will wipe out the resource struct (including flags). I
+> assume that pci_assign_unassign_* will restore bridges when needed but
+> I haven't verified. 
+> 
+>   * pci_bus_claim_resources() is dumber in that regard. It will call
+> pci_claim_bridge_resources() blindly try to claim whatever is there
+> even if res->start is 0. This could be a problem with partially
+> assigned trees. It also doesn't wipe the resource in case of failure to
+> claim which could be a problem going down the tree and letting children
+> attach to the non-claimed resource, thus potentially causing the
+> reassign pass to fail.
+> 
+> The r->start == 0 test is interesting ... the generic claim code will
+> honor IORESOURCE_UNSET but we don't seem to set that generically unless
+> we hit some of the specific pass for explicit resource alignment, or
+> during the reassignment phases.
+> 
+>  - When allocating device resources, the main difference other than the
+> 2 passes is that x86 will "0 base" the resource (r->end -= r->start; r-
+> >start = 0) for later reassignment. The claim path we use won't do
+> that. Note: none sets IORESOURCE_UNSET... Additionally x86 has some
+> oddball code to save the original FW values and restore them if
+> assignment later fails, which is somewhat odd since there's a conflict
+> but probably helps really broken setups.
+> 
+>  - x86 will not claim ROMs in that pass, it does a 3rd pass just for
+> them (it's common I think to not have room for all the ROMs). It also
+> disables them in config space during the survey.
+> pci_bus_claim_resources() will claim everything and leave ROMs enabled.
+> 
+> So as a somewhat temprary conclusion, I think the main difference here
+> is what happens when claim fails (also the res->start = 0 case which we
+> need to look at more closely) and whether we should make the generic
+> code also "0-base" the resource.
+
+Oh my, res->start == 0, another can of worms. Honestly I do not know
+what to do on that one mostly because we need to figure out how it
+plays with resource assignment code (and legacy stuff, you know the
+drill).
+
+> 
+> The question for me really is, do we want to just "upgrade" (if
+> necessary) pci_bus_claim_resources() and continue having x86 do its own
+> thing for ever, or do we want to consolidate around what is probably
+> the most tested platform when it comes to PCI :-)
+
+Consolidating is the right thing to do, with the caveats above, there
+are many but you have all my support.
+
+> And if we consolidate, I think that won't be by changing what x86 does,
+> that code is the result of decades of fiddling to get things right with
+> all sorts of broken BIOSes...
+
+There is 0 chance to change x86 code (and there is 0 chance to change
+core PCI code with x86 assumptions in it).
+
+Cheers,
+Lorenzo
