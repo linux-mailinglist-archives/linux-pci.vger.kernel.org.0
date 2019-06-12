@@ -2,194 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B9F0B41AA3
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2019 05:16:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B5C641C5E
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2019 08:42:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406935AbfFLDQQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jun 2019 23:16:16 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:40169 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406820AbfFLDQQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jun 2019 23:16:16 -0400
-Received: by mail-qt1-f196.google.com with SMTP id a15so17120836qtn.7
-        for <linux-pci@vger.kernel.org>; Tue, 11 Jun 2019 20:16:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7pM/bJ8KVHIUPR4+RA4bCYP1FwUKSdfzbtnXNI7jYUg=;
-        b=AN4Q6Kmp8qKhgA1WRegP49/La57Ux8OAjzI10r2kwBu/crcdda9bIGZE+Frfy87AVU
-         DhDPbB5ejAguNYneffd7FEJ7jsdnz5xT5hXHEKvgetBomLy6l7t0HqT96Xul7oH7vYfY
-         SkSH5fk4QbNYfPUSlMIBP8ANAKQFZS6cKtISwP0aUiNbTalL4XkdIZhj5kCV99qUpKzE
-         EzlEu/42R1djipxopMbrWSrhCMkCV50h8LQkYgtiyMG/NoCL+JE+jUakWs/gA0hymUvL
-         acI/7AcOFqFKnZTeHBhmjY4+0ejhjI0mOke+f5hZYHK/BhcsKxOc3ktSR68EnD821kZd
-         prow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7pM/bJ8KVHIUPR4+RA4bCYP1FwUKSdfzbtnXNI7jYUg=;
-        b=GVmqvv/ewkTm9Nk/W2UxZKLcNWVS4+Abj3xWyHRXRFjLt5nVFimF247jjP3aUDhcdF
-         UUyAU7LANvwn9xCqQl31+ZL7vZIJdeNWIHNg8U+Zo10Z/Nfa7Y+EClpci0riBj78/8vs
-         A1Mgq9TxYHVlbH2rPzH/T5CSXeSI1eMDsmtDU5W8vktbmdpQa3xuCRnF2rymY3JGlOnr
-         asY5q6cbL8eb1c/lgNiLg3BBsgk51/5y0+rPxwdiTRA9qsQVKAG0tnZ13HJWaDzUPRzi
-         N6wLx1C6bWUejP8WEReNZdXY7Eszm/YZVFAaJOWYXeoTYX5x5X4hcoPkA/u6tTjMQPjK
-         J7Ew==
-X-Gm-Message-State: APjAAAXCiMTqfKqtNeFIV5x5Z4hQrqIvgkF8R8U/zJSxPWf5Uqu4q0Lv
-        6jbw4UeUUsKbiS76Ft3lCXihR0+HdfKGHuPmZXtYZQ==
-X-Google-Smtp-Source: APXvYqxNwHBEMHH9cCduwKgR9m3i5D0ADQL7TX14Y8L3K33O5OiTAB5vsp3Puu4YHxV+8R7MXC9A9pZE25E4gpIpJ6I=
-X-Received: by 2002:ac8:4982:: with SMTP id f2mr61652403qtq.213.1560309374677;
- Tue, 11 Jun 2019 20:16:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190610074456.2761-1-drake@endlessm.com> <20190610211628.GA68572@google.com>
- <CAD8Lp47BmOtEgFUDCMyLrDpoPZSxcWmbrXEbh4PXS0FSG8ukLA@mail.gmail.com> <20190611195254.GB768@google.com>
-In-Reply-To: <20190611195254.GB768@google.com>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Wed, 12 Jun 2019 11:16:03 +0800
-Message-ID: <CAD8Lp479mY=dAhFvGT2ZiJP12KXszhWev=QpCcgfgoew0TxgWg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Add Intel remapped NVMe device support
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        linux-ide@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        mjg59@srcf.ucam.org
-Content-Type: text/plain; charset="UTF-8"
+        id S1730957AbfFLGmI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jun 2019 02:42:08 -0400
+Received: from mga03.intel.com ([134.134.136.65]:46990 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726066AbfFLGmI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 Jun 2019 02:42:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 23:42:06 -0700
+X-ExtLoop1: 1
+Received: from lftan-mobl.gar.corp.intel.com (HELO ubuntu) ([10.226.248.70])
+  by FMSMGA003.fm.intel.com with SMTP; 11 Jun 2019 23:42:04 -0700
+Received: by ubuntu (sSMTP sendmail emulation); Wed, 12 Jun 2019 14:42:02 +0800
+From:   Ley Foon Tan <ley.foon.tan@intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        lftan.linux@gmail.com, Ley Foon Tan <ley.foon.tan@intel.com>
+Subject: [PATCH v2] PCI: altera: Fix configuration type based on secondary number
+Date:   Wed, 12 Jun 2019 14:42:00 +0800
+Message-Id: <1560321720-4083-1-git-send-email-ley.foon.tan@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 3:52 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> It also said (three years ago) that there was some hope of opening the
-> specs.  But I guess that hasn't happened.
+This fix issue when access config from PCIe switch.
 
-I think the brief spec I already linked to may have been published as
-a result of the discussion there:
-https://marc.info/?l=linux-ide&m=147734288604783&w=2
+Stratix 10 PCIe controller does not support Type 1 to Type 0 conversion
+as previous version (V1) does.
 
-Either way I'm not aware of any more detailed information having been
-published since then.
+The PCIe controller need to send Type 0 config TLP if the targeting bus
+matches with the secondary bus number, which is when the TLP is targeting
+the immediate device on the link.
 
-> > 2. The RAID controller presented by intel-nvme-remap on a new bus,
-> > with the cfg space tweaked in a way that it gets probed & accepted by
-> > the ahci driver:
-> >
-> > 10000:00:00.0 SATA controller: Intel Corporation 82801 Mobile SATA
-> > Controller [RAID mode] (rev 30) (prog-if 01 [AHCI 1.0])
-> >     Memory at b4390000 (32-bit, non-prefetchable) [size=32K]
->
-> Exposing the same device in two different places (0000:00:17.0 and
-> 10000:00:00.0) is definitely an architectural issue.  Logically we're
-> saying that accesses to b4390000 are claimed by two different devices.
+The PCIe controller send Type 1 config TLP if the targeting bus is
+larger than the secondary bus, which is when the TLP is targeting the
+device not immediate on the link.
 
-I guess intel-nvme-remap could tweak the 0000:00:17.0 device to remove
-those BARs so that they ultimately only appear under 10000:00:00.0.
-But that doesn't sound particularly nice either.
+Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
 
-If we continue down this road, another possibility is to leave the
-0000:00:17.0 device untouched, claimed and driven by the ahci driver
-as it is now, and rather than have intel-nvme-remap be a separate
-driver that claims the PCI device, just have it as a kind of library
-that gets called into from ahci. intel-nvme-remap would then create
-the "fake" PCI bus but only expose the NVMe devs there (not the AHCI
-one). This would deviate a little from the original suggestion of
-"expose a fake PCIe root port that both the AHCI and NVMe driver bind
-to.".
+---
+v2:
+- Add get_tlp_header() function.
+---
+ drivers/pci/controller/pcie-altera.c | 41 ++++++++++++++++++----------
+ 1 file changed, 27 insertions(+), 14 deletions(-)
 
-> > 3. The (previously inaccessible) NVMe device as presented on the new
-> > bus by intel-nvme-remap, probed by the nvme driver
-> >
-> > 10000:00:01.0 Non-Volatile memory controller: Intel Corporation Device
-> > 0000 (prog-if 02 [NVM Express])
-> >     Memory at b430c000 (64-bit, non-prefetchable) [size=16K]
->
-> From a hardware point of view, I think it *was* previously accessible.
-> Maybe not in a convenient, driver-bindable way, but I don't think your
-> patch flips any PCI_COMMAND or similar register enable bits.
-> Everything should have been accessible before if you knew where to
-> look.
+diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+index 27222071ace7..d2497ca43828 100644
+--- a/drivers/pci/controller/pcie-altera.c
++++ b/drivers/pci/controller/pcie-altera.c
+@@ -44,6 +44,8 @@
+ #define S10_RP_RXCPL_STATUS		0x200C
+ #define S10_RP_CFG_ADDR(pcie, reg)	\
+ 	(((pcie)->hip_base) + (reg) + (1 << 20))
++#define S10_RP_SECONDARY(pcie)		\
++	readb(S10_RP_CFG_ADDR(pcie, PCI_SECONDARY_BUS))
+ 
+ /* TLP configuration type 0 and 1 */
+ #define TLP_FMTTYPE_CFGRD0		0x04	/* Configuration Read Type 0 */
+@@ -55,14 +57,9 @@
+ #define TLP_WRITE_TAG			0x10
+ #define RP_DEVFN			0
+ #define TLP_REQ_ID(bus, devfn)		(((bus) << 8) | (devfn))
+-#define TLP_CFGRD_DW0(pcie, bus)					\
+-	((((bus == pcie->root_bus_nr) ? pcie->pcie_data->cfgrd0		\
+-				: pcie->pcie_data->cfgrd1) << 24) |	\
+-				TLP_PAYLOAD_SIZE)
+-#define TLP_CFGWR_DW0(pcie, bus)					\
+-	((((bus == pcie->root_bus_nr) ? pcie->pcie_data->cfgwr0		\
+-				: pcie->pcie_data->cfgwr1) << 24) |	\
+-				TLP_PAYLOAD_SIZE)
++#define TLP_CFG_DW0(pcie, cfg)		\
++		(((cfg) << 24) |	\
++		  TLP_PAYLOAD_SIZE)
+ #define TLP_CFG_DW1(pcie, tag, be)	\
+ 	(((TLP_REQ_ID(pcie->root_bus_nr,  RP_DEVFN)) << 16) | (tag << 8) | (be))
+ #define TLP_CFG_DW2(bus, devfn, offset)	\
+@@ -322,14 +319,31 @@ static void s10_tlp_write_packet(struct altera_pcie *pcie, u32 *headers,
+ 	s10_tlp_write_tx(pcie, data, RP_TX_EOP);
+ }
+ 
++static void get_tlp_header(struct altera_pcie *pcie, u8 bus, u32 devfn,
++			   int where, u8 byte_en, bool read, u32 *headers)
++{
++	u8 cfg;
++	u8 cfg0 = read ? pcie->pcie_data->cfgrd0 : pcie->pcie_data->cfgwr0;
++	u8 cfg1 = read ? pcie->pcie_data->cfgrd1 : pcie->pcie_data->cfgwr1;
++	u8 tag = read ? TLP_READ_TAG : TLP_WRITE_TAG;
++
++	if (pcie->pcie_data->version == ALTERA_PCIE_V1)
++		cfg = (bus == pcie->root_bus_nr) ? cfg0 : cfg1;
++	else
++		cfg = (bus > S10_RP_SECONDARY(pcie)) ? cfg0 : cfg1;
++
++	headers[0] = TLP_CFG_DW0(pcie, cfg);
++	headers[1] = TLP_CFG_DW1(pcie, tag, byte_en);
++	headers[2] = TLP_CFG_DW2(bus, devfn, where);
++}
++
+ static int tlp_cfg_dword_read(struct altera_pcie *pcie, u8 bus, u32 devfn,
+ 			      int where, u8 byte_en, u32 *value)
+ {
+ 	u32 headers[TLP_HDR_SIZE];
+ 
+-	headers[0] = TLP_CFGRD_DW0(pcie, bus);
+-	headers[1] = TLP_CFG_DW1(pcie, TLP_READ_TAG, byte_en);
+-	headers[2] = TLP_CFG_DW2(bus, devfn, where);
++	get_tlp_header(pcie, bus, devfn, where, byte_en, true,
++		       headers);
+ 
+ 	pcie->pcie_data->ops->tlp_write_pkt(pcie, headers, 0, false);
+ 
+@@ -342,9 +356,8 @@ static int tlp_cfg_dword_write(struct altera_pcie *pcie, u8 bus, u32 devfn,
+ 	u32 headers[TLP_HDR_SIZE];
+ 	int ret;
+ 
+-	headers[0] = TLP_CFGWR_DW0(pcie, bus);
+-	headers[1] = TLP_CFG_DW1(pcie, TLP_WRITE_TAG, byte_en);
+-	headers[2] = TLP_CFG_DW2(bus, devfn, where);
++	get_tlp_header(pcie, bus, devfn, where, byte_en, false,
++		       headers);
+ 
+ 	/* check alignment to Qword */
+ 	if ((where & 0x7) == 0)
+-- 
+2.19.0
 
-Pretty much, but in addition to fishing out the NVMe memory address
-from the AHCI BAR,  you also have to know to share the interrupt with
-AHCI, and also the PCI_COMMAND_MEMORY and PCI_COMMAND_MASTER bits must
-be set on the AHCI device in order for the NVMe devices to work.
-
-> Why do you need these to be PCI devices?
-
-I don't have a particular preference, but was trying to explore the
-suggestions from the last round of review:
-
-https://marc.info/?l=linux-ide&m=147923593001525&w=2
-"implementing a bridge driver like VMD"
-http://lists.infradead.org/pipermail/linux-nvme/2017-October/013325.html
-"The right way to do this would be to expose a fake PCIe root port
-that both the AHCI and NVMe driver bind to."
-
-> It looks like the main thing
-> you get is a hook to bind the driver to.  Could you accomplish
-> something similar by doing some coordination between the ahci and nvme
-> drivers directly, without involving PCI?
-
-That's basically what Dan Williams originally proposed, and Christoph
-Hellwig was not particularly excited by it...
-
-Can you take a quick at the original patches and see what you think?
-https://marc.info/?l=linux-ide&m=147709611121482&w=2
-https://marc.info/?l=linux-ide&m=147709611621483&w=2
-https://marc.info/?l=linux-ide&m=147709612221484&w=2
-https://marc.info/?l=linux-ide&m=147709612721485&w=2
-https://marc.info/?l=linux-ide&m=147709613221487&w=2
-
-> I assume that whatever magic Intel is doing with this "RST Optane"
-> mode, the resulting platform topology is at least compliant with the
-> PCI spec, so all the standard things in the spec like AER, DPC, power
-> management, etc, still work.
-
-That would also be my expectation - those standard things you
-configure on the AHCI device would also affect the mode of operation
-of the hidden NVMe devices, in the same way that the
-PCI_COMMAND_MASTER AHCI bit affects NVMe device access.
-
-> This all sounds urgent, but without details of what this "RST Optane"
-> mode means actually means, I don't know what to do with it.  I want to
-> avoid the voodoo programming of "we don't know *why* we're doing this,
-> but it seems to work."
-
-From the user perspective, we're doing it so that they get access to
-their storage device.
-
-But I guess you meant more from the technical architecture
-perspective. My understanding comes from
-https://mjg59.dreamwidth.org/44694.html : this is a game of Windows
-driver politics.
-Intel doesn't want the standard Windows NVMe driver to bind to the
-NVMe devices, because that driver is power hungry and makes Intel
-platforms look bad. So they came up with this scheme to hide the NVMe
-devices from view, and then only the power-eficient Intel Windows
-driver knows how to find them.
-
-The implementation follows patches, emails and the VS_CAP spec, all
-authored by Intel. I'm not confident that we'll get any more than
-that. The 2016 patches only appeared 5 months after numerous Lenovo
-customers had reported their inability to access their disk on Linux
-(they didn't even have a BIOS configuration option at that point).
-While some information was then shared in patches and emails, as you
-have seen Intel wasn't very forthcoming in providing a decent spec.
-Intel's last comment in the 2016 thread wasn't exactly positive:
-https://marc.info/?l=linux-ide&m=147953592417285&w=2
-and there was no reponse from Intel to my 2017 thread:
-http://lists.infradead.org/pipermail/linux-nvme/2017-October/013323.html
-
-So at this point I'd advocate for just piecing together the pieces of
-the puzzle that we do have (I'll work to reference the details better
-in the next patch revision), accepting that we're working with an
-architecture that doesn't seem well thought out, and then figure out
-the least painful way to support it.
-
-Thanks,
-Daniel
