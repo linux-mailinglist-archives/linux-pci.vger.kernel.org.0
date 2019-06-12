@@ -2,127 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7955C42703
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2019 15:08:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C95E42773
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2019 15:27:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732321AbfFLNIV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jun 2019 09:08:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:53052 "EHLO foss.arm.com"
+        id S1731517AbfFLN1c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jun 2019 09:27:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728322AbfFLNIV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:08:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8F4528;
-        Wed, 12 Jun 2019 06:08:20 -0700 (PDT)
-Received: from redmoon (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9EF2E3F557;
-        Wed, 12 Jun 2019 06:08:18 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 14:08:13 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv5 04/20] PCI: mobiveil: Remove the flag
- MSI_FLAG_MULTI_PCI_MSI
-Message-ID: <20190612130813.GA15747@redmoon>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-5-Zhiqiang.Hou@nxp.com>
- <20190611165935.GA22836@redmoon>
- <AM0PR04MB67383023B81AEB33DAF9C35584EC0@AM0PR04MB6738.eurprd04.prod.outlook.com>
+        id S1728977AbfFLN1c (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 Jun 2019 09:27:32 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B30D20866;
+        Wed, 12 Jun 2019 13:27:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560346051;
+        bh=fCiEkHOn4IM9qMiFXhbfh3OOyEoB+GLRdm6K+ZhmpQQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ucR0cDZmFIAHAdxv2kahFhIRw1/m7K1Irbr3F1WGoYg1wU8GwY+GO3X8PGXOr9MfO
+         27guwNNyMJRbXvYoPvcn2+SOMPfBEAIolvLJ1NJBgjuCA2nqD3gs+VATaw4iJSpvae
+         0+8MmKtLZitZu83Igh7zA0p4Wi1UecnRG/psFaa0=
+Date:   Wed, 12 Jun 2019 08:27:30 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sinan Kaya <okaya@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "Zilberman, Zeev" <zeev@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>
+Subject: Re: [PATCH/RESEND] arm64: acpi/pci: invoke _DSM whether to preserve
+ firmware PCI setup
+Message-ID: <20190612132730.GB13533@google.com>
+References: <56715377f941f1953be43b488c2203ec090079a1.camel@kernel.crashing.org>
+ <20190604014945.GE189360@google.com>
+ <960c94eb151ba1d066090774621cf6ca6566d135.camel@kernel.crashing.org>
+ <20190604124959.GF189360@google.com>
+ <e520a4269224ac54798314798a80c080832e68b1.camel@kernel.crashing.org>
+ <d53fc77e1e754ddbd9af555ed5b344c5fa523154.camel@kernel.crashing.org>
+ <20190611233908.GA13533@google.com>
+ <97fd2516fdde7f9f01688af426c103806f68dd2c.camel@kernel.crashing.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM0PR04MB67383023B81AEB33DAF9C35584EC0@AM0PR04MB6738.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <97fd2516fdde7f9f01688af426c103806f68dd2c.camel@kernel.crashing.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 11:34:51AM +0000, Z.q. Hou wrote:
-> Hi Lorenzo,
-> 
-> Thanks a lot for your comments!
-> 
-> > -----Original Message-----
-> > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Sent: 2019年6月12日 1:00
-> > To: Z.q. Hou <zhiqiang.hou@nxp.com>
-> > Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
-> > l.subrahmanya@mobiveil.co.in; shawnguo@kernel.org; Leo Li
-> > <leoyang.li@nxp.com>; catalin.marinas@arm.com; will.deacon@arm.com;
-> > Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>;
-> > Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Subject: Re: [PATCHv5 04/20] PCI: mobiveil: Remove the flag
-> > MSI_FLAG_MULTI_PCI_MSI
-> > 
-> > On Fri, Apr 12, 2019 at 08:35:36AM +0000, Z.q. Hou wrote:
-> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > >
-> > > The current code does not support multiple MSIs, so remove the
-> > > corresponding flag from the msi_domain_info structure.
-> > 
-> > Please explain me what's the problem before removing multi MSI support.
-> 
-> NXP LX2 PCIe use the GIC-ITS instead of Mobiveil IP internal MSI
-> controller, so, I didn't encounter problem.
+On Wed, Jun 12, 2019 at 10:06:06AM +1000, Benjamin Herrenschmidt wrote:
+> On Tue, 2019-06-11 at 18:39 -0500, Bjorn Helgaas wrote:
 
-Well, you sent a patch to fix an issue, explain me the issue you
-are fixing then, aka what have you sent this patch for ?
-
-Lorenzo
-
-> Subbu, did you test with Endpoint supporting multi MSI?
-> 
-> Thanks,
-> Zhiqiang
-> 
+> > This is fine, but can we make a tiny step toward doing this in generic
+> > code instead of adding more arch-specific stuff?
 > > 
-> > Thanks,
-> > Lorenzo
-> > 
-> > > Fixes: 1e913e58335f ("PCI: mobiveil: Add MSI support")
-> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> > > ---
-> > > V5:
-> > >  - Corrected the subject.
-> > >
-> > >  drivers/pci/controller/pcie-mobiveil.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-mobiveil.c
-> > > b/drivers/pci/controller/pcie-mobiveil.c
-> > > index 563210e731d3..a0dd337c6214 100644
-> > > --- a/drivers/pci/controller/pcie-mobiveil.c
-> > > +++ b/drivers/pci/controller/pcie-mobiveil.c
-> > > @@ -703,7 +703,7 @@ static struct irq_chip mobiveil_msi_irq_chip = {
-> > >
-> > >  static struct msi_domain_info mobiveil_msi_domain_info = {
-> > >  	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS |
-> > MSI_FLAG_USE_DEF_CHIP_OPS |
-> > > -		   MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
-> > > +		   MSI_FLAG_PCI_MSIX),
-> > >  	.chip	= &mobiveil_msi_irq_chip,
-> > >  };
-> > >
-> > > --
-> > > 2.17.1
-> > >
+> > E.g., evaluate the _DSM in the generic acpi_pci_root_add(), set a
+> > "preserve_config" bit in the struct acpi_pci_root, and test the bit
+> > here?
+> 
+> I'd rather have the flag in the host bridge no ?
+
+Oh, of course, that would make more sense.
+
+> Talking of which, look at the ongoing discussion I have with Lorenzo
+> when it comes to pci_bus_claim_resources vs. what x86 does, I'd love
+> for you to chime in. I'd like to try to consolidate things further
+> accross architectures but there might be reasons I don't see as to why
+> things are different in that area, so ...
+
+I don't know any reasons why things are different per arch.  In most
+cases I suspect FUD.
+
+Speaking of which, *this* patch looks like FUD because it essentially
+says "Linux shouldn't change the PCI configuration on this system" but
+it offers no explanation of *why* the config needs to be preserved.  I
+would really like some note like "run-time firmware depends on the
+addresses of device X".
+
+Bjorn
