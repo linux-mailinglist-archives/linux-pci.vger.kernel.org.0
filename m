@@ -2,124 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 14D5742C1A
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2019 18:23:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5D8242C53
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2019 18:31:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440218AbfFLQXx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jun 2019 12:23:53 -0400
-Received: from foss.arm.com ([217.140.110.172]:56684 "EHLO foss.arm.com"
+        id S2406558AbfFLQbY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jun 2019 12:31:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:56864 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440150AbfFLQXx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 12 Jun 2019 12:23:53 -0400
+        id S2405901AbfFLQbY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 Jun 2019 12:31:24 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F33442B;
-        Wed, 12 Jun 2019 09:23:51 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62D892B;
+        Wed, 12 Jun 2019 09:31:23 -0700 (PDT)
 Received: from redmoon (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EEDCC3F73C;
-        Wed, 12 Jun 2019 09:23:49 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 17:23:47 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 603CE3F73C;
+        Wed, 12 Jun 2019 09:31:22 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 17:31:20 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv5 18/20] PCI: mobiveil: Disable IB and OB windows set by
- bootloader
-Message-ID: <20190612162347.GF15747@redmoon>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-19-Zhiqiang.Hou@nxp.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>
+Cc:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, linux-arm-kernel@lists.infradead.org,
+        rgummal@xilinx.com
+Subject: Re: [PATCH v4] PCI: xilinx-nwl: Fix Multi MSI data programming
+Message-ID: <20190612163120.GG15747@redmoon>
+References: <1560334679-9206-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <86r27zarej.wl-marc.zyngier@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190412083635.33626-19-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <86r27zarej.wl-marc.zyngier@arm.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 08:37:00AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On Wed, Jun 12, 2019 at 02:01:56PM +0100, Marc Zyngier wrote:
+> On Wed, 12 Jun 2019 11:17:59 +0100,
+> Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com> wrote:
+> > 
+> > The current Multi MSI data programming fails if multiple end points
+> > requesting MSI and multi MSI are connected with switch, i.e the current
+> > multi MSI data being given is not considering the number of vectors
+> > being requested in case of multi MSI.
+> > Ex: Two EP's connected via switch, EP1 requesting single MSI first,
+> > EP2 requesting Multi MSI of count four. The current code gives
+> > MSI data 0x0 to EP1 and 0x1 to EP2, but EP2 can modify lower two bits
+> > due to which EP2 also sends interrupt with MSI data 0x0 which results
+> > in always invoking virq of EP1 due to which EP2 MSI interrupt never
+> > gets handled.
 > 
-> Disable all inbound and outbound windows before set up the windows
-> in kernel, in case transactions match the window set by bootloader.
+> I think there is a much simpler explanation for this: Multi-MSI
+> mandates that the base interrupt number is naturally aligned to its
+> size. Having switches in the middle is just a way to expose the issue,
+> but you could see it failing with a single end-point and two MSIs that
+> are assigned on an odd boundary.
 
-There must be no PCI transactions ongoing at bootloader<->OS handover.
-
-The bootloader needs fixing and this patch should be dropped, the host
-bridge driver assumes the host bridge state is disabled, it will
-program the bridge apertures from scratch with no ongoing transactions,
-anything deviating from this behaviour is a bootloader bug and a recipe
-for disaster.
+Agreed, I will rewrite the commit log with a link to the specs,
+a switch has no role to play in this bug.
 
 Lorenzo
 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> ---
-> V5:
->  - No functionality change.
+> > Fix Multi MSI data programming with required alignment by
+> > using number of vectors being requested.
+> > 
+> > Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe
+> > Host Controller")
+> > 
+> > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> > ---
+> > V4:
+> >  - Using a different bitmap registration API whcih serves single and multi
+> >    MSI requests.
+> > ---
+> >  drivers/pci/controller/pcie-xilinx-nwl.c | 11 +++++------
+> >  1 file changed, 5 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
+> > index 81538d7..a9e07b8 100644
+> > --- a/drivers/pci/controller/pcie-xilinx-nwl.c
+> > +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+> > @@ -483,15 +483,13 @@ static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> >  	int i;
+> >  
+> >  	mutex_lock(&msi->lock);
+> > -	bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
+> > -					 nr_irqs, 0);
+> > -	if (bit >= INT_PCI_MSI_NR) {
+> > +	bit = bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
+> > +				      get_count_order(nr_irqs));
+> > +	if (bit < 0) {
+> >  		mutex_unlock(&msi->lock);
+> >  		return -ENOSPC;
+> >  	}
+> >  
+> > -	bitmap_set(msi->bitmap, bit, nr_irqs);
+> > -
+> >  	for (i = 0; i < nr_irqs; i++) {
+> >  		irq_domain_set_info(domain, virq + i, bit + i, &nwl_irq_chip,
+> >  				domain->host_data, handle_simple_irq,
+> > @@ -509,7 +507,8 @@ static void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+> >  	struct nwl_msi *msi = &pcie->msi;
+> >  
+> >  	mutex_lock(&msi->lock);
+> > -	bitmap_clear(msi->bitmap, data->hwirq, nr_irqs);
+> > +	bitmap_release_region(msi->bitmap, data->hwirq,
+> > +			      get_count_order(nr_irqs));
+> >  	mutex_unlock(&msi->lock);
+> >  }
+> >  
+> > -- 
+> > 2.7.4
+> > 
 > 
->  drivers/pci/controller/pcie-mobiveil.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
+> As for the body of the patch:
 > 
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index 8dc87c7a600e..411e9779da12 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -565,6 +565,24 @@ static int mobiveil_bringup_link(struct mobiveil_pcie *pcie)
->  	return -ETIMEDOUT;
->  }
->  
-> +static void mobiveil_pcie_disable_ib_win(struct mobiveil_pcie *pcie, int idx)
-> +{
-> +	u32 val;
-> +
-> +	val = csr_readl(pcie, PAB_PEX_AMAP_CTRL(idx));
-> +	val &= ~(1 << AMAP_CTRL_EN_SHIFT);
-> +	csr_writel(pcie, val, PAB_PEX_AMAP_CTRL(idx));
-> +}
-> +
-> +static void mobiveil_pcie_disable_ob_win(struct mobiveil_pcie *pcie, int idx)
-> +{
-> +	u32 val;
-> +
-> +	val = csr_readl(pcie, PAB_AXI_AMAP_CTRL(idx));
-> +	val &= ~(1 << WIN_ENABLE_SHIFT);
-> +	csr_writel(pcie, val, PAB_AXI_AMAP_CTRL(idx));
-> +}
-> +
->  static void mobiveil_pcie_enable_msi(struct mobiveil_pcie *pcie)
->  {
->  	phys_addr_t msg_addr = pcie->pcie_reg_base;
-> @@ -585,6 +603,13 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
->  {
->  	u32 value, pab_ctrl, type;
->  	struct resource_entry *win;
-> +	int i;
-> +
-> +	/* Disable all inbound/outbound windows */
-> +	for (i = 0; i < pcie->apio_wins; i++)
-> +		mobiveil_pcie_disable_ob_win(pcie, i);
-> +	for (i = 0; i < pcie->ppio_wins; i++)
-> +		mobiveil_pcie_disable_ib_win(pcie, i);
->  
->  	/* setup bus numbers */
->  	value = csr_readl(pcie, PCI_PRIMARY_BUS);
+> Suggested-by: Marc Zyngier <marc.zyngier@arm.com>
+> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+> 
+> Thanks,
+> 
+> 	M.
+> 
 > -- 
-> 2.17.1
-> 
+> Jazz is not dead, it just smells funny.
