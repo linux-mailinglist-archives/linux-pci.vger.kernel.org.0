@@ -2,84 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C95E42773
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2019 15:27:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03C8D427F7
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2019 15:49:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731517AbfFLN1c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jun 2019 09:27:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53416 "EHLO mail.kernel.org"
+        id S2439478AbfFLNt1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jun 2019 09:49:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728977AbfFLN1c (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:27:32 -0400
+        id S2436722AbfFLNt1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 Jun 2019 09:49:27 -0400
 Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B30D20866;
-        Wed, 12 Jun 2019 13:27:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F9A3208CA;
+        Wed, 12 Jun 2019 13:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560346051;
-        bh=fCiEkHOn4IM9qMiFXhbfh3OOyEoB+GLRdm6K+ZhmpQQ=;
+        s=default; t=1560347366;
+        bh=XxmYfcW64R7kQ/+LuOTWFbRjfanmeG4vLimtAoJAOpc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ucR0cDZmFIAHAdxv2kahFhIRw1/m7K1Irbr3F1WGoYg1wU8GwY+GO3X8PGXOr9MfO
-         27guwNNyMJRbXvYoPvcn2+SOMPfBEAIolvLJ1NJBgjuCA2nqD3gs+VATaw4iJSpvae
-         0+8MmKtLZitZu83Igh7zA0p4Wi1UecnRG/psFaa0=
-Date:   Wed, 12 Jun 2019 08:27:30 -0500
+        b=e89zFSzf/8xvYW51g1/UatnItMta3xse8v/K0qRw1bvXcOM9C02qULISPJbuwNvp9
+         vx21Lx0SwpZjMsFqHJnSuznkoCL1FxWVSI/cSLboVq/G5C89u3IhxFKeiN1wwNWSFs
+         Se33l9/x64vRdLKELqgVlCc8uQQIrYC9Ojp12/IM=
+Date:   Wed, 12 Jun 2019 08:49:25 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sinan Kaya <okaya@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "Zilberman, Zeev" <zeev@amazon.com>,
-        "Saidi, Ali" <alisaidi@amazon.com>
-Subject: Re: [PATCH/RESEND] arm64: acpi/pci: invoke _DSM whether to preserve
- firmware PCI setup
-Message-ID: <20190612132730.GB13533@google.com>
-References: <56715377f941f1953be43b488c2203ec090079a1.camel@kernel.crashing.org>
- <20190604014945.GE189360@google.com>
- <960c94eb151ba1d066090774621cf6ca6566d135.camel@kernel.crashing.org>
- <20190604124959.GF189360@google.com>
- <e520a4269224ac54798314798a80c080832e68b1.camel@kernel.crashing.org>
- <d53fc77e1e754ddbd9af555ed5b344c5fa523154.camel@kernel.crashing.org>
- <20190611233908.GA13533@google.com>
- <97fd2516fdde7f9f01688af426c103806f68dd2c.camel@kernel.crashing.org>
+To:     Daniel Drake <drake@endlessm.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        linux-ide@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        mjg59@srcf.ucam.org
+Subject: Re: [PATCH] PCI: Add Intel remapped NVMe device support
+Message-ID: <20190612134925.GC13533@google.com>
+References: <20190610074456.2761-1-drake@endlessm.com>
+ <20190610211628.GA68572@google.com>
+ <CAD8Lp47BmOtEgFUDCMyLrDpoPZSxcWmbrXEbh4PXS0FSG8ukLA@mail.gmail.com>
+ <20190611195254.GB768@google.com>
+ <CAD8Lp479mY=dAhFvGT2ZiJP12KXszhWev=QpCcgfgoew0TxgWg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <97fd2516fdde7f9f01688af426c103806f68dd2c.camel@kernel.crashing.org>
+In-Reply-To: <CAD8Lp479mY=dAhFvGT2ZiJP12KXszhWev=QpCcgfgoew0TxgWg@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 10:06:06AM +1000, Benjamin Herrenschmidt wrote:
-> On Tue, 2019-06-11 at 18:39 -0500, Bjorn Helgaas wrote:
+On Wed, Jun 12, 2019 at 11:16:03AM +0800, Daniel Drake wrote:
+> On Wed, Jun 12, 2019 at 3:52 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-> > This is fine, but can we make a tiny step toward doing this in generic
-> > code instead of adding more arch-specific stuff?
-> > 
-> > E.g., evaluate the _DSM in the generic acpi_pci_root_add(), set a
-> > "preserve_config" bit in the struct acpi_pci_root, and test the bit
-> > here?
+> > Why do you need these to be PCI devices?
 > 
-> I'd rather have the flag in the host bridge no ?
+> I don't have a particular preference, but was trying to explore the
+> suggestions from the last round of review:
+> 
+> https://marc.info/?l=linux-ide&m=147923593001525&w=2
+> "implementing a bridge driver like VMD"
+> http://lists.infradead.org/pipermail/linux-nvme/2017-October/013325.html
+> "The right way to do this would be to expose a fake PCIe root port
+> that both the AHCI and NVMe driver bind to."
+> 
+> > It looks like the main thing
+> > you get is a hook to bind the driver to.  Could you accomplish
+> > something similar by doing some coordination between the ahci and nvme
+> > drivers directly, without involving PCI?
+> 
+> That's basically what Dan Williams originally proposed, and Christoph
+> Hellwig was not particularly excited by it...
+> 
+> Can you take a quick at the original patches and see what you think?
+> https://marc.info/?l=linux-ide&m=147709611121482&w=2
+> https://marc.info/?l=linux-ide&m=147709611621483&w=2
+> https://marc.info/?l=linux-ide&m=147709612221484&w=2
+> https://marc.info/?l=linux-ide&m=147709612721485&w=2
+> https://marc.info/?l=linux-ide&m=147709613221487&w=2
 
-Oh, of course, that would make more sense.
+I see Christoph's objections starting at
+https://marc.info/?l=linux-ide&m=147711904724908&w=2
+and I agree that this AHCI/NVMe melding is ugly.
 
-> Talking of which, look at the ongoing discussion I have with Lorenzo
-> when it comes to pci_bus_claim_resources vs. what x86 does, I'd love
-> for you to chime in. I'd like to try to consolidate things further
-> accross architectures but there might be reasons I don't see as to why
-> things are different in that area, so ...
+But given the existence of this ugly hardware, my opinion is that
+Dan's original patch series (above) is actually a nice way to deal
+with it.  That's exactly the sort of thing I was proposing.
 
-I don't know any reasons why things are different per arch.  In most
-cases I suspect FUD.
-
-Speaking of which, *this* patch looks like FUD because it essentially
-says "Linux shouldn't change the PCI configuration on this system" but
-it offers no explanation of *why* the config needs to be preserved.  I
-would really like some note like "run-time firmware depends on the
-addresses of device X".
+Part of Christoph's objection was the issue of how reset works, and
+that objection absolutely makes sense to me.  But IMO adding a fake
+PCI host bridge and fake PCI devices that really don't work because
+they have read-only config space just smears the issue over
+PCI/VFIO/etc in addition to AHCI and NVMe.
 
 Bjorn
