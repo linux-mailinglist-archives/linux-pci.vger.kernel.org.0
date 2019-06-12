@@ -2,97 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 03C8D427F7
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2019 15:49:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA4D842816
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2019 15:55:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439478AbfFLNt1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jun 2019 09:49:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58948 "EHLO mail.kernel.org"
+        id S2409151AbfFLNyG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jun 2019 09:54:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:53604 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436722AbfFLNt1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:49:27 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F9A3208CA;
-        Wed, 12 Jun 2019 13:49:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560347366;
-        bh=XxmYfcW64R7kQ/+LuOTWFbRjfanmeG4vLimtAoJAOpc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e89zFSzf/8xvYW51g1/UatnItMta3xse8v/K0qRw1bvXcOM9C02qULISPJbuwNvp9
-         vx21Lx0SwpZjMsFqHJnSuznkoCL1FxWVSI/cSLboVq/G5C89u3IhxFKeiN1wwNWSFs
-         Se33l9/x64vRdLKELqgVlCc8uQQIrYC9Ojp12/IM=
-Date:   Wed, 12 Jun 2019 08:49:25 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Daniel Drake <drake@endlessm.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        linux-ide@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        mjg59@srcf.ucam.org
-Subject: Re: [PATCH] PCI: Add Intel remapped NVMe device support
-Message-ID: <20190612134925.GC13533@google.com>
-References: <20190610074456.2761-1-drake@endlessm.com>
- <20190610211628.GA68572@google.com>
- <CAD8Lp47BmOtEgFUDCMyLrDpoPZSxcWmbrXEbh4PXS0FSG8ukLA@mail.gmail.com>
- <20190611195254.GB768@google.com>
- <CAD8Lp479mY=dAhFvGT2ZiJP12KXszhWev=QpCcgfgoew0TxgWg@mail.gmail.com>
+        id S2409112AbfFLNyF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 Jun 2019 09:54:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9224228;
+        Wed, 12 Jun 2019 06:54:04 -0700 (PDT)
+Received: from redmoon (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8EDE13F557;
+        Wed, 12 Jun 2019 06:54:02 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 14:54:00 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: Re: [PATCHv5 19/20] PCI: mobiveil: Add 8-bit and 16-bit register
+ accessors
+Message-ID: <20190612135400.GB15747@redmoon>
+References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
+ <20190412083635.33626-20-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD8Lp479mY=dAhFvGT2ZiJP12KXszhWev=QpCcgfgoew0TxgWg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190412083635.33626-20-Zhiqiang.Hou@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 11:16:03AM +0800, Daniel Drake wrote:
-> On Wed, Jun 12, 2019 at 3:52 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> > Why do you need these to be PCI devices?
+On Fri, Apr 12, 2019 at 08:37:05AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> I don't have a particular preference, but was trying to explore the
-> suggestions from the last round of review:
+> There are some 8-bit and 16-bit registers in PCIe
+> configuration space, so add accessors for them.
 > 
-> https://marc.info/?l=linux-ide&m=147923593001525&w=2
-> "implementing a bridge driver like VMD"
-> http://lists.infradead.org/pipermail/linux-nvme/2017-October/013325.html
-> "The right way to do this would be to expose a fake PCIe root port
-> that both the AHCI and NVMe driver bind to."
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> ---
+> V5:
+>  - Corrected and retouched the subject and changelog.
+>  - No functionality change.
 > 
-> > It looks like the main thing
-> > you get is a hook to bind the driver to.  Could you accomplish
-> > something similar by doing some coordination between the ahci and nvme
-> > drivers directly, without involving PCI?
+>  drivers/pci/controller/pcie-mobiveil.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
-> That's basically what Dan Williams originally proposed, and Christoph
-> Hellwig was not particularly excited by it...
+> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+> index 411e9779da12..456adfee393c 100644
+> --- a/drivers/pci/controller/pcie-mobiveil.c
+> +++ b/drivers/pci/controller/pcie-mobiveil.c
+> @@ -268,11 +268,31 @@ static u32 csr_readl(struct mobiveil_pcie *pcie, u32 off)
+>  	return csr_read(pcie, off, 0x4);
+>  }
+>  
+> +static u32 csr_readw(struct mobiveil_pcie *pcie, u32 off)
+> +{
+> +	return csr_read(pcie, off, 0x2);
+> +}
+> +
+> +static u32 csr_readb(struct mobiveil_pcie *pcie, u32 off)
+> +{
+> +	return csr_read(pcie, off, 0x1);
+> +}
+> +
+>  static void csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
+>  {
+>  	csr_write(pcie, val, off, 0x4);
+>  }
+>  
+> +static void csr_writew(struct mobiveil_pcie *pcie, u32 val, u32 off)
+> +{
+> +	csr_write(pcie, val, off, 0x2);
+> +}
+> +
+> +static void csr_writeb(struct mobiveil_pcie *pcie, u32 val, u32 off)
+> +{
+> +	csr_write(pcie, val, off, 0x1);
+> +}
+> +
+
+They are not used so you should drop this patch.
+
+Lorenzo
+
+>  static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
+>  {
+>  	return (csr_readl(pcie, LTSSM_STATUS) &
+> -- 
+> 2.17.1
 > 
-> Can you take a quick at the original patches and see what you think?
-> https://marc.info/?l=linux-ide&m=147709611121482&w=2
-> https://marc.info/?l=linux-ide&m=147709611621483&w=2
-> https://marc.info/?l=linux-ide&m=147709612221484&w=2
-> https://marc.info/?l=linux-ide&m=147709612721485&w=2
-> https://marc.info/?l=linux-ide&m=147709613221487&w=2
-
-I see Christoph's objections starting at
-https://marc.info/?l=linux-ide&m=147711904724908&w=2
-and I agree that this AHCI/NVMe melding is ugly.
-
-But given the existence of this ugly hardware, my opinion is that
-Dan's original patch series (above) is actually a nice way to deal
-with it.  That's exactly the sort of thing I was proposing.
-
-Part of Christoph's objection was the issue of how reset works, and
-that objection absolutely makes sense to me.  But IMO adding a fake
-PCI host bridge and fake PCI devices that really don't work because
-they have read-only config space just smears the issue over
-PCI/VFIO/etc in addition to AHCI and NVMe.
-
-Bjorn
