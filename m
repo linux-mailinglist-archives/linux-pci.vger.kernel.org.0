@@ -2,234 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E72943989
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 17:14:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A78143941
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 17:12:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732764AbfFMPON (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jun 2019 11:14:13 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:33791 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732257AbfFMNaS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jun 2019 09:30:18 -0400
-Received: by mail-yw1-f67.google.com with SMTP id n21so2254009ywh.0
-        for <linux-pci@vger.kernel.org>; Thu, 13 Jun 2019 06:30:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gpC/BcbJqZm/b199OKanFtWwuFNfn3Nh4TAP7OeO2NA=;
-        b=BXofh382FGQ6XKPL2MfgAofF8BQm+/tgz4ml76l/iJkrG2E/+Dn2CcsfgfbiuEU3tj
-         RuZDqTsDzm6ObH1XEtafWfBUf0me0bv7ELlRK/EDgBLTTgGPCN72PLbTY5I64v8joDPd
-         vxEGj4K1laNQ4h//KZVXnpwBplBXDchGCJsiGY/LoSNyOPFsqamliqkc/auc6LnvDP6z
-         NdYHf9KnTMvUsC+0FFJCOuLumZOWQWWFFm7EjGvUO1RF3FRQHmeF81IER2zJvyqqJvVa
-         tYxikwp4VS73sfIlUIcSULdSIFQqhVNuqn4zfVaeOca9Eh6qh4k1yBfMCKcYh7/N9fdC
-         cPzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gpC/BcbJqZm/b199OKanFtWwuFNfn3Nh4TAP7OeO2NA=;
-        b=VN8pLCUh6PXyHJtWk/wOakhvXb3Y/vgQYQ1o4PeGJ7xrag+j32bohLuUaikgk4c3xx
-         J/ELb76L1MaYwukrtY0K0TFAiRQhBUSRJVC0os8fo6+LYdrKebrOlSbHF/JD50sJV77O
-         pEZuXECMvNi6yj3II8DsOm1ew+PkvA27lDWVU3IX9nZdx3LENNAA4lBaGMXgknHTHH1A
-         g9YPZAXzcycsIsoUa+GHtTuEaI6IOTYPKyG4fwOelauCgbkrA8vV/zqTf3++gTdZUHSx
-         Dl23z/j/bd2GNqkDLgKdmQEQhi4+kLJdxaC0Np57k+Iv2FhLyJvYtaHywVU1meJtVQBQ
-         7XEw==
-X-Gm-Message-State: APjAAAVg7ZT3We4FgdmBmS95L6IEyVFcmjT20HyspoXdug58EYwOIpQl
-        j+9//v3gjJ+Ms0UONO6uImHVmA==
-X-Google-Smtp-Source: APXvYqxTssA/J+9V16+D44hORYBVXWzyfYlD4b0eRTXEkb7pd189qJsIUW5hoWZ7PNVmk1rzS/3Kzg==
-X-Received: by 2002:a0d:ea10:: with SMTP id t16mr32493125ywe.221.1560432617677;
-        Thu, 13 Jun 2019 06:30:17 -0700 (PDT)
-Received: from kudzu.us (76-230-155-4.lightspeed.rlghnc.sbcglobal.net. [76.230.155.4])
-        by smtp.gmail.com with ESMTPSA id p12sm742658ywg.72.2019.06.13.06.30.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 06:30:17 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 09:30:15 -0400
-From:   Jon Mason <jdmason@kudzu.us>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-kselftest@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Eric Pilmore <epilmore@gigaio.com>
-Subject: Re: [PATCH v5 00/10]  Support using MSI interrupts in ntb_transport
-Message-ID: <20190613133014.GE1572@kudzu.us>
-References: <20190523223100.5526-1-logang@deltatee.com>
+        id S1727135AbfFMPMg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jun 2019 11:12:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732283AbfFMNqx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 13 Jun 2019 09:46:53 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75D0F20851;
+        Thu, 13 Jun 2019 13:46:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560433611;
+        bh=fWn/j2co1eFhB4DIu2nWHccLcw32ULZkm0SQPN00GJ0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cG+i+kOKixoCQcmut8i62OMOBk9DfbfDH7NSPCeVW9lIlCZ/A8keKKXgTcX6v8HFC
+         k++fvHnF3gzHI3CIOB1+q1xZS2y/fkJcvmGVwcRODyrgW2R3gL5YUXnsUB7u3CyR05
+         s0iiD7aWcKwY4IIEZ6e80nDIeKylwpvNYD6cH0oY=
+Date:   Thu, 13 Jun 2019 08:46:50 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     lorenzo.pieralisi@arm.com, arnd@arndb.de,
+        linux-pci@vger.kernel.org, rjw@rjwysocki.net,
+        linux-arm-kernel@lists.infradead.org, will.deacon@arm.com,
+        wangkefeng.wang@huawei.com, linuxarm@huawei.com,
+        andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com
+Subject: Re: [PATCH v4 2/3] lib: logic_pio: Reject accesses to unregistered
+ CPU MMIO regions
+Message-ID: <20190613134650.GF13533@google.com>
+References: <1560262374-67875-1-git-send-email-john.garry@huawei.com>
+ <1560262374-67875-3-git-send-email-john.garry@huawei.com>
+ <20190613032034.GE13533@google.com>
+ <2d5e6112-be27-33c2-c1fd-6ab06405fa40@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190523223100.5526-1-logang@deltatee.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <2d5e6112-be27-33c2-c1fd-6ab06405fa40@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 23, 2019 at 04:30:50PM -0600, Logan Gunthorpe wrote:
-> This is another resend as there has been no feedback since v4.
-> Seems Jon has been MIA this past cycle so hopefully he appears on the
-> list soon.
+On Thu, Jun 13, 2019 at 11:17:37AM +0100, John Garry wrote:
+> On 13/06/2019 04:20, Bjorn Helgaas wrote:
+> > On Tue, Jun 11, 2019 at 10:12:53PM +0800, John Garry wrote:
+> > > Currently when accessing logical indirect PIO addresses in
+> > > logic_{in, out}{,s}, we first ensure that the region is registered.
 > 
-> I've addressed the feedback so far and rebased on the latest kernel
-> and would like this to be considered for merging this cycle.
+> > I think logic_pio is specifically concerned with I/O port space, so
+> > it's a little bit unfortunate that we named this "PIO".
+> > 
+> > PIO is a general term for "Programmed I/O", which just means the CPU
+> > is involved in each transfer, as opposed to DMA.  The transfers can be
+> > to either MMIO or I/O port space.
+> > 
+> > So this ends up being a little confusing because I think you mean
+> > "Port I/O", not "Programmed I/O".
 > 
-> The only outstanding issue I know of is that it still will not work
-> with IDT hardware, but ntb_transport doesn't work with IDT hardware
-> and there is still no sensible common infrastructure to support
-> ntb_peer_mw_set_trans(). Thus, I decline to consider that complication
-> in this patchset. However, I'll be happy to review work that adds this
-> feature in the future.
+> Personally I agree that the naming isn't great. But then Arnd does think
+> that "PIO" is appropriate.
 > 
-> Also, as the port number and resource index stuff is a bit complicated,
-> I made a quick out of tree test fixture to ensure it's correct[1]. As
-> an excerise I also wrote some test code[2] using the upcomming KUnit
-> feature.
+> There were many different names along the way to this support merged, and I
+> think that the naming became almost irrelevant in the end.
 
-Sorry for the delay.  The patch is now in the ntb-next branch.  We've
-missed window for 5.2, but it will be in the 5.3 pull request (barring
-last minute comments).
+Yep, Arnd is right.  The "PIO" name contributed a little to my
+confusion, but I think the bigger piece was that I read the "indirect
+PIO addresses" above as being parallel to the "CPU MMIO regions"
+below, when in fact, they are not.  The arguments to logic_inb() are
+always port addresses, never CPU MMIO addresses, but in some cases
+logic_inb() internally references a CPU MMIO region that corresponds
+to the port address.
 
-Thanks,
-Jon
+Possible commit log text:
 
+  The logic_{in,out}*() functions access two regions of I/O port
+  addresses:
+
+    1) [0, MMIO_UPPER_LIMIT): these are assumed to be
+       LOGIC_PIO_CPU_MMIO regions, where a bridge converts CPU loads
+       and stores to MMIO space on its primary side into I/O port
+       transactions on its secondary side.
+
+    2) [MMIO_UPPER_LIMIT, IO_SPACE_LIMIT): these are assumed to be
+       LOGIC_PIO_INDIRECT regions, where we verify that the region was
+       registered by logic_pio_register_range() before calling the
+       logic_pio_host_ops functions to perform the access.
+
+  Previously there was no requirement that accesses to the
+  LOGIC_PIO_CPU_MMIO area matched anything registered by
+  logic_pio_register_range(), and accesses to unregistered I/O ports
+  could cause exceptions like the one below.
+
+  Verify that accesses to ports in the LOGIC_PIO_CPU_MMIO area
+  correspond to registered ranges.  Accesses to ports outside those
+  registered ranges fail (logic_in*() returns ~0 data and logic_out*()
+  does nothing).
+
+  This matches the x86 behavior where in*() returns ~0 if no device
+  responds, and out*() is dropped if no device claims it.
+
+> >   1) The simple "bridge converts CPU MMIO space to PCI I/O port space"
+> >      flavor is essentially identical to what ia64 (and probably other
+> >      architectures) does.  This should really be combined somehow.
 > 
-> Logan
+> Maybe. For ia64, it seems to have some "platform" versions of IO port
+> accessors, and then also accessors need a fence barrier. I'm not sure how
+> well that would fit with logical PIO. It would need further analysis.
+
+Right.  That shouldn't be part of this series, but I think it would be
+nice to someday unify the ia64 add_io_space() path with the
+pci_register_io_range() path.  There might have to be ia64-specific
+accessors at the bottom for the fences, but I think the top side could
+be unified because it's conceptually the same thing -- an MMIO region
+that is translated by a bridge to an I/O port region.
+
+> >   2) If you made a default set of logic_pio_host_ops that merely did
+> >      loads/stores and maybe added a couple fields in the struct
+> >      logic_pio_hwaddr, I bet you could unify the two kinds so
+> >      logic_inb() would look something like this:
 > 
-> [1] https://repl.it/repls/ExcitingPresentFile
-> [2] https://github.com/sbates130272/linux-p2pmem/commits/ntb_kunit
+> Yeah, I did consider this. We do not provide host operators for PCI MMIO
+> ranges. We could simply provide regular versions of inb et al for this. A
+> small obstacle for this is that we redefine inb et al, so would need
+> "direct" versions also. It would be strange.
+
+Yeah, just a thought, maybe it wouldn't work out.
+
+> > > Any failed checks silently return.
+> > 
+> > I *think* what you're doing here is making inb/outb/etc work the same
+> > as on x86, i.e., if no device responds to an inb(), the caller gets
+> > ~0, and if no device claims an outb() the data gets dropped.
 > 
-> --
-> 
-> Changes in v5:
-> 
-> * Rebased onto v5.2-rc1 (plus the patches in ntb-next)
-> 
-> --
-> 
-> Changes in v4:
-> 
-> * Rebased onto v5.1-rc6 (No changes)
-> 
-> * Numerous grammar and spelling mistakes spotted by Bjorn
-> 
-> --
-> 
-> Changes in v3:
-> 
-> * Rebased onto v5.1-rc1 (Dropped the first two patches as they have
->   been merged, and cleaned up some minor conflicts in the PCI tree)
-> 
-> * Added a new patch (#3) to calculate logical port numbers that
->   are port numbers from 0 to (number of ports - 1). This is
->   then used in ntb_peer_resource_idx() to fix the issues brought
->   up by Serge.
-> 
-> * Fixed missing __iomem and iowrite calls (as noticed by Serge)
-> 
-> * Added patch 10 which describes ntb_msi_test in the documentation
->   file (as requested by Serge)
-> 
-> * A couple other minor nits and documentation fixes
-> 
-> --
-> 
-> Changes in v2:
-> 
-> * Cleaned up the changes in intel_irq_remapping.c to make them
->   less confusing and add a comment. (Per discussion with Jacob and
->   Joerg)
-> 
-> * Fixed a nit from Bjorn and collected his Ack
-> 
-> * Added a Kconfig dependancy on CONFIG_PCI_MSI for CONFIG_NTB_MSI
->   as the Kbuild robot hit a random config that didn't build
->   without it.
-> 
-> * Worked in a callback for when the MSI descriptor changes so that
->   the clients can resend the new address and data values to the peer.
->   On my test system this was never necessary, but there may be
->   other platforms where this can occur. I tested this by hacking
->   in a path to rewrite the MSI descriptor when I change the cpu
->   affinity of an IRQ. There's a bit of uncertainty over the latency
->   of the change, but without hardware this can acctually occur on
->   we can't test this. This was the result of a discussion with Dave.
-> 
-> --
-> 
-> This patch series adds optional support for using MSI interrupts instead
-> of NTB doorbells in ntb_transport. This is desirable seeing doorbells on
-> current hardware are quite slow and therefore switching to MSI interrupts
-> provides a significant performance gain. On switchtec hardware, a simple
-> apples-to-apples comparison shows ntb_netdev/iperf numbers going from
-> 3.88Gb/s to 14.1Gb/s when switching to MSI interrupts.
-> 
-> To do this, a couple changes are required outside of the NTB tree:
-> 
-> 1) The IOMMU must know to accept MSI requests from aliased bused numbers
-> seeing NTB hardware typically sends proxied request IDs through
-> additional requester IDs. The first patch in this series adds support
-> for the Intel IOMMU. A quirk to add these aliases for switchtec hardware
-> was already accepted. See commit ad281ecf1c7d ("PCI: Add DMA alias quirk
-> for Microsemi Switchtec NTB") for a description of NTB proxy IDs and why
-> this is necessary.
-> 
-> 2) NTB transport (and other clients) may often need more MSI interrupts
-> than the NTB hardware actually advertises support for. However, seeing
-> these interrupts will not be triggered by the hardware but through an
-> NTB memory window, the hardware does not actually need support or need
-> to know about them. Therefore we add the concept of Virtual MSI
-> interrupts which are allocated just like any other MSI interrupt but
-> are not programmed into the hardware's MSI table. This is done in
-> Patch 2 and then made use of in Patch 3.
-> 
-> The remaining patches in this series add a library for dealing with MSI
-> interrupts, a test client and finally support in ntb_transport.
-> 
-> The series is based off of v5.1-rc6 plus the patches in ntb-next.
-> A git repo is available here:
-> 
-> https://github.com/sbates130272/linux-p2pmem/ ntb_transport_msi_v4
-> 
-> Thanks,
-> 
-> Logan
-> 
-> --
-> 
-> Logan Gunthorpe (10):
->   PCI/MSI: Support allocating virtual MSI interrupts
->   PCI/switchtec: Add module parameter to request more interrupts
->   NTB: Introduce helper functions to calculate logical port number
->   NTB: Introduce functions to calculate multi-port resource index
->   NTB: Rename ntb.c to support multiple source files in the module
->   NTB: Introduce MSI library
->   NTB: Introduce NTB MSI Test Client
->   NTB: Add ntb_msi_test support to ntb_test
->   NTB: Add MSI interrupt support to ntb_transport
->   NTB: Describe the ntb_msi_test client in the documentation.
-> 
->  Documentation/ntb.txt                   |  27 ++
->  drivers/ntb/Kconfig                     |  11 +
->  drivers/ntb/Makefile                    |   3 +
->  drivers/ntb/{ntb.c => core.c}           |   0
->  drivers/ntb/msi.c                       | 415 +++++++++++++++++++++++
->  drivers/ntb/ntb_transport.c             | 169 ++++++++-
->  drivers/ntb/test/Kconfig                |   9 +
->  drivers/ntb/test/Makefile               |   1 +
->  drivers/ntb/test/ntb_msi_test.c         | 433 ++++++++++++++++++++++++
->  drivers/pci/msi.c                       |  54 ++-
->  drivers/pci/switch/switchtec.c          |  12 +-
->  include/linux/msi.h                     |   8 +
->  include/linux/ntb.h                     | 196 ++++++++++-
->  include/linux/pci.h                     |   9 +
->  tools/testing/selftests/ntb/ntb_test.sh |  54 ++-
->  15 files changed, 1386 insertions(+), 15 deletions(-)
->  rename drivers/ntb/{ntb.c => core.c} (100%)
->  create mode 100644 drivers/ntb/msi.c
->  create mode 100644 drivers/ntb/test/ntb_msi_test.c
-> 
-> --
-> 2.20.1
+> Correct, but with a caveat: when you say no device responds, this means that
+> - for arm64 case - no PCI MMIO region is mapped.
+
+Yep.  I was describing the x86 behavior, where we don't do any mapping
+and all we can say is that no device responded.
+
+Bjorn
