@@ -2,132 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9915C44FD7
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 01:07:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A89444FDD
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 01:10:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfFMXHt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jun 2019 19:07:49 -0400
-Received: from gate.crashing.org ([63.228.1.57]:37646 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727060AbfFMXHt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 13 Jun 2019 19:07:49 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5DN7ZDZ014484;
-        Thu, 13 Jun 2019 18:07:36 -0500
-Message-ID: <e6c7854ae360be513f6f43729ed6d4052e289376.camel@kernel.crashing.org>
-Subject: Re: [RFC PATCH v2] arm64: acpi/pci: invoke _DSM whether to preserve
- firmware PCI setup
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sinan Kaya <okaya@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Date:   Fri, 14 Jun 2019 09:07:35 +1000
-In-Reply-To: <20190613190248.GH13533@google.com>
-References: <5783e36561bb77a1deb6ba67e5a9824488cc69c6.camel@kernel.crashing.org>
-         <20190613190248.GH13533@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726734AbfFMXKw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jun 2019 19:10:52 -0400
+Received: from mail-eopbgr30074.outbound.protection.outlook.com ([40.107.3.74]:60726
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726603AbfFMXKv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 13 Jun 2019 19:10:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=739c5jQXQ0DYsV5q9yGUEJ3j5bapmAiM/he/yV381G8=;
+ b=puGmflYjZFCuMlHhWT3QE5twzlouftmMldP/seG3MfaVrk/szmnlBQwflcPwHA5qHBdvpNlr0Ehq1pu9NgbvTfObVG4KcDZE5q2/IUSvXbgRf/4j6Jza9jw82Fn8p9yrYP4L3YI7cXQvUgFCt7/Je5ZOTooBYEI8LKLE7m5GxvY=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5216.eurprd05.prod.outlook.com (20.178.12.93) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.13; Thu, 13 Jun 2019 23:10:45 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
+ 23:10:45 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: dev_pagemap related cleanups
+Thread-Topic: dev_pagemap related cleanups
+Thread-Index: AQHVIcx5DdVrUhs/HUiF5V2FmmsvzKaZ58OAgAAlLoCAAAtCgIAAHqKA
+Date:   Thu, 13 Jun 2019 23:10:45 +0000
+Message-ID: <20190613231039.GE22062@mellanox.com>
+References: <20190613094326.24093-1-hch@lst.de>
+ <CAPcyv4jBdwYaiVwkhy6kP78OBAs+vJme1UTm47dX4Eq_5=JgSg@mail.gmail.com>
+ <20190613204043.GD22062@mellanox.com> <20190613212101.GA27174@lst.de>
+In-Reply-To: <20190613212101.GA27174@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: QB1PR01CA0005.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:2d::18) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6deefc2c-1cfe-42b4-a481-08d6f0545d5a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5216;
+x-ms-traffictypediagnostic: VI1PR05MB5216:
+x-microsoft-antispam-prvs: <VI1PR05MB52161DFBA773BE4F896E6107CFEF0@VI1PR05MB5216.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(39860400002)(346002)(366004)(136003)(199004)(189003)(66446008)(64756008)(66476007)(66946007)(1076003)(7416002)(66556008)(73956011)(5660300002)(2906002)(8936002)(81156014)(26005)(8676002)(71200400001)(71190400001)(102836004)(256004)(6506007)(386003)(76176011)(86362001)(52116002)(486006)(99286004)(11346002)(446003)(4744005)(7116003)(2616005)(476003)(66066001)(6246003)(305945005)(33656002)(14454004)(25786009)(7736002)(6116002)(3846002)(4326008)(478600001)(54906003)(6916009)(36756003)(68736007)(6512007)(186003)(81166006)(6436002)(6486002)(316002)(53936002)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5216;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: IxerV2Ues/JSOcb8GLs2M1W5creYR/hSc2Ld7NaDx5lom/4gPQHVuDzz+iegaHaiak68YoBo1qmhTmWqPMNuSkxTUbVDMXKuD+y0MYQ+s148o+lJXY45QaReW0xTCbwj4fTWzHYpaVgpzyOI2uJGjuwe8zltTJyKEO+MbJPVH952uN+EGFGVWkIU0VwBnwdLoi/L7zVf4zyvko2537aRaFOVkWfyl2VO9zl8rGK2luIOihGZ8nCEfxFwMA3a3fs9GSSPfKJWGaMt2M06AQU/jZvaIfQtev7Y7HJI6lt7AVU7FDor+VuW5RzO0wnekKZou8W3toLRY+zBldGHKLLUUoWpjJihE6y4qwY2VvpWwKCfX/0BM5glNwMu0BPr3g1xu7K7ivPeEJiAMRgbFvD52ghJtJEYdA1bBTbY/VbQzx8=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <9DD504E2832E244190B09BBD35CAF05D@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6deefc2c-1cfe-42b4-a481-08d6f0545d5a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 23:10:45.6882
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5216
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 2019-06-13 at 14:02 -0500, Bjorn Helgaas wrote:
-> 
-> PCI FW r3.2 says 0 means "the OS must not ignore config done by
-> firmware."  That means we must keep the FW configuration intact.
+On Thu, Jun 13, 2019 at 11:21:01PM +0200, Christoph Hellwig wrote:
+> On Thu, Jun 13, 2019 at 08:40:46PM +0000, Jason Gunthorpe wrote:
+> > > Perhaps we should pull those out and resend them through hmm.git?
+> >=20
+> > It could be done - but how bad is the conflict resolution?
+>=20
+> Trivial.  All but one patch just apply using git-am, and the other one
+> just has a few lines of offsets.
 
-So I tried implementing what you seem to want and it doesn't make sense
-imho.
+Okay, NP then, trivial ones are OK to send to Linus..
 
-I think the wording of the spec is terrible and doesn't convey the
-intent here.
+If Andrew gets them into -rc5 then I will get rc5 into hmm.git next
+week.
 
-What is it that _DSM #5 is about ? Is it about telling us that the FW
-config shall not be trusted ? That seem to be its original intent based
-on the existing wording and the fact that "1" says "may ignore".
-
-Or was it always intended to be some kind of inverted logic with 0
-meaning that we *must* preserve what FW did ?
-
-But preserving what FW did was always the default for x86 and
-Windows... It's just that we happen to do something wrong today on
-Linux/ARM64 which is to always reassign everything.
-
-The way Linux resource assignment works accross platforms has generally
-been based on one of these 3 methods:
-
- - The standard x86 method, which is to claim what's there when it
-doesn't look completely busted and has been assigned, then assign
-what's left. This allows for FW doing partial assignment, and allows to
-work around a number of BIOS bugs.
-
- - The "probe only" method. This was created independently on powerpc
-and some other archs afaik. At least for powerpc, the reason for that
-is some interesting virtualization cases where we just cannot touch or
-change or move anything. The effect is to not reassign even what we
-dont like, and not call pci_assign_unassign_resources().
-
- - The "reassign everything" method. This is used by almost all
-embedded patforms accross archs. All arm32, all arm64 today (but we
-agree that's wrong), all embedded powerpc etc... This is basically
-meant for us not trusting whatever random uboot or other embedded FW,
-if any, and do a full from-scratch assignment. There are issues in how
-that is implemented accross the various platforms/archs, some for
-example still honor existing bus numbers and some don't, but I doubt
-it's intentional etc... but that method is there to stay.
-
-Now, the questions are two fold
-
-  - How do we map _DSM #5 to these, at least on arm64, maybe in the
-long run we can also look at affecting x86, but that's less urgent.
-
-  - How do I ensure the above fixes my Amazon platform ? :-)
-
-There's one obvious thing here. If we don't want to break existing
-things, then the absence of _DSM #5 must not change our existing
-behaviour. I think we can all agree on this.
-
-We might explore changing arm64 default behaviour as a second step
-since we all agree it's not doing what it should, but we also know that
-it will probably break some things so we need to be careful, understand
-the issues and work around them. This isn't the scope of the initial
-_DSM #5 patch.
-
-That leaves us with the _DSM #5 present cases.
-
-Now we have two values. What do they mean ? As I already said before,
-the wording with "must not ignore" and "may ignore" is completely
-useless and doesn't tell us a thing about the intention here. We don't
-know why the FW folks may have put a given value here, and what they
-expect us to do about it.
-
-What we do know is that Seattle returns 1 and needs reassignment, and
-we do know that the Amazon platforms return 0 and will want us to not
-touch the existing setup.
-
-However, does 1 means "business as usual" or does it mean "reassign
-everything" ?
-
-Does 0 means "probe only" ? Or do we still do an assignment pass for
-things that the FW may have left unassigned ?
-
-Today in Linux, the "probe only" logic tends to not call
-pci_assign_unassigned_resources for example.
-
-From a pure reading of the spec, there's an argument to be made that
-both 0 and 1 values can lead to the same code that reads what's there
-and reassign what's missing.
-
-So this is a mess, a usual when it comes to specs written by
-committees, but at this stage I'm at a loss as to what you want me to
-do.
-
-Cheers,
-Ben.
- 
-
+Thanks,
+Jason
