@@ -2,228 +2,476 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 87DD443C8D
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 17:36:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B427543A5B
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 17:20:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727624AbfFMPgY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jun 2019 11:36:24 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18566 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727182AbfFMKRy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 13 Jun 2019 06:17:54 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 81ECDD7D7A706F99E1A3;
-        Thu, 13 Jun 2019 18:17:51 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 13 Jun 2019
- 18:17:44 +0800
-Subject: Re: [PATCH v4 2/3] lib: logic_pio: Reject accesses to unregistered
- CPU MMIO regions
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <1560262374-67875-1-git-send-email-john.garry@huawei.com>
- <1560262374-67875-3-git-send-email-john.garry@huawei.com>
- <20190613032034.GE13533@google.com>
-CC:     <lorenzo.pieralisi@arm.com>, <arnd@arndb.de>,
-        <linux-pci@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <linux-arm-kernel@lists.infradead.org>, <will.deacon@arm.com>,
-        <wangkefeng.wang@huawei.com>, <linuxarm@huawei.com>,
-        <andriy.shevchenko@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <catalin.marinas@arm.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <2d5e6112-be27-33c2-c1fd-6ab06405fa40@huawei.com>
-Date:   Thu, 13 Jun 2019 11:17:37 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        id S1727006AbfFMPUk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jun 2019 11:20:40 -0400
+Received: from mga18.intel.com ([134.134.136.126]:29704 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732017AbfFMMw6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 13 Jun 2019 08:52:58 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 05:52:56 -0700
+X-ExtLoop1: 1
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 13 Jun 2019 05:52:53 -0700
+Received: by lahna (sSMTP sendmail emulation); Thu, 13 Jun 2019 15:52:52 +0300
+Date:   Thu, 13 Jun 2019 15:52:52 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 3/3] PCI / ACPI: Handle sibling devices sharing power
+ resources
+Message-ID: <20190613125252.GL2640@lahna.fi.intel.com>
+References: <20190605145820.37169-1-mika.westerberg@linux.intel.com>
+ <CAJZ5v0gwqMd0W43KQoU80=fdYooLkgPg1n0cbbAWjPqrOepYsg@mail.gmail.com>
+ <20190606143606.GN2781@lahna.fi.intel.com>
+ <26924432.Xal58bVLXT@kreacher>
 MIME-Version: 1.0
-In-Reply-To: <20190613032034.GE13533@google.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <26924432.Xal58bVLXT@kreacher>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 13/06/2019 04:20, Bjorn Helgaas wrote:
-> On Tue, Jun 11, 2019 at 10:12:53PM +0800, John Garry wrote:
->> Currently when accessing logical indirect PIO addresses in
->> logic_{in, out}{,s}, we first ensure that the region is registered.
->
+On Thu, Jun 13, 2019 at 12:38:50AM +0200, Rafael J. Wysocki wrote:
+> Basically, at the pci_acpi_setup() time dev and adev need to be passed to a function that
+> will add dev as a "dependent device" for each of the power resources in the adev's D0
+> list.
+> 
+> Next whenever a power resource with a list of "dependent devices" goes _ON successfully,
+> pm_request_resume() needs to be called for each device in that list.
+> 
+> Finally, at the pci_acpi_cleanup() time, dev needs to be removed from the lists of
+> "dependent devices" for all power resources in its ACPI companion's D0 list.
+> 
+> At least that's how I see that.
 
-Hi Bjorn,
+Thanks for the suggestion. This seems to make it work only for PCI
+devices, though. Is that the intention?
 
-> I think logic_pio is specifically concerned with I/O port space, so
-> it's a little bit unfortunate that we named this "PIO".
->
-> PIO is a general term for "Programmed I/O", which just means the CPU
-> is involved in each transfer, as opposed to DMA.  The transfers can be
-> to either MMIO or I/O port space.
->
-> So this ends up being a little confusing because I think you mean
-> "Port I/O", not "Programmed I/O".
->
+I went for the all ACPI devices path instead where we add all devices
+sharing the power resource as "consumers" for that resource. I haven't
+fully tested the approach yet but the draft patch is below. I have no
+issues doing what you say above, though :)
 
-Personally I agree that the naming isn't great. But then Arnd does think 
-that "PIO" is appropriate.
+----8<----8<----8<----8<----8<----8<----8<----8<----8<----8<----8<----
 
-There were many different names along the way to this support merged, 
-and I think that the naming became almost irrelevant in the end.
-
->> However, no such check exists for CPU MMIO regions. The CPU MMIO regions
->> would be registered by the PCI host (when PCI_IOBASE is defined) in
->> pci_register_io_range().
->
-> IIUC this "CPU MMIO region" is an MMIO region where a memory load or
-> store from the CPU is converted by a PCI host bridge into an I/O port
-> transaction on PCI.
->
-
-Right
-
-> Again IIUC, logic_pio supports two kinds of I/O port space accesses:
->
->   1) The simple "bridge converts loads/stores to an MMIO region to PCI
->      I/O port transactions" kind, and
->
->   2) The more complicated "somebody supplies logic_pio_host_ops
->      functions that do arbitrary magic to generate I/O port
->      transactions on some bus.
-
-Right
-
->
-> And this patch is making the first kind smarter.  Previously it would
-> perform the memory access whenever "addr < MMIO_UPPER_LIMIT", but
-> after this patch it will only do it if find_io_range() succeeds.
->
-> Right?  Sorry for restating what probably should have been obvious to
-> me.
->
-
-Yes, right. A logical PIO range is registered for a PCI MMIO region in 
-pci_register_io_range(). As such, if no range is registered, we can 
-assume that no PCI MMIO region has been mapped and discard any attempted 
-access.
-
-> I have two observations here:
->
->   1) The simple "bridge converts CPU MMIO space to PCI I/O port space"
->      flavor is essentially identical to what ia64 (and probably other
->      architectures) does.  This should really be combined somehow.
->
-
-Maybe. For ia64, it seems to have some "platform" versions of IO port 
-accessors, and then also accessors need a fence barrier. I'm not sure 
-how well that would fit with logical PIO. It would need further analysis.
-
-IIRC, PPC did have its own custom version of "indirect IO". So we could 
-look to factor that out.
-
->   2) If you made a default set of logic_pio_host_ops that merely did
->      loads/stores and maybe added a couple fields in the struct
->      logic_pio_hwaddr, I bet you could unify the two kinds so
->      logic_inb() would look something like this:
->
-
-Yeah, I did consider this. We do not provide host operators for PCI MMIO 
-ranges. We could simply provide regular versions of inb et al for this. 
-A small obstacle for this is that we redefine inb et al, so would need 
-"direct" versions also. It would be strange.
-
-So I'm not sure on the value of this.
-
->        u8 logic_inb(unsigned long addr)
->        {
->          struct logic_pio_hwaddr *range = find_io_range(addr);
->
-> 	 if (!range)
-> 	   return (u8) ~0;
->
->          return (u8) range->ops->in(range->hostdata, addr, sz);
->        }
->
->> We have seen scenarios when systems which don't have a PCI host, or they
->> do but the PCI host probe fails, certain drivers attempts to still attempt
->> to access PCI IO ports; examples are in [1] and [2].
->>
->> Such is a case on an ARM64 system without a PCI host:
->>
->> root@(none)$ insmod hwmon/f71805f.ko
->>  Unable to handle kernel paging request at virtual address ffff7dfffee0002e
->>  Mem abort info:
->>    ESR = 0x96000046
->>    Exception class = DABT (current EL), IL = 32 bits
->>    SET = 0, FnV = 0
->>    EA = 0, S1PTW = 0
->>  Data abort info:
->>    ISV = 0, ISS = 0x00000046
->>    CM = 0, WnR = 1
->>  swapper pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
->>  [ffff7dfffee0002e] pgd=000000000141c003, pud=000000000141d003, pmd=0000000000000000
->>  Internal error: Oops: 96000046 [#1] PREEMPT SMP
->>  Modules linked in: f71805f(+)
->>  CPU: 20 PID: 2736 Comm: insmod Not tainted 5.1.0-rc1-00003-g6f1bfec2a620-dirty #99
->>  Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT21 Nemo 2.0 RC0 04/18/2018
->>  pstate: 80000005 (Nzcv daif -PAN -UAO)
->>  pc : logic_outb+0x54/0xb8
->>  lr : f71805f_find+0x2c/0x1b8 [f71805f]
->>  sp : ffff000025fbba90
->>  x29: ffff000025fbba90 x28: ffff000008b944d0
->>  x27: ffff000025fbbdf0 x26: 0000000000000100
->>  x25: ffff801f8c270580 x24: ffff000011420000
->>  x23: ffff000025fbbb3e x22: ffff000025fbbb40
->>  x21: ffff000008b991b8 x20: 0000000000000087
->>  x19: 000000000000002e x18: ffffffffffffffff
->>  x17: 0000000000000000 x16: 0000000000000000
->>  x15: ffff00001127d6c8 x14: 0000000000000000
->>  x13: 0000000000000000 x12: 0000000000000000
->>  x11: 0000000000010820 x10: 0000841fdac40000
->>  x9 : 0000000000000001 x8 : 0000000040000000
->>  x7 : 0000000000210d00 x6 : 0000000000000000
->>  x5 : ffff801fb6a46040 x4 : ffff841febeaeda0
->>  x3 : 0000000000ffbffe x2 : ffff000025fbbb40
->>  x1 : ffff7dfffee0002e x0 : ffff7dfffee00000
->>  Process insmod (pid: 2736, stack limit = 0x(____ptrval____))
->>  Call trace:
->>   logic_outb+0x54/0xb8
->>   f71805f_find+0x2c/0x1b8 [f71805f]
->>   f71805f_init+0x38/0xe48 [f71805f]
->>   do_one_initcall+0x5c/0x198
->>   do_init_module+0x54/0x1b0
->>   load_module+0x1dc4/0x2158
->>   __se_sys_init_module+0x14c/0x1e8
->>   __arm64_sys_init_module+0x18/0x20
->>   el0_svc_common+0x5c/0x100
->>   el0_svc_handler+0x2c/0x80
->>   el0_svc+0x8/0xc
->>  Code: d2bfdc00 f2cfbfe0 f2ffffe0 8b000021 (39000034)
->>  ---[ end trace 10ea80bde051bbfc ]---
->> root@(none)$
->>
->> Well-behaved drivers call request_{muxed_}region() to grab the IO port
->> region, but success here still doesn't actually mean that there is some IO
->> port mapped in this region.
->>
->> This patch adds a check to ensure that the CPU MMIO region is registered
->> prior to accessing the PCI IO ports.
->>
->> Any failed checks silently return.
->
-> I *think* what you're doing here is making inb/outb/etc work the same
-> as on x86, i.e., if no device responds to an inb(), the caller gets
-> ~0, and if no device claims an outb() the data gets dropped.
->
-
-Correct, but with a caveat: when you say no device responds, this means 
-that - for arm64 case - no PCI MMIO region is mapped.
-
-> That should be explicit in the commit log.
->
->> [1] https://lore.kernel.org/linux-pci/56F209A9.4040304@huawei.com
->> [2] https://lore.kernel.org/linux-arm-kernel/e6995b4a-184a-d8d4-f4d4-9ce75d8f47c0@huawei.com/
->>
-
-Thanks
-
+diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
+index f6157d4d637a..e840299c3293 100644
+--- a/drivers/acpi/internal.h
++++ b/drivers/acpi/internal.h
+@@ -127,10 +127,10 @@ int __acpi_device_uevent_modalias(struct acpi_device *adev,
+                                   Power Resource
+    -------------------------------------------------------------------------- */
+ int acpi_power_init(void);
+-void acpi_power_resources_list_free(struct list_head *list);
+-int acpi_extract_power_resources(union acpi_object *package, unsigned int start,
+-				 struct list_head *list);
+-int acpi_add_power_resource(acpi_handle handle);
++void acpi_power_resources_list_free(struct acpi_device *device, struct list_head *list);
++int acpi_extract_power_resources(struct acpi_device *device,
++	union acpi_object *package, unsigned int start, struct list_head *list);
++int acpi_add_power_resource(struct acpi_device *adev, acpi_handle handle);
+ void acpi_power_add_remove_device(struct acpi_device *adev, bool add);
+ int acpi_power_wakeup_list_init(struct list_head *list, int *system_level);
+ int acpi_device_sleep_wake(struct acpi_device *dev,
+diff --git a/drivers/acpi/power.c b/drivers/acpi/power.c
+index a916417b9e70..31817f931381 100644
+--- a/drivers/acpi/power.c
++++ b/drivers/acpi/power.c
+@@ -45,6 +45,8 @@ ACPI_MODULE_NAME("power");
+ struct acpi_power_resource {
+ 	struct acpi_device device;
+ 	struct list_head list_node;
++	struct list_head consumers;
++	struct mutex consumer_lock;
+ 	char *name;
+ 	u32 system_level;
+ 	u32 order;
+@@ -58,6 +60,11 @@ struct acpi_power_resource_entry {
+ 	struct acpi_power_resource *resource;
+ };
+ 
++struct acpi_power_resource_consumer {
++	struct list_head node;
++	struct acpi_device *consumer;
++};
++
+ static LIST_HEAD(acpi_power_resource_list);
+ static DEFINE_MUTEX(power_resource_list_lock);
+ 
+@@ -81,6 +88,111 @@ static struct acpi_power_resource *acpi_power_get_context(acpi_handle handle)
+ 	return to_power_resource(device);
+ }
+ 
++static int acpi_power_add_consumer(struct acpi_power_resource *resource,
++				   struct acpi_device *device)
++{
++	struct acpi_power_resource_consumer *consumer;
++	int ret = 0;
++
++	if (!device)
++		return 0;
++
++	mutex_lock(&resource->consumer_lock);
++
++	list_for_each_entry(consumer, &resource->consumers, node) {
++		/* Don't add it twice */
++		if (consumer->consumer == device)
++			goto unlock;
++	}
++
++	consumer = kzalloc(sizeof(*consumer), GFP_KERNEL);
++	if (!consumer) {
++		ret = -ENOMEM;
++		goto unlock;
++	}
++
++	consumer->consumer = device;
++	list_add_tail(&consumer->node, &resource->consumers);
++
++	acpi_handle_debug(device->handle, "added dependency to %s\n",
++			  resource->name);
++
++unlock:
++	mutex_unlock(&resource->consumer_lock);
++	return ret;
++}
++
++static void acpi_power_remove_consumer(struct acpi_power_resource *resource,
++				       struct acpi_device *device)
++{
++	struct acpi_power_resource_consumer *consumer;
++
++	mutex_lock(&resource->consumer_lock);
++	list_for_each_entry(consumer, &resource->consumers, node) {
++		if (consumer->consumer == device) {
++			list_del(&consumer->node);
++			kfree(consumer);
++
++			acpi_handle_debug(device->handle,
++					  "removed dependency to %s\n",
++					  resource->name);
++			break;
++		}
++	}
++	mutex_unlock(&resource->consumer_lock);
++}
++
++static void
++acpi_power_resume_consumer(const struct acpi_power_resource *resource,
++			  struct acpi_device *device)
++{
++	struct device *dev;
++
++	/*
++	 * If the device is prepared to wake we need to resume it now so
++	 * that the driver can re-program it to do so. For non-wake devices
++	 * we can leave them as is. The driver then restores the device
++	 * when it is needed next time.
++	 */
++	if (!acpi_device_can_wakeup(device) || !device->wakeup.prepare_count)
++		return;
++
++	dev = acpi_get_first_physical_node(device);
++	if (dev) {
++		acpi_handle_debug(device->handle,
++				  "resuming %s because %s was turned on\n",
++				  dev_name(dev), resource->name);
++		pm_runtime_resume(dev);
++	}
++}
++
++static int acpi_power_resume_consumers(struct acpi_power_resource *resource,
++				       struct acpi_device *device)
++{
++	struct acpi_power_resource_consumer *consumer;
++	int ret = 0;
++
++	mutex_lock(&resource->consumer_lock);
++
++	list_for_each_entry(consumer, &resource->consumers, node) {
++		struct acpi_device *adev = consumer->consumer;
++		int state, ret;
++
++		/* Skip the device that originated the power on request */
++		if (adev == device)
++			continue;
++
++		ret = acpi_power_get_inferred_state(consumer->consumer, &state);
++		if (!ret && adev->power.state > ACPI_STATE_D0 &&
++		    state == ACPI_STATE_D0) {
++			acpi_power_resume_consumer(resource, adev);
++		}
++	}
++
++	mutex_unlock(&resource->consumer_lock);
++	return ret;
++}
++
+ static int acpi_power_resources_list_add(acpi_handle handle,
+ 					 struct list_head *list)
+ {
+@@ -108,12 +220,14 @@ static int acpi_power_resources_list_add(acpi_handle handle,
+ 	return 0;
+ }
+ 
+-void acpi_power_resources_list_free(struct list_head *list)
++void acpi_power_resources_list_free(struct acpi_device *device, struct list_head *list)
+ {
+ 	struct acpi_power_resource_entry *entry, *e;
+ 
+ 	list_for_each_entry_safe(entry, e, list, node) {
+ 		list_del(&entry->node);
++		if (device)
++			acpi_power_remove_consumer(entry->resource, device);
+ 		kfree(entry);
+ 	}
+ }
+@@ -135,8 +249,8 @@ static bool acpi_power_resource_is_dup(union acpi_object *package,
+ 	return false;
+ }
+ 
+-int acpi_extract_power_resources(union acpi_object *package, unsigned int start,
+-				 struct list_head *list)
++int acpi_extract_power_resources(struct acpi_device *device,
++	union acpi_object *package, unsigned int start, struct list_head *list)
+ {
+ 	unsigned int i;
+ 	int err = 0;
+@@ -159,7 +273,7 @@ int acpi_extract_power_resources(union acpi_object *package, unsigned int start,
+ 		if (acpi_power_resource_is_dup(package, start, i))
+ 			continue;
+ 
+-		err = acpi_add_power_resource(rhandle);
++		err = acpi_add_power_resource(device, rhandle);
+ 		if (err)
+ 			break;
+ 
+@@ -168,7 +282,7 @@ int acpi_extract_power_resources(union acpi_object *package, unsigned int start,
+ 			break;
+ 	}
+ 	if (err)
+-		acpi_power_resources_list_free(list);
++		acpi_power_resources_list_free(device, list);
+ 
+ 	return err;
+ }
+@@ -258,18 +372,33 @@ static int acpi_power_on_unlocked(struct acpi_power_resource *resource)
+ 		result = __acpi_power_on(resource);
+ 		if (result)
+ 			resource->ref_count--;
++		else
++			result = 1;
+ 	}
+ 	return result;
+ }
+ 
+-static int acpi_power_on(struct acpi_power_resource *resource)
++static int acpi_power_on(struct acpi_device *device,
++			 struct acpi_power_resource *resource)
+ {
+ 	int result;
+ 
+ 	mutex_lock(&resource->resource_lock);
+ 	result = acpi_power_on_unlocked(resource);
+ 	mutex_unlock(&resource->resource_lock);
+-	return result;
++
++	if (result <= 0)
++		return result;
++
++	/*
++	 * The power resource was physically turned on. Because of this
++	 * some of the devices sharing it may have been transitioned into
++	 * D0 so we need to runtime resume them to make sure their driver
++	 * re-initializes them properly. This is important for PCI devices
++	 * that go into D0uninitialized and lose their wakeup settings
++	 * otherwise.
++	 */
++	return acpi_power_resume_consumers(resource, device);
+ }
+ 
+ static int __acpi_power_off(struct acpi_power_resource *resource)
+@@ -319,7 +448,7 @@ static int acpi_power_off(struct acpi_power_resource *resource)
+ 	return result;
+ }
+ 
+-static int acpi_power_off_list(struct list_head *list)
++static int acpi_power_off_list(struct acpi_device *device, struct list_head *list)
+ {
+ 	struct acpi_power_resource_entry *entry;
+ 	int result = 0;
+@@ -333,18 +462,18 @@ static int acpi_power_off_list(struct list_head *list)
+ 
+  err:
+ 	list_for_each_entry_continue(entry, list, node)
+-		acpi_power_on(entry->resource);
++		acpi_power_on(device, entry->resource);
+ 
+ 	return result;
+ }
+ 
+-static int acpi_power_on_list(struct list_head *list)
++static int acpi_power_on_list(struct acpi_device *device, struct list_head *list)
+ {
+ 	struct acpi_power_resource_entry *entry;
+ 	int result = 0;
+ 
+ 	list_for_each_entry(entry, list, node) {
+-		result = acpi_power_on(entry->resource);
++		result = acpi_power_on(device, entry->resource);
+ 		if (result)
+ 			goto err;
+ 	}
+@@ -582,7 +711,7 @@ int acpi_enable_wakeup_device_power(struct acpi_device *dev, int sleep_state)
+ 
+ 		if (!resource->wakeup_enabled) {
+ 			err = acpi_power_on_unlocked(resource);
+-			if (!err)
++			if (err >= 0)
+ 				resource->wakeup_enabled = true;
+ 		}
+ 
+@@ -703,7 +832,7 @@ int acpi_power_on_resources(struct acpi_device *device, int state)
+ 	if (!device || state < ACPI_STATE_D0 || state > ACPI_STATE_D3_HOT)
+ 		return -EINVAL;
+ 
+-	return acpi_power_on_list(&device->power.states[state].resources);
++	return acpi_power_on_list(device, &device->power.states[state].resources);
+ }
+ 
+ int acpi_power_transition(struct acpi_device *device, int state)
+@@ -726,11 +855,11 @@ int acpi_power_transition(struct acpi_device *device, int state)
+ 	 * we dereference all power resources used in the current list.
+ 	 */
+ 	if (state < ACPI_STATE_D3_COLD)
+-		result = acpi_power_on_list(
++		result = acpi_power_on_list(device,
+ 			&device->power.states[state].resources);
+ 
+ 	if (!result && device->power.state < ACPI_STATE_D3_COLD)
+-		acpi_power_off_list(
++		acpi_power_off_list(device,
+ 			&device->power.states[device->power.state].resources);
+ 
+ 	/* We shouldn't change the state unless the above operations succeed. */
+@@ -788,7 +917,7 @@ static void acpi_power_add_resource_to_list(struct acpi_power_resource *resource
+ 	mutex_unlock(&power_resource_list_lock);
+ }
+ 
+-int acpi_add_power_resource(acpi_handle handle)
++int acpi_add_power_resource(struct acpi_device *adev, acpi_handle handle)
+ {
+ 	struct acpi_power_resource *resource;
+ 	struct acpi_device *device = NULL;
+@@ -798,8 +927,10 @@ int acpi_add_power_resource(acpi_handle handle)
+ 	int state, result = -ENODEV;
+ 
+ 	acpi_bus_get_device(handle, &device);
+-	if (device)
+-		return 0;
++	if (device) {
++		resource = to_power_resource(device);
++		goto add_consumer;
++	}
+ 
+ 	resource = kzalloc(sizeof(*resource), GFP_KERNEL);
+ 	if (!resource)
+@@ -810,6 +941,8 @@ int acpi_add_power_resource(acpi_handle handle)
+ 				ACPI_STA_DEFAULT);
+ 	mutex_init(&resource->resource_lock);
+ 	INIT_LIST_HEAD(&resource->list_node);
++	INIT_LIST_HEAD(&resource->consumers);
++	mutex_init(&resource->consumer_lock);
+ 	resource->name = device->pnp.bus_id;
+ 	strcpy(acpi_device_name(device), ACPI_POWER_DEVICE_NAME);
+ 	strcpy(acpi_device_class(device), ACPI_POWER_CLASS);
+@@ -840,7 +973,11 @@ int acpi_add_power_resource(acpi_handle handle)
+ 
+ 	acpi_power_add_resource_to_list(resource);
+ 	acpi_device_add_finalize(device);
+-	return 0;
++
++ add_consumer:
++	result = acpi_power_add_consumer(resource, adev);
++	if (!result)
++		return 0;
+ 
+  err:
+ 	acpi_release_power_resource(&device->dev);
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index 6153030451eb..3af0abe5b5e2 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -451,14 +451,14 @@ static void acpi_free_power_resources_lists(struct acpi_device *device)
+ 	int i;
+ 
+ 	if (device->wakeup.flags.valid)
+-		acpi_power_resources_list_free(&device->wakeup.resources);
++		acpi_power_resources_list_free(NULL, &device->wakeup.resources);
+ 
+ 	if (!device->power.flags.power_resources)
+ 		return;
+ 
+ 	for (i = ACPI_STATE_D0; i <= ACPI_STATE_D3_HOT; i++) {
+ 		struct acpi_device_power_state *ps = &device->power.states[i];
+-		acpi_power_resources_list_free(&ps->resources);
++		acpi_power_resources_list_free(device, &ps->resources);
+ 	}
+ }
+ 
+@@ -816,7 +816,7 @@ static int acpi_bus_extract_wakeup_device_power_package(struct acpi_device *dev)
+ 
+ 	wakeup->sleep_state = element->integer.value;
+ 
+-	err = acpi_extract_power_resources(package, 2, &wakeup->resources);
++	err = acpi_extract_power_resources(NULL, package, 2, &wakeup->resources);
+ 	if (err)
+ 		goto out;
+ 
+@@ -828,7 +828,7 @@ static int acpi_bus_extract_wakeup_device_power_package(struct acpi_device *dev)
+ 		if (err) {
+ 			acpi_handle_warn(handle, "Retrieving current states "
+ 					 "of wakeup power resources failed\n");
+-			acpi_power_resources_list_free(&wakeup->resources);
++			acpi_power_resources_list_free(NULL, &wakeup->resources);
+ 			goto out;
+ 		}
+ 		if (sleep_state < wakeup->sleep_state) {
+@@ -920,7 +920,7 @@ static void acpi_bus_init_power_state(struct acpi_device *device, int state)
+ 		if (buffer.length && package
+ 		    && package->type == ACPI_TYPE_PACKAGE
+ 		    && package->package.count) {
+-			int err = acpi_extract_power_resources(package, 0,
++			int err = acpi_extract_power_resources(device, package, 0,
+ 							       &ps->resources);
+ 			if (!err)
+ 				device->power.flags.power_resources = 1;
+@@ -1867,7 +1867,7 @@ static acpi_status acpi_bus_check_add(acpi_handle handle, u32 lvl_not_used,
+ 		return AE_OK;
+ 
+ 	if (type == ACPI_BUS_TYPE_POWER) {
+-		acpi_add_power_resource(handle);
++		acpi_add_power_resource(NULL, handle);
+ 		return AE_OK;
+ 	}
+ 
+-- 
+2.20.1
 
