@@ -2,125 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E573944C8E
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 21:45:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCE6744C9C
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 21:53:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbfFMTpG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jun 2019 15:45:06 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:39488 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728693AbfFMTpG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jun 2019 15:45:06 -0400
-Received: by mail-ua1-f67.google.com with SMTP id j8so46282uan.6
-        for <linux-pci@vger.kernel.org>; Thu, 13 Jun 2019 12:45:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3kty5SqcDEL4347wZ8UzAvmzntdto7UwCBDOLGP1a6M=;
-        b=YIHEasWQfsz3IQHZgKiQEwWYjZ2Atcpi8qW8K6/DRO9CnXOlKw+HZPoz97iCuda3Fn
-         yVU14P0CkGX9/v/G85aK420ItHIGKJ9XtUWaNOnpkV49p3RnmxVGr2IP0yU62GotaAHp
-         fnmNFjKuV0AyCVabzE+qU5O7TMIObjmck98HaTkAwYLWYKCeIDnh/VaazWEapgqH71zT
-         Y88eqy3gTWKi8rRDIjIQfofh06745RvIeCicjsoVZd43YZl7ucEkZpzDQiZ5tcZE5fWJ
-         IaQv1RE0HlSsQlAqPIiz0cgU4dEPCY5EQVNM3MImnphhjqIT+Dkw8i6Y7aymW3Kw+5pM
-         jgFA==
-X-Gm-Message-State: APjAAAWewDkx25PRwEnzqGjZOlCqvQDjTIBTaBZGw3WxXLRgqO0foOWQ
-        0LgpXPe+Jkh1G6prTLgy0BGP3CBzuZruK0eem7A=
-X-Google-Smtp-Source: APXvYqxrDAsHxjpm2iNqHN+6K6m4s/cQG8mobsEF9GG2hjuBxnxKHdpDiZsDqpU85xWHJTIwBNsGJCcqS7ZJvStMd/s=
-X-Received: by 2002:ab0:644d:: with SMTP id j13mr20789609uap.98.1560455105673;
- Thu, 13 Jun 2019 12:45:05 -0700 (PDT)
+        id S1727344AbfFMTxH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jun 2019 15:53:07 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:17053 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727156AbfFMTxH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jun 2019 15:53:07 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d02a9a20000>; Thu, 13 Jun 2019 12:53:06 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 13 Jun 2019 12:53:06 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 13 Jun 2019 12:53:06 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Jun
+ 2019 19:53:02 +0000
+Subject: Re: [PATCH 18/22] mm: mark DEVICE_PUBLIC as broken
+To:     Jason Gunthorpe <jgg@mellanox.com>, Christoph Hellwig <hch@lst.de>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-19-hch@lst.de> <20190613194430.GY22062@mellanox.com>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <a27251ad-a152-f84d-139d-e1a3bf01c153@nvidia.com>
+Date:   Thu, 13 Jun 2019 12:53:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-References: <20190613063514.15317-1-drake@endlessm.com> <CAKb7UvjAGtQrcgO=GE8JHuy=mgCtOr+eTinBVwekXGHiam1t1A@mail.gmail.com>
-In-Reply-To: <CAKb7UvjAGtQrcgO=GE8JHuy=mgCtOr+eTinBVwekXGHiam1t1A@mail.gmail.com>
-From:   Ilia Mirkin <imirkin@alum.mit.edu>
-Date:   Thu, 13 Jun 2019 15:44:54 -0400
-Message-ID: <CAKb7UvhWzHaRzG3WK3-fu=cWZNbsn9Q1EQ4hvV7JhEoT7LpP5w@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Expose hidden NVIDIA HDA controllers
-To:     Daniel Drake <drake@endlessm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>, linux@endlessm.com,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Aaron Plattner <aplattner@nvidia.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Karol Herbst <kherbst@redhat.com>,
-        Maik Freudenberg <hhfeuer@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190613194430.GY22062@mellanox.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560455586; bh=Jb4g90Z1ba65oKYjTxGpf+f/32abJWQiXQLuIbWbzvY=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=fX5tey0oBNTieShQOoS4gHfsvizLQIZuWaHc6dzOwFFJidyDqIYU2AUhp266HRFrN
+         XrtOPBnaSUAKElzDHFexziLEsf0mgRvYpwoaL4sSYsIU1LcKrpDAHjizgl/yJjcdl3
+         p6Pf6shBbCxBVGLYCn7p1Sc7R72zptzPvDHZbEr82hLm46tnMp65GrRnZ3EbGnwLJz
+         23lgDPGqY/fbBOf3AXToJKAO/Z8B9A4BRpstqapMwDkQOz+kz4JCB2SNVDQH0ir2MJ
+         WzkLVK43aAga/2HoikuGF1iJ+5COBwso/r1BhSmM63r0HyIcQnSmXduf+EERM53rtq
+         kwroL2mZCH2Jw==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 9:15 AM Ilia Mirkin <imirkin@alum.mit.edu> wrote:
->
-> On Thu, Jun 13, 2019 at 2:35 AM Daniel Drake <drake@endlessm.com> wrote:
-> >
-> > From: Lukas Wunner <lukas@wunner.de>
-> >
-> > The integrated HDA controller on Nvidia GPUs can be hidden with a bit in
-> > the GPU's config space. Information about this scheme was provided by
-> > NVIDIA on their forums.
-> >
-> > Many laptops now ship with this device hidden, meaning that Linux users
-> > of affected platforms (where the HDMI connector comes off the NVIDIA GPU)
-> > cannot use HDMI audio functionality.
-> >
-> > Avoid this issue by exposing the HDMI audio device on device enumeration
-> > and resume.
-> >
-> > The GPU and HDA controller are two functions of the same PCI device
-> > (VGA class device on function 0 and audio device on function 1).
-> > The multifunction flag in the GPU's Header Type register is cleared when
-> > the HDA controller is hidden and set if it's exposed, so reread the flag
-> > after exposing the HDA.
-> >
-> > According to Ilia Mirkin, the HDA controller is only present from MCP89
-> > onward, so do not touch config space on older GPUs.
->
-> Actually GF100 also has it, and has a lower PCI ID than MCP89. But I
-> don't think it really matters - I can't imagine anyone played HDA
-> hiding tricks on that power-hungry monster. I'd appreciate it if you
-> could reword this sentence to imply that it's on PCI IDs >= MCP89's
-> rather than GPUs newer than MCP89. GT215 was released before MCP89,
-> I'm fairly sure, but its PCI ID comes later, for example. [Wikipedia
-> says November 17, 2009 for GT215 vs some point in 2010 for MCP89.]
-> Maybe like
->
-> "..., the HDA controller is only present on GPUs with PCI IDs values
-> from MCP89's and onward, so ..."
->
-> >
-> > This quirk is limited to NVIDIA PCI devices with the VGA Controller
-> > device class. This is expected to correspond to product configurations
-> > where the NVIDIA GPU has connectors attached. Other products where the
-> > device class is 3D Controller are expected to correspond to configurations
-> > where the NVIDIA GPU is dedicated (dGPU) and has no connectors.
-> >
-> > It's sensible to avoid exposing the HDA controller on dGPU setups,
-> > especially because we've seen cases where the PCI BARs are not set
-> > up correctly by the platform in this case, causing Linux to log
-> > errors if the device is visible. This assumption of device class
-> > accurately corresponding to product configuration is true for 6 of 6
-> > laptops recently checked at the Endless lab, and there are also signs of
-> > agreement checking the data from 74 previously tested products, however
-> > Ilia Mirkin comments that he's seen cases where it is not true. Anyway, it
-> > looks like this quirk should fix audio support for the majority of
-> > affected users.
->
-> Yeah, this is fine. We used to have code which prevented enabling the
-> display portion when 3d class != VGA. We had to change it :) So I'm
-> definitely not making things up... However whether any of those people
-> *also* had HDA hiding issues -- unknown. And it wouldn't make things
-> any worse for them.
 
-FTR, this is where it was enabled:
+On 6/13/19 12:44 PM, Jason Gunthorpe wrote:
+> On Thu, Jun 13, 2019 at 11:43:21AM +0200, Christoph Hellwig wrote:
+>> The code hasn't been used since it was added to the tree, and doesn't
+>> appear to actually be usable.  Mark it as BROKEN until either a user
+>> comes along or we finally give up on it.
+>>
+>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>>   mm/Kconfig | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/mm/Kconfig b/mm/Kconfig
+>> index 0d2ba7e1f43e..406fa45e9ecc 100644
+>> +++ b/mm/Kconfig
+>> @@ -721,6 +721,7 @@ config DEVICE_PRIVATE
+>>   config DEVICE_PUBLIC
+>>   	bool "Addressable device memory (like GPU memory)"
+>>   	depends on ARCH_HAS_HMM
+>> +	depends on BROKEN
+>>   	select HMM
+>>   	select DEV_PAGEMAP_OPS
+> 
+> This seems a bit harsh, we do have another kconfig that selects this
+> one today:
+> 
+> config DRM_NOUVEAU_SVM
+>          bool "(EXPERIMENTAL) Enable SVM (Shared Virtual Memory) support"
+>          depends on ARCH_HAS_HMM
+>          depends on DRM_NOUVEAU
+>          depends on STAGING
+>          select HMM_MIRROR
+>          select DEVICE_PRIVATE
+>          default n
+>          help
+>            Say Y here if you want to enable experimental support for
+>            Shared Virtual Memory (SVM).
+> 
+> Maybe it should be depends on STAGING not broken?
+> 
+> or maybe nouveau_svm doesn't actually need DEVICE_PRIVATE?
+> 
+> Jason
 
-commit fc1620883af8cbc10bfb1a4ef2eb4e8113243012
-Author: Ben Skeggs <bskeggs@redhat.com>
-Date:   Tue Sep 10 13:20:34 2013 +1000
+I think you are confusing DEVICE_PRIVATE for DEVICE_PUBLIC.
+DRM_NOUVEAU_SVM does use DEVICE_PRIVATE but not DEVICE_PUBLIC.
 
-    drm/nouveau/kms: enable for non-vga pci classes
-
-    Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
-
-Unfortunately no bug id included.
