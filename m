@@ -2,152 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 38ED64387D
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 17:06:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6F5C43858
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 17:05:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732422AbfFMPGL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jun 2019 11:06:11 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18603 "EHLO huawei.com"
+        id S1732791AbfFMPFS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jun 2019 11:05:18 -0400
+Received: from mail-eopbgr70040.outbound.protection.outlook.com ([40.107.7.40]:29637
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732420AbfFMOJf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:09:35 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C543B7C6445F292C5592;
-        Thu, 13 Jun 2019 22:09:28 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 13 Jun 2019
- 22:09:17 +0800
-Subject: Re: [PATCH v4 2/3] lib: logic_pio: Reject accesses to unregistered
- CPU MMIO regions
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <1560262374-67875-1-git-send-email-john.garry@huawei.com>
- <1560262374-67875-3-git-send-email-john.garry@huawei.com>
- <20190613032034.GE13533@google.com>
- <2d5e6112-be27-33c2-c1fd-6ab06405fa40@huawei.com>
- <20190613134650.GF13533@google.com>
-CC:     <lorenzo.pieralisi@arm.com>, <arnd@arndb.de>,
-        <linux-pci@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <linux-arm-kernel@lists.infradead.org>, <will.deacon@arm.com>,
-        <wangkefeng.wang@huawei.com>, <linuxarm@huawei.com>,
-        <andriy.shevchenko@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <catalin.marinas@arm.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <d1ed7c02-9bad-c584-9b0e-1e3fc22ea46e@huawei.com>
-Date:   Thu, 13 Jun 2019 15:09:10 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        id S1732455AbfFMOQf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 13 Jun 2019 10:16:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uRCtqGzjhJOBLRtVX0V/ZgSTkU8/jdLSuxxED8NJUIc=;
+ b=TvGnXbEcjU6Lo/7/fJyphO+gcrunapqxGdLz+M17V8Za/VtKbSX2UybpfN/j0jOX9sC6Lm2xBxEh49cE0w5ymm9p5MQ2sS9TfXQk7dgCrfXyzRlkaSiH5uYLLNWjzlj4HWhvmzR09mBLA4vwuj9bks2IyeyCyk+IavPI2sL/+T0=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB4783.eurprd05.prod.outlook.com (20.176.4.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.14; Thu, 13 Jun 2019 14:16:27 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
+ 14:16:27 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        =?utf-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: dev_pagemap related cleanups
+Thread-Topic: dev_pagemap related cleanups
+Thread-Index: AQHVIcx5DdVrUhs/HUiF5V2FmmsvzKaZoY4A
+Date:   Thu, 13 Jun 2019 14:16:27 +0000
+Message-ID: <20190613141622.GE22062@mellanox.com>
+References: <20190613094326.24093-1-hch@lst.de>
+In-Reply-To: <20190613094326.24093-1-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BL0PR02CA0048.namprd02.prod.outlook.com
+ (2603:10b6:207:3d::25) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ce498060-eaaa-4cfc-43b2-08d6f009b931
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4783;
+x-ms-traffictypediagnostic: VI1PR05MB4783:
+x-microsoft-antispam-prvs: <VI1PR05MB47836CBE2730DE9B4A14468FCFEF0@VI1PR05MB4783.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(396003)(366004)(376002)(39860400002)(189003)(199004)(26005)(53936002)(81166006)(99286004)(52116002)(6486002)(7736002)(36756003)(305945005)(33656002)(6116002)(2906002)(6512007)(6436002)(229853002)(6506007)(478600001)(14454004)(3846002)(81156014)(8676002)(316002)(386003)(186003)(102836004)(76176011)(66446008)(486006)(2616005)(66556008)(476003)(86362001)(68736007)(54906003)(446003)(7416002)(11346002)(64756008)(1076003)(8936002)(5660300002)(71190400001)(6916009)(7116003)(71200400001)(66066001)(4326008)(66476007)(6246003)(73956011)(66946007)(256004)(25786009)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4783;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: V7MYS+Xi0yuEwrWiqQdFEyNmIo52ph6edRuO4tk6AgYuo0b1aNnoJUgJdJqY5OPp4z215xdSTIlif805KjTtwoDOCuQP1/9ok+E9ptw226a2wqHVsoDym8cU0BN91wSMfVOXKRek3zPXyZb9qhv022St0teR3Q7xiN1Ey+EgDtjktRjj7eyfPmSIEEQlR/j2pU5iBJDYEbJPX5zNx/rHf3Y9mW0Tfxat4lpIjDoEtlWlW6ETGh76wNSMBwBD+DPQwBTiiBueMm/wuC1Fj+LteWMELDHyIfiZDpZfwJ10/BIGmUIvXpKK5oEPjUqMazcbnVtK340VjdMxLPoD9di01Ku0wuSQafzVeLQ3c31x5f5B8aNtFynOUa4Gx3J12rS/WpKzcwm/1VF+kS/8oMXw9oAdlXksbr9nZCIzWk7EdFA=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3F56F1D2ECF2EA44ADBAB2BD95ADFE6F@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20190613134650.GF13533@google.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce498060-eaaa-4cfc-43b2-08d6f009b931
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 14:16:27.8375
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4783
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-Hi Bjorn,
-
->> There were many different names along the way to this support merged, and I
->> think that the naming became almost irrelevant in the end.
->
-> Yep, Arnd is right.  The "PIO" name contributed a little to my
-> confusion, but I think the bigger piece was that I read the "indirect
-> PIO addresses" above as being parallel to the "CPU MMIO regions"
-> below, when in fact, they are not.  The arguments to logic_inb() are
-> always port addresses, never CPU MMIO addresses, but in some cases
-> logic_inb() internally references a CPU MMIO region that corresponds
-> to the port address.
-
-Right
-
->
-> Possible commit log text:
->
->   The logic_{in,out}*() functions access two regions of I/O port
->   addresses:
->
->     1) [0, MMIO_UPPER_LIMIT): these are assumed to be
->        LOGIC_PIO_CPU_MMIO regions, where a bridge converts CPU loads
->        and stores to MMIO space on its primary side into I/O port
->        transactions on its secondary side.
->
->     2) [MMIO_UPPER_LIMIT, IO_SPACE_LIMIT): these are assumed to be
->        LOGIC_PIO_INDIRECT regions, where we verify that the region was
->        registered by logic_pio_register_range() before calling the
->        logic_pio_host_ops functions to perform the access.
->
->   Previously there was no requirement that accesses to the
->   LOGIC_PIO_CPU_MMIO area matched anything registered by
->   logic_pio_register_range(), and accesses to unregistered I/O ports
->   could cause exceptions like the one below.
->
->   Verify that accesses to ports in the LOGIC_PIO_CPU_MMIO area
->   correspond to registered ranges.  Accesses to ports outside those
->   registered ranges fail (logic_in*() returns ~0 data and logic_out*()
->   does nothing).
->
->   This matches the x86 behavior where in*() returns ~0 if no device
->   responds, and out*() is dropped if no device claims it.
-
-It reads quite well so I can incorporate it. I'd still like to mention 
-about request_{muxed_}region(), and how this does not protect against 
-accesses to unregistered regions.
-
->
->>>   1) The simple "bridge converts CPU MMIO space to PCI I/O port space"
->>>      flavor is essentially identical to what ia64 (and probably other
->>>      architectures) does.  This should really be combined somehow.
->>
->> Maybe. For ia64, it seems to have some "platform" versions of IO port
->> accessors, and then also accessors need a fence barrier. I'm not sure how
->> well that would fit with logical PIO. It would need further analysis.
->
-> Right.  That shouldn't be part of this series, but I think it would be
-> nice to someday unify the ia64 add_io_space() path with the
-> pci_register_io_range() path.  There might have to be ia64-specific
-> accessors at the bottom for the fences, but I think the top side could
-> be unified because it's conceptually the same thing -- an MMIO region
-> that is translated by a bridge to an I/O port region.
-
-Yes, it would be good to move any arch-specific port IO function to this 
-common framework. To mention it again, what's under 
-CONFIG_PPC_INDIRECT_PIO seems an obvious candidate.
-
->
->>>   2) If you made a default set of logic_pio_host_ops that merely did
->>>      loads/stores and maybe added a couple fields in the struct
->>>      logic_pio_hwaddr, I bet you could unify the two kinds so
->>>      logic_inb() would look something like this:
->>
->> Yeah, I did consider this. We do not provide host operators for PCI MMIO
->> ranges. We could simply provide regular versions of inb et al for this. A
->> small obstacle for this is that we redefine inb et al, so would need
->> "direct" versions also. It would be strange.
->
-> Yeah, just a thought, maybe it wouldn't work out.
->
->>>> Any failed checks silently return.
->>>
->>> I *think* what you're doing here is making inb/outb/etc work the same
->>> as on x86, i.e., if no device responds to an inb(), the caller gets
->>> ~0, and if no device claims an outb() the data gets dropped.
->>
->> Correct, but with a caveat: when you say no device responds, this means that
->> - for arm64 case - no PCI MMIO region is mapped.
->
-> Yep.  I was describing the x86 behavior, where we don't do any mapping
-> and all we can say is that no device responded.
->
-> Bjorn
->
-
-Thanks,
-John
-
-> .
->
-
-
+T24gVGh1LCBKdW4gMTMsIDIwMTkgYXQgMTE6NDM6MDNBTSArMDIwMCwgQ2hyaXN0b3BoIEhlbGx3
+aWcgd3JvdGU6DQo+IEhpIERhbiwgSsOpcsO0bWUgYW5kIEphc29uLA0KPiANCj4gYmVsb3cgaXMg
+YSBzZXJpZXMgdGhhdCBjbGVhbnMgdXAgdGhlIGRldl9wYWdlbWFwIGludGVyZmFjZSBzbyB0aGF0
+DQo+IGl0IGlzIG1vcmUgZWFzaWx5IHVzYWJsZSwgd2hpY2ggcmVtb3ZlcyB0aGUgbmVlZCB0byB3
+cmFwIGl0IGluIGhtbQ0KPiBhbmQgdGh1cyBhbGxvd2luZyB0byBraWxsIGEgbG90IG9mIGNvZGUN
+Cg0KRG8geW91IHdhbnQgc29tZSBvZiB0aGlzIHRvIHJ1biB0aHJvdWdoIGhtbS5naXQ/IEkgc2Vl
+IG1hbnkgcGF0Y2hlcw0KdGhhdCBkb24ndCBzZWVtIHRvIGhhdmUgaW50ZXItZGVwZW5kZW5jaWVz
+Li4NCg0KVGhhbmtzLA0KSmFzb24NCg==
