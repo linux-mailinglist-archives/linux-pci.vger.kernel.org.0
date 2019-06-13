@@ -2,272 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F36D545032
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 01:43:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A75B445051
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 01:51:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbfFMXmM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jun 2019 19:42:12 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:14959 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbfFMXmL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jun 2019 19:42:11 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d02df510000>; Thu, 13 Jun 2019 16:42:09 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 13 Jun 2019 16:42:08 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 13 Jun 2019 16:42:08 -0700
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Jun
- 2019 23:42:07 +0000
-Subject: Re: [PATCH 10/22] memremap: add a migrate callback to struct
- dev_pagemap_ops
-To:     Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-CC:     <linux-mm@kvack.org>, <nouveau@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-nvdimm@lists.01.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190613094326.24093-1-hch@lst.de>
- <20190613094326.24093-11-hch@lst.de>
-From:   Ralph Campbell <rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <d6916d71-c17e-74df-58f2-c28ff8044b96@nvidia.com>
-Date:   Thu, 13 Jun 2019 16:42:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        id S1725863AbfFMXvj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jun 2019 19:51:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725836AbfFMXvj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 13 Jun 2019 19:51:39 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BB3921721;
+        Thu, 13 Jun 2019 23:51:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560469898;
+        bh=SWfQ1gY29eX+lI6rw7IGuclMFyy90+aC9W1QPfO1e3k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EQeAbBQpoq5ARV/EgBs7NIqsgdLhSJeh5ec+5+VctrXu1hNJAqj6sBU1wTXWe31v4
+         YH33ed8c6RgY4Qwfl8djx33i81nCrI3wQaObCGqixDTbtHmt+UZyerr5n+KXiPUtBa
+         kshTkPrk4wVp+4BDgg394UNk/ae2s43psyLSw6Gc=
+Date:   Thu, 13 Jun 2019 18:51:12 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
+Message-ID: <20190613235112.GO13533@google.com>
+References: <20190329080058.21736-1-pierre.cregut@orange.com>
+ <20190405223300.GD159318@google.com>
+ <744273fd-8045-7527-ad29-fa19adf6d015@orange.com>
 MIME-Version: 1.0
-In-Reply-To: <20190613094326.24093-11-hch@lst.de>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560469329; bh=wLsE+X+8pitibNp+2XhoFt2Wacvnxu1fblPm1H5d/6Q=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=K8AKe6gofAssIF+PWoIuTwl4fCkUwuiOvHNEsvPI3F+q8VQ4+xJWpP84RWIp2f3Mv
-         vM/f8XrfvgL48kTe0DZDz8uLahwVWJVbReUsFLpkhihuCalW2d/Eak3R/rD5QepCm4
-         eAT3qIqhtKZ2iV0oC5E3+YcnsBUSSuqGl8OksAsK+CDDOD/NG+NwGm+eY+JOt6cn/K
-         1DJbYLIbG5TYSbhI0/IpkyhPXQDxOnDF3mu4S/a9zHc+FirnrIJnjHhjESGPnAKzt5
-         I3iL8In6P9r99xdo7wZmjVCtpSHnz1ZXoerU/wDDEdlFepU5Wsr2g9IVOwPBRrjw/t
-         DyeF5Z2L4YXLg==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <744273fd-8045-7527-ad29-fa19adf6d015@orange.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Pierre,
 
-On 6/13/19 2:43 AM, Christoph Hellwig wrote:
-> This replaces the hacky ->fault callback, which is currently directly
-> called from common code through a hmm specific data structure as an
-> exercise in layering violations.
+I'm really sorry, I totally missed your response.
+
+On Fri, Apr 26, 2019 at 10:11:54AM +0200, CREGUT Pierre IMT/OLN wrote:
+> I also initially thought that kobject_uevent generated the netlink event
+> but this is not the case. This is generated by the specific driver in use.
+> For the Intel i40e driver, this is the call to i40e_do_reset_safe in
+> i40e_pci_sriov_configure that sends the event.
+> It is followed by i40e_pci_sriov_enable that calls i40e_alloc_vfs that
+> finally calls the generic pci_enable_sriov function.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   include/linux/hmm.h      |  6 ------
->   include/linux/memremap.h |  6 ++++++
->   include/linux/swapops.h  | 15 ---------------
->   kernel/memremap.c        | 31 -------------------------------
->   mm/hmm.c                 | 13 +++++--------
->   mm/memory.c              |  9 ++-------
->   6 files changed, 13 insertions(+), 67 deletions(-)
+> So the proposed patch works well for the i40e driver (x710 cards) because
+> the update to num_VFs is fast enough to be committed before the event is
+> received. It may not work with other cards. The same is true for the zero
+> value and there is no guarantee for other cards.
 > 
-> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-> index 5761a39221a6..3c9a59dbfdb8 100644
-> --- a/include/linux/hmm.h
-> +++ b/include/linux/hmm.h
-> @@ -658,11 +658,6 @@ struct hmm_devmem_ops {
->    * chunk, as an optimization. It must, however, prioritize the faulting address
->    * over all the others.
->    */
-> -typedef vm_fault_t (*dev_page_fault_t)(struct vm_area_struct *vma,
-> -				unsigned long addr,
-> -				const struct page *page,
-> -				unsigned int flags,
-> -				pmd_t *pmdp);
->   
->   struct hmm_devmem {
->   	struct completion		completion;
-> @@ -673,7 +668,6 @@ struct hmm_devmem {
->   	struct dev_pagemap		pagemap;
->   	const struct hmm_devmem_ops	*ops;
->   	struct percpu_ref		ref;
-> -	dev_page_fault_t		page_fault;
->   };
->   
->   /*
-> diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-> index 96a3a6d564ad..03a4099be701 100644
-> --- a/include/linux/memremap.h
-> +++ b/include/linux/memremap.h
-> @@ -75,6 +75,12 @@ struct dev_pagemap_ops {
->   	 * Transition the percpu_ref in struct dev_pagemap to the dead state.
->   	 */
->   	void (*kill)(struct dev_pagemap *pgmap);
-> +
-> +	/*
-> +	 * Used for private (un-addressable) device memory only.  Must migrate
-> +	 * the page back to a CPU accessible page.
-> +	 */
-> +	vm_fault_t (*migrate)(struct vm_fault *vmf);
->   };
->   
->   /**
-> diff --git a/include/linux/swapops.h b/include/linux/swapops.h
-> index 4d961668e5fc..15bdb6fe71e5 100644
-> --- a/include/linux/swapops.h
-> +++ b/include/linux/swapops.h
-> @@ -129,12 +129,6 @@ static inline struct page *device_private_entry_to_page(swp_entry_t entry)
->   {
->   	return pfn_to_page(swp_offset(entry));
->   }
-> -
-> -vm_fault_t device_private_entry_fault(struct vm_area_struct *vma,
-> -		       unsigned long addr,
-> -		       swp_entry_t entry,
-> -		       unsigned int flags,
-> -		       pmd_t *pmdp);
->   #else /* CONFIG_DEVICE_PRIVATE */
->   static inline swp_entry_t make_device_private_entry(struct page *page, bool write)
->   {
-> @@ -164,15 +158,6 @@ static inline struct page *device_private_entry_to_page(swp_entry_t entry)
->   {
->   	return NULL;
->   }
-> -
-> -static inline vm_fault_t device_private_entry_fault(struct vm_area_struct *vma,
-> -				     unsigned long addr,
-> -				     swp_entry_t entry,
-> -				     unsigned int flags,
-> -				     pmd_t *pmdp)
-> -{
-> -	return VM_FAULT_SIGBUS;
-> -}
->   #endif /* CONFIG_DEVICE_PRIVATE */
->   
->   #ifdef CONFIG_MIGRATION
-> diff --git a/kernel/memremap.c b/kernel/memremap.c
-> index 6a3183cac764..7167e717647d 100644
-> --- a/kernel/memremap.c
-> +++ b/kernel/memremap.c
-> @@ -11,7 +11,6 @@
->   #include <linux/types.h>
->   #include <linux/wait_bit.h>
->   #include <linux/xarray.h>
-> -#include <linux/hmm.h>
->   
->   static DEFINE_XARRAY(pgmap_array);
->   #define SECTION_MASK ~((1UL << PA_SECTION_SHIFT) - 1)
-> @@ -48,36 +47,6 @@ static inline int dev_pagemap_enable(struct device *dev)
->   }
->   #endif /* CONFIG_DEV_PAGEMAP_OPS */
->   
-> -#if IS_ENABLED(CONFIG_DEVICE_PRIVATE)
-> -vm_fault_t device_private_entry_fault(struct vm_area_struct *vma,
-> -		       unsigned long addr,
-> -		       swp_entry_t entry,
-> -		       unsigned int flags,
-> -		       pmd_t *pmdp)
-> -{
-> -	struct page *page = device_private_entry_to_page(entry);
-> -	struct hmm_devmem *devmem;
-> -
-> -	devmem = container_of(page->pgmap, typeof(*devmem), pagemap);
-> -
-> -	/*
-> -	 * The page_fault() callback must migrate page back to system memory
-> -	 * so that CPU can access it. This might fail for various reasons
-> -	 * (device issue, device was unsafely unplugged, ...). When such
-> -	 * error conditions happen, the callback must return VM_FAULT_SIGBUS.
-> -	 *
-> -	 * Note that because memory cgroup charges are accounted to the device
-> -	 * memory, this should never fail because of memory restrictions (but
-> -	 * allocation of regular system page might still fail because we are
-> -	 * out of memory).
-> -	 *
-> -	 * There is a more in-depth description of what that callback can and
-> -	 * cannot do, in include/linux/memremap.h
-> -	 */
-> -	return devmem->page_fault(vma, addr, page, flags, pmdp);
-> -}
-> -#endif /* CONFIG_DEVICE_PRIVATE */
-> -
->   static void pgmap_array_delete(struct resource *res)
->   {
->   	xa_store_range(&pgmap_array, PHYS_PFN(res->start), PHYS_PFN(res->end),
-> diff --git a/mm/hmm.c b/mm/hmm.c
-> index 6dc769feb2e1..aab799677c7d 100644
-> --- a/mm/hmm.c
-> +++ b/mm/hmm.c
-> @@ -1330,15 +1330,12 @@ static void hmm_devmem_ref_kill(struct dev_pagemap *pgmap)
->   	percpu_ref_kill(pgmap->ref);
->   }
->   
-> -static vm_fault_t hmm_devmem_fault(struct vm_area_struct *vma,
-> -			    unsigned long addr,
-> -			    const struct page *page,
-> -			    unsigned int flags,
-> -			    pmd_t *pmdp)
-> +static vm_fault_t hmm_devmem_migrate(struct vm_fault *vmf)
->   {
-> -	struct hmm_devmem *devmem = page->pgmap->data;
-> +	struct hmm_devmem *devmem = vmf->page->pgmap->data;
->   
-> -	return devmem->ops->fault(devmem, vma, addr, page, flags, pmdp);
-> +	return devmem->ops->fault(devmem, vmf->vma, vmf->address, vmf->page,
-> +			vmf->flags, vmf->pmd);
->   }
->   
->   static void hmm_devmem_free(struct page *page, void *data)
-> @@ -1351,6 +1348,7 @@ static void hmm_devmem_free(struct page *page, void *data)
->   static const struct dev_pagemap_ops hmm_pagemap_ops = {
->   	.page_free		= hmm_devmem_free,
->   	.kill			= hmm_devmem_ref_kill,
-> +	.migrate		= hmm_devmem_migrate,
->   };
->   
->   /*
-> @@ -1405,7 +1403,6 @@ struct hmm_devmem *hmm_devmem_add(const struct hmm_devmem_ops *ops,
->   	devmem->pfn_first = devmem->resource->start >> PAGE_SHIFT;
->   	devmem->pfn_last = devmem->pfn_first +
->   			   (resource_size(devmem->resource) >> PAGE_SHIFT);
-> -	devmem->page_fault = hmm_devmem_fault;
->   
->   	devmem->pagemap.type = MEMORY_DEVICE_PRIVATE;
->   	devmem->pagemap.res = *devmem->resource;
-> diff --git a/mm/memory.c b/mm/memory.c
-> index ddf20bd0c317..cbf3cb598436 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -2782,13 +2782,8 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->   			migration_entry_wait(vma->vm_mm, vmf->pmd,
->   					     vmf->address);
->   		} else if (is_device_private_entry(entry)) {
-> -			/*
-> -			 * For un-addressable device memory we call the pgmap
-> -			 * fault handler callback. The callback must migrate
-> -			 * the page back to some CPU accessible page.
-> -			 */
-> -			ret = device_private_entry_fault(vma, vmf->address, entry,
-> -						 vmf->flags, vmf->pmd);
-> +			vmf->page = device_private_entry_to_page(entry);
-> +			ret = page->pgmap->ops->migrate(vmf);
-
-This needs to either initialize "page" or be changed to "vmf->page".
-Otherwise, it is a NULL pointer dereference.
-
->   		} else if (is_hwpoison_entry(entry)) {
->   			ret = VM_FAULT_HWPOISON;
->   		} else {
+> The clean solution would be to lock the device in sriov_numvfs_show.
+> I guess that there are good reasons why locks have been avoided
+> in sysfs getter functions so let us explore other approaches.
 > 
+> We can either return a "not settled" value (-1) or (probably better)
+> do not return a value but an error (-EAGAIN returned by the show
+> function).
+> 
+> To distinguish this "not settled" situation we can either:
+> * overload the meaning of num_VFs (eg make it negative)
+>   but it is an unsigned short.
+> * add a bool to pci_sriov struct (rather simple but modifies a well
+>   established structure).
+> * use the fact that not_settled => device is locked and use
+>   mutex_is_locked as an over approximation.
+> 
+> The later is not perfect but requires minimal changes to
+> sriov_numvfs_show:
+> 
+>      if (mutex_is_locked(&dev->mutex))
+>          return -EAGAIN;
 
-You can add:
-Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+I think this looks like a good resolution.
+
+> In all cases, the device could be locked or the boolean set just
+> after the test. But I don't think there is a case where causality
+> would be violated.Thank you in advance for your recommendations.  I will
+> update the patch according to your instructions.
+> 
+> Le 06/04/2019 à 00:33, Bjorn Helgaas a écrit :
+> > On Fri, Mar 29, 2019 at 09:00:58AM +0100, Pierre Crégut wrote:
+> > > Ensure that iov->num_VFs is set before a netlink message is sent
+> > > when the number of VFs is changed. Only the path for num_VFs > 0
+> > > is affected. The path for num_VFs = 0 is already correct.
+> > > 
+> > > Monitoring programs can relie on netlink messages to track interface
+> > > change and query their state in /sys. But when sriov_numvfs is set to a
+> > > positive value, the netlink message is sent before the value is available
+> > > in sysfs. The value read after the message is received is always zero.
+> > Thanks, Pierre!  Can you clue me in on where exactly the connection
+> > from sriov_enable() to netlink is?
+> > 
+> > I see one side of the race is with sriov_numvfs_show(), but I don't
+> > know where the netlink message is sent.  Is that connected with the
+> > kobject_uevent(KOBJ_CHANGE)?
+> > 
+> > One thing this would help with is figuring out exactly how *much*
+> > earlier we need to set iov->num_VFs.  It looks like the current patch
+> > sets it before we actually enable the VFs, so a user could read
+> > /sys/.../sriov_numvfs and get the wrong value.  Of course, that's
+> > unavoidable; the question is whether it's OK to get the new value
+> > *before* it actually takes effect, or whether we want to return a
+> > stale value until after it takes effect.
+> > 
+> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=202991
+> > > Signed-off-by: Pierre Crégut <pierre.cregut@orange.com>
+> > > ---
+> > > note: the behaviour can be tested with the following shell script also
+> > > available on the bugzilla (d being the phy device name):
+> > > 
+> > > ip monitor dev $d | grep --line-buffered "^[0-9]*:" | \
+> > > while read line; do cat /sys/class/net/$d/device/sriov_numvfs; done
+> > > 
+> > >   drivers/pci/iov.c | 3 ++-
+> > >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > > index 3aa115ed3a65..a9655c10e87f 100644
+> > > --- a/drivers/pci/iov.c
+> > > +++ b/drivers/pci/iov.c
+> > > @@ -351,6 +351,7 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
+> > >   		goto err_pcibios;
+> > >   	}
+> > > +	iov->num_VFs = nr_virtfn;
+> > >   	pci_iov_set_numvfs(dev, nr_virtfn);
+> > >   	iov->ctrl |= PCI_SRIOV_CTRL_VFE | PCI_SRIOV_CTRL_MSE;
+> > >   	pci_cfg_access_lock(dev);
+> > > @@ -363,7 +364,6 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
+> > >   		goto err_pcibios;
+> > >   	kobject_uevent(&dev->dev.kobj, KOBJ_CHANGE);
+> > > -	iov->num_VFs = nr_virtfn;
+> > >   	return 0;
+> > > @@ -379,6 +379,7 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
+> > >   	if (iov->link != dev->devfn)
+> > >   		sysfs_remove_link(&dev->dev.kobj, "dep_link");
+> > > +	iov->num_VFs = 0;
+> > >   	pci_iov_set_numvfs(dev, 0);
+> > >   	return rc;
+> > >   }
+> > > -- 
+> > > 2.17.1
+> > > 
