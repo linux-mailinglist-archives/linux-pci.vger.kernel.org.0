@@ -2,86 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B522243D9F
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 17:44:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68E0C43CFD
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 17:39:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbfFMPnr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jun 2019 11:43:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33660 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731831AbfFMJog (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jun 2019 05:44:36 -0400
+        id S1729028AbfFMPic (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jun 2019 11:38:32 -0400
+Received: from casper.infradead.org ([85.118.1.10]:33510 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731947AbfFMJ7G (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jun 2019 05:59:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=0sAfzDlcAsndHKBt75dqqx/GnOCOQqtRdathOjahJzQ=; b=trz7K9USBFzK+xAnepin47AmRr
-        Ru/Ufe0ArOAav00lGoPPzRUVxrswp05DRpD2d5fXaeZItnlHIGrtF1O1z/B5eK/v1ypkuEUV33AoE
-        O6sWXD/9uMVmrJLXNRSSRwxNiWV3okj38PS6HOorCIE1095zMfIxNPliWKgHj+KFNGQYjRJfvAAE9
-        OZPPi7DMhfjs+Ay9FbxkmMkIi0kMa6qSNkzN8TL3yorsUR6y30VoiV0rQhnhlXUczuR6wnoc3Tr3D
-        5CrUdFq3rR6UxwQZviB1fSzfyE69t0fvrojVXmSEKwbbynKreccgHDzaxSTGmzkzt23o/mQnE0h+e
-        YEeclslA==;
-Received: from mpp-cp1-natpool-1-198.ethz.ch ([82.130.71.198] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbMHY-0001yQ-Rm; Thu, 13 Jun 2019 09:44:33 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 22/22] mm: don't select MIGRATE_VMA_HELPER from HMM_MIRROR
-Date:   Thu, 13 Jun 2019 11:43:25 +0200
-Message-Id: <20190613094326.24093-23-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190613094326.24093-1-hch@lst.de>
-References: <20190613094326.24093-1-hch@lst.de>
+        bh=X6go1h+qBvd8UqStxDka25oSP1lwn219vXM1njzftqM=; b=st/cCkCW17JvfhPcMMlIiWlWs7
+        IjzbMHLeCgNGoALijV6IG+3mBu2hWh+zDF/ixgeztGRJFvKYWEb/k1hwDtOuJEM+LaN5VPyeL2Nyt
+        pUW3p7YE7JRXzR5AqF9H3+IiwxYWckQCRps/QFoMco8bS1sS+v518UWrrJXO7ml5NcscdFDSXeQVX
+        ZKduv2MoYrDVAMjIkypzrzv1fDu9De18EdqyKnVmVA/jtlt3lbqFtvB/kKq3/UdhRk448WORt2zGk
+        vyVeBQhaltTvjNhKaj4bDz1fJNL7g5eIVBQzyzZatNVk3zR46pfOQJ6fi4X1Ul2gzhVbF7Xgp5Fcx
+        8jdm6Tow==;
+Received: from 201.86.169.251.dynamic.adsl.gvt.net.br ([201.86.169.251] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbMVS-0000iN-9Z; Thu, 13 Jun 2019 09:58:54 +0000
+Date:   Thu, 13 Jun 2019 06:58:43 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-pci@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v4 18/28] docs: convert docs to ReST and rename to *.rst
+Message-ID: <20190613065843.100f72dd@coco.lan>
+In-Reply-To: <7dc94cb4-ebf1-22ab-29c9-fcb2b875a9ac@csail.mit.edu>
+References: <cover.1560361364.git.mchehab+samsung@kernel.org>
+        <fac44e1fbab5ea755a93601a4fdfa34fcc57ae9e.1560361364.git.mchehab+samsung@kernel.org>
+        <7dc94cb4-ebf1-22ab-29c9-fcb2b875a9ac@csail.mit.edu>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The migrate_vma helper is only used by noveau to migrate device private
-pages around.  Other HMM_MIRROR users like amdgpu or infiniband don't
-need it.
+Em Wed, 12 Jun 2019 17:25:39 -0700
+"Srivatsa S. Bhat" <srivatsa@csail.mit.edu> escreveu:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/gpu/drm/nouveau/Kconfig | 1 +
- mm/Kconfig                      | 1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
+> On 6/12/19 10:52 AM, Mauro Carvalho Chehab wrote:
+> > Convert the PM documents to ReST, in order to allow them to
+> > build with Sphinx.
+> > 
+> > The conversion is actually:
+> >   - add blank lines and identation in order to identify paragraphs;
+> >   - fix tables markups;
+> >   - add some lists markups;
+> >   - mark literal blocks;
+> >   - adjust title markups.
+> > 
+> > At its new index.rst, let's add a :orphan: while this is not linked to
+> > the main index.rst file, in order to avoid build warnings.
+> > 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Acked-by: Mark Brown <broonie@kernel.org>
+> > ---  
+> 
+> [...]
+> 
+> > diff --git a/Documentation/power/suspend-and-cpuhotplug.txt b/Documentation/power/suspend-and-cpuhotplug.rst
+> > similarity index 90%
+> > rename from Documentation/power/suspend-and-cpuhotplug.txt
+> > rename to Documentation/power/suspend-and-cpuhotplug.rst
+> > index a8751b8df10e..9df664f5423a 100644
+> > --- a/Documentation/power/suspend-and-cpuhotplug.txt
+> > +++ b/Documentation/power/suspend-and-cpuhotplug.rst
+> > @@ -1,10 +1,15 @@
+> > +====================================================================
+> >  Interaction of Suspend code (S3) with the CPU hotplug infrastructure
+> > +====================================================================
+> >  
+> > -     (C) 2011 - 2014 Srivatsa S. Bhat <srivatsa.bhat@linux.vnet.ibm.com>
+> > +(C) 2011 - 2014 Srivatsa S. Bhat <srivatsa.bhat@linux.vnet.ibm.com>
+> >  
+> >  
+> > -I. How does the regular CPU hotplug code differ from how the Suspend-to-RAM
+> > -   infrastructure uses it internally? And where do they share common code?
+> > +I. Differences between CPU hotplug and Suspend-to-RAM
+> > +======================================================
+> > +
+> > +How does the regular CPU hotplug code differ from how the Suspend-to-RAM
+> > +infrastructure uses it internally? And where do they share common code?
+> >  
+> >  Well, a picture is worth a thousand words... So ASCII art follows :-)
+> >    
+> 
+> [...]
+> 
+> > @@ -101,7 +108,7 @@ execution during resume):
+> >  
+> >  It is to be noted here that the system_transition_mutex lock is acquired at the very
+> >  beginning, when we are just starting out to suspend, and then released only
+> > -after the entire cycle is complete (i.e., suspend + resume).
+> > +after the entire cycle is complete (i.e., suspend + resume)::
+> >    
+> 
+> I think that should be a period, not a colon, because it is clarifying
+> the text above it (as opposed to referring to the example below it).
+> 
+> Other than that, for suspend-and-cpuhotplug.txt:
+> 
+> Acked-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
 
-diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
-index 66c839d8e9d1..96b9814e6d06 100644
---- a/drivers/gpu/drm/nouveau/Kconfig
-+++ b/drivers/gpu/drm/nouveau/Kconfig
-@@ -88,6 +88,7 @@ config DRM_NOUVEAU_SVM
- 	depends on DRM_NOUVEAU
- 	depends on HMM_MIRROR
- 	depends on STAGING
-+	select MIGRATE_VMA_HELPER
- 	default n
- 	help
- 	  Say Y here if you want to enable experimental support for
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 73676cb4693f..eca88679b624 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -679,7 +679,6 @@ config HMM_MIRROR
- 	bool "HMM mirror CPU page table into a device page table"
- 	depends on MMU
- 	select MMU_NOTIFIER
--	select MIGRATE_VMA_HELPER
- 	help
- 	  Select HMM_MIRROR if you want to mirror range of the CPU page table of a
- 	  process into a device page table. Here, mirror means "keep synchronized".
--- 
-2.20.1
+Ah, ok. I'll change it to:
 
+	after the entire cycle is complete (i.e., suspend + resume).
+
+	::
+
+and add your acked-by.
+
+>  
+> Regards,
+> Srivatsa
+> VMware Photon OS
+
+
+
+Thanks,
+Mauro
