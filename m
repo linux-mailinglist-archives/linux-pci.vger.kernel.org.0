@@ -2,99 +2,234 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C6E6A439AA
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 17:16:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E72943989
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 17:14:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732605AbfFMPPP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jun 2019 11:15:15 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:44038 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732227AbfFMNZ4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jun 2019 09:25:56 -0400
-Received: by mail-yw1-f68.google.com with SMTP id l79so504732ywe.11
-        for <linux-pci@vger.kernel.org>; Thu, 13 Jun 2019 06:25:55 -0700 (PDT)
+        id S1732764AbfFMPON (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jun 2019 11:14:13 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:33791 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732257AbfFMNaS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jun 2019 09:30:18 -0400
+Received: by mail-yw1-f67.google.com with SMTP id n21so2254009ywh.0
+        for <linux-pci@vger.kernel.org>; Thu, 13 Jun 2019 06:30:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=L8n107KncEadiGucDyUOK1dc7Qoutbu/OkCN1q9wnKQ=;
-        b=T75PJq2EBg1P6e56UgbjWnrSLbUMr0q8C7tRRjRh+94AczGGES6QfzrFVyga6yTDBL
-         eNyYFSXWvc5xDFkJFr5m8mdG1nzNUtd8pP3i+4MqWQ8Cvd2Im8TQ6PEaJCbB/JSwhs/6
-         k2VU1dNUPbwmH9fWul1KXxCVJDMoyy77xxEmfvmhJwH4HYQp9HQZAHQEPort5tewGCnS
-         PGzGhgm3xPlR/BNhfJ56el+G+yF9BT5XtqYYQayL9ExP+RBlI2mZ7fFs2RQ1PG+nIM3G
-         mRtZ4RtsJHSBREICIIWJ3Bnc4eX7R3pGkNHyr/he0XPq7QuaVIe54tbPvyeSVzhbbuxU
-         rYJg==
+        bh=gpC/BcbJqZm/b199OKanFtWwuFNfn3Nh4TAP7OeO2NA=;
+        b=BXofh382FGQ6XKPL2MfgAofF8BQm+/tgz4ml76l/iJkrG2E/+Dn2CcsfgfbiuEU3tj
+         RuZDqTsDzm6ObH1XEtafWfBUf0me0bv7ELlRK/EDgBLTTgGPCN72PLbTY5I64v8joDPd
+         vxEGj4K1laNQ4h//KZVXnpwBplBXDchGCJsiGY/LoSNyOPFsqamliqkc/auc6LnvDP6z
+         NdYHf9KnTMvUsC+0FFJCOuLumZOWQWWFFm7EjGvUO1RF3FRQHmeF81IER2zJvyqqJvVa
+         tYxikwp4VS73sfIlUIcSULdSIFQqhVNuqn4zfVaeOca9Eh6qh4k1yBfMCKcYh7/N9fdC
+         cPzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=L8n107KncEadiGucDyUOK1dc7Qoutbu/OkCN1q9wnKQ=;
-        b=sUugHBTM+ehrRVTGy0zvYTMilPMlMyD6Xe/XCvzNiaVgLL+D66ZE1OI8hVSW2tL0SK
-         LlPqZ3j7s9SwjhvpEB7lCcKbT16DoXuTejj3K6+7G3d+9ZgTxyY1HIFTCthsKffhYvSv
-         nvTXDmlAz5WG820PQKxnRy7OAXKi81HHC81LIfXFf6N+Npaj4dSyfb7/nlGBpLLOLQjA
-         pP847Q2ly+jITPAyFQwfqyTfDaSprz62tpToi64yt385VR3PZ4fnFrV9A8dL2dJ7nVhI
-         2EmJ2oruI0WfHuYebEeHyjAJgT7A+M+Fp4sUHLQhO1BfSQAgQN9Gxy7tauEFqy1Rx0OR
-         4GEA==
-X-Gm-Message-State: APjAAAXHz3ByqlGvb79UpaG8isgesHAxcr7pVrB2Zf4lTL44/EHyyiE9
-        WZ2BE5eaCy3+f4A2/xyoqclkKA==
-X-Google-Smtp-Source: APXvYqxjNGc6AcyEwZ/t/zcIOEouNn4QjUQcqZAqhno7R1RgUL6b0qSoKcPTm1rLqUfvQtW5ZcYsdg==
-X-Received: by 2002:a81:2f4a:: with SMTP id v71mr46927896ywv.51.1560432355472;
-        Thu, 13 Jun 2019 06:25:55 -0700 (PDT)
+        bh=gpC/BcbJqZm/b199OKanFtWwuFNfn3Nh4TAP7OeO2NA=;
+        b=VN8pLCUh6PXyHJtWk/wOakhvXb3Y/vgQYQ1o4PeGJ7xrag+j32bohLuUaikgk4c3xx
+         J/ELb76L1MaYwukrtY0K0TFAiRQhBUSRJVC0os8fo6+LYdrKebrOlSbHF/JD50sJV77O
+         pEZuXECMvNi6yj3II8DsOm1ew+PkvA27lDWVU3IX9nZdx3LENNAA4lBaGMXgknHTHH1A
+         g9YPZAXzcycsIsoUa+GHtTuEaI6IOTYPKyG4fwOelauCgbkrA8vV/zqTf3++gTdZUHSx
+         Dl23z/j/bd2GNqkDLgKdmQEQhi4+kLJdxaC0Np57k+Iv2FhLyJvYtaHywVU1meJtVQBQ
+         7XEw==
+X-Gm-Message-State: APjAAAVg7ZT3We4FgdmBmS95L6IEyVFcmjT20HyspoXdug58EYwOIpQl
+        j+9//v3gjJ+Ms0UONO6uImHVmA==
+X-Google-Smtp-Source: APXvYqxTssA/J+9V16+D44hORYBVXWzyfYlD4b0eRTXEkb7pd189qJsIUW5hoWZ7PNVmk1rzS/3Kzg==
+X-Received: by 2002:a0d:ea10:: with SMTP id t16mr32493125ywe.221.1560432617677;
+        Thu, 13 Jun 2019 06:30:17 -0700 (PDT)
 Received: from kudzu.us (76-230-155-4.lightspeed.rlghnc.sbcglobal.net. [76.230.155.4])
-        by smtp.gmail.com with ESMTPSA id p12sm740145ywg.72.2019.06.13.06.25.55
+        by smtp.gmail.com with ESMTPSA id p12sm742658ywg.72.2019.06.13.06.30.16
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 06:25:55 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 09:25:53 -0400
+        Thu, 13 Jun 2019 06:30:17 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 09:30:15 -0400
 From:   Jon Mason <jdmason@kudzu.us>
 To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Kelvin Cao <kelvin.cao@microsemi.com>,
+Cc:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-kselftest@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Allen Hubbe <allenbh@gmail.com>,
         Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-pci@vger.kernel.org,
-        linux-ntb@googlegroups.com, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] ntb_hw_switchtec: potential shift wrapping bug in
- switchtec_ntb_init_sndev()
-Message-ID: <20190613132553.GC1572@kudzu.us>
-References: <20190325091726.GD16023@kadam>
- <e2bc8cf0-8e3e-9335-e21b-4a9697e9c0ef@deltatee.com>
+        Serge Semin <fancer.lancer@gmail.com>,
+        Eric Pilmore <epilmore@gigaio.com>
+Subject: Re: [PATCH v5 00/10]  Support using MSI interrupts in ntb_transport
+Message-ID: <20190613133014.GE1572@kudzu.us>
+References: <20190523223100.5526-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e2bc8cf0-8e3e-9335-e21b-4a9697e9c0ef@deltatee.com>
+In-Reply-To: <20190523223100.5526-1-logang@deltatee.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 09:49:31AM -0600, Logan Gunthorpe wrote:
-> Thanks!
+On Thu, May 23, 2019 at 04:30:50PM -0600, Logan Gunthorpe wrote:
+> This is another resend as there has been no feedback since v4.
+> Seems Jon has been MIA this past cycle so hopefully he appears on the
+> list soon.
 > 
-> On 2019-03-25 3:17 a.m., Dan Carpenter wrote:
-> > This code triggers a Smatch warning:
-> > 
-> >     drivers/ntb/hw/mscc/ntb_hw_switchtec.c:884 switchtec_ntb_init_sndev()
-> >     warn: should '(1 << sndev->peer_partition)' be a 64 bit type?
-> > 
-> > The "part_map" and "tpart_vec" variables are u64 type so this seems like
-> > a valid warning.
-> > 
-> > Fixes: 3df54c870f52 ("ntb_hw_switchtec: Allow using Switchtec NTB in multi-partition setups")
-> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> I've addressed the feedback so far and rebased on the latest kernel
+> and would like this to be considered for merging this cycle.
 > 
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> The only outstanding issue I know of is that it still will not work
+> with IDT hardware, but ntb_transport doesn't work with IDT hardware
+> and there is still no sensible common infrastructure to support
+> ntb_peer_mw_set_trans(). Thus, I decline to consider that complication
+> in this patchset. However, I'll be happy to review work that adds this
+> feature in the future.
+> 
+> Also, as the port number and resource index stuff is a bit complicated,
+> I made a quick out of tree test fixture to ensure it's correct[1]. As
+> an excerise I also wrote some test code[2] using the upcomming KUnit
+> feature.
 
-Sorry for the delay.  The patch is now in the ntb branch.  We've
-missed window for 5.2, but it will be in the 5.3 pull request.
+Sorry for the delay.  The patch is now in the ntb-next branch.  We've
+missed window for 5.2, but it will be in the 5.3 pull request (barring
+last minute comments).
 
 Thanks,
 Jon
 
 > 
-> -- 
-> You received this message because you are subscribed to the Google Groups "linux-ntb" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-ntb+unsubscribe@googlegroups.com.
-> To post to this group, send email to linux-ntb@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/linux-ntb/e2bc8cf0-8e3e-9335-e21b-4a9697e9c0ef%40deltatee.com.
-> For more options, visit https://groups.google.com/d/optout.
+> Logan
+> 
+> [1] https://repl.it/repls/ExcitingPresentFile
+> [2] https://github.com/sbates130272/linux-p2pmem/commits/ntb_kunit
+> 
+> --
+> 
+> Changes in v5:
+> 
+> * Rebased onto v5.2-rc1 (plus the patches in ntb-next)
+> 
+> --
+> 
+> Changes in v4:
+> 
+> * Rebased onto v5.1-rc6 (No changes)
+> 
+> * Numerous grammar and spelling mistakes spotted by Bjorn
+> 
+> --
+> 
+> Changes in v3:
+> 
+> * Rebased onto v5.1-rc1 (Dropped the first two patches as they have
+>   been merged, and cleaned up some minor conflicts in the PCI tree)
+> 
+> * Added a new patch (#3) to calculate logical port numbers that
+>   are port numbers from 0 to (number of ports - 1). This is
+>   then used in ntb_peer_resource_idx() to fix the issues brought
+>   up by Serge.
+> 
+> * Fixed missing __iomem and iowrite calls (as noticed by Serge)
+> 
+> * Added patch 10 which describes ntb_msi_test in the documentation
+>   file (as requested by Serge)
+> 
+> * A couple other minor nits and documentation fixes
+> 
+> --
+> 
+> Changes in v2:
+> 
+> * Cleaned up the changes in intel_irq_remapping.c to make them
+>   less confusing and add a comment. (Per discussion with Jacob and
+>   Joerg)
+> 
+> * Fixed a nit from Bjorn and collected his Ack
+> 
+> * Added a Kconfig dependancy on CONFIG_PCI_MSI for CONFIG_NTB_MSI
+>   as the Kbuild robot hit a random config that didn't build
+>   without it.
+> 
+> * Worked in a callback for when the MSI descriptor changes so that
+>   the clients can resend the new address and data values to the peer.
+>   On my test system this was never necessary, but there may be
+>   other platforms where this can occur. I tested this by hacking
+>   in a path to rewrite the MSI descriptor when I change the cpu
+>   affinity of an IRQ. There's a bit of uncertainty over the latency
+>   of the change, but without hardware this can acctually occur on
+>   we can't test this. This was the result of a discussion with Dave.
+> 
+> --
+> 
+> This patch series adds optional support for using MSI interrupts instead
+> of NTB doorbells in ntb_transport. This is desirable seeing doorbells on
+> current hardware are quite slow and therefore switching to MSI interrupts
+> provides a significant performance gain. On switchtec hardware, a simple
+> apples-to-apples comparison shows ntb_netdev/iperf numbers going from
+> 3.88Gb/s to 14.1Gb/s when switching to MSI interrupts.
+> 
+> To do this, a couple changes are required outside of the NTB tree:
+> 
+> 1) The IOMMU must know to accept MSI requests from aliased bused numbers
+> seeing NTB hardware typically sends proxied request IDs through
+> additional requester IDs. The first patch in this series adds support
+> for the Intel IOMMU. A quirk to add these aliases for switchtec hardware
+> was already accepted. See commit ad281ecf1c7d ("PCI: Add DMA alias quirk
+> for Microsemi Switchtec NTB") for a description of NTB proxy IDs and why
+> this is necessary.
+> 
+> 2) NTB transport (and other clients) may often need more MSI interrupts
+> than the NTB hardware actually advertises support for. However, seeing
+> these interrupts will not be triggered by the hardware but through an
+> NTB memory window, the hardware does not actually need support or need
+> to know about them. Therefore we add the concept of Virtual MSI
+> interrupts which are allocated just like any other MSI interrupt but
+> are not programmed into the hardware's MSI table. This is done in
+> Patch 2 and then made use of in Patch 3.
+> 
+> The remaining patches in this series add a library for dealing with MSI
+> interrupts, a test client and finally support in ntb_transport.
+> 
+> The series is based off of v5.1-rc6 plus the patches in ntb-next.
+> A git repo is available here:
+> 
+> https://github.com/sbates130272/linux-p2pmem/ ntb_transport_msi_v4
+> 
+> Thanks,
+> 
+> Logan
+> 
+> --
+> 
+> Logan Gunthorpe (10):
+>   PCI/MSI: Support allocating virtual MSI interrupts
+>   PCI/switchtec: Add module parameter to request more interrupts
+>   NTB: Introduce helper functions to calculate logical port number
+>   NTB: Introduce functions to calculate multi-port resource index
+>   NTB: Rename ntb.c to support multiple source files in the module
+>   NTB: Introduce MSI library
+>   NTB: Introduce NTB MSI Test Client
+>   NTB: Add ntb_msi_test support to ntb_test
+>   NTB: Add MSI interrupt support to ntb_transport
+>   NTB: Describe the ntb_msi_test client in the documentation.
+> 
+>  Documentation/ntb.txt                   |  27 ++
+>  drivers/ntb/Kconfig                     |  11 +
+>  drivers/ntb/Makefile                    |   3 +
+>  drivers/ntb/{ntb.c => core.c}           |   0
+>  drivers/ntb/msi.c                       | 415 +++++++++++++++++++++++
+>  drivers/ntb/ntb_transport.c             | 169 ++++++++-
+>  drivers/ntb/test/Kconfig                |   9 +
+>  drivers/ntb/test/Makefile               |   1 +
+>  drivers/ntb/test/ntb_msi_test.c         | 433 ++++++++++++++++++++++++
+>  drivers/pci/msi.c                       |  54 ++-
+>  drivers/pci/switch/switchtec.c          |  12 +-
+>  include/linux/msi.h                     |   8 +
+>  include/linux/ntb.h                     | 196 ++++++++++-
+>  include/linux/pci.h                     |   9 +
+>  tools/testing/selftests/ntb/ntb_test.sh |  54 ++-
+>  15 files changed, 1386 insertions(+), 15 deletions(-)
+>  rename drivers/ntb/{ntb.c => core.c} (100%)
+>  create mode 100644 drivers/ntb/msi.c
+>  create mode 100644 drivers/ntb/test/ntb_msi_test.c
+> 
+> --
+> 2.20.1
