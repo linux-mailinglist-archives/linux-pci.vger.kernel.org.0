@@ -2,166 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8642344B11
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 20:49:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F28344B22
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 20:52:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbfFMStQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jun 2019 14:49:16 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:53714 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbfFMStQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jun 2019 14:49:16 -0400
-Received: from 79.184.253.190.ipv4.supernova.orange.pl (79.184.253.190) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 53b4723736121aee; Thu, 13 Jun 2019 20:49:12 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: [PATCH] PCI: PM: Skip devices in D0 for suspend-to-idle
-Date:   Thu, 13 Jun 2019 20:49:12 +0200
-Message-ID: <2649673.xutNDJ3zlI@kreacher>
-In-Reply-To: <2513600.jR9RdVMSR0@kreacher>
-References: <2513600.jR9RdVMSR0@kreacher>
+        id S1729025AbfFMSwv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jun 2019 14:52:51 -0400
+Received: from mail-eopbgr00041.outbound.protection.outlook.com ([40.107.0.41]:6670
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725838AbfFMSwv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 13 Jun 2019 14:52:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FNfgWtpWZP+R3zWab6EmeYAQTAYgx2pVR+LpFXyrRss=;
+ b=HuhOeDN4cvQnIPbnkY3/38FWBgnbccW+6aHtR17EeaLBgLlfggbM7Jmgd9HH/svLW/bPsC9MlhNeSNa3bXCOnAHSwbCOCWxV/UJ9cNCAooyjp2IS3RJ6Yyn/362HV2+z6SsrcvE5DkDoUj77xNdUXAVZHIbvMwr5hkc5ZHOX/JM=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5919.eurprd05.prod.outlook.com (20.178.126.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.11; Thu, 13 Jun 2019 18:52:44 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
+ 18:52:44 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 03/22] mm: remove hmm_devmem_add_resource
+Thread-Topic: [PATCH 03/22] mm: remove hmm_devmem_add_resource
+Thread-Index: AQHVIcx8KEghGfMSdEK+G1+HLD+T3KaZ7r+A
+Date:   Thu, 13 Jun 2019 18:52:44 +0000
+Message-ID: <20190613185239.GP22062@mellanox.com>
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-4-hch@lst.de>
+In-Reply-To: <20190613094326.24093-4-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR16CA0007.namprd16.prod.outlook.com
+ (2603:10b6:208:134::20) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 88cc1feb-7b67-4d6e-c18f-08d6f03051c6
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5919;
+x-ms-traffictypediagnostic: VI1PR05MB5919:
+x-microsoft-antispam-prvs: <VI1PR05MB5919FFFF62953C9A7D5AF300CFEF0@VI1PR05MB5919.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(346002)(376002)(39860400002)(136003)(199004)(189003)(99286004)(229853002)(7416002)(2906002)(53936002)(6486002)(6436002)(86362001)(81166006)(8676002)(186003)(6916009)(26005)(81156014)(102836004)(6116002)(4326008)(3846002)(25786009)(305945005)(7736002)(76176011)(6246003)(68736007)(486006)(316002)(52116002)(476003)(386003)(6506007)(11346002)(2616005)(446003)(1076003)(14454004)(256004)(4744005)(71190400001)(66066001)(33656002)(64756008)(66476007)(66946007)(66556008)(71200400001)(54906003)(36756003)(8936002)(6512007)(73956011)(5660300002)(478600001)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5919;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: iPoetAJzPWZv8VU52oGqZLrf5f3NTUkWPIOsu2E3P9cUOeZ3NwtuyEYz7iS7GJhlnDVMvGysQH81INXAyHGi4fhjs5va1Vo7Rdk93MlIgXRDPGqXx6+KGKEioXBXh61QIBW+HjfcdF9Afc/Uz8IU4w2KDhGZZyhNl/YEDKF9BG8aoozap+p31SfnFwV4kfNk64o6JW56KSiT60BrYrmeCz1XjhbsuaBg6SlAuqng5W2PWwz6FDD5jzrI/s5ZqBSLG+9QaRGa5ztkbj0f21QAbgQ9bDRkhNtDPfY/D24ndwUJPvjpdNIvVA5Nbk22Z1FnYXFRZc91aJgcqQyXDuUFzCT23/IfQophXoBr4oq2jKokb9DjG1mV1f29A7FqlAqhk+lNsM6TLohpGpppFxMbAIkVr/LP6Ao3e2lHBGtj3ng=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <866711CC77D78F4DBA1F59965DF24E41@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 88cc1feb-7b67-4d6e-c18f-08d6f03051c6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 18:52:44.2949
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5919
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday, June 13, 2019 12:14:02 AM CEST Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> Commit d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
-> attempted to avoid a problem with devices whose drivers want them to
-> stay in D0 over suspend-to-idle and resume, but it did not go as far
-> as it should with that.
-> 
-> Namely, first of all, it is questionable to change the power state
-> of a PCI bridge with a device in D0 under it, but that is not
-> actively prevented from happening during system-wide PM transitions,
-> so use the skip_bus_pm flag introduced by commit d491f2b75237 for
-> that.
-> 
-> Second, the configuration of devices left in D0 (whatever the reason)
-> during suspend-to-idle need not be changed and attempting to put them
-> into D0 again by force may confuse some firmware, so explicitly avoid
-> doing that.
-> 
-> Fixes: d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
-> Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
-> 
-> Tested on Dell XPS13 9360 with no issues.
-> 
-> ---
->  drivers/pci/pci-driver.c |   47 +++++++++++++++++++++++++++++++++++------------
->  1 file changed, 35 insertions(+), 12 deletions(-)
-> 
-> Index: linux-pm/drivers/pci/pci-driver.c
-> ===================================================================
-> --- linux-pm.orig/drivers/pci/pci-driver.c
-> +++ linux-pm/drivers/pci/pci-driver.c
-> @@ -524,7 +524,6 @@ static void pci_pm_default_resume_early(
->  	pci_power_up(pci_dev);
->  	pci_restore_state(pci_dev);
->  	pci_pme_restore(pci_dev);
-> -	pci_fixup_device(pci_fixup_resume_early, pci_dev);
->  }
->  
->  /*
-> @@ -842,18 +841,16 @@ static int pci_pm_suspend_noirq(struct d
->  
->  	if (pci_dev->skip_bus_pm) {
->  		/*
-> -		 * The function is running for the second time in a row without
-> +		 * Either the device is a bridge with a child in D0 below it, or
-> +		 * the function is running for the second time in a row without
->  		 * going through full resume, which is possible only during
-> -		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
-> -		 * device was originally left in D0, so its power state should
-> -		 * not be changed here and the device register values saved
-> -		 * originally should be restored on resume again.
-> +		 * suspend-to-idle in a spurious wakeup case.  The device should
-> +		 * be in D0 at this point, but if it is a bridge, it may be
-> +		 * necessary to save its state.
->  		 */
-> -		pci_dev->state_saved = true;
-> -	} else if (pci_dev->state_saved) {
-> -		if (pci_dev->current_state == PCI_D0)
-> -			pci_dev->skip_bus_pm = true;
-> -	} else {
-> +		if (!pci_dev->state_saved)
-> +			pci_save_state(pci_dev);
-> +	} else if (!pci_dev->state_saved) {
->  		pci_save_state(pci_dev);
->  		if (pci_power_manageable(pci_dev))
->  			pci_prepare_to_sleep(pci_dev);
-> @@ -862,6 +859,22 @@ static int pci_pm_suspend_noirq(struct d
->  	dev_dbg(dev, "PCI PM: Suspend power state: %s\n",
->  		pci_power_name(pci_dev->current_state));
->  
-> +	if (pci_dev->current_state == PCI_D0) {
-> +		pci_dev->skip_bus_pm = true;
-> +		/*
-> +		 * Changing the power state of a PCI bridge with a device in D0
-> +		 * below it is questionable, so avoid doing that by setting the
-> +		 * skip_bus_pm flag for the parent bridge.
-> +		 */
-> +		if (pci_dev->bus->self)
-> +			pci_dev->bus->self->skip_bus_pm = true;
-> +	}
-> +
-> +	if (pci_dev->skip_bus_pm && !pm_suspend_via_firmware()) {
-> +		dev_dbg(dev, "PCI PM: Skipped\n");
-> +		goto Fixup;
-> +	}
-> +
->  	pci_pm_set_unknown_state(pci_dev);
->  
->  	/*
-> @@ -909,7 +922,16 @@ static int pci_pm_resume_noirq(struct de
->  	if (dev_pm_smart_suspend_and_suspended(dev))
->  		pm_runtime_set_active(dev);
->  
-> -	pci_pm_default_resume_early(pci_dev);
-> +	/*
-> +	 * In the suspend-to-idle case, devices left in D0 during suspend will
-> +	 * stay in D0, so it is not necessary to restore or update their
-> +	 * configuration here and attempting to put them into D0 again may
-> +	 * confuse some firmware, so avoid doing that.
-> +	 */
-> +	if (!pci_dev->skip_bus_pm || pm_suspend_via_firmware())
-> +		pci_pm_default_resume_early(pci_dev);
-> +
-> +	pci_fixup_device(pci_fixup_resume_early, pci_dev);
->  
->  	if (pci_has_legacy_pm_support(pci_dev))
->  		return pci_legacy_resume_early(dev);
-> @@ -1200,6 +1222,7 @@ static int pci_pm_restore_noirq(struct d
->  	}
->  
->  	pci_pm_default_resume_early(pci_dev);
-> +	pci_fixup_device(pci_fixup_resume_early, pci_dev);
->  
->  	if (pci_has_legacy_pm_support(pci_dev))
->  		return pci_legacy_resume_early(dev);
-> 
+On Thu, Jun 13, 2019 at 11:43:06AM +0200, Christoph Hellwig wrote:
+> This function has never been used since it was first added to the kernel
+> more than a year and a half ago, and if we ever grow a consumer of the
+> MEMORY_DEVICE_PUBLIC infrastructure it can easily use devm_memremap_pages
+> directly now that we've simplified the API for it.
 
-Bjorn, please let me know if you have any reservations here.
+nit: Have we simplified the interface for devm_memremap_pages() at
+this point, or are you talking about later patches in this series.
 
-Since this has been confirmed to fix a reported issue, I'm about to queue it up for 5.2-rc6.
+I checked this and all the called functions are exported symbols, so
+there is no blocker for a future driver to call devm_memremap_pages(),
+maybe even with all this boiler plate, in future.
 
-Cheers,
-Rafael
+If we eventually get many users that need some simplified registration
+then we should add a devm_memremap_pages_simplified() interface and
+factor out that code when we can see the pattern.
 
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 
-
+Jason
