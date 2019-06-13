@@ -2,134 +2,329 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 02B2844761
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 18:59:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 866E9446C7
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 18:54:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729849AbfFMQ7L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jun 2019 12:59:11 -0400
-Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:53158 "EHLO
-        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729848AbfFMAeY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jun 2019 20:34:24 -0400
-X-Greylist: delayed 493 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Jun 2019 20:34:23 EDT
-Received: from [4.30.142.84] (helo=srivatsab-a01.vmware.com)
-        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <srivatsa@csail.mit.edu>)
-        id 1hbDYq-000Xfo-J5; Wed, 12 Jun 2019 20:25:48 -0400
-Subject: Re: [PATCH v4 18/28] docs: convert docs to ReST and rename to *.rst
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-pci@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <cover.1560361364.git.mchehab+samsung@kernel.org>
- <fac44e1fbab5ea755a93601a4fdfa34fcc57ae9e.1560361364.git.mchehab+samsung@kernel.org>
-From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Message-ID: <7dc94cb4-ebf1-22ab-29c9-fcb2b875a9ac@csail.mit.edu>
-Date:   Wed, 12 Jun 2019 17:25:39 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        id S1730127AbfFMQy0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jun 2019 12:54:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59320 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730051AbfFMCjy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 Jun 2019 22:39:54 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A0A2208CA;
+        Thu, 13 Jun 2019 02:39:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560393592;
+        bh=IITyHjiv62SNhJ4yXoRzm4f7+2+5GIlSE+irIAPOEwI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OAZN3L4pHvi36KeY3wFF29+S+Rf1vVorb8eMMyYAEdD89hesFlqveQcV376mHhamQ
+         5btlDzDL6f2O89IrmMl3lGt+06Zf83DuFF3JD9kBn41bB1gMw8wy0U8POMNRIXBuoP
+         T8jfC3V0Lq5yhgm7EZN2qo3QwgHqWFedHrKm/xrk=
+Date:   Wed, 12 Jun 2019 21:39:47 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     lorenzo.pieralisi@arm.com, arnd@arndb.de,
+        linux-pci@vger.kernel.org, rjw@rjwysocki.net,
+        linux-arm-kernel@lists.infradead.org, will.deacon@arm.com,
+        wangkefeng.wang@huawei.com, linuxarm@huawei.com,
+        andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com
+Subject: Re: [PATCH v4 1/3] lib: logic_pio: Use logical PIO low-level
+ accessors for !CONFIG_INDIRECT_PIO
+Message-ID: <20190613023947.GD13533@google.com>
+References: <1560262374-67875-1-git-send-email-john.garry@huawei.com>
+ <1560262374-67875-2-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <fac44e1fbab5ea755a93601a4fdfa34fcc57ae9e.1560361364.git.mchehab+samsung@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560262374-67875-2-git-send-email-john.garry@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/12/19 10:52 AM, Mauro Carvalho Chehab wrote:
-> Convert the PM documents to ReST, in order to allow them to
-> build with Sphinx.
+On Tue, Jun 11, 2019 at 10:12:52PM +0800, John Garry wrote:
+> Currently we only use logical PIO low-level accessors for when
+> CONFIG_INDIRECT_PIO is enabled.
 > 
-> The conversion is actually:
->   - add blank lines and identation in order to identify paragraphs;
->   - fix tables markups;
->   - add some lists markups;
->   - mark literal blocks;
->   - adjust title markups.
+> Otherwise we just use inb/out et all directly.
 > 
-> At its new index.rst, let's add a :orphan: while this is not linked to
-> the main index.rst file, in order to avoid build warnings.
+> It is useful to now use logical PIO accessors for all cases, so we can add
+> legality checks to accesses. Such a check would be for ensuring that the
+> PCI IO port has been IO remapped prior to the access.
+
+IIUC, *this* patch doesn't actually add any additional checks, so no
+need to mention that in this commit log.
+
+One thing this patch *does* do is "#define inb logic_inb" whenever
+PCI_IOBASE is defined (we used to do that #define only when
+CONFIG_INDIRECT_PIO was defined).  That's a pretty important change
+and needs to be very clear in the commit log.
+
+I'm not sure it's even safe, because CONFIG_INDIRECT_PIO depends on
+ARM64, but PCI_IOBASE is defined on most arches via asm-generic/io.h,
+so this potentially affects arches other than ARM64.
+
+If possible, split out the cleanup patches as below and make the patch
+that does this PCI_IOBASE change as small as possible so we can
+evaluate that change by itself.
+
+> Using the logical PIO accesses will add a little processing overhead, but
+> that's ok as IO port accesses are relatively slow anyway.
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Acked-by: Mark Brown <broonie@kernel.org>
+> Some changes are also made to stop spilling so many lines under
+> CONFIG_INDIRECT_PIO.
+
+"Some changes are also made" is a good hint to me that this patch
+might be able to be split up :)
+
+> Signed-off-by: John Garry <john.garry@huawei.com>
 > ---
+>  include/linux/logic_pio.h |  7 ++--
+>  lib/logic_pio.c           | 83 ++++++++++++++++++++++++++++-----------
+>  2 files changed, 63 insertions(+), 27 deletions(-)
+> 
+> diff --git a/include/linux/logic_pio.h b/include/linux/logic_pio.h
+> index cbd9d8495690..06d22b2ec99f 100644
+> --- a/include/linux/logic_pio.h
+> +++ b/include/linux/logic_pio.h
+> @@ -37,7 +37,7 @@ struct logic_pio_host_ops {
+>  		     size_t dwidth, unsigned int count);
+>  };
+>  
+> -#ifdef CONFIG_INDIRECT_PIO
+> +#if defined(PCI_IOBASE)
 
-[...]
+Why change the #ifdef style?  I understand these are equivalent, but
+unless there's a movement to change from "#ifdef X" to "#if defined(X)"
+I wouldn't bother.
 
-> diff --git a/Documentation/power/suspend-and-cpuhotplug.txt b/Documentation/power/suspend-and-cpuhotplug.rst
-> similarity index 90%
-> rename from Documentation/power/suspend-and-cpuhotplug.txt
-> rename to Documentation/power/suspend-and-cpuhotplug.rst
-> index a8751b8df10e..9df664f5423a 100644
-> --- a/Documentation/power/suspend-and-cpuhotplug.txt
-> +++ b/Documentation/power/suspend-and-cpuhotplug.rst
-> @@ -1,10 +1,15 @@
-> +====================================================================
->  Interaction of Suspend code (S3) with the CPU hotplug infrastructure
-> +====================================================================
+>  u8 logic_inb(unsigned long addr);
+>  void logic_outb(u8 value, unsigned long addr);
+>  void logic_outw(u16 value, unsigned long addr);
+> @@ -102,6 +102,7 @@ void logic_outsl(unsigned long addr, const void *buffer, unsigned int count);
+>  #define outsl logic_outsl
+>  #endif
 >  
-> -     (C) 2011 - 2014 Srivatsa S. Bhat <srivatsa.bhat@linux.vnet.ibm.com>
-> +(C) 2011 - 2014 Srivatsa S. Bhat <srivatsa.bhat@linux.vnet.ibm.com>
+> +#if defined(CONFIG_INDIRECT_PIO)
+>  /*
+>   * We reserve 0x4000 bytes for Indirect IO as so far this library is only
+>   * used by the HiSilicon LPC Host. If needed, we can reserve a wider IO
+> @@ -109,10 +110,10 @@ void logic_outsl(unsigned long addr, const void *buffer, unsigned int count);
+>   */
+>  #define PIO_INDIRECT_SIZE 0x4000
+>  #define MMIO_UPPER_LIMIT (IO_SPACE_LIMIT - PIO_INDIRECT_SIZE)
+> -#else
+> +#else /* CONFIG_INDIRECT_PIO */
+>  #define MMIO_UPPER_LIMIT IO_SPACE_LIMIT
+>  #endif /* CONFIG_INDIRECT_PIO */
+> -
+> +#endif /* PCI_IOBASE */
+>  struct logic_pio_hwaddr *find_io_range_by_fwnode(struct fwnode_handle *fwnode);
+>  unsigned long logic_pio_trans_hwaddr(struct fwnode_handle *fwnode,
+>  			resource_size_t hw_addr, resource_size_t size);
+> diff --git a/lib/logic_pio.c b/lib/logic_pio.c
+> index feea48fd1a0d..40d9428010e1 100644
+> --- a/lib/logic_pio.c
+> +++ b/lib/logic_pio.c
+> @@ -191,7 +191,8 @@ unsigned long logic_pio_trans_cpuaddr(resource_size_t addr)
+>  	return ~0UL;
+>  }
 >  
+> -#if defined(CONFIG_INDIRECT_PIO) && defined(PCI_IOBASE)
+> +#if defined(PCI_IOBASE)
+> +#if defined(CONFIG_INDIRECT_PIO)
+>  #define BUILD_LOGIC_IO(bw, type)					\
+>  type logic_in##bw(unsigned long addr)					\
+>  {									\
+> @@ -200,11 +201,11 @@ type logic_in##bw(unsigned long addr)					\
+>  	if (addr < MMIO_UPPER_LIMIT) {					\
+>  		ret = read##bw(PCI_IOBASE + addr);			\
+>  	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) { \
+> -		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+> +		struct logic_pio_hwaddr *range = find_io_range(addr);	\
+> +		size_t sz = sizeof(type);				\
+
+I don't mind changing "entry" to "range" and adding "sz".  But that
+could be done in a separate "no functional change" patch that is
+trivial to review, which would make *this* patch smaller and easier to
+review.
+
+Another "no functional change" simplification patch would be to
+replace this:
+
+  type ret = (type)~0;
+
+  if (addr < MMIO_UPPER_LIMIT) {
+    ret = read##bw(...);
+  } else if (...) {
+    if (range && range->ops)
+      ret = range->ops->in(...);
+    else
+      WARN_ON_ONCE();
+  }
+  return ret;
+
+with this:
+
+  if (addr < MMIO_UPPER_LIMIT)
+    return read##bw(...);
+
+  if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {
+    if (range && range->ops)
+      return range->ops->in(...);
+    else
+      WARN_ON_ONCE();
+  }
+
+  return (type)~0;
+
+Finally, I think the end result would be a little easier to read if
+you restructured the #ifdefs like this:
+
+  #ifdef PCI_IOBASE
+  #define BUILD_LOGIC_IO(...)
+  type logic_in##bw(...)
+  {
+    if (addr < MMIO_UPPER_LIMIT)
+      return read##bw(...);
+
+  #ifdef CONFIG_INDIRECT_PIO
+    if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {
+      if (range && range->ops)
+	return range->ops->in(...);
+      else
+	WARN_ON_ONCE();
+    }
+  #endif
+
+    return (type)~0;
+  }
+
+That does mean a CONFIG_INDIRECT_PIO #ifdef in each in/out/ins/outs
+builder, but it's more localized so I think it's easier to understand
+that INDIRECT_PIO is just adding a new case to the default path.
+
+> -		if (entry && entry->ops)				\
+> -			ret = entry->ops->in(entry->hostdata,		\
+> -					addr, sizeof(type));		\
+> +		if (range && range->ops)				\
+> +			ret = range->ops->in(range->hostdata, addr, sz);\
+>  		else							\
+>  			WARN_ON_ONCE(1);				\
+>  	}								\
+> @@ -216,49 +217,83 @@ void logic_out##bw(type value, unsigned long addr)			\
+>  	if (addr < MMIO_UPPER_LIMIT) {					\
+>  		write##bw(value, PCI_IOBASE + addr);			\
+>  	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
+> -		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+> +		struct logic_pio_hwaddr *range = find_io_range(addr);	\
+> +		size_t sz = sizeof(type);				\
+>  									\
+> -		if (entry && entry->ops)				\
+> -			entry->ops->out(entry->hostdata,		\
+> -					addr, value, sizeof(type));	\
+> +		if (range && range->ops)				\
+> +			range->ops->out(range->hostdata,		\
+> +					addr, value, sz);		\
+>  		else							\
+>  			WARN_ON_ONCE(1);				\
+>  	}								\
+>  }									\
+>  									\
+> -void logic_ins##bw(unsigned long addr, void *buffer,		\
+> -		   unsigned int count)					\
+> +void logic_ins##bw(unsigned long addr, void *buf, unsigned int cnt)	\
+>  {									\
+>  	if (addr < MMIO_UPPER_LIMIT) {					\
+> -		reads##bw(PCI_IOBASE + addr, buffer, count);		\
+> +		reads##bw(PCI_IOBASE + addr, buf, cnt);			\
+>  	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
+> -		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+> +		struct logic_pio_hwaddr *range = find_io_range(addr);	\
+> +		size_t sz = sizeof(type);				\
+>  									\
+> -		if (entry && entry->ops)				\
+> -			entry->ops->ins(entry->hostdata,		\
+> -				addr, buffer, sizeof(type), count);	\
+> +		if (range && range->ops)				\
+> +			range->ops->ins(range->hostdata,		\
+> +					addr, buf, sz, cnt);		\
+>  		else							\
+>  			WARN_ON_ONCE(1);				\
+>  	}								\
+>  									\
+>  }									\
+>  									\
+> -void logic_outs##bw(unsigned long addr, const void *buffer,		\
+> -		    unsigned int count)					\
+> +void logic_outs##bw(unsigned long addr, const void *buf,		\
+> +		    unsigned int cnt)					\
+>  {									\
+>  	if (addr < MMIO_UPPER_LIMIT) {					\
+> -		writes##bw(PCI_IOBASE + addr, buffer, count);		\
+> +		writes##bw(PCI_IOBASE + addr, buf, cnt);		\
+>  	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
+> -		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+> +		struct logic_pio_hwaddr *range = find_io_range(addr);	\
+> +		size_t sz = sizeof(type);				\
+>  									\
+> -		if (entry && entry->ops)				\
+> -			entry->ops->outs(entry->hostdata,		\
+> -				addr, buffer, sizeof(type), count);	\
+> +		if (range && range->ops)				\
+> +			range->ops->outs(range->hostdata,		\
+> +					 addr, buf, sz, cnt);		\
+>  		else							\
+>  			WARN_ON_ONCE(1);				\
+>  	}								\
+>  }
 >  
-> -I. How does the regular CPU hotplug code differ from how the Suspend-to-RAM
-> -   infrastructure uses it internally? And where do they share common code?
-> +I. Differences between CPU hotplug and Suspend-to-RAM
-> +======================================================
+> +#else /* CONFIG_INDIRECT_PIO */
 > +
-> +How does the regular CPU hotplug code differ from how the Suspend-to-RAM
-> +infrastructure uses it internally? And where do they share common code?
+> +#define BUILD_LOGIC_IO(bw, type)					\
+> +type logic_in##bw(unsigned long addr)					\
+> +{									\
+> +	type ret = (type)~0;						\
+> +									\
+> +	if (addr < MMIO_UPPER_LIMIT)					\
+> +		ret = read##bw(PCI_IOBASE + addr);			\
+> +	return ret;							\
+> +}									\
+> +									\
+> +void logic_out##bw(type value, unsigned long addr)			\
+> +{									\
+> +	if (addr < MMIO_UPPER_LIMIT)					\
+> +		write##bw(value, PCI_IOBASE + addr);			\
+> +}									\
+> +									\
+> +void logic_ins##bw(unsigned long addr, void *buf, unsigned int cnt)	\
+> +{									\
+> +	if (addr < MMIO_UPPER_LIMIT)					\
+> +		reads##bw(PCI_IOBASE + addr, buf, cnt);			\
+> +}									\
+> +									\
+> +void logic_outs##bw(unsigned long addr, const void *buf,		\
+> +		    unsigned int cnt)					\
+> +{									\
+> +	if (addr < MMIO_UPPER_LIMIT)					\
+> +		writes##bw(PCI_IOBASE + addr, buf, cnt);		\
+> +}
+> +#endif /* CONFIG_INDIRECT_PIO */
+> +
+>  BUILD_LOGIC_IO(b, u8)
+>  EXPORT_SYMBOL(logic_inb);
+>  EXPORT_SYMBOL(logic_insb);
+> @@ -277,4 +312,4 @@ EXPORT_SYMBOL(logic_insl);
+>  EXPORT_SYMBOL(logic_outl);
+>  EXPORT_SYMBOL(logic_outsl);
 >  
->  Well, a picture is worth a thousand words... So ASCII art follows :-)
->  
-
-[...]
-
-> @@ -101,7 +108,7 @@ execution during resume):
->  
->  It is to be noted here that the system_transition_mutex lock is acquired at the very
->  beginning, when we are just starting out to suspend, and then released only
-> -after the entire cycle is complete (i.e., suspend + resume).
-> +after the entire cycle is complete (i.e., suspend + resume)::
->  
-
-I think that should be a period, not a colon, because it is clarifying
-the text above it (as opposed to referring to the example below it).
-
-Other than that, for suspend-and-cpuhotplug.txt:
-
-Acked-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
- 
-Regards,
-Srivatsa
-VMware Photon OS
+> -#endif /* CONFIG_INDIRECT_PIO && PCI_IOBASE */
+> +#endif /* PCI_IOBASE */
+> -- 
+> 2.17.1
+> 
