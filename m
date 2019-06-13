@@ -2,83 +2,209 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A1F084441B
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 18:36:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2892443F7
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 18:34:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbfFMQey (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jun 2019 12:34:54 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44039 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730748AbfFMHsJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jun 2019 03:48:09 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x47so21444044qtk.11;
-        Thu, 13 Jun 2019 00:48:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fgT/YI2hhlyXpTA69Z5TLJrfk51LKe8sjqrg92sPdsE=;
-        b=SQg+yqsmEG8/rbL5s56YYblBFrLfmJsiBXHa7ZXVgyIP0tRoUXtNYQ0UIPH/XazFfA
-         L3GC1hyyy/kLMqwWeF4XpEiubJ2IzjM/pyZgoFCQX94B2q0GuqAHB0ApLWeB59IO7P1v
-         AnyS4noenqQKVv6dzMO4etLQ1mVb1wdkmCuI4rwxqz14UZBvSmrtbAATR3g9MjHNw/pb
-         eBzyywIV9piCmHE0zkCOuCnpQcQyl4Yshq5H5pJC6D8shazQfBM8x1Hghse9rJ9V3uey
-         tbUmq81JX+mUo3MPmYHLyPxq/VrrzEfQGdWuKjKyWFW+JjD54whb/J++843Ajdw8IjGB
-         Bl3A==
-X-Gm-Message-State: APjAAAUiAqQlL7dK/5SpbrLTm8uDGOtFJAlWU24Cksm5CXLW7FUz6SYG
-        usyGCQ/fpyaR/pUC+FF6UyNIc39dKcn/RNzAD1Q=
-X-Google-Smtp-Source: APXvYqxrrnzKo+F21ENjug1XYtPxZtDHIGQHLWn6kMjV5ZWTGO0RqR8XpwT1uM7DX/d/KwMCFvP6KDGEjgTJk97GDCA=
-X-Received: by 2002:ac8:3ff5:: with SMTP id v50mr69703766qtk.142.1560412088101;
- Thu, 13 Jun 2019 00:48:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <1560262374-67875-1-git-send-email-john.garry@huawei.com>
- <1560262374-67875-3-git-send-email-john.garry@huawei.com> <20190613032034.GE13533@google.com>
-In-Reply-To: <20190613032034.GE13533@google.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 13 Jun 2019 09:47:51 +0200
-Message-ID: <CAK8P3a0C010LEs3HmyQKHWx4EVpVH1NUtFwYkoF16syFQ9hd8w@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] lib: logic_pio: Reject accesses to unregistered
- CPU MMIO regions
+        id S1730794AbfFMQeB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jun 2019 12:34:01 -0400
+Received: from gate.crashing.org ([63.228.1.57]:57033 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727819AbfFMHzK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 13 Jun 2019 03:55:10 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5D7suM2000424;
+        Thu, 13 Jun 2019 02:54:57 -0500
+Message-ID: <5783e36561bb77a1deb6ba67e5a9824488cc69c6.camel@kernel.crashing.org>
+Subject: [RFC PATCH v2] arm64: acpi/pci: invoke _DSM whether to preserve
+ firmware PCI setup
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     John Garry <john.garry@huawei.com>,
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sinan Kaya <okaya@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Date:   Thu, 13 Jun 2019 17:54:56 +1000
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 5:20 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Jun 11, 2019 at 10:12:53PM +0800, John Garry wrote:
-> > Currently when accessing logical indirect PIO addresses in
-> > logic_{in, out}{,s}, we first ensure that the region is registered.
->
-> I think logic_pio is specifically concerned with I/O port space, so
-> it's a little bit unfortunate that we named this "PIO".
->
-> PIO is a general term for "Programmed I/O", which just means the CPU
-> is involved in each transfer, as opposed to DMA.  The transfers can be
-> to either MMIO or I/O port space.
->
-> So this ends up being a little confusing because I think you mean
-> "Port I/O", not "Programmed I/O".
+The current arm64 PCI code for ACPI platforms will unconditionally
+reassign all resources.
 
-I think the terms that John uses are more common: I would also
-assume that "PIO" (regardless of whether you expand it as Port
-or Programmed I/O) refers only to inb/outb and PCI/ISA/LPC
-I/O space, and is distinct from "MMIO", which refers to the readl/writel
-accessors and PCI memory space.
+This is not only suboptimal, it's also wrong for a number of cases, for
+example, this could invalidate a UEFI framebuffer address, or a runtime
+firmware could be using some of the devices in their original location.
 
-That is consistent with the usage across at least the x86, powerpc
-and ia64 architectures when they refer to PIO.
+There is an ACPI method defined today for P2P bridges (_DSM #5) that
+can indicate that a bridge resources set by firmware. There is current
+discussions to extend that method to cover host bridges, and define
+a value of "0" as meaning that the resources must be preserved.
 
-        Arnd
+This patch adds the resource assignment policy to struct
+pci_host_bridge and sets it based on the presence of that method and if
+present the value returned, and honors it on arm64.
+
+No other architectures are currently affected, and the default is kept
+to "reassign everything" on arm64 for now via an #ifdef, though we do
+plan to get rid of that in a separate patch.
+
+The setting in pci_host_bridge "looks" generic because I intend in
+subsquent work to consolidate the resource allocation policy accross
+architectures and I intend for that setting to be the canonical
+location used by the generic code to decide what to do.
+
+This is based on some earlier work by
+Ard Biesheuvel <ard.biesheuvel@linaro.org>
+
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+---
+
+ arch/arm64/kernel/pci.c  | 12 ++++++++++--
+ drivers/acpi/pci_root.c  | 42 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/pci-acpi.h |  7 ++++---
+ include/linux/pci.h      | 10 ++++++++++
+ 4 files changed, 66 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+index bb85e2f4603f..b209a506f390 100644
+--- a/arch/arm64/kernel/pci.c
++++ b/arch/arm64/kernel/pci.c
+@@ -168,6 +168,7 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
+ 	struct acpi_pci_generic_root_info *ri;
+ 	struct pci_bus *bus, *child;
+ 	struct acpi_pci_root_ops *root_ops;
++	struct pci_host_bridge *hb;
+ 
+ 	ri = kzalloc(sizeof(*ri), GFP_KERNEL);
+ 	if (!ri)
+@@ -193,8 +194,15 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
+ 	if (!bus)
+ 		return NULL;
+ 
+-	pci_bus_size_bridges(bus);
+-	pci_bus_assign_resources(bus);
++	hb = pci_find_host_bridge(bus);
++
++	/* If the policy is normal or probe only, claim existing resources */
++	if (hb->rsrc_policy != pci_rsrc_reassign)
++		pci_bus_claim_resources(bus);
++
++	/* If the policy is not probe only, assign what's left unassigned */
++	if (hb->rsrc_policy != pci_rsrc_probe_only)
++		pci_assign_unassigned_root_bus_resources(bus);
+ 
+ 	list_for_each_entry(child, &bus->children, node)
+ 		pcie_bus_configure_settings(child);
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index 39f5d172e84f..410f7f2b2587 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -881,6 +881,7 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+ 	int node = acpi_get_node(device->handle);
+ 	struct pci_bus *bus;
+ 	struct pci_host_bridge *host_bridge;
++	union acpi_object *obj;
+ 
+ 	info->root = root;
+ 	info->bridge = device;
+@@ -917,6 +918,47 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+ 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
+ 		host_bridge->native_ltr = 0;
+ 
++	/*
++	 * Invoke the PCI device specific method (_DSM) #5 'Ignore PCI Boot
++	 * Configuration', on the host bridge. This tells us whether the
++	 * firmware wants us to preserve or reassign the configuration of
++	 * the PCI resource tree for this root bridge.
++	 *
++	 * There are three possible outcomes here:
++	 *
++	 *  - _DSM #5 is absent. This is the default. Currently it will be
++	 *    architecture specific in order to maintain existing behaviours
++	 *    but the plan is to move arm64 into the fold: x86 and ia64 will
++	 *    claim the existing config, and reassign if needed. arm64 will
++	 *    always reassign.
++	 *
++	 *  - _DSM #5 exists and is 1. This is the FW telling us to ignore
++	 *    the configuration it performed. This is currently only supported
++	 *    on arm64.
++	 *
++	 *  - _DSM #5 exists and is 0. This should be the same as the default
++	 *    (_DSM #5 absent). However there are some assumptions flying around
++	 *    that this means we must keep the FW configuration intact. So we
++	 *    treat that as "probe only" for the time being. This is currently
++	 *    only supported on arm64.
++	 */
++	obj = acpi_evaluate_dsm(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 1,
++	                        IGNORE_PCI_BOOT_CONFIG_DSM, NULL);
++	if (obj && obj->type == ACPI_TYPE_INTEGER) {
++		if (obj->integer.value == 1)
++			host_bridge->rsrc_policy = pci_rsrc_reassign;
++		else
++			host_bridge->rsrc_policy = pci_rsrc_probe_only;
++	} else {
++		/* Default is arch specific ... for now */
++#ifdef CONFIG_ARM64
++		host_bridge->rsrc_policy = pci_rsrc_reassign;
++#else
++		host_bridge->rsrc_policy = pci_rsrc_normal;
++#endif
++	}
++	ACPI_FREE(obj);
++
+ 	pci_scan_child_bus(bus);
+ 	pci_set_host_bridge_release(host_bridge, acpi_pci_root_release_info,
+ 				    info);
+diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
+index 8082b612f561..62b7fdcc661c 100644
+--- a/include/linux/pci-acpi.h
++++ b/include/linux/pci-acpi.h
+@@ -107,9 +107,10 @@ static inline void acpiphp_check_host_bridge(struct acpi_device *adev) { }
+ #endif
+ 
+ extern const guid_t pci_acpi_dsm_guid;
+-#define DEVICE_LABEL_DSM	0x07
+-#define RESET_DELAY_DSM		0x08
+-#define FUNCTION_DELAY_DSM	0x09
++#define IGNORE_PCI_BOOT_CONFIG_DSM	0x05
++#define DEVICE_LABEL_DSM		0x07
++#define RESET_DELAY_DSM			0x08
++#define FUNCTION_DELAY_DSM		0x09
+ 
+ #else	/* CONFIG_ACPI */
+ static inline void acpi_pci_add_bus(struct pci_bus *bus) { }
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index dd436da7eccc..7ff5cedb30cf 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -486,6 +486,12 @@ static inline int pci_channel_offline(struct pci_dev *pdev)
+ 	return (pdev->error_state != pci_channel_io_normal);
+ }
+ 
++enum pci_host_rsrc_policy {
++	pci_rsrc_normal,	/* Probe and (re)assign what's missing/broken */
++	pci_rsrc_probe_only,	/* Probe only */
++	pci_rsrc_reassign,	/* Reassign resources */
++};
++
+ struct pci_host_bridge {
+ 	struct device	dev;
+ 	struct pci_bus	*bus;		/* Root bus */
+@@ -506,6 +512,10 @@ struct pci_host_bridge {
+ 	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
+ 	unsigned int	native_pme:1;		/* OS may use PCIe PME */
+ 	unsigned int	native_ltr:1;		/* OS may use PCIe LTR */
++
++	/* Resource assignment/allocation policy */
++	enum pci_host_rsrc_policy rsrc_policy;
++
+ 	/* Resource alignment requirements */
+ 	resource_size_t (*align_resource)(struct pci_dev *dev,
+ 			const struct resource *res,
+
+
