@@ -2,153 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D8A744EDA
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 23:59:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87C9244EEB
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 00:01:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbfFMV7s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jun 2019 17:59:48 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:49658 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728025AbfFMV7s (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jun 2019 17:59:48 -0400
-Received: from 79.184.253.190.ipv4.supernova.orange.pl (79.184.253.190) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 0423c3e6485434c2; Thu, 13 Jun 2019 23:59:45 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH v2] PCI: PM: Skip devices in D0 for suspend-to-idle
-Date:   Thu, 13 Jun 2019 23:59:45 +0200
-Message-ID: <1668247.RaJIPSxJUN@kreacher>
+        id S1728201AbfFMWBN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jun 2019 18:01:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59552 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726316AbfFMWBN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 13 Jun 2019 18:01:13 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8D0C4307D90D;
+        Thu, 13 Jun 2019 22:01:12 +0000 (UTC)
+Received: from x1.home (ovpn-116-190.phx2.redhat.com [10.3.116.190])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0EB305C54A;
+        Thu, 13 Jun 2019 22:01:09 +0000 (UTC)
+Date:   Thu, 13 Jun 2019 16:01:09 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, KarimAllah Ahmed <karahmed@amazon.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/IOV: Fix VF cfg_size
+Message-ID: <20190613160109.23e1747c@x1.home>
+In-Reply-To: <20190613212039.GL13533@google.com>
+References: <155966918965.10361.16228304474160813310.stgit@gimli.home>
+        <20190604143617.0a226555@x1.home>
+        <20190613212039.GL13533@google.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 13 Jun 2019 22:01:12 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Thu, 13 Jun 2019 16:20:39 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Commit d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
-attempted to avoid a problem with devices whose drivers want them to
-stay in D0 over suspend-to-idle and resume, but it did not go as far
-as it should with that.
+> On Tue, Jun 04, 2019 at 02:36:17PM -0600, Alex Williamson wrote:
+> > On Tue, 04 Jun 2019 11:26:42 -0600
+> > Alex Williamson <alex.williamson@redhat.com> wrote:
+> >   
+> > > Commit 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for
+> > > other VFs") attempts to cache the config space size of VF0 to re-use
+> > > for all other VFs, but the cache is setup before the call to
+> > > pci_setup_device(), where we use set_pcie_port_type() to setup the
+> > > pcie_cap field on the struct pci_dev.  Without pcie_cap configured,
+> > > pci_cfg_space_size() returns PCI_CFG_SPACE_SIZE for the size.  VF0
+> > > has a bypass through pci_cfg_space_size(), so its size is reported
+> > > correctly, but all subsequent VFs incorrectly report 256 bytes of
+> > > config space.
+> > > 
+> > > Resolve by delaying pci_read_vf_config_common() until after
+> > > pci_setup_device().
+> > > 
+> > > Fixes: 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for other VFs")
+> > > Link: https://bugzilla.redhat.com/show_bug.cgi?id=1714978
+> > > Cc: KarimAllah Ahmed <karahmed@amazon.de>
+> > > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> > > ---
+> > >  drivers/pci/iov.c |    6 +++---
+> > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > > index 3aa115ed3a65..34b1f78f4d31 100644
+> > > --- a/drivers/pci/iov.c
+> > > +++ b/drivers/pci/iov.c
+> > > @@ -161,13 +161,13 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+> > >  	virtfn->is_virtfn = 1;
+> > >  	virtfn->physfn = pci_dev_get(dev);
+> > >  
+> > > -	if (id == 0)
+> > > -		pci_read_vf_config_common(virtfn);
+> > > -
+> > >  	rc = pci_setup_device(virtfn);
+> > >  	if (rc)
+> > >  		goto failed1;
+> > >  
+> > > +	if (id == 0)
+> > > +		pci_read_vf_config_common(virtfn);
+> > > +
+> > >  	virtfn->dev.parent = dev->dev.parent;
+> > >  	virtfn->multifunction = 0;  
+> > 
+> > Would it actually make more sense to revert 975bb8b4dc93 and just
+> > assume any is_virtfn device has PCI_CFG_SPACE_EXP_SIZE for cfg_size?
+> > Per the SR-IOV spec, VFs are required to implement a PCIe capability,
+> > which should imply 4K of config space.  The reachability of that
+> > extended config space seems unnecessary to test if we assume that it
+> > has the same characteristics as the PF, which must be reachable if
+> > we're able to enable SR-IOV.  Thoughts?  Thanks,  
+> 
+> I like this idea.
+> 
+> I first thought maybe we'd still be susceptible to the gotchas
+> described in the pci_cfg_space_size_ext() comment, i.e., we might not
+> have a way to generate extended config space accesses, or the device
+> might be behind a reverse Express bridge.
+> 
+> But as you say, SR-IOV is an extended capability that must be located
+> at config offset 0x100 or greater, so the fact that we have a VF at
+> all means we must be able to reach it.
 
-Namely, first of all, the power state of a PCI bridge with a
-downstream device in D0 must be D0 (based on the PCI PM spec r1.2,
-sec 6, table 6-1, if the bridge is not in D0, there can be no PCI
-transactions on its secondary bus), but that is not actively enforced
-during system-wide PM transitions, so use the skip_bus_pm flag
-introduced by commit d491f2b75237 for that.
+Cool, I'll send a patch shortly.  Thanks,
 
-Second, the configuration of devices left in D0 (whatever the reason)
-during suspend-to-idle need not be changed and attempting to put them
-into D0 again by force is pointless, so explicitly avoid doing that.
-
-Fixes: d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/pci/pci-driver.c |   47 +++++++++++++++++++++++++++++++++++------------
- 1 file changed, 35 insertions(+), 12 deletions(-)
-
-Index: linux-pm/drivers/pci/pci-driver.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci-driver.c
-+++ linux-pm/drivers/pci/pci-driver.c
-@@ -524,7 +524,6 @@ static void pci_pm_default_resume_early(
- 	pci_power_up(pci_dev);
- 	pci_restore_state(pci_dev);
- 	pci_pme_restore(pci_dev);
--	pci_fixup_device(pci_fixup_resume_early, pci_dev);
- }
- 
- /*
-@@ -842,18 +841,16 @@ static int pci_pm_suspend_noirq(struct d
- 
- 	if (pci_dev->skip_bus_pm) {
- 		/*
--		 * The function is running for the second time in a row without
-+		 * Either the device is a bridge with a child in D0 below it, or
-+		 * the function is running for the second time in a row without
- 		 * going through full resume, which is possible only during
--		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
--		 * device was originally left in D0, so its power state should
--		 * not be changed here and the device register values saved
--		 * originally should be restored on resume again.
-+		 * suspend-to-idle in a spurious wakeup case.  The device should
-+		 * be in D0 at this point, but if it is a bridge, it may be
-+		 * necessary to save its state.
- 		 */
--		pci_dev->state_saved = true;
--	} else if (pci_dev->state_saved) {
--		if (pci_dev->current_state == PCI_D0)
--			pci_dev->skip_bus_pm = true;
--	} else {
-+		if (!pci_dev->state_saved)
-+			pci_save_state(pci_dev);
-+	} else if (!pci_dev->state_saved) {
- 		pci_save_state(pci_dev);
- 		if (pci_power_manageable(pci_dev))
- 			pci_prepare_to_sleep(pci_dev);
-@@ -862,6 +859,22 @@ static int pci_pm_suspend_noirq(struct d
- 	dev_dbg(dev, "PCI PM: Suspend power state: %s\n",
- 		pci_power_name(pci_dev->current_state));
- 
-+	if (pci_dev->current_state == PCI_D0) {
-+		pci_dev->skip_bus_pm = true;
-+		/*
-+		 * Per PCI PM r1.2, table 6-1, a bridge must be in D0 if any
-+		 * downstream device is in D0, so avoid changing the power state
-+		 * of the parent bridge by setting the skip_bus_pm flag for it.
-+		 */
-+		if (pci_dev->bus->self)
-+			pci_dev->bus->self->skip_bus_pm = true;
-+	}
-+
-+	if (pci_dev->skip_bus_pm && !pm_suspend_via_firmware()) {
-+		dev_dbg(dev, "PCI PM: Skipped\n");
-+		goto Fixup;
-+	}
-+
- 	pci_pm_set_unknown_state(pci_dev);
- 
- 	/*
-@@ -909,7 +922,16 @@ static int pci_pm_resume_noirq(struct de
- 	if (dev_pm_smart_suspend_and_suspended(dev))
- 		pm_runtime_set_active(dev);
- 
--	pci_pm_default_resume_early(pci_dev);
-+	/*
-+	 * In the suspend-to-idle case, devices left in D0 during suspend will
-+	 * stay in D0, so it is not necessary to restore or update their
-+	 * configuration here and attempting to put them into D0 again may
-+	 * confuse some firmware, so avoid doing that.
-+	 */
-+	if (!pci_dev->skip_bus_pm || pm_suspend_via_firmware())
-+		pci_pm_default_resume_early(pci_dev);
-+
-+	pci_fixup_device(pci_fixup_resume_early, pci_dev);
- 
- 	if (pci_has_legacy_pm_support(pci_dev))
- 		return pci_legacy_resume_early(dev);
-@@ -1200,6 +1222,7 @@ static int pci_pm_restore_noirq(struct d
- 	}
- 
- 	pci_pm_default_resume_early(pci_dev);
-+	pci_fixup_device(pci_fixup_resume_early, pci_dev);
- 
- 	if (pci_has_legacy_pm_support(pci_dev))
- 		return pci_legacy_resume_early(dev);
-
-
-
+Alex
