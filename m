@@ -2,133 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B8C844A9C
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 20:27:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 812EA44AB2
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 20:30:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbfFMS1w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jun 2019 14:27:52 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39412 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727168AbfFMS1w (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jun 2019 14:27:52 -0400
-Received: by mail-oi1-f193.google.com with SMTP id m202so70900oig.6
-        for <linux-pci@vger.kernel.org>; Thu, 13 Jun 2019 11:27:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MQQWIXbMnO77ZtHyX2kfFVvlpzWpGkMLz/R1+ir3QOA=;
-        b=crvCEGgkqd+iu3jPAVCgc0rO9kwagRqhiuh9lqc2Ju8CbgOGid+cpJ19wpMCBIaSji
-         U8Mz0dX1Um88VCqaKkUNTGuID9Bzc63KYSiIdoNpp/7dpBf8k6fFGIdSQ7ELDhxa2lhq
-         O+Cm1rdZssbK5qGXuJrRKvIFe20o9RjF63pnvwmTOEXNE3m0kL4mYXXHPHnWB7iNGKvf
-         IRmvCqhPr54CoqyHGAWbyFjtaCU9quXmW4KMHVoz5mhnnS/xbbV6lznIglpAz1QTbisQ
-         VH8TIrLDYodoKV2w14PaLsUgipHZwL/KVe25acJc00UDmNqVKP+RWr4Mjo9Lxw4wybxj
-         3jlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MQQWIXbMnO77ZtHyX2kfFVvlpzWpGkMLz/R1+ir3QOA=;
-        b=OnqJJ1BMhnTm1Xd+kJKjw8D3zbVhOylu8O55M7SBSWLteS2H6eX8klbxRJcIbY5WRW
-         hfZSxc02l2mSxBmstCTzBL/gUuQd7+f1zsgKfK2tOIDxtyjAl5wbdc1AhcJACGmxveWV
-         1Q3DhGIL2ELW/NXs5Gwmq7EF8KdhcYACQe7Ef1Np6w7YQo8M2OnCylDOnM691wcvvYst
-         ELNq/co7VBrtdgxscGER7TthSS664hI6/MX39D+Tw0mbj9uD3QO5RCAh3XZDppLMND6h
-         ukySaBsViQk8/Y4mhfXTHqghktO2DTgw3FS8cyYN178hFDyd3c027yUl8rHlREZcB3hI
-         CEFA==
-X-Gm-Message-State: APjAAAWa3ORNcyaFVHVsJ1sHSO6lszpMLSlyNvYudY9ubGTnkLBTXcXr
-        eqOOk4fUPax8FDHFr/5OTVg7gp/jxh6vRNjiySVsUQ==
-X-Google-Smtp-Source: APXvYqwS3UGoJsEHP8JK1xPznND3LFKZmK0TBwbTuAL+csM43V1iR6xbM76Rxv8Te4jLIHldpTP2/DzDl/DDdZFYcCo=
-X-Received: by 2002:aca:fc50:: with SMTP id a77mr4031867oii.0.1560450471426;
- Thu, 13 Jun 2019 11:27:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190613094326.24093-1-hch@lst.de>
-In-Reply-To: <20190613094326.24093-1-hch@lst.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 13 Jun 2019 11:27:39 -0700
-Message-ID: <CAPcyv4jBdwYaiVwkhy6kP78OBAs+vJme1UTm47dX4Eq_5=JgSg@mail.gmail.com>
-Subject: Re: dev_pagemap related cleanups
+        id S1727067AbfFMSac (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jun 2019 14:30:32 -0400
+Received: from mail-eopbgr50078.outbound.protection.outlook.com ([40.107.5.78]:51074
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727058AbfFMSac (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 13 Jun 2019 14:30:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r0d+YLFD8dGkAwiCYZAtPwS2G6Ds7zR/M3jKY4RPVuk=;
+ b=monCWH28lJ8KutFgYrbunH4n71O0rCyBxc5YAFfMijiC+36DWBjgRugr2jES4xlF5XZW4obgenyjgDDc9/IxSVr5yzCoI5cH1QauGF4qKClZYCrLY15EznN0ic2/4wRlPBtniXJKWIQFSIlRR23+0rxITpaOtgBm7uBPIcTdrA8=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5584.eurprd05.prod.outlook.com (20.177.203.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.11; Thu, 13 Jun 2019 18:30:28 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
+ 18:30:28 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
 To:     Christoph Hellwig <hch@lst.de>
-Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 01/22] mm: remove the unused ARCH_HAS_HMM_DEVICE Kconfig
+ option
+Thread-Topic: [PATCH 01/22] mm: remove the unused ARCH_HAS_HMM_DEVICE Kconfig
+ option
+Thread-Index: AQHVIcx6m7GApB2g2EOjqyqCTmZIFaaZ6IgA
+Date:   Thu, 13 Jun 2019 18:30:28 +0000
+Message-ID: <20190613183024.GN22062@mellanox.com>
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-2-hch@lst.de>
+In-Reply-To: <20190613094326.24093-2-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR02CA0032.namprd02.prod.outlook.com
+ (2603:10b6:208:fc::45) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c1ee3c6a-1509-419a-74b4-08d6f02d35ac
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5584;
+x-ms-traffictypediagnostic: VI1PR05MB5584:
+x-microsoft-antispam-prvs: <VI1PR05MB558425A8B5EAF3873BF93F5BCFEF0@VI1PR05MB5584.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:923;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(396003)(346002)(376002)(366004)(189003)(199004)(11346002)(26005)(4326008)(8676002)(2906002)(446003)(73956011)(81166006)(81156014)(68736007)(316002)(8936002)(229853002)(66446008)(6512007)(6436002)(64756008)(25786009)(66946007)(66556008)(6486002)(66476007)(2616005)(476003)(7736002)(305945005)(186003)(53936002)(256004)(3846002)(1076003)(6116002)(6506007)(6246003)(33656002)(66066001)(386003)(14454004)(102836004)(4744005)(71190400001)(54906003)(86362001)(6916009)(71200400001)(36756003)(478600001)(486006)(5660300002)(99286004)(76176011)(7416002)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5584;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: eb3KNKd+VDg3aMK8Xechk52gl84tRX+UWpHdsOLNOQzeiT28ESmFj2R4yKBmX+NPNaW6nZgyRfR3xgOTcaQ1b4lRWF6pQAbCHEkPttsEIW1r8cu28CXaD45UV36dQZIooipJbaFiZTzELlXICo9wDON3UG7aNvg+R+cWUXcYJie9pdMNgKX5v3lkEcBent4N1kyPRMafc480EDdxGF4aAAmP5ip0yM9nDnluL/fQCgq8GXOGX7b3kOgug3OKimrxKxX837QgZlGE2fpggJ/ZDicu4ctD5be9CWPG3TpqcjUCqzn1BV4UmOojvh+hKxZkl1v7Z0lpZ+RXvTN9QxS06jX1iWzwcH93SIz/BXEzE46Prkw1Id4bz6tQ0K79DZqnttQrzX5GmktcE0O6ji7z3ox0jb5Tt89CDTzrmvMVFN0=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <1C3FD7879859344FA6C6020F72EC479A@eurprd05.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1ee3c6a-1509-419a-74b4-08d6f02d35ac
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 18:30:28.7061
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5584
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 2:43 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> Hi Dan, J=C3=A9r=C3=B4me and Jason,
->
-> below is a series that cleans up the dev_pagemap interface so that
-> it is more easily usable, which removes the need to wrap it in hmm
-> and thus allowing to kill a lot of code
->
-> Diffstat:
->
->  22 files changed, 245 insertions(+), 802 deletions(-)
+On Thu, Jun 13, 2019 at 11:43:04AM +0200, Christoph Hellwig wrote:
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  mm/Kconfig | 10 ----------
+>  1 file changed, 10 deletions(-)
 
-Hooray!
+So long as we are willing to run a hmm.git we can merge only complete
+features going forward.
 
-> Git tree:
->
->     git://git.infradead.org/users/hch/misc.git hmm-devmem-cleanup
+Thus we don't need the crazy process described in the commit message
+that (deliberately) introduced this unused kconfig.
 
-I just realized this collides with the dev_pagemap release rework in
-Andrew's tree (commit ids below are from next.git and are not stable)
+I also tried to find something in-flight for 5.3 that would need this
+and found nothing
 
-4422ee8476f0 mm/devm_memremap_pages: fix final page put race
-771f0714d0dc PCI/P2PDMA: track pgmap references per resource, not globally
-af37085de906 lib/genalloc: introduce chunk owners
-e0047ff8aa77 PCI/P2PDMA: fix the gen_pool_add_virt() failure path
-0315d47d6ae9 mm/devm_memremap_pages: introduce devm_memunmap_pages
-216475c7eaa8 drivers/base/devres: introduce devm_release_action()
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 
-CONFLICT (content): Merge conflict in tools/testing/nvdimm/test/iomap.c
-CONFLICT (content): Merge conflict in mm/hmm.c
-CONFLICT (content): Merge conflict in kernel/memremap.c
-CONFLICT (content): Merge conflict in include/linux/memremap.h
-CONFLICT (content): Merge conflict in drivers/pci/p2pdma.c
-CONFLICT (content): Merge conflict in drivers/nvdimm/pmem.c
-CONFLICT (content): Merge conflict in drivers/dax/device.c
-CONFLICT (content): Merge conflict in drivers/dax/dax-private.h
-
-Perhaps we should pull those out and resend them through hmm.git?
-
-It also turns out the nvdimm unit tests crash with this signature on
-that branch where base v5.2-rc3 passes:
-
-    BUG: kernel NULL pointer dereference, address: 0000000000000008
-    [..]
-    CPU: 15 PID: 1414 Comm: lt-libndctl Tainted: G           OE
-5.2.0-rc3+ #3399
-    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06=
-/2015
-    RIP: 0010:percpu_ref_kill_and_confirm+0x1e/0x180
-    [..]
-    Call Trace:
-     release_nodes+0x234/0x280
-     device_release_driver_internal+0xe8/0x1b0
-     bus_remove_device+0xf2/0x160
-     device_del+0x166/0x370
-     unregister_dev_dax+0x23/0x50
-     release_nodes+0x234/0x280
-     device_release_driver_internal+0xe8/0x1b0
-     unbind_store+0x94/0x120
-     kernfs_fop_write+0xf0/0x1a0
-     vfs_write+0xb7/0x1b0
-     ksys_write+0x5c/0xd0
-     do_syscall_64+0x60/0x240
-
-The crash bisects to:
-
-    d8cc8bbe108c device-dax: use the dev_pagemap internal refcount
+Jason
