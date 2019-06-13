@@ -2,107 +2,274 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F28344B22
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 20:52:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2612244B84
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 21:02:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbfFMSwv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jun 2019 14:52:51 -0400
-Received: from mail-eopbgr00041.outbound.protection.outlook.com ([40.107.0.41]:6670
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725838AbfFMSwv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 13 Jun 2019 14:52:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FNfgWtpWZP+R3zWab6EmeYAQTAYgx2pVR+LpFXyrRss=;
- b=HuhOeDN4cvQnIPbnkY3/38FWBgnbccW+6aHtR17EeaLBgLlfggbM7Jmgd9HH/svLW/bPsC9MlhNeSNa3bXCOnAHSwbCOCWxV/UJ9cNCAooyjp2IS3RJ6Yyn/362HV2+z6SsrcvE5DkDoUj77xNdUXAVZHIbvMwr5hkc5ZHOX/JM=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5919.eurprd05.prod.outlook.com (20.178.126.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.11; Thu, 13 Jun 2019 18:52:44 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
- 18:52:44 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 03/22] mm: remove hmm_devmem_add_resource
-Thread-Topic: [PATCH 03/22] mm: remove hmm_devmem_add_resource
-Thread-Index: AQHVIcx8KEghGfMSdEK+G1+HLD+T3KaZ7r+A
-Date:   Thu, 13 Jun 2019 18:52:44 +0000
-Message-ID: <20190613185239.GP22062@mellanox.com>
-References: <20190613094326.24093-1-hch@lst.de>
- <20190613094326.24093-4-hch@lst.de>
-In-Reply-To: <20190613094326.24093-4-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR16CA0007.namprd16.prod.outlook.com
- (2603:10b6:208:134::20) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 88cc1feb-7b67-4d6e-c18f-08d6f03051c6
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5919;
-x-ms-traffictypediagnostic: VI1PR05MB5919:
-x-microsoft-antispam-prvs: <VI1PR05MB5919FFFF62953C9A7D5AF300CFEF0@VI1PR05MB5919.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0067A8BA2A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(346002)(376002)(39860400002)(136003)(199004)(189003)(99286004)(229853002)(7416002)(2906002)(53936002)(6486002)(6436002)(86362001)(81166006)(8676002)(186003)(6916009)(26005)(81156014)(102836004)(6116002)(4326008)(3846002)(25786009)(305945005)(7736002)(76176011)(6246003)(68736007)(486006)(316002)(52116002)(476003)(386003)(6506007)(11346002)(2616005)(446003)(1076003)(14454004)(256004)(4744005)(71190400001)(66066001)(33656002)(64756008)(66476007)(66946007)(66556008)(71200400001)(54906003)(36756003)(8936002)(6512007)(73956011)(5660300002)(478600001)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5919;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: iPoetAJzPWZv8VU52oGqZLrf5f3NTUkWPIOsu2E3P9cUOeZ3NwtuyEYz7iS7GJhlnDVMvGysQH81INXAyHGi4fhjs5va1Vo7Rdk93MlIgXRDPGqXx6+KGKEioXBXh61QIBW+HjfcdF9Afc/Uz8IU4w2KDhGZZyhNl/YEDKF9BG8aoozap+p31SfnFwV4kfNk64o6JW56KSiT60BrYrmeCz1XjhbsuaBg6SlAuqng5W2PWwz6FDD5jzrI/s5ZqBSLG+9QaRGa5ztkbj0f21QAbgQ9bDRkhNtDPfY/D24ndwUJPvjpdNIvVA5Nbk22Z1FnYXFRZc91aJgcqQyXDuUFzCT23/IfQophXoBr4oq2jKokb9DjG1mV1f29A7FqlAqhk+lNsM6TLohpGpppFxMbAIkVr/LP6Ao3e2lHBGtj3ng=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <866711CC77D78F4DBA1F59965DF24E41@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1729101AbfFMTCw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jun 2019 15:02:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727307AbfFMTCw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 13 Jun 2019 15:02:52 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 464E020B7C;
+        Thu, 13 Jun 2019 19:02:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560452570;
+        bh=E9qshPeU0DrWf0BKzElLpC7lnCoLhlxr4VBNHdi9leU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fPy6zb2F0f8e9hHr0uEBkV9sBOMaGf3yERb1w7O8jHaSlQFgcFTHIfFP7YncRw09f
+         cl/8hO2/v2eGBHqRptWz9mfkGyTZZR80ALcVvIJaJISq0BCngGVuFWLG7c27VtmVYA
+         o247zxQSmAOte2nJgaQlZa2NOHOv0u69RDCSwxH4=
+Date:   Thu, 13 Jun 2019 14:02:48 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sinan Kaya <okaya@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH v2] arm64: acpi/pci: invoke _DSM whether to preserve
+ firmware PCI setup
+Message-ID: <20190613190248.GH13533@google.com>
+References: <5783e36561bb77a1deb6ba67e5a9824488cc69c6.camel@kernel.crashing.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88cc1feb-7b67-4d6e-c18f-08d6f03051c6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 18:52:44.2949
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5919
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5783e36561bb77a1deb6ba67e5a9824488cc69c6.camel@kernel.crashing.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 11:43:06AM +0200, Christoph Hellwig wrote:
-> This function has never been used since it was first added to the kernel
-> more than a year and a half ago, and if we ever grow a consumer of the
-> MEMORY_DEVICE_PUBLIC infrastructure it can easily use devm_memremap_pages
-> directly now that we've simplified the API for it.
+On Thu, Jun 13, 2019 at 05:54:56PM +1000, Benjamin Herrenschmidt wrote:
+> The current arm64 PCI code for ACPI platforms will unconditionally
+> reassign all resources.
+> 
+> This is not only suboptimal, it's also wrong for a number of cases, for
+> example, this could invalidate a UEFI framebuffer address, or a runtime
+> firmware could be using some of the devices in their original location.
+> 
+> There is an ACPI method defined today for P2P bridges (_DSM #5) that
+> can indicate that a bridge resources set by firmware. There is current
+> discussions to extend that method to cover host bridges, and define
+> a value of "0" as meaning that the resources must be preserved.
 
-nit: Have we simplified the interface for devm_memremap_pages() at
-this point, or are you talking about later patches in this series.
+The ECR does extend the r3.2 spec so the _DSM can apply to host
+bridges.  Apart from that change, the ECR clarifies the language
+without changing the sense.  The meaning of "0" doesn't change.
 
-I checked this and all the called functions are exported symbols, so
-there is no blocker for a future driver to call devm_memremap_pages(),
-maybe even with all this boiler plate, in future.
+> This patch adds the resource assignment policy to struct
+> pci_host_bridge and sets it based on the presence of that method and if
+> present the value returned, and honors it on arm64.
+> 
+> No other architectures are currently affected, and the default is kept
+> to "reassign everything" on arm64 for now via an #ifdef, though we do
+> plan to get rid of that in a separate patch.
+> 
+> The setting in pci_host_bridge "looks" generic because I intend in
+> subsquent work to consolidate the resource allocation policy accross
+> architectures and I intend for that setting to be the canonical
+> location used by the generic code to decide what to do.
+> 
+> This is based on some earlier work by
+> Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> 
+> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> ---
+> 
+>  arch/arm64/kernel/pci.c  | 12 ++++++++++--
+>  drivers/acpi/pci_root.c  | 42 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pci-acpi.h |  7 ++++---
+>  include/linux/pci.h      | 10 ++++++++++
+>  4 files changed, 66 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+> index bb85e2f4603f..b209a506f390 100644
+> --- a/arch/arm64/kernel/pci.c
+> +++ b/arch/arm64/kernel/pci.c
+> @@ -168,6 +168,7 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
+>  	struct acpi_pci_generic_root_info *ri;
+>  	struct pci_bus *bus, *child;
+>  	struct acpi_pci_root_ops *root_ops;
+> +	struct pci_host_bridge *hb;
 
-If we eventually get many users that need some simplified registration
-then we should add a devm_memremap_pages_simplified() interface and
-factor out that code when we can see the pattern.
+The only other use of "struct pci_host_bridge *" in this file uses
+"bridge" as the variable, so I'd follow suit.
 
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+>  	ri = kzalloc(sizeof(*ri), GFP_KERNEL);
+>  	if (!ri)
+> @@ -193,8 +194,15 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
+>  	if (!bus)
+>  		return NULL;
+>  
+> -	pci_bus_size_bridges(bus);
+> -	pci_bus_assign_resources(bus);
+> +	hb = pci_find_host_bridge(bus);
+> +
+> +	/* If the policy is normal or probe only, claim existing resources */
+> +	if (hb->rsrc_policy != pci_rsrc_reassign)
+> +		pci_bus_claim_resources(bus);
+> +
+> +	/* If the policy is not probe only, assign what's left unassigned */
+> +	if (hb->rsrc_policy != pci_rsrc_probe_only)
+> +		pci_assign_unassigned_root_bus_resources(bus);
+>  
+>  	list_for_each_entry(child, &bus->children, node)
+>  		pcie_bus_configure_settings(child);
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index 39f5d172e84f..410f7f2b2587 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -881,6 +881,7 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+>  	int node = acpi_get_node(device->handle);
+>  	struct pci_bus *bus;
+>  	struct pci_host_bridge *host_bridge;
+> +	union acpi_object *obj;
+>  
+>  	info->root = root;
+>  	info->bridge = device;
+> @@ -917,6 +918,47 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+>  	if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
+>  		host_bridge->native_ltr = 0;
+>  
+> +	/*
+> +	 * Invoke the PCI device specific method (_DSM) #5 'Ignore PCI Boot
+> +	 * Configuration', on the host bridge. This tells us whether the
+> +	 * firmware wants us to preserve or reassign the configuration of
+> +	 * the PCI resource tree for this root bridge.
+> +	 *
+> +	 * There are three possible outcomes here:
+> +	 *
+> +	 *  - _DSM #5 is absent. This is the default. Currently it will be
+> +	 *    architecture specific in order to maintain existing behaviours
+> +	 *    but the plan is to move arm64 into the fold: x86 and ia64 will
+> +	 *    claim the existing config, and reassign if needed. arm64 will
+> +	 *    always reassign.
 
-Jason
+The spec (PCI FW r3.2) says a _DSM that returns 0 means "OS must not
+ignore config done by firmware".  The ECR in the works changes the
+wording to something like "OS must preserve config done by firmware",
+which is equivalent but clearer.
+
+The r3.2 spec goes on to suggest that a missing _DSM means the same
+thing ("OS must not ignore firmware config").  I think that part is
+crap, and the ECR removes that wording.
+
+I don't accept the _DSM #5 section in the PCI FW spec as being
+normative about what a missing _DSM #5 means.  This section didn't
+even exist until r3.2, and all it says is "this situation is the same
+as the legacy situation where this _DSM is not provided".  That's just
+hand-waving; it's not a requirement.
+
+I'm not aware of any spec that says the OS can't change PCI resources
+(if there is such a spec, please cite it).
+
+So my opinion is that a missing _DSM means nothing, and the default
+situation is that the OS can change PCI resources as necessary.
+
+The ECR input from Windows was that in the absence of a _DSM #5, they
+keep the boot configuration unless a FW bug causes an overlap, a
+hot-add requires rebalancing, or the system includes external (e.g.,
+Thunderbolt) devices.  That's what I think Linux should do, too: keep
+the config from firmware unless we have a reason to change it.
+
+> +	 *  - _DSM #5 exists and is 1. This is the FW telling us to ignore
+> +	 *    the configuration it performed. This is currently only supported
+> +	 *    on arm64.
+
+The r3.2 spec actually says "the OS *may* ignore config done by
+firmware".  There's no *requirement* that the OS change anything.
+
+IMHO *this* is the same as the case where there's no _DSM at all.
+
+> +	 *  - _DSM #5 exists and is 0. This should be the same as the default
+> +	 *    (_DSM #5 absent). However there are some assumptions flying around
+> +	 *    that this means we must keep the FW configuration intact. So we
+> +	 *    treat that as "probe only" for the time being. This is currently
+> +	 *    only supported on arm64.
+
+PCI FW r3.2 says 0 means "the OS must not ignore config done by
+firmware."  That means we must keep the FW configuration intact.
+
+> +	obj = acpi_evaluate_dsm(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 1,
+> +	                        IGNORE_PCI_BOOT_CONFIG_DSM, NULL);
+> +	if (obj && obj->type == ACPI_TYPE_INTEGER) {
+> +		if (obj->integer.value == 1)
+> +			host_bridge->rsrc_policy = pci_rsrc_reassign;
+> +		else
+> +			host_bridge->rsrc_policy = pci_rsrc_probe_only;
+> +	} else {
+> +		/* Default is arch specific ... for now */
+> +#ifdef CONFIG_ARM64
+> +		host_bridge->rsrc_policy = pci_rsrc_reassign;
+> +#else
+> +		host_bridge->rsrc_policy = pci_rsrc_normal;
+> +#endif
+> +	}
+
+I think this needs to be a single bit, not a 3-choice thing.  I don't
+think it's possible to clearly explain how pci_rsrc_normal is
+different from pci_rsrc_reassign.  We either need to preserve the
+config or we don't.
+
+A middle ground of "we don't need to preserve the config and in fact
+we *must* reassign resources" is pointless because we don't know *why*
+we have to reassign things, and we don't know what sort of change
+would be correct.
+
+> +	ACPI_FREE(obj);
+> +
+>  	pci_scan_child_bus(bus);
+>  	pci_set_host_bridge_release(host_bridge, acpi_pci_root_release_info,
+>  				    info);
+> diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
+> index 8082b612f561..62b7fdcc661c 100644
+> --- a/include/linux/pci-acpi.h
+> +++ b/include/linux/pci-acpi.h
+> @@ -107,9 +107,10 @@ static inline void acpiphp_check_host_bridge(struct acpi_device *adev) { }
+>  #endif
+>  
+>  extern const guid_t pci_acpi_dsm_guid;
+> -#define DEVICE_LABEL_DSM	0x07
+> -#define RESET_DELAY_DSM		0x08
+> -#define FUNCTION_DELAY_DSM	0x09
+> +#define IGNORE_PCI_BOOT_CONFIG_DSM	0x05
+> +#define DEVICE_LABEL_DSM		0x07
+> +#define RESET_DELAY_DSM			0x08
+> +#define FUNCTION_DELAY_DSM		0x09
+>  
+>  #else	/* CONFIG_ACPI */
+>  static inline void acpi_pci_add_bus(struct pci_bus *bus) { }
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index dd436da7eccc..7ff5cedb30cf 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -486,6 +486,12 @@ static inline int pci_channel_offline(struct pci_dev *pdev)
+>  	return (pdev->error_state != pci_channel_io_normal);
+>  }
+>  
+> +enum pci_host_rsrc_policy {
+> +	pci_rsrc_normal,	/* Probe and (re)assign what's missing/broken */
+> +	pci_rsrc_probe_only,	/* Probe only */
+> +	pci_rsrc_reassign,	/* Reassign resources */
+> +};
+> +
+>  struct pci_host_bridge {
+>  	struct device	dev;
+>  	struct pci_bus	*bus;		/* Root bus */
+> @@ -506,6 +512,10 @@ struct pci_host_bridge {
+>  	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
+>  	unsigned int	native_pme:1;		/* OS may use PCIe PME */
+>  	unsigned int	native_ltr:1;		/* OS may use PCIe LTR */
+> +
+> +	/* Resource assignment/allocation policy */
+> +	enum pci_host_rsrc_policy rsrc_policy;
+> +
+>  	/* Resource alignment requirements */
+>  	resource_size_t (*align_resource)(struct pci_dev *dev,
+>  			const struct resource *res,
+> 
+> 
