@@ -2,195 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EAB4844593
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 18:45:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15D6444557
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 18:43:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730795AbfFMQo6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jun 2019 12:44:58 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39094 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730402AbfFMGNg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jun 2019 02:13:36 -0400
-Received: from mail-pf1-f198.google.com ([209.85.210.198])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hbIzN-0005Zg-6t
-        for linux-pci@vger.kernel.org; Thu, 13 Jun 2019 06:13:33 +0000
-Received: by mail-pf1-f198.google.com with SMTP id f9so13753575pfn.6
-        for <linux-pci@vger.kernel.org>; Wed, 12 Jun 2019 23:13:33 -0700 (PDT)
+        id S2392287AbfFMQnf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jun 2019 12:43:35 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43452 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730458AbfFMGfW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jun 2019 02:35:22 -0400
+Received: by mail-pl1-f194.google.com with SMTP id cl9so7657462plb.10
+        for <linux-pci@vger.kernel.org>; Wed, 12 Jun 2019 23:35:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UuVptW7+/rVg73C/cVY3PxglIIDzq6v+boQkzm8gPXw=;
+        b=tTHreuwa5Gl5hG5mRCZOIcgm7Y1KWgOatyEfgy9w+38FSpObzYleao4+JvnyAtaIBY
+         bLh2nFGX9+4yMaAQCtcJyMDx81aIM3RYsVy3tpzVM+XsBR2QhLg/vyx5dG4jVXGzRRxH
+         rbUP6x2tt2R1xK9c8VLhnM5zafCjzUR07wkrOGufszuEjj7yOaoPD9w6n/dQcBHbjNEf
+         F1pxUpHJidOHHSozB4H+koWiST+5CK3rIBZ5VaEAppyxnxy3ybTuNU2Sry/66KaqRv0v
+         t56cuiMvyHnuoBARNwa4+AGc4CCbm7mNdWkbJuvKcHJ+BOhlq+dO0xIHY1546QXz7LpG
+         ytWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=xZMnfNxiIJQHgk6DTR2b96lSjKM+Cv557iMAiHl0otE=;
-        b=gW/bBPQ1roX36TFuaaBZBeLNiMCKBHxBGHNm2luGiPyAA9WlgTIzUjjg0xxpBQZhen
-         Dn85eib0VuOIS8lmnf0o9dCDRBw0z0O6e3Zx0Z2dkTt5+5i7OShgD986HbkN9NT+Z5fb
-         EmpnkX8eBaJ2JmMuaEPx4AKmgEl+M9mAdqpWKXebOYD6wfqQIiyAYXVcNhx6kitvlJdY
-         hCS69tLlB2IMIXFWl5KeAbc2tpZjcehMzkelSTV779KCIFJTRG17vq6G6wgS35cYgcGE
-         rsAD+Db6/DsRXodciXmrb8HlP21/NdEVGAw4LIAflQ74Ri9OD0flfPb4Za2j249e4oeJ
-         Ky6w==
-X-Gm-Message-State: APjAAAWNunH4aLvnUdEBWoW4RevAYi1zWxsKuP6BkMIRp/nvkPD7s/cx
-        YI+LTTWy/IXdqOqsoGOYFHf4wouKSdruAfg2KayfL9t7GL3SWIVgHGvBxIfGAleC4zTTyejK43M
-        o12zPtIiPxwCV1TolXHitUwdr3IwP1s+kcqxvYA==
-X-Received: by 2002:aa7:9407:: with SMTP id x7mr48714681pfo.163.1560406411622;
-        Wed, 12 Jun 2019 23:13:31 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy/M4KOk8anUvleYe4Z0kHfP1YyeHtJEQFqJQMyjw20cPWdlOiaKzI0TiyHxZ0ofVL/cTvhMw==
-X-Received: by 2002:aa7:9407:: with SMTP id x7mr48714652pfo.163.1560406411293;
-        Wed, 12 Jun 2019 23:13:31 -0700 (PDT)
-Received: from [172.20.10.4] (223-136-183-91.emome-ip.hinet.net. [223.136.183.91])
-        by smtp.gmail.com with ESMTPSA id u123sm1554074pfu.67.2019.06.12.23.13.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 23:13:30 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] PCI: PM: Skip devices in D0 for suspend-to-idle
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <2513600.jR9RdVMSR0@kreacher>
-Date:   Thu, 13 Jun 2019 14:13:26 +0800
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <kbusch@kernel.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <A0D09537-12D3-4466-945A-7D7F889A5472@canonical.com>
-References: <2513600.jR9RdVMSR0@kreacher>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-X-Mailer: Apple Mail (2.3445.104.11)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UuVptW7+/rVg73C/cVY3PxglIIDzq6v+boQkzm8gPXw=;
+        b=V0yqlSQE4E9ZxyU/umlv6zu/qBEVkl5Azdh1avK9PVM0PcE/hclJOhYtlrmdGgi724
+         XJyqB27z4RxNd+h6XGOKszV/yWY2+oO9y4YVk8nrWn8cA89ojxt/tnWXq2tzKBVij/xd
+         FmZbnCVC3i0COBx5YM9gmOiex9sfD4amoX9/NmK/h061cnCaJdN++X1IlgC1WvYC2oYr
+         0s+WRLn14odY8AqoNwtOo1u00txIjjoNg9v7BY0QfgLcXvm57A952HxNv7lfCIyMy5Gi
+         NwAL0xwXwH4uyTpL+rfVvy35pjnHsijsaZODmjoSxY/1tBBWksKsC/nAZi8MYAaaMmy5
+         cZUw==
+X-Gm-Message-State: APjAAAUPFHRE43Qje1TuFXmqZOQP4Dwzfb95sP/cZYGv9vqhIAKfhVzc
+        UIo1Dnm9KWFpo8U0gUr+0t5+QA==
+X-Google-Smtp-Source: APXvYqw3P9R2gnma8ARJTrahC35D2wK2AOLaXvKGn8r1LxYilVT6GoGf82uSiUuE7+6vRVAn2ZRYtw==
+X-Received: by 2002:a17:902:6947:: with SMTP id k7mr14461279plt.253.1560407720918;
+        Wed, 12 Jun 2019 23:35:20 -0700 (PDT)
+Received: from limbo.local (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id c130sm1516706pfc.105.2019.06.12.23.35.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 23:35:19 -0700 (PDT)
+From:   Daniel Drake <drake@endlessm.com>
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux@endlessm.com,
+        nouveau@lists.freedesktop.org, Lukas Wunner <lukas@wunner.de>,
+        Aaron Plattner <aplattner@nvidia.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Ilia Mirkin <imirkin@alum.mit.edu>,
+        Karol Herbst <kherbst@redhat.com>,
+        Maik Freudenberg <hhfeuer@gmx.de>
+Subject: [PATCH] PCI: Expose hidden NVIDIA HDA controllers
+Date:   Thu, 13 Jun 2019 14:35:14 +0800
+Message-Id: <20190613063514.15317-1-drake@endlessm.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-at 06:14, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+From: Lukas Wunner <lukas@wunner.de>
 
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> Commit d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
-> attempted to avoid a problem with devices whose drivers want them to
-> stay in D0 over suspend-to-idle and resume, but it did not go as far
-> as it should with that.
->
-> Namely, first of all, it is questionable to change the power state
-> of a PCI bridge with a device in D0 under it, but that is not
-> actively prevented from happening during system-wide PM transitions,
-> so use the skip_bus_pm flag introduced by commit d491f2b75237 for
-> that.
->
-> Second, the configuration of devices left in D0 (whatever the reason)
-> during suspend-to-idle need not be changed and attempting to put them
-> into D0 again by force may confuse some firmware, so explicitly avoid
-> doing that.
->
-> Fixes: d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
-> Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+The integrated HDA controller on Nvidia GPUs can be hidden with a bit in
+the GPU's config space. Information about this scheme was provided by
+NVIDIA on their forums.
 
-Thanks! This patch solves the issue I reported earlier.
+Many laptops now ship with this device hidden, meaning that Linux users
+of affected platforms (where the HDMI connector comes off the NVIDIA GPU)
+cannot use HDMI audio functionality.
 
-Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Avoid this issue by exposing the HDMI audio device on device enumeration
+and resume.
 
-> ---
->
-> Tested on Dell XPS13 9360 with no issues.
->
-> ---
->  drivers/pci/pci-driver.c |   47 +++++++++++++++++++++++++++++++++++------------
->  1 file changed, 35 insertions(+), 12 deletions(-)
->
-> Index: linux-pm/drivers/pci/pci-driver.c
-> ===================================================================
-> --- linux-pm.orig/drivers/pci/pci-driver.c
-> +++ linux-pm/drivers/pci/pci-driver.c
-> @@ -524,7 +524,6 @@ static void pci_pm_default_resume_early(
->  	pci_power_up(pci_dev);
->  	pci_restore_state(pci_dev);
->  	pci_pme_restore(pci_dev);
-> -	pci_fixup_device(pci_fixup_resume_early, pci_dev);
->  }
->
->  /*
-> @@ -842,18 +841,16 @@ static int pci_pm_suspend_noirq(struct d
->
->  	if (pci_dev->skip_bus_pm) {
->  		/*
-> -		 * The function is running for the second time in a row without
-> +		 * Either the device is a bridge with a child in D0 below it, or
-> +		 * the function is running for the second time in a row without
->  		 * going through full resume, which is possible only during
-> -		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
-> -		 * device was originally left in D0, so its power state should
-> -		 * not be changed here and the device register values saved
-> -		 * originally should be restored on resume again.
-> +		 * suspend-to-idle in a spurious wakeup case.  The device should
-> +		 * be in D0 at this point, but if it is a bridge, it may be
-> +		 * necessary to save its state.
->  		 */
-> -		pci_dev->state_saved = true;
-> -	} else if (pci_dev->state_saved) {
-> -		if (pci_dev->current_state == PCI_D0)
-> -			pci_dev->skip_bus_pm = true;
-> -	} else {
-> +		if (!pci_dev->state_saved)
-> +			pci_save_state(pci_dev);
-> +	} else if (!pci_dev->state_saved) {
->  		pci_save_state(pci_dev);
->  		if (pci_power_manageable(pci_dev))
->  			pci_prepare_to_sleep(pci_dev);
-> @@ -862,6 +859,22 @@ static int pci_pm_suspend_noirq(struct d
->  	dev_dbg(dev, "PCI PM: Suspend power state: %s\n",
->  		pci_power_name(pci_dev->current_state));
->
-> +	if (pci_dev->current_state == PCI_D0) {
-> +		pci_dev->skip_bus_pm = true;
-> +		/*
-> +		 * Changing the power state of a PCI bridge with a device in D0
-> +		 * below it is questionable, so avoid doing that by setting the
-> +		 * skip_bus_pm flag for the parent bridge.
-> +		 */
-> +		if (pci_dev->bus->self)
-> +			pci_dev->bus->self->skip_bus_pm = true;
-> +	}
-> +
-> +	if (pci_dev->skip_bus_pm && !pm_suspend_via_firmware()) {
-> +		dev_dbg(dev, "PCI PM: Skipped\n");
-> +		goto Fixup;
-> +	}
-> +
->  	pci_pm_set_unknown_state(pci_dev);
->
->  	/*
-> @@ -909,7 +922,16 @@ static int pci_pm_resume_noirq(struct de
->  	if (dev_pm_smart_suspend_and_suspended(dev))
->  		pm_runtime_set_active(dev);
->
-> -	pci_pm_default_resume_early(pci_dev);
-> +	/*
-> +	 * In the suspend-to-idle case, devices left in D0 during suspend will
-> +	 * stay in D0, so it is not necessary to restore or update their
-> +	 * configuration here and attempting to put them into D0 again may
-> +	 * confuse some firmware, so avoid doing that.
-> +	 */
-> +	if (!pci_dev->skip_bus_pm || pm_suspend_via_firmware())
-> +		pci_pm_default_resume_early(pci_dev);
-> +
-> +	pci_fixup_device(pci_fixup_resume_early, pci_dev);
->
->  	if (pci_has_legacy_pm_support(pci_dev))
->  		return pci_legacy_resume_early(dev);
-> @@ -1200,6 +1222,7 @@ static int pci_pm_restore_noirq(struct d
->  	}
->
->  	pci_pm_default_resume_early(pci_dev);
-> +	pci_fixup_device(pci_fixup_resume_early, pci_dev);
->
->  	if (pci_has_legacy_pm_support(pci_dev))
->  		return pci_legacy_resume_early(dev);
+The GPU and HDA controller are two functions of the same PCI device
+(VGA class device on function 0 and audio device on function 1).
+The multifunction flag in the GPU's Header Type register is cleared when
+the HDA controller is hidden and set if it's exposed, so reread the flag
+after exposing the HDA.
 
+According to Ilia Mirkin, the HDA controller is only present from MCP89
+onward, so do not touch config space on older GPUs.
+
+This quirk is limited to NVIDIA PCI devices with the VGA Controller
+device class. This is expected to correspond to product configurations
+where the NVIDIA GPU has connectors attached. Other products where the
+device class is 3D Controller are expected to correspond to configurations
+where the NVIDIA GPU is dedicated (dGPU) and has no connectors.
+
+It's sensible to avoid exposing the HDA controller on dGPU setups,
+especially because we've seen cases where the PCI BARs are not set
+up correctly by the platform in this case, causing Linux to log
+errors if the device is visible. This assumption of device class
+accurately corresponding to product configuration is true for 6 of 6
+laptops recently checked at the Endless lab, and there are also signs of
+agreement checking the data from 74 previously tested products, however
+Ilia Mirkin comments that he's seen cases where it is not true. Anyway, it
+looks like this quirk should fix audio support for the majority of
+affected users.
+
+This commit takes inspiration from an earlier patch by Daniel Drake.
+
+Link: https://devtalk.nvidia.com/default/topic/1024022
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=75985
+Cc: Aaron Plattner <aplattner@nvidia.com>
+Cc: Peter Wu <peter@lekensteyn.nl>
+Cc: Ilia Mirkin <imirkin@alum.mit.edu>
+Cc: Karol Herbst <kherbst@redhat.com>
+Cc: Maik Freudenberg <hhfeuer@gmx.de>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Tested-by: Daniel Drake <drake@endlessm.com>
+---
+ drivers/pci/quirks.c    | 28 ++++++++++++++++++++++++++++
+ include/linux/pci_ids.h |  1 +
+ 2 files changed, 29 insertions(+)
+
+Submitting Lukas's patch from over a year ago.
+
+It got held up before on patch dependencies (which are now all merged)
+and also the concern around the device class assumption not being true
+in all cases. However, there hasn't been any progress towards finding a
+better approach, and we don't have any logs to hand from the cases where
+this isn't true, so I think we should go with this approach which will
+work in the (vast?) majority of cases.
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 0f16acc323c6..52046b517e2e 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4971,6 +4971,34 @@ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMD, PCI_ANY_ID,
+ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
+ 			      PCI_CLASS_MULTIMEDIA_HD_AUDIO, 8, quirk_gpu_hda);
+ 
++/*
++ * Many laptop BIOSes hide the integrated HDA controller on NVIDIA GPUs
++ * via a special bit. This prevents Linux from seeing and using it.
++ * Unhide it here.
++ * https://devtalk.nvidia.com/default/topic/1024022
++ */
++static void quirk_nvidia_hda(struct pci_dev *gpu)
++{
++	u8 hdr_type;
++	u32 val;
++
++	/* there was no integrated HDA controller before MCP89 */
++	if (gpu->device < PCI_DEVICE_ID_NVIDIA_GEFORCE_320M)
++		return;
++
++	/* bit 25 at offset 0x488 hides or exposes the HDA controller */
++	pci_read_config_dword(gpu, 0x488, &val);
++	pci_write_config_dword(gpu, 0x488, val | BIT(25));
++
++	/* the GPU becomes a multifunction device when the HDA is exposed */
++	pci_read_config_byte(gpu, PCI_HEADER_TYPE, &hdr_type);
++	gpu->multifunction = !!(hdr_type & BIT(7));
++}
++DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
++			       PCI_BASE_CLASS_DISPLAY, 16, quirk_nvidia_hda);
++DECLARE_PCI_FIXUP_CLASS_RESUME_EARLY(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
++			       PCI_BASE_CLASS_DISPLAY, 16, quirk_nvidia_hda);
++
+ /*
+  * Some IDT switches incorrectly flag an ACS Source Validation error on
+  * completions for config read requests even though PCIe r4.0, sec
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 70e86148cb1e..66898463b81f 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -1336,6 +1336,7 @@
+ #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP78S_SMBUS    0x0752
+ #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP77_IDE       0x0759
+ #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP73_SMBUS     0x07D8
++#define PCI_DEVICE_ID_NVIDIA_GEFORCE_320M           0x08A0
+ #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP79_SMBUS     0x0AA2
+ #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP89_SATA	    0x0D85
+ 
+-- 
+2.20.1
 
