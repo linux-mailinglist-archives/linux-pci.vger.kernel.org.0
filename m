@@ -2,64 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D51044D0A
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 22:09:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D3FE44D1A
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2019 22:12:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfFMUJf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jun 2019 16:09:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46426 "EHLO mail.kernel.org"
+        id S1727216AbfFMUMc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jun 2019 16:12:32 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:59552 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfFMUJf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:09:35 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1654420B7C;
-        Thu, 13 Jun 2019 20:09:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560456574;
-        bh=eQj63h8OCCsmMvkjVVnO0QbXAh3YrpBesVcLGSyN+1Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JcfxDoqUPK3n5IVChceyR/hB3kr/taJFeMbOnBcOsBePn3MFgnepNEMUZAT6jYLQq
-         +JiQAwbZMzg+ag4ZULmUXs2Na6deMkwfO9z9/7//Ny2fX39kYWm4b7zbmxNxOohV61
-         j+B5Ew5pIVMqbVQDzvtbpjpfZnab3NfpBwUiINWY=
-Date:   Thu, 13 Jun 2019 15:09:32 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     lorenzo.pieralisi@arm.com, arnd@arndb.de,
-        linux-pci@vger.kernel.org, rjw@rjwysocki.net,
-        linux-arm-kernel@lists.infradead.org, will.deacon@arm.com,
-        wangkefeng.wang@huawei.com, linuxarm@huawei.com,
-        andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com
-Subject: Re: [PATCH v4 1/3] lib: logic_pio: Use logical PIO low-level
- accessors for !CONFIG_INDIRECT_PIO
-Message-ID: <20190613200932.GJ13533@google.com>
-References: <1560262374-67875-1-git-send-email-john.garry@huawei.com>
- <1560262374-67875-2-git-send-email-john.garry@huawei.com>
- <20190613023947.GD13533@google.com>
- <8ef228f8-97cb-e40e-ea6b-410b80a845cf@huawei.com>
+        id S1727083AbfFMUMc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 13 Jun 2019 16:12:32 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hbW5G-00040b-8N; Thu, 13 Jun 2019 14:12:31 -0600
+To:     Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Cc:     linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org, nouveau@lists.freedesktop.org
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-9-hch@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <d9e24f8e-986d-e7b8-cf1d-9344ba51719e@deltatee.com>
+Date:   Thu, 13 Jun 2019 14:12:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8ef228f8-97cb-e40e-ea6b-410b80a845cf@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190613094326.24093-9-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: nouveau@lists.freedesktop.org, linux-mm@kvack.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvdimm@lists.01.org, bskeggs@redhat.com, jgg@mellanox.com, jglisse@redhat.com, dan.j.williams@intel.com, hch@lst.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [PATCH 08/22] memremap: pass a struct dev_pagemap to ->kill
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 10:39:12AM +0100, John Garry wrote:
-> On 13/06/2019 03:39, Bjorn Helgaas wrote:
-> > I'm not sure it's even safe, because CONFIG_INDIRECT_PIO depends on
-> > ARM64,  but PCI_IOBASE is defined on most arches via asm-generic/io.h,
-> > so this potentially affects arches other than ARM64.
-> 
-> It would do. It would affect any arch which defines PCI_IOBASE and
-> does not have arch-specific definition of inb et all.
 
-What's the reason for testing PCI_IOBASE instead of
-CONFIG_INDIRECT_PIO?  If there's a reason it's needed, that's fine,
-but it does make this much more complicated to review.
 
-Bjorn
+On 2019-06-13 3:43 a.m., Christoph Hellwig wrote:
+> Passing the actual typed structure leads to more understandable code
+> vs the actual references.
+
+Ha, ok, I originally suggested this to Dan when he introduced the
+callback[1].
+
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+Logan
+
+[1]
+https://lore.kernel.org/lkml/8f0cae82-130f-8a64-cfbd-fda5fd76bb79@deltatee.com/T/#u
+
