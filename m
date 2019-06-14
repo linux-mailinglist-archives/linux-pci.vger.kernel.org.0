@@ -2,84 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 712154629D
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 17:23:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37FBE46319
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 17:41:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbfFNPXn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jun 2019 11:23:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:36598 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725981AbfFNPXn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:23:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2E62344;
-        Fri, 14 Jun 2019 08:23:42 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE3D43F718;
-        Fri, 14 Jun 2019 08:23:41 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 16:23:36 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Yuehaibing <yuehaibing@huawei.com>
-Cc:     bhelgaas@google.com, sthemmin@microsoft.com, sashal@kernel.org,
-        decui@microsoft.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: hv: Fix build error without CONFIG_SYSFS
-Message-ID: <20190614152336.GA26846@e121166-lin.cambridge.arm.com>
-References: <20190531150923.12376-1-yuehaibing@huawei.com>
- <6c97b2ae-b151-5610-d8d5-ef626d1f9bbb@huawei.com>
+        id S1725991AbfFNPlg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Jun 2019 11:41:36 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44104 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725780AbfFNPlg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 Jun 2019 11:41:36 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id BDF8DA992A2F1DCED3A4;
+        Fri, 14 Jun 2019 23:41:31 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Fri, 14 Jun 2019
+ 23:41:23 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <kishon@ti.com>, <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] PCI: dwc: pci-dra7xx: Add missing include file
+Date:   Fri, 14 Jun 2019 23:40:44 +0800
+Message-ID: <20190614154044.4972-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6c97b2ae-b151-5610-d8d5-ef626d1f9bbb@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 10:19:10PM +0800, Yuehaibing wrote:
-> Hi all,
-> 
-> Friendly ping...
+Fix build error:
 
-We should address Michael's question:
+drivers/pci/controller/dwc/pci-dra7xx.c:
+ In function dra7xx_pcie_probe:
+drivers/pci/controller/dwc/pci-dra7xx.c:777:10:
+ error: implicit declaration of function devm_gpiod_get_optional;
+ did you mean devm_regulator_get_optional? [-Werror=implicit-function-declaration]
 
-https://lore.kernel.org/linux-pci/BYAPR21MB12211EEA95200F437C8E37ECD71A0@BYAPR21MB1221.namprd21.prod.outlook.com/
+  reset = devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH);
 
-Lorenzo
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/pci/controller/dwc/pci-dra7xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> On 2019/5/31 23:09, YueHaibing wrote:
-> > while building without CONFIG_SYSFS, fails as below:
-> > 
-> > drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_assign_slots':
-> > pci-hyperv.c:(.text+0x40a): undefined reference to 'pci_create_slot'
-> > drivers/pci/controller/pci-hyperv.o: In function 'pci_devices_present_work':
-> > pci-hyperv.c:(.text+0xc02): undefined reference to 'pci_destroy_slot'
-> > drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_remove':
-> > pci-hyperv.c:(.text+0xe50): undefined reference to 'pci_destroy_slot'
-> > drivers/pci/controller/pci-hyperv.o: In function 'hv_eject_device_work':
-> > pci-hyperv.c:(.text+0x11f9): undefined reference to 'pci_destroy_slot'
-> > 
-> > Select SYSFS while PCI_HYPERV is set to fix this.
-> > 
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
-> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> > ---
-> >  drivers/pci/Kconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> > index 2ab9240..6722952 100644
-> > --- a/drivers/pci/Kconfig
-> > +++ b/drivers/pci/Kconfig
-> > @@ -182,6 +182,7 @@ config PCI_LABEL
-> >  config PCI_HYPERV
-> >          tristate "Hyper-V PCI Frontend"
-> >          depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
-> > +	select SYSFS
-> >          help
-> >            The PCI device frontend driver allows the kernel to import arbitrary
-> >            PCI devices from a PCI backend to support PCI driver domains.
-> > 
-> 
+diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+index 419451e..4234ddb 100644
+--- a/drivers/pci/controller/dwc/pci-dra7xx.c
++++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+@@ -26,6 +26,7 @@
+ #include <linux/types.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/regmap.h>
++#include <linux/gpio/consumer.h>
+ 
+ #include "../../pci.h"
+ #include "pcie-designware.h"
+-- 
+2.7.4
+
+
