@@ -2,108 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 58746459B4
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 11:57:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD55E459C8
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 12:01:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbfFNJ5t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jun 2019 05:57:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:58416 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725812AbfFNJ5t (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:57:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 507BC2B;
-        Fri, 14 Jun 2019 02:57:48 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E46C3F718;
-        Fri, 14 Jun 2019 02:59:31 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 10:57:42 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Sinan Kaya <okaya@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RFC PATCH v2] arm64: acpi/pci: invoke _DSM whether to preserve
- firmware PCI setup
-Message-ID: <20190614095742.GA27188@e121166-lin.cambridge.arm.com>
-References: <5783e36561bb77a1deb6ba67e5a9824488cc69c6.camel@kernel.crashing.org>
- <20190613190248.GH13533@google.com>
- <e6c7854ae360be513f6f43729ed6d4052e289376.camel@kernel.crashing.org>
- <CAKv+Gu95pQ7_OfLbEXHZ_bhYnqOgTBKCmTgqUY27un-Y708BgQ@mail.gmail.com>
- <d5d3e7b9553438482854c97e09543afb7de23eaa.camel@kernel.crashing.org>
+        id S1726951AbfFNKBZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Jun 2019 06:01:25 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:53989 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727162AbfFNKBZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jun 2019 06:01:25 -0400
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id BF1E1100018;
+        Fri, 14 Jun 2019 10:01:21 +0000 (UTC)
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Ellie Reeves <ellierevves@gmail.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH v3] PCI: aardvark: Fix PCI_EXP_RTCTL register configuration
+Date:   Fri, 14 Jun 2019 12:10:59 +0200
+Message-Id: <20190614101059.1664-1-repk@triplefau.lt>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d5d3e7b9553438482854c97e09543afb7de23eaa.camel@kernel.crashing.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 06:36:32PM +1000, Benjamin Herrenschmidt wrote:
+PCI_EXP_RTCTL is used to activate PME interrupt only, so writing into it
+should not modify other interrupts' mask. The ISR mask polarity was also
+inverted, when PCI_EXP_RTCTL_PMEIE is set PCIE_MSG_PM_PME_MASK mask bit
+should actually be cleared.
 
-[...]
+Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+---
+Changes since v1:
+ * Improve code readability
+ * Fix mask polarity
+ * PME_MASK shift was off by one
+Changes since v2:
+ * Modify patch title
+ * Change Fixes tag to commit that actually introduces the bug
+---
+ drivers/pci/controller/pci-aardvark.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-> The biggest issue for me right now is that the spec says pretty much at
-> _DSM #5 = 0 is equivalent to _DSM #5 absent, and Bjorn seems keen on
-> having it this way, but for arm64, we specifically want to distinguish
-> those 2 cases.
-> 
-> We want to honor _DSM #5 = 0, and at least initially, leave the rest
-> alone.
-> 
-> Now, we *also* want to look at switching the rest to the "normal" (for
-> ACPI platforms at least) mechanism of using what FW setup and fixing up
-> if necessary, but that's not what the code does today, we know just
-> switching to pci_bus_claim_resources() will break some platforms, and
-> we need more testing and possibly quirks to get there, so it's material
-> for a separate patch.
-> 
-> But in the meantime, I need to differenciate.
-> 
-> Also using "probe_only" for _DSM #5 = 0 isn't a good idea, at least as
-> implemented today in the rest of the kernel, probe_only also means we
-> shouldn't assign what was left unassigned. However _DSM #5 allows this.
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 134e0306ff00..f6e55c4597b1 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -415,7 +415,7 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+ 
+ 	case PCI_EXP_RTCTL: {
+ 		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG);
+-		*value = (val & PCIE_MSG_PM_PME_MASK) ? PCI_EXP_RTCTL_PMEIE : 0;
++		*value = (val & PCIE_MSG_PM_PME_MASK) ? 0 : PCI_EXP_RTCTL_PMEIE;
+ 		return PCI_BRIDGE_EMUL_HANDLED;
+ 	}
+ 
+@@ -451,10 +451,15 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+ 		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+ 		break;
+ 
+-	case PCI_EXP_RTCTL:
+-		new = (new & PCI_EXP_RTCTL_PMEIE) << 3;
+-		advk_writel(pcie, new, PCIE_ISR0_MASK_REG);
++	case PCI_EXP_RTCTL: {
++		/* Only mask/unmask PME interrupt */
++		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG) &
++			~PCIE_MSG_PM_PME_MASK;
++		if ((new & PCI_EXP_RTCTL_PMEIE) == 0)
++			val |= PCIE_MSG_PM_PME_MASK;
++		advk_writel(pcie, val, PCIE_ISR0_MASK_REG);
+ 		break;
++	}
+ 
+ 	case PCI_EXP_RTSTA:
+ 		new = (new & PCI_EXP_RTSTA_PME) >> 9;
+-- 
+2.20.1
 
-I am not sure about this. PCI_PROBE_ONLY cannot stop an OS from
-reassigning BARs that are clearly misconfigured, it does not make
-any sense. It can't stop an OS from writing those BARs anyway,
-since they must be sized, why firmware would prevent an OS from
-reassigning BARs that are programmed with values that can be
-deemed 100% bogus ? Or put it differently, why must an OS preserve
-those values willy-nilly ?
-
-For me, PCI_PROBE_ONLY and _DSM == 0 on a host bridge must be considered
-equivalent.
-
-I agree with Bjorn on his reading of _DSM #5 and I think that
-the original patch that claims on _DSM #5 == 0 is a good
-starting point. I would like to make it a default even without
-_DSM #5 == 0 so that claim and reassign on claim failure works
-irrespective of _DSM #5, it is now or never, I think we can give
-it a shot, with an incremental patch.
-
-Lorenzo
-
-> So we'll need to find some more subtle way to convey these.
-> 
-> Bjorn: At this point, because of all the above, I'm keen on going back
-> to my original patch (slightly modified Ard's patch), possibly
-> rewording a thing or two and addressing Lorenzo comment.
-> 
-> We can look at a better and more generic implementation of _DSM #5
-> including for child nodes after I have consolidated more of the
-> resource management code.
-> 
-> Looking at the spec (and followup discussions for specs updates), I'm
-> quite keen on treating _DSM #5 = 1 as "wipe out the resource for that
-> endpoint/bridge and realloc something better. There are reasons for
-> that, but we can probably discuss that later.
-> 
-> Cheers,
-> Ben.
-> 
-> 
