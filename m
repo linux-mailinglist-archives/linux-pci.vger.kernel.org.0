@@ -2,69 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F56046895
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 22:06:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9458468A0
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 22:13:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725825AbfFNUGC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jun 2019 16:06:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47812 "EHLO mail.kernel.org"
+        id S1725868AbfFNUNd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Jun 2019 16:13:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbfFNUGB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:06:01 -0400
+        id S1725825AbfFNUNc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:13:32 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DE252173C;
-        Fri, 14 Jun 2019 20:06:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC94E2133D;
+        Fri, 14 Jun 2019 20:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560542761;
-        bh=6AW++I2KeuWsGHSu6JA6vMiNYLcuVsi2K4GLEIO/3+s=;
+        s=default; t=1560543212;
+        bh=xAM7mBjDbgUS5XcFtTkGqbwxqhzw2VQJQpfEmS3r5OU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=G7iDYR2wO+22rp7C4sRG3HKb8Yvppfd8jh3xhLjUwkILhQmDU7qp3vOaNq41vX2Cp
-         4HVkTcnrDTNvvKawNN0V8EVYyXUqmMlx69rFLzuFgXyt1UMU8XGAezwPv22BvU1/0F
-         cISsK9vDvwkmVLoQUzYeqmJDwceOSnNJu0aIb5j0=
-Date:   Fri, 14 Jun 2019 15:05:57 -0500
+        b=y9B/wKt8iAZmQzcNZMwojsGSPxWD0nlvAJ9fR2Mgc9gCFoXg973sQdjAjVCP/6T1t
+         b9gCFz2nYYCVV+dwHCGPAcSHn7aY/9VRZMzyrF48P1GQ4HMlgijZoW0/5QGEf73pu9
+         RW4fNguuPDa39W3Az18UKkqM6+czwwa/16ADuqpE=
+Date:   Fri, 14 Jun 2019 15:13:18 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Keith Busch <keith.busch@gmail.com>
-Cc:     Daniel Drake <drake@endlessm.com>, Jens Axboe <axboe@kernel.dk>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Keith Busch <kbusch@kernel.org>, linux-ide@vger.kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] PCI: Add Intel remapped NVMe device support
-Message-ID: <20190614200557.GS13533@google.com>
-References: <20190610074456.2761-1-drake@endlessm.com>
- <CAOSXXT7OFzHeTxNqZ1sS6giRxhDcrUUnVjURWBiFUc5T_8p=MA@mail.gmail.com>
- <CAD8Lp45djPU_Ur8uCO2Y5Sbek_5N9QKkxLXdKNVcvkr6rFPLUQ@mail.gmail.com>
- <CAOSXXT7H6HxY-za66Tr9ybRQyHsTdwwAgk9O2F=xK42MT8HsuA@mail.gmail.com>
- <20190613085402.GC13442@lst.de>
- <CAD8Lp47Vu=w+Lj77_vL05JYV1WMog9WX3FHGE+TseFrhcLoTuA@mail.gmail.com>
- <CAOSXXT4Ba_6xRUyaQBxpq+zdG9_itXDhFJ5EFZPv3CQuJZKHzg@mail.gmail.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Sinan Kaya <okaya@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [RFC PATCH v2] arm64: acpi/pci: invoke _DSM whether to preserve
+ firmware PCI setup
+Message-ID: <20190614201318.GT13533@google.com>
+References: <5783e36561bb77a1deb6ba67e5a9824488cc69c6.camel@kernel.crashing.org>
+ <20190613190248.GH13533@google.com>
+ <e6c7854ae360be513f6f43729ed6d4052e289376.camel@kernel.crashing.org>
+ <CAKv+Gu95pQ7_OfLbEXHZ_bhYnqOgTBKCmTgqUY27un-Y708BgQ@mail.gmail.com>
+ <d5d3e7b9553438482854c97e09543afb7de23eaa.camel@kernel.crashing.org>
+ <20190614095742.GA27188@e121166-lin.cambridge.arm.com>
+ <906b2576756e82a54b584c3de2d8362602de07ce.camel@kernel.crashing.org>
+ <84320a45ef9395d82bf1c5d4d2d7e6db189cbfda.camel@kernel.crashing.org>
+ <20190614131253.GR13533@google.com>
+ <fdedfe23250f0dcb49619ed9da1d53ff7e7403d8.camel@kernel.crashing.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOSXXT4Ba_6xRUyaQBxpq+zdG9_itXDhFJ5EFZPv3CQuJZKHzg@mail.gmail.com>
+In-Reply-To: <fdedfe23250f0dcb49619ed9da1d53ff7e7403d8.camel@kernel.crashing.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 01:36:07PM -0600, Keith Busch wrote:
+On Fri, Jun 14, 2019 at 11:48:18PM +1000, Benjamin Herrenschmidt wrote:
+> On Fri, 2019-06-14 at 08:12 -0500, Bjorn Helgaas wrote:
+> > On Fri, Jun 14, 2019 at 08:43:19PM +1000, Benjamin Herrenschmidt
+> > wrote:
+> > 
+> > > This least to another conversation we hinted at earlier.. we should
+> > > probably have a way to do the same at least for BARs on ACPI
+> > > systems so
+> > > we don't have to temporarily disable access to a device to size
+> > > them.
+> > 
+> > The PCI Enhanced Allocation capability provides a way to do this.  I
+> > don't know how widely used it is, but it's theoretically possible.
+> 
+> Ok, I have to read about this. I haven't seen a device with that on
+> yet, it looks messy at a quick glance.
+> 
+> Can ACPI convey the information ? On powerpc and sparc64 we have ways
+> to read the BAR values from the device-tree created by OF when it
+> assigned them.
 
-> Even if you wish to forgo the standard features and management
-> capabilities, you're still having to deal with legacy IRQ, which has
-> IOPs at a fraction of the hardware's true capabilities when using MSI.
+I agree, EA is messy.
 
-> ... your best option is still to set to AHCI mode for Linux
-> for this reason alone, and vendors should be providing this option in
-> BIOS.
-
-Ugh.  Are you saying the installation instructions for Linux will say
-"change the BIOS setting to AHCI"?  That's an unpleasant user
-experience, especially if the installation fails if the user hasn't
-read the instructions.
+I don't think it's feasible to do this in ACPI.  It's a pretty
+fundamental principle of PCI that you can discover what resources a
+device needs and uses by looking at its config space.  In general PCIe
+requires ECAM, which gives the OS direct access to config space,
+although it does allow exceptions for architecture-specific firmware
+interfaces for accessing config space, e.g., ia64 SAL (PCIe r4.0, sec
+7.2.2).
 
 Bjorn
