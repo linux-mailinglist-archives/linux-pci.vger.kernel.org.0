@@ -2,131 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BD2845A7C
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 12:36:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBA5845A84
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 12:38:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfFNKgk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jun 2019 06:36:40 -0400
-Received: from gate.crashing.org ([63.228.1.57]:50788 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726545AbfFNKgk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:36:40 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5EAaSLf008838;
-        Fri, 14 Jun 2019 05:36:29 -0500
-Message-ID: <906b2576756e82a54b584c3de2d8362602de07ce.camel@kernel.crashing.org>
-Subject: Re: [RFC PATCH v2] arm64: acpi/pci: invoke _DSM whether to preserve
- firmware PCI setup
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Sinan Kaya <okaya@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Date:   Fri, 14 Jun 2019 20:36:27 +1000
-In-Reply-To: <20190614095742.GA27188@e121166-lin.cambridge.arm.com>
-References: <5783e36561bb77a1deb6ba67e5a9824488cc69c6.camel@kernel.crashing.org>
-         <20190613190248.GH13533@google.com>
-         <e6c7854ae360be513f6f43729ed6d4052e289376.camel@kernel.crashing.org>
-         <CAKv+Gu95pQ7_OfLbEXHZ_bhYnqOgTBKCmTgqUY27un-Y708BgQ@mail.gmail.com>
-         <d5d3e7b9553438482854c97e09543afb7de23eaa.camel@kernel.crashing.org>
-         <20190614095742.GA27188@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+        id S1726900AbfFNKiJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Jun 2019 06:38:09 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:13632 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfFNKiI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jun 2019 06:38:08 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d03790e0000>; Fri, 14 Jun 2019 03:38:06 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 14 Jun 2019 03:38:06 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 14 Jun 2019 03:38:06 -0700
+Received: from [10.24.192.32] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
+ 2019 10:38:03 +0000
+Subject: Re: [PATCH V4 27/28] PCI: tegra: Add support for GPIO based PERST#
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <jonathanh@nvidia.com>,
+        <vidyas@nvidia.com>, <linux-tegra@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
+ <20190516055307.25737-28-mmaddireddy@nvidia.com>
+ <20190604132233.GT16519@ulmo>
+ <20190613152404.GB30445@e121166-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Message-ID: <cb2dd446-1275-7179-33ac-e5c237d81da6@nvidia.com>
+Date:   Fri, 14 Jun 2019 16:07:35 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190613152404.GB30445@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560508686; bh=UOMLox4uj3389xDl/DbaieWFaryVwUlWe0oUPgQgLt0=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:
+         Content-Transfer-Encoding:Content-Language;
+        b=dQZ45c0O4LVg9UXxDNrI9eadt+AwkC3Lq63tyS6YMf5aRc3LOwMOK8xuY5UeRX2kg
+         XWm/uWe7izmvKQK3we6enXQTAFT/bOTehT0coQBFKloOEfH8NDSYGXHl4uwro3vQuJ
+         rN7pMiOokxtwqATwGVr0W53LTyH5yq3MAUjZLtHZ0QoPQvWr/kB9B1D8kTbS22hppJ
+         iR97P2UF2lCzAR1jJ5MXnGkpV50AD8qtd4+WaXFcD4uaLT5jyGlVPM+2+qeWXT1YX2
+         IkowJJ+CbZcoAmRXjfuxs5KSDKNyPejFxGWcP5Xi7xqmRB0/jCLcMVwll38RPW3lKS
+         zy6Xav5JYZfsg==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 2019-06-14 at 10:57 +0100, Lorenzo Pieralisi wrote:
-> > Also using "probe_only" for _DSM #5 = 0 isn't a good idea, at least as
-> > implemented today in the rest of the kernel, probe_only also means we
-> > shouldn't assign what was left unassigned. However _DSM #5 allows this.
-> 
-> I am not sure about this. PCI_PROBE_ONLY cannot stop an OS from
-> reassigning BARs that are clearly misconfigured, it does not make
-> any sense.
 
-PCI_PROBE_ONLY is a linux thing which, as implemented today, implies no
-assignment at all. I believe it originates as a merge of variants of
-the same thing, at least one of them being one I created for powerpc
-back in the days due to our proprietary hypervisor not letting you
-touch any of the PCI config space.
 
-If a device looks broken, disable it, don't use it, but don't reassign
-either. At least that the semantics we have today. And as such they
-don't match _DSM #5 = 0.
+On 13-Jun-19 8:54 PM, Lorenzo Pieralisi wrote:
+> On Tue, Jun 04, 2019 at 03:22:33PM +0200, Thierry Reding wrote:
+>
+> [...]
+>
+>>> +	} else {
+>>> +		value = afi_readl(port->pcie, ctrl);
+>>> +		value &= ~AFI_PEX_CTRL_RST;
+>>> +		afi_writel(port->pcie, value, ctrl);
+>>> +	}
+>>>  
+>>>  	usleep_range(1000, 2000);
+>>>  
+>>> -	value = afi_readl(port->pcie, ctrl);
+>>> -	value |= AFI_PEX_CTRL_RST;
+>>> -	afi_writel(port->pcie, value, ctrl);
+>>> +	if (port->reset_gpiod) {
+>>> +		gpiod_set_value(port->reset_gpiod, 1);
+>> After this the port should be functional, right? I think it'd be better
+>> to reverse the logic here and move the polarity of the GPIO into device
+>> tree. gpiod_set_value() takes care of inverting the level internally if
+>> the GPIO is marked as low-active in DT.
+>>
+>> The end result is obviously the same, but it makes the usage much
+>> clearer. If somebody want to write a DT for their board, they will look
+>> at the schematics and see a low-active reset line and may be tempted to
+>> describe it as such in DT, but with your current code that would be
+>> exactly the wrong way around.
+> I agree with Thierry here, you should change the logic.
+>
+> Question: what's the advantage of adding GPIO reset support if that's
+> architected already in port registers ? I am pretty sure there is a
+> reason behind it (and forgive me the dumb question) and I would like to
+> have it written in the commit log.
+>
+> Thanks,
+> Lorenzo
 
-> It can't stop an OS from writing those BARs anyway,
-> since they must be sized, why firmware would prevent an OS from
-> reassigning BARs that are programmed with values that can be
-> deemed 100% bogus ? Or put it differently, why must an OS preserve
-> those values willy-nilly ?
+Each PCIe controller has a dedicated SFIO pin to support PERST# signal. Port register
+can control only this particular SFIO pin. However, in one of the Nvidia platform,
+instead of using PCIe SFIO pin, different gpio is routed PCIe slot. This happened
+because of a confusion in IO ball naming convention. To support this particular
+platform, driver has provide gpio support. I will update the commit log in V5.
 
-Don't ask me ... IBM firmware :-) At least that was the idea back then.
+Manikanta
 
-That said I suppose some platforms may also have set that flag to
-indicate that they aren't sure what other "ghost" things might be
-in the address space, ie Linux doesnt have a clear view of what's
-free to allocate devices to for example.
-
-> For me, PCI_PROBE_ONLY and _DSM == 0 on a host bridge must be considered
-> equivalent.
-
-Well, that's not what PCI_PROBE_ONLY is today in Linux. It might be
-what you would like it to be but it's not what it is :-) And I'd like
-to avoid making arm64 different than everybody else here because I want
-to consolidate things.
-
-Fundamentally, is what _DSM #5 == 0 does any different from our
-standard (not PROBE_ONLY) mode of operation on server platforms anyway
-? Ie, we read what's there, and we leave it alone unless it's broken or
-unassigned ? This is precisely the definition of _DSM #5 == 0 no ?
-
-PROBE_ONLY is .. something else.
-
-> I agree with Bjorn on his reading of _DSM #5 and I think that
-> the original patch that claims on _DSM #5 == 0 is a good
-> starting point.
-
-The original patch is a good starting point, we agree. The only point
-of disagreement with Bjorn at this stage is what the "default" is in
-absence of _DSM #5.
-
-The spec says it should be the same as _DSM #5 == 0, but we know today
-it will introduce a much wider ranging change to arm64 to treat it that
-way. At the very least, changing the default should be a different
-patch.
-
->  I would like to make it a default even without
-> _DSM #5 == 0 so that claim and reassign on claim failure works
-> irrespective of _DSM #5, it is now or never, I think we can give
-> it a shot, with an incremental patch.
-
-We should. In fact, I was thinking about it on the way home tonight and
-was going to ask you and Ard to try this out and send me the debug
-level log output of anything that looks wrong on any platform:
-
-diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-index bb85e2f4603f..0af1f1b4e4d8 100644
---- a/arch/arm64/kernel/pci.c
-+++ b/arch/arm64/kernel/pci.c
-@@ -193,8 +193,8 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
- 	if (!bus)
- 		return NULL;
- 
--	pci_bus_size_bridges(bus);
--	pci_bus_assign_resources(bus);
-+	pci_bus_claim_resources(bus);
-+	pci_assign_unassigned_root_bus_resources(bus);
- 
- 	list_for_each_entry(child, &bus->children, node)
- 		pcie_bus_configure_settings(child);
-
-Cheers,
-Ben.
-
+>
+>>> +	} else {
+>>> +		value = afi_readl(port->pcie, ctrl);
+>>> +		value |= AFI_PEX_CTRL_RST;
+>>> +		afi_writel(port->pcie, value, ctrl);
+>>> +	}
+>>>  }
+>>>  
+>>>  static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
+>>> @@ -2238,6 +2249,7 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+>>>  		struct tegra_pcie_port *rp;
+>>>  		unsigned int index;
+>>>  		u32 value;
+>>> +		char *label;
+>>>  
+>>>  		err = of_pci_get_devfn(port);
+>>>  		if (err < 0) {
+>>> @@ -2296,6 +2308,23 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+>>>  		if (IS_ERR(rp->base))
+>>>  			return PTR_ERR(rp->base);
+>>>  
+>>> +		label = kasprintf(GFP_KERNEL, "pex-reset-%u", index);
+>> devm_kasprintf()?
+>>
+>> Thierry
+>>
+>>> +		if (!label) {
+>>> +			dev_err(dev, "failed to create reset GPIO label\n");
+>>> +			return -ENOMEM;
+>>> +		}
+>>> +
+>>> +		rp->reset_gpiod = devm_gpiod_get_from_of_node(dev, port,
+>>> +							      "reset-gpios", 0,
+>>> +							      GPIOD_OUT_LOW,
+>>> +							      label);
+>>> +		kfree(label);
+>>> +		if (IS_ERR(rp->reset_gpiod)) {
+>>> +			err = PTR_ERR(rp->reset_gpiod);
+>>> +			dev_err(dev, "failed to get reset GPIO: %d\n", err);
+>>> +			return err;
+>>> +		}
+>>> +
+>>>  		list_add_tail(&rp->list, &pcie->ports);
+>>>  	}
+>>>  
+>>> -- 
+>>> 2.17.1
+>>>
+>
 
