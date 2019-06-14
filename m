@@ -2,89 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B9B0D45514
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 08:54:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10178454EB
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 08:43:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725858AbfFNGyZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jun 2019 02:54:25 -0400
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:33860 "EHLO
-        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbfFNGyZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jun 2019 02:54:25 -0400
-Received: from relay7-d.mail.gandi.net (unknown [217.70.183.200])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id D2E883A570C;
-        Fri, 14 Jun 2019 06:33:02 +0000 (UTC)
-X-Originating-IP: 88.190.179.123
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id EA8272000E;
-        Fri, 14 Jun 2019 06:32:52 +0000 (UTC)
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Ellie Reeves <ellierevves@gmail.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Remi Pommarel <repk@triplefau.lt>
-Subject: [PATCH v2] PCI: aardvark: Fix PCI_EXP_RTCTL conf register writing
-Date:   Fri, 14 Jun 2019 08:42:25 +0200
-Message-Id: <20190614064225.24434-1-repk@triplefau.lt>
-X-Mailer: git-send-email 2.20.1
+        id S1725923AbfFNGnn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Jun 2019 02:43:43 -0400
+Received: from verein.lst.de ([213.95.11.211]:44484 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725780AbfFNGnn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 Jun 2019 02:43:43 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id D916768B02; Fri, 14 Jun 2019 08:43:13 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 08:43:13 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 18/22] mm: mark DEVICE_PUBLIC as broken
+Message-ID: <20190614064313.GM7246@lst.de>
+References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-19-hch@lst.de> <20190613194430.GY22062@mellanox.com> <a27251ad-a152-f84d-139d-e1a3bf01c153@nvidia.com> <20190613195819.GA22062@mellanox.com> <20190614004314.GD783@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614004314.GD783@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCI_EXP_RTCTL is used to activate PME interrupt only, so writing into it
-should not modify other interrupts' mask. The ISR mask polarity was also
-inverted, when PCI_EXP_RTCTL_PMEIE is set PCIE_MSG_PM_PME_MASK mask bit
-should actually be cleared.
+On Thu, Jun 13, 2019 at 05:43:15PM -0700, Ira Weiny wrote:
+> <sigh>  yes but the earlier patch:
+> 
+> [PATCH 03/22] mm: remove hmm_devmem_add_resource
+> 
+> Removes the only place type is set to MEMORY_DEVICE_PUBLIC.
+> 
+> So I think it is ok.  Frankly I was wondering if we should remove the public
+> type altogether but conceptually it seems ok.  But I don't see any users of it
+> so...  should we get rid of it in the code rather than turning the config off?
 
-Fixes: 6302bf3ef78d ("PCI: Init PCIe feature bits for managed host bridge alloc")
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
----
-Changes since v1:
- * Improve code readability
- * Fix mask polarity
- * PME_MASK shift was off by one
----
- drivers/pci/controller/pci-aardvark.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 134e0306ff00..f6e55c4597b1 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -415,7 +415,7 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
- 
- 	case PCI_EXP_RTCTL: {
- 		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG);
--		*value = (val & PCIE_MSG_PM_PME_MASK) ? PCI_EXP_RTCTL_PMEIE : 0;
-+		*value = (val & PCIE_MSG_PM_PME_MASK) ? 0 : PCI_EXP_RTCTL_PMEIE;
- 		return PCI_BRIDGE_EMUL_HANDLED;
- 	}
- 
-@@ -451,10 +451,15 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
- 		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
- 		break;
- 
--	case PCI_EXP_RTCTL:
--		new = (new & PCI_EXP_RTCTL_PMEIE) << 3;
--		advk_writel(pcie, new, PCIE_ISR0_MASK_REG);
-+	case PCI_EXP_RTCTL: {
-+		/* Only mask/unmask PME interrupt */
-+		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG) &
-+			~PCIE_MSG_PM_PME_MASK;
-+		if ((new & PCI_EXP_RTCTL_PMEIE) == 0)
-+			val |= PCIE_MSG_PM_PME_MASK;
-+		advk_writel(pcie, val, PCIE_ISR0_MASK_REG);
- 		break;
-+	}
- 
- 	case PCI_EXP_RTSTA:
- 		new = (new & PCI_EXP_RTSTA_PME) >> 9;
--- 
-2.20.1
-
+That was my original idea.  But then again Jerome spent a lot of effort
+putting hooks for it all over the mm and it would seem a little root
+to just rip this out ASAP.  I'll give it some more time, but it it doesn't
+get used after a few more kernel releases we should nuke it.
