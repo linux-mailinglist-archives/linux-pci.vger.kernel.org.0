@@ -2,138 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 71735465AF
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 19:23:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79E3A46830
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 21:36:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfFNRXq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jun 2019 13:23:46 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:19637 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbfFNRXq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jun 2019 13:23:46 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d03d8210001>; Fri, 14 Jun 2019 10:23:45 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 14 Jun 2019 10:23:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 14 Jun 2019 10:23:45 -0700
-Received: from [10.24.192.32] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
- 2019 17:23:42 +0000
-Subject: Re: [PATCH V4 27/28] PCI: tegra: Add support for GPIO based PERST#
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Thierry Reding <thierry.reding@gmail.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <jonathanh@nvidia.com>, <vidyas@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20190516055307.25737-28-mmaddireddy@nvidia.com>
- <20190604132233.GT16519@ulmo>
- <20190613152404.GB30445@e121166-lin.cambridge.arm.com>
- <cb2dd446-1275-7179-33ac-e5c237d81da6@nvidia.com>
- <20190614143222.GB23116@e121166-lin.cambridge.arm.com>
- <1508173d-0ecc-f498-6ab2-78a718086b35@nvidia.com>
- <20190614145023.GA24588@e121166-lin.cambridge.arm.com>
- <20190614152304.GK15526@ulmo>
- <20190614155934.GA28253@e121166-lin.cambridge.arm.com>
- <51e4ae62-f842-1d2f-fbca-0b2063dd53a6@nvidia.com>
- <20190614165353.GB30511@e121166-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Message-ID: <1c662f82-8329-5e1b-58bf-b2fe1643adb0@nvidia.com>
-Date:   Fri, 14 Jun 2019 22:53:13 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726072AbfFNTgV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Jun 2019 15:36:21 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38805 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfFNTgV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jun 2019 15:36:21 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d18so3698744wrs.5;
+        Fri, 14 Jun 2019 12:36:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Iuen4us4qwoV5tqtyFbIwEnmTYf7b4xea2g4tH0SWx8=;
+        b=IAvJg8ETPBRJWFF/CGdbBAN8iyvgesw76DdfQRPlXss/RPtBIBuZhkJDiEW8DK2UMc
+         OIwzjcMDGDtv7bFu86LRsy1jRy+fBurVJq1EdPU3m79G0+cU/wIujLwzNFr0kzjxKDcm
+         ZayMCIIn1xqCRQ/SHsWj93ob6tAojWpoJma83UpFn9WmYv26W6nRECIiCeQ/g0cVDakV
+         fQmTFt3znCEOGuFYOSWzlyasP5KWQ0oPB3p7ibde5NlXatrCcoSmWjXM6Fo7dJbmLhCV
+         dA3126kW+XtzrUmACoqbo1PjUx3A/Me7lTRrgSEZ0ysSh5+dJDfQsUDGIoGYSHTYQqee
+         HCyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Iuen4us4qwoV5tqtyFbIwEnmTYf7b4xea2g4tH0SWx8=;
+        b=NGKLyEs8bJzrP6UECQApLvGbCTOP4hFo9dZMQgZ81XLc+LMcHvheLcMv6/S1gSXASZ
+         NQ1k5RvEhNdSl9v6ZC+Gn4Tzi76wFNL1MOKm28C0T73V1baXfimODWApHmq+xhs80GK0
+         dTnO7ZQyUOgI/dg5Am2wbDlDPaKvgC5owYJEj3XZdbEghCOFHK+GIKBcTVL1x4DrTC1+
+         weaNoXhJt/RzMcURu11hn0hA+vmD7hZPY5z2z4CN4I08pXijgUIoHFzIyYsDIQkhCn9C
+         hEWWgsx2ZpwqI8FnPBbR2jcrZvidGap91QaYJgvGHuLbTZVEgVNV0KeLeHLmQhQ/DYiW
+         LeNA==
+X-Gm-Message-State: APjAAAWQhkca6s58rjODV3K4OXlLoobRmR8AcdoJ6+6PguEYbXvDKm2t
+        aLhGs1U9Kl+9E35iWNzeajAoO5/R9hNSN1sr6Io=
+X-Google-Smtp-Source: APXvYqzJyCR5WhUhz5HRAU2NajqT2EChTOtU9SC51qWgHHh2VgjMJakSG3j7zJQj+J0sE/Lje+oCGhTch8AZWAzJei4=
+X-Received: by 2002:a5d:6b12:: with SMTP id v18mr66636492wrw.306.1560540979110;
+ Fri, 14 Jun 2019 12:36:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190614165353.GB30511@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560533025; bh=3CBnkFdGS4UTonodjsvkHODIWZ6WFboQ59T/RqSru8Y=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:
-         Content-Transfer-Encoding:Content-Language;
-        b=lmaxOTZvROR0MfaPsBg4jLsAOYnOe6ahzTDz6xEqF3tenMe+bSiEBLsPIu+qLN7sS
-         8QLBswT36O2eRT8dv3JWcWeEoPONNFz8iO6MsDkXxvp9QLTfXvQHdElUAj+02ANkGk
-         7U31LaaPBXuoBhM0CNdW/Ik3v8Qz/I+qGs3RZSgrbVAJHnd+/s2OhfDYq3nafB5C37
-         dWFHsPdc0ERWk/M/y+tM2/In7lw1HIYNDh8CICQXJ8dt3bG/8gd9u+KLJuWtrAy+QC
-         49aKTa8Z4x2zBXxIce1igYzZQFWYXi5BE8PS51YctELQ29+vreQIMgPCktswU7WgIs
-         a+1FIsxkL9p+A==
+References: <20190610074456.2761-1-drake@endlessm.com> <CAOSXXT7OFzHeTxNqZ1sS6giRxhDcrUUnVjURWBiFUc5T_8p=MA@mail.gmail.com>
+ <CAD8Lp45djPU_Ur8uCO2Y5Sbek_5N9QKkxLXdKNVcvkr6rFPLUQ@mail.gmail.com>
+ <CAOSXXT7H6HxY-za66Tr9ybRQyHsTdwwAgk9O2F=xK42MT8HsuA@mail.gmail.com>
+ <20190613085402.GC13442@lst.de> <CAD8Lp47Vu=w+Lj77_vL05JYV1WMog9WX3FHGE+TseFrhcLoTuA@mail.gmail.com>
+In-Reply-To: <CAD8Lp47Vu=w+Lj77_vL05JYV1WMog9WX3FHGE+TseFrhcLoTuA@mail.gmail.com>
+From:   Keith Busch <keith.busch@gmail.com>
+Date:   Fri, 14 Jun 2019 13:36:07 -0600
+Message-ID: <CAOSXXT4Ba_6xRUyaQBxpq+zdG9_itXDhFJ5EFZPv3CQuJZKHzg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Add Intel remapped NVMe device support
+To:     Daniel Drake <drake@endlessm.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linux-ide@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 14-Jun-19 10:23 PM, Lorenzo Pieralisi wrote:
-> On Fri, Jun 14, 2019 at 10:00:49PM +0530, Manikanta Maddireddy wrote:
+On Thu, Jun 13, 2019 at 8:26 PM Daniel Drake <drake@endlessm.com> wrote:
+> On Thu, Jun 13, 2019 at 4:54 PM Christoph Hellwig <hch@lst.de> wrote:
+> >  b) reset handling, including the PCI device removal as the last
+> >     escalation step
 >
-> [...]
+> Apparently can't be supported, but it's not clear that this actually
+> matters for a home PC...
 >
->> GPIO based PERST# is per-platform requirement.
->> If DT prop is not present, then devm_gpiod_get_from_of_node() returns
->> NULL gpio_desc.
->>
->> struct gpio_desc *gpiod_get_from_of_node(struct device_node *node,
->>                                          const char *propname, int index,
->>                                          enum gpiod_flags dflags,
->>                                          const char *label)
->> {
->>         struct gpio_desc *desc;
->>         unsigned long lflags = 0;
->>         enum of_gpio_flags flags;
->>         bool active_low = false;
->>         bool single_ended = false;
->>         bool open_drain = false;
->>         bool transitory = false;
->>         int ret;
->>
->>         desc = of_get_named_gpiod_flags(node, propname,
->>                                         index, &flags);
->>
->>         if (!desc || IS_ERR(desc)) {
->> */* If it is not there, just return NULL */****if (PTR_ERR(desc) == -ENOENT)****return NULL;*
->>                 return desc;
->>         }
->> 	...
->>
->> }
-> Ok. My point then is that you have no way to enforce this requirement on
-> platforms that actually need it, I do not even know if there is a
-> way you can do it (I was thinking along the lines of using a
-> compatible string to detect whether the GPIO #PERST reset is mandatory)
-> but maybe this is not even a SOC property.
+> https://marc.info/?l=linux-ide&m=147733119300691&w=2
+> "The driver seems to already comprehend instances where the
+> device does not support nvme_reset_subsystem() requests."
 >
-> Maybe what I am asking is overkill, I just wanted to understand.
->
-> I was just asking a question to understand how you handle the case
-> where a GPIO pin definition is missing in DT for a platform that
-> actually needs it, the driver will probe but nothing will work.
->
-> It would be good to describe this and capture it in the commit log.
->
-> Thanks,
-> Lorenzo
+> https://marc.info/?l=linux-ide&m=147734288604783&w=2
+> "Talking with Keith, subsystem-resets are a feature of enterprise-class
+> NVMe devices.  I think those features are out of scope for the class
+> of devices that will find themselves in a platform with this
+> configuration, same for hot-plug."
 
-I can't think of a easy way to enforce this requirement. As you said
-compatible string is per SOC, so we can't use it for a platform.
-This issue is present on only one platform, so it is hard to miss the
-DT property. That is the reason for publishing this patch with out this
-enforcement in driver.
+NVMe Subsystem resets are not the same thing as conventional PCI
+resets. We still have use for the latter in client space.
 
-I thought for changing PERST# to GPIO for all platform, but testing is
-a tedious job. Also I don't have Tegra20 and Tegra30 platforms.
-
-Do you want me to drop the patch or update the limitation in the commit
-log?
-
-Manikanta
-
-
+Even if you wish to forgo the standard features and management
+capabilities, you're still having to deal with legacy IRQ, which has
+IOPs at a fraction of the hardware's true capabilities when using MSI.
+I do not believe that is what users want out of their purchased
+hardware, so your best option is still to set to AHCI mode for Linux
+for this reason alone, and vendors should be providing this option in
+BIOS.
