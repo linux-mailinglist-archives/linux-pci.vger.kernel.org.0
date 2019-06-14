@@ -2,116 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 65E4C45125
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 03:21:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8FCF4512B
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 03:23:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbfFNBVX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jun 2019 21:21:23 -0400
-Received: from mail-eopbgr80057.outbound.protection.outlook.com ([40.107.8.57]:6976
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725616AbfFNBVX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 13 Jun 2019 21:21:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5YmwdtJs4Wqng2BX4vdSF2RAU6KnfAhsdC4DrddbwPQ=;
- b=SqK3aqqXoA0UdNdsjpANn+K9ZfRrtdCvyhoZocvFXhhh0ZNF436LB26nnCSiNDjrDSzRlybmyp6a/LwYYwaxhpuxyYmBZZbcv15rYc17LWV4shOhWvJuNke3cG40R7lMpviAPPCVX5nTpZr4X+zMrCme74d2sdNzBZSRa71eaUI=
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
- AM5PR04MB3012.eurprd04.prod.outlook.com (10.173.254.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.15; Fri, 14 Jun 2019 01:21:18 +0000
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::38dc:f8e6:b29a:54c6]) by AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::38dc:f8e6:b29a:54c6%6]) with mapi id 15.20.1965.018; Fri, 14 Jun 2019
- 01:21:18 +0000
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
-        "pombredanne@nexb.com" <pombredanne@nexb.com>,
-        "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        id S1726201AbfFNBXJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jun 2019 21:23:09 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:18476 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725616AbfFNBXJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jun 2019 21:23:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d02f6fc0000>; Thu, 13 Jun 2019 18:23:08 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 13 Jun 2019 18:23:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 13 Jun 2019 18:23:08 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
+ 2019 01:23:04 +0000
+Subject: Re: [PATCH 18/22] mm: mark DEVICE_PUBLIC as broken
+To:     Ira Weiny <ira.weiny@intel.com>, Jason Gunthorpe <jgg@mellanox.com>
+CC:     Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: [EXT] Re: [PATCH 1/3] dt-bindings: pci: layerscape-pci: add
- compatible strings "fsl,ls1028a-pcie"
-Thread-Topic: [EXT] Re: [PATCH 1/3] dt-bindings: pci: layerscape-pci: add
- compatible strings "fsl,ls1028a-pcie"
-Thread-Index: AQHVCvDaGb043xOzIkucXDyWoGqpkKaaP+cAgABI/RA=
-Date:   Fri, 14 Jun 2019 01:21:18 +0000
-Message-ID: <AM5PR04MB329999D245D9C549C9631F71F5EE0@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190515072747.39941-1-xiaowei.bao@nxp.com>
- <20190613205930.GA9003@bogus>
-In-Reply-To: <20190613205930.GA9003@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaowei.bao@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 65504fd2-86e9-474d-5e9e-08d6f0669a3f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM5PR04MB3012;
-x-ms-traffictypediagnostic: AM5PR04MB3012:
-x-microsoft-antispam-prvs: <AM5PR04MB3012962ABAACD15A6520AAD4F5EE0@AM5PR04MB3012.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2331;
-x-forefront-prvs: 0068C7E410
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(136003)(366004)(346002)(376002)(189003)(199004)(13464003)(53936002)(186003)(6116002)(99286004)(7696005)(6506007)(8936002)(64756008)(81166006)(76176011)(4326008)(81156014)(229853002)(68736007)(26005)(33656002)(256004)(25786009)(71190400001)(71200400001)(5660300002)(8676002)(52536014)(6246003)(53546011)(3846002)(102836004)(478600001)(486006)(446003)(14454004)(66066001)(74316002)(44832011)(476003)(54906003)(86362001)(7736002)(55016002)(76116006)(66446008)(2906002)(6916009)(11346002)(66476007)(305945005)(66556008)(9686003)(7416002)(73956011)(316002)(6436002)(66946007)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3012;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: XywbbYQYOoMMXW7eH45eu/VkPdRGxDpmnStIGRG5ilOmNSE6EO5SSDtLf/KgXhibzzOvQ1T+/gkmCWiVYY9/dUDpuC4JZ2zrt5zEKxatUKG4//OlB3hRqS+nYJTuAvxLibaSITeuLKx0eLzTrwxJXSL7qthJZNlJAO0UIJJgNsmAPODuND8rw+tNnh/1p0no5qTh6JZBSMaphO4dRUz4BcEz8jyo7rlDsiy2Ho7erPAzaq2/1aEF/4shj5YUq8fMdnGIppi/KOG+dOTC2kbNSV4OaEWue5V08fNN6xW/fueLv9OY0tssSZ3Zt/DKdRGcXIFv9s4Gm+6Rm6cDxYZGe0tsJDgq/cTsl2+WZ/qM3rCGFQPB4SFx9zflbb2sMAoyR2033sDiNGKexTI9JX0R1Pv5m+tB6no4o92TNs5o4Vg=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-19-hch@lst.de> <20190613194430.GY22062@mellanox.com>
+ <a27251ad-a152-f84d-139d-e1a3bf01c153@nvidia.com>
+ <20190613195819.GA22062@mellanox.com>
+ <20190614004314.GD783@iweiny-DESK2.sc.intel.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <d2b77ea1-7b27-e37d-c248-267a57441374@nvidia.com>
+Date:   Thu, 13 Jun 2019 18:23:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65504fd2-86e9-474d-5e9e-08d6f0669a3f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 01:21:18.2229
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xiaowei.bao@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3012
+In-Reply-To: <20190614004314.GD783@iweiny-DESK2.sc.intel.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560475388; bh=NWiGQvc0UaQg06vGlx/KBoyQY7FTb90HKZp/7cWu1+4=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=CCd8e2OpQNYk9MLkQj2SISKb1f8rHEt8owfBUnfdQ/EbQaEHFbssnQujsTCvu1hg/
+         mR8Y3/sQ0FeoXBKw8x7EwSNeP0JirtlvLprjUK1BAmudORUfLC87dyxEeAk19INas5
+         NI29MBs4mO8FUO+2r1avdCcLUMWD+OBag9RCJIoLc2O2dHRfWViTRDAYcfn3m6Wrf6
+         udfy6sC0OFEAlHI5edqKIVUfELxR84G7Dkf+roQu6aKqp3E13WZ1IqDdG/Lffgeh/e
+         nogIq4wl7uO95KxuzvD0ijZERk5Gr6SxTkWBIiWMnMYA0zmWut5Pf3opqWtrNeceNW
+         Ua0w/eL4F+pAQ==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgPHJv
-YmhAa2VybmVsLm9yZz4NCj4gU2VudDogMjAxOcTqNtTCMTTI1SA1OjAwDQo+IFRvOiBYaWFvd2Vp
-IEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gQ2M6IGJoZWxnYWFzQGdvb2dsZS5jb207IHJv
-YmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IHNoYXduZ3VvQGtlcm5l
-bC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsga2lzaG9uQHRpLmNvbTsNCj4gbG9y
-ZW56by5waWVyYWxpc2lAYXJtLmNvbTsgYXJuZEBhcm5kYi5kZTsgZ3JlZ2toQGxpbnV4Zm91bmRh
-dGlvbi5vcmc7DQo+IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgTWluZ2thaSBI
-dSA8bWluZ2thaS5odUBueHAuY29tPjsNCj4gUm95IFphbmcgPHJveS56YW5nQG54cC5jb20+OyBr
-c3Rld2FydEBsaW51eGZvdW5kYXRpb24ub3JnOw0KPiBwb21icmVkYW5uZUBuZXhiLmNvbTsgc2hh
-d24ubGluQHJvY2stY2hpcHMuY29tOw0KPiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBkZXZp
-Y2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsg
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBsaW51eHBwYy1kZXZAbGlz
-dHMub3psYWJzLm9yZzsgWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+IFN1Ympl
-Y3Q6IFtFWFRdIFJlOiBbUEFUQ0ggMS8zXSBkdC1iaW5kaW5nczogcGNpOiBsYXllcnNjYXBlLXBj
-aTogYWRkDQo+IGNvbXBhdGlibGUgc3RyaW5ncyAiZnNsLGxzMTAyOGEtcGNpZSINCj4gDQo+IENh
-dXRpb246IEVYVCBFbWFpbA0KPiANCj4gT24gV2VkLCAxNSBNYXkgMjAxOSAxNToyNzo0NSArMDgw
-MCwgWGlhb3dlaSBCYW8gd3JvdGU6DQo+ID4gQWRkIHRoZSBQQ0llIGNvbXBhdGlibGUgc3RyaW5n
-IGZvciBMUzEwMjhBDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJhbyA8eGlhb3dl
-aS5iYW9AbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGNp
-L2xheWVyc2NhcGUtcGNpLnR4dCAgICAgfCAgICAxICsNCj4gPiAgMSBmaWxlcyBjaGFuZ2VkLCAx
-IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pDQo+ID4NCj4gDQo+IFJldmlld2VkLWJ5OiBS
-b2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KW1hpYW93ZWkgQmFvXSB0aGFua3MgYSBsb3Qg
-Zm9yIHlvdXIgcmV2aWV3Lg0K
+On 6/13/19 5:43 PM, Ira Weiny wrote:
+> On Thu, Jun 13, 2019 at 07:58:29PM +0000, Jason Gunthorpe wrote:
+>> On Thu, Jun 13, 2019 at 12:53:02PM -0700, Ralph Campbell wrote:
+>>>
+...
+>> Hum, so the only thing this config does is short circuit here:
+>>
+>> static inline bool is_device_public_page(const struct page *page)
+>> {
+>>         return IS_ENABLED(CONFIG_DEV_PAGEMAP_OPS) &&
+>>                 IS_ENABLED(CONFIG_DEVICE_PUBLIC) &&
+>>                 is_zone_device_page(page) &&
+>>                 page->pgmap->type == MEMORY_DEVICE_PUBLIC;
+>> }
+>>
+>> Which is called all over the place.. 
+> 
+> <sigh>  yes but the earlier patch:
+> 
+> [PATCH 03/22] mm: remove hmm_devmem_add_resource
+> 
+> Removes the only place type is set to MEMORY_DEVICE_PUBLIC.
+> 
+> So I think it is ok.  Frankly I was wondering if we should remove the public
+> type altogether but conceptually it seems ok.  But I don't see any users of it
+> so...  should we get rid of it in the code rather than turning the config off?
+> 
+> Ira
+
+That seems reasonable. I recall that the hope was for those IBM Power 9
+systems to use _PUBLIC, as they have hardware-based coherent device (GPU)
+memory, and so the memory really is visible to the CPU. And the IBM team
+was thinking of taking advantage of it. But I haven't seen anything on
+that front for a while.
+
+So maybe it will get re-added as part of a future patchset to use that
+kind of memory, but yes, we should not hesitate to clean house at this
+point, and delete unused code.
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
+> 
+>>
+>> So, yes, we really don't want any distro or something to turn this on
+>> until it has a use.
+>>
+>> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+>>
+>> Jason
+>> _______________________________________________
+>> Linux-nvdimm mailing list
+>> Linux-nvdimm@lists.01.org
+>> https://lists.01.org/mailman/listinfo/linux-nvdimm
