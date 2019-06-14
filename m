@@ -2,99 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D1FD245D08
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 14:40:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D91C745D5B
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 15:02:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbfFNMkR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jun 2019 08:40:17 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44352 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727685AbfFNMkR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jun 2019 08:40:17 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t16so1388042pfe.11;
-        Fri, 14 Jun 2019 05:40:16 -0700 (PDT)
+        id S1728033AbfFNNC2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Jun 2019 09:02:28 -0400
+Received: from mail-lf1-f54.google.com ([209.85.167.54]:36134 "EHLO
+        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727682AbfFNNC2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jun 2019 09:02:28 -0400
+Received: by mail-lf1-f54.google.com with SMTP id q26so1696913lfc.3;
+        Fri, 14 Jun 2019 06:02:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=G6J+XslQx14mgUJu3IkiN0FzUg+9m/GNr8qGP15QXM4=;
-        b=nSzXWq2wgDfSBPulagdL8DAcLzRmrLOdE8OSqGLUh/cCWEG3++iLthKmJE9JgDDu0J
-         g6PnPHyDY4q1EPdQW2X9uzxa3pPRJ1cOQ1fmM2aAQOyFV0HQsI4WYBYU17eIUeOW/36Y
-         KMj/d23F7Z95RMGAVs1TVxOW+bsfxCQPm7DxMpsIGQveqjpZoTZoueZ+mBMA9pxuYLEZ
-         /Wvfsyspn1WnCvGsUWh7gn1T+DdlKXPbDnokDp+vpPD9ZTI7sNMCiTspAz3oXxBwFKKx
-         OgMQHvcTuF2AoZgLsLOqS77QFmKQ0yZpPHOcNVjbQ5a6LU7o7HAkbsD5iytZBkx/8vr5
-         ngGw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JNCCekNXxF72Z55DYxpSmTTnL0h6yytISWpjYq2m+S8=;
+        b=Vo96BzDQ74ypjJAU1MqhEcnRuUOs8FJSEkzLVURbhq0pZauL6Hsk4zntSTKsxlRAwo
+         6j3bgM0L61jhronOfeoLgFKzZpGbManW0X2Pf+OARHNkI0imiMTgoNLdd00bm0mQeQpA
+         oU3M05EiGcaO+lfh/leIPWtJRx2wm4ATGCbhl6VEVR+B1hTLssf6ZHyqkijzOKmmgJLf
+         T58p0FTsl5UC74a97uaWUPtTjq7YveSFTJavgTYAsz8Pwa+wNM7WhbWCnW0JrBA6tZK4
+         ROw7OObTvdUeRJfGkDcN7PKDZOTo9o2mBXM5pj9nauJFNgwxgHW9Ym9g63T/FUUaZ9As
+         7VSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=G6J+XslQx14mgUJu3IkiN0FzUg+9m/GNr8qGP15QXM4=;
-        b=U4nq5HKrszTiqmcJW/4G87D3JptiK8laVf3weo0WVzpl6cDeDskbUoJqWFe+myp7k2
-         chAVnrZX/bIeEovQPTE5WkYTEgBvUa5BG/1uCHlBoXAftBYOWHJ6I3hKaF2UiiQ4lkxP
-         DL5okDpnwugrr5AITKQ17l96nD/HJRgth/eVEzgGFSqCa3m6vn+3okYkRZRxEF5xOFQY
-         BGQcyRTvn8LciOTSO0Iwfy0BniQiHmPYUrPEo1AEt0NfG2OuMLeAtF1gUCOt8M8lIlWz
-         AnOr8gpCMGa8pdlBtXeWZ1Z8lE3E5ibLbe6sidS7CHUWc41iZb1QJO4aTFK0MT6hIFaA
-         ykCA==
-X-Gm-Message-State: APjAAAUAM8AqSKLNpFLtXps4XC4650UbYftdfGk5jWAdTFVESRICM3Lo
-        vmE6bkgUyCtfLd5QNTI0qDQ=
-X-Google-Smtp-Source: APXvYqx9/TmX0TUwRb9YhbZ2LXa7SIjFQEulobTNWMcuiWddW3z+6s9Qvfj2cWsqDvqXx986mqHohQ==
-X-Received: by 2002:aa7:84d1:: with SMTP id x17mr75198419pfn.188.1560516016456;
-        Fri, 14 Jun 2019 05:40:16 -0700 (PDT)
-Received: from xy-data.openstacklocal ([159.138.22.150])
-        by smtp.gmail.com with ESMTPSA id a3sm2477908pff.122.2019.06.14.05.40.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 14 Jun 2019 05:40:15 -0700 (PDT)
-From:   Young Xiao <92siuyang@gmail.com>
-To:     bhelgaas@google.com, tyreld@linux.vnet.ibm.com,
-        andy.shevchenko@gmail.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Young Xiao <92siuyang@gmail.com>
-Subject: [PATCH] PCI/hotplug: fix potential null pointer deference
-Date:   Fri, 14 Jun 2019 20:41:25 +0800
-Message-Id: <1560516085-3101-1-git-send-email-92siuyang@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JNCCekNXxF72Z55DYxpSmTTnL0h6yytISWpjYq2m+S8=;
+        b=CXUDSf3c1H9PfnEjSFByApgCC1RtjkVbgLxFpLs8MKYIFiq/SpAmiyk9sBWOKvFj0b
+         9Khrudhfcj3G3beWwFzhwT0+UXiSObIUpBP8uDQtnPaTxnPJjxQ7uOptl1MW5XBG0+vc
+         Dn8hXjC4CPn0meynqyc5RfC7+bLvqvMMlbiqntSz1PrBSUfiq9q7GNvR0A6lXnmacIlG
+         rmZxu+DFCbR3iYphLdxbjDieMqN3JOgaZhCxzXj9kFy6gDYFvqGREd9dGqRIjEbb3sjM
+         xvuIwPmGyWE4HapRUxW5mtXKlUmsVoqdR6DeScmBLcRjccLYl9CACbxvHwfHsKGmzTKN
+         qj+w==
+X-Gm-Message-State: APjAAAU970eV7oRLDMyPbC8IoLh0NMZaPp/oHM6gQplci0/B4g5E8Kmx
+        dGrcbPFwm5USwaHJs49P6q6872GzufYDr0C4G3oJIYgXxeQ=
+X-Google-Smtp-Source: APXvYqzT19zAyV7NHT8SynOcQ+B8M0VI3VgBKEvgbGYpbH+azt1LL7LzIBctjZRJqLUl4EH9EsxvJr/pB4zAVN1SpBI=
+X-Received: by 2002:ac2:5a5e:: with SMTP id r30mr5218050lfn.12.1560517345808;
+ Fri, 14 Jun 2019 06:02:25 -0700 (PDT)
+MIME-Version: 1.0
+References: <f297c15c-af4f-e4b3-feac-ca313f46f13e@sedsystems.ca>
+ <74703679-96d4-b759-a332-c3f3bff9a7c7@sedsystems.ca> <CAOMZO5C9fu_h5Ct-rbSuTQ149JFT6tH-iN_r8dnYaDxE7gL+UQ@mail.gmail.com>
+ <857036e0-769b-11bd-2083-5451670bd645@sedsystems.ca>
+In-Reply-To: <857036e0-769b-11bd-2083-5451670bd645@sedsystems.ca>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Fri, 14 Jun 2019 10:02:29 -0300
+Message-ID: <CAOMZO5A+X_+4b3qGzSx0DzrU6UkH-KZ1Kd_WVNXP9pXXqFqFSQ@mail.gmail.com>
+Subject: Re: iMX6 5.2-rc3 boot failure due to "PCI: imx6: Allow asynchronous probing"
+To:     Robert Hancock <hancock@sedsystems.ca>,
+        Robin Gong <yibin.gong@nxp.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There is otherwise a risk of a null pointer dereference.
+Hi Robert,
 
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
----
- drivers/pci/hotplug/cpqphp_ctrl.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+On Tue, Jun 11, 2019 at 8:05 PM Robert Hancock <hancock@sedsystems.ca> wrote:
 
-diff --git a/drivers/pci/hotplug/cpqphp_ctrl.c b/drivers/pci/hotplug/cpqphp_ctrl.c
-index b7f4e1f..3c8399f 100644
---- a/drivers/pci/hotplug/cpqphp_ctrl.c
-+++ b/drivers/pci/hotplug/cpqphp_ctrl.c
-@@ -598,10 +598,11 @@ static struct pci_resource *get_io_resource(struct pci_resource **head, u32 size
- 			*head = node->next;
- 		} else {
- 			prevnode = *head;
--			while (prevnode->next != node)
-+			while (prevnode && prevnode->next != node)
- 				prevnode = prevnode->next;
- 
--			prevnode->next = node->next;
-+			if (prevnode)
-+				prevnode->next = node->next;
- 		}
- 		node->next = NULL;
- 		break;
-@@ -788,10 +789,11 @@ static struct pci_resource *get_resource(struct pci_resource **head, u32 size)
- 			*head = node->next;
- 		} else {
- 			prevnode = *head;
--			while (prevnode->next != node)
-+			while (prevnode && prevnode->next != node)
- 				prevnode = prevnode->next;
- 
--			prevnode->next = node->next;
-+			if (prevnode)
-+				prevnode->next = node->next;
- 		}
- 		node->next = NULL;
- 		break;
--- 
-2.7.4
+> Based on some tests, it appears that may help - however it is hard to be
+> conclusive since the behavior is somewhat random, it doesn't fail every
+> time. The first few times I booted this version, I didn't see the
+> problem, but after that it was consistently happening every time until I
+> reverted the patch.
 
+Do you see the failure if you apply this patch from Robin?
+https://www.spinics.net/lists/arm-kernel/msg734813.html
