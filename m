@@ -2,32 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 09373461CC
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 16:57:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F347646297
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 17:23:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbfFNO5U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jun 2019 10:57:20 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:11794 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727272AbfFNO5U (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jun 2019 10:57:20 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d03b5ce0000>; Fri, 14 Jun 2019 07:57:18 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 14 Jun 2019 07:57:18 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 14 Jun 2019 07:57:18 -0700
-Received: from [10.24.192.32] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
- 2019 14:57:15 +0000
-Subject: Re: [PATCH V4 27/28] PCI: tegra: Add support for GPIO based PERST#
+        id S1725999AbfFNPXK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Jun 2019 11:23:10 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53406 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfFNPXK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jun 2019 11:23:10 -0400
+Received: by mail-wm1-f65.google.com with SMTP id x15so2781592wmj.3;
+        Fri, 14 Jun 2019 08:23:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bCsIQkHts/WGN8UBpWhd/+xj5TSD+Bur2KRjDgtvffs=;
+        b=oO2X+W9uAsJjUGStbkGRtQjX1SfgVtB0SbNkl+gnNF7KWTkyd6/VxCmxC7tosMy5Ie
+         xtF+p11nkjefX6KDObAa6yjyfzTZ1VFGJYe3t3D0x7sX+u8YkRzzHft0CwJuL4QC7aOl
+         A8XibhY3qDwxt7kc9M+jYpC+V0v/qq/KfNmbUGcM59p3K0UpKQUljAL1M6TMUB4QeJVA
+         gx0jr93i72vm4hrZ4451EAUnTXRuUbQU8tdtKWQx0geFJlVLCGmzJ09MjaU6WmiHhqrI
+         /SlUsRSgHuBbKpUTtockIZ9Wla7J/1htQLJ1WCHEm4Fpw9r6egX2TxB20MTd2yjH5IaR
+         hH3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bCsIQkHts/WGN8UBpWhd/+xj5TSD+Bur2KRjDgtvffs=;
+        b=aayWM06SDetAZef+8v0UUkClIw2teUJxnOVi2pBSoThnVTHU+dBtXXYwan9BcOS7So
+         6yp+tjanenwPTQJsOHQ8cJP/GeyusjioVcCNuBJFuPBLifNIRNajcmGAyakGotol0XJU
+         J/s4i7lhMd6g+omqxe9U1nqOqBR2y2vX29LHjVVM84buFhmGv34/serRo7+Ip6HAowIB
+         4ThS+r63nZz4DlJaNUgcxrgbPoFGGwpBLRSYvGJsTgpSThdg20yezuuBKLn38Y0+yIZT
+         7Cn/whPTJx8T+Pw3XttpfnYetNHRS9f3CDUaKY00HPvSWO6jWhBqNRzcbQ9Pm/vmD4Kv
+         KYbw==
+X-Gm-Message-State: APjAAAVQ3Pios9Ck8kEFirQ9DMeJS4ktxPGMqGydF5vdYnvo83ewrs6a
+        Wt554ChHP924uwjheGvKovU=
+X-Google-Smtp-Source: APXvYqzLWzJW/ljpcqiYy+u+u5SOMjYfo17C4C5REFiIwlQi8MiUwMqc2pKURX+tY+8+VdbINem8xQ==
+X-Received: by 2002:a7b:cae9:: with SMTP id t9mr8400305wml.126.1560525787124;
+        Fri, 14 Jun 2019 08:23:07 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id w67sm5577665wma.24.2019.06.14.08.23.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 08:23:06 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 17:23:04 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Thierry Reding <thierry.reding@gmail.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <jonathanh@nvidia.com>, <vidyas@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
+Cc:     Manikanta Maddireddy <mmaddireddy@nvidia.com>, bhelgaas@google.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com,
+        vidyas@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH V4 27/28] PCI: tegra: Add support for GPIO based PERST#
+Message-ID: <20190614152304.GK15526@ulmo>
 References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
  <20190516055307.25737-28-mmaddireddy@nvidia.com>
  <20190604132233.GT16519@ulmo>
@@ -36,169 +61,130 @@ References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
  <20190614143222.GB23116@e121166-lin.cambridge.arm.com>
  <1508173d-0ecc-f498-6ab2-78a718086b35@nvidia.com>
  <20190614145023.GA24588@e121166-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Message-ID: <46823e6e-66d4-ba72-31ef-aba31af37fb2@nvidia.com>
-Date:   Fri, 14 Jun 2019 20:26:46 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cEobB2knsyc5ebfU"
+Content-Disposition: inline
 In-Reply-To: <20190614145023.GA24588@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560524238; bh=prJ0ySXzLJwAYwKMN/MHLS/X3oZRaqA4OX6451uSJ6M=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:
-         Content-Transfer-Encoding:Content-Language;
-        b=HCFZSgdiYmvCSowL0dnqRleU7Z4wd0cFODcXQy6lvb1/VFOj6DG8OZRMrb/i2K+iD
-         qt9DZTSFWhXAV2OgLVDo8AytdYYHDdw7sAmew0g/ll/XUrW0dKzOERWs2zhrhQ1eik
-         veGynEhyCQnXQay66GDWopfY8sETQ0oNGcgC7lJUyo3w0UdolZMW9HP+2X/1J9HGC+
-         O1jNwX7wAiH7MojaXgeTRXuL2BzUjEFxrYwQZZv3n9TW4jIL6cScU07O6F3dbKn/Ut
-         cglwvk+1NDpglkXM43yd7lp9sZfymvgTGUMo/7gqDrF9WrLaGhBQGuoByrCvndgcvb
-         uyqfxHj5igsTA==
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
+--cEobB2knsyc5ebfU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 14-Jun-19 8:20 PM, Lorenzo Pieralisi wrote:
+On Fri, Jun 14, 2019 at 03:50:23PM +0100, Lorenzo Pieralisi wrote:
 > On Fri, Jun 14, 2019 at 08:08:26PM +0530, Manikanta Maddireddy wrote:
->>
->> On 14-Jun-19 8:02 PM, Lorenzo Pieralisi wrote:
->>> On Fri, Jun 14, 2019 at 04:07:35PM +0530, Manikanta Maddireddy wrote:
->>>> On 13-Jun-19 8:54 PM, Lorenzo Pieralisi wrote:
->>>>> On Tue, Jun 04, 2019 at 03:22:33PM +0200, Thierry Reding wrote:
->>>>>
->>>>> [...]
->>>>>
->>>>>>> +	} else {
->>>>>>> +		value = afi_readl(port->pcie, ctrl);
->>>>>>> +		value &= ~AFI_PEX_CTRL_RST;
->>>>>>> +		afi_writel(port->pcie, value, ctrl);
->>>>>>> +	}
->>>>>>>  
->>>>>>>  	usleep_range(1000, 2000);
->>>>>>>  
->>>>>>> -	value = afi_readl(port->pcie, ctrl);
->>>>>>> -	value |= AFI_PEX_CTRL_RST;
->>>>>>> -	afi_writel(port->pcie, value, ctrl);
->>>>>>> +	if (port->reset_gpiod) {
->>>>>>> +		gpiod_set_value(port->reset_gpiod, 1);
->>>>>> After this the port should be functional, right? I think it'd be better
->>>>>> to reverse the logic here and move the polarity of the GPIO into device
->>>>>> tree. gpiod_set_value() takes care of inverting the level internally if
->>>>>> the GPIO is marked as low-active in DT.
->>>>>>
->>>>>> The end result is obviously the same, but it makes the usage much
->>>>>> clearer. If somebody want to write a DT for their board, they will look
->>>>>> at the schematics and see a low-active reset line and may be tempted to
->>>>>> describe it as such in DT, but with your current code that would be
->>>>>> exactly the wrong way around.
->>>>> I agree with Thierry here, you should change the logic.
->>>>>
->>>>> Question: what's the advantage of adding GPIO reset support if that's
->>>>> architected already in port registers ? I am pretty sure there is a
->>>>> reason behind it (and forgive me the dumb question) and I would like to
->>>>> have it written in the commit log.
->>>>>
->>>>> Thanks,
->>>>> Lorenzo
->>>> Each PCIe controller has a dedicated SFIO pin to support PERST#
->>>> signal. Port register can control only this particular SFIO pin.
->>>> However, in one of the Nvidia platform, instead of using PCIe SFIO
->>>> pin, different gpio is routed PCIe slot. This happened because of a
->>>> confusion in IO ball naming convention. To support this particular
->>>> platform, driver has provide gpio support. I will update the commit
->>>> log in V5.
->>> What happens on that platform where you trigger reset through a port
->>> register with :
->>>
->>> value = afi_readl(port->pcie, ctrl);
->>> value |= AFI_PEX_CTRL_RST;
->>> afi_writel(port->pcie, value, ctrl);
->>>
->>> (imagine the DT is not updated for instance or on current
->>> mainline) ?
->>>
->>> Lorenzo
->> Lets take an example of PCIe controller-0, SFIO ball name which is
->> controlled by the port-0 register is PEX_L0_RST. It will deassert
->> PEX_L0_RST SFIO line but it doesn't go to PCIe slot, so fundamental
->> reset(PERST# deassert) is not applied to the endpoint connected to
->> that slot.
+> >=20
+> >=20
+> > On 14-Jun-19 8:02 PM, Lorenzo Pieralisi wrote:
+> > > On Fri, Jun 14, 2019 at 04:07:35PM +0530, Manikanta Maddireddy wrote:
+> > >>
+> > >> On 13-Jun-19 8:54 PM, Lorenzo Pieralisi wrote:
+> > >>> On Tue, Jun 04, 2019 at 03:22:33PM +0200, Thierry Reding wrote:
+> > >>>
+> > >>> [...]
+> > >>>
+> > >>>>> +	} else {
+> > >>>>> +		value =3D afi_readl(port->pcie, ctrl);
+> > >>>>> +		value &=3D ~AFI_PEX_CTRL_RST;
+> > >>>>> +		afi_writel(port->pcie, value, ctrl);
+> > >>>>> +	}
+> > >>>>> =20
+> > >>>>>  	usleep_range(1000, 2000);
+> > >>>>> =20
+> > >>>>> -	value =3D afi_readl(port->pcie, ctrl);
+> > >>>>> -	value |=3D AFI_PEX_CTRL_RST;
+> > >>>>> -	afi_writel(port->pcie, value, ctrl);
+> > >>>>> +	if (port->reset_gpiod) {
+> > >>>>> +		gpiod_set_value(port->reset_gpiod, 1);
+> > >>>> After this the port should be functional, right? I think it'd be b=
+etter
+> > >>>> to reverse the logic here and move the polarity of the GPIO into d=
+evice
+> > >>>> tree. gpiod_set_value() takes care of inverting the level internal=
+ly if
+> > >>>> the GPIO is marked as low-active in DT.
+> > >>>>
+> > >>>> The end result is obviously the same, but it makes the usage much
+> > >>>> clearer. If somebody want to write a DT for their board, they will=
+ look
+> > >>>> at the schematics and see a low-active reset line and may be tempt=
+ed to
+> > >>>> describe it as such in DT, but with your current code that would be
+> > >>>> exactly the wrong way around.
+> > >>> I agree with Thierry here, you should change the logic.
+> > >>>
+> > >>> Question: what's the advantage of adding GPIO reset support if that=
+'s
+> > >>> architected already in port registers ? I am pretty sure there is a
+> > >>> reason behind it (and forgive me the dumb question) and I would lik=
+e to
+> > >>> have it written in the commit log.
+> > >>>
+> > >>> Thanks,
+> > >>> Lorenzo
+> > >> Each PCIe controller has a dedicated SFIO pin to support PERST#
+> > >> signal. Port register can control only this particular SFIO pin.
+> > >> However, in one of the Nvidia platform, instead of using PCIe SFIO
+> > >> pin, different gpio is routed PCIe slot. This happened because of a
+> > >> confusion in IO ball naming convention. To support this particular
+> > >> platform, driver has provide gpio support. I will update the commit
+> > >> log in V5.
+> > > What happens on that platform where you trigger reset through a port
+> > > register with :
+> > >
+> > > value =3D afi_readl(port->pcie, ctrl);
+> > > value |=3D AFI_PEX_CTRL_RST;
+> > > afi_writel(port->pcie, value, ctrl);
+> > >
+> > > (imagine the DT is not updated for instance or on current
+> > > mainline) ?
+> > >
+> > > Lorenzo
+> >=20
+> > Lets take an example of PCIe controller-0, SFIO ball name which is
+> > controlled by the port-0 register is PEX_L0_RST. It will deassert
+> > PEX_L0_RST SFIO line but it doesn't go to PCIe slot, so fundamental
+> > reset(PERST# deassert) is not applied to the endpoint connected to
+> > that slot.
+>=20
 > That's the point I am making, if the reset is not applied nothing
 > will work (provided PEX_L0_RST does not do any damage either).
->
+>=20
 > For the platform in question you should make reset-gpios mandatory and
 > fail if not present (instead of toggling the wrong reset line) there is
 > no chance the driver can work without that property AFAICS.
->
-> Lorenzo
 
-In upstream kernel, device tree file is not available for the platform in
-question. That is the reason for not send device tree patch as part of 
-this series.
+I'm not sure I understand what you're proposing here. Are you suggesting
+that we put a check in the driver to see if we're running on a specific
+board and then fail if the reset-gpios are not there?
 
-Manikanta
+Thierry
 
->>
->> Manikanta
->>
->>>> Manikanta
->>>>
->>>>>>> +	} else {
->>>>>>> +		value = afi_readl(port->pcie, ctrl);
->>>>>>> +		value |= AFI_PEX_CTRL_RST;
->>>>>>> +		afi_writel(port->pcie, value, ctrl);
->>>>>>> +	}
->>>>>>>  }
->>>>>>>  
->>>>>>>  static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
->>>>>>> @@ -2238,6 +2249,7 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
->>>>>>>  		struct tegra_pcie_port *rp;
->>>>>>>  		unsigned int index;
->>>>>>>  		u32 value;
->>>>>>> +		char *label;
->>>>>>>  
->>>>>>>  		err = of_pci_get_devfn(port);
->>>>>>>  		if (err < 0) {
->>>>>>> @@ -2296,6 +2308,23 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
->>>>>>>  		if (IS_ERR(rp->base))
->>>>>>>  			return PTR_ERR(rp->base);
->>>>>>>  
->>>>>>> +		label = kasprintf(GFP_KERNEL, "pex-reset-%u", index);
->>>>>> devm_kasprintf()?
->>>>>>
->>>>>> Thierry
->>>>>>
->>>>>>> +		if (!label) {
->>>>>>> +			dev_err(dev, "failed to create reset GPIO label\n");
->>>>>>> +			return -ENOMEM;
->>>>>>> +		}
->>>>>>> +
->>>>>>> +		rp->reset_gpiod = devm_gpiod_get_from_of_node(dev, port,
->>>>>>> +							      "reset-gpios", 0,
->>>>>>> +							      GPIOD_OUT_LOW,
->>>>>>> +							      label);
->>>>>>> +		kfree(label);
->>>>>>> +		if (IS_ERR(rp->reset_gpiod)) {
->>>>>>> +			err = PTR_ERR(rp->reset_gpiod);
->>>>>>> +			dev_err(dev, "failed to get reset GPIO: %d\n", err);
->>>>>>> +			return err;
->>>>>>> +		}
->>>>>>> +
->>>>>>>  		list_add_tail(&rp->list, &pcie->ports);
->>>>>>>  	}
->>>>>>>  
->>>>>>> -- 
->>>>>>> 2.17.1
->>>>>>>
+--cEobB2knsyc5ebfU
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Du9YACgkQ3SOs138+
+s6HbbxAAhZP/PrlezAF2+SWVXXEizqiwWsERJwH8MJqbzsUkAkYXXr+07Xd4VNLS
+Hz+7Vg7jopAplEICym/ryuOM8AssVpCpZW3rCZK6s5MfKPdejD5fQ0ISBkTxGUB3
++g/bYtqxe//zvP99f5gJH9B94GLGgWg5K/xPTME+0g4ymeqLtR6ZlFXcbn4FrYNv
+R1uI2vIo6HhldniwelxDZRrt4BsRe9XggfFqd1y/9UDfxFmhdUhRJtglp9o3CJl8
+9rkPqC15Jul39FxsqaqPKilgn2emBinYUJAM6ty9oEQYh9XPe+CBMtoTg8Idm5zz
+8SZ85itpeTSyguGlwsmuaQHxq6V79GqGW9MoI7Imf1sQQheMZEPId5Tk5+FoAw3S
+YLKpIcI/sr1aYGvULe0qB5COzKQulmgbbLMZ1gQ9r4hQzIDR0cLE41LXkB+UMoDM
+5Tj8xrTuKBqYcMsqLCZQ1ZiI/zlupH7jPn1I4j9oleEaEv1NBMCXclPUhtD2v9EW
+5C25/MT7axcvJOfXTFszJCmbHE88ybSLJkGvCM52QoEXkIVfFjwSCRVcMYotTqMm
+lQivd80PayTYR1TP2KwYsjR3RyqVSb0b9NE2TNO9qEHU3UU6QIP9PHfABHibd0/x
+4laNBy09J1Q88exwSstLI+irvxaLDTmiSMUuVk7epOmU4KPNpZI=
+=yRTH
+-----END PGP SIGNATURE-----
+
+--cEobB2knsyc5ebfU--
