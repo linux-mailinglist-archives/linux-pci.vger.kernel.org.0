@@ -2,130 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 713C745CB0
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 14:22:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1FD245D08
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 14:40:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbfFNMWr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jun 2019 08:22:47 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34984 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727362AbfFNMWr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:22:47 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 154F19C821EE6C64B89A;
-        Fri, 14 Jun 2019 20:22:45 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 14 Jun 2019
- 20:22:38 +0800
-From:   John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v4 1/3] lib: logic_pio: Use logical PIO low-level
- accessors for !CONFIG_INDIRECT_PIO
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <1560262374-67875-1-git-send-email-john.garry@huawei.com>
- <1560262374-67875-2-git-send-email-john.garry@huawei.com>
- <20190613023947.GD13533@google.com>
- <8ef228f8-97cb-e40e-ea6b-410b80a845cf@huawei.com>
- <20190613200932.GJ13533@google.com>
- <7495dcab-f293-4b2a-4740-2249f61351f7@huawei.com>
- <20190614115056.GP13533@google.com>
-CC:     <rjw@rjwysocki.net>, <wangkefeng.wang@huawei.com>,
-        <lorenzo.pieralisi@arm.com>, <arnd@arndb.de>,
-        <linux-pci@vger.kernel.org>, <will.deacon@arm.com>,
-        <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <catalin.marinas@arm.com>, <andriy.shevchenko@linux.intel.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Message-ID: <4c49bf7d-f68e-0b79-f03d-03958dac640e@huawei.com>
-Date:   Fri, 14 Jun 2019 13:22:31 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
-MIME-Version: 1.0
-In-Reply-To: <20190614115056.GP13533@google.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+        id S1727692AbfFNMkR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Jun 2019 08:40:17 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44352 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbfFNMkR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jun 2019 08:40:17 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t16so1388042pfe.11;
+        Fri, 14 Jun 2019 05:40:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=G6J+XslQx14mgUJu3IkiN0FzUg+9m/GNr8qGP15QXM4=;
+        b=nSzXWq2wgDfSBPulagdL8DAcLzRmrLOdE8OSqGLUh/cCWEG3++iLthKmJE9JgDDu0J
+         g6PnPHyDY4q1EPdQW2X9uzxa3pPRJ1cOQ1fmM2aAQOyFV0HQsI4WYBYU17eIUeOW/36Y
+         KMj/d23F7Z95RMGAVs1TVxOW+bsfxCQPm7DxMpsIGQveqjpZoTZoueZ+mBMA9pxuYLEZ
+         /Wvfsyspn1WnCvGsUWh7gn1T+DdlKXPbDnokDp+vpPD9ZTI7sNMCiTspAz3oXxBwFKKx
+         OgMQHvcTuF2AoZgLsLOqS77QFmKQ0yZpPHOcNVjbQ5a6LU7o7HAkbsD5iytZBkx/8vr5
+         ngGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=G6J+XslQx14mgUJu3IkiN0FzUg+9m/GNr8qGP15QXM4=;
+        b=U4nq5HKrszTiqmcJW/4G87D3JptiK8laVf3weo0WVzpl6cDeDskbUoJqWFe+myp7k2
+         chAVnrZX/bIeEovQPTE5WkYTEgBvUa5BG/1uCHlBoXAftBYOWHJ6I3hKaF2UiiQ4lkxP
+         DL5okDpnwugrr5AITKQ17l96nD/HJRgth/eVEzgGFSqCa3m6vn+3okYkRZRxEF5xOFQY
+         BGQcyRTvn8LciOTSO0Iwfy0BniQiHmPYUrPEo1AEt0NfG2OuMLeAtF1gUCOt8M8lIlWz
+         AnOr8gpCMGa8pdlBtXeWZ1Z8lE3E5ibLbe6sidS7CHUWc41iZb1QJO4aTFK0MT6hIFaA
+         ykCA==
+X-Gm-Message-State: APjAAAUAM8AqSKLNpFLtXps4XC4650UbYftdfGk5jWAdTFVESRICM3Lo
+        vmE6bkgUyCtfLd5QNTI0qDQ=
+X-Google-Smtp-Source: APXvYqx9/TmX0TUwRb9YhbZ2LXa7SIjFQEulobTNWMcuiWddW3z+6s9Qvfj2cWsqDvqXx986mqHohQ==
+X-Received: by 2002:aa7:84d1:: with SMTP id x17mr75198419pfn.188.1560516016456;
+        Fri, 14 Jun 2019 05:40:16 -0700 (PDT)
+Received: from xy-data.openstacklocal ([159.138.22.150])
+        by smtp.gmail.com with ESMTPSA id a3sm2477908pff.122.2019.06.14.05.40.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 14 Jun 2019 05:40:15 -0700 (PDT)
+From:   Young Xiao <92siuyang@gmail.com>
+To:     bhelgaas@google.com, tyreld@linux.vnet.ibm.com,
+        andy.shevchenko@gmail.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Young Xiao <92siuyang@gmail.com>
+Subject: [PATCH] PCI/hotplug: fix potential null pointer deference
+Date:   Fri, 14 Jun 2019 20:41:25 +0800
+Message-Id: <1560516085-3101-1-git-send-email-92siuyang@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 14/06/2019 12:50, Bjorn Helgaas wrote:
-> On Fri, Jun 14, 2019 at 10:02:52AM +0100, John Garry wrote:
->> On 13/06/2019 21:09, Bjorn Helgaas wrote:
->>> On Thu, Jun 13, 2019 at 10:39:12AM +0100, John Garry wrote:
->>>> On 13/06/2019 03:39, Bjorn Helgaas wrote:
->>>>> I'm not sure it's even safe, because CONFIG_INDIRECT_PIO depends on
->>>>> ARM64,  but PCI_IOBASE is defined on most arches via asm-generic/io.h,
->>>>> so this potentially affects arches other than ARM64.
->>>>
->>>> It would do. It would affect any arch which defines PCI_IOBASE and
->>>> does not have arch-specific definition of inb et all.
->>
->>> What's the reason for testing PCI_IOBASE instead of
->>> CONFIG_INDIRECT_PIO?  If there's a reason it's needed, that's fine,
->>> but it does make this much more complicated to review.
->>
->> For ARM64, we have PCI_IOBASE defined but may not have
->> CONFIG_INDIRECT_PIO defined. Currently CONFIG_INDIRECT_PIO is only
->> selected by CONFIG_HISILICON_LPC.
->>
->> As such, we should make this change also for when
->> CONFIG_INDIRECT_PIO is not defined.
+There is otherwise a risk of a null pointer dereference.
 
-Hi Bjorn,
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
+---
+ drivers/pci/hotplug/cpqphp_ctrl.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
->
-> OK.  This is all very important for the commit log -- we need to
-> understand what arches are affected and the reason they need it.
-
-Right, and to repeat, this would affect other archs which define 
-PCI_IOBASE and don't have custom IO port accessors definitions.
-
-There are a few remaining even after the recent arch clear out . I have 
-it at arm64, microblaze, and unicore32. Arch m68k defines PCI_IOBASE but 
-seems to have its own IO port accessors. Same again for some arm machines.
-
-At least I should cc those arch maintainers.
-
->
-> Since the goal of this series is to fix an ARM64-specific issue,
-
-"ARM64" was in the headline banner, but it would apply to other archs, 
-as mentioned above. I should have made that clearer.
-
-and
-> the typical port I/O model is for each arch to #define its own inb(),
-> maybe it would make sense to move the "#define inb logic_inb" from
-> linux/logic_pio.h to arm64/include/asm/io.h?
->
-
-CONFIG_INDIRECT_PIO has been indirectly enabled in ARM64 defconfig for 
-some time, so I think that it's ok for ARM64 arch Kconfig to select it 
-at this stage. From that, we could make the change suggested.
-
-And, in addition to that, we can make the change in this series just for 
-CONFIG_INDIRECT_PIO.
-
-But I think that the other archs, above, could benefit from the changes 
-in this series, so it would be shame to omit them.
-
-> The "#ifndef inb" arrangement gets pretty complicated when it occurs
-> more than one place (asm-generic/io.h and logic_pio.h) and we have to
-> start worrying about the ordering of #includes.
-
-I agree on that.
-
-Cheers,
-John
-
->
-> Bjorn
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
->
-
+diff --git a/drivers/pci/hotplug/cpqphp_ctrl.c b/drivers/pci/hotplug/cpqphp_ctrl.c
+index b7f4e1f..3c8399f 100644
+--- a/drivers/pci/hotplug/cpqphp_ctrl.c
++++ b/drivers/pci/hotplug/cpqphp_ctrl.c
+@@ -598,10 +598,11 @@ static struct pci_resource *get_io_resource(struct pci_resource **head, u32 size
+ 			*head = node->next;
+ 		} else {
+ 			prevnode = *head;
+-			while (prevnode->next != node)
++			while (prevnode && prevnode->next != node)
+ 				prevnode = prevnode->next;
+ 
+-			prevnode->next = node->next;
++			if (prevnode)
++				prevnode->next = node->next;
+ 		}
+ 		node->next = NULL;
+ 		break;
+@@ -788,10 +789,11 @@ static struct pci_resource *get_resource(struct pci_resource **head, u32 size)
+ 			*head = node->next;
+ 		} else {
+ 			prevnode = *head;
+-			while (prevnode->next != node)
++			while (prevnode && prevnode->next != node)
+ 				prevnode = prevnode->next;
+ 
+-			prevnode->next = node->next;
++			if (prevnode)
++				prevnode->next = node->next;
+ 		}
+ 		node->next = NULL;
+ 		break;
+-- 
+2.7.4
 
