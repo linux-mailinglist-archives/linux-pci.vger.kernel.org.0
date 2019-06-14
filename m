@@ -2,152 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ABA28451D6
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 04:26:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1A3645332
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2019 05:58:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbfFNC03 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jun 2019 22:26:29 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44603 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfFNC03 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jun 2019 22:26:29 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x47so781516qtk.11
-        for <linux-pci@vger.kernel.org>; Thu, 13 Jun 2019 19:26:28 -0700 (PDT)
+        id S1725807AbfFND6C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jun 2019 23:58:02 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41065 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbfFND6B (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jun 2019 23:58:01 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c2so918642wrm.8;
+        Thu, 13 Jun 2019 20:58:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LiOoADs+Q5z91q0BFH/hfKvDUqqapbQTXU8ncMrf99M=;
-        b=uwiadcDhl26vPElVBSbZDabFb3ZE6S7BS3NtKXxz0gAL1w+mU3B7XGSP0TKRChf0QG
-         qLjNLOYx2KLU4BUePq77d6nrIgFcJseoHDifbiVYZs43K3eHQPof84CQE2INw+fom/Sk
-         AlZ7ILsFm4ODQYGhvDzyFyVfGVVtU3sQXtsHDzzNFSgX2xo4mskrrz9X5tBUXMVSwj2B
-         JNyD1EEUdegFKa+egn7rxCq/8vxTTN1KnDj757mUOZW/XqjcW3DWLhpKs7Uay6xJYdee
-         8XqL+l7Sm9kvlRNvI+HlZDyxmDjMwR2EQ3tje8e/zilP2LnIOZpuKaI1Lpq7EHo8WZjv
-         f+Hw==
+         :cc:content-transfer-encoding;
+        bh=uwDYUfNCDx2fc22MYxlEMUfeH43G6/A1w9YTtwp2O8o=;
+        b=cNTJS08pTE9SEPqFUodQMBq/Hj7duJI8Zr4Ew0SOhr+J0VnJE7BDBAByAU2aUWo6RE
+         cJRxBZ/Ou3cK+1gMzSkxXtENB0pu1e59Uc1vjsbiF/MfLX4yJoIvApS8VtUGaGbIr4SK
+         SSZwcbudnheS4q9QhtjCqiyMEed5HmSTd4uTbTryQzBqwcAp3xqjoKfZpFel5hn+mXJM
+         YUjkDPu0Usvx6IcEfpG0N4yBcq8JeOajaqlOj737GrDwQVD3nlTvgM++V85GmJVhkbgM
+         CNJhz4BFmiLrTa6sxr3yyM4LC8f5t9wO3NqEVXXJ3DHvmj7EbbKdSvmsYobGd1Wgypml
+         0I4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LiOoADs+Q5z91q0BFH/hfKvDUqqapbQTXU8ncMrf99M=;
-        b=QEeDAf9qLdNBIC1HZN25Rdr2mz5ROh9iyiAZauRaKJC4cq0JlQSloq0xp/sjq45AqI
-         veasLnzB3fH5Pm2/GQTCDK3V0eqczL6IjZOFny99wkqejPVqsUMTtyxuy88+/qHyxwuM
-         pkLHu9Lb3J5H6sIX4YDm5bzZz0GmV2EuqTJjLQaAsUWt5xabhwJfQRgAqCgRhkiObesO
-         YnZuhb2uCtC/CffevTrhPM872+kfmWVlmjBsEav5eivKkPG7VLcPcm3kavgfb0zDVkLP
-         YrAXMAjaNQT/kdnl7x/cRgYDQfZRBI5q80neaNeyAztb9NI4nBdo7rVmbpXOXfaCg4iD
-         KdbA==
-X-Gm-Message-State: APjAAAVYPzW/NUxlPvqC/7XIp4ddERVP4Z/rLWUBdek0siu9fc+8lRnM
-        J5JOxQlAzOSMeBpiDauBAwyTSW3yaIjWtd6Uyqzr/A==
-X-Google-Smtp-Source: APXvYqzqe1/DHk1BGLZnH3KdvGW6KQDBwyXvUptRc8CEGriCukr0xUjYBj6CZBI0TGOmAn3teIaCliw6A0KIzqukAz8=
-X-Received: by 2002:aed:21f0:: with SMTP id m45mr64329935qtc.391.1560479187623;
- Thu, 13 Jun 2019 19:26:27 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uwDYUfNCDx2fc22MYxlEMUfeH43G6/A1w9YTtwp2O8o=;
+        b=T/pWPWRIj4wkwskvQu9ZK7iphwtOQUkCwd8VtqejO6ZxDRGNuKTP7l4FE5utCBUt8w
+         /SIzjv6iTNp0qBqE6pGlxJ7PVzaazqbHazi/CHiIOd1Lt1Tj1g5mD5pRguxvB1NFFuKy
+         rA88RGwi/2irez7rBUy1YhYupSuM0ob9rdoE7voolnnHyTYmZF8Ti4OseK1jM3Mse3G5
+         EBi9UhpXrhFsNA46lyRzVYvsr+z4HbBrsOn+p6hnb//Phz2d6DC8LaaKfCMVPnJoVpOh
+         IOwZ3Anmdz+LtlMnIUnrdAoy5n5lgOM8+dr0SYSmdqPBz/HI6z39CK3cf1hKYSnY8cJH
+         21RQ==
+X-Gm-Message-State: APjAAAWb5AUS9hLQLfZhDs3Gm8zehdQV1BUcYOf4whvnNnWZ7ffEWqYm
+        lzcsidf1SNmrO2HSva42Alu754SEwYG70EcL31k=
+X-Google-Smtp-Source: APXvYqzVVsuxOItdPfuVmbf8Pq7kj1cON92Rhjm8GlttyUt6YygwE7reL5byAOMboxnj7/kzmjHwk+RnoOHon8Ejuj8=
+X-Received: by 2002:adf:b64b:: with SMTP id i11mr11657992wre.205.1560484679581;
+ Thu, 13 Jun 2019 20:57:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190610074456.2761-1-drake@endlessm.com> <CAOSXXT7OFzHeTxNqZ1sS6giRxhDcrUUnVjURWBiFUc5T_8p=MA@mail.gmail.com>
- <CAD8Lp45djPU_Ur8uCO2Y5Sbek_5N9QKkxLXdKNVcvkr6rFPLUQ@mail.gmail.com>
- <CAOSXXT7H6HxY-za66Tr9ybRQyHsTdwwAgk9O2F=xK42MT8HsuA@mail.gmail.com> <20190613085402.GC13442@lst.de>
-In-Reply-To: <20190613085402.GC13442@lst.de>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Fri, 14 Jun 2019 10:26:15 +0800
-Message-ID: <CAD8Lp47Vu=w+Lj77_vL05JYV1WMog9WX3FHGE+TseFrhcLoTuA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Add Intel remapped NVMe device support
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Keith Busch <keith.busch@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-ide@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
+References: <1558358244-35832-1-git-send-email-mowendugu@gmail.com> <20190604112905.1f16232c@x1.home>
+In-Reply-To: <20190604112905.1f16232c@x1.home>
+From:   =?UTF-8?B?54us5a2k6LSl?= <mowendugu@gmail.com>
+Date:   Fri, 14 Jun 2019 11:57:48 +0800
+Message-ID: <CAAPrRyRP5MPKH+o6J7H-jRtG8mLVD6-VoBmT8mFL_=Wv5ST1wQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] PCI/IOV: Fix VF0 cached config space size for other VFs
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Quan Xu <quan.xu0@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 4:54 PM Christoph Hellwig <hch@lst.de> wrote:
-> So until we get very clear and good documentation from Intel on that
-> I don't think any form of upstream support will fly.  And given that
-> Dan who submitted the original patch can't even talk about this thing
-> any more and apparently got a gag order doesn't really give me confidence
-> any of this will ever work.
+Alex Williamson <alex.williamson@redhat.com> =E4=BA=8E2019=E5=B9=B46=E6=9C=
+=885=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=881:29=E5=86=99=E9=81=93=EF=
+=BC=9A
+>
+> On Mon, 20 May 2019 21:17:24 +0800
+> Hao Zheng <mowendugu@gmail.com> wrote:
+>
+> > Set the pcie_cap field before getting the config space size for
+> > other VFs. Otherwise, the config space size of other VFs are error
+> > set to 256, while the size of VF0 is 4096.
+> >
+> > Signed-off-by: Hao Zheng <mowendugu@gmail.com>
+> > Signed-off-by: Quan Xu <quan.xu0@gmail.com>
+> > ---
+> >  drivers/pci/iov.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > index 3aa115e..239fad1 100644
+> > --- a/drivers/pci/iov.c
+> > +++ b/drivers/pci/iov.c
+> > @@ -133,6 +133,7 @@ static void pci_read_vf_config_common(struct pci_de=
+v *virtfn)
+> >       pci_read_config_word(virtfn, PCI_SUBSYSTEM_ID,
+> >                            &physfn->sriov->subsystem_device);
+> >
+> > +     set_pcie_port_type(virtfn);
+> >       physfn->sriov->cfg_size =3D pci_cfg_space_size(virtfn);
+> >  }
+> >
+>
+> This results in set_pci_port_type() being called multiple times on
+> VF0.  Why not simply delay calling pci_read_vf_config_common() until
+> after pci_setup_device()?  Here's the alternate approach:
+>
+> https://lore.kernel.org/linux-pci/155966918965.10361.16228304474160813310=
+.stgit@gimli.home/
 
-I realise the architecture here seems badly thought out, and the lack
-of a decent spec makes the situation worse, but I'd encourage you to
-reconsider this from the perspectives of:
- - Are the patches really more ugly than the underlying architecture?
- - We strive to make Linux work well on common platforms and sometimes
-have to accept that hardware vendors do questionable things & do not
-fully cooperate
- - It works out of the box on Windows
+I get it. This is a better approach. Thank you for your advice!
+>
+> Thanks,
+> Alex
 
-As you said years ago:
-https://marc.info/?l=linux-ide&m=147923593001525&w=2
-"It seems devices supporting this "slow down the devices and make life
-hell for the OS" mode are getting more common, so we'll have to do
-something about it."
 
-The frequency of apperance of this configuration appears poised to
-grow even more significantly at this point. There appears to be a
-significant increase in consumer laptops in development that have NVMe
-disk as the only storage device, and come with the BIOS option on by
-default. When these reach point of sale, expect to see a whole bunch
-more Linux users who struggle with this. We also have indication that
-vendors are unwilling to deal with the logistics headache of having
-different BIOS settings for Linux, so the lack of support here is
-potentially going to stop those vendors from shipping Linux at all.
 
-Even with a spec I don't imagine that we can meet the feature parity
-of having the real NVMe PCI device available. Can we just accept the
-compromises & start by focusing on the simple case of a consumer
-home/family PC?
-
->  a) quirks on the PCI ID
-
-Intel stated unequivocally that the PCI config space is not available.
-So this isn't going to happen, spec or not.
-https://marc.info/?l=linux-ide&m=147734288604783&w=2
-
-If we run into a case where we absolutely need quirks, we could
-examine doing that on the disk identification data available over the
-NVMe protocol (e.g. vendor & model name).
-
->  b) reset handling, including the PCI device removal as the last
->     escalation step
-
-Apparently can't be supported, but it's not clear that this actually
-matters for a home PC...
-
-https://marc.info/?l=linux-ide&m=147733119300691&w=2
-"The driver seems to already comprehend instances where the
-device does not support nvme_reset_subsystem() requests."
-
-https://marc.info/?l=linux-ide&m=147734288604783&w=2
-"Talking with Keith, subsystem-resets are a feature of enterprise-class
-NVMe devices.  I think those features are out of scope for the class
-of devices that will find themselves in a platform with this
-configuration, same for hot-plug."
-
->  c) SR-IOV VFs and their management
-
-This seems like a server/virtualization topic. I don't see any issues
-in not supporting this in the context of a consumer PC.
-It seems reasonable to expect people interested in this to be required
-to read the kernel logs (to see the message) and proceed with changing
-the BIOS setting.
-
->  d) power management
-
-If there is a way to control the NVMe device power separately from the
-AHCI device that would of course be nice, but this seems secondary to
-the larger problem of users not being able to access their storage
-device.
-
-I'm hopeful that after years of waiting for the situation to improve
-without any positive developments, we can find a way to go with the
-code we have now, and if we do get a spec from Intel at any point,
-make any relevant code improvments when that happens.
-
-I'll work on refreshing Dan's patches & clarifying the knowledge we
-have within there, plus the limitations.
-
-Thanks,
-Daniel
+--=20
+Best Regards!
