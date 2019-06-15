@@ -2,58 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6760147070
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Jun 2019 16:31:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F1264709A
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Jun 2019 17:04:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbfFOObO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 15 Jun 2019 10:31:14 -0400
-Received: from verein.lst.de ([213.95.11.211]:53697 "EHLO newverein.lst.de"
+        id S1726734AbfFOPEp convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Sat, 15 Jun 2019 11:04:45 -0400
+Received: from om.cz.net ([193.85.2.13]:37010 "EHLO om.cz.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbfFOObO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 15 Jun 2019 10:31:14 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 57B1468B02; Sat, 15 Jun 2019 16:30:44 +0200 (CEST)
-Date:   Sat, 15 Jun 2019 16:30:43 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/22] mm: factor out a devm_request_free_mem_region
- helper
-Message-ID: <20190615143043.GA27825@lst.de>
-References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-7-hch@lst.de> <56c130b1-5ed9-7e75-41d9-c61e73874cb8@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <56c130b1-5ed9-7e75-41d9-c61e73874cb8@nvidia.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1725944AbfFOPEo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 15 Jun 2019 11:04:44 -0400
+X-Greylist: delayed 876 seconds by postgrey-1.27 at vger.kernel.org; Sat, 15 Jun 2019 11:04:44 EDT
+Received: from mail.contactel.cz (unknown [88.255.93.116])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by om.cz.net (Postfix) with ESMTPSA id C0A03176A6F5;
+        Sat, 15 Jun 2019 16:49:59 +0200 (CEST)
+From:   Arpit Patel <arpit_patel@gtsce.net>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Mime-Version: 1.0 (1.0)
+Subject: fwd:
+Message-Id: <2D191626-AF0E-4ACB-B807-74D6F12CB95D@gtsce.net>
+Date:   Sat, 15 Jun 2019 06:53:43 -0800
+To:     "linux pci" <linux-pci@vger.kernel.org>,
+        "linux scsi" <linux-scsi@vger.kernel.org>, "Liz" <lizc@issci.com>,
+        "Lara" <ljd@hallkinion.com>, "Ludy" <ludy.zoeller@adeccona.com>,
+        "Bansi" <magic1@interpath.com>, "Mahesh" <mahesh@nsymbio.com>,
+        "majordomo" <majordomo@vger.kernel.org>,
+        "mala" <mala@avexfunding.com>, "Manish" <manishm@bsil.com>,
+        "marge" <marge@avexfunding.com>,
+        "mark clemons" <mark.clemons@carsdirect.com>,
+        "Marlon" <marlon.livers@mortgagefamily.com>,
+        "martinsonl" <martinsonl@esuhsd.org>, "mary" <mary@avexfunding.com>
+X-Mailer: iPhone Mail (14C92)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 07:21:54PM -0700, John Hubbard wrote:
-> On 6/13/19 2:43 AM, Christoph Hellwig wrote:
-> > Keep the physical address allocation that hmm_add_device does with the
-> > rest of the resource code, and allow future reuse of it without the hmm
-> > wrapper.
-> > 
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > ---
-> >  include/linux/ioport.h |  2 ++
-> >  kernel/resource.c      | 39 +++++++++++++++++++++++++++++++++++++++
-> >  mm/hmm.c               | 33 ++++-----------------------------
-> >  3 files changed, 45 insertions(+), 29 deletions(-)
-> 
-> Some trivial typos noted below, but this accurately moves the code
-> into a helper routine, looks good.
 
-Thanks for the typo spotting.  These two actually were copy and pasted
-from the original hmm code, but I'll gladly fix them for the next
-iteration.
+hi linux
+
+
+http://texbengalchem.com/edition.php?wopv=GGNS38001
+
+
+Hope this helps
+Arpit Patel
