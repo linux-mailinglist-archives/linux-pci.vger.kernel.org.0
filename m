@@ -2,126 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CFD9846EA1
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Jun 2019 08:48:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6422E46F01
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Jun 2019 10:34:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbfFOGsc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 15 Jun 2019 02:48:32 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:60756 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725820AbfFOGsc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 15 Jun 2019 02:48:32 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B147BB5939DD75E4A577;
-        Sat, 15 Jun 2019 14:48:27 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Sat, 15 Jun 2019
- 14:48:25 +0800
-Subject: Re: [PATCH] PCI: hv: Fix build error without CONFIG_SYSFS
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-References: <20190531150923.12376-1-yuehaibing@huawei.com>
- <BYAPR21MB12211EEA95200F437C8E37ECD71A0@BYAPR21MB1221.namprd21.prod.outlook.com>
- <7d8ca05e-7519-45d8-e694-d31e221696d5@huawei.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <b049b0f9-e31e-897a-6f2e-e30d6d865f24@huawei.com>
-Date:   Sat, 15 Jun 2019 14:48:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        id S1725828AbfFOIe0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 15 Jun 2019 04:34:26 -0400
+Received: from verein.lst.de ([213.95.11.211]:52416 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725825AbfFOIe0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 15 Jun 2019 04:34:26 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 31A9C68AFE; Sat, 15 Jun 2019 10:33:57 +0200 (CEST)
+Date:   Sat, 15 Jun 2019 10:33:56 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        nouveau@lists.freedesktop.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: dev_pagemap related cleanups
+Message-ID: <20190615083356.GB23406@lst.de>
+References: <20190613094326.24093-1-hch@lst.de> <CAPcyv4jBdwYaiVwkhy6kP78OBAs+vJme1UTm47dX4Eq_5=JgSg@mail.gmail.com> <20190614061333.GC7246@lst.de> <CAPcyv4jmk6OBpXkuwjMn0Ovtv__2LBNMyEOWx9j5LWvWnr8f_A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <7d8ca05e-7519-45d8-e694-d31e221696d5@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jmk6OBpXkuwjMn0Ovtv__2LBNMyEOWx9j5LWvWnr8f_A@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+cc Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+On Fri, Jun 14, 2019 at 06:14:45PM -0700, Dan Williams wrote:
+> On Thu, Jun 13, 2019 at 11:14 PM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > On Thu, Jun 13, 2019 at 11:27:39AM -0700, Dan Williams wrote:
+> > > It also turns out the nvdimm unit tests crash with this signature on
+> > > that branch where base v5.2-rc3 passes:
+> >
+> > How do you run that test?
+> 
+> This is the unit test suite that gets kicked off by running "make
+> check" from the ndctl source repository. In this case it requires the
+> nfit_test set of modules to create a fake nvdimm environment.
+> 
+> The setup instructions are in the README, but feel free to send me
+> branches and I can kick off a test. One of these we'll get around to
+> making it automated for patch submissions to the linux-nvdimm mailing
+> list.
 
-On 2019/6/15 14:18, Yuehaibing wrote:
-> 
-> On 2019/6/2 6:59, Michael Kelley wrote:
->> From: YueHaibing <yuehaibing@huawei.com>  Sent: Friday, May 31, 2019 8:09 AM
->>>
->>> while building without CONFIG_SYSFS, fails as below:
->>>
->>> drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_assign_slots':
->>> pci-hyperv.c:(.text+0x40a): undefined reference to 'pci_create_slot'
->>> drivers/pci/controller/pci-hyperv.o: In function 'pci_devices_present_work':
->>> pci-hyperv.c:(.text+0xc02): undefined reference to 'pci_destroy_slot'
->>> drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_remove':
->>> pci-hyperv.c:(.text+0xe50): undefined reference to 'pci_destroy_slot'
->>> drivers/pci/controller/pci-hyperv.o: In function 'hv_eject_device_work':
->>> pci-hyperv.c:(.text+0x11f9): undefined reference to 'pci_destroy_slot'
->>>
->>> Select SYSFS while PCI_HYPERV is set to fix this.
->>>
->>
->> I'm wondering if is the right way to fix the problem.  Conceptually
->> is it possible to setup & operate virtual PCI devices like 
->> pci-hyperv.c does, even if sysfs is not present?  Or is it right to
->> always required sysfs?
->>
->> The function pci_dev_assign_slot() in slot.c has a null implementation
->> in include/linux/pci.h when CONFIG_SYSFS is not defined, which
->> seems to be trying to solve the same problem for that function.  And
->> if CONFIG_HOTPLUG_PCI is defined but CONFIG_SYSFS is not,
->> pci_hp_create_module_link() and pci_hp_remove_module_link()
->> look like they would have the same problem.  Maybe there should
->> be degenerate implementations of pci_create_slot() and
->> pci_destroy_slot() for cases when CONFIG_SYSFS is not defined?
->>
->> But I'll admit I don't know the full story behind how PCI slots
->> are represented and used, so maybe I'm off base.  I just noticed
->> the inconsistency in how other functions in slot.c are handled.
->>
->> Thoughts?
-> 
-> 268a03a42d33 ("PCI: drivers/pci/slot.c should depend on CONFIG_SYSFS")
-> 
-> make slot.o depends CONFIG_SYSFS
-> 
-> commit 268a03a42d3377d5fb41e6e7cbdec4e0b65cab2e
-> Author: Alex Chiang <achiang@hp.com>
-> Date:   Wed Jun 17 19:03:57 2009 -0600
-> 
->     PCI: drivers/pci/slot.c should depend on CONFIG_SYSFS
-> 
->     There is no way to interact with a physical PCI slot without
->     sysfs, so encode the dependency and prevent this build error:
-> 
->         drivers/pci/slot.c: In function 'pci_hp_create_module_link':
->         drivers/pci/slot.c:327: error: 'module_kset' undeclared
-> 
->     This patch _should_ make pci-sysfs.o depend on CONFIG_SYSFS too,
->     but we cannot (yet) because the PCI core merrily assumes the
->     existence of sysfs:
-> 
->         drivers/built-in.o: In function `pci_bus_add_device':
->         drivers/pci/bus.c:89: undefined reference to `pci_create_sysfs_dev_files'
->         drivers/built-in.o: In function `pci_stop_dev':
->         drivers/pci/remove.c:24: undefined reference to `pci_remove_sysfs_dev_files'
-> 
->     So do the minimal bit for now and figure out how to untangle it
->     later.
-> 
-> If No CONFIG_SYSFS, slot.o is not build
-> 
->>
->> Michael
->>
->>
-> 
-> 
-> .
-> 
-
+Oh, now I remember, and that was the bummer as anything requiring modules
+just does not fit at all into my normal test flows that just inject
+kernel images and use otherwise static images.
