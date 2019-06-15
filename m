@@ -2,368 +2,209 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BD55471F6
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Jun 2019 21:56:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4ADEB471F8
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Jun 2019 21:57:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfFOT4n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 15 Jun 2019 15:56:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33842 "EHLO mail.kernel.org"
+        id S1726873AbfFOT5Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 15 Jun 2019 15:57:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725270AbfFOT4n (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 15 Jun 2019 15:56:43 -0400
+        id S1725270AbfFOT5Z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 15 Jun 2019 15:57:25 -0400
 Received: from localhost (rrcs-162-155-246-179.central.biz.rr.com [162.155.246.179])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38A6021852;
-        Sat, 15 Jun 2019 19:56:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7385321852;
+        Sat, 15 Jun 2019 19:57:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560628601;
-        bh=/+kSluf8kbisp73f57Q0crttNs7eS/xehQ+v5w76Yco=;
+        s=default; t=1560628643;
+        bh=BZ1bICQ2iXsbykz2ihls2tiXgBXufDwr9YnTHK7bScc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wl0anSXLgtsr2wLBIt7Lj3a/fm8cKu9I5M9cHSx9MroHqXP05n4SR4d7/ByUl2404
-         bS0SIs6dmssKPIMtvnac3bbkHt8amNNu9nfUvFIXqjYHt7bwTXVMs6XzD5QO5De/Tm
-         zbwqxUEcaXw9BX6bjGluDZmJmpq0/wneTZCnqW00=
-Date:   Sat, 15 Jun 2019 14:56:36 -0500
+        b=qQXEyQx7QUeHHmZYxiBdQM9UPBsnahrhBW5WuxXi1KL2bB3zs5uUQBsjoafvh2erl
+         yJbegDU36N3H3XCUqoSVsgiDnecxZn0/VtMi1kwHgWGj4AwjVcxlAxJXE5mY7ke742
+         yWqv3RMRAA2iQD5AxdbF9FjPxz6FwKIanSPq8Azo=
+Date:   Sat, 15 Jun 2019 14:57:19 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
 Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
         "corbet@lwn.net" <corbet@lwn.net>
-Subject: Re: [PATCH v6 1/4] PCI: Consider alignment of hot-added bridges when
- distributing available resources
-Message-ID: <20190615195636.GX13533@google.com>
+Subject: Re: [PATCH v6 2/4] PCI: Modify extend_bridge_window() to set
+ resource size directly
+Message-ID: <20190615195719.GY13533@google.com>
 References: <20190522222928.2964-1-nicholas.johnson-opensource@outlook.com.au>
- <PS2P216MB0642C7A485649D2D787A1C6F80000@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
+ <PS2P216MB0642044F9ECF48AD0183A98380000@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PS2P216MB0642C7A485649D2D787A1C6F80000@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
+In-Reply-To: <PS2P216MB0642044F9ECF48AD0183A98380000@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Mika, this patch changes code you added in 1a5767725cec ("PCI:
-Distribute available resources to hotplug-capable bridges").  Is there
-any chance you could help review this?
-
-On Wed, May 22, 2019 at 02:30:44PM +0000, Nicholas Johnson wrote:
-> Rewrite pci_bus_distribute_available_resources to better handle bridges
-> with different resource alignment requirements. Pass more details
-> arguments recursively to track the resource start and end addresses
-> relative to the initial hotplug bridge. This is especially useful for
-> Thunderbolt with native PCI enumeration, enabling external graphics
-> cards and other devices with bridge alignment higher than 0x100000
-> bytes.
+On Wed, May 22, 2019 at 02:30:57PM +0000, Nicholas Johnson wrote:
+> Background
+> ==========================================================================
 > 
-> Change extend_bridge_window to resize the actual resource, rather than
-> using add_list and dev_res->add_size. If an additional resource entry
-> exists for the given resource, zero out the add_size field to avoid it
-> interfering. Because add_size is considered optional when allocating,
-> using add_size could cause issues in some cases, because successful
-> resource distribution requires sizes to be guaranteed. Such cases
-> include hot-adding nested hotplug bridges in one enumeration, and
-> potentially others which are yet to be encountered.
+> In the current state, the PCI allocation could fail with Thunderbolt
+> under certain unusual circumstances, because add_list resources are
+> "optional". Guaranteed allocation requires guaranteed resource sizes.
+
+I don't see anything here specific to Thunderbolt, so this boils down
+to "allocation might fail in unusual cases".  That's true, of course,
+but in order to fix something we have to identify a failure that could
+be avoided.
+
+Part of the reason for "add_size" is for SR-IOV devices where we can
+control the amount of space they require.  The PF space is mandatory,
+but we can adjust the number of VFs and the space they use.
+
+If we don't have enough space for all the possible VFs, we'd rather
+allocate space for some of them than fail completely.
+
+We can never guarantee that there's enough space for all devices, even
+if we make all the possible VF space required instead of optional.
+
+> It is difficult to give examples of these failures - because without the
+> previous patch in the series, the symptoms of the problem are hidden by
+> larger problems. This patch has been split from the previous patch and
+> makes little sense on its own - as it is almost impossible to see the
+> effect of this patch without first fixing the problems addressed by the
+> previous patch. So the evidence I put forward for making this change is
+> that because add_list resources are "optional", there could be any
+> number of unforeseen bugs that are yet to be encountered if the kernel
+> decides not to assign all of the optional size. In kernel development,
+> we should not play around with chance.
+> 
+> Moving away from add_size also allows for use of pci=hpmemsize to assign
+> resources. Previously, when using add_size and not allowing the add_size
+> to shrink, it made it impossible to distribute resources. If a hotplug
+> bridge has size X, and below it is some devices with non-zero size Y and
+> a nested hotplug bridge of same size X, fitting X+Y into size X is
+> mathematically impossible.
+> 
+> This patch solves this by dropping add_size and giving each bridge the
+> maximum size possible without failing resource assignment. Using
+> pci=hpmemsize still works as pci_assign_unassigned_root_bus_resources()
+> does not call pci_bus_distribute_available_resources(). At boot,
+> pci_assign_unassigned_root_bus_resources() is used, instead of
+> pci_bridge_distribute_available_resources().
+> 
+> By allowing to use pci=hpmemsize, it removes the reliance on the
+> firmware to declare the window resources under the root port, and could
+> pay off in the future with USB4 (which is backward-compatible to
+> Thunderbolt devices, and not specific to Intel systems). Users of
+> Thunderbolt hardware on unsupported systems will be able to specify the
+> resources in the kernel parameters. Users of official systems will be
+> able to override the default firmware window sizes to allocate much
+> larger resource sizes, potentially enabling Thunderbolt support for
+> devices with massive BARs (with a few other problems solved by later
+> patches in this series).
+> 
+> Patch notes
+> ==========================================================================
+> 
+> Modify extend_bridge_window() to remove the resource from add_list and
+> change the resource size directly.
+> 
+> Modify extend_bridge_window() to reset resources that are being assigned
+> zero size. This is required to prevent the bridge not being enabled due
+> to resources with zero size. This is a direct requirement to prevent the
+> change away from using add_list from introducing a regression - because
+> before, it was not possible to end up with zero size.
 > 
 > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
 > ---
->  drivers/pci/setup-bus.c | 169 ++++++++++++++++++++--------------------
->  1 file changed, 84 insertions(+), 85 deletions(-)
+>  drivers/pci/setup-bus.c | 42 ++++++++++++++++++++++++++---------------
+>  1 file changed, 27 insertions(+), 15 deletions(-)
 > 
 > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index 0cdd5ff38..1b5b851ca 100644
+> index 1b5b851ca..5675254fa 100644
 > --- a/drivers/pci/setup-bus.c
 > +++ b/drivers/pci/setup-bus.c
-> @@ -1835,12 +1835,10 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
+> @@ -1810,28 +1810,40 @@ void __init pci_assign_unassigned_resources(void)
+>  }
+>  
+>  static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
+> -				 struct list_head *add_list,
+> -				 resource_size_t available)
+> +			struct list_head *add_list, resource_size_t new_size)
+
+Follow parameter indentation style of the rest of the file.  It's OK if it
+requires another line.
+
+>  {
+> -	struct pci_dev_resource *dev_res;
+> +	resource_size_t add_size;
+>  
+>  	if (res->parent)
+>  		return;
+>  
+> -	if (resource_size(res) >= available)
+> -		return;
+> -
+> -	dev_res = res_to_dev_res(add_list, res);
+> -	if (!dev_res)
+> -		return;
+> +	if (new_size >= resource_size(res)) {
+> +		add_size = new_size - resource_size(res);
+> +		pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
+> +			&add_size);
+> +	} else {
+> +		add_size = resource_size(res) - new_size;
+> +		pci_dbg(bridge, "bridge window %pR shrunken by %pa\n", res,
+> +			&add_size);
+> +	}
+>  
+> -	/* Is there room to extend the window? */
+> -	if (available - resource_size(res) <= dev_res->add_size)
+> -		return;
+> +	/*
+> +	 * Resources requested using add_size in additional resource lists are
+> +	 * considered optional when allocated. Guaranteed size of allocation
+> +	 * is required to guarantee successful resource distribution. Hence,
+> +	 * the size of the actual resource must be adjusted, and the resource
+> +	 * removed from add_list to prevent any additional size interfering.
+> +	 */
+> +	res->end = res->start + new_size - 1;
+> +	remove_from_list(add_list, res);
+>  
+> -	dev_res->add_size = available - resource_size(res);
+> -	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
+> -		&dev_res->add_size);
+> +	/*
+> +	 * If we have run out of bridge resources, we may end up with a
+> +	 * zero-sized resource which may cause its bridge to not be enabled.
+> +	 * Disabling the resource prevents any such issues.
+
+I don't understand the concern about the bridge not being enabled; can
+you help me out?
+
+When you refer to the bridge not being enabled, I'm guessing you mean
+the bridge PCI_COMMAND_IO and PCI_COMMAND_MEMORY bits might not be
+set?
+
+"res" refers to a bridge window (io, mmio, or mmio_pref).  Bridge
+windows can be individually disabled (by setting limit < base), and
+that should not cause the bridge itself to be disabled.
+reset_resource() itself doesn't touch the bridge base or limit
+registers; is there something later that does?
+
+I don't like reset_resource() because it throws away the flags that
+tell us what sort of resource we have (I/O, MMIO, 64-bit).  The only
+way to get that back is to re-read the device's config space.  I think
+the goal should be to read that *once* during enumeration and keep it.
+I know we already use reset_resource() elsewhere, but I'd rather not
+add new uses if we can avoid it.
+
+> +	if (!new_size)
+> +		reset_resource(res);
 >  }
 >  
 >  static void pci_bus_distribute_available_resources(struct pci_bus *bus,
-> -					    struct list_head *add_list,
-> -					    resource_size_t available_io,
-> -					    resource_size_t available_mmio,
-> -					    resource_size_t available_mmio_pref)
-> +	struct list_head *add_list, struct resource io,
-> +	struct resource mmio, struct resource mmio_pref)
-
-Follow the parameter indentation style of the rest of the file.
-
->  {
-> -	resource_size_t remaining_io, remaining_mmio, remaining_mmio_pref;
-> +	resource_size_t io_per_hp, mmio_per_hp, mmio_pref_per_hp, align;
->  	unsigned int normal_bridges = 0, hotplug_bridges = 0;
->  	struct resource *io_res, *mmio_res, *mmio_pref_res;
->  	struct pci_dev *dev, *bridge = bus->self;
-> @@ -1850,29 +1848,36 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
->  	mmio_pref_res = &bridge->resource[PCI_BRIDGE_RESOURCES + 2];
->  
->  	/*
-> -	 * Update additional resource list (add_list) to fill all the
-> -	 * extra resource space available for this port except the space
-> -	 * calculated in __pci_bus_size_bridges() which covers all the
-> -	 * devices currently connected to the port and below.
-> +	 * The alignment of this bridge is yet to be considered, hence it must
-> +	 * be done now before extending its bridge window. A single bridge
-> +	 * might not be able to occupy the whole parent region if the alignment
-> +	 * differs - for example, an external GPU at the end of a Thunderbolt
-> +	 * daisy chain.
-
-The example seems needlessly specific.  There isn't anything GPU- or
-Thunderbolt-specific about this, is there?
-
-Bridge windows can be aligned to any multiple of 1MB.  But a device
-BAR must be aligned on its size, so any BAR larger than 1MB should be
-able to cause this, e.g.,
-
-  [mem 0x100000-0x3fffff] (bridge A 3MB window)
-    [mem 0x200000-0x3fffff] (bridge B 2MB window)
-      [mem 0x200000-0x3fffff] (device 2MB BAR)
-
-Bridge B *could* occupy the the entire 3MB parent region, but it
-doesn't need to.  But you say it "might not be *able* to", so maybe
-you're thinking of something different?
-
-> -	extend_bridge_window(bridge, io_res, add_list, available_io);
-> -	extend_bridge_window(bridge, mmio_res, add_list, available_mmio);
-> -	extend_bridge_window(bridge, mmio_pref_res, add_list,
-> -			     available_mmio_pref);
-> +	align = pci_resource_alignment(bridge, io_res);
-> +	if (!io_res->parent && align)
-> +		io.start = ALIGN(io.start, align);
-> +
-> +	align = pci_resource_alignment(bridge, mmio_res);
-> +	if (!mmio_res->parent && align)
-> +		mmio.start = ALIGN(mmio.start, align);
-> +
-> +	align = pci_resource_alignment(bridge, mmio_pref_res);
-> +	if (!mmio_pref_res->parent && align)
-> +		mmio_pref.start = ALIGN(mmio_pref.start, align);
->  
->  	/*
-> -	 * Calculate the total amount of extra resource space we can
-> -	 * pass to bridges below this one.  This is basically the
-> -	 * extra space reduced by the minimal required space for the
-> -	 * non-hotplug bridges.
-> +	 * Update the resources to fill as much remaining resource space in the
-> +	 * parent bridge as possible, while considering alignment.
->  	 */
-> -	remaining_io = available_io;
-> -	remaining_mmio = available_mmio;
-> -	remaining_mmio_pref = available_mmio_pref;
-> +	extend_bridge_window(bridge, io_res, add_list, resource_size(&io));
-> +	extend_bridge_window(bridge, mmio_res, add_list, resource_size(&mmio));
-> +	extend_bridge_window(bridge, mmio_pref_res, add_list,
-> +		resource_size(&mmio_pref));
->  
->  	/*
->  	 * Calculate how many hotplug bridges and normal bridges there
-> -	 * are on this bus.  We will distribute the additional available
-> +	 * are on this bus. We will distribute the additional available
-
-This whitespace change is pointless and distracting.
-
->  	 * resources between hotplug bridges.
->  	 */
->  	for_each_pci_bridge(dev, bus) {
-> @@ -1882,104 +1887,98 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
->  			normal_bridges++;
->  	}
->  
-> +	/*
-> +	 * There is only one bridge on the bus so it gets all possible
-> +	 * resources which it can then distribute to the possible
-> +	 * hotplug bridges below.
-> +	 */
-> +	if (hotplug_bridges + normal_bridges == 1) {
-> +		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
-> +		if (dev->subordinate)
-> +			pci_bus_distribute_available_resources(dev->subordinate,
-> +				add_list, io, mmio, mmio_pref);
-> +		return;
-> +	}
-
-Moving this "single bridge" case up makes sense, and I think it could
-be done by a separate patch preceding this one.  Mika, I remember some
-discussion about this case, but I can't remember if there's some
-reason you didn't do this initially.
-
-The current code is:
-
-  for_each_pci_bridge(dev, bus)
-    # compute hotplug_bridges, normal_bridges
-
-  for_each_pci_bridge(dev, bus)
-    # compute remaining_io, etc
-
-  if (hotplug_bridges + normal_bridges == 1)
-    # handle single bridge case
-
-  for_each_pci_bridge(dev, bus)
-    # use remaining_io, etc here
-
-AFAICT the single bridge case has no dependency on the remaining_io
-computation.
-
-> +	/*
-> +	 * Reduce the available resource space by what the
-> +	 * bridge and devices below it occupy.
-> +	 */
->  	for_each_pci_bridge(dev, bus) {
-> -		const struct resource *res;
-> +		struct resource *res;
-> +		resource_size_t used_size;
->  
->  		if (dev->is_hotplug_bridge)
->  			continue;
->  
-> -		/*
-> -		 * Reduce the available resource space by what the
-> -		 * bridge and devices below it occupy.
-> -		 */
->  		res = &dev->resource[PCI_BRIDGE_RESOURCES + 0];
-> -		if (!res->parent && available_io > resource_size(res))
-> -			remaining_io -= resource_size(res);
-> +		align = pci_resource_alignment(dev, res);
-> +		align = align ? ALIGN(io.start, align) - io.start : 0;
-> +		used_size = align + resource_size(res);
-> +		if (!res->parent && used_size <= resource_size(&io))
-> +			io.start += used_size;
->  
->  		res = &dev->resource[PCI_BRIDGE_RESOURCES + 1];
-> -		if (!res->parent && available_mmio > resource_size(res))
-> -			remaining_mmio -= resource_size(res);
-> +		align = pci_resource_alignment(dev, res);
-> +		align = align ? ALIGN(mmio.start, align) - mmio.start : 0;
-> +		used_size = align + resource_size(res);
-> +		if (!res->parent && used_size <= resource_size(&mmio))
-> +			mmio.start += used_size;
->  
->  		res = &dev->resource[PCI_BRIDGE_RESOURCES + 2];
-> -		if (!res->parent && available_mmio_pref > resource_size(res))
-> -			remaining_mmio_pref -= resource_size(res);
-> +		align = pci_resource_alignment(dev, res);
-> +		align = align ? ALIGN(mmio_pref.start, align) -
-> +				mmio_pref.start : 0;
-> +		used_size = align + resource_size(res);
-> +		if (!res->parent && used_size <= resource_size(&mmio_pref))
-> +			mmio_pref.start += used_size;
->  	}
->  
-> -	/*
-> -	 * There is only one bridge on the bus so it gets all available
-> -	 * resources which it can then distribute to the possible hotplug
-> -	 * bridges below.
-> -	 */
-> -	if (hotplug_bridges + normal_bridges == 1) {
-> -		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
-> -		if (dev->subordinate) {
-> -			pci_bus_distribute_available_resources(dev->subordinate,
-> -				add_list, available_io, available_mmio,
-> -				available_mmio_pref);
-> -		}
-> +	if (!hotplug_bridges)
->  		return;
-
-I like the addition of this early return when there are no hotplug
-bridges.  The following loop is a no-op if there are no hotplug
-bridges, so it doesn't *fix* anything, but it does make it more
-obvious that we don't even have to bother with the loop at all, and
-it makes the "Here hotplug_bridges is always != 0" comment
-unnecessary.
-
-I think this could be done in a separate patch before this one, too.
-Anything we can do to simplify these patches is a win because the code
-is so complicated.
-
->  	/*
-> -	 * Go over devices on this bus and distribute the remaining
-> -	 * resource space between hotplug bridges.
-> +	 * Distribute any remaining resources equally between
-> +	 * the hotplug-capable downstream ports.
->  	 */
-> -	for_each_pci_bridge(dev, bus) {
-> -		resource_size_t align, io, mmio, mmio_pref;
-> -		struct pci_bus *b;
-> +	io_per_hp = div64_ul(resource_size(&io), hotplug_bridges);
-> +	mmio_per_hp = div64_ul(resource_size(&mmio), hotplug_bridges);
-> +	mmio_pref_per_hp = div64_ul(resource_size(&mmio_pref),
-> +		hotplug_bridges);
->  
-> -		b = dev->subordinate;
-> -		if (!b || !dev->is_hotplug_bridge)
-> +	for_each_pci_bridge(dev, bus) {
-> +		if (!dev->subordinate || !dev->is_hotplug_bridge)
->  			continue;
->  
-> -		/*
-> -		 * Distribute available extra resources equally between
-> -		 * hotplug-capable downstream ports taking alignment into
-> -		 * account.
-> -		 *
-> -		 * Here hotplug_bridges is always != 0.
-> -		 */
-> -		align = pci_resource_alignment(bridge, io_res);
-> -		io = div64_ul(available_io, hotplug_bridges);
-> -		io = min(ALIGN(io, align), remaining_io);
-> -		remaining_io -= io;
-> -
-> -		align = pci_resource_alignment(bridge, mmio_res);
-> -		mmio = div64_ul(available_mmio, hotplug_bridges);
-> -		mmio = min(ALIGN(mmio, align), remaining_mmio);
-> -		remaining_mmio -= mmio;
-> +		io.end = io.start + io_per_hp - 1;
-> +		mmio.end = mmio.start + mmio_per_hp - 1;
-> +		mmio_pref.end = mmio_pref.start + mmio_pref_per_hp - 1;
->  
-> -		align = pci_resource_alignment(bridge, mmio_pref_res);
-> -		mmio_pref = div64_ul(available_mmio_pref, hotplug_bridges);
-> -		mmio_pref = min(ALIGN(mmio_pref, align), remaining_mmio_pref);
-> -		remaining_mmio_pref -= mmio_pref;
-> +		pci_bus_distribute_available_resources(dev->subordinate,
-> +			add_list, io, mmio, mmio_pref);
->  
-> -		pci_bus_distribute_available_resources(b, add_list, io, mmio,
-> -						       mmio_pref);
-> +		io.start = io.end + 1;
-> +		mmio.start = mmio.end + 1;
-> +		mmio_pref.start = mmio_pref.end + 1;
->  	}
-
-I like the simplification of this loop.
-
->  }
->  
->  static void pci_bridge_distribute_available_resources(struct pci_dev *bridge,
->  						     struct list_head *add_list)
->  {
-> -	resource_size_t available_io, available_mmio, available_mmio_pref;
-> -	const struct resource *res;
-> +	struct resource io_res, mmio_res, mmio_pref_res;
->  
->  	if (!bridge->is_hotplug_bridge)
->  		return;
->  
-> +	io_res = bridge->resource[PCI_BRIDGE_RESOURCES + 0];
-> +	mmio_res = bridge->resource[PCI_BRIDGE_RESOURCES + 1];
-> +	mmio_pref_res = bridge->resource[PCI_BRIDGE_RESOURCES + 2];
-> +
->  	/* Take the initial extra resources from the hotplug port */
-> -	res = &bridge->resource[PCI_BRIDGE_RESOURCES + 0];
-> -	available_io = resource_size(res);
-> -	res = &bridge->resource[PCI_BRIDGE_RESOURCES + 1];
-> -	available_mmio = resource_size(res);
-> -	res = &bridge->resource[PCI_BRIDGE_RESOURCES + 2];
-> -	available_mmio_pref = resource_size(res);
->  
->  	pci_bus_distribute_available_resources(bridge->subordinate,
-> -					       add_list, available_io,
-> -					       available_mmio,
-> -					       available_mmio_pref);
-> +		add_list, io_res, mmio_res, mmio_pref_res);
->  }
->  
->  void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
 > -- 
 > 2.20.1
 > 
