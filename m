@@ -2,96 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C8C347184
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Jun 2019 20:09:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FB5F471F4
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Jun 2019 21:56:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbfFOSJV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 15 Jun 2019 14:09:21 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40679 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfFOSJV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 15 Jun 2019 14:09:21 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e8so4705253otl.7
-        for <linux-pci@vger.kernel.org>; Sat, 15 Jun 2019 11:09:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Cb0Hmo2zAZrYDyoCgAidl3UeL9kc8+XrLoGdt6CrXZE=;
-        b=EY/IUPVbu+1KTXp5GI53vNwR2z9Nvu64XsQUizbEMMU+aGYsXWtd2lTzv6Rx3V/2OG
-         ZCHaTlatz8Y6DgkD78CATBQ1yUSjk/05HpPEqetVEj/+F5+Kom/9e7XbdGpDgyQQCBnL
-         yj7evXXPdyreGRqDjU90YAS5Z/xg/+W8t5onIf68LdBa/3dqW/rLtaWBvtaURMP28S5L
-         ACzapU9ov4J0F0u3SlQrs+vm8YDjsJurYg/jGuJheOXTmxVlf3qQXGWQIp1J0v1wmtf3
-         4CKVxNLpNlkzY6vy0HsyUqk2Hkklo6bAEUB4ced5+znlBd2UCAgiXhA0LcanxooGfjdt
-         jtDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Cb0Hmo2zAZrYDyoCgAidl3UeL9kc8+XrLoGdt6CrXZE=;
-        b=XsLWbCvj7IRgDx2mWsltaN0yjGjCp2zGdAb7ejKcDP/ZTqAPX6KTFCQQX0n5VkXvQm
-         iSdUZ1CfnB/SGxiHNvgMz0PByYVtwFars0EuNdl5o9Yc2yo32iuHIe4eGMoL1hi2xoYG
-         4fM7ruIBDF8FUMNG8GqSyz+QyZ7uH1FwnQjyRXDI+5WKF3WDJW1JJBfi3vz4hcqAO8/f
-         +DgGiHjWgavzA7jhsKiUN5IrjNnTby6C/m2i08eRWXTyC8b49dgeemiXxbTdQw8MQNNp
-         NNI8RLIzVNkPr6Yna3dDK1swWjXI2IPM+vNv0APNDInxkKcv8V9N+1/galhicCBs+Rj+
-         azqg==
-X-Gm-Message-State: APjAAAWoMXxQqK/sHKtv+DZlCo1wBXOdnS1fnRzqdbyWCLFyl+c40Skp
-        oA/7z+WWa3ANvYzMvUqAR40s13Xr1+8IOKBgEtt5YQ==
-X-Google-Smtp-Source: APXvYqxK2ja20GipaVbp7qq4Oaf290msf2s3XleRazQ4mdHqmcalk7o8VyutGF6B5iu+bOwCwwdJPEhdvYDhbnFupMs=
-X-Received: by 2002:a9d:7a9a:: with SMTP id l26mr44930666otn.71.1560622160642;
- Sat, 15 Jun 2019 11:09:20 -0700 (PDT)
+        id S1725944AbfFOT4Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 15 Jun 2019 15:56:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33750 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725270AbfFOT4Z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 15 Jun 2019 15:56:25 -0400
+Received: from localhost (rrcs-162-155-246-179.central.biz.rr.com [162.155.246.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54E8E21852;
+        Sat, 15 Jun 2019 19:56:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560628584;
+        bh=5pzNQptnsFClJ3I2c85gaKDrOpQPFODNMKPCD018SjI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Rv+CFhiHxXUmMtz5fRK1miEMBd1vnOt37iQb8fFkW919KHaPZmOuQlqevUQVzHQSV
+         zbt1J1OBhPzVGZrjOPUKztc5tTGYiwBbpoCE3871p4zzGYSQ3d0viFnjDkh6TXXqHC
+         1v4lAZr83v/Os0MBbHbF5rXIrYMxJm/ZDfdw88FE=
+Date:   Sat, 15 Jun 2019 14:56:19 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH v6 0/4] PCI: Patch series to support Thunderbolt without
+ any BIOS support
+Message-ID: <20190615195604.GW13533@google.com>
+References: <PS2P216MB0642AD5BCA377FDC5DCD8A7B80000@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-References: <20190613094326.24093-1-hch@lst.de> <CAPcyv4jBdwYaiVwkhy6kP78OBAs+vJme1UTm47dX4Eq_5=JgSg@mail.gmail.com>
- <20190614061333.GC7246@lst.de> <CAPcyv4jmk6OBpXkuwjMn0Ovtv__2LBNMyEOWx9j5LWvWnr8f_A@mail.gmail.com>
- <20190615083356.GB23406@lst.de>
-In-Reply-To: <20190615083356.GB23406@lst.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 15 Jun 2019 11:09:09 -0700
-Message-ID: <CAPcyv4jkDC3hRt_pj1e8j_OmzJ-wdumy-o1bN0ab=JVE_gfKdg@mail.gmail.com>
-Subject: Re: dev_pagemap related cleanups
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PS2P216MB0642AD5BCA377FDC5DCD8A7B80000@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jun 15, 2019 at 1:34 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Fri, Jun 14, 2019 at 06:14:45PM -0700, Dan Williams wrote:
-> > On Thu, Jun 13, 2019 at 11:14 PM Christoph Hellwig <hch@lst.de> wrote:
-> > >
-> > > On Thu, Jun 13, 2019 at 11:27:39AM -0700, Dan Williams wrote:
-> > > > It also turns out the nvdimm unit tests crash with this signature on
-> > > > that branch where base v5.2-rc3 passes:
-> > >
-> > > How do you run that test?
-> >
-> > This is the unit test suite that gets kicked off by running "make
-> > check" from the ndctl source repository. In this case it requires the
-> > nfit_test set of modules to create a fake nvdimm environment.
-> >
-> > The setup instructions are in the README, but feel free to send me
-> > branches and I can kick off a test. One of these we'll get around to
-> > making it automated for patch submissions to the linux-nvdimm mailing
-> > list.
->
-> Oh, now I remember, and that was the bummer as anything requiring modules
-> just does not fit at all into my normal test flows that just inject
-> kernel images and use otherwise static images.
+[+cc Ben, Logan]
 
-Yeah... although we do have some changes being proposed from non-x86
-devs to allow a subset of the tests to run without the nfit_test
-modules: https://patchwork.kernel.org/patch/10980779/
+Ben, Logan, since you're looking at the resource code, maybe you'd be
+interested in this as well?
 
-...so this prompts me to go review that patch.
+On Wed, May 22, 2019 at 02:30:30PM +0000, Nicholas Johnson wrote:
+> Rebase patches to apply cleanly to 5.2-rc1 source. Remove patch for 
+> comment style cleanup as this has already been applied.
+
+Thanks for rebasing these.
+
+They do apply cleanly, but they seem to be base64-encoded MIME
+attachments, and I don't know how to make mutt extract them easily.  I
+had to save each patch attachment individually, apply it, insert the
+commit log manually, etc.
+
+Is there any chance you could send the next series as plain-text
+patches?  That would be a lot easier for me.
+
+> Anybody interested in testing, you can do so with:
+> 
+> a) Intel system with Thunderbolt 3 and native enumeration. The Gigabyte 
+> Z390 Designare is one of the most perfect for this that I have never had 
+> the opportunity to use - it does not even have the option for BIOS 
+> assisted enumeration present in the BIOS.
+> 
+> b) Any system with PCIe and the Gigabyte GC-TITAN RIDGE add-in card, 
+> jump the header as described and use kernel parameters like:
+> 
+> pci=assign-busses,hpbussize=0x33,realloc,hpmemsize=128M,hpmemprefsize=1G,nocrs 
+> pcie_ports=native
+> 
+> [optional] pci.dyndbg
+> 
+>     ___
+>  __/   \__
+> |o o o o o| When looking into the receptacle on back of PCIe card.
+> |_________| Jump pins 3 and 5.
+> 
+>  1 2 3 4 5
+> 
+> The Intel system is nice in that it should just work. The add-in card 
+> setup is nice in that you can go nuts and assign copious amounts of 
+> MMIO_PREF - can anybody show a Xeon Phi coprocessor with 16G BAR working 
+> in an eGPU enclosure with these patches?
+> 
+> However, if you specify the above kernel parameters on the Intel system, 
+> you should be able to override it to allocate more space.
+> 
+> Nicholas Johnson (4):
+>   PCI: Consider alignment of hot-added bridges when distributing
+>     available resources
+>   PCI: Modify extend_bridge_window() to set resource size directly
+>   PCI: Fix bug resulting in double hpmemsize being assigned to MMIO
+>     window
+>   PCI: Add pci=hpmemprefsize parameter to set MMIO_PREF size
+>     independently
+> 
+>  .../admin-guide/kernel-parameters.txt         |   7 +-
+>  drivers/pci/pci.c                             |  18 +-
+>  drivers/pci/setup-bus.c                       | 265 ++++++++++--------
+>  include/linux/pci.h                           |   3 +-
+>  4 files changed, 167 insertions(+), 126 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
