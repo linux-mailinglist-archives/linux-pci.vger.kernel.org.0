@@ -2,28 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 70A0F48A98
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 19:41:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C37348A9B
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 19:41:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbfFQRlK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jun 2019 13:41:10 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:11984 "EHLO
+        id S1728661AbfFQRlO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jun 2019 13:41:14 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:12003 "EHLO
         hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbfFQRlK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jun 2019 13:41:10 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d07d0b50000>; Mon, 17 Jun 2019 10:41:09 -0700
+        with ESMTP id S1725995AbfFQRlO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jun 2019 13:41:14 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d07d0b80005>; Mon, 17 Jun 2019 10:41:12 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 17 Jun 2019 10:41:09 -0700
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 17 Jun 2019 10:41:13 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 17 Jun 2019 10:41:09 -0700
-Received: from HQMAIL108.nvidia.com (172.18.146.13) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 17 Jun
- 2019 17:41:09 +0000
+        by hqpgpgate102.nvidia.com on Mon, 17 Jun 2019 10:41:13 -0700
+Received: from HQMAIL102.nvidia.com (172.18.146.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 17 Jun
+ 2019 17:41:13 +0000
+Received: from HQMAIL108.nvidia.com (172.18.146.13) by HQMAIL102.nvidia.com
+ (172.18.146.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 17 Jun
+ 2019 17:41:12 +0000
 Received: from manikanta-bm2.nvidia.com (10.124.1.5) by HQMAIL108.nvidia.com
  (172.18.146.13) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
- Transport; Mon, 17 Jun 2019 17:41:06 +0000
+ Transport; Mon, 17 Jun 2019 17:41:09 +0000
 From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
 To:     <thierry.reding@gmail.com>, <bhelgaas@google.com>,
         <robh+dt@kernel.org>, <mark.rutland@arm.com>,
@@ -32,9 +35,9 @@ To:     <thierry.reding@gmail.com>, <bhelgaas@google.com>,
 CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <devicetree@vger.kernel.org>,
         Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V5 21/27] PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of soc struct
-Date:   Mon, 17 Jun 2019 23:09:46 +0530
-Message-ID: <20190617173952.29363-22-mmaddireddy@nvidia.com>
+Subject: [PATCH V5 22/27] dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
+Date:   Mon, 17 Jun 2019 23:09:47 +0530
+Message-ID: <20190617173952.29363-23-mmaddireddy@nvidia.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
 References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
@@ -42,26 +45,26 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560793269; bh=3bcCY3MLVivc1aNYkXBUejAFxfzgzINmcux62AFrLuw=;
+        t=1560793273; bh=+pqFuAByCIJZ4WLL9oG+v7N0kYgYWiHit82owuupTQA=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=WGatSqJTN3IStKCOvajyTGt8D4ArbaP6zDbhcg94QvMDZS5QWTwQtOKM1R+MDGAd/
-         RSPVDyMSMO/BhyK1Uyl/T/RyoGv9dkZtXod2rH7Z2ieLxwQv6Mo+eC0K5KAqdbHq8m
-         GfPHhuXoHyP5q5ejIYXaftiFpDq5TMowiQlhdtB+ZqfSEcCmE+7n+fZruLJxDv7RIj
-         VmNxUT/ku5TtaatliLZKXMmP28g4xkR9Rzvt8iD9BepKi6UAIIKWGIiCITSpXWZtLZ
-         Drm+knfDYTqDhSoiPCsNY0ioIg+0oDg4L47/70+/vh4hLndF0Ara9VdzqTW2uKSbI/
-         UG54wro3GMnlA==
+        b=pt8pppvpG0AIcWY8aK6BLh5eb0kJ6zCeJmTlG2PruEv5Sk7zTIBGp8ARmyzULZoZl
+         F9SrwPojFBTv4lpqjQXAs5PhIGc6n6FYyY5VNSRc1AW4ZttA68NjyNnJ051cLbo1c+
+         SGYHd7nG4rU6fvS5o+zlxju4GNMXSMq/ppUq6RskEfjP5wCS5aH6Ou0doubE3g15ME
+         uibJKjKNca4k6sUaG5+VY/1j0WMD+elkgcFNsyzT+qiEJx1M0BgZKdBVW6+8oGgdt4
+         /ddP2+4d7EgU3cud9+qyfDw0mq22GaUiI+9S2kEDzJGewNQatOB5F6IgFch10p7LYT
+         mQSg+BAept9qw==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Tegra186 and Tegra30 have three PCIe root ports. AFI_PEX2_CTRL register
-is defined for third root port. Offset of this register in Tegra186 is
-different from Tegra30, so add offset as part of soc data structure.
+Document PCIe DPD pinctrl optional property to put PEX clk & BIAS pads
+in low power mode.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Acked-by: Thierry Reding <treding@nvidia.com>
 ---
 V5: No change
@@ -70,64 +73,30 @@ V4: No change
 
 V3: No change
 
-V2: No change
+V2: Using standard pinctrl names, default and idle
 
- drivers/pci/controller/pci-tegra.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/pci/nvidia,tegra20-pcie.txt       | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 9429c0c6a1f3..34c5cabd8e80 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -169,7 +169,6 @@
+diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+index 145a4f04194f..7939bca47861 100644
+--- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+@@ -65,6 +65,14 @@ Required properties:
+   - afi
+   - pcie_x
  
- #define AFI_PEX0_CTRL			0x110
- #define AFI_PEX1_CTRL			0x118
--#define AFI_PEX2_CTRL			0x128
- #define  AFI_PEX_CTRL_RST		(1 << 0)
- #define  AFI_PEX_CTRL_CLKREQ_EN		(1 << 1)
- #define  AFI_PEX_CTRL_REFCLK_EN		(1 << 3)
-@@ -308,6 +307,7 @@ struct tegra_pcie_soc {
- 	unsigned int num_ports;
- 	const struct tegra_pcie_port_soc *ports;
- 	unsigned int msi_base_shift;
-+	unsigned long afi_pex2_ctrl;
- 	u32 pads_pll_ctl;
- 	u32 tx_ref_sel;
- 	u32 pads_refclk_cfg0;
-@@ -518,6 +518,7 @@ static struct pci_ops tegra_pcie_ops = {
- 
- static unsigned long tegra_pcie_port_get_pex_ctrl(struct tegra_pcie_port *port)
- {
-+	const struct tegra_pcie_soc *soc = port->pcie->soc;
- 	unsigned long ret = 0;
- 
- 	switch (port->index) {
-@@ -530,7 +531,7 @@ static unsigned long tegra_pcie_port_get_pex_ctrl(struct tegra_pcie_port *port)
- 		break;
- 
- 	case 2:
--		ret = AFI_PEX2_CTRL;
-+		ret = soc->afi_pex2_ctrl;
- 		break;
- 	}
- 
-@@ -2431,6 +2432,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
- 	.num_ports = 2,
- 	.ports = tegra20_pcie_ports,
- 	.msi_base_shift = 0,
-+	.afi_pex2_ctrl = 0x128,
- 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA20,
- 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_DIV10,
- 	.pads_refclk_cfg0 = 0xfa5cfa5c,
-@@ -2548,6 +2550,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
- 	.num_ports = 3,
- 	.ports = tegra186_pcie_ports,
- 	.msi_base_shift = 8,
-+	.afi_pex2_ctrl = 0x19c,
- 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
- 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
- 	.pads_refclk_cfg0 = 0x80b880b8,
++Optional properties:
++- pinctrl-names: A list of pinctrl state names. Must contain the following
++  entries:
++  - "default": active state, puts PCIe I/O out of deep power down state
++  - "idle": puts PCIe I/O into deep power down state
++- pinctrl-0: phandle for the default/active state of pin configurations.
++- pinctrl-1: phandle for the idle state of pin configurations.
++
+ Required properties on Tegra124 and later (deprecated):
+ - phys: Must contain an entry for each entry in phy-names.
+ - phy-names: Must include the following entries:
 -- 
 2.17.1
 
