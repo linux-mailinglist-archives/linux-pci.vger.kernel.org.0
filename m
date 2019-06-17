@@ -2,118 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3934A48A24
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 19:32:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74AA048A48
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 19:37:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbfFQRcZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jun 2019 13:32:25 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:46258 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbfFQRcZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 17 Jun 2019 13:32:25 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hcvUV-0007og-MA; Mon, 17 Jun 2019 11:32:24 -0600
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Kit Chow <kchow@gigaio.com>, Yinghai Lu <yinghai@kernel.org>
-References: <20190531171216.20532-1-logang@deltatee.com>
- <20190531171216.20532-3-logang@deltatee.com>
- <20190617135307.GA13533@google.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <56b3452c-7713-c39a-196e-9f6921580b9c@deltatee.com>
-Date:   Mon, 17 Jun 2019 11:32:23 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726776AbfFQRhZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jun 2019 13:37:25 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42458 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbfFQRhZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jun 2019 13:37:25 -0400
+Received: by mail-ot1-f68.google.com with SMTP id l15so444943otn.9
+        for <linux-pci@vger.kernel.org>; Mon, 17 Jun 2019 10:37:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gBoBuo4G3FSgEhDC+FoktVJNloMg07m1kebASNjaow0=;
+        b=GEy6EGCLZL0UwYQ9PkUNByAPZFrQNOY55J4Isr3tPIqQ98XVq0fsFEiJHE9y337UnR
+         z0ckb3F0Q8bUBMwOxk3FMovLMeLeRhGzCH4bMfXl//v4SZneAiWL2E3nXGQ0kfcbkMQ5
+         r05Q0aOOGSCIoONjGAUc0NUdIqrqwt9uOKpttnI5/W0wpWZ0UjI/eMzHv96YMzDyw6ea
+         Iw2XLIDHbY2xAKMBDynID8VFE/XZYZnxY6Kobfxb5Ee621xVhNNWauS73uuIqKg8WlP8
+         DC4G2oI80ceWohUqqQoEpsB1uZSHUXQoqzfwbmLCxnomOs9Nh6gRUrBB4UmmNwcz2q++
+         zoow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gBoBuo4G3FSgEhDC+FoktVJNloMg07m1kebASNjaow0=;
+        b=AXgbnbUA0MZZ9F3ON5tljJeIehMOYgkNZrAiF+yOLGnwnuQa3jWErPtW2S8IVEeba4
+         qC2UdUD2znznPvBmYq5pbztOBjX4qj1FylnR0VAAzOASAHq+qDZfhKd92Gz3baIgTIRn
+         zRt2axvLUTYhsXXGzAe3LoEBfGDZhRhtoqLjDekfb7DO5YN/+mXitaKheQ0nZbT14vKf
+         IpiBo+n5gRoHiQU5YGHOc6sRBYei0rEWsvsi9X3FVKiYqbx6VddbDvp25MW7MOnwFPeD
+         1gUbJX/Y+u4/7+y8wDWsjqCIO5mBLYoUgRoQcpG/K3I1OuS+DLo4ov+cPs0W1uxCn9Q8
+         wiTw==
+X-Gm-Message-State: APjAAAWYh/M6+KE5NclhgfEQfcDFjHCR+yGMN6dxIu+lkIFa9kGtBsta
+        RP7994yTnOjaXkY/q0hbszywlD00O/iIN+oPKdOTMA==
+X-Google-Smtp-Source: APXvYqy6UHQ+8+yRan8DQxrtjWFO0AeHWuMCd0MZM6YFNNcDvh4g1h/fJSpQjjAZ+ZTnayEmtlW26P14xfxTxsyl170=
+X-Received: by 2002:a9d:470d:: with SMTP id a13mr25335686otf.126.1560793043776;
+ Mon, 17 Jun 2019 10:37:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190617135307.GA13533@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: yinghai@kernel.org, kchow@gigaio.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, helgaas@kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH v3 2/2] PCI: Fix disabling of bridge BARs when assigning
- bus resources
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20190617122733.22432-1-hch@lst.de> <20190617122733.22432-7-hch@lst.de>
+In-Reply-To: <20190617122733.22432-7-hch@lst.de>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 17 Jun 2019 10:37:12 -0700
+Message-ID: <CAPcyv4hoRR6gzTSkWnwMiUtX6jCKz2NMOhCUfXTji8f2H1v+rg@mail.gmail.com>
+Subject: Re: [PATCH 06/25] mm: factor out a devm_request_free_mem_region helper
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        nouveau@lists.freedesktop.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2019-06-17 7:53 a.m., Bjorn Helgaas wrote:
->> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
->> index 0eb40924169b..7adbd4bedd16 100644
->> --- a/drivers/pci/setup-bus.c
->> +++ b/drivers/pci/setup-bus.c
->> @@ -1784,11 +1784,16 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
->>  	/* restore size and flags */
->>  	list_for_each_entry(fail_res, &fail_head, list) {
->>  		struct resource *res = fail_res->res;
->> +		int idx;
->>  
->>  		res->start = fail_res->start;
->>  		res->end = fail_res->end;
->>  		res->flags = fail_res->flags;
->> -		if (fail_res->dev->subordinate)
->> +
->> +		idx = res - &fail_res->dev->resource[0];
->> +		if (fail_res->dev->subordinate &&
->> +		    idx >= PCI_BRIDGE_RESOURCES &&
->> +		    idx <= PCI_BRIDGE_RESOURCE_END)
->>  			res->flags = 0;
-> 
-> In my ideal world we wouldn't zap the flags of any resource.  I think
-> we should derive the flags from the device's config space *once*
-> during enumeration and remember them for the life of the device.
-
-Yes, I agree. The fact that this code seems to be constantly modifying
-everything makes it difficult to follow. When it clears the flags like
-this it's not clear if/where/how it will ever put them back.
-
-> This patch preserves res->flags for bridge BARs just like for any
-> other device, so I think this is definitely a step in the right
-> direction.
-> 
-> I'm not sure the "dev->subordinate" test is really correct, though.
-> I think the original intent of this code was to clear res->flags for
-> bridge windows under the assumptions that (a) we can identify bridges
-> by "dev->subordinate" being non-zero, and (b) bridges only have
-> windows and didn't have BARs.
-
-Yes, I was also unsure of the reasoning behind the dev->subordinate test
-as well. But given that I didn't fully understand it, and it wasn't
-itself causing any problems, I elected to just change around it only for
-the bug I was trying to fix.
-
-> This patch fixes assumption (b), but I think (a) is false, and we
-> should fix it as well.  One can imagine a bridge device without a
-> subordinate bus (maybe we ran out of bus numbers), so I don't think we
-> should test dev->subordinate.
+On Mon, Jun 17, 2019 at 5:27 AM Christoph Hellwig <hch@lst.de> wrote:
 >
-> We could test something like pci_is_bridge(), although testing for idx
-> being in the PCI_BRIDGE_RESOURCES range should be sufficient because I
-> don't think we use those resource for anything other than windows.
+> Keep the physical address allocation that hmm_add_device does with the
+> rest of the resource code, and allow future reuse of it without the hmm
+> wrapper.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  include/linux/ioport.h |  2 ++
+>  kernel/resource.c      | 39 +++++++++++++++++++++++++++++++++++++++
+>  mm/hmm.c               | 33 ++++-----------------------------
+>  3 files changed, 45 insertions(+), 29 deletions(-)
+>
+> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> index da0ebaec25f0..76a33ae3bf6c 100644
+> --- a/include/linux/ioport.h
+> +++ b/include/linux/ioport.h
+> @@ -286,6 +286,8 @@ static inline bool resource_overlaps(struct resource *r1, struct resource *r2)
+>         return (r1->start <= r2->end && r1->end >= r2->start);
+>  }
+>
+> +struct resource *devm_request_free_mem_region(struct device *dev,
+> +               struct resource *base, unsigned long size);
 
-Ok, yes, there are a couple possibilities here and I'm unsure of the
-best thing to do. I agree that, right now, testing the idx for the range
-is probably sufficient. So logically we could probably just remove the
-dev->subordinate test. Assuming nobody decides to reuse the bridge
-indices for something else (which is probably a safe assumption).
-Though, testing for pci_is_bridge() would definitely be an improvement
-in terms of readability and the issues you point out.
+This appears to need a 'static inline' helper stub in the
+CONFIG_DEVICE_PRIVATE=n case, otherwise this compile error triggers:
 
-One way or another I can add a third patch to do this next time I submit
-this series.
-
-Thanks,
-
-Logan
+ld: mm/hmm.o: in function `hmm_devmem_add':
+/home/dwillia2/git/linux/mm/hmm.c:1427: undefined reference to
+`devm_request_free_mem_region'
