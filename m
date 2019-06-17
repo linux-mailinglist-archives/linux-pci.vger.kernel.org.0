@@ -2,81 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE1EC48BD3
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 20:22:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECCBB48D54
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 21:02:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfFQSWQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jun 2019 14:22:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726292AbfFQSWQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:22:16 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A5692084D;
-        Mon, 17 Jun 2019 18:22:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560795734;
-        bh=qbxCbs3GDp/CMv5cX9wG11BqOooaSzc5OufFPBK83JI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=epfD/pHewbrtU7RIq8hZ9DZ2Oqv+jnjcHpsCMxoLWFWCsMHaPv6B3bu9h3RPkfmAa
-         wN0PIZ9fDKy8XxycJmkxlglCRWJ7Qh/zE6RqJatltbO11YW85KguMSnaEcdTZNh7Ci
-         AGZZ89mlLlB2Wxn7SqSoEGpe2BYRLYERjg436COE=
-Date:   Mon, 17 Jun 2019 13:22:13 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>
-Subject: Re: [PATCH v6 1/4] PCI: Consider alignment of hot-added bridges when
- distributing available resources
-Message-ID: <20190617182213.GB13533@google.com>
-References: <20190522222928.2964-1-nicholas.johnson-opensource@outlook.com.au>
- <PS2P216MB0642C7A485649D2D787A1C6F80000@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
- <20190617093513.GN2640@lahna.fi.intel.com>
+        id S1727261AbfFQTCV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jun 2019 15:02:21 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35644 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbfFQTCV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jun 2019 15:02:21 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j19so10594600otq.2
+        for <linux-pci@vger.kernel.org>; Mon, 17 Jun 2019 12:02:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BlHoKzaMfcTndlIUZpaHNLrZG84G4vKyhA8APL9TYlo=;
+        b=GQLW4HsTHqCZEV9mnOjnMrJWlLsdN8IhjnBoXVeTWqMkmbCxk8sZBD5lQSSBonTJIM
+         PQpLqvxmfSU97Mp7ZkXYfzmZvyaftV4da/a21l7cSiFjBd/MqoX/xe2Q1eES5mKJF5Gx
+         CjLeVsYnpL1abS+tpATrdwoL8cfv1W46T/pNOxBw8rYqsvqcySs4doJJNlylxXen8sQu
+         0tArKmv0hrkikKLc1DMK+s8fkM1rgXKen4eyLlfkzY9W6Wctk+b/3/fC7QVMsGZuOWHr
+         vLKx/QLeQzPNSvOdmqkQgk5dMQpH8k73LtoVoK1CABRsAj/MA+31rF03f1vzZFLYB6Mk
+         qStg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BlHoKzaMfcTndlIUZpaHNLrZG84G4vKyhA8APL9TYlo=;
+        b=T2z3HgMz2GTcoQWmU5VPTDThv3ZAKEcS02+OnxSEwoeXqdqZRr4oEXHpQ4RRQ9tX+K
+         cUX6kwfVnT/yBPqLE1y0ufm8llfn+O4utbACi/jlyT2K9DnLjYWlNyq6snLVUfdyFySQ
+         v/BSSuI2VkgwXQVOQrKK4Dcq3zYYuecdVK5zDkSwx1GjHCT9oCWmPwI6wy659LIxeDk4
+         9MXPGjCSsELWA/3G+912Kvne67fbSj+D1slnoKQQOsChyDnjx60404rz1H//XJHlyhTt
+         68jXYfiCiYi373+dTjPcGZUpiFLZZBUOpy6bW+/pA2f/5PZxL4IL4VisVcQ1Km3svZZq
+         aYeQ==
+X-Gm-Message-State: APjAAAU4XM5Uala8XTXptebf1e+hjU537QzZS4DbrCe1GAwmbU+J+qv7
+        PBpdsRHP9SK2/OvDFcKXGpWQylTWK958f511EIQuGA==
+X-Google-Smtp-Source: APXvYqzJpQgCLYpd5HiWxDsy1wcz73meBykPfY3oY8gVfhGSrrrXTjfeSfxjaTy4CC9Dtjp1KjOhC26LvRkxDcN1gDI=
+X-Received: by 2002:a9d:7a9a:: with SMTP id l26mr51912079otn.71.1560798140931;
+ Mon, 17 Jun 2019 12:02:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617093513.GN2640@lahna.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190617122733.22432-1-hch@lst.de> <20190617122733.22432-8-hch@lst.de>
+In-Reply-To: <20190617122733.22432-8-hch@lst.de>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 17 Jun 2019 12:02:09 -0700
+Message-ID: <CAPcyv4hbGfOawfafqQ-L1CMr6OMFGmnDtdgLTXrgQuPxYNHA2w@mail.gmail.com>
+Subject: Re: [PATCH 07/25] memremap: validate the pagemap type passed to devm_memremap_pages
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        nouveau@lists.freedesktop.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 12:35:13PM +0300, mika.westerberg@linux.intel.com wrote:
-> On Wed, May 22, 2019 at 02:30:44PM +0000, Nicholas Johnson wrote:
-> > Rewrite pci_bus_distribute_available_resources to better handle bridges
-> > with different resource alignment requirements. Pass more details
-> > arguments recursively to track the resource start and end addresses
-> > relative to the initial hotplug bridge. This is especially useful for
-> > Thunderbolt with native PCI enumeration, enabling external graphics
-> > cards and other devices with bridge alignment higher than 0x100000
->  
-> Instead of 0x100000 you could say 1MB here.
+On Mon, Jun 17, 2019 at 5:27 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Most pgmap types are only supported when certain config options are
+> enabled.  Check for a type that is valid for the current configuration
+> before setting up the pagemap.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  kernel/memremap.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>
+> diff --git a/kernel/memremap.c b/kernel/memremap.c
+> index 6e1970719dc2..6a2dd31a6250 100644
+> --- a/kernel/memremap.c
+> +++ b/kernel/memremap.c
+> @@ -157,6 +157,33 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+>         pgprot_t pgprot = PAGE_KERNEL;
+>         int error, nid, is_ram;
+>
+> +       switch (pgmap->type) {
+> +       case MEMORY_DEVICE_PRIVATE:
+> +               if (!IS_ENABLED(CONFIG_DEVICE_PRIVATE)) {
+> +                       WARN(1, "Device private memory not supported\n");
+> +                       return ERR_PTR(-EINVAL);
+> +               }
+> +               break;
+> +       case MEMORY_DEVICE_PUBLIC:
+> +               if (!IS_ENABLED(CONFIG_DEVICE_PUBLIC)) {
+> +                       WARN(1, "Device public memory not supported\n");
+> +                       return ERR_PTR(-EINVAL);
+> +               }
+> +               break;
+> +       case MEMORY_DEVICE_FS_DAX:
+> +               if (!IS_ENABLED(CONFIG_ZONE_DEVICE) ||
+> +                   IS_ENABLED(CONFIG_FS_DAX_LIMITED)) {
+> +                       WARN(1, "File system DAX not supported\n");
+> +                       return ERR_PTR(-EINVAL);
+> +               }
+> +               break;
+> +       case MEMORY_DEVICE_PCI_P2PDMA:
 
-And of course, 1MB is the minimum bridge window alignment.  I *guess*
-this is actually talking about endpoints with BARs larger than 1MB,
-which have to be aligned on their size.  This doesn't actually impose
-any requirement on the bridge window alignment, as long as the bridge
-window contains the endpoint BARs.
+Need a lead in patch that introduces MEMORY_DEVICE_DEVDAX, otherwise:
 
-> > bytes.
-
-> >  	for_each_pci_bridge(dev, bus) {
-> > -		const struct resource *res;
-> > +		struct resource *res;
-> > +		resource_size_t used_size;
-> 
-> Here order these in "reverse christmas tree" like:
-> 
-> 		resource_size_t used_size;
-> 		struct resource *res;
-
-I actually don't enforce "reverse christmas tree", and when I write
-code, I order the declarations in order of their use in the code
-below, as Nicholas has done.  But either way is fine.
-
-Bjorn
+ Invalid pgmap type 0
+ WARNING: CPU: 6 PID: 1316 at kernel/memremap.c:183
+devm_memremap_pages+0x1d8/0x700
+ [..]
+ RIP: 0010:devm_memremap_pages+0x1d8/0x700
+ [..]
+ Call Trace:
+  dev_dax_probe+0xc7/0x1e0 [device_dax]
+  really_probe+0xef/0x390
+  driver_probe_device+0xb4/0x100
+  device_driver_attach+0x4f/0x60
