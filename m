@@ -2,73 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C61447AD0
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 09:28:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0A9A47D36
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 10:35:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfFQH2g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jun 2019 03:28:36 -0400
-Received: from slot0.nejknio.cf ([89.32.41.233]:45628 "EHLO slot0.nejknio.cf"
+        id S1727554AbfFQIfi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jun 2019 04:35:38 -0400
+Received: from gate.crashing.org ([63.228.1.57]:42189 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725826AbfFQH2e (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 17 Jun 2019 03:28:34 -0400
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=dkim; d=nejknio.cf;
- h=Content-Type:MIME-Version:Content-Transfer-Encoding:Content-Description:Subject:To:From:Date:Reply-To:Message-ID; i=trade1@nejknio.cf;
- bh=73Xs4LxjK+lP+h5mKCyFyWTpkoQ=;
- b=K5xb/bWOWc9di2H/GaMlX1LLKvzSIrk/3OZ//b3qj/nXnqIlDfiKFL6FT+zbPwLpFYeObJgtnTh7
-   7FqoLafqpHw4YImX2ahhUPn/mAqdjaaRy3RlfQgdCMEwXTYI1eVaBySpa1obxurJKpgvx4RYridV
-   gnzzUV0KA9TH+zLVaGxQ5QR8dSppG5u/jU1Y+IGs4PiAnxnAKPkw22DJbkH9gS3SfpCCXMdLVEVR
-   SFNqgKnYPzhpavT7uQ9d3aygFRf+1yAafmiLkGhlwrwgxHN/kjv7rugZCTddp9ig1tq6EI5laVbA
-   Ul6PCWEvwbXgfc7e8O+2kNkfsKIZHI0PnsHv2w==
-DomainKey-Signature: a=rsa-sha1; c=nofws; q=dns; s=dkim; d=nejknio.cf;
- b=JFyFu14BFQ0mQNwdhRHqfdKWTv2ytVjHcjkEe/kQUkTjY56mBU6T4WoIO3MBE+no0MKW3Suwftun
-   q80NxYcMuAc7C4NggEPWRljXMKaHHhRKc+LYqPRsFFPz7Jm7DqI0K4MUz2tuo+a6xMS2if9XeMlN
-   7VoGFa6BCtTHyGschf6y54PL6Ki/tO82HSHkP+5Ja3Wva29PTqv+8Oi9OypcQOHeRUTMlI+1yf29
-   rg29qu90W6OYhxJxyoPTc73zQV1YQiNwtVFUkSpwPTgFtTu8rfZ6uo9FVTfNXvUluSaKSTuM1ROK
-   FlAIG/kDfG3qtHyaM2c9g1NUu5JYxbZVUwZp2Q==;
-Content-Type: text/plain; charset="iso-8859-1"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: PRODUCT INQUIRY FOR EXPORT SHIPMENT
-To:     Recipients <trade1@nejknio.cf>
-From:   "Mark Maths" <trade1@nejknio.cf>
-Date:   Mon, 17 Jun 2019 10:08:46 +0300
-Reply-To: purchase_m.maths@aol.com
-Message-ID: <0.0.1.D7C.1D524DB760C3ADA.0@slot0.nejknio.cf>
+        id S1725837AbfFQIfh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 Jun 2019 04:35:37 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5H8ZH30015805;
+        Mon, 17 Jun 2019 03:35:18 -0500
+Message-ID: <bd5144fc12eeb611a85d194bbccdcac577fc6084.camel@kernel.crashing.org>
+Subject: IORESOURCE_PCI_FIXES & __pci_bus_assign_resources()
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     linux-pci <linux-pci@vger.kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Matt Turner <mattst88@gmail.com>
+Date:   Mon, 17 Jun 2019 18:35:16 +1000
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dear Sales team,
- =
+Hi !
 
-In furtherance to our market research, we have reviewed all your products t=
-ypes and we have finally interested in your product for our market here in =
+While working on consolidating resource assignment, I stumbled upon
+something alpha does (and maybe others I haven't spotted yet):
 
+On most platforms (not all), it uses the usual pair:
 
-United State for your production. We introduce ourselves as Emilxa Tram SRL=
-, A general group of company located in the United State. =
+	pci_bus_size_bridges(bus);
+	pci_bus_assign_resources(bus);
 
+to reassign everything.
 
-We are sourcing for new suppliers from your location =
+However, before doing so, it first calls pcibios_claim_one_bus() which,
+on those platforms (ie those who don't set PCI_PROBE_ONLY), will
+effectively claim only resources that have IORESOURCE_PCI_FIXED.
 
+Now, let's leave alone for now the fact that this is will really only
+work if those resources aren't behind a bridge as, to the best of my
+undertanding of the code at this point, we aren't going to take them
+into account when sizing & locating bridges. But that's not my point
+right now :-)
 
-Kindly advice us if you accept new purchase orders, I will forward our PO f=
-or urgent order.
+From what I can tell, these days, pci_bus_assign_resources() will
+already claim those fixed resources via pdev_assign_fixed_resources().
 
-Waiting for your response to send order. Reply to ( purchase_m.maths@aol.co=
-m)
+However, it does so *after* it has assigned and claimed resoures for
+all the sibling devices on that bus.
 
-Best regards.
-Mark Maths
-Company Address:
-Emilxa Tram SRL Company Limited
-P.O. Box 978
-Road Town
-Tortola
-British Virgin Islands
-Contact information:
-Tel: +1 (284) 493 7235
-Email: purchase_m.maths@aol.com
-https://meridianbvi.com/contact-us/
+That looks wrong to me. Shouldn't we claim the fixed resources first ?
+IE something like:
+
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1345,11 +1345,12 @@ void __pci_bus_assign_resources(const struct pci_bus *bus,
+ 	struct pci_bus *b;
+ 	struct pci_dev *dev;
+ 
++	list_for_each_entry(dev, &bus->devices, bus_list)
++		pdev_assign_fixed_resources(dev);
++
+ 	pbus_assign_resources_sorted(bus, realloc_head, fail_head);
+ 
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+-		pdev_assign_fixed_resources(dev);
+-
+ 		b = dev->subordinate;
+ 		if (!b)
+ 			continue;
+?
+
+Now, I suspect most of the time it happens to work due to the fact that
+the fixed resources are generally IO resources in the legacy low ranges
+( < 0x1000) and PCIBIOS_MIN_IO is *generally* set to 0x1000 but it still
+sounds fishy to me.
+
+I don't think I have HW at hand with that type of fixed stuff to test
+with at the moment, so this is very much academic right now but I worry
+that when I convert archs such as alpha who does that claiming before
+the rest of the assignment, switching doing things the other way around
+will break.
+
+Any thoughts ?
+
+Cheers,
+Ben.
+ 
+
