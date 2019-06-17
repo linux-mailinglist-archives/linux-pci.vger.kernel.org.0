@@ -2,30 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 12B704824F
+	by mail.lfdr.de (Postfix) with ESMTP id 7B82848250
 	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 14:30:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbfFQM2N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jun 2019 08:28:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42716 "EHLO
+        id S1728015AbfFQM2O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jun 2019 08:28:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42736 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727957AbfFQM2M (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jun 2019 08:28:12 -0400
+        with ESMTP id S1728007AbfFQM2O (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jun 2019 08:28:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=GlNxVMm8W4O5v065JMNFU6bkRl3AbEbXSnrBr8peAhc=; b=hceq9aC6tJ73idi0gys5khCNkb
-        4oa/Hc09tP2sutmhvsQMCCgbZeQ65RgYiliHtKl5ES7k4PIx5QoJOmP158XuVwgiaDMwakShQWbmE
-        2BQA9YBQorrWSgUr5kX4t9vAcPMRIvxeaD7vV44sRG6NUoWodLAfV48Htg6MQ2WO2MAtKlChRMtf5
-        wCam1QxlrgXhMZA6F9p2gc2Ek7aGGPTwazLl9Df998k9Zp7cthixwUdhiZdLy/lL4lTfdFLHfTxA4
-        MgbRgO934AqctA5SWdhgmmfrTW0+igprb3FsAQeA/tukrmljjK2fU4vyzRWkn67p8G3T2FPFSv6xF
-        0pBQDtSw==;
+        bh=WoytrCxG5kt017Mi4r+qftdCcpzSPco9CT8jAnxV7AA=; b=cfjnQSuk0OePqkBqt1Zoo6BJSv
+        YWzVaKyyvXJvGwKvelhIJkGt4h1MS45yu0wtaVOrOQWYQW9eQdRpwlluWo02xjodmYnwZgSZZt8+1
+        jzywQKVxgLg1An5u3r79qC0eTU+LiFdbrO0B+smIqOb9mh1Yv64a7TiGQAYJn6+yuTiEu6beGOzX4
+        PblogVq3IxXTL4MGO1JlQa7eryDUGRdrwy+ePIEKe0/njOwiXsi5TDAP2I6bETcHeOvI5IfFmsXAV
+        It0kb/wuRPja6yBoYSJjboYG1k7cI0Koq9jvoZvICMYV+7UkSgs7yAO310r+FQswO/ZeVYTphiBrn
+        eZrWu20w==;
 Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hcqk4-0000Ep-9f; Mon, 17 Jun 2019 12:28:08 +0000
+        id 1hcqk6-0000Fs-Fr; Mon, 17 Jun 2019 12:28:10 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Dan Williams <dan.j.williams@intel.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
@@ -34,9 +34,9 @@ To:     Dan Williams <dan.j.williams@intel.com>,
 Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, linux-nvdimm@lists.01.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 14/25] memremap: provide an optional internal refcount in struct dev_pagemap
-Date:   Mon, 17 Jun 2019 14:27:22 +0200
-Message-Id: <20190617122733.22432-15-hch@lst.de>
+Subject: [PATCH 15/25] device-dax: use the dev_pagemap internal refcount
+Date:   Mon, 17 Jun 2019 14:27:23 +0200
+Message-Id: <20190617122733.22432-16-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190617122733.22432-1-hch@lst.de>
 References: <20190617122733.22432-1-hch@lst.de>
@@ -48,189 +48,105 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Provide an internal refcounting logic if no ->ref field is provided
-in the pagemap passed into devm_memremap_pages so that callers don't
-have to reinvent it poorly.
+The functionality is identical to the one currently open coded in
+device-dax.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- include/linux/memremap.h          |  4 ++
- kernel/memremap.c                 | 64 ++++++++++++++++++++++++-------
- tools/testing/nvdimm/test/iomap.c | 17 ++++++--
- 3 files changed, 68 insertions(+), 17 deletions(-)
+ drivers/dax/dax-private.h |  4 ----
+ drivers/dax/device.c      | 43 ---------------------------------------
+ 2 files changed, 47 deletions(-)
 
-diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-index 7289eb091b04..7e0f072ddce7 100644
---- a/include/linux/memremap.h
-+++ b/include/linux/memremap.h
-@@ -95,6 +95,8 @@ struct dev_pagemap_ops {
-  * @altmap: pre-allocated/reserved memory for vmemmap allocations
-  * @res: physical address range covered by @ref
-  * @ref: reference count that pins the devm_memremap_pages() mapping
-+ * @internal_ref: internal reference if @ref is not provided by the caller
-+ * @done: completion for @internal_ref
-  * @dev: host device of the mapping for debug
-  * @data: private data pointer for page_free()
-  * @type: memory type: see MEMORY_* in memory_hotplug.h
-@@ -105,6 +107,8 @@ struct dev_pagemap {
- 	struct vmem_altmap altmap;
- 	struct resource res;
- 	struct percpu_ref *ref;
-+	struct percpu_ref internal_ref;
-+	struct completion done;
- 	struct device *dev;
- 	enum memory_type type;
- 	unsigned int flags;
-diff --git a/kernel/memremap.c b/kernel/memremap.c
-index b41d98a64ebf..60693a1e8e92 100644
---- a/kernel/memremap.c
-+++ b/kernel/memremap.c
-@@ -29,7 +29,7 @@ static void dev_pagemap_put_ops(void *data)
+diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
+index a45612148ca0..ed04a18a35be 100644
+--- a/drivers/dax/dax-private.h
++++ b/drivers/dax/dax-private.h
+@@ -51,8 +51,6 @@ struct dax_region {
+  * @target_node: effective numa node if dev_dax memory range is onlined
+  * @dev - device core
+  * @pgmap - pgmap for memmap setup / lifetime (driver owned)
+- * @ref: pgmap reference count (driver owned)
+- * @cmp: @ref final put completion (driver owned)
+  */
+ struct dev_dax {
+ 	struct dax_region *region;
+@@ -60,8 +58,6 @@ struct dev_dax {
+ 	int target_node;
+ 	struct device dev;
+ 	struct dev_pagemap pgmap;
+-	struct percpu_ref ref;
+-	struct completion cmp;
+ };
  
- static int dev_pagemap_get_ops(struct device *dev, struct dev_pagemap *pgmap)
+ static inline struct dev_dax *to_dev_dax(struct device *dev)
+diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+index 17b46c1a76b4..a9d7c90ecf1e 100644
+--- a/drivers/dax/device.c
++++ b/drivers/dax/device.c
+@@ -14,36 +14,6 @@
+ #include "dax-private.h"
+ #include "bus.h"
+ 
+-static struct dev_dax *ref_to_dev_dax(struct percpu_ref *ref)
+-{
+-	return container_of(ref, struct dev_dax, ref);
+-}
+-
+-static void dev_dax_percpu_release(struct percpu_ref *ref)
+-{
+-	struct dev_dax *dev_dax = ref_to_dev_dax(ref);
+-
+-	dev_dbg(&dev_dax->dev, "%s\n", __func__);
+-	complete(&dev_dax->cmp);
+-}
+-
+-static void dev_dax_percpu_exit(struct dev_pagemap *pgmap)
+-{
+-	struct dev_dax *dev_dax = container_of(pgmap, struct dev_dax, pgmap);
+-
+-	dev_dbg(&dev_dax->dev, "%s\n", __func__);
+-	wait_for_completion(&dev_dax->cmp);
+-	percpu_ref_exit(pgmap->ref);
+-}
+-
+-static void dev_dax_percpu_kill(struct dev_pagemap *pgmap)
+-{
+-	struct dev_dax *dev_dax = container_of(pgmap, struct dev_dax, pgmap);
+-
+-	dev_dbg(&dev_dax->dev, "%s\n", __func__);
+-	percpu_ref_kill(pgmap->ref);
+-}
+-
+ static int check_vma(struct dev_dax *dev_dax, struct vm_area_struct *vma,
+ 		const char *func)
  {
--	if (!pgmap->ops->page_free) {
-+	if (!pgmap->ops || !pgmap->ops->page_free) {
- 		WARN(1, "Missing page_free method\n");
- 		return -EINVAL;
- 	}
-@@ -75,6 +75,24 @@ static unsigned long pfn_next(unsigned long pfn)
- #define for_each_device_pfn(pfn, map) \
- 	for (pfn = pfn_first(map); pfn < pfn_end(map); pfn = pfn_next(pfn))
- 
-+static void dev_pagemap_kill(struct dev_pagemap *pgmap)
-+{
-+	if (pgmap->ops && pgmap->ops->kill)
-+		pgmap->ops->kill(pgmap);
-+	else
-+		percpu_ref_kill(pgmap->ref);
-+}
-+
-+static void dev_pagemap_cleanup(struct dev_pagemap *pgmap)
-+{
-+	if (pgmap->ops && pgmap->ops->cleanup) {
-+		pgmap->ops->cleanup(pgmap);
-+	} else {
-+		wait_for_completion(&pgmap->done);
-+		percpu_ref_exit(pgmap->ref);
-+	}
-+}
-+
- static void devm_memremap_pages_release(void *data)
- {
- 	struct dev_pagemap *pgmap = data;
-@@ -84,10 +102,10 @@ static void devm_memremap_pages_release(void *data)
- 	unsigned long pfn;
- 	int nid;
- 
--	pgmap->ops->kill(pgmap);
-+	dev_pagemap_kill(pgmap);
- 	for_each_device_pfn(pfn, pgmap)
- 		put_page(pfn_to_page(pfn));
--	pgmap->ops->cleanup(pgmap);
-+	dev_pagemap_cleanup(pgmap);
- 
- 	/* pages are dead and unused, undo the arch mapping */
- 	align_start = res->start & ~(SECTION_SIZE - 1);
-@@ -114,20 +132,29 @@ static void devm_memremap_pages_release(void *data)
- 		      "%s: failed to free all reserved pages\n", __func__);
+@@ -441,11 +411,6 @@ static void dev_dax_kill(void *dev_dax)
+ 	kill_dev_dax(dev_dax);
  }
  
-+static void dev_pagemap_percpu_release(struct percpu_ref *ref)
-+{
-+	struct dev_pagemap *pgmap =
-+		container_of(ref, struct dev_pagemap, internal_ref);
-+
-+	complete(&pgmap->done);
-+}
-+
- /**
-  * devm_memremap_pages - remap and provide memmap backing for the given resource
-  * @dev: hosting device for @res
-  * @pgmap: pointer to a struct dev_pagemap
-  *
-  * Notes:
-- * 1/ At a minimum the res, ref and type and ops members of @pgmap must be
-- *    initialized by the caller before passing it to this function
-+ * 1/ At a minimum the res and type members of @pgmap must be initialized
-+ *    by the caller before passing it to this function
-  *
-  * 2/ The altmap field may optionally be initialized, in which case
-  *    PGMAP_ALTMAP_VALID must be set in pgmap->flags.
-  *
-- * 3/ pgmap->ref must be 'live' on entry and will be killed and reaped
-- *    at devm_memremap_pages_release() time, or if this routine fails.
-+ * 3/ The ref field may optionally be provided, in which pgmap->ref must be
-+ *    'live' on entry and will be killed and reaped at
-+ *    devm_memremap_pages_release() time, or if this routine fails.
-  *
-  * 4/ res is expected to be a host memory range that could feasibly be
-  *    treated as a "System RAM" range, i.e. not a device mmio range, but
-@@ -178,10 +205,21 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
- 		break;
- 	}
- 
--	if (!pgmap->ref || !pgmap->ops || !pgmap->ops->kill ||
--	    !pgmap->ops->cleanup) {
--		WARN(1, "Missing reference count teardown definition\n");
--		return ERR_PTR(-EINVAL);
-+	if (!pgmap->ref) {
-+		if (pgmap->ops && (pgmap->ops->kill || pgmap->ops->cleanup))
-+			return ERR_PTR(-EINVAL);
-+
-+		init_completion(&pgmap->done);
-+		error = percpu_ref_init(&pgmap->internal_ref,
-+				dev_pagemap_percpu_release, 0, GFP_KERNEL);
-+		if (error)
-+			return ERR_PTR(error);
-+		pgmap->ref = &pgmap->internal_ref;
-+	} else {
-+		if (!pgmap->ops || !pgmap->ops->kill || !pgmap->ops->cleanup) {
-+			WARN(1, "Missing reference count teardown definition\n");
-+			return ERR_PTR(-EINVAL);
-+		}
- 	}
- 
- 	if (pgmap->type != MEMORY_DEVICE_PCI_P2PDMA) {
-@@ -299,8 +337,8 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
-  err_pfn_remap:
- 	pgmap_array_delete(res);
-  err_array:
--	pgmap->ops->kill(pgmap);
--	pgmap->ops->cleanup(pgmap);
-+	dev_pagemap_kill(pgmap);
-+	dev_pagemap_cleanup(pgmap);
- 	return ERR_PTR(error);
- }
- EXPORT_SYMBOL_GPL(devm_memremap_pages);
-diff --git a/tools/testing/nvdimm/test/iomap.c b/tools/testing/nvdimm/test/iomap.c
-index 3a1fa7735f47..8cd9b9873a7f 100644
---- a/tools/testing/nvdimm/test/iomap.c
-+++ b/tools/testing/nvdimm/test/iomap.c
-@@ -106,10 +106,19 @@ EXPORT_SYMBOL(__wrap_devm_memremap);
- 
- static void nfit_test_kill(void *_pgmap)
+-static const struct dev_pagemap_ops dev_dax_pagemap_ops = {
+-	.kill		= dev_dax_percpu_kill,
+-	.cleanup	= dev_dax_percpu_exit,
+-};
+-
+ int dev_dax_probe(struct device *dev)
  {
--	WARN_ON(!pgmap || !pgmap->ref || !pgmap->ops->kill ||
--		!pgmap->ops->cleanup);
--	pgmap->ops->kill(pgmap);
--	pgmap->ops->cleanup(pgmap);
-+	WARN_ON(!pgmap || !pgmap->ref)
-+
-+	if (pgmap->ops && pgmap->ops->kill)
-+		pgmap->ops->kill(pgmap);
-+	else
-+		percpu_ref_kill(pgmap->ref);
-+
-+	if (pgmap->ops && pgmap->ops->cleanup) {
-+		pgmap->ops->cleanup(pgmap);
-+	} else {
-+		wait_for_completion(&pgmap->done);
-+		percpu_ref_exit(pgmap->ref);
-+	}
- }
+ 	struct dev_dax *dev_dax = to_dev_dax(dev);
+@@ -463,14 +428,6 @@ int dev_dax_probe(struct device *dev)
+ 		return -EBUSY;
+ 	}
  
- void *__wrap_devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+-	init_completion(&dev_dax->cmp);
+-	rc = percpu_ref_init(&dev_dax->ref, dev_dax_percpu_release, 0,
+-			GFP_KERNEL);
+-	if (rc)
+-		return rc;
+-
+-	dev_dax->pgmap.ref = &dev_dax->ref;
+-	dev_dax->pgmap.ops = &dev_dax_pagemap_ops;
+ 	addr = devm_memremap_pages(dev, &dev_dax->pgmap);
+ 	if (IS_ERR(addr))
+ 		return PTR_ERR(addr);
 -- 
 2.20.1
 
