@@ -2,87 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B5C048264
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 14:30:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59097482CC
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 14:44:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbfFQM2m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jun 2019 08:28:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44632 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728302AbfFQM2h (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jun 2019 08:28:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=I8PlqMUI4C1+5AXdWNAvJGUn4z7E5OvP3cFwdUwwRcM=; b=idjxwSVcGR8gj/Hv9rgN32Pbhq
-        n+B3Dw/eAY5nzc0hWjvE0/DJdYcXUudxghMTEfuhBlOZzQqw6Kp9Ri+RNMJ+ZbD/rpwTc7jNnggaJ
-        oWqEp9P7byqhhh4K1c+iPeFxUZ8V7J2oZFOxQqqzjxHYw+5SJgb3oBcJchVokBPs8JXyeVW8tAhRx
-        i7ntPKqW6sOS8kblCvWSXQcLZNVxYW/7zdv6j5cHwyvtGEDGaTmZwfX2j/Yje0mucmxOeMh4+QyGl
-        st8aBl75weQTuuByjCtZpmELlzhnz8odxyh1rYlQ1/iPx/2DY6A/ochv2KYvVjetIbSP6uDrsRviB
-        sLz4N94A==;
-Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hcqkS-0000eV-VL; Mon, 17 Jun 2019 12:28:33 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 25/25] mm: don't select MIGRATE_VMA_HELPER from HMM_MIRROR
-Date:   Mon, 17 Jun 2019 14:27:33 +0200
-Message-Id: <20190617122733.22432-26-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190617122733.22432-1-hch@lst.de>
-References: <20190617122733.22432-1-hch@lst.de>
+        id S1726432AbfFQMnw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jun 2019 08:43:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:48538 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725995AbfFQMnw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 Jun 2019 08:43:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6064F2B;
+        Mon, 17 Jun 2019 05:43:51 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5CD913F246;
+        Mon, 17 Jun 2019 05:43:50 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 13:43:36 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ellie Reeves <ellierevves@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: aardvark: Fix PCI_EXP_RTCTL register
+ configuration
+Message-ID: <20190617124328.GA27113@e121166-lin.cambridge.arm.com>
+References: <20190614101059.1664-1-repk@triplefau.lt>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614101059.1664-1-repk@triplefau.lt>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The migrate_vma helper is only used by noveau to migrate device private
-pages around.  Other HMM_MIRROR users like amdgpu or infiniband don't
-need it.
+On Fri, Jun 14, 2019 at 12:10:59PM +0200, Remi Pommarel wrote:
+> PCI_EXP_RTCTL is used to activate PME interrupt only, so writing into it
+> should not modify other interrupts' mask. The ISR mask polarity was also
+> inverted, when PCI_EXP_RTCTL_PMEIE is set PCIE_MSG_PM_PME_MASK mask bit
+> should actually be cleared.
+> 
+> Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> ---
+> Changes since v1:
+>  * Improve code readability
+>  * Fix mask polarity
+>  * PME_MASK shift was off by one
+> Changes since v2:
+>  * Modify patch title
+>  * Change Fixes tag to commit that actually introduces the bug
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
----
- drivers/gpu/drm/nouveau/Kconfig | 1 +
- mm/Kconfig                      | 1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
+I need Thomas' ACK to apply it, thanks.
 
-diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
-index 66c839d8e9d1..96b9814e6d06 100644
---- a/drivers/gpu/drm/nouveau/Kconfig
-+++ b/drivers/gpu/drm/nouveau/Kconfig
-@@ -88,6 +88,7 @@ config DRM_NOUVEAU_SVM
- 	depends on DRM_NOUVEAU
- 	depends on HMM_MIRROR
- 	depends on STAGING
-+	select MIGRATE_VMA_HELPER
- 	default n
- 	help
- 	  Say Y here if you want to enable experimental support for
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 7fa785551f96..55c9c661e2ee 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -680,7 +680,6 @@ config HMM_MIRROR
- 	depends on (X86_64 || PPC64)
- 	depends on MMU && 64BIT
- 	select MMU_NOTIFIER
--	select MIGRATE_VMA_HELPER
- 	help
- 	  Select HMM_MIRROR if you want to mirror range of the CPU page table of a
- 	  process into a device page table. Here, mirror means "keep synchronized".
--- 
-2.20.1
+Lorenzo
 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 134e0306ff00..f6e55c4597b1 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -415,7 +415,7 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+>  
+>  	case PCI_EXP_RTCTL: {
+>  		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG);
+> -		*value = (val & PCIE_MSG_PM_PME_MASK) ? PCI_EXP_RTCTL_PMEIE : 0;
+> +		*value = (val & PCIE_MSG_PM_PME_MASK) ? 0 : PCI_EXP_RTCTL_PMEIE;
+>  		return PCI_BRIDGE_EMUL_HANDLED;
+>  	}
+>  
+> @@ -451,10 +451,15 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+>  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+>  		break;
+>  
+> -	case PCI_EXP_RTCTL:
+> -		new = (new & PCI_EXP_RTCTL_PMEIE) << 3;
+> -		advk_writel(pcie, new, PCIE_ISR0_MASK_REG);
+> +	case PCI_EXP_RTCTL: {
+> +		/* Only mask/unmask PME interrupt */
+> +		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG) &
+> +			~PCIE_MSG_PM_PME_MASK;
+> +		if ((new & PCI_EXP_RTCTL_PMEIE) == 0)
+> +			val |= PCIE_MSG_PM_PME_MASK;
+> +		advk_writel(pcie, val, PCIE_ISR0_MASK_REG);
+>  		break;
+> +	}
+>  
+>  	case PCI_EXP_RTSTA:
+>  		new = (new & PCI_EXP_RTSTA_PME) >> 9;
+> -- 
+> 2.20.1
+> 
