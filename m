@@ -2,99 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59097482CC
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 14:44:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A84E4847D
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 15:50:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbfFQMnw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jun 2019 08:43:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:48538 "EHLO foss.arm.com"
+        id S1726151AbfFQNts (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jun 2019 09:49:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbfFQMnw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:43:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6064F2B;
-        Mon, 17 Jun 2019 05:43:51 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5CD913F246;
-        Mon, 17 Jun 2019 05:43:50 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 13:43:36 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ellie Reeves <ellierevves@gmail.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Fix PCI_EXP_RTCTL register
- configuration
-Message-ID: <20190617124328.GA27113@e121166-lin.cambridge.arm.com>
-References: <20190614101059.1664-1-repk@triplefau.lt>
+        id S1725906AbfFQNtr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 Jun 2019 09:49:47 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA27E2080A;
+        Mon, 17 Jun 2019 13:49:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560779387;
+        bh=EBuNzBd/qGbqCnmfVuPFwTpXaSxzUIxXb6DluxKP7J8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bNETxfszQdnVSL+nzOtmSUdViN8LmZW+UtXOeGITcw4s/oAlhvugoLKS7j5Khb562
+         ujC7jxrhPQ0foGT3yruPcenz4Lh9LbX7gq7T0NdkMxrjJ57N9FlqzS9mRXSTC0ggck
+         1BMJSARhJqATEcz3BeFZOa+K+jYH9mCUA1xxAPjo=
+Date:   Mon, 17 Jun 2019 08:49:45 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Kit Chow <kchow@gigaio.com>, Yinghai Lu <yinghai@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: Re: [PATCH v3 0/2] Fix a pair of setup bus bugs
+Message-ID: <20190617134447.GZ13533@google.com>
+References: <20190531171216.20532-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190614101059.1664-1-repk@triplefau.lt>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190531171216.20532-1-logang@deltatee.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 12:10:59PM +0200, Remi Pommarel wrote:
-> PCI_EXP_RTCTL is used to activate PME interrupt only, so writing into it
-> should not modify other interrupts' mask. The ISR mask polarity was also
-> inverted, when PCI_EXP_RTCTL_PMEIE is set PCIE_MSG_PM_PME_MASK mask bit
-> should actually be cleared.
+[+cc Ben, Nicholas]
+
+On Fri, May 31, 2019 at 11:12:14AM -0600, Logan Gunthorpe wrote:
+> Hey,
 > 
-> Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> ---
-> Changes since v1:
->  * Improve code readability
->  * Fix mask polarity
->  * PME_MASK shift was off by one
-> Changes since v2:
->  * Modify patch title
->  * Change Fixes tag to commit that actually introduces the bug
-> ---
->  drivers/pci/controller/pci-aardvark.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
-
-I need Thomas' ACK to apply it, thanks.
-
-Lorenzo
-
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index 134e0306ff00..f6e55c4597b1 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -415,7 +415,7 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
->  
->  	case PCI_EXP_RTCTL: {
->  		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG);
-> -		*value = (val & PCIE_MSG_PM_PME_MASK) ? PCI_EXP_RTCTL_PMEIE : 0;
-> +		*value = (val & PCIE_MSG_PM_PME_MASK) ? 0 : PCI_EXP_RTCTL_PMEIE;
->  		return PCI_BRIDGE_EMUL_HANDLED;
->  	}
->  
-> @@ -451,10 +451,15 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
->  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
->  		break;
->  
-> -	case PCI_EXP_RTCTL:
-> -		new = (new & PCI_EXP_RTCTL_PMEIE) << 3;
-> -		advk_writel(pcie, new, PCIE_ISR0_MASK_REG);
-> +	case PCI_EXP_RTCTL: {
-> +		/* Only mask/unmask PME interrupt */
-> +		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG) &
-> +			~PCIE_MSG_PM_PME_MASK;
-> +		if ((new & PCI_EXP_RTCTL_PMEIE) == 0)
-> +			val |= PCIE_MSG_PM_PME_MASK;
-> +		advk_writel(pcie, val, PCIE_ISR0_MASK_REG);
->  		break;
-> +	}
->  
->  	case PCI_EXP_RTSTA:
->  		new = (new & PCI_EXP_RTSTA_PME) >> 9;
-> -- 
+> This is another resend to get some more attention. Nothing has changed
+> since v2.
+> 
+> For the first patch, there's a lot more information in the original
+> thread here[1] including instructions on how to reproduce it in QEMU.
+> 
+> The second patch fixes an unrelated bug, with similar symptoms, in
+> the same code. It was a lot easier to debug and the reasoning should
+> hopefully be easier to follow, but I don't think it was reviewed much
+> during the first posting due to the nightmare in the first patch.
+> 
+> Thanks,
+> 
+> Logan
+> 
+> [1] https://lore.kernel.org/lkml/de3e34d8-2ac3-e89b-30f1-a18826ce5d7d@deltatee.com/T/#m96ba95de4678146ed46b602e8bfd6ac08a588fa2
+> 
+> --
+> 
+> Changes in v3:
+> 
+> * Rebased onto v5.2-rc2 (no changes)
+> 
+> Changes in v2:
+> 
+> * Rebased onto v5.1-rc6 (no changes)
+> * Reworked the commit message in the first commit to try and explain
+>   it better.
+> 
+> --
+> 
+> Logan Gunthorpe (2):
+>   PCI: Prevent 64-bit resources from being counted in 32-bit bridge
+>     region
+>   PCI: Fix disabling of bridge BARs when assigning bus resources
+> 
+>  drivers/pci/setup-bus.c | 24 ++++++++++++++----------
+>  1 file changed, 14 insertions(+), 10 deletions(-)
+> 
+> --
 > 2.20.1
-> 
