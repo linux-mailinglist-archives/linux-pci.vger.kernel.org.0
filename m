@@ -2,73 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 89F2747FED
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 12:43:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 028524807A
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 13:19:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbfFQKnE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jun 2019 06:43:04 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:64671 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfFQKnE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jun 2019 06:43:04 -0400
-Received: from 79.184.254.20.ipv4.supernova.orange.pl (79.184.254.20) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id d1245691e53fa191; Mon, 17 Jun 2019 12:43:02 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Len Brown <lenb@kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] PCI: Power management improvements
-Date:   Mon, 17 Jun 2019 12:43:01 +0200
-Message-ID: <24804374.PG13b4niSC@kreacher>
-In-Reply-To: <20190612105739.88578-1-mika.westerberg@linux.intel.com>
-References: <20190612105739.88578-1-mika.westerberg@linux.intel.com>
+        id S1727599AbfFQLSZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jun 2019 07:18:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:45898 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726605AbfFQLSY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 Jun 2019 07:18:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 358F6344;
+        Mon, 17 Jun 2019 04:18:24 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B3B5C3F246;
+        Mon, 17 Jun 2019 04:20:08 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 12:18:17 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] PCI: armada8k: Add PHYs support
+Message-ID: <20190617111817.GA24968@e121166-lin.cambridge.arm.com>
+References: <20190401131239.17008-1-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190401131239.17008-1-miquel.raynal@bootlin.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wednesday, June 12, 2019 12:57:37 PM CEST Mika Westerberg wrote:
-> Hi all,
+On Mon, Apr 01, 2019 at 03:12:39PM +0200, Miquel Raynal wrote:
+> Bring PHY support for the Armada8k driver.
 > 
-> This series includes a couple of changes to the PCI power management that
-> should make Linux follow the PCIe spec better. The issues this series aims
-> to solve came up with Intel Ice Lake Thunderbolt enabling where the
-> controller is first time integrated into the SoC but I think these issues
-> are generic to any platform having similar configuration.
+> The Armada8k IP only supports x1, x2 or x4 link widths. Iterate over
+> the DT 'phys' entries and configure them one by one. Use
+> phy_set_mode_ext() to make use of the submode parameter (initially
+> introduced for Ethernet modes). For PCI configuration, let the submode
+> be the width (1, 2, 4, etc) so that the PHY driver knows how many
+> lanes are bundled. Do not error out in case of error for compatibility
+> reasons.
 > 
-> Changes from v1
-> 
->   * I dropped the last patch as it requires bit more work and not dependent
->     on the other two. I will send it out separately.
->   * Re-arranged conditionals in wait_for_downstream_link()
->   * Moved comments to be part of kernel-doc
->   * Added tags from Rafael and Lukas
-> 
-> Previous version is here:
-> 
->   https://www.spinics.net/lists/linux-pci/msg83582.html
-> 
-> Mika Westerberg (2):
->   PCI: Add missing link delays required by the PCIe spec
->   PCI: Do not poll for PME if the device is in D3cold
-> 
->  drivers/pci/pci.c               | 36 +++++++++++++-----
->  drivers/pci/pci.h               |  1 +
->  drivers/pci/pcie/portdrv_core.c | 66 +++++++++++++++++++++++++++++++++
->  3 files changed, 93 insertions(+), 10 deletions(-)
-> 
-> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-armada8k.c | 82 +++++++++++++++++++++-
+>  1 file changed, 81 insertions(+), 1 deletion(-)
 
-Both added to my 5.3 queue, thanks!
+Applied to pci/armada for v5.3, thanks.
 
+Lorenzo
 
-
-
+> diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
+> index 0c389a30ef5d..e567a7cfa3d7 100644
+> --- a/drivers/pci/controller/dwc/pcie-armada8k.c
+> +++ b/drivers/pci/controller/dwc/pcie-armada8k.c
+> @@ -25,10 +25,14 @@
+>  
+>  #include "pcie-designware.h"
+>  
+> +#define ARMADA8K_PCIE_MAX_LANES PCIE_LNK_X4
+> +
+>  struct armada8k_pcie {
+>  	struct dw_pcie *pci;
+>  	struct clk *clk;
+>  	struct clk *clk_reg;
+> +	struct phy *phy[ARMADA8K_PCIE_MAX_LANES];
+> +	unsigned int phy_count;
+>  };
+>  
+>  #define PCIE_VENDOR_REGS_OFFSET		0x8000
+> @@ -67,6 +71,76 @@ struct armada8k_pcie {
+>  
+>  #define to_armada8k_pcie(x)	dev_get_drvdata((x)->dev)
+>  
+> +static void armada8k_pcie_disable_phys(struct armada8k_pcie *pcie)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < ARMADA8K_PCIE_MAX_LANES; i++) {
+> +		phy_power_off(pcie->phy[i]);
+> +		phy_exit(pcie->phy[i]);
+> +	}
+> +}
+> +
+> +static int armada8k_pcie_enable_phys(struct armada8k_pcie *pcie)
+> +{
+> +	int ret;
+> +	int i;
+> +
+> +	for (i = 0; i < ARMADA8K_PCIE_MAX_LANES; i++) {
+> +		ret = phy_init(pcie->phy[i]);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = phy_set_mode_ext(pcie->phy[i], PHY_MODE_PCIE,
+> +				       pcie->phy_count);
+> +		if (ret) {
+> +			phy_exit(pcie->phy[i]);
+> +			return ret;
+> +		}
+> +
+> +		ret = phy_power_on(pcie->phy[i]);
+> +		if (ret) {
+> +			phy_exit(pcie->phy[i]);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int armada8k_pcie_setup_phys(struct armada8k_pcie *pcie)
+> +{
+> +	struct dw_pcie *pci = pcie->pci;
+> +	struct device *dev = pci->dev;
+> +	struct device_node *node = dev->of_node;
+> +	int ret = 0;
+> +	int i;
+> +
+> +	for (i = 0; i < ARMADA8K_PCIE_MAX_LANES; i++) {
+> +		pcie->phy[i] = devm_of_phy_get_by_index(dev, node, i);
+> +		if (IS_ERR(pcie->phy[i]) &&
+> +		    (PTR_ERR(pcie->phy[i]) == -EPROBE_DEFER))
+> +			return PTR_ERR(pcie->phy[i]);
+> +
+> +		if (IS_ERR(pcie->phy[i])) {
+> +			pcie->phy[i] = NULL;
+> +			continue;
+> +		}
+> +
+> +		pcie->phy_count++;
+> +	}
+> +
+> +	/* Old bindings miss the PHY handle, so just warn if there is no PHY */
+> +	if (!pcie->phy_count)
+> +		dev_warn(dev, "No available PHY\n");
+> +
+> +	ret = armada8k_pcie_enable_phys(pcie);
+> +	if (ret)
+> +		dev_err(dev, "Failed to initialize PHY(s) (%d)\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+>  static int armada8k_pcie_link_up(struct dw_pcie *pci)
+>  {
+>  	u32 reg;
+> @@ -249,14 +323,20 @@ static int armada8k_pcie_probe(struct platform_device *pdev)
+>  		goto fail_clkreg;
+>  	}
+>  
+> +	ret = armada8k_pcie_setup_phys(pcie);
+> +	if (ret)
+> +		goto fail_clkreg;
+> +
+>  	platform_set_drvdata(pdev, pcie);
+>  
+>  	ret = armada8k_add_pcie_port(pcie, pdev);
+>  	if (ret)
+> -		goto fail_clkreg;
+> +		goto disable_phy;
+>  
+>  	return 0;
+>  
+> +disable_phy:
+> +	armada8k_pcie_disable_phys(pcie);
+>  fail_clkreg:
+>  	clk_disable_unprepare(pcie->clk_reg);
+>  fail:
+> -- 
+> 2.19.1
+> 
