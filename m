@@ -2,132 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BED9480B1
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 13:30:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11533480D6
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 13:35:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbfFQLan (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jun 2019 07:30:43 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35219 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbfFQLan (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jun 2019 07:30:43 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c6so8713249wml.0;
-        Mon, 17 Jun 2019 04:30:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jIYD7jJxsMMsTeHkkeCxMxS+0nX8dsWeFEB3Kc26fV4=;
-        b=FWn6W/gC3fdxxuSgp1fRdDeiWM2BCvQ9xV2rp5teav4B85NGUEfqOz+oRize2Y1XCA
-         OHGceD6AtS5nS5ovmjw1g7xoJAstFCjDFnqR/uGaexmJyohMiYiUzOgEfq6qRXyVfESx
-         zR6H40iW4g24+TjlQZA+H3Q5mHRtqG2aUW34gKGf9hyuKfUhSrpOTgmiBBU9t5nRARPx
-         qZRDl50ZJ6s6ZVsUM+bBpOGhIzov3FuzT2VdAwZYq2tjtCQMOq3W89kMFYwDGvfcpTWx
-         lmHhEVHPcZVtsNAtqoFakW92ayY4igS2efO6n2XFNRTCfP71QM8hIV3s9juUwOIdeTsp
-         qAOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jIYD7jJxsMMsTeHkkeCxMxS+0nX8dsWeFEB3Kc26fV4=;
-        b=Czb2bqRuJAvwLjNEKp8lLQpNxK/oLy9OFwWMT6vsAr4yeV9sjlAwPNZOBrkYZGWDNP
-         /Niz6Sr6FHFOkDO0mXVI4nO5Lv91TWAmTQZclnEcmr+q0JZwaqFqlL244E0JkjnFcpVh
-         eG5LpEtVJAUjqXGocDAcoFO9TUIgoC8o0i47w/u1DheVI1WwTx6rB5oyCSRIxMkwc42a
-         pMfUablOEIcg52x2qynVR75xWC7YQKpUlbz2+8qTjXvAP3U7ujq3gnP81iCqNYkG8pWH
-         U8l3N8r/9WpMrPdxM/OenVxNgbejckESD2s/YLYhr6dSAGRp2At000r5YKOQkm2fEgTF
-         WBrw==
-X-Gm-Message-State: APjAAAXTbHPYKxCi/ZU9VC2zbBLgsuAn/krCyxr7n5SNclJNy+8An+Z6
-        uLjZXFD5xf4sAi14gGUlWE0=
-X-Google-Smtp-Source: APXvYqwVLYUonvELBilcmxHMeuj7eJzkoNFZm9J24vZ4RPQ0HEqEXmKWTJ4zBLjk3HQFtRCXXBpgsA==
-X-Received: by 2002:a1c:f20c:: with SMTP id s12mr19666176wmc.151.1560771040522;
-        Mon, 17 Jun 2019 04:30:40 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id x11sm14548936wmg.23.2019.06.17.04.30.39
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 04:30:39 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 13:30:38 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V4 26/28] PCI: Add DT binding for "reset-gpios" property
-Message-ID: <20190617113038.GK508@ulmo>
-References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
- <20190516055307.25737-27-mmaddireddy@nvidia.com>
+        id S1726173AbfFQLeu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jun 2019 07:34:50 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:4018 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbfFQLeu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jun 2019 07:34:50 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d077ad90000>; Mon, 17 Jun 2019 04:34:49 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 17 Jun 2019 04:34:49 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 17 Jun 2019 04:34:49 -0700
+Received: from [10.24.247.153] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 17 Jun
+ 2019 11:34:47 +0000
+Subject: Re: [PATCH v2 0/2] PCI: device link quirk for NVIDIA GPU
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lukas@wunner.de>
+References: <20190606092225.17960-1-abhsahu@nvidia.com>
+ <20190613205720.GK13533@google.com>
+X-Nvconfidentiality: public
+From:   Abhishek Sahu <abhsahu@nvidia.com>
+Message-ID: <ec2226e8-ccce-488f-20eb-0dd22dc9bed1@nvidia.com>
+Date:   Mon, 17 Jun 2019 17:04:43 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3D7yMlnunRPwJqC7"
-Content-Disposition: inline
-In-Reply-To: <20190516055307.25737-27-mmaddireddy@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190613205720.GK13533@google.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560771289; bh=Hk/6KBGqJg6eibtneR2WtGviyInDD/OJ7+WqSEyVYRc=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=bieRDgFeWAkiTRJzUdd4ELyDZRMADAoqyCE90ifyaN/QNX4qV7WRSuW+zpDQdVBpH
+         iDhxm8A09dE/2J1ceOTaoQpvXVrwF9b8KIX9OQSN7NdpniNwOBVmtM3MNxtMrrCK4O
+         oQ3ECSTaM9mN5k39Smjq3UQseOaBRSuhdP0EBn+FHWC4/TyRClbaZNBOAmXE/MjFG0
+         qsUZvBKSbAlxX9eJwm+JXyHErDFO4ATEKM+ikjX1AV0JawFOjvzYNERL/phM31pmoX
+         7a5buzhrPg9Hy2tdb1b7XBqTzu+nGBo4bvEebzUUjQrrEYP//SEKgX2Ky6hxv6PDyV
+         G/3ysW/Dp1ghg==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 6/14/2019 2:27 AM, Bjorn Helgaas wrote:
+> On Thu, Jun 06, 2019 at 02:52:23PM +0530, Abhishek Sahu wrote:
+>> * v2:
+>>
+>> 1. Make the pci device link helper function generic which can be
+>>    used for other multi-function PCI devices also.
+>> 2. Minor changes in comments and commit logs.
+>>
+>> * v1:
+>>
+>> NVIDIA Turing GPU [1] has hardware support for USB Type-C and
+>> VirtualLink [2]. The Turing GPU is a multi-function PCI device
+>> which has the following four functions:
+>>
+>> 	- VGA display controller (Function 0)
+>> 	- Audio controller (Function 1)
+>> 	- USB xHCI Host controller (Function 2)
+>> 	- USB Type-C USCI controller (Function 3)
+>>
+>> Currently NVIDIA and Nouveau GPU drivers only manage function 0.
+>> Rest of the functions are managed by other drivers. These functions
+>> internally in the hardware are tightly coupled. When function 0 goes
+>> in runtime suspended state, then it will do power gating for most of
+>> the hardware blocks. Some of these hardware blocks are used by
+>> the other PCI functions, which leads to functional failure. In the
+>> mainline kernel, the device link is present between
+>> function 0 and function 1.  This patch series deals with creating
+>> a similar kind of device link between function 0 and
+>> functions 2 and 3.
+>>
+>> [1] https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/technologies/turing-architecture/NVIDIA-Turing-Architecture-Whitepaper.pdf
+>> [2] https://en.wikipedia.org/wiki/VirtualLink
+>>
+>> Abhishek Sahu (2):
+>>   PCI: Code reorganization for creating device link
+>>   PCI: Create device link for NVIDIA GPU
+> 
+> Applied to pci/misc for v5.3, thanks!
 
---3D7yMlnunRPwJqC7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ Thanks Bjorn for your review and support!
 
-On Thu, May 16, 2019 at 11:23:05AM +0530, Manikanta Maddireddy wrote:
-> Add DT binding for "reset-gpios" property which supports GPIO based PERST#
-> signal.
->=20
-> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> ---
-> V4: No change
->=20
-> V3: Moved to common pci binding doc
->=20
-> V2: Using standard "reset-gpio" property
->=20
->  Documentation/devicetree/bindings/pci/pci.txt | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentatio=
-n/devicetree/bindings/pci/pci.txt
-> index c77981c5dd18..79124898aa5b 100644
-> --- a/Documentation/devicetree/bindings/pci/pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci.txt
-> @@ -24,3 +24,6 @@ driver implementation may support the following propert=
-ies:
->     unsupported link speed, for instance, trying to do training for
->     unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
->     for gen2, and '1' for gen1. Any other values are invalid.
-> +- reset-gpios:
-> +   If present this property specifies PERST# GPIO. Host drivers can pars=
-e the
-> +   GPIO and apply fundamental reset to endpoints.
+ The runtime PM changes in USB Type-C USCI driver is also
+ applied for v5.3
 
-As mentioned in patch 27/28, maybe mention here that this is only a
-workaround for bad board designs and that it shouldn't be necessary in
-the majority of cases.
+ https://marc.info/?l=linux-usb&m=155994544705901&w=2
 
-Thierry
+ It will help in achieving run-time PM for Turing GPUs
+ in v5.3.
 
---3D7yMlnunRPwJqC7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Hed4ACgkQ3SOs138+
-s6G9tw/+J+LMeHS55p4zNY4O9TsQ67a70Q0zY5+3zr9vtsRGlukvCDgLOn2x00r6
-j8vTyJNxIwgZzQjE5tC/zt67Sp9fqi/5tVgMe+0sh9GWIvl0m/3SrdIfkLPNsBWQ
-5leiPp92Hvipghscn1EavmWmizQHz9FaXsNnaYALAdW/SWp8fRwukUcuJ5kW+cam
-110qZJL+LIqINrS6nHFlmCz5yIjIyQYq3z5rLuGDWl47jGW1cIRfM5KT++23w/vC
-MzJxw6MLMTGlqa4CXRN4Gtmvx30ki1O30HVX6CshS1qlZ6/2skzrOWxI+glxV/kY
-YK7bv+UV5a+cmwh5pcBi2RZImNRSJQUBzDITT/mERLYghBvIqIJ1FToKlGkCpdhe
-CkSdC66puoUAAacbebioJBp8NDG4bDDLZq4NnUqk3X9yAuQ6iTrnMNSFaefmDKWw
-0fAdX8U1vNWv5e5gaCXJVAMz53Rqbc6Tjvx1cxt4YEXCSkHbxgz+AdKa/hDJzRn7
-dFJnkpPyTXYWtOrsOEgUTy9VLUhnDbKB7fK/vpAlfD+8S77zd3Te6HKqJUS/5Ylx
-ldcdblTV9kja5xuweZF9MVIHEL0q/XDfDis7oTCUCr227XMSw39718HXnWRg/+Or
-Qy+Tg00yZQ4dSfZ9uonRxWmMnfacpZb1mU4qwH8l2qvzKiGd2ik=
-=S/ir
------END PGP SIGNATURE-----
-
---3D7yMlnunRPwJqC7--
+ Regards,
+ Abhishek
