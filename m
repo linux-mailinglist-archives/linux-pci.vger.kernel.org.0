@@ -2,83 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 10FFD47FD4
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 12:37:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 464B447FDA
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 12:39:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfFQKhJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jun 2019 06:37:09 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:43167 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbfFQKhJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jun 2019 06:37:09 -0400
-Received: from 79.184.254.20.ipv4.supernova.orange.pl (79.184.254.20) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 4bde88e79f44df54; Mon, 17 Jun 2019 12:37:06 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>
-Subject: Re: [PATCH] PCI/PME: Fix race on PME polling
-Date:   Mon, 17 Jun 2019 12:37:06 +0200
-Message-ID: <1957149.eOSnrBRbHu@kreacher>
-In-Reply-To: <0113014581dbe2d1f938813f1783905bd81b79db.1560079442.git.lukas@wunner.de>
-References: <0113014581dbe2d1f938813f1783905bd81b79db.1560079442.git.lukas@wunner.de>
+        id S1726287AbfFQKj2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jun 2019 06:39:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:44932 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726091AbfFQKj2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 Jun 2019 06:39:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A408344;
+        Mon, 17 Jun 2019 03:39:27 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 829DD3F246;
+        Mon, 17 Jun 2019 03:41:11 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 11:39:21 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, bhelgaas@google.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com,
+        vidyas@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH V4 27/28] PCI: tegra: Add support for GPIO based PERST#
+Message-ID: <20190617103921.GA20619@e121166-lin.cambridge.arm.com>
+References: <20190614143222.GB23116@e121166-lin.cambridge.arm.com>
+ <1508173d-0ecc-f498-6ab2-78a718086b35@nvidia.com>
+ <20190614145023.GA24588@e121166-lin.cambridge.arm.com>
+ <20190614152304.GK15526@ulmo>
+ <20190614155934.GA28253@e121166-lin.cambridge.arm.com>
+ <51e4ae62-f842-1d2f-fbca-0b2063dd53a6@nvidia.com>
+ <20190614165353.GB30511@e121166-lin.cambridge.arm.com>
+ <1c662f82-8329-5e1b-58bf-b2fe1643adb0@nvidia.com>
+ <20190617094839.GE18020@e121166-lin.cambridge.arm.com>
+ <0f9bb97d-5a30-a654-0cc6-a57a7bd894c8@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0f9bb97d-5a30-a654-0cc6-a57a7bd894c8@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sunday, June 9, 2019 1:29:33 PM CEST Lukas Wunner wrote:
-> Since commit df17e62e5bff ("PCI: Add support for polling PME state on
-> suspended legacy PCI devices"), the work item pci_pme_list_scan() polls
-> the PME status flag of devices and wakes them up if the bit is set.
+On Mon, Jun 17, 2019 at 03:57:09PM +0530, Manikanta Maddireddy wrote:
 > 
-> The function performs a check whether a device's upstream bridge is in
-> D0 for otherwise the device is inaccessible, rendering PME polling
-> impossible.  However the check is racy because it is performed before
-> polling the device.  If the upstream bridge runtime suspends to D3hot
-> after pci_pme_list_scan() checks its power state and before it invokes
-> pci_pme_wakeup(), the latter will read the PMCSR as "all ones" and
-> mistake it for a set PME status flag.  I am seeing this race play out as
-> a Thunderbolt controller going to D3cold and occasionally immediately
-> going to D0 again because PM polling was performed at just the wrong
-> time.
 > 
-> Avoid by checking for an "all ones" PMCSR in pci_check_pme_status().
+> On 17-Jun-19 3:18 PM, Lorenzo Pieralisi wrote:
+> > On Fri, Jun 14, 2019 at 10:53:13PM +0530, Manikanta Maddireddy wrote:
+> >
+> > [...]
+> >
+> >>> Ok. My point then is that you have no way to enforce this requirement on
+> >>> platforms that actually need it, I do not even know if there is a
+> >>> way you can do it (I was thinking along the lines of using a
+> >>> compatible string to detect whether the GPIO #PERST reset is mandatory)
+> >>> but maybe this is not even a SOC property.
+> >>>
+> >>> Maybe what I am asking is overkill, I just wanted to understand.
+> >>>
+> >>> I was just asking a question to understand how you handle the case
+> >>> where a GPIO pin definition is missing in DT for a platform that
+> >>> actually needs it, the driver will probe but nothing will work.
+> >>>
+> >>> It would be good to describe this and capture it in the commit log.
+> >>>
+> >>> Thanks,
+> >>> Lorenzo
+> >> I can't think of a easy way to enforce this requirement. As you said
+> >> compatible string is per SOC, so we can't use it for a platform.
+> >> This issue is present on only one platform, so it is hard to miss the
+> >> DT property. That is the reason for publishing this patch with out this
+> >> enforcement in driver.
+> >>
+> >> I thought for changing PERST# to GPIO for all platform, but testing is
+> >> a tedious job. Also I don't have Tegra20 and Tegra30 platforms.
+> > I can't help with that.
+> >
+> >> Do you want me to drop the patch or update the limitation in the commit
+> >> log?
+> > It is Thierry's call, if he is OK with it fine by me, please do
+> > update the commit log, it will help everybody understand.
+> >
+> > Lorenzo
 > 
-> Fixes: 58ff463396ad ("PCI PM: Add function for checking PME status of devices")
-> Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: stable@vger.kernel.org # v2.6.34+
-> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/pci/pci.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 8abc843b1615..eed5db9f152f 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1989,6 +1989,8 @@ bool pci_check_pme_status(struct pci_dev *dev)
->  	pci_read_config_word(dev, pmcsr_pos, &pmcsr);
->  	if (!(pmcsr & PCI_PM_CTRL_PME_STATUS))
->  		return false;
-> +	if (pmcsr == 0xffff)
-> +		return false;
->  
->  	/* Clear PME status. */
->  	pmcsr |= PCI_PM_CTRL_PME_STATUS;
-> 
+> Sure, I will update the commit log in V5.
+> Please let me know if you completed reviewing this series, I will
+> send V5 addressing review comments in this patch.
 
-Added to my 5.3 queue, thanks!
+Post v5, we should be able to get it in v5.3, thanks.
 
-
-
+Lorenzo
