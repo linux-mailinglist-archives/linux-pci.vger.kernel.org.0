@@ -2,104 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F40448AC9
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 19:52:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE1EC48BD3
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2019 20:22:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbfFQRwC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jun 2019 13:52:02 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35197 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfFQRwC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jun 2019 13:52:02 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j19so10183392otq.2
-        for <linux-pci@vger.kernel.org>; Mon, 17 Jun 2019 10:52:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GjmvPRW/EB2UZMiXQmlwdUn3cNZy7MEt9OXtWGJNxz0=;
-        b=aTNnToCYbt/RLgFmZg1PIvrCe0JVP4C32RN5cfyMVp2zYXXYY11JnD0P5Xn5tfOK6Y
-         voW3Syk7UYIIG5SF4LSMDVtOlpmEa0YxFfvlu8+J6wAb/HPFiX2GuYxqo+V2fpMpF+jS
-         NlrpFBkRARTzBSJzVDZzE7bQS2UMHOvFRAjYRiT9xL8/lOeALYe1ebk8LfMUYkoFpZaD
-         PAFxFM2FYNf4FyGaTFye24KEnD9WdtERxcyZTxLFaidHht03PVJNbu4TuZbdbzHMaWbM
-         oEiXMcpcSzAKgjPufMTuJybkt3G4uT6kQCK3aNOgUOJV87J/VA4uKxPCVrEi1MqSqx3i
-         hB9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GjmvPRW/EB2UZMiXQmlwdUn3cNZy7MEt9OXtWGJNxz0=;
-        b=nLwgnyAUcJrNU3gyFThdwBYpscaaTTvEcfVxPLfce3o3iFS4clelcUhzHufzQ7rm0g
-         8C7P3qLikeo9NMAD9o5H+43nnAlz8mpr2i52y2QrjJKPQlw01pi/gVjtOEks4oeuyBO3
-         l9D8STgvcHkEx8w7yAyS0F5pU/oo9QJu+CwjAPm0mYE6jVAorgPKeIszoW5gqrcNmfT9
-         7Uk9TlPTAD+FHIJTeeG9vazZNXZxHWOi425z75NjOt+CGeabkjjKs72aRsQ4v9WQHD8b
-         jnDjNV+uEKx8ahejuLymPIBwRLrA8Nx3lyyX2bily+PPIcEtZ0Q+CuyJuRqH9Epg3h6h
-         lXtw==
-X-Gm-Message-State: APjAAAXw7YBpoO++a42IHK85Zvw0atgcEEz0wtJVwjNKwLqXSpg1wMtV
-        BLL/UeSGNf4nqlg/3XxcO6vKn833K1lc4AdwaZudbQ==
-X-Google-Smtp-Source: APXvYqyhtBEP50oerFZs8TdK9nCsvOJRWYCWzRd2vhiNPfCpga0Ba5N2yHiBCHm+W4K6XflHhEhbg4A9IXDkc+ucm/c=
-X-Received: by 2002:a9d:7a8b:: with SMTP id l11mr54836696otn.247.1560793907524;
- Mon, 17 Jun 2019 10:51:47 -0700 (PDT)
+        id S1726607AbfFQSWQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jun 2019 14:22:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726292AbfFQSWQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 Jun 2019 14:22:16 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A5692084D;
+        Mon, 17 Jun 2019 18:22:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560795734;
+        bh=qbxCbs3GDp/CMv5cX9wG11BqOooaSzc5OufFPBK83JI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=epfD/pHewbrtU7RIq8hZ9DZ2Oqv+jnjcHpsCMxoLWFWCsMHaPv6B3bu9h3RPkfmAa
+         wN0PIZ9fDKy8XxycJmkxlglCRWJ7Qh/zE6RqJatltbO11YW85KguMSnaEcdTZNh7Ci
+         AGZZ89mlLlB2Wxn7SqSoEGpe2BYRLYERjg436COE=
+Date:   Mon, 17 Jun 2019 13:22:13 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>
+Subject: Re: [PATCH v6 1/4] PCI: Consider alignment of hot-added bridges when
+ distributing available resources
+Message-ID: <20190617182213.GB13533@google.com>
+References: <20190522222928.2964-1-nicholas.johnson-opensource@outlook.com.au>
+ <PS2P216MB0642C7A485649D2D787A1C6F80000@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
+ <20190617093513.GN2640@lahna.fi.intel.com>
 MIME-Version: 1.0
-References: <20190617122733.22432-1-hch@lst.de> <20190617122733.22432-9-hch@lst.de>
-In-Reply-To: <20190617122733.22432-9-hch@lst.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 17 Jun 2019 10:51:35 -0700
-Message-ID: <CAPcyv4i_0wUJHDqY91R=x5M2o_De+_QKZxPyob5=E9CCv8rM7A@mail.gmail.com>
-Subject: Re: [PATCH 08/25] memremap: move dev_pagemap callbacks into a
- separate structure
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617093513.GN2640@lahna.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 5:27 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> The dev_pagemap is a growing too many callbacks.  Move them into a
-> separate ops structure so that they are not duplicated for multiple
-> instances, and an attacker can't easily overwrite them.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-> ---
->  drivers/dax/device.c              | 11 ++++++----
->  drivers/dax/pmem/core.c           |  2 +-
->  drivers/nvdimm/pmem.c             | 19 +++++++++-------
->  drivers/pci/p2pdma.c              |  9 +++++---
->  include/linux/memremap.h          | 36 +++++++++++++++++--------------
->  kernel/memremap.c                 | 18 ++++++++--------
->  mm/hmm.c                          | 10 ++++++---
->  tools/testing/nvdimm/test/iomap.c |  9 ++++----
->  8 files changed, 65 insertions(+), 49 deletions(-)
->
-[..]
-> diff --git a/tools/testing/nvdimm/test/iomap.c b/tools/testing/nvdimm/tes=
-t/iomap.c
-> index 219dd0a1cb08..a667d974155e 100644
-> --- a/tools/testing/nvdimm/test/iomap.c
-> +++ b/tools/testing/nvdimm/test/iomap.c
-> @@ -106,11 +106,10 @@ EXPORT_SYMBOL(__wrap_devm_memremap);
->
->  static void nfit_test_kill(void *_pgmap)
->  {
-> -       struct dev_pagemap *pgmap =3D _pgmap;
+On Mon, Jun 17, 2019 at 12:35:13PM +0300, mika.westerberg@linux.intel.com wrote:
+> On Wed, May 22, 2019 at 02:30:44PM +0000, Nicholas Johnson wrote:
+> > Rewrite pci_bus_distribute_available_resources to better handle bridges
+> > with different resource alignment requirements. Pass more details
+> > arguments recursively to track the resource start and end addresses
+> > relative to the initial hotplug bridge. This is especially useful for
+> > Thunderbolt with native PCI enumeration, enabling external graphics
+> > cards and other devices with bridge alignment higher than 0x100000
+>  
+> Instead of 0x100000 you could say 1MB here.
 
-Whoops, needed to keep this line to avoid:
+And of course, 1MB is the minimum bridge window alignment.  I *guess*
+this is actually talking about endpoints with BARs larger than 1MB,
+which have to be aligned on their size.  This doesn't actually impose
+any requirement on the bridge window alignment, as long as the bridge
+window contains the endpoint BARs.
 
-tools/testing/nvdimm/test/iomap.c:109:11: error: =E2=80=98pgmap=E2=80=99 un=
-declared
-(first use in this function); did you mean =E2=80=98_pgmap=E2=80=99?
+> > bytes.
+
+> >  	for_each_pci_bridge(dev, bus) {
+> > -		const struct resource *res;
+> > +		struct resource *res;
+> > +		resource_size_t used_size;
+> 
+> Here order these in "reverse christmas tree" like:
+> 
+> 		resource_size_t used_size;
+> 		struct resource *res;
+
+I actually don't enforce "reverse christmas tree", and when I write
+code, I order the declarations in order of their use in the code
+below, as Nicholas has done.  But either way is fine.
+
+Bjorn
