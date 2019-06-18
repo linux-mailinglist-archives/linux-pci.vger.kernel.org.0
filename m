@@ -2,122 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 665BD49E9B
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2019 12:51:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8A9249E9F
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2019 12:51:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbfFRKvM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jun 2019 06:51:12 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33429 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729098AbfFRKvM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jun 2019 06:51:12 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n9so13458705wru.0;
-        Tue, 18 Jun 2019 03:51:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0L/YJOCqKTNjOy3j+yONHu2Sd1slD94QcBd0x/bwi9w=;
-        b=imCaRx5tVV1jvVcij15BUfdyua6BYkQZ1T0SZyYQuUzQYyVufF1RcCTwyLvhKnmImj
-         LIW1XXbrzxkB3W9rl0wX1wTDkpora3rRhsUJmreqr5eUWMOXL+EyemRIGLrkDXLXNw+R
-         i+ZnyMJi/fWyxxQjk+3IRjV41shkqupKTicX2HQnrVf+NTGqQmPOJE+vfhZG95aEnGch
-         ONnsWkuC2x7b0GyZzrVGgHcSxRpP7UZjeDTGZvC81iBiI1WHLM/c3bF4LlBz+W5H9eiG
-         tUAfnHsfDjsjpEQI4wg2cu+sTByl3ovLcTK8ZvnHi2VJZPzkzm/Wok5xz4PnBNqskVIj
-         bA5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0L/YJOCqKTNjOy3j+yONHu2Sd1slD94QcBd0x/bwi9w=;
-        b=Ysh65x6wpvb9RlOj7lnH7EJ47aXtjgzw7aypmDkhu/9nmOFW6u0Pz5bmtyDUVa2PUJ
-         AoSE6Dj1YYdvEpRhIEDWH/QfLW1sOwADKogZOsdOZo1wpBacIj/xPOUwzEjluEZ2U/A6
-         ytZkAvKkt/lL2NfS1pRvFfIIUEcHBv1jcOq3lMXCQ25YSq6OLbLLIfR7DTB1NWpnPk5S
-         cs5PcOfLFnAgC4mJjI2r1HRGDUShneOwMfrpO+oXfpLzyAzy+SCEpewMgbNYN3MDDC5n
-         t1Vrz/Zkh3LTX9EkAVIIxKj1s2KtN4e4Mmmjnk0mtbL8ZRtXCecJgVlSjrdpkUN6aT8l
-         h8mw==
-X-Gm-Message-State: APjAAAXb5fNB1HPXflEFJFIis0X5bK18YVNF4ENUipU0UDhE1OKPMudH
-        mpr4qE33+jks/Mi9HHk2gJ0=
-X-Google-Smtp-Source: APXvYqzecsMceZupbxhk55Bnmp/fJ3V6IooAyGrRG/hXVs0ksCoetm2Fhug+oKKQthgDFoopirOkiw==
-X-Received: by 2002:a5d:67cd:: with SMTP id n13mr68682576wrw.138.1560855069697;
-        Tue, 18 Jun 2019 03:51:09 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id s8sm19722556wra.55.2019.06.18.03.51.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 03:51:08 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 12:51:07 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V5 26/27] PCI: tegra: Add support for GPIO based PERST#
-Message-ID: <20190618105107.GB28892@ulmo>
-References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
- <20190617173952.29363-27-mmaddireddy@nvidia.com>
+        id S1729585AbfFRKv2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jun 2019 06:51:28 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:14316 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729098AbfFRKv1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jun 2019 06:51:27 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d08c22c0000>; Tue, 18 Jun 2019 03:51:27 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 18 Jun 2019 03:51:26 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 18 Jun 2019 03:51:26 -0700
+Received: from [10.24.47.153] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
+ 2019 10:51:20 +0000
+Subject: Re: [PATCH V4 1/2] PCI: dwc: Add API support to de-initialize host
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <bhelgaas@google.com>, <Jisheng.Zhang@synaptics.com>,
+        <thierry.reding@gmail.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190502170426.28688-1-vidyas@nvidia.com>
+ <20190503112338.GA25649@e121166-lin.cambridge.arm.com>
+ <dec5ecb2-863e-a1db-10c9-2d91f860a2c6@nvidia.com>
+ <37697830-5a94-0f8e-a5cf-3347bc4850cb@nvidia.com>
+ <b560f3c3-b69e-d9b5-2dae-1ede52af0ea6@nvidia.com>
+ <011b52b6-9fcd-8930-1313-6b546226c7b9@nvidia.com>
+ <8a6696e0-fc53-2e6b-536b-d1d2668e0f21@nvidia.com>
+ <07c3dd04-cfd0-2d52-5917-25d0e40ad00b@nvidia.com>
+ <20190618093657.GA30711@e121166-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <eb0e5b1e-7e91-4dc6-681f-b497f087c62d@nvidia.com>
+Date:   Tue, 18 Jun 2019 16:21:17 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5/uDoXvLw7AC5HRs"
-Content-Disposition: inline
-In-Reply-To: <20190617173952.29363-27-mmaddireddy@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190618093657.GA30711@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560855087; bh=tG4QOMCAspIJNcVTt0o+6AE2E9v26du6/Osbyzw3Ero=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Do+3w9cmJXI1PPoTM/iqHat60dVQ/xUotKkdurD2eRlRzJ2v3Pw5PjRmzL9wX1BFW
+         ueGD9gP38RR9x+aGbYLB+DqoW/dx/LXX6+kNjaTzxqiyvYFr0Ms2XGhPWHaxkxtqcN
+         tWc3vb0y/S/iGx8BWE7X0bUN57eKOz5f16BrUhwuGTboqrZfOf8OoQ2um/ZaOuBXXt
+         21gSF1XdqYe2BwnyGobRztw56KBcScNYtHnVvPPoUIQjGQAByDfeFFys/4UJGNf1Cw
+         nhpFfPa2Yz4ARWBeo5Z9ihMwbNdscOPog0mMIJiKNOBsCnuk0w8gAbGlSMMVEvKxQa
+         NoEoaQdWHMZZw==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
---5/uDoXvLw7AC5HRs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jun 17, 2019 at 11:09:51PM +0530, Manikanta Maddireddy wrote:
-> Tegra PCIe has fixed per port SFIO line to signal PERST#, which can be
-> controlled by AFI port register. However, if a platform routes a different
-> GPIO to the PCIe slot, then port register cannot control it. Add support
-> for GPIO based PERST# signal for such platforms. GPIO number comes from p=
-er
-> port PCIe device tree node. PCIe driver probe doesn't fail if per port
-> "reset-gpios" property is not populated, make sure that DT property is not
-> missed for such platforms.
+On 6/18/2019 3:06 PM, Lorenzo Pieralisi wrote:
+> On Tue, Jun 18, 2019 at 10:19:14AM +0530, Vidya Sagar wrote:
 >=20
-> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-> ---
-> V5:
-> * Updated reset gpio toggle logic to reflect active low usage
-> * Replaced kasprintf() with devm_kasprintf()
-> * Updated commit message with more information.
+> [...]
 >=20
-> V4: Using devm_gpiod_get_from_of_node() to get reset-gpios
+>> Sorry for pinging again. Please let me know if these patches need to
+>> be sent again.
 >=20
-> V3: Using helper function to get reset-gpios
+> No problem. We can merge the code as-is even though I have a couple
+> of questions.
 >=20
-> V2: Using standard "reset-gpio" property
+> 1) What about dbi2 interfaces (what an horrible name it is :() ? It
+>     is true that it is probably best to export just what we need.
+I see that dbi2 API (that too only write) is used by pci-keystone and it
+is described as a bool driver currently. I'm not sure if it will ever be
+made as a modular driver.
+
+> 2) It is not related to this patch but I fail to see the reasoning
+>     behind the __ in __dw_pci_read_dbi(), there is no no-underscore
+>     equivalent so its definition is somewhat questionable, maybe
+>     we should clean-it up (for dbi2 alike).
+Separate no-underscore versions are present in pcie-designware.h for each w=
+idth
+(i.e. l/w/b) as inline and are calling __ versions passing size as argument=
+.
+
 >=20
->  drivers/pci/controller/pci-tegra.c | 45 ++++++++++++++++++++++++++----
->  1 file changed, 39 insertions(+), 6 deletions(-)
+> Lorenzo
+>=20
+>> Thanks,
+>> Vidya Sagar
+>>
+>>>
+>>>>
+>>>>>>
+>>>>>>>
+>>>>>>>>
+>>>>>>>> Thanks,
+>>>>>>>> Lorenzo
+>>>>>>>>
+>>>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/=
+drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>>>> index 77db32529319..d069e4290180 100644
+>>>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>>>> @@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>>>>>>>>>  =C2=A0 }
+>>>>>>>>> +void dw_pcie_host_deinit(struct pcie_port *pp)
+>>>>>>>>> +{
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 pci_stop_root_bus(pp->root_bus);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 pci_remove_root_bus(pp->root_bus);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (pci_msi_enabled() && !pp->ops->msi_host_i=
+nit)
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dw_pcie_free_msi(pp);
+>>>>>>>>> +}
+>>>>>>>>> +
+>>>>>>>>>  =C2=A0 static int dw_pcie_access_other_conf(struct pcie_port *pp=
+, struct pci_bus *bus,
+>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 d=
+evfn, int where, int size, u32 *val,
+>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool =
+write)
+>>>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drive=
+rs/pci/controller/dwc/pcie-designware.h
+>>>>>>>>> index deab426affd3..4f48ec78c7b9 100644
+>>>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>>>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>>>>>>>>> @@ -348,6 +348,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
+>>>>>>>>>  =C2=A0 void dw_pcie_free_msi(struct pcie_port *pp);
+>>>>>>>>>  =C2=A0 void dw_pcie_setup_rc(struct pcie_port *pp);
+>>>>>>>>>  =C2=A0 int dw_pcie_host_init(struct pcie_port *pp);
+>>>>>>>>> +void dw_pcie_host_deinit(struct pcie_port *pp);
+>>>>>>>>>  =C2=A0 int dw_pcie_allocate_domains(struct pcie_port *pp);
+>>>>>>>>>  =C2=A0 #else
+>>>>>>>>>  =C2=A0 static inline irqreturn_t dw_handle_msi_irq(struct pcie_p=
+ort *pp)
+>>>>>>>>> @@ -372,6 +373,10 @@ static inline int dw_pcie_host_init(struct p=
+cie_port *pp)
+>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>>>>>>>>  =C2=A0 }
+>>>>>>>>> +static inline void dw_pcie_host_deinit(struct pcie_port *pp)
+>>>>>>>>> +{
+>>>>>>>>> +}
+>>>>>>>>> +
+>>>>>>>>>  =C2=A0 static inline int dw_pcie_allocate_domains(struct pcie_po=
+rt *pp)
+>>>>>>>>>  =C2=A0 {
+>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>>>>>>>> --=20
+>>>>>>>>> 2.17.1
+>>>>>>>>>
+>>>>>>>
+>>>>>>
+>>>>>
+>>>>
+>>>
+>>
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---5/uDoXvLw7AC5HRs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0IwhsACgkQ3SOs138+
-s6GcGw/+Pi6zDjLmsQQqPGMkvQfxr5DbOJxPtZ0K4fWTvoUmoCrw2KAigmmfKupP
-vxeKJWlwhTsfe80GMyNaGrCld5QXDb3UuZ1RRd9i24FOymTALu9I3MdFyYBXAuqv
-4+xQFl2N/q4/aoBiSgYe2tGAoXYQc0gHDqqKKmCeZfx3/srE0H27fvzH8XUNC1ku
-1ZjhYQcNW7y1w1CpRBVjVpxBDweQJ50suyk4kIMMgxXpmYzbB7qWh1lghDaSIMqg
-UFKWmjr88p3otYMBDMxxu0U+gYniYApM7+pH4KfV2uf+H8rksF9P9a64IyRsYOL0
-9VAM608wGdxvpoZo0PXFbrzz/ABnEBjFd9qX55493zxF0yEwwSWtl4ARFdSggjn+
-gBlh6TqFxYvdWU30R4fT1QjHRXTCZEZNeznyXJReRfO/4XKK4VAvJpmlKJTcN5QI
-eAmJwnBae9mjZM9VxRGWt171dlkk0FGNcO6xgci51/C8B9LyYzgwtHbB8DBFijCL
-hhSc/0WbzPxy+l8T/blPDxeinGxLh8VIY/kzwClySuqOqWt4OJEhlrOdEB9X3KKe
-27CT9HK/2PgTyeNOpkSStZl3vr6jgcYhYzDR4lG+NtZGA1oTfmaB2R4HEITA+zzC
-tjFIsRf93HLWj5YZNH+NnawThLejWhF3/4Rw5UYBZP+VXYkju+I=
-=l/xN
------END PGP SIGNATURE-----
-
---5/uDoXvLw7AC5HRs--
