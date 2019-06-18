@@ -2,34 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27E0449B0B
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2019 09:46:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D76649B74
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2019 09:49:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbfFRHqw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jun 2019 03:46:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58142 "EHLO mx1.suse.de"
+        id S1725900AbfFRHtC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jun 2019 03:49:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59008 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728840AbfFRHqv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:46:51 -0400
+        id S1725870AbfFRHtC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 18 Jun 2019 03:49:02 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8B6C3AFEE;
-        Tue, 18 Jun 2019 07:46:49 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id D5191AFA9;
+        Tue, 18 Jun 2019 07:48:59 +0000 (UTC)
 Subject: Re: [PATCH] PCI: Add Intel remapped NVMe device support
-To:     Daniel Drake <drake@endlessm.com>, Christoph Hellwig <hch@lst.de>
+To:     Keith Busch <keith.busch@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>,
         Linux PCI <linux-pci@vger.kernel.org>,
-        Keith Busch <keith.busch@gmail.com>,
-        Keith Busch <kbusch@kernel.org>, linux-ide@vger.kernel.org,
         linux-nvme <linux-nvme@lists.infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux Upstreaming Team <linux@endlessm.com>
+        Daniel Drake <drake@endlessm.com>, linux-ide@vger.kernel.org,
+        Keith Busch <kbusch@kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Christoph Hellwig <hch@lst.de>
 References: <20190610074456.2761-1-drake@endlessm.com>
  <CAOSXXT7OFzHeTxNqZ1sS6giRxhDcrUUnVjURWBiFUc5T_8p=MA@mail.gmail.com>
  <CAD8Lp45djPU_Ur8uCO2Y5Sbek_5N9QKkxLXdKNVcvkr6rFPLUQ@mail.gmail.com>
  <CAOSXXT7H6HxY-za66Tr9ybRQyHsTdwwAgk9O2F=xK42MT8HsuA@mail.gmail.com>
  <20190613085402.GC13442@lst.de>
  <CAD8Lp47Vu=w+Lj77_vL05JYV1WMog9WX3FHGE+TseFrhcLoTuA@mail.gmail.com>
+ <CAOSXXT4Ba_6xRUyaQBxpq+zdG9_itXDhFJ5EFZPv3CQuJZKHzg@mail.gmail.com>
+ <20190614200557.GS13533@google.com>
+ <CAOSXXT7eV4SBSkoKoOKAPaUQxczrD3rAvpz=12LTQenvRjCYRw@mail.gmail.com>
 From:   Hannes Reinecke <hare@suse.de>
 Openpgp: preference=signencrypt
 Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
@@ -75,12 +79,12 @@ Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
  ZtWlhGRERnDH17PUXDglsOA08HCls0PHx8itYsjYCAyETlxlLApXWdVl9YVwbQpQ+i693t/Y
  PGu8jotn0++P19d3JwXW8t6TVvBIQ1dRZHx1IxGLMn+CkDJMOmHAUMWTAXX2rf5tUjas8/v2
  azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <06c38b3e-603b-5bae-4959-9965ab40db62@suse.de>
-Date:   Tue, 18 Jun 2019 09:46:48 +0200
+Message-ID: <0edd328f-4040-73ec-39fc-50d1ea785fb9@suse.de>
+Date:   Tue, 18 Jun 2019 09:48:59 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAD8Lp47Vu=w+Lj77_vL05JYV1WMog9WX3FHGE+TseFrhcLoTuA@mail.gmail.com>
+In-Reply-To: <CAOSXXT7eV4SBSkoKoOKAPaUQxczrD3rAvpz=12LTQenvRjCYRw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -89,48 +93,28 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/14/19 4:26 AM, Daniel Drake wrote:
-> On Thu, Jun 13, 2019 at 4:54 PM Christoph Hellwig <hch@lst.de> wrote:
->> So until we get very clear and good documentation from Intel on that
->> I don't think any form of upstream support will fly.  And given that
->> Dan who submitted the original patch can't even talk about this thing
->> any more and apparently got a gag order doesn't really give me confidence
->> any of this will ever work.
+On 6/14/19 11:05 PM, Keith Busch wrote:
+> On Fri, Jun 14, 2019 at 2:06 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>> Ugh.  Are you saying the installation instructions for Linux will say
+>> "change the BIOS setting to AHCI"?  That's an unpleasant user
+>> experience, especially if the installation fails if the user hasn't
+>> read the instructions.
 > 
-> I realise the architecture here seems badly thought out, and the lack
-> of a decent spec makes the situation worse, but I'd encourage you to
-> reconsider this from the perspectives of:
->  - Are the patches really more ugly than the underlying architecture?
->  - We strive to make Linux work well on common platforms and sometimes
-> have to accept that hardware vendors do questionable things & do not
-> fully cooperate
->  - It works out of the box on Windows
+> :) That is essentially what the dmesg currently says when Linux
+> detects this, from drivers/ata/ahci.c:ahci_remap_check()
 > 
-Actually, there _is_ a register description:
-
-https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/300-series-chipset-pch-datasheet-vol-2.pdf
-
-Look for section 15: Intel RST for PCIe Storage.
-
-That gives you a reasonable description of the various registers etc.
-You'll have to translate from Intel-speak, but that should be manageable.
-
-In general, I am _quite_ in favour of having Linux Support for these
-kind of devices.
-I fully agree the interface is ugly, and badly thought out.
-But these devices exist and have been sold for quite some time now, so
-there is no way we can influence the design on those boxes.
-
-And we really have come a long way from the the original Linux idea of
-"hey, that's weird hardware, let's hack together a driver for it" to the
-flat rejection of hardware we don't like.
-I, for one, prefer the old way.
-
-Looking at the spec I think that Daniels approach of exposing an
-additional PCI device is the correct way of going about it (as the
-interface design can be thought of a messed-up SR-IOV interface), but
-I'll defer to Bjorn here.
-But we really should have a driver to get these boxes rolling.
+>   "Switch your BIOS from RAID to AHCI mode to use them (remapped NVMe devices)"
+> 
+> Unpleasant yes, but what's the lesser of two evils? Recommend the
+> supported full featured mode, or try to support with degraded
+> capabilities?
+> 
+... and we already had several customer calls because of this.
+Quite tedious, and completely unneccesary IMO.
+The time for having the interface changed has passed, and we have to
+live with it.
+I still do prefer to have a driver for it, just to smooth the initial
+user experience.
 
 Cheers,
 
