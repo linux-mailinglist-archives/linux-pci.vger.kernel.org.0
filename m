@@ -2,70 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CAA9149559
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2019 00:43:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8082C4986D
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2019 06:49:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfFQWnh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jun 2019 18:43:37 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:54653 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfFQWnh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jun 2019 18:43:37 -0400
-Received: from 79.184.254.20.ipv4.supernova.orange.pl (79.184.254.20) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id a683a0a51c8ced34; Tue, 18 Jun 2019 00:43:35 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>
-Subject: Re: [PATCH] PCI/PME: Fix race on PME polling
-Date:   Tue, 18 Jun 2019 00:43:35 +0200
-Message-ID: <1943367.SoULSMlgxK@kreacher>
-In-Reply-To: <20190617145348.cqmtuqlvabgpo2ky@wunner.de>
-References: <0113014581dbe2d1f938813f1783905bd81b79db.1560079442.git.lukas@wunner.de> <20190617143510.GT2640@lahna.fi.intel.com> <20190617145348.cqmtuqlvabgpo2ky@wunner.de>
+        id S1725955AbfFREtY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jun 2019 00:49:24 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:10680 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfFREtY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jun 2019 00:49:24 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d086d530001>; Mon, 17 Jun 2019 21:49:23 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 17 Jun 2019 21:49:22 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 17 Jun 2019 21:49:22 -0700
+Received: from [10.24.47.153] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
+ 2019 04:49:17 +0000
+Subject: Re: [PATCH V4 1/2] PCI: dwc: Add API support to de-initialize host
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <bhelgaas@google.com>, <Jisheng.Zhang@synaptics.com>,
+        <thierry.reding@gmail.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190502170426.28688-1-vidyas@nvidia.com>
+ <20190503112338.GA25649@e121166-lin.cambridge.arm.com>
+ <dec5ecb2-863e-a1db-10c9-2d91f860a2c6@nvidia.com>
+ <37697830-5a94-0f8e-a5cf-3347bc4850cb@nvidia.com>
+ <b560f3c3-b69e-d9b5-2dae-1ede52af0ea6@nvidia.com>
+ <011b52b6-9fcd-8930-1313-6b546226c7b9@nvidia.com>
+ <8a6696e0-fc53-2e6b-536b-d1d2668e0f21@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <07c3dd04-cfd0-2d52-5917-25d0e40ad00b@nvidia.com>
+Date:   Tue, 18 Jun 2019 10:19:14 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <8a6696e0-fc53-2e6b-536b-d1d2668e0f21@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560833363; bh=D1am2I/bI2xZcHfLWVk+66IAFl8L+5WwQBu6d7+UR1s=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=h78QfXjCqiYr6ZqGHO0He7XVaGUh0p3KFnQQPoS8Oucj1YpGOhTF7ID6YV89BmmFk
+         omF1hS3JnBvqWt0SlPceuVKhMYF/VrFUUtuGYd9TEkG8q9Xl8BQIfuWW2CI5SIb+Ed
+         RMmult/WyyBTlHPbTFjb6rcSQsdiDJk9M8rc00I9jtLoeFUDNFlY0mKMq4xF+OSW9N
+         3qdBG0To4ips66FfD+VdUhe00B4/VIgnDynUhu4bSKeIgvsYSgkxGgW4ZrUCufVoPI
+         RdmpkRBoCUT9luDUSp8VWmxAkT7fkcx3nk9xrbhl7ja26vVeVjqG5tOcAqrmy3bODB
+         7QFD7CvBKxW5Q==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Monday, June 17, 2019 4:53:48 PM CEST Lukas Wunner wrote:
-> On Mon, Jun 17, 2019 at 05:35:10PM +0300, Mika Westerberg wrote:
-> > Today when doing some PM testing I noticed that this patch actually
-> > reveals an issue in our native PME handling. Problem is in
-> > pcie_pme_handle_request() where we first convert req_id to struct
-> > pci_dev and then call pci_check_pme_status() for it. Now, when a device
-> > triggers wake the link is first brought up and then the PME is sent to
-> > root complex with req_id matching the originating device. However, if
-> > there are PCIe ports in the middle they may still be in D3 which means
-> > that pci_check_pme_status() returns 0xffff for the device below so there
-> > are lots of
-> > 
-> > 	Spurious native interrupt"
-> > 
-> > messages in the dmesg but the actual PME is never handled.
-> > 
-> > It has been working because pci_check_pme_status() returned true in case
-> > of 0xffff as well and we went and runtime resumed to originating device.
-> > 
-> > I think the correct way to handle this is actually drop the call to
-> > pci_check_pme_status() in pcie_pme_handle_request() because the whole
-> > idea of req_id in PME message is to allow the root complex and SW to
-> > identify the device without need to poll for the PME status bit.
-> 
-> Either that or the call to pci_check_pme_status() should be encapsulated
-> in a pci_config_pm_runtime_get() / _put() pair.
+On 6/13/2019 11:54 PM, Vidya Sagar wrote:
+> On 6/7/2019 6:43 PM, Vidya Sagar wrote:
+>> On 5/27/2019 4:39 PM, Vidya Sagar wrote:
+>>> On 5/7/2019 12:25 PM, Vidya Sagar wrote:
+>>>> On 5/7/2019 11:19 AM, Vidya Sagar wrote:
+>>>>> On 5/3/2019 4:53 PM, Lorenzo Pieralisi wrote:
+>>>>>> On Thu, May 02, 2019 at 10:34:25PM +0530, Vidya Sagar wrote:
+>>>>>>> Add an API to group all the tasks to be done to de-initialize host =
+which
+>>>>>>> can then be called by any DesignWare core based driver implementati=
+ons
+>>>>>>> while adding .remove() support in their respective drivers.
+>>>>>>>
+>>>>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>>>>>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>>>>>>> ---
+>>>>>>> Changes from v3:
+>>>>>>> * Added check if (pci_msi_enabled() && !pp->ops->msi_host_init) bef=
+ore calling
+>>>>>>> =C2=A0=C2=A0 dw_pcie_free_msi() API to mimic init path
+>>>>>>>
+>>>>>>> Changes from v2:
+>>>>>>> * Rebased on top of linux-next top of the tree branch
+>>>>>>>
+>>>>>>> Changes from v1:
+>>>>>>> * s/Designware/DesignWare
+>>>>>>>
+>>>>>>> =C2=A0 drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++=
+++
+>>>>>>> =C2=A0 drivers/pci/controller/dwc/pcie-designware.h=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 | 5 +++++
+>>>>>>> =C2=A0 2 files changed, 13 insertions(+)
+>>>>>>
+>>>>>> Series doesn't apply to v5.1-rc1, what's based on ? I suspect
+>>>>>> there is a dependency on pci/keystone, given the tight timeline
+>>>>>> for the merge window, would you mind postponing it to v5.3 ?
+>>>>>>
+>>>>>> I do not think it is urgent, I am happy to create a branch
+>>>>>> for it as soon as v5.2-rc1 is released.
+>>>>> I rebased my changes on top of linux-next. I see that they have confl=
+icts
+>>>>> on top of v5.1-rc1. Do you want me to rebase them on top of v5.1-rc1 =
+instead
+>>>>> of linux-next?
+>>>>> I'm fine with v5.2-rc1 as well.I forgot to mention that these changes=
+ are made on top of Jisheng's patches
+>>>> FWIW, Jisheng's patches are approved and applied to pci/dwc for v5.2
+>>>> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1968324.h=
+tml
+>>>
+>>> Hi Lorenzo,
+>>> Now that v5.2-rc2 is also available, could you please pick up this seri=
+es?
+>>>
+>>> Thanks,
+>>> Vidya Sagar
+>>>
+>> Hi Bjorn / Lorenzo,
+>> Can you please pick up these two patches?
+>>
+>> Thanks,
+>> Vidya Sagar
+> Apologies for pinging again. These two patches can be applied directly on=
+ top of
+> v5.2-rc4. Please do let me know if there is anything required from my sid=
+e.
+>=20
+> Thanks,
+> Vidya Sagar
+>=20
+Sorry for pinging again. Please let me know if these patches need to be sen=
+t again.
 
-And the whole hierarchy might as well be resumed, which could be rather
-wasteful.
+Thanks,
+Vidya Sagar
 
-The problem is that the $subject patch should affect polling only, but it has
-side effects beyond that.
-
-
+>=20
+>>
+>>>>
+>>>>>
+>>>>>>
+>>>>>> Thanks,
+>>>>>> Lorenzo
+>>>>>>
+>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/dr=
+ivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>> index 77db32529319..d069e4290180 100644
+>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>> @@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>>>>>>> =C2=A0 }
+>>>>>>> +void dw_pcie_host_deinit(struct pcie_port *pp)
+>>>>>>> +{
+>>>>>>> +=C2=A0=C2=A0=C2=A0 pci_stop_root_bus(pp->root_bus);
+>>>>>>> +=C2=A0=C2=A0=C2=A0 pci_remove_root_bus(pp->root_bus);
+>>>>>>> +=C2=A0=C2=A0=C2=A0 if (pci_msi_enabled() && !pp->ops->msi_host_ini=
+t)
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dw_pcie_free_msi(pp);
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> =C2=A0 static int dw_pcie_access_other_conf(struct pcie_port *pp, s=
+truct pci_bus *bus,
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 devf=
+n, int where, int size, u32 *val,
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool wri=
+te)
+>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers=
+/pci/controller/dwc/pcie-designware.h
+>>>>>>> index deab426affd3..4f48ec78c7b9 100644
+>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>>>>>>> @@ -348,6 +348,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
+>>>>>>> =C2=A0 void dw_pcie_free_msi(struct pcie_port *pp);
+>>>>>>> =C2=A0 void dw_pcie_setup_rc(struct pcie_port *pp);
+>>>>>>> =C2=A0 int dw_pcie_host_init(struct pcie_port *pp);
+>>>>>>> +void dw_pcie_host_deinit(struct pcie_port *pp);
+>>>>>>> =C2=A0 int dw_pcie_allocate_domains(struct pcie_port *pp);
+>>>>>>> =C2=A0 #else
+>>>>>>> =C2=A0 static inline irqreturn_t dw_handle_msi_irq(struct pcie_port=
+ *pp)
+>>>>>>> @@ -372,6 +373,10 @@ static inline int dw_pcie_host_init(struct pci=
+e_port *pp)
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>>>>>> =C2=A0 }
+>>>>>>> +static inline void dw_pcie_host_deinit(struct pcie_port *pp)
+>>>>>>> +{
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> =C2=A0 static inline int dw_pcie_allocate_domains(struct pcie_port =
+*pp)
+>>>>>>> =C2=A0 {
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>>>>>> --=20
+>>>>>>> 2.17.1
+>>>>>>>
+>>>>>
+>>>>
+>>>
+>>
+>=20
 
