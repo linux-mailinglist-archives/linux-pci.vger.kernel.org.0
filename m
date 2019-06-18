@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EB75B4A933
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2019 20:03:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C2504A936
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2019 20:03:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730241AbfFRSDK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jun 2019 14:03:10 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:8845 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729337AbfFRSDJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jun 2019 14:03:09 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d09275c0000>; Tue, 18 Jun 2019 11:03:08 -0700
+        id S1730248AbfFRSDN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jun 2019 14:03:13 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:12523 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730246AbfFRSDN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jun 2019 14:03:13 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0927610003>; Tue, 18 Jun 2019 11:03:13 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 18 Jun 2019 11:03:08 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 18 Jun 2019 11:03:12 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 18 Jun 2019 11:03:08 -0700
+        by hqpgpgate101.nvidia.com on Tue, 18 Jun 2019 11:03:12 -0700
 Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL104.nvidia.com
  (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 18:03:08 +0000
+ 2019 18:03:11 +0000
 Received: from manikanta-bm2.nvidia.com (10.124.1.5) by HQMAIL101.nvidia.com
  (172.20.187.10) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
- Transport; Tue, 18 Jun 2019 18:03:05 +0000
+ Transport; Tue, 18 Jun 2019 18:03:08 +0000
 From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
 To:     <thierry.reding@gmail.com>, <bhelgaas@google.com>,
         <robh+dt@kernel.org>, <mark.rutland@arm.com>,
@@ -32,9 +32,9 @@ To:     <thierry.reding@gmail.com>, <bhelgaas@google.com>,
 CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <devicetree@vger.kernel.org>,
         Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V6 16/27] PCI: tegra: Set target speed as Gen1 before starting LTSSM
-Date:   Tue, 18 Jun 2019 23:31:55 +0530
-Message-ID: <20190618180206.4908-17-mmaddireddy@nvidia.com>
+Subject: [PATCH V6 17/27] PCI: tegra: Fix PLLE power down issue due to CLKREQ# signal
+Date:   Tue, 18 Jun 2019 23:31:56 +0530
+Message-ID: <20190618180206.4908-18-mmaddireddy@nvidia.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190618180206.4908-1-mmaddireddy@nvidia.com>
 References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
@@ -42,33 +42,28 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560880988; bh=1vPi770/Z5fICSNm6FuPv0aDnB9kNs0p4U+8dM6StzU=;
+        t=1560880993; bh=V45grrq6EH7sr5LF0RBE0ARHzk0EF17iu2N7jIO08KQ=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=sUbBg2kOBdKvXCuymBvDujOc5kF4AHJOBuSTCEjhQj1ME0Cvjygaf84XHJBzk/akd
-         hclP7DOnGlG06Nlz2wsf27e85UwuHKKYIg2jS9a0r8Dyq3jQF9nVvK9OoTTKGby2oN
-         wPXCzq9kPRcm0p90xQqc5iBr+ctJ+DriqUTB6r82EYkVMxA6kUqwzRxEvWTCQVYWp8
-         1W7beE0GuIgf/PG+fSAci+89j5W18y7EnhAo9HwmhVxWaUkgPE3AXFOfkAqQl6af96
-         E5aP5Zl1t+u/zpzj5LhoqrIv5RmZ19fwkyBzMuxNEYdHQcTZw6bYcV6EKc5+6hP86w
-         WqPw2DxWciKWg==
+        b=ZfTdNnSOgQke2PXJxxwZZVCxPCl4J6ZQRKYgSjhLS1FiLkfoyzN585Gzvd+w3KSqM
+         HWfN+1x1woV1UtKDqk0LDq0eRraQx7eMhKnfvfQT84rl1mkGt9HYJQLzCYj3mOqlGG
+         inZ+jdoD1IWLcS3/L9113/L3JDUqMAojMUUprq2jttEZtnp0T3BgLxbU014x2HgzDU
+         TtNG5yZGauF2gr9GhUalrxb/thG68dp0p6xfqMUQ14KoHtDQ+V+8g2X48MMRN266Eq
+         Sz5aOeHNVkyDZlxGRgjeBV493jWPphn16673dQ+CbGvLY+XfW8Lpn0VaK3/EnzgDfH
+         dIZDgiZom/l5Q==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCIe link up fails with few legacy endpoints if root port advertises both
-Gen-1 and Gen-2 speeds in Tegra. This is because link number negotiation
-fails if both Gen1 & Gen2 are advertised. Tegra doesn't retry link up by
-advertising only Gen1. Hence, the strategy followed here is to initially
-advertise only Gen-1 and after link is up, retrain link to Gen-2 speed.
+Disable controllers which failed to link up and configure CLKREQ# signals
+of these controllers as GPIO. This is required to avoid CLKREQ# signal of
+inactive controllers interfering with PLLE power down sequence.
 
-Tegra doesn't support HW autonomous speed change. Link comes up in Gen1
-even if Gen2 is advertised, so there is no downside of this change.
-
-This behavior is observed with following two PCIe devices on Tegra,
- - Fusion HDTV 5 Express card
- - IOGear SIL - PCIE - SATA card
+PCIE_CLKREQ_GPIO bits are defined only in Tegra186, however programming
+these bits in other SoCs doesn't cause any side effects. Program these
+bits for all Tegra SoCs to avoid conditional check.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 Acked-by: Thierry Reding <treding@nvidia.com>
@@ -81,34 +76,51 @@ V4: No change
 
 V3: No change
 
-V2: Updated commit log to reflect why this issue is observed on Tegra with
-these particular cards
+V2: Corrected the comment in driver
 
- drivers/pci/controller/pci-tegra.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/pci/controller/pci-tegra.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 6ed406c46409..abb94595c76b 100644
+index abb94595c76b..3d9028cecc18 100644
 --- a/drivers/pci/controller/pci-tegra.c
 +++ b/drivers/pci/controller/pci-tegra.c
-@@ -676,6 +676,17 @@ static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
- 		value |= soc->update_fc_threshold;
- 		writel(value, port->base + RP_VEND_XP);
- 	}
+@@ -160,6 +160,8 @@
+ #define  AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_211	(0x1 << 20)
+ #define  AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_411	(0x2 << 20)
+ #define  AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_111	(0x2 << 20)
++#define  AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO(x)		(1 << ((x) + 29))
++#define  AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO_ALL		(0x7 << 29)
+ 
+ #define AFI_FUSE			0x104
+ #define  AFI_FUSE_PCIE_T0_GEN2_DIS	(1 << 2)
+@@ -741,6 +743,12 @@ static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
+ 
+ 	value &= ~AFI_PEX_CTRL_REFCLK_EN;
+ 	afi_writel(port->pcie, value, ctrl);
 +
-+	/*
-+	 * PCIe link doesn't come up with few legacy PCIe endpoints if
-+	 * root port advertises both Gen-1 and Gen-2 speeds in Tegra.
-+	 * Hence, the strategy followed here is to initially advertise
-+	 * only Gen-1 and after link is up, retrain link to Gen-2 speed
-+	 */
-+	value = readl(port->base + RP_LINK_CONTROL_STATUS_2);
-+	value &= ~PCI_EXP_LNKSTA_CLS;
-+	value |= PCI_EXP_LNKSTA_CLS_2_5GB;
-+	writel(value, port->base + RP_LINK_CONTROL_STATUS_2);
++	/* disable PCIe port and set CLKREQ# as GPIO to allow PLLE power down */
++	value = afi_readl(port->pcie, AFI_PCIE_CONFIG);
++	value |= AFI_PCIE_CONFIG_PCIE_DISABLE(port->index);
++	value |= AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO(port->index);
++	afi_writel(port->pcie, value, AFI_PCIE_CONFIG);
  }
  
- static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
+ static void tegra_pcie_port_free(struct tegra_pcie_port *port)
+@@ -1153,9 +1161,12 @@ static void tegra_pcie_enable_controller(struct tegra_pcie *pcie)
+ 	value = afi_readl(pcie, AFI_PCIE_CONFIG);
+ 	value &= ~AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_MASK;
+ 	value |= AFI_PCIE_CONFIG_PCIE_DISABLE_ALL | pcie->xbar_config;
++	value |= AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO_ALL;
+ 
+-	list_for_each_entry(port, &pcie->ports, list)
++	list_for_each_entry(port, &pcie->ports, list) {
+ 		value &= ~AFI_PCIE_CONFIG_PCIE_DISABLE(port->index);
++		value &= ~AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO(port->index);
++	}
+ 
+ 	afi_writel(pcie, value, AFI_PCIE_CONFIG);
+ 
 -- 
 2.17.1
 
