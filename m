@@ -2,208 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 176B74AB28
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2019 21:47:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10D684AB31
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2019 21:48:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730189AbfFRTrX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jun 2019 15:47:23 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33643 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730176AbfFRTrX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jun 2019 15:47:23 -0400
-Received: by mail-ot1-f66.google.com with SMTP id i4so76783otk.0
-        for <linux-pci@vger.kernel.org>; Tue, 18 Jun 2019 12:47:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KdzTI56/zG61CRTFghoJgUKFV1Q8B4zDnAoIv6r27HM=;
-        b=s2Uy7F2zSbJmvMOmCMRUi/PHWSrNmkd+yGx8fJ35yqjrx0VA2g4YYc0V0vIwh56Z/0
-         BKgsgx566zdN/soUBM+hoVSPg0Mh339pfKaZgnXQ9whOVS/VisWHxVN9WcoYYav3yECk
-         Ij61J5BrFPqR+ChgqtjTrxSj+HZo/Wi3cxewVxCzA6SdioZEqsUUz0FjTzFcjq5+jDL3
-         W2eJpXAWBAeQDuOHPPDjWTeepbZZcaK0bwqBN0lAn86Q+NQi6cXesdKLyg5ZhJ+PKQWL
-         ILFMB95thwvXk8Yhg5TY/3cQLZfeRvv7FWwXv8GnfNwMUDdeT8DHF2iVNEmofRWm0l1+
-         BWaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KdzTI56/zG61CRTFghoJgUKFV1Q8B4zDnAoIv6r27HM=;
-        b=KK8HOTT+dPYos8ekBSJSqQyB4zdgUifLX+TYFvymv9aIJx1fQdHWFUJTlJiwpdLNne
-         GbFdjgyIhwxUSTfi/KGy3VFUctpOCy9PWodRlAkkuSHPdZTe5cmlH4L37UDPOwgvBs1U
-         5UPwiyi3A0ADOR0bZyKJ/iMx37/P9T8ag7k6uoL2NYIOwEh36+QvzKFg/Oil+g/fVTHk
-         r+ubdnMfMronJugp5CHl1OpfavVoZhctwhfWyehbP7hHbtmisOHL5ckmJttfZnb3zv0j
-         BS5meET5ikUzwqXRoW1FNH3Er9VJ+GVehtoe6BDmxGKa0xw7HFo5yiXGgncOfwRxuTkS
-         OGQA==
-X-Gm-Message-State: APjAAAUlyuoutVvQlseEPIoa8uhZq8H1GR49fk5AB75U064oybG6aFyU
-        C0fo6JKK0hDUdtpeh2kE3I/6jgWDMTkvJyoEn3WMqw==
-X-Google-Smtp-Source: APXvYqySF7rQ3CS5aYa5WUQws2eei8Wnpe7WRTBg73J6Btkx3UaxdRnRh4Rn6PBOGuhYC6vnCKHCnWzCQAn50NUniuI=
-X-Received: by 2002:a9d:7b48:: with SMTP id f8mr6127462oto.207.1560887240878;
- Tue, 18 Jun 2019 12:47:20 -0700 (PDT)
+        id S1730517AbfFRTsg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jun 2019 15:48:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60842 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730176AbfFRTsf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 18 Jun 2019 15:48:35 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0A5F206E0;
+        Tue, 18 Jun 2019 19:48:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560887314;
+        bh=B+P3EIUfBOoeviB9x7VEMBkgJuOvE5XAkLXgLqXgA1U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=d4aa/HY3/uH51bmvZBqzTIu09V5+HGoAigLH5I1623wc4xfpXh2MoiaiNUSAwpnj6
+         zRjfudgEhpNOEJI5ndiRQtB+LNX2PfCB3UfJPSWUtv0sFrCigj1HorhtNz8CoB9NZu
+         135PY4ZSiiSgFSk95kmQcQGjwDkbVwFjQbOfsHQQ=
+Date:   Tue, 18 Jun 2019 14:48:30 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V6 20/27] PCI: tegra: Disable MSI for Tegra PCIe root port
+Message-ID: <20190618194830.GA110859@google.com>
+References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+ <20190618180206.4908-21-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-References: <20190617122733.22432-1-hch@lst.de>
-In-Reply-To: <20190617122733.22432-1-hch@lst.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 18 Jun 2019 12:47:10 -0700
-Message-ID: <CAPcyv4hBUJB2RxkDqHkfEGCupDdXfQSrEJmAdhLFwnDOwt8Lig@mail.gmail.com>
-Subject: Re: dev_pagemap related cleanups v2
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="000000000000872d5f058b9e614c"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190618180206.4908-21-mmaddireddy@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---000000000000872d5f058b9e614c
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jun 18, 2019 at 11:31:59PM +0530, Manikanta Maddireddy wrote:
+> Tegra PCIe generates PME and AER events over legacy interrupt line. Disable
+> MSI to avoid service drivers registering interrupt routine over MSI IRQ
+> line.
+> 
+> PME and AER interrupts registered to MSI without this change,
+> cat /proc/interrupts | grep -i pci
+> 36: 21 0 0 0 0 0 GICv2 104 Level       PCIE
+> 37: 35 0 0 0 0 0 GICv2 105 Level       Tegra PCIe MSI
+> 76: 0  0 0 0 0 0 Tegra PCIe MSI 0 Edge PCIe PME, aerdrv, PCIe BW notif
+> 
+> PME and AER interrupts registered to legacy IRQ with this change,
+> cat /proc/interrupts | grep -i pci
+> 36: 33 0 0 0 0 0 GICv2 104 Level      PCIE, PCIe PME, aerdrv, PCIe BW notif
+> 37: 52 0 0 0 0 0 GICv2 105 Level      Tegra PCIe MSI
+> 
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> ---
+> V6: Replaced pcie_pme_disable_msi() with no_msi quirk
+> 
+> V5: No change
+> 
+> V4: No change
+> 
+> V3: Corrected typo in commit log
+> 
+> V2: No change
+> 
+>  drivers/pci/quirks.c | 39 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index a59ad09ce911..20dcad421991 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2576,6 +2576,45 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA,
+>  			PCI_DEVICE_ID_NVIDIA_NVENET_15,
+>  			nvenet_msi_disable);
+>  
+> +/*
+> + * Tegra PCIe generates PME and AER events over legacy interrupt line.
+> + * So disable msi for Tegra PCIe root ports.
 
-On Mon, Jun 17, 2019 at 5:27 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> Hi Dan, J=C3=A9r=C3=B4me and Jason,
->
-> below is a series that cleans up the dev_pagemap interface so that
-> it is more easily usable, which removes the need to wrap it in hmm
-> and thus allowing to kill a lot of code
->
-> Note: this series is on top of the rdma/hmm branch + the dev_pagemap
-> releas fix series from Dan that went into 5.2-rc5.
->
-> Git tree:
->
->     git://git.infradead.org/users/hch/misc.git hmm-devmem-cleanup.2
->
-> Gitweb:
->
->     http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/hmm-d=
-evmem-cleanup.2
->
-> Changes since v1:
->  - rebase
->  - also switch p2pdma to the internal refcount
->  - add type checking for pgmap->type
->  - rename the migrate method to migrate_to_ram
->  - cleanup the altmap_valid flag
->  - various tidbits from the reviews
+s/msi/MSI/
 
-Attached is my incremental fixups on top of this series, with those
-integrated you can add:
+What's going on here?  Vidya posted a very similar patch [1] (although
+his included nice spec citations, which you omitted), but his added
+quirks for 0x1ad0, 0x1ad1, and 0x1ad2.  You didn't include any of
+those here.
 
-Tested-by: Dan Williams <dan.j.williams@intel.com>
+Maybe Lorenzo will sort this all out, but it would make things easier
+if you and Vidya got together and integrated your patches yourselves
+so Lorenzo didn't have to worry about it.
 
-...to the patches that touch kernel/memremap.c, drivers/dax, and drivers/nv=
-dimm.
+[1] https://lore.kernel.org/lkml/20190612095339.20118-3-vidyas@nvidia.com
 
-You can also add:
-
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-
-...for the series.
-
---000000000000872d5f058b9e614c
-Content-Type: text/x-patch; charset="US-ASCII"; name="incremental.diff"
-Content-Disposition: attachment; filename="incremental.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_jx27x1rf0>
-X-Attachment-Id: f_jx27x1rf0
-
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZGF4L2RldmljZS5jIGIvZHJpdmVycy9kYXgvZGV2aWNlLmMK
-aW5kZXggYTlkN2M5MGVjZjFlLi4xYWY4MjNiMmZlNmIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZGF4
-L2RldmljZS5jCisrKyBiL2RyaXZlcnMvZGF4L2RldmljZS5jCkBAIC00MjgsNiArNDI4LDcgQEAg
-aW50IGRldl9kYXhfcHJvYmUoc3RydWN0IGRldmljZSAqZGV2KQogCQlyZXR1cm4gLUVCVVNZOwog
-CX0KIAorCWRldl9kYXgtPnBnbWFwLnR5cGUgPSBNRU1PUllfREVWSUNFX0RFVkRBWDsKIAlhZGRy
-ID0gZGV2bV9tZW1yZW1hcF9wYWdlcyhkZXYsICZkZXZfZGF4LT5wZ21hcCk7CiAJaWYgKElTX0VS
-UihhZGRyKSkKIAkJcmV0dXJuIFBUUl9FUlIoYWRkcik7CmRpZmYgLS1naXQgYS9kcml2ZXJzL252
-ZGltbS9LY29uZmlnIGIvZHJpdmVycy9udmRpbW0vS2NvbmZpZwppbmRleCA1NDUwMDc5OGYyM2Eu
-LjU3ZDNhNmMzYWM3MCAxMDA2NDQKLS0tIGEvZHJpdmVycy9udmRpbW0vS2NvbmZpZworKysgYi9k
-cml2ZXJzL252ZGltbS9LY29uZmlnCkBAIC0xMTgsNCArMTE4LDE1IEBAIGNvbmZpZyBOVkRJTU1f
-S0VZUwogCWRlcGVuZHMgb24gRU5DUllQVEVEX0tFWVMKIAlkZXBlbmRzIG9uIChMSUJOVkRJTU09
-RU5DUllQVEVEX0tFWVMpIHx8IExJQk5WRElNTT1tCiAKK2NvbmZpZyBOVkRJTU1fVEVTVF9CVUlM
-RAorCWJvb2wgIkJ1aWxkIHRoZSB1bml0IHRlc3QgY29yZSIKKwlkZXBlbmRzIG9uIENPTVBJTEVf
-VEVTVAorCWRlZmF1bHQgQ09NUElMRV9URVNUCisJaGVscAorCSAgQnVpbGQgdGhlIGNvcmUgb2Yg
-dGhlIHVuaXQgdGVzdCBpbmZyYXN0cnVjdHVyZS4gIFRoZSByZXN1bHQgb2YKKwkgIHRoaXMgYnVp
-bGQgaXMgbm9uLWZ1bmN0aW9uYWwgZm9yIHVuaXQgdGVzdCBleGVjdXRpb24sIGJ1dCBpdAorCSAg
-b3RoZXJ3aXNlIGhlbHBzIGNhdGNoIGJ1aWxkIGVycm9ycyBpbmR1Y2VkIGJ5IGNoYW5nZXMgdG8g
-dGhlCisJICBjb3JlIGRldm1fbWVtcmVtYXBfcGFnZXMoKSBpbXBsZW1lbnRhdGlvbiBhbmQgb3Ro
-ZXIKKwkgIGluZnJhc3RydWN0dXJlLgorCiBlbmRpZgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9udmRp
-bW0vTWFrZWZpbGUgYi9kcml2ZXJzL252ZGltbS9NYWtlZmlsZQppbmRleCA2ZjJhMDg4YWZhZDYu
-LjQwMDgwYzEyMDM2MyAxMDA2NDQKLS0tIGEvZHJpdmVycy9udmRpbW0vTWFrZWZpbGUKKysrIGIv
-ZHJpdmVycy9udmRpbW0vTWFrZWZpbGUKQEAgLTI4LDMgKzI4LDcgQEAgbGlibnZkaW1tLSQoQ09O
-RklHX0JUVCkgKz0gYnR0X2RldnMubwogbGlibnZkaW1tLSQoQ09ORklHX05WRElNTV9QRk4pICs9
-IHBmbl9kZXZzLm8KIGxpYm52ZGltbS0kKENPTkZJR19OVkRJTU1fREFYKSArPSBkYXhfZGV2cy5v
-CiBsaWJudmRpbW0tJChDT05GSUdfTlZESU1NX0tFWVMpICs9IHNlY3VyaXR5Lm8KKworVE9PTFMg
-Oj0gLi4vLi4vdG9vbHMKK1RFU1RfU1JDIDo9ICQoVE9PTFMpL3Rlc3RpbmcvbnZkaW1tL3Rlc3QK
-K29iai0kKENPTkZJR19OVkRJTU1fVEVTVF9CVUlMRCkgOj0gJChURVNUX1NSQykvaW9tYXAubwpk
-aWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9tZW1yZW1hcC5oIGIvaW5jbHVkZS9saW51eC9tZW1y
-ZW1hcC5oCmluZGV4IDdlMGYwNzJkZGNlNy4uNDcwZGU2OGRhYmQ2IDEwMDY0NAotLS0gYS9pbmNs
-dWRlL2xpbnV4L21lbXJlbWFwLmgKKysrIGIvaW5jbHVkZS9saW51eC9tZW1yZW1hcC5oCkBAIC01
-NSwxMiArNTUsMTkgQEAgc3RydWN0IHZtZW1fYWx0bWFwIHsKICAqIE1FTU9SWV9ERVZJQ0VfUENJ
-X1AyUERNQToKICAqIERldmljZSBtZW1vcnkgcmVzaWRpbmcgaW4gYSBQQ0kgQkFSIGludGVuZGVk
-IGZvciB1c2Ugd2l0aCBQZWVyLXRvLVBlZXIKICAqIHRyYW5zYWN0aW9ucy4KKyAqCisgKiBNRU1P
-UllfREVWSUNFX0RFVkRBWDoKKyAqIEhvc3QgbWVtb3J5IHRoYXQgaGFzIHNpbWlsYXIgYWNjZXNz
-IHNlbWFudGljcyBhcyBTeXN0ZW0gUkFNIGkuZS4gRE1BCisgKiBjb2hlcmVudCBhbmQgc3VwcG9y
-dHMgcGFnZSBwaW5uaW5nLiBJbiBjb250cmFzdCB0bworICogTUVNT1JZX0RFVklDRV9GU19EQVgs
-IHRoaXMgbWVtb3J5IGlzIGFjY2VzcyB2aWEgYSBkZXZpY2UtZGF4CisgKiBjaGFyYWN0ZXIgZGV2
-aWNlLgogICovCiBlbnVtIG1lbW9yeV90eXBlIHsKIAlNRU1PUllfREVWSUNFX1BSSVZBVEUgPSAx
-LAogCU1FTU9SWV9ERVZJQ0VfUFVCTElDLAogCU1FTU9SWV9ERVZJQ0VfRlNfREFYLAogCU1FTU9S
-WV9ERVZJQ0VfUENJX1AyUERNQSwKKwlNRU1PUllfREVWSUNFX0RFVkRBWCwKIH07CiAKIHN0cnVj
-dCBkZXZfcGFnZW1hcF9vcHMgewpkaWZmIC0tZ2l0IGEva2VybmVsL21lbXJlbWFwLmMgYi9rZXJu
-ZWwvbWVtcmVtYXAuYwppbmRleCA2MDY5M2ExZThlOTIuLjUyYjQ5NjhlNjJjZCAxMDA2NDQKLS0t
-IGEva2VybmVsL21lbXJlbWFwLmMKKysrIGIva2VybmVsL21lbXJlbWFwLmMKQEAgLTE3Myw2ICsx
-NzMsNyBAQCB2b2lkICpkZXZtX21lbXJlbWFwX3BhZ2VzKHN0cnVjdCBkZXZpY2UgKmRldiwgc3Ry
-dWN0IGRldl9wYWdlbWFwICpwZ21hcCkKIAl9OwogCXBncHJvdF90IHBncHJvdCA9IFBBR0VfS0VS
-TkVMOwogCWludCBlcnJvciwgbmlkLCBpc19yYW07CisJYm9vbCBnZXRfb3BzID0gdHJ1ZTsKIAog
-CXN3aXRjaCAocGdtYXAtPnR5cGUpIHsKIAljYXNlIE1FTU9SWV9ERVZJQ0VfUFJJVkFURToKQEAg
-LTE5OSw2ICsyMDAsOCBAQCB2b2lkICpkZXZtX21lbXJlbWFwX3BhZ2VzKHN0cnVjdCBkZXZpY2Ug
-KmRldiwgc3RydWN0IGRldl9wYWdlbWFwICpwZ21hcCkKIAkJfQogCQlicmVhazsKIAljYXNlIE1F
-TU9SWV9ERVZJQ0VfUENJX1AyUERNQToKKwljYXNlIE1FTU9SWV9ERVZJQ0VfREVWREFYOgorCQln
-ZXRfb3BzID0gZmFsc2U7CiAJCWJyZWFrOwogCWRlZmF1bHQ6CiAJCVdBUk4oMSwgIkludmFsaWQg
-cGdtYXAgdHlwZSAlZFxuIiwgcGdtYXAtPnR5cGUpOwpAQCAtMjIyLDcgKzIyNSw3IEBAIHZvaWQg
-KmRldm1fbWVtcmVtYXBfcGFnZXMoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2X3BhZ2Vt
-YXAgKnBnbWFwKQogCQl9CiAJfQogCi0JaWYgKHBnbWFwLT50eXBlICE9IE1FTU9SWV9ERVZJQ0Vf
-UENJX1AyUERNQSkgeworCWlmIChnZXRfb3BzKSB7CiAJCWVycm9yID0gZGV2X3BhZ2VtYXBfZ2V0
-X29wcyhkZXYsIHBnbWFwKTsKIAkJaWYgKGVycm9yKQogCQkJcmV0dXJuIEVSUl9QVFIoZXJyb3Ip
-OwpkaWZmIC0tZ2l0IGEvdG9vbHMvdGVzdGluZy9udmRpbW0vdGVzdC9pb21hcC5jIGIvdG9vbHMv
-dGVzdGluZy9udmRpbW0vdGVzdC9pb21hcC5jCmluZGV4IDhjZDliOTg3M2E3Zi4uOTAxOWRkOGFm
-YmMxIDEwMDY0NAotLS0gYS90b29scy90ZXN0aW5nL252ZGltbS90ZXN0L2lvbWFwLmMKKysrIGIv
-dG9vbHMvdGVzdGluZy9udmRpbW0vdGVzdC9pb21hcC5jCkBAIC0xMDYsNyArMTA2LDcgQEAgRVhQ
-T1JUX1NZTUJPTChfX3dyYXBfZGV2bV9tZW1yZW1hcCk7CiAKIHN0YXRpYyB2b2lkIG5maXRfdGVz
-dF9raWxsKHZvaWQgKl9wZ21hcCkKIHsKLQlXQVJOX09OKCFwZ21hcCB8fCAhcGdtYXAtPnJlZikK
-KwlzdHJ1Y3QgZGV2X3BhZ2VtYXAgKnBnbWFwID0gX3BnbWFwOwogCiAJaWYgKHBnbWFwLT5vcHMg
-JiYgcGdtYXAtPm9wcy0+a2lsbCkKIAkJcGdtYXAtPm9wcy0+a2lsbChwZ21hcCk7CkBAIC0xMjEs
-MjAgKzEyMSw0NSBAQCBzdGF0aWMgdm9pZCBuZml0X3Rlc3Rfa2lsbCh2b2lkICpfcGdtYXApCiAJ
-fQogfQogCitzdGF0aWMgdm9pZCBkZXZfcGFnZW1hcF9wZXJjcHVfcmVsZWFzZShzdHJ1Y3QgcGVy
-Y3B1X3JlZiAqcmVmKQoreworCXN0cnVjdCBkZXZfcGFnZW1hcCAqcGdtYXAgPQorCQljb250YWlu
-ZXJfb2YocmVmLCBzdHJ1Y3QgZGV2X3BhZ2VtYXAsIGludGVybmFsX3JlZik7CisKKwljb21wbGV0
-ZSgmcGdtYXAtPmRvbmUpOworfQorCiB2b2lkICpfX3dyYXBfZGV2bV9tZW1yZW1hcF9wYWdlcyhz
-dHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZfcGFnZW1hcCAqcGdtYXApCiB7CisJaW50IGVy
-cm9yOwogCXJlc291cmNlX3NpemVfdCBvZmZzZXQgPSBwZ21hcC0+cmVzLnN0YXJ0OwogCXN0cnVj
-dCBuZml0X3Rlc3RfcmVzb3VyY2UgKm5maXRfcmVzID0gZ2V0X25maXRfcmVzKG9mZnNldCk7CiAK
-LQlpZiAobmZpdF9yZXMpIHsKLQkJaW50IHJjOworCWlmICghbmZpdF9yZXMpCisJCXJldHVybiBk
-ZXZtX21lbXJlbWFwX3BhZ2VzKGRldiwgcGdtYXApOwogCi0JCXJjID0gZGV2bV9hZGRfYWN0aW9u
-X29yX3Jlc2V0KGRldiwgbmZpdF90ZXN0X2tpbGwsIHBnbWFwKTsKLQkJaWYgKHJjKQotCQkJcmV0
-dXJuIEVSUl9QVFIocmMpOwotCQlyZXR1cm4gbmZpdF9yZXMtPmJ1ZiArIG9mZnNldCAtIG5maXRf
-cmVzLT5yZXMuc3RhcnQ7CisJcGdtYXAtPmRldiA9IGRldjsKKwlpZiAoIXBnbWFwLT5yZWYpIHsK
-KwkJaWYgKHBnbWFwLT5vcHMgJiYgKHBnbWFwLT5vcHMtPmtpbGwgfHwgcGdtYXAtPm9wcy0+Y2xl
-YW51cCkpCisJCQlyZXR1cm4gRVJSX1BUUigtRUlOVkFMKTsKKworCQlpbml0X2NvbXBsZXRpb24o
-JnBnbWFwLT5kb25lKTsKKwkJZXJyb3IgPSBwZXJjcHVfcmVmX2luaXQoJnBnbWFwLT5pbnRlcm5h
-bF9yZWYsCisJCQkJZGV2X3BhZ2VtYXBfcGVyY3B1X3JlbGVhc2UsIDAsIEdGUF9LRVJORUwpOwor
-CQlpZiAoZXJyb3IpCisJCQlyZXR1cm4gRVJSX1BUUihlcnJvcik7CisJCXBnbWFwLT5yZWYgPSAm
-cGdtYXAtPmludGVybmFsX3JlZjsKKwl9IGVsc2UgeworCQlpZiAoIXBnbWFwLT5vcHMgfHwgIXBn
-bWFwLT5vcHMtPmtpbGwgfHwgIXBnbWFwLT5vcHMtPmNsZWFudXApIHsKKwkJCVdBUk4oMSwgIk1p
-c3NpbmcgcmVmZXJlbmNlIGNvdW50IHRlYXJkb3duIGRlZmluaXRpb25cbiIpOworCQkJcmV0dXJu
-IEVSUl9QVFIoLUVJTlZBTCk7CisJCX0KIAl9Ci0JcmV0dXJuIGRldm1fbWVtcmVtYXBfcGFnZXMo
-ZGV2LCBwZ21hcCk7CisKKwllcnJvciA9IGRldm1fYWRkX2FjdGlvbl9vcl9yZXNldChkZXYsIG5m
-aXRfdGVzdF9raWxsLCBwZ21hcCk7CisJaWYgKGVycm9yKQorCQlyZXR1cm4gRVJSX1BUUihlcnJv
-cik7CisJcmV0dXJuIG5maXRfcmVzLT5idWYgKyBvZmZzZXQgLSBuZml0X3Jlcy0+cmVzLnN0YXJ0
-OwogfQogRVhQT1JUX1NZTUJPTF9HUEwoX193cmFwX2Rldm1fbWVtcmVtYXBfcGFnZXMpOwogCg==
---000000000000872d5f058b9e614c--
+> + */
+> +static void pci_quirk_nvidia_tegra_disable_rp_msi(struct pci_dev *dev)
+> +{
+> +	dev->no_msi = 1;
+> +}
+> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf0,
+> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf1,
+> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c,
+> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d,
+> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e12,
+> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e13,
+> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0fae,
+> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0faf,
+> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x10e5,
+> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x10e6,
+> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> +
+>  /*
+>   * Some versions of the MCP55 bridge from Nvidia have a legacy IRQ routing
+>   * config register.  This register controls the routing of legacy
+> -- 
+> 2.17.1
+> 
