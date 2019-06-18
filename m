@@ -2,170 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D8A9249E9F
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2019 12:51:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 476FF4A0C0
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2019 14:28:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbfFRKv2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jun 2019 06:51:28 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:14316 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729098AbfFRKv1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jun 2019 06:51:27 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d08c22c0000>; Tue, 18 Jun 2019 03:51:27 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 18 Jun 2019 03:51:26 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 18 Jun 2019 03:51:26 -0700
-Received: from [10.24.47.153] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 10:51:20 +0000
-Subject: Re: [PATCH V4 1/2] PCI: dwc: Add API support to de-initialize host
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <bhelgaas@google.com>, <Jisheng.Zhang@synaptics.com>,
-        <thierry.reding@gmail.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190502170426.28688-1-vidyas@nvidia.com>
- <20190503112338.GA25649@e121166-lin.cambridge.arm.com>
- <dec5ecb2-863e-a1db-10c9-2d91f860a2c6@nvidia.com>
- <37697830-5a94-0f8e-a5cf-3347bc4850cb@nvidia.com>
- <b560f3c3-b69e-d9b5-2dae-1ede52af0ea6@nvidia.com>
- <011b52b6-9fcd-8930-1313-6b546226c7b9@nvidia.com>
- <8a6696e0-fc53-2e6b-536b-d1d2668e0f21@nvidia.com>
- <07c3dd04-cfd0-2d52-5917-25d0e40ad00b@nvidia.com>
- <20190618093657.GA30711@e121166-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <eb0e5b1e-7e91-4dc6-681f-b497f087c62d@nvidia.com>
-Date:   Tue, 18 Jun 2019 16:21:17 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190618093657.GA30711@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        id S1725970AbfFRM2H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jun 2019 08:28:07 -0400
+Received: from mail-eopbgr810049.outbound.protection.outlook.com ([40.107.81.49]:32000
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725919AbfFRM2H (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 18 Jun 2019 08:28:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5Zm0jDVCCqDNt3W3hYGDEGAmc01tkRV943G38pqB4Sk=;
+ b=sRKGWk/SCxhS/YV7Q3c+BqvnrQegVnK8Qi+BOiWALDnQVnyitVkldjEhLaKjIKGzIsWMdNbF0K3vc7CFWPfNdJxyvM9zdRwXURTlH94SOJBrxTpjsc6tOnbaz2hvTiMHKaxYALjtYZqBPz5ehU4qh5ySRrqqpgWwjHuiS/3w7hI=
+Received: from CH2PR02MB6453.namprd02.prod.outlook.com (52.132.228.24) by
+ CH2PR02MB6038.namprd02.prod.outlook.com (10.255.156.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.12; Tue, 18 Jun 2019 12:28:02 +0000
+Received: from CH2PR02MB6453.namprd02.prod.outlook.com
+ ([fe80::8121:11ae:9021:ba9e]) by CH2PR02MB6453.namprd02.prod.outlook.com
+ ([fe80::8121:11ae:9021:ba9e%7]) with mapi id 15.20.1987.014; Tue, 18 Jun 2019
+ 12:28:02 +0000
+From:   Bharat Kumar Gogada <bharatku@xilinx.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Ravikiran Gummaluri <rgummal@xilinx.com>
+Subject: RE: [PATCH v4] PCI: xilinx-nwl: Fix Multi MSI data programming
+Thread-Topic: [PATCH v4] PCI: xilinx-nwl: Fix Multi MSI data programming
+Thread-Index: AQHVIQgn2G+6s2M/0EWS6kSrcyuXeqafme0AgAHGMRA=
+Date:   Tue, 18 Jun 2019 12:28:02 +0000
+Message-ID: <CH2PR02MB6453032A01A540F5E9C58402A5EA0@CH2PR02MB6453.namprd02.prod.outlook.com>
+References: <1560334679-9206-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <20190617092108.GA18020@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20190617092108.GA18020@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=bharatku@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a8a8c915-509f-4a90-5541-08d6f3e86840
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CH2PR02MB6038;
+x-ms-traffictypediagnostic: CH2PR02MB6038:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-microsoft-antispam-prvs: <CH2PR02MB6038D8E2226D32A77D3FD2D0A5EA0@CH2PR02MB6038.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 007271867D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(136003)(376002)(346002)(366004)(189003)(199004)(64756008)(102836004)(2351001)(26005)(6506007)(478600001)(66556008)(11346002)(66446008)(73956011)(6436002)(66476007)(7696005)(55016002)(33656002)(66946007)(446003)(76116006)(5640700003)(76176011)(476003)(86362001)(486006)(6246003)(107886003)(186003)(74316002)(4326008)(25786009)(5660300002)(68736007)(7736002)(8676002)(71190400001)(71200400001)(66066001)(2501003)(81166006)(81156014)(14444005)(256004)(6916009)(229853002)(8936002)(6116002)(3846002)(52536014)(9686003)(99286004)(2906002)(316002)(54906003)(53936002)(305945005)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6038;H:CH2PR02MB6453.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: WNdCFm0SSUIRPzx9vJ8YYWRjSWAyk+/mprF8p4ksaYl2r5T/Eyb+L/lnTQGILW30TgI7CLFxhafHZpdGztSP3Ww49WrPnUrVRcW4gBbF7tN/gMZKJvTYtCaZG0cR1GjU/7WOVxgCZYTRPvZjYv4BsFcv5FtSdpgr9N5g6mfrahFWNiGkexYKu0tFBj+KAaHnZQ2lDG0neTqj/GZsXE8z0ODHetwS7EBEGieP5sSCcN9o6WQi4IQZ8gK1kef80d4sXO47xwaeobRm0+H0s0JMmT/OOQBNo2L3Opk2s1EV9xNbNPr3A7AnOT2NIlTrEofd0iI311Y+E0aEMoGauAG1DcWHjqE9qbYqMAPnKZQxli0Kb/TO1MZsmAlvRWBqtYQZeYRdKGa2Qije/NZjgEET5ysNmU7soPthTWrTslfLPFk=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560855087; bh=tG4QOMCAspIJNcVTt0o+6AE2E9v26du6/Osbyzw3Ero=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Do+3w9cmJXI1PPoTM/iqHat60dVQ/xUotKkdurD2eRlRzJ2v3Pw5PjRmzL9wX1BFW
-         ueGD9gP38RR9x+aGbYLB+DqoW/dx/LXX6+kNjaTzxqiyvYFr0Ms2XGhPWHaxkxtqcN
-         tWc3vb0y/S/iGx8BWE7X0bUN57eKOz5f16BrUhwuGTboqrZfOf8OoQ2um/ZaOuBXXt
-         21gSF1XdqYe2BwnyGobRztw56KBcScNYtHnVvPPoUIQjGQAByDfeFFys/4UJGNf1Cw
-         nhpFfPa2Yz4ARWBeo5Z9ihMwbNdscOPog0mMIJiKNOBsCnuk0w8gAbGlSMMVEvKxQa
-         NoEoaQdWHMZZw==
+MIME-Version: 1.0
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a8a8c915-509f-4a90-5541-08d6f3e86840
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2019 12:28:02.4873
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bharatku@xilinx.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6038
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/18/2019 3:06 PM, Lorenzo Pieralisi wrote:
-> On Tue, Jun 18, 2019 at 10:19:14AM +0530, Vidya Sagar wrote:
 >=20
-> [...]
+> On Wed, Jun 12, 2019 at 03:47:59PM +0530, Bharat Kumar Gogada wrote:
+> > The current Multi MSI data programming fails if multiple end points
+> > requesting MSI and multi MSI are connected with switch, i.e the
+> > current multi MSI data being given is not considering the number of
+> > vectors being requested in case of multi MSI.
+> > Ex: Two EP's connected via switch, EP1 requesting single MSI first,
+> > EP2 requesting Multi MSI of count four. The current code gives MSI
+> > data 0x0 to EP1 and 0x1 to EP2, but EP2 can modify lower two bits due
+> > to which EP2 also sends interrupt with MSI data 0x0 which results in
+> > always invoking virq of EP1 due to which EP2 MSI interrupt never gets
+> > handled.
+> >
+> > Fix Multi MSI data programming with required alignment by using number
+> > of vectors being requested.
+> >
+> > Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe
+> > Host Controller")
+> >
+> > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> > ---
+> > V4:
+> >  - Using a different bitmap registration API whcih serves single and mu=
+lti
+> >    MSI requests.
+> > ---
+> >  drivers/pci/controller/pcie-xilinx-nwl.c | 11 +++++------
+> >  1 file changed, 5 insertions(+), 6 deletions(-)
 >=20
->> Sorry for pinging again. Please let me know if these patches need to
->> be sent again.
->=20
-> No problem. We can merge the code as-is even though I have a couple
-> of questions.
->=20
-> 1) What about dbi2 interfaces (what an horrible name it is :() ? It
->     is true that it is probably best to export just what we need.
-I see that dbi2 API (that too only write) is used by pci-keystone and it
-is described as a bool driver currently. I'm not sure if it will ever be
-made as a modular driver.
-
-> 2) It is not related to this patch but I fail to see the reasoning
->     behind the __ in __dw_pci_read_dbi(), there is no no-underscore
->     equivalent so its definition is somewhat questionable, maybe
->     we should clean-it up (for dbi2 alike).
-Separate no-underscore versions are present in pcie-designware.h for each w=
-idth
-(i.e. l/w/b) as inline and are calling __ versions passing size as argument=
-.
-
+> Applied to pci/xilinx for v5.3, please have a look and check if the commi=
+t log
+> I wrote provides a clear description of the issue.
 >=20
 > Lorenzo
->=20
->> Thanks,
->> Vidya Sagar
->>
->>>
->>>>
->>>>>>
->>>>>>>
->>>>>>>>
->>>>>>>> Thanks,
->>>>>>>> Lorenzo
->>>>>>>>
->>>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/=
-drivers/pci/controller/dwc/pcie-designware-host.c
->>>>>>>>> index 77db32529319..d069e4290180 100644
->>>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>>>>>> @@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
->>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>>>>>>>  =C2=A0 }
->>>>>>>>> +void dw_pcie_host_deinit(struct pcie_port *pp)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 pci_stop_root_bus(pp->root_bus);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 pci_remove_root_bus(pp->root_bus);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (pci_msi_enabled() && !pp->ops->msi_host_i=
-nit)
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dw_pcie_free_msi(pp);
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>>  =C2=A0 static int dw_pcie_access_other_conf(struct pcie_port *pp=
-, struct pci_bus *bus,
->>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 d=
-evfn, int where, int size, u32 *val,
->>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool =
-write)
->>>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drive=
-rs/pci/controller/dwc/pcie-designware.h
->>>>>>>>> index deab426affd3..4f48ec78c7b9 100644
->>>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
->>>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->>>>>>>>> @@ -348,6 +348,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
->>>>>>>>>  =C2=A0 void dw_pcie_free_msi(struct pcie_port *pp);
->>>>>>>>>  =C2=A0 void dw_pcie_setup_rc(struct pcie_port *pp);
->>>>>>>>>  =C2=A0 int dw_pcie_host_init(struct pcie_port *pp);
->>>>>>>>> +void dw_pcie_host_deinit(struct pcie_port *pp);
->>>>>>>>>  =C2=A0 int dw_pcie_allocate_domains(struct pcie_port *pp);
->>>>>>>>>  =C2=A0 #else
->>>>>>>>>  =C2=A0 static inline irqreturn_t dw_handle_msi_irq(struct pcie_p=
-ort *pp)
->>>>>>>>> @@ -372,6 +373,10 @@ static inline int dw_pcie_host_init(struct p=
-cie_port *pp)
->>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>>  =C2=A0 }
->>>>>>>>> +static inline void dw_pcie_host_deinit(struct pcie_port *pp)
->>>>>>>>> +{
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>>  =C2=A0 static inline int dw_pcie_allocate_domains(struct pcie_po=
-rt *pp)
->>>>>>>>>  =C2=A0 {
->>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>> --=20
->>>>>>>>> 2.17.1
->>>>>>>>>
->>>>>>>
->>>>>>
->>>>>
->>>>
->>>
->>
+Thanks Lorenzo and Marc.
+Lorenzo, can you please point to link for above commit.
 
+Regards,
+Bharat
+> > diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c
+> > b/drivers/pci/controller/pcie-xilinx-nwl.c
+> > index 81538d7..a9e07b8 100644
+> > --- a/drivers/pci/controller/pcie-xilinx-nwl.c
+> > +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+> > @@ -483,15 +483,13 @@ static int nwl_irq_domain_alloc(struct
+> irq_domain *domain, unsigned int virq,
+> >  	int i;
+> >
+> >  	mutex_lock(&msi->lock);
+> > -	bit =3D bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
+> > -					 nr_irqs, 0);
+> > -	if (bit >=3D INT_PCI_MSI_NR) {
+> > +	bit =3D bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
+> > +				      get_count_order(nr_irqs));
+> > +	if (bit < 0) {
+> >  		mutex_unlock(&msi->lock);
+> >  		return -ENOSPC;
+> >  	}
+> >
+> > -	bitmap_set(msi->bitmap, bit, nr_irqs);
+> > -
+> >  	for (i =3D 0; i < nr_irqs; i++) {
+> >  		irq_domain_set_info(domain, virq + i, bit + i, &nwl_irq_chip,
+> >  				domain->host_data, handle_simple_irq, @@
+> -509,7 +507,8 @@ static
+> > void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+> >  	struct nwl_msi *msi =3D &pcie->msi;
+> >
+> >  	mutex_lock(&msi->lock);
+> > -	bitmap_clear(msi->bitmap, data->hwirq, nr_irqs);
+> > +	bitmap_release_region(msi->bitmap, data->hwirq,
+> > +			      get_count_order(nr_irqs));
+> >  	mutex_unlock(&msi->lock);
+> >  }
+> >
+> > --
+> > 2.7.4
+> >
