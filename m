@@ -2,50 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 974444AD22
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2019 23:15:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BE154AD24
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2019 23:15:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730655AbfFRVPF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jun 2019 17:15:05 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34459 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730181AbfFRVPF (ORCPT
+        id S1730181AbfFRVPG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jun 2019 17:15:06 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39696 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730350AbfFRVPF (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jun 2019 17:15:05 -0400
-Received: by mail-wr1-f68.google.com with SMTP id k11so1049550wrl.1;
-        Tue, 18 Jun 2019 14:15:02 -0700 (PDT)
+Received: by mail-wm1-f68.google.com with SMTP id z23so4697468wma.4;
+        Tue, 18 Jun 2019 14:15:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GFC2U217SF+O5Fp8I6sd90iiYF5kWGFryqAnl3xENJw=;
-        b=E2NYCAjVizh2kbiYeRCOYgVAzGUadZbKlNdbvHNK0I/Nuu2pUHvJO+rtW7vhyyjZp5
-         pF1xvOq35dSN29vmWRcmIpuiU9wUzKdCfoek26+K5F3ytTUfX2Vqgqn+Lf4S8XEoByy1
-         /lMoKAMbZjgSr83VMl+r814/EePU6zOOo/2yROGAJqkqoqUFQVQvMWhySbFft9LjzoA3
-         DDU5fMxK2fXoag2Nh8hyNjAJ90LI9BRnU3zfoAOXvTFcLeNFrCRwSz4llt/uA3KV9THO
-         At15CgvnCLLdSqNo/lIZffE0sTAsgk7sBFsdi7K32DBpcl2i7Ia7IrFEoJTk0CxkXGEM
-         5BoQ==
+        bh=rWwSJeLUsFHwAKGFtL8HKocirM8z2NvBy3ERORUMtdg=;
+        b=XvaZP0OFZUyDtAFm8Jt0dCdogaeIMkmtHWzy/z+NaDk2EmVHjipKfok/GCvnfBCddz
+         CCawxZfXYZOrsRu5u+tcj/ylBVY8kj/yw0E+TXT+embp8vIaj+imxJC2q/Bkil8yOV9y
+         VxoJnO3aBSTu/jvHckfrIQGBHrPgamLYxwRqmnGI9OxsOcsOj9nYbjKDX1MPYBUEUiE4
+         8/JdYqOgbJqufHOEVtpBgWmETPn6O3NqN74wa1Mx61KOwpCIL6XdHZ9HKucVmQFC9xrk
+         0qPJOEqyogNNALobB90eiNT0Uj6LugfjfspjyUSzSs6b26yAmisBmrkdcg04Bf3m0Q35
+         iB0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=GFC2U217SF+O5Fp8I6sd90iiYF5kWGFryqAnl3xENJw=;
-        b=N45jPM28ywxAvAFmq2jR7kyRikGn1EdS0ggRdxCP5Z9y3PyOQ65UuafbBfh+ls9Xwl
-         1l8kapWaqCq2dZ48zCOg3bQ+aSZsIxgn9e1TFmxlq+SOUjIRQDXa+UET66YWfWBjVK5X
-         13e88KZj9Gw+nqLb05kyuBwvwJ/XXppoPBLa9W9MHJuHS0OLIH3cffim+t+n6tPQPJ7n
-         kOsYx6XbCm861ZAAT94pk+YUCt7LHm9QlpcV3cSluIp+SOaBA6t0T8z0cMrzuAXVApDN
-         sMLCtZhvh4n7ANDDJA41fPRQzGS6QSwKtt5+wwatgLXG4laLDSQJVqS7xcxqZiNNI7EJ
-         RsaQ==
-X-Gm-Message-State: APjAAAX6NmyxnGZWsnKagjk9u+o6iRQnhDKFWF3OC3KdGSNakt1rgbbD
-        SZwLPsV1nTmdS6Y06eVS6qfg6u3S
-X-Google-Smtp-Source: APXvYqwNIuNZWCOh05X2WAP3isXcePC9IyCyA+Y3zx3Zy2x4SwjrePsghwKNBm9oMAQgdSIR1U2dQw==
-X-Received: by 2002:a5d:50cc:: with SMTP id f12mr5509116wrt.129.1560892501933;
-        Tue, 18 Jun 2019 14:15:01 -0700 (PDT)
+        bh=rWwSJeLUsFHwAKGFtL8HKocirM8z2NvBy3ERORUMtdg=;
+        b=XBltXh21laWk5llgZW4FNNzZ5H43o1X4EL2szV7h2iXw5LAxNmO89lSP0HOaYDxvKu
+         T3onKzqcMlJVaIuZFGaPInz3pF6vYnPD4oLhqjUouYNuv8PxeCTaawRUqUxKU4i3eSGW
+         KLMzd4QHIno694U9H2XiMahPEnHYxj6GTSZy+a4xgzYLcXBsa1c9aZ1uBZEYL45hS0Nq
+         rQ5bHxXuedgilubreQQ899SYqBe717S/Zf2bhiesbKsK47yAKcrFBabPjwEDvU5EQpzx
+         xQxSmEh5r9udmZKTKSiWHylkghVFXO+/9bir97oqsf7oIswo9qerQTS0ZKmreDnFMMJ5
+         u3cg==
+X-Gm-Message-State: APjAAAXPpj6R3Var2YUi5+385jDBkUOEx7dimehGbupWOVBYM/RXjqPw
+        zxKtrqo9v55rBFUFVo9ICcGI+fDi
+X-Google-Smtp-Source: APXvYqxsrGzOaEsC2qr3FAIs6zt3ylrJo+Csd3rypjCYCc5C9R7IAL4yO6RqnzyX5RHavRuv3/vfZA==
+X-Received: by 2002:a1c:67c2:: with SMTP id b185mr4859786wmc.98.1560892503351;
+        Tue, 18 Jun 2019 14:15:03 -0700 (PDT)
 Received: from ?IPv6:2003:ea:8bf3:bd00:28c3:39c3:997e:395f? (p200300EA8BF3BD0028C339C3997E395F.dip0.t-ipconnect.de. [2003:ea:8bf3:bd00:28c3:39c3:997e:395f])
-        by smtp.googlemail.com with ESMTPSA id t1sm22599964wra.74.2019.06.18.14.15.00
+        by smtp.googlemail.com with ESMTPSA id q20sm35973938wra.36.2019.06.18.14.15.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 14:15:01 -0700 (PDT)
-Subject: [PATCH net-next 1/2] PCI: let pci_disable_link_state propagate errors
+        Tue, 18 Jun 2019 14:15:02 -0700 (PDT)
+Subject: [PATCH net-next 2/2] r8169: don't activate ASPM in chip if OS can't
+ control ASPM
 From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Realtek linux nic maintainers <nic_swsd@realtek.com>,
@@ -53,8 +54,8 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
 Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>
 References: <5ea56278-05e2-794f-5f66-23343e72164c@gmail.com>
-Message-ID: <604f2954-c60c-d2aa-3849-9a2f8872001c@gmail.com>
-Date:   Tue, 18 Jun 2019 23:13:48 +0200
+Message-ID: <680bce5c-44e7-b9ad-0f41-d7a4a70462b7@gmail.com>
+Date:   Tue, 18 Jun 2019 23:14:50 +0200
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.1
 MIME-Version: 1.0
@@ -67,108 +68,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Drivers may rely on pci_disable_link_state() having disabled certain
-ASPM link states. If OS can't control ASPM then pci_disable_link_state()
-turns into a no-op w/o informing the caller. The driver therefore may
-falsely assume the respective ASPM link states are disabled.
-Let pci_disable_link_state() propagate errors to the caller, enabling
-the caller to react accordingly.
+Certain chip version / board combinations have massive problems if
+ASPM is active. If BIOS enables ASPM and doesn't let OS control it,
+then we may have a problem with the current code. Therefore check the
+return code of pci_disable_link_state() and don't enable ASPM in the
+network chip if OS can't control ASPM.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- drivers/pci/pcie/aspm.c  | 20 +++++++++++---------
- include/linux/pci-aspm.h |  7 ++++---
- 2 files changed, 15 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/realtek/r8169_main.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index fd4cb7508..e44af7f4d 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -1062,18 +1062,18 @@ void pcie_aspm_powersave_config_link(struct pci_dev *pdev)
- 	up_read(&pci_bus_sem);
- }
+diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+index 2e2a74aa0..48b8a90f7 100644
+--- a/drivers/net/ethernet/realtek/r8169_main.c
++++ b/drivers/net/ethernet/realtek/r8169_main.c
+@@ -652,6 +652,7 @@ struct rtl8169_private {
  
--static void __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
-+static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
+ 	unsigned irq_enabled:1;
+ 	unsigned supports_gmii:1;
++	unsigned aspm_manageable:1;
+ 	dma_addr_t counters_phys_addr;
+ 	struct rtl8169_counters *counters;
+ 	struct rtl8169_tc_offsets tc_offset;
+@@ -4286,7 +4287,8 @@ static void rtl_pcie_state_l2l3_disable(struct rtl8169_private *tp)
+ 
+ static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
  {
- 	struct pci_dev *parent = pdev->bus->self;
- 	struct pcie_link_state *link;
- 
- 	if (!pci_is_pcie(pdev))
--		return;
-+		return 0;
- 
- 	if (pdev->has_secondary_link)
- 		parent = pdev;
- 	if (!parent || !parent->link_state)
--		return;
-+		return -EINVAL;
- 
- 	/*
- 	 * A driver requested that ASPM be disabled on this device, but
-@@ -1085,7 +1085,7 @@ static void __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
+-	if (enable) {
++	/* Don't enable ASPM in the chip if OS can't control ASPM */
++	if (enable && tp->aspm_manageable) {
+ 		RTL_W8(tp, Config5, RTL_R8(tp, Config5) | ASPM_en);
+ 		RTL_W8(tp, Config2, RTL_R8(tp, Config2) | ClkReqEn);
+ 	} else {
+@@ -6678,7 +6680,9 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	/* Disable ASPM completely as that cause random device stop working
+ 	 * problems as well as full system hangs for some PCIe devices users.
  	 */
- 	if (aspm_disabled) {
- 		pci_warn(pdev, "can't disable ASPM; OS doesn't have ASPM control\n");
--		return;
-+		return -EPERM;
- 	}
+-	pci_disable_link_state(pdev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
++	rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L0S |
++					  PCIE_LINK_STATE_L1);
++	tp->aspm_manageable = !rc;
  
- 	if (sem)
-@@ -1105,11 +1105,13 @@ static void __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
- 	mutex_unlock(&aspm_lock);
- 	if (sem)
- 		up_read(&pci_bus_sem);
-+
-+	return 0;
- }
- 
--void pci_disable_link_state_locked(struct pci_dev *pdev, int state)
-+int pci_disable_link_state_locked(struct pci_dev *pdev, int state)
- {
--	__pci_disable_link_state(pdev, state, false);
-+	return __pci_disable_link_state(pdev, state, false);
- }
- EXPORT_SYMBOL(pci_disable_link_state_locked);
- 
-@@ -1117,14 +1119,14 @@ EXPORT_SYMBOL(pci_disable_link_state_locked);
-  * pci_disable_link_state - Disable device's link state, so the link will
-  * never enter specific states.  Note that if the BIOS didn't grant ASPM
-  * control to the OS, this does nothing because we can't touch the LNKCTL
-- * register.
-+ * register. Returns 0 or a negative errno.
-  *
-  * @pdev: PCI device
-  * @state: ASPM link state to disable
-  */
--void pci_disable_link_state(struct pci_dev *pdev, int state)
-+int pci_disable_link_state(struct pci_dev *pdev, int state)
- {
--	__pci_disable_link_state(pdev, state, true);
-+	return __pci_disable_link_state(pdev, state, true);
- }
- EXPORT_SYMBOL(pci_disable_link_state);
- 
-diff --git a/include/linux/pci-aspm.h b/include/linux/pci-aspm.h
-index df28af5ce..67064145d 100644
---- a/include/linux/pci-aspm.h
-+++ b/include/linux/pci-aspm.h
-@@ -24,11 +24,12 @@
- #define PCIE_LINK_STATE_CLKPM	4
- 
- #ifdef CONFIG_PCIEASPM
--void pci_disable_link_state(struct pci_dev *pdev, int state);
--void pci_disable_link_state_locked(struct pci_dev *pdev, int state);
-+int pci_disable_link_state(struct pci_dev *pdev, int state);
-+int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
- void pcie_no_aspm(void);
- #else
--static inline void pci_disable_link_state(struct pci_dev *pdev, int state) { }
-+static inline int pci_disable_link_state(struct pci_dev *pdev, int state)
-+{ return 0; }
- static inline void pcie_no_aspm(void) { }
- #endif
- 
+ 	/* enable device (incl. PCI PM wakeup and hotplug setup) */
+ 	rc = pcim_enable_device(pdev);
 -- 
 2.22.0
 
