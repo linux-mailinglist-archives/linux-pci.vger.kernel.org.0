@@ -2,211 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8082C4986D
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2019 06:49:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51C8B499B3
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2019 09:02:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725955AbfFREtY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jun 2019 00:49:24 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:10680 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfFREtY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jun 2019 00:49:24 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d086d530001>; Mon, 17 Jun 2019 21:49:23 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 17 Jun 2019 21:49:22 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 17 Jun 2019 21:49:22 -0700
-Received: from [10.24.47.153] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 04:49:17 +0000
-Subject: Re: [PATCH V4 1/2] PCI: dwc: Add API support to de-initialize host
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <bhelgaas@google.com>, <Jisheng.Zhang@synaptics.com>,
-        <thierry.reding@gmail.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190502170426.28688-1-vidyas@nvidia.com>
- <20190503112338.GA25649@e121166-lin.cambridge.arm.com>
- <dec5ecb2-863e-a1db-10c9-2d91f860a2c6@nvidia.com>
- <37697830-5a94-0f8e-a5cf-3347bc4850cb@nvidia.com>
- <b560f3c3-b69e-d9b5-2dae-1ede52af0ea6@nvidia.com>
- <011b52b6-9fcd-8930-1313-6b546226c7b9@nvidia.com>
- <8a6696e0-fc53-2e6b-536b-d1d2668e0f21@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <07c3dd04-cfd0-2d52-5917-25d0e40ad00b@nvidia.com>
-Date:   Tue, 18 Jun 2019 10:19:14 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <8a6696e0-fc53-2e6b-536b-d1d2668e0f21@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560833363; bh=D1am2I/bI2xZcHfLWVk+66IAFl8L+5WwQBu6d7+UR1s=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=h78QfXjCqiYr6ZqGHO0He7XVaGUh0p3KFnQQPoS8Oucj1YpGOhTF7ID6YV89BmmFk
-         omF1hS3JnBvqWt0SlPceuVKhMYF/VrFUUtuGYd9TEkG8q9Xl8BQIfuWW2CI5SIb+Ed
-         RMmult/WyyBTlHPbTFjb6rcSQsdiDJk9M8rc00I9jtLoeFUDNFlY0mKMq4xF+OSW9N
-         3qdBG0To4ips66FfD+VdUhe00B4/VIgnDynUhu4bSKeIgvsYSgkxGgW4ZrUCufVoPI
-         RdmpkRBoCUT9luDUSp8VWmxAkT7fkcx3nk9xrbhl7ja26vVeVjqG5tOcAqrmy3bODB
-         7QFD7CvBKxW5Q==
+        id S1726238AbfFRHB4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jun 2019 03:01:56 -0400
+Received: from gate.crashing.org ([63.228.1.57]:44279 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfFRHB4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 18 Jun 2019 03:01:56 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5I5RJD1009174;
+        Tue, 18 Jun 2019 00:27:22 -0500
+Message-ID: <e406c7bc73971a3626cf587f3ee9970973b0782a.camel@kernel.crashing.org>
+Subject: Re: [PATCH v3 2/2] PCI: Fix disabling of bridge BARs when assigning
+ bus resources
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Kit Chow <kchow@gigaio.com>, Yinghai Lu <yinghai@kernel.org>
+Date:   Tue, 18 Jun 2019 15:27:18 +1000
+In-Reply-To: <20190617135307.GA13533@google.com>
+References: <20190531171216.20532-1-logang@deltatee.com>
+         <20190531171216.20532-3-logang@deltatee.com>
+         <20190617135307.GA13533@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/13/2019 11:54 PM, Vidya Sagar wrote:
-> On 6/7/2019 6:43 PM, Vidya Sagar wrote:
->> On 5/27/2019 4:39 PM, Vidya Sagar wrote:
->>> On 5/7/2019 12:25 PM, Vidya Sagar wrote:
->>>> On 5/7/2019 11:19 AM, Vidya Sagar wrote:
->>>>> On 5/3/2019 4:53 PM, Lorenzo Pieralisi wrote:
->>>>>> On Thu, May 02, 2019 at 10:34:25PM +0530, Vidya Sagar wrote:
->>>>>>> Add an API to group all the tasks to be done to de-initialize host =
-which
->>>>>>> can then be called by any DesignWare core based driver implementati=
-ons
->>>>>>> while adding .remove() support in their respective drivers.
->>>>>>>
->>>>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>>>>>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->>>>>>> ---
->>>>>>> Changes from v3:
->>>>>>> * Added check if (pci_msi_enabled() && !pp->ops->msi_host_init) bef=
-ore calling
->>>>>>> =C2=A0=C2=A0 dw_pcie_free_msi() API to mimic init path
->>>>>>>
->>>>>>> Changes from v2:
->>>>>>> * Rebased on top of linux-next top of the tree branch
->>>>>>>
->>>>>>> Changes from v1:
->>>>>>> * s/Designware/DesignWare
->>>>>>>
->>>>>>> =C2=A0 drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++=
-++
->>>>>>> =C2=A0 drivers/pci/controller/dwc/pcie-designware.h=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 | 5 +++++
->>>>>>> =C2=A0 2 files changed, 13 insertions(+)
->>>>>>
->>>>>> Series doesn't apply to v5.1-rc1, what's based on ? I suspect
->>>>>> there is a dependency on pci/keystone, given the tight timeline
->>>>>> for the merge window, would you mind postponing it to v5.3 ?
->>>>>>
->>>>>> I do not think it is urgent, I am happy to create a branch
->>>>>> for it as soon as v5.2-rc1 is released.
->>>>> I rebased my changes on top of linux-next. I see that they have confl=
-icts
->>>>> on top of v5.1-rc1. Do you want me to rebase them on top of v5.1-rc1 =
-instead
->>>>> of linux-next?
->>>>> I'm fine with v5.2-rc1 as well.I forgot to mention that these changes=
- are made on top of Jisheng's patches
->>>> FWIW, Jisheng's patches are approved and applied to pci/dwc for v5.2
->>>> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1968324.h=
-tml
->>>
->>> Hi Lorenzo,
->>> Now that v5.2-rc2 is also available, could you please pick up this seri=
-es?
->>>
->>> Thanks,
->>> Vidya Sagar
->>>
->> Hi Bjorn / Lorenzo,
->> Can you please pick up these two patches?
->>
->> Thanks,
->> Vidya Sagar
-> Apologies for pinging again. These two patches can be applied directly on=
- top of
-> v5.2-rc4. Please do let me know if there is anything required from my sid=
-e.
->=20
-> Thanks,
-> Vidya Sagar
->=20
-Sorry for pinging again. Please let me know if these patches need to be sen=
-t again.
+On Mon, 2019-06-17 at 08:53 -0500, Bjorn Helgaas wrote:
+> On Fri, May 31, 2019 at 11:12:16AM -0600, Logan Gunthorpe wrote:
+> > One odd quirk of PLX switches is that their upstream bridge port has
+> > 256K of space allocated behind its BAR0 (most other bridge
+> > implementations do not report any BAR space).
+> 
+> Somewhat unusual, but completely legal, of course.
 
-Thanks,
-Vidya Sagar
+Ah yes, I've seen these. They have an MMIO path to their internal
+registers in addition to cfg. Can be annoying.
 
->=20
->>
->>>>
->>>>>
->>>>>>
->>>>>> Thanks,
->>>>>> Lorenzo
->>>>>>
->>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/dr=
-ivers/pci/controller/dwc/pcie-designware-host.c
->>>>>>> index 77db32529319..d069e4290180 100644
->>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>>>> @@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
->>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>>>>> =C2=A0 }
->>>>>>> +void dw_pcie_host_deinit(struct pcie_port *pp)
->>>>>>> +{
->>>>>>> +=C2=A0=C2=A0=C2=A0 pci_stop_root_bus(pp->root_bus);
->>>>>>> +=C2=A0=C2=A0=C2=A0 pci_remove_root_bus(pp->root_bus);
->>>>>>> +=C2=A0=C2=A0=C2=A0 if (pci_msi_enabled() && !pp->ops->msi_host_ini=
-t)
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dw_pcie_free_msi(pp);
->>>>>>> +}
->>>>>>> +
->>>>>>> =C2=A0 static int dw_pcie_access_other_conf(struct pcie_port *pp, s=
-truct pci_bus *bus,
->>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 devf=
-n, int where, int size, u32 *val,
->>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool wri=
-te)
->>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers=
-/pci/controller/dwc/pcie-designware.h
->>>>>>> index deab426affd3..4f48ec78c7b9 100644
->>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
->>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->>>>>>> @@ -348,6 +348,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
->>>>>>> =C2=A0 void dw_pcie_free_msi(struct pcie_port *pp);
->>>>>>> =C2=A0 void dw_pcie_setup_rc(struct pcie_port *pp);
->>>>>>> =C2=A0 int dw_pcie_host_init(struct pcie_port *pp);
->>>>>>> +void dw_pcie_host_deinit(struct pcie_port *pp);
->>>>>>> =C2=A0 int dw_pcie_allocate_domains(struct pcie_port *pp);
->>>>>>> =C2=A0 #else
->>>>>>> =C2=A0 static inline irqreturn_t dw_handle_msi_irq(struct pcie_port=
- *pp)
->>>>>>> @@ -372,6 +373,10 @@ static inline int dw_pcie_host_init(struct pci=
-e_port *pp)
->>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>> =C2=A0 }
->>>>>>> +static inline void dw_pcie_host_deinit(struct pcie_port *pp)
->>>>>>> +{
->>>>>>> +}
->>>>>>> +
->>>>>>> =C2=A0 static inline int dw_pcie_allocate_domains(struct pcie_port =
-*pp)
->>>>>>> =C2=A0 {
->>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>> --=20
->>>>>>> 2.17.1
->>>>>>>
->>>>>
->>>>
->>>
->>
->=20
+> If a bridge has memory BARs, AFAIK it is impossible to enable a memory
+> window without also enabling the BARs, so if we want to use the bridge
+> at all, we *must* allocate space for its BARs, just like for any other
+> device.
+
+Right.
+
+ .../... (agreeing violently)
+
+> In my ideal world we wouldn't zap the flags of any resource.  I think
+> we should derive the flags from the device's config space *once*
+> during enumeration and remember them for the life of the device.
+
+Amen brother. It will take a little while to get there. One thing we
+should do is have a clearer way to mark a resource that failed to
+assign/allocate (though technically parent=NULL is it really, as long
+as all archs these days claim properly, it used not to be the case).
+
+We do wipe *bridge* windows (nor BARs) all over the place, that is less
+of an issue I suppose though I would be more comfortable if we also
+wrote to the bridge to close those windows as we do so...
+
+The problem of course is how much old weird quirky will break due to
+subtle assumptions as we "fix" these things :-)
+
+> This patch preserves res->flags for bridge BARs just like for any
+> other device, so I think this is definitely a step in the right
+> direction.
+> 
+> I'm not sure the "dev->subordinate" test is really correct, though.
+
+Right, shouldn't it be pci_is_bridge() ?
+
+> I think the original intent of this code was to clear res->flags for
+> bridge windows under the assumptions that (a) we can identify bridges
+> by "dev->subordinate" being non-zero, and (b) bridges only have
+> windows and didn't have BARs.
+> 
+> This patch fixes assumption (b), but I think (a) is false, and we
+> should fix it as well.  One can imagine a bridge device without a
+> subordinate bus (maybe we ran out of bus numbers), so I don't think we
+> should test dev->subordinate.
+
+Yup.
+
+> We could test something like pci_is_bridge(), although testing for idx
+> being in the PCI_BRIDGE_RESOURCES range should be sufficient because I
+> don't think we use those resource for anything other than windows.
+
+Yeah quite possibly.
+
+Cheers,
+Ben.
+
 
