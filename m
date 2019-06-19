@@ -2,121 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 274634B571
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 11:50:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B95964B575
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 11:51:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731473AbfFSJu5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jun 2019 05:50:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:58806 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727067AbfFSJu4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 19 Jun 2019 05:50:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2176A344;
-        Wed, 19 Jun 2019 02:50:56 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 168763F738;
-        Wed, 19 Jun 2019 02:52:40 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 10:50:52 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, thierry.reding@gmail.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com,
-        vidyas@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH V6 20/27] PCI: tegra: Disable MSI for Tegra PCIe root port
-Message-ID: <20190619095052.GB10372@e121166-lin.cambridge.arm.com>
-References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
- <20190618180206.4908-21-mmaddireddy@nvidia.com>
- <20190618194830.GA110859@google.com>
- <e06f85eb-be0c-c2a5-84a9-51aa9b8372c3@nvidia.com>
+        id S1726959AbfFSJvc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jun 2019 05:51:32 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45502 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbfFSJvb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jun 2019 05:51:31 -0400
+Received: by mail-oi1-f196.google.com with SMTP id m206so10033258oib.12;
+        Wed, 19 Jun 2019 02:51:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=UJbr7/phPEcDTZVXC/bckou8HWl+paGsMx0R3z/uC48=;
+        b=WMQwHRcgQPWB1zx7OT6b+skLoBy5W0ZZMLpjIO0Wd9twQf8f/YXUavJtbmwv4QSmVu
+         QodO/unqjBefGWY3lb30y99ObXkSGi+sXyxO+iN7gJlx3RVqN7jxrc85OU4TN4i5UAwQ
+         YJTn7WU3ofsSzBdMy7jHjffldzzybzLHr/eURqWqFpAgr4dzG0JqXj+g9VsMtzhTNEHf
+         cy+r2VlSazqM+zKFRWoiLj8hrEAA56WTiUL1/cQZr29T295fD131iwlVwiBN4Mknmuxx
+         ZZCntw7iJU/zut8egcCigWzZodqtyhwr3HNYl1HAgqbiRxTR8DMrDwwJbtGTru/EcCxZ
+         4R6Q==
+X-Gm-Message-State: APjAAAUe5i7YnfnhBu2RIHFSsDb9I3StVdS2IzC3F/8jz038UfxE/WWw
+        +0UKMoLivtujSdEHukFv1zp1eUM5PG303kGrkhbZTm7X
+X-Google-Smtp-Source: APXvYqxJhL4UK1SJOJA0owPbeMrKSSBECfxygU6EJI2tzL6c266q3fjJDmh+UqXmzv/u+42BIG9yb+pEnyNP8TziDDw=
+X-Received: by 2002:aca:4e89:: with SMTP id c131mr2241000oib.57.1560937890890;
+ Wed, 19 Jun 2019 02:51:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e06f85eb-be0c-c2a5-84a9-51aa9b8372c3@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 19 Jun 2019 11:51:19 +0200
+Message-ID: <CAJZ5v0hbF4i-mJ6thnu8HRNcAXBrw4=vqQG+ikufB2z3q82F4g@mail.gmail.com>
+Subject: [GIT PULL] Power management fix for v5.2-rc6
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 09:25:54AM +0530, Manikanta Maddireddy wrote:
+Hi Linus,
 
-[...]
+Please pull from the tag
 
-> > s/msi/MSI/
-> >
-> > What's going on here?  Vidya posted a very similar patch [1] (although
-> 
-> This series is focused on Tegra20, Tegra30, Tegra124, Tegra210 and Tegra186,
-> whereas Vidya's series is focused only on Tegra194. So I didn't include
-> Tegra194 device IDs.
-> 
-> > his included nice spec citations, which you omitted), but his added
-> > quirks for 0x1ad0, 0x1ad1, and 0x1ad2.  You didn't include any of
-> > those here.
-> >
-> > Maybe Lorenzo will sort this all out, but it would make things easier
-> > if you and Vidya got together and integrated your patches yourselves
-> > so Lorenzo didn't have to worry about it.
-> >
-> > [1] https://lore.kernel.org/lkml/20190612095339.20118-3-vidyas@nvidia.com
-> 
-> I talked with Vidya, he will take this changes in his series if he needs
-> to publish another version, or else he will publish a new patch to add
-> quirk for legacy Tegra SOCs.
-> 
-> Lorenzo,
-> If this series is ready for integration, please drop this patch.
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.2-rc6
 
-OK, will do.
+with top-most commit 3e26c5feed2add218046ecf91bab3cfa9bf762a6
 
-Thanks,
-Lorenzo
+ PCI: PM: Skip devices in D0 for suspend-to-idle
 
-> Manikanta
-> 
-> >
-> >> + */
-> >> +static void pci_quirk_nvidia_tegra_disable_rp_msi(struct pci_dev *dev)
-> >> +{
-> >> +	dev->no_msi = 1;
-> >> +}
-> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf0,
-> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
-> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
-> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf1,
-> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
-> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
-> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c,
-> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
-> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
-> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d,
-> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
-> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
-> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e12,
-> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
-> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
-> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e13,
-> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
-> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
-> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0fae,
-> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
-> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
-> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0faf,
-> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
-> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
-> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x10e5,
-> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
-> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
-> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x10e6,
-> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
-> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
-> >> +
-> >>  /*
-> >>   * Some versions of the MCP55 bridge from Nvidia have a legacy IRQ routing
-> >>   * config register.  This register controls the routing of legacy
-> >> -- 
-> >> 2.17.1
-> >>
-> 
+on top of commit d1fdb6d8f6a4109a4263176c84b899076a5f8008
+
+ Linux 5.2-rc4
+
+to receive a power management fix for 5.2-rc6.
+
+This prevents PCI bridges in general (and PCIe ports in particular)
+from being put into low-power states during system-wide suspend
+transitions if there are any devices in D0 below them and refines
+the handling of PCI devices in D0 during suspend-to-idle cycles.
+
+Thanks!
+
+
+---------------
+
+Rafael J. Wysocki (1):
+      PCI: PM: Skip devices in D0 for suspend-to-idle
+
+---------------
+
+ drivers/pci/pci-driver.c | 47 +++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 35 insertions(+), 12 deletions(-)
