@@ -2,128 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F4474C248
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 22:22:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5E7D4C2A6
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 23:01:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726175AbfFSUWF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jun 2019 16:22:05 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:64834
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726143AbfFSUWF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jun 2019 16:22:05 -0400
-X-IronPort-AV: E=Sophos;i="5.63,394,1557180000"; 
-   d="scan'208";a="309906047"
-Received: from abo-12-105-68.mrs.modulonet.fr (HELO hadrien) ([85.68.105.12])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 22:22:00 +0200
-Date:   Wed, 19 Jun 2019 22:21:59 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Bjorn Helgaas <helgaas@kernel.org>
-cc:     Kirill Smelkov <kirr@nexedi.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kbuild-all@01.org
-Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
-In-Reply-To: <20190619201859.GA197717@google.com>
-Message-ID: <alpine.DEB.2.21.1906192221290.2634@hadrien>
-References: <alpine.DEB.2.20.1906191227430.3726@hadrien> <20190619162713.GA19859@deco.navytux.spb.ru> <20190619201859.GA197717@google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        id S1726246AbfFSVB1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jun 2019 17:01:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58186 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726175AbfFSVB1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 19 Jun 2019 17:01:27 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5944A215EA;
+        Wed, 19 Jun 2019 21:01:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560978085;
+        bh=2+w/sDc7TOGcJqUGNqoLVM4ANfIB5qdNfkMoJOUEWRQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nswNsuVILZTLvHSmd9m/WJSBlUuD27RumWInokuIMM+7tLdj0pQm6bmm4k5RFJDG3
+         5jXPCOZmZXFWqZ1VCTYWySLjtcyokLtjSFi00xL5IGf341Mw5/N3r5YYqO7FCu9qlf
+         mbWcMVhqQdhJ3Q+ju0pDqysLhQ5xAwMnWLtCgqKA=
+Date:   Wed, 19 Jun 2019 17:01:24 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Keith Busch <keith.busch@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.14 15/31] PCI: PM: Avoid possible
+ suspend-to-idle issue
+Message-ID: <20190619210124.GF2226@sasha-vm>
+References: <20190608114646.9415-1-sashal@kernel.org>
+ <20190608114646.9415-15-sashal@kernel.org>
+ <7003865c-8689-78f2-d441-f2a223fb3122@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <7003865c-8689-78f2-d441-f2a223fb3122@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On Wed, 19 Jun 2019, Bjorn Helgaas wrote:
-
-> On Wed, Jun 19, 2019 at 04:27:52PM +0000, Kirill Smelkov wrote:
-> > Hi Julia, everyone.
-> >
-> > On Wed, Jun 19, 2019 at 12:28:47PM +0200, Julia Lawall wrote:
-> > > Hi,
-> > >
-> > > Can you forward this patch to the people below if you think it is
-> > > appropriate?
-> >
-> > Yes, this patch is appropriate. It was actually part of
-> > git.kernel.org/linus/c5bf68fe0c86 . It should be safe, (and desirable as
-> > it removes a chance for deadlock) to apply it.
-> >
-> > Sebastian, Kurt, Logan, Bjorn, please consider picking it up.
+On Tue, Jun 11, 2019 at 05:25:48PM +0200, Rafael J. Wysocki wrote:
+>On 6/8/2019 1:46 PM, Sasha Levin wrote:
+>>From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+>>
+>>[ Upstream commit d491f2b75237ef37d8867830ab7fad8d9659e853 ]
+>>
+>>If a PCI driver leaves the device handled by it in D0 and calls
+>>pci_save_state() on the device in its ->suspend() or ->suspend_late()
+>>callback, it can expect the device to stay in D0 over the whole
+>>s2idle cycle.  However, that may not be the case if there is a
+>>spurious wakeup while the system is suspended, because in that case
+>>pci_pm_suspend_noirq() will run again after pci_pm_resume_noirq()
+>>which calls pci_restore_state(), via pci_pm_default_resume_early(),
+>>so state_saved is cleared and the second iteration of
+>>pci_pm_suspend_noirq() will invoke pci_prepare_to_sleep() which
+>>may change the power state of the device.
+>>
+>>To avoid that, add a new internal flag, skip_bus_pm, that will be set
+>>by pci_pm_suspend_noirq() when it runs for the first time during the
+>>given system suspend-resume cycle if the state of the device has
+>>been saved already and the device is still in D0.  Setting that flag
+>>will cause the next iterations of pci_pm_suspend_noirq() to set
+>>state_saved for pci_pm_resume_noirq(), so that it always restores the
+>>device state from the originally saved data, and avoid calling
+>>pci_prepare_to_sleep() for the device.
+>>
+>>Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from suspend-to-idle")
+>>Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>Reviewed-by: Keith Busch <keith.busch@intel.com>
+>>Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+>>Signed-off-by: Sasha Levin <sashal@kernel.org>
+>>---
+>>  drivers/pci/pci-driver.c | 17 ++++++++++++++++-
+>>  include/linux/pci.h      |  1 +
+>>  2 files changed, 17 insertions(+), 1 deletion(-)
+>>
+>>diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+>>index ea69b4dbab66..f5d66335fe53 100644
+>>--- a/drivers/pci/pci-driver.c
+>>+++ b/drivers/pci/pci-driver.c
+>>@@ -726,6 +726,8 @@ static int pci_pm_suspend(struct device *dev)
+>>  	struct pci_dev *pci_dev = to_pci_dev(dev);
+>>  	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+>>+	pci_dev->skip_bus_pm = false;
+>>+
+>>  	if (pci_has_legacy_pm_support(pci_dev))
+>>  		return pci_legacy_suspend(dev, PMSG_SUSPEND);
+>>@@ -799,7 +801,20 @@ static int pci_pm_suspend_noirq(struct device *dev)
+>>  		}
+>>  	}
+>>-	if (!pci_dev->state_saved) {
+>>+	if (pci_dev->skip_bus_pm) {
+>>+		/*
+>>+		 * The function is running for the second time in a row without
+>>+		 * going through full resume, which is possible only during
+>>+		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
+>>+		 * device was originally left in D0, so its power state should
+>>+		 * not be changed here and the device register values saved
+>>+		 * originally should be restored on resume again.
+>>+		 */
+>>+		pci_dev->state_saved = true;
+>>+	} else if (pci_dev->state_saved) {
+>>+		if (pci_dev->current_state == PCI_D0)
+>>+			pci_dev->skip_bus_pm = true;
+>>+	} else {
+>>  		pci_save_state(pci_dev);
+>>  		if (pci_power_manageable(pci_dev))
+>>  			pci_prepare_to_sleep(pci_dev);
+>>diff --git a/include/linux/pci.h b/include/linux/pci.h
+>>index 59f4d10568c6..430f3c335446 100644
+>>--- a/include/linux/pci.h
+>>+++ b/include/linux/pci.h
+>>@@ -346,6 +346,7 @@ struct pci_dev {
+>>  						   D3cold, not set for devices
+>>  						   powered on/off by the
+>>  						   corresponding bridge */
+>>+	unsigned int	skip_bus_pm:1;	/* Internal: Skip bus-level PM */
+>>  	unsigned int	ignore_hotplug:1;	/* Ignore hotplug events */
+>>  	unsigned int	hotplug_user_indicators:1; /* SlotCtl indicators
+>>  						      controlled exclusively by
 >
-> I don't get it.  This appeared in v5.2-rc1 as c5bf68fe0c86 ("*: convert
-> stream-like files from nonseekable_open -> stream_open"), so it looks like
-> this is already done.  What would you like me to do with it?
+>This has been reported to be problematic, I wouldn't recommend taking 
+>it for -stable at this point.
 
-Somehow 0-day got a hold of it...  If there is nothing to do, just ignore
-it.
+I've dropped it, thank you.
 
-thanks,
-julia
-
->
-> > > Could I tell the kbuild people to add you to the CC list for
-> > > this semantic patch?
-> >
-> > Yes, sure. Please feel free to add me to CC list for stream_open.cocci
-> > related patches.
-> >
-> > Kirill
-> >
-> >
-> > > thanks,
-> > > julia
-> > >
-> > > ---------- Forwarded message ----------
-> > > Date: Wed, 19 Jun 2019 18:23:18 +0800
-> > > From: kbuild test robot <lkp@intel.com>
-> > > To: kbuild@01.org
-> > > Cc: Julia Lawall <julia.lawall@lip6.fr>
-> > > Subject: [PATCH] pci/switchtec: fix stream_open.cocci warnings
-> > >
-> > > CC: kbuild-all@01.org
-> > > TO: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > > CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
-> > > CC: Logan Gunthorpe <logang@deltatee.com>
-> > > CC: Bjorn Helgaas <helgaas@kernel.org>
-> > > CC: linux-pci@vger.kernel.org
-> > > CC: linux-kernel@vger.kernel.org
-> > >
-> > > From: kbuild test robot <lkp@intel.com>
-> > >
-> > > drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
-> > >
-> > > Generated by: scripts/coccinelle/api/stream_open.cocci
-> > >
-> > > Fixes: a3a1e895d4fa ("pci/switchtec: Don't use completion's wait queue")
-> > > Signed-off-by: kbuild test robot <lkp@intel.com>
-> > > ---
-> > >
-> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git linux-5.0.y-rt-rebase
-> > > head:   31cc76d5590f5e60c2f26f029e40bc7d0441d93f
-> > > commit: a3a1e895d4fa0508e11ac9107ace883a5b2a4d3b [171/305] pci/switchtec: Don't use completion's wait queue
-> > > :::::: branch date: 6 days ago
-> > > :::::: commit date: 6 days ago
-> > >
-> > > Please take the patch only if it's a positive warning. Thanks!
-> > >
-> > >  switchtec.c |    2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > --- a/drivers/pci/switch/switchtec.c
-> > > +++ b/drivers/pci/switch/switchtec.c
-> > > @@ -392,7 +392,7 @@ static int switchtec_dev_open(struct ino
-> > >  		return PTR_ERR(stuser);
-> > >
-> > >  	filp->private_data = stuser;
-> > > -	nonseekable_open(inode, filp);
-> > > +	stream_open(inode, filp);
-> > >
-> > >  	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
-> > >
->
+--
+Thanks,
+Sasha
