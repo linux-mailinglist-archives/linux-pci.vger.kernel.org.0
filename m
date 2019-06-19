@@ -2,109 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7225B4B12E
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 07:14:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 572204B166
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 07:29:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730541AbfFSFNK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jun 2019 01:13:10 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:39274 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfFSFNK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jun 2019 01:13:10 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5J5D001013940;
-        Wed, 19 Jun 2019 00:13:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560921180;
-        bh=J6ZCI/2KmQ5LK0Mv5p/l9j+MOvVdtitQkF5T0OA9KNM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=II958DAuFXjUTn2oepUcE9v5bpwTOgEZWYd76cFtmQdEpkODdZUqJw4Cai4pNc+nc
-         /fwFeMM50EdobnoFT5AjMXksweYF/cGWZmIFTvS/+AUpd7VJFZLERMw4mCoqv7y/jD
-         eUgl5NBdgTUVBlHerLSblKCEhpSMTRWQWzxnqM4I=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5J5D0ZO125667
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 19 Jun 2019 00:13:00 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 19
- Jun 2019 00:13:00 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 19 Jun 2019 00:12:59 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5J5CuGm012093;
-        Wed, 19 Jun 2019 00:12:56 -0500
-Subject: Re: [PATCH V4 1/2] PCI: dwc: Add API support to de-initialize host
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Vidya Sagar <vidyas@nvidia.com>
-CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <bhelgaas@google.com>, <Jisheng.Zhang@synaptics.com>,
-        <thierry.reding@gmail.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190502170426.28688-1-vidyas@nvidia.com>
- <20190503112338.GA25649@e121166-lin.cambridge.arm.com>
- <dec5ecb2-863e-a1db-10c9-2d91f860a2c6@nvidia.com>
- <37697830-5a94-0f8e-a5cf-3347bc4850cb@nvidia.com>
- <b560f3c3-b69e-d9b5-2dae-1ede52af0ea6@nvidia.com>
- <011b52b6-9fcd-8930-1313-6b546226c7b9@nvidia.com>
- <8a6696e0-fc53-2e6b-536b-d1d2668e0f21@nvidia.com>
- <07c3dd04-cfd0-2d52-5917-25d0e40ad00b@nvidia.com>
- <20190618093657.GA30711@e121166-lin.cambridge.arm.com>
- <eb0e5b1e-7e91-4dc6-681f-b497f087c62d@nvidia.com>
- <20190618142821.GC9002@e121166-lin.cambridge.arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <69e79afa-16c7-a00c-653d-e4155999660f@ti.com>
-Date:   Wed, 19 Jun 2019 10:41:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1730337AbfFSF3G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jun 2019 01:29:06 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34323 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730297AbfFSF3E (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jun 2019 01:29:04 -0400
+Received: by mail-lj1-f193.google.com with SMTP id p17so1958137ljg.1
+        for <linux-pci@vger.kernel.org>; Tue, 18 Jun 2019 22:29:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mobiveil.co.in; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uCUAPV+QexPTMtFpELNiq1RlIWLicRq4oH7TLWUppok=;
+        b=06W/Y3cSZGK9qGdIkrRKae6GS83CtZgvcpLyiEYX/CH8oiz2QMNEnRHq9tkOe8Vhlv
+         AaYmyZRoz+2JGbAkSTfAL+lYDZe+EKPXLD87Ug+rDiga9JVBb1lAfYm/OHzqIe7QQ4sg
+         GNFRhx6EP/7BdHkzpUDQfWkORZMvcOicpDZ60=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uCUAPV+QexPTMtFpELNiq1RlIWLicRq4oH7TLWUppok=;
+        b=DyukwAe8YPedYkZK4RL76zZ+O7OlOOuYGKdpOps7jPo+VuPL1Z4TScPdJ/dnc0GyrR
+         oaIWK5NjemeairhbmkSwlXWRd1ab6ePhPr5OJQE+VNZXs3PqD0NvVJ9JGYYZeNxa6nig
+         H7gz4mzeyZFxCQrPYSzjJN9yho2pHmRTtS0eiSF59NHBTvfN6WZBQ3XkuymQ27+MKMyS
+         PHyomcjTTkBsFvoSmYfkDaC21GShq7RUm05VHGvaEMlJG1JY4UxX9EsbshtNiKoDhJWy
+         s93Ogd3wyIUlVsZ2KpOZGsh9/mKp27QNBq/ZKF4EuMtOuVboCQni/YFzHiVzh7JZMaMS
+         xhyw==
+X-Gm-Message-State: APjAAAXp6s33kQXSlM3nq0ziBJd6voiapB/ZtNY7q7dAWwOwt01ltROS
+        ck8e7E3FMiAUvTva3xDihglXQ3+eyyzQew5OFmGxFLYK2Spiuv3EsgLXEsM5KVkNNgE3j8cgxsE
+        h7wvayU/FE3IrCHfWufHDj2PHFFopbQ==
+X-Google-Smtp-Source: APXvYqzKCWyYVYljVoUu5JGomTGSMvq1652NRLfxnluH9rE+ab0jIubi+Ogd2Mw26Jaq0Y4Uxj/yFkRHTtCXrWX8zDQ=
+X-Received: by 2002:a2e:9bc6:: with SMTP id w6mr22630705ljj.156.1560922141583;
+ Tue, 18 Jun 2019 22:29:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190618142821.GC9002@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com> <20190412083635.33626-11-Zhiqiang.Hou@nxp.com>
+ <20190612150819.GD15747@redmoon> <CAKnKUHFMH6=ox=qdaUR1kNEhETDCVyu3jQZEj+taEbbMRBRuYA@mail.gmail.com>
+ <20190614104351.GA29955@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20190614104351.GA29955@e121166-lin.cambridge.arm.com>
+From:   Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+Date:   Wed, 19 Jun 2019 10:58:49 +0530
+Message-ID: <CAKnKUHHTAsjMoMkqaWq5z6r30JUGCpxSaYwyp8AuE3H5R0vBig@mail.gmail.com>
+Subject: Re: [PATCHv5 10/20] PCI: mobiveil: Fix the INTx process errors
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo,
+On Fri, Jun 14, 2019 at 4:14 PM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> On Fri, Jun 14, 2019 at 12:38:51PM +0530, Karthikeyan Mitran wrote:
+> > Hi Lorenzo and Hou Zhiqiang
+> >  PAB_INTP_AMBA_MISC_STAT does have other status in the higher bits, it
+> > should have been masked before checking for the status
+>
+> You are the maintainer for this driver, so if there is something to be
+> changed you must post a patch to that extent, I do not understand what
+> the above means, write the code to fix it, I won't do it.
+>
+> I am getting a bit annoyed with this Mobiveil driver so either you guys
+> sort this out or I will have to remove it from the kernel.
+>
+> > Acked-by: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+>
+> Ok I assume this means you tested it but according to what you
+> say above, are there still issues with this code path ? Should
+> we update the patch ?
+Tested-by: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+This patch fixes the INTx status extraction and handling,
+I don't see any need to update this patch.
+>
+> Moreover:
+>
+> https://kernelnewbies.org/PatchCulture
+>
+> Please read it and never top-post.
+Thank you very much, for the information.
 
-On 18/06/19 7:58 PM, Lorenzo Pieralisi wrote:
-> On Tue, Jun 18, 2019 at 04:21:17PM +0530, Vidya Sagar wrote:
-> 
-> [...]
-> 
->>> 2) It is not related to this patch but I fail to see the reasoning
->>>     behind the __ in __dw_pci_read_dbi(), there is no no-underscore
->>>     equivalent so its definition is somewhat questionable, maybe
->>>     we should clean-it up (for dbi2 alike).
->> Separate no-underscore versions are present in pcie-designware.h for
->> each width (i.e. l/w/b) as inline and are calling __ versions passing
->> size as argument.
-> 
-> I understand - the __ prologue was added in b50b2db266d8 maybe
-> Kishon can help us understand the __ rationale.
-> 
-> I am happy to merge it as is, I was just curious about the
-> __ annotation (not related to this patch).
+>
+> Thanks,
+> Lorenzo
+>
+> > On Wed, Jun 12, 2019 at 8:38 PM Lorenzo Pieralisi
+> > <lorenzo.pieralisi@arm.com> wrote:
+> > >
+> > > On Fri, Apr 12, 2019 at 08:36:12AM +0000, Z.q. Hou wrote:
+> > > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > >
+> > > > In the loop block, there is not code to update the loop key,
+> > > > this patch updates the loop key by re-read the INTx status
+> > > > register.
+> > > >
+> > > > This patch also add the clearing of the handled INTx status.
+> > > >
+> > > > Note: Need MV to test this fix.
+> > >
+> > > This means INTX were never tested and current code handling them is,
+> > > AFAICS, an infinite loop which is very very bad.
+> > >
+> > > This is a gross bug and must be fixed as soon as possible.
+> > >
+> > > I want Karthikeyan ACK and Tested-by on this patch.
+> > >
+> > > Lorenzo
+> > >
+> > > > Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
+> > > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> > > > Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> > > > ---
+> > > > V5:
+> > > >  - Corrected and retouched the subject and changelog.
+> > > >
+> > > >  drivers/pci/controller/pcie-mobiveil.c | 13 +++++++++----
+> > > >  1 file changed, 9 insertions(+), 4 deletions(-)
+> > > >
+> > > > diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+> > > > index 4ba458474e42..78e575e71f4d 100644
+> > > > --- a/drivers/pci/controller/pcie-mobiveil.c
+> > > > +++ b/drivers/pci/controller/pcie-mobiveil.c
+> > > > @@ -361,6 +361,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+> > > >       /* Handle INTx */
+> > > >       if (intr_status & PAB_INTP_INTX_MASK) {
+> > > >               shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
+> > > > +             shifted_status &= PAB_INTP_INTX_MASK;
+> > > >               shifted_status >>= PAB_INTX_START;
+> > > >               do {
+> > > >                       for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
+> > > > @@ -372,12 +373,16 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+> > > >                                       dev_err_ratelimited(dev, "unexpected IRQ, INT%d\n",
+> > > >                                                           bit);
+> > > >
+> > > > -                             /* clear interrupt */
+> > > > -                             csr_writel(pcie,
+> > > > -                                        shifted_status << PAB_INTX_START,
+> > > > +                             /* clear interrupt handled */
+> > > > +                             csr_writel(pcie, 1 << (PAB_INTX_START + bit),
+> > > >                                          PAB_INTP_AMBA_MISC_STAT);
+> > > >                       }
+> > > > -             } while ((shifted_status >> PAB_INTX_START) != 0);
+> > > > +
+> > > > +                     shifted_status = csr_readl(pcie,
+> > > > +                                                PAB_INTP_AMBA_MISC_STAT);
+> > > > +                     shifted_status &= PAB_INTP_INTX_MASK;
+> > > > +                     shifted_status >>= PAB_INTX_START;
+> > > > +             } while (shifted_status != 0);
+> > > >       }
+> > > >
+> > > >       /* read extra MSI status register */
+> > > > --
+> > > > 2.17.1
+> > > >
+> >
+> >
+> >
+> >
 
-In commit b50b2db266d8a8c303e8d88590 ("PCI: dwc: all: Modify dbi accessors to
-take dbi_base as argument"), dbi accessors was modified to take dbi_base as
-argument (since we wanted to write to dbics2 address space). We didn't want to
-change all the drivers invoking dbi accessors to pass the dbi_base. So we added
-"__" variant to take dbi_base as argument and the drivers continued to invoke
-existing dbi accessors which in-turn invoked "__" version with dbi_base as
-argument.
-
-I agree there could be some cleanup since in commit
-a509d7d9af5ebf86ffbefa98e49761d ("PCI: dwc: all: Modify dbi accessors to access
-data of 4/2/1 bytes"), we modified __dw_pcie_readl_dbi() to
-__dw_pcie_write_dbi() when it could have been directly modified to
-dw_pcie_write_dbi().
-
-Thanks
-Kishon
+-- 
+Mobiveil INC., CONFIDENTIALITY NOTICE: This e-mail message, including any 
+attachments, is for the sole use of the intended recipient(s) and may 
+contain proprietary confidential or privileged information or otherwise be 
+protected by law. Any unauthorized review, use, disclosure or distribution 
+is prohibited. If you are not the intended recipient, please notify the 
+sender and destroy all copies and the original message.
