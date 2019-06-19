@@ -2,31 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E06734C330
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 23:41:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 598AE4C331
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 23:41:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730611AbfFSVlp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jun 2019 17:41:45 -0400
-Received: from mga11.intel.com ([192.55.52.93]:10385 "EHLO mga11.intel.com"
+        id S1730578AbfFSVlq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jun 2019 17:41:46 -0400
+Received: from mga11.intel.com ([192.55.52.93]:10387 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725908AbfFSVlp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 19 Jun 2019 17:41:45 -0400
+        id S1730596AbfFSVlq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 19 Jun 2019 17:41:46 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 14:41:44 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 14:41:45 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,394,1557212400"; 
-   d="scan'208";a="170683460"
+   d="scan'208";a="170683464"
 Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.162])
   by orsmga002.jf.intel.com with ESMTP; 19 Jun 2019 14:41:44 -0700
 From:   Megha Dey <megha.dey@linux.intel.com>
 To:     bhelgaas@google.com, linux-pci@vger.kernel.org
 Cc:     ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
         megha.dey@intel.com, Megha Dey <megha.dey@linux.intel.com>
-Subject: [RFC V1 3/6] x86: Introduce the dynamic teardown function
-Date:   Wed, 19 Jun 2019 15:03:41 -0700
-Message-Id: <1560981824-3966-4-git-send-email-megha.dey@linux.intel.com>
+Subject: [RFC V1 4/6] PCI/MSI: Introduce new structure to manage MSI-x entries
+Date:   Wed, 19 Jun 2019 15:03:42 -0700
+Message-Id: <1560981824-3966-5-git-send-email-megha.dey@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560981824-3966-1-git-send-email-megha.dey@linux.intel.com>
 References: <1560981824-3966-1-git-send-email-megha.dey@linux.intel.com>
@@ -36,101 +36,98 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 This is a preparatory patch to introduce disabling of MSI-X vectors
-belonging to a particular group. In this patch, we introduce a x86
-specific mechanism to teardown the IRQ vectors belonging to a
-particular group.
+belonging to a particular group. In this patch, we introduce a new
+structure msix_sysfs, which manages sysfs entries for dynamically
+allocated MSI-X vectors belonging to a particular group.
 
 Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
 Cc: Ashok Raj <ashok.raj@intel.com>
 Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
 ---
- arch/x86/include/asm/x86_init.h |  1 +
- arch/x86/kernel/x86_init.c      |  6 ++++++
- drivers/pci/msi.c               | 18 ++++++++++++++++++
- include/linux/msi.h             |  2 ++
- 4 files changed, 27 insertions(+)
+ drivers/pci/msi.c   | 12 +++++++++++-
+ drivers/pci/probe.c |  1 +
+ include/linux/pci.h |  9 +++++++++
+ 3 files changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-index b85a7c5..50f26a0 100644
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -283,6 +283,7 @@ struct pci_dev;
- struct x86_msi_ops {
- 	int (*setup_msi_irqs)(struct pci_dev *dev, int nvec, int type);
- 	void (*teardown_msi_irq)(unsigned int irq);
-+	void (*teardown_msi_irqs_grp)(struct pci_dev *dev, int group_id);
- 	void (*teardown_msi_irqs)(struct pci_dev *dev);
- 	void (*restore_msi_irqs)(struct pci_dev *dev);
- };
-diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
-index 50a2b49..794e7d4 100644
---- a/arch/x86/kernel/x86_init.c
-+++ b/arch/x86/kernel/x86_init.c
-@@ -127,6 +127,7 @@ EXPORT_SYMBOL_GPL(x86_platform);
- struct x86_msi_ops x86_msi __ro_after_init = {
- 	.setup_msi_irqs		= native_setup_msi_irqs,
- 	.teardown_msi_irq	= native_teardown_msi_irq,
-+	.teardown_msi_irqs_grp	= default_teardown_msi_irqs_grp,
- 	.teardown_msi_irqs	= default_teardown_msi_irqs,
- 	.restore_msi_irqs	= default_restore_msi_irqs,
- };
-@@ -142,6 +143,11 @@ void arch_teardown_msi_irqs(struct pci_dev *dev)
- 	x86_msi.teardown_msi_irqs(dev);
- }
- 
-+void arch_teardown_msi_irqs_grp(struct pci_dev *dev, int group_id)
-+{
-+	x86_msi.teardown_msi_irqs_grp(dev, group_id);
-+}
-+
- void arch_teardown_msi_irq(unsigned int irq)
- {
- 	x86_msi.teardown_msi_irq(irq);
 diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 73ad9bf..fd7fa6e 100644
+index fd7fa6e..e947243 100644
 --- a/drivers/pci/msi.c
 +++ b/drivers/pci/msi.c
-@@ -133,6 +133,24 @@ void __weak arch_teardown_msi_irqs(struct pci_dev *dev)
- 	return default_teardown_msi_irqs(dev);
- }
- 
-+void default_teardown_msi_irqs_grp(struct pci_dev *dev, int group_id)
-+{
-+	int i;
-+	struct msi_desc *entry;
-+
-+	for_each_pci_msi_entry(entry, dev) {
-+		if (entry->group_id == group_id && entry->irq) {
-+			for (i = 0; i < entry->nvec_used; i++)
-+				arch_teardown_msi_irq(entry->irq + i);
-+		}
-+	}
-+}
-+
-+void __weak arch_teardown_msi_irqs_grp(struct pci_dev *dev, int group_id)
-+{
-+	return default_teardown_msi_irqs_grp(dev, group_id);
-+}
-+
- static void default_restore_msi_irq(struct pci_dev *dev, int irq)
- {
+@@ -479,10 +479,11 @@ static int populate_msi_sysfs(struct pci_dev *pdev)
+ 	struct device_attribute *msi_dev_attr;
+ 	struct attribute_group *msi_irq_group;
+ 	const struct attribute_group **msi_irq_groups;
++	struct msix_sysfs *msix_sysfs_entry;
  	struct msi_desc *entry;
-diff --git a/include/linux/msi.h b/include/linux/msi.h
-index 91273cd..e61ba24 100644
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -202,9 +202,11 @@ int arch_setup_msi_irq(struct pci_dev *dev, struct msi_desc *desc);
- void arch_teardown_msi_irq(unsigned int irq);
- int arch_setup_msi_irqs(struct pci_dev *dev, int nvec, int type);
- void arch_teardown_msi_irqs(struct pci_dev *dev);
-+void arch_teardown_msi_irqs_grp(struct pci_dev *dev, int group_id);
- void arch_restore_msi_irqs(struct pci_dev *dev);
+ 	int ret = -ENOMEM;
+ 	int num_msi = 0;
+-	int count = 0;
++	int count = 0, group = -1;
+ 	int i;
  
- void default_teardown_msi_irqs(struct pci_dev *dev);
-+void default_teardown_msi_irqs_grp(struct pci_dev *dev, int group_id);
- void default_restore_msi_irqs(struct pci_dev *dev);
+ 	/* Determine how many msi entries we have */
+@@ -509,6 +510,8 @@ static int populate_msi_sysfs(struct pci_dev *pdev)
+ 				goto error_attrs;
+ 			msi_dev_attr->attr.mode = S_IRUGO;
+ 			msi_dev_attr->show = msi_mode_show;
++			if (!i)
++				group = entry->group_id;
+ 			++count;
+ 		}
+ 	}
+@@ -524,6 +527,13 @@ static int populate_msi_sysfs(struct pci_dev *pdev)
+ 		goto error_irq_group;
+ 	msi_irq_groups[0] = msi_irq_group;
  
- struct msi_controller {
++	msix_sysfs_entry = kzalloc(sizeof(*msix_sysfs_entry) * 2, GFP_KERNEL);
++	msix_sysfs_entry->msi_irq_group = msi_irq_group;
++	msix_sysfs_entry->group_id = group;
++	msix_sysfs_entry->vecs_in_grp = count;
++	INIT_LIST_HEAD(&msix_sysfs_entry->list);
++	list_add_tail(&msix_sysfs_entry->list, &pdev->msix_sysfs);
++
+ 	if (!pdev->msix_enabled)
+ 		ret = sysfs_create_group(&pdev->dev.kobj, msi_irq_group);
+ 	else
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 491c1cf..bb20ef6 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2435,6 +2435,7 @@ struct pci_dev *pci_alloc_dev(struct pci_bus *bus)
+ 	idr_init(dev->grp_idr);
+ 
+ 	INIT_LIST_HEAD(&dev->bus_list);
++	INIT_LIST_HEAD(&dev->msix_sysfs);
+ 	dev->dev.type = &pci_dev_type;
+ 	dev->bus = pci_bus_get(bus);
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index c56462c..73385c0 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -471,6 +471,7 @@ struct pci_dev {
+ 	struct idr	*grp_idr;       /* IDR to assign group to MSI-X vecs */
+ 	unsigned long	*entry;         /* Bitmap to represent MSI-X entries */
+ 	bool		one_shot;	/* If true, oneshot MSI-X allocation */
++	struct list_head	msix_sysfs; /* sysfs entries for MSI-X group */
+ };
+ 
+ static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
+@@ -1390,6 +1391,14 @@ struct msix_entry {
+ 	u16	entry;	/* Driver uses to specify entry, OS writes */
+ };
+ 
++/* Manage sysfs entries for dynamically allocated MSI-X vectors */
++struct msix_sysfs {
++	struct	attribute_group *msi_irq_group;
++	struct	list_head list;
++	int	group_id;
++	int	vecs_in_grp;
++};
++
+ #ifdef CONFIG_PCI_MSI
+ int pci_msi_vec_count(struct pci_dev *dev);
+ void pci_disable_msi(struct pci_dev *dev);
 -- 
 2.7.4
 
