@@ -2,126 +2,206 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C7B2C4BEFC
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 18:51:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 041464BF14
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 18:55:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730165AbfFSQvh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jun 2019 12:51:37 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33196 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728671AbfFSQvh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jun 2019 12:51:37 -0400
-Received: by mail-io1-f65.google.com with SMTP id u13so184867iop.0
-        for <linux-pci@vger.kernel.org>; Wed, 19 Jun 2019 09:51:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9/VY+/HxtJ6r/tUKypc3sQ2VNbSxhUCs/lSBxOu+yqE=;
-        b=dc9GnjCnvJh9dC+V8gpqT+JQQD6h1Hmf+iN3ekFQd8nAGGK6QkK4M3UciNprQk3uwr
-         YglJ/BkpLBqBnfaa1P18rkWcyHMrSguRGb9YBstvaVFYqNl37SwsUIGH4omGiE+S24Qt
-         eQJYJxtgGAXDoSnqSAdOM09GIbPzoNt3fKN4Igy7cP/yDKjyGoacTwPFhVmfWqxJXsmT
-         LVU2PUqGVWBnWV770Pc1NtaVsbh6IlKzRClqgDPEOvJoiY+TxiYXedo1z2IfCt3JjK12
-         zONUvnIbkmwgUfGahSZuqug5NJwrR2SloWkFc0bqKFj0UKSZkFkotxO7JCJhniP6JGc+
-         BlZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9/VY+/HxtJ6r/tUKypc3sQ2VNbSxhUCs/lSBxOu+yqE=;
-        b=Z8jo2bD8pIV6+c1Q2DnWl3qhqj70xOXWt9On5t5eO+TB4eg9x2t9FkTB4ofY0C4KWq
-         4tivW+hqiHpL5f0Z84WN++91R78wYgK0F0mbMhZklDFT7QMklNDnE1lQypq5GuOi202p
-         +x0XeVJH0EgbZqE4oO3CDZcz1xYk3xi85LQb5VdoYyNrIqhPZ2e/+sgJBOnaMjzFhqmk
-         fjOvo441LI/9xbJ+dnLKL9YBuBEMkpZIkLSmObscjKKqI/YNGsGOMvrLM09stcmEPqSu
-         xWWtQZ5Qi46XvL+mR2wr5XVvqJbNCXYz5sHO7f8re8mXGD83fgmszsJRnqrDvFa77Igp
-         jpmA==
-X-Gm-Message-State: APjAAAWl6AHjI7k1Jfde0euNdPIsFBpCJeXXrrI+ARiAyCLhNUyqIcVm
-        oz8MvWAkE0NNkMfXSuUmWUO/NJuoXP7jsg==
-X-Google-Smtp-Source: APXvYqxg6VzUUrpqS273dZtQJuvzSd+ZGiVXGnaXKV1stmSzkQ9fxDRhPFIN4/MtXX+tw/vhMKqj4Q==
-X-Received: by 2002:a02:1006:: with SMTP id 6mr100102148jay.47.1560963096306;
-        Wed, 19 Jun 2019 09:51:36 -0700 (PDT)
-Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id f4sm17863408iok.56.2019.06.19.09.51.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 09:51:35 -0700 (PDT)
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     linux-pci@vger.kernel.org
-Cc:     skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org, mj@ucw.cz,
-        bjorn@helgaas.com, skunberg.kelsey@gmail.com
-Subject: [PATCH v4 3/3] lspci: Change output for bridge with empty range to "[disabled]"
-Date:   Wed, 19 Jun 2019 10:48:58 -0600
-Message-Id: <20190619164858.84746-4-skunberg.kelsey@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190619164858.84746-1-skunberg.kelsey@gmail.com>
-References: <20190619164858.84746-1-skunberg.kelsey@gmail.com>
+        id S1727002AbfFSQzg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jun 2019 12:55:36 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:33136 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726175AbfFSQzf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 19 Jun 2019 12:55:35 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hddrx-00016M-BU; Wed, 19 Jun 2019 10:55:34 -0600
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+References: <SL2P216MB01871948CB8CF39E354A2BCD80E50@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Message-ID: <15a6bb08-06ad-760d-5390-f37a72d7cbbc@deltatee.com>
+Date:   Wed, 19 Jun 2019 10:55:32 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <SL2P216MB01871948CB8CF39E354A2BCD80E50@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: helgaas@kernel.org, linux-pci@vger.kernel.org, benh@kernel.crashing.org, nicholas.johnson-opensource@outlook.com.au
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [nicholas.johnson-opensource@outlook.com.au: [PATCH v6 2/4] PCI:
+ Modify extend_bridge_window() to set resource size directly]
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Change output displayed for memory behind bridge when the range is
-empty to be consistent between each verbosity level. Replace "None" and
-"[empty]" with "[disabled]". Old and new output examples listed below
-for each verbosity level.
 
-Show_range() is not called unless verbose == true. No output given
-unless a verbose argument is provided.
 
-OLD output for -v and -vv which uses "None" and -vvv uses "[empty]":
+On 2019-06-19 8:00 a.m., Nicholas Johnson wrote:
+> Hi Ben and Logan,
+> 
+> It looks like my git send-email has been not working correctly since I
+> started trying to get these patches accepted. I may have remedied this
+> now, but I have seen that Logan tried to find these patches and failed.
+> So as a courtesy until I post PATCH v7 (hopefully correctly, this time),
+> I am forwarding you the patches. I hope you like them. I would love to 
+> know of any concerns or questions you may have, and / or what happens if 
+> you test them. Thanks and all the best!
+> 
+> ----- Forwarded message from Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au> -----
+> 
+> Date: Thu, 23 May 2019 06:29:26 +0800
+> From: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> To: linux-kernel@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org, bhelgaas@google.com, mika.westerberg@linux.intel.com, corbet@lwn.net, Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> Subject: [PATCH v6 2/4] PCI: Modify extend_bridge_window() to set resource size directly
+> X-Mailer: git-send-email 2.19.1
+> 
+> Background
+> ==========================================================================
+> 
+> In the current state, the PCI allocation could fail with Thunderbolt
+> under certain unusual circumstances, because add_list resources are
+> "optional". Guaranteed allocation requires guaranteed resource sizes.
+> 
+> It is difficult to give examples of these failures - because without the
+> previous patch in the series, the symptoms of the problem are hidden by
+> larger problems. This patch has been split from the previous patch and
+> makes little sense on its own - as it is almost impossible to see the
+> effect of this patch without first fixing the problems addressed by the
+> previous patch. So the evidence I put forward for making this change is
+> that because add_list resources are "optional", there could be any
+> number of unforeseen bugs that are yet to be encountered if the kernel
+> decides not to assign all of the optional size. In kernel development,
+> we should not play around with chance.
+> 
+> Moving away from add_size also allows for use of pci=hpmemsize to assign
+> resources. Previously, when using add_size and not allowing the add_size
+> to shrink, it made it impossible to distribute resources. If a hotplug
+> bridge has size X, and below it is some devices with non-zero size Y and
+> a nested hotplug bridge of same size X, fitting X+Y into size X is
+> mathematically impossible.
+> 
+> This patch solves this by dropping add_size and giving each bridge the
+> maximum size possible without failing resource assignment. Using
+> pci=hpmemsize still works as pci_assign_unassigned_root_bus_resources()
+> does not call pci_bus_distribute_available_resources(). At boot,
+> pci_assign_unassigned_root_bus_resources() is used, instead of
+> pci_bridge_distribute_available_resources().
+> 
+> By allowing to use pci=hpmemsize, it removes the reliance on the
+> firmware to declare the window resources under the root port, and could
+> pay off in the future with USB4 (which is backward-compatible to
+> Thunderbolt devices, and not specific to Intel systems). Users of
+> Thunderbolt hardware on unsupported systems will be able to specify the
+> resources in the kernel parameters. Users of official systems will be
+> able to override the default firmware window sizes to allocate much
+> larger resource sizes, potentially enabling Thunderbolt support for
+> devices with massive BARs (with a few other problems solved by later
+> patches in this series).
+> 
+> Patch notes
+> ==========================================================================
+> 
+> Modify extend_bridge_window() to remove the resource from add_list and
+> change the resource size directly.
+> 
+> Modify extend_bridge_window() to reset resources that are being assigned
+> zero size. This is required to prevent the bridge not being enabled due
+> to resources with zero size. This is a direct requirement to prevent the
+> change away from using add_list from introducing a regression - because
+> before, it was not possible to end up with zero size.
 
-  Memory behind bridge: None                          # lspci -v
-  Memory behind bridge: None                          # lspci -vv
-  Memory behind bridge: 0000e000-0000efff [empty]     # lspci -vvv
+I'm having a hard time following the changes in the first two patches.
 
-NEW output for -v, -vv, and -vvv to use "[disabled]":
+But it kind of seems like the semantics of extend_bridge_window()
+changed in the first patch and that these two patches are interdependent??
 
-  Memory behind bridge: [disabled]                       # lspci -v
-  Memory behind bridge: [disabled]                       # lspci -vv
-  Memory behind bridge: 0000e000-0000efff [disabled]     # lspci -vvv
+Perhaps you need to consider splitting these changes up a bit
+differently so that there's easy to follow reorganizations (like passing
+struct resource instead of resource_size_t in
+pci_bus_distribute_available_resources()) followed by changes in
+functionality.
 
-Advantage is consistent output regardless of verbosity level chosen and
-to simplify the code.
+> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> ---
+>  drivers/pci/setup-bus.c | 42 ++++++++++++++++++++++++++---------------
+>  1 file changed, 27 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index 1b5b851ca..5675254fa 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -1810,28 +1810,40 @@ void __init pci_assign_unassigned_resources(void)
+>  }
+>  
+>  static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
+> -				 struct list_head *add_list,
+> -				 resource_size_t available)
+> +			struct list_head *add_list, resource_size_t new_size)
+>  {
+> -	struct pci_dev_resource *dev_res;
+> +	resource_size_t add_size;
+>  
+>  	if (res->parent)
+>  		return;
+>  
+> -	if (resource_size(res) >= available)
+> -		return;
+> -
+> -	dev_res = res_to_dev_res(add_list, res);
+> -	if (!dev_res)
+> -		return;
+> +	if (new_size >= resource_size(res)) {
+> +		add_size = new_size - resource_size(res);
+> +		pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
+> +			&add_size);
+> +	} else {
+> +		add_size = resource_size(res) - new_size;
+> +		pci_dbg(bridge, "bridge window %pR shrunken by %pa\n", res,
+> +			&add_size);
+> +	}
+>  
+> -	/* Is there room to extend the window? */
+> -	if (available - resource_size(res) <= dev_res->add_size)
+> -		return;
+> +	/*
+> +	 * Resources requested using add_size in additional resource lists are
+> +	 * considered optional when allocated. Guaranteed size of allocation
+> +	 * is required to guarantee successful resource distribution. Hence,
+> +	 * the size of the actual resource must be adjusted, and the resource
+> +	 * removed from add_list to prevent any additional size interfering.
+> +	 */
+> +	res->end = res->start + new_size - 1;
+> +	remove_from_list(add_list, res);
+>  
+> -	dev_res->add_size = available - resource_size(res);
+> -	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
+> -		&dev_res->add_size);
 
-Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
----
- lspci.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+Best I can see dev_res->add_size is not set anywhere else so if you're
+removing it you probably need to clean up a bunch of other stuff...
 
-diff --git a/lspci.c b/lspci.c
-index 7418b07..525bb82 100644
---- a/lspci.c
-+++ b/lspci.c
-@@ -376,20 +376,18 @@ show_size(u64 x)
- static void
- show_range(char *prefix, u64 base, u64 limit, int is_64bit)
- {
--  if (base > limit && verbose < 3)
-+  printf("%s:", prefix);
-+  if (base <= limit || verbose > 2)
-     {
--      printf("%s: None\n", prefix);
--      return;
-+      if (is_64bit)
-+        printf(" %016" PCI_U64_FMT_X "-%016" PCI_U64_FMT_X, base, limit);
-+      else
-+        printf(" %08x-%08x", (unsigned) base, (unsigned) limit);
-     }
--  printf("%s: ", prefix);
--  if (is_64bit)
--    printf("%016" PCI_U64_FMT_X "-%016" PCI_U64_FMT_X, base, limit);
--  else
--    printf("%08x-%08x", (unsigned) base, (unsigned) limit);
-   if (base <= limit)
-     show_size(limit - base + 1);
-   else
--    printf(" [empty]");
-+    printf(" [disabled]");
-   putchar('\n');
- }
- 
--- 
-2.20.1
-
+> +	/*
+> +	 * If we have run out of bridge resources, we may end up with a
+> +	 * zero-sized resource which may cause its bridge to not be enabled.
+> +	 * Disabling the resource prevents any such issues.
+> +	 */
+> +	if (!new_size)
+> +		reset_resource(res);
+>  }
+>  
+>  static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+> 
