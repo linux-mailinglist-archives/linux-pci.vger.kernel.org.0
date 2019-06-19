@@ -2,125 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AB5E24C23B
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 22:19:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F4474C248
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 22:22:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726175AbfFSUTD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jun 2019 16:19:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726143AbfFSUTC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 19 Jun 2019 16:19:02 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2631214AF;
-        Wed, 19 Jun 2019 20:19:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560975542;
-        bh=80B2TtmwQpbrKV8W76fkvhLKo/iXWe4+FylQEUWo+Pk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hNed1zLU1lLuRKIsDPHhY7BXxwO8StzG5o+6G+NVAEfP+5d2oSUAzuQFKWF+3D2s9
-         PgywgPAFis+wlH/fKBtGzqay1BoJxujVFMgst/6fr+NqknMqV0URAEC65ibwccp6Y/
-         XN2aZ15al23nObRm/YUyZmUKlE4G97GI66Rvn6JQ=
-Date:   Wed, 19 Jun 2019 15:19:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kirill Smelkov <kirr@nexedi.com>
-Cc:     Julia Lawall <julia.lawall@lip6.fr>,
+        id S1726175AbfFSUWF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jun 2019 16:22:05 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:64834
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726143AbfFSUWF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jun 2019 16:22:05 -0400
+X-IronPort-AV: E=Sophos;i="5.63,394,1557180000"; 
+   d="scan'208";a="309906047"
+Received: from abo-12-105-68.mrs.modulonet.fr (HELO hadrien) ([85.68.105.12])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 22:22:00 +0200
+Date:   Wed, 19 Jun 2019 22:21:59 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     Kirill Smelkov <kirr@nexedi.com>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
         Logan Gunthorpe <logang@deltatee.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         kbuild-all@01.org
 Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
-Message-ID: <20190619201859.GA197717@google.com>
-References: <alpine.DEB.2.20.1906191227430.3726@hadrien>
- <20190619162713.GA19859@deco.navytux.spb.ru>
+In-Reply-To: <20190619201859.GA197717@google.com>
+Message-ID: <alpine.DEB.2.21.1906192221290.2634@hadrien>
+References: <alpine.DEB.2.20.1906191227430.3726@hadrien> <20190619162713.GA19859@deco.navytux.spb.ru> <20190619201859.GA197717@google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619162713.GA19859@deco.navytux.spb.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 04:27:52PM +0000, Kirill Smelkov wrote:
-> Hi Julia, everyone.
-> 
-> On Wed, Jun 19, 2019 at 12:28:47PM +0200, Julia Lawall wrote:
-> > Hi,
-> > 
-> > Can you forward this patch to the people below if you think it is
-> > appropriate?
-> 
-> Yes, this patch is appropriate. It was actually part of
-> git.kernel.org/linus/c5bf68fe0c86 . It should be safe, (and desirable as
-> it removes a chance for deadlock) to apply it. 
-> 
-> Sebastian, Kurt, Logan, Bjorn, please consider picking it up.
 
-I don't get it.  This appeared in v5.2-rc1 as c5bf68fe0c86 ("*: convert
-stream-like files from nonseekable_open -> stream_open"), so it looks like
-this is already done.  What would you like me to do with it?
 
-> > Could I tell the kbuild people to add you to the CC list for
-> > this semantic patch?
-> 
-> Yes, sure. Please feel free to add me to CC list for stream_open.cocci
-> related patches.
-> 
-> Kirill
-> 
-> 
-> > thanks,
-> > julia
-> > 
-> > ---------- Forwarded message ----------
-> > Date: Wed, 19 Jun 2019 18:23:18 +0800
-> > From: kbuild test robot <lkp@intel.com>
-> > To: kbuild@01.org
-> > Cc: Julia Lawall <julia.lawall@lip6.fr>
-> > Subject: [PATCH] pci/switchtec: fix stream_open.cocci warnings
-> > 
-> > CC: kbuild-all@01.org
-> > TO: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
-> > CC: Logan Gunthorpe <logang@deltatee.com>
-> > CC: Bjorn Helgaas <helgaas@kernel.org>
-> > CC: linux-pci@vger.kernel.org
-> > CC: linux-kernel@vger.kernel.org
-> > 
-> > From: kbuild test robot <lkp@intel.com>
-> > 
-> > drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
-> > 
-> > Generated by: scripts/coccinelle/api/stream_open.cocci
-> > 
-> > Fixes: a3a1e895d4fa ("pci/switchtec: Don't use completion's wait queue")
-> > Signed-off-by: kbuild test robot <lkp@intel.com>
-> > ---
-> > 
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git linux-5.0.y-rt-rebase
-> > head:   31cc76d5590f5e60c2f26f029e40bc7d0441d93f
-> > commit: a3a1e895d4fa0508e11ac9107ace883a5b2a4d3b [171/305] pci/switchtec: Don't use completion's wait queue
-> > :::::: branch date: 6 days ago
-> > :::::: commit date: 6 days ago
-> > 
-> > Please take the patch only if it's a positive warning. Thanks!
-> > 
-> >  switchtec.c |    2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > --- a/drivers/pci/switch/switchtec.c
-> > +++ b/drivers/pci/switch/switchtec.c
-> > @@ -392,7 +392,7 @@ static int switchtec_dev_open(struct ino
-> >  		return PTR_ERR(stuser);
-> > 
-> >  	filp->private_data = stuser;
-> > -	nonseekable_open(inode, filp);
-> > +	stream_open(inode, filp);
-> > 
-> >  	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
+On Wed, 19 Jun 2019, Bjorn Helgaas wrote:
+
+> On Wed, Jun 19, 2019 at 04:27:52PM +0000, Kirill Smelkov wrote:
+> > Hi Julia, everyone.
 > >
+> > On Wed, Jun 19, 2019 at 12:28:47PM +0200, Julia Lawall wrote:
+> > > Hi,
+> > >
+> > > Can you forward this patch to the people below if you think it is
+> > > appropriate?
+> >
+> > Yes, this patch is appropriate. It was actually part of
+> > git.kernel.org/linus/c5bf68fe0c86 . It should be safe, (and desirable as
+> > it removes a chance for deadlock) to apply it.
+> >
+> > Sebastian, Kurt, Logan, Bjorn, please consider picking it up.
+>
+> I don't get it.  This appeared in v5.2-rc1 as c5bf68fe0c86 ("*: convert
+> stream-like files from nonseekable_open -> stream_open"), so it looks like
+> this is already done.  What would you like me to do with it?
+
+Somehow 0-day got a hold of it...  If there is nothing to do, just ignore
+it.
+
+thanks,
+julia
+
+>
+> > > Could I tell the kbuild people to add you to the CC list for
+> > > this semantic patch?
+> >
+> > Yes, sure. Please feel free to add me to CC list for stream_open.cocci
+> > related patches.
+> >
+> > Kirill
+> >
+> >
+> > > thanks,
+> > > julia
+> > >
+> > > ---------- Forwarded message ----------
+> > > Date: Wed, 19 Jun 2019 18:23:18 +0800
+> > > From: kbuild test robot <lkp@intel.com>
+> > > To: kbuild@01.org
+> > > Cc: Julia Lawall <julia.lawall@lip6.fr>
+> > > Subject: [PATCH] pci/switchtec: fix stream_open.cocci warnings
+> > >
+> > > CC: kbuild-all@01.org
+> > > TO: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > > CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
+> > > CC: Logan Gunthorpe <logang@deltatee.com>
+> > > CC: Bjorn Helgaas <helgaas@kernel.org>
+> > > CC: linux-pci@vger.kernel.org
+> > > CC: linux-kernel@vger.kernel.org
+> > >
+> > > From: kbuild test robot <lkp@intel.com>
+> > >
+> > > drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
+> > >
+> > > Generated by: scripts/coccinelle/api/stream_open.cocci
+> > >
+> > > Fixes: a3a1e895d4fa ("pci/switchtec: Don't use completion's wait queue")
+> > > Signed-off-by: kbuild test robot <lkp@intel.com>
+> > > ---
+> > >
+> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git linux-5.0.y-rt-rebase
+> > > head:   31cc76d5590f5e60c2f26f029e40bc7d0441d93f
+> > > commit: a3a1e895d4fa0508e11ac9107ace883a5b2a4d3b [171/305] pci/switchtec: Don't use completion's wait queue
+> > > :::::: branch date: 6 days ago
+> > > :::::: commit date: 6 days ago
+> > >
+> > > Please take the patch only if it's a positive warning. Thanks!
+> > >
+> > >  switchtec.c |    2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > --- a/drivers/pci/switch/switchtec.c
+> > > +++ b/drivers/pci/switch/switchtec.c
+> > > @@ -392,7 +392,7 @@ static int switchtec_dev_open(struct ino
+> > >  		return PTR_ERR(stuser);
+> > >
+> > >  	filp->private_data = stuser;
+> > > -	nonseekable_open(inode, filp);
+> > > +	stream_open(inode, filp);
+> > >
+> > >  	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
+> > >
+>
