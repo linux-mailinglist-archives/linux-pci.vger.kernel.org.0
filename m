@@ -2,158 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 60F474C2FE
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 23:32:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D1674C33B
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 23:45:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbfFSVcm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jun 2019 17:32:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51744 "EHLO mail.kernel.org"
+        id S1730578AbfFSVpE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jun 2019 17:45:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbfFSVcm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 19 Jun 2019 17:32:42 -0400
+        id S1730574AbfFSVpE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 19 Jun 2019 17:45:04 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF30F208CB;
-        Wed, 19 Jun 2019 21:32:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E1D4208CA;
+        Wed, 19 Jun 2019 21:45:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560979961;
-        bh=CDPA4HtuI28sp/o5jhSfPYklJ8LJ3Tdxzzv6K+fuFJQ=;
+        s=default; t=1560980703;
+        bh=xq3nh0b03CKV7/ml8UOF1l5b9iR5UaRfb5yS2tTRobE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=w9n5drERN5CmY9LmSEE4xtZ+wc2vv/xUBUixBx/eJq5MfwudUWR8RjTeHD1ql9Kkh
-         FR6ejrN47TjQfMC3szeb+mdZJ+6+e96gmgAHMbfhwBEZU/pt+ItXKaTDftz2sni849
-         hjTODNvj1Bn6YYr4U7tHFpC5WavZeePVlBbZdovc=
-Date:   Wed, 19 Jun 2019 16:32:39 -0500
+        b=s68rn5cWw2JOtOq9KGBN4KE3onSVG07yaJh4C0Gbk5tMytYF4TcV+5Y4/1QRVWiAD
+         AyKU8mo5SwKIRGA+be5GMlmZi5DLDFKnrrbzYHXh2PTHfAYWr6mGxJUGH3fTID8PMP
+         fj62g/96hZadZbVVuDhk1LacvotRxOEs0q06soXo=
+Date:   Wed, 19 Jun 2019 16:45:02 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        David Miller <davem@davemloft.net>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH net-next 1/2] PCI: let pci_disable_link_state propagate
- errors
-Message-ID: <20190619213238.GD143205@google.com>
-References: <5ea56278-05e2-794f-5f66-23343e72164c@gmail.com>
- <604f2954-c60c-d2aa-3849-9a2f8872001c@gmail.com>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     "linux-pci @ vger . kernel . org" <linux-pci@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v2] PCI/P2PDMA: Root complex whitelist should not apply
+ when an IOMMU is present
+Message-ID: <20190619214502.GE143205@google.com>
+References: <20190619185626.15806-1-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <604f2954-c60c-d2aa-3849-9a2f8872001c@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190619185626.15806-1-logang@deltatee.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 11:13:48PM +0200, Heiner Kallweit wrote:
-> Drivers may rely on pci_disable_link_state() having disabled certain
-> ASPM link states. If OS can't control ASPM then pci_disable_link_state()
-> turns into a no-op w/o informing the caller. The driver therefore may
-> falsely assume the respective ASPM link states are disabled.
-> Let pci_disable_link_state() propagate errors to the caller, enabling
-> the caller to react accordingly.
+On Wed, Jun 19, 2019 at 12:56:26PM -0600, Logan Gunthorpe wrote:
+> Presently, there is no path to DMA map P2PDMA memory, so if a TLP
+> targeting this memory hits the root complex and an IOMMU is present,
+> the IOMMU will reject the transaction, even if the RC would support
+> P2PDMA.
 > 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> So until the kernel knows to map these DMA addresses in the IOMMU,
+> we should not enable the whitelist when an IOMMU is present.
+> 
+> Link: https://lore.kernel.org/linux-pci/20190522201252.2997-1-logang@deltatee.com/
+> Fixes: 0f97da831026 ("PCI/P2PDMA: Allow P2P DMA between any devices under AMD ZEN Root Complex")
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> Reviewed-by: Christian König <christian.koenig@amd.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Christoph Hellwig <hch@lst.de>
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Thanks, I think this makes good sense.
+Applied to for-linus for v5.2, since we merged 0f97da831026 during the v5.2
+merge window, thanks!
 
 > ---
->  drivers/pci/pcie/aspm.c  | 20 +++++++++++---------
->  include/linux/pci-aspm.h |  7 ++++---
->  2 files changed, 15 insertions(+), 12 deletions(-)
+>  drivers/pci/p2pdma.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index fd4cb7508..e44af7f4d 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -1062,18 +1062,18 @@ void pcie_aspm_powersave_config_link(struct pci_dev *pdev)
->  	up_read(&pci_bus_sem);
->  }
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index a98126ad9c3a..a4994aa3acc0 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/percpu-refcount.h>
+>  #include <linux/random.h>
+>  #include <linux/seq_buf.h>
+> +#include <linux/iommu.h>
 >  
-> -static void __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
-> +static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
->  {
->  	struct pci_dev *parent = pdev->bus->self;
->  	struct pcie_link_state *link;
+>  struct pci_p2pdma {
+>  	struct gen_pool *pool;
+> @@ -299,6 +300,9 @@ static bool root_complex_whitelist(struct pci_dev *dev)
+>  	struct pci_dev *root = pci_get_slot(host->bus, PCI_DEVFN(0, 0));
+>  	unsigned short vendor, device;
 >  
->  	if (!pci_is_pcie(pdev))
-> -		return;
-> +		return 0;
->  
->  	if (pdev->has_secondary_link)
->  		parent = pdev;
->  	if (!parent || !parent->link_state)
-> -		return;
-> +		return -EINVAL;
->  
->  	/*
->  	 * A driver requested that ASPM be disabled on this device, but
-> @@ -1085,7 +1085,7 @@ static void __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
->  	 */
->  	if (aspm_disabled) {
->  		pci_warn(pdev, "can't disable ASPM; OS doesn't have ASPM control\n");
-> -		return;
-> +		return -EPERM;
->  	}
->  
->  	if (sem)
-> @@ -1105,11 +1105,13 @@ static void __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
->  	mutex_unlock(&aspm_lock);
->  	if (sem)
->  		up_read(&pci_bus_sem);
+> +	if (iommu_present(dev->dev.bus))
+> +		return false;
 > +
-> +	return 0;
->  }
->  
-> -void pci_disable_link_state_locked(struct pci_dev *pdev, int state)
-> +int pci_disable_link_state_locked(struct pci_dev *pdev, int state)
->  {
-> -	__pci_disable_link_state(pdev, state, false);
-> +	return __pci_disable_link_state(pdev, state, false);
->  }
->  EXPORT_SYMBOL(pci_disable_link_state_locked);
->  
-> @@ -1117,14 +1119,14 @@ EXPORT_SYMBOL(pci_disable_link_state_locked);
->   * pci_disable_link_state - Disable device's link state, so the link will
->   * never enter specific states.  Note that if the BIOS didn't grant ASPM
->   * control to the OS, this does nothing because we can't touch the LNKCTL
-> - * register.
-> + * register. Returns 0 or a negative errno.
->   *
->   * @pdev: PCI device
->   * @state: ASPM link state to disable
->   */
-> -void pci_disable_link_state(struct pci_dev *pdev, int state)
-> +int pci_disable_link_state(struct pci_dev *pdev, int state)
->  {
-> -	__pci_disable_link_state(pdev, state, true);
-> +	return __pci_disable_link_state(pdev, state, true);
->  }
->  EXPORT_SYMBOL(pci_disable_link_state);
->  
-> diff --git a/include/linux/pci-aspm.h b/include/linux/pci-aspm.h
-> index df28af5ce..67064145d 100644
-> --- a/include/linux/pci-aspm.h
-> +++ b/include/linux/pci-aspm.h
-> @@ -24,11 +24,12 @@
->  #define PCIE_LINK_STATE_CLKPM	4
->  
->  #ifdef CONFIG_PCIEASPM
-> -void pci_disable_link_state(struct pci_dev *pdev, int state);
-> -void pci_disable_link_state_locked(struct pci_dev *pdev, int state);
-> +int pci_disable_link_state(struct pci_dev *pdev, int state);
-> +int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
->  void pcie_no_aspm(void);
->  #else
-> -static inline void pci_disable_link_state(struct pci_dev *pdev, int state) { }
-> +static inline int pci_disable_link_state(struct pci_dev *pdev, int state)
-> +{ return 0; }
->  static inline void pcie_no_aspm(void) { }
->  #endif
+>  	if (!root)
+>  		return false;
 >  
 > -- 
-> 2.22.0
-> 
+> 2.20.1
 > 
