@@ -2,113 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6053C4C1DA
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 21:56:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB5E24C23B
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 22:19:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfFST4w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jun 2019 15:56:52 -0400
-Received: from mga04.intel.com ([192.55.52.120]:26202 "EHLO mga04.intel.com"
+        id S1726175AbfFSUTD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jun 2019 16:19:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726143AbfFST4w (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 19 Jun 2019 15:56:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 12:56:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,394,1557212400"; 
-   d="scan'208";a="162310218"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 19 Jun 2019 12:56:51 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id 5B7FE580889;
-        Wed, 19 Jun 2019 12:56:51 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH 2/2] PCI/IOV: Assume SR-IOV VFs support extended config
- space.
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        linux-pci@vger.kernel.org
-Cc:     KarimAllah Ahmed <karahmed@amazon.de>,
-        Hao Zheng <yinhe@linux.alibaba.com>, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org, nanhai.zou@linux.alibaba.com,
-        quan.xu0@linux.alibaba.com, ashok.raj@intel.com,
-        keith.busch@intel.com, mike.campin@intel.com
-References: <156046609596.29869.5839964168034189416.stgit@gimli.home>
- <156046664016.29869.16676461736240878900.stgit@gimli.home>
-From:   sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <60712d78-b7a3-f50f-f5c3-a5e99841da4f@linux.intel.com>
-Date:   Wed, 19 Jun 2019 12:54:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726143AbfFSUTC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 19 Jun 2019 16:19:02 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2631214AF;
+        Wed, 19 Jun 2019 20:19:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560975542;
+        bh=80B2TtmwQpbrKV8W76fkvhLKo/iXWe4+FylQEUWo+Pk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hNed1zLU1lLuRKIsDPHhY7BXxwO8StzG5o+6G+NVAEfP+5d2oSUAzuQFKWF+3D2s9
+         PgywgPAFis+wlH/fKBtGzqay1BoJxujVFMgst/6fr+NqknMqV0URAEC65ibwccp6Y/
+         XN2aZ15al23nObRm/YUyZmUKlE4G97GI66Rvn6JQ=
+Date:   Wed, 19 Jun 2019 15:19:00 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kirill Smelkov <kirr@nexedi.com>
+Cc:     Julia Lawall <julia.lawall@lip6.fr>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kbuild-all@01.org
+Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
+Message-ID: <20190619201859.GA197717@google.com>
+References: <alpine.DEB.2.20.1906191227430.3726@hadrien>
+ <20190619162713.GA19859@deco.navytux.spb.ru>
 MIME-Version: 1.0
-In-Reply-To: <156046664016.29869.16676461736240878900.stgit@gimli.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190619162713.GA19859@deco.navytux.spb.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Wed, Jun 19, 2019 at 04:27:52PM +0000, Kirill Smelkov wrote:
+> Hi Julia, everyone.
+> 
+> On Wed, Jun 19, 2019 at 12:28:47PM +0200, Julia Lawall wrote:
+> > Hi,
+> > 
+> > Can you forward this patch to the people below if you think it is
+> > appropriate?
+> 
+> Yes, this patch is appropriate. It was actually part of
+> git.kernel.org/linus/c5bf68fe0c86 . It should be safe, (and desirable as
+> it removes a chance for deadlock) to apply it. 
+> 
+> Sebastian, Kurt, Logan, Bjorn, please consider picking it up.
 
-On 6/13/19 3:57 PM, Alex Williamson wrote:
-> The SR-IOV specification requires both PFs and VFs to implement a PCIe
-> capability.  Generally this is sufficient to assume extended config
-> space is present, but we generally also perform additional tests to
-> make sure the extended config space is reachable and not simply an
-> alias of standard config space.  For a VF to exist extended config
-> space must be accessible on the PF, therefore we can also assume it to
-> be accessible on the VF.  This enables a micro performance
-> optimization previously implemented in commit 975bb8b4dc93 ("PCI/IOV:
-> Use VF0 cached config space size for other VFs") to speed up probing
-> of VFs.
->
-> Cc: KarimAllah Ahmed <karahmed@amazon.de>
-> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Cc: Hao Zheng <yinhe@linux.alibaba.com>
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> ---
->   drivers/pci/probe.c |   15 +++++++++++++++
->   1 file changed, 15 insertions(+)
->
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index a3a3c6b28343..439244ff8f09 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1561,6 +1561,21 @@ int pci_cfg_space_size(struct pci_dev *dev)
->   	u32 status;
->   	u16 class;
->   
-> +#ifdef CONFIG_PCI_IOV
-> +	/*
-> +	 * Per the SR-IOV specification (rev 1.1, sec 3.5), VFs are required to
-> +	 * implement a PCIe capability and therefore must implement extended
-> +	 * config space.  We can skip the NO_EXTCFG test below and the
-> +	 * reachability/aliasing test in pci_cfg_space_size_ext() by virtue of
-> +	 * the fact that the SR-IOV capability on the PF resides in extended
-> +	 * config space and must be accessible and non-aliased to have enabled
-> +	 * support for this VF.  This is a micro performance optimization for
-> +	 * systems supporting many VFs.
-> +	 */
-> +	if (dev->is_virtfn)
-> +		return PCI_CFG_SPACE_EXP_SIZE;
-> +#endif
+I don't get it.  This appeared in v5.2-rc1 as c5bf68fe0c86 ("*: convert
+stream-like files from nonseekable_open -> stream_open"), so it looks like
+this is already done.  What would you like me to do with it?
 
-It looks good to me.
-
-Reviewed-by: Kuppuswamy Sathyanarayanan 
-<sathyanarayanan.kuppuswamy@linux.intel.com>
-
-> +
->   	if (dev->bus->bus_flags & PCI_BUS_FLAGS_NO_EXTCFG)
->   		return PCI_CFG_SPACE_SIZE;
->   
->
->
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
-
+> > Could I tell the kbuild people to add you to the CC list for
+> > this semantic patch?
+> 
+> Yes, sure. Please feel free to add me to CC list for stream_open.cocci
+> related patches.
+> 
+> Kirill
+> 
+> 
+> > thanks,
+> > julia
+> > 
+> > ---------- Forwarded message ----------
+> > Date: Wed, 19 Jun 2019 18:23:18 +0800
+> > From: kbuild test robot <lkp@intel.com>
+> > To: kbuild@01.org
+> > Cc: Julia Lawall <julia.lawall@lip6.fr>
+> > Subject: [PATCH] pci/switchtec: fix stream_open.cocci warnings
+> > 
+> > CC: kbuild-all@01.org
+> > TO: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
+> > CC: Logan Gunthorpe <logang@deltatee.com>
+> > CC: Bjorn Helgaas <helgaas@kernel.org>
+> > CC: linux-pci@vger.kernel.org
+> > CC: linux-kernel@vger.kernel.org
+> > 
+> > From: kbuild test robot <lkp@intel.com>
+> > 
+> > drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
+> > 
+> > Generated by: scripts/coccinelle/api/stream_open.cocci
+> > 
+> > Fixes: a3a1e895d4fa ("pci/switchtec: Don't use completion's wait queue")
+> > Signed-off-by: kbuild test robot <lkp@intel.com>
+> > ---
+> > 
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git linux-5.0.y-rt-rebase
+> > head:   31cc76d5590f5e60c2f26f029e40bc7d0441d93f
+> > commit: a3a1e895d4fa0508e11ac9107ace883a5b2a4d3b [171/305] pci/switchtec: Don't use completion's wait queue
+> > :::::: branch date: 6 days ago
+> > :::::: commit date: 6 days ago
+> > 
+> > Please take the patch only if it's a positive warning. Thanks!
+> > 
+> >  switchtec.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > --- a/drivers/pci/switch/switchtec.c
+> > +++ b/drivers/pci/switch/switchtec.c
+> > @@ -392,7 +392,7 @@ static int switchtec_dev_open(struct ino
+> >  		return PTR_ERR(stuser);
+> > 
+> >  	filp->private_data = stuser;
+> > -	nonseekable_open(inode, filp);
+> > +	stream_open(inode, filp);
+> > 
+> >  	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
+> >
