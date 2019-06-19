@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB2214B9B6
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 15:20:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAFCA4B9BF
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 15:24:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbfFSNU6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jun 2019 09:20:58 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43639 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbfFSNU6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jun 2019 09:20:58 -0400
-Received: by mail-oi1-f196.google.com with SMTP id w79so10516840oif.10;
-        Wed, 19 Jun 2019 06:20:57 -0700 (PDT)
+        id S1726496AbfFSNYw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jun 2019 09:24:52 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43100 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbfFSNYv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jun 2019 09:24:51 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w79so10527100oif.10;
+        Wed, 19 Jun 2019 06:24:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/sbjtq/dDS1OQiER3+MGrQ7JVDrD9M4EcoflQzWHOLs=;
-        b=DtP4syrrH8NUgSIYRmsATbunUxolJUYn1d55VbLwQFGXK3ZPFJZDt5bzW3UNAr3vbS
-         UVN6GEBdtlnpZxxLZWrcdGlaCOZnZQl0VvUOOutFvsXCjZBLVtLC0lWS+Dfh/Hlyzyct
-         zy3eZ35pijr5QPxwNO8iBA3/CDmSVg6cCUg+rXWDzbTcqYowShYzuSPfpDNmAqpW0xGY
-         5KnRhSOKSesS+srEYGiFE+9fJWsKgJR0XvwdKhwx7RoQFVpRmG6zleLGA5mgDuBiIWBG
-         lemqiQMnhrO8226O9eslVIAt2SQ9WTqXfolsY8c2JLEZpwKNbVI4AP0JV5ydAAsQCZ7n
-         BK8Q==
-X-Gm-Message-State: APjAAAX/CtQYRh5+V9NkqIhNTPrD3/xuAH+I5U6bF1adYi+UYzaOmq8K
-        7sVvzCredy1gpOCd6ZhLSyqAc6s/w7EJhtVNacQ=
-X-Google-Smtp-Source: APXvYqzbF/UeO5hojPg8oTn1PzeWovI2nk2mZpqLvsWARoFt/2NgNMTO76UwAw3tqLwjeFcyXs6HIXUF7IcSeMhPFbw=
-X-Received: by 2002:aca:4e89:: with SMTP id c131mr2788597oib.57.1560950457106;
- Wed, 19 Jun 2019 06:20:57 -0700 (PDT)
+        bh=PhOVk0YKQ9cisNARq7cyez5OukO5PZ5X/+LQ1VobwuY=;
+        b=cUrwP5Al/llTNqWxWCsMlwZHbYXGTNb766l5QGDDxdUdlTg3MFfKJA4xR6JEyukUDg
+         eA8B2Xr2rN+IEos14xIFuLUa5JxPry2GqTuWHKIradkGHas2TnjkqgPAx/S6g1kWQ7Zc
+         MTHaBhxdraaciEJnd8vhleOA+Q0wAgQkJ5InGNhVizwtbEDY6PbSZJaWTDrplgGDwlSB
+         nWLCjQkg60b2x/S8/5E/6jylmCzF5yGs7+IRhCyy7Ne3VWbURq/EJ3X8s+3DtzJfczcx
+         CzWg+KND8yUzeIQh3qoJ24lLXwfNf/2ImIhT5u83d0yCwkmKEXAXLxMv6js33G+xRVAG
+         Hixg==
+X-Gm-Message-State: APjAAAVSTQpSoNXXiR9Ss9IVVB7pj7hATEqC8ncbYyOvgjDqFqjl3roO
+        v8gR/Fj6GYexXOiM2YImIRbtvZNbzMHRcOIj5oU=
+X-Google-Smtp-Source: APXvYqztIKwiAN0o5fiZ0wASv6XWajIafDc5Ax1IdXdYSuZberouBSB9M66/UPe3XoO9mtYVFuqrL+bbiQmHIXrOueQ=
+X-Received: by 2002:aca:5a41:: with SMTP id o62mr2918613oib.110.1560950691069;
+ Wed, 19 Jun 2019 06:24:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190618161858.77834-1-mika.westerberg@linux.intel.com> <20190618161858.77834-3-mika.westerberg@linux.intel.com>
-In-Reply-To: <20190618161858.77834-3-mika.westerberg@linux.intel.com>
+References: <20190618161858.77834-1-mika.westerberg@linux.intel.com>
+In-Reply-To: <20190618161858.77834-1-mika.westerberg@linux.intel.com>
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 19 Jun 2019 15:20:45 +0200
-Message-ID: <CAJZ5v0jaNpgW2=QfTVYcY=2MzTCaxNNSsVT667Lwz8HxvJT8mQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] ACPI / PM: Introduce concept of a _PR0 dependent device
+Date:   Wed, 19 Jun 2019 15:24:40 +0200
+Message-ID: <CAJZ5v0gD2sCBKv4QXWSOg+smQryqamCaYUbVQZeMSpCoA1rkVg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] PCI / ACPI: Handle sibling devices sharing power resources
 To:     Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -54,140 +54,46 @@ X-Mailing-List: linux-pci@vger.kernel.org
 On Tue, Jun 18, 2019 at 6:19 PM Mika Westerberg
 <mika.westerberg@linux.intel.com> wrote:
 >
-> If there are shared power resources between otherwise unrelated devices
-> turning them on causes the other devices sharing them to be powered up
-> as well. In case of PCI devices go into D0uninitialized state meaning
-> that if they were configured to trigger wake that configuration is lost
-> at this point.
+> Hi all,
 >
-> For this reason introduce a concept of "_PR0 dependent device" that can
-> be added to any ACPI device that has power resources. The dependent
-> device will be included in a list of dependent devices for all power
-> resources returned by the ACPI device's _PR0 (assuming it has one).
-> Whenever a power resource having dependent devices is turned physically
-> on (its _ON method is called) we runtime resume all of them to allow
-> their driver or in case of PCI the PCI core to re-initialize the device
-> and its wake configuration.
+> Based on a discussion regarding patch series I sent previously [1] to deal
+> with sibling devices sharing ACPI power resources, I prepared a new
+> reworked version according to the comments I got.
 >
-> This adds two functions that can be used to add and remove these
-> dependent devices. Note the dependent device does not necessary need
-> share power resources so this functionality can be used to add "software
-> dependencies" as well if needed.
+> To summarize, in Intel Ice Lake the Thunderbolt controller, PCIe root ports
+> and xHCI all share power resources. When they are all in D3hot power
+> resources (returned by _PR3) can be turned off powering off the whole
+> block. However, there are two issues around this.
 >
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  drivers/acpi/power.c    | 139 ++++++++++++++++++++++++++++++++++++++++
->  include/acpi/acpi_bus.h |   4 ++
->  2 files changed, 143 insertions(+)
+> Firstly the PCI core sets the device power state by asking what the real
+> ACPI power state is. This results that all but last device sharing the
+> power resources are in D3hot when the power resources are turned off. This
+> causes issues if user runs for example 'lspci' because the device is really
+> in D3cold so what user gets back is all ones (0xffffffff).
 >
-> diff --git a/drivers/acpi/power.c b/drivers/acpi/power.c
-> index a916417b9e70..76d298192940 100644
-> --- a/drivers/acpi/power.c
-> +++ b/drivers/acpi/power.c
-> @@ -42,6 +42,11 @@ ACPI_MODULE_NAME("power");
->  #define ACPI_POWER_RESOURCE_STATE_ON   0x01
->  #define ACPI_POWER_RESOURCE_STATE_UNKNOWN 0xFF
+> Secondly if any of the device is runtime resumed the power resources are
+> turned on bringing all other devices sharing the resources to
+> D0uninitialized losing their wakeup configuration.
 >
-> +struct acpi_power_dependent_device {
-> +       struct device *dev;
-> +       struct list_head node;
-> +};
-> +
->  struct acpi_power_resource {
->         struct acpi_device device;
->         struct list_head list_node;
-> @@ -51,6 +56,7 @@ struct acpi_power_resource {
->         unsigned int ref_count;
->         bool wakeup_enabled;
->         struct mutex resource_lock;
-> +       struct list_head dependents;
->  };
+> This series aims to fix the two issues by:
 >
->  struct acpi_power_resource_entry {
-> @@ -232,8 +238,125 @@ static int acpi_power_get_list_state(struct list_head *list, int *state)
->         return 0;
->  }
+>   1. Using the ACPI cached power state when PCI devices are transitioned
+>      into low power states instead of reading back the "real" power state.
 >
-> +static int
-> +acpi_power_resource_add_dependent(struct acpi_power_resource *resource,
-> +                                 struct device *dev)
-> +{
-> +       struct acpi_power_dependent_device *dep;
-> +       int ret = 0;
-> +
-> +       mutex_lock(&resource->resource_lock);
-> +       list_for_each_entry(dep, &resource->dependents, node) {
-> +               /* Only add it once */
-> +               if (dep->dev == dev)
-> +                       goto unlock;
-> +       }
-> +
-> +       dep = kzalloc(sizeof(*dep), GFP_KERNEL);
-> +       if (!dep) {
-> +               ret = -ENOMEM;
-> +               goto unlock;
-> +       }
-> +
-> +       dep->dev = dev;
-> +       list_add_tail(&dep->node, &resource->dependents);
-> +       dev_dbg(dev, "added power dependency to [%s]\n", resource->name);
-> +
-> +unlock:
-> +       mutex_unlock(&resource->resource_lock);
-> +       return ret;
-> +}
-> +
-> +static void
-> +acpi_power_resource_remove_dependent(struct acpi_power_resource *resource,
-> +                                    struct device *dev)
-> +{
-> +       struct acpi_power_dependent_device *dep;
-> +
-> +       mutex_lock(&resource->resource_lock);
-> +       list_for_each_entry(dep, &resource->dependents, node) {
-> +               if (dep->dev == dev) {
-> +                       list_del(&dep->node);
-> +                       kfree(dep);
-> +                       dev_dbg(dev, "removed power dependency to [%s]\n",
-> +                               resource->name);
-> +                       break;
-> +               }
-> +       }
-> +       mutex_unlock(&resource->resource_lock);
-> +}
-> +
-> +/**
-> + * acpi_device_power_add_dependent - Add dependent device of this ACPI device
-> + * @adev: ACPI device pointer
-> + * @dev: Dependent device
-> + *
-> + * If @adev has non-empty _PR0 the @dev is added as dependent device to all
-> + * power resources returned by it. This means that whenever these power
-> + * resources are turned _ON the dependent devices get runtime resumed. This
-> + * is needed for devices such as PCI to allow its driver to re-initialize
-> + * it after it went to D0uninitialized.
-> + *
-> + * If @adev does not have _PR0 this does nothing.
-> + *
-> + * Returns %0 in case of success and negative errno otherwise.
-> + */
-> +int acpi_device_power_add_dependent(struct acpi_device *adev,
-> +                                   struct device *dev)
-> +{
-> +       struct acpi_power_resource_entry *entry;
-> +       struct list_head *resources;
-> +       int ret;
-> +
-> +       if (!adev->power.flags.power_resources)
-> +               return 0;
-> +       if (!adev->power.states[ACPI_STATE_D0].flags.valid)
-> +               return 0;
+>   2. Introducing concept of "_PR0 dependent devices" that get runtime
+>      resumed whenever their power resource (which they might share with
+>      other sibling devices) gets turned on.
+>
+> The series is based on the idea of Rafael J. Wysocki <rafael@kernel.org>.
+>
+> [1] https://www.spinics.net/lists/linux-pci/msg83583.html
+>
+> Mika Westerberg (3):
+>   PCI / ACPI: Use cached ACPI device state to get PCI device power state
+>   ACPI / PM: Introduce concept of a _PR0 dependent device
+>   PCI / ACPI: Add _PR0 dependent devices
 
-The two checks above can be replaced with an
-adev->flags.power_manageable one AFAICS (the "valid" flag is always
-set for D0 and the list below will be empty if there are no power
-resources).
+LGMT overall, patch [2/3] can be simplified slightly IMO (already sent
+comments for that one).
 
-Same for acpi_device_power_remove_dependent(), of course.
-
-Apart from this LGTM.
+As far as I'm concerned, the other patches need not be updated.
