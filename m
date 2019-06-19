@@ -2,127 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 60EAE4BE7A
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 18:43:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D52D04BE5C
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 18:37:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbfFSQm5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jun 2019 12:42:57 -0400
-Received: from mail180-24.suw31.mandrillapp.com ([198.2.180.24]:56391 "EHLO
-        mail180-24.suw31.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726839AbfFSQm4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jun 2019 12:42:56 -0400
-X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Jun 2019 12:42:56 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=fV7NQkOm47Fi2EjqYPKStwQJEWlNbrKyKdGaNA4YDHc=;
- b=Q5bY2sFh3B5MqFCAkB0DD53mk0btrJsrX8O1tKvCe2+IlI3r0uzwTwduKO4bKCkyurmpjyY5US9x
-   FfeZbOdOQd48vkbroc1EpECJqgwYrPgUjeC86i5Rhg4TmVBdWnCMKeizXnUNHkBClnmmgX8GFL8E
-   CzlsHit3U6YntaskkAY=
-Received: from pmta03.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail180-24.suw31.mandrillapp.com id h19j1022sc0r for <linux-pci@vger.kernel.org>; Wed, 19 Jun 2019 16:27:53 +0000 (envelope-from <bounce-md_31050260.5d0a6289.v1-e7a94ac20d0648b393fe8aeaa833f91b@mandrillapp.com>)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1560961673; h=From : 
- Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
- MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
- Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=fV7NQkOm47Fi2EjqYPKStwQJEWlNbrKyKdGaNA4YDHc=; 
- b=W7qBgaaNz34EPnx48sOEFAXxcFbilh/31qdpg+aLcmxvNJhwGavd3T7rEQfKhxIyh9n+Xu
- M/LOkpq9g1VinIo9jBl97WB34OIWLCn5HztLIViK1zp3XgNC2uFyKWGWE41JOx2uxKf9jBrA
- flZ+mpJotM0momx802Um6eQphtI84=
-From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
-Received: from [87.98.221.171] by mandrillapp.com id e7a94ac20d0648b393fe8aeaa833f91b; Wed, 19 Jun 2019 16:27:53 +0000
-To:     Julia Lawall <julia.lawall@lip6.fr>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kbuild-all@01.org>
-Message-Id: <20190619162713.GA19859@deco.navytux.spb.ru>
-References: <alpine.DEB.2.20.1906191227430.3726@hadrien>
-In-Reply-To: <alpine.DEB.2.20.1906191227430.3726@hadrien>
-X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.e7a94ac20d0648b393fe8aeaa833f91b
-X-Mandrill-User: md_31050260
-Date:   Wed, 19 Jun 2019 16:27:53 +0000
+        id S1726518AbfFSQg6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jun 2019 12:36:58 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42722 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfFSQg5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jun 2019 12:36:57 -0400
+Received: by mail-qt1-f195.google.com with SMTP id s15so20645235qtk.9
+        for <linux-pci@vger.kernel.org>; Wed, 19 Jun 2019 09:36:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DzpNw7iMfHgKemdLUrfJxvdy9KGKJSIkCkr6aus8rCA=;
+        b=EDamHHKFiI7TTHkw3d71MrV0NdBwB6F1R0bV3XkjGbuH5mQMYmiVlZa63N43certmw
+         GaIE2u+163Cb4BhvTpbwTBxOWcLAcGEeI/3LO9nZ2D3hphDdktczve9XtPtWbb/zjdgx
+         QuoJYZuWKxQ1Q1HWKQMOXlDG8688RHVxOe9ZrXX0wEZogGnlfFfLqDn8V5Dbs8IQvczi
+         yQX28xdFN722tg0xFkBas291DRO6iaiEm0BDaeD7B2Eul7XBDtVnG/ZeKQsPeS/6vBSl
+         FO7l2jZl3LYlQIBoVhkk/uCuTaMtyaMfsLTID0dqUBuf/FNrb2Plto9Q3eXvKdPYCYXn
+         mxug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DzpNw7iMfHgKemdLUrfJxvdy9KGKJSIkCkr6aus8rCA=;
+        b=SeICj2Lx3Dh6Pno/ymFHAN/xAW+t29AUNrhyFG4PzucWcVjuIVR1V3tBV/kkHgTBxt
+         SMESWhNMPTNp60CdGbuCf6zzJ/oreOsj649PnXVpxKlr5YN64KwG5qUMklsCqZzf5iPG
+         ZdP2diy6xTZaW5Km4rpPVvrR91y/AV3HBLkfMSkTSgRl2ieHZSfGWPbAgjP91zPmlgiG
+         GabcbhzxWUmNHGfZidzmd+3+m+2EoWpFCGEsiT0I5WfjoiEaQdsV0YVPPU2urY6RXzwe
+         easDcabRg8a1LbkOeKC6Uow97Bnn/1LpC5CUdF8/P61BlaZZyOcqp++H6n/AkUE2fe6w
+         jvVA==
+X-Gm-Message-State: APjAAAWsxAuYVPeA2GUgLWNzCwNJzLwUFC5z7aOApZ3rVtkeCbX8Iwpy
+        6boHEqZCgYiAiowi6lNPO12k6A==
+X-Google-Smtp-Source: APXvYqzqHRHHrr8SACyRyLxcASgrxSvjDf6v3XwfN8DQX4ZVR7KLVzKliqO65H7tJkj2zv0u+29foQ==
+X-Received: by 2002:a0c:d24d:: with SMTP id o13mr34947576qvh.86.1560962216870;
+        Wed, 19 Jun 2019 09:36:56 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id r36sm11720396qte.71.2019.06.19.09.36.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Jun 2019 09:36:56 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hddZv-0001vf-QN; Wed, 19 Jun 2019 13:36:55 -0300
+Date:   Wed, 19 Jun 2019 13:36:55 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        nouveau@lists.freedesktop.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: dev_pagemap related cleanups v2
+Message-ID: <20190619163655.GG9360@ziepe.ca>
+References: <20190617122733.22432-1-hch@lst.de>
+ <CAPcyv4hBUJB2RxkDqHkfEGCupDdXfQSrEJmAdhLFwnDOwt8Lig@mail.gmail.com>
+ <20190619094032.GA8928@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190619094032.GA8928@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Julia, everyone.
+On Wed, Jun 19, 2019 at 11:40:32AM +0200, Christoph Hellwig wrote:
+> On Tue, Jun 18, 2019 at 12:47:10PM -0700, Dan Williams wrote:
+> > > Git tree:
+> > >
+> > >     git://git.infradead.org/users/hch/misc.git hmm-devmem-cleanup.2
+> > >
+> > > Gitweb:
+> > >
+> > >     http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/hmm-devmem-cleanup.2
+> 
+> > 
+> > Attached is my incremental fixups on top of this series, with those
+> > integrated you can add:
+> 
+> I've folded your incremental bits in and pushed out a new
+> hmm-devmem-cleanup.3 to the repo above.  Let me know if I didn't mess
+> up anything else.  I'll wait for a few more comments and Jason's
+> planned rebase of the hmm branch before reposting.
 
-On Wed, Jun 19, 2019 at 12:28:47PM +0200, Julia Lawall wrote:
-> Hi,
-> 
-> Can you forward this patch to the people below if you think it is
-> appropriate?
+I said I wouldn't rebase the hmm.git (as it needs to go to DRM, AMD
+and RDMA git trees)..
 
-Yes, this patch is appropriate. It was actually part of
-git.kernel.org/linus/c5bf68fe0c86 . It should be safe, (and desirable as
-it removes a chance for deadlock) to apply it. 
+Instead I will merge v5.2-rc5 to the tree before applying this series.
 
-Sebastian, Kurt, Logan, Bjorn, please consider picking it up.
+I've understood this to be Linus's prefered workflow.
 
-> Could I tell the kbuild people to add you to the CC list for
-> this semantic patch?
+So, please send the next iteration of this against either
+plainv5.2-rc5 or v5.2-rc5 merged with hmm.git and I'll sort it out.
 
-Yes, sure. Please feel free to add me to CC list for stream_open.cocci
-related patches.
-
-Kirill
-
-
-> thanks,
-> julia
-> 
-> ---------- Forwarded message ----------
-> Date: Wed, 19 Jun 2019 18:23:18 +0800
-> From: kbuild test robot <lkp@intel.com>
-> To: kbuild@01.org
-> Cc: Julia Lawall <julia.lawall@lip6.fr>
-> Subject: [PATCH] pci/switchtec: fix stream_open.cocci warnings
-> 
-> CC: kbuild-all@01.org
-> TO: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
-> CC: Logan Gunthorpe <logang@deltatee.com>
-> CC: Bjorn Helgaas <helgaas@kernel.org>
-> CC: linux-pci@vger.kernel.org
-> CC: linux-kernel@vger.kernel.org
-> 
-> From: kbuild test robot <lkp@intel.com>
-> 
-> drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
-> 
-> Generated by: scripts/coccinelle/api/stream_open.cocci
-> 
-> Fixes: a3a1e895d4fa ("pci/switchtec: Don't use completion's wait queue")
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-> ---
-> 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git linux-5.0.y-rt-rebase
-> head:   31cc76d5590f5e60c2f26f029e40bc7d0441d93f
-> commit: a3a1e895d4fa0508e11ac9107ace883a5b2a4d3b [171/305] pci/switchtec: Don't use completion's wait queue
-> :::::: branch date: 6 days ago
-> :::::: commit date: 6 days ago
-> 
-> Please take the patch only if it's a positive warning. Thanks!
-> 
->  switchtec.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- a/drivers/pci/switch/switchtec.c
-> +++ b/drivers/pci/switch/switchtec.c
-> @@ -392,7 +392,7 @@ static int switchtec_dev_open(struct ino
->  		return PTR_ERR(stuser);
-> 
->  	filp->private_data = stuser;
-> -	nonseekable_open(inode, filp);
-> +	stream_open(inode, filp);
-> 
->  	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
->
+Jason
