@@ -2,105 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C58A4C1B3
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 21:47:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6053C4C1DA
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2019 21:56:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfFSTrj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jun 2019 15:47:39 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:37110 "EHLO ale.deltatee.com"
+        id S1727076AbfFST4w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jun 2019 15:56:52 -0400
+Received: from mga04.intel.com ([192.55.52.120]:26202 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbfFSTrj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 19 Jun 2019 15:47:39 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hdgYT-0003lA-LS; Wed, 19 Jun 2019 13:47:38 -0600
-To:     Kirill Smelkov <kirr@nexedi.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kbuild-all@01.org
-References: <alpine.DEB.2.20.1906191227430.3726@hadrien>
- <20190619162713.GA19859@deco.navytux.spb.ru>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <8ece80ad-d3c9-ac7b-29a5-b8c6f40851af@deltatee.com>
-Date:   Wed, 19 Jun 2019 13:47:35 -0600
+        id S1726143AbfFST4w (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 19 Jun 2019 15:56:52 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 12:56:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,394,1557212400"; 
+   d="scan'208";a="162310218"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 19 Jun 2019 12:56:51 -0700
+Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
+        by linux.intel.com (Postfix) with ESMTP id 5B7FE580889;
+        Wed, 19 Jun 2019 12:56:51 -0700 (PDT)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH 2/2] PCI/IOV: Assume SR-IOV VFs support extended config
+ space.
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        linux-pci@vger.kernel.org
+Cc:     KarimAllah Ahmed <karahmed@amazon.de>,
+        Hao Zheng <yinhe@linux.alibaba.com>, bhelgaas@google.com,
+        linux-kernel@vger.kernel.org, nanhai.zou@linux.alibaba.com,
+        quan.xu0@linux.alibaba.com, ashok.raj@intel.com,
+        keith.busch@intel.com, mike.campin@intel.com
+References: <156046609596.29869.5839964168034189416.stgit@gimli.home>
+ <156046664016.29869.16676461736240878900.stgit@gimli.home>
+From:   sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <60712d78-b7a3-f50f-f5c3-a5e99841da4f@linux.intel.com>
+Date:   Wed, 19 Jun 2019 12:54:55 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190619162713.GA19859@deco.navytux.spb.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <156046664016.29869.16676461736240878900.stgit@gimli.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: kbuild-all@01.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, helgaas@kernel.org, kurt.schwemmer@microsemi.com, bigeasy@linutronix.de, julia.lawall@lip6.fr, kirr@nexedi.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi,
 
+On 6/13/19 3:57 PM, Alex Williamson wrote:
+> The SR-IOV specification requires both PFs and VFs to implement a PCIe
+> capability.  Generally this is sufficient to assume extended config
+> space is present, but we generally also perform additional tests to
+> make sure the extended config space is reachable and not simply an
+> alias of standard config space.  For a VF to exist extended config
+> space must be accessible on the PF, therefore we can also assume it to
+> be accessible on the VF.  This enables a micro performance
+> optimization previously implemented in commit 975bb8b4dc93 ("PCI/IOV:
+> Use VF0 cached config space size for other VFs") to speed up probing
+> of VFs.
+>
+> Cc: KarimAllah Ahmed <karahmed@amazon.de>
+> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Cc: Hao Zheng <yinhe@linux.alibaba.com>
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> ---
+>   drivers/pci/probe.c |   15 +++++++++++++++
+>   1 file changed, 15 insertions(+)
+>
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index a3a3c6b28343..439244ff8f09 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1561,6 +1561,21 @@ int pci_cfg_space_size(struct pci_dev *dev)
+>   	u32 status;
+>   	u16 class;
+>   
+> +#ifdef CONFIG_PCI_IOV
+> +	/*
+> +	 * Per the SR-IOV specification (rev 1.1, sec 3.5), VFs are required to
+> +	 * implement a PCIe capability and therefore must implement extended
+> +	 * config space.  We can skip the NO_EXTCFG test below and the
+> +	 * reachability/aliasing test in pci_cfg_space_size_ext() by virtue of
+> +	 * the fact that the SR-IOV capability on the PF resides in extended
+> +	 * config space and must be accessible and non-aliased to have enabled
+> +	 * support for this VF.  This is a micro performance optimization for
+> +	 * systems supporting many VFs.
+> +	 */
+> +	if (dev->is_virtfn)
+> +		return PCI_CFG_SPACE_EXP_SIZE;
+> +#endif
 
-On 2019-06-19 10:27 a.m., Kirill Smelkov wrote:
-> Hi Julia, everyone.
-> 
-> On Wed, Jun 19, 2019 at 12:28:47PM +0200, Julia Lawall wrote:
->> Hi,
->>
->> Can you forward this patch to the people below if you think it is
->> appropriate?
+It looks good to me.
 
->> From: kbuild test robot <lkp@intel.com>
->>
->> drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
->>
->> Generated by: scripts/coccinelle/api/stream_open.cocci
->>
->> Fixes: a3a1e895d4fa ("pci/switchtec: Don't use completion's wait queue")
->> Signed-off-by: kbuild test robot <lkp@intel.com>
->> ---
->>
->> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git linux-5.0.y-rt-rebase
+Reviewed-by: Kuppuswamy Sathyanarayanan 
+<sathyanarayanan.kuppuswamy@linux.intel.com>
 
-This is for the RT tree? The patch in the fixes tag isn't in upstream
-and I don't understand how this is related to that patch at all. It just
-looks like the RT tree hasn't picked up the patch which made this change
-in upstream.
+> +
+>   	if (dev->bus->bus_flags & PCI_BUS_FLAGS_NO_EXTCFG)
+>   		return PCI_CFG_SPACE_SIZE;
+>   
+>
+>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
 
-I feel like I've seen the change in this patch a bunch of times already
-and it appears to be correct in rc5 at least...
-
-Logan
-
-
->> head:   31cc76d5590f5e60c2f26f029e40bc7d0441d93f
->> commit: a3a1e895d4fa0508e11ac9107ace883a5b2a4d3b [171/305] pci/switchtec: Don't use completion's wait queue
->> :::::: branch date: 6 days ago
->> :::::: commit date: 6 days ago
->>
->> Please take the patch only if it's a positive warning. Thanks!
->>
->>  switchtec.c |    2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> --- a/drivers/pci/switch/switchtec.c
->> +++ b/drivers/pci/switch/switchtec.c
->> @@ -392,7 +392,7 @@ static int switchtec_dev_open(struct ino
->>  		return PTR_ERR(stuser);
->>
->>  	filp->private_data = stuser;
->> -	nonseekable_open(inode, filp);
->> +	stream_open(inode, filp);
->>
->>  	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
->>
