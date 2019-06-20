@@ -2,138 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BAD34DA2E
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 21:32:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA0164DA34
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 21:33:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbfFTTco (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jun 2019 15:32:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36802 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726169AbfFTTco (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 20 Jun 2019 15:32:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 21B8DAC9A;
-        Thu, 20 Jun 2019 19:32:42 +0000 (UTC)
-Date:   Thu, 20 Jun 2019 21:32:41 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/22] mm: remove hmm_devmem_add_resource
-Message-ID: <20190620193241.GJ12083@dhcp22.suse.cz>
-References: <20190613094326.24093-1-hch@lst.de>
- <20190613094326.24093-4-hch@lst.de>
+        id S1726311AbfFTTd4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jun 2019 15:33:56 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45541 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfFTTd4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jun 2019 15:33:56 -0400
+Received: by mail-qk1-f195.google.com with SMTP id s22so2714496qkj.12
+        for <linux-pci@vger.kernel.org>; Thu, 20 Jun 2019 12:33:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=U0/M0hJ5KzLhd8Pu6VVXoRLFvHgguLN3K3fjwlVNVaM=;
+        b=Wt2ovZze54UqqqHzCmnXCGlb5Qc3bnUJjGObm0j8zbiYre8HlvEk5208lFcXh7pfvs
+         zv5mh5GND6Bykqlz3QQS9Mbg/CG59bWfywFqT02HavCh4SuLF6NAC/WP+XrfIa6Knj4B
+         CdPS626RVGFyzJ8coeEllSa84zPPVHqdGM4FF5J5QBbaL1Z30OFC6v7TFAE91MmAtxB5
+         5pqEAXptwIWPMJY9VB5+d3VeyRmIbMyV6lfNLd5bap3hf+isOY8MtgUb2sGq410RxNnI
+         5ROVsOyIKWybeR9yAm5KdOEmV8A/m+0PJLN1KrfAMRKRy3bwQ6EqDdTUAV739zFNtR2z
+         Mohg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=U0/M0hJ5KzLhd8Pu6VVXoRLFvHgguLN3K3fjwlVNVaM=;
+        b=GBf/uxpy4vxHgJ8qR7vNiL+/fSzSv+4sO90X5TmVESJ5qOPgBSnWXLBkIDeV2aWks0
+         seQM6i6Jr8HSzxElxCbAppZeWnD5UR5cuZJWzBQnYW//fILkl7UvEVTLhIdBzKX+XmQb
+         tmW1QO093nUFSQ0Sdob1KtTlIA25wWwg+1HLWJ6QcrXkhW0c6jfNkaZvd7a5mNysN7vg
+         63V3qUIRCgX8CXmkZ6DzWWCbBVzTesii6fnTSHZZygWYfp3xahVzncufatbVP9Ya3Wom
+         wFdnUB0JcXyiuJVmAJjJoulBKgjY8mFahw6zkoBYwswf6cO4E/iyMXThLibYMxt9qY+L
+         PmKQ==
+X-Gm-Message-State: APjAAAXToXakec2kY/M03+VcxnN6gh6yV30CDp5G2BwS9twiROZ3U+Xi
+        GenidlrFkKbvoyCLa5SmMuRR8g==
+X-Google-Smtp-Source: APXvYqzMjt1OdaqNY1f3tojkMWZyYagV+dqwE2MNLCBNiHRuxvCmS8jTQnWPWnW999Z5H3so8l5PEA==
+X-Received: by 2002:a05:620a:16c1:: with SMTP id a1mr64294792qkn.269.1561059234931;
+        Thu, 20 Jun 2019 12:33:54 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id k5sm298816qkc.75.2019.06.20.12.33.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Jun 2019 12:33:54 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1he2ok-0006eH-0K; Thu, 20 Jun 2019 16:33:54 -0300
+Date:   Thu, 20 Jun 2019 16:33:53 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+Message-ID: <20190620193353.GF19891@ziepe.ca>
+References: <20190620161240.22738-1-logang@deltatee.com>
+ <CAPcyv4ijztOK1FUjLuFing7ps4LOHt=6z=eO=98HHWauHA+yog@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190613094326.24093-4-hch@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAPcyv4ijztOK1FUjLuFing7ps4LOHt=6z=eO=98HHWauHA+yog@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu 13-06-19 11:43:06, Christoph Hellwig wrote:
-> This function has never been used since it was first added to the kernel
-> more than a year and a half ago, and if we ever grow a consumer of the
-> MEMORY_DEVICE_PUBLIC infrastructure it can easily use devm_memremap_pages
-> directly now that we've simplified the API for it.
+On Thu, Jun 20, 2019 at 11:45:38AM -0700, Dan Williams wrote:
+
+> > Previously, there have been multiple attempts[1][2] to replace
+> > struct page usage with pfn_t but this has been unpopular seeing
+> > it creates dangerous edge cases where unsuspecting code might
+> > run accross pfn_t's they are not ready for.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-> ---
->  include/linux/hmm.h |  3 ---
->  mm/hmm.c            | 54 ---------------------------------------------
->  2 files changed, 57 deletions(-)
+> That's not the conclusion I arrived at because pfn_t is specifically
+> an opaque type precisely to force "unsuspecting" code to throw
+> compiler assertions. Instead pfn_t was dealt its death blow here:
 > 
-> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-> index 4867b9da1b6c..5761a39221a6 100644
-> --- a/include/linux/hmm.h
-> +++ b/include/linux/hmm.h
-> @@ -688,9 +688,6 @@ struct hmm_devmem {
->  struct hmm_devmem *hmm_devmem_add(const struct hmm_devmem_ops *ops,
->  				  struct device *device,
->  				  unsigned long size);
-> -struct hmm_devmem *hmm_devmem_add_resource(const struct hmm_devmem_ops *ops,
-> -					   struct device *device,
-> -					   struct resource *res);
->  
->  /*
->   * hmm_devmem_page_set_drvdata - set per-page driver data field
-> diff --git a/mm/hmm.c b/mm/hmm.c
-> index ff2598eb7377..0c62426d1257 100644
-> --- a/mm/hmm.c
-> +++ b/mm/hmm.c
-> @@ -1445,58 +1445,4 @@ struct hmm_devmem *hmm_devmem_add(const struct hmm_devmem_ops *ops,
->  	return devmem;
->  }
->  EXPORT_SYMBOL_GPL(hmm_devmem_add);
-> -
-> -struct hmm_devmem *hmm_devmem_add_resource(const struct hmm_devmem_ops *ops,
-> -					   struct device *device,
-> -					   struct resource *res)
-> -{
-> -	struct hmm_devmem *devmem;
-> -	void *result;
-> -	int ret;
-> -
-> -	if (res->desc != IORES_DESC_DEVICE_PUBLIC_MEMORY)
-> -		return ERR_PTR(-EINVAL);
-> -
-> -	dev_pagemap_get_ops();
-> -
-> -	devmem = devm_kzalloc(device, sizeof(*devmem), GFP_KERNEL);
-> -	if (!devmem)
-> -		return ERR_PTR(-ENOMEM);
-> -
-> -	init_completion(&devmem->completion);
-> -	devmem->pfn_first = -1UL;
-> -	devmem->pfn_last = -1UL;
-> -	devmem->resource = res;
-> -	devmem->device = device;
-> -	devmem->ops = ops;
-> -
-> -	ret = percpu_ref_init(&devmem->ref, &hmm_devmem_ref_release,
-> -			      0, GFP_KERNEL);
-> -	if (ret)
-> -		return ERR_PTR(ret);
-> -
-> -	ret = devm_add_action_or_reset(device, hmm_devmem_ref_exit,
-> -			&devmem->ref);
-> -	if (ret)
-> -		return ERR_PTR(ret);
-> -
-> -	devmem->pfn_first = devmem->resource->start >> PAGE_SHIFT;
-> -	devmem->pfn_last = devmem->pfn_first +
-> -			   (resource_size(devmem->resource) >> PAGE_SHIFT);
-> -	devmem->page_fault = hmm_devmem_fault;
-> -
-> -	devmem->pagemap.type = MEMORY_DEVICE_PUBLIC;
-> -	devmem->pagemap.res = *devmem->resource;
-> -	devmem->pagemap.page_free = hmm_devmem_free;
-> -	devmem->pagemap.altmap_valid = false;
-> -	devmem->pagemap.ref = &devmem->ref;
-> -	devmem->pagemap.data = devmem;
-> -	devmem->pagemap.kill = hmm_devmem_ref_kill;
-> -
-> -	result = devm_memremap_pages(devmem->device, &devmem->pagemap);
-> -	if (IS_ERR(result))
-> -		return result;
-> -	return devmem;
-> -}
-> -EXPORT_SYMBOL_GPL(hmm_devmem_add_resource);
->  #endif /* CONFIG_DEVICE_PRIVATE || CONFIG_DEVICE_PUBLIC */
-> -- 
-> 2.20.1
+> https://lore.kernel.org/lkml/CA+55aFzON9617c2_Amep0ngLq91kfrPiSccdZakxir82iekUiA@mail.gmail.com/
+> 
+> ...and I think that feedback also reads on this proposal.
 
--- 
-Michal Hocko
-SUSE Labs
+I read through Linus's remarks and it he seems completely right that
+anything that touches a filesystem needs a struct page, because FS's
+rely heavily on that.
+
+It is much less clear to me why a GPU BAR or a NVME CMB that never
+touches a filesystem needs a struct page.. The best reason I've seen
+is that it must have struct page because the block layer heavily
+depends on struct page.
+
+Since that thread was so DAX/pmem centric (and Linus did say he liked
+the __pfn_t), maybe it is worth checking again, but not for DAX/pmem
+users?
+
+This P2P is quite distinct from DAX as the struct page* would point to
+non-cacheable weird memory that few struct page users would even be
+able to work with, while I understand DAX use cases focused on CPU
+cache coherent memory, and filesystem involvement.
+
+> My primary concern with this is that ascribes a level of generality
+> that just isn't there for peer-to-peer dma operations. "Peer"
+> addresses are not "DMA" addresses, and the rules about what can and
+> can't do peer-DMA are not generically known to the block layer.
+
+?? The P2P infrastructure produces a DMA bus address for the
+initiating device that is is absolutely a DMA address. There is some
+intermediate CPU centric representation, but after mapping it is the
+same as any other DMA bus address.
+
+The map function can tell if the device pair combination can do p2p or
+not.
+
+> Again, what are the benefits of plumbing this RDMA special case?
+
+It is not just RDMA, this is interesting for GPU and vfio use cases
+too. RDMA is just the most complete in-tree user we have today.
+
+ie GPU people wouuld really like to do read() and have P2P
+transparently happen to on-GPU pages. With GPUs having huge amounts of
+memory loading file data into them is really a performance critical
+thing.
+
+Jason
