@@ -2,159 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 85E824C5B5
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 05:13:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 738224C6B2
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 07:14:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfFTDNc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jun 2019 23:13:32 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:56072 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726370AbfFTDNc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 19 Jun 2019 23:13:32 -0400
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id DB309BE042F414820F35;
-        Thu, 20 Jun 2019 11:13:29 +0800 (CST)
-Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 20 Jun 2019 11:13:29 +0800
-Received: from [127.0.0.1] (10.40.49.11) by dggeme758-chm.china.huawei.com
- (10.3.19.104) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Thu, 20
- Jun 2019 11:13:29 +0800
-Subject: Re: Bug report: AER driver deadlock
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Sinan Kaya <Okaya@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-References: <a7dcc378-6101-ac08-ec8e-be7d5c183b49@huawei.com>
- <CAK9iUCPREGruU7zGqnkS9w_x8Q7iE8twveEp2dn8ArupTTQyHA@mail.gmail.com>
- <a1c90cfb9ce4062b4823c6647d7709baf1c5534f.camel@kernel.crashing.org>
-From:   "Fangjian (Turing)" <f.fangjian@huawei.com>
-Message-ID: <7b98d81c-55bd-1782-f214-7bbf48e54f16@huawei.com>
-Date:   Thu, 20 Jun 2019 11:14:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        id S1731203AbfFTFNr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jun 2019 01:13:47 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34827 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbfFTFNq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jun 2019 01:13:46 -0400
+Received: by mail-pf1-f195.google.com with SMTP id d126so975617pfd.2
+        for <linux-pci@vger.kernel.org>; Wed, 19 Jun 2019 22:13:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x1MMOnOq8RstNP2fbCqAXnUxGL8fsmmbBQmO9ouhYxU=;
+        b=qqfZQy2CGsb+E8k+hNToCHi7yQ6EQT1ztzughkC4rZ7JZeS8tJxFUZHT3ESXaIYf13
+         UgniZjFtJNzZzllYugZzh2J0jll+rA/UjsUDGIDBFBz1XOYdoNPZfDjGQ6ccVzACDhlQ
+         fAgBwhr8ldmbQvxUiJ/rrucTy42SRYxvy1n88EHFjG+wsN2W22D5ydbGO4g9DGcZ77fL
+         tjqLQZNiZYsxR6kCib/BqTVZDnEjWI/2GpCXzNLuUp0Rmmhp7P3nomG3qPiQ6UFFeWv3
+         YIyCm6kvWIk9Yg/jt59IFnyxW6lTaGdJMA86sTL0qHAu5oVfqFIktUWro/775sloGPW5
+         X71A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x1MMOnOq8RstNP2fbCqAXnUxGL8fsmmbBQmO9ouhYxU=;
+        b=rIFVBhFKApZgdFUy0S2dC+v/zAWlGOu4kC9sHFa6ArLIwYlmt+tYl7i+MeqVQKLRT1
+         Yx3l64eSEkzfCYgNL/BpD7Y8/WR/QlML+8UlZgWBG7MdBP5QHzNHJ2g/hPkEJtwV8x7E
+         MhISF9AbcyjPNvRjA88NoAcQ8+bneh25V7K44hpSO8qcyuY7CaA4idpef8lFgQSIRfjY
+         5dy+IP/rZ/3w3UFsaJhE4j2nawalgEBXMY4QdZ95xmLN/UykXve80pQl5sSxTF9DtGFP
+         Y227HikFszpgV8JP4DsHiNBz2hyYjCgL669CvqvVYVT5b7gSgjniwe3FD6Pc3HoOTWFi
+         zZlw==
+X-Gm-Message-State: APjAAAUpH9PxvQh/eoRPYrjsHARPFzrDT0ZsAmO2rvWv3KUFcFKhH/Gw
+        TxH3uHLztnurCubJFsHsdWCoIQ==
+X-Google-Smtp-Source: APXvYqwG59rjA9LYxKGaWy2LiC6hk6P16QRV4jC29nrowDYTzI56hJhNq74kFL956eFcU6GzoYReIw==
+X-Received: by 2002:a17:90a:216f:: with SMTP id a102mr1118147pje.29.1561007625289;
+        Wed, 19 Jun 2019 22:13:45 -0700 (PDT)
+Received: from limbo.local (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id j2sm26383423pfn.135.2019.06.19.22.13.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 19 Jun 2019 22:13:44 -0700 (PDT)
+From:   Daniel Drake <drake@endlessm.com>
+To:     axboe@kernel.dk, kbusch@kernel.org, hch@lst.de, sagi@grimberg.me
+Cc:     linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, linux-ide@vger.kernel.org, linux@endlessm.com,
+        linux-kernel@vger.kernel.org, hare@suse.de,
+        alex.williamson@redhat.com, dan.j.williams@intel.com
+Subject: [PATCH v2 0/5] Support Intel AHCI remapped NVMe devices
+Date:   Thu, 20 Jun 2019 13:13:28 +0800
+Message-Id: <20190620051333.2235-1-drake@endlessm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <a1c90cfb9ce4062b4823c6647d7709baf1c5534f.camel@kernel.crashing.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.40.49.11]
-X-ClientProxiedBy: dggeme706-chm.china.huawei.com (10.1.199.102) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-Are there any further advice?
+Intel SATA AHCI controllers support a strange mode where NVMe devices
+disappear from the PCI bus, and instead are remapped into AHCI PCI memory
+space.
 
-On 2019/6/5 7:47, Benjamin Herrenschmidt wrote:
-> On Tue, 2019-06-04 at 10:34 -0400, Sinan Kaya wrote:
->> On 6/3/19, Fangjian (Turing) <f.fangjian@huawei.com> wrote:
->>> Hi, We met a deadlock triggered by a NONFATAL AER event during a sysfs
->>> "sriov_numvfs" operation. Any suggestion to fix such deadlock ?
->>>
->>>   enable one VF
->>>   # echo 1 > /sys/devices/pci0000:74/0000:74:00.0/0000:75:00.0/sriov_numvfs
->>>
->>>   The sysfs "sriov_numvfs" side is:
->>>
->>>     sriov_numvfs_store
->>>       device_lock                               # hold the device_lock
->>>         ...
->>>         pci_enable_sriov
->>>           sriov_enable
->>>             ...
->>>             pci_device_add
->>>               down_write(&pci_bus_sem) 	        # wait for
->>> up_read(&pci_bus_sem)
->>>
->>>   The AER side is:
->>>
->>>     pcie_do_recovery
->>>       pci_walk_bus
->>>         down_read(&pci_bus_sem)                 # hold the rw_semaphore
->>>         report_resume
->>
->> Should we replace these device lock with try lock loop with some sleep
->> statements. This could solve the immediate deadlock issues until
->> someone implements granular locking in pci.
-> 
-> That won't necessarily solve this AB->BA problem. I think the issue
-> here is that sriov shouldn't device_lock before doing something that
-> can take the pci_bus_sem.
-> 
-> Ben.
-> 
-> 
->>>           device_lock                           # wait for device_unlock()
->>>
->>> The calltrace is as below:
->>>
->>> [  258.411464] INFO: task kworker/0:1:13 blocked for more than 120 seconds.
->>> [  258.418139]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
->>> [  258.424379] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables
->>> this message.
->>> [  258.432172] kworker/0:1     D    0    13      2 0x00000028
->>> [  258.437640] Workqueue: events aer_recover_work_func
->>> [  258.442496] Call trace:
->>> [  258.444933]  __switch_to+0xb4/0x1b8
->>> [  258.448409]  __schedule+0x1ec/0x720
->>> [  258.451884]  schedule+0x38/0x90
->>> [  258.455012]  schedule_preempt_disabled+0x20/0x38
->>> [  258.459610]  __mutex_lock.isra.1+0x150/0x518
->>> [  258.463861]  __mutex_lock_slowpath+0x10/0x18
->>> [  258.468112]  mutex_lock+0x34/0x40
->>> [  258.471413]  report_resume+0x1c/0x78
->>> [  258.474973]  pci_walk_bus+0x58/0xb0
->>> [  258.478451]  pcie_do_recovery+0x18c/0x248
->>> [  258.482445]  aer_recover_work_func+0xe0/0x118
->>> [  258.486783]  process_one_work+0x1e4/0x468
->>> [  258.490776]  worker_thread+0x40/0x450
->>> [  258.494424]  kthread+0x128/0x130
->>> [  258.497639]  ret_from_fork+0x10/0x1c
->>> [  258.501329] INFO: task flr.sh:4534 blocked for more than 120 seconds.
->>> [  258.507742]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
->>> [  258.513980] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables
->>> this message.
->>> [  258.521774] flr.sh          D    0  4534   4504 0x00000000
->>> [  258.527235] Call trace:
->>> [  258.529671]  __switch_to+0xb4/0x1b8
->>> [  258.533146]  __schedule+0x1ec/0x720
->>> [  258.536619]  schedule+0x38/0x90
->>> [  258.539749]  rwsem_down_write_failed+0x14c/0x210
->>> [  258.544347]  down_write+0x48/0x60
->>> [  258.547648]  pci_device_add+0x1a0/0x290
->>> [  258.551469]  pci_iov_add_virtfn+0x190/0x358
->>> [  258.555633]  sriov_enable+0x24c/0x480
->>> [  258.559279]  pci_enable_sriov+0x14/0x28
->>> [  258.563101]  hisi_zip_sriov_configure+0x64/0x100 [hisi_zip]
->>> [  258.568649]  sriov_numvfs_store+0xc4/0x190
->>> [  258.572728]  dev_attr_store+0x18/0x28
->>> [  258.576375]  sysfs_kf_write+0x3c/0x50
->>> [  258.580024]  kernfs_fop_write+0x114/0x1d8
->>> [  258.584018]  __vfs_write+0x18/0x38
->>> [  258.587404]  vfs_write+0xa4/0x1b0
->>> [  258.590705]  ksys_write+0x60/0xd8
->>> [  258.594007]  __arm64_sys_write+0x18/0x20
->>> [  258.597914]  el0_svc_common+0x5c/0x100
->>> [  258.601646]  el0_svc_handler+0x2c/0x80
->>> [  258.605381]  el0_svc+0x8/0xc
->>> [  379.243461] INFO: task kworker/0:1:13 blocked for more than 241 seconds.
->>> [  379.250134]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
->>> [  379.256373] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables
->>> this message.
->>>
->>>
->>> Thank you,
->>> Jay
->>>
->>>
-> 
-> 
-> .
-> 
+Many current and upcoming consumer products ship with the AHCI controller
+in this "RAID" or "Intel RST Premium with Intel Optane System Acceleration"
+mode by default. Without Linux support for this remapped mode,
+the default out-of-the-box experience is that the NVMe storage device
+is inaccessible (which in many cases is the only internal storage device).
+
+In most cases, the SATA configuration can be changed in the BIOS menu to
+"AHCI", resulting in the AHCI & NVMe devices appearing as separate
+devices as you would ordinarily expect. Changing this configuration
+is the recommendation for power users because there are several limitations
+of the remapped mode (now documented in Kconfig help text).
+
+However, it's also important to support the remapped mode given that
+it is an increasingly common product default. We cannot expect ordinary
+users of consumer PCs to find out about this situation and then
+confidently go into the BIOS menu to change options.
+
+This patch set implements support for the remapped mode.
+
+v1 of these patches was originally posted by Dan Williams in 2016.
+https://marc.info/?l=linux-ide&m=147709610621480&w=2
+Since then:
+
+ - Intel stopped developing these patches & hasn't been responding to
+   my emails on this topic.
+
+ - More register documentation appeared in
+   https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/300-series-chipset-pch-datasheet-vol-2.pdf
+
+ - I tried Christoph's suggestion of exposing the devices on a fake PCI bus,
+   hence not requiring NVMe driver changes, but Bjorn Helgaas does not think
+   it's the right approach and instead recommends the approach taken here.
+   https://marc.info/?l=linux-pci&m=156034736822205&w=2
+
+ - More consumer devices have appeared with this setting as the default,
+   and with the decreasing cost of NVMe storage, it appears that a whole
+   bunch more consumer PC products currently in development are going to
+   ship in RAID/remapped mode, with only a single NVMe disk, which Linux
+   will otherwise be unable to access by default.
+
+ - We heard from hardware vendors that this Linux incompatibility is
+   causing them to consider discontinuing Linux support on affected
+   products. Changing the BIOS setting is too much of a logistics
+   challenge.
+
+ - I updated Dan's patches for current kernels. I added docs and references
+   and incorporated the new register info. I incorporated feedback to push
+   the recommendation that the user goes back to AHCI mode via the BIOS
+   setting (in kernel logs and Kconfig help). And made some misc minor
+   changes that I think are sensible.
+
+ - I investigated MSI-X support. Can't quite get it working, but I'm hopeful
+   that we can figure it out and add it later. With these patches shared
+   I'll follow up with more details about that. With the focus on
+   compatibility with default configuration of common consumer products,
+   I'm hoping we could land an initial version without MSI support before
+   tending to those complications.
+
+Dan Williams (2):
+  nvme: rename "pci" operations to "mmio"
+  nvme: move common definitions to pci.h
+
+Daniel Drake (3):
+  ahci: Discover Intel remapped NVMe devices
+  nvme: introduce nvme_dev_ops
+  nvme: Intel AHCI remap support
+
+ drivers/ata/Kconfig                  |  33 ++
+ drivers/ata/ahci.c                   | 173 ++++++++--
+ drivers/ata/ahci.h                   |  14 +
+ drivers/nvme/host/Kconfig            |   3 +
+ drivers/nvme/host/Makefile           |   3 +
+ drivers/nvme/host/intel-ahci-remap.c | 185 ++++++++++
+ drivers/nvme/host/pci.c              | 490 ++++++++++++++-------------
+ drivers/nvme/host/pci.h              | 145 ++++++++
+ include/linux/ahci-remap.h           | 140 +++++++-
+ 9 files changed, 922 insertions(+), 264 deletions(-)
+ create mode 100644 drivers/nvme/host/intel-ahci-remap.c
+ create mode 100644 drivers/nvme/host/pci.h
+
+-- 
+2.20.1
 
