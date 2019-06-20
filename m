@@ -2,146 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CEFA24C827
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 09:17:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B3D744C85B
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 09:24:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbfFTHQy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jun 2019 03:16:54 -0400
-Received: from mail177-29.suw61.mandrillapp.com ([198.2.177.29]:11553 "EHLO
-        mail177-29.suw61.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726274AbfFTHQp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jun 2019 03:16:45 -0400
-X-Greylist: delayed 900 seconds by postgrey-1.27 at vger.kernel.org; Thu, 20 Jun 2019 03:16:44 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:In-Reply-To:References:Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=LMg3Bk6kln69Vs5t8MxVxPy3A99uh33UqnDkBfEpokk=;
- b=Uca4MKOEZQTBYKZw2yfAIoj3uF5nnI2/TqdpeWR+I/QFzUXI0RyUnlyvzLpyKMSzQIXBI4zEJzUZ
-   ZY9DjrnfFIPjR8Qim2xTYqOO4+pytKe05FNeZLLE66gTFN+mGc3gbiydGTVlHZF4y8FoedJpNyca
-   rJSHFbwwntZgxhhsqrE=
-Received: from pmta06.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail177-29.suw61.mandrillapp.com id h1cpdo22rtk2 for <linux-pci@vger.kernel.org>; Thu, 20 Jun 2019 07:01:44 +0000 (envelope-from <bounce-md_31050260.5d0b2f58.v1-f59c5ad798a74b2a9a0c445be6c9aaf5@mandrillapp.com>)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1561014104; h=From : 
- Subject : To : Cc : In-Reply-To : References : Message-Id : Date : 
- MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
- Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=LMg3Bk6kln69Vs5t8MxVxPy3A99uh33UqnDkBfEpokk=; 
- b=c61iYcxGpS6QpDMAax3gb9qwS7d5K/krqJ2n9Ov1eUd2v6bk0p9/UXbIcB07D+RATC6J0X
- SuI6XbnwA9XAdKOtKWh8YOyyXNWNjvUuMaY8L5tULblLUq0uzKFVyG5tMus8dYQLvi7XDktB
- DpiX0Ppd5BSERwuG6uksgO9M1JmNQ=
-From:   <kirr@nexedi.com>
-Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
-Received: from [87.98.221.171] by mandrillapp.com id f59c5ad798a74b2a9a0c445be6c9aaf5; Thu, 20 Jun 2019 07:01:44 +0000
-X-Sender: kirr@nexedi.com
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Julia Lawall <julia.lawall@lip6.fr>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kbuild-all@01.org>
-In-Reply-To: <20190619201859.GA197717@google.com>
-References: <alpine.DEB.2.20.1906191227430.3726@hadrien> <20190619162713.GA19859@deco.navytux.spb.ru> <20190619201859.GA197717@google.com>
-Message-Id: <e6568b7107d4cbef639f82a400ba8b1a@nexedi.com>
-X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.f59c5ad798a74b2a9a0c445be6c9aaf5
-X-Mandrill-User: md_31050260
-Date:   Thu, 20 Jun 2019 07:01:44 +0000
+        id S1726392AbfFTHYF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jun 2019 03:24:05 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54338 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfFTHYF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jun 2019 03:24:05 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5K7Nmuw074605;
+        Thu, 20 Jun 2019 02:23:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561015428;
+        bh=4nptE+V/8zTkQNKxzkmRKnHwJXFg/cYh6mx5TMhKhtI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=vrU7djtQBnNcjPj8h1kXXoUlHOqY7vzkaCMbFrKYEYBmem9hPzglV3HH97v/7T4Z/
+         XYuVUmPEpVyz8xaCir4fLsxMvj7rqdEBOIuv+xkxvxjvidu/Vw5jaMejrMotL2rdRI
+         j3+ARvTMDq07pmeGXHSk2wPX+1sfAPqoxUjO4Dxo=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5K7NmsK070685
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 20 Jun 2019 02:23:48 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 20
+ Jun 2019 02:23:48 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 20 Jun 2019 02:23:48 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5K7Nfrn091447;
+        Thu, 20 Jun 2019 02:23:42 -0500
+Subject: Re: [PATCH V10 10/15] dt-bindings: PHY: P2U: Add Tegra194 P2U block
+To:     Vidya Sagar <vidyas@nvidia.com>, <lorenzo.pieralisi@arm.com>,
+        <bhelgaas@google.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>
+CC:     <digetx@gmail.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190612095339.20118-1-vidyas@nvidia.com>
+ <20190612095339.20118-11-vidyas@nvidia.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <1ecf61d7-5535-4f07-5e1e-5d492f4194da@ti.com>
+Date:   Thu, 20 Jun 2019 12:52:16 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190612095339.20118-11-vidyas@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Bjorn Helgaas =D0=BF=D0=B8=D1=81=D0=B0=D0=BB 2019-06-19 23:19:
-> On Wed, Jun 19, 2019 at 04:27:52PM +0000, Kirill Smelkov wrote:
->> Hi Julia, everyone.
->> 
->> On Wed, Jun 19, 2019 at 12:28:47PM +0200, Julia Lawall wrote:
->> > Hi,
->> >
->> > Can you forward this patch to the people below if you think it is
->> > appropriate?
->> 
->> Yes, this patch is appropriate. It was actually part of
->> git.kernel.org/linus/c5bf68fe0c86 . It should be safe, (and desirable 
->> as
->> it removes a chance for deadlock) to apply it.
->> 
->> Sebastian, Kurt, Logan, Bjorn, please consider picking it up.
+
+
+On 12/06/19 3:23 PM, Vidya Sagar wrote:
+> Add support for Tegra194 P2U (PIPE to UPHY) module block which is a glue
+> module instantiated one for each PCIe lane between Synopsys DesignWare core
+> based PCIe IP and Universal PHY block.
 > 
-> I don't get it.  This appeared in v5.2-rc1 as c5bf68fe0c86 ("*: convert
-> stream-like files from nonseekable_open -> stream_open"), so it looks 
-> like
-> this is already done.  What would you like me to do with it?
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Acked-by: Thierry Reding <treding@nvidia.com>
 
-I meant just that it was ok to pick this change into 5.0-RT tree as 
-kbuild robot was suggesting. Sorry for not being clear.
-
-Kirill
-
->> > Could I tell the kbuild people to add you to the CC list for
->> > this semantic patch?
->> 
->> Yes, sure. Please feel free to add me to CC list for stream_open.cocci
->> related patches.
->> 
->> Kirill
->> 
->> 
->> > thanks,
->> > julia
->> >
->> > ---------- Forwarded message ----------
->> > Date: Wed, 19 Jun 2019 18:23:18 +0800
->> > From: kbuild test robot <lkp@intel.com>
->> > To: kbuild@01.org
->> > Cc: Julia Lawall <julia.lawall@lip6.fr>
->> > Subject: [PATCH] pci/switchtec: fix stream_open.cocci warnings
->> >
->> > CC: kbuild-all@01.org
->> > TO: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
->> > CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
->> > CC: Logan Gunthorpe <logang@deltatee.com>
->> > CC: Bjorn Helgaas <helgaas@kernel.org>
->> > CC: linux-pci@vger.kernel.org
->> > CC: linux-kernel@vger.kernel.org
->> >
->> > From: kbuild test robot <lkp@intel.com>
->> >
->> > drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read(=
-) can deadlock .write(); change nonseekable_open -> stream_open to fix.
->> >
->> > Generated by: scripts/coccinelle/api/stream_open.cocci
->> >
->> > Fixes: a3a1e895d4fa ("pci/switchtec: Don't use completion's wait queue=
-")
->> > Signed-off-by: kbuild test robot <lkp@intel.com>
->> > ---
->> >
->> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-de=
-vel.git linux-5.0.y-rt-rebase
->> > head:   31cc76d5590f5e60c2f26f029e40bc7d0441d93f
->> > commit: a3a1e895d4fa0508e11ac9107ace883a5b2a4d3b [171/305] pci/switcht=
-ec: Don't use completion's wait queue
->> > :::::: branch date: 6 days ago
->> > :::::: commit date: 6 days ago
->> >
->> > Please take the patch only if it's a positive warning. Thanks!
->> >
->> >  switchtec.c |    2 +-
->> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> >
->> > --- a/drivers/pci/switch/switchtec.c
->> > +++ b/drivers/pci/switch/switchtec.c
->> > @@ -392,7 +392,7 @@ static int switchtec_dev_open(struct ino
->> >  =09=09return PTR_ERR(stuser);
->> >
->> >  =09filp->private_data =3D stuser;
->> > -=09nonseekable_open(inode, filp);
->> > +=09stream_open(inode, filp);
->> >
->> >  =09dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
->> >
-
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+> Changes since [v9]:
+> * None
+> 
+> Changes since [v8]:
+> * None
+> 
+> Changes since [v7]:
+> * None
+> 
+> Changes since [v6]:
+> * None
+> 
+> Changes since [v5]:
+> * Added Sob
+> * Changed node name from "p2u@xxxxxxxx" to "phy@xxxxxxxx"
+> 
+> Changes since [v4]:
+> * None
+> 
+> Changes since [v3]:
+> * None
+> 
+> Changes since [v2]:
+> * Changed node label to reflect new format that includes either 'hsio' or
+>   'nvhs' in its name to reflect which UPHY brick they belong to
+> 
+> Changes since [v1]:
+> * This is a new patch in v2 series
+> 
+>  .../bindings/phy/phy-tegra194-p2u.txt         | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+> new file mode 100644
+> index 000000000000..d23ff90baad5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+> @@ -0,0 +1,28 @@
+> +NVIDIA Tegra194 P2U binding
+> +
+> +Tegra194 has two PHY bricks namely HSIO (High Speed IO) and NVHS (NVIDIA High
+> +Speed) each interfacing with 12 and 8 P2U instances respectively.
+> +A P2U instance is a glue logic between Synopsys DesignWare Core PCIe IP's PIPE
+> +interface and PHY of HSIO/NVHS bricks. Each P2U instance represents one PCIe
+> +lane.
+> +
+> +Required properties:
+> +- compatible: For Tegra19x, must contain "nvidia,tegra194-p2u".
+> +- reg: Should be the physical address space and length of respective each P2U
+> +       instance.
+> +- reg-names: Must include the entry "ctl".
+> +
+> +Required properties for PHY port node:
+> +- #phy-cells: Defined by generic PHY bindings.  Must be 0.
+> +
+> +Refer to phy/phy-bindings.txt for the generic PHY binding properties.
+> +
+> +Example:
+> +
+> +p2u_hsio_0: phy@3e10000 {
+> +	compatible = "nvidia,tegra194-p2u";
+> +	reg = <0x03e10000 0x10000>;
+> +	reg-names = "ctl";
+> +
+> +	#phy-cells = <0>;
+> +};
+> 
