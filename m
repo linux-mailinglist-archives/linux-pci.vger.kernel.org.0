@@ -2,167 +2,182 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 90ACF4D021
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 16:15:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 378C74D05E
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 16:27:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfFTOPn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jun 2019 10:15:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33720 "EHLO mail.kernel.org"
+        id S1726697AbfFTO1K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jun 2019 10:27:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:41226 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbfFTOPn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:15:43 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83F1020679;
-        Thu, 20 Jun 2019 14:15:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561040142;
-        bh=dhiwqsDhCCo4JZv9OT6poUUFmjuS3n8Co5QFTEhmk+w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KnOa3Xp0eNI1xBeqsl4WZA1waTpm2HtaA/dm/32XLV5O8S1RYvBxFU/B6UVq7ykh/
-         GHGLDPwlLIDNnIRAfytuEH9JrjFUpMZ1lmIKOg1fteuFC86uOG8yNhqPJp+O2F/6Hp
-         qCH+6O55D+54WmqOvDLDch4oDQZGbQMAH9IrunjE=
-Date:   Thu, 20 Jun 2019 09:15:41 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] PCI / ACPI: Use cached ACPI device state to get
- PCI device power state
-Message-ID: <20190620141541.GA257318@google.com>
-References: <20190618161858.77834-1-mika.westerberg@linux.intel.com>
- <20190618161858.77834-2-mika.westerberg@linux.intel.com>
- <20190619212801.GC143205@google.com>
- <20190620082730.GM2640@lahna.fi.intel.com>
- <20190620131649.GG143205@google.com>
- <20190620133710.GB2640@lahna.fi.intel.com>
+        id S1726675AbfFTO1K (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 20 Jun 2019 10:27:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 297A9344;
+        Thu, 20 Jun 2019 07:27:09 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C90013F718;
+        Thu, 20 Jun 2019 07:27:07 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 15:27:02 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc:     thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, jonathanh@nvidia.com, vidyas@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V6 04/27] PCI: tegra: Mask AFI_INTR in runtime suspend
+Message-ID: <20190620142702.GA31996@e121166-lin.cambridge.arm.com>
+References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+ <20190618180206.4908-5-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190620133710.GB2640@lahna.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190618180206.4908-5-mmaddireddy@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 04:37:10PM +0300, Mika Westerberg wrote:
-> On Thu, Jun 20, 2019 at 08:16:49AM -0500, Bjorn Helgaas wrote:
-> > On Thu, Jun 20, 2019 at 11:27:30AM +0300, Mika Westerberg wrote:
-> > > On Wed, Jun 19, 2019 at 04:28:01PM -0500, Bjorn Helgaas wrote:
-> > > > On Tue, Jun 18, 2019 at 07:18:56PM +0300, Mika Westerberg wrote:
-> > > > > Intel Ice Lake has an integrated Thunderbolt controller which
-> > > > > means that the PCIe topology is extended directly from the two
-> > > > > root ports (RP0 and RP1).
-> > > > 
-> > > > A PCIe topology is always extended directly from root ports,
-> > > > regardless of whether a Thunderbolt controller is integrated, so I
-> > > > guess I'm missing the point you're making.  It doesn't sound like
-> > > > this is anything specific to Thunderbolt?
-> > >
-> > > The point I'm trying to make here is to explain why this is problem
-> > > now and not with the previous discrete controllers. With the
-> > > previous there was only a single ACPI power resource for the root
-> > > port and the Thunderbolt host router was connected to that root
-> > > port. PCIe hierarchy was extended through downstream ports (not root
-> > > ports) of that controller (which includes PCIe switch).
-> > 
-> > Sounds like you're using "PCIe topology extension" to mean
-> > specifically something below a Thunderbolt controller, excluding a
-> > subtree below a root port.  I don't think the PCI core is aware of
-> > that distinction.
+On Tue, Jun 18, 2019 at 11:31:43PM +0530, Manikanta Maddireddy wrote:
+> AFI_INTR is unmasked in tegra_pcie_enable_controller(), mask it to avoid
+> unwanted interrupts raised by AFI after pex_rst is asserted.
 > 
-> Right it is not.
+> Following sequence triggers such scenario,
+>  - tegra_pcie_remove() triggers runtime suspend
+>  - pex_rst is asserted in runtime suspend
+>  - PRSNT_MAP bit field in RP_PRIV_MISC register changes from EP_PRSNT to
+>    EP_ABSNT
+>  - This is sensed by AFI and triggers "Slot present pin change" interrupt
+>  - tegra_pcie_isr() function accesses AFI register when runtime suspend
+>    is going through power off sequence
 > 
-> > > Now the thing is part of the SoC so power management is different
-> > > and causes problems in Linux.
-> > 
-> > The SoC is a physical packaging issue that really doesn't enter into
-> > the specs directly.  I'm trying to get at the logical topology
-> > questions in terms of the PCIe and ACPI specs.
-> > 
-> > I assume we could dream up a non-Thunderbolt topology that would show
-> > the same problem?
+> rmmod pci-tegra
+>  pci_generic_config_write32: 108 callbacks suppressed
+>  pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x4c may corrupt adjacent RW1C bits
+>  pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x9c may corrupt adjacent RW1C bits
+>  pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x88 may corrupt adjacent RW1C bits
+>  pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x90 may corrupt adjacent RW1C bits
+>  pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x4 may corrupt adjacent RW1C bits
+>  igb 0002:04:00.1: removed PHC on enP2p4s0f1
+>  igb 0002:04:00.0: removed PHC on enP2p4s0f0
+>  pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x4c may corrupt adjacent RW1C bits
+>  pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x9c may corrupt adjacent RW1C bits
+>  pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x88 may corrupt adjacent RW1C bits
+>  pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x90 may corrupt adjacent RW1C bits
+>  pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x4 may corrupt adjacent RW1C bits
+>  rcu: INFO: rcu_preempt self-detected stall on CPU
+>  SError Interrupt on CPU0, code 0xbf000002 -- SError
+>  CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W         5.1.0-rc3-next-20190405-00027-gcd8110499e6f-dirty #42
+>  Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
+>  pstate: 20000085 (nzCv daIf -PAN -UAO)
+>  pc : tegra_pcie_isr+0x58/0x178 [pci_tegra]
+>  lr : tegra_pcie_isr+0x40/0x178 [pci_tegra]
+>  sp : ffff000010003da0
+>  x29: ffff000010003da0 x28: 0000000000000000
+>  x27: ffff8000f9e61000 x26: ffff000010fbf420
+>  x25: ffff000011427f93 x24: ffff8000fa600410
+>  x23: ffff00001129d000 x22: ffff00001129d000
+>  x21: ffff8000f18bf3c0 x20: 0000000000000070
+>  x19: 00000000ffffffff x18: 0000000000000000
+>  x17: 0000000000000000 x16: 0000000000000000
+>  x15: 0000000000000000 x14: ffff000008d40a48
+>  x13: ffff000008d40a30 x12: ffff000008d40a20
+>  x11: ffff000008d40a10 x10: ffff000008d40a00
+>  x9 : ffff000008d409e8 x8 : ffff000008d40ae8
+>  x7 : ffff000008d40ad0 x6 : ffff000010003e58
+>  x5 : ffff8000fac00248 x4 : 0000000000000000
+>  x3 : ffff000008d40b08 x2 : fffffffffffffff8
+>  x1 : ffff000008d3f4e8 x0 : 00000000ffffffff
+>  Kernel panic - not syncing: Asynchronous SError Interrupt
+>  CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W         5.1.0-rc3-next-20190405-00027-gcd8110499e6f-dirty #42
+>  Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
+>  Call trace:
+>   dump_backtrace+0x0/0x158
+>   show_stack+0x14/0x20
+>   dump_stack+0xa8/0xcc
+>   panic+0x140/0x2f4
+>   nmi_panic+0x6c/0x70
+>   arm64_serror_panic+0x74/0x80
+>   __pte_error+0x0/0x28
+>   el1_error+0x84/0xf8
+>   tegra_pcie_isr+0x58/0x178 [pci_tegra]
+>   __handle_irq_event_percpu+0x70/0x198
+>   handle_irq_event_percpu+0x34/0x88
+>   handle_irq_event+0x48/0x78
+>   handle_fasteoi_irq+0xb4/0x190
+>   generic_handle_irq+0x24/0x38
+>   __handle_domain_irq+0x5c/0xb8
+>   gic_handle_irq+0x58/0xa8
+>   el1_irq+0xb8/0x180
+>   cpuidle_enter_state+0x138/0x358
+>   cpuidle_enter+0x18/0x20
+>   call_cpuidle+0x1c/0x48
+>   do_idle+0x230/0x2d0
+>   cpu_startup_entry+0x20/0x28
+>   rest_init+0xd4/0xe0
+>   arch_call_rest_init+0xc/0x14
+>   start_kernel+0x444/0x470
 > 
-> Yes.
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> ---
+> V6: No change
 > 
-> > > > > Power management is handled by ACPI power resources that are
-> > > > > shared between the root ports, Thunderbolt controller (NHI) and xHCI
-> > > > > controller.
-> > > > > 
-> > > > > The topology with the power resources (marked with []) looks like:
-> > > > > 
-> > > > >   Host bridge
-> > > > >     |
-> > > > >     +- RP0 ---\
-> > > > >     +- RP1 ---|--+--> [TBT]
-> > > > >     +- NHI --/   |
-> > > > >     |            |
-> > > > >     |            v
-> > > > >     +- xHCI --> [D3C]
-> > > > > 
-> > > > > Here TBT and D3C are the shared ACPI power resources. ACPI
-> > > > > _PR3() method returns either TBT or D3C or both.
-> > 
-> > I'm not very familiar with _PR3.  I guess this is under an ACPI object
-> > representing a PCI device, e.g., \_SB.PCI0.RP0._PR3?
+> V5:
+> * Added blank line before block-style comment
 > 
-> Correct.
+> V4: No change
 > 
-> > > > > Say we runtime suspend first the root ports RP0 and RP1, then
-> > > > > NHI. Now since the TBT power resource is still on when the root
-> > > > > ports are runtime suspended their dev->current_state is set to
-> > > > > D3hot. When NHI is runtime suspended TBT is finally turned off
-> > > > > but state of the root ports remain to be D3hot.
-> > 
-> > So in this example we might have:
-> > 
-> >   _SB.PCI0.RP0._PR3: TBT
-> >   _SB.PCI0.RP1._PR3: TBT
-> >   _SB.PCI0.NHI._PR3: TBT
+> V3:
+> * Update the commit log and comment to reflect why this fix is required
+> * MSI interrupt is not disabled
 > 
-> and also D3C.
+> V2: This is new patch in V2
 > 
-> > And when Linux figures out that everything depending on TBT is in
-> > D3hot, it evaluates TBT._OFF, which puts them all in D3cold?  And part
-> > of the problem is that they're now in D3cold (where config access
-> > doesn't work) but Linux still thinks they're in D3hot (where config
-> > access would work)?
+>  drivers/pci/controller/pci-tegra.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 > 
-> Exactly.
-> 
-> > I feel like I'm missing something because I don't know how D3C is
-> > involved, since you didn't mention suspending xHCI.
-> 
-> That's another power resource so we will also have D3C turned off when
-> xHCI gets suspended but I did not want to complicate things too much in
-> the changelog.
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index bb3c0af9c830..0453bfb2726e 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -1622,6 +1622,15 @@ static int tegra_pcie_disable_msi(struct tegra_pcie *pcie)
+>  	return 0;
+>  }
+>  
+> +static void tegra_pcie_disable_interrupts(struct tegra_pcie *pcie)
+> +{
+> +	u32 value;
+> +
+> +	value = afi_readl(pcie, AFI_INTR_MASK);
+> +	value &= ~AFI_INTR_MASK_INT_MASK;
+> +	afi_writel(pcie, value, AFI_INTR_MASK);
+> +}
+> +
+>  static int tegra_pcie_get_xbar_config(struct tegra_pcie *pcie, u32 lanes,
+>  				      u32 *xbar)
+>  {
+> @@ -2467,6 +2476,12 @@ static int __maybe_unused tegra_pcie_pm_suspend(struct device *dev)
+>  
+>  	tegra_pcie_disable_ports(pcie);
+>  
+> +	/*
+> +	 * AFI_INTR is unmasked in tegra_pcie_enable_controller(), mask it to
+> +	 * avoid unwanted interrupts raised by AFI after pex_rst is asserted.
+> +	 */
+> +	tegra_pcie_disable_interrupts(pcie);
 
-If D3C isn't essential to seeing this problem, you could just omit it
-altogether.  I think stripping out anything that's not essential will
-make it easier to think about the underlying issues.
+When do you re-enable it ? I assume it is enabled by default for
+a reason, so if you disable on suspend you renable it on resume.
 
-> > And I can't mentally match up the patch with the D3hot/D3cold state
-> > change (if indeed that's the problem).  If we were updating the path
-> > that evaluates _OFF so it changed the power state of all dependent
-> > devices, *that* would make a lot of sense to me because it sounds like
-> > that's where the physical change happens that makes things out of
-> > sync.
+Please explain or I will drop this patch from the series.
+
+Lorenzo
+
+> +
+>  	if (pcie->soc->program_uphy) {
+>  		err = tegra_pcie_phy_power_off(pcie);
+>  		if (err < 0)
+> -- 
+> 2.17.1
 > 
-> I did that in the first version [1] but Rafael pointed out that it is
-> racy one way or another [2].
-> 
-> [1] https://www.spinics.net/lists/linux-pci/msg83583.html
-> [2] https://www.spinics.net/lists/linux-pci/msg83600.html
-
-Yeah, interesting.  It was definitely a much larger patch.  I don't
-know enough to comment on the races.  I would wonder whether there's a
-way to get rid of the caches that become stale, but that's just an
-idle thought, not a suggestion.
-
-Bjorn
