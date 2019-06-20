@@ -2,67 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D6C304DDC2
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 01:25:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 424334DDCF
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 01:40:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725907AbfFTXZJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jun 2019 19:25:09 -0400
-Received: from gate.crashing.org ([63.228.1.57]:53477 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbfFTXZJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 20 Jun 2019 19:25:09 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5KNOnmN006299;
-        Thu, 20 Jun 2019 18:24:53 -0500
-Message-ID: <59c6111e9567d8f03c4b03caeb1020df51b0fb4c.camel@kernel.crashing.org>
-Subject: Re: [nicholas.johnson-opensource@outlook.com.au: [PATCH v6 3/4]
- PCI: Fix bug resulting in double hpmemsize being assigned to MMIO window]
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Date:   Fri, 21 Jun 2019 09:24:48 +1000
-In-Reply-To: <20190620134346.GH143205@google.com>
-References: <SL2P216MB01874DFDDBDE49B935A9B1B380E50@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-         <e768271e-9455-2a3d-ad76-4a6d9c71d669@deltatee.com>
-         <SL2P216MB01872DFDDA9C313CA43C7B3280E40@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-         <20190620134346.GH143205@google.com>
+        id S1725948AbfFTXkw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jun 2019 19:40:52 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:32914 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfFTXkw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jun 2019 19:40:52 -0400
+Received: by mail-oi1-f196.google.com with SMTP id f80so3454061oib.0
+        for <linux-pci@vger.kernel.org>; Thu, 20 Jun 2019 16:40:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=scNy0Tfe+BdKZYj5qpcGlHdmruocVLL136U7yeONjQY=;
+        b=0cnLFHw3wyYOy7GJtgs9QmCRnq9eswmVPzeiBI0nzxLIy08w2sne8Vna1Y1grmzkuK
+         orXF6GaJfScNIrL+CmEEjfEWeebyFY2BN5C/NjI21notoMZHMFZD8O85FX4FqZJ8Z8r9
+         c9WxGq/LLz3LwW3HtljqhWfi0h5SxokaderedRePsLiY444AX/karrDFsSoksoWcCCgZ
+         +7KfzBlJb6BYSae/aXYMhV6RyOh/BJhvk9JSH7sv18Mz9knbjhajd4FDNRnGNZuLTc2X
+         k/ws4WPi1RFgTyfCmAwHTUeSPhtAYFKNfpXRN3OehGFyz6DqnUc2COeygcoP24s922vi
+         ch3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=scNy0Tfe+BdKZYj5qpcGlHdmruocVLL136U7yeONjQY=;
+        b=saZdEMKZ5QjGh90/87iQQvKVOfaUmiddjaZc9pAbnkZL5VTnWVijcu9Vh+Wvjlnp+t
+         Vn5xebWzj2WMkPFkZduy2FnJs7A+Ke+uMNIu6OdbIYlVh9Cv0gm23ysvVMHOFbKeURyu
+         TC7+W8ylBeoCbu4gdK+MjIpflK/MHm9l8S0F2OVUfzQXKU0SwqoVJKdsivyYpTviTGXU
+         qWciHiLoC2ksg5pufup/NDlo+bSxZxWtnyywu7swQF3nnvj0iUqLw9qYg699zTCKXqlx
+         1gPWjLZgmPc3GGiLD9tJL0pF0eVM3oZOH/uZdiFSxjg/d5DCqdDGEPOpUOo7a5e4xtYN
+         fCCw==
+X-Gm-Message-State: APjAAAVj8lOzT6YKZ15GKPrsDH+JZ7CdtwSqtaDPBcodmfZATnn3BXKX
+        lUfQVn76cRpuwofNag+wtXYf/n7t05jiGZicif8j2w==
+X-Google-Smtp-Source: APXvYqy+dAobdNgdfPhzhP0DQIKrQv88wgGeAk/7F+FLUOR+10JaG31ibuPbYrW/Rv/5imGwwlnZKa4QroXz2NVXZYc=
+X-Received: by 2002:aca:ec82:: with SMTP id k124mr901169oih.73.1561074051695;
+ Thu, 20 Jun 2019 16:40:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190620161240.22738-1-logang@deltatee.com> <CAPcyv4ijztOK1FUjLuFing7ps4LOHt=6z=eO=98HHWauHA+yog@mail.gmail.com>
+ <91eba9a0-27b4-08b4-7c12-86e24e1bfe85@deltatee.com>
+In-Reply-To: <91eba9a0-27b4-08b4-7c12-86e24e1bfe85@deltatee.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 20 Jun 2019 16:40:40 -0700
+Message-ID: <CAPcyv4gPOXaL3qks6RMufu==O9RV2m_-7bBmJqKOFYTf4v_jXQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stephen Bates <sbates@raithlin.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 2019-06-20 at 08:43 -0500, Bjorn Helgaas wrote:
-> This is as it should be.  Non-prefetchable windows are 32 bits, and
-> in general non-prefetchable BARs must be placed there.
-> 
-> There is some wiggle room in pure PCIe systems because PCIe reads
-> always contain an explicit length, so in some cases it is safe to
-> put a non-prefetchable BAR in a prefetchable window (see the
-> implementation note in sec 7.5.1.2.1).  But I don't think Linux
-> currently implements this.
+On Thu, Jun 20, 2019 at 12:35 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+>
+>
+>
+> On 2019-06-20 12:45 p.m., Dan Williams wrote:
+> > On Thu, Jun 20, 2019 at 9:13 AM Logan Gunthorpe <logang@deltatee.com> wrote:
+> >>
+> >> For eons there has been a debate over whether or not to use
+> >> struct pages for peer-to-peer DMA transactions. Pro-pagers have
+> >> argued that struct pages are necessary for interacting with
+> >> existing code like scatterlists or the bio_vecs. Anti-pagers
+> >> assert that the tracking of the memory is unecessary and
+> >> allocating the pages is a waste of memory. Both viewpoints are
+> >> valid, however developers working on GPUs and RDMA tend to be
+> >> able to do away with struct pages relatively easily
+> >
+> > Presumably because they have historically never tried to be
+> > inter-operable with the block layer or drivers outside graphics and
+> > RDMA.
+>
+> Yes, but really there are three main sets of users for P2P right now:
+> graphics, RDMA and NVMe. And every time a patch set comes from GPU/RDMA
+> people they don't bother with struct page. I seem to be the only one
+> trying to push P2P with NVMe and it seems to be a losing battle.
+>
+> > Please spell out the value, it is not immediately obvious to me
+> > outside of some memory capacity savings.
+>
+> There are a few things:
+>
+> * Have consistency with P2P efforts as most other efforts have been
+> avoiding struct page. Nobody else seems to want
+> pci_p2pdma_add_resource() or any devm_memremap_pages() call.
+>
+> * Avoid all arch-specific dependencies for P2P. With struct page the IO
+> memory must fit in the linear mapping. This requires some work with
+> RISC-V and I remember some complaints from the powerpc people regarding
+> this. Certainly not all arches will be able to fit the IO region into
+> the linear mapping space.
+>
+> * Remove a bunch of PCI P2PDMA special case mapping stuff from the block
+> layer and RDMA interface (which I've been hearing complaints over).
 
-We don't, we probably should, but seeing our current allocation code, I
-dread of the end result ...
-
-We would need a host bridge flag to indicate it's safe (no byte merging
-at the PHB). I know most host bridge implementations don't
-differenciate prefetchable from non-prefetchable outbound windows so
-should be fine, and the other side effects are generally attributes of
-the mapping done in the MMU and thus depend on the device BAR
-attribute, not the bridge windows in the way.
-
-I'm not 100% sure how/if x86 throws a wrench into this with MTRRs
-(could a BIOS setup one of these things to cover a bridge/switch
-prefetchable window ? That would be a bad idea but bad ideas is what
-BIOS vendors often come up with).
-
-Cheers,
-Ben.
-
-
+This seems to be the most salient point. I was missing the fact that
+this replaces custom hacks and "special" pages with an explicit "just
+pass this pre-mapped address down the stack". It's functionality that
+might plausibly be used outside of p2p, as long as the driver can
+assert that it never needs to touch the data with the cpu before
+handing it off to a dma-engine.
