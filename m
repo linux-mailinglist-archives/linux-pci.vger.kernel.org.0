@@ -2,81 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 460654CF38
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 15:43:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AF164CF57
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 15:47:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbfFTNnt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jun 2019 09:43:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46122 "EHLO mail.kernel.org"
+        id S1726697AbfFTNrP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jun 2019 09:47:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfFTNnt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 20 Jun 2019 09:43:49 -0400
+        id S1726391AbfFTNrP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 20 Jun 2019 09:47:15 -0400
 Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C620206E0;
-        Thu, 20 Jun 2019 13:43:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA0B4206E0;
+        Thu, 20 Jun 2019 13:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561038228;
-        bh=Qw5LLT/u0To2Gq4gQ4lqwg1AplHYn4Ot3u+F9Dhdnfs=;
+        s=default; t=1561038434;
+        bh=d5ofdz+9QjwZAj1YbfVJI70wV21UwnW5CSJhDjRuEXc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gLaKQlwuyjgiqBwE3u11UvQGK9UPGv5KLCQG34pk7OoTuBv1dlZ1KEnrhoKi43Mzx
-         8mVT8GL9c/whTCD3Agan7hWEqhzLh0ihYEAwT331d8rqEBOyXjDdCK/whSn4SKts7q
-         h/y0dKMfEBhLR9F2fNUJ5NlkO5Bi7EnJAAWNrNVw=
-Date:   Thu, 20 Jun 2019 08:43:46 -0500
+        b=FMcdIzXtTql+jmwRd9fsBmgATm1jxJS4XlsVljsVlhic8uNE6y2bzFIFUx6gVOFfO
+         ynOCsn0X/MLyEZLUuHFX+AgI7mgipWHJXODK0CEQtFL4C+A5+MOo08518R8HwXH0XP
+         uSM34PN5Bcjis2vD482kqy/Uz+ZobWlibEwEW9n0=
+Date:   Thu, 20 Jun 2019 08:47:12 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
         "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [nicholas.johnson-opensource@outlook.com.au: [PATCH v6 3/4] PCI:
- Fix bug resulting in double hpmemsize being assigned to MMIO window]
-Message-ID: <20190620134346.GH143205@google.com>
-References: <SL2P216MB01874DFDDBDE49B935A9B1B380E50@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <e768271e-9455-2a3d-ad76-4a6d9c71d669@deltatee.com>
- <SL2P216MB01872DFDDA9C313CA43C7B3280E40@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+Subject: Re: [nicholas.johnson-opensource@outlook.com.au: [PATCH v6 4/4] PCI:
+ Add pci=hpmemprefsize parameter to set MMIO_PREF size independently]
+Message-ID: <20190620134712.GI143205@google.com>
+References: <SL2P216MB018784C16CC1903DF2CEDCB880E50@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+ <a473bee0-0a25-64d5-bd29-1d5bdc43d027@deltatee.com>
+ <SL2P216MB01875B40093190DBB6C4CBB780E40@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+ <89c6a6ee-46cc-4047-0093-30f07992e7e5@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SL2P216MB01872DFDDA9C313CA43C7B3280E40@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+In-Reply-To: <89c6a6ee-46cc-4047-0093-30f07992e7e5@deltatee.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 12:44:11AM +0000, Nicholas Johnson wrote:
+On Wed, Jun 19, 2019 at 07:35:21PM -0600, Logan Gunthorpe wrote:
+> On 2019-06-19 6:56 p.m., Nicholas Johnson wrote:
+> > On Wed, Jun 19, 2019 at 10:45:38AM -0600, Logan Gunthorpe wrote:
+> >> On 2019-06-19 8:01 a.m., Nicholas Johnson wrote:
+> >>> ----- Forwarded message from Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au> -----
+> >>>
+> >>> Date: Thu, 23 May 2019 06:29:28 +0800
+> >>> From: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> >>> To: linux-kernel@vger.kernel.org
+> >>> Cc: linux-pci@vger.kernel.org, bhelgaas@google.com, mika.westerberg@linux.intel.com, corbet@lwn.net, Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> >>> Subject: [PATCH v6 4/4] PCI: Add pci=hpmemprefsize parameter to set MMIO_PREF size independently
+> >>> X-Mailer: git-send-email 2.19.1
+> >>>
+> >>> Add kernel parameter pci=hpmemprefsize=nn[KMG] to control
+> >>> MMIO_PREF size for PCI hotplug bridges.
+> >>
+> >> Makes sense.
+> >>
+> >>> Change behaviour of pci=hpmemsize=nn[KMG] to not set MMIO_PREF
+> >>> size if hpmempref has been specified, rather than controlling
+> >>> both MMIO and MMIO_PREF sizes unconditionally.
+> >>
+> >> I don't think I like that fact that hpmemsize behaves differently
+> >> if hpmempref size is specfied before it. I'd probably suggest
+> >> having three parameters: hpmemsize which sets both as it always
+> >> has, a pref one and a regular one which each set one of
+> >> parameters.
+> > 
+> > It does not matter if hpmempref is specified before or after
+> > hpmemsize.  I made sure of that.
+> 
+> > Originally, I proposed to depreciate hpiosize, hpmemsize, and
+> > introduce: hp_io_size, hp_mmio_size, hp_mmio_pref_size, each
+> > controlling its own window exclusively.
+> > 
+> > The patch had the old parameters work with a warning, and if the
+> > new ones were specified, they would override the old ones. Then,
+> > after a few kernel releases, the old ones could be removed.
+> 
+> Well I don't like that either. No need to depreciate hpmemsize.
+> 
+> > Bjorn insisted that there be nil changes which break the existing
+> > parameters, and the solution he requested was to leave hpmemsize
+> > to work exactly the same (controlling both MMIO and MMIO_PREF),
+> > unless hpmemprefsize is given, which will take control of
+> > MMIO_PREF from hpmemsize.
+> 
+> I agree with Bjorn here too but my suggestion is to leave hpmemsize
+> alone and have it set both values as it has always done. And add two
+> new parameters to set one or the other. Then there's none of this
+> "sets one if the other one wasn't set". Also, if I only want to
+> change the non-preftechable version then your method leaves no way
+> to do so without setting the preftechable version.
 
-> Correct me if I am wrong about assumptions about windows. My
-> understanding cannot be perfect. As far as I know, 64-bit BARs
-> should always be prefetchable, 
-
-There's no requirement that a 64-bit BAR be prefetchable.
-
-  - BARs of PCIe Functions must be prefetchable unless they have read
-    side effects or can't tolerate write merging (PCIe r5.0, sec
-    7.5.1.2.1).
-
-  - BARs of PCIe Functions other than Legacy Endpoints must be 64-bit
-    if they are prefetchable (sec 7.5.1.2.1).
-
-  - Bridge non-prefetchable memory windows are limited to 32-bit
-    (7.5.1.3.8).
-
-  - There's some ambiguity in the spec about bridge prefetchable
-    memory windows.  Current specs claim 64-bit addresses must be
-    supported (sec 7.5.1.3.9), but also say the upper 32 bits are
-    optional (sec 7.5.1.3.10).  Both 32- and 64-bit versions
-    definitely exist.
-
-> but I own the Aquantia AQC-107S NIC and it has three 64-bit non-pref
-> BARs. It happens that they are assigned into the 32-bit window.
-
-This is as it should be.  Non-prefetchable windows are 32 bits, and
-in general non-prefetchable BARs must be placed there.
-
-There is some wiggle room in pure PCIe systems because PCIe reads
-always contain an explicit length, so in some cases it is safe to
-put a non-prefetchable BAR in a prefetchable window (see the
-implementation note in sec 7.5.1.2.1).  But I don't think Linux
-currently implements this.
+Adding two new parameters sounds like a good idea to me.
