@@ -2,80 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 619994C90F
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 10:11:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2862B4C970
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 10:27:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbfFTILq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jun 2019 04:11:46 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43940 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731103AbfFTILi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jun 2019 04:11:38 -0400
-Received: by mail-qk1-f195.google.com with SMTP id m14so1304046qka.10
-        for <linux-pci@vger.kernel.org>; Thu, 20 Jun 2019 01:11:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TRkUooSd/UaA9IYdN/7znCXTQbIqRDk0LfQwmX0rHGI=;
-        b=2AUBnw4K/dxPsBT0ACnhasZG6o3C2vb8NI8ADKu6mrlsxcT6D8GSweyjMItLvjcPTO
-         M62MAuTrpywiNZfneUDtJE9m1ye7CaKoTfr/nnJ/Sqt4d1lFq2egRpWqfYT1PdQKLu2T
-         CG2UBTbcwWnfcXCYTbc+Tm7LZ4FvZSyy+TIuzQPxe4eqyq0V1ycCXb0aZ9t2fhfYYqIU
-         6xHgCk/2SkwH7csf+P9Hsrhf5iYORp3qq20hC/lACrebPy7bVxMpvvYlg94YnzyDclKG
-         tcOvXjGKdGIoLMNJoy5goqb1k6GncA0CZf59lruSREYWZAqb8odPrrFXEBcxQ6XiEvYy
-         FbXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TRkUooSd/UaA9IYdN/7znCXTQbIqRDk0LfQwmX0rHGI=;
-        b=hGPZFnDp35XqzNorqDk1SMiUYRgjbRQYfMWuelG+BwIuYrntWsC2rqNqQhjjysgrfY
-         Es9z9c/n5KVQu5atMtIsWis/MXIeKc1FxDnWVx2ucPN2Br5bnlhpz/25vJzs+TrOywqb
-         GKjFmmDJn6Q/vu2BvFNV3FaEG74ebGLa+aj6vWgfDCSs+31fYMvHrnrWCOYAYT3h/ktD
-         5F01USyuBRcw97lKeOURHzld9D2Na4p0CTZXXgXIKQBJmX7ZcTHxW+0zV2fBiJmrROI0
-         ljic67zLKGv2Z4Klu9YfKyNTCuoXLqzHCU5bmQsUErDkRHjiphM9046uEovG37b5PtPH
-         RBjw==
-X-Gm-Message-State: APjAAAUjKfSBs1SoireIyiESfu0QwkzPmNYPl6JksSFHEl6Q43cmTuoI
-        /pHjM1EOdDsXEwXkHyLuH18PBCj/dvcHnqb3atCV/Q==
-X-Google-Smtp-Source: APXvYqxOSWRsTHI+1qYV6tXZLhxzg82CDrJlzsurV+doJXHQ9bjAUDTq4iluEfM00odIArBgUTjNtLH0hVGOGcFASPQ=
-X-Received: by 2002:a37:de07:: with SMTP id h7mr105593186qkj.41.1561018297544;
- Thu, 20 Jun 2019 01:11:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190620051333.2235-1-drake@endlessm.com> <20190620051333.2235-3-drake@endlessm.com>
- <20190620061038.GA20564@lst.de>
-In-Reply-To: <20190620061038.GA20564@lst.de>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Thu, 20 Jun 2019 16:11:26 +0800
-Message-ID: <CAD8Lp45ua=L+ixO+du=Njhy+dxjWobWA+V1i+Y2p6faeyt1FBQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] nvme: rename "pci" operations to "mmio"
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-ide@vger.kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.de>,
+        id S1725925AbfFTI1f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jun 2019 04:27:35 -0400
+Received: from mga02.intel.com ([134.134.136.20]:22482 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725875AbfFTI1f (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 20 Jun 2019 04:27:35 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 01:27:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,396,1557212400"; 
+   d="scan'208";a="181815906"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 20 Jun 2019 01:27:32 -0700
+Received: by lahna (sSMTP sendmail emulation); Thu, 20 Jun 2019 11:27:30 +0300
+Date:   Thu, 20 Jun 2019 11:27:30 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
         Alex Williamson <alex.williamson@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] PCI / ACPI: Use cached ACPI device state to get
+ PCI device power state
+Message-ID: <20190620082730.GM2640@lahna.fi.intel.com>
+References: <20190618161858.77834-1-mika.westerberg@linux.intel.com>
+ <20190618161858.77834-2-mika.westerberg@linux.intel.com>
+ <20190619212801.GC143205@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190619212801.GC143205@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 2:11 PM Christoph Hellwig <hch@lst.de> wrote:
-> The Linux NVMe driver will deal with NVMe as specified plus whatever
-> minor tweaks we'll need for small bugs.  Hiding it behind an AHCI
-> device is completely out of scope and will not be accepted.
+On Wed, Jun 19, 2019 at 04:28:01PM -0500, Bjorn Helgaas wrote:
+> On Tue, Jun 18, 2019 at 07:18:56PM +0300, Mika Westerberg wrote:
+> > Intel Ice Lake has an integrated Thunderbolt controller which means that
+> > the PCIe topology is extended directly from the two root ports (RP0 and
+> > RP1).
+> 
+> A PCIe topology is always extended directly from root ports,
+> regardless of whether a Thunderbolt controller is integrated, so I
+> guess I'm missing the point you're making.  It doesn't sound like this
+> is anything specific to Thunderbolt?
 
-Do you have any new suggestions for alternative ways we can implement
-support for this storage configuration?
+The point I'm trying to make here is to explain why this is problem now
+and not with the previous discrete controllers. With the previous there
+was only a single ACPI power resource for the root port and the
+Thunderbolt host router was connected to that root port. PCIe hierarchy
+was extended through downstream ports (not root ports) of that
+controller (which includes PCIe switch).
 
-I tried to follow your earlier suggestions regarding faking a PCI bus
-here: (or let me know if you had something different in mind...)
-https://marc.info/?l=linux-pci&m=156015271021614&w=2
-but it looks like that is not going to fly either :(
+Now the thing is part of the SoC so power management is different and
+causes problems in Linux.
 
-Daniel
+> > Power management is handled by ACPI power resources that are
+> > shared between the root ports, Thunderbolt controller (NHI) and xHCI
+> > controller.
+> > 
+> > The topology with the power resources (marked with []) looks like:
+> > 
+> >   Host bridge
+> >     |
+> >     +- RP0 ---\
+> >     +- RP1 ---|--+--> [TBT]
+> >     +- NHI --/   |
+> >     |            |
+> >     |            v
+> >     +- xHCI --> [D3C]
+> > 
+> > Here TBT and D3C are the shared ACPI power resources. ACPI _PR3() method
+> > returns either TBT or D3C or both.
+> > 
+> > Say we runtime suspend first the root ports RP0 and RP1, then NHI. Now
+> > since the TBT power resource is still on when the root ports are runtime
+> > suspended their dev->current_state is set to D3hot. When NHI is runtime
+> > suspended TBT is finally turned off but state of the root ports remain
+> > to be D3hot.
+> > 
+> > If the user now runs lspci for instance, the result is all 1's like in
+> > the below output (07.0 is the first root port, RP0):
+> > 
+> > 00:07.0 PCI bridge: Intel Corporation Device 8a1d (rev ff) (prog-if ff)
+> >     !!! Unknown header type 7f
+> >     Kernel driver in use: pcieport
+> > 
+> > I short the hardware state is not in sync with the software state
+> > anymore. The exact same thing happens with the PME polling thread which
+> > ends up bringing the root ports back into D0 after they are runtime
+> > suspended.
+> 
+> s/I /In /
+
+Thanks, I'll fix it.
