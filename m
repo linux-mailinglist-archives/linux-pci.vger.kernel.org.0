@@ -2,94 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B4BE4CF2D
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 15:42:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 460654CF38
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 15:43:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731663AbfFTNmU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jun 2019 09:42:20 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36601 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbfFTNmU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jun 2019 09:42:20 -0400
-Received: by mail-io1-f67.google.com with SMTP id h6so172164ioh.3
-        for <linux-pci@vger.kernel.org>; Thu, 20 Jun 2019 06:42:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8rPnlYJTsEWRrrMURVOg3q6s++ndjHj5G41dcqyvtfk=;
-        b=CzYZ0K7zoibk1pKo5KT/vMGqHZvVQQKUh5gkqSe9OgFWIZlq/5M9W+8Hhgn8PzdqJW
-         vPnp/0ugWsIz86uk+RQvsbpp1SEKlZt0eqXKivb8WmOGtjCD1YLXGjknATlDMbtf4J3+
-         G3D9UcKV2KV2Okv/0F6HEVJixRw+T3JhWxx3hKdg7BgcP0o4/GSYow2gAgb05A1EZUBs
-         lB0AzA3QT05qAzL/+5ffhKsbpFEEOWpHxMYXt1g5OVCQvzEWzmh77vD1r1td1jt7H2Ae
-         jMAsWzq1uTIYIkF6BWmppJdlWJyxEYpXQfkXJw8QoL6FE+gLVUX9sO/+E2YCxxcfuyKC
-         eSow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8rPnlYJTsEWRrrMURVOg3q6s++ndjHj5G41dcqyvtfk=;
-        b=f4Vg82sWg1LZKCQhCS2s825T/auWEK23g63nuwek0veb4kzGiViacpWdBazq2zKQRt
-         GOMKnGdU5FrRq2u00BSAlzeZOTZfJlEVMa3ofLf5UbZbtDrkeTzOw3AGojGKOLTlE6Ud
-         ZiDV1k6gZGnbS+xvBKCWCXNBEbX7uSNC0eidM1ThwcCXari0HzfnR0oC4J/qR5JducWw
-         SVU502l7+VMB2Kgt20JUdhL22WMytW6k9Q9QLSu/7lVVeG+z3m04NEqf7Py6YypSZa4h
-         DCA7USFgpj/Q8jKVAmA/1EbAL5e4yHGaLDqk+4TO/kV7Az+GngvdBRnWTX4nrTZIn7PI
-         0Fiw==
-X-Gm-Message-State: APjAAAVJzwpt4naHIh+RWJq395d8i7pp5KB+SlDSCJxBobkWFh4cRGSE
-        UOdtEiiyQjzQsSD1qX2gmN2Y86c5oVcakWBpWfb7mw==
-X-Google-Smtp-Source: APXvYqzLdEI/7zE586TbFVV9DAjh8m0jc4TIa2jBNO57XuYVFLcau4FnwIIZtkh5LxzOxQ398Gmru5hxBp4l7Yl9bx4=
-X-Received: by 2002:a02:394c:: with SMTP id w12mr478044jae.126.1561038139505;
- Thu, 20 Jun 2019 06:42:19 -0700 (PDT)
+        id S1726582AbfFTNnt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jun 2019 09:43:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46122 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726551AbfFTNnt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 20 Jun 2019 09:43:49 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C620206E0;
+        Thu, 20 Jun 2019 13:43:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561038228;
+        bh=Qw5LLT/u0To2Gq4gQ4lqwg1AplHYn4Ot3u+F9Dhdnfs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gLaKQlwuyjgiqBwE3u11UvQGK9UPGv5KLCQG34pk7OoTuBv1dlZ1KEnrhoKi43Mzx
+         8mVT8GL9c/whTCD3Agan7hWEqhzLh0ihYEAwT331d8rqEBOyXjDdCK/whSn4SKts7q
+         h/y0dKMfEBhLR9F2fNUJ5NlkO5Bi7EnJAAWNrNVw=
+Date:   Thu, 20 Jun 2019 08:43:46 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [nicholas.johnson-opensource@outlook.com.au: [PATCH v6 3/4] PCI:
+ Fix bug resulting in double hpmemsize being assigned to MMIO window]
+Message-ID: <20190620134346.GH143205@google.com>
+References: <SL2P216MB01874DFDDBDE49B935A9B1B380E50@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+ <e768271e-9455-2a3d-ad76-4a6d9c71d669@deltatee.com>
+ <SL2P216MB01872DFDDA9C313CA43C7B3280E40@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-References: <1561026716-140537-1-git-send-email-john.garry@huawei.com>
- <CAOesGMg+jAae5A0LgvBH0=dF95Y208h0c5RZ6f0v6CVUhsMk4g@mail.gmail.com> <8265cdc4-ce24-4efd-a64a-78ce34104b9c@huawei.com>
-In-Reply-To: <8265cdc4-ce24-4efd-a64a-78ce34104b9c@huawei.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Thu, 20 Jun 2019 14:42:07 +0100
-Message-ID: <CAOesGMjKYzj+h=ummXvQLaVHDEYeNNWMqZFUJ4qqmqPr3LDVeA@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Fixes for HiSilicon LPC driver and logical PIO code
-To:     John Garry <john.garry@huawei.com>
-Cc:     xuwei5@huawei.com, Bjorn Helgaas <bhelgaas@google.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        ARM-SoC Maintainers <arm@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SL2P216MB01872DFDDA9C313CA43C7B3280E40@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 1:56 PM John Garry <john.garry@huawei.com> wrote:
->
-> On 20/06/2019 13:42, Olof Johansson wrote:
-> > Hi John,
-> >
-> > For patches that go to a soc maintainer for merge, we're asking that
-> > people don't cc arm@kernel.org directly.
-> >
-> > We prefer to keep that alias mostly for pull requests from other
-> > maintainers and patches we might have a reason to apply directly.
-> > Otherwise we risk essentially getting all of linux-arm-kernel into
-> > this mailbox as well.
-> >
-> >
-> > Thanks!
-> >
-> > -Olof
-> >
->
-> Hi Olof,
->
-> Can do in future.
->
-> The specific reason here for me to cc arm@kernel.org was that I wanted
-> to at least make the maintainers aware that we intend to send some
-> patches outside the "arm soc" domain through their tree, * below.
+On Thu, Jun 20, 2019 at 12:44:11AM +0000, Nicholas Johnson wrote:
 
-That's fine -- but it's usually better to cc us individually in those
-cases. We normally go find the patches on the lists if/as needed when
-we see them come in as well.
+> Correct me if I am wrong about assumptions about windows. My
+> understanding cannot be perfect. As far as I know, 64-bit BARs
+> should always be prefetchable, 
 
+There's no requirement that a 64-bit BAR be prefetchable.
 
--Olof
+  - BARs of PCIe Functions must be prefetchable unless they have read
+    side effects or can't tolerate write merging (PCIe r5.0, sec
+    7.5.1.2.1).
+
+  - BARs of PCIe Functions other than Legacy Endpoints must be 64-bit
+    if they are prefetchable (sec 7.5.1.2.1).
+
+  - Bridge non-prefetchable memory windows are limited to 32-bit
+    (7.5.1.3.8).
+
+  - There's some ambiguity in the spec about bridge prefetchable
+    memory windows.  Current specs claim 64-bit addresses must be
+    supported (sec 7.5.1.3.9), but also say the upper 32 bits are
+    optional (sec 7.5.1.3.10).  Both 32- and 64-bit versions
+    definitely exist.
+
+> but I own the Aquantia AQC-107S NIC and it has three 64-bit non-pref
+> BARs. It happens that they are assigned into the 32-bit window.
+
+This is as it should be.  Non-prefetchable windows are 32 bits, and
+in general non-prefetchable BARs must be placed there.
+
+There is some wiggle room in pure PCIe systems because PCIe reads
+always contain an explicit length, so in some cases it is safe to
+put a non-prefetchable BAR in a prefetchable window (see the
+implementation note in sec 7.5.1.2.1).  But I don't think Linux
+currently implements this.
