@@ -2,83 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A9094D4A3
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 19:14:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C18F54D4CA
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 19:23:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfFTROC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jun 2019 13:14:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:50132 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbfFTROC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:14:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67619360;
-        Thu, 20 Jun 2019 10:14:01 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 485713F246;
-        Thu, 20 Jun 2019 10:14:00 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 18:13:57 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sinan Kaya <okaya@kernel.org>, Ali Saidi <alisaidi@amazon.com>,
-        Zeev Zilberman <zeev@amazon.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/4] arm64: pci: acpi: Use
- pci_assign_unassigned_root_bus_resources()
-Message-ID: <20190620171357.GD18771@e121166-lin.cambridge.arm.com>
-References: <20190615002359.29577-1-benh@kernel.crashing.org>
+        id S1732309AbfFTRXu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jun 2019 13:23:50 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38544 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732301AbfFTRXu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jun 2019 13:23:50 -0400
+Received: by mail-qt1-f196.google.com with SMTP id n11so3993357qtl.5
+        for <linux-pci@vger.kernel.org>; Thu, 20 Jun 2019 10:23:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SfbKUCdSGF4+jFDRzcaQ+Fna6TrcXDnyta04yl7lq1Y=;
+        b=fDa+hMU4rcsLRRCH2gWRtgjYh9RFedwMwqv0Trz+YbWuMGaoX85v7I71KOkTii51uB
+         oO9IljJOAF7bcm1YYxdaerj3SB1eX+ROcV7aGqi3ZBwoKVBEGC2K9Gm0a4yLiiEn/uAk
+         fBk5sWnkPe6Qfa4DgWWmQRbh4XlFAlCgTAsATQPIvgIfBdORGI7YHDMsJoSK7wBXLdyk
+         G7L29YhKyUqgAQjd6fwdckTK5NEQcVswgxlSYd5TMwXXMxxdYk5swQozsEqhRL82kEHN
+         PYoc9M2dsT9k3d119XICrYvVvAjQcFqPNiWbp3QBf8xLIqoPCbUOF1ztjjMN/UPlCr8M
+         O9Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SfbKUCdSGF4+jFDRzcaQ+Fna6TrcXDnyta04yl7lq1Y=;
+        b=fWeLyUaG8Z4bPikv91TnCcOTDbLdDeFC1lakHYRuTR1QCuIzBjABUMC0lKlyDy3wSo
+         H0yTBEVA4znq5mOi4ZNn7WTtynTIl4Ty4OkT1jT32NmYB0wRGm4ImKd06MKQrFNouOGK
+         kPyXcnh7ZSisTjxjjqeQUz97MAGjW5oNKEyOPmJGAf/4GxxwHyHziTP1F/zr3TCrzBTe
+         n5EleF62UwVUbsvAqbh/Eiqpiti3RvTPFFhighH836xg073OYo++bVyS+JVdPZqipzJ3
+         cr76jymm92kpvuVAGSKz/8r5WiEkJmm5xuqEgDp5YSwgeUE6hPF5WwFzLegcS918z+Il
+         dszg==
+X-Gm-Message-State: APjAAAUKnavdAt1AernBc7j2xE8LnZr7EO/LCe01stjghrMlxSbw+mvB
+        2CbgTWWiZb74KDAf6OJPKTyBkg==
+X-Google-Smtp-Source: APXvYqw404QwKeABmWhU9qLItoqgwLK+kwwRuUpz/G8u1JQs97zHuMB8xnbcA0CiswhJAlAz0nkrug==
+X-Received: by 2002:ac8:2409:: with SMTP id c9mr53861547qtc.145.1561051428982;
+        Thu, 20 Jun 2019 10:23:48 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id c5sm109198qtj.27.2019.06.20.10.23.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Jun 2019 10:23:48 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1he0mq-0005eq-0K; Thu, 20 Jun 2019 14:23:48 -0300
+Date:   Thu, 20 Jun 2019 14:23:47 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@lst.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 04/28] block: Never bounce dma-direct bios
+Message-ID: <20190620172347.GE19891@ziepe.ca>
+References: <20190620161240.22738-1-logang@deltatee.com>
+ <20190620161240.22738-5-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190615002359.29577-1-benh@kernel.crashing.org>
+In-Reply-To: <20190620161240.22738-5-logang@deltatee.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jun 15, 2019 at 10:23:56AM +1000, Benjamin Herrenschmidt wrote:
-> Instead of the simpler
+On Thu, Jun 20, 2019 at 10:12:16AM -0600, Logan Gunthorpe wrote:
+> It is expected the creator of the dma-direct bio will ensure the
+> target device can access the DMA address it's creating bios for.
+> It's also not possible to bounce a dma-direct bio seeing the block
+> layer doesn't have any way to access the underlying data behind
+> the DMA address.
 > 
-> 	pci_bus_size_bridges(bus);
-> 	pci_bus_assign_resources(bus);
-> 
-> Use pci_assign_unassigned_root_bus_resources(). This should have no effect
-> as long as we are reassigning everything. Once we start honoring FW
-> resource allocations, this will bring up the "reallocation" feature
-> which can help making room for SR-IOV when necessary.
+> Thus, never bounce dma-direct bios.
 
-I would like to add more details on why we want to make this change,
-I will update the log when we merge it, it is a bit too late for v5.3,
-even if in theory no functional change is intended.
+I wonder how feasible it would be to implement a 'dma vec' copy
+from/to? 
 
-> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> ---
->  arch/arm64/kernel/pci.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> index bb85e2f4603f..1419b1b4e9b9 100644
-> --- a/arch/arm64/kernel/pci.c
-> +++ b/arch/arm64/kernel/pci.c
-> @@ -193,8 +193,7 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
->  	if (!bus)
->  		return NULL;
->  
-> -	pci_bus_size_bridges(bus);
-> -	pci_bus_assign_resources(bus);
-> +	pci_assign_unassigned_root_bus_resources(bus);
+That is about the only operation you could safely do on P2P BAR
+memory. 
 
-These hunks should be identical, minus the additional resource size
-handling and realloc policy (which are *missing* features in current
-code). We must document this change in the log.
+I wonder if a copy implementation could somehow query the iommu layer
+to get a kmap of the memory pointed at by the dma address so we don't
+need to carry struct page around?
 
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-
->  	list_for_each_entry(child, &bus->children, node)
->  		pcie_bus_configure_settings(child);
-> -- 
-> 2.17.1
-> 
+Jason
