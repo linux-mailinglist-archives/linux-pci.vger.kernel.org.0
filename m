@@ -2,77 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2099D4DCAD
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 23:38:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90BB04DD91
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 00:56:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbfFTVh6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jun 2019 17:37:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46804 "EHLO mail.kernel.org"
+        id S1725864AbfFTW4D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jun 2019 18:56:03 -0400
+Received: from gate.crashing.org ([63.228.1.57]:36329 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfFTVh5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 20 Jun 2019 17:37:57 -0400
-Received: from localhost (odyssey.drury.edu [64.22.249.253])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 997182084A;
-        Thu, 20 Jun 2019 21:37:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561066676;
-        bh=TNmYr6CvvNadt0CrFEbwkNnYFLKwnqfGdwLIPynMFJc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xbcxdOGjQwdd+KsHTxdBW/6Mn4LrjOJDdcATrKHeCYZWK4QU9SvwHmaUEW8iDYuOj
-         aE7c0meBbMgEWfTvPeK7Y2ALcZ21grwNmQ3xkeLbXc1x4qw1MzX1vqgPieLpbAS+3P
-         ZtFEOyxnCTr1JHxQuwZJ62AqkPYy4FnjrUuK2E+A=
-Date:   Thu, 20 Jun 2019 16:37:55 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Puranjay Mohan <puranjay12@gmail.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] net: fddi: skfp: Include generic PCI definitions
-Message-ID: <20190620213755.GE110859@google.com>
-References: <20190620180754.15413-1-puranjay12@gmail.com>
- <20190620180754.15413-3-puranjay12@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620180754.15413-3-puranjay12@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1725815AbfFTW4D (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 20 Jun 2019 18:56:03 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5KMthDS002646;
+        Thu, 20 Jun 2019 17:55:44 -0500
+Message-ID: <a2ab2f2e6588fa12642dc16fbe908de55ba7b684.camel@kernel.crashing.org>
+Subject: Re: [PATCH 1/4] arm64: pci: acpi: Use
+ pci_assign_unassigned_root_bus_resources()
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sinan Kaya <okaya@kernel.org>, Ali Saidi <alisaidi@amazon.com>,
+        Zeev Zilberman <zeev@amazon.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Date:   Fri, 21 Jun 2019 08:55:43 +1000
+In-Reply-To: <20190620171357.GD18771@e121166-lin.cambridge.arm.com>
+References: <20190615002359.29577-1-benh@kernel.crashing.org>
+         <20190620171357.GD18771@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 11:37:53PM +0530, Puranjay Mohan wrote:
-> Include the uapi/linux/pci_regs.h header file which contains the generic
-> PCI defines.
+On Thu, 2019-06-20 at 18:13 +0100, Lorenzo Pieralisi wrote:
+> On Sat, Jun 15, 2019 at 10:23:56AM +1000, Benjamin Herrenschmidt wrote:
+> > Instead of the simpler
+> > 
+> > 	pci_bus_size_bridges(bus);
+> > 	pci_bus_assign_resources(bus);
+> > 
+> > Use pci_assign_unassigned_root_bus_resources(). This should have no effect
+> > as long as we are reassigning everything. Once we start honoring FW
+> > resource allocations, this will bring up the "reallocation" feature
+> > which can help making room for SR-IOV when necessary.
 > 
-> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
-> ---
->  drivers/net/fddi/skfp/drvfbi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/fddi/skfp/drvfbi.c b/drivers/net/fddi/skfp/drvfbi.c
-> index b324c1acf195..e8245cb281f8 100644
-> --- a/drivers/net/fddi/skfp/drvfbi.c
-> +++ b/drivers/net/fddi/skfp/drvfbi.c
-> @@ -20,7 +20,7 @@
->  #include "h/supern_2.h"
->  #include "h/skfbiinc.h"
->  #include <linux/bitrev.h>
-> -
-> +#include <linux/pci_regs.h>
+> I would like to add more details on why we want to make this change,
+> I will update the log when we merge it, it is a bit too late for v5.3,
+> even if in theory no functional change is intended.
 
-You removed the blank line between the list of include files and the
-SCCS ID (now there's an anachronism) below.  That blank line is part
-of typical Linux style and you should keep it.
+Ok. The why is that a subsequent patch will turn the code into
 
->  #ifndef	lint
->  static const char ID_sccs[] = "@(#)drvfbi.c	1.63 99/02/11 (C) SK " ;
->  #endif
-> -- 
-> 2.21.0
+	if (claim)
+		claim()
+	pci_assign_unassigned*
+
+And I wanted the patch replacing the existing 2 calls with the above
+separate and bisectable in case we missed some odd effect of the
+change.
+
+Cheers,
+Ben.
+
 > 
+> > Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > ---
+> >  arch/arm64/kernel/pci.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+> > index bb85e2f4603f..1419b1b4e9b9 100644
+> > --- a/arch/arm64/kernel/pci.c
+> > +++ b/arch/arm64/kernel/pci.c
+> > @@ -193,8 +193,7 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
+> >  	if (!bus)
+> >  		return NULL;
+> >  
+> > -	pci_bus_size_bridges(bus);
+> > -	pci_bus_assign_resources(bus);
+> > +	pci_assign_unassigned_root_bus_resources(bus);
+> 
+> These hunks should be identical, minus the additional resource size
+> handling and realloc policy (which are *missing* features in current
+> code). We must document this change in the log.
+> 
+> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> 
+> >  	list_for_each_entry(child, &bus->children, node)
+> >  		pcie_bus_configure_settings(child);
+> > -- 
+> > 2.17.1
+> > 
+
