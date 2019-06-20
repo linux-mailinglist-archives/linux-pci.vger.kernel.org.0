@@ -2,144 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ED8004DA3C
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 21:34:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B33544DA47
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 21:36:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbfFTTer (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jun 2019 15:34:47 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:35280 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726169AbfFTTer (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 20 Jun 2019 15:34:47 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1he2pR-0006ue-MT; Thu, 20 Jun 2019 13:34:38 -0600
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190620161240.22738-1-logang@deltatee.com>
- <CAPcyv4ijztOK1FUjLuFing7ps4LOHt=6z=eO=98HHWauHA+yog@mail.gmail.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <91eba9a0-27b4-08b4-7c12-86e24e1bfe85@deltatee.com>
-Date:   Thu, 20 Jun 2019 13:34:35 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        id S1726245AbfFTTgW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jun 2019 15:36:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37314 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726169AbfFTTgV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 20 Jun 2019 15:36:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A71FAAEEC;
+        Thu, 20 Jun 2019 19:36:20 +0000 (UTC)
+Date:   Thu, 20 Jun 2019 21:36:19 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/22] mm: don't clear ->mapping in hmm_devmem_free
+Message-ID: <20190620193619.GK12083@dhcp22.suse.cz>
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-5-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4ijztOK1FUjLuFing7ps4LOHt=6z=eO=98HHWauHA+yog@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, jgg@ziepe.ca, kbusch@kernel.org, sagi@grimberg.me, bhelgaas@google.com, hch@lst.de, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,MYRULES_URI_HASH autolearn=ham autolearn_force=no
-        version=3.4.2
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613094326.24093-5-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2019-06-20 12:45 p.m., Dan Williams wrote:
-> On Thu, Jun 20, 2019 at 9:13 AM Logan Gunthorpe <logang@deltatee.com> wrote:
->>
->> For eons there has been a debate over whether or not to use
->> struct pages for peer-to-peer DMA transactions. Pro-pagers have
->> argued that struct pages are necessary for interacting with
->> existing code like scatterlists or the bio_vecs. Anti-pagers
->> assert that the tracking of the memory is unecessary and
->> allocating the pages is a waste of memory. Both viewpoints are
->> valid, however developers working on GPUs and RDMA tend to be
->> able to do away with struct pages relatively easily
+On Thu 13-06-19 11:43:07, Christoph Hellwig wrote:
+> ->mapping isn't even used by HMM users, and the field at the same offset
+> in the zone_device part of the union is declared as pad.  (Which btw is
+> rather confusing, as DAX uses ->pgmap and ->mapping from two different
+> sides of the union, but DAX doesn't use hmm_devmem_free).
 > 
-> Presumably because they have historically never tried to be
-> inter-operable with the block layer or drivers outside graphics and
-> RDMA.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Yes, but really there are three main sets of users for P2P right now:
-graphics, RDMA and NVMe. And every time a patch set comes from GPU/RDMA
-people they don't bother with struct page. I seem to be the only one
-trying to push P2P with NVMe and it seems to be a losing battle.
+I cannot really judge here but setting mapping here without any comment
+is quite confusing. So if this is safe to remove then it is certainly an
+improvement.
 
-> Please spell out the value, it is not immediately obvious to me
-> outside of some memory capacity savings.
-
-There are a few things:
-
-* Have consistency with P2P efforts as most other efforts have been
-avoiding struct page. Nobody else seems to want
-pci_p2pdma_add_resource() or any devm_memremap_pages() call.
-
-* Avoid all arch-specific dependencies for P2P. With struct page the IO
-memory must fit in the linear mapping. This requires some work with
-RISC-V and I remember some complaints from the powerpc people regarding
-this. Certainly not all arches will be able to fit the IO region into
-the linear mapping space.
-
-* Remove a bunch of PCI P2PDMA special case mapping stuff from the block
-layer and RDMA interface (which I've been hearing complaints over).
-
-* Save the struct page memory that is largely unused (as you note).
-
->> Previously, there have been multiple attempts[1][2] to replace
->> struct page usage with pfn_t but this has been unpopular seeing
->> it creates dangerous edge cases where unsuspecting code might
->> run accross pfn_t's they are not ready for.
+> ---
+>  mm/hmm.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> That's not the conclusion I arrived at because pfn_t is specifically
-> an opaque type precisely to force "unsuspecting" code to throw
-> compiler assertions. Instead pfn_t was dealt its death blow here:
-> 
-> https://lore.kernel.org/lkml/CA+55aFzON9617c2_Amep0ngLq91kfrPiSccdZakxir82iekUiA@mail.gmail.com/
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index 0c62426d1257..e1dc98407e7b 100644
+> --- a/mm/hmm.c
+> +++ b/mm/hmm.c
+> @@ -1347,8 +1347,6 @@ static void hmm_devmem_free(struct page *page, void *data)
+>  {
+>  	struct hmm_devmem *devmem = data;
+>  
+> -	page->mapping = NULL;
+> -
+>  	devmem->ops->free(devmem, page);
+>  }
+>  
+> -- 
+> 2.20.1
 
-Ok, well yes the special pages are what we've done for P2PDMA today. But
-I don't think Linus's criticism really applies to what's in this RFC.
-For starters, P2PDMA doesn't, and has have never, used struct page to
-look up the reference count. PCI BARs have no relation to the cache so
-there's no need to serialize their access but this can be done
-before/after the DMA addresses are submitted to the block/rdma layer if
-it was required.
-
-In fact, the only thing the struct page is used for in the current
-P2PDMA implementation is a single flag indicating it's special and needs
-to be mapped in a special way.
-> My primary concern with this is that ascribes a level of generality
-> that just isn't there for peer-to-peer dma operations. "Peer"
-> addresses are not "DMA" addresses, and the rules about what can and
-> can't do peer-DMA are not generically known to the block layer.
-
-Correct, but I don't think we should teach the block layer about these
-rules. In the current code, the rules are enforced outside the block
-layer before the bios are submitted and this patch set doesn't change
-that. The driver orchestrating P2P will always have to check the rules
-and derive addresses from them (as appropriate). With the RFC the block
-layer then doesn't have to care and can just handle the DMA addresses
-directly.
-
-> At least with a side object there's a chance to describe / recall those
-> restrictions as these things get passed around the I/O stack, but an
-> undecorated "DMA" address passed through the block layer with no other
-> benefit to any subsystem besides RDMA does not feel like it advances
-> the state of the art.
-> 
-> Again, what are the benefits of plumbing this RDMA special case?
-
-Because I don't think it is an RDMA special case.
-
-Logan
+-- 
+Michal Hocko
+SUSE Labs
