@@ -2,154 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ACED34CEFE
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 15:37:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B4BE4CF2D
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 15:42:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbfFTNhQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jun 2019 09:37:16 -0400
-Received: from mga03.intel.com ([134.134.136.65]:63087 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbfFTNhQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 20 Jun 2019 09:37:16 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 06:37:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,397,1557212400"; 
-   d="scan'208";a="181857959"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 20 Jun 2019 06:37:11 -0700
-Received: by lahna (sSMTP sendmail emulation); Thu, 20 Jun 2019 16:37:10 +0300
-Date:   Thu, 20 Jun 2019 16:37:10 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] PCI / ACPI: Use cached ACPI device state to get
- PCI device power state
-Message-ID: <20190620133710.GB2640@lahna.fi.intel.com>
-References: <20190618161858.77834-1-mika.westerberg@linux.intel.com>
- <20190618161858.77834-2-mika.westerberg@linux.intel.com>
- <20190619212801.GC143205@google.com>
- <20190620082730.GM2640@lahna.fi.intel.com>
- <20190620131649.GG143205@google.com>
+        id S1731663AbfFTNmU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jun 2019 09:42:20 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36601 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbfFTNmU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jun 2019 09:42:20 -0400
+Received: by mail-io1-f67.google.com with SMTP id h6so172164ioh.3
+        for <linux-pci@vger.kernel.org>; Thu, 20 Jun 2019 06:42:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8rPnlYJTsEWRrrMURVOg3q6s++ndjHj5G41dcqyvtfk=;
+        b=CzYZ0K7zoibk1pKo5KT/vMGqHZvVQQKUh5gkqSe9OgFWIZlq/5M9W+8Hhgn8PzdqJW
+         vPnp/0ugWsIz86uk+RQvsbpp1SEKlZt0eqXKivb8WmOGtjCD1YLXGjknATlDMbtf4J3+
+         G3D9UcKV2KV2Okv/0F6HEVJixRw+T3JhWxx3hKdg7BgcP0o4/GSYow2gAgb05A1EZUBs
+         lB0AzA3QT05qAzL/+5ffhKsbpFEEOWpHxMYXt1g5OVCQvzEWzmh77vD1r1td1jt7H2Ae
+         jMAsWzq1uTIYIkF6BWmppJdlWJyxEYpXQfkXJw8QoL6FE+gLVUX9sO/+E2YCxxcfuyKC
+         eSow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8rPnlYJTsEWRrrMURVOg3q6s++ndjHj5G41dcqyvtfk=;
+        b=f4Vg82sWg1LZKCQhCS2s825T/auWEK23g63nuwek0veb4kzGiViacpWdBazq2zKQRt
+         GOMKnGdU5FrRq2u00BSAlzeZOTZfJlEVMa3ofLf5UbZbtDrkeTzOw3AGojGKOLTlE6Ud
+         ZiDV1k6gZGnbS+xvBKCWCXNBEbX7uSNC0eidM1ThwcCXari0HzfnR0oC4J/qR5JducWw
+         SVU502l7+VMB2Kgt20JUdhL22WMytW6k9Q9QLSu/7lVVeG+z3m04NEqf7Py6YypSZa4h
+         DCA7USFgpj/Q8jKVAmA/1EbAL5e4yHGaLDqk+4TO/kV7Az+GngvdBRnWTX4nrTZIn7PI
+         0Fiw==
+X-Gm-Message-State: APjAAAVJzwpt4naHIh+RWJq395d8i7pp5KB+SlDSCJxBobkWFh4cRGSE
+        UOdtEiiyQjzQsSD1qX2gmN2Y86c5oVcakWBpWfb7mw==
+X-Google-Smtp-Source: APXvYqzLdEI/7zE586TbFVV9DAjh8m0jc4TIa2jBNO57XuYVFLcau4FnwIIZtkh5LxzOxQ398Gmru5hxBp4l7Yl9bx4=
+X-Received: by 2002:a02:394c:: with SMTP id w12mr478044jae.126.1561038139505;
+ Thu, 20 Jun 2019 06:42:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620131649.GG143205@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <1561026716-140537-1-git-send-email-john.garry@huawei.com>
+ <CAOesGMg+jAae5A0LgvBH0=dF95Y208h0c5RZ6f0v6CVUhsMk4g@mail.gmail.com> <8265cdc4-ce24-4efd-a64a-78ce34104b9c@huawei.com>
+In-Reply-To: <8265cdc4-ce24-4efd-a64a-78ce34104b9c@huawei.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Thu, 20 Jun 2019 14:42:07 +0100
+Message-ID: <CAOesGMjKYzj+h=ummXvQLaVHDEYeNNWMqZFUJ4qqmqPr3LDVeA@mail.gmail.com>
+Subject: Re: [PATCH 0/5] Fixes for HiSilicon LPC driver and logical PIO code
+To:     John Garry <john.garry@huawei.com>
+Cc:     xuwei5@huawei.com, Bjorn Helgaas <bhelgaas@google.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        ARM-SoC Maintainers <arm@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, Joe Perches <joe@perches.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 08:16:49AM -0500, Bjorn Helgaas wrote:
-> On Thu, Jun 20, 2019 at 11:27:30AM +0300, Mika Westerberg wrote:
-> > On Wed, Jun 19, 2019 at 04:28:01PM -0500, Bjorn Helgaas wrote:
-> > > On Tue, Jun 18, 2019 at 07:18:56PM +0300, Mika Westerberg wrote:
-> > > > Intel Ice Lake has an integrated Thunderbolt controller which
-> > > > means that the PCIe topology is extended directly from the two
-> > > > root ports (RP0 and RP1).
-> > > 
-> > > A PCIe topology is always extended directly from root ports,
-> > > regardless of whether a Thunderbolt controller is integrated, so I
-> > > guess I'm missing the point you're making.  It doesn't sound like
-> > > this is anything specific to Thunderbolt?
+On Thu, Jun 20, 2019 at 1:56 PM John Garry <john.garry@huawei.com> wrote:
+>
+> On 20/06/2019 13:42, Olof Johansson wrote:
+> > Hi John,
 > >
-> > The point I'm trying to make here is to explain why this is problem
-> > now and not with the previous discrete controllers. With the
-> > previous there was only a single ACPI power resource for the root
-> > port and the Thunderbolt host router was connected to that root
-> > port. PCIe hierarchy was extended through downstream ports (not root
-> > ports) of that controller (which includes PCIe switch).
-> 
-> Sounds like you're using "PCIe topology extension" to mean
-> specifically something below a Thunderbolt controller, excluding a
-> subtree below a root port.  I don't think the PCI core is aware of
-> that distinction.
+> > For patches that go to a soc maintainer for merge, we're asking that
+> > people don't cc arm@kernel.org directly.
+> >
+> > We prefer to keep that alias mostly for pull requests from other
+> > maintainers and patches we might have a reason to apply directly.
+> > Otherwise we risk essentially getting all of linux-arm-kernel into
+> > this mailbox as well.
+> >
+> >
+> > Thanks!
+> >
+> > -Olof
+> >
+>
+> Hi Olof,
+>
+> Can do in future.
+>
+> The specific reason here for me to cc arm@kernel.org was that I wanted
+> to at least make the maintainers aware that we intend to send some
+> patches outside the "arm soc" domain through their tree, * below.
 
-Right it is not.
+That's fine -- but it's usually better to cc us individually in those
+cases. We normally go find the patches on the lists if/as needed when
+we see them come in as well.
 
-> > Now the thing is part of the SoC so power management is different
-> > and causes problems in Linux.
-> 
-> The SoC is a physical packaging issue that really doesn't enter into
-> the specs directly.  I'm trying to get at the logical topology
-> questions in terms of the PCIe and ACPI specs.
-> 
-> I assume we could dream up a non-Thunderbolt topology that would show
-> the same problem?
 
-Yes.
-
-> > > > Power management is handled by ACPI power resources that are
-> > > > shared between the root ports, Thunderbolt controller (NHI) and xHCI
-> > > > controller.
-> > > > 
-> > > > The topology with the power resources (marked with []) looks like:
-> > > > 
-> > > >   Host bridge
-> > > >     |
-> > > >     +- RP0 ---\
-> > > >     +- RP1 ---|--+--> [TBT]
-> > > >     +- NHI --/   |
-> > > >     |            |
-> > > >     |            v
-> > > >     +- xHCI --> [D3C]
-> > > > 
-> > > > Here TBT and D3C are the shared ACPI power resources. ACPI
-> > > > _PR3() method returns either TBT or D3C or both.
-> 
-> I'm not very familiar with _PR3.  I guess this is under an ACPI object
-> representing a PCI device, e.g., \_SB.PCI0.RP0._PR3?
-
-Correct.
-
-> > > > Say we runtime suspend first the root ports RP0 and RP1, then
-> > > > NHI. Now since the TBT power resource is still on when the root
-> > > > ports are runtime suspended their dev->current_state is set to
-> > > > D3hot. When NHI is runtime suspended TBT is finally turned off
-> > > > but state of the root ports remain to be D3hot.
-> 
-> So in this example we might have:
-> 
->   _SB.PCI0.RP0._PR3: TBT
->   _SB.PCI0.RP1._PR3: TBT
->   _SB.PCI0.NHI._PR3: TBT
-
-and also D3C.
-
-> And when Linux figures out that everything depending on TBT is in
-> D3hot, it evaluates TBT._OFF, which puts them all in D3cold?  And part
-> of the problem is that they're now in D3cold (where config access
-> doesn't work) but Linux still thinks they're in D3hot (where config
-> access would work)?
-
-Exactly.
-
-> I feel like I'm missing something because I don't know how D3C is
-> involved, since you didn't mention suspending xHCI.
-
-That's another power resource so we will also have D3C turned off when
-xHCI gets suspended but I did not want to complicate things too much in
-the changelog.
-
-> And I can't mentally match up the patch with the D3hot/D3cold state
-> change (if indeed that's the problem).  If we were updating the path
-> that evaluates _OFF so it changed the power state of all dependent
-> devices, *that* would make a lot of sense to me because it sounds like
-> that's where the physical change happens that makes things out of
-> sync.
-
-I did that in the first version [1] but Rafael pointed out that it is
-racy one way or another [2].
-
-[1] https://www.spinics.net/lists/linux-pci/msg83583.html
-[2] https://www.spinics.net/lists/linux-pci/msg83600.html
+-Olof
