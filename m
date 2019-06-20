@@ -2,159 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 53C5C4D49B
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 19:11:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A9094D4A3
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 19:14:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfFTRLQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jun 2019 13:11:16 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:40589 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbfFTRLI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jun 2019 13:11:08 -0400
-Received: by mail-qt1-f196.google.com with SMTP id a15so3932879qtn.7
-        for <linux-pci@vger.kernel.org>; Thu, 20 Jun 2019 10:11:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=B/Z1xHhYAjAI7ioTCGgFoDOmi7PSKcfXMaUReB0Dr1o=;
-        b=iDKiiByf/rCLVBiwQKacZOEFqluND5l/Q7B8xuyrYYiT8npctI6tkA6bd5Z3+X6WXJ
-         7gP3l17z5AQNjEKoghc1QQGWYYTQhxhcX9yGx54PMvjgvEHZEh7JKLlg64yxdauLIkD6
-         PlX1F93t1CtWxQ8kNNXs9JCH7/Ycn3pW7NdVjaUwoeBrG9xILQAk6iI0m+ngDTRaz0n2
-         KHM4oMsjPmMO77I7PU4GywcSoyfCFebua5oLxUE6W85UfxNuyOXg7jsaASQUndU7XOUT
-         zN203NLRIh3JOjlN2kSuwATpWhmPazDPI0SbRVShwbgeM2SVzNCO4ifAlBXeUKKBuJD+
-         jaDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=B/Z1xHhYAjAI7ioTCGgFoDOmi7PSKcfXMaUReB0Dr1o=;
-        b=P3GY8Rgtyx3Jw8SJUXsDMI/tgf4yzTsnr+EpQiMsOux9yGKcbxpHK7/IHTDaVEN8uq
-         T0oZ98xliqICz6xK8dX18/tqGjQr3SWjPQ3hPxRg3Lyy+XcNxBjdAn643gIPdpj9Lb9/
-         C6lUCyCp1fWGzrPt1c+26N3EeKPnq2dXb29SlH09ViCp+5YnKdPr4rNrWpXMAC7ZGgnA
-         BEFcfEBxHA5wKO1sVxiuw1RfDeiv+/kIc2kHaoPUV2LTzYi8VuttJyqZpbOg4MG5WGzr
-         VENG2CiAMCSH4iuG35NGvwqB9mM0pJgu5WrbzjkGhRgF6YwODWpe1pMAeAy0jBReHcMC
-         oAeg==
-X-Gm-Message-State: APjAAAVSjrxBl43DE5Fd5mmijCAfCtcnglgOm+EjhPzf51tpywWChWTZ
-        FR1UFDW3a7R8j3y8lnnsZcvyuw==
-X-Google-Smtp-Source: APXvYqwc2iwZPScenX0v4jDBGu4RdLUTLz2n8sdXn8hwtd0G64nXQQ8UGnDbXfC6MHvJ9vTLmjr9lQ==
-X-Received: by 2002:ac8:2e5d:: with SMTP id s29mr105147696qta.70.1561050666885;
-        Thu, 20 Jun 2019 10:11:06 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id t29sm152221qtt.42.2019.06.20.10.11.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Jun 2019 10:11:06 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1he0aX-0005SU-RR; Thu, 20 Jun 2019 14:11:05 -0300
-Date:   Thu, 20 Jun 2019 14:11:05 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [RFC PATCH 20/28] IB/core: Introduce API for initializing a RW
- ctx from a DMA address
-Message-ID: <20190620171105.GD19891@ziepe.ca>
-References: <20190620161240.22738-1-logang@deltatee.com>
- <20190620161240.22738-21-logang@deltatee.com>
- <20190620164909.GC19891@ziepe.ca>
- <f9186b2b-7737-965f-2dca-25e40e566e64@deltatee.com>
+        id S1726675AbfFTROC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jun 2019 13:14:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:50132 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726530AbfFTROC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 20 Jun 2019 13:14:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67619360;
+        Thu, 20 Jun 2019 10:14:01 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 485713F246;
+        Thu, 20 Jun 2019 10:14:00 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 18:13:57 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sinan Kaya <okaya@kernel.org>, Ali Saidi <alisaidi@amazon.com>,
+        Zeev Zilberman <zeev@amazon.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/4] arm64: pci: acpi: Use
+ pci_assign_unassigned_root_bus_resources()
+Message-ID: <20190620171357.GD18771@e121166-lin.cambridge.arm.com>
+References: <20190615002359.29577-1-benh@kernel.crashing.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f9186b2b-7737-965f-2dca-25e40e566e64@deltatee.com>
+In-Reply-To: <20190615002359.29577-1-benh@kernel.crashing.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 10:59:44AM -0600, Logan Gunthorpe wrote:
+On Sat, Jun 15, 2019 at 10:23:56AM +1000, Benjamin Herrenschmidt wrote:
+> Instead of the simpler
 > 
+> 	pci_bus_size_bridges(bus);
+> 	pci_bus_assign_resources(bus);
 > 
-> On 2019-06-20 10:49 a.m., Jason Gunthorpe wrote:
-> > On Thu, Jun 20, 2019 at 10:12:32AM -0600, Logan Gunthorpe wrote:
-> >> Introduce rdma_rw_ctx_dma_init() and rdma_rw_ctx_dma_destroy() which
-> >> peform the same operation as rdma_rw_ctx_init() and
-> >> rdma_rw_ctx_destroy() respectively except they operate on a DMA
-> >> address and length instead of an SGL.
-> >>
-> >> This will be used for struct page-less P2PDMA, but there's also
-> >> been opinions expressed to migrate away from SGLs and struct
-> >> pages in the RDMA APIs and this will likely fit with that
-> >> effort.
-> >>
-> >> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> >>  drivers/infiniband/core/rw.c | 74 ++++++++++++++++++++++++++++++------
-> >>  include/rdma/rw.h            |  6 +++
-> >>  2 files changed, 69 insertions(+), 11 deletions(-)
-> >>
-> >> diff --git a/drivers/infiniband/core/rw.c b/drivers/infiniband/core/rw.c
-> >> index 32ca8429eaae..cefa6b930bc8 100644
-> >> +++ b/drivers/infiniband/core/rw.c
-> >> @@ -319,6 +319,39 @@ int rdma_rw_ctx_init(struct rdma_rw_ctx *ctx, struct ib_qp *qp, u8 port_num,
-> >>  }
-> >>  EXPORT_SYMBOL(rdma_rw_ctx_init);
-> >>  
-> >> +/**
-> >> + * rdma_rw_ctx_dma_init - initialize a RDMA READ/WRITE context from a
-> >> + *	DMA address instead of SGL
-> >> + * @ctx:	context to initialize
-> >> + * @qp:		queue pair to operate on
-> >> + * @port_num:	port num to which the connection is bound
-> >> + * @addr:	DMA address to READ/WRITE from/to
-> >> + * @len:	length of memory to operate on
-> >> + * @remote_addr:remote address to read/write (relative to @rkey)
-> >> + * @rkey:	remote key to operate on
-> >> + * @dir:	%DMA_TO_DEVICE for RDMA WRITE, %DMA_FROM_DEVICE for RDMA READ
-> >> + *
-> >> + * Returns the number of WQEs that will be needed on the workqueue if
-> >> + * successful, or a negative error code.
-> >> + */
-> >> +int rdma_rw_ctx_dma_init(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
-> >> +		u8 port_num, dma_addr_t addr, u32 len, u64 remote_addr,
-> >> +		u32 rkey, enum dma_data_direction dir)
-> > 
-> > Why not keep the same basic signature here but replace the scatterlist
-> > with the dma vec ?
+> Use pci_assign_unassigned_root_bus_resources(). This should have no effect
+> as long as we are reassigning everything. Once we start honoring FW
+> resource allocations, this will bring up the "reallocation" feature
+> which can help making room for SR-IOV when necessary.
+
+I would like to add more details on why we want to make this change,
+I will update the log when we merge it, it is a bit too late for v5.3,
+even if in theory no functional change is intended.
+
+> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> ---
+>  arch/arm64/kernel/pci.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> Could do. At the moment, I had no need for dma_vec in this interface.
+> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+> index bb85e2f4603f..1419b1b4e9b9 100644
+> --- a/arch/arm64/kernel/pci.c
+> +++ b/arch/arm64/kernel/pci.c
+> @@ -193,8 +193,7 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
+>  	if (!bus)
+>  		return NULL;
+>  
+> -	pci_bus_size_bridges(bus);
+> -	pci_bus_assign_resources(bus);
+> +	pci_assign_unassigned_root_bus_resources(bus);
 
-I think that is because you only did nvme not srp/iser :)
+These hunks should be identical, minus the additional resource size
+handling and realloc policy (which are *missing* features in current
+code). We must document this change in the log.
 
-> >> +{
-> >> +	struct scatterlist sg;
-> >> +
-> >> +	sg_dma_address(&sg) = addr;
-> >> +	sg_dma_len(&sg) = len;
-> > 
-> > This needs to fail if the driver is one of the few that require
-> > struct page to work..
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+
+>  	list_for_each_entry(child, &bus->children, node)
+>  		pcie_bus_configure_settings(child);
+> -- 
+> 2.17.1
 > 
-> Yes, right. Currently P2PDMA checks for the use of dma_virt_ops. And
-> that probably should also be done here. But is that sufficient? You're
-> probably right that it'll take an audit of the RDMA tree to sort that out.
-
-For this purpose I'd be fine if you added a flag to the struct
-ib_device_ops that is set on drivers that we know are OK.. We can make
-that list bigger over time.
-
-> > This is not so hard to do, as most drivers are already struct page
-> > free, but is pretty much blocked on needing some way to go from the
-> > block layer SGL world to the dma vec world that does not hurt storage
-> > performance.
-> 
-> Maybe I can end up helping with that if it helps push the ideas here
-> through. (And assuming people think it's an acceptable approach for the
-> block-layer side of things).
-
-Let us hope for a clear decision then
-
-Jason
