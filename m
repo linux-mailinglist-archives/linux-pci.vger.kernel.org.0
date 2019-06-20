@@ -2,100 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 373644D986
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 20:38:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A947E4D9AC
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2019 20:45:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbfFTSib (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jun 2019 14:38:31 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:33806 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726052AbfFTSib (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:38:31 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1he1ws-000641-Jx; Thu, 20 Jun 2019 12:38:15 -0600
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>,
+        id S1726915AbfFTSpu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jun 2019 14:45:50 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35741 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfFTSpu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jun 2019 14:45:50 -0400
+Received: by mail-oi1-f193.google.com with SMTP id a127so2926105oii.2
+        for <linux-pci@vger.kernel.org>; Thu, 20 Jun 2019 11:45:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5VxtaXvavuIj/WSwZHnAHCDIqk0MlZk9aDQYd+gdFk4=;
+        b=PvhKM5V+6yqnt2aU5HxaJksE4uPAQmNs5skwhuJ6n8y5XgZlmqj3eeb150T7SBN6SE
+         gIm81w+vU1PtiVJorKQJeZTOHd5OFru39TU4SqL/hr3Rtekmt9KMOkokl1EdfE8VlZMk
+         1NkJs/r1WvgIbwR5DJQ0DbUyxIuHbh3jBXe8LKcbCXSMEinhkyK/xlaSv+78VovqYMtg
+         q1DEjNCTrdAytojICVF4MAcW1VhW5C6b2MEs9t9SRvlyLXj7Lh7Yhv74YAr6kla9u8Qp
+         j8ElcBqtPWtUqgwrRBxPPxQ++W67n8FbK6X2OdqDEGZA60ahsSfATor7gBkpcrk+yQzG
+         znqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5VxtaXvavuIj/WSwZHnAHCDIqk0MlZk9aDQYd+gdFk4=;
+        b=oBAPJ/NKXVDiSmWNpEPbTQdf1KncRBQIZ1Xq4mz5s/2mU3wvlLRmtMvuaVQR0RXBFI
+         QXU7zEZOpO0nM+DAJKTw35wrBNryzk4sEcQ8UgkItFFxK9A0DxHGJwbRlD090upRlc0A
+         CtrjAPMLiHedcWIJu7c7I7IfOehEP7azMr6DFcNlEmp8lznI0nlFW4sZwyvRtV0SEWCB
+         AmDs5sYKNpAB12Etf+h0GoUmRRdX/7Eka4Z7X4n4iPInGLiCQfQHYd5QSIh75wzWJ8aq
+         IslpNml2etRUz8Cr7f0fuJTAjNvzB/JU1QZ4IKSEzJsDdlac3yUu7pm6DR5ghUo10G6u
+         8ojg==
+X-Gm-Message-State: APjAAAUTEXipFeAtnHEr83r+fr6dvAyFh5Bv0XLCDyix3XLCF3/7RGrh
+        wtuym0K5j7/6gvqtmZ+CCAhaq8I2y5tdQ90T8k6whQ==
+X-Google-Smtp-Source: APXvYqxzQJlp4UblxkfvTerY7hS4anNKGD6JaiZlLO54L7p3q2W7RUsf+utlNLQ8WFVB+mqDyi2X0jOIR79GoWAQb9A=
+X-Received: by 2002:aca:ec82:: with SMTP id k124mr222240oih.73.1561056349598;
+ Thu, 20 Jun 2019 11:45:49 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190620161240.22738-1-logang@deltatee.com>
+In-Reply-To: <20190620161240.22738-1-logang@deltatee.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 20 Jun 2019 11:45:38 -0700
+Message-ID: <CAPcyv4ijztOK1FUjLuFing7ps4LOHt=6z=eO=98HHWauHA+yog@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
         Sagi Grimberg <sagi@grimberg.me>,
         Keith Busch <kbusch@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
         Stephen Bates <sbates@raithlin.com>
-References: <20190620161240.22738-1-logang@deltatee.com>
- <20190620161240.22738-5-logang@deltatee.com>
- <20190620172347.GE19891@ziepe.ca>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <6e4caa21-a148-00d1-a46f-18517fb744d6@deltatee.com>
-Date:   Thu, 20 Jun 2019 12:38:13 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <20190620172347.GE19891@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, hch@lst.de, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [RFC PATCH 04/28] block: Never bounce dma-direct bios
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Jun 20, 2019 at 9:13 AM Logan Gunthorpe <logang@deltatee.com> wrote:
+>
+> For eons there has been a debate over whether or not to use
+> struct pages for peer-to-peer DMA transactions. Pro-pagers have
+> argued that struct pages are necessary for interacting with
+> existing code like scatterlists or the bio_vecs. Anti-pagers
+> assert that the tracking of the memory is unecessary and
+> allocating the pages is a waste of memory. Both viewpoints are
+> valid, however developers working on GPUs and RDMA tend to be
+> able to do away with struct pages relatively easily
 
+Presumably because they have historically never tried to be
+inter-operable with the block layer or drivers outside graphics and
+RDMA.
 
-On 2019-06-20 11:23 a.m., Jason Gunthorpe wrote:
-> On Thu, Jun 20, 2019 at 10:12:16AM -0600, Logan Gunthorpe wrote:
->> It is expected the creator of the dma-direct bio will ensure the
->> target device can access the DMA address it's creating bios for.
->> It's also not possible to bounce a dma-direct bio seeing the block
->> layer doesn't have any way to access the underlying data behind
->> the DMA address.
->>
->> Thus, never bounce dma-direct bios.
-> 
-> I wonder how feasible it would be to implement a 'dma vec' copy
-> from/to? 
+>  compared to
+> those wanting to work with NVMe devices through the block layer.
+> So it would be of great value to be able to universally do P2PDMA
+> transactions without the use of struct pages.
 
-> That is about the only operation you could safely do on P2P BAR
-> memory. 
-> 
-> I wonder if a copy implementation could somehow query the iommu layer
-> to get a kmap of the memory pointed at by the dma address so we don't
-> need to carry struct page around?
+Please spell out the value, it is not immediately obvious to me
+outside of some memory capacity savings.
 
-That sounds a bit nasty. First we'd have to determine what the
-dma_addr_t points to; and with P2P it may be a bus address or it may be
-an IOVA address and it would probably have to be based on whether the
-IOVA is reserved or not (PCI bus addresses should all be reserved).
-Second, if it is an IOVA then the we'd have to get the physical address
-back from the IOMMU tables and hope we can then get it back to a
-sensible kernel mapping -- and if it points to a PCI bus address we'd
-then have to somehow get back to the kernel mapping which could be
-anywhere in the VMALLOC region as we no longer have the linear mapping
-that struct page provides.
+> Previously, there have been multiple attempts[1][2] to replace
+> struct page usage with pfn_t but this has been unpopular seeing
+> it creates dangerous edge cases where unsuspecting code might
+> run accross pfn_t's they are not ready for.
 
-I think if we need access to the memory, then this is the wrong approach
-and we should keep struct page or try pfn_t so we can map the memory in
-a way that would perform better.
+That's not the conclusion I arrived at because pfn_t is specifically
+an opaque type precisely to force "unsuspecting" code to throw
+compiler assertions. Instead pfn_t was dealt its death blow here:
 
-In theory, I could relatively easily do the same thing I did for dma_vec
-but with a pfn_t_vec. Though we'd still have the problem of determining
-virtual address from physical address for memory that isn't linearly
-mapped. We'd probably have to introduce some arch-specific thing to
-linearly map an io region or something which may be possible on some
-arches on not on others (same problems we have with struct page).
+https://lore.kernel.org/lkml/CA+55aFzON9617c2_Amep0ngLq91kfrPiSccdZakxir82iekUiA@mail.gmail.com/
 
-Logan
+...and I think that feedback also reads on this proposal.
+
+> Currently, we have P2PDMA using struct pages through the block layer
+> and the dangerous cases are avoided by using a queue flag that
+> indicates support for the special pages.
+>
+> This RFC proposes a new solution: allow the block layer to take
+> DMA addresses directly for queues that indicate support. This will
+> provide a more general path for doing P2PDMA-like requests and will
+> allow us to remove the struct pages that back P2PDMA memory thus paving
+> the way to build a more uniform P2PDMA ecosystem.
+
+My primary concern with this is that ascribes a level of generality
+that just isn't there for peer-to-peer dma operations. "Peer"
+addresses are not "DMA" addresses, and the rules about what can and
+can't do peer-DMA are not generically known to the block layer. At
+least with a side object there's a chance to describe / recall those
+restrictions as these things get passed around the I/O stack, but an
+undecorated "DMA" address passed through the block layer with no other
+benefit to any subsystem besides RDMA does not feel like it advances
+the state of the art.
+
+Again, what are the benefits of plumbing this RDMA special case?
