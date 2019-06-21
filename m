@@ -2,135 +2,249 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 184A34EA92
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 16:28:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 872BE4EAA5
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 16:32:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbfFUO20 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jun 2019 10:28:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:33414 "EHLO foss.arm.com"
+        id S1726031AbfFUOc4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jun 2019 10:32:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:33466 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbfFUO20 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:28:26 -0400
+        id S1726002AbfFUOc4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:32:56 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5636128;
-        Fri, 21 Jun 2019 07:28:25 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53C8828;
+        Fri, 21 Jun 2019 07:32:55 -0700 (PDT)
 Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 893C13F575;
-        Fri, 21 Jun 2019 07:28:24 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 15:28:15 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BBF953F575;
+        Fri, 21 Jun 2019 07:32:53 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 15:32:51 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Jon Derrick <jonathan.derrick@intel.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/VMD: Fix config addressing with bus offsets
-Message-ID: <20190621142803.GA21807@e121166-lin.cambridge.arm.com>
-References: <20190611211538.29151-1-jonathan.derrick@intel.com>
+To:     Vidya Sagar <vidyas@nvidia.com>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com
+Cc:     bhelgaas@google.com, Jisheng.Zhang@synaptics.com,
+        thierry.reding@gmail.com, kishon@ti.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V6 2/3] PCI: dwc: Cleanup DBI read and write APIs
+Message-ID: <20190621143251.GB21807@e121166-lin.cambridge.arm.com>
+References: <20190621111000.23216-1-vidyas@nvidia.com>
+ <20190621111000.23216-2-vidyas@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190611211538.29151-1-jonathan.derrick@intel.com>
+In-Reply-To: <20190621111000.23216-2-vidyas@nvidia.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[dropped CC stable]
-
-On Tue, Jun 11, 2019 at 03:15:38PM -0600, Jon Derrick wrote:
-> VMD config space addressing relies on mapping the BDF of the target into
-> the VMD config bar. When using bus number offsets to number the VMD
-> domain, the offset needs to be ignored in order to correctly map devices
-> to their config space.
+On Fri, Jun 21, 2019 at 04:39:59PM +0530, Vidya Sagar wrote:
+> Cleanup DBI read and write APIs by removing "__" (underscore) from their
+> names as there are no no-underscore versions and the underscore versions
+> are already doing what no-underscore versions typically do. It also removes
+> passing dbi/dbi2 base address as one of the arguments as the same can be
+> derived with in read and write APIs.
 > 
-> Fixes: 2a5a9c9a20f9 ("PCI: vmd: Add offset to bus numbers if necessary")
-> Cc: <stable@vger.kernel.org> # v4.19
-> Cc: <stable@vger.kernel.org> # v4.18
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes from v5:
+> * Removed passing base address as one of the arguments as the same can be derived within
+>   the API itself.
+> * Modified ATU read/write APIs to call dw_pcie_{write/read}() API
+> 
+> Changes from v4:
+> * This is a new patch in this series
+> 
+>  drivers/pci/controller/dwc/pcie-designware.c | 28 ++++++-------
+>  drivers/pci/controller/dwc/pcie-designware.h | 43 ++++++++++++--------
+>  2 files changed, 37 insertions(+), 34 deletions(-)
 
-Hi Jon,
+Gustavo, Jingoo,
 
-that's not how stable should be handled. You should always start
-by fixing mainline and if there are backports to be fixed too you
-should add patch dependencies in the CC area, see:
+please ACK this patch if you are OK with it so that I can merge
+the series, thanks.
 
-Documentation/process/stable-kernel-rules.rst
-
-Never add stable to the CC list in the email header, only in the
-commit log.
-
-When your patch hits mainline it will trickle back into stable,
-if you specified dependencies as described above there is nothing
-to do.
-
-Thanks,
 Lorenzo
 
-> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-> ---
->  drivers/pci/controller/vmd.c | 16 +++++++++-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index fd2dbd7..a59afec 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -94,6 +94,7 @@ struct vmd_dev {
->  	struct resource		resources[3];
->  	struct irq_domain	*irq_domain;
->  	struct pci_bus		*bus;
-> +	u8			busn_start;
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 9d7c51c32b3b..0b383feb13de 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -52,64 +52,60 @@ int dw_pcie_write(void __iomem *addr, int size, u32 val)
+>  	return PCIBIOS_SUCCESSFUL;
+>  }
 >  
->  #ifdef CONFIG_X86_DEV_DMA_OPS
->  	struct dma_map_ops	dma_ops;
-> @@ -465,7 +466,8 @@ static char __iomem *vmd_cfg_addr(struct vmd_dev *vmd, struct pci_bus *bus,
->  				  unsigned int devfn, int reg, int len)
+> -u32 __dw_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
+> -		       size_t size)
+> +u32 dw_pcie_read_dbi(struct dw_pcie *pci, u32 reg, size_t size)
 >  {
->  	char __iomem *addr = vmd->cfgbar +
-> -			     (bus->number << 20) + (devfn << 12) + reg;
-> +			     ((bus->number - vmd->busn_start) << 20) +
-> +			     (devfn << 12) + reg;
+>  	int ret;
+>  	u32 val;
 >  
->  	if ((addr - vmd->cfgbar) + len >=
->  	    resource_size(&vmd->dev->resource[VMD_CFGBAR]))
-> @@ -588,7 +590,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  	unsigned long flags;
->  	LIST_HEAD(resources);
->  	resource_size_t offset[2] = {0};
-> -	resource_size_t membar2_offset = 0x2000, busn_start = 0;
-> +	resource_size_t membar2_offset = 0x2000;
+>  	if (pci->ops->read_dbi)
+> -		return pci->ops->read_dbi(pci, base, reg, size);
+> +		return pci->ops->read_dbi(pci, pci->dbi_base, reg, size);
 >  
->  	/*
->  	 * Shadow registers may exist in certain VMD device ids which allow
-> @@ -630,14 +632,14 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  		pci_read_config_dword(vmd->dev, PCI_REG_VMCONFIG, &vmconfig);
->  		if (BUS_RESTRICT_CAP(vmcap) &&
->  		    (BUS_RESTRICT_CFG(vmconfig) == 0x1))
-> -			busn_start = 128;
-> +			vmd->busn_start = 128;
+> -	ret = dw_pcie_read(base + reg, size, &val);
+> +	ret = dw_pcie_read(pci->dbi_base + reg, size, &val);
+>  	if (ret)
+>  		dev_err(pci->dev, "Read DBI address failed\n");
+>  
+>  	return val;
+>  }
+>  
+> -void __dw_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
+> -			 size_t size, u32 val)
+> +void dw_pcie_write_dbi(struct dw_pcie *pci, u32 reg, size_t size, u32 val)
+>  {
+>  	int ret;
+>  
+>  	if (pci->ops->write_dbi) {
+> -		pci->ops->write_dbi(pci, base, reg, size, val);
+> +		pci->ops->write_dbi(pci, pci->dbi_base, reg, size, val);
+>  		return;
 >  	}
 >  
->  	res = &vmd->dev->resource[VMD_CFGBAR];
->  	vmd->resources[0] = (struct resource) {
->  		.name  = "VMD CFGBAR",
-> -		.start = busn_start,
-> -		.end   = busn_start + (resource_size(res) >> 20) - 1,
-> +		.start = vmd->busn_start,
-> +		.end   = vmd->busn_start + (resource_size(res) >> 20) - 1,
->  		.flags = IORESOURCE_BUS | IORESOURCE_PCI_FIXED,
->  	};
+> -	ret = dw_pcie_write(base + reg, size, val);
+> +	ret = dw_pcie_write(pci->dbi_base + reg, size, val);
+>  	if (ret)
+>  		dev_err(pci->dev, "Write DBI address failed\n");
+>  }
 >  
-> @@ -705,8 +707,8 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  	pci_add_resource_offset(&resources, &vmd->resources[1], offset[0]);
->  	pci_add_resource_offset(&resources, &vmd->resources[2], offset[1]);
+> -u32 __dw_pcie_read_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
+> -			size_t size)
+> +u32 dw_pcie_read_dbi2(struct dw_pcie *pci, u32 reg, size_t size)
+>  {
+>  	int ret;
+>  	u32 val;
 >  
-> -	vmd->bus = pci_create_root_bus(&vmd->dev->dev, busn_start, &vmd_ops,
-> -				       sd, &resources);
-> +	vmd->bus = pci_create_root_bus(&vmd->dev->dev, vmd->busn_start,
-> +				       &vmd_ops, sd, &resources);
->  	if (!vmd->bus) {
->  		pci_free_resource_list(&resources);
->  		irq_domain_remove(vmd->irq_domain);
+>  	if (pci->ops->read_dbi2)
+> -		return pci->ops->read_dbi2(pci, base, reg, size);
+> +		return pci->ops->read_dbi2(pci, pci->dbi_base2, reg, size);
+>  
+> -	ret = dw_pcie_read(base + reg, size, &val);
+> +	ret = dw_pcie_read(pci->dbi_base2 + reg, size, &val);
+>  	if (ret)
+>  		dev_err(pci->dev, "read DBI address failed\n");
+>  
+>  	return val;
+>  }
+>  
+> -void __dw_pcie_write_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
+> -			  size_t size, u32 val)
+> +void dw_pcie_write_dbi2(struct dw_pcie *pci, u32 reg, size_t size, u32 val)
+>  {
+>  	int ret;
+>  
+>  	if (pci->ops->write_dbi2) {
+> -		pci->ops->write_dbi2(pci, base, reg, size, val);
+> +		pci->ops->write_dbi2(pci, pci->dbi_base2, reg, size, val);
+>  		return;
+>  	}
+>  
+> -	ret = dw_pcie_write(base + reg, size, val);
+> +	ret = dw_pcie_write(pci->dbi_base2 + reg, size, val);
+>  	if (ret)
+>  		dev_err(pci->dev, "write DBI address failed\n");
+>  }
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 14762e262758..88300b445a4d 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -254,14 +254,10 @@ struct dw_pcie {
+>  int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+>  int dw_pcie_write(void __iomem *addr, int size, u32 val);
+>  
+> -u32 __dw_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
+> -		       size_t size);
+> -void __dw_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
+> -			 size_t size, u32 val);
+> -u32 __dw_pcie_read_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
+> -			size_t size);
+> -void __dw_pcie_write_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
+> -			  size_t size, u32 val);
+> +u32 dw_pcie_read_dbi(struct dw_pcie *pci, u32 reg, size_t size);
+> +void dw_pcie_write_dbi(struct dw_pcie *pci, u32 reg, size_t size, u32 val);
+> +u32 dw_pcie_read_dbi2(struct dw_pcie *pci, u32 reg, size_t size);
+> +void dw_pcie_write_dbi2(struct dw_pcie *pci, u32 reg, size_t size, u32 val);
+>  int dw_pcie_link_up(struct dw_pcie *pci);
+>  int dw_pcie_wait_for_link(struct dw_pcie *pci);
+>  void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
+> @@ -275,52 +271,63 @@ void dw_pcie_setup(struct dw_pcie *pci);
+>  
+>  static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val)
+>  {
+> -	__dw_pcie_write_dbi(pci, pci->dbi_base, reg, 0x4, val);
+> +	dw_pcie_write_dbi(pci, reg, 0x4, val);
+>  }
+>  
+>  static inline u32 dw_pcie_readl_dbi(struct dw_pcie *pci, u32 reg)
+>  {
+> -	return __dw_pcie_read_dbi(pci, pci->dbi_base, reg, 0x4);
+> +	return dw_pcie_read_dbi(pci, reg, 0x4);
+>  }
+>  
+>  static inline void dw_pcie_writew_dbi(struct dw_pcie *pci, u32 reg, u16 val)
+>  {
+> -	__dw_pcie_write_dbi(pci, pci->dbi_base, reg, 0x2, val);
+> +	dw_pcie_write_dbi(pci, reg, 0x2, val);
+>  }
+>  
+>  static inline u16 dw_pcie_readw_dbi(struct dw_pcie *pci, u32 reg)
+>  {
+> -	return __dw_pcie_read_dbi(pci, pci->dbi_base, reg, 0x2);
+> +	return dw_pcie_read_dbi(pci, reg, 0x2);
+>  }
+>  
+>  static inline void dw_pcie_writeb_dbi(struct dw_pcie *pci, u32 reg, u8 val)
+>  {
+> -	__dw_pcie_write_dbi(pci, pci->dbi_base, reg, 0x1, val);
+> +	dw_pcie_write_dbi(pci, reg, 0x1, val);
+>  }
+>  
+>  static inline u8 dw_pcie_readb_dbi(struct dw_pcie *pci, u32 reg)
+>  {
+> -	return __dw_pcie_read_dbi(pci, pci->dbi_base, reg, 0x1);
+> +	return dw_pcie_read_dbi(pci, reg, 0x1);
+>  }
+>  
+>  static inline void dw_pcie_writel_dbi2(struct dw_pcie *pci, u32 reg, u32 val)
+>  {
+> -	__dw_pcie_write_dbi2(pci, pci->dbi_base2, reg, 0x4, val);
+> +	dw_pcie_write_dbi2(pci, reg, 0x4, val);
+>  }
+>  
+>  static inline u32 dw_pcie_readl_dbi2(struct dw_pcie *pci, u32 reg)
+>  {
+> -	return __dw_pcie_read_dbi2(pci, pci->dbi_base2, reg, 0x4);
+> +	return dw_pcie_read_dbi2(pci, reg, 0x4);
+>  }
+>  
+>  static inline void dw_pcie_writel_atu(struct dw_pcie *pci, u32 reg, u32 val)
+>  {
+> -	__dw_pcie_write_dbi(pci, pci->atu_base, reg, 0x4, val);
+> +	int ret;
+> +
+> +	ret = dw_pcie_write(pci->atu_base + reg, 0x4, val);
+> +	if (ret)
+> +		dev_err(pci->dev, "write ATU address failed\n");
+>  }
+>  
+>  static inline u32 dw_pcie_readl_atu(struct dw_pcie *pci, u32 reg)
+>  {
+> -	return __dw_pcie_read_dbi(pci, pci->atu_base, reg, 0x4);
+> +	int ret;
+> +	u32 val;
+> +
+> +	ret = dw_pcie_read(pci->atu_base + reg, 0x4, &val);
+> +	if (ret)
+> +		dev_err(pci->dev, "Read ATU address failed\n");
+> +
+> +	return val;
+>  }
+>  
+>  static inline void dw_pcie_dbi_ro_wr_en(struct dw_pcie *pci)
 > -- 
-> 1.8.3.1
+> 2.17.1
 > 
