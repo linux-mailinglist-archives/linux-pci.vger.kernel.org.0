@@ -2,66 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D19FF4EA58
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 16:15:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2060D4EA73
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 16:19:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbfFUOPx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jun 2019 10:15:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbfFUOPx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:15:53 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C822F20679;
-        Fri, 21 Jun 2019 14:15:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561126552;
-        bh=cKl1ATkQpP+oDNaHNi2VIa2C13hcw38+hSlhNpnDBWY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SsgU3AMSfzeUXecKcYbTcI4sG8aRDVGY+ybbHMeTH0cdpQEpHre2neo26baNKeXcj
-         YxBd+09SqWak0kpjG4tgMwUmSfVfRQvGEzhucM1m6LY+olmtxYTLMbt0IVZup5NT34
-         BBEbhR+ZNvO7BxfdS7VUJgWyaMN2BPji7kKs6b2Q=
-Date:   Fri, 21 Jun 2019 09:15:50 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Rajat Jain <rajatja@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: PCI/AER sysfs files violate the rules of how sysfs works
-Message-ID: <20190621141550.GG82584@google.com>
-References: <20190621072911.GA21600@kroah.com>
+        id S1726031AbfFUOTv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jun 2019 10:19:51 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18660 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725975AbfFUOTv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:19:51 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B337788BF42820C49AE1;
+        Fri, 21 Jun 2019 22:19:45 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Fri, 21 Jun 2019
+ 22:19:37 +0800
+Subject: Re: [PATCH 2/5] lib: logic_pio: Add logic_pio_unregister_range()
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <1561026716-140537-1-git-send-email-john.garry@huawei.com>
+ <1561026716-140537-3-git-send-email-john.garry@huawei.com>
+ <20190621134955.GD82584@google.com>
+CC:     <xuwei5@huawei.com>, <linuxarm@huawei.com>, <arm@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <joe@perches.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <baa629ab-f8c9-7c6e-8402-77fe41a47e07@huawei.com>
+Date:   Fri, 21 Jun 2019 15:19:32 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190621072911.GA21600@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190621134955.GD82584@google.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 09:29:11AM +0200, Greg KH wrote:
-> Hi,
-> 
-> When working on some documentation scripts to show the
-> Documentation/ABI/ files in an automated way, I ran across this "gem" of
-> a sysfs file: Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> 
-> In it you describe how the files
-> /sys/bus/pci/devices/<dev>/aer_dev_correctable and
-> /sys/bus/pci/devices/<dev>/aer_dev_fatal and
-> /sys/bus/pci/devices/<dev>/aer_dev_nonfatal
-> all display a bunch of text on multiple lines.
-> 
-> This violates the "one value per sysfs file" rule, and should never have
-> been merged as-is :(
-> 
-> Please fix it up to be a lot of individual files if your really need all
-> of those different values.
+On 21/06/2019 14:49, Bjorn Helgaas wrote:
+>> --- a/lib/logic_pio.c
+>> > +++ b/lib/logic_pio.c
+>> > @@ -56,7 +56,7 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+>> >  			/* for MMIO ranges we need to check for overlap */
+>> >  			if (start >= range->hw_start + range->size ||
+>> >  			    end < range->hw_start) {
+>> > -				mmio_sz += range->size;
+>> > +				mmio_sz = range->io_start + range->size;
 
-Sorry about that.  Do you think we're safe in changing the sysfs ABI
-by removing the original files and replacing them with new, better
-ones?  This is pretty new and hopefully not widely used yet.
+Hi Bjorn,
 
-Bjorn
+> Should this be renamed to something like "mmio_end"?  Computing a
+> "size" as "start + size" looks wrong at first glance.  The code overall
+> probably makes sense, but maybe breaking this out as a separate "avoid
+> overlaps" patch that renames "mmio_sz" might make it clearer.
+
+I agree with the renaming to "mmio_end". I can split it out into another 
+patch also.
+
+Thanks,
+John
+
+>
+>> >  			} else {
+>> >  				ret = -EFAULT;
+>> >  				goto end_register;
+
+
