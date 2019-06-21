@@ -2,121 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3F8A4ECC6
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 18:03:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17BCF4ED31
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 18:36:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726045AbfFUQD1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jun 2019 12:03:27 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:57892 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726032AbfFUQD1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 21 Jun 2019 12:03:27 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1heM0c-0006zu-2F; Fri, 21 Jun 2019 10:03:26 -0600
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <SL2P216MB018784C16CC1903DF2CEDCB880E50@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <a473bee0-0a25-64d5-bd29-1d5bdc43d027@deltatee.com>
- <SL2P216MB01875B40093190DBB6C4CBB780E40@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <89c6a6ee-46cc-4047-0093-30f07992e7e5@deltatee.com>
- <20190620134712.GI143205@google.com>
- <SL2P216MB018710C0513F97989DCD3A4880E70@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <7d008368-d358-ede9-215b-1971cbdc2d77@deltatee.com>
- <SL2P216MB018735338F997285B486E28180E70@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <202a76d1-e90a-954d-9288-92f81b95a521@deltatee.com>
-Date:   Fri, 21 Jun 2019 10:03:23 -0600
+        id S1726099AbfFUQgF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jun 2019 12:36:05 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40443 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfFUQgF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jun 2019 12:36:05 -0400
+Received: by mail-io1-f65.google.com with SMTP id n5so433794ioc.7
+        for <linux-pci@vger.kernel.org>; Fri, 21 Jun 2019 09:36:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=k0Gv8DfD1efOdqhlugZQYcDCnL+VjkQIY1zETUpyLmE=;
+        b=OMHj9VHPqt6HJV5QqUNQBFucnZ816kuNESW2vX7vWTjN2NKZQ0Ssors2vl9q/oyuMH
+         L4gD9fWAwVneJlkOZ5wKA4kPos2/DA0u7tENNy0CRpi1DpOTAoeLOYZzZNuUhqa3NYoO
+         l+m/HJGVQEyGbWRa42bxOPQn5wxbmn1nC6c8E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=k0Gv8DfD1efOdqhlugZQYcDCnL+VjkQIY1zETUpyLmE=;
+        b=igXxbtN24VwqfRf3aEL6s8hym60uAjn2V0Z6Jsi4WlqnzFzBfQArJPAyr4+/SRo64F
+         wcUqny44Q1Edrsl7YS7K7FM82ffqhtufgC1MLJFGKYMJ+Tz+D4vi7UHXYbaCNK8/B5d4
+         6fVjP0F5lXWTblMQolBRXG/M5AGSWD6wp+/XadRyboRrQb9HjNj3D50ShaVL4W3h7W8v
+         YOwFYy2HNoqQFOSGhKAvK0wbgADABSAYhbTHJUxL4IXNInW+DFTkCj/q4B2a8uk90Q4N
+         ETD9WiLA6jCDSk1rClPdGNDq+E8OM+ma3C8NwDNb6U1+p5G2CI/7NDRWOk9PWu+7MHVi
+         UwWg==
+X-Gm-Message-State: APjAAAVkln8Dcn2ydeT32WlBnFTnjAGOYveLKVl3dvNmUzxTjrYmgiaS
+        bp4dYLTKUKhksF0R3tgWXZATcVdPrEM=
+X-Google-Smtp-Source: APXvYqzGFfCvLzH6zCFRfbW14LQqv78O/rLPC0RhDAbvKNQeJ9kfbYFCwBGc/fq8J4aAggu64E2IhQ==
+X-Received: by 2002:a5d:8508:: with SMTP id q8mr14433265ion.31.1561134964449;
+        Fri, 21 Jun 2019 09:36:04 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id c11sm4374026ioi.72.2019.06.21.09.36.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 09:36:04 -0700 (PDT)
+Subject: Re: [PATCH v3 0/3] net: fddi: skfp: Use PCI generic definitions
+ instead of private duplicates
+To:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>, stephen@networkplumber.org,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org
+References: <20190621094607.15011-1-puranjay12@gmail.com>
+ <20190621162024.53620dd9@alans-desktop>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <5f04f52d-8911-4db9-4321-00334d357d54@linuxfoundation.org>
+Date:   Fri, 21 Jun 2019 10:36:02 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <SL2P216MB018735338F997285B486E28180E70@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190621162024.53620dd9@alans-desktop>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, benh@kernel.crashing.org, helgaas@kernel.org, nicholas.johnson-opensource@outlook.com.au
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [nicholas.johnson-opensource@outlook.com.au: [PATCH v6 4/4] PCI:
- Add pci=hpmemprefsize parameter to set MMIO_PREF size independently]
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2019-06-21 12:01 a.m., Nicholas Johnson wrote:
-> Thanks for advice. I do believe you are correct. I guess it is my 
-> inexperience - I have trouble telling what is normal and what to expect 
-> from the process. But I am not feeling like this is any closer to 
-> submission than on day one - no sense of progress. It is not reassuring 
-> and I do wonder if I will ever manage to get it right.
+On 6/21/19 9:20 AM, Alan Cox wrote:
+> On Fri, 21 Jun 2019 15:16:04 +0530
+> Puranjay Mohan <puranjay12@gmail.com> wrote:
 > 
-> None of this is technically Thunderbolt-specific, but that is the use 
-> case, and if a single one of these patches does not make it in then the 
-> use case of Thunderbolt without firmware support will remain broken. The 
-> only benefit of a partial acception is patch #1 which fixes a bug report 
-> by Mika Westerberg on its own, so I guess that would be a win. If it has 
-> to wait another cycle then I will live with it, but this is the cause of 
-> my anxiety.
+>> This patch series removes the private duplicates of PCI definitions in
+>> favour of generic definitions defined in pci_regs.h.
 > 
-> I can look at this patch again, but my concerns are the following:
+> Why bother ? It's an ancient obsolete card ?
 > 
-> - If we avoid depreciation, then that implies this patch is ideal - we 
-> are not breaking anything for existing users. We can set MMIO on its own 
-> with pci=hpmemsize and by setting pci=hpmemprefsize to the default size of 
-> 2M (so it remains unchanged).
+> Do you even have one to test ?
+> 
+>>
+>> This driver only uses some of the generic PCI definitons,
+>> which are included from pci_regs.h and thier private versions
+>> are removed from skfbi.h with all other private defines.
+>>
+>> The skfbi.h defines PCI_REV_ID and other private defines with different
+>> names, these are renamed to Generic PCI names to make them
+>> compatible with defines in pci_regs.h.
+>>
+>> All unused defines are removed from skfbi.h.
+> 
+> I sincerely doubt anyone on the planet is using this card any more.
+> 
+> Alan
+> 
 
-I disagree. The semantics are weird and the changes to the documentation
-show that. When you have to describe things based on what other
-parameters are doing, it's weird.
+Thanks Alan!
 
-> - If we have two sets of parameters, then we have to support having two 
-> sets for eternity, and the loss of minimalism and the potential for 
-> confusion. The description in kernel-parameters.txt will become 
-> confusing with a lot of "if this" and "if that".
+Stephen Hemminger is suggesting removal as well. Makes sense to me.
 
-Yes, but they're simple and clear parameters that are easy to support.
-There would be no "ifs" at all. One parameter sets one value, another a
-parameter sets another, and the original parameter sets both.
+David!
 
-> - How do we deal with order if both are specified? It will become 
-> unclean.
+What would you recommend the next steps are? Would like driver removed?
 
-If a user mixes the "both" with the "single" parameters, the winner goes
-to the last that's specified. This is common and predictable. It's not
-dissimilar to when a user specifies the same parameter twice.
-
-> - If we make two new ones, then what should they be called? I propose 
-> hp_mmio_size and hp_mmio_pref_size from my original submission. Then 
-> should hpiosize be aliased to hp_io_size to keep the consistency?
-
-Good question. I'd probably go something along the lines of
-'hpmemsize_pref' and 'hpmemsize_nonpref'. Though, it might be good to
-get others opinions on this.
-
-> - I am quite surprised that when 64-bit window support was added to the 
-> kernel, that this was not done then, although I am not good enough at 
-> navigating the mailing list to see what actually happened.
-
-Generally, things won't get done until people have a use case for them
-and motivation to make the change. I don't think there's a lot of users
-of hpmemsize to begin with.
-
-> Should I perhaps forward my original submission for this patch again and 
-> you can see if there is anything to salvage from that that?
-
-Not if you haven't changed anything.
-
-Logan
+thanks,
+-- Shuah
