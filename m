@@ -2,71 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 13ECD4EE3F
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 19:58:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D916E4EE43
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 19:59:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfFUR6D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jun 2019 13:58:03 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44578 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfFUR6D (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jun 2019 13:58:03 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k8so11192038edr.11
-        for <linux-pci@vger.kernel.org>; Fri, 21 Jun 2019 10:58:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=x0l90DJbFK2xPfKQGorgeLSykup80vncsM7q9wvFwcw=;
-        b=F6hJx7BXWsR8GCs2cpNBuY+/365rpjdgMsbe0sOC/xX5T7TYWghQFzAIX3ZGGUKwM4
-         v2eDo88fy9QTkkSRXVlWfCRw79EqTmE+hoWO70jb/CvFvJZoJZIsWoXj2gsP7wRZX9Pu
-         E+28GkFDXOGMpX18YKeQwzwOQww2l2W+83TysBworuVOKlFSs9Byn7ov/dLafneESb4C
-         giTroIE6cu4GnIL9qWvHvsghbav1V0c+RWNrN/1bod1FA8Ql2to3wI2SWuWzNBEt1wZ4
-         JLffR5VxCO1vLV1AIr+Th1IUBiX/7/vhmKyy2T1xjJx2dlZhnBrqZdynl5Gli18BFaic
-         PWbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=x0l90DJbFK2xPfKQGorgeLSykup80vncsM7q9wvFwcw=;
-        b=HhvkAIaqg5rjlo3sEBBxVRLNw1uNNYBs0HGmNLCgZRex7EdI8yITBUwPTXohhlI7W7
-         IcmffwPB5YtEgsEuNhhSXiWH0nBMfJrzjYGs/UHV+MQKrXMFxk/RnwInp0GqAUNcf3Iu
-         5g/pPQpEFcY/QjeFsFVVQ5bkdpd+V6b+nPLA/0alWR20XDla+YkxSJ02nRobLTZse3R1
-         Qj1tVwoUCZgWbd5z/YGNiBrqmhQ/aBxSBWqiuXucRp9GYb55e9yT7PzUhXdn9+saNxhQ
-         tOQg3H87UnaK0Fo62giHYDDG7EmEk3TPcvRNcnNFnhEkeEfU4VcAGoDPA5agp1ZnW5PM
-         1RsQ==
-X-Gm-Message-State: APjAAAU0ZNILSK8PDhfztuY9f9/3iO27USEg2hQupFH3TdP+3rL5PRn1
-        Tpz3xRnxSaoB7PPYWEuqz9TjBRn/4CFjPEP69FQ=
-X-Google-Smtp-Source: APXvYqxMBM6aRrhjJ63JfC867MSEoCtJAYTzWcnr1SFxzVx/Lbgz0FvPKW8zcX6VayxosvSMbDw6A8SM25v54SDh5Dk=
-X-Received: by 2002:a50:bdc2:: with SMTP id z2mr17505614edh.245.1561139881310;
- Fri, 21 Jun 2019 10:58:01 -0700 (PDT)
+        id S1726049AbfFUR70 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jun 2019 13:59:26 -0400
+Received: from smtprelay0062.hostedemail.com ([216.40.44.62]:39534 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725992AbfFUR7Z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jun 2019 13:59:25 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 2CFC9837F24D;
+        Fri, 21 Jun 2019 17:59:24 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::::::::::::,RULES_HIT:41:355:379:599:800:960:967:968:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:1978:1981:2194:2199:2393:2525:2553:2559:2563:2682:2685:2828:2859:2933:2937:2939:2942:2945:2947:2951:2954:3022:3138:3139:3140:3141:3142:3353:3622:3865:3866:3867:3868:3870:3871:3872:3874:3934:3936:3938:3941:3944:3947:3950:3953:3956:3959:4250:4321:4384:5007:6117:6119:7514:9010:9025:10004:10400:10848:10967:11232:11658:11914:12043:12296:12297:12555:12740:12760:12895:13069:13255:13311:13357:13439:13845:14096:14097:14181:14659:14721:21080:21627:30009:30041:30054:30060:30090:30091,0,RBL:23.242.196.136:@perches.com:.lbl8.mailshell.net-62.8.0.180 64.201.201.201,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:fn,MSBL:0,DNSBL:neutral,Custom_rules:0:0:0,LFtime:25,LUA_SUMMARY:none
+X-HE-Tag: paint61_8c15a38e8ef39
+X-Filterd-Recvd-Size: 2525
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 21 Jun 2019 17:59:22 +0000 (UTC)
+Message-ID: <5025da034080c6653b23d7362e06cf211d2cec3c.camel@perches.com>
+Subject: Re: [PATCH v3 0/3] net: fddi: skfp: Use PCI generic definitions
+ instead of private duplicates
+From:   Joe Perches <joe@perches.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+Cc:     Puranjay Mohan <puranjay12@gmail.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org
+Date:   Fri, 21 Jun 2019 10:59:21 -0700
+In-Reply-To: <20190621164429.GA187016@google.com>
+References: <20190621094607.15011-1-puranjay12@gmail.com>
+         <20190621162024.53620dd9@alans-desktop>
+         <20190621164429.GA187016@google.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Reply-To: DrtracyWilliam1@gmail.com
-Received: by 2002:a17:906:49c1:0:0:0:0 with HTTP; Fri, 21 Jun 2019 10:58:00
- -0700 (PDT)
-From:   Dr Tracy William <ra6277708@gmail.com>
-Date:   Fri, 21 Jun 2019 10:58:00 -0700
-X-Google-Sender-Auth: _N7wLp9iBfkMyrOLNOla2XiWGNo
-Message-ID: <CAA1MTYGRMmYuG3KmQPadLMuTFTHQDBYTns2OPyqbj9tCxgif=A@mail.gmail.com>
-Subject: From Dr tracy William
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Dear,
+On Fri, 2019-06-21 at 11:44 -0500, Bjorn Helgaas wrote:
+> On Fri, Jun 21, 2019 at 04:20:24PM +0100, Alan Cox wrote:
+> > On Fri, 21 Jun 2019 15:16:04 +0530
+> > Puranjay Mohan <puranjay12@gmail.com> wrote:
+> > 
+> > > This patch series removes the private duplicates of PCI definitions in
+> > > favour of generic definitions defined in pci_regs.h.
+> > 
+> > Why bother ? It's an ancient obsolete card ?
+> 
+> That's a fair question.
+> 
+> Is there anything that would indicate that "this file is obsolete and
+> problems shouldn't be fixed"?  Nobody wants to waste time on things
+> that don't need to be fixed, but I don't know how to tell if something
+> is obsolete.
+> 
+> My naive assumption is that if something is in the tree, it's fair
+> game for fixes and cleanups.
 
-How are you today,I hope you are doing great. It is my great pleasure
-to contact you,I want to make a new and special friend,I hope you
-don't mind. My name is Tracy Williams
+I'd prefer to move the old, crufty, obsolete and generally
+unsupported drivers to new directory trees and possibly
+symlink those drivers to their current locations.
 
-from the United States, Am a french and English nationality. I will
-give you pictures and more details about my self as soon as i hear
-from you in my email account bellow, Here is my email address;
-DrtracyWilliam1@gmail.com
+I suggested on the kernel summit list:
+https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2019-June/006482.html
 
-Please send your reply to my PRIVATE  mail box.
+---
 
-Thanks,
-Dr. Tracy Williams.
+Perhaps a mechanism to move these old, generally unsupported
+by an actual maintainer, and rarely tested drivers out of the
+mainline drivers directory into a separate obsolete directory
+would help isolate the whitespace and trivial api changes.
+
+
