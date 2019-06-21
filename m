@@ -2,153 +2,313 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AA484DF3B
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 04:57:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BCFD4DF7A
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 06:03:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725936AbfFUC5h convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 20 Jun 2019 22:57:37 -0400
-Received: from mail-oln040092254015.outbound.protection.outlook.com ([40.92.254.15]:27284
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725906AbfFUC5h (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 20 Jun 2019 22:57:37 -0400
-Received: from HK2APC01FT008.eop-APC01.prod.protection.outlook.com
- (10.152.248.58) by HK2APC01HT033.eop-APC01.prod.protection.outlook.com
- (10.152.249.50) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1987.11; Fri, 21 Jun
- 2019 02:57:32 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.248.58) by
- HK2APC01FT008.mail.protection.outlook.com (10.152.248.117) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.1987.11 via Frontend Transport; Fri, 21 Jun 2019 02:57:32 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::8c3b:f424:c69d:527e]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::8c3b:f424:c69d:527e%3]) with mapi id 15.20.1987.014; Fri, 21 Jun 2019
- 02:57:32 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Logan Gunthorpe <logang@deltatee.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [nicholas.johnson-opensource@outlook.com.au: [PATCH v6 4/4] PCI:
- Add pci=hpmemprefsize parameter to set MMIO_PREF size independently]
-Thread-Topic: [nicholas.johnson-opensource@outlook.com.au: [PATCH v6 4/4] PCI:
- Add pci=hpmemprefsize parameter to set MMIO_PREF size independently]
-Thread-Index: AQHVJqdtisSX95SZEkGuUZAlsxs7iaajL4kAgACJCQCAAAr4gIAAzHoAgADcxwA=
-Date:   Fri, 21 Jun 2019 02:57:32 +0000
-Message-ID: <SL2P216MB018710C0513F97989DCD3A4880E70@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-References: <SL2P216MB018784C16CC1903DF2CEDCB880E50@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <a473bee0-0a25-64d5-bd29-1d5bdc43d027@deltatee.com>
- <SL2P216MB01875B40093190DBB6C4CBB780E40@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <89c6a6ee-46cc-4047-0093-30f07992e7e5@deltatee.com>
- <20190620134712.GI143205@google.com>
-In-Reply-To: <20190620134712.GI143205@google.com>
-Accept-Language: en-AU, en-US
+        id S1725906AbfFUEDd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jun 2019 00:03:33 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:59664 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbfFUEDc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jun 2019 00:03:32 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id A5C0B886BF;
+        Fri, 21 Jun 2019 16:03:28 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1561089808;
+        bh=DAK5yPtszayhwjnlTmBc3QE84ABr3J9qrB+j9wai8/U=;
+        h=From:To:Subject:Date;
+        b=CVXLgrRQjsbJfXD/0VBKrS9Y2Ml7wN6I8sMiz3AN1/RrzxW/+MH8Lz8MV2q/05/Tz
+         LD5JHSXjt5+aQZKf9yXzapBpXw4ocA1SHfBQMJGEj7BZykMgHdVhPKp4NR7piiloBU
+         10kQnDowcLz2X1mPjhO4COv/KfsbZgstTzIu/tq2aUkDKr33PJbqEFEu66uchqgyXN
+         oQLt/RON+sdaJf+op30kgTcTyvnsICCV5QHVhNlaT7Yd4aND1d955RtiTfrNqiy9tf
+         c/7jt6P3bVgeyA2uBGSHSJdD4Z/oy7zV6DYN5hGF9s1dUHtlrk4xkuRp3YFTlWbhPq
+         /BNsJI2dwoTUQ==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d0c57100001>; Fri, 21 Jun 2019 16:03:28 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1156.6; Fri, 21 Jun 2019 16:03:28 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Fri, 21 Jun 2019 16:03:28 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Kirkwood PCI Express and bridges
+Thread-Topic: Kirkwood PCI Express and bridges
+Thread-Index: AQHVJ+ZHqWcIqP7kgUutSbOlaor9TQ==
+Date:   Fri, 21 Jun 2019 04:03:27 +0000
+Message-ID: <403548ec3a7543b08ca32e47a1465e70@svr-chch-ex1.atlnz.lc>
+Accept-Language: en-NZ, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: ME2PR01CA0116.ausprd01.prod.outlook.com
- (2603:10c6:201:2c::32) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- (2603:1096:100:22::19)
-x-incomingtopheadermarker: OriginalChecksum:9B8241F894DEE63248D946841A1EF5C52DD609926872C97CBECE04EBE3A29B51;UpperCasedChecksum:26E024198425AAEE36CD632A5DEFFFB151BC9DD54056A9C139F63CA8AC1C5912;SizeAsReceived:8034;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [QvYyO0U3I1a6wJHm/KVDD8ZyrpFm3OR3TYNaCmiy0zB1Vpn2Z+FiX9x1fquBDmCP]
-x-microsoft-original-message-id: <20190621025721.GA2610@nicholas-usb>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:HK2APC01HT033;
-x-ms-traffictypediagnostic: HK2APC01HT033:
-x-microsoft-antispam-message-info: iRg3O7TlcX//PVRyJpsuCwJdPFH6rBrsKXXD7z3jGwkJ60E4cUO91o//8YmWfgkHyH7ldKCXnZ9SxCsYr5bXokp5kleGYTm5Ji/axsilG0Qti8+ulKBLzplsRQxeB3tIdMH21gBC/DwSCfygQkxab/bFPe3ZShBQl9Vs5ZotlJpyZyoHlxhLN7Twce53sLG3
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <218282BE8B72D14984AC076BA4F8F093@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 77da1cfa-f649-4770-2016-08d6f5f43493
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 02:57:32.7870
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT033
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 08:47:12AM -0500, Bjorn Helgaas wrote:
-> On Wed, Jun 19, 2019 at 07:35:21PM -0600, Logan Gunthorpe wrote:
-> > On 2019-06-19 6:56 p.m., Nicholas Johnson wrote:
-> > > On Wed, Jun 19, 2019 at 10:45:38AM -0600, Logan Gunthorpe wrote:
-> > >> On 2019-06-19 8:01 a.m., Nicholas Johnson wrote:
-> > >>> ----- Forwarded message from Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au> -----
-> > >>>
-> > >>> Date: Thu, 23 May 2019 06:29:28 +0800
-> > >>> From: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > >>> To: linux-kernel@vger.kernel.org
-> > >>> Cc: linux-pci@vger.kernel.org, bhelgaas@google.com, mika.westerberg@linux.intel.com, corbet@lwn.net, Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > >>> Subject: [PATCH v6 4/4] PCI: Add pci=hpmemprefsize parameter to set MMIO_PREF size independently
-> > >>> X-Mailer: git-send-email 2.19.1
-> > >>>
-> > >>> Add kernel parameter pci=hpmemprefsize=nn[KMG] to control
-> > >>> MMIO_PREF size for PCI hotplug bridges.
-> > >>
-> > >> Makes sense.
-> > >>
-> > >>> Change behaviour of pci=hpmemsize=nn[KMG] to not set MMIO_PREF
-> > >>> size if hpmempref has been specified, rather than controlling
-> > >>> both MMIO and MMIO_PREF sizes unconditionally.
-> > >>
-> > >> I don't think I like that fact that hpmemsize behaves differently
-> > >> if hpmempref size is specfied before it. I'd probably suggest
-> > >> having three parameters: hpmemsize which sets both as it always
-> > >> has, a pref one and a regular one which each set one of
-> > >> parameters.
-> > > 
-> > > It does not matter if hpmempref is specified before or after
-> > > hpmemsize.  I made sure of that.
-> > 
-> > > Originally, I proposed to depreciate hpiosize, hpmemsize, and
-> > > introduce: hp_io_size, hp_mmio_size, hp_mmio_pref_size, each
-> > > controlling its own window exclusively.
-> > > 
-> > > The patch had the old parameters work with a warning, and if the
-> > > new ones were specified, they would override the old ones. Then,
-> > > after a few kernel releases, the old ones could be removed.
-> > 
-> > Well I don't like that either. No need to depreciate hpmemsize.
-> > 
-> > > Bjorn insisted that there be nil changes which break the existing
-> > > parameters, and the solution he requested was to leave hpmemsize
-> > > to work exactly the same (controlling both MMIO and MMIO_PREF),
-> > > unless hpmemprefsize is given, which will take control of
-> > > MMIO_PREF from hpmemsize.
-> > 
-> > I agree with Bjorn here too but my suggestion is to leave hpmemsize
-> > alone and have it set both values as it has always done. And add two
-> > new parameters to set one or the other. Then there's none of this
-> > "sets one if the other one wasn't set". Also, if I only want to
-> > change the non-preftechable version then your method leaves no way
-> > to do so without setting the preftechable version.
-> 
-> Adding two new parameters sounds like a good idea to me.
-Yeah, that is basically what I did originally (except I depreciated the 
-old ones rather than keeping them).
-
-I did it this way on your direct advice in keeping with minimal lines of 
-diff, minimal disruption, etc. If I were to do this, the number of lines 
-of diff will increase and then I will be fielding complaints that it is 
-too large to sign off.
-
-I am already scrambling to make last minute changes before end of 
-release to the other patches and I am not even convinced that that stuff 
-is going to get accepted based on proximity to deadline and how many 
-change requests are flying around.
-
-So I am going to have to respectfully decline to do this for now. I need 
-to know earlier in the release cycle if I am going to go back on stuff I 
-have already been asked to do.
-
-Cheers.
+Hi All,=0A=
+=0A=
+I'm in the process of updating the kernel version used on our products =0A=
+from 4.4 -> 5.1.=0A=
+=0A=
+We have one product that uses a Kirkwood CPU, IDT PCI bridge and Marvell =
+=0A=
+Switch ASIC. The Switch ASIC presents as multiple PCI devices.=0A=
+=0A=
+The hardware setup looks like this=0A=
+                                        __________=0A=
+[ Kirkwood ] --- [ IDT 5T5 ] ---+---  |          |=0A=
+                                 +---  |  Switch  |=0A=
+                                 +---  |          |=0A=
+                                 +---  |__________|=0A=
+=0A=
+On the 4.4 based kernel things are fine=0A=
+=0A=
+[root@awplus flash]# lspci -t=0A=
+-[0000:00]---01.0-[01-06]----00.0-[02-06]--+-02.0-[03]----00.0=0A=
+                                            +-03.0-[04]----00.0=0A=
+                                            +-04.0-[05]----00.0=0A=
+                                            \-05.0-[06]----00.0=0A=
+=0A=
+But on the 5.1 based kernel things get a little weird=0A=
+=0A=
+[root@awplus flash]# lspci -t=0A=
+-[0000:00]---01.0-[01-06]--+-00.0-[02-06]--=0A=
+                            +-01.0=0A=
+                            +-02.0-[02-06]--=0A=
+                            +-03.0-[02-06]--=0A=
+                            +-04.0-[02-06]--=0A=
+                            +-05.0-[02-06]--=0A=
+                            +-06.0-[02-06]--=0A=
+                            +-07.0-[02-06]--=0A=
+                            +-08.0-[02-06]--=0A=
+                            +-09.0-[02-06]--=0A=
+                            +-0a.0-[02-06]--=0A=
+                            +-0b.0-[02-06]--=0A=
+                            +-0c.0-[02-06]--=0A=
+                            +-0d.0-[02-06]--=0A=
+                            +-0e.0-[02-06]--=0A=
+                            +-0f.0-[02-06]--=0A=
+                            +-10.0-[02-06]--=0A=
+                            +-11.0-[02-06]--=0A=
+                            +-12.0-[02-06]--=0A=
+                            +-13.0-[02-06]--=0A=
+                            +-14.0-[02-06]--=0A=
+                            +-15.0-[02-06]--=0A=
+                            +-16.0-[02-06]--=0A=
+                            +-17.0-[02-06]--=0A=
+                            +-18.0-[02-06]--=0A=
+                            +-19.0-[02-06]--=0A=
+                            +-1a.0-[02-06]--=0A=
+                            +-1b.0-[02-06]--=0A=
+                            +-1c.0-[02-06]--=0A=
+                            +-1d.0-[02-06]--=0A=
+                            +-1e.0-[02-06]--=0A=
+                            \-1f.0-[02-06]--+-02.0-[03]----00.0=0A=
+                                            +-03.0-[04]----00.0=0A=
+                                            +-04.0-[05]----00.0=0A=
+                                            \-05.0-[06]----00.0=0A=
+=0A=
+=0A=
+I'll start bisecting to see where things started going wrong. I just =0A=
+wondered if this rings any bells for anyone.=0A=
+=0A=
+The startup output also seems to be quite unhappy=0A=
+=0A=
+Detected board: alliedtelesis,SBx81GC40=0A=
+Booting into Linux kernel ...=0A=
+** 143 printk messages dropped **=0A=
+pci 0000:01:19.0: PME# supported from D0 D3hot D3cold=0A=
+pci 0000:01:1a.0: [111d:803c] type 01 class 0x060400=0A=
+pci 0000:01:1a.0: PME# supported from D0 D3hot D3cold=0A=
+pci 0000:01:1b.0: [111d:803c] type 01 class 0x060400=0A=
+pci 0000:01:1b.0: PME# supported from D0 D3hot D3cold=0A=
+pci 0000:01:1c.0: [111d:803c] type 01 class 0x060400=0A=
+pci 0000:01:1c.0: PME# supported from D0 D3hot D3cold=0A=
+pci 0000:01:1d.0: [111d:803c] type 01 class 0x060400=0A=
+pci 0000:01:1d.0: PME# supported from D0 D3hot D3cold=0A=
+pci 0000:01:1e.0: [111d:803c] type 01 class 0x060400=0A=
+pci 0000:01:1e.0: PME# supported from D0 D3hot D3cold=0A=
+pci 0000:01:1f.0: [111d:803c] type 01 class 0x060400=0A=
+pci 0000:01:1f.0: PME# supported from D0 D3hot D3cold=0A=
+PCI: bus1: Fast back to back transfers disabled=0A=
+pci 0000:01:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:02.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:03.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:04.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:05.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:06.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:07.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:08.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:09.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:0a.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:0b.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:0c.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:0d.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:0e.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:0f.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:10.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:11.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:12.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:13.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:14.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:15.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:16.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:17.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:18.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:19.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:1a.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:1b.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:1c.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:1d.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:1e.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:01:1f.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:02:02.0: [111d:803c] type 01 class 0x060400=0A=
+pci 0000:02:02.0: enabling Extended Tags=0A=
+pci 0000:02:02.0: PME# supported from D0 D3hot D3cold=0A=
+pci 0000:02:03.0: [111d:803c] type 01 class 0x060400=0A=
+pci 0000:02:03.0: enabling Extended Tags=0A=
+pci 0000:02:03.0: PME# supported from D0 D3hot D3cold=0A=
+pci 0000:02:04.0: [111d:803c] type 01 class 0x060400=0A=
+pci 0000:02:04.0: enabling Extended Tags=0A=
+pci 0000:02:04.0: PME# supported from D0 D3hot D3cold=0A=
+pci 0000:02:05.0: [111d:803c] type 01 class 0x060400=0A=
+pci 0000:02:05.0: enabling Extended Tags=0A=
+pci 0000:02:05.0: PME# supported from D0 D3hot D3cold=0A=
+PCI: bus2: Fast back to back transfers disabled=0A=
+pci 0000:02:02.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:02:03.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:02:04.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:02:05.0: bridge configuration invalid ([bus 00-00]), reconfiguring=
+=0A=
+pci 0000:03:00.0: [11ab:e023] type 00 class 0x058000=0A=
+pci 0000:03:00.0: reg 0x10: [mem 0xd0000000-0xd00fffff 64bit pref]=0A=
+pci 0000:03:00.0: reg 0x18: [mem 0x00000000-0x03ffffff 64bit]=0A=
+PCI: bus3: Fast back to back transfers disabled=0A=
+pci_bus 0000:03: busn_res: [bus 03-ff] end is updated to 03=0A=
+pci 0000:04:00.0: [11ab:e023] type 00 class 0x058000=0A=
+pci 0000:04:00.0: reg 0x10: [mem 0xd0000000-0xd00fffff 64bit pref]=0A=
+pci 0000:04:00.0: reg 0x18: [mem 0x00000000-0x03ffffff 64bit]=0A=
+PCI: bus4: Fast back to back transfers disabled=0A=
+pci_bus 0000:04: busn_res: [bus 04-ff] end is updated to 04=0A=
+pci 0000:05:00.0: [11ab:e023] type 00 class 0x058000=0A=
+pci 0000:05:00.0: reg 0x10: [mem 0xd0000000-0xd00fffff 64bit pref]=0A=
+pci 0000:05:00.0: reg 0x18: [mem 0x00000000-0x03ffffff 64bit]=0A=
+PCI: bus5: Fast back to back transfers disabled=0A=
+pci_bus 0000:05: busn_res: [bus 05-ff] end is updated to 05=0A=
+pci 0000:06:00.0: [11ab:e023] type 00 class 0x058000=0A=
+pci 0000:06:00.0: reg 0x10: [mem 0xd0000000-0xd00fffff 64bit pref]=0A=
+pci 0000:06:00.0: reg 0x18: [mem 0x00000000-0x03ffffff 64bit]=0A=
+PCI: bus6: Fast back to back transfers disabled=0A=
+pci_bus 0000:06: busn_res: [bus 06-ff] end is updated to 06=0A=
+pci_bus 0000:02: busn_res: [bus 02-ff] end is updated to 06=0A=
+pci_bus 0000:01: busn_res: [bus 01-ff] end is updated to 06=0A=
+pci 0000:00:01.0: BAR 8: no space for [mem size 0x1c000000]=0A=
+pci 0000:00:01.0: BAR 8: failed to assign [mem size 0x1c000000]=0A=
+pci 0000:00:01.0: BAR 6: assigned [mem 0xe0000000-0xe00007ff pref]=0A=
+pci 0000:01:01.0: BAR 2: no space for [mem size 0x08000000]=0A=
+pci 0000:01:01.0: BAR 2: failed to assign [mem size 0x08000000]=0A=
+pci 0000:01:00.0: BAR 8: no space for [mem size 0x10000000]=0A=
+pci 0000:01:00.0: BAR 8: failed to assign [mem size 0x10000000]=0A=
+pci 0000:01:00.0: BAR 9: no space for [mem size 0x00400000 64bit pref]=0A=
+pci 0000:01:00.0: BAR 9: failed to assign [mem size 0x00400000 64bit pref]=
+=0A=
+pci 0000:01:01.0: BAR 0: no space for [mem size 0x00100000 64bit pref]=0A=
+pci 0000:01:01.0: BAR 0: failed to assign [mem size 0x00100000 64bit pref]=
+=0A=
+pci 0000:02:02.0: BAR 8: no space for [mem size 0x04000000]=0A=
+pci 0000:02:02.0: BAR 8: failed to assign [mem size 0x04000000]=0A=
+pci 0000:02:03.0: BAR 8: no space for [mem size 0x04000000]=0A=
+pci 0000:02:03.0: BAR 8: failed to assign [mem size 0x04000000]=0A=
+pci 0000:02:04.0: BAR 8: no space for [mem size 0x04000000]=0A=
+pci 0000:02:04.0: BAR 8: failed to assign [mem size 0x04000000]=0A=
+pci 0000:02:05.0: BAR 8: no space for [mem size 0x04000000]=0A=
+pci 0000:02:05.0: BAR 8: failed to assign [mem size 0x04000000]=0A=
+pci 0000:02:02.0: BAR 9: no space for [mem size 0x00100000 64bit pref]=0A=
+pci 0000:02:02.0: BAR 9: failed to assign [mem size 0x00100000 64bit pref]=
+=0A=
+pci 0000:02:03.0: BAR 9: no space for [mem size 0x00100000 64bit pref]=0A=
+pci 0000:02:03.0: BAR 9: failed to assign [mem size 0x00100000 64bit pref]=
+=0A=
+pci 0000:02:04.0: BAR 9: no space for [mem size 0x00100000 64bit pref]=0A=
+pci 0000:02:04.0: BAR 9: failed to assign [mem size 0x00100000 64bit pref]=
+=0A=
+pci 0000:02:05.0: BAR 9: no space for [mem size 0x00100000 64bit pref]=0A=
+pci 0000:02:05.0: BAR 9: failed to assign [mem size 0x00100000 64bit pref]=
+=0A=
+pci 0000:03:00.0: BAR 2: no space for [mem size 0x04000000 64bit]=0A=
+pci 0000:03:00.0: BAR 2: failed to assign [mem size 0x04000000 64bit]=0A=
+pci 0000:03:00.0: BAR 0: no space for [mem size 0x00100000 64bit pref]=0A=
+pci 0000:03:00.0: BAR 0: failed to assign [mem size 0x00100000 64bit pref]=
+=0A=
+pci 0000:02:02.0: PCI bridge to [bus 03]=0A=
+pci 0000:04:00.0: BAR 2: no space for [mem size 0x04000000 64bit]=0A=
+pci 0000:04:00.0: BAR 2: failed to assign [mem size 0x04000000 64bit]=0A=
+pci 0000:04:00.0: BAR 0: no space for [mem size 0x00100000 64bit pref]=0A=
+pci 0000:04:00.0: BAR 0: failed to assign [mem size 0x00100000 64bit pref]=
+=0A=
+pci 0000:02:03.0: PCI bridge to [bus 04]=0A=
+pci 0000:05:00.0: BAR 2: no space for [mem size 0x04000000 64bit]=0A=
+pci 0000:05:00.0: BAR 2: failed to assign [mem size 0x04000000 64bit]=0A=
+pci 0000:05:00.0: BAR 0: no space for [mem size 0x00100000 64bit pref]=0A=
+pci 0000:05:00.0: BAR 0: failed to assign [mem size 0x00100000 64bit pref]=
+=0A=
+pci 0000:02:04.0: PCI bridge to [bus 05]=0A=
+pci 0000:06:00.0: BAR 2: no space for [mem size 0x04000000 64bit]=0A=
+pci 0000:06:00.0: BAR 2: failed to assign [mem size 0x04000000 64bit]=0A=
+pci 0000:06:00.0: BAR 0: no space for [mem size 0x00100000 64bit pref]=0A=
+pci 0000:06:00.0: BAR 0: failed to assign [mem size 0x00100000 64bit pref]=
+=0A=
+pci 0000:02:05.0: PCI bridge to [bus 06]=0A=
+pci 0000:01:00.0: PCI bridge to [bus 02-06]=0A=
+pci 0000:00:01.0: PCI bridge to [bus 01-06]=0A=
