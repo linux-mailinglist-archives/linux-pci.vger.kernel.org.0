@@ -2,108 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F09774EC6B
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 17:45:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3F8A4ECC6
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 18:03:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbfFUPpE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jun 2019 11:45:04 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40795 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfFUPpE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jun 2019 11:45:04 -0400
-Received: by mail-io1-f67.google.com with SMTP id n5so89356ioc.7
-        for <linux-pci@vger.kernel.org>; Fri, 21 Jun 2019 08:45:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gxm7GOcU7qUFuWy1WhLbGliMHK4qz3vxLGVpx4HgQB0=;
-        b=moZqDRZ2BR+wvMG5nlpY0ZdMbc4FBaH9Oatm9ufFW1xWv4o//FJ6SY5IXFB1Na8ESB
-         R5WPHrWvdAzZyibh/L9Xm3NFcL33L0sAC/XY+EFM6rN+q+bFT2VcCyNCSKedQNXI/44/
-         ssbWKLOfTr9BOlWxnbVy5U6MsNf1HuBl2PU8mCKOOFveZQtjW31frkb3+44ocuxTS5Nu
-         VOIggl8fh1dcZZSnE3q/kb82ZU68iaWtdBliNWXZsVWgcvG1DALSnyW9CacDD21HTACl
-         oNvvnz+1HillIZjWciMPJr55EMvJ0Vi4C6MgPDUjbhcQ4dWZVqWhN1xrQ6lalyK8UDeo
-         JHqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gxm7GOcU7qUFuWy1WhLbGliMHK4qz3vxLGVpx4HgQB0=;
-        b=hWEoIXmEH/B2Kf0+zNmHixKiP+uIwnuzrwA0PTMXAtKpPBCk6YMO9pXvoycdK9U+Qe
-         7VyYra4z+e2OIul2H6JG+3ykaDE3RAzAfZLtArELC1/GGi7qnypmqR565ZxQzSpQO095
-         12by/NFEuaeTJj9hvwETBGJ5smjYT/TV3RWAAbfOm005QFWOwPAH9vadNeWXVaS4nLlS
-         gO9fP4jvSkNHPjoPvwJT+7mus9FRM9c6v+CDw2fquO1yb8REZeL7AvwOs0VJupw2PI5K
-         da18jWaXLGr9lWaYlwsDrVnojnxkQIqG5HOrbP307aJelXUu/vSvNPVCOZaLy9KqL/Wr
-         B5sg==
-X-Gm-Message-State: APjAAAWuCzlt3S2u4s7XvPhgG9EpCkhxm3w4F4NvZ0LLNgi0PUJf/2lX
-        1YWUf8VeLFwNUBMli3LYBtdxddE73xCTrnCBFLbPRg==
-X-Google-Smtp-Source: APXvYqzZY+gOixQjMUl856N0sHPx+HD44kd2sZoHmHXE1d0Rv7jbWWsubnhodFuDC99TqRUIdNNTbX9lAyGC6TFDJNs=
-X-Received: by 2002:a5d:8794:: with SMTP id f20mr37337499ion.128.1561131903453;
- Fri, 21 Jun 2019 08:45:03 -0700 (PDT)
+        id S1726045AbfFUQD1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jun 2019 12:03:27 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:57892 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbfFUQD1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 21 Jun 2019 12:03:27 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1heM0c-0006zu-2F; Fri, 21 Jun 2019 10:03:26 -0600
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <SL2P216MB018784C16CC1903DF2CEDCB880E50@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+ <a473bee0-0a25-64d5-bd29-1d5bdc43d027@deltatee.com>
+ <SL2P216MB01875B40093190DBB6C4CBB780E40@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+ <89c6a6ee-46cc-4047-0093-30f07992e7e5@deltatee.com>
+ <20190620134712.GI143205@google.com>
+ <SL2P216MB018710C0513F97989DCD3A4880E70@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+ <7d008368-d358-ede9-215b-1971cbdc2d77@deltatee.com>
+ <SL2P216MB018735338F997285B486E28180E70@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <202a76d1-e90a-954d-9288-92f81b95a521@deltatee.com>
+Date:   Fri, 21 Jun 2019 10:03:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <20190615002359.29577-1-benh@kernel.crashing.org> <20190615002359.29577-4-benh@kernel.crashing.org>
-In-Reply-To: <20190615002359.29577-4-benh@kernel.crashing.org>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 21 Jun 2019 17:44:52 +0200
-Message-ID: <CAKv+Gu95mmsSzzAUTp5Cw3vN-Ge=OZ6danTSeb3xs7dj9Vs6ow@mail.gmail.com>
-Subject: Re: [PATCH 4/4] arm64: pci: acpi: Preserve PCI resources
- configuration when asked by ACPI
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sinan Kaya <okaya@kernel.org>, Ali Saidi <alisaidi@amazon.com>,
-        Zeev Zilberman <zeev@amazon.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <SL2P216MB018735338F997285B486E28180E70@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, benh@kernel.crashing.org, helgaas@kernel.org, nicholas.johnson-opensource@outlook.com.au
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [nicholas.johnson-opensource@outlook.com.au: [PATCH v6 4/4] PCI:
+ Add pci=hpmemprefsize parameter to set MMIO_PREF size independently]
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, 15 Jun 2019 at 02:30, Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
->
-> When _DSM #5 returns 0 for a host bridge, we need to claim the existing
-> resources rather than reassign everything.
->
-> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-> ---
->  arch/arm64/kernel/pci.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> index 1419b1b4e9b9..a2c608a3fc41 100644
-> --- a/arch/arm64/kernel/pci.c
-> +++ b/arch/arm64/kernel/pci.c
-> @@ -168,6 +168,7 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
->         struct acpi_pci_generic_root_info *ri;
->         struct pci_bus *bus, *child;
->         struct acpi_pci_root_ops *root_ops;
-> +       struct pci_host_bridge *hb;
->
->         ri = kzalloc(sizeof(*ri), GFP_KERNEL);
->         if (!ri)
-> @@ -193,6 +194,16 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
->         if (!bus)
->                 return NULL;
->
-> +       hb = pci_find_host_bridge(bus);
-> +
-> +       /* If ACPI tells us to preserve the resource configuration, claim now */
-> +       if (hb->preserve_config)
-> +               pci_bus_claim_resources(bus);
-> +
-> +       /*
-> +        * Assign whatever was left unassigned. If we didn't claim above, this will
-> +        * reassign everything.
-> +        */
->         pci_assign_unassigned_root_bus_resources(bus);
->
->         list_for_each_entry(child, &bus->children, node)
-> --
-> 2.17.1
->
+On 2019-06-21 12:01 a.m., Nicholas Johnson wrote:
+> Thanks for advice. I do believe you are correct. I guess it is my 
+> inexperience - I have trouble telling what is normal and what to expect 
+> from the process. But I am not feeling like this is any closer to 
+> submission than on day one - no sense of progress. It is not reassuring 
+> and I do wonder if I will ever manage to get it right.
+> 
+> None of this is technically Thunderbolt-specific, but that is the use 
+> case, and if a single one of these patches does not make it in then the 
+> use case of Thunderbolt without firmware support will remain broken. The 
+> only benefit of a partial acception is patch #1 which fixes a bug report 
+> by Mika Westerberg on its own, so I guess that would be a win. If it has 
+> to wait another cycle then I will live with it, but this is the cause of 
+> my anxiety.
+> 
+> I can look at this patch again, but my concerns are the following:
+> 
+> - If we avoid depreciation, then that implies this patch is ideal - we 
+> are not breaking anything for existing users. We can set MMIO on its own 
+> with pci=hpmemsize and by setting pci=hpmemprefsize to the default size of 
+> 2M (so it remains unchanged).
+
+I disagree. The semantics are weird and the changes to the documentation
+show that. When you have to describe things based on what other
+parameters are doing, it's weird.
+
+> - If we have two sets of parameters, then we have to support having two 
+> sets for eternity, and the loss of minimalism and the potential for 
+> confusion. The description in kernel-parameters.txt will become 
+> confusing with a lot of "if this" and "if that".
+
+Yes, but they're simple and clear parameters that are easy to support.
+There would be no "ifs" at all. One parameter sets one value, another a
+parameter sets another, and the original parameter sets both.
+
+> - How do we deal with order if both are specified? It will become 
+> unclean.
+
+If a user mixes the "both" with the "single" parameters, the winner goes
+to the last that's specified. This is common and predictable. It's not
+dissimilar to when a user specifies the same parameter twice.
+
+> - If we make two new ones, then what should they be called? I propose 
+> hp_mmio_size and hp_mmio_pref_size from my original submission. Then 
+> should hpiosize be aliased to hp_io_size to keep the consistency?
+
+Good question. I'd probably go something along the lines of
+'hpmemsize_pref' and 'hpmemsize_nonpref'. Though, it might be good to
+get others opinions on this.
+
+> - I am quite surprised that when 64-bit window support was added to the 
+> kernel, that this was not done then, although I am not good enough at 
+> navigating the mailing list to see what actually happened.
+
+Generally, things won't get done until people have a use case for them
+and motivation to make the change. I don't think there's a lot of users
+of hpmemsize to begin with.
+
+> Should I perhaps forward my original submission for this patch again and 
+> you can see if there is anything to salvage from that that?
+
+Not if you haven't changed anything.
+
+Logan
