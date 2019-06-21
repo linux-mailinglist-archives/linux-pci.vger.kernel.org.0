@@ -2,89 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42C674EAAA
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 16:33:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1162C4EAF2
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 16:45:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfFUOdu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jun 2019 10:33:50 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51086 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725985AbfFUOdu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:33:50 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 56FAA15A5690BFCC3BED;
-        Fri, 21 Jun 2019 22:33:46 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Fri, 21 Jun 2019
- 22:33:36 +0800
-Subject: Re: [PATCH 4/5] bus: hisi_lpc: Add .remove method to avoid driver
- unbind crash
+        id S1726270AbfFUOpE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jun 2019 10:45:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35416 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726049AbfFUOpD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:45:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 002172089E;
+        Fri, 21 Jun 2019 14:45:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561128302;
+        bh=q70MibmwnCTMbTaHdEAX5LqZY9jUKGiJgTvCSHm190c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ThrUwR3Ecvs/hHhP6WaYD3l1QmgyOaHiKD9NhXU3miNk1Wa9VO/fvZRyeE7m/us0r
+         xkJBbtBjl0q+VlydHOG1VGEPTWGO1W6VMPBSWskl6G7J01wHOl/OdJmGYvl6qt4q4V
+         nl+36skBpAqHKt9LNPqBxRn+39A3p5HRVlfGAADA=
+Date:   Fri, 21 Jun 2019 16:44:59 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <1561026716-140537-1-git-send-email-john.garry@huawei.com>
- <1561026716-140537-5-git-send-email-john.garry@huawei.com>
- <20190621135619.GE82584@google.com>
-CC:     <xuwei5@huawei.com>, <linuxarm@huawei.com>, <arm@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <joe@perches.com>, <linux-acpi@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <919b0b6f-1c37-47d5-1853-cb297d68aae7@huawei.com>
-Date:   Fri, 21 Jun 2019 15:33:30 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+Cc:     Rajat Jain <rajatja@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: PCI/AER sysfs files violate the rules of how sysfs works
+Message-ID: <20190621144459.GA6493@kroah.com>
+References: <20190621072911.GA21600@kroah.com>
+ <20190621141550.GG82584@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190621135619.GE82584@google.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190621141550.GG82584@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21/06/2019 14:56, Bjorn Helgaas wrote:
->>
->> > +static void hisi_lpc_acpi_remove(struct device *hostdev)
->> > +{
->> > +	struct acpi_device *adev = ACPI_COMPANION(hostdev);
->> > +	struct acpi_device *child;
->> > +
->> > +	device_for_each_child(hostdev, NULL, hisi_lpc_acpi_remove_subdev);
->> > +
->> > +	list_for_each_entry(child, &adev->children, node)
+On Fri, Jun 21, 2019 at 09:15:50AM -0500, Bjorn Helgaas wrote:
+> On Fri, Jun 21, 2019 at 09:29:11AM +0200, Greg KH wrote:
+> > Hi,
+> > 
+> > When working on some documentation scripts to show the
+> > Documentation/ABI/ files in an automated way, I ran across this "gem" of
+> > a sysfs file: Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> > 
+> > In it you describe how the files
+> > /sys/bus/pci/devices/<dev>/aer_dev_correctable and
+> > /sys/bus/pci/devices/<dev>/aer_dev_fatal and
+> > /sys/bus/pci/devices/<dev>/aer_dev_nonfatal
+> > all display a bunch of text on multiple lines.
+> > 
+> > This violates the "one value per sysfs file" rule, and should never have
+> > been merged as-is :(
+> > 
+> > Please fix it up to be a lot of individual files if your really need all
+> > of those different values.
+> 
+> Sorry about that.  Do you think we're safe in changing the sysfs ABI
+> by removing the original files and replacing them with new, better
+> ones?
 
-Hi Bjorn,
+I doubt any tool is parsing that monstrosity, so you should be fine :)
 
->> > +		acpi_device_clear_enumerated(child);
-> There are only two other non-ACPI core callers of
-> acpi_device_clear_enumerated() (i2c and spi).  That always makes me
-> wonder if we're getting too deep in ACPI internals.
+> This is pretty new and hopefully not widely used yet.
 
-It's no coincidence that i2c and spi are the only other two non-ACPI 
-core callers. For getting ACPI support for the hisi-lpc driver, we 
-modeled the driver to have the same ACPI enumeration method as i2c and 
-spi hosts. That is, allow the host driver to enumerate the child devices.
+Only one way to find out...
 
-You can check drivers/acpi/scan.c::acpi_device_enumeration_by_parent() 
-for where we make the check on the host and how it is used.
+thanks,
 
-Thanks,
-John
-
->
->> > +}
->> > +
->> >  /*
->> >   * hisi_lpc_acpi_probe - probe children for ACPI FW
->> >   * @hostdev: LPC host device pointer
->> > @@ -555,8 +566,7 @@ static int hisi_lpc_acpi_probe(struct device *hostdev)
->> >  	return 0;
->> >
->> >  fail:
->> > -	device_for_each_child(hostdev, NULL,
->> > -			      hisi_lpc_acpi_remove_subdev);
->> > +	hisi_lpc_acpi_remove(hostdev);
->> >  	return ret;
-
-
+greg k-h
