@@ -2,113 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF1D34EDDE
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 19:37:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 349914EE1B
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 19:47:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbfFURhQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jun 2019 13:37:16 -0400
-Received: from smtprelay0246.hostedemail.com ([216.40.44.246]:32849 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725992AbfFURhQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jun 2019 13:37:16 -0400
-X-Greylist: delayed 569 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Jun 2019 13:37:15 EDT
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave04.hostedemail.com (Postfix) with ESMTP id BCAE9180144A3
-        for <linux-pci@vger.kernel.org>; Fri, 21 Jun 2019 17:27:46 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 3F510100E806B;
-        Fri, 21 Jun 2019 17:27:45 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::::::::::::::,RULES_HIT:41:355:379:599:800:960:968:973:982:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1542:1593:1594:1711:1730:1747:1777:1792:1978:1981:2194:2199:2393:2553:2559:2562:2693:2828:3138:3139:3140:3141:3142:3354:3865:3866:3867:3868:3870:3871:3872:3873:3874:4250:4321:4362:5007:7514:7809:7903:9010:10004:10400:10471:10848:11232:11657:11658:11914:12043:12048:12050:12296:12297:12663:12740:12760:12895:13161:13229:13255:13439:14096:14097:14181:14659:14721:21080:21451:21627:30030:30045:30054:30060:30090:30091,0,RBL:23.242.196.136:@perches.com:.lbl8.mailshell.net-62.14.0.180 64.201.201.201,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:fn,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:24,LUA_SUMMARY:none
-X-HE-Tag: cream64_93b04b7d1048
-X-Filterd-Recvd-Size: 3436
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 21 Jun 2019 17:27:43 +0000 (UTC)
-Message-ID: <698d3e3614ae903ae9582547d64c6a9846629e57.camel@perches.com>
-Subject: Re: [PATCH 0/3] net: ethernet: atheros: atlx: Use PCI generic
- definitions instead of private duplicates
-From:   Joe Perches <joe@perches.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        netdev <netdev@vger.kernel.org>,
+        id S1726101AbfFURr1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jun 2019 13:47:27 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33332 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbfFURr1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jun 2019 13:47:27 -0400
+Received: by mail-qt1-f196.google.com with SMTP id x2so7815170qtr.0
+        for <linux-pci@vger.kernel.org>; Fri, 21 Jun 2019 10:47:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UJ7zr3BMlP+D/21QaluO3IJXggd4WWthL7KU1eJt5LU=;
+        b=aCfnaPMvDaA78Mv5k5ur7VCixpP5F9r0nrtXoL0bNjrtavhSWpa/Xp37Y9kJAKY7Cw
+         BKosLY8jx/OuXb5vEV0atvoLpWrIk6kcWRjuMizj1Wdy4+jfyM2jdOr59/0yzrXlFK3U
+         yfmLv4y2Dm496vq2UcfTnb9rycSDhAhPproM54A1In2cWM4tiFiMSvkYk40fvwaGYKcj
+         3O97gNacC+AV8g99zW3DGJ2yeH9AloFAPriEF14JOmvBILkvyAoSWq3pfSMg6UsMmUPm
+         snbErb0HM55f7U+JUI5NHBGXuZSK21iToYFAXMeWQWtnL84ylNtmk67YrG5HEQGML7iu
+         J90w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UJ7zr3BMlP+D/21QaluO3IJXggd4WWthL7KU1eJt5LU=;
+        b=j3vmbJyW35n5sOa/QVNFHgSfX1O79Xa5u6TSXuofLAsB1j71ZmZbL7b1S5Y7fnwkrv
+         Yb9YA5/dLphqXLjE4rXgwI3cAMwd253p15aMmkxvh8LY6svbUif7mpfYD1KqIUYS3KA6
+         Wx3/MdWGAB8RnEwtmIO/ubpVj0NUKxodomXdbPXe/EYvuKlf0QzYBglWhvVUIfUjrhY5
+         M0vqbuCsPYE3YfeN48sB1+SaiScv9oMJkj/e+KcQ00GJGpSCRJUzKf3IfNbDbVE6brIB
+         tmxRQLkNN0ZWrbcQdgjHixwW56rzqkw1aFmAg60r2ysXoiz+qRQ94RiIrNF/6w9GJ1p3
+         /mkQ==
+X-Gm-Message-State: APjAAAVYiX1gnnw/t7YyugvSM58P3pBjuAlvKtDiFoAsJnvCIsL5HHt/
+        BSdo012qPcTO3rv+lvpc5hbJaw==
+X-Google-Smtp-Source: APXvYqzYxwhqo3xvnYyIGJGDhki+8Wa6Yr+9LhNg9yc2Yh32DBFiynlceLoS+GkzjCUfIhiF5T75Mg==
+X-Received: by 2002:a0c:d604:: with SMTP id c4mr12256209qvj.27.1561139245935;
+        Fri, 21 Jun 2019 10:47:25 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id a11sm1652403qkn.26.2019.06.21.10.47.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Jun 2019 10:47:25 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1heNdE-0005hb-Pa; Fri, 21 Jun 2019 14:47:24 -0300
+Date:   Fri, 21 Jun 2019 14:47:24 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Linux PCI <linux-pci@vger.kernel.org>
-Date:   Fri, 21 Jun 2019 10:27:41 -0700
-In-Reply-To: <CAErSpo5TMPokae7BMY8ZcOXtW=GeGsWXX_bqS8SrZnh0pEQYxw@mail.gmail.com>
-References: <20190621163921.26188-1-puranjay12@gmail.com>
-         <CAErSpo5TMPokae7BMY8ZcOXtW=GeGsWXX_bqS8SrZnh0pEQYxw@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+Message-ID: <20190621174724.GV19891@ziepe.ca>
+References: <20190620161240.22738-1-logang@deltatee.com>
+ <CAPcyv4ijztOK1FUjLuFing7ps4LOHt=6z=eO=98HHWauHA+yog@mail.gmail.com>
+ <20190620193353.GF19891@ziepe.ca>
+ <CAPcyv4jyNRBvtWhr9+aHbzWP6=D4qAME+=hWMtOYJ17BVHdy2w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jyNRBvtWhr9+aHbzWP6=D4qAME+=hWMtOYJ17BVHdy2w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-(adding the atlx maintainers to cc)
+On Thu, Jun 20, 2019 at 01:18:13PM -0700, Dan Williams wrote:
 
-On Fri, 2019-06-21 at 12:11 -0500, Bjorn Helgaas wrote:
-> On Fri, Jun 21, 2019 at 11:39 AM Puranjay Mohan <puranjay12@gmail.com> wrote:
-> > This patch series removes the private duplicates of PCI definitions in
-> > favour of generic definitions defined in pci_regs.h.
-> > 
-> > Puranjay Mohan (3):
-> >   net: ethernet: atheros: atlx: Rename local PCI defines to generic
-> >     names
-> >   net: ethernet: atheros: atlx: Include generic PCI definitions
-> >   net: ethernet: atheros: atlx: Remove unused and private PCI
-> >     definitions
-> > 
-> >  drivers/net/ethernet/atheros/atlx/atl2.c | 5 +++--
-> >  drivers/net/ethernet/atheros/atlx/atl2.h | 2 --
-> >  drivers/net/ethernet/atheros/atlx/atlx.h | 1 -
-> >  3 files changed, 3 insertions(+), 5 deletions(-)
+> > This P2P is quite distinct from DAX as the struct page* would point to
+> > non-cacheable weird memory that few struct page users would even be
+> > able to work with, while I understand DAX use cases focused on CPU
+> > cache coherent memory, and filesystem involvement.
 > 
-> Let's slow this down a little bit; I'm afraid we're going to overwhelm folks.
+> What I'm poking at is whether this block layer capability can pick up
+> users outside of RDMA, more on this below...
 
-I generally disagree.
+The generic capability is to do a transfer through the block layer and
+scatter/gather the resulting data to some PCIe BAR memory. Currently
+the block layer can only scatter/gather data into CPU cache coherent
+memory.
 
-Consolidation of these sorts of changes are generally
-better done treewide all at once, posted as a series to
-a list and maintainers allowing time (weeks to months)
-for the specific maintainers to accept them and then
-whatever remainder exists reposted and possibly applied
-by an overall maintainer (e.g.: Dave M)
+We know of several useful places to put PCIe BAR memory already:
+ - On a GPU (or FPGA, acclerator, etc), ie the GB's of GPU private
+   memory that is standard these days.
+ - On a NVMe CMB. This lets the NVMe drive avoid DMA entirely
+ - On a RDMA NIC. Mellanox NICs have a small amount of BAR memory that
+   can be used like a CMB and avoids a DMA
 
-> Before posting more to LKML/netdev, how about we first complete a
-> sweep of all the drivers to see what we're getting into.  It could be
-> that this will end up being more churn than it's worth.
+RDMA doesn't really get so involved here, except that RDMA is often
+the prefered way to source/sink the data buffers after the block layer has
+scatter/gathered to them. (and of course RDMA is often for a block
+driver, ie NMVe over fabrics)
 
-Also doubtful.
+> > > My primary concern with this is that ascribes a level of generality
+> > > that just isn't there for peer-to-peer dma operations. "Peer"
+> > > addresses are not "DMA" addresses, and the rules about what can and
+> > > can't do peer-DMA are not generically known to the block layer.
+> >
+> > ?? The P2P infrastructure produces a DMA bus address for the
+> > initiating device that is is absolutely a DMA address. There is some
+> > intermediate CPU centric representation, but after mapping it is the
+> > same as any other DMA bus address.
+> 
+> Right, this goes back to the confusion caused by the hardware / bus /
+> address that a dma-engine would consume directly, and Linux "DMA"
+> address as a device-specific translation of host memory.
 
-Subsystem specific local PCI #defines without generic
-naming is poor style and makes treewide grep and
-refactoring much more difficult.
+I don't think there is a confusion :) Logan explained it, the
+dma_addr_t is always the thing you program into the DMA engine of the
+device it was created for, and this changes nothing about that.
 
-The atlx maintainers should definitely have been cc'd
-on these patches.
+Think of the dma vec as the same as a dma mapped SGL, just with no
+available struct page.
 
-Jay Cliburn <jcliburn@gmail.com> (maintainer:ATLX ETHERNET DRIVERS)
-Chris Snook <chris.snook@gmail.com> (maintainer:ATLX ETHERNET DRIVERS)
+> Is the block layer representation of this address going to go through
+> a peer / "bus" address translation when it reaches the RDMA driver? 
 
-Puranjay, can you please do a few things more here:
+No, it is just like any other dma mapped SGL, it is ready to go for
+the device it was mapped for, and can be used for nothing other than
+programming DMA on that device.
 
-1: Make sure you use scripts/get_maintainer.pl to cc the
-   appropriate people.
+> > ie GPU people wouuld really like to do read() and have P2P
+> > transparently happen to on-GPU pages. With GPUs having huge amounts of
+> > memory loading file data into them is really a performance critical
+> > thing.
+> 
+> A direct-i/o read(2) into a page-less GPU mapping? 
 
-2: Show that you compiled the object files and verified
-   where possible that there are no object file changes.
+The interesting case is probably an O_DIRECT read into a
+DEVICE_PRIVATE page owned by the GPU driver and mmaped into the
+process calling read(). The GPU driver can dynamically arrange for
+that DEVICE_PRIVATE page to linked to P2P targettable BAR memory so
+the HW is capable of a direct CPU bypass transfer from the underlying
+block device (ie NVMe or RDMA) to the GPU.
 
-3: State that there are no object changes in the proposed
-   commit log.
+One way to approach this problem is to use this new dma_addr path in
+the block layer.
 
-thanks.
+Another way is to feed the DEVICE_PRIVATE pages into the block layer
+and have it DMA map them to a P2P address.
 
+In either case we have a situation where the block layer cannot touch
+the target struct page buffers with the CPU because there is no cache
+coherent CPU mapping for them, and we have to create a CPU clean path
+in the block layer.
+
+At best you could do memcpy to/from on these things, but if a GPU is
+involved even that is incredibly inefficient. The GPU can do the
+memcpy with DMA much faster than a memcpy_to/from_io.
+
+Jason
