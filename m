@@ -2,145 +2,215 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C8A344E773
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 13:57:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC0B34E898
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 15:09:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbfFUL5C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jun 2019 07:57:02 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41277 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfFUL5B (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jun 2019 07:57:01 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 43so1214668otf.8;
-        Fri, 21 Jun 2019 04:57:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ohNwUBuR+/PQEekWCi0G2CpYBckWHWNiT6da3G910Dk=;
-        b=YS89d12VCSB6YcjX9nvwPv0/SPklqd99XcYhPzwRWBa8qiqugAxy+TCulkzhikm7UK
-         RvUilA+yWO6YIg6mhpefrSSBYiaOF1z6LQmziCFjEZ6MLAJ/jyTHT0nAUR7R8bh7w3jL
-         eDJNLqRo+HaZySaa3Yfu89BIc27SQQis5njIsaTFvXfRIGgoHEzGSCNk+uc8o/lCGuOr
-         hxc73MSv8bMfISa9PsWktXTNsyYIU7hGRsSHtV2AlKHOQdRzVaIZ2W+kBlk1uenzjwov
-         wW5vUCwTXc7RqMegoTQmVwNh4IRJUQRGtAK/zx/3tMCZ8l4uqev3l1YSkgA+8RiM4e4R
-         uLqA==
-X-Gm-Message-State: APjAAAX8f35yaLhNF+99ZQMZkqeBOpUAZTwyi9+oXJr290oYJntrI9lB
-        H6+qdDv9gpEb/bOYfwqcP9xyewb7JZGowXFlhho=
-X-Google-Smtp-Source: APXvYqxKYJUhbugQHSKSoF+Ajd7wHBUZLt3mxEUY4Wojw635PwBuw56F64oak4f+OpbvbOIBqGMuWjOH1oY1Jk3ehzA=
-X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr12461842otp.189.1561118220987;
- Fri, 21 Jun 2019 04:57:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190618161858.77834-1-mika.westerberg@linux.intel.com> <20190618161858.77834-2-mika.westerberg@linux.intel.com>
-In-Reply-To: <20190618161858.77834-2-mika.westerberg@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 21 Jun 2019 13:56:49 +0200
-Message-ID: <CAJZ5v0huw-n1m3mz2fEk9y2ejQuT4XYeP8_a-iR+epSq5Wu6yQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] PCI / ACPI: Use cached ACPI device state to get
- PCI device power state
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        id S1726716AbfFUNJX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jun 2019 09:09:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726285AbfFUNJX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 21 Jun 2019 09:09:23 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9E512083B;
+        Fri, 21 Jun 2019 13:09:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561122562;
+        bh=3kASRVGmx6gIzaNDW0UH4aywd2v9uOYZA1v/uiaj0SA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Lhcfsi00wrk7qFLHqMnMCfo+ARkq04Z4tvXNxtTXrG80UljTus9evC3AoMzikE4ku
+         XMnyA5gEUJINbjE/6/+NxNinZZVZoAkztMeV5lxkm8lTwQjG82PL03S/5VQNvTlQYZ
+         ors3bjBvg+oFHl7Z4iY3nFtbo5SVGGXqkJx8BpqI=
+Date:   Fri, 21 Jun 2019 08:09:20 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
         Keith Busch <keith.busch@intel.com>,
         Alex Williamson <alex.williamson@redhat.com>,
         Alexandru Gagniuc <mr.nuke.me@gmail.com>,
         ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v2 1/3] PCI / ACPI: Use cached ACPI device state to get
+ PCI device power state
+Message-ID: <20190621130920.GB82584@google.com>
+References: <20190618161858.77834-1-mika.westerberg@linux.intel.com>
+ <20190618161858.77834-2-mika.westerberg@linux.intel.com>
+ <20190619212801.GC143205@google.com>
+ <20190620082730.GM2640@lahna.fi.intel.com>
+ <20190620131649.GG143205@google.com>
+ <20190620133710.GB2640@lahna.fi.intel.com>
+ <20190620141541.GA257318@google.com>
+ <CAJZ5v0hfCnyuAA7kC5-fXRo-Mf0jvGZQASV9T4iK8QxsqHMN_g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0hfCnyuAA7kC5-fXRo-Mf0jvGZQASV9T4iK8QxsqHMN_g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 6:19 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
+On Fri, Jun 21, 2019 at 12:32:22PM +0200, Rafael J. Wysocki wrote:
+> On Thu, Jun 20, 2019 at 4:15 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Thu, Jun 20, 2019 at 04:37:10PM +0300, Mika Westerberg wrote:
+> > > On Thu, Jun 20, 2019 at 08:16:49AM -0500, Bjorn Helgaas wrote:
+> > > > On Thu, Jun 20, 2019 at 11:27:30AM +0300, Mika Westerberg wrote:
+> > > > > On Wed, Jun 19, 2019 at 04:28:01PM -0500, Bjorn Helgaas wrote:
+> > > > > > On Tue, Jun 18, 2019 at 07:18:56PM +0300, Mika Westerberg wrote:
+> > > > > > > Intel Ice Lake has an integrated Thunderbolt controller which
+> > > > > > > means that the PCIe topology is extended directly from the two
+> > > > > > > root ports (RP0 and RP1).
+> > > > > >
+> > > > > > A PCIe topology is always extended directly from root ports,
+> > > > > > regardless of whether a Thunderbolt controller is integrated, so I
+> > > > > > guess I'm missing the point you're making.  It doesn't sound like
+> > > > > > this is anything specific to Thunderbolt?
+> > > > >
+> > > > > The point I'm trying to make here is to explain why this is problem
+> > > > > now and not with the previous discrete controllers. With the
+> > > > > previous there was only a single ACPI power resource for the root
+> > > > > port and the Thunderbolt host router was connected to that root
+> > > > > port. PCIe hierarchy was extended through downstream ports (not root
+> > > > > ports) of that controller (which includes PCIe switch).
+> > > >
+> > > > Sounds like you're using "PCIe topology extension" to mean
+> > > > specifically something below a Thunderbolt controller, excluding a
+> > > > subtree below a root port.  I don't think the PCI core is aware of
+> > > > that distinction.
+> > >
+> > > Right it is not.
+> > >
+> > > > > Now the thing is part of the SoC so power management is different
+> > > > > and causes problems in Linux.
+> > > >
+> > > > The SoC is a physical packaging issue that really doesn't enter into
+> > > > the specs directly.  I'm trying to get at the logical topology
+> > > > questions in terms of the PCIe and ACPI specs.
+> > > >
+> > > > I assume we could dream up a non-Thunderbolt topology that would show
+> > > > the same problem?
+> > >
+> > > Yes.
+> > >
+> > > > > > > Power management is handled by ACPI power resources that are
+> > > > > > > shared between the root ports, Thunderbolt controller (NHI) and xHCI
+> > > > > > > controller.
+> > > > > > >
+> > > > > > > The topology with the power resources (marked with []) looks like:
+> > > > > > >
+> > > > > > >   Host bridge
+> > > > > > >     |
+> > > > > > >     +- RP0 ---\
+> > > > > > >     +- RP1 ---|--+--> [TBT]
+> > > > > > >     +- NHI --/   |
+> > > > > > >     |            |
+> > > > > > >     |            v
+> > > > > > >     +- xHCI --> [D3C]
+> > > > > > >
+> > > > > > > Here TBT and D3C are the shared ACPI power resources. ACPI
+> > > > > > > _PR3() method returns either TBT or D3C or both.
+> > > >
+> > > > I'm not very familiar with _PR3.  I guess this is under an ACPI object
+> > > > representing a PCI device, e.g., \_SB.PCI0.RP0._PR3?
+> > >
+> > > Correct.
+> > >
+> > > > > > > Say we runtime suspend first the root ports RP0 and RP1, then
+> > > > > > > NHI. Now since the TBT power resource is still on when the root
+> > > > > > > ports are runtime suspended their dev->current_state is set to
+> > > > > > > D3hot. When NHI is runtime suspended TBT is finally turned off
+> > > > > > > but state of the root ports remain to be D3hot.
+> > > >
+> > > > So in this example we might have:
+> > > >
+> > > >   _SB.PCI0.RP0._PR3: TBT
+> > > >   _SB.PCI0.RP1._PR3: TBT
+> > > >   _SB.PCI0.NHI._PR3: TBT
+> > >
+> > > and also D3C.
+> > >
+> > > > And when Linux figures out that everything depending on TBT is in
+> > > > D3hot, it evaluates TBT._OFF, which puts them all in D3cold?  And part
+> > > > of the problem is that they're now in D3cold (where config access
+> > > > doesn't work) but Linux still thinks they're in D3hot (where config
+> > > > access would work)?
+> > >
+> > > Exactly.
+> > >
+> > > > I feel like I'm missing something because I don't know how D3C is
+> > > > involved, since you didn't mention suspending xHCI.
+> > >
+> > > That's another power resource so we will also have D3C turned off when
+> > > xHCI gets suspended but I did not want to complicate things too much in
+> > > the changelog.
+> >
+> > If D3C isn't essential to seeing this problem, you could just omit it
+> > altogether.  I think stripping out anything that's not essential will
+> > make it easier to think about the underlying issues.
+> >
+> > > > And I can't mentally match up the patch with the D3hot/D3cold state
+> > > > change (if indeed that's the problem).  If we were updating the path
+> > > > that evaluates _OFF so it changed the power state of all dependent
+> > > > devices, *that* would make a lot of sense to me because it sounds like
+> > > > that's where the physical change happens that makes things out of
+> > > > sync.
+> > >
+> > > I did that in the first version [1] but Rafael pointed out that it is
+> > > racy one way or another [2].
+> > >
+> > > [1] https://www.spinics.net/lists/linux-pci/msg83583.html
+> > > [2] https://www.spinics.net/lists/linux-pci/msg83600.html
+> >
+> > Yeah, interesting.  It was definitely a much larger patch.  I don't
+> > know enough to comment on the races.
+> 
+> Say two power resources are listed by _PR3 for one device (because why
+> not?) and you want to change the device's state to D3cold only if the
+> two power resources are both "off".  Then, you need some locking (or
+> equivalent) to synchronize two power resources with each other, so
+> that you can change the devices state when the last of them goes _OFF.
+> Currently, there is no such synchronization between power resources
+> other then the "system_level" value which may not be reliable enough
+> for this type of use.
+> 
+> Or you can say that the device is in D3cold if at least one of the
+> power resources is _OFF, but IMO that may not really be consistent
+> with the view that the "logical" power state of the device should
+> reflect the physical reality accurately.
+> 
+> > I would wonder whether there's a way to get rid of the caches that become stale,
+> 
+> I guess what you mean is that the "cached" (or rather "logical" or
+> "expected") power state value may become different from what is
+> returned by acpi_device_get_power() for the device.
+> 
+> The problem here is that acpi_device_get_power() really only should be
+> used for two purposes: (1) To initialize adev->power.state, or to
+> update it via acpi_device_update_power(), and (2) by the
+> "real_power_state" sysfs attribute (of ACPI device objects).  The
+> adev->power.state value should be used anywhere else, in principle, so
+> the Mika's patch is correct.
+> 
+> [Note that adev->power.state cannot be updated after calling
+> acpi_device_get_power() to the value returned by it without updating
+> the reference counters of the power resources that are "on" *exactly*
+> because of the problem at hand here.]
+> 
+> > but that's just an idle thought, not a suggestion.
+> 
+> After the initialization of the ACPI subsystem, the authoritative
+> source of the ACPI device power state information is
+> adev->power.state.  The ACPI subsystem is expected to update this
+> value as needed going forward (including system-wide transitions like
+> resume from S3).
 
-Actually, to start with, you can say that the ACPI power state
-returned by acpi_device_get_power() may depend on the configuration of
-ACPI power resources in the system which may change at any time after
-acpi_device_get_power() has returned, unless the reference counters of
-the ACPI power resources in question are set to prevent that from
-happening.  Thus it is invalid to use acpi_device_get_power() in
-acpi_pci_get_power_state() the way it is done now and the value of the
-power.state field in the corresponding struct acpi_device object
-(which reflects the ACPI power resources reference counting, among
-other things) should be used instead.
+Thanks, this is all very helpful!  Do you by any chance add
+lore.kernel.org links to commit logs when applying patches?  This is a
+case where I think the discussion could be useful in the future.
 
-Then you can describe the particular issue below as an example.
-
-IMO that would explain the rationale better here.
-
-> Intel Ice Lake has an integrated Thunderbolt controller which means that
-> the PCIe topology is extended directly from the two root ports (RP0 and
-> RP1). Power management is handled by ACPI power resources that are
-> shared between the root ports, Thunderbolt controller (NHI) and xHCI
-> controller.
->
-> The topology with the power resources (marked with []) looks like:
->
->   Host bridge
->     |
->     +- RP0 ---\
->     +- RP1 ---|--+--> [TBT]
->     +- NHI --/   |
->     |            |
->     |            v
->     +- xHCI --> [D3C]
->
-> Here TBT and D3C are the shared ACPI power resources. ACPI _PR3() method
-> returns either TBT or D3C or both.
->
-> Say we runtime suspend first the root ports RP0 and RP1, then NHI. Now
-> since the TBT power resource is still on when the root ports are runtime
-> suspended their dev->current_state is set to D3hot. When NHI is runtime
-> suspended TBT is finally turned off but state of the root ports remain
-> to be D3hot.
->
-> If the user now runs lspci for instance, the result is all 1's like in
-> the below output (07.0 is the first root port, RP0):
->
-> 00:07.0 PCI bridge: Intel Corporation Device 8a1d (rev ff) (prog-if ff)
->     !!! Unknown header type 7f
->     Kernel driver in use: pcieport
->
-> I short the hardware state is not in sync with the software state
-> anymore. The exact same thing happens with the PME polling thread which
-> ends up bringing the root ports back into D0 after they are runtime
-> suspended.
->
-> ACPI core already sets the device state to be D3cold when it drops its
-> references to the power resources returned by _PR3 even if these power
-> resources are still physically on (other devices still reference them).
-> However, in PCI core we call acpi_device_get_power() to figure out the
-> power state and that returns the "real" power state based on the state
-> of its power resources.
->
-> To make it work with the shared power resources modify
-> acpi_pci_get_power_state() so that it reads the ACPI device power state
-> that was cached by the ACPI core. This makes the PCI device power state
-> match the ACPI device power state regardless of state of the shared
-> power resources that may still be on at this point.
->
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  drivers/pci/pci-acpi.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index 1897847ceb0c..b782acac26c5 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -685,7 +685,8 @@ static pci_power_t acpi_pci_get_power_state(struct pci_dev *dev)
->         if (!adev || !acpi_device_power_manageable(adev))
->                 return PCI_UNKNOWN;
->
-> -       if (acpi_device_get_power(adev, &state) || state == ACPI_STATE_UNKNOWN)
-> +       state = adev->power.state;
-> +       if (state == ACPI_STATE_UNKNOWN)
->                 return PCI_UNKNOWN;
->
->         return state_conv[state];
-> --
-> 2.20.1
->
+Link: https://lore.kernel.org/r/20190618161858.77834-2-mika.westerberg@linux.intel.com
