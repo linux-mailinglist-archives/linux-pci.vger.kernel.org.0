@@ -2,152 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CBE374EA01
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 15:56:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D88E34EA29
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 16:05:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726132AbfFUN4W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jun 2019 09:56:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58322 "EHLO mail.kernel.org"
+        id S1726058AbfFUOFH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jun 2019 10:05:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbfFUN4V (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:56:21 -0400
+        id S1725975AbfFUOFG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:05:06 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B206E2083B;
-        Fri, 21 Jun 2019 13:56:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D5E82075E;
+        Fri, 21 Jun 2019 14:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561125381;
-        bh=BBRLV5HK4wojUuRwh0Rs7j6ma6H9sAhgSFIRNIQgDhg=;
+        s=default; t=1561125906;
+        bh=9SpD7uZXF12Lgn71hZIUmDAfAlF2fpqc8oZvSOye1Ac=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UBkgFZ78v39DEfSXuGiLLocJ+jUu/9obvwtDpFnq9msQlxrPRQNKcqCS1tzCrzzu9
-         zcX6lYf5FN4xy5pbLwGx1vi+D/nXP3DNXAzTsefIFPkn7QSBaheUzxp4f51QG6Hs9d
-         rPFDb7MuSom/wFM61ziIx+4IyV1xEZWrPphXDgf8=
-Date:   Fri, 21 Jun 2019 08:56:19 -0500
+        b=Gduhdc+w/cr/kolxidI6ZyawEhqHL84tr773iV8OL8RKQMfeOdtzbEe4enD/Z2N6/
+         fV/1UP8V1+YW/UFNIJjStUdRgpNlmVzKI4kMQZ1D5/xf8kD4AFoHJ1/leobK9PPc8x
+         O3HnQ33TbfucZ4IAcL8n2m9hBviPF58L6F90iA9c=
+Date:   Fri, 21 Jun 2019 09:05:05 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     xuwei5@huawei.com, linuxarm@huawei.com, arm@kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        joe@perches.com, linux-acpi@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 4/5] bus: hisi_lpc: Add .remove method to avoid driver
- unbind crash
-Message-ID: <20190621135619.GE82584@google.com>
-References: <1561026716-140537-1-git-send-email-john.garry@huawei.com>
- <1561026716-140537-5-git-send-email-john.garry@huawei.com>
+To:     Puranjay Mohan <puranjay12@gmail.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        Stephen Hemminger <stephen@networkplumber.org>
+Subject: Re: [PATCH v3 0/3] net: fddi: skfp: Use PCI generic definitions
+ instead of private duplicates
+Message-ID: <20190621140505.GF82584@google.com>
+References: <20190621094607.15011-1-puranjay12@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1561026716-140537-5-git-send-email-john.garry@huawei.com>
+In-Reply-To: <20190621094607.15011-1-puranjay12@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Rafael, linux-acpi]
+[+cc Stephen]
 
-On Thu, Jun 20, 2019 at 06:31:55PM +0800, John Garry wrote:
-> The original driver author seemed to be under the impression that a driver
-> cannot be removed if it does not have a .remove method. Or maybe if it is
-> a built-in platform driver.
+On Fri, Jun 21, 2019 at 03:16:04PM +0530, Puranjay Mohan wrote:
+> This patch series removes the private duplicates of PCI definitions in
+> favour of generic definitions defined in pci_regs.h.
 > 
-> This is not true. This crash can be created:
+> This driver only uses some of the generic PCI definitons,
+> which are included from pci_regs.h and thier private versions
+> are removed from skfbi.h with all other private defines.
 > 
-> root@ubuntu:/sys/bus/platform/drivers/hisi-lpc# echo HISI0191\:00 > unbind
-> root@ubuntu:/sys/bus/platform/drivers/hisi-lpc# ipmitool raw 6 1
->  Unable to handle kernel paging request at virtual address ffff000010035010
-> ...
+> The skfbi.h defines PCI_REV_ID and other private defines with different
+> names, these are renamed to Generic PCI names to make them
+> compatible with defines in pci_regs.h.
+> 
+> All unused defines are removed from skfbi.h.
+> 
+> Puranjay Mohan (3):
+>   net: fddi: skfp: Rename local PCI defines to match generic PCI defines
+>   net: fddi: skfp: Include generic PCI definitions
+>   net: fddi: skfp: Remove unused private PCI definitions
+> 
+>  drivers/net/fddi/skfp/drvfbi.c  |  3 +-
+>  drivers/net/fddi/skfp/h/skfbi.h | 80 +--------------------------------
+>  2 files changed, 4 insertions(+), 79 deletions(-)
 
-> The problem here is that the host goes away but the associated logical PIO
-> region remains registered, as do the child devices.
-> 
-> Fix by adding a .remove method to tidy-up by removing the child devices
-> and unregistering the logical PIO region.
-> 
-> Fixes: adf38bb0b595 ("HISI LPC: Support the LPC host on Hip06/Hip07 with DT bindings")
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> ---
->  drivers/bus/hisi_lpc.c | 34 ++++++++++++++++++++++++++++++++--
->  1 file changed, 32 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/bus/hisi_lpc.c b/drivers/bus/hisi_lpc.c
-> index 6d301aafcad2..0e9f1f141c93 100644
-> --- a/drivers/bus/hisi_lpc.c
-> +++ b/drivers/bus/hisi_lpc.c
-> @@ -456,6 +456,17 @@ struct hisi_lpc_acpi_cell {
->  	size_t pdata_size;
->  };
->  
-> +static void hisi_lpc_acpi_remove(struct device *hostdev)
-> +{
-> +	struct acpi_device *adev = ACPI_COMPANION(hostdev);
-> +	struct acpi_device *child;
-> +
-> +	device_for_each_child(hostdev, NULL, hisi_lpc_acpi_remove_subdev);
-> +
-> +	list_for_each_entry(child, &adev->children, node)
-> +		acpi_device_clear_enumerated(child);
+It's good form to CC people who have commented on previous versions of
+your series, so I added Stephen.
 
-There are only two other non-ACPI core callers of
-acpi_device_clear_enumerated() (i2c and spi).  That always makes me
-wonder if we're getting too deep in ACPI internals.
+FWIW,
 
-> +}
-> +
->  /*
->   * hisi_lpc_acpi_probe - probe children for ACPI FW
->   * @hostdev: LPC host device pointer
-> @@ -555,8 +566,7 @@ static int hisi_lpc_acpi_probe(struct device *hostdev)
->  	return 0;
->  
->  fail:
-> -	device_for_each_child(hostdev, NULL,
-> -			      hisi_lpc_acpi_remove_subdev);
-> +	hisi_lpc_acpi_remove(hostdev);
->  	return ret;
->  }
->  
-> @@ -626,6 +636,8 @@ static int hisi_lpc_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	dev_set_drvdata(dev, lpcdev);
-> +
->  	io_end = lpcdev->io_host->io_start + lpcdev->io_host->size;
->  	dev_info(dev, "registered range [%pa - %pa]\n",
->  		 &lpcdev->io_host->io_start, &io_end);
-> @@ -633,6 +645,23 @@ static int hisi_lpc_probe(struct platform_device *pdev)
->  	return ret;
->  }
->  
-> +static int hisi_lpc_remove(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct acpi_device *acpi_device = ACPI_COMPANION(dev);
-> +	struct hisi_lpc_dev *lpcdev = dev_get_drvdata(dev);
-> +	struct logic_pio_hwaddr *range = lpcdev->io_host;
-> +
-> +	if (acpi_device)
-> +		hisi_lpc_acpi_remove(dev);
-> +	else
-> +		of_platform_depopulate(dev);
-> +
-> +	logic_pio_unregister_range(range);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct of_device_id hisi_lpc_of_match[] = {
->  	{ .compatible = "hisilicon,hip06-lpc", },
->  	{ .compatible = "hisilicon,hip07-lpc", },
-> @@ -646,5 +675,6 @@ static struct platform_driver hisi_lpc_driver = {
->  		.acpi_match_table = ACPI_PTR(hisi_lpc_acpi_match),
->  	},
->  	.probe = hisi_lpc_probe,
-> +	.remove = hisi_lpc_remove,
->  };
->  builtin_platform_driver(hisi_lpc_driver);
-> -- 
-> 2.17.1
-> 
+Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
