@@ -2,170 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B6284E260
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 10:53:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 810B64E35C
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 11:21:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbfFUIxG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jun 2019 04:53:06 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54825 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbfFUIxF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jun 2019 04:53:05 -0400
-Received: from mail-pf1-f198.google.com ([209.85.210.198])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1heFI7-0007Qv-Gj
-        for linux-pci@vger.kernel.org; Fri, 21 Jun 2019 08:53:03 +0000
-Received: by mail-pf1-f198.google.com with SMTP id u21so3977206pfn.15
-        for <linux-pci@vger.kernel.org>; Fri, 21 Jun 2019 01:53:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=u1hSlNEter5h1ru+YK0xU7QWME8tCkI1M6jD8mwebc0=;
-        b=Ty6XwWBUWwCfB7WDRIOsVVVEXAFC9MSrlvBScJCtc+AQP7Gt1FLUgP6QwNhmGi1aX2
-         H4X4Nm99/LibajpQPduF9S82/mENWHL8iyai3Hq+EkoZcCzKKYhmQ4/RFhj3XUzrZvHW
-         ioOU/oJ8T0GDhJPH5OJs5MiGKwZRfYcWSdakSQoZB5DhAEK0p2HHMqdNrkcqYc9F+aws
-         gWPxeENS0MO/b4V5sRO2X0jgVWavp+8CmRQpKJnalaZke9hOh3cPJArGO1DJB0rPURxH
-         thV780d8ErWzROG5YKNgdSqFIftD8sJk1G8gSaRPlkvqom42oZXGAiJiIHO7VLr4rFKP
-         JYlQ==
-X-Gm-Message-State: APjAAAVGgFlFgSd8P5wPG0xKX1qSV54Ef5M8+2FFeCqwils8lYi30ZzB
-        cbl23U8XcClzcLZUXL+fz7DYBJTPjlGc0iT1eeikUlELArDDC32+6A0zSLiSJqfsJ5EdDyhDd3K
-        97z2ZoNdmJ+veHNHTYISwFhtT6oGlopyCYGMM6A==
-X-Received: by 2002:a17:902:e281:: with SMTP id cf1mr48855011plb.271.1561107182194;
-        Fri, 21 Jun 2019 01:53:02 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqz8nVP924V3DK7kjmQuC0S7gMYc5j/LFZzSXMJFzmTAzQwvANHE7EWYdGbGTao99GI3cwnXmQ==
-X-Received: by 2002:a17:902:e281:: with SMTP id cf1mr48854995plb.271.1561107181925;
-        Fri, 21 Jun 2019 01:53:01 -0700 (PDT)
-Received: from 2001-b011-380f-3511-28ca-1aa7-7f48-7d86.dynamic-ip6.hinet.net (2001-b011-380f-3511-28ca-1aa7-7f48-7d86.dynamic-ip6.hinet.net. [2001:b011:380f:3511:28ca:1aa7:7f48:7d86])
-        by smtp.gmail.com with ESMTPSA id l44sm4959357pje.29.2019.06.21.01.52.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Jun 2019 01:53:01 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 1/2] PCI: pciehp: Do not disable interrupt twice on
- suspend
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20190618125051.2382-1-mika.westerberg@linux.intel.com>
-Date:   Fri, 21 Jun 2019 16:52:57 +0800
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <62F7BEE7-F38E-41C8-A181-B03F9308DE81@canonical.com>
-References: <20190618125051.2382-1-mika.westerberg@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        id S1726437AbfFUJVk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jun 2019 05:21:40 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:14710 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfFUJVj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jun 2019 05:21:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0ca1a10000>; Fri, 21 Jun 2019 02:21:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 21 Jun 2019 02:21:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 21 Jun 2019 02:21:38 -0700
+Received: from HQMAIL112.nvidia.com (172.18.146.18) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Jun
+ 2019 09:21:38 +0000
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL112.nvidia.com
+ (172.18.146.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Jun
+ 2019 09:21:38 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 21 Jun 2019 09:21:38 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d0ca19f0000>; Fri, 21 Jun 2019 02:21:37 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <Jisheng.Zhang@synaptics.com>, <thierry.reding@gmail.com>,
+        <kishon@ti.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH V5 1/3] PCI: dwc: Add API support to de-initialize host
+Date:   Fri, 21 Jun 2019 14:51:25 +0530
+Message-ID: <20190621092127.17930-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
+MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561108898; bh=fN2JTX+5AuNYUERGSOTuFE9qCq3O4/KmTsAayCd2QBQ=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=V3nO6VlQmL4cptg8jWGkYe8PQetrxgCipi0fEsJ6+84s+2fXT3Rl3a8V5UWkVxgLu
+         uE5GCy3Rd8thzJ1CJtz+XvvEhhrlHT7+HFKR3wU7WXoeMNgdajlxDc7rVZTtiwUJHF
+         iBCaIeiO2l8jPFBc1MAAoSclo+ny0a4Wszx4Jafbh5ur0Pr3jOx+MDJ2Xmiruf0Dw/
+         DXIn92PRuq0og8PeHzIITPkW4BLAI8CnxaJyxwAwbCqDQgufdA7KeUQZHw2E6YuLj1
+         FlT3AR4MMW21MQe9B2YDZoVqrnbxpWuDetwA9SdedhO6nRh3WkCBR1M3LZwBJWRuHv
+         6tnMCHD7A19+w==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-at 20:50, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+Add an API to group all the tasks to be done to de-initialize host which
+can then be called by any DesignWare core based driver implementations
+while adding .remove() support in their respective drivers.
 
-> We try to keep PCIe hotplug ports runtime suspended when entering system
-> suspend. Due to the fact that the PCIe portdrv sets NEVER_SKIP driver PM
-> flag the PM core always calls system suspend/resume hooks even if the
-> device is left runtime suspended. Since PCIe hotplug driver re-uses the
-> same function for both it ends up disabling hotplug interrupt twice and
-> the second time following is printed:
->
->   pciehp 0000:03:01.0:pcie204: pcie_do_write_cmd: no response from device
->
-> Prevent this from happening by checking whether the device is already
-> runtime suspended when system suspend hook is called.
->
-> Fixes: 9c62f0bfb832 ("PCI: pciehp: Implement runtime PM callbacks")
-> Reported-by: Kai Heng Feng <kai.heng.feng@canonical.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+---
+Changes from v4:
+* None
 
-Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Changes from v3:
+* Added check if (pci_msi_enabled() && !pp->ops->msi_host_init) before calling
+  dw_pcie_free_msi() API to mimic init path
 
-> ---
->  drivers/pci/hotplug/pciehp_core.c | 25 +++++++++++++++++++++++--
->  1 file changed, 23 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pci/hotplug/pciehp_core.c  
-> b/drivers/pci/hotplug/pciehp_core.c
-> index 6ad0d86762cb..3f8c13ddb3e8 100644
-> --- a/drivers/pci/hotplug/pciehp_core.c
-> +++ b/drivers/pci/hotplug/pciehp_core.c
-> @@ -248,7 +248,7 @@ static bool pme_is_native(struct pcie_device *dev)
->  	return pcie_ports_native || host->native_pme;
->  }
->
-> -static int pciehp_suspend(struct pcie_device *dev)
-> +static void pciehp_disable_interrupt(struct pcie_device *dev)
->  {
->  	/*
->  	 * Disable hotplug interrupt so that it does not trigger
-> @@ -256,7 +256,19 @@ static int pciehp_suspend(struct pcie_device *dev)
->  	 */
->  	if (pme_is_native(dev))
->  		pcie_disable_interrupt(get_service_data(dev));
-> +}
->
-> +#ifdef CONFIG_PM_SLEEP
-> +static int pciehp_suspend(struct pcie_device *dev)
-> +{
-> +	/*
-> +	 * If the port is already runtime suspended we can keep it that
-> +	 * way.
-> +	 */
-> +	if (dev_pm_smart_suspend_and_suspended(&dev->port->dev))
-> +		return 0;
-> +
-> +	pciehp_disable_interrupt(dev);
->  	return 0;
->  }
->
-> @@ -274,6 +286,7 @@ static int pciehp_resume_noirq(struct pcie_device *dev)
->
->  	return 0;
->  }
-> +#endif
->
->  static int pciehp_resume(struct pcie_device *dev)
->  {
-> @@ -287,6 +300,12 @@ static int pciehp_resume(struct pcie_device *dev)
->  	return 0;
->  }
->
-> +static int pciehp_runtime_suspend(struct pcie_device *dev)
-> +{
-> +	pciehp_disable_interrupt(dev);
-> +	return 0;
-> +}
-> +
->  static int pciehp_runtime_resume(struct pcie_device *dev)
->  {
->  	struct controller *ctrl = get_service_data(dev);
-> @@ -313,10 +332,12 @@ static struct pcie_port_service_driver  
-> hpdriver_portdrv = {
->  	.remove		= pciehp_remove,
->
->  #ifdef	CONFIG_PM
-> +#ifdef	CONFIG_PM_SLEEP
->  	.suspend	= pciehp_suspend,
->  	.resume_noirq	= pciehp_resume_noirq,
-> +#endif
->  	.resume		= pciehp_resume,
-> -	.runtime_suspend = pciehp_suspend,
-> +	.runtime_suspend = pciehp_runtime_suspend,
->  	.runtime_resume	= pciehp_runtime_resume,
->  #endif	/* PM */
->  };
-> -- 
-> 2.20.1
+Changes from v2:
+* Rebased on top of linux-next top of the tree branch
 
+Changes from v1:
+* s/Designware/DesignWare
+
+ drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
+ drivers/pci/controller/dwc/pcie-designware.h      | 5 +++++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 77db32529319..d069e4290180 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	return ret;
+ }
+ 
++void dw_pcie_host_deinit(struct pcie_port *pp)
++{
++	pci_stop_root_bus(pp->root_bus);
++	pci_remove_root_bus(pp->root_bus);
++	if (pci_msi_enabled() && !pp->ops->msi_host_init)
++		dw_pcie_free_msi(pp);
++}
++
+ static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+ 				     u32 devfn, int where, int size, u32 *val,
+ 				     bool write)
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index b8993f2b78df..14762e262758 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -351,6 +351,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
+ void dw_pcie_free_msi(struct pcie_port *pp);
+ void dw_pcie_setup_rc(struct pcie_port *pp);
+ int dw_pcie_host_init(struct pcie_port *pp);
++void dw_pcie_host_deinit(struct pcie_port *pp);
+ int dw_pcie_allocate_domains(struct pcie_port *pp);
+ #else
+ static inline irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+@@ -375,6 +376,10 @@ static inline int dw_pcie_host_init(struct pcie_port *pp)
+ 	return 0;
+ }
+ 
++static inline void dw_pcie_host_deinit(struct pcie_port *pp)
++{
++}
++
+ static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
+ {
+ 	return 0;
+-- 
+2.17.1
 
