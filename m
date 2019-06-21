@@ -2,160 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9374B4E6D0
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 13:10:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8A344E773
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2019 13:57:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfFULKm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jun 2019 07:10:42 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:15243 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfFULKm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jun 2019 07:10:42 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0cbb2f0000>; Fri, 21 Jun 2019 04:10:39 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 21 Jun 2019 04:10:40 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 21 Jun 2019 04:10:40 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Jun
- 2019 11:10:39 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 21 Jun 2019 11:10:39 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d0cbb2c000d>; Fri, 21 Jun 2019 04:10:39 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <Jisheng.Zhang@synaptics.com>, <thierry.reding@gmail.com>,
-        <kishon@ti.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
-        <sagar.tv@gmail.com>
-Subject: [PATCH V6 3/3] PCI: dwc: Export APIs to support .remove() implementation
-Date:   Fri, 21 Jun 2019 16:40:00 +0530
-Message-ID: <20190621111000.23216-3-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190621111000.23216-1-vidyas@nvidia.com>
-References: <20190621111000.23216-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        id S1726309AbfFUL5C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jun 2019 07:57:02 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41277 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfFUL5B (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jun 2019 07:57:01 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 43so1214668otf.8;
+        Fri, 21 Jun 2019 04:57:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ohNwUBuR+/PQEekWCi0G2CpYBckWHWNiT6da3G910Dk=;
+        b=YS89d12VCSB6YcjX9nvwPv0/SPklqd99XcYhPzwRWBa8qiqugAxy+TCulkzhikm7UK
+         RvUilA+yWO6YIg6mhpefrSSBYiaOF1z6LQmziCFjEZ6MLAJ/jyTHT0nAUR7R8bh7w3jL
+         eDJNLqRo+HaZySaa3Yfu89BIc27SQQis5njIsaTFvXfRIGgoHEzGSCNk+uc8o/lCGuOr
+         hxc73MSv8bMfISa9PsWktXTNsyYIU7hGRsSHtV2AlKHOQdRzVaIZ2W+kBlk1uenzjwov
+         wW5vUCwTXc7RqMegoTQmVwNh4IRJUQRGtAK/zx/3tMCZ8l4uqev3l1YSkgA+8RiM4e4R
+         uLqA==
+X-Gm-Message-State: APjAAAX8f35yaLhNF+99ZQMZkqeBOpUAZTwyi9+oXJr290oYJntrI9lB
+        H6+qdDv9gpEb/bOYfwqcP9xyewb7JZGowXFlhho=
+X-Google-Smtp-Source: APXvYqxKYJUhbugQHSKSoF+Ajd7wHBUZLt3mxEUY4Wojw635PwBuw56F64oak4f+OpbvbOIBqGMuWjOH1oY1Jk3ehzA=
+X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr12461842otp.189.1561118220987;
+ Fri, 21 Jun 2019 04:57:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561115439; bh=y7TEAspofRBMIokrjXATOwSmhawYFwJQqnvJ7ZYiDZQ=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=sRxZksDqmOS1GxoJ0tynXwEQEL3c2oh3vI3UnHitzsOFcc1sbR+Ps5L1cSFxUC/cO
-         wHezHGyBZ4rISu2YN/xcl5tDp8oFoXaffEMaW+kHKyAJL7id3WSJZPNccItjI0bfE2
-         4c3dZAwdHXxTbcJ2jcBhLJOmhGV5QtcV0KHxhQW014jrENt240XgeronZp8R/ayoyT
-         jGqwlzfrwWYb3ZMcDT92UemfsQdKkbd/hRuOuLLUJoo3AStTO2nhevq6jTlRT77LXT
-         lNk+Nt8K7/ziHdtDCfsvq1nnodfxXC8eEMdjRkRyFkFEwP5SNS+/WR1GcB+A72DM6Y
-         dE4wGb4rLwv7w==
+References: <20190618161858.77834-1-mika.westerberg@linux.intel.com> <20190618161858.77834-2-mika.westerberg@linux.intel.com>
+In-Reply-To: <20190618161858.77834-2-mika.westerberg@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 21 Jun 2019 13:56:49 +0200
+Message-ID: <CAJZ5v0huw-n1m3mz2fEk9y2ejQuT4XYeP8_a-iR+epSq5Wu6yQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] PCI / ACPI: Use cached ACPI device state to get
+ PCI device power state
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Export all configuration space access APIs and also other APIs to
-support host controller drivers of DesignWare core based implementations
-while adding support for .remove() hook to build their respective drivers
-as modules
+On Tue, Jun 18, 2019 at 6:19 PM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
-Changes from v5:
-* None
+Actually, to start with, you can say that the ACPI power state
+returned by acpi_device_get_power() may depend on the configuration of
+ACPI power resources in the system which may change at any time after
+acpi_device_get_power() has returned, unless the reference counters of
+the ACPI power resources in question are set to prevent that from
+happening.  Thus it is invalid to use acpi_device_get_power() in
+acpi_pci_get_power_state() the way it is done now and the value of the
+power.state field in the corresponding struct acpi_device object
+(which reflects the ACPI power resources reference counting, among
+other things) should be used instead.
 
-Changes from v4:
-* Removed __ (underscore) from dw_pcie_{write/read}_dbi API names
+Then you can describe the particular issue below as an example.
 
-Changes from v3:
-* Exported only __dw_pcie_{read/write}_dbi() APIs instead of
-  dw_pcie_read{l/w/b}_dbi & dw_pcie_write{l/w/b}_dbi APIs.
+IMO that would explain the rationale better here.
 
-Changes from v2:
-* Rebased on top of linux-next top of the tree branch
-
-Changes from v1:
-* s/Designware/DesignWare
-
- drivers/pci/controller/dwc/pcie-designware-host.c | 4 ++++
- drivers/pci/controller/dwc/pcie-designware.c      | 4 ++++
- 2 files changed, 8 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index d069e4290180..f93252d0da5b 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -311,6 +311,7 @@ void dw_pcie_msi_init(struct pcie_port *pp)
- 	dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_HI, 4,
- 			    upper_32_bits(msi_target));
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_msi_init);
- 
- int dw_pcie_host_init(struct pcie_port *pp)
- {
-@@ -495,6 +496,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 		dw_pcie_free_msi(pp);
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_host_init);
- 
- void dw_pcie_host_deinit(struct pcie_port *pp)
- {
-@@ -503,6 +505,7 @@ void dw_pcie_host_deinit(struct pcie_port *pp)
- 	if (pci_msi_enabled() && !pp->ops->msi_host_init)
- 		dw_pcie_free_msi(pp);
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_host_deinit);
- 
- static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
- 				     u32 devfn, int where, int size, u32 *val,
-@@ -695,3 +698,4 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
- 	val |= PORT_LOGIC_SPEED_CHANGE;
- 	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 0b383feb13de..dc9cdcd72ffc 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -34,6 +34,7 @@ int dw_pcie_read(void __iomem *addr, int size, u32 *val)
- 
- 	return PCIBIOS_SUCCESSFUL;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_read);
- 
- int dw_pcie_write(void __iomem *addr, int size, u32 val)
- {
-@@ -51,6 +52,7 @@ int dw_pcie_write(void __iomem *addr, int size, u32 val)
- 
- 	return PCIBIOS_SUCCESSFUL;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_write);
- 
- u32 dw_pcie_read_dbi(struct dw_pcie *pci, u32 reg, size_t size)
- {
-@@ -66,6 +68,7 @@ u32 dw_pcie_read_dbi(struct dw_pcie *pci, u32 reg, size_t size)
- 
- 	return val;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_read_dbi);
- 
- void dw_pcie_write_dbi(struct dw_pcie *pci, u32 reg, size_t size, u32 val)
- {
-@@ -80,6 +83,7 @@ void dw_pcie_write_dbi(struct dw_pcie *pci, u32 reg, size_t size, u32 val)
- 	if (ret)
- 		dev_err(pci->dev, "Write DBI address failed\n");
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_write_dbi);
- 
- u32 dw_pcie_read_dbi2(struct dw_pcie *pci, u32 reg, size_t size)
- {
--- 
-2.17.1
-
+> Intel Ice Lake has an integrated Thunderbolt controller which means that
+> the PCIe topology is extended directly from the two root ports (RP0 and
+> RP1). Power management is handled by ACPI power resources that are
+> shared between the root ports, Thunderbolt controller (NHI) and xHCI
+> controller.
+>
+> The topology with the power resources (marked with []) looks like:
+>
+>   Host bridge
+>     |
+>     +- RP0 ---\
+>     +- RP1 ---|--+--> [TBT]
+>     +- NHI --/   |
+>     |            |
+>     |            v
+>     +- xHCI --> [D3C]
+>
+> Here TBT and D3C are the shared ACPI power resources. ACPI _PR3() method
+> returns either TBT or D3C or both.
+>
+> Say we runtime suspend first the root ports RP0 and RP1, then NHI. Now
+> since the TBT power resource is still on when the root ports are runtime
+> suspended their dev->current_state is set to D3hot. When NHI is runtime
+> suspended TBT is finally turned off but state of the root ports remain
+> to be D3hot.
+>
+> If the user now runs lspci for instance, the result is all 1's like in
+> the below output (07.0 is the first root port, RP0):
+>
+> 00:07.0 PCI bridge: Intel Corporation Device 8a1d (rev ff) (prog-if ff)
+>     !!! Unknown header type 7f
+>     Kernel driver in use: pcieport
+>
+> I short the hardware state is not in sync with the software state
+> anymore. The exact same thing happens with the PME polling thread which
+> ends up bringing the root ports back into D0 after they are runtime
+> suspended.
+>
+> ACPI core already sets the device state to be D3cold when it drops its
+> references to the power resources returned by _PR3 even if these power
+> resources are still physically on (other devices still reference them).
+> However, in PCI core we call acpi_device_get_power() to figure out the
+> power state and that returns the "real" power state based on the state
+> of its power resources.
+>
+> To make it work with the shared power resources modify
+> acpi_pci_get_power_state() so that it reads the ACPI device power state
+> that was cached by the ACPI core. This makes the PCI device power state
+> match the ACPI device power state regardless of state of the shared
+> power resources that may still be on at this point.
+>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  drivers/pci/pci-acpi.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index 1897847ceb0c..b782acac26c5 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -685,7 +685,8 @@ static pci_power_t acpi_pci_get_power_state(struct pci_dev *dev)
+>         if (!adev || !acpi_device_power_manageable(adev))
+>                 return PCI_UNKNOWN;
+>
+> -       if (acpi_device_get_power(adev, &state) || state == ACPI_STATE_UNKNOWN)
+> +       state = adev->power.state;
+> +       if (state == ACPI_STATE_UNKNOWN)
+>                 return PCI_UNKNOWN;
+>
+>         return state_conv[state];
+> --
+> 2.20.1
+>
