@@ -2,147 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 240504F3D9
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2019 07:26:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80D8B4F478
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2019 10:50:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbfFVF04 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 22 Jun 2019 01:26:56 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38970 "EHLO
+        id S1726285AbfFVIuT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 22 Jun 2019 04:50:19 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46197 "EHLO
         mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbfFVF04 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 Jun 2019 01:26:56 -0400
-Received: by mail-pf1-f194.google.com with SMTP id j2so4611585pfe.6;
-        Fri, 21 Jun 2019 22:26:56 -0700 (PDT)
+        with ESMTP id S1726114AbfFVIuT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 Jun 2019 04:50:19 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 81so4749975pfy.13;
+        Sat, 22 Jun 2019 01:50:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
-         :references:in-reply-to:accept-language:content-language
-         :content-transfer-encoding:mime-version;
-        bh=sZRv/LGTOOe6faTsydAViDQ1bUDA3iC8uWlW5RBxb6c=;
-        b=TZ4LSzTa16KC9/e+viKoUd3imXJ1pD/yBNnq5o1E+qoOUgO076Lt8bRUg2ZawwL4/+
-         SxCk1s2dvBjMmigN+QgvNQTeeTMFoon+W6vbDmXa9RjYkHyDFsu6VgMxPiDceMLHlO2W
-         Rdy41rG8BWbTHkWIi0Bh0dRC5c3+6vk0/T8vmLFTFVgygydzPNm92yC+X3wCo/gto90W
-         oag0DhWywOi2ZqEMw5Tn4lOQFyVVAN5TdpueK/gCKxNtjm9vlSo68wTTIHGJvMGANtRg
-         7xiYknlaj5DvOyxeYoHSC9LxzLnXoTHyfGga/6mgjxl88Jy8mK0NA9zfdWUk0bNhEW1M
-         8h4w==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HuyUZznnr+2KTzyGeAevDXOnX1L1s36jECfUjJLEBVY=;
+        b=nQ9fUmlGL1p1hlKj1JC+UdErZcBkQhP+ho3nGSAmkPtmsC1G3BEwYna7ZG/a/zxLnN
+         JEigT7Srdnge2JzAruVO2eDmflLWCk8VO0UYq7RIlj2V3MSFjBJBW9mUcBAKuqT8ecIG
+         JH9JK0i1KvjA9zaZDt+vv9IX+Nlz0l95T0Q/3H64y3jX1mHLjcV40gXsMN35mps9HxAT
+         U8K2LQCQFT8AWkUfuWmgGuPFhuSeS4pNcZaxQGt7g9AiJRpPIBx7ENZCF8P4Loaza2bT
+         2dYB/AhAGQ8/dAfJ7+ALVcU5pOpSaHvUF9KrgREet7st0Ex6qtbFFIswh+VQ6E3RwgHj
+         mYrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
-         :date:message-id:references:in-reply-to:accept-language
-         :content-language:content-transfer-encoding:mime-version;
-        bh=sZRv/LGTOOe6faTsydAViDQ1bUDA3iC8uWlW5RBxb6c=;
-        b=RqUl7uS/zkowKLnYiyrPsH0roSJ4NBZvQtyNVXLd3Gp90moxM3WUs16hSc5ABdl0v3
-         n5+YVd4zICAAtW8T7FMMgk+rk6NOdx/4TkHQI6hA+KH5LfD4fKiHaVfoiV+mymODjt74
-         i/uyqaethTFjduCH5qIQD8uI3bv3xAAJXLJ78bTF0bPQLT8xNH+0+ITGGbaqRlUnSov1
-         eOluc7mVXumKIA458rhCfobXPiYuVJen6SnRnHDpDR0qKWabl6fk5qdDHYeKOaeEhGB9
-         EIia14SFmaq91qiROiPsMACA+yqQTni6eeT+Qci2tq+/QN2gJrAosQM/0RIu/3HW4KVL
-         8hrA==
-X-Gm-Message-State: APjAAAU95Ga/B+DBn6epfHziYGJpGiz4LDmtuun/rMiw5s7EgmghCxHT
-        ByS2dyL9xLFsCa8ovCvI/w4=
-X-Google-Smtp-Source: APXvYqwhL0puArWz+Be/LkkHlaM8fRnUEobz7A4LCH1hwBouqeqhcIaOxqotozGxHd0WWonkbBHE1g==
-X-Received: by 2002:a17:90a:af8b:: with SMTP id w11mr11158769pjq.135.1561181215708;
-        Fri, 21 Jun 2019 22:26:55 -0700 (PDT)
-Received: from PSXP216MB0662.KORP216.PROD.OUTLOOK.COM ([40.100.44.181])
-        by smtp.gmail.com with ESMTPSA id f2sm3735439pgs.83.2019.06.21.22.26.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Jun 2019 22:26:54 -0700 (PDT)
-From:   Jingoo Han <jingoohan1@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Jisheng.Zhang@synaptics.com" <Jisheng.Zhang@synaptics.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "kishon@ti.com" <kishon@ti.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
-        Han Jingoo <jingoohan1@gmail.com>
-Subject: Re: [PATCH V6 2/3] PCI: dwc: Cleanup DBI read and write APIs
-Thread-Topic: [PATCH V6 2/3] PCI: dwc: Cleanup DBI read and write APIs
-Thread-Index: AQHVKCHtRnCtljKhvUCAapB/SWoPlqanJefh
-X-MS-Exchange-MessageSentRepresentingType: 1
-Date:   Sat, 22 Jun 2019 05:26:49 +0000
-Message-ID: <PSXP216MB0662399C169A6D944E7C6A8FAAE60@PSXP216MB0662.KORP216.PROD.OUTLOOK.COM>
-References: <20190621111000.23216-1-vidyas@nvidia.com>
- <20190621111000.23216-2-vidyas@nvidia.com>
-In-Reply-To: <20190621111000.23216-2-vidyas@nvidia.com>
-Accept-Language: ko-KR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-Exchange-Organization-SCL: -1
-X-MS-TNEF-Correlator: 
-X-MS-Exchange-Organization-RecordReviewCfmType: 0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HuyUZznnr+2KTzyGeAevDXOnX1L1s36jECfUjJLEBVY=;
+        b=eOmZ+QlJzDnaZ157PtadpYQ1JAPTxZ6OyIMPMhkmFyTVqKGz/PxC7xBowGKpUvgrQz
+         lD1M4OEfZBgShz0+fGnkKmrCAEYWH23Jkov+iGmguWdriIUh26muUryCWTipjEaUCj3O
+         YA+/NqEcNJyNzjJp2wA3r6dUmvhhI7gCosrv91LhWKUTzWNvXU8IEk4L8ver+Plh/fWf
+         hbHM3FuL5WMaJTKeo0MZUmZXk42Pcbt1CwVobW0499cH2BE+HdQeXZygmhglJSBHHDn0
+         /w0aW4L9qnA3dr3pHOuqngdM2UwLT2soGtTSaemA+iIq7wNi/zBFKguVxzQW+kuZsTyA
+         Logg==
+X-Gm-Message-State: APjAAAW3Bv/wGAoTKYLS9VtDeIq8zHtGQ88YPPhCgPQ0Gy7jzZBd2zI5
+        xDIYdr64dzNtbyxyunyrKyzjpOPgjJND+A==
+X-Google-Smtp-Source: APXvYqxW7xK3j4Vyr1xnfpkzg5t2peLxlCmlJFBZ1lfX9JqIduSzNbSdUfryVMoVr10zrQXZOaysrg==
+X-Received: by 2002:a17:90a:fa18:: with SMTP id cm24mr3869488pjb.120.1561193418682;
+        Sat, 22 Jun 2019 01:50:18 -0700 (PDT)
+Received: from arch ([112.196.181.13])
+        by smtp.gmail.com with ESMTPSA id j13sm8240054pgh.44.2019.06.22.01.50.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 22 Jun 2019 01:50:18 -0700 (PDT)
+Date:   Sat, 22 Jun 2019 14:20:01 +0530
+From:   Puranjay Mohan <puranjay12@gmail.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Chris Snook <chris.snook@gmail.com>
+Subject: Re: [PATCH 0/3] net: ethernet: atheros: atlx: Use PCI generic
+ definitions instead of private duplicates
+Message-ID: <20190622085001.GA11032@arch>
+References: <20190621163921.26188-1-puranjay12@gmail.com>
+ <CAErSpo5TMPokae7BMY8ZcOXtW=GeGsWXX_bqS8SrZnh0pEQYxw@mail.gmail.com>
+ <698d3e3614ae903ae9582547d64c6a9846629e57.camel@perches.com>
+ <CAErSpo6iRVWU-yL5CRF_GEY7CWg5iV=Jw0BrdNV4h3Jvh5AuAw@mail.gmail.com>
+ <838b8e84523151418ab8cda4abdbb114ce24a497.camel@perches.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <838b8e84523151418ab8cda4abdbb114ce24a497.camel@perches.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/21/19, 8:10 PM, Vidya Sagar wrote:
->=20
-> Cleanup DBI read and write APIs by removing "__" (underscore) from their
-> names as there are no no-underscore versions and the underscore versions
-> are already doing what no-underscore versions typically do. It also remov=
-es
-> passing dbi/dbi2 base address as one of the arguments as the same can be
-> derived with in read and write APIs.
+On Fri, Jun 21, 2019 at 11:33:27AM -0700, Joe Perches wrote:
+> On Fri, 2019-06-21 at 13:12 -0500, Bjorn Helgaas wrote:
+> > On Fri, Jun 21, 2019 at 12:27 PM Joe Perches <joe@perches.com> wrote:
+> []
+> > > Subsystem specific local PCI #defines without generic
+> > > naming is poor style and makes treewide grep and
+> > > refactoring much more difficult.
+> > 
+> > Don't worry, we have the same objectives.  I totally agree that local
+> > #defines are a bad thing, which is why I proposed this project in the
+> > first place.
+> 
+> Hi again Bjorn.
+> 
+> I didn't know that was your idea.  Good idea.
+> 
+> > I'm just saying that this is a "first-patch" sort of learning project
+> > and I think it'll avoid some list spamming and discouragement if we
+> > can figure out the scope and shake out some of the teething problems
+> > ahead of time.  I don't want to end up with multiple versions of
+> > dozens of little 2-3 patch series posted every week or two.
+> 
+> Great, that's sensible.
+> 
+> > I'd rather be able to deal with a whole block of them at one time.
+> 
+> Also very sensible.
+> 
+> > > 2: Show that you compiled the object files and verified
+> > >    where possible that there are no object file changes.
+> > 
+> > Do you have any pointers for the best way to do this?  Is it as simple
+> > as comparing output of "objdump -d"?
+> 
+> Generically, yes.
+> 
+> I have a little script that does the equivalent of:
+> 
+> <git reset>
+> make <foo.o>
+> mv <foo.o> <foo.o>.old
+> patch -P1 < <foo_patch>
+> make <foo.o>
+> mv <foo.o> <foo.o>.new
+> diff -urN <(objdump -d <foo.o>.old) <(objdump -d <foo.o>.new)
+> 
+> But it's not foolproof as gcc does not guarantee
+> compilation repeatability.
+> 
+> And some subsystems Makefiles do not allow per-file
+> compilation.
 >
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes from v5:
-> * Removed passing base address as one of the arguments as the same can be=
- derived within
->   the API itself.
-> * Modified ATU read/write APIs to call dw_pcie_{write/read}() API
+Hi Joe,
+I tried using your specified technique here are the steps I took and the
+results I got.
 
-Unlike previous patches (v1~v5), you modified ATU read/write APIs from v6.
-Why do you change ATU read/write APIs to call dw_pcie_{write/read}() API???
-It is not clean-up, but function change. Please add the reason to the commi=
-t message.
+I built the object file before the patch named it "atl2-old.o"
+then I built it after the patch, named it "atl2-new.o"
 
-Best regards,
-Jingoo Han
+then i ran these commands:-
+$ objdump -d atl2-old.o > 1
+$ objdump -d atl2-new.o > 2
+$ diff -urN 1 2
 
->
-> Changes from v4:
-> * This is a new patch in this series
->
->  drivers/pci/controller/dwc/pcie-designware.c | 28 ++++++-------
->  drivers/pci/controller/dwc/pcie-designware.h | 43 ++++++++++++--------
->  2 files changed, 37 insertions(+), 34 deletions(-)
+--- 1	2019-06-22 13:56:17.881392372 +0530
++++ 2	2019-06-22 13:56:35.228018053 +0530
+@@ -1,5 +1,5 @@
 
-.....
+-atl2-old.o:     file format elf64-x86-64
++atl2-new.o:     file format elf64-x86-64
 
->  static inline void dw_pcie_writel_atu(struct dw_pcie *pci, u32 reg, u32 =
-val)
->  {
-> -	__dw_pcie_write_dbi(pci, pci->atu_base, reg, 0x4, val);
-> +	int ret;
-> +
-> +	ret =3D dw_pcie_write(pci->atu_base + reg, 0x4, val);
-> +	if (ret)
-> +		dev_err(pci->dev, "write ATU address failed\n");
->  }
-> =20
->  static inline u32 dw_pcie_readl_atu(struct dw_pcie *pci, u32 reg)
->  {
-> -	return __dw_pcie_read_dbi(pci, pci->atu_base, reg, 0x4);
-> +	int ret;
-> +	u32 val;
-> +
-> +	ret =3D dw_pcie_read(pci->atu_base + reg, 0x4, &val);
-> +	if (ret)
-> +		dev_err(pci->dev, "Read ATU address failed\n");
-> +
-> +	return val;
->  }
-> =20
->  static inline void dw_pcie_dbi_ro_wr_en(struct dw_pcie *pci)
-> --=20
-> 2.17.1
+
+ Disassembly of section .text:
+
+So both the object files are similar.
+
+Thanks,
+--Puranjay
+
+
 
