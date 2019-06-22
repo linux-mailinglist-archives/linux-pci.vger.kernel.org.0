@@ -2,92 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C45944F212
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2019 02:01:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 342054F32B
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2019 04:06:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726075AbfFVABT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jun 2019 20:01:19 -0400
-Received: from mga11.intel.com ([192.55.52.93]:10826 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726070AbfFVABT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 21 Jun 2019 20:01:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jun 2019 17:01:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,402,1557212400"; 
-   d="scan'208";a="163039686"
-Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.162])
-  by orsmga003.jf.intel.com with ESMTP; 21 Jun 2019 17:01:18 -0700
-Message-ID: <1561163018.12836.1.camel@intel.com>
-Subject: Re: [RFC V1 0/6] Introduce dynamic allocation/freeing of MSI-X
- vectors
-From:   Megha Dey <megha.dey@intel.com>
-To:     bhelgaas@google.com, linux-pci@vger.kernel.org
-Cc:     ashok.raj@intel.com, jacob.jun.pan@linux.intel.com
-Date:   Fri, 21 Jun 2019 17:23:38 -0700
-In-Reply-To: <1560981824-3966-1-git-send-email-megha.dey@linux.intel.com>
-References: <1560981824-3966-1-git-send-email-megha.dey@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
+        id S1726052AbfFVCGF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jun 2019 22:06:05 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:48078 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfFVCGE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jun 2019 22:06:04 -0400
+Received: from localhost (unknown [50.234.174.228])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id CE33E14DE8713;
+        Fri, 21 Jun 2019 19:06:03 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 22:06:00 -0400 (EDT)
+Message-Id: <20190621.220600.907494131596072466.davem@davemloft.net>
+To:     hkallweit1@gmail.com
+Cc:     bhelgaas@google.com, nic_swsd@realtek.com,
+        linux-pci@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next 0/2] PCI: let pci_disable_link_state propagate
+ errors
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <5ea56278-05e2-794f-5f66-23343e72164c@gmail.com>
+References: <5ea56278-05e2-794f-5f66-23343e72164c@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 21 Jun 2019 19:06:04 -0700 (PDT)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2019-06-19 at 15:03 -0700, Megha Dey wrote:
-> Currently, MSI-X vector enabling and allocation for a PCIe device is
-> static i.e. a device driver gets only one chance to enable a specific
-> number of MSI-X vectors, usually during device probe. Also, in many
-> cases, drivers usually reserve more than required number of vectors
-> anticipating their use, which unnecessarily blocks resources that
-> could have been made available to other devices. Lastly, there is no
-> way for drivers to reserve more vectors, if the MSI-x has already
-> been
-> enabled for that device.
->  
-> Hence, a dynamic MSI-X kernel infrastructure can benefit drivers by
-> deferring MSI-X allocation to post probe phase, where actual demand
-> information is available.
->  
-> This patchset enables the dynamic allocation/de-allocation of MSI-X
-> vectors by introducing 2 new APIs:
-> pci_alloc_irq_vectors_dyn() and pci_free_irq_vectors_grp():
-> 
-> We have had requests from some of the NIC/RDMA users who have lots of
-> interrupt resources and would like to allocate them on demand,
-> instead of using an all or none approach.
-> 
-> The APIs are fairly well tested (multiple allocations/deallocations),
-> but we have no early adopters yet. Hence, sending this series as an
-> RFC for review and comments.
-> 
-> The patches are based out of Linux 5.2-rc5.
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Date: Tue, 18 Jun 2019 23:12:56 +0200
 
-I have resent the patches to include LKML.
-https://lkml.org/lkml/2019/6/21/923
+> Drivers like r8169 rely on pci_disable_link_state() having disabled
+> certain ASPM link states. If OS can't control ASPM then
+> pci_disable_link_state() turns into a no-op w/o informing the caller.
+> The driver therefore may falsely assume the respective ASPM link
+> states are disabled. Let pci_disable_link_state() propagate errors
+> to the caller, enabling the caller to react accordingly.
+> 
+> I'd propose to let this series go through the netdev tree if the PCI
+> core extension is acked by the PCI people.
 
-> 
-> Megha Dey (6):
->   PCI/MSI: New structures/macros for dynamic MSI-X allocation
->   PCI/MSI: Dynamic allocation of MSI-X vectors by group
->   x86: Introduce the dynamic teardown function
->   PCI/MSI: Introduce new structure to manage MSI-x entries
->   PCI/MSI: Free MSI-X resources by group
->   Documentation: PCI/MSI: Document dynamic MSI-X infrastructure
-> 
->  Documentation/PCI/MSI-HOWTO.txt |  38 +++++
->  arch/x86/include/asm/x86_init.h |   1 +
->  arch/x86/kernel/x86_init.c      |   6 +
->  drivers/pci/msi.c               | 363
-> +++++++++++++++++++++++++++++++++++++---
->  drivers/pci/probe.c             |   9 +
->  include/linux/device.h          |   3 +
->  include/linux/msi.h             |  13 ++
->  include/linux/pci.h             |  61 +++++++
->  kernel/irq/msi.c                |  34 +++-
->  9 files changed, 497 insertions(+), 31 deletions(-)
-> 
+Series applied, thanks Heiner.
