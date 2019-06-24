@@ -2,70 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C851508E1
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2019 12:27:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39D605094F
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2019 12:57:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfFXK16 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jun 2019 06:27:58 -0400
-Received: from gate.crashing.org ([63.228.1.57]:43624 "EHLO gate.crashing.org"
+        id S1728761AbfFXK5a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jun 2019 06:57:30 -0400
+Received: from mga05.intel.com ([192.55.52.43]:11126 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727101AbfFXK16 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:27:58 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5OARqGN028142;
-        Mon, 24 Jun 2019 05:27:53 -0500
-Message-ID: <10cafe60fa12d3801d8645046be02771e8af7619.camel@kernel.crashing.org>
-Subject: Re: Question about call to pci_assign_unassigned_bus_resources in
- amdgpu
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     "Koenig, Christian" <Christian.Koenig@amd.com>
-Cc:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Date:   Mon, 24 Jun 2019 20:27:49 +1000
-In-Reply-To: <0680ee65-5960-18b8-d7a2-eb87ec2056ef@amd.com>
-References: <ed3d3e4e87b54fa4d0d8e68abeebb7be6711b82a.camel@kernel.crashing.org>
-         <71904c98-be86-2807-d5c9-4b90c7387f6f@amd.com>
-         <ea9f770c373ad9c6a998edbd603972014e4b7fea.camel@kernel.crashing.org>
-         <f4cb8429-a32d-d3af-dee0-0bae1935cb47@amd.com>
-         <b873931988c7e6ccf61010e8ad03cf2d7f3e4b09.camel@kernel.crashing.org>
-         <0680ee65-5960-18b8-d7a2-eb87ec2056ef@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1728477AbfFXK5a (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:57:30 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 03:57:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,411,1557212400"; 
+   d="scan'208";a="182612908"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 24 Jun 2019 03:57:26 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 24 Jun 2019 13:57:25 +0300
+Date:   Mon, 24 Jun 2019 13:57:25 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] PCI / ACPI: Use cached ACPI device state to get
+ PCI device power state
+Message-ID: <20190624105725.GD2640@lahna.fi.intel.com>
+References: <20190618161858.77834-1-mika.westerberg@linux.intel.com>
+ <CAJZ5v0hfCnyuAA7kC5-fXRo-Mf0jvGZQASV9T4iK8QxsqHMN_g@mail.gmail.com>
+ <20190621130920.GB82584@google.com>
+ <4163488.7S8HHuhOPg@kreacher>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4163488.7S8HHuhOPg@kreacher>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 2019-06-24 at 09:42 +0000, Koenig, Christian wrote:
+On Sat, Jun 22, 2019 at 10:51:28AM +0200, Rafael J. Wysocki wrote:
+> > Thanks, this is all very helpful!  Do you by any chance add
+> > lore.kernel.org links to commit logs when applying patches?  This is a
+> > case where I think the discussion could be useful in the future.
+> > 
+> > Link: https://lore.kernel.org/r/20190618161858.77834-2-mika.westerberg@linux.intel.com
 > 
-> > Ok, Ill plumb it that way in my branch, I'll let you know when it's
-> > worth testing. BTW. Which GPUs typically are affected ? I'm pretty
-> > sure
-> > my old R9 290 isn't :-) But I was thinking of upgrading so...
+> Agreed, and thanks for the URL.
 > 
-> Well in theory we have the functionality 10+ years now, but only 
-> activated it in all hardware versions recently.
-> 
-> Polaris and Vega should definitely have it, older hardware most
-> likely not.
-> 
-> You can check the PCI capabilities and look for #15, if it's present 
-> then that should be supported.
+> I guess Mika can add this tag to the patch changelog.
 
-Ok, well, we'll see if I decide to get myself a Navi when it comes out,
-otherwise I'll rely on your testing :)
-
-That said, I'm keen on having a discussion about our resource
-assignment code at Plumbers with whoever can make it. The current
-situation is rather horrible, it would be good to ensure at least that
-we all understand and agree on what it's trying to do, what it's
-actually doing, and what we want to do, which the more I stare at it
-I'm reasonably sure are very different things depending on the
-context...
-
-Cheers,
-Ben.
-
-
+Sure I'll add it.
