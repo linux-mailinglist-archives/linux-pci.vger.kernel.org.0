@@ -2,56 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C20DA50203
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2019 08:16:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71C315027B
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2019 08:45:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfFXGQu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jun 2019 02:16:50 -0400
-Received: from verein.lst.de ([213.95.11.211]:52606 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726343AbfFXGQu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 24 Jun 2019 02:16:50 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id A185E68AFE; Mon, 24 Jun 2019 08:16:17 +0200 (CEST)
-Date:   Mon, 24 Jun 2019 08:16:17 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Daniel Drake <drake@endlessm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Keith Busch <kbusch@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-ide@vger.kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v2 2/5] nvme: rename "pci" operations to "mmio"
-Message-ID: <20190624061617.GA2848@lst.de>
-References: <20190620051333.2235-1-drake@endlessm.com> <20190620051333.2235-3-drake@endlessm.com> <20190620061038.GA20564@lst.de> <CAD8Lp45ua=L+ixO+du=Njhy+dxjWobWA+V1i+Y2p6faeyt1FBQ@mail.gmail.com>
+        id S1725916AbfFXGpr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jun 2019 02:45:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45500 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFXGpr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jun 2019 02:45:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=AJNWEGJIKDd3zy48iUOMkrDN5zu/iHSPzKernfVg8M8=; b=Mh/q5FnmR+faF/a1V6A+X8EvQ
+        9PpQ4CXlMiYqtpivjYKYu5VGfA+EPMiFUA+9ct8EZggQVj3Gx+gvadUnoPHu+C7Yd+UVO204L51bu
+        xx/9SKwJ1iDnT2CkEBsIM1nUj5kJX7nctb5hDvh3VUZ9RT60LS5HBf+RN62YUapKbMZPiJiI3GSP4
+        eAgJ5t5b2aBV6zaJtcDm5IN6N0nSKvlil5mMq0/adXULOD9ooY9SjukG+p73pMj/qbkMqz+XRPRwD
+        H2NA5jbZmfso9Tt/SmXJHXYsxNI6AwejnN2q8wRST0C6dtzXrssDtD+/OsNmvsrl+9BwBObQ4BUEe
+        wOlPUMTqQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hfIjZ-0002lV-8p; Mon, 24 Jun 2019 06:45:45 +0000
+Date:   Sun, 23 Jun 2019 23:45:45 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Puranjay Mohan <puranjay12@gmail.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] net: fddi: skfp: Rename PCI_REV_ID to
+ PCI_REVISION_ID
+Message-ID: <20190624064545.GA23977@infradead.org>
+References: <20190620180754.15413-1-puranjay12@gmail.com>
+ <20190620180754.15413-2-puranjay12@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD8Lp45ua=L+ixO+du=Njhy+dxjWobWA+V1i+Y2p6faeyt1FBQ@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190620180754.15413-2-puranjay12@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 04:11:26PM +0800, Daniel Drake wrote:
-> On Thu, Jun 20, 2019 at 2:11 PM Christoph Hellwig <hch@lst.de> wrote:
-> > The Linux NVMe driver will deal with NVMe as specified plus whatever
-> > minor tweaks we'll need for small bugs.  Hiding it behind an AHCI
-> > device is completely out of scope and will not be accepted.
-> 
-> Do you have any new suggestions for alternative ways we can implement
-> support for this storage configuration?
+On Thu, Jun 20, 2019 at 11:37:52PM +0530, Puranjay Mohan wrote:
+> Rename the PCI_REV_ID define to PCI_REVISION_ID in skfbi.h
+> and drvfbi.c to make it compatible with the pci_regs.h
+> which defines it as PCI_REVISION_ID.
 
-IFF we want to support it it has to be done at the PCIe layer.  But
-even that will require actual documentation and support from Intel.
-
-If Intel still believes this scheme is their magic secret to control
-the NVMe market and give themselves and unfair advantage over their
-competitors there is not much we can do.
+We already cache the revision in struct pci_dev.  In doubt you should
+use that one.
