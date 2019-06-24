@@ -2,107 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DB39451A77
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2019 20:25:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D4E751A81
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2019 20:28:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732831AbfFXSZA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jun 2019 14:25:00 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37437 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728275AbfFXSZA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jun 2019 14:25:00 -0400
-Received: by mail-oi1-f195.google.com with SMTP id t76so10532177oih.4
-        for <linux-pci@vger.kernel.org>; Mon, 24 Jun 2019 11:25:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NsFsqmCeB4cJxbUvEFO6xcZSO/kARHjBGNTe6zm2OGk=;
-        b=ISIKS+QlpEyn1hNfgdDi5hMHKw8iit0945EcE3yN7j+0wsgacWlTs5VS/2eHyNPn4P
-         zFzHaSyW66Yiy2RhkTwuJ3InCkBlGpTPkGdBxkYOWHXgUlVbX7KrnXrnxhmbl79B80YX
-         fCQYLMQ6T4q3GxjWwuuuag5EPhpGhA+skRXUiofVA4jxcOoybEtzKs47HHrVewo4aeOH
-         xEgr2mAYq4kDK9twlyulxuXtH8x20UgS6h2b36rjnfm3Zpe3kyRxJhg0wXN2sl5N3Gx9
-         a1ANzgYTbnIct0aX4IAsj7uocTALXH4slbfh3ZtWL5Y9qp3yWn0Ovu6E52I1ME72busN
-         XZfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NsFsqmCeB4cJxbUvEFO6xcZSO/kARHjBGNTe6zm2OGk=;
-        b=RMGrD612Wyo+27m0bF38DiAQ7LFhx7rjcn5Hy0UzHDQMoIS+NaAs0kRYp7qK10sP56
-         q7m/ZSVzzgZEfhzC0i0ZYBkKgjgZn2WQ+nAR2RnKgUd8EOd8RK8TC/vicryYfZvmH0se
-         WZXS2etytw/IG0kPwxZLkuYF7y5TER++N/dWRdgOZc9qa4FMbj3XuabJh4yZKkNd/yLM
-         hQ6nx8/8jwwMtv5W1dH3N0ligp+NK/sG6A+INgjiaug71p82hz6t+q8MH5xHj2L5HCpa
-         dw00kGXPV2HudABlohFE/HFffZpIVD0+eaYksLX6el3QwWC5cpvFlMWfgDH2IeBRoCxO
-         UWgA==
-X-Gm-Message-State: APjAAAXI7GKwyUfCNoGuTMmPZHyfY6pPtFjxWXcV0rmKXu/J3UYh7Nbh
-        cVhPf5q7gx157zDXFheBrONdy+bhJAsUDlfq5ch0pA==
-X-Google-Smtp-Source: APXvYqxMfIu+2D2MtYcv2E7EXzI2zB57kKNYjO9p4H9g9zR42W2XzhT13YcbI1eS8VOBT1jN50QqXbLB+mAAmyIYdBg=
-X-Received: by 2002:aca:fc50:: with SMTP id a77mr11696883oii.0.1561400699583;
- Mon, 24 Jun 2019 11:24:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-6-hch@lst.de>
- <20190620191733.GH12083@dhcp22.suse.cz>
-In-Reply-To: <20190620191733.GH12083@dhcp22.suse.cz>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 24 Jun 2019 11:24:48 -0700
-Message-ID: <CAPcyv4h9+Ha4FVrvDAe-YAr1wBOjc4yi7CAzVuASv=JCxPcFaw@mail.gmail.com>
-Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
-To:     Michal Hocko <mhocko@kernel.org>
+        id S1728025AbfFXS2r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jun 2019 14:28:47 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:40200 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726885AbfFXS2r (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 24 Jun 2019 14:28:47 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hfThm-0001JO-NG; Mon, 24 Jun 2019 12:28:39 -0600
+To:     Jason Gunthorpe <jgg@ziepe.ca>
 Cc:     Christoph Hellwig <hch@lst.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190620161240.22738-1-logang@deltatee.com>
+ <CAPcyv4ijztOK1FUjLuFing7ps4LOHt=6z=eO=98HHWauHA+yog@mail.gmail.com>
+ <20190620193353.GF19891@ziepe.ca> <20190624073126.GB3954@lst.de>
+ <20190624134641.GA8268@ziepe.ca> <20190624135024.GA11248@lst.de>
+ <20190624135550.GB8268@ziepe.ca>
+ <7210ba39-c923-79ca-57bb-7cf9afe21d54@deltatee.com>
+ <20190624181632.GC8268@ziepe.ca>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <bbd81ef9-b4f7-3ba7-7f93-85f602495e19@deltatee.com>
+Date:   Mon, 24 Jun 2019 12:28:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+MIME-Version: 1.0
+In-Reply-To: <20190624181632.GC8268@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, hch@lst.de, jgg@ziepe.ca
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 12:17 PM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Thu 13-06-19 11:43:08, Christoph Hellwig wrote:
-> > noveau is currently using this through an odd hmm wrapper, and I plan
-> > to switch it to the real thing later in this series.
-> >
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > ---
-> >  mm/mempolicy.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> > index 01600d80ae01..f9023b5fba37 100644
-> > --- a/mm/mempolicy.c
-> > +++ b/mm/mempolicy.c
-> > @@ -2098,6 +2098,7 @@ alloc_pages_vma(gfp_t gfp, int order, struct vm_area_struct *vma,
-> >  out:
-> >       return page;
-> >  }
-> > +EXPORT_SYMBOL_GPL(alloc_pages_vma);
->
-> All allocator exported symbols are EXPORT_SYMBOL, what is a reason to
-> have this one special?
 
-I asked for this simply because it was not exported historically. In
-general I want to establish explicit export-type criteria so the
-community can spend less time debating when to use EXPORT_SYMBOL_GPL
-[1].
 
-The thought in this instance is that it is not historically exported
-to modules and it is safer from a maintenance perspective to start
-with GPL-only for new symbols in case we don't want to maintain that
-interface long-term for out-of-tree modules.
+On 2019-06-24 12:16 p.m., Jason Gunthorpe wrote:
+> On Mon, Jun 24, 2019 at 10:53:38AM -0600, Logan Gunthorpe wrote:
+>>> It is only a very narrow case where you can take shortcuts with
+>>> dma_addr_t, and I don't think shortcuts like are are appropriate for
+>>> the mainline kernel..
+>>
+>> I don't think it's that narrow and it opens up a lot of avenues for
+>> system design that people are wanting to go. If your high speed data
+>> path can avoid the root complex and CPU, you can design a system which a
+>> much smaller CPU and fewer lanes directed at the CPU.
+> 
+> I mean the shortcut that something generates dma_addr_t for Device A
+> and then passes it to Device B - that is too hacky for mainline.
 
-Yes, we always reserve the right to remove / change interfaces
-regardless of the export type, but history has shown that external
-pressure to keep an interface stable (contrary to
-Documentation/process/stable-api-nonsense.rst) tends to be less for
-GPL-only exports.
+Oh, that's not a shortcut. It's completely invalid and not likely to
+work in any case. If you're mapping something you have to pass the
+device that the dma_addr_t is being programmed into.
 
-[1]: https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2018-September/005688.html
+> Sounded like this series does generate the dma_addr for the correct
+> device..
+
+This series doesn't generate any DMA addresses with dma_map(). The
+current p2pdma code ensures everything is behind the same root port and
+only uses the pci bus address. This is valid and correct, but yes it's
+something to expand upon.
+
+I'll be doing some work shortly to add transactions that go through the
+IOMMU and calls dma_map_* when appropriate.
+
+Logan
