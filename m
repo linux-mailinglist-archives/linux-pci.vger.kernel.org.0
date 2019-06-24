@@ -2,58 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3813750976
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2019 13:09:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86C755097B
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2019 13:11:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbfFXLJx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jun 2019 07:09:53 -0400
-Received: from mga17.intel.com ([192.55.52.151]:29468 "EHLO mga17.intel.com"
+        id S1729639AbfFXLLT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jun 2019 07:11:19 -0400
+Received: from gate.crashing.org ([63.228.1.57]:40470 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727732AbfFXLJx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 24 Jun 2019 07:09:53 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 04:09:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,411,1557212400"; 
-   d="scan'208";a="182614778"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 24 Jun 2019 04:09:50 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 24 Jun 2019 14:09:49 +0300
-Date:   Mon, 24 Jun 2019 14:09:49 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 1/2] PCI: Simplify
- pci_bus_distribute_available_resources()
-Message-ID: <20190624110949.GI2640@lahna.fi.intel.com>
-References: <20190622210310.180905-1-helgaas@kernel.org>
- <20190622210310.180905-2-helgaas@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190622210310.180905-2-helgaas@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        id S1727282AbfFXLLT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 24 Jun 2019 07:11:19 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5OBB6U9029913;
+        Mon, 24 Jun 2019 06:11:07 -0500
+Message-ID: <41b68d14c2805da16e8b563236232c22e9203ec0.camel@kernel.crashing.org>
+Subject: Re: Archs using generic PCI controller drivers vs. resource policy
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Date:   Mon, 24 Jun 2019 21:11:04 +1000
+In-Reply-To: <20190624110206.GA6541@infradead.org>
+References: <5f3dcc3a8dafad188e3adb8ee9cf347bebdee7f6.camel@kernel.crashing.org>
+         <20190624110206.GA6541@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jun 22, 2019 at 04:03:10PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Mon, 2019-06-24 at 04:02 -0700, Christoph Hellwig wrote:
+> On Sun, Jun 23, 2019 at 10:30:42AM +1000, Benjamin Herrenschmidt wrote:
+> > This is wrong. I want to move it to the architecture (initially,
+> > eventually it should be platform driven, but the default will start
+> > with architecture specific to avoid changing the existing behaviours
+> > while consolidating the code).
 > 
-> Reorder pci_bus_distribute_available_resources() to group related code
-> together.  No functional change intended.
-> 
-> Link: https://lore.kernel.org/r/PS2P216MB0642C7A485649D2D787A1C6F80000@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM
-> Based-on-patch-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> [bhelgaas: extracted from larger patch]
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Doing this per arch sounds fundamentally wrong.  At best per firmware
+> type, but hopefully firmware messing with PCIe setup is slowly going
+> away, at least outside of x86.
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+No it's actually the other way around. UEFI/ACPI is growing outside of
+x86 and it *is* essing with PCIe in ways we need to deal with better
+(it's somewhat broken on arm64 today).
+
+That said, the policy doesn't belong in the host bridge driver. It's
+platform (or firmware) driven. At the moment, those platform/firmware
+type decisions are done in the architecture. This can change, but I
+won't change everything in one day.
+
+Keep in mind that what I'm doing is a clean up keeping existing
+behaviours as much as possible. Once we don't have 36 different ways of
+doing the same thing, we can look at whether we want to change the
+actual policies for some platforms/firmware/arch combinations.
+
+Today, it's a practical fact that the resource allocation policy is
+driven by the arch/platform code.
+
+The fact that some host bridge drivers in drivers/pci/controller
+effectively implement a resource allocation policy by diretly calling
+stuff they shouldn't be calling is what I'm trying to fix.
+
+So I just want to make the arch (today) set a default policy and have
+the controller drivers call a generic function that performs the
+resource management according to said policy.
+
+> > To do that right, I want to understand which archs can potentially use
+> > the code in drivers/pci/controller today so I can change those archs to
+> > explicitely set the default to "reassign everything" (and take the
+> > policy out of the drivers themselves).
+> > 
+> > So far I've counted arm, arm64 (DT, not ACPI) and nios2. Any other ?
+> 
+> riscv at least and probably anything that can be synthesized to common
+> FPGAs with PCIe support.
+
+Ok. I'll set riscv default policy to reassign all like arm and arm64
+for now.
+
+Cheers,
+Ben.
+
