@@ -2,193 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A5D551EF4
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 01:09:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D78A51F35
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 01:46:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbfFXXJl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jun 2019 19:09:41 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:58549 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728045AbfFXXJl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jun 2019 19:09:41 -0400
-Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id d4c091cf0ca37d7c; Tue, 25 Jun 2019 01:09:37 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI: PM: Skip devices in D0 for suspend-to-idle
-Date:   Tue, 25 Jun 2019 01:09:36 +0200
-Message-ID: <2287147.DxjcvLeq6l@kreacher>
-In-Reply-To: <CAJZ5v0gGdXmgc_9r2rbiadq4e31hngpjYQ40QoC6C0z19da_hQ@mail.gmail.com>
-References: <1668247.RaJIPSxJUN@kreacher> <CAJZ5v0hdtXqoK84DpYtyMSCnkR9zOHFiUPAzWZDtkFmEjyWD1g@mail.gmail.com> <CAJZ5v0gGdXmgc_9r2rbiadq4e31hngpjYQ40QoC6C0z19da_hQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        id S1728255AbfFXXqn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jun 2019 19:46:43 -0400
+Received: from gate.crashing.org ([63.228.1.57]:41372 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727561AbfFXXqn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 24 Jun 2019 19:46:43 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5ONj6Nk032164;
+        Mon, 24 Jun 2019 18:45:07 -0500
+Message-ID: <8a53232416cce158fad35b781eb80b3ace3afc08.camel@kernel.crashing.org>
+Subject: Re: [PATCH 2/2] PCI: Skip resource distribution when no hotplug
+ bridges
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Date:   Tue, 25 Jun 2019 09:45:04 +1000
+In-Reply-To: <20190624112449.GJ2640@lahna.fi.intel.com>
+References: <20190622210310.180905-1-helgaas@kernel.org>
+         <20190622210310.180905-3-helgaas@kernel.org>
+         <20190624112449.GJ2640@lahna.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday, June 25, 2019 12:20:26 AM CEST Rafael J. Wysocki wrote:
-> On Mon, Jun 24, 2019 at 11:37 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Mon, Jun 24, 2019 at 2:43 PM Jon Hunter <jonathanh@nvidia.com> wrote:
-> > >
-> > > Hi Rafael,
-> > >
-> > > On 13/06/2019 22:59, Rafael J. Wysocki wrote:
-> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > >
-> > > > Commit d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
-> > > > attempted to avoid a problem with devices whose drivers want them to
-> > > > stay in D0 over suspend-to-idle and resume, but it did not go as far
-> > > > as it should with that.
-> > > >
-> > > > Namely, first of all, the power state of a PCI bridge with a
-> > > > downstream device in D0 must be D0 (based on the PCI PM spec r1.2,
-> > > > sec 6, table 6-1, if the bridge is not in D0, there can be no PCI
-> > > > transactions on its secondary bus), but that is not actively enforced
-> > > > during system-wide PM transitions, so use the skip_bus_pm flag
-> > > > introduced by commit d491f2b75237 for that.
-> > > >
-> > > > Second, the configuration of devices left in D0 (whatever the reason)
-> > > > during suspend-to-idle need not be changed and attempting to put them
-> > > > into D0 again by force is pointless, so explicitly avoid doing that.
-> > > >
-> > > > Fixes: d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
-> > > > Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > > Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > >
-> > > I have noticed a regression in both the mainline and -next branches on
-> > > one of our boards when testing suspend. The bisect is point to this
-> > > commit and reverting on top of mainline does fix the problem. So far I
-> > > have not looked at this in close detail but kernel log is showing ...
-> >
-> > Can you please collect a log like that, but with dynamic debug in
-> > pci-driver.c enabled?
-> >
-> > Note that reverting this commit is rather out of the question, so we
-> > need to get to the bottom of the failure.
+On Mon, 2019-06-24 at 14:24 +0300, Mika Westerberg wrote:
+> > 
+> > I'm pretty sure this patch preserves the previous behavior of
+> > pci_bus_distribute_available_resources(), but I'm not sure that
+> > behavior is what we want.
+> > 
+> > For example, in the following topology, when we process bus 10, we
+> > find two non-hotplug bridges and no hotplug bridges, so IIUC we
+> > return
+> > without distributing any resources to them.  But I would think we
+> > should try to give 10:1c.0 more space if possible because it has a
+> > hotplug bridge below it.
+> > 
+> >    00:1c.0: hotplug bridge to [bus 10-2f]
+> >      10:1c.0: non-hotplug bridge to [bus 11-2e]
+> >        11:00.0: hotplug bridge to [bus 12-2e]
+> >      10:1c.1: non-hotplug bridge to [bus 2f]
 > 
-> I suspect that there is a problem with the pm_suspend_via_firmware()
-> check which returns 'false' on the affected board, but the platform
-> actually removes power from devices left in D0 during suspend.
-> 
-> I guess it would be more appropriate to check something like
-> pm_suspend_no_platform() which would return 'true' in the
-> suspend-to-idle patch w/ ACPI.
+> Yes, I agree in this case we want to preserve more space for 10:1c.0.
 
-So I wonder if the patch below makes any difference?
+I sitll can't make sense of any of this stuff though.
 
----
- drivers/pci/pci-driver.c |    8 ++++----
- include/linux/suspend.h  |   26 ++++++++++++++++++++++++--
- kernel/power/suspend.c   |    3 +++
- 3 files changed, 31 insertions(+), 6 deletions(-)
+We only every distribute resources when using
+pci_assign_unassigned_bridge_resources which we only use some cases,
+and it's completely non obvious why we would use it there and not in
+other places.
 
-Index: linux-pm/include/linux/suspend.h
-===================================================================
---- linux-pm.orig/include/linux/suspend.h
-+++ linux-pm/include/linux/suspend.h
-@@ -209,8 +209,9 @@ extern int suspend_valid_only_mem(suspen
- 
- extern unsigned int pm_suspend_global_flags;
- 
--#define PM_SUSPEND_FLAG_FW_SUSPEND	(1 << 0)
--#define PM_SUSPEND_FLAG_FW_RESUME	(1 << 1)
-+#define PM_SUSPEND_FLAG_FW_SUSPEND	BIT(0)
-+#define PM_SUSPEND_FLAG_FW_RESUME	BIT(1)
-+#define PM_SUSPEND_FLAG_NO_PLATFORM	BIT(2)
- 
- static inline void pm_suspend_clear_flags(void)
- {
-@@ -227,6 +228,11 @@ static inline void pm_set_resume_via_fir
- 	pm_suspend_global_flags |= PM_SUSPEND_FLAG_FW_RESUME;
- }
- 
-+static inline void pm_set_suspend_no_platform(void)
-+{
-+	pm_suspend_global_flags |= PM_SUSPEND_FLAG_NO_PLATFORM;
-+}
-+
- /**
-  * pm_suspend_via_firmware - Check if platform firmware will suspend the system.
-  *
-@@ -268,6 +274,22 @@ static inline bool pm_resume_via_firmwar
- 	return !!(pm_suspend_global_flags & PM_SUSPEND_FLAG_FW_RESUME);
- }
- 
-+/**
-+ * pm_suspend_no_platform - Check if platform may change device power states.
-+ *
-+ * To be called during system-wide power management transitions to sleep states
-+ * or during the subsequent system-wide transitions back to the working state.
-+ *
-+ * Return 'true' if the power states of devices remain under full control of the
-+ * kernel throughout the system-wide suspend and resume cycle in progress (that
-+ * is, if a device is put into a certain power state during suspend, it can be
-+ * expected to remain in that state during resume).
-+ */
-+static inline bool pm_suspend_no_platform(void)
-+{
-+	return !!(pm_suspend_global_flags & PM_SUSPEND_FLAG_NO_PLATFORM);
-+}
-+
- /* Suspend-to-idle state machnine. */
- enum s2idle_states {
- 	S2IDLE_STATE_NONE,      /* Not suspended/suspending. */
-Index: linux-pm/kernel/power/suspend.c
-===================================================================
---- linux-pm.orig/kernel/power/suspend.c
-+++ linux-pm/kernel/power/suspend.c
-@@ -493,6 +493,9 @@ int suspend_devices_and_enter(suspend_st
- 
- 	pm_suspend_target_state = state;
- 
-+	if (state == PM_SUSPEND_TO_IDLE)
-+		pm_set_suspend_no_platform();
-+
- 	error = platform_suspend_begin(state);
- 	if (error)
- 		goto Close;
-Index: linux-pm/drivers/pci/pci-driver.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci-driver.c
-+++ linux-pm/drivers/pci/pci-driver.c
-@@ -870,7 +870,7 @@ static int pci_pm_suspend_noirq(struct d
- 			pci_dev->bus->self->skip_bus_pm = true;
- 	}
- 
--	if (pci_dev->skip_bus_pm && !pm_suspend_via_firmware()) {
-+	if (pci_dev->skip_bus_pm && pm_suspend_no_platform()) {
- 		dev_dbg(dev, "PCI PM: Skipped\n");
- 		goto Fixup;
- 	}
-@@ -925,10 +925,10 @@ static int pci_pm_resume_noirq(struct de
- 	/*
- 	 * In the suspend-to-idle case, devices left in D0 during suspend will
- 	 * stay in D0, so it is not necessary to restore or update their
--	 * configuration here and attempting to put them into D0 again may
--	 * confuse some firmware, so avoid doing that.
-+	 * configuration here and attempting to put them into D0 again is
-+	 * pointless, so avoid doing that.
- 	 */
--	if (!pci_dev->skip_bus_pm || pm_suspend_via_firmware())
-+	if (!(pci_dev->skip_bus_pm && pm_suspend_no_platform()))
- 		pci_pm_default_resume_early(pci_dev);
- 
- 	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+We also don't distribute during the initial root survey meaning afaik
+that we get toast for any hotplug bridge that has stuff already there
+at boot.
 
+Also, distributing the "available" space means we leave nothing for
+potential SR-IOV siblings... have we ended up bloting the very PCIe-
+centric assumption that it's "unlikely" that a hotplug bridge has an
+SR-IOV sibling ?
+
+This is all a terrible mess and I feel that all these little tweaks
+here or there are just making it even more impossible to completely
+grasp or predict how it will behave.
+
+Ben.
 
 
