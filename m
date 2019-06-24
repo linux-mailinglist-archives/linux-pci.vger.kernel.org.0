@@ -2,711 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3917150F9F
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2019 17:04:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10DA95180A
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2019 18:08:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbfFXPEy convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 24 Jun 2019 11:04:54 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44225 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727454AbfFXPEy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jun 2019 11:04:54 -0400
-Received: by mail-ot1-f68.google.com with SMTP id b7so13789977otl.11
-        for <linux-pci@vger.kernel.org>; Mon, 24 Jun 2019 08:04:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qGRf0vgO83EDIZRv5GFMomGD7780fcyeiaUgnNA8I2I=;
-        b=syHwaI4rVuvsbGxvMURE/pM06gJ7HB16TMWj08RozoeTglfXYoPsPwKBcpBYfuEVPr
-         aqhsPellIbhx23KOOcnvOW2b8/eqAnca7XDcZmx1lIY4L+tAyOSqgbnn96XiRmKO0cMK
-         HxKJx34p5JcH2JFLX6cei8TzpGN34FdkbJnPi1VallE6DPhvaYhJOZeXpdGQlUUf/Cg5
-         T4Ysqr6c78JipFls3Y6G4h2FiZ8RlkDjdfUxQ0YIJIn0U9RT87+QCuNdPdvEklT7V+c+
-         JRiTqwq4Ri5/mkNrrUVpwwIpFmE9IgDvVy6eNIlvCkNtMYbkwN5xq3K6DHesxulk7QfZ
-         gGHg==
-X-Gm-Message-State: APjAAAXKqTJTC8QSlWo/+HJtw9Q+lOje+Vvyy//I+TUtohZqI5StfJvt
-        LvKhKk78QyCYv1DeNGzUx2E+MLa00pXTvDhyw1BFu8EfkxI=
-X-Google-Smtp-Source: APXvYqzIpDC4JLt1KmqYxWbFVxJF2SKAJ+ybMKWfaMJUsDUsdq5bXtBGCw4xPL9QKcZZq29FdkOCLvKCgSspsOKSgl8=
-X-Received: by 2002:a9d:2f69:: with SMTP id h96mr88297844otb.366.1561388692309;
- Mon, 24 Jun 2019 08:04:52 -0700 (PDT)
+        id S1726715AbfFXQIV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jun 2019 12:08:21 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:36892 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727579AbfFXQIV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 24 Jun 2019 12:08:21 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hfRVf-0007f9-UM; Mon, 24 Jun 2019 10:08:00 -0600
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190620161240.22738-1-logang@deltatee.com>
+ <20190624072752.GA3954@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com>
+Date:   Mon, 24 Jun 2019 10:07:56 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <20190507201245.9295-5-kherbst@redhat.com> <20190520211933.GA57618@google.com>
- <CACO55tsHi+4gRMC=XqOypJttztKNe5oKxxk0eqEVxGZoMzS+4Q@mail.gmail.com>
- <20190521131033.GC57618@google.com> <CACO55ts=u7aZ1uZYJ4eMZPvSycwYpzr-W6Xn8oDBLrxsivLOAw@mail.gmail.com>
- <20190521141317.GD57618@google.com> <CACO55tvVzugMpFFNbnxgsfkXNXcN-PqoaXkjWHL0et=fAcThhg@mail.gmail.com>
- <CACO55tv2nnAxNAr=DTd2EzQXmQ5KLT1TR04J+WhVsnkV2_gBnw@mail.gmail.com>
- <CACO55tsdev_gXMRcRBtxs0ee3exoxRFS7z-di6PD87FWJyb=yw@mail.gmail.com>
- <CACO55ttv4f_XkCgOdCbnuBiXqYjs9p1Q2LEczv7FNYxogqWTfg@mail.gmail.com>
- <20190603181025.GD189360@google.com> <CACO55ts8fmdaN=+ca_=dv-mKiMHnLL0dE9=HsRkQDpPnQ1Njuw@mail.gmail.com>
- <CACO55tt-UmzeHRqsXz47vjoYDwzo3TrgQ7Bb+8dixbQ9GW7x1A@mail.gmail.com>
-In-Reply-To: <CACO55tt-UmzeHRqsXz47vjoYDwzo3TrgQ7Bb+8dixbQ9GW7x1A@mail.gmail.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Mon, 24 Jun 2019 17:04:40 +0200
-Message-ID: <CACO55ts8AM6+1=Gt17L--MuDuArae_N4sgcQinj1aMHV2sAtnQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] pci: save the boot pcie link speed and restore it
- on fini
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     nouveau <nouveau@lists.freedesktop.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190624072752.GA3954@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, jgg@ziepe.ca, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
 
-I managed to trigger the issue from userspace without having to call
-into any ACPI code. Wrote a little script[1] which essentially does
-(and prints) this (I've added some comments):
 
-PCI SCAN
-# set PCIe link speed to 2.5. Bug doesn't trigger with 5.0 or 8.0
-# NVA is a small lib we use to poke into MMIO registers of the GPU in
-order to easier reverse engineer them.
-NVA R 0x8c040 80005800
-NVA W 0x8c040 80085800
-NVA R 0x8c040 80085800
-NVA W 0x8c040 80085801
-NVA R 0x8c040 80085800
-# put GPU into d3hot via the PCI config
-PCI R 0000:01:00.0 0x64 00000008
-PCI W 0000:01:00.0 0x64 0000000b
-PCI R 0000:01:00.0 0x64 0000000b
-# slot ctrl/status
-PCI R 0000:00:01.0 0xb8 00480000
-# link ctrl/status 2
-PCI R 0000:00:01.0 0xd0 001e0043
-# bit 7 in 0x248 is called Q0L2 inside the ACPI code
-# is set by the ACPI platform method to runtime suspend the GPU
-# \_SB.PCI0.PEG0.PG00._OFF on my machine for the parent method
-PCI W 0000:00:01.0 0x248 00000080
-PCI R 0000:00:01.0 0x248 00000000
-# now things are super messed up <====!!
-# slot ctrl/status:
-# bit 6 got cleared which indicates the bus doesn't detect any device
-connected to the slot
-# bit stays set if the PCIe link speed was set to 5.0 or 8.0
-PCI R 0000:00:01.0 0xb8 00080000
-# link ctrl/status 2
-# apparently equalization wasn't executed, but maybe that makes sense
-if the bridge controller doesn't see any devices
-PCI R 0000:00:01.0 0xd0 00000043
-# reading from the GPU now fails
-PCI R 0000:01:00.0 0x64 ffffffff
-GPU PCI link in broken state. GPU might not come back on PCI bus rescan.
-PCI REMOVE 0000:01:00.0
-PCI SCAN
-# the GPU wasn't able to be found after a rescan
-setpci: Warning: No devices selected for "0x64.L".
-PCI R 0000:01:00.0 0x64
+On 2019-06-24 1:27 a.m., Christoph Hellwig wrote:
+> This is not going to fly.
+> 
+> For one passing a dma_addr_t through the block layer is a layering
+> violation, and one that I think will also bite us in practice.
+> The host physical to PCIe bus address mapping can have offsets, and
+> those offsets absolutely can be different for differnet root ports.
+> So with your caller generated dma_addr_t everything works fine with
+> a switched setup as the one you are probably testing on, but on a
+> sufficiently complicated setup with multiple root ports it can break.
 
-I think Q0L2 should set the Link into L2 state, but I have no idea
-what implications that has. Also the write to Q0L2 is guarded by some
-conditions inside the ACPI code, but I don't know how much we can
-trust vendors to have those guards and what they do at all. At this
-point I am inclined to say that this might actually be a hardware or
-firmware bug or something.
+I don't follow this argument. Yes, I understand PCI Bus offsets and yes
+I understand that they only apply beyond the bus they're working with.
+But this isn't *that* complicated and it should be the responsibility of
+the P2PDMA code to sort out and provide a dma_addr_t for. The dma_addr_t
+that's passed through the block layer could be a bus address or it could
+be the result of a dma_map_* request (if the transaction is found to go
+through an RC) depending on the requirements of the devices being used.
 
-At this point I guess it makes sense to poke Intel folks, but I
-wouldn't know who exactly to ask here. Any thoughts or ideas?
+> Also duplicating the whole block I/O stack, including hooks all over
+> the fast path is pretty much a no-go.
 
-Sadly I don't know the PCIe spec enough (to be honest, I just read a
-bit in the spec yesterday) to say what this Q0L2 field is actually
-doing. That register also doesn't seem to be documented by Intel afaik
-[2].
+There was very little duplicate code in the patch set. (Really just the
+mapping code). There are a few hooks, but in practice not that many if
+we ignore the WARN_ONs. We might be able to work to reduce this further.
+The main hooks are: when we skip bouncing, when we skip integrity prep,
+when we split, and when we map. And the patchset drops the PCI_P2PDMA
+hook when we map. So we're talking about maybe three or four extra ifs
+that would likely normally be fast due to the branch predictor.
 
-[1]: script: https://gist.githubusercontent.com/karolherbst/0d0c369a0c14dc092fcb0f5c854dd79c/raw/daab0c3a3d0aa94c270eba44b811271042dd2756/script.sh
-[2]: intel KBL platform datasheet:
-https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/7th-gen-core-family-mobile-h-processor-lines-datasheet-vol-2.pdf
+> I've been pondering for a while if we wouldn't be better off just
+> passing a phys_addr_t + len instead of the page, offset, len tuple
+> in the bio_vec, though.  If you look at the normal I/O path here
+> is what we normally do:
+> 
+>  - we get a page as input, either because we have it at hand (e.g.
+>    from the page cache) or from get_user_pages (which actually caculates
+>    it from a pfn in the page tables)
+>  - once in the bio all the merging decisions are based on the physical
+>    address, so we have to convert it to the physical address there,
+>    potentially multiple times
+>  - then dma mapping all works off the physical address, which it gets
+>    from the page at the start
+>  - then only the dma address is used for the I/O
+>  - on I/O completion we often but not always need the page again.  In
+>    the direct I/O case for reference counting and dirty status, in the
+>    file system also for things like marking the page uptodate
+> 
+> So if we move to a phys_addr_t we'd need to go back to the page at least
+> once.  But because of how the merging works we really only need to do
+> it once per segment, as we can just do pointer arithmerics do get the
+> following pages.  As we generally go at least once from a physical
+> address to a page in the merging code even a relatively expensive vmem_map
+> looks shouldn't be too bad.  Even more so given that the super hot path
+> (small blkdev direct I/O) can actually trivially cache the affected pages
+> as well.
 
-On Wed, Jun 19, 2019 at 2:12 PM Karol Herbst <kherbst@redhat.com> wrote:
->
-> ohh nvm. It was a mistake on my end. Sorry for the noise
->
-> On Wed, Jun 19, 2019 at 2:07 PM Karol Herbst <kherbst@redhat.com> wrote:
-> >
-> > Hi Bjorn,
-> >
-> > I was playing around with some older information again (write into the
-> > PCI config to put the card into d3 state). And there is something
-> > which made me very curious:
-> > If I put the card manually into any other state besides D0 via the
-> > 0x64 pci config register, the card just dies and pci core seems to
-> > expect this to not happen. pci_raw_set_power_state has this
-> > "pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL, pmcsr);" call,
-> > and reads the value back later, but if the card is already gone, maybe
-> > we can't do this for nvidia GPUs?
-> >
-> > No idea why I didn't played around more with that register, but if the
-> > card already dies there then this kind of shows there is indeed an
-> > issue on a PCI level, no?
-> >
-> > On Mon, Jun 3, 2019 at 8:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >
-> > > On Mon, Jun 03, 2019 at 03:18:56PM +0200, Karol Herbst wrote:
-> > > > @bjorn: any further ideas? Otherwise I'd like to just go ahead and fix
-> > > > this issue inside Nouveau and leave it there until we have a better
-> > > > understanding or non Nouveau cases of this issue.
-> > >
-> > > Nope, I have no more ideas.
-> > >
-> > > > On Tue, May 21, 2019 at 7:48 PM Karol Herbst <kherbst@redhat.com> wrote:
-> > > > >
-> > > > > doing the same on the bridge controller with my workarounds applied:
-> > > > >
-> > > > > please note some differences:
-> > > > > LnkSta: Speed 8GT/s (ok) vs Speed 2.5GT/s (downgraded)
-> > > > > SltSta: PresDet+ vs PresDet-
-> > > > > LnkSta2: Equalization stuff
-> > > > > Virtual channel: NegoPending- vs NegoPending+
-> > > > >
-> > > > > both times I executed lspci while the GPU was still suspended.
-> > > > >
-> > > > > 00:01.0 PCI bridge: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th
-> > > > > Gen Core Processor PCIe Controller (x16) (rev 05) (prog-if 00 [Normal
-> > > > > decode])
-> > > > >         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
-> > > > > ParErr- Stepping- SERR- FastB2B- DisINTx-
-> > > > >         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
-> > > > > <TAbort- <MAbort- >SERR- <PERR- INTx-
-> > > > >         Latency: 0
-> > > > >         Interrupt: pin A routed to IRQ 16
-> > > > >         Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
-> > > > >         I/O behind bridge: 0000e000-0000efff [size=4K]
-> > > > >         Memory behind bridge: ec000000-ed0fffff [size=17M]
-> > > > >         Prefetchable memory behind bridge:
-> > > > > 00000000c0000000-00000000d1ffffff [size=288M]
-> > > > >         Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort-
-> > > > > <TAbort- <MAbort+ <SERR- <PERR-
-> > > > >         BridgeCtl: Parity- SERR- NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
-> > > > >                 PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-> > > > >         Capabilities: [88] Subsystem: Dell Device 07be
-> > > > >         Capabilities: [80] Power Management version 3
-> > > > >                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA
-> > > > > PME(D0+,D1-,D2-,D3hot+,D3cold+)
-> > > > >                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-> > > > >         Capabilities: [90] MSI: Enable- Count=1/1 Maskable- 64bit-
-> > > > >                 Address: 00000000  Data: 0000
-> > > > >         Capabilities: [a0] Express (v2) Root Port (Slot+), MSI 00
-> > > > >                 DevCap: MaxPayload 256 bytes, PhantFunc 0
-> > > > >                         ExtTag- RBE+
-> > > > >                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-> > > > >                         RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
-> > > > >                         MaxPayload 256 bytes, MaxReadReq 128 bytes
-> > > > >                 DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-> > > > > AuxPwr- TransPend-
-> > > > >                 LnkCap: Port #2, Speed 8GT/s, Width x16, ASPM L0s L1,
-> > > > > Exit Latency L0s <256ns, L1 <8us
-> > > > >                         ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
-> > > > >                 LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk+
-> > > > >                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-> > > > >                 LnkSta: Speed 8GT/s (ok), Width x16 (ok)
-> > > > >                         TrErr- Train- SlotClk+ DLActive- BWMgmt+ ABWMgmt+
-> > > > >                 SltCap: AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd-
-> > > > > HotPlug- Surprise-
-> > > > >                         Slot #1, PowerLimit 75.000W; Interlock- NoCompl+
-> > > > >                 SltCtl: Enable: AttnBtn- PwrFlt- MRL- PresDet-
-> > > > > CmdCplt- HPIrq- LinkChg-
-> > > > >                         Control: AttnInd Unknown, PwrInd Unknown,
-> > > > > Power- Interlock-
-> > > > >                 SltSta: Status: AttnBtn- PowerFlt- MRL- CmdCplt-
-> > > > > PresDet+ Interlock-
-> > > > >                         Changed: MRL- PresDet+ LinkState-
-> > > > >                 RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal-
-> > > > > PMEIntEna- CRSVisible-
-> > > > >                 RootCap: CRSVisible-
-> > > > >                 RootSta: PME ReqID 0000, PMEStatus- PMEPending-
-> > > > >                 DevCap2: Completion Timeout: Not Supported,
-> > > > > TimeoutDis-, LTR+, OBFF Via WAKE# ARIFwd-
-> > > > >                          AtomicOpsCap: Routing- 32bit+ 64bit+ 128bitCAS+
-> > > > >                 DevCtl2: Completion Timeout: 50us to 50ms,
-> > > > > TimeoutDis-, LTR+, OBFF Via WAKE# ARIFwd-
-> > > > >                          AtomicOpsCtl: ReqEn- EgressBlck-
-> > > > >                 LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
-> > > > >                          Transmit Margin: Normal Operating Range,
-> > > > > EnterModifiedCompliance- ComplianceSOS-
-> > > > >                          Compliance De-emphasis: -6dB
-> > > > >                 LnkSta2: Current De-emphasis Level: -6dB,
-> > > > > EqualizationComplete+, EqualizationPhase1+
-> > > > >                          EqualizationPhase2+, EqualizationPhase3+,
-> > > > > LinkEqualizationRequest-
-> > > > >         Capabilities: [100 v1] Virtual Channel
-> > > > >                 Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1
-> > > > >                 Arb:    Fixed- WRR32- WRR64- WRR128-
-> > > > >                 Ctrl:   ArbSelect=Fixed
-> > > > >                 Status: InProgress-
-> > > > >                 VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
-> > > > >                         Arb:    Fixed+ WRR32- WRR64- WRR128- TWRR128- WRR256-
-> > > > >                         Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
-> > > > >                         Status: NegoPending- InProgress-
-> > > > >         Capabilities: [140 v1] Root Complex Link
-> > > > >                 Desc:   PortNumber=02 ComponentID=01 EltType=Config
-> > > > >                 Link0:  Desc:   TargetPort=00 TargetComponent=01
-> > > > > AssocRCRB- LinkType=MemMapped LinkValid+
-> > > > >                         Addr:   00000000fed19000
-> > > > >         Capabilities: [d94 v1] Secondary PCI Express <?>
-> > > > >         Kernel driver in use: pcieport
-> > > > > 00: 86 80 01 19 07 00 10 00 05 00 04 06 00 00 81 00
-> > > > > 10: 00 00 00 00 00 00 00 00 00 01 01 00 e0 e0 00 20
-> > > > > 20: 00 ec 00 ed 01 c0 f1 d1 00 00 00 00 00 00 00 00
-> > > > > 30: 00 00 00 00 88 00 00 00 00 00 00 00 ff 01 10 00
-> > > > > 40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > > > > 50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > > > > 60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > > > > 70: 00 00 00 00 00 00 00 00 00 62 17 00 00 00 00 0a
-> > > > > 80: 01 90 03 c8 08 00 00 00 0d 80 00 00 28 10 be 07
-> > > > > 90: 05 a0 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > > > > a0: 10 00 42 01 01 80 00 00 20 00 00 00 03 ad 61 02
-> > > > > b0: 40 00 03 d1 80 25 0c 00 00 00 48 00 00 00 00 00
-> > > > > c0: 00 00 00 00 80 0b 08 00 00 64 00 00 0e 00 00 00
-> > > > > d0: 43 00 1e 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > > > > e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > > > > f0: 00 00 00 84 4e 01 01 20 00 00 00 00 e0 00 10 00
-> > > > >
-> > > > > On Tue, May 21, 2019 at 7:35 PM Karol Herbst <kherbst@redhat.com> wrote:
-> > > > > >
-> > > > > > was able to get the lspci prints via ssh. Machine rebooted
-> > > > > > automatically each time though.
-> > > > > >
-> > > > > > relevant dmesg:
-> > > > > > kernel: nouveau 0000:01:00.0: Refused to change power state, currently in D3
-> > > > > > kernel: nouveau 0000:01:00.0: Refused to change power state, currently in D3
-> > > > > > kernel: nouveau 0000:01:00.0: Refused to change power state, currently in D3
-> > > > > > kernel: nouveau 0000:01:00.0: tmr: stalled at ffffffffffffffff
-> > > > > >
-> > > > > > (last one is a 64 bit mmio read to get the on GPU timer value)
-> > > > > >
-> > > > > > # lspci -vvxxx -s 0:01.00
-> > > > > > 00:01.0 PCI bridge: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th
-> > > > > > Gen Core Processor PCIe Controller (x16) (rev 05) (prog-if 00 [Normal
-> > > > > > decode])
-> > > > > >        Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
-> > > > > > ParErr- Stepping- SERR- FastB2B- DisINTx-
-> > > > > >        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
-> > > > > > <TAbort- <MAbort- >SERR- <PERR- INTx-
-> > > > > >        Latency: 0
-> > > > > >        Interrupt: pin A routed to IRQ 16
-> > > > > >        Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
-> > > > > >        I/O behind bridge: 0000e000-0000efff [size=4K]
-> > > > > >        Memory behind bridge: ec000000-ed0fffff [size=17M]
-> > > > > >        Prefetchable memory behind bridge:
-> > > > > > 00000000c0000000-00000000d1ffffff [size=288M]
-> > > > > >        Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort-
-> > > > > > <TAbort- <MAbort+ <SERR- <PERR-
-> > > > > >        BridgeCtl: Parity- SERR- NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
-> > > > > >                PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-> > > > > >        Capabilities: [88] Subsystem: Dell Device 07be
-> > > > > >        Capabilities: [80] Power Management version 3
-> > > > > >                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA
-> > > > > > PME(D0+,D1-,D2-,D3hot+,D3cold+)
-> > > > > >                Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-> > > > > >        Capabilities: [90] MSI: Enable- Count=1/1 Maskable- 64bit-
-> > > > > >                Address: 00000000  Data: 0000
-> > > > > >        Capabilities: [a0] Express (v2) Root Port (Slot+), MSI 00
-> > > > > >                DevCap: MaxPayload 256 bytes, PhantFunc 0
-> > > > > >                        ExtTag- RBE+
-> > > > > >                DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-> > > > > >                        RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
-> > > > > >                        MaxPayload 256 bytes, MaxReadReq 128 bytes
-> > > > > >                DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-> > > > > > AuxPwr- TransPend-
-> > > > > >                LnkCap: Port #2, Speed 8GT/s, Width x16, ASPM L0s L1,
-> > > > > > Exit Latency L0s <256ns, L1 <8us
-> > > > > >                        ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
-> > > > > >                LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk+
-> > > > > >                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-> > > > > >                LnkSta: Speed 2.5GT/s (downgraded), Width x16 (ok)
-> > > > > >                        TrErr- Train- SlotClk+ DLActive- BWMgmt+ ABWMgmt+
-> > > > > >                SltCap: AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd-
-> > > > > > HotPlug- Surprise-
-> > > > > >                        Slot #1, PowerLimit 75.000W; Interlock- NoCompl+
-> > > > > >                SltCtl: Enable: AttnBtn- PwrFlt- MRL- PresDet- CmdCplt-
-> > > > > > HPIrq- LinkChg-
-> > > > > >                        Control: AttnInd Unknown, PwrInd Unknown,
-> > > > > > Power- Interlock-
-> > > > > >                SltSta: Status: AttnBtn- PowerFlt- MRL- CmdCplt-
-> > > > > > PresDet- Interlock-
-> > > > > >                        Changed: MRL- PresDet+ LinkState-
-> > > > > >                RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal-
-> > > > > > PMEIntEna- CRSVisible-
-> > > > > >                RootCap: CRSVisible-
-> > > > > >                RootSta: PME ReqID 0000, PMEStatus- PMEPending-
-> > > > > >                DevCap2: Completion Timeout: Not Supported,
-> > > > > > TimeoutDis-, LTR+, OBFF Via WAKE# ARIFwd-
-> > > > > >                         AtomicOpsCap: Routing- 32bit+ 64bit+ 128bitCAS+
-> > > > > >                DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-,
-> > > > > > LTR+, OBFF Via WAKE# ARIFwd-
-> > > > > >                         AtomicOpsCtl: ReqEn- EgressBlck-
-> > > > > >                LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
-> > > > > >                         Transmit Margin: Normal Operating Range,
-> > > > > > EnterModifiedCompliance- ComplianceSOS-
-> > > > > >                         Compliance De-emphasis: -6dB
-> > > > > >                LnkSta2: Current De-emphasis Level: -6dB,
-> > > > > > EqualizationComplete-, EqualizationPhase1-
-> > > > > >                         EqualizationPhase2-, EqualizationPhase3-,
-> > > > > > LinkEqualizationRequest-
-> > > > > >        Capabilities: [100 v1] Virtual Channel
-> > > > > >                Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1
-> > > > > >                Arb:    Fixed- WRR32- WRR64- WRR128-
-> > > > > >                Ctrl:   ArbSelect=Fixed
-> > > > > >                Status: InProgress-
-> > > > > >                VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
-> > > > > >                        Arb:    Fixed+ WRR32- WRR64- WRR128- TWRR128- WRR256-
-> > > > > >                        Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
-> > > > > >                        Status: NegoPending+ InProgress-
-> > > > > >        Capabilities: [140 v1] Root Complex Link
-> > > > > >                Desc:   PortNumber=02 ComponentID=01 EltType=Config
-> > > > > >                Link0:  Desc:   TargetPort=00 TargetComponent=01
-> > > > > > AssocRCRB- LinkType=MemMapped LinkValid+
-> > > > > >                        Addr:   00000000fed19000
-> > > > > >        Capabilities: [d94 v1] Secondary PCI Express <?>
-> > > > > >        Kernel driver in use: pcieport
-> > > > > > 00: 86 80 01 19 07 00 10 00 05 00 04 06 00 00 81 00
-> > > > > > 10: 00 00 00 00 00 00 00 00 00 01 01 00 e0 e0 00 20
-> > > > > > 20: 00 ec 00 ed 01 c0 f1 d1 00 00 00 00 00 00 00 00
-> > > > > > 30: 00 00 00 00 88 00 00 00 00 00 00 00 ff 01 10 00
-> > > > > > 40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > > > > > 50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > > > > > 60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > > > > > 70: 00 00 00 00 00 00 00 00 00 62 17 00 00 00 00 0a
-> > > > > > 80: 01 90 03 c8 08 00 00 00 0d 80 00 00 28 10 be 07
-> > > > > > 90: 05 a0 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > > > > > a0: 10 00 42 01 01 80 00 00 20 00 00 00 03 ad 61 02
-> > > > > > b0: 40 00 01 d1 80 25 0c 00 00 00 08 00 00 00 00 00
-> > > > > > c0: 00 00 00 00 80 0b 08 00 00 64 00 00 0e 00 00 00
-> > > > > > d0: 43 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > > > > > e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > > > > > f0: 00 40 01 00 4e 01 01 22 00 00 00 00 e0 00 10 00
-> > > > > >
-> > > > > > lspci -vvxxx -s 1:00.00
-> > > > > > 01:00.0 3D controller: NVIDIA Corporation GP107M [GeForce GTX 1050
-> > > > > > Mobile] (rev ff) (prog-if ff)
-> > > > > >        !!! Unknown header type 7f
-> > > > > >        Kernel driver in use: nouveau
-> > > > > >        Kernel modules: nouveau
-> > > > > > 00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > > > > > 10: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > > > > > 20: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > > > > > 30: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > > > > > 40: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > > > > > 50: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > > > > > 60: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > > > > > 70: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > > > > > 80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > > > > > 90: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > > > > > a0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > > > > > b0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > > > > > c0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > > > > > d0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > > > > > e0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > > > > > f0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > > > > >
-> > > > > > On Tue, May 21, 2019 at 4:30 PM Karol Herbst <kherbst@redhat.com> wrote:
-> > > > > > >
-> > > > > > > On Tue, May 21, 2019 at 4:13 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > > >
-> > > > > > > > On Tue, May 21, 2019 at 03:28:48PM +0200, Karol Herbst wrote:
-> > > > > > > > > On Tue, May 21, 2019 at 3:11 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > > > > > On Tue, May 21, 2019 at 12:30:38AM +0200, Karol Herbst wrote:
-> > > > > > > > > > > On Mon, May 20, 2019 at 11:20 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > > > > > > > On Tue, May 07, 2019 at 10:12:45PM +0200, Karol Herbst wrote:
-> > > > > > > > > > > > > Apperantly things go south if we suspend the device with a different PCIE
-> > > > > > > > > > > > > link speed set than it got booted with. Fixes runtime suspend on my gp107.
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > This all looks like some bug inside the pci subsystem and I would prefer a
-> > > > > > > > > > > > > fix there instead of nouveau, but maybe there is no real nice way of doing
-> > > > > > > > > > > > > that outside of drivers?
-> > > > > > > > > > > >
-> > > > > > > > > > > > I agree it would be nice to fix this in the PCI core if that's
-> > > > > > > > > > > > feasible.
-> > > > > > > > > > > >
-> > > > > > > > > > > > It looks like this driver changes the PCIe link speed using some
-> > > > > > > > > > > > device-specific mechanism.  When we suspend, we put the device in
-> > > > > > > > > > > > D3cold, so it loses all its state.  When we resume, the link probably
-> > > > > > > > > > > > comes up at the boot speed because nothing did that device-specific
-> > > > > > > > > > > > magic to change it, so you probably end up with the link being slow
-> > > > > > > > > > > > but the driver thinking it's configured to be fast, and maybe that
-> > > > > > > > > > > > combination doesn't work.
-> > > > > > > > > > > >
-> > > > > > > > > > > > If it requires something device-specific to change that link speed, I
-> > > > > > > > > > > > don't know how to put that in the PCI core.  But maybe I'm missing
-> > > > > > > > > > > > something?
-> > > > > > > > > > > >
-> > > > > > > > > > > > Per the PCIe spec (r4.0, sec 1.2):
-> > > > > > > > > > > >
-> > > > > > > > > > > >   Initialization – During hardware initialization, each PCI Express
-> > > > > > > > > > > >   Link is set up following a negotiation of Lane widths and frequency
-> > > > > > > > > > > >   of operation by the two agents at each end of the Link. No firmware
-> > > > > > > > > > > >   or operating system software is involved.
-> > > > > > > > > > > >
-> > > > > > > > > > > > I have been assuming that this means device-specific link speed
-> > > > > > > > > > > > management is out of spec, but it seems pretty common that devices
-> > > > > > > > > > > > don't come up by themselves at the fastest possible link speed.  So
-> > > > > > > > > > > > maybe the spec just intends that devices can operate at *some* valid
-> > > > > > > > > > > > speed.
-> > > > > > > > > > >
-> > > > > > > > > > > I would expect that devices kind of have to figure out what they can
-> > > > > > > > > > > operate on and the operating system kind of just checks what the
-> > > > > > > > > > > current state is and doesn't try to "restore" the old state or
-> > > > > > > > > > > something?
-> > > > > > > > > >
-> > > > > > > > > > The devices at each end of the link negotiate the width and speed of
-> > > > > > > > > > the link.  This is done directly by the hardware without any help from
-> > > > > > > > > > the OS.
-> > > > > > > > > >
-> > > > > > > > > > The OS can read the current link state (Current Link Speed and
-> > > > > > > > > > Negotiated Link Width, both in the Link Status register).  The OS has
-> > > > > > > > > > very little control over that state.  It can't directly restore the
-> > > > > > > > > > state because the hardware has to negotiate a width & speed that
-> > > > > > > > > > result in reliable operation.
-> > > > > > > > > >
-> > > > > > > > > > > We don't do anything in the driver after the device was suspended. And
-> > > > > > > > > > > the 0x88000 is a mirror of the PCI config space, but we also got some
-> > > > > > > > > > > PCIe stuff at 0x8c000 which is used by newer GPUs for gen3 stuff
-> > > > > > > > > > > essentially. I have no idea how much of this is part of the actual pci
-> > > > > > > > > > > standard and how much is driver specific. But the driver also wants to
-> > > > > > > > > > > have some control over the link speed as it's tight to performance
-> > > > > > > > > > > states on GPU.
-> > > > > > > > > >
-> > > > > > > > > > As far as I'm aware, there is no generic PCIe way for the OS to
-> > > > > > > > > > influence the link width or speed.  If the GPU driver needs to do
-> > > > > > > > > > that, it would be via some device-specific mechanism.
-> > > > > > > > > >
-> > > > > > > > > > > The big issue here is just, that the GPU boots with 8.0, some on-gpu
-> > > > > > > > > > > init mechanism decreases it to 2.5. If we suspend, the GPU or at least
-> > > > > > > > > > > the communication with the controller is broken. But if we set it to
-> > > > > > > > > > > the boot speed, resuming the GPU just works. So my assumption was,
-> > > > > > > > > > > that _something_ (might it be the controller or the pci subsystem)
-> > > > > > > > > > > tries to force to operate on an invalid link speed and because the
-> > > > > > > > > > > bridge controller is actually powered down as well (as all children
-> > > > > > > > > > > are in D3cold) I could imagine that something in the pci subsystem
-> > > > > > > > > > > actually restores the state which lets the controller fail to
-> > > > > > > > > > > establish communication again?
-> > > > > > > > > >
-> > > > > > > > > >   1) At boot-time, the Port and the GPU hardware negotiate 8.0 GT/s
-> > > > > > > > > >      without OS/driver intervention.
-> > > > > > > > > >
-> > > > > > > > > >   2) Some mechanism reduces link speed to 2.5 GT/s.  This probably
-> > > > > > > > > >      requires driver intervention or at least some ACPI method.
-> > > > > > > > >
-> > > > > > > > > there is no driver intervention and Nouveau doesn't care at all. It's
-> > > > > > > > > all done on the GPU. We just upload a script and some firmware on to
-> > > > > > > > > the GPU. The script runs then on the PMU inside the GPU and this
-> > > > > > > > > script also causes changing the PCIe link settings. But from a Nouveau
-> > > > > > > > > point of view we don't care about the link before or after that script
-> > > > > > > > > was invoked. Also there is no ACPI method involved.
-> > > > > > > > >
-> > > > > > > > > But if there is something we should notify pci core about, maybe
-> > > > > > > > > that's something we have to do then?
-> > > > > > > >
-> > > > > > > > I don't think there's anything the PCI core could do with that
-> > > > > > > > information anyway.  The PCI core doesn't care at all about the link
-> > > > > > > > speed, and it really can't influence it directly.
-> > > > > > > >
-> > > > > > > > > >   3) Suspend puts GPU into D3cold (powered off).
-> > > > > > > > > >
-> > > > > > > > > >   4) Resume restores GPU to D0, and the Port and GPU hardware again
-> > > > > > > > > >      negotiate 8.0 GT/s without OS/driver intervention, just like at
-> > > > > > > > > >      initial boot.
-> > > > > > > > >
-> > > > > > > > > No, that negotiation fails apparently as any attempt to read anything
-> > > > > > > > > from the device just fails inside pci core. Or something goes wrong
-> > > > > > > > > when resuming the bridge controller.
-> > > > > > > >
-> > > > > > > > I'm surprised the negotiation would fail even after a power cycle of
-> > > > > > > > the device.  But if you can avoid the issue by running another script
-> > > > > > > > on the PMU before suspend, that's probably what you'll have to do.
-> > > > > > > >
-> > > > > > >
-> > > > > > > there is none as far as we know. Or at least nothing inside the vbios.
-> > > > > > > We still have to get signed PMU firmware images from Nvidia for full
-> > > > > > > support, but this still would be a hacky issue as we would depend on
-> > > > > > > those then (and without having those in  redistributable form, there
-> > > > > > > isn't much we can do about except fixing it on the kernel side).
-> > > > > > >
-> > > > > > > > > >   5) Now the driver thinks the GPU is at 2.5 GT/s but it's actually at
-> > > > > > > > > >      8.0 GT/s.
-> > > > > > > > >
-> > > > > > > > > what is actually meant by "driver" here? The pci subsystem or Nouveau?
-> > > > > > > >
-> > > > > > > > I was thinking Nouveau because the PCI core doesn't care about the
-> > > > > > > > link speed.
-> > > > > > > >
-> > > > > > > > > > Without knowing more about the transition to 2.5 GT/s, I can't guess
-> > > > > > > > > > why the GPU wouldn't work after resume.  From a PCIe point of view,
-> > > > > > > > > > the link is supposed to work and the device should be reachable
-> > > > > > > > > > independent of the link speed.  But maybe there's some weird
-> > > > > > > > > > dependency between the GPU and the driver here.
-> > > > > > > > >
-> > > > > > > > > but the device isn't reachable at all, not even from the pci
-> > > > > > > > > subsystem. All reads fail/return a default error value (0xffffffff).
-> > > > > > > >
-> > > > > > > > Are these PCI config reads that return 0xffffffff?  Or MMIO reads?
-> > > > > > > > "lspci -vvxxxx" of the bridge and the GPU might have a clue about
-> > > > > > > > whether a PCI error occurred.
-> > > > > > > >
-> > > > > > >
-> > > > > > > that's kind of problematic as it might just lock up my machine... but
-> > > > > > > let me try that.
-> > > > > > >
-> > > > > > > > > > It sounds like things work if you return to 8.0 GT/s before suspend,
-> > > > > > > > > > things work.  That would make sense to me because then the driver's
-> > > > > > > > > > idea of the link state after resume would match the actual state.
-> > > > > > > > >
-> > > > > > > > > depends on what is meant by the driver here. Inside Nouveau we don't
-> > > > > > > > > care one bit about the current link speed, so I assume you mean
-> > > > > > > > > something inside the pci core code?
-> > > > > > > > >
-> > > > > > > > > > But I don't see a way to deal with this in the PCI core.  The PCI core
-> > > > > > > > > > does save and restore most of the architected config space around
-> > > > > > > > > > suspend/resume, but since this appears to be a device-specific thing,
-> > > > > > > > > > the PCI core would have no idea how to save/restore it.
-> > > > > > > > >
-> > > > > > > > > if we assume that the negotiation on a device level works as intended,
-> > > > > > > > > then I would expect this to be a pci core issue, which might actually
-> > > > > > > > > be not fixable there. But if it's not, then we would have to put
-> > > > > > > > > something like that inside the runpm documentation to tell drivers
-> > > > > > > > > they have to do something about it.
-> > > > > > > > >lspci -vvxxxx
-> > > > > > > > > But again, for me it just sounds like the negotiation on the device
-> > > > > > > > > level fails or something inside pci core messes it up.
-> > > > > > > >
-> > > > > > > > To me it sounds like the PMU script messed something up, and the PCI
-> > > > > > > > core has no way to know what that was or how to fix it.
-> > > > > > > >
-> > > > > > >
-> > > > > > > sure, I am mainly wondering why it doesn't work after we power cycled
-> > > > > > > the GPU and the host bridge controller, because no matter what the
-> > > > > > > state was before, we have to reprobe instead of relying on a known
-> > > > > > > state, no?
-> > > > > > >
-> > > > > > > > > > > > > Signed-off-by: Karol Herbst <kherbst@redhat.com>
-> > > > > > > > > > > > > Reviewed-by: Lyude Paul <lyude@redhat.com>
-> > > > > > > > > > > > > ---
-> > > > > > > > > > > > >  drm/nouveau/include/nvkm/subdev/pci.h |  5 +++--
-> > > > > > > > > > > > >  drm/nouveau/nvkm/subdev/pci/base.c    |  9 +++++++--
-> > > > > > > > > > > > >  drm/nouveau/nvkm/subdev/pci/pcie.c    | 24 ++++++++++++++++++++----
-> > > > > > > > > > > > >  drm/nouveau/nvkm/subdev/pci/priv.h    |  2 ++
-> > > > > > > > > > > > >  4 files changed, 32 insertions(+), 8 deletions(-)
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > diff --git a/drm/nouveau/include/nvkm/subdev/pci.h b/drm/nouveau/include/nvkm/subdev/pci.h
-> > > > > > > > > > > > > index 1fdf3098..b23793a2 100644
-> > > > > > > > > > > > > --- a/drm/nouveau/include/nvkm/subdev/pci.h
-> > > > > > > > > > > > > +++ b/drm/nouveau/include/nvkm/subdev/pci.h
-> > > > > > > > > > > > > @@ -26,8 +26,9 @@ struct nvkm_pci {
-> > > > > > > > > > > > >       } agp;
-> > > > > > > > > > > > >
-> > > > > > > > > > > > >       struct {
-> > > > > > > > > > > > > -             enum nvkm_pcie_speed speed;
-> > > > > > > > > > > > > -             u8 width;
-> > > > > > > > > > > > > +             enum nvkm_pcie_speed cur_speed;
-> > > > > > > > > > > > > +             enum nvkm_pcie_speed def_speed;
-> > > > > > > > > > > > > +             u8 cur_width;
-> > > > > > > > > > > > >       } pcie;
-> > > > > > > > > > > > >
-> > > > > > > > > > > > >       bool msi;
-> > > > > > > > > > > > > diff --git a/drm/nouveau/nvkm/subdev/pci/base.c b/drm/nouveau/nvkm/subdev/pci/base.c
-> > > > > > > > > > > > > index ee2431a7..d9fb5a83 100644
-> > > > > > > > > > > > > --- a/drm/nouveau/nvkm/subdev/pci/base.c
-> > > > > > > > > > > > > +++ b/drm/nouveau/nvkm/subdev/pci/base.c
-> > > > > > > > > > > > > @@ -90,6 +90,8 @@ nvkm_pci_fini(struct nvkm_subdev *subdev, bool suspend)
-> > > > > > > > > > > > >
-> > > > > > > > > > > > >       if (pci->agp.bridge)
-> > > > > > > > > > > > >               nvkm_agp_fini(pci);
-> > > > > > > > > > > > > +     else if (pci_is_pcie(pci->pdev))
-> > > > > > > > > > > > > +             nvkm_pcie_fini(pci);
-> > > > > > > > > > > > >
-> > > > > > > > > > > > >       return 0;
-> > > > > > > > > > > > >  }
-> > > > > > > > > > > > > @@ -100,6 +102,8 @@ nvkm_pci_preinit(struct nvkm_subdev *subdev)
-> > > > > > > > > > > > >       struct nvkm_pci *pci = nvkm_pci(subdev);
-> > > > > > > > > > > > >       if (pci->agp.bridge)
-> > > > > > > > > > > > >               nvkm_agp_preinit(pci);
-> > > > > > > > > > > > > +     else if (pci_is_pcie(pci->pdev))
-> > > > > > > > > > > > > +             nvkm_pcie_preinit(pci);
-> > > > > > > > > > > > >       return 0;
-> > > > > > > > > > > > >  }
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > @@ -193,8 +197,9 @@ nvkm_pci_new_(const struct nvkm_pci_func *func, struct nvkm_device *device,
-> > > > > > > > > > > > >       pci->func = func;
-> > > > > > > > > > > > >       pci->pdev = device->func->pci(device)->pdev;
-> > > > > > > > > > > > >       pci->irq = -1;
-> > > > > > > > > > > > > -     pci->pcie.speed = -1;
-> > > > > > > > > > > > > -     pci->pcie.width = -1;
-> > > > > > > > > > > > > +     pci->pcie.cur_speed = -1;
-> > > > > > > > > > > > > +     pci->pcie.def_speed = -1;
-> > > > > > > > > > > > > +     pci->pcie.cur_width = -1;
-> > > > > > > > > > > > >
-> > > > > > > > > > > > >       if (device->type == NVKM_DEVICE_AGP)
-> > > > > > > > > > > > >               nvkm_agp_ctor(pci);
-> > > > > > > > > > > > > diff --git a/drm/nouveau/nvkm/subdev/pci/pcie.c b/drm/nouveau/nvkm/subdev/pci/pcie.c
-> > > > > > > > > > > > > index 70ccbe0d..731dd30e 100644
-> > > > > > > > > > > > > --- a/drm/nouveau/nvkm/subdev/pci/pcie.c
-> > > > > > > > > > > > > +++ b/drm/nouveau/nvkm/subdev/pci/pcie.c
-> > > > > > > > > > > > > @@ -85,6 +85,13 @@ nvkm_pcie_oneinit(struct nvkm_pci *pci)
-> > > > > > > > > > > > >       return 0;
-> > > > > > > > > > > > >  }
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > +int
-> > > > > > > > > > > > > +nvkm_pcie_preinit(struct nvkm_pci *pci)
-> > > > > > > > > > > > > +{
-> > > > > > > > > > > > > +     pci->pcie.def_speed = nvkm_pcie_get_speed(pci);
-> > > > > > > > > > > > > +     return 0;
-> > > > > > > > > > > > > +}
-> > > > > > > > > > > > > +
-> > > > > > > > > > > > >  int
-> > > > > > > > > > > > >  nvkm_pcie_init(struct nvkm_pci *pci)
-> > > > > > > > > > > > >  {
-> > > > > > > > > > > > > @@ -105,12 +112,21 @@ nvkm_pcie_init(struct nvkm_pci *pci)
-> > > > > > > > > > > > >       if (pci->func->pcie.init)
-> > > > > > > > > > > > >               pci->func->pcie.init(pci);
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > -     if (pci->pcie.speed != -1)
-> > > > > > > > > > > > > -             nvkm_pcie_set_link(pci, pci->pcie.speed, pci->pcie.width);
-> > > > > > > > > > > > > +     if (pci->pcie.cur_speed != -1)
-> > > > > > > > > > > > > +             nvkm_pcie_set_link(pci, pci->pcie.cur_speed,
-> > > > > > > > > > > > > +                                pci->pcie.cur_width);
-> > > > > > > > > > > > >
-> > > > > > > > > > > > >       return 0;
-> > > > > > > > > > > > >  }
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > +int
-> > > > > > > > > > > > > +nvkm_pcie_fini(struct nvkm_pci *pci)
-> > > > > > > > > > > > > +{
-> > > > > > > > > > > > > +     if (!IS_ERR_VALUE(pci->pcie.def_speed))
-> > > > > > > > > > > > > +             return nvkm_pcie_set_link(pci, pci->pcie.def_speed, 16);
-> > > > > > > > > > > > > +     return 0;
-> > > > > > > > > > > > > +}
-> > > > > > > > > > > > > +
-> > > > > > > > > > > > >  int
-> > > > > > > > > > > > >  nvkm_pcie_set_link(struct nvkm_pci *pci, enum nvkm_pcie_speed speed, u8 width)
-> > > > > > > > > > > > >  {
-> > > > > > > > > > > > > @@ -146,8 +162,8 @@ nvkm_pcie_set_link(struct nvkm_pci *pci, enum nvkm_pcie_speed speed, u8 width)
-> > > > > > > > > > > > >               speed = max_speed;
-> > > > > > > > > > > > >       }
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > -     pci->pcie.speed = speed;
-> > > > > > > > > > > > > -     pci->pcie.width = width;
-> > > > > > > > > > > > > +     pci->pcie.cur_speed = speed;
-> > > > > > > > > > > > > +     pci->pcie.cur_width = width;
-> > > > > > > > > > > > >
-> > > > > > > > > > > > >       if (speed == cur_speed) {
-> > > > > > > > > > > > >               nvkm_debug(subdev, "requested matches current speed\n");
-> > > > > > > > > > > > > diff --git a/drm/nouveau/nvkm/subdev/pci/priv.h b/drm/nouveau/nvkm/subdev/pci/priv.h
-> > > > > > > > > > > > > index a0d4c007..e7744671 100644
-> > > > > > > > > > > > > --- a/drm/nouveau/nvkm/subdev/pci/priv.h
-> > > > > > > > > > > > > +++ b/drm/nouveau/nvkm/subdev/pci/priv.h
-> > > > > > > > > > > > > @@ -60,5 +60,7 @@ enum nvkm_pcie_speed gk104_pcie_max_speed(struct nvkm_pci *);
-> > > > > > > > > > > > >  int gk104_pcie_version_supported(struct nvkm_pci *);
-> > > > > > > > > > > > >
-> > > > > > > > > > > > >  int nvkm_pcie_oneinit(struct nvkm_pci *);
-> > > > > > > > > > > > > +int nvkm_pcie_preinit(struct nvkm_pci *);
-> > > > > > > > > > > > >  int nvkm_pcie_init(struct nvkm_pci *);
-> > > > > > > > > > > > > +int nvkm_pcie_fini(struct nvkm_pci *);
-> > > > > > > > > > > > >  #endif
-> > > > > > > > > > > > > --
-> > > > > > > > > > > > > 2.21.0
-> > > > > > > > > > > > >
+I've always wondered why it wasn't done this way. Passing around a page
+pointer *and* an offset always seemed less efficient than just a
+physical address. If we did do this, the proposed dma_addr_t and
+phys_addr_t paths through the block layer could be a lot more similar as
+things like the split calculation could work on either address type.
+We'd just have to prevent bouncing and integrity and change have a hook
+on how it's mapped.
+
+> Linus kinda hates the pfn approach, but part of that was really that
+> it was proposed for file system data, which we all found out really
+> can't work as-is without pages the hard way.  Another part probably
+> was potential performance issue, but between the few page lookups, and
+> the fact that using a single phys_addr_t instead of pfn/page + offset
+> should avoid quite a few calculations performance should not actually
+> be affected, although we'll have to be careful to actually verify that.
+
+Yes, I'd agree that removing the offset should make things simpler. But
+that requires changing a lot of stuff and doesn't really help what I'm
+trying to do.
+
+Logan
+
