@@ -2,186 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CE5D52089
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 04:05:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B3D175215C
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 05:51:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730298AbfFYCFJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jun 2019 22:05:09 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:35425 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729609AbfFYCFI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jun 2019 22:05:08 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 488C6891A9;
-        Tue, 25 Jun 2019 14:05:05 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1561428305;
-        bh=+6URSfGtIdmUEn9Jok/S4j5d2CkYStHkZ1g8pNXng0E=;
-        h=From:To:CC:Subject:Date:References;
-        b=0k0CcKHQFnLwzTLuvJNcizX25qlsvfR4/h0JHu6wP2R8r0WiwGJF1d77CLG9OvbW8
-         +q8ppt+u/Pb9+Si21qLowc4HwYnxuTDEIBneMFHuTnU2dR4cLQ69NVEa4erK6Zoi+T
-         q5aMND/wS+kVACUSsJpIyboMj1IT0esbC6t+0HUeSI7Qkc7eHykIHs7kwLrZ+NtKmu
-         D0ynAAVrBnQcWWAI26AADyrWxOZVh9uD56z9cHYB2ooP0l5uHVS5gcazUAPlwg4Szi
-         mEXxdhwB/Azuw+KQvQ5fkGX3kEr0YSsYAw7Eg0ygcJugOmEfRlK0TE5kjArd3yAF1/
-         XCa45k36Q5pFA==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d1181510001>; Tue, 25 Jun 2019 14:05:05 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Tue, 25 Jun 2019 14:05:05 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Tue, 25 Jun 2019 14:05:05 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-CC:     Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Kirkwood PCI Express and bridges
-Thread-Topic: Kirkwood PCI Express and bridges
-Thread-Index: AQHVJ+ZHqWcIqP7kgUutSbOlaor9TQ==
-Date:   Tue, 25 Jun 2019 02:05:04 +0000
-Message-ID: <dc50b20e47d94f2294b3d8889d0468c4@svr-chch-ex1.atlnz.lc>
-References: <403548ec3a7543b08ca32e47a1465e70@svr-chch-ex1.atlnz.lc>
- <20190621073318.3bcd940e@windsurf>
- <936d1790c94f4b9c884bc79819b8b777@svr-chch-ex1.atlnz.lc>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.1.10]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726976AbfFYDvl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jun 2019 23:51:41 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37616 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfFYDvl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jun 2019 23:51:41 -0400
+Received: by mail-qt1-f195.google.com with SMTP id y57so16951037qtk.4
+        for <linux-pci@vger.kernel.org>; Mon, 24 Jun 2019 20:51:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kXJGETA/jJ0RNhUF4386IT59bPJr3Q37TZWH9CEiV9k=;
+        b=hPTBh4P3Z7HxVQ1mJ762Mok61s1wxcWhUnvGdnKDOaJTWE83YvvY0cc1YDOaiqd7vi
+         P0dDipAcCaZ3dHpKLAGwgnGe0Wgaqa+bfKynMaz5tBjJfnuAqFAdL/EyJ1eBrWezVs18
+         ptnXHf7dxFDxwwoatvW15kdM1tOnFINndIdadOxn7Dk0tjxXq17X1zlMTKGMBeO3b8Zm
+         CibeF4oHmo8j+8hQhCu5ZgDkBrUCBcBMoI3D++8Yr59saKhcuEnuSpamgac/xxgwUq4C
+         THweH29RavF2tBZv3uTko+ba1VYlOn8w+7/GRUWWJgQ+XnCy35AbL6JKasygZeZRbaY2
+         XhEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kXJGETA/jJ0RNhUF4386IT59bPJr3Q37TZWH9CEiV9k=;
+        b=YUI8rWJzRpkd6eCsyR5KEVgfVXiQSLaTGX+AEyF7ra9m2CgIm+BcokNRYhTjMEiPVe
+         QSJmvM4CNbYakvB5Na3Z9pcOCsXhL+qxEqg720DEequg/BxklOgz9WQoqAzGSSrX1AVY
+         JpZuU4lJlrJk3IIVEfxZG31+7GwPIwUXWJBnEGf6/8bEXyZhYL4slG3t5NWNqc2JlKYn
+         7eD6STqCAoNLBlVW9dmZOFko6HDZRln6kH51dLquwEB0pg+J/cZe+EyX1rYfvIi72P8D
+         eQRJ1x51hIW3VzLNxXAF6Vef3MhgFthX+RkR+hsNHwyn48JTcxdWQ5sWNUvFHS+yW8EO
+         s+FQ==
+X-Gm-Message-State: APjAAAXLFtY2VKcc80qhPNlApiECSgjQxld2YbzcQd4mHNtl8IZRYvyY
+        JtsW/fks94VL8XwVDFxh6oRryudwIxJFR6Ju6LGsog==
+X-Google-Smtp-Source: APXvYqysYiUZoWD/Jf4xCDTfTLYGuMOk+c5m665oC/suZNO5Km6hGfXjFCr3fn7wYiYo6ZCFPd5whrK8A0sCv8hhNSU=
+X-Received: by 2002:a0c:9807:: with SMTP id c7mr30275759qvd.26.1561434700099;
+ Mon, 24 Jun 2019 20:51:40 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190620051333.2235-1-drake@endlessm.com> <20190620051333.2235-3-drake@endlessm.com>
+ <20190620061038.GA20564@lst.de> <CAD8Lp45ua=L+ixO+du=Njhy+dxjWobWA+V1i+Y2p6faeyt1FBQ@mail.gmail.com>
+ <20190624061617.GA2848@lst.de>
+In-Reply-To: <20190624061617.GA2848@lst.de>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Tue, 25 Jun 2019 11:51:28 +0800
+Message-ID: <CAD8Lp464B0dOd+ayF_AK4DRzHEpiaSbUOXjVJ5bq5zMXq=BBKQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] nvme: rename "pci" operations to "mmio"
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-ide@vger.kernel.org,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.de>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 24/06/19 4:08 PM, Chris Packham wrote:=0A=
-> Hi Thomas,=0A=
-> =0A=
-> On 21/06/19 6:17 PM, Thomas Petazzoni wrote:=0A=
->> Hello Chris,=0A=
->>=0A=
->> On Fri, 21 Jun 2019 04:03:27 +0000=0A=
->> Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:=0A=
->>=0A=
->>> I'm in the process of updating the kernel version used on our products=
-=0A=
->>> from 4.4 -> 5.1.=0A=
->>>=0A=
->>> We have one product that uses a Kirkwood CPU, IDT PCI bridge and Marvel=
-l=0A=
->>> Switch ASIC. The Switch ASIC presents as multiple PCI devices.=0A=
->>>=0A=
->>> The hardware setup looks like this=0A=
->>>                                         __________=0A=
->>> [ Kirkwood ] --- [ IDT 5T5 ] ---+---  |          |=0A=
->>>                                  +---  |  Switch  |=0A=
->>>                                  +---  |          |=0A=
->>>                                  +---  |__________|=0A=
->>>=0A=
->>> On the 4.4 based kernel things are fine=0A=
->>>=0A=
->>> [root@awplus flash]# lspci -t=0A=
->>> -[0000:00]---01.0-[01-06]----00.0-[02-06]--+-02.0-[03]----00.0=0A=
->>>                                               +-03.0-[04]----00.0=0A=
->>>                                               +-04.0-[05]----00.0=0A=
->>>                                               \-05.0-[06]----00.0=0A=
->>>=0A=
->>> But on the 5.1 based kernel things get a little weird=0A=
->>>=0A=
->>> [root@awplus flash]# lspci -t=0A=
->>> -[0000:00]---01.0-[01-06]--+-00.0-[02-06]--=0A=
->>>                               +-01.0=0A=
->>>                               +-02.0-[02-06]--=0A=
->>>                               +-03.0-[02-06]--=0A=
->>>                               +-04.0-[02-06]--=0A=
->>>                               +-05.0-[02-06]--=0A=
->>>                               +-06.0-[02-06]--=0A=
->>>                               +-07.0-[02-06]--=0A=
->>>                               +-08.0-[02-06]--=0A=
->>>                               +-09.0-[02-06]--=0A=
->>>                               +-0a.0-[02-06]--=0A=
->>>                               +-0b.0-[02-06]--=0A=
->>>                               +-0c.0-[02-06]--=0A=
->>>                               +-0d.0-[02-06]--=0A=
->>>                               +-0e.0-[02-06]--=0A=
->>>                               +-0f.0-[02-06]--=0A=
->>>                               +-10.0-[02-06]--=0A=
->>>                               +-11.0-[02-06]--=0A=
->>>                               +-12.0-[02-06]--=0A=
->>>                               +-13.0-[02-06]--=0A=
->>>                               +-14.0-[02-06]--=0A=
->>>                               +-15.0-[02-06]--=0A=
->>>                               +-16.0-[02-06]--=0A=
->>>                               +-17.0-[02-06]--=0A=
->>>                               +-18.0-[02-06]--=0A=
->>>                               +-19.0-[02-06]--=0A=
->>>                               +-1a.0-[02-06]--=0A=
->>>                               +-1b.0-[02-06]--=0A=
->>>                               +-1c.0-[02-06]--=0A=
->>>                               +-1d.0-[02-06]--=0A=
->>>                               +-1e.0-[02-06]--=0A=
->>>                               \-1f.0-[02-06]--+-02.0-[03]----00.0=0A=
->>>                                               +-03.0-[04]----00.0=0A=
->>>                                               +-04.0-[05]----00.0=0A=
->>>                                               \-05.0-[06]----00.0=0A=
->>>=0A=
->>>=0A=
->>> I'll start bisecting to see where things started going wrong. I just=0A=
->>> wondered if this rings any bells for anyone.=0A=
->>=0A=
->> I am almost sure that the culprit is=0A=
->> 1f08673eef1236f7d02d93fcf596bb8531ef0d12 ("PCI: mvebu: Convert to PCI=0A=
->> emulated bridge config space").=0A=
-> =0A=
-> The problem seems to pre-date this commit. I've gone back as far as 4.18=
-=0A=
-> and the problem still exists (in fact there are more duplicate devices).=
-=0A=
-> I'll keep going back (unfortunately due to out platform being out of=0A=
-> tree it's not a simple bisect).=0A=
-> =0A=
->> I still think it makes sense to share the bridge emulation code between=
-=0A=
->> the mvebu and aardvark drivers, but this sharing has required making=0A=
->> the code very different, with lots of subtle differences in behavior in=
-=0A=
->> how registers are emulated.=0A=
-> =0A=
-> Agreed. Bugs love to hide in duplicated code.=0A=
-> =0A=
-> I will admit to being ignorant about the need for an emulated bridge. I=
-=0A=
-> know it has something to do with the type of transaction used for the=0A=
-> downstream devices. I also know that these systems won't work without an=
-=0A=
-> emulated bridge.=0A=
-> =0A=
->> Unfortunately, I don't have access to one of these complicated PCI=0A=
->> setup with a HW switch on the way, so I couldn't test this kind of=0A=
->> setups.=0A=
->>=0A=
->> Do you mind helping with figuring out what the issues are ? That would=
-=0A=
->> be really nice.=0A=
-> =0A=
-> No problem. As I said I'll keep going to find a point where behaviour=0A=
-> turns bad for me. I suspect we might find other problems along the way.=
-=0A=
-> =0A=
-=0A=
-Some progress. Our defconfig had CONFIG_CMDLINE=3D"pci=3Dpcie_scan_all" in =
-=0A=
-it. This dated back to before we were using a devicetree with our =0A=
-kirkwood platforms. At some point this started having an effect on the =0A=
-emulated bridge.=0A=
+On Mon, Jun 24, 2019 at 2:16 PM Christoph Hellwig <hch@lst.de> wrote:
+> IFF we want to support it it has to be done at the PCIe layer.  But
+> even that will require actual documentation and support from Intel.
+>
+> If Intel still believes this scheme is their magic secret to control
+> the NVMe market and give themselves and unfair advantage over their
+> competitors there is not much we can do.
+
+Since the 2016 discussion, more documentation has been published:
+https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/300-series-chipset-pch-datasheet-vol-2.pdf
+Chapter 15 is entirely new, and section 15.2 provides a nice clarity
+improvement of the magic regs in the AHCI BAR, which I have used in
+these patches to clean up the code and add documentation in the header
+(see patch 1 in this series, ahci-remap.h).
+
+I believe there's room for further improvement in the docs here, but
+it would be nice to know what you see as the blocking questions or
+documentation gaps that would prevent us from continuing to develop
+the fake PCI bridge approach
+(https://marc.info/?l=linux-pci&m=156015271021614&w=2). We are going
+to try and push Intel on this via other channels to see if we can get
+a contact to help us, so it would be useful if I can include a
+concrete list of what we need.
+
+Bearing in mind that we've already been told that the NVMe device
+config space is inaccessible, and the new docs show exactly how the
+BIOS enforces such inaccessibility during early boot, the remaining
+points you mentioned recently were:
+
+ b) reset handling, including the PCI device removal as the last
+    escalation step
+ c) SR-IOV VFs and their management
+ d) power management
+
+Are there other blocking questions you would require answers to?
+
+Thanks,
+Daniel
