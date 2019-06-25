@@ -2,67 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4530855B54
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 00:36:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D005155C3C
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 01:24:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbfFYWgL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jun 2019 18:36:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40246 "EHLO mail.kernel.org"
+        id S1726037AbfFYXYJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jun 2019 19:24:09 -0400
+Received: from gate.crashing.org ([63.228.1.57]:42277 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfFYWgL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 Jun 2019 18:36:11 -0400
-Received: from localhost (236.sub-174-209-17.myvzw.com [174.209.17.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E68B205ED;
-        Tue, 25 Jun 2019 22:36:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561502170;
-        bh=erg06t1vXLhlnRWJqBiac6VQHBryWbFqbZtliiEvC8A=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ZH231qYqv4dClsoXSlBZ0gaa8XZykQRduRpyNYFwBb7jLCRN+yFtBQYqg9TdtXtGU
-         Qdm+BayxrhD8y1wMSJuENkeV8rFmAedWCE+btnJ95Gsi3rNXwCk6ewKXd9aGwI6qy/
-         wAq/74RXi4bL8Bc8KWLfunYqqJwCwlMYkjVsuwDE=
-Date:   Tue, 25 Jun 2019 17:36:08 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: mmap/munmap in sysfs
-Message-ID: <20190625223608.GB103694@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1725782AbfFYXYJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 Jun 2019 19:24:09 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5PNMcZX001246;
+        Tue, 25 Jun 2019 18:22:40 -0500
+Message-ID: <df2650789c67f6c89d12bd698c9aef14c949a795.camel@kernel.crashing.org>
+Subject: Re: [PATCH 2/2] PCI: Skip resource distribution when no hotplug
+ bridges
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Date:   Wed, 26 Jun 2019 09:22:38 +1000
+In-Reply-To: <20190625120455.GF2640@lahna.fi.intel.com>
+References: <20190622210310.180905-1-helgaas@kernel.org>
+         <20190622210310.180905-3-helgaas@kernel.org>
+         <20190624112449.GJ2640@lahna.fi.intel.com>
+         <8a53232416cce158fad35b781eb80b3ace3afc08.camel@kernel.crashing.org>
+         <20190625100534.GZ2640@lahna.fi.intel.com>
+         <c4daf43a302eeb1c507b9cf4a353200669e04ad8.camel@kernel.crashing.org>
+         <20190625120455.GF2640@lahna.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Greg, et al,
+On Tue, 2019-06-25 at 15:04 +0300, Mika Westerberg wrote:
+> > What's your experience in that area ? How (well) do they handle it in
+> > the boot firmware ? at least on arm64, boot firmwares are rather
+> > catastrophic when it comes to PCI, and on other embedded devices they
+> > are basically non-existent.
+> 
+> Well my experience is quite limited to recent Macs and PCs which usually
+> handle the initial resource allocation just fine. In case of Thunderbolt
+> some "older" PCs handle everything in firmware, even the runtime
+> resource allocation via SMI handler accompanied with ACPI hotplug.
 
-Userspace can mmap PCI device memory via the resourceN files in sysfs,
-which use pci_mmap_resource().  I think this path is unaware of power
-management, so the device may be runtime-suspended, e.g., it may be in
-D1, D2, or D3, where it will not respond to memory accesses.
+So I'm tempted to toy a bit with the "realloc everything" platforms
+(all non-x86 embedded basically) use
+pci_bus_distribute_available_resources on the PCIe root ports
+unconditionally.
 
-Userspace accesses while the device is suspended will cause PCI
-errors, so I think we need something like the patch below.  But this
-isn't sufficient by itself because we would need a corresponding
-pm_runtime_put() when the mapping goes away.  Where should that go?
-Or is there a better way to do this?
+I don't think it will be a problem with SR-IOV as I very much doubt
+you'll end up with a setup where we have under the root port SR-IOV
+devices that are *siblings* with a switch. If that ever becomes the
+case, SR-IOV should be hanlded somewhat as part of the add_list of the
+bus sizing anyway.
+
+I might do that as a test patch or behind a test config option, see how
+it goes, after I've consolidated all those platforms to go through the
+same generic code path, it will be a lot easier.
+
+I'm keen to limit that to PCIe root ports though, old stuff can stay as
+it is and die happily :)
+
+Cheers,
+Ben.
 
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 6d27475e39b2..aab7a47679a7 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1173,6 +1173,7 @@ static int pci_mmap_resource(struct kobject *kobj, struct bin_attribute *attr,
- 
- 	mmap_type = res->flags & IORESOURCE_MEM ? pci_mmap_mem : pci_mmap_io;
- 
-+	pm_runtime_get_sync(pdev);
- 	return pci_mmap_resource_range(pdev, bar, vma, mmap_type, write_combine);
- }
- 
