@@ -2,90 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E89CC5554F
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 19:01:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DB5A555A8
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 19:16:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729994AbfFYRBs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jun 2019 13:01:48 -0400
-Received: from verein.lst.de ([213.95.11.211]:36441 "EHLO newverein.lst.de"
+        id S1731269AbfFYRQl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jun 2019 13:16:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728664AbfFYRBs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 Jun 2019 13:01:48 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id D3C0068B05; Tue, 25 Jun 2019 19:01:15 +0200 (CEST)
-Date:   Tue, 25 Jun 2019 19:01:15 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-Message-ID: <20190625170115.GA9746@lst.de>
-References: <20190620161240.22738-1-logang@deltatee.com> <20190624072752.GA3954@lst.de> <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com> <20190625072008.GB30350@lst.de> <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
+        id S1730165AbfFYRQl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 Jun 2019 13:16:41 -0400
+Received: from localhost (c-67-161-149-27.hsd1.co.comcast.net [67.161.149.27])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 174FE20883;
+        Tue, 25 Jun 2019 17:16:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561483000;
+        bh=efAZOIBCMDXaF/32mIQRuAHKfBu2BquoJ12alRwlJwc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IolAeE+BylPP79XIp3wNQ9krprH9IlO+F1X08MevU9/8lIqlpyS+uxqLpoFLlx2pD
+         a4Y2963fASY3Qgi7u3Ga6bIcxyfhH94dgHZxEcVT9BPXN+/RqnvCCR2mqTC0sVCtUF
+         FamcdySENKzwBrV6LWfJnUPkhy22ez4FaTnv+8eI=
+Date:   Tue, 25 Jun 2019 12:16:39 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Fangjian (Turing)" <f.fangjian@huawei.com>
+Cc:     linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: Bug report: AER driver deadlock
+Message-ID: <20190625171639.GA103694@google.com>
+References: <a7dcc378-6101-ac08-ec8e-be7d5c183b49@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <a7dcc378-6101-ac08-ec8e-be7d5c183b49@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 09:57:52AM -0600, Logan Gunthorpe wrote:
-> > You assume all addressing is done by the PCI bus address.  If a device
-> > is addressing its own BAR there is no reason to use the PCI bus address,
-> > as it might have much more intelligent schemes (usually bar + offset).
-> 
-> Yes, that will be a bit tricky regardless of what we do.
+On Tue, Jun 04, 2019 at 11:25:44AM +0800, Fangjian (Turing) wrote:
+> Hi, We met a deadlock triggered by a NONFATAL AER event during a sysfs
+> "sriov_numvfs" operation. Any suggestion to fix such deadlock ?
 
-At least right now it isn't at all.  I've implemented support for
-a draft NVMe proposal for that, and it basically boils down to this
-in the p2p path:
+Here's a bugzilla report for this; please reference it and this email
+thread in any patches to fix it:
 
-	addr = sg_phys(sg);
-
-	if (page->pgmap->dev == ctrl->dev && HAS_RELATIVE_ADDRESSING)
-		addr -= ctrl->cmb_start_addr;
-
-		// set magic flag in the SGL
-	} else {
-		addr -= pgmap->pci_p2pdma_bus_offset;
-	}
-
-without the pagemap it would require a range compare instead, which
-isn't all that hard either.
-
-> >>> Also duplicating the whole block I/O stack, including hooks all over
-> >>> the fast path is pretty much a no-go.
-> >>
-> >> There was very little duplicate code in the patch set. (Really just the
-> >> mapping code). There are a few hooks, but in practice not that many if
-> >> we ignore the WARN_ONs. We might be able to work to reduce this further.
-> >> The main hooks are: when we skip bouncing, when we skip integrity prep,
-> >> when we split, and when we map. And the patchset drops the PCI_P2PDMA
-> >> hook when we map. So we're talking about maybe three or four extra ifs
-> >> that would likely normally be fast due to the branch predictor.
-> > 
-> > And all of those add code to the block layer fast path.
-> 
-> If we can't add any ifs to the block layer, there's really nothing we
-> can do.
-
-That is not what I said.  Of course we can.  But we rather have a
-really good reason.  And adding a parallel I/O path violating the
-highlevel model is not one.
-
-> So then we're committed to using struct page for P2P?
-
-Only until we have a significantly better soltution.  And I think
-using physical address in some form instead of pages is that,
-adding a parallel path with dma_addr_t is not, it actually is worse
-than the current code in many respects.
+https://bugzilla.kernel.org/show_bug.cgi?id=203981
