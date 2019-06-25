@@ -2,104 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 09AC855066
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 15:31:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F0D3552BD
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 17:00:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbfFYNbs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jun 2019 09:31:48 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:19076 "EHLO huawei.com"
+        id S1731478AbfFYPA4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jun 2019 11:00:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59058 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726506AbfFYNbs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 Jun 2019 09:31:48 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 267CFC528F2FA8730D57;
-        Tue, 25 Jun 2019 21:31:46 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 25 Jun 2019
- 21:31:38 +0800
-Subject: Re: [GIT PULL] Hisilicon fixes for v5.2
-To:     Olof Johansson <olof@lixom.net>, Wei Xu <xuwei5@hisilicon.com>
-References: <b89ef8f0-d102-7f78-f373-cbcc7faddee3@hisilicon.com>
- <20190625112148.ckj7sgdgvyeel7vy@localhost>
- <CAOesGMj+aNkOT1YVHTSBLkOfEujk7uer3R1AmE-sa1TwCijbBg@mail.gmail.com>
-CC:     ARM-SoC Maintainers <arm@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, Linuxarm <linuxarm@huawei.com>,
-        "xuwei (O)" <xuwei5@huawei.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        <jinying@hisilicon.com>, huangdaode <huangdaode@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <7e215bd7-daab-b6cf-8d0f-9513bd7c4f6d@huawei.com>
-Date:   Tue, 25 Jun 2019 14:31:26 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        id S1731153AbfFYPA4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 Jun 2019 11:00:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7BBA5AF4C;
+        Tue, 25 Jun 2019 15:00:54 +0000 (UTC)
+Date:   Tue, 25 Jun 2019 17:00:53 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        nouveau@lists.freedesktop.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
+Message-ID: <20190625150053.GJ11400@dhcp22.suse.cz>
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-6-hch@lst.de>
+ <20190620191733.GH12083@dhcp22.suse.cz>
+ <CAPcyv4h9+Ha4FVrvDAe-YAr1wBOjc4yi7CAzVuASv=JCxPcFaw@mail.gmail.com>
+ <20190625072317.GC30350@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <CAOesGMj+aNkOT1YVHTSBLkOfEujk7uer3R1AmE-sa1TwCijbBg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190625072317.GC30350@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 25/06/2019 14:03, Olof Johansson wrote:
->>> are available in the Git repository at:
->>> > >
->>> > >   git://github.com/hisilicon/linux-hisi.git tags/hisi-fixes-for-5.2
->>> > >
->>> > > for you to fetch changes up to 07c811af1c00d7b4212eac86900b023b6405a954:
->>> > >
->>> > >   lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration (2019-06-25 09:40:42 +0100)
->>> > >
->>> > > ----------------------------------------------------------------
->>> > > Hisilicon fixes for v5.2-rc
->>> > >
->>> > > - fixed RCU usage in logical PIO
->>> > > - Added a function to unregister a logical PIO range in logical PIO
->>> > >   to support the fixes in the hisi-lpc driver
->>> > > - fixed and optimized hisi-lpc driver to avoid potential use-after-free
->>> > >   and driver unbind crash
->> >
->> > Merged to fixes, thanks.
->
-> This broke arm64 allmodconfig:
->
->        arm64.allmodconfig:
-> drivers/bus/hisi_lpc.c:656:3: error: implicit declaration of function
-> 'hisi_lpc_acpi_remove'; did you mean 'hisi_lpc_acpi_probe'?
-> [-Werror=implicit-function-declaration]
->
->
+On Tue 25-06-19 09:23:17, Christoph Hellwig wrote:
+> On Mon, Jun 24, 2019 at 11:24:48AM -0700, Dan Williams wrote:
+> > I asked for this simply because it was not exported historically. In
+> > general I want to establish explicit export-type criteria so the
+> > community can spend less time debating when to use EXPORT_SYMBOL_GPL
+> > [1].
+> > 
+> > The thought in this instance is that it is not historically exported
+> > to modules and it is safer from a maintenance perspective to start
+> > with GPL-only for new symbols in case we don't want to maintain that
+> > interface long-term for out-of-tree modules.
+> > 
+> > Yes, we always reserve the right to remove / change interfaces
+> > regardless of the export type, but history has shown that external
+> > pressure to keep an interface stable (contrary to
+> > Documentation/process/stable-api-nonsense.rst) tends to be less for
+> > GPL-only exports.
+> 
+> Fully agreed.  In the end the decision is with the MM maintainers,
+> though, although I'd prefer to keep it as in this series.
 
-Uhhh, that's my fault - I didn't provide a stub for !ACPI. Sorry. I'll 
-send a fixed v3 series.
+I am sorry but I am not really convinced by the above reasoning wrt. to
+the allocator API and it has been a subject of many changes over time. I
+do not remember a single case where we would be bending the allocator
+API because of external modules and I am pretty sure we will push back
+heavily if that was the case in the future.
 
->
-> Please build and test your branches before you send pull requests, Wei.
->
-> I've dropped the branch again; please re-submit when fixed. I think
-> it's probably 5.3 material now.
->
+So in this particular case I would go with consistency and export the
+same way we do with other functions. Also we do not want people to
+reinvent this API and screw that like we have seen in other cases when
+external modules try reimplement core functionality themselves.
 
-Thanks,
-John
-
->
-> -Olof
->
-> .
->
-
-
+Thanks!
+-- 
+Michal Hocko
+SUSE Labs
