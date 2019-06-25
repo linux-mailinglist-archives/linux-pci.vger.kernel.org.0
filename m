@@ -2,26 +2,26 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1647952979
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 12:29:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92A5752988
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 12:30:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732003AbfFYK3t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jun 2019 06:29:49 -0400
-Received: from mga09.intel.com ([134.134.136.24]:62003 "EHLO mga09.intel.com"
+        id S1727521AbfFYKaG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jun 2019 06:30:06 -0400
+Received: from mga03.intel.com ([134.134.136.65]:58162 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731994AbfFYK3s (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:29:48 -0400
+        id S1731985AbfFYK3r (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 Jun 2019 06:29:47 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 03:29:46 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 03:29:46 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,415,1557212400"; 
-   d="scan'208";a="166635610"
+   d="scan'208";a="188245039"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 25 Jun 2019 03:29:44 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 25 Jun 2019 03:29:44 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 4721C232; Tue, 25 Jun 2019 13:29:43 +0300 (EEST)
+        id 5317E26A; Tue, 25 Jun 2019 13:29:43 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Bjorn Helgaas <bhelgaas@google.com>
@@ -31,9 +31,9 @@ Cc:     Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
         Alexandru Gagniuc <mr.nuke.me@gmail.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH v3 2/3] ACPI / PM: Introduce concept of a _PR0 dependent device
-Date:   Tue, 25 Jun 2019 13:29:41 +0300
-Message-Id: <20190625102942.27740-3-mika.westerberg@linux.intel.com>
+Subject: [PATCH v3 3/3] PCI / ACPI: Add _PR0 dependent devices
+Date:   Tue, 25 Jun 2019 13:29:42 +0300
+Message-Id: <20190625102942.27740-4-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190625102942.27740-1-mika.westerberg@linux.intel.com>
 References: <20190625102942.27740-1-mika.westerberg@linux.intel.com>
@@ -44,223 +44,66 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If there are shared power resources between otherwise unrelated devices
-turning them on causes the other devices sharing them to be powered up
-as well. In case of PCI devices go into D0uninitialized state meaning
-that if they were configured to trigger wake that configuration is lost
-at this point.
+If otherwise unrelated PCI devices share ACPI power resources turning
+them on causes the devices to enter D0uninitialized power state which may
+cause problems.
 
-For this reason introduce a concept of "_PR0 dependent device" that can
-be added to any ACPI device that has power resources. The dependent
-device will be included in a list of dependent devices for all power
-resources returned by the ACPI device's _PR0 (assuming it has one).
-Whenever a power resource having dependent devices is turned physically
-on (its _ON method is called) we runtime resume all of them to allow
-their driver or in case of PCI the PCI core to re-initialize the device
-and its wake configuration.
+For example in Intel Ice Lake two root ports (RP0 and RP1), Thunderbolt
+controller (NHI) and xHCI controller all share power resources as can be
+ween in the topology below where power resources are marked with []:
 
-This adds two functions that can be used to add and remove these
-dependent devices. Note the dependent device does not necessary need
-share power resources so this functionality can be used to add "software
-dependencies" as well if needed.
+  Host bridge
+    |
+    +- RP0 ---\
+    +- RP1 ---|--+--> [TBT]
+    +- NHI --/   |
+    |            |
+    |            v
+    +- xHCI --> [D3C]
+
+In a situation where all devices sharing the power resources are in
+D3cold (the power resources are turned off) and for example the
+Thunderbolt controller is runtime resumed resulting that the power
+resources are turned on. This means that the other devices sharing them
+(RP0, RP1 and xHCI) are transitioned into D0uninitialized state. If they
+were configured to trigger wake (PME) on a certain event that
+configuration gets lost after reset so we would need to re-initialize
+them to get the wakeup working as expected again. To do so we would need
+to runtime resume all of them to make sure their registers get restored
+properly before we can runtime suspend them again.
+
+Since we just added concept of "_PR0 dependent device" we can solve this
+by calling the relevant add/remove functions when the PCI device is bind
+to its ACPI representation. If it has power resources the PCI device
+will be added as dependent device to them and runtime resumed whenever
+they are physically turned on. This should make sure PCI core can
+reconfigure wakes after the device is transitioned into D0uninitialized.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/acpi/power.c    | 135 ++++++++++++++++++++++++++++++++++++++++
- include/acpi/acpi_bus.h |   4 ++
- 2 files changed, 139 insertions(+)
+ drivers/pci/pci-acpi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/acpi/power.c b/drivers/acpi/power.c
-index a916417b9e70..fe1e7bc91a5e 100644
---- a/drivers/acpi/power.c
-+++ b/drivers/acpi/power.c
-@@ -42,6 +42,11 @@ ACPI_MODULE_NAME("power");
- #define ACPI_POWER_RESOURCE_STATE_ON	0x01
- #define ACPI_POWER_RESOURCE_STATE_UNKNOWN 0xFF
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index b782acac26c5..2abe0eeafb53 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -902,6 +902,7 @@ static void pci_acpi_setup(struct device *dev)
+ 		device_wakeup_enable(dev);
  
-+struct acpi_power_dependent_device {
-+	struct device *dev;
-+	struct list_head node;
-+};
-+
- struct acpi_power_resource {
- 	struct acpi_device device;
- 	struct list_head list_node;
-@@ -51,6 +56,7 @@ struct acpi_power_resource {
- 	unsigned int ref_count;
- 	bool wakeup_enabled;
- 	struct mutex resource_lock;
-+	struct list_head dependents;
- };
- 
- struct acpi_power_resource_entry {
-@@ -232,8 +238,121 @@ static int acpi_power_get_list_state(struct list_head *list, int *state)
- 	return 0;
+ 	acpi_pci_wakeup(pci_dev, false);
++	acpi_device_power_add_dependent(adev, dev);
  }
  
-+static int
-+acpi_power_resource_add_dependent(struct acpi_power_resource *resource,
-+				  struct device *dev)
-+{
-+	struct acpi_power_dependent_device *dep;
-+	int ret = 0;
-+
-+	mutex_lock(&resource->resource_lock);
-+	list_for_each_entry(dep, &resource->dependents, node) {
-+		/* Only add it once */
-+		if (dep->dev == dev)
-+			goto unlock;
-+	}
-+
-+	dep = kzalloc(sizeof(*dep), GFP_KERNEL);
-+	if (!dep) {
-+		ret = -ENOMEM;
-+		goto unlock;
-+	}
-+
-+	dep->dev = dev;
-+	list_add_tail(&dep->node, &resource->dependents);
-+	dev_dbg(dev, "added power dependency to [%s]\n", resource->name);
-+
-+unlock:
-+	mutex_unlock(&resource->resource_lock);
-+	return ret;
-+}
-+
-+static void
-+acpi_power_resource_remove_dependent(struct acpi_power_resource *resource,
-+				     struct device *dev)
-+{
-+	struct acpi_power_dependent_device *dep;
-+
-+	mutex_lock(&resource->resource_lock);
-+	list_for_each_entry(dep, &resource->dependents, node) {
-+		if (dep->dev == dev) {
-+			list_del(&dep->node);
-+			kfree(dep);
-+			dev_dbg(dev, "removed power dependency to [%s]\n",
-+				resource->name);
-+			break;
-+		}
-+	}
-+	mutex_unlock(&resource->resource_lock);
-+}
-+
-+/**
-+ * acpi_device_power_add_dependent - Add dependent device of this ACPI device
-+ * @adev: ACPI device pointer
-+ * @dev: Dependent device
-+ *
-+ * If @adev has non-empty _PR0 the @dev is added as dependent device to all
-+ * power resources returned by it. This means that whenever these power
-+ * resources are turned _ON the dependent devices get runtime resumed. This
-+ * is needed for devices such as PCI to allow its driver to re-initialize
-+ * it after it went to D0uninitialized.
-+ *
-+ * If @adev does not have _PR0 this does nothing.
-+ *
-+ * Returns %0 in case of success and negative errno otherwise.
-+ */
-+int acpi_device_power_add_dependent(struct acpi_device *adev,
-+				    struct device *dev)
-+{
-+	struct acpi_power_resource_entry *entry;
-+	struct list_head *resources;
-+	int ret;
-+
-+	if (!adev->flags.power_manageable)
-+		return 0;
-+
-+	resources = &adev->power.states[ACPI_STATE_D0].resources;
-+	list_for_each_entry(entry, resources, node) {
-+		ret = acpi_power_resource_add_dependent(entry->resource, dev);
-+		if (ret)
-+			goto err;
-+	}
-+
-+	return 0;
-+
-+err:
-+	list_for_each_entry(entry, resources, node)
-+		acpi_power_resource_remove_dependent(entry->resource, dev);
-+
-+	return ret;
-+}
-+
-+/**
-+ * acpi_device_power_remove_dependent - Remove dependent device
-+ * @adev: ACPI device pointer
-+ * @dev: Dependent device
-+ *
-+ * Does the opposite of acpi_device_power_add_dependent() and removes the
-+ * dependent device if it is found. Can be called to @adev that does not
-+ * have _PR0 as well.
-+ */
-+void acpi_device_power_remove_dependent(struct acpi_device *adev,
-+					struct device *dev)
-+{
-+	struct acpi_power_resource_entry *entry;
-+	struct list_head *resources;
-+
-+	if (!adev->flags.power_manageable)
-+		return;
-+
-+	resources = &adev->power.states[ACPI_STATE_D0].resources;
-+	list_for_each_entry_reverse(entry, resources, node)
-+		acpi_power_resource_remove_dependent(entry->resource, dev);
-+}
-+
- static int __acpi_power_on(struct acpi_power_resource *resource)
- {
-+	struct acpi_power_dependent_device *dep;
- 	acpi_status status = AE_OK;
+ static void pci_acpi_cleanup(struct device *dev)
+@@ -914,6 +915,7 @@ static void pci_acpi_cleanup(struct device *dev)
  
- 	status = acpi_evaluate_object(resource->device.handle, "_ON", NULL, NULL);
-@@ -243,6 +362,21 @@ static int __acpi_power_on(struct acpi_power_resource *resource)
- 	ACPI_DEBUG_PRINT((ACPI_DB_INFO, "Power resource [%s] turned on\n",
- 			  resource->name));
+ 	pci_acpi_remove_pm_notifier(adev);
+ 	if (adev->wakeup.flags.valid) {
++		acpi_device_power_remove_dependent(adev, dev);
+ 		if (pci_dev->bridge_d3)
+ 			device_wakeup_disable(dev);
  
-+	/*
-+	 * If there are other dependents on this power resource we need to
-+	 * resume them now so that their drivers can re-initialize the
-+	 * hardware properly after it went back to D0.
-+	 */
-+	if (list_empty(&resource->dependents) ||
-+	    list_is_singular(&resource->dependents))
-+		return 0;
-+
-+	list_for_each_entry(dep, &resource->dependents, node) {
-+		dev_dbg(dep->dev, "runtime resuming because [%s] turned on\n",
-+			resource->name);
-+		pm_request_resume(dep->dev);
-+	}
-+
- 	return 0;
- }
- 
-@@ -810,6 +944,7 @@ int acpi_add_power_resource(acpi_handle handle)
- 				ACPI_STA_DEFAULT);
- 	mutex_init(&resource->resource_lock);
- 	INIT_LIST_HEAD(&resource->list_node);
-+	INIT_LIST_HEAD(&resource->dependents);
- 	resource->name = device->pnp.bus_id;
- 	strcpy(acpi_device_name(device), ACPI_POWER_DEVICE_NAME);
- 	strcpy(acpi_device_class(device), ACPI_POWER_CLASS);
-diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-index 31b6c87d6240..4752ff0a9d9b 100644
---- a/include/acpi/acpi_bus.h
-+++ b/include/acpi/acpi_bus.h
-@@ -513,6 +513,10 @@ int acpi_device_fix_up_power(struct acpi_device *device);
- int acpi_bus_update_power(acpi_handle handle, int *state_p);
- int acpi_device_update_power(struct acpi_device *device, int *state_p);
- bool acpi_bus_power_manageable(acpi_handle handle);
-+int acpi_device_power_add_dependent(struct acpi_device *adev,
-+				    struct device *dev);
-+void acpi_device_power_remove_dependent(struct acpi_device *adev,
-+					struct device *dev);
- 
- #ifdef CONFIG_PM
- bool acpi_bus_can_wakeup(acpi_handle handle);
 -- 
 2.20.1
 
