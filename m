@@ -2,98 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A62DC5287C
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 11:46:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65B39528C3
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 11:57:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbfFYJqE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jun 2019 05:46:04 -0400
-Received: from mga01.intel.com ([192.55.52.88]:28571 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728360AbfFYJqE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:46:04 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 02:46:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,415,1557212400"; 
-   d="scan'208";a="182852468"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 25 Jun 2019 02:46:00 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 25 Jun 2019 12:45:59 +0300
-Date:   Tue, 25 Jun 2019 12:45:59 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Len Brown <lenb@kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] PCI / ACPI: Use cached ACPI device state to get
- PCI device power state
-Message-ID: <20190625094559.GY2640@lahna.fi.intel.com>
-References: <20190618161858.77834-1-mika.westerberg@linux.intel.com>
- <20190620141541.GA257318@google.com>
- <CAJZ5v0hfCnyuAA7kC5-fXRo-Mf0jvGZQASV9T4iK8QxsqHMN_g@mail.gmail.com>
- <1858642.x2LvR771H8@kreacher>
+        id S1728160AbfFYJ5r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jun 2019 05:57:47 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33031 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726421AbfFYJ5r (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 Jun 2019 05:57:47 -0400
+Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id ED49D12DE61E0138AA32;
+        Tue, 25 Jun 2019 10:57:45 +0100 (IST)
+Received: from [127.0.0.1] (10.202.227.157) by LHREML713-CAH.china.huawei.com
+ (10.201.108.36) with Microsoft SMTP Server id 14.3.408.0; Tue, 25 Jun 2019
+ 10:57:37 +0100
+Subject: Re: [PATCH v2 0/6] Fixes for HiSilicon LPC driver and logical PIO
+ code
+To:     John Garry <john.garry@huawei.com>, <xuwei5@huawei.com>
+CC:     <bhelgaas@google.com>, <linuxarm@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <arnd@arndb.de>, <olof@lixom.net>, <rjw@rjwysocki.net>
+References: <1561386908-31884-1-git-send-email-john.garry@huawei.com>
+From:   Wei Xu <xuwei5@hisilicon.com>
+Message-ID: <162ae8fa-46a1-6962-27ad-672415e5cf53@hisilicon.com>
+Date:   Tue, 25 Jun 2019 10:57:37 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1858642.x2LvR771H8@kreacher>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1561386908-31884-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.157]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 01:14:47PM +0200, Rafael J. Wysocki wrote:
-> > The problem here is that acpi_device_get_power() really only should be
-> > used for two purposes: (1) To initialize adev->power.state, or to
-> > update it via acpi_device_update_power(), and (2) by the
-> > "real_power_state" sysfs attribute (of ACPI device objects).  The
-> > adev->power.state value should be used anywhere else, in principle, so
-> > the Mika's patch is correct.
-> 
-> Well, it is an improvement, but it is not sufficient.
-> 
-> > [Note that adev->power.state cannot be updated after calling
-> > acpi_device_get_power() to the value returned by it without updating
-> > the reference counters of the power resources that are "on" *exactly*
-> > because of the problem at hand here.]
-> 
-> That is obviously correct, but ->
-> 
-> > > but that's just an idle thought, not a suggestion.
-> > 
-> > After the initialization of the ACPI subsystem, the authoritative
-> > source of the ACPI device power state information is
-> > adev->power.state.  The ACPI subsystem is expected to update this
-> > value as needed going forward (including system-wide transitions like
-> > resume from S3).
-> 
-> -> the "resume from S3 or hibernation" case needs special handling, because
-> in that case the device power state need not reflect the information the ACPI
-> subsystem has.  That only matters if adev->power.state is ACPI_STATE_D0 and
-> the device is actually *not* in D0, because in that case acpi_device_set_power()
-> will not work. 
+Hi John,
 
-I guess you are talking about the special-cased devices that we leave in
-D0 when system suspend (via firmware) is entered?
+On 6/24/2019 3:35 PM, John Garry wrote:
+> As reported in [1], the hisi-lpc driver has certain issues in handling
+> logical PIO regions, specifically unregistering regions.
+> 
+> This series add a method to unregister a logical PIO region, and fixes up
+> the driver to use them.
+> 
+> RCU usage in logical PIO code looks to always have been broken, so that
+> is fixed also. This is not a major fix as the list which RCU protects
+> would be rarely modified.
+> 
+> There is another patch to simplify logical PIO registration, made possible
+> by the fixes.
+> 
+> At this point, there are still separate ongoing discussions about how to
+> stop the logical PIO and PCI host bridge code leaking ranges, as in [2].
+> 
+> Hopefully this series can go through the arm soc tree and the maintainers
+> have no issue with that. I'm talking specifically about the logical PIO
+> code, which went through PCI tree on only previous upstreaming.
 
-> So that case is not covered currently (it should be rare in practice,
-> though, if it happens at all), so something like the patch below (untested) may
-> be needed in addition to the Mika's patch.
+Thanks!
+Series applied to the hisilicon fix tree.
+But I am not sure it is proper for me to apply and send the pull request
+for this patch set.
+I will give it a try.
 
-Looks good to me.
+Best Regards,
+Wei
 
-> Still, there is also the "power state not matching" case in pci_pm_complete() that's
-> need to be covered and the non-PCI ACPI PM has a similar issue in theory, so I
-> need to think about this a bit more.
+> 
+> Cc. linux-pci@vger.kernel.org
+> 
+> [1] https://lore.kernel.org/lkml/1560770148-57960-1-git-send-email-john.garry@huawei.com/
+> [2] https://lore.kernel.org/lkml/4b24fd36-e716-7c5e-31cc-13da727802e7@huawei.com/
+> 
+> Changes since v1:
+> - Add more reasoning in RCU fix patch
+> - Create separate patch to change LOGIC_PIO_CPU_MMIO registration to
+>   accomodate unregistration
+> 
+> John Garry (6):
+>   lib: logic_pio: Fix RCU usage
+>   lib: logic_pio: Avoid possible overlap for unregistering regions
+>   lib: logic_pio: Add logic_pio_unregister_range()
+>   bus: hisi_lpc: Unregister logical PIO range to avoid potential
+>     use-after-free
+>   bus: hisi_lpc: Add .remove method to avoid driver unbind crash
+>   lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at
+>     registration
+> 
+>  drivers/bus/hisi_lpc.c    | 43 +++++++++++++++++---
+>  include/linux/logic_pio.h |  1 +
+>  lib/logic_pio.c           | 86 +++++++++++++++++++++++++++------------
+>  3 files changed, 99 insertions(+), 31 deletions(-)
+> 
 
-Do you want me to hold off sending an updated version of the patch
-series while we figure this one out or is it fine if I send it out now
-and we can add further details on top?
