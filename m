@@ -2,108 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 92A5752988
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 12:30:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F42552FFB
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 12:35:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfFYKaG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jun 2019 06:30:06 -0400
-Received: from mga03.intel.com ([134.134.136.65]:58162 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731985AbfFYK3r (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:29:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 03:29:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,415,1557212400"; 
-   d="scan'208";a="188245039"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 25 Jun 2019 03:29:44 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 5317E26A; Tue, 25 Jun 2019 13:29:43 +0300 (EEST)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        id S1728328AbfFYKfY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jun 2019 06:35:24 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35503 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728321AbfFYKfY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jun 2019 06:35:24 -0400
+Received: by mail-oi1-f193.google.com with SMTP id a127so12117597oii.2;
+        Tue, 25 Jun 2019 03:35:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ObRW1XwoF6B64hL1OcTXkCzwTD1X859M7Rik6J/Dqzc=;
+        b=WyGoOvx23BcLluHS869atyFSKEUIj9fb1LeG/XRDxhg9+Oc9p097wnhF/Hpz75tacW
+         08bWk2OqFAToiuSClrxsgmSWMP3FlIA9V4ZR9uu16ngxWL9xi9ntIktWxZvWzOhG+e7K
+         1pqDCDzUEezzWSwhMQvF9y3iSHz0UK2PybZzp6gv+fFSjZRq1hwzguklfhlIADzt/O4o
+         rRuSjPWGTFiJR6Eljz+a3L0WUmSF+a2t5Svj/ICrK8Y8K4J+nRTJUrxDNSxmbqsl70cQ
+         nGm9AXvYZo13GQ7cSFaPKnpzNjb/ZkE7cPRaafkiJ53idDHrPK2HVSmu+T5uqZY+RJjs
+         S7nw==
+X-Gm-Message-State: APjAAAWhN1oGMDXJqQ3BgBfDpjMZ2LHjNJeVwT1f0gW9f2vJP2lF7XOZ
+        yhEUu/e7RBz+V8RYlsaic1cU0k+hk3fmVZXQm7E=
+X-Google-Smtp-Source: APXvYqxKhRfStpB997B8Y/b35kec/DdknsmgEaSIFu50+fG+cciiqu7g0lxWI8OK69tgkndQ16SQvyKUvvCmVfZnMyA=
+X-Received: by 2002:aca:cdd3:: with SMTP id d202mr12717373oig.115.1561458923392;
+ Tue, 25 Jun 2019 03:35:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190625102942.27740-1-mika.westerberg@linux.intel.com>
+In-Reply-To: <20190625102942.27740-1-mika.westerberg@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 25 Jun 2019 12:35:12 +0200
+Message-ID: <CAJZ5v0he36SF+q_0J5D_UCdhUPkKh6S3e94gqB=5XKcT=eum1A@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] PCI / ACPI: Handle sibling devices sharing power resources
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
         Keith Busch <keith.busch@intel.com>,
         Alex Williamson <alex.williamson@redhat.com>,
         Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH v3 3/3] PCI / ACPI: Add _PR0 dependent devices
-Date:   Tue, 25 Jun 2019 13:29:42 +0300
-Message-Id: <20190625102942.27740-4-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190625102942.27740-1-mika.westerberg@linux.intel.com>
-References: <20190625102942.27740-1-mika.westerberg@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If otherwise unrelated PCI devices share ACPI power resources turning
-them on causes the devices to enter D0uninitialized power state which may
-cause problems.
+On Tue, Jun 25, 2019 at 12:30 PM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> Hi all,
+>
+> This is third iteration of the patch series addressing issues around
+> sibling PCI devices sharing ACPI power resources.
+>
+> As a concrete example in Intel Ice Lake the Thunderbolt controller, PCIe
+> root ports and xHCI all share the same ACPI power resources. When they are
+> all in D3hot power resources (returned by _PR3) can be turned off powering
+> off the whole block. However, there are two issues around this.
+>
+> Firstly the PCI core sets the device power state by asking what the real
+> ACPI power state is. This results that all but last device sharing the
+> power resources are in D3hot when the power resources are turned off. This
+> causes issues if user runs for example 'lspci' because the device is really
+> in D3cold so what user gets back is all ones (0xffffffff).
+>
+> Secondly if any of the device is runtime resumed the power resources are
+> turned on bringing all other devices sharing the resources to
+> D0uninitialized losing their wakeup configuration.
+>
+> This series aims to fix the two issues by:
+>
+>   1. Using the ACPI cached power state when PCI devices are transitioned
+>      into low power states instead of reading back the "real" power state.
+>
+>   2. Introducing concept of "_PR0 dependent devices" that get runtime
+>      resumed whenever their power resource (which they might share with
+>      other sibling devices) gets turned on.
+>
+> The series is based on the idea of Rafael J. Wysocki <rafael@kernel.org>.
+>
+> Previous version of the series can be found here:
+>
+>   v2: https://lore.kernel.org/linux-pci/20190618161858.77834-1-mika.westerberg@linux.intel.com/T/#m7a41d0b745400054543324ce84125040dbfed912
+>   v1: https://www.spinics.net/lists/linux-pci/msg83583.html
+>
+> Changes from v2:
+>
+>   * Updated changelog of patch [1/3] according to comments I got. I left
+>     the D3C power resource and xHCI there because it shows that we can have
+>     multiple shared power resources.
+>
+>   * Added link to the discussion around v2.
+>
+>   * Use adev->flags.power_manageable in patch [2/3].
+>
+> Mika Westerberg (3):
+>   PCI / ACPI: Use cached ACPI device state to get PCI device power state
+>   ACPI / PM: Introduce concept of a _PR0 dependent device
+>   PCI / ACPI: Add _PR0 dependent devices
+>
+>  drivers/acpi/power.c    | 135 ++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/pci-acpi.c  |   5 +-
+>  include/acpi/acpi_bus.h |   4 ++
+>  3 files changed, 143 insertions(+), 1 deletion(-)
+>
 
-For example in Intel Ice Lake two root ports (RP0 and RP1), Thunderbolt
-controller (NHI) and xHCI controller all share power resources as can be
-ween in the topology below where power resources are marked with []:
-
-  Host bridge
-    |
-    +- RP0 ---\
-    +- RP1 ---|--+--> [TBT]
-    +- NHI --/   |
-    |            |
-    |            v
-    +- xHCI --> [D3C]
-
-In a situation where all devices sharing the power resources are in
-D3cold (the power resources are turned off) and for example the
-Thunderbolt controller is runtime resumed resulting that the power
-resources are turned on. This means that the other devices sharing them
-(RP0, RP1 and xHCI) are transitioned into D0uninitialized state. If they
-were configured to trigger wake (PME) on a certain event that
-configuration gets lost after reset so we would need to re-initialize
-them to get the wakeup working as expected again. To do so we would need
-to runtime resume all of them to make sure their registers get restored
-properly before we can runtime suspend them again.
-
-Since we just added concept of "_PR0 dependent device" we can solve this
-by calling the relevant add/remove functions when the PCI device is bind
-to its ACPI representation. If it has power resources the PCI device
-will be added as dependent device to them and runtime resumed whenever
-they are physically turned on. This should make sure PCI core can
-reconfigure wakes after the device is transitioned into D0uninitialized.
-
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
- drivers/pci/pci-acpi.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index b782acac26c5..2abe0eeafb53 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -902,6 +902,7 @@ static void pci_acpi_setup(struct device *dev)
- 		device_wakeup_enable(dev);
- 
- 	acpi_pci_wakeup(pci_dev, false);
-+	acpi_device_power_add_dependent(adev, dev);
- }
- 
- static void pci_acpi_cleanup(struct device *dev)
-@@ -914,6 +915,7 @@ static void pci_acpi_cleanup(struct device *dev)
- 
- 	pci_acpi_remove_pm_notifier(adev);
- 	if (adev->wakeup.flags.valid) {
-+		acpi_device_power_remove_dependent(adev, dev);
- 		if (pci_dev->bridge_d3)
- 			device_wakeup_disable(dev);
- 
--- 
-2.20.1
-
+The whole series looks good to me, thank you!
