@@ -2,59 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BF31B5244B
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 09:23:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D38B524AE
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 09:29:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfFYHXu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jun 2019 03:23:50 -0400
-Received: from verein.lst.de ([213.95.11.211]:60268 "EHLO newverein.lst.de"
+        id S1728346AbfFYH3s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jun 2019 03:29:48 -0400
+Received: from verein.lst.de ([213.95.11.211]:60293 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726422AbfFYHXt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:23:49 -0400
+        id S1727781AbfFYH3s (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 Jun 2019 03:29:48 -0400
 Received: by newverein.lst.de (Postfix, from userid 2407)
-        id EDBB068B02; Tue, 25 Jun 2019 09:23:17 +0200 (CEST)
-Date:   Tue, 25 Jun 2019 09:23:17 +0200
+        id 0839568B02; Tue, 25 Jun 2019 09:29:16 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 09:29:15 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, Christoph Hellwig <hch@lst.de>,
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
         =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
-Message-ID: <20190625072317.GC30350@lst.de>
-References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-6-hch@lst.de> <20190620191733.GH12083@dhcp22.suse.cz> <CAPcyv4h9+Ha4FVrvDAe-YAr1wBOjc4yi7CAzVuASv=JCxPcFaw@mail.gmail.com>
+        Ben Skeggs <bskeggs@redhat.com>, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 18/22] mm: mark DEVICE_PUBLIC as broken
+Message-ID: <20190625072915.GD30350@lst.de>
+References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-19-hch@lst.de> <20190620192648.GI12083@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4h9+Ha4FVrvDAe-YAr1wBOjc4yi7CAzVuASv=JCxPcFaw@mail.gmail.com>
+In-Reply-To: <20190620192648.GI12083@dhcp22.suse.cz>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 11:24:48AM -0700, Dan Williams wrote:
-> I asked for this simply because it was not exported historically. In
-> general I want to establish explicit export-type criteria so the
-> community can spend less time debating when to use EXPORT_SYMBOL_GPL
-> [1].
+On Thu, Jun 20, 2019 at 09:26:48PM +0200, Michal Hocko wrote:
+> On Thu 13-06-19 11:43:21, Christoph Hellwig wrote:
+> > The code hasn't been used since it was added to the tree, and doesn't
+> > appear to actually be usable.  Mark it as BROKEN until either a user
+> > comes along or we finally give up on it.
 > 
-> The thought in this instance is that it is not historically exported
-> to modules and it is safer from a maintenance perspective to start
-> with GPL-only for new symbols in case we don't want to maintain that
-> interface long-term for out-of-tree modules.
-> 
-> Yes, we always reserve the right to remove / change interfaces
-> regardless of the export type, but history has shown that external
-> pressure to keep an interface stable (contrary to
-> Documentation/process/stable-api-nonsense.rst) tends to be less for
-> GPL-only exports.
+> I would go even further and simply remove all the DEVICE_PUBLIC code.
 
-Fully agreed.  In the end the decision is with the MM maintainers,
-though, although I'd prefer to keep it as in this series.
+I looked into that as I now got the feedback twice.  It would
+create a conflict with another tree cleaning things up around the
+is_device_private defintion, but otherwise I'd be glad to just remove
+it.
+
+Jason, as this goes through your tree, do you mind the additional
+conflict?
