@@ -2,133 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FB115582F
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 21:54:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BDD255AF3
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 00:20:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbfFYTyk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jun 2019 15:54:40 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:37308 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726712AbfFYTyk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 Jun 2019 15:54:40 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hfrWI-0007CW-Rp; Tue, 25 Jun 2019 13:54:23 -0600
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190620161240.22738-1-logang@deltatee.com>
- <20190624072752.GA3954@lst.de>
- <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com>
- <20190625072008.GB30350@lst.de>
- <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
- <20190625170115.GA9746@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
-Date:   Tue, 25 Jun 2019 13:54:21 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1726037AbfFYWU0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jun 2019 18:20:26 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:60207 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfFYWU0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jun 2019 18:20:26 -0400
+Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id 31d07203676d00d2; Wed, 26 Jun 2019 00:20:23 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] PCI: PM: Avoid skipping bus-level PM on platforms without ACPI
+Date:   Wed, 26 Jun 2019 00:20:23 +0200
+Message-ID: <14605632.7Eqku7tdey@kreacher>
 MIME-Version: 1.0
-In-Reply-To: <20190625170115.GA9746@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, jgg@ziepe.ca, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+There are platforms that do not call pm_set_suspend_via_firmware(),
+so pm_suspend_via_firmware() returns 'false' on them, but the power
+states of PCI devices (PCIe ports in particular) are changed as a
+result of powering down core platform components during system-wide
+suspend.  Thus the pm_suspend_via_firmware() checks in
+pci_pm_suspend_noirq() and pci_pm_resume_noirq() introduced by
+commit 3e26c5feed2a ("PCI: PM: Skip devices in D0 for suspend-to-
+idle") are not sufficient to determine that devices left in D0
+during suspend will remain in D0 during resume and so the bus-level
+power management can be skipped for them.
+
+For this reason, introduce a new global suspend flag,
+PM_SUSPEND_FLAG_NO_PLATFORM, set it for suspend-to-idle only
+and replace the pm_suspend_via_firmware() checks mentioned above
+with checks against this flag.
+
+Fixes: 3e26c5feed2a ("PCI: PM: Skip devices in D0 for suspend-to-idle")
+Reported-by: Jon Hunter <jonathanh@nvidia.com>
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/pci/pci-driver.c |    8 ++++----
+ include/linux/suspend.h  |   26 ++++++++++++++++++++++++--
+ kernel/power/suspend.c   |    3 +++
+ 3 files changed, 31 insertions(+), 6 deletions(-)
+
+Index: linux-pm/include/linux/suspend.h
+===================================================================
+--- linux-pm.orig/include/linux/suspend.h
++++ linux-pm/include/linux/suspend.h
+@@ -209,8 +209,9 @@ extern int suspend_valid_only_mem(suspen
+ 
+ extern unsigned int pm_suspend_global_flags;
+ 
+-#define PM_SUSPEND_FLAG_FW_SUSPEND	(1 << 0)
+-#define PM_SUSPEND_FLAG_FW_RESUME	(1 << 1)
++#define PM_SUSPEND_FLAG_FW_SUSPEND	BIT(0)
++#define PM_SUSPEND_FLAG_FW_RESUME	BIT(1)
++#define PM_SUSPEND_FLAG_NO_PLATFORM	BIT(2)
+ 
+ static inline void pm_suspend_clear_flags(void)
+ {
+@@ -227,6 +228,11 @@ static inline void pm_set_resume_via_fir
+ 	pm_suspend_global_flags |= PM_SUSPEND_FLAG_FW_RESUME;
+ }
+ 
++static inline void pm_set_suspend_no_platform(void)
++{
++	pm_suspend_global_flags |= PM_SUSPEND_FLAG_NO_PLATFORM;
++}
++
+ /**
+  * pm_suspend_via_firmware - Check if platform firmware will suspend the system.
+  *
+@@ -268,6 +274,22 @@ static inline bool pm_resume_via_firmwar
+ 	return !!(pm_suspend_global_flags & PM_SUSPEND_FLAG_FW_RESUME);
+ }
+ 
++/**
++ * pm_suspend_no_platform - Check if platform may change device power states.
++ *
++ * To be called during system-wide power management transitions to sleep states
++ * or during the subsequent system-wide transitions back to the working state.
++ *
++ * Return 'true' if the power states of devices remain under full control of the
++ * kernel throughout the system-wide suspend and resume cycle in progress (that
++ * is, if a device is put into a certain power state during suspend, it can be
++ * expected to remain in that state during resume).
++ */
++static inline bool pm_suspend_no_platform(void)
++{
++	return !!(pm_suspend_global_flags & PM_SUSPEND_FLAG_NO_PLATFORM);
++}
++
+ /* Suspend-to-idle state machnine. */
+ enum s2idle_states {
+ 	S2IDLE_STATE_NONE,      /* Not suspended/suspending. */
+Index: linux-pm/kernel/power/suspend.c
+===================================================================
+--- linux-pm.orig/kernel/power/suspend.c
++++ linux-pm/kernel/power/suspend.c
+@@ -493,6 +493,9 @@ int suspend_devices_and_enter(suspend_st
+ 
+ 	pm_suspend_target_state = state;
+ 
++	if (state == PM_SUSPEND_TO_IDLE)
++		pm_set_suspend_no_platform();
++
+ 	error = platform_suspend_begin(state);
+ 	if (error)
+ 		goto Close;
+Index: linux-pm/drivers/pci/pci-driver.c
+===================================================================
+--- linux-pm.orig/drivers/pci/pci-driver.c
++++ linux-pm/drivers/pci/pci-driver.c
+@@ -877,7 +877,7 @@ static int pci_pm_suspend_noirq(struct d
+ 			pci_dev->bus->self->skip_bus_pm = true;
+ 	}
+ 
+-	if (pci_dev->skip_bus_pm && !pm_suspend_via_firmware()) {
++	if (pci_dev->skip_bus_pm && pm_suspend_no_platform()) {
+ 		dev_dbg(dev, "PCI PM: Skipped\n");
+ 		goto Fixup;
+ 	}
+@@ -932,10 +932,10 @@ static int pci_pm_resume_noirq(struct de
+ 	/*
+ 	 * In the suspend-to-idle case, devices left in D0 during suspend will
+ 	 * stay in D0, so it is not necessary to restore or update their
+-	 * configuration here and attempting to put them into D0 again may
+-	 * confuse some firmware, so avoid doing that.
++	 * configuration here and attempting to put them into D0 again is
++	 * pointless, so avoid doing that.
+ 	 */
+-	if (!pci_dev->skip_bus_pm || pm_suspend_via_firmware())
++	if (!(pci_dev->skip_bus_pm && pm_suspend_no_platform()))
+ 		pci_pm_default_resume_early(pci_dev);
+ 
+ 	pci_fixup_device(pci_fixup_resume_early, pci_dev);
 
 
-On 2019-06-25 11:01 a.m., Christoph Hellwig wrote:
-> On Tue, Jun 25, 2019 at 09:57:52AM -0600, Logan Gunthorpe wrote:
->>> You assume all addressing is done by the PCI bus address.  If a device
->>> is addressing its own BAR there is no reason to use the PCI bus address,
->>> as it might have much more intelligent schemes (usually bar + offset).
->>
->> Yes, that will be a bit tricky regardless of what we do.
-> 
-> At least right now it isn't at all.  I've implemented support for
-> a draft NVMe proposal for that, and it basically boils down to this
-> in the p2p path:
-> 
-> 	addr = sg_phys(sg);
-> 
-> 	if (page->pgmap->dev == ctrl->dev && HAS_RELATIVE_ADDRESSING)
-> 		addr -= ctrl->cmb_start_addr;
-> 
-> 		// set magic flag in the SGL
-> 	} else {
-> 		addr -= pgmap->pci_p2pdma_bus_offset;
-> 	}
-> 
-> without the pagemap it would require a range compare instead, which
-> isn't all that hard either.
-> 
->>>>> Also duplicating the whole block I/O stack, including hooks all over
->>>>> the fast path is pretty much a no-go.
->>>>
->>>> There was very little duplicate code in the patch set. (Really just the
->>>> mapping code). There are a few hooks, but in practice not that many if
->>>> we ignore the WARN_ONs. We might be able to work to reduce this further.
->>>> The main hooks are: when we skip bouncing, when we skip integrity prep,
->>>> when we split, and when we map. And the patchset drops the PCI_P2PDMA
->>>> hook when we map. So we're talking about maybe three or four extra ifs
->>>> that would likely normally be fast due to the branch predictor.
->>>
->>> And all of those add code to the block layer fast path.
->>
->> If we can't add any ifs to the block layer, there's really nothing we
->> can do.
-> 
-> That is not what I said.  Of course we can.  But we rather have a
-> really good reason.  And adding a parallel I/O path violating the
-> highlevel model is not one.
-> 
->> So then we're committed to using struct page for P2P?
-> 
-> Only until we have a significantly better soltution.  And I think
-> using physical address in some form instead of pages is that,
-> adding a parallel path with dma_addr_t is not, it actually is worse
-> than the current code in many respects.
 
-Well whether it's dma_addr_t, phys_addr_t, pfn_t the result isn't all
-that different. You still need roughly the same 'if' hooks for any
-backed memory that isn't in the linear mapping and you can't get a
-kernel mapping for directly.
-
-It wouldn't be too hard to do a similar patch set that uses something
-like phys_addr_t instead and have a request and queue flag for support
-of non-mappable memory. But you'll end up with very similar 'if' hooks
-and we'd have to clean up all bio-using drivers that access the struct
-pages directly.
-
-Though, we'd also still have the problem of how to recognize when the
-address points to P2PDMA and needs to be translated to the bus offset.
-The map-first inversion was what helped here because the driver
-submitting the requests had all the information. Though it could be
-another request flag and indicating non-mappable memory could be a flag
-group like REQ_NOMERGE_FLAGS -- REQ_NOMAP_FLAGS.
-
-If you think any of the above ideas sound workable I'd be happy to try
-to code up another prototype.
-
-Logan
