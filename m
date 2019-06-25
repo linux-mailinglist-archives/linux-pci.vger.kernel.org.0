@@ -2,129 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 93A8A54F2E
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 14:46:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6258A54FA3
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 15:03:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731681AbfFYMqq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jun 2019 08:46:46 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:13420 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727217AbfFYMqq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jun 2019 08:46:46 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1217b30000>; Tue, 25 Jun 2019 05:46:43 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 25 Jun 2019 05:46:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 25 Jun 2019 05:46:45 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 25 Jun
- 2019 12:46:42 +0000
-Subject: Re: [PATCH v2] PCI: PM: Skip devices in D0 for suspend-to-idle
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-CC:     Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <1668247.RaJIPSxJUN@kreacher>
- <CAJZ5v0hdtXqoK84DpYtyMSCnkR9zOHFiUPAzWZDtkFmEjyWD1g@mail.gmail.com>
- <CAJZ5v0gGdXmgc_9r2rbiadq4e31hngpjYQ40QoC6C0z19da_hQ@mail.gmail.com>
- <2287147.DxjcvLeq6l@kreacher>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <f233d8fe-9525-05de-858d-e7456a17bd4b@nvidia.com>
-Date:   Tue, 25 Jun 2019 13:46:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        id S1730414AbfFYNDi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jun 2019 09:03:38 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39481 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729846AbfFYNDh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jun 2019 09:03:37 -0400
+Received: by mail-io1-f67.google.com with SMTP id r185so2787736iod.6
+        for <linux-pci@vger.kernel.org>; Tue, 25 Jun 2019 06:03:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AaAux+mpjiFWEqJlAiGOu1BVPLgrTOOP018VAUoSN3o=;
+        b=lmRjWvzcBFajWRoBK3znbG6i3978d6nBbrRGi3suA6cnsxIj5JI2hVj20FLTyh+0yt
+         zV7i5MYXlc52IXaOeYNjzP8Km02CfCbdrpobiwqLnmNIoJC484FCh1NAiy9uJzZ2p/ak
+         mMguigzQ63Q61fPmyPDQzSrl6/Lar+u1ARJamNP1zlq85bKWUns0qMJT7D9GKH4/ZlQT
+         MhwVKWJ4ICSk3sn5QpF8a4LT8tnmv8P23HsxXWL/TyRkmjtwMKIuQpXXavC4cWN0plke
+         Vsdh3Ar8TJ70vtpE0ohBaHT9Xa2HP7pLyJMMHPfKOWuHJNMvCFUGK8z9SL/OONjvSnzz
+         TTzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AaAux+mpjiFWEqJlAiGOu1BVPLgrTOOP018VAUoSN3o=;
+        b=U8D6TFqtdGoRovuKT0BNUVR/b+skz9ebu/Q1diHZWqd+HptIBv8V5ewt1/H8uFzKBV
+         DEZ1MJ3joW2GCoWmiBzjzqxa7os0ZIc3EEmsoX1YjbscJMT6cy0LX9qrtYApMdMzUrRa
+         IgZoHwhtpJ0sCVt6QTRC4eVhJErmaqQxFL0zLyXKMqKQfjPLVo51SKw5KF9klqdSJHvf
+         0tQ/J3/gYJ2FQVvsIE5Su4uM7/Y6VrGOGnYayEPUcbFAI9c9Z3aEJiKPUwXYO7Bm6VUm
+         9j3dzsBiBu1NHC6GVxLyNkgD0xJhazprrzoEvZSmR7EmdyWOObY5z+KOU0nLEKLBLFUv
+         JhXg==
+X-Gm-Message-State: APjAAAXQgpkPk4tQlYwzwG74UveRVQlrEouAmZJSfH9Nz5Mg9kByoDih
+        gg6KsOMEWOUB2pgYWJUexU5CQZx1rfWxiK1jpDTIuQ==
+X-Google-Smtp-Source: APXvYqy4zCAKoPaPG2k29F7XqifxmNDOdW2j4TDAW8nqSYe5f3mVIHS3sMFRvz8ca5dxqSPtvcR/IL7ykacX2H/I+K4=
+X-Received: by 2002:a02:54c1:: with SMTP id t184mr10221497jaa.10.1561467816781;
+ Tue, 25 Jun 2019 06:03:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2287147.DxjcvLeq6l@kreacher>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561466803; bh=d78HqQ20KZYrh16yH9/J+FHIlCtyikzMQuzoMFGmiZ8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=l6Hj3sj1CPlhmy+nhIdEC99hzmnMz5t9L7LDhKbLJrRoADGMrkeKX1Ancf8uVfE2y
-         i2I5e/QuH3FvPzdYHjvHq/MILicIhcKLJJS/hmuB3v7zZkc9nSrTlKTjK8vcDqKgQ2
-         eLLwBFgEUMsICRW0f2Qf1x/V6PFYIgQtzfEGr78eZCEu4OUbtgQSzhIOskynqqzan6
-         c4KJbKi8ARv2Ul9EY6ifldM2+oN5dMi0Dd07jdrHwMSIYCDt9JrdxYOe0UF7V3LaJ7
-         0rhK0ZUab5ZNeHQeZYYEYQ8yv0BiE7Yp9OdswcR7quJ0CffG5CheNVp6aymky1SR91
-         vDS/gOpbJmfUQ==
+References: <b89ef8f0-d102-7f78-f373-cbcc7faddee3@hisilicon.com> <20190625112148.ckj7sgdgvyeel7vy@localhost>
+In-Reply-To: <20190625112148.ckj7sgdgvyeel7vy@localhost>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Tue, 25 Jun 2019 15:03:25 +0200
+Message-ID: <CAOesGMj+aNkOT1YVHTSBLkOfEujk7uer3R1AmE-sa1TwCijbBg@mail.gmail.com>
+Subject: Re: [GIT PULL] Hisilicon fixes for v5.2
+To:     Wei Xu <xuwei5@hisilicon.com>
+Cc:     ARM-SoC Maintainers <arm@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, Linuxarm <linuxarm@huawei.com>,
+        "xuwei (O)" <xuwei5@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Zhangyi ac <zhangyi.ac@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
+        jinying@hisilicon.com, huangdaode <huangdaode@hisilicon.com>,
+        Tangkunshan <tangkunshan@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi,
 
-On 25/06/2019 00:09, Rafael J. Wysocki wrote:
-> On Tuesday, June 25, 2019 12:20:26 AM CEST Rafael J. Wysocki wrote:
->> On Mon, Jun 24, 2019 at 11:37 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->>>
->>> On Mon, Jun 24, 2019 at 2:43 PM Jon Hunter <jonathanh@nvidia.com> wrote:
->>>>
->>>> Hi Rafael,
->>>>
->>>> On 13/06/2019 22:59, Rafael J. Wysocki wrote:
->>>>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>>>
->>>>> Commit d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
->>>>> attempted to avoid a problem with devices whose drivers want them to
->>>>> stay in D0 over suspend-to-idle and resume, but it did not go as far
->>>>> as it should with that.
->>>>>
->>>>> Namely, first of all, the power state of a PCI bridge with a
->>>>> downstream device in D0 must be D0 (based on the PCI PM spec r1.2,
->>>>> sec 6, table 6-1, if the bridge is not in D0, there can be no PCI
->>>>> transactions on its secondary bus), but that is not actively enforced
->>>>> during system-wide PM transitions, so use the skip_bus_pm flag
->>>>> introduced by commit d491f2b75237 for that.
->>>>>
->>>>> Second, the configuration of devices left in D0 (whatever the reason)
->>>>> during suspend-to-idle need not be changed and attempting to put them
->>>>> into D0 again by force is pointless, so explicitly avoid doing that.
->>>>>
->>>>> Fixes: d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
->>>>> Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>>>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>>> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
->>>>> Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>>>
->>>> I have noticed a regression in both the mainline and -next branches on
->>>> one of our boards when testing suspend. The bisect is point to this
->>>> commit and reverting on top of mainline does fix the problem. So far I
->>>> have not looked at this in close detail but kernel log is showing ...
->>>
->>> Can you please collect a log like that, but with dynamic debug in
->>> pci-driver.c enabled?
->>>
->>> Note that reverting this commit is rather out of the question, so we
->>> need to get to the bottom of the failure.
->>
->> I suspect that there is a problem with the pm_suspend_via_firmware()
->> check which returns 'false' on the affected board, but the platform
->> actually removes power from devices left in D0 during suspend.
->>
->> I guess it would be more appropriate to check something like
->> pm_suspend_no_platform() which would return 'true' in the
->> suspend-to-idle patch w/ ACPI.
-> 
-> So I wonder if the patch below makes any difference?
+On Tue, Jun 25, 2019 at 2:04 PM Olof Johansson <olof@lixom.net> wrote:
+>
+> On Tue, Jun 25, 2019 at 11:23:21AM +0100, Wei Xu wrote:
+> > Hi ARM-SoC team,
+> >
+> > Please consider to pull the following changes.
+> > Thanks!
+> >
+> > Best Regards,
+> > Wei
+> >
+> > ---
+> >
+> > The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+> >
+> >   Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+> >
+> > are available in the Git repository at:
+> >
+> >   git://github.com/hisilicon/linux-hisi.git tags/hisi-fixes-for-5.2
+> >
+> > for you to fetch changes up to 07c811af1c00d7b4212eac86900b023b6405a954:
+> >
+> >   lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration (2019-06-25 09:40:42 +0100)
+> >
+> > ----------------------------------------------------------------
+> > Hisilicon fixes for v5.2-rc
+> >
+> > - fixed RCU usage in logical PIO
+> > - Added a function to unregister a logical PIO range in logical PIO
+> >   to support the fixes in the hisi-lpc driver
+> > - fixed and optimized hisi-lpc driver to avoid potential use-after-free
+> >   and driver unbind crash
+>
+> Merged to fixes, thanks.
 
-Thanks. I will try this now and let you know.
 
-Cheers!
-Jon
+This broke arm64 allmodconfig:
 
--- 
-nvpublic
+       arm64.allmodconfig:
+drivers/bus/hisi_lpc.c:656:3: error: implicit declaration of function
+'hisi_lpc_acpi_remove'; did you mean 'hisi_lpc_acpi_probe'?
+[-Werror=implicit-function-declaration]
+
+
+
+Please build and test your branches before you send pull requests, Wei.
+
+I've dropped the branch again; please re-submit when fixed. I think
+it's probably 5.3 material now.
+
+
+-Olof
