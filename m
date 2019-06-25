@@ -2,141 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 79B9555828
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 21:52:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FB115582F
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 21:54:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbfFYTw3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jun 2019 15:52:29 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42850 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727652AbfFYTw3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jun 2019 15:52:29 -0400
-Received: by mail-ot1-f66.google.com with SMTP id l15so62223otn.9
-        for <linux-pci@vger.kernel.org>; Tue, 25 Jun 2019 12:52:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w0iye/3d1d43WiqVq+yINWIQnPqAw8A16FUwAjTLITU=;
-        b=cg40kmVDe098Yeal1OpwCn3OtKBjzRnBRkGsDiRkJlBZmoYI19FP8EGzmZENBKS9gc
-         y85l2sQkHTXgqXraL4kaAGyPSS89BlMic0a5IYD4ijt8AaGI5dAMpm1LqTsvqtZ0PA18
-         /sFXK4G4VbfJsBTSuI7jnUNqry2IT3CR4rWFZDFAIwwgF0wpO56iBYn1OrWh8zMn5H5U
-         UiXxOJDTdDUZ1sp/qT4gDr5qxfq60VgObAV3QcEkH8aWy3k9rRcTQ+1xwDIMTbjb/rOl
-         vLBtj451wwdwT3Iv/y3LeY44bWSWgm5KwxP2Hkh4f45wvrSWUrzPcQdtg3gHbAGRQLJ3
-         R1iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w0iye/3d1d43WiqVq+yINWIQnPqAw8A16FUwAjTLITU=;
-        b=G6WaPJ5Ql8UvCaggDlZ+BseNQxjrUgq9YrWrQR1zgiuOIw9qNqULZWWnu8R6Zi2Y+z
-         piOks0uGmoRrSnRbXqTjA8EdhKhc2tUuaGGrI3HlBvSJcduiT8IPVuiwLFyZTJOk8Zib
-         CSvTXFNKttvMKEaeuMDEft0h7inooRg87VPB22S/eh4YVApm6lUVE9xvyMeqWXnURjYY
-         +N6mMgBomfYH3Pjznc+aFunElPwg0DuaocBotd3IV8b/GaROaKufaCjSs3MVQzpqiasc
-         D20xCULiLZbjbYdztEqNSYuQWrBlVUGO5z7Nxz417e2Kh+hMK1nBg1EF/SvXj/cBAhq1
-         XV7w==
-X-Gm-Message-State: APjAAAXvzOuTefTOA54kqV71/Z+eCcXuE/jrjcOlCBJg5nP5M0YLBUpq
-        Z871mu1Vx2kZbds2Aqdlv980CcekRiKBVb1GAgjVsw==
-X-Google-Smtp-Source: APXvYqx9tkQWIJH6qfCTM4r93Fn0JkGxBFjGh9k1TjumYyf0PnXcUjYDBWeUS/klLXmbZuWZeGlEsSD0mVmlPe4JDBw=
-X-Received: by 2002:a9d:7b48:: with SMTP id f8mr50775oto.207.1561492348979;
- Tue, 25 Jun 2019 12:52:28 -0700 (PDT)
+        id S1727510AbfFYTyk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jun 2019 15:54:40 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:37308 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726712AbfFYTyk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 Jun 2019 15:54:40 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hfrWI-0007CW-Rp; Tue, 25 Jun 2019 13:54:23 -0600
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190620161240.22738-1-logang@deltatee.com>
+ <20190624072752.GA3954@lst.de>
+ <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com>
+ <20190625072008.GB30350@lst.de>
+ <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
+ <20190625170115.GA9746@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
+Date:   Tue, 25 Jun 2019 13:54:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-6-hch@lst.de>
- <20190620191733.GH12083@dhcp22.suse.cz> <CAPcyv4h9+Ha4FVrvDAe-YAr1wBOjc4yi7CAzVuASv=JCxPcFaw@mail.gmail.com>
- <20190625072317.GC30350@lst.de> <20190625150053.GJ11400@dhcp22.suse.cz>
- <CAPcyv4j1e5dbBHnc+wmtsNUyFbMK_98WxHNwuD_Vxo4dX9Ce=Q@mail.gmail.com> <20190625190038.GK11400@dhcp22.suse.cz>
-In-Reply-To: <20190625190038.GK11400@dhcp22.suse.cz>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 25 Jun 2019 12:52:18 -0700
-Message-ID: <CAPcyv4hU13v7dSQpF0WTQTxQM3L3UsHMUhsFMVz7i4UGLoM89g@mail.gmail.com>
-Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190625170115.GA9746@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, jgg@ziepe.ca, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 12:01 PM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Tue 25-06-19 11:03:53, Dan Williams wrote:
-> > On Tue, Jun 25, 2019 at 8:01 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > >
-> > > On Tue 25-06-19 09:23:17, Christoph Hellwig wrote:
-> > > > On Mon, Jun 24, 2019 at 11:24:48AM -0700, Dan Williams wrote:
-> > > > > I asked for this simply because it was not exported historically. In
-> > > > > general I want to establish explicit export-type criteria so the
-> > > > > community can spend less time debating when to use EXPORT_SYMBOL_GPL
-> > > > > [1].
-> > > > >
-> > > > > The thought in this instance is that it is not historically exported
-> > > > > to modules and it is safer from a maintenance perspective to start
-> > > > > with GPL-only for new symbols in case we don't want to maintain that
-> > > > > interface long-term for out-of-tree modules.
-> > > > >
-> > > > > Yes, we always reserve the right to remove / change interfaces
-> > > > > regardless of the export type, but history has shown that external
-> > > > > pressure to keep an interface stable (contrary to
-> > > > > Documentation/process/stable-api-nonsense.rst) tends to be less for
-> > > > > GPL-only exports.
-> > > >
-> > > > Fully agreed.  In the end the decision is with the MM maintainers,
-> > > > though, although I'd prefer to keep it as in this series.
-> > >
-> > > I am sorry but I am not really convinced by the above reasoning wrt. to
-> > > the allocator API and it has been a subject of many changes over time. I
-> > > do not remember a single case where we would be bending the allocator
-> > > API because of external modules and I am pretty sure we will push back
-> > > heavily if that was the case in the future.
-> >
-> > This seems to say that you have no direct experience of dealing with
-> > changing symbols that that a prominent out-of-tree module needs? GPU
-> > drivers and the core-mm are on a path to increase their cooperation on
-> > memory management mechanisms over time, and symbol export changes for
-> > out-of-tree GPU drivers have been a significant source of friction in
-> > the past.
->
-> I have an experience e.g. to rework semantic of some gfp flags and that is
-> something that users usualy get wrong and never heard that an out of
-> tree code would insist on an old semantic and pushing us to the corner.
->
-> > > So in this particular case I would go with consistency and export the
-> > > same way we do with other functions. Also we do not want people to
-> > > reinvent this API and screw that like we have seen in other cases when
-> > > external modules try reimplement core functionality themselves.
-> >
-> > Consistency is a weak argument when the cost to the upstream community
-> > is negligible. If the same functionality was available via another /
-> > already exported interface *that* would be an argument to maintain the
-> > existing export policy. "Consistency" in and of itself is not a
-> > precedent we can use more widely in default export-type decisions.
-> >
-> > Effectively I'm arguing EXPORT_SYMBOL_GPL by default with a later
-> > decision to drop the _GPL. Similar to how we are careful to mark sysfs
-> > interfaces in Documentation/ABI/ that we are not fully committed to
-> > maintaining over time, or are otherwise so new that there is not yet a
-> > good read on whether they can be made permanent.
->
-> Documentation/process/stable-api-nonsense.rst
 
-That document has failed to preclude symbol export fights in the past
-and there is a reasonable argument to try not to retract functionality
-that had been previously exported regardless of that document.
 
-> Really. If you want to play with GPL vs. EXPORT_SYMBOL else this is up
-> to you but I do not see any technical argument to make this particular
-> interface to the page allocator any different from all others that are
-> exported to modules.
+On 2019-06-25 11:01 a.m., Christoph Hellwig wrote:
+> On Tue, Jun 25, 2019 at 09:57:52AM -0600, Logan Gunthorpe wrote:
+>>> You assume all addressing is done by the PCI bus address.  If a device
+>>> is addressing its own BAR there is no reason to use the PCI bus address,
+>>> as it might have much more intelligent schemes (usually bar + offset).
+>>
+>> Yes, that will be a bit tricky regardless of what we do.
+> 
+> At least right now it isn't at all.  I've implemented support for
+> a draft NVMe proposal for that, and it basically boils down to this
+> in the p2p path:
+> 
+> 	addr = sg_phys(sg);
+> 
+> 	if (page->pgmap->dev == ctrl->dev && HAS_RELATIVE_ADDRESSING)
+> 		addr -= ctrl->cmb_start_addr;
+> 
+> 		// set magic flag in the SGL
+> 	} else {
+> 		addr -= pgmap->pci_p2pdma_bus_offset;
+> 	}
+> 
+> without the pagemap it would require a range compare instead, which
+> isn't all that hard either.
+> 
+>>>>> Also duplicating the whole block I/O stack, including hooks all over
+>>>>> the fast path is pretty much a no-go.
+>>>>
+>>>> There was very little duplicate code in the patch set. (Really just the
+>>>> mapping code). There are a few hooks, but in practice not that many if
+>>>> we ignore the WARN_ONs. We might be able to work to reduce this further.
+>>>> The main hooks are: when we skip bouncing, when we skip integrity prep,
+>>>> when we split, and when we map. And the patchset drops the PCI_P2PDMA
+>>>> hook when we map. So we're talking about maybe three or four extra ifs
+>>>> that would likely normally be fast due to the branch predictor.
+>>>
+>>> And all of those add code to the block layer fast path.
+>>
+>> If we can't add any ifs to the block layer, there's really nothing we
+>> can do.
+> 
+> That is not what I said.  Of course we can.  But we rather have a
+> really good reason.  And adding a parallel I/O path violating the
+> highlevel model is not one.
+> 
+>> So then we're committed to using struct page for P2P?
+> 
+> Only until we have a significantly better soltution.  And I think
+> using physical address in some form instead of pages is that,
+> adding a parallel path with dma_addr_t is not, it actually is worse
+> than the current code in many respects.
 
-I'm failing to find any practical substance to your argument, but in
-the end I agree with Chrishoph, it's up to MM maintainers.
+Well whether it's dma_addr_t, phys_addr_t, pfn_t the result isn't all
+that different. You still need roughly the same 'if' hooks for any
+backed memory that isn't in the linear mapping and you can't get a
+kernel mapping for directly.
+
+It wouldn't be too hard to do a similar patch set that uses something
+like phys_addr_t instead and have a request and queue flag for support
+of non-mappable memory. But you'll end up with very similar 'if' hooks
+and we'd have to clean up all bio-using drivers that access the struct
+pages directly.
+
+Though, we'd also still have the problem of how to recognize when the
+address points to P2PDMA and needs to be translated to the bus offset.
+The map-first inversion was what helped here because the driver
+submitting the requests had all the information. Though it could be
+another request flag and indicating non-mappable memory could be a flag
+group like REQ_NOMERGE_FLAGS -- REQ_NOMAP_FLAGS.
+
+If you think any of the above ideas sound workable I'd be happy to try
+to code up another prototype.
+
+Logan
