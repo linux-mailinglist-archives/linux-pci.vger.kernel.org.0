@@ -2,93 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DE71F54DEF
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 13:48:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA97654E14
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 13:59:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfFYLst (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jun 2019 07:48:49 -0400
-Received: from gate.crashing.org ([63.228.1.57]:38787 "EHLO gate.crashing.org"
+        id S1727237AbfFYL7y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jun 2019 07:59:54 -0400
+Received: from verein.lst.de ([213.95.11.211]:34177 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726931AbfFYLst (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 Jun 2019 07:48:49 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5PBmJOK032045;
-        Tue, 25 Jun 2019 06:48:20 -0500
-Message-ID: <c4daf43a302eeb1c507b9cf4a353200669e04ad8.camel@kernel.crashing.org>
-Subject: Re: [PATCH 2/2] PCI: Skip resource distribution when no hotplug
- bridges
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Date:   Tue, 25 Jun 2019 21:48:19 +1000
-In-Reply-To: <20190625100534.GZ2640@lahna.fi.intel.com>
-References: <20190622210310.180905-1-helgaas@kernel.org>
-         <20190622210310.180905-3-helgaas@kernel.org>
-         <20190624112449.GJ2640@lahna.fi.intel.com>
-         <8a53232416cce158fad35b781eb80b3ace3afc08.camel@kernel.crashing.org>
-         <20190625100534.GZ2640@lahna.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726423AbfFYL7y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 Jun 2019 07:59:54 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id D3FF468B05; Tue, 25 Jun 2019 13:59:21 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 13:59:21 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Michal Hocko <mhocko@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 18/22] mm: mark DEVICE_PUBLIC as broken
+Message-ID: <20190625115921.GA3874@lst.de>
+References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-19-hch@lst.de> <20190620192648.GI12083@dhcp22.suse.cz> <20190625072915.GD30350@lst.de> <20190625114422.GA3118@mellanox.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190625114422.GA3118@mellanox.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2019-06-25 at 13:05 +0300, Mika Westerberg wrote:
-> > We only every distribute resources when using
-> > pci_assign_unassigned_bridge_resources which we only use some cases,
-> > and it's completely non obvious why we would use it there and not in
-> > other places.
+On Tue, Jun 25, 2019 at 11:44:28AM +0000, Jason Gunthorpe wrote:
+> Which tree and what does the resolution look like?
+
+Looks like in -mm.  The current commit in linux-next is:
+
+commit 0d23b042f26955fb35721817beb98ba7f1d9ed9f
+Author: Robin Murphy <robin.murphy@arm.com>
+Date:   Fri Jun 14 10:42:14 2019 +1000
+
+    mm: clean up is_device_*_page() definitions
+
+
+> Also, I don't want to be making the decision if we should keep/remove
+> DEVICE_PUBLIC, so let's get an Ack from Andrew/etc?
 > 
-> We added it only for native PCIe hotplug path with the assumption that
-> the boot firmware takes care of the initial resource allocation. I don't
-> see any particular reason why it could not be called for other paths as
-> well, though.
+> My main reluctance is that I know there is HW out there that can do
+> coherent, and I want to believe they are coming with patches, just
+> too slowly. But I'd also rather those people defend themselves :P
 
-Ok, we need to look into this for all the platforms who just reassign
-everything in Linux (ie, ignore whatever the boot firmware did, if it
-did anything).
-
-I feel like all these platforms today will have a hard time getting
-anything useful out of hotplug with our default "2M" add to the hotplug
-bridges :)
-
-> > We also don't distribute during the initial root survey meaning afaik
-> > that we get toast for any hotplug bridge that has stuff already there
-> > at boot.
-> 
-> The boot firmware obviously needs to follow the same logic. AFAICT
-> recent PCs and Macs using native PCIe hotplug handle it.
-
-What's your experience in that area ? How (well) do they handle it in
-the boot firmware ? at least on arm64, boot firmwares are rather
-catastrophic when it comes to PCI, and on other embedded devices they
-are basically non-existent.
-
-> > Also, distributing the "available" space means we leave nothing for
-> > potential SR-IOV siblings... have we ended up bloting the very PCIe-
-> > centric assumption that it's "unlikely" that a hotplug bridge has an
-> > SR-IOV sibling ?
-> 
-> Looking at the code, I'm not sure we reserved any additional resource
-> space for the SR-IOV even before pci_bus_distribute_available_resources()
-> was introduced. We do reserve extra bus numbers for SR-IOV in
-> pci_scan_child_bus_extend() so maybe we can add something similar to
-> resource allocation path.
-
-Ok. I'll look more. I think we do somewhat cater for SR-IOV in in the
-bridge sizing code actually. It's a bit obscure...
-
-I also need to look a bit more closely at what happens with
-Thunderbolt.
-
-Thanks !
-
-Cheers
-Ben.
-
+Lets keep everything as-is for now.  I'm pretty certain nothing
+will show up, but letting this linger another release or two
+shouldn't be much of a problem.  And if we urgently feel like removing
+it we can do it after -rc1.
