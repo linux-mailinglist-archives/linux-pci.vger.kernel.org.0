@@ -2,82 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F0D3552BD
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 17:00:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7801F553D4
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 17:58:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731478AbfFYPA4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jun 2019 11:00:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59058 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731153AbfFYPA4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 Jun 2019 11:00:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7BBA5AF4C;
-        Tue, 25 Jun 2019 15:00:54 +0000 (UTC)
-Date:   Tue, 25 Jun 2019 17:00:53 +0200
-From:   Michal Hocko <mhocko@kernel.org>
+        id S1732448AbfFYP6S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jun 2019 11:58:18 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:35340 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728442AbfFYP6R (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 Jun 2019 11:58:17 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hfnpU-00047F-3d; Tue, 25 Jun 2019 09:57:57 -0600
 To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
-Message-ID: <20190625150053.GJ11400@dhcp22.suse.cz>
-References: <20190613094326.24093-1-hch@lst.de>
- <20190613094326.24093-6-hch@lst.de>
- <20190620191733.GH12083@dhcp22.suse.cz>
- <CAPcyv4h9+Ha4FVrvDAe-YAr1wBOjc4yi7CAzVuASv=JCxPcFaw@mail.gmail.com>
- <20190625072317.GC30350@lst.de>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190620161240.22738-1-logang@deltatee.com>
+ <20190624072752.GA3954@lst.de>
+ <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com>
+ <20190625072008.GB30350@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
+Date:   Tue, 25 Jun 2019 09:57:52 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625072317.GC30350@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190625072008.GB30350@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, jgg@ziepe.ca, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue 25-06-19 09:23:17, Christoph Hellwig wrote:
-> On Mon, Jun 24, 2019 at 11:24:48AM -0700, Dan Williams wrote:
-> > I asked for this simply because it was not exported historically. In
-> > general I want to establish explicit export-type criteria so the
-> > community can spend less time debating when to use EXPORT_SYMBOL_GPL
-> > [1].
-> > 
-> > The thought in this instance is that it is not historically exported
-> > to modules and it is safer from a maintenance perspective to start
-> > with GPL-only for new symbols in case we don't want to maintain that
-> > interface long-term for out-of-tree modules.
-> > 
-> > Yes, we always reserve the right to remove / change interfaces
-> > regardless of the export type, but history has shown that external
-> > pressure to keep an interface stable (contrary to
-> > Documentation/process/stable-api-nonsense.rst) tends to be less for
-> > GPL-only exports.
+
+
+On 2019-06-25 1:20 a.m., Christoph Hellwig wrote:
+> On Mon, Jun 24, 2019 at 10:07:56AM -0600, Logan Gunthorpe wrote:
+>>> For one passing a dma_addr_t through the block layer is a layering
+>>> violation, and one that I think will also bite us in practice.
+>>> The host physical to PCIe bus address mapping can have offsets, and
+>>> those offsets absolutely can be different for differnet root ports.
+>>> So with your caller generated dma_addr_t everything works fine with
+>>> a switched setup as the one you are probably testing on, but on a
+>>> sufficiently complicated setup with multiple root ports it can break.
+>>
+>> I don't follow this argument. Yes, I understand PCI Bus offsets and yes
+>> I understand that they only apply beyond the bus they're working with.
+>> But this isn't *that* complicated and it should be the responsibility of
+>> the P2PDMA code to sort out and provide a dma_addr_t for. The dma_addr_t
+>> that's passed through the block layer could be a bus address or it could
+>> be the result of a dma_map_* request (if the transaction is found to go
+>> through an RC) depending on the requirements of the devices being used.
 > 
-> Fully agreed.  In the end the decision is with the MM maintainers,
-> though, although I'd prefer to keep it as in this series.
+> You assume all addressing is done by the PCI bus address.  If a device
+> is addressing its own BAR there is no reason to use the PCI bus address,
+> as it might have much more intelligent schemes (usually bar + offset).
 
-I am sorry but I am not really convinced by the above reasoning wrt. to
-the allocator API and it has been a subject of many changes over time. I
-do not remember a single case where we would be bending the allocator
-API because of external modules and I am pretty sure we will push back
-heavily if that was the case in the future.
+Yes, that will be a bit tricky regardless of what we do.
 
-So in this particular case I would go with consistency and export the
-same way we do with other functions. Also we do not want people to
-reinvent this API and screw that like we have seen in other cases when
-external modules try reimplement core functionality themselves.
+>>> Also duplicating the whole block I/O stack, including hooks all over
+>>> the fast path is pretty much a no-go.
+>>
+>> There was very little duplicate code in the patch set. (Really just the
+>> mapping code). There are a few hooks, but in practice not that many if
+>> we ignore the WARN_ONs. We might be able to work to reduce this further.
+>> The main hooks are: when we skip bouncing, when we skip integrity prep,
+>> when we split, and when we map. And the patchset drops the PCI_P2PDMA
+>> hook when we map. So we're talking about maybe three or four extra ifs
+>> that would likely normally be fast due to the branch predictor.
+> 
+> And all of those add code to the block layer fast path.
 
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
+If we can't add any ifs to the block layer, there's really nothing we
+can do.
+
+So then we're committed to using struct page for P2P?
+
+Logan
