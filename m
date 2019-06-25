@@ -2,26 +2,26 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 28D6F5298C
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 12:30:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DCDE52987
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2019 12:30:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727687AbfFYKaJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jun 2019 06:30:09 -0400
-Received: from mga11.intel.com ([192.55.52.93]:39954 "EHLO mga11.intel.com"
+        id S1727472AbfFYKaF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jun 2019 06:30:05 -0400
+Received: from mga09.intel.com ([134.134.136.24]:62003 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731972AbfFYK3q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:29:46 -0400
+        id S1731984AbfFYK3r (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 Jun 2019 06:29:47 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 03:29:46 -0700
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 03:29:46 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,415,1557212400"; 
-   d="scan'208";a="169741352"
+   d="scan'208";a="166635608"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 25 Jun 2019 03:29:43 -0700
+  by orsmga006.jf.intel.com with ESMTP; 25 Jun 2019 03:29:44 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 2ED35162; Tue, 25 Jun 2019 13:29:42 +0300 (EEST)
+        id 387E5130; Tue, 25 Jun 2019 13:29:43 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Bjorn Helgaas <bhelgaas@google.com>
@@ -31,10 +31,12 @@ Cc:     Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
         Alexandru Gagniuc <mr.nuke.me@gmail.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH v3 0/3] PCI / ACPI: Handle sibling devices sharing power resources
-Date:   Tue, 25 Jun 2019 13:29:39 +0300
-Message-Id: <20190625102942.27740-1-mika.westerberg@linux.intel.com>
+Subject: [PATCH v3 1/3] PCI / ACPI: Use cached ACPI device state to get PCI device power state
+Date:   Tue, 25 Jun 2019 13:29:40 +0300
+Message-Id: <20190625102942.27740-2-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190625102942.27740-1-mika.westerberg@linux.intel.com>
+References: <20190625102942.27740-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -42,62 +44,83 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi all,
+The ACPI power state returned by acpi_device_get_power() may depend on
+the configuration of ACPI power resources in the system which may change
+any time after acpi_device_get_power() has returned, unless the
+reference counters of the ACPI power resources in question are set to
+prevent that from happening. Thus it is invalid to use acpi_device_get_power()
+in acpi_pci_get_power_state() the way it is done now and the value of
+the ->power.state field in the corresponding struct acpi_device objects
+(which reflects the ACPI power resources reference counting, among other
+things) should be used instead.
 
-This is third iteration of the patch series addressing issues around
-sibling PCI devices sharing ACPI power resources.
+As an example where this becomes an issue is Intel Ice Lake where the
+Thunderbolt controller (NHI), two PCIe root ports (RP0 and RP1) and xHCI
+all share the same power resources. The following picture with power
+resources marked with [] shows the topology:
 
-As a concrete example in Intel Ice Lake the Thunderbolt controller, PCIe
-root ports and xHCI all share the same ACPI power resources. When they are
-all in D3hot power resources (returned by _PR3) can be turned off powering
-off the whole block. However, there are two issues around this.
+  Host bridge
+    |
+    +- RP0 ---\
+    +- RP1 ---|--+--> [TBT]
+    +- NHI --/   |
+    |            |
+    |            v
+    +- xHCI --> [D3C]
 
-Firstly the PCI core sets the device power state by asking what the real
-ACPI power state is. This results that all but last device sharing the
-power resources are in D3hot when the power resources are turned off. This
-causes issues if user runs for example 'lspci' because the device is really
-in D3cold so what user gets back is all ones (0xffffffff).
+Here TBT and D3C are the shared ACPI power resources. ACPI _PR3() method
+of the devices in question returns either TBT or D3C or both.
 
-Secondly if any of the device is runtime resumed the power resources are
-turned on bringing all other devices sharing the resources to
-D0uninitialized losing their wakeup configuration.
+Say we runtime suspend first the root ports RP0 and RP1, then NHI. Now
+since the TBT power resource is still on when the root ports are runtime
+suspended their dev->current_state is set to D3hot. When NHI is runtime
+suspended TBT is finally turned off but state of the root ports remain
+to be D3hot. Now when the xHCI is runtime suspended D3C gets also turned
+off. PCI core thus has power states of these devices cached in their
+dev->current_state as follows:
 
-This series aims to fix the two issues by:
+  RP0 -> D3hot
+  RP1 -> D3hot
+  NHI -> D3cold
+  xHCI -> D3cold
 
-  1. Using the ACPI cached power state when PCI devices are transitioned
-     into low power states instead of reading back the "real" power state.
+If the user now runs lspci for instance, the result is all 1's like in
+the below output (00:07.0 is the first root port, RP0):
 
-  2. Introducing concept of "_PR0 dependent devices" that get runtime
-     resumed whenever their power resource (which they might share with
-     other sibling devices) gets turned on.
+00:07.0 PCI bridge: Intel Corporation Device 8a1d (rev ff) (prog-if ff)
+    !!! Unknown header type 7f
+    Kernel driver in use: pcieport
 
-The series is based on the idea of Rafael J. Wysocki <rafael@kernel.org>.
+In short the hardware state is not in sync with the software state
+anymore. The exact same thing happens with the PME polling thread which
+ends up bringing the root ports back into D0 after they are runtime
+suspended.
 
-Previous version of the series can be found here:
+For this reason, modify acpi_pci_get_power_state() so that it uses the
+ACPI device power state that was cached by the ACPI core. This makes the
+PCI device power state match the ACPI device power state regardless of
+state of the shared power resources which may still be on at this point.
 
-  v2: https://lore.kernel.org/linux-pci/20190618161858.77834-1-mika.westerberg@linux.intel.com/T/#m7a41d0b745400054543324ce84125040dbfed912
-  v1: https://www.spinics.net/lists/linux-pci/msg83583.html
+Link: https://lore.kernel.org/r/20190618161858.77834-2-mika.westerberg@linux.intel.com
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/pci/pci-acpi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Changes from v2:
-
-  * Updated changelog of patch [1/3] according to comments I got. I left
-    the D3C power resource and xHCI there because it shows that we can have
-    multiple shared power resources.
-
-  * Added link to the discussion around v2.
-
-  * Use adev->flags.power_manageable in patch [2/3].
-
-Mika Westerberg (3):
-  PCI / ACPI: Use cached ACPI device state to get PCI device power state
-  ACPI / PM: Introduce concept of a _PR0 dependent device
-  PCI / ACPI: Add _PR0 dependent devices
-
- drivers/acpi/power.c    | 135 ++++++++++++++++++++++++++++++++++++++++
- drivers/pci/pci-acpi.c  |   5 +-
- include/acpi/acpi_bus.h |   4 ++
- 3 files changed, 143 insertions(+), 1 deletion(-)
-
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index 1897847ceb0c..b782acac26c5 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -685,7 +685,8 @@ static pci_power_t acpi_pci_get_power_state(struct pci_dev *dev)
+ 	if (!adev || !acpi_device_power_manageable(adev))
+ 		return PCI_UNKNOWN;
+ 
+-	if (acpi_device_get_power(adev, &state) || state == ACPI_STATE_UNKNOWN)
++	state = adev->power.state;
++	if (state == ACPI_STATE_UNKNOWN)
+ 		return PCI_UNKNOWN;
+ 
+ 	return state_conv[state];
 -- 
 2.20.1
 
