@@ -2,121 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E0BA56FFB
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 19:52:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2ABBF57033
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 20:01:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbfFZRv4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jun 2019 13:51:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45390 "EHLO mail.kernel.org"
+        id S1726239AbfFZSBZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jun 2019 14:01:25 -0400
+Received: from mga07.intel.com ([134.134.136.100]:1255 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726796AbfFZRvz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 Jun 2019 13:51:55 -0400
-Received: from localhost (c-67-164-175-55.hsd1.co.comcast.net [67.164.175.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B046B216FD;
-        Wed, 26 Jun 2019 17:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561571514;
-        bh=Sca4Z3OaKtXYUI/5YyPbiGGtd0DSIOE2gztWP1tFwRg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LZnYzW45b3DGtb+CSPIw9lW7eg1jZASAqQPgdDRKfJ/J8WWC8+6IG/TKWE9KqQEdV
-         1qvhJ3wa+JEDaYDwsmK2m9ViNBpE+a6nXrW7LmK++vw19GHOw3SzLOY98opv9FCoEH
-         8lOrIL5bqyp5EksDA0XqzgVxiLhcPXvGcyMNLcNo=
-Date:   Wed, 26 Jun 2019 12:51:53 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
-        arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
-        mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org,
-        pombredanne@nexb.com, shawn.lin@rock-chips.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCHv2 2/2] PCI: layerscape: EP and RC drivers are compiled
- separately
-Message-ID: <20190626175153.GC103694@google.com>
-References: <20190626111139.32878-1-xiaowei.bao@nxp.com>
- <20190626111139.32878-2-xiaowei.bao@nxp.com>
+        id S1726042AbfFZSBZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Jun 2019 14:01:25 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 11:01:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,420,1557212400"; 
+   d="scan'208";a="164032950"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga007.fm.intel.com with ESMTP; 26 Jun 2019 11:01:22 -0700
+Date:   Wed, 26 Jun 2019 11:01:22 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org
+Subject: Re: [PATCH 08/25] memremap: validate the pagemap type passed to
+ devm_memremap_pages
+Message-ID: <20190626180122.GB4605@iweiny-DESK2.sc.intel.com>
+References: <20190626122724.13313-1-hch@lst.de>
+ <20190626122724.13313-9-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190626111139.32878-2-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190626122724.13313-9-hch@lst.de>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If you post another revision for any reason, please change the subject
-so it's worded as a command and mentions the new config options, e.g.,
-
-  PCI: layerscape: Add CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately
-
-On Wed, Jun 26, 2019 at 07:11:39PM +0800, Xiaowei Bao wrote:
-> Compile the EP and RC drivers separately with different configuration
-> options, this looks clearer.
+On Wed, Jun 26, 2019 at 02:27:07PM +0200, Christoph Hellwig wrote:
+> Most pgmap types are only supported when certain config options are
+> enabled.  Check for a type that is valid for the current configuration
+> before setting up the pagemap.  For this the usage of the 0 type for
+> device dax gets replaced with an explicit MEMORY_DEVICE_DEVDAX type.
 > 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
 > ---
-> v2:
->  - No change.
+>  drivers/dax/device.c     |  1 +
+>  include/linux/memremap.h |  8 ++++++++
+>  kernel/memremap.c        | 22 ++++++++++++++++++++++
+>  3 files changed, 31 insertions(+)
 > 
->  drivers/pci/controller/dwc/Kconfig  |   20 ++++++++++++++++++--
->  drivers/pci/controller/dwc/Makefile |    3 ++-
->  2 files changed, 20 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index a6ce1ee..a41ccf5 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -131,13 +131,29 @@ config PCI_KEYSTONE_EP
->  	  DesignWare core functions to implement the driver.
+> diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+> index 8465d12fecba..79014baa782d 100644
+> --- a/drivers/dax/device.c
+> +++ b/drivers/dax/device.c
+> @@ -468,6 +468,7 @@ int dev_dax_probe(struct device *dev)
+>  	dev_dax->pgmap.ref = &dev_dax->ref;
+>  	dev_dax->pgmap.kill = dev_dax_percpu_kill;
+>  	dev_dax->pgmap.cleanup = dev_dax_percpu_exit;
+> +	dev_dax->pgmap.type = MEMORY_DEVICE_DEVDAX;
+>  	addr = devm_memremap_pages(dev, &dev_dax->pgmap);
+>  	if (IS_ERR(addr))
+>  		return PTR_ERR(addr);
+> diff --git a/include/linux/memremap.h b/include/linux/memremap.h
+> index 995c62c5a48b..0c86f2c5ac9c 100644
+> --- a/include/linux/memremap.h
+> +++ b/include/linux/memremap.h
+> @@ -45,13 +45,21 @@ struct vmem_altmap {
+>   * wakeup is used to coordinate physical address space management (ex:
+>   * fs truncate/hole punch) vs pinned pages (ex: device dma).
+>   *
+> + * MEMORY_DEVICE_DEVDAX:
+> + * Host memory that has similar access semantics as System RAM i.e. DMA
+> + * coherent and supports page pinning. In contrast to
+> + * MEMORY_DEVICE_FS_DAX, this memory is access via a device-dax
+> + * character device.
+> + *
+>   * MEMORY_DEVICE_PCI_P2PDMA:
+>   * Device memory residing in a PCI BAR intended for use with Peer-to-Peer
+>   * transactions.
+>   */
+>  enum memory_type {
+> +	/* 0 is reserved to catch uninitialized type fields */
+>  	MEMORY_DEVICE_PRIVATE = 1,
+>  	MEMORY_DEVICE_FS_DAX,
+> +	MEMORY_DEVICE_DEVDAX,
+>  	MEMORY_DEVICE_PCI_P2PDMA,
+>  };
 >  
->  config PCI_LAYERSCAPE
-> -	bool "Freescale Layerscape PCIe controller"
-> +	bool "Freescale Layerscape PCIe controller - Host mode"
->  	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
->  	depends on PCI_MSI_IRQ_DOMAIN
->  	select MFD_SYSCON
->  	select PCIE_DW_HOST
->  	help
-> -	  Say Y here if you want PCIe controller support on Layerscape SoCs.
-> +	  Say Y here if you want to enable PCIe controller support on Layerscape
-> +	  SoCs to work in Host mode.
-> +	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-> +	  determines which PCIe controller works in EP mode and which PCIe
-> +	  controller works in RC mode.
+> diff --git a/kernel/memremap.c b/kernel/memremap.c
+> index 6e1970719dc2..abda62d1e5a3 100644
+> --- a/kernel/memremap.c
+> +++ b/kernel/memremap.c
+> @@ -157,6 +157,28 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+>  	pgprot_t pgprot = PAGE_KERNEL;
+>  	int error, nid, is_ram;
+>  
+> +	switch (pgmap->type) {
+> +	case MEMORY_DEVICE_PRIVATE:
+> +		if (!IS_ENABLED(CONFIG_DEVICE_PRIVATE)) {
+> +			WARN(1, "Device private memory not supported\n");
+> +			return ERR_PTR(-EINVAL);
+> +		}
+> +		break;
+> +	case MEMORY_DEVICE_FS_DAX:
+> +		if (!IS_ENABLED(CONFIG_ZONE_DEVICE) ||
+> +		    IS_ENABLED(CONFIG_FS_DAX_LIMITED)) {
+> +			WARN(1, "File system DAX not supported\n");
+> +			return ERR_PTR(-EINVAL);
+> +		}
+> +		break;
+> +	case MEMORY_DEVICE_DEVDAX:
+> +	case MEMORY_DEVICE_PCI_P2PDMA:
+> +		break;
+> +	default:
+> +		WARN(1, "Invalid pgmap type %d\n", pgmap->type);
+> +		break;
+> +	}
 > +
-> +config PCI_LAYERSCAPE_EP
-> +	bool "Freescale Layerscape PCIe controller - Endpoint mode"
-> +	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
-> +	depends on PCI_ENDPOINT
-> +	select PCIE_DW_EP
-> +	help
-> +	  Say Y here if you want to enable PCIe controller support on Layerscape
-> +	  SoCs to work in Endpoint mode.
-> +	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-> +	  determines which PCIe controller works in EP mode and which PCIe
-> +	  controller works in RC mode.
->  
->  config PCI_HISI
->  	depends on OF && (ARM64 || COMPILE_TEST)
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> index b085dfd..824fde7 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -8,7 +8,8 @@ obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
->  obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
->  obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
->  obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
-> -obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o pci-layerscape-ep.o
-> +obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
-> +obj-$(CONFIG_PCI_LAYERSCAPE_EP) += pci-layerscape-ep.o
->  obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
->  obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
->  obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
+>  	if (!pgmap->ref || !pgmap->kill || !pgmap->cleanup) {
+>  		WARN(1, "Missing reference count teardown definition\n");
+>  		return ERR_PTR(-EINVAL);
 > -- 
-> 1.7.1
+> 2.20.1
 > 
+> _______________________________________________
+> Linux-nvdimm mailing list
+> Linux-nvdimm@lists.01.org
+> https://lists.01.org/mailman/listinfo/linux-nvdimm
