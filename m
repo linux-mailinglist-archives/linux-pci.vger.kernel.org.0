@@ -2,86 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B67F573F0
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 23:53:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D39057458
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 00:36:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfFZVxF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jun 2019 17:53:05 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41029 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbfFZVxF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jun 2019 17:53:05 -0400
-Received: by mail-oi1-f193.google.com with SMTP id g7so294190oia.8;
-        Wed, 26 Jun 2019 14:53:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jh0+2mAWjXJNoSTW5MRBB2B6YwXLkK5uhGK/sZ0vNz0=;
-        b=VYKYI7LG9M+IoA76H4gvkGz990KdpGz8P0USFriJ56mo8vhlMB0owIY+FVVDICdLr7
-         3iRzy9PdwMb7KqJ3PHwrOJcq9wn7MjaaOIwufaVkmZY0vzbtHMuJetd+hi7Nu9CDLRsH
-         foxhJXlhiRa+R+Q8C9BDyVqnj+UvarZ/sBlI2Oe+xfhFgenjKDfnNxD3Fj3qQM5UdvpV
-         ETFM3kt7yY1RNbqWpK1/bktTmpF3cU75k4UKzlVnwJhb8VpB6tIfKbu2kZnw9vMpVWXK
-         y9t3VhZCeahpUs1ZXuaCGjp7NZcdNK5QURN0/5ThpTaGsVeiHG+deiWuHya8jU1WNgKT
-         VW6A==
-X-Gm-Message-State: APjAAAWYU89iHA5CDxlT2R3NUPtN2UQb0XUvJNbtoGXbpoqMdcL40sB2
-        STW+WzXdKOrUlvkNcl7S+I3gVa2haAP80qrpqTc=
-X-Google-Smtp-Source: APXvYqyMH6FBcdjQemrvt91EvobeYBF97A7D7wROknFepaWD+3MoOnQN4+IIFpySjm5YjkeHs4OWeFsy0d2f+J2wJ4c=
-X-Received: by 2002:aca:edc8:: with SMTP id l191mr344550oih.103.1561585984728;
- Wed, 26 Jun 2019 14:53:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <14605632.7Eqku7tdey@kreacher> <20190626125605.GT2640@lahna.fi.intel.com>
-In-Reply-To: <20190626125605.GT2640@lahna.fi.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 26 Jun 2019 23:52:54 +0200
-Message-ID: <CAJZ5v0gAejzYYo1TO01K3xTfZDr-1UT6XsVxY=u4LvnHmNcc9w@mail.gmail.com>
-Subject: Re: [PATCH] PCI: PM: Avoid skipping bus-level PM on platforms without ACPI
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
+        id S1726370AbfFZWgY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jun 2019 18:36:24 -0400
+Received: from gate.crashing.org ([63.228.1.57]:58508 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726347AbfFZWgY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Jun 2019 18:36:24 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5QMZwRi031212;
+        Wed, 26 Jun 2019 17:35:59 -0500
+Message-ID: <9479a6d4ad7335b1e261081d6802219d53619cf5.camel@kernel.crashing.org>
+Subject: Re: [PATCH 2/2] PCI: Skip resource distribution when no hotplug
+ bridges
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-pci@vger.kernel.org
+Date:   Thu, 27 Jun 2019 08:35:58 +1000
+In-Reply-To: <20190626173505.GB183605@google.com>
+References: <20190622210310.180905-1-helgaas@kernel.org>
+         <20190622210310.180905-3-helgaas@kernel.org>
+         <20190624112449.GJ2640@lahna.fi.intel.com>
+         <8a53232416cce158fad35b781eb80b3ace3afc08.camel@kernel.crashing.org>
+         <20190626173505.GB183605@google.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 2:56 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> On Wed, Jun 26, 2019 at 12:20:23AM +0200, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > There are platforms that do not call pm_set_suspend_via_firmware(),
-> > so pm_suspend_via_firmware() returns 'false' on them, but the power
-> > states of PCI devices (PCIe ports in particular) are changed as a
-> > result of powering down core platform components during system-wide
-> > suspend.  Thus the pm_suspend_via_firmware() checks in
-> > pci_pm_suspend_noirq() and pci_pm_resume_noirq() introduced by
-> > commit 3e26c5feed2a ("PCI: PM: Skip devices in D0 for suspend-to-
-> > idle") are not sufficient to determine that devices left in D0
-> > during suspend will remain in D0 during resume and so the bus-level
-> > power management can be skipped for them.
-> >
-> > For this reason, introduce a new global suspend flag,
-> > PM_SUSPEND_FLAG_NO_PLATFORM, set it for suspend-to-idle only
-> > and replace the pm_suspend_via_firmware() checks mentioned above
-> > with checks against this flag.
-> >
-> > Fixes: 3e26c5feed2a ("PCI: PM: Skip devices in D0 for suspend-to-idle")
-> > Reported-by: Jon Hunter <jonathanh@nvidia.com>
-> > Tested-by: Jon Hunter <jonathanh@nvidia.com>
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> I tested this patch on top of your (and mine) previous patches touching
-> the ACPI/PCI PM and did not see any issues over several suspend-to-idle
-> cycles with and without TBT device connected.
->
-> Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+On Wed, 2019-06-26 at 12:35 -0500, Bjorn Helgaas wrote:
+> No argument about it being a mess.
+> 
+> I agree that tweaks clutter the history, which is definitely a
+> downside.  Do you think these actually change the way things work or
+> make the code harder to read?
+> 
+> I think there is value in even minor simplifications that make the
+> code easier to understand.  Small improvements compound over time and
+> expose opportunities for more significant improvement.
 
-Thanks!
+Oh I absolutely agree. And I love that your patches come with more cset
+comment than actual patch lines :-)
+
+The main issue I've had so far trying to untangle things is the sheer
+amount of subtle changes and tweaks that went in over the year without
+any useful explanation as to why things are done.
+
+For example, do you have any idea why this:
+
+d65245c3297ac63abc51a976d92f45f2195d2854
+PCI: don't shrink bridge resources
+
+Was added by Yinghai in 2010 ? :-)
+
+The main issue with this is that previous to this commit,
+pbus_size_{io,mem} would essentially ignore the previous state of the
+bridge resources, and calculate from scratch (provided the resources
+are unclaimed).
+
+After this, it has this subtle dependency.
+
+This is what broke Lorenzo attempts at moving pci_read_bridge_bases()
+to the geneneric code a couple of years ago for example. There may be a
+good reason to do that on x86, though it's not explained, but it's
+definitely not right if the platform requires a full re-assignment.
+
+Now I'll "work around" it by making that function look at the
+assignment policy set by the arch/platform, but it's a fix on top of a
+quirk on top of a band-aid. However, what else can we do without
+understanding the root issue that lead to that patch being created ?
+
+Cheers,
+Ben.
+
+
