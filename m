@@ -2,324 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A47957360
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 23:13:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B05A057376
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 23:18:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfFZVND (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jun 2019 17:13:03 -0400
-Received: from mga01.intel.com ([192.55.52.88]:63351 "EHLO mga01.intel.com"
+        id S1726375AbfFZVSR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jun 2019 17:18:17 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:49938 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbfFZVNC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 Jun 2019 17:13:02 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 14:13:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,421,1557212400"; 
-   d="scan'208";a="172874357"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga002.jf.intel.com with ESMTP; 26 Jun 2019 14:13:01 -0700
-Date:   Wed, 26 Jun 2019 14:13:00 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org
-Subject: Re: [PATCH 14/25] memremap: replace the altmap_valid field with a
- PGMAP_ALTMAP_VALID flag
-Message-ID: <20190626211300.GF4605@iweiny-DESK2.sc.intel.com>
-References: <20190626122724.13313-1-hch@lst.de>
- <20190626122724.13313-15-hch@lst.de>
+        id S1726239AbfFZVSR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Jun 2019 17:18:17 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hgFIv-000310-0a; Wed, 26 Jun 2019 15:18:10 -0600
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190624072752.GA3954@lst.de>
+ <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com>
+ <20190625072008.GB30350@lst.de>
+ <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
+ <20190625170115.GA9746@lst.de>
+ <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
+ <20190626065708.GB24531@lst.de>
+ <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
+ <20190626202107.GA5850@ziepe.ca>
+ <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
+ <20190626210018.GB6392@ziepe.ca>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <c25d3333-dcd5-3313-089b-7fbbd6fbd876@deltatee.com>
+Date:   Wed, 26 Jun 2019 15:18:07 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190626122724.13313-15-hch@lst.de>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20190626210018.GB6392@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de, jgg@ziepe.ca
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 02:27:13PM +0200, Christoph Hellwig wrote:
-> Add a flags field to struct dev_pagemap to replace the altmap_valid
-> boolean to be a little more extensible.  Also add a pgmap_altmap() helper
-> to find the optional altmap and clean up the code using the altmap using
-> it.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-> ---
->  arch/powerpc/mm/mem.c     | 10 +---------
->  arch/x86/mm/init_64.c     |  8 ++------
->  drivers/nvdimm/pfn_devs.c |  3 +--
->  drivers/nvdimm/pmem.c     |  1 -
->  include/linux/memremap.h  | 12 +++++++++++-
->  kernel/memremap.c         | 26 ++++++++++----------------
->  mm/hmm.c                  |  1 -
->  mm/memory_hotplug.c       |  6 ++----
->  mm/page_alloc.c           |  5 ++---
->  9 files changed, 29 insertions(+), 43 deletions(-)
+On 2019-06-26 3:00 p.m., Jason Gunthorpe wrote:
+> On Wed, Jun 26, 2019 at 02:45:38PM -0600, Logan Gunthorpe wrote:
+>>
+>>
+>> On 2019-06-26 2:21 p.m., Jason Gunthorpe wrote:
+>>> On Wed, Jun 26, 2019 at 12:31:08PM -0600, Logan Gunthorpe wrote:
+>>>>> we have a hole behind len where we could store flag.  Preferably
+>>>>> optionally based on a P2P or other magic memory types config
+>>>>> option so that 32-bit systems with 32-bit phys_addr_t actually
+>>>>> benefit from the smaller and better packing structure.
+>>>>
+>>>> That seems sensible. The one thing that's unclear though is how to get
+>>>> the PCI Bus address when appropriate. Can we pass that in instead of the
+>>>> phys_addr with an appropriate flag? Or will we need to pass the actual
+>>>> physical address and then, at the map step, the driver has to some how
+>>>> lookup the PCI device to figure out the bus offset?
+>>>
+>>> I agree with CH, if we go down this path it is a layering violation
+>>> for the thing injecting bio's into the block stack to know what struct
+>>> device they egress&dma map on just to be able to do the dma_map up
+>>> front.
+>>
+>> Not sure I agree with this statement. The p2pdma code already *must*
+>> know and access the pci_dev of the dma device ahead of when it submits
+>> the IO to know if it's valid to allocate and use P2P memory at all.
 > 
-> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-> index cba29131bccc..f774d80df025 100644
-> --- a/arch/powerpc/mm/mem.c
-> +++ b/arch/powerpc/mm/mem.c
-> @@ -131,17 +131,9 @@ void __ref arch_remove_memory(int nid, u64 start, u64 size,
->  {
->  	unsigned long start_pfn = start >> PAGE_SHIFT;
->  	unsigned long nr_pages = size >> PAGE_SHIFT;
-> -	struct page *page;
-> +	struct page *page = pfn_to_page(start_pfn) + vmem_altmap_offset(altmap);
->  	int ret;
->  
-> -	/*
-> -	 * If we have an altmap then we need to skip over any reserved PFNs
-> -	 * when querying the zone.
-> -	 */
-> -	page = pfn_to_page(start_pfn);
-> -	if (altmap)
-> -		page += vmem_altmap_offset(altmap);
-> -
->  	__remove_pages(page_zone(page), start_pfn, nr_pages, altmap);
->  
->  	/* Remove htab bolted mappings for this section of memory */
-> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-> index 693aaf28d5fe..3139e992ef9d 100644
-> --- a/arch/x86/mm/init_64.c
-> +++ b/arch/x86/mm/init_64.c
-> @@ -1211,13 +1211,9 @@ void __ref arch_remove_memory(int nid, u64 start, u64 size,
->  {
->  	unsigned long start_pfn = start >> PAGE_SHIFT;
->  	unsigned long nr_pages = size >> PAGE_SHIFT;
-> -	struct page *page = pfn_to_page(start_pfn);
-> -	struct zone *zone;
-> +	struct page *page = pfn_to_page(start_pfn) + vmem_altmap_offset(altmap);
-> +	struct zone *zone = page_zone(page);
->  
-> -	/* With altmap the first mapped page is offset from @start */
-> -	if (altmap)
-> -		page += vmem_altmap_offset(altmap);
-> -	zone = page_zone(page);
->  	__remove_pages(zone, start_pfn, nr_pages, altmap);
->  	kernel_physical_mapping_remove(start, start + size);
->  }
-> diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
-> index 0f81fc56bbfd..55fb6b7433ed 100644
-> --- a/drivers/nvdimm/pfn_devs.c
-> +++ b/drivers/nvdimm/pfn_devs.c
-> @@ -622,7 +622,6 @@ static int __nvdimm_setup_pfn(struct nd_pfn *nd_pfn, struct dev_pagemap *pgmap)
->  		if (offset < reserve)
->  			return -EINVAL;
->  		nd_pfn->npfns = le64_to_cpu(pfn_sb->npfns);
-> -		pgmap->altmap_valid = false;
->  	} else if (nd_pfn->mode == PFN_MODE_PMEM) {
->  		nd_pfn->npfns = PFN_SECTION_ALIGN_UP((resource_size(res)
->  					- offset) / PAGE_SIZE);
-> @@ -634,7 +633,7 @@ static int __nvdimm_setup_pfn(struct nd_pfn *nd_pfn, struct dev_pagemap *pgmap)
->  		memcpy(altmap, &__altmap, sizeof(*altmap));
->  		altmap->free = PHYS_PFN(offset - reserve);
->  		altmap->alloc = 0;
-> -		pgmap->altmap_valid = true;
-> +		pgmap->flags |= PGMAP_ALTMAP_VALID;
->  	} else
->  		return -ENXIO;
->  
-> diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-> index 093408ce40ad..e7d8cc9f41e8 100644
-> --- a/drivers/nvdimm/pmem.c
-> +++ b/drivers/nvdimm/pmem.c
-> @@ -412,7 +412,6 @@ static int pmem_attach_disk(struct device *dev,
->  		bb_res.start += pmem->data_offset;
->  	} else if (pmem_should_map_pages(dev)) {
->  		memcpy(&pmem->pgmap.res, &nsio->res, sizeof(pmem->pgmap.res));
-> -		pmem->pgmap.altmap_valid = false;
->  		pmem->pgmap.type = MEMORY_DEVICE_FS_DAX;
->  		pmem->pgmap.ops = &fsdax_pagemap_ops;
->  		addr = devm_memremap_pages(dev, &pmem->pgmap);
-> diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-> index 336eca601dad..e25685b878e9 100644
-> --- a/include/linux/memremap.h
-> +++ b/include/linux/memremap.h
-> @@ -88,6 +88,8 @@ struct dev_pagemap_ops {
->  	vm_fault_t (*migrate_to_ram)(struct vm_fault *vmf);
->  };
->  
-> +#define PGMAP_ALTMAP_VALID	(1 << 0)
-> +
->  /**
->   * struct dev_pagemap - metadata for ZONE_DEVICE mappings
->   * @altmap: pre-allocated/reserved memory for vmemmap allocations
-> @@ -96,19 +98,27 @@ struct dev_pagemap_ops {
->   * @dev: host device of the mapping for debug
->   * @data: private data pointer for page_free()
->   * @type: memory type: see MEMORY_* in memory_hotplug.h
-> + * @flags: PGMAP_* flags to specify defailed behavior
->   * @ops: method table
->   */
->  struct dev_pagemap {
->  	struct vmem_altmap altmap;
-> -	bool altmap_valid;
->  	struct resource res;
->  	struct percpu_ref *ref;
->  	struct device *dev;
->  	enum memory_type type;
-> +	unsigned int flags;
->  	u64 pci_p2pdma_bus_offset;
->  	const struct dev_pagemap_ops *ops;
->  };
->  
-> +static inline struct vmem_altmap *pgmap_altmap(struct dev_pagemap *pgmap)
-> +{
-> +	if (pgmap->flags & PGMAP_ALTMAP_VALID)
-> +		return &pgmap->altmap;
-> +	return NULL;
-> +}
-> +
->  #ifdef CONFIG_ZONE_DEVICE
->  void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap);
->  void devm_memunmap_pages(struct device *dev, struct dev_pagemap *pgmap);
-> diff --git a/kernel/memremap.c b/kernel/memremap.c
-> index 6c3dbb692037..eee490e7d7e1 100644
-> --- a/kernel/memremap.c
-> +++ b/kernel/memremap.c
-> @@ -54,14 +54,8 @@ static void pgmap_array_delete(struct resource *res)
->  
->  static unsigned long pfn_first(struct dev_pagemap *pgmap)
->  {
-> -	const struct resource *res = &pgmap->res;
-> -	struct vmem_altmap *altmap = &pgmap->altmap;
-> -	unsigned long pfn;
-> -
-> -	pfn = res->start >> PAGE_SHIFT;
-> -	if (pgmap->altmap_valid)
-> -		pfn += vmem_altmap_offset(altmap);
-> -	return pfn;
-> +	return (pgmap->res.start >> PAGE_SHIFT) +
-> +		vmem_altmap_offset(pgmap_altmap(pgmap));
->  }
->  
->  static unsigned long pfn_end(struct dev_pagemap *pgmap)
-> @@ -109,7 +103,7 @@ static void devm_memremap_pages_release(void *data)
->  				align_size >> PAGE_SHIFT, NULL);
->  	} else {
->  		arch_remove_memory(nid, align_start, align_size,
-> -				pgmap->altmap_valid ? &pgmap->altmap : NULL);
-> +				pgmap_altmap(pgmap));
->  		kasan_remove_zero_shadow(__va(align_start), align_size);
->  	}
->  	mem_hotplug_done();
-> @@ -129,8 +123,8 @@ static void devm_memremap_pages_release(void *data)
->   * 1/ At a minimum the res, ref and type and ops members of @pgmap must be
->   *    initialized by the caller before passing it to this function
->   *
-> - * 2/ The altmap field may optionally be initialized, in which case altmap_valid
-> - *    must be set to true
-> + * 2/ The altmap field may optionally be initialized, in which case
-> + *    PGMAP_ALTMAP_VALID must be set in pgmap->flags.
->   *
->   * 3/ pgmap->ref must be 'live' on entry and will be killed and reaped
->   *    at devm_memremap_pages_release() time, or if this routine fails.
-> @@ -142,15 +136,13 @@ static void devm_memremap_pages_release(void *data)
->  void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
->  {
->  	resource_size_t align_start, align_size, align_end;
-> -	struct vmem_altmap *altmap = pgmap->altmap_valid ?
-> -			&pgmap->altmap : NULL;
->  	struct resource *res = &pgmap->res;
->  	struct dev_pagemap *conflict_pgmap;
->  	struct mhp_restrictions restrictions = {
->  		/*
->  		 * We do not want any optional features only our own memmap
->  		*/
-> -		.altmap = altmap,
-> +		.altmap = pgmap_altmap(pgmap),
->  	};
->  	pgprot_t pgprot = PAGE_KERNEL;
->  	int error, nid, is_ram;
-> @@ -274,7 +266,7 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
->  
->  		zone = &NODE_DATA(nid)->node_zones[ZONE_DEVICE];
->  		move_pfn_range_to_zone(zone, align_start >> PAGE_SHIFT,
-> -				align_size >> PAGE_SHIFT, altmap);
-> +				align_size >> PAGE_SHIFT, pgmap_altmap(pgmap));
->  	}
->  
->  	mem_hotplug_done();
-> @@ -319,7 +311,9 @@ EXPORT_SYMBOL_GPL(devm_memunmap_pages);
->  unsigned long vmem_altmap_offset(struct vmem_altmap *altmap)
->  {
->  	/* number of pfns from base where pfn_to_page() is valid */
-> -	return altmap->reserve + altmap->free;
-> +	if (altmap)
-> +		return altmap->reserve + altmap->free;
-> +	return 0;
->  }
->  
->  void vmem_altmap_free(struct vmem_altmap *altmap, unsigned long nr_pfns)
-> diff --git a/mm/hmm.c b/mm/hmm.c
-> index 36e25cdbdac1..e4470462298f 100644
-> --- a/mm/hmm.c
-> +++ b/mm/hmm.c
-> @@ -1442,7 +1442,6 @@ struct hmm_devmem *hmm_devmem_add(const struct hmm_devmem_ops *ops,
->  	devmem->pagemap.type = MEMORY_DEVICE_PRIVATE;
->  	devmem->pagemap.res = *devmem->resource;
->  	devmem->pagemap.ops = &hmm_pagemap_ops;
-> -	devmem->pagemap.altmap_valid = false;
->  	devmem->pagemap.ref = &devmem->ref;
->  
->  	result = devm_memremap_pages(devmem->device, &devmem->pagemap);
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index e096c987d261..6166ba5a15f3 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -557,10 +557,8 @@ void __remove_pages(struct zone *zone, unsigned long phys_start_pfn,
->  	int sections_to_remove;
->  
->  	/* In the ZONE_DEVICE case device driver owns the memory region */
-> -	if (is_dev_zone(zone)) {
-> -		if (altmap)
-> -			map_offset = vmem_altmap_offset(altmap);
-> -	}
-> +	if (is_dev_zone(zone))
-> +		map_offset = vmem_altmap_offset(altmap);
->  
->  	clear_zone_contiguous(zone);
->  
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index d66bc8abe0af..17a39d40a556 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5853,6 +5853,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
->  {
->  	unsigned long pfn, end_pfn = start_pfn + size;
->  	struct pglist_data *pgdat = zone->zone_pgdat;
-> +	struct vmem_altmap *altmap = pgmap_altmap(pgmap);
->  	unsigned long zone_idx = zone_idx(zone);
->  	unsigned long start = jiffies;
->  	int nid = pgdat->node_id;
-> @@ -5865,9 +5866,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
->  	 * of the pages reserved for the memmap, so we can just jump to
->  	 * the end of that region and start processing the device pages.
->  	 */
-> -	if (pgmap->altmap_valid) {
-> -		struct vmem_altmap *altmap = &pgmap->altmap;
-> -
-> +	if (altmap) {
->  		start_pfn = altmap->base_pfn + vmem_altmap_offset(altmap);
->  		size = end_pfn - start_pfn;
->  	}
-> -- 
-> 2.20.1
+> I don't think we should make drives do that. What if it got CMB memory
+> on some other device?
+
+Huh? A driver submitting P2P requests finds appropriate memory to use
+based on the DMA device that will be doing the mapping. It *has* to. It
+doesn't necessarily have control over which P2P provider it might find
+(ie. it may get CMB memory from a random NVMe device), but it easily
+knows the NVMe device it got the CMB memory for. Look at the existing
+code in the nvme target.
+
+>>> For instance we could use a small hash table of the upper phys addr
+>>> bits, or an interval tree, to do the lookup.
+>>
+>> Yes, if we're going to take a hard stance on this. But using an interval
+>> tree (or similar) is a lot more work for the CPU to figure out these
+>> mappings that may not be strictly necessary if we could just pass better
+>> information down from the submitting driver to the mapping driver.
 > 
-> _______________________________________________
-> Linux-nvdimm mailing list
-> Linux-nvdimm@lists.01.org
-> https://lists.01.org/mailman/listinfo/linux-nvdimm
+> Right, this is coming down to an optimization argument. I think there
+> are very few cases (Basically yours) where the caller will know this
+> info, so we need to support the other cases anyhow.
+
+I disagree. I think it has to be a common pattern. A driver doing a P2P
+transaction *must* find some device to obtain memory from (or it may be
+itself)  and check if it is compatible with the device that's going to
+be mapping the memory or vice versa. So no matter what we do, a driver
+submitting P2P requests must have access to both the PCI device that's
+going to be mapping the memory and the device that's providing the memory.
+
+> I think with some simple caching this will become negligible for cases
+> you care about
+
+Well *maybe* it will be negligible performance wise, but it's also a lot
+more complicated, code wise. Tree lookups will always be a lot more
+expensive than just checking a flag.
+
+Logan
