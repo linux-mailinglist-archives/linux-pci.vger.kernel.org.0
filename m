@@ -2,77 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 508BF569D5
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 14:56:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB0F356D8C
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 17:22:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbfFZM4K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jun 2019 08:56:10 -0400
-Received: from mga07.intel.com ([134.134.136.100]:49873 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727181AbfFZM4K (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 Jun 2019 08:56:10 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 05:56:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,419,1557212400"; 
-   d="scan'208";a="183165946"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 26 Jun 2019 05:56:07 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 26 Jun 2019 15:56:05 +0300
-Date:   Wed, 26 Jun 2019 15:56:05 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: [PATCH] PCI: PM: Avoid skipping bus-level PM on platforms
- without ACPI
-Message-ID: <20190626125605.GT2640@lahna.fi.intel.com>
-References: <14605632.7Eqku7tdey@kreacher>
+        id S1726157AbfFZPWR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jun 2019 11:22:17 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:19115 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725958AbfFZPWR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Jun 2019 11:22:17 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CED06C1ABC82D47A8304;
+        Wed, 26 Jun 2019 23:22:13 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 26 Jun 2019
+ 23:22:06 +0800
+Subject: Re: [GIT PULL] Hisilicon fixes for v5.2
+To:     Olof Johansson <olof@lixom.net>, Wei Xu <xuwei5@hisilicon.com>
+References: <b89ef8f0-d102-7f78-f373-cbcc7faddee3@hisilicon.com>
+ <20190625112148.ckj7sgdgvyeel7vy@localhost>
+ <CAOesGMj+aNkOT1YVHTSBLkOfEujk7uer3R1AmE-sa1TwCijbBg@mail.gmail.com>
+ <7e215bd7-daab-b6cf-8d0f-9513bd7c4f6d@huawei.com>
+CC:     ARM-SoC Maintainers <arm@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, Linuxarm <linuxarm@huawei.com>,
+        "xuwei (O)" <xuwei5@huawei.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Zhangyi ac <zhangyi.ac@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
+        <jinying@hisilicon.com>, huangdaode <huangdaode@hisilicon.com>,
+        Tangkunshan <tangkunshan@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <2e59728e-25fa-cc15-3c63-3566dc2ae69f@huawei.com>
+Date:   Wed, 26 Jun 2019 16:21:56 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <14605632.7Eqku7tdey@kreacher>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <7e215bd7-daab-b6cf-8d0f-9513bd7c4f6d@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 12:20:23AM +0200, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> There are platforms that do not call pm_set_suspend_via_firmware(),
-> so pm_suspend_via_firmware() returns 'false' on them, but the power
-> states of PCI devices (PCIe ports in particular) are changed as a
-> result of powering down core platform components during system-wide
-> suspend.  Thus the pm_suspend_via_firmware() checks in
-> pci_pm_suspend_noirq() and pci_pm_resume_noirq() introduced by
-> commit 3e26c5feed2a ("PCI: PM: Skip devices in D0 for suspend-to-
-> idle") are not sufficient to determine that devices left in D0
-> during suspend will remain in D0 during resume and so the bus-level
-> power management can be skipped for them.
-> 
-> For this reason, introduce a new global suspend flag,
-> PM_SUSPEND_FLAG_NO_PLATFORM, set it for suspend-to-idle only
-> and replace the pm_suspend_via_firmware() checks mentioned above
-> with checks against this flag.
-> 
-> Fixes: 3e26c5feed2a ("PCI: PM: Skip devices in D0 for suspend-to-idle")
-> Reported-by: Jon Hunter <jonathanh@nvidia.com>
-> Tested-by: Jon Hunter <jonathanh@nvidia.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 25/06/2019 14:31, John Garry wrote:
+> On 25/06/2019 14:03, Olof Johansson wrote:
+>>>> are available in the Git repository at:
+>>>> > >
+>>>> > >   git://github.com/hisilicon/linux-hisi.git tags/hisi-fixes-for-5.2
+>>>> > >
+>>>> > > for you to fetch changes up to
+>>>> 07c811af1c00d7b4212eac86900b023b6405a954:
+>>>> > >
+>>>> > >   lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set
+>>>> at registration (2019-06-25 09:40:42 +0100)
+>>>> > >
+>>>> > > ----------------------------------------------------------------
+>>>> > > Hisilicon fixes for v5.2-rc
+>>>> > >
+>>>> > > - fixed RCU usage in logical PIO
+>>>> > > - Added a function to unregister a logical PIO range in logical PIO
+>>>> > >   to support the fixes in the hisi-lpc driver
+>>>> > > - fixed and optimized hisi-lpc driver to avoid potential
+>>>> use-after-free
+>>>> > >   and driver unbind crash
+>>> >
+>>> > Merged to fixes, thanks.
+>>
+>> This broke arm64 allmodconfig:
+>>
+>>        arm64.allmodconfig:
+>> drivers/bus/hisi_lpc.c:656:3: error: implicit declaration of function
+>> 'hisi_lpc_acpi_remove'; did you mean 'hisi_lpc_acpi_probe'?
+>> [-Werror=implicit-function-declaration]
 
-I tested this patch on top of your (and mine) previous patches touching
-the ACPI/PCI PM and did not see any issues over several suspend-to-idle
-cycles with and without TBT device connected.
+As an aside, I find it a little strange that arm64 allmodconfig does not 
+have CONFIG_ACPI set. It used to have it set, and this patch stopped that:
 
-Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+5bcd44083a082f314032969cd6db1eb8275ac77a is the first bad commit
+commit 5bcd44083a082f314032969cd6db1eb8275ac77a
+Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Date:   Mon Jul 23 10:57:29 2018 +0900
+
+     drivers: acpi: add dependency of EFI for arm64
+
+     As Ard suggested, CONFIG_ACPI && !CONFIG_EFI doesn't make sense on 
+arm64,
+     while CONFIG_ACPI and CONFIG_CPU_BIG_ENDIAN doesn't make sense either.
+
+     As CONFIG_EFI already has a dependency of !CONFIG_CPU_BIG_ENDIAN, it is
+     good enough to add a dependency of CONFIG_EFI to avoid any useless
+     combination of configuration.
+
+     This bug, reported by Will, will be revealed when my patch series,
+     "arm64: kexec,kdump: fix boot failures on acpi-only system," is applied
+     and the kernel is built under allmodconfig.
+
+     Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+     Suggested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+     Signed-off-by: Will Deacon <will.deacon@arm.com>
+
+That patch stopped many configs being set for allmodconfig.
+
+With this change, CONFIG_EFI is not set. I think that this is because 
+CONFIG_CPU_BIG_ENDIAN is set for arm64 allmodconfig.
+
+Any opinion on this? Could we change CONFIG_CPU_BIG_ENDIAN to be unset 
+for arm64?
+
+>>
+>>
+>
+> Uhhh, that's my fault - I didn't provide a stub for !ACPI. Sorry. I'll
+> send a fixed v3 series.
+>
+>>
+>> Please build and test your branches before you send pull requests, Wei.
+>>
+>> I've dropped the branch again; please re-submit when fixed. I think
+>> it's probably 5.3 material now.
+>>
+>
+> Thanks,
+> John
+>
+>>
+>> -Olof
+>>
+>> .
+>>
+>
+
+
