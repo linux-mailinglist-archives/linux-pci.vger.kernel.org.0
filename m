@@ -2,142 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1976D56204
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 08:07:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03A18562D2
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 08:57:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725790AbfFZGHT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jun 2019 02:07:19 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:12193 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbfFZGHT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jun 2019 02:07:19 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d130b940000>; Tue, 25 Jun 2019 23:07:16 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 25 Jun 2019 23:07:18 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 25 Jun 2019 23:07:18 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Jun
- 2019 06:07:14 +0000
-Subject: Re: [PATCH 18/22] mm: mark DEVICE_PUBLIC as broken
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     Jason Gunthorpe <jgg@mellanox.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <20190613094326.24093-1-hch@lst.de>
- <20190613094326.24093-19-hch@lst.de> <20190613194430.GY22062@mellanox.com>
- <a27251ad-a152-f84d-139d-e1a3bf01c153@nvidia.com>
- <20190613195819.GA22062@mellanox.com>
- <20190614004314.GD783@iweiny-DESK2.sc.intel.com>
- <d2b77ea1-7b27-e37d-c248-267a57441374@nvidia.com>
- <20190619192719.GO9374@mellanox.com>
- <29f43c79-b454-0477-a799-7850e6571bd3@nvidia.com>
- <20190626054554.GA17798@dhcp22.suse.cz>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <f71f16a4-d411-a540-fc71-34d15f4f02d6@nvidia.com>
-Date:   Tue, 25 Jun 2019 23:07:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        id S1726468AbfFZG5m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jun 2019 02:57:42 -0400
+Received: from verein.lst.de ([213.95.11.211]:40637 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbfFZG5m (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Jun 2019 02:57:42 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id C9BA468B05; Wed, 26 Jun 2019 08:57:08 +0200 (CEST)
+Date:   Wed, 26 Jun 2019 08:57:08 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+Message-ID: <20190626065708.GB24531@lst.de>
+References: <20190620161240.22738-1-logang@deltatee.com> <20190624072752.GA3954@lst.de> <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com> <20190625072008.GB30350@lst.de> <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com> <20190625170115.GA9746@lst.de> <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
 MIME-Version: 1.0
-In-Reply-To: <20190626054554.GA17798@dhcp22.suse.cz>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561529236; bh=lOYN6Xujx0qgVx2R2grB9rnpAuC+tRlCUn6fhuHNVBw=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=MeEaNoyuI3afmGIgQqaUlcM8mWD4HE/GKCjf1kgZqenkygdQ6iZn8Y+wMfzhJF87I
-         vYo21C+56S9Bvta+WE93xqp1yxRd+0aF795hDv05MxYNL3r+vvAmMHm4YgF+fZ9DDF
-         07zGzHtLnrEybnAKwTuVgiU1Di+G2xgjzSwCSSceljuW82qT60fZLO+EJoH4v/ubsD
-         NyaUlJ4MlpZ0Et6J1Gg+pmaLUo/LH/zF/aaAcoZbyC51AIUa7VWPEd94fdesxNrSAi
-         U72HjlF1/+oo9PUKkvNA5wckZf7S8p+OANEJ3IUYXElXVcyRJ79Q5H9Zy/HqtbvLbl
-         uJqmTWhXrGX7Q==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/25/19 10:45 PM, Michal Hocko wrote:
-> On Tue 25-06-19 20:15:28, John Hubbard wrote:
->> On 6/19/19 12:27 PM, Jason Gunthorpe wrote:
->>> On Thu, Jun 13, 2019 at 06:23:04PM -0700, John Hubbard wrote:
->>>> On 6/13/19 5:43 PM, Ira Weiny wrote:
->>>>> On Thu, Jun 13, 2019 at 07:58:29PM +0000, Jason Gunthorpe wrote:
->>>>>> On Thu, Jun 13, 2019 at 12:53:02PM -0700, Ralph Campbell wrote:
->>>>>>>
->>>> ...
->>>>> So I think it is ok.  Frankly I was wondering if we should remove the public
->>>>> type altogether but conceptually it seems ok.  But I don't see any users of it
->>>>> so...  should we get rid of it in the code rather than turning the config off?
->>>>>
->>>>> Ira
->>>>
->>>> That seems reasonable. I recall that the hope was for those IBM Power 9
->>>> systems to use _PUBLIC, as they have hardware-based coherent device (GPU)
->>>> memory, and so the memory really is visible to the CPU. And the IBM team
->>>> was thinking of taking advantage of it. But I haven't seen anything on
->>>> that front for a while.
->>>
->>> Does anyone know who those people are and can we encourage them to
->>> send some patches? :)
->>>
->>
->> I asked about this, and it seems that the idea was: DEVICE_PUBLIC was there
->> in order to provide an alternative way to do things (such as migrate memory
->> to and from a device), in case the combination of existing and near-future
->> NUMA APIs was insufficient. This probably came as a follow-up to the early
->> 2017-ish conversations about NUMA, in which the linux-mm recommendation was
->> "try using HMM mechanisms, and if those are inadequate, then maybe we can
->> look at enhancing NUMA so that it has better handling of advanced (GPU-like)
->> devices".
+On Tue, Jun 25, 2019 at 01:54:21PM -0600, Logan Gunthorpe wrote:
+> Well whether it's dma_addr_t, phys_addr_t, pfn_t the result isn't all
+> that different. You still need roughly the same 'if' hooks for any
+> backed memory that isn't in the linear mapping and you can't get a
+> kernel mapping for directly.
 > 
-> Yes that was the original idea. It sounds so much better to use a common
-> framework rather than awkward special cased cpuless NUMA nodes with
-> a weird semantic. User of the neither of the two has shown up so I guess
-> that the envisioned HW just didn't materialized. Or has there been a
-> completely different approach chosen?
+> It wouldn't be too hard to do a similar patch set that uses something
+> like phys_addr_t instead and have a request and queue flag for support
+> of non-mappable memory. But you'll end up with very similar 'if' hooks
+> and we'd have to clean up all bio-using drivers that access the struct
+> pages directly.
 
-The HW showed up, alright: it's the IBM Power 9, which provides HW-based
-memory coherency between its CPUs and GPUs. So on this system, the CPU is
-allowed to access GPU memory, which *could* be modeled as DEVICE_PUBLIC.
+We'll need to clean that mess up anyway, and I've been chugging
+along doing some of that.  A lot still assume no highmem, so we need
+to convert them over to something that kmaps anyway.  If we get
+the abstraction right that will actually help converting over to
+a better reprsentation.
 
-However, what happened was that the system worked well enough with a combination
-of the device driver, plus NUMA APIs, plus heaven knows what sort of /proc tuning
-might have also gone on. :) No one saw the need to reach for the DEVICE_PUBLIC
-functionality.
+> Though, we'd also still have the problem of how to recognize when the
+> address points to P2PDMA and needs to be translated to the bus offset.
+> The map-first inversion was what helped here because the driver
+> submitting the requests had all the information. Though it could be
+> another request flag and indicating non-mappable memory could be a flag
+> group like REQ_NOMERGE_FLAGS -- REQ_NOMAP_FLAGS.
 
-> 
->> In the end, however, _PUBLIC was never used, nor does anyone in the local
->> (NVIDIA + IBM) kernel vicinity seem to have plans to use it.  So it really
->> does seem safe to remove, although of course it's good to start with 
->> BROKEN and see if anyone pops up and complains.
-> 
-> Well, I do not really see much of a difference. Preserving an unused
-> code which doesn't have any user in sight just adds a maintenance burden
-> whether the code depends on BROKEN or not. We can always revert patches
-> which remove the code once a real user shows up.
+The assumes the request all has the same memory, which is a simplifing
+assuption.  My idea was that if had our new bio_vec like this:
 
-Sure, I don't see much difference either. Either way seems fine.
+struct bio_vec {
+	phys_addr_t		paddr; // 64-bit on 64-bit systems
+	unsigned long		len;
+};
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+we have a hole behind len where we could store flag.  Preferably
+optionally based on a P2P or other magic memory types config
+option so that 32-bit systems with 32-bit phys_addr_t actually
+benefit from the smaller and better packing structure.
+
+> If you think any of the above ideas sound workable I'd be happy to try
+> to code up another prototype.
+
+Іt sounds workable.  To some of the first steps are cleanups independent
+of how the bio_vec is eventually going to look like.  That is making
+the DMA-API internals work on the phys_addr_t, which also unifies the
+map_resource implementation with map_page.  I plan to do that relatively
+soon.  The next is sorting out access to bios data by virtual address.
+All these need nice kmapping helper that avoid too much open coding.
+I was going to look into that next, mostly to kill the block layer
+bounce buffering code.  Similar things will also be needed at the
+scatterlist level I think.  After that we need to more audits of
+how bv_page is still used.  something like a bv_phys() helper that
+does "page_to_phys(bv->bv_page) + bv->bv_offset" might come in handy
+for example.
