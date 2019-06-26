@@ -2,74 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E34305675B
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 13:06:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B42C56772
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 13:20:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726104AbfFZLGz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jun 2019 07:06:55 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:50605 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbfFZLGy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jun 2019 07:06:54 -0400
-Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id d238ae37f2c9a07d; Wed, 26 Jun 2019 13:06:52 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: mmap/munmap in sysfs
-Date:   Wed, 26 Jun 2019 13:06:52 +0200
-Message-ID: <2001283.OsK9664mvh@kreacher>
-In-Reply-To: <20190626010746.GA22454@kroah.com>
-References: <20190625223608.GB103694@google.com> <20190626010746.GA22454@kroah.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        id S1726673AbfFZLUx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jun 2019 07:20:53 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:42418 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726077AbfFZLUx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Jun 2019 07:20:53 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CF2D71A0071;
+        Wed, 26 Jun 2019 13:20:51 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 87BEC1A09EE;
+        Wed, 26 Jun 2019 13:20:41 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id F2CB1402D5;
+        Wed, 26 Jun 2019 19:20:28 +0800 (SGT)
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
+        lorenzo.pieralisi@arm.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
+        mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org,
+        pombredanne@nexb.com, shawn.lin@rock-chips.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCHv2 1/2] PCI: layerscape: Add the bar_fixed_64bit property in EP driver.
+Date:   Wed, 26 Jun 2019 19:11:38 +0800
+Message-Id: <20190626111139.32878-1-xiaowei.bao@nxp.com>
+X-Mailer: git-send-email 2.14.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wednesday, June 26, 2019 3:07:46 AM CEST Greg Kroah-Hartman wrote:
-> On Tue, Jun 25, 2019 at 05:36:08PM -0500, Bjorn Helgaas wrote:
-> > Hi Greg, et al,
-> > 
-> > Userspace can mmap PCI device memory via the resourceN files in sysfs,
-> > which use pci_mmap_resource().  I think this path is unaware of power
-> > management, so the device may be runtime-suspended, e.g., it may be in
-> > D1, D2, or D3, where it will not respond to memory accesses.
-> > 
-> > Userspace accesses while the device is suspended will cause PCI
-> > errors, so I think we need something like the patch below.  But this
-> > isn't sufficient by itself because we would need a corresponding
-> > pm_runtime_put() when the mapping goes away.  Where should that go?
-> > Or is there a better way to do this?
-> > 
-> > 
-> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > index 6d27475e39b2..aab7a47679a7 100644
-> > --- a/drivers/pci/pci-sysfs.c
-> > +++ b/drivers/pci/pci-sysfs.c
-> > @@ -1173,6 +1173,7 @@ static int pci_mmap_resource(struct kobject *kobj, struct bin_attribute *attr,
-> >  
-> >  	mmap_type = res->flags & IORESOURCE_MEM ? pci_mmap_mem : pci_mmap_io;
-> >  
-> > +	pm_runtime_get_sync(pdev);
-> >  	return pci_mmap_resource_range(pdev, bar, vma, mmap_type, write_combine);
-> >  }
-> >  
-> 
-> Ugh, we never thought about this when adding the mmap sysfs interface
-> all those years ago :(
-> 
-> I think you are right, this will not properly solve the issue, but I
-> don't know off the top of my head where to solve this.  Maybe Rafael has
-> a better idea as he knows the pm paths much better than I do?
+The PCIe controller of layerscape just have 4 BARs, BAR0 and BAR1
+is 32bit, BAR3 and BAR4 is 64bit, this is determined by hardware,
+so set the bar_fixed_64bit with 0x14.
 
-Well, let me think about this a bit.
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+---
+v2:
+ - Replace value 0x14 with a macro.
 
+ drivers/pci/controller/dwc/pci-layerscape-ep.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
+diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+index be61d96..227c33b 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
++++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+@@ -44,6 +44,7 @@ static int ls_pcie_establish_link(struct dw_pcie *pci)
+ 	.linkup_notifier = false,
+ 	.msi_capable = true,
+ 	.msix_capable = false,
++	.bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+ };
+ 
+ static const struct pci_epc_features*
+-- 
+1.7.1
 
