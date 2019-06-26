@@ -2,60 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 99A0D56747
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 12:59:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E34305675B
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 13:06:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfFZK6s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jun 2019 06:58:48 -0400
-Received: from mga07.intel.com ([134.134.136.100]:45547 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbfFZK6s (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 Jun 2019 06:58:48 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 03:58:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,419,1557212400"; 
-   d="scan'208";a="183139426"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 26 Jun 2019 03:58:44 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 26 Jun 2019 13:58:43 +0300
-Date:   Wed, 26 Jun 2019 13:58:43 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI: PM: Skip devices in D0 for suspend-to-idle
-Message-ID: <20190626105843.GQ2640@lahna.fi.intel.com>
-References: <1668247.RaJIPSxJUN@kreacher>
- <CAJZ5v0hdtXqoK84DpYtyMSCnkR9zOHFiUPAzWZDtkFmEjyWD1g@mail.gmail.com>
- <CAJZ5v0gGdXmgc_9r2rbiadq4e31hngpjYQ40QoC6C0z19da_hQ@mail.gmail.com>
- <2287147.DxjcvLeq6l@kreacher>
- <CAJZ5v0gU9OedmZBNDGefG3GjS7FHRmgQ67eOcr2vXRrAg3zZbg@mail.gmail.com>
+        id S1726104AbfFZLGz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jun 2019 07:06:55 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:50605 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfFZLGy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jun 2019 07:06:54 -0400
+Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id d238ae37f2c9a07d; Wed, 26 Jun 2019 13:06:52 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: mmap/munmap in sysfs
+Date:   Wed, 26 Jun 2019 13:06:52 +0200
+Message-ID: <2001283.OsK9664mvh@kreacher>
+In-Reply-To: <20190626010746.GA22454@kroah.com>
+References: <20190625223608.GB103694@google.com> <20190626010746.GA22454@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gU9OedmZBNDGefG3GjS7FHRmgQ67eOcr2vXRrAg3zZbg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 06:23:46PM +0200, Rafael J. Wysocki wrote:
-> > So I wonder if the patch below makes any difference?
+On Wednesday, June 26, 2019 3:07:46 AM CEST Greg Kroah-Hartman wrote:
+> On Tue, Jun 25, 2019 at 05:36:08PM -0500, Bjorn Helgaas wrote:
+> > Hi Greg, et al,
+> > 
+> > Userspace can mmap PCI device memory via the resourceN files in sysfs,
+> > which use pci_mmap_resource().  I think this path is unaware of power
+> > management, so the device may be runtime-suspended, e.g., it may be in
+> > D1, D2, or D3, where it will not respond to memory accesses.
+> > 
+> > Userspace accesses while the device is suspended will cause PCI
+> > errors, so I think we need something like the patch below.  But this
+> > isn't sufficient by itself because we would need a corresponding
+> > pm_runtime_put() when the mapping goes away.  Where should that go?
+> > Or is there a better way to do this?
+> > 
+> > 
+> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > index 6d27475e39b2..aab7a47679a7 100644
+> > --- a/drivers/pci/pci-sysfs.c
+> > +++ b/drivers/pci/pci-sysfs.c
+> > @@ -1173,6 +1173,7 @@ static int pci_mmap_resource(struct kobject *kobj, struct bin_attribute *attr,
+> >  
+> >  	mmap_type = res->flags & IORESOURCE_MEM ? pci_mmap_mem : pci_mmap_io;
+> >  
+> > +	pm_runtime_get_sync(pdev);
+> >  	return pci_mmap_resource_range(pdev, bar, vma, mmap_type, write_combine);
+> >  }
+> >  
 > 
-> Mika, can you please test this one in combination with the other
-> changes we've been working on?
+> Ugh, we never thought about this when adding the mmap sysfs interface
+> all those years ago :(
+> 
+> I think you are right, this will not properly solve the issue, but I
+> don't know off the top of my head where to solve this.  Maybe Rafael has
+> a better idea as he knows the pm paths much better than I do?
 
-Sure, I'll give it a try shortly.
+Well, let me think about this a bit.
+
+
+
