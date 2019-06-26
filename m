@@ -2,145 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EB0F356D8C
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 17:22:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E64D556E3D
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 18:01:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbfFZPWR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jun 2019 11:22:17 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:19115 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725958AbfFZPWR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 Jun 2019 11:22:17 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CED06C1ABC82D47A8304;
-        Wed, 26 Jun 2019 23:22:13 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 26 Jun 2019
- 23:22:06 +0800
-Subject: Re: [GIT PULL] Hisilicon fixes for v5.2
-To:     Olof Johansson <olof@lixom.net>, Wei Xu <xuwei5@hisilicon.com>
-References: <b89ef8f0-d102-7f78-f373-cbcc7faddee3@hisilicon.com>
- <20190625112148.ckj7sgdgvyeel7vy@localhost>
- <CAOesGMj+aNkOT1YVHTSBLkOfEujk7uer3R1AmE-sa1TwCijbBg@mail.gmail.com>
- <7e215bd7-daab-b6cf-8d0f-9513bd7c4f6d@huawei.com>
-CC:     ARM-SoC Maintainers <arm@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, Linuxarm <linuxarm@huawei.com>,
-        "xuwei (O)" <xuwei5@huawei.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        <jinying@hisilicon.com>, huangdaode <huangdaode@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <2e59728e-25fa-cc15-3c63-3566dc2ae69f@huawei.com>
-Date:   Wed, 26 Jun 2019 16:21:56 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        id S1726373AbfFZQA7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jun 2019 12:00:59 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33718 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfFZQA7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jun 2019 12:00:59 -0400
+Received: by mail-oi1-f195.google.com with SMTP id f80so2358421oib.0
+        for <linux-pci@vger.kernel.org>; Wed, 26 Jun 2019 09:00:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r/963AMc32TjFW8pz2sb81LGtvemWumKWmOSWi/w+uo=;
+        b=FEqk4AyqvI2SzCotbI6w47r7lIg1pbMai4XViymaBkOSAtj0NfKwJKshzu/N8BPJFi
+         PPN0xns9/GQ3UjW0F9OUD+lLQxT0bLvpRO6rEeExsKdp48k3oiJcMS1RfpUHWI3YgQSe
+         P3swXsvQ9fmeXBT6oobBozcpVgRGWN23FavhhN4cCEGhqIdsUZ+QWbmxpT1xgQhmYaLI
+         wRlJBZOCxG1HxsggNiXJVMbdqx15uDTKnIMPx8OZYBLCprh9CGs/eCgDPe7/TAMtVU5d
+         oafpIZj3xnh4RTWYjvBCXah4DbVlLssHna403/2Qrtq8aZqQJ+EBDW0IKrQkvHB1zCgf
+         +PXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r/963AMc32TjFW8pz2sb81LGtvemWumKWmOSWi/w+uo=;
+        b=EcqHkAyOVocgZLV3bPHkxVbcdBxmNXaaiLIMeqIPFzS/e49tcwfVq+YWI68zn3s25y
+         xsL+VdX90UkFVQim9yAejC+iICW5uvzrK/y0yyds8XI0D4I7bSP6LNXR+LsiH/AM6OjN
+         v7Xf6DolVmT36zOMtHfN4cNOB18xoJKg8zgCZv01whqPRLnhr8AzZKu/LbmOA74p1e6B
+         EU31cpoo8pg44T9LPrz2lCnRx81LuZ1bvFp54NNvPJ6W1FvYF/Yo4+u4c9y/cNLrM4bH
+         23Hr8VeZEq0E7m/1AEhAxi5xrFMhyvmgEYGbOC2CAq/ZDoqxvYVDeSJjQ6+DF/WtzAUz
+         cExw==
+X-Gm-Message-State: APjAAAWhR0O+Q/g5F1+pFepCUY8ZI3iJSSnAlXooKa+Rcqs3kZQjHMrs
+        yj4d+xPhpzeaDjVb9X3k5KID6C3z8ajQgEWERpdfFw==
+X-Google-Smtp-Source: APXvYqw+HKEk3o1E4qvsumKbcYL8DeGoSSUg6kQouoUdfkWJuiZCSiMJzuF3+UevbQqRwbob+TxTsET5oJi5oxrpxxs=
+X-Received: by 2002:aca:fc50:: with SMTP id a77mr2276731oii.0.1561564858765;
+ Wed, 26 Jun 2019 09:00:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <7e215bd7-daab-b6cf-8d0f-9513bd7c4f6d@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+References: <20190626122724.13313-1-hch@lst.de> <20190626122724.13313-5-hch@lst.de>
+In-Reply-To: <20190626122724.13313-5-hch@lst.de>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 26 Jun 2019 09:00:47 -0700
+Message-ID: <CAPcyv4gTOf+EWzSGrFrh2GrTZt5HVR=e+xicUKEpiy57px8J+w@mail.gmail.com>
+Subject: Re: [PATCH 04/25] mm: remove MEMORY_DEVICE_PUBLIC support
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        nouveau@lists.freedesktop.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 25/06/2019 14:31, John Garry wrote:
-> On 25/06/2019 14:03, Olof Johansson wrote:
->>>> are available in the Git repository at:
->>>> > >
->>>> > >   git://github.com/hisilicon/linux-hisi.git tags/hisi-fixes-for-5.2
->>>> > >
->>>> > > for you to fetch changes up to
->>>> 07c811af1c00d7b4212eac86900b023b6405a954:
->>>> > >
->>>> > >   lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set
->>>> at registration (2019-06-25 09:40:42 +0100)
->>>> > >
->>>> > > ----------------------------------------------------------------
->>>> > > Hisilicon fixes for v5.2-rc
->>>> > >
->>>> > > - fixed RCU usage in logical PIO
->>>> > > - Added a function to unregister a logical PIO range in logical PIO
->>>> > >   to support the fixes in the hisi-lpc driver
->>>> > > - fixed and optimized hisi-lpc driver to avoid potential
->>>> use-after-free
->>>> > >   and driver unbind crash
->>> >
->>> > Merged to fixes, thanks.
->>
->> This broke arm64 allmodconfig:
->>
->>        arm64.allmodconfig:
->> drivers/bus/hisi_lpc.c:656:3: error: implicit declaration of function
->> 'hisi_lpc_acpi_remove'; did you mean 'hisi_lpc_acpi_probe'?
->> [-Werror=implicit-function-declaration]
+[ add Ira ]
 
-As an aside, I find it a little strange that arm64 allmodconfig does not 
-have CONFIG_ACPI set. It used to have it set, and this patch stopped that:
-
-5bcd44083a082f314032969cd6db1eb8275ac77a is the first bad commit
-commit 5bcd44083a082f314032969cd6db1eb8275ac77a
-Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Date:   Mon Jul 23 10:57:29 2018 +0900
-
-     drivers: acpi: add dependency of EFI for arm64
-
-     As Ard suggested, CONFIG_ACPI && !CONFIG_EFI doesn't make sense on 
-arm64,
-     while CONFIG_ACPI and CONFIG_CPU_BIG_ENDIAN doesn't make sense either.
-
-     As CONFIG_EFI already has a dependency of !CONFIG_CPU_BIG_ENDIAN, it is
-     good enough to add a dependency of CONFIG_EFI to avoid any useless
-     combination of configuration.
-
-     This bug, reported by Will, will be revealed when my patch series,
-     "arm64: kexec,kdump: fix boot failures on acpi-only system," is applied
-     and the kernel is built under allmodconfig.
-
-     Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-     Suggested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-     Signed-off-by: Will Deacon <will.deacon@arm.com>
-
-That patch stopped many configs being set for allmodconfig.
-
-With this change, CONFIG_EFI is not set. I think that this is because 
-CONFIG_CPU_BIG_ENDIAN is set for arm64 allmodconfig.
-
-Any opinion on this? Could we change CONFIG_CPU_BIG_ENDIAN to be unset 
-for arm64?
-
->>
->>
+On Wed, Jun 26, 2019 at 5:27 AM Christoph Hellwig <hch@lst.de> wrote:
 >
-> Uhhh, that's my fault - I didn't provide a stub for !ACPI. Sorry. I'll
-> send a fixed v3 series.
+> The code hasn't been used since it was added to the tree, and doesn't
+> appear to actually be usable.
 >
->>
->> Please build and test your branches before you send pull requests, Wei.
->>
->> I've dropped the branch again; please re-submit when fixed. I think
->> it's probably 5.3 material now.
->>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+[..]
+> diff --git a/mm/swap.c b/mm/swap.c
+> index 7ede3eddc12a..83107410d29f 100644
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -740,17 +740,6 @@ void release_pages(struct page **pages, int nr)
+>                 if (is_huge_zero_page(page))
+>                         continue;
 >
-> Thanks,
-> John
->
->>
->> -Olof
->>
->> .
->>
->
+> -               /* Device public page can not be huge page */
+> -               if (is_device_public_page(page)) {
+> -                       if (locked_pgdat) {
+> -                               spin_unlock_irqrestore(&locked_pgdat->lru_lock,
+> -                                                      flags);
+> -                               locked_pgdat = NULL;
+> -                       }
+> -                       put_devmap_managed_page(page);
+> -                       continue;
+> -               }
+> -
 
+This collides with Ira's bug fix [1]. The MEMORY_DEVICE_FSDAX case
+needs this to be converted to be independent of "public" pages.
+Perhaps it should be pulled out of -mm and incorporated in this
+series.
 
+[1]: https://lore.kernel.org/lkml/20190605214922.17684-1-ira.weiny@intel.com/
