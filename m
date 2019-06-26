@@ -2,53 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E64D556E3D
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 18:01:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D6CE56E7D
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 18:14:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbfFZQA7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jun 2019 12:00:59 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33718 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfFZQA7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jun 2019 12:00:59 -0400
-Received: by mail-oi1-f195.google.com with SMTP id f80so2358421oib.0
-        for <linux-pci@vger.kernel.org>; Wed, 26 Jun 2019 09:00:59 -0700 (PDT)
+        id S1726359AbfFZQOo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jun 2019 12:14:44 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40820 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfFZQOn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jun 2019 12:14:43 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e8so3081952otl.7
+        for <linux-pci@vger.kernel.org>; Wed, 26 Jun 2019 09:14:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=r/963AMc32TjFW8pz2sb81LGtvemWumKWmOSWi/w+uo=;
-        b=FEqk4AyqvI2SzCotbI6w47r7lIg1pbMai4XViymaBkOSAtj0NfKwJKshzu/N8BPJFi
-         PPN0xns9/GQ3UjW0F9OUD+lLQxT0bLvpRO6rEeExsKdp48k3oiJcMS1RfpUHWI3YgQSe
-         P3swXsvQ9fmeXBT6oobBozcpVgRGWN23FavhhN4cCEGhqIdsUZ+QWbmxpT1xgQhmYaLI
-         wRlJBZOCxG1HxsggNiXJVMbdqx15uDTKnIMPx8OZYBLCprh9CGs/eCgDPe7/TAMtVU5d
-         oafpIZj3xnh4RTWYjvBCXah4DbVlLssHna403/2Qrtq8aZqQJ+EBDW0IKrQkvHB1zCgf
-         +PXw==
+         :cc:content-transfer-encoding;
+        bh=XK0CaHJOVcsS/u0euQkBQYUAFEHomal+V6KfwmFuG+U=;
+        b=l+5kJ6tokPJ98bH2NME9M/AQ27NvFMKuOsXn1/Bb6bOBzelrSngvtDZJXmVwZKzpKi
+         qjSD/BPNZzWpZiBQzbopXZ4t+Owe9yGEnJZxcLTPAlrrPvnYO2K7gCbSAaaiJHFcBp4k
+         rxUq8p1DHnLMI0fRDu2WCtVRP/OHmPtRFurCHJX0OhgjoUZQUqGECtXD/hiUSR9PPelH
+         MnkCXYqaYmm4WKtHJZYWuY7L6Kj9qhni0KNGsJokbTzfJurnEEHErfJ69HKEvmfEeo+E
+         N7IwPwAkdbg4plX6eEOz52RHtcXnuvonc5/m143W02YNIvHsz5xJAtpZFJ8Hrcf91kdm
+         NShw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r/963AMc32TjFW8pz2sb81LGtvemWumKWmOSWi/w+uo=;
-        b=EcqHkAyOVocgZLV3bPHkxVbcdBxmNXaaiLIMeqIPFzS/e49tcwfVq+YWI68zn3s25y
-         xsL+VdX90UkFVQim9yAejC+iICW5uvzrK/y0yyds8XI0D4I7bSP6LNXR+LsiH/AM6OjN
-         v7Xf6DolVmT36zOMtHfN4cNOB18xoJKg8zgCZv01whqPRLnhr8AzZKu/LbmOA74p1e6B
-         EU31cpoo8pg44T9LPrz2lCnRx81LuZ1bvFp54NNvPJ6W1FvYF/Yo4+u4c9y/cNLrM4bH
-         23Hr8VeZEq0E7m/1AEhAxi5xrFMhyvmgEYGbOC2CAq/ZDoqxvYVDeSJjQ6+DF/WtzAUz
-         cExw==
-X-Gm-Message-State: APjAAAWhR0O+Q/g5F1+pFepCUY8ZI3iJSSnAlXooKa+Rcqs3kZQjHMrs
-        yj4d+xPhpzeaDjVb9X3k5KID6C3z8ajQgEWERpdfFw==
-X-Google-Smtp-Source: APXvYqw+HKEk3o1E4qvsumKbcYL8DeGoSSUg6kQouoUdfkWJuiZCSiMJzuF3+UevbQqRwbob+TxTsET5oJi5oxrpxxs=
-X-Received: by 2002:aca:fc50:: with SMTP id a77mr2276731oii.0.1561564858765;
- Wed, 26 Jun 2019 09:00:58 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XK0CaHJOVcsS/u0euQkBQYUAFEHomal+V6KfwmFuG+U=;
+        b=bXILIXZVt1NL67onBlgrIyfuAp7fPStjBoG/bcENMnY/MmOfV69RcyrsaJIN/5TGlZ
+         MXruzBw5AOryxcC6wbcbt64IevsduEGpJJAbfeolFgvTAz5+Pyat/hTtZTlHgrwg+Ok0
+         QpbTzcO3vnG3GR+w3mbUOumJNiSZazL7lcJkT+Tv9y+4pOx6WWtCZGyojvIBQkn8SMoa
+         MflYGKurpaC6seAZc/iVjLMiR6j7bP2Ob6unIFt+arXaD/2wMFukIbw8hBuwBhVhM5du
+         MNUw+7Gd6Rc9ABqEOSH0LPTXp+odjH3ttJpFG3Fw+JAFWf2Ko/u2LtL0l+KalWoZYGFV
+         mhog==
+X-Gm-Message-State: APjAAAVU2mF8b8CncSQyJNN2Pcm8Y/Zrx9lriOYzfaMQiO7KwZ82V58V
+        Y0Dpk2oDPw1gakUASKrxrLAT4qijd3EyxaiJCyf6ew==
+X-Google-Smtp-Source: APXvYqxlK4A4nPLhfNez6panLCe0oG2uZ68rpjoeO+K9OBDO45YdiJCTPi2DLYKpN0RI7gOpjzzUX8DJkFMKIZ4j7YA=
+X-Received: by 2002:a9d:7a9a:: with SMTP id l26mr1155884otn.71.1561565683159;
+ Wed, 26 Jun 2019 09:14:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190626122724.13313-1-hch@lst.de> <20190626122724.13313-5-hch@lst.de>
-In-Reply-To: <20190626122724.13313-5-hch@lst.de>
+References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-6-hch@lst.de>
+ <20190620191733.GH12083@dhcp22.suse.cz> <CAPcyv4h9+Ha4FVrvDAe-YAr1wBOjc4yi7CAzVuASv=JCxPcFaw@mail.gmail.com>
+ <20190625072317.GC30350@lst.de> <20190625150053.GJ11400@dhcp22.suse.cz>
+ <CAPcyv4j1e5dbBHnc+wmtsNUyFbMK_98WxHNwuD_Vxo4dX9Ce=Q@mail.gmail.com>
+ <20190625190038.GK11400@dhcp22.suse.cz> <CAPcyv4hU13v7dSQpF0WTQTxQM3L3UsHMUhsFMVz7i4UGLoM89g@mail.gmail.com>
+ <20190626054645.GB17798@dhcp22.suse.cz>
+In-Reply-To: <20190626054645.GB17798@dhcp22.suse.cz>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 26 Jun 2019 09:00:47 -0700
-Message-ID: <CAPcyv4gTOf+EWzSGrFrh2GrTZt5HVR=e+xicUKEpiy57px8J+w@mail.gmail.com>
-Subject: Re: [PATCH 04/25] mm: remove MEMORY_DEVICE_PUBLIC support
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+Date:   Wed, 26 Jun 2019 09:14:32 -0700
+Message-ID: <CAPcyv4jLK2F2UHqbwp4bCEiB7tL8sVsr775egKMmJvfZG+W+NQ@mail.gmail.com>
+Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
         Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
         nouveau@lists.freedesktop.org,
@@ -56,49 +62,31 @@ Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
         <dri-devel@lists.freedesktop.org>,
         linux-nvdimm <linux-nvdimm@lists.01.org>,
         linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[ add Ira ]
-
-On Wed, Jun 26, 2019 at 5:27 AM Christoph Hellwig <hch@lst.de> wrote:
+On Tue, Jun 25, 2019 at 10:46 PM Michal Hocko <mhocko@kernel.org> wrote:
 >
-> The code hasn't been used since it was added to the tree, and doesn't
-> appear to actually be usable.
+> On Tue 25-06-19 12:52:18, Dan Williams wrote:
+> [...]
+> > > Documentation/process/stable-api-nonsense.rst
+> >
+> > That document has failed to preclude symbol export fights in the past
+> > and there is a reasonable argument to try not to retract functionality
+> > that had been previously exported regardless of that document.
 >
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-[..]
-> diff --git a/mm/swap.c b/mm/swap.c
-> index 7ede3eddc12a..83107410d29f 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -740,17 +740,6 @@ void release_pages(struct page **pages, int nr)
->                 if (is_huge_zero_page(page))
->                         continue;
->
-> -               /* Device public page can not be huge page */
-> -               if (is_device_public_page(page)) {
-> -                       if (locked_pgdat) {
-> -                               spin_unlock_irqrestore(&locked_pgdat->lru_lock,
-> -                                                      flags);
-> -                               locked_pgdat = NULL;
-> -                       }
-> -                       put_devmap_managed_page(page);
-> -                       continue;
-> -               }
-> -
+> Can you point me to any specific example where this would be the case
+> for the core kernel symbols please?
 
-This collides with Ira's bug fix [1]. The MEMORY_DEVICE_FSDAX case
-needs this to be converted to be independent of "public" pages.
-Perhaps it should be pulled out of -mm and incorporated in this
-series.
+The most recent example that comes to mind was the thrash around
+__kernel_fpu_{begin,end} [1]. I referenced that when debating _GPL
+symbol policy with J=C3=A9r=C3=B4me [2].
 
-[1]: https://lore.kernel.org/lkml/20190605214922.17684-1-ira.weiny@intel.com/
+[1]: https://lore.kernel.org/lkml/20190522100959.GA15390@kroah.com/
+[2]: https://lore.kernel.org/lkml/CAPcyv4gb+r=3D=3DriKFXkVZ7gGdnKe62yBmZ7xO=
+a4uBBByhnK9Tzg@mail.gmail.com/
