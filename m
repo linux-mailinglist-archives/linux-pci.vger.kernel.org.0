@@ -2,80 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B952565E2
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 11:48:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99A0D56747
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2019 12:59:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbfFZJsO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jun 2019 05:48:14 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:4361 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbfFZJsO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jun 2019 05:48:14 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d133f5f0000>; Wed, 26 Jun 2019 02:48:15 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 26 Jun 2019 02:48:13 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 26 Jun 2019 02:48:13 -0700
-Received: from [10.24.47.31] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Jun
- 2019 09:48:09 +0000
-Subject: Re: [PATCH] PCI: tegra: Enable Relaxed Ordering only for Tegra20 &
- Tegra30
-To:     <bhelgaas@google.com>, <lorenzo.pieralisi@arm.com>
-CC:     Thierry Reding <thierry.reding@gmail.com>, <treding@nvidia.com>,
-        <jonathanh@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190618073810.30270-1-vidyas@nvidia.com>
- <20190620111854.GA15501@ulmo>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <7eef7afa-e61f-e2ff-f429-338fc2008792@nvidia.com>
-Date:   Wed, 26 Jun 2019 15:18:06 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1726599AbfFZK6s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jun 2019 06:58:48 -0400
+Received: from mga07.intel.com ([134.134.136.100]:45547 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726131AbfFZK6s (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Jun 2019 06:58:48 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 03:58:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,419,1557212400"; 
+   d="scan'208";a="183139426"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 26 Jun 2019 03:58:44 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 26 Jun 2019 13:58:43 +0300
+Date:   Wed, 26 Jun 2019 13:58:43 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Keith Busch <kbusch@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI: PM: Skip devices in D0 for suspend-to-idle
+Message-ID: <20190626105843.GQ2640@lahna.fi.intel.com>
+References: <1668247.RaJIPSxJUN@kreacher>
+ <CAJZ5v0hdtXqoK84DpYtyMSCnkR9zOHFiUPAzWZDtkFmEjyWD1g@mail.gmail.com>
+ <CAJZ5v0gGdXmgc_9r2rbiadq4e31hngpjYQ40QoC6C0z19da_hQ@mail.gmail.com>
+ <2287147.DxjcvLeq6l@kreacher>
+ <CAJZ5v0gU9OedmZBNDGefG3GjS7FHRmgQ67eOcr2vXRrAg3zZbg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190620111854.GA15501@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561542495; bh=XTAmoN+lvAZ098uaoKf9ignkET7M76DLX8Bn9FgNknc=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mB5gii9KGPq1VEmQZ36N1PbtGXz9ms5pU+1QLy4myylFp0BUCin2PHrQiDDIyrynU
-         uM21URXDKDdtS9MTFL2j8fLaPHj8sxTpGnQ/bQWyvnLCw2lYzB4aY/dM+9W7QGS05+
-         UbsUnmMrz8mT6Sg/evDS6ROmVVPvqh/yjU9ni5KLeq62yXCjBiBg2erOyKjgIwz3MM
-         xzX4nlAbI3UmagZ02RPnCfMrQfoyQdhNKC8YEP6bHGxppPptbL5t3Qlx9bkIdMmnBR
-         uXc+M9BdQc7bZhgtHD65Vt6xINp/ThyEY+82EtORdqqeFCsC6zRk2ybAJX6Lz9Wmx/
-         ezSTTAhLQOGwg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0gU9OedmZBNDGefG3GjS7FHRmgQ67eOcr2vXRrAg3zZbg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/20/2019 4:48 PM, Thierry Reding wrote:
-> On Tue, Jun 18, 2019 at 01:08:10PM +0530, Vidya Sagar wrote:
->> Currently Relaxed Ordering bit in the configuration space is enabled for
->> all devices whereas it should be enabled only for root ports for Tegra20
->> and Tegra30 chips to avoid deadlock in hardware.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->>   drivers/pci/controller/pci-tegra.c | 7 +++++--
->>   1 file changed, 5 insertions(+), 2 deletions(-)
+On Tue, Jun 25, 2019 at 06:23:46PM +0200, Rafael J. Wysocki wrote:
+> > So I wonder if the patch below makes any difference?
 > 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> 
-Bjorn / Lorenzo,
-Can you please consider this patch?
+> Mika, can you please test this one in combination with the other
+> changes we've been working on?
 
-Thanks,
-Vidya Sagar
+Sure, I'll give it a try shortly.
