@@ -2,108 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D562158718
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 18:30:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 820DD5871F
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 18:31:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfF0QaC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jun 2019 12:30:02 -0400
-Received: from mail-eopbgr140089.outbound.protection.outlook.com ([40.107.14.89]:6088
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726464AbfF0QaC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 Jun 2019 12:30:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wUTlgfdID2iRtFCZgVweDp5Qtf+mItNdaN0x/fMGgZs=;
- b=FCgEsLalfRXB4rv9hD0QxS/nthmGlfplI0uu4eJ3CMBFkQ2Bd7YzkRdW+p8gRpkMeGC6OBSQ+POJ9MTepzuc/+EAKH5OnVqI+whx+h24Qw+Rid2rrtIUW6utO9CLzdEdxlI04SsmqIMg8KUBIH0lq9fYbPyWXqFd7/WcsOHb/Fc=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB6032.eurprd05.prod.outlook.com (20.178.127.217) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Thu, 27 Jun 2019 16:29:59 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2008.014; Thu, 27 Jun 2019
- 16:29:59 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
+        id S1726464AbfF0Qaz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jun 2019 12:30:55 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:36190 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726315AbfF0Qaz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 Jun 2019 12:30:55 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hgXIL-0002lS-36; Thu, 27 Jun 2019 10:30:46 -0600
 To:     Christoph Hellwig <hch@lst.de>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 24/25] mm: remove the HMM config option
-Thread-Topic: [PATCH 24/25] mm: remove the HMM config option
-Thread-Index: AQHVLBqsRKRxj5FxGkevpNmecZGFtKavsuOA
-Date:   Thu, 27 Jun 2019 16:29:59 +0000
-Message-ID: <20190627162953.GF9499@mellanox.com>
-References: <20190626122724.13313-1-hch@lst.de>
- <20190626122724.13313-25-hch@lst.de>
-In-Reply-To: <20190626122724.13313-25-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR21CA0024.namprd21.prod.outlook.com
- (2603:10b6:a03:114::34) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.199.206.50]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0151b4b8-c186-417a-5d94-08d6fb1cb28f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6032;
-x-ms-traffictypediagnostic: VI1PR05MB6032:
-x-microsoft-antispam-prvs: <VI1PR05MB603205C1A7792960EECA583DCFFD0@VI1PR05MB6032.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2657;
-x-forefront-prvs: 008184426E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(346002)(39860400002)(376002)(136003)(199004)(189003)(6512007)(102836004)(5660300002)(7736002)(305945005)(6116002)(486006)(478600001)(476003)(81156014)(256004)(386003)(11346002)(53936002)(76176011)(3846002)(2616005)(52116002)(446003)(81166006)(6436002)(8936002)(68736007)(66066001)(6246003)(316002)(2906002)(54906003)(229853002)(99286004)(36756003)(6486002)(26005)(6506007)(186003)(64756008)(6916009)(8676002)(7416002)(66946007)(4744005)(1076003)(66476007)(14454004)(4326008)(86362001)(66556008)(66446008)(73956011)(71190400001)(71200400001)(25786009)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6032;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 9A6iNgq7ZRD14y7lsHP8UnKnqhIiFdeKgjWYA1jatzb8GnGnHiDhk19p0NkDyNq/Gcat5H/okmisOy6TJt9eUby66lOVVov9OqQOHhZrCb7iavtLvtwZQD9yD+Kc87mvHoGEH3mzdRnL4QVIJ2AUVshzNBbsSQNOFogrQebge8LavQESGjw8P2EBLmdflurGmw8JERlr2w/ZGRWw0QDUgxgBEMu+rk/mJEfk6O7kGOoQME52DOYMbaibXgt9vHEGeTbCa092EHjSVLfNGYpX0mRLb4w5ljwewWgyFyYANaYbtuj0yQaTgafTijlOAiwof9ioolGafwfyp901ymvyYNMoAOAHyLw1vTwe/ZKuE+qIso6zWpzkOzkrfPUJsDHzlwk3k7d35w08WNYILJzNFScDslN3Qm7b/nwPZmzkFUo=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <F6F5CD4C0A7BBA40A1967D61F8AD76F1@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190624072752.GA3954@lst.de>
+ <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com>
+ <20190625072008.GB30350@lst.de>
+ <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
+ <20190625170115.GA9746@lst.de>
+ <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
+ <20190626065708.GB24531@lst.de>
+ <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
+ <20190626202107.GA5850@ziepe.ca>
+ <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
+ <20190627090843.GB11548@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <89889319-e778-7772-ab36-dc55b59826be@deltatee.com>
+Date:   Thu, 27 Jun 2019 10:30:42 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0151b4b8-c186-417a-5d94-08d6fb1cb28f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 16:29:59.6088
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6032
+In-Reply-To: <20190627090843.GB11548@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca, hch@lst.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,MYRULES_FREE autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 02:27:23PM +0200, Christoph Hellwig wrote:
-> All the mm/hmm.c code is better keyed off HMM_MIRROR.  Also let nouveau
-> depend on it instead of the mix of a dummy dependency symbol plus the
-> actually selected one.  Drop various odd dependencies, as the code is
-> pretty portable.
->=20
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/gpu/drm/nouveau/Kconfig |  3 +--
->  include/linux/hmm.h             |  5 +----
->  include/linux/mm_types.h        |  2 +-
->  mm/Kconfig                      | 27 ++++-----------------------
->  mm/Makefile                     |  2 +-
->  mm/hmm.c                        |  2 --
->  6 files changed, 8 insertions(+), 33 deletions(-)
 
-Makes more sense to me too
 
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+On 2019-06-27 3:08 a.m., Christoph Hellwig wrote:
+> On Wed, Jun 26, 2019 at 02:45:38PM -0600, Logan Gunthorpe wrote:
+>>> The bar info would give the exporting struct device and any other info
+>>> we need to make the iommu mapping.
+>>
+>> Well, the IOMMU mapping is the normal thing the mapping driver will
+>> always do. We'd really just need the submitting driver to, when
+>> appropriate, inform the mapping driver that this is a pci bus address
+>> and not to call dma_map_xxx(). Then, for special mappings for the CMB
+>> like Christoph is talking about, it's simply a matter of doing a range
+>> compare on the PCI Bus address and converting the bus address to a BAR
+>> and offset.
+> 
+> Well, range compare on the physical address.  We have a few different
+> options here:
+> 
+>  (a) a range is normal RAM, DMA mapping works as usual
+>  (b) a range is another devices BAR, in which case we need to do a
+>      map_resource equivalent (which really just means don't bother with
+>      cache flush on non-coherent architectures) and apply any needed
+>      offset, fixed or iommu based
 
-Jason
+Well I would split this into two cases: (b1) ranges in another device's
+BAR that will pass through the root complex and require a map_resource
+equivalent and (b2) ranges in another device's bar that don't pass
+through the root complex and require applying an offset to the bus
+address. Both require rather different handling and the submitting
+driver should already know ahead of time what type we have.
+
+>  (c) a range points to a BAR on the acting device. In which case we
+>      don't need to DMA map at all, because no dma is happening but just an
+>      internal transfer.  And depending on the device that might also require
+>      a different addressing mode
+
+I think (c) is actually just a special case of (b2). Any device that has
+a special protocol for addressing the local BAR can just do a range
+compare on the address to determine if it's local or not. Devices that
+don't have a special protocol for this would handle both (c) and (b2)
+the same.
+
+> I guess it might make sense to just have a block layer flag that (b) or
+> (c) might be contained in a bio.  Then we always look up the data
+> structure, but can still fall back to (a) if nothing was found.  That
+> even allows free mixing and matching of memory types, at least as long
+> as they are contained to separate bio_vec segments.
+
+IMO these three cases should be reflected in flags in the bio_vec. We'd
+probably still need a queue flag to indicate support for mapping these,
+but a flag on the bio that indicates special cases *might* exist in the
+bio_vec and the driver has to do extra work to somehow distinguish the
+three types doesn't seem useful. bio_vec flags also make it easy to
+support mixing segments from different memory types.
+
+Logan
