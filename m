@@ -2,125 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 522E45816D
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 13:25:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DECA58463
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 16:22:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfF0LZb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jun 2019 07:25:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:52192 "EHLO foss.arm.com"
+        id S1726431AbfF0OWr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jun 2019 10:22:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:55326 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbfF0LZb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 Jun 2019 07:25:31 -0400
+        id S1726370AbfF0OWr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 Jun 2019 10:22:47 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09DE22B;
-        Thu, 27 Jun 2019 04:25:29 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AC11360;
+        Thu, 27 Jun 2019 07:22:44 -0700 (PDT)
 Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 725E73F718;
-        Thu, 27 Jun 2019 04:25:27 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 12:25:22 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 56A253F246;
+        Thu, 27 Jun 2019 07:22:43 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 15:22:41 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        bhelgaas@google.com, Jisheng.Zhang@synaptics.com,
-        thierry.reding@gmail.com, kishon@ti.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V9 1/3] PCI: dwc: Add API support to de-initialize host
-Message-ID: <20190627112522.GA3782@e121166-lin.cambridge.arm.com>
-References: <20190625092238.13207-1-vidyas@nvidia.com>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ellie Reeves <ellierevves@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: aardvark: Fix PCI_EXP_RTCTL register
+ configuration
+Message-ID: <20190627142241.GB3782@e121166-lin.cambridge.arm.com>
+References: <20190614101059.1664-1-repk@triplefau.lt>
+ <20190617124328.GA27113@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190625092238.13207-1-vidyas@nvidia.com>
+In-Reply-To: <20190617124328.GA27113@e121166-lin.cambridge.arm.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 02:52:36PM +0530, Vidya Sagar wrote:
-> Add an API to group all the tasks to be done to de-initialize host which
-> can then be called by any DesignWare core based driver implementations
-> while adding .remove() support in their respective drivers.
+On Mon, Jun 17, 2019 at 01:43:36PM +0100, Lorenzo Pieralisi wrote:
+> On Fri, Jun 14, 2019 at 12:10:59PM +0200, Remi Pommarel wrote:
+> > PCI_EXP_RTCTL is used to activate PME interrupt only, so writing into it
+> > should not modify other interrupts' mask. The ISR mask polarity was also
+> > inverted, when PCI_EXP_RTCTL_PMEIE is set PCIE_MSG_PM_PME_MASK mask bit
+> > should actually be cleared.
+> > 
+> > Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
+> > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> > ---
+> > Changes since v1:
+> >  * Improve code readability
+> >  * Fix mask polarity
+> >  * PME_MASK shift was off by one
+> > Changes since v2:
+> >  * Modify patch title
+> >  * Change Fixes tag to commit that actually introduces the bug
+> > ---
+> >  drivers/pci/controller/pci-aardvark.c | 13 +++++++++----
+> >  1 file changed, 9 insertions(+), 4 deletions(-)
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> ---
-> Changes from v8:
-> * None
-> 
-> Changes from v7:
-> * None
-> 
-> Changes from v6:
-> * None
-> 
-> Changes from v5:
-> * None
-> 
-> Changes from v4:
-> * None
-> 
-> Changes from v3:
-> * Added check if (pci_msi_enabled() && !pp->ops->msi_host_init) before calling
->   dw_pcie_free_msi() API to mimic init path
-> 
-> Changes from v2:
-> * Rebased on top of linux-next top of the tree branch
-> 
-> Changes from v1:
-> * s/Designware/DesignWare
-> 
->  drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
->  drivers/pci/controller/dwc/pcie-designware.h      | 5 +++++
->  2 files changed, 13 insertions(+)
+> I need Thomas' ACK to apply it, thanks.
 
-I have applied the series in pci/dwc for v5.3, thanks.
+I still need it :), thanks.
 
 Lorenzo
 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 77db32529319..d069e4290180 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  	return ret;
->  }
->  
-> +void dw_pcie_host_deinit(struct pcie_port *pp)
-> +{
-> +	pci_stop_root_bus(pp->root_bus);
-> +	pci_remove_root_bus(pp->root_bus);
-> +	if (pci_msi_enabled() && !pp->ops->msi_host_init)
-> +		dw_pcie_free_msi(pp);
-> +}
-> +
->  static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
->  				     u32 devfn, int where, int size, u32 *val,
->  				     bool write)
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index b8993f2b78df..14762e262758 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -351,6 +351,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
->  void dw_pcie_free_msi(struct pcie_port *pp);
->  void dw_pcie_setup_rc(struct pcie_port *pp);
->  int dw_pcie_host_init(struct pcie_port *pp);
-> +void dw_pcie_host_deinit(struct pcie_port *pp);
->  int dw_pcie_allocate_domains(struct pcie_port *pp);
->  #else
->  static inline irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
-> @@ -375,6 +376,10 @@ static inline int dw_pcie_host_init(struct pcie_port *pp)
->  	return 0;
->  }
->  
-> +static inline void dw_pcie_host_deinit(struct pcie_port *pp)
-> +{
-> +}
-> +
->  static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
->  {
->  	return 0;
-> -- 
-> 2.17.1
+> Lorenzo
 > 
+> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > index 134e0306ff00..f6e55c4597b1 100644
+> > --- a/drivers/pci/controller/pci-aardvark.c
+> > +++ b/drivers/pci/controller/pci-aardvark.c
+> > @@ -415,7 +415,7 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+> >  
+> >  	case PCI_EXP_RTCTL: {
+> >  		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG);
+> > -		*value = (val & PCIE_MSG_PM_PME_MASK) ? PCI_EXP_RTCTL_PMEIE : 0;
+> > +		*value = (val & PCIE_MSG_PM_PME_MASK) ? 0 : PCI_EXP_RTCTL_PMEIE;
+> >  		return PCI_BRIDGE_EMUL_HANDLED;
+> >  	}
+> >  
+> > @@ -451,10 +451,15 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+> >  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+> >  		break;
+> >  
+> > -	case PCI_EXP_RTCTL:
+> > -		new = (new & PCI_EXP_RTCTL_PMEIE) << 3;
+> > -		advk_writel(pcie, new, PCIE_ISR0_MASK_REG);
+> > +	case PCI_EXP_RTCTL: {
+> > +		/* Only mask/unmask PME interrupt */
+> > +		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG) &
+> > +			~PCIE_MSG_PM_PME_MASK;
+> > +		if ((new & PCI_EXP_RTCTL_PMEIE) == 0)
+> > +			val |= PCIE_MSG_PM_PME_MASK;
+> > +		advk_writel(pcie, val, PCIE_ISR0_MASK_REG);
+> >  		break;
+> > +	}
+> >  
+> >  	case PCI_EXP_RTSTA:
+> >  		new = (new & PCI_EXP_RTSTA_PME) >> 9;
+> > -- 
+> > 2.20.1
+> > 
