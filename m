@@ -2,145 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 106F9587C2
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 18:55:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D31B9587D6
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 19:00:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbfF0Qzt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jun 2019 12:55:49 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:35303 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbfF0Qzt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jun 2019 12:55:49 -0400
-Received: from [192.168.1.162] ([37.4.249.111]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MRTEp-1hspKc0A8z-00NSkY; Thu, 27 Jun 2019 18:55:27 +0200
-Subject: Re: [PATCH v5 04/12] PCI: brcmstb: add dma-range mapping for inbound
- traffic
-To:     Jim Quinlan <jim2101024@gmail.com>
-Cc:     ard.biesheuvel@linaro.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
+        id S1726472AbfF0RAc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jun 2019 13:00:32 -0400
+Received: from verein.lst.de ([213.95.11.210]:40306 "EHLO newverein.lst.de"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726315AbfF0RAc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 Jun 2019 13:00:32 -0400
+X-Greylist: delayed 399 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Jun 2019 13:00:31 EDT
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 991F9227A8B; Thu, 27 Jun 2019 19:00:27 +0200 (CEST)
+Date:   Thu, 27 Jun 2019 19:00:27 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <1537367527-20773-1-git-send-email-jim2101024@gmail.com>
- <1537367527-20773-5-git-send-email-jim2101024@gmail.com>
- <CAKv+Gu_d-r0ubyqZcDzERYd5FVTSpjBk++iACHqVgtHrOK0F7A@mail.gmail.com>
- <7fa897cf-4d58-c63f-afdd-a3ec5a6a56bf@gmail.com>
- <CAKv+Gu8aJRV4nqq1e-5HRLvbrANQsYuMf-pwWB53BhxLgX7iWg@mail.gmail.com>
- <b74d3c16-a512-73dc-c94a-ef6adde5f757@gmail.com>
- <CAKv+Gu8ZbN3BDRyuFzt4o--SSUmhuOh+jnpq8ZR-Ay13DJrAqg@mail.gmail.com>
- <fa285694-c3e1-adf8-032a-202e7598de41@gmail.com>
- <CANCKTBsypcVS_iC1+sbW5fMKfj+tTsxbQv9CvDwcO8GV3a8_Yg@mail.gmail.com>
- <CAKv+Gu-+OjJi8zGLqvnsOJQ9ygMot-O0EbyMKO-yyG-+k-274A@mail.gmail.com>
- <CANCKTBtbwSqfSU0b_d6Yi7TV3R_ijEpPE8a4bpgpkcOxJOa_zQ@mail.gmail.com>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=stefan.wahren@i2se.com; keydata=
- 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 AQ==
-Message-ID: <cd1a967d-2088-c644-6b50-547b14cd3357@i2se.com>
-Date:   Thu, 27 Jun 2019 18:55:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+Message-ID: <20190627170027.GE10652@lst.de>
+References: <20190625072008.GB30350@lst.de> <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com> <20190625170115.GA9746@lst.de> <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com> <20190626065708.GB24531@lst.de> <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com> <20190626202107.GA5850@ziepe.ca> <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com> <20190627090843.GB11548@lst.de> <89889319-e778-7772-ab36-dc55b59826be@deltatee.com>
 MIME-Version: 1.0
-In-Reply-To: <CANCKTBtbwSqfSU0b_d6Yi7TV3R_ijEpPE8a4bpgpkcOxJOa_zQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:l0xqY3UsxG8WEbzy1MkAb9rzx+/CW3Sl86OkU9r+x4PXh3NDpHY
- 1fwSKXJXdqciEj2c2bsPwifFf8+/31Gek/e6wGpwtSJqPM+76aw6uGipn+WSViX7bpUjccb
- 9zPy89bXBT9oPQCwtOulXmsYEP6wsu+5J3kc0qetQHJHRlDsDoCwRdHPrudpPnmS3C4UQXb
- 74x2o4zcoNmEV0yL/aemw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:klzKvQL7Mbc=:b++CW595MCjhCMXg9C4h31
- RtO/vAve4myjETFhYIxsF5oFo5fRpCpdJH2139LBmLFuxAJgnmtH6Pr0u5ZHeThJKVKz2Ejpk
- jDcvjod4IGE+4yJyitnP/HoEIxcxHOTRiJVkuUa8x+b+vRAP3P795AwCT1Q5LCkkD0LLb2B1W
- vcUHjwpnmZoSMvU565P1Ms2Glmw/qjV5HXVk1miUwZfvzv3eqTe1uogzQr8OBbAGLEowVRhhU
- CP/GqAj5pUjo3BvhA311IgmmBAA5fUIRsdOzdV2xIRAdSpqUlL+GkajB5Q6ISAHYS4X1l5W5q
- PjZOMdCeBoolYEgp6hm9UM/+plE2lo/Asq8G2k7g3TMaXfJvkT7M+AXV4oA0B3AxKqhWJIJFo
- DwdTB3N/mog32B9umoVLSeyozBsVgQyb05MjqKBO4+sw2EI0wd2D0RCbVZLiBUM/WvxRXyO+K
- lvtVY0fkO4KJ9uuPTgmkhVbVOh01k+3MiVVcWeX1iCnJhucYno1VHzorRnI1qmnyr/ygGdGkl
- NVCFxrtaux/gGO10Af4qijoAjDjuQVOH92ZuGuuJiwkjOEnGZSNUUQ2UlhgNbP/yX7L+lDUBD
- JWFw68rIATVEm1HFgoCbniN/tVXYlIsiAGlOWS5YIndUfXdN+DZy6T1EJwo0R34AqX0pSirMS
- FX72uEEHggC8IaBDbfz5bXSIWxJ9gh1oTvJTHxikDpAlTxEMzLAppcMblW2z5qCTySFFvIMAF
- /PMQkbheeqzQANXwVlQy4KiZuAVut5luUMrvdtR41GmGRRMLS2BhQkOTPu8=
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <89889319-e778-7772-ab36-dc55b59826be@deltatee.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jim,
+On Thu, Jun 27, 2019 at 10:30:42AM -0600, Logan Gunthorpe wrote:
+> >  (a) a range is normal RAM, DMA mapping works as usual
+> >  (b) a range is another devices BAR, in which case we need to do a
+> >      map_resource equivalent (which really just means don't bother with
+> >      cache flush on non-coherent architectures) and apply any needed
+> >      offset, fixed or iommu based
+> 
+> Well I would split this into two cases: (b1) ranges in another device's
+> BAR that will pass through the root complex and require a map_resource
+> equivalent and (b2) ranges in another device's bar that don't pass
+> through the root complex and require applying an offset to the bus
+> address. Both require rather different handling and the submitting
+> driver should already know ahead of time what type we have.
 
-Am 24.09.18 um 17:01 schrieb Jim Quinlan:
-> On Mon, Sep 24, 2018 at 4:25 AM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
->> On Fri, 21 Sep 2018 at 19:41, Jim Quinlan <jim2101024@gmail.com> wrote:
->>> On Thu, Sep 20, 2018 at 5:39 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->>>> On 09/20/2018 02:33 PM, Ard Biesheuvel wrote:
->>>>> On 20 September 2018 at 14:31, Florian Fainelli <f.fainelli@gmail.com> wrote:
->>>>>> On 09/20/2018 02:04 PM, Ard Biesheuvel wrote:
->>>>>>> On 20 September 2018 at 13:55, Florian Fainelli <f.fainelli@gmail.com> wrote:
->>>>>>>> On 09/19/2018 07:19 PM, Ard Biesheuvel wrote:
->>>>>>>>> On 19 September 2018 at 07:31, Jim Quinlan <jim2101024@gmail.com> wrote:
->>>>>>>>>> The Broadcom STB PCIe host controller is intimately related to the
->>>>>>>>>> memory subsystem.  This close relationship adds complexity to how cpu
->>>>>>>>>> system memory is mapped to PCIe memory.  Ideally, this mapping is an
->>>>>>>>>> identity mapping, or an identity mapping off by a constant.  Not so in
->>>>>>>>>> this case.
+True.
 
-are there any plans to release a new version of this series?
+> 
+> >  (c) a range points to a BAR on the acting device. In which case we
+> >      don't need to DMA map at all, because no dma is happening but just an
+> >      internal transfer.  And depending on the device that might also require
+> >      a different addressing mode
+> 
+> I think (c) is actually just a special case of (b2). Any device that has
+> a special protocol for addressing the local BAR can just do a range
+> compare on the address to determine if it's local or not. Devices that
+> don't have a special protocol for this would handle both (c) and (b2)
+> the same.
 
-The Raspberry Pi 4 uses a similiar PCIe controller, so it would be nice
-to get this upstream. Unfortunately i have no clue about PCI, so i the
-only thing i can do is testing.
+It is not.  (c) is fundamentally very different as it is not actually
+an operation that ever goes out to the wire at all, and which is why the
+actual physical address on the wire does not matter at all.
+Some interfaces like NVMe have designed it in a way that it the commands
+used to do this internal transfer look like (b2), but that is just their
+(IMHO very questionable) interface design choice, that produces a whole
+chain of problems.
 
-Regards
-Stefan
+> > I guess it might make sense to just have a block layer flag that (b) or
+> > (c) might be contained in a bio.  Then we always look up the data
+> > structure, but can still fall back to (a) if nothing was found.  That
+> > even allows free mixing and matching of memory types, at least as long
+> > as they are contained to separate bio_vec segments.
+> 
+> IMO these three cases should be reflected in flags in the bio_vec. We'd
+> probably still need a queue flag to indicate support for mapping these,
+> but a flag on the bio that indicates special cases *might* exist in the
+> bio_vec and the driver has to do extra work to somehow distinguish the
+> three types doesn't seem useful. bio_vec flags also make it easy to
+> support mixing segments from different memory types.
 
+So I іnitially suggested these flags.  But without a pgmap we absolutely
+need a lookup operation to find which phys address ranges map to which
+device.  And once we do that the data structure the only thing we need
+is a flag saying that we need that information, and everything else
+can be in the data structure returned from that lookup.
