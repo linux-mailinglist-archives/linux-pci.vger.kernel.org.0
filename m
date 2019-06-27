@@ -2,60 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 25C2658967
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 20:00:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C6F658A2F
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 20:49:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfF0SAu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jun 2019 14:00:50 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:38904 "EHLO ale.deltatee.com"
+        id S1726472AbfF0St4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jun 2019 14:49:56 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:39894 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726520AbfF0SAu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:00:50 -0400
+        id S1726465AbfF0St4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 Jun 2019 14:49:56 -0400
 Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
         by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.89)
         (envelope-from <logang@deltatee.com>)
-        id 1hgYhL-00046B-JH; Thu, 27 Jun 2019 12:00:40 -0600
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        id 1hgZSz-0004rJ-D3; Thu, 27 Jun 2019 12:49:54 -0600
+To:     Christoph Hellwig <hch@lst.de>,
         Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190625072008.GB30350@lst.de>
- <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
- <20190625170115.GA9746@lst.de>
- <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
- <20190626065708.GB24531@lst.de>
- <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
- <20190626202107.GA5850@ziepe.ca>
- <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
- <20190627090843.GB11548@lst.de>
- <89889319-e778-7772-ab36-dc55b59826be@deltatee.com>
- <20190627170027.GE10652@lst.de>
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Cc:     linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org, nouveau@lists.freedesktop.org
+References: <20190626122724.13313-1-hch@lst.de>
+ <20190626122724.13313-18-hch@lst.de>
 From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <e63d0259-e17f-effe-b76d-43dbfda8ae3a@deltatee.com>
-Date:   Thu, 27 Jun 2019 12:00:35 -0600
+Message-ID: <580609fd-5ef2-bae4-e8f8-adc1eb0314a1@deltatee.com>
+Date:   Thu, 27 Jun 2019 12:49:47 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190627170027.GE10652@lst.de>
+In-Reply-To: <20190626122724.13313-18-hch@lst.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca, hch@lst.de
+X-SA-Exim-Rcpt-To: nouveau@lists.freedesktop.org, linux-mm@kvack.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvdimm@lists.01.org, bskeggs@redhat.com, jgg@mellanox.com, jglisse@redhat.com, dan.j.williams@intel.com, hch@lst.de
 X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
         GREYLIST_ISWHITE,MYRULES_FREE autolearn=ham autolearn_force=no
         version=3.4.2
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+Subject: Re: [PATCH 17/25] PCI/P2PDMA: use the dev_pagemap internal refcount
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
@@ -65,80 +54,141 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 2019-06-27 11:00 a.m., Christoph Hellwig wrote:
-> It is not.  (c) is fundamentally very different as it is not actually
-> an operation that ever goes out to the wire at all, and which is why the
-> actual physical address on the wire does not matter at all.
-> Some interfaces like NVMe have designed it in a way that it the commands
-> used to do this internal transfer look like (b2), but that is just their
-> (IMHO very questionable) interface design choice, that produces a whole
-> chain of problems.
-
-From the mapping device's driver's perspective yes, but from the
-perspective of a submitting driver they would be the same.
-
->>> I guess it might make sense to just have a block layer flag that (b) or
->>> (c) might be contained in a bio.  Then we always look up the data
->>> structure, but can still fall back to (a) if nothing was found.  That
->>> even allows free mixing and matching of memory types, at least as long
->>> as they are contained to separate bio_vec segments.
->>
->> IMO these three cases should be reflected in flags in the bio_vec. We'd
->> probably still need a queue flag to indicate support for mapping these,
->> but a flag on the bio that indicates special cases *might* exist in the
->> bio_vec and the driver has to do extra work to somehow distinguish the
->> three types doesn't seem useful. bio_vec flags also make it easy to
->> support mixing segments from different memory types.
+On 2019-06-26 6:27 a.m., Christoph Hellwig wrote:
+> The functionality is identical to the one currently open coded in
+> p2pdma.c.
 > 
-> So I іnitially suggested these flags.  But without a pgmap we absolutely
-> need a lookup operation to find which phys address ranges map to which
-> device.  And once we do that the data structure the only thing we need
-> is a flag saying that we need that information, and everything else
-> can be in the data structure returned from that lookup.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Yes, you did suggest them. But what I'm trying to suggest is we don't
-*necessarily* need the lookup. For demonstration purposes only, a
-submitting driver could very roughly potentially do:
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 
-struct bio_vec vec;
-dist = pci_p2pdma_dist(provider_pdev, mapping_pdev);
-if (dist < 0) {
-     /* use regular memory */
-     vec.bv_addr = virt_to_phys(kmalloc(...));
-     vec.bv_flags = 0;
-} else if (dist & PCI_P2PDMA_THRU_HOST_BRIDGE) {
-     vec.bv_addr = pci_p2pmem_alloc_phys(provider_pdev, ...);
-     vec.bv_flags = BVEC_MAP_RESOURCE;
-} else {
-     vec.bv_addr = pci_p2pmem_alloc_bus_addr(provider_pdev, ...);
-     vec.bv_flags = BVEC_MAP_BUS_ADDR;
-}
+Also, for the P2PDMA changes in this series:
 
--- And a mapping driver would roughly just do:
+Tested-by: Logan Gunthorpe <logang@deltatee.com>
 
-dma_addr_t dma_addr;
-if (vec.bv_flags & BVEC_MAP_BUS_ADDR) {
-     if (pci_bus_addr_in_bar(mapping_pdev, vec.bv_addr, &bar, &off))  {
-          /* case (c) */
-          /* program the DMA engine with bar and off */
-     } else {
-          /* case (b2) */
-          dma_addr = vec.bv_addr;
-     }
-} else if (vec.bv_flags & BVEC_MAP_RESOURCE) {
-     /* case (b1) */
-     dma_addr = dma_map_resource(mapping_dev, vec.bv_addr, ...);
-} else {
-     /* case (a) */
-     dma_addr = dma_map_page(..., phys_to_page(vec.bv_addr), ...);
-}
-
-The real difficulty here is that you'd really want all the above handled
-by a dma_map_bvec() so it can combine every vector hitting the IOMMU
-into a single continuous IOVA -- but it's hard to fit case (c) into that
-equation. So it might be that a dma_map_bvec() handles cases (a), (b1)
-and (b2) and the mapping driver has to then check each resulting DMA
-vector for pci_bus_addr_in_bar() while it is programming the DMA engine
-to deal with case (c).
+I've ran this series through my simple P2PDMA tests.
 
 Logan
+
+> ---
+>  drivers/pci/p2pdma.c | 57 ++++----------------------------------------
+>  1 file changed, 4 insertions(+), 53 deletions(-)
+> 
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index ebd8ce3bba2e..608f84df604a 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -24,12 +24,6 @@ struct pci_p2pdma {
+>  	bool p2pmem_published;
+>  };
+>  
+> -struct p2pdma_pagemap {
+> -	struct dev_pagemap pgmap;
+> -	struct percpu_ref ref;
+> -	struct completion ref_done;
+> -};
+> -
+>  static ssize_t size_show(struct device *dev, struct device_attribute *attr,
+>  			 char *buf)
+>  {
+> @@ -78,32 +72,6 @@ static const struct attribute_group p2pmem_group = {
+>  	.name = "p2pmem",
+>  };
+>  
+> -static struct p2pdma_pagemap *to_p2p_pgmap(struct percpu_ref *ref)
+> -{
+> -	return container_of(ref, struct p2pdma_pagemap, ref);
+> -}
+> -
+> -static void pci_p2pdma_percpu_release(struct percpu_ref *ref)
+> -{
+> -	struct p2pdma_pagemap *p2p_pgmap = to_p2p_pgmap(ref);
+> -
+> -	complete(&p2p_pgmap->ref_done);
+> -}
+> -
+> -static void pci_p2pdma_percpu_kill(struct dev_pagemap *pgmap)
+> -{
+> -	percpu_ref_kill(pgmap->ref);
+> -}
+> -
+> -static void pci_p2pdma_percpu_cleanup(struct dev_pagemap *pgmap)
+> -{
+> -	struct p2pdma_pagemap *p2p_pgmap =
+> -		container_of(pgmap, struct p2pdma_pagemap, pgmap);
+> -
+> -	wait_for_completion(&p2p_pgmap->ref_done);
+> -	percpu_ref_exit(&p2p_pgmap->ref);
+> -}
+> -
+>  static void pci_p2pdma_release(void *data)
+>  {
+>  	struct pci_dev *pdev = data;
+> @@ -153,11 +121,6 @@ static int pci_p2pdma_setup(struct pci_dev *pdev)
+>  	return error;
+>  }
+>  
+> -static const struct dev_pagemap_ops pci_p2pdma_pagemap_ops = {
+> -	.kill		= pci_p2pdma_percpu_kill,
+> -	.cleanup	= pci_p2pdma_percpu_cleanup,
+> -};
+> -
+>  /**
+>   * pci_p2pdma_add_resource - add memory for use as p2p memory
+>   * @pdev: the device to add the memory to
+> @@ -171,7 +134,6 @@ static const struct dev_pagemap_ops pci_p2pdma_pagemap_ops = {
+>  int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
+>  			    u64 offset)
+>  {
+> -	struct p2pdma_pagemap *p2p_pgmap;
+>  	struct dev_pagemap *pgmap;
+>  	void *addr;
+>  	int error;
+> @@ -194,26 +156,15 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
+>  			return error;
+>  	}
+>  
+> -	p2p_pgmap = devm_kzalloc(&pdev->dev, sizeof(*p2p_pgmap), GFP_KERNEL);
+> -	if (!p2p_pgmap)
+> +	pgmap = devm_kzalloc(&pdev->dev, sizeof(*pgmap), GFP_KERNEL);
+> +	if (!pgmap)
+>  		return -ENOMEM;
+> -
+> -	init_completion(&p2p_pgmap->ref_done);
+> -	error = percpu_ref_init(&p2p_pgmap->ref,
+> -			pci_p2pdma_percpu_release, 0, GFP_KERNEL);
+> -	if (error)
+> -		goto pgmap_free;
+> -
+> -	pgmap = &p2p_pgmap->pgmap;
+> -
+>  	pgmap->res.start = pci_resource_start(pdev, bar) + offset;
+>  	pgmap->res.end = pgmap->res.start + size - 1;
+>  	pgmap->res.flags = pci_resource_flags(pdev, bar);
+> -	pgmap->ref = &p2p_pgmap->ref;
+>  	pgmap->type = MEMORY_DEVICE_PCI_P2PDMA;
+>  	pgmap->pci_p2pdma_bus_offset = pci_bus_address(pdev, bar) -
+>  		pci_resource_start(pdev, bar);
+> -	pgmap->ops = &pci_p2pdma_pagemap_ops;
+>  
+>  	addr = devm_memremap_pages(&pdev->dev, pgmap);
+>  	if (IS_ERR(addr)) {
+> @@ -224,7 +175,7 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
+>  	error = gen_pool_add_owner(pdev->p2pdma->pool, (unsigned long)addr,
+>  			pci_bus_address(pdev, bar) + offset,
+>  			resource_size(&pgmap->res), dev_to_node(&pdev->dev),
+> -			&p2p_pgmap->ref);
+> +			pgmap->ref);
+>  	if (error)
+>  		goto pages_free;
+>  
+> @@ -236,7 +187,7 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
+>  pages_free:
+>  	devm_memunmap_pages(&pdev->dev, pgmap);
+>  pgmap_free:
+> -	devm_kfree(&pdev->dev, p2p_pgmap);
+> +	devm_kfree(&pdev->dev, pgmap);
+>  	return error;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_p2pdma_add_resource);
+> 
