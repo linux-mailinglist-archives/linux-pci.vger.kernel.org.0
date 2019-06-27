@@ -2,69 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04D9E57EFA
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 11:09:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F049057FEB
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 12:06:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbfF0JJS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jun 2019 05:09:18 -0400
-Received: from verein.lst.de ([213.95.11.211]:50859 "EHLO newverein.lst.de"
+        id S1726511AbfF0KG1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jun 2019 06:06:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:50766 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725385AbfF0JJR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 Jun 2019 05:09:17 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 7C50668B20; Thu, 27 Jun 2019 11:08:43 +0200 (CEST)
-Date:   Thu, 27 Jun 2019 11:08:43 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Christoph Hellwig <hch@lst.de>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-Message-ID: <20190627090843.GB11548@lst.de>
-References: <20190624072752.GA3954@lst.de> <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com> <20190625072008.GB30350@lst.de> <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com> <20190625170115.GA9746@lst.de> <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com> <20190626065708.GB24531@lst.de> <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com> <20190626202107.GA5850@ziepe.ca> <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
+        id S1726500AbfF0KG1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 Jun 2019 06:06:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73B4AD6E;
+        Thu, 27 Jun 2019 03:06:26 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A4A13F718;
+        Thu, 27 Jun 2019 03:06:25 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 11:06:16 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, treding@nvidia.com, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH] PCI: tegra: Enable Relaxed Ordering only for Tegra20 &
+ Tegra30
+Message-ID: <20190627100616.GA30071@e121166-lin.cambridge.arm.com>
+References: <20190618073810.30270-1-vidyas@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190618073810.30270-1-vidyas@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 02:45:38PM -0600, Logan Gunthorpe wrote:
-> > The bar info would give the exporting struct device and any other info
-> > we need to make the iommu mapping.
+On Tue, Jun 18, 2019 at 01:08:10PM +0530, Vidya Sagar wrote:
+> Currently Relaxed Ordering bit in the configuration space is enabled for
+> all devices whereas it should be enabled only for root ports for Tegra20
+> and Tegra30 chips to avoid deadlock in hardware.
+
+This is a fix so I think you had better add a Fixes: tag and if the
+erratum is a public document it would be good to add it to the log
+to explain what the problem is.
+
+Thanks,
+Lorenzo
+
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  drivers/pci/controller/pci-tegra.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> Well, the IOMMU mapping is the normal thing the mapping driver will
-> always do. We'd really just need the submitting driver to, when
-> appropriate, inform the mapping driver that this is a pci bus address
-> and not to call dma_map_xxx(). Then, for special mappings for the CMB
-> like Christoph is talking about, it's simply a matter of doing a range
-> compare on the PCI Bus address and converting the bus address to a BAR
-> and offset.
-
-Well, range compare on the physical address.  We have a few different
-options here:
-
- (a) a range is normal RAM, DMA mapping works as usual
- (b) a range is another devices BAR, in which case we need to do a
-     map_resource equivalent (which really just means don't bother with
-     cache flush on non-coherent architectures) and apply any needed
-     offset, fixed or iommu based
- (c) a range points to a BAR on the acting device. In which case we
-     don't need to DMA map at all, because no dma is happening but just an
-     internal transfer.  And depending on the device that might also require
-     a different addressing mode
-
-I guess it might make sense to just have a block layer flag that (b) or
-(c) might be contained in a bio.  Then we always look up the data
-structure, but can still fall back to (a) if nothing was found.  That
-even allows free mixing and matching of memory types, at least as long
-as they are contained to separate bio_vec segments.
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index 464ba2538d52..bc7be369c1b3 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -545,12 +545,15 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_fixup_class);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_fixup_class);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_fixup_class);
+>  
+> -/* Tegra PCIE requires relaxed ordering */
+> +/* Tegra20 and Tegra30 PCIE requires relaxed ordering */
+>  static void tegra_pcie_relax_enable(struct pci_dev *dev)
+>  {
+>  	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_RELAX_EN);
+>  }
+> -DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, tegra_pcie_relax_enable);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf0, tegra_pcie_relax_enable);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_relax_enable);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_relax_enable);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_relax_enable);
+>  
+>  static int tegra_pcie_request_resources(struct tegra_pcie *pcie)
+>  {
+> -- 
+> 2.17.1
+> 
