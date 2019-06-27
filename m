@@ -2,161 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF538587B8
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 18:54:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B980587E2
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 19:02:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbfF0QyY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jun 2019 12:54:24 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:36910 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726405AbfF0QyX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 Jun 2019 12:54:23 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hgXfA-00034h-4H; Thu, 27 Jun 2019 10:54:22 -0600
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <SL2P216MB01874DFDDBDE49B935A9B1B380E50@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <e768271e-9455-2a3d-ad76-4a6d9c71d669@deltatee.com>
- <SL2P216MB0187E3E3A8307DF01B04020D80FD0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <b8f6c13c-ae27-dac4-2c34-497fafcffef0@deltatee.com>
-Date:   Thu, 27 Jun 2019 10:54:18 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1726482AbfF0RBv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jun 2019 13:01:51 -0400
+Received: from verein.lst.de ([213.95.11.210]:40324 "EHLO newverein.lst.de"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726405AbfF0RBv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 Jun 2019 13:01:51 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id D884D68C7B; Thu, 27 Jun 2019 18:54:28 +0200 (CEST)
+Date:   Thu, 27 Jun 2019 18:54:28 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH 03/25] mm: remove hmm_devmem_add_resource
+Message-ID: <20190627165428.GC10652@lst.de>
+References: <20190626122724.13313-1-hch@lst.de> <20190626122724.13313-4-hch@lst.de> <20190627161813.GB9499@mellanox.com>
 MIME-Version: 1.0
-In-Reply-To: <SL2P216MB0187E3E3A8307DF01B04020D80FD0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, bhelgaas@google.com, benh@kernel.crashing.org, nicholas.johnson-opensource@outlook.com.au
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,LR_URI_NUMERIC_ENDING,MYRULES_FREE autolearn=ham
-        autolearn_force=no version=3.4.2
-Subject: Re: [nicholas.johnson-opensource@outlook.com.au: [PATCH v6 3/4] PCI:
- Fix bug resulting in double hpmemsize being assigned to MMIO window]
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627161813.GB9499@mellanox.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Jun 27, 2019 at 04:18:22PM +0000, Jason Gunthorpe wrote:
+> On Wed, Jun 26, 2019 at 02:27:02PM +0200, Christoph Hellwig wrote:
+> > This function has never been used since it was first added to the kernel
+> > more than a year and a half ago, and if we ever grow a consumer of the
+> > MEMORY_DEVICE_PUBLIC infrastructure it can easily use devm_memremap_pages
+> > directly.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+> > Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+> > Acked-by: Michal Hocko <mhocko@suse.com>
+> > ---
+> >  include/linux/hmm.h |  3 ---
+> >  mm/hmm.c            | 50 ---------------------------------------------
+> >  2 files changed, 53 deletions(-)
+> 
+> This should be squashed to the new earlier patch?
 
-
-On 2019-06-27 1:50 a.m., Nicholas Johnson wrote:
-> On Wed, Jun 19, 2019 at 10:21:21AM -0600, Logan Gunthorpe wrote:
->> *(cc'd back Bjorn and the list)
->>
->> On 2019-06-19 8:00 a.m., Nicholas Johnson wrote:
->>> Hi Ben and Logan,
->>>
->>> It looks like my git send-email has been not working correctly since I
->>> started trying to get these patches accepted. I may have remedied this
->>> now, but I have seen that Logan tried to find these patches and failed.
->>> So as a courtesy until I post PATCH v7 (hopefully correctly, this time),
->>> I am forwarding you the patches. I hope you like them. I would love to 
->>> know of any concerns or questions you may have, and / or what happens if 
->>> you test them. Thanks and all the best!
->>>
->>> ----- Forwarded message from Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au> -----
->>>
->>> Date: Thu, 23 May 2019 06:29:27 +0800
->>> From: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
->>> To: linux-kernel@vger.kernel.org
->>> Cc: linux-pci@vger.kernel.org, bhelgaas@google.com, mika.westerberg@linux.intel.com, corbet@lwn.net, Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
->>> Subject: [PATCH v6 3/4] PCI: Fix bug resulting in double hpmemsize being assigned to MMIO window
->>> X-Mailer: git-send-email 2.19.1
->>>
->>> Background
->>> ==========================================================================
->>>
->>> Solve bug report:
->>> https://bugzilla.kernel.org/show_bug.cgi?id=203243
->>
->> This is all kinds of confusing... the bug report just seems to be a copy
->> of the patch set. The description of the actual symptoms of the problem
->> appears to be missing from all of it.
->>
->>> Currently, the kernel can sometimes assign the MMIO_PREF window
->>> additional size into the MMIO window, resulting in double the MMIO
->>> additional size, even if the MMIO_PREF window was successful.
->>>
->>> This happens if in the first pass, the MMIO_PREF succeeds but the MMIO
->>> fails. In the next pass, because MMIO_PREF is already assigned, the
->>> attempt to assign MMIO_PREF returns an error code instead of success
->>> (nothing more to do, already allocated).
->>>
->>> Example of problem (more context can be found in the bug report URL):
->>>
->>> Mainline kernel:
->>> pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0xa00fffff] = 256M
->>> pci 0000:06:04.0: BAR 14: assigned [mem 0xa0200000-0xb01fffff] = 256M
->>>
->>> Patched kernel:
->>> pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0x980fffff] = 128M
->>> pci 0000:06:04.0: BAR 14: assigned [mem 0x98200000-0xa01fffff] = 128M
->>>
->>> This was using pci=realloc,hpmemsize=128M,nocrs - on the same machine
->>> with the same configuration, with a Ubuntu mainline kernel and a kernel
->>> patched with this patch series.
->>>
->>> This patch is vital for the next patch in the series. The next patch
->>> allows the user to specify MMIO and MMIO_PREF independently. If the
->>> MMIO_PREF is set to be very large, this bug will end up more than
->>> doubling the MMIO size. The bug results in the MMIO_PREF being added to
->>> the MMIO window, which means doubling if MMIO_PREF size == MMIO size.
->>> With a large MMIO_PREF, without this patch, the MMIO window will likely
->>> fail to be assigned altogether due to lack of 32-bit address space.
->>>
->>> Patch notes
->>> ==========================================================================
->>>
->>> Change find_free_bus_resource() to not skip assigned resources with
->>> non-null parent.
->>>
->>> Add checks in pbus_size_io() and pbus_size_mem() to return success if
->>> resource returned from find_free_bus_resource() is already allocated.
->>>
->>> This avoids pbus_size_io() and pbus_size_mem() returning error code to
->>> __pci_bus_size_bridges() when a resource has been successfully assigned
->>> in a previous pass. This fixes the existing behaviour where space for a
->>> resource could be reserved multiple times in different parent bridge
->>> windows. This also greatly reduces the number of failed BAR messages in
->>> dmesg when Linux assigns resources.
->>
->> This patch looks like the same bug that I tracked down earlier but I
->> solved in a slightly different way. See this patch[1] which is still
->> under review. Can you maybe test it and see if it solves the same problem?
->>
->> Thanks,
->>
->> Logan
->>
->> [1]
->> https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
-> [1] says Reported-by: Kit Chow, but I cannot find the bug report on 
-> bugzilla.kernel.org - should I be linking the bug reports into my 
-> version of this patch in case it is accepted?
-
-Reported-by doesn't indicate a bug report is on bugzilla. In fact I
-don't think too many people rely on bugzilla. It's more of a place that
-triage is done to send reporters to appropriate mailing lists.
-
-> Bjorn never replied to my queries about which should be accepted and 
-> what I should do either way. For now I am moving my version of this 
-> patch to the end of my series so that it can easily be knocked off if 
-> Bjorn prefers your patch.
-
-I'm sure he'll get to it eventually. Probably just seeing where some of
-the discussion is leading.
-
-Logan
+We could do that.  Do you just want to do that when you apply it?
