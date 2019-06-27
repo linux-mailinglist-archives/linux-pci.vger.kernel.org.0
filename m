@@ -2,179 +2,280 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 53FFF57D7A
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 09:50:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80AEA57E29
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 10:22:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbfF0Huj convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 27 Jun 2019 03:50:39 -0400
-Received: from mail-oln040092255070.outbound.protection.outlook.com ([40.92.255.70]:47264
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725787AbfF0Huj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 Jun 2019 03:50:39 -0400
-Received: from PU1APC01FT039.eop-APC01.prod.protection.outlook.com
- (10.152.252.54) by PU1APC01HT176.eop-APC01.prod.protection.outlook.com
- (10.152.253.182) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2032.15; Thu, 27 Jun
- 2019 07:50:34 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.252.51) by
- PU1APC01FT039.mail.protection.outlook.com (10.152.253.127) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2032.15 via Frontend Transport; Thu, 27 Jun 2019 07:50:34 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::9d2d:391f:5f49:c806]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::9d2d:391f:5f49:c806%6]) with mapi id 15.20.2008.014; Thu, 27 Jun 2019
- 07:50:34 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     Logan Gunthorpe <logang@deltatee.com>
-CC:     "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [nicholas.johnson-opensource@outlook.com.au: [PATCH v6 3/4] PCI:
- Fix bug resulting in double hpmemsize being assigned to MMIO window]
-Thread-Topic: [nicholas.johnson-opensource@outlook.com.au: [PATCH v6 3/4] PCI:
- Fix bug resulting in double hpmemsize being assigned to MMIO window]
-Thread-Index: AQHVJqddn+2PwrSPpkW3hy382qHokKajKMGAgAwD5wA=
-Date:   Thu, 27 Jun 2019 07:50:34 +0000
-Message-ID: <SL2P216MB0187E3E3A8307DF01B04020D80FD0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-References: <SL2P216MB01874DFDDBDE49B935A9B1B380E50@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <e768271e-9455-2a3d-ad76-4a6d9c71d669@deltatee.com>
-In-Reply-To: <e768271e-9455-2a3d-ad76-4a6d9c71d669@deltatee.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SY2PR01CA0025.ausprd01.prod.outlook.com
- (2603:10c6:1:15::13) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- (2603:1096:100:22::19)
-x-incomingtopheadermarker: OriginalChecksum:3126F02D5E681196562C224996201390864D017BFF2BF82B0AF23732B13AB26A;UpperCasedChecksum:F11EE72412A421339BD7D51F0E5F3EC65ACD02A3DDD23C5ECEFC49DC5578DB5B;SizeAsReceived:7870;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [A9MQgcqjXC6gu9A7cwboCiZ8iD3Z1MzHtJWjMhX+5jWudxX5NrEVujuBi8ft0nFb3i66e7nDdH4=]
-x-microsoft-original-message-id: <20190627075024.GB5604@nicholas-usb>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:PU1APC01HT176;
-x-ms-traffictypediagnostic: PU1APC01HT176:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-message-info: 2OMsLn79HM78sX980GWRp8Wz7pmhLLBFrFckURpF5cOiBoY7ee4OAbEURyIh9xkEAVPzER6apsMvcTiv3Q1lgd3s2dipL0MmIL8ydHSWg/NIOO7oK302lv30Fi/ZDXTI3ZZ1tvcFM7jxZNpPYRSrjTzehkcpZIo4HjyWBsHDLbZy+qPv9/wYKm0MUndblxJI
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E4FF4645E7119E429BCF3400E1C95A89@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        id S1726369AbfF0IWD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jun 2019 04:22:03 -0400
+Received: from mail-io1-f54.google.com ([209.85.166.54]:46368 "EHLO
+        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbfF0IWD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jun 2019 04:22:03 -0400
+Received: by mail-io1-f54.google.com with SMTP id i10so2803506iol.13
+        for <linux-pci@vger.kernel.org>; Thu, 27 Jun 2019 01:22:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=VGZUBZaPWyvbPRUNJ5VcmA2c3aQZgvI+cFZmURKvaYU=;
+        b=Mw6hNMg4OM6tS3vIxxmoSoVpIqJTbCvQk9lx9deY0QreiB4EdXZyBTSbpEG0Xj71CZ
+         w0Fi0+FGe1e7w2vIARhrsowE3oe/dd/Yykw0gwqtbVS4g8KxxmnLg5BEr2Imo13LGXRn
+         t5pFkwHQKTMpYrMnH4RD+PCOZ6ZUT6SodpPvJ60CKvad7h2THdj610c3usjU8bqtvavt
+         cS3WQ/AvaAeZmuO0sQaO8EnP2VyRJw98/l7P3AoAIZdYGWCnDccZFGD7GuDD3Paz7ENK
+         4pEiF7xbIUzA4qcXRkMmTEgDJVG0f+VdZqFR+toIiT1Bn3Kba6wC867wrHXm+PuUSZsp
+         baxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=VGZUBZaPWyvbPRUNJ5VcmA2c3aQZgvI+cFZmURKvaYU=;
+        b=l07CsPwaE1ZfsP56cENY1VPBuMAKKUKmx0aB3L7Sc0OTUYLxvmOS7+3485MNmJaYQ1
+         HONMz+5qT1abtHpKYnjAdZ6Le6TnxkcdLZI4Hn9SHWbD6DMy4QsLDS2afcYPPvbej5oV
+         4zF03/CiRa9x2Wj4gLVMQs5QcV3h/WCAlNbdaItVjr0ZwwzFd8mgOLPr1v7iuvGSvf7Y
+         Yl9qNjzWrO2AKEOF4OhbZDH2LHQUjs+kZXWqgOBnmYS5H3+/nYe+Bb3xIsDgEAb1nBu6
+         izTCC+evAcxGBiDPrOY4QI8JoG9TGmJ+FJnfNa3RKM6+COlxfkZjY6xZr/zQC0ZYreIW
+         lTig==
+X-Gm-Message-State: APjAAAU5AntfkTXbRd5oEfd/JSpX8vwFbN09pEMonGtppPpHR1qnsmzT
+        cOCC4EWRUf+lfhz4tU9S4eKrg8r9V+HSz+5J48HsRFba
+X-Google-Smtp-Source: APXvYqyXGA87GTe9Z1T1VnkEEemVrvEiDnakbiw7w4IpoxYJF0uYYR2E2YWrRFA4U6s2BXRT90vqcIRFV0hMqz8aUsg=
+X-Received: by 2002:a5e:9401:: with SMTP id q1mr3077762ioj.276.1561623721614;
+ Thu, 27 Jun 2019 01:22:01 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: adefef6a-c2e4-48cd-7e1b-08d6fad42270
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 07:50:34.2396
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT176
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Thu, 27 Jun 2019 18:21:50 +1000
+Message-ID: <CAOSf1CGnYaGUTZQHbgy39dC47XNZRi4At2aTWRK0MeBvupKrxg@mail.gmail.com>
+Subject: pciehp lockdep splat on 5.2-rc6
+To:     linux-pci@vger.kernel.org
+Cc:     Lukas Wunner <lukas@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 10:21:21AM -0600, Logan Gunthorpe wrote:
-> *(cc'd back Bjorn and the list)
-> 
-> On 2019-06-19 8:00 a.m., Nicholas Johnson wrote:
-> > Hi Ben and Logan,
-> > 
-> > It looks like my git send-email has been not working correctly since I
-> > started trying to get these patches accepted. I may have remedied this
-> > now, but I have seen that Logan tried to find these patches and failed.
-> > So as a courtesy until I post PATCH v7 (hopefully correctly, this time),
-> > I am forwarding you the patches. I hope you like them. I would love to 
-> > know of any concerns or questions you may have, and / or what happens if 
-> > you test them. Thanks and all the best!
-> > 
-> > ----- Forwarded message from Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au> -----
-> > 
-> > Date: Thu, 23 May 2019 06:29:27 +0800
-> > From: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > To: linux-kernel@vger.kernel.org
-> > Cc: linux-pci@vger.kernel.org, bhelgaas@google.com, mika.westerberg@linux.intel.com, corbet@lwn.net, Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > Subject: [PATCH v6 3/4] PCI: Fix bug resulting in double hpmemsize being assigned to MMIO window
-> > X-Mailer: git-send-email 2.19.1
-> > 
-> > Background
-> > ==========================================================================
-> > 
-> > Solve bug report:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=203243
-> 
-> This is all kinds of confusing... the bug report just seems to be a copy
-> of the patch set. The description of the actual symptoms of the problem
-> appears to be missing from all of it.
-> 
-> > Currently, the kernel can sometimes assign the MMIO_PREF window
-> > additional size into the MMIO window, resulting in double the MMIO
-> > additional size, even if the MMIO_PREF window was successful.
-> > 
-> > This happens if in the first pass, the MMIO_PREF succeeds but the MMIO
-> > fails. In the next pass, because MMIO_PREF is already assigned, the
-> > attempt to assign MMIO_PREF returns an error code instead of success
-> > (nothing more to do, already allocated).
-> > 
-> > Example of problem (more context can be found in the bug report URL):
-> > 
-> > Mainline kernel:
-> > pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0xa00fffff] = 256M
-> > pci 0000:06:04.0: BAR 14: assigned [mem 0xa0200000-0xb01fffff] = 256M
-> > 
-> > Patched kernel:
-> > pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0x980fffff] = 128M
-> > pci 0000:06:04.0: BAR 14: assigned [mem 0x98200000-0xa01fffff] = 128M
-> > 
-> > This was using pci=realloc,hpmemsize=128M,nocrs - on the same machine
-> > with the same configuration, with a Ubuntu mainline kernel and a kernel
-> > patched with this patch series.
-> > 
-> > This patch is vital for the next patch in the series. The next patch
-> > allows the user to specify MMIO and MMIO_PREF independently. If the
-> > MMIO_PREF is set to be very large, this bug will end up more than
-> > doubling the MMIO size. The bug results in the MMIO_PREF being added to
-> > the MMIO window, which means doubling if MMIO_PREF size == MMIO size.
-> > With a large MMIO_PREF, without this patch, the MMIO window will likely
-> > fail to be assigned altogether due to lack of 32-bit address space.
-> > 
-> > Patch notes
-> > ==========================================================================
-> > 
-> > Change find_free_bus_resource() to not skip assigned resources with
-> > non-null parent.
-> > 
-> > Add checks in pbus_size_io() and pbus_size_mem() to return success if
-> > resource returned from find_free_bus_resource() is already allocated.
-> > 
-> > This avoids pbus_size_io() and pbus_size_mem() returning error code to
-> > __pci_bus_size_bridges() when a resource has been successfully assigned
-> > in a previous pass. This fixes the existing behaviour where space for a
-> > resource could be reserved multiple times in different parent bridge
-> > windows. This also greatly reduces the number of failed BAR messages in
-> > dmesg when Linux assigns resources.
-> 
-> This patch looks like the same bug that I tracked down earlier but I
-> solved in a slightly different way. See this patch[1] which is still
-> under review. Can you maybe test it and see if it solves the same problem?
-> 
-> Thanks,
-> 
-> Logan
-> 
-> [1]
-> https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
-[1] says Reported-by: Kit Chow, but I cannot find the bug report on 
-bugzilla.kernel.org - should I be linking the bug reports into my 
-version of this patch in case it is accepted?
+Hi all,
 
-Bjorn never replied to my queries about which should be accepted and 
-what I should do either way. For now I am moving my version of this 
-patch to the end of my series so that it can easily be knocked off if 
-Bjorn prefers your patch.
+I've been re-working the powerpc pci code to make it possible to use
+pciehp on powernv. While testing I'm consistently seeing this lockdep
+splat when hot-adding a U.2 NVMe drive. This might be my bug, but all
+my changes are contained in arch/powerpc/ and the stack traces point
+entirely at generic code, so maybe not. Does this look like a real
+issue?
 
-Cheers
+Oliver
 
-Nicholas
+[  169.920642][ T1952] pcieport 0020:02:02.0: pciehp: Slot(0-3): Card present
+[  169.924806][ T1952] pcieport 0020:02:02.0: pciehp: Slot(0-3): Link Up
+[  170.083951][ T1952] pci 0020:08:00.0: [1344:5192] type 00 class 0x010802
+[  170.088307][ T1952] pci 0020:08:00.0: reg 0x10: [mem
+0x00000000-0x00003fff 64bit]
+[  170.092711][ T1952] pci 0020:08:00.0: reg 0x30: [mem
+0x00000000-0x0001ffff pref]
+[  170.096839][ T1952] pci 0020:08:00.0: Max Payload Size set to 256
+(was 128, max 256)
+[  170.100973][ T1952] pci 0020:08:00.0: enabling Extended Tags
+[  170.105323][ T1952] pci 0020:08:00.0: BAR0 [mem size 0x00004000
+64bit]: requesting alignment to 0x10000
+[  170.111719][ T1952] pci 0020:08:00.0: Adding to iommu group 8
+[  170.142333][ T1952] pcieport 0020:02:02.0: bridge window [io
+0x1000-0x0fff] to [bus 08] add_size 1000
+[  170.145079][ T1952] pcieport 0020:02:02.0: BAR 7: no space for [io
+size 0x1000]
+[  170.147783][ T1952] pcieport 0020:02:02.0: BAR 7: failed to assign
+[io  size 0x1000]
+[  170.150524][ T1952] pcieport 0020:02:02.0: BAR 7: no space for [io
+size 0x1000]
+[  170.153292][ T1952] pcieport 0020:02:02.0: BAR 7: failed to assign
+[io  size 0x1000]
+[  170.156078][ T1952] pci 0020:08:00.0: BAR 6: assigned [mem
+0x3fe800800000-0x3fe80081ffff pref]
+[  170.158897][ T1952] pci 0020:08:00.0: BAR 0: assigned [mem
+0x3fe800820000-0x3fe800823fff 64bit]
+[  170.161761][ T1952] 0020:08:00.0: No device node associated with device !
+[  170.164607][ T1952] pcieport 0020:02:02.0: PCI bridge to [bus 08]
+[  170.167478][ T1952] pcieport 0020:02:02.0:   bridge window [mem
+0x3fe800800000-0x3fe800ffffff]
+[  170.170386][ T1952] pcieport 0020:02:02.0:   bridge window [mem
+0x240100000000-0x2401ffffffff 64bit pref]
+[  170.173389][ T1952] pnv_pcibios_bus_add_device: EEH: Setting up
+device 0020:08:00.0.
+[  170.176372][ T1952] EEH: Adding device 0020:08:00.0
+[  170.179352][ T1952] pnv_eeh_probe_pdev: probing 0020:08:00.0
+[  170.182597][ T1952] EEH: Add 0020:08:00.0 to Device PE#fd, Parent PE#0
+[  170.185783][ T1952] pnv_eeh_probe_pdev: EEH enabled on 08:00.0 PHB#20-PE#fd
+[  170.189244][ T1952] nvme 0020:08:00.0: runtime IRQ mapping not
+provided by arch
+[  170.192617][ T1952]
+[  170.194049][  T656] nvme nvme1: pci function 0020:08:00.0
+[  170.195732][ T1952] ======================================================
+[  170.195743][ T1952] WARNING: possible circular locking dependency detected
+[  170.201813][ T1947] nvme 0020:08:00.0: enabling device (0000 -> 0002)
+[  170.205419][ T1952] 5.2.0-rc6-00074-g99d8de2-dirty #225 Tainted: G        W
+[  170.205422][ T1952] ------------------------------------------------------
+[  170.205425][ T1952] irq/251-pciehp/1952 is trying to acquire lock:
+[  170.205428][ T1952] 00000000c71b3eb9
+((work_completion)(&wfc.work)){+.+.}, at: __flush_work+0x68/0x120
+[  170.205443][ T1952]
+[  170.205443][ T1952] but task is already holding lock:
+[  170.205445][ T1952] 00000000788e6539
+(pci_rescan_remove_lock){+.+.}, at: pci_lock_rescan_remove+0x2c/0x40
+[  170.205456][ T1952]
+[  170.205456][ T1952] which lock already depends on the new lock.
+[  170.205456][ T1952]
+[  170.205458][ T1952]
+[  170.205458][ T1952] the existing dependency chain (in reverse order) is:
+[  170.205460][ T1952]
+[  170.205460][ T1952] -> #2 (pci_rescan_remove_lock){+.+.}:
+[  170.211487][ T1947] nvme 0020:08:00.0: enabling bus mastering
+[  170.215287][ T1952]        validate_chain.isra.12+0x520/0x780
+[  170.215292][ T1952]        __lock_acquire+0x358/0x7c0
+[  170.215297][ T1952]        lock_acquire+0xd4/0x230
+[  170.215303][ T1952]        __mutex_lock+0x8c/0xa30
+[  170.215308][ T1952]        pci_lock_rescan_remove+0x2c/0x40
+[  170.215313][ T1952]        pciehp_unconfigure_device+0x54/0x1a0
+[  170.215318][ T1952]        remove_board+0x28/0x90
+[  170.215329][ T1952]        __pciehp_disable_slot+0x64/0xb0
+[  170.292060][ T1952]        pciehp_disable_slot+0x58/0xc0
+[  170.295062][ T1952]        pciehp_handle_presence_or_link_change+0x94/0x2a0
+[  170.298064][ T1952]        pciehp_ist+0x1fc/0x280
+[  170.300988][ T1952]        irq_thread_fn+0x4c/0xa0
+[  170.303878][ T1952]        irq_thread+0xdc/0x150
+[  170.306740][ T1952]        kthread+0x15c/0x1a0
+[  170.309584][ T1952]        ret_from_kernel_thread+0x5c/0x78
+[  170.312445][ T1952]
+[  170.312445][ T1952] -> #1 (&ctrl->reset_lock){.+.+}:
+[  170.318025][ T1952]        validate_chain.isra.12+0x520/0x780
+[  170.320822][ T1952]        __lock_acquire+0x358/0x7c0
+[  170.323589][ T1952]        lock_acquire+0xd4/0x230
+[  170.326324][ T1952]        down_read+0x44/0x130
+[  170.329053][ T1952]        pciehp_check_presence+0x3c/0x110
+[  170.331737][ T1952]        pciehp_probe+0x94/0x1c0
+[  170.334374][ T1952]        pcie_port_probe_service+0x60/0xb0
+[  170.337014][ T1952]        really_probe+0x2c4/0x500
+[  170.339616][ T1952]        driver_probe_device+0x124/0x150
+[  170.342197][ T1952]        bus_for_each_drv+0x80/0xe0
+[  170.344742][ T1952]        __device_attach+0x130/0x200
+[  170.347246][ T1952]        bus_probe_device+0xe4/0xf0
+[  170.349730][ T1952]        device_add+0x294/0x4a0
+[  170.352174][ T1952]        pcie_device_init+0x124/0x170
+[  170.354644][ T1952]        pcie_port_device_register+0x130/0x160
+[  170.357053][ T1952]        pcie_portdrv_probe+0x74/0x130
+[  170.359421][ T1952]        local_pci_probe+0x6c/0x110
+[  170.361756][ T1952]        work_for_cpu_fn+0x38/0x60
+[  170.364059][ T1952]        process_one_work+0x21c/0x6a0
+[  170.366312][ T1952]        process_scheduled_works+0x50/0x80
+[  170.368514][ T1952]        worker_thread+0x15c/0x2d0
+[  170.370708][ T1952]        kthread+0x15c/0x1a0
+[  170.372831][ T1952]        ret_from_kernel_thread+0x5c/0x78
+[  170.374913][ T1952]
+[  170.374913][ T1952] -> #0 ((work_completion)(&wfc.work)){+.+.}:
+[  170.379010][ T1952]        check_prevs_add+0x160/0x1a0
+[  170.381126][ T1952]        validate_chain.isra.12+0x520/0x780
+[  170.383246][ T1952]        __lock_acquire+0x358/0x7c0
+[  170.385334][ T1952]        lock_acquire+0xd4/0x230
+[  170.387410][ T1952]        __flush_work+0x8c/0x120
+[  170.389457][ T1952]        work_on_cpu+0xb8/0xe0
+[  170.391483][ T1952]        pci_call_probe+0x124/0x160
+[  170.393508][ T1952]        pci_device_probe+0x68/0xd0
+[  170.395530][ T1952]        really_probe+0x2c4/0x500
+[  170.397615][ T1952]        driver_probe_device+0x124/0x150
+[  170.399647][ T1952]        bus_for_each_drv+0x80/0xe0
+[  170.401676][ T1952]        __device_attach+0x130/0x200
+[  170.403703][ T1952]        pci_bus_add_device+0x78/0x100
+[  170.405731][ T1952]        pci_bus_add_devices+0x60/0xd0
+[  170.407734][ T1952]        pciehp_configure_device+0xf4/0x1f0
+[  170.409737][ T1952]        board_added+0xa0/0x190
+[  170.411712][ T1952]        __pciehp_enable_slot+0x64/0x100
+[  170.413707][ T1952]        pciehp_enable_slot+0x4c/0x130
+[  170.415718][ T1952]        pciehp_handle_presence_or_link_change+0x120/0x2a0
+[  170.417783][ T1952]        pciehp_ist+0x1fc/0x280
+[  170.419816][ T1952]        irq_thread_fn+0x4c/0xa0
+[  170.421840][ T1952]        irq_thread+0xdc/0x150
+[  170.423851][ T1952]        kthread+0x15c/0x1a0
+[  170.425839][ T1952]        ret_from_kernel_thread+0x5c/0x78
+[  170.427835][ T1952]
+[  170.427835][ T1952] other info that might help us debug this:
+[  170.427835][ T1952]
+[  170.433742][ T1952] Chain exists of:
+[  170.433742][ T1952]   (work_completion)(&wfc.work) -->
+&ctrl->reset_lock --> pci_rescan_remove_lock
+[  170.433742][ T1952]
+[  170.439873][ T1952]  Possible unsafe locking scenario:
+[  170.439873][ T1952]
+[  170.444014][ T1952]        CPU0                    CPU1
+[  170.446158][ T1952]        ----                    ----
+[  170.448228][ T1952]   lock(pci_rescan_remove_lock);
+[  170.450316][ T1952]                                lock(&ctrl->reset_lock);
+[  170.452454][ T1952]
+lock(pci_rescan_remove_lock);
+[  170.454592][ T1952]   lock((work_completion)(&wfc.work));
+[  170.456728][ T1952]
+[  170.456728][ T1952]  *** DEADLOCK ***
+[  170.456728][ T1952]
+[  170.462943][ T1952] 3 locks held by irq/251-pciehp/1952:
+[  170.465064][ T1952]  #0: 000000006b79c00e
+(&ctrl->reset_lock){.+.+}, at: pciehp_ist+0xd0/0x280
+[  170.467301][ T1952]  #1: 00000000788e6539
+(pci_rescan_remove_lock){+.+.}, at: pci_lock_rescan_remove+0x2c/0x40
+[  170.469621][ T1952]  #2: 00000000af82701a (&dev->mutex){....}, at:
+__device_attach+0x44/0x200
+[  170.471965][ T1952]
+[  170.471965][ T1952] stack backtrace:
+[  170.476487][ T1952] CPU: 54 PID: 1952 Comm: irq/251-pciehp Tainted:
+G        W         5.2.0-rc6-00074-g99d8de2-dirty #225
+[  170.480804][ T1952] Call Trace:
+[  170.484966][ T1952] [c000000005493110] [c000000000e22dd8]
+__dump_stack+0x2c/0x40 (unreliable)
+[  170.493286][ T1952] [c000000005493130] [c000000000e22ec0]
+dump_stack+0xd4/0x144
+[  170.500222][ T1952] [c000000005493180] [c000000000195da0]
+print_circular_bug+0x160/0x170
+[  170.508537][ T1952] [c000000005493210] [c000000000197640]
+check_prev_add+0x6f0/0xef0
+[  170.515472][ T1952] [c000000005493300] [c000000000197fa0]
+check_prevs_add+0x160/0x1a0
+[  170.523793][ T1952] [c000000005493360] [c000000000198500]
+validate_chain.isra.12+0x520/0x780
+[  170.532113][ T1952] [c000000005493420] [c000000000199d58]
+__lock_acquire+0x358/0x7c0
+[  170.540427][ T1952] [c0000000054934f0] [c00000000019ab94]
+lock_acquire+0xd4/0x230
+[  170.547366][ T1952] [c0000000054935b0] [c000000000135a9c]
+__flush_work+0x8c/0x120
+[  170.554299][ T1952] [c000000005493690] [c0000000001376f8]
+work_on_cpu+0xb8/0xe0
+[  170.562616][ T1952] [c000000005493730] [c00000000074c514]
+pci_call_probe+0x124/0x160
+[  170.569555][ T1952] [c000000005493780] [c00000000074cfc8]
+pci_device_probe+0x68/0xd0
+[  170.577868][ T1952] [c0000000054937c0] [c00000000087a274]
+really_probe+0x2c4/0x500
+[  170.584806][ T1952] [c000000005493850] [c00000000087a964]
+driver_probe_device+0x124/0x150
+[  170.593123][ T1952] [c0000000054938c0] [c000000000877120]
+bus_for_each_drv+0x80/0xe0
+[  170.601442][ T1952] [c000000005493910] [c00000000087a6b0]
+__device_attach+0x130/0x200
+[  170.608375][ T1952] [c0000000054939a0] [c000000000739eb8]
+pci_bus_add_device+0x78/0x100
+[  170.616694][ T1952] [c000000005493a10] [c000000000739fa0]
+pci_bus_add_devices+0x60/0xd0
+[  170.625014][ T1952] [c000000005493a50] [c00000000076a094]
+pciehp_configure_device+0xf4/0x1f0
+[  170.633339][ T1952] [c000000005493ad0] [c0000000007691b0]
+board_added+0xa0/0x190
+[  170.640268][ T1952] [c000000005493b50] [c000000000769304]
+__pciehp_enable_slot+0x64/0x100
+[  170.648588][ T1952] [c000000005493bd0] [c0000000007693ec]
+pciehp_enable_slot+0x4c/0x130
+[  170.656907][ T1952] [c000000005493c10] [c000000000769a10]
+pciehp_handle_presence_or_link_change+0x120/0x2a0
+[  170.666610][ T1952] [c000000005493c90] [c00000000076baec]
+pciehp_ist+0x1fc/0x280
+[  170.673549][ T1952] [c000000005493d20] [c0000000001b015c]
+irq_thread_fn+0x4c/0xa0
+[  170.680482][ T1952] [c000000005493d60] [c0000000001b10cc]
+irq_thread+0xdc/0x150
+[  170.688796][ T1952] [c000000005493db0] [c000000000140b6c] kthread+0x15c/0x1a0
+[  170.695731][ T1952] [c000000005493e20] [c00000000000bb84]
+ret_from_kernel_thread+0x5c/0x78
+[  174.904923][ T1947] nvme nvme1: Shutdown timeout set to 10 seconds
+[  174.993798][ T1947] nvme nvme1: 128/0/0 default/read/poll queues
