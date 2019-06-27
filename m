@@ -2,280 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 80AEA57E29
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 10:22:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 591E257E7A
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 10:48:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbfF0IWD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jun 2019 04:22:03 -0400
-Received: from mail-io1-f54.google.com ([209.85.166.54]:46368 "EHLO
-        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbfF0IWD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jun 2019 04:22:03 -0400
-Received: by mail-io1-f54.google.com with SMTP id i10so2803506iol.13
-        for <linux-pci@vger.kernel.org>; Thu, 27 Jun 2019 01:22:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=VGZUBZaPWyvbPRUNJ5VcmA2c3aQZgvI+cFZmURKvaYU=;
-        b=Mw6hNMg4OM6tS3vIxxmoSoVpIqJTbCvQk9lx9deY0QreiB4EdXZyBTSbpEG0Xj71CZ
-         w0Fi0+FGe1e7w2vIARhrsowE3oe/dd/Yykw0gwqtbVS4g8KxxmnLg5BEr2Imo13LGXRn
-         t5pFkwHQKTMpYrMnH4RD+PCOZ6ZUT6SodpPvJ60CKvad7h2THdj610c3usjU8bqtvavt
-         cS3WQ/AvaAeZmuO0sQaO8EnP2VyRJw98/l7P3AoAIZdYGWCnDccZFGD7GuDD3Paz7ENK
-         4pEiF7xbIUzA4qcXRkMmTEgDJVG0f+VdZqFR+toIiT1Bn3Kba6wC867wrHXm+PuUSZsp
-         baxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=VGZUBZaPWyvbPRUNJ5VcmA2c3aQZgvI+cFZmURKvaYU=;
-        b=l07CsPwaE1ZfsP56cENY1VPBuMAKKUKmx0aB3L7Sc0OTUYLxvmOS7+3485MNmJaYQ1
-         HONMz+5qT1abtHpKYnjAdZ6Le6TnxkcdLZI4Hn9SHWbD6DMy4QsLDS2afcYPPvbej5oV
-         4zF03/CiRa9x2Wj4gLVMQs5QcV3h/WCAlNbdaItVjr0ZwwzFd8mgOLPr1v7iuvGSvf7Y
-         Yl9qNjzWrO2AKEOF4OhbZDH2LHQUjs+kZXWqgOBnmYS5H3+/nYe+Bb3xIsDgEAb1nBu6
-         izTCC+evAcxGBiDPrOY4QI8JoG9TGmJ+FJnfNa3RKM6+COlxfkZjY6xZr/zQC0ZYreIW
-         lTig==
-X-Gm-Message-State: APjAAAU5AntfkTXbRd5oEfd/JSpX8vwFbN09pEMonGtppPpHR1qnsmzT
-        cOCC4EWRUf+lfhz4tU9S4eKrg8r9V+HSz+5J48HsRFba
-X-Google-Smtp-Source: APXvYqyXGA87GTe9Z1T1VnkEEemVrvEiDnakbiw7w4IpoxYJF0uYYR2E2YWrRFA4U6s2BXRT90vqcIRFV0hMqz8aUsg=
-X-Received: by 2002:a5e:9401:: with SMTP id q1mr3077762ioj.276.1561623721614;
- Thu, 27 Jun 2019 01:22:01 -0700 (PDT)
-MIME-Version: 1.0
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Thu, 27 Jun 2019 18:21:50 +1000
-Message-ID: <CAOSf1CGnYaGUTZQHbgy39dC47XNZRi4At2aTWRK0MeBvupKrxg@mail.gmail.com>
-Subject: pciehp lockdep splat on 5.2-rc6
-To:     linux-pci@vger.kernel.org
-Cc:     Lukas Wunner <lukas@wunner.de>
+        id S1726385AbfF0Isx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jun 2019 04:48:53 -0400
+Received: from gate.crashing.org ([63.228.1.57]:41598 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725385AbfF0Isx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 Jun 2019 04:48:53 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5R8maeh017918;
+        Thu, 27 Jun 2019 03:48:37 -0500
+Message-ID: <1a0e2012fd26685819cb1ee83180405717f690be.camel@kernel.crashing.org>
+Subject: Re: Multitude of resource assignment functions
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Logan Gunthorpe <logang@deltatee.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Date:   Thu, 27 Jun 2019 18:48:35 +1000
+In-Reply-To: <SL2P216MB01875C9CB93E6B39846749B280FD0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+References: <SL2P216MB01874DFDDBDE49B935A9B1B380E50@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+         <e768271e-9455-2a3d-ad76-4a6d9c71d669@deltatee.com>
+         <SL2P216MB01872DFDDA9C313CA43C7B3280E40@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+         <024eec86-dfb9-0a23-6385-9e8dfe9a0381@deltatee.com>
+         <SL2P216MB0187340941F03A5A03625F4F80E10@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+         <442c6b35a1aab9833fd2942b499d4fb082a71a15.camel@kernel.crashing.org>
+         <dc631e87-099f-3354-5477-b95e97e55d3f@deltatee.com>
+         <SL2P216MB01875C9CB93E6B39846749B280FD0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi all,
+On Thu, 2019-06-27 at 07:40 +0000, Nicholas Johnson wrote:
+> Unfortunately, the operating system is designed to let the firmware do 
+> things. In my mind, ACPI should not need to exist, and the operating 
+> system should start with a clean state with PCI and re-enumerate 
+> everything at boot time. The PCI allocation is so broken and 
+> inconsistent (as you have noted) because it tries to combine the two, 
+> when firmware enumeration and native enumeration should be mutually 
+> exclusive. I have attempted to re-write large chunks of probe.c, pci.c 
+> and setup-bus.c to completely disregard firmware enumeration and clean 
+> everything up. Unfortunately, I get stuck in probe.c with the double 
+> recursive loop which assigns bus numbers - I cannot figure out how to 
+> re-write it successfully. Plus, I feel like nobody will be ready for 
+> such a drastic change - I am having trouble selling minor changes that 
+> fix actual use cases, as opposed to code reworking.
 
-I've been re-working the powerpc pci code to make it possible to use
-pciehp on powernv. While testing I'm consistently seeing this lockdep
-splat when hot-adding a U.2 NVMe drive. This might be my bug, but all
-my changes are contained in arch/powerpc/ and the stack traces point
-entirely at generic code, so maybe not. Does this look like a real
-issue?
+Well... so a lot of platforms are happy to do a full re-assignment,
+though they use the current code today which leads to rather sub
+standard results when it comes to hotplug bridges.
 
-Oliver
+All the embedded platforms today are like that,and all of ARM64 though
+the latter will somewhat change, all DT based ARM64 will probably
+remain that way.
 
-[  169.920642][ T1952] pcieport 0020:02:02.0: pciehp: Slot(0-3): Card present
-[  169.924806][ T1952] pcieport 0020:02:02.0: pciehp: Slot(0-3): Link Up
-[  170.083951][ T1952] pci 0020:08:00.0: [1344:5192] type 00 class 0x010802
-[  170.088307][ T1952] pci 0020:08:00.0: reg 0x10: [mem
-0x00000000-0x00003fff 64bit]
-[  170.092711][ T1952] pci 0020:08:00.0: reg 0x30: [mem
-0x00000000-0x0001ffff pref]
-[  170.096839][ T1952] pci 0020:08:00.0: Max Payload Size set to 256
-(was 128, max 256)
-[  170.100973][ T1952] pci 0020:08:00.0: enabling Extended Tags
-[  170.105323][ T1952] pci 0020:08:00.0: BAR0 [mem size 0x00004000
-64bit]: requesting alignment to 0x10000
-[  170.111719][ T1952] pci 0020:08:00.0: Adding to iommu group 8
-[  170.142333][ T1952] pcieport 0020:02:02.0: bridge window [io
-0x1000-0x0fff] to [bus 08] add_size 1000
-[  170.145079][ T1952] pcieport 0020:02:02.0: BAR 7: no space for [io
-size 0x1000]
-[  170.147783][ T1952] pcieport 0020:02:02.0: BAR 7: failed to assign
-[io  size 0x1000]
-[  170.150524][ T1952] pcieport 0020:02:02.0: BAR 7: no space for [io
-size 0x1000]
-[  170.153292][ T1952] pcieport 0020:02:02.0: BAR 7: failed to assign
-[io  size 0x1000]
-[  170.156078][ T1952] pci 0020:08:00.0: BAR 6: assigned [mem
-0x3fe800800000-0x3fe80081ffff pref]
-[  170.158897][ T1952] pci 0020:08:00.0: BAR 0: assigned [mem
-0x3fe800820000-0x3fe800823fff 64bit]
-[  170.161761][ T1952] 0020:08:00.0: No device node associated with device !
-[  170.164607][ T1952] pcieport 0020:02:02.0: PCI bridge to [bus 08]
-[  170.167478][ T1952] pcieport 0020:02:02.0:   bridge window [mem
-0x3fe800800000-0x3fe800ffffff]
-[  170.170386][ T1952] pcieport 0020:02:02.0:   bridge window [mem
-0x240100000000-0x2401ffffffff 64bit pref]
-[  170.173389][ T1952] pnv_pcibios_bus_add_device: EEH: Setting up
-device 0020:08:00.0.
-[  170.176372][ T1952] EEH: Adding device 0020:08:00.0
-[  170.179352][ T1952] pnv_eeh_probe_pdev: probing 0020:08:00.0
-[  170.182597][ T1952] EEH: Add 0020:08:00.0 to Device PE#fd, Parent PE#0
-[  170.185783][ T1952] pnv_eeh_probe_pdev: EEH enabled on 08:00.0 PHB#20-PE#fd
-[  170.189244][ T1952] nvme 0020:08:00.0: runtime IRQ mapping not
-provided by arch
-[  170.192617][ T1952]
-[  170.194049][  T656] nvme nvme1: pci function 0020:08:00.0
-[  170.195732][ T1952] ======================================================
-[  170.195743][ T1952] WARNING: possible circular locking dependency detected
-[  170.201813][ T1947] nvme 0020:08:00.0: enabling device (0000 -> 0002)
-[  170.205419][ T1952] 5.2.0-rc6-00074-g99d8de2-dirty #225 Tainted: G        W
-[  170.205422][ T1952] ------------------------------------------------------
-[  170.205425][ T1952] irq/251-pciehp/1952 is trying to acquire lock:
-[  170.205428][ T1952] 00000000c71b3eb9
-((work_completion)(&wfc.work)){+.+.}, at: __flush_work+0x68/0x120
-[  170.205443][ T1952]
-[  170.205443][ T1952] but task is already holding lock:
-[  170.205445][ T1952] 00000000788e6539
-(pci_rescan_remove_lock){+.+.}, at: pci_lock_rescan_remove+0x2c/0x40
-[  170.205456][ T1952]
-[  170.205456][ T1952] which lock already depends on the new lock.
-[  170.205456][ T1952]
-[  170.205458][ T1952]
-[  170.205458][ T1952] the existing dependency chain (in reverse order) is:
-[  170.205460][ T1952]
-[  170.205460][ T1952] -> #2 (pci_rescan_remove_lock){+.+.}:
-[  170.211487][ T1947] nvme 0020:08:00.0: enabling bus mastering
-[  170.215287][ T1952]        validate_chain.isra.12+0x520/0x780
-[  170.215292][ T1952]        __lock_acquire+0x358/0x7c0
-[  170.215297][ T1952]        lock_acquire+0xd4/0x230
-[  170.215303][ T1952]        __mutex_lock+0x8c/0xa30
-[  170.215308][ T1952]        pci_lock_rescan_remove+0x2c/0x40
-[  170.215313][ T1952]        pciehp_unconfigure_device+0x54/0x1a0
-[  170.215318][ T1952]        remove_board+0x28/0x90
-[  170.215329][ T1952]        __pciehp_disable_slot+0x64/0xb0
-[  170.292060][ T1952]        pciehp_disable_slot+0x58/0xc0
-[  170.295062][ T1952]        pciehp_handle_presence_or_link_change+0x94/0x2a0
-[  170.298064][ T1952]        pciehp_ist+0x1fc/0x280
-[  170.300988][ T1952]        irq_thread_fn+0x4c/0xa0
-[  170.303878][ T1952]        irq_thread+0xdc/0x150
-[  170.306740][ T1952]        kthread+0x15c/0x1a0
-[  170.309584][ T1952]        ret_from_kernel_thread+0x5c/0x78
-[  170.312445][ T1952]
-[  170.312445][ T1952] -> #1 (&ctrl->reset_lock){.+.+}:
-[  170.318025][ T1952]        validate_chain.isra.12+0x520/0x780
-[  170.320822][ T1952]        __lock_acquire+0x358/0x7c0
-[  170.323589][ T1952]        lock_acquire+0xd4/0x230
-[  170.326324][ T1952]        down_read+0x44/0x130
-[  170.329053][ T1952]        pciehp_check_presence+0x3c/0x110
-[  170.331737][ T1952]        pciehp_probe+0x94/0x1c0
-[  170.334374][ T1952]        pcie_port_probe_service+0x60/0xb0
-[  170.337014][ T1952]        really_probe+0x2c4/0x500
-[  170.339616][ T1952]        driver_probe_device+0x124/0x150
-[  170.342197][ T1952]        bus_for_each_drv+0x80/0xe0
-[  170.344742][ T1952]        __device_attach+0x130/0x200
-[  170.347246][ T1952]        bus_probe_device+0xe4/0xf0
-[  170.349730][ T1952]        device_add+0x294/0x4a0
-[  170.352174][ T1952]        pcie_device_init+0x124/0x170
-[  170.354644][ T1952]        pcie_port_device_register+0x130/0x160
-[  170.357053][ T1952]        pcie_portdrv_probe+0x74/0x130
-[  170.359421][ T1952]        local_pci_probe+0x6c/0x110
-[  170.361756][ T1952]        work_for_cpu_fn+0x38/0x60
-[  170.364059][ T1952]        process_one_work+0x21c/0x6a0
-[  170.366312][ T1952]        process_scheduled_works+0x50/0x80
-[  170.368514][ T1952]        worker_thread+0x15c/0x2d0
-[  170.370708][ T1952]        kthread+0x15c/0x1a0
-[  170.372831][ T1952]        ret_from_kernel_thread+0x5c/0x78
-[  170.374913][ T1952]
-[  170.374913][ T1952] -> #0 ((work_completion)(&wfc.work)){+.+.}:
-[  170.379010][ T1952]        check_prevs_add+0x160/0x1a0
-[  170.381126][ T1952]        validate_chain.isra.12+0x520/0x780
-[  170.383246][ T1952]        __lock_acquire+0x358/0x7c0
-[  170.385334][ T1952]        lock_acquire+0xd4/0x230
-[  170.387410][ T1952]        __flush_work+0x8c/0x120
-[  170.389457][ T1952]        work_on_cpu+0xb8/0xe0
-[  170.391483][ T1952]        pci_call_probe+0x124/0x160
-[  170.393508][ T1952]        pci_device_probe+0x68/0xd0
-[  170.395530][ T1952]        really_probe+0x2c4/0x500
-[  170.397615][ T1952]        driver_probe_device+0x124/0x150
-[  170.399647][ T1952]        bus_for_each_drv+0x80/0xe0
-[  170.401676][ T1952]        __device_attach+0x130/0x200
-[  170.403703][ T1952]        pci_bus_add_device+0x78/0x100
-[  170.405731][ T1952]        pci_bus_add_devices+0x60/0xd0
-[  170.407734][ T1952]        pciehp_configure_device+0xf4/0x1f0
-[  170.409737][ T1952]        board_added+0xa0/0x190
-[  170.411712][ T1952]        __pciehp_enable_slot+0x64/0x100
-[  170.413707][ T1952]        pciehp_enable_slot+0x4c/0x130
-[  170.415718][ T1952]        pciehp_handle_presence_or_link_change+0x120/0x2a0
-[  170.417783][ T1952]        pciehp_ist+0x1fc/0x280
-[  170.419816][ T1952]        irq_thread_fn+0x4c/0xa0
-[  170.421840][ T1952]        irq_thread+0xdc/0x150
-[  170.423851][ T1952]        kthread+0x15c/0x1a0
-[  170.425839][ T1952]        ret_from_kernel_thread+0x5c/0x78
-[  170.427835][ T1952]
-[  170.427835][ T1952] other info that might help us debug this:
-[  170.427835][ T1952]
-[  170.433742][ T1952] Chain exists of:
-[  170.433742][ T1952]   (work_completion)(&wfc.work) -->
-&ctrl->reset_lock --> pci_rescan_remove_lock
-[  170.433742][ T1952]
-[  170.439873][ T1952]  Possible unsafe locking scenario:
-[  170.439873][ T1952]
-[  170.444014][ T1952]        CPU0                    CPU1
-[  170.446158][ T1952]        ----                    ----
-[  170.448228][ T1952]   lock(pci_rescan_remove_lock);
-[  170.450316][ T1952]                                lock(&ctrl->reset_lock);
-[  170.452454][ T1952]
-lock(pci_rescan_remove_lock);
-[  170.454592][ T1952]   lock((work_completion)(&wfc.work));
-[  170.456728][ T1952]
-[  170.456728][ T1952]  *** DEADLOCK ***
-[  170.456728][ T1952]
-[  170.462943][ T1952] 3 locks held by irq/251-pciehp/1952:
-[  170.465064][ T1952]  #0: 000000006b79c00e
-(&ctrl->reset_lock){.+.+}, at: pciehp_ist+0xd0/0x280
-[  170.467301][ T1952]  #1: 00000000788e6539
-(pci_rescan_remove_lock){+.+.}, at: pci_lock_rescan_remove+0x2c/0x40
-[  170.469621][ T1952]  #2: 00000000af82701a (&dev->mutex){....}, at:
-__device_attach+0x44/0x200
-[  170.471965][ T1952]
-[  170.471965][ T1952] stack backtrace:
-[  170.476487][ T1952] CPU: 54 PID: 1952 Comm: irq/251-pciehp Tainted:
-G        W         5.2.0-rc6-00074-g99d8de2-dirty #225
-[  170.480804][ T1952] Call Trace:
-[  170.484966][ T1952] [c000000005493110] [c000000000e22dd8]
-__dump_stack+0x2c/0x40 (unreliable)
-[  170.493286][ T1952] [c000000005493130] [c000000000e22ec0]
-dump_stack+0xd4/0x144
-[  170.500222][ T1952] [c000000005493180] [c000000000195da0]
-print_circular_bug+0x160/0x170
-[  170.508537][ T1952] [c000000005493210] [c000000000197640]
-check_prev_add+0x6f0/0xef0
-[  170.515472][ T1952] [c000000005493300] [c000000000197fa0]
-check_prevs_add+0x160/0x1a0
-[  170.523793][ T1952] [c000000005493360] [c000000000198500]
-validate_chain.isra.12+0x520/0x780
-[  170.532113][ T1952] [c000000005493420] [c000000000199d58]
-__lock_acquire+0x358/0x7c0
-[  170.540427][ T1952] [c0000000054934f0] [c00000000019ab94]
-lock_acquire+0xd4/0x230
-[  170.547366][ T1952] [c0000000054935b0] [c000000000135a9c]
-__flush_work+0x8c/0x120
-[  170.554299][ T1952] [c000000005493690] [c0000000001376f8]
-work_on_cpu+0xb8/0xe0
-[  170.562616][ T1952] [c000000005493730] [c00000000074c514]
-pci_call_probe+0x124/0x160
-[  170.569555][ T1952] [c000000005493780] [c00000000074cfc8]
-pci_device_probe+0x68/0xd0
-[  170.577868][ T1952] [c0000000054937c0] [c00000000087a274]
-really_probe+0x2c4/0x500
-[  170.584806][ T1952] [c000000005493850] [c00000000087a964]
-driver_probe_device+0x124/0x150
-[  170.593123][ T1952] [c0000000054938c0] [c000000000877120]
-bus_for_each_drv+0x80/0xe0
-[  170.601442][ T1952] [c000000005493910] [c00000000087a6b0]
-__device_attach+0x130/0x200
-[  170.608375][ T1952] [c0000000054939a0] [c000000000739eb8]
-pci_bus_add_device+0x78/0x100
-[  170.616694][ T1952] [c000000005493a10] [c000000000739fa0]
-pci_bus_add_devices+0x60/0xd0
-[  170.625014][ T1952] [c000000005493a50] [c00000000076a094]
-pciehp_configure_device+0xf4/0x1f0
-[  170.633339][ T1952] [c000000005493ad0] [c0000000007691b0]
-board_added+0xa0/0x190
-[  170.640268][ T1952] [c000000005493b50] [c000000000769304]
-__pciehp_enable_slot+0x64/0x100
-[  170.648588][ T1952] [c000000005493bd0] [c0000000007693ec]
-pciehp_enable_slot+0x4c/0x130
-[  170.656907][ T1952] [c000000005493c10] [c000000000769a10]
-pciehp_handle_presence_or_link_change+0x120/0x2a0
-[  170.666610][ T1952] [c000000005493c90] [c00000000076baec]
-pciehp_ist+0x1fc/0x280
-[  170.673549][ T1952] [c000000005493d20] [c0000000001b015c]
-irq_thread_fn+0x4c/0xa0
-[  170.680482][ T1952] [c000000005493d60] [c0000000001b10cc]
-irq_thread+0xdc/0x150
-[  170.688796][ T1952] [c000000005493db0] [c000000000140b6c] kthread+0x15c/0x1a0
-[  170.695731][ T1952] [c000000005493e20] [c00000000000bb84]
-ret_from_kernel_thread+0x5c/0x78
-[  174.904923][ T1947] nvme nvme1: Shutdown timeout set to 10 seconds
-[  174.993798][ T1947] nvme nvme1: 128/0/0 default/read/poll queues
+> My next proposal might be a kernel parameter for PCI to set various 
+> levels of disregard for firmware
+
+Well, at least ACPI has this _DSM #5 thingy that can tell us that we
+are allowed to disregard firmware for selected bits and pieces
+(hopefully that tends to be whole hierarchies but I don't know how well
+it's used in practice).
+
+> , from none to complete, which can be 
+> added to incrementally to do more and more (rather than all in one patch 
+> series).
+
+So there are a number of reasons to honor what the firmware did.
+
+First, today (but that's fixable), we suck at setting up reasonable
+space for hotplug by default.
+
+But there are more insidious ones. There are platforms where you can't
+move things (typically virtualized platforms with specific hypervisors,
+such as IBM pseries).
+
+There are platforms where the *runtime* firwmare (SMM or equivalent or
+even ACPI AML bits) will be poking at some system devices and those
+really must not be moved. (In fact there's a theorical problem with
+such devices becoming temporarily inaccessible during BAR sizing today
+but we mostly get lucky).
+
+There are other "interesting" cases, like EFI giving us the framebuffer
+address to use if we don't have a native driver... which happens to be
+off a PCI BAR somewhere. Now we *could* probably try to special case
+that and detect when we move that BAR but today we'll probably break if
+we move it.
+
+x86 historically has other nasty "hidden" devices. There are historical
+cases of devices that break if they move after initial setup, etc...
+Most of these things are ancient but we have to ensure we keep today's
+policy for old platforms at least.
+
+>  This can supercede pci=realloc. The realloc command is so 
+> broken because once the system has loaded drivers, it becomes next to 
+> impossible to free and reallocate a resource to fit another device in - 
+> because it will upset existing devices. The realloc command is only 
+> useful in early boot because nothing is yet assigned, so it works. 
+> However, the same effect can be achieved by releasing all the resources 
+> on the root port before anything happens. I think it was 
+> pci_assign_unassigned_resources(), and I did verify this experimentally. 
+> This switch could be part of such a new kernel parameter to ignore 
+> firmware influence on PCI.
+
+We should see what ACPI gives us in _DSM #5 on x86 these days.. if it's
+meaningful on enough machines we could use that as an indication that a
+given tree can be reallocated.
+
+> I hope that somehow we can transition to ignoring the firmware - because 
+> firmware and native enumeration need to be mutually exclusive, and we 
+> need native enumeration for PCI hotplug. If anybody has any ideas how, I 
+> would love to hear.
+
+We'll probably have to live with an "in-between" forever on x86 and
+maybe arm64, but with some luck, the static devices will only be the
+on-board stuff, and we can go wild below bridges...
+
+BTW: I'd like us to discuss that f2f at Plumbers in a miniconf if
+enough of us can go.
+
+Cheers,
+Ben.
+
+
