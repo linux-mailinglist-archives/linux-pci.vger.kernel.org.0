@@ -2,119 +2,347 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 71CC857981
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 04:33:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBA125799C
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 04:44:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfF0Cdt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jun 2019 22:33:49 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:32897 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfF0Cds (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jun 2019 22:33:48 -0400
-Received: by mail-lf1-f66.google.com with SMTP id y17so482094lfe.0
-        for <linux-pci@vger.kernel.org>; Wed, 26 Jun 2019 19:33:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kpqYC0bettaQFGE+cPMxYMow71Zk/Lt7y+RJt1aO3ZA=;
-        b=CUYJXh+O76PMEBZGgXYE4jBtsdtMsFSEbZO0ZPyGHzyh2zdxZqtKDI8UekfWutOZ/E
-         YOB+X7vQ4M6jz4r3vtoOXStSuKF65tzQF2Hy2iAis1o6RYF834KH8sRjmjRZMHCwO+62
-         MO4t7AD0yZgX9E1DKMcyzPLyDEPCd2COfseoooOnSJqaFvkUw9X7M0S0KF5v1b58crp0
-         FwPaHIAzP4nqMXq7qwBG6huU7gkp8E3fXfbotKN6d/a7vZrhC6xBO1zFP3Kc95nRNozg
-         3dUxkOYgiDhv7NyUXyrj5a+3L0Vv1LSR+WiWc3I9rNhxc1Mp1+3c7vN7Xszo0uMwbfZ+
-         hNTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kpqYC0bettaQFGE+cPMxYMow71Zk/Lt7y+RJt1aO3ZA=;
-        b=tMYkVDqgQLaiCpUx+dKH6o5BbqnHQsfHtNgFBMea2UXfW5pY+JCsB7Mwk+jeIeM6c9
-         N9raPTdWk6vslucG1l08guubXfdJNOPfecFExFibYkSQMdIOa0YNYjOwIC/+jf9PLDZ2
-         0xVeK4k8p8xlNzAqZaQJSwkfPKckDLQeRdrqYdIBmG9Fu6jxydmdXNiBXV0J2VKDc0cm
-         lHmzh6D5X0JYxEN2MJpSw6uJpGVL/LYIeQwfYoWhGMffD/9SKbEzZKi8eKKpcb1aEhSC
-         iWmxpx75T6ExaphH6fydmq3JoUKuqkPPHm7ArQgt+ysju+aQk0IlmOAbc9hPsnod+eVK
-         5GEw==
-X-Gm-Message-State: APjAAAXvZ1Rd1TKluFq69+Ltj/3s2wM8DZdGh7WJkgbjFfJ5IeN7crND
-        guR+63u6W1DgJ92QRejdF8stCw==
-X-Google-Smtp-Source: APXvYqwVm7ApFldCcgUkF3KiAVNAlR3f2LErwu5ylCjWa4dtUcO2yDmcrQXQfnSFhvIyODaUbhq7dQ==
-X-Received: by 2002:ac2:52b7:: with SMTP id r23mr662754lfm.120.1561602825764;
-        Wed, 26 Jun 2019 19:33:45 -0700 (PDT)
-Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id k12sm117397lfm.90.2019.06.26.19.33.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 26 Jun 2019 19:33:43 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 19:19:37 -0700
-From:   Olof Johansson <olof@lixom.net>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Wei Xu <xuwei5@hisilicon.com>,
-        ARM-SoC Maintainers <arm@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, Linuxarm <linuxarm@huawei.com>,
-        "xuwei (O)" <xuwei5@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        id S1726674AbfF0CoE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jun 2019 22:44:04 -0400
+Received: from xes-mad.com ([162.248.234.2]:50474 "EHLO mail.xes-mad.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726576AbfF0CoE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Jun 2019 22:44:04 -0400
+X-Greylist: delayed 325 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 Jun 2019 22:44:03 EDT
+Received: from zimbra.xes-mad.com (zimbra.xes-mad.com [10.52.0.127])
+        by mail.xes-mad.com (Postfix) with ESMTP id 8FF1D20218;
+        Wed, 26 Jun 2019 21:38:37 -0500 (CDT)
+Date:   Wed, 26 Jun 2019 21:38:36 -0500 (CDT)
+From:   Aaron Sierra <asierra@xes-inc.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        jinying@hisilicon.com, huangdaode <huangdaode@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>
-Subject: Re: [GIT PULL] Hisilicon fixes for v5.2
-Message-ID: <20190627021937.kk4lklv2uz3mogoq@localhost>
-References: <b89ef8f0-d102-7f78-f373-cbcc7faddee3@hisilicon.com>
- <20190625112148.ckj7sgdgvyeel7vy@localhost>
- <CAOesGMj+aNkOT1YVHTSBLkOfEujk7uer3R1AmE-sa1TwCijbBg@mail.gmail.com>
- <7e215bd7-daab-b6cf-8d0f-9513bd7c4f6d@huawei.com>
+        Len Brown <lenb@kernel.org>
+Message-ID: <99840928.514731.1561603116552.JavaMail.zimbra@xes-inc.com>
+In-Reply-To: <20190626172013.GA183605@google.com>
+References: <1540483292-24049-1-git-send-email-asierra@xes-inc.com> <20190213213242.21920-1-asierra@xes-inc.com> <20190626172013.GA183605@google.com>
+Subject: Re: [PATCH v3] PCI/ACPI: Improve _OSC control request granularity
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7e215bd7-daab-b6cf-8d0f-9513bd7c4f6d@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.0.127]
+X-Mailer: Zimbra 8.7.5_GA_1764 (ZimbraWebClient - GC72 (Linux)/8.7.5_GA_1764)
+Thread-Topic: PCI/ACPI: Improve _OSC control request granularity
+Thread-Index: q3PLdZo64XFwoxWkMS8/CU12SBgrQg==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 02:31:26PM +0100, John Garry wrote:
-> On 25/06/2019 14:03, Olof Johansson wrote:
-> > > > are available in the Git repository at:
-> > > > > >
-> > > > > >   git://github.com/hisilicon/linux-hisi.git tags/hisi-fixes-for-5.2
-> > > > > >
-> > > > > > for you to fetch changes up to 07c811af1c00d7b4212eac86900b023b6405a954:
-> > > > > >
-> > > > > >   lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration (2019-06-25 09:40:42 +0100)
-> > > > > >
-> > > > > > ----------------------------------------------------------------
-> > > > > > Hisilicon fixes for v5.2-rc
-> > > > > >
-> > > > > > - fixed RCU usage in logical PIO
-> > > > > > - Added a function to unregister a logical PIO range in logical PIO
-> > > > > >   to support the fixes in the hisi-lpc driver
-> > > > > > - fixed and optimized hisi-lpc driver to avoid potential use-after-free
-> > > > > >   and driver unbind crash
-> > > >
-> > > > Merged to fixes, thanks.
-> > 
-> > This broke arm64 allmodconfig:
-> > 
-> >        arm64.allmodconfig:
-> > drivers/bus/hisi_lpc.c:656:3: error: implicit declaration of function
-> > 'hisi_lpc_acpi_remove'; did you mean 'hisi_lpc_acpi_probe'?
-> > [-Werror=implicit-function-declaration]
-> > 
-> > 
+----- Original Message -----
+> From: "Bjorn Helgaas" <helgaas@kernel.org>
+> Sent: Wednesday, June 26, 2019 12:20:13 PM
+
+> Hi Aaron,
 > 
-> Uhhh, that's my fault - I didn't provide a stub for !ACPI. Sorry. I'll send
-> a fixed v3 series.
+> On Wed, Feb 13, 2019 at 03:32:42PM -0600, Aaron Sierra wrote:
+>> This patch reorganizes negotiate_os_control() to be less ASPM-centric in
+>> order to:
+>> 
+>>     1. allow other features (notably AER) to work without enabling ASPM
+>>     2. better isolate feature-specific tests for readability/maintenance
+>> 
+>> Each feature (ASPM, PCIe hotplug, SHPC hotplug, and AER) now has its own
+>> inline function for setting its _OSC control requests.
 
-No worries, it happens -- but it's good if maintainers do at least a few test
-builds before sending in pull requests so we don't catch all of it at our end.
+Hi Bjorn,
 
+Thanks for the review.
 
--Olof
+> Can you split this into three patches?
+
+Sure.
+
+> IIUC, 1) above is a functional change that allows us to use AER even
+> if CONFIG_PCIEASPM is unset or we booted with "pcie_aspm=off".  This
+> seems like a reasonable thing to do, although I would want to dig out
+> the commit that added the requirement in the first place to see if
+> there's some reason for requiring Linux support for all those
+> features.  It would also be nice to have the commit log for this patch
+> mention the use case.
+
+That is correct. I will elaborate on the use case in the new patch for
+this change. It boils down to wanting to keep PCIe links fully active
+for reliability while still being able to know about error conditions on
+the links.
+
+> And 2) seems like basically a cleanup with no functional change?  It
+> does make the code in negotiate_os_control() a little prettier, but I
+> have to admit that while reviewing this, I found the additional
+> indirection made it harder to untangle the dependencies, so I'm not
+> 100% convinced yet.  _OSC is just such an ugly interface to begin with
+> that I'm not sure how it can really be improved.
+
+That is a fair assessment. I point out a functional change following your
+last comment below.
+
+>> Part of making this function more generic, required eliminating a test
+>> for overall success/failure that previously caused two different types
+>> of messages to be printed. Now, printed messages are streamlined to
+>> always show requested _OSC control versus what was granted.
+>> 
+>> Previous output (success):
+>> 
+>>   acpi PNP0A08:00: _OSC: OS now controls [PME AER PCIeCapability LTR]
+>> 
+>> Previous output (failure):
+>> 
+>>   acpi PNP0A08:00: _OSC: OS requested [PME AER PCIeCapability LTR]
+>>   acpi PNP0A08:00: _OSC: platform willing to grant []
+>> 
+>> New output:
+>> 
+>>   acpi PNP0A08:00: _OSC: OS requested [PME AER PCIeCapability LTR]
+>>   acpi PNP0A08:00: _OSC: platform granted [PME AER PCIeCapability LTR]
+> 
+> I like this output change.  Can it be split into a separate third
+> patch that only changes the output, without changing the actual
+> behavior?
+
+OK
+ 
+>> Signed-off-by: Aaron Sierra <asierra@xes-inc.com>
+>> ---
+>> 
+>> v3:
+>>   * Dropped patch moving the pcie_ports_disabled check
+>>   * Removed underscore prefix from new inline functions
+>>   * Defined ASPM_OSC_CONTROL_BITS and removed __osc_have_aspm_control()
+>>   * Refactored OSC control bit-setting functions to return the bits they want
+>>     to set, instead of an ignored error code, and converted most conditionals
+>>     from inverted logic, (!x || !y), to positive logic, (x && y)
+>>   * Renamed OSC control bit-setting functions from __osc_set_X_control()
+>>     to osc_get_X_control_bits()
+>> 
+>> v2:
+>>   * Rebased from the mainline kernel (4.19-rc7) to Bjorn Helgaas's
+>>     pci/aspm branch [1]
+>>   * Factored moving the pcie_ports_disabled check to the top of
+>>     negotiate_os_control into its own patch
+>>   * Simplified new __osc_check_support function and renamed it to
+>>     __osc_have_support
+>>   * No longer messes with _OSC general availability test and related
+>>     error message (i.e. _OSC failed ... disabling ASPM)
+>> 
+>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
+>> 
+>>  drivers/acpi/pci_root.c | 111 ++++++++++++++++++++++++++++++----------
+>>  1 file changed, 83 insertions(+), 28 deletions(-)
+>> 
+>> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+>> index 707aafc7c2aa..ac74bd42399d 100644
+>> --- a/drivers/acpi/pci_root.c
+>> +++ b/drivers/acpi/pci_root.c
+>> @@ -53,9 +53,13 @@ static int acpi_pci_root_scan_dependent(struct acpi_device
+>> *adev)
+>>  }
+>>  
+>>  #define ACPI_PCIE_REQ_SUPPORT (OSC_PCI_EXT_CONFIG_SUPPORT \
+>> -				| OSC_PCI_ASPM_SUPPORT \
+>> -				| OSC_PCI_CLOCK_PM_SUPPORT \
+>>  				| OSC_PCI_MSI_SUPPORT)
+>> +#define ACPI_PCIE_ASPM_SUPPORT (ACPI_PCIE_REQ_SUPPORT \
+>> +				| OSC_PCI_ASPM_SUPPORT \
+>> +				| OSC_PCI_CLOCK_PM_SUPPORT)
+>> +#define OSC_CONTROL_BITS_ASPM (OSC_PCI_EXPRESS_CAPABILITY_CONTROL \
+>> +				| OSC_PCI_EXPRESS_LTR_CONTROL \
+>> +				| OSC_PCI_EXPRESS_PME_CONTROL)
+>>  
+>>  static const struct acpi_device_id root_device_ids[] = {
+>>  	{"PNP0A03", 0},
+>> @@ -421,6 +425,67 @@ acpi_status acpi_pci_osc_control_set(acpi_handle handle,
+>> u32 *mask, u32 req)
+>>  }
+>>  EXPORT_SYMBOL(acpi_pci_osc_control_set);
+>>  
+>> +static inline bool osc_have_support(u32 support, u32 required)
+>> +{
+>> +	return ((support & required) == required);
+>> +}
+>> +
+>> +static inline u32 osc_get_aspm_control_bits(struct acpi_pci_root *root,
+>> +					    u32 support)
+>> +{
+>> +	u32 control = 0;
+>> +
+>> +	if (IS_ENABLED(CONFIG_PCIEASPM) &&
+>> +	    osc_have_support(support, ACPI_PCIE_ASPM_SUPPORT)) {
+>> +		control = OSC_CONTROL_BITS_ASPM;
+>> +	}
+>> +
+>> +	return control;
+> 
+> If we end up keeping these wrappers, they would be a little simpler
+> as:
+> 
+>    static inline u32 osc_get_aspm_control_bits(...)
+>    {
+>      if (IS_ENABLED(CONFIG_PCIEASPM) &&
+>	  osc_have_support(support, ACPI_PCIE_ASPM_SUPPORT))
+>	    return OSC_CONTROL_BITS_ASPM;
+>      return 0;
+>    }
+> 
+> But really, it seems a little convoluted to have to pass in "support",
+> since it doesn't depend on any _OSC results or even on which host
+> bridge this is.  It's just a function of config options and sometimes
+> global kernel boot parameters.  So I'm not sure whether the overall
+> readability is better.
+
+Doesn't pci_ext_cfg_avail() at least depend on the host bridge? I see what
+you mean with respect to support flags set based on pci_msi_enable() and
+pcie_aspm_support_enabled().
+
+I think you've highlighted that this one can be simplified even more due
+to overlap with pcie_aspm_support_enabled():
+
+    static inline u32 osc_get_aspm_control_bits(...)
+    {
+    	if (osc_have_support(support, ACPI_PCIE_ASPM_SUPPORT))
+		return OSC_CONTROL_BITS_ASPM;
+    	return 0;
+    }
+
+To be clear, the key change that allows AER to work without ASPM is altering
+the flags set in ACPI_PCIE_REQ_SUPPORT to the least restrictive set needed
+to satisfy at least one kernel feature. Without that change, this test
+causes us to bail out without requesting any _OSC control:
+
+	if ((support & ACPI_PCIE_REQ_SUPPORT) != ACPI_PCIE_REQ_SUPPORT) {
+		decode_osc_support(root, "not requesting OS control; OS requires",
+				   ACPI_PCIE_REQ_SUPPORT);
+		return;
+	}
+
+The inline functions attempt to better show the relationship between support
+bits (support needed by kernel features enabled at runtime) and the control
+bits (access requests to support those features) for a given feature.
+
+In the case of ASPM, there is a change in behavior related to weakening the
+blanket "support" test. The control bits it depends on can now be omitted
+from the request set, so we don't request more than the kernel intends to
+use.
+
+-Aaron
+
+>> +}
+>> +
+>> +static inline u32 osc_get_pciehp_control_bits(struct acpi_pci_root *root,
+>> +					      u32 support)
+>> +{
+>> +	u32 control = 0;
+>> +
+>> +	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE) &&
+>> +	    osc_have_support(support, ACPI_PCIE_REQ_SUPPORT)) {
+>> +		control = OSC_PCI_EXPRESS_CAPABILITY_CONTROL |
+>> +			  OSC_PCI_EXPRESS_NATIVE_HP_CONTROL;
+>> +	}
+>> +
+>> +	return control;
+>> +}
+>> +
+>> +static inline u32 osc_get_shpchp_control_bits(struct acpi_pci_root *root,
+>> +					      u32 support)
+>> +{
+>> +	u32 control = 0;
+>> +
+>> +	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_SHPC) &&
+>> +	    osc_have_support(support, ACPI_PCIE_REQ_SUPPORT)) {
+>> +		control = OSC_PCI_EXPRESS_CAPABILITY_CONTROL |
+>> +			  OSC_PCI_SHPC_NATIVE_HP_CONTROL;
+>> +	}
+>> +
+>> +	return control;
+>> +}
+>> +
+>> +static inline u32 osc_get_aer_control_bits(struct acpi_pci_root *root,
+>> +					   u32 support)
+>> +{
+>> +	if (!pci_aer_available() ||
+>> +	    !osc_have_support(support, ACPI_PCIE_REQ_SUPPORT))
+>> +		return 0;
+>> +
+>> +	if (aer_acpi_firmware_first()) {
+>> +		dev_info(&root->device->dev, "PCIe AER handled by firmware\n");
+>> +		return 0;
+>> +	}
+>> +
+>> +	return OSC_PCI_EXPRESS_CAPABILITY_CONTROL | OSC_PCI_EXPRESS_AER_CONTROL;
+>> +}
+>> +
+>>  static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>>  				 bool is_pcie)
+>>  {
+>> @@ -479,31 +544,24 @@ static void negotiate_os_control(struct acpi_pci_root
+>> *root, int *no_aspm,
+>>  		return;
+>>  	}
+>>  
+>> -	control = OSC_PCI_EXPRESS_CAPABILITY_CONTROL
+>> -		| OSC_PCI_EXPRESS_PME_CONTROL;
+>> -
+>> -	if (IS_ENABLED(CONFIG_PCIEASPM))
+>> -		control |= OSC_PCI_EXPRESS_LTR_CONTROL;
+>> -
+>> -	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
+>> -		control |= OSC_PCI_EXPRESS_NATIVE_HP_CONTROL;
+>> -
+>> -	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_SHPC))
+>> -		control |= OSC_PCI_SHPC_NATIVE_HP_CONTROL;
+>> +	control = osc_get_aspm_control_bits(root, support);
+>> +	if (!control)
+>> +		*no_aspm = 1;
+>>  
+>> -	if (pci_aer_available()) {
+>> -		if (aer_acpi_firmware_first())
+>> -			dev_info(&device->dev,
+>> -				 "PCIe AER handled by firmware\n");
+>> -		else
+>> -			control |= OSC_PCI_EXPRESS_AER_CONTROL;
+>> +	control |= osc_get_pciehp_control_bits(root, support);
+>> +	control |= osc_get_shpchp_control_bits(root, support);
+>> +	control |= osc_get_aer_control_bits(root, support);
+>> +	if (!control) {
+>> +		dev_info(&device->dev, "_OSC: not requesting OS control\n");
+>> +		return;
+>>  	}
+>>  
+>>  	requested = control;
+>> -	status = acpi_pci_osc_control_set(handle, &control,
+>> -					  OSC_PCI_EXPRESS_CAPABILITY_CONTROL);
+>> -	if (ACPI_SUCCESS(status)) {
+>> -		decode_osc_control(root, "OS now controls", control);
+>> +	acpi_pci_osc_control_set(handle, &control, 0);
+>> +	decode_osc_control(root, "OS requested", requested);
+>> +	decode_osc_control(root, "platform granted", control);
+>> +
+>> +	if (osc_have_support(control, OSC_CONTROL_BITS_ASPM)) {
+>>  		if (acpi_gbl_FADT.boot_flags & ACPI_FADT_NO_ASPM) {
+>>  			/*
+>>  			 * We have ASPM control, but the FADT indicates that
+>> @@ -513,11 +571,8 @@ static void negotiate_os_control(struct acpi_pci_root
+>> *root, int *no_aspm,
+>>  			dev_info(&device->dev, "FADT indicates ASPM is unsupported, using BIOS
+>>  			configuration\n");
+>>  			*no_aspm = 1;
+>>  		}
+>> -	} else {
+>> -		decode_osc_control(root, "OS requested", requested);
+>> -		decode_osc_control(root, "platform willing to grant", control);
+>> -		dev_info(&device->dev, "_OSC failed (%s); disabling ASPM\n",
+>> -			acpi_format_exception(status));
+>> +	} else if (!*no_aspm) {
+>> +		dev_info(&device->dev, "_OSC failed; disabling ASPM\n");
+>>  
+>>  		/*
+>>  		 * We want to disable ASPM here, but aspm_disabled
+>> --
+>> 2.17.1
