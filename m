@@ -2,166 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 30F7057933
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 04:01:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71CC857981
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 04:33:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbfF0CAz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jun 2019 22:00:55 -0400
-Received: from mail-eopbgr20086.outbound.protection.outlook.com ([40.107.2.86]:46656
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726756AbfF0CAz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 Jun 2019 22:00:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kh3ndaU6ZdNCZItesSx6DlqtV91F1OIGNRLIRiX0xkQ=;
- b=ppk1SxM4RNEJg1Zi6qUhe0a75sr/lHpbBkq/LYdg3hB19blnajA4dnqQLpiyn6yJ5+nEO+YRHorPE+w7oZivwe0MuRJjT4OZ9m9/Z/qrsJrwvf78Hgat/EHJbH5JbX7+jMl5Cfpn+WV6d9sYfhpeah1viZBvro9lS4aJpvzRpN8=
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
- AM5PR04MB3235.eurprd04.prod.outlook.com (10.167.171.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Thu, 27 Jun 2019 02:00:48 +0000
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::85dc:ed8:2a0d:4afe]) by AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::85dc:ed8:2a0d:4afe%6]) with mapi id 15.20.2008.017; Thu, 27 Jun 2019
- 02:00:48 +0000
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
-        "pombredanne@nexb.com" <pombredanne@nexb.com>,
-        "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: [EXT] Re: [PATCHv2 2/2] PCI: layerscape: EP and RC drivers are
- compiled separately
-Thread-Topic: [EXT] Re: [PATCHv2 2/2] PCI: layerscape: EP and RC drivers are
- compiled separately
-Thread-Index: AQHVLBE4IA2SIKwZ+ECco9RDrpxLQ6auN4qAgACIFLA=
-Date:   Thu, 27 Jun 2019 02:00:47 +0000
-Message-ID: <AM5PR04MB329928579BA98A3429A0B412F5FD0@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190626111139.32878-1-xiaowei.bao@nxp.com>
- <20190626111139.32878-2-xiaowei.bao@nxp.com>
- <20190626175153.GC103694@google.com>
-In-Reply-To: <20190626175153.GC103694@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaowei.bao@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5e0d3ea3-f2c2-446a-1633-08d6faa34611
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM5PR04MB3235;
-x-ms-traffictypediagnostic: AM5PR04MB3235:
-x-microsoft-antispam-prvs: <AM5PR04MB3235064E9A862F8C7F73A344F5FD0@AM5PR04MB3235.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 008184426E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(39860400002)(366004)(346002)(13464003)(189003)(199004)(76176011)(486006)(186003)(14454004)(26005)(7696005)(478600001)(102836004)(44832011)(66066001)(53546011)(6506007)(99286004)(74316002)(68736007)(5660300002)(81166006)(8676002)(81156014)(8936002)(7736002)(4326008)(6916009)(7416002)(25786009)(305945005)(256004)(33656002)(52536014)(76116006)(3846002)(66946007)(66476007)(73956011)(229853002)(54906003)(66446008)(66556008)(64756008)(53936002)(6116002)(6436002)(9686003)(316002)(71200400001)(71190400001)(2906002)(6246003)(446003)(86362001)(11346002)(55016002)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3235;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1rAeelWrgHa/SmKdfvoE68z5ijxT48W0Ug6kYTk25Us0MErOx/jXpJiYiuak57kwipvyGCOSEGfj1Hcc2F1vLJT5goz1Qm2ocSkzdgl9cVjWBGPTrZ+54ki1Gd2gHA9FepgGyZH5lnEoTJbfMex25+JiiB6f61JjeoTX+B9T6U+pGVN8gmuqFZW5CydSx00jNv6O1KaFV+FftKXeaiqtgxyrSDeTif80md8u2oKJeOYu0W5zYp9e6bWuvqgmY8ZTXlxROMwqGjuw8OeDkAO9W7vxGDH84Qs2732OF87PcMJ7635fnwGpVwIzRb+kJeiaOpQD61GOVNfGat05Jlim7uvQLDljZovIb3XU9VozptH3qDlqtY+ANJZpyy3iq6HMGdEkbQmz2xrh522glKO7OOsI+yFEqYR7BA30C5SUZi8=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        id S1726786AbfF0Cdt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jun 2019 22:33:49 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:32897 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfF0Cds (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jun 2019 22:33:48 -0400
+Received: by mail-lf1-f66.google.com with SMTP id y17so482094lfe.0
+        for <linux-pci@vger.kernel.org>; Wed, 26 Jun 2019 19:33:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kpqYC0bettaQFGE+cPMxYMow71Zk/Lt7y+RJt1aO3ZA=;
+        b=CUYJXh+O76PMEBZGgXYE4jBtsdtMsFSEbZO0ZPyGHzyh2zdxZqtKDI8UekfWutOZ/E
+         YOB+X7vQ4M6jz4r3vtoOXStSuKF65tzQF2Hy2iAis1o6RYF834KH8sRjmjRZMHCwO+62
+         MO4t7AD0yZgX9E1DKMcyzPLyDEPCd2COfseoooOnSJqaFvkUw9X7M0S0KF5v1b58crp0
+         FwPaHIAzP4nqMXq7qwBG6huU7gkp8E3fXfbotKN6d/a7vZrhC6xBO1zFP3Kc95nRNozg
+         3dUxkOYgiDhv7NyUXyrj5a+3L0Vv1LSR+WiWc3I9rNhxc1Mp1+3c7vN7Xszo0uMwbfZ+
+         hNTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kpqYC0bettaQFGE+cPMxYMow71Zk/Lt7y+RJt1aO3ZA=;
+        b=tMYkVDqgQLaiCpUx+dKH6o5BbqnHQsfHtNgFBMea2UXfW5pY+JCsB7Mwk+jeIeM6c9
+         N9raPTdWk6vslucG1l08guubXfdJNOPfecFExFibYkSQMdIOa0YNYjOwIC/+jf9PLDZ2
+         0xVeK4k8p8xlNzAqZaQJSwkfPKckDLQeRdrqYdIBmG9Fu6jxydmdXNiBXV0J2VKDc0cm
+         lHmzh6D5X0JYxEN2MJpSw6uJpGVL/LYIeQwfYoWhGMffD/9SKbEzZKi8eKKpcb1aEhSC
+         iWmxpx75T6ExaphH6fydmq3JoUKuqkPPHm7ArQgt+ysju+aQk0IlmOAbc9hPsnod+eVK
+         5GEw==
+X-Gm-Message-State: APjAAAXvZ1Rd1TKluFq69+Ltj/3s2wM8DZdGh7WJkgbjFfJ5IeN7crND
+        guR+63u6W1DgJ92QRejdF8stCw==
+X-Google-Smtp-Source: APXvYqwVm7ApFldCcgUkF3KiAVNAlR3f2LErwu5ylCjWa4dtUcO2yDmcrQXQfnSFhvIyODaUbhq7dQ==
+X-Received: by 2002:ac2:52b7:: with SMTP id r23mr662754lfm.120.1561602825764;
+        Wed, 26 Jun 2019 19:33:45 -0700 (PDT)
+Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id k12sm117397lfm.90.2019.06.26.19.33.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Jun 2019 19:33:43 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 19:19:37 -0700
+From:   Olof Johansson <olof@lixom.net>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Wei Xu <xuwei5@hisilicon.com>,
+        ARM-SoC Maintainers <arm@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, Linuxarm <linuxarm@huawei.com>,
+        "xuwei (O)" <xuwei5@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Zhangyi ac <zhangyi.ac@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
+        jinying@hisilicon.com, huangdaode <huangdaode@hisilicon.com>,
+        Tangkunshan <tangkunshan@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>
+Subject: Re: [GIT PULL] Hisilicon fixes for v5.2
+Message-ID: <20190627021937.kk4lklv2uz3mogoq@localhost>
+References: <b89ef8f0-d102-7f78-f373-cbcc7faddee3@hisilicon.com>
+ <20190625112148.ckj7sgdgvyeel7vy@localhost>
+ <CAOesGMj+aNkOT1YVHTSBLkOfEujk7uer3R1AmE-sa1TwCijbBg@mail.gmail.com>
+ <7e215bd7-daab-b6cf-8d0f-9513bd7c4f6d@huawei.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e0d3ea3-f2c2-446a-1633-08d6faa34611
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 02:00:47.9363
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xiaowei.bao@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3235
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7e215bd7-daab-b6cf-8d0f-9513bd7c4f6d@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgQmpvcm4sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQmpvcm4g
-SGVsZ2FhcyA8aGVsZ2Fhc0BrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE5xOo21MIyN8jVIDE6NTIN
-Cj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzogcm9iaCtkdEBr
-ZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVv
-DQo+IExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNob25AdGkuY29tOyBsb3JlbnpvLnBpZXJh
-bGlzaUBhcm0uY29tOw0KPiBhcm5kQGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9y
-ZzsgTS5oLiBMaWFuDQo+IDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5n
-a2FpLmh1QG54cC5jb20+OyBSb3kgWmFuZw0KPiA8cm95LnphbmdAbnhwLmNvbT47IGtzdGV3YXJ0
-QGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+IHBvbWJyZWRhbm5lQG5leGIuY29tOyBzaGF3bi5saW5A
-cm9jay1jaGlwcy5jb207DQo+IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxh
-YnMub3JnDQo+IFN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0h2MiAyLzJdIFBDSTogbGF5ZXJzY2Fw
-ZTogRVAgYW5kIFJDIGRyaXZlcnMgYXJlDQo+IGNvbXBpbGVkIHNlcGFyYXRlbHkNCj4gDQo+IENh
-dXRpb246IEVYVCBFbWFpbA0KPiANCj4gSWYgeW91IHBvc3QgYW5vdGhlciByZXZpc2lvbiBmb3Ig
-YW55IHJlYXNvbiwgcGxlYXNlIGNoYW5nZSB0aGUgc3ViamVjdCBzbyBpdCdzDQo+IHdvcmRlZCBh
-cyBhIGNvbW1hbmQgYW5kIG1lbnRpb25zIHRoZSBuZXcgY29uZmlnIG9wdGlvbnMsIGUuZy4sDQo+
-IA0KPiAgIFBDSTogbGF5ZXJzY2FwZTogQWRkIENPTkZJR19QQ0lfTEFZRVJTQ0FQRV9FUCB0byBi
-dWlsZCBFUC9SQw0KPiBzZXBhcmF0ZWx5DQpbWGlhb3dlaSBCYW9dIE9LLCB0aGFua3MsIHRoaXMg
-c3ViamVjdCBsb29rcyB3ZWxsLg0KPiANCj4gT24gV2VkLCBKdW4gMjYsIDIwMTkgYXQgMDc6MTE6
-MzlQTSArMDgwMCwgWGlhb3dlaSBCYW8gd3JvdGU6DQo+ID4gQ29tcGlsZSB0aGUgRVAgYW5kIFJD
-IGRyaXZlcnMgc2VwYXJhdGVseSB3aXRoIGRpZmZlcmVudCBjb25maWd1cmF0aW9uDQo+ID4gb3B0
-aW9ucywgdGhpcyBsb29rcyBjbGVhcmVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogWGlhb3dl
-aSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gdjI6DQo+ID4gIC0gTm8g
-Y2hhbmdlLg0KPiA+DQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL0tjb25maWcgIHwg
-ICAyMCArKysrKysrKysrKysrKysrKystLQ0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3
-Yy9NYWtlZmlsZSB8ICAgIDMgKystDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMjAgaW5zZXJ0aW9u
-cygrKSwgMyBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9j
-b250cm9sbGVyL2R3Yy9LY29uZmlnDQo+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9L
-Y29uZmlnDQo+ID4gaW5kZXggYTZjZTFlZS4uYTQxY2NmNSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2
-ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9LY29uZmlnDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29u
-dHJvbGxlci9kd2MvS2NvbmZpZw0KPiA+IEBAIC0xMzEsMTMgKzEzMSwyOSBAQCBjb25maWcgUENJ
-X0tFWVNUT05FX0VQDQo+ID4gICAgICAgICBEZXNpZ25XYXJlIGNvcmUgZnVuY3Rpb25zIHRvIGlt
-cGxlbWVudCB0aGUgZHJpdmVyLg0KPiA+DQo+ID4gIGNvbmZpZyBQQ0lfTEFZRVJTQ0FQRQ0KPiA+
-IC0gICAgIGJvb2wgIkZyZWVzY2FsZSBMYXllcnNjYXBlIFBDSWUgY29udHJvbGxlciINCj4gPiAr
-ICAgICBib29sICJGcmVlc2NhbGUgTGF5ZXJzY2FwZSBQQ0llIGNvbnRyb2xsZXIgLSBIb3N0IG1v
-ZGUiDQo+ID4gICAgICAgZGVwZW5kcyBvbiBPRiAmJiAoQVJNIHx8IEFSQ0hfTEFZRVJTQ0FQRSB8
-fCBDT01QSUxFX1RFU1QpDQo+ID4gICAgICAgZGVwZW5kcyBvbiBQQ0lfTVNJX0lSUV9ET01BSU4N
-Cj4gPiAgICAgICBzZWxlY3QgTUZEX1NZU0NPTg0KPiA+ICAgICAgIHNlbGVjdCBQQ0lFX0RXX0hP
-U1QNCj4gPiAgICAgICBoZWxwDQo+ID4gLSAgICAgICBTYXkgWSBoZXJlIGlmIHlvdSB3YW50IFBD
-SWUgY29udHJvbGxlciBzdXBwb3J0IG9uIExheWVyc2NhcGUgU29Dcy4NCj4gPiArICAgICAgIFNh
-eSBZIGhlcmUgaWYgeW91IHdhbnQgdG8gZW5hYmxlIFBDSWUgY29udHJvbGxlciBzdXBwb3J0IG9u
-DQo+IExheWVyc2NhcGUNCj4gPiArICAgICAgIFNvQ3MgdG8gd29yayBpbiBIb3N0IG1vZGUuDQo+
-ID4gKyAgICAgICBUaGlzIGNvbnRyb2xsZXIgY2FuIHdvcmsgZWl0aGVyIGFzIEVQIG9yIFJDLiBU
-aGUNCj4gUkNXW0hPU1RfQUdUX1BFWF0NCj4gPiArICAgICAgIGRldGVybWluZXMgd2hpY2ggUENJ
-ZSBjb250cm9sbGVyIHdvcmtzIGluIEVQIG1vZGUgYW5kIHdoaWNoDQo+IFBDSWUNCj4gPiArICAg
-ICAgIGNvbnRyb2xsZXIgd29ya3MgaW4gUkMgbW9kZS4NCj4gPiArDQo+ID4gK2NvbmZpZyBQQ0lf
-TEFZRVJTQ0FQRV9FUA0KPiA+ICsgICAgIGJvb2wgIkZyZWVzY2FsZSBMYXllcnNjYXBlIFBDSWUg
-Y29udHJvbGxlciAtIEVuZHBvaW50IG1vZGUiDQo+ID4gKyAgICAgZGVwZW5kcyBvbiBPRiAmJiAo
-QVJNIHx8IEFSQ0hfTEFZRVJTQ0FQRSB8fCBDT01QSUxFX1RFU1QpDQo+ID4gKyAgICAgZGVwZW5k
-cyBvbiBQQ0lfRU5EUE9JTlQNCj4gPiArICAgICBzZWxlY3QgUENJRV9EV19FUA0KPiA+ICsgICAg
-IGhlbHANCj4gPiArICAgICAgIFNheSBZIGhlcmUgaWYgeW91IHdhbnQgdG8gZW5hYmxlIFBDSWUg
-Y29udHJvbGxlciBzdXBwb3J0IG9uDQo+IExheWVyc2NhcGUNCj4gPiArICAgICAgIFNvQ3MgdG8g
-d29yayBpbiBFbmRwb2ludCBtb2RlLg0KPiA+ICsgICAgICAgVGhpcyBjb250cm9sbGVyIGNhbiB3
-b3JrIGVpdGhlciBhcyBFUCBvciBSQy4gVGhlDQo+IFJDV1tIT1NUX0FHVF9QRVhdDQo+ID4gKyAg
-ICAgICBkZXRlcm1pbmVzIHdoaWNoIFBDSWUgY29udHJvbGxlciB3b3JrcyBpbiBFUCBtb2RlIGFu
-ZCB3aGljaA0KPiBQQ0llDQo+ID4gKyAgICAgICBjb250cm9sbGVyIHdvcmtzIGluIFJDIG1vZGUu
-DQo+ID4NCj4gPiAgY29uZmlnIFBDSV9ISVNJDQo+ID4gICAgICAgZGVwZW5kcyBvbiBPRiAmJiAo
-QVJNNjQgfHwgQ09NUElMRV9URVNUKSBkaWZmIC0tZ2l0DQo+ID4gYS9kcml2ZXJzL3BjaS9jb250
-cm9sbGVyL2R3Yy9NYWtlZmlsZQ0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvTWFr
-ZWZpbGUNCj4gPiBpbmRleCBiMDg1ZGZkLi44MjRmZGU3IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZl
-cnMvcGNpL2NvbnRyb2xsZXIvZHdjL01ha2VmaWxlDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29u
-dHJvbGxlci9kd2MvTWFrZWZpbGUNCj4gPiBAQCAtOCw3ICs4LDggQEAgb2JqLSQoQ09ORklHX1BD
-SV9FWFlOT1MpICs9IHBjaS1leHlub3Mubw0KPiA+ICBvYmotJChDT05GSUdfUENJX0lNWDYpICs9
-IHBjaS1pbXg2Lm8NCj4gPiAgb2JqLSQoQ09ORklHX1BDSUVfU1BFQVIxM1hYKSArPSBwY2llLXNw
-ZWFyMTN4eC5vDQo+ID4gIG9iai0kKENPTkZJR19QQ0lfS0VZU1RPTkUpICs9IHBjaS1rZXlzdG9u
-ZS5vDQo+ID4gLW9iai0kKENPTkZJR19QQ0lfTEFZRVJTQ0FQRSkgKz0gcGNpLWxheWVyc2NhcGUu
-byBwY2ktbGF5ZXJzY2FwZS1lcC5vDQo+ID4gK29iai0kKENPTkZJR19QQ0lfTEFZRVJTQ0FQRSkg
-Kz0gcGNpLWxheWVyc2NhcGUubw0KPiA+ICtvYmotJChDT05GSUdfUENJX0xBWUVSU0NBUEVfRVAp
-ICs9IHBjaS1sYXllcnNjYXBlLWVwLm8NCj4gPiAgb2JqLSQoQ09ORklHX1BDSUVfUUNPTSkgKz0g
-cGNpZS1xY29tLm8NCj4gPiAgb2JqLSQoQ09ORklHX1BDSUVfQVJNQURBXzhLKSArPSBwY2llLWFy
-bWFkYThrLm8NCj4gPiAgb2JqLSQoQ09ORklHX1BDSUVfQVJUUEVDNikgKz0gcGNpZS1hcnRwZWM2
-Lm8NCj4gPiAtLQ0KPiA+IDEuNy4xDQo+ID4NCg==
+On Tue, Jun 25, 2019 at 02:31:26PM +0100, John Garry wrote:
+> On 25/06/2019 14:03, Olof Johansson wrote:
+> > > > are available in the Git repository at:
+> > > > > >
+> > > > > >   git://github.com/hisilicon/linux-hisi.git tags/hisi-fixes-for-5.2
+> > > > > >
+> > > > > > for you to fetch changes up to 07c811af1c00d7b4212eac86900b023b6405a954:
+> > > > > >
+> > > > > >   lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration (2019-06-25 09:40:42 +0100)
+> > > > > >
+> > > > > > ----------------------------------------------------------------
+> > > > > > Hisilicon fixes for v5.2-rc
+> > > > > >
+> > > > > > - fixed RCU usage in logical PIO
+> > > > > > - Added a function to unregister a logical PIO range in logical PIO
+> > > > > >   to support the fixes in the hisi-lpc driver
+> > > > > > - fixed and optimized hisi-lpc driver to avoid potential use-after-free
+> > > > > >   and driver unbind crash
+> > > >
+> > > > Merged to fixes, thanks.
+> > 
+> > This broke arm64 allmodconfig:
+> > 
+> >        arm64.allmodconfig:
+> > drivers/bus/hisi_lpc.c:656:3: error: implicit declaration of function
+> > 'hisi_lpc_acpi_remove'; did you mean 'hisi_lpc_acpi_probe'?
+> > [-Werror=implicit-function-declaration]
+> > 
+> > 
+> 
+> Uhhh, that's my fault - I didn't provide a stub for !ACPI. Sorry. I'll send
+> a fixed v3 series.
+
+No worries, it happens -- but it's good if maintainers do at least a few test
+builds before sending in pull requests so we don't catch all of it at our end.
+
+
+-Olof
