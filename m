@@ -2,103 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4488D59D0F
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 15:38:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E3F159EBF
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 17:23:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfF1Nim (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jun 2019 09:38:42 -0400
-Received: from verein.lst.de ([213.95.11.211]:38826 "EHLO verein.lst.de"
+        id S1726711AbfF1PXa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jun 2019 11:23:30 -0400
+Received: from smtp3.ono.com ([62.42.230.163]:29780 "EHLO smtp3.ono.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726655AbfF1Nim (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Jun 2019 09:38:42 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8BA79227A81; Fri, 28 Jun 2019 15:38:37 +0200 (CEST)
-Date:   Fri, 28 Jun 2019 15:38:37 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-Message-ID: <20190628133837.GA3801@lst.de>
-References: <20190625170115.GA9746@lst.de> <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com> <20190626065708.GB24531@lst.de> <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com> <20190626202107.GA5850@ziepe.ca> <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com> <20190627090843.GB11548@lst.de> <89889319-e778-7772-ab36-dc55b59826be@deltatee.com> <20190627170027.GE10652@lst.de> <e63d0259-e17f-effe-b76d-43dbfda8ae3a@deltatee.com>
+        id S1726686AbfF1PXa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 28 Jun 2019 11:23:30 -0400
+X-Junkmail-Premium-Raw: score=17/50,refid=2.7.2:2019.6.28.144517:17:17.150,ip=62.42.230.132,rules=__HAS_MSGID,
+ __SANE_MSGID, MSGID_JMAIL_DEFAULT, INVALID_MSGID_NO_FQDN, __HAS_FROM,
+ FROM_NAME_ONE_WORD, __HAS_REPLYTO, __FRAUD_WEBMAIL_REPLYTO,
+ __SUBJ_ALPHA_START, __PHISH_SPEAR_SUBJ_ALERT, __SUBJ_ALPHA_END,
+ __MIME_VERSION, __CT, __CT_TEXT_PLAIN, __CTE, MISSING_HEADERS,
+ __CP_NAME_BODY, __FRAUD_INYOURCOUNTRY, __STOCK_PHRASE_7, __STOCK_PHRASE_8,
+ __FRAUD_MONEY_GENERIC, __FRAUD_MONEY_BIG_COIN_DIG, __OEM_PRICE,
+ __FRAUD_MONEY_CURRENCY_DOLLAR, __NO_HTML_TAG_RAW, BODY_SIZE_700_799,
+ BODYTEXTP_SIZE_3000_LESS, __MIME_TEXT_P1, __MIME_TEXT_ONLY, HTML_00_01,
+ HTML_00_10, __FRAUD_MONEY_CURRENCY, __FRAUD_MONEY_BIG_COIN,
+ __FRAUD_MONEY_VALUE, __FRAUD_MONEY, FRAUD_X3, BODY_SIZE_5000_LESS,
+ __FRAUD_WEBMAIL, WEBMAIL_REPLYTO_NOT_FROM, FRAUD_WEBMAIL_R_NOT_F,
+ __FRAUD_COMMON, __MIME_TEXT_P, NO_URI_FOUND, NO_CTA_URI_FOUND,
+ __PHISH_SPEAR_STRUCTURE_1, BODY_SIZE_1000_LESS, BODY_SIZE_2000_LESS,
+ __PHISH_SPEAR_STRUCTURE_2, REPLYTO_FROM_DIFF_ADDY, NO_URI_HTTPS,
+ BODY_SIZE_7000_LESS, TO_MALFORMED
+Received: from resprs02 (62.42.230.132) by smtp3.ono.com (9.0.019.09-1)
+        id 5CC0A28F0335D763; Fri, 28 Jun 2019 17:23:00 +0200
+Received: from (198.143.55.1) by webmailcpr02n.ono.com;  Fri, 28 Jun 2019 17:23:00 +0200
+Message-ID: <31209429.1272461561735380549.JavaMail.defaultUser@defaultHost>
+Date:   Fri, 28 Jun 2019 17:23:00 +0200 (CEST)
+From:   Aisha <dacaceresgo@ono.com>
+Reply-To: mrsgaddafi06@gmail.com
+Subject: hello dear
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e63d0259-e17f-effe-b76d-43dbfda8ae3a@deltatee.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain;charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 12:00:35PM -0600, Logan Gunthorpe wrote:
-> > It is not.  (c) is fundamentally very different as it is not actually
-> > an operation that ever goes out to the wire at all, and which is why the
-> > actual physical address on the wire does not matter at all.
-> > Some interfaces like NVMe have designed it in a way that it the commands
-> > used to do this internal transfer look like (b2), but that is just their
-> > (IMHO very questionable) interface design choice, that produces a whole
-> > chain of problems.
-> 
-> >From the mapping device's driver's perspective yes, but from the
-> perspective of a submitting driver they would be the same.
+Assalamu Alaikum Wa Rahmatullahi Wa Barakatuh,
 
-With your dma_addr_t scheme it won't be the same, as you'd need
-a magic way to generate the internal addressing and stuff it into
-the dma_addr_t.  With a phys_addr_t based scheme they should basically
-be all the same.
+hello dear
 
-> Yes, you did suggest them. But what I'm trying to suggest is we don't
-> *necessarily* need the lookup. For demonstration purposes only, a
-> submitting driver could very roughly potentially do:
-> 
-> struct bio_vec vec;
-> dist = pci_p2pdma_dist(provider_pdev, mapping_pdev);
-> if (dist < 0) {
->      /* use regular memory */
->      vec.bv_addr = virt_to_phys(kmalloc(...));
->      vec.bv_flags = 0;
-> } else if (dist & PCI_P2PDMA_THRU_HOST_BRIDGE) {
->      vec.bv_addr = pci_p2pmem_alloc_phys(provider_pdev, ...);
->      vec.bv_flags = BVEC_MAP_RESOURCE;
-> } else {
->      vec.bv_addr = pci_p2pmem_alloc_bus_addr(provider_pdev, ...);
->      vec.bv_flags = BVEC_MAP_BUS_ADDR;
-> }
+I came across your contact during my private search. Mrs Aisha Al-
+Qaddafi is my name, the only daughter of late Libyan president, am a 
+single Mother and a Widow with three Children.I have funds the sum of 
+$27.5 million USD for, investment, I am interested in you for 
+investment project assistance in your country,because of my current 
+refugee status, i shall compensate you 30% of the total sum after the 
+funds are transfer into your account,I am willing to, negotiate 
+investment/business profit sharing ratio with you base on the future 
+investment earning profits.
 
-That doesn't look too bad, except..
+Reply me urgent for more details
 
-> -- And a mapping driver would roughly just do:
-> 
-> dma_addr_t dma_addr;
-> if (vec.bv_flags & BVEC_MAP_BUS_ADDR) {
->      if (pci_bus_addr_in_bar(mapping_pdev, vec.bv_addr, &bar, &off))  {
->           /* case (c) */
->           /* program the DMA engine with bar and off */
-
-Why bother with that here if we could also let the caller handle
-that? pci_p2pdma_dist() should be able to trivially find that out
-based on provider_dev == mapping_dev.
-
-> The real difficulty here is that you'd really want all the above handled
-> by a dma_map_bvec() so it can combine every vector hitting the IOMMU
-> into a single continuous IOVA -- but it's hard to fit case (c) into that
-> equation. So it might be that a dma_map_bvec() handles cases (a), (b1)
-> and (b2) and the mapping driver has to then check each resulting DMA
-> vector for pci_bus_addr_in_bar() while it is programming the DMA engine
-> to deal with case (c).
-
-I'd do it the other way around.  pci_p2pdma_dist is used to find
-the p2p type.  The p2p type is stuff into the bio_vec, and we then:
-
- (1) manually check for case (c) in driver for drivers that want to
-     treat it different from (b)
- (2) we then have a dma mapping wrapper that checks the p2p type
-     and does the right thing for the rest.
+Mrs Aisha Al-Qaddafi
