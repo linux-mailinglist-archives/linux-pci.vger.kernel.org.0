@@ -2,39 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BF4F159CA8
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 15:12:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 175E859CF7
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 15:33:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbfF1NMW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jun 2019 09:12:22 -0400
-Received: from mga06.intel.com ([134.134.136.31]:39309 "EHLO mga06.intel.com"
+        id S1726653AbfF1Ndb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jun 2019 09:33:31 -0400
+Received: from mga06.intel.com ([134.134.136.31]:40369 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726590AbfF1NMW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Jun 2019 09:12:22 -0400
+        id S1726566AbfF1Ndb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 28 Jun 2019 09:33:31 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 06:12:22 -0700
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 06:33:30 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,427,1557212400"; 
-   d="scan'208";a="167753239"
+   d="scan'208";a="162974304"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 28 Jun 2019 06:12:20 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 28 Jun 2019 06:33:28 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 2399B177; Fri, 28 Jun 2019 16:12:19 +0300 (EEST)
+        id ABD0914A; Fri, 28 Jun 2019 16:33:27 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     linux-pci@vger.kernel.org,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+To:     linux-pci@vger.kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH v1 2/2] tools: PCI: Fix a typo in usage messages
-Date:   Fri, 28 Jun 2019 16:12:18 +0300
-Message-Id: <20190628131218.10244-2-andriy.shevchenko@linux.intel.com>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH v1] tools: PCI: Fix installation when `make tools/pci_install`
+Date:   Fri, 28 Jun 2019 16:33:26 +0300
+Message-Id: <20190628133326.18203-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190628131218.10244-1-andriy.shevchenko@linux.intel.com>
-References: <20190628131218.10244-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -42,38 +40,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When the commit fbca0b284bd0 ("tools: PCI: Add 'h' in optstring of getopt()")
-introduced a fix to support -h command line option, it, at the same time,
-brought a regression to the code which produces a compile-time warning:
+The commit c9a707875053 ("tools pci: Do not delete pcitest.sh in 'make clean'")
+fixed a `make tools clean` issue and simultaneously brought a regression
+to the installation process:
 
-pcitest.c:203:4: warning: too many arguments for format [-Wformat-extra-args]
-    "usage: %s [options]\n"
-    ^~~~~~~~~~~~~~~~~~~~~~~
+  for script in .../tools/pci/pcitest.sh; do	\
+	install $script .../usr/usr/bin;	\
+  done
+  install: cannot stat '.../tools/pci/pcitest.sh': No such file or directory
 
-Remove trailing comma to make it correct.
+Here is the missed part of the fix.
 
-Fixes: fbca0b284bd0 ("tools: PCI: Add 'h' in optstring of getopt()")
+Cc: Jean-Jacques Hiblot <jjhiblot@ti.com>
 Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Sekhar Nori <nsekhar@ti.com>
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- tools/pci/pcitest.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/pci/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
-index 81b89260e80f..c495e5b5fd7f 100644
---- a/tools/pci/pcitest.c
-+++ b/tools/pci/pcitest.c
-@@ -212,7 +212,7 @@ int main(int argc, char **argv)
- 			"\t-r			Read buffer test\n"
- 			"\t-w			Write buffer test\n"
- 			"\t-c			Copy buffer test\n"
--			"\t-s <size>		Size of buffer {default: 100KB}\n",
-+			"\t-s <size>		Size of buffer {default: 100KB}\n"
- 			"\t-h			Print this help message\n",
- 			argv[0]);
- 		return -EINVAL;
+diff --git a/tools/pci/Makefile b/tools/pci/Makefile
+index 6876ee4bd78c..cc4a161ee2cc 100644
+--- a/tools/pci/Makefile
++++ b/tools/pci/Makefile
+@@ -47,10 +47,10 @@ clean:
+ 
+ install: $(ALL_PROGRAMS)
+ 	install -d -m 755 $(DESTDIR)$(bindir);		\
+-	for program in $(ALL_PROGRAMS) pcitest.sh; do	\
++	for program in $(ALL_PROGRAMS); do		\
+ 		install $$program $(DESTDIR)$(bindir);	\
+ 	done;						\
+-	for script in $(ALL_SCRIPTS); do		\
++	for script in pcitest.sh; do			\
+ 		install $$script $(DESTDIR)$(bindir);	\
+ 	done
+ 
 -- 
 2.20.1
 
