@@ -2,114 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1601659F0B
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 17:38:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D01345A005
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 17:54:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfF1Pij (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jun 2019 11:38:39 -0400
-Received: from mail-eopbgr70071.outbound.protection.outlook.com ([40.107.7.71]:6795
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726657AbfF1Pij (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Jun 2019 11:38:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=YWrf81ldmjTWhNIf2o5s+PxDhoRgg/hguBJQA7mOcQPdLgoNe0m90BeaGC0LPXBfH4B7RtXeCieoC4HL2XNsHsIAwynBC4REa5SthMaY38EJiXds+PiaaTVIFFsi8kEkOCPWhec98uI6+U5+RD3h3X/23SyfikLOuNe2a4/paSg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bLku6ir24rZW4tVJUVeMvnBtyIoSP0XnsnDssJoRSYk=;
- b=wG6ObGU35Hyfhhn/CuTGFTNWTFIuXqRepQniXecRutpjrqQJblAoQn+dwMZkCd6UqanEfIbTNeCGpQQO9uWM6Uf41UYN6z7aUUQhoV3Fa4Xa79Zu+ZBNak+pCg+kBaIQjxVYaLtIi3OebOVA0J9vAR/3HbWpPLKIiyyEdpqwJ5w=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bLku6ir24rZW4tVJUVeMvnBtyIoSP0XnsnDssJoRSYk=;
- b=DnAA2swC4elRI3KiIRukzdPV/k9Q24g7eikbNVlDNZk9dlUMIOgAgecRYBldwUguw+YTQzuDDJPEVGkvHSB3w4hI1PY3/ii4XS4u/0znjRgxr0EC26T+yiLfR1csWMf4O4AtXg7yshHI4AtF/yX9u7UbKtPorGjbfRVZjFIU+kI=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5936.eurprd05.prod.outlook.com (20.178.126.89) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Fri, 28 Jun 2019 15:38:34 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2008.014; Fri, 28 Jun 2019
- 15:38:34 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
+        id S1726750AbfF1Pyr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jun 2019 11:54:47 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:38384 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726686AbfF1Pyr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 28 Jun 2019 11:54:47 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hgtCs-0008QY-EA; Fri, 28 Jun 2019 09:54:35 -0600
 To:     Christoph Hellwig <hch@lst.de>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 16/25] device-dax: use the dev_pagemap internal refcount
-Thread-Topic: [PATCH 16/25] device-dax: use the dev_pagemap internal refcount
-Thread-Index: AQHVLBqgvimki3zmIk2l4xtSxGbkyKaxNtmA
-Date:   Fri, 28 Jun 2019 15:38:33 +0000
-Message-ID: <20190628153827.GA5373@mellanox.com>
-References: <20190626122724.13313-1-hch@lst.de>
- <20190626122724.13313-17-hch@lst.de>
-In-Reply-To: <20190626122724.13313-17-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR07CA0020.namprd07.prod.outlook.com
- (2603:10b6:a02:bc::33) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [38.88.19.130]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 05d4fcbc-8ab9-4069-84fc-08d6fbdeadd0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5936;
-x-ms-traffictypediagnostic: VI1PR05MB5936:
-x-microsoft-antispam-prvs: <VI1PR05MB59360B8AC12BA66BC72FEE4ECFFC0@VI1PR05MB5936.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 00826B6158
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(346002)(39860400002)(376002)(396003)(199004)(189003)(68736007)(99286004)(476003)(81166006)(8936002)(86362001)(64756008)(71190400001)(6246003)(478600001)(81156014)(66946007)(6512007)(8676002)(6436002)(3846002)(6506007)(53936002)(73956011)(4744005)(33656002)(102836004)(4326008)(36756003)(6486002)(5660300002)(6116002)(2616005)(71200400001)(316002)(1076003)(26005)(386003)(66476007)(25786009)(7416002)(66556008)(76176011)(66446008)(229853002)(186003)(54906003)(2906002)(305945005)(6916009)(256004)(7736002)(14454004)(446003)(66066001)(52116002)(486006)(11346002)(55236004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5936;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: aVxtYRA0vip7hM1WU5QuKAiStkC5K6vc2eNm/k3hRyZi/nbuMukNzRui1mmIH3vhTFVAfGYY0ZFdAfKTTKKkjqkUP8qEexEP+issJMtLRASJmVe4Jn2H12ReEsuZOtzOKpwlhytDORudx7Mc0br9a0Hqthy1N8osOox2QNGAxUXDgDMplUJ8yXBjSUPb7ydz88in5Spy5QtdUsqvrDrx+FJF80EurzTDrI4CewXKNGneNRXyyYhZ5Z45TM4dsptN0726IU53ImZ3FqF0W0/viCwF6USMFz4KJICqPuoajx55kM5BFFHNZ9PgqyrUlQ94vuZMoXYBfFdGOHd3k8WFG+Wwwi2BW4MXFsIE5x/XGfK8DkPBCIoEsZbdhWrBgCdzpIhvKvD9JfCOPWTh55sqVbuyKk1ymPHwjjZXYTVCt90=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <8C444E0EC453B1428BA516BB657C6928@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190625170115.GA9746@lst.de>
+ <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
+ <20190626065708.GB24531@lst.de>
+ <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
+ <20190626202107.GA5850@ziepe.ca>
+ <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
+ <20190627090843.GB11548@lst.de>
+ <89889319-e778-7772-ab36-dc55b59826be@deltatee.com>
+ <20190627170027.GE10652@lst.de>
+ <e63d0259-e17f-effe-b76d-43dbfda8ae3a@deltatee.com>
+ <20190628133837.GA3801@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <10b2b013-5b2e-f642-9524-9551809c03a3@deltatee.com>
+Date:   Fri, 28 Jun 2019 09:54:27 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05d4fcbc-8ab9-4069-84fc-08d6fbdeadd0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 15:38:33.9637
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5936
+In-Reply-To: <20190628133837.GA3801@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca, hch@lst.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 02:27:15PM +0200, Christoph Hellwig wrote:
-> The functionality is identical to the one currently open coded in
-> device-dax.
->=20
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  drivers/dax/dax-private.h |  4 ----
->  drivers/dax/device.c      | 43 ---------------------------------------
->  2 files changed, 47 deletions(-)
 
-DanW: I think this series has reached enough review, did you want
-to ack/test any further?
 
-This needs to land in hmm.git soon to make the merge window.
+On 2019-06-28 7:38 a.m., Christoph Hellwig wrote:
+> On Thu, Jun 27, 2019 at 12:00:35PM -0600, Logan Gunthorpe wrote:
+>>> It is not.  (c) is fundamentally very different as it is not actually
+>>> an operation that ever goes out to the wire at all, and which is why the
+>>> actual physical address on the wire does not matter at all.
+>>> Some interfaces like NVMe have designed it in a way that it the commands
+>>> used to do this internal transfer look like (b2), but that is just their
+>>> (IMHO very questionable) interface design choice, that produces a whole
+>>> chain of problems.
+>>
+>> >From the mapping device's driver's perspective yes, but from the
+>> perspective of a submitting driver they would be the same.
+> 
+> With your dma_addr_t scheme it won't be the same, as you'd need
+> a magic way to generate the internal addressing and stuff it into
+> the dma_addr_t.  With a phys_addr_t based scheme they should basically
+> be all the same.
 
-Thanks,
-Jason
+Yes, I see the folly in the dma_addr_t scheme now. I like the
+phys_addr_t ideas we have been discussing.
+
+>> Yes, you did suggest them. But what I'm trying to suggest is we don't
+>> *necessarily* need the lookup. For demonstration purposes only, a
+>> submitting driver could very roughly potentially do:
+>>
+>> struct bio_vec vec;
+>> dist = pci_p2pdma_dist(provider_pdev, mapping_pdev);
+>> if (dist < 0) {
+>>      /* use regular memory */
+>>      vec.bv_addr = virt_to_phys(kmalloc(...));
+>>      vec.bv_flags = 0;
+>> } else if (dist & PCI_P2PDMA_THRU_HOST_BRIDGE) {
+>>      vec.bv_addr = pci_p2pmem_alloc_phys(provider_pdev, ...);
+>>      vec.bv_flags = BVEC_MAP_RESOURCE;
+>> } else {
+>>      vec.bv_addr = pci_p2pmem_alloc_bus_addr(provider_pdev, ...);
+>>      vec.bv_flags = BVEC_MAP_BUS_ADDR;
+>> }
+> 
+> That doesn't look too bad, except..
+> 
+>> -- And a mapping driver would roughly just do:
+>>
+>> dma_addr_t dma_addr;
+>> if (vec.bv_flags & BVEC_MAP_BUS_ADDR) {
+>>      if (pci_bus_addr_in_bar(mapping_pdev, vec.bv_addr, &bar, &off))  {
+>>           /* case (c) */
+>>           /* program the DMA engine with bar and off */
+> 
+> Why bother with that here if we could also let the caller handle
+> that? pci_p2pdma_dist() should be able to trivially find that out
+> based on provider_dev == mapping_dev.
+
+True, in fact pci_p2pdma_dist() should return 0 in that case.
+
+Though the driver will still have to do a range compare to figure out
+which BAR the address belongs to and find the offset.
+
+>> The real difficulty here is that you'd really want all the above handled
+>> by a dma_map_bvec() so it can combine every vector hitting the IOMMU
+>> into a single continuous IOVA -- but it's hard to fit case (c) into that
+>> equation. So it might be that a dma_map_bvec() handles cases (a), (b1)
+>> and (b2) and the mapping driver has to then check each resulting DMA
+>> vector for pci_bus_addr_in_bar() while it is programming the DMA engine
+>> to deal with case (c).
+> 
+> I'd do it the other way around.  pci_p2pdma_dist is used to find
+> the p2p type.  The p2p type is stuff into the bio_vec, and we then:
+> 
+>  (1) manually check for case (c) in driver for drivers that want to
+>      treat it different from (b)
+>  (2) we then have a dma mapping wrapper that checks the p2p type
+>      and does the right thing for the rest.
+
+Sure, that could make sense.
+
+I imagine there's a lot of details that are wrong or could be done
+better in my example. The purpose of it was just to demonstrate that we
+can do it without a lookup in an interval tree on the physical address.
+
+Logan
+
