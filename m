@@ -2,146 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 57D5C5A252
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 19:29:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A7855A38A
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 20:29:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfF1R33 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jun 2019 13:29:29 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43436 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbfF1R33 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jun 2019 13:29:29 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i189so3311727pfg.10
-        for <linux-pci@vger.kernel.org>; Fri, 28 Jun 2019 10:29:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rma7fKPl8WRrgspEuPOD2qANxVH7cGLiOLxSkWJa8ic=;
-        b=XYoROQr0/ERbcbKHajZ9Ao3WWSavmnOg/Y1z8MrsPjnp/F3Mz4YCfc1CESGqd6xvqp
-         G/h60ThiovpqKD4QdExA6FuXtxhUcEQN+2U/+tsZcCmKTft/Z3BVxcRSXu5AYrGtSqEt
-         l66sDEwjFyZseeRQhhjOI2oAzYb7ShiVd70Qc5r4FBXt77QBTckVjCvftyqonWfZqoEB
-         eYXCjr1MHIbZowSaRL54JLuZ7Tt9Ga6wnKoJx84slf19tjTeG3Woch/+c01ImrrI21mt
-         43UwLOJYZ8no5rburHx8FYkfKFAzZ+oMF2zUO4JZ/STiuIyyPJ/xC586TAhOxAbO1Dd6
-         XAIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rma7fKPl8WRrgspEuPOD2qANxVH7cGLiOLxSkWJa8ic=;
-        b=Hd5Sp9LryCX5/DYfTZcccEtrZkF99A5fM7oNmXbRsiSsPOwfgauhpqrgY7nd1C18OZ
-         DuAFO3FARxRQG4QDJekp9yfNXCt4j4AK+mALW1hDfVuLPO5fUMaUdUZF9U6kF2p3yrqE
-         7uxHYa1Mcl6JxPIXF9DQNlVLo9rS8L5Zk6aGFo76D62DVxdDuFypYbDQ8i8ggCaOfNpK
-         54dMArtLd+MdvwMdq55X3CvKgkFm2Z5a2viWLwW8yBZ7yNxhERliQN1VXpfCsLOgR/zP
-         +HrZUjfOzBG1P3oeh+c5ku90R3oLvHRN9pX36dG8dIKJJlUnFcB9dVBaj6ENVHz28OzT
-         nO0Q==
-X-Gm-Message-State: APjAAAUb1+pzsimy80pH6veYKX67QQFiWB5KiqSdIP2kuouzRkfPyTHt
-        iJCF7ivN2nPcEDmipgbtstl5EA==
-X-Google-Smtp-Source: APXvYqynICMG9uwmXh/mYczktdhjlf/b/oAI8FqIWjcwxPV0uEU4Ql2AIiqWQC9VF6cvDKyRwxevBg==
-X-Received: by 2002:a63:4105:: with SMTP id o5mr10706003pga.308.1561742968383;
-        Fri, 28 Jun 2019 10:29:28 -0700 (PDT)
-Received: from ziepe.ca ([76.14.1.154])
-        by smtp.gmail.com with ESMTPSA id d6sm2257715pgf.55.2019.06.28.10.29.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 28 Jun 2019 10:29:27 -0700 (PDT)
-Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hgugg-00015s-PF; Fri, 28 Jun 2019 14:29:26 -0300
-Date:   Fri, 28 Jun 2019 14:29:26 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-Message-ID: <20190628172926.GA3877@ziepe.ca>
-References: <20190626202107.GA5850@ziepe.ca>
- <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
- <20190626210018.GB6392@ziepe.ca>
- <c25d3333-dcd5-3313-089b-7fbbd6fbd876@deltatee.com>
- <20190627063223.GA7736@ziepe.ca>
- <6afe4027-26c8-df4e-65ce-49df07dec54d@deltatee.com>
- <20190627163504.GB9568@ziepe.ca>
- <4894142c-3233-a3bb-f9a3-4a4985136e9b@deltatee.com>
- <20190628045705.GD3705@ziepe.ca>
- <8022a2a4-4069-d256-11da-e6d9b2ffbf60@deltatee.com>
+        id S1726513AbfF1S3i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jun 2019 14:29:38 -0400
+Received: from mail-eopbgr30042.outbound.protection.outlook.com ([40.107.3.42]:10226
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726498AbfF1S3i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 28 Jun 2019 14:29:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=SMGjLKbDUPfnf9EYwqTLq1tumGoualfPfZcFgUBrEzxzlqL/SVk3jtE5n9dT2tOgXbmj9lBwtsvItQONYVwwr5YfzL8oruGtdHK8n1yZklIdQeNlQZ01vC9+f3RSEKPH/fr3Re4hHu0z8fC0KIRg7c9+19rrwDox0/hNIeYC3b8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aW+4ZnzFUxI2thr+G8Np8e2Oaw4bAbhf7CTAtwXVS7w=;
+ b=XA9ftZejVn45JWnTwlvetjfcxwbhqKfzuI3izLVSnEYc9VQemMGteuUAyAVrpeKuLkJIT302YxzUg27XJQW/0988mEqMEeO0tQmLJrfKXyD4vaqSjxdd9qbfNfrlYTolHJ4xLjagtiu9BgCJ2iyCHiqF3okOMTCvJM0pprTAjp0=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aW+4ZnzFUxI2thr+G8Np8e2Oaw4bAbhf7CTAtwXVS7w=;
+ b=i/sq3VFp3C08XaTuKwHLxcVYHPXIaNzhEuu3F3FguK6s4f+v0TYSCoJH2ugmmoXVU6n5/DNhHQNaWKQmEIMLgq5RWK0e1Er/GxWZs+smSRYlWXAF/zxXR48Wo9swMfK8cs9srf9qNSeH2CyPNtX0djywJbltIyU2UZb4thfbaC4=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB4365.eurprd05.prod.outlook.com (52.133.12.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Fri, 28 Jun 2019 18:29:30 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2008.014; Fri, 28 Jun 2019
+ 18:29:30 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Christoph Hellwig <hch@lst.de>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 16/25] device-dax: use the dev_pagemap internal refcount
+Thread-Topic: [PATCH 16/25] device-dax: use the dev_pagemap internal refcount
+Thread-Index: AQHVLBqgvimki3zmIk2l4xtSxGbkyKaxNtmAgAANxQCAAAmqgIAAAboAgAAAeQCAABYfAA==
+Date:   Fri, 28 Jun 2019 18:29:29 +0000
+Message-ID: <20190628182922.GA15242@mellanox.com>
+References: <20190626122724.13313-1-hch@lst.de>
+ <20190626122724.13313-17-hch@lst.de> <20190628153827.GA5373@mellanox.com>
+ <CAPcyv4joSiFMeYq=D08C-QZSkHz0kRpvRfseNQWrN34Rrm+S7g@mail.gmail.com>
+ <20190628170219.GA3608@mellanox.com>
+ <CAPcyv4ja9DVL2zuxuSup8x3VOT_dKAOS8uBQweE9R81vnYRNWg@mail.gmail.com>
+ <CAPcyv4iWTe=vOXUqkr_CguFrFRqgA7hJSt4J0B3RpuP-Okz0Vw@mail.gmail.com>
+In-Reply-To: <CAPcyv4iWTe=vOXUqkr_CguFrFRqgA7hJSt4J0B3RpuP-Okz0Vw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR08CA0008.namprd08.prod.outlook.com
+ (2603:10b6:a03:100::21) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [76.14.1.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 92287021-7090-4314-de00-08d6fbf68ed6
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4365;
+x-ms-traffictypediagnostic: VI1PR05MB4365:
+x-microsoft-antispam-prvs: <VI1PR05MB43657FBDB1EA58C053C63BC0CFFC0@VI1PR05MB4365.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 00826B6158
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(39840400004)(376002)(136003)(199004)(189003)(66476007)(486006)(6512007)(33656002)(66946007)(7416002)(6916009)(71200400001)(2906002)(73956011)(64756008)(36756003)(66556008)(71190400001)(68736007)(66066001)(1076003)(305945005)(99286004)(7736002)(6506007)(102836004)(53546011)(6116002)(66446008)(316002)(81156014)(52116002)(54906003)(8936002)(14454004)(5660300002)(2616005)(476003)(386003)(26005)(6246003)(53936002)(25786009)(86362001)(76176011)(6486002)(4326008)(229853002)(14444005)(3846002)(186003)(11346002)(6436002)(81166006)(446003)(478600001)(256004)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4365;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: NndW95S8YhHhIuIPXgE6DJ7FFQ7Wi7Qv94ks4fGecraJJl1kl/B/OiUhXXk9d64RAObNBGQNxj/+Dsy5mCDDXsBwBDTWMuw3tjOuwTSgwG5PzhEEsvNDJf9XW+MPpKaSIsZv/rs4/U1oe22/ThS4DnCfmYBIFdhumeofar4MDc1jemYw0XIYXX8bU9TB+TOtLL3E7d3f4yPyOPANELn3trWurneIuwVvOkzGEBz4dpp7ebk/fyq+oyUj00Dl1Sgj+X8NHddMhnD3WgJiL9qTBSapgYgKOkVLUcxF56u40YYlfwNZXXBi5FOP0gnYxu24VP8w25yfd0HTdOMjiy1SlXg4j33ovwiSGHGgr9YOfs+e/FuwerlAr0ZU/nj91QnAncOQQTkPfIx9yX5IeyPw9IJWGZeEyz3r0NamJ8DV4Fo=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <14F6B0C5B925FB4B8ECAEFC2C0B435B0@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8022a2a4-4069-d256-11da-e6d9b2ffbf60@deltatee.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 92287021-7090-4314-de00-08d6fbf68ed6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 18:29:30.0154
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4365
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 10:22:06AM -0600, Logan Gunthorpe wrote:
+On Fri, Jun 28, 2019 at 10:10:12AM -0700, Dan Williams wrote:
+> On Fri, Jun 28, 2019 at 10:08 AM Dan Williams <dan.j.williams@intel.com> =
+wrote:
+> >
+> > On Fri, Jun 28, 2019 at 10:02 AM Jason Gunthorpe <jgg@mellanox.com> wro=
+te:
+> > >
+> > > On Fri, Jun 28, 2019 at 09:27:44AM -0700, Dan Williams wrote:
+> > > > On Fri, Jun 28, 2019 at 8:39 AM Jason Gunthorpe <jgg@mellanox.com> =
+wrote:
+> > > > >
+> > > > > On Wed, Jun 26, 2019 at 02:27:15PM +0200, Christoph Hellwig wrote=
+:
+> > > > > > The functionality is identical to the one currently open coded =
+in
+> > > > > > device-dax.
+> > > > > >
+> > > > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > > > > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> > > > > >  drivers/dax/dax-private.h |  4 ----
+> > > > > >  drivers/dax/device.c      | 43 -------------------------------=
+--------
+> > > > > >  2 files changed, 47 deletions(-)
+> > > > >
+> > > > > DanW: I think this series has reached enough review, did you want
+> > > > > to ack/test any further?
+> > > > >
+> > > > > This needs to land in hmm.git soon to make the merge window.
+> > > >
+> > > > I was awaiting a decision about resolving the collision with Ira's
+> > > > patch before testing the final result again [1]. You can go ahead a=
+nd
+> > > > add my reviewed-by for the series, but my tested-by should be on th=
+e
+> > > > final state of the series.
+> > >
+> > > The conflict looks OK to me, I think we can let Andrew and Linus
+> > > resolve it.
+> >
+> > Andrew's tree effectively always rebases since it's a quilt series.
+> > I'd recommend pulling Ira's patch out of -mm and applying it with the
+> > rest of hmm reworks. Any other git tree I'd agree with just doing the
+> > late conflict resolution, but I'm not clear on what's the best
+> > practice when conflicting with -mm.
 
-> > Why not?  If we have a 'bar info' structure that could have data
-> > transfer op callbacks, infact, I think we might already have similar
-> > callbacks for migrating to/from DEVICE_PRIVATE memory with DMA..
-> 
-> Well it could, in theory be done, but It just seems wrong to setup and
-> wait for more DMA requests while we are in mid-progress setting up
-> another DMA request. Especially when the block layer has historically
-> had issues with stack sizes. It's also possible you might have multiple
-> bio_vec's that have to each do a migration and with a hook here they'd
-> have to be done serially.
+What happens depends on timing as things arrive to Linus. I promised
+to send hmm.git early, so I understand that Andrew will quilt rebase
+his tree to Linus's and fix the conflict in Ira's patch before he
+sends it.
 
-*shrug* this is just standard bounce buffering stuff...
- 
-> > I think the best reason to prefer a uniform phys_addr_t is that it
-> > does give us the option to copy the data to/from CPU memory. That
-> > option goes away as soon as the bio sometimes provides a dma_addr_t.
-> 
-> Not really. phys_addr_t alone doesn't give us a way to copy data. You
-> need a lookup table on that address and a couple of hooks.
+> Regardless the patch is buggy. If you want to do the conflict
+> resolution it should be because the DEVICE_PUBLIC removal effectively
+> does the same fix otherwise we're knowingly leaving a broken point in
+> the history.
 
-Yes, I'm not sure how you envision using phys_addr_t without a
-lookup.. At the end of the day we must get the src and target 'struct
-device' in the dma_map area (at the minimum to compute the offset to
-translate phys_addr_t to dma_addr_t) and the only way to do that from
-phys_addr_t is via lookup??
+I'm not sure I understand your concern, is there something wrong with
+CH's series as it stands? hmm is a non-rebasing git tree, so as long
+as the series is correct *when I apply it* there is no broken history.
 
-> > At least for RDMA, we do have some cases (like siw/rxe, hfi) where
-> > they sometimes need to do that copy. I suspect the block stack is
-> > similar, in the general case.
-> 
-> But the whole point of the use cases I'm trying to serve is to avoid the
-> root complex. 
+I assumed the conflict resolution for Ira's patch was to simply take
+the deletion of the if block from CH's series - right?
 
-Well, I think this is sort of a seperate issue. Generically I think
-the dma layer should continue to work largely transparently, and if I
-feed in BAR memory that can't be P2P'd it should bounce, just like
-all the other DMA limitations it already supports. That is pretty much
-its whole purpose in life.
+If we do need to take Ira's patch into hmm.git it will go after CH's
+series (and Ira will have to rebase/repost it), so I think there is
+nothing to do at this moment - unless you are saying there is a
+problem with the series in CH's git tree?
 
-The issue of having the caller optimize what it sends is kind of
-separate - yes you definately still need the egress DMA device to
-drive CMB buffer selection, and DEVICE_PRIVATE also needs it to decide
-if it should migrate or not.
-
-What I see as the question is how to layout the BIO. 
-
-If we agree the bio should only have phys_addr_t then we need some
-'bar info' (ie at least the offset) in the dma map and some 'bar info'
-(ie the DMA device) during the bio construciton.
-
-What you are trying to do is optimize the passing of that 'bar info'
-with a limited number of bits in the BIO.
-
-A single flag means an interval tree, 4-8 bits could build a probably
-O(1) hash lookup, 64 bits could store a pointer, etc.
-
-If we can spare 4-8 bits in the bio then I suggest a 'perfect hash
-table'. Assign each registered P2P 'bar info' a small 4 bit id and
-hash on that. It should be fast enough to not worry about the double
-lookup.
-
+Regards,
 Jason
