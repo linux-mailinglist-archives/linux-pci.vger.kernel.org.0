@@ -2,144 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3615259319
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 06:57:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C819859447
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 08:38:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725783AbfF1E5I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jun 2019 00:57:08 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45588 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726862AbfF1E5H (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jun 2019 00:57:07 -0400
-Received: by mail-pg1-f195.google.com with SMTP id z19so2017052pgl.12
-        for <linux-pci@vger.kernel.org>; Thu, 27 Jun 2019 21:57:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=40otFp6F7wYNIWaw/L8cC57SBD2LZP+aE8/JoUmprMs=;
-        b=knQXOlDKBpBtHrf+czhnvWYdz1+B5psqY/9VBnD5Bll42lCBz4ch413YItZFEx3az1
-         ISaGOSH+9ewkyDPJmxpQbLOsHIo4j45b3b+bHlKbx3IC6VXuuHxvXwxYYjK6i+1yY3WO
-         tnVerVdRLkJu1JQfvf1X89e6/XyVnX5bpxBuBnWwezmVJFldo6pt/YPKJkfMX2mhqiO7
-         a1XAbS3B4mVVfwpLReE0DlrQwGmstqPTi1PaquRmBP8Mw+ZJqDqT5JecqvmSHEpolzBb
-         zfsyGOWbgiu8k3yofhq3zpKynkFNg+JuHq+anDOUA3PRiTHXg4T0v5euRw4sm2s0YxMe
-         Sf1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=40otFp6F7wYNIWaw/L8cC57SBD2LZP+aE8/JoUmprMs=;
-        b=TY+AtJEQ5HVYGyjfG6xUXA351KpF0aVFP4hSQO7+vekmM6B33mSHs0ruW20wJTVYMk
-         SMVM7XBmvGeEbUeOhXgiHMgABCA51JqlGJriN5CJwUrNX5uaXZOsJse8B6Bhr136daD2
-         ObZcAETblyL3dpnPeyNUhGHlASZxhlXQrstYpyooXvLUPeyKWk45E3/qYaxsL98Bib4c
-         QhzOdkqj9kdLWhUwzVv/TUzKTAKSou6c608X7h46h369xcqjFgzVxVjwZm/aUYOlHV1b
-         Pctb3F5/2LieolRZvMu4U9+6din8fZforvlaawTYmDiXj2G/pTT3QLb+OGv+taHFLPgR
-         GL/g==
-X-Gm-Message-State: APjAAAVtg7QNx72yBHYEhv7iCQitLy2LUoEsTdd30j71kC0RstSbCc8k
-        BQ58qN/F0xfjePUmMvbU2nwzWg==
-X-Google-Smtp-Source: APXvYqxTBH0nvx29YJYThIHjGxJ954k/GtXrMkQAHpN5aViwJe/lSkpGTzLn6t61soW4ouOasFHRtg==
-X-Received: by 2002:a17:90a:3ac2:: with SMTP id b60mr10815350pjc.74.1561697827207;
-        Thu, 27 Jun 2019 21:57:07 -0700 (PDT)
-Received: from ziepe.ca ([38.88.19.130])
-        by smtp.gmail.com with ESMTPSA id t24sm721884pfh.113.2019.06.27.21.57.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Jun 2019 21:57:06 -0700 (PDT)
-Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hgiwb-000123-Lo; Fri, 28 Jun 2019 01:57:05 -0300
-Date:   Fri, 28 Jun 2019 01:57:05 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-Message-ID: <20190628045705.GD3705@ziepe.ca>
-References: <20190626065708.GB24531@lst.de>
- <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
- <20190626202107.GA5850@ziepe.ca>
- <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
- <20190626210018.GB6392@ziepe.ca>
- <c25d3333-dcd5-3313-089b-7fbbd6fbd876@deltatee.com>
- <20190627063223.GA7736@ziepe.ca>
- <6afe4027-26c8-df4e-65ce-49df07dec54d@deltatee.com>
- <20190627163504.GB9568@ziepe.ca>
- <4894142c-3233-a3bb-f9a3-4a4985136e9b@deltatee.com>
+        id S1726937AbfF1GiZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jun 2019 02:38:25 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:10751 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726648AbfF1GiZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jun 2019 02:38:25 -0400
+X-UUID: da96804691c5402e872980591e3bd802-20190628
+X-UUID: da96804691c5402e872980591e3bd802-20190628
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 937936099; Fri, 28 Jun 2019 14:38:10 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 28 Jun
+ 2019 14:38:06 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 28 Jun 2019 14:38:06 +0800
+Message-ID: <1561703886.21133.14.camel@mhfsdcap03>
+Subject: Re: [PATCH 2/2] PCI: mediatek: Add controller support for MT7629
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Bjorn Helgaas <helgaas@kernel.org>,
+        Ryder Lee =?UTF-8?Q?=28=E6=9D=8E=E5=BA=9A=E8=AB=BA=29?= 
+        <Ryder.Lee@mediatek.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Youlin Pei =?UTF-8?Q?=28=E8=A3=B4=E5=8F=8B=E6=9E=97=29?= 
+        <youlin.pei@mediatek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        Honghui Zhang =?UTF-8?Q?=28=E5=BC=A0=E6=B4=AA=E8=BE=89=29?= 
+        <Honghui.Zhang@mediatek.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, <jianjun.wang@mediatek.com>
+Date:   Fri, 28 Jun 2019 14:38:06 +0800
+In-Reply-To: <20190219150352.GA21833@e107981-ln.cambridge.arm.com>
+References: <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
+         <20181213145517.GB4701@google.com> <1545034779.8528.8.camel@mhfsdcap03>
+         <20181217143247.GK20725@google.com>
+         <20181217154645.GA24864@e107981-ln.cambridge.arm.com>
+         <1545124764.25199.3.camel@mhfsdcap03> <20181220182043.GC183878@google.com>
+         <1545651628.5634.57.camel@mhfsdcap03>
+         <20190123154023.GA1157@e107981-ln.cambridge.arm.com>
+         <1550559699.29794.2.camel@mhfsdcap03>
+         <20190219150352.GA21833@e107981-ln.cambridge.arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4894142c-3233-a3bb-f9a3-4a4985136e9b@deltatee.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 226F04D099627E20AD2AD93D5DC115D1142A2FAD96C8240667F1D37A93E3DA682000:8
+X-MTK:  N
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 10:49:43AM -0600, Logan Gunthorpe wrote:
-
-> > I don't think a GPU/FPGA driver will be involved, this would enter the
-> > block layer through the O_DIRECT path or something generic.. This the
-> > general flow I was suggesting to Dan earlier
-> 
-> I would say the O_DIRECT path has to somehow call into the driver
-> backing the VMA to get an address to appropriate memory (in some way
-> vaguely similar to how we were discussing at LSF/MM)
-
-Maybe, maybe no. For something like VFIO the PTE already has the
-correct phys_addr_t and we don't need to do anything..
-
-For DEVICE_PRIVATE we need to get the phys_addr_t out - presumably
-through a new pagemap op?
-
-> If P2P can't be done at that point, then the provider driver would
-> do the copy to system memory, in the most appropriate way, and
-> return regular pages for O_DIRECT to submit to the block device.
-
-That only makes sense for the migratable DEVICE_PRIVATE case, it
-doesn't help the VFIO-like case, there you'd need to bounce buffer.
-
-> >> I think it would be a larger layering violation to have the NVMe driver
-> >> (for example) memcpy data off a GPU's bar during a dma_map step to
-> >> support this bouncing. And it's even crazier to expect a DMA transfer to
-> >> be setup in the map step.
+On Tue, 2019-02-19 at 23:03 +0800, Lorenzo Pieralisi wrote:
+> On Tue, Feb 19, 2019 at 03:01:39PM +0800, Jianjun Wang wrote:
+> > On Wed, 2019-01-23 at 15:40 +0000, Lorenzo Pieralisi wrote:
+> > > On Mon, Dec 24, 2018 at 07:40:28PM +0800, Jianjun Wang wrote:
+> > > > On Thu, 2018-12-20 at 12:20 -0600, Bjorn Helgaas wrote:
+> > > > > On Tue, Dec 18, 2018 at 05:19:24PM +0800, Jianjun Wang wrote:
+> > > > > > On Mon, 2018-12-17 at 15:46 +0000, Lorenzo Pieralisi wrote:
+> > > > > > > On Mon, Dec 17, 2018 at 08:32:47AM -0600, Bjorn Helgaas wrote:
+> > > > > > > > On Mon, Dec 17, 2018 at 04:19:39PM +0800, Jianjun Wang wrote:
+> > > > > > > > > On Thu, 2018-12-13 at 08:55 -0600, Bjorn Helgaas wrote:
+> > > > > > > > > > On Thu, Dec 06, 2018 at 09:09:13AM +0800, Jianjun Wang wrote:
+> > > > > > > > > > > The read value of BAR0 is 0xffff_ffff, it's size will be
+> > > > > > > > > > > calculated as 4GB in arm64 but bogus alignment values at
+> > > > > > > > > > > arm32, the pcie device and devices behind this bridge will
+> > > > > > > > > > > not be enabled. Fix it's BAR0 resource size to guarantee
+> > > > > > > > > > > the pcie devices will be enabled correctly.
+> > > > > > > > > > 
+> > > > > > > > > > So this is a hardware erratum?  Per spec, a memory BAR has
+> > > > > > > > > > bit 0 hardwired to 0, and an IO BAR has bit 1 hardwired to
+> > > > > > > > > > 0.
+> > > > > > > > > 
+> > > > > > > > > Yes, it only works properly on 64bit platform.
+> > > > > > > > 
+> > > > > > > > I don't understand.  BARs are supposed to work the same
+> > > > > > > > regardless of whether it's a 32- or 64-bit platform.  If this is
+> > > > > > > > a workaround for a hardware defect, please just say that
+> > > > > > > > explicitly.
+> > > > > > > 
+> > > > > > > I do not understand this either. First thing to do is to describe
+> > > > > > > the problem properly so that we can actually find a solution to
+> > > > > > > it.
+> > > > > > 
+> > > > > > This BAR0 is a 64-bit memory BAR, the HW default values for this BAR
+> > > > > > is 0xffff_ffff_0000_0000 and it could not be changed except by
+> > > > > > config write operation.
+> > > > > 
+> > > > > If you literally get 0xffff_ffff_0000_0000 when reading the BAR, that
+> > > > > is out of spec because the low-order 4 bits of a 64-bit memory BAR
+> > > > > cannot all be zero.
+> > > > > 
+> > > > > A 64-bit BAR consumes two DWORDS in config space.  For a 64-bit BAR0,
+> > > > > the DWORD at 0x10 contains the low-order bits, and the DWORD at 0x14
+> > > > > contains the upper 32 bits.  Bits 0-3 of the low-order DWORD (the
+> > > > > one at 0x10) are read-only, and in this case should contain the value
+> > > > > 0b1100 (0xc).  That means the range is prefetchable (bit 3 == 1) and
+> > > > > the BAR is 64 bits (bits 2:1 == 10).
+> > > > 
+> > > > Sorry, I have confused the HW default value and the read value of BAR
+> > > > size. The hardware default value is 0xffff_ffff_0000_000c, it's a 64-bit
+> > > > BAR with prefetchable range.
+> > > > 
+> > > > When we start to decoding the BAR, the read value of BAR0 at 0x10 is
+> > > > 0x0c, and the value at 0x14 is 0xffff_ffff, so the read value of BAR
+> > > > size is 0xffff_ffff_0000_0000, which will be decoded to 0xffff_ffff, and
+> > > > it will be set to the end value of BAR0 resource in the pci_dev.
+> > > > > 
+> > > > > > The calculated BAR size will be 0 in 32-bit platform since the
+> > > > > > phys_addr_t is a 32bit value in 32-bit platform.
+> > > > > 
+> > > > > Either (1) this is a hardware defect that feeds incorrect data to the
+> > > > > BAR size calculation, or (2) there's a problem in the BAR size
+> > > > > calculation code.  We need to figure out which one and work around or
+> > > > > fix it correctly.
+> > > > 
+> > > > The BAR size is calculated by the code (res->end - res->start + 1) is
+> > > > fine, I think it's a hardware defect because that we can not change the
+> > > > hardware default value or just disable it since we don't using it.
+> > > 
+> > > Apologies for the delay in getting back to this.
+> > > 
+> > > This looks like a kernel defect, not a HW defect.
+> > > 
+> > > I need some time to make up my mind on what the right fix for this
+> > > but it is most certainly not this patch.
+> > > 
+> > > Lorenzo
 > > 
-> > Why? Don't we already expect the DMA mapper to handle bouncing for
-> > lots of cases, how is this case different? This is the best place to
-> > place it to make it shared.
+> > Hi Lorenzo,
+> > 
+> > Is there any better idea about this patch?
 > 
-> This is different because it's special memory where the DMA mapper
-> can't possibly know the best way to transfer the data.
+> Hi,
+> 
+> I did not have time to investigate the issue in core code that triggers
+> this defect but this patch is not the solution to the problem it is a
+> plaster that papers over it, I won't merge it.
+> 
+> I would appreciate some help. If you could have a look at core code that
+> triggers the failure we can analyze what should be done to make it work,
+> I do not think it is a defect in your IP.
+> 
+> Lorenzo
 
-Why not?  If we have a 'bar info' structure that could have data
-transfer op callbacks, infact, I think we might already have similar
-callbacks for migrating to/from DEVICE_PRIVATE memory with DMA..
+Hi Lorenzo,
 
-> One could argue that the hook to the GPU/FPGA driver could be in the
-> mapping step but then we'd have to do lookups based on an address --
-> where as the VMA could more easily have a hook back to whatever driver
-> exported it.
+This BAR size issue has been fixed by commit
+"01b37f851ca150554496fd6e79c6d9a67992a2c0
+PCI: Make pci_size() return real BAR size"
 
-The trouble with a VMA hook is that it is only really avaiable when
-working with the VA, and it is not actually available during GUP, you
-have to have a GUP-like thing such as hmm_range_snapshot that is
-specifically VMA based. And it is certainly not available during dma_map.
+So there is no need to add the fixup method, I will remove it in next
+version.
 
-When working with VMA's/etc it seems there are some good reasons to
-drive things off of the PTE content (either via struct page & pgmap or
-via phys_addr_t & barmap)
+Thanks.
 
-I think the best reason to prefer a uniform phys_addr_t is that it
-does give us the option to copy the data to/from CPU memory. That
-option goes away as soon as the bio sometimes provides a dma_addr_t.
 
-At least for RDMA, we do have some cases (like siw/rxe, hfi) where
-they sometimes need to do that copy. I suspect the block stack is
-similar, in the general case.
-
-Jason
