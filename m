@@ -2,81 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 175E859CF7
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 15:33:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4488D59D0F
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 15:38:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfF1Ndb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jun 2019 09:33:31 -0400
-Received: from mga06.intel.com ([134.134.136.31]:40369 "EHLO mga06.intel.com"
+        id S1726695AbfF1Nim (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jun 2019 09:38:42 -0400
+Received: from verein.lst.de ([213.95.11.211]:38826 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbfF1Ndb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Jun 2019 09:33:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 06:33:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,427,1557212400"; 
-   d="scan'208";a="162974304"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 28 Jun 2019 06:33:28 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id ABD0914A; Fri, 28 Jun 2019 16:33:27 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     linux-pci@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v1] tools: PCI: Fix installation when `make tools/pci_install`
-Date:   Fri, 28 Jun 2019 16:33:26 +0300
-Message-Id: <20190628133326.18203-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726655AbfF1Nim (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 28 Jun 2019 09:38:42 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 8BA79227A81; Fri, 28 Jun 2019 15:38:37 +0200 (CEST)
+Date:   Fri, 28 Jun 2019 15:38:37 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+Message-ID: <20190628133837.GA3801@lst.de>
+References: <20190625170115.GA9746@lst.de> <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com> <20190626065708.GB24531@lst.de> <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com> <20190626202107.GA5850@ziepe.ca> <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com> <20190627090843.GB11548@lst.de> <89889319-e778-7772-ab36-dc55b59826be@deltatee.com> <20190627170027.GE10652@lst.de> <e63d0259-e17f-effe-b76d-43dbfda8ae3a@deltatee.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e63d0259-e17f-effe-b76d-43dbfda8ae3a@deltatee.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The commit c9a707875053 ("tools pci: Do not delete pcitest.sh in 'make clean'")
-fixed a `make tools clean` issue and simultaneously brought a regression
-to the installation process:
+On Thu, Jun 27, 2019 at 12:00:35PM -0600, Logan Gunthorpe wrote:
+> > It is not.  (c) is fundamentally very different as it is not actually
+> > an operation that ever goes out to the wire at all, and which is why the
+> > actual physical address on the wire does not matter at all.
+> > Some interfaces like NVMe have designed it in a way that it the commands
+> > used to do this internal transfer look like (b2), but that is just their
+> > (IMHO very questionable) interface design choice, that produces a whole
+> > chain of problems.
+> 
+> >From the mapping device's driver's perspective yes, but from the
+> perspective of a submitting driver they would be the same.
 
-  for script in .../tools/pci/pcitest.sh; do	\
-	install $script .../usr/usr/bin;	\
-  done
-  install: cannot stat '.../tools/pci/pcitest.sh': No such file or directory
+With your dma_addr_t scheme it won't be the same, as you'd need
+a magic way to generate the internal addressing and stuff it into
+the dma_addr_t.  With a phys_addr_t based scheme they should basically
+be all the same.
 
-Here is the missed part of the fix.
+> Yes, you did suggest them. But what I'm trying to suggest is we don't
+> *necessarily* need the lookup. For demonstration purposes only, a
+> submitting driver could very roughly potentially do:
+> 
+> struct bio_vec vec;
+> dist = pci_p2pdma_dist(provider_pdev, mapping_pdev);
+> if (dist < 0) {
+>      /* use regular memory */
+>      vec.bv_addr = virt_to_phys(kmalloc(...));
+>      vec.bv_flags = 0;
+> } else if (dist & PCI_P2PDMA_THRU_HOST_BRIDGE) {
+>      vec.bv_addr = pci_p2pmem_alloc_phys(provider_pdev, ...);
+>      vec.bv_flags = BVEC_MAP_RESOURCE;
+> } else {
+>      vec.bv_addr = pci_p2pmem_alloc_bus_addr(provider_pdev, ...);
+>      vec.bv_flags = BVEC_MAP_BUS_ADDR;
+> }
 
-Cc: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- tools/pci/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+That doesn't look too bad, except..
 
-diff --git a/tools/pci/Makefile b/tools/pci/Makefile
-index 6876ee4bd78c..cc4a161ee2cc 100644
---- a/tools/pci/Makefile
-+++ b/tools/pci/Makefile
-@@ -47,10 +47,10 @@ clean:
- 
- install: $(ALL_PROGRAMS)
- 	install -d -m 755 $(DESTDIR)$(bindir);		\
--	for program in $(ALL_PROGRAMS) pcitest.sh; do	\
-+	for program in $(ALL_PROGRAMS); do		\
- 		install $$program $(DESTDIR)$(bindir);	\
- 	done;						\
--	for script in $(ALL_SCRIPTS); do		\
-+	for script in pcitest.sh; do			\
- 		install $$script $(DESTDIR)$(bindir);	\
- 	done
- 
--- 
-2.20.1
+> -- And a mapping driver would roughly just do:
+> 
+> dma_addr_t dma_addr;
+> if (vec.bv_flags & BVEC_MAP_BUS_ADDR) {
+>      if (pci_bus_addr_in_bar(mapping_pdev, vec.bv_addr, &bar, &off))  {
+>           /* case (c) */
+>           /* program the DMA engine with bar and off */
 
+Why bother with that here if we could also let the caller handle
+that? pci_p2pdma_dist() should be able to trivially find that out
+based on provider_dev == mapping_dev.
+
+> The real difficulty here is that you'd really want all the above handled
+> by a dma_map_bvec() so it can combine every vector hitting the IOMMU
+> into a single continuous IOVA -- but it's hard to fit case (c) into that
+> equation. So it might be that a dma_map_bvec() handles cases (a), (b1)
+> and (b2) and the mapping driver has to then check each resulting DMA
+> vector for pci_bus_addr_in_bar() while it is programming the DMA engine
+> to deal with case (c).
+
+I'd do it the other way around.  pci_p2pdma_dist is used to find
+the p2p type.  The p2p type is stuff into the bio_vec, and we then:
+
+ (1) manually check for case (c) in driver for drivers that want to
+     treat it different from (b)
+ (2) we then have a dma mapping wrapper that checks the p2p type
+     and does the right thing for the rest.
