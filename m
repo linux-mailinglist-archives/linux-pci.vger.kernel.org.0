@@ -2,138 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E5245950E
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 09:35:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EF765964A
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 10:44:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbfF1Hf2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jun 2019 03:35:28 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:31242 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726463AbfF1Hf2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jun 2019 03:35:28 -0400
-X-UUID: 4171d408b6704aee9ef5500fff449928-20190628
-X-UUID: 4171d408b6704aee9ef5500fff449928-20190628
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <jianjun.wang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 217366862; Fri, 28 Jun 2019 15:35:14 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 28 Jun 2019 15:35:13 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 28 Jun 2019 15:35:12 +0800
-From:   Jianjun Wang <jianjun.wang@mediatek.com>
-To:     Ryder Lee <ryder.lee@mediatek.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <youlin.pei@mediatek.com>,
-        <jianjun.wang@mediatek.com>
-Subject: [v2,2/2] PCI: mediatek: Add controller support for MT7629
-Date:   Fri, 28 Jun 2019 15:34:25 +0800
-Message-ID: <20190628073425.25165-3-jianjun.wang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20190628073425.25165-1-jianjun.wang@mediatek.com>
-References: <20190628073425.25165-1-jianjun.wang@mediatek.com>
+        id S1726408AbfF1IoG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jun 2019 04:44:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726385AbfF1IoG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 28 Jun 2019 04:44:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFA8D2070D;
+        Fri, 28 Jun 2019 08:44:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561711445;
+        bh=o6V86oek2kjSAYllqdbRs9diWyYXGQbO50xPH7OpvSM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ykGpmU6sP2eEgs8/lrb6HffixI0ak35r4b72eAIqMwJZJOc2Batv1QLFrvWcFA20k
+         vIn+SxScmErc5TuHgzKadINK17LTRa+KL8Z+sw4PElRPhx/L8I3R/YcOETnnWp3EyR
+         AzDVn+te4PTN2POdKWghJYgV/+4uWiiGlME9CeSM=
+Date:   Fri, 28 Jun 2019 10:44:02 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatxjain@gmail.com>
+Subject: Re: PCI/AER sysfs files violate the rules of how sysfs works
+Message-ID: <20190628084402.GA28386@kroah.com>
+References: <20190621072911.GA21600@kroah.com>
+ <20190621141550.GG82584@google.com>
+ <CACK8Z6FXS3VoaqxmwXCR2vnp-TSE5zGMi6Zt1w_LxskTguMw=Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 91FA08810E71FD46B88CAD112DFCA01B16B5ED1478AE18F4B91DC42D229A45642000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACK8Z6FXS3VoaqxmwXCR2vnp-TSE5zGMi6Zt1w_LxskTguMw=Q@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-MT7629 is an ARM platform SoC which has the same PCIe IP with MT7622.
+On Thu, Jun 27, 2019 at 05:56:59PM -0700, Rajat Jain wrote:
+> On Fri, Jun 21, 2019 at 7:15 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Fri, Jun 21, 2019 at 09:29:11AM +0200, Greg KH wrote:
+> > > Hi,
+> > >
+> > > When working on some documentation scripts to show the
+> > > Documentation/ABI/ files in an automated way, I ran across this "gem" of
+> > > a sysfs file: Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> > >
+> > > In it you describe how the files
+> > > /sys/bus/pci/devices/<dev>/aer_dev_correctable and
+> > > /sys/bus/pci/devices/<dev>/aer_dev_fatal and
+> > > /sys/bus/pci/devices/<dev>/aer_dev_nonfatal
+> > > all display a bunch of text on multiple lines.
+> > >
+> > > This violates the "one value per sysfs file" rule, and should never have
+> > > been merged as-is :(
+> > >
+> > > Please fix it up to be a lot of individual files if your really need all
+> > > of those different values.
+> >
+> > Sorry about that.  Do you think we're safe in changing the sysfs ABI
+> > by removing the original files and replacing them with new, better
+> > ones?  This is pretty new and hopefully not widely used yet.
+> 
+> Hi Bjorn / Greg,
+> 
+> I'm thinking of having a named group  for AER stats so that all the
+> individual counter attributes are put under a subdirectory (called
+> "aer_stats") in the sysfs, instead of cluttering the PCI device
+> directory. I expect to have the following counters in there:
+> 
+> dev_err_corr_<correctible_error_name>  (Total 8 such files)
+> dev_err_fatal_<fatal_error_name> (Total 17 Such files)
+> dev_err_nonfatal_<fatal_error_name> (Total 17 Such files)
+> 
+> dev_total_err_corr (1file)
+> dev_total_err_fatal (1file)
+> dev_total_err_nonfatal (1file)
+> 
+> rootport_total_err_corr (1file - only for rootports)
+> rootport_total_err_fatal (1file - only for rootports)
+> rootport_total_err_nonfatal (1file - only for rootports)
+> 
+> Please let me know if this sounds ok.
 
-The HW default value of its Device ID is invalid, fix its Device ID to
-match the hardware implementation.
+Sounds good to me.
 
-Acked-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
----
- drivers/pci/controller/pcie-mediatek.c | 18 ++++++++++++++++++
- include/linux/pci_ids.h                |  1 +
- 2 files changed, 19 insertions(+)
+thanks,
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 80601e1b939e..e5e6740b635d 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -73,6 +73,7 @@
- #define PCIE_MSI_VECTOR		0x0c0
- 
- #define PCIE_CONF_VEND_ID	0x100
-+#define PCIE_CONF_DEVICE_ID	0x102
- #define PCIE_CONF_CLASS_ID	0x106
- 
- #define PCIE_INT_MASK		0x420
-@@ -141,12 +142,16 @@ struct mtk_pcie_port;
- /**
-  * struct mtk_pcie_soc - differentiate between host generations
-  * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-+ * @need_fix_device_id: whether this host's Device ID needed to be fixed or not
-+ * @device_id: Device ID which this host need to be fixed
-  * @ops: pointer to configuration access functions
-  * @startup: pointer to controller setting functions
-  * @setup_irq: pointer to initialize IRQ functions
-  */
- struct mtk_pcie_soc {
- 	bool need_fix_class_id;
-+	bool need_fix_device_id;
-+	unsigned int device_id;
- 	struct pci_ops *ops;
- 	int (*startup)(struct mtk_pcie_port *port);
- 	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-@@ -696,6 +701,9 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
- 		writew(val, port->base + PCIE_CONF_CLASS_ID);
- 	}
- 
-+	if (soc->need_fix_device_id)
-+		writew(soc->device_id, port->base + PCIE_CONF_DEVICE_ID);
-+
- 	/* 100ms timeout value should be enough for Gen1/2 training */
- 	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
- 				 !!(val & PCIE_PORT_LINKUP_V2), 20,
-@@ -1216,11 +1224,21 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
- 	.setup_irq = mtk_pcie_setup_irq,
- };
- 
-+static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
-+	.need_fix_class_id = true,
-+	.need_fix_device_id = true,
-+	.device_id = PCI_DEVICE_ID_MEDIATEK_7629,
-+	.ops = &mtk_pcie_ops_v2,
-+	.startup = mtk_pcie_startup_port_v2,
-+	.setup_irq = mtk_pcie_setup_irq,
-+};
-+
- static const struct of_device_id mtk_pcie_ids[] = {
- 	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
- 	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
- 	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
- 	{ .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
-+	{ .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
- 	{},
- };
- 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 70e86148cb1e..aa32962759b2 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2131,6 +2131,7 @@
- #define PCI_VENDOR_ID_MYRICOM		0x14c1
- 
- #define PCI_VENDOR_ID_MEDIATEK		0x14c3
-+#define PCI_DEVICE_ID_MEDIATEK_7629	0x7629
- 
- #define PCI_VENDOR_ID_TITAN		0x14D2
- #define PCI_DEVICE_ID_TITAN_010L	0x8001
--- 
-2.18.0
-
+greg k-h
