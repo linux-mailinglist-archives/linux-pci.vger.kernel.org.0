@@ -2,98 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EF765964A
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 10:44:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FCC159869
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 12:30:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbfF1IoG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jun 2019 04:44:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726385AbfF1IoG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:44:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFA8D2070D;
-        Fri, 28 Jun 2019 08:44:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561711445;
-        bh=o6V86oek2kjSAYllqdbRs9diWyYXGQbO50xPH7OpvSM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ykGpmU6sP2eEgs8/lrb6HffixI0ak35r4b72eAIqMwJZJOc2Batv1QLFrvWcFA20k
-         vIn+SxScmErc5TuHgzKadINK17LTRa+KL8Z+sw4PElRPhx/L8I3R/YcOETnnWp3EyR
-         AzDVn+te4PTN2POdKWghJYgV/+4uWiiGlME9CeSM=
-Date:   Fri, 28 Jun 2019 10:44:02 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatxjain@gmail.com>
-Subject: Re: PCI/AER sysfs files violate the rules of how sysfs works
-Message-ID: <20190628084402.GA28386@kroah.com>
-References: <20190621072911.GA21600@kroah.com>
- <20190621141550.GG82584@google.com>
- <CACK8Z6FXS3VoaqxmwXCR2vnp-TSE5zGMi6Zt1w_LxskTguMw=Q@mail.gmail.com>
+        id S1726671AbfF1KaG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jun 2019 06:30:06 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:55213 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfF1KaG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jun 2019 06:30:06 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N7zW7-1ic3kn1u4Z-0155ao; Fri, 28 Jun 2019 12:29:54 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pci: tegra: use correct gpio/consumer.h header
+Date:   Fri, 28 Jun 2019 12:29:45 +0200
+Message-Id: <20190628102953.2369879-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACK8Z6FXS3VoaqxmwXCR2vnp-TSE5zGMi6Zt1w_LxskTguMw=Q@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:zzUOH1RM+MdToDOSOYUpqwuJhko3ET3hxBn0kGPsim+JIxZYxG1
+ XL97K10O0FLtJdhcC8TvvrZ+HcsVaob78pOqwoRHayQtkPzyUnXYmeRdZiooYnSWvlgaDLJ
+ UX1HF8WDmnop1ec+ErULmE0rOEZyKM9nbU1B5YxhZUgpe/PXfZSN184ruVBbzJmE9JY+IqL
+ 1bg1JEOXFUbYd0uZnb7tg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uOgGL06hKEA=:hS06+fwf1oiScunEXCJ/Q9
+ FPwbQ2nNg3RcBK2Z9OxHw/n6hxX2YWAfAAjYU7fMzaedv9Y426SIChlRpgYSQ+5t+eUhN8oSz
+ aaw315oUK2DmZfIALtX85tDBJM+OoAGBWE50jGYGYdnmTvobIpZFJUqEl0uVJ5Qoq+WJ0F62O
+ 2hX5thowapEb41Jc2InElhRBOz8qRdnLXZ4bSldmCez5V+/wxUakjVTnRUQGDJHW74vufTVMT
+ WsXmutUVJyujUC3x2gmo35hOjKY6wnekr8ldjGC/KVYXIBxMtdDPLYuDv3pfOgSF1TTHiH7an
+ eIrvajVlLiZhCD6rNogHzfZarweSFnJMmqm569guG0m/111LCUqrYSj2X3Qs7m1Ots2MZQ+Vg
+ klsnxXrX2LR8NWpc7GCIh4JnKdpyoWtRUssI8pa/zhtNwF51/rgpELL57qCf3kTOyXWwt6r6U
+ jMev3IoHVG9fBcjSenEVIfDLoxLo/hIbHvAc/rIP6EvIJQ+w26caYlYXB/A2sBu48oexCAhNQ
+ md1cRiV8C6nvA6qekQ142FAUBnJoxm46ZbIGa4VtDxzQ86TvT9FYY4UyriUWcT/j1+axePGRX
+ mPclptMg0uriMqyRMZWrVOT/Lv1QwUlRgavwu3iPKYG40LqwsaxvBPWKSpmrmweCYz9uxETKg
+ zl66Dzbhcab4Xoq2Azb7Hlkd4Nx71qBL/isG7n3a6Hc/VXc90NuYFE+CeKXGZ49ZHrfb7UTfP
+ RmamvsxPm1j3TdFlCE1Ls3psNS/Anqx2Zf/P0w==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 05:56:59PM -0700, Rajat Jain wrote:
-> On Fri, Jun 21, 2019 at 7:15 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Fri, Jun 21, 2019 at 09:29:11AM +0200, Greg KH wrote:
-> > > Hi,
-> > >
-> > > When working on some documentation scripts to show the
-> > > Documentation/ABI/ files in an automated way, I ran across this "gem" of
-> > > a sysfs file: Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> > >
-> > > In it you describe how the files
-> > > /sys/bus/pci/devices/<dev>/aer_dev_correctable and
-> > > /sys/bus/pci/devices/<dev>/aer_dev_fatal and
-> > > /sys/bus/pci/devices/<dev>/aer_dev_nonfatal
-> > > all display a bunch of text on multiple lines.
-> > >
-> > > This violates the "one value per sysfs file" rule, and should never have
-> > > been merged as-is :(
-> > >
-> > > Please fix it up to be a lot of individual files if your really need all
-> > > of those different values.
-> >
-> > Sorry about that.  Do you think we're safe in changing the sysfs ABI
-> > by removing the original files and replacing them with new, better
-> > ones?  This is pretty new and hopefully not widely used yet.
-> 
-> Hi Bjorn / Greg,
-> 
-> I'm thinking of having a named group  for AER stats so that all the
-> individual counter attributes are put under a subdirectory (called
-> "aer_stats") in the sysfs, instead of cluttering the PCI device
-> directory. I expect to have the following counters in there:
-> 
-> dev_err_corr_<correctible_error_name>  (Total 8 such files)
-> dev_err_fatal_<fatal_error_name> (Total 17 Such files)
-> dev_err_nonfatal_<fatal_error_name> (Total 17 Such files)
-> 
-> dev_total_err_corr (1file)
-> dev_total_err_fatal (1file)
-> dev_total_err_nonfatal (1file)
-> 
-> rootport_total_err_corr (1file - only for rootports)
-> rootport_total_err_fatal (1file - only for rootports)
-> rootport_total_err_nonfatal (1file - only for rootports)
-> 
-> Please let me know if this sounds ok.
+linux/gpio.h is not the correct header for modern interfaces and
+causes a build failure without CONFIG_GPIOLIB:
 
-Sounds good to me.
+drivers/pci/controller/pci-tegra.c: In function 'tegra_pcie_port_reset':
+drivers/pci/controller/pci-tegra.c:551:3: error: implicit declaration of function 'gpiod_set_value'; did you mean 'gpio_set_value'? [-Werror=implicit-function-declaration]
+   gpiod_set_value(port->reset_gpio, 1);
+   ^~~~~~~~~~~~~~~
 
-thanks,
+Use linux/gpio/consumer.h instead.
 
-greg k-h
+Fixes: 5e5e9c23f82a ("PCI: tegra: Add support for GPIO based PERST#")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/pci/controller/pci-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 9cc03a2549c0..1775b88c0aec 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -17,7 +17,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/export.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/interrupt.h>
+ #include <linux/iopoll.h>
+ #include <linux/irq.h>
+-- 
+2.20.0
+
