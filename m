@@ -2,87 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F2ADD591C4
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 04:58:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3615259319
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 06:57:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbfF1C6h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jun 2019 22:58:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59398 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726441AbfF1C6g (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 Jun 2019 22:58:36 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B92A8356D4;
-        Fri, 28 Jun 2019 02:58:33 +0000 (UTC)
-Received: from jsavitz.bos.com (ovpn-123-72.rdu2.redhat.com [10.10.123.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B46BC60BE0;
-        Fri, 28 Jun 2019 02:58:29 +0000 (UTC)
-From:   Joel Savitz <jsavitz@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Joel Savitz <jsavitz@redhat.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v2] PCI: rpaphp: Avoid a sometimes-uninitialized warning
-Date:   Thu, 27 Jun 2019 22:57:54 -0400
-Message-Id: <1561690674-5880-1-git-send-email-jsavitz@redhat.com>
-In-Reply-To: <20190603221157.58502-1-natechancellor@gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 28 Jun 2019 02:58:36 +0000 (UTC)
+        id S1725783AbfF1E5I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jun 2019 00:57:08 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45588 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726862AbfF1E5H (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jun 2019 00:57:07 -0400
+Received: by mail-pg1-f195.google.com with SMTP id z19so2017052pgl.12
+        for <linux-pci@vger.kernel.org>; Thu, 27 Jun 2019 21:57:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=40otFp6F7wYNIWaw/L8cC57SBD2LZP+aE8/JoUmprMs=;
+        b=knQXOlDKBpBtHrf+czhnvWYdz1+B5psqY/9VBnD5Bll42lCBz4ch413YItZFEx3az1
+         ISaGOSH+9ewkyDPJmxpQbLOsHIo4j45b3b+bHlKbx3IC6VXuuHxvXwxYYjK6i+1yY3WO
+         tnVerVdRLkJu1JQfvf1X89e6/XyVnX5bpxBuBnWwezmVJFldo6pt/YPKJkfMX2mhqiO7
+         a1XAbS3B4mVVfwpLReE0DlrQwGmstqPTi1PaquRmBP8Mw+ZJqDqT5JecqvmSHEpolzBb
+         zfsyGOWbgiu8k3yofhq3zpKynkFNg+JuHq+anDOUA3PRiTHXg4T0v5euRw4sm2s0YxMe
+         Sf1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=40otFp6F7wYNIWaw/L8cC57SBD2LZP+aE8/JoUmprMs=;
+        b=TY+AtJEQ5HVYGyjfG6xUXA351KpF0aVFP4hSQO7+vekmM6B33mSHs0ruW20wJTVYMk
+         SMVM7XBmvGeEbUeOhXgiHMgABCA51JqlGJriN5CJwUrNX5uaXZOsJse8B6Bhr136daD2
+         ObZcAETblyL3dpnPeyNUhGHlASZxhlXQrstYpyooXvLUPeyKWk45E3/qYaxsL98Bib4c
+         QhzOdkqj9kdLWhUwzVv/TUzKTAKSou6c608X7h46h369xcqjFgzVxVjwZm/aUYOlHV1b
+         Pctb3F5/2LieolRZvMu4U9+6din8fZforvlaawTYmDiXj2G/pTT3QLb+OGv+taHFLPgR
+         GL/g==
+X-Gm-Message-State: APjAAAVtg7QNx72yBHYEhv7iCQitLy2LUoEsTdd30j71kC0RstSbCc8k
+        BQ58qN/F0xfjePUmMvbU2nwzWg==
+X-Google-Smtp-Source: APXvYqxTBH0nvx29YJYThIHjGxJ954k/GtXrMkQAHpN5aViwJe/lSkpGTzLn6t61soW4ouOasFHRtg==
+X-Received: by 2002:a17:90a:3ac2:: with SMTP id b60mr10815350pjc.74.1561697827207;
+        Thu, 27 Jun 2019 21:57:07 -0700 (PDT)
+Received: from ziepe.ca ([38.88.19.130])
+        by smtp.gmail.com with ESMTPSA id t24sm721884pfh.113.2019.06.27.21.57.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Jun 2019 21:57:06 -0700 (PDT)
+Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hgiwb-000123-Lo; Fri, 28 Jun 2019 01:57:05 -0300
+Date:   Fri, 28 Jun 2019 01:57:05 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+Message-ID: <20190628045705.GD3705@ziepe.ca>
+References: <20190626065708.GB24531@lst.de>
+ <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
+ <20190626202107.GA5850@ziepe.ca>
+ <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
+ <20190626210018.GB6392@ziepe.ca>
+ <c25d3333-dcd5-3313-089b-7fbbd6fbd876@deltatee.com>
+ <20190627063223.GA7736@ziepe.ca>
+ <6afe4027-26c8-df4e-65ce-49df07dec54d@deltatee.com>
+ <20190627163504.GB9568@ziepe.ca>
+ <4894142c-3233-a3bb-f9a3-4a4985136e9b@deltatee.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4894142c-3233-a3bb-f9a3-4a4985136e9b@deltatee.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
->On Mon, Jun 03, 2019 at 03:11:58PM -0700, Nathan Chancellor wrote:
->> When building with -Wsometimes-uninitialized, clang warns:
->> 
->> drivers/pci/hotplug/rpaphp_core.c:243:14: warning: variable 'fndit' is
->> used uninitialized whenever 'for' loop exits because its condition is
->> false [-Wsometimes-uninitialized]
->>         for (j = 0; j < entries; j++) {
->>                     ^~~~~~~~~~~
->> drivers/pci/hotplug/rpaphp_core.c:256:6: note: uninitialized use occurs
->> here
->>         if (fndit)
->>             ^~~~~
->> drivers/pci/hotplug/rpaphp_core.c:243:14: note: remove the condition if
->> it is always true
->>         for (j = 0; j < entries; j++) {
->>                     ^~~~~~~~~~~
->> drivers/pci/hotplug/rpaphp_core.c:233:14: note: initialize the variable
->> 'fndit' to silence this warning
->>         int j, fndit;
->>                     ^
->>                      = 0
->> 
->> fndit is only used to gate a sprintf call, which can be moved into the
->> loop to simplify the code and eliminate the local variable, which will
->> fix this warning.
->> 
->> Link: https://github.com/ClangBuiltLinux/linux/issues/504
->> Fixes: 2fcf3ae508c2 ("hotplug/drc-info: Add code to search ibm,drc-info property")
->> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
->> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
->> ---
->> 
->> v1 -> v2:
->> 
->> * Eliminate fndit altogether by shuffling the sprintf call into the for
->>   loop and changing the if conditional, as suggested by Nick.
+On Thu, Jun 27, 2019 at 10:49:43AM -0600, Logan Gunthorpe wrote:
+
+> > I don't think a GPU/FPGA driver will be involved, this would enter the
+> > block layer through the O_DIRECT path or something generic.. This the
+> > general flow I was suggesting to Dan earlier
 > 
->>  drivers/pci/hotplug/rpaphp_core.c | 18 +++++++-----------
->>  1 file changed, 7 insertions(+), 11 deletions(-)
+> I would say the O_DIRECT path has to somehow call into the driver
+> backing the VMA to get an address to appropriate memory (in some way
+> vaguely similar to how we were discussing at LSF/MM)
 
->> Gentle ping, can someone pick this up?
+Maybe, maybe no. For something like VFIO the PTE already has the
+correct phys_addr_t and we don't need to do anything..
 
-Looks a good simplification of somewhat convoluted control flow.
+For DEVICE_PRIVATE we need to get the phys_addr_t out - presumably
+through a new pagemap op?
 
-Acked-by: Joel Savitz <jsavitz@redhat.com>
+> If P2P can't be done at that point, then the provider driver would
+> do the copy to system memory, in the most appropriate way, and
+> return regular pages for O_DIRECT to submit to the block device.
+
+That only makes sense for the migratable DEVICE_PRIVATE case, it
+doesn't help the VFIO-like case, there you'd need to bounce buffer.
+
+> >> I think it would be a larger layering violation to have the NVMe driver
+> >> (for example) memcpy data off a GPU's bar during a dma_map step to
+> >> support this bouncing. And it's even crazier to expect a DMA transfer to
+> >> be setup in the map step.
+> > 
+> > Why? Don't we already expect the DMA mapper to handle bouncing for
+> > lots of cases, how is this case different? This is the best place to
+> > place it to make it shared.
+> 
+> This is different because it's special memory where the DMA mapper
+> can't possibly know the best way to transfer the data.
+
+Why not?  If we have a 'bar info' structure that could have data
+transfer op callbacks, infact, I think we might already have similar
+callbacks for migrating to/from DEVICE_PRIVATE memory with DMA..
+
+> One could argue that the hook to the GPU/FPGA driver could be in the
+> mapping step but then we'd have to do lookups based on an address --
+> where as the VMA could more easily have a hook back to whatever driver
+> exported it.
+
+The trouble with a VMA hook is that it is only really avaiable when
+working with the VA, and it is not actually available during GUP, you
+have to have a GUP-like thing such as hmm_range_snapshot that is
+specifically VMA based. And it is certainly not available during dma_map.
+
+When working with VMA's/etc it seems there are some good reasons to
+drive things off of the PTE content (either via struct page & pgmap or
+via phys_addr_t & barmap)
+
+I think the best reason to prefer a uniform phys_addr_t is that it
+does give us the option to copy the data to/from CPU memory. That
+option goes away as soon as the bio sometimes provides a dma_addr_t.
+
+At least for RDMA, we do have some cases (like siw/rxe, hfi) where
+they sometimes need to do that copy. I suspect the block stack is
+similar, in the general case.
+
+Jason
