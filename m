@@ -2,63 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0282D58BA8
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2019 22:26:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B54458F79
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 02:57:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfF0U0R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jun 2019 16:26:17 -0400
-Received: from gate.crashing.org ([63.228.1.57]:57300 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbfF0U0Q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 Jun 2019 16:26:16 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5RKQ0JI017540;
-        Thu, 27 Jun 2019 15:26:01 -0500
-Message-ID: <29195ddffa377c5d080552bb5194018681f8f5f7.camel@kernel.crashing.org>
-Subject: Re: Multitude of resource assignment functions
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Date:   Fri, 28 Jun 2019 06:26:00 +1000
-In-Reply-To: <e2eec9dc-5eef-62ba-6251-f420d6579d03@deltatee.com>
-References: <SL2P216MB01874DFDDBDE49B935A9B1B380E50@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-         <e768271e-9455-2a3d-ad76-4a6d9c71d669@deltatee.com>
-         <SL2P216MB01872DFDDA9C313CA43C7B3280E40@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-         <024eec86-dfb9-0a23-6385-9e8dfe9a0381@deltatee.com>
-         <SL2P216MB0187340941F03A5A03625F4F80E10@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-         <442c6b35a1aab9833fd2942b499d4fb082a71a15.camel@kernel.crashing.org>
-         <dc631e87-099f-3354-5477-b95e97e55d3f@deltatee.com>
-         <SL2P216MB01875C9CB93E6B39846749B280FD0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-         <e2eec9dc-5eef-62ba-6251-f420d6579d03@deltatee.com>
+        id S1726652AbfF1A5i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jun 2019 20:57:38 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45103 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726606AbfF1A5i (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jun 2019 20:57:38 -0400
+Received: by mail-lj1-f193.google.com with SMTP id m23so4185544lje.12
+        for <linux-pci@vger.kernel.org>; Thu, 27 Jun 2019 17:57:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+ColG6tAMdXMX0sMcY5uS4eoT6aSf9bBNC0BhjT/Dps=;
+        b=FkqymYqSYyzMnl6BeJ+0JA3KpJHYhMUGxyg0//P/F1xTjwGV+Hc9nP0j5AsWIVw5TS
+         2hn64vii2DskH08AM9sDw3qiDUv/WCWoxusc5AeMIj95ts7Vv60TMDrhCj/SQjBZtfr+
+         p0IShO+mgPJZbNVIMebQ1ETCdkb8Kyosa6OFKhjis+06cUKGrTDtYvoqzQe+hjLHV1W9
+         jSa3kCvJq0/ejTtP3/F9KrzdmtDtN3g9dan53g7+QxeK01SpIUQze4Aq5c20BRE7jJlF
+         c2L5g9neQT9bl0JIoRrsWpH5jBJ8rXGU6gMlShDZWdhPxmfjynrl7l4nY+37ZO+ZRfVd
+         pbqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+ColG6tAMdXMX0sMcY5uS4eoT6aSf9bBNC0BhjT/Dps=;
+        b=PbqQvnokfBmihDfLzX/Sl1ONqprfi4apB+r8468R5N5giFLYwLU5xZHmwJsqNW46FI
+         Go1cOzjfcyMr1rJwWz3E7FQabLe9cycKMmyedHeULHusGrk0S2nH8LiIrU5Kwb1DfFBA
+         nvezLKJXGy8argGHhL/l3bj94bUGldnJQFi8rvUtQBlnINRo228A8Gh8sgE3alMPSmZN
+         7IMhxMKpTJQckBpiVHb270jL7EQc8aQPseko+Ws4iY0x5p38+1mF/0T7QdaphhlkgIPZ
+         8v/qMw98yLbH9eYFwMxDJsG1CgL9jhdVwyFAl2owE1Vgijzn3RzEH3B5buex8+m2EeZ+
+         LtJg==
+X-Gm-Message-State: APjAAAWtD4mEIidHd4w1HPA5xrfTVNc5weNEQp2dkdnydPkLXX0oHjFk
+        MPo4XFT5/lRU0xjb8ZcrNprcuJt1JI9HhLXmCWrIbw==
+X-Google-Smtp-Source: APXvYqxeqxKlbqEG0X8f8nA8BtDLRCgvi1n29E+p3mzGfmcxCq6PUxPeSNrEkhYQS+uyWX37yf29kbDBHfqvXOKSlIE=
+X-Received: by 2002:a2e:a311:: with SMTP id l17mr4294915lje.214.1561683455952;
+ Thu, 27 Jun 2019 17:57:35 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190621072911.GA21600@kroah.com> <20190621141550.GG82584@google.com>
+In-Reply-To: <20190621141550.GG82584@google.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Thu, 27 Jun 2019 17:56:59 -0700
+Message-ID: <CACK8Z6FXS3VoaqxmwXCR2vnp-TSE5zGMi6Zt1w_LxskTguMw=Q@mail.gmail.com>
+Subject: Re: PCI/AER sysfs files violate the rules of how sysfs works
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatxjain@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 2019-06-27 at 10:35 -0600, Logan Gunthorpe wrote:
-> My worry would be if the firmware depends on any of those PCI resources
-> for any of it's calls. For example, laptop firmware often has specific
-> code for screen blanking/dimming when the special buttons are pressed.
-> If it implements this by communicating with a PCI device then the kernel
-> will break things by reassigning all the addresses.
-> 
-> However, having a kernel parameter to ignore the firmware choices might
-> be a good way for us to start testing whether this is a problem or not
-> on some systems
+On Fri, Jun 21, 2019 at 7:15 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Jun 21, 2019 at 09:29:11AM +0200, Greg KH wrote:
+> > Hi,
+> >
+> > When working on some documentation scripts to show the
+> > Documentation/ABI/ files in an automated way, I ran across this "gem" of
+> > a sysfs file: Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> >
+> > In it you describe how the files
+> > /sys/bus/pci/devices/<dev>/aer_dev_correctable and
+> > /sys/bus/pci/devices/<dev>/aer_dev_fatal and
+> > /sys/bus/pci/devices/<dev>/aer_dev_nonfatal
+> > all display a bunch of text on multiple lines.
+> >
+> > This violates the "one value per sysfs file" rule, and should never have
+> > been merged as-is :(
+> >
+> > Please fix it up to be a lot of individual files if your really need all
+> > of those different values.
+>
+> Sorry about that.  Do you think we're safe in changing the sysfs ABI
+> by removing the original files and replacing them with new, better
+> ones?  This is pretty new and hopefully not widely used yet.
 
-As I consolidate that accross archs I can add such a parameter... I
-haven't quite folded x86 in yet, but I'm hoping I'll be able to do so
-soon. I plan to move some of those x86 specific kernel parameters into
-generic code while doing so. I can add this one.
+Hi Bjorn / Greg,
 
-Cheers,
-Ben.
+I'm thinking of having a named group  for AER stats so that all the
+individual counter attributes are put under a subdirectory (called
+"aer_stats") in the sysfs, instead of cluttering the PCI device
+directory. I expect to have the following counters in there:
 
+dev_err_corr_<correctible_error_name>  (Total 8 such files)
+dev_err_fatal_<fatal_error_name> (Total 17 Such files)
+dev_err_nonfatal_<fatal_error_name> (Total 17 Such files)
 
+dev_total_err_corr (1file)
+dev_total_err_fatal (1file)
+dev_total_err_nonfatal (1file)
 
+rootport_total_err_corr (1file - only for rootports)
+rootport_total_err_fatal (1file - only for rootports)
+rootport_total_err_nonfatal (1file - only for rootports)
+
+Please let me know if this sounds ok.
+
+Thanks & Best Regards,
+
+Rajat
+
+>
+> Bjorn
