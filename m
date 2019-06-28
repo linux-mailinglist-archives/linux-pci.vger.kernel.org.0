@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B0C05950B
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 09:35:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D78A45950C
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 09:35:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbfF1HfR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jun 2019 03:35:17 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:55227 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726463AbfF1HfQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jun 2019 03:35:16 -0400
-X-UUID: aa8ceb0559b44ced9d2a7492dd504452-20190628
-X-UUID: aa8ceb0559b44ced9d2a7492dd504452-20190628
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        id S1726586AbfF1Hf1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jun 2019 03:35:27 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:15740 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726408AbfF1Hf1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jun 2019 03:35:27 -0400
+X-UUID: 4348a167286d48f1959a32d5ed2dd538-20190628
+X-UUID: 4348a167286d48f1959a32d5ed2dd538-20190628
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
         (envelope-from <jianjun.wang@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1631612174; Fri, 28 Jun 2019 15:35:13 +0800
+        with ESMTP id 96256411; Fri, 28 Jun 2019 15:35:14 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 28 Jun 2019 15:35:11 +0800
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 28 Jun 2019 15:35:12 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 28 Jun 2019 15:35:11 +0800
+ Transport; Fri, 28 Jun 2019 15:35:12 +0800
 From:   Jianjun Wang <jianjun.wang@mediatek.com>
 To:     Ryder Lee <ryder.lee@mediatek.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -34,30 +34,42 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <youlin.pei@mediatek.com>,
         <jianjun.wang@mediatek.com>
-Subject: [v2,0/2] PCI: mediatek: Add support for MT7629
-Date:   Fri, 28 Jun 2019 15:34:23 +0800
-Message-ID: <20190628073425.25165-1-jianjun.wang@mediatek.com>
+Subject: [v2,1/2] dt-bindings: PCI: Add support for MT7629
+Date:   Fri, 28 Jun 2019 15:34:24 +0800
+Message-ID: <20190628073425.25165-2-jianjun.wang@mediatek.com>
 X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20190628073425.25165-1-jianjun.wang@mediatek.com>
+References: <20190628073425.25165-1-jianjun.wang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-SNTS-SMTP: 8ED5F4D19021FD9E5BE78EE408F42C39A0566BC23BE030BE3F8D63A4E3D719C72000:8
 X-MTK:  N
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-These series patches modify pcie-mediatek.c and dt-bindings compatible
-string to support MT7629 PCIe host.
+MT7629 is an ARM platform Soc which has the same PCIe IP with MT7622.
 
-Jianjun Wang (2):
-  dt-bindings: PCI: Add support for MT7629
-  PCI: mediatek: Add controller support for MT7629
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+---
+ Documentation/devicetree/bindings/pci/mediatek-pcie.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
- .../devicetree/bindings/pci/mediatek-pcie.txt  |  1 +
- drivers/pci/controller/pcie-mediatek.c         | 18 ++++++++++++++++++
- include/linux/pci_ids.h                        |  1 +
- 3 files changed, 20 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie.txt b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
+index 92437a366e5f..7468d666763a 100644
+--- a/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
+@@ -6,6 +6,7 @@ Required properties:
+ 	"mediatek,mt2712-pcie"
+ 	"mediatek,mt7622-pcie"
+ 	"mediatek,mt7623-pcie"
++	"mediatek,mt7629-pcie"
+ - device_type: Must be "pci"
+ - reg: Base addresses and lengths of the PCIe subsys and root ports.
+ - reg-names: Names of the above areas to use during resource lookup.
 -- 
 2.18.0
 
