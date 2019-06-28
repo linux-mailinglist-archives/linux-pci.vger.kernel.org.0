@@ -2,116 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A0F845A1C6
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 19:05:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E460B5A1EB
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 19:08:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfF1RF5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jun 2019 13:05:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:52080 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726056AbfF1RF5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Jun 2019 13:05:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF6F928;
-        Fri, 28 Jun 2019 10:05:56 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC1AB3F706;
-        Fri, 28 Jun 2019 10:05:54 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 18:05:52 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv5 10/20] PCI: mobiveil: Fix the INTx process errors
-Message-ID: <20190628170552.GD21829@e121166-lin.cambridge.arm.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-11-Zhiqiang.Hou@nxp.com>
+        id S1726513AbfF1RIm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jun 2019 13:08:42 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45014 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbfF1RIl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jun 2019 13:08:41 -0400
+Received: by mail-ot1-f65.google.com with SMTP id b7so6644458otl.11
+        for <linux-pci@vger.kernel.org>; Fri, 28 Jun 2019 10:08:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LA7BcUYMgiPM4LhkTkot3xLWQxZ9GymJ/I3cshi8054=;
+        b=aWEsAGzc2Yh3JREBeLfqCnbjuH6gFhlIwpqtRUdyIB6fGEGjp0c/9cteoNu7mVTPYk
+         k7v3tmKRFxuMhqWzggOKwBghog33HajwgNHqZGgt7yBZssqkujvFSdmZ6oFP073o8bd1
+         ZFWE8m7Q/mY3rKQ0JO12vTiImwp/mNsQn0+1FPDFmxgJqZwFVHptf+HajNjWmdXZdyi/
+         sXfT7o1lOMP8oP6O1xqR5I5TKSGwy+YYZ/aXoZ4EnNCmm8t/FhivsI3LpEb/JP77AiWP
+         Hl/nPelTzud50IIzNwJksYSVmktcqKvzLaRjqqynqcF7HJ5XeVfEHEzsPm9koUpO7D/j
+         z+yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LA7BcUYMgiPM4LhkTkot3xLWQxZ9GymJ/I3cshi8054=;
+        b=dF/cfL8nmCAUZ1+ZLjW1Mkgh5RblSAAjDuy9fJTituOdKL+t5SsgSmcReJK+kVRJy8
+         ouoNAUA5+Clrvbc6w2sPhLOwJO+tKq8RryAWrBMY/v+m9rGPLTDP44pRi2E07Q8++EUU
+         TdcDBQN2Hspt2OvLxvSpdFTmUUiaJxqw5ld490nGkFbPm3Wnf7/WBKkKgRCZJ9/Q95QF
+         IAhL6uDPHy8Lc1lXyv+7YEoBrrTbbOYuR+G00Od+9hwg5euXhSB9wQYQi1NICRxsRNyV
+         1bf9/kjwr7NEHzZcZzKf/1UVjA0r0uh4zZguvoKcbVbErlQh0OHWmo+4MjZMMpByVFyI
+         0AzQ==
+X-Gm-Message-State: APjAAAVGaoRD8OY0XZ4JW0F2N/hq9N3UrZXr2iVLICb7Pg51oZk9GTQb
+        yXqmiMgNkaOKiAlhuNcW7yKYX96M3wtqRwnjYOk/kA==
+X-Google-Smtp-Source: APXvYqx9NDQoyUwfceLcBzkU2NvzJ3YM6qn8RS5E95TlC5H3OILwJGHGUQARUz+LN1VfbIDPOiU7HWfaHbo1PzKN6QA=
+X-Received: by 2002:a9d:7b48:: with SMTP id f8mr8719655oto.207.1561741721035;
+ Fri, 28 Jun 2019 10:08:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190412083635.33626-11-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190626122724.13313-1-hch@lst.de> <20190626122724.13313-17-hch@lst.de>
+ <20190628153827.GA5373@mellanox.com> <CAPcyv4joSiFMeYq=D08C-QZSkHz0kRpvRfseNQWrN34Rrm+S7g@mail.gmail.com>
+ <20190628170219.GA3608@mellanox.com>
+In-Reply-To: <20190628170219.GA3608@mellanox.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 28 Jun 2019 10:08:30 -0700
+Message-ID: <CAPcyv4ja9DVL2zuxuSup8x3VOT_dKAOS8uBQweE9R81vnYRNWg@mail.gmail.com>
+Subject: Re: [PATCH 16/25] device-dax: use the dev_pagemap internal refcount
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 08:36:12AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> In the loop block, there is not code to update the loop key,
-> this patch updates the loop key by re-read the INTx status
-> register.
-> 
-> This patch also add the clearing of the handled INTx status.
+On Fri, Jun 28, 2019 at 10:02 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
+>
+> On Fri, Jun 28, 2019 at 09:27:44AM -0700, Dan Williams wrote:
+> > On Fri, Jun 28, 2019 at 8:39 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
+> > >
+> > > On Wed, Jun 26, 2019 at 02:27:15PM +0200, Christoph Hellwig wrote:
+> > > > The functionality is identical to the one currently open coded in
+> > > > device-dax.
+> > > >
+> > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> > > >  drivers/dax/dax-private.h |  4 ----
+> > > >  drivers/dax/device.c      | 43 ---------------------------------------
+> > > >  2 files changed, 47 deletions(-)
+> > >
+> > > DanW: I think this series has reached enough review, did you want
+> > > to ack/test any further?
+> > >
+> > > This needs to land in hmm.git soon to make the merge window.
+> >
+> > I was awaiting a decision about resolving the collision with Ira's
+> > patch before testing the final result again [1]. You can go ahead and
+> > add my reviewed-by for the series, but my tested-by should be on the
+> > final state of the series.
+>
+> The conflict looks OK to me, I think we can let Andrew and Linus
+> resolve it.
+>
 
-This is two bugs and that requires two patches, each of them fixing a
-specific issue.
-
-So split the patch into two and repost it.
-
-Lorenzo
-
-> Note: Need MV to test this fix.
-> 
-> Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> ---
-> V5:
->  - Corrected and retouched the subject and changelog.
-> 
->  drivers/pci/controller/pcie-mobiveil.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index 4ba458474e42..78e575e71f4d 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -361,6 +361,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
->  	/* Handle INTx */
->  	if (intr_status & PAB_INTP_INTX_MASK) {
->  		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
-> +		shifted_status &= PAB_INTP_INTX_MASK;
->  		shifted_status >>= PAB_INTX_START;
->  		do {
->  			for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
-> @@ -372,12 +373,16 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
->  					dev_err_ratelimited(dev, "unexpected IRQ, INT%d\n",
->  							    bit);
->  
-> -				/* clear interrupt */
-> -				csr_writel(pcie,
-> -					   shifted_status << PAB_INTX_START,
-> +				/* clear interrupt handled */
-> +				csr_writel(pcie, 1 << (PAB_INTX_START + bit),
->  					   PAB_INTP_AMBA_MISC_STAT);
->  			}
-> -		} while ((shifted_status >> PAB_INTX_START) != 0);
-> +
-> +			shifted_status = csr_readl(pcie,
-> +						   PAB_INTP_AMBA_MISC_STAT);
-> +			shifted_status &= PAB_INTP_INTX_MASK;
-> +			shifted_status >>= PAB_INTX_START;
-> +		} while (shifted_status != 0);
->  	}
->  
->  	/* read extra MSI status register */
-> -- 
-> 2.17.1
-> 
+Andrew's tree effectively always rebases since it's a quilt series.
+I'd recommend pulling Ira's patch out of -mm and applying it with the
+rest of hmm reworks. Any other git tree I'd agree with just doing the
+late conflict resolution, but I'm not clear on what's the best
+practice when conflicting with -mm.
