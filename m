@@ -2,170 +2,177 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A7855A38A
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 20:29:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5CBA5A390
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2019 20:29:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfF1S3i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jun 2019 14:29:38 -0400
-Received: from mail-eopbgr30042.outbound.protection.outlook.com ([40.107.3.42]:10226
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726498AbfF1S3i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Jun 2019 14:29:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=SMGjLKbDUPfnf9EYwqTLq1tumGoualfPfZcFgUBrEzxzlqL/SVk3jtE5n9dT2tOgXbmj9lBwtsvItQONYVwwr5YfzL8oruGtdHK8n1yZklIdQeNlQZ01vC9+f3RSEKPH/fr3Re4hHu0z8fC0KIRg7c9+19rrwDox0/hNIeYC3b8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aW+4ZnzFUxI2thr+G8Np8e2Oaw4bAbhf7CTAtwXVS7w=;
- b=XA9ftZejVn45JWnTwlvetjfcxwbhqKfzuI3izLVSnEYc9VQemMGteuUAyAVrpeKuLkJIT302YxzUg27XJQW/0988mEqMEeO0tQmLJrfKXyD4vaqSjxdd9qbfNfrlYTolHJ4xLjagtiu9BgCJ2iyCHiqF3okOMTCvJM0pprTAjp0=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aW+4ZnzFUxI2thr+G8Np8e2Oaw4bAbhf7CTAtwXVS7w=;
- b=i/sq3VFp3C08XaTuKwHLxcVYHPXIaNzhEuu3F3FguK6s4f+v0TYSCoJH2ugmmoXVU6n5/DNhHQNaWKQmEIMLgq5RWK0e1Er/GxWZs+smSRYlWXAF/zxXR48Wo9swMfK8cs9srf9qNSeH2CyPNtX0djywJbltIyU2UZb4thfbaC4=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB4365.eurprd05.prod.outlook.com (52.133.12.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Fri, 28 Jun 2019 18:29:30 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2008.014; Fri, 28 Jun 2019
- 18:29:30 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Christoph Hellwig <hch@lst.de>,
-        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 16/25] device-dax: use the dev_pagemap internal refcount
-Thread-Topic: [PATCH 16/25] device-dax: use the dev_pagemap internal refcount
-Thread-Index: AQHVLBqgvimki3zmIk2l4xtSxGbkyKaxNtmAgAANxQCAAAmqgIAAAboAgAAAeQCAABYfAA==
-Date:   Fri, 28 Jun 2019 18:29:29 +0000
-Message-ID: <20190628182922.GA15242@mellanox.com>
-References: <20190626122724.13313-1-hch@lst.de>
- <20190626122724.13313-17-hch@lst.de> <20190628153827.GA5373@mellanox.com>
- <CAPcyv4joSiFMeYq=D08C-QZSkHz0kRpvRfseNQWrN34Rrm+S7g@mail.gmail.com>
- <20190628170219.GA3608@mellanox.com>
- <CAPcyv4ja9DVL2zuxuSup8x3VOT_dKAOS8uBQweE9R81vnYRNWg@mail.gmail.com>
- <CAPcyv4iWTe=vOXUqkr_CguFrFRqgA7hJSt4J0B3RpuP-Okz0Vw@mail.gmail.com>
-In-Reply-To: <CAPcyv4iWTe=vOXUqkr_CguFrFRqgA7hJSt4J0B3RpuP-Okz0Vw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR08CA0008.namprd08.prod.outlook.com
- (2603:10b6:a03:100::21) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [76.14.1.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 92287021-7090-4314-de00-08d6fbf68ed6
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4365;
-x-ms-traffictypediagnostic: VI1PR05MB4365:
-x-microsoft-antispam-prvs: <VI1PR05MB43657FBDB1EA58C053C63BC0CFFC0@VI1PR05MB4365.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 00826B6158
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(39840400004)(376002)(136003)(199004)(189003)(66476007)(486006)(6512007)(33656002)(66946007)(7416002)(6916009)(71200400001)(2906002)(73956011)(64756008)(36756003)(66556008)(71190400001)(68736007)(66066001)(1076003)(305945005)(99286004)(7736002)(6506007)(102836004)(53546011)(6116002)(66446008)(316002)(81156014)(52116002)(54906003)(8936002)(14454004)(5660300002)(2616005)(476003)(386003)(26005)(6246003)(53936002)(25786009)(86362001)(76176011)(6486002)(4326008)(229853002)(14444005)(3846002)(186003)(11346002)(6436002)(81166006)(446003)(478600001)(256004)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4365;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: NndW95S8YhHhIuIPXgE6DJ7FFQ7Wi7Qv94ks4fGecraJJl1kl/B/OiUhXXk9d64RAObNBGQNxj/+Dsy5mCDDXsBwBDTWMuw3tjOuwTSgwG5PzhEEsvNDJf9XW+MPpKaSIsZv/rs4/U1oe22/ThS4DnCfmYBIFdhumeofar4MDc1jemYw0XIYXX8bU9TB+TOtLL3E7d3f4yPyOPANELn3trWurneIuwVvOkzGEBz4dpp7ebk/fyq+oyUj00Dl1Sgj+X8NHddMhnD3WgJiL9qTBSapgYgKOkVLUcxF56u40YYlfwNZXXBi5FOP0gnYxu24VP8w25yfd0HTdOMjiy1SlXg4j33ovwiSGHGgr9YOfs+e/FuwerlAr0ZU/nj91QnAncOQQTkPfIx9yX5IeyPw9IJWGZeEyz3r0NamJ8DV4Fo=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <14F6B0C5B925FB4B8ECAEFC2C0B435B0@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1726646AbfF1S3s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jun 2019 14:29:48 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:41700 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726514AbfF1S3s (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 28 Jun 2019 14:29:48 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hgvct-0002Ln-NS; Fri, 28 Jun 2019 12:29:36 -0600
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190626202107.GA5850@ziepe.ca>
+ <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
+ <20190626210018.GB6392@ziepe.ca>
+ <c25d3333-dcd5-3313-089b-7fbbd6fbd876@deltatee.com>
+ <20190627063223.GA7736@ziepe.ca>
+ <6afe4027-26c8-df4e-65ce-49df07dec54d@deltatee.com>
+ <20190627163504.GB9568@ziepe.ca>
+ <4894142c-3233-a3bb-f9a3-4a4985136e9b@deltatee.com>
+ <20190628045705.GD3705@ziepe.ca>
+ <8022a2a4-4069-d256-11da-e6d9b2ffbf60@deltatee.com>
+ <20190628172926.GA3877@ziepe.ca>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <25a87c72-630b-e1f1-c858-9c8b417506fc@deltatee.com>
+Date:   Fri, 28 Jun 2019 12:29:32 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92287021-7090-4314-de00-08d6fbf68ed6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 18:29:30.0154
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4365
+In-Reply-To: <20190628172926.GA3877@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de, jgg@ziepe.ca
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 10:10:12AM -0700, Dan Williams wrote:
-> On Fri, Jun 28, 2019 at 10:08 AM Dan Williams <dan.j.williams@intel.com> =
-wrote:
-> >
-> > On Fri, Jun 28, 2019 at 10:02 AM Jason Gunthorpe <jgg@mellanox.com> wro=
-te:
-> > >
-> > > On Fri, Jun 28, 2019 at 09:27:44AM -0700, Dan Williams wrote:
-> > > > On Fri, Jun 28, 2019 at 8:39 AM Jason Gunthorpe <jgg@mellanox.com> =
-wrote:
-> > > > >
-> > > > > On Wed, Jun 26, 2019 at 02:27:15PM +0200, Christoph Hellwig wrote=
-:
-> > > > > > The functionality is identical to the one currently open coded =
-in
-> > > > > > device-dax.
-> > > > > >
-> > > > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > > > > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> > > > > >  drivers/dax/dax-private.h |  4 ----
-> > > > > >  drivers/dax/device.c      | 43 -------------------------------=
---------
-> > > > > >  2 files changed, 47 deletions(-)
-> > > > >
-> > > > > DanW: I think this series has reached enough review, did you want
-> > > > > to ack/test any further?
-> > > > >
-> > > > > This needs to land in hmm.git soon to make the merge window.
-> > > >
-> > > > I was awaiting a decision about resolving the collision with Ira's
-> > > > patch before testing the final result again [1]. You can go ahead a=
-nd
-> > > > add my reviewed-by for the series, but my tested-by should be on th=
-e
-> > > > final state of the series.
-> > >
-> > > The conflict looks OK to me, I think we can let Andrew and Linus
-> > > resolve it.
-> >
-> > Andrew's tree effectively always rebases since it's a quilt series.
-> > I'd recommend pulling Ira's patch out of -mm and applying it with the
-> > rest of hmm reworks. Any other git tree I'd agree with just doing the
-> > late conflict resolution, but I'm not clear on what's the best
-> > practice when conflicting with -mm.
 
-What happens depends on timing as things arrive to Linus. I promised
-to send hmm.git early, so I understand that Andrew will quilt rebase
-his tree to Linus's and fix the conflict in Ira's patch before he
-sends it.
 
-> Regardless the patch is buggy. If you want to do the conflict
-> resolution it should be because the DEVICE_PUBLIC removal effectively
-> does the same fix otherwise we're knowingly leaving a broken point in
-> the history.
+On 2019-06-28 11:29 a.m., Jason Gunthorpe wrote:
+> On Fri, Jun 28, 2019 at 10:22:06AM -0600, Logan Gunthorpe wrote:
+> 
+>>> Why not?  If we have a 'bar info' structure that could have data
+>>> transfer op callbacks, infact, I think we might already have similar
+>>> callbacks for migrating to/from DEVICE_PRIVATE memory with DMA..
+>>
+>> Well it could, in theory be done, but It just seems wrong to setup and
+>> wait for more DMA requests while we are in mid-progress setting up
+>> another DMA request. Especially when the block layer has historically
+>> had issues with stack sizes. It's also possible you might have multiple
+>> bio_vec's that have to each do a migration and with a hook here they'd
+>> have to be done serially.
+> 
+> *shrug* this is just standard bounce buffering stuff...
 
-I'm not sure I understand your concern, is there something wrong with
-CH's series as it stands? hmm is a non-rebasing git tree, so as long
-as the series is correct *when I apply it* there is no broken history.
+I don't know of any "standard" bounce buffering stuff that uses random
+other device's DMA engines where appropriate.
 
-I assumed the conflict resolution for Ira's patch was to simply take
-the deletion of the if block from CH's series - right?
+>>> I think the best reason to prefer a uniform phys_addr_t is that it
+>>> does give us the option to copy the data to/from CPU memory. That
+>>> option goes away as soon as the bio sometimes provides a dma_addr_t.
+>>
+>> Not really. phys_addr_t alone doesn't give us a way to copy data. You
+>> need a lookup table on that address and a couple of hooks.
+> 
+> Yes, I'm not sure how you envision using phys_addr_t without a
+> lookup.. At the end of the day we must get the src and target 'struct
+> device' in the dma_map area (at the minimum to compute the offset to
+> translate phys_addr_t to dma_addr_t) and the only way to do that from
+> phys_addr_t is via lookup??
 
-If we do need to take Ira's patch into hmm.git it will go after CH's
-series (and Ira will have to rebase/repost it), so I think there is
-nothing to do at this moment - unless you are saying there is a
-problem with the series in CH's git tree?
+I thought my other email to Christoph laid it out pretty cleanly...
 
-Regards,
-Jason
+>>> At least for RDMA, we do have some cases (like siw/rxe, hfi) where
+>>> they sometimes need to do that copy. I suspect the block stack is
+>>> similar, in the general case.
+>>
+>> But the whole point of the use cases I'm trying to serve is to avoid the
+>> root complex. 
+> 
+> Well, I think this is sort of a seperate issue. Generically I think
+> the dma layer should continue to work largely transparently, and if I
+> feed in BAR memory that can't be P2P'd it should bounce, just like
+> all the other DMA limitations it already supports. That is pretty much
+> its whole purpose in life.
+
+I disagree. It's one thing for the DMA layer to work around architecture
+limitations like HighMem/LowMem and just do a memcpy when it can't
+handle it -- it's whole different thing for the DMA layer to know about
+the varieties of memory on different peripheral device's and the nuances
+of how and when to transfer between them. I think the submitting driver
+has the best information of when to do these transfers.
+
+IMO the bouncing in the DMA layer isn't a desirable thing, it was a
+necessary addition to work around various legacy platform issues and
+have existing code still work correctly. It's always better for a driver
+to allocate memory appropriate for the DMA than to just use random
+memory and rely on it being bounced by the lower layer. For P2P, we
+don't have existing code to worry about so I don't think a magic
+automatic bouncing design is appropriate.
+
+> The issue of having the caller optimize what it sends is kind of
+> separate - yes you definately still need the egress DMA device to
+> drive CMB buffer selection, and DEVICE_PRIVATE also needs it to decide
+> if it should migrate or not.
+
+Yes, but my contention is that I don't want to have to make these
+decisions twice: once before I submit it to the block layer, then again
+at mapping time.
+
+> What I see as the question is how to layout the BIO. 
+> 
+> If we agree the bio should only have phys_addr_t then we need some
+> 'bar info' (ie at least the offset) in the dma map and some 'bar info'
+> (ie the DMA device) during the bio construciton.
+
+Per my other email, it was phys_addr_t plus hints on how to map the
+memory (bus address, dma_map_resource, or regular). This requires
+exactly two flag bits in the bio_vec and no interval tree or hash table.
+I don't want to have to pass bar info, other hooks, or anything like
+that to the block layer.
+
+> What you are trying to do is optimize the passing of that 'bar info'
+> with a limited number of bits in the BIO.
+> 
+> A single flag means an interval tree, 4-8 bits could build a probably
+> O(1) hash lookup, 64 bits could store a pointer, etc.
+
+Well, an interval tree can get you the backing device for a given
+phys_addr_t; however, for P2PDMA, we need a second lookup based on the
+mapping device. This is because exactly how you map the data depends on
+both devices. Currently I'm working on this for the existing
+implementation and struct page gets me the backing device but I need
+another xarray cache based on the mapping device to figure out exactly
+how to map the memory. But none of this mess is required if we can just
+pass the mapping hints through the block layer as flags (per my other
+email) because the submitting driver should already know ahead of time
+what it's trying to do.
+
+> If we can spare 4-8 bits in the bio then I suggest a 'perfect hash
+> table'. Assign each registered P2P 'bar info' a small 4 bit id and
+> hash on that. It should be fast enough to not worry about the double
+> lookup.
+
+This feels like it's just setting us up to run into nasty limits based
+on the number of bits we actually have. The number of bits in a bio_vec
+will always be a precious resource. If I have a server chassis that
+exist today with 24 NVMe devices, and each device has a CMB, I'm already
+using up 6 of those bits. Then we might have DEVICE_PRIVATE and other
+uses on top of that.
+
+Logan
