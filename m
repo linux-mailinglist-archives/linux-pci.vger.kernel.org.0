@@ -2,128 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C19115A98D
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2019 10:08:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 572E75A9C3
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2019 11:07:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfF2IIg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 29 Jun 2019 04:08:36 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38390 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbfF2IIg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Jun 2019 04:08:36 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hh8PQ-0002GX-QA; Sat, 29 Jun 2019 10:08:32 +0200
-Date:   Sat, 29 Jun 2019 10:08:31 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Megha Dey <megha.dey@linux.intel.com>
-cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
-        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
-        megha.dey@intel.com
-Subject: Re: [RFC V1 RESEND 5/6] PCI/MSI: Free MSI-X resources by group
-In-Reply-To: <1561162778-12669-6-git-send-email-megha.dey@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.1906291002190.1802@nanos.tec.linutronix.de>
-References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com> <1561162778-12669-6-git-send-email-megha.dey@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        id S1726839AbfF2JHX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 29 Jun 2019 05:07:23 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33676 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbfF2JHX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Jun 2019 05:07:23 -0400
+Received: by mail-ot1-f66.google.com with SMTP id q20so8521321otl.0;
+        Sat, 29 Jun 2019 02:07:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=Ry0ikm9jlJIGPa85x3qVakAXT3GF98XkEln9GjZGy08=;
+        b=E69qwa8qQUd5RtGkz7SPJkWvSMxk7vArVhBA4nHx3WOIuL1NqgUMv9YUn7G4k5bTiw
+         08NIKNaoXkp0VmIQDVdTPWL2z5y0x2w2EY3bFWyAS4/ENCseIZU0jPlzWda71fw6BkR6
+         prYRBYLZE9pFmjR4Ovri7XXq2ElsmuzXmLBqGkiGPjYq7l5O0ClT9t0EzbIW48/EyiKM
+         +JEepAVeNbPfpuNGGtNiNFW8CB8dWOhG+JBM6Ghg0cL3WJ+gb/28/m4H08wqwKAzbPa7
+         RPw+wSZNUg691DAriBvu0cFOfpgMmprFp9ldRUL8fnpfEaATiONfcWMqrECbG4ZlIs+e
+         EjPg==
+X-Gm-Message-State: APjAAAVAZqUE/2FE6mKggO7mrhfKZYWMS/S7BRKZ04vF6amiZbcatGyo
+        stybQSefByw9sYX/vgKKpVlwUFn3iLHuVS+um9WreTFf
+X-Google-Smtp-Source: APXvYqwGyLH5570+dqH9wO99dggC8HFynAKWOaBFTQQyCjPw3pM+ZlRMu6ExF8TxHk0GYk5P1I9OlI5+Cs/AaAimzRU=
+X-Received: by 2002:a9d:6a4b:: with SMTP id h11mr12133029otn.266.1561799242826;
+ Sat, 29 Jun 2019 02:07:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sat, 29 Jun 2019 11:07:09 +0200
+Message-ID: <CAJZ5v0ieD3bohHtsk4dZtZL-oJF8NUz5MJ3p+zHvQ2McgaSqaw@mail.gmail.com>
+Subject: [GIT PULL] Power management fix for v5.2-rc7
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Megha,
+Hi Linus,
 
-On Fri, 21 Jun 2019, Megha Dey wrote:
-> +static int free_msi_irqs_grp(struct pci_dev *dev, int group_id)
-> +{
+Please pull from the tag
 
-> +
-> +	for_each_pci_msi_entry(entry, dev) {
-> +		if (entry->group_id == group_id && entry->irq)
-> +			for (i = 0; i < entry->nvec_used; i++)
-> +				BUG_ON(irq_has_action(entry->irq + i));
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.2-rc7
 
-BUG_ON is wrong here. This can and must be handled gracefully.
+with top-most commit 471a739a47aa7d582f0cdf9d392957d04632bae2
 
-> +	}
-> +
-> +	pci_msi_teardown_msi_irqs_grp(dev, group_id);
-> +
-> +	list_for_each_entry_safe(entry, tmp, msi_list, list) {
-> +		if (entry->group_id == group_id) {
-> +			clear_bit(entry->msi_attrib.entry_nr, dev->entry);
-> +			list_del(&entry->list);
-> +			free_msi_entry(entry);
-> +		}
-> +	}
-> +
-> +	list_for_each_entry_safe(msix_sysfs_entry, tmp_msix, pci_msix, list) {
-> +		if (msix_sysfs_entry->group_id == group_id) {
+ PCI: PM: Avoid skipping bus-level PM on platforms without ACPI
 
-Again. Proper group management makes all of that just straight forward and
-not yet another special case.
+on top of commit 4b972a01a7da614b4796475f933094751a295a2f
 
-> +			msi_attrs = msix_sysfs_entry->msi_irq_group->attrs;
->  
-> +static void pci_msix_shutdown_grp(struct pci_dev *dev, int group_id)
-> +{
-> +	struct msi_desc *entry;
-> +	int grp_present = 0;
-> +
-> +	if (pci_dev_is_disconnected(dev)) {
-> +		dev->msix_enabled = 0;
+ Linux 5.2-rc6
 
-Huch? What's that? I can't figure out why this is needed and of course it
-completely lacks a comment explaining this. 
+to receive a PCI power management fix for 5.2-rc7.
 
-> +		return;
-> +	}
-> +
-> +	/* Return the device with MSI-X masked as initial states */
-> +	for_each_pci_msi_entry(entry, dev) {
-> +		if (entry->group_id == group_id) {
-> +			/* Keep cached states to be restored */
-> +			__pci_msix_desc_mask_irq(entry, 1);
-> +			grp_present = 1;
-> +		}
-> +	}
-> +
-> +	if (!grp_present) {
-> +		pci_err(dev, "Group to be disabled not present\n");
-> +		return;
+This avoids skipping bus-level PCI power management during system
+resume for PCIe ports left in D0 during the preceding suspend
+transition on platforms where the power states of those ports
+can change out of the PCI layer's control.
 
-So you print an error and silently return
+Thanks!
 
-> +	}
-> +}
-> +
-> +int pci_disable_msix_grp(struct pci_dev *dev, int group_id)
-> +{
-> +	int num_vecs;
-> +
-> +	if (!pci_msi_enable || !dev)
-> +		return -EINVAL;
-> +
-> +	pci_msix_shutdown_grp(dev, group_id);
-> +	num_vecs = free_msi_irqs_grp(dev, group_id);
 
-just to call in another function which has to do the same group_id lookup
-muck again.
+---------------
 
-> +
-> +	return num_vecs;
-> +}
-> +EXPORT_SYMBOL(pci_disable_msix_grp);
+Rafael J. Wysocki (1):
+      PCI: PM: Avoid skipping bus-level PM on platforms without ACPI
 
-Why is this exposed ?
+---------------
 
-Thanks,
-
-	tglx
+ drivers/pci/pci-driver.c |  8 ++++----
+ include/linux/suspend.h  | 26 ++++++++++++++++++++++++--
+ kernel/power/suspend.c   |  3 +++
+ 3 files changed, 31 insertions(+), 6 deletions(-)
