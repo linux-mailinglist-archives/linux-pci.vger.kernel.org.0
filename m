@@ -2,80 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 572E75A9C3
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2019 11:07:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD4065A9EE
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2019 11:53:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfF2JHX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 29 Jun 2019 05:07:23 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33676 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfF2JHX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Jun 2019 05:07:23 -0400
-Received: by mail-ot1-f66.google.com with SMTP id q20so8521321otl.0;
-        Sat, 29 Jun 2019 02:07:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=Ry0ikm9jlJIGPa85x3qVakAXT3GF98XkEln9GjZGy08=;
-        b=E69qwa8qQUd5RtGkz7SPJkWvSMxk7vArVhBA4nHx3WOIuL1NqgUMv9YUn7G4k5bTiw
-         08NIKNaoXkp0VmIQDVdTPWL2z5y0x2w2EY3bFWyAS4/ENCseIZU0jPlzWda71fw6BkR6
-         prYRBYLZE9pFmjR4Ovri7XXq2ElsmuzXmLBqGkiGPjYq7l5O0ClT9t0EzbIW48/EyiKM
-         +JEepAVeNbPfpuNGGtNiNFW8CB8dWOhG+JBM6Ghg0cL3WJ+gb/28/m4H08wqwKAzbPa7
-         RPw+wSZNUg691DAriBvu0cFOfpgMmprFp9ldRUL8fnpfEaATiONfcWMqrECbG4ZlIs+e
-         EjPg==
-X-Gm-Message-State: APjAAAVAZqUE/2FE6mKggO7mrhfKZYWMS/S7BRKZ04vF6amiZbcatGyo
-        stybQSefByw9sYX/vgKKpVlwUFn3iLHuVS+um9WreTFf
-X-Google-Smtp-Source: APXvYqwGyLH5570+dqH9wO99dggC8HFynAKWOaBFTQQyCjPw3pM+ZlRMu6ExF8TxHk0GYk5P1I9OlI5+Cs/AaAimzRU=
-X-Received: by 2002:a9d:6a4b:: with SMTP id h11mr12133029otn.266.1561799242826;
- Sat, 29 Jun 2019 02:07:22 -0700 (PDT)
+        id S1727037AbfF2JxM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 29 Jun 2019 05:53:12 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:52207 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726965AbfF2JxL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Jun 2019 05:53:11 -0400
+Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id cb0f85cb5e292c0e; Sat, 29 Jun 2019 11:53:08 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans De Goede <hdegoede@redhat.com>,
+        "Robert R. Howell" <RHowell@uwyo.edu>
+Subject: [PATCH 0/6] PM: PCI/ACPI: Hibernation handling fixes
+Date:   Sat, 29 Jun 2019 11:33:30 +0200
+Message-ID: <2318839.0szTqvJMZa@kreacher>
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sat, 29 Jun 2019 11:07:09 +0200
-Message-ID: <CAJZ5v0ieD3bohHtsk4dZtZL-oJF8NUz5MJ3p+zHvQ2McgaSqaw@mail.gmail.com>
-Subject: [GIT PULL] Power management fix for v5.2-rc7
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Linus,
+Hi All,
 
-Please pull from the tag
+This series of patches addresses a few issues related to the handling of
+hibernation in the PCI bus type and the ACPI PM domain and ACPI LPSS driver.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.2-rc7
+First of all, all of the runtime-suspended PCI devices and devices in the ACPI PM and LPSS
+PM domains will be resumed during hibernation (first patch).  This appears to be the
+only way to avoid weird corner cases and the benefit from avoiding to resume those
+devices during hibernation is questionable.
 
-with top-most commit 471a739a47aa7d582f0cdf9d392957d04632bae2
+That change allows the the hibernation callbacks in all of the involved subsystems to be
+simplified (patches 2 and 3).
 
- PCI: PM: Avoid skipping bus-level PM on platforms without ACPI
+While at it, there is a subtle issue in the LPSS suspend callbacks which is addressed
+by patch 4.
 
-on top of commit 4b972a01a7da614b4796475f933094751a295a2f
+Moreover, reusing bus-level suspend callbacks for the "poweroff" transition during
+hibernation (which is the case for the ACPI PM domain and LPSS) is incorrect, so patch 5
+fixes that.
 
- Linux 5.2-rc6
+Finally, there are some leftover items in linux/acpi.h that can be dropped (patch 6).
 
-to receive a PCI power management fix for 5.2-rc7.
-
-This avoids skipping bus-level PCI power management during system
-resume for PCIe ports left in D0 during the preceding suspend
-transition on platforms where the power states of those ports
-can change out of the PCI layer's control.
-
-Thanks!
+Thanks,
+Rafael
 
 
----------------
 
-Rafael J. Wysocki (1):
-      PCI: PM: Avoid skipping bus-level PM on platforms without ACPI
-
----------------
-
- drivers/pci/pci-driver.c |  8 ++++----
- include/linux/suspend.h  | 26 ++++++++++++++++++++++++--
- kernel/power/suspend.c   |  3 +++
- 3 files changed, 31 insertions(+), 6 deletions(-)
