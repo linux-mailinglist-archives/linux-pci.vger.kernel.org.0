@@ -2,18 +2,18 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C0BE55A9F7
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2019 11:53:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83B2E5A9F2
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2019 11:53:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfF2JxK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 29 Jun 2019 05:53:10 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:59558 "EHLO
+        id S1726818AbfF2JxI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 29 Jun 2019 05:53:08 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:53402 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbfF2JxJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Jun 2019 05:53:09 -0400
+        with ESMTP id S1726874AbfF2JxI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Jun 2019 05:53:08 -0400
 Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 019fcf2001f61acf; Sat, 29 Jun 2019 11:53:06 +0200
+ id 9df156552b97bad2; Sat, 29 Jun 2019 11:53:05 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     Linux PCI <linux-pci@vger.kernel.org>,
@@ -24,9 +24,9 @@ Cc:     Linux PCI <linux-pci@vger.kernel.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Hans De Goede <hdegoede@redhat.com>,
         "Robert R. Howell" <RHowell@uwyo.edu>
-Subject: [PATCH 3/6] ACPI: PM: Simplify and fix PM domain hibernation callbacks
-Date:   Sat, 29 Jun 2019 11:50:15 +0200
-Message-ID: <5796347.NkSBlFHSjW@kreacher>
+Subject: [PATCH 4/6] ACPI: LPSS: Fix ->suspend_late callbacks handling
+Date:   Sat, 29 Jun 2019 11:50:54 +0200
+Message-ID: <2981101.tKVHzisTAg@kreacher>
 In-Reply-To: <2318839.0szTqvJMZa@kreacher>
 References: <2318839.0szTqvJMZa@kreacher>
 MIME-Version: 1.0
@@ -39,269 +39,118 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-First, after a previous change causing all runtime-suspended devices
-in the ACPI PM domain (and ACPI LPSS devices) to be resumed before
-creating a snapshot image of memory during hibernation, it is not
-necessary to worry about the case in which them might be left in
-runtime-suspend any more, so get rid of the code related to that from
-ACPI PM domain and ACPI LPSS hibernation callbacks.
+If the resume_from_noirq flag is set in dev_desc, the ->suspend_late
+callback provided by the device driver will be invoked at the "noirq"
+stage of system suspend, via acpi_lpss_do_suspend_late(), which is
+incorrect.
 
-Second, it is not correct to use pm_generic_resume_early() and
-acpi_subsys_resume_noirq() in hibernation "restore" callbacks (which
-currently happens in the ACPI PM domain and ACPI LPSS), so introduce
-proper _restore_late and _restore_noirq callbacks for the ACPI PM
-domain and ACPI LPSS.
+To fix that, drop acpi_lpss_do_suspend_late() and rearrange
+acpi_lpss_suspend_late() to call pm_generic_suspend_late()
+directly, before calling acpi_lpss_suspend(), in analogy with
+acpi_subsys_suspend_late().
 
-Fixes: 05087360fd7a (ACPI / PM: Take SMART_SUSPEND driver flag into account)
+Also notice that acpi_subsys_suspend_late() is not used outside
+of the file where it is defined, so make it static and drop its
+header for the header file containing it.
+
+Fixes: 48402cee6889 (ACPI / LPSS: Resume BYT/CHT I2C controllers from resume_noirq)
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/acpi/acpi_lpss.c |   59 +++++++++++++++++++++++++++++++++------------
- drivers/acpi/device_pm.c |   61 ++++++-----------------------------------------
- include/linux/acpi.h     |   10 -------
- 3 files changed, 52 insertions(+), 78 deletions(-)
+ drivers/acpi/acpi_lpss.c |   23 ++++++++++-------------
+ drivers/acpi/device_pm.c |    3 +--
+ include/linux/acpi.h     |    2 --
+ 3 files changed, 11 insertions(+), 17 deletions(-)
 
 Index: linux-pm/drivers/acpi/acpi_lpss.c
 ===================================================================
 --- linux-pm.orig/drivers/acpi/acpi_lpss.c
 +++ linux-pm/drivers/acpi/acpi_lpss.c
-@@ -1069,38 +1069,68 @@ static int acpi_lpss_suspend_noirq(struc
- 	return acpi_subsys_suspend_noirq(dev);
+@@ -1034,34 +1034,31 @@ static int acpi_lpss_resume(struct devic
  }
  
--static int acpi_lpss_do_resume_early(struct device *dev)
-+static int acpi_lpss_resume_noirq(struct device *dev)
+ #ifdef CONFIG_PM_SLEEP
+-static int acpi_lpss_do_suspend_late(struct device *dev)
++static int acpi_lpss_suspend_late(struct device *dev)
  {
--	int ret = acpi_lpss_resume(dev);
 +	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
-+	int ret;
-+
-+	/* Follow acpi_subsys_resune_noirq(). */
-+	if (dev_pm_may_skip_resume(dev))
-+		return 0;
- 
--	return ret ? ret : pm_generic_resume_early(dev);
-+	if (dev_pm_smart_suspend_and_suspended(dev))
-+		pm_runtime_set_active(dev);
-+
-+	ret = pm_generic_resume_noirq(dev);
-+	if (ret)
-+		return ret;
-+
-+	if (pdata->dev_desc->resume_from_noirq)
-+		return acpi_lpss_resume(dev);
-+
-+	return 0;
- }
- 
- static int acpi_lpss_resume_early(struct device *dev)
- {
- 	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
- 
--	if (pdata->dev_desc->resume_from_noirq)
--		return 0;
-+	if (!pdata->dev_desc->resume_from_noirq) {
-+		int ret = acpi_lpss_resume(dev);
-+		if (ret)
-+			return ret;
-+	}
- 
--	return acpi_lpss_do_resume_early(dev);
-+	return pm_generic_resume_early(dev);
- }
- 
--static int acpi_lpss_resume_noirq(struct device *dev)
-+static int acpi_lpss_restore_noirq(struct device *dev)
- {
- 	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
  	int ret;
  
--	ret = acpi_subsys_resume_noirq(dev);
-+	ret = pm_generic_restore_noirq(dev);
- 	if (ret)
- 		return ret;
+ 	if (dev_pm_smart_suspend_and_suspended(dev))
+ 		return 0;
  
--	if (!dev_pm_may_skip_resume(dev) && pdata->dev_desc->resume_from_noirq)
--		ret = acpi_lpss_do_resume_early(dev);
-+	if (pdata->dev_desc->resume_from_noirq)
-+		return acpi_lpss_resume(dev);
+ 	ret = pm_generic_suspend_late(dev);
+-	return ret ? ret : acpi_lpss_suspend(dev, device_may_wakeup(dev));
+-}
++	if (ret)
++		return ret;
  
--	return ret;
+-static int acpi_lpss_suspend_late(struct device *dev)
+-{
+-	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
+-
+-	if (pdata->dev_desc->resume_from_noirq)
+-		return 0;
++	if (!pdata->dev_desc->resume_from_noirq)
++		return acpi_lpss_suspend(dev, device_may_wakeup(dev));
+ 
+-	return acpi_lpss_do_suspend_late(dev);
 +	return 0;
  }
  
-+static int acpi_lpss_restore_early(struct device *dev)
-+{
-+	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
-+
-+	if (!pdata->dev_desc->resume_from_noirq) {
-+		int ret = acpi_lpss_resume(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return pm_generic_restore_early(dev);
-+}
- #endif /* CONFIG_PM_SLEEP */
+ static int acpi_lpss_suspend_noirq(struct device *dev)
+ {
+ 	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
+-	int ret;
  
- static int acpi_lpss_runtime_suspend(struct device *dev)
-@@ -1134,14 +1164,11 @@ static struct dev_pm_domain acpi_lpss_pm
- 		.resume_noirq = acpi_lpss_resume_noirq,
- 		.resume_early = acpi_lpss_resume_early,
- 		.freeze = acpi_subsys_freeze,
--		.freeze_late = acpi_subsys_freeze_late,
--		.freeze_noirq = acpi_subsys_freeze_noirq,
--		.thaw_noirq = acpi_subsys_thaw_noirq,
- 		.poweroff = acpi_subsys_suspend,
- 		.poweroff_late = acpi_lpss_suspend_late,
- 		.poweroff_noirq = acpi_lpss_suspend_noirq,
--		.restore_noirq = acpi_lpss_resume_noirq,
--		.restore_early = acpi_lpss_resume_early,
-+		.restore_noirq = acpi_lpss_restore_noirq,
-+		.restore_early = acpi_lpss_restore_early,
- #endif
- 		.runtime_suspend = acpi_lpss_runtime_suspend,
- 		.runtime_resume = acpi_lpss_runtime_resume,
+-	if (pdata->dev_desc->resume_from_noirq) {
+-		ret = acpi_lpss_do_suspend_late(dev);
++	if (!dev_pm_smart_suspend_and_suspended(dev) &&
++	    pdata->dev_desc->resume_from_noirq) {
++		int ret = acpi_lpss_suspend(dev, device_may_wakeup(dev));
+ 		if (ret)
+ 			return ret;
+ 	}
 Index: linux-pm/drivers/acpi/device_pm.c
 ===================================================================
 --- linux-pm.orig/drivers/acpi/device_pm.c
 +++ linux-pm/drivers/acpi/device_pm.c
-@@ -1116,7 +1116,7 @@ EXPORT_SYMBOL_GPL(acpi_subsys_suspend_no
-  * acpi_subsys_resume_noirq - Run the device driver's "noirq" resume callback.
-  * @dev: Device to handle.
+@@ -1069,7 +1069,7 @@ EXPORT_SYMBOL_GPL(acpi_subsys_suspend);
+  * Carry out the generic late suspend procedure for @dev and use ACPI to put
+  * it into a low-power state during system transition into a sleep state.
   */
--int acpi_subsys_resume_noirq(struct device *dev)
-+static int acpi_subsys_resume_noirq(struct device *dev)
+-int acpi_subsys_suspend_late(struct device *dev)
++static int acpi_subsys_suspend_late(struct device *dev)
  {
- 	if (dev_pm_may_skip_resume(dev))
- 		return 0;
-@@ -1131,7 +1131,6 @@ int acpi_subsys_resume_noirq(struct devi
+ 	int ret;
  
- 	return pm_generic_resume_noirq(dev);
+@@ -1079,7 +1079,6 @@ int acpi_subsys_suspend_late(struct devi
+ 	ret = pm_generic_suspend_late(dev);
+ 	return ret ? ret : acpi_dev_suspend(dev, device_may_wakeup(dev));
  }
--EXPORT_SYMBOL_GPL(acpi_subsys_resume_noirq);
+-EXPORT_SYMBOL_GPL(acpi_subsys_suspend_late);
  
  /**
-  * acpi_subsys_resume_early - Resume device using ACPI.
-@@ -1141,12 +1140,11 @@ EXPORT_SYMBOL_GPL(acpi_subsys_resume_noi
-  * generic early resume procedure for it during system transition into the
-  * working state.
-  */
--int acpi_subsys_resume_early(struct device *dev)
-+static int acpi_subsys_resume_early(struct device *dev)
- {
- 	int ret = acpi_dev_resume(dev);
- 	return ret ? ret : pm_generic_resume_early(dev);
- }
--EXPORT_SYMBOL_GPL(acpi_subsys_resume_early);
- 
- /**
-  * acpi_subsys_freeze - Run the device driver's freeze callback.
-@@ -1169,52 +1167,15 @@ int acpi_subsys_freeze(struct device *de
- EXPORT_SYMBOL_GPL(acpi_subsys_freeze);
- 
- /**
-- * acpi_subsys_freeze_late - Run the device driver's "late" freeze callback.
-- * @dev: Device to handle.
-- */
--int acpi_subsys_freeze_late(struct device *dev)
--{
--
--	if (dev_pm_smart_suspend_and_suspended(dev))
--		return 0;
--
--	return pm_generic_freeze_late(dev);
--}
--EXPORT_SYMBOL_GPL(acpi_subsys_freeze_late);
--
--/**
-- * acpi_subsys_freeze_noirq - Run the device driver's "noirq" freeze callback.
-- * @dev: Device to handle.
-- */
--int acpi_subsys_freeze_noirq(struct device *dev)
--{
--
--	if (dev_pm_smart_suspend_and_suspended(dev))
--		return 0;
--
--	return pm_generic_freeze_noirq(dev);
--}
--EXPORT_SYMBOL_GPL(acpi_subsys_freeze_noirq);
--
--/**
-- * acpi_subsys_thaw_noirq - Run the device driver's "noirq" thaw callback.
-- * @dev: Device to handle.
-+ * acpi_subsys_restore_early - Restore device using ACPI.
-+ * @dev: Device to restore.
-  */
--int acpi_subsys_thaw_noirq(struct device *dev)
-+int acpi_subsys_restore_early(struct device *dev)
- {
--	/*
--	 * If the device is in runtime suspend, the "thaw" code may not work
--	 * correctly with it, so skip the driver callback and make the PM core
--	 * skip all of the subsequent "thaw" callbacks for the device.
--	 */
--	if (dev_pm_smart_suspend_and_suspended(dev)) {
--		dev_pm_skip_next_resume_phases(dev);
--		return 0;
--	}
--
--	return pm_generic_thaw_noirq(dev);
-+	int ret = acpi_dev_resume(dev);
-+	return ret ? ret : pm_generic_restore_early(dev);
- }
--EXPORT_SYMBOL_GPL(acpi_subsys_thaw_noirq);
-+EXPORT_SYMBOL_GPL(acpi_subsys_restore_early);
- #endif /* CONFIG_PM_SLEEP */
- 
- static struct dev_pm_domain acpi_general_pm_domain = {
-@@ -1230,14 +1191,10 @@ static struct dev_pm_domain acpi_general
- 		.resume_noirq = acpi_subsys_resume_noirq,
- 		.resume_early = acpi_subsys_resume_early,
- 		.freeze = acpi_subsys_freeze,
--		.freeze_late = acpi_subsys_freeze_late,
--		.freeze_noirq = acpi_subsys_freeze_noirq,
--		.thaw_noirq = acpi_subsys_thaw_noirq,
- 		.poweroff = acpi_subsys_suspend,
- 		.poweroff_late = acpi_subsys_suspend_late,
- 		.poweroff_noirq = acpi_subsys_suspend_noirq,
--		.restore_noirq = acpi_subsys_resume_noirq,
--		.restore_early = acpi_subsys_resume_early,
-+		.restore_early = acpi_subsys_restore_early,
- #endif
- 	},
- };
+  * acpi_subsys_suspend_noirq - Run the device driver's "noirq" suspend callback.
 Index: linux-pm/include/linux/acpi.h
 ===================================================================
 --- linux-pm.orig/include/linux/acpi.h
 +++ linux-pm/include/linux/acpi.h
-@@ -918,26 +918,16 @@ int acpi_subsys_prepare(struct device *d
+@@ -916,7 +916,6 @@ static inline int acpi_dev_pm_attach(str
+ int acpi_dev_suspend_late(struct device *dev);
+ int acpi_subsys_prepare(struct device *dev);
  void acpi_subsys_complete(struct device *dev);
- int acpi_subsys_suspend_late(struct device *dev);
+-int acpi_subsys_suspend_late(struct device *dev);
  int acpi_subsys_suspend_noirq(struct device *dev);
--int acpi_subsys_resume_noirq(struct device *dev);
--int acpi_subsys_resume_early(struct device *dev);
  int acpi_subsys_suspend(struct device *dev);
  int acpi_subsys_freeze(struct device *dev);
--int acpi_subsys_freeze_late(struct device *dev);
--int acpi_subsys_freeze_noirq(struct device *dev);
--int acpi_subsys_thaw_noirq(struct device *dev);
- #else
+@@ -924,7 +923,6 @@ int acpi_subsys_freeze(struct device *de
  static inline int acpi_dev_resume_early(struct device *dev) { return 0; }
  static inline int acpi_subsys_prepare(struct device *dev) { return 0; }
  static inline void acpi_subsys_complete(struct device *dev) {}
- static inline int acpi_subsys_suspend_late(struct device *dev) { return 0; }
+-static inline int acpi_subsys_suspend_late(struct device *dev) { return 0; }
  static inline int acpi_subsys_suspend_noirq(struct device *dev) { return 0; }
--static inline int acpi_subsys_resume_noirq(struct device *dev) { return 0; }
--static inline int acpi_subsys_resume_early(struct device *dev) { return 0; }
  static inline int acpi_subsys_suspend(struct device *dev) { return 0; }
  static inline int acpi_subsys_freeze(struct device *dev) { return 0; }
--static inline int acpi_subsys_freeze_late(struct device *dev) { return 0; }
--static inline int acpi_subsys_freeze_noirq(struct device *dev) { return 0; }
--static inline int acpi_subsys_thaw_noirq(struct device *dev) { return 0; }
- #endif
- 
- #ifdef CONFIG_ACPI
 
 
 
