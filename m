@@ -2,33 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBDB05BBB7
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2019 14:40:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B1995BBBB
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2019 14:40:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729003AbfGAMkk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Jul 2019 08:40:40 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:9112 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727564AbfGAMkk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Jul 2019 08:40:40 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d19ff420001>; Mon, 01 Jul 2019 05:40:34 -0700
+        id S1728882AbfGAMkq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Jul 2019 08:40:46 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:5459 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727564AbfGAMkq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Jul 2019 08:40:46 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d19ff4f0000>; Mon, 01 Jul 2019 05:40:47 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 01 Jul 2019 05:40:37 -0700
+  Mon, 01 Jul 2019 05:40:44 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 01 Jul 2019 05:40:37 -0700
-Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 1 Jul
- 2019 12:40:37 +0000
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by hqmail110.nvidia.com
- (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 1 Jul
- 2019 12:40:37 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 1 Jul 2019 12:40:37 +0000
+        by hqpgpgate101.nvidia.com on Mon, 01 Jul 2019 05:40:44 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 1 Jul
+ 2019 12:40:44 +0000
+Received: from HQMAIL108.nvidia.com (172.18.146.13) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 1 Jul
+ 2019 12:40:43 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL108.nvidia.com
+ (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 1 Jul 2019 12:40:43 +0000
 Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d19ff400000>; Mon, 01 Jul 2019 05:40:36 -0700
+        id <B5d19ff460001>; Mon, 01 Jul 2019 05:40:43 -0700
 From:   Vidya Sagar <vidyas@nvidia.com>
 To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
         <robh+dt@kernel.org>, <mark.rutland@arm.com>,
@@ -40,9 +40,9 @@ CC:     <digetx@gmail.com>, <mperttunen@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
         <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V12 03/12] PCI: dwc: Perform dbi regs write lock towards the end
-Date:   Mon, 1 Jul 2019 18:10:01 +0530
-Message-ID: <20190701124010.7484-4-vidyas@nvidia.com>
+Subject: [PATCH V12 04/12] PCI: dwc: Move config space capability search API
+Date:   Mon, 1 Jul 2019 18:10:02 +0530
+Message-ID: <20190701124010.7484-5-vidyas@nvidia.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190701124010.7484-1-vidyas@nvidia.com>
 References: <20190701124010.7484-1-vidyas@nvidia.com>
@@ -50,40 +50,30 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561984834; bh=ZPHZdQUeNnmFMzPoXfbUAGXppKNf3wrULi+u6tKgtJQ=;
+        t=1561984847; bh=sJkF3F5wk9SXCpOqCUo6JdcopOe1KiThwHS/i4l6JYU=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=Zy67QgQ6na4QFHRi80uCibc/8fqBuA1VI7f9BWLBkgOvOSIm2Rg0Zt5045B9mqMTv
-         DgFtr4Am59P6TWV3eTCsjbk4lgCKB1pj1a94OQkhzS95g2QZGjHYOr2q43D36Y69KU
-         eGD14AP7XAyUiC9vsD+lRfk6N2oQY7vhV47MsWhdwbiLqo+fmnRE2UiTuZaDoacoEQ
-         JIlQ7TEqC6xIaeTvaVO3aH4esEBBvr4Mg808xzp1OGtZfNOtS2F2ZN3F3f8fP0akGA
-         LFXUfBqNJ+aZym2YJ8jOxuL9QdqSzg7OhK/QL7Pp8AirgyngbeA5pP76u7BDdiCHkI
-         xgfZ2eL0Da+7A==
+        b=r4hRQhXIIHUIlEI/rCcaB91gQAGBgd2zfQbbzM05cXKrWCkvyilS/3gNgK28t5WY0
+         niQajTfwUKtV1OJIbT5fLoe1IP9WBARpnvr2DKDLR9mnQxjwBvDz7yXhEQJWspvniQ
+         +38fLCrPn3ylO6Z4RR3QyfruvzlOJAjG74a80f3E/YQuhUPPwP2pfaHe916viHEjCt
+         RG3hN04i4VWC1Hs01JTAfirG/fhOKe6mfCVpILx/ZG3yBE53fQnwJQQ4Y2IQU52A2s
+         l3CkRVmCGo2LjBSrWxtz6Tph2IJ2m6WiDAwUfJED1Uv56uTFkWSyZYz94XTqNsUVWk
+         ffWpOvGBQm4Zw==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Some of DesignWare core's DBI registers (a.k.a configuration space
-registers) are write-protected with a lock without enabling which they are
-read-only by default. These write-protected registers are implementation
-specific. Tegra194's BAR-0 register which is at offset 0x10 in the
-configuration space is an example. Current implementation in
-dw_pcie_setup_rc() API attempts to unlock those write-protected registers
-whenever they are updated and lock them back again for writing. This patch
-attempts to unlock all such write-protected registers for writing in the
-beginning of the API once and lock them back again towards the end to avoid
-bloating the API with multiple unlock/lock sequences for all those
-write-protected registers.
+Move PCIe config space capability search API to common DesignWare file
+as this can be used by both host and ep mode codes.
 
 Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Reviewed-by: Thierry Reding <treding@nvidia.com>
-Acked-by: Jingoo Han <jingoohan1@gmail.com>
 ---
 Changes since [v11]:
-* Modified commit message to make it explicit that write-protected registers are
-  implementation specific.
+* None
 
 Changes since [v10]:
 * None
@@ -95,77 +85,153 @@ Changes since [v8]:
 * None
 
 Changes since [v7]:
-* None
+* Changed comment to explicitly state their mere resemblance to standard APIs
+  but not their operation and place of use.
 
 Changes since [v6]:
-* None
+* Exported dw_pcie_find_capability() API
 
 Changes since [v5]:
-* Moved write enable to the beginning of the API and write disable to the end
+* None
 
 Changes since [v4]:
-* None
+* Removed redundant APIs in pcie-designware-ep.c file after moving them
+  to pcie-designware.c file based on Bjorn's comments.
 
 Changes since [v3]:
-* None
+* Rebased to linux-next top of the tree
 
 Changes since [v2]:
 * None
 
 Changes since [v1]:
-* None
+* Removed dw_pcie_find_next_ext_capability() API from here and made a
+  separate patch for that
 
- drivers/pci/controller/dwc/pcie-designware-host.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ .../pci/controller/dwc/pcie-designware-ep.c   | 37 +-----------------
+ drivers/pci/controller/dwc/pcie-designware.c  | 39 +++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware.h  |  2 +
+ 3 files changed, 43 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index f93252d0da5b..d3156446ff27 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -628,6 +628,12 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
- 	u32 val, ctrl, num_ctrls;
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 
-+	/*
-+	 * Enable DBI read-only registers for writing/updating configuration.
-+	 * Write permission gets disabled towards the end of this function.
-+	 */
-+	dw_pcie_dbi_ro_wr_en(pci);
-+
- 	dw_pcie_setup(pci);
- 
- 	if (!pp->ops->msi_host_init) {
-@@ -650,12 +656,10 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
- 	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
- 
- 	/* Setup interrupt pins */
--	dw_pcie_dbi_ro_wr_en(pci);
- 	val = dw_pcie_readl_dbi(pci, PCI_INTERRUPT_LINE);
- 	val &= 0xffff00ff;
- 	val |= 0x00000100;
- 	dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
--	dw_pcie_dbi_ro_wr_dis(pci);
- 
- 	/* Setup bus numbers */
- 	val = dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
-@@ -687,15 +691,13 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
- 
- 	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
- 
--	/* Enable write permission for the DBI read-only register */
--	dw_pcie_dbi_ro_wr_en(pci);
- 	/* Program correct class for RC */
- 	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
--	/* Better disable write permission right after the update */
--	dw_pcie_dbi_ro_wr_dis(pci);
- 
- 	dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, &val);
- 	val |= PORT_LOGIC_SPEED_CHANGE;
- 	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
-+
-+	dw_pcie_dbi_ro_wr_dis(pci);
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 2bf5a35c0570..65f479250087 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -40,39 +40,6 @@ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+ 	__dw_pcie_ep_reset_bar(pci, bar, 0);
  }
- EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
+ 
+-static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+-			      u8 cap)
+-{
+-	u8 cap_id, next_cap_ptr;
+-	u16 reg;
+-
+-	if (!cap_ptr)
+-		return 0;
+-
+-	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+-	cap_id = (reg & 0x00ff);
+-
+-	if (cap_id > PCI_CAP_ID_MAX)
+-		return 0;
+-
+-	if (cap_id == cap)
+-		return cap_ptr;
+-
+-	next_cap_ptr = (reg & 0xff00) >> 8;
+-	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+-}
+-
+-static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
+-{
+-	u8 next_cap_ptr;
+-	u16 reg;
+-
+-	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+-	next_cap_ptr = (reg & 0x00ff);
+-
+-	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+-}
+-
+ static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no,
+ 				   struct pci_epf_header *hdr)
+ {
+@@ -612,9 +579,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+ 		return -ENOMEM;
+ 	}
+-	ep->msi_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSI);
++	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+ 
+-	ep->msix_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSIX);
++	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
+ 
+ 	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+ 	if (offset) {
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 7d25102c304c..7818b4febb08 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -14,6 +14,45 @@
+ 
+ #include "pcie-designware.h"
+ 
++/*
++ * These interfaces resemble the pci_find_*capability() interfaces, but these
++ * are for configuring host controllers, which are bridges *to* PCI devices but
++ * are not PCI devices themselves.
++ */
++static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
++				  u8 cap)
++{
++	u8 cap_id, next_cap_ptr;
++	u16 reg;
++
++	if (!cap_ptr)
++		return 0;
++
++	reg = dw_pcie_readw_dbi(pci, cap_ptr);
++	cap_id = (reg & 0x00ff);
++
++	if (cap_id > PCI_CAP_ID_MAX)
++		return 0;
++
++	if (cap_id == cap)
++		return cap_ptr;
++
++	next_cap_ptr = (reg & 0xff00) >> 8;
++	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
++}
++
++u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
++{
++	u8 next_cap_ptr;
++	u16 reg;
++
++	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
++	next_cap_ptr = (reg & 0x00ff);
++
++	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
++}
++EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
++
+ int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+ {
+ 	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index ffed084a0b4f..d8c66a6827dc 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -251,6 +251,8 @@ struct dw_pcie {
+ #define to_dw_pcie_from_ep(endpoint)   \
+ 		container_of((endpoint), struct dw_pcie, ep)
+ 
++u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
++
+ int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+ int dw_pcie_write(void __iomem *addr, int size, u32 val);
+ 
 -- 
 2.17.1
 
