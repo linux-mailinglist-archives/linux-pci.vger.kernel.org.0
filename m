@@ -2,139 +2,299 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 40EFB5B96B
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2019 12:50:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5BB25BA39
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2019 12:58:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfGAKus (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Jul 2019 06:50:48 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:18358 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbfGAKus (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Jul 2019 06:50:48 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d19e58a0000>; Mon, 01 Jul 2019 03:50:50 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 01 Jul 2019 03:50:46 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 01 Jul 2019 03:50:46 -0700
-Received: from [10.24.46.111] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 1 Jul
- 2019 10:50:43 +0000
-Subject: Re: [PATCH] PCI: tegra: Enable Relaxed Ordering only for Tegra20 &
- Tegra30
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <bhelgaas@google.com>, <treding@nvidia.com>,
-        <jonathanh@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190618073810.30270-1-vidyas@nvidia.com>
- <20190627100616.GA30071@e121166-lin.cambridge.arm.com>
- <716ad7c9-08bb-b885-69bd-a442d6f9b2eb@nvidia.com>
- <20190627152303.GE3782@e121166-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <f54f595c-b03f-47d7-09d2-d0cf148b1ba3@nvidia.com>
-Date:   Mon, 1 Jul 2019 16:20:41 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1728105AbfGAK6W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Jul 2019 06:58:22 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:62187 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727740AbfGAK6W (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Jul 2019 06:58:22 -0400
+Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id 12f6c2b577100129; Mon, 1 Jul 2019 12:58:18 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans De Goede <hdegoede@redhat.com>,
+        "Robert R. Howell" <RHowell@uwyo.edu>
+Subject: [PATCH v2 3/5] ACPI: PM: Simplify and fix PM domain hibernation callbacks
+Date:   Mon, 01 Jul 2019 12:54:10 +0200
+Message-ID: <2802028.YOpNIL8Yh8@kreacher>
+In-Reply-To: <4976412.ihyb9sT5jY@kreacher>
+References: <4976412.ihyb9sT5jY@kreacher>
 MIME-Version: 1.0
-In-Reply-To: <20190627152303.GE3782@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561978250; bh=q882PDq25kuZRevJKIe02NSInIQJ7WUfjiLxvUzGrhA=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mkD5jrEuRdgEmAtbCqBCQnta/zLLCsP96c1vTGwSnhGLcpbr3GPIGCw7X1JCynwK/
-         ZZQ3gEOlAv2mkCFAFpj3gKbJRcCkLPiRVU/asuaVhXigA4Nt31PkUNZTC/nhmNBl+s
-         SvLxlB61Ct3/REOgnFZJSrNGDthohRt/nKHKgHXPcQoAMZq07ckNVPc18toD0tb1Bo
-         PiRwWJTioi1VqPryS8ut6g+yjs+FQKJEqHo2j2fLb9pBlxVFXLsGC5+fbxaqpkG12D
-         qZxAubY2BOvmu4lQ42gZEl6dshHDsm0GdvMTozrIh/1zEc/GoWPUAWtfRgebXWtmGY
-         aHBzDcSozgA4g==
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/27/2019 8:53 PM, Lorenzo Pieralisi wrote:
-> On Thu, Jun 27, 2019 at 08:41:37PM +0530, Vidya Sagar wrote:
->> On 6/27/2019 3:36 PM, Lorenzo Pieralisi wrote:
->>> On Tue, Jun 18, 2019 at 01:08:10PM +0530, Vidya Sagar wrote:
->>>> Currently Relaxed Ordering bit in the configuration space is enabled for
->>>> all devices whereas it should be enabled only for root ports for Tegra20
->>>> and Tegra30 chips to avoid deadlock in hardware.
->>>
->>> This is a fix so I think you had better add a Fixes: tag and if the
->>> erratum is a public document it would be good to add it to the log
->>> to explain what the problem is.
->>>
->>> Thanks,
->>> Lorenzo
->> This has been there from the beginning. I mean, if I have to give a tag as part
->> of Fixes: , then I should give the tag that adds this driver itself. Is that fine?
->> I can quote the following document section 31.1 for Tegra20, but the same information
->> is not mentioned in Tegra30 specific public document.
->> https://www.chiark.greenend.org.uk/~theom/riscos/docs/Tegra2_TRM_DP04508001v01p.pdf
->> Is it fine to just quote only this document?
-> 
-> I am pretty sure an errata document should exist about this and Nvidia
-> owns it (if it is not public, well, there is nothing to quote then); I
-> would not quote this website, it does not look like Nvidia official
-> documentation.
-We have the TRM (Technical Reference Manual) document available for Tegra20 at
-https://developer.nvidia.com/embedded/downloads#?search=tegra%202 but basic registration
-is required to download the document. I'll mention this link in the commit message.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> 
-> For the Fixes: tag, it is up to you, to me this seems like a
-> critical bug (deadlock in hardware) and I do not think you
-> want to ship stable kernels with it. It depends on the entity
-> of the bug we are fixing, I leave it to you to decide the
-> best course of action, I am just trying to help.
-Since there is no specific commit that introduced this issue and the issue has been there
-from the beginning, I'm of the opinion that giving initial commit tag (the one that added
-the driver itself) for 'Fixes: tag doesn't really help here.
+First, after a previous change causing all runtime-suspended devices
+in the ACPI PM domain (and ACPI LPSS devices) to be resumed before
+creating a snapshot image of memory during hibernation, it is not
+necessary to worry about the case in which them might be left in
+runtime-suspend any more, so get rid of the code related to that from
+ACPI PM domain and ACPI LPSS hibernation callbacks.
 
-> 
-> Lorenzo
-> 
->> Thanks,
->> Vidya Sagar
->>>
->>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>>> ---
->>>>    drivers/pci/controller/pci-tegra.c | 7 +++++--
->>>>    1 file changed, 5 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
->>>> index 464ba2538d52..bc7be369c1b3 100644
->>>> --- a/drivers/pci/controller/pci-tegra.c
->>>> +++ b/drivers/pci/controller/pci-tegra.c
->>>> @@ -545,12 +545,15 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_fixup_class);
->>>>    DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_fixup_class);
->>>>    DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_fixup_class);
->>>> -/* Tegra PCIE requires relaxed ordering */
->>>> +/* Tegra20 and Tegra30 PCIE requires relaxed ordering */
->>>>    static void tegra_pcie_relax_enable(struct pci_dev *dev)
->>>>    {
->>>>    	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_RELAX_EN);
->>>>    }
->>>> -DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, tegra_pcie_relax_enable);
->>>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf0, tegra_pcie_relax_enable);
->>>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_relax_enable);
->>>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_relax_enable);
->>>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_relax_enable);
->>>>    static int tegra_pcie_request_resources(struct tegra_pcie *pcie)
->>>>    {
->>>> -- 
->>>> 2.17.1
->>>>
->>
+Second, it is not correct to use pm_generic_resume_early() and
+acpi_subsys_resume_noirq() in hibernation "restore" callbacks (which
+currently happens in the ACPI PM domain and ACPI LPSS), so introduce
+proper _restore_late and _restore_noirq callbacks for the ACPI PM
+domain and ACPI LPSS.
+
+Fixes: 05087360fd7a (ACPI / PM: Take SMART_SUSPEND driver flag into account)
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+-> v2:
+ * Add a comment explaining the acpi_lpss_resume_noirq() behavior.
+ * Make the new LPSS "restore" callbacks follow that behavior.
+
+---
+ drivers/acpi/acpi_lpss.c |   61 ++++++++++++++++++++++++++++++++++++++++-------
+ drivers/acpi/device_pm.c |   61 ++++++-----------------------------------------
+ include/linux/acpi.h     |   10 -------
+ 3 files changed, 61 insertions(+), 71 deletions(-)
+
+Index: linux-pm/drivers/acpi/device_pm.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/device_pm.c
++++ linux-pm/drivers/acpi/device_pm.c
+@@ -1116,7 +1116,7 @@ EXPORT_SYMBOL_GPL(acpi_subsys_suspend_no
+  * acpi_subsys_resume_noirq - Run the device driver's "noirq" resume callback.
+  * @dev: Device to handle.
+  */
+-int acpi_subsys_resume_noirq(struct device *dev)
++static int acpi_subsys_resume_noirq(struct device *dev)
+ {
+ 	if (dev_pm_may_skip_resume(dev))
+ 		return 0;
+@@ -1131,7 +1131,6 @@ int acpi_subsys_resume_noirq(struct devi
+ 
+ 	return pm_generic_resume_noirq(dev);
+ }
+-EXPORT_SYMBOL_GPL(acpi_subsys_resume_noirq);
+ 
+ /**
+  * acpi_subsys_resume_early - Resume device using ACPI.
+@@ -1141,12 +1140,11 @@ EXPORT_SYMBOL_GPL(acpi_subsys_resume_noi
+  * generic early resume procedure for it during system transition into the
+  * working state.
+  */
+-int acpi_subsys_resume_early(struct device *dev)
++static int acpi_subsys_resume_early(struct device *dev)
+ {
+ 	int ret = acpi_dev_resume(dev);
+ 	return ret ? ret : pm_generic_resume_early(dev);
+ }
+-EXPORT_SYMBOL_GPL(acpi_subsys_resume_early);
+ 
+ /**
+  * acpi_subsys_freeze - Run the device driver's freeze callback.
+@@ -1169,52 +1167,15 @@ int acpi_subsys_freeze(struct device *de
+ EXPORT_SYMBOL_GPL(acpi_subsys_freeze);
+ 
+ /**
+- * acpi_subsys_freeze_late - Run the device driver's "late" freeze callback.
+- * @dev: Device to handle.
+- */
+-int acpi_subsys_freeze_late(struct device *dev)
+-{
+-
+-	if (dev_pm_smart_suspend_and_suspended(dev))
+-		return 0;
+-
+-	return pm_generic_freeze_late(dev);
+-}
+-EXPORT_SYMBOL_GPL(acpi_subsys_freeze_late);
+-
+-/**
+- * acpi_subsys_freeze_noirq - Run the device driver's "noirq" freeze callback.
+- * @dev: Device to handle.
+- */
+-int acpi_subsys_freeze_noirq(struct device *dev)
+-{
+-
+-	if (dev_pm_smart_suspend_and_suspended(dev))
+-		return 0;
+-
+-	return pm_generic_freeze_noirq(dev);
+-}
+-EXPORT_SYMBOL_GPL(acpi_subsys_freeze_noirq);
+-
+-/**
+- * acpi_subsys_thaw_noirq - Run the device driver's "noirq" thaw callback.
+- * @dev: Device to handle.
++ * acpi_subsys_restore_early - Restore device using ACPI.
++ * @dev: Device to restore.
+  */
+-int acpi_subsys_thaw_noirq(struct device *dev)
++int acpi_subsys_restore_early(struct device *dev)
+ {
+-	/*
+-	 * If the device is in runtime suspend, the "thaw" code may not work
+-	 * correctly with it, so skip the driver callback and make the PM core
+-	 * skip all of the subsequent "thaw" callbacks for the device.
+-	 */
+-	if (dev_pm_smart_suspend_and_suspended(dev)) {
+-		dev_pm_skip_next_resume_phases(dev);
+-		return 0;
+-	}
+-
+-	return pm_generic_thaw_noirq(dev);
++	int ret = acpi_dev_resume(dev);
++	return ret ? ret : pm_generic_restore_early(dev);
+ }
+-EXPORT_SYMBOL_GPL(acpi_subsys_thaw_noirq);
++EXPORT_SYMBOL_GPL(acpi_subsys_restore_early);
+ #endif /* CONFIG_PM_SLEEP */
+ 
+ static struct dev_pm_domain acpi_general_pm_domain = {
+@@ -1230,14 +1191,10 @@ static struct dev_pm_domain acpi_general
+ 		.resume_noirq = acpi_subsys_resume_noirq,
+ 		.resume_early = acpi_subsys_resume_early,
+ 		.freeze = acpi_subsys_freeze,
+-		.freeze_late = acpi_subsys_freeze_late,
+-		.freeze_noirq = acpi_subsys_freeze_noirq,
+-		.thaw_noirq = acpi_subsys_thaw_noirq,
+ 		.poweroff = acpi_subsys_suspend,
+ 		.poweroff_late = acpi_subsys_suspend_late,
+ 		.poweroff_noirq = acpi_subsys_suspend_noirq,
+-		.restore_noirq = acpi_subsys_resume_noirq,
+-		.restore_early = acpi_subsys_resume_early,
++		.restore_early = acpi_subsys_restore_early,
+ #endif
+ 	},
+ };
+Index: linux-pm/include/linux/acpi.h
+===================================================================
+--- linux-pm.orig/include/linux/acpi.h
++++ linux-pm/include/linux/acpi.h
+@@ -918,26 +918,16 @@ int acpi_subsys_prepare(struct device *d
+ void acpi_subsys_complete(struct device *dev);
+ int acpi_subsys_suspend_late(struct device *dev);
+ int acpi_subsys_suspend_noirq(struct device *dev);
+-int acpi_subsys_resume_noirq(struct device *dev);
+-int acpi_subsys_resume_early(struct device *dev);
+ int acpi_subsys_suspend(struct device *dev);
+ int acpi_subsys_freeze(struct device *dev);
+-int acpi_subsys_freeze_late(struct device *dev);
+-int acpi_subsys_freeze_noirq(struct device *dev);
+-int acpi_subsys_thaw_noirq(struct device *dev);
+ #else
+ static inline int acpi_dev_resume_early(struct device *dev) { return 0; }
+ static inline int acpi_subsys_prepare(struct device *dev) { return 0; }
+ static inline void acpi_subsys_complete(struct device *dev) {}
+ static inline int acpi_subsys_suspend_late(struct device *dev) { return 0; }
+ static inline int acpi_subsys_suspend_noirq(struct device *dev) { return 0; }
+-static inline int acpi_subsys_resume_noirq(struct device *dev) { return 0; }
+-static inline int acpi_subsys_resume_early(struct device *dev) { return 0; }
+ static inline int acpi_subsys_suspend(struct device *dev) { return 0; }
+ static inline int acpi_subsys_freeze(struct device *dev) { return 0; }
+-static inline int acpi_subsys_freeze_late(struct device *dev) { return 0; }
+-static inline int acpi_subsys_freeze_noirq(struct device *dev) { return 0; }
+-static inline int acpi_subsys_thaw_noirq(struct device *dev) { return 0; }
+ #endif
+ 
+ #ifdef CONFIG_ACPI
+Index: linux-pm/drivers/acpi/acpi_lpss.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/acpi_lpss.c
++++ linux-pm/drivers/acpi/acpi_lpss.c
+@@ -1091,16 +1091,62 @@ static int acpi_lpss_resume_noirq(struct
+ 	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
+ 	int ret;
+ 
+-	ret = acpi_subsys_resume_noirq(dev);
++	/* Follow acpi_subsys_resume_noirq(). */
++	if (dev_pm_may_skip_resume(dev))
++		return 0;
++
++	if (dev_pm_smart_suspend_and_suspended(dev))
++		pm_runtime_set_active(dev);
++
++	ret = pm_generic_resume_noirq(dev);
+ 	if (ret)
+ 		return ret;
+ 
+-	if (!dev_pm_may_skip_resume(dev) && pdata->dev_desc->resume_from_noirq)
+-		ret = acpi_lpss_do_resume_early(dev);
++	if (!pdata->dev_desc->resume_from_noirq)
++		return 0;
++
++	/*
++	 * The driver's ->resume_early callback will be invoked by
++	 * acpi_lpss_do_resume_early(), with the assumption that the driver
++	 * really wanted to run that code in ->resume_noirq, but it could not
++	 * run before acpi_dev_resume() and the driver expected the latter to be
++	 * called in the "early" phase.
++	 */
++	return acpi_lpss_do_resume_early(dev);
++}
++
++static int acpi_lpss_do_restore_early(struct device *dev)
++{
++	int ret = acpi_lpss_resume(dev);
++
++	return ret ? ret : pm_generic_restore_early(dev);
++}
++
++static int acpi_lpss_restore_early(struct device *dev)
++{
++	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
++
++	if (pdata->dev_desc->resume_from_noirq)
++		return 0;
+ 
+-	return ret;
++	return acpi_lpss_do_restore_early(dev);
+ }
+ 
++static int acpi_lpss_restore_noirq(struct device *dev)
++{
++	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
++	int ret;
++
++	ret = pm_generic_restore_noirq(dev);
++	if (ret)
++		return ret;
++
++	if (!pdata->dev_desc->resume_from_noirq)
++		return 0;
++
++	/* This is analogous to what happens in acpi_lpss_resume_noirq(). */
++	return acpi_lpss_do_restore_early(dev);
++}
+ #endif /* CONFIG_PM_SLEEP */
+ 
+ static int acpi_lpss_runtime_suspend(struct device *dev)
+@@ -1134,14 +1180,11 @@ static struct dev_pm_domain acpi_lpss_pm
+ 		.resume_noirq = acpi_lpss_resume_noirq,
+ 		.resume_early = acpi_lpss_resume_early,
+ 		.freeze = acpi_subsys_freeze,
+-		.freeze_late = acpi_subsys_freeze_late,
+-		.freeze_noirq = acpi_subsys_freeze_noirq,
+-		.thaw_noirq = acpi_subsys_thaw_noirq,
+ 		.poweroff = acpi_subsys_suspend,
+ 		.poweroff_late = acpi_lpss_suspend_late,
+ 		.poweroff_noirq = acpi_lpss_suspend_noirq,
+-		.restore_noirq = acpi_lpss_resume_noirq,
+-		.restore_early = acpi_lpss_resume_early,
++		.restore_noirq = acpi_lpss_restore_noirq,
++		.restore_early = acpi_lpss_restore_early,
+ #endif
+ 		.runtime_suspend = acpi_lpss_runtime_suspend,
+ 		.runtime_resume = acpi_lpss_runtime_resume,
+
+
 
