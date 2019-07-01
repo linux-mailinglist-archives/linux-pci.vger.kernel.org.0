@@ -2,30 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 75C525B49E
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2019 08:20:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDD505B4A1
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2019 08:20:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfGAGUg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Jul 2019 02:20:36 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48188 "EHLO
+        id S1726869AbfGAGUi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Jul 2019 02:20:38 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48210 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727498AbfGAGUg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Jul 2019 02:20:36 -0400
+        with ESMTP id S1727516AbfGAGUh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Jul 2019 02:20:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
         To:From:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ha0G2SIX3qJwQBHCJ94hXS+l70ON3HkLuGbICbqpRXk=; b=McY+jahORBX9m/je/bQ6Q38b0
-        28WcXEPXZE6Hcjq+4+sHpTWSUUYsygvbEwNrGXLJDRekMZBBLHs2JA6d74Md5I104lXzbV968Av2Z
-        J3DQ3Q8m0Co759Cpf29dQlJNwis3r3MTh0SnOtF3FTLzlzDD1UtJcPF1MrRi/lcAYx9uEtoYU6DI1
-        zW2v8jIkosACsyQpdiePRz4xMw1/0Q20ytuHFjDVBFY4moXLnh+l4DZt9Ylgq8UV1BYJzXJjsmDli
-        YQZuhtMWHmwqMewYBuiuiE9Re+8KsGcSZTxhoYiwxkwOqQWnvw8dyNpA8uGeK74XtpU4V04Cfy3z7
-        hn4lvcOUg==;
+         bh=aDDV0kJ/bs5He1sJYNTcx8QRyDKaqv7PRbW2xYMan0w=; b=SRjdRB90aDp9ri+nwpQyyHN9q
+        qGQh2uFv5+oBVnpCH4SJ+S82Wpl/5WlkHeVnbWe5AlpG9jmwibSgKOUPVlmKBymW6MzbzMs+Z5o5x
+        Ggnd73UXr0J0EaH1JLkQ+tGELOwpt6iVaxq/8Lv9lorXyp9nYihVahCxuZEkCLErZAFZV/QTwiXbj
+        oiqBjQ3hmd4hDDsYPsDc5xc2RtHEVg21y2T/8EgBWohFixCBg5aFXa4NXJZnpcyUlA/vxFRjuIkQg
+        kNIQKzf0Emx+NwpXszIeVaqahmKQdjRNxfXxrmrM0Gmy6pasBag0nyerbXo0boyU6/Q3xNOwrjEQY
+        5fLWM2pmQ==;
 Received: from [46.140.178.35] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hhpfz-0002ta-A6; Mon, 01 Jul 2019 06:20:31 +0000
+        id 1hhpg1-0002tx-JM; Mon, 01 Jul 2019 06:20:33 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Dan Williams <dan.j.williams@intel.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
@@ -34,11 +34,11 @@ To:     Dan Williams <dan.j.williams@intel.com>,
 Cc:     Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
         nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Philip Yang <Philip.Yang@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>
-Subject: [PATCH 04/22] mm/hmm: support automatic NUMA balancing
-Date:   Mon,  1 Jul 2019 08:20:02 +0200
-Message-Id: <20190701062020.19239-5-hch@lst.de>
+        linux-kernel@vger.kernel.org,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>
+Subject: [PATCH 05/22] mm/hmm: Only set FAULT_FLAG_ALLOW_RETRY for non-blocking
+Date:   Mon,  1 Jul 2019 08:20:03 +0200
+Message-Id: <20190701062020.19239-6-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190701062020.19239-1-hch@lst.de>
 References: <20190701062020.19239-1-hch@lst.de>
@@ -51,17 +51,13 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Philip Yang <Philip.Yang@amd.com>
+From: "Kuehling, Felix" <Felix.Kuehling@amd.com>
 
-While the page is migrating by NUMA balancing, HMM failed to detect this
-condition and still return the old page. Application will use the new page
-migrated, but driver pass the old page physical address to GPU, this crash
-the application later.
+Don't set this flag by default in hmm_vma_do_fault. It is set
+conditionally just a few lines below. Setting it unconditionally can lead
+to handle_mm_fault doing a non-blocking fault, returning -EBUSY and
+unlocking mmap_sem unexpectedly.
 
-Use pte_protnone(pte) to return this condition and then hmm_vma_do_fault
-will allocate new page.
-
-Signed-off-by: Philip Yang <Philip.Yang@amd.com>
 Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
 Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
@@ -70,18 +66,18 @@ Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/mm/hmm.c b/mm/hmm.c
-index 4db5dcf110ba..dce4e70e648a 100644
+index dce4e70e648a..826816ab2377 100644
 --- a/mm/hmm.c
 +++ b/mm/hmm.c
-@@ -548,7 +548,7 @@ static int hmm_vma_handle_pmd(struct mm_walk *walk,
- 
- static inline uint64_t pte_to_hmm_pfn_flags(struct hmm_range *range, pte_t pte)
+@@ -328,7 +328,7 @@ struct hmm_vma_walk {
+ static int hmm_vma_do_fault(struct mm_walk *walk, unsigned long addr,
+ 			    bool write_fault, uint64_t *pfn)
  {
--	if (pte_none(pte) || !pte_present(pte))
-+	if (pte_none(pte) || !pte_present(pte) || pte_protnone(pte))
- 		return 0;
- 	return pte_write(pte) ? range->flags[HMM_PFN_VALID] |
- 				range->flags[HMM_PFN_WRITE] :
+-	unsigned int flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_REMOTE;
++	unsigned int flags = FAULT_FLAG_REMOTE;
+ 	struct hmm_vma_walk *hmm_vma_walk = walk->private;
+ 	struct hmm_range *range = hmm_vma_walk->range;
+ 	struct vm_area_struct *vma = walk->vma;
 -- 
 2.20.1
 
