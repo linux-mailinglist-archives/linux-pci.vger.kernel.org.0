@@ -2,140 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 451735D5CF
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2019 20:01:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60FDE5D65E
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2019 20:42:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfGBSBS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Jul 2019 14:01:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfGBSBS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Jul 2019 14:01:18 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E15CF21721;
-        Tue,  2 Jul 2019 18:01:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562090476;
-        bh=kIyxmE2Mr1IyGzQ4fVM/a6nCRCw2PNXuUwGbNB+MA+8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OaeHKq6Ue8uNfTzlxnZXXbihytg9QMqaUnI2S2DhsYTgdm9nOjREh0s1HoBp1xDlO
-         jMLz038dAIeYfukbzvZ+QbDEhd/+8PpFGdtXSlH3SQhtX6cp5uij9hy/245ylau6iA
-         Xi1Fyx+Rl6dX3GqKOxvYfoiCMYlh66VMbaFM4s7U=
-Date:   Tue, 2 Jul 2019 13:01:12 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai Heng Feng <kai.heng.feng@canonical.com>
-Cc:     "Neftin, Sasha" <sasha.neftin@intel.com>,
-        jeffrey.t.kirsher@intel.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        intel-wired-lan@lists.osuosl.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: RX CRC errors on I219-V (6) 8086:15be
-Message-ID: <20190702180112.GB128603@google.com>
-References: <C4036C54-EEEB-47F3-9200-4DD1B22B4280@canonical.com>
- <3975473C-B117-4DC6-809A-6623A5A478BF@canonical.com>
- <ed4eca8e-d393-91d7-5d2f-97d42e0b75cb@intel.com>
- <1804A45E-71B5-4C41-839C-AF0CFAD0D785@canonical.com>
- <E29A2CD2-1632-4575-9910-0808BD15F4D3@canonical.com>
+        id S1726457AbfGBSmM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Jul 2019 14:42:12 -0400
+Received: from mail-eopbgr20055.outbound.protection.outlook.com ([40.107.2.55]:62393
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726150AbfGBSmM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Jul 2019 14:42:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t+FoI6vpCgiLSBqPMjFHBUD4fTkpXFG2F39LPBhxl74=;
+ b=I9ohJ6GNRLW+Zm+ooghClKVijPw+7yhdPymyZ9UYfnb4h8l6cgxmEgeOCdNbseE8x/L9Ge3wh5JFWVDJkBobwtg4AMDNxisbgOSckJW6DEFsDhCpj4Vvnc0r7ERyJeLyh4zmpM5zcIi36u7IFgX/RRdLh9hX6jYVNuPMYsv81uA=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5855.eurprd05.prod.outlook.com (20.178.125.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Tue, 2 Jul 2019 18:42:07 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2032.019; Tue, 2 Jul 2019
+ 18:42:07 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: dev_pagemap related cleanups v4
+Thread-Topic: dev_pagemap related cleanups v4
+Thread-Index: AQHVL9UU5cGGdRKLlkyPcV6XfRMxZaa1bVyAgAI+pYA=
+Date:   Tue, 2 Jul 2019 18:42:07 +0000
+Message-ID: <20190702184201.GO31718@mellanox.com>
+References: <20190701062020.19239-1-hch@lst.de>
+ <20190701082517.GA22461@lst.de>
+In-Reply-To: <20190701082517.GA22461@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: QB1PR01CA0020.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:2d::33) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f3e918f6-e7b1-45d3-220d-08d6ff1cfc06
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5855;
+x-ms-traffictypediagnostic: VI1PR05MB5855:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <VI1PR05MB5855D9FC2C87AE8EDF4F3360CFF80@VI1PR05MB5855.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 008663486A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(136003)(39860400002)(376002)(189003)(199004)(36756003)(305945005)(7736002)(6246003)(2906002)(54906003)(64756008)(81156014)(8676002)(8936002)(86362001)(81166006)(53936002)(316002)(6916009)(68736007)(478600001)(7416002)(3846002)(229853002)(5660300002)(6486002)(66066001)(102836004)(6506007)(66446008)(6512007)(14444005)(26005)(4326008)(25786009)(99286004)(186003)(33656002)(14454004)(486006)(446003)(476003)(6116002)(256004)(6306002)(11346002)(1076003)(6436002)(66476007)(76176011)(73956011)(966005)(52116002)(71200400001)(66946007)(386003)(66556008)(71190400001)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5855;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: uxvz6FxwQNsbgdBscCEIRaUYaJ9Hx5UYarazHW+5NehM9eLqQYvVoI1KKwDxw/TefzXSdN5/4xxaq2D7Tani/hQ3Ba46KvDWFZX1MzCawz6jHovyW1WbVATRJPe/6oCfFCi3u7vgRuAnaIKDN7CqC0ljSMhNokZQnmPfYTlZjMpHjSkEb/fv3JDQ1CElySfqAL/l4SpYJpExh8oDwUQRFHHntindvjHxrlA3vnEVyvFJ3u9/MyorpuyISuMH3O9fpPEFzvbkZ+C/6mcbz2FnOogmpZQUZXV8McdcqbNVN5fOXX29ykI848fp6PhT8GI+2FA8t3lq6/klVApz+1NqJaUYSLnxp43VAin0GArLmHF+KBQlgy2AbPkodq7v9nnCYT3QUUxkXF0uDyCQgO7rpgim7bFHYuOpyFu69U5lnyA=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <ADE83ECAC2BC474EA837455494A5DDBE@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <E29A2CD2-1632-4575-9910-0808BD15F4D3@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3e918f6-e7b1-45d3-220d-08d6ff1cfc06
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2019 18:42:07.4459
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5855
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 04:25:59PM +0800, Kai Heng Feng wrote:
-> +linux-pci
-> 
-> Hi Sasha,
-> 
-> at 6:49 PM, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
-> 
-> > at 14:26, Neftin, Sasha <sasha.neftin@intel.com> wrote:
-> > 
-> > > On 6/26/2019 09:14, Kai Heng Feng wrote:
-> > > > Hi Sasha
-> > > > at 5:09 PM, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
-> > > > > Hi Jeffrey,
-> > > > > 
-> > > > > We’ve encountered another issue, which causes multiple CRC
-> > > > > errors and renders ethernet completely useless, here’s the
-> > > > > network stats:
-> > > > I also tried ignore_ltr for this issue, seems like it alleviates
-> > > > the symptom a bit for a while, then the network still becomes
-> > > > useless after some usage.
-> > > > And yes, it’s also a Whiskey Lake platform. What’s the next step
-> > > > to debug this problem?
-> > > > Kai-Heng
-> > > CRC errors not related to the LTR. Please, try to disable the ME on
-> > > your platform. Hope you have this option in BIOS. Another way is to
-> > > contact your PC vendor and ask to provide NVM without ME. Let's
-> > > start debugging with these steps.
-> > 
-> > According to ODM, the ME can be physically disabled by a jumper.
-> > But after disabling the ME the same issue can still be observed.
-> 
-> We’ve found that this issue doesn’t happen to SATA SSD, it only happens when
-> NVMe SSD is in use.
-> 
-> Here are the steps:
-> - Disable NVMe ASPM, issue persists
-> - modprobe -r e1000e && modprobe e1000e, issue doesn’t happen
-> - Enabling NVMe ASPM, issue doesn’t happen
-> 
-> As long as NVMe ASPM gets enabled after e1000e gets loaded, the issue
-> doesn’t happen.
+On Mon, Jul 01, 2019 at 10:25:17AM +0200, Christoph Hellwig wrote:
+> And I've demonstrated that I can't send patch series..  While this
+> has all the right patches, it also has the extra patches already
+> in the hmm tree, and four extra patches I wanted to send once
+> this series is merged.  I'll give up for now, please use the git
+> url for anything serious, as it contains the right thing.
 
-IIUC the problem happens with the mainline and dev-queue e1000e
-driver, but not with the out-of-tree Intel driver.  Since there is a
-working driver and there's the potential (at least in principle) for
-unifying them or bisecting between them, I have limited interest in
-debugging it from scratch.
+Okay, I sorted it all out and temporarily put it here:
 
-If it turns out to be a PCI core problem, I would want to know: What's
-the PCI topology?  "lspci -vv" output for the system?  Does it make a
-difference if you boot with "pcie_aspm=off"?  Collect complete dmesg,
-maybe attach it to a kernel.org bugzilla?
+https://github.com/jgunthorpe/linux/commits/hmm
 
-> > > > > /sys/class/net/eno1/statistics$ grep . *
-> > > > > collisions:0
-> > > > > multicast:95
-> > > > > rx_bytes:1499851
-> > > > > rx_compressed:0
-> > > > > rx_crc_errors:1165
-> > > > > rx_dropped:0
-> > > > > rx_errors:2330
-> > > > > rx_fifo_errors:0
-> > > > > rx_frame_errors:0
-> > > > > rx_length_errors:0
-> > > > > rx_missed_errors:0
-> > > > > rx_nohandler:0
-> > > > > rx_over_errors:0
-> > > > > rx_packets:4789
-> > > > > tx_aborted_errors:0
-> > > > > tx_bytes:864312
-> > > > > tx_carrier_errors:0
-> > > > > tx_compressed:0
-> > > > > tx_dropped:0
-> > > > > tx_errors:0
-> > > > > tx_fifo_errors:0
-> > > > > tx_heartbeat_errors:0
-> > > > > tx_packets:7370
-> > > > > tx_window_errors:0
-> > > > > 
-> > > > > Same behavior can be observed on both mainline kernel and on
-> > > > > your dev-queue branch.
-> > > > > OTOH, the same issue can’t be observed on out-of-tree e1000e.
-> > > > > 
-> > > > > Is there any plan to close the gap between upstream and
-> > > > > out-of-tree version?
-> > > > > 
-> > > > > Kai-Heng
-> 
-> 
+Bit involved job:
+- Took Ira's v4 patch into hmm.git and confirmed it matches what
+  Andrew has in linux-next after all the fixups
+- Checked your github v4 and the v3 that hit the mailing list were
+  substantially similar (I never did get a clean v4) and largely
+  went with the github version
+- Based CH's v4 series on -rc7 and put back the removal hunk in swap.c
+  so it compiles
+- Merge'd CH's series to hmm.git and fixed all the conflicts with Ira
+  and Ralph's patches (such that swap.c remains unchanged)
+- Added Dan's ack's and tested-by's
+
+I think this fairly closely follows what was posted to the mailing
+list.
+
+As it was more than a simple 'git am', I'll let it sit on github until
+I hear OK's then I'll move it to kernel.org's hmm.git and it will hit
+linux-next. 0-day should also run on this whole thing from my github.
+
+What I know is outstanding:
+ - The conflicting ARM patches, I understand Andrew will handle these
+   post-linux-next
+ - The conflict with AMD GPU in -next, I am waiting to hear from AMD
+
+Otherwise I think we are done with hmm.git for this
+cycle.
+
+Unfortunately this is still not enough to progress rdma's ODP, so we
+will need to do this again next cycle :( I'll be working on patches
+once I get all the merge window prep I have to do done.
+
+Regards,
+Jason
