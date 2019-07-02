@@ -2,70 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 602F85DA28
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 03:03:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B54935D910
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 02:33:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbfGCBDF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Jul 2019 21:03:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727082AbfGCBDF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:03:05 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F38A21904;
-        Tue,  2 Jul 2019 22:35:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562106936;
-        bh=c/MyoEL1y9iSRH8tUqhzcXV9ntk3My2ap/3Dn7awyKw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=l01hbVKK1DS91crh+dWLCuA/4HwJhhjblV3ZmG7+ToSZt2H6+9chb5C6lWKcVbpZT
-         6yf7b0ESc5qYx1xKDTnqLzeOjjZhZFZwE/7x1lR6/PQ/5qZQPNx1I+vWXKWbwacqes
-         0uz8JuzySX1Z2Xp+A47oGKzrXsLwsUNXRd+bPFwo=
-Date:   Tue, 2 Jul 2019 15:35:35 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@mellanox.com>,
-        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 16/25] device-dax: use the dev_pagemap internal refcount
-Message-Id: <20190702153535.228365fea7f0063cceec96cd@linux-foundation.org>
-In-Reply-To: <CAPcyv4h90DAVHbZ4bgvJwpfB8wr2K28oEes6HcdQOpf02+NL=g@mail.gmail.com>
-References: <20190626122724.13313-17-hch@lst.de>
-        <20190628153827.GA5373@mellanox.com>
-        <CAPcyv4joSiFMeYq=D08C-QZSkHz0kRpvRfseNQWrN34Rrm+S7g@mail.gmail.com>
-        <20190628170219.GA3608@mellanox.com>
-        <CAPcyv4ja9DVL2zuxuSup8x3VOT_dKAOS8uBQweE9R81vnYRNWg@mail.gmail.com>
-        <CAPcyv4iWTe=vOXUqkr_CguFrFRqgA7hJSt4J0B3RpuP-Okz0Vw@mail.gmail.com>
-        <20190628182922.GA15242@mellanox.com>
-        <CAPcyv4g+zk9pnLcj6Xvwh-svKM+w4hxfYGikcmuoBAFGCr-HAw@mail.gmail.com>
-        <20190628185152.GA9117@lst.de>
-        <CAPcyv4i+b6bKhSF2+z7Wcw4OUAvb1=m289u9QF8zPwLk402JVg@mail.gmail.com>
-        <20190628190207.GA9317@lst.de>
-        <CAPcyv4h90DAVHbZ4bgvJwpfB8wr2K28oEes6HcdQOpf02+NL=g@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1727212AbfGCAdg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Jul 2019 20:33:36 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33108 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbfGCAdf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Jul 2019 20:33:35 -0400
+Received: by mail-qk1-f196.google.com with SMTP id r6so425372qkc.0
+        for <linux-pci@vger.kernel.org>; Tue, 02 Jul 2019 17:33:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MdOAu5KOREG+EbRK6Nq+YrKhvJXs3HmUBDCrdZ5KiX8=;
+        b=AAxljt6pnpE2phFv0au/KMXwtndrEkpi/j2/EJsMk1Ltm/znau8U4oC61EO2/d59Sk
+         xJPU1u0BtjEPFESekQuX2BJ1u/SqIZ7bMflpffyt+/cccxx1yOrusUEn8yOp2ywWrOCf
+         Lld5MDyXgnJIr3ve2Fh/w5j5fkwVyTxgAGins3VH29cEQcbzt+qyDR2bHhjmFSi3jbg6
+         /F7F3gPexkQQQsNw63xYHhsOrFz2Bzyo6kl0n9KIvQtP8bxrPZ5QJz8X1GXONm3VkV3X
+         NKNrdqQe5b84FicJ1h0fFR5CFdrR9SaWP/732ngOtvNn+h+/TB30mAQ6Zl96yTI1xlw7
+         I9fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MdOAu5KOREG+EbRK6Nq+YrKhvJXs3HmUBDCrdZ5KiX8=;
+        b=KU/ayU/zX6ZWrm80w/MIa0kV2ds5ApufQN4y01iyDh1uBYFNNAUYekWWht4tIHm1+d
+         5Jm0fikNyEDlJJaQdr1xzIiBsAjvi2AQJfIQ1sXk/B1CGRBiw7fP67xMlYSRrPrriu1H
+         3ee9Vf+QARpdiidRz27fF257STdWqbfgI8j82haSys2XJwIzWgEvrKGQXfPr24Hck9QH
+         dhI1ywNEUJ3dNJ7D+Gs57Tu9dRDplNpd3+95T6ucHPUH1vpwad7VhWwrIZEjZb5y96fy
+         G2hLrrK8XtGPEakOt9umDw43P5+MofGG5NE8RrP5ftK+iCp1/T/YaVlHOyJs56y+VteT
+         nZBw==
+X-Gm-Message-State: APjAAAW6qnp0L/t7zgReHX8NJ6vI2zwrOaIzpKQeQmgoSKZz7y6kppwE
+        Tl12hZFY2W3K/5Gya4zFM4PaTg==
+X-Google-Smtp-Source: APXvYqzUcLNxWLj8a1mpiDGB2K6z0y2WfLWUEsAEOQWJszxbWpBMhPdailzBeKZol6g1VGK7JNoCSA==
+X-Received: by 2002:a37:9904:: with SMTP id b4mr26656775qke.159.1562107531140;
+        Tue, 02 Jul 2019 15:45:31 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id j3sm141576qki.5.2019.07.02.15.45.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Jul 2019 15:45:30 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hiRWk-0003Lm-82; Tue, 02 Jul 2019 19:45:30 -0300
+Date:   Tue, 2 Jul 2019 19:45:30 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+Message-ID: <20190702224530.GD11860@ziepe.ca>
+References: <20190627063223.GA7736@ziepe.ca>
+ <6afe4027-26c8-df4e-65ce-49df07dec54d@deltatee.com>
+ <20190627163504.GB9568@ziepe.ca>
+ <4894142c-3233-a3bb-f9a3-4a4985136e9b@deltatee.com>
+ <20190628045705.GD3705@ziepe.ca>
+ <8022a2a4-4069-d256-11da-e6d9b2ffbf60@deltatee.com>
+ <20190628172926.GA3877@ziepe.ca>
+ <25a87c72-630b-e1f1-c858-9c8b417506fc@deltatee.com>
+ <20190628190931.GC3877@ziepe.ca>
+ <cb680437-9615-da42-ebc5-4751e024a45f@deltatee.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cb680437-9615-da42-ebc5-4751e024a45f@deltatee.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 28 Jun 2019 12:14:44 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
+On Fri, Jun 28, 2019 at 01:35:42PM -0600, Logan Gunthorpe wrote:
 
-> I believe -mm auto drops patches when they appear in the -next
-> baseline. So it should "just work" to pull it into the series and send
-> it along for -next inclusion.
+> > However, I'd feel more comfortable about that assumption if we had
+> > code to support the IOMMU case, and know for sure it doesn't require
+> > more info :(
+> 
+> The example I posted *does* support the IOMMU case. That was case (b1)
+> in the description. The idea is that pci_p2pdma_dist() returns a
+> distance with a high bit set (PCI_P2PDMA_THRU_HOST_BRIDGE) when an IOMMU
+> mapping is required and the appropriate flag tells it to call
+> dma_map_resource(). This way, it supports both same-segment and
+> different-segments without needing any look ups in the map step.
 
-Yup.  Although it isn't very "auto" - I manually check that the patch
-which turned up in -next was identical to the version which I had.  If
-not, I go find out why...
+I mean we actually have some iommu drivers that can setup P2P in real
+HW. I'm worried that real IOMMUs will need to have the BDF of the
+completer to route completions back to the requester - which we can't
+trivially get through this scheme.
 
+However, maybe that is just a future problem, and certainly we can see
+that with an interval tree or otherwise such a IOMMU could get the
+information it needs.
+
+Jason
