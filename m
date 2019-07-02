@@ -2,88 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C6D85D55A
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2019 19:35:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BB315D5A3
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2019 19:50:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfGBRfs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Jul 2019 13:35:48 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:41680 "EHLO ale.deltatee.com"
+        id S1726329AbfGBRuo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Jul 2019 13:50:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbfGBRfs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Jul 2019 13:35:48 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hiMh0-0005wc-LA; Tue, 02 Jul 2019 11:35:47 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hiMh0-0005ik-9k; Tue, 02 Jul 2019 11:35:46 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Tue,  2 Jul 2019 11:35:44 -0600
-Message-Id: <20190702173544.21950-1-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726150AbfGBRuo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Jul 2019 13:50:44 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1137F21721;
+        Tue,  2 Jul 2019 17:50:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562089843;
+        bh=S41st5cRffWCwI1px1NAqUx7dKAecFlA2dZOtrgmC3Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fgZY7FqHJVIFZg2bWiE/eQXMoLB+ah85jd73eCP2hrWj1D42Gv+rAFfei6zEuyW+K
+         EjN1Ah8vStBEEHprvaSzvdIMyRbaLJGU1mwnabkLyV4OWFkrx4InaKwM66nU2eteFu
+         Pd5P8GUFjtBBvPdTi6iGRXDa01kM7MCIl+Ubz8Nw=
+Date:   Tue, 2 Jul 2019 12:50:40 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Miaohe Lin <linmiaohe@huawei.com>
+Cc:     andy.shevchenko@gmail.com, sebott@linux.ibm.com, lukas@wunner.de,
+        gustavo@embeddedor.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mingfangsen@huawei.com
+Subject: Re: [PATCH] net: pci: Fix hotplug event timeout with shpchp
+Message-ID: <20190702175040.GA128603@google.com>
+References: <1562074519-205047-1-git-send-email-linmiaohe@huawei.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, helgaas@kernel.org, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,MYRULES_NO_TEXT autolearn=ham autolearn_force=no
-        version=3.4.2
-Subject: [PATCH] PCI/P2PDMA: Fix missing check for dma_virt_ops
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+In-Reply-To: <1562074519-205047-1-git-send-email-linmiaohe@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Drivers that use dma_virt_ops were meant to be rejected when testing
-compatibility for P2PDMA.
+On Tue, Jul 02, 2019 at 01:35:19PM +0000, Miaohe Lin wrote:
+> Hotplug a network card would take more than 5 seconds
+> in qemu + shpchp scene. It’s because 5 seconds
+> delayed_work in func handle_button_press_event with
+> case STATIC_STATE. And this will break some
+> protocols with timeout within 5 seconds.
 
-This check got inadvertantly dropped in one of the later versions of the
-original patchset, so add it back.
+I'm dropping this because of the required delay pointed out by Lukas.
 
-Fixes: 52916982af48 ("PCI/P2PDMA: Support peer-to-peer memory")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/pci/p2pdma.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+If you think we still need to do something here, please clarify the
+situation.  Are you hot-adding?  Hot-swapping?  Since you mention a
+protocol timeout, I suspect the latter, e.g., maybe you had an
+existing device with connections already open, and you want to replace
+it with a new device while preserving those open connections?
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index a4994aa3acc0..ab48babdf214 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -487,6 +487,14 @@ int pci_p2pdma_distance_many(struct pci_dev *provider, struct device **clients,
- 		return -1;
- 
- 	for (i = 0; i < num_clients; i++) {
-+		if (IS_ENABLED(CONFIG_DMA_VIRT_OPS) &&
-+		    clients[i]->dma_ops == &dma_virt_ops) {
-+			if (verbose)
-+				dev_warn(clients[i],
-+					 "cannot be used for peer-to-peer DMA because the driver makes use of dma_virt_ops\n");
-+			return -1;
-+		}
-+
- 		pci_client = find_parent_pci_dev(clients[i]);
- 		if (!pci_client) {
- 			if (verbose)
-@@ -765,7 +773,7 @@ int pci_p2pdma_map_sg(struct device *dev, struct scatterlist *sg, int nents,
- 	 * p2pdma mappings are not compatible with devices that use
- 	 * dma_virt_ops. If the upper layers do the right thing
- 	 * this should never happen because it will be prevented
--	 * by the check in pci_p2pdma_add_client()
-+	 * by the check in pci_p2pdma_distance_many()
- 	 */
- 	if (WARN_ON_ONCE(IS_ENABLED(CONFIG_DMA_VIRT_OPS) &&
- 			 dev->dma_ops == &dma_virt_ops))
--- 
-2.20.1
+We do have to preserve the existing user experience, e.g., delays to
+allow operators to recover from mistaken latch opens or button
+presses.  But if we knew more about what you're trying to do, maybe we
+could figure out another approach.
 
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  drivers/pci/hotplug/shpchp_ctrl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/hotplug/shpchp_ctrl.c b/drivers/pci/hotplug/shpchp_ctrl.c
+> index 078003dcde5b..cbb00acaba0d 100644
+> --- a/drivers/pci/hotplug/shpchp_ctrl.c
+> +++ b/drivers/pci/hotplug/shpchp_ctrl.c
+> @@ -478,7 +478,7 @@ static void handle_button_press_event(struct slot *p_slot)
+>  		p_slot->hpc_ops->green_led_blink(p_slot);
+>  		p_slot->hpc_ops->set_attention_status(p_slot, 0);
+>  
+> -		queue_delayed_work(p_slot->wq, &p_slot->work, 5*HZ);
+> +		queue_delayed_work(p_slot->wq, &p_slot->work, 0);
+>  		break;
+>  	case BLINKINGOFF_STATE:
+>  	case BLINKINGON_STATE:
+> -- 
+> 2.21.GIT
+> 
