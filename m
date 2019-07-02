@@ -2,98 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 980835D9D8
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 02:55:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30FF85DA5E
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 03:10:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfGCAy7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Jul 2019 20:54:59 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:48638 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726963AbfGCAy6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:54:58 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hiRdk-0001o8-HO; Tue, 02 Jul 2019 16:52:46 -0600
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190627063223.GA7736@ziepe.ca>
- <6afe4027-26c8-df4e-65ce-49df07dec54d@deltatee.com>
- <20190627163504.GB9568@ziepe.ca>
- <4894142c-3233-a3bb-f9a3-4a4985136e9b@deltatee.com>
- <20190628045705.GD3705@ziepe.ca>
- <8022a2a4-4069-d256-11da-e6d9b2ffbf60@deltatee.com>
- <20190628172926.GA3877@ziepe.ca>
- <25a87c72-630b-e1f1-c858-9c8b417506fc@deltatee.com>
- <20190628190931.GC3877@ziepe.ca>
- <cb680437-9615-da42-ebc5-4751e024a45f@deltatee.com>
- <20190702224530.GD11860@ziepe.ca>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <49c7f848-3cd5-7225-0821-b19fb4547ad9@deltatee.com>
-Date:   Tue, 2 Jul 2019 16:52:41 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1727121AbfGCBKT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Jul 2019 21:10:19 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42544 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfGCBKT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Jul 2019 21:10:19 -0400
+Received: by mail-oi1-f193.google.com with SMTP id s184so603168oie.9
+        for <linux-pci@vger.kernel.org>; Tue, 02 Jul 2019 18:10:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u5UwRiHjXkEAlhFHmvxN8ePNlS4fXC/47jr2WEGpIzo=;
+        b=OuN/4ptiyR+plJoUbh14HMfrLiUOlvumFP0tzROycbsFqfygYxNO3xqFi028k9qP6U
+         2hsxYQ/2r3+ffTRQvqv/sCf8RYf+3AvuvLqH7ogDKbeVFyv/k7MsfBkCxG4uRyEvLytD
+         3hBMhCKOWYcfttKhsfT8Y19T3NlQHBTeuu1o3bC0SKi1LDuyTUAXjHnls8TPzw595KLC
+         nNTom92Iwyk5ROjrmSXSDkHChpxbNbnGWGRWyw3laBL4fIp/E7U50dYgr8AGkfNKV1ux
+         j9NiIvFe4orlhguGifJ7Su4YhO973/sL8kBVtipoBIsWxN1zYFyjnK/YO/aROHHw66yH
+         203w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u5UwRiHjXkEAlhFHmvxN8ePNlS4fXC/47jr2WEGpIzo=;
+        b=pgjLyXTgx4VOkBRq2I/+OP3xfttXa0zy69F+3dYNgtOfNOdNEGKo72FAkLUKpZA1tb
+         jCYa2zIEftCsqITk1lTwNWiwiZ9JdTvpcWIlYoYsR6eIm9kiE8ejUPe66anUV5Qgk7vR
+         SljXsaeb3P2nW1detvcIMS1l31bXckBJ3sGu08vUtKdcCOANE+1YdOfug+BIn+/w2Gt2
+         paRJgY4wvFhVTp5LsTkvB7IOEbyejbiUo+x4OJCwWH9vb6r9x3zyeqWpaADAt2IQhPbh
+         P6UhwxmmVASVJ2aWdZN/b+IiHUbwNYGMAWmZatbJMvaT4/yo9sT3vwpHufLotLfhqZOI
+         j3Dw==
+X-Gm-Message-State: APjAAAWp9SfnedZz07kW2iCLH0Vu2uuJ+vHB5cEWct3o0eSZszfDu4BJ
+        7hWmVC2JI+9HpRK6vBWbwq9/q2blAWNB4DaOXiYnif10
+X-Google-Smtp-Source: APXvYqyLlYpHy9+AMc/X38t5BFMinZJQ01XTqDg0vHmjdWTN0eXoTzXdkzMkhqYvcnewmJArWXl9rZoSGD4d6S4ISik=
+X-Received: by 2002:aca:ec82:: with SMTP id k124mr4183998oih.73.1562109479302;
+ Tue, 02 Jul 2019 16:17:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190702224530.GD11860@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de, jgg@ziepe.ca
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20190701062020.19239-1-hch@lst.de> <20190701082517.GA22461@lst.de>
+ <20190702184201.GO31718@mellanox.com>
+In-Reply-To: <20190702184201.GO31718@mellanox.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 2 Jul 2019 16:17:48 -0700
+Message-ID: <CAPcyv4iWXJ-c7LahPD=Qt4RuDNTU7w_8HjsitDuj3cxngzb56g@mail.gmail.com>
+Subject: Re: dev_pagemap related cleanups v4
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Jul 2, 2019 at 11:42 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
+>
+> On Mon, Jul 01, 2019 at 10:25:17AM +0200, Christoph Hellwig wrote:
+> > And I've demonstrated that I can't send patch series..  While this
+> > has all the right patches, it also has the extra patches already
+> > in the hmm tree, and four extra patches I wanted to send once
+> > this series is merged.  I'll give up for now, please use the git
+> > url for anything serious, as it contains the right thing.
+>
+> Okay, I sorted it all out and temporarily put it here:
+>
+> https://github.com/jgunthorpe/linux/commits/hmm
+>
+> Bit involved job:
+> - Took Ira's v4 patch into hmm.git and confirmed it matches what
+>   Andrew has in linux-next after all the fixups
+> - Checked your github v4 and the v3 that hit the mailing list were
+>   substantially similar (I never did get a clean v4) and largely
+>   went with the github version
+> - Based CH's v4 series on -rc7 and put back the removal hunk in swap.c
+>   so it compiles
+> - Merge'd CH's series to hmm.git and fixed all the conflicts with Ira
+>   and Ralph's patches (such that swap.c remains unchanged)
+> - Added Dan's ack's and tested-by's
 
+Looks good. Test merge (with some collisions, see below) also passes
+my test suite.
 
-On 2019-07-02 4:45 p.m., Jason Gunthorpe wrote:
-> On Fri, Jun 28, 2019 at 01:35:42PM -0600, Logan Gunthorpe wrote:
-> 
->>> However, I'd feel more comfortable about that assumption if we had
->>> code to support the IOMMU case, and know for sure it doesn't require
->>> more info :(
->>
->> The example I posted *does* support the IOMMU case. That was case (b1)
->> in the description. The idea is that pci_p2pdma_dist() returns a
->> distance with a high bit set (PCI_P2PDMA_THRU_HOST_BRIDGE) when an IOMMU
->> mapping is required and the appropriate flag tells it to call
->> dma_map_resource(). This way, it supports both same-segment and
->> different-segments without needing any look ups in the map step.
-> 
-> I mean we actually have some iommu drivers that can setup P2P in real
-> HW. I'm worried that real IOMMUs will need to have the BDF of the
-> completer to route completions back to the requester - which we can't
-> trivially get through this scheme.
+>
+> I think this fairly closely follows what was posted to the mailing
+> list.
+>
+> As it was more than a simple 'git am', I'll let it sit on github until
+> I hear OK's then I'll move it to kernel.org's hmm.git and it will hit
+> linux-next. 0-day should also run on this whole thing from my github.
+>
+> What I know is outstanding:
+>  - The conflicting ARM patches, I understand Andrew will handle these
+>    post-linux-next
+>  - The conflict with AMD GPU in -next, I am waiting to hear from AMD
 
-I've never seen such an IOMMU but I guess, in theory, it could exist.
-The IOMMUs that setup P2P-like transactions in real hardware make use of
-dma_map_resource(). There aren't a lot of users of this function (it's
-actually been broken with the Intel IOMMU until I fixed it recently and
-I'd expect there are other broken implementations); but, to my
-knowledge, none of them have needed the BDF of the provider to date.
-
-> However, maybe that is just a future problem, and certainly we can see
-> that with an interval tree or otherwise such a IOMMU could get the
-> information it needs.
-
-Yup, the rule of thumb is to design for the needs we have today not
-imagined future problems.
-
-Logan
+Just a heads up that this also collides with the "sub-section" patches
+in Andrew's tree. The resolution is straightforward, mostly just
+colliding updates to arch_{add,remove}_memory() call sites in
+kernel/memremap.c and collisions with pgmap_altmap() usage.
