@@ -2,105 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B54935D910
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 02:33:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B03D5DA47
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 03:07:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbfGCAdg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Jul 2019 20:33:36 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33108 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbfGCAdf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Jul 2019 20:33:35 -0400
-Received: by mail-qk1-f196.google.com with SMTP id r6so425372qkc.0
-        for <linux-pci@vger.kernel.org>; Tue, 02 Jul 2019 17:33:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MdOAu5KOREG+EbRK6Nq+YrKhvJXs3HmUBDCrdZ5KiX8=;
-        b=AAxljt6pnpE2phFv0au/KMXwtndrEkpi/j2/EJsMk1Ltm/znau8U4oC61EO2/d59Sk
-         xJPU1u0BtjEPFESekQuX2BJ1u/SqIZ7bMflpffyt+/cccxx1yOrusUEn8yOp2ywWrOCf
-         Lld5MDyXgnJIr3ve2Fh/w5j5fkwVyTxgAGins3VH29cEQcbzt+qyDR2bHhjmFSi3jbg6
-         /F7F3gPexkQQQsNw63xYHhsOrFz2Bzyo6kl0n9KIvQtP8bxrPZ5QJz8X1GXONm3VkV3X
-         NKNrdqQe5b84FicJ1h0fFR5CFdrR9SaWP/732ngOtvNn+h+/TB30mAQ6Zl96yTI1xlw7
-         I9fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MdOAu5KOREG+EbRK6Nq+YrKhvJXs3HmUBDCrdZ5KiX8=;
-        b=KU/ayU/zX6ZWrm80w/MIa0kV2ds5ApufQN4y01iyDh1uBYFNNAUYekWWht4tIHm1+d
-         5Jm0fikNyEDlJJaQdr1xzIiBsAjvi2AQJfIQ1sXk/B1CGRBiw7fP67xMlYSRrPrriu1H
-         3ee9Vf+QARpdiidRz27fF257STdWqbfgI8j82haSys2XJwIzWgEvrKGQXfPr24Hck9QH
-         dhI1ywNEUJ3dNJ7D+Gs57Tu9dRDplNpd3+95T6ucHPUH1vpwad7VhWwrIZEjZb5y96fy
-         G2hLrrK8XtGPEakOt9umDw43P5+MofGG5NE8RrP5ftK+iCp1/T/YaVlHOyJs56y+VteT
-         nZBw==
-X-Gm-Message-State: APjAAAW6qnp0L/t7zgReHX8NJ6vI2zwrOaIzpKQeQmgoSKZz7y6kppwE
-        Tl12hZFY2W3K/5Gya4zFM4PaTg==
-X-Google-Smtp-Source: APXvYqzUcLNxWLj8a1mpiDGB2K6z0y2WfLWUEsAEOQWJszxbWpBMhPdailzBeKZol6g1VGK7JNoCSA==
-X-Received: by 2002:a37:9904:: with SMTP id b4mr26656775qke.159.1562107531140;
-        Tue, 02 Jul 2019 15:45:31 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id j3sm141576qki.5.2019.07.02.15.45.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jul 2019 15:45:30 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hiRWk-0003Lm-82; Tue, 02 Jul 2019 19:45:30 -0300
-Date:   Tue, 2 Jul 2019 19:45:30 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-Message-ID: <20190702224530.GD11860@ziepe.ca>
-References: <20190627063223.GA7736@ziepe.ca>
- <6afe4027-26c8-df4e-65ce-49df07dec54d@deltatee.com>
- <20190627163504.GB9568@ziepe.ca>
- <4894142c-3233-a3bb-f9a3-4a4985136e9b@deltatee.com>
- <20190628045705.GD3705@ziepe.ca>
- <8022a2a4-4069-d256-11da-e6d9b2ffbf60@deltatee.com>
- <20190628172926.GA3877@ziepe.ca>
- <25a87c72-630b-e1f1-c858-9c8b417506fc@deltatee.com>
- <20190628190931.GC3877@ziepe.ca>
- <cb680437-9615-da42-ebc5-4751e024a45f@deltatee.com>
+        id S1727300AbfGCBHo convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 2 Jul 2019 21:07:44 -0400
+Received: from mga09.intel.com ([134.134.136.24]:48400 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727179AbfGCBHo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Jul 2019 21:07:44 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jul 2019 15:45:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,444,1557212400"; 
+   d="scan'208";a="171943496"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by FMSMGA003.fm.intel.com with ESMTP; 02 Jul 2019 15:45:36 -0700
+Received: from fmsmsx152.amr.corp.intel.com (10.18.125.5) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 2 Jul 2019 15:45:36 -0700
+Received: from crsmsx104.amr.corp.intel.com (172.18.63.32) by
+ FMSMSX152.amr.corp.intel.com (10.18.125.5) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 2 Jul 2019 15:45:36 -0700
+Received: from crsmsx101.amr.corp.intel.com ([169.254.1.124]) by
+ CRSMSX104.amr.corp.intel.com ([169.254.6.189]) with mapi id 14.03.0439.000;
+ Tue, 2 Jul 2019 16:45:34 -0600
+From:   "Weiny, Ira" <ira.weiny@intel.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>, Christoph Hellwig <hch@lst.de>
+CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: dev_pagemap related cleanups v4
+Thread-Topic: dev_pagemap related cleanups v4
+Thread-Index: AQHVL9UWGRaDoyThvUmAcd/teNbddKa10fGAgAI+rID//8OxIA==
+Date:   Tue, 2 Jul 2019 22:45:34 +0000
+Message-ID: <2807E5FD2F6FDA4886F6618EAC48510E79DEA747@CRSMSX101.amr.corp.intel.com>
+References: <20190701062020.19239-1-hch@lst.de>
+ <20190701082517.GA22461@lst.de> <20190702184201.GO31718@mellanox.com>
+In-Reply-To: <20190702184201.GO31718@mellanox.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjc2ZTdhMmQtMWM5Zi00ZTAzLWJmY2UtNGZjYTkyNTYxNjZjIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiV2VKQ1gzZk1WV2hvSmx0bEFBUjRyWFNOT0JNemtQSkdVaHlIbkdveVFhVFdxSlh0T2h3ZytucCt4dWx6djFPTSJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [172.18.205.10]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cb680437-9615-da42-ebc5-4751e024a45f@deltatee.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 01:35:42PM -0600, Logan Gunthorpe wrote:
-
-> > However, I'd feel more comfortable about that assumption if we had
-> > code to support the IOMMU case, and know for sure it doesn't require
-> > more info :(
 > 
-> The example I posted *does* support the IOMMU case. That was case (b1)
-> in the description. The idea is that pci_p2pdma_dist() returns a
-> distance with a high bit set (PCI_P2PDMA_THRU_HOST_BRIDGE) when an IOMMU
-> mapping is required and the appropriate flag tells it to call
-> dma_map_resource(). This way, it supports both same-segment and
-> different-segments without needing any look ups in the map step.
+> On Mon, Jul 01, 2019 at 10:25:17AM +0200, Christoph Hellwig wrote:
+> > And I've demonstrated that I can't send patch series..  While this has
+> > all the right patches, it also has the extra patches already in the
+> > hmm tree, and four extra patches I wanted to send once this series is
+> > merged.  I'll give up for now, please use the git url for anything
+> > serious, as it contains the right thing.
+> 
+> Okay, I sorted it all out and temporarily put it here:
+> 
+> https://github.com/jgunthorpe/linux/commits/hmm
+> 
+> Bit involved job:
+> - Took Ira's v4 patch into hmm.git and confirmed it matches what
+>   Andrew has in linux-next after all the fixups
 
-I mean we actually have some iommu drivers that can setup P2P in real
-HW. I'm worried that real IOMMUs will need to have the BDF of the
-completer to route completions back to the requester - which we can't
-trivially get through this scheme.
+Looking at the final branch seems good.
 
-However, maybe that is just a future problem, and certainly we can see
-that with an interval tree or otherwise such a IOMMU could get the
-information it needs.
+Ira
 
-Jason
+> - Checked your github v4 and the v3 that hit the mailing list were
+>   substantially similar (I never did get a clean v4) and largely
+>   went with the github version
+> - Based CH's v4 series on -rc7 and put back the removal hunk in swap.c
+>   so it compiles
+> - Merge'd CH's series to hmm.git and fixed all the conflicts with Ira
+>   and Ralph's patches (such that swap.c remains unchanged)
+> - Added Dan's ack's and tested-by's
+> 
+> I think this fairly closely follows what was posted to the mailing list.
+> 
+> As it was more than a simple 'git am', I'll let it sit on github until I hear OK's
+> then I'll move it to kernel.org's hmm.git and it will hit linux-next. 0-day
+> should also run on this whole thing from my github.
+> 
+> What I know is outstanding:
+>  - The conflicting ARM patches, I understand Andrew will handle these
+>    post-linux-next
+>  - The conflict with AMD GPU in -next, I am waiting to hear from AMD
+> 
+> Otherwise I think we are done with hmm.git for this cycle.
+> 
+> Unfortunately this is still not enough to progress rdma's ODP, so we will need
+> to do this again next cycle :( I'll be working on patches once I get all the
+> merge window prep I have to do done.
+> 
+> Regards,
+> Jason
