@@ -2,96 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D5DF75DA98
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 03:18:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C4A15D8C3
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 02:28:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfGCBST (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Jul 2019 21:18:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59100 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727377AbfGCBSF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:18:05 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75DB3218D9;
-        Tue,  2 Jul 2019 21:39:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562103594;
-        bh=qg21pARqRrGiqzp8oVFATV/rRvwdeZy0ZvC+FpGJras=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AdDH7F2UwNKk7hs8XFn48mBnJYW3tekpy49ww101NDf6ClrVP8HVoVh9ZXMduwfGI
-         4c9zuOtndSvhsQmRkGPnlQJT1IUNR1jMFyb0erLoU6mlKMKP/lZCGuiIKyloixILC7
-         QSoakQtXMIafoY2n2pzNdlCTaF9hR/xp3U/7j5RQ=
-Date:   Tue, 2 Jul 2019 16:39:51 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: Multitude of resource assignment functions
-Message-ID: <20190702213951.GF128603@google.com>
-References: <SL2P216MB01874DFDDBDE49B935A9B1B380E50@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <e768271e-9455-2a3d-ad76-4a6d9c71d669@deltatee.com>
- <SL2P216MB01872DFDDA9C313CA43C7B3280E40@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <024eec86-dfb9-0a23-6385-9e8dfe9a0381@deltatee.com>
- <SL2P216MB0187340941F03A5A03625F4F80E10@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <442c6b35a1aab9833fd2942b499d4fb082a71a15.camel@kernel.crashing.org>
- <dc631e87-099f-3354-5477-b95e97e55d3f@deltatee.com>
- <SL2P216MB01875C9CB93E6B39846749B280FD0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <e2eec9dc-5eef-62ba-6251-f420d6579d03@deltatee.com>
- <SL2P216MB0187E659CFF6F9385E92838680FE0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+        id S1727237AbfGCA2i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Jul 2019 20:28:38 -0400
+Received: from mail-eopbgr800084.outbound.protection.outlook.com ([40.107.80.84]:26748
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727164AbfGCA2h (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Jul 2019 20:28:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bXV5m5/kWL0UTx0rffDnbnfr99W18VuHp36gZ6xXldk=;
+ b=I2VmR7GaVUgrTx3BAhLw9gTSGN99h0fegBzuNaGRakfcNLzWWMVvDPwiH25Ed6kRRZWK7jwJ+Wkc4HAEgy8qCeSHo1hnjGfVCHF47S6AH5knIs8Ze4jaK4tAhax64gSold0HYRVowbsRYACwaMYkwtOCo1sS+MjODN0yChOyxGE=
+Received: from DM6PR12MB3947.namprd12.prod.outlook.com (10.255.174.156) by
+ DM6PR12MB3227.namprd12.prod.outlook.com (20.179.105.95) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Tue, 2 Jul 2019 21:43:58 +0000
+Received: from DM6PR12MB3947.namprd12.prod.outlook.com
+ ([fe80::91a2:f9e7:8c86:f927]) by DM6PR12MB3947.namprd12.prod.outlook.com
+ ([fe80::91a2:f9e7:8c86:f927%7]) with mapi id 15.20.2032.019; Tue, 2 Jul 2019
+ 21:43:58 +0000
+From:   "Kuehling, Felix" <Felix.Kuehling@amd.com>
+To:     Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        =?utf-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "Yang, Philip" <Philip.Yang@amd.com>
+CC:     Ira Weiny <ira.weiny@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 19/22] mm: always return EBUSY for invalid ranges in
+ hmm_range_{fault,snapshot}
+Thread-Topic: [PATCH 19/22] mm: always return EBUSY for invalid ranges in
+ hmm_range_{fault,snapshot}
+Thread-Index: AQHVL9U3BN0CaVdL806tAThCwvVuZKa33tOA
+Date:   Tue, 2 Jul 2019 21:43:58 +0000
+Message-ID: <fedf75d4-4ce2-e0cc-3c77-73ba31bed653@amd.com>
+References: <20190701062020.19239-1-hch@lst.de>
+ <20190701062020.19239-20-hch@lst.de>
+In-Reply-To: <20190701062020.19239-20-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [165.204.55.251]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+x-clientproxiedby: YTOPR0101CA0031.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:15::44) To DM6PR12MB3947.namprd12.prod.outlook.com
+ (2603:10b6:5:1cb::28)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Felix.Kuehling@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 13f473c3-5730-48c1-f95f-08d6ff366354
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3227;
+x-ms-traffictypediagnostic: DM6PR12MB3227:
+x-microsoft-antispam-prvs: <DM6PR12MB32277E4745008E9B86DBD5E692F80@DM6PR12MB3227.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 008663486A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(396003)(136003)(376002)(189003)(199004)(6116002)(3846002)(68736007)(476003)(2616005)(486006)(6486002)(36756003)(72206003)(478600001)(66066001)(64126003)(64756008)(66446008)(66946007)(66476007)(73956011)(14444005)(256004)(66556008)(8676002)(65956001)(65806001)(102836004)(86362001)(71200400001)(53936002)(229853002)(8936002)(110136005)(316002)(6436002)(6506007)(81166006)(5660300002)(53546011)(31696002)(65826007)(58126008)(305945005)(186003)(71190400001)(54906003)(7416002)(386003)(14454004)(6512007)(99286004)(7736002)(11346002)(4326008)(25786009)(6636002)(2906002)(76176011)(31686004)(52116002)(446003)(26005)(81156014)(6246003)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3227;H:DM6PR12MB3947.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sMk9L56Wb8xff3fa0UYNwsl9h+hrIYZNmWjZ2sZDOyWhgc5H+orKgzntdXV+43yWl4Lr3U4nKoyq+847Jyb1LO7jtF/utnCV/yhFNbUpoClgimWeyEW1AfwIxb1AbfTDFJ81dfCLN7d1C6JKhszrqEz69czVaywl62W2iiv2ZsBx1M78T3Kk8/Q3H8WtxPPbof/9Ll5wm58jel7AN2JeO8FBGM7JoD3HVlg6nqebp3T6ukDzHKWAKGVT7ItJfD/8XTkhqmPwRzGOd7AxvfYipQ9hPwAzZfdrFp7OCGSLNKDF/CC9Kp+yDd6w1rGGvYppl2NucncmXRzCmiFh9ivHN47pfj9UgYWZNbJcnc6XVH1bOnlXWAqOSDvoSm9qrF0zVD8TRE8BtixlMseu5AYRmAhTf7vXX2h43mFy4AgGm1c=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <30B65ABE32E43E43B44DF7426B589C07@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SL2P216MB0187E659CFF6F9385E92838680FE0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 13f473c3-5730-48c1-f95f-08d6ff366354
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2019 21:43:58.3251
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fkuehlin@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3227
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jun 30, 2019 at 02:57:37AM +0000, Nicholas Johnson wrote:
-
-> - Should pci=noacpi imply pci=nocrs? It does not appear to, and I feel 
-> like it should, as CRS is part of ACPI and relates to PCI.
-
-"pci=noacpi" means "Do not use ACPI for IRQ routing or for PCI
-scanning."
-
-"pci=nocrs" means "Ignore PCI host bridge windows from ACPI."  If we
-ignore _CRS, we have no idea what the PCI host bridge apertures are,
-so we cannot allocate resources for devices on the root bus.
-
-The "Do not use ACPI for ... PCI scanning" part indeed does suggest
-that "pci=noacpi" could imply "pci=nocrs", but I don't think there's
-anything to be gained by changing that now.
-
-We probably *should* remove "or for PCI scanning" from the
-documentation, because "pci=noacpi" only affects IRQs.
-
-The only reason these exist at all is as a debugging aid to
-temporarily work around issues in firmware or Linux until we can
-develop a real fix or quirk that works without the user specifying a
-kernel parameter.
-
-> - Does anybody know why with pci=noacpi, you get dmesg warnings about 
-> cannot find PCI int A mapping - but they do not seem to cause the 
-> devices any issues in functioning? Is it because they are using MSI?
-
-I doubt it.  I think you're just lucky.  In general the information
-from _PRT and _CRS is essential for correct operation.
-
-> - Does pci=ignorefw sound good for a future proposal?
-
-No, at least not without more description of what this would
-accomplish.
-
-It sounds like you would want this to turn off _PRT, _CRS, and other
-information from ACPI.  You may not like ACPI, but that information is
-there for good reason, and if we didn't get it from ACPI we would have
-to get it from somewhere else.
-
-There is always "acpi=off" if you just don't want ACPI at all.
-
-Bjorn
+T24gMjAxOS0wNy0wMSAyOjIwIGEubS4sIENocmlzdG9waCBIZWxsd2lnIHdyb3RlOg0KPiBXZSBz
+aG91bGQgbm90IGhhdmUgdHdvIGRpZmZlcmVudCBlcnJvciBjb2RlcyBmb3IgdGhlIHNhbWUgY29u
+ZGl0aW9uLiAgSW4NCj4gYWRkaXRpb24gdGhpcyByZWFsbHkgY29tcGxpY2F0ZXMgdGhlIGNvZGUg
+ZHVlIHRvIHRoZSBzcGVjaWFsIGhhbmRsaW5nIG9mDQo+IEVBR0FJTiB0aGF0IGRyb3BzIHRoZSBt
+bWFwX3NlbSBkdWUgdG8gdGhlIEZBVUxUX0ZMQUdfQUxMT1dfUkVUUlkgbG9naWMNCj4gaW4gdGhl
+IGNvcmUgdm0uDQoNCkkgdGhpbmsgdGhlIGNvbW1lbnQgYWJvdmUgaG1tX3JhbmdlX3NuYXBzaG90
+IG5lZWRzIGFuIHVwZGF0ZS4gQWxzbyANCkRvY3VtZW50YXRpb24vdm0vaG1tLnJzdCBzaG93cyBz
+b21lIGV4YW1wbGUgY29kZSB1c2luZyANCmhtbV9yYW5nZV9zbmFwc2hvdCB0aGF0IHJldHJpZXMg
+b24gLUVBR0FJTi4gVGhhdCB3b3VsZCBuZWVkIHRvIGJlIA0KdXBkYXRlZCB0byB1c2UgLUVCVVNZ
+IG9yIHJlbW92ZSB0aGUgcmV0cnkgbG9naWMgYWx0b2dldGhlci4NCg0KT3RoZXIgdGhhbiB0aGF0
+LCB0aGlzIHBhdGNoIGlzIFJldmlld2VkLWJ5OiBGZWxpeCBLdWVobGluZyANCjxGZWxpeC5LdWVo
+bGluZ0BhbWQuY29tPg0KDQpQaGlsaXAsIHRoaXMgbWVhbnMgd2Ugc2hvdWxkIHJlbW92ZSBvdXIg
+cmV0cnkgbG9naWMgYWdhaW4gaW4gDQphbWRncHVfdHRtX3R0X2dldF91c2VyX3BhZ2VzLiBBY2Nv
+cmRpbmcgdG8gdGhlIGNvbW1lbnQgYWJvdmUgDQpobW1fcmFuZ2VfZmF1bHQsIGl0IGNhbiBvbmx5
+IHJldHVybiAtRUFHQUlOIGlmIHRoZSBibG9jayBwYXJhbWV0ZXIgaXMgDQpmYWxzZS4gSSB0aGlu
+ayB0aGlzIHN0YXRlbWVudCBpcyBub3cgYWN0dWFsbHkgdHJ1ZS4gV2Ugc2V0IGJsb2NrPXRydWUs
+IA0Kc28gd2UgY2FuJ3QgZ2V0IC1FQUdBSU4uIE9uIC1FQlVTWSB3ZSBjYW4gbGV0IA0KYW1kZ3B1
+X2FtZGtmZF9yZXN0b3JlX3VzZXJwdHJfd29ya2VyIHNjaGVkdWxlIHRoZSByZXRyeSAod2hpY2gg
+aXQgZG9lcyANCmFscmVhZHkgYW55d2F5KS4NCg0KUmVnYXJkcywNCiDCoCBGZWxpeA0KDQoNCj4N
+Cj4gU2lnbmVkLW9mZi1ieTogQ2hyaXN0b3BoIEhlbGx3aWcgPGhjaEBsc3QuZGU+DQo+IC0tLQ0K
+PiAgIG1tL2htbS5jIHwgOCArKystLS0tLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlv
+bnMoKyksIDUgZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQgYS9tbS9obW0uYyBiL21tL2ht
+bS5jDQo+IGluZGV4IGM4NWVkN2Q0ZTJjZS4uZDEyNWRmNjk4ZTJiIDEwMDY0NA0KPiAtLS0gYS9t
+bS9obW0uYw0KPiArKysgYi9tbS9obW0uYw0KPiBAQCAtOTc0LDcgKzk3NCw3IEBAIGxvbmcgaG1t
+X3JhbmdlX3NuYXBzaG90KHN0cnVjdCBobW1fcmFuZ2UgKnJhbmdlKQ0KPiAgIAlkbyB7DQo+ICAg
+CQkvKiBJZiByYW5nZSBpcyBubyBsb25nZXIgdmFsaWQgZm9yY2UgcmV0cnkuICovDQo+ICAgCQlp
+ZiAoIXJhbmdlLT52YWxpZCkNCj4gLQkJCXJldHVybiAtRUFHQUlOOw0KPiArCQkJcmV0dXJuIC1F
+QlVTWTsNCj4gICANCj4gICAJCXZtYSA9IGZpbmRfdm1hKGhtbS0+bW0sIHN0YXJ0KTsNCj4gICAJ
+CWlmICh2bWEgPT0gTlVMTCB8fCAodm1hLT52bV9mbGFncyAmIGRldmljZV92bWEpKQ0KPiBAQCAt
+MTA2OSwxMCArMTA2OSw4IEBAIGxvbmcgaG1tX3JhbmdlX2ZhdWx0KHN0cnVjdCBobW1fcmFuZ2Ug
+KnJhbmdlLCBib29sIGJsb2NrKQ0KPiAgIA0KPiAgIAlkbyB7DQo+ICAgCQkvKiBJZiByYW5nZSBp
+cyBubyBsb25nZXIgdmFsaWQgZm9yY2UgcmV0cnkuICovDQo+IC0JCWlmICghcmFuZ2UtPnZhbGlk
+KSB7DQo+IC0JCQl1cF9yZWFkKCZobW0tPm1tLT5tbWFwX3NlbSk7DQo+IC0JCQlyZXR1cm4gLUVB
+R0FJTjsNCj4gLQkJfQ0KPiArCQlpZiAoIXJhbmdlLT52YWxpZCkNCj4gKwkJCXJldHVybiAtRUJV
+U1k7DQo+ICAgDQo+ICAgCQl2bWEgPSBmaW5kX3ZtYShobW0tPm1tLCBzdGFydCk7DQo+ICAgCQlp
+ZiAodm1hID09IE5VTEwgfHwgKHZtYS0+dm1fZmxhZ3MgJiBkZXZpY2Vfdm1hKSkNCg==
