@@ -2,68 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C0755D157
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2019 16:17:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12EA65D23C
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2019 16:59:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfGBORd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Jul 2019 10:17:33 -0400
-Received: from gate.crashing.org ([63.228.1.57]:54750 "EHLO gate.crashing.org"
+        id S1725981AbfGBO7q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Jul 2019 10:59:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:51348 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbfGBORd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Jul 2019 10:17:33 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x62EHQG7016707;
-        Tue, 2 Jul 2019 09:17:27 -0500
-Message-ID: <1c5b15f9bc714a5e5a05bd788e1e041c3e9ffd85.camel@kernel.crashing.org>
-Subject: Re: Archs using generic PCI controller drivers vs. resource policy
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Greg Ungerer <gregungerer00@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-arch@vger.kernel.org
-Date:   Wed, 03 Jul 2019 00:17:25 +1000
-In-Reply-To: <bafcb3eb-2bf0-2ea7-00e4-50e729406978@linux-m68k.org>
-References: <5f3dcc3a8dafad188e3adb8ee9cf347bebdee7f6.camel@kernel.crashing.org>
-         <bafcb3eb-2bf0-2ea7-00e4-50e729406978@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+        id S1726765AbfGBO7q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Jul 2019 10:59:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A1821424;
+        Tue,  2 Jul 2019 07:59:45 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8FE533F703;
+        Tue,  2 Jul 2019 07:59:43 -0700 (PDT)
+Subject: Re: [PATCH v3 8/9] iommu/arm-smmu-v3: Add support for PCI ATS
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+Cc:     "zhongmiao@hisilicon.com" <zhongmiao@hisilicon.com>,
+        "okaya@kernel.org" <okaya@kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Sudeep Holla <Sudeep.Holla@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "lenb@kernel.org" <lenb@kernel.org>
+References: <20190417182448.12382-1-jean-philippe.brucker@arm.com>
+ <20190417182448.12382-9-jean-philippe.brucker@arm.com>
+ <7fcd5263-8a20-11cb-0c20-9fee35fe65c1@arm.com>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <433038b1-048b-57ab-db0e-5f9f940d52ce@arm.com>
+Date:   Tue, 2 Jul 2019 15:59:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <7fcd5263-8a20-11cb-0c20-9fee35fe65c1@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2019-07-02 at 23:24 +1000, Greg Ungerer wrote:
-> > So far I've counted arm, arm64 (DT, not ACPI) and nios2. Any other
-> > ?
+On 01/07/2019 18:41, Robin Murphy wrote:
+> Hi Jean-Philippe,
 > 
-> For the m68k platforms which support PCI (which is only some of
-> the more modern ColdFire variants) they expect PCI resources to
-> be assigned by Linux. There is no boot firmware that will do that
-> before kernel startup.
+> I realise it's a bit late for a "review", but digging up the original 
+> patch seemed as good a place as any to raise this...
 > 
-> The PCI root driver complex is already in the arch area though
-> (arch/m68k/coldfire/pci.c) so that is essentially what you
-> want to achieve right?
+> On 17/04/2019 19:24, Jean-Philippe Brucker wrote:
+> [...]
+>> @@ -1740,6 +1906,9 @@ static void arm_smmu_detach_dev(struct arm_smmu_master *master)
+>>   
+>>   	master->domain = NULL;
+>>   	arm_smmu_install_ste_for_dev(master);
+>> +
+>> +	/* Disabling ATS invalidates all ATC entries */
+>> +	arm_smmu_disable_ats(master);
+>>   }
+> 
+> Is that actually true? I had initially overlooked this entirely while 
+> diagnosing something else and thought that we were missing any ATC 
+> invalidation on detach at all, but even having looked again I'm not 
+> entirely convinced it's bulletproof.
+> 
+> Firstly, the ATS spec only seems to say that *enabling* the ATS 
+> capability invalidates all ATC entries, although I think any corner 
+> cases that that alone opens up should be at best theoretical. More 
+> importantly though, pci_disable_ats() might not actually touch the 
+> capability - given that, it seems possible to move a VF to a new domain, 
+> and if it's not reset, end up preserving now-bogus ATC entries despite 
+> the old domain being torn down and freed. Do we need an explicit ATC 
+> invalidation here to be 100% safe, or is there something else I'm missing?
 
-Thanks !
+Good points, yes the comment is wrong and it looks like we need an
+explicit invalidation given the current pci_disable_ats()
+implementation. I'll send a fix shortly.
 
-So no I'm not trying to move controllers to arch. It makes sense to
-have controllers live in generic code when those controller are IP
-blocks from mobs like DesignWare that various SoC vendors chose to
-integrate, regardless of the CPU architecture.
-
-The issue is more about the resource allocation policy. I want to move
-that *out* of the host controller drivers. That policy essentially
-depends on whether a given platform/board trusts its firmware or not,
-so it's fundamentally arch specific.
-
-There are various reason which I can elaborate if you want wy some
-platforms actually need to trust the firmware, at least partially.
-
-Most embedded platforms don't give a damn and are happy for Linux to
-reassign everything.
-
-Cheers,
-Ben.
-
+Thanks,
+Jean
