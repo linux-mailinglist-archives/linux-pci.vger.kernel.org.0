@@ -2,133 +2,221 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 60FDE5D65E
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2019 20:42:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9B335DA2B
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 03:03:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfGBSmM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Jul 2019 14:42:12 -0400
-Received: from mail-eopbgr20055.outbound.protection.outlook.com ([40.107.2.55]:62393
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726150AbfGBSmM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Jul 2019 14:42:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t+FoI6vpCgiLSBqPMjFHBUD4fTkpXFG2F39LPBhxl74=;
- b=I9ohJ6GNRLW+Zm+ooghClKVijPw+7yhdPymyZ9UYfnb4h8l6cgxmEgeOCdNbseE8x/L9Ge3wh5JFWVDJkBobwtg4AMDNxisbgOSckJW6DEFsDhCpj4Vvnc0r7ERyJeLyh4zmpM5zcIi36u7IFgX/RRdLh9hX6jYVNuPMYsv81uA=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5855.eurprd05.prod.outlook.com (20.178.125.84) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.20; Tue, 2 Jul 2019 18:42:07 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2032.019; Tue, 2 Jul 2019
- 18:42:07 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: dev_pagemap related cleanups v4
-Thread-Topic: dev_pagemap related cleanups v4
-Thread-Index: AQHVL9UU5cGGdRKLlkyPcV6XfRMxZaa1bVyAgAI+pYA=
-Date:   Tue, 2 Jul 2019 18:42:07 +0000
-Message-ID: <20190702184201.GO31718@mellanox.com>
-References: <20190701062020.19239-1-hch@lst.de>
- <20190701082517.GA22461@lst.de>
-In-Reply-To: <20190701082517.GA22461@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: QB1PR01CA0020.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:2d::33) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f3e918f6-e7b1-45d3-220d-08d6ff1cfc06
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5855;
-x-ms-traffictypediagnostic: VI1PR05MB5855:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VI1PR05MB5855D9FC2C87AE8EDF4F3360CFF80@VI1PR05MB5855.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 008663486A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(136003)(39860400002)(376002)(189003)(199004)(36756003)(305945005)(7736002)(6246003)(2906002)(54906003)(64756008)(81156014)(8676002)(8936002)(86362001)(81166006)(53936002)(316002)(6916009)(68736007)(478600001)(7416002)(3846002)(229853002)(5660300002)(6486002)(66066001)(102836004)(6506007)(66446008)(6512007)(14444005)(26005)(4326008)(25786009)(99286004)(186003)(33656002)(14454004)(486006)(446003)(476003)(6116002)(256004)(6306002)(11346002)(1076003)(6436002)(66476007)(76176011)(73956011)(966005)(52116002)(71200400001)(66946007)(386003)(66556008)(71190400001)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5855;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: uxvz6FxwQNsbgdBscCEIRaUYaJ9Hx5UYarazHW+5NehM9eLqQYvVoI1KKwDxw/TefzXSdN5/4xxaq2D7Tani/hQ3Ba46KvDWFZX1MzCawz6jHovyW1WbVATRJPe/6oCfFCi3u7vgRuAnaIKDN7CqC0ljSMhNokZQnmPfYTlZjMpHjSkEb/fv3JDQ1CElySfqAL/l4SpYJpExh8oDwUQRFHHntindvjHxrlA3vnEVyvFJ3u9/MyorpuyISuMH3O9fpPEFzvbkZ+C/6mcbz2FnOogmpZQUZXV8McdcqbNVN5fOXX29ykI848fp6PhT8GI+2FA8t3lq6/klVApz+1NqJaUYSLnxp43VAin0GArLmHF+KBQlgy2AbPkodq7v9nnCYT3QUUxkXF0uDyCQgO7rpgim7bFHYuOpyFu69U5lnyA=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <ADE83ECAC2BC474EA837455494A5DDBE@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1727237AbfGCBDN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Jul 2019 21:03:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726963AbfGCBDG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Jul 2019 21:03:06 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6331721871;
+        Tue,  2 Jul 2019 20:13:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562098399;
+        bh=oiyxtfK7M35SdgF9TLOGYB8qTNTecCfmWOOqN0GIClQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=t3vrIcZpBDnA/vNnTdKLssc+IIlJbrCPInKqwmH8RnXWAVefCaG5MlE+uz1EQdavp
+         kCeI8YNk7EoGai4ONb99/39zhRBFNnHYMwHrmSjIonr15UvpP4iYojqffz0Hxahz36
+         /pboLPuorrf/kondW+kWgwjIauL0wZW+m3aAKkqM=
+Date:   Tue, 2 Jul 2019 15:13:18 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Aaron Sierra <asierra@xes-inc.com>
+Cc:     linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH v4 2/3] PCI/ACPI: Allow _OSC request without ASPM support
+Message-ID: <20190702201318.GC128603@google.com>
+References: <20190213213242.21920-1-git-send-email-asierra@xes-inc.com>
+ <20190701204515.23374-1-asierra@xes-inc.com>
+ <20190701204515.23374-3-asierra@xes-inc.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3e918f6-e7b1-45d3-220d-08d6ff1cfc06
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2019 18:42:07.4459
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5855
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701204515.23374-3-asierra@xes-inc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 10:25:17AM +0200, Christoph Hellwig wrote:
-> And I've demonstrated that I can't send patch series..  While this
-> has all the right patches, it also has the extra patches already
-> in the hmm tree, and four extra patches I wanted to send once
-> this series is merged.  I'll give up for now, please use the git
-> url for anything serious, as it contains the right thing.
+On Mon, Jul 01, 2019 at 03:45:14PM -0500, Aaron Sierra wrote:
+> Some use cases favor resiliency over efficiency. In my company's case,
+> the power savings offered by Active State Power Management (ASPM) are
+> entirely secondary to ensuring robust operation. For that same reason we
+> want to stay aware of events reportable via Advanced Error Reporting
+> (AER). We found, on x86 platforms, that AER has an erroneous implicit
+> dependency on ASPM within negotiate_os_control().
+> 
+> This patch updates negotiate_os_control() to be less ASPM-centric in
+> order to allow other features (notably AER) to work without enabling
+> ASPM (either at compile time or at run time).
+> 
+> Signed-off-by: Aaron Sierra <asierra@xes-inc.com>
+> ---
+>  drivers/acpi/pci_root.c | 49 +++++++++++++++++++++++++++--------------
+>  1 file changed, 33 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index 21aa56f9ca54..9b8a44391ea0 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -53,9 +53,13 @@ static int acpi_pci_root_scan_dependent(struct acpi_device *adev)
+>  }
+>  
+>  #define ACPI_PCIE_REQ_SUPPORT (OSC_PCI_EXT_CONFIG_SUPPORT \
+> -				| OSC_PCI_ASPM_SUPPORT \
+> -				| OSC_PCI_CLOCK_PM_SUPPORT \
+>  				| OSC_PCI_MSI_SUPPORT)
 
-Okay, I sorted it all out and temporarily put it here:
+This change so we can use AER even if the OS has no ASPM support makes
+sense to me.
 
-https://github.com/jgunthorpe/linux/commits/hmm
+But Rafael added ACPI_PCIE_REQ_SUPPORT with 415e12b23792 ("PCI/ACPI:
+Request _OSC control once for each root bridge (v3)") [1], apparently
+related to a bug [2].  I assume there was some reason for requiring
+all those things together, so I'd really like his comments.
 
-Bit involved job:
-- Took Ira's v4 patch into hmm.git and confirmed it matches what
-  Andrew has in linux-next after all the fixups
-- Checked your github v4 and the v3 that hit the mailing list were
-  substantially similar (I never did get a clean v4) and largely
-  went with the github version
-- Based CH's v4 series on -rc7 and put back the removal hunk in swap.c
-  so it compiles
-- Merge'd CH's series to hmm.git and fixed all the conflicts with Ira
-  and Ralph's patches (such that swap.c remains unchanged)
-- Added Dan's ack's and tested-by's
+[1] https://git.kernel.org/linus/415e12b23792
+[2] https://bugzilla.kernel.org/show_bug.cgi?id=20232
 
-I think this fairly closely follows what was posted to the mailing
-list.
+> +#define ACPI_PCIE_ASPM_SUPPORT (ACPI_PCIE_REQ_SUPPORT \
+> +				| OSC_PCI_ASPM_SUPPORT \
+> +				| OSC_PCI_CLOCK_PM_SUPPORT)
+> +#define OSC_CONTROL_BITS_ASPM (OSC_PCI_EXPRESS_CAPABILITY_CONTROL \
+> +				| OSC_PCI_EXPRESS_LTR_CONTROL \
+> +				| OSC_PCI_EXPRESS_PME_CONTROL)
+>  
+>  static const struct acpi_device_id root_device_ids[] = {
+>  	{"PNP0A03", 0},
+> @@ -422,6 +426,11 @@ acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 req)
+>  }
+>  EXPORT_SYMBOL(acpi_pci_osc_control_set);
+>  
+> +static inline bool osc_have_support(u32 support, u32 required)
+> +{
+> +	return ((support & required) == required);
+> +}
 
-As it was more than a simple 'git am', I'll let it sit on github until
-I hear OK's then I'll move it to kernel.org's hmm.git and it will hit
-linux-next. 0-day should also run on this whole thing from my github.
+This is used to test both "support" bitmasks and "control" bitmasks,
+so the name is a little confusing.  Maybe the function could have a
+more generic name, and the "osc" and "support/control" hints could
+come from the arguments passed to it?  It actually does nothing
+_OSC-specific, so we probably don't even need a hint for that.
 
-What I know is outstanding:
- - The conflicting ARM patches, I understand Andrew will handle these
-   post-linux-next
- - The conflict with AMD GPU in -next, I am waiting to hear from AMD
+Maybe it would be overkill, but this could be added with a separate
+preliminary patch so the "allow AER with ASPM" patch becomes even
+simpler.
 
-Otherwise I think we are done with hmm.git for this
-cycle.
+>  static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>  				 bool is_pcie)
+>  {
+> @@ -475,38 +484,47 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>  		return;
+>  	}
+>  
+> -	if ((support & ACPI_PCIE_REQ_SUPPORT) != ACPI_PCIE_REQ_SUPPORT) {
+> +	/*
+> +	 * Require the least restrictive set needed to satisfy at least one
+> +	 * kernel feature.
+> +	 */
+> +	if (!osc_have_support(support, ACPI_PCIE_REQ_SUPPORT)) {
+>  		decode_osc_support(root, "not requesting OS control; OS requires",
+>  				   ACPI_PCIE_REQ_SUPPORT);
+>  		return;
+>  	}
 
-Unfortunately this is still not enough to progress rdma's ODP, so we
-will need to do this again next cycle :( I'll be working on patches
-once I get all the merge window prep I have to do done.
+It seems like the changes below could be a separate patch?  Or do they
+actually depend on the ACPI_PCIE_REQ_SUPPORT change?  Changing
+ACPI_PCIE_REQ_SUPPORT is fairly significant, so I'd like to isolate it
+as much as possible.
 
-Regards,
-Jason
+I think it's fine to pull out the OSC_PCI_EXPRESS_CAPABILITY_CONTROL
+dependency into each feature that requires it, but theoretically that
+would be cosmetic with no real functional change, so it could be in
+its own separate patch.
+
+> -	control = OSC_PCI_EXPRESS_CAPABILITY_CONTROL
+> -		| OSC_PCI_EXPRESS_PME_CONTROL;
+> +	control = 0;
+> +
+> +	if (osc_have_support(support, ACPI_PCIE_ASPM_SUPPORT))
+> +		control |= OSC_CONTROL_BITS_ASPM;
+
+I think this would actually be easier to read without the
+OSC_CONTROL_BITS_ASPM #define because then it would be directly
+parallel with the other cases below, e.g., as
+
+  if (osc_have_support(support, ACPI_PCIE_ASPM_SUPPORT))
+    control |= OSC_PCI_EXPRESS_CAPABILITY_CONTROL |
+               OSC_PCI_EXPRESS_LTR_CONTROL |
+               OSC_PCI_EXPRESS_PME_CONTROL;
+
+Also, since OSC_CONTROL_BITS_ASPM includes both
+OSC_PCI_EXPRESS_LTR_CONTROL and OSC_PCI_EXPRESS_PME_CONTROL, this
+change seems to connect PME to ASPM, and I'm not sure why.  Those are
+two different features, and it seems like we should be able to request
+PME control even if the OS doesn't have ASPM support.
+
+It seems like maybe the OSC_PCI_EXPRESS_PME_CONTROL part should depend
+on CONFIG_PCIE_PME, the same way OSC_PCI_EXPRESS_NATIVE_HP_CONTROL
+depends on CONFIG_HOTPLUG_PCI_PCIE.  That would be a potential
+behavior change and should be its own separate patch.
+
+Rafael is the PME expert, so maybe he has an opinion on this, too.
+
+> -	if (IS_ENABLED(CONFIG_PCIEASPM))
+> -		control |= OSC_PCI_EXPRESS_LTR_CONTROL;
+> +	if (!control)
+> +		*no_aspm = 1;
+>  
+>  	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
+> -		control |= OSC_PCI_EXPRESS_NATIVE_HP_CONTROL;
+> +		control |= OSC_PCI_EXPRESS_CAPABILITY_CONTROL |
+> +			   OSC_PCI_EXPRESS_NATIVE_HP_CONTROL;
+>  
+>  	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_SHPC))
+> -		control |= OSC_PCI_SHPC_NATIVE_HP_CONTROL;
+> +		control |= OSC_PCI_EXPRESS_CAPABILITY_CONTROL |
+> +			   OSC_PCI_SHPC_NATIVE_HP_CONTROL;
+>  
+>  	if (pci_aer_available()) {
+>  		if (aer_acpi_firmware_first())
+>  			dev_info(&device->dev,
+>  				 "PCIe AER handled by firmware\n");
+>  		else
+> -			control |= OSC_PCI_EXPRESS_AER_CONTROL;
+> +			control |= OSC_PCI_EXPRESS_CAPABILITY_CONTROL |
+> +				   OSC_PCI_EXPRESS_AER_CONTROL;
+>  	}
+>  
+>  	requested = control;
+> -	status = acpi_pci_osc_control_set(handle, &control,
+> -					  OSC_PCI_EXPRESS_CAPABILITY_CONTROL);
+> +	acpi_pci_osc_control_set(handle, &control, 0);
+>  	decode_osc_control(root, "OS requested", requested);
+>  	decode_osc_control(root, "platform granted", control);
+> -	if (ACPI_SUCCESS(status)) {
+> +
+> +	if (osc_have_support(control, OSC_CONTROL_BITS_ASPM)) {
+>  		if (acpi_gbl_FADT.boot_flags & ACPI_FADT_NO_ASPM) {
+>  			/*
+>  			 * We have ASPM control, but the FADT indicates that
+> @@ -516,9 +534,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>  			dev_info(&device->dev, "FADT indicates ASPM is unsupported, using BIOS configuration\n");
+>  			*no_aspm = 1;
+>  		}
+> -	} else {
+> -		dev_info(&device->dev, "_OSC failed (%s); disabling ASPM\n",
+> -			acpi_format_exception(status));
+> +	} else if (!*no_aspm) {
+> +		dev_info(&device->dev, "_OSC failed; disabling ASPM\n");
+>  
+>  		/*
+>  		 * We want to disable ASPM here, but aspm_disabled
+> -- 
+> 2.17.1
+> 
