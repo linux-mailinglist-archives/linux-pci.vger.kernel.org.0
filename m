@@ -2,141 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91EFB5DA4D
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 03:08:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5DF75DA98
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 03:18:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbfGCBIF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Jul 2019 21:08:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53806 "EHLO mail.kernel.org"
+        id S1727360AbfGCBST (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Jul 2019 21:18:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727435AbfGCBIF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:08:05 -0400
+        id S1727377AbfGCBSF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Jul 2019 21:18:05 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07111206E0;
-        Tue,  2 Jul 2019 21:28:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75DB3218D9;
+        Tue,  2 Jul 2019 21:39:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562102912;
-        bh=fyqXNS4wOs1KzFcxMs8sN7xIFks2lnuffsrGqABj8J0=;
+        s=default; t=1562103594;
+        bh=qg21pARqRrGiqzp8oVFATV/rRvwdeZy0ZvC+FpGJras=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jGQBxfIXyr4LBTFiosFRv93ZLVxIrf0b9N5XwTGPlu4PRw4WQNuRbfLdsfGB59P9+
-         f140FmhLuvCxjYuvtSGBXL+CJ5XVZHxQg2F7mihTe1D/10IUvVO0N2lPcAIHaHdnP+
-         JsBqQOHXL+S+PIOUZWzQtZr7hiVzQn+GMn0geJfg=
-Date:   Tue, 2 Jul 2019 16:28:29 -0500
+        b=AdDH7F2UwNKk7hs8XFn48mBnJYW3tekpy49ww101NDf6ClrVP8HVoVh9ZXMduwfGI
+         4c9zuOtndSvhsQmRkGPnlQJT1IUNR1jMFyb0erLoU6mlKMKP/lZCGuiIKyloixILC7
+         QSoakQtXMIafoY2n2pzNdlCTaF9hR/xp3U/7j5RQ=
+Date:   Tue, 2 Jul 2019 16:39:51 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-pci@vger.kernel.org, Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, jcm@redhat.com,
-        nariman.poushin@linaro.org, linuxarm@huawei.com
-Subject: Re: [RFC PATCH 0/2] lspci: support for CCIX DVSEC
-Message-ID: <20190702212829.GE128603@google.com>
-References: <20190627144355.27913-1-Jonathan.Cameron@huawei.com>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: Multitude of resource assignment functions
+Message-ID: <20190702213951.GF128603@google.com>
+References: <SL2P216MB01874DFDDBDE49B935A9B1B380E50@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+ <e768271e-9455-2a3d-ad76-4a6d9c71d669@deltatee.com>
+ <SL2P216MB01872DFDDA9C313CA43C7B3280E40@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+ <024eec86-dfb9-0a23-6385-9e8dfe9a0381@deltatee.com>
+ <SL2P216MB0187340941F03A5A03625F4F80E10@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+ <442c6b35a1aab9833fd2942b499d4fb082a71a15.camel@kernel.crashing.org>
+ <dc631e87-099f-3354-5477-b95e97e55d3f@deltatee.com>
+ <SL2P216MB01875C9CB93E6B39846749B280FD0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+ <e2eec9dc-5eef-62ba-6251-f420d6579d03@deltatee.com>
+ <SL2P216MB0187E659CFF6F9385E92838680FE0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190627144355.27913-1-Jonathan.Cameron@huawei.com>
+In-Reply-To: <SL2P216MB0187E659CFF6F9385E92838680FE0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 10:43:53PM +0800, Jonathan Cameron wrote:
-> This series adds support for near complete interpretation of CCIX DVSEC.
-> Most of the CCIX base 1.0 specification is covered, but a few minor
-> elements are not currently printed (some of the timeouts and credit
-> types). That can be rectified in a future version or follow up patch
-> and isn't necessary for this discussion.
-> 
-> CCIX (www.ccixconsortium.org) is a coherent interconnect specification.
-> It is flexible in allowed interconnect topologies, but is overlayed
-> on top of a traditional PCIe tree.  Note that CCIX physical devices
-> may turn up in a number of different locations in the PCIe tree.
-> 
-> The topology configuration and physical layer controls and description
-> are presented using PCIe DVSEC structures defined in the CCIX 1.0
-> base specification.  These use the unique ID granted by the PCISIG.
-> Note that, whilst it looks like a Vendor ID for this usecase it is
-> not one and can only be used to identify DVSEC and related CCIX protocol
-> messages.
-> 
-> So why an RFC?
-> * Are the lspci maintainers happy to have the tool include support for
->   PCI configuration structures that are defined in other standards?
-> * Is the general approach and code structure appropriate?
-> * It's a lot of description so chances are some of it isn't in a format
->   consistent with the rest of lspci!
-> 
-> The patch set includes and example that was manually created to exercise
-> much of the parser.  We also have qemu patches to emulate more complex
-> topologies if anyone wants to experiment.
-> 
-> https://patchwork.kernel.org/cover/11015357/
-> 
-> Example output from lspci -t -F ccix-specex1 -s 03:00.0
-> 
-> 03:00.0 Class 0700: Device 19ec:0003 (prog-if 01)
-> ...
+On Sun, Jun 30, 2019 at 02:57:37AM +0000, Nicholas Johnson wrote:
 
-> 	Capabilities: [600 v0] Designated Vendor-Specific <>
-> 		Vendor:1e2c Version:0
-> 		<CCIX Transport 600>
-> 			TranCap:	ESM+ SR/LR RecalOnrC- CalTime: 500us QuickEqTime: 200ms/208ms
-> 			ESMRateCap:	2.5 GT/s 5 GT/s 8 GT/s 16 GT/s 20 GT/s 25 GT/s 
-> 			ESMStatus:	25 GT/s Cal+
-> 			ESMCtl:		ESM0: 16 GT/s ESM1: 25 GT/s ESM+ ESMCompliance- LR
-> 					ExtEqPhase2TimeOut: 400 ms / 408 ms  ExtEqPhase3TimeOut: 600 ms / 608 ms 
-> 					QuickEqTimeout: Unknown
-> 			ESMEqCtl 20GT/s:	Lane #00: Trans Presets US: 0x1 DS: 0x2
+> - Should pci=noacpi imply pci=nocrs? It does not appear to, and I feel 
+> like it should, as CRS is part of ACPI and relates to PCI.
 
-It's a minor annoyance that all these lines are longer than 80 columns.  I
-know there are existing things in lspci that are wider, which are also
-slightly annoying.  But you're adding a TON of them and there's a bunch of
-whitespace at the beginning of each line :)
+"pci=noacpi" means "Do not use ACPI for IRQ routing or for PCI
+scanning."
 
-> The following grants the 'pciutils' project trademark usage of
-> CCIX tradmark where relevant.
-> 
-> This patch is being distributed by the CCIX Consortium, Inc. (CCIX) to
-> you and other parties that are paticipating (the "participants") in the
-> pciutils with the understanding that the participants will use CCIX's
-> name and trademark only when this patch is used in association with the
-> pciutils project.
-> 
-> CCIX is also distributing this patch to these participants with the
-> understanding that if any portion of the CCIX specification will be
-> used or referenced in the pciutils project, the participants will not modify
-> the cited portion of the CCIX specification and will give CCIX propery
-> copyright attribution by including the following copyright notice with
-> the cited part of the CCIX specification:
-> "© 2019 CCIX CONSORTIUM, INC. ALL RIGHTS RESERVED."
+"pci=nocrs" means "Ignore PCI host bridge windows from ACPI."  If we
+ignore _CRS, we have no idea what the PCI host bridge apertures are,
+so we cannot allocate resources for devices on the root bus.
 
-s/tradmark/trademark/
-s/paticipating/participating/
-s/propery/proper/
+The "Do not use ACPI for ... PCI scanning" part indeed does suggest
+that "pci=noacpi" could imply "pci=nocrs", but I don't think there's
+anything to be gained by changing that now.
 
-I guess "will not modify the cited portion" just means people will
-quote it accurately?  It seems obvious that people proposing changes
-to pciutils can't really modify the CCIX spec.
+We probably *should* remove "or for PCI scanning" from the
+documentation, because "pci=noacpi" only affects IRQs.
 
-The above all sounds a little onerous and I doubt I would sign up to
-it because I'd be afraid to mention "CCIX" in an email and I'm pretty
-sure I'd forget to add the copyright notice somewhere.  But
-fortunately that's up to Martin, not me.
+The only reason these exist at all is as a debugging aid to
+temporarily work around issues in firmware or Linux until we can
+develop a real fix or quirk that works without the user specifying a
+kernel parameter.
 
-> Jonathan Cameron (2):
->   CCIX DVSEC initial support
->   DVSEC Add an example from the ccix spec.
+> - Does anybody know why with pci=noacpi, you get dmesg warnings about 
+> cannot find PCI int A mapping - but they do not seem to cause the 
+> devices any issues in functioning? Is it because they are using MSI?
 
-s/ccix/CCIX/ so they match.  No period necessary in subject line.
+I doubt it.  I think you're just lucky.  In general the information
+from _PRT and _CRS is essential for correct operation.
 
-I don't maintain pciutils, but I like to have subject lines match in
-grammatical style.  One of the above is a sentence and the other is not.
-Maybe:
+> - Does pci=ignorefw sound good for a future proposal?
 
-  Add CCIX DVSEC decoding support
-  Add DVSEC example from CCIX spec
+No, at least not without more description of what this would
+accomplish.
+
+It sounds like you would want this to turn off _PRT, _CRS, and other
+information from ACPI.  You may not like ACPI, but that information is
+there for good reason, and if we didn't get it from ACPI we would have
+to get it from somewhere else.
+
+There is always "acpi=off" if you just don't want ACPI at all.
 
 Bjorn
