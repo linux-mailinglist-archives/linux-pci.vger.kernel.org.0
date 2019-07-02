@@ -2,85 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BB315D5A3
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2019 19:50:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 451735D5CF
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2019 20:01:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbfGBRuo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Jul 2019 13:50:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60830 "EHLO mail.kernel.org"
+        id S1726457AbfGBSBS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Jul 2019 14:01:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbfGBRuo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Jul 2019 13:50:44 -0400
+        id S1726329AbfGBSBS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Jul 2019 14:01:18 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1137F21721;
-        Tue,  2 Jul 2019 17:50:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E15CF21721;
+        Tue,  2 Jul 2019 18:01:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562089843;
-        bh=S41st5cRffWCwI1px1NAqUx7dKAecFlA2dZOtrgmC3Y=;
+        s=default; t=1562090476;
+        bh=kIyxmE2Mr1IyGzQ4fVM/a6nCRCw2PNXuUwGbNB+MA+8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fgZY7FqHJVIFZg2bWiE/eQXMoLB+ah85jd73eCP2hrWj1D42Gv+rAFfei6zEuyW+K
-         EjN1Ah8vStBEEHprvaSzvdIMyRbaLJGU1mwnabkLyV4OWFkrx4InaKwM66nU2eteFu
-         Pd5P8GUFjtBBvPdTi6iGRXDa01kM7MCIl+Ubz8Nw=
-Date:   Tue, 2 Jul 2019 12:50:40 -0500
+        b=OaeHKq6Ue8uNfTzlxnZXXbihytg9QMqaUnI2S2DhsYTgdm9nOjREh0s1HoBp1xDlO
+         jMLz038dAIeYfukbzvZ+QbDEhd/+8PpFGdtXSlH3SQhtX6cp5uij9hy/245ylau6iA
+         Xi1Fyx+Rl6dX3GqKOxvYfoiCMYlh66VMbaFM4s7U=
+Date:   Tue, 2 Jul 2019 13:01:12 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Miaohe Lin <linmiaohe@huawei.com>
-Cc:     andy.shevchenko@gmail.com, sebott@linux.ibm.com, lukas@wunner.de,
-        gustavo@embeddedor.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingfangsen@huawei.com
-Subject: Re: [PATCH] net: pci: Fix hotplug event timeout with shpchp
-Message-ID: <20190702175040.GA128603@google.com>
-References: <1562074519-205047-1-git-send-email-linmiaohe@huawei.com>
+To:     Kai Heng Feng <kai.heng.feng@canonical.com>
+Cc:     "Neftin, Sasha" <sasha.neftin@intel.com>,
+        jeffrey.t.kirsher@intel.com,
+        Anthony Wong <anthony.wong@canonical.com>,
+        intel-wired-lan@lists.osuosl.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: RX CRC errors on I219-V (6) 8086:15be
+Message-ID: <20190702180112.GB128603@google.com>
+References: <C4036C54-EEEB-47F3-9200-4DD1B22B4280@canonical.com>
+ <3975473C-B117-4DC6-809A-6623A5A478BF@canonical.com>
+ <ed4eca8e-d393-91d7-5d2f-97d42e0b75cb@intel.com>
+ <1804A45E-71B5-4C41-839C-AF0CFAD0D785@canonical.com>
+ <E29A2CD2-1632-4575-9910-0808BD15F4D3@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1562074519-205047-1-git-send-email-linmiaohe@huawei.com>
+In-Reply-To: <E29A2CD2-1632-4575-9910-0808BD15F4D3@canonical.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 01:35:19PM +0000, Miaohe Lin wrote:
-> Hotplug a network card would take more than 5 seconds
-> in qemu + shpchp scene. It’s because 5 seconds
-> delayed_work in func handle_button_press_event with
-> case STATIC_STATE. And this will break some
-> protocols with timeout within 5 seconds.
-
-I'm dropping this because of the required delay pointed out by Lukas.
-
-If you think we still need to do something here, please clarify the
-situation.  Are you hot-adding?  Hot-swapping?  Since you mention a
-protocol timeout, I suspect the latter, e.g., maybe you had an
-existing device with connections already open, and you want to replace
-it with a new device while preserving those open connections?
-
-We do have to preserve the existing user experience, e.g., delays to
-allow operators to recover from mistaken latch opens or button
-presses.  But if we knew more about what you're trying to do, maybe we
-could figure out another approach.
-
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  drivers/pci/hotplug/shpchp_ctrl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Jul 02, 2019 at 04:25:59PM +0800, Kai Heng Feng wrote:
+> +linux-pci
 > 
-> diff --git a/drivers/pci/hotplug/shpchp_ctrl.c b/drivers/pci/hotplug/shpchp_ctrl.c
-> index 078003dcde5b..cbb00acaba0d 100644
-> --- a/drivers/pci/hotplug/shpchp_ctrl.c
-> +++ b/drivers/pci/hotplug/shpchp_ctrl.c
-> @@ -478,7 +478,7 @@ static void handle_button_press_event(struct slot *p_slot)
->  		p_slot->hpc_ops->green_led_blink(p_slot);
->  		p_slot->hpc_ops->set_attention_status(p_slot, 0);
->  
-> -		queue_delayed_work(p_slot->wq, &p_slot->work, 5*HZ);
-> +		queue_delayed_work(p_slot->wq, &p_slot->work, 0);
->  		break;
->  	case BLINKINGOFF_STATE:
->  	case BLINKINGON_STATE:
-> -- 
-> 2.21.GIT
+> Hi Sasha,
+> 
+> at 6:49 PM, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+> 
+> > at 14:26, Neftin, Sasha <sasha.neftin@intel.com> wrote:
+> > 
+> > > On 6/26/2019 09:14, Kai Heng Feng wrote:
+> > > > Hi Sasha
+> > > > at 5:09 PM, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+> > > > > Hi Jeffrey,
+> > > > > 
+> > > > > We’ve encountered another issue, which causes multiple CRC
+> > > > > errors and renders ethernet completely useless, here’s the
+> > > > > network stats:
+> > > > I also tried ignore_ltr for this issue, seems like it alleviates
+> > > > the symptom a bit for a while, then the network still becomes
+> > > > useless after some usage.
+> > > > And yes, it’s also a Whiskey Lake platform. What’s the next step
+> > > > to debug this problem?
+> > > > Kai-Heng
+> > > CRC errors not related to the LTR. Please, try to disable the ME on
+> > > your platform. Hope you have this option in BIOS. Another way is to
+> > > contact your PC vendor and ask to provide NVM without ME. Let's
+> > > start debugging with these steps.
+> > 
+> > According to ODM, the ME can be physically disabled by a jumper.
+> > But after disabling the ME the same issue can still be observed.
+> 
+> We’ve found that this issue doesn’t happen to SATA SSD, it only happens when
+> NVMe SSD is in use.
+> 
+> Here are the steps:
+> - Disable NVMe ASPM, issue persists
+> - modprobe -r e1000e && modprobe e1000e, issue doesn’t happen
+> - Enabling NVMe ASPM, issue doesn’t happen
+> 
+> As long as NVMe ASPM gets enabled after e1000e gets loaded, the issue
+> doesn’t happen.
+
+IIUC the problem happens with the mainline and dev-queue e1000e
+driver, but not with the out-of-tree Intel driver.  Since there is a
+working driver and there's the potential (at least in principle) for
+unifying them or bisecting between them, I have limited interest in
+debugging it from scratch.
+
+If it turns out to be a PCI core problem, I would want to know: What's
+the PCI topology?  "lspci -vv" output for the system?  Does it make a
+difference if you boot with "pcie_aspm=off"?  Collect complete dmesg,
+maybe attach it to a kernel.org bugzilla?
+
+> > > > > /sys/class/net/eno1/statistics$ grep . *
+> > > > > collisions:0
+> > > > > multicast:95
+> > > > > rx_bytes:1499851
+> > > > > rx_compressed:0
+> > > > > rx_crc_errors:1165
+> > > > > rx_dropped:0
+> > > > > rx_errors:2330
+> > > > > rx_fifo_errors:0
+> > > > > rx_frame_errors:0
+> > > > > rx_length_errors:0
+> > > > > rx_missed_errors:0
+> > > > > rx_nohandler:0
+> > > > > rx_over_errors:0
+> > > > > rx_packets:4789
+> > > > > tx_aborted_errors:0
+> > > > > tx_bytes:864312
+> > > > > tx_carrier_errors:0
+> > > > > tx_compressed:0
+> > > > > tx_dropped:0
+> > > > > tx_errors:0
+> > > > > tx_fifo_errors:0
+> > > > > tx_heartbeat_errors:0
+> > > > > tx_packets:7370
+> > > > > tx_window_errors:0
+> > > > > 
+> > > > > Same behavior can be observed on both mainline kernel and on
+> > > > > your dev-queue branch.
+> > > > > OTOH, the same issue can’t be observed on out-of-tree e1000e.
+> > > > > 
+> > > > > Is there any plan to close the gap between upstream and
+> > > > > out-of-tree version?
+> > > > > 
+> > > > > Kai-Heng
+> 
 > 
