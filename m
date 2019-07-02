@@ -2,153 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C22A5CC01
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2019 10:26:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 029D15CE5E
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2019 13:26:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfGBI0R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Jul 2019 04:26:17 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45493 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfGBI0Q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Jul 2019 04:26:16 -0400
-Received: from mail-wm1-f69.google.com ([209.85.128.69])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hiE7C-0007Qy-TS
-        for linux-pci@vger.kernel.org; Tue, 02 Jul 2019 08:26:15 +0000
-Received: by mail-wm1-f69.google.com with SMTP id w126so561395wmb.0
-        for <linux-pci@vger.kernel.org>; Tue, 02 Jul 2019 01:26:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=trl/WIaWKJT6HVXal0DvRqg1PD1vdTs1Z0wlP41mFoI=;
-        b=E7jL7L64A5dLg6TmM0grz+zGdN63OA8q3Fyq6JxgwFgepaguXrm/OMUWitO7+gNplf
-         ZM4hBqampaR5sZ1lvdtjBoZWsk2NwSu8P7n+BuT5Yoe+2n0NE1iSdkRVABo7WoPm/Kcy
-         A6RWVtbMiNbF3oKMtojqZnOTyxfufc3EBDIJn2FW9mR/MaWZLeuttnw3ZoDVHj2Btj+a
-         HDkIdlUJLx9fDW2aJpJx7pTuq0AZ+ioR4sgZvqw+WUd6v+ebqbbEld1LlfcQhL7ei/8f
-         X8pVEPCL15iTBaTY/s9FlEN61M6bYGucufYH1ivpzg4tWtdUm1WBpLY70oSgMW7BQdvG
-         Vw2g==
-X-Gm-Message-State: APjAAAX/jFN4rz1135MTUBYrxLQzzLtTXEmnU1D9hKFjAkqzNhApGI2D
-        BJhVMbyWL7H/x+d/XR3YTCdJoBCK4tJKO/YuGdrD7Pxu/Ylux3rSv6A8eoE9Rp2fy5rfCgsoCTN
-        TYN1esHJqq9eU32JiwWLmkaZNE/AIgov8vdVbTA==
-X-Received: by 2002:a5d:670b:: with SMTP id o11mr12785078wru.311.1562055974599;
-        Tue, 02 Jul 2019 01:26:14 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqz+FTyT/cxUiGg2GivGHqjxcLBglyyxVajY50jh2Isvt0G30XDYj+xriC7qEnS0qKyUqyM0aw==
-X-Received: by 2002:a5d:670b:: with SMTP id o11mr12785044wru.311.1562055974297;
-        Tue, 02 Jul 2019 01:26:14 -0700 (PDT)
-Received: from [10.101.46.178] (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
-        by smtp.gmail.com with ESMTPSA id z1sm13636806wrv.90.2019.07.02.01.26.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 01:26:13 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: RX CRC errors on I219-V (6) 8086:15be
-From:   Kai Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <1804A45E-71B5-4C41-839C-AF0CFAD0D785@canonical.com>
-Date:   Tue, 2 Jul 2019 16:25:59 +0800
-Cc:     jeffrey.t.kirsher@intel.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        intel-wired-lan@lists.osuosl.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Transfer-Encoding: 8bit
-Message-Id: <E29A2CD2-1632-4575-9910-0808BD15F4D3@canonical.com>
-References: <C4036C54-EEEB-47F3-9200-4DD1B22B4280@canonical.com>
- <3975473C-B117-4DC6-809A-6623A5A478BF@canonical.com>
- <ed4eca8e-d393-91d7-5d2f-97d42e0b75cb@intel.com>
- <1804A45E-71B5-4C41-839C-AF0CFAD0D785@canonical.com>
-To:     "Neftin, Sasha" <sasha.neftin@intel.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        id S1725767AbfGBL05 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Jul 2019 07:26:57 -0400
+Received: from mout.web.de ([217.72.192.78]:57019 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725835AbfGBL04 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Jul 2019 07:26:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1562066812;
+        bh=juqKN/utSp3mkklzu+oSJ9se0SQsDf+4EbbluIbW+U0=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=JFjwoia8gyOm3B7tVtdGLdDc9lhxm11MTIUt2bokTWQdwhF89hC8MGUmijipIIgam
+         y1vYv3C72PCEp360wnvHDkV6/YV1sTBEXWKcFjaA9+Ohd1dY/uRAeUVrSEXAWuyEDA
+         yb1+ubDB34Zxh85ZPiLKYeTUNjhYoNDjaHuy30aI=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.48.11.114]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LvSLn-1ihDCx0m0Z-010YqW; Tue, 02
+ Jul 2019 13:26:52 +0200
+To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] pci/proc: Use seq_puts() in show_device()
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <a6b110cb-0d0e-5dc3-9ca1-9041609cf74c@web.de>
+Date:   Tue, 2 Jul 2019 13:26:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:j/yYiV3XfWA4kHGZcI33aLdYKuqQjEH0nantFwZKwvtGRkg2hQG
+ HupyjTvUftjx43PwlPuEwWS8ZugGfcO+d0nGR76NbDJ2AjzEhl/foo0d+1aGD6mkmrYOVz3
+ XrR83+gRiTuv0krYeS/uyWhNOKjqksgFbG27xTTK7R9l8AdPAuH1rpo7GGaomPqlAX7je3F
+ 7WWKdbsJcA/AfE1RVjS1Q==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QwjPEUF+dsw=:UeGW4La/GqUNi8lqjnn0Vy
+ WoC3yjA5KD6rNbpWnPdk68KD2k+NA6JZrCykYPbxHCau8uP1O4EobU/DIcahFfRAwAiFN7Hd8
+ dVgDXxOx2kLQ1nsCxG3coKxAyDBcnjx+gl49kMXJwC9Sv4Sk3eYzpv7+tU9eAKBOBjh+eSJUE
+ 3EAbDWSCVA3RKywKPPL3zlz55y0lE0Xhj4olmXc/SqbCSrcx2EAKgxwkrIaUeyjCj51SoBcCJ
+ B/kdHFhKqEpqJa3bzNcS4QjSlSAlgESolNM0LnQ7J0kqOSgSfzxpWdub4lX+k9dutzXt36pMP
+ WMcBZNaX0O6TVggLYeODov11/qjBVxDuxez/5CLnARmCxs5EgMaSDH5fYBtr4uZAlvhZzGMcd
+ 2MyHrSXVw775d01usevMJC4CEN+/s8gnpoeFVln4D6zTGL2c/owp8ZKiyIRsiZw1Be0k+tg12
+ krkeHpkRTqSVFA12SBtpoQFcKVGPp5gQ6eJR7qe4CAgsrQWqk96gJx7CW2YTfVVtXas0va8RF
+ ULS4yA+vA0jPJ7UVMZBcTP427Qw32mfnjf367hhC+B4gkbjP7WYYoDKRz373yEYT4xYS28a/a
+ YAjxtUor6qgPuTqzyft+1Ne9ALkOksVVKcq/sfxRBk2lqmFQDIaMOKqW0pZSTXStavh6UAf3P
+ MJQPCkwDSrdvESIJ3axk+9lSB/xggjL8bqeFuR56FjlbmZfHI876ZHn7kyWRGCf1NxIokY2cf
+ CsYB9VxCLHFeQdXveb7rroc3XMSGa3HP4bFlQgLYngpPy0R6Inlpvti9clWQPMpqDIfCgMpVf
+ yFCZZbKoSH0XZUFIc6gQw+cVYJglS8/QGP+5NW06Z0pFkScFoQDUKKFSMHHkcAnYiIslorE8M
+ xTI9aKyBHxc1PpzGYx8gDbUzC6L7ksGl+KDT6AirX/k9lcK9AUapMx5elP9hXzv46sbs+ozu2
+ AeLDoXlm5U8RP1Nldzxu9IwDi9CrrgkAhOOt1zUAEMg8zPMwE92/ngHwQzuxDjpGnVj+2dBJV
+ IzO79Jal05EX+fImJCfNZs7JyibnlNM+0H2RgDx8eFddcGQ3Xpo/cVG5QUKxxsCbnDHdTE2dy
+ G0ExEjhnchLa4CbaWgvD8hI//JPUWAXhoVp
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+linux-pci
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Tue, 2 Jul 2019 13:21:33 +0200
 
-Hi Sasha,
+A string which did not contain a data format specification should be put
+into a sequence. Thus use the corresponding function =E2=80=9Cseq_puts=E2=
+=80=9D.
 
-at 6:49 PM, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+This issue was detected by using the Coccinelle software.
 
-> at 14:26, Neftin, Sasha <sasha.neftin@intel.com> wrote:
->
->> On 6/26/2019 09:14, Kai Heng Feng wrote:
->>> Hi Sasha
->>> at 5:09 PM, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
->>>> Hi Jeffrey,
->>>>
->>>> We’ve encountered another issue, which causes multiple CRC errors and  
->>>> renders ethernet completely useless, here’s the network stats:
->>> I also tried ignore_ltr for this issue, seems like it alleviates the  
->>> symptom a bit for a while, then the network still becomes useless after  
->>> some usage.
->>> And yes, it’s also a Whiskey Lake platform. What’s the next step to  
->>> debug this problem?
->>> Kai-Heng
->> CRC errors not related to the LTR. Please, try to disable the ME on your  
->> platform. Hope you have this option in BIOS. Another way is to contact  
->> your PC vendor and ask to provide NVM without ME. Let's start debugging  
->> with these steps.
->
-> According to ODM, the ME can be physically disabled by a jumper.
-> But after disabling the ME the same issue can still be observed.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/pci/proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-We’ve found that this issue doesn’t happen to SATA SSD, it only happens  
-when NVMe SSD is in use.
-
-Here are the steps:
-- Disable NVMe ASPM, issue persists
-- modprobe -r e1000e && modprobe e1000e, issue doesn’t happen
-- Enabling NVMe ASPM, issue doesn’t happen
-
-As long as NVMe ASPM gets enabled after e1000e gets loaded, the issue  
-doesn’t happen.
-
-Do you have any idea how those two are intertwined together?
-
-Kai-Heng
-
->
-> Kai-Heng
->
->>>> /sys/class/net/eno1/statistics$ grep . *
->>>> collisions:0
->>>> multicast:95
->>>> rx_bytes:1499851
->>>> rx_compressed:0
->>>> rx_crc_errors:1165
->>>> rx_dropped:0
->>>> rx_errors:2330
->>>> rx_fifo_errors:0
->>>> rx_frame_errors:0
->>>> rx_length_errors:0
->>>> rx_missed_errors:0
->>>> rx_nohandler:0
->>>> rx_over_errors:0
->>>> rx_packets:4789
->>>> tx_aborted_errors:0
->>>> tx_bytes:864312
->>>> tx_carrier_errors:0
->>>> tx_compressed:0
->>>> tx_dropped:0
->>>> tx_errors:0
->>>> tx_fifo_errors:0
->>>> tx_heartbeat_errors:0
->>>> tx_packets:7370
->>>> tx_window_errors:0
->>>>
->>>> Same behavior can be observed on both mainline kernel and on your  
->>>> dev-queue branch.
->>>> OTOH, the same issue can’t be observed on out-of-tree e1000e.
->>>>
->>>> Is there any plan to close the gap between upstream and out-of-tree  
->>>> version?
->>>>
->>>> Kai-Heng
-
+diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
+index 445b51db75b0..fe7fe678965b 100644
+=2D-- a/drivers/pci/proc.c
++++ b/drivers/pci/proc.c
+@@ -377,7 +377,7 @@ static int show_device(struct seq_file *m, void *v)
+ 	}
+ 	seq_putc(m, '\t');
+ 	if (drv)
+-		seq_printf(m, "%s", drv->name);
++		seq_puts(m, drv->name);
+ 	seq_putc(m, '\n');
+ 	return 0;
+ }
+=2D-
+2.22.0
 
