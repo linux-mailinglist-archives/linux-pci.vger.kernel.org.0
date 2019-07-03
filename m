@@ -2,95 +2,182 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C1D15EB61
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 20:15:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1287C5EB87
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 20:25:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfGCSPs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Jul 2019 14:15:48 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:38213 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726955AbfGCSPo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Jul 2019 14:15:44 -0400
-Received: by mail-qk1-f196.google.com with SMTP id a27so3565312qkk.5
-        for <linux-pci@vger.kernel.org>; Wed, 03 Jul 2019 11:15:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wryDEDMxoF6Vk+K+7duTnFgyottGCGFfZAdbutaWn2g=;
-        b=MGb4X8V0OjUmCxHXdwat5t//603Imvm3kttDyzPr4B1R8dke3zyk8pDWGq7fzjOf9T
-         vhoLDzI6WCU5N4NrK/vZZAt9KDue5n72hIeNC1cz1j/ds592t4xYj0gPc7RQWN5tu3kK
-         y/BZeSVV19CFNNBfNU5x0lM9OM/CH02xFeKxUrblZJMqjjhX0l4gjG924KSmb6umCVqY
-         q+ZOkych1AFQ/2d82ikRe4cso3C8TVySqyZbPVlAYKLNARrOu29Nsf2uO3Rs45jVcEQb
-         PCfasJR/oBWrfsPe016/1vxmUYZfy876Nti6m+RO+WQbCOzAxMa5i5a/ZdgHoU8lAwIn
-         KN7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wryDEDMxoF6Vk+K+7duTnFgyottGCGFfZAdbutaWn2g=;
-        b=ssXSTlHLqDOcRpLb+ajnhV0ih7FCcF5TmHcDYaIzYAEdozo6JgAVMTc+sYdrmHBtEX
-         gFtaxxr/+C+kMVzk5vRSzqg1e8JMwyXztSNfKYSWw9u3Gk7LN/mPPbVLAr0Jc/vRP56r
-         B9wBPtSrYzlB9B691v9AqlotxPmbI/2F/xRJD68T442HglSbTfeRemDfk6q1a9p8o4Bi
-         GUcmIg6rCb4UUK6Bq2Q/jbViXEmW2UDK972fFVWExDe2YEhEMAOQUCUNsq+EflSIrjHP
-         ifby48/kWT+IDoRCvUz+IQbM+n8y0PYqasXiKnAUfSoX59m0SpwgUPJHRlkjJehhrSxw
-         yDOA==
-X-Gm-Message-State: APjAAAWlhIgT1K3ltobud7uMVPDJzJABeqDObDSB5r/k2uLMroPN2yV5
-        C3kGBci1kJCGL3MXLWPSsJ7hHu1j+WpDvw==
-X-Google-Smtp-Source: APXvYqx+Obpp289GMjyQScpks1hosaCdzO2IJ2gOygQVUkXAuZU/IoXFFk8Hk2uU2aW+fFE5K61x4g==
-X-Received: by 2002:a37:4914:: with SMTP id w20mr31403797qka.156.1562177743091;
-        Wed, 03 Jul 2019 11:15:43 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id j184sm1204269qkc.65.2019.07.03.11.15.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Jul 2019 11:15:42 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hijnC-0000Ju-2z; Wed, 03 Jul 2019 15:15:42 -0300
-Date:   Wed, 3 Jul 2019 15:15:42 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 22/22] mm: remove the legacy hmm_pfn_* APIs
-Message-ID: <20190703181542.GD18673@ziepe.ca>
-References: <20190701062020.19239-1-hch@lst.de>
- <20190701062020.19239-23-hch@lst.de>
- <20190703180125.GA18673@ziepe.ca>
- <20190703180308.GA13656@lst.de>
+        id S1727159AbfGCSZw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Jul 2019 14:25:52 -0400
+Received: from mga01.intel.com ([192.55.52.88]:6475 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725933AbfGCSZw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 3 Jul 2019 14:25:52 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 11:25:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,446,1557212400"; 
+   d="scan'208";a="315655248"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 03 Jul 2019 11:25:45 -0700
+Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
+        by linux.intel.com (Postfix) with ESMTP id A021258060A;
+        Wed,  3 Jul 2019 11:25:45 -0700 (PDT)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v3 1/7] PCI/ATS: Fix pci_prg_resp_pasid_required()
+ dependency issues
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+References: <cover.1561061640.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <a0534c2ec69e0d7e03c4da3e8d539e8591a5686c.1561061640.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190703175654.GN128603@google.com>
+From:   sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <a2ff2b65-3e7c-6aad-22d8-3a17dd4074b1@linux.intel.com>
+Date:   Wed, 3 Jul 2019 11:23:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190703180308.GA13656@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190703175654.GN128603@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 08:03:08PM +0200, Christoph Hellwig wrote:
-> On Wed, Jul 03, 2019 at 03:01:25PM -0300, Jason Gunthorpe wrote:
-> > Christoph, I guess you didn't mean to send this branch to the mailing
-> > list?
-> > 
-> > In any event some of these, like this one, look obvious and I could
-> > still grab a few for hmm.git.
-> > 
-> > Let me know what you'd like please
-> > 
-> > Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-> 
-> Thanks.  I was going to send this series out as soon as you had
-> applied the previous one.  Now that it leaked I'm happy to collect
-> reviews.  But while I've got your attention:  the rdma.git hmm
-> branch is still at the -rc7 merge and doen't have my series, is that
-> intentional?
+Hi,
 
-Sorry, I rushed it too late at night to do it right apparently. Fixed.
+On 7/3/19 10:56 AM, Bjorn Helgaas wrote:
+> On Thu, Jun 20, 2019 at 01:38:42PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>> Since pci_prg_resp_pasid_required() function has dependency on both
+>> PASID and PRI, define it only if both CONFIG_PCI_PRI and
+>> CONFIG_PCI_PASID config options are enabled.
+> This is likely just confusion on my part, but I don't understand what
+> you're doing here.
+>
+> pci_prg_resp_pasid_required() does not actually *depend* on the
+> CONFIG_PCI_PRI config symbol.
 
-Jason
+pci_prg_resp_pasid_required() function internally reads the PRI status 
+register to get the status of PASID required bit.
+
+FILE:drivers/pci/ats.c
+
+419         pci_read_config_word(pdev, pos + PCI_PRI_STATUS, &status);
+420
+421         if (status & PCI_PRI_STATUS_PASID)
+
+Since pci_prg_resp_pasid_required()  function is only used if 
+CONFIG_PCI_PASID is enabled, and since it also has internal PCI_PRI 
+dependency, I have protected it with both CONFIG_PCI_PASID and 
+CONFIG_PCI_PRI ifdefs.
+
+>
+> It is currently compiled only if CONFIG_PCI_ATS=y (which controls
+> compilation of the entire ats.c) and CONFIG_PCI_PASID=y (since it's
+> within #ifdef CONFIG_PCI_PASID).
+>
+> pci_prg_resp_pasid_required() is called by attach_device()
+> (amd_iommu.c), which is only compiled if CONFIG_AMD_IOMMU=y, and that
+> selects PCI_PRI.
+pci_prg_resp_pasid_required() is also called by intel_iommu.c, and 
+enabling CONFIG_INTEL_IOMMU does not enable PCI_PRI/PCI_PASID by default.
+>
+> It is also called by iommu_enable_dev_iotlb() (intel-iommu.c).  That
+> file is compiled if CONFIG_INTEL_IOMMU=y and the call itself is inside
+> #ifdef CONFIG_INTEL_IOMMU_SVM.  But I don't see the PCI_PRI connection
+> here.
+>
+> If this is just to limit the visibility, say that.  But I don't think
+> that's really a good reason.  The chain of config symbols seems a
+> little too complicated.
+>
+>> Fixes: e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required()
+>> interface.")
+>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> ---
+>>   drivers/pci/ats.c       | 10 ++++++----
+>>   include/linux/pci-ats.h | 12 +++++++++---
+>>   2 files changed, 15 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+>> index 97c08146534a..f9eeb7db0db3 100644
+>> --- a/drivers/pci/ats.c
+>> +++ b/drivers/pci/ats.c
+>> @@ -395,6 +395,8 @@ int pci_pasid_features(struct pci_dev *pdev)
+>>   }
+>>   EXPORT_SYMBOL_GPL(pci_pasid_features);
+>>   
+>> +#ifdef CONFIG_PCI_PRI
+>> +
+>>   /**
+>>    * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
+>>    *				 status.
+>> @@ -402,10 +404,8 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
+>>    *
+>>    * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
+>>    *
+>> - * Even though the PRG response PASID status is read from PRI Status
+>> - * Register, since this API will mainly be used by PASID users, this
+>> - * function is defined within #ifdef CONFIG_PCI_PASID instead of
+>> - * CONFIG_PCI_PRI.
+>> + * Since this API has dependency on both PRI and PASID, protect it
+>> + * with both CONFIG_PCI_PRI and CONFIG_PCI_PASID.
+>>    */
+>>   int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+>>   {
+>> @@ -425,6 +425,8 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+>>   }
+>>   EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
+>>   
+>> +#endif
+>> +
+>>   #define PASID_NUMBER_SHIFT	8
+>>   #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
+>>   /**
+>> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+>> index 1ebb88e7c184..1a0bdaee2f32 100644
+>> --- a/include/linux/pci-ats.h
+>> +++ b/include/linux/pci-ats.h
+>> @@ -40,7 +40,6 @@ void pci_disable_pasid(struct pci_dev *pdev);
+>>   void pci_restore_pasid_state(struct pci_dev *pdev);
+>>   int pci_pasid_features(struct pci_dev *pdev);
+>>   int pci_max_pasids(struct pci_dev *pdev);
+>> -int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+>>   
+>>   #else  /* CONFIG_PCI_PASID */
+>>   
+>> @@ -67,11 +66,18 @@ static inline int pci_max_pasids(struct pci_dev *pdev)
+>>   	return -EINVAL;
+>>   }
+>>   
+>> +#endif /* CONFIG_PCI_PASID */
+>> +
+>> +#if defined(CONFIG_PCI_PRI) && defined(CONFIG_PCI_PASID)
+>> +
+>> +int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+>> +
+>> +#else /* CONFIG_PCI_PASID && CONFIG_PCI_PRI */
+>> +
+>>   static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+>>   {
+>>   	return 0;
+>>   }
+>> -#endif /* CONFIG_PCI_PASID */
+>> -
+>> +#endif
+>>   
+>>   #endif /* LINUX_PCI_ATS_H*/
+>> -- 
+>> 2.21.0
+>>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
+
