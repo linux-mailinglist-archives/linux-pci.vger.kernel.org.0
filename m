@@ -2,76 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 600D85DA2A
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 03:03:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDCAF5DAEE
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 03:33:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfGCBDF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Jul 2019 21:03:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51744 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfGCBDF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:03:05 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DE7121BF1;
-        Tue,  2 Jul 2019 23:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562111178;
-        bh=HHd7/JqeDyA8cgnz+y55uY+RyTkhNRZ7JSHv+IT51Gc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CrIu84spArwVRPyBzpYPsRgnNuSm+lDSIBhd3KtX3SHm9xW7OQsYblD6gEf1Pscxf
-         y/k2K0wUqzF65nDFT1nh89HdvzjtV7CzNkbzValklRdVH30+iyOALXAeO19kd8xhCq
-         bCyfUwDDdyUUc6TCvECcWPKG41dYIxhnZ2wWQBeQ=
-Date:   Tue, 2 Jul 2019 18:46:16 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] pci/proc: Use seq_puts() in show_device()
-Message-ID: <20190702234616.GH128603@google.com>
-References: <a6b110cb-0d0e-5dc3-9ca1-9041609cf74c@web.de>
+        id S1727200AbfGCBdR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Jul 2019 21:33:17 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38736 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbfGCBdR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Jul 2019 21:33:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=InWmJ+St41ikI+4rizzZIL6hXVavnsXpRy2fc8t2i50=; b=MTAK0tEofyhdJtOypGTtVMIs8
+        pBHy2O4TbTzCttnhg/LJanmt/XcBTzuDUPmbybPs6Rg0XsO8iYO8naIeHTwjWnTHMDu2KwwH+wcaU
+        UpgnAge56JadzEiab+YsfsJgSwEcUVmsXXLcBg7486V8FIHylCXzlaBxru1QQo4Cxabp8ifS4zC1S
+        WiCo1d2p5b0qBvzQ/Bn1xH/KrrLMTkgiNvjJ+icdIKMQqyrz+o0Zf66g5hdYwzpVJSFWLobFtRLOO
+        6mqp/Zt3/me/Ikt6C503zATKULYzwPjiKZ1shQ0rrnDcVy3RZxqs3bIlRyDOoQLav2NUCrdUOuspl
+        e2I5twPxQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hiSw1-0007NX-MU; Wed, 03 Jul 2019 00:15:41 +0000
+Date:   Tue, 2 Jul 2019 17:15:41 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-hyperv@vger.kernel.org,
+        Jake Oshins <jakeo@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI: hv: fix pci-hyperv build, depends on SYSFS
+Message-ID: <20190703001541.GG1729@bombadil.infradead.org>
+References: <69c25bc3-da00-2758-92ee-13c82b51fc45@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a6b110cb-0d0e-5dc3-9ca1-9041609cf74c@web.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <69c25bc3-da00-2758-92ee-13c82b51fc45@infradead.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 01:26:27PM +0200, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Tue, 2 Jul 2019 13:21:33 +0200
+On Tue, Jul 02, 2019 at 04:24:30PM -0700, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
 > 
-> A string which did not contain a data format specification should be put
-> into a sequence. Thus use the corresponding function “seq_puts”.
+> Fix build errors when building almost-allmodconfig but with SYSFS
+> not set (not enabled).  Fixes these build errors:
 > 
-> This issue was detected by using the Coccinelle software.
+> ERROR: "pci_destroy_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
+> ERROR: "pci_create_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
 > 
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> drivers/pci/slot.o is only built when SYSFS is enabled, so
+> pci-hyperv.o has an implicit dependency on SYSFS.
+> Make that explicit.
 
-Applied to pci/misc for v5.3, thanks!
-
-> ---
->  drivers/pci/proc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-> index 445b51db75b0..fe7fe678965b 100644
-> --- a/drivers/pci/proc.c
-> +++ b/drivers/pci/proc.c
-> @@ -377,7 +377,7 @@ static int show_device(struct seq_file *m, void *v)
->  	}
->  	seq_putc(m, '\t');
->  	if (drv)
-> -		seq_printf(m, "%s", drv->name);
-> +		seq_puts(m, drv->name);
->  	seq_putc(m, '\n');
->  	return 0;
->  }
-> --
-> 2.22.0
-> 
+I wonder if we shouldn't rather provide no-op versions of
+pci_create|destroy_slot for when SYSFS is not set?
