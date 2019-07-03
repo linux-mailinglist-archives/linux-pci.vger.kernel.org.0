@@ -2,167 +2,222 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A1CBA5E662
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 16:19:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96A145E751
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 17:03:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfGCOTN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Jul 2019 10:19:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55100 "EHLO mail.kernel.org"
+        id S1726760AbfGCPDs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Jul 2019 11:03:48 -0400
+Received: from mga03.intel.com ([134.134.136.65]:32220 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725830AbfGCOTN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 3 Jul 2019 10:19:13 -0400
-Received: from localhost (84.sub-174-234-39.myvzw.com [174.234.39.84])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 830B521881;
-        Wed,  3 Jul 2019 14:19:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562163551;
-        bh=TOI2UbmjAOF7VuL8bRp/vefYCFnzpOnxFE5nZX/jNfA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HEg+SGleVnD+45dm7VkB27F8KnWy/laKKP2i+8GdUEvYSGWz9RcR/op/7UWF4Zgt+
-         Pt8ouixOIOhQ9v665SxNA37YYiHPs/q4S+Sx5guNLGEHj4fWCzeaBfmAmtW79xqS0E
-         umOj4f2ps3d5L5fPc/HVUXhKlqTrChUz+b/3tszo=
-Date:   Wed, 3 Jul 2019 09:19:09 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: Multitude of resource assignment functions
-Message-ID: <20190703141909.GM128603@google.com>
-References: <SL2P216MB01872DFDDA9C313CA43C7B3280E40@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <024eec86-dfb9-0a23-6385-9e8dfe9a0381@deltatee.com>
- <SL2P216MB0187340941F03A5A03625F4F80E10@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <442c6b35a1aab9833fd2942b499d4fb082a71a15.camel@kernel.crashing.org>
- <dc631e87-099f-3354-5477-b95e97e55d3f@deltatee.com>
- <SL2P216MB01875C9CB93E6B39846749B280FD0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <e2eec9dc-5eef-62ba-6251-f420d6579d03@deltatee.com>
- <SL2P216MB0187E659CFF6F9385E92838680FE0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <20190702213951.GF128603@google.com>
- <SL2P216MB01878623FC34BC4894EB495280FB0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+        id S1726605AbfGCPDs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 3 Jul 2019 11:03:48 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 08:03:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,446,1557212400"; 
+   d="scan'208";a="184779863"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 03 Jul 2019 08:03:42 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 03 Jul 2019 18:03:41 +0300
+Date:   Wed, 3 Jul 2019 18:03:41 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add sysfs attribute for disabling PCIe link to
+ downstream component
+Message-ID: <20190703150341.GW2640@lahna.fi.intel.com>
+References: <20190529104942.74991-1-mika.westerberg@linux.intel.com>
+ <20190703133953.GK128603@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SL2P216MB01878623FC34BC4894EB495280FB0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190703133953.GK128603@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 01:43:52PM +0000, Nicholas Johnson wrote:
-> On Tue, Jul 02, 2019 at 04:39:51PM -0500, Bjorn Helgaas wrote:
-> > On Sun, Jun 30, 2019 at 02:57:37AM +0000, Nicholas Johnson wrote:
+On Wed, Jul 03, 2019 at 08:39:53AM -0500, Bjorn Helgaas wrote:
+> On Wed, May 29, 2019 at 01:49:42PM +0300, Mika Westerberg wrote:
+> > PCIe root and downstream ports have link control register that can be
+> > used disable the link from software. This can be useful for instance
+> > when performing "software" hotplug on systems that do not support real
+> > PCIe/ACPI hotplug.
 > > 
-> > > - Should pci=noacpi imply pci=nocrs? It does not appear to, and I feel 
-> > > like it should, as CRS is part of ACPI and relates to PCI.
+> > For example when used with FPGA card we can burn a new FPGA image
+> > without need to reboot the system.
 > > 
-> > "pci=noacpi" means "Do not use ACPI for IRQ routing or for PCI
-> > scanning."
+> > First we remove the FGPA device from Linux PCI stack:
 > > 
-> > "pci=nocrs" means "Ignore PCI host bridge windows from ACPI."  If we
-> > ignore _CRS, we have no idea what the PCI host bridge apertures are,
-> > so we cannot allocate resources for devices on the root bus.
->
-> But I use pci=nocrs (it is non-negotiable for assigning massive 
-> MMIO_PREF with kernel parameters) and it does work. If I use pci=nocrs, 
-> then the whole physical address range of the CPU goes to the root 
-> complex (for example, 39-bit physical address lines on quad-core Intel 
-> is 512G). I am guessing that the OS makes sure that when assigning root 
-> port windows, we do not clobber the physical RAM so that any RAM 
-> addresses pass straight through the root complex. I have never had funny 
-> crashes that would make me think I have clobbered the RAM with nocrs. If 
-> I push the limits then it fails to assign root port resources as 
-> expected. Usually I assign 64G size to each Thunderbolt port for total 
-> of 256G over four ports. It is total overkill but it gives me 
-> satisfaction to know that the firmware is definitely not in control and 
-> that if it is needed, it can be requested. For a production system, I 
-> would likely tone it down a little.
-
-"pci=nocrs" happens to work on many machines, but the _CRS information
-is definitely required on many others.  For example, on any machine
-with multiple host bridges, we need to know the actual host bridge
-apertures to correctly assign resources to hot-added devices.
-
-> > The "Do not use ACPI for ... PCI scanning" part indeed does suggest
-> > that "pci=noacpi" could imply "pci=nocrs", but I don't think there's
-> > anything to be gained by changing that now.
+> >   # echo 1 > /sys/bus/pci/devices/0000:00:01.1/0000:02:00.0/remove
 > > 
-> > We probably *should* remove "or for PCI scanning" from the
-> > documentation, because "pci=noacpi" only affects IRQs.
+> > Then we disable the link:
 > > 
-> > The only reason these exist at all is as a debugging aid to
-> > temporarily work around issues in firmware or Linux until we can
-> > develop a real fix or quirk that works without the user specifying a
-> > kernel parameter.
+> >   # echo 1 > /sys/bus/pci/devices/0000:00:01.1/link_disable
 > > 
-> > > - Does anybody know why with pci=noacpi, you get dmesg warnings about 
-> > > cannot find PCI int A mapping - but they do not seem to cause the 
-> > > devices any issues in functioning? Is it because they are using MSI?
-> > 
-> > I doubt it.  I think you're just lucky.  In general the information
-> > from _PRT and _CRS is essential for correct operation.
->
-> Strange, because there are dozens of these warnings on multiple 
-> computers and heaps of devices on Thunderbolt. If the BARs are assigned 
-> then they work, every time, no questions asked. Maybe this suggests that 
-> Thunderbolt is somehow exempt. Perhaps the controller has kept 
-> configuration from the firmware setup and everything behind it does not 
-> care.
-
-Thunderbolt is not exempt.  _PRT tells us where INTx wires from PCI
-are connected.  On systems with multiple host bridges, there are
-multiple sets of those wires.  Your many examples of systems where
-things seem to work are not arguments for it being safe to ignore _PRT
-and _CRS in general.
-
-> > > - Does pci=ignorefw sound good for a future proposal?
-> > 
-> > No, at least not without more description of what this would
-> > accomplish.
-> I have not given it much time and thought but basically it will be 
-> something that can be added to incrementally. I would start with it 
-> implying nocrs and releasing all root complex resources at boot before 
-> the initial scan. That way we can see if the particular platform cares 
-> if we do everything in the kernel.
+> > By doing this we prevent the kernel from accessing the hardware while we
+> > burn the new FPGA image. 
 > 
-> > It sounds like you would want this to turn off _PRT, _CRS, and other
-> > information from ACPI.  You may not like ACPI, but that information is
-> > there for good reason, and if we didn't get it from ACPI we would have
-> > to get it from somewhere else.
->
-> The nocrs is vital because the BIOS places pitiful space behind the root 
-> complex and will fail for assigning large BARs - hence why Xeon Phi 
-> coprocessors with 8G or 16G BARs to map their whole RAM are only 
-> supported on certain systems. I consider all BIOS / firmware to be 
-> broken at this time, especially with most still catering for 32-bit OS 
-> that almost nobody uses. I know not everybody feels that way, but I am 
-> an idealist and aim to move things in the right direction.
+> What is the case where the kernel accesses the hardware?  You've
+> already done the remove, so the pci_dev is gone.  Is this to protect
+> against another user doing a rescan?  Or is there some spurious event
+> during the FPGA update that causes an interrupt that causes pciehp to
+> rescan?  Something else?
 
-Fine.  You can boot with "pci=nocrs" all you want, but it's not safe
-in general.
+Protect against another user doing rescan.
 
-The problem of BIOS not reporting enough space for the root complex is
-a BIOS issue.  The host bridge _CRS should report all the space routed
-to the host bridge.  If it doesn't, that's a BIOS issue.  In principle
-Linux could work around that by reading the hardware registers that
-control the host bridge apertures, but that would require Linux to
-know how to program every host bridge of interest.  We don't have or
-want that sort of code in Linux because it would be a huge maintenance
-burden.
+> I guess this particular FPGA update must be done via some side channel
+> (not the PCIe link)?  I assume there are other FPGA arrangements where
+> the update *would* be done via the PCIe link, and we would just do a
+> reset to make the update take effect.
 
-> I would accept ACPI if it were just a collection of tables, memory 
-> mapped like MMCONFIG. I know there are more complicated things that 
-> require bytecode to run (although I do assert my belief that it should 
-> be avoided if possible) but if the static tables were moved out of ACPI 
-> then in my mind, it would be progress.
+In this setup the FPGA is programmed using side channel. I haven't seen
+the actual system but I think it is some sort of FPGA programmer
+connected to another system.
+
+> > Once the new FPGA is burned we can re-enable
+> > the link and rescan the new and possibly different device:
+> > 
+> >   # echo 0 > /sys/bus/pci/devices/0000:00:01.1/link_disable
+> >   # echo 1 > /sys/bus/pci/devices/0000:00:01.1/rescan
+> > 
+> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-pci |  8 +++
+> >  drivers/pci/pci-sysfs.c                 | 65 ++++++++++++++++++++++++-
+> >  2 files changed, 72 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> > index 8bfee557e50e..c93d6b9ab580 100644
+> > --- a/Documentation/ABI/testing/sysfs-bus-pci
+> > +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> > @@ -324,6 +324,14 @@ Description:
+> >  		This is similar to /sys/bus/pci/drivers_autoprobe, but
+> >  		affects only the VFs associated with a specific PF.
+> >  
+> > +What:		/sys/bus/pci/devices/.../link_disable
+> > +Date:		September 2019
+> > +Contact:	Mika Westerberg <mika.westerberg@linux.intel.com>
+> > +Description:
+> > +		PCIe root and downstream ports have this attribute. Writing
+> > +		1 causes the link to downstream component be disabled.
+> > +		Re-enabling the link happens by writing 0 instead.
+> > +
+> >  What:		/sys/bus/pci/devices/.../p2pmem/size
+> >  Date:		November 2017
+> >  Contact:	Logan Gunthorpe <logang@deltatee.com>
+> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > index 6d27475e39b2..dfcd21745192 100644
+> > --- a/drivers/pci/pci-sysfs.c
+> > +++ b/drivers/pci/pci-sysfs.c
+> > @@ -218,6 +218,56 @@ static ssize_t current_link_width_show(struct device *dev,
+> >  }
+> >  static DEVICE_ATTR_RO(current_link_width);
+> >  
+> > +static ssize_t link_disable_show(struct device *dev,
+> > +				 struct device_attribute *attr, char *buf)
+> > +{
+> > +	struct pci_dev *pci_dev = to_pci_dev(dev);
+> > +	u16 linkctl;
+> > +	int ret;
+> > +
+> > +	ret = pcie_capability_read_word(pci_dev, PCI_EXP_LNKCTL, &linkctl);
+> > +	if (ret)
+> > +		return -EINVAL;
+> > +
+> > +	return sprintf(buf, "%d\n", !!(linkctl & PCI_EXP_LNKCTL_LD));
+> > +}
+> > +
+> > +static ssize_t link_disable_store(struct device *dev,
+> > +				  struct device_attribute *attr,
+> > +				  const char *buf, size_t count)
+> > +{
+> > +	struct pci_dev *pci_dev = to_pci_dev(dev);
+> > +	u16 linkctl;
+> > +	bool disable;
+> > +	int ret;
+> > +
+> > +	ret = kstrtobool(buf, &disable);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = pcie_capability_read_word(pci_dev, PCI_EXP_LNKCTL, &linkctl);
+> > +	if (ret)
+> > +		return -EINVAL;
+> > +
+> > +	if (disable) {
+> > +		if (linkctl & PCI_EXP_LNKCTL_LD)
+> > +			goto out;
+> > +		linkctl |= PCI_EXP_LNKCTL_LD;
+> > +	} else {
+> > +		if (!(linkctl & PCI_EXP_LNKCTL_LD))
+> > +			goto out;
+> > +		linkctl &= ~PCI_EXP_LNKCTL_LD;
+> > +	}
+> > +
+> > +	ret = pcie_capability_write_word(pci_dev, PCI_EXP_LNKCTL, linkctl);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +out:
+> > +	return count;
+> > +}
+> > +static DEVICE_ATTR_RW(link_disable);
+> > +
+> >  static ssize_t secondary_bus_number_show(struct device *dev,
+> >  					 struct device_attribute *attr,
+> >  					 char *buf)
+> > @@ -785,6 +835,7 @@ static struct attribute *pcie_dev_attrs[] = {
+> >  	&dev_attr_current_link_width.attr,
+> >  	&dev_attr_max_link_width.attr,
+> >  	&dev_attr_max_link_speed.attr,
+> > +	&dev_attr_link_disable.attr,
+> >  	NULL,
+> >  };
+> >  
+> > @@ -1656,8 +1707,20 @@ static umode_t pcie_dev_attrs_are_visible(struct kobject *kobj,
+> >  	struct device *dev = kobj_to_dev(kobj);
+> >  	struct pci_dev *pdev = to_pci_dev(dev);
+> >  
+> > -	if (pci_is_pcie(pdev))
+> > +	if (pci_is_pcie(pdev)) {
+> > +		if (a == &dev_attr_link_disable.attr) {
+> > +			switch (pci_pcie_type(pdev)) {
+> > +			case PCI_EXP_TYPE_ROOT_PORT:
+> > +			case PCI_EXP_TYPE_DOWNSTREAM:
 > 
-> Is there a reason why PCI SIG could not add a future extension where all 
-> of this information can be accessed with an extended MMCONFIG address 
-> range?
+> This is actually not completely reliable because there are weird
+> systems that don't identify upstream/downstream ports correctly, e.g.,
+> see d0751b98dfa3 ("PCI: Add dev->has_secondary_link to track
+> downstream PCIe links") and c8fc9339409d ("PCI/ASPM: Use
+> dev->has_secondary_link to find downstream links").
 
-For one thing, we don't know where MMCONFIG space lives.  We learn
-that from the static MCFG table.
+D'oh!
 
-Bjorn
+It never came to my mind that using pci_pcie_type() would not be
+reliable. Thanks for pointing it out.
+
+> I think I suggested the dev->has_secondary_link approach, but I now
+> think that was a mistake because it means we have to remember to look
+> at has_secondary_link instead of doing the obvious thing like your
+> code.
+> 
+> set_pcie_port_type() detects those unusual topologies, and I think it
+> would probably be better for it to just change the cached caps reg
+> used by pci_pcie_type() so checking for PCI_EXP_TYPE_DOWNSTREAM does
+> the right thing.
+
+You mean modify set_pcie_port_type() to correct the type if it finds:
+
+  type == PCI_EXP_TYPE_UPSTREAM && !pdev->has_secondary_link => type = PCI_EXP_TYPE_DOWNSTREAM
+
+or
+
+  type == PCI_EXP_TYPE_DOWNSTREAM && pdev->has_secondary_link => type = PCI_EXP_TYPE_UPSTREAM
+
+? Assuming my understanding of pdev->has_secondary_link is correct.
