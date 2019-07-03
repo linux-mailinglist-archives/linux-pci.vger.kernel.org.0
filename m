@@ -2,101 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8360A5E51E
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 15:16:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DB5B5E523
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 15:17:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfGCNQg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Jul 2019 09:16:36 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34048 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGCNQg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Jul 2019 09:16:36 -0400
-Received: by mail-pl1-f194.google.com with SMTP id i2so1255367plt.1;
-        Wed, 03 Jul 2019 06:16:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=yGVA8J1oVzuyxdhC58zOwyQMGcRamYPeie8LuWEVbJc=;
-        b=nXbtKwlge67Worbf6RMT9WMh92tQ3gTM1oVX1HCnuxoJfjLD/UIFj/T5jhZlANKzzW
-         TMKs96xvvo+Y37GM/A+hHtBi/y4oDprdPqDagwtb7ckNr8/Qgy3aHmjlbSF8Gn5fuyrQ
-         yiw1wXvhksrp01MTMonqYLO5NnYyz12uWIxqXP/KcShHRreoAfVhpGD9L+wp8b+R8hCq
-         oOruzraOagO0Fcx7xRfWyKWNquZqH1ye+5rBfDekfhOUW9PZFm8JjINh4aKRiiRe56zK
-         0OAJzt6SKML1suwge9vzIUpc3Oh+LRoyKSPKvFu3GmX4YKkEbErZw/jnwMSvkvV7YokO
-         zvWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=yGVA8J1oVzuyxdhC58zOwyQMGcRamYPeie8LuWEVbJc=;
-        b=FfLa8VSmZ8aC5hTKCyGqpbEWnNH76cdJbrjSrYJbVwVqycHJiS5Gr77/5gZvTZjMRb
-         ZQh/vfmHBXbt+jGb1LjbNKykeigNLhTPbqnWn5O2LcZTHers/O7SUZUk46MbANWw2IZV
-         K9QV1NTYPq0l08eH9bNIozbTiUw1evimwlZqrgM0ZOeQ1tLD9sVQdElYIwkBcjF4xB+4
-         P/NecQro//hCeRDODNlyJFits+XzZdFqyFqVX4mU4uGHCt+bWG4JegLk2rcbx9H3RCeG
-         tfxFA9kW1ZVjv4+QRBSzGZVQVDV7+ex8drD5qbbBgibDYUgIKG2QRPGsNOq+pBuInk62
-         LSYQ==
-X-Gm-Message-State: APjAAAXisdF4q4O2yhwNikR5sIjG+8ytAgN10rBckJ5185vmAf2bAYV5
-        J4hiGOg6MURJmCOeKu/rxio=
-X-Google-Smtp-Source: APXvYqyN1054GnIJMN3bsrP8sV0gVT4Bjivsrqo/KBP9SmwELSDhRq6TDkYZyLC56yDgpQd3Tz7ORw==
-X-Received: by 2002:a17:902:1e9:: with SMTP id b96mr42559503plb.277.1562159795997;
-        Wed, 03 Jul 2019 06:16:35 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id q1sm2932966pfg.84.2019.07.03.06.16.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 06:16:35 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH 17/30] pci: Use kmemdup rather than duplicating its implementation
-Date:   Wed,  3 Jul 2019 21:16:27 +0800
-Message-Id: <20190703131627.25455-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+        id S1726640AbfGCNRE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Jul 2019 09:17:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725830AbfGCNRE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 3 Jul 2019 09:17:04 -0400
+Received: from localhost (84.sub-174-234-39.myvzw.com [174.234.39.84])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73B73218A0;
+        Wed,  3 Jul 2019 13:17:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562159822;
+        bh=BQWh2gky1OFcj/S72HsWkahDJvcrNpCTWiuEr8aLsyc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CQI84JVhSS3kNk9Wk1vJRVBfl0emlNeoSM1UOVfWFiyLehF+72Qgh73aDaWwFutPl
+         JilSujhjGc2AyGjyHWJO7/UWO/0RuLitQ4GA2z85GdBsvOmPfqLVf9HO2fKXGehHlC
+         7j4WjoiBBhUdvGzENtIb/xcMqGvEWu21Ns+B1qAc=
+Date:   Wed, 3 Jul 2019 08:17:00 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     linux-pci@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: Archs using generic PCI controller drivers vs. resource policy
+Message-ID: <20190703131700.GJ128603@google.com>
+References: <5f3dcc3a8dafad188e3adb8ee9cf347bebdee7f6.camel@kernel.crashing.org>
+ <20190702201914.GD128603@google.com>
+ <eaea693094caecf291e2a40a7ed88cd9fb273ab8.camel@kernel.crashing.org>
+ <20190703030855.GI128603@google.com>
+ <75cae9fa146ec7b28d9da7deaf339e95f77e0efd.camel@kernel.crashing.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <75cae9fa146ec7b28d9da7deaf339e95f77e0efd.camel@kernel.crashing.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-kmemdup is introduced to duplicate a region of memory in a neat way.
-Rather than kmalloc/kzalloc + memset, which the programmer needs to
-write the size twice (sometimes lead to mistakes), kmemdup improves
-readability, leads to smaller code and also reduce the chances of mistakes.
-Suggestion to use kmemdup rather than using kmalloc/kzalloc + memset.
+On Wed, Jul 03, 2019 at 03:31:30PM +1000, Benjamin Herrenschmidt wrote:
+> On Tue, 2019-07-02 at 22:08 -0500, Bjorn Helgaas wrote:
+> > 
+> > > No it actually is. The policy on these is to rather explicitely ignore
+> > > what was set. If you just switch to honoring it, a good number of those
+> > > platforms will break. (We know that happens on arm64 as we are trying
+> > > to do just that).
+> > 
+> > It's only different if you're assuming something about how Linux
+> > allocates things.  That assumption is implicit, which makes this
+> > fragile.
+> 
+> I don't understand your argument.
+> 
+> Linux has *always* been responsible for the full assignment on these,
+> there is no UEFI/ACPI, no runtime firmware involved, I don't see the
+> point in trying to change that policy. The owners of these platforms
+> chose to do things that way, effectively assuming that Linux will do a
+> better job than whatever firmware (if any) did.
+> 
+> I remember cases for example where the firmware would just hard wire a
+> BAR for a boot device to some random value right in the middle of the
+> address space. If we started honoring this,  it would effectively have
+> split the already small available memory space for PCI on that card, it
+> made no sense to try to keep that setup. This was a case of some
+> obscure ppc embedded board, but that doesn't matter, I dont' see why we
+> should even consider changing the policy on these things. It's not like
+> we have to maintain two different algorithms anyway, we're just
+> skipping the claim pass, At least with my initial patch series it will
+> be obvious and done in a single place.
+> 
+> > You could make this concrete by supplying an example of the actual
+> > firmware assignments that are broken, and the better ones that Linux
+> > produces.  I'm talking about window and BAR values, not all the
+> > needless differences in how the resource tree is managed.
+> 
+> Why would I waste time chasing the hundreds of random embedded boards
+> around to do that ?
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
----
- drivers/pci/hotplug/ibmphp_core.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+All I asked for was a single example so we could talk about something
+specific instead of handwaving, and your example of a device in the
+middle of the address space was a good one.
 
-diff --git a/drivers/pci/hotplug/ibmphp_core.c b/drivers/pci/hotplug/ibmphp_core.c
-index 17124254d897..0e340e105c3b 100644
---- a/drivers/pci/hotplug/ibmphp_core.c
-+++ b/drivers/pci/hotplug/ibmphp_core.c
-@@ -1261,19 +1261,18 @@ static int __init ibmphp_init(void)
- 
- 	info(DRIVER_DESC " version: " DRIVER_VERSION "\n");
- 
--	ibmphp_pci_bus = kmalloc(sizeof(*ibmphp_pci_bus), GFP_KERNEL);
--	if (!ibmphp_pci_bus) {
--		rc = -ENOMEM;
--		goto exit;
--	}
--
- 	bus = pci_find_bus(0, 0);
- 	if (!bus) {
- 		err("Can't find the root pci bus, can not continue\n");
- 		rc = -ENODEV;
- 		goto error;
- 	}
--	memcpy(ibmphp_pci_bus, bus, sizeof(*ibmphp_pci_bus));
-+
-+	ibmphp_pci_bus = kmemdup(bus, sizeof(*ibmphp_pci_bus), GFP_KERNEL);
-+	if (!ibmphp_pci_bus) {
-+		rc = -ENOMEM;
-+		goto exit;
-+	}
- 
- 	ibmphp_debug = debug;
- 
--- 
-2.11.0
+That could happen just as easily on a "reassign if broken" platform
+like x86 as on a "reassign everything" platform, so I would rather
+make the generic code smart enough to deal with it than have the
+platform or driver set a "reassign everything" flag.
 
+But I think we're really talking past each other, and we're not
+talking about an actual patch, so I don't think we need to come to any
+conclusions yet.
+
+Bjorn
