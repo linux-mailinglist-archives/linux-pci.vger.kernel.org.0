@@ -2,84 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1583A5DDA8
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 07:05:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BACF75DDC3
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 07:31:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725933AbfGCFFj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Jul 2019 01:05:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47004 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfGCFFj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Jul 2019 01:05:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=xEl2+/JTzzBOI/KV08MgmserEhjFmkUWQJwBIctYK4M=; b=SFkzNcwpjtj88+RFf39lES3Nd
-        UpEcUpbr23nX5AEzz3vL5og98hLt9afZrefE1veDbp33W2fNzY6fiTDq/ZJFVjhy8BllljujBxzWS
-        yaLerA+zNO8n0GkdayN//eyGJEMgsEuGAHkd56kiBBCaMIJsoj2KmKlRvpF+HAYJ+nIIwUk/ma7sZ
-        Z0cFW8szsaDtrvg6Xcm6y+X7hqBshGj6AqlCQveshLz891vkxCojG2foWThJYXK2pUqzcv5OK0Xet
-        TMhCxUfwjxawsGr/NcgAYfeOulsmWaQdu7vy2Qh+1c16wohWxtsy8NKAj8B/v2f+pZke8Fsvdlnbd
-        EBXhfvzfg==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hiXSZ-0008SV-NI; Wed, 03 Jul 2019 05:05:36 +0000
-Subject: Re: [PATCH] PCI: hv: fix pci-hyperv build, depends on SYSFS
-To:     Dexuan Cui <decui@microsoft.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Jake Oshins <jakeo@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <69c25bc3-da00-2758-92ee-13c82b51fc45@infradead.org>
- <PU1P153MB016931FDE7BF095FB85783EEBFFB0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <99059dd0-3b53-a8b8-5573-18edf449085a@infradead.org>
-Date:   Tue, 2 Jul 2019 22:05:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <PU1P153MB016931FDE7BF095FB85783EEBFFB0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        id S1725927AbfGCFbi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Jul 2019 01:31:38 -0400
+Received: from gate.crashing.org ([63.228.1.57]:60527 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbfGCFbi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 3 Jul 2019 01:31:38 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x635VVjM025266;
+        Wed, 3 Jul 2019 00:31:32 -0500
+Message-ID: <75cae9fa146ec7b28d9da7deaf339e95f77e0efd.camel@kernel.crashing.org>
+Subject: Re: Archs using generic PCI controller drivers vs. resource policy
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-arch@vger.kernel.org
+Date:   Wed, 03 Jul 2019 15:31:30 +1000
+In-Reply-To: <20190703030855.GI128603@google.com>
+References: <5f3dcc3a8dafad188e3adb8ee9cf347bebdee7f6.camel@kernel.crashing.org>
+         <20190702201914.GD128603@google.com>
+         <eaea693094caecf291e2a40a7ed88cd9fb273ab8.camel@kernel.crashing.org>
+         <20190703030855.GI128603@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 7/2/19 9:33 PM, Dexuan Cui wrote:
->> From: linux-hyperv-owner@vger.kernel.org
->> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Randy Dunlap
->> Sent: Tuesday, July 2, 2019 4:25 PM
->> ERROR: "pci_destroy_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
->> ERROR: "pci_create_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
->>
->> drivers/pci/slot.o is only built when SYSFS is enabled, so
->> pci-hyperv.o has an implicit dependency on SYSFS.
->> Make that explicit.
->>
->> Also, depending on X86 && X86_64 is not needed, so just change that
->> to depend on X86_64.
->>
->> Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft
->> Hyper-V VMs")
+On Tue, 2019-07-02 at 22:08 -0500, Bjorn Helgaas wrote:
 > 
-> I think the Fixes tag should be:
-> Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
+> > No it actually is. The policy on these is to rather explicitely ignore
+> > what was set. If you just switch to honoring it, a good number of those
+> > platforms will break. (We know that happens on arm64 as we are trying
+> > to do just that).
 > 
-> Thanks,
-> -- Dexuan
-> 
+> It's only different if you're assuming something about how Linux
+> allocates things.  That assumption is implicit, which makes this
+> fragile.
 
-Thanks.  I did have a little trouble with that.
+I don't understand your argument.
 
--- 
-~Randy
+Linux has *always* been responsible for the full assignment on these,
+there is no UEFI/ACPI, no runtime firmware involved, I don't see the
+point in trying to change that policy. The owners of these platforms
+chose to do things that way, effectively assuming that Linux will do a
+better job than whatever firmware (if any) did.
+
+I remember cases for example where the firmware would just hard wire a
+BAR for a boot device to some random value right in the middle of the
+address space. If we started honoring this,  it would effectively have
+split the already small available memory space for PCI on that card, it
+made no sense to try to keep that setup. This was a case of some
+obscure ppc embedded board, but that doesn't matter, I dont' see why we
+should even consider changing the policy on these things. It's not like
+we have to maintain two different algorithms anyway, we're just
+skipping the claim pass, At least with my initial patch series it will
+be obvious and done in a single place.
+
+> You could make this concrete by supplying an example of the actual
+> firmware assignments that are broken, and the better ones that Linux
+> produces.  I'm talking about window and BAR values, not all the
+> needless differences in how the resource tree is managed.
+
+Why would I waste time chasing the hundreds of random embedded boards
+around to do that ? I really completely fail to see your point and what
+benefit we would have in trying to change this.
+
+> > Part of the problem is it's not always easy to figure out whether the
+> > existing setup is "broken". It could just be "very suboptimal" for
+> > example. Or broken in ways we don't detect early enough to do a good
+> > job about it.
+> > 
+> > I really wouldn't try to change that at this point. Those platforms are
+> > happy with Linux doing the complete setup the way it does, I don't see
+> > areason to change it. In fact, in some cases we can do even better (see
+> > below).
+> > 
+> > > "Reassign everything" is clearly allowed to produce the exact same
+> > > result as "honor what has been setup and (re)assign what's left or
+> > > broken".
+> > 
+> > Provided we have some IA that can figure out what "broken" means :)
+> > 
+> > > I claim any difference between the two is actually a fragile
+> > > dependency on the Linux assignment algorithm that is likely to break
+> > > as that algorithm changes.
+> > > 
+> > > Or am I missing something?
+> > 
+> > Well, reassign-everything isn't that likely to break when Linux changes
+> > as long as linux doesn't change in ways that are completely busted
+> > anyway. It's a pretty simple process really. And that would be caught
+> > quickly since a LOT of platforms use that method.
+> > 
+> > As for the reasons, well, this tends to be embedded platforms where the
+> > firmware may have left crap behind that we really don't want to honor
+> > and can't really detect as "broken".
+> > 
+> > For example, switches sized incorrectly, or too big, sub optimal
+> > placement with everything in 32-bit space and no room left for SR-IOV,
+> > etc...
+> 
+> These are things we should fix by improving the generic assignment
+> code (this might be what you're alluding to below).  I do not want a
+> "reassign everything" mode that does things differently than the
+> "change what's broken" mode.
+
+They don't fundamentally. With my patches, "reassign everything"
+basically consists of calling pci_assign_unassigned_* without first
+claiming existing resources. It's fundamentally the same algorithm.
+
+The one thing I'm considering changing later is to use the "bridge"
+variant instead so we get distribution of the available space, though
+I'd have to make it work at the root. But that's separate and we can
+discuss it later.
+
+> I know we sort of have that today, but if we're reworking this code, I
+> don't want to perpetuate that kind of black magic.  If we can make the
+> difference between "reassign everything" and "change what's broken"
+> explicit, then we can make progress.
+
+I don't think it's black magic. As I said above, the definition of
+"broken" in that context is almost impossible to get right. It could
+just be massively sub-optimal. If we let Linux claim, it will and will
+quickly run out of space if any hotplug or SR-IOV activity tries to
+take place later.
+
+Those platforms have historically chosen to ignore the FW allocation
+for whatever reasons, changing that isn't something we should aim to
+change, I don't see the point or benefit. And the testing burden would
+be astronomical.
+
+If anything, history has chown us that we are a lot better at assigning
+resources that most embedded firmware out there.
+
+> > In fact, I'm thinking that on these platforms (which are basically
+> > *all* arm32, all embedded ppc, and pretty much all other non-
+> > server/desktop archs that aren't x86), we could in fact go one step
+> > further and improve the default algorithm by applying the "distribute
+> > available space" method at the top level (we currently only do it for
+> > hotplug bridges below that, so the top level bridges will get the
+> > default which, for hotplug, isn't likely to be enough).
+
+Cheers,
+Ben.
+
