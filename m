@@ -2,70 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AC5935DB5A
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 04:07:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A82865DCC2
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2019 05:09:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfGCCHy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Jul 2019 22:07:54 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2963 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726329AbfGCCHy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:07:54 -0400
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id BA99EBBF4176F5607A9F;
-        Wed,  3 Jul 2019 10:07:52 +0800 (CST)
-Received: from dggeme716-chm.china.huawei.com (10.1.199.112) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 3 Jul 2019 10:07:52 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme716-chm.china.huawei.com (10.1.199.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Wed, 3 Jul 2019 10:07:52 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1591.008;
- Wed, 3 Jul 2019 10:07:52 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "sebott@linux.ibm.com" <sebott@linux.ibm.com>,
-        "lukas@wunner.de" <lukas@wunner.de>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>
-Subject: Re: [PATCH] net: pci: Fix hotplug event timeout with shpchp
-Thread-Topic: [PATCH] net: pci: Fix hotplug event timeout with shpchp
-Thread-Index: AdUxQ4Ot2MsgjZ40Rim/5d9K2wgLog==
-Date:   Wed, 3 Jul 2019 02:07:51 +0000
-Message-ID: <fdbaef22bd774ee49fc58fe13a76bf91@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.184.189.20]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1727103AbfGCDJA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Jul 2019 23:09:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727080AbfGCDI7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Jul 2019 23:08:59 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEFD120B1F;
+        Wed,  3 Jul 2019 03:08:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562123338;
+        bh=JvebqGXjIhB7fNybQT6wMPhqRJca1ZKx17UJUVSVgko=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ccUa2jMd2QJ3d500DW1jo4JOMFvcxRLOnOMtIm8N7bvWrF1ITXNvt3YFkgwxhlT7E
+         KJFqEx6CyEp8t5ggZuDv5DJu6B6n1gmdIsAFgY1SaqMnZsJzWXuXOWA9tivb1JmsWN
+         7OsMqxowx4+nHZg73IEj6b/PA3FOP+yylVsKpeKI=
+Date:   Tue, 2 Jul 2019 22:08:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     linux-pci@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: Archs using generic PCI controller drivers vs. resource policy
+Message-ID: <20190703030855.GI128603@google.com>
+References: <5f3dcc3a8dafad188e3adb8ee9cf347bebdee7f6.camel@kernel.crashing.org>
+ <20190702201914.GD128603@google.com>
+ <eaea693094caecf291e2a40a7ed88cd9fb273ab8.camel@kernel.crashing.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eaea693094caecf291e2a40a7ed88cd9fb273ab8.camel@kernel.crashing.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQpPbiBUdWUsIEp1bCAwMiwgMjAxOSBhdCAwMTozNToxOVBNICswMDAwLCBNaWFvaGUgTGluIHdy
-b3RlOg0KPiA+IEhvdHBsdWcgYSBuZXR3b3JrIGNhcmQgd291bGQgdGFrZSBtb3JlIHRoYW4gNSBz
-ZWNvbmRzIGluIHFlbXUgKyBzaHBjaHAgDQo+ID4gc2NlbmUuIEl04oCZcyBiZWNhdXNlIDUgc2Vj
-b25kcyBkZWxheWVkX3dvcmsgaW4gZnVuYyANCj4NCj4gSSdtIGRyb3BwaW5nIHRoaXMgYmVjYXVz
-ZSBvZiB0aGUgcmVxdWlyZWQgZGVsYXkgcG9pbnRlZCBvdXQgYnkgTHVrYXMuDQo+DQo+IElmIHlv
-dSB0aGluayB3ZSBzdGlsbCBuZWVkIHRvIGRvIHNvbWV0aGluZyBoZXJlLCBwbGVhc2UgY2xhcmlm
-eSB0aGUgc2l0dWF0aW9uLiAgQXJlIHlvdSBob3QtYWRkaW5nPyAgSG90LXN3YXBwaW5nPyAgU2lu
-Y2UgeW91IG1lbnRpb24gYSBwcm90b2NvbCB0aW1lb3V0LCBJIHN1c3BlY3QgdGhlIGxhdHRlciwg
-ZS5nLiwgbWF5YmUgeW91IGhhZCBhbiBleGlzdGluZyBkZXZpY2Ugd2l0aCBjb25uZWN0aW9ucyBh
-bHJlYWR5IG9wZW4sIGFuZCB5b3Ugd2FudCB0byByZXBsYWNlIGl0IHdpdGggYSBuZXcgZGV2aWNl
-DQo+IFdlIGRvIGhhdmUgdG8gcHJlc2VydmUgdGhlIGV4aXN0aW5nIHVzZXIgZXhwZXJpZW5jZSwg
-ZS5nLiwgZGVsYXlzIHRvIGFsbG93IG9wZXJhdG9ycyB0byByZWNvdmVyIGZyb20gbWlzdGFrZW4g
-bGF0Y2ggb3BlbnMgb3IgYnV0dG9uIHByZXNzZXMuICBCdXQgaWYgd2Uga25ldyBtb3JlIGFib3V0
-IHdoYXQgeW91J3JlIHRyeWluZyB0byBkbywgbWF5YmUgd2UgY291bGQgZmlndXJlIG91dCBhbm90
-aGVyIGFwcHJvYWNoLg0KDQpUaGFua3MgZm9yIHlvdXIgcmVwbHkuIEFzIGlzIHNwZWMgcmVxdWly
-ZWQsIHdlIHdvdWxkIHRyeSB0byB3b3JrIGFyb3VuZCBpdC4NCk1hbnkgdGhhbmtzLg0KDQpIYXZl
-IGEgZ29vZCBkYXkuDQpCZXN0IHdpc2hlcy4NCg==
+On Wed, Jul 03, 2019 at 10:16:49AM +1000, Benjamin Herrenschmidt wrote:
+> On Tue, 2019-07-02 at 15:19 -0500, Bjorn Helgaas wrote:
+> > On Sun, Jun 23, 2019 at 10:30:42AM +1000, Benjamin Herrenschmidt
+> > wrote:
+> > > Hi !
+> > > 
+> > > As part of my cleanup and consolidation of the PCI resource
+> > > assignment
+> > > policies, I need to clarify something.
+> > > 
+> > > At the moment, unless PCI_PROBE_ONLY is set, a number of
+> > > platforms/archs expect Linux to reassign everything rather than
+> > > honor
+> > > what has setup, then (re)assign what's left or broken.
+> > 
+> > I don't think "reassign everything" is any different from "honor what
+> > has been setup and (re)assign what's left or broken".
+> 
+> No it actually is. The policy on these is to rather explicitely ignore
+> what was set. If you just switch to honoring it, a good number of those
+> platforms will break. (We know that happens on arm64 as we are trying
+> to do just that).
+
+It's only different if you're assuming something about how Linux
+allocates things.  That assumption is implicit, which makes this
+fragile.
+
+You could make this concrete by supplying an example of the actual
+firmware assignments that are broken, and the better ones that Linux
+produces.  I'm talking about window and BAR values, not all the
+needless differences in how the resource tree is managed.
+
+> Part of the problem is it's not always easy to figure out whether the
+> existing setup is "broken". It could just be "very suboptimal" for
+> example. Or broken in ways we don't detect early enough to do a good
+> job about it.
+> 
+> I really wouldn't try to change that at this point. Those platforms are
+> happy with Linux doing the complete setup the way it does, I don't see
+> areason to change it. In fact, in some cases we can do even better (see
+> below).
+> 
+> > "Reassign everything" is clearly allowed to produce the exact same
+> > result as "honor what has been setup and (re)assign what's left or
+> > broken".
+> 
+> Provided we have some IA that can figure out what "broken" means :)
+>
+> > I claim any difference between the two is actually a fragile
+> > dependency on the Linux assignment algorithm that is likely to break
+> > as that algorithm changes.
+> > 
+> > Or am I missing something?
+> 
+> Well, reassign-everything isn't that likely to break when Linux changes
+> as long as linux doesn't change in ways that are completely busted
+> anyway. It's a pretty simple process really. And that would be caught
+> quickly since a LOT of platforms use that method.
+> 
+> As for the reasons, well, this tends to be embedded platforms where the
+> firmware may have left crap behind that we really don't want to honor
+> and can't really detect as "broken".
+> 
+> For example, switches sized incorrectly, or too big, sub optimal
+> placement with everything in 32-bit space and no room left for SR-IOV,
+> etc...
+
+These are things we should fix by improving the generic assignment
+code (this might be what you're alluding to below).  I do not want a
+"reassign everything" mode that does things differently than the
+"change what's broken" mode.
+
+I know we sort of have that today, but if we're reworking this code, I
+don't want to perpetuate that kind of black magic.  If we can make the
+difference between "reassign everything" and "change what's broken"
+explicit, then we can make progress.
+
+> In fact, I'm thinking that on these platforms (which are basically
+> *all* arm32, all embedded ppc, and pretty much all other non-
+> server/desktop archs that aren't x86), we could in fact go one step
+> further and improve the default algorithm by applying the "distribute
+> available space" method at the top level (we currently only do it for
+> hotplug bridges below that, so the top level bridges will get the
+> default which, for hotplug, isn't likely to be enough).
