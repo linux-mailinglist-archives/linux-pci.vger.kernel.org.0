@@ -2,53 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FA8C5EF47
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2019 00:54:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E40955EFF4
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2019 02:11:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfGCWyW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Jul 2019 18:54:22 -0400
-Received: from gate.crashing.org ([63.228.1.57]:40579 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727021AbfGCWyW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 3 Jul 2019 18:54:22 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x63Ms7Z4012251;
-        Wed, 3 Jul 2019 17:54:08 -0500
-Message-ID: <b73eb3ecf37cec8761e9e62d14a35e7eddd62fd1.camel@kernel.crashing.org>
-Subject: Re: Multitude of resource assignment functions
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Date:   Thu, 04 Jul 2019 08:54:07 +1000
-In-Reply-To: <SL2P216MB01878623FC34BC4894EB495280FB0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-References: <e768271e-9455-2a3d-ad76-4a6d9c71d669@deltatee.com>
-         <SL2P216MB01872DFDDA9C313CA43C7B3280E40@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-         <024eec86-dfb9-0a23-6385-9e8dfe9a0381@deltatee.com>
-         <SL2P216MB0187340941F03A5A03625F4F80E10@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-         <442c6b35a1aab9833fd2942b499d4fb082a71a15.camel@kernel.crashing.org>
-         <dc631e87-099f-3354-5477-b95e97e55d3f@deltatee.com>
-         <SL2P216MB01875C9CB93E6B39846749B280FD0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-         <e2eec9dc-5eef-62ba-6251-f420d6579d03@deltatee.com>
-         <SL2P216MB0187E659CFF6F9385E92838680FE0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-         <20190702213951.GF128603@google.com>
-         <SL2P216MB01878623FC34BC4894EB495280FB0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1727395AbfGDALS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Jul 2019 20:11:18 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42005 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727100AbfGDALS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Jul 2019 20:11:18 -0400
+Received: by mail-io1-f66.google.com with SMTP id u19so9093574ior.9
+        for <linux-pci@vger.kernel.org>; Wed, 03 Jul 2019 17:11:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pv0L/i+oFqEqpmo5erGTpZKTu9PLiH0PUF+c9Msu43A=;
+        b=ek6jBKVLLevUn8ZQksQ4PA00TqxVWuz+hbid5F18Kxuk8uYoGvFURFUn+cjKOlaARz
+         lmcn5N3x3BcD2sqQ3dD3u5GYETu1sScdo6SK5qEML7yYwgZ2NG48W2mWrjN3GURrHYsA
+         12VtM01RF2pbtaItU+T4BIjVi7c/AZ+5gjTRl7ZwB0k7NxJcR6T8nD+ZBQ7FES1WtEQH
+         H3mOY+13Bhlz4uBIl7Y8vZQyYVoKABuPscxGzIFsehhmvFAg5Zt4Za+08GWCWYk2Eg4Y
+         LHqJkdAzu1fF0XH8nfsZw09DFGovuuqT4FH/oe2VRoe0bqZSM8CHuh6wTGU3nZ3mA/AL
+         +u6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pv0L/i+oFqEqpmo5erGTpZKTu9PLiH0PUF+c9Msu43A=;
+        b=UOhhb1BISc5Tq+t1RJ16O1u2K4YYyxzaznAX1mQ8CncOkusFCbGYJP+G3pW07L7kde
+         EwPl0CJaj3KHq40zHMn9x+2W4l+nO97zmHU7h/C0ZRCZAI3tDoZlaPoDu/kdt7feblVS
+         gLsIWeBqEqXioOlwd+wJR9swP3BJN7wGIfzRGUEk0p5p/5HplYxrV4OIdT3x1G7o9f0B
+         CnM6F7jY8n0Vps6GlDwe13yOS92q0kVt1Yo8DbQIWuGR9oly9Nr2FzEjI/AyxSgoTYxE
+         hOwNZ6PdpT1HeB4H0eSmL81E3dvuAWd4+aTZw7x64dtbsi3LQSUJ1zFU0I0ba8544qND
+         uTLg==
+X-Gm-Message-State: APjAAAWhvMu51yecV2bdvdDRk1LVhNmWheNM8m9uPODSDn9rxg2bVbTC
+        vKy25l62a0oGdFY7qxKMjnoM/WtA5NnAcQ==
+X-Google-Smtp-Source: APXvYqwasdapg3QDTtTcS3QtyGFoU8nAS09miX6oWGjxLITdqBc1Nz+Jxe5nV94jxIiYkMMHUqnhhQ==
+X-Received: by 2002:a6b:7f06:: with SMTP id l6mr7479227ioq.53.1562199077118;
+        Wed, 03 Jul 2019 17:11:17 -0700 (PDT)
+Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id c81sm6152370iof.28.2019.07.03.17.11.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 17:11:15 -0700 (PDT)
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     linux-pci@vger.kernel.org
+Cc:     skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, mj@ucw.cz,
+        bjorn@helgaas.com, skunberg.kelsey@gmail.com
+Subject: [PATCH 0/2] lspci: Add lspci support to decode AIDA64 and dmesg log files
+Date:   Wed,  3 Jul 2019 18:08:17 -0600
+Message-Id: <20190704000819.25050-1-skunberg.kelsey@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2019-07-03 at 13:43 +0000, Nicholas Johnson wrote:
-> The nocrs is vital because the BIOS places pitiful space behind the root 
-> complex and will fail for assigning large BARs - hence why Xeon Phi 
+Add lspci support to decode AIDA64 log files and dmesg log files with
+"pci=earlydump" parameter to output PCI configuration space information.
 
-Can you check what you get out of _DSM #5 behind these if it exists ?
+	Patch 1: Add lspci support to decode AIDA64 log file.
 
-Cheers
-Ben.
+	AIDA64 log file included in patch for testing. Use the following
+	command to run:
+
+		lspci -F tests/aida64-dump
+
+
+	Patch 2: Add lspci support to decode dmesg log file with
+	"pci=earlydump" parameter.
+
+	dmesg log file with "pci=earlydump" included in patch for
+	testing. Use the following command to run:
+
+                lspci -F tests/dmesg-dump
+
+
+
+
+
+Bjorn Helgaas (2):
+  lspci: Add lspci support to decode an AIDA64 log file
+  lspci: Add lspci support to decode "pci=earlydump" output
+
+ lib/dump.c        |   96 ++-
+ tests/aida64-dump |  954 ++++++++++++++++++++++++
+ tests/dmesg-dump  | 1795 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 2812 insertions(+), 33 deletions(-)
+ create mode 100644 tests/aida64-dump
+ create mode 100644 tests/dmesg-dump
+
+-- 
+2.20.1
 
