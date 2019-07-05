@@ -2,118 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DC96F6097B
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2019 17:41:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AE6C609AC
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2019 17:49:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbfGEPlS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Jul 2019 11:41:18 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:56089 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727978AbfGEPlS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Jul 2019 11:41:18 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1hjQKh-00065s-CS; Fri, 05 Jul 2019 17:41:07 +0200
-Message-ID: <1562341265.2321.21.camel@pengutronix.de>
-Subject: Re: [PATCH] PCI: imx6: Simplify Kconfig depends on
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-Cc:     Trent Piepho <tpiepho@impinj.com>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Date:   Fri, 05 Jul 2019 17:41:05 +0200
-In-Reply-To: <20190430142249.GC18742@e121166-lin.cambridge.arm.com>
-References: <e3fd8e88a22468be8bd8fce85dafcc14f2e6a618.1552330407.git.leonard.crestez@nxp.com>
-         <20190326181912.GB12093@e107981-ln.cambridge.arm.com>
-         <VI1PR04MB5533A64718D373F9F8357BCDEE280@VI1PR04MB5533.eurprd04.prod.outlook.com>
-         <1555092208.2142.50.camel@impinj.com>
-         <VI1PR04MB55338F78DED082D13A78585BEE280@VI1PR04MB5533.eurprd04.prod.outlook.com>
-         <20190430142249.GC18742@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
+        id S1725882AbfGEPtm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Jul 2019 11:49:42 -0400
+Received: from mga03.intel.com ([134.134.136.65]:46926 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725791AbfGEPtm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 5 Jul 2019 11:49:42 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 08:49:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,455,1557212400"; 
+   d="scan'208";a="363626325"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga006.fm.intel.com with ESMTP; 05 Jul 2019 08:49:14 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hjQSX-0002MN-TU; Fri, 05 Jul 2019 18:49:13 +0300
+Date:   Fri, 5 Jul 2019 18:49:13 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v1 1/2] tools: PCI: Fix compilation error
+Message-ID: <20190705154913.GF9224@smile.fi.intel.com>
+References: <20190628131218.10244-1-andriy.shevchenko@linux.intel.com>
+ <20190705133441.GA31464@e121166-lin.cambridge.arm.com>
+ <20190705142147.GE9224@smile.fi.intel.com>
+ <20190705150412.GC31464@e121166-lin.cambridge.arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+In-Reply-To: <20190705150412.GC31464@e121166-lin.cambridge.arm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am Dienstag, den 30.04.2019, 15:22 +0100 schrieb Lorenzo Pieralisi:
-> On Fri, Apr 12, 2019 at 06:20:53PM +0000, Leonard Crestez wrote:
-> > On 4/12/2019 9:03 PM, Trent Piepho wrote:
-> > > On Fri, 2019-04-12 at 17:56 +0000, Leonard Crestez wrote:
-> > > > On 3/26/19 8:19 PM, Lorenzo Pieralisi wrote:
-> > > > > On Mon, Mar 11, 2019 at 06:59:28PM +0000, Leonard Crestez wrote:
-> > > > > > In theory this driver can be used on imx6sx without enabling support for
-> > > > > > imx6q or imx7d but the "depends on" condition doesn't allow that.
-> > > > > > 
-> > > > > > Instead of making the condition even longer just make it depend on
-> > > > > > "ARCH_MXC || COMPILE_TEST" instead.
-> > > > > > 
-> > > > > > > > > > > > Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-> > > > > > ---
-> > > > > >    drivers/pci/controller/dwc/Kconfig | 2 +-
-> > > > > >    1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > > 
-> > > > > > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > > > > > index 6ea74b1c0d94..21747fd0e799 100644
-> > > > > > --- a/drivers/pci/controller/dwc/Kconfig
-> > > > > > +++ b/drivers/pci/controller/dwc/Kconfig
-> > > > > > @@ -88,11 +88,11 @@ config PCI_EXYNOS
-> > > > > >            depends on PCI_MSI_IRQ_DOMAIN
-> > > > > >            select PCIE_DW_HOST
-> > > > > > 
-> > > > > >    config PCI_IMX6
-> > > > > >            bool "Freescale i.MX6/7/8 PCIe controller"
-> > > > > > - depends on SOC_IMX6Q || SOC_IMX7D || (ARM64 && ARCH_MXC) || COMPILE_TEST
-> > > > > > + depends on ARCH_MXC || COMPILE_TEST
-> > > > > >            depends on PCI_MSI_IRQ_DOMAIN
-> > > > > >            select PCIE_DW_HOST
-> > > > > 
-> > > > > If Lucas does not spot any problem with this patch I would request his
-> > > > > ACK to merge it, thanks.
+On Fri, Jul 05, 2019 at 04:04:12PM +0100, Lorenzo Pieralisi wrote:
+> On Fri, Jul 05, 2019 at 05:21:47PM +0300, Andy Shevchenko wrote:
+> > On Fri, Jul 05, 2019 at 02:34:41PM +0100, Lorenzo Pieralisi wrote:
+> > > On Fri, Jun 28, 2019 at 04:12:17PM +0300, Andy Shevchenko wrote:
+> > > > The commit
 > > > > 
-> > > > Lucas: Can you please ack this? It's a bit old but applies cleanly and
-> > > > resend shouldn't be required.
+> > > >   b71f0a0b1e3f ("tools: PCI: Exit with error code when test fails")
+> > > > 
+> > > > forgot to update function prototype and thus brought a regression:
+> > > > 
+> > > > pcitest.c:221:9: error: void value not ignored as it ought to be
+> > > >  return run_test(test);
+> > > >         ^~~~~~~~~~~~~~
+> > > > 
+> > > > Fix it by changing prototype from void to int.
+> > > > 
+> > > > While here, initialize ret with 0 to avoid compiler warning:
+> > > > 
+> > > > pcitest.c:132:25: warning: ‘ret’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+> > > > 
+> > > > Fixes: b71f0a0b1e3f ("tools: PCI: Exit with error code when test fails")
+> > > > Cc: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> > > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > > Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> > > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > ---
+> > > >  tools/pci/pcitest.c | 8 ++++----
+> > > >  1 file changed, 4 insertions(+), 4 deletions(-)
 > > > 
-> > > The IMX7s does not have a PCI-e controller.  The IMX7d does have one,
-> > > but not the "s".
+> > > Patch 1 and 2 already applied from another thread:
 > > > 
-> > > Enabling the controller driver on an IMX SoC that doesn't have it is
-> > > not exactly the end of the world and having to keep adding new IMX SOCs
-> > > to the list here is annoying.  So IMHO, it's ok to make this change
-> > > even if the controller is allowed on a superset of the SoCs that have
-> > > it.
+> > > https://lore.kernel.org/linux-pci/1558646281-12676-1-git-send-email-alan.mikhak@sifive.com/
+> > > 
+> > > Thanks anyway !
 > > 
-> > There is no separate config option for IMX7S and I don't think it will 
-> > be ever added. There is however a CONFIG_SOC_IMX6SX.
-> > 
-> > There were attempts to add "depends on"/"selected by" IMX8MQ to various 
-> > drivers but arm64 maintainers disagreed. This is why this patch fixes 
-> > the "depends on" list for 6sx pcie by dropping per-SOC logic on 32-bit 
-> > arm as well.
-> > 
-> > People who want very small kernels for their boards will likely fiddle 
-> > with their specific defconfig anyway so maybe complex logic in Kconfig 
-> > is not very helpful.
+> > I don't see neither in v5.2-rc7, nor in Linux Next.
+> > In which repository is it?
 > 
-> My request still stands, please let me know.
+> It is in -next:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/tools/pci/pcitest.c?h=next-20190705
 
-I've acked the resend, but that one doesn't show up in patchwork for
-some reason, so:
+Ah, thanks. It seems I forgot to update my local branch.
 
-Acked-by: Lucas Stach <l.stach@pengutronix.de>
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Regards,
-Lucas
 
