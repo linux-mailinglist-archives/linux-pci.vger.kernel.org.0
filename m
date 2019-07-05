@@ -2,139 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 545E0606BF
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2019 15:41:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A273C606CD
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2019 15:46:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbfGENlo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Jul 2019 09:41:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:38504 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727702AbfGENlo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 5 Jul 2019 09:41:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C082360;
-        Fri,  5 Jul 2019 06:41:43 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B0AF3F718;
-        Fri,  5 Jul 2019 06:41:40 -0700 (PDT)
-Date:   Fri, 5 Jul 2019 14:41:38 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "Lili Deng (Wicresoft North America Ltd)" <v-lide@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>
-Subject: Re: [PATCH v2] PCI: hv: Fix a use-after-free bug in
- hv_eject_device_work()
-Message-ID: <20190705134138.GB31464@e121166-lin.cambridge.arm.com>
-References: <PU1P153MB0169D420EAB61757DF4B337FBFE70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        id S1727341AbfGENqe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Jul 2019 09:46:34 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:3129 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbfGENqe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Jul 2019 09:46:34 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d1f54bb0000>; Fri, 05 Jul 2019 06:46:35 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 05 Jul 2019 06:46:31 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 05 Jul 2019 06:46:31 -0700
+Received: from [10.25.73.124] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Jul
+ 2019 13:46:25 +0000
+Subject: Re: [PATCH V12 01/12] PCI: Add #defines for some of PCIe spec r4.0
+ features
+To:     <bhelgaas@google.com>
+CC:     <lorenzo.pieralisi@arm.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
+        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190701124010.7484-1-vidyas@nvidia.com>
+ <20190701124010.7484-2-vidyas@nvidia.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <66d8af45-66f5-b597-0ea8-39e8662df5e6@nvidia.com>
+Date:   Fri, 5 Jul 2019 19:16:22 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PU1P153MB0169D420EAB61757DF4B337FBFE70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190701124010.7484-2-vidyas@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562334395; bh=2Qy6ORAWvrbTlmfqAnF7zDdNOiozdPJ+e9fLmQAmT2s=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=d8v8nKDdjlIXTfXIOi5GsRbdP041QsfRpBLjjsMPdizHbCbmFMgqe8vGkmjLZUxlu
+         NK/YbczaGAoQS/BKbjd/Wv6g8aVfD439ngxFzxcZ5qoqMsv0H1UpmSpjzFoCf4XeLf
+         OJbNSYjItvis6SB6QQK17u2YFfpf9wkIO32L3JY8lRrIoYVaHA9ZfGtmHDZnm9tOze
+         jdwSvge5JeajNERQZLcTM/UzTtAqjuMAhOy4htXvPMQ08CpeWSMrSWkPtLP4SZr78U
+         HtqFZIjipMnFXuDTYyP8f0hRfHxVU2PUP+aPVeuAhjPE1vwPWjiCSvRunnYzmHvPWZ
+         SRRX2lPQXaBXg==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 11:45:23PM +0000, Dexuan Cui wrote:
+On 7/1/2019 6:09 PM, Vidya Sagar wrote:
+Bjorn,
+Can you please provide Ack for this patch?
+
+Thanks,
+Vidya Sagar
+
+> Add #defines only for the Data Link Feature and Physical Layer 16.0 GT/s
+> features.
 > 
-> The commit 05f151a73ec2 itself is correct, but it exposes this
-> use-after-free bug, which is caught by some memory debug options.
-> 
-> Add a Fixes tag to indicate the dependency.
-> 
-> Fixes: 05f151a73ec2 ("PCI: hv: Fix a memory leak in hv_eject_device_work()")
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Cc: stable@vger.kernel.org
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
 > ---
+> Changes since [v11]:
+> * None
 > 
-> In v2:
-> Replaced "hpdev->hbus" with "hbus", since we have the new "hbus" variable. [Michael Kelley]
+> Changes since [v10]:
+> * None
 > 
->  drivers/pci/controller/pci-hyperv.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-
-Applied to pci/hv for v5.3, thanks.
-
-Lorenzo
-
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 808a182830e5..5dadc964ad3b 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1880,6 +1880,7 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
->  static void hv_eject_device_work(struct work_struct *work)
->  {
->  	struct pci_eject_response *ejct_pkt;
-> +	struct hv_pcibus_device *hbus;
->  	struct hv_pci_dev *hpdev;
->  	struct pci_dev *pdev;
->  	unsigned long flags;
-> @@ -1890,6 +1891,7 @@ static void hv_eject_device_work(struct work_struct *work)
->  	} ctxt;
->  
->  	hpdev = container_of(work, struct hv_pci_dev, wrk);
-> +	hbus = hpdev->hbus;
->  
->  	WARN_ON(hpdev->state != hv_pcichild_ejecting);
->  
-> @@ -1900,8 +1902,7 @@ static void hv_eject_device_work(struct work_struct *work)
->  	 * because hbus->pci_bus may not exist yet.
->  	 */
->  	wslot = wslot_to_devfn(hpdev->desc.win_slot.slot);
-> -	pdev = pci_get_domain_bus_and_slot(hpdev->hbus->sysdata.domain, 0,
-> -					   wslot);
-> +	pdev = pci_get_domain_bus_and_slot(hbus->sysdata.domain, 0, wslot);
->  	if (pdev) {
->  		pci_lock_rescan_remove();
->  		pci_stop_and_remove_bus_device(pdev);
-> @@ -1909,9 +1910,9 @@ static void hv_eject_device_work(struct work_struct *work)
->  		pci_unlock_rescan_remove();
->  	}
->  
-> -	spin_lock_irqsave(&hpdev->hbus->device_list_lock, flags);
-> +	spin_lock_irqsave(&hbus->device_list_lock, flags);
->  	list_del(&hpdev->list_entry);
-> -	spin_unlock_irqrestore(&hpdev->hbus->device_list_lock, flags);
-> +	spin_unlock_irqrestore(&hbus->device_list_lock, flags);
->  
->  	if (hpdev->pci_slot)
->  		pci_destroy_slot(hpdev->pci_slot);
-> @@ -1920,7 +1921,7 @@ static void hv_eject_device_work(struct work_struct *work)
->  	ejct_pkt = (struct pci_eject_response *)&ctxt.pkt.message;
->  	ejct_pkt->message_type.type = PCI_EJECTION_COMPLETE;
->  	ejct_pkt->wslot.slot = hpdev->desc.win_slot.slot;
-> -	vmbus_sendpacket(hpdev->hbus->hdev->channel, ejct_pkt,
-> +	vmbus_sendpacket(hbus->hdev->channel, ejct_pkt,
->  			 sizeof(*ejct_pkt), (unsigned long)&ctxt.pkt,
->  			 VM_PKT_DATA_INBAND, 0);
->  
-> @@ -1929,7 +1930,9 @@ static void hv_eject_device_work(struct work_struct *work)
->  	/* For the two refs got in new_pcichild_device() */
->  	put_pcichild(hpdev);
->  	put_pcichild(hpdev);
-> -	put_hvpcibus(hpdev->hbus);
-> +	/* hpdev has been freed. Do not use it any more. */
+> Changes since [v9]:
+> * None
+> 
+> Changes since [v8]:
+> * None
+> 
+> Changes since [v7]:
+> * None
+> 
+> Changes since [v6]:
+> * None
+> 
+> Changes since [v5]:
+> * None
+> 
+> Changes since [v4]:
+> * None
+> 
+> Changes since [v3]:
+> * None
+> 
+> Changes since [v2]:
+> * Updated commit message and description to explicitly mention that defines are
+>    added only for some of the features and not all.
+> 
+> Changes since [v1]:
+> * None
+> 
+>   include/uapi/linux/pci_regs.h | 22 +++++++++++++++++++++-
+>   1 file changed, 21 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index f28e562d7ca8..1c79f6a097d2 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -713,7 +713,9 @@
+>   #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
+>   #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
+>   #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
+> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PTM
+> +#define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+> +#define PCI_EXT_CAP_ID_PL	0x26	/* Physical Layer 16.0 GT/s */
+> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL
+>   
+>   #define PCI_EXT_CAP_DSN_SIZEOF	12
+>   #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
+> @@ -1053,4 +1055,22 @@
+>   #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
+>   #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
+>   
+> +/* Data Link Feature */
+> +#define PCI_DLF_CAP		0x04	/* Capabilities Register */
+> +#define  PCI_DLF_LOCAL_DLF_SUP_MASK	0x007fffff  /* Local Data Link Feature Supported */
+> +#define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
+> +#define PCI_DLF_STS		0x08	/* Status Register */
+> +#define  PCI_DLF_REMOTE_DLF_SUP_MASK	0x007fffff  /* Remote Data Link Feature Supported */
+> +#define  PCI_DLF_REMOTE_DLF_SUP_VALID	0x80000000  /* Remote Data Link Feature Support Valid */
 > +
-> +	put_hvpcibus(hbus);
->  }
->  
->  /**
-> -- 
-> 2.17.1
+> +/* Physical Layer 16.0 GT/s */
+> +#define PCI_PL_16GT_CAP		0x04	/* Capabilities Register */
+> +#define PCI_PL_16GT_CTRL	0x08	/* Control Register */
+> +#define PCI_PL_16GT_STS		0x0c	/* Status Register */
+> +#define PCI_PL_16GT_LDPM_STS	0x10	/* Local Data Parity Mismatch Status Register */
+> +#define PCI_PL_16GT_FRDPM_STS	0x14	/* First Retimer Data Parity Mismatch Status Register */
+> +#define PCI_PL_16GT_SRDPM_STS	0x18	/* Second Retimer Data Parity Mismatch Status Register */
+> +#define PCI_PL_16GT_RSVD	0x1C	/* Reserved */
+> +#define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
+> +
+>   #endif /* LINUX_PCI_REGS_H */
 > 
+
