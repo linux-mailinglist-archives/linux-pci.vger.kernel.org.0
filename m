@@ -2,119 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6883E6029A
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2019 10:49:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F18A602BB
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2019 10:57:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbfGEItG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Jul 2019 04:49:06 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:8397 "EHLO
+        id S1727544AbfGEI5c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Jul 2019 04:57:32 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:8923 "EHLO
         hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfGEItG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Jul 2019 04:49:06 -0400
+        with ESMTP id S1726427AbfGEI5c (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Jul 2019 04:57:32 -0400
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1f0f050001>; Fri, 05 Jul 2019 01:49:09 -0700
+        id <B5d1f10ff0000>; Fri, 05 Jul 2019 01:57:35 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 05 Jul 2019 01:49:05 -0700
+  Fri, 05 Jul 2019 01:57:31 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 05 Jul 2019 01:49:05 -0700
-Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Jul
- 2019 08:49:05 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 5 Jul 2019 08:49:04 +0000
-Received: from moonraker.nvidia.com (Not Verified[10.26.11.221]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d1f0eff0002>; Fri, 05 Jul 2019 01:49:04 -0700
+        by hqpgpgate101.nvidia.com on Fri, 05 Jul 2019 01:57:31 -0700
+Received: from [10.26.11.221] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Jul
+ 2019 08:57:28 +0000
+Subject: Re: [PATCH V3] PCI: tegra: Enable Relaxed Ordering only for Tegra20 &
+ Tegra30
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Vidya Sagar <vidyas@nvidia.com>
+CC:     <bhelgaas@google.com>, <treding@nvidia.com>, <swarren@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190704150428.4035-1-vidyas@nvidia.com>
+ <20190704160948.GA28058@e121166-lin.cambridge.arm.com>
 From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH] PCI: tegra: Fix support for GPIO based PERST#
-Date:   Fri, 5 Jul 2019 09:48:50 +0100
-Message-ID: <20190705084850.30777-1-jonathanh@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-X-NVConfidentiality: public
+Message-ID: <310ce6f7-9379-9857-ac7c-53118b80966b@nvidia.com>
+Date:   Fri, 5 Jul 2019 09:57:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190704160948.GA28058@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562316549; bh=tBHCslONGNXrTuqR08BQriljhrvSbQNaMiL9a/TIMAo=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=mJAWtXLuY1JNrR9BMi1//luoq7N7RQzV7q4o2a8v/v9v1QaqQkNEVTrOdJkZyYWzN
-         Bzizezio0/QJN6c1IDzuk1IuqK0EfHChlCErUvY+domCQXoS4JCMwOlaCutYlg+9yG
-         H0OVifUDuhYmON08B9tW0YDOctONAb8JcZnhliFI+QzSOtIoxObXOMrhQqCZz9Dnx9
-         QlKEYZRPco8SWFYg2cUNWa0NIO1zsqZ8KuG4u9nSIt0Y6H/7lKX0G81/6Wzl7hfCt1
-         TnFr/kHpaOnpH0+nyn5IyYskyB2V8wflU2jOrFfAIMQlUCJc1vGBnuebN1zqr0Nue9
-         68PX0w28Noe7w==
+        t=1562317055; bh=Y65L4SlD3nFwcEsHObKuUGmbM8XzhhPABML9Lsxmtn8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Cwx9Rojuc+VqH0QwO2hYnig785gwggT/X/RQKsj0xG/cEOHcBp6cSDj1e6c5IHeLp
+         2K0nViCrJhrTGMxxN4SVgREYD+uVkcd/Eg8Nq5Y2VgnVIHslDswvdS7c7sIdpSRlO0
+         QJI1vi7O8a0D3D/fiVwVwx27fOnsDcqd5b4yvziIIiJCCp5G0KFf5VKlgK9ypIAbVl
+         NPhVxnt00DBLY/m8HJMajVNT4mp3A+C834cxulU7LtD/7ejgsxWPXpKcRvjkliPjpZ
+         BWdXkrNjHjFvEYpf3z+ZNX+FvyJNoF3lu1Ax3MHk5LUhn8/6wfUfby49GMq2fJnF4/
+         YAXwNcptxIDcQ==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Commit 5e5e9c23f82a ("PCI: tegra: Add support for GPIO based PERST#")
-calls the function devm_gpiod_get_from_of_node() to request a GPIO.
-Unfortunately, around the same time this was merged, commit 025bf37725f1
-("gpio: Fix return value mismatch of function gpiod_get_from_of_node()")
-was also merged to fix the return value of the function
-devm_gpiod_get_from_of_node() that was incorrectly returning NULL
-instead of an error pointer encoded with -ENOENT if no GPIO was found.
-When this fix for the GPIO subsystem was merged, PCI support for Tegra
-devices that did not provide a GPIO for the PERST# (which is optional)
-broke because the Tegra PCI driver was expecting NULL to be returned if
-no GPIO was present and not -ENOENT.
+Hi Lorenzo,
 
-Fix this by checking to see if -ENOENT is returned from the function
-devm_gpiod_get_from_of_node(), to indicate there is no GPIO for PERST#
-present, and if this is the case set the variable 'reset_gpio' to NULL.
-If the variable 'reset_gpio' is NULL then the Tegra PCI driver will
-fallback to using the AFI register to toggle the PERST#. Finally,
-correct the comment now that NULL is no longer returned from
-devm_gpiod_get_from_of_node().
+On 04/07/2019 17:09, Lorenzo Pieralisi wrote:
+> On Thu, Jul 04, 2019 at 08:34:28PM +0530, Vidya Sagar wrote:
+>> Currently Relaxed Ordering bit in the configuration space is enabled for
+>> all PCIe devices as the quirk uses PCI_ANY_ID for both Vendor-ID and
+>> Device-ID, but, as per the Technical Reference Manual of Tegra20 which is
+>> available at https://developer.nvidia.com/embedded/downloads#?search=tegra%202
+>> in Sec 34.1, it is mentioned that Relexed Ordering bit needs to be enabled in
+>> its root ports to avoid deadlock in hardware. The same is applicable for
+>> Tegra30 as well though it is not explicitly mentioned in Tegra30 TRM document,
+>> but the same must not be extended to root ports of other Tegra SoCs or
+>> other hosts as the same issue doesn't exist there.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> 
+> You forgot Thierry's ACK, I added it back but next time pay more
+> attention please.
+> 
+> You should link the versions through eg git send-email
+> --in-reply-to=Message-Id so that it is easier to follow.
+> 
+>> ---
+>> V3:
+>> * Modified commit message to make it more precise and explicit
+>>
+>> V2:
+>> * Modified commit message to include reference to Tegra20 TRM document.
+>>
+>>  drivers/pci/controller/pci-tegra.c | 7 +++++--
+>>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> I applied it to pci/tegra after rewriting the whole commit log and
+> adding a Fixes: tag that you or someone at Nvidia will follow up;
+> I will check.
 
-Fixes: 5e5e9c23f82a ("PCI: tegra: Add support for GPIO based PERST#")
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
- drivers/pci/controller/pci-tegra.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+I had a chat with Vidya last night to understand the issue, so now I
+have a good understanding of the problem this has caused, which is very
+unfortunate indeed!
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 9cc03a2549c0..ff8a346f3e04 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2295,18 +2295,22 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		}
- 
- 		/*
--		 * Returns null if reset-gpios property is not populated and
--		 * fall back to using AFI per port register to toggle PERST#
--		 * SFIO line.
-+		 * Returns -ENOENT if reset-gpios property is not populated
-+		 * and in this case fall back to using AFI per port register
-+		 * to toggle PERST# SFIO line.
- 		 */
- 		rp->reset_gpio = devm_gpiod_get_from_of_node(dev, port,
- 							     "reset-gpios", 0,
- 							     GPIOD_OUT_LOW,
- 							     label);
- 		if (IS_ERR(rp->reset_gpio)) {
--			err = PTR_ERR(rp->reset_gpio);
--			dev_err(dev, "failed to get reset GPIO: %d\n", err);
--			return err;
-+			if (PTR_ERR(rp->reset_gpio) == -ENOENT) {
-+				rp->reset_gpio = NULL;
-+			} else {
-+				dev_err(dev, "failed to get reset GPIO: %d\n",
-+					err);
-+				return PTR_ERR(rp->reset_gpio);
-+			}
- 		}
- 
- 		list_add_tail(&rp->list, &pcie->ports);
+Vidya mentioned that you would like us to get this backported to stable
+branches. Please correct me if I am wrong here. We can certainly do
+that, but I do have concerns about doing so, for non-Tegra devices
+inparticularly, given that this has been around for sometime now. Hence,
+I was wondering if we should leave this soak in the mainline for at
+least a kernel release cycle before doing so. I really don't want to
+break stable for anyone. What are your thoughts on this?
+
+Cheers
+Jon
+
 -- 
-2.17.1
-
+nvpublic
