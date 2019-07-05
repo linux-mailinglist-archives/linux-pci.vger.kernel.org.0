@@ -2,105 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F1986036C
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2019 11:51:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F0FF603C7
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2019 12:07:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbfGEJvm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Jul 2019 05:51:42 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:57530 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728188AbfGEJvm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Jul 2019 05:51:42 -0400
-Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 3ded838a44778bef; Fri, 5 Jul 2019 11:51:39 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Len Brown <lenb@kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 0/3] PCI / ACPI: Handle sibling devices sharing power resources
-Date:   Fri, 05 Jul 2019 11:51:39 +0200
-Message-ID: <3373307.rzzEvYTkqQ@kreacher>
-In-Reply-To: <CAJZ5v0he36SF+q_0J5D_UCdhUPkKh6S3e94gqB=5XKcT=eum1A@mail.gmail.com>
-References: <20190625102942.27740-1-mika.westerberg@linux.intel.com> <CAJZ5v0he36SF+q_0J5D_UCdhUPkKh6S3e94gqB=5XKcT=eum1A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        id S1727620AbfGEKHG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Jul 2019 06:07:06 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:47748 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726568AbfGEKHG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 5 Jul 2019 06:07:06 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1AC10200703;
+        Fri,  5 Jul 2019 12:07:03 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8F8BF200706;
+        Fri,  5 Jul 2019 12:06:54 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 20295402DF;
+        Fri,  5 Jul 2019 18:06:44 +0800 (SGT)
+From:   Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        l.subrahmanya@mobiveil.co.in, shawnguo@kernel.org,
+        leoyang.li@nxp.com, lorenzo.pieralisi@arm.com,
+        catalin.marinas@arm.com, will.deacon@arm.com
+Cc:     Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv6 00/28] PCI: mobiveil: fixes for Mobiveil PCIe Host Bridge IP driver
+Date:   Fri,  5 Jul 2019 17:56:28 +0800
+Message-Id: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
+X-Mailer: git-send-email 2.14.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday, June 25, 2019 12:35:12 PM CEST Rafael J. Wysocki wrote:
-> On Tue, Jun 25, 2019 at 12:30 PM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> >
-> > Hi all,
-> >
-> > This is third iteration of the patch series addressing issues around
-> > sibling PCI devices sharing ACPI power resources.
-> >
-> > As a concrete example in Intel Ice Lake the Thunderbolt controller, PCIe
-> > root ports and xHCI all share the same ACPI power resources. When they are
-> > all in D3hot power resources (returned by _PR3) can be turned off powering
-> > off the whole block. However, there are two issues around this.
-> >
-> > Firstly the PCI core sets the device power state by asking what the real
-> > ACPI power state is. This results that all but last device sharing the
-> > power resources are in D3hot when the power resources are turned off. This
-> > causes issues if user runs for example 'lspci' because the device is really
-> > in D3cold so what user gets back is all ones (0xffffffff).
-> >
-> > Secondly if any of the device is runtime resumed the power resources are
-> > turned on bringing all other devices sharing the resources to
-> > D0uninitialized losing their wakeup configuration.
-> >
-> > This series aims to fix the two issues by:
-> >
-> >   1. Using the ACPI cached power state when PCI devices are transitioned
-> >      into low power states instead of reading back the "real" power state.
-> >
-> >   2. Introducing concept of "_PR0 dependent devices" that get runtime
-> >      resumed whenever their power resource (which they might share with
-> >      other sibling devices) gets turned on.
-> >
-> > The series is based on the idea of Rafael J. Wysocki <rafael@kernel.org>.
-> >
-> > Previous version of the series can be found here:
-> >
-> >   v2: https://lore.kernel.org/linux-pci/20190618161858.77834-1-mika.westerberg@linux.intel.com/T/#m7a41d0b745400054543324ce84125040dbfed912
-> >   v1: https://www.spinics.net/lists/linux-pci/msg83583.html
-> >
-> > Changes from v2:
-> >
-> >   * Updated changelog of patch [1/3] according to comments I got. I left
-> >     the D3C power resource and xHCI there because it shows that we can have
-> >     multiple shared power resources.
-> >
-> >   * Added link to the discussion around v2.
-> >
-> >   * Use adev->flags.power_manageable in patch [2/3].
-> >
-> > Mika Westerberg (3):
-> >   PCI / ACPI: Use cached ACPI device state to get PCI device power state
-> >   ACPI / PM: Introduce concept of a _PR0 dependent device
-> >   PCI / ACPI: Add _PR0 dependent devices
-> >
-> >  drivers/acpi/power.c    | 135 ++++++++++++++++++++++++++++++++++++++++
-> >  drivers/pci/pci-acpi.c  |   5 +-
-> >  include/acpi/acpi_bus.h |   4 ++
-> >  3 files changed, 143 insertions(+), 1 deletion(-)
-> >
-> 
-> The whole series looks good to me, thank you!
-> 
+This patch set is to add fixes for Mobiveil PCIe Host driver.
+Splited #2, #3, #9 and #10 of v5 patches.
 
-And so it has been applied and queued for 5.3, thanks!
+Hou Zhiqiang (28):
+  PCI: mobiveil: Unify register accessors
+  PCI: mobiveil: Remove the flag MSI_FLAG_MULTI_PCI_MSI
+  PCI: mobiveil: Fix PCI base address in MEM/IO outbound windows
+  PCI: mobiveil: Update the resource list traversal function
+  PCI: mobiveil: Use WIN_NUM_0 explicitly for CFG outbound window
+  PCI: mobiveil: Use the 1st inbound window for MEM inbound
+    transactions
+  PCI: mobiveil: Fix the Class Code field
+  PCI: mobiveil: Move the link up waiting out of mobiveil_host_init()
+  PCI: mobiveil: Move IRQ chained handler setup out of DT parse
+  PCI: mobiveil: Initialize Primary/Secondary/Subordinate bus numbers
+  PCI: mobiveil: Fix devfn check in mobiveil_pcie_valid_device()
+  dt-bindings: PCI: mobiveil: Change gpio_slave and apb_csr to optional
+  PCI: mobiveil: Reformat the code for readability
+  PCI: mobiveil: Make the register updating more readable
+  PCI: mobiveil: Revise the MEM/IO outbound window initialization
+  PCI: mobiveil: Fix the returned error number
+  PCI: mobiveil: Remove an unnecessary return value check
+  PCI: mobiveil: Remove redundant var definitions and register read
+    operations
+  PCI: mobiveil: Fix the valid check for inbound and outbound window
+  PCI: mobiveil: Add the statistic of initialized inbound windows
+  PCI: mobiveil: Clear the target fields before updating the register
+  PCI: mobiveil: Mask out the lower 10-bit hardcode window size
+  PCI: mobiveil: Add upper 32-bit CPU base address setup in outbound
+    window
+  PCI: mobiveil: Add upper 32-bit PCI base address setup in inbound
+    window
+  PCI: mobiveil: Fix the CPU base address setup in inbound window
+  PCI: mobiveil: Move PCIe PIO enablement out of inbound window routine
+  PCI: mobiveil: Fix infinite-loop in the INTx process
+  PCI: mobiveil: Fix the potential INTx missing problem
 
-
+ .../devicetree/bindings/pci/mobiveil-pcie.txt      |    2 +
+ drivers/pci/controller/pcie-mobiveil.c             |  529 ++++++++++++--------
+ 2 files changed, 318 insertions(+), 213 deletions(-)
 
