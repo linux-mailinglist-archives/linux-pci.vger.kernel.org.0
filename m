@@ -2,108 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DFB3C606A2
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2019 15:34:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 545E0606BF
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2019 15:41:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfGENeu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Jul 2019 09:34:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:38398 "EHLO foss.arm.com"
+        id S1728196AbfGENlo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Jul 2019 09:41:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:38504 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727295AbfGENet (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 5 Jul 2019 09:34:49 -0400
+        id S1727702AbfGENlo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 5 Jul 2019 09:41:44 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EBE11360;
-        Fri,  5 Jul 2019 06:34:46 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C082360;
+        Fri,  5 Jul 2019 06:41:43 -0700 (PDT)
 Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 25BA23F718;
-        Fri,  5 Jul 2019 06:34:46 -0700 (PDT)
-Date:   Fri, 5 Jul 2019 14:34:41 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B0AF3F718;
+        Fri,  5 Jul 2019 06:41:40 -0700 (PDT)
+Date:   Fri, 5 Jul 2019 14:41:38 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v1 1/2] tools: PCI: Fix compilation error
-Message-ID: <20190705133441.GA31464@e121166-lin.cambridge.arm.com>
-References: <20190628131218.10244-1-andriy.shevchenko@linux.intel.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "Lili Deng (Wicresoft North America Ltd)" <v-lide@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>
+Subject: Re: [PATCH v2] PCI: hv: Fix a use-after-free bug in
+ hv_eject_device_work()
+Message-ID: <20190705134138.GB31464@e121166-lin.cambridge.arm.com>
+References: <PU1P153MB0169D420EAB61757DF4B337FBFE70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190628131218.10244-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <PU1P153MB0169D420EAB61757DF4B337FBFE70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 04:12:17PM +0300, Andy Shevchenko wrote:
-> The commit
+On Fri, Jun 21, 2019 at 11:45:23PM +0000, Dexuan Cui wrote:
 > 
->   b71f0a0b1e3f ("tools: PCI: Exit with error code when test fails")
+> The commit 05f151a73ec2 itself is correct, but it exposes this
+> use-after-free bug, which is caught by some memory debug options.
 > 
-> forgot to update function prototype and thus brought a regression:
+> Add a Fixes tag to indicate the dependency.
 > 
-> pcitest.c:221:9: error: void value not ignored as it ought to be
->  return run_test(test);
->         ^~~~~~~~~~~~~~
-> 
-> Fix it by changing prototype from void to int.
-> 
-> While here, initialize ret with 0 to avoid compiler warning:
-> 
-> pcitest.c:132:25: warning: ‘ret’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-> 
-> Fixes: b71f0a0b1e3f ("tools: PCI: Exit with error code when test fails")
-> Cc: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Fixes: 05f151a73ec2 ("PCI: hv: Fix a memory leak in hv_eject_device_work()")
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Cc: stable@vger.kernel.org
 > ---
->  tools/pci/pcitest.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> In v2:
+> Replaced "hpdev->hbus" with "hbus", since we have the new "hbus" variable. [Michael Kelley]
+> 
+>  drivers/pci/controller/pci-hyperv.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
 
-Patch 1 and 2 already applied from another thread:
-
-https://lore.kernel.org/linux-pci/1558646281-12676-1-git-send-email-alan.mikhak@sifive.com/
-
-Thanks anyway !
+Applied to pci/hv for v5.3, thanks.
 
 Lorenzo
 
-> diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
-> index cb7a47dfd8b6..81b89260e80f 100644
-> --- a/tools/pci/pcitest.c
-> +++ b/tools/pci/pcitest.c
-> @@ -36,15 +36,15 @@ struct pci_test {
->  	unsigned long	size;
->  };
->  
-> -static void run_test(struct pci_test *test)
-> +static int run_test(struct pci_test *test)
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 808a182830e5..5dadc964ad3b 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1880,6 +1880,7 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+>  static void hv_eject_device_work(struct work_struct *work)
 >  {
-> -	long ret;
-> +	long ret = 0;
->  	int fd;
+>  	struct pci_eject_response *ejct_pkt;
+> +	struct hv_pcibus_device *hbus;
+>  	struct hv_pci_dev *hpdev;
+>  	struct pci_dev *pdev;
+>  	unsigned long flags;
+> @@ -1890,6 +1891,7 @@ static void hv_eject_device_work(struct work_struct *work)
+>  	} ctxt;
 >  
->  	fd = open(test->device, O_RDWR);
->  	if (fd < 0) {
->  		perror("can't open PCI Endpoint Test device");
-> -		return;
-> +		return fd;
+>  	hpdev = container_of(work, struct hv_pci_dev, wrk);
+> +	hbus = hpdev->hbus;
+>  
+>  	WARN_ON(hpdev->state != hv_pcichild_ejecting);
+>  
+> @@ -1900,8 +1902,7 @@ static void hv_eject_device_work(struct work_struct *work)
+>  	 * because hbus->pci_bus may not exist yet.
+>  	 */
+>  	wslot = wslot_to_devfn(hpdev->desc.win_slot.slot);
+> -	pdev = pci_get_domain_bus_and_slot(hpdev->hbus->sysdata.domain, 0,
+> -					   wslot);
+> +	pdev = pci_get_domain_bus_and_slot(hbus->sysdata.domain, 0, wslot);
+>  	if (pdev) {
+>  		pci_lock_rescan_remove();
+>  		pci_stop_and_remove_bus_device(pdev);
+> @@ -1909,9 +1910,9 @@ static void hv_eject_device_work(struct work_struct *work)
+>  		pci_unlock_rescan_remove();
 >  	}
 >  
->  	if (test->barnum >= 0 && test->barnum <= 5) {
-> @@ -129,7 +129,7 @@ static void run_test(struct pci_test *test)
->  	}
+> -	spin_lock_irqsave(&hpdev->hbus->device_list_lock, flags);
+> +	spin_lock_irqsave(&hbus->device_list_lock, flags);
+>  	list_del(&hpdev->list_entry);
+> -	spin_unlock_irqrestore(&hpdev->hbus->device_list_lock, flags);
+> +	spin_unlock_irqrestore(&hbus->device_list_lock, flags);
 >  
->  	fflush(stdout);
-> -	return (ret < 0) ? ret : 1 - ret; /* return 0 if test succeeded */
-> +	return (ret < 0) ? ret : 0; /* return 0 if test succeeded */
+>  	if (hpdev->pci_slot)
+>  		pci_destroy_slot(hpdev->pci_slot);
+> @@ -1920,7 +1921,7 @@ static void hv_eject_device_work(struct work_struct *work)
+>  	ejct_pkt = (struct pci_eject_response *)&ctxt.pkt.message;
+>  	ejct_pkt->message_type.type = PCI_EJECTION_COMPLETE;
+>  	ejct_pkt->wslot.slot = hpdev->desc.win_slot.slot;
+> -	vmbus_sendpacket(hpdev->hbus->hdev->channel, ejct_pkt,
+> +	vmbus_sendpacket(hbus->hdev->channel, ejct_pkt,
+>  			 sizeof(*ejct_pkt), (unsigned long)&ctxt.pkt,
+>  			 VM_PKT_DATA_INBAND, 0);
+>  
+> @@ -1929,7 +1930,9 @@ static void hv_eject_device_work(struct work_struct *work)
+>  	/* For the two refs got in new_pcichild_device() */
+>  	put_pcichild(hpdev);
+>  	put_pcichild(hpdev);
+> -	put_hvpcibus(hpdev->hbus);
+> +	/* hpdev has been freed. Do not use it any more. */
+> +
+> +	put_hvpcibus(hbus);
 >  }
 >  
->  int main(int argc, char **argv)
+>  /**
 > -- 
-> 2.20.1
+> 2.17.1
 > 
