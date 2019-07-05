@@ -2,158 +2,244 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A273C606CD
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2019 15:46:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6700F606DB
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2019 15:51:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbfGENqe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Jul 2019 09:46:34 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:3129 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbfGENqe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Jul 2019 09:46:34 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1f54bb0000>; Fri, 05 Jul 2019 06:46:35 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 05 Jul 2019 06:46:31 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 05 Jul 2019 06:46:31 -0700
-Received: from [10.25.73.124] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Jul
- 2019 13:46:25 +0000
-Subject: Re: [PATCH V12 01/12] PCI: Add #defines for some of PCIe spec r4.0
- features
-To:     <bhelgaas@google.com>
-CC:     <lorenzo.pieralisi@arm.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
-        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190701124010.7484-1-vidyas@nvidia.com>
- <20190701124010.7484-2-vidyas@nvidia.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <66d8af45-66f5-b597-0ea8-39e8662df5e6@nvidia.com>
-Date:   Fri, 5 Jul 2019 19:16:22 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190701124010.7484-2-vidyas@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562334395; bh=2Qy6ORAWvrbTlmfqAnF7zDdNOiozdPJ+e9fLmQAmT2s=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=d8v8nKDdjlIXTfXIOi5GsRbdP041QsfRpBLjjsMPdizHbCbmFMgqe8vGkmjLZUxlu
-         NK/YbczaGAoQS/BKbjd/Wv6g8aVfD439ngxFzxcZ5qoqMsv0H1UpmSpjzFoCf4XeLf
-         OJbNSYjItvis6SB6QQK17u2YFfpf9wkIO32L3JY8lRrIoYVaHA9ZfGtmHDZnm9tOze
-         jdwSvge5JeajNERQZLcTM/UzTtAqjuMAhOy4htXvPMQ08CpeWSMrSWkPtLP4SZr78U
-         HtqFZIjipMnFXuDTYyP8f0hRfHxVU2PUP+aPVeuAhjPE1vwPWjiCSvRunnYzmHvPWZ
-         SRRX2lPQXaBXg==
+        id S1727853AbfGENvq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Jul 2019 09:51:46 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:33473 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727635AbfGENvp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Jul 2019 09:51:45 -0400
+Received: from mail-pf1-f198.google.com ([209.85.210.198])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hjOcq-0002P2-AY
+        for linux-pci@vger.kernel.org; Fri, 05 Jul 2019 13:51:44 +0000
+Received: by mail-pf1-f198.google.com with SMTP id x10so5610797pfa.23
+        for <linux-pci@vger.kernel.org>; Fri, 05 Jul 2019 06:51:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=YNguRT3VdYqQwZjKNQS52cI6hAGLZ3x6rPPYR/rKEKA=;
+        b=Z7Xq8DsJgO5ywojsBKYf7GbQ+vRXMPdbwwd4LN1nUK/TT6QKJQpmDX7MYAVxY2J0KO
+         3wn2ltwStjeLTsbOwfOVlqhFrXJZup8BhA6NrnkvfHx2v5i6weVLnJDedGa4o3mINPFB
+         HsYMQz1r387YBUo3+uMxavNY80ZmFbAd9KJaKYaUbz5I0cYLQ5eRy/SMmhgT8LKsqNLO
+         9zzL3e/BBqv5u/IfnGymVo4h0m5AVCcdhbdAsXoZp5UFCP0Wx9HNcBtqOAFxMxi68rkc
+         2K4KugBN2+yCTRWZNMOC03sh8zQ5kNkimeUYg6c68n/TzNiIWz3VsBtFZ4hKV0YezS92
+         oUQg==
+X-Gm-Message-State: APjAAAWnOL3aybo6SjH4NA3R9e9UQB1OOA/2XQXo6PaaAupNi9elXEtS
+        TByUUnPyP/gHW0uMYK4KQHohRAzh3yGbbNVI3YqZFVZQjBWSnclpWEAjEjQ/KwovxMDrnbJrqyp
+        KbVQBaCrOf72JJEQ0SUWbroDbaFuh9Dsv1LkerA==
+X-Received: by 2002:a63:6b07:: with SMTP id g7mr5899666pgc.325.1562334702786;
+        Fri, 05 Jul 2019 06:51:42 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz1NYy+OXhkmgOsgIAs7QkwNkkbjEIdrxYNXrmiO+nSeuTs0BUjocoDARsdAgBemJLpGveq5g==
+X-Received: by 2002:a63:6b07:: with SMTP id g7mr5899635pgc.325.1562334702413;
+        Fri, 05 Jul 2019 06:51:42 -0700 (PDT)
+Received: from 2001-b011-380f-3511-154d-4126-51e3-28cb.dynamic-ip6.hinet.net (2001-b011-380f-3511-154d-4126-51e3-28cb.dynamic-ip6.hinet.net. [2001:b011:380f:3511:154d:4126:51e3:28cb])
+        by smtp.gmail.com with ESMTPSA id a25sm8766164pfn.1.2019.07.05.06.51.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 06:51:41 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] PCI / PM: Don't runtime suspend when device only supports
+ wakeup from D0
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <2067449.jKPth8Qelp@kreacher>
+Date:   Fri, 5 Jul 2019 21:51:39 +0800
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linux-usb@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Message-Id: <3EF5C3B9-F7D0-49C3-9CC0-88DDDDAF4616@canonical.com>
+References: <20190522181157.GC79339@google.com>
+ <20190605115724.GE84290@google.com>
+ <7E5CD0E5-2C23-4339-9660-74994FC5C111@canonical.com>
+ <2067449.jKPth8Qelp@kreacher>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 7/1/2019 6:09 PM, Vidya Sagar wrote:
-Bjorn,
-Can you please provide Ack for this patch?
+at 17:39, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
 
-Thanks,
-Vidya Sagar
+> On Friday, July 5, 2019 9:02:01 AM CEST Kai-Heng Feng wrote:
+>> at 19:57, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>
+>>> On Mon, May 27, 2019 at 11:57:47AM -0500, Bjorn Helgaas wrote:
+>>>> On Thu, May 23, 2019 at 12:39:23PM +0800, Kai-Heng Feng wrote:
+>>>>> at 04:52, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>>>> On Wed, May 22, 2019 at 02:39:56PM -0400, Alan Stern wrote:
+>>>>>>> On Wed, 22 May 2019, Bjorn Helgaas wrote:
+>>>>>>>> On Wed, May 22, 2019 at 11:46:25PM +0800, Kai Heng Feng wrote:
+>>>>>>>>>> On May 22, 2019, at 9:48 PM, Bjorn Helgaas <helgaas@kernel.org>
+>>>>>>>>>> wrote:
+>>>>>>>>>> On Wed, May 22, 2019 at 11:42:14AM +0800, Kai Heng Feng wrote:
+>>>>>>>>>>> at 6:23 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>>>>>>>>>> On Wed, May 22, 2019 at 12:31:04AM +0800, Kai-Heng Feng wrote:
+>>>>>>>>>>>>> There's an xHC device that doesn't wake when
+>>>>>>>>>>>>> a USB device gets plugged
+>>>>>>>>>>>>> to its USB port. The driver's own runtime
+>>>>>>>>>>>>> suspend callback was called,
+>>>>>>>>>>>>> PME signaling was enabled, but it stays at PCI D0.
+>>>>>>>>
+>>>>>>>>>> ...
+>>>>>>>>>> And I guess this patch basically means we wouldn't call
+>>>>>>>>>> the driver's suspend callback if we're merely going to
+>>>>>>>>>> stay at D0, so the driver would have no idea anything
+>>>>>>>>>> happened.  That might match Documentation/power/pci.txt
+>>>>>>>>>> better, because it suggests that the suspend callback is
+>>>>>>>>>> related to putting a device in a low-power state, and D0
+>>>>>>>>>> is not a low-power state.
+>>>>>>>>>
+>>>>>>>>> Yes, the patch is to let the device stay at D0 and don’t run
+>>>>>>>>> driver’s own runtime suspend routine.
+>>>>>>>>>
+>>>>>>>>> I guess I’ll just proceed to send a V2 with updated commit message?
+>>>>>>>>
+>>>>>>>> Now that I understand what "runtime suspended to D0" means, help me
+>>>>>>>> understand what's actually wrong.
+>>>>>>>
+>>>>>>> Kai's point is that the xhci-hcd driver thinks the device is now
+>>>>>>> in runtime suspend, because the runtime_suspend method has been
+>>>>>>> executed.  But in fact the device is still in D0, and as a
+>>>>>>> result, PME signalling may not work correctly.
+>>>>>>
+>>>>>> The device claims to be able to signal PME from D0 (this is from the
+>>>>>> lspci
+>>>>>> in https://bugzilla.kernel.org/show_bug.cgi?id=203673):
+>>>>>>
+>>>>>>   00:10.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller (rev 20) (prog-if 30 [XHCI])
+>>>>>>     Capabilities: [50] Power Management version 3
+>>>>>>       Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+>>>>>>
+>>>>>> From the xHCI spec r1.0, sec 4.15.2.3, it looks like a connect
+>>>>>> detected while in D0 should assert PME# if enabled (and WCE is
+>>>>>> set).
+>>>>>
+>>>>> I think section 4.15.2.3 is about S3 wake up, no S0 we are
+>>>>> discussing here.
+>>>>
+>>>> S0 and S3 are system-level ideas and have no meaning to an individual
+>>>> PCI device.  The xHC is a PCI device and can't tell whether the system
+>>>> as a whole is in S0 or S3.  If a PCI device claims to be able to
+>>>> generate PME while in D0, that applies regardless of the system state.
+>>>>
+>>>> xHCI r1.0, sec A.1 says "The host controller should be capable of
+>>>> asserting PME# when in any supported device state."  In sec 4.19.2,
+>>>> Figure 42 says PME# should be asserted whenever PMCSR.PME_En=1 and
+>>>> WCE=1 and a connection is detected.
+>>>>
+>>>> Figure 42 also shows that CSC (Connect Status Change) and related bits
+>>>> feed into Port Status Change Event Generation.  So I assume the xhci
+>>>> driver normally detects connect/disconnect via CSC, but the runtime
+>>>> suspend method makes it use PME# instead?
+>>>>
+>>>> And the way your patch works is by avoiding that xhci runtime suspend
+>>>> method, so it *always* uses CSC and never uses PME#?  If that's the
+>>>> case, we're just papering over a problem without really understanding
+>>>> it.
+>>>>
+>>>> I'm wondering if this platform has a firmware defect.  Here's my
+>>>> thinking.  The xHC is a Root Complex Integrated Endpoint, so its PME
+>>>> signaling is a little unusual.
+>>>>
+>>>> The typical scenario is that a PCIe device is below a Root Port.  In
+>>>> that case, it would send a PME Message upstream to the Root Port.  Per
+>>>> PCIe r4.0, sec 6.1.6, when configured for native PME support (for ACPI
+>>>> systems, I assume this means "when firmware has granted PME control to
+>>>> the OS via _OSC"), the Root Port would generate a normal PCI INTx or
+>>>> MSI interrupt:
+>>>>
+>>>>   PCI Express-aware software can enable a mode where the Root Complex
+>>>>   signals PME via an interrupt. When configured for native PME
+>>>>   support, a Root Port receives the PME Message and sets the PME
+>>>>   Status bit in its Root Status register. If software has set the PME
+>>>>   Interrupt Enable bit in the Root Control register to 1b, the Root
+>>>>   Port then generates an interrupt.
+>>>>
+>>>> But on this platform the xHC is a Root Complex Integrated Endpoint, so
+>>>> there is no Root Port upstream from it, and that mechanism can't be
+>>>> used.  Per PCIe r4.0, sec 1.3.2.3, RCiEPs signal PME via "the same
+>>>> mechanism as PCI systems" or via Root Complex Event Collectors:
+>>>>
+>>>>   An RCiEP must signal PME and error conditions through the same
+>>>>   mechanisms used on PCI systems. If a Root Complex Event Collector is
+>>>>   implemented, an RCiEP may optionally signal PME and error conditions
+>>>>   through a Root Complex Event Collector.
+>>>>
+>>>> This platform has no Root Complex Event Collectors, so the xHC should
+>>>> signal PME via the same mechanism as PCI systems, i.e., asserting a
+>>>> PME# signal.  I think this means the OS cannot use native PCIe PME
+>>>> control because it doesn't know what interrupt PME# is connected to.
+>>>> The PCI Firmware Spec r3.2, sec 4.5.1 (also quoted in ACPI v6.2, sec
+>>>> 6.2.11.3), says:
+>>>>
+>>>>   PCI Express Native Power Management Events control
+>>>>
+>>>>   The firmware sets this bit to 1 to grant control over PCI Express
+>>>>   native power management event interrupts (PMEs). If firmware
+>>>>   allows the operating system control of this feature, then in the
+>>>>   context of the _OSC method, it must ensure that all PMEs are
+>>>>   routed to root port interrupts as described in the PCI Express
+>>>>   Base Specification.
+>>>>
+>>>> This platform cannot route all PMEs to Root Port interrupts because
+>>>> the xHC RCiEP cannot report PME via a Root Port, so I think its _OSC
+>>>> method should not grant control of PCIe Native Power Management Events
+>>>> to the OS, and I think that would mean we have to use the ACPI
+>>>> mechanism for PME on this platform.
+>>>>
+>>>> Can you confirm or deny any of this line of reasoning?  I'm wondering
+>>>> if there's something wrong with the platform's _OSC, so Linux thinks
+>>>> it can use native PME, but that doesn't work for this device.
+>>>>
+>>>>> It’s a platform in development so the name can’t be disclosed.
+>>>>
+>>>> Please attach a complete dmesg log to the bugzilla.  You can remove
+>>>> identifying details like the platform name, but I want to see the
+>>>> results of the _OSC negotiation.
+>>>
+>>> Thanks for the dmesg log
+>>> (https://bugzilla.kernel.org/attachment.cgi?id=283109).  It shows:
+>>>
+>>>   acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
+>>>   acpi PNP0A08:00: _OSC: platform does not support [SHPCHotplug LTR]
+>>>   acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME AER PCIeCapability]
+>>>
+>>> I think it is incorrect for the platform to give the OS native control
+>>> over PME because the OS has no way to know how the RCiEP PMEs are
+>>> routed.  But it would be interesting to know how BIOSes on other
+>>> platforms with RCiEPs handle this, and I did post a question to the
+>>> PCI-SIG to see if there's any guidance there.
+>>
+>> Is there any update from PCI-SIG?
+>>
+>> I really think we don’t need wakeup capability in D0 because D0 is a
+>> working state.
+>
+> Well, in theory, devices may stay in D0 over suspend-to-idle and they may  
+> need to
+> signal wakeup then.  Using PME for that would be kind of handy (if it  
+> worked) as it
+> would allow special handling of in-band IRQs to be avoided in that case.
 
-> Add #defines only for the Data Link Feature and Physical Layer 16.0 GT/s
-> features.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Reviewed-by: Thierry Reding <treding@nvidia.com>
-> ---
-> Changes since [v11]:
-> * None
-> 
-> Changes since [v10]:
-> * None
-> 
-> Changes since [v9]:
-> * None
-> 
-> Changes since [v8]:
-> * None
-> 
-> Changes since [v7]:
-> * None
-> 
-> Changes since [v6]:
-> * None
-> 
-> Changes since [v5]:
-> * None
-> 
-> Changes since [v4]:
-> * None
-> 
-> Changes since [v3]:
-> * None
-> 
-> Changes since [v2]:
-> * Updated commit message and description to explicitly mention that defines are
->    added only for some of the features and not all.
-> 
-> Changes since [v1]:
-> * None
-> 
->   include/uapi/linux/pci_regs.h | 22 +++++++++++++++++++++-
->   1 file changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index f28e562d7ca8..1c79f6a097d2 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -713,7 +713,9 @@
->   #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
->   #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
->   #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
-> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PTM
-> +#define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
-> +#define PCI_EXT_CAP_ID_PL	0x26	/* Physical Layer 16.0 GT/s */
-> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL
->   
->   #define PCI_EXT_CAP_DSN_SIZEOF	12
->   #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
-> @@ -1053,4 +1055,22 @@
->   #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
->   #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
->   
-> +/* Data Link Feature */
-> +#define PCI_DLF_CAP		0x04	/* Capabilities Register */
-> +#define  PCI_DLF_LOCAL_DLF_SUP_MASK	0x007fffff  /* Local Data Link Feature Supported */
-> +#define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
-> +#define PCI_DLF_STS		0x08	/* Status Register */
-> +#define  PCI_DLF_REMOTE_DLF_SUP_MASK	0x007fffff  /* Remote Data Link Feature Supported */
-> +#define  PCI_DLF_REMOTE_DLF_SUP_VALID	0x80000000  /* Remote Data Link Feature Support Valid */
-> +
-> +/* Physical Layer 16.0 GT/s */
-> +#define PCI_PL_16GT_CAP		0x04	/* Capabilities Register */
-> +#define PCI_PL_16GT_CTRL	0x08	/* Control Register */
-> +#define PCI_PL_16GT_STS		0x0c	/* Status Register */
-> +#define PCI_PL_16GT_LDPM_STS	0x10	/* Local Data Parity Mismatch Status Register */
-> +#define PCI_PL_16GT_FRDPM_STS	0x14	/* First Retimer Data Parity Mismatch Status Register */
-> +#define PCI_PL_16GT_SRDPM_STS	0x18	/* Second Retimer Data Parity Mismatch Status Register */
-> +#define PCI_PL_16GT_RSVD	0x1C	/* Reserved */
-> +#define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
-> +
->   #endif /* LINUX_PCI_REGS_H */
-> 
+That makes sense but doesn’t apply to this case.
+This patch only avoids D0 runtime suspend, suspend-to-idle will call  
+system-wide suspend routine which still enables D0 PME.
+
+It’ll be great if you can review my v3 patch here:
+https://patchwork.kernel.org/patch/10960271/
+
+Kai-Heng
 
