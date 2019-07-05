@@ -2,109 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1361D60361
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2019 11:50:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F32FD60363
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2019 11:50:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbfGEJuM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Jul 2019 05:50:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:34394 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727225AbfGEJuM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 5 Jul 2019 05:50:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DB222B;
-        Fri,  5 Jul 2019 02:50:11 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 996D13F246;
-        Fri,  5 Jul 2019 02:50:10 -0700 (PDT)
-Date:   Fri, 5 Jul 2019 10:50:08 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: Re: [PATCH] PCI: tegra: Fix support for GPIO based PERST#
-Message-ID: <20190705095008.GB17491@e121166-lin.cambridge.arm.com>
-References: <20190705084850.30777-1-jonathanh@nvidia.com>
+        id S1728018AbfGEJui (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Jul 2019 05:50:38 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:42261 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727225AbfGEJui (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Jul 2019 05:50:38 -0400
+Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id 46046217919f682c; Fri, 5 Jul 2019 11:50:35 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Hans De Goede <hdegoede@redhat.com>,
+        "Robert R. Howell" <RHowell@uwyo.edu>
+Subject: Re: [PATCH v2 0/5] PM: PCI/ACPI: Hibernation handling fixes
+Date:   Fri, 05 Jul 2019 11:50:35 +0200
+Message-ID: <3380486.WkxyVYbAKD@kreacher>
+In-Reply-To: <20190701162017.GB2640@lahna.fi.intel.com>
+References: <4976412.ihyb9sT5jY@kreacher> <20190701162017.GB2640@lahna.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190705084850.30777-1-jonathanh@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 09:48:50AM +0100, Jon Hunter wrote:
-> Commit 5e5e9c23f82a ("PCI: tegra: Add support for GPIO based PERST#")
-> calls the function devm_gpiod_get_from_of_node() to request a GPIO.
-> Unfortunately, around the same time this was merged, commit 025bf37725f1
-> ("gpio: Fix return value mismatch of function gpiod_get_from_of_node()")
-> was also merged to fix the return value of the function
-> devm_gpiod_get_from_of_node() that was incorrectly returning NULL
-> instead of an error pointer encoded with -ENOENT if no GPIO was found.
-> When this fix for the GPIO subsystem was merged, PCI support for Tegra
-> devices that did not provide a GPIO for the PERST# (which is optional)
-> broke because the Tegra PCI driver was expecting NULL to be returned if
-> no GPIO was present and not -ENOENT.
+On Monday, July 1, 2019 6:20:17 PM CEST Mika Westerberg wrote:
+> On Mon, Jul 01, 2019 at 12:42:14PM +0200, Rafael J. Wysocki wrote:
+> > Hi All,
+> > 
+> > This series of patches addresses a few issues related to the handling of
+> > hibernation in the PCI bus type and the ACPI PM domain and ACPI LPSS driver.
+> > 
+> > The v2 addresses Hans' concerns regarding the LPSS changes.
+> > 
+> > First of all, all of the runtime-suspended PCI devices and devices in the ACPI PM and LPSS
+> > PM domains will be resumed during hibernation (first patch).  This appears to be the
+> > only way to avoid weird corner cases and the benefit from avoiding to resume those
+> > devices during hibernation is questionable.
+> > 
+> > That change allows the the hibernation callbacks in all of the involved subsystems to be
+> > simplified (patches 2 and 3).
+> > 
+> > Moreover, reusing bus-level suspend callbacks for the "poweroff" transition during
+> > hibernation (which is the case for the ACPI PM domain and LPSS) is incorrect, so patch 4
+> > fixes that.
+> > 
+> > Finally, there are some leftover items in linux/acpi.h that can be dropped (patch 5).
 > 
-> Fix this by checking to see if -ENOENT is returned from the function
-> devm_gpiod_get_from_of_node(), to indicate there is no GPIO for PERST#
-> present, and if this is the case set the variable 'reset_gpio' to NULL.
-> If the variable 'reset_gpio' is NULL then the Tegra PCI driver will
-> fallback to using the AFI register to toggle the PERST#. Finally,
-> correct the comment now that NULL is no longer returned from
-> devm_gpiod_get_from_of_node().
+> For the whole series,
 > 
-> Fixes: 5e5e9c23f82a ("PCI: tegra: Add support for GPIO based PERST#")
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->  drivers/pci/controller/pci-tegra.c | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
-
-Can I squash this in the original commit (ie Fixes: tag above) ? I do
-not think there is any issue with that, if there is please do let me
-know.
-
-Thanks,
-Lorenzo
-
-> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> index 9cc03a2549c0..ff8a346f3e04 100644
-> --- a/drivers/pci/controller/pci-tegra.c
-> +++ b/drivers/pci/controller/pci-tegra.c
-> @@ -2295,18 +2295,22 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
->  		}
->  
->  		/*
-> -		 * Returns null if reset-gpios property is not populated and
-> -		 * fall back to using AFI per port register to toggle PERST#
-> -		 * SFIO line.
-> +		 * Returns -ENOENT if reset-gpios property is not populated
-> +		 * and in this case fall back to using AFI per port register
-> +		 * to toggle PERST# SFIO line.
->  		 */
->  		rp->reset_gpio = devm_gpiod_get_from_of_node(dev, port,
->  							     "reset-gpios", 0,
->  							     GPIOD_OUT_LOW,
->  							     label);
->  		if (IS_ERR(rp->reset_gpio)) {
-> -			err = PTR_ERR(rp->reset_gpio);
-> -			dev_err(dev, "failed to get reset GPIO: %d\n", err);
-> -			return err;
-> +			if (PTR_ERR(rp->reset_gpio) == -ENOENT) {
-> +				rp->reset_gpio = NULL;
-> +			} else {
-> +				dev_err(dev, "failed to get reset GPIO: %d\n",
-> +					err);
-> +				return PTR_ERR(rp->reset_gpio);
-> +			}
->  		}
->  
->  		list_add_tail(&rp->list, &pcie->ports);
-> -- 
-> 2.17.1
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 > 
+
+Thanks!
+
+Queued for 5.3 with the tags from you and Hans (I've fixed up comments in the first patch while applying it).
+
+
+
+
