@@ -2,147 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 312816042F
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2019 12:12:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B59B160460
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2019 12:23:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbfGEKL7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Jul 2019 06:11:59 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:8879 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfGEKL7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Jul 2019 06:11:59 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1f226b0000>; Fri, 05 Jul 2019 03:11:56 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 05 Jul 2019 03:11:57 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 05 Jul 2019 03:11:57 -0700
-Received: from [192.168.1.141] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Jul
- 2019 10:11:54 +0000
-Subject: Re: [PATCH] PCI: tegra: Fix support for GPIO based PERST#
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jon Hunter <jonathanh@nvidia.com>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190705084850.30777-1-jonathanh@nvidia.com>
- <20190705095008.GB17491@e121166-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Message-ID: <3269adc0-215a-be7b-0820-bea7c07f6dcc@nvidia.com>
-Date:   Fri, 5 Jul 2019 15:41:24 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        id S1727266AbfGEKXf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Jul 2019 06:23:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56570 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726005AbfGEKXf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 5 Jul 2019 06:23:35 -0400
+Received: from localhost (83-84-126-242.cable.dynamic.v4.ziggo.nl [83.84.126.242])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42E6D20989;
+        Fri,  5 Jul 2019 10:23:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562322213;
+        bh=8z8MgYp+ZL1IiyyVmtNDGTbfeqiXDaPi/kWvI/Gs86M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Cdr3lJQVeXTFwh1wrzbUuPQt3cFsua/5z2RznY4fMRjj9iZJDNq9SgJe1AvjZEN4A
+         MPVsJjbl5UKS4YZC7ZUfiWB6622jXHeGCWzDf4a7h8bOm8VXvSMQ49wePwovHcBH40
+         s4qelC3rn8b/hVjWJ5kPSNN+RAU95XrZISWCgij0=
+Date:   Fri, 5 Jul 2019 12:23:30 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>,
+        bhelgaas@google.com, treding@nvidia.com, swarren@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V3] PCI: tegra: Enable Relaxed Ordering only for Tegra20
+ & Tegra30
+Message-ID: <20190705102330.GA11541@kroah.com>
+References: <20190704150428.4035-1-vidyas@nvidia.com>
+ <20190704160948.GA28058@e121166-lin.cambridge.arm.com>
+ <310ce6f7-9379-9857-ac7c-53118b80966b@nvidia.com>
+ <20190705093859.GA17491@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190705095008.GB17491@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562321516; bh=iuPlrRbm3SRRKi5NaJZmZm/BQsmRFpOi0nq1gIpKbP4=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:
-         Content-Transfer-Encoding:Content-Language;
-        b=UOIH9ZOkFY4izZikflUYNA89wYJRhxtFgSvBW14H6qXL07AVK3Fb1vwlgI7cH6Iqm
-         s0Kxngl3iyS68AKHteo58uPEi9wtS3Of1z7CTDOvTgRMdIVG1tzELjDFklSoZpQXfI
-         ZB5vha0G6LAuwan2sfcyKSsvHXtuLTONdfXml2utCvQWnIeORZm/9/IxMgt5FOxajn
-         NoxBPLEBwi65NoPWkxVfvw3KGHicZSVjY7PHl/WaGbXeQ8dS1MuJiDZ1hd7GFzr/3w
-         Sgf6/EPffOTVfeJEb01y94SFH4MRTSOeQbIMMH3djzb6UBYwTFAavpusdgf13CGHly
-         NfIqqvr95FCsQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190705093859.GA17491@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Jul 05, 2019 at 10:38:59AM +0100, Lorenzo Pieralisi wrote:
+> [+Greg]
+> 
+> On Fri, Jul 05, 2019 at 09:57:25AM +0100, Jon Hunter wrote:
+> > Hi Lorenzo,
+> > 
+> > On 04/07/2019 17:09, Lorenzo Pieralisi wrote:
+> > > On Thu, Jul 04, 2019 at 08:34:28PM +0530, Vidya Sagar wrote:
+> > >> Currently Relaxed Ordering bit in the configuration space is enabled for
+> > >> all PCIe devices as the quirk uses PCI_ANY_ID for both Vendor-ID and
+> > >> Device-ID, but, as per the Technical Reference Manual of Tegra20 which is
+> > >> available at https://developer.nvidia.com/embedded/downloads#?search=tegra%202
+> > >> in Sec 34.1, it is mentioned that Relexed Ordering bit needs to be enabled in
+> > >> its root ports to avoid deadlock in hardware. The same is applicable for
+> > >> Tegra30 as well though it is not explicitly mentioned in Tegra30 TRM document,
+> > >> but the same must not be extended to root ports of other Tegra SoCs or
+> > >> other hosts as the same issue doesn't exist there.
+> > >>
+> > >> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > 
+> > > You forgot Thierry's ACK, I added it back but next time pay more
+> > > attention please.
+> > > 
+> > > You should link the versions through eg git send-email
+> > > --in-reply-to=Message-Id so that it is easier to follow.
+> > > 
+> > >> ---
+> > >> V3:
+> > >> * Modified commit message to make it more precise and explicit
+> > >>
+> > >> V2:
+> > >> * Modified commit message to include reference to Tegra20 TRM document.
+> > >>
+> > >>  drivers/pci/controller/pci-tegra.c | 7 +++++--
+> > >>  1 file changed, 5 insertions(+), 2 deletions(-)
+> > > 
+> > > I applied it to pci/tegra after rewriting the whole commit log and
+> > > adding a Fixes: tag that you or someone at Nvidia will follow up;
+> > > I will check.
+> > 
+> > I had a chat with Vidya last night to understand the issue, so now I
+> > have a good understanding of the problem this has caused, which is very
+> > unfortunate indeed!
+> > 
+> > Vidya mentioned that you would like us to get this backported to stable
+> > branches. Please correct me if I am wrong here. We can certainly do
+> > that, but I do have concerns about doing so, for non-Tegra devices
+> > inparticularly, given that this has been around for sometime now. Hence,
+> > I was wondering if we should leave this soak in the mainline for at
+> > least a kernel release cycle before doing so. I really don't want to
+> > break stable for anyone. What are your thoughts on this?
+> 
+> I looped in Greg to pick his brain, since it is unclear how we should
+> apply the stable kernel rules on this specific patch. Basically, this
+> technically is not a bug, it is just bad code that forces a feature on
+> ALL kernels that compile the PCI Tegra Controller driver in the kernel.
+> I would really really want to have this patch applied to all stable
+> kernels but first as you said it is better to apply it to mainline and
+> check it does not cause any issues on any other arch/platform then
+> we can think about backporting it to stable kernels.
 
+You all have read the stable kernel rules, right:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
 
-On 05-Jul-19 3:20 PM, Lorenzo Pieralisi wrote:
-> On Fri, Jul 05, 2019 at 09:48:50AM +0100, Jon Hunter wrote:
->> Commit 5e5e9c23f82a ("PCI: tegra: Add support for GPIO based PERST#")
->> calls the function devm_gpiod_get_from_of_node() to request a GPIO.
->> Unfortunately, around the same time this was merged, commit 025bf37725f1
->> ("gpio: Fix return value mismatch of function gpiod_get_from_of_node()")
->> was also merged to fix the return value of the function
->> devm_gpiod_get_from_of_node() that was incorrectly returning NULL
->> instead of an error pointer encoded with -ENOENT if no GPIO was found.
->> When this fix for the GPIO subsystem was merged, PCI support for Tegra
->> devices that did not provide a GPIO for the PERST# (which is optional)
->> broke because the Tegra PCI driver was expecting NULL to be returned if
->> no GPIO was present and not -ENOENT.
->>
->> Fix this by checking to see if -ENOENT is returned from the function
->> devm_gpiod_get_from_of_node(), to indicate there is no GPIO for PERST#
->> present, and if this is the case set the variable 'reset_gpio' to NULL.
->> If the variable 'reset_gpio' is NULL then the Tegra PCI driver will
->> fallback to using the AFI register to toggle the PERST#. Finally,
->> correct the comment now that NULL is no longer returned from
->> devm_gpiod_get_from_of_node().
->>
->> Fixes: 5e5e9c23f82a ("PCI: tegra: Add support for GPIO based PERST#")
->> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
->> ---
->>  drivers/pci/controller/pci-tegra.c | 16 ++++++++++------
->>  1 file changed, 10 insertions(+), 6 deletions(-)
-> Can I squash this in the original commit (ie Fixes: tag above) ? I do
-> not think there is any issue with that, if there is please do let me
-> know.
->
-> Thanks,
-> Lorenzo
+Patches have to be upstream first.
 
-Reviewed-by: Manikanta Maddireddy
+After it is merged in Linus's tree, post the patches with the git commit
+ids to stable@vger and we will be glad to review them there.
 
-Thank you Jon for publishing the fix.
+thanks,
 
-Hi Lorenzo,
-
-Yes, this patch can be squashed in the original commit.
-
-Apologies for the inconvenience.
-
-Manikanta
-
->> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
->> index 9cc03a2549c0..ff8a346f3e04 100644
->> --- a/drivers/pci/controller/pci-tegra.c
->> +++ b/drivers/pci/controller/pci-tegra.c
->> @@ -2295,18 +2295,22 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
->>  		}
->>  
->>  		/*
->> -		 * Returns null if reset-gpios property is not populated and
->> -		 * fall back to using AFI per port register to toggle PERST#
->> -		 * SFIO line.
->> +		 * Returns -ENOENT if reset-gpios property is not populated
->> +		 * and in this case fall back to using AFI per port register
->> +		 * to toggle PERST# SFIO line.
->>  		 */
->>  		rp->reset_gpio = devm_gpiod_get_from_of_node(dev, port,
->>  							     "reset-gpios", 0,
->>  							     GPIOD_OUT_LOW,
->>  							     label);
->>  		if (IS_ERR(rp->reset_gpio)) {
->> -			err = PTR_ERR(rp->reset_gpio);
->> -			dev_err(dev, "failed to get reset GPIO: %d\n", err);
->> -			return err;
->> +			if (PTR_ERR(rp->reset_gpio) == -ENOENT) {
->> +				rp->reset_gpio = NULL;
->> +			} else {
->> +				dev_err(dev, "failed to get reset GPIO: %d\n",
->> +					err);
->> +				return PTR_ERR(rp->reset_gpio);
->> +			}
->>  		}
->>  
->>  		list_add_tail(&rp->list, &pcie->ports);
->> -- 
->> 2.17.1
->>
-
+greg k-h
