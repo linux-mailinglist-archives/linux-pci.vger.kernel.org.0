@@ -2,467 +2,291 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 26C3462AF6
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2019 23:26:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8E5162B1E
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2019 23:36:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732347AbfGHV0m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Jul 2019 17:26:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729474AbfGHV0m (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 8 Jul 2019 17:26:42 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A8252166E;
-        Mon,  8 Jul 2019 21:26:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562621200;
-        bh=Gj2DVRX6sk9gWO8Kn20rYuehTjpLmPxrP//3uv7W76I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=bThrv/6w+rQ7rpgwGEoxfAgJ425ps3U+3avGsmMn5Skh3Bk0BrNF0s2FhVhrSmO+E
-         VL8mG03gZjbnhI7KrfTzQVtAmU55CzHog5Aa/GFrnqFOW3SmU6jIVS/mRZIIrFfMXZ
-         0/S/+lKVgFa8DldRbgePRq/1aIHjIY1o+KcawVek=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] PCI: Fix typos and whitespace errors
-Date:   Mon,  8 Jul 2019 16:26:30 -0500
-Message-Id: <20190708212630.117465-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+        id S1732124AbfGHVgk convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 8 Jul 2019 17:36:40 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37667 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732087AbfGHVgk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Jul 2019 17:36:40 -0400
+Received: by mail-ot1-f66.google.com with SMTP id s20so17749651otp.4;
+        Mon, 08 Jul 2019 14:36:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=eMUSKo6iEe8G01P776LcpFMuJ7VQceevTGt23xb94tA=;
+        b=CplHVk7yD68U89ylzP+KsJ0AjhqPaNEcDcKQKH9HjJ84QOn0bRhdFLXSRt9Nw4t3oz
+         eH2lTlilLYF/2FDtegfgCTkQA2xEyFwju+rnNJ/6XWPZy+QhkDlRNDnB4mpYDuBvAnpS
+         V4zo4d5HoDr73M2fwmb1Rku853bfmppvflC+GlyDPDWfmiwGVQqPFEeoVLAr3R+xoXzF
+         YEN45rPH0ZeQtoE+Pwrm22+RYDx6s0pfvsQxX+BFZrNovUGRV1EgchG8XZ0eIT2rLKPW
+         Uv4iCVY8kRdIUePkml1hgNwshkB/PlyfCXhzodlFosF8Lcc/gVGDv+woKnptDZKu6NaC
+         Grhg==
+X-Gm-Message-State: APjAAAXtoDG4PUwV8fvbtu8b57D8wHEtDtjzp4nidoC/J2DZUrYwJ3qp
+        9gDFA5Obd6Sn0EtyFuzdsAT9vfgXPRSBTAEvee+CG63c
+X-Google-Smtp-Source: APXvYqwPgpD//Rh4nEEkHTfVcFnuPpe+M8/PQSIAWA+yyF9sjiFaIcFgD9mz95D/ILFolo5QGWvkOTa55UsUmt3HY+4=
+X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr15574374otp.189.1562621798432;
+ Mon, 08 Jul 2019 14:36:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 8 Jul 2019 23:36:26 +0200
+Message-ID: <CAJZ5v0jfQX=QmX9NFRu7M98=WjeVhSW4X0nTW93-MeB3FR1uWw@mail.gmail.com>
+Subject: [GIT PULL] Power management updates for v5.3-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+Hi Linus,
 
-Fix typos in drivers/pci.  Comment and whitespace changes only.
+Please pull from the tag
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/ats.c                            |  2 +-
- drivers/pci/controller/dwc/pcie-armada8k.c   |  2 +-
- drivers/pci/controller/dwc/pcie-kirin.c      |  2 +-
- drivers/pci/controller/pci-aardvark.c        |  2 +-
- drivers/pci/controller/pcie-iproc-platform.c |  2 +-
- drivers/pci/controller/pcie-iproc.c          |  2 +-
- drivers/pci/controller/vmd.c                 |  2 +-
- drivers/pci/mmap.c                           |  2 +-
- drivers/pci/msi.c                            | 43 ++++++++++----------
- drivers/pci/p2pdma.c                         |  6 +--
- drivers/pci/pci-bridge-emul.c                |  2 +-
- drivers/pci/pci-pf-stub.c                    |  2 +-
- drivers/pci/pci.c                            |  2 +-
- drivers/pci/pcie/aer_inject.c                |  2 +-
- include/linux/pci.h                          |  2 +-
- include/linux/pci_ids.h                      |  6 +--
- 16 files changed, 41 insertions(+), 40 deletions(-)
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.3-rc1
 
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index 97c08146534a..e18499243f84 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -432,7 +432,7 @@ EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
-  * @pdev: PCI device structure
-  *
-  * Returns negative value when PASID capability is not present.
-- * Otherwise it returns the numer of supported PASIDs.
-+ * Otherwise it returns the number of supported PASIDs.
-  */
- int pci_max_pasids(struct pci_dev *pdev)
- {
-diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
-index 0c389a30ef5d..9012d5f60be9 100644
---- a/drivers/pci/controller/dwc/pcie-armada8k.c
-+++ b/drivers/pci/controller/dwc/pcie-armada8k.c
-@@ -55,7 +55,7 @@ struct armada8k_pcie {
- #define PCIE_ARUSER_REG			(PCIE_VENDOR_REGS_OFFSET + 0x5C)
- #define PCIE_AWUSER_REG			(PCIE_VENDOR_REGS_OFFSET + 0x60)
- /*
-- * AR/AW Cache defauls: Normal memory, Write-Back, Read / Write
-+ * AR/AW Cache defaults: Normal memory, Write-Back, Read / Write
-  * allocate
-  */
- #define ARCACHE_DEFAULT_VALUE		0x3511
-diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-index 9b599296205d..8df1914226be 100644
---- a/drivers/pci/controller/dwc/pcie-kirin.c
-+++ b/drivers/pci/controller/dwc/pcie-kirin.c
-@@ -2,7 +2,7 @@
- /*
-  * PCIe host controller driver for Kirin Phone SoCs
-  *
-- * Copyright (C) 2017 Hilisicon Electronics Co., Ltd.
-+ * Copyright (C) 2017 HiSilicon Electronics Co., Ltd.
-  *		http://www.huawei.com
-  *
-  * Author: Xiaowei Song <songxiaowei@huawei.com>
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 134e0306ff00..fc0fe4d4de49 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -308,7 +308,7 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 
- 	advk_writel(pcie, PCIE_ISR1_ALL_MASK, PCIE_ISR1_MASK_REG);
- 
--	/* Unmask all MSI's */
-+	/* Unmask all MSIs */
- 	advk_writel(pcie, 0, PCIE_MSI_MASK_REG);
- 
- 	/* Enable summary interrupt for GIC SPI source */
-diff --git a/drivers/pci/controller/pcie-iproc-platform.c b/drivers/pci/controller/pcie-iproc-platform.c
-index f30f5f3fb5c1..5a3550b6bb29 100644
---- a/drivers/pci/controller/pcie-iproc-platform.c
-+++ b/drivers/pci/controller/pcie-iproc-platform.c
-@@ -87,7 +87,7 @@ static int iproc_pcie_pltfm_probe(struct platform_device *pdev)
- 
- 	/*
- 	 * DT nodes are not used by all platforms that use the iProc PCIe
--	 * core driver. For platforms that require explict inbound mapping
-+	 * core driver. For platforms that require explicit inbound mapping
- 	 * configuration, "dma-ranges" would have been present in DT
- 	 */
- 	pcie->need_ib_cfg = of_property_read_bool(np, "dma-ranges");
-diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-index e3ca46497470..2d457bfdaf66 100644
---- a/drivers/pci/controller/pcie-iproc.c
-+++ b/drivers/pci/controller/pcie-iproc.c
-@@ -163,7 +163,7 @@ enum iproc_pcie_ib_map_type {
-  * @size_unit: inbound mapping region size unit, could be SZ_1K, SZ_1M, or
-  * SZ_1G
-  * @region_sizes: list of supported inbound mapping region sizes in KB, MB, or
-- * GB, depedning on the size unit
-+ * GB, depending on the size unit
-  * @nr_sizes: number of supported inbound mapping region sizes
-  * @nr_windows: number of supported inbound mapping windows for the region
-  * @imap_addr_offset: register offset between the upper and lower 32-bit
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 999a5509e57e..4575e0c6dc4b 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -627,7 +627,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 	 * 32-bit resources.  __pci_assign_resource() enforces that
- 	 * artificial restriction to make sure everything will fit.
- 	 *
--	 * The only way we could use a 64-bit non-prefechable MEMBAR is
-+	 * The only way we could use a 64-bit non-prefetchable MEMBAR is
- 	 * if its address is <4GB so that we can convert it to a 32-bit
- 	 * resource.  To be visible to the host OS, all VMD endpoints must
- 	 * be initially configured by platform BIOS, which includes setting
-diff --git a/drivers/pci/mmap.c b/drivers/pci/mmap.c
-index 24505b08de40..b8c9011987f4 100644
---- a/drivers/pci/mmap.c
-+++ b/drivers/pci/mmap.c
-@@ -73,7 +73,7 @@ int pci_mmap_resource_range(struct pci_dev *pdev, int bar,
- #elif defined(HAVE_PCI_MMAP) /* && !ARCH_GENERIC_PCI_MMAP_RESOURCE */
- 
- /*
-- * Legacy setup: Impement pci_mmap_resource_range() as a wrapper around
-+ * Legacy setup: Implement pci_mmap_resource_range() as a wrapper around
-  * the architecture's pci_mmap_page_range(), converting to "user visible"
-  * addresses as necessary.
-  */
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index e039b740fe74..59a6d232f77a 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -237,7 +237,7 @@ static void msi_set_mask_bit(struct irq_data *data, u32 flag)
- }
- 
- /**
-- * pci_msi_mask_irq - Generic irq chip callback to mask PCI/MSI interrupts
-+ * pci_msi_mask_irq - Generic IRQ chip callback to mask PCI/MSI interrupts
-  * @data:	pointer to irqdata associated to that interrupt
-  */
- void pci_msi_mask_irq(struct irq_data *data)
-@@ -247,7 +247,7 @@ void pci_msi_mask_irq(struct irq_data *data)
- EXPORT_SYMBOL_GPL(pci_msi_mask_irq);
- 
- /**
-- * pci_msi_unmask_irq - Generic irq chip callback to unmask PCI/MSI interrupts
-+ * pci_msi_unmask_irq - Generic IRQ chip callback to unmask PCI/MSI interrupts
-  * @data:	pointer to irqdata associated to that interrupt
-  */
- void pci_msi_unmask_irq(struct irq_data *data)
-@@ -588,11 +588,11 @@ static int msi_verify_entries(struct pci_dev *dev)
-  * msi_capability_init - configure device's MSI capability structure
-  * @dev: pointer to the pci_dev data structure of MSI device function
-  * @nvec: number of interrupts to allocate
-- * @affd: description of automatic irq affinity assignments (may be %NULL)
-+ * @affd: description of automatic IRQ affinity assignments (may be %NULL)
-  *
-  * Setup the MSI capability structure of the device with the requested
-  * number of interrupts.  A return value of zero indicates the successful
-- * setup of an entry with the new MSI irq.  A negative return value indicates
-+ * setup of an entry with the new MSI IRQ.  A negative return value indicates
-  * an error, and a positive return value indicates the number of interrupts
-  * which could have been allocated.
-  */
-@@ -609,7 +609,7 @@ static int msi_capability_init(struct pci_dev *dev, int nvec,
- 	if (!entry)
- 		return -ENOMEM;
- 
--	/* All MSIs are unmasked by default, Mask them all */
-+	/* All MSIs are unmasked by default; mask them all */
- 	mask = msi_mask(entry->msi_attrib.multi_cap);
- 	msi_mask_irq(entry, mask, mask);
- 
-@@ -637,7 +637,7 @@ static int msi_capability_init(struct pci_dev *dev, int nvec,
- 		return ret;
- 	}
- 
--	/* Set MSI enabled bits	 */
-+	/* Set MSI enabled bits	*/
- 	pci_intx_for_msi(dev, 0);
- 	pci_msi_set_enable(dev, 1);
- 	dev->msi_enabled = 1;
-@@ -729,11 +729,11 @@ static void msix_program_entries(struct pci_dev *dev,
-  * @dev: pointer to the pci_dev data structure of MSI-X device function
-  * @entries: pointer to an array of struct msix_entry entries
-  * @nvec: number of @entries
-- * @affd: Optional pointer to enable automatic affinity assignement
-+ * @affd: Optional pointer to enable automatic affinity assignment
-  *
-  * Setup the MSI-X capability structure of device function with a
-- * single MSI-X irq. A return of zero indicates the successful setup of
-- * requested MSI-X entries with allocated irqs or non-zero for otherwise.
-+ * single MSI-X IRQ. A return of zero indicates the successful setup of
-+ * requested MSI-X entries with allocated IRQs or non-zero for otherwise.
-  **/
- static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
- 				int nvec, struct irq_affinity *affd)
-@@ -789,7 +789,7 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
- out_avail:
- 	if (ret < 0) {
- 		/*
--		 * If we had some success, report the number of irqs
-+		 * If we had some success, report the number of IRQs
- 		 * we succeeded in setting up.
- 		 */
- 		struct msi_desc *entry;
-@@ -812,7 +812,7 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
- /**
-  * pci_msi_supported - check whether MSI may be enabled on a device
-  * @dev: pointer to the pci_dev data structure of MSI device function
-- * @nvec: how many MSIs have been requested ?
-+ * @nvec: how many MSIs have been requested?
-  *
-  * Look at global flags, the device itself, and its parent buses
-  * to determine if MSI/-X are supported for the device. If MSI/-X is
-@@ -896,7 +896,7 @@ static void pci_msi_shutdown(struct pci_dev *dev)
- 	/* Keep cached state to be restored */
- 	__pci_msi_desc_mask_irq(desc, mask, ~mask);
- 
--	/* Restore dev->irq to its default pin-assertion irq */
-+	/* Restore dev->irq to its default pin-assertion IRQ */
- 	dev->irq = desc->msi_attrib.default_irq;
- 	pcibios_alloc_irq(dev);
- }
-@@ -958,7 +958,7 @@ static int __pci_enable_msix(struct pci_dev *dev, struct msix_entry *entries,
- 		}
- 	}
- 
--	/* Check whether driver already requested for MSI irq */
-+	/* Check whether driver already requested for MSI IRQ */
- 	if (dev->msi_enabled) {
- 		pci_info(dev, "can't enable MSI-X (MSI IRQ already assigned)\n");
- 		return -EINVAL;
-@@ -1026,7 +1026,7 @@ static int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
- 	if (!pci_msi_supported(dev, minvec))
- 		return -EINVAL;
- 
--	/* Check whether driver already requested MSI-X irqs */
-+	/* Check whether driver already requested MSI-X IRQs */
- 	if (dev->msix_enabled) {
- 		pci_info(dev, "can't enable MSI (MSI-X already enabled)\n");
- 		return -EINVAL;
-@@ -1113,8 +1113,8 @@ static int __pci_enable_msix_range(struct pci_dev *dev,
-  * pci_enable_msix_range - configure device's MSI-X capability structure
-  * @dev: pointer to the pci_dev data structure of MSI-X device function
-  * @entries: pointer to an array of MSI-X entries
-- * @minvec: minimum number of MSI-X irqs requested
-- * @maxvec: maximum number of MSI-X irqs requested
-+ * @minvec: minimum number of MSI-X IRQs requested
-+ * @maxvec: maximum number of MSI-X IRQs requested
-  *
-  * Setup the MSI-X capability structure of device function with a maximum
-  * possible number of interrupts in the range between @minvec and @maxvec
-@@ -1179,7 +1179,7 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
- 			return msi_vecs;
- 	}
- 
--	/* use legacy irq if allowed */
-+	/* use legacy IRQ if allowed */
- 	if (flags & PCI_IRQ_LEGACY) {
- 		if (min_vecs == 1 && dev->irq) {
- 			/*
-@@ -1248,7 +1248,7 @@ int pci_irq_vector(struct pci_dev *dev, unsigned int nr)
- EXPORT_SYMBOL(pci_irq_vector);
- 
- /**
-- * pci_irq_get_affinity - return the affinity of a particular msi vector
-+ * pci_irq_get_affinity - return the affinity of a particular MSI vector
-  * @dev:	PCI device to operate on
-  * @nr:		device-relative interrupt vector index (0-based).
-  */
-@@ -1280,7 +1280,7 @@ const struct cpumask *pci_irq_get_affinity(struct pci_dev *dev, int nr)
- EXPORT_SYMBOL(pci_irq_get_affinity);
- 
- /**
-- * pci_irq_get_node - return the numa node of a particular msi vector
-+ * pci_irq_get_node - return the NUMA node of a particular MSI vector
-  * @pdev:	PCI device to operate on
-  * @vec:	device-relative interrupt vector index (0-based).
-  */
-@@ -1330,7 +1330,7 @@ void pci_msi_domain_write_msg(struct irq_data *irq_data, struct msi_msg *msg)
- /**
-  * pci_msi_domain_calc_hwirq - Generate a unique ID for an MSI source
-  * @dev:	Pointer to the PCI device
-- * @desc:	Pointer to the msi descriptor
-+ * @desc:	Pointer to the MSI descriptor
-  *
-  * The ID number is only used within the irqdomain.
-  */
-@@ -1348,7 +1348,8 @@ static inline bool pci_msi_desc_is_multi_msi(struct msi_desc *desc)
- }
- 
- /**
-- * pci_msi_domain_check_cap - Verify that @domain supports the capabilities for @dev
-+ * pci_msi_domain_check_cap - Verify that @domain supports the capabilities
-+ * 			      for @dev
-  * @domain:	The interrupt domain to check
-  * @info:	The domain info for verification
-  * @dev:	The device to check
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index 742928d0053e..d953cc7d9a54 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -223,7 +223,7 @@ EXPORT_SYMBOL_GPL(pci_p2pdma_add_resource);
- 
- /*
-  * Note this function returns the parent PCI device with a
-- * reference taken. It is the caller's responsibily to drop
-+ * reference taken. It is the caller's responsibility to drop
-  * the reference.
-  */
- static struct pci_dev *find_parent_pci_dev(struct device *dev)
-@@ -380,7 +380,7 @@ static int upstream_bridge_distance(struct pci_dev *provider,
- 
- 	/*
- 	 * Allow the connection if both devices are on a whitelisted root
--	 * complex, but add an arbitary large value to the distance.
-+	 * complex, but add an arbitrary large value to the distance.
- 	 */
- 	if (root_complex_whitelist(provider) &&
- 	    root_complex_whitelist(client))
-@@ -439,7 +439,7 @@ static int upstream_bridge_distance_warn(struct pci_dev *provider,
- }
- 
- /**
-- * pci_p2pdma_distance_many - Determive the cumulative distance between
-+ * pci_p2pdma_distance_many - Determine the cumulative distance between
-  *	a p2pdma provider and the clients in use.
-  * @provider: p2pdma provider to check against the client list
-  * @clients: array of devices to check (NULL-terminated)
-diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-index 83fb077d0b41..06083b86d4f4 100644
---- a/drivers/pci/pci-bridge-emul.c
-+++ b/drivers/pci/pci-bridge-emul.c
-@@ -305,7 +305,7 @@ int pci_bridge_emul_init(struct pci_bridge_emul *bridge,
- }
- 
- /*
-- * Cleanup a pci_bridge_emul structure that was previously initilized
-+ * Cleanup a pci_bridge_emul structure that was previously initialized
-  * using pci_bridge_emul_init().
-  */
- void pci_bridge_emul_cleanup(struct pci_bridge_emul *bridge)
-diff --git a/drivers/pci/pci-pf-stub.c b/drivers/pci/pci-pf-stub.c
-index 9795649fc6f9..ef293e735c55 100644
---- a/drivers/pci/pci-pf-stub.c
-+++ b/drivers/pci/pci-pf-stub.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- /* pci-pf-stub - simple stub driver for PCI SR-IOV PF device
-  *
-- * This driver is meant to act as a "whitelist" for devices that provde
-+ * This driver is meant to act as a "whitelist" for devices that provide
-  * SR-IOV functionality while at the same time not actually needing a
-  * driver of their own.
-  */
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 8abc843b1615..3fd4eaa32b21 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4501,7 +4501,7 @@ static int pci_af_flr(struct pci_dev *dev, int probe)
- 
- 	/*
- 	 * Wait for Transaction Pending bit to clear.  A word-aligned test
--	 * is used, so we use the conrol offset rather than status and shift
-+	 * is used, so we use the control offset rather than status and shift
- 	 * the test bit to match.
- 	 */
- 	if (!pci_wait_for_pending(dev, pos + PCI_AF_CTRL,
-diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
-index 043b8b0cfcc5..6988fe7389b9 100644
---- a/drivers/pci/pcie/aer_inject.c
-+++ b/drivers/pci/pcie/aer_inject.c
-@@ -2,7 +2,7 @@
- /*
-  * PCIe AER software error injection support.
-  *
-- * Debuging PCIe AER code is quite difficult because it is hard to
-+ * Debugging PCIe AER code is quite difficult because it is hard to
-  * trigger various real hardware errors. Software based error
-  * injection can fake almost all kinds of errors with the help of a
-  * user space helper tool aer-inject, which can be gotten from:
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 4a5a84d7bdd4..fb207a22d686 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -382,7 +382,7 @@ struct pci_dev {
- 
- 	unsigned int	is_busmaster:1;		/* Is busmaster */
- 	unsigned int	no_msi:1;		/* May not use MSI */
--	unsigned int	no_64bit_msi:1; 	/* May only use 32-bit MSIs */
-+	unsigned int	no_64bit_msi:1;		/* May only use 32-bit MSIs */
- 	unsigned int	block_cfg_access:1;	/* Config space access blocked */
- 	unsigned int	broken_parity_status:1;	/* Generates false positive parity */
- 	unsigned int	irq_reroute_variant:2;	/* Needs IRQ rerouting variant */
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 70e86148cb1e..0dd239f11e91 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -1112,7 +1112,7 @@
- 
- #define PCI_VENDOR_ID_AL		0x10b9
- #define PCI_DEVICE_ID_AL_M1533		0x1533
--#define PCI_DEVICE_ID_AL_M1535 		0x1535
-+#define PCI_DEVICE_ID_AL_M1535		0x1535
- #define PCI_DEVICE_ID_AL_M1541		0x1541
- #define PCI_DEVICE_ID_AL_M1563		0x1563
- #define PCI_DEVICE_ID_AL_M1621		0x1621
-@@ -1752,7 +1752,7 @@
- #define PCI_VENDOR_ID_STALLION		0x124d
- 
- /* Allied Telesyn */
--#define PCI_VENDOR_ID_AT    		0x1259
-+#define PCI_VENDOR_ID_AT		0x1259
- #define PCI_SUBDEVICE_ID_AT_2700FX	0x2701
- #define PCI_SUBDEVICE_ID_AT_2701FX	0x2703
- 
-@@ -2550,7 +2550,7 @@
- #define PCI_DEVICE_ID_KORENIX_JETCARDF2	0x1700
- #define PCI_DEVICE_ID_KORENIX_JETCARDF3	0x17ff
- 
--#define PCI_VENDOR_ID_HUAWEI         	0x19e5
-+#define PCI_VENDOR_ID_HUAWEI		0x19e5
- 
- #define PCI_VENDOR_ID_NETRONOME		0x19ee
- #define PCI_DEVICE_ID_NETRONOME_NFP4000	0x4000
--- 
-2.22.0.410.gd8fdbe21b5-goog
+with top-most commit 586a07dca8c51b966960d1f0d8be9c27d7e0a95c
 
+ Merge branch 'pm-cpufreq'
+
+on top of commit 6fbc7275c7a9ba97877050335f290341a1fd8dbf
+
+ Linux 5.2-rc7
+
+to receive power management updates for 5.3-rc1.
+
+These update PCI and ACPI power management (improved handling of
+ACPI power resources and PCIe link delays, fixes related to corner
+cases, hibernation handling rework), fix and extend the operating
+performance points (OPP) framework, add new cpufreq drivers for
+Raspberry Pi and imx8m chips, update some other cpufreq drivers,
+clean up assorted pieces of PM code and documentation and update
+tools.
+
+Specifics:
+
+ - Improve the handling of shared ACPI power resources in the PCI
+   bus type layer (Mika Westerberg).
+
+ - Make the PCI layer take link delays required by the PCIe spec
+   into account as appropriate and avoid polling devices in D3cold
+   for PME (Mika Westerberg).
+
+ - Fix some corner case issues in ACPI device power management and
+   in the PCI bus type layer, optimiza and clean up the handling of
+   runtime-suspended PCI devices during system-wide transitions to
+   sleep states (Rafael Wysocki).
+
+ - Rework hibernation handling in the ACPI core and the PCI bus type
+   to resume runtime-suspended devices before hibernation (which
+   allows some functional problems to be avoided) and fix some ACPI
+   power management issues related to hiberation (Rafael Wysocki).
+
+ - Extend the operating performance points (OPP) framework to support
+   a wider range of devices (Rajendra Nayak, Stehpen Boyd).
+
+ - Fix issues related to genpd_virt_devs and issues with platforms
+   using the set_opp() callback in the OPP framework (Viresh Kumar,
+   Dmitry Osipenko).
+
+ - Add new cpufreq driver for Raspberry Pi (Nicolas Saenz Julienne).
+
+ - Add new cpufreq driver for imx8m and imx7d chips (Leonard Crestez).
+
+ - Fix and clean up the pcc-cpufreq, brcmstb-avs-cpufreq, s5pv210,
+   and armada-37xx cpufreq drivers (David Arcari, Florian Fainelli,
+   Paweł Chmiel, YueHaibing).
+
+ - Clean up and fix the cpufreq core (Viresh Kumar, Daniel Lezcano).
+
+ - Fix minor issue in the ACPI system sleep support code and export
+   one function from it (Lenny Szubowicz, Dexuan Cui).
+
+ - Clean up assorted pieces of PM code and documentation (Kefeng Wang,
+   Andy Shevchenko, Bart Van Assche, Greg Kroah-Hartman, Fuqian Huang,
+   Geert Uytterhoeven, Mathieu Malaterre, Rafael Wysocki).
+
+ - Update the pm-graph utility to v5.4 (Todd Brandt).
+
+ - Fix and clean up the cpupower utility (Abhishek Goel, Nick Black).
+
+Thanks!
+
+
+---------------
+
+Abhishek Goel (1):
+      cpupower : frequency-set -r option misses the last cpu in related cpu list
+
+Andy Shevchenko (1):
+      ACPI / sleep: Switch to use acpi_dev_get_first_match_dev()
+
+Bart Van Assche (1):
+      PM: sleep: Show how long dpm_suspend_start() and dpm_suspend_end() take
+
+Daniel Lezcano (1):
+      cpufreq: Move the IS_ENABLED(CPU_THERMAL) macro into a stub
+
+David Arcari (1):
+      cpufreq: pcc-cpufreq: Fail initialization if driver cannot be registered
+
+Dexuan Cui (1):
+      ACPI: PM: Make acpi_sleep_state_supported() non-static
+
+Dmitry Osipenko (1):
+      opp: Don't use IS_ERR on invalid supplies
+
+Florian Fainelli (2):
+      cpufreq: brcmstb-avs-cpufreq: Fix initial command check
+      cpufreq: brcmstb-avs-cpufreq: Fix types for voltage/frequency
+
+Fuqian Huang (1):
+      kernel: power: swap: use kzalloc() instead of kmalloc() followed
+by memset()
+
+Geert Uytterhoeven (2):
+      PM / clk: Remove error message on out-of-memory condition
+      Documentation: ABI: power: Add missing newline at end of file
+
+Greg Kroah-Hartman (2):
+      power: avs: smartreflex: no need to check return value of
+debugfs_create functions
+      drivers: base: power: remove wakeup_sources_stats_dentry variable
+
+Kefeng Wang (1):
+      drivers: base: power: clock_ops: Use of_clk_get_parent_count()
+
+Lenny Szubowicz (1):
+      ACPI / LPIT: Correct LPIT end address for lpit_process()
+
+Leonard Crestez (5):
+      cpufreq: Add imx-cpufreq-dt driver
+      dt-bindings: imx-cpufreq-dt: Document opp-supported-hw usage
+      cpufreq: imx-cpufreq-dt: Fix no OPPs available on unfused parts
+      cpufreq: imx-cpufreq-dt: Remove global platform match list
+      cpufreq: Switch imx7d to imx-cpufreq-dt for speed grading
+
+Mathieu Malaterre (1):
+      PM: hibernate: powerpc: Expose pfn_is_nosave() prototype
+
+Mika Westerberg (5):
+      PCI: Add missing link delays required by the PCIe spec
+      PCI: Do not poll for PME if the device is in D3cold
+      PCI / ACPI: Use cached ACPI device state to get PCI device power state
+      ACPI / PM: Introduce concept of a _PR0 dependent device
+      PCI / ACPI: Add _PR0 dependent devices
+
+Nick Black (1):
+      cpupower: correct spelling of interval
+
+Nicolas Saenz Julienne (1):
+      cpufreq: add driver for Raspberry Pi
+
+Paweł Chmiel (1):
+      cpufreq: s5pv210: Don't flood kernel log after cpufreq change
+
+Rafael J. Wysocki (14):
+      PCI: PM: Avoid resuming devices in D3hot during system suspend
+      PCI: PM: Replace pci_dev_keep_suspended() with two functions
+      PM: suspend: Rename pm_suspend_via_s2idle()
+      PM: sleep: Update struct wakeup_source documentation
+      ACPI: PM: Avoid evaluating _PS3 on transitions from D3hot to D3cold
+      ACPI: PM: Allow transitions to D0 to occur in special cases
+      PCI: PM/ACPI: Refresh all stale power state data in pci_pm_complete()
+      PM: ACPI/PCI: Resume all devices during hibernation
+      PCI: PM: Simplify bus-level hibernation callbacks
+      ACPI: PM: Simplify and fix PM domain hibernation callbacks
+      ACPI: PM: Introduce "poweroff" callbacks for ACPI PM domain and LPSS
+      ACPI: PM: Drop unused function and function header
+      ACPI: PM: Unexport acpi_device_get_power()
+      PM: sleep: Drop dev_pm_skip_next_resume_phases()
+
+Rajendra Nayak (1):
+      opp: Make dev_pm_opp_set_rate() handle freq = 0 to drop performance votes
+
+Stephen Boyd (1):
+      opp: Don't overwrite rounded clk rate
+
+Todd Brandt (3):
+      Update to pm-graph 5.3
+      Update to pm-graph 5.4
+      Add README and update pm-graph and sleepgraph docs
+
+Viresh Kumar (7):
+      opp: Attach genpds to devices from within OPP core
+      opp: Allocate genpd_virt_devs from dev_pm_opp_attach_genpd()
+      cpufreq: Remove redundant !setpolicy check
+      cpufreq: Use has_target() instead of !setpolicy
+      cpufreq: Don't skip frequency validation for has_target() drivers
+      cpufreq: Consolidate cpufreq_update_current_freq() and __cpufreq_get()
+      cpufreq: Avoid calling cpufreq_verify_current_freq() from handle_update()
+
+YueHaibing (1):
+      cpufreq: armada-37xx: Remove set but not used variable 'freq'
+
+---------------
+
+ Documentation/ABI/testing/sysfs-power              |   2 +-
+ .../devicetree/bindings/cpufreq/imx-cpufreq-dt.txt |  37 +
+ arch/powerpc/kernel/suspend.c                      |   1 +
+ arch/s390/kernel/entry.h                           |   1 -
+ drivers/acpi/acpi_lpit.c                           |   7 +-
+ drivers/acpi/acpi_lpss.c                           | 111 ++-
+ drivers/acpi/device_pm.c                           | 165 ++--
+ drivers/acpi/internal.h                            |   7 +
+ drivers/acpi/power.c                               | 135 ++++
+ drivers/acpi/sleep.c                               |  22 +-
+ drivers/base/power/clock_ops.c                     |   6 +-
+ drivers/base/power/main.c                          |  36 +-
+ drivers/base/power/wakeup.c                        |   6 +-
+ drivers/cpufreq/Kconfig.arm                        |  17 +
+ drivers/cpufreq/Makefile                           |   2 +
+ drivers/cpufreq/armada-37xx-cpufreq.c              |   4 +-
+ drivers/cpufreq/brcmstb-avs-cpufreq.c              |  12 +-
+ drivers/cpufreq/cpufreq-dt-platdev.c               |   5 +-
+ drivers/cpufreq/cpufreq.c                          | 121 ++-
+ drivers/cpufreq/imx-cpufreq-dt.c                   |  97 +++
+ drivers/cpufreq/pcc-cpufreq.c                      |   4 +-
+ drivers/cpufreq/raspberrypi-cpufreq.c              |  97 +++
+ drivers/cpufreq/s5pv210-cpufreq.c                  |   2 +-
+ drivers/input/serio/i8042.c                        |   2 +-
+ drivers/opp/core.c                                 | 174 +++--
+ drivers/opp/of.c                                   |  30 +-
+ drivers/pci/pci-acpi.c                             |  14 +-
+ drivers/pci/pci-driver.c                           |  74 +-
+ drivers/pci/pci.c                                  | 116 ++-
+ drivers/pci/pci.h                                  |   8 +-
+ drivers/pci/pcie/portdrv_core.c                    |  66 ++
+ drivers/power/avs/smartreflex.c                    |  41 +-
+ drivers/soc/imx/soc-imx8.c                         |   3 +
+ include/acpi/acpi_bus.h                            |  11 +-
+ include/linux/acpi.h                               |  14 +-
+ include/linux/cpufreq.h                            |   6 +
+ include/linux/pm.h                                 |   1 -
+ include/linux/pm_opp.h                             |   8 +-
+ include/linux/pm_wakeup.h                          |   2 +-
+ include/linux/suspend.h                            |   5 +-
+ kernel/power/power.h                               |   2 -
+ kernel/power/suspend.c                             |   6 +-
+ kernel/power/swap.c                                |   3 +-
+ tools/power/cpupower/man/cpupower-monitor.1        |   2 +-
+ tools/power/cpupower/po/cs.po                      |   2 +-
+ tools/power/cpupower/po/de.po                      |   2 +-
+ tools/power/cpupower/po/fr.po                      |   2 +-
+ tools/power/cpupower/po/it.po                      |   2 +-
+ tools/power/cpupower/po/pt.po                      |   2 +-
+ tools/power/cpupower/utils/cpufreq-set.c           |   2 +
+ tools/power/pm-graph/README                        | 552 +++++++++++++
+ tools/power/pm-graph/bootgraph.py                  |   8 +-
+ tools/power/pm-graph/config/example.cfg            |  26 +
+ tools/power/pm-graph/sleepgraph.8                  |  16 +-
+ tools/power/pm-graph/sleepgraph.py                 | 857 ++++++++++++++++-----
+ 55 files changed, 2325 insertions(+), 631 deletions(-)
