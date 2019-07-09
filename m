@@ -2,49 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 69F81638C6
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2019 17:40:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EE9563918
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2019 18:14:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726060AbfGIPkU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Jul 2019 11:40:20 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41330 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbfGIPkT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Jul 2019 11:40:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=1l3rYx+kdkqRUYKxZa5I4Bcd/Jr0zCKsf+Y32tRAj8k=; b=nK0icQBHnnBELp9a4tnAn7iYZu
-        8SQl77UBjbdsdFZYKz6tjgmYbMZJgkDl1PixjvrI0zZ1x/SMQazJF2xsY6Wxua4zkeOrzrEro7GZq
-        XC5skft0HaTRojhjvp5AOEbY+ESCVilMxDb3DzRQTztZeIITpdCu1uiANx4eYOdprGki99e8UPHQm
-        kcxX9E+pMpT01ynTsQeNzomCqGZ/L+Tk4vg9Ul056rZs0R5LovgLXWZCP0cKky6iJKpXoXnbqnVem
-        jdN1O6jERX/gNgHoZwUVoAFTwYzDEPQLqFelWTSDqGF0SA4JoL9EpfFd1xq8jQGF5bfm+RS5Qe7mi
-        agK10BmQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hksE7-0000nb-If
-        for linux-pci@vger.kernel.org; Tue, 09 Jul 2019 15:40:19 +0000
-Date:   Tue, 9 Jul 2019 08:40:19 -0700
-From:   Christoph Hellwig <hch@infradead.org>
+        id S1726060AbfGIQOF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Jul 2019 12:14:05 -0400
+Received: from mga12.intel.com ([192.55.52.136]:64490 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725816AbfGIQOF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 9 Jul 2019 12:14:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jul 2019 09:14:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,470,1557212400"; 
+   d="scan'208";a="249193042"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga001.jf.intel.com with ESMTP; 09 Jul 2019 09:14:01 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 51297F1; Tue,  9 Jul 2019 19:14:00 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     linux-pci@vger.kernel.org
-Subject: reprobing BAR sizes and capabilities after a FLR?
-Message-ID: <20190709154019.GA30673@infradead.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH v2] tools: PCI: Fix installation when `make tools/pci_install`
+Date:   Tue,  9 Jul 2019 19:13:59 +0300
+Message-Id: <20190709161359.15874-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi all,
+The commit c9a707875053 ("tools pci: Do not delete pcitest.sh in 'make clean'")
+fixed a `make tools clean` issue and simultaneously brought a regression
+to the installation process:
 
-I've just been talking to some firmware developers that were a little
-surprised that Linux does not reprobe BAR sizes after a FLR.  I looked
-at our code and we do not reprobe anything at all after a FLR.  Is it
-a good assumption that a devices comes back in exactly the same state
-after an FLR?
+  for script in .../tools/pci/pcitest.sh; do	\
+	install $script .../usr/usr/bin;	\
+  done
+  install: cannot stat '.../tools/pci/pcitest.sh': No such file or directory
+
+Here is the missed part of the fix.
+
+Cc: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+- addressed Kishon's comment
+- appended his Ack
+ tools/pci/Makefile | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/tools/pci/Makefile b/tools/pci/Makefile
+index 6876ee4bd78c..4b95a5176355 100644
+--- a/tools/pci/Makefile
++++ b/tools/pci/Makefile
+@@ -18,7 +18,6 @@ ALL_TARGETS := pcitest
+ ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
+ 
+ SCRIPTS := pcitest.sh
+-ALL_SCRIPTS := $(patsubst %,$(OUTPUT)%,$(SCRIPTS))
+ 
+ all: $(ALL_PROGRAMS)
+ 
+@@ -47,10 +46,10 @@ clean:
+ 
+ install: $(ALL_PROGRAMS)
+ 	install -d -m 755 $(DESTDIR)$(bindir);		\
+-	for program in $(ALL_PROGRAMS) pcitest.sh; do	\
++	for program in $(ALL_PROGRAMS); do		\
+ 		install $$program $(DESTDIR)$(bindir);	\
+ 	done;						\
+-	for script in $(ALL_SCRIPTS); do		\
++	for script in $(SCRIPTS); do			\
+ 		install $$script $(DESTDIR)$(bindir);	\
+ 	done
+ 
+-- 
+2.20.1
+
