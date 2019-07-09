@@ -2,106 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 75E296352B
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2019 13:48:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CFB763688
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2019 15:10:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726025AbfGILsB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Jul 2019 07:48:01 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48966 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfGILsB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Jul 2019 07:48:01 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x69BlS4G030720;
-        Tue, 9 Jul 2019 06:47:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1562672848;
-        bh=QkqcskFZE5RYkKqs+6UIPK6Ypsi+eJYHWDnX57nl558=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=VvDLdjd34L1IA85TVh2USL5lUX+7zNX2Twj1hu76hxwFAUhvO2dIm4sGI9TWqIjsN
-         z/QYVZFfy0FjsrMgXel6fl+Ay+nT5ung/tWCdVw8KCb2MjBnmwjmgo/6z9DzFms/3f
-         a+I20FJmW20yoZfpDeWxS6S6ycwaycbFzQ3PBdac=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x69BlSR1082642
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 9 Jul 2019 06:47:28 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 9 Jul
- 2019 06:47:28 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 9 Jul 2019 06:47:28 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x69BlN0Y063752;
-        Tue, 9 Jul 2019 06:47:25 -0500
-Subject: Re: [PATCH v1] tools: PCI: Fix installation when `make
- tools/pci_install`
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        <linux-pci@vger.kernel.org>
-CC:     Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-References: <20190628133326.18203-1-andriy.shevchenko@linux.intel.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <b7199693-9426-2ab6-4a95-20ebed5fdf71@ti.com>
-Date:   Tue, 9 Jul 2019 17:15:44 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <20190628133326.18203-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        id S1726641AbfGINK6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Jul 2019 09:10:58 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47622 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfGINK6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Jul 2019 09:10:58 -0400
+Received: from mail-pf1-f200.google.com ([209.85.210.200])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hkptX-0008Oi-Ue
+        for linux-pci@vger.kernel.org; Tue, 09 Jul 2019 13:10:56 +0000
+Received: by mail-pf1-f200.google.com with SMTP id 145so12401866pfv.18
+        for <linux-pci@vger.kernel.org>; Tue, 09 Jul 2019 06:10:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=Dle3R/JKkJuvARNfD4j2spSdPlYkaOQ8jZ6z5Qf88A0=;
+        b=d3zxg6JpR6i8Idql2TuhVMutJGluP/B77wpj0FAglKA+0g0uLu3+AnlOsvMZDYfIum
+         rqyWUZcDtWXSiDnDXHtvczgjP7EtdREQTq72KfrpL0Ju4n3SS3QCkFc0tbZb6jVPHG7x
+         VGfWdNQFuPkgx/VyIbc+YrY72rPORfijSGsp4Kg9X2RPZQIIOQ6OUkdVijpxAzi9DOte
+         LEwYJ4ih7j/mcG8tYvipa8fKk5DAfLn8Ug0r+T0CY9PNr3tyk+8ZHYUt+tC2hV+EJ6jl
+         FI9cQQafxShY3DA5tVWvcNV0JF6HAyVfaF/5tp+0tTxKF9vrdjDjjPPi1YXj8a9YyHgI
+         wakQ==
+X-Gm-Message-State: APjAAAXFNTrtt7RTtmef9CbpHXWwNz8rALJgZ2maW0R7KHlKSHYL5xqE
+        3CHLYHkWWcJjXDrILKa9bMt3GIVOiMeAfY12faXNulz9q4+zgqYY+Y+zycOFEQcJmaHciWWWjek
+        zJKD6bps1YTaUOMGplKt73bLymfq+5OxYGys0Dw==
+X-Received: by 2002:a63:f817:: with SMTP id n23mr30760732pgh.35.1562677854631;
+        Tue, 09 Jul 2019 06:10:54 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqw+JscG/oIDZCvSNZ9ftS2I2PR2LBnqUfsgLH98941/ARkm1AxzCpb81QGpks1mOId7EfZqYQ==
+X-Received: by 2002:a63:f817:: with SMTP id n23mr30760689pgh.35.1562677854293;
+        Tue, 09 Jul 2019 06:10:54 -0700 (PDT)
+Received: from 2001-b011-380f-3c20-5cef-9a28-6766-fbdf.dynamic-ip6.hinet.net (2001-b011-380f-3c20-5cef-9a28-6766-fbdf.dynamic-ip6.hinet.net. [2001:b011:380f:3c20:5cef:9a28:6766:fbdf])
+        by smtp.gmail.com with ESMTPSA id j15sm1366492pfe.3.2019.07.09.06.10.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 06:10:50 -0700 (PDT)
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Titan Ridge xHCI may stop to working after re-plugging the dock
+Message-Id: <993E78A1-2A60-46D8-AA51-F4CB077E48D1@canonical.com>
+Date:   Tue, 9 Jul 2019 21:10:47 +0800
+Cc:     Kent Lin <kent.lin@canonical.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Andy,
+Hi Mika and Mathias,
 
-On 28/06/19 7:03 PM, Andy Shevchenko wrote:
-> The commit c9a707875053 ("tools pci: Do not delete pcitest.sh in 'make clean'")
-> fixed a `make tools clean` issue and simultaneously brought a regression
-> to the installation process:
-> 
->   for script in .../tools/pci/pcitest.sh; do	\
-> 	install $script .../usr/usr/bin;	\
->   done
->   install: cannot stat '.../tools/pci/pcitest.sh': No such file or directory
-> 
-> Here is the missed part of the fix.
-> 
-> Cc: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  tools/pci/Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/pci/Makefile b/tools/pci/Makefile
-> index 6876ee4bd78c..cc4a161ee2cc 100644
-> --- a/tools/pci/Makefile
-> +++ b/tools/pci/Makefile
-> @@ -47,10 +47,10 @@ clean:
->  
->  install: $(ALL_PROGRAMS)
->  	install -d -m 755 $(DESTDIR)$(bindir);		\
-> -	for program in $(ALL_PROGRAMS) pcitest.sh; do	\
-> +	for program in $(ALL_PROGRAMS); do		\
->  		install $$program $(DESTDIR)$(bindir);	\
->  	done;						\
-> -	for script in $(ALL_SCRIPTS); do		\
-> +	for script in pcitest.sh; do			\
+I’ve filed a bug [1] which renders docking station unusable.
 
-If ALL_SCRIPTS is not used anywhere else, this patch can remove that as well.
-With that fixed
+I am not sure it's a bug in PCI, Thunderbolt or xHCI so raise the issue to  
+you both.
 
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=203885
 
-Thanks
-Kishon
+Kai-Heng
