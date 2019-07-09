@@ -2,198 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C26C6372F
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2019 15:45:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 807896378D
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2019 16:14:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbfGINpm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Jul 2019 09:45:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39260 "EHLO mail.kernel.org"
+        id S1726444AbfGIOOb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Jul 2019 10:14:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbfGINpm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 9 Jul 2019 09:45:42 -0400
+        id S1726025AbfGIOOb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 9 Jul 2019 10:14:31 -0400
 Received: from localhost (249.sub-174-234-174.myvzw.com [174.234.174.249])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39DB3214AF;
-        Tue,  9 Jul 2019 13:45:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 175D92080C;
+        Tue,  9 Jul 2019 14:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562679940;
-        bh=pFpOkJHiAYbGncovzMXBIx9dzH17tRDacavgDnffM50=;
+        s=default; t=1562681670;
+        bh=aByOK+zzVwLPzmHerWij80ctxh6Sgg+/BIZzdxbJl4c=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cTwocF9iNQ/MOODLXMFPNInDXPHulYy4PTGwfoOKiR9X6a36MeEmx88KBCV69gbjY
-         HrJtzhMImMqasu++slJvQEkzNZHGf6b32cvpE3dyMvgxRBw0xCDenNROkPdvJmotrN
-         n5qNV764+21kArt71upxYFtC3GGq8N7nqucvZ5G4=
-Date:   Tue, 9 Jul 2019 08:45:38 -0500
+        b=AGNoPj52haojTKl83cHZhTcXgNZoRA03liHpBu8SHLapzLI5hKhvptQB/VzjqI+Gd
+         81+/WoF2FUAEVmTEC+Gps7rhtlY6ZjvnZdmu5exXK6xN+a6GL3lPXvn8ULTA6Zon/Y
+         0RpkAvPpzrniAx4NnJlh0LbdktlTQk6jN6IdViro=
+Date:   Tue, 9 Jul 2019 09:14:27 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH] PCI / PM: Don't runtime suspend when device only
- supports wakeup from D0
-Message-ID: <20190709134538.GA35486@google.com>
-References: <20190522181157.GC79339@google.com>
- <Pine.LNX.4.44L0.1905221433310.1410-100000@iolanthe.rowland.org>
- <20190522205231.GD79339@google.com>
- <010C1D41-C66D-45C0-8AFF-6F746306CE29@canonical.com>
- <20190527165747.GF79339@google.com>
- <20190605115724.GE84290@google.com>
- <7E5CD0E5-2C23-4339-9660-74994FC5C111@canonical.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
+        will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V12 01/12] PCI: Add #defines for some of PCIe spec r4.0
+ features
+Message-ID: <20190709141427.GB35486@google.com>
+References: <20190701124010.7484-1-vidyas@nvidia.com>
+ <20190701124010.7484-2-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7E5CD0E5-2C23-4339-9660-74994FC5C111@canonical.com>
+In-Reply-To: <20190701124010.7484-2-vidyas@nvidia.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 03:02:01PM +0800, Kai-Heng Feng wrote:
-> at 19:57, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Mon, May 27, 2019 at 11:57:47AM -0500, Bjorn Helgaas wrote:
-
-> > > I'm wondering if this platform has a firmware defect.  Here's my
-> > > thinking.  The xHC is a Root Complex Integrated Endpoint, so its PME
-> > > signaling is a little unusual.
-> > > 
-> > > The typical scenario is that a PCIe device is below a Root Port.  In
-> > > that case, it would send a PME Message upstream to the Root Port.  Per
-> > > PCIe r4.0, sec 6.1.6, when configured for native PME support (for ACPI
-> > > systems, I assume this means "when firmware has granted PME control to
-> > > the OS via _OSC"), the Root Port would generate a normal PCI INTx or
-> > > MSI interrupt:
-> > > 
-> > >   PCI Express-aware software can enable a mode where the Root Complex
-> > >   signals PME via an interrupt. When configured for native PME
-> > >   support, a Root Port receives the PME Message and sets the PME
-> > >   Status bit in its Root Status register. If software has set the PME
-> > >   Interrupt Enable bit in the Root Control register to 1b, the Root
-> > >   Port then generates an interrupt.
-> > > 
-> > > But on this platform the xHC is a Root Complex Integrated Endpoint, so
-> > > there is no Root Port upstream from it, and that mechanism can't be
-> > > used.  Per PCIe r4.0, sec 1.3.2.3, RCiEPs signal PME via "the same
-> > > mechanism as PCI systems" or via Root Complex Event Collectors:
-> > > 
-> > >   An RCiEP must signal PME and error conditions through the same
-> > >   mechanisms used on PCI systems. If a Root Complex Event Collector is
-> > >   implemented, an RCiEP may optionally signal PME and error conditions
-> > >   through a Root Complex Event Collector.
-> > > 
-> > > This platform has no Root Complex Event Collectors, so the xHC should
-> > > signal PME via the same mechanism as PCI systems, i.e., asserting a
-> > > PME# signal.  I think this means the OS cannot use native PCIe PME
-> > > control because it doesn't know what interrupt PME# is connected to.
-> > > The PCI Firmware Spec r3.2, sec 4.5.1 (also quoted in ACPI v6.2, sec
-> > > 6.2.11.3), says:
-> > > 
-> > >   PCI Express Native Power Management Events control
-> > > 
-> > >   The firmware sets this bit to 1 to grant control over PCI Express
-> > >   native power management event interrupts (PMEs). If firmware
-> > >   allows the operating system control of this feature, then in the
-> > >   context of the _OSC method, it must ensure that all PMEs are
-> > >   routed to root port interrupts as described in the PCI Express
-> > >   Base Specification.
-> > > 
-> > > This platform cannot route all PMEs to Root Port interrupts because
-> > > the xHC RCiEP cannot report PME via a Root Port, so I think its _OSC
-> > > method should not grant control of PCIe Native Power Management Events
-> > > to the OS, and I think that would mean we have to use the ACPI
-> > > mechanism for PME on this platform.
-> > > 
-> > > Can you confirm or deny any of this line of reasoning?  I'm wondering
-> > > if there's something wrong with the platform's _OSC, so Linux thinks
-> > > it can use native PME, but that doesn't work for this device.
-> > > 
-> > > > It’s a platform in development so the name can’t be disclosed.
-> > > 
-> > > Please attach a complete dmesg log to the bugzilla.  You can remove
-> > > identifying details like the platform name, but I want to see the
-> > > results of the _OSC negotiation.
-> > 
-> > Thanks for the dmesg log
-> > (https://bugzilla.kernel.org/attachment.cgi?id=283109).  It shows:
-> > 
-> >   acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
-> >   acpi PNP0A08:00: _OSC: platform does not support [SHPCHotplug LTR]
-> >   acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME AER PCIeCapability]
-> > 
-> > I think it is incorrect for the platform to give the OS native control
-> > over PME because the OS has no way to know how the RCiEP PMEs are
-> > routed.  But it would be interesting to know how BIOSes on other
-> > platforms with RCiEPs handle this, and I did post a question to the
-> > PCI-SIG to see if there's any guidance there.
+On Mon, Jul 01, 2019 at 06:09:59PM +0530, Vidya Sagar wrote:
+> Add #defines only for the Data Link Feature and Physical Layer 16.0 GT/s
+> features.
 > 
-> Is there any update from PCI-SIG?
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
 
-Yes, but I did a terrible job asking the question, so we didn't
-really get an answer for this situation.  The thread on the forum is
-https://forum.pcisig.com/viewtopic.php?f=85&t=1081 (requires PCI-SIG
-login, unfortunately).  My question was:
+Please include spec references in the commit log, e.g., PCIe r5.0, sec
+7.7.4, for Data Link Feature and sec 7.7.5 for Physical Layer 16 GT/s.
 
-  Given an RCiEP that supports PME, can firmware grant control over
-  native power management events to the OS?
+>  include/uapi/linux/pci_regs.h | 22 +++++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index f28e562d7ca8..1c79f6a097d2 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -713,7 +713,9 @@
+>  #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
+>  #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
+>  #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
+> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PTM
+> +#define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+> +#define PCI_EXT_CAP_ID_PL	0x26	/* Physical Layer 16.0 GT/s */
 
-  The PCI Firmware spec, r3.2, sec 4.5.1, says:
+Maybe PCI_EXT_CAP_ID_PL_16GT so there's a little more hint of what
+this is for?
 
-    PCI Express Native Power Management Events control
+> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL
+>  
+>  #define PCI_EXT_CAP_DSN_SIZEOF	12
+>  #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
+> @@ -1053,4 +1055,22 @@
+>  #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
+>  #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
+>  
+> +/* Data Link Feature */
+> +#define PCI_DLF_CAP		0x04	/* Capabilities Register */
+> +#define  PCI_DLF_LOCAL_DLF_SUP_MASK	0x007fffff  /* Local Data Link Feature Supported */
+> +#define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
+> +#define PCI_DLF_STS		0x08	/* Status Register */
+> +#define  PCI_DLF_REMOTE_DLF_SUP_MASK	0x007fffff  /* Remote Data Link Feature Supported */
+> +#define  PCI_DLF_REMOTE_DLF_SUP_VALID	0x80000000  /* Remote Data Link Feature Support Valid */
 
-    The firmware sets this bit to 1 to grant control over PCI Express
-    native power management event interrupts (PMEs). If firmware
-    allows the operating system control of this feature, then in the
-    context of the _OSC method, it must ensure that all PMEs are
-    routed to root port interrupts as described in the PCI Express
-    Base Specification.
+I'm a little bit ambivalent about adding #defines that aren't used.  I
+personally would probably just add the things we use, so the header
+file gives a clue about what's currently implemented.  But I guess
+either way is fine.
 
-  I don't think there's a mechanism for RCiEPs to route PMEs to a Root
-  Port interrupt.
+> +/* Physical Layer 16.0 GT/s */
+> +#define PCI_PL_16GT_CAP		0x04	/* Capabilities Register */
+> +#define PCI_PL_16GT_CTRL	0x08	/* Control Register */
+> +#define PCI_PL_16GT_STS		0x0c	/* Status Register */
+> +#define PCI_PL_16GT_LDPM_STS	0x10	/* Local Data Parity Mismatch Status Register */
+> +#define PCI_PL_16GT_FRDPM_STS	0x14	/* First Retimer Data Parity Mismatch Status Register */
+> +#define PCI_PL_16GT_SRDPM_STS	0x18	/* Second Retimer Data Parity Mismatch Status Register */
+> +#define PCI_PL_16GT_RSVD	0x1C	/* Reserved */
 
-  PCIe r4.0, sec 1.3.2.3, says:
+Use lower-case hex consistently here.  There's no global consistency
+in this file, but we can at least be consistent in each section.  But
+I'm even more hesitant about included unused #defines for "reserved"
+fields, so if you drop this it would take care of both :)
 
-    An RCiEP must signal PME and error conditions through the same
-    mechanisms used on PCI systems. If a Root Complex Event Collector
-    is implemented, an RCiEP may optionally signal PME and error
-    conditions through a Root Complex Event Collector.
+> +#define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
 
-  If the OS can be granted native PME control, how does it learn where
-  the RCiEP PME is routed?
+This is the only register you actually use.  You defined a local
+PL16G_CAP_OFF_DSP_16G_TX_PRESET_MASK for this register.  Shouldn't
+that be defined here instead of in
+drivers/pci/controller/dwc/pcie-tegra194.c?
 
-And the response from Robert Gough:
-
-  The routing of root complex devices- Root Ports and Root Complex
-  Integrated Endpionts- to Event Collectors is described in the Event
-  Collector's RCEC Endpoint Association Capability Structure.
-
-  In order for OSPM to process PMEs routed to an Event Collector, the
-  source of the PME is found in the PME Requester ID field within the
-  Root Status register of the Event Collector, in the same way that
-  PME messages from children of Root Ports are serviced.
-
-I just posted this follow-up question:
-
-  Thanks, that clarifies one piece. The PCI Firmware spec, r3.2, sec
-  4.5.1, says that if firmware allows OSPM control of PME, all PMEs
-  should be routed to Root Port interrupts. Your answer suggests that
-  this should be updated to say something like "all PMEs are routed to
-  Root Port *or RCEC* interrupts".
-
-  The piece I still don't understand is what happens when firmware
-  allows OSPM control of PME in a system with an RCiEP but no RCEC.
-  Where are PMEs from the RCiEP routed, and how does OSPM discover
-  that? Or is it simply illegal for firmware to allow OSPM control of
-  PME in that case?
-
-The system we're looking at doesn't have any RCECs, so I don't think
-the Root Complex Event Collector Endpoint Association Capability (what
-a mouthful :)) is applicable, but I don't think Linux currently has
-any support for it, so I think we're likely to trip over similar
-issues on systems that do have RCECs.
-
-It would be good if somebody added support for that capability.
-
-Bjorn
+>  #endif /* LINUX_PCI_REGS_H */
+> -- 
+> 2.17.1
+> 
