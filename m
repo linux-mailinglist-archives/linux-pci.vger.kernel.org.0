@@ -2,108 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 55DD4634DB
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2019 13:24:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3313263507
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2019 13:38:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbfGILYA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Jul 2019 07:24:00 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:44742 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbfGILYA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Jul 2019 07:24:00 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x69BNlHP023028;
-        Tue, 9 Jul 2019 06:23:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1562671427;
-        bh=b8hnSaDtAsosEIqS3Wtlk/YzhxSQT2YsI/k+98clIo4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=pAXArl2RZan427WEUzWy9FensFk4A0hpvp9/x8sbuF1yxrtUBLgCbUTKad7XwGZNf
-         TqwzAlaNy9ga3jmP4K7U+LemryiE61ZvgIefs6CvPvKfpcTiyUWrWF5VHcwQWL7Spb
-         pwr0Ui2qd4Km4UgVISbtWeSe1wE3RDPm8ER/MX0Y=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x69BNlV0097963
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 9 Jul 2019 06:23:47 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 9 Jul
- 2019 06:23:47 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 9 Jul 2019 06:23:47 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x69BNeuB048589;
-        Tue, 9 Jul 2019 06:23:41 -0500
-Subject: Re: [PATCH] PCI: dwc: pci-dra7xx: Add missing include file
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        YueHaibing <yuehaibing@huawei.com>
-CC:     <bhelgaas@google.com>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-omap@vger.kernel.org>
-References: <20190614154044.4972-1-yuehaibing@huawei.com>
- <20190705152905.GA6284@e121166-lin.cambridge.arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <619055c4-7d18-a77e-f7c6-267e4340bc4e@ti.com>
-Date:   Tue, 9 Jul 2019 16:52:01 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        id S1726411AbfGILiv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Jul 2019 07:38:51 -0400
+Received: from mga02.intel.com ([134.134.136.20]:32665 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726126AbfGILiv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 9 Jul 2019 07:38:51 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jul 2019 04:38:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,470,1557212400"; 
+   d="scan'208";a="364113714"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga005.fm.intel.com with ESMTP; 09 Jul 2019 04:38:23 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hkoRy-0002TV-NH; Tue, 09 Jul 2019 14:38:22 +0300
+Date:   Tue, 9 Jul 2019 14:38:22 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v1] tools: PCI: Fix installation when `make
+ tools/pci_install`
+Message-ID: <20190709113822.GV9224@smile.fi.intel.com>
+References: <20190628133326.18203-1-andriy.shevchenko@linux.intel.com>
+ <20190705162358.GA3080@e121166-lin.cambridge.arm.com>
+ <20190705170853.GG9224@smile.fi.intel.com>
+ <7c48dbae-847b-812d-88f3-7336686bd46e@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20190705152905.GA6284@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7c48dbae-847b-812d-88f3-7336686bd46e@ti.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Jul 09, 2019 at 04:48:57PM +0530, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On 05/07/19 10:38 PM, Andy Shevchenko wrote:
+> > On Fri, Jul 05, 2019 at 05:23:58PM +0100, Lorenzo Pieralisi wrote:
+> >> On Fri, Jun 28, 2019 at 04:33:26PM +0300, Andy Shevchenko wrote:
+> >>> The commit c9a707875053 ("tools pci: Do not delete pcitest.sh in 'make clean'")
+> >>> fixed a `make tools clean` issue and simultaneously brought a regression
+> >>> to the installation process:
+> >>>
+> >>>   for script in .../tools/pci/pcitest.sh; do	\
+> >>> 	install $script .../usr/usr/bin;	\
+> >>>   done
+> >>>   install: cannot stat '.../tools/pci/pcitest.sh': No such file or directory
+> >>>
+> >>> Here is the missed part of the fix.
+> >>
+> >> Sigh, hopefully that's the last fix :), Kishon if that's OK mind
+> >> ACKing it please ?
+> > 
+> > From my side, yes. Now it works as I expect.
+> > 
+> > Honestly, I'm puzzled how so many errors has been pushed upstream...
+> 
+> I'm not sure why, but I don't see any issue without this patch as well. Am I
+> missing something here?
+
+Yes.
+I'm not contaminate my Linux kernel tree with any build stuff, so, I'm using
+the folder which is out to the build, i.e.
+
+% make O=/xyz ...
+
+> I'm copy pasting the steps below.
+> 
+> a0393678@a0393678ub:~/repos/linux/tools/pci$ make clean
+> rm -f pcitest
+> rm -rf include/
+> find . -name '*.o' -delete -o -name '\.*.d' -delete
+> a0393678@a0393678ub:~/repos/linux/tools/pci$ make
+> mkdir -p include/linux/ 2>&1 || true
+> ln -sf /home/a0393678/repos/linux/tools/pci/../../include/uapi/linux/pcitest.h
+> include/linux/
+> make -f /home/a0393678/repos/linux/tools/build/Makefile.build dir=. obj=pcitest
+> make[1]: Entering directory '/home/a0393678/repos/linux/tools/pci'
+>   CC       pcitest.o
+>   LD       pcitest-in.o
+> make[1]: Leaving directory '/home/a0393678/repos/linux/tools/pci'
+>   LINK     pcitest
+> a0393678@a0393678ub:~/repos/linux/tools/pci$ sudo make install
+> make -f /home/a0393678/repos/linux/tools/build/Makefile.build dir=. obj=pcitest
+> install -d -m 755 /usr/bin;		\
+> for program in pcitest pcitest.sh; do	\
+> 	install $program /usr/bin;	\
+> done;						\
+> for script in pcitest.sh; do		\
+> 	install $script /usr/bin;	\
+> done
+> a0393678@a0393678ub:~/repos/linux/tools/pci$
+> 
+> Thanks
+> Kishon
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-On 05/07/19 8:59 PM, Lorenzo Pieralisi wrote:
-> On Fri, Jun 14, 2019 at 11:40:44PM +0800, YueHaibing wrote:
->> Fix build error:
->>
->> drivers/pci/controller/dwc/pci-dra7xx.c:
->>  In function dra7xx_pcie_probe:
->> drivers/pci/controller/dwc/pci-dra7xx.c:777:10:
->>  error: implicit declaration of function devm_gpiod_get_optional;
->>  did you mean devm_regulator_get_optional? [-Werror=implicit-function-declaration]
->>
->>   reset = devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH);
-> 
-> Adding the reason (in particular the config options) that triggers
-> this error would not hurt.
-> 
-> Kishon please let me know if I can merge it (ACK it if so).
-
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> Thanks,
-> Lorenzo
-> 
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->> ---
->>  drivers/pci/controller/dwc/pci-dra7xx.c | 1 +
->>  1 file changed, 1 insertion(+)
-> 
-> 
->>
->> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
->> index 419451e..4234ddb 100644
->> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
->> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
->> @@ -26,6 +26,7 @@
->>  #include <linux/types.h>
->>  #include <linux/mfd/syscon.h>
->>  #include <linux/regmap.h>
->> +#include <linux/gpio/consumer.h>
->>  
->>  #include "../../pci.h"
->>  #include "pcie-designware.h"
->> -- 
->> 2.7.4
->>
->>
