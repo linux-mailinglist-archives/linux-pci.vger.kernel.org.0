@@ -2,94 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DF75B639A2
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2019 18:43:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B43F6639A5
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2019 18:45:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbfGIQni (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Jul 2019 12:43:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:47120 "EHLO foss.arm.com"
+        id S1726324AbfGIQpH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Jul 2019 12:45:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:47154 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726345AbfGIQni (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 9 Jul 2019 12:43:38 -0400
+        id S1726318AbfGIQpH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 9 Jul 2019 12:45:07 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10AA72B;
-        Tue,  9 Jul 2019 09:43:38 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42EAD2B;
+        Tue,  9 Jul 2019 09:45:06 -0700 (PDT)
 Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 420073F59C;
-        Tue,  9 Jul 2019 09:43:37 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 17:43:32 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 58C3C3F59C;
+        Tue,  9 Jul 2019 09:45:05 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 17:45:03 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v2] tools: PCI: Fix installation when `make
- tools/pci_install`
-Message-ID: <20190709164332.GA19709@e121166-lin.cambridge.arm.com>
-References: <20190709161359.15874-1-andriy.shevchenko@linux.intel.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     kishon@ti.com, bhelgaas@google.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH] PCI: dwc: pci-dra7xx: Add missing include file
+Message-ID: <20190709164503.GB19709@e121166-lin.cambridge.arm.com>
+References: <20190614154044.4972-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190709161359.15874-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20190614154044.4972-1-yuehaibing@huawei.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 07:13:59PM +0300, Andy Shevchenko wrote:
-> The commit c9a707875053 ("tools pci: Do not delete pcitest.sh in 'make clean'")
-> fixed a `make tools clean` issue and simultaneously brought a regression
-> to the installation process:
+On Fri, Jun 14, 2019 at 11:40:44PM +0800, YueHaibing wrote:
+> Fix build error:
 > 
->   for script in .../tools/pci/pcitest.sh; do	\
-> 	install $script .../usr/usr/bin;	\
->   done
->   install: cannot stat '.../tools/pci/pcitest.sh': No such file or directory
+> drivers/pci/controller/dwc/pci-dra7xx.c:
+>  In function dra7xx_pcie_probe:
+> drivers/pci/controller/dwc/pci-dra7xx.c:777:10:
+>  error: implicit declaration of function devm_gpiod_get_optional;
+>  did you mean devm_regulator_get_optional? [-Werror=implicit-function-declaration]
 > 
-> Here is the missed part of the fix.
+>   reset = devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH);
 > 
-> Cc: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
-> - addressed Kishon's comment
-> - appended his Ack
->  tools/pci/Makefile | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+>  drivers/pci/controller/dwc/pci-dra7xx.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-Thank you Andy, merged in pci/misc for v5.3, thanks.
+Applied to pci/dwc for v5.3, thanks.
 
 Lorenzo
 
-> diff --git a/tools/pci/Makefile b/tools/pci/Makefile
-> index 6876ee4bd78c..4b95a5176355 100644
-> --- a/tools/pci/Makefile
-> +++ b/tools/pci/Makefile
-> @@ -18,7 +18,6 @@ ALL_TARGETS := pcitest
->  ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
+> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> index 419451e..4234ddb 100644
+> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/types.h>
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/regmap.h>
+> +#include <linux/gpio/consumer.h>
 >  
->  SCRIPTS := pcitest.sh
-> -ALL_SCRIPTS := $(patsubst %,$(OUTPUT)%,$(SCRIPTS))
->  
->  all: $(ALL_PROGRAMS)
->  
-> @@ -47,10 +46,10 @@ clean:
->  
->  install: $(ALL_PROGRAMS)
->  	install -d -m 755 $(DESTDIR)$(bindir);		\
-> -	for program in $(ALL_PROGRAMS) pcitest.sh; do	\
-> +	for program in $(ALL_PROGRAMS); do		\
->  		install $$program $(DESTDIR)$(bindir);	\
->  	done;						\
-> -	for script in $(ALL_SCRIPTS); do		\
-> +	for script in $(SCRIPTS); do			\
->  		install $$script $(DESTDIR)$(bindir);	\
->  	done
->  
+>  #include "../../pci.h"
+>  #include "pcie-designware.h"
 > -- 
-> 2.20.1
+> 2.7.4
+> 
 > 
