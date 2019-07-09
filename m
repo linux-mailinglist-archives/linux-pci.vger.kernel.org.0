@@ -2,199 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ABE5263284
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2019 10:00:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F441634B6
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2019 13:03:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725947AbfGIIA0 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 9 Jul 2019 04:00:26 -0400
-Received: from mga17.intel.com ([192.55.52.151]:61477 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbfGIIA0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 9 Jul 2019 04:00:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jul 2019 01:00:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,469,1557212400"; 
-   d="scan'208";a="156103343"
-Received: from irsmsx104.ger.corp.intel.com ([163.33.3.159])
-  by orsmga007.jf.intel.com with ESMTP; 09 Jul 2019 01:00:24 -0700
-Received: from irsmsx111.ger.corp.intel.com (10.108.20.4) by
- IRSMSX104.ger.corp.intel.com (163.33.3.159) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 9 Jul 2019 09:00:23 +0100
-Received: from irsmsx101.ger.corp.intel.com ([169.254.1.88]) by
- irsmsx111.ger.corp.intel.com ([169.254.2.65]) with mapi id 14.03.0439.000;
- Tue, 9 Jul 2019 09:00:23 +0100
-From:   "Patel, Mayurkumar" <mayurkumar.patel@intel.com>
-To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        'Bjorn Helgaas' <helgaas@kernel.org>
-CC:     "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "'Andy Shevchenko'" <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH] PCI/AER: save/restore AER registers during suspend/resume
-Thread-Topic: [PATCH] PCI/AER: save/restore AER registers during
- suspend/resume
-Thread-Index: AdU2K450PVQcsHkmQ527SJKW7Dkoyg==
-Date:   Tue, 9 Jul 2019 08:00:22 +0000
-Message-ID: <92EBB4272BF81E4089A7126EC1E7B28479A7F14D@IRSMSX101.ger.corp.intel.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMzFmOTg0NzktYWVhYy00MDJhLThmNzMtNDljZDI4NjU4ZTdkIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiVVwvTEVmdGdcL00zb0RtcEc1SUpXdE0yK2g4WXhuSVVyTnBMZDFmZTh4TTA2MnZhRUg4c2N3U0Nmcmh2Wk5VZHJvIn0=
-x-ctpclassification: CTP_NT
-x-originating-ip: [163.33.239.181]
-Content-Type: text/plain; charset="us-ascii"
+        id S1726211AbfGILDE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Jul 2019 07:03:04 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:9353 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfGILDE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Jul 2019 07:03:04 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d24746a0000>; Tue, 09 Jul 2019 04:03:06 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 09 Jul 2019 04:03:01 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 09 Jul 2019 04:03:01 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 9 Jul
+ 2019 11:02:59 +0000
+From:   Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH V3] PCI: tegra: Enable Relaxed Ordering only for Tegra20 &
+ Tegra30
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Vidya Sagar <vidyas@nvidia.com>, <bhelgaas@google.com>,
+        <treding@nvidia.com>, <swarren@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190704150428.4035-1-vidyas@nvidia.com>
+ <20190704160948.GA28058@e121166-lin.cambridge.arm.com>
+ <310ce6f7-9379-9857-ac7c-53118b80966b@nvidia.com>
+ <20190705093859.GA17491@e121166-lin.cambridge.arm.com>
+Message-ID: <c3168cfd-69f5-b51b-6ec6-c64d447efe13@nvidia.com>
+Date:   Tue, 9 Jul 2019 12:02:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190705093859.GA17491@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562670186; bh=duxsM4jaiCIGu9f68Hhmt/737H3A12RFzUMlXOvrCvE=;
+        h=X-PGP-Universal:From:Subject:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=EYFLVwpiCs217ROg5nwsOsO905r5vdJiu/rSh0V3XuQpv44jB2LPAy+dzoe1CiKf7
+         e2ksdTAuA8YyioUmF3FaQuoaOzr5Dbv7FEOe1DKS/IPP8fIANC/017l/hk7WrkiegD
+         yQwi5w4d1eE7yBdUExKhHKequtdox44WIx3WYwIrflqeED0vCDIIXi/c3L7fvHR8fs
+         zatwhGqH7rQOl4ps9URRYMDM74ly4F9nMEaQRAPAt0r/4FDfibAHeHQ9wcY0KviAWu
+         CSKKKSleCgh+/GXTQ3T2mr3Kwr8nvs0zRtJ7HXRZq3kadmV/IGYQxVvY+aIFANXmPz
+         h+67Lq3aiRsgw==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-After system suspend/resume cycle AER registers settings are
-lost. Not restoring Root Error Command Register bits if it were
-set, keeps AER interrupts disabled after system resume.
-Moreover, AER mask and severity registers are also required
-to be restored back to AER settings prior to system suspend.
 
-Signed-off-by: Mayurkumar Patel <mayurkumar.patel@intel.com>
----
- drivers/pci/pci.c      |  2 ++
- drivers/pci/pcie/aer.c | 49 +++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/aer.h    |  4 ++++
- 3 files changed, 55 insertions(+)
+On 05/07/2019 10:38, Lorenzo Pieralisi wrote:
+> [+Greg]
+> 
+> On Fri, Jul 05, 2019 at 09:57:25AM +0100, Jon Hunter wrote:
+>> Hi Lorenzo,
+>>
+>> On 04/07/2019 17:09, Lorenzo Pieralisi wrote:
+>>> On Thu, Jul 04, 2019 at 08:34:28PM +0530, Vidya Sagar wrote:
+>>>> Currently Relaxed Ordering bit in the configuration space is enabled for
+>>>> all PCIe devices as the quirk uses PCI_ANY_ID for both Vendor-ID and
+>>>> Device-ID, but, as per the Technical Reference Manual of Tegra20 which is
+>>>> available at https://developer.nvidia.com/embedded/downloads#?search=tegra%202
+>>>> in Sec 34.1, it is mentioned that Relexed Ordering bit needs to be enabled in
+>>>> its root ports to avoid deadlock in hardware. The same is applicable for
+>>>> Tegra30 as well though it is not explicitly mentioned in Tegra30 TRM document,
+>>>> but the same must not be extended to root ports of other Tegra SoCs or
+>>>> other hosts as the same issue doesn't exist there.
+>>>>
+>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>>
+>>> You forgot Thierry's ACK, I added it back but next time pay more
+>>> attention please.
+>>>
+>>> You should link the versions through eg git send-email
+>>> --in-reply-to=Message-Id so that it is easier to follow.
+>>>
+>>>> ---
+>>>> V3:
+>>>> * Modified commit message to make it more precise and explicit
+>>>>
+>>>> V2:
+>>>> * Modified commit message to include reference to Tegra20 TRM document.
+>>>>
+>>>>  drivers/pci/controller/pci-tegra.c | 7 +++++--
+>>>>  1 file changed, 5 insertions(+), 2 deletions(-)
+>>>
+>>> I applied it to pci/tegra after rewriting the whole commit log and
+>>> adding a Fixes: tag that you or someone at Nvidia will follow up;
+>>> I will check.
+>>
+>> I had a chat with Vidya last night to understand the issue, so now I
+>> have a good understanding of the problem this has caused, which is very
+>> unfortunate indeed!
+>>
+>> Vidya mentioned that you would like us to get this backported to stable
+>> branches. Please correct me if I am wrong here. We can certainly do
+>> that, but I do have concerns about doing so, for non-Tegra devices
+>> inparticularly, given that this has been around for sometime now. Hence,
+>> I was wondering if we should leave this soak in the mainline for at
+>> least a kernel release cycle before doing so. I really don't want to
+>> break stable for anyone. What are your thoughts on this?
+> 
+> I looped in Greg to pick his brain, since it is unclear how we should
+> apply the stable kernel rules on this specific patch. Basically, this
+> technically is not a bug, it is just bad code that forces a feature on
+> ALL kernels that compile the PCI Tegra Controller driver in the kernel.
+> I would really really want to have this patch applied to all stable
+> kernels but first as you said it is better to apply it to mainline and
+> check it does not cause any issues on any other arch/platform then
+> we can think about backporting it to stable kernels.
+> 
+> I am not happy to force Relaxed Ordering on any PCIe device on
+> any platform/arch compiling PCI Tegra controller in, so somehow
+> we must rectify this situation, this is gross as I said before.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 8abc843..40d5507 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1340,6 +1340,7 @@ int pci_save_state(struct pci_dev *dev)
- 
- 	pci_save_ltr_state(dev);
- 	pci_save_dpc_state(dev);
-+	pci_save_aer_state(dev);
- 	return pci_save_vc_state(dev);
- }
- EXPORT_SYMBOL(pci_save_state);
-@@ -1453,6 +1454,7 @@ void pci_restore_state(struct pci_dev *dev)
- 	pci_restore_dpc_state(dev);
- 
- 	pci_cleanup_aer_error_status_regs(dev);
-+	pci_restore_aer_state(dev);
- 
- 	pci_restore_config_space(dev);
- 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index b45bc47..1acc641 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -448,6 +448,54 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
- 	return 0;
- }
- 
-+void pci_save_aer_state(struct pci_dev *dev)
-+{
-+	int pos = 0;
-+	struct pci_cap_saved_state *save_state;
-+	u32 *cap;
-+
-+	if (!pci_is_pcie(dev))
-+		return;
-+
-+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ERR);
-+	if (!save_state)
-+		return;
-+
-+	pos = dev->aer_cap;
-+	if (!pos)
-+		return;
-+
-+	cap = &save_state->cap.data[0];
-+	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, cap++);
-+	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, cap++);
-+	pci_read_config_dword(dev, pos + PCI_ERR_COR_MASK, cap++);
-+	pci_read_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, cap++);
-+}
-+
-+void pci_restore_aer_state(struct pci_dev *dev)
-+{
-+	int pos = 0;
-+	struct pci_cap_saved_state *save_state;
-+	u32 *cap;
-+
-+	if (!pci_is_pcie(dev))
-+		return;
-+
-+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ERR);
-+	if (!save_state)
-+		return;
-+
-+	pos = dev->aer_cap;
-+	if (!pos)
-+		return;
-+
-+	cap = &save_state->cap.data[0];
-+	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, *cap++);
-+	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, *cap++);
-+	pci_write_config_dword(dev, pos + PCI_ERR_COR_MASK, *cap++);
-+	pci_write_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, *cap++);
-+}
-+
- void pci_aer_init(struct pci_dev *dev)
- {
- 	dev->aer_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ERR);
-@@ -1396,6 +1444,7 @@ static int aer_probe(struct pcie_device *dev)
- 		return status;
- 	}
- 
-+	pci_add_ext_cap_save_buffer(port, PCI_EXT_CAP_ID_ERR, sizeof(u32) * 4);
- 	aer_enable_rootport(rpc);
- 	pci_info(port, "enabled with IRQ %d\n", dev->irq);
- 	return 0;
-diff --git a/include/linux/aer.h b/include/linux/aer.h
-index 514bffa..fa19e01 100644
---- a/include/linux/aer.h
-+++ b/include/linux/aer.h
-@@ -46,6 +46,8 @@ int pci_enable_pcie_error_reporting(struct pci_dev *dev);
- int pci_disable_pcie_error_reporting(struct pci_dev *dev);
- int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev);
- int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);
-+void pci_save_aer_state(struct pci_dev *dev);
-+void pci_restore_aer_state(struct pci_dev *dev);
- #else
- static inline int pci_enable_pcie_error_reporting(struct pci_dev *dev)
- {
-@@ -63,6 +65,8 @@ static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
- {
- 	return -EINVAL;
- }
-+static inline void pci_save_aer_state(struct pci_dev *dev) {}
-+static inline void pci_restore_aer_state(struct pci_dev *dev) {}
- #endif
- 
- void cper_print_aer(struct pci_dev *dev, int aer_severity,
+Yes understood. Let's plan to sync up on this once v5.3 is out and see
+how the land lies. We have an internal issue filed to track this and so
+we should not forget!
+
+Cheers
+Jon
+
 -- 
-2.7.4
-
-
-Mayurkumar Patel
-Intel Deutschland GmbH
-Registered Address: Am Campeon 10-12, 85579 Neubiberg, Germany
-Registered Office: Munich
-Commercial Register: Amtsgericht Muenchen HRB 186928
-
-
-
-Intel Deutschland GmbH
-Registered Address: Am Campeon 10-12, 85579 Neubiberg, Germany
-Tel: +49 89 99 8853-0, www.intel.de
-Managing Directors: Christin Eisenschmid, Gary Kershaw
-Chairperson of the Supervisory Board: Nicole Lau
-Registered Office: Munich
-Commercial Register: Amtsgericht Muenchen HRB 186928
-
+nvpublic
