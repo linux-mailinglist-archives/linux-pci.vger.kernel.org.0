@@ -2,122 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B2DF641C0
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2019 09:14:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52497643C1
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2019 10:44:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbfGJHOC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Jul 2019 03:14:02 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:40662 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfGJHOC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Jul 2019 03:14:02 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id B90F625B7D5;
-        Wed, 10 Jul 2019 17:13:59 +1000 (AEST)
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id 57ED09402F1; Wed, 10 Jul 2019 09:13:57 +0200 (CEST)
-Date:   Wed, 10 Jul 2019 09:13:57 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     marek.vasut@gmail.com
-Cc:     linux-pci@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 2/2] PCI: rcar: Recalculate inbound range alignment for
- each controller entry
-Message-ID: <20190710071355.x5uxc5rvnv7cq5go@verge.net.au>
-References: <20190709011559.12379-1-marek.vasut@gmail.com>
- <20190709011559.12379-2-marek.vasut@gmail.com>
+        id S1727142AbfGJIob (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Jul 2019 04:44:31 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36416 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfGJIob (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Jul 2019 04:44:31 -0400
+Received: by mail-lj1-f194.google.com with SMTP id i21so1249720ljj.3
+        for <linux-pci@vger.kernel.org>; Wed, 10 Jul 2019 01:44:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=FqMO8RT89OR9fNtMgTSxuVjqmXGyM8SsKk2ZzzmwHBQ=;
+        b=B5fmBwnA1EraBB2e8QkhC52KEtVPIM4uiMUWlwN0KgQA59OiKLHLiyO0JihyRnPt3m
+         WoUIlpqGpZNLoqvhvcoMiAFaa10A7pbxB2ExWfYQeLfKBYgSjK/gt0bjUW+XyaVjC9KX
+         wfJQ4ioZlrPQIS9JNbUEAlEfB0NCvsXJ1mKskDsHsEal1sGQLk/i5gM+tXVScspTjrXE
+         q1y47/NQGV2td9sW+dY4hYHzg9bL/nNA6sjjD5N2cHvOLWQLe0aLHcnTQT7me57gJkfI
+         Kgf16a+oqQ9r8OV6xuHiqTop7IUGRrhCG1iNDxnGF5c1LJcwXFQWXF9BJwykqnSaGKrg
+         zeOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=FqMO8RT89OR9fNtMgTSxuVjqmXGyM8SsKk2ZzzmwHBQ=;
+        b=ODWl1MS7+EdrQUpFa36YcDEysem2FHg57hMtO3SCG9KHaVWGnGNXyi0GdB4A3g396+
+         vYFQzw2nPtK8jvZvMaFuzkkLq1bnq5usiluyyLWRWNeNGzZxyHm/cP3GbpZqOjv3lvNV
+         EyUkC3yDOduYAkwURDfhR2lNOD4RFtzp8mPkPxISdCu9oyyFvahxlGRZ26qxydWo92JJ
+         zrU7UD7j+sHjiVz/salGcs6VBe6gbftgdqIlQu9DyYH4nDD+HWJk9E5bdS+OJQUt7CjL
+         1SVWyKagwkisT3TqwsZfZSnQEVY2rpKC2x04Jgr1kdE5ITv/uh8LeG6WZz9bTZFNeOzw
+         lvFg==
+X-Gm-Message-State: APjAAAWk41MZws/xubxwoGXKmAySOM1x+DyWncQYhMM8fuI87id20pf5
+        uatZx44EqoCZYKTxARD8M3glAbT5XCk=
+X-Google-Smtp-Source: APXvYqxR3GU78uAGJiY8+/bhheQw4OlgaGGLP44zp1/cyfmIggBOLN633fTFOVHG2zKz9upFNJa/mA==
+X-Received: by 2002:a2e:8455:: with SMTP id u21mr13239478ljh.20.1562748269260;
+        Wed, 10 Jul 2019 01:44:29 -0700 (PDT)
+Received: from localhost ([89.207.88.249])
+        by smtp.gmail.com with ESMTPSA id y15sm256050lfg.43.2019.07.10.01.44.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Jul 2019 01:44:28 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 11:44:27 +0300
+From:   Alexander Fomichev <fomichev.ru@gmail.com>
+To:     linux-ntb@googlegroups.com, linux-pci@vger.kernel.org
+Cc:     linux@yadro.com, Logan Gunthorpe <logang@deltatee.com>
+Subject: [PATCH RESEND] ntb_hw_switchtec: Fix ntb_mw_clear_trans returning
+ error if size == 0
+Message-ID: <20190710084427.7iqrhapxa7jo5v6y@yadro.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190709011559.12379-2-marek.vasut@gmail.com>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+User-Agent: NeoMutt/20180716
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 03:15:59AM +0200, marek.vasut@gmail.com wrote:
-> From: Marek Vasut <marek.vasut+renesas@gmail.com>
-> 
-> Due to hardware constraints, the size of each inbound range entry
-> populated into the controller cannot be larger than the alignment
-> of the entry's start address. Currently, the alignment for each
-> "dma-ranges" inbound range is calculated only once for each range
-> and the increment for programming the controller is also derived
-> from it only once. Thus, a "dma-ranges" entry describing a memory
-> at 0x48000000 and size 0x38000000 would lead to multiple controller
-> entries, each 0x08000000 long.
-> 
-> This is inefficient, especially considering that by adding the size
-> to the start address, the alignment increases. This patch moves the
-> alignment calculation into the loop populating the controller entries,
-> thus updating the alignment for each controller entry.
-> 
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Cc: linux-renesas-soc@vger.kernel.org
-> To: linux-pci@vger.kernel.org
+ntb_mw_set_trans should work as ntb_mw_clear_trans when size == 0 and/or
+addr == 0. But error in xlate_pos checking condition prevents this.
+Fix the condition to make ntb_mw_clear_trans working.
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Alexander Fomichev <fomichev.ru@gmail.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ drivers/ntb/hw/mscc/ntb_hw_switchtec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  drivers/pci/controller/pcie-rcar.c | 33 +++++++++++++++---------------
->  1 file changed, 17 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
-> index 938adff4148f..48f361b5d690 100644
-> --- a/drivers/pci/controller/pcie-rcar.c
-> +++ b/drivers/pci/controller/pcie-rcar.c
-> @@ -1029,25 +1029,26 @@ static int rcar_pcie_inbound_ranges(struct rcar_pcie *pcie,
->  	if (restype & IORESOURCE_PREFETCH)
->  		flags |= LAM_PREFETCH;
->  
-> -	/*
-> -	 * If the size of the range is larger than the alignment of the start
-> -	 * address, we have to use multiple entries to perform the mapping.
-> -	 */
-> -	if (cpu_addr > 0) {
-> -		unsigned long nr_zeros = __ffs64(cpu_addr);
-> -		u64 alignment = 1ULL << nr_zeros;
-> +	while (cpu_addr < cpu_end) {
-> +		/*
-> +		 * If the size of the range is larger than the alignment of
-> +		 * the start address, we have to use multiple entries to
-> +		 * perform the mapping.
-> +		 */
-> +		if (cpu_addr > 0) {
-> +			unsigned long nr_zeros = __ffs64(cpu_addr);
-> +			u64 alignment = 1ULL << nr_zeros;
->  
-> -		size = min(range->size, alignment);
-> -	} else {
-> -		size = range->size;
-> -	}
-> -	/* Hardware supports max 4GiB inbound region */
-> -	size = min(size, 1ULL << 32);
-> +			size = min(range->size, alignment);
-> +		} else {
-> +			size = range->size;
-> +		}
-> +		/* Hardware supports max 4GiB inbound region */
-> +		size = min(size, 1ULL << 32);
->  
-> -	mask = roundup_pow_of_two(size) - 1;
-> -	mask &= ~0xf;
-> +		mask = roundup_pow_of_two(size) - 1;
-> +		mask &= ~0xf;
->  
-> -	while (cpu_addr < cpu_end) {
->  		/*
->  		 * Set up 64-bit inbound regions as the range parser doesn't
->  		 * distinguish between 32 and 64-bit types.
-> -- 
-> 2.20.1
-> 
+diff --git a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+index 1e2f627d3bac..19d46af19650 100644
+--- a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
++++ b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+@@ -299,7 +299,7 @@ static int switchtec_ntb_mw_set_trans(struct ntb_dev *ntb, int pidx, int widx,
+ 	if (widx >= switchtec_ntb_mw_count(ntb, pidx))
+ 		return -EINVAL;
+ 
+-	if (xlate_pos < 12)
++	if (size != 0 && xlate_pos < 12)
+ 		return -EINVAL;
+ 
+ 	if (!IS_ALIGNED(addr, BIT_ULL(xlate_pos))) {
+-- 
+2.17.1
