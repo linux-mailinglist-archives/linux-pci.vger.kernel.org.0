@@ -2,147 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C745D64B4A
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2019 19:14:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F372864B64
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2019 19:22:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbfGJROa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Jul 2019 13:14:30 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:13796 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726898AbfGJRO3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Jul 2019 13:14:29 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d261cf30000>; Wed, 10 Jul 2019 10:14:27 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 10 Jul 2019 10:14:28 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 10 Jul 2019 10:14:28 -0700
-Received: from [10.25.74.6] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jul
- 2019 17:14:23 +0000
-Subject: Re: [PATCH V13 08/12] dt-bindings: Add PCIe supports-clkreq property
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
-        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190710062212.1745-1-vidyas@nvidia.com>
- <20190710062212.1745-9-vidyas@nvidia.com>
- <20190710152856.GB8781@e121166-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <95103fa2-9181-247e-3fd5-1b0bd95e8bb9@nvidia.com>
-Date:   Wed, 10 Jul 2019 22:44:20 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190710152856.GB8781@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        id S1727254AbfGJRWj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Jul 2019 13:22:39 -0400
+Received: from mga07.intel.com ([134.134.136.100]:18735 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726229AbfGJRWi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 10 Jul 2019 13:22:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 10:22:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,475,1557212400"; 
+   d="scan'208";a="186186526"
+Received: from irsmsx106.ger.corp.intel.com ([163.33.3.31])
+  by fmsmga001.fm.intel.com with ESMTP; 10 Jul 2019 10:22:35 -0700
+Received: from irsmsx101.ger.corp.intel.com ([169.254.1.88]) by
+ IRSMSX106.ger.corp.intel.com ([169.254.8.234]) with mapi id 14.03.0439.000;
+ Wed, 10 Jul 2019 18:22:34 +0100
+From:   "Patel, Mayurkumar" <mayurkumar.patel@intel.com>
+To:     "'sathyanarayanan.kuppuswamy@linux.intel.com'" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        'Bjorn Helgaas' <helgaas@kernel.org>
+CC:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        'Andy Shevchenko' <andriy.shevchenko@linux.intel.com>
+Subject: RE: [PATCH] PCI/AER: save/restore AER registers during
+ suspend/resume
+Thread-Topic: [PATCH] PCI/AER: save/restore AER registers during
+ suspend/resume
+Thread-Index: AdU2K450PVQcsHkmQ527SJKW7DkoygAUInqAAB190NA=
+Date:   Wed, 10 Jul 2019 17:22:34 +0000
+Message-ID: <92EBB4272BF81E4089A7126EC1E7B28479A7F9BA@IRSMSX101.ger.corp.intel.com>
+References: <92EBB4272BF81E4089A7126EC1E7B28479A7F14D@IRSMSX101.ger.corp.intel.com>
+ <1fbfe79b-0123-7305-5fc3-4963599538a3@linux.intel.com>
+In-Reply-To: <1fbfe79b-0123-7305-5fc3-4963599538a3@linux.intel.com>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562778867; bh=CCe2cpbcTfj8PcVYEgcYHWQ29tSTq4v82/vz3Ha3bvM=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=IDIaT7hwrXY0e2aFy5qoHGyfhPqHrmC06v3yAqQpH3QWKIbHjK1TiJmxlfbYnvK+S
-         11zGdae9e8G8gihUUhW8kewo+e9ilAfgeFBoZ6Fw8gPOKv6e/txU0NMcDqiEtaRKEK
-         nfjc3NjcplCTdBkmDWuQKtPF8gvWVcHdOLmd8B+xEWGloRMLXsSJ9LNmF/xNat9Ffw
-         ToQVm9aCL62P0BKMp1MbCu4L/p/+IkCC1wR+OOHO27FYKLmI7dEYTALN03dkFL6fyq
-         NOwTeOBDzk3shnZQTTwy/+4zQYXF54Qk5sh0dbt5bJhpdi3fB0jhyWPLT40R75GATG
-         tJwWeTIf914CQ==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMDU2NzZhMmItNTE5NS00ZWUxLWE3MjAtMzc4NWFlNDFiN2JjIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoielNiOW9Md0owc09hUE9wUGFEWVhLdWMyV3hGdXlHYTgzMzg4OGNWK2VURndKYU53ckNDUTFTNWNPT3gxakFSNiJ9
+x-ctpclassification: CTP_NT
+x-originating-ip: [163.33.239.181]
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 7/10/2019 8:58 PM, Lorenzo Pieralisi wrote:
-> On Wed, Jul 10, 2019 at 11:52:08AM +0530, Vidya Sagar wrote:
->> Some host controllers need to know the existence of clkreq signal routing to
->> downstream devices to be able to advertise low power features like ASPM L1
->> substates. Without clkreq signal routing being present, enabling ASPM L1 sub
->> states might lead to downstream devices falling off the bus. Hence a new device
-> 
-> You mean "being disconnected from the bus" right ? I will update it.
-Yes. I meant the same.
-
-> 
-> Lorenzo
-> 
->> tree property 'supports-clkreq' is added to make such host controllers
->> aware of clkreq signal routing to downstream devices.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> Reviewed-by: Thierry Reding <treding@nvidia.com>
->> ---
->> V13:
->> * None
->>
->> V12:
->> * Rebased on top of linux-next top of the tree
->>
->> V11:
->> * None
->>
->> V10:
->> * None
->>
->> V9:
->> * None
->>
->> V8:
->> * None
->>
->> V7:
->> * None
->>
->> V6:
->> * s/Documentation\/devicetree/dt-bindings/ in the subject
->>
->> V5:
->> * None
->>
->> V4:
->> * Rebased on top of linux-next top of the tree
->>
->> V3:
->> * None
->>
->> V2:
->> * This is a new patch in v2 series
->>
->>   Documentation/devicetree/bindings/pci/pci.txt | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
->> index 2a5d91024059..29bcbd88f457 100644
->> --- a/Documentation/devicetree/bindings/pci/pci.txt
->> +++ b/Documentation/devicetree/bindings/pci/pci.txt
->> @@ -27,6 +27,11 @@ driver implementation may support the following properties:
->>   - reset-gpios:
->>      If present this property specifies PERST# GPIO. Host drivers can parse the
->>      GPIO and apply fundamental reset to endpoints.
->> +- supports-clkreq:
->> +   If present this property specifies that CLKREQ signal routing exists from
->> +   root port to downstream device and host bridge drivers can do programming
->> +   which depends on CLKREQ signal existence. For example, programming root port
->> +   not to advertise ASPM L1 Sub-States support if there is no CLKREQ signal.
->>   
->>   PCI-PCI Bridge properties
->>   -------------------------
->> -- 
->> 2.17.1
->>
+SGksIA0KDQoNCj4gSGksDQo+IA0KPiBPbiA3LzkvMTkgMTowMCBBTSwgUGF0ZWwsIE1heXVya3Vt
+YXIgd3JvdGU6DQo+ID4gQWZ0ZXIgc3lzdGVtIHN1c3BlbmQvcmVzdW1lIGN5Y2xlIEFFUiByZWdp
+c3RlcnMgc2V0dGluZ3MgYXJlDQo+ID4gbG9zdC4gTm90IHJlc3RvcmluZyBSb290IEVycm9yIENv
+bW1hbmQgUmVnaXN0ZXIgYml0cyBpZiBpdCB3ZXJlDQo+ID4gc2V0LCBrZWVwcyBBRVIgaW50ZXJy
+dXB0cyBkaXNhYmxlZCBhZnRlciBzeXN0ZW0gcmVzdW1lLg0KPiA+IE1vcmVvdmVyLCBBRVIgbWFz
+ayBhbmQgc2V2ZXJpdHkgcmVnaXN0ZXJzIGFyZSBhbHNvIHJlcXVpcmVkDQo+ID4gdG8gYmUgcmVz
+dG9yZWQgYmFjayB0byBBRVIgc2V0dGluZ3MgcHJpb3IgdG8gc3lzdGVtIHN1c3BlbmQuDQo+ID4N
+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXl1cmt1bWFyIFBhdGVsIDxtYXl1cmt1bWFyLnBhdGVsQGlu
+dGVsLmNvbT4NCj4gPiAtLS0NCj4gPiAgIGRyaXZlcnMvcGNpL3BjaS5jICAgICAgfCAgMiArKw0K
+PiA+ICAgZHJpdmVycy9wY2kvcGNpZS9hZXIuYyB8IDQ5ICsrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgIGluY2x1ZGUvbGludXgvYWVyLmggICAg
+fCAgNCArKysrDQo+ID4gICAzIGZpbGVzIGNoYW5nZWQsIDU1IGluc2VydGlvbnMoKykNCj4gPg0K
+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9wY2kuYyBiL2RyaXZlcnMvcGNpL3BjaS5jDQo+
+ID4gaW5kZXggOGFiYzg0My4uNDBkNTUwNyAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9w
+Y2kuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL3BjaS5jDQo+ID4gQEAgLTEzNDAsNiArMTM0MCw3
+IEBAIGludCBwY2lfc2F2ZV9zdGF0ZShzdHJ1Y3QgcGNpX2RldiAqZGV2KQ0KPiA+DQo+ID4gICAJ
+cGNpX3NhdmVfbHRyX3N0YXRlKGRldik7DQo+ID4gICAJcGNpX3NhdmVfZHBjX3N0YXRlKGRldik7
+DQo+ID4gKwlwY2lfc2F2ZV9hZXJfc3RhdGUoZGV2KTsNCj4gPiAgIAlyZXR1cm4gcGNpX3NhdmVf
+dmNfc3RhdGUoZGV2KTsNCj4gPiAgIH0NCj4gPiAgIEVYUE9SVF9TWU1CT0wocGNpX3NhdmVfc3Rh
+dGUpOw0KPiA+IEBAIC0xNDUzLDYgKzE0NTQsNyBAQCB2b2lkIHBjaV9yZXN0b3JlX3N0YXRlKHN0
+cnVjdCBwY2lfZGV2ICpkZXYpDQo+ID4gICAJcGNpX3Jlc3RvcmVfZHBjX3N0YXRlKGRldik7DQo+
+ID4NCj4gPiAgIAlwY2lfY2xlYW51cF9hZXJfZXJyb3Jfc3RhdHVzX3JlZ3MoZGV2KTsNCj4gPiAr
+CXBjaV9yZXN0b3JlX2Flcl9zdGF0ZShkZXYpOw0KPiA+DQo+ID4gICAJcGNpX3Jlc3RvcmVfY29u
+ZmlnX3NwYWNlKGRldik7DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcGNpZS9h
+ZXIuYyBiL2RyaXZlcnMvcGNpL3BjaWUvYWVyLmMNCj4gPiBpbmRleCBiNDViYzQ3Li4xYWNjNjQx
+IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL3BjaWUvYWVyLmMNCj4gPiArKysgYi9kcml2
+ZXJzL3BjaS9wY2llL2Flci5jDQo+ID4gQEAgLTQ0OCw2ICs0NDgsNTQgQEAgaW50IHBjaV9jbGVh
+bnVwX2Flcl9lcnJvcl9zdGF0dXNfcmVncyhzdHJ1Y3QgcGNpX2RldiAqZGV2KQ0KPiA+ICAgCXJl
+dHVybiAwOw0KPiA+ICAgfQ0KPiA+DQo+ID4gK3ZvaWQgcGNpX3NhdmVfYWVyX3N0YXRlKHN0cnVj
+dCBwY2lfZGV2ICpkZXYpDQo+ID4gK3sNCj4gPiArCWludCBwb3MgPSAwOw0KPiA+ICsJc3RydWN0
+IHBjaV9jYXBfc2F2ZWRfc3RhdGUgKnNhdmVfc3RhdGU7DQo+ID4gKwl1MzIgKmNhcDsNCj4gPiAr
+DQo+ID4gKwlpZiAoIXBjaV9pc19wY2llKGRldikpDQo+ID4gKwkJcmV0dXJuOw0KPiA+ICsNCj4g
+PiArCXNhdmVfc3RhdGUgPSBwY2lfZmluZF9zYXZlZF9leHRfY2FwKGRldiwgUENJX0VYVF9DQVBf
+SURfRVJSKTsNCj4gPiArCWlmICghc2F2ZV9zdGF0ZSkNCj4gPiArCQlyZXR1cm47DQo+ID4gKw0K
+PiA+ICsJcG9zID0gZGV2LT5hZXJfY2FwOw0KPiA+ICsJaWYgKCFwb3MpDQo+ID4gKwkJcmV0dXJu
+Ow0KPiA+ICsNCj4gPiArCWNhcCA9ICZzYXZlX3N0YXRlLT5jYXAuZGF0YVswXTsNCj4gPiArCXBj
+aV9yZWFkX2NvbmZpZ19kd29yZChkZXYsIHBvcyArIFBDSV9FUlJfVU5DT1JfTUFTSywgY2FwKysp
+Ow0KPiA+ICsJcGNpX3JlYWRfY29uZmlnX2R3b3JkKGRldiwgcG9zICsgUENJX0VSUl9VTkNPUl9T
+RVZFUiwgY2FwKyspOw0KPiA+ICsJcGNpX3JlYWRfY29uZmlnX2R3b3JkKGRldiwgcG9zICsgUENJ
+X0VSUl9DT1JfTUFTSywgY2FwKyspOw0KPiA+ICsJcGNpX3JlYWRfY29uZmlnX2R3b3JkKGRldiwg
+cG9zICsgUENJX0VSUl9ST09UX0NPTU1BTkQsIGNhcCsrKTsNCj4gDQo+IEkgZG9uJ3Qgc2VlIEFF
+UiBkcml2ZXIgbW9kaWZ5aW5nIFVOQ09SX01BU0svU0VWRVIvQ09SX01BU0sgcmVnaXN0ZXIuIElm
+DQo+IGFsbCBpdCBoYXMgaXMgZGVmYXVsdCB2YWx1ZSB0aGVuIHdoeSBkbyB5b3Ugd2FudCB0byBw
+cmVzZXJ2ZSBpdCA/DQo+IA0KDQpUaGFua3MgZm9yIHJlcGx5Lg0KWW91IGFyZSByaWdodCBhYm91
+dCBVTkNPUl9NQVNLL1NFVkVSL0NPUl9NQVNLIG1hc2sgQUVSIGRyaXZlciBsZWF2ZXMgdW50b3Vj
+aGVkLA0KQnV0IElNSE8gdXNlcnMgZm9yIGV4YW1wbGUgY2FuIHVzZSAic2V0cGNpIiB0byB1bm1h
+c2sgc3BlY2lmaWMgZXJyb3JzIGFuZCBpdHMgc2V2ZXJpdHkgYmFzZWQgb24NCnRoZWlyIGRlYnVn
+Z2luZyByZXF1aXJlbWVudCBvbiBSb290IHBvcnQgYW5kL29yIEVuZHBvaW50LiBTbyBkdXJpbmcg
+cmVzdW1lLCBpZiBQQ0llIGVuZHBvaW50DQpmYWlscyBkdWUgdG8gYW55IGVycm9yIHdoaWNoIGJ5
+IGRlZmF1bHQgc3RheXMgbWFza2VkIHRoZW4gaXQgY2FuJ3QgYmUgY2F0Y2hlZCBhbmQvb3IgZGVi
+dWdnZWQuDQpNb3Jlb3ZlciwgRW5kcG9pbnQgZHJpdmVyIG1heSBhbHNvIHVubWFzayBkdXJpbmcg
+ImRyaXZlciBwcm9iZSIgY2VydGFpbiBzcGVjaWZpYw0KZXJyb3JzIGZvciBlbmRwb2ludCwgd2hp
+Y2ggbmVlZHMgdG8gYmUgcmVzdG9yZWQgd2hpbGUgcmVzdW1lLg0KDQpAQmpvcm4vQW55Ym9keSBl
+bHNlIGhhcyBhbnkgb3BpbmlvbiB0byBjYWNoZS9yZXN0b3JlIFVOQ09SX01BU0svU0VWRVIvQ09S
+X01BU0sgcmVnaXN0ZXJzPw0KUGxlYXNlIGhlbHAgdG8gY29tbWVudC4NCg0KPiBBbHNvLCBhbnkg
+cmVhc29uIGZvciBub3QgcHJlc2VydmluZyBFQ1JDIHNldHRpbmdzID8NCg0KTm8gc3BlY2lmaWMg
+cmVhc29uLiBJIGNhbiBpbmNvcnBvcnRlIHRoYXQgd2l0aCB2MiBvZiB0aGlzIHBhdGNoc2V0IGJ1
+dCBJIGRvbuKAmXQgaGF2ZSBIVyBvbiB3aGljaCBJIGNhbiB2YWxpZGF0ZSB0aGF0Lg0KDQoNCj4g
+DQo+ID4gK30NCj4gPiArDQo+ID4gK3ZvaWQgcGNpX3Jlc3RvcmVfYWVyX3N0YXRlKHN0cnVjdCBw
+Y2lfZGV2ICpkZXYpDQo+ID4gK3sNCj4gPiArCWludCBwb3MgPSAwOw0KPiA+ICsJc3RydWN0IHBj
+aV9jYXBfc2F2ZWRfc3RhdGUgKnNhdmVfc3RhdGU7DQo+ID4gKwl1MzIgKmNhcDsNCj4gPiArDQo+
+ID4gKwlpZiAoIXBjaV9pc19wY2llKGRldikpDQo+ID4gKwkJcmV0dXJuOw0KPiA+ICsNCj4gPiAr
+CXNhdmVfc3RhdGUgPSBwY2lfZmluZF9zYXZlZF9leHRfY2FwKGRldiwgUENJX0VYVF9DQVBfSURf
+RVJSKTsNCj4gPiArCWlmICghc2F2ZV9zdGF0ZSkNCj4gPiArCQlyZXR1cm47DQo+ID4gKw0KPiA+
+ICsJcG9zID0gZGV2LT5hZXJfY2FwOw0KPiA+ICsJaWYgKCFwb3MpDQo+ID4gKwkJcmV0dXJuOw0K
+PiA+ICsNCj4gPiArCWNhcCA9ICZzYXZlX3N0YXRlLT5jYXAuZGF0YVswXTsNCj4gPiArCXBjaV93
+cml0ZV9jb25maWdfZHdvcmQoZGV2LCBwb3MgKyBQQ0lfRVJSX1VOQ09SX01BU0ssICpjYXArKyk7
+DQo+ID4gKwlwY2lfd3JpdGVfY29uZmlnX2R3b3JkKGRldiwgcG9zICsgUENJX0VSUl9VTkNPUl9T
+RVZFUiwgKmNhcCsrKTsNCj4gPiArCXBjaV93cml0ZV9jb25maWdfZHdvcmQoZGV2LCBwb3MgKyBQ
+Q0lfRVJSX0NPUl9NQVNLLCAqY2FwKyspOw0KPiA+ICsJcGNpX3dyaXRlX2NvbmZpZ19kd29yZChk
+ZXYsIHBvcyArIFBDSV9FUlJfUk9PVF9DT01NQU5ELCAqY2FwKyspOw0KPiA+ICt9DQo+ID4gKw0K
+PiA+ICAgdm9pZCBwY2lfYWVyX2luaXQoc3RydWN0IHBjaV9kZXYgKmRldikNCj4gPiAgIHsNCj4g
+PiAgIAlkZXYtPmFlcl9jYXAgPSBwY2lfZmluZF9leHRfY2FwYWJpbGl0eShkZXYsIFBDSV9FWFRf
+Q0FQX0lEX0VSUik7DQo+ID4gQEAgLTEzOTYsNiArMTQ0NCw3IEBAIHN0YXRpYyBpbnQgYWVyX3By
+b2JlKHN0cnVjdCBwY2llX2RldmljZSAqZGV2KQ0KPiA+ICAgCQlyZXR1cm4gc3RhdHVzOw0KPiA+
+ICAgCX0NCj4gPg0KPiA+ICsJcGNpX2FkZF9leHRfY2FwX3NhdmVfYnVmZmVyKHBvcnQsIFBDSV9F
+WFRfQ0FQX0lEX0VSUiwgc2l6ZW9mKHUzMikgKiA0KTsNCj4gPiAgIAlhZXJfZW5hYmxlX3Jvb3Rw
+b3J0KHJwYyk7DQo+ID4gICAJcGNpX2luZm8ocG9ydCwgImVuYWJsZWQgd2l0aCBJUlEgJWRcbiIs
+IGRldi0+aXJxKTsNCj4gPiAgIAlyZXR1cm4gMDsNCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9s
+aW51eC9hZXIuaCBiL2luY2x1ZGUvbGludXgvYWVyLmgNCj4gPiBpbmRleCA1MTRiZmZhLi5mYTE5
+ZTAxIDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvbGludXgvYWVyLmgNCj4gPiArKysgYi9pbmNs
+dWRlL2xpbnV4L2Flci5oDQo+ID4gQEAgLTQ2LDYgKzQ2LDggQEAgaW50IHBjaV9lbmFibGVfcGNp
+ZV9lcnJvcl9yZXBvcnRpbmcoc3RydWN0IHBjaV9kZXYgKmRldik7DQo+ID4gICBpbnQgcGNpX2Rp
+c2FibGVfcGNpZV9lcnJvcl9yZXBvcnRpbmcoc3RydWN0IHBjaV9kZXYgKmRldik7DQo+ID4gICBp
+bnQgcGNpX2NsZWFudXBfYWVyX3VuY29ycmVjdF9lcnJvcl9zdGF0dXMoc3RydWN0IHBjaV9kZXYg
+KmRldik7DQo+ID4gICBpbnQgcGNpX2NsZWFudXBfYWVyX2Vycm9yX3N0YXR1c19yZWdzKHN0cnVj
+dCBwY2lfZGV2ICpkZXYpOw0KPiA+ICt2b2lkIHBjaV9zYXZlX2Flcl9zdGF0ZShzdHJ1Y3QgcGNp
+X2RldiAqZGV2KTsNCj4gPiArdm9pZCBwY2lfcmVzdG9yZV9hZXJfc3RhdGUoc3RydWN0IHBjaV9k
+ZXYgKmRldik7DQo+ID4gICAjZWxzZQ0KPiA+ICAgc3RhdGljIGlubGluZSBpbnQgcGNpX2VuYWJs
+ZV9wY2llX2Vycm9yX3JlcG9ydGluZyhzdHJ1Y3QgcGNpX2RldiAqZGV2KQ0KPiA+ICAgew0KPiA+
+IEBAIC02Myw2ICs2NSw4IEBAIHN0YXRpYyBpbmxpbmUgaW50IHBjaV9jbGVhbnVwX2Flcl9lcnJv
+cl9zdGF0dXNfcmVncyhzdHJ1Y3QgcGNpX2RldiAqZGV2KQ0KPiA+ICAgew0KPiA+ICAgCXJldHVy
+biAtRUlOVkFMOw0KPiA+ICAgfQ0KPiA+ICtzdGF0aWMgaW5saW5lIHZvaWQgcGNpX3NhdmVfYWVy
+X3N0YXRlKHN0cnVjdCBwY2lfZGV2ICpkZXYpIHt9DQo+ID4gK3N0YXRpYyBpbmxpbmUgdm9pZCBw
+Y2lfcmVzdG9yZV9hZXJfc3RhdGUoc3RydWN0IHBjaV9kZXYgKmRldikge30NCj4gPiAgICNlbmRp
+Zg0KPiA+DQo+ID4gICB2b2lkIGNwZXJfcHJpbnRfYWVyKHN0cnVjdCBwY2lfZGV2ICpkZXYsIGlu
+dCBhZXJfc2V2ZXJpdHksDQo+IA0KPiAtLQ0KPiBTYXRoeWFuYXJheWFuYW4gS3VwcHVzd2FteQ0K
+PiBMaW51eCBrZXJuZWwgZGV2ZWxvcGVyDQoNCkludGVsIERldXRzY2hsYW5kIEdtYkgKUmVnaXN0
+ZXJlZCBBZGRyZXNzOiBBbSBDYW1wZW9uIDEwLTEyLCA4NTU3OSBOZXViaWJlcmcsIEdlcm1hbnkK
+VGVsOiArNDkgODkgOTkgODg1My0wLCB3d3cuaW50ZWwuZGUKTWFuYWdpbmcgRGlyZWN0b3JzOiBD
+aHJpc3RpbiBFaXNlbnNjaG1pZCwgR2FyeSBLZXJzaGF3CkNoYWlycGVyc29uIG9mIHRoZSBTdXBl
+cnZpc29yeSBCb2FyZDogTmljb2xlIExhdQpSZWdpc3RlcmVkIE9mZmljZTogTXVuaWNoCkNvbW1l
+cmNpYWwgUmVnaXN0ZXI6IEFtdHNnZXJpY2h0IE11ZW5jaGVuIEhSQiAxODY5MjgK
 
