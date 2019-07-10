@@ -2,66 +2,188 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 08FE7647E2
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2019 16:14:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C068564820
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2019 16:19:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfGJOOk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Jul 2019 10:14:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39430 "EHLO mail.kernel.org"
+        id S1727102AbfGJOTW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Jul 2019 10:19:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:34390 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726957AbfGJOOk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 10 Jul 2019 10:14:40 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D1D12086D;
-        Wed, 10 Jul 2019 14:14:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562768079;
-        bh=doOg+rHk2EN9esXNLf9coAoeUka6jalwXBt2NUvawdo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f47oWhKvnxmeDUYzYhus0hu7jRaCo5u4QFhREAWnendTAZThMO2ePqxaAn9iglU/7
-         3xR//69DOv7HVWwoo6g2fR9Dc8QpzjLtPdja8sHteYZT3Hwm8+v3rKxitPLDWwj5AA
-         fU30c2T8nrtYLZHXdsbauSDj5fgypEiH2xH8ql94=
-Date:   Wed, 10 Jul 2019 09:14:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-pci@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: reprobing BAR sizes and capabilities after a FLR?
-Message-ID: <20190710141438.GO128603@google.com>
-References: <20190709154019.GA30673@infradead.org>
+        id S1725911AbfGJOTV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 10 Jul 2019 10:19:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A34B72B;
+        Wed, 10 Jul 2019 07:19:20 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17BC03F71F;
+        Wed, 10 Jul 2019 07:19:17 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 15:19:08 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V13 05/12] PCI: dwc: Add ext config space capability
+ search API
+Message-ID: <20190710141900.GA8781@e121166-lin.cambridge.arm.com>
+References: <20190710062212.1745-1-vidyas@nvidia.com>
+ <20190710062212.1745-6-vidyas@nvidia.com>
+ <20190710103709.GA4063@e121166-lin.cambridge.arm.com>
+ <fd1fc10e-47d0-aaac-158d-1c19363ec8d3@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190709154019.GA30673@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <fd1fc10e-47d0-aaac-158d-1c19363ec8d3@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Alex]
+On Wed, Jul 10, 2019 at 04:57:23PM +0530, Vidya Sagar wrote:
+> On 7/10/2019 4:07 PM, Lorenzo Pieralisi wrote:
+> > On Wed, Jul 10, 2019 at 11:52:05AM +0530, Vidya Sagar wrote:
+> > > Add extended configuration space capability search API using struct dw_pcie *
+> > > pointer
+> > 
+> > Sentences are terminated with a period and this is v13 not v1, which
+> > proves that you do not read the commit logs you write.
+> > 
+> > I need you guys to understand that I can't rewrite commit logs all
+> > the time, I do not want to go as far as not accepting your patches
+> > anymore so please do pay attention to commit log details they
+> > are as important as the code itself.
+> > 
+> > https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com/
+> My sincere apologies.
+> Since I didn't touch this patch much all through this series, I missed it.
+> I'll make a point to not make such mistakes again.
+> Do you want me to send a new version fixing it?
 
-On Tue, Jul 09, 2019 at 08:40:19AM -0700, Christoph Hellwig wrote:
-> Hi all,
+I will update it, I just wanted to get the point across, no
+problems.
+
+Lorenzo
+
+> Thanks,
+> Vidya Sagar
 > 
-> I've just been talking to some firmware developers that were a little
-> surprised that Linux does not reprobe BAR sizes after a FLR.  I looked
-> at our code and we do not reprobe anything at all after a FLR.  Is it
-> a good assumption that a devices comes back in exactly the same state
-> after an FLR?
-
-I am a little nervous about the fact that we don't reprobe devices
-after reset because the reset may cause the device to load new
-firmware, which may cause arbitrary changes (device type, number and
-size of BARs, etc).  FLR is a little more restrictive than
-Conventional Reset, e.g., FLR must not affect the link state, so maybe
-it's safer to assume BAR sizes are unchanged.  But I'm not at all
-confident about that.
-
-I mooted the idea of reprobing after reset, but that would break higher
-level software that isn't prepared to see hotplug-like events caused by
-reset, so haven't gone that direction (yet).
-
-Bjorn
+> > 
+> > Thanks,
+> > Lorenzo
+> > 
+> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > > Acked-by: Thierry Reding <treding@nvidia.com>
+> > > ---
+> > > V13:
+> > > * None
+> > > 
+> > > V12:
+> > > * None
+> > > 
+> > > V11:
+> > > * None
+> > > 
+> > > V10:
+> > > * None
+> > > 
+> > > V9:
+> > > * Added Acked-by from Thierry
+> > > 
+> > > V8:
+> > > * Changed data types of return and arguments to be inline with data being returned
+> > >    and passed.
+> > > 
+> > > V7:
+> > > * None
+> > > 
+> > > V6:
+> > > * None
+> > > 
+> > > V5:
+> > > * None
+> > > 
+> > > V4:
+> > > * None
+> > > 
+> > > V3:
+> > > * None
+> > > 
+> > > V2:
+> > > * This is a new patch in v2 series
+> > > 
+> > >   drivers/pci/controller/dwc/pcie-designware.c | 41 ++++++++++++++++++++
+> > >   drivers/pci/controller/dwc/pcie-designware.h |  1 +
+> > >   2 files changed, 42 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > > index 7818b4febb08..181449e342f1 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > > @@ -53,6 +53,47 @@ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+> > >   }
+> > >   EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
+> > > +static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
+> > > +					    u8 cap)
+> > > +{
+> > > +	u32 header;
+> > > +	int ttl;
+> > > +	int pos = PCI_CFG_SPACE_SIZE;
+> > > +
+> > > +	/* minimum 8 bytes per capability */
+> > > +	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+> > > +
+> > > +	if (start)
+> > > +		pos = start;
+> > > +
+> > > +	header = dw_pcie_readl_dbi(pci, pos);
+> > > +	/*
+> > > +	 * If we have no capabilities, this is indicated by cap ID,
+> > > +	 * cap version and next pointer all being 0.
+> > > +	 */
+> > > +	if (header == 0)
+> > > +		return 0;
+> > > +
+> > > +	while (ttl-- > 0) {
+> > > +		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
+> > > +			return pos;
+> > > +
+> > > +		pos = PCI_EXT_CAP_NEXT(header);
+> > > +		if (pos < PCI_CFG_SPACE_SIZE)
+> > > +			break;
+> > > +
+> > > +		header = dw_pcie_readl_dbi(pci, pos);
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
+> > > +{
+> > > +	return dw_pcie_find_next_ext_capability(pci, 0, cap);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
+> > > +
+> > >   int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+> > >   {
+> > >   	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> > > index d8c66a6827dc..11c223471416 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > > @@ -252,6 +252,7 @@ struct dw_pcie {
+> > >   		container_of((endpoint), struct dw_pcie, ep)
+> > >   u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
+> > > +u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
+> > >   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+> > >   int dw_pcie_write(void __iomem *addr, int size, u32 val);
+> > > -- 
+> > > 2.17.1
+> > > 
+> 
