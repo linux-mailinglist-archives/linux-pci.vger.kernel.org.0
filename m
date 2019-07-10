@@ -2,30 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B7E196411F
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2019 08:23:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEB6764125
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2019 08:23:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbfGJGXG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Jul 2019 02:23:06 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:9831 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbfGJGXF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Jul 2019 02:23:05 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d2584420001>; Tue, 09 Jul 2019 23:22:58 -0700
+        id S1726996AbfGJGXN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Jul 2019 02:23:13 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:2149 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbfGJGXN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Jul 2019 02:23:13 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d2584540000>; Tue, 09 Jul 2019 23:23:16 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 09 Jul 2019 23:23:03 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 09 Jul 2019 23:23:11 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 09 Jul 2019 23:23:03 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jul
- 2019 06:23:03 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 10 Jul 2019 06:23:03 +0000
+        by hqpgpgate101.nvidia.com on Tue, 09 Jul 2019 23:23:11 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jul
+ 2019 06:23:10 +0000
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jul
+ 2019 06:23:10 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 10 Jul 2019 06:23:10 +0000
 Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d2584410000>; Tue, 09 Jul 2019 23:23:02 -0700
+        id <B5d2584480000>; Tue, 09 Jul 2019 23:23:09 -0700
 From:   Vidya Sagar <vidyas@nvidia.com>
 To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
         <robh+dt@kernel.org>, <mark.rutland@arm.com>,
@@ -37,9 +40,9 @@ CC:     <digetx@gmail.com>, <mperttunen@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
         <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V13 02/12] PCI: Disable MSI for Tegra root ports
-Date:   Wed, 10 Jul 2019 11:52:02 +0530
-Message-ID: <20190710062212.1745-3-vidyas@nvidia.com>
+Subject: [PATCH V13 03/12] PCI: dwc: Perform dbi regs write lock towards the end
+Date:   Wed, 10 Jul 2019 11:52:03 +0530
+Message-ID: <20190710062212.1745-4-vidyas@nvidia.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190710062212.1745-1-vidyas@nvidia.com>
 References: <20190710062212.1745-1-vidyas@nvidia.com>
@@ -47,39 +50,46 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562739778; bh=C2RgPOePUyK0ZeerFvt6uxTRpV/wqjkx1DWzpJAA8QY=;
+        t=1562739796; bh=Ph9ET10KcpWBNyztj2W1W87ow7MHuvRGYsAkwGxrtLo=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=BhKvylXxrvdcBFYR+OoOCd3gCRtas2Z71EBa6xAkWdVhiHzPBzRtEeI+LjUNgabw1
-         Jf/nE1Ne/YpsrVwtdODY9m31FTg9TwvyBYU86AQOEbfMRNVBrRNWm3eC+G4+tyf++3
-         KKSe1//r9qIcqGKNlrMv7lnhE7kMm6Jnfxvzekp9Ga+UYMsPo4UlP2JQyYYJ9tI4FY
-         8PoVsflQ40xEIb49WiDXJVcCKWGkfLLuTUQhZHOGje4+sxZRR08cHiRgH+r3oTYHAc
-         K60W/T8P8/Q6vGl1iOkwEg49BLoxiZfeFNP7v85EYxtFBeVq5Lb6qIclsXUi0ZLtA5
-         xZhsYyre02jVQ==
+        b=VJRZGOFirqt19PCzy0LtO1vg68dqzKa7Hp0Qwfl89UG9LiKziIEaR18QR1WmkeIGn
+         OOJWKpwqdUPDM/+PET28ExXH04euptkjucd/AEQtdxQY+DkXyNbOd1l/VYmkCL2bUC
+         7uDkSygm129LyvgRgiE2pJYEPodwztqQnUltD47q0PkfChCWb7AsTirXbuwIUrgVrg
+         iPiYqWRlR2taKmN9Sb67rkx8j1/c2aa2ak0v0w+i8W7PFxUQtnsBHe9ELUzmMMyMmh
+         IzP4QkTyTCKQ6zxRcMzbZyBDikNIJ9HXzVR48W0DNSRNisr8Xx3Pk6lyEY3SM2DddZ
+         Mn8hQfy5z++zw==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Tegra PCIe rootports don't generate MSI interrupts for PME and AER events.
-Since PCIe spec (Ref: r4.0 sec 7.7.1.2 and 7.7.2.2) doesn't support using
-a mix of INTx and MSI/MSI-X, MSI needs to be disabled to avoid root ports
-service drivers registering their respective ISRs with MSI interrupt and
-to let only INTx be used for all events.
+Some of DesignWare core's DBI registers (a.k.a configuration space
+registers) are write-protected with a lock without enabling which they are
+read-only by default. These write-protected registers are implementation
+specific. Tegra194's BAR-0 register which is at offset 0x10 in the
+configuration space is an example. Current implementation in
+dw_pcie_setup_rc() API attempts to unlock those write-protected registers
+whenever they are updated and lock them back again for writing. This patch
+attempts to unlock all such write-protected registers for writing in the
+beginning of the API once and lock them back again towards the end to avoid
+bloating the API with multiple unlock/lock sequences for all those
+write-protected registers.
 
 Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 Reviewed-by: Thierry Reding <treding@nvidia.com>
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
 ---
 V13:
 * None
 
 V12:
-* None
+* Modified commit message to make it explicit that write-protected registers are
+  implementation specific.
 
 V11:
-* Included older Tegra chips to extend the quirk as this issue is present in
-  older Tegra chips as well.
+* None
 
 V10:
 * None
@@ -88,80 +98,77 @@ V9:
 * None
 
 V8:
-* Changed quirk macro to consider class code as well to avoid this quirk
-  getting applied to Tegra194 when it is operating in endpoint mode. Also
-  quoted relevant sections from PCIe spec in comments.
+* None
 
 V7:
-* This is a new patch
+* None
 
- drivers/pci/quirks.c | 53 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+V6:
+* Moved write enable to the beginning of the API and write disable to the end
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index c66c0ca446c4..1d3cac43ecbc 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2592,6 +2592,59 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA,
- 			PCI_DEVICE_ID_NVIDIA_NVENET_15,
- 			nvenet_msi_disable);
+V5:
+* None
+
+V4:
+* None
+
+V3:
+* None
+
+V2:
+* None
+
+ drivers/pci/controller/dwc/pcie-designware-host.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index f93252d0da5b..d3156446ff27 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -628,6 +628,12 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 	u32 val, ctrl, num_ctrls;
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
  
-+/*
-+ * PCIe spec r4.0 sec 7.7.1.2 and sec 7.7.2.2 say that if MSI/MSI-X is enabled,
-+ * then the device can't use INTx interrupts. Tegra's PCIe root ports don't
-+ * generate MSI interrupts for PME and AER events instead only INTx interrupts
-+ * are generated. Though Tegra's PCIe root ports can generate MSI interrupts
-+ * for other events, since PCIe specificiation doesn't support using a mix of
-+ * INTx and MSI/MSI-X, it is required to disable MSI interrupts to avoid port
-+ * service drivers registering their respective ISRs for MSIs.
-+ */
-+static void pci_quirk_nvidia_tegra_disable_rp_msi(struct pci_dev *dev)
-+{
-+	dev->no_msi = 1;
-+}
-+DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad0,
-+			      PCI_CLASS_BRIDGE_PCI, 8,
-+			      pci_quirk_nvidia_tegra_disable_rp_msi);
-+DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad1,
-+			      PCI_CLASS_BRIDGE_PCI, 8,
-+			      pci_quirk_nvidia_tegra_disable_rp_msi);
-+DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad2,
-+			      PCI_CLASS_BRIDGE_PCI, 8,
-+			      pci_quirk_nvidia_tegra_disable_rp_msi);
-+DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf0,
-+			      PCI_CLASS_BRIDGE_PCI, 8,
-+			      pci_quirk_nvidia_tegra_disable_rp_msi);
-+DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf1,
-+			      PCI_CLASS_BRIDGE_PCI, 8,
-+			      pci_quirk_nvidia_tegra_disable_rp_msi);
-+DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c,
-+			      PCI_CLASS_BRIDGE_PCI, 8,
-+			      pci_quirk_nvidia_tegra_disable_rp_msi);
-+DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d,
-+			      PCI_CLASS_BRIDGE_PCI, 8,
-+			      pci_quirk_nvidia_tegra_disable_rp_msi);
-+DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e12,
-+			      PCI_CLASS_BRIDGE_PCI, 8,
-+			      pci_quirk_nvidia_tegra_disable_rp_msi);
-+DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e13,
-+			      PCI_CLASS_BRIDGE_PCI, 8,
-+			      pci_quirk_nvidia_tegra_disable_rp_msi);
-+DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0fae,
-+			      PCI_CLASS_BRIDGE_PCI, 8,
-+			      pci_quirk_nvidia_tegra_disable_rp_msi);
-+DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0faf,
-+			      PCI_CLASS_BRIDGE_PCI, 8,
-+			      pci_quirk_nvidia_tegra_disable_rp_msi);
-+DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x10e5,
-+			      PCI_CLASS_BRIDGE_PCI, 8,
-+			      pci_quirk_nvidia_tegra_disable_rp_msi);
-+DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x10e6,
-+			      PCI_CLASS_BRIDGE_PCI, 8,
-+			      pci_quirk_nvidia_tegra_disable_rp_msi);
++	/*
++	 * Enable DBI read-only registers for writing/updating configuration.
++	 * Write permission gets disabled towards the end of this function.
++	 */
++	dw_pcie_dbi_ro_wr_en(pci);
 +
- /*
-  * Some versions of the MCP55 bridge from Nvidia have a legacy IRQ routing
-  * config register.  This register controls the routing of legacy
+ 	dw_pcie_setup(pci);
+ 
+ 	if (!pp->ops->msi_host_init) {
+@@ -650,12 +656,10 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
+ 
+ 	/* Setup interrupt pins */
+-	dw_pcie_dbi_ro_wr_en(pci);
+ 	val = dw_pcie_readl_dbi(pci, PCI_INTERRUPT_LINE);
+ 	val &= 0xffff00ff;
+ 	val |= 0x00000100;
+ 	dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
+-	dw_pcie_dbi_ro_wr_dis(pci);
+ 
+ 	/* Setup bus numbers */
+ 	val = dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
+@@ -687,15 +691,13 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 
+ 	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
+ 
+-	/* Enable write permission for the DBI read-only register */
+-	dw_pcie_dbi_ro_wr_en(pci);
+ 	/* Program correct class for RC */
+ 	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
+-	/* Better disable write permission right after the update */
+-	dw_pcie_dbi_ro_wr_dis(pci);
+ 
+ 	dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, &val);
+ 	val |= PORT_LOGIC_SPEED_CHANGE;
+ 	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
++
++	dw_pcie_dbi_ro_wr_dis(pci);
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
 -- 
 2.17.1
 
