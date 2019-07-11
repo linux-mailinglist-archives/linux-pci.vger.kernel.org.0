@@ -2,152 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2695765989
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2019 16:58:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8360E65AA5
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2019 17:44:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728745AbfGKO6A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Jul 2019 10:58:00 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:14953 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728594AbfGKO6A (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Jul 2019 10:58:00 -0400
+        id S1728325AbfGKPoK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Jul 2019 11:44:10 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:24466 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728068AbfGKPoK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Jul 2019 11:44:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1562857079; x=1594393079;
-  h=from:to:cc:message-id:in-reply-to:references:
-   mime-version:subject:resent-from:resent-cc:date:
-   content-transfer-encoding;
-  bh=kBlveuRuLMfyuhTLyavKKcr81LjwYg6bfTMtC9Bgl7s=;
-  b=U3UKbA9oqtompUxBpLHxyZHTHIXOZJjcAu/JAfY+YTeZptq1JTx2VUXl
-   PNbJZ75P524YkMb4GA33BhcQJifZELeNvQ6z8r+Q9LvWLD8w6fmzfRj+1
-   36SOrLMWS8TXueagITfrWkjuHhfQbXQ/7MC38p6O0/QhgGq/tGk+Bs1sN
+  t=1562859849; x=1594395849;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=cXsWhyai1acE7HFTmBeuqY4fcd00qt25CKfGa+mnBNA=;
+  b=cNr7b8ciPvoaV+ietisXq/h4+UfDg80TYUqDUSmS1yHEpVwGSyijfb4n
+   qJHM4lJghzbImJ5pI17kZmoIBQZq90mcZ9H1tX3CxhgZyktuL9Mdv6sBE
+   PymOzCHDZQ2Rn3qJ2ce+bx2bBfLcEAsfRUBrjvZGFTcDAHADWOJlhsb38
    Y=;
-X-IronPort-AV: E=Sophos;i="5.62,478,1554768000"; 
-   d="scan'208";a="410282856"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 11 Jul 2019 14:57:57 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id 12344A22F2;
-        Thu, 11 Jul 2019 14:57:56 +0000 (UTC)
-Received: from EX13D04UEA001.ant.amazon.com (10.43.61.40) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 11 Jul 2019 14:57:56 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D04UEA001.ant.amazon.com (10.43.61.40) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 11 Jul 2019 14:57:56 +0000
-Received: from u9ff250417f405e.ant.amazon.com (10.107.0.52) by
- mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Thu, 11 Jul 2019 14:57:55 +0000
-Received: from EX13D13UWB004.ant.amazon.com (10.43.161.218) by
- EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server
- (TLS) id 15.0.1367.3 via Mailbox Transport; Wed, 10 Jul 2019 16:45:55 +0000
-Received: from EX13MTAUEB001.ant.amazon.com (10.43.60.96) by
- EX13D13UWB004.ant.amazon.com (10.43.161.218) with Microsoft SMTP Server
- (TLS) id 15.0.1367.3; Wed, 10 Jul 2019 16:45:54 +0000
-Received: from email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com
- (10.124.125.2) by mail-relay.amazon.com (10.43.60.129) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Wed, 10 Jul 2019 16:45:54
- +0000
-Received: by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix)
-        id E2DCBA243C; Wed, 10 Jul 2019 16:45:52 +0000 (UTC)
-Received: from u9ff250417f405e.ant.amazon.com
- (pdx2-ws-svc-lb17-vlan3.amazon.com [10.247.140.70]) by
- email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS
- id 5579BA18F9; Wed, 10 Jul 2019 16:45:52 +0000 (UTC)
-Received: from u9ff250417f405e.ant.amazon.com (localhost [127.0.0.1]) by
- u9ff250417f405e.ant.amazon.com (8.15.2/8.15.2/Debian-10) with ESMTP id
- x6AGjmRh022241; Wed, 10 Jul 2019 19:45:48 +0300
-Received: (from jonnyc@localhost)
-        by u9ff250417f405e.ant.amazon.com (8.15.2/8.15.2/Submit) id x6AGjknT022047;
-        Wed, 10 Jul 2019 19:45:46 +0300
-From:   Jonathan Chocron <jonnyc@amazon.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <alisaidi@amazon.com>, <ronenk@amazon.com>, <barakw@amazon.com>,
-        <talel@amazon.com>, <hanochu@amazon.com>, <hhhawa@amazon.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
-Message-ID: <20190710164519.17883-9-jonnyc@amazon.com>
-In-Reply-To: <20190710164519.17883-1-jonnyc@amazon.com>
+X-IronPort-AV: E=Sophos;i="5.62,479,1554768000"; 
+   d="scan'208";a="815651803"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 11 Jul 2019 15:44:06 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com (Postfix) with ESMTPS id BED6F281F5D;
+        Thu, 11 Jul 2019 15:44:03 +0000 (UTC)
+Received: from EX13D02UWB001.ant.amazon.com (10.43.161.240) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 11 Jul 2019 15:44:03 +0000
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13D02UWB001.ant.amazon.com (10.43.161.240) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 11 Jul 2019 15:44:02 +0000
+Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
+ EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1367.000;
+ Thu, 11 Jul 2019 15:44:02 +0000
+From:   "Chocron, Jonathan" <jonnyc@amazon.com>
+To:     "Shenhar, Talel" <talel@amazon.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Hanoch, Uri" <hanochu@amazon.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "Wasserstrom, Barak" <barakw@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+Subject: Re: [PATCH 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe
+ host bridge binding
+Thread-Topic: [PATCH 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe
+ host bridge binding
+Thread-Index: AQHVNz7sM84qVxUGzEGLjbSa8Pyh36bFAYmAgAAm/wCAAGfkAA==
+Date:   Thu, 11 Jul 2019 15:44:02 +0000
+Message-ID: <44bf0c96505bb3620bec10d378eac3f6d60ceb4f.camel@amazon.com>
 References: <20190710164519.17883-1-jonnyc@amazon.com>
-Content-Type: text/plain
+         <20190710164519.17883-6-jonnyc@amazon.com>
+         <36e8c3b0-feeb-db8f-3808-0218b54adcec@amazon.com>
+         <20190711093210.GA26088@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20190711093210.GA26088@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.160.245]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <712B7F4B1C184E4E9F1C6E079F224C5B@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Subject: [PATCH 8/8] PCI: dw: Add support for
- PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
-Date:   Thu, 11 Jul 2019 17:57:54 +0300
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This basically aligns the usage of PCI_PROBE_ONLY and
-PCI_REASSIGN_ALL_BUS in dw_pcie_host_init() with the logic in
-pci_host_common_probe().
-
-Now it will be possible to control via the devicetree whether to just
-probe the PCI bus (in cases where FW already configured it) or to fully
-configure it.
-
-Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
----
- .../pci/controller/dwc/pcie-designware-host.c | 23 +++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pc=
-i/controller/dwc/pcie-designware-host.c
-index d2ca748e4c85..0a294d8aa21a 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -342,6 +342,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (!bridge)
- 		return -ENOMEM;
-=20
-+	of_pci_check_probe_only();
-+
- 	ret =3D devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
- 					&bridge->windows, &pp->io_base);
- 	if (ret)
-@@ -474,6 +476,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
-=20
- 	pp->root_bus_nr =3D pp->busn->start;
-=20
-+	/* Do not reassign bus nums if probe only */
-+	if (!pci_has_flag(PCI_PROBE_ONLY))
-+		pci_add_flags(PCI_REASSIGN_ALL_BUS);
-+
- 	bridge->dev.parent =3D dev;
- 	bridge->sysdata =3D pp;
- 	bridge->busnr =3D pp->root_bus_nr;
-@@ -490,11 +496,20 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (pp->ops->scan_bus)
- 		pp->ops->scan_bus(pp);
-=20
--	pci_bus_size_bridges(pp->root_bus);
--	pci_bus_assign_resources(pp->root_bus);
-+	/*
-+	 * We insert PCI resources into the iomem_resource and
-+	 * ioport_resource trees in either pci_bus_claim_resources()
-+	 * or pci_bus_assign_resources().
-+	 */
-+	if (pci_has_flag(PCI_PROBE_ONLY)) {
-+		pci_bus_claim_resources(pp->root_bus);
-+	} else {
-+		pci_bus_size_bridges(pp->root_bus);
-+		pci_bus_assign_resources(pp->root_bus);
-=20
--	list_for_each_entry(child, &pp->root_bus->children, node)
--		pcie_bus_configure_settings(child);
-+		list_for_each_entry(child, &pp->root_bus->children, node)
-+			pcie_bus_configure_settings(child);
-+	}
-=20
- 	pci_bus_add_devices(pp->root_bus);
- 	return 0;
---=20
-2.17.1
-
-
+T24gVGh1LCAyMDE5LTA3LTExIGF0IDEwOjMyICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
+ZToNCj4gT24gVGh1LCBKdWwgMTEsIDIwMTkgYXQgMTA6MTI6MzVBTSArMDMwMCwgU2hlbmhhciwg
+VGFsZWwgd3JvdGU6DQo+ID4gDQo+ID4gT24gNy8xMC8yMDE5IDc6NDUgUE0sIEpvbmF0aGFuIENo
+b2Nyb24gd3JvdGU6DQo+ID4gPiBEb2N1bWVudCBBbWF6b24ncyBBbm5hcHVybmEgTGFicyBQQ0ll
+IGhvc3QgYnJpZGdlLg0KPiA+IA0KPiA+IFRoYXQgaXMgdGhlIHdheSEgKGJlc3QgdG8ga2VlcCBz
+YW1lIHdvcmRpbmdzIChBbWF6b24ncykNCj4gDQo+IEd1eXMsDQo+IA0KPiBhcyBhIGhlYWRzLXVw
+LCB0aGUgb3JpZ2luYWwgcG9zdGluZywgZm9yIHdoYXRldmVyIHJlYXNvbiwgZGlkIG5vdCBoaXQN
+Cj4gbGludXgtcGNpQHZnZXIsIHdoaWNoIG1lYW5zIHRoYXQgZnJvbSBhIFBDSSBwYXRjaGVzIHF1
+ZXVlIHJldmlldw0KPiBwb2ludA0KPiBvZiB2aWV3IGl0IGRvZXMgbm90IGV4aXN0Lg0KPiANCj4g
+SXQgb3VnaHQgdG8gYmUgZml4ZWQgb3RoZXJ3aXNlIHdlIHdvbid0IGJlIGFibGUgdG8gcmV2aWV3
+IHRoZSBjb2RlLg0KPiANCj4gTG9yZW56bw0KPiANCg0KSSd2ZSBzdWNjZWVkZWQgdG8gcmVkaXJl
+Y3QgdGhlIG9yaWdpbmFsIGVtYWlscyB0byBsaW51eC1wY2lAdmdlciwgc28NCnBsZWFzZSBwcm9j
+ZWVkIHdpdGggcmV2aWV3aW5nIHRoZSBwYXRjaGVzLg0KDQpUaGFua3MsDQogICBKb25hdGhhbg0K
