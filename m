@@ -2,57 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E53D2661AF
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2019 00:27:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6462661AC
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2019 00:26:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbfGKW07 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Jul 2019 18:26:59 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39671 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728757AbfGKW0O (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Jul 2019 18:26:14 -0400
-Received: by mail-io1-f67.google.com with SMTP id f4so16157226ioh.6;
-        Thu, 11 Jul 2019 15:26:14 -0700 (PDT)
+        id S1728890AbfGKW0R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Jul 2019 18:26:17 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43825 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728762AbfGKW0Q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Jul 2019 18:26:16 -0400
+Received: by mail-io1-f66.google.com with SMTP id k20so16112075ios.10;
+        Thu, 11 Jul 2019 15:26:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=B7Q+88/1r0u7c2B6QjPHmF5D3UfMD7VkncBOPB4xqnY=;
-        b=WBoEHXu0KZ4DEZnPjfSX+XW+fGJCDiT5qC5+TC0Bw9R3Zg5bndhAmFizc7RNrWVpaX
-         iNkFBOdQTjpiaAijq/F9tfezaY9SICoZZJbCjjCtxwSxyg+6nh+KscU5fv/gEdi6sqCI
-         hAKC28MCHrf8Dr+jXdjUZDlGKj/Lst9vRID1mTykfPEiM2JPoFp3bw0Bbn/4knPZE25K
-         aML2JaHGoZ6pBA2d0qAlnav+RI/dQHe7x9pzLYzEThPBeYKuzFk9tN1QeEFpDE4T2u0h
-         42tzZwlLjwT7ptCTYFHHB03PhMsVh9bqav2+AP5pRVRESUDKD609P2FqAIw6rB26jmJX
-         WBTA==
+        bh=ojyucIvKYu7CDUehRCpB+nredG5sCsEyfgfj3qkRIiw=;
+        b=i/mEcKa+xHrz06ZIZEmoKfO8o/1ZFEOiblV2dinwYFXK6eAxvmnu+0vvfkAbwYS6O4
+         fuAICrMduoNmJHBRxgAXr3bxwCy3RrjtDIpwobjGSj4QOlgWbSowotg9OI3XiSSNKK43
+         UQEru/kEstdUTG9/lvkyL3okm7v9jVQYdpYCMg1MNwEK9NogLATOPdfsnsaT/q07NdvZ
+         yIvN/NhQUCE5DdOz+bpGkADj5zI5L6QGyl5kJjqZgXolX4xQmTRFYsuZDK9jPdixYFCP
+         Qde3xuqEue7CeShjiNMlJRB43SqPt37mwJHiomcrbAlXKyHy/6HhJ9BiIcgkzR5y+Qgx
+         DGAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=B7Q+88/1r0u7c2B6QjPHmF5D3UfMD7VkncBOPB4xqnY=;
-        b=rDJvgQTqbrxqkaaacWHNb4yYvwmWpa0dUrcSxn/R5fPu459s7Tel6fkcOJOGDVpSHn
-         RisO4dTqCSM+xchpsNcAEyIxh2gA40PxHNLXJ3NcOPuKCnLMqgvqb4V7irkPX7zT03rB
-         b+xRvnbvMMDE0U8ePAUAyGzJD+EQiQrOA8+5D5yVHSvCV/GpbOPcV+tRn4l8GTW9YIS/
-         jGuGt5/0+wYVYeURWCj5ZaJmadoERFOVzwAPAhShS0gyR2jlbKT8catuRzzbQG8ZCzye
-         8IBPb00gxONTdD2mcf3x3Jqc4pGrcY9A8dLH0iq90JDLT+evICCdob64KSY78L0Bok6j
-         /C0Q==
-X-Gm-Message-State: APjAAAVnLsdkMkyWRU+6ILRbgcmEU8AntyJk2D3OeEPh6awgg5tOY1pt
-        1KoVf41XJ1TqApWBM9lMSHCRC+4V4CZRRg==
-X-Google-Smtp-Source: APXvYqzIOpFYThRbBahecvJaRJQDIcL+OA8MrF+nPbgf4gJ2Cl91cYTYiwTeyF2E0q03szbbyEW5tQ==
-X-Received: by 2002:a6b:641a:: with SMTP id t26mr6958337iog.3.1562883973499;
-        Thu, 11 Jul 2019 15:26:13 -0700 (PDT)
+        bh=ojyucIvKYu7CDUehRCpB+nredG5sCsEyfgfj3qkRIiw=;
+        b=dCP8dOhCILMoLLZ4iXxndTFfLOveB4vnkJbw9CzecJVY/X1Y+OsnRPfNvPELrr6KtC
+         G2sDINpdUMCrRqSFjaBOipLVb50Dg3fYUteHk08bjQnCCjiIReKHqeCYQcHzup+bBiMO
+         WFCNoH1DY2WvKhrRehWt2q6NCd9Bw1ASi+O99UfYM5imAF+78/0eXSYqzSIUUvVxEGdl
+         YMyHRVpHrhGPonYQ6+Io8rVJH9fs+FCNUu7S9KcpYw4DAbuigoRni2FuGrhgeIvbY9BH
+         0nslDywR8WyoqQniYuDEL8glbtmw7LvLSDLJ6BSz4WvyOJouZwSf91O8vmXeRafk2Jf/
+         5enQ==
+X-Gm-Message-State: APjAAAXkTZMSiA8WOnQPqyiGeBRw7S2Ee4dW3sJF0haeoUF5PG0IbPRM
+        XC1TE+qp8kJ0UAVUUaFyp2Bd68RWJM7adA==
+X-Google-Smtp-Source: APXvYqxVaWyX7BoBLPXUnidLV1bwccbWvm2pLjuPiRmmJRziC/3nXuJ9jBAfSDZji5oj4xFHzZojEQ==
+X-Received: by 2002:a5d:940b:: with SMTP id v11mr7205793ion.69.1562883974909;
+        Thu, 11 Jul 2019 15:26:14 -0700 (PDT)
 Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id s2sm4478982ioj.8.2019.07.11.15.26.12
+        by smtp.gmail.com with ESMTPSA id s2sm4478982ioj.8.2019.07.11.15.26.13
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 15:26:12 -0700 (PDT)
+        Thu, 11 Jul 2019 15:26:14 -0700 (PDT)
 From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
 To:     linux-pci@vger.kernel.org, bhelgaas@google.com,
         linux-kernel@vger.kernel.org
 Cc:     skhan@linuxfoundation.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         skunberg.kelsey@gmail.com
-Subject: [PATCH 02/11] PCI: Move PME declarations to drivers/pci/pci.h
-Date:   Thu, 11 Jul 2019 16:23:32 -0600
-Message-Id: <20190711222341.111556-3-skunberg.kelsey@gmail.com>
+Subject: [PATCH 03/11] PCI: Move *_host_bridge_device() declarations to drivers/pci.pci.h
+Date:   Thu, 11 Jul 2019 16:23:33 -0600
+Message-Id: <20190711222341.111556-4-skunberg.kelsey@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190711222341.111556-1-skunberg.kelsey@gmail.com>
 References: <20190711222341.111556-1-skunberg.kelsey@gmail.com>
@@ -63,42 +63,44 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-pci_check_pme_status() and pci_pme_wakeup_bus() are only
-called within drivers/pci/. Since declarations do not need to be visible
+pci_get_host_bridge_device() and pci_put_host_bridge_device() are only
+called within drivers/pci/pci.h. Since declarations do not need to be visible
 to the rest of the kernel, move to drivers/pci/pci.h.
 
 Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
 ---
- drivers/pci/pci.h   | 2 ++
- include/linux/pci.h | 2 --
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/pci.h   | 3 +++
+ include/linux/pci.h | 3 ---
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 7e30fbde5c84..800fe8989f48 100644
+index 800fe8989f48..f2ba33613c21 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -85,6 +85,8 @@ void pci_power_up(struct pci_dev *dev);
- void pci_disable_enabled_device(struct pci_dev *dev);
- int pci_finish_runtime_suspend(struct pci_dev *dev);
- void pcie_clear_root_pme_status(struct pci_dev *dev);
-+bool pci_check_pme_status(struct pci_dev *dev);
-+void pci_pme_wakeup_bus(struct pci_bus *bus);
- int __pci_pme_wakeup(struct pci_dev *dev, void *ign);
- void pci_pme_restore(struct pci_dev *dev);
- bool pci_dev_keep_suspended(struct pci_dev *dev);
+@@ -100,6 +100,9 @@ void pci_free_cap_save_buffers(struct pci_dev *dev);
+ bool pci_bridge_d3_possible(struct pci_dev *dev);
+ void pci_bridge_d3_update(struct pci_dev *dev);
+ 
++struct device *pci_get_host_bridge_device(struct pci_dev *dev);
++void pci_put_host_bridge_device(struct device *dev);
++
+ static inline void pci_wakeup_event(struct pci_dev *dev)
+ {
+ 	/* Wait 100 ms before the system can be put into a sleep state. */
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 3bda6a87a815..cedebb08a32d 100644
+index cedebb08a32d..39e609ea316e 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -1187,8 +1187,6 @@ int pci_wake_from_d3(struct pci_dev *dev, bool enable);
- int pci_prepare_to_sleep(struct pci_dev *dev);
- int pci_back_from_sleep(struct pci_dev *dev);
- bool pci_dev_run_wake(struct pci_dev *dev);
--bool pci_check_pme_status(struct pci_dev *dev);
--void pci_pme_wakeup_bus(struct pci_bus *bus);
- void pci_d3cold_enable(struct pci_dev *dev);
- void pci_d3cold_disable(struct pci_dev *dev);
- bool pcie_relaxed_ordering_enabled(struct pci_dev *dev);
+@@ -639,9 +639,6 @@ static inline struct pci_dev *pci_upstream_bridge(struct pci_dev *dev)
+ 	return dev->bus->self;
+ }
+ 
+-struct device *pci_get_host_bridge_device(struct pci_dev *dev);
+-void pci_put_host_bridge_device(struct device *dev);
+-
+ #ifdef CONFIG_PCI_MSI
+ static inline bool pci_dev_msi_enabled(struct pci_dev *pci_dev)
+ {
 -- 
 2.20.1
 
