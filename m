@@ -2,64 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D1D5D65949
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2019 16:45:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6732165959
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2019 16:50:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbfGKOpt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Jul 2019 10:45:49 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:18470 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728102AbfGKOps (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Jul 2019 10:45:48 -0400
+        id S1728750AbfGKOuM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Jul 2019 10:50:12 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:43577 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728538AbfGKOuL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Jul 2019 10:50:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1562856347; x=1594392347;
-  h=from:to:cc:message-id:in-reply-to:references:
-   mime-version:subject:resent-from:resent-cc:date:
-   content-transfer-encoding;
-  bh=rEwhUcItizhTKKQJkJSUZmJogRweHOEiCZMdT5sfIX4=;
-  b=ZLvIvWQSBJmF3lhBHejZTopb3tnZQh7cF+z4KXsQPTy/2sQr/ncEShB0
-   tXDDEYkvbWpROktRjkPqXw048uqhR70MMsHuQOJ9I46L7nt+iuOsgl7uI
-   Brc3Xk4X/44ZxsMse4/1tX5eojdzL7AGFkTez6gNARV1XSERI5P4smycH
-   M=;
+  t=1562856610; x=1594392610;
+  h=from:to:cc:message-id:mime-version:subject:resent-from:
+   resent-cc:date:content-transfer-encoding;
+  bh=cbNKXHdWGGN5N4ljL3044bGhDdetj8MItmt22zUHnUM=;
+  b=W1JL3mvtD1ckvn701aIaobkIN0tnEssc01Evbi2tdkgi2u+HZz76kB8x
+   uOGKuC5Mcf+w/6WcnZVlAjTI4ozNfjQslB1b3RKdwPe1tNMwNYzuxjbuU
+   vfUwtqOaEa566drug8FLMdmov1YOqo2WnIIpIi6EhHD1Ctp3LIZcoTeJr
+   w=;
 X-IronPort-AV: E=Sophos;i="5.62,478,1554768000"; 
-   d="scan'208";a="815639539"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 11 Jul 2019 14:45:45 +0000
+   d="scan'208";a="741352044"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 11 Jul 2019 14:50:08 +0000
 Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com (Postfix) with ESMTPS id 7D50DA2205;
-        Thu, 11 Jul 2019 14:45:45 +0000 (UTC)
-Received: from EX13D13UWB004.ant.amazon.com (10.43.161.218) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 11 Jul 2019 14:45:45 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D13UWB004.ant.amazon.com (10.43.161.218) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 11 Jul 2019 14:45:44 +0000
+        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id 9F981A17B9;
+        Thu, 11 Jul 2019 14:50:07 +0000 (UTC)
+Received: from EX13D01UWB004.ant.amazon.com (10.43.161.157) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 11 Jul 2019 14:50:06 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13d01UWB004.ant.amazon.com (10.43.161.157) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 11 Jul 2019 14:50:06 +0000
 Received: from u9ff250417f405e.ant.amazon.com (10.107.0.52) by
- mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Thu, 11 Jul 2019 14:45:42 +0000
-Received: from EX13D13UWA002.ant.amazon.com (10.43.160.172) by
+ mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Thu, 11 Jul 2019 14:50:05 +0000
+Received: from EX13D13UWA004.ant.amazon.com (10.43.160.251) by
  EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server
- (TLS) id 15.0.1367.3 via Mailbox Transport; Wed, 10 Jul 2019 16:45:46 +0000
-Received: from EX13MTAUEB001.ant.amazon.com (10.43.60.96) by
- EX13D13UWA002.ant.amazon.com (10.43.160.172) with Microsoft SMTP Server
- (TLS) id 15.0.1367.3; Wed, 10 Jul 2019 16:45:46 +0000
-Received: from email-inbound-relay-1d-98acfc19.us-east-1.amazon.com
- (10.124.125.2) by mail-relay.amazon.com (10.43.60.129) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Wed, 10 Jul 2019 16:45:45
+ (TLS) id 15.0.1367.3 via Mailbox Transport; Wed, 10 Jul 2019 16:45:28 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13D13UWA004.ant.amazon.com (10.43.160.251) with Microsoft SMTP Server
+ (TLS) id 15.0.1367.3; Wed, 10 Jul 2019 16:45:28 +0000
+Received: from email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com
+ (10.25.10.214) by mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP
+ Server id 15.0.1367.3 via Frontend Transport; Wed, 10 Jul 2019 16:45:28
  +0000
-Received: by email-inbound-relay-1d-98acfc19.us-east-1.amazon.com (Postfix)
-        id 6CB35A2515; Wed, 10 Jul 2019 16:45:44 +0000 (UTC)
+Received: by email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix)
+        id 1D462A2387; Wed, 10 Jul 2019 16:45:28 +0000 (UTC)
 Received: from u9ff250417f405e.ant.amazon.com
- (iad7-ws-svc-lb50-vlan3.amazon.com [10.0.93.214]) by
- email-inbound-relay-1d-98acfc19.us-east-1.amazon.com (Postfix) with ESMTPS
- id 80A84A20A2; Wed, 10 Jul 2019 16:45:43 +0000 (UTC)
+ (pdx2-ws-svc-lb17-vlan3.amazon.com [10.247.140.70]) by
+ email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix) with ESMTPS
+ id 50D71A2361; Wed, 10 Jul 2019 16:45:27 +0000 (UTC)
 Received: from u9ff250417f405e.ant.amazon.com (localhost [127.0.0.1]) by
  u9ff250417f405e.ant.amazon.com (8.15.2/8.15.2/Debian-10) with ESMTP id
- x6AGjd5W021757; Wed, 10 Jul 2019 19:45:39 +0300
+ x6AGjNOk021313; Wed, 10 Jul 2019 19:45:23 +0300
 Received: (from jonnyc@localhost)
-        by u9ff250417f405e.ant.amazon.com (8.15.2/8.15.2/Submit) id x6AGjbb8021728;
-        Wed, 10 Jul 2019 19:45:37 +0300
+        by u9ff250417f405e.ant.amazon.com (8.15.2/8.15.2/Submit) id x6AGjK5C021200;
+        Wed, 10 Jul 2019 19:45:20 +0300
 From:   Jonathan Chocron <jonnyc@amazon.com>
 To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
         <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
@@ -69,14 +68,12 @@ CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
         <talel@amazon.com>, <hanochu@amazon.com>, <hhhawa@amazon.com>,
         <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
-Message-ID: <20190710164519.17883-6-jonnyc@amazon.com>
-In-Reply-To: <20190710164519.17883-1-jonnyc@amazon.com>
-References: <20190710164519.17883-1-jonnyc@amazon.com>
+Message-ID: <20190710164519.17883-1-jonnyc@amazon.com>
 Content-Type: text/plain
 MIME-Version: 1.0
-Subject: [PATCH 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host
- bridge binding
-Date:   Thu, 11 Jul 2019 17:45:41 +0300
+Subject: [PATCH 0/8] Amazon's Annapurna Labs DT-based PCIe host controller
+ driver
+Date:   Thu, 11 Jul 2019 17:50:03 +0300
 X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
@@ -84,82 +81,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Document Amazon's Annapurna Labs PCIe host bridge.
+This series adds support for Amazon's Annapurna Labs DT-based PCIe host
+controller driver.
+Additionally, it adds 3 quirks (ACS, VPD and MSI-X) and 2 generic DWC patch=
+es.
 
-Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
----
- .../devicetree/bindings/pci/pcie-al.txt       | 45 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 46 insertions(+)
+Regarding the 2nd DWC patch (PCI flags support), do you think this should
+be done in the context of a host-bridge driver at all (as opposed to PCI
+system-wide code)?
+
+
+Ali Saidi (1):
+  PCI: Add ACS quirk for Amazon Annapurna Labs root ports
+
+Jonathan Chocron (7):
+  PCI: Add Amazon's Annapurna Labs vendor ID
+  PCI/VPD: Add VPD release quirk for Amazon Annapurna Labs host bridge
+  PCI: Add quirk to disable MSI support for Amazon's Annapurna Labs host
+    bridge
+  dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
+  PCI: al: Add support for DW based driver type
+  PCI: dw: Add validation that PCIe core is set to correct mode
+  PCI: dw: Add support for PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
+
+ .../devicetree/bindings/pci/pcie-al.txt       |  45 ++
+ MAINTAINERS                                   |   1 +
+ drivers/pci/controller/dwc/Kconfig            |  11 +
+ drivers/pci/controller/dwc/pcie-al.c          | 397 ++++++++++++++++++
+ .../pci/controller/dwc/pcie-designware-ep.c   |   8 +
+ .../pci/controller/dwc/pcie-designware-host.c |  31 +-
+ drivers/pci/quirks.c                          |  27 ++
+ drivers/pci/vpd.c                             |  12 +
+ include/linux/pci_ids.h                       |   2 +
+ 9 files changed, 530 insertions(+), 4 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
 
-diff --git a/Documentation/devicetree/bindings/pci/pcie-al.txt b/Documentat=
-ion/devicetree/bindings/pci/pcie-al.txt
-new file mode 100644
-index 000000000000..d92cc529490e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/pcie-al.txt
-@@ -0,0 +1,45 @@
-+* Amazon Annapurna Labs PCIe host bridge
-+
-+Annapurna Labs' PCIe Host Controller is based on the Synopsys DesignWare
-+PCI core.
-+It shares common functions with the PCIe DesignWare core driver and inheri=
-ts
-+common properties defined in Documentation/devicetree/bindings/pci/designw=
-are-pcie.txt.
-+Properties of the host controller node that differ from it are:
-+
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Value should contain
-+			- "amazon,al-pcie"
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Register ranges as listed in the reg-names property
-+
-+- reg-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Must include the following entries
-+			- "config"	PCIe ECAM space
-+			- "controller"	AL proprietary registers
-+			- "dbi"		Designware PCIe registers
-+
-+Example:
-+
-+	pcie-external0 {
-+		compatible =3D "amazon,al-pcie";
-+		reg =3D <0x0 0xfb600000 0x0 0x00100000
-+		       0x0 0xfd800000 0x0 0x00010000
-+		       0x0 0xfd810000 0x0 0x00001000>;
-+		reg-names =3D "config", "controller", "dbi";
-+		bus-range =3D <0 255>;
-+		device_type =3D "pci";
-+		#address-cells =3D <3>;
-+		#size-cells =3D <2>;
-+		#interrupt-cells =3D <1>;
-+		interrupts =3D <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-map-mask =3D <0x00 0 0 7>;
-+		interrupt-map =3D <0x0000 0 0 1 &gic_main GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH=
->; /* INTa */
-+		ranges =3D <0x02000000 0x0 0xc0010000 0x0 0xc0010000 0x0 0x07ff0000>;
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5a6137df3f0e..d555beb794bb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12205,6 +12205,7 @@ PCIE DRIVER FOR ANNAPURNA LABS
- M:	Jonathan Chocron <jonnyc@amazon.com>
- L:	linux-pci@vger.kernel.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/pci/pcie-al.txt
- F:	drivers/pci/controller/dwc/pcie-al.c
-=20
- PCIE DRIVER FOR AMLOGIC MESON
 --=20
 2.17.1
 
