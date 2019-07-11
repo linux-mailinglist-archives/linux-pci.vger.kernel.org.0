@@ -2,45 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 13C4B66250
+	by mail.lfdr.de (Postfix) with ESMTP id 7DD7066251
 	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2019 01:44:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729220AbfGKXoU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Jul 2019 19:44:20 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45081 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729553AbfGKXoT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Jul 2019 19:44:19 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y8so3815933plr.12
-        for <linux-pci@vger.kernel.org>; Thu, 11 Jul 2019 16:44:19 -0700 (PDT)
+        id S1730463AbfGKXoX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Jul 2019 19:44:23 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34557 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730452AbfGKXoX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Jul 2019 19:44:23 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p10so3671324pgn.1
+        for <linux-pci@vger.kernel.org>; Thu, 11 Jul 2019 16:44:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=FITTKsy0ccvIyixSPRiCdGiovalZSrd3OHcUD21QK98=;
-        b=IGKpfpLdCh9L199i85cDoWBN2sVOwSD+UtAb3c4qrcAw43wxgeMdcgA9g+jve3LID5
-         6vOOpxemLXJj1CZ79tB3Pje6chjO0HvYbVetcbgPQoCchXFtYur1Efy9Q7vdAWUF4ngJ
-         VBDST6I2Pm3/IeSKN7V5T8vNCOjcm1ESkYOGo=
+        bh=/GuW47+ITVwlHRyFWoit77iH8wSxBVV56wbG/AJ8g+A=;
+        b=POP2I6vcsX7mrpLNszrDZ3jHjn5JeGjYvt0TIBarOc+TTSSHTMCxN8ZJl3umrbGe13
+         LL/K6XJbcw8liWBMr5VJm7tJsyYXkpeSHOo93Z5cFDVSa8Vym2EQZ+vSjFXjz8J4Wkoy
+         ABgjJP8Cfel0JsMbqaLz7L8BjEej7RSdpehss=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=FITTKsy0ccvIyixSPRiCdGiovalZSrd3OHcUD21QK98=;
-        b=Y+PQ19JQLx4Qs1wPSCJeuNGY/VvH/LKQKWThRy4s3Ar+d9rprfWC8MByC8gvdY4lIB
-         Z+lgOMKUzKlkclm5mrnMFIoREpF6wQ9IVvh/KO+zpwvlwgCS5cc4RSqJRjAyUysVosBZ
-         oVTSOCEx0LDCmscD3d54V2iI/uekrFX3wr81hVqgkv7LBX8nZh/ib3ITKanIXx6qY2Na
-         FEN6FXzH6SSvp2RVQX7MXfNEpB2gSnkr2zMIneaNiNVif2WwzAsMZZwKO9Lmajvw0bR1
-         LKtTk0FX1EhzD6kAGy7mlxkhQdvFNVv3H/plAE+g1eHQXQIAgoF7bg9m43h8Cf2WLaz3
-         YvXw==
-X-Gm-Message-State: APjAAAUlvNsMzuOxYHNXEN5TYB4AaXfHNpK1suP+t4H9MqQ3g3Sbgzti
-        GWxc9AfRlu2uPvQ+BuOP9U0=
-X-Google-Smtp-Source: APXvYqwozgq75nMKR73qox3f/PRoDIY5soJTLm7wRfHEcQK+usIOeqo0yORbOwCrmC8k4mWWATDhPg==
-X-Received: by 2002:a17:902:e281:: with SMTP id cf1mr7321567plb.271.1562888658619;
-        Thu, 11 Jul 2019 16:44:18 -0700 (PDT)
+        bh=/GuW47+ITVwlHRyFWoit77iH8wSxBVV56wbG/AJ8g+A=;
+        b=ozFArlWp4frBlcXu/awFiowHl+zAYzboyFYEGQL8ss6zlC+tbraZOjOCnVfQsrsTvP
+         FKbVzKHtXo2BgPMAl1IgfUU7Xbn8NZIGCbev+HBV5exYzjQkTgu4h88aERs2O88ZtaEk
+         gRcDD8WJG6fRxUml2uoRLwvlK1Iq2sZBPDaU1efbj7Ujm8hdDS7LeL0M1Nn06AqK99Ho
+         azm4nPPp0h3CiIo/2APtl+Tz4inz/QfJXS2UTi1Qbsoy74vY52YJwRPaXnkbHoWDp6tt
+         5wk+lP5S+Cc3rYvhQPnAsAwQjU1TjXovZAsAXX4kogfg2AZKHCicNu9zU2HRXAFTug3E
+         oG3Q==
+X-Gm-Message-State: APjAAAWO+8LL4QU3enUMdNFRr0oyPtvYB0UehpmdEWsj2MWhIUT1fBel
+        KSiCSCsRTLI3CvEz2BeOAkM=
+X-Google-Smtp-Source: APXvYqwL3radJMAbdECmS/G+TOrWXAIf4q3T6x0oa7czoYNYGbVr9jTCwdHXMM+5nal4G43CSaqnjQ==
+X-Received: by 2002:a63:3f48:: with SMTP id m69mr7029829pga.17.1562888662320;
+        Thu, 11 Jul 2019 16:44:22 -0700 (PDT)
 Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id t10sm6163450pjr.13.2019.07.11.16.44.15
+        by smtp.gmail.com with ESMTPSA id t10sm6163450pjr.13.2019.07.11.16.44.18
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 16:44:17 -0700 (PDT)
+        Thu, 11 Jul 2019 16:44:21 -0700 (PDT)
 From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
@@ -66,9 +66,9 @@ Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         Tejun Heo <tj@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
         x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-Subject: [PATCH v1 1/6] rcu: Add support for consolidated-RCU reader checking
-Date:   Thu, 11 Jul 2019 19:43:56 -0400
-Message-Id: <20190711234401.220336-2-joel@joelfernandes.org>
+Subject: [PATCH v1 2/6] ipv4: add lockdep condition to fix for_each_entry
+Date:   Thu, 11 Jul 2019 19:43:57 -0400
+Message-Id: <20190711234401.220336-3-joel@joelfernandes.org>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 In-Reply-To: <20190711234401.220336-1-joel@joelfernandes.org>
 References: <20190711234401.220336-1-joel@joelfernandes.org>
@@ -79,161 +79,25 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch adds support for checking RCU reader sections in list
-traversal macros. Optionally, if the list macro is called under SRCU or
-other lock/mutex protection, then appropriate lockdep expressions can be
-passed to make the checks pass.
-
-Existing list_for_each_entry_rcu() invocations don't need to pass the
-optional fourth argument (cond) unless they are under some non-RCU
-protection and needs to make lockdep check pass.
-
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- include/linux/rculist.h  | 29 ++++++++++++++++++++++++-----
- include/linux/rcupdate.h |  7 +++++++
- kernel/rcu/Kconfig.debug | 11 +++++++++++
- kernel/rcu/update.c      | 26 ++++++++++++++++++++++++++
- 4 files changed, 68 insertions(+), 5 deletions(-)
+ net/ipv4/fib_frontend.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-index e91ec9ddcd30..78c15ec6b2c9 100644
---- a/include/linux/rculist.h
-+++ b/include/linux/rculist.h
-@@ -40,6 +40,23 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
-  */
- #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
+diff --git a/net/ipv4/fib_frontend.c b/net/ipv4/fib_frontend.c
+index b298255f6fdb..ef7c9f8e8682 100644
+--- a/net/ipv4/fib_frontend.c
++++ b/net/ipv4/fib_frontend.c
+@@ -127,7 +127,8 @@ struct fib_table *fib_get_table(struct net *net, u32 id)
+ 	h = id & (FIB_TABLE_HASHSZ - 1);
  
-+/*
-+ * Check during list traversal that we are within an RCU reader
-+ */
-+
-+#define SIXTH_ARG(a1, a2, a3, a4, a5, a6, ...) a6
-+#define COUNT_VARGS(...) SIXTH_ARG(dummy, ## __VA_ARGS__, 4, 3, 2, 1, 0)
-+
-+#ifdef CONFIG_PROVE_RCU_LIST
-+#define __list_check_rcu(dummy, cond, ...)				\
-+	({								\
-+	RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(),		\
-+			 "RCU-list traversed in non-reader section!");	\
-+	 })
-+#else
-+#define __list_check_rcu(dummy, cond, ...) ({})
-+#endif
-+
- /*
-  * Insert a new entry between two known consecutive entries.
-  *
-@@ -348,9 +365,10 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
-  * the _rcu list-mutation primitives such as list_add_rcu()
-  * as long as the traversal is guarded by rcu_read_lock().
-  */
--#define list_for_each_entry_rcu(pos, head, member) \
--	for (pos = list_entry_rcu((head)->next, typeof(*pos), member); \
--		&pos->member != (head); \
-+#define list_for_each_entry_rcu(pos, head, member, cond...)		\
-+	for (__list_check_rcu(dummy, ## cond, 0),			\
-+	     pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
-+		&pos->member != (head);					\
- 		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
- 
- /**
-@@ -621,8 +639,9 @@ static inline void hlist_add_behind_rcu(struct hlist_node *n,
-  * the _rcu list-mutation primitives such as hlist_add_head_rcu()
-  * as long as the traversal is guarded by rcu_read_lock().
-  */
--#define hlist_for_each_entry_rcu(pos, head, member)			\
--	for (pos = hlist_entry_safe (rcu_dereference_raw(hlist_first_rcu(head)),\
-+#define hlist_for_each_entry_rcu(pos, head, member, cond...)		\
-+	for (__list_check_rcu(dummy, ## cond, 0),			\
-+	     pos = hlist_entry_safe (rcu_dereference_raw(hlist_first_rcu(head)),\
- 			typeof(*(pos)), member);			\
- 		pos;							\
- 		pos = hlist_entry_safe(rcu_dereference_raw(hlist_next_rcu(\
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index 922bb6848813..712b464ab960 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -223,6 +223,7 @@ int debug_lockdep_rcu_enabled(void);
- int rcu_read_lock_held(void);
- int rcu_read_lock_bh_held(void);
- int rcu_read_lock_sched_held(void);
-+int rcu_read_lock_any_held(void);
- 
- #else /* #ifdef CONFIG_DEBUG_LOCK_ALLOC */
- 
-@@ -243,6 +244,12 @@ static inline int rcu_read_lock_sched_held(void)
- {
- 	return !preemptible();
- }
-+
-+static inline int rcu_read_lock_any_held(void)
-+{
-+	return !preemptible();
-+}
-+
- #endif /* #else #ifdef CONFIG_DEBUG_LOCK_ALLOC */
- 
- #ifdef CONFIG_PROVE_RCU
-diff --git a/kernel/rcu/Kconfig.debug b/kernel/rcu/Kconfig.debug
-index 0ec7d1d33a14..b20d0e2903d1 100644
---- a/kernel/rcu/Kconfig.debug
-+++ b/kernel/rcu/Kconfig.debug
-@@ -7,6 +7,17 @@ menu "RCU Debugging"
- config PROVE_RCU
- 	def_bool PROVE_LOCKING
- 
-+config PROVE_RCU_LIST
-+	bool "RCU list lockdep debugging"
-+	depends on PROVE_RCU
-+	default n
-+	help
-+	  Enable RCU lockdep checking for list usages. By default it is
-+	  turned off since there are several list RCU users that still
-+	  need to be converted to pass a lockdep expression. To prevent
-+	  false-positive splats, we keep it default disabled but once all
-+	  users are converted, we can remove this config option.
-+
- config TORTURE_TEST
- 	tristate
- 	default n
-diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-index c3bf44ba42e5..9cb30006a5e1 100644
---- a/kernel/rcu/update.c
-+++ b/kernel/rcu/update.c
-@@ -298,6 +298,32 @@ int rcu_read_lock_bh_held(void)
- }
- EXPORT_SYMBOL_GPL(rcu_read_lock_bh_held);
- 
-+int rcu_read_lock_any_held(void)
-+{
-+	int lockdep_opinion = 0;
-+
-+	if (!debug_lockdep_rcu_enabled())
-+		return 1;
-+	if (!rcu_is_watching())
-+		return 0;
-+	if (!rcu_lockdep_current_cpu_online())
-+		return 0;
-+
-+	/* Preemptible RCU flavor */
-+	if (lock_is_held(&rcu_lock_map))
-+		return 1;
-+
-+	/* BH flavor */
-+	if (in_softirq() || irqs_disabled())
-+		return 1;
-+
-+	/* Sched flavor */
-+	if (debug_locks)
-+		lockdep_opinion = lock_is_held(&rcu_sched_lock_map);
-+	return lockdep_opinion || !preemptible();
-+}
-+EXPORT_SYMBOL_GPL(rcu_read_lock_any_held);
-+
- #endif /* #ifdef CONFIG_DEBUG_LOCK_ALLOC */
- 
- /**
+ 	head = &net->ipv4.fib_table_hash[h];
+-	hlist_for_each_entry_rcu(tb, head, tb_hlist) {
++	hlist_for_each_entry_rcu(tb, head, tb_hlist,
++				 lockdep_rtnl_is_held()) {
+ 		if (tb->tb_id == id)
+ 			return tb;
+ 	}
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
