@@ -2,93 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F9A467099
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2019 15:54:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ED63670AB
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2019 15:56:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726724AbfGLNyS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Jul 2019 09:54:18 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:56385 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbfGLNyS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Jul 2019 09:54:18 -0400
-Received: from [2001:67c:670:100:6a05:caff:fe2d:a9b1]
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <a.fatoum@pengutronix.de>)
-        id 1hlw09-00058S-39; Fri, 12 Jul 2019 15:54:17 +0200
-Subject: Re: [PATCH] PCI: dwc: avoid OOB read in find_next_bit
-To:     Lucas Stach <l.stach@pengutronix.de>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-pci@vger.kernel.org, kernel@pengutronix.de,
-        patchwork-lst@pengutronix.de
-References: <20190712132611.3374-1-l.stach@pengutronix.de>
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-Message-ID: <06320942-63ce-7233-b3a5-5c4e00a36dc0@pengutronix.de>
-Date:   Fri, 12 Jul 2019 15:54:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1727654AbfGLN4d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Jul 2019 09:56:33 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43814 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbfGLN4c (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Jul 2019 09:56:32 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i189so4345753pfg.10
+        for <linux-pci@vger.kernel.org>; Fri, 12 Jul 2019 06:56:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WDiv0t+R3uRl5W7qmXtAoSiEHEHdxKx4ml5mjXWh+Pg=;
+        b=QYqkLEGFA1/hJ7msrSJEUejaFTfoP3QzQQ0XbAHmT9Csl4VlQGRIXmlO2ywQXQvND+
+         Hrz0eSA/du87KWMiWhvfsSxGBDZW8Y6Afvn5Q1TceLQvp9r9CvlEbDnZIeTmNrviry7U
+         wYHovwF3+TslYJyFDr+Shjrc4RZtnIq4XuqVI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WDiv0t+R3uRl5W7qmXtAoSiEHEHdxKx4ml5mjXWh+Pg=;
+        b=Zl1U26R8wXU5NA6kEmsQtf5F2TSaDRmgtKfEqWwfHXC5mPQrhbxL1CotwusoJ8wv8I
+         6SDk2sSHiXZPD6GWvDDs6JgiUtBB6zQju3atZXlkDVqWjB9ZbyAhOjMswGZmr6YqFVpA
+         O1xAUsg9wVg6ATfqXL91YIa684rtaoYTiA3MjX6E9E6ILSLr4BbZDrtIWkRGpqcxdIzI
+         RzOq/6dYL0r1i+wXRLYGc2wRathK5EZIUk4FdJzMNKsd5ooqA5CZTsFmaGK6BDdYpgOM
+         /3NvyIARW3aPUbikybGTXL1G5YUB2djzMOrAl2kxgCRhWkt4WtfQrPmG0u0Bg0O7a4sd
+         QxVw==
+X-Gm-Message-State: APjAAAWgpNXbk1QuVv4UPF/pQVJV/D+S0KGGq7W57lwgQjGB5/sLyrJD
+        i5Ilv+b10JkC1dSAfZ4zB3eL8G/Z
+X-Google-Smtp-Source: APXvYqzJEhVDBzSiRVeb97C/BOIrGCC92lhrBy1TO8FxsLTYA0YSdLtl7eAeD1UPch8SID4lyw/Qag==
+X-Received: by 2002:a63:b1d:: with SMTP id 29mr11024618pgl.103.1562939792240;
+        Fri, 12 Jul 2019 06:56:32 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id h16sm9673070pfo.34.2019.07.12.06.56.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 06:56:31 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 09:56:29 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH v1 1/6] rcu: Add support for consolidated-RCU reader
+ checking
+Message-ID: <20190712135629.GH92297@google.com>
+References: <20190711234401.220336-1-joel@joelfernandes.org>
+ <20190711234401.220336-2-joel@joelfernandes.org>
+ <20190712121200.GC21989@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190712132611.3374-1-l.stach@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:6a05:caff:fe2d:a9b1
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712121200.GC21989@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Lucas,
-
-On 7/12/19 3:26 PM, Lucas Stach wrote:
-> Find_next_bit works on a long type, which causes a OOB read on the
-> u32 input when used on ARM64.
+On Fri, Jul 12, 2019 at 02:12:00PM +0200, Oleg Nesterov wrote:
+> On 07/11, Joel Fernandes (Google) wrote:
+> >
+> > +int rcu_read_lock_any_held(void)
 > 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 77db32529319..81a2139d68d6 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -78,15 +78,16 @@ static struct msi_domain_info dw_pcie_msi_domain_info = {
->  irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
->  {
->  	int i, pos, irq;
-> -	u32 val, num_ctrls;
-> +	u32 num_ctrls;
->  	irqreturn_t ret = IRQ_NONE;
-> +	unsigned long val;
->  
->  	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
->  
->  	for (i = 0; i < num_ctrls; i++) {
->  		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_STATUS +
->  					(i * MSI_REG_CTRL_BLOCK_SIZE),
-> -				    4, &val);
-> +				    4, (u32 *)&val);
+> rcu_sync_is_idle() wants it. You have my ack in advance ;)
 
-Wouldn't this still be wrong on big-endian 64-bit systems?
-You're writing the first 4 bytes here, leaving the higher 4 uninitialized.
-find_next_bit will read the lowest-valued 32-bits, i.e. the highest
-four on ARM64, which are uninitialized.
+Cool, thanks ;)
 
-
->  		if (!val)
->  			continue;
->  
-> 
-
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+- Joel
