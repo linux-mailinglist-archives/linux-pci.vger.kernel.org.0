@@ -2,244 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AC9267C1E
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Jul 2019 23:31:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A11CD67F8D
+	for <lists+linux-pci@lfdr.de>; Sun, 14 Jul 2019 17:08:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbfGMVbF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 13 Jul 2019 17:31:05 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43806 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727961AbfGMVbF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 13 Jul 2019 17:31:05 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6DLRVZI033516;
-        Sat, 13 Jul 2019 17:28:15 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tqbt5g22v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 13 Jul 2019 17:28:15 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6DLSEBQ042352;
-        Sat, 13 Jul 2019 17:28:14 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tqbt5g229-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 13 Jul 2019 17:28:14 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6DLPAkf022684;
-        Sat, 13 Jul 2019 21:28:13 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01wdc.us.ibm.com with ESMTP id 2tq6x5cqsh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 13 Jul 2019 21:28:13 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6DLSC2I38404564
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 13 Jul 2019 21:28:12 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9E37CB205F;
-        Sat, 13 Jul 2019 21:28:12 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 46C96B2065;
-        Sat, 13 Jul 2019 21:28:12 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.158.189])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sat, 13 Jul 2019 21:28:12 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 4AEB516C39C0; Sat, 13 Jul 2019 14:28:12 -0700 (PDT)
-Date:   Sat, 13 Jul 2019 14:28:12 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH v2 3/9] rcu/sync: Remove custom check for reader-section
-Message-ID: <20190713212812.GH26519@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190712213559.GA175138@google.com>
- <20190712233206.GZ26519@linux.ibm.com>
- <20190713030150.GA246587@google.com>
- <20190713031008.GA248225@google.com>
- <20190713082114.GA26519@linux.ibm.com>
- <20190713133049.GA133650@google.com>
- <20190713144108.GD26519@linux.ibm.com>
- <20190713153606.GD133650@google.com>
- <20190713155010.GF26519@linux.ibm.com>
- <20190713161316.GA39321@google.com>
+        id S1728398AbfGNPI2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 14 Jul 2019 11:08:28 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:12986 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728380AbfGNPI2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 14 Jul 2019 11:08:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1563116907; x=1594652907;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=u6QzrCtsIwWSt8LZhYRbUNeXSOKPqeoxvtTBsx/mueQ=;
+  b=dcedo0iWhwcig3QJucvXC9LLZ6Vdh3O3XbPwhXNCWHfwI52IfssE5ptP
+   haJKdfyGWSWEXTu4lGArzn7w9QtowZIihiUP58evuQirKz9i4tBg4Am96
+   iFuV6kwxR9BhD0OXy+9fVH+o5JHJqeN08zPeCvkAt7/UWfhn3fTDPFpZa
+   A=;
+X-IronPort-AV: E=Sophos;i="5.62,490,1554768000"; 
+   d="scan'208";a="816070802"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 14 Jul 2019 15:08:25 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id 40584A04FA;
+        Sun, 14 Jul 2019 15:08:25 +0000 (UTC)
+Received: from EX13D02UWC004.ant.amazon.com (10.43.162.236) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Sun, 14 Jul 2019 15:08:24 +0000
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13D02UWC004.ant.amazon.com (10.43.162.236) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Sun, 14 Jul 2019 15:08:24 +0000
+Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
+ EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1367.000;
+ Sun, 14 Jul 2019 15:08:24 +0000
+From:   "Chocron, Jonathan" <jonnyc@amazon.com>
+To:     "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Hanoch, Uri" <hanochu@amazon.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "Wasserstrom, Barak" <barakw@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+Subject: Re: [PATCH 3/8] PCI/VPD: Add VPD release quirk for Amazon Annapurna
+ Labs host bridge
+Thread-Topic: [PATCH 3/8] PCI/VPD: Add VPD release quirk for Amazon Annapurna
+ Labs host bridge
+Thread-Index: AQHVNz7nhVFJDLb7z0OhdNISDg4h16bG98QAgANFs4A=
+Date:   Sun, 14 Jul 2019 15:08:24 +0000
+Message-ID: <233cb293d7bc572bee5c206732a6f374daa9609e.camel@amazon.com>
+References: <20190710164519.17883-1-jonnyc@amazon.com>
+         <20190710164519.17883-4-jonnyc@amazon.com>
+         <20190712131008.GC46935@google.com>
+In-Reply-To: <20190712131008.GC46935@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.161.115]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A137BBB720212B4694F0CA46235CC196@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190713161316.GA39321@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-13_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907130264
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 12:13:16PM -0400, Joel Fernandes wrote:
-> On Sat, Jul 13, 2019 at 08:50:10AM -0700, Paul E. McKenney wrote:
-> > On Sat, Jul 13, 2019 at 11:36:06AM -0400, Joel Fernandes wrote:
-> > > On Sat, Jul 13, 2019 at 07:41:08AM -0700, Paul E. McKenney wrote:
-> > > > On Sat, Jul 13, 2019 at 09:30:49AM -0400, Joel Fernandes wrote:
-> > > > > On Sat, Jul 13, 2019 at 01:21:14AM -0700, Paul E. McKenney wrote:
-> > > > > > On Fri, Jul 12, 2019 at 11:10:08PM -0400, Joel Fernandes wrote:
-> > > > > > > On Fri, Jul 12, 2019 at 11:01:50PM -0400, Joel Fernandes wrote:
-> > > > > > > > On Fri, Jul 12, 2019 at 04:32:06PM -0700, Paul E. McKenney wrote:
-> > > > > > > > > On Fri, Jul 12, 2019 at 05:35:59PM -0400, Joel Fernandes wrote:
-> > > > > > > > > > On Fri, Jul 12, 2019 at 01:00:18PM -0400, Joel Fernandes (Google) wrote:
-> > > > > > > > > > > The rcu/sync code was doing its own check whether we are in a reader
-> > > > > > > > > > > section. With RCU consolidating flavors and the generic helper added in
-> > > > > > > > > > > this series, this is no longer need. We can just use the generic helper
-> > > > > > > > > > > and it results in a nice cleanup.
-> > > > > > > > > > > 
-> > > > > > > > > > > Cc: Oleg Nesterov <oleg@redhat.com>
-> > > > > > > > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > > > > > > > 
-> > > > > > > > > > Hi Oleg,
-> > > > > > > > > > Slightly unrelated to the patch,
-> > > > > > > > > > I tried hard to understand this comment below in percpu_down_read() but no dice.
-> > > > > > > > > > 
-> > > > > > > > > > I do understand how rcu sync and percpu rwsem works, however the comment
-> > > > > > > > > > below didn't make much sense to me. For one, there's no readers_fast anymore
-> > > > > > > > > > so I did not follow what readers_fast means. Could the comment be updated to
-> > > > > > > > > > reflect latest changes?
-> > > > > > > > > > Also could you help understand how is a writer not able to change
-> > > > > > > > > > sem->state and count the per-cpu read counters at the same time as the
-> > > > > > > > > > comment tries to say?
-> > > > > > > > > > 
-> > > > > > > > > > 	/*
-> > > > > > > > > > 	 * We are in an RCU-sched read-side critical section, so the writer
-> > > > > > > > > > 	 * cannot both change sem->state from readers_fast and start checking
-> > > > > > > > > > 	 * counters while we are here. So if we see !sem->state, we know that
-> > > > > > > > > > 	 * the writer won't be checking until we're past the preempt_enable()
-> > > > > > > > > > 	 * and that once the synchronize_rcu() is done, the writer will see
-> > > > > > > > > > 	 * anything we did within this RCU-sched read-size critical section.
-> > > > > > > > > > 	 */
-> > > > > > > > > > 
-> > > > > > > > > > Also,
-> > > > > > > > > > I guess we could get rid of all of the gp_ops struct stuff now that since all
-> > > > > > > > > > the callbacks are the same now. I will post that as a follow-up patch to this
-> > > > > > > > > > series.
-> > > > > > > > > 
-> > > > > > > > > Hello, Joel,
-> > > > > > > > > 
-> > > > > > > > > Oleg has a set of patches updating this code that just hit mainline
-> > > > > > > > > this week.  These patches get rid of the code that previously handled
-> > > > > > > > > RCU's multiple flavors.  Or are you looking at current mainline and
-> > > > > > > > > me just missing your point?
-> > > > > > > > > 
-> > > > > > > > 
-> > > > > > > > Hi Paul,
-> > > > > > > > You are right on point. I have a bad habit of not rebasing my trees. In this
-> > > > > > > > case the feature branch of mine in concern was based on v5.1. Needless to
-> > > > > > > > say, I need to rebase my tree.
-> > > > > > > > 
-> > > > > > > > Yes, this sync clean up patch does conflict when I rebase, but other patches
-> > > > > > > > rebase just fine.
-> > > > > > > > 
-> > > > > > > > The 2 options I see are:
-> > > > > > > > 1. Let us drop this patch for now and I resend it later.
-> > > > > > > > 2. I resend all patches based on Linus's master branch.
-> > > > > > > 
-> > > > > > > Below is the updated patch based on Linus master branch:
-> > > > > > > 
-> > > > > > > ---8<-----------------------
-> > > > > > > 
-> > > > > > > >From 5f40c9a07fcf3d6dafc2189599d0ba9443097d0f Mon Sep 17 00:00:00 2001
-> > > > > > > From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-> > > > > > > Date: Fri, 12 Jul 2019 12:13:27 -0400
-> > > > > > > Subject: [PATCH v2.1 3/9] rcu/sync: Remove custom check for reader-section
-> > > > > > > 
-> > > > > > > The rcu/sync code was doing its own check whether we are in a reader
-> > > > > > > section. With RCU consolidating flavors and the generic helper added in
-> > > > > > > this series, this is no longer need. We can just use the generic helper
-> > > > > > > and it results in a nice cleanup.
-> > > > > > > 
-> > > > > > > Cc: Oleg Nesterov <oleg@redhat.com>
-> > > > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > > > > ---
-> > > > > > >  include/linux/rcu_sync.h | 4 +---
-> > > > > > >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > > > > > > 
-> > > > > > > diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
-> > > > > > > index 9b83865d24f9..0027d4c8087c 100644
-> > > > > > > --- a/include/linux/rcu_sync.h
-> > > > > > > +++ b/include/linux/rcu_sync.h
-> > > > > > > @@ -31,9 +31,7 @@ struct rcu_sync {
-> > > > > > >   */
-> > > > > > >  static inline bool rcu_sync_is_idle(struct rcu_sync *rsp)
-> > > > > > >  {
-> > > > > > > -	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&
-> > > > > > > -			 !rcu_read_lock_bh_held() &&
-> > > > > > > -			 !rcu_read_lock_sched_held(),
-> > > > > > > +	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),
-> > > > > > 
-> > > > > > I believe that replacing rcu_read_lock_sched_held() with preemptible()
-> > > > > > in a CONFIG_PREEMPT=n kernel will give you false-positive splats here.
-> > > > > > If you have not already done so, could you please give it a try?
-> > > > > 
-> > > > > Hi Paul,
-> > > > > I don't think it will cause splats for !CONFIG_PREEMPT.
-> > > > > 
-> > > > > Currently, rcu_read_lock_any_held() introduced in this patch returns true if
-> > > > > !preemptible(). This means that:
-> > > > > 
-> > > > > The following expression above:
-> > > > > RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),...)
-> > > > > 
-> > > > > Becomes:
-> > > > > RCU_LOCKDEP_WARN(preemptible(), ...)
-> > > > > 
-> > > > > For, CONFIG_PREEMPT=n kernels, this means:
-> > > > > RCU_LOCKDEP_WARN(0, ...)
-> > > > > 
-> > > > > Which would mean no splats. Or, did I miss the point?
-> > > > 
-> > > > I suggest trying it out on a CONFIG_PREEMPT=n kernel.
-> > > 
-> > > Sure, will do, sorry did not try it out yet because was busy with weekend
-> > > chores but will do soon, thanks!
-> > 
-> > I am not faulting you for taking the weekend off, actually.  ;-)
-> 
-> ;-) 
-> 
-> I tried doing RCU_LOCKDEP_WARN(preemptible(), ...) in this code path and I
-> don't get any splats. I also disassembled the code and it seems to me
-> RCU_LOCKDEP_WARN() becomes a NOOP which also the above reasoning confirms.
-
-OK, very good.  Could you do the same thing for the RCU_LOCKDEP_WARN()
-in synchronize_rcu()?  Why or why not?
-
-(No need to work this on your Sunday.)
-
-							Thanx, Paul
+T24gRnJpLCAyMDE5LTA3LTEyIGF0IDA4OjEwIC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
+PiBPbiBUaHUsIEp1bCAxMSwgMjAxOSBhdCAwNTo1NTo1NlBNICswMzAwLCBKb25hdGhhbiBDaG9j
+cm9uIHdyb3RlOg0KPiA+IFRoZSBBbWF6b24gQW5uYXB1cm5hIExhYnMgcGNpZSBob3N0IGJyaWRn
+ZSBleHBvc2VzIHRoZSBWUEQNCj4gPiBjYXBhYmlsaXR5LA0KPiA+IGJ1dCB0aGVyZSBpcyBubyBh
+Y3R1YWwgc3VwcG9ydCBmb3IgaXQuDQo+IA0KPiBzL3BjaWUvUENJZS8NCj4gcy9ob3N0IGJyaWRn
+ZS9Sb290IFBvcnQvDQpBY2suDQoNCj4gDQo+ID4gVGhlIHJlYXNvbiBmb3Igbm90IHVzaW5nIHRo
+ZSBhbHJlYWR5IGV4aXN0aW5nIHF1aXJrX2JsYWNrbGlzdF92cGQoKQ0KPiA+IGlzIHRoYXQsIGFs
+dGhvdWdoIHRoaXMgZmFpbHMgcGNpX3ZwZF9yZWFkL3dyaXRlLCB0aGUgJ3ZwZCcgc3lzZnMNCj4g
+PiBlbnRyeSBzdGlsbCBleGlzdHMuIFdoZW4gcnVubmluZyBsc3BjaSAtdnYsIGZvciBleGFtcGxl
+LCB0aGlzDQo+ID4gcmVzdWx0cyBpbiB0aGUgZm9sbG93aW5nIGVycm9yOg0KPiA+IA0KPiA+IHBj
+aWxpYjogc3lzZnNfcmVhZF92cGQ6IHJlYWQgZmFpbGVkOiBJbnB1dC9vdXRwdXQgZXJyb3INCj4g
+PiANCj4gPiBUaGlzIHF1aXJrIHJlbW92ZXMgdGhlIHN5c2ZzIGVudHJ5LCB3aGljaCBhdm9pZHMg
+dGhlIGVycm9yIHByaW50Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEpvbmF0aGFuIENob2Ny
+b24gPGpvbm55Y0BhbWF6b24uY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BjaS92cGQuYyB8
+IDEyICsrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKQ0K
+PiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS92cGQuYyBiL2RyaXZlcnMvcGNpL3Zw
+ZC5jDQo+ID4gaW5kZXggNDk2M2MyZTJiZDRjLi5iNTk0YjI4OTVmZmUgMTAwNjQ0DQo+ID4gLS0t
+IGEvZHJpdmVycy9wY2kvdnBkLmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS92cGQuYw0KPiA+IEBA
+IC02NDQsNCArNjQ0LDE2IEBAIHN0YXRpYyB2b2lkIHF1aXJrX2NoZWxzaW9fZXh0ZW5kX3ZwZChz
+dHJ1Y3QNCj4gPiBwY2lfZGV2ICpkZXYpDQo+ID4gIERFQ0xBUkVfUENJX0ZJWFVQX0ZJTkFMKFBD
+SV9WRU5ET1JfSURfQ0hFTFNJTywgUENJX0FOWV9JRCwNCj4gPiAgCQkJcXVpcmtfY2hlbHNpb19l
+eHRlbmRfdnBkKTsNCj4gPiAgDQo+ID4gK3N0YXRpYyB2b2lkIHF1aXJrX2FsX3ZwZF9yZWxlYXNl
+KHN0cnVjdCBwY2lfZGV2ICpkZXYpDQo+ID4gK3sNCj4gPiArCWlmIChkZXYtPnZwZCkgew0KPiA+
+ICsJCXBjaV92cGRfcmVsZWFzZShkZXYpOw0KPiA+ICsJCWRldi0+dnBkID0gTlVMTDsNCj4gPiAr
+CQlwY2lfd2FybihkZXYsIEZXX0JVRyAiQW5uYXB1cm5hIExhYnMgcGNpZSBxdWlyayAtDQo+ID4g
+UmVsZWFzaW5nIFZQRCBjYXBhYmlsaXR5IChObyBzdXBwb3J0IGZvciBWUEQgcmVhZC93cml0ZQ0K
+PiA+IHRyYW5zYWN0aW9ucylcbiIpOw0KPiANCj4gVGhlICJBbm5hcHVybmEgTGFicyBwY2llIHF1
+aXJrIiB0ZXh0IGlzIHN1cGVyZmx1b3VzLg0KPiANCkFjay4NCg0KPiA+ICsJfQ0KPiA+ICt9DQo+
+ID4gKw0KPiA+ICtERUNMQVJFX1BDSV9GSVhVUF9DTEFTU19GSU5BTChQQ0lfVkVORE9SX0lEX0FN
+QVpPTl9BTk5BUFVSTkFfTEFCUywNCj4gPiAweDAwMzEsDQo+ID4gKwkJCSAgICAgIFBDSV9DTEFT
+U19CUklER0VfUENJLCA4LA0KPiA+IHF1aXJrX2FsX3ZwZF9yZWxlYXNlKTsNCj4gDQo+IFdoeSBE
+RUNMQVJFX1BDSV9GSVhVUF9DTEFTU19GSU5BTCgpPyAgU2VlIGNvbW1lbnRzIG9uIHRoZSBNU0kt
+WCBxdWlyaw0KPiBwYXRjaC4NCj4gDQpSZXNwb25kZWQgaW4gdGhlIE1TSS14IHF1aXJrIHBhdGNo
+LCBidXQgaW4gc2hvcnQsIGluZGVlZCB0aGUgMHgwMDMxDQpkZXYtaWQgaXMgcmUtdXNlZCBmb3Ig
+YSBub24taG9zdCBicmlkZ2UgZGV2aWNlIDooDQoNCj4gPiArDQo+ID4gICNlbmRpZg0KPiA+IC0t
+IA0KPiA+IDIuMTcuMQ0KPiA+IA0KPiA+IA0K
