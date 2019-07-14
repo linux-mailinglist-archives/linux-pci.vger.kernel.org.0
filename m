@@ -2,153 +2,240 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C1D267F98
-	for <lists+linux-pci@lfdr.de>; Sun, 14 Jul 2019 17:13:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FFBA6809F
+	for <lists+linux-pci@lfdr.de>; Sun, 14 Jul 2019 20:11:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbfGNPJh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 14 Jul 2019 11:09:37 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:48472 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728380AbfGNPJh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 14 Jul 2019 11:09:37 -0400
+        id S1728654AbfGNSK6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 14 Jul 2019 14:10:58 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42044 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728307AbfGNSK6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 14 Jul 2019 14:10:58 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t132so6631438pgb.9
+        for <linux-pci@vger.kernel.org>; Sun, 14 Jul 2019 11:10:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1563116976; x=1594652976;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=afLAhRTmyXqD4WvsD9i4GDCBH1C8z4LWY6KP9KTmfPY=;
-  b=Bxp/vQGobnuymPUNWuM1DrIHn3YLfl+oHEudwgA5sI/mrUR8YiSiy0Ib
-   2UvSafDv8GkGnW1wUzOrdFuLu7YwNhx86ranaw7hVAzINPrP5pX4VTaOq
-   QkxJikgmOgX/DqheqN4cQoLLI7+VpO9FcH+S1xaQzV+3/1e+xwtTtCQKM
-   E=;
-X-IronPort-AV: E=Sophos;i="5.62,490,1554768000"; 
-   d="scan'208";a="811086998"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1a-af6a10df.us-east-1.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 14 Jul 2019 15:09:33 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-af6a10df.us-east-1.amazon.com (Postfix) with ESMTPS id 54A9AA1EE5;
-        Sun, 14 Jul 2019 15:09:29 +0000 (UTC)
-Received: from EX13D02UWB001.ant.amazon.com (10.43.161.240) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Sun, 14 Jul 2019 15:09:29 +0000
-Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
- EX13D02UWB001.ant.amazon.com (10.43.161.240) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Sun, 14 Jul 2019 15:09:28 +0000
-Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
- EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1367.000;
- Sun, 14 Jul 2019 15:09:28 +0000
-From:   "Chocron, Jonathan" <jonnyc@amazon.com>
-To:     "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Hanoch, Uri" <hanochu@amazon.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "Wasserstrom, Barak" <barakw@amazon.com>,
-        "Saidi, Ali" <alisaidi@amazon.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-Subject: Re: [PATCH 4/8] PCI: Add quirk to disable MSI support for Amazon's
- Annapurna Labs host bridge
-Thread-Topic: [PATCH 4/8] PCI: Add quirk to disable MSI support for Amazon's
- Annapurna Labs host bridge
-Thread-Index: AQHVNz7pFJOUVU8rpUq6BZp0rOsVi6bG9iOAgANHogA=
-Date:   Sun, 14 Jul 2019 15:09:28 +0000
-Message-ID: <2cac43401f0cf76acb645b98c6543204f12d5c05.camel@amazon.com>
-References: <20190710164519.17883-1-jonnyc@amazon.com>
-         <20190710164519.17883-5-jonnyc@amazon.com>
-         <20190712130419.GA46935@google.com>
-In-Reply-To: <20190712130419.GA46935@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.161.115]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <55739D4A49BDD04D8FD5432054916642@amazon.com>
-Content-Transfer-Encoding: base64
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=h1pAcn8lGSAohpOznQF9NmGy7QqhFhjk1FbBtBnrL3Q=;
+        b=EMgyg0ifNFigYL4RNf7iGfiMIUg6jvRXRiys4EXya8l6ZmanKbiXroI/a0Mzi54zNi
+         evMfGank18wT1GABV79nf3sIQ9Bsfw1s3LQtXCu1jO0i1RSPO3FHYXnJsopKFdU1iqpl
+         lnJyX45ng7dNKagHUCm560W8tKOHrwtrgrnP8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=h1pAcn8lGSAohpOznQF9NmGy7QqhFhjk1FbBtBnrL3Q=;
+        b=gI3p5yHixYOddE3+ED2ykyOoiF1ZsETgkU8aF3RVxKbS2YXaqHeSL+QMdz8J+/VeL0
+         my92oZ+GefWB0vQTUh8g2ZP+WWF+GArQJUqVsbBDTtX5LyddtmBZRH14KoAt8ZxBhLve
+         3VCVKZ1h+UVH/FvcArSER1vuEvwMUbxoYoDg+ulsYIKyl7x+KDuxqPqegoTq0zOeCOrl
+         DAuOyEgIngjhAbfeBty4Z2WlHgyYWAbIkS6GYYzGb5pi3jHkaLjzVO8BqjAgWe0eyHp+
+         KazgIiX5BUFkMwwO6xj1FH23cm72HKBWZHVO9yQANvhBI9obboz0SoCcyJhgBAmXFkD/
+         5V6g==
+X-Gm-Message-State: APjAAAXyViodX2SL3Gz0MJ8VR+IzJimGNfds9eArMMAXVfo9NLP8Lj/T
+        Atc7FVDj39lHOouvhumUrVM=
+X-Google-Smtp-Source: APXvYqxF3hpQsmoT+sPJXSACN4cxJFE3QliM8B8zXx9WoEiv61udpMi6Vi+H9/biYKmUyGPphFBWKQ==
+X-Received: by 2002:a17:90b:8cd:: with SMTP id ds13mr23479973pjb.141.1563127857354;
+        Sun, 14 Jul 2019 11:10:57 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id h26sm15448605pfq.64.2019.07.14.11.10.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 14 Jul 2019 11:10:55 -0700 (PDT)
+Date:   Sun, 14 Jul 2019 14:10:53 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH v2 3/9] rcu/sync: Remove custom check for reader-section
+Message-ID: <20190714181053.GB34501@google.com>
+References: <20190712233206.GZ26519@linux.ibm.com>
+ <20190713030150.GA246587@google.com>
+ <20190713031008.GA248225@google.com>
+ <20190713082114.GA26519@linux.ibm.com>
+ <20190713133049.GA133650@google.com>
+ <20190713144108.GD26519@linux.ibm.com>
+ <20190713153606.GD133650@google.com>
+ <20190713155010.GF26519@linux.ibm.com>
+ <20190713161316.GA39321@google.com>
+ <20190713212812.GH26519@linux.ibm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190713212812.GH26519@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA3LTEyIGF0IDA4OjA0IC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
-PiBPbiBUaHUsIEp1bCAxMSwgMjAxOSBhdCAwNTo1NjoyNVBNICswMzAwLCBKb25hdGhhbiBDaG9j
-cm9uIHdyb3RlOg0KPiA+IE9uIHNvbWUgcGxhdGZvcm1zLCB0aGUgaG9zdCBicmlkZ2UgZXhwb3Nl
-cyBhbiBNU0ktWCBjYXBhYmlsaXR5IGJ1dA0KPiA+IGRvZXNuJ3QgYWN0dWFsbHkgc3VwcG9ydCBp
-dC4NCj4gPiBUaGlzIGNhdXNlcyBhIGNyYXNoIGR1cmluZyBpbml0aWFsaXphdGlvbiBieSB0aGUg
-cGNpZXBvcnQgZHJpdmVyLA0KPiA+IHNpbmNlDQo+ID4gaXQgdHJpZXMgdG8gY29uZmlndXJlIHRo
-ZSBNU0ktWCBjYXBhYmlsaXR5Lg0KPiANCj4gTml0OiBUaGUgZm9ybWF0dGluZyBhYm92ZSBpcyBq
-YXJyaW5nIHRvIHJlYWQgYmVjYXVzZSBJIGNhbid0IHRlbGwNCj4gd2hldGhlciBpdCdzIG9uZSBw
-YXJhZ3JhcGggb3IgdHdvLg0KPiANCj4gRWl0aGVyIHJld3JhcCBpdCBpbnRvIGEgc2luZ2xlIHBh
-cmFncmFwaCBvciBhZGQgYSBibGFuayBsaW5lIHRvIG1ha2UNCj4gdHdvIHBhcmFncmFwaHMuICBJ
-IG5vdGljZWQgdGhpcyBlbHNld2hlcmUsIHRvbywgaW4gYSBjb21tZW50LCBJDQo+IHRoaW5rLg0K
-PiANCkFjay4NCg0KPiBzL2hvc3QgYnJpZGdlL1Jvb3QgUG9ydC8sIGlmIEkgdW5kZXJzdGFuZCBj
-b3JyZWN0bHkuDQo+IA0KQWNrLg0KDQpCVFcsIHdoYXQgaXMgdGhlIG1haW4gZGlmZmVyZW5jZSBi
-ZXR3ZWVuIHRoZSAyIHRlcm1zLCBzaW5jZSB0aGV5IHNlZW0NCnRvIGJlIChtaXN0YWtlbmx5Pykg
-dXNlZCBpbnRlcmNoYW5nZWFibHk/DQoNCj4gSSBkb24ndCB1bmRlcnN0YW5kIHRoZSAib24gc29t
-ZSBwbGF0Zm9ybXMuLi4iIHBhcnQuICBEbyB5b3UgbWVhbiB0aGF0DQo+IG9uICpldmVyeSogcGxh
-dGZvcm0sIHRoaXMgcGFydGljdWxhciBob3N0IGJyaWRnZSAoaWRlbnRpZmllZCBieQ0KPiBbMWMz
-NjowMDMxXSkgYWR2ZXJ0aXNlcyBhbiBNU0ktWCBjYXBhYmlsaXR5IHRoYXQgZG9lc24ndCB3b3Jr
-Pw0KPiANCj4gT3IgYXJlIHRoZXJlIHNvbWUgcGxhdGZvcm1zIHRoYXQgY29uZmlndXJlIHRoZSBi
-cmlkZ2Ugc28gaXQgZG9lc24ndA0KPiBhZHZlcnRpc2UgTVNJLVggYXQgYWxsLCB3aGlsZSBvdGhl
-ciBwbGF0Zm9ybXMgY29uZmlndXJlIGl0IHNvIGl0DQo+ICpkb2VzKiBhZHZlcnRpc2UgTVNJLVg/
-DQo+IA0KVGhlIE1TSS14IGNhcGFiaWxpdHkgaXNuJ3Qgc3VwcG9ydGVkIGZvciB0aGlzIHNwZWNp
-ZmljIGhvc3QgYnJpZGdlDQooWzFjMzY6MDAzMV0pLiBPbiBzb21lIHBsYXRmb3JtcywgaXQgaXMg
-Y29uZmlndXJlZCB0byBub3QgYWR2ZXJ0aXNlIHRoZQ0KY2FwYWJpbGl0eSBhdCBhbGwsIHdoaWxl
-IG9uIG90aGVycyBpdCAobWlzdGFrZW5seSkgZG9lcyBhZHZlcnRpc2UgaXQuDQoNCkkndmUgdXBk
-YXRlZCB0aGUgY29tbWl0IG1lc3NhZ2UgdG8gYmUgbW9yZSBleHBsaWNpdC4NCg0KPiBJZiB0aGVy
-ZSdzIGEgbGluZSBvciB0d28gb2YgZGlhZ25vc3RpY3MgZnJvbSB0aGUgY3Jhc2ggeW91IGNvdWxk
-DQo+IGluY2x1ZGUgaGVyZSwgdGhhdCB3b3VsZCBoZWxwIHBlb3BsZSB3aG8gZW5jb3VudGVyIHRo
-ZSBjcmFzaCBmaW5kDQo+IHRoZSBzb2x1dGlvbi4NCj4gDQpTdXJlLCBJJ2xsIGFkZCBhIHBhcnRp
-YWwgc3RhY2t0cmFjZSAoYSBiaXQgbW9yZSB0aGFuIGEgY291cGxlIG9mIGxpbmVzLA0KYnV0IEkg
-ZmVlbCBpdCB3aWxsIGJlIHRvbyBhbWJpZ3VvdXMgb3RoZXJ3aXNlKS4NCg0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IEpvbmF0aGFuIENob2Nyb24gPGpvbm55Y0BhbWF6b24uY29tPg0KPiA+IC0tLQ0KPiA+
-ICBkcml2ZXJzL3BjaS9xdWlya3MuYyB8IDggKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQs
-IDggaW5zZXJ0aW9ucygrKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9xdWly
-a3MuYyBiL2RyaXZlcnMvcGNpL3F1aXJrcy5jDQo+ID4gaW5kZXggMTE4NTBiMDMwNjM3Li4wZmI3
-MGQ3NTU5NzcgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvcXVpcmtzLmMNCj4gPiArKysg
-Yi9kcml2ZXJzL3BjaS9xdWlya3MuYw0KPiA+IEBAIC0yOTI1LDYgKzI5MjUsMTQgQEANCj4gPiBE
-RUNMQVJFX1BDSV9GSVhVUF9GSU5BTChQQ0lfVkVORE9SX0lEX0FUVEFOU0lDLCAweDEwYTEsDQo+
-ID4gIAkJCXF1aXJrX21zaV9pbnR4X2Rpc2FibGVfcWNhX2J1Zyk7DQo+ID4gIERFQ0xBUkVfUENJ
-X0ZJWFVQX0ZJTkFMKFBDSV9WRU5ET1JfSURfQVRUQU5TSUMsIDB4ZTA5MSwNCj4gPiAgCQkJcXVp
-cmtfbXNpX2ludHhfZGlzYWJsZV9xY2FfYnVnKTsNCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIHF1
-aXJrX2FsX21zaV9kaXNhYmxlKHN0cnVjdCBwY2lfZGV2ICpkZXYpDQo+ID4gK3sNCj4gPiArCWRl
-di0+bm9fbXNpID0gMTsNCj4gPiArCWRldl93YXJuKCZkZXYtPmRldiwgIkFubmFwdXJuYSBMYWJz
-IHBjaWUgcXVpcmsgLSBkaXNhYmxpbmcNCj4gPiBNU0lcbiIpOw0KPiANCj4gcy9wY2llL1BDSWUv
-IGluIEVuZ2xpc2ggdGV4dCwgY29tbWVudHMsIHByaW50ayBzdHJpbmdzLCBldGMuDQo+IA0KQWNr
-Lg0KDQo+IEFjdHVhbGx5LCBJIHRoaW5rIHRoZSB3aG9sZSAiQW5uYXB1cm5hIExhYnMgcGNpZSBx
-dWlyayIgcGFydCBpcw0KPiBwcm9iYWJseSB1bm5lY2Vzc2FyeSwgc2luY2Ugd2UgY2FuIGlkZW50
-aWZ5IHRoZSBkZXZpY2UgdmlhIHRoZQ0KPiBkZXZfcHJpbnRrKCkgaW5mby4NCj4gDQpBY2suDQoN
-Cj4gU3BlYWtpbmcgb2Ygd2hpY2gsIHlvdSBjYW4gdXNlICJwY2lfd2FybihkZXYpIiBoZXJlIHRv
-IGJlIGNvbnNpc3RlbnQNCj4gd2l0aCB0aGUgcmVzdCBvZiB0aGUgZmlsZS4NCj4gDQpBY2suDQoN
-Cj4gPiArfQ0KPiA+ICtERUNMQVJFX1BDSV9GSVhVUF9DTEFTU19GSU5BTChQQ0lfVkVORE9SX0lE
-X0FNQVpPTl9BTk5BUFVSTkFfTEFCUywNCj4gPiAweDAwMzEsDQo+ID4gKwkJCSAgICAgIFBDSV9D
-TEFTU19CUklER0VfUENJLCA4LA0KPiA+IHF1aXJrX2FsX21zaV9kaXNhYmxlKTsNCj4gDQo+IFdo
-eSBkbyB5b3UgdXNlIHRoZSBjbGFzcyBmaXh1cCBoZXJlIGluc3RlYWQgb2YgdGhlIHNpbXBsZXIN
-Cj4gREVDTEFSRV9QQ0lfRklYVVBfRklOQUwoKT8gIFJlcXVpcmluZyB0aGUgY2xhc3MgdG8gbWF0
-Y2gNCj4gUENJX0NMQVNTX0JSSURHRV9QQ0kgc3VnZ2VzdHMgdGhhdCB0aGVyZSBtYXkgYmUgb3Ro
-ZXIgWzFjMzY6MDAzMV0NCj4gZGV2aWNlcyB0aGF0IGFyZSBub3QgUm9vdCBQb3J0cy4gIElmIHRo
-YXQncyB0aGUgY2FzZSwgcGxlYXNlIG1lbnRpb24NCj4gaXQgc28gaXQncyBjbGVhciB3aHkgd2Ug
-bmVlZCBERUNMQVJFX1BDSV9GSVhVUF9DTEFTU19GSU5BTCgpLiAgSWYNCj4gbm90LA0KPiBqdXN0
-IHVzZSBERUNMQVJFX1BDSV9GSVhVUF9GSU5BTCgpLg0KPiANClRoaXMgaXMgaW5kZWVkIHRoZSBj
-YXNlLiBXaGF0IGRvIHlvdSBzYXkgYWJvdXQgYWRkaW5nIHRoZSBmb2xsb3dpbmcNCmNvbW1lbnQg
-YmVmb3JlIHRoZSBmdW5jdGlvbidzIGRlZmluaXRpb246DQovKg0KICogQW1hem9uJ3MgQW5uYXB1
-cm5hIExhYnMgMWMzNjowMDMxIFJvb3QgUG9ydHMgZG9uJ3Qgc3VwcG9ydCBNU0ktWCwgc28NCml0
-DQogKiBzaG91bGQgYmUgZGlzYWJsZWQgb24gcGxhdGZvcm1zIHdoZXJlIHRoZSBkZXZpY2UgKG1p
-c3Rha2VubHkpDQphZHZlcnRpc2VzIGl0Lg0KICoNCiAqIFRoZSAwMDMxIGRldmljZSBpZCBpcyBy
-ZXVzZWQgZm9yIG90aGVyIG5vbiBSb290IFBvcnQgZGV2aWNlIHR5cGVzLA0KICogdGhlcmVmb3Jl
-IHRoZSBxdWlyayBpcyByZWdpc3RlcmVkIGZvciB0aGUgUENJX0NMQVNTX0JSSURHRV9QQ0kgY2xh
-c3MNCm9ubHkuDQogKi8NCg0KPiAgI2VuZGlmIC8qIENPTkZJR19QQ0lfTVNJICovDQogDQogLyoN
-Ci0tIA0KMi4xNy4xDQoNCg0K
+On Sat, Jul 13, 2019 at 02:28:12PM -0700, Paul E. McKenney wrote:
+> On Sat, Jul 13, 2019 at 12:13:16PM -0400, Joel Fernandes wrote:
+> > On Sat, Jul 13, 2019 at 08:50:10AM -0700, Paul E. McKenney wrote:
+> > > On Sat, Jul 13, 2019 at 11:36:06AM -0400, Joel Fernandes wrote:
+> > > > On Sat, Jul 13, 2019 at 07:41:08AM -0700, Paul E. McKenney wrote:
+> > > > > On Sat, Jul 13, 2019 at 09:30:49AM -0400, Joel Fernandes wrote:
+> > > > > > On Sat, Jul 13, 2019 at 01:21:14AM -0700, Paul E. McKenney wrote:
+> > > > > > > On Fri, Jul 12, 2019 at 11:10:08PM -0400, Joel Fernandes wrote:
+> > > > > > > > On Fri, Jul 12, 2019 at 11:01:50PM -0400, Joel Fernandes wrote:
+> > > > > > > > > On Fri, Jul 12, 2019 at 04:32:06PM -0700, Paul E. McKenney wrote:
+> > > > > > > > > > On Fri, Jul 12, 2019 at 05:35:59PM -0400, Joel Fernandes wrote:
+> > > > > > > > > > > On Fri, Jul 12, 2019 at 01:00:18PM -0400, Joel Fernandes (Google) wrote:
+> > > > > > > > > > > > The rcu/sync code was doing its own check whether we are in a reader
+> > > > > > > > > > > > section. With RCU consolidating flavors and the generic helper added in
+> > > > > > > > > > > > this series, this is no longer need. We can just use the generic helper
+> > > > > > > > > > > > and it results in a nice cleanup.
+> > > > > > > > > > > > 
+> > > > > > > > > > > > Cc: Oleg Nesterov <oleg@redhat.com>
+> > > > > > > > > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > > > > > > > > > 
+> > > > > > > > > > > Hi Oleg,
+> > > > > > > > > > > Slightly unrelated to the patch,
+> > > > > > > > > > > I tried hard to understand this comment below in percpu_down_read() but no dice.
+> > > > > > > > > > > 
+> > > > > > > > > > > I do understand how rcu sync and percpu rwsem works, however the comment
+> > > > > > > > > > > below didn't make much sense to me. For one, there's no readers_fast anymore
+> > > > > > > > > > > so I did not follow what readers_fast means. Could the comment be updated to
+> > > > > > > > > > > reflect latest changes?
+> > > > > > > > > > > Also could you help understand how is a writer not able to change
+> > > > > > > > > > > sem->state and count the per-cpu read counters at the same time as the
+> > > > > > > > > > > comment tries to say?
+> > > > > > > > > > > 
+> > > > > > > > > > > 	/*
+> > > > > > > > > > > 	 * We are in an RCU-sched read-side critical section, so the writer
+> > > > > > > > > > > 	 * cannot both change sem->state from readers_fast and start checking
+> > > > > > > > > > > 	 * counters while we are here. So if we see !sem->state, we know that
+> > > > > > > > > > > 	 * the writer won't be checking until we're past the preempt_enable()
+> > > > > > > > > > > 	 * and that once the synchronize_rcu() is done, the writer will see
+> > > > > > > > > > > 	 * anything we did within this RCU-sched read-size critical section.
+> > > > > > > > > > > 	 */
+> > > > > > > > > > > 
+> > > > > > > > > > > Also,
+> > > > > > > > > > > I guess we could get rid of all of the gp_ops struct stuff now that since all
+> > > > > > > > > > > the callbacks are the same now. I will post that as a follow-up patch to this
+> > > > > > > > > > > series.
+> > > > > > > > > > 
+> > > > > > > > > > Hello, Joel,
+> > > > > > > > > > 
+> > > > > > > > > > Oleg has a set of patches updating this code that just hit mainline
+> > > > > > > > > > this week.  These patches get rid of the code that previously handled
+> > > > > > > > > > RCU's multiple flavors.  Or are you looking at current mainline and
+> > > > > > > > > > me just missing your point?
+> > > > > > > > > > 
+> > > > > > > > > 
+> > > > > > > > > Hi Paul,
+> > > > > > > > > You are right on point. I have a bad habit of not rebasing my trees. In this
+> > > > > > > > > case the feature branch of mine in concern was based on v5.1. Needless to
+> > > > > > > > > say, I need to rebase my tree.
+> > > > > > > > > 
+> > > > > > > > > Yes, this sync clean up patch does conflict when I rebase, but other patches
+> > > > > > > > > rebase just fine.
+> > > > > > > > > 
+> > > > > > > > > The 2 options I see are:
+> > > > > > > > > 1. Let us drop this patch for now and I resend it later.
+> > > > > > > > > 2. I resend all patches based on Linus's master branch.
+> > > > > > > > 
+> > > > > > > > Below is the updated patch based on Linus master branch:
+> > > > > > > > 
+> > > > > > > > ---8<-----------------------
+> > > > > > > > 
+> > > > > > > > >From 5f40c9a07fcf3d6dafc2189599d0ba9443097d0f Mon Sep 17 00:00:00 2001
+> > > > > > > > From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+> > > > > > > > Date: Fri, 12 Jul 2019 12:13:27 -0400
+> > > > > > > > Subject: [PATCH v2.1 3/9] rcu/sync: Remove custom check for reader-section
+> > > > > > > > 
+> > > > > > > > The rcu/sync code was doing its own check whether we are in a reader
+> > > > > > > > section. With RCU consolidating flavors and the generic helper added in
+> > > > > > > > this series, this is no longer need. We can just use the generic helper
+> > > > > > > > and it results in a nice cleanup.
+> > > > > > > > 
+> > > > > > > > Cc: Oleg Nesterov <oleg@redhat.com>
+> > > > > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > > > > > > ---
+> > > > > > > >  include/linux/rcu_sync.h | 4 +---
+> > > > > > > >  1 file changed, 1 insertion(+), 3 deletions(-)
+> > > > > > > > 
+> > > > > > > > diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
+> > > > > > > > index 9b83865d24f9..0027d4c8087c 100644
+> > > > > > > > --- a/include/linux/rcu_sync.h
+> > > > > > > > +++ b/include/linux/rcu_sync.h
+> > > > > > > > @@ -31,9 +31,7 @@ struct rcu_sync {
+> > > > > > > >   */
+> > > > > > > >  static inline bool rcu_sync_is_idle(struct rcu_sync *rsp)
+> > > > > > > >  {
+> > > > > > > > -	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&
+> > > > > > > > -			 !rcu_read_lock_bh_held() &&
+> > > > > > > > -			 !rcu_read_lock_sched_held(),
+> > > > > > > > +	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),
+> > > > > > > 
+> > > > > > > I believe that replacing rcu_read_lock_sched_held() with preemptible()
+> > > > > > > in a CONFIG_PREEMPT=n kernel will give you false-positive splats here.
+> > > > > > > If you have not already done so, could you please give it a try?
+> > > > > > 
+> > > > > > Hi Paul,
+> > > > > > I don't think it will cause splats for !CONFIG_PREEMPT.
+> > > > > > 
+> > > > > > Currently, rcu_read_lock_any_held() introduced in this patch returns true if
+> > > > > > !preemptible(). This means that:
+> > > > > > 
+> > > > > > The following expression above:
+> > > > > > RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),...)
+> > > > > > 
+> > > > > > Becomes:
+> > > > > > RCU_LOCKDEP_WARN(preemptible(), ...)
+> > > > > > 
+> > > > > > For, CONFIG_PREEMPT=n kernels, this means:
+> > > > > > RCU_LOCKDEP_WARN(0, ...)
+> > > > > > 
+> > > > > > Which would mean no splats. Or, did I miss the point?
+> > > > > 
+> > > > > I suggest trying it out on a CONFIG_PREEMPT=n kernel.
+> > > > 
+> > > > Sure, will do, sorry did not try it out yet because was busy with weekend
+> > > > chores but will do soon, thanks!
+> > > 
+> > > I am not faulting you for taking the weekend off, actually.  ;-)
+> > 
+> > ;-) 
+> > 
+> > I tried doing RCU_LOCKDEP_WARN(preemptible(), ...) in this code path and I
+> > don't get any splats. I also disassembled the code and it seems to me
+> > RCU_LOCKDEP_WARN() becomes a NOOP which also the above reasoning confirms.
+> 
+> OK, very good.  Could you do the same thing for the RCU_LOCKDEP_WARN()
+> in synchronize_rcu()?  Why or why not?
+> 
+
+Hi Paul,
+
+Yes synchronize_rcu() can also make use of this technique since it is
+strictly illegal to call synchronize_rcu() within a reader section.
+
+I will add this to the set of my patches as well and send them all out next
+week, along with the rcu-sync and bh clean ups we discussed.
+
+thanks,
+
+- Joel
+
