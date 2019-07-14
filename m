@@ -2,187 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C03F2680DF
-	for <lists+linux-pci@lfdr.de>; Sun, 14 Jul 2019 20:53:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C5BC68144
+	for <lists+linux-pci@lfdr.de>; Sun, 14 Jul 2019 23:31:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbfGNSxC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 14 Jul 2019 14:53:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6002 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728125AbfGNSxC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 14 Jul 2019 14:53:02 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6EIlCEJ106075;
-        Sun, 14 Jul 2019 14:50:30 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tqvuf5gts-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 14 Jul 2019 14:50:30 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6EIoUZH135521;
-        Sun, 14 Jul 2019 14:50:30 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tqvuf5gta-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 14 Jul 2019 14:50:29 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6EInRHA026321;
-        Sun, 14 Jul 2019 18:50:28 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma03dal.us.ibm.com with ESMTP id 2tq6x6tdsf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 14 Jul 2019 18:50:28 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6EIoSV749414412
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 14 Jul 2019 18:50:28 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F3E19B205F;
-        Sun, 14 Jul 2019 18:50:27 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 88499B2065;
-        Sun, 14 Jul 2019 18:50:27 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.203.247])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sun, 14 Jul 2019 18:50:27 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 7A5C116C8FBA; Sun, 14 Jul 2019 11:50:27 -0700 (PDT)
-Date:   Sun, 14 Jul 2019 11:50:27 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH v2 3/9] rcu/sync: Remove custom check for reader-section
-Message-ID: <20190714185027.GL26519@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190713031008.GA248225@google.com>
- <20190713082114.GA26519@linux.ibm.com>
- <20190713133049.GA133650@google.com>
- <20190713144108.GD26519@linux.ibm.com>
- <20190713153606.GD133650@google.com>
- <20190713155010.GF26519@linux.ibm.com>
- <20190713161316.GA39321@google.com>
- <20190713212812.GH26519@linux.ibm.com>
- <20190714181053.GB34501@google.com>
- <20190714183820.GD34501@google.com>
+        id S1728864AbfGNVbL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 14 Jul 2019 17:31:11 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42888 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728701AbfGNVbK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 14 Jul 2019 17:31:10 -0400
+Received: by mail-pg1-f194.google.com with SMTP id t132so6739937pgb.9;
+        Sun, 14 Jul 2019 14:31:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OI4xMsbqQf5Vrd3dbjB5Xy9DidSLC6HJyzC9HwJmKsc=;
+        b=g2MZ8iXz8S/AlMluHGjv4oQC1mY+0D/ljETpIWRRPq182JjTgW2cnnDPjIOnQt/k3w
+         UfEea+BmOISa844HIgTuHyLAR+SrTZdEZTiHadCfcSxV4ooXq+TCb44jhKV5qk89nlmS
+         v5VD031lLiPuvNE4VouuW7v39Zu7TzwXzNSbU/j+43dqDyeu2DDoYRaTrUSdV0o63PKm
+         xRSn0YTIODcWloeFdwg4alsqpc/gHas6sHe41OsyV7InGDmm076cHHFsl7u0YHoR/iUm
+         mulmlwfH8ixWiXktfZWEh6hWV6hTOvnvbyC55FfMbSjaVIB9WmscMqOooDp63NsXEQNR
+         rzEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OI4xMsbqQf5Vrd3dbjB5Xy9DidSLC6HJyzC9HwJmKsc=;
+        b=bG9+QK5zaYUvX/15Wl70bkbZefPzz81JsLnxxj75ZkrecioDk9/wARqNGHvgNu2GO/
+         vO9rz2ZK2/IBv/w1Jpv7iWRYl1I1uK5dij7BtchnbseQ72DvMpTaWmeQWTtjKnJkic9H
+         el2YiqHahaxCl5srvWb6UX10CcSyQhwjHt8YZg+ckqX2v08QczmceASJTen5QQXZ2AQm
+         /ICbb/O98Tnn7pZIK9QV70tA4M62GlGMf5mxi1ZyoAYKetW12DOIqokQfIGQEGrSJnHZ
+         Co5Y6jCFn7rprlUKXt8G9iHDNtdokiNmwI0ieVBXvhltMhLCa+ScsTsl6tvMEMmnCJSI
+         3rSw==
+X-Gm-Message-State: APjAAAXyrkn8v/4mX1rqhB4xmK23CtvPWvtLaUQUD5pTTciVGmA211r1
+        85tE4j0gA6HKOlezay0cOk8z89xB
+X-Google-Smtp-Source: APXvYqyQaAFBCaC86ytdeR9B0pAZgAmoPfDBUUULGmeEknrNkALndeNS+Fb2DqFr5/rNgTrPOoCIZw==
+X-Received: by 2002:a63:2148:: with SMTP id s8mr22928413pgm.336.1563139869899;
+        Sun, 14 Jul 2019 14:31:09 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o14sm30337287pfh.153.2019.07.14.14.31.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 14 Jul 2019 14:31:08 -0700 (PDT)
+Subject: Re: [PATCH 1/2] x86/amd_nb: Add PCI device IDs for family 17h, model
+ 70h
+To:     Vicki Pfau <vi@endrift.com>, linux-hwmon@vger.kernel.org,
+        linux-pci@vger.kernel.org, Brian Woods <brian.woods@amd.com>
+References: <20190714183209.29916-1-vi@endrift.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <425d3dfd-ab13-2fe2-f8ae-58aa8a3422cc@roeck-us.net>
+Date:   Sun, 14 Jul 2019 14:31:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190714183820.GD34501@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-14_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907140234
+In-Reply-To: <20190714183209.29916-1-vi@endrift.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jul 14, 2019 at 02:38:20PM -0400, Joel Fernandes wrote:
-> On Sun, Jul 14, 2019 at 02:10:53PM -0400, Joel Fernandes wrote:
-> > On Sat, Jul 13, 2019 at 02:28:12PM -0700, Paul E. McKenney wrote:
-> [snip]
-> > > > > > > > > > 
-> > > > > > > > > > Cc: Oleg Nesterov <oleg@redhat.com>
-> > > > > > > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > > > > > > > ---
-> > > > > > > > > >  include/linux/rcu_sync.h | 4 +---
-> > > > > > > > > >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > > > > > > > > > 
-> > > > > > > > > > diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
-> > > > > > > > > > index 9b83865d24f9..0027d4c8087c 100644
-> > > > > > > > > > --- a/include/linux/rcu_sync.h
-> > > > > > > > > > +++ b/include/linux/rcu_sync.h
-> > > > > > > > > > @@ -31,9 +31,7 @@ struct rcu_sync {
-> > > > > > > > > >   */
-> > > > > > > > > >  static inline bool rcu_sync_is_idle(struct rcu_sync *rsp)
-> > > > > > > > > >  {
-> > > > > > > > > > -	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&
-> > > > > > > > > > -			 !rcu_read_lock_bh_held() &&
-> > > > > > > > > > -			 !rcu_read_lock_sched_held(),
-> > > > > > > > > > +	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),
-> > > > > > > > > 
-> > > > > > > > > I believe that replacing rcu_read_lock_sched_held() with preemptible()
-> > > > > > > > > in a CONFIG_PREEMPT=n kernel will give you false-positive splats here.
-> > > > > > > > > If you have not already done so, could you please give it a try?
-> > > > > > > > 
-> > > > > > > > Hi Paul,
-> > > > > > > > I don't think it will cause splats for !CONFIG_PREEMPT.
-> > > > > > > > 
-> > > > > > > > Currently, rcu_read_lock_any_held() introduced in this patch returns true if
-> > > > > > > > !preemptible(). This means that:
-> > > > > > > > 
-> > > > > > > > The following expression above:
-> > > > > > > > RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),...)
-> > > > > > > > 
-> > > > > > > > Becomes:
-> > > > > > > > RCU_LOCKDEP_WARN(preemptible(), ...)
-> > > > > > > > 
-> > > > > > > > For, CONFIG_PREEMPT=n kernels, this means:
-> > > > > > > > RCU_LOCKDEP_WARN(0, ...)
-> > > > > > > > 
-> > > > > > > > Which would mean no splats. Or, did I miss the point?
-> > > > > > > 
-> > > > > > > I suggest trying it out on a CONFIG_PREEMPT=n kernel.
-> > > > > > 
-> > > > > > Sure, will do, sorry did not try it out yet because was busy with weekend
-> > > > > > chores but will do soon, thanks!
-> > > > > 
-> > > > > I am not faulting you for taking the weekend off, actually.  ;-)
-> > > > 
-> > > > ;-) 
-> > > > 
-> > > > I tried doing RCU_LOCKDEP_WARN(preemptible(), ...) in this code path and I
-> > > > don't get any splats. I also disassembled the code and it seems to me
-> > > > RCU_LOCKDEP_WARN() becomes a NOOP which also the above reasoning confirms.
-> > > 
-> > > OK, very good.  Could you do the same thing for the RCU_LOCKDEP_WARN()
-> > > in synchronize_rcu()?  Why or why not?
-> > > 
-> > 
-> > Hi Paul,
-> > 
-> > Yes synchronize_rcu() can also make use of this technique since it is
-> > strictly illegal to call synchronize_rcu() within a reader section.
-> > 
-> > I will add this to the set of my patches as well and send them all out next
-> > week, along with the rcu-sync and bh clean ups we discussed.
+On 7/14/19 11:32 AM, Vicki Pfau wrote:
+> Add the PCI device IDs for the newly released AMD Ryzen 3xxx desktop
+> (Matisse) CPU line northbridge link and misc devices.
 > 
-> After sending this email, it occurs to me it wont work in synchronize_rcu()
-> for !CONFIG_PREEMPT kernels. This is because in a !CONFIG_PREEMPT kernel,
-> executing in kernel mode itself looks like being in an RCU reader. So we
-> should leave that as is. However it will work fine for rcu_sync_is_idle (for
-> CONFIG_PREEMPT=n kernels) as I mentioned earlier.
+> Signed-off-by: Vicki Pfau <vi@endrift.com>
+
+You didn't copy any of the x86 maintainers.
+
+FWIW:
+
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>   arch/x86/kernel/amd_nb.c | 3 +++
+>   include/linux/pci_ids.h  | 1 +
+>   2 files changed, 4 insertions(+)
 > 
-> Were trying to throw me a Quick-Quiz ? ;-) In that case, hope I passed!
+> diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+> index d63e63b7d1d9..0a8b816857c1 100644
+> --- a/arch/x86/kernel/amd_nb.c
+> +++ b/arch/x86/kernel/amd_nb.c
+> @@ -21,6 +21,7 @@
+>   #define PCI_DEVICE_ID_AMD_17H_DF_F4	0x1464
+>   #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec
+>   #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494
+> +#define PCI_DEVICE_ID_AMD_17H_M70H_DF_F4 0x1444
+>   
+>   /* Protect the PCI config register pairs used for SMN and DF indirect access. */
+>   static DEFINE_MUTEX(smn_mutex);
+> @@ -49,6 +50,7 @@ const struct pci_device_id amd_nb_misc_ids[] = {
+>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_DF_F3) },
+>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
+>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
+>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F3) },
+>   	{}
+>   };
+> @@ -63,6 +65,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
+>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_DF_F4) },
+>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F4) },
+>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F4) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F4) },
+>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },
+>   	{}
+>   };
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 70e86148cb1e..862556761bbf 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -548,6 +548,7 @@
+>   #define PCI_DEVICE_ID_AMD_17H_DF_F3	0x1463
+>   #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3 0x15eb
+>   #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F3 0x1493
+> +#define PCI_DEVICE_ID_AMD_17H_M70H_DF_F3 0x1443
+>   #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
+>   #define PCI_DEVICE_ID_AMD_LANCE		0x2000
+>   #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
+> 
 
-You did pass.  This time.  ;-)
-
-							Thanx, Paul
