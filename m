@@ -2,46 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FFBA6809F
-	for <lists+linux-pci@lfdr.de>; Sun, 14 Jul 2019 20:11:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C45C0680BE
+	for <lists+linux-pci@lfdr.de>; Sun, 14 Jul 2019 20:38:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbfGNSK6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 14 Jul 2019 14:10:58 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42044 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728307AbfGNSK6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 14 Jul 2019 14:10:58 -0400
-Received: by mail-pg1-f196.google.com with SMTP id t132so6631438pgb.9
-        for <linux-pci@vger.kernel.org>; Sun, 14 Jul 2019 11:10:57 -0700 (PDT)
+        id S1728442AbfGNSi2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 14 Jul 2019 14:38:28 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46185 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728125AbfGNSiY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 14 Jul 2019 14:38:24 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i8so6637482pgm.13
+        for <linux-pci@vger.kernel.org>; Sun, 14 Jul 2019 11:38:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=h1pAcn8lGSAohpOznQF9NmGy7QqhFhjk1FbBtBnrL3Q=;
-        b=EMgyg0ifNFigYL4RNf7iGfiMIUg6jvRXRiys4EXya8l6ZmanKbiXroI/a0Mzi54zNi
-         evMfGank18wT1GABV79nf3sIQ9Bsfw1s3LQtXCu1jO0i1RSPO3FHYXnJsopKFdU1iqpl
-         lnJyX45ng7dNKagHUCm560W8tKOHrwtrgrnP8=
+        bh=sox1qbAuMnPUwD0CgD0KdMKVv1SxdSpzlx78UgprX+8=;
+        b=uvIXjc6RpIBKGJKLMswZL0zKOIbGCOqwZVMZfzv8f0e56iW5Xw+d175Iewh7O0m4QG
+         PTQTK9CSolsfpH5eZHkNSyajv9VLH/1qzdWEVarVoP4ce8ZjKCT1LdIuWT1W9Ypl4naJ
+         p98jtynPImVVZsE4/RPF3Jp7vxXCaWrM0dr5E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h1pAcn8lGSAohpOznQF9NmGy7QqhFhjk1FbBtBnrL3Q=;
-        b=gI3p5yHixYOddE3+ED2ykyOoiF1ZsETgkU8aF3RVxKbS2YXaqHeSL+QMdz8J+/VeL0
-         my92oZ+GefWB0vQTUh8g2ZP+WWF+GArQJUqVsbBDTtX5LyddtmBZRH14KoAt8ZxBhLve
-         3VCVKZ1h+UVH/FvcArSER1vuEvwMUbxoYoDg+ulsYIKyl7x+KDuxqPqegoTq0zOeCOrl
-         DAuOyEgIngjhAbfeBty4Z2WlHgyYWAbIkS6GYYzGb5pi3jHkaLjzVO8BqjAgWe0eyHp+
-         KazgIiX5BUFkMwwO6xj1FH23cm72HKBWZHVO9yQANvhBI9obboz0SoCcyJhgBAmXFkD/
-         5V6g==
-X-Gm-Message-State: APjAAAXyViodX2SL3Gz0MJ8VR+IzJimGNfds9eArMMAXVfo9NLP8Lj/T
-        Atc7FVDj39lHOouvhumUrVM=
-X-Google-Smtp-Source: APXvYqxF3hpQsmoT+sPJXSACN4cxJFE3QliM8B8zXx9WoEiv61udpMi6Vi+H9/biYKmUyGPphFBWKQ==
-X-Received: by 2002:a17:90b:8cd:: with SMTP id ds13mr23479973pjb.141.1563127857354;
-        Sun, 14 Jul 2019 11:10:57 -0700 (PDT)
+        bh=sox1qbAuMnPUwD0CgD0KdMKVv1SxdSpzlx78UgprX+8=;
+        b=pS+D+egxzDTHOQ1NoTcg2WgrC822naExwCzbs3AiuNv7Lr8sRphsZjDTK/mNsQ6sy2
+         sY0xwMTvkaHQIgVR5RMk3HyV5qYQr/I3KCxgv0mpQLuuozc2v+i+y8l9+JdXojwMKSaA
+         a2ZUXGkV5JvyU3shRXp5MnBmC6LWpmVK7uB/xRd/mwWGWZhxCOGrqxs2HyG3TWuPnuhr
+         GrZeOLtMRyPvg8avT26PhxvELj3KBhkHh+7AwAO0Jsb4klzpgFpjHQC4CddxpZBI066f
+         xltGntJiQhWiWKQqKs1k4DxXWMD+UKaB09oZuxjyjgVgRhn6OYS2CttmVHmmuoIyX8k6
+         IYhg==
+X-Gm-Message-State: APjAAAWQVTkpcQBBR/U32oxVdHfc1YdwAMq3aKs99kwWQqhwKHm19n3J
+        3xGVSvKsABO9eUFhlj4zyD0=
+X-Google-Smtp-Source: APXvYqzbkYP46GwBSD0mDA1ULApcyNEVrg5o30ItZY+eSVKxrnZ68GFxhMKl90asFkD9mHvD6qzZOw==
+X-Received: by 2002:a65:4507:: with SMTP id n7mr21968240pgq.86.1563129503349;
+        Sun, 14 Jul 2019 11:38:23 -0700 (PDT)
 Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id h26sm15448605pfq.64.2019.07.14.11.10.54
+        by smtp.gmail.com with ESMTPSA id g2sm22630976pfq.88.2019.07.14.11.38.21
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 14 Jul 2019 11:10:55 -0700 (PDT)
-Date:   Sun, 14 Jul 2019 14:10:53 -0400
+        Sun, 14 Jul 2019 11:38:22 -0700 (PDT)
+Date:   Sun, 14 Jul 2019 14:38:20 -0400
 From:   Joel Fernandes <joel@joelfernandes.org>
 To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
 Cc:     linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
@@ -69,9 +69,8 @@ Cc:     linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
         "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
 Subject: Re: [PATCH v2 3/9] rcu/sync: Remove custom check for reader-section
-Message-ID: <20190714181053.GB34501@google.com>
-References: <20190712233206.GZ26519@linux.ibm.com>
- <20190713030150.GA246587@google.com>
+Message-ID: <20190714183820.GD34501@google.com>
+References: <20190713030150.GA246587@google.com>
  <20190713031008.GA248225@google.com>
  <20190713082114.GA26519@linux.ibm.com>
  <20190713133049.GA133650@google.com>
@@ -80,162 +79,95 @@ References: <20190712233206.GZ26519@linux.ibm.com>
  <20190713155010.GF26519@linux.ibm.com>
  <20190713161316.GA39321@google.com>
  <20190713212812.GH26519@linux.ibm.com>
+ <20190714181053.GB34501@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190713212812.GH26519@linux.ibm.com>
+In-Reply-To: <20190714181053.GB34501@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 02:28:12PM -0700, Paul E. McKenney wrote:
-> On Sat, Jul 13, 2019 at 12:13:16PM -0400, Joel Fernandes wrote:
-> > On Sat, Jul 13, 2019 at 08:50:10AM -0700, Paul E. McKenney wrote:
-> > > On Sat, Jul 13, 2019 at 11:36:06AM -0400, Joel Fernandes wrote:
-> > > > On Sat, Jul 13, 2019 at 07:41:08AM -0700, Paul E. McKenney wrote:
-> > > > > On Sat, Jul 13, 2019 at 09:30:49AM -0400, Joel Fernandes wrote:
-> > > > > > On Sat, Jul 13, 2019 at 01:21:14AM -0700, Paul E. McKenney wrote:
-> > > > > > > On Fri, Jul 12, 2019 at 11:10:08PM -0400, Joel Fernandes wrote:
-> > > > > > > > On Fri, Jul 12, 2019 at 11:01:50PM -0400, Joel Fernandes wrote:
-> > > > > > > > > On Fri, Jul 12, 2019 at 04:32:06PM -0700, Paul E. McKenney wrote:
-> > > > > > > > > > On Fri, Jul 12, 2019 at 05:35:59PM -0400, Joel Fernandes wrote:
-> > > > > > > > > > > On Fri, Jul 12, 2019 at 01:00:18PM -0400, Joel Fernandes (Google) wrote:
-> > > > > > > > > > > > The rcu/sync code was doing its own check whether we are in a reader
-> > > > > > > > > > > > section. With RCU consolidating flavors and the generic helper added in
-> > > > > > > > > > > > this series, this is no longer need. We can just use the generic helper
-> > > > > > > > > > > > and it results in a nice cleanup.
-> > > > > > > > > > > > 
-> > > > > > > > > > > > Cc: Oleg Nesterov <oleg@redhat.com>
-> > > > > > > > > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > > > > > > > > 
-> > > > > > > > > > > Hi Oleg,
-> > > > > > > > > > > Slightly unrelated to the patch,
-> > > > > > > > > > > I tried hard to understand this comment below in percpu_down_read() but no dice.
-> > > > > > > > > > > 
-> > > > > > > > > > > I do understand how rcu sync and percpu rwsem works, however the comment
-> > > > > > > > > > > below didn't make much sense to me. For one, there's no readers_fast anymore
-> > > > > > > > > > > so I did not follow what readers_fast means. Could the comment be updated to
-> > > > > > > > > > > reflect latest changes?
-> > > > > > > > > > > Also could you help understand how is a writer not able to change
-> > > > > > > > > > > sem->state and count the per-cpu read counters at the same time as the
-> > > > > > > > > > > comment tries to say?
-> > > > > > > > > > > 
-> > > > > > > > > > > 	/*
-> > > > > > > > > > > 	 * We are in an RCU-sched read-side critical section, so the writer
-> > > > > > > > > > > 	 * cannot both change sem->state from readers_fast and start checking
-> > > > > > > > > > > 	 * counters while we are here. So if we see !sem->state, we know that
-> > > > > > > > > > > 	 * the writer won't be checking until we're past the preempt_enable()
-> > > > > > > > > > > 	 * and that once the synchronize_rcu() is done, the writer will see
-> > > > > > > > > > > 	 * anything we did within this RCU-sched read-size critical section.
-> > > > > > > > > > > 	 */
-> > > > > > > > > > > 
-> > > > > > > > > > > Also,
-> > > > > > > > > > > I guess we could get rid of all of the gp_ops struct stuff now that since all
-> > > > > > > > > > > the callbacks are the same now. I will post that as a follow-up patch to this
-> > > > > > > > > > > series.
-> > > > > > > > > > 
-> > > > > > > > > > Hello, Joel,
-> > > > > > > > > > 
-> > > > > > > > > > Oleg has a set of patches updating this code that just hit mainline
-> > > > > > > > > > this week.  These patches get rid of the code that previously handled
-> > > > > > > > > > RCU's multiple flavors.  Or are you looking at current mainline and
-> > > > > > > > > > me just missing your point?
-> > > > > > > > > > 
+On Sun, Jul 14, 2019 at 02:10:53PM -0400, Joel Fernandes wrote:
+> On Sat, Jul 13, 2019 at 02:28:12PM -0700, Paul E. McKenney wrote:
+[snip]
 > > > > > > > > > 
-> > > > > > > > > Hi Paul,
-> > > > > > > > > You are right on point. I have a bad habit of not rebasing my trees. In this
-> > > > > > > > > case the feature branch of mine in concern was based on v5.1. Needless to
-> > > > > > > > > say, I need to rebase my tree.
+> > > > > > > > > Cc: Oleg Nesterov <oleg@redhat.com>
+> > > > > > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > > > > > > > ---
+> > > > > > > > >  include/linux/rcu_sync.h | 4 +---
+> > > > > > > > >  1 file changed, 1 insertion(+), 3 deletions(-)
 > > > > > > > > > 
-> > > > > > > > > Yes, this sync clean up patch does conflict when I rebase, but other patches
-> > > > > > > > > rebase just fine.
-> > > > > > > > > 
-> > > > > > > > > The 2 options I see are:
-> > > > > > > > > 1. Let us drop this patch for now and I resend it later.
-> > > > > > > > > 2. I resend all patches based on Linus's master branch.
+> > > > > > > > > diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
+> > > > > > > > > index 9b83865d24f9..0027d4c8087c 100644
+> > > > > > > > > --- a/include/linux/rcu_sync.h
+> > > > > > > > > +++ b/include/linux/rcu_sync.h
+> > > > > > > > > @@ -31,9 +31,7 @@ struct rcu_sync {
+> > > > > > > > >   */
+> > > > > > > > >  static inline bool rcu_sync_is_idle(struct rcu_sync *rsp)
+> > > > > > > > >  {
+> > > > > > > > > -	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&
+> > > > > > > > > -			 !rcu_read_lock_bh_held() &&
+> > > > > > > > > -			 !rcu_read_lock_sched_held(),
+> > > > > > > > > +	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),
 > > > > > > > > 
-> > > > > > > > Below is the updated patch based on Linus master branch:
-> > > > > > > > 
-> > > > > > > > ---8<-----------------------
-> > > > > > > > 
-> > > > > > > > >From 5f40c9a07fcf3d6dafc2189599d0ba9443097d0f Mon Sep 17 00:00:00 2001
-> > > > > > > > From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-> > > > > > > > Date: Fri, 12 Jul 2019 12:13:27 -0400
-> > > > > > > > Subject: [PATCH v2.1 3/9] rcu/sync: Remove custom check for reader-section
-> > > > > > > > 
-> > > > > > > > The rcu/sync code was doing its own check whether we are in a reader
-> > > > > > > > section. With RCU consolidating flavors and the generic helper added in
-> > > > > > > > this series, this is no longer need. We can just use the generic helper
-> > > > > > > > and it results in a nice cleanup.
-> > > > > > > > 
-> > > > > > > > Cc: Oleg Nesterov <oleg@redhat.com>
-> > > > > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > > > > > ---
-> > > > > > > >  include/linux/rcu_sync.h | 4 +---
-> > > > > > > >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > > > > > > > 
-> > > > > > > > diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
-> > > > > > > > index 9b83865d24f9..0027d4c8087c 100644
-> > > > > > > > --- a/include/linux/rcu_sync.h
-> > > > > > > > +++ b/include/linux/rcu_sync.h
-> > > > > > > > @@ -31,9 +31,7 @@ struct rcu_sync {
-> > > > > > > >   */
-> > > > > > > >  static inline bool rcu_sync_is_idle(struct rcu_sync *rsp)
-> > > > > > > >  {
-> > > > > > > > -	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&
-> > > > > > > > -			 !rcu_read_lock_bh_held() &&
-> > > > > > > > -			 !rcu_read_lock_sched_held(),
-> > > > > > > > +	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),
+> > > > > > > > I believe that replacing rcu_read_lock_sched_held() with preemptible()
+> > > > > > > > in a CONFIG_PREEMPT=n kernel will give you false-positive splats here.
+> > > > > > > > If you have not already done so, could you please give it a try?
 > > > > > > > 
-> > > > > > > I believe that replacing rcu_read_lock_sched_held() with preemptible()
-> > > > > > > in a CONFIG_PREEMPT=n kernel will give you false-positive splats here.
-> > > > > > > If you have not already done so, could you please give it a try?
+> > > > > > > Hi Paul,
+> > > > > > > I don't think it will cause splats for !CONFIG_PREEMPT.
+> > > > > > > 
+> > > > > > > Currently, rcu_read_lock_any_held() introduced in this patch returns true if
+> > > > > > > !preemptible(). This means that:
+> > > > > > > 
+> > > > > > > The following expression above:
+> > > > > > > RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),...)
+> > > > > > > 
+> > > > > > > Becomes:
+> > > > > > > RCU_LOCKDEP_WARN(preemptible(), ...)
+> > > > > > > 
+> > > > > > > For, CONFIG_PREEMPT=n kernels, this means:
+> > > > > > > RCU_LOCKDEP_WARN(0, ...)
+> > > > > > > 
+> > > > > > > Which would mean no splats. Or, did I miss the point?
 > > > > > > 
-> > > > > > Hi Paul,
-> > > > > > I don't think it will cause splats for !CONFIG_PREEMPT.
-> > > > > > 
-> > > > > > Currently, rcu_read_lock_any_held() introduced in this patch returns true if
-> > > > > > !preemptible(). This means that:
-> > > > > > 
-> > > > > > The following expression above:
-> > > > > > RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),...)
-> > > > > > 
-> > > > > > Becomes:
-> > > > > > RCU_LOCKDEP_WARN(preemptible(), ...)
-> > > > > > 
-> > > > > > For, CONFIG_PREEMPT=n kernels, this means:
-> > > > > > RCU_LOCKDEP_WARN(0, ...)
-> > > > > > 
-> > > > > > Which would mean no splats. Or, did I miss the point?
+> > > > > > I suggest trying it out on a CONFIG_PREEMPT=n kernel.
 > > > > > 
-> > > > > I suggest trying it out on a CONFIG_PREEMPT=n kernel.
+> > > > > Sure, will do, sorry did not try it out yet because was busy with weekend
+> > > > > chores but will do soon, thanks!
 > > > > 
-> > > > Sure, will do, sorry did not try it out yet because was busy with weekend
-> > > > chores but will do soon, thanks!
+> > > > I am not faulting you for taking the weekend off, actually.  ;-)
 > > > 
-> > > I am not faulting you for taking the weekend off, actually.  ;-)
+> > > ;-) 
+> > > 
+> > > I tried doing RCU_LOCKDEP_WARN(preemptible(), ...) in this code path and I
+> > > don't get any splats. I also disassembled the code and it seems to me
+> > > RCU_LOCKDEP_WARN() becomes a NOOP which also the above reasoning confirms.
 > > 
-> > ;-) 
+> > OK, very good.  Could you do the same thing for the RCU_LOCKDEP_WARN()
+> > in synchronize_rcu()?  Why or why not?
 > > 
-> > I tried doing RCU_LOCKDEP_WARN(preemptible(), ...) in this code path and I
-> > don't get any splats. I also disassembled the code and it seems to me
-> > RCU_LOCKDEP_WARN() becomes a NOOP which also the above reasoning confirms.
 > 
-> OK, very good.  Could you do the same thing for the RCU_LOCKDEP_WARN()
-> in synchronize_rcu()?  Why or why not?
+> Hi Paul,
 > 
+> Yes synchronize_rcu() can also make use of this technique since it is
+> strictly illegal to call synchronize_rcu() within a reader section.
+> 
+> I will add this to the set of my patches as well and send them all out next
+> week, along with the rcu-sync and bh clean ups we discussed.
 
-Hi Paul,
+After sending this email, it occurs to me it wont work in synchronize_rcu()
+for !CONFIG_PREEMPT kernels. This is because in a !CONFIG_PREEMPT kernel,
+executing in kernel mode itself looks like being in an RCU reader. So we
+should leave that as is. However it will work fine for rcu_sync_is_idle (for
+CONFIG_PREEMPT=n kernels) as I mentioned earlier.
 
-Yes synchronize_rcu() can also make use of this technique since it is
-strictly illegal to call synchronize_rcu() within a reader section.
-
-I will add this to the set of my patches as well and send them all out next
-week, along with the rcu-sync and bh clean ups we discussed.
+Were trying to throw me a Quick-Quiz ? ;-) In that case, hope I passed!
 
 thanks,
 
-- Joel
+ - Joel
 
