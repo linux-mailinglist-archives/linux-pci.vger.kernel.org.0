@@ -2,132 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 16D2C69363
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2019 16:44:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A239A69715
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2019 17:08:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404178AbfGOOnx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Jul 2019 10:43:53 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41960 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392033AbfGOOhr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Jul 2019 10:37:47 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m9so8357953pls.8
-        for <linux-pci@vger.kernel.org>; Mon, 15 Jul 2019 07:37:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5zPd11qsqBV6enPH1pgmEhMrw3DVmEsKL+rgelJGu5E=;
-        b=XStDr0pOpAvfMPGvyaCiXhax5OpTI8omiicJPCmLonS9L7hbMWB8WbkqauDTlsAue1
-         /IzXyBhFpxdPHPkwfVRCjLPZYScMK7RsrUnJmmgQGxgyicRfMpFtWxfw1YpluI/oDB0w
-         mhjDfrjf8F43ROWC4kjFdePNxqWjxG9UE7yCo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5zPd11qsqBV6enPH1pgmEhMrw3DVmEsKL+rgelJGu5E=;
-        b=WY6pjI5333HtlhHhNfAlFa+RVLGqea8Fh+7YjBNbGRXptH3I/keLhzTar/gmQm0vzi
-         a1bboWAHsIXHDw1gOo0CQPBJqojVBGf7f6412expjoid89URfAe59itQASNdvKHtdQq7
-         07EnmPGc9wD7Lo/tucGD7cFtdJ1QVRW3LHFzQcP5mDAQGrJ6ekgb1X882RARNhDDXUvS
-         oG1kNmNimMKy4iz0WrxdpBjC3oKbIcyudt9KV3+k0HhIRYpWt4rLaqJv0RVPrwJ6ywIV
-         Lew7Md3QIwTeLHwCy036ePunbBHlrIoqIYgHBnO0SWeQeK6fp9xHjCntHktktVJx51iT
-         xvsQ==
-X-Gm-Message-State: APjAAAUKauCTDzfUdMbZGVNlQMuB+ooNnDESxJy3nWcOEw8MjEsuviAE
-        WUYNxkUb3DUZug2/GuZYqtQ=
-X-Google-Smtp-Source: APXvYqzkIpFv5vPuz81gmhFr3B+gCTSP4FKDqSNzw1vK/5n3JtNPasCMdlzt1VHFYex1IyUvrWl66Q==
-X-Received: by 2002:a17:902:2889:: with SMTP id f9mr27373830plb.230.1563201466638;
-        Mon, 15 Jul 2019 07:37:46 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id s66sm18381852pfs.8.2019.07.15.07.37.42
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 15 Jul 2019 07:37:45 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-Subject: [PATCH 8/9] acpi: Use built-in RCU list checking for acpi_ioremaps list (v1)
-Date:   Mon, 15 Jul 2019 10:37:04 -0400
-Message-Id: <20190715143705.117908-9-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
-In-Reply-To: <20190715143705.117908-1-joel@joelfernandes.org>
-References: <20190715143705.117908-1-joel@joelfernandes.org>
+        id S1733063AbfGON6F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Jul 2019 09:58:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37098 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733060AbfGON6E (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:58:04 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19694212F5;
+        Mon, 15 Jul 2019 13:58:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563199083;
+        bh=ZS55mG+paP+L29yblX7J5SeVoO5OrFk/y/5CPeKCzEA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Jtgoz4blmGQd9F8M3Jr2xH5MSu/uvveAlxgzsmjvnFXOW2Cjw4h2hiIGjYZhQVrc7
+         Xi556+EWnaW/GyBhfdvN9Iu/ULdODDs1wuzoL4+1f28TVbGPmB0EoI2yeQ10y91kFj
+         6L8/vkFIHGfFj0+Yk4mC6isWtKmhS7MLRvj7kldw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 185/249] PCI / ACPI: Use cached ACPI device state to get PCI device power state
+Date:   Mon, 15 Jul 2019 09:45:50 -0400
+Message-Id: <20190715134655.4076-185-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
+References: <20190715134655.4076-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-list_for_each_entry_rcu has built-in RCU and lock checking. Make use of
-it for acpi_ioremaps list traversal.
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+[ Upstream commit 83a16e3f6d70da99896c7a2639c0b60fff13afb8 ]
+
+The ACPI power state returned by acpi_device_get_power() may depend on
+the configuration of ACPI power resources in the system which may change
+any time after acpi_device_get_power() has returned, unless the
+reference counters of the ACPI power resources in question are set to
+prevent that from happening. Thus it is invalid to use acpi_device_get_power()
+in acpi_pci_get_power_state() the way it is done now and the value of
+the ->power.state field in the corresponding struct acpi_device objects
+(which reflects the ACPI power resources reference counting, among other
+things) should be used instead.
+
+As an example where this becomes an issue is Intel Ice Lake where the
+Thunderbolt controller (NHI), two PCIe root ports (RP0 and RP1) and xHCI
+all share the same power resources. The following picture with power
+resources marked with [] shows the topology:
+
+  Host bridge
+    |
+    +- RP0 ---\
+    +- RP1 ---|--+--> [TBT]
+    +- NHI --/   |
+    |            |
+    |            v
+    +- xHCI --> [D3C]
+
+Here TBT and D3C are the shared ACPI power resources. ACPI _PR3() method
+of the devices in question returns either TBT or D3C or both.
+
+Say we runtime suspend first the root ports RP0 and RP1, then NHI. Now
+since the TBT power resource is still on when the root ports are runtime
+suspended their dev->current_state is set to D3hot. When NHI is runtime
+suspended TBT is finally turned off but state of the root ports remain
+to be D3hot. Now when the xHCI is runtime suspended D3C gets also turned
+off. PCI core thus has power states of these devices cached in their
+dev->current_state as follows:
+
+  RP0 -> D3hot
+  RP1 -> D3hot
+  NHI -> D3cold
+  xHCI -> D3cold
+
+If the user now runs lspci for instance, the result is all 1's like in
+the below output (00:07.0 is the first root port, RP0):
+
+00:07.0 PCI bridge: Intel Corporation Device 8a1d (rev ff) (prog-if ff)
+    !!! Unknown header type 7f
+    Kernel driver in use: pcieport
+
+In short the hardware state is not in sync with the software state
+anymore. The exact same thing happens with the PME polling thread which
+ends up bringing the root ports back into D0 after they are runtime
+suspended.
+
+For this reason, modify acpi_pci_get_power_state() so that it uses the
+ACPI device power state that was cached by the ACPI core. This makes the
+PCI device power state match the ACPI device power state regardless of
+state of the shared power resources which may still be on at this point.
+
+Link: https://lore.kernel.org/r/20190618161858.77834-2-mika.westerberg@linux.intel.com
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/osl.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/pci/pci-acpi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index 9c0edf2fc0dd..2f9d0d20b836 100644
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -14,6 +14,7 @@
- #include <linux/slab.h>
- #include <linux/mm.h>
- #include <linux/highmem.h>
-+#include <linux/lockdep.h>
- #include <linux/pci.h>
- #include <linux/interrupt.h>
- #include <linux/kmod.h>
-@@ -80,6 +81,7 @@ struct acpi_ioremap {
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index 1897847ceb0c..b782acac26c5 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -685,7 +685,8 @@ static pci_power_t acpi_pci_get_power_state(struct pci_dev *dev)
+ 	if (!adev || !acpi_device_power_manageable(adev))
+ 		return PCI_UNKNOWN;
  
- static LIST_HEAD(acpi_ioremaps);
- static DEFINE_MUTEX(acpi_ioremap_lock);
-+#define acpi_ioremap_lock_held() lock_is_held(&acpi_ioremap_lock.dep_map)
+-	if (acpi_device_get_power(adev, &state) || state == ACPI_STATE_UNKNOWN)
++	state = adev->power.state;
++	if (state == ACPI_STATE_UNKNOWN)
+ 		return PCI_UNKNOWN;
  
- static void __init acpi_request_region (struct acpi_generic_address *gas,
- 	unsigned int length, char *desc)
-@@ -206,7 +208,7 @@ acpi_map_lookup(acpi_physical_address phys, acpi_size size)
- {
- 	struct acpi_ioremap *map;
- 
--	list_for_each_entry_rcu(map, &acpi_ioremaps, list)
-+	list_for_each_entry_rcu(map, &acpi_ioremaps, list, acpi_ioremap_lock_held())
- 		if (map->phys <= phys &&
- 		    phys + size <= map->phys + map->size)
- 			return map;
-@@ -249,7 +251,7 @@ acpi_map_lookup_virt(void __iomem *virt, acpi_size size)
- {
- 	struct acpi_ioremap *map;
- 
--	list_for_each_entry_rcu(map, &acpi_ioremaps, list)
-+	list_for_each_entry_rcu(map, &acpi_ioremaps, list, acpi_ioremap_lock_held())
- 		if (map->virt <= virt &&
- 		    virt + size <= map->virt + map->size)
- 			return map;
+ 	return state_conv[state];
 -- 
-2.22.0.510.g264f2c817a-goog
+2.20.1
 
