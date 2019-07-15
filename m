@@ -2,72 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07C60691B1
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2019 16:31:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CA5A6928A
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2019 16:37:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391017AbfGOObN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Jul 2019 10:31:13 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:42996 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391774AbfGOObD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Jul 2019 10:31:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1q5vtulX6Voxl789kmHFwf18zdh2bTyKV31IcrNYlLA=; b=0SHdyISmTAhQj+0wpGceHAUIQ
-        6HS9PebCXS+39jDY9iNPYXVKRqYi1gBrBXaS7sNqNA/g/Zr5SVThPXxmWEo6eStZeKLfOppKF0amL
-        zMHtIQlTdiGR8lNBXHz874HdfLkO58xGI8VRC9RGel2NBaCxgveaeHUMx1Jz429UWQNGCuXRFJ2BH
-        dTPZevJQqSpg4BKE85xt3DIp39i0KWWQsBGLJ5OzZUfBkunigZpT53hJz1RZEWz7wokpD93uiLiJD
-        Ueuww5IATrGGsFwGEQN9Vey86Zx7q1o5M3WG1tRyyELi2Zax2763jR59xK4HEPH8l4qJ1h+o/sEYO
-        5AIlIc4oA==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:59510)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hn20E-0005Ur-0P; Mon, 15 Jul 2019 15:30:54 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hn206-0008QY-WD; Mon, 15 Jul 2019 15:30:47 +0100
-Date:   Mon, 15 Jul 2019 15:30:46 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Grzegorz Jaszczyk <jaz@semihalf.com>
-Cc:     thomas.petazzoni@bootlin.com, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org, mw@semihalf.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] PCI: pci-bridge-emul: fix big-endian support
-Message-ID: <20190715143046.r3ja32rfntagqrqr@shell.armlinux.org.uk>
-References: <1563200177-8380-1-git-send-email-jaz@semihalf.com>
+        id S2404572AbfGOOh1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Jul 2019 10:37:27 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39251 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404549AbfGOOh1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Jul 2019 10:37:27 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b7so8397413pls.6
+        for <linux-pci@vger.kernel.org>; Mon, 15 Jul 2019 07:37:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Z+lAujGo7GrSG40jkK2/203/pKxvTLE13nrgeKcOwgI=;
+        b=AUubZl4ETLIsW/m5dgXLBulJXDHc0BCosX1eCwyxi+94m0Nn+UMJmqa85ypsCsZq1j
+         xz0LM9usgNKyVFOetyi7Bh0t5cemvEnRKdil/TVdpWNJXsluRFLQGvr0RhdUuQJTVlAU
+         AAiUQF4zYjdlsdkxFoX9G9U8IN3eAZ1c3LtuQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Z+lAujGo7GrSG40jkK2/203/pKxvTLE13nrgeKcOwgI=;
+        b=aLHPVU8Pl1QT5iafkg9Msu1LLdEOz+luSgCNWrBMJTCA6BUdOn/3Hnk9Udp/gyNBTk
+         JbLMOVKX3JmG9F1kAW1dtIUGFDo+N6M542sfPP04oO5zRk+Qi6hkdnpOj2p8xSnqA9e/
+         WKuDdJbjGEz6B5yOTkLkRK/eE2HuikA7iUInXGSUQ424a7oFCLcnVf9NrIrNvthsH0GO
+         wtB+AcU+BEkEx+HaKO5yOQRRpWTv3grUSBqwDqHJudpwz3gBZn8QeXZ/lVWhyl2I1I4F
+         Ypfz9RV7YVdIIbKkWpr80yz3fCwCgS3i1azxReSksWfCA3fsOWQmNYgVnzBfFbrE+X06
+         O76w==
+X-Gm-Message-State: APjAAAUplGs+OVEGqBO5dqfZGnWTR03SFp/ppha9kwPstkEMFJuOsmlt
+        ifuXKWX9KhOc+SwIffPq8Mo=
+X-Google-Smtp-Source: APXvYqyfIIGoLXgS2oKcW7Wk3sDCdph3kdkFQYwRHA7oKCzkGjxEv3JlpE2AZDMyjbjqgNcrkFD7WQ==
+X-Received: by 2002:a17:902:8649:: with SMTP id y9mr28192780plt.289.1563201446297;
+        Mon, 15 Jul 2019 07:37:26 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id s66sm18381852pfs.8.2019.07.15.07.37.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 15 Jul 2019 07:37:25 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+Subject: [PATCH 3/9] rcu/sync: Remove custom check for reader-section (v2)
+Date:   Mon, 15 Jul 2019 10:36:59 -0400
+Message-Id: <20190715143705.117908-4-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
+In-Reply-To: <20190715143705.117908-1-joel@joelfernandes.org>
+References: <20190715143705.117908-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1563200177-8380-1-git-send-email-jaz@semihalf.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 04:16:17PM +0200, Grzegorz Jaszczyk wrote:
-> Perform conversion to little-endian before every write to configuration
-> space and converse back to cpu endianness during read. Additionally
-> initialise every not-byte wide fields of config space with proper
-> cpu_to_le* macro.
-> 
-> This is required since the structure describing config space of emulated
-> bridge assumes little-endian convention.
+The rcu/sync code was doing its own check whether we are in a reader
+section. With RCU consolidating flavors and the generic helper added in
+this series, this is no longer need. We can just use the generic helper
+and it results in a nice cleanup.
 
-This is insufficient - pci-bridge-emul.h needs to be fixed up to use
-__le32 and __le16.
+Cc: Oleg Nesterov <oleg@redhat.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ include/linux/rcu_sync.h | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-It is a good idea to check such changes with sparse - a tool originally
-written by Linus, which is able to detect incorrect endian accesses
-(iow, access to LE members without using a LE accessor.)  Such checks
-rely on using the right types.
-
+diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
+index 9b83865d24f9..0027d4c8087c 100644
+--- a/include/linux/rcu_sync.h
++++ b/include/linux/rcu_sync.h
+@@ -31,9 +31,7 @@ struct rcu_sync {
+  */
+ static inline bool rcu_sync_is_idle(struct rcu_sync *rsp)
+ {
+-	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&
+-			 !rcu_read_lock_bh_held() &&
+-			 !rcu_read_lock_sched_held(),
++	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),
+ 			 "suspicious rcu_sync_is_idle() usage");
+ 	return !READ_ONCE(rsp->gp_state); /* GP_IDLE */
+ }
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.22.0.510.g264f2c817a-goog
+
