@@ -2,145 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D13696929B
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2019 16:38:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9877692F7
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2019 16:41:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404132AbfGOOhw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Jul 2019 10:37:52 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38491 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392141AbfGOOhw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Jul 2019 10:37:52 -0400
-Received: by mail-pl1-f193.google.com with SMTP id az7so8392040plb.5
-        for <linux-pci@vger.kernel.org>; Mon, 15 Jul 2019 07:37:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3/Yc3rMkHMZtDKtPxvXMbpuJtYxFK974gkQSASG7nfg=;
-        b=Irsk1l+cCvhHrnLDCclN8wIYVEkPEbD9MdUbMAfJ0kSrDpX7chroJyo2YF46UzcBkM
-         XJuVwKS6BKM9ZHR0du6EvejWG8y2q+OPRVvdrOulKML9bNBty7xmC4DwYF/BBFtQPuLu
-         EwiuS9bOEcElBlknIAsc95qH+foz6NeembQns=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3/Yc3rMkHMZtDKtPxvXMbpuJtYxFK974gkQSASG7nfg=;
-        b=kg0fyLt4RKKcjBhHYb4EY24xFl/ROTalH1kQlWQYPJwqhXn+Z6Ysw+xuXdVu0xK1DK
-         MMKHlR4CL+ZA+Hkw3VpHzjlntwDMfHJcQtmskW/PebMKwwFeILAI7JuY/OHot1NO6JIw
-         w2cCYOtnjORGEJPtbh1i2gT+Lnxbb0tkjqqQcAk9D7BHe8e+bTG6RZ2jbROssUVyaJKk
-         X4Iqiq9KjHifXKgg9xF+iA+Q7Hyl9suZA3fRMOY3WxNqSlKOzyWmTJX7xDmm5zDTwSl/
-         U1XCJPFfQ24ivR+iMPALQglZ1j7+e+b+31piSZ9VGgwOJx2VTB8tQLnN8UY1sMINBWCj
-         2AlA==
-X-Gm-Message-State: APjAAAVA7WTTngxef/Fnq70Y7WxR3xadXk5w9p+gepGYtX6I9Bj8AsOJ
-        3+e9r6vCnOLgKJ153vOYt68=
-X-Google-Smtp-Source: APXvYqwiS/rB81iw9YBrF0TFJUziDe1TQrXSMZ4COSYLaJJSbdiihNhGfcJrAEF9RQGi29HbbCoEvQ==
-X-Received: by 2002:a17:902:27e6:: with SMTP id i35mr28686773plg.190.1563201470637;
-        Mon, 15 Jul 2019 07:37:50 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id s66sm18381852pfs.8.2019.07.15.07.37.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 15 Jul 2019 07:37:49 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-Subject: [PATCH 9/9] doc: Update documentation about list_for_each_entry_rcu (v1)
-Date:   Mon, 15 Jul 2019 10:37:05 -0400
-Message-Id: <20190715143705.117908-10-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
-In-Reply-To: <20190715143705.117908-1-joel@joelfernandes.org>
-References: <20190715143705.117908-1-joel@joelfernandes.org>
+        id S2404566AbfGOOkq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Jul 2019 10:40:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404528AbfGOOkp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:40:45 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9710620868;
+        Mon, 15 Jul 2019 14:40:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563201644;
+        bh=gJzPiZVBFcE8RXulxxlznpuymjnWRLtlUwGWFWQ02V4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kpzYK1cvrBUoabW0jyojCUWaEZsFiB7fcc+SYYymUMLsRy16gdmyDF/wanSrxvNNC
+         wxf7HhmHoQQRht33AjBQlWuMu23C7wFa424CS2B4MJ+j6UqLbpFw5HubCcXxPLYB2e
+         rbZxOA6ShwZ0Cg7Q18NT18bMV7JPCuLmZV4aUgzk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 62/73] PCI / ACPI: Use cached ACPI device state to get PCI device power state
+Date:   Mon, 15 Jul 2019 10:36:18 -0400
+Message-Id: <20190715143629.10893-62-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
+References: <20190715143629.10893-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch updates the documentation with information about
-usage of lockdep with list_for_each_entry_rcu().
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+[ Upstream commit 83a16e3f6d70da99896c7a2639c0b60fff13afb8 ]
+
+The ACPI power state returned by acpi_device_get_power() may depend on
+the configuration of ACPI power resources in the system which may change
+any time after acpi_device_get_power() has returned, unless the
+reference counters of the ACPI power resources in question are set to
+prevent that from happening. Thus it is invalid to use acpi_device_get_power()
+in acpi_pci_get_power_state() the way it is done now and the value of
+the ->power.state field in the corresponding struct acpi_device objects
+(which reflects the ACPI power resources reference counting, among other
+things) should be used instead.
+
+As an example where this becomes an issue is Intel Ice Lake where the
+Thunderbolt controller (NHI), two PCIe root ports (RP0 and RP1) and xHCI
+all share the same power resources. The following picture with power
+resources marked with [] shows the topology:
+
+  Host bridge
+    |
+    +- RP0 ---\
+    +- RP1 ---|--+--> [TBT]
+    +- NHI --/   |
+    |            |
+    |            v
+    +- xHCI --> [D3C]
+
+Here TBT and D3C are the shared ACPI power resources. ACPI _PR3() method
+of the devices in question returns either TBT or D3C or both.
+
+Say we runtime suspend first the root ports RP0 and RP1, then NHI. Now
+since the TBT power resource is still on when the root ports are runtime
+suspended their dev->current_state is set to D3hot. When NHI is runtime
+suspended TBT is finally turned off but state of the root ports remain
+to be D3hot. Now when the xHCI is runtime suspended D3C gets also turned
+off. PCI core thus has power states of these devices cached in their
+dev->current_state as follows:
+
+  RP0 -> D3hot
+  RP1 -> D3hot
+  NHI -> D3cold
+  xHCI -> D3cold
+
+If the user now runs lspci for instance, the result is all 1's like in
+the below output (00:07.0 is the first root port, RP0):
+
+00:07.0 PCI bridge: Intel Corporation Device 8a1d (rev ff) (prog-if ff)
+    !!! Unknown header type 7f
+    Kernel driver in use: pcieport
+
+In short the hardware state is not in sync with the software state
+anymore. The exact same thing happens with the PME polling thread which
+ends up bringing the root ports back into D0 after they are runtime
+suspended.
+
+For this reason, modify acpi_pci_get_power_state() so that it uses the
+ACPI device power state that was cached by the ACPI core. This makes the
+PCI device power state match the ACPI device power state regardless of
+state of the shared power resources which may still be on at this point.
+
+Link: https://lore.kernel.org/r/20190618161858.77834-2-mika.westerberg@linux.intel.com
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/RCU/lockdep.txt   | 15 +++++++++++----
- Documentation/RCU/whatisRCU.txt |  9 ++++++++-
- 2 files changed, 19 insertions(+), 5 deletions(-)
+ drivers/pci/pci-acpi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/RCU/lockdep.txt b/Documentation/RCU/lockdep.txt
-index da51d3068850..3d967df3a801 100644
---- a/Documentation/RCU/lockdep.txt
-+++ b/Documentation/RCU/lockdep.txt
-@@ -96,7 +96,14 @@ other flavors of rcu_dereference().  On the other hand, it is illegal
- to use rcu_dereference_protected() if either the RCU-protected pointer
- or the RCU-protected data that it points to can change concurrently.
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index d38d379bb5c8..8373c0dca575 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -467,7 +467,8 @@ static pci_power_t acpi_pci_get_power_state(struct pci_dev *dev)
+ 	if (!adev || !acpi_device_power_manageable(adev))
+ 		return PCI_UNKNOWN;
  
--There are currently only "universal" versions of the rcu_assign_pointer()
--and RCU list-/tree-traversal primitives, which do not (yet) check for
--being in an RCU read-side critical section.  In the future, separate
--versions of these primitives might be created.
-+Similar to rcu_dereference_protected, The RCU list and hlist traversal
-+primitives also check for whether there are called from within a reader
-+section. However, an optional lockdep expression can be passed to them as
-+the last argument in case they are called under other non-RCU protection.
-+
-+For example, the workqueue for_each_pwq() macro is implemented as follows.
-+It is safe to call for_each_pwq() outside a reader section but under protection
-+of wq->mutex:
-+#define for_each_pwq(pwq, wq)
-+	list_for_each_entry_rcu((pwq), &(wq)->pwqs, pwqs_node,
-+				lock_is_held(&(wq->mutex).dep_map))
-diff --git a/Documentation/RCU/whatisRCU.txt b/Documentation/RCU/whatisRCU.txt
-index 7e1a8721637a..00fe77ede1e2 100644
---- a/Documentation/RCU/whatisRCU.txt
-+++ b/Documentation/RCU/whatisRCU.txt
-@@ -290,7 +290,7 @@ rcu_dereference()
- 	at any time, including immediately after the rcu_dereference().
- 	And, again like rcu_assign_pointer(), rcu_dereference() is
- 	typically used indirectly, via the _rcu list-manipulation
--	primitives, such as list_for_each_entry_rcu().
-+	primitives, such as list_for_each_entry_rcu() [2].
+-	if (acpi_device_get_power(adev, &state) || state == ACPI_STATE_UNKNOWN)
++	state = adev->power.state;
++	if (state == ACPI_STATE_UNKNOWN)
+ 		return PCI_UNKNOWN;
  
- 	[1] The variant rcu_dereference_protected() can be used outside
- 	of an RCU read-side critical section as long as the usage is
-@@ -305,6 +305,13 @@ rcu_dereference()
- 	a lockdep splat is emitted.  See RCU/Design/Requirements/Requirements.html
- 	and the API's code comments for more details and example usage.
- 
-+	[2] In case the list_for_each_entry_rcu() primitive is intended
-+	to be used outside of an RCU reader section such as when
-+	protected by a lock, then an additional lockdep expression can be
-+	passed as the last argument to it so that RCU lockdep checking code
-+	knows that the dereference of the list pointers are safe. If the
-+	indicated protection is not provided, a lockdep splat is emitted.
-+
- The following diagram shows how each API communicates among the
- reader, updater, and reclaimer.
- 
+ 	return state_conv[state];
 -- 
-2.22.0.510.g264f2c817a-goog
+2.20.1
 
