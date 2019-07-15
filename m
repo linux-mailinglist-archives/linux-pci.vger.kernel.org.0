@@ -2,132 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CCC769E7A
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2019 23:45:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2578A69F8C
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2019 01:37:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732395AbfGOVop (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Jul 2019 17:44:45 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41953 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731858AbfGOVop (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Jul 2019 17:44:45 -0400
-Received: by mail-ot1-f68.google.com with SMTP id o101so18695714ota.8;
-        Mon, 15 Jul 2019 14:44:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hO2lc5/RCrOfroO8+pzsn6ZrqRVw3tFQDoLgNfzmBUQ=;
-        b=QxXDGZ3v64gyAMTDqUN0aDnOZUEUriuNBjPSYo18FhopZ8P0hjPzAG+ZIKn7zH4gUi
-         QQfKwc35vqrWxz9Pdos45CbPkxluZAY+xJxiCUnS/c8V3irYv3sVlFOGVsI03FOmIaXv
-         1EW+EKfby2IgVifnLuY8yMlV3B9g9zSRWk+MkjD42FojhmDrPbL1Gj05OvCQfmBMrtVC
-         H2sgMK8MwEiq61UuGNkJPV+VQ+plnLtUXI5O8yARGzjtU/JH3OxAdhS+CBaJnz7jEarF
-         rKc52Lygct/0tLMNo/N1pP0Qx0Vim/zzGg889XPO1TWBw/bRbhAqCy7vbi3fogYK9Wkn
-         2OSA==
-X-Gm-Message-State: APjAAAUsAOkRYO87kbLMCwaOxid9BCDbmnB2OvJG6nh20Bt2jxK632To
-        Re3Z9R3uMSLoWgU/fV0rp3nL8QXeSGq3NMcP2Ik=
-X-Google-Smtp-Source: APXvYqxeBU+lL3PSYmxhb7JppIVz9aT6KKyGzUIDEJ8gGEzipFV4PQx8sL/9KU3ERl8XEJvsrjqZy4/vHGyUSxfUvR0=
-X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr18941426otp.189.1563227084317;
- Mon, 15 Jul 2019 14:44:44 -0700 (PDT)
+        id S1731284AbfGOXhU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Jul 2019 19:37:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731412AbfGOXhT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 15 Jul 2019 19:37:19 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33D9220693;
+        Mon, 15 Jul 2019 23:37:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563233839;
+        bh=rG3h1CCwAFZcD67QhSxNdHQ/Kh5vcwoW6i8O8rEvLxs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=y4A+RIVv9w6aNcb2AVOqzfA76/Z/mJYm9CUvm+FOJSElGvHz5RJIEE6B0+P/krc93
+         uZUO6RD1vpx5dmlRAX67rdUug14E06LKigjQuU9byBl1w+Ohs1pxLGLDgMgycI2GZb
+         EQKXNxH2fL2zXPa2aMicYFftOFt2VVJbXV9xVX0k=
+Date:   Mon, 15 Jul 2019 18:37:17 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Kelsey Skunberg <skunberg.kelsey@gmail.com>,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH v2] PCI: Remove functions not
+ called in include/linux/pci.h
+Message-ID: <20190715233717.GA79424@google.com>
+References: <20190715175658.29605-1-skunberg.kelsey@gmail.com>
+ <20190715181312.31403-1-skunberg.kelsey@gmail.com>
+ <alpine.DEB.2.21.1907152138120.2564@felia>
 MIME-Version: 1.0
-References: <20190715143705.117908-1-joel@joelfernandes.org> <20190715143705.117908-9-joel@joelfernandes.org>
-In-Reply-To: <20190715143705.117908-9-joel@joelfernandes.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 15 Jul 2019 23:44:31 +0200
-Message-ID: <CAJZ5v0jdx1dgBZLyH_Loj1XVuLCV+HMHjk8r_n8xG7qmoH_z3A@mail.gmail.com>
-Subject: Re: [PATCH 8/9] acpi: Use built-in RCU list checking for
- acpi_ioremaps list (v1)
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kees Cook <keescook@chromium.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        NeilBrown <neilb@suse.com>, netdev <netdev@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1907152138120.2564@felia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 4:43 PM Joel Fernandes (Google)
-<joel@joelfernandes.org> wrote:
->
-> list_for_each_entry_rcu has built-in RCU and lock checking. Make use of
-> it for acpi_ioremaps list traversal.
->
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+On Mon, Jul 15, 2019 at 09:42:47PM +0200, Lukas Bulwahn wrote:
+> On Mon, 15 Jul 2019, Kelsey Skunberg wrote:
+> 
+> > Remove the following uncalled functions from include/linux/pci.h:
+> > 
+> >         pci_block_cfg_access()
+> >         pci_block_cfg_access_in_atomic()
+> >         pci_unblock_cfg_access()
+> > 
+> > Functions were added in patch fb51ccbf217c "PCI: Rework config space
+> > blocking services", ...
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Also note that commits are referred to with this format:
+> 
+> commit <12-character sha prefix> ("<commit message>")
 
-> ---
->  drivers/acpi/osl.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-> index 9c0edf2fc0dd..2f9d0d20b836 100644
-> --- a/drivers/acpi/osl.c
-> +++ b/drivers/acpi/osl.c
-> @@ -14,6 +14,7 @@
->  #include <linux/slab.h>
->  #include <linux/mm.h>
->  #include <linux/highmem.h>
-> +#include <linux/lockdep.h>
->  #include <linux/pci.h>
->  #include <linux/interrupt.h>
->  #include <linux/kmod.h>
-> @@ -80,6 +81,7 @@ struct acpi_ioremap {
->
->  static LIST_HEAD(acpi_ioremaps);
->  static DEFINE_MUTEX(acpi_ioremap_lock);
-> +#define acpi_ioremap_lock_held() lock_is_held(&acpi_ioremap_lock.dep_map)
->
->  static void __init acpi_request_region (struct acpi_generic_address *gas,
->         unsigned int length, char *desc)
-> @@ -206,7 +208,7 @@ acpi_map_lookup(acpi_physical_address phys, acpi_size size)
->  {
->         struct acpi_ioremap *map;
->
-> -       list_for_each_entry_rcu(map, &acpi_ioremaps, list)
-> +       list_for_each_entry_rcu(map, &acpi_ioremaps, list, acpi_ioremap_lock_held())
->                 if (map->phys <= phys &&
->                     phys + size <= map->phys + map->size)
->                         return map;
-> @@ -249,7 +251,7 @@ acpi_map_lookup_virt(void __iomem *virt, acpi_size size)
->  {
->         struct acpi_ioremap *map;
->
-> -       list_for_each_entry_rcu(map, &acpi_ioremaps, list)
-> +       list_for_each_entry_rcu(map, &acpi_ioremaps, list, acpi_ioremap_lock_held())
->                 if (map->virt <= virt &&
->                     virt + size <= map->virt + map->size)
->                         return map;
-> --
-> 2.22.0.510.g264f2c817a-goog
->
+FWIW, I use this shell alias to generate these references:
+
+  gsr is aliased to `git --no-pager show -s --abbrev-commit --abbrev=12 --pretty=format:"%h (\"%s\")%n"'
+
+  $ gsr fb51ccb
+  fb51ccbf217c ("PCI: Rework config space blocking services")
+
+Documentation/process/submitting-patches.rst mentions a 12-char (at
+least) SHA-1 but the e21d2170f36 example shows a *20*-char SHA-1,
+which seems excessive to me.
+
+I personally skip the word "commit" because I figure it's pretty
+obvious what it is, but it's fine either way.
+
+Bjorn
