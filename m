@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A239A69715
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2019 17:08:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9180269609
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2019 17:02:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733063AbfGON6F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Jul 2019 09:58:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37098 "EHLO mail.kernel.org"
+        id S2388955AbfGOONw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Jul 2019 10:13:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733060AbfGON6E (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:58:04 -0400
+        id S2388889AbfGOONv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:13:51 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19694212F5;
-        Mon, 15 Jul 2019 13:58:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8862D20651;
+        Mon, 15 Jul 2019 14:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199083;
-        bh=ZS55mG+paP+L29yblX7J5SeVoO5OrFk/y/5CPeKCzEA=;
+        s=default; t=1563200029;
+        bh=F0F2Q8KUGLU5KKPw844B94bWHqTSxq4X6WeqvKfZWDU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jtgoz4blmGQd9F8M3Jr2xH5MSu/uvveAlxgzsmjvnFXOW2Cjw4h2hiIGjYZhQVrc7
-         Xi556+EWnaW/GyBhfdvN9Iu/ULdODDs1wuzoL4+1f28TVbGPmB0EoI2yeQ10y91kFj
-         6L8/vkFIHGfFj0+Yk4mC6isWtKmhS7MLRvj7kldw=
+        b=w8LQ5868JDN1qDcJ6vOppX73KRPP15XOtKhJKjabK6hH6VpzdbIxMPQPn4YwXAAx5
+         wi0NrVIqxqa3ef0i6PSAoeXo74G2HvdkGHC6bBvNS9NgSwLCxAaVyVvCfa2Jvh5UE9
+         SAx58nTAqkDPjZ2JCMb5jU0AwwJ91G5jyjQBxNIk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 185/249] PCI / ACPI: Use cached ACPI device state to get PCI device power state
-Date:   Mon, 15 Jul 2019 09:45:50 -0400
-Message-Id: <20190715134655.4076-185-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 163/219] PCI / ACPI: Use cached ACPI device state to get PCI device power state
+Date:   Mon, 15 Jul 2019 10:02:44 -0400
+Message-Id: <20190715140341.6443-163-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
-References: <20190715134655.4076-1-sashal@kernel.org>
+In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
+References: <20190715140341.6443-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -114,10 +114,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index 1897847ceb0c..b782acac26c5 100644
+index bf32fde328c2..1591cd82bbc7 100644
 --- a/drivers/pci/pci-acpi.c
 +++ b/drivers/pci/pci-acpi.c
-@@ -685,7 +685,8 @@ static pci_power_t acpi_pci_get_power_state(struct pci_dev *dev)
+@@ -618,7 +618,8 @@ static pci_power_t acpi_pci_get_power_state(struct pci_dev *dev)
  	if (!adev || !acpi_device_power_manageable(adev))
  		return PCI_UNKNOWN;
  
