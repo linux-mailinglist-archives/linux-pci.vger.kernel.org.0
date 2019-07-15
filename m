@@ -2,131 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 96D0B69241
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2019 16:36:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07C60691B1
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2019 16:31:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391534AbfGOOf4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Jul 2019 10:35:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403829AbfGOOd5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:33:57 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A021204FD;
-        Mon, 15 Jul 2019 14:33:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201236;
-        bh=rVnbu98XFHmTsDb3iwZ59vX+WiLREQBHvK3D1hCvXqY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IrioT61QTLhbIRFhVAbHQVmvLz+tUqXVai+5Xomtcf6tv8oqmbUsyNk6Oaq3B+sE2
-         OKYbApXpmgagKX1GLWdzpyONwTkaZ1kVHf9lyU6vjk25h+rG/NuyjRr3YCai0tvIQU
-         ROTCzyMJx/InDuW3oCW3fDLMzPVbUegB1J+yw8TQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 086/105] PCI / ACPI: Use cached ACPI device state to get PCI device power state
-Date:   Mon, 15 Jul 2019 10:28:20 -0400
-Message-Id: <20190715142839.9896-86-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
-References: <20190715142839.9896-1-sashal@kernel.org>
+        id S2391017AbfGOObN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Jul 2019 10:31:13 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:42996 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391774AbfGOObD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Jul 2019 10:31:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1q5vtulX6Voxl789kmHFwf18zdh2bTyKV31IcrNYlLA=; b=0SHdyISmTAhQj+0wpGceHAUIQ
+        6HS9PebCXS+39jDY9iNPYXVKRqYi1gBrBXaS7sNqNA/g/Zr5SVThPXxmWEo6eStZeKLfOppKF0amL
+        zMHtIQlTdiGR8lNBXHz874HdfLkO58xGI8VRC9RGel2NBaCxgveaeHUMx1Jz429UWQNGCuXRFJ2BH
+        dTPZevJQqSpg4BKE85xt3DIp39i0KWWQsBGLJ5OzZUfBkunigZpT53hJz1RZEWz7wokpD93uiLiJD
+        Ueuww5IATrGGsFwGEQN9Vey86Zx7q1o5M3WG1tRyyELi2Zax2763jR59xK4HEPH8l4qJ1h+o/sEYO
+        5AIlIc4oA==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:59510)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hn20E-0005Ur-0P; Mon, 15 Jul 2019 15:30:54 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hn206-0008QY-WD; Mon, 15 Jul 2019 15:30:47 +0100
+Date:   Mon, 15 Jul 2019 15:30:46 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Grzegorz Jaszczyk <jaz@semihalf.com>
+Cc:     thomas.petazzoni@bootlin.com, lorenzo.pieralisi@arm.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org, mw@semihalf.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] PCI: pci-bridge-emul: fix big-endian support
+Message-ID: <20190715143046.r3ja32rfntagqrqr@shell.armlinux.org.uk>
+References: <1563200177-8380-1-git-send-email-jaz@semihalf.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1563200177-8380-1-git-send-email-jaz@semihalf.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+On Mon, Jul 15, 2019 at 04:16:17PM +0200, Grzegorz Jaszczyk wrote:
+> Perform conversion to little-endian before every write to configuration
+> space and converse back to cpu endianness during read. Additionally
+> initialise every not-byte wide fields of config space with proper
+> cpu_to_le* macro.
+> 
+> This is required since the structure describing config space of emulated
+> bridge assumes little-endian convention.
 
-[ Upstream commit 83a16e3f6d70da99896c7a2639c0b60fff13afb8 ]
+This is insufficient - pci-bridge-emul.h needs to be fixed up to use
+__le32 and __le16.
 
-The ACPI power state returned by acpi_device_get_power() may depend on
-the configuration of ACPI power resources in the system which may change
-any time after acpi_device_get_power() has returned, unless the
-reference counters of the ACPI power resources in question are set to
-prevent that from happening. Thus it is invalid to use acpi_device_get_power()
-in acpi_pci_get_power_state() the way it is done now and the value of
-the ->power.state field in the corresponding struct acpi_device objects
-(which reflects the ACPI power resources reference counting, among other
-things) should be used instead.
+It is a good idea to check such changes with sparse - a tool originally
+written by Linus, which is able to detect incorrect endian accesses
+(iow, access to LE members without using a LE accessor.)  Such checks
+rely on using the right types.
 
-As an example where this becomes an issue is Intel Ice Lake where the
-Thunderbolt controller (NHI), two PCIe root ports (RP0 and RP1) and xHCI
-all share the same power resources. The following picture with power
-resources marked with [] shows the topology:
-
-  Host bridge
-    |
-    +- RP0 ---\
-    +- RP1 ---|--+--> [TBT]
-    +- NHI --/   |
-    |            |
-    |            v
-    +- xHCI --> [D3C]
-
-Here TBT and D3C are the shared ACPI power resources. ACPI _PR3() method
-of the devices in question returns either TBT or D3C or both.
-
-Say we runtime suspend first the root ports RP0 and RP1, then NHI. Now
-since the TBT power resource is still on when the root ports are runtime
-suspended their dev->current_state is set to D3hot. When NHI is runtime
-suspended TBT is finally turned off but state of the root ports remain
-to be D3hot. Now when the xHCI is runtime suspended D3C gets also turned
-off. PCI core thus has power states of these devices cached in their
-dev->current_state as follows:
-
-  RP0 -> D3hot
-  RP1 -> D3hot
-  NHI -> D3cold
-  xHCI -> D3cold
-
-If the user now runs lspci for instance, the result is all 1's like in
-the below output (00:07.0 is the first root port, RP0):
-
-00:07.0 PCI bridge: Intel Corporation Device 8a1d (rev ff) (prog-if ff)
-    !!! Unknown header type 7f
-    Kernel driver in use: pcieport
-
-In short the hardware state is not in sync with the software state
-anymore. The exact same thing happens with the PME polling thread which
-ends up bringing the root ports back into D0 after they are runtime
-suspended.
-
-For this reason, modify acpi_pci_get_power_state() so that it uses the
-ACPI device power state that was cached by the ACPI core. This makes the
-PCI device power state match the ACPI device power state regardless of
-state of the shared power resources which may still be on at this point.
-
-Link: https://lore.kernel.org/r/20190618161858.77834-2-mika.westerberg@linux.intel.com
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/pci-acpi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index a3cedf8de863..688e195e85b4 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -563,7 +563,8 @@ static pci_power_t acpi_pci_get_power_state(struct pci_dev *dev)
- 	if (!adev || !acpi_device_power_manageable(adev))
- 		return PCI_UNKNOWN;
- 
--	if (acpi_device_get_power(adev, &state) || state == ACPI_STATE_UNKNOWN)
-+	state = adev->power.state;
-+	if (state == ACPI_STATE_UNKNOWN)
- 		return PCI_UNKNOWN;
- 
- 	return state_conv[state];
 -- 
-2.20.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
