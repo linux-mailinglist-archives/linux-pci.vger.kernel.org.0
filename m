@@ -2,108 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 86FE368FBC
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2019 16:16:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D105690F8
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2019 16:26:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731290AbfGOOQb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Jul 2019 10:16:31 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43953 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389718AbfGOOQa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Jul 2019 10:16:30 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 16so16377155ljv.10
-        for <linux-pci@vger.kernel.org>; Mon, 15 Jul 2019 07:16:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=BYAFHd9zlAtd2xa3XOWV/zbnzstq1j4lmXv20sPh5gI=;
-        b=LMQu+p91juO6CZOWACtq1a1WcxgHhNX7LYgPmvbjGCspegMU2wt9p7nF3vw5BosayV
-         tI9PmUBUDq+lGUu/vyk7EEM7OZFBTHRUimWyyW59gvt4Hs9fBrMXeB5+4pWN1iUl+0CM
-         8E/AauZkhnIExpCfk8ovMTPTS0hqZFOgqF9GyUM4Hwgeau4u8YS5KeamPZFFiTz+l9IS
-         5EyuVEk0dMU/g5khI/cR1ubRiuUBwpa0IAYw150zoqDEz7B7Pyvbf+U7+iCyJAVjOKM9
-         yqtS2Y7kdrYl7RL/J7xy/P4MbSo3GYPcrIrOlvvladmdchyj+rwS/qqrBgboOR/Yfmuj
-         h8LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=BYAFHd9zlAtd2xa3XOWV/zbnzstq1j4lmXv20sPh5gI=;
-        b=mdN8L2nsw20gcvq7a2sPtt8XdI7KR2f8n+AWEKVbg59ICbWdESQjejTDmSRI1xRtal
-         OA/dgOuiluXIFlw6L9aJt5RJInXln4I0Z4XU4dhbATHHNX4y1YiFjK0/gyxBPA6CJ15G
-         +p0sSxrDr51BxGUqEtOsbvqATsnm29F4qdfnyeGa9butjmhEpeA5mFT/Vxs1JdPk8c/a
-         xcHgirNrRgLgi8PIPe87mnUvw09jJgaK462wCDsyHXuMcT8LJM1iLV3BdND12iRDbbPu
-         nh+T5+M4/FIsHsmOYUGn6Bk/4uaTsvTo9vCd0V4RIqPfly5ubtRFE4yBCqEImy4vwU0v
-         Fjcg==
-X-Gm-Message-State: APjAAAUbd3awYov0dojfuk7+gU/tpyAlxQR3Zt0tHOXWYhSmTSldYd4E
-        95ZMY4uFrEjybiKfh7sb4EU=
-X-Google-Smtp-Source: APXvYqy4dHpaZqJ4j++0qnAClEnt0wUAzLFJ4oyjt+DIoyObdoUl+ndR7VU8InxgTIe0wG1zSTJcWQ==
-X-Received: by 2002:a2e:9c85:: with SMTP id x5mr14279928lji.139.1563200188039;
-        Mon, 15 Jul 2019 07:16:28 -0700 (PDT)
-Received: from gilgamesh.semihalf.com (31-172-191-173.noc.fibertech.net.pl. [31.172.191.173])
-        by smtp.gmail.com with ESMTPSA id o17sm3190612ljg.71.2019.07.15.07.16.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 15 Jul 2019 07:16:27 -0700 (PDT)
-From:   Grzegorz Jaszczyk <jaz@semihalf.com>
-To:     thomas.petazzoni@bootlin.com, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        mw@semihalf.com, Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: [PATCH] PCI: pci-bridge-emul: fix big-endian support
-Date:   Mon, 15 Jul 2019 16:16:17 +0200
-Message-Id: <1563200177-8380-1-git-send-email-jaz@semihalf.com>
-X-Mailer: git-send-email 2.7.4
+        id S2390099AbfGOOZm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Jul 2019 10:25:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60988 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391328AbfGOOZl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:25:41 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B82D12053B;
+        Mon, 15 Jul 2019 14:25:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563200740;
+        bh=lo5bcquH7VVkLP+Y8eBRd3kSsnT6FpL9BS5G3w7tH0M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ny41lauNYghJGzaG0qmoojmurUc4HgePQTl4OPtUffDkgQQtvD7KNYrpIvFSOt++J
+         lsDp0simVDYcDOzG1FGH3K4Uo2RdRFkJDAFkPgghp5QwdGSZ0gUL/npzB7QBeFqwKB
+         kCKOZa/pZkveb+Y6Q3HuJYURQa9UeQxwwWSRk49A=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 120/158] PCI / ACPI: Use cached ACPI device state to get PCI device power state
+Date:   Mon, 15 Jul 2019 10:17:31 -0400
+Message-Id: <20190715141809.8445-120-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
+References: <20190715141809.8445-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Perform conversion to little-endian before every write to configuration
-space and converse back to cpu endianness during read. Additionally
-initialise every not-byte wide fields of config space with proper
-cpu_to_le* macro.
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-This is required since the structure describing config space of emulated
-bridge assumes little-endian convention.
+[ Upstream commit 83a16e3f6d70da99896c7a2639c0b60fff13afb8 ]
 
-Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+The ACPI power state returned by acpi_device_get_power() may depend on
+the configuration of ACPI power resources in the system which may change
+any time after acpi_device_get_power() has returned, unless the
+reference counters of the ACPI power resources in question are set to
+prevent that from happening. Thus it is invalid to use acpi_device_get_power()
+in acpi_pci_get_power_state() the way it is done now and the value of
+the ->power.state field in the corresponding struct acpi_device objects
+(which reflects the ACPI power resources reference counting, among other
+things) should be used instead.
+
+As an example where this becomes an issue is Intel Ice Lake where the
+Thunderbolt controller (NHI), two PCIe root ports (RP0 and RP1) and xHCI
+all share the same power resources. The following picture with power
+resources marked with [] shows the topology:
+
+  Host bridge
+    |
+    +- RP0 ---\
+    +- RP1 ---|--+--> [TBT]
+    +- NHI --/   |
+    |            |
+    |            v
+    +- xHCI --> [D3C]
+
+Here TBT and D3C are the shared ACPI power resources. ACPI _PR3() method
+of the devices in question returns either TBT or D3C or both.
+
+Say we runtime suspend first the root ports RP0 and RP1, then NHI. Now
+since the TBT power resource is still on when the root ports are runtime
+suspended their dev->current_state is set to D3hot. When NHI is runtime
+suspended TBT is finally turned off but state of the root ports remain
+to be D3hot. Now when the xHCI is runtime suspended D3C gets also turned
+off. PCI core thus has power states of these devices cached in their
+dev->current_state as follows:
+
+  RP0 -> D3hot
+  RP1 -> D3hot
+  NHI -> D3cold
+  xHCI -> D3cold
+
+If the user now runs lspci for instance, the result is all 1's like in
+the below output (00:07.0 is the first root port, RP0):
+
+00:07.0 PCI bridge: Intel Corporation Device 8a1d (rev ff) (prog-if ff)
+    !!! Unknown header type 7f
+    Kernel driver in use: pcieport
+
+In short the hardware state is not in sync with the software state
+anymore. The exact same thing happens with the PME polling thread which
+ends up bringing the root ports back into D0 after they are runtime
+suspended.
+
+For this reason, modify acpi_pci_get_power_state() so that it uses the
+ACPI device power state that was cached by the ACPI core. This makes the
+PCI device power state match the ACPI device power state regardless of
+state of the shared power resources which may still be on at this point.
+
+Link: https://lore.kernel.org/r/20190618161858.77834-2-mika.westerberg@linux.intel.com
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci-bridge-emul.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/pci/pci-acpi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-index 83fb077..d1235d2 100644
---- a/drivers/pci/pci-bridge-emul.c
-+++ b/drivers/pci/pci-bridge-emul.c
-@@ -270,10 +270,10 @@ const static struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
- int pci_bridge_emul_init(struct pci_bridge_emul *bridge,
- 			 unsigned int flags)
- {
--	bridge->conf.class_revision |= PCI_CLASS_BRIDGE_PCI << 16;
-+	bridge->conf.class_revision |= cpu_to_le32(PCI_CLASS_BRIDGE_PCI << 16);
- 	bridge->conf.header_type = PCI_HEADER_TYPE_BRIDGE;
- 	bridge->conf.cache_line_size = 0x10;
--	bridge->conf.status = PCI_STATUS_CAP_LIST;
-+	bridge->conf.status = cpu_to_le16(PCI_STATUS_CAP_LIST);
- 	bridge->pci_regs_behavior = kmemdup(pci_regs_behavior,
- 					    sizeof(pci_regs_behavior),
- 					    GFP_KERNEL);
-@@ -357,7 +357,7 @@ int pci_bridge_emul_conf_read(struct pci_bridge_emul *bridge, int where,
- 		ret = PCI_BRIDGE_EMUL_NOT_HANDLED;
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index f7218c1673ce..bfe6ba33e25c 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -577,7 +577,8 @@ static pci_power_t acpi_pci_get_power_state(struct pci_dev *dev)
+ 	if (!adev || !acpi_device_power_manageable(adev))
+ 		return PCI_UNKNOWN;
  
- 	if (ret == PCI_BRIDGE_EMUL_NOT_HANDLED)
--		*value = cfgspace[reg / 4];
-+		*value = le32_to_cpu(cfgspace[reg / 4]);
+-	if (acpi_device_get_power(adev, &state) || state == ACPI_STATE_UNKNOWN)
++	state = adev->power.state;
++	if (state == ACPI_STATE_UNKNOWN)
+ 		return PCI_UNKNOWN;
  
- 	/*
- 	 * Make sure we never return any reserved bit with a value
-@@ -431,7 +431,7 @@ int pci_bridge_emul_conf_write(struct pci_bridge_emul *bridge, int where,
- 	/* Clear the W1C bits */
- 	new &= ~((value << shift) & (behavior[reg / 4].w1c & mask));
- 
--	cfgspace[reg / 4] = new;
-+	cfgspace[reg / 4] = cpu_to_le32(new);
- 
- 	if (write_op)
- 		write_op(bridge, reg, old, new, mask);
+ 	return state_conv[state];
 -- 
-2.7.4
+2.20.1
 
