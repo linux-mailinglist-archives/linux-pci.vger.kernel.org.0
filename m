@@ -2,132 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DBB9A6A1AA
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2019 06:58:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 002E46A1E6
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2019 07:41:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbfGPE63 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Jul 2019 00:58:29 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44390 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfGPE63 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Jul 2019 00:58:29 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p17so19308766wrf.11;
-        Mon, 15 Jul 2019 21:58:27 -0700 (PDT)
+        id S1726619AbfGPFk7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Jul 2019 01:40:59 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35078 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfGPFk7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Jul 2019 01:40:59 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w24so9501285plp.2;
+        Mon, 15 Jul 2019 22:40:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=DAH6dKwCyAbLlDOpi+3YA8QHS8AaWmvdyvdCSPTEF0Y=;
-        b=nS2o8Fm9M4Qr66Q30/2C6MH1XD+GoJrUGw89RjxqqLMPy/N0vMS4aNGEcaxYAJnIX5
-         SMPnUb15ISTTidfbY8LA1hNqNSHrVaySeORVyNQIozPHNfJbfYm1KmEWWBGaRpMyedso
-         S2zxddiS33osopW5ZauwrcBDxU4V2MLZfCjvABdQ3x5s1cg8fnlKIR3+w30ChaFjxvJP
-         JBW5gE9xk9NHewAXNzvH8+ZLk+mRQ51auejRMC3/N52dzZztGdUrVNlJviAPQJU972ml
-         2+f02WEkshrB/oh97WenpnRP9UJjeamWtgIy1jp0ssFoe7lcA2RDYAy5O4KSpAxPvQ+0
-         3vyA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FBJREbuUcQWvvYEwTt/8v4/mfr5H4JRh9nPtsgNKrFQ=;
+        b=FStmaG2fXrwX5CzFkIZg6EO/YNw+qvDhp92DyCelPa2sJi3LZq5MVUSbeVcSxVQxmc
+         Y1Ot6uNNUSYfk0ZBQtcKNsSZJ1463h1Grj5kZxG2U+bUxidHX3za/l9Pb54SlbNBCzDm
+         3gdic5/FUWKqPDyA/W6iwnzjgxUATLruZ525qiMSLAD9E1O+xc4h+CFBHSYB/JzIHwKZ
+         qSzjyqPEy0APeFMRVOheO6iBLEMR5kQvKmEahCgJixTDHuJcQIqX0DWNRINI2zfEg3DM
+         cEY2uuJheuQa7QpwZmH4CpWrVsrZexkrl9yFx1FVFwloR1sAWH3GNnQjyN4lMi9ZuxB+
+         pQOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=DAH6dKwCyAbLlDOpi+3YA8QHS8AaWmvdyvdCSPTEF0Y=;
-        b=RmmCjkJkQXEPSLvWCtAXnMTlLyWzDuMqbg1HlZTMRsEnf9TrGmAR+1LGrGHW4fjsZI
-         Z4m8B7aWsK//ba9Mk7/NdcCCn6leFvnoadM6OgbOb1ioy4xKM9sN5VSYwPFu8BZV/Uml
-         vOYAr9eVUEYd22HwMN7Ssv2Ks5DQ+oor0eHfDJrvpcuyDwc/Dcnt7ZxnqGihv9sMgAEf
-         MMAxHpX00xx0n2QoqF2Jp16y+HfJrjmy8kdIR4/deAqIGAZ/vVtj9mVMmft5i16nnzSv
-         lTkjee6+HunwRfMsuH6q/LjClFXiy7MroqPlVDjxh9xile4/jsMXCOm7FMJFQMRrUnQX
-         SB0A==
-X-Gm-Message-State: APjAAAWabuB5yBdhyzp56Ma5nhmz75SLeQWmJatAWWsA9K62v68vS55d
-        zgv5R78DYJwXLIlc8Wbco54=
-X-Google-Smtp-Source: APXvYqzr38ksHGsl/DwWofhZwIvO6atz4K0RW1TCfzVhr13qTsXUsftSgaCT7giy8X8bGABmOvhmgw==
-X-Received: by 2002:a5d:468a:: with SMTP id u10mr33323669wrq.177.1563253107137;
-        Mon, 15 Jul 2019 21:58:27 -0700 (PDT)
-Received: from felia ([2001:16b8:2d8a:7300:3de9:10dd:67c8:ed32])
-        by smtp.gmail.com with ESMTPSA id j10sm32668442wrd.26.2019.07.15.21.58.25
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FBJREbuUcQWvvYEwTt/8v4/mfr5H4JRh9nPtsgNKrFQ=;
+        b=tJbux785XUNPIVVhRejmeKJieitaqQCNUyLDFj9b/J9VHZ1bpaIpo627sJPMAXILiq
+         uhOQugUCYc6JwIVT9WgXjsBCQAOE/xtpw/aoiqafWrMC2UhUdOIBlw4a75Mshc+Elyiq
+         ypvvDFNNy/h2zgK3dBjWK7u7xrcf9pwATyNCUSvGLPuQKL15WQriy24mEtRw9vhmw09A
+         piKYEavdg8F2QlHiHTPmIhAc4yXQMBMcKFLdft2X6syx3PA1Q65dEYibNaO/+V6Ogrso
+         lqxMouZhc1+3Eq9fSCNiBik+/bzdJ86fhvV68vWGn33jVCi6z501fx50H7ElHjcgVZ/6
+         /Mkw==
+X-Gm-Message-State: APjAAAWVBsUtWVE2c2ZX9hPpC7Vmbh7NrJsTVsuODajbjsiCbZ6Grlj9
+        ltsxbRYJWY91ct/Agmel9aY=
+X-Google-Smtp-Source: APXvYqwq+1lfPSWJQECU5s9UXm+3HSo/0MSuFP1nDOLpfciit8pWelaC7M1gUlgCfCljFzHUcWivPQ==
+X-Received: by 2002:a17:902:9a95:: with SMTP id w21mr32672559plp.126.1563255658943;
+        Mon, 15 Jul 2019 22:40:58 -0700 (PDT)
+Received: from localhost.localdomain ([110.227.64.207])
+        by smtp.gmail.com with ESMTPSA id d21sm8842201pgm.75.2019.07.15.22.40.55
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 15 Jul 2019 21:58:26 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Tue, 16 Jul 2019 06:58:15 +0200 (CEST)
-X-X-Sender: lukas@felia
-To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
-cc:     linux-pci@vger.kernel.org, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v3] PCI: Remove functions not
- called in include/linux/pci.h
-In-Reply-To: <20190715203416.37547-1-skunberg.kelsey@gmail.com>
-Message-ID: <alpine.DEB.2.21.1907160653150.3426@felia>
-References: <20190715181312.31403-1-skunberg.kelsey@gmail.com> <20190715203416.37547-1-skunberg.kelsey@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 15 Jul 2019 22:40:58 -0700 (PDT)
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+To:     thierry.reding@gmail.com, lorenzo.pieralisi@arm.com,
+        bhelgaas@google.com, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Subject: [PATCH] pci: controller: pci-tegra: Add of_node_put() before return
+Date:   Tue, 16 Jul 2019 11:10:47 +0530
+Message-Id: <20190716054047.2671-1-nishkadg.linux@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Each iteration of for_each_child_of_node puts the previous node, but in
+the case of a return from the middle of the loop, there is no put, thus
+causing a memory leak.
+Hence store these mid-loop return values in variable err and add a new
+label err_node_put which puts the previous node and returns err. Change
+six mid-loop return statements to point to this new label instead.
 
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+---
+ drivers/pci/controller/pci-tegra.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-On Mon, 15 Jul 2019, Kelsey Skunberg wrote:
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 9a917b2456f6..673a1725ef38 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -2237,14 +2237,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		err = of_pci_get_devfn(port);
+ 		if (err < 0) {
+ 			dev_err(dev, "failed to parse address: %d\n", err);
+-			return err;
++			goto err_node_put;
+ 		}
+ 
+ 		index = PCI_SLOT(err);
+ 
+ 		if (index < 1 || index > soc->num_ports) {
+ 			dev_err(dev, "invalid port number: %d\n", index);
+-			return -EINVAL;
++			err = -EINVAL;
++			goto err_node_put;
+ 		}
+ 
+ 		index--;
+@@ -2253,12 +2254,13 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		if (err < 0) {
+ 			dev_err(dev, "failed to parse # of lanes: %d\n",
+ 				err);
+-			return err;
++			goto err_node_put;
+ 		}
+ 
+ 		if (value > 16) {
+ 			dev_err(dev, "invalid # of lanes: %u\n", value);
+-			return -EINVAL;
++			err = -EINVAL;
++			goto err_node_put;
+ 		}
+ 
+ 		lanes |= value << (index << 3);
+@@ -2272,13 +2274,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		lane += value;
+ 
+ 		rp = devm_kzalloc(dev, sizeof(*rp), GFP_KERNEL);
+-		if (!rp)
+-			return -ENOMEM;
++		if (!rp) {
++			err = -ENOMEM;
++			goto err_node_put;
++		}
+ 
+ 		err = of_address_to_resource(port, 0, &rp->regs);
+ 		if (err < 0) {
+ 			dev_err(dev, "failed to parse address: %d\n", err);
+-			return err;
++			goto err_node_put;
+ 		}
+ 
+ 		INIT_LIST_HEAD(&rp->list);
+@@ -2330,6 +2334,10 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		return err;
+ 
+ 	return 0;
++
++err_node_put:
++	of_node_put(port);
++	return err;
+ }
+ 
+ /*
+-- 
+2.19.1
 
-> Remove the following uncalled functions from include/linux/pci.h:
-> 
->         pci_block_cfg_access()
->         pci_block_cfg_access_in_atomic()
->         pci_unblock_cfg_access()
-> 
-> Functions were added in commit fb51ccbf217c ("PCI: Rework config space
-> blocking services"), though no callers were added. Code continues to be
-> unused and should be removed.
-> 
-> Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
-> ---
-> 
-> Changes since v1:
->   - Fixed Signed-off-by line to show full name
-> 
-> Changes since v2:
->   - Change commit message to reference prior commit properly with the
->     following format:
-> 	commit <12-character sha prefix> ("<commit message>")
-> 
->  include/linux/pci.h | 5 -----
->  1 file changed, 5 deletions(-)
-> 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index cf380544c700..3c9ba6133bea 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1656,11 +1656,6 @@ static inline void pci_release_regions(struct pci_dev *dev) { }
->  
->  static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
->  
-> -static inline void pci_block_cfg_access(struct pci_dev *dev) { }
-> -static inline int pci_block_cfg_access_in_atomic(struct pci_dev *dev)
-> -{ return 0; }
-> -static inline void pci_unblock_cfg_access(struct pci_dev *dev) { }
-> -
->  static inline struct pci_bus *pci_find_next_bus(const struct pci_bus *from)
->  { return NULL; }
->  static inline struct pci_dev *pci_get_slot(struct pci_bus *bus,
-> -- 
-> 2.20.1
-
-I just checked with elixir on v5.2 that all three identifiers are never 
-referenced beyond its definition in pci.h:
-
-https://elixir.bootlin.com/linux/v5.2/ident/pci_block_cfg_access
-https://elixir.bootlin.com/linux/v5.2/ident/pci_block_cfg_access_in_atomic
-https://elixir.bootlin.com/linux/v5.2/ident/pci_unblock_cfg_access
-
-So, what it is worth:
-
-Reviewed-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-
-Lukas
-
-> 
-> _______________________________________________
-> Linux-kernel-mentees mailing list
-> Linux-kernel-mentees@lists.linuxfoundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
-> 
