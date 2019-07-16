@@ -2,291 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B2C66AF43
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2019 20:53:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9AC16AF73
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2019 21:00:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbfGPSxS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Jul 2019 14:53:18 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49142 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728438AbfGPSxR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Jul 2019 14:53:17 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6GIpnPf131266
-        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2019 14:53:15 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tsk4hjw3v-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2019 14:53:15 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-pci@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 16 Jul 2019 19:53:15 +0100
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 16 Jul 2019 19:53:05 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6GIr4HN37159330
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jul 2019 18:53:04 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4A27FB2067;
-        Tue, 16 Jul 2019 18:53:04 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E778DB2064;
-        Tue, 16 Jul 2019 18:53:03 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.80.225.134])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Jul 2019 18:53:03 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 011B016C8E9B; Tue, 16 Jul 2019 11:53:03 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 11:53:03 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        peterz@infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 2/9] rcu: Add support for consolidated-RCU reader
- checking (v3)
-Reply-To: paulmck@linux.ibm.com
-References: <20190715143705.117908-1-joel@joelfernandes.org>
- <20190715143705.117908-3-joel@joelfernandes.org>
- <20190716183833.GD14271@linux.ibm.com>
- <20190716184649.GA130463@google.com>
+        id S2388433AbfGPTAS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Jul 2019 15:00:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728438AbfGPTAS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 16 Jul 2019 15:00:18 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 205B620665;
+        Tue, 16 Jul 2019 19:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563303617;
+        bh=PcKLpA+pS1VyNuIrEf+5mScc/jl5xMwC/Ln9VrThiwM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ds6GCOFDWGbqaeNEXsfyh5tTrSYmUSx2y6p+eKtWUUz6ysDpx1PT+fCUkaFwglGSE
+         t11NOTkWtJPELCIfTSIY/hr7rfCOG445Vc4M6SbnWLkvumfjge1koPnOC50gsqRC4K
+         jj3+9KVPYqnbOCetP8iEXNID4IrEyoeh5AeMtseM=
+Date:   Tue, 16 Jul 2019 14:00:13 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
+        will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V13 12/12] PCI: tegra: Add Tegra194 PCIe support
+Message-ID: <20190716190013.GB4470@google.com>
+References: <20190710062212.1745-1-vidyas@nvidia.com>
+ <20190710062212.1745-13-vidyas@nvidia.com>
+ <20190711125433.GB26088@e121166-lin.cambridge.arm.com>
+ <986d0b1a-666a-7b05-a9f3-e761518bdc92@nvidia.com>
+ <20190712160754.GA24285@e121166-lin.cambridge.arm.com>
+ <a5f8689b-1358-dd2d-4f54-7e68a6ab158b@nvidia.com>
+ <20190716112225.GA24335@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190716184649.GA130463@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19071618-0072-0000-0000-00000449B137
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011440; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01233111; UDB=6.00649721; IPR=6.01014423;
- MB=3.00027748; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-16 18:53:14
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071618-0073-0000-0000-00004CB9FCC3
-Message-Id: <20190716185303.GM14271@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-16_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907160231
+In-Reply-To: <20190716112225.GA24335@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 02:46:49PM -0400, Joel Fernandes wrote:
-> On Tue, Jul 16, 2019 at 11:38:33AM -0700, Paul E. McKenney wrote:
-> > On Mon, Jul 15, 2019 at 10:36:58AM -0400, Joel Fernandes (Google) wrote:
-> > > This patch adds support for checking RCU reader sections in list
-> > > traversal macros. Optionally, if the list macro is called under SRCU or
-> > > other lock/mutex protection, then appropriate lockdep expressions can be
-> > > passed to make the checks pass.
+On Tue, Jul 16, 2019 at 12:22:25PM +0100, Lorenzo Pieralisi wrote:
+> On Sat, Jul 13, 2019 at 12:34:34PM +0530, Vidya Sagar wrote:
+
+> > > > > So if the link is not up we still go ahead and make probe
+> > > > > succeed. What for ?
+> > > > We may need root port to be available to support hot-plugging of
+> > > > endpoint devices, so, we don't fail the probe.
 > > > 
-> > > Existing list_for_each_entry_rcu() invocations don't need to pass the
-> > > optional fourth argument (cond) unless they are under some non-RCU
-> > > protection and needs to make lockdep check pass.
-> > > 
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > We need it or we don't. If you do support hotplugging of endpoint
+> > > devices point me at the code, otherwise link up failure means
+> > > failure to probe.
+> > Currently hotplugging of endpoint is not supported, but it is one of
+> > the use cases that we may add support for in future. 
+> 
+> You should elaborate on this, I do not understand what you mean,
+> either the root port(s) supports hotplug or it does not.
+> 
+> > But, why should we fail probe if link up doesn't happen? As such,
+> > nothing went wrong in terms of root port initialization right?  I
+> > checked other DWC based implementations and following are not failing
+> > the probe pci-dra7xx.c, pcie-armada8k.c, pcie-artpec6.c, pcie-histb.c,
+> > pcie-kirin.c, pcie-spear13xx.c, pci-exynos.c, pci-imx6.c,
+> > pci-keystone.c, pci-layerscape.c
 > > 
-> > Now that I am on the correct version, again please fold in the checks
-> > for the extra argument.  The ability to have an optional argument looks
-> > quite helpful, especially when compared to growing the RCU API!
-> 
-> I did fold this and replied with a pull request URL based on /dev branch. But
-> we can hold off on the pull requests until we decide on the below comments:
-> 
-> > A few more things below.
-> > > ---
-> > >  include/linux/rculist.h  | 28 ++++++++++++++++++++-----
-> > >  include/linux/rcupdate.h |  7 +++++++
-> > >  kernel/rcu/Kconfig.debug | 11 ++++++++++
-> > >  kernel/rcu/update.c      | 44 ++++++++++++++++++++++++----------------
-> > >  4 files changed, 67 insertions(+), 23 deletions(-)
-> > > 
-> > > diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-> > > index e91ec9ddcd30..1048160625bb 100644
-> > > --- a/include/linux/rculist.h
-> > > +++ b/include/linux/rculist.h
-> > > @@ -40,6 +40,20 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
-> > >   */
-> > >  #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
-> > >  
-> > > +/*
-> > > + * Check during list traversal that we are within an RCU reader
-> > > + */
-> > > +
-> > > +#ifdef CONFIG_PROVE_RCU_LIST
+> > Although following do fail the probe if link is not up.  pcie-qcom.c,
+> > pcie-uniphier.c, pci-meson.c
 > > 
-> > This new Kconfig option is OK temporarily, but unless there is reason to
-> > fear malfunction that a few weeks of rcutorture, 0day, and -next won't
-> > find, it would be better to just use CONFIG_PROVE_RCU.  The overall goal
-> > is to reduce the number of RCU knobs rather than grow them, must though
-> > history might lead one to believe otherwise.  :-/
+> > So, to me, it looks more like a choice we can make whether to fail the
+> > probe or not and in this case we are choosing not to fail.
 > 
-> If you want, we can try to drop this option and just use PROVE_RCU however I
-> must say there may be several warnings that need to be fixed in a short
-> period of time (even a few weeks may be too short) considering the 1000+
-> uses of RCU lists.
+> I disagree. I had an offline chat with Bjorn and whether link-up should
+> fail the probe or not depends on whether the root port(s) is hotplug
+> capable or not and this in turn relies on the root port "Slot
+> implemented" bit in the PCI Express capabilities register.
 
-Do many people other than me build with CONFIG_PROVE_RCU?  If so, then
-that would be a good reason for a temporary CONFIG_PROVE_RCU_LIST,
-as in going away in a release or two once the warnings get fixed.
+There might be a little more we can talk about in this regard.  I did
+bring up the "Slot implemented" bit, but after thinking about it more,
+I don't really think the host bridge driver should be looking at that.
+That's a PCIe concept, and it's really *downstream* from the host
+bridge itself.  The host bridge is logically a device on the CPU bus,
+not the PCI bus.
 
-> But I don't mind dropping it and it may just accelerate the fixing up of all
-> callers.
+I'm starting to think that the host bridge driver probe should be
+disconnected from question of whether the root port links are up.
 
-I will let you decide based on the above question.  But if you have
-CONFIG_PROVE_RCU_LIST, as noted below, it needs to depend on RCU_EXPERT.
+Logically, the host bridge driver connects the CPU bus to a PCI root
+bus, so it converts CPU-side accesses to PCI config, memory, or I/O
+port transactions.  Given that, the PCI core can enumerate devices on
+the root bus and downstream buses.
 
-							Thanx, Paul
+Devices on the root bus typically include Root Ports, but might also
+include endpoints, Root Complex Integrated Endpoints, Root Complex
+Event Collectors, etc.  I think in principle, we would want the host
+bridge probe to succeed so we can use these devices even if none of
+the Root Ports have a link.
 
-> > > +#define __list_check_rcu(dummy, cond, ...)				\
-> > > +	({								\
-> > > +	RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(),		\
-> > > +			 "RCU-list traversed in non-reader section!");	\
-> > > +	 })
-> > > +#else
-> > > +#define __list_check_rcu(dummy, cond, ...) ({})
-> > > +#endif
-> > > +
-> > >  /*
-> > >   * Insert a new entry between two known consecutive entries.
-> > >   *
-> > > @@ -343,14 +357,16 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
-> > >   * @pos:	the type * to use as a loop cursor.
-> > >   * @head:	the head for your list.
-> > >   * @member:	the name of the list_head within the struct.
-> > > + * @cond:	optional lockdep expression if called from non-RCU protection.
-> > >   *
-> > >   * This list-traversal primitive may safely run concurrently with
-> > >   * the _rcu list-mutation primitives such as list_add_rcu()
-> > >   * as long as the traversal is guarded by rcu_read_lock().
-> > >   */
-> > > -#define list_for_each_entry_rcu(pos, head, member) \
-> > > -	for (pos = list_entry_rcu((head)->next, typeof(*pos), member); \
-> > > -		&pos->member != (head); \
-> > > +#define list_for_each_entry_rcu(pos, head, member, cond...)		\
-> > > +	for (__list_check_rcu(dummy, ## cond, 0),			\
-> > > +	     pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
-> > > +		&pos->member != (head);					\
-> > >  		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
-> > >  
-> > >  /**
-> > > @@ -616,13 +632,15 @@ static inline void hlist_add_behind_rcu(struct hlist_node *n,
-> > >   * @pos:	the type * to use as a loop cursor.
-> > >   * @head:	the head for your list.
-> > >   * @member:	the name of the hlist_node within the struct.
-> > > + * @cond:	optional lockdep expression if called from non-RCU protection.
-> > >   *
-> > >   * This list-traversal primitive may safely run concurrently with
-> > >   * the _rcu list-mutation primitives such as hlist_add_head_rcu()
-> > >   * as long as the traversal is guarded by rcu_read_lock().
-> > >   */
-> > > -#define hlist_for_each_entry_rcu(pos, head, member)			\
-> > > -	for (pos = hlist_entry_safe (rcu_dereference_raw(hlist_first_rcu(head)),\
-> > > +#define hlist_for_each_entry_rcu(pos, head, member, cond...)		\
-> > > +	for (__list_check_rcu(dummy, ## cond, 0),			\
-> > > +	     pos = hlist_entry_safe (rcu_dereference_raw(hlist_first_rcu(head)),\
-> > >  			typeof(*(pos)), member);			\
-> > >  		pos;							\
-> > >  		pos = hlist_entry_safe(rcu_dereference_raw(hlist_next_rcu(\
-> > > diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-> > > index 8f7167478c1d..f3c29efdf19a 100644
-> > > --- a/include/linux/rcupdate.h
-> > > +++ b/include/linux/rcupdate.h
-> > > @@ -221,6 +221,7 @@ int debug_lockdep_rcu_enabled(void);
-> > >  int rcu_read_lock_held(void);
-> > >  int rcu_read_lock_bh_held(void);
-> > >  int rcu_read_lock_sched_held(void);
-> > > +int rcu_read_lock_any_held(void);
-> > >  
-> > >  #else /* #ifdef CONFIG_DEBUG_LOCK_ALLOC */
-> > >  
-> > > @@ -241,6 +242,12 @@ static inline int rcu_read_lock_sched_held(void)
-> > >  {
-> > >  	return !preemptible();
-> > >  }
-> > > +
-> > > +static inline int rcu_read_lock_any_held(void)
-> > > +{
-> > > +	return !preemptible();
-> > > +}
-> > > +
-> > >  #endif /* #else #ifdef CONFIG_DEBUG_LOCK_ALLOC */
-> > >  
-> > >  #ifdef CONFIG_PROVE_RCU
-> > > diff --git a/kernel/rcu/Kconfig.debug b/kernel/rcu/Kconfig.debug
-> > > index 5ec3ea4028e2..7fbd21dbfcd0 100644
-> > > --- a/kernel/rcu/Kconfig.debug
-> > > +++ b/kernel/rcu/Kconfig.debug
-> > > @@ -8,6 +8,17 @@ menu "RCU Debugging"
-> > >  config PROVE_RCU
-> > >  	def_bool PROVE_LOCKING
-> > >  
-> > > +config PROVE_RCU_LIST
-> > > +	bool "RCU list lockdep debugging"
-> > > +	depends on PROVE_RCU
-> > 
-> > This must also depend on RCU_EXPERT.  
-> 
-> Sure.
-> 
-> > > +	default n
-> > > +	help
-> > > +	  Enable RCU lockdep checking for list usages. By default it is
-> > > +	  turned off since there are several list RCU users that still
-> > > +	  need to be converted to pass a lockdep expression. To prevent
-> > > +	  false-positive splats, we keep it default disabled but once all
-> > > +	  users are converted, we can remove this config option.
-> > > +
-> > >  config TORTURE_TEST
-> > >  	tristate
-> > >  	default n
-> > > diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-> > > index 9dd5aeef6e70..b7a4e3b5fa98 100644
-> > > --- a/kernel/rcu/update.c
-> > > +++ b/kernel/rcu/update.c
-> > > @@ -91,14 +91,18 @@ module_param(rcu_normal_after_boot, int, 0);
-> > >   * Similarly, we avoid claiming an SRCU read lock held if the current
-> > >   * CPU is offline.
-> > >   */
-> > > +#define rcu_read_lock_held_common()		\
-> > > +	if (!debug_lockdep_rcu_enabled())	\
-> > > +		return 1;			\
-> > > +	if (!rcu_is_watching())			\
-> > > +		return 0;			\
-> > > +	if (!rcu_lockdep_current_cpu_online())	\
-> > > +		return 0;
-> > 
-> > Nice abstraction of common code!
-> 
-> Thanks!
-> 
+If a Root Port is present, I think users will expect to see it in the
+"lspci" output, even if its downstream link is not up.  That will
+enable things like manually poking the Root Port via "setpci" for
+debug.  And if it has a connector, the generic pciehp should be able
+to handle hot-add events without any special help from the host bridge
+driver.
 
+On ACPI systems there is no concept of the host bridge driver probe
+failing because of lack of link on a Root Port.  If a Root Port
+doesn't have an operational link, we still keep the pci_root.c driver,
+and we'll enumerate the Root Port itself.  So I tend to think DT
+systems should behave the same way, i.e., the driver probe should
+succeed unless it fails to allocate resources or something similar.  I
+think this is analogous to a NIC or USB adapter driver, where the
+probe succeeds even if there's no network cable or USB device
+attached.
+
+Bjorn
