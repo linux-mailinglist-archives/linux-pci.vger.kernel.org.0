@@ -2,135 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BB986A4C7
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2019 11:23:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44D266A63D
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2019 12:11:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731166AbfGPJWr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Jul 2019 05:22:47 -0400
-Received: from mga06.intel.com ([134.134.136.31]:63355 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727849AbfGPJWr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 16 Jul 2019 05:22:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jul 2019 02:22:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,497,1557212400"; 
-   d="scan'208";a="172490270"
-Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.128.254]) ([10.249.128.254])
-  by orsmga006.jf.intel.com with ESMTP; 16 Jul 2019 02:22:44 -0700
-Subject: Re: [PATCH AUTOSEL 4.14 086/105] PCI / ACPI: Use cached ACPI device
- state to get PCI device power state
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20190715142839.9896-1-sashal@kernel.org>
- <20190715142839.9896-86-sashal@kernel.org>
-From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
- 173, 80-298 Gdansk
-Message-ID: <01d729e3-9778-9e4f-84d2-16b7353eeee1@intel.com>
-Date:   Tue, 16 Jul 2019 11:22:44 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190715142839.9896-86-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        id S1731042AbfGPKLR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Jul 2019 06:11:17 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41112 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728329AbfGPKLQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Jul 2019 06:11:16 -0400
+Received: by mail-pf1-f196.google.com with SMTP id m30so8880334pff.8
+        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2019 03:11:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=R81ZzKgxtCEhGNXrZhRMrtHubJyNabvopqXLt4EYV7c=;
+        b=bTxhlALZdZwuNaMJD0l76DKiv/xY60vuGKCqaS8QEqqZRcExr5r8b0wvXFTmRJ01Hi
+         t+hWMBBM7n7xC7e3ED+y1vL6vldMWi34cXGfhoB6ktO3TCwSjuLu4qfS4+XS0oCg5M1g
+         akiBiNwTe4ySYlcurbv/fAKMbXR1Phzha3WFI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=R81ZzKgxtCEhGNXrZhRMrtHubJyNabvopqXLt4EYV7c=;
+        b=t+b1m6j15LBpT8iz2StOAU5D9mZgoSHegSPFMiEPfSPBWjDQfdWJY0YiQ8Ap67Aw2d
+         gW0szc7KmLhhaWgF8pZXRmULwS7zwbRecNyV/tg/l3LnCf2e61ghudVZwBVxZOHM6AdR
+         ghiTuEPfZ08hDKfXPxvW2ArIhN6Zj4Yg74fN/sS/r+pDOD0omM7FKVyoRB4DfkT5vsGq
+         8SRMt9tv8W6NBlnzAGj6E6RetHswuiT1e8onY0hDJ3UA0o9HAMZ9mQNG0vLQp8LYv9vN
+         km/0gllgPxzjHQTl11JInVWGfkbmEbJyObhk1X81GP/TOufb/C0De1OKIjkpa668CRPr
+         c82A==
+X-Gm-Message-State: APjAAAUa9Zwil2A8p1N8l59oUyEBPhzWk+Rsi1/xuZXIlQldoTyBq/qs
+        ekII72VZZIMIU3/NHTPq8PhaIWpD15U=
+X-Google-Smtp-Source: APXvYqzmndE3ZEiKWKq5APqXbLOEmW9FQSA1N3MEMEcwNkG38eeNgwpsXeo4PZJIJ/mYOmOVZOIOGg==
+X-Received: by 2002:a17:90a:5288:: with SMTP id w8mr35239474pjh.61.1563271876140;
+        Tue, 16 Jul 2019 03:11:16 -0700 (PDT)
+Received: from dhcp-10-123-20-16.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id x14sm22966839pfq.158.2019.07.16.03.11.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 03:11:15 -0700 (PDT)
+From:   Sumit Saxena <sumit.saxena@broadcom.com>
+To:     helgaas@kernel.org
+Cc:     linux-pci@vger.kernel.org, stable@vger.kernel.org,
+        Sumit Saxena <sumit.saxena@broadcom.com>
+Subject: [PATCH] PCI: set BAR size bits correctly in Resize BAR control register
+Date:   Tue, 16 Jul 2019 23:39:40 +0530
+Message-Id: <20190716180940.17828-1-sumit.saxena@broadcom.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 7/15/2019 4:28 PM, Sasha Levin wrote:
-> From: Mika Westerberg <mika.westerberg@linux.intel.com>
->
-> [ Upstream commit 83a16e3f6d70da99896c7a2639c0b60fff13afb8 ]
->
-> The ACPI power state returned by acpi_device_get_power() may depend on
-> the configuration of ACPI power resources in the system which may change
-> any time after acpi_device_get_power() has returned, unless the
-> reference counters of the ACPI power resources in question are set to
-> prevent that from happening. Thus it is invalid to use acpi_device_get_power()
-> in acpi_pci_get_power_state() the way it is done now and the value of
-> the ->power.state field in the corresponding struct acpi_device objects
-> (which reflects the ACPI power resources reference counting, among other
-> things) should be used instead.
->
-> As an example where this becomes an issue is Intel Ice Lake where the
-> Thunderbolt controller (NHI), two PCIe root ports (RP0 and RP1) and xHCI
-> all share the same power resources. The following picture with power
-> resources marked with [] shows the topology:
->
->    Host bridge
->      |
->      +- RP0 ---\
->      +- RP1 ---|--+--> [TBT]
->      +- NHI --/   |
->      |            |
->      |            v
->      +- xHCI --> [D3C]
->
-> Here TBT and D3C are the shared ACPI power resources. ACPI _PR3() method
-> of the devices in question returns either TBT or D3C or both.
->
-> Say we runtime suspend first the root ports RP0 and RP1, then NHI. Now
-> since the TBT power resource is still on when the root ports are runtime
-> suspended their dev->current_state is set to D3hot. When NHI is runtime
-> suspended TBT is finally turned off but state of the root ports remain
-> to be D3hot. Now when the xHCI is runtime suspended D3C gets also turned
-> off. PCI core thus has power states of these devices cached in their
-> dev->current_state as follows:
->
->    RP0 -> D3hot
->    RP1 -> D3hot
->    NHI -> D3cold
->    xHCI -> D3cold
->
-> If the user now runs lspci for instance, the result is all 1's like in
-> the below output (00:07.0 is the first root port, RP0):
->
-> 00:07.0 PCI bridge: Intel Corporation Device 8a1d (rev ff) (prog-if ff)
->      !!! Unknown header type 7f
->      Kernel driver in use: pcieport
->
-> In short the hardware state is not in sync with the software state
-> anymore. The exact same thing happens with the PME polling thread which
-> ends up bringing the root ports back into D0 after they are runtime
-> suspended.
->
-> For this reason, modify acpi_pci_get_power_state() so that it uses the
-> ACPI device power state that was cached by the ACPI core. This makes the
-> PCI device power state match the ACPI device power state regardless of
-> state of the shared power resources which may still be on at this point.
->
-> Link: https://lore.kernel.org/r/20190618161858.77834-2-mika.westerberg@linux.intel.com
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->   drivers/pci/pci-acpi.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index a3cedf8de863..688e195e85b4 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -563,7 +563,8 @@ static pci_power_t acpi_pci_get_power_state(struct pci_dev *dev)
->   	if (!adev || !acpi_device_power_manageable(adev))
->   		return PCI_UNKNOWN;
->   
-> -	if (acpi_device_get_power(adev, &state) || state == ACPI_STATE_UNKNOWN)
-> +	state = adev->power.state;
-> +	if (state == ACPI_STATE_UNKNOWN)
->   		return PCI_UNKNOWN;
->   
->   	return state_conv[state];
+In Resize BAR control register, bits[8:12] represents size of BAR.
+As per PCIe specification, below is encoded values in register bits
+to actual BAR size table:
 
-This requires additional changes to really work in all cases, please do 
-not include it alone into -stable.
+Bits  BAR size
+0     1 MB
+1     2 MB
+2     4 MB
+3     8 MB
+--
 
+For 1 MB BAR size, BAR size bits should be set to 0 but incorrectly
+these bits are set to "1f". 
+Latest megaraid_sas and mpt3sas adapters which support Resizable BAR 
+with 1 MB BAR size fails to initialize during system resume from S3 sleep.
+
+Fix: Correctly set BAR size bits to "0" for 1MB BAR size.
+
+CC: stable@vger.kernel.org # v4.16+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203939
+Fixes: d3252ace0bc652a1a244455556b6a549f969bf99 ("PCI: Restore resized BAR state on resume")
+Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
+---
+ drivers/pci/pci.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 8abc843..b651f32 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1417,12 +1417,13 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
+ 
+ 	for (i = 0; i < nbars; i++, pos += 8) {
+ 		struct resource *res;
+-		int bar_idx, size;
++		int bar_idx, size, order;
+ 
+ 		pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
+ 		bar_idx = ctrl & PCI_REBAR_CTRL_BAR_IDX;
+ 		res = pdev->resource + bar_idx;
+-		size = order_base_2((resource_size(res) >> 20) | 1) - 1;
++		order = order_base_2((resource_size(res) >> 20) | 1);
++		size = order ? order - 1 : 0;
+ 		ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
+ 		ctrl |= size << PCI_REBAR_CTRL_BAR_SHIFT;
+ 		pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
+-- 
+1.8.3.1
 
