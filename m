@@ -2,118 +2,231 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C3C156A786
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2019 13:36:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06D876A85B
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2019 14:11:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387711AbfGPLfX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Jul 2019 07:35:23 -0400
-Received: from mx0b-00010702.pphosted.com ([148.163.158.57]:23962 "EHLO
-        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733067AbfGPLfW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Jul 2019 07:35:22 -0400
-X-Greylist: delayed 1125 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Jul 2019 07:35:21 EDT
-Received: from pps.filterd (m0098779.ppops.net [127.0.0.1])
-        by mx0b-00010702.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x6GBBuT7018790;
-        Tue, 16 Jul 2019 06:16:36 -0500
-Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2053.outbound.protection.outlook.com [104.47.46.53])
-        by mx0b-00010702.pphosted.com with ESMTP id 2ts0cd1wn5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jul 2019 06:16:36 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G9Z09jp51JHyvim8wAJTb0xZDufl8ff1Jvqfjv4YHA9denT2E4ZKZItg0NwdkEhR6zFPzuZOgiOFY761dyWSN5T1oKG+zBySzV/gSlCspUyfHIYzjJQIWORxBN3Ssx3R7TOkf1BGZZ/MsymOw3TGAi55uZzKxXnZsWx+w/JAUvC6WsRJ4VB7wNR6tnXA3PQR6XC29mAlocABCgc2RzIZ6nbakIMb5UwijHttzelB6PqvUYg6PLpGsLbRdvEvv3/yzQJjCXDS4dIwxo9DOcf+URCZMgGRSuw2YZQdjHVTsomziyObNikf0Ct4n9yd8AtCNvSrQle9BbKW1cq2rah++Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hNr3kzVhwMK6+UhX6hIAZbop7fOeZlcFRw0fn43z3s4=;
- b=f/hiuqJo8ahl7eXRbfMWSRgv2JE5A50XLq+AnLTizeCcIEFi6MuGnpTtM4gVwFhfEetiyt7ne2qF3olZVVCWHek0V5WMEZiBThR+DJBAgHWpWLS2mhLSx++Auao8wFu5WmDXYWaml+WeuLj62aAo7boLupMFF8CFdxsAvtWTJ67lNZhNN9XvKTUFRKFoXkKm0qAqsyk4SfIknUhVu5uk5pgLC31PNDgj/moeJLP21WfHBIHtiTAuco5zK7YcNCNMQ8CgLikQVQJLCDZscBdxFQhdp4BV4VcxykTgUPsxJw5K1fnemBwLKBKymWkr2PbwKINTwuRUDYmRbShT/lxVog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=ni.com;dmarc=pass action=none header.from=ni.com;dkim=pass
- header.d=ni.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=nio365.onmicrosoft.com; s=selector1-nio365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hNr3kzVhwMK6+UhX6hIAZbop7fOeZlcFRw0fn43z3s4=;
- b=kgqLzAWhq+EtsBVISHrdjahV1L7phTzT7S/8m5vKkutriTPSZ0h7oxXmNF59LvdqqKqMgSYk4dH3N1z/TJlI+ZtC1d9bQlkI1tS1EYflVG4TqY7n9Oqp4w0BqxEwTHOXQ7GawLX/cI88vJjiC1NXTKIgkFtNKQrn2b27CEePuMM=
-Received: from MN2PR04MB6255.namprd04.prod.outlook.com (20.178.245.75) by
- MN2PR04MB5821.namprd04.prod.outlook.com (20.179.22.76) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Tue, 16 Jul 2019 11:16:33 +0000
-Received: from MN2PR04MB6255.namprd04.prod.outlook.com
- ([fe80::c592:ee6f:7749:dcc8]) by MN2PR04MB6255.namprd04.prod.outlook.com
- ([fe80::c592:ee6f:7749:dcc8%3]) with mapi id 15.20.2073.012; Tue, 16 Jul 2019
- 11:16:33 +0000
-From:   Kar Hin Ong <kar.hin.ong@ni.com>
-To:     "linux-x86_64@vger.kernel.org" <linux-x86_64@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     Keng Soon Cheah <keng.soon.cheah@ni.com>
-Subject: Firing an interrupt pin induces the occurrence of another interrupt
-Thread-Topic: Firing an interrupt pin induces the occurrence of another
- interrupt
-Thread-Index: AdU7xXHhnNl8aRO4RPO0W4+pOfkZoA==
-Date:   Tue, 16 Jul 2019 11:16:33 +0000
-Message-ID: <MN2PR04MB6255ED23FBD06326084DA2C4C3CE0@MN2PR04MB6255.namprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [130.164.75.18]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d72563eb-8e53-490c-42bc-08d709df0f36
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR04MB5821;
-x-ms-traffictypediagnostic: MN2PR04MB5821:
-x-microsoft-antispam-prvs: <MN2PR04MB5821211DF86F5EE8FB080057C3CE0@MN2PR04MB5821.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0100732B76
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(346002)(376002)(39850400004)(136003)(199004)(189003)(4744005)(4326008)(81156014)(81166006)(8936002)(478600001)(25786009)(5660300002)(52536014)(6436002)(53936002)(71200400001)(110136005)(450100002)(8676002)(7736002)(86362001)(55016002)(71190400001)(256004)(9686003)(316002)(305945005)(2501003)(2906002)(3846002)(26005)(186003)(74316002)(66946007)(14454004)(476003)(33656002)(7696005)(102836004)(6506007)(68736007)(76116006)(66556008)(64756008)(66446008)(66066001)(66476007)(6116002)(486006)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5821;H:MN2PR04MB6255.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: ni.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: nvdfoOODpA6bwhgwMV9zP59x3hW0BmGHXGYq8Ccu/vqBlbqv9OXgFWqXKMv3iLiGNhFO4pdmfoqUsJ+/2SZQU1JNlAJz5hCAsjxZ/E4lzZktxvYQUDVh8lKroF0EtaLg98sqtBGchTSJGU/LMKOUMjvWRd0JroLTsdipsWiKk8gBsi9KVL8H/jRKEU/dcNchJCm0cULY3RUVphyHaZRp/6l1K43GXWxJPuYAz9wvJQrD8MzkfH+8Q6xo58qzTxm2I+9xSjj9kAjPXomot86LGoVVEuUteEqcqQauoiT768FZ4nJQCQGKCN4UXd4hJo0okRyAGwo23YNzMg8Y94kHSADlEUAqnEXxz/WdYbrrlajK1XgHKM8GplBrYKZ6DTVmOZMa8/hlIqNvMeXre0CV94Ndw5QZBCin4SA9GMsmLNI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1733034AbfGPMLB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Jul 2019 08:11:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39064 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732581AbfGPMLA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Jul 2019 08:11:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cmrXWeKZex18XPtqOqXe6bsYV64AO68iLYgMsiWQPIg=; b=QAAw/LhYE17kHpcrRzOCn1piW
+        wDQhBm1yl/KZ+dj8rCQhgNieg+hhttiHCd56p5QhHz5ASeESwhg4e5NnaVU0xFvaS1lhK+pI34VAH
+        U07mMZP9tRQ4deiPKcIy4WDiR29u2hCPogiZhF9Lz2jHXns+8RDa0pzAsZAsHJhW3j3YMjCZIm/+P
+        LGpxBBG2lEGO3KMHIzygFcSKKg0GHttc1pRY0pbQBDBk7P+UYDrt1y6b2Q/bZPeVAySSZNi95nOXL
+        A9MLC1Mv0VfRw8xgU7fIrVDbMile7MGuQFtM0dQbNTrXk9FcF/xI3aZ/c1Bhe5nAJD6JiU0T0som+
+        3cGvhJxcQ==;
+Received: from [189.27.46.152] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hnMIL-0004hz-Al; Tue, 16 Jul 2019 12:10:57 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hnMII-0000QW-KI; Tue, 16 Jul 2019 09:10:54 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-scsi@vger.kernel.org, esc.storagedev@microsemi.com,
+        linuxppc-dev@lists.ozlabs.org, Jonathan Corbet <corbet@lwn.net>,
+        alsa-devel@alsa-project.org, kvm@vger.kernel.org,
+        linux-i2c@vger.kernel.org, rcu@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-doc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-watchdog@vger.kernel.org, x86@kernel.org,
+        dri-devel@lists.freedesktop.org, netdev@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH 00/14] pending doc patches for 5.3-rc
+Date:   Tue, 16 Jul 2019 09:10:39 -0300
+Message-Id: <cover.1563277838.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-OriginatorOrg: ni.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d72563eb-8e53-490c-42bc-08d709df0f36
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2019 11:16:33.1547
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 87ba1f9a-44cd-43a6-b008-6fdb45a5204e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kar.hin.ong@ni.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5821
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
- definitions=2019-07-16_03:2019-07-16,2019-07-16 signatures=0
-X-Proofpoint-Spam-Details: rule=inbound_policy_notspam policy=inbound_policy score=30 malwarescore=0
- clxscore=1011 bulkscore=0 impostorscore=0 phishscore=0 mlxscore=0
- spamscore=0 lowpriorityscore=0 mlxlogscore=679 priorityscore=1501
- adultscore=0 suspectscore=0 classifier=spam adjust=30 reason=mlx
- scancount=1 engine=8.12.0-1904300001 definitions=main-1907160142
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,=20
+Those are the pending documentation patches after my pull request
+for this branch:
 
-I have a x86 system with Xeon CPU running Linux with preempt_rt patch (kern=
-el version 4.14).=20
+    git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media.git tags/docs/v5.3-1
 
-When a PCI device firing interrupt to GSI 44 (ioapic2, pin20), I noticed th=
-at GSI 19 (ioapic1, pin19) will get fired as well, and then it went unhandl=
-ed.
-I can reproduce this issue by using another PCI card or swapping the PCI ca=
-rd to other slot, as long as the device is driving GSI 44.
+Patches 1 to 13 were already submitted, but got rebased. Patch 14
+is a new fixup one.
 
-By putting traces on do_IRQ, I can see it's being called once for GSI 44, t=
-hen being called another once for GSI 19.
+Patches 1 and 2 weren't submitted before due to merge conflicts
+that are now solved upstream;
 
-I tried to reproduce it on RHEL 8, it is not reproducible initially. Howeve=
-r, after I added "threadirqs" kernel parameter, this behaviour appears on R=
-HEL 8 as well.
+Patch 3 fixes a series of random Documentation/* references that
+are pointing to the wrong places.
 
-I would like to get your advice on whether this could be a kernel issue or =
-hardware issue.
-Inputs on how to further narrow down the issue are most welcomed.
+Patch 4 fix a longstanding issue: every time a new book is added,
+conf.py need changes, in order to allow generating a PDF file.
+After the patch, conf.py will automatically recognize new books,
+saving the trouble of keeping adding documents to it.
 
-Thanks very much in advance,
-Kar Hin Ong
+Patches 5 to 11 are due to fonts support when building translations.pdf.
+The main focus is to add xeCJK support. While doing it, I discovered
+some bugs at sphinx-pre-install script after running it with 7 different
+distributions.
+
+Patch 12 improves support for partial doc building. Currently, each
+subdir needs to have its own conf.py, in order to support partial
+doc build. After it, any Documentation subdir can be used to 
+roduce html/pdf docs with:
+
+	make SPHINXDIRS="foo bar" htmldocs
+	(or pdfdocs, latexdocs, epubdocs, ...)
+
+Patch 13 is a cleanup patch: it simply get rid of all those extra
+conf.py files that  aren't needed anymore. The only extra config
+file after it is this one:
+
+	Documentation/media/conf_nitpick.py
+
+With enables some extra optional Sphinx features.
+
+Patch 14 adds Documentation/virtual to the main index.rst file
+and add a new *.rst file that was orphaned there.
+
+-
+
+After this series, there's just one more patch meant to be applied
+for 5.3, with is still waiting for some patches to be merged from
+linux-next:
+
+    https://git.linuxtv.org/mchehab/experimental.git/commit/?id=b1b5dc7d7bbfbbfdace2a248c6458301c6e34100
+
+
+Mauro Carvalho Chehab (14):
+  docs: powerpc: convert docs to ReST and rename to *.rst
+  docs: power: add it to to the main documentation index
+  docs: fix broken doc references due to renames
+  docs: pdf: add all Documentation/*/index.rst to PDF output
+  docs: conf.py: add CJK package needed by translations
+  docs: conf.py: only use CJK if the font is available
+  scripts/sphinx-pre-install: fix script for RHEL/CentOS
+  scripts/sphinx-pre-install: don't use LaTeX with CentOS 7
+  scripts/sphinx-pre-install: fix latexmk dependencies
+  scripts/sphinx-pre-install: cleanup Gentoo checks
+  scripts/sphinx-pre-install: seek for Noto CJK fonts for pdf output
+  docs: load_config.py: avoid needing a conf.py just due to LaTeX docs
+  docs: remove extra conf.py files
+  docs: virtual: add it to the documentation body
+
+ Documentation/PCI/pci-error-recovery.rst      |   5 +-
+ Documentation/RCU/rculist_nulls.txt           |   2 +-
+ Documentation/admin-guide/conf.py             |  10 --
+ Documentation/conf.py                         |  30 +++-
+ Documentation/core-api/conf.py                |  10 --
+ Documentation/crypto/conf.py                  |  10 --
+ Documentation/dev-tools/conf.py               |  10 --
+ .../devicetree/bindings/arm/idle-states.txt   |   2 +-
+ Documentation/doc-guide/conf.py               |  10 --
+ Documentation/driver-api/80211/conf.py        |  10 --
+ Documentation/driver-api/conf.py              |  10 --
+ Documentation/driver-api/pm/conf.py           |  10 --
+ Documentation/filesystems/conf.py             |  10 --
+ Documentation/gpu/conf.py                     |  10 --
+ Documentation/index.rst                       |   3 +
+ Documentation/input/conf.py                   |  10 --
+ Documentation/kernel-hacking/conf.py          |  10 --
+ Documentation/locking/spinlocks.rst           |   4 +-
+ Documentation/maintainer/conf.py              |  10 --
+ Documentation/media/conf.py                   |  12 --
+ Documentation/memory-barriers.txt             |   2 +-
+ Documentation/networking/conf.py              |  10 --
+ Documentation/power/index.rst                 |   2 +-
+ .../{bootwrapper.txt => bootwrapper.rst}      |  28 +++-
+ .../{cpu_families.txt => cpu_families.rst}    |  23 +--
+ .../{cpu_features.txt => cpu_features.rst}    |   6 +-
+ Documentation/powerpc/{cxl.txt => cxl.rst}    |  46 ++++--
+ .../powerpc/{cxlflash.txt => cxlflash.rst}    |  10 +-
+ .../{DAWR-POWER9.txt => dawr-power9.rst}      |  15 +-
+ Documentation/powerpc/{dscr.txt => dscr.rst}  |  18 +-
+ ...ecovery.txt => eeh-pci-error-recovery.rst} | 108 ++++++------
+ ...ed-dump.txt => firmware-assisted-dump.rst} | 117 +++++++------
+ Documentation/powerpc/{hvcs.txt => hvcs.rst}  | 108 ++++++------
+ Documentation/powerpc/index.rst               |  34 ++++
+ Documentation/powerpc/isa-versions.rst        |  15 +-
+ .../powerpc/{mpc52xx.txt => mpc52xx.rst}      |  12 +-
+ ...nv.txt => pci_iov_resource_on_powernv.rst} |  15 +-
+ .../powerpc/{pmu-ebb.txt => pmu-ebb.rst}      |   1 +
+ Documentation/powerpc/ptrace.rst              | 156 ++++++++++++++++++
+ Documentation/powerpc/ptrace.txt              | 151 -----------------
+ .../{qe_firmware.txt => qe_firmware.rst}      |  37 +++--
+ .../{syscall64-abi.txt => syscall64-abi.rst}  |  29 ++--
+ ...al_memory.txt => transactional_memory.rst} |  45 ++---
+ Documentation/process/conf.py                 |  10 --
+ Documentation/sh/conf.py                      |  10 --
+ Documentation/sound/conf.py                   |  10 --
+ Documentation/sphinx/load_config.py           |  27 ++-
+ .../translations/ko_KR/memory-barriers.txt    |   2 +-
+ Documentation/userspace-api/conf.py           |  10 --
+ Documentation/virtual/kvm/index.rst           |   1 +
+ Documentation/vm/conf.py                      |  10 --
+ Documentation/watchdog/hpwdt.rst              |   2 +-
+ Documentation/x86/conf.py                     |  10 --
+ MAINTAINERS                                   |  14 +-
+ arch/powerpc/kernel/exceptions-64s.S          |   2 +-
+ drivers/gpu/drm/drm_modes.c                   |   2 +-
+ drivers/i2c/busses/i2c-nvidia-gpu.c           |   2 +-
+ drivers/scsi/hpsa.c                           |   4 +-
+ drivers/soc/fsl/qe/qe.c                       |   2 +-
+ drivers/tty/hvc/hvcs.c                        |   2 +-
+ include/soc/fsl/qe/qe.h                       |   2 +-
+ scripts/sphinx-pre-install                    | 118 ++++++++++---
+ 62 files changed, 738 insertions(+), 678 deletions(-)
+ delete mode 100644 Documentation/admin-guide/conf.py
+ delete mode 100644 Documentation/core-api/conf.py
+ delete mode 100644 Documentation/crypto/conf.py
+ delete mode 100644 Documentation/dev-tools/conf.py
+ delete mode 100644 Documentation/doc-guide/conf.py
+ delete mode 100644 Documentation/driver-api/80211/conf.py
+ delete mode 100644 Documentation/driver-api/conf.py
+ delete mode 100644 Documentation/driver-api/pm/conf.py
+ delete mode 100644 Documentation/filesystems/conf.py
+ delete mode 100644 Documentation/gpu/conf.py
+ delete mode 100644 Documentation/input/conf.py
+ delete mode 100644 Documentation/kernel-hacking/conf.py
+ delete mode 100644 Documentation/maintainer/conf.py
+ delete mode 100644 Documentation/media/conf.py
+ delete mode 100644 Documentation/networking/conf.py
+ rename Documentation/powerpc/{bootwrapper.txt => bootwrapper.rst} (93%)
+ rename Documentation/powerpc/{cpu_families.txt => cpu_families.rst} (95%)
+ rename Documentation/powerpc/{cpu_features.txt => cpu_features.rst} (97%)
+ rename Documentation/powerpc/{cxl.txt => cxl.rst} (95%)
+ rename Documentation/powerpc/{cxlflash.txt => cxlflash.rst} (98%)
+ rename Documentation/powerpc/{DAWR-POWER9.txt => dawr-power9.rst} (95%)
+ rename Documentation/powerpc/{dscr.txt => dscr.rst} (91%)
+ rename Documentation/powerpc/{eeh-pci-error-recovery.txt => eeh-pci-error-recovery.rst} (82%)
+ rename Documentation/powerpc/{firmware-assisted-dump.txt => firmware-assisted-dump.rst} (80%)
+ rename Documentation/powerpc/{hvcs.txt => hvcs.rst} (91%)
+ create mode 100644 Documentation/powerpc/index.rst
+ rename Documentation/powerpc/{mpc52xx.txt => mpc52xx.rst} (91%)
+ rename Documentation/powerpc/{pci_iov_resource_on_powernv.txt => pci_iov_resource_on_powernv.rst} (97%)
+ rename Documentation/powerpc/{pmu-ebb.txt => pmu-ebb.rst} (99%)
+ create mode 100644 Documentation/powerpc/ptrace.rst
+ delete mode 100644 Documentation/powerpc/ptrace.txt
+ rename Documentation/powerpc/{qe_firmware.txt => qe_firmware.rst} (95%)
+ rename Documentation/powerpc/{syscall64-abi.txt => syscall64-abi.rst} (82%)
+ rename Documentation/powerpc/{transactional_memory.txt => transactional_memory.rst} (93%)
+ delete mode 100644 Documentation/process/conf.py
+ delete mode 100644 Documentation/sh/conf.py
+ delete mode 100644 Documentation/sound/conf.py
+ delete mode 100644 Documentation/userspace-api/conf.py
+ delete mode 100644 Documentation/vm/conf.py
+ delete mode 100644 Documentation/x86/conf.py
+
+-- 
+2.21.0
+
+
