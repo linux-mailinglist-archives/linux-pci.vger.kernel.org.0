@@ -2,56 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EC1456A3E6
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2019 10:32:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CD406A3EF
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2019 10:33:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbfGPIcE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Jul 2019 04:32:04 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36699 "EHLO
+        id S1727829AbfGPIdk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Jul 2019 04:33:40 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44315 "EHLO
         mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbfGPIcE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Jul 2019 04:32:04 -0400
-Received: by mail-io1-f65.google.com with SMTP id o9so38655919iom.3
-        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2019 01:32:03 -0700 (PDT)
+        with ESMTP id S1726537AbfGPIdk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Jul 2019 04:33:40 -0400
+Received: by mail-io1-f65.google.com with SMTP id s7so38512713iob.11
+        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2019 01:33:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=semihalf-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=sKdxU6girRO1TqV8WThQeqzTOlWNp9bBRPW3AAWw3EE=;
-        b=0f58P8VQwlkJ/rLmi2ztU74s0mYPu0RPsbPZ83qZuKLqcKxk5YPGbzo3PG9M4E5aym
-         sXGG/Yr2A00tpz6yRrNHx96THBD37Mp/sGqFgX6lqyr23gkHOMxm85mizdn5NWpEHpF5
-         NuoLsx3x3W6zJB5O12izjCLC7Zg74NSpPZz+RmaftNf36EpTcuvU1ymR6DFM6hh4IoVH
-         N7JfpvTzR4AAu7ZDphMIPdrl6WhqP/1TOvslDpSF1NhmV9Vu2OZRs8qCGm3FE4DdQ4bz
-         /bbh4RWykT/fFfqdF50k5GcAtXC5fXb1MaaePQX6akllVpM3Y+4LSCAJ1+a2OXRqV9yo
-         oQ+w==
+        bh=vzap+4xNNS/hHS/OOE+FonbCO2y8T5Sdhg9a7mHxxZc=;
+        b=AaPIi+ZVWCk/ycH5zSap9Rfc6OBIq8nWE4hDYFCzrfkpayybwdWvEMTHnmCQG971mx
+         9CtvU5rGuw2gVobtAw8Mq/PnDLZ+pUwo3H94CiyLluMRjG2ZWD/fxPTqjgpKNbXCUz3V
+         /lanFrBrhxNZHcHw3VDagNcDaRqqNL46FP6517DmjB6RXG6oRWdwyUye+YtndjdHt1nA
+         OaniCWCE/qlkdYf1FPNL9lXF5e5kwCxNNE4tpuPNLr5JyGTL4mVE5RD4BSEm3a9YhNQR
+         F6aF2y6am9XnIv+bEyE28koSvp+1zQonYZc4NUydXFlRNqjZjpEL1Af33v0CK0JP3I7Y
+         3OYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sKdxU6girRO1TqV8WThQeqzTOlWNp9bBRPW3AAWw3EE=;
-        b=cxAGyUG8tjTinSyFuP6VOqn73lfVS4r0W6YTXl5727P3yNn4uHNc0XUN/pbBD+t12r
-         SASkqFhzc0RabK+f+6ahD8J7OJt4/nMkzH5FoaCmo9nIXj3HhWm6cuZNnYxUwkSZ9C2q
-         toxvtYUcZeBqoxsPlli5XD/B8rVCm/qOdFyxkqUhtbsY2Y3pTqmLV9Kx3GhAQiVAksol
-         Ia7M5ntOZn8Izzr/btQlQ9fCvj3ZHqk3+fobOmxzXFYEkZRsGVGrUL03keGeppL83Wp9
-         RWKFYluhZ1i8OtdAiq63uPr02l2J6xkLfe7QVB7589DXtZldfs4MZExl8weTwgATJ2HC
-         +hOw==
-X-Gm-Message-State: APjAAAWMrWzFfCxy6oFNbmbsjSSzsy8Mn3fCijS7e7ocxKpFt8O9rGPy
-        VE/6adwX6e7EO4MWftFc/9crMi3zUGKVVM0FYbU=
-X-Google-Smtp-Source: APXvYqysvbnNzDFZTOSk9lKhMkpJ49xrRxE2EWpZWMnPCXhWzYs6MW4wC2tnJbZvK6bGRWTX90Jc2AgTPs8k3BJG0IM=
-X-Received: by 2002:a5d:860e:: with SMTP id f14mr30170291iol.242.1563265923194;
- Tue, 16 Jul 2019 01:32:03 -0700 (PDT)
+        bh=vzap+4xNNS/hHS/OOE+FonbCO2y8T5Sdhg9a7mHxxZc=;
+        b=GeDuJ6ZgVesEzNfDVBATkEeaLHNbBEIKvKLAP4pa6LKwpcGk1vqRqeA1argUi7etXs
+         NRImImlyeAuewkNHeXfyjiFsaWlJ48/SF7OOQoarIc/2WNYdqKw6oeZSPnA0xQqv1rBS
+         Jne07YUQBtULVRJyOVF6Ojz40pH02MF2rkj5kCAyqUE9sa+wx+koOGXyaUjsiJJHfraB
+         N3F4xy7QDiKZPGvDzNWGj4SA8LoHdTOmT4p1KwZEHpOiAx39MifwGBWbqBdh/XUCPZy7
+         OAOFPA2pVhXGOKazo3oIufZGZCmtwL+amZ7v+7C2hVmJQ+AlhLtGik4/jijKo7vDbZ+V
+         uV/A==
+X-Gm-Message-State: APjAAAUCt1tljiXOyaCqRz7g2+T5sBdaU04eeztV6XOHcfMeUypb5jfl
+        +NRnurUbHL2rCaROOQZYtuIl801b2ta+SLTr6Bk=
+X-Google-Smtp-Source: APXvYqya0V5jarXyUeFdaG8e6dAJp0uRcbmGkv63/kgCGx/E6oESR+tWIfI7iA022SDAuIC6+cpN6bRaSLxuJRf8wpY=
+X-Received: by 2002:a02:7f15:: with SMTP id r21mr34328068jac.120.1563266019706;
+ Tue, 16 Jul 2019 01:33:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <1563200122-8323-1-git-send-email-jaz@semihalf.com> <20190715170840.326acd73@windsurf>
-In-Reply-To: <20190715170840.326acd73@windsurf>
+References: <1563200177-8380-1-git-send-email-jaz@semihalf.com> <20190715143046.r3ja32rfntagqrqr@shell.armlinux.org.uk>
+In-Reply-To: <20190715143046.r3ja32rfntagqrqr@shell.armlinux.org.uk>
 From:   Grzegorz Jaszczyk <jaz@semihalf.com>
-Date:   Tue, 16 Jul 2019 10:31:52 +0200
-Message-ID: <CAH76GKNXnBaR+3N14yMNoTbMtXD2fU17ZvrCA+W19q21jt9Osg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: aardvark: fix big endian support
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc:     lorenzo.pieralisi@arm.com, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Marcin Wojtas <mw@semihalf.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Date:   Tue, 16 Jul 2019 10:33:28 +0200
+Message-ID: <CAH76GKNKLm8y1PsF3uSiUpqDqh28XEepnkCAM_69Yp=vjHsn6w@mail.gmail.com>
+Subject: Re: [PATCH] PCI: pci-bridge-emul: fix big-endian support
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        lorenzo.pieralisi@arm.com, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
+        linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
@@ -59,76 +59,20 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Thomas,
+Hi Russell
 
-pon., 15 lip 2019 o 17:08 Thomas Petazzoni
-<thomas.petazzoni@bootlin.com> napisa=C5=82(a):
+pon., 15 lip 2019 o 16:30 Russell King - ARM Linux admin
+<linux@armlinux.org.uk> napisa=C5=82(a):
+> This is insufficient - pci-bridge-emul.h needs to be fixed up to use
+> __le32 and __le16.
 >
->
-> > -     bridge->conf.vendor =3D advk_readl(pcie, PCIE_CORE_DEV_ID_REG) & =
-0xffff;
-> > -     bridge->conf.device =3D advk_readl(pcie, PCIE_CORE_DEV_ID_REG) >>=
- 16;
-> > +     bridge->conf.vendor =3D
-> > +             cpu_to_le16(advk_readl(pcie, PCIE_CORE_DEV_ID_REG) & 0xff=
-ff);
-> > +     bridge->conf.device =3D
-> > +             cpu_to_le16(advk_readl(pcie, PCIE_CORE_DEV_ID_REG) >> 16)=
-;
-> >       bridge->conf.class_revision =3D
-> >               advk_readl(pcie, PCIE_CORE_DEV_REV_REG) & 0xff;
->
-> So conf.vendor and conf.device and stored as little-endian in the
-> emulated config address space, but conf.class_revision is stored in the
-> CPU endianness ?
+> It is a good idea to check such changes with sparse - a tool originally
+> written by Linus, which is able to detect incorrect endian accesses
+> (iow, access to LE members without using a LE accessor.)  Such checks
+> rely on using the right types.
 
-Thank you it seems it slip over - after my change I dump whole config
-space in big and little endian and compere to be sure that there are
-no more fields that Iam missing and everything seemed ok - so it is
-probably '0' therefore the bug wasn't caught.
-In bridge emulation the conversion is done correctly:
-bridge->conf.class_revision |=3D cpu_to_le32(PCI_CLASS_BRIDGE_PCI << 16);
-
->
-> >
-> > @@ -489,8 +491,8 @@ static void advk_sw_pci_bridge_init(struct advk_pci=
-e *pcie)
-> >       bridge->conf.iolimit =3D PCI_IO_RANGE_TYPE_32;
->
-> >
-> >       /* Support 64 bits memory pref */
-> > -     bridge->conf.pref_mem_base =3D PCI_PREF_RANGE_TYPE_64;
-> > -     bridge->conf.pref_mem_limit =3D PCI_PREF_RANGE_TYPE_64;
-> > +     bridge->conf.pref_mem_base =3D cpu_to_le16(PCI_PREF_RANGE_TYPE_64=
-);
-> > +     bridge->conf.pref_mem_limit =3D cpu_to_le16(PCI_PREF_RANGE_TYPE_6=
-4);
->
-> Same here: why are conf.pref_mem_{base,limit} converted to LE, but not
-> conf.iolimit ?
-
-Here we are ok, since iobase and iolimit are 1byte wide.
-
->
->
-> Also, the advk_pci_bridge_emul_pcie_conf_read() and
-> advk_pci_bridge_emul_pcie_conf_write() return values that are in the
-> CPU endianness.
->
-> Am I missing something ?
-
-Yes because we are mixing the 4byte accesses in
-advk_pci_bridge_emul_pcie_conf_read/write with u16 and u8 accesses
-when referring to structure fields directly.
-E.g. please see what will happen when in BE e.g. device id and vendor
-id are set via conf->vendor and conf->device and then read via
-advk_pci_bridge_emul_pcie_conf_read which first read whole 32bit value
-and then shift it. The same with other not u32 fields.
-
-Before my changes PCIe didn't work in BE mode at all - I've tested it
-on a3700. Nevertheless Russell advice about Sparse validation is
-really good - it helps to detect some bugs which slip over - I will
+Thank you for pointing this out - it is really usefully tool. I will
 send v2 soon.
 
-Best regards,
+regards,
 Grzegorz
