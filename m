@@ -2,41 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C0806DD10
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2019 06:20:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA05D6DD14
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2019 06:20:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388839AbfGSEM1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Jul 2019 00:12:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47708 "EHLO mail.kernel.org"
+        id S1727266AbfGSEU1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Jul 2019 00:20:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388822AbfGSEMY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:12:24 -0400
+        id S1729651AbfGSEMk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:12:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9280D21873;
-        Fri, 19 Jul 2019 04:12:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9ED82218C3;
+        Fri, 19 Jul 2019 04:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509543;
-        bh=E3+Janh7I5tZaUpI1dGOCf4luRr+92HNCwwvVl12LnI=;
+        s=default; t=1563509560;
+        bh=B7XcmmDrEYhFQjp6wQGmlqrHF2BJW0to0gwzTZJeFds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y1UlAQcjPsS7DlMIhkRcZjLEF/dhev9ur9yLpPUSGnoPIwZBP7A7+lJInetxVsDYy
-         QM6da9ziM9XuIdvOlbkE3A7HR3tAKEmhu1emwlzVTQt2oRvrH44OyswkZYwD+zZlLn
-         RrI+o+uyofFWxiW6Up9dExiUHUG0tyDgua6K5/RQ=
+        b=hrGS1sMh5IY6DLRdTo6ou4SQfVL53g9KjvS0v/5EgGzPxgmOavmQYdAUyN0YO+EXD
+         IrxyFDfK6LJj1q2GoJc4/Vyv6wZrJ/UwHL2+3g9PJHWjJuiCGQplyxPR4WmhQbF5eO
+         RPX5cDgdijqf5Qp4AOHdB+0Uqkj++o7zgNsEh0wk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vidya Sagar <vidyas@nvidia.com>,
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 41/60] PCI: tegra: Enable Relaxed Ordering only for Tegra20 & Tegra30
-Date:   Fri, 19 Jul 2019 00:10:50 -0400
-Message-Id: <20190719041109.18262-41-sashal@kernel.org>
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 47/60] PCI: dwc: pci-dra7xx: Fix compilation when !CONFIG_GPIOLIB
+Date:   Fri, 19 Jul 2019 00:10:56 -0400
+Message-Id: <20190719041109.18262-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -45,68 +45,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Vidya Sagar <vidyas@nvidia.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 7be142caabc4780b13a522c485abc806de5c4114 ]
+[ Upstream commit 381ed79c8655a40268ee7391f716edd90c5c3a97 ]
 
-The PCI Tegra controller conversion to a device tree configurable
-driver in commit d1523b52bff3 ("PCI: tegra: Move PCIe driver
-to drivers/pci/host") implied that code for the driver can be
-compiled in for a kernel supporting multiple platforms.
+If CONFIG_GPIOLIB is not selected the compilation results in the
+following build errors:
 
-Unfortunately, a blind move of the code did not check that some of the
-quirks that were applied in arch/arm (eg enabling Relaxed Ordering on
-all PCI devices - since the quirk hook erroneously matches PCI_ANY_ID
-for both Vendor-ID and Device-ID) are now applied in all kernels that
-compile the PCI Tegra controlled driver, DT and ACPI alike.
+drivers/pci/controller/dwc/pci-dra7xx.c:
+ In function dra7xx_pcie_probe:
+drivers/pci/controller/dwc/pci-dra7xx.c:777:10:
+ error: implicit declaration of function devm_gpiod_get_optional;
+ did you mean devm_regulator_get_optional? [-Werror=implicit-function-declaration]
 
-This is completely wrong, in that enablement of Relaxed Ordering is only
-required by default in Tegra20 platforms as described in the Tegra20
-Technical Reference Manual (available at
-https://developer.nvidia.com/embedded/downloads#?search=tegra%202 in
-Section 34.1, where it is mentioned that Relaxed Ordering bit needs to
-be enabled in its root ports to avoid deadlock in hardware) and in the
-Tegra30 platforms for the same reasons (unfortunately not documented
-in the TRM).
+  reset = devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH);
 
-There is no other strict requirement on PCI devices Relaxed Ordering
-enablement on any other Tegra platforms or PCI host bridge driver.
+drivers/pci/controller/dwc/pci-dra7xx.c:778:45: error: ‘GPIOD_OUT_HIGH’
+undeclared (first use in this function); did you mean ‘GPIOF_INIT_HIGH’?
+  reset = devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH);
+                                             ^~~~~~~~~~~~~~
+                                             GPIOF_INIT_HIGH
 
-Fix this quite upsetting situation by limiting the vendor and device IDs
-to which the Relaxed Ordering quirk applies to the root ports in
-question, reported above.
+Fix them by including the appropriate header file.
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-[lorenzo.pieralisi@arm.com: completely rewrote the commit log/fixes tag]
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+[lorenzo.pieralisi@arm.com: commit log]
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/host/pci-tegra.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/pci/dwc/pci-dra7xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
-index 1987fec1f126..d2ad76ef3e83 100644
---- a/drivers/pci/host/pci-tegra.c
-+++ b/drivers/pci/host/pci-tegra.c
-@@ -607,12 +607,15 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_fixup_class);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_fixup_class);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_fixup_class);
+diff --git a/drivers/pci/dwc/pci-dra7xx.c b/drivers/pci/dwc/pci-dra7xx.c
+index 06eae132aff7..63052c5e5f82 100644
+--- a/drivers/pci/dwc/pci-dra7xx.c
++++ b/drivers/pci/dwc/pci-dra7xx.c
+@@ -29,6 +29,7 @@
+ #include <linux/types.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/regmap.h>
++#include <linux/gpio/consumer.h>
  
--/* Tegra PCIE requires relaxed ordering */
-+/* Tegra20 and Tegra30 PCIE requires relaxed ordering */
- static void tegra_pcie_relax_enable(struct pci_dev *dev)
- {
- 	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_RELAX_EN);
- }
--DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, tegra_pcie_relax_enable);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf0, tegra_pcie_relax_enable);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_relax_enable);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_relax_enable);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_relax_enable);
+ #include "pcie-designware.h"
  
- static int tegra_pcie_request_resources(struct tegra_pcie *pcie)
- {
 -- 
 2.20.1
 
