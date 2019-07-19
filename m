@@ -2,63 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD7216E338
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2019 11:15:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC2E76E342
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2019 11:17:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbfGSJPa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Jul 2019 05:15:30 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:56456 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725794AbfGSJPa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Jul 2019 05:15:30 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
+        id S1725853AbfGSJRz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Jul 2019 05:17:55 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:45700 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725794AbfGSJRy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Jul 2019 05:17:54 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost1.synopsys.com [10.12.135.161])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 52AA6C1C29;
-        Fri, 19 Jul 2019 09:15:29 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 334C3C120C;
+        Fri, 19 Jul 2019 09:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1563527729; bh=glP5uP2ggifjoKelpQdu/6mj220AVeBpAfQ/z5KcnYI=;
+        t=1563527874; bh=HH3y4NbmGqKeo8VKux5wiFHzmzM4+ArcZrm53piLQuY=;
         h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=MRl26UQeyzPtLrWOYHlc9rnAxMnez03wKUO6UpCKxbaR9H+SbGNHFYigo2475DeP6
-         fi9lySdI49vibKKGmHtNZpPgr5DAxtw/LhosZsYj3CGc8j6kNQ6zQgwHmbpj2+r8up
-         18kNp8KW+t2tVFxLu+k7U+ixcPDCFy5tCZoyr6BemjcF0Ct5eK6qLO77nfXrvqaUOm
-         A9siCu5Y2qUTVs/XiPcn2cvhKLpiNUpVPHTe2Xbt1Nu2Co7KiyuryIKVZ6ZXNlQbui
-         xKqN8ijMQJwOQ8U+ry8DKPaR0O8uPyzIm7WbUDF879XB1bUSxqTgUNmz5ryWKp+cNT
-         eodg+3n7YM6rw==
+        b=WqcJU7qF7KTn1yDk2RibkbOrxWA/Css7AjPvHlIAdQOyGVEjl+3l9y1BSBxzmYjAH
+         dMg4/fW9V7wDu7xcmYw3V/dvTWv5CEeokq3pgJfLnUUwIyKSktfzXOjSH1nMHu+4ps
+         gQ311Sdzx+YAPdL5jT2mXsyJ+Td3lult8sA0l1BCfroUlnDXYu2n6DX9DxYi0JHe3j
+         Tfbz7H7wg6+BGfIEZvo4AtvL02/9nqUekwP+ZiDZdMtrMqbl2jdGnYDqOBMkInnqPj
+         cXZvUM56DFZ9KLujY0nea9C2MUBrE2bKrevdZQWp9otsG5Bk7DrIz8BS97R97cobtB
+         vW67viIbnHbvQ==
 Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 304DCA0067;
-        Fri, 19 Jul 2019 09:15:29 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 8009BA0097;
+        Fri, 19 Jul 2019 09:17:52 +0000 (UTC)
 Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
  us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 19 Jul 2019 02:15:18 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.13.134.195)
+ (TLS) id 14.3.408.0; Fri, 19 Jul 2019 02:17:23 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (10.13.134.195)
  by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 19 Jul 2019 02:15:18 -0700
+ 14.3.408.0; Fri, 19 Jul 2019 02:17:23 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mRZEiifqO5wGHhLb9uXftbzxROZL/VEUdKlJZYA+SDEZz6EDnUIehqekZLgkntV/lTfhygknk5myuYaAVroUOMggdrCYSaFFgE/Dy0QleHJ1I47HJD1p246spIUImjDD9bjPUSPde/Up5PUV87MmdqkMRnKP18z1pb9wy2o9r9i249wE0uEq6zNF/Dar954R+VLpMD+Ef5Rb3Yc5hpwM+90Z6hXW/yNnnx/zuliFMFRA0hhkrIkMPxDGuu1i0tkqhvpony+XIaOed1NLYZdyLouBYtUuxHteZbYR2QVmSJW7iCLzFDcLnINPstEUrckkZ7EhXu+XqxpaRkwQKVFgfQ==
+ b=Q+Zvtp80eJmh14/DjpUQ53atVy34w6K2HeaQjR1bYYw7aHvIe2yAx5Q2H++nifCwhfm0P6xKiUe9l6NDtrOsllDMoi+JjFKNga+C0MlRlCa9fBvSAlY8gXRwt0cOWLju1KNGfgD9FsYxdeSQ45/VTm4kbOQiAZ3VprgTvPccccC/qGF5mTb1a0HL/1BaxRGDmHcMwU60gidoeN51nGhkWOis5G2dqn35T3LE3FIAeD5aSEa4K3cLnqJYpim85m3wamgyUK9TwBrAGe01MioXJto9icILxTmcdgFdQbVWGYqmFStnrOiNSP/O8Tq3bgQMwUsJ9UYu0dQoLPeMABZQAQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f8jwzaU9i6tupe+Lp8qj48r9inQNcL9+O1vvYWu++L4=;
- b=VVqjvn1M0vr0TiRN75tZaJbWT5ELGkP8+wfrM3A9P4z5cePM8LfdZb86+CGQ3DzLgnyEYWMukTZMhXojHcYyRd3r6WKJgckroYsJAmOYnCoU9+aDBHoIh6kzn7Sr7CtTaOQMwZ18gpL1m6v31Bdqf7B7idF1uZvY9Iy7Y9Fph97mNeslJ/Pylmy+JAvNGcrqzyRtMsLwF1maIVdRF6je1EEK4OVUVWhborR/KRJlN2IN3wtZfqoNCwF+7i9TrTbxpPbUqess9zdEU/13QBDsMNMKIkuO1B9zTP4JzswTRMfhqmQhDijQZeoBhiDnOTC15eVAQfCuKfWJnxzGxbkvpQ==
+ bh=tvNA94e/08xcILh+KDiH+/f8U5iAk8PD/Uebyy1fHCk=;
+ b=D0FWZ4vkHMPFsdV9Drfsb2VWd+Yf9kR84aPzXUTWHi/yBfp699XXjZf546H4oVVAsiE8HGa5mQS43zR8N3yGYUuvIQb1Go/VDN8JiLzH6NERbxcMJ+VUJN2bi7uZlCa6Cg7Zpf/sP+vwmr8TsDlWwAh2/scdBS5c2XQv5njlLSI2GgfRPUdC6DxF2gw3vBN/9s5rV7XMhySMIwFC77c3WZV1oYZyoadZdO6xSzG077lw6EjqY3QHkkJ5sFtt5blIGOyPqn0H/1T7Im0fsT3kRGtRIkCSyGZ/33kI6z+0lZ279QIRL4LsoI41G6HnxwZYUe0BZRdHToWsjArIpl0C9g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
  smtp.mailfrom=synopsys.com;dmarc=pass action=none
  header.from=synopsys.com;dkim=pass header.d=synopsys.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f8jwzaU9i6tupe+Lp8qj48r9inQNcL9+O1vvYWu++L4=;
- b=uaTHgBtDcVR1EbzMM7675CkHBM7hYY1id3uEo3O/eUcYIC+PdrGyT6REwCNwEK52ZRfhA3+YpNxWuauqtY9n2Tl4K23R+wDPJSZM3ksd0ZL1QM8RCY3ZLz5fevE1zRGhAxRRqkCHzExeDsz5Ng5KV+0psQ1yCSZz8i5C33DL5nk=
+ bh=tvNA94e/08xcILh+KDiH+/f8U5iAk8PD/Uebyy1fHCk=;
+ b=M4PYZJNmkB4Vu2U0ByYZK55wVMmihhJC1KCw66RymQgGScUbYl7SE56yzeACHyURbvHF5vV1UicAp9H4T0MSaqiQyaLb9ZUx9kDq4Nnl9TLQacm96ShP8PLnggDAKSM+84bA88POJ1i/yRizyRQfurySN8+QulwDrCkUC2C3HZc=
 Received: from DM6PR12MB4010.namprd12.prod.outlook.com (10.255.175.83) by
  DM6PR12MB3515.namprd12.prod.outlook.com (20.179.106.151) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.14; Fri, 19 Jul 2019 09:15:16 +0000
+ 15.20.2094.14; Fri, 19 Jul 2019 09:17:21 +0000
 Received: from DM6PR12MB4010.namprd12.prod.outlook.com
  ([fe80::2dc8:6bc4:3d9d:9203]) by DM6PR12MB4010.namprd12.prod.outlook.com
  ([fe80::2dc8:6bc4:3d9d:9203%4]) with mapi id 15.20.2073.012; Fri, 19 Jul 2019
- 09:15:16 +0000
+ 09:17:21 +0000
 From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
 To:     Jonathan Chocron <jonnyc@amazon.com>,
         "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
@@ -78,28 +78,28 @@ CC:     "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH v2 7/8] PCI: dw: Add validation that PCIe core is set to
- correct mode
-Thread-Topic: [PATCH v2 7/8] PCI: dw: Add validation that PCIe core is set to
- correct mode
-Thread-Index: AQHVPU4E178VJy6TjkK4KITScO7kRKbRqjIw
-Date:   Fri, 19 Jul 2019 09:15:16 +0000
-Message-ID: <DM6PR12MB40105D55ECC90DB9A1DF783DDACB0@DM6PR12MB4010.namprd12.prod.outlook.com>
+Subject: RE: [PATCH v2 4/8] PCI: Add quirk to disable MSI-X support for
+ Amazon's Annapurna Labs Root Port
+Thread-Topic: [PATCH v2 4/8] PCI: Add quirk to disable MSI-X support for
+ Amazon's Annapurna Labs Root Port
+Thread-Index: AQHVPU3dR9uQZehrjUO2TSbxknslaabRqrNQ
+Date:   Fri, 19 Jul 2019 09:17:21 +0000
+Message-ID: <DM6PR12MB401060B62453CA171166FE64DACB0@DM6PR12MB4010.namprd12.prod.outlook.com>
 References: <20190718094531.21423-1-jonnyc@amazon.com>
- <20190718094718.25083-3-jonnyc@amazon.com>
-In-Reply-To: <20190718094718.25083-3-jonnyc@amazon.com>
+ <20190718094531.21423-5-jonnyc@amazon.com>
+In-Reply-To: <20190718094531.21423-5-jonnyc@amazon.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
  =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
- =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLWI2YWJmOTUxLWFhMDUtMTFlOS05ODhjLWY4OTRj?=
- =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFxiNmFiZjk1My1hYTA1LTExZTktOTg4Yy1mODk0?=
- =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjI3MTUiIHQ9IjEzMjA4MDAxMzEzNzkx?=
- =?us-ascii?Q?NzAzNSIgaD0iVU0yS1pGVmptQWt2d1Y2MndBUEtqYkxSOU9VPSIgaWQ9IiIg?=
- =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFC?=
- =?us-ascii?Q?cnRBTjVFajdWQVlOTUE1bFJNdlp2ZzB3RG1WRXk5bThPQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTAxNTczMjBkLWFhMDYtMTFlOS05ODhjLWY4OTRj?=
+ =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFwwMTU3MzIwZi1hYTA2LTExZTktOTg4Yy1mODk0?=
+ =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjQxNDkiIHQ9IjEzMjA4MDAxNDM5MDY5?=
+ =?us-ascii?Q?MzU3MSIgaD0iYU1uNjEvbktJZEt2aGVGdFEwa1NvRzRGL0lrPSIgaWQ9IiIg?=
+ =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFE?=
+ =?us-ascii?Q?RGpxL0RFajdWQVIvRGw2Rkc5TDhnSDhPWG9VYjB2eUFPQUFBQUFBQUFBQUFB?=
  =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
  =?us-ascii?Q?QUVBQVFBQkFBQUFGdGJCcHdBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
  =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
@@ -172,22 +172,22 @@ authentication-results: spf=none (sender IP is )
  smtp.mailfrom=gustavo@synopsys.com; 
 x-originating-ip: [83.174.63.141]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 47f37403-430c-406e-dc91-08d70c299d5b
+x-ms-office365-filtering-correlation-id: 510158f2-8166-4a3b-741e-08d70c29e7d9
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR12MB3515;
 x-ms-traffictypediagnostic: DM6PR12MB3515:
-x-microsoft-antispam-prvs: <DM6PR12MB3515DC1FE6241E73246107A1DACB0@DM6PR12MB3515.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-microsoft-antispam-prvs: <DM6PR12MB35152B7E281EA50E371BEB6FDACB0@DM6PR12MB3515.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
 x-forefront-prvs: 01039C93E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(376002)(396003)(366004)(39860400002)(189003)(199004)(478600001)(14454004)(7696005)(76176011)(66946007)(229853002)(66476007)(66556008)(64756008)(99286004)(476003)(76116006)(5660300002)(25786009)(14444005)(256004)(7736002)(2501003)(66446008)(102836004)(186003)(33656002)(74316002)(8936002)(305945005)(81156014)(26005)(81166006)(446003)(66066001)(486006)(4326008)(11346002)(53546011)(6506007)(2201001)(7416002)(52536014)(9686003)(54906003)(110136005)(86362001)(6436002)(6116002)(8676002)(3846002)(316002)(68736007)(53936002)(2906002)(6246003)(55016002)(71190400001)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB3515;H:DM6PR12MB4010.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(376002)(396003)(366004)(39860400002)(47630400002)(189003)(199004)(478600001)(14454004)(7696005)(76176011)(66946007)(229853002)(66476007)(66556008)(64756008)(99286004)(476003)(76116006)(5660300002)(25786009)(14444005)(256004)(7736002)(2501003)(66446008)(102836004)(186003)(33656002)(74316002)(8936002)(305945005)(81156014)(26005)(81166006)(446003)(66066001)(486006)(4326008)(11346002)(53546011)(6506007)(2201001)(7416002)(52536014)(9686003)(54906003)(110136005)(86362001)(6436002)(6116002)(8676002)(3846002)(316002)(68736007)(53936002)(2906002)(6246003)(55016002)(71190400001)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB3515;H:DM6PR12MB4010.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: synopsys.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 27E25VmXnMkFqWX1Wqd3sEZfJcax1Io+KsnHYqMhLbmO7ipKLdFNXC4itn0B1+hqv921OdEGZULxA53aGqluvyZjifncaqTaJZaOtXcctdqfBKpTpKs1bgyvSNqf17Tg1GU91Hd174tq1da1WqwAATj+3Q5dDkloe9E1ZruQaHTaeKe62nEIY4EqYBuXBv7yATn/sY2Nn44fKMPczP0qaNuqyl6YwSMfb19/F9cp4XC9wzkqbBO9cxF5FmWfh4d9E8rlpgZhl2v/XWqWrKlXhw2eBKGXoI0Le6urky6HgEQISHBk7SlHDGxj43vPjpJhaZRr7GdV2WHlnMEoJ+wfmpKpH4ZSrfF6AQOCzfRD+iuZWqITSifzrm6VAZvtNoylFYxEneEfW3rMNAI6df3pJDv8zbQdA6bo6zEwmQK6IcY=
+x-microsoft-antispam-message-info: C83uJZlcUmhZKWuAqDEVIDURQgUVhiGGXtxJjoDsm/mCYA2tnHyAFiIuR5wcDgo20wX37wvzr22nhI42MexOtEmqG9pMAJzyzOcGy8fXeseHJKtbEMRDnnTI8tmnzNprtkTxergwg2i7CzMENJfFNQcIUElFIkAldA6lZh0rAmjJV3R+eP38jrkvLBOBKHPX91Uow63jCEom5bI0CeqjNoAtJSldBWQI8SXfOlzmNTW8q1VkoDjTpND+l55s+9q01gRBANZNF3HAkzdCasE6Qb9nu7seAvfRTse6vy4MT5uiieWEdU3dkFnWV7+GSwzpJ1CBNMaBjh6qY32ca735jafZTDz8TMadZS6u3kzCweWiPPtBjhClggW1jEEqOyqvhFtNn0dzZ0c9PlVoRVUxATZ+L7rs8pa1CMYZb/3qp4M=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47f37403-430c-406e-dc91-08d70c299d5b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2019 09:15:16.7761
+X-MS-Exchange-CrossTenant-Network-Message-Id: 510158f2-8166-4a3b-741e-08d70c29e7d9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2019 09:17:21.7475
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
@@ -200,83 +200,98 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 10:47:17, Jonathan Chocron <jonnyc@amazon.com>=20
+On Thu, Jul 18, 2019 at 10:45:27, Jonathan Chocron <jonnyc@amazon.com>=20
 wrote:
 
-> Some PCIe controllers can be set to either Host or EP according to some
-> early boot FW. To make sure there is no discrepancy (e.g. FW configured
-> the port to EP mode while the DT specifies it as a host bridge or vice
-> versa), a check has been added for each mode.
+> The Root Port (identified by [1c36:0032]) doesn't support MSI-X. On some
+> platforms it is configured to not advertise the capability at all, while
+> on others it (mistakenly) does. This causes a panic during
+> initialization by the pcieport driver, since it tries to configure the
+> MSI-X capability. Specifically, when trying to access the MSI-X table
+> a "non-existing addr" exception occurs.
+>=20
+> Example stacktrace snippet:
+>=20
+> [    1.632363] SError Interrupt on CPU2, code 0xbf000000 -- SError
+> [    1.632364] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-Jonny-=
+14847-ge76f1d4a1828-dirty #33
+> [    1.632365] Hardware name: Annapurna Labs Alpine V3 EVP (DT)
+> [    1.632365] pstate: 80000005 (Nzcv daif -PAN -UAO)
+> [    1.632366] pc : __pci_enable_msix_range+0x4e4/0x608
+> [    1.632367] lr : __pci_enable_msix_range+0x498/0x608
+> [    1.632367] sp : ffffff80117db700
+> [    1.632368] x29: ffffff80117db700 x28: 0000000000000001
+> [    1.632370] x27: 0000000000000001 x26: 0000000000000000
+> [    1.632372] x25: ffffffd3e9d8c0b0 x24: 0000000000000000
+> [    1.632373] x23: 0000000000000000 x22: 0000000000000000
+> [    1.632375] x21: 0000000000000001 x20: 0000000000000000
+> [    1.632376] x19: ffffffd3e9d8c000 x18: ffffffffffffffff
+> [    1.632378] x17: 0000000000000000 x16: 0000000000000000
+> [    1.632379] x15: ffffff80116496c8 x14: ffffffd3e9844503
+> [    1.632380] x13: ffffffd3e9844502 x12: 0000000000000038
+> [    1.632382] x11: ffffffffffffff00 x10: 0000000000000040
+> [    1.632384] x9 : ffffff801165e270 x8 : ffffff801165e268
+> [    1.632385] x7 : 0000000000000002 x6 : 00000000000000b2
+> [    1.632387] x5 : ffffffd3e9d8c2c0 x4 : 0000000000000000
+> [    1.632388] x3 : 0000000000000000 x2 : 0000000000000000
+> [    1.632390] x1 : 0000000000000000 x0 : ffffffd3e9844680
+> [    1.632392] Kernel panic - not syncing: Asynchronous SError Interrupt
+> [    1.632393] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-Jonny-=
+14847-ge76f1d4a1828-dirty #33
+> [    1.632394] Hardware name: Annapurna Labs Alpine V3 EVP (DT)
+> [    1.632394] Call trace:
+> [    1.632395]  dump_backtrace+0x0/0x140
+> [    1.632395]  show_stack+0x14/0x20
+> [    1.632396]  dump_stack+0xa8/0xcc
+> [    1.632396]  panic+0x140/0x334
+> [    1.632397]  nmi_panic+0x6c/0x70
+> [    1.632398]  arm64_serror_panic+0x74/0x88
+> [    1.632398]  __pte_error+0x0/0x28
+> [    1.632399]  el1_error+0x84/0xf8
+> [    1.632400]  __pci_enable_msix_range+0x4e4/0x608
+> [    1.632400]  pci_alloc_irq_vectors_affinity+0xdc/0x150
+> [    1.632401]  pcie_port_device_register+0x2b8/0x4e0
+> [    1.632402]  pcie_portdrv_probe+0x34/0xf0
 >=20
 > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
 > ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c   | 8 ++++++++
->  drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
->  2 files changed, 16 insertions(+)
+>  drivers/pci/quirks.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 >=20
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pc=
-i/controller/dwc/pcie-designware-ep.c
-> index 2bf5a35c0570..00e59a134b93 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -531,6 +531,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  	int ret;
->  	u32 reg;
->  	void *addr;
-> +	u8 hdr_type;
->  	unsigned int nbars;
->  	unsigned int offset;
->  	struct pci_epc *epc;
-> @@ -543,6 +544,13 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  		return -EINVAL;
->  	}
-> =20
-> +	hdr_type =3D dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-> +	if (hdr_type !=3D PCI_HEADER_TYPE_NORMAL) {
-> +		dev_err(pci->dev, "PCIe controller is not set to EP mode (hdr_type:0x%=
-x)!\n",
-> +			hdr_type);
-> +		return -EIO;
-> +	}
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 23672680dba7..11f843aa96b3 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2925,6 +2925,21 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0x=
+10a1,
+>  			quirk_msi_intx_disable_qca_bug);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0xe091,
+>  			quirk_msi_intx_disable_qca_bug);
 > +
->  	ret =3D of_property_read_u32(np, "num-ib-windows", &ep->num_ib_windows)=
-;
->  	if (ret < 0) {
->  		dev_err(dev, "Unable to read *num-ib-windows* property\n");
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/=
-pci/controller/dwc/pcie-designware-host.c
-> index f93252d0da5b..d2ca748e4c85 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -323,6 +323,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  	struct pci_bus *child;
->  	struct pci_host_bridge *bridge;
->  	struct resource *cfg_res;
-> +	u8 hdr_type;
->  	int ret;
+> +/*
+> + * Amazon's Annapurna Labs 1c36:0031 Root Ports don't support MSI-X, so =
+it
+> + * should be disabled on platforms where the device (mistakenly) adverti=
+ses it.
+> + *
+> + * The 0031 device id is reused for other non Root Port device types,
+> + * therefore the quirk is registered for the PCI_CLASS_BRIDGE_PCI class.
+> + */
+> +static void quirk_al_msi_disable(struct pci_dev *dev)
+> +{
+> +	dev->no_msi =3D 1;
+> +	pci_warn(dev, "Disabling MSI-X\n");
+> +}
+> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x003=
+1,
+> +			      PCI_CLASS_BRIDGE_PCI, 8, quirk_al_msi_disable);
+>  #endif /* CONFIG_PCI_MSI */
 > =20
->  	raw_spin_lock_init(&pci->pp.lock);
-> @@ -396,6 +397,13 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  		}
->  	}
-> =20
-> +	hdr_type =3D dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-> +	if (hdr_type !=3D PCI_HEADER_TYPE_BRIDGE) {
-> +		dev_err(pci->dev, "PCIe controller is not set to bridge type (hdr_type=
-: 0x%x)!\n",
-> +			hdr_type);
-> +		return -EIO;
-> +	}
-> +
->  	pp->mem_base =3D pp->mem->start;
-> =20
->  	if (!pp->va_cfg0_base) {
+>  /*
 > --=20
 > 2.17.1
 
-It doesn't harm.
-Thanks.
 
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 
 
