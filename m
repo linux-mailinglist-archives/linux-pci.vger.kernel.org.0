@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 274ED6DD99
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2019 06:24:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2F666DD98
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2019 06:24:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732238AbfGSEJr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Jul 2019 00:09:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44376 "EHLO mail.kernel.org"
+        id S1726347AbfGSEYD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Jul 2019 00:24:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387779AbfGSEJr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:09:47 -0400
+        id S2387779AbfGSEJu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:09:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D3D2218B6;
-        Fri, 19 Jul 2019 04:09:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B078121872;
+        Fri, 19 Jul 2019 04:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509386;
-        bh=RSM7vXECc3co5GwoFjDVR5jLznfcYnuQ2CSHW2TlSLk=;
+        s=default; t=1563509389;
+        bh=Q23VozQgqC4XWzuLefYwKMGSYo5yIeAkrhoFlfpLTiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PINbm30Sh7MFfUo2HfR1eiZLG0KroVRSZSro9lj5vQxNeVmPXjiFT5hdb01e3gTqC
-         G2U38H57+AXrFquP5Qh0MG5W11QAETWMKfJKW88z0nVaTSe49eFww+w8DYAcwXMYf/
-         WWrMpc3r6iveAazk+2k3TCtSrJYrOvBbRhCqYs9w=
+        b=gV6sMsUT3GhUNknwQAucvctc8gdm0KbjObAhHwxAaTfM43T7zikqcb+0Sy8eJTjMN
+         dJtmx1kYU6NfLvUvWwipfBIMxtJQoSmzphQbFD5a/1SnlDtY3p3jWsEoQccC+FDN2Y
+         4D5lfrBUOs30vCZfrwjsJSOqRse6S+5zz43RdYXc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
@@ -30,9 +30,9 @@ Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
         Minghuan Lian <Minghuan.Lian@nxp.com>,
         Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 067/101] PCI: mobiveil: Fix the Class Code field
-Date:   Fri, 19 Jul 2019 00:06:58 -0400
-Message-Id: <20190719040732.17285-67-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 069/101] PCI: mobiveil: Initialize Primary/Secondary/Subordinate bus numbers
+Date:   Fri, 19 Jul 2019 00:07:00 -0400
+Message-Id: <20190719040732.17285-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
@@ -47,51 +47,40 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-[ Upstream commit 0122af0a08243f344a438f924e5c2486486555b3 ]
+[ Upstream commit 6f3ab451aa5c2cbff33197d82fe8489cbd55ad91 ]
 
-Fix up the Class Code field in PCI configuration space and set it to
-PCI_CLASS_BRIDGE_PCI.
+The reset value of Primary, Secondary and Subordinate bus numbers is
+zero which is a broken setup.
 
-Move the Class Code fixup to function mobiveil_host_init() where
-it belongs.
+Program a sensible default value for Primary/Secondary/Subordinate
+bus numbers.
 
-Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-mobiveil.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index d9f2d0f2d602..3e81e68b5ce0 100644
+index 3e81e68b5ce0..2fe7ebdad2d2 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -565,6 +565,12 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
- 		}
+@@ -508,6 +508,12 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ 		return err;
  	}
  
-+	/* fixup for PCIe class register */
-+	value = csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
-+	value &= 0xff;
-+	value |= (PCI_CLASS_BRIDGE_PCI << 16);
-+	csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
++	/* setup bus numbers */
++	value = csr_readl(pcie, PCI_PRIMARY_BUS);
++	value &= 0xff000000;
++	value |= 0x00ff0100;
++	csr_writel(pcie, value, PCI_PRIMARY_BUS);
 +
- 	/* setup MSI hardware registers */
- 	mobiveil_pcie_enable_msi(pcie);
- 
-@@ -805,9 +811,6 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
- 		goto error;
- 	}
- 
--	/* fixup for PCIe class register */
--	csr_writel(pcie, 0x060402ab, PAB_INTP_AXI_PIO_CLASS);
--
- 	/* initialize the IRQ domains */
- 	ret = mobiveil_pcie_init_irq_domain(pcie);
- 	if (ret) {
+ 	/*
+ 	 * program Bus Master Enable Bit in Command Register in PAB Config
+ 	 * Space
 -- 
 2.20.1
 
