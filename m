@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB43A6D9E1
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2019 05:58:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7B9B6DAB8
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2019 06:04:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfGSD6F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Jul 2019 23:58:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57244 "EHLO mail.kernel.org"
+        id S1730567AbfGSEDi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Jul 2019 00:03:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727719AbfGSD6A (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:58:00 -0400
+        id S1729578AbfGSEDh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:03:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67DA921851;
-        Fri, 19 Jul 2019 03:57:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34ECE218A3;
+        Fri, 19 Jul 2019 04:03:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508680;
-        bh=Wr3x8ZZZZHuF7Y+/WDvHqqDNEqTCWfNjBXxp0WKNg4Y=;
+        s=default; t=1563509016;
+        bh=nFVThk2UzaEx1dP37v+gAcp+FF4pDG5pQTBTwNz3DKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kVs33hqaaBQokpT314lcFB7Gb50iHuRJGcJ4u/BWvg/MMNnea+hNsJGJfeOgFotza
-         85x/o82uRWsio4RzlnMNnHiVvuPNeUNTLrrhbXviqSy+V+oJzmLqXIK1JnabLLqCLW
-         w8EqvPNIOmqMp5fngiJB5s4inc+jog0A5zQQ57Qk=
+        b=iTwIDLIB9AWnGiNQontVx1x2kwGiyJ8rmowkA4DeiKqL2IBxUGM/yubTSpWUyLxEO
+         pjTm6klgnjgAd8DW1XBTAWQ71aoVxmirj6dvaSH3tTcVuA9HRPXouanLZTUsrMBqKI
+         AYRhpAWL3eO0CXrJfBRt8aveY3sshgAZSJGmmV3Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Alex Williamson <alex.williamson@redhat.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 031/171] PCI: Return error if cannot probe VF
-Date:   Thu, 18 Jul 2019 23:54:22 -0400
-Message-Id: <20190719035643.14300-31-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 023/141] PCI: Return error if cannot probe VF
+Date:   Fri, 19 Jul 2019 00:00:48 -0400
+Message-Id: <20190719040246.15945-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
-References: <20190719035643.14300-1-sashal@kernel.org>
+In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
+References: <20190719040246.15945-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -70,7 +70,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 7 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index ca3793002e2f..74c3df250d9c 100644
+index 71853befd435..da7b82e56c83 100644
 --- a/drivers/pci/pci-driver.c
 +++ b/drivers/pci/pci-driver.c
 @@ -414,6 +414,9 @@ static int pci_device_probe(struct device *dev)
