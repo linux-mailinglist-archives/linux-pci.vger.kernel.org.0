@@ -2,59 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3342B6E079
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2019 07:12:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAE596E1A3
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2019 09:24:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725853AbfGSFMV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Jul 2019 01:12:21 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:39976 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725794AbfGSFMV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Jul 2019 01:12:21 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=shannon.zhao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TXG4GTe_1563513118;
-Received: from localhost(mailfrom:shannon.zhao@linux.alibaba.com fp:SMTPD_---0TXG4GTe_1563513118)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 19 Jul 2019 13:12:17 +0800
-From:   Shannon Zhao <shenglong.zsl@alibaba-inc.com>
-To:     linux-kernel@vger.kernel.org, jnair@marvell.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org, gduan@marvell.com
-Subject: [PATCH] PCI: Add ACS quirk for Cavium ThunderX 2 root port devices
-Date:   Fri, 19 Jul 2019 21:10:35 +0800
-Message-Id: <1563541835-141011-1-git-send-email-shenglong.zsl@alibaba-inc.com>
-X-Mailer: git-send-email 1.8.3.1
+        id S1726243AbfGSHYB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Jul 2019 03:24:01 -0400
+Received: from mga12.intel.com ([192.55.52.136]:9432 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726072AbfGSHYB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Jul 2019 03:24:01 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 00:24:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,281,1559545200"; 
+   d="asc'?scan'208";a="168482198"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga008.fm.intel.com with ESMTP; 19 Jul 2019 00:23:59 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Oliver Neukum <oneukum@suse.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Kent Lin <kent.lin@canonical.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>
+Subject: Re: Titan Ridge xHCI may stop to working after re-plugging the dock
+In-Reply-To: <1562759399.5312.6.camel@suse.com>
+References: <993E78A1-2A60-46D8-AA51-F4CB077E48D1@canonical.com> <1562759399.5312.6.camel@suse.com>
+Date:   Fri, 19 Jul 2019 10:23:55 +0300
+Message-ID: <87pnm6sd10.fsf@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Shannon Zhao <shannon.zhao@linux.alibaba.com>
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Like commit f2ddaf8(PCI: Apply Cavium ThunderX ACS quirk to more Root
-Ports), it should apply ACS quirk to ThunderX 2 root port devices.
 
-Signed-off-by: Shannon Zhao <shannon.zhao@linux.alibaba.com>
----
- drivers/pci/quirks.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Hi,
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 28c64f8..ea7848b 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4224,10 +4224,12 @@ static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
- 	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
- 	 * bits of device ID are used to indicate which subdevice is used
- 	 * within the SoC.
-+	 * Effectively selects the ThunderX 2 root ports whose device ID
-+	 * is 0xaf84.
- 	 */
- 	return (pci_is_pcie(dev) &&
- 		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
--		((dev->device & 0xf800) == 0xa000));
-+		((dev->device & 0xf800) == 0xa000 || dev->device == 0xaf84));
+Oliver Neukum <oneukum@suse.com> writes:
+> Am Dienstag, den 09.07.2019, 21:10 +0800 schrieb Kai-Heng Feng:
+>> Hi Mika and Mathias,
+>>=20
+>> I=E2=80=99ve filed a bug [1] which renders docking station unusable.
+>>=20
+>> I am not sure it's a bug in PCI, Thunderbolt or xHCI so raise the issue =
+to=20=20
+>> you both.
+>>=20
+>> [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D203885
+>>=20
+>> Kai-Heng
+>>=20
+>
+> The issue starts before you unplug. In fact it starts before
+> the dock is even detected the first time:
+>
+> [   13.171167] rfkill: input handler disabled
+> [   19.781905] pcieport 0000:00:1c.0: PME: Spurious native interrupt!
+> [   19.781909] pcieport 0000:00:1c.0: PME: Spurious native interrupt!
+> [   20.109251] usb 4-1: new SuperSpeedPlus Gen 2 USB device number 2 usin=
+g xhci_hcd
+> [   20.136000] usb 4-1: New USB device found, idVendor=3D0bda, idProduct=
+=3D0487, bcdDevice=3D 1.47
+> [   20.136004] usb 4-1: New USB device strings: Mfr=3D1, Product=3D2, Ser=
+ialNumber=3D0
+> [   20.136007] usb 4-1: Product: Dell dock
+> [   20.136009] usb 4-1: Manufacturer: Dell Inc.
+> [   20.140607] hub 4-1:1.0: USB hub found
+> [   20.141004] hub 4-1:1.0: 4 ports detected
+> [   20.253025] usb 1-4: new high-speed USB device number 5 using xhci_hcd
+> [   20.403520] usb 1-4: New USB device found, idVendor=3D0bda, idProduct=
+=3D5487, bcdDevice=3D 1.47
+> [   20.403521] usb 1-4: New USB device strings: Mfr=3D1, Product=3D2, Ser=
+ialNumber=3D0
+> [   20.403522] usb 1-4: Product: Dell dock
+> [   20.403522] usb 1-4: Manufacturer: Dell Inc.
+> [   20.404348] hub 1-4:1.0: USB hub found
+>
+> This looks like a PCI issue.
+> In general, this kind of reporting sucks. We have to guess what you did a=
+t 19.781905
+
+It might be nice to know which device is generating that and why it's
+not found. This may help:
+
+diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
+index f38e6c19dd50..33285ef29362 100644
+=2D-- a/drivers/pci/pcie/pme.c
++++ b/drivers/pci/pcie/pme.c
+@@ -203,7 +203,7 @@ static void pcie_pme_handle_request(struct pci_dev *por=
+t, u16 req_id)
+=20
+  out:
+ 	if (!found)
+=2D		pci_info(port, "Spurious native interrupt!\n");
++		pci_info(port, "Spurious native interrupt! (Bus# %d DevFn %d)\n", busnr,=
+ devfn);
  }
- 
- static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
--- 
-1.8.3.1
+=20
+ /**
 
+
+Also, according to what Kai-Heng said, xHCI stops working even after
+repluggin the Dock. We could be dealing with two bugs here:
+
+1. Spurious PME event being generated by an unexistent device
+2. xHCI not handling hot-plug very well
+
+Kai-Heng,
+
+please run your tests again and make note of when you unplugged the dock
+and when you replugged it so we can correlate the time stampts with what
+you have done otherwise we will never be able to pin-point what's going
+on.
+
+cheers
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0xcAsACgkQzL64meEa
+mQZKkxAAuYjD1tjMF1x1I145/c0JegbKZXr5kkBUzkRIM4UKq7iO9PpQzWtLiQYb
+sCnRj3iNxa2SY7vGXadmJeOucyDxEtBgtxOvuQyn315EivjrWobcqCeMcHkJhQ8N
+qOxqI/Om6IPh+A+U75+NEJM9OVyuU+sePfQSEjZ4spL9yz4llgNcQ/kFn+nyunSC
+kC+nJgozApbgR2mOtzkIIiKV0e/l4BwGNL2E+GjmkzAIHJ28nBtP1rkE8jZPnvEV
+ZH4q0LZAN54E/rtqeIbABIQC1x3+c5sn+oVMMF6FSP/Iz5t7XGD5LEINaoEfhAas
+Z6e6xZsf16WNy+Oq6ArO9ir83FvyX5Rn4qgMc5uo3as61egWz2tR2NY8S6tVgD64
+p3DcnrBoeiqSsSgCvbQHfD0BcsYRfuMDXHz9AFxQaqkA+UXRO6P3TIcwtvx6t66O
+E1IDO5bqU/zgfrz+qOu/fuPNJ5svqOWFJiLogha1uewoSyIn2GagFFft2+AQnNHX
+b5BinB0VcAcFxV9Waqhi/IWexhzaPPrGaszhRUWsMxh9leETK7B47in7hQJ0qKIF
+GdTeWVymxRmUgkmSsj8WQ+ZibQR2aDSzYSV51euoRNAve58Qjj2udnQBDMG2Gta6
+fh2tZa2n2yH69nZP0xZcPUZwAMQQDiMxrAhgXfPwUKTgesiEITM=
+=yJA1
+-----END PGP SIGNATURE-----
+--=-=-=--
