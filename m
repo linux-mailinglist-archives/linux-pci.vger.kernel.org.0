@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 294FB6DC86
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2019 06:17:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38C836DE98
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2019 06:29:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390052AbfGSEPR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Jul 2019 00:15:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51544 "EHLO mail.kernel.org"
+        id S1731350AbfGSE3d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Jul 2019 00:29:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388735AbfGSEPQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:15:16 -0400
+        id S1729964AbfGSEFg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:05:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5774D21873;
-        Fri, 19 Jul 2019 04:15:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5567218BA;
+        Fri, 19 Jul 2019 04:05:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509715;
-        bh=TFa32rdvyRrccR5yuIrKoMH94jn+H0MYmYw4inNWKU0=;
+        s=default; t=1563509134;
+        bh=KlTkwHCVaS0kL1uz2CRs61DJvawhdf7Km2s1wciG94g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y5IWDg1a3h5O9KkPHBLmSMN0ETFoI0/NvhKZKwCuVsvdOWMgWu8Kq9gasoilaNH3J
-         AdcMcTe4ioLolJhG7b2WAWHsCoxcXl9+0EWH+JssZbCFq+yRsHy0nm3szXaypoF5rf
-         5gb33OI0HRYTB2C9fbqOia7oUTo/nYwBAkXKB1cA=
+        b=nFcRphWeZXl1KZdXe8v8ZWDGpHJx3ze8qKpwwzZFKhW9EuR8NYv8tgnKH5toZxz5u
+         bkP52dgkrQA5rHXOEVy/HlebrF1bgBcrtuLJQE/CNYZkwjfRbOfgncpfztz9pB1j/+
+         UzFoXacN9WOnhFdZYQn9slFpVf9NOXPIr6vy/QUY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Vidya Sagar <vidyas@nvidia.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 25/35] PCI: tegra: Enable Relaxed Ordering only for Tegra20 & Tegra30
-Date:   Fri, 19 Jul 2019 00:14:13 -0400
-Message-Id: <20190719041423.19322-25-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 089/141] PCI: tegra: Enable Relaxed Ordering only for Tegra20 & Tegra30
+Date:   Fri, 19 Jul 2019 00:01:54 -0400
+Message-Id: <20190719040246.15945-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190719041423.19322-1-sashal@kernel.org>
-References: <20190719041423.19322-1-sashal@kernel.org>
+In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
+References: <20190719040246.15945-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -82,14 +82,14 @@ Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Acked-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/host/pci-tegra.c | 7 +++++--
+ drivers/pci/controller/pci-tegra.c | 7 +++++--
  1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
-index 30323114c53c..9865793b538a 100644
---- a/drivers/pci/host/pci-tegra.c
-+++ b/drivers/pci/host/pci-tegra.c
-@@ -586,12 +586,15 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_fixup_class);
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index f4f53d092e00..2e1fd0c07cf1 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -545,12 +545,15 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_fixup_class);
  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_fixup_class);
  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_fixup_class);
  
@@ -105,7 +105,7 @@ index 30323114c53c..9865793b538a 100644
 +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_relax_enable);
 +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_relax_enable);
  
- static int tegra_pcie_setup(int nr, struct pci_sys_data *sys)
+ static int tegra_pcie_request_resources(struct tegra_pcie *pcie)
  {
 -- 
 2.20.1
