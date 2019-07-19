@@ -2,63 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 860296E269
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2019 10:25:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2FED6E271
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2019 10:26:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726029AbfGSIZN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Jul 2019 04:25:13 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:54544 "EHLO
+        id S1727127AbfGSI0X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Jul 2019 04:26:23 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:43596 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725853AbfGSIZN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Jul 2019 04:25:13 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
+        by vger.kernel.org with ESMTP id S1727007AbfGSI0W (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Jul 2019 04:26:22 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id CBD42C01D7;
-        Fri, 19 Jul 2019 08:25:11 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id CBA86C0AE6;
+        Fri, 19 Jul 2019 08:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1563524712; bh=9ySvO9nVpZXcAzDe1jqpJcGdHi4caqi/xUl/Lgx8E1c=;
+        t=1563524782; bh=Sf8eQZVf7xi3zpRszdsCx9Lmg4aK0Fhb8Yw4BEOjn3Y=;
         h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=DK/xGSrI7dTL8fDiILYu4p2VJKL6KyyLE3X8XlQRVJQ6j2zCKrZvJ+rf7nI1nI0W9
-         JjU42BnZDlrAXaeO2GrERXM3+GomzrKjubr2wNTS6oZRO70h8jAQW5OfqRSqWTwtQK
-         M7vhTIaW6lZYs7fnbkGZCUSDE9CzmDZguaoJ3mNPZHh60RTrftDIS4V1gml6RH1Aw/
-         KS5zDgF2QFkoDNAKVBNrhqGlJzwtHC/I+Nonm1IWOKlCX/5udSLbR/lzQV87XgMplj
-         1dKwjgyJBtLfrkEyUgTbSjIRDAo6Ps1a9gQpgxwRSIWLyi/PMTd/xNHxBUcJKWzf62
-         JJq1q1gDFxkrQ==
-Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        b=GWa1wLZTLm12vkL/tn6UU4v+KHylzoPCAt9EpoCq6NCWBX1mR6nBRqzlgZAgYJxtD
+         iVoQ8U2tYOCRjQS7eUGHCIMm+r2d01JFq4X1xm9seJgnwhzfwN2tcZ0eoVLaGb/A55
+         4dhOb0d6ueJkYOkH4ghztc4C9aADoO7NnsmdFRJX4/hIcQ00YJHGmqdOReP3Wy9iZ7
+         pQeCSwUhHiAWwKjJncuQo4k6eNFQpM/QWqJRRWPXAa5m1gh6mRvrzFMcF/bS2kodqm
+         RPgXqXAGFshhCNLzHGX+/ihYB0C7nnAN7oePFJKyeMAH9hJbvv66L+OSqTVKAxOpla
+         dDX7Uzq49AypQ==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id A611FA0067;
-        Fri, 19 Jul 2019 08:24:51 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 5DC68A0091;
+        Fri, 19 Jul 2019 08:26:20 +0000 (UTC)
 Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 19 Jul 2019 01:24:33 -0700
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 19 Jul 2019 01:25:55 -0700
 Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.13.134.195)
  by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 19 Jul 2019 01:24:33 -0700
+ 14.3.408.0; Fri, 19 Jul 2019 01:25:54 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P8gBqBEsUCGdyz35fQTRb2C+3x4LQuY3AQ9W9PigocA3+fl1AlfAhGjYBDwTWM0NTBcdmqge+rdzCNWmFSe1W60ylbn/M8Ftno+Gtr7P1EWn98LxHEfXG0S5N+bflzjnyIhxdvWhyFda2zhyzOcnfQTYjqjYnECoH0Um2b70QgUk1nkTS795EMwUQj6oOwUhQmMog9Xpa+wgVqs2g3cQAe23ryzvG+QN1qzPudHBryR8CAdn2HlKZNNgS5wdTmeoqzBknrYtwBj9I1JXMj/uhsRBwrlQD29+iWkfmLHmnMPj11FJL0nyB/6SseyJH1irg6xKtp3DayGEPf4WKPJh2w==
+ b=Oa3Jxg9+JbQCS8NnwHq/j2fnHVWshSnIgrCRbLNoNb6L2037e6+WIPEigAONGQaafz+iq0/7wRNhHXzuzpmZvihSULL3+sGffopcLLnJaDUto9XJRcWjh3g1IWBwlGzGF/amFa8Zqx0LZ7x7NpUkTMIO3cGR1fDeavswUyjHmPMW5J7+ieT19kovTRoYkrrNldRvnhFru6TCbm82Ytoy59du7b9kFDCSLxJ6+G7JoM/Gz6XQb3yc8BSGFYoUuO986yjKt9i4ADKzUKFLBh00/kqg/4AM8+pZlh3vxp5ACo6nSZ7zh7QEMXzNtDhrksmQ9ybq/u2d5PkK2UY/Bq4AUQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EfmpOTa1yT2jUoNey2ACdDbzG+iPk71Dd5geitqkFng=;
- b=LZFkag7n+s4szGDCPnRWbSAxs/LRKLv7RbIDoN1XNOwUAW5e7tceD+vHN30yZjZGRFTxSk3HwENggr+cqRFMqJ7QXctpRP61GkKgyKleZ+rQSA1+ofy3Xx0F6qsh6Iwc0RGiGcUQvxwu+HKRJDSuEHLSgekovknK2HIDpmgS97JeU60uBo58tCc0F9dfXRWd9PHojh/ZmBGdp6J89M7YfmmywGf/Kw98a71EB+Og3YwmaewDOpSshXNJDvAwkZeJSiRyDC/AjzWEPBunL2diYDdwk/cqovkDsVzmQoodOFTm/oLWuHymus+zkd3bsuDHe4F0hAH9uYewBM+GQstJyw==
+ bh=MohgqyeHANcijeuDdUqtYBwprZliMDAF6WXblIuqraU=;
+ b=aoDlVXVkjx/dSgC1Btw4cNJbyJbCF6nABGSCzmp09wy5mhKrLInHPyF1Y/6ZhfqsjVvrIisH3cZmMGG3yuqesaxxUWLJrSbgyi/nj3lhyC02ZWagcu2g7M2MQizoxtJLLluGw8ChgTeBd3VFA/vhsZWBQtcJfYJ8XC8IP6mX5hjG2CWFvQcygDQcdwg9nI02NDOnRMpi6sS4eNw2hpoLVNSynQu01SkOnCY6/4yYRK0lLnHtHbrm7Kw0dLceTF+8IFZxg/nHBWDBZB8vsFi0lZIvjQrnF5dN7eFA6CsB7QFoQj9lsq6zaLCZCRsFEJC45zK1ZNFs8EbPmZ4o5EZndw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
  smtp.mailfrom=synopsys.com;dmarc=pass action=none
  header.from=synopsys.com;dkim=pass header.d=synopsys.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EfmpOTa1yT2jUoNey2ACdDbzG+iPk71Dd5geitqkFng=;
- b=I4dvG3HbQeZIjXltGTsD41+5MxSCUrPpReKBvWIDESVIUBLL1mZUJISgn36WYUUEP6IIGbSYZEE3bCPVG5bY31L2XTvnfMq6B6/Q9QK8QbJvcM4y5wQs42Xn6WTU9C9eqGZdCtCxB4VDP4Nphzml0oxbCN1Il+9t0BN2/4TsRio=
+ bh=MohgqyeHANcijeuDdUqtYBwprZliMDAF6WXblIuqraU=;
+ b=EnQ7SI5rqQWoQhQxT2ZyhgWTrvAxMMGSiGfiWayhzaZdcFrJO+XdayG0N7U7ErnCwh7lpU+fTgIzaGEztDL/zLIusfrhvC3YThRFk4P0m/qdfFgQeAuXhBnipyUHW4HRxE0KMPTbLEeS0KRdGX9C7zXDbsf1g2bsevulsF1hSLM=
 Received: from DM6PR12MB4010.namprd12.prod.outlook.com (10.255.175.83) by
  DM6PR12MB3690.namprd12.prod.outlook.com (10.255.76.95) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Fri, 19 Jul 2019 08:24:31 +0000
+ 15.20.2073.14; Fri, 19 Jul 2019 08:25:53 +0000
 Received: from DM6PR12MB4010.namprd12.prod.outlook.com
  ([fe80::2dc8:6bc4:3d9d:9203]) by DM6PR12MB4010.namprd12.prod.outlook.com
  ([fe80::2dc8:6bc4:3d9d:9203%4]) with mapi id 15.20.2073.012; Fri, 19 Jul 2019
- 08:24:31 +0000
+ 08:25:53 +0000
 From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
 To:     Jonathan Chocron <jonnyc@amazon.com>,
         "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
@@ -78,28 +78,28 @@ CC:     "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH v2 3/8] PCI/VPD: Add VPD release quirk for Amazon's
- Annapurna Labs Root Port
-Thread-Topic: [PATCH v2 3/8] PCI/VPD: Add VPD release quirk for Amazon's
- Annapurna Labs Root Port
-Thread-Index: AQHVPU3WtsXRG+xtuUmLPkPGEvDZ1abRm9mQ
-Date:   Fri, 19 Jul 2019 08:24:30 +0000
-Message-ID: <DM6PR12MB4010BDFACD5974E310435D8BDACB0@DM6PR12MB4010.namprd12.prod.outlook.com>
+Subject: RE: [PATCH v2 2/8] PCI: Add ACS quirk for Amazon Annapurna Labs root
+ ports
+Thread-Topic: [PATCH v2 2/8] PCI: Add ACS quirk for Amazon Annapurna Labs root
+ ports
+Thread-Index: AQHVPU3Y2R7KTbmymkShpQNWiD85vKbRnGaQ
+Date:   Fri, 19 Jul 2019 08:25:52 +0000
+Message-ID: <DM6PR12MB40103BEB4F4050FBBDCD7C95DACB0@DM6PR12MB4010.namprd12.prod.outlook.com>
 References: <20190718094531.21423-1-jonnyc@amazon.com>
- <20190718094531.21423-4-jonnyc@amazon.com>
-In-Reply-To: <20190718094531.21423-4-jonnyc@amazon.com>
+ <20190718094531.21423-3-jonnyc@amazon.com>
+In-Reply-To: <20190718094531.21423-3-jonnyc@amazon.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
  =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
- =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTlmMzI1MzMyLWE5ZmUtMTFlOS05ODhjLWY4OTRj?=
- =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFw5ZjMyNTMzNC1hOWZlLTExZTktOTg4Yy1mODk0?=
- =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjE4NTciIHQ9IjEzMjA3OTk4MjY3OTI5?=
- =?us-ascii?Q?MzkwMyIgaD0iZ25DUDg4dnVDZFdNbkVTTUlKMEJudjAzajRFPSIgaWQ9IiIg?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLWQwOWU2OTk1LWE5ZmUtMTFlOS05ODhjLWY4OTRj?=
+ =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFxkMDllNjk5Ny1hOWZlLTExZTktOTg4Yy1mODk0?=
+ =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjIyMjkiIHQ9IjEzMjA3OTk4MzUwODQ5?=
+ =?us-ascii?Q?Njg3NSIgaD0idEdZL3owNjVkNGdLZ0xQZCs5ZVdCdDdiK0FvPSIgaWQ9IiIg?=
  =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFE?=
- =?us-ascii?Q?UC80bGhDejdWQVNjbnRXZG91VEZySnllMVoyaTVNV3NPQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?cm9mYVNDejdWQWZjTU5PS0RkWk1WOXd3MDRvTjFreFVPQUFBQUFBQUFBQUFB?=
  =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
  =?us-ascii?Q?QUVBQVFBQkFBQUFGdGJCcHdBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
  =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
@@ -172,22 +172,22 @@ authentication-results: spf=none (sender IP is )
  smtp.mailfrom=gustavo@synopsys.com; 
 x-originating-ip: [83.174.63.141]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d47c449e-df89-4006-eab0-08d70c2285e4
+x-ms-office365-filtering-correlation-id: c4305cb5-d4ff-4c18-dac9-08d70c22b6bc
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR12MB3690;
 x-ms-traffictypediagnostic: DM6PR12MB3690:
-x-microsoft-antispam-prvs: <DM6PR12MB3690B0E58F77CA52665F30F4DACB0@DM6PR12MB3690.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-microsoft-antispam-prvs: <DM6PR12MB3690DB91F6B47B6678AE638EDACB0@DM6PR12MB3690.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-forefront-prvs: 01039C93E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(346002)(39860400002)(136003)(366004)(47630400002)(199004)(189003)(102836004)(66476007)(229853002)(66556008)(2501003)(64756008)(66946007)(476003)(66446008)(11346002)(53546011)(71190400001)(71200400001)(26005)(52536014)(256004)(54906003)(81156014)(7736002)(110136005)(76116006)(6506007)(86362001)(186003)(316002)(446003)(81166006)(76176011)(8936002)(5660300002)(4326008)(2906002)(25786009)(14454004)(99286004)(478600001)(305945005)(74316002)(7696005)(3846002)(33656002)(55016002)(6116002)(8676002)(7416002)(9686003)(53936002)(6246003)(486006)(68736007)(2201001)(66066001)(6436002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB3690;H:DM6PR12MB4010.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(346002)(39860400002)(136003)(366004)(47630400002)(199004)(189003)(102836004)(66476007)(229853002)(66556008)(2501003)(64756008)(66946007)(476003)(66446008)(11346002)(53546011)(71190400001)(71200400001)(26005)(52536014)(256004)(54906003)(81156014)(7736002)(110136005)(76116006)(6506007)(86362001)(186003)(316002)(14444005)(446003)(81166006)(76176011)(8936002)(5660300002)(4326008)(2906002)(25786009)(14454004)(99286004)(478600001)(305945005)(74316002)(7696005)(3846002)(33656002)(55016002)(6116002)(8676002)(7416002)(9686003)(53936002)(6246003)(486006)(68736007)(2201001)(66066001)(6436002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB3690;H:DM6PR12MB4010.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: synopsys.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 22xNC0qTeU3uiGg4LVZaIwufPMcIaqFyFvWjJxe/BpqGkQS9u9z0JT+K/3X8AvZnTqOWuTu4zcATxPm0p0YCnBGp082iHDG+cbUqGaAlYV7u91EFUX8mKHTWznSmBFPvOAUlBr0h4Tbs+YtrCFqPkgEgYFX5v4uD71mfvKGvgs0gU6G/qrOHjUolb0oLI43+l7aehUW6tPiPRUODI4wbyRba2yXnDlh66SI8kws/7NuFdA4PNLn0phV9iG/y+BXNHp9Z8v3BW4VzMs1op2eQsuI+A7aycgKI94ubOZqnokQ8+Y6EANsoZ76VJTfdTc0+SJtEqoW67Cdh2c9tSeTGlwIMfNjzcDl/b0NVxVJvk6DsX2S+ra6oTFPlZWytt/UB5meAXVPlWPk7CRbpTcLipYxB5PRmNlps8rTfeBlU1SA=
+x-microsoft-antispam-message-info: GVeSJIdB4iBjHEGifrz6c5kY4OTrnGLJW9ToJomxU1/EPNKKlfNj6NO1chzSj4PG6qVaMWVzzfFejS266c+SmMOiCBe7lqrft8YxPdAqnxBc1ATgaGuPLxdKLJqNIO7amJw3IA9rEZ5qLJXuj9sj0KVNVH1UckGLcmnyC6roSELO9MkjDxYgEQuVPWBtcLVRrte67KB7vbRj/wOHsMq5ecI5cbBMCJf5KwzpVteeP/qPowXcGQhh33QiajNWLawNciiADix6z2lTeRntnCbX4jMy401GOg2ef+5X8v6zCC3I9ujBUn7jO5cNX3GPdbjZD//xpo2HrOqnEWCZMlIPsollX2IDVNyR35tyPjm23xZ21ZAsl7jBj/JN+pYmTjpH6Zxst52FThL7PRBlv19toK4uF9CVCjK7A5c66W9+ifA=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d47c449e-df89-4006-eab0-08d70c2285e4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2019 08:24:30.9188
+X-MS-Exchange-CrossTenant-Network-Message-Id: c4305cb5-d4ff-4c18-dac9-08d70c22b6bc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2019 08:25:52.8557
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
@@ -200,60 +200,66 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 10:45:26, Jonathan Chocron <jonnyc@amazon.com>=20
+On Thu, Jul 18, 2019 at 10:45:25, Jonathan Chocron <jonnyc@amazon.com>=20
 wrote:
 
-> The Amazon Annapurna Labs PCIe Root Port exposes the VPD capability,
-> but there is no actual support for it.
+> From: Ali Saidi <alisaidi@amazon.com>
 >=20
-> The reason for not using the already existing quirk_blacklist_vpd()
-> is that, although this fails pci_vpd_read/write, the 'vpd' sysfs
-> entry still exists. When running lspci -vv, for example, this
-> results in the following error:
+> The Amazon's Annapurna Labs root ports don't advertise an ACS
+> capability, but they don't allow peer-to-peer transactions and do
+> validate bus numbers through the SMMU. Additionally, it's not possible
+> for one RP to pass traffic to another RP.
 >=20
-> pcilib: sysfs_read_vpd: read failed: Input/output error
->=20
-> This quirk removes the sysfs entry, which avoids the error print.
->=20
+> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
 > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
 > ---
->  drivers/pci/vpd.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  drivers/pci/quirks.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 >=20
-> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-> index 4963c2e2bd4c..c23a8ec08db9 100644
-> --- a/drivers/pci/vpd.c
-> +++ b/drivers/pci/vpd.c
-> @@ -644,4 +644,20 @@ static void quirk_chelsio_extend_vpd(struct pci_dev =
-*dev)
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
->  			quirk_chelsio_extend_vpd);
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 208aacf39329..23672680dba7 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4366,6 +4366,23 @@ static int pci_quirk_qcom_rp_acs(struct pci_dev *d=
+ev, u16 acs_flags)
+>  	return ret;
+>  }
 > =20
-> +static void quirk_al_vpd_release(struct pci_dev *dev)
+> +static int pci_quirk_al_acs(struct pci_dev *dev, u16 acs_flags)
 > +{
-> +	if (dev->vpd) {
-> +		pci_vpd_release(dev);
-> +		dev->vpd =3D NULL;
-> +		pci_warn(dev, FW_BUG "Releasing VPD capability (No support for VPD rea=
-d/write transactions)\n");
-> +	}
+> +	/*
+> +	 * Amazon's Annapurna Labs root ports don't include an ACS capability,
+> +	 * but do include ACS-like functionality. The hardware doesn't support
+> +	 * peer-to-peer transactions via the root port and each has a unique
+> +	 * segment number.
+> +	 * Additionally, the root ports cannot send traffic to each other.
+> +	 */
+> +	acs_flags &=3D ~(PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_SV | PCI_ACS_UF);
+> +
+> +	if (pci_pcie_type(dev) !=3D PCI_EXP_TYPE_ROOT_PORT)
+> +		return -ENOTTY;
+> +
+> +	return acs_flags ? 0 : 1;
 > +}
 > +
-> +/*
-> + * The 0031 device id is reused for other non Root Port device types,
-> + * therefore the quirk is registered for the PCI_CLASS_BRIDGE_PCI class.
-> + */
-> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x003=
-1,
-> +			      PCI_CLASS_BRIDGE_PCI, 8, quirk_al_vpd_release);
-> +
->  #endif
+>  /*
+>   * Sunrise Point PCH root ports implement ACS, but unfortunately as show=
+n in
+>   * the datasheet (Intel 100 Series Chipset Family PCH Datasheet, Vol. 2,
+> @@ -4559,6 +4576,8 @@ static const struct pci_dev_acs_enabled {
+>  	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
+>  	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
+>  	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
+> +	/* Amazon Annapurna Labs */
+> +	{ PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031, pci_quirk_al_acs },
+>  	{ 0 }
+>  };
+> =20
 > --=20
 > 2.17.1
 
 Seems ok.
 
 Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-
 
 
