@@ -2,35 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 078FA6DD55
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2019 06:23:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01A346DD3C
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2019 06:21:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388405AbfGSELW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Jul 2019 00:11:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46292 "EHLO mail.kernel.org"
+        id S1729738AbfGSEV0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Jul 2019 00:21:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730254AbfGSELW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:11:22 -0400
+        id S1732715AbfGSEL5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:11:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3991121873;
-        Fri, 19 Jul 2019 04:11:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D758A21873;
+        Fri, 19 Jul 2019 04:11:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509481;
-        bh=lTpd3BwJntjvisbyb/KkUvM8RQIScLiS5UOe+xKdDrg=;
+        s=default; t=1563509517;
+        bh=tGjESBeDYN43XYR3+Lpn7FySCqjRCcufydLk9+TMPUk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IK5y7uGNwssdy/6IMIpU1xh/iUIngh849+YaD94uVrjPS8aMcKCIWlgO8lykg+VF2
-         1g3zSWOa9apHjCxADf7uNsxdLBP/7c+KIdv5uN1mbIAM+iKa+37cedi8d1bLGsJfsw
-         5pStqknUABx0rz8M3SJoYXLKJ1WMV80HckPej+yo=
+        b=i2cC29GOaLv8fwDICPtmH7MavleQB2pUC9xraHfof8sQkpnHsH1c9K9yK+sJbYLs6
+         DuenCsEzYEviGkQaVb2YEF3leOQGUnkM8ygt7zk1Hfb+eqyx4eUbg6KWJQpK4VYH6k
+         +zrfu5MwMwPbMp0BwSYNMbkFyvCk5DYRCJh+Umqw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Tejun Heo <tj@kernel.org>, Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/60] PCI: Return error if cannot probe VF
-Date:   Fri, 19 Jul 2019 00:10:16 -0400
-Message-Id: <20190719041109.18262-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 26/60] PCI: sysfs: Ignore lockdep for remove attribute
+Date:   Fri, 19 Jul 2019 00:10:35 -0400
+Message-Id: <20190719041109.18262-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
@@ -43,63 +47,61 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Marek Vasut <marek.vasut+renesas@gmail.com>
 
-[ Upstream commit 76002d8b48c4b08c9bd414517dd295e132ad910b ]
+[ Upstream commit dc6b698a86fe40a50525433eb8e92a267847f6f9 ]
 
-Commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control
-VF driver binding") allows the user to specify that drivers for VFs of
-a PF should not be probed, but it actually causes pci_device_probe() to
-return success back to the driver core in this case.  Therefore by all
-sysfs appearances the device is bound to a driver, the driver link from
-the device exists as does the device link back from the driver, yet the
-driver's probe function is never called on the device.  We also fail to
-do any sort of cleanup when we're prohibited from probing the device,
-the IRQ setup remains in place and we even hold a device reference.
+With CONFIG_PROVE_LOCKING=y, using sysfs to remove a bridge with a device
+below it causes a lockdep warning, e.g.,
 
-Instead, abort with errno before any setup or references are taken when
-pci_device_can_probe() prevents us from trying to probe the device.
+  # echo 1 > /sys/class/pci_bus/0000:00/device/0000:00:00.0/remove
+  ============================================
+  WARNING: possible recursive locking detected
+  ...
+  pci_bus 0000:01: busn_res: [bus 01] is released
 
-Link: https://lore.kernel.org/lkml/155672991496.20698.4279330795743262888.stgit@gimli.home
-Fixes: 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+The remove recursively removes the subtree below the bridge.  Each call
+uses a different lock so there's no deadlock, but the locks were all
+created with the same lockdep key so the lockdep checker can't tell them
+apart.
+
+Mark the "remove" sysfs attribute with __ATTR_IGNORE_LOCKDEP() as it is
+safe to ignore the lockdep check between different "remove" kernfs
+instances.
+
+There's discussion about a similar issue in USB at [1], which resulted in
+356c05d58af0 ("sysfs: get rid of some lockdep false positives") and
+e9b526fe7048 ("i2c: suppress lockdep warning on delete_device"), which do
+basically the same thing for USB "remove" and i2c "delete_device" files.
+
+[1] https://lore.kernel.org/r/Pine.LNX.4.44L0.1204251436140.1206-100000@iolanthe.rowland.org
+Link: https://lore.kernel.org/r/20190526225151.3865-1-marek.vasut@gmail.com
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+[bhelgaas: trim commit log, details at above links]
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci-driver.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/pci/pci-sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index ea69b4dbab66..e5a8bf2c9b37 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -415,6 +415,9 @@ static int pci_device_probe(struct device *dev)
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
- 	struct pci_driver *drv = to_pci_driver(dev->driver);
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index c3f0473d1afa..ee7dccab771d 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -496,7 +496,7 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+ 		pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
+ 	return count;
+ }
+-static struct device_attribute dev_remove_attr = __ATTR(remove,
++static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
+ 							(S_IWUSR|S_IWGRP),
+ 							NULL, remove_store);
  
-+	if (!pci_device_can_probe(pci_dev))
-+		return -ENODEV;
-+
- 	pci_assign_irq(pci_dev);
- 
- 	error = pcibios_alloc_irq(pci_dev);
-@@ -422,12 +425,10 @@ static int pci_device_probe(struct device *dev)
- 		return error;
- 
- 	pci_dev_get(pci_dev);
--	if (pci_device_can_probe(pci_dev)) {
--		error = __pci_device_probe(drv, pci_dev);
--		if (error) {
--			pcibios_free_irq(pci_dev);
--			pci_dev_put(pci_dev);
--		}
-+	error = __pci_device_probe(drv, pci_dev);
-+	if (error) {
-+		pcibios_free_irq(pci_dev);
-+		pci_dev_put(pci_dev);
- 	}
- 
- 	return error;
 -- 
 2.20.1
 
