@@ -2,23 +2,23 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 380A270D19
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2019 01:10:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48CD570D20
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2019 01:10:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbfGVXKL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Jul 2019 19:10:11 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:40258 "EHLO ale.deltatee.com"
+        id S1733012AbfGVXJL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Jul 2019 19:09:11 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:40248 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbfGVXJN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 22 Jul 2019 19:09:13 -0400
+        id S1726130AbfGVXJL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 22 Jul 2019 19:09:11 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hphQb-0002ju-Dj; Mon, 22 Jul 2019 17:09:11 -0600
+        id 1hphQb-0002jx-Dj; Mon, 22 Jul 2019 17:09:10 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hphQU-0001Qc-4e; Mon, 22 Jul 2019 17:09:02 -0600
+        id 1hphQU-0001Qk-VM; Mon, 22 Jul 2019 17:09:03 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org
@@ -32,9 +32,11 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Eric Pilmore <epilmore@gigaio.com>,
         Stephen Bates <sbates@raithlin.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Mon, 22 Jul 2019 17:08:45 -0600
-Message-Id: <20190722230859.5436-1-logang@deltatee.com>
+Date:   Mon, 22 Jul 2019 17:08:48 -0600
+Message-Id: <20190722230859.5436-4-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190722230859.5436-1-logang@deltatee.com>
+References: <20190722230859.5436-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
@@ -45,7 +47,7 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
         GREYLIST_ISWHITE,MYRULES_NO_TEXT autolearn=ham autolearn_force=no
         version=3.4.2
-Subject: [PATCH 00/14] PCI/P2PDMA: Support transactions that hit the host bridge
+Subject: [PATCH 03/14] PCI/P2PDMA: Apply host bridge white list for ACS
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
@@ -53,57 +55,67 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-As discussed on the list previously, in order to fully support the
-whitelist Christian added with the IOMMU, we must ensure that we
-map any buffer going through the IOMMU with an aprropriate dma_map
-call. This patchset accomplishes this by cleaning up the output of
-upstream_bridge_distance() to better indicate the mapping requirements,
-caching these requirements in an xarray, then looking them up at map
-time and applying the appropriate mapping method.
+When a P2PDMA transfer is rejected due to ACS being set, we
+can also check the white list and allow the transactions.
 
-After this patchset, it's possible to use the NVMe-of P2P support to
-transfer between devices without a switch on the whitelisted root
-complexes. A couple Intel device I have tested this on have also
-been added to the white list.
+Do this by pushing the whitelist check into the
+upstream_bridge_distance() function.
 
-Most of the changes are contained within the p2pdma.c, but there are
-a few minor touches to other subsystems, mostly to add support
-to call an unmap function.
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ drivers/pci/p2pdma.c | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
 
-The final patch in this series demonstrates a possible
-pci_p2pdma_map_resource() function that I expect Christian will need
-but does not have any users at this time so I don't intend for it to be
-considered for merging.
-
-This patchset is based on 5.3-rc1 and a git branch is available here:
-
-https://github.com/sbates130272/linux-p2pmem/ p2pdma_rc_map_v1
-
---
-
-Logan Gunthorpe (14):
-  PCI/P2PDMA: Add constants for not-supported result
-    upstream_bridge_distance()
-  PCI/P2PDMA: Factor out __upstream_bridge_distance()
-  PCI/P2PDMA: Apply host bridge white list for ACS
-  PCI/P2PDMA: Cache the result of upstream_bridge_distance()
-  PCI/P2PDMA: Factor out host_bridge_whitelist()
-  PCI/P2PDMA: Add whitelist support for Intel Host Bridges
-  PCI/P2PDMA: Add the provider's pci_dev to the dev_pgmap struct
-  PCI/P2PDMA: Add attrs argument to pci_p2pdma_map_sg()
-  PCI/P2PDMA: Introduce pci_p2pdma_unmap_sg()
-  PCI/P2PDMA: Factor out __pci_p2pdma_map_sg()
-  PCI/P2PDMA: dma_map P2PDMA map requests that traverse the host bridge
-  PCI/P2PDMA: No longer require no-mmu for host bridge whitelist
-  PCI/P2PDMA: Update documentation for pci_p2pdma_distance_many()
-  PCI/P2PDMA: Introduce pci_p2pdma_[un]map_resource()
-
- drivers/infiniband/core/rw.c |   6 +-
- drivers/nvme/host/pci.c      |  10 +-
- drivers/pci/p2pdma.c         | 400 +++++++++++++++++++++++++++--------
- include/linux/memremap.h     |   1 +
- include/linux/pci-p2pdma.h   |  28 ++-
- 5 files changed, 341 insertions(+), 104 deletions(-)
-
---
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index 289d03a31e7d..d5034e28d1e1 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -324,15 +324,7 @@ static int __upstream_bridge_distance(struct pci_dev *provider,
+ 		dist_a++;
+ 	}
+ 
+-	/*
+-	 * Allow the connection if both devices are on a whitelisted root
+-	 * complex, but add an arbitrary large value to the distance.
+-	 */
+-	if (root_complex_whitelist(provider) &&
+-	    root_complex_whitelist(client))
+-		return (dist_a + dist_b) | P2PDMA_THRU_HOST_BRIDGE;
+-
+-	return (dist_a + dist_b) | P2PDMA_NOT_SUPPORTED;
++	return (dist_a + dist_b) | P2PDMA_THRU_HOST_BRIDGE;
+ 
+ check_b_path_acs:
+ 	bb = b;
+@@ -350,7 +342,8 @@ static int __upstream_bridge_distance(struct pci_dev *provider,
+ 	}
+ 
+ 	if (acs_cnt)
+-		return P2PDMA_NOT_SUPPORTED | P2PDMA_ACS_FORCES_UPSTREAM;
++		return (dist_a + dist_b) | P2PDMA_ACS_FORCES_UPSTREAM |
++			P2PDMA_THRU_HOST_BRIDGE;
+ 
+ 	return dist_a + dist_b;
+ }
+@@ -397,7 +390,17 @@ static int upstream_bridge_distance(struct pci_dev *provider,
+ 				    struct pci_dev *client,
+ 				    struct seq_buf *acs_list)
+ {
+-	return __upstream_bridge_distance(provider, client, acs_list);
++	int dist;
++
++	dist = __upstream_bridge_distance(provider, client, acs_list);
++
++	if (!(dist & P2PDMA_THRU_HOST_BRIDGE))
++		return dist;
++
++	if (root_complex_whitelist(provider) && root_complex_whitelist(client))
++		return dist;
++
++	return dist | P2PDMA_NOT_SUPPORTED;
+ }
+ 
+ static int upstream_bridge_distance_warn(struct pci_dev *provider,
+-- 
 2.20.1
+
