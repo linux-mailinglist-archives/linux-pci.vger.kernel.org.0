@@ -2,125 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A3BC471527
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2019 11:27:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79D757153D
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2019 11:32:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730347AbfGWJ1q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Jul 2019 05:27:46 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:31440 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727408AbfGWJ1q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Jul 2019 05:27:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1563874065; x=1595410065;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=r3UejI0fEyx4nycQ3vf7JrpqMGHRZyoys9vsmeuSdCk=;
-  b=WpYunE6QvhuTBTT0kkM5lBnZ+I0Xcbplq16FNSNp3Cg+2wMmCyRyV7I4
-   JPqjjkOFzS+H4LZu5mbcGU9p85vScXytLx0h6e+Z4rZohlzHNFF21lVZI
-   +upfWVJLzI2iyKs3dcWLiPrVjHnMdFT9Kc7PnBQrW7aYlwZBDDT2Qe7LJ
-   M=;
-X-IronPort-AV: E=Sophos;i="5.64,298,1559520000"; 
-   d="scan'208";a="687150634"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2a-69849ee2.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 23 Jul 2019 09:27:43 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-69849ee2.us-west-2.amazon.com (Postfix) with ESMTPS id BE1F9A2490;
-        Tue, 23 Jul 2019 09:27:42 +0000 (UTC)
-Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 23 Jul 2019 09:27:42 +0000
-Received: from u9ff250417f405e.ant.amazon.com (10.43.161.85) by
- EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 23 Jul 2019 09:27:37 +0000
-From:   Jonathan Chocron <jonnyc@amazon.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <alisaidi@amazon.com>, <ronenk@amazon.com>, <barakw@amazon.com>,
-        <talel@amazon.com>, <hanochu@amazon.com>, <hhhawa@amazon.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
-Subject: [PATCH v3 8/8] PCI: dw: Add support for PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
-Date:   Tue, 23 Jul 2019 12:27:11 +0300
-Message-ID: <20190723092711.11786-4-jonnyc@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190723092529.11310-1-jonnyc@amazon.com>
-References: <20190723092529.11310-1-jonnyc@amazon.com>
+        id S1726606AbfGWJc5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Jul 2019 05:32:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:51764 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726284AbfGWJc5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 23 Jul 2019 05:32:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D081B337;
+        Tue, 23 Jul 2019 02:32:56 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0FCB93F71A;
+        Tue, 23 Jul 2019 02:32:55 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 10:32:51 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "sashal@kernel.org" <sashal@kernel.org>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>
+Subject: Re: [PATCH] PCI/VMD: Fix config addressing with bus offsets
+Message-ID: <20190723093251.GA12867@e121166-lin.cambridge.arm.com>
+References: <20190611211538.29151-1-jonathan.derrick@intel.com>
+ <20190621142803.GA21807@e121166-lin.cambridge.arm.com>
+ <1ec9408fabb2178181f02b7ddbb2b22604c49417.camel@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.85]
-X-ClientProxiedBy: EX13D27UWB003.ant.amazon.com (10.43.161.195) To
- EX13D13UWA001.ant.amazon.com (10.43.160.136)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1ec9408fabb2178181f02b7ddbb2b22604c49417.camel@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This basically aligns the usage of PCI_PROBE_ONLY and
-PCI_REASSIGN_ALL_BUS in dw_pcie_host_init() with the logic in
-pci_host_common_probe().
+On Mon, Jul 22, 2019 at 04:02:18PM +0000, Derrick, Jonathan wrote:
+> On Fri, 2019-06-21 at 15:28 +0100, Lorenzo Pieralisi wrote:
+> > [dropped CC stable]
+> > 
+> > On Tue, Jun 11, 2019 at 03:15:38PM -0600, Jon Derrick wrote:
+> > > VMD config space addressing relies on mapping the BDF of the target into
+> > > the VMD config bar. When using bus number offsets to number the VMD
+> > > domain, the offset needs to be ignored in order to correctly map devices
+> > > to their config space.
+> > > 
+> > > Fixes: 2a5a9c9a20f9 ("PCI: vmd: Add offset to bus numbers if necessary")
+> > > Cc: <stable@vger.kernel.org> # v4.19
+> > > Cc: <stable@vger.kernel.org> # v4.18
+> > 
+> > Hi Jon,
+> > 
+> > that's not how stable should be handled. You should always start
+> > by fixing mainline and if there are backports to be fixed too you
+> > should add patch dependencies in the CC area, see:
+> > 
+> > Documentation/process/stable-kernel-rules.rst
+> > 
+> > Never add stable to the CC list in the email header, only in the
+> > commit log.
+> > 
+> > When your patch hits mainline it will trickle back into stable,
+> > if you specified dependencies as described above there is nothing
+> > to do.
+> > 
+> > Thanks,
+> > Lorenzo
+> > 
+> 
+> Besides the stable issue, can we get this into 5.3?
 
-Now it will be possible to control via the devicetree whether to just
-probe the PCI bus (in cases where FW already configured it) or to fully
-configure it.
+Usually we send fixes at -rc for patches that were merged in the
+previous merge window; this fix is not one of those so I think
+we will send it for v5.4 unless it is very urgent.
 
-Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
----
- .../pci/controller/dwc/pcie-designware-host.c | 23 +++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+We should still update stable info in the log appropriately
+before queuing it.
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index d2ca748e4c85..0a294d8aa21a 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -342,6 +342,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (!bridge)
- 		return -ENOMEM;
- 
-+	of_pci_check_probe_only();
-+
- 	ret = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
- 					&bridge->windows, &pp->io_base);
- 	if (ret)
-@@ -474,6 +476,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 
- 	pp->root_bus_nr = pp->busn->start;
- 
-+	/* Do not reassign bus nums if probe only */
-+	if (!pci_has_flag(PCI_PROBE_ONLY))
-+		pci_add_flags(PCI_REASSIGN_ALL_BUS);
-+
- 	bridge->dev.parent = dev;
- 	bridge->sysdata = pp;
- 	bridge->busnr = pp->root_bus_nr;
-@@ -490,11 +496,20 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (pp->ops->scan_bus)
- 		pp->ops->scan_bus(pp);
- 
--	pci_bus_size_bridges(pp->root_bus);
--	pci_bus_assign_resources(pp->root_bus);
-+	/*
-+	 * We insert PCI resources into the iomem_resource and
-+	 * ioport_resource trees in either pci_bus_claim_resources()
-+	 * or pci_bus_assign_resources().
-+	 */
-+	if (pci_has_flag(PCI_PROBE_ONLY)) {
-+		pci_bus_claim_resources(pp->root_bus);
-+	} else {
-+		pci_bus_size_bridges(pp->root_bus);
-+		pci_bus_assign_resources(pp->root_bus);
- 
--	list_for_each_entry(child, &pp->root_bus->children, node)
--		pcie_bus_configure_settings(child);
-+		list_for_each_entry(child, &pp->root_bus->children, node)
-+			pcie_bus_configure_settings(child);
-+	}
- 
- 	pci_bus_add_devices(pp->root_bus);
- 	return 0;
--- 
-2.17.1
-
+Thanks,
+Lorenzo
