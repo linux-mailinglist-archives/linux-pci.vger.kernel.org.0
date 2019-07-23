@@ -2,104 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D066722D9
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2019 01:10:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6F51722EE
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2019 01:24:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbfGWXK2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Jul 2019 19:10:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725884AbfGWXK2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 23 Jul 2019 19:10:28 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 488B5216F4;
-        Tue, 23 Jul 2019 23:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563923427;
-        bh=j8bLuldBBqMhCMCDVzy6BAXt6Ga9tRbQC3m8P6hPc1c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AP0zSSo2VmV3eHyP04t0twnDt3kxR+lAykX9TsL3++GI4Dm+wUVunwKCRkOlRfzfw
-         PXzBYbuRz48swE2BbLvNmn4nAfR2dwsjH6/ndpZksMwaIGEKjnT90qEwjLOYq16V1T
-         K02oooz+AOPrdwndVwuGPFI/l167ThiU8whSmK+M=
-Date:   Tue, 23 Jul 2019 18:10:25 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vicki Pfau <vi@endrift.com>
-Cc:     linux-hwmon@vger.kernel.org, linux-pci@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Brian Woods <brian.woods@amd.com>
-Subject: Re: [PATCH 1/2] x86/amd_nb: Add PCI device IDs for family 17h, model
- 70h
-Message-ID: <20190723231025.GB47047@google.com>
-References: <20190714183209.29916-1-vi@endrift.com>
+        id S1726646AbfGWXYS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Jul 2019 19:24:18 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34031 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbfGWXYR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Jul 2019 19:24:17 -0400
+Received: by mail-io1-f67.google.com with SMTP id k8so85604789iot.1;
+        Tue, 23 Jul 2019 16:24:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OKl/UO0N722owerZ7uvxTX5GkSBg77fwKXsdJcJ89jw=;
+        b=W/azuwYc5RF0CLl2tNylYs96mx//cO/dqpDHVSi7Tx5ZOsQpKCKderAm4PQFHc0Wlo
+         CA5ArjI4C7GISOF1gvZGapcPsBoiGrJOBC+Hhg+kEbHGOkqJwf7WmqohdzXTMSFD4asg
+         F6J9p+jkhfqSQTcRZWUIaMENq/j+pKJ+jSImB11LK7FMkGbjQP6eKY96aTkBo+aRrj0G
+         E+KI0xJHmHtf5Y32Fi5SvSZzpRUKwPLlGaZgi1exYiopX5P0DSZGynbyT1+s+bHOq+3Y
+         ZlSyTX7uG1STgviFa2wV6W6P2JmZpuODDmKO/5Mv5vrX6vSqd/fzi+zmaeVL1AYKEOHC
+         AhRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OKl/UO0N722owerZ7uvxTX5GkSBg77fwKXsdJcJ89jw=;
+        b=g4CWHeznJBgIRZIaiiD/7YGe/1ClqlUuh9UrElpvoCyk7HhORCHsmcYHoLDlEZdo8A
+         YKWJueS9bX8Ro3IQUQdKUhLEScSkPrUtEy4C69A1YZb3Frz38PG8c31rehfIBRrwDfy3
+         nwuRmfFXOtS1Pe9RxvDNCZsVA4npylp7QXdOa7EJvcilCxV4RUAu/Dh9kijrFpk4MTTw
+         N8RVClfisOZNm637gPIMxqSN5+gajpp155xVmc7ywDkj5iHQ5FI2aXdOYLR7rt5/elmH
+         i6bpGvWiJdsrrSQrpikPNQTZZZXdReiGeImJSW9xmruDtAt5GEDdrItgDoWG4wQhPeiJ
+         /37g==
+X-Gm-Message-State: APjAAAXAJ812OQeQLHBaT+7OwC9j4wXDFM42jX7rULmAVqfqShxyWC3b
+        YDLH/+qHs+BpAmKZ5U5rnrg=
+X-Google-Smtp-Source: APXvYqzEGthFomN6apTXtcZGPfFB3acwEY2rLrsGnZT81G/G8D+Oq6T6j0D+KB0q5WG7jl1jc5K5rQ==
+X-Received: by 2002:a02:5ec9:: with SMTP id h192mr79609871jab.25.1563924257148;
+        Tue, 23 Jul 2019 16:24:17 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id s10sm106218264iod.46.2019.07.23.16.24.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 16:24:16 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 17:24:14 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH 00/11] PCI: Move symbols to drivers/pci/pci.h
+Message-ID: <20190723232414.GB16776@JATN>
+References: <20190711222341.111556-1-skunberg.kelsey@gmail.com>
+ <20190723230701.GA47047@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190714183209.29916-1-vi@endrift.com>
+In-Reply-To: <20190723230701.GA47047@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jul 14, 2019 at 11:32:08AM -0700, Vicki Pfau wrote:
-> Add the PCI device IDs for the newly released AMD Ryzen 3xxx desktop
-> (Matisse) CPU line northbridge link and misc devices.
+On Tue, Jul 23, 2019 at 06:07:01PM -0500, Bjorn Helgaas wrote:
+> On Thu, Jul 11, 2019 at 04:23:30PM -0600, Kelsey Skunberg wrote:
+> > Move symbols defined in include/linux/pci.h that are only used in
+> > drivers/pci/ to drivers/pci/pci.h.
+> > 
+> > Symbols only used in drivers/pci/ do not need to be visible to the rest of
+> > the kernel.
+> > 
+> > Kelsey Skunberg (11):
+> >   PCI: Move #define PCI_PM_* lines to drivers/pci/pci.h
+> >   PCI: Move PME declarations to drivers/pci/pci.h
+> >   PCI: Move *_host_bridge_device() declarations to drivers/pci.pci.h
+> >   PCI: Move PCI Virtual Channel declarations to drivers/pci/pci.h
+> >   PCI: Move pci_hotplug_*_size declarations to drivers/pci/pci.h
+> >   PCI: Move pci_bus_* declarations to drivers/pci/pci.h
+> >   PCI: Move pcie_update_link_speed() to drivers/pci/pci.h
+> >   PCI: Move pci_ats_init() to drivers/pci/pci.h
+> >   PCI: Move ECRC declarations to drivers/pci/pci.h
+> >   PCI: Move PTM declaration to drivers/pci/pci.h
+> >   PCI: Move pci_*_node() declarations to drivers/pci/pci.h
+> > 
+> >  drivers/pci/pci.h   | 48 ++++++++++++++++++++++++++++++++++++++++++---
+> >  include/linux/pci.h | 47 --------------------------------------------
+> >  2 files changed, 45 insertions(+), 50 deletions(-)
 > 
-> Signed-off-by: Vicki Pfau <vi@endrift.com>
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# pci_ids.h
-
-It's still a shame to have to modify the kernel to add new device IDs
-even though there's no new functionality here.  But ISTR there was a
-hornet's nest there ;)
-
-> ---
->  arch/x86/kernel/amd_nb.c | 3 +++
->  include/linux/pci_ids.h  | 1 +
->  2 files changed, 4 insertions(+)
+> Hi Kelsey,
 > 
-> diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-> index d63e63b7d1d9..0a8b816857c1 100644
-> --- a/arch/x86/kernel/amd_nb.c
-> +++ b/arch/x86/kernel/amd_nb.c
-> @@ -21,6 +21,7 @@
->  #define PCI_DEVICE_ID_AMD_17H_DF_F4	0x1464
->  #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec
->  #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494
-> +#define PCI_DEVICE_ID_AMD_17H_M70H_DF_F4 0x1444
->  
->  /* Protect the PCI config register pairs used for SMN and DF indirect access. */
->  static DEFINE_MUTEX(smn_mutex);
-> @@ -49,6 +50,7 @@ const struct pci_device_id amd_nb_misc_ids[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_DF_F3) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F3) },
->  	{}
->  };
-> @@ -63,6 +65,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_DF_F4) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F4) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F4) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F4) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },
->  	{}
->  };
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 70e86148cb1e..862556761bbf 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -548,6 +548,7 @@
->  #define PCI_DEVICE_ID_AMD_17H_DF_F3	0x1463
->  #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3 0x15eb
->  #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F3 0x1493
-> +#define PCI_DEVICE_ID_AMD_17H_M70H_DF_F3 0x1443
->  #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
->  #define PCI_DEVICE_ID_AMD_LANCE		0x2000
->  #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
-> -- 
-> 2.22.0
+> I didn't get these applied before v5.3-rc1, so now they don't apply
+> cleanly.  Would you mind refreshing them and posting a v2 that does
+> apply to my "master" branch (v5.3-rc1)?
 > 
+> Bjorn
+
+Hi Bjorn,
+
+I can absolutely do that. I'll have v2 sent out soon.
+
+-Kelsey
