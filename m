@@ -2,97 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 00D2C71D36
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2019 18:58:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDA04720A4
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2019 22:24:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730959AbfGWQ64 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Jul 2019 12:58:56 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:50466 "EHLO ale.deltatee.com"
+        id S1731713AbfGWUY2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Jul 2019 16:24:28 -0400
+Received: from mga12.intel.com ([192.55.52.136]:31967 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730940AbfGWQ64 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 23 Jul 2019 12:58:56 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hpy7e-0003Tj-UQ; Tue, 23 Jul 2019 10:58:43 -0600
-To:     "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Pilmore <epilmore@gigaio.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190722230859.5436-1-logang@deltatee.com>
- <d7c7011e-e9b7-89f8-99ba-b674d45821c6@amd.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <deaa0992-24c8-be93-f623-a5b2b442e4d0@deltatee.com>
-Date:   Tue, 23 Jul 2019 10:58:41 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727247AbfGWUY2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 23 Jul 2019 16:24:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 13:24:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,300,1559545200"; 
+   d="scan'208";a="369028998"
+Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
+  by fmsmga006.fm.intel.com with ESMTP; 23 Jul 2019 13:24:27 -0700
+From:   sathyanarayanan.kuppuswamy@linux.intel.com
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: [PATCH v5 0/9] Add Error Disconnect Recover (EDR) support
+Date:   Tue, 23 Jul 2019 13:21:42 -0700
+Message-Id: <cover.1563912591.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <d7c7011e-e9b7-89f8-99ba-b674d45821c6@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, epilmore@gigaio.com, dan.j.williams@intel.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, jgg@mellanox.com, hch@lst.de, bhelgaas@google.com, linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Christian.Koenig@amd.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,MYRULES_FREE autolearn=ham autolearn_force=no
-        version=3.4.2
-Subject: Re: [PATCH 00/14] PCI/P2PDMA: Support transactions that hit the host
- bridge
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
+This patchset adds support for following features:
 
-On 2019-07-23 10:30 a.m., Koenig, Christian wrote:
-> Am 23.07.19 um 01:08 schrieb Logan Gunthorpe:
->> As discussed on the list previously, in order to fully support the
->> whitelist Christian added with the IOMMU, we must ensure that we
->> map any buffer going through the IOMMU with an aprropriate dma_map
->> call. This patchset accomplishes this by cleaning up the output of
->> upstream_bridge_distance() to better indicate the mapping requirements,
->> caching these requirements in an xarray, then looking them up at map
->> time and applying the appropriate mapping method.
->>
->> After this patchset, it's possible to use the NVMe-of P2P support to
->> transfer between devices without a switch on the whitelisted root
->> complexes. A couple Intel device I have tested this on have also
->> been added to the white list.
->>
->> Most of the changes are contained within the p2pdma.c, but there are
->> a few minor touches to other subsystems, mostly to add support
->> to call an unmap function.
->>
->> The final patch in this series demonstrates a possible
->> pci_p2pdma_map_resource() function that I expect Christian will need
->> but does not have any users at this time so I don't intend for it to be
->> considered for merging.
->>
->> This patchset is based on 5.3-rc1 and a git branch is available here:
->>
->> https://github.com/sbates130272/linux-p2pmem/ p2pdma_rc_map_v1
-> 
-> I reviewed patches #1-#3 and #14.
-> 
-> Feel free to stick an Acked-by: Christian König 
-> <christian.koenig@amd.com> to the rest, but I'm not really deep into the 
-> NVMe P2P handling here.
+1. Error Disconnect Recover (EDR) support.
+2. _OSC based negotiation support for DPC.
 
-Thanks!
+You can find EDR spec in the following link.
 
-Logan
+https://members.pcisig.com/wg/PCI-SIG/document/12614
+
+Changes since v1:
+ * Rebased on top of v5.1-rc1
+
+Changes since v2:
+ * Split EDR support patch into multiple patches.
+ * Addressed Bjorn comments.
+
+Changes since v3:
+ * Moved EDR related ACPI functions/definitions to pci-acpi.c
+ * Modified commit history in few patches to include spec reference.
+ * Added support to handle DPC triggered by NON_FATAL errors.
+ * Added edr_lock to protect PCI device receiving duplicate EDR notifications.
+ * Addressed Bjorn comments.
+
+Changes since v4:
+ * Rebased on top of v5.3-rc1
+ * Fixed lock/unlock issue in edr_handle_event().
+ * Merged "Update error status after reset_link()" patch into this patchset.
+
+Kuppuswamy Sathyanarayanan (9):
+  PCI/ERR: Update error status after reset_link()
+  PCI/ACPI: Add _OSC based negotiation support for DPC
+  PCI/ACPI: Expose EDR support via _OSC to BIOS
+  PCI/DPC: Allow dpc_probe() even if firmware first mode is enabled
+  PCI/DPC: Add dpc_process_error() wrapper function
+  PCI/DPC: Add Error Disconnect Recover (EDR) support
+  PCI/AER: Allow clearing Error Status Register in FF mode
+  PCI/DPC: Add support for DPC recovery on NON_FATAL errors
+  PCI/DPC: Clear AER registers in EDR mode
+
+ drivers/acpi/pci_root.c         |   9 ++
+ drivers/pci/pci-acpi.c          |  91 +++++++++++++++
+ drivers/pci/pcie/Kconfig        |  10 ++
+ drivers/pci/pcie/aer.c          |   9 --
+ drivers/pci/pcie/dpc.c          | 201 +++++++++++++++++++++++++++++---
+ drivers/pci/pcie/err.c          |  11 +-
+ drivers/pci/pcie/portdrv_core.c |   8 +-
+ drivers/pci/probe.c             |   1 +
+ include/linux/acpi.h            |   4 +-
+ include/linux/pci-acpi.h        |  11 ++
+ include/linux/pci.h             |   2 +-
+ 11 files changed, 323 insertions(+), 34 deletions(-)
+
+-- 
+2.21.0
+
