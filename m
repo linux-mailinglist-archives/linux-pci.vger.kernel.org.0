@@ -2,168 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A300C70D1C
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2019 01:10:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0692D71505
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2019 11:26:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733173AbfGVXJM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Jul 2019 19:09:12 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:40254 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728191AbfGVXJM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 22 Jul 2019 19:09:12 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hphQb-0002k9-Dj; Mon, 22 Jul 2019 17:09:11 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hphQX-0001RH-V5; Mon, 22 Jul 2019 17:09:06 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Pilmore <epilmore@gigaio.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Mon, 22 Jul 2019 17:08:59 -0600
-Message-Id: <20190722230859.5436-15-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190722230859.5436-1-logang@deltatee.com>
-References: <20190722230859.5436-1-logang@deltatee.com>
+        id S1729397AbfGWJZu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Jul 2019 05:25:50 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:29958 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728809AbfGWJZu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Jul 2019 05:25:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1563873949; x=1595409949;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=VDsDOEHhvQQsv24n5KRVR3T7vqAzJLQlWdXaSZiqvVw=;
+  b=Q9GCmTyr3qea5Kejc1IKtOVvMJZs1a15vj/pnQE8ShCP5nEMUWf21bci
+   zhGNnMpwONNNalYF1+Zcd9e7UbwDc5eQsAFWgqFzhLBGZFiimQcPBolkb
+   5/X67/4kIw2W0ScjL5Ub64owvhn42d1s3fU3hglaXcFU1fvPtvU9eN7H4
+   o=;
+X-IronPort-AV: E=Sophos;i="5.64,298,1559520000"; 
+   d="scan'208";a="775793900"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-e7be2041.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 23 Jul 2019 09:25:46 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-e7be2041.us-west-2.amazon.com (Postfix) with ESMTPS id DEE1AA2397;
+        Tue, 23 Jul 2019 09:25:45 +0000 (UTC)
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 23 Jul 2019 09:25:45 +0000
+Received: from u9ff250417f405e.ant.amazon.com (10.43.160.245) by
+ EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 23 Jul 2019 09:25:40 +0000
+From:   Jonathan Chocron <jonnyc@amazon.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <alisaidi@amazon.com>, <ronenk@amazon.com>, <barakw@amazon.com>,
+        <talel@amazon.com>, <hanochu@amazon.com>, <hhhawa@amazon.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
+Subject: [PATCH v3 0/8] Amazon's Annapurna Labs DT-based PCIe host controller driver
+Date:   Tue, 23 Jul 2019 12:25:25 +0300
+Message-ID: <20190723092529.11310-1-jonnyc@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org, bhelgaas@google.com, hch@lst.de, Christian.Koenig@amd.com, jgg@mellanox.com, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, dan.j.williams@intel.com, epilmore@gigaio.com, sbates@raithlin.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,MYRULES_NO_TEXT autolearn=ham autolearn_force=no
-        version=3.4.2
-Subject: [PATCH 14/14] PCI/P2PDMA: Introduce pci_p2pdma_[un]map_resource()
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.245]
+X-ClientProxiedBy: EX13D24UWB004.ant.amazon.com (10.43.161.4) To
+ EX13D13UWA001.ant.amazon.com (10.43.160.136)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-pci_p2pdma_[un]map_resource() can be used to map a resource given
-it's physical address and the backing pci_dev. The functions will call
-dma_[un]map_resource() when appropriate.
+This series adds support for Amazon's Annapurna Labs DT-based PCIe host
+controller driver.
+Additionally, it adds 3 quirks (ACS, VPD and MSI-X) and 2 generic DWC patches.
 
-This is for demonstration purposes only as there are no users of this
-function at this time. Thus, this patch should not be merged at
-this time.
+Regarding the 2nd DWC patch (PCI flags support), do you think this should
+be done in the context of a host-bridge driver at all (as opposed to PCI
+system-wide code)?
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/pci/p2pdma.c | 85 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
+Changes since v2:
+- Added al_pcie_controller_readl/writel() wrappers
+- Reorganized local vars in several functions according to reverse
+  tree structure
+- Removed unnecessary check of ret value
+- Changed return type of al_pcie_config_prepare() from int to void
+- Removed check if link is up from probe() [done internally in
+  dw_pcie_rd/wr_conf()]
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index baf476039396..20c834cfd2d3 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -874,6 +874,91 @@ void pci_p2pdma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
- }
- EXPORT_SYMBOL_GPL(pci_p2pdma_unmap_sg_attrs);
- 
-+static pci_bus_addr_t pci_p2pdma_phys_to_bus(struct pci_dev *dev,
-+		phys_addr_t start, size_t size)
-+{
-+	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
-+	phys_addr_t end = start + size;
-+	struct resource_entry *window;
-+
-+	resource_list_for_each_entry(window, &bridge->windows) {
-+		if (window->res->start <= start && window->res->end >= end)
-+			return start - window->offset;
-+	}
-+
-+	return DMA_MAPPING_ERROR;
-+}
-+EXPORT_SYMBOL_GPL(pci_p2pdma_phys_to_bus);
-+
-+/**
-+ * pci_p2pdma_map_resource - map a PCI peer-to-peer physical address for DMA
-+ * @provider: pci device that provides the memory backed by phys_addr
-+ * @dma_dev: device doing the DMA request
-+ * @phys_addr: physical address of the memory to map
-+ * @size: size of the memory to map
-+ * @dir: DMA direction
-+ * @attrs: dma attributes passed to dma_map_resource() (if called)
-+ *
-+ * Maps a BAR physical address for programming a DMA engine.
-+ *
-+ * Returns the dma_addr_t to map or DMA_MAPPING_ERROR on failure
-+ */
-+dma_addr_t pci_p2pdma_map_resource(struct pci_dev *provider,
-+		struct device *dma_dev, phys_addr_t phys_addr, size_t size,
-+		enum dma_data_direction dir, unsigned long attrs)
-+{
-+	struct pci_dev *client;
-+	int dist;
-+
-+	client = find_parent_pci_dev(dma_dev);
-+	if (!client)
-+		return DMA_MAPPING_ERROR;
-+
-+	dist = upstream_bridge_distance(provider, client, NULL);
-+	if (dist & P2PDMA_NOT_SUPPORTED)
-+		return DMA_MAPPING_ERROR;
-+
-+	if (dist & P2PDMA_THRU_HOST_BRIDGE)
-+		return dma_map_resource(dma_dev, phys_addr, size, dir, attrs);
-+	else
-+		return pci_p2pdma_phys_to_bus(provider, phys_addr, size);
-+}
-+EXPORT_SYMBOL_GPL(pci_p2pdma_map_resource);
-+
-+/**
-+ * pci_p2pdma_unmap_resource - unmap a resource mapped with
-+ *		pci_p2pdma_map_resource()
-+ * @provider: pci device that provides the memory backed by phys_addr
-+ * @dma_dev: device doing the DMA request
-+ * @addr: dma address returned by pci_p2pdma_unmap_resource()
-+ * @size: size of the memory to map
-+ * @dir: DMA direction
-+ * @attrs: dma attributes passed to dma_unmap_resource() (if called)
-+ *
-+ * Maps a BAR physical address for programming a DMA engine.
-+ *
-+ * Returns the dma_addr_t to map or DMA_MAPPING_ERROR on failure
-+ */
-+void pci_p2pdma_unmap_resource(struct pci_dev *provider,
-+		struct device *dma_dev, dma_addr_t addr, size_t size,
-+		enum dma_data_direction dir, unsigned long attrs)
-+{
-+	struct pci_dev *client;
-+	int dist;
-+
-+	client = find_parent_pci_dev(dma_dev);
-+	if (!client)
-+		return;
-+
-+	dist = upstream_bridge_distance(provider, client, NULL);
-+	if (dist & P2PDMA_NOT_SUPPORTED)
-+		return;
-+
-+	if (dist & P2PDMA_THRU_HOST_BRIDGE)
-+		dma_unmap_resource(dma_dev, addr, size, dir, attrs);
-+}
-+EXPORT_SYMBOL_GPL(pci_p2pdma_unmap_resource);
-+
- /**
-  * pci_p2pdma_enable_store - parse a configfs/sysfs attribute store
-  *		to enable p2pdma
+Changes since v1:
+- Added comment regarding 0x0031 being used as a dev_id for non root-port devices as well
+- Fixed different message/comment/print wordings
+- Added panic stacktrace to commit message of MSI-x quirk patch
+- Changed to pci_warn() instead of dev_warn()
+- Added unit_address after node_name in dt-binding
+- Updated Kconfig help description
+- Used GENMASK and FIELD_PREP/GET where appropriate
+- Removed leftover field from struct al_pcie and moved all ptrs to
+  the beginning
+- Re-wrapped function definitions and invocations to use fewer lines
+- Change %p to %px in dbg prints in rd/wr_conf() functions
+- Removed validation that the port is configured to RC mode (as this is
+  added generically in PATCH 7/8)
+- Removed unnecessary variable initializations
+- Swtiched to %pR for printing resources
+
+
+Ali Saidi (1):
+  PCI: Add ACS quirk for Amazon Annapurna Labs root ports
+
+Jonathan Chocron (7):
+  PCI: Add Amazon's Annapurna Labs vendor ID
+  PCI/VPD: Add VPD release quirk for Amazon's Annapurna Labs Root Port
+  PCI: Add quirk to disable MSI-X support for Amazon's Annapurna Labs
+    Root Port
+  dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
+  PCI: al: Add support for DW based driver type
+  PCI: dw: Add validation that PCIe core is set to correct mode
+  PCI: dw: Add support for PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
+
+ .../devicetree/bindings/pci/pcie-al.txt       |  45 +++
+ MAINTAINERS                                   |   3 +-
+ drivers/pci/controller/dwc/Kconfig            |  12 +
+ drivers/pci/controller/dwc/pcie-al.c          | 367 ++++++++++++++++++
+ .../pci/controller/dwc/pcie-designware-ep.c   |   8 +
+ .../pci/controller/dwc/pcie-designware-host.c |  31 +-
+ drivers/pci/quirks.c                          |  34 ++
+ drivers/pci/vpd.c                             |  16 +
+ include/linux/pci_ids.h                       |   2 +
+ 9 files changed, 513 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
+
 -- 
-2.20.1
+2.17.1
 
