@@ -2,136 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE6BE75807
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2019 21:36:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C461F75974
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2019 23:25:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726230AbfGYTgp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Jul 2019 15:36:45 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:42696 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726220AbfGYTgp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 25 Jul 2019 15:36:45 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hqjXT-000461-Ns; Thu, 25 Jul 2019 13:36:32 -0600
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Pilmore <epilmore@gigaio.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190722230859.5436-1-logang@deltatee.com>
- <20190722230859.5436-12-logang@deltatee.com>
- <20190725185830.GH7450@mellanox.com>
- <cf61d237-8a8a-e3ac-a9df-466f20b63020@deltatee.com>
- <20190725192944.GI7450@mellanox.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <01950d0a-ed22-681b-2eb7-ae553b785e2e@deltatee.com>
-Date:   Thu, 25 Jul 2019 13:36:28 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726666AbfGYVZh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Jul 2019 17:25:37 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39676 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbfGYVZh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Jul 2019 17:25:37 -0400
+Received: by mail-io1-f67.google.com with SMTP id f4so100397506ioh.6
+        for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2019 14:25:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=0OE6CkyrftBD3Ku7P1YRVsn9jYbz8x68WmGWVUa6hzY=;
+        b=AWXlfRnEtLM74XglQGEkne+2wpRMQ3s+jTBHVl27BvwSaVklVPQBOEl+vVl2AOmA5q
+         qv9xXCge4s0vMUla2SYNdU3WfUuDpFqt6iVunAkr8kVIuSSqBhDFCulVS6VMtoNBW2nW
+         a3G2ZcfFBZNVDiJHDGaVNLBfRDN7Awy4HmWGgAy3K0bwPm+wqk1zOeXXbb/TXMI5b+i0
+         DnvM6BNfb/FAc68JxHuQRI2poAaDUJAcgX3JFh0zp6NFcq0rNvNxGTWgwNBKhLE/Hkyp
+         MdU+cjP7xzKxethms3zDzEPZwpyPFzGC5cDQqCSu2QqadqaB+iA26yhrhCOZ+AgVap5e
+         mmmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=0OE6CkyrftBD3Ku7P1YRVsn9jYbz8x68WmGWVUa6hzY=;
+        b=kJsMR/YtRBP1c7o2+PLQmUP6Di2650aEDcjPNb/783IpAnPr5hD33+I7SPUhG/8ViP
+         JdNfDFGE6yPH2JnwvA9HjoZ8Y3wRwBfataa2XflbgH1mcgR8qanDBC2u3X+6YXza/Fry
+         trP9e8Go3/74fGQwH0XIgmu3UYChMJ86idGVG89uqwPdCcbkyN8jrfObcPXxX8l1yA0F
+         K3GGcH/3z+STn+65q1X7DmtJgVKGP6tLulAFF7aZTRGpfamfZaJcwc6navgnVZANtyKv
+         0WjDtDGb7KSn6yI0b4j4s0+6fr7qDFXKjsa3uP4yLxtQxTSaKb4nbnYD2WKE6Rh0eVk/
+         YnbQ==
+X-Gm-Message-State: APjAAAWmLktCLZnw+f1Ltcu5gbg0wu+9Ovrzpfo5n1Mod83SzDdlAvxN
+        Uc4alYVF018xRorTw3tlUoCsFsDFZx8=
+X-Google-Smtp-Source: APXvYqyXby2GabhLGrmfNxGRSjjzbJ/o7K20JIc5pwz0S+rpYgbr6bHq19jJS94ZBSI/g1gq1f+w5w==
+X-Received: by 2002:a6b:b556:: with SMTP id e83mr81812981iof.94.1564089936348;
+        Thu, 25 Jul 2019 14:25:36 -0700 (PDT)
+Received: from localhost (67-0-24-96.albq.qwest.net. [67.0.24.96])
+        by smtp.gmail.com with ESMTPSA id s2sm36154569ioj.8.2019.07.25.14.25.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 14:25:35 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 14:25:34 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     bhelgaas@google.com
+cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH] pci: Kconfig: select PCI_MSI_IRQ_DOMAIN by default on
+ RISC-V
+Message-ID: <alpine.DEB.2.21.9999.1907251422040.32766@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-In-Reply-To: <20190725192944.GI7450@mellanox.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, epilmore@gigaio.com, dan.j.williams@intel.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, Christian.Koenig@amd.com, hch@lst.de, bhelgaas@google.com, linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, jgg@mellanox.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH 11/14] PCI/P2PDMA: dma_map P2PDMA map requests that
- traverse the host bridge
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
+This is part of adding support for RISC-V systems with PCIe host 
+controllers that support message-signaled interrupts.
 
-On 2019-07-25 1:29 p.m., Jason Gunthorpe wrote:
-> On Thu, Jul 25, 2019 at 01:17:02PM -0600, Logan Gunthorpe wrote:
->>
->>
->> On 2019-07-25 12:58 p.m., Jason Gunthorpe wrote:
->>> On Mon, Jul 22, 2019 at 05:08:56PM -0600, Logan Gunthorpe wrote:
->>>> Any requests that traverse the host bridge will need to be mapped into
->>>> the IOMMU, so call dma_map_sg() inside pci_p2pdma_map_sg() when
->>>> appropriate.
->>>>
->>>> Similarly, call dma_unmap_sg() inside pci_p2pdma_unmap_sg().
->>>>
->>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->>>>  drivers/pci/p2pdma.c | 31 ++++++++++++++++++++++++++++++-
->>>>  1 file changed, 30 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
->>>> index 5f43f92f9336..76f51678342c 100644
->>>> +++ b/drivers/pci/p2pdma.c
->>>> @@ -830,8 +830,22 @@ int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
->>>>  		int nents, enum dma_data_direction dir, unsigned long attrs)
->>>>  {
->>>>  	struct dev_pagemap *pgmap = sg_page(sg)->pgmap;
->>>> +	struct pci_dev *client;
->>>> +	int dist;
->>>> +
->>>> +	client = find_parent_pci_dev(dev);
->>>> +	if (WARN_ON_ONCE(!client))
->>>> +		return 0;
->>>>  
->>>> -	return __pci_p2pdma_map_sg(pgmap, dev, sg, nents);
->>>> +	dist = upstream_bridge_distance(pgmap->pci_p2pdma_provider,
->>>> +					client, NULL);
-> 
-> Isn't is a bit of a leap to assume that the pgmap is uniform across
-> all the sgs?
+Signed-off-by: Wesley Terpstra <wesley@sifive.com>
+[paul.walmsley@sifive.com: wrote patch description; split this
+ patch from the arch/riscv patch]
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+---
+ drivers/pci/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This is definitely a wart but there's not much we can do about it.
-Currently we can't support mixing p2p pages with regular pages. In the
-same way we can't support mixing p2p pages from different sources. No
-current users do that and it would be weird for them to want to at this
-point.
-
->>>> +	if (WARN_ON_ONCE(dist & P2PDMA_NOT_SUPPORTED))
->>>> +		return 0;
->>>> +
->>>> +	if (dist & P2PDMA_THRU_HOST_BRIDGE)
->>>> +		return dma_map_sg_attrs(dev, sg, nents, dir, attrs);
->>>
->>> IIRC at this point the SG will have struct page references to the BAR
->>> memory - so (all?) the IOMMU drivers are able to handle P2P setup in
->>> this case?
->>
->> Yes. The IOMMU drivers refer to the physical address for BAR which they
->> can get from the struct page. And this works fine today.
-> 
-> Interesting.
-> 
-> So, for the places where we already map BAR memory to userspace, if I
-> were to make struct pages for those BARs and use vm_insert_page()
-> instead of io_remap_pfn_range(), then the main thing missing in RDMA
-> to actually do P2P DMA is a way to get those struct pages out of
-> get_user_pages and know to call the pci_p2pdma_map_sg version (ie in
-> ib_umem_get())?
-
-Yes, we've been doing that for a long time with hacky code that would
-never get upstream.
-
-Essentially, if you expose those pages to userspace we also need to
-ensure that all other users of GUP either reject those pages or map them
-correctly.
-
-Logan
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 2ab92409210a..beb3408a0272 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -52,7 +52,7 @@ config PCI_MSI
+ 	   If you don't know what to do here, say Y.
+ 
+ config PCI_MSI_IRQ_DOMAIN
+-	def_bool ARC || ARM || ARM64 || X86
++	def_bool ARC || ARM || ARM64 || X86 || RISCV
+ 	depends on PCI_MSI
+ 	select GENERIC_MSI_IRQ_DOMAIN
