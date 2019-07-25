@@ -2,46 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9765575336
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2019 17:50:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ACB17536A
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2019 18:00:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389487AbfGYPuz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Jul 2019 11:50:55 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:37956 "EHLO ale.deltatee.com"
+        id S2389788AbfGYQAq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Jul 2019 12:00:46 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:38154 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389566AbfGYPuz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 25 Jul 2019 11:50:55 -0400
+        id S2387874AbfGYQAq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 25 Jul 2019 12:00:46 -0400
 Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
         by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.89)
         (envelope-from <logang@deltatee.com>)
-        id 1hqg17-0007t9-3O; Thu, 25 Jul 2019 09:50:54 -0600
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <SL2P216MB01878BBCD75F21D882AEEA2880C60@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <20190724133814.GA194025@google.com>
- <SL2P216MB0187E2042E5DB8D9F29E665280C10@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+        id 1hqgAQ-00081J-CN; Thu, 25 Jul 2019 10:00:31 -0600
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190722230859.5436-1-logang@deltatee.com>
+ <20190722230859.5436-12-logang@deltatee.com> <20190724063232.GB1804@lst.de>
+ <7173a4dd-0c9c-48de-98cd-93513313fd8d@deltatee.com>
+ <20190725061005.GB24875@lst.de>
 From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <4f5afb8e-9013-980f-0553-c687d17ed8d5@deltatee.com>
-Date:   Thu, 25 Jul 2019 09:50:48 -0600
+Message-ID: <fb39485a-2914-bac4-b249-e1f4ecc8d2be@deltatee.com>
+Date:   Thu, 25 Jul 2019 10:00:25 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <SL2P216MB0187E2042E5DB8D9F29E665280C10@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+In-Reply-To: <20190725061005.GB24875@lst.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, mika.westerberg@linux.intel.com, benh@kernel.crashing.org, helgaas@kernel.org, nicholas.johnson-opensource@outlook.com.au
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, epilmore@gigaio.com, dan.j.williams@intel.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, jgg@mellanox.com, Christian.Koenig@amd.com, bhelgaas@google.com, linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de
 X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
         GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: Possible PCI Regression Linux 5.3-rc1
+Subject: Re: [PATCH 11/14] PCI/P2PDMA: dma_map P2PDMA map requests that
+ traverse the host bridge
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
@@ -51,42 +59,74 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 2019-07-25 7:18 a.m., Nicholas Johnson wrote:
-> On Wed, Jul 24, 2019 at 08:38:14AM -0500, Bjorn Helgaas wrote:
->> On Wed, Jul 24, 2019 at 12:54:00PM +0000, Nicholas Johnson wrote:
->>> Hi all,
->>>
->>> I was just rebasing my patches for linux 5.3-rc1 and noticed a possible 
->>> regression that shows on both of my machines. It is also reproducible 
->>> with the unmodified Ubuntu mainline kernel, downloadable at [1].
->>>
->>> Running the lspci command takes 1-3 seconds with 5.3-rc1 (rather than an 
->>> imperceivable amount of time). Booting with pci.dyndbg does not reveal 
->>> why.
->>>
->>> $ uname -r
->>> 5.3.0-050300rc1-generic
->>> $ time lspci -vt 1>/dev/null
->>>
->>> real	0m2.321s
->>> user	0m0.026s
->>> sys	0m0.000s
->>>
->>> If none of you are aware of this or what is causing it, I will submit a 
->>> bug report to Bugzilla.
+On 2019-07-25 12:10 a.m., Christoph Hellwig wrote:
+> On Wed, Jul 24, 2019 at 09:58:59AM -0600, Logan Gunthorpe wrote:
 >>
->> I wasn't aware of this; thanks for reporting it!  I wasn't able to
->> reproduce this in qemu.  Can you play with "strace -r lspci -vt" and
->> the like?  Maybe try "lspci -n" to see if it's related to looking up
->> the names?
+>>
+>> On 2019-07-24 12:32 a.m., Christoph Hellwig wrote:
+>>>>  	struct dev_pagemap *pgmap = sg_page(sg)->pgmap;
+>>>> +	struct pci_dev *client;
+>>>> +	int dist;
+>>>> +
+>>>> +	client = find_parent_pci_dev(dev);
+>>>> +	if (WARN_ON_ONCE(!client))
+>>>> +		return 0;
+>>>>  
+>>>> +	dist = upstream_bridge_distance(pgmap->pci_p2pdma_provider,
+>>>> +					client, NULL);
+>>>
+>>> Doing this on every mapping call sounds expensive..
+>>
+>> The result of this function is cached in an xarray (per patch 4) so, on
+>> the hot path, it should just be a single xa_load() which should be a
+>> relatively fast lookup which is similarly used for other hot path
+>> operations.
 > 
-> For a second you had me doubting myself - it could have been a Ubuntu 
-> thing. But no, I just reproduced it on Arch Linux, and double checked 
-> that it was not doing it on 5.2. Also, the problem occurs even without 
-> the PCI kernel parameters which I usually pass.
+> We don't cache find_parent_pci_dev, though.  So we should probably
+> export find_parent_pci_dev with a proper namespaces name and cache
+> that in the caler.
 
-Ok, can you bisect to find the commit that causes this issue?
+Oh, yes, I'll take a look at this. Of the two callers: NVMe should be
+easy we could just pass the PCI device instead of the struct device.
+RDMA is significantly more unclear: would you add a pci_dev to struct
+ib_device? Or maybe we should be able to simply rely on the fact that
+the DMA device *must* be a PCI device and just use to_pci_dev() directly?
+
+>>>
+>>>> +	if (WARN_ON_ONCE(dist & P2PDMA_NOT_SUPPORTED))
+>>>> +		return 0;
+>>>> +
+>>>> +	if (dist & P2PDMA_THRU_HOST_BRIDGE)
+>>>> +		return dma_map_sg_attrs(dev, sg, nents, dir, attrs);
+>>>> +	else
+>>>> +		return __pci_p2pdma_map_sg(pgmap, dev, sg, nents);
+>>>
+>>> Can't we organize the values so that we can switch on the return
+>>> value instead of doing flag checks?
+>>
+>> Sorry, I don't follow what you are saying here. If you mean for
+>> upstream_bridge_distance() to just return how to map and not the
+>> distance that would interfere with other uses of that function.
+> 
+> The point is that in the map path we don't even care about the
+> distance.  I think we should just have a function that returns the
+> P2PDMA_ values from the xarray (maybe also store it there as two
+> values, but that isn't quite as important), and get rid of even
+> the concept of distance in the map path. e.g.:
+> 
+> 	switch (pci_p2pdma_supported(pgmap->pci_p2pdma_provider, client))) {
+> 	case P2PDMA_HOST_BRIDGE:
+> 		return dma_map_sg_attrs(dev, sg, nents, dir, attrs);
+> 	case P2PDMA_SWITCH:
+> 		return __pci_p2pdma_map_sg(pgmap, dev, sg, nents);
+> 	default:
+> 		WARN_ON_ONCE(1);
+> 		return 0;
+> 	}
+
+Ok, will change for v2.
 
 Thanks,
 
 Logan
+
