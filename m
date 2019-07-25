@@ -2,146 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DB0D175422
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2019 18:34:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4869B75423
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2019 18:35:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbfGYQeu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Jul 2019 12:34:50 -0400
-Received: from mail-eopbgr10043.outbound.protection.outlook.com ([40.107.1.43]:28227
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729364AbfGYQeu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:34:50 -0400
+        id S1729394AbfGYQfK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Jul 2019 12:35:10 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:6228 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729364AbfGYQfK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Jul 2019 12:35:10 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x6PFxcPn022218;
+        Thu, 25 Jul 2019 09:35:06 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=zVqy5QaPbbRnO2AOLgy4rE7ZOLCEbzX5XU9gZQTW7DA=;
+ b=xWWS8Z3U/7J0YvL0VqvLrAEriFwSLjloSB5HIk0rf1NF0qwgBzExVUh2nvyJFW0X0pri
+ 5LGAkJEKQBz2k+jTWrtMa48i7PyaFt7rxkBpRom39Pngz2KlYffsco+8gAZvSIG0bmlc
+ yOya4L+0DwMWeA61PQ4mLgPOUYRsSEpDOhJtAWKvY8lv/bfeDdqODYzVozVunXS03R+D
+ 8xy3lehZHDvv4UN2Vzp+sDmyzT3oXL0sll5s+ZKRRy36c8eVEcDlWO5gali57t7ZGl4x
+ suSjIK2MN9jT+UKtyLP5FxlKxL8WwSqAcVib3oQmzcpFtINKh9T2v4mVOBtJYyKlkSam Bw== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2tx61rjeyr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jul 2019 09:35:06 -0700
+Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 25 Jul
+ 2019 09:35:05 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.53) by
+ SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 25 Jul 2019 09:35:04 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AMwdjlo0lVa49rx+GRSbHELLMs5Reix4uiMjQ8JikQO30Q9A3Lec9Cb+ccAL1lmKeJPtJkhawUbiJAs+xVJQmJ7QIlzn9nxp8lbqFrbPPN0PNhn9OG1fnuBMuu9rurbBC6UJtABDiPrtjQX7IfzoKaGaM4RqySEBR1CVwUD1m4UjDAcuH4s8I8lnOqG1mAkW9mxVnUZFDDTXJtVYIjIY/I4Y3OOzN9DmqUV9BWs/+9lVcO98zbro7rxOGyU2xjee2hsF7jUlLmMJ/HPUbfop7fjEjIWgS7ecGzuiFZUFUZ7kLHCpscCw7UJk2bzxVjs6kLXESrGcpwzYaX2OtiiNGA==
+ b=RxYDzULJFp4m4y4ZxOFOJrOBTfFwIYTqtldaWA65+YPhcV/gMFBCoYGmpMngaI5T3th0IMfnzqDdS/6XEVRIkYb0nQasaKQgCMC2dVQNbCHO63Rn6eZkU8SrR+jen6DRXcRIiqDTNONWV7lOBVt/FupIqL1QmmLC6wc2SKtpw2tyGEY0OzKH2Ly+UhflNg2oZJXIBhiILGGbkaQ9clWdS+eaOQEzjoccPMif/ooD7wwoN64U5/uxn+CojN2QrDoZpOuhnlvS75cA4jiVMquD6VpwC6z6Mhozhir6ESseYTlNajcVV7VnO9/EXUUfDtaA/DJkmpc7OHuo1xUIFaJo+g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gXDfkSJ3HbkJRyHV33LW27pBv42JcRgX97lSOQmsnpU=;
- b=YszARQ6GVLtGvIXZtNZEs86iwSSQxCpXsqPFJjBjhJ2PKBygtMrYrIcHMVyPzriTBQlDtzXian79N68Jt9O4aaBDFcnIrdnHJzp3DJ9o7GmrBBRqDqleKCCRvN8Xu/S0Y/lQAesio0jruWkdVCSveA2jz/cRTautTpBB4tbjs3fa0/GSFq2D9ZLLhXO1EySSjBeHqtj2M5FzvF15wFHrjHXJkhu0Io7hKuPrNmynD3X5F0qwpVvo+BpqzdXIY99d483gI3aw/wwMbPGQtpug3VivcqOYq3X5sColl9VIJeeHYPM8e8RuQZIP4TeaqHcR8xUWnlc0l6945iWk2/XDAg==
+ bh=zVqy5QaPbbRnO2AOLgy4rE7ZOLCEbzX5XU9gZQTW7DA=;
+ b=mBA2fn+b56jh3SLzH+o06s/yfwm/W3llGzekCUZuXvh12nigJ2Qg0ZJkCDKXtoEtq8G+DfPi8o9zLvGJ3stLauZKWmZC6Q8f9mV72LMDeuda3H+Q/8pgHvFpZr/GyYUHvrA2d0nR1vY4FlqKvg6kx7apw8UmGrtkuVu+nJUPfuylhWGJvRB853G5xNhPOIB3z5JD+HiHg+Ek3zRAotvMZwNRmxkzGsoOMooGnUdpnZWKB2BLE062+yCFoMHjUzp3qCnmtaZ3QTB5toMyPgHOceKkDAy/M/hvzReun5MC9pds0t4tpyNcVhJfNGg/cK6pBK/aB6fF4uelRuXNF2KUSg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=mellanox.com;dmarc=pass action=none
- header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
+ smtp.mailfrom=marvell.com;dmarc=pass action=none
+ header.from=marvell.com;dkim=pass header.d=marvell.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gXDfkSJ3HbkJRyHV33LW27pBv42JcRgX97lSOQmsnpU=;
- b=XM7a8sxNNqaIW3vdgfmczUkbqmqUP4wuyN4gHRzCyjikBomT+PH+JDdAkguXw89qwxyFjt8RM3q/cns3Yrk0uDzgU7HPuebUZQE9bxQJxpR/0hSDQf0H84Yy8gkmA8zLnQRxKe70gEry9zVXqFtUZdxqLUihhmossoliGny/jN8=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5550.eurprd05.prod.outlook.com (20.177.201.210) with Microsoft SMTP
+ bh=zVqy5QaPbbRnO2AOLgy4rE7ZOLCEbzX5XU9gZQTW7DA=;
+ b=QEQFNhQW21gB/voYb8at4nYEd+YmXrmSH03KXrBRZP08RUoN3qCLx2BK1pPGoRZGugfni2fcjl6aom68/lLwg+BcqUZSe0c4Rff8RYM8Nv6hQrImefDRPpNP2hh5jP72+tgl+FcXDAP69p7tEpGnhce0E/eQyrbbXNTROZ/RaGk=
+Received: from CY4PR1801MB1895.namprd18.prod.outlook.com (10.171.255.22) by
+ CY4PR1801MB1878.namprd18.prod.outlook.com (10.171.255.17) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.16; Thu, 25 Jul 2019 16:34:45 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::5c6f:6120:45cd:2880]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::5c6f:6120:45cd:2880%4]) with mapi id 15.20.2115.005; Thu, 25 Jul 2019
- 16:34:45 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Logan Gunthorpe <logang@deltatee.com>
-CC:     Christoph Hellwig <hch@lst.de>,
+ 15.20.2115.13; Thu, 25 Jul 2019 16:35:02 +0000
+Received: from CY4PR1801MB1895.namprd18.prod.outlook.com
+ ([fe80::c0db:b35e:8b2f:c1e7]) by CY4PR1801MB1895.namprd18.prod.outlook.com
+ ([fe80::c0db:b35e:8b2f:c1e7%6]) with mapi id 15.20.2115.005; Thu, 25 Jul 2019
+ 16:35:02 +0000
+From:   Jayachandran Chandrasekharan Nair <jnair@marvell.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Shannon Zhao <shenglong.zsl@alibaba-inc.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Pilmore <epilmore@gigaio.com>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [PATCH 11/14] PCI/P2PDMA: dma_map P2PDMA map requests that
- traverse the host bridge
-Thread-Topic: [PATCH 11/14] PCI/P2PDMA: dma_map P2PDMA map requests that
- traverse the host bridge
-Thread-Index: AQHVQOKBSj2t7d2fJ0uM7qhfiZtzFqbZUWAAgACeQ4CAAO3MgIAApPCAgAAJjwA=
-Date:   Thu, 25 Jul 2019 16:34:44 +0000
-Message-ID: <20190725163438.GF7450@mellanox.com>
-References: <20190722230859.5436-1-logang@deltatee.com>
- <20190722230859.5436-12-logang@deltatee.com> <20190724063232.GB1804@lst.de>
- <7173a4dd-0c9c-48de-98cd-93513313fd8d@deltatee.com>
- <20190725061005.GB24875@lst.de>
- <fb39485a-2914-bac4-b249-e1f4ecc8d2be@deltatee.com>
-In-Reply-To: <fb39485a-2914-bac4-b249-e1f4ecc8d2be@deltatee.com>
+        Guiping Duan <gduan@marvell.com>,
+        George Cherian <gcherian@marvell.com>,
+        "Sunil Kovvuri Goutham" <sgoutham@marvell.com>
+Subject: Re: [PATCH] PCI: Add ACS quirk for Cavium ThunderX 2 root port
+ devices
+Thread-Topic: [PATCH] PCI: Add ACS quirk for Cavium ThunderX 2 root port
+ devices
+Thread-Index: AQHVQwboV84qzPxVD0yOX55pKvzUPQ==
+Date:   Thu, 25 Jul 2019 16:35:02 +0000
+Message-ID: <20190725163453.GA28724@dc5-eodlnx05.marvell.com>
+References: <1563541835-141011-1-git-send-email-shenglong.zsl@alibaba-inc.com>
+ <20190724185535.GD203187@google.com>
+In-Reply-To: <20190724185535.GD203187@google.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: YQBPR0101CA0002.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00::15) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
+x-clientproxiedby: BY5PR17CA0001.namprd17.prod.outlook.com
+ (2603:10b6:a03:1b8::14) To CY4PR1801MB1895.namprd18.prod.outlook.com
+ (2603:10b6:910:7a::22)
 x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
+x-originating-ip: [199.233.59.128]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f7893a56-4231-4f9d-871b-08d7111e004a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5550;
-x-ms-traffictypediagnostic: VI1PR05MB5550:
-x-microsoft-antispam-prvs: <VI1PR05MB55507ED741219256CC0F3DA7CFC10@VI1PR05MB5550.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-office365-filtering-correlation-id: 6d2b6679-bb3a-4fbe-94c7-08d7111e0adf
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR1801MB1878;
+x-ms-traffictypediagnostic: CY4PR1801MB1878:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <CY4PR1801MB1878095CDD9FB5CBB81D7487A6C10@CY4PR1801MB1878.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:962;
 x-forefront-prvs: 0109D382B0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(39860400002)(376002)(396003)(136003)(199004)(189003)(33656002)(11346002)(81166006)(446003)(53936002)(486006)(2616005)(8936002)(36756003)(7736002)(1076003)(6512007)(6116002)(478600001)(71200400001)(6486002)(71190400001)(3846002)(26005)(81156014)(6916009)(6436002)(25786009)(305945005)(186003)(8676002)(86362001)(76176011)(4326008)(102836004)(53546011)(7416002)(5660300002)(2906002)(476003)(386003)(256004)(14454004)(66446008)(68736007)(66946007)(66476007)(229853002)(64756008)(6246003)(6506007)(52116002)(99286004)(66066001)(54906003)(316002)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5550;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(396003)(376002)(346002)(366004)(189003)(199004)(6486002)(305945005)(71200400001)(71190400001)(81166006)(81156014)(7736002)(33656002)(4326008)(2906002)(99286004)(8936002)(25786009)(256004)(14444005)(229853002)(3846002)(476003)(478600001)(6116002)(966005)(102836004)(186003)(54906003)(26005)(14454004)(86362001)(6916009)(446003)(11346002)(66946007)(386003)(6506007)(486006)(1076003)(316002)(6306002)(8676002)(6246003)(53936002)(107886003)(6512007)(76176011)(52116002)(66066001)(5660300002)(66476007)(68736007)(6436002)(66446008)(64756008)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1801MB1878;H:CY4PR1801MB1895.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gfrO4g8HpaSnZM7m3hxi1Pehla2WqblbjeiXy5KlFFa7efA8GnLQGRijb/g+HjRvmeNpBgm23Awonezd+gj/gbaYSuA2YPDWNn7+X7Vc1EaSfc4Im8eLVEvDWjLYXIG8+7QmmUpQObw1v0lT9ZjpXCE8BZnKfS0Zc4WHO2BcTVUKnmDBKq5WT62Inzt8dTdvso6nytUApkejxK28M89oCVsBsSgDhV6Ipni5uD02k0/UD/cwZ06ZkCzr2Y9yyfJIcwnqLXlIwLXbciH2p4mtkgEbUFHKNxxDQ+Leqr6SzJf7qknar1vEd6OpSgN3dOYVVpVljNWGgBJR552FW2Pn2qkVwb4wjQ7v7EMPQmcCKWUwOpbWuuAuB6ZlluYe/scO6KbnhdMXkmepYnP8zZTXyC95wxPvxyu0VJW5P79IkWc=
+x-microsoft-antispam-message-info: O9kEdx9HLIQ1aMye9Z7aHjfsP0Fv68Rxp6CM2C4rvlcN+bB8Nnd4xowT58WwAZoL81kXsqfsObDG31G+3FiHjmXNrZm/COWeRvkahPMlz0Y9apzWJkJrN6Y3xLp7IEEETxDksO4kycsqkbDGckNYU6m1blZHUU8DFA/uUYyLUOj1APKbwUPzocadxTQK871Wdc14ozXOJI8516Dm2EZH3IES6BfUbP9RbhT+DWBUYqzWE5w9hSuW/CfREigzI0ATaqLSz1Ei2Tp90ahnF6GdLVPVzK5JYVIrrbjIMIhw4p244rbVKxFxjitKwTne5NLJGj3LiAC8HPqyOdi7q9pkx5gwZYXRxAnnljLye9SanktRHrZOrD7l1rR8OKw0q11UDObwXLJq+m+Ysy5snq5JNExeO2WKDehfs+klKqr53uM=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5857963BAF91B24986E9094C8F84E7D2@eurprd05.prod.outlook.com>
+Content-ID: <8EDB2E46CBFEFC49B3209104B6E48DC5@namprd18.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7893a56-4231-4f9d-871b-08d7111e004a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2019 16:34:44.9708
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d2b6679-bb3a-4fbe-94c7-08d7111e0adf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2019 16:35:02.7089
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5550
+X-MS-Exchange-CrossTenant-userprincipalname: jnair@marvell.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1801MB1878
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
+ definitions=2019-07-25_06:2019-07-25,2019-07-25 signatures=0
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 10:00:25AM -0600, Logan Gunthorpe wrote:
+On Wed, Jul 24, 2019 at 01:55:35PM -0500, Bjorn Helgaas wrote:
+> See
+> https://lkml.kernel.org/r/20171026223701.GA25649@bhelgaas-glaptop.roam.co=
+rp.google.com
+> for incidental hints (subject, commit log, commit reference).  Your
+> patch basically extends that commit, so the subject should be very
+> similar.
 >=20
->=20
-> On 2019-07-25 12:10 a.m., Christoph Hellwig wrote:
-> > On Wed, Jul 24, 2019 at 09:58:59AM -0600, Logan Gunthorpe wrote:
-> >>
-> >>
-> >> On 2019-07-24 12:32 a.m., Christoph Hellwig wrote:
-> >>>>  	struct dev_pagemap *pgmap =3D sg_page(sg)->pgmap;
-> >>>> +	struct pci_dev *client;
-> >>>> +	int dist;
-> >>>> +
-> >>>> +	client =3D find_parent_pci_dev(dev);
-> >>>> +	if (WARN_ON_ONCE(!client))
-> >>>> +		return 0;
-> >>>> =20
-> >>>> +	dist =3D upstream_bridge_distance(pgmap->pci_p2pdma_provider,
-> >>>> +					client, NULL);
-> >>>
-> >>> Doing this on every mapping call sounds expensive..
-> >>
-> >> The result of this function is cached in an xarray (per patch 4) so, o=
-n
-> >> the hot path, it should just be a single xa_load() which should be a
-> >> relatively fast lookup which is similarly used for other hot path
-> >> operations.
+> On Fri, Jul 19, 2019 at 09:10:35PM +0800, Shannon Zhao wrote:
+> > From: Shannon Zhao <shannon.zhao@linux.alibaba.com>
 > >=20
-> > We don't cache find_parent_pci_dev, though.  So we should probably
-> > export find_parent_pci_dev with a proper namespaces name and cache
-> > that in the caler.
+> > Like commit f2ddaf8(PCI: Apply Cavium ThunderX ACS quirk to more Root
+> > Ports), it should apply ACS quirk to ThunderX 2 root port devices.
 >=20
-> Oh, yes, I'll take a look at this. Of the two callers: NVMe should be
-> easy we could just pass the PCI device instead of the struct device.
-> RDMA is significantly more unclear: would you add a pci_dev to struct
-> ib_device? Or maybe we should be able to simply rely on the fact that
-> the DMA device *must* be a PCI device and just use to_pci_dev() directly?
+> s/root port/Root Port/ to be consistent
+>=20
+> > Signed-off-by: Shannon Zhao <shannon.zhao@linux.alibaba.com>
+>=20
+> I suppose this should have the same stable tag as f2ddaf8dfd4a ("PCI:
+> Apply Cavium ThunderX ACS quirk to more Root Ports") itself?
+> > ---
+> >  drivers/pci/quirks.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index 28c64f8..ea7848b 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -4224,10 +4224,12 @@ static bool pci_quirk_cavium_acs_match(struct p=
+ci_dev *dev)
+> >  	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
+> >  	 * bits of device ID are used to indicate which subdevice is used
+> >  	 * within the SoC.
+> > +	 * Effectively selects the ThunderX 2 root ports whose device ID
+> > +	 * is 0xaf84.
+> >  	 */
+> >  	return (pci_is_pcie(dev) &&
+> >  		(pci_pcie_type(dev) =3D=3D PCI_EXP_TYPE_ROOT_PORT) &&
+> > -		((dev->device & 0xf800) =3D=3D 0xa000));
+> > +		((dev->device & 0xf800) =3D=3D 0xa000 || dev->device =3D=3D 0xaf84))=
+;
+>=20
+> I'm somewhat doubtful about this because previously we at least
+> selected a whole class of ThunderX 1 devices:
+>=20
+>   ((dev->device & 0xf800) =3D=3D 0xa000)
+>=20
+> while you're adding only a *single* ThunderX device.
+>=20
+> I don't want a constant trickle of adding new devices.  Can somebody
+> from Cavium or Marvell provide a corresponding mask for ThunderX 2, or
+> confirm that 0xaf84 is really the single device we expect to need
+> here?
+=20
+We are working on a patch to fix this quirk to handle more Marvell
+(Cavium) PCI IDs. Ideally we should be handling ThunderX1, ThunderX2
+and the Octeon-TX families here.
 
-AFAIK you need to use the ib_device->dma_device and add some kind of
-is_pci_dev to make it safe
-
-Jason
+Adding the folks working on this reduce the churn here, hopefully
+we can get all of it sorted in one patch.
+=20
+JC
