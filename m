@@ -2,103 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BFF6B767CA
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2019 15:40:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 483AE76BC4
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2019 16:40:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfGZNkC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Jul 2019 09:40:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45918 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727546AbfGZNkC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:40:02 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 536D522CB8;
-        Fri, 26 Jul 2019 13:40:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148401;
-        bh=j4QpKiWOZUwLVM0PO3DDqb7etaR53fFYJO+NvTspFdk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zWhMHCdBFwGPGOsuvfBOtBdu2zZHZRatzR2mxP2wiecw3bV7tswFP87sKbCZ6TtJ+
-         D0Qm7+Ir+Se2G+4pkPEtKk0Lnb6CHTxe4lfr66Onwkes6JHKQ3fqwhn6TL2RmpAPbX
-         5D60qnMeR9PWMnJsIIiaA2jkg/0iNHp1r/4C1xe8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 14/85] PCI: OF: Initialize dev->fwnode appropriately
-Date:   Fri, 26 Jul 2019 09:38:24 -0400
-Message-Id: <20190726133936.11177-14-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
-References: <20190726133936.11177-1-sashal@kernel.org>
+        id S1727570AbfGZOkR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Jul 2019 10:40:17 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:55634 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbfGZOkQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Jul 2019 10:40:16 -0400
+Received: from trochilidae.toradex.int (unknown [46.140.72.82])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id C5DBF5C0AF6;
+        Fri, 26 Jul 2019 16:40:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1564152014;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=xXvBZt2loW2wVxqkmYT2gOg2/wgOnSpx+FICc1eWU54=;
+        b=k9OCOvip8cfpxfzJ+aCk4Ob+jtjM6XQpjG//Qj50KO9qpJf6DvIcJ3OsXLnmZ8c0KtYJJL
+        F8XNABsdDGAMDTg3ig/0Ei/+O4IEi9QElFxC0znKyK9HWZaPv6exN4sNtGkHnLOL1UCpCs
+        aCLiQcPUKou8JhOQEFt43V8mvACOQbM=
+From:   Stefan Agner <stefan@agner.ch>
+To:     hongxing.zhu@nxp.com, l.stach@pengutronix.de
+Cc:     lorenzo.pieralisi@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, tpiepho@impinj.com,
+        leonard.crestez@nxp.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stefan Agner <stefan@agner.ch>
+Subject: [PATCH RESEND v8] PCI: imx6: limit DBI register length
+Date:   Fri, 26 Jul 2019 16:40:07 +0200
+Message-Id: <20190726144007.26605-1-stefan@agner.ch>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Define the length of the DBI registers and limit config space to its
+length. This makes sure that the kernel does not access registers
+beyond that point, avoiding the following abort on a i.MX 6Quad:
+  # cat /sys/devices/soc0/soc/1ffc000.pcie/pci0000\:00/0000\:00\:00.0/config
+  [  100.021433] Unhandled fault: imprecise external abort (0x1406) at 0xb6ea7000
+  ...
+  [  100.056423] PC is at dw_pcie_read+0x50/0x84
+  [  100.060790] LR is at dw_pcie_rd_own_conf+0x44/0x48
+  ...
 
-[ Upstream commit 59b099a6c75e4ddceeaf9676422d8d91d0049755 ]
-
-For PCI devices that have an OF node, set the fwnode as well. This way
-drivers that rely on fwnode don't need the special case described by
-commit f94277af03ea ("of/platform: Initialise dev->fwnode appropriately").
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- drivers/pci/of.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Changes in v3:
+- Rebase on pci/dwc
+Changes in v4:
+- Rebase on pci/dwc
+Changes in v5:
+- Rebased ontop of pci/dwc
+- Use DBI length of 0x200
+Changes in v6:
+- Use pci_dev.cfg_size mechanism to limit config space (this made patch 1
+  of previous versions of this patchset obsolete).
+Changes in v7:
+- Restrict fixup to Synopsys/0xabcd
+- Apply cfg_size limitation only if dbi_length is specified
+Changes in v8:
+- Restrict fixup for Synopsys/0xabcd and class PCI bridge
+- Check device driver to be pci-imx6
 
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 73d5adec0a28..bc7b27a28795 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -22,12 +22,15 @@ void pci_set_of_node(struct pci_dev *dev)
- 		return;
- 	dev->dev.of_node = of_pci_find_child_device(dev->bus->dev.of_node,
- 						    dev->devfn);
-+	if (dev->dev.of_node)
-+		dev->dev.fwnode = &dev->dev.of_node->fwnode;
- }
+ drivers/pci/controller/dwc/pci-imx6.c | 33 +++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 9b5cb5b70389..8b8efa3063f5 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -57,6 +57,7 @@ enum imx6_pcie_variants {
+ struct imx6_pcie_drvdata {
+ 	enum imx6_pcie_variants variant;
+ 	u32 flags;
++	int dbi_length;
+ };
  
- void pci_release_of_node(struct pci_dev *dev)
- {
- 	of_node_put(dev->dev.of_node);
- 	dev->dev.of_node = NULL;
-+	dev->dev.fwnode = NULL;
- }
+ struct imx6_pcie {
+@@ -1212,6 +1213,7 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+ 		.variant = IMX6Q,
+ 		.flags = IMX6_PCIE_FLAG_IMX6_PHY |
+ 			 IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE,
++		.dbi_length = 0x200,
+ 	},
+ 	[IMX6SX] = {
+ 		.variant = IMX6SX,
+@@ -1254,6 +1256,37 @@ static struct platform_driver imx6_pcie_driver = {
+ 	.shutdown = imx6_pcie_shutdown,
+ };
  
- void pci_set_bus_of_node(struct pci_bus *bus)
-@@ -41,13 +44,18 @@ void pci_set_bus_of_node(struct pci_bus *bus)
- 		if (node && of_property_read_bool(node, "external-facing"))
- 			bus->self->untrusted = true;
- 	}
++static void imx6_pcie_quirk(struct pci_dev *dev)
++{
++	struct pci_bus *bus = dev->bus;
++	struct pcie_port *pp = bus->sysdata;
 +
- 	bus->dev.of_node = node;
++	/* Bus parent is the PCI bridge, its parent is this platform driver */
++	if (!bus->dev.parent || !bus->dev.parent->parent)
++		return;
 +
-+	if (bus->dev.of_node)
-+		bus->dev.fwnode = &bus->dev.of_node->fwnode;
- }
- 
- void pci_release_bus_of_node(struct pci_bus *bus)
++	/* Make sure we only quirk devices associated with this driver */
++	if (bus->dev.parent->parent->driver != &imx6_pcie_driver.driver)
++		return;
++
++	if (bus->number == pp->root_bus_nr) {
++		struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++		struct imx6_pcie *imx6_pcie = to_imx6_pcie(pci);
++
++		/*
++		 * Limit config length to avoid the kernel reading beyond
++		 * the register set and causing an abort on i.MX 6Quad
++		 */
++		if (imx6_pcie->drvdata->dbi_length) {
++			dev->cfg_size = imx6_pcie->drvdata->dbi_length;
++			dev_info(&dev->dev, "Limiting cfg_size to %d\n",
++					dev->cfg_size);
++		}
++	}
++}
++DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_VENDOR_ID_SYNOPSYS, 0xabcd,
++			PCI_CLASS_BRIDGE_PCI, 8, imx6_pcie_quirk);
++
+ static int __init imx6_pcie_init(void)
  {
- 	of_node_put(bus->dev.of_node);
- 	bus->dev.of_node = NULL;
-+	bus->dev.fwnode = NULL;
- }
- 
- struct device_node * __weak pcibios_get_phb_of_node(struct pci_bus *bus)
+ #ifdef CONFIG_ARM
 -- 
-2.20.1
+2.22.0
 
