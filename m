@@ -2,102 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 94CEA76EBA
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2019 18:18:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C796B76F2A
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2019 18:32:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbfGZQSR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Jul 2019 12:18:17 -0400
-Received: from mga06.intel.com ([134.134.136.31]:7028 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbfGZQSR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 26 Jul 2019 12:18:17 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 09:18:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,311,1559545200"; 
-   d="scan'208";a="189674915"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Jul 2019 09:18:15 -0700
-Date:   Fri, 26 Jul 2019 10:15:24 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     "Patel, Mayurkumar" <mayurkumar.patel@intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        'Andy Shevchenko' <andriy.shevchenko@linux.intel.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        Oza Pawandeep <poza@codeaurora.org>
-Subject: Re: [PATCH] PCI/AER: save/restore AER registers during suspend/resume
-Message-ID: <20190726161524.GA8437@localhost.localdomain>
-References: <92EBB4272BF81E4089A7126EC1E7B28479A7F14D@IRSMSX101.ger.corp.intel.com>
- <1fbfe79b-0123-7305-5fc3-4963599538a3@linux.intel.com>
- <92EBB4272BF81E4089A7126EC1E7B28479A7F9BA@IRSMSX101.ger.corp.intel.com>
- <cd3cb1af-bc80-f92d-b9e4-7b7c2a9bd2fb@linux.intel.com>
- <20190724184548.GC203187@google.com>
- <20190725160822.GB6949@localhost.localdomain>
- <92EBB4272BF81E4089A7126EC1E7B28479A8704C@IRSMSX101.ger.corp.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        id S2387456AbfGZQcw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Jul 2019 12:32:52 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55553 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387452AbfGZQcw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Jul 2019 12:32:52 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1hr396-0004LY-Tq; Fri, 26 Jul 2019 18:32:40 +0200
+Message-ID: <1564158758.2311.49.camel@pengutronix.de>
+Subject: Re: [PATCH RESEND v8] PCI: imx6: limit DBI register length
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Stefan Agner <stefan@agner.ch>, hongxing.zhu@nxp.com
+Cc:     lorenzo.pieralisi@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, tpiepho@impinj.com,
+        leonard.crestez@nxp.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 26 Jul 2019 18:32:38 +0200
+In-Reply-To: <20190726144007.26605-1-stefan@agner.ch>
+References: <20190726144007.26605-1-stefan@agner.ch>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <92EBB4272BF81E4089A7126EC1E7B28479A8704C@IRSMSX101.ger.corp.intel.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 02:00:05AM -0700, Patel, Mayurkumar wrote:
-> > The call to pci_save_state most likely occurs long before a user has an
-> > opportunity to alter these regsiters, though. Won't this just restore
-> > what was previously there, and not the state you changed it to?
+Am Freitag, den 26.07.2019, 16:40 +0200 schrieb Stefan Agner:
+> Define the length of the DBI registers and limit config space to its
+> length. This makes sure that the kernel does not access registers
+> beyond that point, avoiding the following abort on a i.MX 6Quad:
+>   # cat /sys/devices/soc0/soc/1ffc000.pcie/pci0000\:00/0000\:00\:00.0/config
+>   [  100.021433] Unhandled fault: imprecise external abort (0x1406) at 0xb6ea7000
+>   ...
+>   [  100.056423] PC is at dw_pcie_read+0x50/0x84
+>   [  100.060790] LR is at dw_pcie_rd_own_conf+0x44/0x48
+>   ...
 > 
-> 
-> There were two things (not sure to call them issues),
-> 1. PCI_ERR_ROOT_COMMAND resets to 0  during S3 entry/exit, which disables AER interrupt trigger
-> if AER happens on Endpoint after resume.
-> 
-> Also specified in spec. NCB-PCI_Express_Base_4.0r1.0_September-27-2017-c.pdf in
-> chapter 7.8.4.9 Root Error Command Register (Offset 2Ch) - in bitfields descriptions.
-> i.e. Correctable Error Reporting Enable – When Set, this bit enables the generation of an interrupt when
-> a correctable error is reported by any of the Functions in the Hierarchy Domain associated with this Root Port.
-> 
-> 2. Root port resets to its default configuration of UNCOR_MASK/SEVER/COR_MASK register bits after system resume.
-> This influences user configurations, how errors shall be treated if AER happens on root port itself due to Device (for example
-> Endpoint not answering which results in completion timeouts on root ports).
-> 
-> Following is one example scenario which can handled with this patch.
-> - user configures AER registers using setpci certain masks and severity based on debug requirements. This can be applied on Root port of EP.
-> - triggers system test which includes S3 entry/exit cycles.
-> - system enters s3 -> AER registers settings are saved which has been configured by users.
-> - system exits s3 -> AER registers settings are restored which has been configured by users.
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
 
-Right, I was just more curious *where* the aer state was being saved
-during suspend since pci port driver only saves state during probe. This
-patch must be relying on the generic pci-driver's power management. I
-think that works, but I just didn't realize initially that we're relying
-on that path.
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
-> > You are allocating the capability save buffer in aer_probe(), so this
-> > save/restore applies only to root ports. But you mention above that you
-> > want to restore end devices, right?
+> ---
+> Changes in v3:
+> - Rebase on pci/dwc
+> Changes in v4:
+> - Rebase on pci/dwc
+> Changes in v5:
+> - Rebased ontop of pci/dwc
+> - Use DBI length of 0x200
+> Changes in v6:
+> - Use pci_dev.cfg_size mechanism to limit config space (this made patch 1
+>   of previous versions of this patchset obsolete).
+> Changes in v7:
+> - Restrict fixup to Synopsys/0xabcd
+> - Apply cfg_size limitation only if dbi_length is specified
+> Changes in v8:
+> - Restrict fixup for Synopsys/0xabcd and class PCI bridge
+> - Check device driver to be pci-imx6
 > 
-> That’s correct. I agree that my commit message was not so explicit.
-> But Since I included PCI_ERR_ROOT_COMMAND register for save/restore which is specific to Root ports only & I thought
-> endpoint drivers can handle to save/restore (UNCOR_MASK/SEVER/COR_MASK) themselves with its suspend/resume functions.
+>  drivers/pci/controller/dwc/pci-imx6.c | 33 +++++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
 > 
-> However I am fine to move pci_add_ext_cap_save_buffer() to some other function so
-> that it also save/restores UNCOR_MASK/SEVER/COR_MASK registers for endpoints and
-> if it's not useful to save/restore MASK & SEVER registers  then also fine to remove them
-> and just restore PCI_ERR_ROOT_COMMAND & ECRC settings.  Please let me know.
-
-If users are changing default settings that you want to preserve, that
-reason should apply to bridges and endpoints too, so I think you ought
-to allocate the save buffer for this capability for all devices that
-support it in in pci_aer_init(). Just make sure to check the device type
-in save/restore so you're not accessing root port specific registers.
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 9b5cb5b70389..8b8efa3063f5 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -57,6 +57,7 @@ enum imx6_pcie_variants {
+>  struct imx6_pcie_drvdata {
+> >  	enum imx6_pcie_variants variant;
+> >  	u32 flags;
+> > +	int dbi_length;
+>  };
+>  
+>  struct imx6_pcie {
+> @@ -1212,6 +1213,7 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+> >  		.variant = IMX6Q,
+> >  		.flags = IMX6_PCIE_FLAG_IMX6_PHY |
+> >  			 IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE,
+> > +		.dbi_length = 0x200,
+> >  	},
+> >  	[IMX6SX] = {
+> >  		.variant = IMX6SX,
+> @@ -1254,6 +1256,37 @@ static struct platform_driver imx6_pcie_driver = {
+> >  	.shutdown = imx6_pcie_shutdown,
+>  };
+>  
+> +static void imx6_pcie_quirk(struct pci_dev *dev)
+> +{
+> > +	struct pci_bus *bus = dev->bus;
+> > +	struct pcie_port *pp = bus->sysdata;
+> +
+> > +	/* Bus parent is the PCI bridge, its parent is this platform driver */
+> > +	if (!bus->dev.parent || !bus->dev.parent->parent)
+> > +		return;
+> +
+> > +	/* Make sure we only quirk devices associated with this driver */
+> > +	if (bus->dev.parent->parent->driver != &imx6_pcie_driver.driver)
+> > +		return;
+> +
+> > +	if (bus->number == pp->root_bus_nr) {
+> > +		struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > +		struct imx6_pcie *imx6_pcie = to_imx6_pcie(pci);
+> +
+> > +		/*
+> > +		 * Limit config length to avoid the kernel reading beyond
+> > +		 * the register set and causing an abort on i.MX 6Quad
+> > +		 */
+> > +		if (imx6_pcie->drvdata->dbi_length) {
+> > +			dev->cfg_size = imx6_pcie->drvdata->dbi_length;
+> > +			dev_info(&dev->dev, "Limiting cfg_size to %d\n",
+> > +					dev->cfg_size);
+> > +		}
+> > +	}
+> +}
+> +DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_VENDOR_ID_SYNOPSYS, 0xabcd,
+> > +			PCI_CLASS_BRIDGE_PCI, 8, imx6_pcie_quirk);
+> +
+>  static int __init imx6_pcie_init(void)
+>  {
+>  #ifdef CONFIG_ARM
