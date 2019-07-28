@@ -2,106 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56B2E78064
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2019 18:10:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EF097816F
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2019 22:22:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbfG1QKf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 28 Jul 2019 12:10:35 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:35618 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726046AbfG1QKf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 28 Jul 2019 12:10:35 -0400
-Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6SGAQMQ003000;
-        Sun, 28 Jul 2019 12:10:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=IPm6kpAMyQ21g1BE7u8bb6DBdTLrLLx/c/N4HoSfwdo=;
- b=LNl3yPAetRNXHk8gpUrUR66j4M+9fly4MR4pBDL4f2jM0e9yeTae5/jT3gng4GHErihD
- +jked3KPZ1nGq259tOIrPlPLQjA82fdN8uvsCaLfFFHi/S00zxjFO0lcpe5LeS2tf1YP
- F/lVauka4QosVDZQwbl2xmnhwQTRN/pVWpL7eNi7cfji9wjeq7+vYL0RP4bwXm3Eiic2
- nFXsN93nTVIpZEX4JOeuz1frwOMCwcCqd8xJTQznwqLcgkjByRtb6coro+SdNuiUSlMA
- CtfBpjSt0po5U3+2Fn53wCbXP1bdkw1ZsPT02IdsPqtIJrCgPYyrxtHhwP1Q91tbViXG 3A== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0a-00154904.pphosted.com with ESMTP id 2u0hp3v542-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 28 Jul 2019 12:10:33 -0400
-Received: from pps.filterd (m0144104.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6SG8xYp115061;
-        Sun, 28 Jul 2019 12:10:32 -0400
-Received: from ausxipps306.us.dell.com (AUSXIPPS306.us.dell.com [143.166.148.156])
-        by mx0b-00154901.pphosted.com with ESMTP id 2u19e8tt6f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 28 Jul 2019 12:10:32 -0400
-X-LoopCount0: from 10.166.132.133
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="353806993"
-From:   <Huong.Nguyen@dell.com>
-To:     <sathyanarayanan.kuppuswamy@linux.intel.com>, <kbusch@kernel.org>
-CC:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <ashok.raj@intel.com>,
-        <keith.busch@intel.com>, <Austin.Bolen@dell.com>
-Subject: RE: [PATCH v6 0/9] Add Error Disconnect Recover (EDR) support
-Thread-Topic: [PATCH v6 0/9] Add Error Disconnect Recover (EDR) support
-Thread-Index: AQHVRAqUlCXNmneL4UeVy6KBySWnPabgNYgA
-Date:   Sun, 28 Jul 2019 16:10:30 +0000
-Message-ID: <4896673b83c8401187b6983dffc47ba8@ausx13mps323.AMER.DELL.COM>
-References: <cover.1564177080.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190726215311.GA8720@localhost.localdomain>
- <683fffda-7116-a67b-02ab-503c0efc6853@linux.intel.com>
-In-Reply-To: <683fffda-7116-a67b-02ab-503c0efc6853@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.242.75]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726262AbfG1UWs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 28 Jul 2019 16:22:48 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35031 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbfG1UWr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 28 Jul 2019 16:22:47 -0400
+Received: by mail-lj1-f196.google.com with SMTP id x25so56543056ljh.2;
+        Sun, 28 Jul 2019 13:22:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=H30JE1TBEsAuw94izU6UpoMxwvUnP+RXDRNZnh1O8pc=;
+        b=NLzJaWYk5pMNRm/jy6AFK25+6c/JRuiw6a2ZmsVY9Jk0rGXvm9qACQVpp1krrsUqhN
+         WjiTp9weCHhsYEZPZ34ofjaooYmsITNBwfBMRlhfJXJZL6U5RrbJP8dnrLk8K3xeMemD
+         BsCdoOYcOp73v7nJe++hkZweON+IrnjFEHiYtdOPQDWernOaqUDrkkWSOWQ8w2hrniJX
+         iq/zg/OqExeQ5obLpXS0azII9NH2WQegjMCrK6W3Up2FweU6FwSttyYg+W3F9xklEjT5
+         xeYFTkidA0pZOFNLbV/sU5DHAm9Gc8KqiSvhX8MBsaXVQu+9gIBB87BPwUHR2mKvDcNe
+         B8Bw==
+X-Gm-Message-State: APjAAAVw9yrGvkX3Y9WaxgQqHauF9mleTbSwOPNzyHk6e1pxChU9gXC6
+        4matc8CsCj0kWRKmnMlRGRc=
+X-Google-Smtp-Source: APXvYqygX2Y5dS/gnwNqOZKPSCByVOdOdiau/6PoALAhMf0ml07RPwI9uM2EKDeRpNnJ5yE9cYpa9g==
+X-Received: by 2002:a2e:814e:: with SMTP id t14mr20112908ljg.167.1564345365258;
+        Sun, 28 Jul 2019 13:22:45 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id z17sm12395917ljc.37.2019.07.28.13.22.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Jul 2019 13:22:44 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Michal Simek <monstr@monstr.eu>, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] PCI: Convert pci_resource_to_user() to a weak function
+Date:   Sun, 28 Jul 2019 23:22:08 +0300
+Message-Id: <20190728202213.15550-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-28_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907280201
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907280202
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBzYXRoeWFuYXJheWFuYW4ga3Vw
-cHVzd2FteSA8c2F0aHlhbmFyYXlhbmFuLmt1cHB1c3dhbXlAbGludXguaW50ZWwuY29tPiANClNl
-bnQ6IEZyaWRheSwgSnVseSAyNiwgMjAxOSA2OjMxIFBNDQpUbzogS2VpdGggQnVzY2gNCkNjOiBi
-aGVsZ2Fhc0Bnb29nbGUuY29tOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJu
-ZWxAdmdlci5rZXJuZWwub3JnOyBhc2hvay5yYWpAaW50ZWwuY29tOyBrZWl0aC5idXNjaEBpbnRl
-bC5jb207IEJvbGVuLCBBdXN0aW47IE5ndXllbiwgSHVvbmcNClN1YmplY3Q6IFJlOiBbUEFUQ0gg
-djYgMC85XSBBZGQgRXJyb3IgRGlzY29ubmVjdCBSZWNvdmVyIChFRFIpIHN1cHBvcnQNCg0KDQpb
-RVhURVJOQUwgRU1BSUxdIA0KDQorQXVzdGluICwgSHVvbmcNCg0KT24gNy8yNi8xOSAyOjUzIFBN
-LCBLZWl0aCBCdXNjaCB3cm90ZToNCj4gT24gRnJpLCBKdWwgMjYsIDIwMTkgYXQgMDI6NDM6MTBQ
-TSAtMDcwMCwgc2F0aHlhbmFyYXlhbmFuLmt1cHB1c3dhbXlAbGludXguaW50ZWwuY29tIHdyb3Rl
-Og0KPj4gRnJvbTogS3VwcHVzd2FteSBTYXRoeWFuYXJheWFuYW4gDQo+PiA8c2F0aHlhbmFyYXlh
-bmFuLmt1cHB1c3dhbXlAbGludXguaW50ZWwuY29tPg0KPj4NCj4+IFRoaXMgcGF0Y2hzZXQgYWRk
-cyBzdXBwb3J0IGZvciBmb2xsb3dpbmcgZmVhdHVyZXM6DQo+Pg0KPj4gMS4gRXJyb3IgRGlzY29u
-bmVjdCBSZWNvdmVyIChFRFIpIHN1cHBvcnQuDQo+PiAyLiBfT1NDIGJhc2VkIG5lZ290aWF0aW9u
-IHN1cHBvcnQgZm9yIERQQy4NCj4+DQo+PiBZb3UgY2FuIGZpbmQgRURSIHNwZWMgaW4gdGhlIGZv
-bGxvd2luZyBsaW5rLg0KPj4NCj4+IGh0dHBzOi8vbWVtYmVycy5wY2lzaWcuY29tL3dnL1BDSS1T
-SUcvZG9jdW1lbnQvMTI2MTQNCj4gVGhhbmsgeW91IGZvciBzdGlja2luZyB3aXRoIHRoaXMuIEkn
-dmUgcmV2aWV3ZWQgdGhlIHNlcmllcyBhbmQgSSB0aGluayANCj4gdGhpcyBsb29rcyBnb29kIGZv
-ciB0aGUgbmV4dCBtZXJnZSB3aW5kb3cuDQo+DQo+IEFja2VkLWJ5OiBLZWl0aCBCdXNjaCA8a2Vp
-dGguYnVzY2hAaW50ZWwuY29tPg0KDQpUZXN0ZWQgb24gYSBEUEMtZW5hYmxlZCBQQ0llIHN3aXRj
-aCAoQnJvYWRjb20gUEVYOTczMykgaW4gYSBEZWxsIFBvd2VyRWRnZSBSNzQweGQuICBJbmplY3Rl
-ZCBmYXRhbCBhbmQgbm9uLWZhdGFsIGVycm9ycyBvbiBhbiBOVk1lIGVuZHBvaW50IGJlbG93IHRo
-ZSBzd2l0Y2ggYW5kIG9uIHRoZSBzd2l0Y2ggZG93bnN0cmVhbSBwb3J0IGl0c2VsZiBhbmQgdmVy
-aWZpZWQgZXJyb3JzIHdlcmUgY29udGFpbmVkIGFuZCB0aGVuIHJlY292ZXJlZCBhdCB0aGUgUENJ
-ZSBsZXZlbC4NCg0KVGVzdGVkLWJ5OiBIdW9uZyBOZ3V5ZW4gPGh1b25nLm5ndXllbkBkZWxsLmNv
-beKAjj4NCj4NCi0tDQpTYXRoeWFuYXJheWFuYW4gS3VwcHVzd2FteQ0KTGludXgga2VybmVsIGRl
-dmVsb3Blcg0KDQo=
+Architectures currently define HAVE_ARCH_PCI_RESOURCE_TO_USER if they want
+to provide their own pci_resource_to_user() implementation. This could be
+simplified if we make the generic version a weak function. Thus,
+architecture specific versions will automatically override the generic one.
+
+Denis Efremov (5):
+  PCI: Convert pci_resource_to_user to a weak function
+  microblaze/PCI: Remove HAVE_ARCH_PCI_RESOURCE_TO_USER
+  mips/PCI: Remove HAVE_ARCH_PCI_RESOURCE_TO_USER
+  powerpc/PCI: Remove HAVE_ARCH_PCI_RESOURCE_TO_USER
+  spark/PCI: Remove HAVE_ARCH_PCI_RESOURCE_TO_USER
+
+ arch/microblaze/include/asm/pci.h |  2 --
+ arch/mips/include/asm/pci.h       |  1 -
+ arch/powerpc/include/asm/pci.h    |  2 --
+ arch/sparc/include/asm/pci.h      |  2 --
+ drivers/pci/pci.c                 |  8 ++++++++
+ include/linux/pci.h               | 18 +++---------------
+ 6 files changed, 11 insertions(+), 22 deletions(-)
+
+-- 
+2.21.0
+
