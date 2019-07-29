@@ -2,47 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C5C6378976
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2019 12:14:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BF227896E
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2019 12:14:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbfG2KOj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Jul 2019 06:14:39 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34429 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbfG2KOj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Jul 2019 06:14:39 -0400
-Received: by mail-lf1-f67.google.com with SMTP id b29so34404212lfq.1;
-        Mon, 29 Jul 2019 03:14:37 -0700 (PDT)
+        id S1728304AbfG2KOl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Jul 2019 06:14:41 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40629 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728260AbfG2KOk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Jul 2019 06:14:40 -0400
+Received: by mail-lf1-f65.google.com with SMTP id b17so41668809lff.7;
+        Mon, 29 Jul 2019 03:14:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mhScrfvzfJHOaoJ1E3ndJMrRVW60NNkjG9R46Biny8M=;
-        b=PQD+V2vmqKcBSfcY8EVrs38RSYxD5piYNtIZwlBCZHv/BVlbTXFrhOlTryU8OJA19O
-         Lwvwgnoiz0Jv4+HJiarR+WD0ASmjg9lKsTDFhOdpGOjgGIzKUWu7SeIJTyoN2FEE6T8R
-         YgL8hqxOomX67cljEdplzU1doZ209G4kbTek/zv8dQT//s/Ukm1wAF7R/v6v1eUqI/5g
-         QivOwT0GWD9LjLSvXSXCXUNy1m/uqVP7Yzg0kkXVYeD/hmgCvDfRWBcGOzWg38BrCEv1
-         nhO0UrKIPTjfsTrqmEBOX4FRjIOqawAbNZdJ4Nsb6CN52f012OE9VW7yU5Ny/maxUdGg
-         OpeQ==
-X-Gm-Message-State: APjAAAVsW1981ZuhwbG0x+E423ie5fKBMoYGqmA/Ep+YVVgWJJ4RXlIm
-        3yh3P3Kqr7dG5Y/IKiZiuVw=
-X-Google-Smtp-Source: APXvYqyFV/z2+4qtK/3ETW+F11Zp0K4FKj2kFJkLCRVUOtY6mp6T14WvUEmJPMKi1FbaBLxNl25GSw==
-X-Received: by 2002:a19:f806:: with SMTP id a6mr37949567lff.102.1564395276889;
-        Mon, 29 Jul 2019 03:14:36 -0700 (PDT)
+        bh=BsIPSvfzLwnhnLKtcEHLG5y6k186GA8GW/6JbbfPnA4=;
+        b=Bs6UPJ5AGBfzGCDu1yTlLyiAGy/axf7R5AP8BquIYDJcIDHfPQbNs/uxxXOtgdqbrT
+         +x4q2VfquCtIdRSMCV14uxsQAqELm2Erq/3evaRSL659fACwYgGrjEb2m0f3V5qHjxsA
+         554SEssPzLAnrI/ZnRBvOiJ7KMl+GJS5UKoM8hUiC84MxbRkiEehEdbJ/7mAJwvmPxj9
+         2yzdv9if5oTGUUdVDKdt8mGyek6cOPJ3a+fdLPViRpnFA3+WGBVEEQIdUti/uzOIMijx
+         gKdnym3hmSPhbbE6fuekglwfmvEqHi4HAPUrltBn9JYEe8y/VH85uevVtvrWndfgFs3S
+         gsVQ==
+X-Gm-Message-State: APjAAAVO4XS41fsfxEqFx6QDMyvU3qizS2GaFpA5fDXOaG+B0W6PkbrB
+        5j9RYEhs0IiXdV70ZZfEfmk=
+X-Google-Smtp-Source: APXvYqxAitsCCS/HFPR7uHO4tOhzGp6jjCagTQ9NCr3/Ull+T3hU8+UpiyoxWae7OFM9Qe0aQhN3uA==
+X-Received: by 2002:ac2:5492:: with SMTP id t18mr53096046lfk.41.1564395278677;
+        Mon, 29 Jul 2019 03:14:38 -0700 (PDT)
 Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id y12sm11814834lfy.36.2019.07.29.03.14.36
+        by smtp.googlemail.com with ESMTPSA id y12sm11814834lfy.36.2019.07.29.03.14.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 03:14:36 -0700 (PDT)
+        Mon, 29 Jul 2019 03:14:38 -0700 (PDT)
 From:   Denis Efremov <efremov@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Denis Efremov <efremov@linux.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/5] mips/PCI: Remove HAVE_ARCH_PCI_RESOURCE_TO_USER
-Date:   Mon, 29 Jul 2019 13:13:59 +0300
-Message-Id: <20190729101401.28068-4-efremov@linux.com>
+        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 4/5] powerpc/PCI: Remove HAVE_ARCH_PCI_RESOURCE_TO_USER
+Date:   Mon, 29 Jul 2019 13:14:00 +0300
+Message-Id: <20190729101401.28068-5-efremov@linux.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190729101401.28068-1-efremov@linux.com>
 References: <20190729101401.28068-1-efremov@linux.com>
@@ -54,26 +55,27 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 The function pci_resource_to_user() was turned to a weak one. Thus,
-mips-specific version will automatically override the generic one
+powerpc-specific version will automatically override the generic one
 and the HAVE_ARCH_PCI_RESOURCE_TO_USER macro should be removed.
 
 Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- arch/mips/include/asm/pci.h | 1 -
- 1 file changed, 1 deletion(-)
+ arch/powerpc/include/asm/pci.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/mips/include/asm/pci.h b/arch/mips/include/asm/pci.h
-index 436099883022..6f48649201c5 100644
---- a/arch/mips/include/asm/pci.h
-+++ b/arch/mips/include/asm/pci.h
-@@ -108,7 +108,6 @@ extern unsigned long PCIBIOS_MIN_MEM;
+diff --git a/arch/powerpc/include/asm/pci.h b/arch/powerpc/include/asm/pci.h
+index 2372d35533ad..327567b8f7d6 100644
+--- a/arch/powerpc/include/asm/pci.h
++++ b/arch/powerpc/include/asm/pci.h
+@@ -112,8 +112,6 @@ extern pgprot_t	pci_phys_mem_access_prot(struct file *file,
+ 					 unsigned long size,
+ 					 pgprot_t prot);
  
- #define HAVE_PCI_MMAP
- #define ARCH_GENERIC_PCI_MMAP_RESOURCE
 -#define HAVE_ARCH_PCI_RESOURCE_TO_USER
- 
- /*
-  * Dynamic DMA mapping stuff.
+-
+ extern resource_size_t pcibios_io_space_offset(struct pci_controller *hose);
+ extern void pcibios_setup_bus_devices(struct pci_bus *bus);
+ extern void pcibios_setup_bus_self(struct pci_bus *bus);
 -- 
 2.21.0
 
