@@ -2,74 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A52A77828D
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2019 01:59:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 277B878509
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2019 08:37:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbfG1X7J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 28 Jul 2019 19:59:09 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33327 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbfG1X7J (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 28 Jul 2019 19:59:09 -0400
-Received: by mail-oi1-f194.google.com with SMTP id u15so44079541oiv.0
-        for <linux-pci@vger.kernel.org>; Sun, 28 Jul 2019 16:59:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=8HerNJ+KPshsmAFkEGOs3SrN9ygWfkRsx5jp23KpQmk=;
-        b=Yn6LP1yHfMwwPg53IamPWTnHkjZTaCmpMsyUidVbuggQ1WimJZw0XQDQfAxp8GqLIY
-         90wEcyJQhqJg7THTDPXKtiWvBhAszFdRL8UPJb+Vi4Tpdr7LZx+6MYi2Q+ivVUC16Hp1
-         2KYLtHMOOBkTJq7sqJnpcuetxFuSZ/vzay+yhC27AQg41VGRxmadGb9jXGjT9ELngsdl
-         FAmT7sJh5hGyEOx9TbBtfItbgeqvtpj9xO7JyD/+aieMyC2WNphoVUApAGrSu0yeTwtM
-         fyWNWPfPCkHk9nbC+BbAwZ06gXMVBDgyvIuabqmeKG7tF3QAD4X0KIkwi4XWP7mHG0n9
-         DuCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=8HerNJ+KPshsmAFkEGOs3SrN9ygWfkRsx5jp23KpQmk=;
-        b=VtYLzFPN5ZjE1NVruLMO2o9bbBNpcG3XBMpqLtlZ7k3yov11wxUyJCrkqH7jRaoJhe
-         /qtKeIvgBuzB9a3/rAaZVVrNp0Fm564Y/Z829NbwCY4vQ/pV6JN1xthroxBTK+WLCULO
-         nKzEcPoaakZxdR7uKAAVCDYaIwxFQo6yK/CkeZB0GE5ucXSNRWByo/eIiGBP+5hc/bq3
-         TbKsvPjkT9M4/4Us260adbwNLhbL5gZmAf/VGCVgx4jM9W7eLev+ftZGyvw12/eKIPku
-         FYd/pMTW9sCZ2D8w/PAVqO/CsAjWOSg3XlpxNBZ9rNgKBjImbdfUJNtuCx1v+Kp3I0uZ
-         fPWw==
-X-Gm-Message-State: APjAAAWsgB9pslF0pLZnz7Q7GSNoAgXlwyUTI5D1egOoRinjRx1EvfgO
-        3vRs3OFJFdO1ImKyEOk3ZSGNNQxeI5yZOXHC8ZU=
-X-Google-Smtp-Source: APXvYqwA3YWPBRk1Wu5nor6Smf5GISPjoijKxCEF0/ETI4d20oWL6ZXsBw228liOguJjLYR3xlxgHOi9iu5PMaIn1OA=
-X-Received: by 2002:aca:eb57:: with SMTP id j84mr51315661oih.17.1564358348537;
- Sun, 28 Jul 2019 16:59:08 -0700 (PDT)
+        id S1726870AbfG2Gha (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Jul 2019 02:37:30 -0400
+Received: from smtprelay0051.hostedemail.com ([216.40.44.51]:49365 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725934AbfG2Gha (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Jul 2019 02:37:30 -0400
+X-Greylist: delayed 366 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jul 2019 02:37:29 EDT
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave02.hostedemail.com (Postfix) with ESMTP id 0DBBC18019A13;
+        Mon, 29 Jul 2019 06:31:25 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id AC68383777ED;
+        Mon, 29 Jul 2019 06:31:22 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::::::::::::::::::::::::,RULES_HIT:41:355:379:599:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:2393:2553:2559:2562:2693:2828:3138:3139:3140:3141:3142:3354:3622:3865:3866:3867:3868:3870:3871:3873:4250:4321:5007:6742:7875:7904:10004:10400:10848:11026:11232:11473:11658:11914:12043:12114:12296:12297:12438:12555:12740:12760:12895:13069:13311:13357:13439:14096:14097:14180:14181:14659:14721:21060:21080:21627:30054:30090:30091,0,RBL:23.242.196.136:@perches.com:.lbl8.mailshell.net-62.8.0.180 64.201.201.201,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:fn,MSBL:0,DNSBL:neutral,Custom_rules:0:0:0,LFtime:24,LUA_SUMMARY:none
+X-HE-Tag: star39_8018288ec7e4b
+X-Filterd-Recvd-Size: 3529
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 29 Jul 2019 06:31:20 +0000 (UTC)
+Message-ID: <b0deb4e6b12ea1f943855440a3cc99a6e47d0717.camel@perches.com>
+Subject: Re: [EXTERNAL][PATCH 1/5] PCI: Convert pci_resource_to_user to a
+ weak function
+From:   Joe Perches <joe@perches.com>
+To:     Paul Burton <paul.burton@mips.com>,
+        Denis Efremov <efremov@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Sun, 28 Jul 2019 23:31:18 -0700
+In-Reply-To: <20190728224953.kezztdozc6k24ya3@pburton-laptop>
+References: <20190728202213.15550-1-efremov@linux.com>
+         <20190728202213.15550-2-efremov@linux.com>
+         <20190728224953.kezztdozc6k24ya3@pburton-laptop>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Received: by 2002:a9d:7614:0:0:0:0:0 with HTTP; Sun, 28 Jul 2019 16:59:08
- -0700 (PDT)
-Reply-To: williamrobert416@gmail.com
-From:   "Mr. Robert William" <omarmariam373@gmail.com>
-Date:   Mon, 29 Jul 2019 00:59:08 +0100
-Message-ID: <CA+FSRKB0RfLELsjZfD1D=Kk_2Fwdn8JHrNGO0o21WO+Ned8+sg@mail.gmail.com>
-Subject: Its Urgent
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
--- 
-Hello,
+On Sun, 2019-07-28 at 22:49 +0000, Paul Burton wrote:
+> Hi Denis,
+> 
+> On Sun, Jul 28, 2019 at 11:22:09PM +0300, Denis Efremov wrote:
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 9e700d9f9f28..1a19d0151b0a 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -1870,25 +1870,13 @@ static inline const char *pci_name(const struct pci_dev *pdev)
+> >  	return dev_name(&pdev->dev);
+> >  }
+> >  
+> > -
+> >  /*
+> >   * Some archs don't want to expose struct resource to userland as-is
+> >   * in sysfs and /proc
+> >   */
+> > -#ifdef HAVE_ARCH_PCI_RESOURCE_TO_USER
+> > -void pci_resource_to_user(const struct pci_dev *dev, int bar,
+> > -			  const struct resource *rsrc,
+> > -			  resource_size_t *start, resource_size_t *end);
+> > -#else
+> > -static inline void pci_resource_to_user(const struct pci_dev *dev, int bar,
+> > -		const struct resource *rsrc, resource_size_t *start,
+> > -		resource_size_t *end)
+> > -{
+> > -	*start = rsrc->start;
+> > -	*end = rsrc->end;
+> > -}
+> > -#endif /* HAVE_ARCH_PCI_RESOURCE_TO_USER */
+> > -
+> > +void __weak pci_resource_to_user(const struct pci_dev *dev, int bar,
+> > +				 const struct resource *rsrc,
+> > +				 resource_size_t *start, resource_size_t *end);
+> >  
+> >  /*
+> >   * The world is not perfect and supplies us with broken PCI devices.
+> 
+> This is wrong - using __weak on the declaration in a header will cause
+> the weak attribute to be applied to all implementations too (presuming
+> the C files containing the implementations include the header). You then
+> get whichever impleentation the linker chooses, which isn't necessarily
+> the one you wanted.
+> 
+> checkpatch.pl should produce an error about this - see the
+> WEAK_DECLARATION error introduced in commit 619a908aa334 ("checkpatch:
+> add error on use of attribute((weak)) or __weak declarations").
 
-I am Eng. Robert William, a retired Marine Engineer residing in
-Trinidad & Tobago.
-Unfortunately i am admitted to the hospital for a cancer (Sickness)
-over a year now,my doctor reported that i have only few months to pass
-away. Please i need your consent to invest my money (USD$1.8 Million)
-in any business of your
-
-choice in your country before i die, i have no other relatives not
-even children because i lost my family in a fire disaster in 2005.
-Please i need your urgent and
-
-kind response to enable me send you more information on how to contact
-my bank as my next of kin to process the fund into your bank account.
+Unfortunately, checkpatch is pretty stupid and only emits
+this on single line declarations.
 
 
-Mr Robert William
