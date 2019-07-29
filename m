@@ -2,112 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 277B878509
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2019 08:37:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1134278670
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2019 09:39:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbfG2Gha (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Jul 2019 02:37:30 -0400
-Received: from smtprelay0051.hostedemail.com ([216.40.44.51]:49365 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725934AbfG2Gha (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Jul 2019 02:37:30 -0400
-X-Greylist: delayed 366 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jul 2019 02:37:29 EDT
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave02.hostedemail.com (Postfix) with ESMTP id 0DBBC18019A13;
-        Mon, 29 Jul 2019 06:31:25 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id AC68383777ED;
-        Mon, 29 Jul 2019 06:31:22 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::::::::::::::::::::::::,RULES_HIT:41:355:379:599:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:2393:2553:2559:2562:2693:2828:3138:3139:3140:3141:3142:3354:3622:3865:3866:3867:3868:3870:3871:3873:4250:4321:5007:6742:7875:7904:10004:10400:10848:11026:11232:11473:11658:11914:12043:12114:12296:12297:12438:12555:12740:12760:12895:13069:13311:13357:13439:14096:14097:14180:14181:14659:14721:21060:21080:21627:30054:30090:30091,0,RBL:23.242.196.136:@perches.com:.lbl8.mailshell.net-62.8.0.180 64.201.201.201,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:fn,MSBL:0,DNSBL:neutral,Custom_rules:0:0:0,LFtime:24,LUA_SUMMARY:none
-X-HE-Tag: star39_8018288ec7e4b
-X-Filterd-Recvd-Size: 3529
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf05.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 29 Jul 2019 06:31:20 +0000 (UTC)
-Message-ID: <b0deb4e6b12ea1f943855440a3cc99a6e47d0717.camel@perches.com>
-Subject: Re: [EXTERNAL][PATCH 1/5] PCI: Convert pci_resource_to_user to a
- weak function
-From:   Joe Perches <joe@perches.com>
-To:     Paul Burton <paul.burton@mips.com>,
-        Denis Efremov <efremov@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Sun, 28 Jul 2019 23:31:18 -0700
-In-Reply-To: <20190728224953.kezztdozc6k24ya3@pburton-laptop>
-References: <20190728202213.15550-1-efremov@linux.com>
-         <20190728202213.15550-2-efremov@linux.com>
-         <20190728224953.kezztdozc6k24ya3@pburton-laptop>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        id S1726432AbfG2HjL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Jul 2019 03:39:11 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:2214 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725917AbfG2HjK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Jul 2019 03:39:10 -0400
+X-UUID: 956ec71b12d64041beb42b8c6da990ec-20190729
+X-UUID: 956ec71b12d64041beb42b8c6da990ec-20190729
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1541818433; Mon, 29 Jul 2019 15:38:44 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 29 Jul
+ 2019 15:38:39 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 29 Jul 2019 15:38:38 +0800
+Message-ID: <1564385918.17211.6.camel@mhfsdcap03>
+Subject: Re: [v2,2/2] PCI: mediatek: Add controller support for MT7629
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <youlin.pei@mediatek.com>,
+        <jianjun.wang@mediatek.com>
+Date:   Mon, 29 Jul 2019 15:38:38 +0800
+In-Reply-To: <20190628073425.25165-3-jianjun.wang@mediatek.com>
+References: <20190628073425.25165-1-jianjun.wang@mediatek.com>
+         <20190628073425.25165-3-jianjun.wang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 736AECADBE0E85D306CDAE61C7316ECFE7F8B270E6112EAB74CF5017161808C82000:8
+X-MTK:  N
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 2019-07-28 at 22:49 +0000, Paul Burton wrote:
-> Hi Denis,
+On Fri, 2019-06-28 at 15:34 +0800, Jianjun Wang wrote:
+> MT7629 is an ARM platform SoC which has the same PCIe IP with MT7622.
 > 
-> On Sun, Jul 28, 2019 at 11:22:09PM +0300, Denis Efremov wrote:
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 9e700d9f9f28..1a19d0151b0a 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -1870,25 +1870,13 @@ static inline const char *pci_name(const struct pci_dev *pdev)
-> >  	return dev_name(&pdev->dev);
-> >  }
-> >  
-> > -
-> >  /*
-> >   * Some archs don't want to expose struct resource to userland as-is
-> >   * in sysfs and /proc
-> >   */
-> > -#ifdef HAVE_ARCH_PCI_RESOURCE_TO_USER
-> > -void pci_resource_to_user(const struct pci_dev *dev, int bar,
-> > -			  const struct resource *rsrc,
-> > -			  resource_size_t *start, resource_size_t *end);
-> > -#else
-> > -static inline void pci_resource_to_user(const struct pci_dev *dev, int bar,
-> > -		const struct resource *rsrc, resource_size_t *start,
-> > -		resource_size_t *end)
-> > -{
-> > -	*start = rsrc->start;
-> > -	*end = rsrc->end;
-> > -}
-> > -#endif /* HAVE_ARCH_PCI_RESOURCE_TO_USER */
-> > -
-> > +void __weak pci_resource_to_user(const struct pci_dev *dev, int bar,
-> > +				 const struct resource *rsrc,
-> > +				 resource_size_t *start, resource_size_t *end);
-> >  
-> >  /*
-> >   * The world is not perfect and supplies us with broken PCI devices.
+> The HW default value of its Device ID is invalid, fix its Device ID to
+> match the hardware implementation.
 > 
-> This is wrong - using __weak on the declaration in a header will cause
-> the weak attribute to be applied to all implementations too (presuming
-> the C files containing the implementations include the header). You then
-> get whichever impleentation the linker chooses, which isn't necessarily
-> the one you wanted.
+> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> ---
+>  drivers/pci/controller/pcie-mediatek.c | 18 ++++++++++++++++++
+>  include/linux/pci_ids.h                |  1 +
+>  2 files changed, 19 insertions(+)
 > 
-> checkpatch.pl should produce an error about this - see the
-> WEAK_DECLARATION error introduced in commit 619a908aa334 ("checkpatch:
-> add error on use of attribute((weak)) or __weak declarations").
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index 80601e1b939e..e5e6740b635d 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -73,6 +73,7 @@
+>  #define PCIE_MSI_VECTOR		0x0c0
+>  
+>  #define PCIE_CONF_VEND_ID	0x100
+> +#define PCIE_CONF_DEVICE_ID	0x102
+>  #define PCIE_CONF_CLASS_ID	0x106
+>  
+>  #define PCIE_INT_MASK		0x420
+> @@ -141,12 +142,16 @@ struct mtk_pcie_port;
+>  /**
+>   * struct mtk_pcie_soc - differentiate between host generations
+>   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
+> + * @need_fix_device_id: whether this host's Device ID needed to be fixed or not
+> + * @device_id: Device ID which this host need to be fixed
+>   * @ops: pointer to configuration access functions
+>   * @startup: pointer to controller setting functions
+>   * @setup_irq: pointer to initialize IRQ functions
+>   */
+>  struct mtk_pcie_soc {
+>  	bool need_fix_class_id;
+> +	bool need_fix_device_id;
+> +	unsigned int device_id;
+>  	struct pci_ops *ops;
+>  	int (*startup)(struct mtk_pcie_port *port);
+>  	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
+> @@ -696,6 +701,9 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+>  		writew(val, port->base + PCIE_CONF_CLASS_ID);
+>  	}
+>  
+> +	if (soc->need_fix_device_id)
+> +		writew(soc->device_id, port->base + PCIE_CONF_DEVICE_ID);
+> +
+>  	/* 100ms timeout value should be enough for Gen1/2 training */
+>  	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
+>  				 !!(val & PCIE_PORT_LINKUP_V2), 20,
+> @@ -1216,11 +1224,21 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
+>  	.setup_irq = mtk_pcie_setup_irq,
+>  };
+>  
+> +static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
+> +	.need_fix_class_id = true,
+> +	.need_fix_device_id = true,
+> +	.device_id = PCI_DEVICE_ID_MEDIATEK_7629,
+> +	.ops = &mtk_pcie_ops_v2,
+> +	.startup = mtk_pcie_startup_port_v2,
+> +	.setup_irq = mtk_pcie_setup_irq,
+> +};
+> +
+>  static const struct of_device_id mtk_pcie_ids[] = {
+>  	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
+>  	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
+>  	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
+>  	{ .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
+> +	{ .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
+>  	{},
+>  };
+>  
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 70e86148cb1e..aa32962759b2 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2131,6 +2131,7 @@
+>  #define PCI_VENDOR_ID_MYRICOM		0x14c1
+>  
+>  #define PCI_VENDOR_ID_MEDIATEK		0x14c3
+> +#define PCI_DEVICE_ID_MEDIATEK_7629	0x7629
+>  
+>  #define PCI_VENDOR_ID_TITAN		0x14D2
+>  #define PCI_DEVICE_ID_TITAN_010L	0x8001
 
-Unfortunately, checkpatch is pretty stupid and only emits
-this on single line declarations.
+Hi Bjorn & Lorenzo,
+
+Is this patch ok or is there anything I need to fixed?
+
+Thanks.
 
 
