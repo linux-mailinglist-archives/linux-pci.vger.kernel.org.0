@@ -2,341 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D2127ACBE
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2019 17:50:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 445E07ADE2
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2019 18:36:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbfG3Pts (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Jul 2019 11:49:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:34928 "EHLO foss.arm.com"
+        id S1727425AbfG3QgC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Jul 2019 12:36:02 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:34082 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727774AbfG3Pts (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:49:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB33D28;
-        Tue, 30 Jul 2019 08:49:46 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 61CD43F694;
-        Tue, 30 Jul 2019 08:49:44 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 16:49:39 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V13 12/12] PCI: tegra: Add Tegra194 PCIe support
-Message-ID: <20190730154939.GA367@e121166-lin.cambridge.arm.com>
-References: <20190710062212.1745-1-vidyas@nvidia.com>
- <20190710062212.1745-13-vidyas@nvidia.com>
- <20190711125433.GB26088@e121166-lin.cambridge.arm.com>
- <986d0b1a-666a-7b05-a9f3-e761518bdc92@nvidia.com>
- <20190712160754.GA24285@e121166-lin.cambridge.arm.com>
- <a5f8689b-1358-dd2d-4f54-7e68a6ab158b@nvidia.com>
- <20190716112225.GA24335@e121166-lin.cambridge.arm.com>
- <be6367bc-08a0-762a-aae8-b3f0376d0e9a@nvidia.com>
+        id S1726107AbfG3QgC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 30 Jul 2019 12:36:02 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hsV6V-0003y8-5k; Tue, 30 Jul 2019 10:36:00 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hsV6R-0001ID-0L; Tue, 30 Jul 2019 10:35:55 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Tue, 30 Jul 2019 10:35:31 -0600
+Message-Id: <20190730163545.4915-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <be6367bc-08a0-762a-aae8-b3f0376d0e9a@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org, bhelgaas@google.com, hch@lst.de, Christian.Koenig@amd.com, jgg@mellanox.com, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, dan.j.williams@intel.com, epilmore@gigaio.com, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
+Subject: [PATCH v2 00/14]  PCI/P2PDMA: Support transactions that hit the host bridge
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 08:14:08PM +0530, Vidya Sagar wrote:
-> On 7/16/2019 4:52 PM, Lorenzo Pieralisi wrote:
-> > On Sat, Jul 13, 2019 at 12:34:34PM +0530, Vidya Sagar wrote:
-> > 
-> > [...]
-> > 
-> > > > > > > +static int tegra_pcie_bpmp_set_ctrl_state(struct tegra_pcie_dw *pcie,
-> > > > > > > +					  bool enable)
-> > > > > > > +{
-> > > > > > > +	struct mrq_uphy_response resp;
-> > > > > > > +	struct tegra_bpmp_message msg;
-> > > > > > > +	struct mrq_uphy_request req;
-> > > > > > > +	int err;
-> > > > > > > +
-> > > > > > > +	if (pcie->cid == 5)
-> > > > > > > +		return 0;
-> > > > > > 
-> > > > > > What's wrong with cid == 5 ? Explain please.
-> > > > > Controller with ID=5 doesn't need any programming to enable it which is
-> > > > > done here through calling firmware API.
-> > > > > 
-> > > > > > 
-> > > > > > > +	memset(&req, 0, sizeof(req));
-> > > > > > > +	memset(&resp, 0, sizeof(resp));
-> > > > > > > +
-> > > > > > > +	req.cmd = CMD_UPHY_PCIE_CONTROLLER_STATE;
-> > > > > > > +	req.controller_state.pcie_controller = pcie->cid;
-> > > > > > > +	req.controller_state.enable = enable;
-> > > > > > > +
-> > > > > > > +	memset(&msg, 0, sizeof(msg));
-> > > > > > > +	msg.mrq = MRQ_UPHY;
-> > > > > > > +	msg.tx.data = &req;
-> > > > > > > +	msg.tx.size = sizeof(req);
-> > > > > > > +	msg.rx.data = &resp;
-> > > > > > > +	msg.rx.size = sizeof(resp);
-> > > > > > > +
-> > > > > > > +	if (irqs_disabled())
-> > > > > > 
-> > > > > > Can you explain to me what this check is meant to achieve please ?
-> > > > > Firmware interface provides different APIs to be called when there are
-> > > > > no interrupts enabled in the system (noirq context) and otherwise
-> > > > > hence checking that situation here and calling appropriate API.
-> > > > 
-> > > > That's what I am questioning. Being called from {suspend/resume}_noirq()
-> > > > callbacks (if that's the code path this check caters for) does not mean
-> > > > irqs_disabled() == true.
-> > > Agree.
-> > > Actually, I got a hint of having this check from the following.
-> > > Both tegra_bpmp_transfer_atomic() and tegra_bpmp_transfer() are indirectly
-> > > called by APIs registered with .master_xfer() and .master_xfer_atomic() hooks of
-> > > struct i2c_algorithm and the decision to call which one of these is made using the
-> > > following check in i2c-core.h file.
-> > > static inline bool i2c_in_atomic_xfer_mode(void)
-> > > {
-> > > 	return system_state > SYSTEM_RUNNING && irqs_disabled();
-> > > }
-> > > I think I should use this condition as is IIUC.
-> > > Please let me know if there are any concerns with this.
-> > 
-> > It is not a concern, it is just that I don't understand how this code
-> > can be called with IRQs disabled, if you can give me an execution path I
-> > am happy to leave the check there. On top of that, when called from
-> > suspend NOIRQ context, it is likely to use the blocking API (because
-> > IRQs aren't disabled at CPU level) behind which there is most certainly
-> > an IRQ required to wake the thread up and if the IRQ in question was
-> > disabled in the suspend NOIRQ phase this code is likely to deadlock.
-> > 
-> > I want to make sure we can justify adding this check, I do not
-> > want to add it because we think it can be needed when it may not
-> > be needed at all (and it gets copy and pasted over and over again
-> > in other drivers).
-> I had a discussion internally about this and the prescribed usage of these APIs
-> seem to be that
-> use tegra_bpmp_transfer() in .probe() and other paths where interrupts are
-> enabled as this API needs interrupts to be enabled for its working.
-> Use tegra_bpmp_transfer_atomic() surrounded by local_irq_save()/local_irq_restore()
-> in other paths where interrupt servicing is disabled.
+Here's v2 of the patchset. It doesn't sound like there's anything
+terribly controversial here so this version is mostly just some
+cleanup changes for clarity.
 
-Why tegra_bpmp_transfer_atomic() needs IRQs to be disabled ? And why
-is it needed in this piece of code where IRQs are _never_ disabled
-at CPU level ?
+Changes in v2:
+ * Rebase on v5.3-rc2 (No changes)
+ * Re-introduce the private pagemap structure and move the p2p-specific
+   elements out of the commond dev_pagemap (per Christoph)
+ * Use flags instead of bool in the whitelist (per Jason)
+ * Only store the mapping type in the xarray (instead of the distance
+   with flags) such that a function can return the mapping method
+   with a switch statement to decide how to map. (per Christoph)
+ * Drop find_parent_pci_dev() on the fast path and rely on the fact
+   that the struct device passed to the mapping functions *must* be
+   a PCI device and convert it directly. (per suggestions from
+   Christoph and Jason)
+ * Collected Christian's Reviewed-by's
 
-IRQs are enabled when you call a suspend_noirq() callback, so the
-blocking API can be used as long as the IRQ descriptor backing
-the IRQ that will wake-up the blocked call is marked as
-IRQF_NO_SUSPEND.
+--
 
-The problem is not IRQs enabled/disabled at CPU level, the problem is
-the IRQ descriptor of the IRQ required to handle the blocking BPMP call,
-mark it as IRQF_NO_SUSPEND and remove the tegra_bpmp_transfer_atomic()
-call from this code (or please give me a concrete example pinpointing
-why it is needed).
+As discussed on the list previously, in order to fully support the
+whitelist Christian added with the IOMMU, we must ensure that we
+map any buffer going through the IOMMU with an aprropriate dma_map
+call. This patchset accomplishes this by cleaning up the output of
+upstream_bridge_distance() to better indicate the mapping requirements,
+caching these requirements in an xarray, then looking them up at map
+time and applying the appropriate mapping method.
 
-Thanks,
-Lorenzo
+After this patchset, it's possible to use the NVMe-of P2P support to
+transfer between devices without a switch on the whitelisted root
+complexes. A couple Intel device I have tested this on have also
+been added to the white list.
 
-> I'll go ahead and make next patch series with this if this looks fine to you.
-> 
-> > 
-> > > > Actually, if tegra_bpmp_transfer() requires IRQs to be enabled you may
-> > > > even end up in a situation where that blocking call does not wake up
-> > > > because the IRQ in question was disabled in the NOIRQ suspend/resume
-> > > > phase.
-> > > > 
-> > > > [...]
-> > > > 
-> > > > > > > +static int tegra_pcie_dw_probe(struct platform_device *pdev)
-> > > > > > > +{
-> > > > > > > +	const struct tegra_pcie_soc *data;
-> > > > > > > +	struct device *dev = &pdev->dev;
-> > > > > > > +	struct resource *atu_dma_res;
-> > > > > > > +	struct tegra_pcie_dw *pcie;
-> > > > > > > +	struct resource *dbi_res;
-> > > > > > > +	struct pcie_port *pp;
-> > > > > > > +	struct dw_pcie *pci;
-> > > > > > > +	struct phy **phys;
-> > > > > > > +	char *name;
-> > > > > > > +	int ret;
-> > > > > > > +	u32 i;
-> > > > > > > +
-> > > > > > > +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> > > > > > > +	if (!pcie)
-> > > > > > > +		return -ENOMEM;
-> > > > > > > +
-> > > > > > > +	pci = &pcie->pci;
-> > > > > > > +	pci->dev = &pdev->dev;
-> > > > > > > +	pci->ops = &tegra_dw_pcie_ops;
-> > > > > > > +	pp = &pci->pp;
-> > > > > > > +	pcie->dev = &pdev->dev;
-> > > > > > > +
-> > > > > > > +	data = (struct tegra_pcie_soc *)of_device_get_match_data(dev);
-> > > > > > > +	if (!data)
-> > > > > > > +		return -EINVAL;
-> > > > > > > +	pcie->mode = (enum dw_pcie_device_mode)data->mode;
-> > > > > > > +
-> > > > > > > +	ret = tegra_pcie_dw_parse_dt(pcie);
-> > > > > > > +	if (ret < 0) {
-> > > > > > > +		dev_err(dev, "Failed to parse device tree: %d\n", ret);
-> > > > > > > +		return ret;
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
-> > > > > > > +	if (IS_ERR(pcie->pex_ctl_supply)) {
-> > > > > > > +		dev_err(dev, "Failed to get regulator: %ld\n",
-> > > > > > > +			PTR_ERR(pcie->pex_ctl_supply));
-> > > > > > > +		return PTR_ERR(pcie->pex_ctl_supply);
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	pcie->core_clk = devm_clk_get(dev, "core");
-> > > > > > > +	if (IS_ERR(pcie->core_clk)) {
-> > > > > > > +		dev_err(dev, "Failed to get core clock: %ld\n",
-> > > > > > > +			PTR_ERR(pcie->core_clk));
-> > > > > > > +		return PTR_ERR(pcie->core_clk);
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	pcie->appl_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > > > > > > +						      "appl");
-> > > > > > > +	if (!pcie->appl_res) {
-> > > > > > > +		dev_err(dev, "Failed to find \"appl\" region\n");
-> > > > > > > +		return PTR_ERR(pcie->appl_res);
-> > > > > > > +	}
-> > > > > > > +	pcie->appl_base = devm_ioremap_resource(dev, pcie->appl_res);
-> > > > > > > +	if (IS_ERR(pcie->appl_base))
-> > > > > > > +		return PTR_ERR(pcie->appl_base);
-> > > > > > > +
-> > > > > > > +	pcie->core_apb_rst = devm_reset_control_get(dev, "apb");
-> > > > > > > +	if (IS_ERR(pcie->core_apb_rst)) {
-> > > > > > > +		dev_err(dev, "Failed to get APB reset: %ld\n",
-> > > > > > > +			PTR_ERR(pcie->core_apb_rst));
-> > > > > > > +		return PTR_ERR(pcie->core_apb_rst);
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	phys = devm_kcalloc(dev, pcie->phy_count, sizeof(*phys), GFP_KERNEL);
-> > > > > > > +	if (!phys)
-> > > > > > > +		return PTR_ERR(phys);
-> > > > > > > +
-> > > > > > > +	for (i = 0; i < pcie->phy_count; i++) {
-> > > > > > > +		name = kasprintf(GFP_KERNEL, "p2u-%u", i);
-> > > > > > > +		if (!name) {
-> > > > > > > +			dev_err(dev, "Failed to create P2U string\n");
-> > > > > > > +			return -ENOMEM;
-> > > > > > > +		}
-> > > > > > > +		phys[i] = devm_phy_get(dev, name);
-> > > > > > > +		kfree(name);
-> > > > > > > +		if (IS_ERR(phys[i])) {
-> > > > > > > +			ret = PTR_ERR(phys[i]);
-> > > > > > > +			dev_err(dev, "Failed to get PHY: %d\n", ret);
-> > > > > > > +			return ret;
-> > > > > > > +		}
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	pcie->phys = phys;
-> > > > > > > +
-> > > > > > > +	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-> > > > > > > +	if (!dbi_res) {
-> > > > > > > +		dev_err(dev, "Failed to find \"dbi\" region\n");
-> > > > > > > +		return PTR_ERR(dbi_res);
-> > > > > > > +	}
-> > > > > > > +	pcie->dbi_res = dbi_res;
-> > > > > > > +
-> > > > > > > +	pci->dbi_base = devm_ioremap_resource(dev, dbi_res);
-> > > > > > > +	if (IS_ERR(pci->dbi_base))
-> > > > > > > +		return PTR_ERR(pci->dbi_base);
-> > > > > > > +
-> > > > > > > +	/* Tegra HW locates DBI2 at a fixed offset from DBI */
-> > > > > > > +	pci->dbi_base2 = pci->dbi_base + 0x1000;
-> > > > > > > +
-> > > > > > > +	atu_dma_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > > > > > > +						   "atu_dma");
-> > > > > > > +	if (!atu_dma_res) {
-> > > > > > > +		dev_err(dev, "Failed to find \"atu_dma\" region\n");
-> > > > > > > +		return PTR_ERR(atu_dma_res);
-> > > > > > > +	}
-> > > > > > > +	pcie->atu_dma_res = atu_dma_res;
-> > > > > > > +	pci->atu_base = devm_ioremap_resource(dev, atu_dma_res);
-> > > > > > > +	if (IS_ERR(pci->atu_base))
-> > > > > > > +		return PTR_ERR(pci->atu_base);
-> > > > > > > +
-> > > > > > > +	pcie->core_rst = devm_reset_control_get(dev, "core");
-> > > > > > > +	if (IS_ERR(pcie->core_rst)) {
-> > > > > > > +		dev_err(dev, "Failed to get core reset: %ld\n",
-> > > > > > > +			PTR_ERR(pcie->core_rst));
-> > > > > > > +		return PTR_ERR(pcie->core_rst);
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	pp->irq = platform_get_irq_byname(pdev, "intr");
-> > > > > > > +	if (!pp->irq) {
-> > > > > > > +		dev_err(dev, "Failed to get \"intr\" interrupt\n");
-> > > > > > > +		return -ENODEV;
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	ret = devm_request_irq(dev, pp->irq, tegra_pcie_irq_handler,
-> > > > > > > +			       IRQF_SHARED, "tegra-pcie-intr", pcie);
-> > > > > > > +	if (ret) {
-> > > > > > > +		dev_err(dev, "Failed to request IRQ %d: %d\n", pp->irq, ret);
-> > > > > > > +		return ret;
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	pcie->bpmp = tegra_bpmp_get(dev);
-> > > > > > > +	if (IS_ERR(pcie->bpmp))
-> > > > > > > +		return PTR_ERR(pcie->bpmp);
-> > > > > > > +
-> > > > > > > +	platform_set_drvdata(pdev, pcie);
-> > > > > > > +
-> > > > > > > +	if (pcie->mode == DW_PCIE_RC_TYPE) {
-> > > > > > > +		ret = tegra_pcie_config_rp(pcie);
-> > > > > > > +		if (ret && ret != -ENOMEDIUM)
-> > > > > > > +			goto fail;
-> > > > > > > +		else
-> > > > > > > +			return 0;
-> > > > > > 
-> > > > > > So if the link is not up we still go ahead and make probe
-> > > > > > succeed. What for ?
-> > > > > We may need root port to be available to support hot-plugging of
-> > > > > endpoint devices, so, we don't fail the probe.
-> > > > 
-> > > > We need it or we don't. If you do support hotplugging of endpoint
-> > > > devices point me at the code, otherwise link up failure means
-> > > > failure to probe.
-> > > Currently hotplugging of endpoint is not supported, but it is one of
-> > > the use cases that we may add support for in future.
-> > 
-> > You should elaborate on this, I do not understand what you mean,
-> > either the root port(s) supports hotplug or it does not.
-> > 
-> > > But, why should we fail probe if link up doesn't happen? As such,
-> > > nothing went wrong in terms of root port initialization right?  I
-> > > checked other DWC based implementations and following are not failing
-> > > the probe pci-dra7xx.c, pcie-armada8k.c, pcie-artpec6.c, pcie-histb.c,
-> > > pcie-kirin.c, pcie-spear13xx.c, pci-exynos.c, pci-imx6.c,
-> > > pci-keystone.c, pci-layerscape.c
-> > > 
-> > > Although following do fail the probe if link is not up.  pcie-qcom.c,
-> > > pcie-uniphier.c, pci-meson.c
-> > > 
-> > > So, to me, it looks more like a choice we can make whether to fail the
-> > > probe or not and in this case we are choosing not to fail.
-> > 
-> > I disagree. I had an offline chat with Bjorn and whether link-up should
-> > fail the probe or not depends on whether the root port(s) is hotplug
-> > capable or not and this in turn relies on the root port "Slot
-> > implemented" bit in the PCI Express capabilities register.
-> > 
-> > It is a choice but it should be based on evidence.
-> > 
-> > Lorenzo
-> With Bjorn's latest comment on top of this, I think we are good not to fail
-> the probe here.
-> 
-> - Vidya Sagar
-> > 
-> 
+Most of the changes are contained within the p2pdma.c, but there are
+a few minor touches to other subsystems, mostly to add support
+to call an unmap function.
+
+The final patch in this series demonstrates a possible
+pci_p2pdma_map_resource() function that I expect Christian will need
+but does not have any users at this time so I don't intend for it to be
+considered for merging.
+
+This patchset is based on 5.3-rc2 and a git branch is available here:
+
+https://github.com/sbates130272/linux-p2pmem/ p2pdma_rc_map_v2
+
+--
+
+Logan Gunthorpe (14):
+  PCI/P2PDMA: Introduce private pagemap structure
+  PCI/P2PDMA: Add the provider's pci_dev to the pci_p2pdma_pagemap
+    struct
+  PCI/P2PDMA: Add constants for not-supported result
+    upstream_bridge_distance()
+  PCI/P2PDMA: Factor out __upstream_bridge_distance()
+  PCI/P2PDMA: Apply host bridge white list for ACS
+  PCI/P2PDMA: Factor out host_bridge_whitelist()
+  PCI/P2PDMA: Add whitelist support for Intel Host Bridges
+  PCI/P2PDMA: Add attrs argument to pci_p2pdma_map_sg()
+  PCI/P2PDMA: Introduce pci_p2pdma_unmap_sg()
+  PCI/P2PDMA: Factor out __pci_p2pdma_map_sg()
+  PCI/P2PDMA: Store mapping method in an xarray
+  PCI/P2PDMA: dma_map P2PDMA map requests that traverse the host bridge
+  PCI/P2PDMA: No longer require no-mmu for host bridge whitelist
+  PCI/P2PDMA: Update documentation for pci_p2pdma_distance_many()
+
+ drivers/infiniband/core/rw.c |   6 +-
+ drivers/nvme/host/pci.c      |  10 +-
+ drivers/pci/p2pdma.c         | 361 +++++++++++++++++++++++++----------
+ include/linux/memremap.h     |   1 -
+ include/linux/pci-p2pdma.h   |  28 ++-
+ 5 files changed, 296 insertions(+), 110 deletions(-)
+
+--
+2.20.1
