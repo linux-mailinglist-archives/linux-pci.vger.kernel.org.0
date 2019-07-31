@@ -2,557 +2,279 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D2BA17B555
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2019 23:56:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B80EC7C81C
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2019 18:04:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387879AbfG3V4a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Jul 2019 17:56:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52950 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387630AbfG3V4a (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Jul 2019 17:56:30 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D24672067D;
-        Tue, 30 Jul 2019 21:56:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564523788;
-        bh=3RjKuBNK6iJwGQYzm4u3Tg3Ye0rW1o3Fq7uPfncfUSs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Bnhk5d/5ca4U8xEs8I0CjpEIpq6Kzvbif9gN11zczZV6QHg3mcrU0IRCAq9UbLEAm
-         Oko2Y3px1qQCDRQgOHk0FN+Wr07AJZpqih5xdAuW+DhA1MLFCzLo8fOwCZnNmanS9E
-         ZyxuAHdOBF7tAsHRx3GNrtlkW1+0qnFoHvYI3f0c=
-Date:   Tue, 30 Jul 2019 16:56:26 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Mans Rullgard <mans@mansr.com>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v6 31/57] pci: Remove dev_err() usage after
- platform_get_irq()
-Message-ID: <20190730215626.GA151852@google.com>
-References: <20190730181557.90391-1-swboyd@chromium.org>
- <20190730181557.90391-32-swboyd@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190730181557.90391-32-swboyd@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1729464AbfGaQEl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 Jul 2019 12:04:41 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47068 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728795AbfGaQEk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 Jul 2019 12:04:40 -0400
+Received: from mail-pg1-f198.google.com ([209.85.215.198])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hsr5j-0003S0-4U
+        for linux-pci@vger.kernel.org; Wed, 31 Jul 2019 16:04:39 +0000
+Received: by mail-pg1-f198.google.com with SMTP id n3so33304193pgh.12
+        for <linux-pci@vger.kernel.org>; Wed, 31 Jul 2019 09:04:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=1UTn4h2zeGRodRaDrd/JZgv2Q6Zf253Lel/s2dvM0/U=;
+        b=gbPARaZx7llQ0iv4BdVAoAB/LUs99roPWHcB3SRPQVu3r80dImJJsrYLy4G6P4979u
+         g0oWyo+VOQfce/M0/nI2OxRmXqch67gfTWH7QmD5pFEncI0ppS9mwHWGOcEIIg7q2G0f
+         3g5DQcJ8jp384wbp3jSJZSnNOXJvOeQjDbGsaRH9YCkLS81Nw/Xjp8SGD2uPG5ENn/ud
+         fmjwGwftfIg7be762xTywEPpuOWgT2CmCeJHdn5VKZd/F+XhLCkfqt5W16l4XKWHAW0B
+         +sMXc14rOjdv530Q3QQ+gCAlfckwzyjk5KmEVcZVmRJGJIznvzffnw37vuAO8vTvSfAC
+         B9jw==
+X-Gm-Message-State: APjAAAX2Ff7v9EpVjlMp0LMji5PuqSrF8TEJ2sgqsfLdeZ30e3PtEYMv
+        X1sZlRD0NkDRkqBb7kHVr3hmT0QqmbAtx5QQOGv22MwYoP5swY/nLK+If277i/vEWoCG1fV/vHZ
+        DINMC0ymrOTeFKu8EgVaOFKnz9kfTtxPCkIw2Ag==
+X-Received: by 2002:a62:e815:: with SMTP id c21mr50061075pfi.244.1564589076752;
+        Wed, 31 Jul 2019 09:04:36 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxfp/AISVBO9OllPlTac1N2vWloiHtDLFWvJDUKmnAU4yATIMuMP8tamfQmB+D+PUzxu+qKEA==
+X-Received: by 2002:a62:e815:: with SMTP id c21mr50061017pfi.244.1564589076270;
+        Wed, 31 Jul 2019 09:04:36 -0700 (PDT)
+Received: from 2001-b011-380f-37d3-f52e-c69b-5d89-c245.dynamic-ip6.hinet.net (2001-b011-380f-37d3-f52e-c69b-5d89-c245.dynamic-ip6.hinet.net. [2001:b011:380f:37d3:f52e:c69b:5d89:c245])
+        by smtp.gmail.com with ESMTPSA id d14sm85185308pfo.154.2019.07.31.09.04.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 09:04:35 -0700 (PDT)
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: [Regression] Commit "ACPI: PM: Allow transitions to D0 to occur in
+ special cases"
+Message-Id: <578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com>
+Date:   Thu, 1 Aug 2019 00:04:29 +0800
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Lorenzo, maintainer of native host bridge drivers]
-[+cc maintainers of drivers with additional questions below]
+Hi,
 
-Please run "git log --oneline drivers/pci/controller" and match the
-style, e.g.,
+After commit "ACPI: PM: Allow transitions to D0 to occur in special cases”,  
+Thunderbolt on XPS 9380 spews the following when it runtime resumes:
+[   36.136554] pci_raw_set_power_state: 25 callbacks suppressed
+[   36.136558] pcieport 0000:03:00.0: Refused to change power state,  
+currently in D3
+[   36.143850] pcieport 0000:04:04.0: Refused to change power state,  
+currently in D3
+[   36.150796] pcieport 0000:04:00.0: Refused to change power state,  
+currently in D3
+[   36.157138] pcieport 0000:04:01.0: Refused to change power state,  
+currently in D3
+[   36.162635] pcieport 0000:04:02.0: Refused to change power state,  
+currently in D3
+[   36.166711] pcieport 0000:04:01.0: pciehp: pcie_do_write_cmd: no  
+response from device
+[   36.166818] pcieport 0000:04:01.0: pciehp: Slot(1): Card present
+[   36.166820] pcieport 0000:04:01.0: pciehp: Slot(1): Link Up
+[   36.167122] pcieport 0000:04:04.0: pciehp: pcie_do_write_cmd: no  
+response from device
+[   36.167179] pcieport 0000:04:04.0: pciehp: Slot(4): Card present
+[   36.167181] pcieport 0000:04:04.0: pciehp: Slot(4): Link Up
+[   36.196453] usb 1-6: new high-speed USB device number 4 using xhci_hcd
+[   36.436436] usb 1-6: New USB device found, idVendor=058f,  
+idProduct=6387, bcdDevice= 1.03
+[   36.436438] usb 1-6: New USB device strings: Mfr=1, Product=2,  
+SerialNumber=3
+[   36.436439] usb 1-6: Product: Mass Storage
+[   36.436441] usb 1-6: Manufacturer: Generic
+[   36.436442] usb 1-6: SerialNumber: 7632C867
+[   37.276751] thunderbolt 0000:05:00.0: Refused to change power state,  
+currently in D3
+[   37.343078] xhci_hcd 0000:39:00.0: Refused to change power state,  
+currently in D3
+[   37.407135] ------------[ cut here ]------------
+[   37.407136] thunderbolt 0000:05:00.0: interrupt for TX ring 0 is already  
+enabled
+[   37.407167] WARNING: CPU: 0 PID: 1830 at drivers/thunderbolt/nhi.c:104  
+ring_interrupt_active+0x1f6/0x240 [thunderbolt]
+[   37.407167] Modules linked in: rfcomm ccm cmac bnep nls_iso8859_1  
+snd_hda_codec_hdmi x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel  
+kvm snd_hda_codec_realtek irqbypass snd_hda_codec_generic dell_laptop  
+ledtrig_audi
+o sof_pci_dev dell_wmi snd_sof_intel_hda_common dell_smbios  
+snd_sof_intel_byt snd_sof_intel_ipc mei_hdcp snd_sof snd_sof_xtensa_dsp  
+snd_soc_skl wmi_bmof intel_wmi_thunderbolt dell_wmi_descriptor  
+snd_soc_hdac_hda snd_hda_ext_cor
+e intel_rapl_msr crct10dif_pclmul snd_soc_skl_ipc snd_soc_sst_dsp  
+snd_soc_sst_ipc snd_soc_core snd_soc_acpi_intel_match snd_soc_acpi  
+crc32_pclmul ghash_clmulni_intel joydev snd_hda_intel snd_hda_codec  
+snd_hwdep snd_hda_core snd
+_pcm aesni_intel aes_x86_64 glue_helper crypto_simd iwlmvm cryptd mac80211  
+dcdbas snd_seq i915 libarc4 intel_cstate intel_rapl_perf uvcvideo snd_timer  
+input_leds btusb snd_seq_device btrtl iwlwifi serio_raw btbcm btintel videob
+uf2_vmalloc i2c_algo_bit videobuf2_memops snd bluetooth drm_kms_helper  
+videobuf2_v4l2
+[   37.407181]  videobuf2_common videodev syscopyarea mc sysfillrect  
+soundcore sysimgblt cfg80211 fb_sys_fops drm rtsx_pci_ms memstick mei_me  
+ecdh_generic ecc mei hid_multitouch processor_thermal_device idma64  
+ucsi_acpi intel_p
+ch_thermal typec_ucsi intel_soc_dts_iosf virt_dma intel_rapl_common typec  
+mac_hid wmi video int3403_thermal int3400_thermal int340x_thermal_zone  
+intel_hid acpi_pad acpi_thermal_rel sparse_keymap sch_fq_codel parport_pc  
+ppdev lp
+  parport ip_tables x_tables autofs4 hid_generic rtsx_pci_sdmmc nvme psmouse nvme_core thunderbolt i2c_i801 rtsx_pci intel_lpss_pci i2c_hid intel_lpss hid pinctrl_cannonlake pinctrl_intel
+[   37.407192] CPU: 0 PID: 1830 Comm: kworker/0:4 Not tainted 5.3.0-rc2+ #47
+[   37.407192] Hardware name: Dell Inc. XPS 13 9380/0SSY11, BIOS 1.5.0  
+06/03/2019
+[   37.407195] Workqueue: pm pm_runtime_work
+[   37.407198] RIP: 0010:ring_interrupt_active+0x1f6/0x240 [thunderbolt]
+[   37.407199] Code: 4c 89 4d c8 44 89 45 d4 e8 c7 cd 73 fd 4c 8b 4d c8 44  
+8b 45 d4 4c 89 e1 48 89 c6 4c 89 f2 48 c7 c7 20 11 1a c0 e8 35 f0 10 fd  
+<0f> 0b e9 17 ff ff ff 41 0f b6 47 78 d3 e0 09 c7 e9 d7 fe ff ff 44
+[   37.407199] RSP: 0018:ffffbf8701c1fc70 EFLAGS: 00010082
+[   37.407200] RAX: 0000000000000000 RBX: 00000000ffffffff RCX:  
+0000000000000006
+[   37.407200] RDX: 0000000000000007 RSI: 0000000000000092 RDI:  
+ffff9d5264417440
+[   37.407201] RBP: ffffbf8701c1fca8 R08: 000000000000047b R09:  
+0000000000000004
+[   37.407201] R10: 0000000000000000 R11: 0000000000000001 R12:  
+ffffffffc01a0641
+[   37.407202] R13: 0000000000038200 R14: ffff9d52620c3d60 R15:  
+ffff9d525faa1300
+[   37.407202] FS:  0000000000000000(0000) GS:ffff9d5264400000(0000)  
+knlGS:0000000000000000
+[   37.407203] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   37.407203] CR2: 00007ffe0858de38 CR3: 000000013b20a001 CR4:  
+00000000003606f0
+[   37.407204] DR0: 0000000000000000 DR1: 0000000000000000 DR2:  
+0000000000000000
+[   37.407204] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:  
+0000000000000400
+[   37.407204] Call Trace:
+[   37.407208]  tb_ring_start+0xd4/0x1c0 [thunderbolt]
+[   37.407210]  tb_ctl_start+0x2d/0xa0 [thunderbolt]
+[   37.407213]  tb_domain_runtime_resume+0x1a/0x40 [thunderbolt]
+[   37.407215]  nhi_runtime_resume+0x28/0x30 [thunderbolt]
+[   37.407217]  pci_pm_runtime_resume+0x75/0xd0
+[   37.407218]  ? pci_restore_standard_config+0x50/0x50
+[   37.407218]  __rpm_callback+0x8c/0x150
+[   37.407219]  ? pci_restore_standard_config+0x50/0x50
+[   37.407220]  rpm_callback+0x24/0x80
+[   37.407221]  ? pci_restore_standard_config+0x50/0x50
+[   37.407222]  rpm_resume+0x568/0x780
+[   37.407223]  pm_runtime_work+0x7d/0xa0
+[   37.407225]  process_one_work+0x1db/0x380
+[   37.407226]  worker_thread+0x4d/0x400
+[   37.407227]  kthread+0x104/0x140
+[   37.407228]  ? process_one_work+0x380/0x380
+[   37.407229]  ? kthread_park+0x80/0x80
+[   37.407231]  ret_from_fork+0x1f/0x40
+[   37.407232] ---[ end trace 33a816af30ee403d ]---
+[   37.407251] ------------[ cut here ]------------
+[   37.407252] thunderbolt 0000:05:00.0: interrupt for RX ring 0 is already  
+enabled
+[   37.407262] WARNING: CPU: 0 PID: 1830 at drivers/thunderbolt/nhi.c:104  
+ring_interrupt_active+0x1f6/0x240 [thunderbolt]
+[   37.407262] Modules linked in: rfcomm ccm cmac bnep nls_iso8859_1  
+snd_hda_codec_hdmi x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel  
+kvm snd_hda_codec_realtek irqbypass snd_hda_codec_generic dell_laptop  
+ledtrig_audio sof_pci_dev dell_wmi snd_sof_intel_hda_common dell_smbios  
+snd_sof_intel_byt snd_sof_intel_ipc mei_hdcp snd_sof snd_sof_xtensa_dsp  
+snd_soc_skl wmi_bmof intel_wmi_thunderbolt dell_wmi_descriptor  
+snd_soc_hdac_hda snd_hda_ext_core intel_rapl_msr crct10dif_pclmul  
+snd_soc_skl_ipc snd_soc_sst_dsp snd_soc_sst_ipc snd_soc_core  
+snd_soc_acpi_intel_match snd_soc_acpi crc32_pclmul ghash_clmulni_intel  
+joydev snd_hda_intel snd_hda_codec snd_hwdep snd_hda_core snd_pcm  
+aesni_intel aes_x86_64 glue_helper crypto_simd iwlmvm cryptd mac80211  
+dcdbas snd_seq i915 libarc4 intel_cstate intel_rapl_perf uvcvideo snd_timer  
+input_leds btusb snd_seq_device btrtl iwlwifi serio_raw btbcm btintel  
+videobuf2_vmalloc i2c_algo_bit videobuf2_memops snd bluetooth  
+drm_kms_helper videobuf2_v4l2
+[   37.407270]  videobuf2_common videodev syscopyarea mc sysfillrect  
+soundcore sysimgblt cfg80211 fb_sys_fops drm rtsx_pci_ms memstick mei_me  
+ecdh_generic ecc mei hid_multitouch processor_thermal_device idma64  
+ucsi_acpi intel_pch_thermal typec_ucsi intel_soc_dts_iosf virt_dma  
+intel_rapl_common typec mac_hid wmi video int3403_thermal int3400_thermal  
+int340x_thermal_zone intel_hid acpi_pad acpi_thermal_rel sparse_keymap  
+sch_fq_codel parport_pc ppdev lp parport ip_tables x_tables autofs4  
+hid_generic rtsx_pci_sdmmc nvme psmouse nvme_core thunderbolt i2c_i801  
+rtsx_pci intel_lpss_pci i2c_hid intel_lpss hid pinctrl_cannonlake  
+pinctrl_intel
+[   37.407277] CPU: 0 PID: 1830 Comm: kworker/0:4 Tainted: G         
+W         5.3.0-rc2+ #47
+[   37.407278] Hardware name: Dell Inc. XPS 13 9380/0SSY11, BIOS 1.5.0  
+06/03/2019
+[   37.407279] Workqueue: pm pm_runtime_work
+[   37.407281] RIP: 0010:ring_interrupt_active+0x1f6/0x240 [thunderbolt]
+[   37.407281] Code: 4c 89 4d c8 44 89 45 d4 e8 c7 cd 73 fd 4c 8b 4d c8 44  
+8b 45 d4 4c 89 e1 48 89 c6 4c 89 f2 48 c7 c7 20 11 1a c0 e8 35 f0 10 fd  
+<0f> 0b e9 17 ff ff ff 41 0f b6 47 78 d3 e0 09 c7 e9 d7 fe ff ff 44
+[   37.407282] RSP: 0018:ffffbf8701c1fc70 EFLAGS: 00010082
+[   37.407282] RAX: 0000000000000000 RBX: 00000000ffffffff RCX:  
+0000000000000006
+[   37.407283] RDX: 0000000000000007 RSI: 0000000000000092 RDI:  
+ffff9d5264417440
+[   37.407283] RBP: ffffbf8701c1fca8 R08: 00000000000004a4 R09:  
+0000000000000004
+[   37.407284] R10: 0000000000000000 R11: 0000000000000001 R12:  
+ffffffffc01a0649
+[   37.407284] R13: 0000000000038200 R14: ffff9d52620c3d60 R15:  
+ffff9d525faa1000
+[   37.407284] FS:  0000000000000000(0000) GS:ffff9d5264400000(0000)  
+knlGS:0000000000000000
+[   37.407285] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   37.407285] CR2: 00007ffe0858de38 CR3: 000000013b20a001 CR4:  
+00000000003606f0
+[   37.407286] DR0: 0000000000000000 DR1: 0000000000000000 DR2:  
+0000000000000000
+[   37.407286] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:  
+0000000000000400
+[   37.407286] Call Trace:
+[   37.407288]  tb_ring_start+0xd4/0x1c0 [thunderbolt]
+[   37.407290]  tb_ctl_start+0x36/0xa0 [thunderbolt]
+[   37.407293]  tb_domain_runtime_resume+0x1a/0x40 [thunderbolt]
+[   37.407295]  nhi_runtime_resume+0x28/0x30 [thunderbolt]
+[   37.407296]  pci_pm_runtime_resume+0x75/0xd0
+[   37.407296]  ? pci_restore_standard_config+0x50/0x50
+[   37.407297]  __rpm_callback+0x8c/0x150
+[   37.407298]  ? pci_restore_standard_config+0x50/0x50
+[   37.407299]  rpm_callback+0x24/0x80
+[   37.407300]  ? pci_restore_standard_config+0x50/0x50
+[   37.407300]  rpm_resume+0x568/0x780
+[   37.407302]  pm_runtime_work+0x7d/0xa0
+[   37.407303]  process_one_work+0x1db/0x380
+[   37.407304]  worker_thread+0x4d/0x400
+[   37.407305]  kthread+0x104/0x140
+[   37.407305]  ? process_one_work+0x380/0x380
+[   37.407306]  ? kthread_park+0x80/0x80
+[   37.407307]  ret_from_fork+0x1f/0x40
+[   37.407308] ---[ end trace 33a816af30ee403e ]---
+[   37.424608] xhci_hcd 0000:39:00.0: Refused to change power state,  
+currently in D3
+[   37.424702] xhci_hcd 0000:39:00.0: WARN: xHC restore state timeout
+[   37.424703] xhci_hcd 0000:39:00.0: PCI post-resume error -110!
+[   37.424705] xhci_hcd 0000:39:00.0: HC died; cleaning up
+[   37.704717] pcieport 0000:04:04.0: pciehp: link training error: status  
+0xffff
+[   37.704721] pcieport 0000:04:01.0: pciehp: link training error: status  
+0xffff
+[   37.704725] pcieport 0000:04:01.0: pciehp: Failed to check link status
+[   37.704731] pcieport 0000:04:04.0: pciehp: Failed to check link status
+[   37.704776] pcieport 0000:04:01.0: pciehp: pcie_do_write_cmd: no  
+response from device
+[   37.704778] pcieport 0000:04:04.0: pciehp: pcie_do_write_cmd: no  
+response from device
 
-  PCI: Remove dev_err() usage after platform_get_irq()
+Kai-Heng
 
-On Tue, Jul 30, 2019 at 11:15:31AM -0700, Stephen Boyd wrote:
-> We don't need dev_err() messages when platform_get_irq() fails now that
-> platform_get_irq() prints an error message itself when something goes
-> wrong. Let's remove these prints with a simple semantic patch.
-
-Lorenzo will take care of this, but it looks good to me.
-
-I *would* like to include the reference for the commit that added the
-error message in platform_get_irq() (or maybe it's in something
-*called* by platform_get_irq() -- I didn't bother to dig deeper).  But
-folks might care about making sure that message is there before
-back-porting this patch.
-
-There are a few comments below, but they don't affect *this* patch;
-they're incidental comments for things in the context lines that look
-wrong.
-
-So, after fixing the subject and adding the commit reference, you can
-add my
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> // <smpl>
-> @@
-> expression ret;
-> struct platform_device *E;
-> @@
-> 
-> ret =
-> (
-> platform_get_irq(E, ...)
-> |
-> platform_get_irq_byname(E, ...)
-> );
-> 
-> if ( \( ret < 0 \| ret <= 0 \) )
-> {
-> (
-> -if (ret != -EPROBE_DEFER)
-> -{ ...
-> -dev_err(...);
-> -... }
-> |
-> ...
-> -dev_err(...);
-> )
-> ...
-> }
-> // </smpl>
-> 
-> While we're here, remove braces on if statements that only have one
-> statement (manually).
-> 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> 
-> Please apply directly to subsystem trees
-> 
->  drivers/pci/controller/dwc/pci-dra7xx.c     |  8 ++------
->  drivers/pci/controller/dwc/pci-exynos.c     |  8 ++------
->  drivers/pci/controller/dwc/pci-imx6.c       |  4 +---
->  drivers/pci/controller/dwc/pci-keystone.c   |  4 +---
->  drivers/pci/controller/dwc/pci-meson.c      |  4 +---
->  drivers/pci/controller/dwc/pcie-armada8k.c  |  4 +---
->  drivers/pci/controller/dwc/pcie-artpec6.c   |  4 +---
->  drivers/pci/controller/dwc/pcie-histb.c     |  4 +---
->  drivers/pci/controller/dwc/pcie-kirin.c     |  5 +----
->  drivers/pci/controller/dwc/pcie-spear13xx.c |  4 +---
->  drivers/pci/controller/pci-tegra.c          |  8 ++------
->  drivers/pci/controller/pci-v3-semi.c        |  4 +---
->  drivers/pci/controller/pci-xgene-msi.c      |  2 --
->  drivers/pci/controller/pcie-altera-msi.c    |  1 -
->  drivers/pci/controller/pcie-altera.c        |  4 +---
->  drivers/pci/controller/pcie-mobiveil.c      |  4 +---
->  drivers/pci/controller/pcie-rockchip-host.c | 12 +++---------
->  drivers/pci/controller/pcie-tango.c         |  4 +---
->  drivers/pci/controller/pcie-xilinx-nwl.c    | 11 ++---------
->  19 files changed, 23 insertions(+), 76 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-> index 4234ddb4722f..5ab34ce963f1 100644
-> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
-> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-> @@ -462,10 +462,8 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
->  	struct resource *res;
->  
->  	pp->irq = platform_get_irq(pdev, 1);
-> -	if (pp->irq < 0) {
-> -		dev_err(dev, "missing IRQ resource\n");
-> +	if (pp->irq < 0)
->  		return pp->irq;
-> -	}
->  
->  	ret = devm_request_irq(dev, pp->irq, dra7xx_pcie_msi_irq_handler,
->  			       IRQF_SHARED | IRQF_NO_THREAD,
-> @@ -713,10 +711,8 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
->  	pci->ops = &dw_pcie_ops;
->  
->  	irq = platform_get_irq(pdev, 0);
-> -	if (irq < 0) {
-> -		dev_err(dev, "missing IRQ resource: %d\n", irq);
-> +	if (irq < 0)
->  		return irq;
-> -	}
->  
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ti_conf");
->  	base = devm_ioremap_nocache(dev, res->start, resource_size(res));
-> diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-> index cee5f2f590e2..a3e005b5f93d 100644
-> --- a/drivers/pci/controller/dwc/pci-exynos.c
-> +++ b/drivers/pci/controller/dwc/pci-exynos.c
-> @@ -402,10 +402,8 @@ static int __init exynos_add_pcie_port(struct exynos_pcie *ep,
->  	int ret;
->  
->  	pp->irq = platform_get_irq(pdev, 1);
-> -	if (pp->irq < 0) {
-> -		dev_err(dev, "failed to get irq\n");
-> +	if (pp->irq < 0)
->  		return pp->irq;
-> -	}
->  	ret = devm_request_irq(dev, pp->irq, exynos_pcie_irq_handler,
->  				IRQF_SHARED, "exynos-pcie", ep);
->  	if (ret) {
-> @@ -415,10 +413,8 @@ static int __init exynos_add_pcie_port(struct exynos_pcie *ep,
->  
->  	if (IS_ENABLED(CONFIG_PCI_MSI)) {
->  		pp->msi_irq = platform_get_irq(pdev, 0);
-> -		if (pp->msi_irq < 0) {
-> -			dev_err(dev, "failed to get msi irq\n");
-> +		if (pp->msi_irq < 0)
->  			return pp->msi_irq;
-> -		}
->  	}
->  
->  	pp->ops = &exynos_pcie_host_ops;
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 9b5cb5b70389..a969ec82ca5f 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -867,10 +867,8 @@ static int imx6_add_pcie_port(struct imx6_pcie *imx6_pcie,
->  
->  	if (IS_ENABLED(CONFIG_PCI_MSI)) {
->  		pp->msi_irq = platform_get_irq_byname(pdev, "msi");
-> -		if (pp->msi_irq <= 0) {
-> -			dev_err(dev, "failed to get MSI irq\n");
-> +		if (pp->msi_irq <= 0)
->  			return -ENODEV;
-
-Why does this return -ENODEV when most of the others return the error
-from platform_get_irq()?  Obviously *this* patch is fine; the possible
-return change is material for a different patch.
-
-> -		}
->  	}
->  
->  	pp->ops = &imx6_pcie_host_ops;
-> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> index af677254a072..3878208cfd44 100644
-> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> @@ -1247,10 +1247,8 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
->  	pci->version = version;
->  
->  	irq = platform_get_irq(pdev, 0);
-> -	if (irq < 0) {
-> -		dev_err(dev, "missing IRQ resource: %d\n", irq);
-> +	if (irq < 0)
->  		return irq;
-> -	}
->  
->  	ret = request_irq(irq, ks_pcie_err_irq_handler, IRQF_SHARED,
->  			  "ks-pcie-error-irq", ks_pcie);
-> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-> index e35e9eaa50ee..419c30034dc8 100644
-> --- a/drivers/pci/controller/dwc/pci-meson.c
-> +++ b/drivers/pci/controller/dwc/pci-meson.c
-> @@ -500,10 +500,8 @@ static int meson_add_pcie_port(struct meson_pcie *mp,
->  
->  	if (IS_ENABLED(CONFIG_PCI_MSI)) {
->  		pp->msi_irq = platform_get_irq(pdev, 0);
-> -		if (pp->msi_irq < 0) {
-> -			dev_err(dev, "failed to get MSI IRQ\n");
-> +		if (pp->msi_irq < 0)
->  			return pp->msi_irq;
-> -		}
->  	}
->  
->  	pp->ops = &meson_pcie_host_ops;
-> diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
-> index 3d55dc78d999..33309ce70ad5 100644
-> --- a/drivers/pci/controller/dwc/pcie-armada8k.c
-> +++ b/drivers/pci/controller/dwc/pcie-armada8k.c
-> @@ -249,10 +249,8 @@ static int armada8k_add_pcie_port(struct armada8k_pcie *pcie,
->  	pp->ops = &armada8k_pcie_host_ops;
->  
->  	pp->irq = platform_get_irq(pdev, 0);
-> -	if (pp->irq < 0) {
-> -		dev_err(dev, "failed to get irq for port\n");
-> +	if (pp->irq < 0)
->  		return pp->irq;
-> -	}
->  
->  	ret = devm_request_irq(dev, pp->irq, armada8k_pcie_irq_handler,
->  			       IRQF_SHARED, "armada8k-pcie", pcie);
-> diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-> index d00252bd8fae..7fa7f8d134b6 100644
-> --- a/drivers/pci/controller/dwc/pcie-artpec6.c
-> +++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-> @@ -393,10 +393,8 @@ static int artpec6_add_pcie_port(struct artpec6_pcie *artpec6_pcie,
->  
->  	if (IS_ENABLED(CONFIG_PCI_MSI)) {
->  		pp->msi_irq = platform_get_irq_byname(pdev, "msi");
-> -		if (pp->msi_irq < 0) {
-> -			dev_err(dev, "failed to get MSI irq\n");
-> +		if (pp->msi_irq < 0)
->  			return pp->msi_irq;
-> -		}
->  	}
->  
->  	pp->ops = &artpec6_pcie_host_ops;
-> diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
-> index 954bc2b74bbc..6612072bd720 100644
-> --- a/drivers/pci/controller/dwc/pcie-histb.c
-> +++ b/drivers/pci/controller/dwc/pcie-histb.c
-> @@ -402,10 +402,8 @@ static int histb_pcie_probe(struct platform_device *pdev)
->  
->  	if (IS_ENABLED(CONFIG_PCI_MSI)) {
->  		pp->msi_irq = platform_get_irq_byname(pdev, "msi");
-> -		if (pp->msi_irq < 0) {
-> -			dev_err(dev, "Failed to get MSI IRQ\n");
-> +		if (pp->msi_irq < 0)
->  			return pp->msi_irq;
-> -		}
->  	}
->  
->  	hipcie->phy = devm_phy_get(dev, "phy");
-> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-> index 8df1914226be..dc08551e3f8d 100644
-> --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> @@ -455,11 +455,8 @@ static int kirin_pcie_add_msi(struct dw_pcie *pci,
->  
->  	if (IS_ENABLED(CONFIG_PCI_MSI)) {
->  		irq = platform_get_irq(pdev, 0);
-> -		if (irq < 0) {
-> -			dev_err(&pdev->dev,
-> -				"failed to get MSI IRQ (%d)\n", irq);
-> +		if (irq < 0)
->  			return irq;
-> -		}
->  
->  		pci->pp.msi_irq = irq;
->  	}
-> diff --git a/drivers/pci/controller/dwc/pcie-spear13xx.c b/drivers/pci/controller/dwc/pcie-spear13xx.c
-> index 7d0cdfd8138b..26d3a734ce0d 100644
-> --- a/drivers/pci/controller/dwc/pcie-spear13xx.c
-> +++ b/drivers/pci/controller/dwc/pcie-spear13xx.c
-> @@ -198,10 +198,8 @@ static int spear13xx_add_pcie_port(struct spear13xx_pcie *spear13xx_pcie,
->  	int ret;
->  
->  	pp->irq = platform_get_irq(pdev, 0);
-> -	if (pp->irq < 0) {
-> -		dev_err(dev, "failed to get irq\n");
-> +	if (pp->irq < 0)
->  		return pp->irq;
-> -	}
->  	ret = devm_request_irq(dev, pp->irq, spear13xx_pcie_irq_handler,
->  			       IRQF_SHARED | IRQF_NO_THREAD,
->  			       "spear1340-pcie", spear13xx_pcie);
-> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> index 9a917b2456f6..43b6e0848b91 100644
-> --- a/drivers/pci/controller/pci-tegra.c
-> +++ b/drivers/pci/controller/pci-tegra.c
-> @@ -1549,10 +1549,8 @@ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
->  
->  	/* request interrupt */
->  	err = platform_get_irq_byname(pdev, "intr");
-> -	if (err < 0) {
-> -		dev_err(dev, "failed to get IRQ: %d\n", err);
-> +	if (err < 0)
->  		goto phys_put;
-> -	}
->  
->  	pcie->irq = err;
->  
-> @@ -1767,10 +1765,8 @@ static int tegra_pcie_msi_setup(struct tegra_pcie *pcie)
->  	}
->  
->  	err = platform_get_irq_byname(pdev, "msi");
-> -	if (err < 0) {
-> -		dev_err(dev, "failed to get IRQ: %d\n", err);
-> +	if (err < 0)
->  		goto free_irq_domain;
-> -	}
->  
->  	msi->irq = err;
->  
-> diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
-> index d219404bad92..7c9d898cde71 100644
-> --- a/drivers/pci/controller/pci-v3-semi.c
-> +++ b/drivers/pci/controller/pci-v3-semi.c
-> @@ -804,10 +804,8 @@ static int v3_pci_probe(struct platform_device *pdev)
->  
->  	/* Get and request error IRQ resource */
->  	irq = platform_get_irq(pdev, 0);
-> -	if (irq <= 0) {
-> -		dev_err(dev, "unable to obtain PCIv3 error IRQ\n");
-> +	if (irq <= 0)
-
-Why does this test for <= 0 when all the others test for < 0?  Again,
-obviously that would be material for a separate patch.
-
->  		return -ENODEV;
-> -	}
->  	ret = devm_request_irq(dev, irq, v3_irq, 0,
->  			"PCIv3 error", v3);
->  	if (ret < 0) {
-> diff --git a/drivers/pci/controller/pci-xgene-msi.c b/drivers/pci/controller/pci-xgene-msi.c
-> index f4c02da84e59..02271c6d17a1 100644
-> --- a/drivers/pci/controller/pci-xgene-msi.c
-> +++ b/drivers/pci/controller/pci-xgene-msi.c
-> @@ -478,8 +478,6 @@ static int xgene_msi_probe(struct platform_device *pdev)
->  	for (irq_index = 0; irq_index < NR_HW_IRQS; irq_index++) {
->  		virt_msir = platform_get_irq(pdev, irq_index);
->  		if (virt_msir < 0) {
-> -			dev_err(&pdev->dev, "Cannot translate IRQ index %d\n",
-> -				irq_index);
->  			rc = virt_msir;
->  			goto error;
->  		}
-> diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
-> index 16d938920ca5..bec666eda1eb 100644
-> --- a/drivers/pci/controller/pcie-altera-msi.c
-> +++ b/drivers/pci/controller/pcie-altera-msi.c
-> @@ -256,7 +256,6 @@ static int altera_msi_probe(struct platform_device *pdev)
->  
->  	msi->irq = platform_get_irq(pdev, 0);
->  	if (msi->irq < 0) {
-> -		dev_err(&pdev->dev, "failed to map IRQ: %d\n", msi->irq);
->  		ret = msi->irq;
->  		goto err;
->  	}
-> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-> index d2497ca43828..0ef01b06efda 100644
-> --- a/drivers/pci/controller/pcie-altera.c
-> +++ b/drivers/pci/controller/pcie-altera.c
-> @@ -747,10 +747,8 @@ static int altera_pcie_parse_dt(struct altera_pcie *pcie)
->  
->  	/* setup IRQ */
->  	pcie->irq = platform_get_irq(pdev, 0);
-> -	if (pcie->irq < 0) {
-> -		dev_err(dev, "failed to get IRQ: %d\n", pcie->irq);
-> +	if (pcie->irq < 0)
->  		return pcie->irq;
-> -	}
->  
->  	irq_set_chained_handler_and_data(pcie->irq, altera_pcie_isr, pcie);
->  	return 0;
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index 672e633601c7..34400ea5a7c3 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -453,10 +453,8 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
->  		pcie->ppio_wins = MAX_PIO_WINDOWS;
->  
->  	pcie->irq = platform_get_irq(pdev, 0);
-> -	if (pcie->irq <= 0) {
-> -		dev_err(dev, "failed to map IRQ: %d\n", pcie->irq);
-> +	if (pcie->irq <= 0)
->  		return -ENODEV;
-
-Why -ENODEV instead of the failure returned by platform_get_irq()?
-And why <= 0 instead of < 0?
-
-> -	}
->  
->  	return 0;
->  }
-> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-> index 8d20f1793a61..edbf872a76d5 100644
-> --- a/drivers/pci/controller/pcie-rockchip-host.c
-> +++ b/drivers/pci/controller/pcie-rockchip-host.c
-> @@ -549,10 +549,8 @@ static int rockchip_pcie_setup_irq(struct rockchip_pcie *rockchip)
->  	struct platform_device *pdev = to_platform_device(dev);
->  
->  	irq = platform_get_irq_byname(pdev, "sys");
-> -	if (irq < 0) {
-> -		dev_err(dev, "missing sys IRQ resource\n");
-> +	if (irq < 0)
->  		return irq;
-> -	}
->  
->  	err = devm_request_irq(dev, irq, rockchip_pcie_subsys_irq_handler,
->  			       IRQF_SHARED, "pcie-sys", rockchip);
-> @@ -562,20 +560,16 @@ static int rockchip_pcie_setup_irq(struct rockchip_pcie *rockchip)
->  	}
->  
->  	irq = platform_get_irq_byname(pdev, "legacy");
-> -	if (irq < 0) {
-> -		dev_err(dev, "missing legacy IRQ resource\n");
-> +	if (irq < 0)
->  		return irq;
-> -	}
->  
->  	irq_set_chained_handler_and_data(irq,
->  					 rockchip_pcie_legacy_int_handler,
->  					 rockchip);
->  
->  	irq = platform_get_irq_byname(pdev, "client");
-> -	if (irq < 0) {
-> -		dev_err(dev, "missing client IRQ resource\n");
-> +	if (irq < 0)
->  		return irq;
-> -	}
->  
->  	err = devm_request_irq(dev, irq, rockchip_pcie_client_irq_handler,
->  			       IRQF_SHARED, "pcie-client", rockchip);
-> diff --git a/drivers/pci/controller/pcie-tango.c b/drivers/pci/controller/pcie-tango.c
-> index 21a208da3f59..b87aa9041480 100644
-> --- a/drivers/pci/controller/pcie-tango.c
-> +++ b/drivers/pci/controller/pcie-tango.c
-> @@ -273,10 +273,8 @@ static int tango_pcie_probe(struct platform_device *pdev)
->  		writel_relaxed(0, pcie->base + SMP8759_ENABLE + offset);
->  
->  	virq = platform_get_irq(pdev, 1);
-> -	if (virq <= 0) {
-> -		dev_err(dev, "Failed to map IRQ\n");
-> +	if (virq <= 0)
->  		return -ENXIO;
-
-Why <= 0 and -ENXIO?
-
-> -	}
->  
->  	irq_dom = irq_domain_create_linear(fwnode, MSI_MAX, &dom_ops, pcie);
->  	if (!irq_dom) {
-> diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-> index 45c0f344ccd1..743244db09d1 100644
-> --- a/drivers/pci/controller/pcie-xilinx-nwl.c
-> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-> @@ -586,7 +586,6 @@ static int nwl_pcie_enable_msi(struct nwl_pcie *pcie)
->  	/* Get msi_1 IRQ number */
->  	msi->irq_msi1 = platform_get_irq_byname(pdev, "msi1");
->  	if (msi->irq_msi1 < 0) {
-> -		dev_err(dev, "failed to get IRQ#%d\n", msi->irq_msi1);
->  		ret = -EINVAL;
-
-Why -EINVAL instead of error from platform_get_irq_byname()?
-
->  		goto err;
->  	}
-> @@ -597,7 +596,6 @@ static int nwl_pcie_enable_msi(struct nwl_pcie *pcie)
->  	/* Get msi_0 IRQ number */
->  	msi->irq_msi0 = platform_get_irq_byname(pdev, "msi0");
->  	if (msi->irq_msi0 < 0) {
-> -		dev_err(dev, "failed to get IRQ#%d\n", msi->irq_msi0);
->  		ret = -EINVAL;
-
-Again.
-
->  		goto err;
->  	}
-> @@ -728,11 +726,8 @@ static int nwl_pcie_bridge_init(struct nwl_pcie *pcie)
->  
->  	/* Get misc IRQ number */
->  	pcie->irq_misc = platform_get_irq_byname(pdev, "misc");
-> -	if (pcie->irq_misc < 0) {
-> -		dev_err(dev, "failed to get misc IRQ %d\n",
-> -			pcie->irq_misc);
-> +	if (pcie->irq_misc < 0)
->  		return -EINVAL;
-
-Again.
-
-> -	}
->  
->  	err = devm_request_irq(dev, pcie->irq_misc,
->  			       nwl_pcie_misc_handler, IRQF_SHARED,
-> @@ -797,10 +792,8 @@ static int nwl_pcie_parse_dt(struct nwl_pcie *pcie,
->  
->  	/* Get intx IRQ number */
->  	pcie->irq_intx = platform_get_irq_byname(pdev, "intx");
-> -	if (pcie->irq_intx < 0) {
-> -		dev_err(dev, "failed to get intx IRQ %d\n", pcie->irq_intx);
-> +	if (pcie->irq_intx < 0)
->  		return pcie->irq_intx;
-> -	}
->  
->  	irq_set_chained_handler_and_data(pcie->irq_intx,
->  					 nwl_pcie_leg_handler, pcie);
-> -- 
-> Sent by a computer through tubes
-> 
