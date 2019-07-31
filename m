@@ -2,82 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F9DA7C845
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2019 18:13:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9E7C7C956
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2019 18:58:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbfGaQM6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 Jul 2019 12:12:58 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:30086 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725209AbfGaQM6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 Jul 2019 12:12:58 -0400
-Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VG9bon026232;
-        Wed, 31 Jul 2019 12:12:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=bvuyEyYL0dYLQuXorPs3yeHCIRdNISCr/Vk2kCK/8jo=;
- b=Xr7DSeFBHEySVZFjVcTuWQtiLeyfzDjbO5EXS03DYvA7PdiZCpggN1d6+4qpJw3+emjp
- uhWstbziepwlfgLW+kHtXg6QDYloWA5UQ4EZH7xR0uhA9Yy9+KW8l9HDYurUABtMEUyS
- 743o7tOVzmL74EQgdDfIjXtiNduiusFi2aE63LPiAkgzTMehIS3KnplyA9XtuTYBALFg
- 56cIThISVUyZJY1CVXTpDLo9KXEH8WJkK4bAsry6bjPfVtlmFSWWKpp05ipCms1iC55A
- 75dCUM7gH597K1tAntWsdl11kkmLwhcF+6fbYHno2To/1mSn9Xln694TQvLItxTczpUa rw== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0a-00154904.pphosted.com with ESMTP id 2u2twectvf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 31 Jul 2019 12:12:57 -0400
-Received: from pps.filterd (m0144103.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VG7rLi052078;
-        Wed, 31 Jul 2019 12:12:56 -0400
-Received: from ausxippc110.us.dell.com (AUSXIPPC110.us.dell.com [143.166.85.200])
-        by mx0b-00154901.pphosted.com with ESMTP id 2u3c0t2ntd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 31 Jul 2019 12:12:56 -0400
-X-LoopCount0: from 10.166.132.131
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="838363177"
-From:   <Mario.Limonciello@dell.com>
-To:     <kai.heng.feng@canonical.com>, <rjw@rjwysocki.net>
-CC:     <mika.westerberg@linux.intel.com>, <anthony.wong@canonical.com>,
-        <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [Regression] Commit "ACPI: PM: Allow transitions to D0 to occur
- in special cases"
-Thread-Topic: [Regression] Commit "ACPI: PM: Allow transitions to D0 to occur
- in special cases"
-Thread-Index: AQHVR7mqkcvT3R0NfUWTXYuokpN3/6bk5bx4
-Date:   Wed, 31 Jul 2019 16:12:54 +0000
-Message-ID: <1564589574204.11850@Dell.com>
-References: <578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com>
-In-Reply-To: <578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.177.49.166]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S1729983AbfGaQ6j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 Jul 2019 12:58:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727487AbfGaQ6j (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 31 Jul 2019 12:58:39 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41F16206B8;
+        Wed, 31 Jul 2019 16:58:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564592318;
+        bh=GK34hMoIqS1LKB9/No990zj8xBhgXxjxz3Ly73DSymU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=TxlVBaEuhFsldFgAeHf8Y1D6LI9uq6ZOcqm8JNesR4uKorcJy3Q7I9yA37uouUgk+
+         9AzugpCizac2aJ6E2oHOSrntgaDHaW0WSHBlD1iyMD1HwlAI+P6vOV/jxrNIS2O+UB
+         yuMudGiZVvcz3XXYdO2WYKpaGQazBDYiE6IX0iio=
+Date:   Wed, 31 Jul 2019 11:58:36 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     AceLan Kao <acelan@gmail.com>, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: [bugzilla-daemon@bugzilla.kernel.org: [Bug 204385] New: Failed to
+ resume from S3 with thunderbolt daisy chain]
+Message-ID: <20190731165836.GB151852@google.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-31_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=603 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907310160
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=715 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907310161
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I've actually been seeing worse behavior, in that I can't get Thunderbolt t=
-o work at all with 5.3rc1 or 5.3rc2 on the 9380 system I have on hand, simi=
-lar messages related to link timeouts. =
+AceLan, before suspending, can you please run "sudo lspci -vv" and
+attach the complete output to the bugzilla?
+
+----- Forwarded message from bugzilla-daemon@bugzilla.kernel.org -----
+
+Date: Wed, 31 Jul 2019 02:58:33 +0000
+From: bugzilla-daemon@bugzilla.kernel.org
+To: bugzilla.pci@gmail.com
+Subject: [Bug 204385] New: Failed to resume from S3 with thunderbolt daisy
+	chain
+Message-ID: <bug-204385-193951@https.bugzilla.kernel.org/>
+
+https://bugzilla.kernel.org/show_bug.cgi?id=204385
+
+            Bug ID: 204385
+           Summary: Failed to resume from S3 with thunderbolt daisy chain
+           Product: Drivers
+           Version: 2.5
+    Kernel Version: 5.3.0-rc2
+          Hardware: All
+                OS: Linux
+              Tree: Mainline
+            Status: NEW
+          Severity: normal
+          Priority: P1
+         Component: PCI
+          Assignee: drivers_pci@kernel-bugs.osdl.org
+          Reporter: acelan@gmail.com
+        Regression: No
+
+Created attachment 284047
+  --> https://bugzilla.kernel.org/attachment.cgi?id=284047&action=edit
+dmesg.log
+
+The system can't resume while connecting to a tbt storage and a tbt monitor
+over Thunderbolt port(daisy-chaining)
+
+Dell Precision 5540 --> Dell WD19TB Thunderbolt Dock --> ASUS-Display PA27AC
+--> HP P800 Thunderbolt Storage
+
+Reproduce steps:
+1. Connect Dell WD19TB Thunderbolt Dock to your system(thunderbolt port)
+2. Connect ASUS-Display PA27AC(thuderbolt port) to WD19TB(thunderbolt port)
+3. Connect HP P800 thunderbolt storage to PA27AC display(thunderbolt port)
+4. mount and access files on HP P800
+5. enter S3(echo deep | sudo tee /sys/power/mem_sleep && systemctl suspend) and
+resume
+6. it hangs
+
+It works well if laptop
+1. connects to HP P800 directly
+2. or connects to ASUS monitor directly
+3. or connects to ASUS monitor -> HP P800
+4. or connects to WD19TB -> HP P800
+5. or connects to WD19TB -> ASUS monitor
+
+-- 
+You are receiving this mail because:
+You are watching the assignee of the bug.
+
+----- End forwarded message -----
