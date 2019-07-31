@@ -2,109 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 623737D000
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2019 23:26:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 164547D015
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2019 23:30:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730447AbfGaV0v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 Jul 2019 17:26:51 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:45519 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728032AbfGaV0v (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 Jul 2019 17:26:51 -0400
-Received: by mail-io1-f65.google.com with SMTP id g20so139575668ioc.12
-        for <linux-pci@vger.kernel.org>; Wed, 31 Jul 2019 14:26:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tIGma61wLHtzNprRff+9TEgirnDHGnLDSLV4ZUKzd0A=;
-        b=GGXOQNvcvh9x7DPOaCvU6Mr/Yimq3x5XwNnQN6gr/ZHoEilUolJo7BffsSizrIKoaq
-         Nvt5S5f/l96bE8UzIyGWrKu9M6OmuGwEIkUBOcPG7ItKNl1ub0y24rlTsmSb5gkHjv+I
-         HRhspEiI4+2x/FmaeNFaxKcsR1mE3Jt/lTysULwoVag6yKMoprB7+94K9IvXdIVBD6oT
-         tiI32H/V90GKX1vFGIKtCEuENsbR+5iaDNBSPHZ9TSmU7Ogyd5niSjer+0qybta+oFu5
-         XdXVilp8mPqOgp0b437a94cM+w2vJnbkVnluZx2Me9+NvotIuEaLZ3OqLlhjc5oqDq2P
-         gycQ==
-X-Gm-Message-State: APjAAAXw9nHikL+iooTm8LXv9dWUe6swOcAIKFG1u8G7irmzT9PWAPIX
-        laNnRZ0TrZsapdYfys6jo1nnA6xC4FuROKgNQJ8SzQ==
-X-Google-Smtp-Source: APXvYqzESQ6j/S2FQ4K/46lCRs2V5bZ+p/HVw7BDuXGgow808D74rbDC31pUP/jqnm5XyBJWHTuU22rvCZ1LzMnu6TU=
-X-Received: by 2002:a02:230a:: with SMTP id u10mr46030961jau.117.1564608410139;
- Wed, 31 Jul 2019 14:26:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190731201927.22054-1-lyude@redhat.com> <20190731211842.befvpoyudrm2subf@wunner.de>
-In-Reply-To: <20190731211842.befvpoyudrm2subf@wunner.de>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Wed, 31 Jul 2019 23:26:39 +0200
-Message-ID: <CACO55tu=9ZBzGkwdXPOwWARy1UTspFv+v=nrmLFoOKiSGU+E5Q@mail.gmail.com>
-Subject: Re: [PATCH] Revert "PCI: Enable NVIDIA HDA controllers"
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Lyude Paul <lyude@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
+        id S1730039AbfGaVaK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 Jul 2019 17:30:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726096AbfGaVaJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 31 Jul 2019 17:30:09 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EF1E20679;
+        Wed, 31 Jul 2019 21:30:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564608608;
+        bh=oGnVpX4dVrD+Qozo8zDA1ZPwnhAHqFMVwK0fzQ1mFIQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GsHIIfWm8iROi366bFleIDVx8TuDAQ/JvQk8TqpznFLhj3NbKvFq927w/uQR2pA3g
+         sANKPraFKMDiKLp4beYs+dKfgz8KDH+fTcPkhcND/J2vzdUQvyjMX5aDm7P7yyi6M5
+         RwsVnvuqMelMzMi9+Y4CwkZO5lIAcdnIF+lCJBfY=
+Date:   Wed, 31 Jul 2019 16:30:01 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
         Linux PCI <linux-pci@vger.kernel.org>,
-        Daniel Drake <drake@endlessm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Aaron Plattner <aplattner@nvidia.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Ilia Mirkin <imirkin@alum.mit.edu>,
-        Maik Freudenberg <hhfeuer@gmx.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>
+Subject: Re: [Regression] Commit "ACPI: PM: Allow transitions to D0 to occur
+ in special cases"
+Message-ID: <20190731213001.GC151852@google.com>
+References: <578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 11:18 PM Lukas Wunner <lukas@wunner.de> wrote:
->
-> On Wed, Jul 31, 2019 at 04:19:27PM -0400, Lyude Paul wrote:
-> > While this fixes audio for a number of users, this commit has the
-> > sideaffect of breaking the BIOS workaround that's required to make the
-> > GPU on the nvidia P50 work, by causing the GPU's PCI device function to
-> > stop working after it's been set to multifunction mode.
->
-> This is missing a reference to the commit introducing the P50 quirk,
-> which is e0547c81bfcf ("PCI: Reset Lenovo ThinkPad P50 nvgpu at boot
-> if necessary").
->
-> Please describe in more detail how the GPU's PCI function stops working.
-> Does it respond with "all ones" when accessing MMIO?
-> Do MMIO accesses cause the system to hang?
->
-> Could you provide lspci -vvxx output for the GPU and its associated
-> HDA controller with and without b516ea586d71?
->
-> Does this machine have external display connectors via which audio
-> can be streamed?
->
->
-> > I'm not really holding my breath on this patch to being accepted:
-> > there's a good chance there's a better solution for this (and I'm going
-> > to continue investigating for one after sending this patch), this is
-> > more just to start a conversation on what the proper way to fix this is.
->
-> Posting as an RFC might have been more appropriate then.
->
+[+cc Thunderbolt folks, see
+https://lore.kernel.org/r/578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com
+for beginning of thread]
 
-no, a revert is actually appropriate.  If a commit fixes something,
-but breaks something else, it gets either reverted or fixed. If nobody
-fixes it, then revert it is.
+On Thu, Aug 01, 2019 at 12:04:29AM +0800, Kai-Heng Feng wrote:
+> Hi,
+> 
+> After commit "ACPI: PM: Allow transitions to D0 to occur in special cases”,
 
->
-> > So, I'm kind of confused about why exactly this was implemented as an
-> > early boot quirk in the first place. If we're seeing the GPU's PCI
-> > device, we already know the GPU is there. Shouldn't we be able to check
-> > for the existence of the HDA device once we probe the GPU in nouveau?
->
-> I think a motivation to keep this generic was to make it work with
-> other drivers besides nouveau, specifically Nvidia's proprietary driver.
-> nouveau might not even be enabled.
->
->
-> > that still doesn't explain why this was implemented as an early quirk
->
-> This isn't an early quirk.  Those live in arch/x86/kernel/early-quirks.c.
-> This is just a PCI quirk executed on device enumeration and on resume.
-> Devices aren't necessarily enumerated only on boot, e.g. think Thunderbolt.
->
-> Thanks,
->
-> Lukas
+This is f850a48a0799 ("ACPI: PM: Allow transitions to D0 to occur in
+special cases").
+
+> Thunderbolt on XPS 9380 spews the following when it runtime resumes:
+> [   36.136554] pci_raw_set_power_state: 25 callbacks suppressed
+> [   36.136558] pcieport 0000:03:00.0: Refused to change power state,
+> currently in D3
+
+We really should be smarter about what we print here, maybe something
+like the patch below?
+
+pci_raw_set_power_state() prints "Refused to change power state" if
+(in this case) the value of (PCI_PM_CTRL & PCI_PM_CTRL_STATE_MASK) is
+0x3.  Most likely we got 0xffff from PCI_PM_CTRL because the device is
+in D3cold.  If the device is in D3cold, pci_raw_set_power_state() has
+no hope of doing anything because it only uses PCI PM config
+registers, and they're inaccessible in D3cold.
+
+Presumably there's some platform PM method that is supposed to take
+the device out of D3cold, and maybe we're missing that somehow?
+
+Based on an lspci I found at [1], I suspect 03:00.0 is a Thunderbolt
+switch leading to [bus 04-6d].  From your log, it looks like these
+devices don't work:
+
+  03:00.0 Thunderbolt Upstream Port
+  04:00.0 Thunderbolt Downstream Port
+  04:01.0 Thunderbolt Downstream Port (Slot 1)
+  04:02.0 Thunderbolt Downstream Port
+  04:04.0 Thunderbolt Downstream Port (Slot 4)
+  05:00.0 Thunderbolt NHI
+  39:00.0 XHCI USB
+
+If 03:00.0 is stuck in D3cold, that would explain why none of these
+things work.
+
+[1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1826125
+
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 29ed5ec1ac27..63ca963ebff9 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -851,6 +852,11 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+ 		return -EIO;
+ 
+ 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
++	if (pmcsr == (u16) ~0) {
++		pci_err(dev, "device not responding; can't change to power state D%d\n",
++			state);
++		return -EIO;
++	}
+ 
+ 	/*
+ 	 * If we're (effectively) in D3, force entire word to 0.
