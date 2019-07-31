@@ -2,149 +2,220 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF5A77D027
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2019 23:35:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDB107D0BA
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2019 00:19:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730296AbfGaVfQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 Jul 2019 17:35:16 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33778 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbfGaVfP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 Jul 2019 17:35:15 -0400
-Received: by mail-qk1-f195.google.com with SMTP id r6so50367389qkc.0
-        for <linux-pci@vger.kernel.org>; Wed, 31 Jul 2019 14:35:15 -0700 (PDT)
+        id S1731263AbfGaWQ4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 Jul 2019 18:16:56 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:44787 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731257AbfGaWQz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 Jul 2019 18:16:55 -0400
+Received: by mail-pl1-f202.google.com with SMTP id n1so38283106plk.11
+        for <linux-pci@vger.kernel.org>; Wed, 31 Jul 2019 15:16:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=IqUClIssxa6D6MoIAE+ms+qpgX9OHdd3voCN/TpeHYo=;
+        b=OSQfdUjsKNzN31+bhcUXLr2H8Ocf38HBXPBklzHGY4NHM5jtawY+aqnedkfaXFZ0CH
+         bnrxhckspK+Dl2WO5zPvm4mIVlAqzNa6JXDwRhYEqAg0nADrIuzMJ99IW7CBMC0z06cT
+         XaVM5l2ElJjj+URRBbOga5Os28t1bLbOtSwQtIE+ij9v4hybvyoiXs5ll9mxRs6PlMpq
+         /vN8vAqK0ZDwqqLRWoXnIfLPbUjKbN7YPC21GMErPsgBxVLl25dtev+CZ42wiW3SO7lZ
+         oSgtUizV2FJn8NR5XwBoh3M6bWa7Pal2CGantvm3rpWwH0EEOGsg7Y4ap6b13GTY89ZS
+         5RVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=Yt3D9L2XmMJM/hxeEeDRbs7n5AVGloPaWA/yadI+Qrg=;
-        b=o9F2mEhW12+rSm2foBMGkHw9463N1nUaZJcTq+/FBvy621JpEG+7HAYW37w/tDZsYw
-         li72iQQu0bWoJH9YOW/mlZlEKJgMQPb0BVmJfXkZe1BqMMwrWGFigEkuMEu7rB5Zlcvo
-         x8zmvzHJr49RRH7OOG1YB8dAZwqtlPbxL3100HQ2lDDmAaP0LlknXvyFYlhIOOViR6y3
-         mXSjNKcubfo8hC0nvvvo90xquTFjU0v1D7irC4T8EaFvONah0a6O8Ebg5MMX5MX77luj
-         PJjsPJPqcMwXKvmFFZi7RHpbuJ193zIHoih1XE1lobROQFqG2d90WdVxX2agVkj0oXSa
-         FfiQ==
-X-Gm-Message-State: APjAAAXsdstjCsXnQ5PPG+gF31cb+V2PqI/nXmwrS88lJqYkLB8gjfVN
-        kz/t8Obwso5y97C1FMm0A8QE7Q==
-X-Google-Smtp-Source: APXvYqwq8iZNfTZjhmXSZpr7SbYmuaQHxbwUhmb4FHrOYyaB4ijjIYu+VCEGw1Epf8zn+a0otAy3Vw==
-X-Received: by 2002:a05:620a:1411:: with SMTP id d17mr77658658qkj.137.1564608914930;
-        Wed, 31 Jul 2019 14:35:14 -0700 (PDT)
-Received: from dhcp-10-20-1-11.bss.redhat.com ([144.121.20.162])
-        by smtp.gmail.com with ESMTPSA id e8sm28934259qkn.95.2019.07.31.14.35.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 14:35:13 -0700 (PDT)
-Message-ID: <b27614151184f29bb147786933cb424fddb82a23.camel@redhat.com>
-Subject: Re: [PATCH] Revert "PCI: Enable NVIDIA HDA controllers"
-From:   Lyude Paul <lyude@redhat.com>
-To:     Karol Herbst <kherbst@redhat.com>, Lukas Wunner <lukas@wunner.de>
-Cc:     nouveau <nouveau@lists.freedesktop.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Daniel Drake <drake@endlessm.com>,
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=IqUClIssxa6D6MoIAE+ms+qpgX9OHdd3voCN/TpeHYo=;
+        b=J6TGxOkDvJmBuANAadjSGD92p9K7+fi0eDxiXrVgW32nsPto+oJc5tjYfsbHMe50/i
+         35h720QIlmtdGi2mUvW8YCDRy/EGWot3EDDE4JWNS53zLVm7SYjITpzhyOnsB8SK6ggY
+         hybXrEEE8svo0Ug8vW6NLHBLlIbuUwYFcN4yBzppNrALbDiJWzIsxNfS57y+drTJxMtV
+         s7hbAKRIGijlxcg1sfohVKz0Apci23Gy9mpm3nFU0TzVNVOoYV5HdlA8EefO1mw1iLM5
+         6svJEcBxH5k4vr4GEExn2ob5yY2seaeE+5z+YvpS824GeYddsw/bQXNDlhqhfGQASeJ8
+         ceTA==
+X-Gm-Message-State: APjAAAWuXpDWqMfaES1MWNo1FORDlNJrT/z97z4FSuaeKgWGXSeEoUQY
+        KYEtEz1q/egqXpQGe+/YT3qhJLCjHh10kb0/+rPgGg==
+X-Google-Smtp-Source: APXvYqyS6YBKB93OOHHm+oxngalxRdvpUX2H1ET3d0/GBi0Heyba67cmqacKd5xZ/ghnAHwFoSGfoLlRBb6KosWk16Qoqg==
+X-Received: by 2002:a65:6850:: with SMTP id q16mr80028747pgt.423.1564611414229;
+ Wed, 31 Jul 2019 15:16:54 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 15:15:59 -0700
+In-Reply-To: <20190731221617.234725-1-matthewgarrett@google.com>
+Message-Id: <20190731221617.234725-12-matthewgarrett@google.com>
+Mime-Version: 1.0
+References: <20190731221617.234725-1-matthewgarrett@google.com>
+X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
+Subject: [PATCH V37 11/29] PCI: Lock down BAR access when the kernel is locked down
+From:   Matthew Garrett <matthewgarrett@google.com>
+To:     jmorris@namei.org
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        David Howells <dhowells@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Aaron Plattner <aplattner@nvidia.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Ilia Mirkin <imirkin@alum.mit.edu>,
-        Maik Freudenberg <hhfeuer@gmx.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Wed, 31 Jul 2019 17:35:11 -0400
-In-Reply-To: <CACO55tu=9ZBzGkwdXPOwWARy1UTspFv+v=nrmLFoOKiSGU+E5Q@mail.gmail.com>
-References: <20190731201927.22054-1-lyude@redhat.com>
-         <20190731211842.befvpoyudrm2subf@wunner.de>
-         <CACO55tu=9ZBzGkwdXPOwWARy1UTspFv+v=nrmLFoOKiSGU+E5Q@mail.gmail.com>
-Organization: Red Hat
+        Kees Cook <keescook@chromium.org>, linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2019-07-31 at 23:26 +0200, Karol Herbst wrote:
-> On Wed, Jul 31, 2019 at 11:18 PM Lukas Wunner <lukas@wunner.de> wrote:
-> > On Wed, Jul 31, 2019 at 04:19:27PM -0400, Lyude Paul wrote:
-> > > While this fixes audio for a number of users, this commit has the
-> > > sideaffect of breaking the BIOS workaround that's required to make the
-> > > GPU on the nvidia P50 work, by causing the GPU's PCI device function to
-> > > stop working after it's been set to multifunction mode.
-> > 
-> > This is missing a reference to the commit introducing the P50 quirk,
-> > which is e0547c81bfcf ("PCI: Reset Lenovo ThinkPad P50 nvgpu at boot
-> > if necessary").
-> > 
-> > Please describe in more detail how the GPU's PCI function stops working.
-> > Does it respond with "all ones" when accessing MMIO?
-> > Do MMIO accesses cause the system to hang?
-> > 
-> > Could you provide lspci -vvxx output for the GPU and its associated
-> > HDA controller with and without b516ea586d71?
-> > 
-> > Does this machine have external display connectors via which audio
-> > can be streamed?
-> > 
-> > 
-> > > I'm not really holding my breath on this patch to being accepted:
-> > > there's a good chance there's a better solution for this (and I'm going
-> > > to continue investigating for one after sending this patch), this is
-> > > more just to start a conversation on what the proper way to fix this is.
-> > 
-> > Posting as an RFC might have been more appropriate then.
-> > 
-> 
-> no, a revert is actually appropriate.  If a commit fixes something,
-> but breaks something else, it gets either reverted or fixed. If nobody
-> fixes it, then revert it is.
+From: Matthew Garrett <mjg59@srcf.ucam.org>
 
-To answer Lukas's question btw: most of the details on how things break are
-back in the original commit (sorry for forgetting the reference!), there's a
-_lot_ of explanation there that I'd rather not retype, so just refer back to
-the commit and bug @ https://bugs.freedesktop.org/show_bug.cgi?id=75985
+Any hardware that can potentially generate DMA has to be locked down in
+order to avoid it being possible for an attacker to modify kernel code,
+allowing them to circumvent disabled module loading or module signing.
+Default to paranoid - in future we can potentially relax this for
+sufficiently IOMMU-isolated devices.
 
-Additionally, there was some extra discussion providing some more detail in
-the email thread that I had with Bjorn:
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+cc: linux-pci@vger.kernel.org
+---
+ drivers/pci/pci-sysfs.c      | 16 ++++++++++++++++
+ drivers/pci/proc.c           | 14 ++++++++++++--
+ drivers/pci/syscall.c        |  4 +++-
+ include/linux/security.h     |  1 +
+ security/lockdown/lockdown.c |  1 +
+ 5 files changed, 33 insertions(+), 3 deletions(-)
 
-https://lkml.org/lkml/2019/2/12/1172
-
-As for how this commit breaks the workaround: it seems that when we enable the
-HDA controller and put the GPU into multifunction mode, the function-level
-reset stops working and thus we can't reset the GPU anymore. Currently I can
-see a couple of solutions (again, please feel free to suggest more!):
-
- * Just revert the commit. We should do this if necessary, but of course I'd
-   much rather try finding a fix first
- * Disable the HDA controller temporarily when a GPU reset is neded in
-   quirk_reset_lenovo_thinkpad_p50_nvgpu(), then call the function level
-   reset, then re-enable the HDA controller. I have no idea if this actually
-   works yet, but I'm about to try this on my system
- * Get quirk_reset_lenovo_thinkpad_p50_nvgpu() to run before
-   quirk_nvidia_hda(). This would probably be fine, but we would need to
-   rework some stuff in the PCI subsystem (maybe it already has a way to do
-   this? haven't checked yet) so that we could perform an flr probe early
-   enough to perform the quirk
-> 
-> > > So, I'm kind of confused about why exactly this was implemented as an
-> > > early boot quirk in the first place. If we're seeing the GPU's PCI
-> > > device, we already know the GPU is there. Shouldn't we be able to check
-> > > for the existence of the HDA device once we probe the GPU in nouveau?
-> > 
-> > I think a motivation to keep this generic was to make it work with
-> > other drivers besides nouveau, specifically Nvidia's proprietary driver.
-> > nouveau might not even be enabled.
-> > 
-> > 
-> > > that still doesn't explain why this was implemented as an early quirk
-> > 
-> > This isn't an early quirk.  Those live in arch/x86/kernel/early-quirks.c.
-> > This is just a PCI quirk executed on device enumeration and on resume.
-> > Devices aren't necessarily enumerated only on boot, e.g. think
-> > Thunderbolt.
-> > 
-> > Thanks,
-> > 
-> > Lukas
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 965c72104150..396c1a90c0e1 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -906,6 +906,11 @@ static ssize_t pci_write_config(struct file *filp, struct kobject *kobj,
+ 	unsigned int size = count;
+ 	loff_t init_off = off;
+ 	u8 *data = (u8 *) buf;
++	int ret;
++
++	ret = security_locked_down(LOCKDOWN_PCI_ACCESS);
++	if (ret)
++		return ret;
+ 
+ 	if (off > dev->cfg_size)
+ 		return 0;
+@@ -1167,6 +1172,11 @@ static int pci_mmap_resource(struct kobject *kobj, struct bin_attribute *attr,
+ 	int bar = (unsigned long)attr->private;
+ 	enum pci_mmap_state mmap_type;
+ 	struct resource *res = &pdev->resource[bar];
++	int ret;
++
++	ret = security_locked_down(LOCKDOWN_PCI_ACCESS);
++	if (ret)
++		return ret;
+ 
+ 	if (res->flags & IORESOURCE_MEM && iomem_is_exclusive(res->start))
+ 		return -EINVAL;
+@@ -1243,6 +1253,12 @@ static ssize_t pci_write_resource_io(struct file *filp, struct kobject *kobj,
+ 				     struct bin_attribute *attr, char *buf,
+ 				     loff_t off, size_t count)
+ {
++	int ret;
++
++	ret = security_locked_down(LOCKDOWN_PCI_ACCESS);
++	if (ret)
++		return ret;
++
+ 	return pci_resource_io(filp, kobj, attr, buf, off, count, true);
+ }
+ 
+diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
+index fe7fe678965b..5495537c60c2 100644
+--- a/drivers/pci/proc.c
++++ b/drivers/pci/proc.c
+@@ -13,6 +13,7 @@
+ #include <linux/seq_file.h>
+ #include <linux/capability.h>
+ #include <linux/uaccess.h>
++#include <linux/security.h>
+ #include <asm/byteorder.h>
+ #include "pci.h"
+ 
+@@ -115,7 +116,11 @@ static ssize_t proc_bus_pci_write(struct file *file, const char __user *buf,
+ 	struct pci_dev *dev = PDE_DATA(ino);
+ 	int pos = *ppos;
+ 	int size = dev->cfg_size;
+-	int cnt;
++	int cnt, ret;
++
++	ret = security_locked_down(LOCKDOWN_PCI_ACCESS);
++	if (ret)
++		return ret;
+ 
+ 	if (pos >= size)
+ 		return 0;
+@@ -196,6 +201,10 @@ static long proc_bus_pci_ioctl(struct file *file, unsigned int cmd,
+ #endif /* HAVE_PCI_MMAP */
+ 	int ret = 0;
+ 
++	ret = security_locked_down(LOCKDOWN_PCI_ACCESS);
++	if (ret)
++		return ret;
++
+ 	switch (cmd) {
+ 	case PCIIOC_CONTROLLER:
+ 		ret = pci_domain_nr(dev->bus);
+@@ -238,7 +247,8 @@ static int proc_bus_pci_mmap(struct file *file, struct vm_area_struct *vma)
+ 	struct pci_filp_private *fpriv = file->private_data;
+ 	int i, ret, write_combine = 0, res_bit = IORESOURCE_MEM;
+ 
+-	if (!capable(CAP_SYS_RAWIO))
++	if (!capable(CAP_SYS_RAWIO) ||
++	    security_locked_down(LOCKDOWN_PCI_ACCESS))
+ 		return -EPERM;
+ 
+ 	if (fpriv->mmap_state == pci_mmap_io) {
+diff --git a/drivers/pci/syscall.c b/drivers/pci/syscall.c
+index d96626c614f5..31e39558d49d 100644
+--- a/drivers/pci/syscall.c
++++ b/drivers/pci/syscall.c
+@@ -7,6 +7,7 @@
+ 
+ #include <linux/errno.h>
+ #include <linux/pci.h>
++#include <linux/security.h>
+ #include <linux/syscalls.h>
+ #include <linux/uaccess.h>
+ #include "pci.h"
+@@ -90,7 +91,8 @@ SYSCALL_DEFINE5(pciconfig_write, unsigned long, bus, unsigned long, dfn,
+ 	u32 dword;
+ 	int err = 0;
+ 
+-	if (!capable(CAP_SYS_ADMIN))
++	if (!capable(CAP_SYS_ADMIN) ||
++	    security_locked_down(LOCKDOWN_PCI_ACCESS))
+ 		return -EPERM;
+ 
+ 	dev = pci_get_domain_bus_and_slot(0, bus, dfn);
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 304a155a5628..8adbd62b7669 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -107,6 +107,7 @@ enum lockdown_reason {
+ 	LOCKDOWN_DEV_MEM,
+ 	LOCKDOWN_KEXEC,
+ 	LOCKDOWN_HIBERNATION,
++	LOCKDOWN_PCI_ACCESS,
+ 	LOCKDOWN_INTEGRITY_MAX,
+ 	LOCKDOWN_CONFIDENTIALITY_MAX,
+ };
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index a0996f75629f..655fe388e615 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -22,6 +22,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+ 	[LOCKDOWN_DEV_MEM] = "/dev/mem,kmem,port",
+ 	[LOCKDOWN_KEXEC] = "kexec of unsigned images",
+ 	[LOCKDOWN_HIBERNATION] = "hibernation",
++	[LOCKDOWN_PCI_ACCESS] = "direct PCI access",
+ 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+ 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+ };
 -- 
-Cheers,
-	Lyude Paul
+2.22.0.770.g0f2c4a37fd-goog
 
