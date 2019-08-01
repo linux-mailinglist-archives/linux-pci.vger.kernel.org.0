@@ -2,113 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9260B7E4B8
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2019 23:23:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECCB57E4BA
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2019 23:25:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbfHAVXm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Aug 2019 17:23:42 -0400
-Received: from mga02.intel.com ([134.134.136.20]:48697 "EHLO mga02.intel.com"
+        id S1729937AbfHAVZe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Aug 2019 17:25:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727580AbfHAVXm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 1 Aug 2019 17:23:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 14:23:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,335,1559545200"; 
-   d="scan'208";a="348221869"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 01 Aug 2019 14:23:41 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id D3FFE5800BD;
-        Thu,  1 Aug 2019 14:23:40 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v4 2/7] PCI/ATS: Initialize PRI in pci_ats_init()
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        keith.busch@intel.com
-References: <cover.1562172836.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <744998862eebecfae79afd23c42d518264231a22.1562172836.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190801210929.GE15795@localhost.localdomain>
-From:   sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <d825feec-f6ca-30b8-3c7f-fb94e2e13499@linux.intel.com>
-Date:   Thu, 1 Aug 2019 14:21:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1727580AbfHAVZe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 1 Aug 2019 17:25:34 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 742E22064A;
+        Thu,  1 Aug 2019 21:25:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564694733;
+        bh=BJbaZtjGihoO7CqXvFDdveYQbTshY500zg7JOb3wQ/Y=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Lg6rkWpv0Lhw8r/g17uLpsr0QjF5pm+Tf+am1Z85CgrGq1X+FTcVG9B5DMMkxMXkY
+         FbEpTkKHLWwuQUgkBfgHOtc8XJrX9NI6a4JtT3LX3AZWPUjPLzBrDxs5E5ggr7DZ1v
+         V43FOvftkBcytXlDKLTVCawyE3K+TyMkbbqlmVNI=
+Date:   Thu, 1 Aug 2019 16:25:29 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc:     Fawad Lateef <fawadlateef@gmail.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Andy Gross <agross@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: *_pcie_establish_link() usage
+Message-ID: <20190801212529.GE151852@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190801210929.GE15795@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Keith,
+Hi,
 
-Thanks for the review.
+I got the following dmesg log from Fawad [1]:
 
-On 8/1/19 2:09 PM, Keith Busch wrote:
-> On Wed, Jul 03, 2019 at 01:46:19PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->> +#ifdef CONFIG_PCI_PRI
->> +static void pci_pri_init(struct pci_dev *pdev)
->> +{
->> +	u32 max_requests;
->> +	int pos;
->> +
->> +	/*
->> +	 * As per PCIe r4.0, sec 9.3.7.11, only PF is permitted to
->> +	 * implement PRI and all associated VFs can only use it.
->> +	 * Since PF already initialized the PRI parameters there is
->> +	 * no need to proceed further.
->> +	 */
->> +	if (pdev->is_virtfn)
->> +		return;
->> +
->> +	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
->> +	if (!pos)
->> +		return;
->> +
->> +	pci_read_config_dword(pdev, pos + PCI_PRI_MAX_REQ, &max_requests);
->> +
->> +	/*
->> +	 * Since PRI is a shared resource between PF and VF, we must not
->> +	 * configure Outstanding Page Allocation Quota as a per device
->> +	 * resource in pci_enable_pri(). So use maximum value possible
->> +	 * as default value.
->> +	 */
->> +	pci_write_config_dword(pdev, pos + PCI_PRI_ALLOC_REQ, max_requests);
->> +
->> +	pdev->pri_reqs_alloc = max_requests;
->> +	pdev->pri_cap = pos;
->> +}
->> +#endif
->> +
->>   void pci_ats_init(struct pci_dev *dev)
->>   {
->>   	int pos;
->> @@ -28,6 +62,10 @@ void pci_ats_init(struct pci_dev *dev)
->>   		return;
->>   
->>   	dev->ats_cap = pos;
->> +
->> +#ifdef CONFIG_PCI_PRI
->> +	pci_pri_init(dev);
->> +#endif
->>   }
-> Rather than surround the call to pci_pri_init() with the #ifdef, you
-> should provide an empty function implementation when CONFIG_PCI_PRI is
-> not defined. Same thing for the next patch adding PASID.
-This function is defined and used in the same file (ats.c). Is there any 
-advantage in defining an empty function ? But if this is the recommended 
-approach, I can make the necessary changes. Please confirm.
->
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+  imx6q-pcie 1ffc000.pcie: host bridge /soc/pcie@1ffc000 ranges:
+  imx6q-pcie 1ffc000.pcie:    IO 0x01f80000..0x01f8ffff -> 0x00000000
+  imx6q-pcie 1ffc000.pcie:   MEM 0x01000000..0x01efffff -> 0x01000000
+  imx6q-pcie 1ffc000.pcie: Link up
+  imx6q-pcie 1ffc000.pcie: Link: Gen2 disabled
+  imx6q-pcie 1ffc000.pcie: Link up, Gen1
+  imx6q-pcie 1ffc000.pcie: PCI host bridge to bus 0000:00
+  pci 0000:00:00.0: [16c3:abcd] type 01 class 0x060400
+  pci 0000:00:00.0: PCI bridge to [bus 01-ff]
 
+This is unrelated to the problem Fawad is working on, but the above
+looks wrong to me because it associates the "Link up" and link speed
+info with the host bridge (imx6q-pcie 1ffc000.pcie), not the Root Port
+(pci 0000:00:00.0).
+
+I see that *_pcie_establish_link() is generally called from
+*_pcie_host_init(), typically via the struct
+dw_pcie_host_ops.host_init pointer, e.g.,
+
+  dra7xx_pcie_probe
+    dra7xx_add_pcie_port(dra7xx)
+      struct dw_pcie *pci = dra7xx->pci
+      struct pcie_port *pp = &pci->pp
+      dw_pcie_host_init(struct pcie_port *pp)
+	bridge = devm_pci_alloc_host_bridge
+	devm_of_pci_get_host_bridge_resources
+	pp->ops->host_init(pp)
+	  dra7xx_pcie_host_init               # .host_init
+	    dra7xx_pcie_establish_link        # <--- bring up link
+	    dw_pcie_wait_for_link
+	pci_scan_root_bus_bridge(bridge)      # <--- enumerate
+	pp->root_bus = bridge->bus
+	pci_bus_add_devices(pp->root_bus)
+
+AFAICT, the *_pcie_establish_link() functions all operate on a single
+PCIe link, i.e., they are bringing up the link going downstream from a
+single Root Port.
+
+It looks like this only allows a single Root Port per struct dw_pcie
+device.  Is that true?  *Should* that be true?
+
+It looks like we bring up the link before enumerating.  In some cases,
+(meson_pcie_host_init(), qcom_pcie_host_init(),
+uniphier_pcie_host_init()) if the link doesn't come up, we return
+failure, which means dw_pcie_host_init() will not enumerate devices at
+all.
+
+That seems wrong -- can't we have Root Complex Integrated Endpoints
+and even other Root Ports on that root bus?  Those should be
+accessible and possibly useful even if we can't bring up a link on
+*one* Root Port.
+
+I would *expect* that we would enumerate all the devices on the root
+bus.  Then if we find one or more Root Ports, we might try to bring up
+the link for each one, and if successful, enumerate the downstream
+devices.
+
+I'm confused.  Is there some restriction that means there can only be
+a single Root Port in this design, and no RCiEPs?  Even if there is,
+can we change the code so it enumerates the root bus first and brings
+up links as necessary so it matches the generic PCIe topology better?
+
+Bjorn
+
+[1] https://lore.kernel.org/linux-pci/CAGgoGu7rot61LSgu2syOMq9Onx26_u3PEtS7pf_QNQRxOaifhg@mail.gmail.com/
