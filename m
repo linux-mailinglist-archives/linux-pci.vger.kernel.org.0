@@ -2,178 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EEA58028A
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Aug 2019 00:08:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B58118029B
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Aug 2019 00:15:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729540AbfHBWIT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Aug 2019 18:08:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40350 "EHLO mail.kernel.org"
+        id S1728292AbfHBWPm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Aug 2019 18:15:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726781AbfHBWIT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 2 Aug 2019 18:08:19 -0400
+        id S1727884AbfHBWPm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 2 Aug 2019 18:15:42 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 830912087C;
-        Fri,  2 Aug 2019 22:08:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FAC92087C;
+        Fri,  2 Aug 2019 22:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564783697;
-        bh=bJSkPBWAvI7uWMOqOTnD/uGDiwHKAHKRoxZ6f+pu34I=;
-        h=Date:From:To:Cc:Subject:From;
-        b=lg9bbtBq8CgCiKO0bk9yrn/pC59FH7cEnGpR9n8ugs+lBgTyp16BLULz/RJA42ZBR
-         3l5iK4RnfMd0oxRM/SRG6iqZzOPNvLU7A/zShQT3hDgSvVid5RsZ/v8tv5meY4YUcm
-         h1fM8620xK3U/NNtPaYmYjeLuRjJMcuJyLN2/gn8=
-Date:   Fri, 2 Aug 2019 17:08:16 -0500
+        s=default; t=1564784141;
+        bh=0VIAzOo4zb+swZnODQr4hpD7QckO3wZdHQ/+75GTF1U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uKqTme8pWjp2pFS3sAbNjLV/ACQVZk5uy3e4F7mchlG8JEQKkiMhiZALaWbrk9dTF
+         PIZ+QsF9kwvw77M+BSZBGxYm/mPQD5HFsDY/DsHx0F1SVUB4RXpIp0jCG2gTlP88Gv
+         KFks3NVPUOXw2b//d5n6Fhj08gxat8oPs+x8imWQ=
+Date:   Fri, 2 Aug 2019 17:15:40 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Matthias Andree <matthias.andree@gmx.de>
-Subject: [bugzilla-daemon@bugzilla.kernel.org: [Bug 204413] New: "PCI: Add
- missing link delays" causes regression on resume from suspend to ram]
-Message-ID: <20190802220816.GM151852@google.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     Stephen Hemminger <sthemmin@microsoft.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>
+Subject: Re: [PATCH] PCI: hv: Fix panic by calling hv_pci_remove_slots()
+ earlier
+Message-ID: <20190802221540.GN151852@google.com>
+References: <PU1P153MB0169DBCFEE7257F5BB93580ABFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190802194053.GL151852@google.com>
+ <PU1P153MB01698F51FE22C39086CC8353BFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <PU1P153MB01698F51FE22C39086CC8353BFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Mika, Rafael, linux-pci]
+On Fri, Aug 02, 2019 at 08:31:26PM +0000, Dexuan Cui wrote:
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > Sent: Friday, August 2, 2019 12:41 PM
+> > The subject line only describes the mechanical code change, which is
+> > obvious from the patch.  It would be better if we could say something
+> > about *why* we need this.
+> 
+> Hi Bjorn,
+> Sorry. I'll try to write a better changelog in v2. :-)
+>  
+> > On Fri, Aug 02, 2019 at 01:32:28AM +0000, Dexuan Cui wrote:
+> > >
+> > > When a slot is removed, the pci_dev must still exist.
+> > >
+> > > pci_remove_root_bus() removes and free all the pci_devs, so
+> > > hv_pci_remove_slots() must be called before pci_remove_root_bus(),
+> > > otherwise a general protection fault can happen, if the kernel is built
+> > 
+> > "general protection fault" is an x86 term that doesn't really say what
+> > the issue is.  I suspect this would be a "use-after-free" problem.
+> 
+> Yes, it's use-after-free. I'll fix the the wording.
+>  
+> > > --- a/drivers/pci/controller/pci-hyperv.c
+> > > +++ b/drivers/pci/controller/pci-hyperv.c
+> > > @@ -2757,8 +2757,8 @@ static int hv_pci_remove(struct hv_device *hdev)
+> > >  		/* Remove the bus from PCI's point of view. */
+> > >  		pci_lock_rescan_remove();
+> > >  		pci_stop_root_bus(hbus->pci_bus);
+> > > -		pci_remove_root_bus(hbus->pci_bus);
+> > >  		hv_pci_remove_slots(hbus);
+> > > +		pci_remove_root_bus(hbus->pci_bus);
+> > 
+> > I'm curious about why we need hv_pci_remove_slots() at all.  None of
+> > the other callers of pci_stop_root_bus() and pci_remove_root_bus() do
+> > anything similar to hv_pci_remove_slots().
+> > 
+> > Surely some of those callers also support slots, so there must be some
+> > other path that calls pci_destroy_slot() in those cases.  Can we use a
+> > similar strategy here?
+> 
+> Originally Stephen Heminger added the slot code for pci-hyperv.c:
+> a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
+> So he may know this better. My understanding is: we can not use the similar
+> stragegy used in the 2 other users of pci_create_slot():
+> 
+> drivers/pci/hotplug/pci_hotplug_core.c calls pci_create_slot().
+> It looks drivers/pci/hotplug/ is quite different from pci-hyperv.c because
+> pci-hyper-v uses a simple *private* hot-plug protocol, making it impossible
+> to use the API pci_hp_register() and pci_hp_destroy() -> pci_destroy_slot().
+> 
+> drivers/acpi/pci_slot.c calls pci_create_slot(), and saves the created slots in
+> the static "slot_list" list in the same file. Again, since pci-hyper-v uses a private
+> PCI-device-discovery protocol (which is based on VMBus rather the emulated
+> ACPI and PCI), acpi_pci_slot_enumerate() can not find the PCI devices that are
+> discovered by pci-hyperv, so we can not use the standard register_slot() ->
+> pci_create_slot() to create the slots and hence acpi_pci_slot_remove() -> 
+> pci_destroy_slot() can not work for pci-hyperv.
 
-Hi Matthias,
+Hmm, ok.  This still doesn't seem right to me, but I think the bottom
+line will be that the current slot registration interfaces just don't
+work quite right for all the cases we want them to.
 
-Thanks a lot for this report!
+Maybe it would be a good project for somebody to rethink them, but it
+doesn't seem practical for *this* patch.  Thanks for looking into it
+this far!
 
-Mika, this bisected to upstream c2bf1fc212f7 ("PCI: Add missing link
-delays required by the PCIe spec").
+> I think I can use this as the v2 changelog:
+> 
+> The slot must be removed before the pci_dev is removed, otherwise a panic
+> can happen due to use-after-free.
 
-Matthias, would you mind opening a separate report for the spurious
-PME issue you mentioned with 5.2.5?  Seems like we should try to
-figure that one out, too.
+Sounds good.
 
-
------ Forwarded message from bugzilla-daemon@bugzilla.kernel.org -----
-
-Date: Fri, 02 Aug 2019 16:26:45 +0000
-From: bugzilla-daemon@bugzilla.kernel.org
-To: bugzilla.pci@gmail.com
-Subject: [Bug 204413] New: "PCI: Add missing link delays" causes regression on resume from suspend to ram
-Message-ID: <bug-204413-193951@https.bugzilla.kernel.org/>
-
-https://bugzilla.kernel.org/show_bug.cgi?id=204413
-
-            Bug ID: 204413
-           Summary: "PCI: Add missing link delays" causes regression on
-                    resume from suspend to ram
-           Product: Drivers
-           Version: 2.5
-    Kernel Version: 5.1.20, 5.2.5, 5.3-rc1?
-          Hardware: All
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: PCI
-          Assignee: drivers_pci@kernel-bugs.osdl.org
-          Reporter: matthias.andree@gmx.de
-        Regression: Yes
-
-Description of problem:
-vanilla 5.1.20 on x86_64 fails to wake from suspend (STR),
-Fedora and vanilla 5.1.19 and prior were fine. 
-5.2.5 (from Fedora's-200.fc30) also fails in a different way (spurious PME
-interrupts on pcie).
-
-How reproducible:
-always
-
-Steps to Reproduce:
-1. boot Fedora 30 and log into GNOME desktop
-2. click pause symbol to suspend the computer to RAM, wait until suspended
-3. press key on keyboard, or power button
-
-Actual results:
-computer tries to wake up, HDD LED blinks a bit, but console does not wake.
-Other computer on network cannot ping the waking computer.
-
-"sync" hangs in D deep sleep for long amounts of time. 
-
-Expected results:
-computer wakes up properly and continues to use its devices.
-
-Additional info:
-PM tracing was enabled, the next boot returned
-[    0.827930] PM:   hash matches drivers/base/power/main.c:1021
-
-It appears that suspend to disk still works.
-
-Computer has an NVIDIA GeForce 1060 PCIe graphics board, but 5.1.19 and prior
-would suspend properly, and the 5.1.20 and 5.2.5 suspend issues also occur if
-nvidia kernel modules are renamed out of the way and nouveau remains blocked,
-so it's not an nvidia driver issue.
-
-I have "git bisect"ed this on the vanilla stable kernel, the stable/linux-5.1.y
-branch (because I have had starting points 5.1.19 and 5.1.20 there).
-The failure-inducing commit on the branch is
-3c795a8e3481e4dec071b5956e7177e816f6e7f1 (see below), which got picked from 
-master's c2bf1fc212f7e6f25ace1af8f0b3ac061ea48ba5, (merged through
-cf2d213e49fdf47e4c10dc629a3659e0026a54b8, v5.3-rc1~167)
-and also got picked to stable/linux-5.2.y
-5817d78eba34f6c86f5462ae2c5212f80a013357 (v5.2.3~291).
-
-Sasha Levin's signoff is only on the stable branches, not on master.
-
-------------------------------------------------------------
-commit 3c795a8e3481e4dec071b5956e7177e816f6e7f1 (refs/bisect/bad)
-Author: Mika Westerberg <mika.westerberg@linux.intel.com>  2019-06-12 12:57:38
-Committer: Greg Kroah-Hartman <gregkh@linuxfoundation.org>  2019-07-26 09:12:37
-Parent: 70cc29dba925b8a99a4917c2b5fa6702d0d496d1 (bpf: fix callees pruning
-callers)
-Child:  a98c15177f72ae3c0a736bb324e66c279bf94899 (net: netsec: initialize tx
-ring on ndo_open)
-Branch: remotes/stable/linux-5.1.y
-Follows: v5.1.19
-Precedes: v5.1.20
-
-    PCI: Add missing link delays required by the PCIe spec
-
-    [ Upstream commit c2bf1fc212f7e6f25ace1af8f0b3ac061ea48ba5 ]
-
-    Currently Linux does not follow PCIe spec regarding the required delays
-    after reset. A concrete example is a Thunderbolt add-in-card that
-    consists of a PCIe switch and two PCIe endpoints:
-
-      +-1b.0-[01-6b]----00.0-[02-6b]--+-00.0-[03]----00.0 TBT controller
-                                      +-01.0-[04-36]-- DS hotplug port
-                                      +-02.0-[37]----00.0 xHCI controller
-                                      \-04.0-[38-6b]-- DS hotplug port
-
-    The root port (1b.0) and the PCIe switch downstream ports are all PCIe
-    gen3 so they support 8GT/s link speeds.
-
-    We wait for the PCIe hierarchy to enter D3cold (runtime):
-
-      pcieport 0000:00:1b.0: power state changed by ACPI to D3cold
-
-    When it wakes up from D3cold, according to the PCIe 4.0 section 5.8 the
-    PCIe switch is put to reset and its power is re-applied. This means that
-    we must follow the rules in PCIe 4.0 section 6.6.1.
-[...]
-    Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-    Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-    Signed-off-by: Sasha Levin <sashal@kernel.org>
-
- drivers/pci/pci.c               | 29 +++++++++++++++++++----------
- drivers/pci/pci.h               |  1 +
- drivers/pci/pcie/portdrv_core.c | 66
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 86 insertions(+), 10 deletions(-)
-
--- 
-You are receiving this mail because:
-You are watching the assignee of the bug.
-
------ End forwarded message -----
+Bjorn
