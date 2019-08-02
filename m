@@ -2,135 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B58118029B
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Aug 2019 00:15:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4661E802DE
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Aug 2019 00:37:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbfHBWPm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Aug 2019 18:15:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41410 "EHLO mail.kernel.org"
+        id S2388487AbfHBWhC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Aug 2019 18:37:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727884AbfHBWPm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 2 Aug 2019 18:15:42 -0400
+        id S1728242AbfHBWhC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 2 Aug 2019 18:37:02 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FAC92087C;
-        Fri,  2 Aug 2019 22:15:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27AA82087E;
+        Fri,  2 Aug 2019 22:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564784141;
-        bh=0VIAzOo4zb+swZnODQr4hpD7QckO3wZdHQ/+75GTF1U=;
+        s=default; t=1564785421;
+        bh=k6A88DuQEvAIoLZeKCV5w8lg3gPfOlEbV8DJruVNIvs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uKqTme8pWjp2pFS3sAbNjLV/ACQVZk5uy3e4F7mchlG8JEQKkiMhiZALaWbrk9dTF
-         PIZ+QsF9kwvw77M+BSZBGxYm/mPQD5HFsDY/DsHx0F1SVUB4RXpIp0jCG2gTlP88Gv
-         KFks3NVPUOXw2b//d5n6Fhj08gxat8oPs+x8imWQ=
-Date:   Fri, 2 Aug 2019 17:15:40 -0500
+        b=HaEoVLJwSjtIMakvSZXXvIDVQkyQQ7paLq7JQYIOPb1FJyOAa7VrtP77sau3BwOaN
+         YdwpFNHzZRYFWXWZUmN6x6kqK8fhg1q5kxVa44OGLrUCqklfTEciGGZyLOGkcThD0o
+         NnZ5IyDLLbL+gXKEeAjLnTjYJU6FAmQEWNU39SZ0=
+Date:   Fri, 2 Aug 2019 17:36:59 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Stephen Hemminger <sthemmin@microsoft.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        "jackm@mellanox.com" <jackm@mellanox.com>
-Subject: Re: [PATCH] PCI: hv: Fix panic by calling hv_pci_remove_slots()
- earlier
-Message-ID: <20190802221540.GN151852@google.com>
-References: <PU1P153MB0169DBCFEE7257F5BB93580ABFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20190802194053.GL151852@google.com>
- <PU1P153MB01698F51FE22C39086CC8353BFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>
+Subject: Re: [Regression] Commit "ACPI: PM: Allow transitions to D0 to occur
+ in special cases"
+Message-ID: <20190802223659.GO151852@google.com>
+References: <578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com>
+ <20190731213001.GC151852@google.com>
+ <6494680.N7F1gMbocb@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <PU1P153MB01698F51FE22C39086CC8353BFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6494680.N7F1gMbocb@kreacher>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 08:31:26PM +0000, Dexuan Cui wrote:
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > Sent: Friday, August 2, 2019 12:41 PM
-> > The subject line only describes the mechanical code change, which is
-> > obvious from the patch.  It would be better if we could say something
-> > about *why* we need this.
-> 
-> Hi Bjorn,
-> Sorry. I'll try to write a better changelog in v2. :-)
->  
-> > On Fri, Aug 02, 2019 at 01:32:28AM +0000, Dexuan Cui wrote:
-> > >
-> > > When a slot is removed, the pci_dev must still exist.
-> > >
-> > > pci_remove_root_bus() removes and free all the pci_devs, so
-> > > hv_pci_remove_slots() must be called before pci_remove_root_bus(),
-> > > otherwise a general protection fault can happen, if the kernel is built
+On Thu, Aug 01, 2019 at 12:26:51AM +0200, Rafael J. Wysocki wrote:
+> On Wednesday, July 31, 2019 11:30:01 PM CEST Bjorn Helgaas wrote:
+> > [+cc Thunderbolt folks, see
+> > https://lore.kernel.org/r/578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com
+> > for beginning of thread]
 > > 
-> > "general protection fault" is an x86 term that doesn't really say what
-> > the issue is.  I suspect this would be a "use-after-free" problem.
-> 
-> Yes, it's use-after-free. I'll fix the the wording.
->  
-> > > --- a/drivers/pci/controller/pci-hyperv.c
-> > > +++ b/drivers/pci/controller/pci-hyperv.c
-> > > @@ -2757,8 +2757,8 @@ static int hv_pci_remove(struct hv_device *hdev)
-> > >  		/* Remove the bus from PCI's point of view. */
-> > >  		pci_lock_rescan_remove();
-> > >  		pci_stop_root_bus(hbus->pci_bus);
-> > > -		pci_remove_root_bus(hbus->pci_bus);
-> > >  		hv_pci_remove_slots(hbus);
-> > > +		pci_remove_root_bus(hbus->pci_bus);
+> > On Thu, Aug 01, 2019 at 12:04:29AM +0800, Kai-Heng Feng wrote:
+> > > Hi,
+> > > 
+> > > After commit "ACPI: PM: Allow transitions to D0 to occur in special cases”,
 > > 
-> > I'm curious about why we need hv_pci_remove_slots() at all.  None of
-> > the other callers of pci_stop_root_bus() and pci_remove_root_bus() do
-> > anything similar to hv_pci_remove_slots().
+> > This is f850a48a0799 ("ACPI: PM: Allow transitions to D0 to occur in
+> > special cases").
 > > 
-> > Surely some of those callers also support slots, so there must be some
-> > other path that calls pci_destroy_slot() in those cases.  Can we use a
-> > similar strategy here?
-> 
-> Originally Stephen Heminger added the slot code for pci-hyperv.c:
-> a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
-> So he may know this better. My understanding is: we can not use the similar
-> stragegy used in the 2 other users of pci_create_slot():
-> 
-> drivers/pci/hotplug/pci_hotplug_core.c calls pci_create_slot().
-> It looks drivers/pci/hotplug/ is quite different from pci-hyperv.c because
-> pci-hyper-v uses a simple *private* hot-plug protocol, making it impossible
-> to use the API pci_hp_register() and pci_hp_destroy() -> pci_destroy_slot().
-> 
-> drivers/acpi/pci_slot.c calls pci_create_slot(), and saves the created slots in
-> the static "slot_list" list in the same file. Again, since pci-hyper-v uses a private
-> PCI-device-discovery protocol (which is based on VMBus rather the emulated
-> ACPI and PCI), acpi_pci_slot_enumerate() can not find the PCI devices that are
-> discovered by pci-hyperv, so we can not use the standard register_slot() ->
-> pci_create_slot() to create the slots and hence acpi_pci_slot_remove() -> 
-> pci_destroy_slot() can not work for pci-hyperv.
+> > > Thunderbolt on XPS 9380 spews the following when it runtime resumes:
+> > > [   36.136554] pci_raw_set_power_state: 25 callbacks suppressed
+> > > [   36.136558] pcieport 0000:03:00.0: Refused to change power state,
+> > > currently in D3
+> > 
+> > We really should be smarter about what we print here, maybe something
+> > like the patch below?
+> > 
+> > pci_raw_set_power_state() prints "Refused to change power state" if
+> > (in this case) the value of (PCI_PM_CTRL & PCI_PM_CTRL_STATE_MASK) is
+> > 0x3.  Most likely we got 0xffff from PCI_PM_CTRL because the device is
+> > in D3cold.  If the device is in D3cold, pci_raw_set_power_state() has
+> > no hope of doing anything because it only uses PCI PM config
+> > registers, and they're inaccessible in D3cold.
 
-Hmm, ok.  This still doesn't seem right to me, but I think the bottom
-line will be that the current slot registration interfaces just don't
-work quite right for all the cases we want them to.
-
-Maybe it would be a good project for somebody to rethink them, but it
-doesn't seem practical for *this* patch.  Thanks for looking into it
-this far!
-
-> I think I can use this as the v2 changelog:
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 29ed5ec1ac27..63ca963ebff9 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -851,6 +852,11 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+> >  		return -EIO;
+> >  
+> >  	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+> > +	if (pmcsr == (u16) ~0) {
 > 
-> The slot must be removed before the pci_dev is removed, otherwise a panic
-> can happen due to use-after-free.
+> Is the "device not accessible" the only case in which we can get all ones from this?
+> 
+> If so, the change will be fine by me.
 
-Sounds good.
+There are several RsvdP bits in that register, so it's not possible to
+read all ones except in error cases.  I'll finish up a patch for it.
 
 Bjorn
