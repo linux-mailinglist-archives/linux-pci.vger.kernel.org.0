@@ -2,147 +2,262 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AEAE380A09
-	for <lists+linux-pci@lfdr.de>; Sun,  4 Aug 2019 10:47:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4675F80AD1
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Aug 2019 14:08:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725987AbfHDIrt convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Sun, 4 Aug 2019 04:47:49 -0400
-Received: from mail-oln040092255093.outbound.protection.outlook.com ([40.92.255.93]:8367
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725941AbfHDIrt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 4 Aug 2019 04:47:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ObSQPhqefH4p8hb1tneJXRyoz4t2iFcfl8n+imv4qIKW1piSpzlO2ikOdQiapY4ftklBONX4Gqgu0b2CJsYE4vIkl1Svkqswj6PuAGwUmlbsB+31Zr/RmZ/JMLHXrUrQTYANre0egcGxKnjbuEohfyPgsvnuIF1sHqyzVPr9I5Q+ImU+uDM640txV4YoCVCS/eRxGyKmbRjDtS3bJTMn9FIaERyZjD7inhO+SzFeFi3DNfwX+SI/5NHpIBSQOlfHqOTiVRSCpx9Y3jvN1i74Reb8HJIEh/QmlE+VvnW3/VsZGcoQUeSLMl9e8Xvvtu9szyhsXqCriVd6FCvXBoScbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RBoY8klwRSqoATzr4W4Xphpt/DHTTzYUCuRp+UJrYh8=;
- b=XoUu44pFj5eauh8SvHwkQOiKy+TeNO5AN5kFFF92e5T/lhV3IzumHgNllmrwvEZS2uNIua5m2ae1Wx0GxKq+gs/wesBlrtwnVQlqUF8/ZDzCZEmcY/wctwqU+riX0I4ZATGFy5ND4sSaGIouYRGh7egkZ+d9mHlXefrsMempH9WSFsDBii/Z9+09dSKO58Wi4L5JcECAkYJDF7X1C7dWD7NG+d2d1CLlGIZUrCuYPTuiGvi+o3lgiIy1sfJfIHCBpuKSAyMA6sJnN0loN6n5M0RiMfxxYW7ML2eYlEqe44+6z1a25YP2wZ7a7BZHar8/DZP3IJGzLvYLlAoB/MCyjw==
-ARC-Authentication-Results: i=1; mx.microsoft.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-Received: from PU1APC01FT114.eop-APC01.prod.protection.outlook.com
- (10.152.252.52) by PU1APC01HT096.eop-APC01.prod.protection.outlook.com
- (10.152.253.55) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2136.14; Sun, 4 Aug
- 2019 08:47:43 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.252.52) by
- PU1APC01FT114.mail.protection.outlook.com (10.152.252.228) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.14 via Frontend Transport; Sun, 4 Aug 2019 08:47:43 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::944c:1ec0:2a91:f222]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::944c:1ec0:2a91:f222%4]) with mapi id 15.20.2136.010; Sun, 4 Aug 2019
- 08:47:43 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     Logan Gunthorpe <logang@deltatee.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: Possible PCI Regression Linux 5.3-rc1
-Thread-Topic: Possible PCI Regression Linux 5.3-rc1
-Thread-Index: AQHVQh7cG4T+gPWoEEORs36yrE7T46bZxdcAgAGMzQCAACqSAIAPQRMA
-Date:   Sun, 4 Aug 2019 08:47:43 +0000
-Message-ID: <SL2P216MB018719A03F048FFA0F745FED80DB0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-References: <SL2P216MB01878BBCD75F21D882AEEA2880C60@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <20190724133814.GA194025@google.com>
- <SL2P216MB0187E2042E5DB8D9F29E665280C10@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <4f5afb8e-9013-980f-0553-c687d17ed8d5@deltatee.com>
-In-Reply-To: <4f5afb8e-9013-980f-0553-c687d17ed8d5@deltatee.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SY2PR01CA0034.ausprd01.prod.outlook.com
- (2603:10c6:1:15::22) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- (2603:1096:100:22::19)
-x-incomingtopheadermarker: OriginalChecksum:687E78227E36C9A1F78151900A7B392D3B71E2801387B6D79D0876E837BC8D0F;UpperCasedChecksum:F8C34AC7138353657652655ED211C9ECA0596D9E62630FE958BD65F8E5E7F7C9;SizeAsReceived:7832;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [qbTCdgIBPRDPBI+6BLB1uVlGK1pqw8wAeewJmhyYr4JyvZiMPnvCwYrL9lZOpnjAjyLll1fd0w4=]
-x-microsoft-original-message-id: <20190804084734.GA1814@nicholas-usb>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:PU1APC01HT096;
-x-ms-traffictypediagnostic: PU1APC01HT096:
-x-microsoft-antispam-message-info: 7QgFUB59Iqb/+QN30dPzSOS93IUR587ljuvMCnln+THlYvIGT0cvrAud872teVhF+iRgvepD6ctyq9gQDFq8+KgaLLl8+8Hdu8pa3yAj3bLHs3LoeUuMG7cVyG+FR/HAZeuv/fgiPeUKVwz9McTO2TU0FQqZBrlOgohc0UhRgl521Wd9tk/3m2CZIdr3nq2J
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <89D9B2F90ED0E445A718CD8EFD63F0AC@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        id S1726050AbfHDMI3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 4 Aug 2019 08:08:29 -0400
+Received: from mga14.intel.com ([192.55.52.115]:31288 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726039AbfHDMI3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 4 Aug 2019 08:08:29 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Aug 2019 05:08:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,345,1559545200"; 
+   d="scan'208";a="185051003"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by orsmga002.jf.intel.com with ESMTP; 04 Aug 2019 05:08:22 -0700
+Date:   Sun, 4 Aug 2019 19:51:16 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-pci@vger.kernel.org, Moritz Fischer <mdf@kernel.org>,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add sysfs attribute for disabling PCIe link to
+ downstream component
+Message-ID: <20190804115116.GA5452@hao-dev>
+References: <20190529104942.74991-1-mika.westerberg@linux.intel.com>
+ <20190703133953.GK128603@google.com>
+ <20190703150341.GW2640@lahna.fi.intel.com>
+ <20190801215339.GF151852@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04e07db5-6baf-43de-3c17-08d718b86a39
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Aug 2019 08:47:43.4747
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT096
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801215339.GF151852@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 09:50:48AM -0600, Logan Gunthorpe wrote:
+On Thu, Aug 01, 2019 at 04:53:39PM -0500, Bjorn Helgaas wrote:
+> [+cc FPGA folks, just FYI; I'm pretty sure PCI could do a much better
+> job supporting FPGAs, so any input is welcome!]
 > 
-> 
-> On 2019-07-25 7:18 a.m., Nicholas Johnson wrote:
-> > On Wed, Jul 24, 2019 at 08:38:14AM -0500, Bjorn Helgaas wrote:
-> >> On Wed, Jul 24, 2019 at 12:54:00PM +0000, Nicholas Johnson wrote:
-> >>> Hi all,
-> >>>
-> >>> I was just rebasing my patches for linux 5.3-rc1 and noticed a possible 
-> >>> regression that shows on both of my machines. It is also reproducible 
-> >>> with the unmodified Ubuntu mainline kernel, downloadable at [1].
-> >>>
-> >>> Running the lspci command takes 1-3 seconds with 5.3-rc1 (rather than an 
-> >>> imperceivable amount of time). Booting with pci.dyndbg does not reveal 
-> >>> why.
-> >>>
-> >>> $ uname -r
-> >>> 5.3.0-050300rc1-generic
-> >>> $ time lspci -vt 1>/dev/null
-> >>>
-> >>> real	0m2.321s
-> >>> user	0m0.026s
-> >>> sys	0m0.000s
-> >>>
-> >>> If none of you are aware of this or what is causing it, I will submit a 
-> >>> bug report to Bugzilla.
-> >>
-> >> I wasn't aware of this; thanks for reporting it!  I wasn't able to
-> >> reproduce this in qemu.  Can you play with "strace -r lspci -vt" and
-> >> the like?  Maybe try "lspci -n" to see if it's related to looking up
-> >> the names?
+> On Wed, Jul 03, 2019 at 06:03:41PM +0300, Mika Westerberg wrote:
+> > On Wed, Jul 03, 2019 at 08:39:53AM -0500, Bjorn Helgaas wrote:
+> > > On Wed, May 29, 2019 at 01:49:42PM +0300, Mika Westerberg wrote:
+> > > > PCIe root and downstream ports have link control register that can be
+> > > > used disable the link from software. This can be useful for instance
+> > > > when performing "software" hotplug on systems that do not support real
+> > > > PCIe/ACPI hotplug.
+> > > > 
+> > > > For example when used with FPGA card we can burn a new FPGA image
+> > > > without need to reboot the system.
+> > > > 
+> > > > First we remove the FGPA device from Linux PCI stack:
+> > > > 
+> > > >   # echo 1 > /sys/bus/pci/devices/0000:00:01.1/0000:02:00.0/remove
+> > > > 
+> > > > Then we disable the link:
+> > > > 
+> > > >   # echo 1 > /sys/bus/pci/devices/0000:00:01.1/link_disable
+> > > > 
+> > > > By doing this we prevent the kernel from accessing the hardware while we
+> > > > burn the new FPGA image. 
+> > > 
+> > > What is the case where the kernel accesses the hardware?  You've
+> > > already done the remove, so the pci_dev is gone.  Is this to protect
+> > > against another user doing a rescan?  Or is there some spurious event
+> > > during the FPGA update that causes an interrupt that causes pciehp to
+> > > rescan?  Something else?
 > > 
-> > For a second you had me doubting myself - it could have been a Ubuntu 
-> > thing. But no, I just reproduced it on Arch Linux, and double checked 
-> > that it was not doing it on 5.2. Also, the problem occurs even without 
-> > the PCI kernel parameters which I usually pass.
+> > Protect against another user doing rescan.
 > 
-> Ok, can you bisect to find the commit that causes this issue?
-
-I have done a partial bisect and then found the culprit commit by visual 
-inspection. I would have done the full bisect, but I am using highly
-underpowered i7-7700K so each round requires 20-30 minutes of compiling.
-
-Reversing the following commit solves the issue:
-
-commit c2bf1fc212f7e6f25ace1af8f0b3ac061ea48ba5
-Author: Mika Westerberg <mika.westerberg@linux.intel.com>
-PCI: Add missing link delays required by the PCIe spec
-
-Mika, care to weigh in (assuming you are back from four weeks leave)? 
-Clearly this creates delays in "lspci -vt" in some Thunderbolt systems, 
-but not all - otherwise you would have caught it. You mentioned Ice Lake 
-in the commit log so perhaps it works fine on Ice Lake.
-
-Thanks,
-Nicholas
-
+> I'm not 100% sure this is enough of an issue to warrant a new sysfs
+> file.  The file is visible all the time to everybody, but it only
+> protects root from shooting him/herself in the foot.
 > 
-> Thanks,
+> > > I guess this particular FPGA update must be done via some side channel
+> > > (not the PCIe link)?  I assume there are other FPGA arrangements where
+> > > the update *would* be done via the PCIe link, and we would just do a
+> > > reset to make the update take effect.
+> > 
+> > In this setup the FPGA is programmed using side channel. I haven't seen
+> > the actual system but I think it is some sort of FPGA programmer
+> > connected to another system.
+
+One example is, FPGA image is stored in flash on the PCIe card, and the
+board management controller loads the image from flash to FPGA during
+power up or any time requested by software/user.
+
+Actually I used several PCIe FPGA cards, they can do partial reconfiguration
+with inband method, but they are all using side channel to do full FPGA
+reconfiguration. Partial reconfiguration doesn't touch the PCIe logics
+inside FPGA, but full reconfiguration case really does. So we do need some
+protection for full reconfiguration case from PCIe device level.
+
+Actually we are using the similar method as above to remove/rescan pcie dev
+to make sure nobody see it during full reconfiguration. For sure we need
+to make sure nobody does the rescan at the same time, and another thing is
+we have to mask AER on the root port, otherwise it's easy to see system
+hang/reboot. I just did some qucik tests, with this patch, after link_disable
+I don't need to mask AER any more, so this patch does help on this case,
+and I should be able to try more next week.
+
+Thanks a lot for adding us to this thread. :)
+
+Hao
+
+> > 
+> > > > Once the new FPGA is burned we can re-enable
+> > > > the link and rescan the new and possibly different device:
+> > > > 
+> > > >   # echo 0 > /sys/bus/pci/devices/0000:00:01.1/link_disable
+> > > >   # echo 1 > /sys/bus/pci/devices/0000:00:01.1/rescan
+> > > > 
+> > > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > > ---
+> > > >  Documentation/ABI/testing/sysfs-bus-pci |  8 +++
+> > > >  drivers/pci/pci-sysfs.c                 | 65 ++++++++++++++++++++++++-
+> > > >  2 files changed, 72 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> > > > index 8bfee557e50e..c93d6b9ab580 100644
+> > > > --- a/Documentation/ABI/testing/sysfs-bus-pci
+> > > > +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> > > > @@ -324,6 +324,14 @@ Description:
+> > > >  		This is similar to /sys/bus/pci/drivers_autoprobe, but
+> > > >  		affects only the VFs associated with a specific PF.
+> > > >  
+> > > > +What:		/sys/bus/pci/devices/.../link_disable
+> > > > +Date:		September 2019
+> > > > +Contact:	Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > > +Description:
+> > > > +		PCIe root and downstream ports have this attribute. Writing
+> > > > +		1 causes the link to downstream component be disabled.
+> > > > +		Re-enabling the link happens by writing 0 instead.
+> > > > +
+> > > >  What:		/sys/bus/pci/devices/.../p2pmem/size
+> > > >  Date:		November 2017
+> > > >  Contact:	Logan Gunthorpe <logang@deltatee.com>
+> > > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > > > index 6d27475e39b2..dfcd21745192 100644
+> > > > --- a/drivers/pci/pci-sysfs.c
+> > > > +++ b/drivers/pci/pci-sysfs.c
+> > > > @@ -218,6 +218,56 @@ static ssize_t current_link_width_show(struct device *dev,
+> > > >  }
+> > > >  static DEVICE_ATTR_RO(current_link_width);
+> > > >  
+> > > > +static ssize_t link_disable_show(struct device *dev,
+> > > > +				 struct device_attribute *attr, char *buf)
+> > > > +{
+> > > > +	struct pci_dev *pci_dev = to_pci_dev(dev);
+> > > > +	u16 linkctl;
+> > > > +	int ret;
+> > > > +
+> > > > +	ret = pcie_capability_read_word(pci_dev, PCI_EXP_LNKCTL, &linkctl);
+> > > > +	if (ret)
+> > > > +		return -EINVAL;
+> > > > +
+> > > > +	return sprintf(buf, "%d\n", !!(linkctl & PCI_EXP_LNKCTL_LD));
+> > > > +}
+> > > > +
+> > > > +static ssize_t link_disable_store(struct device *dev,
+> > > > +				  struct device_attribute *attr,
+> > > > +				  const char *buf, size_t count)
+> > > > +{
+> > > > +	struct pci_dev *pci_dev = to_pci_dev(dev);
+> > > > +	u16 linkctl;
+> > > > +	bool disable;
+> > > > +	int ret;
+> > > > +
+> > > > +	ret = kstrtobool(buf, &disable);
+> > > > +	if (ret)
+> > > > +		return ret;
+> > > > +
+> > > > +	ret = pcie_capability_read_word(pci_dev, PCI_EXP_LNKCTL, &linkctl);
+> > > > +	if (ret)
+> > > > +		return -EINVAL;
+> > > > +
+> > > > +	if (disable) {
+> > > > +		if (linkctl & PCI_EXP_LNKCTL_LD)
+> > > > +			goto out;
+> > > > +		linkctl |= PCI_EXP_LNKCTL_LD;
+> > > > +	} else {
+> > > > +		if (!(linkctl & PCI_EXP_LNKCTL_LD))
+> > > > +			goto out;
+> > > > +		linkctl &= ~PCI_EXP_LNKCTL_LD;
+> > > > +	}
+> > > > +
+> > > > +	ret = pcie_capability_write_word(pci_dev, PCI_EXP_LNKCTL, linkctl);
+> > > > +	if (ret)
+> > > > +		return ret;
+> > > > +
+> > > > +out:
+> > > > +	return count;
+> > > > +}
+> > > > +static DEVICE_ATTR_RW(link_disable);
+> > > > +
+> > > >  static ssize_t secondary_bus_number_show(struct device *dev,
+> > > >  					 struct device_attribute *attr,
+> > > >  					 char *buf)
+> > > > @@ -785,6 +835,7 @@ static struct attribute *pcie_dev_attrs[] = {
+> > > >  	&dev_attr_current_link_width.attr,
+> > > >  	&dev_attr_max_link_width.attr,
+> > > >  	&dev_attr_max_link_speed.attr,
+> > > > +	&dev_attr_link_disable.attr,
+> > > >  	NULL,
+> > > >  };
+> > > >  
+> > > > @@ -1656,8 +1707,20 @@ static umode_t pcie_dev_attrs_are_visible(struct kobject *kobj,
+> > > >  	struct device *dev = kobj_to_dev(kobj);
+> > > >  	struct pci_dev *pdev = to_pci_dev(dev);
+> > > >  
+> > > > -	if (pci_is_pcie(pdev))
+> > > > +	if (pci_is_pcie(pdev)) {
+> > > > +		if (a == &dev_attr_link_disable.attr) {
+> > > > +			switch (pci_pcie_type(pdev)) {
+> > > > +			case PCI_EXP_TYPE_ROOT_PORT:
+> > > > +			case PCI_EXP_TYPE_DOWNSTREAM:
+> > > 
+> > > This is actually not completely reliable because there are weird
+> > > systems that don't identify upstream/downstream ports correctly, e.g.,
+> > > see d0751b98dfa3 ("PCI: Add dev->has_secondary_link to track
+> > > downstream PCIe links") and c8fc9339409d ("PCI/ASPM: Use
+> > > dev->has_secondary_link to find downstream links").
+> > 
+> > D'oh!
+> > 
+> > It never came to my mind that using pci_pcie_type() would not be
+> > reliable. Thanks for pointing it out.
+> > 
+> > > I think I suggested the dev->has_secondary_link approach, but I now
+> > > think that was a mistake because it means we have to remember to look
+> > > at has_secondary_link instead of doing the obvious thing like your
+> > > code.
+> > > 
+> > > set_pcie_port_type() detects those unusual topologies, and I think it
+> > > would probably be better for it to just change the cached caps reg
+> > > used by pci_pcie_type() so checking for PCI_EXP_TYPE_DOWNSTREAM does
+> > > the right thing.
+> > 
+> > You mean modify set_pcie_port_type() to correct the type if it finds:
+> > 
+> >   type == PCI_EXP_TYPE_UPSTREAM && !pdev->has_secondary_link => type = PCI_EXP_TYPE_DOWNSTREAM
+> > 
+> > or
+> > 
+> >   type == PCI_EXP_TYPE_DOWNSTREAM && pdev->has_secondary_link => type = PCI_EXP_TYPE_UPSTREAM
+> > 
+> > ? Assuming my understanding of pdev->has_secondary_link is correct.
 > 
-> Logan
+> I was hoping we could get rid of "has_secondary_link" completely if we
+> corrected the type, but I'm not sure that's possible.
+> 
+> Bjorn
