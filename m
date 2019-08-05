@@ -2,173 +2,368 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5446081E8B
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2019 16:02:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCA5681E79
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2019 16:02:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729630AbfHEOB5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Aug 2019 10:01:57 -0400
-Received: from mout.gmx.net ([212.227.17.20]:35221 "EHLO mout.gmx.net"
+        id S1729375AbfHEOB3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Aug 2019 10:01:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:49814 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729108AbfHEOB0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 5 Aug 2019 10:01:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1565013672;
-        bh=jSkhPYZ2d0UOHGwQYXaBOmk/S07rcgz6dBX4+i3s/os=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=hmpjruNfBhEWqmAPTWnz8tWlD1BZ0yWL4gt7pGMCBehc7FZkC+fXQEsfs8RJMcO5B
-         gC0um+UjcuwfXNvKfAZc8dvbSr0ljvqImgJpDuBNNzRQFJWzq9UDHeN+d2oyPX9rKZ
-         XqwM4hdguzknsKL4524G0Sb0x7DglBSwGXDQyKlk=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from mandree.no-ip.org ([79.229.32.156]) by mail.gmx.com (mrgmx102
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0LhTjQ-1ih7Rg2njM-00mX99; Mon, 05
- Aug 2019 16:01:12 +0200
-Received: from ryzen.an3e.de (localhost [IPv6:::1])
-        by ryzen.an3e.de (Postfix) with ESMTP id 7D6D8120172;
-        Mon,  5 Aug 2019 16:01:11 +0200 (CEST)
-Subject: Re: regression: PCIe resume from suspend stalls I/O and causes
- interrupt storms in Linux 5.3-rc2 (5.2.5, 5.1.20) on Ryzen 7 1700/AMD X370
- MSI board since 5817d78eba34f6c86f5462ae2c5212f80a013357, 5.2/5.3 w/ pcieIRQ
- loop.
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-References: <935c6fd8-c606-836a-9e59-772b9111d5d6@gmx.de>
- <20190805122751.GL2640@lahna.fi.intel.com>
- <20190805124704.GP151852@google.com>
- <20190805130039.GP2640@lahna.fi.intel.com>
-From:   Matthias Andree <matthias.andree@gmx.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=matthias.andree@gmx.de; prefer-encrypt=mutual; keydata=
- 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
- H29L93g/7fa+B3v7
-Message-ID: <0d234153-3c30-c0da-7419-220528897fbf@gmx.de>
-Date:   Mon, 5 Aug 2019 16:01:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1729242AbfHEOB1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 5 Aug 2019 10:01:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C987337;
+        Mon,  5 Aug 2019 07:01:26 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E72A03F706;
+        Mon,  5 Aug 2019 07:01:23 -0700 (PDT)
+Date:   Mon, 5 Aug 2019 15:01:14 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V13 12/12] PCI: tegra: Add Tegra194 PCIe support
+Message-ID: <20190805140107.GA3850@e121166-lin.cambridge.arm.com>
+References: <20190710062212.1745-1-vidyas@nvidia.com>
+ <20190710062212.1745-13-vidyas@nvidia.com>
+ <20190711125433.GB26088@e121166-lin.cambridge.arm.com>
+ <986d0b1a-666a-7b05-a9f3-e761518bdc92@nvidia.com>
+ <20190712160754.GA24285@e121166-lin.cambridge.arm.com>
+ <a5f8689b-1358-dd2d-4f54-7e68a6ab158b@nvidia.com>
+ <20190716112225.GA24335@e121166-lin.cambridge.arm.com>
+ <be6367bc-08a0-762a-aae8-b3f0376d0e9a@nvidia.com>
+ <20190730154939.GA367@e121166-lin.cambridge.arm.com>
+ <f09c79fc-c724-5290-d630-cac3fdd7a996@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20190805130039.GP2640@lahna.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-X-Provags-ID: V03:K1:TPC/+TYwX1szOBr3W8eWzyOxnClYAtl/gfeDE18Odc6l2GrZSbz
- IR7YKBMXbDj2nU5F/+opqOIehJGav1ej+16pHN6N2wE2SPsQejiTziq44NzYi8PiCXjeDzK
- VmZniiSHXY55IBa9X5cd5GYeQzkryvl+8nfPX33Phhpe/KHa/k0jmmmNF8A1Rx+0UJ+5tNq
- R+G9nMdSmOsIAB9EyFaCg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Ka2k8x24Gu4=:XVWK15iJK5593RdXUoZ252
- zcJpGF1rPvTWrhUA5C2Ni92pPBompZV8YB0IyHyf6PMrZbEErEXV3O/Pgy8QSFEbhjzL8rm/d
- /ul+hgrw6/XbnB4Y4jFL8bpW7OhpTauUZbVpML/GBSPT66M/14BVbH3IOMgTDRqAfR+t6GiHh
- vF4xQs+PuE8w1+eud5cpPM4CG6fXuABJmp/zpCbhDyIMs6lvrFm4v3Nh6OrT8g1r0czuhsiyS
- uRsLa7FgUh7trt13Q1KJqrxMmNDBmlPaYdic66DPiorQpFCb2yWRkjnP47dQUJ/AvQ3WpQLcA
- dQm0Eiof4Fo/iDlinK/Tnhl2kbx9bDz+45+CmGTOJTe5/DrBsR2JYDjQv5HvFEG82rKT4RtH0
- 8szTQAWY0ddt6Oh437f5jSOHbUMD4AlQoh/Hs+Nga/YBZ8uHs3fA4j+6v5V8SL7tIw0wIvRJm
- QUzzidOrZ3+uhYoGrtYf5GiiN8xRIdy82s4Gq6OyZ9Wnwq+uDiN2NFJtc9X9FeW/V6ZlgffnJ
- Wgp8zdu5TsdrqQ+TOKzuqsxBRFMhvZibFVPpMfn09Cem5digh4/vX31dubmwKbD+LdaoF9jSF
- buaTX5scRUCTnM4SQGJlMmr3C/mFBmN2i/KNUwgpb0VP/BAHDjuFt+Z5dvT2k9LUX01H+OfX5
- 8HfpWfo45P1j8Y/0Ye60+GvCTHxPDckLX8cJQC/QZpYD12zz4p1ULeQnT7Cm6n9X7+EAkOQL+
- tVYRW1AZ57Fh/+uJFjd7RXWtEEvVW6RORdBnVBEy94KMUwb55jJ+20o27mY8qQ6iq1shSCv/o
- HYwycOkhU2swptBHDrg8m1heAbRc0UEePH+nVfDuDbMlumi+uRarwofjmyVb/bvuMDNBsV+ok
- z0EHyHnNZmlB31Za1VoQoFMrEwiFJb17lRvRWwuQTJR0V/1tVFmCpDEkjFAMAwr1bXjT3H8tV
- pEF3k/kEIN/AtS2PPxGD4NDrofwDXbSg3mobSTzHuZZQwH28AECqj2ejleCCszpreWL/i44So
- g9Yxuf/59EYRVs5lz3NtM1A+lCUQhRiNQNfx36fR8yhNXclCnDHJCUmUfTFJEEaaEZsPMlv7A
- TzwE7V7c1cxz6A9QzxC10q+7d+ZxN0WAemjbqScWZmuH+MfYR0fhSVsvRjavQ9IiCXyx6Ec0I
- 7Z8S8=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f09c79fc-c724-5290-d630-cac3fdd7a996@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am 05.08.19 um 15:00 schrieb Mika Westerberg:
-> On Mon, Aug 05, 2019 at 07:47:05AM -0500, Bjorn Helgaas wrote:
->> On Mon, Aug 05, 2019 at 03:27:51PM +0300, Mika Westerberg wrote:
->>> Are you able to get dmesg after resume or is it completely dead? It
->>> would help you we could see how long it tries to wait for the downstre=
-am
->>> link by passing "pciepordrv.dyndbg" to the kernel command line.
->> "pcieportdrv.dyndbg" (with "t"), I think.
-> Right, thanks for the correction.
+On Fri, Aug 02, 2019 at 05:36:43PM +0530, Vidya Sagar wrote:
+> On 7/30/2019 9:19 PM, Lorenzo Pieralisi wrote:
+> > On Tue, Jul 23, 2019 at 08:14:08PM +0530, Vidya Sagar wrote:
+> > > On 7/16/2019 4:52 PM, Lorenzo Pieralisi wrote:
+> > > > On Sat, Jul 13, 2019 at 12:34:34PM +0530, Vidya Sagar wrote:
+> > > > 
+> > > > [...]
+> > > > 
+> > > > > > > > > +static int tegra_pcie_bpmp_set_ctrl_state(struct tegra_pcie_dw *pcie,
+> > > > > > > > > +					  bool enable)
+> > > > > > > > > +{
+> > > > > > > > > +	struct mrq_uphy_response resp;
+> > > > > > > > > +	struct tegra_bpmp_message msg;
+> > > > > > > > > +	struct mrq_uphy_request req;
+> > > > > > > > > +	int err;
+> > > > > > > > > +
+> > > > > > > > > +	if (pcie->cid == 5)
+> > > > > > > > > +		return 0;
+> > > > > > > > 
+> > > > > > > > What's wrong with cid == 5 ? Explain please.
+> > > > > > > Controller with ID=5 doesn't need any programming to enable it which is
+> > > > > > > done here through calling firmware API.
+> > > > > > > 
+> > > > > > > > 
+> > > > > > > > > +	memset(&req, 0, sizeof(req));
+> > > > > > > > > +	memset(&resp, 0, sizeof(resp));
+> > > > > > > > > +
+> > > > > > > > > +	req.cmd = CMD_UPHY_PCIE_CONTROLLER_STATE;
+> > > > > > > > > +	req.controller_state.pcie_controller = pcie->cid;
+> > > > > > > > > +	req.controller_state.enable = enable;
+> > > > > > > > > +
+> > > > > > > > > +	memset(&msg, 0, sizeof(msg));
+> > > > > > > > > +	msg.mrq = MRQ_UPHY;
+> > > > > > > > > +	msg.tx.data = &req;
+> > > > > > > > > +	msg.tx.size = sizeof(req);
+> > > > > > > > > +	msg.rx.data = &resp;
+> > > > > > > > > +	msg.rx.size = sizeof(resp);
+> > > > > > > > > +
+> > > > > > > > > +	if (irqs_disabled())
+> > > > > > > > 
+> > > > > > > > Can you explain to me what this check is meant to achieve please ?
+> > > > > > > Firmware interface provides different APIs to be called when there are
+> > > > > > > no interrupts enabled in the system (noirq context) and otherwise
+> > > > > > > hence checking that situation here and calling appropriate API.
+> > > > > > 
+> > > > > > That's what I am questioning. Being called from {suspend/resume}_noirq()
+> > > > > > callbacks (if that's the code path this check caters for) does not mean
+> > > > > > irqs_disabled() == true.
+> > > > > Agree.
+> > > > > Actually, I got a hint of having this check from the following.
+> > > > > Both tegra_bpmp_transfer_atomic() and tegra_bpmp_transfer() are indirectly
+> > > > > called by APIs registered with .master_xfer() and .master_xfer_atomic() hooks of
+> > > > > struct i2c_algorithm and the decision to call which one of these is made using the
+> > > > > following check in i2c-core.h file.
+> > > > > static inline bool i2c_in_atomic_xfer_mode(void)
+> > > > > {
+> > > > > 	return system_state > SYSTEM_RUNNING && irqs_disabled();
+> > > > > }
+> > > > > I think I should use this condition as is IIUC.
+> > > > > Please let me know if there are any concerns with this.
+> > > > 
+> > > > It is not a concern, it is just that I don't understand how this code
+> > > > can be called with IRQs disabled, if you can give me an execution path I
+> > > > am happy to leave the check there. On top of that, when called from
+> > > > suspend NOIRQ context, it is likely to use the blocking API (because
+> > > > IRQs aren't disabled at CPU level) behind which there is most certainly
+> > > > an IRQ required to wake the thread up and if the IRQ in question was
+> > > > disabled in the suspend NOIRQ phase this code is likely to deadlock.
+> > > > 
+> > > > I want to make sure we can justify adding this check, I do not
+> > > > want to add it because we think it can be needed when it may not
+> > > > be needed at all (and it gets copy and pasted over and over again
+> > > > in other drivers).
+> > > I had a discussion internally about this and the prescribed usage of these APIs
+> > > seem to be that
+> > > use tegra_bpmp_transfer() in .probe() and other paths where interrupts are
+> > > enabled as this API needs interrupts to be enabled for its working.
+> > > Use tegra_bpmp_transfer_atomic() surrounded by local_irq_save()/local_irq_restore()
+> > > in other paths where interrupt servicing is disabled.
+> > 
+> > Why tegra_bpmp_transfer_atomic() needs IRQs to be disabled ? And why
+> > is it needed in this piece of code where IRQs are _never_ disabled
+> > at CPU level ?
+> > 
+> > IRQs are enabled when you call a suspend_noirq() callback, so the
+> > blocking API can be used as long as the IRQ descriptor backing
+> > the IRQ that will wake-up the blocked call is marked as
+> > IRQF_NO_SUSPEND.
+> > 
+> > The problem is not IRQs enabled/disabled at CPU level, the problem is
+> > the IRQ descriptor of the IRQ required to handle the blocking BPMP call,
+> > mark it as IRQF_NO_SUSPEND and remove the tegra_bpmp_transfer_atomic()
+> > call from this code (or please give me a concrete example pinpointing
+> > why it is needed).
+> Ideally, using tegra_bpmp_transfer() alone in all paths (.probe() as
+> well as .resume_noirq()) should have worked as the corresponding IRQ
+> is already flagged as IRQF_NO_SUSPEND, but, because of the way BPMP-FW
+> driver in kernel making its interface available through
+> .resume_early(), tegra_bpmp_transfer() wasn't working as expected and
+> I pushed a patch (CC'ing you) at
+> http://patchwork.ozlabs.org/patch/1140973/ to make it .resume_noirq()
+> from .resume_early().  With that in place, we can just use
+> tegra_bpmp_trasnfer().  I'll push a new patch with this change once my
+> BPMP-FW driver patch is approved.
 
-Hi Mika, Bjorn,
+Does this leave you with a resume_noirq() callbacks ordering issue to
+sort out ?
 
-thanks for picking this up. I have used pcieportdrv.dyndbg=3D+p (not sure
-if something else would have worked) and was lucky that I could transfer
-dmesg to a USB stick before the machine went completely unusable.
+a.k.a How will you guarantee that the BPMP will resume before the host
+bridge ?
 
-$ grep pcieport dmesg.txt
+Thanks,
+Lorenzo
 
-[=C2=A0=C2=A0=C2=A0 0.698739] pcieport 0000:00:01.3: Signaling PME with IR=
-Q 28
-[=C2=A0=C2=A0=C2=A0 0.698799] pcieport 0000:00:01.3: AER: enabled with IRQ=
- 28
-[=C2=A0=C2=A0=C2=A0 0.698966] pcieport 0000:00:03.1: Signaling PME with IR=
-Q 29
-[=C2=A0=C2=A0=C2=A0 0.699017] pcieport 0000:00:03.1: AER: enabled with IRQ=
- 29
-[=C2=A0=C2=A0=C2=A0 0.699188] pcieport 0000:00:07.1: Signaling PME with IR=
-Q 30
-[=C2=A0=C2=A0=C2=A0 0.699230] pcieport 0000:00:07.1: AER: enabled with IRQ=
- 30
-[=C2=A0=C2=A0=C2=A0 0.699816] pcieport 0000:00:08.1: Signaling PME with IR=
-Q 31
-[=C2=A0=C2=A0=C2=A0 0.699860] pcieport 0000:00:08.1: AER: enabled with IRQ=
- 31
-[=C2=A0 119.637492] pcieport 0000:00:03.1: waiting downstream link for 100=
- ms
-[=C2=A0 119.649285] pcieport 0000:00:08.1: waiting downstream link for 100=
- ms
-[=C2=A0 119.649287] pcieport 0000:00:07.1: waiting downstream link for 100=
- ms
-[=C2=A0 119.649376] pcieport 0000:00:01.3: waiting downstream link for 100=
- ms
-[=C2=A0 119.803025] pcieport 0000:16:08.0: waiting downstream link for 100=
- ms
-[=C2=A0 119.803031] pcieport 0000:16:01.0: waiting downstream link for 100=
- ms
-
-sudo lspci -vv # uploaded to Kernel bug, see
-
-(deep link:) https://bugzilla.kernel.org/attachment.cgi?id=3D284193
-
-(bug:) https://bugzilla.kernel.org/show_bug.cgi?id=3D204413
-
+> Thanks,
+> Vidya Sagar
+> > 
+> > Thanks,
+> > Lorenzo
+> > 
+> > > I'll go ahead and make next patch series with this if this looks fine to you.
+> > > 
+> > > > 
+> > > > > > Actually, if tegra_bpmp_transfer() requires IRQs to be enabled you may
+> > > > > > even end up in a situation where that blocking call does not wake up
+> > > > > > because the IRQ in question was disabled in the NOIRQ suspend/resume
+> > > > > > phase.
+> > > > > > 
+> > > > > > [...]
+> > > > > > 
+> > > > > > > > > +static int tegra_pcie_dw_probe(struct platform_device *pdev)
+> > > > > > > > > +{
+> > > > > > > > > +	const struct tegra_pcie_soc *data;
+> > > > > > > > > +	struct device *dev = &pdev->dev;
+> > > > > > > > > +	struct resource *atu_dma_res;
+> > > > > > > > > +	struct tegra_pcie_dw *pcie;
+> > > > > > > > > +	struct resource *dbi_res;
+> > > > > > > > > +	struct pcie_port *pp;
+> > > > > > > > > +	struct dw_pcie *pci;
+> > > > > > > > > +	struct phy **phys;
+> > > > > > > > > +	char *name;
+> > > > > > > > > +	int ret;
+> > > > > > > > > +	u32 i;
+> > > > > > > > > +
+> > > > > > > > > +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> > > > > > > > > +	if (!pcie)
+> > > > > > > > > +		return -ENOMEM;
+> > > > > > > > > +
+> > > > > > > > > +	pci = &pcie->pci;
+> > > > > > > > > +	pci->dev = &pdev->dev;
+> > > > > > > > > +	pci->ops = &tegra_dw_pcie_ops;
+> > > > > > > > > +	pp = &pci->pp;
+> > > > > > > > > +	pcie->dev = &pdev->dev;
+> > > > > > > > > +
+> > > > > > > > > +	data = (struct tegra_pcie_soc *)of_device_get_match_data(dev);
+> > > > > > > > > +	if (!data)
+> > > > > > > > > +		return -EINVAL;
+> > > > > > > > > +	pcie->mode = (enum dw_pcie_device_mode)data->mode;
+> > > > > > > > > +
+> > > > > > > > > +	ret = tegra_pcie_dw_parse_dt(pcie);
+> > > > > > > > > +	if (ret < 0) {
+> > > > > > > > > +		dev_err(dev, "Failed to parse device tree: %d\n", ret);
+> > > > > > > > > +		return ret;
+> > > > > > > > > +	}
+> > > > > > > > > +
+> > > > > > > > > +	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
+> > > > > > > > > +	if (IS_ERR(pcie->pex_ctl_supply)) {
+> > > > > > > > > +		dev_err(dev, "Failed to get regulator: %ld\n",
+> > > > > > > > > +			PTR_ERR(pcie->pex_ctl_supply));
+> > > > > > > > > +		return PTR_ERR(pcie->pex_ctl_supply);
+> > > > > > > > > +	}
+> > > > > > > > > +
+> > > > > > > > > +	pcie->core_clk = devm_clk_get(dev, "core");
+> > > > > > > > > +	if (IS_ERR(pcie->core_clk)) {
+> > > > > > > > > +		dev_err(dev, "Failed to get core clock: %ld\n",
+> > > > > > > > > +			PTR_ERR(pcie->core_clk));
+> > > > > > > > > +		return PTR_ERR(pcie->core_clk);
+> > > > > > > > > +	}
+> > > > > > > > > +
+> > > > > > > > > +	pcie->appl_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > > > > > > > > +						      "appl");
+> > > > > > > > > +	if (!pcie->appl_res) {
+> > > > > > > > > +		dev_err(dev, "Failed to find \"appl\" region\n");
+> > > > > > > > > +		return PTR_ERR(pcie->appl_res);
+> > > > > > > > > +	}
+> > > > > > > > > +	pcie->appl_base = devm_ioremap_resource(dev, pcie->appl_res);
+> > > > > > > > > +	if (IS_ERR(pcie->appl_base))
+> > > > > > > > > +		return PTR_ERR(pcie->appl_base);
+> > > > > > > > > +
+> > > > > > > > > +	pcie->core_apb_rst = devm_reset_control_get(dev, "apb");
+> > > > > > > > > +	if (IS_ERR(pcie->core_apb_rst)) {
+> > > > > > > > > +		dev_err(dev, "Failed to get APB reset: %ld\n",
+> > > > > > > > > +			PTR_ERR(pcie->core_apb_rst));
+> > > > > > > > > +		return PTR_ERR(pcie->core_apb_rst);
+> > > > > > > > > +	}
+> > > > > > > > > +
+> > > > > > > > > +	phys = devm_kcalloc(dev, pcie->phy_count, sizeof(*phys), GFP_KERNEL);
+> > > > > > > > > +	if (!phys)
+> > > > > > > > > +		return PTR_ERR(phys);
+> > > > > > > > > +
+> > > > > > > > > +	for (i = 0; i < pcie->phy_count; i++) {
+> > > > > > > > > +		name = kasprintf(GFP_KERNEL, "p2u-%u", i);
+> > > > > > > > > +		if (!name) {
+> > > > > > > > > +			dev_err(dev, "Failed to create P2U string\n");
+> > > > > > > > > +			return -ENOMEM;
+> > > > > > > > > +		}
+> > > > > > > > > +		phys[i] = devm_phy_get(dev, name);
+> > > > > > > > > +		kfree(name);
+> > > > > > > > > +		if (IS_ERR(phys[i])) {
+> > > > > > > > > +			ret = PTR_ERR(phys[i]);
+> > > > > > > > > +			dev_err(dev, "Failed to get PHY: %d\n", ret);
+> > > > > > > > > +			return ret;
+> > > > > > > > > +		}
+> > > > > > > > > +	}
+> > > > > > > > > +
+> > > > > > > > > +	pcie->phys = phys;
+> > > > > > > > > +
+> > > > > > > > > +	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> > > > > > > > > +	if (!dbi_res) {
+> > > > > > > > > +		dev_err(dev, "Failed to find \"dbi\" region\n");
+> > > > > > > > > +		return PTR_ERR(dbi_res);
+> > > > > > > > > +	}
+> > > > > > > > > +	pcie->dbi_res = dbi_res;
+> > > > > > > > > +
+> > > > > > > > > +	pci->dbi_base = devm_ioremap_resource(dev, dbi_res);
+> > > > > > > > > +	if (IS_ERR(pci->dbi_base))
+> > > > > > > > > +		return PTR_ERR(pci->dbi_base);
+> > > > > > > > > +
+> > > > > > > > > +	/* Tegra HW locates DBI2 at a fixed offset from DBI */
+> > > > > > > > > +	pci->dbi_base2 = pci->dbi_base + 0x1000;
+> > > > > > > > > +
+> > > > > > > > > +	atu_dma_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > > > > > > > > +						   "atu_dma");
+> > > > > > > > > +	if (!atu_dma_res) {
+> > > > > > > > > +		dev_err(dev, "Failed to find \"atu_dma\" region\n");
+> > > > > > > > > +		return PTR_ERR(atu_dma_res);
+> > > > > > > > > +	}
+> > > > > > > > > +	pcie->atu_dma_res = atu_dma_res;
+> > > > > > > > > +	pci->atu_base = devm_ioremap_resource(dev, atu_dma_res);
+> > > > > > > > > +	if (IS_ERR(pci->atu_base))
+> > > > > > > > > +		return PTR_ERR(pci->atu_base);
+> > > > > > > > > +
+> > > > > > > > > +	pcie->core_rst = devm_reset_control_get(dev, "core");
+> > > > > > > > > +	if (IS_ERR(pcie->core_rst)) {
+> > > > > > > > > +		dev_err(dev, "Failed to get core reset: %ld\n",
+> > > > > > > > > +			PTR_ERR(pcie->core_rst));
+> > > > > > > > > +		return PTR_ERR(pcie->core_rst);
+> > > > > > > > > +	}
+> > > > > > > > > +
+> > > > > > > > > +	pp->irq = platform_get_irq_byname(pdev, "intr");
+> > > > > > > > > +	if (!pp->irq) {
+> > > > > > > > > +		dev_err(dev, "Failed to get \"intr\" interrupt\n");
+> > > > > > > > > +		return -ENODEV;
+> > > > > > > > > +	}
+> > > > > > > > > +
+> > > > > > > > > +	ret = devm_request_irq(dev, pp->irq, tegra_pcie_irq_handler,
+> > > > > > > > > +			       IRQF_SHARED, "tegra-pcie-intr", pcie);
+> > > > > > > > > +	if (ret) {
+> > > > > > > > > +		dev_err(dev, "Failed to request IRQ %d: %d\n", pp->irq, ret);
+> > > > > > > > > +		return ret;
+> > > > > > > > > +	}
+> > > > > > > > > +
+> > > > > > > > > +	pcie->bpmp = tegra_bpmp_get(dev);
+> > > > > > > > > +	if (IS_ERR(pcie->bpmp))
+> > > > > > > > > +		return PTR_ERR(pcie->bpmp);
+> > > > > > > > > +
+> > > > > > > > > +	platform_set_drvdata(pdev, pcie);
+> > > > > > > > > +
+> > > > > > > > > +	if (pcie->mode == DW_PCIE_RC_TYPE) {
+> > > > > > > > > +		ret = tegra_pcie_config_rp(pcie);
+> > > > > > > > > +		if (ret && ret != -ENOMEDIUM)
+> > > > > > > > > +			goto fail;
+> > > > > > > > > +		else
+> > > > > > > > > +			return 0;
+> > > > > > > > 
+> > > > > > > > So if the link is not up we still go ahead and make probe
+> > > > > > > > succeed. What for ?
+> > > > > > > We may need root port to be available to support hot-plugging of
+> > > > > > > endpoint devices, so, we don't fail the probe.
+> > > > > > 
+> > > > > > We need it or we don't. If you do support hotplugging of endpoint
+> > > > > > devices point me at the code, otherwise link up failure means
+> > > > > > failure to probe.
+> > > > > Currently hotplugging of endpoint is not supported, but it is one of
+> > > > > the use cases that we may add support for in future.
+> > > > 
+> > > > You should elaborate on this, I do not understand what you mean,
+> > > > either the root port(s) supports hotplug or it does not.
+> > > > 
+> > > > > But, why should we fail probe if link up doesn't happen? As such,
+> > > > > nothing went wrong in terms of root port initialization right?  I
+> > > > > checked other DWC based implementations and following are not failing
+> > > > > the probe pci-dra7xx.c, pcie-armada8k.c, pcie-artpec6.c, pcie-histb.c,
+> > > > > pcie-kirin.c, pcie-spear13xx.c, pci-exynos.c, pci-imx6.c,
+> > > > > pci-keystone.c, pci-layerscape.c
+> > > > > 
+> > > > > Although following do fail the probe if link is not up.  pcie-qcom.c,
+> > > > > pcie-uniphier.c, pci-meson.c
+> > > > > 
+> > > > > So, to me, it looks more like a choice we can make whether to fail the
+> > > > > probe or not and in this case we are choosing not to fail.
+> > > > 
+> > > > I disagree. I had an offline chat with Bjorn and whether link-up should
+> > > > fail the probe or not depends on whether the root port(s) is hotplug
+> > > > capable or not and this in turn relies on the root port "Slot
+> > > > implemented" bit in the PCI Express capabilities register.
+> > > > 
+> > > > It is a choice but it should be based on evidence.
+> > > > 
+> > > > Lorenzo
+> > > With Bjorn's latest comment on top of this, I think we are good not to fail
+> > > the probe here.
+> > > 
+> > > - Vidya Sagar
+> > > > 
+> > > 
+> 
