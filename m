@@ -2,103 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 64BE48265B
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2019 22:52:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93FB28268A
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2019 23:03:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730679AbfHEUwh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Aug 2019 16:52:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730572AbfHEUwh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 5 Aug 2019 16:52:37 -0400
-Received: from localhost (unknown [64.22.228.164])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2627F20C01;
-        Mon,  5 Aug 2019 20:52:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565038356;
-        bh=DNAjbiMzgrE3Kb7qREO6ym3cbw29s/iqg4ddsy1WvVo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FQr2beP3K/+WLlkMWKpy9wsifOdNO6EMNHig1jahQyRB8FPucqreVr9OKzlv3ECZn
-         2/6E/EPBR+Yiw+b4C2iKDjVVUvVWfN7/QjGbWdqoxldC43Ngxa6+U2Vy1cvYxttGJj
-         1T/wOeMmvxq/Qb5wuqP6xafOtwtXmvx8MEnD74kI=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        id S1730651AbfHEVDG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Aug 2019 17:03:06 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34564 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730099AbfHEVDF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Aug 2019 17:03:05 -0400
+Received: by mail-oi1-f193.google.com with SMTP id l12so2723824oil.1;
+        Mon, 05 Aug 2019 14:03:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5kebLTDLbZgVx9CRIEFifnp3nP4T6jGcLbwqiEI+M60=;
+        b=mDMAWpf3cvP6g1IOMGC+R8Jburoz9GTfsrCNfgUppKDOqqNh9Bigntlh+DNTXS+g0M
+         nlYrxwitjtVW9gCwomU6pk9ymz6SkUwUZLev1Wd9NeuOMnwx+FJ8QBcgCV5I7afX7Zor
+         Lbu7J+xn9QOlMrXqV7SUfuRJlQeQLWZt0LYY7jNyJ36WYcEiyMJvfWFnLS+giJEjRR4V
+         2AqvIdQYH5JVBMLvsVjUrB86lukbxzIC7K6wRPtyhD6hqSbFf9jblVy9xWjpdebcxv0c
+         RdUSuBp+ZMBw637fBmyFyq+2qiwHJmHtZMSlQ+wVbmOrR76VY9e3l9d4oIKxalPCRmhT
+         abew==
+X-Gm-Message-State: APjAAAWIoxgnNrMIyhISLX8SYUgkKHMbv+uu4RhyCRIzRSrHLUs5RueB
+        KPNgPsMhQhIbk4S3oWYeY1YOgaokvwMpxw71zVk=
+X-Google-Smtp-Source: APXvYqyy2IOINwqkPzlVgA75Km3iPIhI3IbcWChDxGiOH0v5+W+2EaZKdtu+RHBxynsuS3NmZUMn1O300lpCU3qCuyI=
+X-Received: by 2002:aca:cdd3:: with SMTP id d202mr193461oig.115.1565038984673;
+ Mon, 05 Aug 2019 14:03:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190805205214.194981-1-helgaas@kernel.org> <20190805205214.194981-4-helgaas@kernel.org>
+In-Reply-To: <20190805205214.194981-4-helgaas@kernel.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 5 Aug 2019 23:02:51 +0200
+Message-ID: <CAJZ5v0i5oVuZMxFmYiLnYPk=BsFGGiYntez3m1V5xeWgTgA4hg@mail.gmail.com>
+Subject: Re: [PATCH 3/5] PCI / PM: Check for error when reading PME status
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Keith Busch <keith.busch@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5/5] PCI / PM: Decode D3cold power state correctly
-Date:   Mon,  5 Aug 2019 15:52:14 -0500
-Message-Id: <20190805205214.194981-6-helgaas@kernel.org>
-X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
-In-Reply-To: <20190805205214.194981-1-helgaas@kernel.org>
-References: <20190805205214.194981-1-helgaas@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Mon, Aug 5, 2019 at 10:52 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> pci_check_pme_status() reads the Power Management capability to determine
+> whether a device has generated a PME.  The capability is in config space,
+> which is accessible in D0, D1, D2, and D3hot, but not in D3cold.
+>
+> If we call pci_check_pme_status() on a device that's in D3cold, config
+> reads fail and return ~0 data, which we erroneously interpreted as "the
+> device has generated a PME".
+>
+> 000dd5316e1c ("PCI: Do not poll for PME if the device is in D3cold")
+> avoided many of these problems by avoiding pci_check_pme_status() if we
+> think the device is in D3cold.  However, it is not a complete fix because
+> the device may go to D3cold after we check its power state but before
+> pci_check_pme_status() reads the Power Management Status Register.
+>
+> Return false ("device has not generated a PME") if we get an error response
+> reading the Power Management Status Register.
+>
+> Fixes: 000dd5316e1c ("PCI: Do not poll for PME if the device is in D3cold")
+> Fixes: 71a83bd727cc ("PCI/PM: add runtime PM support to PCIe port")
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/pci.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 984171d40858..af6a97d7012b 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -2008,6 +2008,9 @@ bool pci_check_pme_status(struct pci_dev *dev)
+>
+>         pmcsr_pos = dev->pm_cap + PCI_PM_CTRL;
+>         pci_read_config_word(dev, pmcsr_pos, &pmcsr);
+> +       if (pmcsr == (u16) PCI_ERROR_RESPONSE)
+> +               return false;
+> +
 
-Use pci_power_name() to print pci_power_t correctly.  This changes:
+No, sorry.
 
-  "state 0" or "D0"   to   "D0"
-  "state 1" or "D1"   to   "D1"
-  "state 2" or "D2"   to   "D2"
-  "state 3" or "D3"   to   "D3hot"
-  "state 4" or "D4"   to   "D3cold"
+We tried that and it didn't work.
 
-Changes dmesg logging only, no other functional change intended.
+pcie_pme_handle_request() depends on this returning "true" for all
+bits set, as from its perspective "device is not accessible" may very
+well mean "device may have signaled PME".
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/pci.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+If you want to make this change, you need to rework
+pcie_pme_handle_request() along with it.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index d8686e3cd5eb..17ae2615ac11 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -834,14 +834,16 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
- 		return -EINVAL;
- 
- 	/*
--	 * Validate current state:
--	 * Can enter D0 from any state, but if we can only go deeper
--	 * to sleep if we're already in a low power state
-+	 * Validate transition: We can enter D0 from any state, but if
-+	 * we're already in a low-power state, we can only go deeper.  E.g.,
-+	 * we can go from D1 to D3, but we can't go directly from D3 to D1;
-+	 * we'd have to go from D3 to D0, then to D1.
- 	 */
- 	if (state != PCI_D0 && dev->current_state <= PCI_D3cold
- 	    && dev->current_state > state) {
--		pci_err(dev, "invalid power transition (from state %d to %d)\n",
--			dev->current_state, state);
-+		pci_err(dev, "invalid power transition (from %s to %s)\n",
-+			pci_power_name(dev->current_state),
-+			pci_power_name(state));
- 		return -EINVAL;
- 	}
- 
-@@ -896,8 +898,8 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
- 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
- 	dev->current_state = pci_power_state(pmcsr);
- 	if (dev->current_state != state && printk_ratelimit())
--		pci_info(dev, "Refused to change power state, currently in D%d\n",
--			 dev->current_state);
-+		pci_info(dev, "refused to change power state (currently %s)\n",
-+			 pci_power_name(dev->current_state));
- 
- 	/*
- 	 * According to section 5.4.1 of the "PCI BUS POWER MANAGEMENT
--- 
-2.22.0.770.g0f2c4a37fd-goog
-
+>         if (!(pmcsr & PCI_PM_CTRL_PME_STATUS))
+>                 return false;
