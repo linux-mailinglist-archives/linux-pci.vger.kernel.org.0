@@ -2,82 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D29058184E
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2019 13:40:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AE1481948
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2019 14:27:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfHELkz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Aug 2019 07:40:55 -0400
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:58483 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbfHELkz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Aug 2019 07:40:55 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id EE7D6100B029E;
-        Mon,  5 Aug 2019 13:40:53 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id A70823E553; Mon,  5 Aug 2019 13:40:53 +0200 (CEST)
-Date:   Mon, 5 Aug 2019 13:40:53 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pciehp: fix a race between pciehp and removing
- operations by sysfs
-Message-ID: <20190805114053.srbngho3wbziy2uy@wunner.de>
-References: <1519648875-38196-1-git-send-email-wangxiongfeng2@huawei.com>
- <20190802003618.GJ151852@google.com>
- <0c0512fd-e95a-74be-09c2-1576844d9c97@huawei.com>
+        id S1728724AbfHEM1z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Aug 2019 08:27:55 -0400
+Received: from mga09.intel.com ([134.134.136.24]:3709 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727349AbfHEM1z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 5 Aug 2019 08:27:55 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 05:27:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,349,1559545200"; 
+   d="scan'208";a="192409924"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 05 Aug 2019 05:27:52 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 05 Aug 2019 15:27:51 +0300
+Date:   Mon, 5 Aug 2019 15:27:51 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Matthias Andree <matthias.andree@gmx.de>
+Cc:     linux-pci@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: regression: PCIe resume from suspend stalls I/O and causes
+ interrupt storms in Linux 5.3-rc2 (5.2.5, 5.1.20) on Ryzen 7 1700/AMD X370
+ MSI board since 5817d78eba34f6c86f5462ae2c5212f80a013357, 5.2/5.3 w/ pcieIRQ
+ loop.
+Message-ID: <20190805122751.GL2640@lahna.fi.intel.com>
+References: <935c6fd8-c606-836a-9e59-772b9111d5d6@gmx.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <0c0512fd-e95a-74be-09c2-1576844d9c97@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <935c6fd8-c606-836a-9e59-772b9111d5d6@gmx.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 04:23:33PM +0800, Xiongfeng Wang wrote:
-> If I use a global flag to mark if any pci device is being rescaned or
-> removed, the problem is that we can't remove two devices belonging to
-> two root ports at the same time.
-> Since a root port produces a pci tree, so I was planning to make the
-> flag per root port slot. I mean add the flag in 'struct slot'.
->  But in some situation, the root port doesn't support hotplug and the
-> downport below the root port support hotplug. I am not sure if it's
-> better to add the flag in 'struct pci_dev' of the root port.
+On Fri, Aug 02, 2019 at 09:03:06PM +0200, Matthias Andree wrote:
+> Greetings, 
 
-We're susceptible to deadlocks if at least two hotplug ports are removed
-simultaneously where one is a parent of the other.
+Hi,
 
-What you're witnessing is basically a variation of that problem wherein
-a hotplug port is removed while it is simultaneously removing its
-children.
+> Commit 5817d78eba34f6c86f5462ae2c5212f80a013357 (written by Mika
+> Westerberg) causes regressions on resume from S3 suspend on my MSI X370
+> w/ Ryzen 7 1700, which is, TTBOMK, a PCI Express 3.0 platform.
+> Consequences are hung disk and net I/O although re-login to GNOME works
+> on 5.1.20, albeit very slowly. The machine is unusable after resume from
+> that point.
+> 
+> 5.2.5 and 5.3-rc2 will go into a tight loop of pcieport 0000:00:01.3:
+> PME: Spurious native interrupt! and need to be rebooted.
+> 
+> bad: v5.3-rc2
+> 
+> good: v5.3-rc2-111-g97b00aff2c45 + "git revert 5817d78eba"
+> 
+> Reverting that commit shown above restores suspend functionality for me,
+> two S3 suspend/resume cycles work.
+> 
+> For details, more information (lspci, versions found) is at:
+> 
+> * Kernel Bugzilla, https://bugzilla.kernel.org/show_bug.cgi?id=204413
+> 
+> * Fedora/Redhat Bugzilla,
+> https://bugzilla.redhat.com/show_bug.cgi?id=1737046
+> 
+> 
+> Same findings for v5.2.5 on stable kernel, reverting the relevant commit
+> (SHA is 5817d78eba34f6c86f5462ae2c5212f80a013357 there) also fixes
+> suspend/resume problems for me.
+> 
+> Let me know if you need me to pull out any further hardware or kernel
+> debug info, but please be specific with instructions - I am not a kernel
+> hacker (although I have been exposed to C for nearly 30 years and
+> Linux/FreeBSD for some 20 years). Pointing me to relevant URLs with
+> debug instructions is fine. I have a Git tree handy and this octocore
+> sitting here compiles a kernel in < 10 minutes.
 
-pci_lock_rescan_remove(), which was introduced by commit 9d16947b7583
-to fix races (which are real), at the same time caused these deadlocks.
-The lock is too coarse-grained and needs to be replaced with more
-fine-grained locking.
+Are you able to get dmesg after resume or is it completely dead? It
+would help you we could see how long it tries to wait for the downstream
+link by passing "pciepordrv.dyndbg" to the kernel command line.
 
-Specifically, unbinding PCI devices from drivers on removal need not
-and should not happen under that lock.  That will fix all the deadlocks.
+Can you also try to revert 00ebf1348cb332941dab52948f29480592bfbe6a
+("PCI/PME: Replace dev_printk(KERN_DEBUG) with dev_info()") so that it
+does not spam dmesg too much?
 
-I've submitted a patch last year to address one class of those deadlocks
-but withdrew it as I realized it's not a proper fix:
-
-https://patchwork.kernel.org/patch/10468065/
-
-What you can do is add a flag to struct pci_dev (or the priv_flags
-embedded therein) to indicate that a device is about to be removed.
-Set this flag on all children of the device being removed before
-acquiring pci_lock_rescan_remove() and avoid taking that lock in
-pciehp_unconfigure_device() if the flag is set on the hotplug port.
-
-But again, that approach is just a band-aid and the real fix is to
-unbind devices without holding the lock.
-
-Thanks,
-
-Lukas
+Thanks!
