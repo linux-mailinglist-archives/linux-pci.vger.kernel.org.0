@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AC7BE826A6
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2019 23:14:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5E18826AB
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2019 23:15:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730515AbfHEVOr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Aug 2019 17:14:47 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35229 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729383AbfHEVOr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Aug 2019 17:14:47 -0400
-Received: by mail-ot1-f67.google.com with SMTP id j19so10642333otq.2;
-        Mon, 05 Aug 2019 14:14:46 -0700 (PDT)
+        id S1730801AbfHEVP0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Aug 2019 17:15:26 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42587 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729383AbfHEVP0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Aug 2019 17:15:26 -0400
+Received: by mail-oi1-f194.google.com with SMTP id s184so63418287oie.9;
+        Mon, 05 Aug 2019 14:15:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=K81VJiYZHz48k5xpZL9JVC+H5GcFEAdkpsb0gf8wQuM=;
-        b=SMtfl8tVA71nFqJGEm+lxR2HMNcCzgcHWuldb5bGXwb1iSPuM9If0bbkc5FdTbxrJN
-         6FjTMYRWrqnaWeLK4Mp9UgqiEiUrwxWBRbOw50IvEvKF1t2Gq7Rf3k8Kdl/1wDuKkimF
-         0P+9eKadA4orH2fNnrOb98xaCxkWiW23rx+xH7unCaLHhG7y9iSa/6/OeRLB3EsfJzmJ
-         dqhylpAPXI/73Web3YcSIHUVqQ2g8OQP0ayiEj7Ht9osqYNHY1LpjvfFq0WCd1hw2pht
-         orTM+7SSVHXm4Hv9J8gr1Vm1hOGcWfzz6yzYkxQUA6oaTH05Mgk59pPcw4eZHAkQ73av
-         tFww==
-X-Gm-Message-State: APjAAAVQ+yjn7FqlrtILypAl4tRRBMLFDjHWqe1WYVIZzS0J9xLIkbx+
-        KMvD80fx/wFNDzaf9L17oyKMx24IBUHoxmZR2h0=
-X-Google-Smtp-Source: APXvYqxAOvq6brWaQzk/LEyKzX+snTQA2yXv4SbP05AZTRriz+D8QJvlIqBpei/jWnH2T4tFiMx8z/ExVaTjVwvcCJM=
-X-Received: by 2002:a05:6830:8a:: with SMTP id a10mr2078732oto.167.1565039686381;
- Mon, 05 Aug 2019 14:14:46 -0700 (PDT)
+        bh=fX0uLeu4WyBXdgrz/XI2vSyMGlamTcEZJr5vMDYwpvE=;
+        b=DK2t3PvZajPjOjcnnm8uK3XCVYmZK4RMkaqj03optfVNfkSOsjD6RfG6/4AEcArdab
+         FMuFsYjj1lcmFpsym9CU/z3CnrHpj3kbrGX7a0WHNUz3SVuNeC34V+l7o2AxH4baKmdH
+         YHl6fEhjbM6rQZ/0mucVSHVnFfTKoO945AqsXqSs0MjBzqVOP53K+3Mzb07WmLJa38P1
+         2ZduJWfdJGNAqI1Kw7v8Tsmajo5G9JC6YtcHKG/YLYdc3SNIDZK5pJLbxI8M2DlSuWtI
+         X2yYQ2nOB2UCBMkxZSreLih2niZFnNbKypHQRU1bj+hAQIL2xnQkXgt9gH6tRhVQdv81
+         WRNQ==
+X-Gm-Message-State: APjAAAWeRe+9BFSGEUB4rgBvMQcduThFgLGPF+SLgjWGgUp4QEzbOLTn
+        /i5WYUxwmpd6FJHZLhvRsBxa8PH3fpgSa3cGEck=
+X-Google-Smtp-Source: APXvYqzxQdPHKAU8EvAofP903jPi7ejUZMMYbWg4JQHntbAQayhsorKwS0WljKzlHdSuvsZpv28j28exZINzhQdVTXw=
+X-Received: by 2002:aca:5a41:: with SMTP id o62mr280998oib.110.1565039725652;
+ Mon, 05 Aug 2019 14:15:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190805205214.194981-1-helgaas@kernel.org> <20190805205214.194981-6-helgaas@kernel.org>
-In-Reply-To: <20190805205214.194981-6-helgaas@kernel.org>
+References: <20190805205214.194981-1-helgaas@kernel.org> <20190805205214.194981-3-helgaas@kernel.org>
+In-Reply-To: <20190805205214.194981-3-helgaas@kernel.org>
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 5 Aug 2019 23:14:34 +0200
-Message-ID: <CAJZ5v0iovG=96rz1B_Fcwi0ZMA3GipoW24zOC6JwZhU=5ZhooQ@mail.gmail.com>
-Subject: Re: [PATCH 5/5] PCI / PM: Decode D3cold power state correctly
+Date:   Mon, 5 Aug 2019 23:15:13 +0200
+Message-ID: <CAJZ5v0gN+r+6UiUFGWmqzudGDqn=oWg0sRg-8jjX2HMJwLdxAg@mail.gmail.com>
+Subject: Re: [PATCH 2/5] PCI / PM: Return error when changing power state from D3cold
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Linux PCI <linux-pci@vger.kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -56,61 +56,47 @@ On Mon, Aug 5, 2019 at 10:52 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
 > From: Bjorn Helgaas <bhelgaas@google.com>
 >
-> Use pci_power_name() to print pci_power_t correctly.  This changes:
+> pci_raw_set_power_state() uses the Power Management capability to change a
+> device's power state.  The capability is in config space, which is
+> accessible in D0, D1, D2, and D3hot, but not in D3cold.
 >
->   "state 0" or "D0"   to   "D0"
->   "state 1" or "D1"   to   "D1"
->   "state 2" or "D2"   to   "D2"
->   "state 3" or "D3"   to   "D3hot"
->   "state 4" or "D4"   to   "D3cold"
+> If we call pci_raw_set_power_state() on a device that's in D3cold, config
+> reads fail and return ~0 data, which we erroneously interpreted as "the
+> device is in D3hot", leading to messages like this:
 >
-> Changes dmesg logging only, no other functional change intended.
+>   pcieport 0000:03:00.0: Refused to change power state, currently in D3
+>
+> The PCI_PM_CTRL has several RsvdP fields, so ~0 is never a valid register
+> value.  Notice if we get that data, print a more informative message, and
+> return an error.
+>
+> Changing the power state of a device from D3cold must be done by a platform
+> power management method or some other non-config space mechanism.
 >
 > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
 Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
 > ---
->  drivers/pci/pci.c | 16 +++++++++-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
+>  drivers/pci/pci.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 >
 > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index d8686e3cd5eb..17ae2615ac11 100644
+> index bfc739dc6ada..984171d40858 100644
 > --- a/drivers/pci/pci.c
 > +++ b/drivers/pci/pci.c
-> @@ -834,14 +834,16 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
->                 return -EINVAL;
+> @@ -851,6 +851,11 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+>                 return -EIO;
 >
->         /*
-> -        * Validate current state:
-> -        * Can enter D0 from any state, but if we can only go deeper
-> -        * to sleep if we're already in a low power state
-> +        * Validate transition: We can enter D0 from any state, but if
-> +        * we're already in a low-power state, we can only go deeper.  E.g.,
-> +        * we can go from D1 to D3, but we can't go directly from D3 to D1;
-> +        * we'd have to go from D3 to D0, then to D1.
->          */
->         if (state != PCI_D0 && dev->current_state <= PCI_D3cold
->             && dev->current_state > state) {
-> -               pci_err(dev, "invalid power transition (from state %d to %d)\n",
-> -                       dev->current_state, state);
-> +               pci_err(dev, "invalid power transition (from %s to %s)\n",
-> +                       pci_power_name(dev->current_state),
-> +                       pci_power_name(state));
->                 return -EINVAL;
->         }
->
-> @@ -896,8 +898,8 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
 >         pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
->         dev->current_state = pci_power_state(pmcsr);
->         if (dev->current_state != state && printk_ratelimit())
-> -               pci_info(dev, "Refused to change power state, currently in D%d\n",
-> -                        dev->current_state);
-> +               pci_info(dev, "refused to change power state (currently %s)\n",
-> +                        pci_power_name(dev->current_state));
+> +       if (pmcsr == (u16) PCI_ERROR_RESPONSE) {
+> +               pci_err(dev, "device not responding; can't change to power state D%d\n",
+> +                       state);
+> +               return -EIO;
+> +       }
 >
 >         /*
->          * According to section 5.4.1 of the "PCI BUS POWER MANAGEMENT
+>          * If we're (effectively) in D3, force entire word to 0.
 > --
 > 2.22.0.770.g0f2c4a37fd-goog
 >
