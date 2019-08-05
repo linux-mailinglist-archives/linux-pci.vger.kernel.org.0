@@ -2,67 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DC77819AF
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2019 14:43:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C226D819EA
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2019 14:47:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbfHEMnX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Aug 2019 08:43:23 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:58826 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728870AbfHEMnU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 5 Aug 2019 08:43:20 -0400
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id DCF5B1ACE30B50EF7388;
-        Mon,  5 Aug 2019 20:43:18 +0800 (CST)
-Received: from dggeme755-chm.china.huawei.com (10.3.19.101) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 5 Aug 2019 20:43:10 +0800
-Received: from [127.0.0.1] (10.40.49.11) by dggeme755-chm.china.huawei.com
- (10.3.19.101) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Mon, 5
- Aug 2019 20:43:10 +0800
-Subject: Re: Bug report: AER driver deadlock
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-References: <a7dcc378-6101-ac08-ec8e-be7d5c183b49@huawei.com>
- <20190625171639.GA103694@google.com>
-From:   "Fangjian (Turing)" <f.fangjian@huawei.com>
-Message-ID: <7b181647-3158-2a79-c6ca-d81056625fc8@huawei.com>
-Date:   Mon, 5 Aug 2019 20:43:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        id S1727553AbfHEMrH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Aug 2019 08:47:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35012 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727357AbfHEMrH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 5 Aug 2019 08:47:07 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE952205C9;
+        Mon,  5 Aug 2019 12:47:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565009227;
+        bh=h7SfAciD2Px7XN6QUh4y+tAAK3kYv0LTgrkeiN8HNZE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cVZYaAUW0k4J9VxVFIKF7kW0vWTLQyJUPrq2chA0gTyWGbDpKXQDdFcITGr1wjveF
+         tIx8SqLr8WtXounIvPTAXzaWApRbT8RnMroJ0lQzEJf3Hih/0ocyq333O7c9VRSxUa
+         +vPjfAjOfZpb3sHYNtvfjK1o9yjXIUyQrxF0+YAw=
+Date:   Mon, 5 Aug 2019 07:47:05 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Matthias Andree <matthias.andree@gmx.de>,
+        linux-pci@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: regression: PCIe resume from suspend stalls I/O and causes
+ interrupt storms in Linux 5.3-rc2 (5.2.5, 5.1.20) on Ryzen 7 1700/AMD X370
+ MSI board since 5817d78eba34f6c86f5462ae2c5212f80a013357, 5.2/5.3 w/ pcieIRQ
+ loop.
+Message-ID: <20190805124704.GP151852@google.com>
+References: <935c6fd8-c606-836a-9e59-772b9111d5d6@gmx.de>
+ <20190805122751.GL2640@lahna.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190625171639.GA103694@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.40.49.11]
-X-ClientProxiedBy: dggeme713-chm.china.huawei.com (10.1.199.109) To
- dggeme755-chm.china.huawei.com (10.3.19.101)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190805122751.GL2640@lahna.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Kindly Ping...
+On Mon, Aug 05, 2019 at 03:27:51PM +0300, Mika Westerberg wrote:
+> Are you able to get dmesg after resume or is it completely dead? It
+> would help you we could see how long it tries to wait for the downstream
+> link by passing "pciepordrv.dyndbg" to the kernel command line.
 
-
-
-Best Regards,
-Jay
-
-On 2019/6/26 1:16, Bjorn Helgaas wrote:
-> On Tue, Jun 04, 2019 at 11:25:44AM +0800, Fangjian (Turing) wrote:
->> Hi, We met a deadlock triggered by a NONFATAL AER event during a sysfs
->> "sriov_numvfs" operation. Any suggestion to fix such deadlock ?
-> 
-> Here's a bugzilla report for this; please reference it and this email
-> thread in any patches to fix it:
-> 
-> https://bugzilla.kernel.org/show_bug.cgi?id=203981
-> 
-> .
-> 
-
+"pcieportdrv.dyndbg" (with "t"), I think.
