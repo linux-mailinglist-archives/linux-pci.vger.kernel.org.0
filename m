@@ -2,241 +2,339 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 200CB82F89
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2019 12:13:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC00B83072
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2019 13:16:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732411AbfHFKMf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Aug 2019 06:12:35 -0400
-Received: from mga09.intel.com ([134.134.136.24]:42179 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbfHFKMf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 6 Aug 2019 06:12:35 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 03:12:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="192633376"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 06 Aug 2019 03:12:31 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 06 Aug 2019 13:12:30 +0300
-Date:   Tue, 6 Aug 2019 13:12:30 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Logan Gunthorpe <logang@deltatee.com>, linux-pci@vger.kernel.org,
-        Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add sysfs attribute for disabling PCIe link to
- downstream component
-Message-ID: <20190806101230.GI2548@lahna.fi.intel.com>
-References: <20190529104942.74991-1-mika.westerberg@linux.intel.com>
- <20190703133953.GK128603@google.com>
- <20190703150341.GW2640@lahna.fi.intel.com>
- <20190801215339.GF151852@google.com>
+        id S1730676AbfHFLQd convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 6 Aug 2019 07:16:33 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50700 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728845AbfHFLQd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 6 Aug 2019 07:16:33 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5F4A53FFC2F6570FD54A;
+        Tue,  6 Aug 2019 19:16:31 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 6 Aug 2019
+ 19:16:24 +0800
+Date:   Tue, 6 Aug 2019 12:16:14 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     <linux-pci@vger.kernel.org>,
+        Martin =?UTF-8?Q?Mare=C5=A1?= <mj@ucw.cz>
+CC:     <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        <jcm@redhat.com>, <nariman.poushin@linaro.org>,
+        <linuxarm@huawei.com>
+Subject: Re: [RFC PATCH 0/2] lspci: support for CCIX DVSEC
+Message-ID: <20190806121614.000014c1@huawei.com>
+In-Reply-To: <20190627144355.27913-1-Jonathan.Cameron@huawei.com>
+References: <20190627144355.27913-1-Jonathan.Cameron@huawei.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801215339.GF151852@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 04:53:39PM -0500, Bjorn Helgaas wrote:
-> [+cc FPGA folks, just FYI; I'm pretty sure PCI could do a much better
-> job supporting FPGAs, so any input is welcome!]
-> 
-> On Wed, Jul 03, 2019 at 06:03:41PM +0300, Mika Westerberg wrote:
-> > On Wed, Jul 03, 2019 at 08:39:53AM -0500, Bjorn Helgaas wrote:
-> > > On Wed, May 29, 2019 at 01:49:42PM +0300, Mika Westerberg wrote:
-> > > > PCIe root and downstream ports have link control register that can be
-> > > > used disable the link from software. This can be useful for instance
-> > > > when performing "software" hotplug on systems that do not support real
-> > > > PCIe/ACPI hotplug.
-> > > > 
-> > > > For example when used with FPGA card we can burn a new FPGA image
-> > > > without need to reboot the system.
-> > > > 
-> > > > First we remove the FGPA device from Linux PCI stack:
-> > > > 
-> > > >   # echo 1 > /sys/bus/pci/devices/0000:00:01.1/0000:02:00.0/remove
-> > > > 
-> > > > Then we disable the link:
-> > > > 
-> > > >   # echo 1 > /sys/bus/pci/devices/0000:00:01.1/link_disable
-> > > > 
-> > > > By doing this we prevent the kernel from accessing the hardware while we
-> > > > burn the new FPGA image. 
-> > > 
-> > > What is the case where the kernel accesses the hardware?  You've
-> > > already done the remove, so the pci_dev is gone.  Is this to protect
-> > > against another user doing a rescan?  Or is there some spurious event
-> > > during the FPGA update that causes an interrupt that causes pciehp to
-> > > rescan?  Something else?
-> > 
-> > Protect against another user doing rescan.
-> 
-> I'm not 100% sure this is enough of an issue to warrant a new sysfs
-> file.  The file is visible all the time to everybody, but it only
-> protects root from shooting him/herself in the foot.
+Heads up for the curious: 
 
-Well, only root can do rescan so in that sense it should be enough ;-)
+Evaluation version of the CCIX 1.0a base specification now available,
+(though there is a form to complete and license agreement)..
 
-> > > I guess this particular FPGA update must be done via some side channel
-> > > (not the PCIe link)?  I assume there are other FPGA arrangements where
-> > > the update *would* be done via the PCIe link, and we would just do a
-> > > reset to make the update take effect.
-> > 
-> > In this setup the FPGA is programmed using side channel. I haven't seen
-> > the actual system but I think it is some sort of FPGA programmer
-> > connected to another system.
-> > 
-> > > > Once the new FPGA is burned we can re-enable
-> > > > the link and rescan the new and possibly different device:
-> > > > 
-> > > >   # echo 0 > /sys/bus/pci/devices/0000:00:01.1/link_disable
-> > > >   # echo 1 > /sys/bus/pci/devices/0000:00:01.1/rescan
-> > > > 
-> > > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > > ---
-> > > >  Documentation/ABI/testing/sysfs-bus-pci |  8 +++
-> > > >  drivers/pci/pci-sysfs.c                 | 65 ++++++++++++++++++++++++-
-> > > >  2 files changed, 72 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-> > > > index 8bfee557e50e..c93d6b9ab580 100644
-> > > > --- a/Documentation/ABI/testing/sysfs-bus-pci
-> > > > +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> > > > @@ -324,6 +324,14 @@ Description:
-> > > >  		This is similar to /sys/bus/pci/drivers_autoprobe, but
-> > > >  		affects only the VFs associated with a specific PF.
-> > > >  
-> > > > +What:		/sys/bus/pci/devices/.../link_disable
-> > > > +Date:		September 2019
-> > > > +Contact:	Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > > +Description:
-> > > > +		PCIe root and downstream ports have this attribute. Writing
-> > > > +		1 causes the link to downstream component be disabled.
-> > > > +		Re-enabling the link happens by writing 0 instead.
-> > > > +
-> > > >  What:		/sys/bus/pci/devices/.../p2pmem/size
-> > > >  Date:		November 2017
-> > > >  Contact:	Logan Gunthorpe <logang@deltatee.com>
-> > > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > > > index 6d27475e39b2..dfcd21745192 100644
-> > > > --- a/drivers/pci/pci-sysfs.c
-> > > > +++ b/drivers/pci/pci-sysfs.c
-> > > > @@ -218,6 +218,56 @@ static ssize_t current_link_width_show(struct device *dev,
-> > > >  }
-> > > >  static DEVICE_ATTR_RO(current_link_width);
-> > > >  
-> > > > +static ssize_t link_disable_show(struct device *dev,
-> > > > +				 struct device_attribute *attr, char *buf)
-> > > > +{
-> > > > +	struct pci_dev *pci_dev = to_pci_dev(dev);
-> > > > +	u16 linkctl;
-> > > > +	int ret;
-> > > > +
-> > > > +	ret = pcie_capability_read_word(pci_dev, PCI_EXP_LNKCTL, &linkctl);
-> > > > +	if (ret)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	return sprintf(buf, "%d\n", !!(linkctl & PCI_EXP_LNKCTL_LD));
-> > > > +}
-> > > > +
-> > > > +static ssize_t link_disable_store(struct device *dev,
-> > > > +				  struct device_attribute *attr,
-> > > > +				  const char *buf, size_t count)
-> > > > +{
-> > > > +	struct pci_dev *pci_dev = to_pci_dev(dev);
-> > > > +	u16 linkctl;
-> > > > +	bool disable;
-> > > > +	int ret;
-> > > > +
-> > > > +	ret = kstrtobool(buf, &disable);
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	ret = pcie_capability_read_word(pci_dev, PCI_EXP_LNKCTL, &linkctl);
-> > > > +	if (ret)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	if (disable) {
-> > > > +		if (linkctl & PCI_EXP_LNKCTL_LD)
-> > > > +			goto out;
-> > > > +		linkctl |= PCI_EXP_LNKCTL_LD;
-> > > > +	} else {
-> > > > +		if (!(linkctl & PCI_EXP_LNKCTL_LD))
-> > > > +			goto out;
-> > > > +		linkctl &= ~PCI_EXP_LNKCTL_LD;
-> > > > +	}
-> > > > +
-> > > > +	ret = pcie_capability_write_word(pci_dev, PCI_EXP_LNKCTL, linkctl);
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +out:
-> > > > +	return count;
-> > > > +}
-> > > > +static DEVICE_ATTR_RW(link_disable);
-> > > > +
-> > > >  static ssize_t secondary_bus_number_show(struct device *dev,
-> > > >  					 struct device_attribute *attr,
-> > > >  					 char *buf)
-> > > > @@ -785,6 +835,7 @@ static struct attribute *pcie_dev_attrs[] = {
-> > > >  	&dev_attr_current_link_width.attr,
-> > > >  	&dev_attr_max_link_width.attr,
-> > > >  	&dev_attr_max_link_speed.attr,
-> > > > +	&dev_attr_link_disable.attr,
-> > > >  	NULL,
-> > > >  };
-> > > >  
-> > > > @@ -1656,8 +1707,20 @@ static umode_t pcie_dev_attrs_are_visible(struct kobject *kobj,
-> > > >  	struct device *dev = kobj_to_dev(kobj);
-> > > >  	struct pci_dev *pdev = to_pci_dev(dev);
-> > > >  
-> > > > -	if (pci_is_pcie(pdev))
-> > > > +	if (pci_is_pcie(pdev)) {
-> > > > +		if (a == &dev_attr_link_disable.attr) {
-> > > > +			switch (pci_pcie_type(pdev)) {
-> > > > +			case PCI_EXP_TYPE_ROOT_PORT:
-> > > > +			case PCI_EXP_TYPE_DOWNSTREAM:
-> > > 
-> > > This is actually not completely reliable because there are weird
-> > > systems that don't identify upstream/downstream ports correctly, e.g.,
-> > > see d0751b98dfa3 ("PCI: Add dev->has_secondary_link to track
-> > > downstream PCIe links") and c8fc9339409d ("PCI/ASPM: Use
-> > > dev->has_secondary_link to find downstream links").
-> > 
-> > D'oh!
-> > 
-> > It never came to my mind that using pci_pcie_type() would not be
-> > reliable. Thanks for pointing it out.
-> > 
-> > > I think I suggested the dev->has_secondary_link approach, but I now
-> > > think that was a mistake because it means we have to remember to look
-> > > at has_secondary_link instead of doing the obvious thing like your
-> > > code.
-> > > 
-> > > set_pcie_port_type() detects those unusual topologies, and I think it
-> > > would probably be better for it to just change the cached caps reg
-> > > used by pci_pcie_type() so checking for PCI_EXP_TYPE_DOWNSTREAM does
-> > > the right thing.
-> > 
-> > You mean modify set_pcie_port_type() to correct the type if it finds:
-> > 
-> >   type == PCI_EXP_TYPE_UPSTREAM && !pdev->has_secondary_link => type = PCI_EXP_TYPE_DOWNSTREAM
-> > 
-> > or
-> > 
-> >   type == PCI_EXP_TYPE_DOWNSTREAM && pdev->has_secondary_link => type = PCI_EXP_TYPE_UPSTREAM
-> > 
-> > ? Assuming my understanding of pdev->has_secondary_link is correct.
+https://www.ccixconsortium.com/ccix-library/download-form/
+
+I'll hopefully get v2 of this patch set out in the next few weeks.
+
+Thanks,
+
+Jonathan
+
+
+On Thu, 27 Jun 2019 22:43:53 +0800
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+
+> This series adds support for near complete interpretation of CCIX DVSEC.
+> Most of the CCIX base 1.0 specification is covered, but a few minor
+> elements are not currently printed (some of the timeouts and credit
+> types). That can be rectified in a future version or follow up patch
+> and isn't necessary for this discussion.
 > 
-> I was hoping we could get rid of "has_secondary_link" completely if we
-> corrected the type, but I'm not sure that's possible.
+> CCIX (www.ccixconsortium.org) is a coherent interconnect specification.
+> It is flexible in allowed interconnect topologies, but is overlayed
+> on top of a traditional PCIe tree.  Note that CCIX physical devices
+> may turn up in a number of different locations in the PCIe tree.
+> 
+> The topology configuration and physical layer controls and description
+> are presented using PCIe DVSEC structures defined in the CCIX 1.0
+> base specification.  These use the unique ID granted by the PCISIG.
+> Note that, whilst it looks like a Vendor ID for this usecase it is
+> not one and can only be used to identify DVSEC and related CCIX protocol
+> messages.
+> 
+> So why an RFC?
+> * Are the lspci maintainers happy to have the tool include support for
+>   PCI configuration structures that are defined in other standards?
+> * Is the general approach and code structure appropriate?
+> * It's a lot of description so chances are some of it isn't in a format
+>   consistent with the rest of lspci!
+> 
+> The patch set includes and example that was manually created to exercise
+> much of the parser.  We also have qemu patches to emulate more complex
+> topologies if anyone wants to experiment.
+> 
+> https://patchwork.kernel.org/cover/11015357/
+> 
+> Example output from lspci -t -F ccix-specex1 -s 03:00.0
+> 
+> 03:00.0 Class 0700: Device 19ec:0003 (prog-if 01)
+> 	Subsystem: Device 19ec:0007
+> 	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+> 	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+> 	Latency: 0, Cache Line Size: 32 bytes
+> 	Interrupt: pin A routed to IRQ 255
+> 	Region 0: Memory at e0000000 (64-bit, non-prefetchable)
+> 	Region 2: Memory at e4000000 (64-bit, non-prefetchable)
+> 	Region 4: [virtual] Memory at 80000000000 (64-bit, prefetchable)
+> 	Capabilities: [40] Power Management version 3
+> 		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
+> 		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+> 	Capabilities: [48] MSI: Enable- Count=1/4 Maskable- 64bit+
+> 		Address: 0000000000000000  Data: 0000
+> 	Capabilities: [60] MSI-X: Enable- Count=32 Masked-
+> 		Vector table: BAR=3 offset=00000000
+> 		PBA: BAR=2 offset=00008fe0
+> 	Capabilities: [70] Express (v2) Endpoint, MSI 00
+> 		DevCap:	MaxPayload 1024 bytes, PhantFunc 0, Latency L0s <64ns, L1 <1us
+> 			ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset- SlotPowerLimit 0.000W
+> 		DevCtl:	CorrErr+ NonFatalErr+ FatalErr+ UnsupReq-
+> 			RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
+> 			MaxPayload 128 bytes, MaxReadReq 512 bytes
+> 		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
+> 		LnkCap:	Port #0, Speed 8GT/s, Width x8, ASPM not supported
+> 			ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+
+> 		LnkCtl:	ASPM Disabled; RCB 128 bytes Disabled- CommClk-
+> 			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+> 		LnkSta:	Speed 8GT/s (ok), Width x8 (ok)
+> 			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+> 		DevCap2: Completion Timeout: Range BC, TimeoutDis+, NROPrPrP-, LTR-
+> 			 10BitTagComp-, 10BitTagReq-, OBFF Not Supported, ExtFmt-, EETLPPrefix-
+> 			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
+> 			 FRS-, TPHComp-, ExtTPHComp-
+> 		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled
+> 			 AtomicOpsCtl: ReqEn-
+> 		LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
+> 			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+> 			 Compliance De-emphasis: -6dB
+> 		LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete+, EqualizationPhase1+
+> 			 EqualizationPhase2+, EqualizationPhase3+, LinkEqualizationRequest-
+> 	Capabilities: [100 v1] Advanced Error Reporting
+> 		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+> 		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+> 		UESvrt:	DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
+> 		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
+> 		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
+> 		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
+> 			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+> 		HeaderLog: 00000000 00000000 00000000 00000000
+> 	Capabilities: [1c0 v1] Secondary PCI Express
+> 		LnkCtl3: LnkEquIntrruptEn-, PerformEqu-
+> 		LaneErrStat: 0
+> 	Capabilities: [1f0 v1] Virtual Channel
+> 		Caps:	LPEVC=0 RefClk=100ns PATEntryBits=1
+> 		Arb:	Fixed- WRR32- WRR64- WRR128-
+> 		Ctrl:	ArbSelect=Fixed
+> 		Status:	InProgress-
+> 		Port Arbitration Table [500] <?>
+> 		VC0:	Caps:	PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
+> 			Arb:	Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
+> 			Ctrl:	Enable+ ID=0 ArbSelect=Fixed TC/VC=7f
+> 			Status:	NegoPending- InProgress-
+> 		VC1:	Caps:	PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
+> 			Arb:	Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
+> 			Ctrl:	Enable+ ID=1 ArbSelect=Fixed TC/VC=80
+> 			Status:	NegoPending- InProgress-
+> 	Capabilities: [380 v1] Address Translation Service (ATS)
+> 		ATSCap:	Invalidate Queue Depth: 00
+> 		ATSCtl:	Enable-, Smallest Translation Unit: 00
+> 	Capabilities: [600 v0] Designated Vendor-Specific <>
+> 		Vendor:1e2c Version:0
+> 		<CCIX Transport 600>
+> 			TranCap:	ESM+ SR/LR RecalOnrC- CalTime: 500us QuickEqTime: 200ms/208ms
+> 			ESMRateCap:	2.5 GT/s 5 GT/s 8 GT/s 16 GT/s 20 GT/s 25 GT/s 
+> 			ESMStatus:	25 GT/s Cal+
+> 			ESMCtl:		ESM0: 16 GT/s ESM1: 25 GT/s ESM+ ESMCompliance- LR
+> 					ExtEqPhase2TimeOut: 400 ms / 408 ms  ExtEqPhase3TimeOut: 600 ms / 608 ms 
+> 					QuickEqTimeout: Unknown
+> 			ESMEqCtl 20GT/s:	Lane #00: Trans Presets US: 0x1 DS: 0x2
+> 						Lane #01: Trans Presets US: 0x2 DS: 0x3
+> 						Lane #02: Trans Presets US: 0x1 DS: 0x2
+> 						Lane #03: Trans Presets US: 0x2 DS: 0x3
+> 						Lane #04: Trans Presets US: 0x2 DS: 0x3
+> 						Lane #05: Trans Presets US: 0x1 DS: 0x2
+> 						Lane #06: Trans Presets US: 0x2 DS: 0x3
+> 						Lane #07: Trans Presets US: 0x1 DS: 0x2
+> 						Lane #08: Trans Presets US: 0x1 DS: 0x2
+> 						Lane #09: Trans Presets US: 0x2 DS: 0x3
+> 						Lane #10: Trans Presets US: 0x1 DS: 0x2
+> 						Lane #11: Trans Presets US: 0x2 DS: 0x3
+> 						Lane #12: Trans Presets US: 0x2 DS: 0x3
+> 						Lane #13: Trans Presets US: 0x1 DS: 0x2
+> 						Lane #14: Trans Presets US: 0x2 DS: 0x3
+> 						Lane #15: Trans Presets US: 0x1 DS: 0x2
+> 
+> 			ESMEqCtl 25GT/s:	Lane #00: Trans Presets US: 0x4 DS: 0x5
+> 						Lane #01: Trans Presets US: 0x5 DS: 0x6
+> 						Lane #02: Trans Presets US: 0x4 DS: 0x5
+> 						Lane #03: Trans Presets US: 0x5 DS: 0x6
+> 						Lane #04: Trans Presets US: 0x5 DS: 0x6
+> 						Lane #05: Trans Presets US: 0x4 DS: 0x5
+> 						Lane #06: Trans Presets US: 0x5 DS: 0x6
+> 						Lane #07: Trans Presets US: 0x4 DS: 0x5
+> 						Lane #08: Trans Presets US: 0x4 DS: 0x5
+> 						Lane #09: Trans Presets US: 0x5 DS: 0x6
+> 						Lane #10: Trans Presets US: 0x4 DS: 0x5
+> 						Lane #11: Trans Presets US: 0x5 DS: 0x6
+> 						Lane #12: Trans Presets US: 0x5 DS: 0x6
+> 						Lane #13: Trans Presets US: 0x4 DS: 0x5
+> 						Lane #14: Trans Presets US: 0x5 DS: 0x6
+> 						Lane #15: Trans Presets US: 0x4 DS: 0x5
+> 				TLCap: OptTLP+ VCResCapInd: 1
+> 				TLCtl: OptTLP+ LengthCheck+
+> 	Capabilities: [644 v0] Designated Vendor-Specific <>
+> 		Vendor:1e2c Version:0
+> 		<CCIX Protocol 644 7bc>
+> 			CCIX Cap [680 v0] Common
+> 				CommonCap:	DevID: 3 StructVer: 0 DevMultiPort- PrimaryPort
+> 				CommonCap2:	Rdy+ PartialCache- PortAgg- 128B- MultiHop- SamAlign- SWPort- 
+> 						AddrWidth: 48 bit, DataRdyTime: 16 * 32^7
+> 				PER [d00]:	LogVersion: 1, ME+ SevUE- SevNoComm- SevDegraded- SevDeferred+
+> 					Component:	Link
+> 					Address:	[0x0000000100000000], MaskLen: 3
+> 					MemErr:	FRU:		3
+> 						MemType:	NonVolatile
+> 						Operation:	Scrub
+> 						ErrorType:	SingleSymbolChipKillECC
+> 						Chan:		2
+> 						Module:		3
+> 						Bank:		4
+> 						Device:		5
+> 						Row:		6
+> 						Column:		7
+> 						Rank:		8
+> 						BitPos:		1
+> 						ChipID:		9
+> 						MemPoolType:	Unspecified
+> 						VenSpecLen:	0
+> 			CCIX Cap [6a0 v0] Port
+> 				PortCap:	Port #0 Rdy+ OptTLP+ P2PForward- Links: 1 PSAMNum: 0 
+> 				PortCap2:	Agg Mask 0x0
+> 				PortCap3:	FW Mask 0x0
+> 			CCIX Cap [6b4 v0] Link
+> 				LinkCap:	Rdy+ SharedCredits- MsgPack- NoCompAck- MaxPktSize: 128B 
+> 				LinkSendCap:	MaxMemReq: 16, MaxSnpReq: 16, MaxDatReq: 32
+> 				LinkRcvCap:	MaxMemReq: 16, MaxSnpReq: 16, MaxDatReq: 32
+> 				MiscCap:	MaxMiscReqSend: 16, MaxMiscReqRcv 16
+> 			CCIX Cap [6d0 v0] Request Agent
+> 				RACapStat:	DiscRdyStat+ CacheFlushStat-
+> 			CCIX Ctl [800] Common
+> 				CommCtl1:	DeviceEnable+ PrimaryPortEnable+ Mesh- PortAgg-
+> 						IDMTableValid+ RSAMTableValid+ HSAMTableValid- SWPort-
+> 						ErrorAgent: 0, DevID: 2
+> 				CommCtl2:	PartialCache- 128B- AddrWidth: 48 bit
+> 				DevErrCtl:	Enable+
+> 			CCIX Ctl [820] Port
+> 				PortCntrl:	Enable+ OptTLP+ LinksEnabled: 33, PSAMNum: 0
+> 				ErrCtlSta1:	Current: Error pending, LogDisable- PERMsgDisable-
+> 				ErrCtlSta2:	SevLogMask: 0x00, SevPERMsgMask: 0x00
+> 				TypeMaskR/L:	Mem-/- Cache-/- ATC-/- Port-/- Agent-/-
+> 				SourceTransportID: 02:00.0
+> 				PER [da0]:	LogVersion: 1, ME+ SevUE- SevNoComm- SevDegraded- SevDeferred+
+> 					Component:	Port
+> 					Address:	[0x0000000002000000], MaskLen: 0
+> 					PortErr:
+> 						Operation:	Command
+> 						PortErrType:	Generic
+> 						CCIX Message:	Unspecified
+> 			CCIX Ctl [840] Link
+> 				Link#00 [844]
+> 				LinkCtl:	Enable+ CreditSnd+ MsgPack- NoCmpAck- MaxPktSize: 128B 
+> 						RA-to-HA
+> 				MaxCredit:	Mem: 0016, Snoop: 0016, Data 0016, Misc 0000
+> 				MinCredit:	Mem: 0008, Snoop: 0008, Data 0008, Misc 0000
+> 				DestBDF:	01:00.0
+> 				ErrCtlSta1:	Current: Error pending, LogDisable- PERMsgDisable-
+> 				ErrCtlSta2:	SevLogMask: 0x01, SevPERMsgMask: 0x00
+> 				TypeMaskR/L:	Mem-/- Cache-/- ATC-/- Port-/- Agent-/-
+> 				PER [d80]:	LogVersion: 1, ME+ SevUE- SevNoComm- SevDegraded- SevDeferred+
+> 					Component:	Link
+> 					Address:	[0x0000000002000000], MaskLen: 3
+> 					LinkErr:
+> 						OperationType:	Read
+> 						ErrorType:	CreditOverflow
+> 						LinkID:		3
+> 						LinkCreditType:	4
+> 						CCIX Message:	Unspecified
+> 			CCIX Ctl [960] Request Agent
+> 				RACtl:	ID: 01, Enable+ SnpRespEnable- CacheFlush- CacheEnable-
+> 				ErrCtlSta1:	Current: Error pending, LogDisable- PERMsgDisable-
+> 				ErrCtlSta2:	SevLogMask: 0x00, SevPERMsgMask: 0x00
+> 				TypeMaskR/L:	Mem-/- Cache-/- ATC-/- Port-/- Agent-/-
+> 				PER [d40]:	LogVersion: 1, ME+ SevUE- SevNoComm- SevDegraded- SevDeferred+
+> 					Component:	RA
+> 					Address:	[0x0000000100000000], MaskLen: 3
+> 					CacheErr:
+> 						CacheType:	Data
+> 						OperationType:	Prefetch
+> 						CacheError:	Data
+> 						Level:		4
+> 						Set:		5
+> 						Way:		6
+> 						InstanceID:	1
+> 			CCIX IDM Table [c00]
+> 				#00: Port#00 Link#00
+> 				#02: Local
+> 			CCIX RSAM Table [b00]
+> 				#00: Enable+ Port#00 NumAgg: 01	[0x0000000000000000:0x0002000000000000]
+> 				#01: Enable- Local		[0x0000000000000000:0x0000000000000000]
+> 				#02: Enable- Local		[0x0000000000000000:0x0000000000000000]
+> 				#03: Enable- Local		[0x0000000000000000:0x0000000000000000]
+> 				#04: Enable- Local		[0x0000000000000000:0x0000000000000000]
+> 
+> The following grants the 'pciutils' project trademark usage of
+> CCIX tradmark where relevant.
+> 
+> This patch is being distributed by the CCIX Consortium, Inc. (CCIX) to
+> you and other parties that are paticipating (the "participants") in the
+> pciutils with the understanding that the participants will use CCIX's
+> name and trademark only when this patch is used in association with the
+> pciutils project.
+> 
+> CCIX is also distributing this patch to these participants with the
+> understanding that if any portion of the CCIX specification will be
+> used or referenced in the pciutils project, the participants will not modify
+> the cited portion of the CCIX specification and will give CCIX propery
+> copyright attribution by including the following copyright notice with
+> the cited part of the CCIX specification:
+> "© 2019 CCIX CONSORTIUM, INC. ALL RIGHTS RESERVED."
+> 
+> Jonathan Cameron (2):
+>   CCIX DVSEC initial support
+>   DVSEC Add an example from the ccix spec.
+> 
+>  Makefile           |    2 +-
+>  lib/header.h       |    2 +
+>  ls-ccix.c          | 1364 ++++++++++++++++++++++++++++++++++++++++++++
+>  ls-ecaps.c         |   28 +-
+>  lspci.h            |    4 +
+>  tests/ccix-specex1 |  661 +++++++++++++++++++++
+>  6 files changed, 2059 insertions(+), 2 deletions(-)
+>  create mode 100644 ls-ccix.c
+>  create mode 100644 tests/ccix-specex1
+> 
 
-Right, it looks like we need some sort of flag there anyway.
+
