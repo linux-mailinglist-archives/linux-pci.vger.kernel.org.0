@@ -2,101 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4123D837E2
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2019 19:29:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF68A8386F
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2019 20:11:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730835AbfHFR3A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Aug 2019 13:29:00 -0400
-Received: from mga09.intel.com ([134.134.136.24]:34235 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729898AbfHFR3A (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 6 Aug 2019 13:29:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 10:28:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="374127088"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Aug 2019 10:28:59 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id E3D8158044F;
-        Tue,  6 Aug 2019 10:28:58 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH] PCI: use PCI_SRIOV_NUM_BARS in loops instead of
- PCI_IOV_RESOURCE_END
-To:     Denis Efremov <efremov@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190806140715.19847-1-efremov@linux.com>
-From:   sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <3322ea7f-c4c7-0dc0-73bd-778f57cc9450@linux.intel.com>
-Date:   Tue, 6 Aug 2019 10:26:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1732195AbfHFSLo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Aug 2019 14:11:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42666 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726783AbfHFSLo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Aug 2019 14:11:44 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x76I29vl029630
+        for <linux-pci@vger.kernel.org>; Tue, 6 Aug 2019 14:11:43 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u7bs7fbr3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-pci@vger.kernel.org>; Tue, 06 Aug 2019 14:11:43 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-pci@vger.kernel.org> from <sebott@linux.ibm.com>;
+        Tue, 6 Aug 2019 19:11:41 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 6 Aug 2019 19:11:38 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x76IBbYr52887594
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 6 Aug 2019 18:11:37 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2A37F4C044;
+        Tue,  6 Aug 2019 18:11:37 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CB5FA4C050;
+        Tue,  6 Aug 2019 18:11:36 +0000 (GMT)
+Received: from sig-9-145-31-144.uk.ibm.com (unknown [9.145.31.144])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  6 Aug 2019 18:11:36 +0000 (GMT)
+Date:   Tue, 6 Aug 2019 20:11:36 +0200 (CEST)
+From:   Sebastian Ott <sebott@linux.ibm.com>
+X-X-Sender: sebott@schleppi
+To:     Denis Efremov <efremov@linux.com>
+cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/pci: PCI_IOV_RESOURCES loop refactoring in
+ zpci_map_resources
+In-Reply-To: <20190806160137.29275-1-efremov@linux.com>
+References: <20190806160137.29275-1-efremov@linux.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+Organization: =?ISO-8859-15?Q?=22IBM_Deutschland_Research_&_Development_GmbH?=
+ =?ISO-8859-15?Q?_=2F_Vorsitzende_des_Aufsichtsrats=3A_Matthias?=
+ =?ISO-8859-15?Q?_Hartmann_Gesch=E4ftsf=FChrung=3A_Dirk_Wittkopp?=
+ =?ISO-8859-15?Q?_Sitz_der_Gesellschaft=3A_B=F6blingen_=2F_Reg?=
+ =?ISO-8859-15?Q?istergericht=3A_Amtsgericht_Stuttgart=2C_HRB_2432?=
+ =?ISO-8859-15?Q?94=22?=
 MIME-Version: 1.0
-In-Reply-To: <20190806140715.19847-1-efremov@linux.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
+X-TM-AS-GCONF: 00
+x-cbid: 19080618-0016-0000-0000-0000029AE5D5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080618-0017-0000-0000-000032F9F41F
+Message-Id: <alpine.LFD.2.21.1908062009230.2835@schleppi>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-06_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=748 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908060162
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-On 8/6/19 7:07 AM, Denis Efremov wrote:
-> It's a general pattern to write loops with 'i < PCI_SRIOV_NUM_BARS'
-> condition. This patch fixes remaining loops which violates this implicit
-> agreement.
-
-Looks good to me.
-
-Reviewed-by: Kuppuswamy Sathyanarayanan 
-<sathyanarayanan.kuppuswamy@linux.intel.com>
-
->
+On Tue, 6 Aug 2019, Denis Efremov wrote:
+> This patch alters the for loop iteration scheme in zpci_map_resources
+> to make it more usual. Thus, the patch generalizes the style for
+> PCI_IOV_RESOURCES iteration and improves readability.
+> 
 > Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->   drivers/pci/iov.c       | 4 ++--
->   drivers/pci/setup-bus.c | 4 ++--
->   2 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index 525fd3f272b3..9b48818ced01 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -557,8 +557,8 @@ static void sriov_restore_state(struct pci_dev *dev)
->   	ctrl |= iov->ctrl & PCI_SRIOV_CTRL_ARI;
->   	pci_write_config_word(dev, iov->pos + PCI_SRIOV_CTRL, ctrl);
->   
-> -	for (i = PCI_IOV_RESOURCES; i <= PCI_IOV_RESOURCE_END; i++)
-> -		pci_update_resource(dev, i);
-> +	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++)
-> +		pci_update_resource(dev, i + PCI_IOV_RESOURCES);
->   
->   	pci_write_config_dword(dev, iov->pos + PCI_SRIOV_SYS_PGSIZE, iov->pgsz);
->   	pci_iov_set_numvfs(dev, iov->num_VFs);
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index 79b1fa6519be..e7dbe21705ba 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1662,8 +1662,8 @@ static int iov_resources_unassigned(struct pci_dev *dev, void *data)
->   	int i;
->   	bool *unassigned = data;
->   
-> -	for (i = PCI_IOV_RESOURCES; i <= PCI_IOV_RESOURCE_END; i++) {
-> -		struct resource *r = &dev->resource[i];
-> +	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> +		struct resource *r = &dev->resource[i + PCI_IOV_RESOURCES];
->   		struct pci_bus_region region;
->   
->   		/* Not assigned or rejected by kernel? */
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+Applied for inclusion via s390/linux.git . Thanks!
+
+Sebastian
 
