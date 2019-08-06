@@ -2,170 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DA9D839D6
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2019 21:50:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A128B839EB
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2019 21:57:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725798AbfHFTuh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Aug 2019 15:50:37 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46417 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfHFTuh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Aug 2019 15:50:37 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z1so89048488wru.13
-        for <linux-pci@vger.kernel.org>; Tue, 06 Aug 2019 12:50:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kGaKvQFsZgZRc0gqerogxzfGiThuXifNLB2OEC0cIoY=;
-        b=KcpdUETMBYuJyx4JKxpCZkDiJd9PgHCJ+KVUsKbiK69I/uNOk1diB7NGlPKuUTgu03
-         5bvA0tDzp9uxmVSvU3Lv5Kpo7zoW4UH6UPRVZc6txr//tC1JsGtF6JpWd1zZHIskDlEb
-         TiRFuGrOZGzTrirywRRsM6BJdkmLwC1GzPQDKM/xujPh5hjKsBo+NZHsVRyUVRK6xBU2
-         vJqGL0IWeQCMCKJQRh7DG0Ngjau29xL3YjVRvzBQoh73f4JOplrpPqhkR0G094ZbQUaY
-         Grq5Qh03BfsG/86N1AeD7/6qVYclfLMGsRTp4j/jG1NhjPNzUa1Pc3kMLtmlv43w7HEU
-         F9gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kGaKvQFsZgZRc0gqerogxzfGiThuXifNLB2OEC0cIoY=;
-        b=rQZgTOaF8UZRbUT7w2A3QsG+EHOWVbqU1rNAdA5Sq0RHsLfsNqPN+39ULQfIvnaovq
-         DzLUYmwoQDtXWU6IJQCbXlgUQQNIdQjeb9gbXHgrJzFRRFGMWZgpBSAkslv3NUwzm7LC
-         MIrBbyyGf6rvUvK50XdOSnzBMZNu72ml9e4nctY/uyRM9i1HKrsxCGWki+pllzSEViPN
-         gdH+TZjLCYBDM/s7iEzVUmGBugTwLvoRXJCk4fBxDayDjAufxk5qSe/HSi+fHPwGXMbS
-         PDPOyrN9/yra7r70vrKdO5N1jpTFdR9NtbboiuECF/8LOGRTLcRlrPmNgCPCCEvfO1Kx
-         AdBQ==
-X-Gm-Message-State: APjAAAWQR26DKFBieZJuLWmgY5wdLIs72qt4yn+eAcQjyYlo8q7U3cHf
-        Hpc04NXu7jli4H7c6QYJvPAiHIP/x+bZ2II3xFHN
-X-Google-Smtp-Source: APXvYqyDnhoa/uCrTWnPgUp2jKiHChoqXQq+xQxY9yMjyk5SXnWI/bXZHLptGN4xGZpSOxpD0VQaSeeW0iGW7hI8NOM=
-X-Received: by 2002:a5d:6650:: with SMTP id f16mr6385465wrw.89.1565121033666;
- Tue, 06 Aug 2019 12:50:33 -0700 (PDT)
+        id S1725948AbfHFT5P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Aug 2019 15:57:15 -0400
+Received: from mout.gmx.net ([212.227.17.20]:59827 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725906AbfHFT5P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 6 Aug 2019 15:57:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1565121390;
+        bh=DsIqcheZq2E+baxpbFyRNd0674tff2lEsv+Ru11Kfcw=;
+        h=X-UI-Sender-Class:From:To:Cc:References:Subject:Date:In-Reply-To;
+        b=fdFuV57T+uwRmtPYGFOVXNRaqL3EuaYEGZ+o+PeisjQDWKrZDpUoDPlnT383J+r7y
+         1Wp0uFl/r4ir6RPD30hIk0xFnL3/Vs0qE+fD47r1d/xmHydgVtNlAzbHeF4V2Nr8+t
+         XdlntuacbCGbiesXMphFNuTnroAwHvs5tLZgV07k=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from mandree.no-ip.org ([79.229.32.156]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MwQXN-1iDJH63TUb-00sQ5N; Tue, 06
+ Aug 2019 21:56:29 +0200
+Received: from ryzen.an3e.de (localhost [IPv6:::1])
+        by ryzen.an3e.de (Postfix) with ESMTP id CBE1D120172;
+        Tue,  6 Aug 2019 21:56:27 +0200 (CEST)
+From:   Matthias Andree <matthias.andree@gmx.de>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+References: <2857501d-c167-547d-c57d-d5d24ea1f1dc@molgen.mpg.de>
+ <20190806093626.GF2548@lahna.fi.intel.com>
+ <acca5213-7d8b-7db1-ff3c-cb5b4a704f04@molgen.mpg.de>
+ <20190806113154.GS2548@lahna.fi.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=matthias.andree@gmx.de; prefer-encrypt=mutual; keydata=
+ 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
+ H29L93g/7fa+B3v7
+Subject: Re: [Regression] pcie_wait_for_link_delay (1132.853 ms @ 5039.414431)
+Message-ID: <f1093e5c-2b90-c61c-7fed-437abda6ec6a@gmx.de>
+Date:   Tue, 6 Aug 2019 21:56:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190628073425.25165-1-jianjun.wang@mediatek.com>
- <20190628073425.25165-3-jianjun.wang@mediatek.com> <1564385918.17211.6.camel@mhfsdcap03>
- <20190806162432.GA15498@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190806162432.GA15498@e121166-lin.cambridge.arm.com>
-From:   Bjorn Helgaas <bhelgaas@google.com>
-Date:   Tue, 6 Aug 2019 14:50:20 -0500
-Message-ID: <CAErSpo5AVXekj8hWxDbf+zTwv9WmQessdBppNrVtOWOkuTREtA@mail.gmail.com>
-Subject: Re: [v2,2/2] PCI: mediatek: Add controller support for MT7629
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Jianjun Wang <jianjun.wang@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        youlin.pei@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190806113154.GS2548@lahna.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Content-Language: en-GB
+X-Provags-ID: V03:K1:d5M3dTdtVuZqSOW9cZ5gR6wA2AbaXKx/buD7s0MDLZcZCJFlEMJ
+ UHHqpjtxD9+KuIXI5eo3sqO9M8vzPbE1S/pBs9pe7eU9AenTf3x9MCOyUGxgvDdAU/mHa07
+ Rmd7LyTdGBElr/g8CX13R9sQOrJvDgo5yeWIFWy1DTXHHml8UeLkjV3IfdcHHn510dJrfGT
+ 5Cou4CvciEpuw8NWZ1Bjg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lsn9kpLXRGI=:MQS1ChqH/vLMqXIS7Kw+zV
+ YIPv3fXRvsTVPSqyuIPHojy96u5KrWcVlHyumRbpb92xLnPHJTh0VeMEt/ZHGJ39mU4TyxuEd
+ SFPitLgEnjEaM1DvuCT4QUUonA5LotBrjLkTKpg+zAItbIX9J2SHI7VpHFsFD9lAlhErpxL7h
+ cboHLF/tvrhcFEMQDI/acTIE7iPnbiSnBwXvBszqxqDksWiuKPYNOsrgQAiJONLke9hJzlMYm
+ u2qZBrfPLgTxLqAPUvL4Bo+r4gamD5H+GO4c2fAjLxvUp8AhqEKKzn0a4iOR3N7ytAqji1/5T
+ QAwG9STYZxL4EQZxXYOkYifcNIWNq88NrDgBcy0P7MTEhQ4TFZh9hjCJ6rsEMhqiBEpCUMKXn
+ Ej5fnpso6Sz2Q8EUAv7cHzqNesyn9vpmikUzR+fwpZkcIrODbjfSBHtC90J2/bfhTSPXOFZiT
+ NfR7Bjr5OzbpZlyyNZNwDx5R5x/X+hWhEViPc6888yZHh20MLGpFlkgBb7Tl0R4nJMUnjD6BU
+ 6HLB2PviI8kram9UPiO25k+38AyaH7cng743BtZVqqm95yLnUocSqJDLLU6ndkE4ljVfyH0wj
+ PdNQ5kFA4TfkhCKL5s8o6+21juV15uYb1hPFyub+sKa1zuU8CK/wUEu8uDGr68fJGoRM5f+j+
+ 01uiNha1Iwj+ZfrPsCyPB4xz+HQUyC17lFEvV+7oQmwcrL+/aTgG+BxFej8H0OdAWkABOvjId
+ HCFi6HyrsOcU04ducebyXm9xsopo1fAcfqyYZJdA4b47iOVdFi1Yptoog3uTA+2DRQR6iQy/W
+ TwI5FTXpQLROChUfU6XfcXt6StGeDOdT5KdtXTjc3OqY01vLX+ONuuLqMp1DuB6mgXvlYQ9Jt
+ zn9cyKYvX3KF4gW5Jfv55R0y8EG75ZkvmWpCaKO2CggHdRc3tZZ/bH0I4FXchjjE6Er4ZaPXl
+ RPbt2TSCrrrzG8kKGJifpf+yRLXH5L/+E2RlnW3SmC8TpzRC8ZhqpOOW/swDoLqK+1guKTTFp
+ EkRxjNfJErEkTy9JTN8TilNtlO+KmN6JX0IX0qrXJjfUa5Cs743S2VVvh+AnkISsL+uPBRomX
+ zPF1IzVwh+squfrmvPlCtc8oKIM94t9ZvKMbnG6YSdcb+rzg01yUl5bUIVuirmctgawc5KRyi
+ 3CW8M=
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 11:24 AM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> [trim the CC list please to keep only required maintainers]
->
-> On Mon, Jul 29, 2019 at 03:38:38PM +0800, Jianjun Wang wrote:
-> > On Fri, 2019-06-28 at 15:34 +0800, Jianjun Wang wrote:
-> > > MT7629 is an ARM platform SoC which has the same PCIe IP with MT7622.
-> > >
-> > > The HW default value of its Device ID is invalid, fix its Device ID to
-> > > match the hardware implementation.
-> > >
-> > > Acked-by: Ryder Lee <ryder.lee@mediatek.com>
-> > > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-> > > ---
-> > >  drivers/pci/controller/pcie-mediatek.c | 18 ++++++++++++++++++
-> > >  include/linux/pci_ids.h                |  1 +
-> > >  2 files changed, 19 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> > > index 80601e1b939e..e5e6740b635d 100644
-> > > --- a/drivers/pci/controller/pcie-mediatek.c
-> > > +++ b/drivers/pci/controller/pcie-mediatek.c
-> > > @@ -73,6 +73,7 @@
-> > >  #define PCIE_MSI_VECTOR            0x0c0
-> > >
-> > >  #define PCIE_CONF_VEND_ID  0x100
-> > > +#define PCIE_CONF_DEVICE_ID        0x102
-> > >  #define PCIE_CONF_CLASS_ID 0x106
-> > >
-> > >  #define PCIE_INT_MASK              0x420
-> > > @@ -141,12 +142,16 @@ struct mtk_pcie_port;
-> > >  /**
-> > >   * struct mtk_pcie_soc - differentiate between host generations
-> > >   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-> > > + * @need_fix_device_id: whether this host's Device ID needed to be fixed or not
-> > > + * @device_id: Device ID which this host need to be fixed
-> > >   * @ops: pointer to configuration access functions
-> > >   * @startup: pointer to controller setting functions
-> > >   * @setup_irq: pointer to initialize IRQ functions
-> > >   */
-> > >  struct mtk_pcie_soc {
-> > >     bool need_fix_class_id;
-> > > +   bool need_fix_device_id;
-> > > +   unsigned int device_id;
-> > >     struct pci_ops *ops;
-> > >     int (*startup)(struct mtk_pcie_port *port);
-> > >     int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-> > > @@ -696,6 +701,9 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
-> > >             writew(val, port->base + PCIE_CONF_CLASS_ID);
-> > >     }
-> > >
-> > > +   if (soc->need_fix_device_id)
-> > > +           writew(soc->device_id, port->base + PCIE_CONF_DEVICE_ID);
-> > > +
-> > >     /* 100ms timeout value should be enough for Gen1/2 training */
-> > >     err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
-> > >                              !!(val & PCIE_PORT_LINKUP_V2), 20,
-> > > @@ -1216,11 +1224,21 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
-> > >     .setup_irq = mtk_pcie_setup_irq,
-> > >  };
-> > >
-> > > +static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
-> > > +   .need_fix_class_id = true,
-> > > +   .need_fix_device_id = true,
-> > > +   .device_id = PCI_DEVICE_ID_MEDIATEK_7629,
-> > > +   .ops = &mtk_pcie_ops_v2,
-> > > +   .startup = mtk_pcie_startup_port_v2,
-> > > +   .setup_irq = mtk_pcie_setup_irq,
-> > > +};
-> > > +
-> > >  static const struct of_device_id mtk_pcie_ids[] = {
-> > >     { .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
-> > >     { .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
-> > >     { .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
-> > >     { .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
-> > > +   { .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
-> > >     {},
-> > >  };
-> > >
-> > > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> > > index 70e86148cb1e..aa32962759b2 100644
-> > > --- a/include/linux/pci_ids.h
-> > > +++ b/include/linux/pci_ids.h
-> > > @@ -2131,6 +2131,7 @@
-> > >  #define PCI_VENDOR_ID_MYRICOM              0x14c1
-> > >
-> > >  #define PCI_VENDOR_ID_MEDIATEK             0x14c3
-> > > +#define PCI_DEVICE_ID_MEDIATEK_7629        0x7629
-> > >
-> > >  #define PCI_VENDOR_ID_TITAN                0x14D2
-> > >  #define PCI_DEVICE_ID_TITAN_010L   0x8001
-> >
-> > Hi Bjorn & Lorenzo,
-> >
-> > Is this patch ok or is there anything I need to fixed?
->
-> The commit log need to be fixed and I will do it, the code if
-> Bjorn is OK with it I can merge it.
-
-Sure, I'm fine with this.  I don't think there's a need to add
-PCI_DEVICE_ID_MEDIATEK_7629, since it's only used in one place, but
-I'm fine with the code.
+TWlrYSwKCnJldmlld2luZyB0aGUgY29kZSBpbiB5b3VyIGNvbW1pdCwgY2FuIHdlIGRvdWJs
+ZS1jaGVjayB0aGUgIiEiIGluICJpZgooIXBkZXYtPmltbV9yZWFkeSkiIGhlcmU/Cgo+IHN0
+YXRpYyBpbnQgZ2V0X2Rvd25zdHJlYW1fZGVsYXkoc3RydWN0IHBjaV9idXMgKmJ1cykKPiB7
+Cj7CoMKgwqDCoMKgwqDCoMKgIHN0cnVjdCBwY2lfZGV2ICpwZGV2Owo+wqDCoMKgwqDCoMKg
+wqDCoCBpbnQgbWluX2RlbGF5ID0gMTAwOwo+wqDCoMKgwqDCoMKgwqDCoCBpbnQgbWF4X2Rl
+bGF5ID0gMDsKPgo+wqDCoMKgwqDCoMKgwqDCoCBsaXN0X2Zvcl9lYWNoX2VudHJ5KHBkZXYs
+ICZidXMtPmRldmljZXMsIGJ1c19saXN0KSB7Cj7CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCBpZiAoIXBkZXYtPmltbV9yZWFkeSkKCkkgaGF2ZSB6ZXJvIGNsdWUgb2YgUENJ
+IChFeHByZXNzKSwgYnV0IHJlYWRpbmcgb3RoZXIgcGFydHMgb2YgeW91ciBwYXRjaCwKSSB0
+aGluayBtaW5fZGVsYXkgc2hvdWxkIGJlIHplcm9lZCBpZiBpbW1fcmVhZHkgaXMgMSAoY3Vy
+cmVudGx5IGl0IGlzCnplcm9lZCBpZiBpbW1fcmVhZHkgPT0gMCksCnVubGVzcyB0aGUgaGVh
+ZGVyIGZpbGUgaGFzIGEgbWlzbGVhZGluZyBjb21tZW50LgoKKEkgaGFkIHRyaWVkIHJlbW92
+aW5nIHRoZSAhIGJ1dCB0aGF0IGRpZG4ndCBmaXggbXkgc3lzdGVtLikKCj7CoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbWluX2RlbGF5ID0gMDsK
+PsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGVsc2UgaWYgKHBkZXYtPmQzY29s
+ZF9kZWxheSA8IG1pbl9kZWxheSkKPsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCBtaW5fZGVsYXkgPSBwZGV2LT5kM2NvbGRfZGVsYXk7Cj7CoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAocGRldi0+ZDNjb2xkX2RlbGF5ID4g
+bWF4X2RlbGF5KQo+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIG1heF9kZWxheSA9IHBkZXYtPmQzY29sZF9kZWxheTsKPsKgwqDCoMKgwqDCoMKg
+wqAgfQo+Cj7CoMKgwqDCoMKgwqDCoMKgIHJldHVybiBtYXgobWluX2RlbGF5LCBtYXhfZGVs
+YXkpOwo+IH0KClJlZ2FyZHMsCk1hdHRoaWFzCgo=
