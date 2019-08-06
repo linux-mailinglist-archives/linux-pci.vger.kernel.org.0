@@ -2,166 +2,228 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E00A782C85
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2019 09:24:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A7EB82E8D
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2019 11:20:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731787AbfHFHYb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Aug 2019 03:24:31 -0400
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:58399 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731735AbfHFHYb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Aug 2019 03:24:31 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id A9E27101C06FB;
-        Tue,  6 Aug 2019 09:24:28 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 6ED1FCCB7; Tue,  6 Aug 2019 09:24:28 +0200 (CEST)
-Date:   Tue, 6 Aug 2019 09:24:28 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yaohongbo@huawei.com,
-        guohanjun@huawei.com, huawei.libin@huawei.com
-Subject: Re: [RFC PATCH] pciehp: use completion to wait irq_thread
- 'pciehp_ist'
-Message-ID: <20190806072428.2v7k775tvvgkbloh@wunner.de>
-References: <1562226638-54134-1-git-send-email-wangxiongfeng2@huawei.com>
+        id S1731922AbfHFJUm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Aug 2019 05:20:42 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:53199 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730068AbfHFJUm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 6 Aug 2019 05:20:42 -0400
+Received: from rabammel.molgen.mpg.de (rabammel.molgen.mpg.de [141.14.30.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id CEA9C201A3C30;
+        Tue,  6 Aug 2019 11:20:38 +0200 (CEST)
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: [Regression] pcie_wait_for_link_delay (1132.853 ms @ 5039.414431)
+Message-ID: <2857501d-c167-547d-c57d-d5d24ea1f1dc@molgen.mpg.de>
+Date:   Tue, 6 Aug 2019 11:20:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562226638-54134-1-git-send-email-wangxiongfeng2@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms030407030505030902090402"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 03:50:38PM +0800, Xiongfeng Wang wrote:
-> When I use the following command to power on a slot which has been
-> powered off already.
-> echo 1 > /sys/bus/pci/slots/22/power
-> It prints the following error:
-> -bash: echo: write error: No such device
-> But the slot is actually powered on and the devices is probed.
-> 
-> In function 'pciehp_sysfs_enable_slot()', we use 'wait_event()' to wait
-> until 'ctrl->pending_events' is cleared in 'pciehp_ist()'. But in some
-> situation, when 'pciehp_ist()' is woken up on a nearby CPU after
-> 'pciehp_request' is called, 'ctrl->pending_events' is cleared before we
-> go into sleep state. 'wait_event()' will check the condition before
-> going into sleep. So we return immediately and '-ENODEV' is return.
-> 
-> This patch use struct completion to wait until irq_thread 'pciehp_ist'
-> is completed.
+This is a cryptographically signed message in MIME format.
 
-Thank you, good catch.
+--------------ms030407030505030902090402
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Unfortunately your patch still allows the following race AFAICS:
+Dear Mika, dear Rafael,
 
-* pciehp_ist() is running (e.g. due to a hotplug operation)
-* a request to disable or enable the slot is submitted via sysfs,
-  the completion is reinitialized
-* pciehp_ist() finishes, signals completion
-* the sysfs request returns to user space prematurely
-* pciehp_ist() is run, handles the sysfs request, signals completion again
 
-I'd suggest something like the below instead, could you give it a whirl
-and see if it reliably fixes the issue for you?
+Commit c2bf1fc2 (PCI: Add missing link delays required by the PCIe spec) =
+[1]=20
+increases the resume time from ACPI S3 on a desktop system Dell OptiPlex =
+5040
+by one second. It looks like this is expected from the commit message, bu=
+t
+breaks existing systems with boot time requirements. I measured this with=
+ the
+help of the pm-graph script `sleepgraph.py` [2].
 
--- >8 --
+    0000:00:01.0 resume_noirq (1134.715 ms @ 5039.412578 to 5040.547293)
+        =E2=80=A6
+            pcie_wait_for_link_delay (1132.853 ms @ 5039.414431)
 
-Subject: [PATCH] PCI: pciehp: Avoid returning prematurely from sysfs requests
+$ lspci -nn
+00:00.0 Host bridge [0600]: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/=
+6th Gen Core Processor Host Bridge/DRAM Registers [8086:191f] (rev 07)
+00:01.0 PCI bridge [0604]: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6=
+th Gen Core Processor PCIe Controller (x16) [8086:1901] (rev 07)
+00:14.0 USB controller [0c03]: Intel Corporation Sunrise Point-H USB 3.0 =
+xHCI Controller [8086:a12f] (rev 31)
+00:14.2 Signal processing controller [1180]: Intel Corporation Sunrise Po=
+int-H Thermal subsystem [8086:a131] (rev 31)
+00:16.0 Communication controller [0780]: Intel Corporation Sunrise Point-=
+H CSME HECI #1 [8086:a13a] (rev 31)
+00:17.0 SATA controller [0106]: Intel Corporation Sunrise Point-H SATA co=
+ntroller [AHCI mode] [8086:a102] (rev 31)
+00:1c.0 PCI bridge [0604]: Intel Corporation Sunrise Point-H PCI Express =
+Root Port #1 [8086:a110] (rev f1)
+00:1f.0 ISA bridge [0601]: Intel Corporation Sunrise Point-H LPC Controll=
+er [8086:a146] (rev 31)
+00:1f.2 Memory controller [0580]: Intel Corporation Sunrise Point-H PMC [=
+8086:a121] (rev 31)
+00:1f.3 Audio device [0403]: Intel Corporation Sunrise Point-H HD Audio [=
+8086:a170] (rev 31)
+00:1f.4 SMBus [0c05]: Intel Corporation Sunrise Point-H SMBus [8086:a123]=
+ (rev 31)
+00:1f.6 Ethernet controller [0200]: Intel Corporation Ethernet Connection=
+ (2) I219-V [8086:15b8] (rev 31)
+01:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [A=
+MD/ATI] Oland XT [Radeon HD 8670 / R7 250/350] [1002:6610] (rev 81)
+01:00.1 Audio device [0403]: Advanced Micro Devices, Inc. [AMD/ATI] Cape =
+Verde/Pitcairn HDMI Audio [Radeon HD 7700/7800 Series] [1002:aab0]
+02:00.0 PCI bridge [0604]: Texas Instruments XIO2001 PCI Express-to-PCI B=
+ridge [104c:8240]
 
-A sysfs request to enable or disable a PCIe hotplug slot should not
-return before it has been carried out.  That is sought to be achieved
-by waiting until the controller's "pending_events" have been cleared.
+So, it=E2=80=99s about the internal Intel graphics device, which is not u=
+sed on this=20
+system, as there is an external AMD graphics device plugged in.
 
-However the IRQ thread pciehp_ist() clears the "pending_events" before
-it acts on them.  If pciehp_sysfs_enable_slot() / _disable_slot() happen
-to check the "pending_events" after they have been cleared but while
-pciehp_ist() is still running, the functions may return prematurely
-with an incorrect return value.
+As far as I understand it, it=E2=80=99s a bug in the firmware, that a one=
+ second delay
+is specified?
 
-Fix by introducing an "ist_running" flag which must be false before a
-sysfs request is allowed to return.
+Anyway, there is such firmware out there, so I=E2=80=99d like to avoid th=
+e time
+increases.
 
-Fixes: 32a8cef274fe ("PCI: pciehp: Enable/disable exclusively from IRQ thread")
-Link: https://lore.kernel.org/linux-pci/1562226638-54134-1-git-send-email-wangxiongfeng2@huawei.com
-Reported-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v4.19+
----
- drivers/pci/hotplug/pciehp.h      | 2 ++
- drivers/pci/hotplug/pciehp_ctrl.c | 6 ++++--
- drivers/pci/hotplug/pciehp_hpc.c  | 2 ++
- 3 files changed, 8 insertions(+), 2 deletions(-)
+As a first step, the commit should be extended to print a warning (maybe =
+if
+`initcall_debug` is specified), when the delay is higher than let=E2=80=99=
+s say 50(?)
+ms. Also better documentation how to debug these delays would be apprecia=
+ted.
 
-diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index 8c51a04b8083..e316bde45c7b 100644
---- a/drivers/pci/hotplug/pciehp.h
-+++ b/drivers/pci/hotplug/pciehp.h
-@@ -72,6 +72,7 @@ extern int pciehp_poll_time;
-  * @reset_lock: prevents access to the Data Link Layer Link Active bit in the
-  *	Link Status register and to the Presence Detect State bit in the Slot
-  *	Status register during a slot reset which may cause them to flap
-+ * @ist_running: flag to keep user request waiting while IRQ thread is running
-  * @request_result: result of last user request submitted to the IRQ thread
-  * @requester: wait queue to wake up on completion of user request,
-  *	used for synchronous slot enable/disable request via sysfs
-@@ -101,6 +102,7 @@ struct controller {
- 
- 	struct hotplug_slot hotplug_slot;	/* hotplug core interface */
- 	struct rw_semaphore reset_lock;
-+	unsigned int ist_running;
- 	int request_result;
- 	wait_queue_head_t requester;
- };
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index 631ced0ab28a..1ce9ce335291 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -368,7 +368,8 @@ int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot)
- 		ctrl->request_result = -ENODEV;
- 		pciehp_request(ctrl, PCI_EXP_SLTSTA_PDC);
- 		wait_event(ctrl->requester,
--			   !atomic_read(&ctrl->pending_events));
-+			   !atomic_read(&ctrl->pending_events) &&
-+			   !ctrl->ist_running);
- 		return ctrl->request_result;
- 	case POWERON_STATE:
- 		ctrl_info(ctrl, "Slot(%s): Already in powering on state\n",
-@@ -401,7 +402,8 @@ int pciehp_sysfs_disable_slot(struct hotplug_slot *hotplug_slot)
- 		mutex_unlock(&ctrl->state_lock);
- 		pciehp_request(ctrl, DISABLE_SLOT);
- 		wait_event(ctrl->requester,
--			   !atomic_read(&ctrl->pending_events));
-+			   !atomic_read(&ctrl->pending_events) &&
-+			   !ctrl->ist_running);
- 		return ctrl->request_result;
- 	case POWEROFF_STATE:
- 		ctrl_info(ctrl, "Slot(%s): Already in powering off state\n",
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index bd990e3371e3..9e2d7688e8cc 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -608,6 +608,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
- 	irqreturn_t ret;
- 	u32 events;
- 
-+	ctrl->ist_running = true;
- 	pci_config_pm_runtime_get(pdev);
- 
- 	/* rerun pciehp_isr() if the port was inaccessible on interrupt */
-@@ -654,6 +655,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
- 	up_read(&ctrl->reset_lock);
- 
- 	pci_config_pm_runtime_put(pdev);
-+	ctrl->ist_running = false;
- 	wake_up(&ctrl->requester);
- 	return IRQ_HANDLED;
- }
--- 
-2.20.1
+If there is no easy solution, it=E2=80=99d be great if the commit could b=
+e reverted for
+now, and a better solution be discussed for the next release.
 
+
+Kind regards,
+
+Paul
+
+
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/c=
+ommit/?id=3Dc2bf1fc212f7e6f25ace1af8f0b3ac061ea48ba5
+[2]: https://github.com/intel/pm-graph
+
+
+--------------ms030407030505030902090402
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
+EFowggUSMIID+qADAgECAgkA4wvV+K8l2YEwDQYJKoZIhvcNAQELBQAwgYIxCzAJBgNVBAYT
+AkRFMSswKQYDVQQKDCJULVN5c3RlbXMgRW50ZXJwcmlzZSBTZXJ2aWNlcyBHbWJIMR8wHQYD
+VQQLDBZULVN5c3RlbXMgVHJ1c3QgQ2VudGVyMSUwIwYDVQQDDBxULVRlbGVTZWMgR2xvYmFs
+Um9vdCBDbGFzcyAyMB4XDTE2MDIyMjEzMzgyMloXDTMxMDIyMjIzNTk1OVowgZUxCzAJBgNV
+BAYTAkRFMUUwQwYDVQQKEzxWZXJlaW4genVyIEZvZXJkZXJ1bmcgZWluZXMgRGV1dHNjaGVu
+IEZvcnNjaHVuZ3NuZXR6ZXMgZS4gVi4xEDAOBgNVBAsTB0RGTi1QS0kxLTArBgNVBAMTJERG
+Ti1WZXJlaW4gQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgMjCCASIwDQYJKoZIhvcNAQEBBQAD
+ggEPADCCAQoCggEBAMtg1/9moUHN0vqHl4pzq5lN6mc5WqFggEcVToyVsuXPztNXS43O+FZs
+FVV2B+pG/cgDRWM+cNSrVICxI5y+NyipCf8FXRgPxJiZN7Mg9mZ4F4fCnQ7MSjLnFp2uDo0p
+eQcAIFTcFV9Kltd4tjTTwXS1nem/wHdN6r1ZB+BaL2w8pQDcNb1lDY9/Mm3yWmpLYgHurDg0
+WUU2SQXaeMpqbVvAgWsRzNI8qIv4cRrKO+KA3Ra0Z3qLNupOkSk9s1FcragMvp0049ENF4N1
+xDkesJQLEvHVaY4l9Lg9K7/AjsMeO6W/VRCrKq4Xl14zzsjz9AkH4wKGMUZrAcUQDBHHWekC
+AwEAAaOCAXQwggFwMA4GA1UdDwEB/wQEAwIBBjAdBgNVHQ4EFgQUk+PYMiba1fFKpZFK4OpL
+4qIMz+EwHwYDVR0jBBgwFoAUv1kgNgB5oKAia4zV8mHSuCzLgkowEgYDVR0TAQH/BAgwBgEB
+/wIBAjAzBgNVHSAELDAqMA8GDSsGAQQBga0hgiwBAQQwDQYLKwYBBAGBrSGCLB4wCAYGZ4EM
+AQICMEwGA1UdHwRFMEMwQaA/oD2GO2h0dHA6Ly9wa2kwMzM2LnRlbGVzZWMuZGUvcmwvVGVs
+ZVNlY19HbG9iYWxSb290X0NsYXNzXzIuY3JsMIGGBggrBgEFBQcBAQR6MHgwLAYIKwYBBQUH
+MAGGIGh0dHA6Ly9vY3NwMDMzNi50ZWxlc2VjLmRlL29jc3ByMEgGCCsGAQUFBzAChjxodHRw
+Oi8vcGtpMDMzNi50ZWxlc2VjLmRlL2NydC9UZWxlU2VjX0dsb2JhbFJvb3RfQ2xhc3NfMi5j
+ZXIwDQYJKoZIhvcNAQELBQADggEBAIcL/z4Cm2XIVi3WO5qYi3FP2ropqiH5Ri71sqQPrhE4
+eTizDnS6dl2e6BiClmLbTDPo3flq3zK9LExHYFV/53RrtCyD2HlrtrdNUAtmB7Xts5et6u5/
+MOaZ/SLick0+hFvu+c+Z6n/XUjkurJgARH5pO7917tALOxrN5fcPImxHhPalR6D90Bo0fa3S
+PXez7vTXTf/D6OWST1k+kEcQSrCFWMBvf/iu7QhCnh7U3xQuTY+8npTD5+32GPg8SecmqKc2
+2CzeIs2LgtjZeOJVEqM7h0S2EQvVDFKvaYwPBt/QolOLV5h7z/0HJPT8vcP9SpIClxvyt7bP
+ZYoaorVyGTkwggWNMIIEdaADAgECAgwcOtRQhH7u81j4jncwDQYJKoZIhvcNAQELBQAwgZUx
+CzAJBgNVBAYTAkRFMUUwQwYDVQQKEzxWZXJlaW4genVyIEZvZXJkZXJ1bmcgZWluZXMgRGV1
+dHNjaGVuIEZvcnNjaHVuZ3NuZXR6ZXMgZS4gVi4xEDAOBgNVBAsTB0RGTi1QS0kxLTArBgNV
+BAMTJERGTi1WZXJlaW4gQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgMjAeFw0xNjExMDMxNTI0
+NDhaFw0zMTAyMjIyMzU5NTlaMGoxCzAJBgNVBAYTAkRFMQ8wDQYDVQQIDAZCYXllcm4xETAP
+BgNVBAcMCE11ZW5jaGVuMSAwHgYDVQQKDBdNYXgtUGxhbmNrLUdlc2VsbHNjaGFmdDEVMBMG
+A1UEAwwMTVBHIENBIC0gRzAyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnhx4
+59Lh4WqgOs/Md04XxU2yFtfM15ZuJV0PZP7BmqSJKLLPyqmOrADfNdJ5PIGBto2JBhtRRBHd
+G0GROOvTRHjzOga95WOTeura79T21FWwwAwa29OFnD3ZplQs6HgdwQrZWNi1WHNJxn/4mA19
+rNEBUc5urSIpZPvZi5XmlF3v3JHOlx3KWV7mUteB4pwEEfGTg4npPAJbp2o7arxQdoIq+Pu2
+OsvqhD7Rk4QeaX+EM1QS4lqd1otW4hE70h/ODPy1xffgbZiuotWQLC6nIwa65Qv6byqlIX0q
+Zuu99Vsu+r3sWYsL5SBkgecNI7fMJ5tfHrjoxfrKl/ErTAt8GQIDAQABo4ICBTCCAgEwEgYD
+VR0TAQH/BAgwBgEB/wIBATAOBgNVHQ8BAf8EBAMCAQYwKQYDVR0gBCIwIDANBgsrBgEEAYGt
+IYIsHjAPBg0rBgEEAYGtIYIsAQEEMB0GA1UdDgQWBBTEiKUH7rh7qgwTv9opdGNSG0lwFjAf
+BgNVHSMEGDAWgBST49gyJtrV8UqlkUrg6kviogzP4TCBjwYDVR0fBIGHMIGEMECgPqA8hjpo
+dHRwOi8vY2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1Yi9jcmwvY2Fjcmwu
+Y3JsMECgPqA8hjpodHRwOi8vY2RwMi5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1
+Yi9jcmwvY2FjcmwuY3JsMIHdBggrBgEFBQcBAQSB0DCBzTAzBggrBgEFBQcwAYYnaHR0cDov
+L29jc3AucGNhLmRmbi5kZS9PQ1NQLVNlcnZlci9PQ1NQMEoGCCsGAQUFBzAChj5odHRwOi8v
+Y2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNy
+dDBKBggrBgEFBQcwAoY+aHR0cDovL2NkcDIucGNhLmRmbi5kZS9nbG9iYWwtcm9vdC1nMi1j
+YS9wdWIvY2FjZXJ0L2NhY2VydC5jcnQwDQYJKoZIhvcNAQELBQADggEBABLpeD5FygzqOjj+
+/lAOy20UQOGWlx0RMuPcI4nuyFT8SGmK9lD7QCg/HoaJlfU/r78ex+SEide326evlFAoJXIF
+jVyzNltDhpMKrPIDuh2N12zyn1EtagqPL6hu4pVRzcBpl/F2HCvtmMx5K4WN1L1fmHWLcSap
+dhXLvAZ9RG/B3rqyULLSNN8xHXYXpmtvG0VGJAndZ+lj+BH7uvd3nHWnXEHC2q7iQlDUqg0a
+wIqWJgdLlx1Q8Dg/sodv0m+LN0kOzGvVDRCmowBdWGhhusD+duKV66pBl+qhC+4LipariWaM
+qK5ppMQROATjYeNRvwI+nDcEXr2vDaKmdbxgDVwwggWvMIIEl6ADAgECAgweKlJIhfynPMVG
+/KIwDQYJKoZIhvcNAQELBQAwajELMAkGA1UEBhMCREUxDzANBgNVBAgMBkJheWVybjERMA8G
+A1UEBwwITXVlbmNoZW4xIDAeBgNVBAoMF01heC1QbGFuY2stR2VzZWxsc2NoYWZ0MRUwEwYD
+VQQDDAxNUEcgQ0EgLSBHMDIwHhcNMTcxMTE0MTEzNDE2WhcNMjAxMTEzMTEzNDE2WjCBizEL
+MAkGA1UEBhMCREUxIDAeBgNVBAoMF01heC1QbGFuY2stR2VzZWxsc2NoYWZ0MTQwMgYDVQQL
+DCtNYXgtUGxhbmNrLUluc3RpdHV0IGZ1ZXIgbW9sZWt1bGFyZSBHZW5ldGlrMQ4wDAYDVQQL
+DAVNUElNRzEUMBIGA1UEAwwLUGF1bCBNZW56ZWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
+ggEKAoIBAQDIh/UR/AX/YQ48VWWDMLTYtXjYJyhRHMc81ZHMMoaoG66lWB9MtKRTnB5lovLZ
+enTIUyPsCrMhTqV9CWzDf6v9gOTWVxHEYqrUwK5H1gx4XoK81nfV8oGV4EKuVmmikTXiztGz
+peyDmOY8o/EFNWP7YuRkY/lPQJQBeBHYq9AYIgX4StuXu83nusq4MDydygVOeZC15ts0tv3/
+6WmibmZd1OZRqxDOkoBbY3Djx6lERohs3IKS6RKiI7e90rCSy9rtidJBOvaQS9wvtOSKPx0a
++2pAgJEVzZFjOAfBcXydXtqXhcpOi2VCyl+7+LnnTz016JJLsCBuWEcB3kP9nJYNAgMBAAGj
+ggIxMIICLTAJBgNVHRMEAjAAMA4GA1UdDwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcD
+AgYIKwYBBQUHAwQwHQYDVR0OBBYEFHM0Mc3XjMLlhWpp4JufRELL4A/qMB8GA1UdIwQYMBaA
+FMSIpQfuuHuqDBO/2il0Y1IbSXAWMCAGA1UdEQQZMBeBFXBtZW56ZWxAbW9sZ2VuLm1wZy5k
+ZTB9BgNVHR8EdjB0MDigNqA0hjJodHRwOi8vY2RwMS5wY2EuZGZuLmRlL21wZy1nMi1jYS9w
+dWIvY3JsL2NhY3JsLmNybDA4oDagNIYyaHR0cDovL2NkcDIucGNhLmRmbi5kZS9tcGctZzIt
+Y2EvcHViL2NybC9jYWNybC5jcmwwgc0GCCsGAQUFBwEBBIHAMIG9MDMGCCsGAQUFBzABhido
+dHRwOi8vb2NzcC5wY2EuZGZuLmRlL09DU1AtU2VydmVyL09DU1AwQgYIKwYBBQUHMAKGNmh0
+dHA6Ly9jZHAxLnBjYS5kZm4uZGUvbXBnLWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNydDBC
+BggrBgEFBQcwAoY2aHR0cDovL2NkcDIucGNhLmRmbi5kZS9tcGctZzItY2EvcHViL2NhY2Vy
+dC9jYWNlcnQuY3J0MEAGA1UdIAQ5MDcwDwYNKwYBBAGBrSGCLAEBBDARBg8rBgEEAYGtIYIs
+AQEEAwYwEQYPKwYBBAGBrSGCLAIBBAMGMA0GCSqGSIb3DQEBCwUAA4IBAQCQs6bUDROpFO2F
+Qz2FMgrdb39VEo8P3DhmpqkaIMC5ZurGbbAL/tAR6lpe4af682nEOJ7VW86ilsIJgm1j0ueY
+aOuL8jrN4X7IF/8KdZnnNnImW3QVni6TCcc+7+ggci9JHtt0IDCj5vPJBpP/dKXLCN4M+exl
+GXYpfHgxh8gclJPY1rquhQrihCzHfKB01w9h9tWZDVMtSoy9EUJFhCXw7mYUsvBeJwZesN2B
+fndPkrXx6XWDdU3S1LyKgHlLIFtarLFm2Hb5zAUR33h+26cN6ohcGqGEEzgIG8tXS8gztEaj
+1s2RyzmKd4SXTkKR3GhkZNVWy+gM68J7jP6zzN+cMYIDmjCCA5YCAQEwejBqMQswCQYDVQQG
+EwJERTEPMA0GA1UECAwGQmF5ZXJuMREwDwYDVQQHDAhNdWVuY2hlbjEgMB4GA1UECgwXTWF4
+LVBsYW5jay1HZXNlbGxzY2hhZnQxFTATBgNVBAMMDE1QRyBDQSAtIEcwMgIMHipSSIX8pzzF
+RvyiMA0GCWCGSAFlAwQCAQUAoIIB8TAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqG
+SIb3DQEJBTEPFw0xOTA4MDYwOTIwMzhaMC8GCSqGSIb3DQEJBDEiBCD1UVHnZEQ60Rn8bO6r
+GHs7xbihu1uehA1eu8KFoM1RFzBsBgkqhkiG9w0BCQ8xXzBdMAsGCWCGSAFlAwQBKjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMCAgFAMAcG
+BSsOAwIHMA0GCCqGSIb3DQMCAgEoMIGJBgkrBgEEAYI3EAQxfDB6MGoxCzAJBgNVBAYTAkRF
+MQ8wDQYDVQQIDAZCYXllcm4xETAPBgNVBAcMCE11ZW5jaGVuMSAwHgYDVQQKDBdNYXgtUGxh
+bmNrLUdlc2VsbHNjaGFmdDEVMBMGA1UEAwwMTVBHIENBIC0gRzAyAgweKlJIhfynPMVG/KIw
+gYsGCyqGSIb3DQEJEAILMXygejBqMQswCQYDVQQGEwJERTEPMA0GA1UECAwGQmF5ZXJuMREw
+DwYDVQQHDAhNdWVuY2hlbjEgMB4GA1UECgwXTWF4LVBsYW5jay1HZXNlbGxzY2hhZnQxFTAT
+BgNVBAMMDE1QRyBDQSAtIEcwMgIMHipSSIX8pzzFRvyiMA0GCSqGSIb3DQEBAQUABIIBAIT1
+d49fy/8X0wKDuDM/3CuqQ5hkbfCTNJ90PAE7YMCTWJDGmtSkayp+WVSVeFhtC1Y5CZKPQ899
+RYwjmDiV0tj+glGpGQ30wTkdUitJ8vAZynPJ9W13388KHWfZt7LehOyHSU/SukeheLYJFAJo
+73lV6j+Mv8N6qMGN7T/pgMTvRIGk+qp52nNp/CDEeqDlg9r7GQdcqWccbHaX1dIzECyjXEaI
+Q570uSUXJ09GyyEpXPFD35d8q116wQKynRs8y7s4EyC4alG0YIYWgWXnrbQnGoM8WDXta4R2
+2b59q7d1CoxQmsUrm10qbCZt0an5aRuCfuAK/A9DD6H8EoQ1rJwAAAAAAAA=
+--------------ms030407030505030902090402--
