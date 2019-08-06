@@ -2,184 +2,270 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 794BB83DEF
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2019 01:44:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25D8B83E0C
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2019 01:52:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbfHFXom (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Aug 2019 19:44:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfHFXom (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 6 Aug 2019 19:44:42 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E57F7214C6;
-        Tue,  6 Aug 2019 23:44:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565135081;
-        bh=SOMBSaDc8nxdDI/az2lKZSoxOMnNPsmkpBZmMYOUojI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gw/NWCnHIe70JmgFGthWObyODCSyQBllFbs3c3PnI1E980XzvGktYm/v85YJkpfI2
-         2o13F61/KwT6B3Zj1o2ci7Y4InfNVb5TiZpt1crsv+hqtrF9hwym0f7OweZlosCnda
-         NVLprZCXXg1My2UaYv0tFUMbBqnG32Sjt0jDaN4s=
-Date:   Tue, 6 Aug 2019 18:44:39 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Jens Axboe <axboe@fb.com>, Keith Busch <kbusch@kernel.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Pilmore <epilmore@gigaio.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v2 00/14] PCI/P2PDMA: Support transactions that hit the
- host bridge
-Message-ID: <20190806234439.GW151852@google.com>
-References: <20190730163545.4915-1-logang@deltatee.com>
+        id S1726419AbfHFXwR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Aug 2019 19:52:17 -0400
+Received: from mail-eopbgr760105.outbound.protection.outlook.com ([40.107.76.105]:6036
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726085AbfHFXwR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 6 Aug 2019 19:52:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jkvaXponIbazxcyZ+pnXVHqwlFNF7nAjKaLwpe9IVa6sz8oM2sE37NXxERF/B3PHu19L6I4hck67a4pr+Fc9cxrIqMBAm3IPGdCbuxSSZ60Q0MvpiByOyyzxh72yPKwqjBe7sxDP+3mtjgDPaKoSim/DNkSMBp0Bq5afYQdQ+up9z+om6auNmpEgdnDMFvfffzfIt5kNXDCvxtwVNizEmdyEEWcXOvK18zR73h+N5tchTw+jc5T6LQNYv9tIplKrlQIWECroU9fzGBDkh7xHnhz8zSxAV9z8F7IOGEhqQibuP39G4WF9xWAF8sVPgr4INhMFOsFCD4UiQXb8qkehWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UdGooF6lqIGjaxd5CDiKNX8zauUOGDGtFj2redNTTHk=;
+ b=hyTlnl2WJ5GV+uDo5qklUKGlvcqheI/9toproHsoQOe3lC/Wh6i/NNvEDPZeHhq3Ym9DkFcBhQyvRIpNXtFEIO/A0hl0gZ6vXKZmIM9AqHtyiuhqI5RqwWYU6k1FL1E2QhEycebyDw/cCwAgkHFSdOh9i0zImfCQqWM2CIqOpIMyLF2zFqeSlpps9VB4lQivmsUJYLis3CSSSkSAwJvuUPaKd+K8iAouqm9aXEeOqY8JK7oTr2AQSQ+KcTfxLc81idxut0Pw23baTmkrPOGa2ue5juGkrlQ955EZXTMKv+OmXnhZ6zgbaUFEEKHiUVA4QSXV3BJ+nMt8RkbHfTWWyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UdGooF6lqIGjaxd5CDiKNX8zauUOGDGtFj2redNTTHk=;
+ b=Va9aDLWB+UkfoAOVm1fEQb3roC4BAKpBMdR85ZHIEFrawpeHDDOp+/YSbZJM5hYPrlyL7Y0EzgLPHxbdW9SxQVz1rKCkZPFGHhTnU/cOPyZSMulxOg/mQewO9dnpAQM3OgE+/oLCJVs8TXMPBed0vIELgLbPEsdhaZPbM3PvAO4=
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
+ DM6PR21MB1322.namprd21.prod.outlook.com (20.179.53.73) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.8; Tue, 6 Aug 2019 23:52:11 +0000
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::6055:de8a:48c1:4271]) by DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::6055:de8a:48c1:4271%5]) with mapi id 15.20.2157.001; Tue, 6 Aug 2019
+ 23:52:11 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     "sashal@kernel.org" <sashal@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Thread-Topic: [PATCH v2] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Thread-Index: AQHVTLH3GagQ2bG1NUyV/+P043l1Zw==
+Date:   Tue, 6 Aug 2019 23:52:11 +0000
+Message-ID: <1565135484-31351-1-git-send-email-haiyangz@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR0201CA0035.namprd02.prod.outlook.com
+ (2603:10b6:301:74::48) To DM6PR21MB1242.namprd21.prod.outlook.com
+ (2603:10b6:5:169::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 2
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 71584e17-55a7-40da-5269-08d71ac91987
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1322;
+x-ms-traffictypediagnostic: DM6PR21MB1322:|DM6PR21MB1322:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM6PR21MB13223876D2E65DC5CE5499C1ACD50@DM6PR21MB1322.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3044;
+x-forefront-prvs: 0121F24F22
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(376002)(366004)(39860400002)(136003)(199004)(189003)(4720700003)(66066001)(5660300002)(8676002)(476003)(7736002)(50226002)(486006)(66446008)(66556008)(305945005)(53936002)(186003)(36756003)(66476007)(2616005)(64756008)(99286004)(26005)(81156014)(316002)(386003)(6506007)(10290500003)(4326008)(102836004)(66946007)(478600001)(2906002)(6486002)(6116002)(3846002)(2501003)(52116002)(14444005)(14454004)(110136005)(256004)(6436002)(25786009)(22452003)(6392003)(54906003)(7846003)(68736007)(8936002)(2201001)(6512007)(10090500001)(71200400001)(81166006)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1322;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: DcPKfhxCDO5erbuAFjV9bEaqRK9RGCqYLDtvcUSwE6e5swVmcw+wcnkd6sG1wOjqwXNBqbrdosgz23xv4wiAu4op1NuprqBIsYacUewVDHlVx4AnB1mNXNVFF5iyzhnN5YHN90/A+Njmds/d/sbXb4jIRA0R/MzFzOvINUB9KrZWm4tzkWppYfNf1nL4HgRnN5RpuiAKthZ1sgBXpabh13owtdGAceWIbJHu5AFV9O4VFmUU+8pNrnxNv8r8QjZ0HX7qfe+r95UUGQS86RDcyfymsPs8XhwfdHLKEm4QjE6JWDvYg5ZQsp3lGCEfdmFZdNy5lZmWiASBMQkUpFYNW82S1CpUBsS5q5f4W05kR+cNyNVZcfklVVN1WrcgBZ22T/7dRBB5ikfroE6va7MjJ6xYrjsgQhfNulD5+BZDT18=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190730163545.4915-1-logang@deltatee.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71584e17-55a7-40da-5269-08d71ac91987
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2019 23:52:11.7220
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: i67uNrdCbs7LkM4nYyVld3tTtQt7EQU77ZgC4yKVQ/Sn8zRZbVEGgK9OlCk5hsP5FYp1iz2jK+t8nLfTes5xpQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1322
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 10:35:31AM -0600, Logan Gunthorpe wrote:
-> Here's v2 of the patchset. It doesn't sound like there's anything
-> terribly controversial here so this version is mostly just some
-> cleanup changes for clarity.
-> 
-> Changes in v2:
->  * Rebase on v5.3-rc2 (No changes)
->  * Re-introduce the private pagemap structure and move the p2p-specific
->    elements out of the commond dev_pagemap (per Christoph)
->  * Use flags instead of bool in the whitelist (per Jason)
->  * Only store the mapping type in the xarray (instead of the distance
->    with flags) such that a function can return the mapping method
->    with a switch statement to decide how to map. (per Christoph)
->  * Drop find_parent_pci_dev() on the fast path and rely on the fact
->    that the struct device passed to the mapping functions *must* be
->    a PCI device and convert it directly. (per suggestions from
->    Christoph and Jason)
->  * Collected Christian's Reviewed-by's
-> --
-> 
-> As discussed on the list previously, in order to fully support the
-> whitelist Christian added with the IOMMU, we must ensure that we
-> map any buffer going through the IOMMU with an aprropriate dma_map
-> call. This patchset accomplishes this by cleaning up the output of
-> upstream_bridge_distance() to better indicate the mapping requirements,
-> caching these requirements in an xarray, then looking them up at map
-> time and applying the appropriate mapping method.
-> 
-> After this patchset, it's possible to use the NVMe-of P2P support to
-> transfer between devices without a switch on the whitelisted root
-> complexes. A couple Intel device I have tested this on have also
-> been added to the white list.
-> 
-> Most of the changes are contained within the p2pdma.c, but there are
-> a few minor touches to other subsystems, mostly to add support
-> to call an unmap function.
-> 
-> The final patch in this series demonstrates a possible
-> pci_p2pdma_map_resource() function that I expect Christian will need
-> but does not have any users at this time so I don't intend for it to be
-> considered for merging.
+Currently in Azure cloud, for passthrough devices including GPU, the
+host sets the device instance ID's bytes 8 - 15 to a value derived from
+the host HWID, which is the same on all devices in a VM. So, the device
+instance ID's bytes 8 and 9 provided by the host are no longer unique.
 
-I don't see pci_p2pdma_map_resource() in any of these patches.
+This can cause device passthrough to VMs to fail because the bytes 8 and
+9 is used as PCI domain number. So, as recommended by Azure host team,
+we now use the bytes 4 and 5 which usually contain unique numbers as PCI
+domain. The chance of collision is greatly reduced. In the rare cases of
+collision, we will detect and find another number that is not in use.
 
-I tentatively applied these to pci/p2pdma with minor typographical
-updates (below), but I'll update the branch if necessary.
+Thanks to Michael Kelley <mikelley@microsoft.com> for proposing this idea.
 
-> This patchset is based on 5.3-rc2 and a git branch is available here:
-> 
-> https://github.com/sbates130272/linux-p2pmem/ p2pdma_rc_map_v2
-> 
-> --
-> 
-> Logan Gunthorpe (14):
->   PCI/P2PDMA: Introduce private pagemap structure
->   PCI/P2PDMA: Add the provider's pci_dev to the pci_p2pdma_pagemap
->     struct
->   PCI/P2PDMA: Add constants for not-supported result
->     upstream_bridge_distance()
->   PCI/P2PDMA: Factor out __upstream_bridge_distance()
->   PCI/P2PDMA: Apply host bridge white list for ACS
->   PCI/P2PDMA: Factor out host_bridge_whitelist()
->   PCI/P2PDMA: Add whitelist support for Intel Host Bridges
->   PCI/P2PDMA: Add attrs argument to pci_p2pdma_map_sg()
->   PCI/P2PDMA: Introduce pci_p2pdma_unmap_sg()
->   PCI/P2PDMA: Factor out __pci_p2pdma_map_sg()
->   PCI/P2PDMA: Store mapping method in an xarray
->   PCI/P2PDMA: dma_map P2PDMA map requests that traverse the host bridge
->   PCI/P2PDMA: No longer require no-mmu for host bridge whitelist
->   PCI/P2PDMA: Update documentation for pci_p2pdma_distance_many()
-> 
->  drivers/infiniband/core/rw.c |   6 +-
->  drivers/nvme/host/pci.c      |  10 +-
->  drivers/pci/p2pdma.c         | 361 +++++++++++++++++++++++++----------
->  include/linux/memremap.h     |   1 -
->  include/linux/pci-p2pdma.h   |  28 ++-
->  5 files changed, 296 insertions(+), 110 deletions(-)
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Acked-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/controller/pci-hyperv.c | 92 +++++++++++++++++++++++++++++++--=
+----
+ 1 file changed, 79 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index ac6b599a10ef..afa42512e604 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -442,17 +442,17 @@ static int map_types_idx(struct pci_dev *client)
-  * port of the switch, to the common upstream port, back up to the second
-  * downstream port and then to Device B.
-  *
-- * Any two devices that cannot communicate using p2pdma will return the distance
-- * with the flag P2PDMA_NOT_SUPPORTED.
-+ * Any two devices that cannot communicate using p2pdma will return the
-+ * distance with the flag P2PDMA_NOT_SUPPORTED.
-  *
-  * Any two devices that have a data path that goes through the host bridge
-  * will consult a whitelist. If the host bridges are on the whitelist,
-- * then the distance will be returned with the flag P2PDMA_THRU_HOST_BRIDGE set.
-+ * the distance will be returned with the flag P2PDMA_THRU_HOST_BRIDGE set.
-  * If either bridge is not on the whitelist, the flag P2PDMA_NOT_SUPPORTED will
-  * be set.
-  *
-  * If a bridge which has any ACS redirection bits set is in the path
-- * then this functions will flag the result with P2PDMA_ACS_FORCES_UPSTREAM.
-+ * this function will flag the result with P2PDMA_ACS_FORCES_UPSTREAM.
-  * In this case, a list of all infringing bridge addresses will be
-  * populated in acs_list (assuming it's non-null) for printk purposes.
-  */
-@@ -529,8 +529,8 @@ static int upstream_bridge_distance_warn(struct pci_dev *provider,
-  * choice).
-  *
-  * "compatible" means the provider and the clients are either all behind
-- * the same PCI root port or the host bridge connected to each of the devices
-- * are is listed in the 'pci_p2pdma_whitelist'.
-+ * the same PCI root port or the host bridges connected to each of the devices
-+ * are listed in the 'pci_p2pdma_whitelist'.
-  */
- int pci_p2pdma_distance_many(struct pci_dev *provider, struct device **clients,
- 			     int num_clients, bool verbose)
-@@ -850,7 +850,7 @@ static int __pci_p2pdma_map_sg(struct pci_p2pdma_pagemap *p2p_pgmap,
-  * @sg: scatter list to map
-  * @nents: elements in the scatterlist
-  * @dir: DMA direction
-- * @attrs: dma attributes passed to dma_map_sg() (if called)
-+ * @attrs: DMA attributes passed to dma_map_sg() (if called)
-  *
-  * Scatterlists mapped with this function should be unmapped using
-  * pci_p2pdma_unmap_sg_attrs().
-@@ -888,7 +888,7 @@ EXPORT_SYMBOL_GPL(pci_p2pdma_map_sg_attrs);
-  * @sg: scatter list to map
-  * @nents: number of elements returned by pci_p2pdma_map_sg()
-  * @dir: DMA direction
-- * @attrs: dma attributes passed to dma_unmap_sg() (if called)
-+ * @attrs: DMA attributes passed to dma_unmap_sg() (if called)
-  */
- void pci_p2pdma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
- 		int nents, enum dma_data_direction dir, unsigned long attrs)
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/p=
+ci-hyperv.c
+index 40b6254..4f3d97e 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2510,6 +2510,48 @@ static void put_hvpcibus(struct hv_pcibus_device *hb=
+us)
+ 		complete(&hbus->remove_event);
+ }
+=20
++#define HVPCI_DOM_MAP_SIZE (64 * 1024)
++static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
++
++/*
++ * PCI domain number 0 is used by emulated devices on Gen1 VMs, so define =
+0
++ * as invalid for passthrough PCI devices of this driver.
++ */
++#define HVPCI_DOM_INVALID 0
++
++/**
++ * hv_get_dom_num() - Get a valid PCI domain number
++ * Check if the PCI domain number is in use, and return another number if
++ * it is in use.
++ *
++ * @dom: Requested domain number
++ *
++ * return: domain number on success, HVPCI_DOM_INVALID on failure
++ */
++static u16 hv_get_dom_num(u16 dom)
++{
++	unsigned int i;
++
++	if (test_and_set_bit(dom, hvpci_dom_map) =3D=3D 0)
++		return dom;
++
++	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
++		if (test_and_set_bit(i, hvpci_dom_map) =3D=3D 0)
++			return i;
++	}
++
++	return HVPCI_DOM_INVALID;
++}
++
++/**
++ * hv_put_dom_num() - Mark the PCI domain number as free
++ * @dom: Domain number to be freed
++ */
++static void hv_put_dom_num(u16 dom)
++{
++	clear_bit(dom, hvpci_dom_map);
++}
++
+ /**
+  * hv_pci_probe() - New VMBus channel probe, for a root PCI bus
+  * @hdev:	VMBus's tracking struct for this root PCI bus
+@@ -2521,6 +2563,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 			const struct hv_vmbus_device_id *dev_id)
+ {
+ 	struct hv_pcibus_device *hbus;
++	u16 dom_req, dom;
+ 	int ret;
+=20
+ 	/*
+@@ -2535,19 +2578,34 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	hbus->state =3D hv_pcibus_init;
+=20
+ 	/*
+-	 * The PCI bus "domain" is what is called "segment" in ACPI and
+-	 * other specs.  Pull it from the instance ID, to get something
+-	 * unique.  Bytes 8 and 9 are what is used in Windows guests, so
+-	 * do the same thing for consistency.  Note that, since this code
+-	 * only runs in a Hyper-V VM, Hyper-V can (and does) guarantee
+-	 * that (1) the only domain in use for something that looks like
+-	 * a physical PCI bus (which is actually emulated by the
+-	 * hypervisor) is domain 0 and (2) there will be no overlap
+-	 * between domains derived from these instance IDs in the same
+-	 * VM.
++	 * The PCI bus "domain" is what is called "segment" in ACPI and other
++	 * specs. Pull it from the instance ID, to get something usually
++	 * unique. In rare cases of collision, we will find out another number
++	 * not in use.
++	 *
++	 * Note that, since this code only runs in a Hyper-V VM, Hyper-V
++	 * together with this guest driver can guarantee that (1) The only
++	 * domain used by Gen1 VMs for something that looks like a physical
++	 * PCI bus (which is actually emulated by the hypervisor) is domain 0.
++	 * (2) There will be no overlap between domains (after fixing possible
++	 * collisions) in the same VM.
+ 	 */
+-	hbus->sysdata.domain =3D hdev->dev_instance.b[9] |
+-			       hdev->dev_instance.b[8] << 8;
++	dom_req =3D hdev->dev_instance.b[5] << 8 | hdev->dev_instance.b[4];
++	dom =3D hv_get_dom_num(dom_req);
++
++	if (dom =3D=3D HVPCI_DOM_INVALID) {
++		dev_err(&hdev->device,
++			"Unable to use dom# 0x%hx or other numbers", dom_req);
++		ret =3D -EINVAL;
++		goto free_bus;
++	}
++
++	if (dom !=3D dom_req)
++		dev_info(&hdev->device,
++			 "PCI dom# 0x%hx has collision, using 0x%hx",
++			 dom_req, dom);
++
++	hbus->sysdata.domain =3D dom;
+=20
+ 	hbus->hdev =3D hdev;
+ 	refcount_set(&hbus->remove_lock, 1);
+@@ -2562,7 +2620,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 					   hbus->sysdata.domain);
+ 	if (!hbus->wq) {
+ 		ret =3D -ENOMEM;
+-		goto free_bus;
++		goto free_dom;
+ 	}
+=20
+ 	ret =3D vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
+@@ -2639,6 +2697,8 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	vmbus_close(hdev->channel);
+ destroy_wq:
+ 	destroy_workqueue(hbus->wq);
++free_dom:
++	hv_put_dom_num(hbus->sysdata.domain);
+ free_bus:
+ 	free_page((unsigned long)hbus);
+ 	return ret;
+@@ -2720,6 +2780,9 @@ static int hv_pci_remove(struct hv_device *hdev)
+ 	put_hvpcibus(hbus);
+ 	wait_for_completion(&hbus->remove_event);
+ 	destroy_workqueue(hbus->wq);
++
++	hv_put_dom_num(hbus->sysdata.domain);
++
+ 	free_page((unsigned long)hbus);
+ 	return 0;
+ }
+@@ -2747,6 +2810,9 @@ static void __exit exit_hv_pci_drv(void)
+=20
+ static int __init init_hv_pci_drv(void)
+ {
++	/* Set the invalid domain number's bit, so it will not be used */
++	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
++
+ 	return vmbus_driver_register(&hv_pci_drv);
+ }
+=20
+--=20
+1.8.3.1
+
