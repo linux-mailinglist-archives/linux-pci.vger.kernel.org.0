@@ -2,62 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D26E84BDA
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2019 14:43:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2FB684CCD
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2019 15:21:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729956AbfHGMnF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Aug 2019 08:43:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52562 "EHLO mail.kernel.org"
+        id S2388172AbfHGNVn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Aug 2019 09:21:43 -0400
+Received: from shell.v3.sk ([90.176.6.54]:42164 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727171AbfHGMnF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Aug 2019 08:43:05 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 820C821E6A;
-        Wed,  7 Aug 2019 12:43:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565181783;
-        bh=DSOqHZKzfxJCZQfOS8mvVgo1QbtlO3rC0sbZdySkgik=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QhtpjOYeSpO9C1DJpFn99mKnBiMif6GrpQHf6lp9Pdd4gFfXvvrZHGDpYLqD9+J5Z
-         mDscs4/7yqUvRNrD3ene0kDil0UPhZNmqa5Yfc0wvno1BiDoJQJR/K1/9+BL5D9GTC
-         BUHo3tTuGvyKWOoP4kgc+ImwkG0E4+bjNllLpA7o=
-Date:   Wed, 7 Aug 2019 07:43:01 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Sagi Grimberg <sagi@grimberg.me>, linux-rdma@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Jens Axboe <axboe@fb.com>, Keith Busch <kbusch@kernel.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Pilmore <epilmore@gigaio.com>
-Subject: Re: [PATCH v2 13/14] PCI/P2PDMA: No longer require no-mmu for host
- bridge whitelist
-Message-ID: <20190807124259.GX151852@google.com>
-References: <20190730163545.4915-1-logang@deltatee.com>
- <20190730163545.4915-14-logang@deltatee.com>
- <20190807055958.GC6627@lst.de>
+        id S2388059AbfHGNVn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Aug 2019 09:21:43 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 2C065CE936;
+        Wed,  7 Aug 2019 15:21:28 +0200 (CEST)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id SzZ9YSBTi9mQ; Wed,  7 Aug 2019 15:21:20 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id F35F1CE949;
+        Wed,  7 Aug 2019 15:21:19 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id eCep9nSFWp-x; Wed,  7 Aug 2019 15:21:19 +0200 (CEST)
+Received: from furthur.local (ip-37-188-233-8.eurotel.cz [37.188.233.8])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 5387BCE936;
+        Wed,  7 Aug 2019 15:21:11 +0200 (CEST)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Jiri Kosina <trivial@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH] PCI: OF: fix a trivial typo in a doc comment
+Date:   Wed,  7 Aug 2019 15:20:49 +0200
+Message-Id: <20190807132049.10304-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190807055958.GC6627@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 07:59:58AM +0200, Christoph Hellwig wrote:
-> no-mmu sounds stange, as we use that for linux ports without paging
-> hardware.  I think an "io" got lost somewhere..
+Diverged from what the code does with commit 530210c7814e ("of/irq: Repla=
+ce
+of_irq with of_phandle_args").
 
-I had already changed the subject to
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ drivers/pci/of.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  PCI/P2PDMA: Allow IOMMU for host bridge whitelist
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index bc7b27a28795d..36891e7deee34 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -353,7 +353,7 @@ EXPORT_SYMBOL_GPL(devm_of_pci_get_host_bridge_resourc=
+es);
+ /**
+  * of_irq_parse_pci - Resolve the interrupt for a PCI device
+  * @pdev:       the device whose interrupt is to be resolved
+- * @out_irq:    structure of_irq filled by this function
++ * @out_irq:    structure of_phandle_args filled by this function
+  *
+  * This function resolves the PCI interrupt for a given PCI device. If a
+  * device-node exists for a given pci_dev, it will use normal OF tree
+--=20
+2.21.0
 
-but certainly open to better suggestions.
