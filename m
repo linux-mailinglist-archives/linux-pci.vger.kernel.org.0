@@ -2,67 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 954FE85398
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2019 21:30:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2177885585
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2019 00:08:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730560AbfHGT3W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Aug 2019 15:29:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36664 "EHLO mail.kernel.org"
+        id S1729934AbfHGWIk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Aug 2019 18:08:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730407AbfHGT3W (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Aug 2019 15:29:22 -0400
+        id S1727213AbfHGWIj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Aug 2019 18:08:39 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66D2D2086D;
-        Wed,  7 Aug 2019 19:29:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7257021872;
+        Wed,  7 Aug 2019 22:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565206161;
-        bh=yXgPGJFs+0VUo2NWm5PbQV6rtXGmgZ7WNLD2jaMJULA=;
+        s=default; t=1565215718;
+        bh=Anq0fyzHSpNvpzissPJGid5WBnHTC6apYNeaT7/QbSo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dsHOLQIqia0vm7jEQwRvEfaIJiT4oNspPc3C3XhOQkCr/aELbAHdwvZ58J3aP8C6n
-         FhNN6PBh/8gfW37xhCWtyvdJfkM02m1cZ4TO7+L840PtPLMickXdOYayXWcHaI2JIp
-         6rVgsht/L1OyTZ46I85rFiLdIOS4uF5UPd4w+0PQ=
-Date:   Wed, 7 Aug 2019 14:29:19 -0500
+        b=Z48flQZqTjJaDYD05Ot7rpnOYeugqEJHgGY4XFE3IO059jgqSn5smN/EywZdfTVMs
+         95zjsbsMzzwvJ+g8xBwap1ChAgu2CCvyplWosfaT/+gtusd69kWVbk08gnqT6F/Eef
+         MD29vTCgdlJYft00UMFW6aUKhb3KhFfsuZoJyyGQ=
+Date:   Wed, 7 Aug 2019 17:08:37 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Jens Axboe <axboe@fb.com>, Keith Busch <kbusch@kernel.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Pilmore <epilmore@gigaio.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v2 00/14] PCI/P2PDMA: Support transactions that hit the
- host bridge
-Message-ID: <20190807192919.GY151852@google.com>
-References: <20190730163545.4915-1-logang@deltatee.com>
- <20190806234439.GW151852@google.com>
- <e31f13f8-5afd-6f38-a206-163e9f77c91a@deltatee.com>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mans Rullgard <mans@mansr.com>, Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v6 31/57] pci: Remove dev_err() usage after
+ platform_get_irq()
+Message-ID: <20190807220837.GZ151852@google.com>
+References: <20190730181557.90391-1-swboyd@chromium.org>
+ <20190730181557.90391-32-swboyd@chromium.org>
+ <20190730215626.GA151852@google.com>
+ <fece42c0-f511-173a-b16a-5b1f3a1c1a4e@free.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e31f13f8-5afd-6f38-a206-163e9f77c91a@deltatee.com>
+In-Reply-To: <fece42c0-f511-173a-b16a-5b1f3a1c1a4e@free.fr>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 06:31:07PM -0600, Logan Gunthorpe wrote:
-> On 2019-08-06 5:44 p.m., Bjorn Helgaas wrote:
-
-> > I tentatively applied these to pci/p2pdma with minor typographical
-> > updates (below), but I'll update the branch if necessary.
+On Wed, Aug 07, 2019 at 04:09:10PM +0200, Marc Gonzalez wrote:
+> On 30/07/2019 23:56, Bjorn Helgaas wrote:
 > 
-> Great, thanks! The typographical changes look good.
+> >> diff --git a/drivers/pci/controller/pcie-tango.c b/drivers/pci/controller/pcie-tango.c
+> >> index 21a208da3f59..b87aa9041480 100644
+> >> --- a/drivers/pci/controller/pcie-tango.c
+> >> +++ b/drivers/pci/controller/pcie-tango.c
+> >> @@ -273,10 +273,8 @@ static int tango_pcie_probe(struct platform_device *pdev)
+> >>  		writel_relaxed(0, pcie->base + SMP8759_ENABLE + offset);
+> >>  
+> >>  	virq = platform_get_irq(pdev, 1);
+> >> -	if (virq <= 0) {
+> >> -		dev_err(dev, "Failed to map IRQ\n");
+> >> +	if (virq <= 0)
+> >>  		return -ENXIO;
+> >
+> > Why <= 0 and -ENXIO?
 > 
-> I already have one very minor change queued up for these. Should I just
-> send you a small patch against your branch for you to squash?
+> Smirk. I remember discussing this in the past...
+> Here it is:
+> 
+> 	https://patchwork.kernel.org/patch/10006651/
 
-Yes, an incremental patch against my branch would be nice.
+Sigh, what a mess.  I did say in that discussion that it wasn't worth
+changing existing "irq <= 0" tests.  I can't remember why I said that,
+but I think I was wrong.
+
+platform_get_irq() is a generic interface and we have to be able to
+interpret return values consistently.  The overwhelming consensus
+among platform_get_irq() callers is to treat "irq < 0" as an error,
+and I think we should follow suit.
+
+> A) AFAIU platform_get_irq() = 0 signals an error.
+> 
+> 	https://yarchive.net/comp/linux/zero.html
+> 	https://lkml.org/lkml/2016/2/9/212
+> 	https://patchwork.ozlabs.org/patch/486056/
+> 
+> B) I don't remember why I picked ENXIO.
+> Perhaps it made more sense to me (at the time) than EINVAL or ENODEV.
+
+I think the best pattern is:
+
+  irq = platform_get_irq(pdev, i);
+  if (irq < 0)
+    return irq;
+
+There's not an overwhelming consensus on whether to return the result
+of platform_get_irq() or a hard-coded -ENXIO/-EINVAL/-ENODEV etc, but
+why throw away information?
 
 Bjorn
