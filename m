@@ -2,104 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2177885585
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2019 00:08:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E400585642
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2019 01:01:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729934AbfHGWIk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Aug 2019 18:08:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45212 "EHLO mail.kernel.org"
+        id S1730302AbfHGXBy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Aug 2019 19:01:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727213AbfHGWIj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Aug 2019 18:08:39 -0400
+        id S1729960AbfHGXBy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Aug 2019 19:01:54 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7257021872;
-        Wed,  7 Aug 2019 22:08:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B4882171F;
+        Wed,  7 Aug 2019 23:01:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565215718;
-        bh=Anq0fyzHSpNvpzissPJGid5WBnHTC6apYNeaT7/QbSo=;
+        s=default; t=1565218913;
+        bh=880CjrWqcw/b0n8e8loUwkiYFlbtOJVJsxG1uGHV1Ps=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z48flQZqTjJaDYD05Ot7rpnOYeugqEJHgGY4XFE3IO059jgqSn5smN/EywZdfTVMs
-         95zjsbsMzzwvJ+g8xBwap1ChAgu2CCvyplWosfaT/+gtusd69kWVbk08gnqT6F/Eef
-         MD29vTCgdlJYft00UMFW6aUKhb3KhFfsuZoJyyGQ=
-Date:   Wed, 7 Aug 2019 17:08:37 -0500
+        b=BbLvpPEMmpazhnJCMsxKGQMri/b6UwTY2G01eANjdrk1kgPgQjO5BcVdhwrMtdD8Q
+         ZqpwBCoCCS3SkcIdXzMH9Sk8xyumGYznOE02Oaq9WTjmtRmkG6n2jHH4feWHLT9Vie
+         YPBkPOIdMFQ79/+nv6Zs9xYpheC8VcJcyAN7zlnw=
+Date:   Wed, 7 Aug 2019 18:01:49 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mans Rullgard <mans@mansr.com>, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v6 31/57] pci: Remove dev_err() usage after
- platform_get_irq()
-Message-ID: <20190807220837.GZ151852@google.com>
-References: <20190730181557.90391-1-swboyd@chromium.org>
- <20190730181557.90391-32-swboyd@chromium.org>
- <20190730215626.GA151852@google.com>
- <fece42c0-f511-173a-b16a-5b1f3a1c1a4e@free.fr>
+To:     Sumit Saxena <sumit.saxena@broadcom.com>
+Cc:     Christian.Koenig@amd.com, linux-pci@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH V2] PCI: set BAR size bits correctly in Resize BAR
+ control register
+Message-ID: <20190807230149.GA151852@google.com>
+References: <20190725192552.24295-1-sumit.saxena@broadcom.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fece42c0-f511-173a-b16a-5b1f3a1c1a4e@free.fr>
+In-Reply-To: <20190725192552.24295-1-sumit.saxena@broadcom.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 04:09:10PM +0200, Marc Gonzalez wrote:
-> On 30/07/2019 23:56, Bjorn Helgaas wrote:
+On Fri, Jul 26, 2019 at 12:55:52AM +0530, Sumit Saxena wrote:
+> In Resize BAR control register, bits[8:12] represents size of BAR.
+> As per PCIe specification, below is encoded values in register bits
+> to actual BAR size table:
 > 
-> >> diff --git a/drivers/pci/controller/pcie-tango.c b/drivers/pci/controller/pcie-tango.c
-> >> index 21a208da3f59..b87aa9041480 100644
-> >> --- a/drivers/pci/controller/pcie-tango.c
-> >> +++ b/drivers/pci/controller/pcie-tango.c
-> >> @@ -273,10 +273,8 @@ static int tango_pcie_probe(struct platform_device *pdev)
-> >>  		writel_relaxed(0, pcie->base + SMP8759_ENABLE + offset);
-> >>  
-> >>  	virq = platform_get_irq(pdev, 1);
-> >> -	if (virq <= 0) {
-> >> -		dev_err(dev, "Failed to map IRQ\n");
-> >> +	if (virq <= 0)
-> >>  		return -ENXIO;
-> >
-> > Why <= 0 and -ENXIO?
+> Bits  BAR size
+> 0     1 MB
+> 1     2 MB
+> 2     4 MB
+> 3     8 MB
+> --
 > 
-> Smirk. I remember discussing this in the past...
-> Here it is:
+> For 1 MB BAR size, BAR size bits should be set to 0 but incorrectly
+> these bits are set to "1f". Latest megaraid_sas and mpt3sas adapters
+> which support Resizable BAR with 1 MB BAR size fails to initialize
+> during system resume from S3 sleep.
 > 
-> 	https://patchwork.kernel.org/patch/10006651/
-
-Sigh, what a mess.  I did say in that discussion that it wasn't worth
-changing existing "irq <= 0" tests.  I can't remember why I said that,
-but I think I was wrong.
-
-platform_get_irq() is a generic interface and we have to be able to
-interpret return values consistently.  The overwhelming consensus
-among platform_get_irq() callers is to treat "irq < 0" as an error,
-and I think we should follow suit.
-
-> A) AFAIU platform_get_irq() = 0 signals an error.
+> Fix: Correctly calculate BAR size bits for Resize BAR control register.
 > 
-> 	https://yarchive.net/comp/linux/zero.html
-> 	https://lkml.org/lkml/2016/2/9/212
-> 	https://patchwork.ozlabs.org/patch/486056/
+> V2:
+> -Simplified calculation of BAR size bits as suggested by Christian Koenig.
 > 
-> B) I don't remember why I picked ENXIO.
-> Perhaps it made more sense to me (at the time) than EINVAL or ENODEV.
+> CC: stable@vger.kernel.org # v4.16+
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203939
+> Fixes: d3252ace0bc652a1a244455556b6a549f969bf99 ("PCI: Restore resized BAR state on resume")
+> Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
+> ---
+>  drivers/pci/pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 29ed5ec1ac27..e59921296125 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1438,7 +1438,7 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
+>  		pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
+>  		bar_idx = ctrl & PCI_REBAR_CTRL_BAR_IDX;
+>  		res = pdev->resource + bar_idx;
+> -		size = order_base_2((resource_size(res) >> 20) | 1) - 1;
+> +		size = order_base_2(resource_size(res) >> 20);
 
-I think the best pattern is:
+Since BAR sizes are always powers of 2, wouldn't this be simpler as:
 
-  irq = platform_get_irq(pdev, i);
-  if (irq < 0)
-    return irq;
+		size = ilog2(resource_size(res)) - 20;
 
-There's not an overwhelming consensus on whether to return the result
-of platform_get_irq() or a hard-coded -ENXIO/-EINVAL/-ENODEV etc, but
-why throw away information?
+which nicely matches the table in PCIe r5.0, sec 7.8.6.3?
 
-Bjorn
+>  		ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
+>  		ctrl |= size << PCI_REBAR_CTRL_BAR_SHIFT;
+>  		pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
+> -- 
+> 2.18.1
+> 
