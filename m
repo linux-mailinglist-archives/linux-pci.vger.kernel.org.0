@@ -2,137 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AD5768566F
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2019 01:27:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB9C9856A6
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2019 01:51:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730045AbfHGX1r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Aug 2019 19:27:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729219AbfHGX1r (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Aug 2019 19:27:47 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C38D12173C;
-        Wed,  7 Aug 2019 23:27:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565220466;
-        bh=XCXgTdN4l1SLnhB7m2E4SEJSLH6Aasvuj4OOsILEFbA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ki5fUYeYmrz4xUXD17aRqXXZCTYJhyTQqgh45613Lj9jjExkXve8w9bORqrIz3gMn
-         KwDFicBiTEdOEnTu7sCveC/oPlOIviAhy41s74anG4mu5gFSdACYuW+u4UibsmF9lK
-         cdTgHILs9jYCDWPmm75hoEObxUu4LMc4/rM83EFM=
-Date:   Wed, 7 Aug 2019 18:27:44 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sumit Saxena <sumit.saxena@broadcom.com>
-Cc:     Christian.Koenig@amd.com, linux-pci@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH V2] PCI: set BAR size bits correctly in Resize BAR
- control register
-Message-ID: <20190807232744.GC151852@google.com>
-References: <20190725192552.24295-1-sumit.saxena@broadcom.com>
+        id S2388911AbfHGXvN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Aug 2019 19:51:13 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33603 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388123AbfHGXvN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Aug 2019 19:51:13 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n9so93153309wru.0;
+        Wed, 07 Aug 2019 16:51:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=81W60zVYjF0WkGNMIxtxV/QpHZxdSDjYkRGFZyoC9NQ=;
+        b=hhTHm5Nw3iub40WKb4H1rqVluoBt3pHck0QiywNeJGfgGNfnNjbzVrBPozkC5g8j9g
+         8aab+mE+4ulrI+yy3QFobs6H3wCMogQfTTEjQ5LK3wee/MLE5uYV9hg9P3EWlEO24S4A
+         GGcRJ0l3FkefLaW5R2D6+IUs60CB3RRjd630LA8qt65E0pXuyLQuHc03dYbuendzW8it
+         7nEsYz/9xvm9+lK46TAYUqXDRS06we3dkaQ4lBBiwYFZJ6UCQRLZ6KAyHmrnHas1Yv09
+         Fsrqehj9A5Sp6lSVWLuV7I3FdqXigC8Jlton0NbJR+TCmrH+wznz/IqijdnDjUtkTRZ5
+         s6aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=81W60zVYjF0WkGNMIxtxV/QpHZxdSDjYkRGFZyoC9NQ=;
+        b=LKpF5+OiYEksh0PzBiWhy7Q1YNJ4NDKSKTUKT7gNlVSHI8hph8oLR9dU06xGQgQM1w
+         t0drqBh0ZUkrio4CxDhmsVfs2nxI2z/YqYE+Wr/u9vuBFuhZBwUQnLBkiuKWOk4NRzMN
+         Ud16RCNUsRS/usoAS03J7mUAQg2EZgf2/H6wXY27CNqyCZuncmnEzSgQSHKV2jLmO9bv
+         1oFGSyR6NEd9a11C8Ou4U3LM++6tteTlXhTBa0XmueQAUY53Xw91j0YZyKPM9OEVEr7w
+         6nDVTVW7tkfTvENZqB2y8+soGujoKx5SGRC4LJu89pHBwowfyI6RkYZMV2xlkuEuueTV
+         383w==
+X-Gm-Message-State: APjAAAX7oRodd1yh/CXhAjj92nTqVKybRtVWCm5tBMoTtSWfzCgPNffW
+        6YfOa0BiMRsHns5A1Fr7HgSH8brNicnipIN3T8Q=
+X-Google-Smtp-Source: APXvYqwt7F5BkB58H5wD984WMZT43ugAcQRwg0VeBjol0Scsm8pOYOWjbYcauyyRwVif41pglTfX8hitoIVSFX1lIAs=
+X-Received: by 2002:adf:f088:: with SMTP id n8mr13084998wro.58.1565221870134;
+ Wed, 07 Aug 2019 16:51:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725192552.24295-1-sumit.saxena@broadcom.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190805011906.5020-1-ming.lei@redhat.com>
+In-Reply-To: <20190805011906.5020-1-ming.lei@redhat.com>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Thu, 8 Aug 2019 07:50:59 +0800
+Message-ID: <CACVXFVNn9wu2sU=47csi+stvzN0TnOV4E8xBHYknxo9uDksMuQ@mail.gmail.com>
+Subject: Re: [PATCH] genirq/affinity: create affinity mask for single vector
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Jens Axboe <axboe@kernel.dk>,
+        Keith Busch <keith.busch@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org,
+        Shivasharan Srikanteshwara 
+        <shivasharan.srikanteshwara@broadcom.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 12:55:52AM +0530, Sumit Saxena wrote:
-> In Resize BAR control register, bits[8:12] represents size of BAR.
-> As per PCIe specification, below is encoded values in register bits
-> to actual BAR size table:
-> 
-> Bits  BAR size
-> 0     1 MB
-> 1     2 MB
-> 2     4 MB
-> 3     8 MB
-> --
-> 
-> For 1 MB BAR size, BAR size bits should be set to 0 but incorrectly
-> these bits are set to "1f". Latest megaraid_sas and mpt3sas adapters
-> which support Resizable BAR with 1 MB BAR size fails to initialize
-> during system resume from S3 sleep.
-> 
-> Fix: Correctly calculate BAR size bits for Resize BAR control register.
-> 
-> V2:
-> -Simplified calculation of BAR size bits as suggested by Christian Koenig.
-> 
-> CC: stable@vger.kernel.org # v4.16+
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203939
-> Fixes: d3252ace0bc652a1a244455556b6a549f969bf99 ("PCI: Restore resized BAR state on resume")
-> Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Hello Thomas and Guys,
 
-I applied this to pci/misc for v5.4 with the tweaks I mentioned (see
-below).
-
-Christian, I didn't add your Reviewed-by since I changed the patch,
-but I'll be glad to update the branch if you take another look.
-
+On Mon, Aug 5, 2019 at 9:19 AM Ming Lei <ming.lei@redhat.com> wrote:
+>
+> Since commit c66d4bd110a1f8 ("genirq/affinity: Add new callback for
+> (re)calculating interrupt sets"), irq_create_affinity_masks() returns
+> NULL in case of single vector. This change has caused regression on some
+> drivers, such as lpfc.
+>
+> The problem is that single vector may be triggered in some generic cases:
+> 1) kdump kernel 2) irq vectors resource is close to exhaustion.
+>
+> If we don't create affinity mask for single vector, almost every caller
+> has to handle the special case.
+>
+> So still create affinity mask for single vector, since irq_create_affinity_masks()
+> is capable of handling that.
+>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Bjorn Helgaas <helgaas@kernel.org>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: linux-block@vger.kernel.org
+> Cc: Sagi Grimberg <sagi@grimberg.me>
+> Cc: linux-nvme@lists.infradead.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: Keith Busch <keith.busch@intel.com>
+> Cc: Sumit Saxena <sumit.saxena@broadcom.com>
+> Cc: Kashyap Desai <kashyap.desai@broadcom.com>
+> Cc: Shivasharan Srikanteshwara <shivasharan.srikanteshwara@broadcom.com>
+> Fixes: c66d4bd110a1f8 ("genirq/affinity: Add new callback for (re)calculating interrupt sets")
+> Signed-off-by: Ming Lei <ming.lei@redhat.com>
 > ---
->  drivers/pci/pci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 29ed5ec1ac27..e59921296125 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1438,7 +1438,7 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
->  		pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
->  		bar_idx = ctrl & PCI_REBAR_CTRL_BAR_IDX;
->  		res = pdev->resource + bar_idx;
-> -		size = order_base_2((resource_size(res) >> 20) | 1) - 1;
-> +		size = order_base_2(resource_size(res) >> 20);
->  		ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
->  		ctrl |= size << PCI_REBAR_CTRL_BAR_SHIFT;
->  		pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
+>  kernel/irq/affinity.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
+> index 4352b08ae48d..6fef48033f96 100644
+> --- a/kernel/irq/affinity.c
+> +++ b/kernel/irq/affinity.c
+> @@ -251,11 +251,9 @@ irq_create_affinity_masks(unsigned int nvecs, struct irq_affinity *affd)
+>          * Determine the number of vectors which need interrupt affinities
+>          * assigned. If the pre/post request exhausts the available vectors
+>          * then nothing to do here except for invoking the calc_sets()
+> -        * callback so the device driver can adjust to the situation. If there
+> -        * is only a single vector, then managing the queue is pointless as
+> -        * well.
+> +        * callback so the device driver can adjust to the situation.
+>          */
+> -       if (nvecs > 1 && nvecs > affd->pre_vectors + affd->post_vectors)
+> +       if (nvecs > affd->pre_vectors + affd->post_vectors)
+>                 affvecs = nvecs - affd->pre_vectors - affd->post_vectors;
+>         else
+>                 affvecs = 0;
 
-commit 614b04644b57
-Author: Sumit Saxena <sumit.saxena@broadcom.com>
-Date:   Fri Jul 26 00:55:52 2019 +0530
+Without this patch, kdump kernel may not work, so could you take a look
+at this patch?
 
-    PCI: Set BAR size bits correctly in Resize BAR control register
-    
-    In a Resizable BAR Control Register, bits 13:8 control the size of the BAR.
-    The encoded values of these bits are as follows (see PCIe r5.0, sec
-    7.8.6.3):
-    
-      Value    BAR size
-         0     1 MB (2^20 bytes)
-         1     2 MB (2^21 bytes)
-         2     4 MB (2^22 bytes)
-       ...
-        43     8 EB (2^63 bytes)
-    
-    Previously we incorrectly set the BAR size bits for a 1 MB BAR to 0x1f
-    instead of 0, so devices that support that size, e.g., new megaraid_sas and
-    mpt3sas adapters, fail to initialize during resume from S3 sleep.
-    
-    Correctly calculate the BAR size bits for Resizable BAR control registers.
-    
-    Link: https://lore.kernel.org/r/20190725192552.24295-1-sumit.saxena@broadcom.com
-    Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203939
-    Fixes: d3252ace0bc6 ("PCI: Restore resized BAR state on resume")
-    Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-    Cc: stable@vger.kernel.org      # v4.19+
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index da3241bb4479..5836eb576d96 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1438,7 +1438,7 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
- 		pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
- 		bar_idx = ctrl & PCI_REBAR_CTRL_BAR_IDX;
- 		res = pdev->resource + bar_idx;
--		size = order_base_2((resource_size(res) >> 20) | 1) - 1;
-+		size = ilog2(resource_size(res)) - 20;
- 		ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
- 		ctrl |= size << PCI_REBAR_CTRL_BAR_SHIFT;
- 		pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
+Thanks,
+Ming Lei
