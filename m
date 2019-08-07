@@ -2,65 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 47BE284A55
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2019 13:06:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D26E84BDA
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2019 14:43:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfHGLGG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Aug 2019 07:06:06 -0400
-Received: from mga02.intel.com ([134.134.136.20]:57170 "EHLO mga02.intel.com"
+        id S1729956AbfHGMnF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Aug 2019 08:43:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726418AbfHGLGG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Aug 2019 07:06:06 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 04:05:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,357,1559545200"; 
-   d="scan'208";a="192894810"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 07 Aug 2019 04:05:37 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 07 Aug 2019 14:05:36 +0300
-Date:   Wed, 7 Aug 2019 14:05:36 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Matthias Andree <matthias.andree@gmx.de>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH] Revert "PCI: Add missing link delays required by the
- PCIe spec"
-Message-ID: <20190807110536.GK2716@lahna.fi.intel.com>
-References: <20190807105718.77600-1-mika.westerberg@linux.intel.com>
- <2705367.zNMUfgmSmy@kreacher>
+        id S1727171AbfHGMnF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Aug 2019 08:43:05 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 820C821E6A;
+        Wed,  7 Aug 2019 12:43:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565181783;
+        bh=DSOqHZKzfxJCZQfOS8mvVgo1QbtlO3rC0sbZdySkgik=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QhtpjOYeSpO9C1DJpFn99mKnBiMif6GrpQHf6lp9Pdd4gFfXvvrZHGDpYLqD9+J5Z
+         mDscs4/7yqUvRNrD3ene0kDil0UPhZNmqa5Yfc0wvno1BiDoJQJR/K1/9+BL5D9GTC
+         BUHo3tTuGvyKWOoP4kgc+ImwkG0E4+bjNllLpA7o=
+Date:   Wed, 7 Aug 2019 07:43:01 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Sagi Grimberg <sagi@grimberg.me>, linux-rdma@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Jens Axboe <axboe@fb.com>, Keith Busch <kbusch@kernel.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>
+Subject: Re: [PATCH v2 13/14] PCI/P2PDMA: No longer require no-mmu for host
+ bridge whitelist
+Message-ID: <20190807124259.GX151852@google.com>
+References: <20190730163545.4915-1-logang@deltatee.com>
+ <20190730163545.4915-14-logang@deltatee.com>
+ <20190807055958.GC6627@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2705367.zNMUfgmSmy@kreacher>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190807055958.GC6627@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 01:01:26PM +0200, Rafael J. Wysocki wrote:
-> On Wednesday, August 7, 2019 12:57:18 PM CEST Mika Westerberg wrote:
-> > Commit c2bf1fc212f7 ("PCI: Add missing link delays required by the PCIe
-> > spec") turned out causing issues with some systems either by making them
-> > unresponsive or slowing down runtime and system wide resume of PCIe
-> > devices. While root cause for the unresponsiveness is still under
-> > investigation given the amount of issues reported better to revert it
-> > for now.
-> 
-> Well, I've applied it, so I guess I should do the revert.
-> 
-> I'll queue this one up as a fix for -rc4.
+On Wed, Aug 07, 2019 at 07:59:58AM +0200, Christoph Hellwig wrote:
+> no-mmu sounds stange, as we use that for linux ports without paging
+> hardware.  I think an "io" got lost somewhere..
 
-Thanks!
+I had already changed the subject to
+
+  PCI/P2PDMA: Allow IOMMU for host bridge whitelist
+
+but certainly open to better suggestions.
