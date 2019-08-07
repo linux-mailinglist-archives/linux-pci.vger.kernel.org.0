@@ -2,104 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D7B8984EF2
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2019 16:40:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B124E84F72
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2019 17:07:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729550AbfHGOkE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Aug 2019 10:40:04 -0400
-Received: from mga04.intel.com ([192.55.52.120]:56257 "EHLO mga04.intel.com"
+        id S1729278AbfHGPHA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Aug 2019 11:07:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:49938 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729516AbfHGOkD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Aug 2019 10:40:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 07:40:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,357,1559545200"; 
-   d="scan'208";a="165338496"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga007.jf.intel.com with ESMTP; 07 Aug 2019 07:40:01 -0700
-Date:   Wed, 7 Aug 2019 08:37:34 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] nvme-pci: Do not prevent PCI bus-level PM from being used
-Message-ID: <20190807143733.GA25621@localhost.localdomain>
-References: <47415939.KV5G6iaeJG@kreacher>
- <20190730144134.GA12844@localhost.localdomain>
- <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
- <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com>
- <20190730191934.GD13948@localhost.localdomain>
- <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
- <20190730213114.GK13948@localhost.localdomain>
- <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
- <20190731221956.GB15795@localhost.localdomain>
- <1893355.EP2830DdO9@kreacher>
+        id S1727213AbfHGPG7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Aug 2019 11:06:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2FD1344;
+        Wed,  7 Aug 2019 08:06:58 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39A073F706;
+        Wed,  7 Aug 2019 08:06:57 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 16:06:54 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jake Oshins <jakeo@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH] PCI: pci-hyperv: fix build errors on non-SYSFS config
+Message-ID: <20190807150654.GB16214@e121166-lin.cambridge.arm.com>
+References: <abbe8012-1e6f-bdea-1454-5c59ccbced3d@infradead.org>
+ <DM6PR21MB133723E9D1FA8BA0006E06FECAF20@DM6PR21MB1337.namprd21.prod.outlook.com>
+ <20190713150353.GF10104@sasha-vm>
+ <20190723212107.GB9742@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1893355.EP2830DdO9@kreacher>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <20190723212107.GB9742@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 02:53:44AM -0700, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Tue, Jul 23, 2019 at 04:21:07PM -0500, Bjorn Helgaas wrote:
+> On Sat, Jul 13, 2019 at 11:03:53AM -0400, Sasha Levin wrote:
+> > On Fri, Jul 12, 2019 at 04:04:17PM +0000, Haiyang Zhang wrote:
+> > > > -----Original Message-----
+> > > > From: Randy Dunlap <rdunlap@infradead.org>
+> > > > Sent: Friday, July 12, 2019 11:53 AM
+> > > > To: linux-pci <linux-pci@vger.kernel.org>; LKML <linux-
+> > > > kernel@vger.kernel.org>
+> > > > Cc: Matthew Wilcox <willy@infradead.org>; Jake Oshins
+> > > > <jakeo@microsoft.com>; KY Srinivasan <kys@microsoft.com>; Haiyang
+> > > > Zhang <haiyangz@microsoft.com>; Stephen Hemminger
+> > > > <sthemmin@microsoft.com>; Stephen Hemminger
+> > > > <stephen@networkplumber.org>; Sasha Levin <sashal@kernel.org>; Bjorn
+> > > > Helgaas <bhelgaas@google.com>; Dexuan Cui <decui@microsoft.com>
+> > > > Subject: [PATCH] PCI: pci-hyperv: fix build errors on non-SYSFS config
 > 
-> One of the modifications made by commit d916b1be94b6 ("nvme-pci: use
-> host managed power state for suspend") was adding a pci_save_state()
-> call to nvme_suspend() in order to prevent the PCI bus-level PM from
-> being applied to the suspended NVMe devices, but if ASPM is not
-> enabled for the target NVMe device, that causes its PCIe link to stay
-> up and the platform may not be able to get into its optimum low-power
-> state because of that.
+> Whoever merges this (see below), please update the subject line to
+> match:
 > 
-> For example, if ASPM is disabled for the NVMe drive (PC401 NVMe SK
-> hynix 256GB) in my Dell XPS13 9380, leaving it in D0 during
-> suspend-to-idle prevents the SoC from reaching package idle states
-> deeper than PC3, which is way insufficient for system suspend.
+>   $ git log --oneline drivers/pci/controller/pci-hyperv.c | head -5
+>   4df591b20b80 PCI: hv: Fix a use-after-free bug in hv_eject_device_work()
+>   340d45569940 PCI: hv: Add pci_destroy_slot() in pci_devices_present_work(), if necessary
+>   15becc2b56c6 PCI: hv: Add hv_pci_remove_slots() when we unload the driver
+>   05f151a73ec2 PCI: hv: Fix a memory leak in hv_eject_device_work()
+>   c8ccf7599dda PCI: hv: Refactor hv_irq_unmask() to use cpumask_to_vpset()
 > 
-> To address this shortcoming, make nvme_suspend() check if ASPM is
-> enabled for the target device and fall back to full device shutdown
-> and PCI bus-level PM if that is not the case.
+> > > > From: Randy Dunlap <rdunlap@infradead.org>
+> > > > 
+> > > > Fix build errors when building almost-allmodconfig but with SYSFS
+> > > > not set (not enabled).  Fixes these build errors:
+> > > > 
+> > > > ERROR: "pci_destroy_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
+> > > > ERROR: "pci_create_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
+> > > > 
+> > > > drivers/pci/slot.o is only built when SYSFS is enabled, so
+> > > > pci-hyperv.o has an implicit dependency on SYSFS.
+> > > > Make that explicit.
+> > > > 
+> > > > Also, depending on X86 && X86_64 is not needed, so just change that
+> > > > to depend on X86_64.
+> > > > 
+> > > > Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot
+> > > > information")
+> > > > 
+> > > > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> > > > Cc: Matthew Wilcox <willy@infradead.org>
+> > > > Cc: Jake Oshins <jakeo@microsoft.com>
+> > > > Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> > > > Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> > > > Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> > > > Cc: Stephen Hemminger <stephen@networkplumber.org>
+> > > > Cc: Sasha Levin <sashal@kernel.org>
+> > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > Cc: linux-pci@vger.kernel.org
+> > > > Cc: linux-hyperv@vger.kernel.org
+> > > > Cc: Dexuan Cui <decui@microsoft.com>
+> > > > ---
+> > > > v3: corrected Fixes: tag [Dexuan Cui <decui@microsoft.com>]
+> > > >     This is the Microsoft-preferred version of the patch.
+> > > > 
+> > > >  drivers/pci/Kconfig |    2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > --- lnx-52.orig/drivers/pci/Kconfig
+> > > > +++ lnx-52/drivers/pci/Kconfig
+> > > > @@ -181,7 +181,7 @@ config PCI_LABEL
+> > > > 
+> > > >  config PCI_HYPERV
+> > > >          tristate "Hyper-V PCI Frontend"
+> > > > -        depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN
+> > > > && X86_64
+> > > > +        depends on X86_64 && HYPERV && PCI_MSI &&
+> > > > PCI_MSI_IRQ_DOMAIN && SYSFS
+> > > >          help
+> > > >            The PCI device frontend driver allows the kernel to import arbitrary
+> > > >            PCI devices from a PCI backend to support PCI driver domains.
+> > > > 
+> > > 
+> > > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> > 
+> > Queued up for hyperv-fixes, thank you!
 > 
-> Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
-> Link: https://lore.kernel.org/linux-pm/2763495.NmdaWeg79L@kreacher/T/#t
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> What merge strategy do you envision for this?  Previous
+> drivers/pci/controller/pci-hyperv.c changes have generally been merged
+> by Lorenzo and incorporated into my PCI tree.
+> 
+> This particular patch doesn't actually touch pci-hyperv.c; it touches
+> drivers/pci/Kconfig, so should somehow be coordinated with me.
+> 
+> Does this need to be tagged for stable?  a15f2c08c708 appeared in
+> v4.19, so my first guess is that it's not stable material.
 
-Thanks for tracking down the cause. Sounds like your earlier assumption
-on ASPM's involvement was spot on.
+AFAIC Bjorn's question still stands. Who will pick this patch up ?
 
-> +/*
-> + * pcie_aspm_enabled - Return the mask of enabled ASPM link states.
-> + * @pci_device: Target device.
-> + */
-> +u32 pcie_aspm_enabled(struct pci_dev *pci_device)
-> +{
-> +	struct pci_dev *bridge = pci_device->bus->self;
-
-You may want use pci_upstream_bridge() instead, just in case someone
-calls this on a virtual function's pci_dev.
-
-> +	u32 aspm_enabled;
-> +
-> +	mutex_lock(&aspm_lock);
-> +	aspm_enabled = bridge->link_state ? bridge->link_state->aspm_enabled : 0;
-> +	mutex_unlock(&aspm_lock);
-> +
-> +	return aspm_enabled;
-> +}
+Thanks,
+Lorenzo
