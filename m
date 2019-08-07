@@ -2,144 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B124E84F72
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2019 17:07:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F9FB85077
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2019 17:59:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729278AbfHGPHA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Aug 2019 11:07:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:49938 "EHLO foss.arm.com"
+        id S2388845AbfHGP6j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Aug 2019 11:58:39 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:34966 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727213AbfHGPG7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Aug 2019 11:06:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2FD1344;
-        Wed,  7 Aug 2019 08:06:58 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39A073F706;
-        Wed,  7 Aug 2019 08:06:57 -0700 (PDT)
-Date:   Wed, 7 Aug 2019 16:06:54 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jake Oshins <jakeo@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH] PCI: pci-hyperv: fix build errors on non-SYSFS config
-Message-ID: <20190807150654.GB16214@e121166-lin.cambridge.arm.com>
-References: <abbe8012-1e6f-bdea-1454-5c59ccbced3d@infradead.org>
- <DM6PR21MB133723E9D1FA8BA0006E06FECAF20@DM6PR21MB1337.namprd21.prod.outlook.com>
- <20190713150353.GF10104@sasha-vm>
- <20190723212107.GB9742@google.com>
+        id S2387943AbfHGP6i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Aug 2019 11:58:38 -0400
+Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hvOKK-0002XL-O8; Wed, 07 Aug 2019 09:58:13 -0600
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190730163545.4915-1-logang@deltatee.com>
+ <20190730163545.4915-4-logang@deltatee.com> <20190807055455.GA6627@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <4b0c012a-c3a1-a1c0-b098-8b350963aed1@deltatee.com>
+Date:   Wed, 7 Aug 2019 09:58:06 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723212107.GB9742@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190807055455.GA6627@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 70.73.163.230
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, epilmore@gigaio.com, dan.j.williams@intel.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, jgg@mellanox.com, Christian.Koenig@amd.com, bhelgaas@google.com, linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-6.9 required=5.0 tests=ALL_TRUSTED,BAYES_00
+        autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [PATCH v2 03/14] PCI/P2PDMA: Add constants for not-supported
+ result upstream_bridge_distance()
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 04:21:07PM -0500, Bjorn Helgaas wrote:
-> On Sat, Jul 13, 2019 at 11:03:53AM -0400, Sasha Levin wrote:
-> > On Fri, Jul 12, 2019 at 04:04:17PM +0000, Haiyang Zhang wrote:
-> > > > -----Original Message-----
-> > > > From: Randy Dunlap <rdunlap@infradead.org>
-> > > > Sent: Friday, July 12, 2019 11:53 AM
-> > > > To: linux-pci <linux-pci@vger.kernel.org>; LKML <linux-
-> > > > kernel@vger.kernel.org>
-> > > > Cc: Matthew Wilcox <willy@infradead.org>; Jake Oshins
-> > > > <jakeo@microsoft.com>; KY Srinivasan <kys@microsoft.com>; Haiyang
-> > > > Zhang <haiyangz@microsoft.com>; Stephen Hemminger
-> > > > <sthemmin@microsoft.com>; Stephen Hemminger
-> > > > <stephen@networkplumber.org>; Sasha Levin <sashal@kernel.org>; Bjorn
-> > > > Helgaas <bhelgaas@google.com>; Dexuan Cui <decui@microsoft.com>
-> > > > Subject: [PATCH] PCI: pci-hyperv: fix build errors on non-SYSFS config
-> 
-> Whoever merges this (see below), please update the subject line to
-> match:
-> 
->   $ git log --oneline drivers/pci/controller/pci-hyperv.c | head -5
->   4df591b20b80 PCI: hv: Fix a use-after-free bug in hv_eject_device_work()
->   340d45569940 PCI: hv: Add pci_destroy_slot() in pci_devices_present_work(), if necessary
->   15becc2b56c6 PCI: hv: Add hv_pci_remove_slots() when we unload the driver
->   05f151a73ec2 PCI: hv: Fix a memory leak in hv_eject_device_work()
->   c8ccf7599dda PCI: hv: Refactor hv_irq_unmask() to use cpumask_to_vpset()
-> 
-> > > > From: Randy Dunlap <rdunlap@infradead.org>
-> > > > 
-> > > > Fix build errors when building almost-allmodconfig but with SYSFS
-> > > > not set (not enabled).  Fixes these build errors:
-> > > > 
-> > > > ERROR: "pci_destroy_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
-> > > > ERROR: "pci_create_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
-> > > > 
-> > > > drivers/pci/slot.o is only built when SYSFS is enabled, so
-> > > > pci-hyperv.o has an implicit dependency on SYSFS.
-> > > > Make that explicit.
-> > > > 
-> > > > Also, depending on X86 && X86_64 is not needed, so just change that
-> > > > to depend on X86_64.
-> > > > 
-> > > > Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot
-> > > > information")
-> > > > 
-> > > > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> > > > Cc: Matthew Wilcox <willy@infradead.org>
-> > > > Cc: Jake Oshins <jakeo@microsoft.com>
-> > > > Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> > > > Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> > > > Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> > > > Cc: Stephen Hemminger <stephen@networkplumber.org>
-> > > > Cc: Sasha Levin <sashal@kernel.org>
-> > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > > Cc: linux-pci@vger.kernel.org
-> > > > Cc: linux-hyperv@vger.kernel.org
-> > > > Cc: Dexuan Cui <decui@microsoft.com>
-> > > > ---
-> > > > v3: corrected Fixes: tag [Dexuan Cui <decui@microsoft.com>]
-> > > >     This is the Microsoft-preferred version of the patch.
-> > > > 
-> > > >  drivers/pci/Kconfig |    2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > --- lnx-52.orig/drivers/pci/Kconfig
-> > > > +++ lnx-52/drivers/pci/Kconfig
-> > > > @@ -181,7 +181,7 @@ config PCI_LABEL
-> > > > 
-> > > >  config PCI_HYPERV
-> > > >          tristate "Hyper-V PCI Frontend"
-> > > > -        depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN
-> > > > && X86_64
-> > > > +        depends on X86_64 && HYPERV && PCI_MSI &&
-> > > > PCI_MSI_IRQ_DOMAIN && SYSFS
-> > > >          help
-> > > >            The PCI device frontend driver allows the kernel to import arbitrary
-> > > >            PCI devices from a PCI backend to support PCI driver domains.
-> > > > 
-> > > 
-> > > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > 
-> > Queued up for hyperv-fixes, thank you!
-> 
-> What merge strategy do you envision for this?  Previous
-> drivers/pci/controller/pci-hyperv.c changes have generally been merged
-> by Lorenzo and incorporated into my PCI tree.
-> 
-> This particular patch doesn't actually touch pci-hyperv.c; it touches
-> drivers/pci/Kconfig, so should somehow be coordinated with me.
-> 
-> Does this need to be tagged for stable?  a15f2c08c708 appeared in
-> v4.19, so my first guess is that it's not stable material.
 
-AFAIC Bjorn's question still stands. Who will pick this patch up ?
 
-Thanks,
-Lorenzo
+On 2019-08-06 11:54 p.m., Christoph Hellwig wrote:
+> On Tue, Jul 30, 2019 at 10:35:34AM -0600, Logan Gunthorpe wrote:
+>> Add constant flags to indicate two devices are not supported or whether
+>> the data path goes through the host bridge instead of using the negative
+>> values -1 and -2.
+>>
+>> This helps annotate the code better, but the main reason is so we
+>> can use the information to store the required mapping method in an
+>> xarray.
+>>
+>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>> Reviewed-by: Christian König <christian.koenig@amd.com>
+> 
+> Is there really no way to keep the distance separate from the type of
+> the connection as I requested?  I think that would avoid a lot of
+> confusion down the road.
+
+Well I separated it in the xarray and the interface. It only stores the
+type of mapping, not the distance and uses pci_p2pdma_map_type() to
+retrieve it.
+
+We only calculate it at the same time as we calculate the distance. This
+is necessary because, to calculate the type, we have to walk the tree
+and check the ACS bits. If we separated it, we'd have to walk the tree
+twice in a very similar way just to determine both the distance and the
+mapping type.
+
+I'll apply your other feedback to a v3 next week.
+
+Logan
