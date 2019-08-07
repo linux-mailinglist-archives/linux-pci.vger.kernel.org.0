@@ -2,88 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F9FB85077
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2019 17:59:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69B1D85093
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2019 18:04:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388845AbfHGP6j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Aug 2019 11:58:39 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:34966 "EHLO ale.deltatee.com"
+        id S1730100AbfHGQD4 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 7 Aug 2019 12:03:56 -0400
+Received: from mga12.intel.com ([192.55.52.136]:61443 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387943AbfHGP6i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Aug 2019 11:58:38 -0400
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hvOKK-0002XL-O8; Wed, 07 Aug 2019 09:58:13 -0600
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Pilmore <epilmore@gigaio.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190730163545.4915-1-logang@deltatee.com>
- <20190730163545.4915-4-logang@deltatee.com> <20190807055455.GA6627@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <4b0c012a-c3a1-a1c0-b098-8b350963aed1@deltatee.com>
-Date:   Wed, 7 Aug 2019 09:58:06 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190807055455.GA6627@lst.de>
-Content-Type: text/plain; charset=utf-8
+        id S1727213AbfHGQDz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Aug 2019 12:03:55 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 09:03:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,357,1559545200"; 
+   d="scan'208";a="174545129"
+Received: from irsmsx154.ger.corp.intel.com ([163.33.192.96])
+  by fmsmga008.fm.intel.com with ESMTP; 07 Aug 2019 09:03:53 -0700
+Received: from irsmsx101.ger.corp.intel.com ([169.254.1.88]) by
+ IRSMSX154.ger.corp.intel.com ([169.254.12.160]) with mapi id 14.03.0439.000;
+ Wed, 7 Aug 2019 17:03:52 +0100
+From:   "Patel, Mayurkumar" <mayurkumar.patel@intel.com>
+To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     "Busch, Keith" <keith.busch@intel.com>,
+        'Andy Shevchenko' <andriy.shevchenko@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v2] PCI/AER: Save and restore AER config state
+Thread-Topic: [PATCH v2] PCI/AER: Save and restore AER config state
+Thread-Index: AdVNNOxDeM4PdfoxRxylrjXnbDircw==
+Date:   Wed, 7 Aug 2019 16:03:52 +0000
+Message-ID: <92EBB4272BF81E4089A7126EC1E7B28479A895C7@IRSMSX101.ger.corp.intel.com>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, epilmore@gigaio.com, dan.j.williams@intel.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, jgg@mellanox.com, Christian.Koenig@amd.com, bhelgaas@google.com, linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=5.0 tests=ALL_TRUSTED,BAYES_00
-        autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH v2 03/14] PCI/P2PDMA: Add constants for not-supported
- result upstream_bridge_distance()
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMDVkMGUxNjAtZjk5My00YTQwLTkwYmMtNWFiMzU5Zjk1MzUyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiSDVOS1wvTENDVnJXbVA0TG0zWDZWXC9HTHhpdEpRa1Y0RlRUNnVJRXhuZ24rNFVVVE1uNG9jQytzNnNSQTJMbTlDIn0=
+x-ctpclassification: CTP_NT
+x-originating-ip: [163.33.239.182]
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+This patch provides AER config save and restore capabilities. After system
+resume AER config registers settings are lost. Not restoring AER root error
+command register bits on root port if they were set, disables generation
+of an AER interrupt reported by function as described in PCIe spec r4.0,
+sec 7.8.4.9. Moreover, AER config mask, severity and ECRC registers are
+also required to maintain same state prior to system suspend to maintain
+AER interrupts behavior.
+
+Signed-off-by: Mayurkumar Patel <mayurkumar.patel@intel.com>
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+---
+ drivers/pci/pci.c      |  2 ++
+ drivers/pci/pcie/aer.c | 70 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/aer.h    |  4 +++
+ 3 files changed, 76 insertions(+)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 8abc843..40d5507 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1340,6 +1340,7 @@ int pci_save_state(struct pci_dev *dev)
+ 
+ 	pci_save_ltr_state(dev);
+ 	pci_save_dpc_state(dev);
++	pci_save_aer_state(dev);
+ 	return pci_save_vc_state(dev);
+ }
+ EXPORT_SYMBOL(pci_save_state);
+@@ -1453,6 +1454,7 @@ void pci_restore_state(struct pci_dev *dev)
+ 	pci_restore_dpc_state(dev);
+ 
+ 	pci_cleanup_aer_error_status_regs(dev);
++	pci_restore_aer_state(dev);
+ 
+ 	pci_restore_config_space(dev);
+ 
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index b45bc47..fb067dc 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -448,6 +448,64 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+ 	return 0;
+ }
+ 
++static inline bool pcie_aer_cap_has_root_command(struct pci_dev *dev)
++{
++	return pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
++		pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC;
++}
++
++void pci_save_aer_state(struct pci_dev *dev)
++{
++	struct pci_cap_saved_state *save_state;
++	u32 *cap;
++	int pos;
++
++	if (!pci_is_pcie(dev))
++		return;
++
++	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ERR);
++	if (!save_state)
++		return;
++
++	pos = dev->aer_cap;
++	if (!pos)
++		return;
++
++	cap = &save_state->cap.data[0];
++	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, cap++);
++	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, cap++);
++	pci_read_config_dword(dev, pos + PCI_ERR_COR_MASK, cap++);
++	pci_read_config_dword(dev, pos + PCI_ERR_CAP, cap++);
++	if (pcie_aer_cap_has_root_command(dev))
++		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, cap++);
++}
++
++void pci_restore_aer_state(struct pci_dev *dev)
++{
++	struct pci_cap_saved_state *save_state;
++	u32 *cap;
++	int pos;
++
++	if (!pci_is_pcie(dev))
++		return;
++
++	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ERR);
++	if (!save_state)
++		return;
++
++	pos = dev->aer_cap;
++	if (!pos)
++		return;
++
++	cap = &save_state->cap.data[0];
++	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, *cap++);
++	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, *cap++);
++	pci_write_config_dword(dev, pos + PCI_ERR_COR_MASK, *cap++);
++	pci_write_config_dword(dev, pos + PCI_ERR_CAP, *cap++);
++	if (pcie_aer_cap_has_root_command(dev))
++		pci_write_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, *cap++);
++}
++
+ void pci_aer_init(struct pci_dev *dev)
+ {
+ 	dev->aer_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ERR);
+@@ -455,6 +513,18 @@ void pci_aer_init(struct pci_dev *dev)
+ 	if (dev->aer_cap)
+ 		dev->aer_stats = kzalloc(sizeof(struct aer_stats), GFP_KERNEL);
+ 
++	/*
++	 * Since PCI_ERR_ROOT_COMMAND is only valid for root port and root
++	 * complex event collector, as per PCIe 4.0 section 7.8.4, interpret
++	 * the device/port type to determine the availability of additional
++	 * root port and root complex event collector register.
++	 */
++	if (pcie_aer_cap_has_root_command(dev))
++		pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ERR,
++					sizeof(u32) * 5);
++	else
++		pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ERR,
++					sizeof(u32) * 4);
+ 	pci_cleanup_aer_error_status_regs(dev);
+ }
+ 
+diff --git a/include/linux/aer.h b/include/linux/aer.h
+index 514bffa..fa19e01 100644
+--- a/include/linux/aer.h
++++ b/include/linux/aer.h
+@@ -46,6 +46,8 @@ int pci_enable_pcie_error_reporting(struct pci_dev *dev);
+ int pci_disable_pcie_error_reporting(struct pci_dev *dev);
+ int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev);
+ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);
++void pci_save_aer_state(struct pci_dev *dev);
++void pci_restore_aer_state(struct pci_dev *dev);
+ #else
+ static inline int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+ {
+@@ -63,6 +65,8 @@ static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+ {
+ 	return -EINVAL;
+ }
++static inline void pci_save_aer_state(struct pci_dev *dev) {}
++static inline void pci_restore_aer_state(struct pci_dev *dev) {}
+ #endif
+ 
+ void cper_print_aer(struct pci_dev *dev, int aer_severity,
+-- 
+2.7.4
 
 
-On 2019-08-06 11:54 p.m., Christoph Hellwig wrote:
-> On Tue, Jul 30, 2019 at 10:35:34AM -0600, Logan Gunthorpe wrote:
->> Add constant flags to indicate two devices are not supported or whether
->> the data path goes through the host bridge instead of using the negative
->> values -1 and -2.
->>
->> This helps annotate the code better, but the main reason is so we
->> can use the information to store the required mapping method in an
->> xarray.
->>
->> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->> Reviewed-by: Christian König <christian.koenig@amd.com>
-> 
-> Is there really no way to keep the distance separate from the type of
-> the connection as I requested?  I think that would avoid a lot of
-> confusion down the road.
+Intel Deutschland GmbH
+Registered Address: Am Campeon 10-12, 85579 Neubiberg, Germany
+Tel: +49 89 99 8853-0, www.intel.de
+Managing Directors: Christin Eisenschmid, Gary Kershaw
+Chairperson of the Supervisory Board: Nicole Lau
+Registered Office: Munich
+Commercial Register: Amtsgericht Muenchen HRB 186928
 
-Well I separated it in the xarray and the interface. It only stores the
-type of mapping, not the distance and uses pci_p2pdma_map_type() to
-retrieve it.
-
-We only calculate it at the same time as we calculate the distance. This
-is necessary because, to calculate the type, we have to walk the tree
-and check the ACS bits. If we separated it, we'd have to walk the tree
-twice in a very similar way just to determine both the distance and the
-mapping type.
-
-I'll apply your other feedback to a v3 next week.
-
-Logan
