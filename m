@@ -2,94 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DBB618658E
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2019 17:20:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA0A88665E
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2019 17:59:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733119AbfHHPUH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Aug 2019 11:20:07 -0400
-Received: from mga01.intel.com ([192.55.52.88]:46713 "EHLO mga01.intel.com"
+        id S2390168AbfHHP7S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Aug 2019 11:59:18 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:55280 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbfHHPUH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 8 Aug 2019 11:20:07 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 08:20:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,361,1559545200"; 
-   d="scan'208";a="203611641"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga002.fm.intel.com with ESMTP; 08 Aug 2019 08:20:06 -0700
-Date:   Thu, 8 Aug 2019 09:17:40 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        id S2390115AbfHHP7R (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 8 Aug 2019 11:59:17 -0400
+Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hvkoc-00029F-KI; Thu, 08 Aug 2019 09:58:59 -0600
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        Keith Busch <keith.busch@intel.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Shivasharan Srikanteshwara 
-        <shivasharan.srikanteshwara@broadcom.com>
-Subject: Re: [PATCH] genirq/affinity: create affinity mask for single vector
-Message-ID: <20190808151740.GA27077@localhost.localdomain>
-References: <20190805011906.5020-1-ming.lei@redhat.com>
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190730163545.4915-1-logang@deltatee.com>
+ <20190730163545.4915-4-logang@deltatee.com> <20190807055455.GA6627@lst.de>
+ <4b0c012a-c3a1-a1c0-b098-8b350963aed1@deltatee.com>
+ <20190808073109.GC29852@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <ae77f630-81dc-62e8-727c-add3578ca002@deltatee.com>
+Date:   Thu, 8 Aug 2019 09:58:50 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805011906.5020-1-ming.lei@redhat.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <20190808073109.GC29852@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.73.163.230
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, epilmore@gigaio.com, dan.j.williams@intel.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, jgg@mellanox.com, Christian.Koenig@amd.com, bhelgaas@google.com, linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [PATCH v2 03/14] PCI/P2PDMA: Add constants for not-supported
+ result upstream_bridge_distance()
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 09:19:06AM +0800, Ming Lei wrote:
-> Since commit c66d4bd110a1f8 ("genirq/affinity: Add new callback for
-> (re)calculating interrupt sets"), irq_create_affinity_masks() returns
-> NULL in case of single vector. This change has caused regression on some
-> drivers, such as lpfc.
-> 
-> The problem is that single vector may be triggered in some generic cases:
-> 1) kdump kernel 2) irq vectors resource is close to exhaustion.
-> 
-> If we don't create affinity mask for single vector, almost every caller
-> has to handle the special case.
-> 
-> So still create affinity mask for single vector, since irq_create_affinity_masks()
-> is capable of handling that.
 
-Hi Ming,
 
-Looks good to me.
-
-Reviewed-by: Keith Busch <keith.busch@intel.com>
- 
-> ---
->  kernel/irq/affinity.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+On 2019-08-08 1:31 a.m., Christoph Hellwig wrote:
+> On Wed, Aug 07, 2019 at 09:58:06AM -0600, Logan Gunthorpe wrote:
+>> We only calculate it at the same time as we calculate the distance. This
+>> is necessary because, to calculate the type, we have to walk the tree
+>> and check the ACS bits. If we separated it, we'd have to walk the tree
+>> twice in a very similar way just to determine both the distance and the
+>> mapping type.
 > 
-> diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
-> index 4352b08ae48d..6fef48033f96 100644
-> --- a/kernel/irq/affinity.c
-> +++ b/kernel/irq/affinity.c
-> @@ -251,11 +251,9 @@ irq_create_affinity_masks(unsigned int nvecs, struct irq_affinity *affd)
->  	 * Determine the number of vectors which need interrupt affinities
->  	 * assigned. If the pre/post request exhausts the available vectors
->  	 * then nothing to do here except for invoking the calc_sets()
-> -	 * callback so the device driver can adjust to the situation. If there
-> -	 * is only a single vector, then managing the queue is pointless as
-> -	 * well.
-> +	 * callback so the device driver can adjust to the situation.
->  	 */
-> -	if (nvecs > 1 && nvecs > affd->pre_vectors + affd->post_vectors)
-> +	if (nvecs > affd->pre_vectors + affd->post_vectors)
->  		affvecs = nvecs - affd->pre_vectors - affd->post_vectors;
->  	else
->  		affvecs = 0;
-> -- 
+> Calculating it together makes perfect sense.  What I find odd is the
+> overloading of a single return value.  Why not return the map type as
+> the return value, and the distance as a by reference argument to keep
+> them properly separated?
+
+Ok, understood. I'll make that change and send some incremental patches
+to Bjorn tomorrow.
+
+Logan
