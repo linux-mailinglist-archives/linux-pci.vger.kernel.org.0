@@ -2,120 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B145E861BB
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2019 14:31:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA760862C6
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2019 15:15:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403783AbfHHMb1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Aug 2019 08:31:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45196 "EHLO mail.kernel.org"
+        id S1732836AbfHHNPj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Aug 2019 09:15:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389951AbfHHMb1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 8 Aug 2019 08:31:27 -0400
+        id S1733043AbfHHNPi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 8 Aug 2019 09:15:38 -0400
 Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2E4221881;
-        Thu,  8 Aug 2019 12:31:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56C4C21874;
+        Thu,  8 Aug 2019 13:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565267486;
-        bh=jPRA8WwVIBP3PqkfhSy/TiRINN02YI/sp1jGz5LU1/c=;
+        s=default; t=1565270137;
+        bh=vFhZxVY8zznG2dSrxO7puCCAQ9KAh4AjZjZKA0nhTAw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E3/gFSiVht9KFJplSMpjko42etxgYXQisDrbuN818/Pn67cENeQhcfvA0qJjCyNnb
-         4xvPZDFxFGNMVYPAGBi7FP301evhJWdbGR94yX6FjfW8h+/Ims0jgaeSvm1o/uh7mp
-         A6i5AwHZqhucwkbw9Jy8kehJvnkZ7EhxuJHokVTw=
-Date:   Thu, 8 Aug 2019 07:31:24 -0500
+        b=NlMKMIrSlU6rvR+VXzY7/b5hTw+vgLbYitjwCvgf/5bMZmb+I9tIWmlPXVfLBBMaP
+         PhegZYaNpANzQ9Pn7T34U2Ssj37aRI2b76KQ2vUqIZK9/OtHeNT9JNljA4J6KR96We
+         n7MoKycWieK/kffMTmTVhIwawhbfkEj7SbA0UGMQ=
+Date:   Thu, 8 Aug 2019 08:15:36 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Koenig, Christian" <Christian.Koenig@amd.com>
-Cc:     Sumit Saxena <sumit.saxena@broadcom.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH V2] PCI: set BAR size bits correctly in Resize BAR
- control register
-Message-ID: <20190808123124.GD151852@google.com>
-References: <20190725192552.24295-1-sumit.saxena@broadcom.com>
- <20190807230149.GA151852@google.com>
- <ed70bffc-eed8-c3c5-ee9b-22e1cad1ae06@amd.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     linux-nvme <linux-nvme@lists.infradead.org>,
+        Keith Busch <kbusch@kernel.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] PCI: PCIe: ASPM: Introduce
+ pcie_aspm_enabled_mask()
+Message-ID: <20190808131536.GE151852@google.com>
+References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
+ <20190731221956.GB15795@localhost.localdomain>
+ <1921165.pTveHRX1Co@kreacher>
+ <3714448.mG7dE8Q3Fs@kreacher>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ed70bffc-eed8-c3c5-ee9b-22e1cad1ae06@amd.com>
+In-Reply-To: <3714448.mG7dE8Q3Fs@kreacher>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 07:01:03AM +0000, Koenig, Christian wrote:
-> Am 08.08.19 um 01:01 schrieb Bjorn Helgaas:
-> > On Fri, Jul 26, 2019 at 12:55:52AM +0530, Sumit Saxena wrote:
-> >> In Resize BAR control register, bits[8:12] represents size of BAR.
-> >> As per PCIe specification, below is encoded values in register bits
-> >> to actual BAR size table:
-> >>
-> >> Bits  BAR size
-> >> 0     1 MB
-> >> 1     2 MB
-> >> 2     4 MB
-> >> 3     8 MB
-> >> --
-> >>
-> >> For 1 MB BAR size, BAR size bits should be set to 0 but incorrectly
-> >> these bits are set to "1f". Latest megaraid_sas and mpt3sas adapters
-> >> which support Resizable BAR with 1 MB BAR size fails to initialize
-> >> during system resume from S3 sleep.
-> >>
-> >> Fix: Correctly calculate BAR size bits for Resize BAR control register.
-> >>
-> >> V2:
-> >> -Simplified calculation of BAR size bits as suggested by Christian Koenig.
-> >>
-> >> CC: stable@vger.kernel.org # v4.16+
-> >> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203939
-> >> Fixes: d3252ace0bc652a1a244455556b6a549f969bf99 ("PCI: Restore resized BAR state on resume")
-> >> Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
-> >> ---
-> >>   drivers/pci/pci.c | 2 +-
-> >>   1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> >> index 29ed5ec1ac27..e59921296125 100644
-> >> --- a/drivers/pci/pci.c
-> >> +++ b/drivers/pci/pci.c
-> >> @@ -1438,7 +1438,7 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
-> >>   		pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-> >>   		bar_idx = ctrl & PCI_REBAR_CTRL_BAR_IDX;
-> >>   		res = pdev->resource + bar_idx;
-> >> -		size = order_base_2((resource_size(res) >> 20) | 1) - 1;
-> >> +		size = order_base_2(resource_size(res) >> 20);
-> > Since BAR sizes are always powers of 2, wouldn't this be simpler as:
-> >
-> > 		size = ilog2(resource_size(res)) - 20;
-> >
-> > which nicely matches the table in PCIe r5.0, sec 7.8.6.3?
+On Thu, Aug 08, 2019 at 12:06:52PM +0200, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> Yeah, that should obviously work as well.
+> Add a function returning the mask of currently enabled ASPM link
+> states for a given device.
 > 
-> We would have a serious problem in the resource management if the 
-> resource size is smaller than 1MB or not a power of two.
-
-Yes, definitely.  Resizable BARs are required by spec to be 1MB or
-larger, but this does niggle at me a little bit, too.  It probably
-saves a few bits in pci_dev to recompute this at restore-time, but
-honestly, I think it would be more obviously correct to just do the
-simple-minded thing of saving and restoring the entire register.
-
-> Feel free to add my r-b.
-
-Done, thanks!
-
-> Regards,
-> Christian.
+> It will be used by the NVMe driver to decide how to handle the
+> device during system suspend.
 > 
-> >
-> >>   		ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
-> >>   		ctrl |= size << PCI_REBAR_CTRL_BAR_SHIFT;
-> >>   		pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
-> >> -- 
-> >> 2.18.1
-> >>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> 
+> -> v2:
+>   * Move the PCI/PCIe ASPM changes to a separate patch.
+>   * Add the _mask suffix to the new function name.
+>   * Add EXPORT_SYMBOL_GPL() to the new function.
+>   * Avoid adding an unnecessary blank line.
+> 
+> ---
+>  drivers/pci/pcie/aspm.c |   20 ++++++++++++++++++++
+>  include/linux/pci.h     |    3 +++
+>  2 files changed, 23 insertions(+)
+> 
+> Index: linux-pm/drivers/pci/pcie/aspm.c
+> ===================================================================
+> --- linux-pm.orig/drivers/pci/pcie/aspm.c
+> +++ linux-pm/drivers/pci/pcie/aspm.c
+> @@ -1170,6 +1170,26 @@ static int pcie_aspm_get_policy(char *bu
+>  module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
+>  	NULL, 0644);
+>  
+> +/*
+> + * pcie_aspm_enabled_mask - Return the mask of enabled ASPM link states.
+> + * @pci_device: Target device.
+> + */
+> +u32 pcie_aspm_enabled_mask(struct pci_dev *pci_device)
+> +{
+> +	struct pci_dev *bridge = pci_upstream_bridge(pci_device);
+> +	u32 ret;
+> +
+> +	if (!bridge)
+> +		return 0;
+> +
+> +	mutex_lock(&aspm_lock);
+> +	ret = bridge->link_state ? bridge->link_state->aspm_enabled : 0;
+
+This returns the "aspm_enabled" mask, but the values of that mask are
+combinations of:
+
+  ASPM_STATE_L0S_UP
+  ASPM_STATE_L0S_DW
+  ASPM_STATE_L1
+  ...
+
+which are defined internally in drivers/pci/pcie/aspm.c and not
+visible to the caller of pcie_aspm_enabled_mask().  If there's no need
+for the actual mask (the current caller doesn't seem to use it), maybe
+this could be a boolean?
+
+> +	mutex_unlock(&aspm_lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(pcie_aspm_enabled_mask);
+> +
+>  #ifdef CONFIG_PCIEASPM_DEBUG
+>  static ssize_t link_state_show(struct device *dev,
+>  		struct device_attribute *attr,
+> Index: linux-pm/include/linux/pci.h
+> ===================================================================
+> --- linux-pm.orig/include/linux/pci.h
+> +++ linux-pm/include/linux/pci.h
+> @@ -1567,8 +1567,11 @@ extern bool pcie_ports_native;
+>  
+>  #ifdef CONFIG_PCIEASPM
+>  bool pcie_aspm_support_enabled(void);
+> +u32 pcie_aspm_enabled_mask(struct pci_dev *pci_device);
+>  #else
+>  static inline bool pcie_aspm_support_enabled(void) { return false; }
+> +static inline u32 pcie_aspm_enabled_mask(struct pci_dev *pci_device)
+> +{ return 0; }
+>  #endif
+>  
+>  #ifdef CONFIG_PCIEAER
+> 
+> 
 > 
