@@ -2,156 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F39286B05
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2019 22:02:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A88A86B15
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2019 22:06:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390266AbfHHUCu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Aug 2019 16:02:50 -0400
-Received: from mail-eopbgr1300124.outbound.protection.outlook.com ([40.107.130.124]:47696
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389883AbfHHUCu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 8 Aug 2019 16:02:50 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Bnyg+XL+OMC9qjDzhlF9VHiXDXzyhBjtYUn0DiG+PEK8sIkqIcAhPtpg7XXQuZJvyZiEDJu+nbzXMddEztle9ENHByHA5I9KR7dOEn34rDPBKg9RTueF9YhjRRkwQ1iQN652/vw/JmmlQ6limUc7Mo7TPR87DpI/Y/EEKQN9m0B4zUswV72YO5sBmSHzxSPn5kLMPjjay2PhL1lYayIg8goPgQdOq1uQFdBMLrXfcMIOEe4G44XecuLtfN77QkZnH4fXU19v+mu2PNVSviAo+l/4l1HouVON+VK3foDjWHdCJjWj2YwPy8Hs17LremQ8LlVNImG6cZOn2L5H6SVCtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A497bBQh64LjItPHc5XDsOj3qDgI6kdo9DRaBR0wwOY=;
- b=PGe0GYNHSpT6DfJ52sMPP+8VkhJPWYQgZCx7T59d0WBFYuwCObMnNMBRgZJ+nWAm8O1q3HX5oNY4SAKJhw/3t2t3FJqZ5t6UB8oMHbLgPaSsbrJK1pT58gLtrJANjcwpNX3IfQUQ10CWugSqfAqD1PYk0KDyFcmW47FalXYfL6WSeZyNM2GpudTuR1IKE2cmzkQqZsG1hM730FZn8BPxi9e0L4l2ceQJwB5zCQuG9EnBRSTejxt+dJsWinPhgX1HFyHCrrbhApwYH9O7RIlmiV7q/6zTmwdWF2nAoHh6InkA5Zcv5DPYOJinHuFofuVi87fxgUJcDNBK8BLpqi+VfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A497bBQh64LjItPHc5XDsOj3qDgI6kdo9DRaBR0wwOY=;
- b=hqZmR0UDQ0LmXbGnDR4k+eQPAPEzWAs4yG82EUm/uvRmQMFdAAUHCnjNi0HW+O+i6rEI6Cp0N5jtzvL5IBTsStg9pMUhLWXcV0llrM7/G+y6X8PKc3qUOdDjfjPneNVAES+hklcZQCfMEcQfWhjtmjctSYsFqPh6lCdQtPajnyc=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0106.APCP153.PROD.OUTLOOK.COM (10.170.188.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.2; Thu, 8 Aug 2019 20:02:37 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d44e:57b7:d8fc:e91c]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d44e:57b7:d8fc:e91c%7]) with mapi id 15.20.2157.001; Thu, 8 Aug 2019
- 20:02:37 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "jackm@mellanox.com" <jackm@mellanox.com>
-Subject: RE: [PATCH] PCI: PM: Also move to D0 before calling
- pci_legacy_resume_early()
-Thread-Topic: [PATCH] PCI: PM: Also move to D0 before calling
- pci_legacy_resume_early()
-Thread-Index: AdVOGUCbZsj/msiiS0u0Knw2VZMQCQABOjuAAABxRyA=
-Date:   Thu, 8 Aug 2019 20:02:36 +0000
-Message-ID: <PU1P153MB0169252B65E2131C29858074BFD70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <PU1P153MB01695867B01987A8C239A8CCBFD70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20190808191913.GI151852@google.com>
-In-Reply-To: <20190808191913.GI151852@google.com>
+        id S2404329AbfHHUGN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Aug 2019 16:06:13 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:53166 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404070AbfHHUGM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Aug 2019 16:06:12 -0400
+Received: from pps.filterd (m0170393.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x78Jt2df030495;
+        Thu, 8 Aug 2019 16:06:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=spsW3iJj1C+z5+hobnJKI3JF6/CSZLZhsxP1rFK06xI=;
+ b=Rq2ekKxw0YDYt1yk99p2KNKEQVqEbzNWb8vDtd6+ZUlk/Im71MAXiuc3oHmiLLFf3+Jy
+ 8NtlzD8iI03JsZ1Y+t5Oq7bI9DOYFdSikBrLry+sJ94Kl9bNWkjATEmE4mW00X6yJbog
+ i6rBs8cPIKHw5zcWI95B33Juh3pJfFDrEoMEYxyrquQvLGUoJGJMKiNw5xG+k0d1cJc1
+ 3+ZUxNKfpn6hEszW4+rFx8XXKcWoL8lxdWGsetuVeUy9nOWu65CsIaAFQNLTbMJsi7ce
+ 5gEcxylft/2Z15fgcZIUJOspVF+PDiXyYm/hvbVRzv3dDqGgyN7Ff9A1ryP9VLigL+No oA== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0a-00154904.pphosted.com with ESMTP id 2u8qf08sys-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 08 Aug 2019 16:06:11 -0400
+Received: from pps.filterd (m0144102.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x78JrOQL100095;
+        Thu, 8 Aug 2019 16:06:11 -0400
+Received: from ausxippc110.us.dell.com (AUSXIPPC110.us.dell.com [143.166.85.200])
+        by mx0b-00154901.pphosted.com with ESMTP id 2u8q3cu1c2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 08 Aug 2019 16:06:10 -0400
+X-LoopCount0: from 10.166.132.131
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="841637776"
+From:   <Mario.Limonciello@dell.com>
+To:     <helgaas@kernel.org>, <rafael@kernel.org>
+CC:     <rjw@rjwysocki.net>, <linux-nvme@lists.infradead.org>,
+        <kbusch@kernel.org>, <kai.heng.feng@canonical.com>,
+        <keith.busch@intel.com>, <hch@lst.de>, <sagi@grimberg.me>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <rajatja@google.com>, <linux-pci@vger.kernel.org>
+Subject: RE: [PATCH v2 2/2] nvme-pci: Allow PCI bus-level PM to be used if
+ ASPM is disabled
+Thread-Topic: [PATCH v2 2/2] nvme-pci: Allow PCI bus-level PM to be used if
+ ASPM is disabled
+Thread-Index: AQHVTdGT69rR0fb3wUCKiH74wnB2qabxltQAgAAR1ICAAEDdAP//rTHA
+Date:   Thu, 8 Aug 2019 20:05:48 +0000
+Message-ID: <707af7109fee4942a4ba8eebbee6cde8@AUSX13MPC105.AMER.DELL.COM>
+References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
+ <20190731221956.GB15795@localhost.localdomain> <1921165.pTveHRX1Co@kreacher>
+ <1870928.r7tBYyfqdz@kreacher> <20190808134356.GF151852@google.com>
+ <CAJZ5v0h=nz8yXwOOGBUB9m1GtJPOqBwtNK7zXPNMJjzPhMWd9w@mail.gmail.com>
+ <20190808183954.GG151852@google.com>
+In-Reply-To: <20190808183954.GG151852@google.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-08T20:02:33.0775966Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2019-08-08T20:05:47.1803865Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=28748fa0-13f3-47b7-bbbc-798fd4b93757;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:9:c9ac:49d6:29e2:b6ef]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 03efe7b5-0f51-49dd-3669-08d71c3b5c4a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600156)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:PU1P153MB0106;
-x-ms-traffictypediagnostic: PU1P153MB0106:|PU1P153MB0106:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <PU1P153MB0106AF1B233D4333A686F3AABFD70@PU1P153MB0106.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 012349AD1C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(376002)(39860400002)(396003)(366004)(346002)(189003)(199004)(99286004)(46003)(10090500001)(7696005)(76176011)(7416002)(86362001)(11346002)(486006)(8990500004)(14444005)(52536014)(102836004)(476003)(64756008)(7736002)(53546011)(446003)(6116002)(71190400001)(74316002)(66446008)(33656002)(53936002)(10290500003)(478600001)(22452003)(66476007)(55016002)(305945005)(76116006)(256004)(14454004)(54906003)(6246003)(81156014)(8676002)(25786009)(186003)(229853002)(66946007)(81166006)(4326008)(71200400001)(6916009)(6506007)(8936002)(66556008)(5660300002)(6436002)(316002)(2906002)(9686003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0106;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Ut+JeE+S8Mh9dz0FyJWVzrh36EIHTTgHfvBAaOZ+JDRVljWLQqwYIKMURaco3CEjkMS3MgyM/239BCh53epmQJJXnuuTG7zgqj+Ty4G3+Av0clcw4t1r2rozDhlhaKjCqD0jHZmJcA4bQkIh9iTf69nsxFg3mcAdfBh22f9twby2ka1yjaJ8i+K/W7t5aEvIb8rHekmIlolm8bP7JmYCFpElsGirigLogU59Nq3GKQ8q1s6nLrXbLMDxllBLg0zBopZFnR3wHD34+WkKHqz24YDkuiWamfgaPEDxlGllvimE7sJWySErY6QSGRbabUfUed87YvQlGLkMPeG29ITcq/8cZgrn2X6Imcy1+SKSQKjqXkqYVxWRWG9yv9ijWqxERs4RI8JY3meVkDEfMeOjNiVp19sOQR1UpcmW9oxfOB4=
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
+ aiplabel=External Public
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.18.86]
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 03efe7b5-0f51-49dd-3669-08d71c3b5c4a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Aug 2019 20:02:36.8942
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HxDl2jG4N0xKz9VvpqJY8vRCVlDOuj+eBgQLfQmf5WaccJyZKu6Numm6eLh/oU8pMumShgCjRKVQeA+BGCnI5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0106
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-08_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908080177
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908080177
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> From: Bjorn Helgaas <helgaas@kernel.org>
-> Sent: Thursday, August 8, 2019 12:19 PM
-> To: Dexuan Cui <decui@microsoft.com>
+> This is more meaningful to you than to most people because "applying
+> the standard PCI PM" doesn't tell us what that means in terms of the
+> device.  Presumably it has something to do with a D-state transition?
+> I *assume* a suspend might involve the D0 -> D3hot transition you
+> mention below?
 >=20
-> On Thu, Aug 08, 2019 at 06:46:51PM +0000, Dexuan Cui wrote:
-> >
-> > In pci_legacy_suspend_late(), the device state is moved to PCI_UNKNOWN.
-> > In pci_pm_thaw_noirq(), the state is supposed to be moved back to PCI_D=
-0,
-> > but the current code misses the pci_legacy_resume_early() path, so the
-> > state remains in PCI_UNKNOWN in that path, and during hiberantion this
-> > causes an error for the Mellanox VF driver, which fails to enable
-> > MSI-X: pci_msi_supported() is false due to dev->current_state !=3D PCI_=
-D0:
+> > The reason for doing that was a (reportedly) widespread failure to
+> > take the PCIe link down during D0 -> D3hot transitions of NVMe
+> > devices,
 >=20
-> s/hiberantion/hibernation/
+> I don't know any of the details, but "failure to take the link down
+> during D0 -> D3hot transitions" is phrased as though it might be a
+> hardware erratum.  If this *is* related to an NVMe erratum, that would
+> explain why you only need to patch the nvme driver, and it would be
+> useful to mention that in the commit log, since otherwise it sounds
+> like something that might be needed in other drivers, too.
 
-Thanks for spoting this typo! :-)
-=20
-> Actually, it sounds more like "during *resume*, this causes an error",
-> so maybe you want s/hiberantion/resume/ instead?
+NVME is special in this case that there is other logic being put in place
+to set the drive's power state explicitly.
 
-Yes, it's during "resume", and to be more accurate, it happens during the
-"resume" of the "thaw" phase: when we run "echo disk > /sys/power/state",
-first the kernel "freezes" all the devices and create a hibernation image, =
-then
-the kernel "thaws" the devices including the disk/NIC, and writes the memor=
-y
-to the disk and powers down. This patch fixes the error message for the
-Mellanox VF driver in this phase.=20
+I would mention that also this alternate flow is quicker for s0ix
+resume since NVME doesn't go through shutdown routine.
 
-When the system starts again, a fresh kernel starts to run, and when the ke=
-rnel
-detects that a hibernation image was saved, the kernel "quiesces" the devic=
-es,
-and "restores" the devices from the saved image. Here device_resume_noirq()
--> ... -> pci_pm_restore_noirq() -> pci_pm_default_resume_early() ->
-pci_power_up() moves the device states back to PCI_D0. This path is not bro=
-ken
-and doesn't need my patch.=20
+Unanimously the feedback from vendors was to avoid NVME shutdown
+and to instead use SetFeatures to go into deepest power state instead
+over S0ix.
 
-Thanks,
--- Dexuan
+>=20
+> According to PCIe r5.0 sec 5.3.2, the only legal link states for D3hot
+> are L1, L2/L3 Ready.  So if you put a device in D3hot and its link
+> stays in L0, that sounds like a defect.  Is that what happens?
+>=20
+> Obviously I'm still confused.  I think it would help if you could
+> describe the problem in terms of the specific PCIe states involved
+> (D0, D3hot, L0, L1, L2, L3, etc) because then the spec would help
+> explain what's happening.
+
+Before that commit, the flow for NVME s0ix was:
+
+* Delete IO SQ/CQ
+* Shutdown NVME controller
+* Save PCI registers
+* Go into D3hot
+* Read PMCSR
+
+A functioning drive had the link at L1.2 and NVME power state at PS4
+at this point.
+Resuming looked like this:
+
+* Restore PCI registers
+* Enable NVME controller
+* Configure NVME controller (IO queues, features, etc).
+
+After that commit the flow for NVME s0ix is:
+
+* Use NVME SetFeatures to put drive into low power mode (PS3 or PS4)
+* Save PCI config register
+* ASPM is used to bring link into L1.2
+
+The resume flow is:
+
+* Restore PCI registers
+
+"Non-functioning" drives consumed too much power from the old flow.
+
+The root cause varied from manufacturer to manufacturer.
+The two I know off hand:
+
+One instance is that when PM status register is read after the device in L1=
+.2
+from D3 it causes link to go to L0 and then stay there.
+
+Another instance I heard drive isn't able to service D3hot request when NVM=
+E
+was already shut down.
+
+
