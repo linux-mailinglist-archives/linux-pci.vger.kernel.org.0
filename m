@@ -2,80 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 80CEB86CF8
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2019 00:13:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EC8686CFC
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2019 00:16:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732708AbfHHWNO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Aug 2019 18:13:14 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37044 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730768AbfHHWNO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Aug 2019 18:13:14 -0400
-Received: by mail-ot1-f65.google.com with SMTP id s20so59495396otp.4
-        for <linux-pci@vger.kernel.org>; Thu, 08 Aug 2019 15:13:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=QAveB2MW5aJCL42pdrRo0A2p3FoeHwf0+C7PsDEtr8A=;
-        b=BYh3CXmpTdLhzlZKIWTS8wOiE1OOGf9hls2ts3bYz7IveQviKpWWqIgibdewQlI/V0
-         bnjk37YFfE6sgM8hrsj1fuNTcN44llGXOqtbclPgC6p1fVnUUAd8ALIcpBm+ZjLWnwfi
-         +ER3HzavOE3pgbXBU+FsmTQRfpeI78xD3Ppwl/MyXIBZtjmYfOOL6XyaBXGot7zZHq2K
-         GP2NsSb/pb6jBVogIgEhzwOFp5bl1GPq502b3f+b4e3lNQxiSH0BAOt/Z0bLNls5hQmG
-         UxceZu66FYwoLYmp6J+3+/qh1D5I11XIzY0q8b+YtWdiZBmgm7xellduUI32H4JiGWbB
-         17MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=QAveB2MW5aJCL42pdrRo0A2p3FoeHwf0+C7PsDEtr8A=;
-        b=Fdb7xhmwC6RQ0KqB8mlAf5GCXSYii+ZwWLe7mHTXHn+6jEmp8IBL73Ik/TwfeDFZUv
-         nIEgZ1isWWx+FtoljRHQMUoWy5Suqk6ptwgyqoPmaD1mp4oyIkACgn8I/iXeKbVASC5q
-         V23b9icE5J82xs0D4G0HD8TwA+TIguOvXVXJAZlyFplmKf7+R7Xz3/2eKbXVbqHgffKw
-         9U2EyICZfr0mvicaEPiDnFwUIuyUyQir+P5K77Q+ff5DsgHzhjsCD+CPymKXFv7K5red
-         Ydfk4sVj7WmcHlWJ6wfe5SFQ1K8RbYmBAkee1ydepuDl2gAlJw5aupuBkv83fz9MSTQN
-         EHnQ==
-X-Gm-Message-State: APjAAAWuDiM9I6XFvPQ2UmdcZX9OwjuPuOruVwWMGlV1/mP03LszTrQZ
-        PlcFJadDu9DNfJ7ukNGOtPuhtQ==
-X-Google-Smtp-Source: APXvYqw6s/RyB6V5j4rVM86HvbsgecZHQYSNieyQsEmT4pWYa+NHHnA6N9MkEh+XkeHSxuIzd+PxoA==
-X-Received: by 2002:a5d:9acf:: with SMTP id x15mr16478208ion.190.1565302393249;
-        Thu, 08 Aug 2019 15:13:13 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id h19sm63989093iol.65.2019.08.08.15.13.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 08 Aug 2019 15:13:12 -0700 (PDT)
-Date:   Thu, 8 Aug 2019 15:13:11 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Bjorn Helgaas <helgaas@kernel.org>
-cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Wesley Terpstra <wesley@sifive.com>
-Subject: Re: [PATCH v2] pci: Kconfig: select PCI_MSI_IRQ_DOMAIN by default
- on RISC-V
-In-Reply-To: <20190808214728.GC7302@google.com>
-Message-ID: <alpine.DEB.2.21.9999.1908081512200.6414@viisi.sifive.com>
-References: <alpine.DEB.2.21.9999.1907251426450.32766@viisi.sifive.com> <20190808195546.GA7302@google.com> <alpine.DEB.2.21.9999.1908081349210.6414@viisi.sifive.com> <20190808214728.GC7302@google.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        id S2404579AbfHHWQU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Aug 2019 18:16:20 -0400
+Received: from mga06.intel.com ([134.134.136.31]:33795 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725535AbfHHWQU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 8 Aug 2019 18:16:20 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 15:16:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,363,1559545200"; 
+   d="scan'208";a="165834000"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by orsmga007.jf.intel.com with ESMTP; 08 Aug 2019 15:16:18 -0700
+Date:   Thu, 8 Aug 2019 16:13:53 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     linux-nvme <linux-nvme@lists.infradead.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Rajat Jain <rajatja@google.com>, Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v3 0/2] nvme-pci: Allow PCI bus-level PM to be used if
+ ASPM is disabled
+Message-ID: <20190808221353.GA27570@localhost.localdomain>
+References: <47415939.KV5G6iaeJG@kreacher>
+ <20190730144134.GA12844@localhost.localdomain>
+ <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
+ <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com>
+ <20190730191934.GD13948@localhost.localdomain>
+ <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
+ <20190730213114.GK13948@localhost.localdomain>
+ <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
+ <20190731221956.GB15795@localhost.localdomain>
+ <2184247.yL3mcj2FRQ@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2184247.yL3mcj2FRQ@kreacher>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 8 Aug 2019, Bjorn Helgaas wrote:
+The v3 series looks good to me.
 
-> Indeed, sorry I missed it.  I generally work based on -rc1, and it
-> looks like 251a44888183 was merged after -rc1.
-> 
-> Since we're after the merge window, the default target would be v5.4,
-> but I see some post-rc1 pull requests from you, so if you need this in
-> v5.3, let me know.
-> 
-> I applied your patch to pci/msi for v5.4 for now.
+Reviewed-by: Keith Busch <keith.busch@intel.com>
 
-v5.4 is fine - thanks.
+Bjorn,
 
+If you're okay with the series, we can either take it through nvme,
+or you can feel free to apply through pci, whichever you prefer.
 
-- Paul
+Thanks,
+Keith
