@@ -2,183 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 657EA8607B
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2019 12:58:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B145E861BB
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2019 14:31:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731178AbfHHK60 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Aug 2019 06:58:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:60070 "EHLO foss.arm.com"
+        id S2403783AbfHHMb1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Aug 2019 08:31:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731122AbfHHK60 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 8 Aug 2019 06:58:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D98E228;
-        Thu,  8 Aug 2019 03:58:25 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BBD723F694;
-        Thu,  8 Aug 2019 03:58:23 -0700 (PDT)
-Date:   Thu, 8 Aug 2019 11:58:21 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Chocron, Jonathan" <jonnyc@amazon.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Hanoch, Uri" <hanochu@amazon.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "Wasserstrom, Barak" <barakw@amazon.com>,
-        "Saidi, Ali" <alisaidi@amazon.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
+        id S2389951AbfHHMb1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 8 Aug 2019 08:31:27 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2E4221881;
+        Thu,  8 Aug 2019 12:31:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565267486;
+        bh=jPRA8WwVIBP3PqkfhSy/TiRINN02YI/sp1jGz5LU1/c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E3/gFSiVht9KFJplSMpjko42etxgYXQisDrbuN818/Pn67cENeQhcfvA0qJjCyNnb
+         4xvPZDFxFGNMVYPAGBi7FP301evhJWdbGR94yX6FjfW8h+/Ims0jgaeSvm1o/uh7mp
+         A6i5AwHZqhucwkbw9Jy8kehJvnkZ7EhxuJHokVTw=
+Date:   Thu, 8 Aug 2019 07:31:24 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Koenig, Christian" <Christian.Koenig@amd.com>
+Cc:     Sumit Saxena <sumit.saxena@broadcom.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-Subject: Re: [PATCH v3 8/8] PCI: dw: Add support for
- PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
-Message-ID: <20190808105821.GB30230@e121166-lin.cambridge.arm.com>
-References: <20190723092529.11310-1-jonnyc@amazon.com>
- <20190723092711.11786-4-jonnyc@amazon.com>
- <20190807163654.GC16214@e121166-lin.cambridge.arm.com>
- <67c58ded2177beca030450c25d742d35890eb48a.camel@amazon.com>
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH V2] PCI: set BAR size bits correctly in Resize BAR
+ control register
+Message-ID: <20190808123124.GD151852@google.com>
+References: <20190725192552.24295-1-sumit.saxena@broadcom.com>
+ <20190807230149.GA151852@google.com>
+ <ed70bffc-eed8-c3c5-ee9b-22e1cad1ae06@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67c58ded2177beca030450c25d742d35890eb48a.camel@amazon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <ed70bffc-eed8-c3c5-ee9b-22e1cad1ae06@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Side note, run:
-
-git log --oneline on drivers/pci/controller/dwc existing files and
-make sure commit subjects are in line with those.
-
-Eg PCI: dw: should be PCI: dwc:
-
-On Thu, Aug 08, 2019 at 09:30:05AM +0000, Chocron, Jonathan wrote:
-> On Wed, 2019-08-07 at 17:36 +0100, Lorenzo Pieralisi wrote:
-> > On Tue, Jul 23, 2019 at 12:27:11PM +0300, Jonathan Chocron wrote:
-> > > This basically aligns the usage of PCI_PROBE_ONLY and
-> > > PCI_REASSIGN_ALL_BUS in dw_pcie_host_init() with the logic in
-> > > pci_host_common_probe().
-> > > 
-> > > Now it will be possible to control via the devicetree whether to
-> > > just
-> > > probe the PCI bus (in cases where FW already configured it) or to
-> > > fully
-> > > configure it.
-> > > 
-> > > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> > > ---
-> > >  .../pci/controller/dwc/pcie-designware-host.c | 23
-> > > +++++++++++++++----
-> > >  1 file changed, 19 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > index d2ca748e4c85..0a294d8aa21a 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > @@ -342,6 +342,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > >  	if (!bridge)
-> > >  		return -ENOMEM;
-> > >  
-> > > +	of_pci_check_probe_only();
-> > > +
-> > >  	ret = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
-> > >  					&bridge->windows, &pp-
-> > > >io_base);
-> > >  	if (ret)
-> > > @@ -474,6 +476,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > >  
-> > >  	pp->root_bus_nr = pp->busn->start;
-> > >  
-> > > +	/* Do not reassign bus nums if probe only */
-> > > +	if (!pci_has_flag(PCI_PROBE_ONLY))
-> > > +		pci_add_flags(PCI_REASSIGN_ALL_BUS);
-> > 
-> > This changes the default for bus reassignment on all DWC host (that
-> > are
-> > !PCI_PROBE_ONLY), we should drop this line, it can trigger
-> > regressions.
-> > 
-> Will be dropped as part of v4. There might also be a behavioral
-> difference below where I added the if (pci_has_flag(PCI_PROBE_ONLY)).
-> Is that still ok?
-
-That's true but I doubt any DWC host has a DT firmware with
-"linux,pci-probe-only" in it.
-
-It is trial and error I am afraid, please make sure all DWC
-maintainers are copied in.
-
-> As I pointed out in the cover letter, since PCI_PROBE_ONLY is a system
-> wide flag, does it make sense to call of_pci_check_probe_only() here,
-> in the context of a specific driver (including the existing invocation
-> in pci_host_common_probe()), as opposed to a platform/arch context?
-
-It is an ongoing discussion to define how we should handle
-PCI_PROBE_ONLY. Adding this code into DWC I do not think it
-would hurt but if we can postpone it for the next (v5.5) merge
-window after we debate this at LPC within the PCI microconference
-it would be great.
-
-Please sync with Benjamin as a first step, I trust he would ask
-you to do the right thing.
-
-> > If we still want to merge it as a separate change we must test it on
-> > all
-> > DWC host bridges to make sure it does not trigger any issues with
-> > current set-ups, that's not going to be easy though.
-> > 
-> Just out of curiosity, how are such exhaustive tests achieved when a
-> patch requires them?
-
-CC DWC host bridge maintainers and ask them to test it. I do not have
-the HW (and FW) required, I am sorry, that's the only option I can give
-you. -next coverage would help too but to a minor extent.
-
-Thanks,
-Lorenzo
-
+On Thu, Aug 08, 2019 at 07:01:03AM +0000, Koenig, Christian wrote:
+> Am 08.08.19 um 01:01 schrieb Bjorn Helgaas:
+> > On Fri, Jul 26, 2019 at 12:55:52AM +0530, Sumit Saxena wrote:
+> >> In Resize BAR control register, bits[8:12] represents size of BAR.
+> >> As per PCIe specification, below is encoded values in register bits
+> >> to actual BAR size table:
+> >>
+> >> Bits  BAR size
+> >> 0     1 MB
+> >> 1     2 MB
+> >> 2     4 MB
+> >> 3     8 MB
+> >> --
+> >>
+> >> For 1 MB BAR size, BAR size bits should be set to 0 but incorrectly
+> >> these bits are set to "1f". Latest megaraid_sas and mpt3sas adapters
+> >> which support Resizable BAR with 1 MB BAR size fails to initialize
+> >> during system resume from S3 sleep.
+> >>
+> >> Fix: Correctly calculate BAR size bits for Resize BAR control register.
+> >>
+> >> V2:
+> >> -Simplified calculation of BAR size bits as suggested by Christian Koenig.
+> >>
+> >> CC: stable@vger.kernel.org # v4.16+
+> >> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203939
+> >> Fixes: d3252ace0bc652a1a244455556b6a549f969bf99 ("PCI: Restore resized BAR state on resume")
+> >> Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
+> >> ---
+> >>   drivers/pci/pci.c | 2 +-
+> >>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> >> index 29ed5ec1ac27..e59921296125 100644
+> >> --- a/drivers/pci/pci.c
+> >> +++ b/drivers/pci/pci.c
+> >> @@ -1438,7 +1438,7 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
+> >>   		pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
+> >>   		bar_idx = ctrl & PCI_REBAR_CTRL_BAR_IDX;
+> >>   		res = pdev->resource + bar_idx;
+> >> -		size = order_base_2((resource_size(res) >> 20) | 1) - 1;
+> >> +		size = order_base_2(resource_size(res) >> 20);
+> > Since BAR sizes are always powers of 2, wouldn't this be simpler as:
+> >
+> > 		size = ilog2(resource_size(res)) - 20;
+> >
+> > which nicely matches the table in PCIe r5.0, sec 7.8.6.3?
 > 
-> > Lorenzo
-> > 
-> > > +
-> > >  	bridge->dev.parent = dev;
-> > >  	bridge->sysdata = pp;
-> > >  	bridge->busnr = pp->root_bus_nr;
-> > > @@ -490,11 +496,20 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > >  	if (pp->ops->scan_bus)
-> > >  		pp->ops->scan_bus(pp);
-> > >  
-> > > -	pci_bus_size_bridges(pp->root_bus);
-> > > -	pci_bus_assign_resources(pp->root_bus);
-> > > +	/*
-> > > +	 * We insert PCI resources into the iomem_resource and
-> > > +	 * ioport_resource trees in either pci_bus_claim_resources()
-> > > +	 * or pci_bus_assign_resources().
-> > > +	 */
-> > > +	if (pci_has_flag(PCI_PROBE_ONLY)) {
-> > > +		pci_bus_claim_resources(pp->root_bus);
-> > > +	} else {
-> > > +		pci_bus_size_bridges(pp->root_bus);
-> > > +		pci_bus_assign_resources(pp->root_bus);
-> > >  
-> > > -	list_for_each_entry(child, &pp->root_bus->children, node)
-> > > -		pcie_bus_configure_settings(child);
-> > > +		list_for_each_entry(child, &pp->root_bus->children,
-> > > node)
-> > > +			pcie_bus_configure_settings(child);
-> > > +	}
-> > >  
-> > >  	pci_bus_add_devices(pp->root_bus);
-> > >  	return 0;
-> > > -- 
-> > > 2.17.1
-> > > 
+> Yeah, that should obviously work as well.
+> 
+> We would have a serious problem in the resource management if the 
+> resource size is smaller than 1MB or not a power of two.
+
+Yes, definitely.  Resizable BARs are required by spec to be 1MB or
+larger, but this does niggle at me a little bit, too.  It probably
+saves a few bits in pci_dev to recompute this at restore-time, but
+honestly, I think it would be more obviously correct to just do the
+simple-minded thing of saving and restoring the entire register.
+
+> Feel free to add my r-b.
+
+Done, thanks!
+
+> Regards,
+> Christian.
+> 
+> >
+> >>   		ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
+> >>   		ctrl |= size << PCI_REBAR_CTRL_BAR_SHIFT;
+> >>   		pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
+> >> -- 
+> >> 2.18.1
+> >>
+> 
