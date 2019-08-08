@@ -2,77 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 714708579B
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2019 03:27:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E18C38598A
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2019 06:58:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730467AbfHHB1s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Aug 2019 21:27:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730433AbfHHB1s (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Aug 2019 21:27:48 -0400
-Received: from localhost (unknown [65.200.167.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBC5B217F4;
-        Thu,  8 Aug 2019 01:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565227667;
-        bh=lehgbmnKPTacIABDR4IO8Y7c9xvi/7dFVWE0LTUEGgI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cvJL/EwykCmxI7R4k/7nKJ9Q3igqHHPUh6gboKqbbPkq1tTpOZeiy7MZKs5VIdJtY
-         Uwg4XbcU8XcJ6o/xdUnLoHHDLk2+2Ut49LHOuod5Vjx/ElDwLZYAkIvZ72fj7nwFTD
-         LK/MM6vtZJY+Swm0huthhMczddlfUFX06i9C344s=
-Date:   Wed, 7 Aug 2019 21:27:45 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jake Oshins <jakeo@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH] PCI: pci-hyperv: fix build errors on non-SYSFS config
-Message-ID: <20190808012745.GV17747@sasha-vm>
-References: <abbe8012-1e6f-bdea-1454-5c59ccbced3d@infradead.org>
- <DM6PR21MB133723E9D1FA8BA0006E06FECAF20@DM6PR21MB1337.namprd21.prod.outlook.com>
- <20190713150353.GF10104@sasha-vm>
- <20190723212107.GB9742@google.com>
- <20190807150654.GB16214@e121166-lin.cambridge.arm.com>
+        id S1726187AbfHHE6E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Aug 2019 00:58:04 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55006 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfHHE6E (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Aug 2019 00:58:04 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p74so988240wme.4;
+        Wed, 07 Aug 2019 21:58:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q7D/8BznaDXMUKeNwuiimCqxMs4M4U8z2oe/6Zp1LH0=;
+        b=QRz6meNnUgB1d68hz4Y0uHhl2sc9Lil/A6oHvm/LlDvt5vmfju0IUgGZVfQVVeXTOn
+         YwOggKYCXh2e9wvVL2y1IJdlMbUtYmPOuzxMADhLNuC/D1gN0IQZDBKv563Nhx2TuwSH
+         FKsNcGQVT+E8R0XTsx/TXjbYLJx4dZoS6wlSSHko92DnmlVJwFOCDJrkk8kA1mGq0gny
+         t36kMtEoEZIBxtnXlsyv/yH0PBUn/mJdAymAldrZn3Je2zXp/Hp5fQVqhfk9infMIT0R
+         T36ePaWFEco5ENVQlfRSACgnCiNvmbeCbxFUFQZoJDMPFqT5Ol8X6RlS/M9hOAy59Qnh
+         HF+w==
+X-Gm-Message-State: APjAAAUtHwGGjMGHrZ7mNiC9CDAiDy28FlfWP7gsOGpikMvB86Hz/iO8
+        H0khtR0Up+3l4dUY887ptqU=
+X-Google-Smtp-Source: APXvYqxouo6xkD/Ka8KpoCVDtmIK16o8FHZU0T4FDxQSAnEw7PlKO9Sge9gjs2gBwXn8UQ+e4dHxHA==
+X-Received: by 2002:a1c:751a:: with SMTP id o26mr1727442wmc.13.1565240282122;
+        Wed, 07 Aug 2019 21:58:02 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id 32sm87082644wrh.76.2019.08.07.21.58.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Aug 2019 21:58:01 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Bjorn Helgaas <bjorn.helgaas@gmail.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Derek Chickles <dchickles@marvell.com>,
+        Satanand Burla <sburla@marvell.com>,
+        Felix Manlunas <fmanlunas@marvell.com>, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] liquidio: Use pcie_flr() instead of reimplementing it
+Date:   Thu,  8 Aug 2019 07:57:53 +0300
+Message-Id: <20190808045753.5474-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190807150654.GB16214@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 04:06:54PM +0100, Lorenzo Pieralisi wrote:
->On Tue, Jul 23, 2019 at 04:21:07PM -0500, Bjorn Helgaas wrote:
->> On Sat, Jul 13, 2019 at 11:03:53AM -0400, Sasha Levin wrote:
->> > Queued up for hyperv-fixes, thank you!
->>
->> What merge strategy do you envision for this?  Previous
->> drivers/pci/controller/pci-hyperv.c changes have generally been merged
->> by Lorenzo and incorporated into my PCI tree.
->>
->> This particular patch doesn't actually touch pci-hyperv.c; it touches
->> drivers/pci/Kconfig, so should somehow be coordinated with me.
->>
->> Does this need to be tagged for stable?  a15f2c08c708 appeared in
->> v4.19, so my first guess is that it's not stable material.
->
->AFAIC Bjorn's question still stands. Who will pick this patch up ?
+octeon_mbox_process_cmd() directly writes the PCI_EXP_DEVCTL_BCR_FLR
+bit, which bypasses timing requirements imposed by the PCIe spec.
+This patch fixes the function to use the pcie_flr() interface instead.
 
-Would it be easier if I just ignored Hyper-V PCI patches?
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ drivers/net/ethernet/cavium/liquidio/octeon_mailbox.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---
-Thanks,
-Sasha
+diff --git a/drivers/net/ethernet/cavium/liquidio/octeon_mailbox.c b/drivers/net/ethernet/cavium/liquidio/octeon_mailbox.c
+index 021d99cd1665..614d07be7181 100644
+--- a/drivers/net/ethernet/cavium/liquidio/octeon_mailbox.c
++++ b/drivers/net/ethernet/cavium/liquidio/octeon_mailbox.c
+@@ -260,9 +260,7 @@ static int octeon_mbox_process_cmd(struct octeon_mbox *mbox,
+ 		dev_info(&oct->pci_dev->dev,
+ 			 "got a request for FLR from VF that owns DPI ring %u\n",
+ 			 mbox->q_no);
+-		pcie_capability_set_word(
+-			oct->sriov_info.dpiring_to_vfpcidev_lut[mbox->q_no],
+-			PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_BCR_FLR);
++		pcie_flr(oct->sriov_info.dpiring_to_vfpcidev_lut[mbox->q_no]);
+ 		break;
+ 
+ 	case OCTEON_PF_CHANGED_VF_MACADDR:
+-- 
+2.21.0
+
