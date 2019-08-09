@@ -2,48 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E490188153
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2019 19:35:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3FB788156
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2019 19:35:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407463AbfHIRe7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Aug 2019 13:34:59 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41678 "EHLO
+        id S2406965AbfHIRfB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Aug 2019 13:35:01 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40586 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406965AbfHIRe7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Aug 2019 13:34:59 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c2so95728406wrm.8;
-        Fri, 09 Aug 2019 10:34:56 -0700 (PDT)
+        with ESMTP id S2406944AbfHIRfA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Aug 2019 13:35:00 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r1so98918906wrl.7;
+        Fri, 09 Aug 2019 10:34:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CpRFDf1on/DMyVvQqiGBbziJaXfyqNwbKQZ77YJ1oLc=;
-        b=lgVLHcU6t/UANLeBerf4FK6ryhYJO5aWKZ8aCe122Q0ifADXlBFnzZ1fXcuXKMj9GF
-         0QJKQKIOXi9ZOaaxYm4LXcxyXd6mNX0hivcAToMdlZr+P1irCH9TLKOXcshKipHQMSe/
-         L1vpbs07tRtxKXMG/ZmiFuKJFGaMbNHlEogsrGFlrRG3NoLSsH5WO0FfAMKh7hxgqN7C
-         5qXWzvXirYsIdPaVx62ULUzLhCZmrZGZhWa87yihsbwGBWrljZWmG0XsIwK85DlSCcaa
-         MM7eXzRgn1Eo2o39/J55w1UHtZ4LlKGbVWcyfLfbTxF0ogDlG71yb3xtFl7DZghlI4gt
-         Yslw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0QkEA1y5nkTOno5XB67RvKzHnUuGnu6wIM9QZuVwt1k=;
+        b=DJBp4n07/eAbtoQgv8YzJp5NC/0ECbiPLtp5s7aKFEiXUxU/OGmZjYl6pnXrgyooSO
+         hkR8+WyvGOYw8j0fJ4Ut/XJYXIG+ZYyAtrkTXEnvZ2GXynAmAsLSKvQ2B8nI8NkP6Atv
+         0LCFq2CCcHimFdsTXMI6m8lb2ZwIO4tyQl0n1/HXvxJtAycf97vi0bZv7W7BTes8s0GF
+         54HHlXnA6SXfCci8kW3gjCxD3efWuA69b0XJYCO6/7xhoFPYw8KOZXadpySUHj+aPZQq
+         rlB+LfcjLDcgTKa1uUC8zKpg9K4g3TEWW8ov845FU6cfoevLdyrHYf3kz01ibNkm4WQq
+         Zzlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CpRFDf1on/DMyVvQqiGBbziJaXfyqNwbKQZ77YJ1oLc=;
-        b=BxyPKRCebn/OPOctU8CC9jMEsSUZM32NVQaOhUemazjWmwSY5544ATQ8lIFW+cbe3o
-         VDyAQIvBqvwv+0YfBV8F/kwLhcNjNpfVgOpsjTUHiAlA4P6C/vy7OKCI4Oj7cDxCg/yk
-         iRN+VFFw5ijLuHwDkcvWNRQC1VDo660ayYisxX1rrpO2QH3NyE6zyxj7D8maptEyt727
-         vujgaGArWexTYIMi4pGqYrhJDN0FaBGl6S7gkmWtn6dnU3FC1guH7mS9DN5O9WWWz9r9
-         j+AhiguQLroMXobfhkTVe2M1dLCH9nRJ4OcQY1FgfcE1m0UvsGVtpYZnoqF/VXEmQP24
-         LknQ==
-X-Gm-Message-State: APjAAAVrNJU94sMKPHIa19jzUngW3M1uriFJY6bRl9d4O8CvkjYxNhdO
-        tC6ovU51rCzOxSpHb44/Ggeccv7V
-X-Google-Smtp-Source: APXvYqzCHFdzjIRGNYri3asezhWaK9OnJ/tiCIYb0cC9tN16vAdkDywm74TH8sJiwYKlhOKG9gsyZQ==
-X-Received: by 2002:adf:ea51:: with SMTP id j17mr394543wrn.184.1565372095591;
-        Fri, 09 Aug 2019 10:34:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0QkEA1y5nkTOno5XB67RvKzHnUuGnu6wIM9QZuVwt1k=;
+        b=mebjhwh4p1ByqRqE3AsLirnVJtmtuM0IzTaL1mhcQLvBv8fob6TieCMfn1mXtyqazh
+         nWY1BGHGNhurQG3gogngBHWxfA7DdMOsUPyTycfW37mYuzkDidklzqPSwbqLIr08nzmk
+         C0gf8H69t9kbQbHpNVyIeCDsMqxK1BY79uPaxnJzsnyPj0qCxSGOOL9FPjutH2uIvldN
+         rdDervGFBXnCejI0GCOb7MTahZJFXusjxmyISWxvj7LCPkInVsJDulMu+sFNnv5fTHnH
+         NBotEcmykh2AgzWUeA/hUBGILm2dDlo4Glk4rN9ckkTELmUG1nRej4EpaLPgE3TnI2LJ
+         t2iA==
+X-Gm-Message-State: APjAAAVx1YAF6JBZmpHbghnii3qQKzcbiUVXane6y/uTRE22TWhgR+Ei
+        469yAOTRBRUaIb8vzAIWol/jdTPk
+X-Google-Smtp-Source: APXvYqzhHcROZMYc+k2MQbVvhOT13ir7GhS1I48iBJezTQ/pimco8h+oS52e8tCifE5uiIZQ2NasZg==
+X-Received: by 2002:adf:fac1:: with SMTP id a1mr4589560wrs.56.1565372097614;
+        Fri, 09 Aug 2019 10:34:57 -0700 (PDT)
 Received: from chi.lan (ip-86-49-35-8.net.upcbroadband.cz. [86.49.35.8])
-        by smtp.gmail.com with ESMTPSA id n14sm189127870wra.75.2019.08.09.10.34.54
+        by smtp.gmail.com with ESMTPSA id n14sm189127870wra.75.2019.08.09.10.34.55
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 10:34:54 -0700 (PDT)
+        Fri, 09 Aug 2019 10:34:56 -0700 (PDT)
 From:   marek.vasut@gmail.com
 To:     linux-pci@vger.kernel.org
 Cc:     Oza Pawandeep <oza.oza@broadcom.com>,
@@ -55,10 +55,12 @@ Cc:     Oza Pawandeep <oza.oza@broadcom.com>,
         Simon Horman <horms+renesas@verge.net.au>,
         Wolfram Sang <wsa@the-dreams.de>,
         linux-renesas-soc@vger.kernel.org
-Subject: [PATCH 1/2] OF/PCI: Export inbound memory interface to PCI RC drivers.
-Date:   Fri,  9 Aug 2019 19:34:48 +0200
-Message-Id: <20190809173449.20126-1-marek.vasut@gmail.com>
+Subject: [PATCH 2/2] PCI/of fix of_dma_get_range; get PCI specific dma-ranges
+Date:   Fri,  9 Aug 2019 19:34:49 +0200
+Message-Id: <20190809173449.20126-2-marek.vasut@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190809173449.20126-1-marek.vasut@gmail.com>
+References: <20190809173449.20126-1-marek.vasut@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -68,16 +70,34 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Oza Pawandeep <oza.oza@broadcom.com>
 
-The patch exports interface to PCIe RC drivers so that,
-Drivers can get their inbound memory configuration.
+current device framework and OF framework integration assumes
+dma-ranges in a way where memory-mapped devices define their
+dma-ranges. (child-bus-address, parent-bus-address, length).
 
-It provides basis for IOVA reservations for inbound memory
-holes, if RC is not capable of addressing all the host memory,
-Specifically when IOMMU is enabled and on ARMv8 where 64bit IOVA
-could be allocated.
+of_dma_configure is specifically written to take care of memory
+mapped devices. but no implementation exists for pci to take
+care of pcie based memory ranges.
 
-It handles multiple inbound windows, and returns resources,
-and is left to the caller, how it wants to use them.
+for e.g. iproc based SOCs and other SOCs(such as rcar) have PCI
+world dma-ranges.
+dma-ranges = <0x43000000 0x00 0x00 0x00 0x00 0x80 0x00>;
+
+this patch fixes the following problems of_dma_get_range.
+1) return of wrong size as 0.
+2) not handling absence of dma-ranges which is valid for PCI master.
+3) not handling multipe inbound windows.
+4) in order to get largest possible dma_mask. this patch also
+retuns the largest possible size based on dma-ranges,
+
+for e.g.
+dma-ranges = <0x43000000 0x00 0x00 0x00 0x00 0x80 0x00>;
+we should get dev->coherent_dma_mask=0x7fffffffff.
+
+based on which IOVA allocation space will honour PCI host
+bridge limitations.
+
+the implementation hooks bus specific callbacks for getting
+dma-ranges.
 
 Signed-off-by: Oza Pawandeep <oza.oza@broadcom.com>
 Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
@@ -90,141 +110,285 @@ Cc: Wolfram Sang <wsa@the-dreams.de>
 Cc: linux-renesas-soc@vger.kernel.org
 To: linux-pci@vger.kernel.org
 ---
- drivers/pci/of.c       | 96 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/of_pci.h |  7 +++
- 2 files changed, 103 insertions(+)
+ drivers/of/address.c | 220 +++++++++++++++++++++++++++++--------------
+ 1 file changed, 150 insertions(+), 70 deletions(-)
 
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index bc7b27a28795..4018f1a26f6f 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -347,6 +347,102 @@ int devm_of_pci_get_host_bridge_resources(struct device *dev,
- 	return err;
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 55a4eb7786ca..ae2819e148b8 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -8,6 +8,7 @@
+ #include <linux/logic_pio.h>
+ #include <linux/module.h>
+ #include <linux/of_address.h>
++#include <linux/of_pci.h>
+ #include <linux/pci.h>
+ #include <linux/pci_regs.h>
+ #include <linux/sizes.h>
+@@ -48,6 +49,8 @@ struct of_bus {
+ 				int na, int ns, int pna);
+ 	int		(*translate)(__be32 *addr, u64 offset, int na);
+ 	unsigned int	(*get_flags)(const __be32 *addr);
++	int		(*get_dma_ranges)(struct device_node *np,
++					  u64 *dma_addr, u64 *paddr, u64 *size);
+ };
+ 
+ /*
+@@ -174,6 +177,143 @@ static int of_bus_pci_translate(__be32 *addr, u64 offset, int na)
+ 	return of_bus_default_translate(addr + 1, offset, na - 1);
  }
- EXPORT_SYMBOL_GPL(devm_of_pci_get_host_bridge_resources);
-+
-+/**
-+ * of_pci_get_dma_ranges - Parse PCI host bridge inbound resources from DT
-+ * @np: device node of the host bridge having the dma-ranges property
-+ * @resources: list where the range of resources will be added after DT parsing
-+ *
-+ * It is the caller's job to free the @resources list.
-+ *
-+ * This function will parse the "dma-ranges" property of a
-+ * PCI host bridge device node and setup the resource mapping based
-+ * on its content.
-+ *
-+ * It returns zero if the range parsing has been successful or a standard error
-+ * value if it failed.
-+ */
-+
-+int of_pci_get_dma_ranges(struct device_node *dn, struct list_head *resources)
+ 
++static int of_bus_pci_get_dma_ranges(struct device_node *np, u64 *dma_addr,
++				     u64 *paddr, u64 *size)
 +{
-+	struct device_node *node = of_node_get(dn);
-+	int rlen;
-+	int pna = of_n_addr_cells(node);
-+	const int na = 3, ns = 2;
-+	int np = pna + na + ns;
++	struct device_node *node = of_node_get(np);
 +	int ret = 0;
-+	struct resource *res;
-+	const u32 *dma_ranges;
-+	struct of_pci_range range;
++	struct resource_entry *window;
++	LIST_HEAD(res);
++
++	if (!node)
++		return -EINVAL;
++
++	*size = 0;
++	/*
++	 * PCI dma-ranges is not mandatory property.
++	 * many devices do no need to have it, since
++	 * host bridge does not require inbound memory
++	 * configuration or rather have design limitations.
++	 * so we look for dma-ranges, if missing we
++	 * just return the caller full size, and also
++	 * no dma-ranges suggests that, host bridge allows
++	 * whatever comes in, so we set dma_addr to 0.
++	 */
++	ret = of_pci_get_dma_ranges(np, &res);
++	if (!ret) {
++		resource_list_for_each_entry(window, &res) {
++		struct resource *res_dma = window->res;
++
++		if (*size < resource_size(res_dma)) {
++			*dma_addr = res_dma->start - window->offset;
++			*paddr = res_dma->start;
++			*size = resource_size(res_dma);
++			}
++		}
++	}
++	pci_free_resource_list(&res);
++
++	/*
++	 * return the largest possible size,
++	 * since PCI master allows everything.
++	 */
++	if (*size == 0) {
++		pr_debug("empty/zero size dma-ranges found for node(%s)\n",
++			np->full_name);
++		*size = DMA_BIT_MASK(sizeof(dma_addr_t) * 8) - 1;
++		*dma_addr = *paddr = 0;
++		ret = 0;
++	}
++
++	pr_debug("dma_addr(%llx) cpu_addr(%llx) size(%llx)\n",
++		 *dma_addr, *paddr, *size);
++
++	of_node_put(node);
++
++	return ret;
++}
++
++static int get_dma_ranges(struct device_node *np, u64 *dma_addr,
++				u64 *paddr, u64 *size)
++{
++	struct device_node *node = of_node_get(np);
++	const __be32 *ranges = NULL;
++	int len, naddr, nsize, pna;
++	int ret = 0;
++	u64 dmaaddr;
 +
 +	if (!node)
 +		return -EINVAL;
 +
 +	while (1) {
-+		dma_ranges = of_get_property(node, "dma-ranges", &rlen);
-+
-+		/* Ignore empty ranges, they imply no translation required. */
-+		if (dma_ranges && rlen > 0)
-+			break;
-+
-+		/* no dma-ranges, they imply no translation required. */
-+		if (!dma_ranges)
-+			break;
-+
++		naddr = of_n_addr_cells(node);
++		nsize = of_n_size_cells(node);
 +		node = of_get_next_parent(node);
-+
 +		if (!node)
++			break;
++
++		ranges = of_get_property(node, "dma-ranges", &len);
++
++		/* Ignore empty ranges, they imply no translation required */
++		if (ranges && len > 0)
++			break;
++
++		/*
++		 * At least empty ranges has to be defined for parent node if
++		 * DMA is supported
++		 */
++		if (!ranges)
 +			break;
 +	}
 +
-+	if (!dma_ranges) {
-+		pr_debug("pcie device has no dma-ranges defined for node(%s)\n",
-+			  dn->full_name);
-+		ret = -EINVAL;
++	if (!ranges) {
++		pr_debug("no dma-ranges found for node(%s)\n", np->full_name);
++		ret = -ENODEV;
 +		goto out;
 +	}
 +
-+	while ((rlen -= np * 4) >= 0) {
-+		range.pci_space = be32_to_cpup((const __be32 *) &dma_ranges[0]);
-+		range.pci_addr = of_read_number(dma_ranges + 1, ns);
-+		range.cpu_addr = of_translate_dma_address(node,
-+							dma_ranges + na);
-+		range.size = of_read_number(dma_ranges + pna + na, ns);
-+		range.flags = IORESOURCE_MEM;
++	len /= sizeof(u32);
 +
-+		dma_ranges += np;
++	pna = of_n_addr_cells(node);
 +
-+		/*
-+		 * If we failed translation or got a zero-sized region
-+		 * then skip this range.
-+		 */
-+		if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
-+			continue;
-+
-+		res = kzalloc(sizeof(struct resource), GFP_KERNEL);
-+		if (!res) {
-+			ret = -ENOMEM;
-+			goto parse_failed;
-+		}
-+
-+		ret = of_pci_range_to_resource(&range, dn, res);
-+		if (ret) {
-+			kfree(res);
-+			continue;
-+		}
-+
-+		pci_add_resource_offset(resources, res,
-+					res->start - range.pci_addr);
++	/* dma-ranges format:
++	 * DMA addr	: naddr cells
++	 * CPU addr	: pna cells
++	 * size		: nsize cells
++	 */
++	dmaaddr = of_read_number(ranges, naddr);
++	*paddr = of_translate_dma_address(np, ranges);
++	if (*paddr == OF_BAD_ADDR) {
++		pr_err("translation of DMA address(%pad) to CPU address failed node(%s)\n",
++		       dma_addr, np->full_name);
++		ret = -EINVAL;
++		goto out;
 +	}
-+	return ret;
++	*dma_addr = dmaaddr;
 +
-+parse_failed:
-+	pci_free_resource_list(resources);
++	*size = of_read_number(ranges + naddr + pna, nsize);
++
++	pr_debug("dma_addr(%llx) cpu_addr(%llx) size(%llx)\n",
++		 *dma_addr, *paddr, *size);
++
 +out:
 +	of_node_put(node);
++
 +	return ret;
 +}
-+EXPORT_SYMBOL_GPL(of_pci_get_dma_ranges);
- #endif /* CONFIG_OF_ADDRESS */
- 
- #if IS_ENABLED(CONFIG_OF_IRQ)
-diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-index 21a89c4880fa..02bff0587dd2 100644
---- a/include/linux/of_pci.h
-+++ b/include/linux/of_pci.h
-@@ -13,6 +13,7 @@ struct device_node;
- struct device_node *of_pci_find_child_device(struct device_node *parent,
- 					     unsigned int devfn);
- int of_pci_get_devfn(struct device_node *np);
-+int of_pci_get_dma_ranges(struct device_node *np, struct list_head *resources);
- void of_pci_check_probe_only(void);
- #else
- static inline struct device_node *of_pci_find_child_device(struct device_node *parent,
-@@ -26,6 +27,12 @@ static inline int of_pci_get_devfn(struct device_node *np)
- 	return -EINVAL;
- }
- 
-+static inline int of_pci_get_dma_ranges(struct device_node *np,
-+					struct list_head *resources)
++
++static int of_bus_isa_get_dma_ranges(struct device_node *np, u64 *dma_addr,
++				     u64 *paddr, u64 *size)
 +{
-+	return -EINVAL;
++	return get_dma_ranges(np, dma_addr, paddr, size);
 +}
 +
- static inline void of_pci_check_probe_only(void) { }
- #endif
++static int of_bus_default_get_dma_ranges(struct device_node *np, u64 *dma_addr,
++					 u64 *paddr, u64 *size)
++{
++	return get_dma_ranges(np, dma_addr, paddr, size);
++}
++
+ const __be32 *of_get_pci_address(struct device_node *dev, int bar_no, u64 *size,
+ 			unsigned int *flags)
+ {
+@@ -438,6 +578,7 @@ static struct of_bus of_busses[] = {
+ 		.map = of_bus_pci_map,
+ 		.translate = of_bus_pci_translate,
+ 		.get_flags = of_bus_pci_get_flags,
++		.get_dma_ranges = of_bus_pci_get_dma_ranges,
+ 	},
+ #endif /* CONFIG_PCI */
+ 	/* ISA */
+@@ -449,6 +590,7 @@ static struct of_bus of_busses[] = {
+ 		.map = of_bus_isa_map,
+ 		.translate = of_bus_isa_translate,
+ 		.get_flags = of_bus_isa_get_flags,
++		.get_dma_ranges = of_bus_isa_get_dma_ranges,
+ 	},
+ 	/* Default */
+ 	{
+@@ -459,6 +601,7 @@ static struct of_bus of_busses[] = {
+ 		.map = of_bus_default_map,
+ 		.translate = of_bus_default_translate,
+ 		.get_flags = of_bus_default_get_flags,
++		.get_dma_ranges = of_bus_default_get_dma_ranges,
+ 	},
+ };
+ 
+@@ -917,80 +1060,17 @@ EXPORT_SYMBOL(of_io_request_and_map);
+  *	size			: nsize cells
+  *
+  * It returns -ENODEV if "dma-ranges" property was not found
+- * for this device in DT.
++ * for this device in DT, except if PCI device then, dma-ranges
++ * can be optional property, and in that case returns size with
++ * entire host memory.
+  */
+ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *size)
+ {
+-	struct device_node *node = of_node_get(np);
+-	const __be32 *ranges = NULL;
+-	int len, naddr, nsize, pna;
+-	int ret = 0;
+-	u64 dmaaddr;
+-
+-	if (!node)
+-		return -EINVAL;
+-
+-	while (1) {
+-		struct device_node *parent;
+-
+-		naddr = of_n_addr_cells(node);
+-		nsize = of_n_size_cells(node);
+-
+-		parent = __of_get_dma_parent(node);
+-		of_node_put(node);
+-
+-		node = parent;
+-		if (!node)
+-			break;
+-
+-		ranges = of_get_property(node, "dma-ranges", &len);
+-
+-		/* Ignore empty ranges, they imply no translation required */
+-		if (ranges && len > 0)
+-			break;
+-
+-		/*
+-		 * At least empty ranges has to be defined for parent node if
+-		 * DMA is supported
+-		 */
+-		if (!ranges)
+-			break;
+-	}
+-
+-	if (!ranges) {
+-		pr_debug("no dma-ranges found for node(%pOF)\n", np);
+-		ret = -ENODEV;
+-		goto out;
+-	}
+-
+-	len /= sizeof(u32);
+-
+-	pna = of_n_addr_cells(node);
+-
+-	/* dma-ranges format:
+-	 * DMA addr	: naddr cells
+-	 * CPU addr	: pna cells
+-	 * size		: nsize cells
+-	 */
+-	dmaaddr = of_read_number(ranges, naddr);
+-	*paddr = of_translate_dma_address(np, ranges);
+-	if (*paddr == OF_BAD_ADDR) {
+-		pr_err("translation of DMA address(%pad) to CPU address failed node(%pOF)\n",
+-		       dma_addr, np);
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-	*dma_addr = dmaaddr;
+-
+-	*size = of_read_number(ranges + naddr + pna, nsize);
+-
+-	pr_debug("dma_addr(%llx) cpu_addr(%llx) size(%llx)\n",
+-		 *dma_addr, *paddr, *size);
+-
+-out:
+-	of_node_put(node);
++	struct of_bus *bus;
+ 
+-	return ret;
++	/* get bus specific dma-ranges. */
++	bus = of_match_bus(np);
++	return bus->get_dma_ranges(np, dma_addr, paddr, size);
+ }
+ EXPORT_SYMBOL_GPL(of_dma_get_range);
  
 -- 
 2.20.1
