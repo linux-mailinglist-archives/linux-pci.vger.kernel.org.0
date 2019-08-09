@@ -2,127 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B812E87784
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2019 12:34:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B39E787D44
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2019 16:54:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405957AbfHIKd7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Aug 2019 06:33:59 -0400
-Received: from mailout2.hostsharing.net ([83.223.78.233]:46121 "EHLO
-        mailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405928AbfHIKd7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Aug 2019 06:33:59 -0400
-X-Greylist: delayed 311 seconds by postgrey-1.27 at vger.kernel.org; Fri, 09 Aug 2019 06:33:57 EDT
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by mailout2.hostsharing.net (Postfix) with ESMTPS id 67DDC1005998E;
-        Fri,  9 Aug 2019 12:28:44 +0200 (CEST)
-Received: from localhost (unknown [89.246.108.87])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by h08.hostsharing.net (Postfix) with ESMTPSA id 0B2136133AB0;
-        Fri,  9 Aug 2019 12:28:44 +0200 (CEST)
-X-Mailbox-Line: From 4174210466e27eb7e2243dd1d801d5f75baaffd8 Mon Sep 17 00:00:00 2001
-Message-Id: <4174210466e27eb7e2243dd1d801d5f75baaffd8.1565345211.git.lukas@wunner.de>
-From:   Lukas Wunner <lukas@wunner.de>
-Date:   Fri, 9 Aug 2019 12:28:43 +0200
-Subject: [PATCH] PCI: pciehp: Avoid returning prematurely from sysfs requests
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>
+        id S2406518AbfHIOy6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Aug 2019 10:54:58 -0400
+Received: from mga07.intel.com ([134.134.136.100]:26918 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726140AbfHIOy6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 9 Aug 2019 10:54:58 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 07:54:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,364,1559545200"; 
+   d="scan'208";a="375224439"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by fmsmga006.fm.intel.com with ESMTP; 09 Aug 2019 07:54:56 -0700
+Date:   Fri, 9 Aug 2019 08:52:33 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Rajat Jain <rajatja@google.com>, Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v3 0/2] nvme-pci: Allow PCI bus-level PM to be used if
+ ASPM is disabled
+Message-ID: <20190809145233.GB28515@localhost.localdomain>
+References: <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
+ <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com>
+ <20190730191934.GD13948@localhost.localdomain>
+ <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
+ <20190730213114.GK13948@localhost.localdomain>
+ <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
+ <20190731221956.GB15795@localhost.localdomain>
+ <2184247.yL3mcj2FRQ@kreacher>
+ <20190808221353.GA27570@localhost.localdomain>
+ <CAJZ5v0hh3Yfx0Kbt11NEXV9q5RtApuvvg5JZ2O_rZLvixOWSOA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0hh3Yfx0Kbt11NEXV9q5RtApuvvg5JZ2O_rZLvixOWSOA@mail.gmail.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-A sysfs request to enable or disable a PCIe hotplug slot should not
-return before it has been carried out.  That is sought to be achieved
-by waiting until the controller's "pending_events" have been cleared.
+On Fri, Aug 09, 2019 at 01:05:42AM -0700, Rafael J. Wysocki wrote:
+> On Fri, Aug 9, 2019 at 12:16 AM Keith Busch <kbusch@kernel.org> wrote:
+> >
+> > The v3 series looks good to me.
+> >
+> > Reviewed-by: Keith Busch <keith.busch@intel.com>
+> >
+> > Bjorn,
+> >
+> > If you're okay with the series, we can either take it through nvme,
+> > or you can feel free to apply through pci, whichever you prefer.
+> 
+> Actually, I can apply it too with your R-by along with the PCIe patch
+> ACKed by Bjorn.  Please let me know if that works for you.
 
-However the IRQ thread pciehp_ist() clears the "pending_events" before
-it acts on them.  If pciehp_sysfs_enable_slot() / _disable_slot() happen
-to check the "pending_events" after they have been cleared but while
-pciehp_ist() is still running, the functions may return prematurely
-with an incorrect return value.
-
-Fix by introducing an "ist_running" flag which must be false before a
-sysfs request is allowed to return.
-
-Fixes: 32a8cef274fe ("PCI: pciehp: Enable/disable exclusively from IRQ thread")
-Link: https://lore.kernel.org/linux-pci/1562226638-54134-1-git-send-email-wangxiongfeng2@huawei.com
-Reported-and-tested-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v4.19+
----
- drivers/pci/hotplug/pciehp.h      | 2 ++
- drivers/pci/hotplug/pciehp_ctrl.c | 6 ++++--
- drivers/pci/hotplug/pciehp_hpc.c  | 2 ++
- 3 files changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index 8c51a04b8083..e316bde45c7b 100644
---- a/drivers/pci/hotplug/pciehp.h
-+++ b/drivers/pci/hotplug/pciehp.h
-@@ -72,6 +72,7 @@ extern int pciehp_poll_time;
-  * @reset_lock: prevents access to the Data Link Layer Link Active bit in the
-  *	Link Status register and to the Presence Detect State bit in the Slot
-  *	Status register during a slot reset which may cause them to flap
-+ * @ist_running: flag to keep user request waiting while IRQ thread is running
-  * @request_result: result of last user request submitted to the IRQ thread
-  * @requester: wait queue to wake up on completion of user request,
-  *	used for synchronous slot enable/disable request via sysfs
-@@ -101,6 +102,7 @@ struct controller {
- 
- 	struct hotplug_slot hotplug_slot;	/* hotplug core interface */
- 	struct rw_semaphore reset_lock;
-+	unsigned int ist_running;
- 	int request_result;
- 	wait_queue_head_t requester;
- };
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index 631ced0ab28a..1ce9ce335291 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -368,7 +368,8 @@ int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot)
- 		ctrl->request_result = -ENODEV;
- 		pciehp_request(ctrl, PCI_EXP_SLTSTA_PDC);
- 		wait_event(ctrl->requester,
--			   !atomic_read(&ctrl->pending_events));
-+			   !atomic_read(&ctrl->pending_events) &&
-+			   !ctrl->ist_running);
- 		return ctrl->request_result;
- 	case POWERON_STATE:
- 		ctrl_info(ctrl, "Slot(%s): Already in powering on state\n",
-@@ -401,7 +402,8 @@ int pciehp_sysfs_disable_slot(struct hotplug_slot *hotplug_slot)
- 		mutex_unlock(&ctrl->state_lock);
- 		pciehp_request(ctrl, DISABLE_SLOT);
- 		wait_event(ctrl->requester,
--			   !atomic_read(&ctrl->pending_events));
-+			   !atomic_read(&ctrl->pending_events) &&
-+			   !ctrl->ist_running);
- 		return ctrl->request_result;
- 	case POWEROFF_STATE:
- 		ctrl_info(ctrl, "Slot(%s): Already in powering off state\n",
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index bd990e3371e3..9e2d7688e8cc 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -608,6 +608,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
- 	irqreturn_t ret;
- 	u32 events;
- 
-+	ctrl->ist_running = true;
- 	pci_config_pm_runtime_get(pdev);
- 
- 	/* rerun pciehp_isr() if the port was inaccessible on interrupt */
-@@ -654,6 +655,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
- 	up_read(&ctrl->reset_lock);
- 
- 	pci_config_pm_runtime_put(pdev);
-+	ctrl->ist_running = false;
- 	wake_up(&ctrl->requester);
- 	return IRQ_HANDLED;
- }
--- 
-2.20.1
-
+Thanks, that sounds good to me.
