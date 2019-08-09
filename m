@@ -2,33 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A300D870C6
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2019 06:46:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EC27870CD
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2019 06:46:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725920AbfHIEqZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Aug 2019 00:46:25 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:5502 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbfHIEqZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Aug 2019 00:46:25 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4cfaa20000>; Thu, 08 Aug 2019 21:46:26 -0700
+        id S1732375AbfHIEqb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Aug 2019 00:46:31 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:5528 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbfHIEqb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Aug 2019 00:46:31 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4cfab00000>; Thu, 08 Aug 2019 21:46:40 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 08 Aug 2019 21:46:24 -0700
+  Thu, 08 Aug 2019 21:46:30 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 08 Aug 2019 21:46:24 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 9 Aug
- 2019 04:46:24 +0000
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 9 Aug
- 2019 04:46:23 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 9 Aug 2019 04:46:23 +0000
+        by hqpgpgate101.nvidia.com on Thu, 08 Aug 2019 21:46:30 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 9 Aug
+ 2019 04:46:30 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 9 Aug 2019 04:46:30 +0000
 Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d4cfa9a0000>; Thu, 08 Aug 2019 21:46:23 -0700
+        id <B5d4cfaa00002>; Thu, 08 Aug 2019 21:46:29 -0700
 From:   Vidya Sagar <vidyas@nvidia.com>
 To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
         <robh+dt@kernel.org>, <mark.rutland@arm.com>,
@@ -40,9 +37,9 @@ CC:     <digetx@gmail.com>, <mperttunen@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
         <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V15 01/13] PCI: Add #defines for some of PCIe spec r4.0 features
-Date:   Fri, 9 Aug 2019 10:15:57 +0530
-Message-ID: <20190809044609.20401-2-vidyas@nvidia.com>
+Subject: [PATCH V15 02/13] PCI: Disable MSI for Tegra root ports
+Date:   Fri, 9 Aug 2019 10:15:58 +0530
+Message-ID: <20190809044609.20401-3-vidyas@nvidia.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190809044609.20401-1-vidyas@nvidia.com>
 References: <20190809044609.20401-1-vidyas@nvidia.com>
@@ -50,45 +47,45 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565325986; bh=yFehXsjNRJlHL1q3HvFaPjCAb4XcBfWHr7DU4Chl2+E=;
+        t=1565326000; bh=+B9+3jDroSR2EXs7lL0wtXJDVSAe60Vu5LOCSStt6+c=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=ZkkApcqIP6rS4apWxAauoQ0sCR80NNyVRug21JxPLtuoRreP/Z8cHWhEWO2U3q1LO
-         iEJW/Yio6I6rk/I6runlgLfZ/no1zYeuBahes6oNkZWWNGzFgXEJqfjZHLec+nI6ut
-         fUGwAfrQ2kodhis8kxDu49hZ96mZgv21sefHW+66zVJyoL8qllLOPlAtRnx4LMO6si
-         hBcU5pkpnbnd3sw9dT2BsiWHbXam8GeX3HYNlQ743zVHK4u1ZyNt4OxpPXQDbOL+PA
-         cRtdJxtIUpWqGT/nCOxlcZCeEpxc/AceNcFIlLuOzMY7SR/wQ3cG6fNPQlO1hM2SKU
-         sp5vSrzzsXAag==
+        b=XzZlgAVHXAsZgZWEEuCYAp/DEbm90D6JVZ9Ru6WyWdd5uAOEvZ+GPGKNd19UJZlos
+         TXLcpDMtMlVjrkkhPAiELd6zGRv/2MBLUaz+vE3bZrSSxvg1CL+GA7vnx25bjc/jlq
+         nVgDtTBHqIwuP/AFtCAf+BIm44kGQ/nZDQ1sxPXE8kcHY/mssOvbo1L8X7kj7ArNV+
+         mixiomKmv5ioZI8+03PUA2wL8gJcri/R8XlVgC9EVN6F/wvkwss2LhXAMWi2bSZuc+
+         VNlp/k4x75Jhq+o8dlQpzJ8HVIEl/MJnBMp9gmFidad+JuDkPxheB5/q81UqYXRjLm
+         53OhroF+pXGzw==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add #defines only for the Data Link Feature and Physical Layer 16.0 GT/s
-features as defined in PCIe spec r4.0, sec 7.7.4 for Data Link Feature and
-sec 7.7.5 for Physical Layer 16.0 GT/s.
+Tegra PCIe rootports don't generate MSI interrupts for PME and AER events.
+Since PCIe spec (Ref: r4.0 sec 7.7.1.2 and 7.7.2.2) doesn't support using
+a mix of INTx and MSI/MSI-X, MSI needs to be disabled to avoid root ports
+service drivers registering their respective ISRs with MSI interrupt and
+to let only INTx be used for all events.
 
 Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 Reviewed-by: Thierry Reding <treding@nvidia.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
 V15:
 * None
 
 V14:
-* Added 'Acked-by: Bjorn Helgaas <bhelgaas@google.com>'
+* None
 
 V13:
-* Updated commit message to include references from spec
-* Removed unused defines and moved some from pcie-tegra194.c file
-* Addressed review comments from Bjorn
+* None
 
 V12:
 * None
 
 V11:
-* None
+* Included older Tegra chips to extend the quirk as this issue is present in
+  older Tegra chips as well.
 
 V10:
 * None
@@ -97,60 +94,80 @@ V9:
 * None
 
 V8:
-* None
+* Changed quirk macro to consider class code as well to avoid this quirk
+  getting applied to Tegra194 when it is operating in endpoint mode. Also
+  quoted relevant sections from PCIe spec in comments.
 
 V7:
-* None
+* This is a new patch
 
-V6:
-* None
+ drivers/pci/quirks.c | 53 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-V5:
-* None
-
-V4:
-* None
-
-V3:
-* Updated commit message and description to explicitly mention that defines are
-  added only for some of the features and not all.
-
-V2:
-* None
-
- include/uapi/linux/pci_regs.h | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index f28e562d7ca8..d28d0319d932 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -713,7 +713,9 @@
- #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
- #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
- #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
--#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PTM
-+#define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
-+#define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
-+#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_16GT
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 208aacf39329..168782c5d23b 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -2592,6 +2592,59 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA,
+ 			PCI_DEVICE_ID_NVIDIA_NVENET_15,
+ 			nvenet_msi_disable);
  
- #define PCI_EXT_CAP_DSN_SIZEOF	12
- #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
-@@ -1053,4 +1055,14 @@
- #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
- #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
- 
-+/* Data Link Feature */
-+#define PCI_DLF_CAP		0x04	/* Capabilities Register */
-+#define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
++/*
++ * PCIe spec r4.0 sec 7.7.1.2 and sec 7.7.2.2 say that if MSI/MSI-X is enabled,
++ * then the device can't use INTx interrupts. Tegra's PCIe root ports don't
++ * generate MSI interrupts for PME and AER events instead only INTx interrupts
++ * are generated. Though Tegra's PCIe root ports can generate MSI interrupts
++ * for other events, since PCIe specificiation doesn't support using a mix of
++ * INTx and MSI/MSI-X, it is required to disable MSI interrupts to avoid port
++ * service drivers registering their respective ISRs for MSIs.
++ */
++static void pci_quirk_nvidia_tegra_disable_rp_msi(struct pci_dev *dev)
++{
++	dev->no_msi = 1;
++}
++DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad0,
++			      PCI_CLASS_BRIDGE_PCI, 8,
++			      pci_quirk_nvidia_tegra_disable_rp_msi);
++DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad1,
++			      PCI_CLASS_BRIDGE_PCI, 8,
++			      pci_quirk_nvidia_tegra_disable_rp_msi);
++DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad2,
++			      PCI_CLASS_BRIDGE_PCI, 8,
++			      pci_quirk_nvidia_tegra_disable_rp_msi);
++DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf0,
++			      PCI_CLASS_BRIDGE_PCI, 8,
++			      pci_quirk_nvidia_tegra_disable_rp_msi);
++DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf1,
++			      PCI_CLASS_BRIDGE_PCI, 8,
++			      pci_quirk_nvidia_tegra_disable_rp_msi);
++DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c,
++			      PCI_CLASS_BRIDGE_PCI, 8,
++			      pci_quirk_nvidia_tegra_disable_rp_msi);
++DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d,
++			      PCI_CLASS_BRIDGE_PCI, 8,
++			      pci_quirk_nvidia_tegra_disable_rp_msi);
++DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e12,
++			      PCI_CLASS_BRIDGE_PCI, 8,
++			      pci_quirk_nvidia_tegra_disable_rp_msi);
++DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e13,
++			      PCI_CLASS_BRIDGE_PCI, 8,
++			      pci_quirk_nvidia_tegra_disable_rp_msi);
++DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0fae,
++			      PCI_CLASS_BRIDGE_PCI, 8,
++			      pci_quirk_nvidia_tegra_disable_rp_msi);
++DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0faf,
++			      PCI_CLASS_BRIDGE_PCI, 8,
++			      pci_quirk_nvidia_tegra_disable_rp_msi);
++DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x10e5,
++			      PCI_CLASS_BRIDGE_PCI, 8,
++			      pci_quirk_nvidia_tegra_disable_rp_msi);
++DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x10e6,
++			      PCI_CLASS_BRIDGE_PCI, 8,
++			      pci_quirk_nvidia_tegra_disable_rp_msi);
 +
-+/* Physical Layer 16.0 GT/s */
-+#define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
-+#define  PCI_PL_16GT_LE_CTRL_DSP_TX_PRESET_MASK		0x0000000F
-+#define  PCI_PL_16GT_LE_CTRL_USP_TX_PRESET_MASK		0x000000F0
-+#define  PCI_PL_16GT_LE_CTRL_USP_TX_PRESET_SHIFT	4
-+
- #endif /* LINUX_PCI_REGS_H */
+ /*
+  * Some versions of the MCP55 bridge from Nvidia have a legacy IRQ routing
+  * config register.  This register controls the routing of legacy
 -- 
 2.17.1
 
