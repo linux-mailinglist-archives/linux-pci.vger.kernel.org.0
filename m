@@ -2,77 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 13DDB889F5
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Aug 2019 10:20:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E67288A84
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Aug 2019 12:12:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725888AbfHJIUS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 10 Aug 2019 04:20:18 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43803 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbfHJIUS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 10 Aug 2019 04:20:18 -0400
-Received: by mail-lf1-f66.google.com with SMTP id c19so71171953lfm.10
-        for <linux-pci@vger.kernel.org>; Sat, 10 Aug 2019 01:20:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2vQnFwQNyVp0MJ6ZA472G3A4Wc8Umh59hbB35xxA2KY=;
-        b=xyRgTEG01oxAM6kN3jiwijjpejYs6si4w5U6ne3GUJERc2vRfDRBTIkQDJjJqxDolK
-         0bLfKfPb3JCYWf66fSjaqCWEhYLa9ycbxRMraqUJswxo9XOPg2BIpaClQ0f73JcLyEel
-         wEnlWiq7C+xmB+M/WcGbHGjA8kxNsahgwIdQW7GjRBhTFb7aTceZi8h2lgO57lgqCa8d
-         LLRBFebUb2L3VvHb4mCQFOjF8j0sxr/z+Astq+efuh3CLGgNJRcXqdJjUeS1veFlDXrA
-         /VoCRELA/ui1hkqfMSw/IObCC0GWhKbL193R8e8nS43qChlzbYB/dfC9rOinU1R9gHyZ
-         QEnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2vQnFwQNyVp0MJ6ZA472G3A4Wc8Umh59hbB35xxA2KY=;
-        b=X1V06XON9egK8Z8C55VcqD0liYechJvt+vRwXTAPH+NkBaZUyDhui94L8eJSZzowkI
-         1RutneCKAP/VVvTFf/0uwsnAPH3myNC6/sC+d4OzvXTXe/XMvsliw1GK6C5NpUieFqNP
-         /YrC7qJ6dkdfdgCnN3qbL6PtqIXLWk81YEvDnIxltHtSTXIYCm2J1TBdakZpb/sTFPMy
-         uOrcnQuVJow15aG4rd5KURQIFhca+9UeOqzj9MrSKbVADJK9Qcx4B1eWUjBnTWxRYv8b
-         BCdJGOyuQOPPiuzK41lb5+j+nGulHwVjzpv4ncJj+c2PLwMlzhFLBWfYjQxdptEeWTWy
-         Hx2w==
-X-Gm-Message-State: APjAAAVYUEaKViAOhML/4Ddz+sR77fx1+KXVHRCz19KGFW2LQ6TJ3AR5
-        cooxBLyOquMFVaeh0QzDkzCuDOnO2b5TyRTaghdJXg==
-X-Google-Smtp-Source: APXvYqzE1mTpjud1QXbttRnYvBm9iSV2zfdjY1xkGmTm69zvHpAT1DCI81jjIuPyyV8Cd8bHwU5cUrdUSfa0v+ozqu4=
-X-Received: by 2002:ac2:5dd6:: with SMTP id x22mr14657379lfq.92.1565425216308;
- Sat, 10 Aug 2019 01:20:16 -0700 (PDT)
+        id S1725858AbfHJKMe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 10 Aug 2019 06:12:34 -0400
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:38555 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbfHJKMe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 10 Aug 2019 06:12:34 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 596A02800B6CA;
+        Sat, 10 Aug 2019 12:12:32 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 259F91DD45E; Sat, 10 Aug 2019 12:12:32 +0200 (CEST)
+Date:   Sat, 10 Aug 2019 12:12:32 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Subject: Re: [PATCH] PCI: pciehp: Avoid returning prematurely from sysfs
+ requests
+Message-ID: <20190810101232.3fdqrbi3tdd27dwx@wunner.de>
+References: <4174210466e27eb7e2243dd1d801d5f75baaffd8.1565345211.git.lukas@wunner.de>
+ <20190809193216.GD28515@localhost.localdomain>
+ <20190809202815.4jtpdsnnmztins34@wunner.de>
 MIME-Version: 1.0
-References: <20190730181557.90391-1-swboyd@chromium.org> <20190730181557.90391-32-swboyd@chromium.org>
-In-Reply-To: <20190730181557.90391-32-swboyd@chromium.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 10 Aug 2019 10:20:05 +0200
-Message-ID: <CACRpkdZhdp7_ou9XiiAq7OAuXDxE6zr-rHuhEZPi+ErSiLKdLA@mail.gmail.com>
-Subject: Re: [PATCH v6 31/57] pci: Remove dev_err() usage after platform_get_irq()
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809202815.4jtpdsnnmztins34@wunner.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 8:19 PM Stephen Boyd <swboyd@chromium.org> wrote:
+On Fri, Aug 09, 2019 at 10:28:15PM +0200, Lukas Wunner wrote:
+> On Fri, Aug 09, 2019 at 01:32:16PM -0600, Keith Busch wrote:
+> > On Fri, Aug 09, 2019 at 12:28:43PM +0200, Lukas Wunner wrote:
+> > > A sysfs request to enable or disable a PCIe hotplug slot should not
+> > > return before it has been carried out.  That is sought to be achieved
+> > > by waiting until the controller's "pending_events" have been cleared.
+> > > 
+> > > However the IRQ thread pciehp_ist() clears the "pending_events" before
+> > > it acts on them.  If pciehp_sysfs_enable_slot() / _disable_slot() happen
+> > > to check the "pending_events" after they have been cleared but while
+> > > pciehp_ist() is still running, the functions may return prematurely
+> > > with an incorrect return value.
+> > > 
+> > > Fix by introducing an "ist_running" flag which must be false before a
+> > > sysfs request is allowed to return.
+> > 
+> > Can you instead just call synchronize_irq(ctrl->pcie->irq) after the
+> > pending events is cleared?
+> 
+> You mean call synchronize_irq() from pciehp_sysfs_enable_slot() /
+> disable_slot()?  That's a good idea, let me think that through and
+> try to make it work that way.
 
-> We don't need dev_err() messages when platform_get_irq() fails now that
-> platform_get_irq() prints an error message itself when something goes
-> wrong. Let's remove these prints with a simple semantic patch.
-(...)
-> While we're here, remove braces on if statements that only have one
-> statement (manually).
->
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+After a bit of thinking:
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+synchronize_irq() doesn't work for poll mode.
 
-Yours,
-Linus Walleij
+A secondary concern is that if the IRQ is shared, synchronize_irq()
+waits for all the other (unrelated) IRQ threads to finish,
+i.e. longer than necessary.
+
+So I can't think of a better way to solve this.
+
+Thanks,
+
+Lukas
