@@ -2,124 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ABA088E8A
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Aug 2019 23:32:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A333489016
+	for <lists+linux-pci@lfdr.de>; Sun, 11 Aug 2019 09:19:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726169AbfHJVcW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 10 Aug 2019 17:32:22 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38585 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbfHJVcW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 10 Aug 2019 17:32:22 -0400
-Received: by mail-ot1-f65.google.com with SMTP id d17so146136881oth.5;
-        Sat, 10 Aug 2019 14:32:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DMMb34sW1+/kTHjwNTUYc8ygL+j2F3tAzUq276SdPcQ=;
-        b=m/mv+h8gJmjIfilAGa7N0MBfbVDijQrZlYukgcoA+OQVvhLo5fAJJpTyYqFU+q8m8q
-         ZQZzHv9Q0ELJMl1d52Uh1eM6u+Z4eZayqf47tAC89dIKzgWTkzEWX7HtHmGogi390Sw1
-         hMS+Slkjbam/Bs5aEd8stuKw2lVDGSUHCJBF0++NH38EACEaheerm3/6Mf3nvmXJD0iB
-         NQopo3vw+OUJlsxC5Tg/K6LDQcPUbRnLkvMfohWhBSPLoi9vAQ/gvcphXrwWNgCdng25
-         u+Mbz5Db1gRkiGncbUZzkLtBi+WD2t4gZnKR7J8WxqCEI0J6bkdc+NTl3Ig3kR3N9Phr
-         tjiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DMMb34sW1+/kTHjwNTUYc8ygL+j2F3tAzUq276SdPcQ=;
-        b=bHSTyr/rTI1EuFbKJJVx0d0R6/myOEsoD9ANj3lxUOprznZZEqXDJKwFroATs8ppF8
-         zyqu0APwsw79oCHiOV/p5mnPKqrpCRQHtT4VgVrByvRmtFZ7egw4mSVKMvgmiRX9QUji
-         LFoOEdO3mhvJgLTXjbvyI7enROWzw9XZKAjHr0b53QbDttswmVtrH6pUu68VOyWuqpta
-         JK32GBwUjOxNyR3OF6dZR0iklS9CC7+UC+XxvJ0TvT/qbyIrea8ZS6/cg/B9mv2ONtZZ
-         n9MBndXOUCdVzmTjy0YUE2DfLr11oeDT2Zce3NCU78SNBFY4bSSUuJ171gyN/+rM3Sv1
-         UAjQ==
-X-Gm-Message-State: APjAAAU8nBfwMpB4hvTCL4iBqUG/RWmRCorIoKuQlhRoy1oUxjp5BpW4
-        O4lbqSjJMPzp0UWNmwB+Lpz1bBZp4vk=
-X-Google-Smtp-Source: APXvYqx0M/yrwTyNG9+H8R33UpKx7McM0MI/sO7LbMBEoESu3njm//f/B+mrSANQ1ecvNGZmdcb5lw==
-X-Received: by 2002:a6b:e013:: with SMTP id z19mr1490934iog.141.1565472741271;
-        Sat, 10 Aug 2019 14:32:21 -0700 (PDT)
-Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id t133sm145838112iof.21.2019.08.10.14.32.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 10 Aug 2019 14:32:20 -0700 (PDT)
-Date:   Sat, 10 Aug 2019 15:32:18 -0600
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     Greg KH <greg@kroah.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH] PCI/IOV: Move sysfs SR-IOV
- functions to iov.c
-Message-ID: <20190810213218.GA55952@JATN>
-References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
- <20190810071719.GA16356@kroah.com>
- <20190810171525.GG221706@google.com>
- <20190810172409.GB4482@kroah.com>
+        id S1725813AbfHKHTM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 11 Aug 2019 03:19:12 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58550 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfHKHTM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 11 Aug 2019 03:19:12 -0400
+Received: from p200300ddd71876477e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7647:7e7a:91ff:fec9:8e25])
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hwi89-0005ku-3g; Sun, 11 Aug 2019 09:19:05 +0200
+Date:   Sun, 11 Aug 2019 09:18:59 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Megha Dey <megha.dey@intel.com>
+cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
+        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
+        megha.dey@linux.intel.com
+Subject: Re: [RFC V1 RESEND 5/6] PCI/MSI: Free MSI-X resources by group
+In-Reply-To: <1565118597.2401.116.camel@intel.com>
+Message-ID: <alpine.DEB.2.21.1908110912470.7324@nanos.tec.linutronix.de>
+References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>  <1561162778-12669-6-git-send-email-megha.dey@linux.intel.com>  <alpine.DEB.2.21.1906291002190.1802@nanos.tec.linutronix.de> <1565118597.2401.116.camel@intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190810172409.GB4482@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/mixed; boundary="8323329-2125260003-1565507945=:7324"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Aug 10, 2019 at 07:24:09PM +0200, Greg KH wrote:
-> On Sat, Aug 10, 2019 at 12:15:25PM -0500, Bjorn Helgaas wrote:
-> > On Sat, Aug 10, 2019 at 09:17:19AM +0200, Greg KH wrote:
-> > > On Fri, Aug 09, 2019 at 01:57:21PM -0600, Kelsey Skunberg wrote:
-> > > > +static struct device_attribute sriov_totalvfs_attr = __ATTR_RO(sriov_totalvfs);
-> > > 
-> > > DEVICE_ATTR_RO() please.  This is a device attribute, not a "raw"
-> > > kobject attribute.
-> > 
-> > This patch is just a move; here's the source of the line above:
-> > 
-> > > > -static struct device_attribute sriov_totalvfs_attr = __ATTR_RO(sriov_totalvfs);
-> > 
-> > I certainly support using DEVICE_ATTR_RO() instead of __ATTR_RO(), but
-> > that should be down with a separate patch so it's not buried in what
-> > is otherwise a simple move.
-> > 
-> > > > +static struct device_attribute sriov_numvfs_attr =
-> > > > +		__ATTR(sriov_numvfs, (S_IRUGO | S_IWUSR | S_IWGRP),
-> > > > +		       sriov_numvfs_show, sriov_numvfs_store);
-> > > > +static struct device_attribute sriov_offset_attr = __ATTR_RO(sriov_offset);
-> > > > +static struct device_attribute sriov_stride_attr = __ATTR_RO(sriov_stride);
-> > > > +static struct device_attribute sriov_vf_device_attr =
-> > > > +		__ATTR_RO(sriov_vf_device);
-> > > > +static struct device_attribute sriov_drivers_autoprobe_attr =
-> > > > +		__ATTR(sriov_drivers_autoprobe, (S_IRUGO | S_IWUSR | S_IWGRP),
-> > > > +		       sriov_drivers_autoprobe_show,
-> > > > +		       sriov_drivers_autoprobe_store);
-> > > 
-> > > Same for all of these, they should use DEVICE_ATTR* macros.
-> > > 
-> > > And why the odd permissions on 2 of these files?  Are you sure about
-> > > that?
-> > 
-> > Same for these.  It'd be nice to fix them (and similar cases in
-> > pci-sysfs.c, rpadlpar_sysfs.c, sgi_hotplug.c, slot.c) but in a
-> > separate patch.
-> > 
-> > I think Kelsey did the right thing here by not mixing unrelated fixes
-> > in with the code move.  A couple additional patches to change the
-> > __ATTR() uses and the permissions (git grep "\<S_" finds several
-> > possibilities) would be icing on the cake, but getting the SR-IOV
-> > code all together is an improvement by itself.
-> 
-> Ah, ok, that makes more sense.  As long as this is patch 1/X, I'm fine
-> with it :)
-> 
-> thanks,
-> 
-> greg k-h
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I'll set up a series to cover these changes and submit it as a v2. Thank
-you for reviewing Greg and Bjorn!
+--8323329-2125260003-1565507945=:7324
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-Cheers,
-Kelsey
+On Tue, 6 Aug 2019, Megha Dey wrote:
+
+> On Sat, 2019-06-29 at 10:08 +0200, Thomas Gleixner wrote:
+> > Megha,
+> > 
+> > On Fri, 21 Jun 2019, Megha Dey wrote:
+> > > 
+> > > +static int free_msi_irqs_grp(struct pci_dev *dev, int group_id)
+> > > +{
+> > > 
+> > > +
+> > > +	for_each_pci_msi_entry(entry, dev) {
+> > > +		if (entry->group_id == group_id && entry->irq)
+> > > +			for (i = 0; i < entry->nvec_used; i++)
+> > > +				BUG_ON(irq_has_action(entry->irq +
+> > > i));
+> > BUG_ON is wrong here. This can and must be handled gracefully.
+> > 
+> 
+> Hmm, I reused this code from the 'free_msi_irqs' function. I am not
+> sure why it is wrong to use BUG_ON here but ok to use it there, please
+> let me know.
+
+We are not adding BUG_ON() anymore except for situations where there is
+absolutely no way out. Just because there is still older code having
+BUG_ON() does not make it any better. Copying it surely is no
+justification.
+
+If there is really no way out, then you need to explain it.
+ 
+> > > +static void pci_msix_shutdown_grp(struct pci_dev *dev, int
+> > > group_id)
+> > > +{
+> > > +	struct msi_desc *entry;
+> > > +	int grp_present = 0;
+> > > +
+> > > +	if (pci_dev_is_disconnected(dev)) {
+> > > +		dev->msix_enabled = 0;
+> > Huch? What's that? I can't figure out why this is needed and of
+> > course it
+> > completely lacks a comment explaining this. 
+> > 
+> 
+> Again, I have reused this code from the pci_msix_shutdown() function.
+> So for the group case, this is not required?
+
+Copy and paste is not an argument, really. Can this happen here? If so,
+then please add a comment.
+
+> > > 
+> > > +		return;
+> > > +	}
+> > > +
+> > > +	/* Return the device with MSI-X masked as initial states
+> > > */
+> > > +	for_each_pci_msi_entry(entry, dev) {
+> > > +		if (entry->group_id == group_id) {
+> > > +			/* Keep cached states to be restored */
+> > > +			__pci_msix_desc_mask_irq(entry, 1);
+> > > +			grp_present = 1;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	if (!grp_present) {
+> > > +		pci_err(dev, "Group to be disabled not
+> > > present\n");
+> > > +		return;
+> > So you print an error and silently return
+> > 
+> 
+> This is a void function, hence no error value can be returned. What do
+> you think is the right thing to do if someone wants to delete a group
+> which is not present?
+
+Well, you made it a void function. 
+ 
+> > > 
+> > > +	}
+> > > +}
+> > > +
+> > > +int pci_disable_msix_grp(struct pci_dev *dev, int group_id)
+> > > +{
+> > > +	int num_vecs;
+> > > +
+> > > +	if (!pci_msi_enable || !dev)
+> > > +		return -EINVAL;
+> > > +
+> > > +	pci_msix_shutdown_grp(dev, group_id);
+> > > +	num_vecs = free_msi_irqs_grp(dev, group_id);
+> > just to call in another function which has to do the same group_id
+> > lookup
+> > muck again.
+> 
+> Even with the new proposal, we are to have 2 sets of functions: one to
+> delete all the msic_desc entries associated with the device, and the
+> other to delete those only belonging a 'user specified' group. So we do
+> need to pass a group_id to these functions right? Yes, internally the
+> deletion would be straightforward with the new approach.
+
+That does not matter. If pci_msix_shutdown_grp() does not find a group, why
+proceeding instead of having a proper error return and telling the caller?
+
+Thanks,
+
+	tglx
+--8323329-2125260003-1565507945=:7324--
