@@ -2,81 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9343489019
-	for <lists+linux-pci@lfdr.de>; Sun, 11 Aug 2019 09:20:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF13F89068
+	for <lists+linux-pci@lfdr.de>; Sun, 11 Aug 2019 10:07:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725810AbfHKHUh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 11 Aug 2019 03:20:37 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58558 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfHKHUh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 11 Aug 2019 03:20:37 -0400
-Received: from p200300ddd71876477e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7647:7e7a:91ff:fec9:8e25])
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hwi9a-0005mZ-Hi; Sun, 11 Aug 2019 09:20:34 +0200
-Date:   Sun, 11 Aug 2019 09:20:29 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-cc:     Megha Dey <megha.dey@intel.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com
-Subject: Re: [RFC V1 RESEND 2/6] PCI/MSI: Dynamic allocation of MSI-X vectors
- by group
-In-Reply-To: <48a44ffc-4b5b-5eef-73de-020f1710c41e@arm.com>
-Message-ID: <alpine.DEB.2.21.1908110919310.7324@nanos.tec.linutronix.de>
-References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com> <1561162778-12669-3-git-send-email-megha.dey@linux.intel.com> <alpine.DEB.2.21.1906280739100.32342@nanos.tec.linutronix.de> <1565118316.2401.112.camel@intel.com>
- <alpine.DEB.2.21.1908071525390.24014@nanos.tec.linutronix.de> <48a44ffc-4b5b-5eef-73de-020f1710c41e@arm.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        id S1725855AbfHKIHG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 11 Aug 2019 04:07:06 -0400
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:53355 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbfHKIHG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 11 Aug 2019 04:07:06 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 2520F30001A46;
+        Sun, 11 Aug 2019 10:07:04 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id F0A83F5A33; Sun, 11 Aug 2019 10:07:03 +0200 (CEST)
+Date:   Sun, 11 Aug 2019 10:07:03 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] pciehp: fix a race between pciehp and removing
+ operations by sysfs
+Message-ID: <20190811080703.qfnlzfutgamoxzti@wunner.de>
+References: <1565008378-4733-1-git-send-email-wangxiongfeng2@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565008378-4733-1-git-send-email-wangxiongfeng2@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 7 Aug 2019, Marc Zyngier wrote:
-> On 07/08/2019 14:56, Thomas Gleixner wrote:
-> > On Tue, 6 Aug 2019, Megha Dey wrote:
-> >> On Sat, 2019-06-29 at 09:59 +0200, Thomas Gleixner wrote:
-> >>> On Fri, 21 Jun 2019, Megha Dey wrote:
-> >>
-> >> Totally agreed. The request to add a dynamic MSI-X infrastructure came
-> >> from some driver teams internally and currently they do not have
-> >> bandwidth to come up with relevant test cases. <sigh>
-> > 
-> > Hahahaha.
-> > 
-> >> But we hope that this patch set could serve as a precursor to the
-> >> interrupt message store (IMS) patch set, and we can use this patch set
-> >> as the baseline for the IMS patches.
-> > 
-> > If IMS needs the same functionality, then we need to think about it
-> > slightly differently because IMS is not necessarily tied to PCI.
-> >  
-> > IMS has some similarity to the ARM GIC ITS stuff IIRC, which already
-> > provides these things outside of PCI. Marc?
+On Mon, Aug 05, 2019 at 08:32:58PM +0800, Xiongfeng Wang wrote:
+> When we remove a slot by sysfs.
+> 'pci_stop_and_remove_bus_device_locked()' will be called. This function
+> will get the global mutex lock 'pci_rescan_remove_lock', and remove the
+> slot. If the irq thread 'pciehp_ist' is still running, we will wait
+> until it exits.
 > 
-> Indeed. We have MSI-like functionality almost everywhere, and make heavy
-> use of the generic MSI framework. Platform-MSI is probably the most
-> generic example we have (it's the Far West transposed to MSIs).
+> If a pciehp interrupt happens immediately after we remove the slot by
+> sysfs, but before we free the pciehp irq in
+> 'pci_stop_and_remove_bus_device_locked()'. 'pciehp_ist' will hung
+> because the global mutex lock 'pci_rescan_remove_lock' is held by the
+> sysfs operation. But the sysfs operation is waiting for the pciehp irq
+> thread 'pciehp_ist' ends. Then a hung task occurs.
 > 
-> > We probably need some generic infrastructure for this so PCI and everything
-> > else can use it.
-> 
-> Indeed. Overall, I'd like the concept of MSI on whatever bus to have one
-> single behaviour across the board, as long as it makes sense for that
-> bus (nobody needs another PCI MultiMSI, for example).
+> So this two kinds of operation, removing the slot triggered by pciehp
+> interrupt and removing through 'sysfs', should not be excuted at the
+> same time. This patch add a global variable to mark that one of these
+> operations is under processing. When this variable is set,  if another
+> operation is requested, it will be rejected.
 
-Right.
+It seems this patch involves an ABI change wherein "remove" as documented
+in Documentation/ABI/testing/sysfs-bus-pci may now fail and need a retry,
+possibly breaking existing scripts which write to this file.  ABI changes
+are fairly problematic.
 
-@Intel: Is there documentation and perhaps early code for that IMS muck to
-	look at?
+The return value -EWOULDBLOCK (which is identical to -EAGAIN) might be
+more appropriate than -EINVAL.
+
+Another problem is that this patch only addresses deadlocks occurring
+because of a "remove" via sysfs and a simultaneous surprise removal
+(or button press removal).  However the same kind of deadlock may
+occur because of two simultaneous surprise removals if one of the
+two devices is a parent of the other.  It would be better to have
+a solution which addresses all types of deadlocks caused by the
+pci_rescan_remove_lock().  I provided you with a suggestion in this
+e-mail:
+
+https://lore.kernel.org/linux-pci/20190805114053.srbngho3wbziy2uy@wunner.de/
+
+   "What you can do is add a flag to struct pci_dev (or the priv_flags
+    embedded therein) to indicate that a device is about to be removed.
+    Set this flag on all children of the device being removed before
+    acquiring pci_lock_rescan_remove() and avoid taking that lock in
+    pciehp_unconfigure_device() if the flag is set on the hotplug port.
+
+    But again, that approach is just a band-aid and the real fix is to
+    unbind devices without holding the lock."
 
 Thanks,
 
-	tglx
+Lukas
