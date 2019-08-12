@@ -2,178 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 517DC89B48
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 12:20:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EDDC89B5E
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 12:23:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfHLKUr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Aug 2019 06:20:47 -0400
-Received: from mail-eopbgr10072.outbound.protection.outlook.com ([40.107.1.72]:48270
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727518AbfHLKUp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:20:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SWesNjiP3PBBABTjceFRC1oG86w8/7D/R+NNDZLTB6TXFW3nJDZTDoOkwkD/bPx8bVR725l9n+s49Q1gVpOusP/yuMERxVqcwLwSHilnO1p6iXK03xVoQod9h6BIZuehhDb9ThgT04YJEbtWQmBjrJLCIPxVOAGWmyd6rmQtHPHrh0ZCOBx2Ax1po199nQwMG2lFX5UICvPUkuRAtJHsPXm+NlKfsfgfQ9nJVi2Hk2UHZOI1uOqxkA3CLwD6M4MNE4PzGZ7zNweTC/qQitSXOjkqgAK6YVZDQd3eLUB6Cmclz73qxPvNgmCpGKwhEGhiRmGA1lxBL9HTNuqbFM7xKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5vyhvPWbFVpYfvLpSfhG4SxjDcRjUrXrbQwZbQZ/pFA=;
- b=buiVP9Lw9kWvvvJ70BtVcGfjgysy6uulS+XEjVzQAQG85VeayK9Rqc76h4R4LUH8h+7QPEpKG71JqKCSgErgOMliFS75gNXdWR2UAuDukEQQqg6Ar0jQRB8E44KSP4tWx5fNl4CuHkXCKSPV+agt3u5XZ76Wo9YRnL5uxbZt/cYUCNmf3shc2QzP9cbUTTnXtJCcqx4xrVQeXTN6q406KmRmIxhouZuwhi8uM7B47Jn/ILnkQU04f3ateBHvCT9DGJGvuWlkjW/IXmKtEMDwLMU5HnHOIONlwNtSkbfipRCznEkwpJBzTttKtw62aZqL+gc4CXQa3gDfL3VpPgHWAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5vyhvPWbFVpYfvLpSfhG4SxjDcRjUrXrbQwZbQZ/pFA=;
- b=joT0mRTNyhFtyQV6QomZFhweZJ1iOsoMmYteZvGKYc1lgBuPqMcHOoj05qy+2ObcR7Tr8eEQ6lOjtxXzgY6z+7kCZB0aUj0cBwiI51Dh8mFYudc93aRsKqDEJ6c3vzOvnErUrZAuI+DkY1Wqq+Oy5Cig78v2DpdadtwDE3qtHAQ=
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
- AM5PR04MB3092.eurprd04.prod.outlook.com (10.167.171.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.20; Mon, 12 Aug 2019 10:18:59 +0000
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::5012:d47a:1f5d:9b84]) by AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::5012:d47a:1f5d:9b84%5]) with mapi id 15.20.2157.022; Mon, 12 Aug 2019
- 10:18:59 +0000
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
-        "pombredanne@nexb.com" <pombredanne@nexb.com>,
-        "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: [EXT] Re: [PATCHv3 2/2] PCI: layerscape: Add
- CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately
-Thread-Topic: [EXT] Re: [PATCHv3 2/2] PCI: layerscape: Add
- CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately
-Thread-Index: AQHVLVN+UwiZIf9uLEeNJKWnCEomWKb3kG4AgAAApuA=
-Date:   Mon, 12 Aug 2019 10:18:59 +0000
-Message-ID: <AM5PR04MB3299F2291ECDB3350C4CDCE8F5D30@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190628013826.4705-1-xiaowei.bao@nxp.com>
- <20190628013826.4705-2-xiaowei.bao@nxp.com>
- <20190812100600.GA20861@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190812100600.GA20861@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaowei.bao@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 40730546-1684-4332-c193-08d71f0e7d95
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM5PR04MB3092;
-x-ms-traffictypediagnostic: AM5PR04MB3092:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR04MB3092D4A995451024E65B575BF5D30@AM5PR04MB3092.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:327;
-x-forefront-prvs: 012792EC17
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(39860400002)(136003)(346002)(396003)(13464003)(199004)(189003)(476003)(186003)(446003)(4326008)(7696005)(76176011)(66476007)(66556008)(66946007)(53936002)(11346002)(5660300002)(66066001)(316002)(26005)(102836004)(52536014)(14454004)(71200400001)(71190400001)(54906003)(25786009)(44832011)(486006)(478600001)(53546011)(6506007)(6246003)(64756008)(66446008)(76116006)(99286004)(2906002)(6436002)(9686003)(55016002)(256004)(6916009)(6116002)(86362001)(3846002)(33656002)(81156014)(8936002)(229853002)(7736002)(305945005)(8676002)(7416002)(74316002)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3092;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: uSQLY2f8AlPtoHJxV0ZgLmJfUyWm+BoaFCjgqSXTBqDiiPldjRo3XzFINYK7aXfX5Tc7qf6yuqKX2nj+CpUhSIZ8FfLBWjzljtv27rEogGEMQ19FPPq+7hMKxTqARIV0BV5eWD3rNgz8EjxnmclYnc8rdMF6TMvlMxaFMkk8EplDaotYl7r8CrDL3EroQHScf87fT5XfLVJIZ+eTZhpn89/NC2/xJOSLhYrWlNFZaIUl3tmeWzKGagjrPjllMspLX+OCNOwIanXQV7e3dgGqakz6fdVmqdU7oz3QMkLtM0YzR2FpjNLH/cAdB8UVsEtNGqC/h7yzsyEZAtDr3SJO413xE2UKFAFQ0vTW7OnKGUSyRfcZDRH4Hy6Yg7w06jNVQCWTpNWkFXLvTWyLOgimdh5q9walEJ5rMsP2hWscN/Y=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        id S1727447AbfHLKXE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Aug 2019 06:23:04 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42750 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727679AbfHLKXE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Aug 2019 06:23:04 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b16so7370293wrq.9;
+        Mon, 12 Aug 2019 03:23:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MTiHtsvt5NhSEME25nXCrgva1MRgamkEFmaJPkZIx4w=;
+        b=AjCxPLPCs5zOInkjESEXueg3dRHlkj8W/McUs0U+BiyZAAx3fiOpO9n7YUlq2uSzbL
+         PDxlVAbxxKpuwXFHPWbT40/Wc07o90dvUFYO80VwftE8WJt8wZWrIN40BII0iXOCnKbf
+         slnbwe8jSQt3acptM9RdKLs+g+9oG2aBRyE+1Pd1c31vH8rXAFDs43+cybT/ayVay+97
+         08apvAHi52MImdRLZlosiTvpat+YkfT74LsMmhHLVciaj+ow7AL6VoRxbdBez7fn7Yoc
+         vl+oZJEN9rUY7DYOYuiij1AC00ipPTh4iZjBpN/h4wQKY0otnT54HY/rcm0PzJqAi71d
+         Szww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MTiHtsvt5NhSEME25nXCrgva1MRgamkEFmaJPkZIx4w=;
+        b=qL9G6FZd5gjFEm7d9itmIDVh3bzWsGPX1k4Ydrzph6zSNnKMjHXi6bR38fA1TDb6Ee
+         yZoe6/VS1Qm9HnjiMcUH0yBRhxoHIHiRp9l+wUm1UcrYTzD3Nydn6oYBEuVmzh0svz0+
+         34vvX4wVoYNzqd60p5xRVrNV7a4xjVGwiBA8J7xZQH37y4n9UbrwH9f0iSLdp9PNobzP
+         tExAP5fke0jBqlT0AYGOOsEUgcM30idFWJjuV+gk0wzk2y8Yb5xJEawYmUL3EeAEVQOK
+         MwEYrdx4Cy+02hjomBdXnwoAgNG46Ze+QRECmFnFl7tMjYKPAr2sf/WLa2mCwWksNj5Y
+         yFxw==
+X-Gm-Message-State: APjAAAVoz5DSvy/0Plyk03YdjVQC6Td2rj8mwimHoUXb2nT9vvTOhMtC
+        YYQiafX3WJqFhXb6+3mQEGI=
+X-Google-Smtp-Source: APXvYqw8ewrkG14Pe2lRIqxXus+F0QYZWt3csjZLIT7tSFq3ITwXIBiyhaMB3csWtIQ680aBgkgtJg==
+X-Received: by 2002:a5d:634c:: with SMTP id b12mr18996501wrw.127.1565605382076;
+        Mon, 12 Aug 2019 03:23:02 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id l3sm24553705wrb.41.2019.08.12.03.23.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 03:23:00 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 12:23:00 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V15 12/13] phy: tegra: Add PCIe PIPE2UPHY support
+Message-ID: <20190812102300.GM8903@ulmo>
+References: <20190809044609.20401-1-vidyas@nvidia.com>
+ <20190809044609.20401-13-vidyas@nvidia.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40730546-1684-4332-c193-08d71f0e7d95
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 10:18:59.0955
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: glChzz0J0TSatUQgFl4pn/fXHJHQ0bq2ETq/itgOo4BfixTIULQilGsiYtXZol1OWBnE0YhZ6So+HDQQJ4Zdgg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3092
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="GeONROBiaq1zPAtT"
+Content-Disposition: inline
+In-Reply-To: <20190809044609.20401-13-vidyas@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTG9yZW56byBQaWVyYWxp
-c2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+IFNlbnQ6IDIwMTnE6jjUwjEyyNUgMTg6
-MDYNCj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzogYmhlbGdh
-YXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsN
-Cj4gc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNo
-b25AdGkuY29tOw0KPiBhcm5kQGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsg
-TS5oLiBMaWFuDQo+IDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2Fp
-Lmh1QG54cC5jb20+OyBSb3kgWmFuZw0KPiA8cm95LnphbmdAbnhwLmNvbT47IGtzdGV3YXJ0QGxp
-bnV4Zm91bmRhdGlvbi5vcmc7DQo+IHBvbWJyZWRhbm5lQG5leGIuY29tOyBzaGF3bi5saW5Acm9j
-ay1jaGlwcy5jb207DQo+IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMu
-b3JnDQo+IFN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0h2MyAyLzJdIFBDSTogbGF5ZXJzY2FwZTog
-QWRkDQo+IENPTkZJR19QQ0lfTEFZRVJTQ0FQRV9FUCB0byBidWlsZCBFUC9SQyBzZXBhcmF0ZWx5
-DQo+IA0KPiBDYXV0aW9uOiBFWFQgRW1haWwNCj4gDQo+IE9uIEZyaSwgSnVuIDI4LCAyMDE5IGF0
-IDA5OjM4OjI2QU0gKzA4MDAsIFhpYW93ZWkgQmFvIHdyb3RlOg0KPiA+IEFkZCBDT05GSUdfUENJ
-X0xBWUVSU0NBUEVfRVAgdG8gYnVpbGQgRVAvUkMgc2VwYXJhdGVseS4NCj4gPg0KPiA+IFNpZ25l
-ZC1vZmYtYnk6IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+
-IHYyOg0KPiA+ICAtIE5vIGNoYW5nZS4NCj4gPiB2MzoNCj4gPiAgLSBtb2RpZnkgdGhlIGNvbW1p
-dCBtZXNzYWdlLg0KPiA+DQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL0tjb25maWcg
-IHwgICAyMCArKysrKysrKysrKysrKysrKystLQ0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVy
-L2R3Yy9NYWtlZmlsZSB8ICAgIDMgKystDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMjAgaW5zZXJ0
-aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Bj
-aS9jb250cm9sbGVyL2R3Yy9LY29uZmlnDQo+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3
-Yy9LY29uZmlnDQo+ID4gaW5kZXggYTZjZTFlZS4uYTQxY2NmNSAxMDA2NDQNCj4gPiAtLS0gYS9k
-cml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9LY29uZmlnDQo+ID4gKysrIGIvZHJpdmVycy9wY2kv
-Y29udHJvbGxlci9kd2MvS2NvbmZpZw0KPiA+IEBAIC0xMzEsMTMgKzEzMSwyOSBAQCBjb25maWcg
-UENJX0tFWVNUT05FX0VQDQo+ID4gICAgICAgICBEZXNpZ25XYXJlIGNvcmUgZnVuY3Rpb25zIHRv
-IGltcGxlbWVudCB0aGUgZHJpdmVyLg0KPiA+DQo+ID4gIGNvbmZpZyBQQ0lfTEFZRVJTQ0FQRQ0K
-PiA+IC0gICAgIGJvb2wgIkZyZWVzY2FsZSBMYXllcnNjYXBlIFBDSWUgY29udHJvbGxlciINCj4g
-PiArICAgICBib29sICJGcmVlc2NhbGUgTGF5ZXJzY2FwZSBQQ0llIGNvbnRyb2xsZXIgLSBIb3N0
-IG1vZGUiDQo+ID4gICAgICAgZGVwZW5kcyBvbiBPRiAmJiAoQVJNIHx8IEFSQ0hfTEFZRVJTQ0FQ
-RSB8fCBDT01QSUxFX1RFU1QpDQo+ID4gICAgICAgZGVwZW5kcyBvbiBQQ0lfTVNJX0lSUV9ET01B
-SU4NCj4gPiAgICAgICBzZWxlY3QgTUZEX1NZU0NPTg0KPiA+ICAgICAgIHNlbGVjdCBQQ0lFX0RX
-X0hPU1QNCj4gPiAgICAgICBoZWxwDQo+ID4gLSAgICAgICBTYXkgWSBoZXJlIGlmIHlvdSB3YW50
-IFBDSWUgY29udHJvbGxlciBzdXBwb3J0IG9uIExheWVyc2NhcGUgU29Dcy4NCj4gPiArICAgICAg
-IFNheSBZIGhlcmUgaWYgeW91IHdhbnQgdG8gZW5hYmxlIFBDSWUgY29udHJvbGxlciBzdXBwb3J0
-IG9uDQo+IExheWVyc2NhcGUNCj4gPiArICAgICAgIFNvQ3MgdG8gd29yayBpbiBIb3N0IG1vZGUu
-DQo+ID4gKyAgICAgICBUaGlzIGNvbnRyb2xsZXIgY2FuIHdvcmsgZWl0aGVyIGFzIEVQIG9yIFJD
-LiBUaGUNCj4gPiArIFJDV1tIT1NUX0FHVF9QRVhdDQo+IA0KPiBXaGF0J3MgIlRoZSBSQ1ciID8g
-VGhpcyBlbnRyeSBzaG91bGQgZXhwbGFpbiB3aHkgYSBrZXJuZWwgY29uZmlndXJhdGlvbg0KPiBz
-aG91bGQgZW5hYmxlIGl0Lg0KW1hpYW93ZWkgQmFvXSBIaSBMb3JlbnpvLCB0aGUgUkNXIGZ1bGwg
-bmFtZSBpcyAicmVzZXQgY29uZmlndXJhdGlvbiB3b3JkIiwgaXQgY2FuIGJlIGJ1aWx0IHRvIGEg
-YmluIGZpbGUgYW5kIHByb2dyYW0gdG8gdGhlIGZsYXNoLCByYXRoZXIgdGhhbiBjb25maWd1cmUg
-Ynkga2VybmVsLCBhbG1vc3QgdGhlIE5YUCBMYXllcnNjYXBsZSBwbGF0Zm9ybSB1c2UgdGhpcyB3
-YXkuDQo+IA0KPiBMb3JlbnpvDQo+IA0KPiA+ICsgICAgICAgZGV0ZXJtaW5lcyB3aGljaCBQQ0ll
-IGNvbnRyb2xsZXIgd29ya3MgaW4gRVAgbW9kZSBhbmQgd2hpY2gNCj4gUENJZQ0KPiA+ICsgICAg
-ICAgY29udHJvbGxlciB3b3JrcyBpbiBSQyBtb2RlLg0KPiA+ICsNCj4gPiArY29uZmlnIFBDSV9M
-QVlFUlNDQVBFX0VQDQo+ID4gKyAgICAgYm9vbCAiRnJlZXNjYWxlIExheWVyc2NhcGUgUENJZSBj
-b250cm9sbGVyIC0gRW5kcG9pbnQgbW9kZSINCj4gPiArICAgICBkZXBlbmRzIG9uIE9GICYmIChB
-Uk0gfHwgQVJDSF9MQVlFUlNDQVBFIHx8IENPTVBJTEVfVEVTVCkNCj4gPiArICAgICBkZXBlbmRz
-IG9uIFBDSV9FTkRQT0lOVA0KPiA+ICsgICAgIHNlbGVjdCBQQ0lFX0RXX0VQDQo+ID4gKyAgICAg
-aGVscA0KPiA+ICsgICAgICAgU2F5IFkgaGVyZSBpZiB5b3Ugd2FudCB0byBlbmFibGUgUENJZSBj
-b250cm9sbGVyIHN1cHBvcnQgb24NCj4gTGF5ZXJzY2FwZQ0KPiA+ICsgICAgICAgU29DcyB0byB3
-b3JrIGluIEVuZHBvaW50IG1vZGUuDQo+ID4gKyAgICAgICBUaGlzIGNvbnRyb2xsZXIgY2FuIHdv
-cmsgZWl0aGVyIGFzIEVQIG9yIFJDLiBUaGUNCj4gUkNXW0hPU1RfQUdUX1BFWF0NCj4gPiArICAg
-ICAgIGRldGVybWluZXMgd2hpY2ggUENJZSBjb250cm9sbGVyIHdvcmtzIGluIEVQIG1vZGUgYW5k
-IHdoaWNoDQo+IFBDSWUNCj4gPiArICAgICAgIGNvbnRyb2xsZXIgd29ya3MgaW4gUkMgbW9kZS4N
-Cj4gPg0KPiA+ICBjb25maWcgUENJX0hJU0kNCj4gPiAgICAgICBkZXBlbmRzIG9uIE9GICYmIChB
-Uk02NCB8fCBDT01QSUxFX1RFU1QpIGRpZmYgLS1naXQNCj4gPiBhL2RyaXZlcnMvcGNpL2NvbnRy
-b2xsZXIvZHdjL01ha2VmaWxlDQo+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9NYWtl
-ZmlsZQ0KPiA+IGluZGV4IGIwODVkZmQuLjgyNGZkZTcgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVy
-cy9wY2kvY29udHJvbGxlci9kd2MvTWFrZWZpbGUNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250
-cm9sbGVyL2R3Yy9NYWtlZmlsZQ0KPiA+IEBAIC04LDcgKzgsOCBAQCBvYmotJChDT05GSUdfUENJ
-X0VYWU5PUykgKz0gcGNpLWV4eW5vcy5vDQo+ID4gIG9iai0kKENPTkZJR19QQ0lfSU1YNikgKz0g
-cGNpLWlteDYubw0KPiA+ICBvYmotJChDT05GSUdfUENJRV9TUEVBUjEzWFgpICs9IHBjaWUtc3Bl
-YXIxM3h4Lm8NCj4gPiAgb2JqLSQoQ09ORklHX1BDSV9LRVlTVE9ORSkgKz0gcGNpLWtleXN0b25l
-Lm8NCj4gPiAtb2JqLSQoQ09ORklHX1BDSV9MQVlFUlNDQVBFKSArPSBwY2ktbGF5ZXJzY2FwZS5v
-IHBjaS1sYXllcnNjYXBlLWVwLm8NCj4gPiArb2JqLSQoQ09ORklHX1BDSV9MQVlFUlNDQVBFKSAr
-PSBwY2ktbGF5ZXJzY2FwZS5vDQo+ID4gK29iai0kKENPTkZJR19QQ0lfTEFZRVJTQ0FQRV9FUCkg
-Kz0gcGNpLWxheWVyc2NhcGUtZXAubw0KPiA+ICBvYmotJChDT05GSUdfUENJRV9RQ09NKSArPSBw
-Y2llLXFjb20ubw0KPiA+ICBvYmotJChDT05GSUdfUENJRV9BUk1BREFfOEspICs9IHBjaWUtYXJt
-YWRhOGsubw0KPiA+ICBvYmotJChDT05GSUdfUENJRV9BUlRQRUM2KSArPSBwY2llLWFydHBlYzYu
-bw0KPiA+IC0tDQo+ID4gMS43LjENCj4gPg0K
+
+--GeONROBiaq1zPAtT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Aug 09, 2019 at 10:16:08AM +0530, Vidya Sagar wrote:
+> Synopsys DesignWare core based PCIe controllers in Tegra 194 SoC interface
+> with Universal PHY (UPHY) module through a PIPE2UPHY (P2U) module.
+> For each PCIe lane of a controller, there is a P2U unit instantiated at
+> hardware level. This driver provides support for the programming required
+> for each P2U that is going to be used for a PCIe controller.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+> V15:
+> * None
+>=20
+> V14:
+> * None
+>=20
+> V13:
+> * None
+>=20
+> V12:
+> * None
+>=20
+> V11:
+> * Replaced PTR_ERR_OR_ZERO() with PTR_ERR() as the check for zero is alre=
+ady
+>   present in the code.
+>=20
+> V10:
+> * Used _relaxed() versions of readl() & writel()
+>=20
+> V9:
+> * Made it dependent on ARCH_TEGRA_194_SOC directly instead of ARCH_TEGRA
+>=20
+> V8:
+> * Changed P2U driver file name from pcie-p2u-tegra194.c to phy-tegra194-p=
+2u.c
+>=20
+> V7:
+> * None
+>=20
+> V6:
+> * Addressed review comments from Thierry
+>=20
+> V5:
+> * None
+>=20
+> V4:
+> * Rebased on top of linux-next top of the tree
+>=20
+> V3:
+> * Replaced spaces with tabs in Kconfig file
+> * Sorted header file inclusion alphabetically
+>=20
+> V2:
+> * Added COMPILE_TEST in Kconfig
+> * Removed empty phy_ops implementations
+> * Modified code according to DT documentation file modifications
+>=20
+>  drivers/phy/tegra/Kconfig            |   7 ++
+>  drivers/phy/tegra/Makefile           |   1 +
+>  drivers/phy/tegra/phy-tegra194-p2u.c | 120 +++++++++++++++++++++++++++
+>  3 files changed, 128 insertions(+)
+>  create mode 100644 drivers/phy/tegra/phy-tegra194-p2u.c
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--GeONROBiaq1zPAtT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1RPgMACgkQ3SOs138+
+s6G6QRAApZ8Wo+dLU8yIc2xUpt31Zb4Mt89cHlgrBXMadX3WQGRdKFxNtS63hucq
+6bj/FGGojkXhuiFBY4vaRnhhWFEeUi8khH+gCiKHEq4f8ENNpPRF3nC11/ISDQlt
+rYB0lB0edwd7ZVso8KVs8LAXPO/qg3hF2UsriGDYyHIzhgNrpAqGtue+RbgfoXic
+uzcPDzhaXgcSls0JkMrQrqdb3I7dH/VrPXs4Y9FdbnHb4OaaSpDRiyR1M0e+j5Rs
+uBA3+qz84CGVEzUCmLakD52NbtEW1SJj2x3LfKe2LzjlR03p8p8q0+L7UbCP3OdM
+SNOB+VD+FCCQ2uH0aJMn1U4t/pAp16NuDSWlJxXXx8Pn/auq1nyYgluYyyArWNJO
+K1Y93Tr3DmEwzv67v8nXQqP7nyFj/Rn0XapYHt9JmjpBsFuZC9vh9lJ+m0lplJir
+LYFt0sZYyP/aYr6EmNwPE4fOsgW9++yXP68WqaS7YmL+Mr7Xek+ojJqi6t65J6K+
+QxIczmLN+hnkAr8RDjO1f5fClz2pIJRCt//HVwk2nMAr6aiSf4oKg0dAoxOW1q04
+7d5Mfcivnqus2gm2w2g4qtnUH1hQ4zxUjDMbaNsYJTxtjwnUS01lA8M2F1eJpqJX
+yTihfhNjw1i2pqoK4FD694YSFT3e/4toB0LG86K4ej9qfFcHcqI=
+=HGLV
+-----END PGP SIGNATURE-----
+
+--GeONROBiaq1zPAtT--
