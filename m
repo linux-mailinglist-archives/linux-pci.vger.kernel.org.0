@@ -2,108 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 867798A6ED
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 21:13:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF81B8A7B5
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 22:01:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfHLTNY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Aug 2019 15:13:24 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39784 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfHLTNY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Aug 2019 15:13:24 -0400
-Received: by mail-qt1-f193.google.com with SMTP id l9so103893955qtu.6
-        for <linux-pci@vger.kernel.org>; Mon, 12 Aug 2019 12:13:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
-         :in-reply-to:references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=zjsjue2/i6SYdRgpGrXmaLlmo1Lo60n2tfvsNCu6PhY=;
-        b=DH3HvG3sEkOzPoOzqWbtbNa37HDQMNdxIBRth7GoCA5itE/f76/Z1yStliuUQZAsNI
-         B65he171PuEnlpAuh5j2KjNw7dLGUQjXeq3prhJfoQQsXhzvuqYC9jIBB/GYJb/5YO9o
-         AOhz4/ZCfpgOtwgWgu2bX1Gd2fXBARjOiA/fUWjPjGXgl8c9AnKsQHxs9ZLb6r06GUTw
-         GeeAMjLrJUHDurCjxZLwfCcIOPbjtJ8BnJxGOi3k6N4kTX+D93Ys08C5KQH36KPZ5hBs
-         NvpTuD/SNbtx53ZOKxpfA+pZQHTRGFrICekkHLpi0s0m2pbqzo4/pvFwZoQuGBk6np5H
-         m5jw==
-X-Gm-Message-State: APjAAAUBJwi/jMaxEARaejzjmcXq/ePTPwLGlv0QKL8MJiZzoDOb9CJL
-        atrws8XTg7ezckPZtBIAEYKR/g==
-X-Google-Smtp-Source: APXvYqyhQHSaIUfWESNxYtrf1WNBT99uoiJxc5Q3fOGPGD4A3C/qjTBsXQMnZVX4LbNqKd0kbglzzw==
-X-Received: by 2002:ac8:e45:: with SMTP id j5mr18467192qti.149.1565637203451;
-        Mon, 12 Aug 2019 12:13:23 -0700 (PDT)
-Received: from whitewolf.lyude.net (static-173-76-190-23.bstnma.ftas.verizon.net. [173.76.190.23])
-        by smtp.gmail.com with ESMTPSA id b123sm6265077qkf.85.2019.08.12.12.13.21
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 12:13:22 -0700 (PDT)
-Message-ID: <c526638ef31f5b8fb7782e1a4f034fcf78088c4a.camel@redhat.com>
-Subject: Re: [PATCH] PCI: Use pci_reset_bus() in
- quirk_reset_lenovo_thinkpad_50_nvgpu()
-From:   Lyude Paul <lyude@redhat.com>
-Reply-To: lyude@redhat.com
-To:     nouveau@lists.freedesktop.org, linux-pci@vger.kernel.org,
-        Lukas Wunner <lukas@wunner.de>
-Cc:     Daniel Drake <drake@endlessm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Aaron Plattner <aplattner@nvidia.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Ilia Mirkin <imirkin@alum.mit.edu>,
-        Karol Herbst <kherbst@redhat.com>,
-        Maik Freudenberg <hhfeuer@gmx.de>, linux-kernel@vger.kernel.org
-Date:   Mon, 12 Aug 2019 15:13:20 -0400
-In-Reply-To: <20190801220117.14952-1-lyude@redhat.com>
-References: <20190801220117.14952-1-lyude@redhat.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        id S1727151AbfHLUBh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Aug 2019 16:01:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726910AbfHLUBh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 12 Aug 2019 16:01:37 -0400
+Received: from localhost (c-73-15-1-175.hsd1.ca.comcast.net [73.15.1.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08C522064A;
+        Mon, 12 Aug 2019 20:01:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565640096;
+        bh=NSkesDbyTebD+v4e1h6gv7mP58q17+gzV7RA4nbnT38=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PM1nIv8I5QbxVroLS05rramZ5dZ0VSEA0hPtM4Nyi7x6O/cRZHpnUn2JqpjpSzmIf
+         3OIovcheUk0W4Xtzb1WjvkRcCUn7GWelbDPWulT11bQc2tDiTREjjfnPGKgCeb+cbF
+         g9JmGWAKO4QpqNwLOoGbde2poi97UEyKOHfYIiIc=
+Date:   Mon, 12 Aug 2019 15:01:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        kvm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        netdev@vger.kernel.org, x86@kernel.org, linux-s390@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] Add definition for the number of standard PCI BARs
+Message-ID: <20190812200134.GB11785@google.com>
+References: <20190811150802.2418-1-efremov@linux.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190811150802.2418-1-efremov@linux.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Bjorn, is there any update on getting this accepted?
+On Sun, Aug 11, 2019 at 06:07:55PM +0300, Denis Efremov wrote:
+> Code that iterates over all standard PCI BARs typically uses
+> PCI_STD_RESOURCE_END, but this is error-prone because it requires
+> "i <= PCI_STD_RESOURCE_END" rather than something like
+> "i < PCI_STD_NUM_BARS". We could add such a definition and use it the same
+> way PCI_SRIOV_NUM_BARS is used. There is already the definition
+> PCI_BAR_COUNT for s390 only. Thus, this patchset introduces it globally.
+> 
+> The patch is splitted into 7 parts for different drivers/subsystems for
+> easy readability.
 
-On Thu, 2019-08-01 at 18:01 -0400, Lyude Paul wrote:
-> Since quirk_nvidia_hda() was added there's now two nvidia device
-> functions on any laptops with nvidia GPUs: the HDA controller, and the
-> GPU itself. Unfortunately this has the sideaffect of breaking
-> quirk_reset_lenovo_thinkpad_50_nvgpu() since pci_reset_function() was
-> using pci_parent_bus_reset() to reset the GPU's respective PCI bus, and
-> pci_parent_bus_reset() does not work on busses which have more then a
-> single device function present.
-> 
-> So, fix this by simply calling pci_reset_bus() instead which properly
-> resets the GPU bus and all device functions under it, including both the
-> GPU and the HDA controller.
-> 
-> Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
-> Cc: Lukas Wunner <lukas@wunner.de>
-> Cc: Daniel Drake <drake@endlessm.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Aaron Plattner <aplattner@nvidia.com>
-> Cc: Peter Wu <peter@lekensteyn.nl>
-> Cc: Ilia Mirkin <imirkin@alum.mit.edu>
-> Cc: Karol Herbst <kherbst@redhat.com>
-> Cc: Maik Freudenberg <hhfeuer@gmx.de>
-> Cc: linux-pci@vger.kernel.org
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> ---
->  drivers/pci/quirks.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 208aacf39329..44c4ae1abd00 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5256,7 +5256,7 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct
-> pci_dev *pdev)
->  	 */
->  	if (ioread32(map + 0x2240c) & 0x2) {
->  		pci_info(pdev, FW_BUG "GPU left initialized by EFI,
-> resetting\n");
-> -		ret = pci_reset_function(pdev);
-> +		ret = pci_reset_bus(pdev);
->  		if (ret < 0)
->  			pci_err(pdev, "Failed to reset GPU: %d\n", ret);
->  	}
+This looks good.  I can take all these together, since they all depend
+on the first patch.  I have a few comments on the individual patches.
 
+> Denis Efremov (7):
+>   PCI: Add define for the number of standard PCI BARs
+>   s390/pci: Replace PCI_BAR_COUNT with PCI_STD_NUM_BARS
+>   x86/PCI: Use PCI_STD_NUM_BARS in loops instead of PCI_STD_RESOURCE_END
+>   PCI/net: Use PCI_STD_NUM_BARS in loops instead of PCI_STD_RESOURCE_END
+>   rapidio/tsi721: use PCI_STD_NUM_BARS in loops instead of
+>     PCI_STD_RESOURCE_END
+>   efifb: Use PCI_STD_NUM_BARS in loops instead of PCI_STD_RESOURCE_END
+>   vfio_pci: Use PCI_STD_NUM_BARS in loops instead of
+>     PCI_STD_RESOURCE_END
+> 
+>  arch/s390/include/asm/pci.h                      |  5 +----
+>  arch/s390/include/asm/pci_clp.h                  |  6 +++---
+>  arch/s390/pci/pci.c                              | 16 ++++++++--------
+>  arch/s390/pci/pci_clp.c                          |  6 +++---
+>  arch/x86/pci/common.c                            |  2 +-
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c |  4 ++--
+>  drivers/net/ethernet/synopsys/dwc-xlgmac-pci.c   |  2 +-
+>  drivers/pci/quirks.c                             |  2 +-
+>  drivers/rapidio/devices/tsi721.c                 |  2 +-
+>  drivers/vfio/pci/vfio_pci.c                      |  4 ++--
+>  drivers/vfio/pci/vfio_pci_config.c               |  2 +-
+>  drivers/vfio/pci/vfio_pci_private.h              |  4 ++--
+>  drivers/video/fbdev/efifb.c                      |  2 +-
+>  include/linux/pci.h                              |  2 +-
+>  include/uapi/linux/pci_regs.h                    |  1 +
+>  15 files changed, 29 insertions(+), 31 deletions(-)
+> 
+> -- 
+> 2.21.0
+> 
