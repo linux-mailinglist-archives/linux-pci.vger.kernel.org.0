@@ -2,187 +2,224 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 341C18A16A
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 16:45:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 598698A26F
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 17:39:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbfHLOo2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Aug 2019 10:44:28 -0400
-Received: from mga02.intel.com ([134.134.136.20]:19856 "EHLO mga02.intel.com"
+        id S1726568AbfHLPik (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Aug 2019 11:38:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:52044 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726581AbfHLOo2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 12 Aug 2019 10:44:28 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 07:41:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,377,1559545200"; 
-   d="scan'208";a="375262037"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 12 Aug 2019 07:41:46 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 39A8C2DD; Mon, 12 Aug 2019 17:41:44 +0300 (EEST)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: Use minimum window alignment when calculating memory window size
-Date:   Mon, 12 Aug 2019 17:41:44 +0300
-Message-Id: <20190812144144.2646-1-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726185AbfHLPik (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 12 Aug 2019 11:38:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C1CB15A2;
+        Mon, 12 Aug 2019 08:38:39 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB2143F718;
+        Mon, 12 Aug 2019 08:38:37 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 16:38:33 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     "sashal@kernel.org" <sashal@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Message-ID: <20190812153833.GA30794@e121166-lin.cambridge.arm.com>
+References: <1565135484-31351-1-git-send-email-haiyangz@microsoft.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565135484-31351-1-git-send-email-haiyangz@microsoft.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There is an issue in Linux PCI resource allocation that if we remove an
-existing device that was initially configured by the BIOS and then issue
-rescan, it will not fit in to the memory space allocated by the BIOS
-even if it originally it fit there just fine.
+On Tue, Aug 06, 2019 at 11:52:11PM +0000, Haiyang Zhang wrote:
+> Currently in Azure cloud, for passthrough devices including GPU, the
+> host sets the device instance ID's bytes 8 - 15 to a value derived from
+> the host HWID, which is the same on all devices in a VM. So, the device
+> instance ID's bytes 8 and 9 provided by the host are no longer unique.
+> 
+> This can cause device passthrough to VMs to fail because the bytes 8 and
+> 9 is used as PCI domain number. So, as recommended by Azure host team,
+> we now use the bytes 4 and 5 which usually contain unique numbers as PCI
+> domain. The chance of collision is greatly reduced. In the rare cases of
+> collision, we will detect and find another number that is not in use.
 
-The system in question is just a regular PC with a FPGA card connected
-to PCIe slot. The initial BIOS resource allocation right after boot
-looks like:
+This is not clear at all. Why "finding another number" is fine with
+this patch while it is not with current kernel code ? Also does this
+have backward compatibility issues ?
 
-00:01.1 Root port
-  Memory behind bridge: d0000000-f01fffff	(514M)
-    02:00.0 PCI-Express to PCI/PCI-X Bridge
-      BAR 0: Memory at d0000000-dfffffff	(256M)
-      BAR 1: Memory at f0100000-f01fffff	(1M)
-      Memory behind bridge: e0000000-f00fffff	(257M)
-        03:0a.0 FPGA
-	  BAR 0: Memory at f0000000-f000ffff	(64k)
-	  BAR 2: Memory at e0000000-efffffff	(256M)
+I do not understand if a collision is a problem or not from the
+log above.
 
-The FPGA card consists of a PCIe-to-PCI-X bridge (02:00.0) and the FPGA
-device itself (03:0a.0) right below the bridge. In order to update the
-FPGA image to the card without need for rebooting the system we remove
-the device through sysfs:
+> Thanks to Michael Kelley <mikelley@microsoft.com> for proposing this idea.
 
-  # echo 1 > /sys/bus/pci/devices/0000:00:01.1/0000:02:00.0/remove
+Add it as Suggested-by: tag.
 
-At this point the same image is burned to the FPGA or alternatively it
-is just reset to make sure the config space gets cleared and the kernel
-needs to do the resource allocation in the next step. Next we issue
-rescan to find and re-configure the same device:
+Thanks,
+Lorenzo
 
-  # echo 1 > /sys/bus/pci/devices/0000:00:01.1/rescan
-
-But the end result is not the same and in fact the FPGA device cannot
-enable its BARs because there is no memory window from bridge 02:00.0 to
-the FPGA:
-
-00:01.1 Root port
-  Memory behind bridge: d0000000-f01fffff	(514M)
-    02:00.0 PCI-Express to PCI/PCI-X Bridge
-      BAR 0: Memory at d0000000-dfffffff	(256M)
-      BAR 1: Memory at e0000000-e00fffff	(1M)
-
-Below are the messages from the rescan with the failure highlighted:
-
-[  208.396066] pci_bus 0000:02: scanning bus
-[  208.396090] pci 0000:02:00.0: [8086:0bcd] type 01 class 0x060400
-[  208.396119] pci 0000:02:00.0: reg 0x10: [mem 0x00000000-0x0fffffff]
-[  208.396128] pci 0000:02:00.0: reg 0x14: [mem 0x00000000-0x000fffff]
-[  208.396156] pci 0000:02:00.0: enabling Extended Tags
-[  208.396236] pci 0000:02:00.0: PME# supported from D0
-[  208.396241] pci 0000:02:00.0: PME# disabled
-[  208.407979] pci 0000:02:00.0: scanning [bus 00-00] behind bridge, pass 0
-[  208.407984] pci 0000:02:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
-[  208.407994] pci 0000:02:00.0: scanning [bus 00-00] behind bridge, pass 1
-[  208.408039] pci_bus 0000:03: extended config space not accessible
-[  208.408119] pci_bus 0000:03: scanning bus
-[  208.456396] pci 0000:03:0a.0: [8086:0bce] type 00 class 0x000000
-[  208.456528] pci 0000:03:0a.0: reg 0x10: [mem 0xf0000000-0xf000ffff 64bit]
-[  208.456611] pci 0000:03:0a.0: reg 0x18: [mem 0xe0000000-0xefffffff 64bit]
-[  208.456664] pci 0000:03:0a.0: reg 0x20: [io  0xe000-0xe0ff]
-[  208.938323] pci_bus 0000:03: fixups for bus
-[  208.938324] pci 0000:02:00.0: PCI bridge to [bus 03]
-[  208.938330] pci 0000:02:00.0:   bridge window [io  0x0000-0x0fff]
-[  208.938334] pci 0000:02:00.0:   bridge window [mem 0x00000000-0x000fffff]
-[  208.938339] pci 0000:02:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
-[  208.938341] pci_bus 0000:03: bus scan returning with max=03
-[  208.938343] pci_bus 0000:03: busn_res: [bus 03] end is updated to 03
-[  208.938346] pci_bus 0000:02: bus scan returning with max=03
-[  208.938555] pci 0000:02:00.0: BAR 0: assigned [mem 0xd0000000-0xdfffffff]
-[  208.938558] pci 0000:02:00.0: BAR 14: no space for [mem size 0x18000000]
-                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[  208.938559] pci 0000:02:00.0: BAR 14: failed to assign [mem size 0x18000000]
-                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[  208.938560] pci 0000:02:00.0: BAR 1: assigned [mem 0xe0000000-0xe00fffff]
-[  208.938564] pci 0000:02:00.0: BAR 15: assigned [mem 0xbfb00000-0xbfbfffff 64bit pref]
-[  208.938565] pci 0000:02:00.0: BAR 13: assigned [io  0xe000-0xefff]
-[  208.938566] pci 0000:03:0a.0: BAR 2: no space for [mem size 0x10000000 64bit]
-[  208.938567] pci 0000:03:0a.0: BAR 2: failed to assign [mem size 0x10000000 64bit]
-[  208.938568] pci 0000:03:0a.0: BAR 0: no space for [mem size 0x00010000 64bit]
-[  208.938569] pci 0000:03:0a.0: BAR 0: failed to assign [mem size 0x00010000 64bit]
-[  208.938569] pci 0000:03:0a.0: BAR 4: assigned [io  0xe000-0xe0ff]
-
-It seems that Linux tries to open memory window of 0x18000000 (384M)
-from the bridge 02:00.0 towards the FPGA 03:0a.0. This of does not fit
-to the memory available for the bridge itself and thus the assignment
-fails.
-
-The size 0x18000000 comes from the following code which tries to
-calculate size of the devices below the bridge and the required
-alignment:
-
-drivers/pci/setup-bus.c::pbus_size_mem(...)
-{
-  // size = 0x10000000 + 0x10000 = 0x10010000 (256M + 64k)
-
-  min_align = calculate_mem_align(aligns, max_order);
-  min_align = max(min_align, window_alignment(bus, b_res->flags));
-  // min_align = 0x8000000 (128M)
-
-  size0 = calculate_memsize(size, min_size, 0, 0, resource_size(b_res), min_align);
-  // size0 = ALIGN(0x10010000, 0x8000000) = 0x18000000 (384M)
-
-We align the calculated size to the next 128M which increases to 384M
-and then later in pci_assign_resource() try to assing the resource which
-fails because there is no room available in the parent bridge.
-
-Since the minimum alignment (min_align) is kept as part of the window
-resource and taken into account later in pbus_assign_resources_sorted()
-and pci_assign_resource(), I think aligning size to min_align is not
-necessary.
-
-For this reason make the size calculation to use minimum memory window
-alignment (1M) instead. The resulting resource allocation matches the
-initial allocation done by the BIOS.
-
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
-The previous RFC version can be found here:
-
-  https://patchwork.kernel.org/patch/10917249/
-
-There are no changes to that version except that I changed "RFC" to "PATCH"
-in the subject and included wider audience in Cc list.
-
- drivers/pci/setup-bus.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 79b1fa6519be..c8c947f17675 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1049,9 +1049,10 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 		}
- 	}
- 
-+	size0 = calculate_memsize(size, min_size, 0, 0, resource_size(b_res),
-+				  window_alignment(bus, b_res->flags));
- 	min_align = calculate_mem_align(aligns, max_order);
- 	min_align = max(min_align, window_alignment(bus, b_res->flags));
--	size0 = calculate_memsize(size, min_size, 0, 0, resource_size(b_res), min_align);
- 	add_align = max(min_align, add_align);
- 	size1 = (!realloc_head || (realloc_head && !add_size && !children_add_size)) ? size0 :
- 		calculate_memsize(size, min_size, add_size, children_add_size,
--- 
-2.20.1
-
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Acked-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 92 +++++++++++++++++++++++++++++++------
+>  1 file changed, 79 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 40b6254..4f3d97e 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2510,6 +2510,48 @@ static void put_hvpcibus(struct hv_pcibus_device *hbus)
+>  		complete(&hbus->remove_event);
+>  }
+>  
+> +#define HVPCI_DOM_MAP_SIZE (64 * 1024)
+> +static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
+> +
+> +/*
+> + * PCI domain number 0 is used by emulated devices on Gen1 VMs, so define 0
+> + * as invalid for passthrough PCI devices of this driver.
+> + */
+> +#define HVPCI_DOM_INVALID 0
+> +
+> +/**
+> + * hv_get_dom_num() - Get a valid PCI domain number
+> + * Check if the PCI domain number is in use, and return another number if
+> + * it is in use.
+> + *
+> + * @dom: Requested domain number
+> + *
+> + * return: domain number on success, HVPCI_DOM_INVALID on failure
+> + */
+> +static u16 hv_get_dom_num(u16 dom)
+> +{
+> +	unsigned int i;
+> +
+> +	if (test_and_set_bit(dom, hvpci_dom_map) == 0)
+> +		return dom;
+> +
+> +	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
+> +		if (test_and_set_bit(i, hvpci_dom_map) == 0)
+> +			return i;
+> +	}
+> +
+> +	return HVPCI_DOM_INVALID;
+> +}
+> +
+> +/**
+> + * hv_put_dom_num() - Mark the PCI domain number as free
+> + * @dom: Domain number to be freed
+> + */
+> +static void hv_put_dom_num(u16 dom)
+> +{
+> +	clear_bit(dom, hvpci_dom_map);
+> +}
+> +
+>  /**
+>   * hv_pci_probe() - New VMBus channel probe, for a root PCI bus
+>   * @hdev:	VMBus's tracking struct for this root PCI bus
+> @@ -2521,6 +2563,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  			const struct hv_vmbus_device_id *dev_id)
+>  {
+>  	struct hv_pcibus_device *hbus;
+> +	u16 dom_req, dom;
+>  	int ret;
+>  
+>  	/*
+> @@ -2535,19 +2578,34 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	hbus->state = hv_pcibus_init;
+>  
+>  	/*
+> -	 * The PCI bus "domain" is what is called "segment" in ACPI and
+> -	 * other specs.  Pull it from the instance ID, to get something
+> -	 * unique.  Bytes 8 and 9 are what is used in Windows guests, so
+> -	 * do the same thing for consistency.  Note that, since this code
+> -	 * only runs in a Hyper-V VM, Hyper-V can (and does) guarantee
+> -	 * that (1) the only domain in use for something that looks like
+> -	 * a physical PCI bus (which is actually emulated by the
+> -	 * hypervisor) is domain 0 and (2) there will be no overlap
+> -	 * between domains derived from these instance IDs in the same
+> -	 * VM.
+> +	 * The PCI bus "domain" is what is called "segment" in ACPI and other
+> +	 * specs. Pull it from the instance ID, to get something usually
+> +	 * unique. In rare cases of collision, we will find out another number
+> +	 * not in use.
+> +	 *
+> +	 * Note that, since this code only runs in a Hyper-V VM, Hyper-V
+> +	 * together with this guest driver can guarantee that (1) The only
+> +	 * domain used by Gen1 VMs for something that looks like a physical
+> +	 * PCI bus (which is actually emulated by the hypervisor) is domain 0.
+> +	 * (2) There will be no overlap between domains (after fixing possible
+> +	 * collisions) in the same VM.
+>  	 */
+> -	hbus->sysdata.domain = hdev->dev_instance.b[9] |
+> -			       hdev->dev_instance.b[8] << 8;
+> +	dom_req = hdev->dev_instance.b[5] << 8 | hdev->dev_instance.b[4];
+> +	dom = hv_get_dom_num(dom_req);
+> +
+> +	if (dom == HVPCI_DOM_INVALID) {
+> +		dev_err(&hdev->device,
+> +			"Unable to use dom# 0x%hx or other numbers", dom_req);
+> +		ret = -EINVAL;
+> +		goto free_bus;
+> +	}
+> +
+> +	if (dom != dom_req)
+> +		dev_info(&hdev->device,
+> +			 "PCI dom# 0x%hx has collision, using 0x%hx",
+> +			 dom_req, dom);
+> +
+> +	hbus->sysdata.domain = dom;
+>  
+>  	hbus->hdev = hdev;
+>  	refcount_set(&hbus->remove_lock, 1);
+> @@ -2562,7 +2620,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  					   hbus->sysdata.domain);
+>  	if (!hbus->wq) {
+>  		ret = -ENOMEM;
+> -		goto free_bus;
+> +		goto free_dom;
+>  	}
+>  
+>  	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
+> @@ -2639,6 +2697,8 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	vmbus_close(hdev->channel);
+>  destroy_wq:
+>  	destroy_workqueue(hbus->wq);
+> +free_dom:
+> +	hv_put_dom_num(hbus->sysdata.domain);
+>  free_bus:
+>  	free_page((unsigned long)hbus);
+>  	return ret;
+> @@ -2720,6 +2780,9 @@ static int hv_pci_remove(struct hv_device *hdev)
+>  	put_hvpcibus(hbus);
+>  	wait_for_completion(&hbus->remove_event);
+>  	destroy_workqueue(hbus->wq);
+> +
+> +	hv_put_dom_num(hbus->sysdata.domain);
+> +
+>  	free_page((unsigned long)hbus);
+>  	return 0;
+>  }
+> @@ -2747,6 +2810,9 @@ static void __exit exit_hv_pci_drv(void)
+>  
+>  static int __init init_hv_pci_drv(void)
+>  {
+> +	/* Set the invalid domain number's bit, so it will not be used */
+> +	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
+> +
+>  	return vmbus_driver_register(&hv_pci_drv);
+>  }
+>  
+> -- 
+> 1.8.3.1
+> 
