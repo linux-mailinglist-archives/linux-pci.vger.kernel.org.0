@@ -2,157 +2,485 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 909D38A2B8
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 17:56:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1AD68A3EF
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 19:04:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfHLP4I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Aug 2019 11:56:08 -0400
-Received: from mail-eopbgr700136.outbound.protection.outlook.com ([40.107.70.136]:39393
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726219AbfHLP4H (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 12 Aug 2019 11:56:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ioTVZ8tUxzNWpOIdfm/mXTSJb1bn0qOyqLPyu/0+oKh3OyYXSehhcV5Cm4b7valUtYhH9TbWYGuwoREusz13nDrZATI6msRDFvGqeP47cf4YcDm0i77qkKsa+DcqCl6tDf2gZOtDmm8U+yTvV2yzez6ID3hTJ0GYkyEowHswBt8xV0usgUmOYrzTA7o9W2UQz08l00rPygyv61hh19RyL3RtBm8NQKeVnWg/bMg8+bUdW0+8uQvqPUd/rwlvQDWVLHWnefuPT0AazSfNykn6/cRR4seNs06tnnM28KQvVVK9HrbISL9daFaJSkZdTGmkEyasd9rExOoOt4lXCiE26A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RB27NeJ5tG+cRlrAkYIf07bbwnSrdLlZ7zPXg6xmvKw=;
- b=E3FIexV6IL+aJN8lUSQrJ//+n75wyRTZYxT17X4e9Fo4rBtZ55e15AwV8aQ7VaWm+h0CjwMnH25N151hGma0ABzL7MkqPcKtLa++j1Yqub/Nkdzm+vy/nuyMiH+JWqxhrhDS3WRqAKVGyh4u1Uq9Dk5NmIWKIQi9yFyVF7wIHbGIrhuA/vnRO7vQa/aLd6m7ILDI0aruIgfqRxO4G4Op053chQV8M9zms4vfmM/ivvfM6u7vtkpfCR60muzGhsSUNWe1Vj9SZziMVt9IcUHgQhy7atpruMnpyJMLK8oZ9i2VaVwcqDXjegtv9bCpLodb4KHXCd7mnW/WGDSVLc8iEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RB27NeJ5tG+cRlrAkYIf07bbwnSrdLlZ7zPXg6xmvKw=;
- b=ijCC3jwmFZh78iz8lGQVbGrcUsIDJyg5e2HhyZmpLqhxbG1vdnd/+A7uFZ38ym7VsIUqSq0fPG26mmCoCH97dSF19lJ79Jhl2qbwuzDuiOv7HJWVUKp7nhQPxsnC5ZomwnE+KfF3QxtNfzFkyIC+ZCRNXUCRIPpTG+6aLASx3Vw=
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
- DM6PR21MB1338.namprd21.prod.outlook.com (20.179.53.81) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.6; Mon, 12 Aug 2019 15:56:05 +0000
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::257a:6f7f:1126:a61d]) by DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::257a:6f7f:1126:a61d%6]) with mapi id 15.20.2178.006; Mon, 12 Aug 2019
- 15:56:05 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Thread-Topic: [PATCH v2] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Thread-Index: AQHVTLH3GagQ2bG1NUyV/+P043l1Z6b3rpuAgAABZXA=
-Date:   Mon, 12 Aug 2019 15:56:05 +0000
-Message-ID: <DM6PR21MB1337424D893B60F48F45A289CAD30@DM6PR21MB1337.namprd21.prod.outlook.com>
-References: <1565135484-31351-1-git-send-email-haiyangz@microsoft.com>
- <20190812153833.GA30794@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190812153833.GA30794@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-12T15:56:03.3755135Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b79b9147-92f9-4119-8236-67be47ff75cc;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [96.61.92.94]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1247fec9-e6e6-46a9-f0b2-08d71f3d952f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1338;
-x-ms-traffictypediagnostic: DM6PR21MB1338:|DM6PR21MB1338:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB133863259570AE5236FBA976CAD30@DM6PR21MB1338.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 012792EC17
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(136003)(346002)(396003)(376002)(13464003)(199004)(189003)(26005)(256004)(14454004)(229853002)(4326008)(66066001)(10090500001)(54906003)(52536014)(53936002)(6116002)(9686003)(6436002)(3846002)(2906002)(66476007)(66446008)(66556008)(55016002)(64756008)(66946007)(6246003)(76176011)(33656002)(14444005)(6916009)(305945005)(7736002)(76116006)(478600001)(316002)(71200400001)(186003)(7696005)(71190400001)(22452003)(8936002)(81156014)(74316002)(8676002)(99286004)(476003)(25786009)(81166006)(8990500004)(86362001)(11346002)(6506007)(53546011)(5660300002)(446003)(102836004)(10290500003)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1338;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: s4XFq481U9xZ3J+7mpUj83smK+y9cxmROjCoo1Ta2DDoWA3zmj0Hv7HssgzWu1hPlr3BDuPjYdKSvVpKnaTVDGonkOu3EKuPXSlltdwVL7TbvqprpvkZSn+NcmqnA9QUMzR1e8df9HHejnUOXJ7C8DswJjvUs7rozvFpKiKlip29dpROwSCQiyAvnp/bBdCXv5LEtKWofIQERzBRCKGbWHTRTC8jbb5CNwCyhri2yeDrx8Zdko3NPiSmHxAeW1LOqYJhRpi4ZKaUfQJIvejRcGEZ76eQdEqvUaaY7Gi8ZgxAEW9q7CUklkuLyHqrKwgPuTHsoTDp7yBX3M35be6Avq96VFPNRKOL+OHJ5OqeM+GYy3/bXgKCFF0sydFDEl+GFY5EQasM0e+eqdAu7dy29InsOAgKs2ElJDnuovybE3c=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1725887AbfHLRDv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Aug 2019 13:03:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:52862 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726334AbfHLRDv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 12 Aug 2019 13:03:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E63915AB;
+        Mon, 12 Aug 2019 10:03:49 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 580963F706;
+        Mon, 12 Aug 2019 10:03:47 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 18:03:36 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Jonathan Chocron <jonnyc@amazon.com>
+Cc:     bhelgaas@google.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org,
+        alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com,
+        talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 6/8] PCI: al: Add support for DW based driver type
+Message-ID: <20190812170336.GA23142@e121166-lin.cambridge.arm.com>
+References: <20190723092529.11310-1-jonnyc@amazon.com>
+ <20190723092711.11786-2-jonnyc@amazon.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1247fec9-e6e6-46a9-f0b2-08d71f3d952f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 15:56:05.1203
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fOo6anCblGEw8zO/UlBEin47AlovXZnGwZs2zIkQUCDS0E2Km+8hrok5MEdXtisQN1cTv7UTUoxkbQyuQIcOfA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1338
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190723092711.11786-2-jonnyc@amazon.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+"PCI: dwc: al: Add support for DW based driver type"
 
+Make $SUBJECT compliant with other host controllers patches.
 
-> -----Original Message-----
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Sent: Monday, August 12, 2019 11:39 AM
-> To: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: sashal@kernel.org; bhelgaas@google.com; linux-
-> hyperv@vger.kernel.org; linux-pci@vger.kernel.org; KY Srinivasan
-> <kys@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> olaf@aepfle.de; vkuznets <vkuznets@redhat.com>; linux-
-> kernel@vger.kernel.org
-> Subject: Re: [PATCH v2] PCI: hv: Detect and fix Hyper-V PCI domain number
-> collision
->=20
-> On Tue, Aug 06, 2019 at 11:52:11PM +0000, Haiyang Zhang wrote:
-> > Currently in Azure cloud, for passthrough devices including GPU, the
-> > host sets the device instance ID's bytes 8 - 15 to a value derived from
-> > the host HWID, which is the same on all devices in a VM. So, the device
-> > instance ID's bytes 8 and 9 provided by the host are no longer unique.
-> >
-> > This can cause device passthrough to VMs to fail because the bytes 8 an=
-d
-> > 9 is used as PCI domain number. So, as recommended by Azure host team,
-> > we now use the bytes 4 and 5 which usually contain unique numbers as PC=
-I
-> > domain. The chance of collision is greatly reduced. In the rare cases o=
-f
-> > collision, we will detect and find another number that is not in use.
->=20
-> This is not clear at all. Why "finding another number" is fine with
-> this patch while it is not with current kernel code ? Also does this
-> have backward compatibility issues ?
-The bytes 4, 5 have more uniqueness (info entropy) than bytes 8, 9, so we u=
-se
-bytes 4, 5. On older hosts, bytes 4, 5 can also be used -- so it has no bac=
-kward
-compatibility issues.
-=20
-> I do not understand if a collision is a problem or not from the
-> log above.
-Collision will cause the second device with the same domain number fails to=
- load.
-I will include these info into the patch description.
+On Tue, Jul 23, 2019 at 12:27:09PM +0300, Jonathan Chocron wrote:
+> This driver is DT based and utilizes the DesignWare APIs.
+> It allows using a smaller ECAM range for a larger bus range -
+> usually an entire bus uses 1MB of address space, but the driver
+> can use it for a larger number of buses.
 
->=20
-> > Thanks to Michael Kelley <mikelley@microsoft.com> for proposing this
-> idea.
->=20
-> Add it as Suggested-by: tag.
-I will add this line.
+I would appreciate if you can add a simple explanation of
+the mechanism for completeness.
 
-Thanks,
-- Haiyang
+AFAIU, with ACPI you don't support all these variants.
+
+> All link initializations are handled by the boot FW.
+> 
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> ---
+>  drivers/pci/controller/dwc/Kconfig   |  12 +
+>  drivers/pci/controller/dwc/pcie-al.c | 367 +++++++++++++++++++++++++++
+>  2 files changed, 379 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index 6ea778ae4877..3c6094cbcc3b 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -230,4 +230,16 @@ config PCIE_UNIPHIER
+>  	  Say Y here if you want PCIe controller support on UniPhier SoCs.
+>  	  This driver supports LD20 and PXs3 SoCs.
+>  
+> +config PCIE_AL
+> +	bool "Amazon Annapurna Labs PCIe controller"
+> +	depends on OF && (ARM64 || COMPILE_TEST)
+> +	depends on PCI_MSI_IRQ_DOMAIN
+> +	select PCIE_DW_HOST
+> +	help
+> +	  Say Y here to enable support of the Amazon's Annapurna Labs PCIe
+> +	  controller IP on Amazon SoCs. The PCIe controller uses the DesignWare
+> +	  core plus Annapurna Labs proprietary hardware wrappers. This is
+> +	  required only for DT-based platforms. ACPI platforms with the
+> +	  Annapurna Labs PCIe controller don't need to enable this.
+> +
+>  endmenu
+> diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
+> index 3ab58f0584a8..3ffdd3c97617 100644
+> --- a/drivers/pci/controller/dwc/pcie-al.c
+> +++ b/drivers/pci/controller/dwc/pcie-al.c
+> @@ -91,3 +91,370 @@ struct pci_ecam_ops al_pcie_ops = {
+>  };
+>  
+>  #endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
+> +
+> +#ifdef CONFIG_PCIE_AL
+> +
+> +#include <linux/of_pci.h>
+> +#include "pcie-designware.h"
+> +
+> +#define AL_PCIE_REV_ID_2	2
+> +#define AL_PCIE_REV_ID_3	3
+> +#define AL_PCIE_REV_ID_4	4
+> +
+> +#define AXI_BASE_OFFSET		0x0
+> +
+> +#define DEVICE_ID_OFFSET	0x16c
+> +
+> +#define DEVICE_REV_ID			0x0
+> +#define DEVICE_REV_ID_DEV_ID_MASK	GENMASK(31, 16)
+> +
+> +#define DEVICE_REV_ID_DEV_ID_X4		0
+> +#define DEVICE_REV_ID_DEV_ID_X8		2
+> +#define DEVICE_REV_ID_DEV_ID_X16	4
+> +
+> +#define OB_CTRL_REV1_2_OFFSET	0x0040
+> +#define OB_CTRL_REV3_5_OFFSET	0x0030
+> +
+> +#define CFG_TARGET_BUS			0x0
+> +#define CFG_TARGET_BUS_MASK_MASK	GENMASK(7, 0)
+> +#define CFG_TARGET_BUS_BUSNUM_MASK	GENMASK(15, 8)
+> +
+> +#define CFG_CONTROL			0x4
+> +#define CFG_CONTROL_SUBBUS_MASK		GENMASK(15, 8)
+> +#define CFG_CONTROL_SEC_BUS_MASK	GENMASK(23, 16)
+> +
+> +struct al_pcie_reg_offsets {
+> +	unsigned int ob_ctrl;
+> +};
+> +
+> +struct al_pcie_target_bus_cfg {
+> +	u8 reg_val;
+> +	u8 reg_mask;
+> +	u8 ecam_mask;
+> +};
+> +
+> +struct al_pcie {
+> +	struct dw_pcie *pci;
+> +	void __iomem *controller_base; /* base of PCIe unit (not DW core) */
+> +	struct device *dev;
+> +	resource_size_t ecam_size;
+> +	unsigned int controller_rev_id;
+> +	struct al_pcie_reg_offsets reg_offsets;
+> +	struct al_pcie_target_bus_cfg target_bus_cfg;
+> +};
+> +
+> +#define PCIE_ECAM_DEVFN(x)		(((x) & 0xff) << 12)
+> +
+> +#define to_al_pcie(x)		dev_get_drvdata((x)->dev)
+> +
+> +static inline u32 al_pcie_controller_readl(struct al_pcie *pcie, u32 offset)
+> +{
+> +	return readl(pcie->controller_base + offset);
+> +}
+> +
+> +static inline void al_pcie_controller_writel(struct al_pcie *pcie, u32 offset,
+> +					     u32 val)
+> +{
+> +	writel(val, pcie->controller_base + offset);
+> +}
+
+You should be able to use the read/write{_relaxed} API.
+
+> +
+> +static int al_pcie_rev_id_get(struct al_pcie *pcie, unsigned int *rev_id)
+> +{
+> +	u32 dev_rev_id_val;
+> +	u32 dev_id_val;
+> +
+> +	dev_rev_id_val = al_pcie_controller_readl(pcie, AXI_BASE_OFFSET +
+> +						  DEVICE_ID_OFFSET +
+> +						  DEVICE_REV_ID);
+> +	dev_id_val = FIELD_GET(DEVICE_REV_ID_DEV_ID_MASK, dev_rev_id_val);
+> +
+> +	switch (dev_id_val) {
+> +	case DEVICE_REV_ID_DEV_ID_X4:
+> +		*rev_id = AL_PCIE_REV_ID_2;
+> +		break;
+> +	case DEVICE_REV_ID_DEV_ID_X8:
+> +		*rev_id = AL_PCIE_REV_ID_3;
+> +		break;
+> +	case DEVICE_REV_ID_DEV_ID_X16:
+> +		*rev_id = AL_PCIE_REV_ID_4;
+> +		break;
+> +	default:
+> +		dev_err(pcie->dev, "Unsupported dev_id_val (0x%x)\n",
+> +			dev_id_val);
+> +		return -EINVAL;
+> +	}
+> +
+> +	dev_dbg(pcie->dev, "dev_id_val: 0x%x\n", dev_id_val);
+> +
+> +	return 0;
+> +}
+> +
+> +static int al_pcie_reg_offsets_set(struct al_pcie *pcie)
+> +{
+> +	switch (pcie->controller_rev_id) {
+> +	case AL_PCIE_REV_ID_2:
+> +		pcie->reg_offsets.ob_ctrl = OB_CTRL_REV1_2_OFFSET;
+> +		break;
+> +	case AL_PCIE_REV_ID_3:
+> +	case AL_PCIE_REV_ID_4:
+> +		pcie->reg_offsets.ob_ctrl = OB_CTRL_REV3_5_OFFSET;
+> +		break;
+> +	default:
+> +		dev_err(pcie->dev, "Unsupported controller rev_id: 0x%x\n",
+> +			pcie->controller_rev_id);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static inline void al_pcie_target_bus_set(struct al_pcie *pcie,
+> +					  u8 target_bus,
+> +					  u8 mask_target_bus)
+> +{
+> +	u32 reg;
+> +
+> +	reg = FIELD_PREP(CFG_TARGET_BUS_MASK_MASK, mask_target_bus) |
+> +	      FIELD_PREP(CFG_TARGET_BUS_BUSNUM_MASK, target_bus);
+> +
+> +	al_pcie_controller_writel(pcie, AXI_BASE_OFFSET +
+> +				  pcie->reg_offsets.ob_ctrl + CFG_TARGET_BUS,
+> +				  reg);
+> +}
+> +
+> +static void __iomem *al_pcie_conf_addr_map(struct al_pcie *pcie,
+> +					   unsigned int busnr,
+> +					   unsigned int devfn)
+> +{
+> +	struct al_pcie_target_bus_cfg *target_bus_cfg = &pcie->target_bus_cfg;
+> +	unsigned int busnr_ecam = busnr & target_bus_cfg->ecam_mask;
+> +	unsigned int busnr_reg = busnr & target_bus_cfg->reg_mask;
+> +	struct pcie_port *pp = &pcie->pci->pp;
+> +	void __iomem *pci_base_addr;
+> +
+> +	pci_base_addr = (void __iomem *)((uintptr_t)pp->va_cfg0_base +
+> +					 (busnr_ecam << 20) +
+> +					 PCIE_ECAM_DEVFN(devfn));
+> +
+> +	if (busnr_reg != target_bus_cfg->reg_val) {
+> +		dev_dbg(pcie->pci->dev, "Changing target bus busnum val from 0x%x to 0x%x\n",
+> +			target_bus_cfg->reg_val, busnr_reg);
+> +		target_bus_cfg->reg_val = busnr_reg;
+> +		al_pcie_target_bus_set(pcie,
+> +				       target_bus_cfg->reg_val,
+> +				       target_bus_cfg->reg_mask);
+> +	}
+> +
+> +	return pci_base_addr;
+> +}
+> +
+> +static int al_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+> +				 unsigned int devfn, int where, int size,
+> +				 u32 *val)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct al_pcie *pcie = to_al_pcie(pci);
+> +	unsigned int busnr = bus->number;
+> +	void __iomem *pci_addr;
+> +	int rc;
+> +
+> +	pci_addr = al_pcie_conf_addr_map(pcie, busnr, devfn);
+> +
+> +	rc = dw_pcie_read(pci_addr + where, size, val);
+> +
+> +	dev_dbg(pci->dev, "%d-byte config read from %04x:%02x:%02x.%d offset 0x%x (pci_addr: 0x%px) - val:0x%x\n",
+> +		size, pci_domain_nr(bus), bus->number,
+> +		PCI_SLOT(devfn), PCI_FUNC(devfn), where,
+> +		(pci_addr + where), *val);
+> +
+> +	return rc;
+> +}
+> +
+> +static int al_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+> +				 unsigned int devfn, int where, int size,
+> +				 u32 val)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct al_pcie *pcie = to_al_pcie(pci);
+> +	unsigned int busnr = bus->number;
+> +	void __iomem *pci_addr;
+> +	int rc;
+> +
+> +	pci_addr = al_pcie_conf_addr_map(pcie, busnr, devfn);
+> +
+> +	rc = dw_pcie_write(pci_addr + where, size, val);
+> +
+> +	dev_err(pci->dev, "%d-byte config write to %04x:%02x:%02x.%d offset 0x%x (pci_addr: 0x%px) - val:0x%x\n",
+> +		size, pci_domain_nr(bus), bus->number,
+> +		PCI_SLOT(devfn), PCI_FUNC(devfn), where,
+> +		(pci_addr + where), val);
+
+dev_dbg() ?
+
+> +
+> +	return rc;
+> +}
+> +
+> +static void al_pcie_config_prepare(struct al_pcie *pcie)
+> +{
+> +	struct al_pcie_target_bus_cfg *target_bus_cfg;
+> +	struct pcie_port *pp = &pcie->pci->pp;
+> +	unsigned int ecam_bus_mask;
+> +	u32 cfg_control_offset;
+> +	u8 subordinate_bus;
+> +	u8 secondary_bus;
+> +	u32 cfg_control;
+> +	u32 reg;
+> +
+> +	target_bus_cfg = &pcie->target_bus_cfg;
+> +
+> +	ecam_bus_mask = (pcie->ecam_size >> 20) - 1;
+> +	if (ecam_bus_mask > 255) {
+> +		dev_warn(pcie->dev, "ECAM window size is larger than 256MB. Cutting off at 256\n");
+> +		ecam_bus_mask = 255;
+> +	}
+> +
+> +	/* This portion is taken from the transaction address */
+> +	target_bus_cfg->ecam_mask = ecam_bus_mask;
+> +	/* This portion is taken from the cfg_target_bus reg */
+> +	target_bus_cfg->reg_mask = ~target_bus_cfg->ecam_mask;
+> +	target_bus_cfg->reg_val = pp->busn->start & target_bus_cfg->reg_mask;
+> +
+> +	al_pcie_target_bus_set(pcie, target_bus_cfg->reg_val,
+> +			       target_bus_cfg->reg_mask);
+> +
+> +	secondary_bus = pp->busn->start + 1;
+> +	subordinate_bus = pp->busn->end;
+> +
+> +	/* Set the valid values of secondary and subordinate buses */
+> +	cfg_control_offset = AXI_BASE_OFFSET + pcie->reg_offsets.ob_ctrl +
+> +			     CFG_CONTROL;
+> +
+> +	cfg_control = al_pcie_controller_readl(pcie, cfg_control_offset);
+> +
+> +	reg = cfg_control &
+> +	      ~(CFG_CONTROL_SEC_BUS_MASK | CFG_CONTROL_SUBBUS_MASK);
+> +
+> +	reg |= FIELD_PREP(CFG_CONTROL_SUBBUS_MASK, subordinate_bus) |
+> +	       FIELD_PREP(CFG_CONTROL_SEC_BUS_MASK, secondary_bus);
+> +
+> +	al_pcie_controller_writel(pcie, cfg_control_offset, reg);
+> +}
+> +
+> +static int al_pcie_host_init(struct pcie_port *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct al_pcie *pcie = to_al_pcie(pci);
+> +	int link_up;
+> +	int rc;
+> +
+> +	rc = al_pcie_rev_id_get(pcie, &pcie->controller_rev_id);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = al_pcie_reg_offsets_set(pcie);
+> +	if (rc)
+> +		return rc;
+> +
+> +	al_pcie_config_prepare(pcie);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dw_pcie_host_ops al_pcie_host_ops = {
+> +	.rd_other_conf = al_pcie_rd_other_conf,
+> +	.wr_other_conf = al_pcie_wr_other_conf,
+> +	.host_init = al_pcie_host_init,
+> +};
+> +
+> +static int al_add_pcie_port(struct pcie_port *pp,
+> +			    struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	int ret;
+> +
+> +	pp->ops = &al_pcie_host_ops;
+> +
+> +	ret = dw_pcie_host_init(pp);
+> +	if (ret) {
+> +		dev_err(dev, "failed to initialize host\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dw_pcie_ops dw_pcie_ops = {
+> +};
+
+I understand you have to have it - probably we should improve
+the generic DW layer to check for a pointer before dereferencing
+so that we avoid this empty struct. Anyway, that's for another
+series.
+
+> +
+> +static int al_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *controller_res;
+> +	struct resource *ecam_res;
+> +	struct resource *dbi_res;
+> +	struct al_pcie *al_pcie;
+> +	struct dw_pcie *pci;
+> +	int ret;
+> +
+> +	al_pcie = devm_kzalloc(dev, sizeof(*al_pcie), GFP_KERNEL);
+> +	if (!al_pcie)
+> +		return -ENOMEM;
+> +
+> +	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
+> +	if (!pci)
+> +		return -ENOMEM;
+> +
+> +	pci->dev = dev;
+> +	pci->ops = &dw_pcie_ops;
+> +
+> +	al_pcie->pci = pci;
+> +	al_pcie->dev = dev;
+> +
+> +	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_res);
+> +	if (IS_ERR(pci->dbi_base)) {
+> +		dev_err(dev, "couldn't remap dbi base %pR\n", dbi_res);
+> +		return PTR_ERR(pci->dbi_base);
+> +	}
+> +
+> +	ecam_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+> +	if (!ecam_res) {
+> +		dev_err(dev, "couldn't find 'config' reg in DT\n");
+> +		return -ENOENT;
+> +	}
+> +	al_pcie->ecam_size = resource_size(ecam_res);
+> +
+> +	controller_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						      "controller");
+> +	al_pcie->controller_base = devm_ioremap_resource(dev, controller_res);
+> +	if (IS_ERR(al_pcie->controller_base)) {
+> +		dev_err(dev, "couldn't remap controller base %pR\n",
+> +			controller_res);
+> +		return PTR_ERR(al_pcie->controller_base);
+> +	}
+> +
+> +	dev_dbg(dev, "From DT: dbi_base: %pR, controller_base: %pR\n",
+> +		dbi_res, controller_res);
+> +
+> +	platform_set_drvdata(pdev, al_pcie);
+> +
+> +	ret = al_add_pcie_port(&pci->pp, pdev);
+> +
+> +	return ret;
+
+Nit:
+
+return al_add_pcie_port(&pci->pp, pdev);
+
+?
+
+Lorenzo
+
+> +}
+> +
+> +static const struct of_device_id al_pcie_of_match[] = {
+> +	{ .compatible = "amazon,al-pcie",
+> +	},
+> +	{},
+> +};
+> +
+> +static struct platform_driver al_pcie_driver = {
+> +	.driver = {
+> +		.name	= "al-pcie",
+> +		.of_match_table = al_pcie_of_match,
+> +		.suppress_bind_attrs = true,
+> +	},
+> +	.probe = al_pcie_probe,
+> +};
+> +builtin_platform_driver(al_pcie_driver);
+> +
+> +#endif /* CONFIG_PCIE_AL*/
+> -- 
+> 2.17.1
+> 
