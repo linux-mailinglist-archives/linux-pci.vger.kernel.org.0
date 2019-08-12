@@ -2,105 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F113889962
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 11:06:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B39F89A69
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 11:50:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbfHLJGn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Aug 2019 05:06:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:46194 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727233AbfHLJGn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:06:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6039915A2;
-        Mon, 12 Aug 2019 02:06:42 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ACD743F718;
-        Mon, 12 Aug 2019 02:06:41 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 10:06:40 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        kvm@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        netdev@vger.kernel.org, x86@kernel.org, linux-s390@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] Add definition for the number of standard PCI BARs
-Message-ID: <20190812090639.GX56241@e119886-lin.cambridge.arm.com>
-References: <20190811150802.2418-1-efremov@linux.com>
+        id S1727549AbfHLJuc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Aug 2019 05:50:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46000 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727471AbfHLJub (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 12 Aug 2019 05:50:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9F9FEAECA;
+        Mon, 12 Aug 2019 09:50:30 +0000 (UTC)
+Date:   Mon, 12 Aug 2019 11:50:29 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     =?iso-8859-1?Q?J=F6rg_R=F6del?= <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        "x86@kernel.org" <x86@kernel.org>, kexec@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Donald Buczek <buczek@molgen.mpg.de>
+Subject: Re: Crash kernel with 256 MB reserved memory runs into OOM condition
+Message-ID: <20190812095029.GE5117@dhcp22.suse.cz>
+References: <d65e4a42-1962-78c6-1b5a-65cb70529d62@molgen.mpg.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190811150802.2418-1-efremov@linux.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <d65e4a42-1962-78c6-1b5a-65cb70529d62@molgen.mpg.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 06:07:55PM +0300, Denis Efremov wrote:
-> Code that iterates over all standard PCI BARs typically uses
-> PCI_STD_RESOURCE_END, but this is error-prone because it requires
-> "i <= PCI_STD_RESOURCE_END" rather than something like
-> "i < PCI_STD_NUM_BARS". We could add such a definition and use it the same
-> way PCI_SRIOV_NUM_BARS is used. There is already the definition
-> PCI_BAR_COUNT for s390 only. Thus, this patchset introduces it globally.
+On Mon 12-08-19 11:42:33, Paul Menzel wrote:
+> Dear Linux folks,
 > 
-> The patch is splitted into 7 parts for different drivers/subsystems for
-> easy readability.
 > 
-> Denis Efremov (7):
->   PCI: Add define for the number of standard PCI BARs
->   s390/pci: Replace PCI_BAR_COUNT with PCI_STD_NUM_BARS
->   x86/PCI: Use PCI_STD_NUM_BARS in loops instead of PCI_STD_RESOURCE_END
->   PCI/net: Use PCI_STD_NUM_BARS in loops instead of PCI_STD_RESOURCE_END
->   rapidio/tsi721: use PCI_STD_NUM_BARS in loops instead of
->     PCI_STD_RESOURCE_END
->   efifb: Use PCI_STD_NUM_BARS in loops instead of PCI_STD_RESOURCE_END
->   vfio_pci: Use PCI_STD_NUM_BARS in loops instead of
->     PCI_STD_RESOURCE_END
+> On a Dell PowerEdge R7425 with two AMD EPYC 7601 (total 128 threads) and
+> 1 TB RAM, the crash kernel with 256 MB of space reserved crashes.
 > 
->  arch/s390/include/asm/pci.h                      |  5 +----
->  arch/s390/include/asm/pci_clp.h                  |  6 +++---
->  arch/s390/pci/pci.c                              | 16 ++++++++--------
->  arch/s390/pci/pci_clp.c                          |  6 +++---
->  arch/x86/pci/common.c                            |  2 +-
->  drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c |  4 ++--
->  drivers/net/ethernet/synopsys/dwc-xlgmac-pci.c   |  2 +-
->  drivers/pci/quirks.c                             |  2 +-
->  drivers/rapidio/devices/tsi721.c                 |  2 +-
->  drivers/vfio/pci/vfio_pci.c                      |  4 ++--
->  drivers/vfio/pci/vfio_pci_config.c               |  2 +-
->  drivers/vfio/pci/vfio_pci_private.h              |  4 ++--
->  drivers/video/fbdev/efifb.c                      |  2 +-
->  include/linux/pci.h                              |  2 +-
->  include/uapi/linux/pci_regs.h                    |  1 +
+> Please find the messages of the normal and the crash kernel attached.
 
-Hi Denis,
+You will need more memory to reserve for the crash kernel because ...
 
-You could also fix up a few cases where the number of BARs is hard coded in
-loops, e.g.
+> [    4.548703] Node 0 DMA free:484kB min:4kB low:4kB high:4kB active_anon:0kB inactive_anon:0kB active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB present:568kB managed:484kB mlocked:0kB kernel_stack:0kB pagetables:0kB bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB
+> [    4.573612] lowmem_reserve[]: 0 125 125 125
+> [    4.577799] Node 0 DMA32 free:1404kB min:1428kB low:1784kB high:2140kB active_anon:0kB inactive_anon:0kB active_file:0kB inactive_file:0kB unevictable:15720kB writepending:0kB present:261560kB managed:133752kB mlocked:0kB kernel_stack:2496kB pagetables:0kB bounce:0kB free_pcp:212kB local_pcp:212kB free_cma:0kB
 
-drivers/pci/controller/pci-hyperv.c - look for uses of probed_bar in loops
-drivers/pci/pci.c - pci_release_selected_regions and __pci_request_selected_regions
-drivers/pci/quirks.c - quirk_alder_ioapic
+... the memory is really depleted and nothing to be reclaimed (no anon.
+file pages) Look how tht free memory is below min watermark (node zone DMA has
+lowmem protection for GFP_KERNEL allocation).
 
-Thanks,
+[...]
+> [    4.923156] Out of memory and no killable processes...
 
-Andrew Murray
-
->  15 files changed, 29 insertions(+), 31 deletions(-)
-> 
-> -- 
-> 2.21.0
-> 
+and there is no task existing to be killed so we go and panic.
+-- 
+Michal Hocko
+SUSE Labs
