@@ -2,183 +2,273 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0951D8A544
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 20:05:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F34978A58F
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 20:21:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbfHLSFO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Aug 2019 14:05:14 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:35137 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbfHLSFO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Aug 2019 14:05:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1565633112; x=1597169112;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=dbWryusZX9U4GcVeFcVYbuGVGtsLpyzYEjzDFjd/2f4=;
-  b=mOTSxTWjUzsxuYpIONEPcAIZ/X8gKKw9l5ZXlELlkSSuqCq/sEZ5+IO0
-   KrG/CV5077FnMOQS1NNCrvhd9OAi5eGwEk4SQNmqfwimlJ0+2U/6t5fxe
-   VIhCIvJm/mXVaKf0kzor0ZCW+sMZmKZ8/m2UpWVzEblDg4JESWrSZtKKm
-   g=;
-X-IronPort-AV: E=Sophos;i="5.64,378,1559520000"; 
-   d="scan'208";a="819146222"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 12 Aug 2019 18:05:09 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id 50412240AAC;
-        Mon, 12 Aug 2019 18:05:08 +0000 (UTC)
-Received: from EX13D13UWA003.ant.amazon.com (10.43.160.181) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 12 Aug 2019 18:05:08 +0000
-Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
- EX13D13UWA003.ant.amazon.com (10.43.160.181) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 12 Aug 2019 18:05:07 +0000
-Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
- EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1367.000;
- Mon, 12 Aug 2019 18:05:07 +0000
-From:   "Chocron, Jonathan" <jonnyc@amazon.com>
-To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Hanoch, Uri" <hanochu@amazon.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "Wasserstrom, Barak" <barakw@amazon.com>,
-        "Saidi, Ali" <alisaidi@amazon.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
+        id S1726655AbfHLSU6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Aug 2019 14:20:58 -0400
+Received: from mail-eopbgr730128.outbound.protection.outlook.com ([40.107.73.128]:18624
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726185AbfHLSU5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 12 Aug 2019 14:20:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KfnrkIe5s2QuaZwJ+sgJ6uisgdyCNLByLQ630S03vMBT3ryogUWySX3wPTEL7JUWqYHQB9F3r2TGWazVwNQmd6606A7boX9LJjsSsgcBcgSNdtCHpSncgxdAsumzZx2xKJVuoFdyW0WibG8kxIKtqHob65DoOfLYfk2klCakyRpcIyuCDLFeT5W8+bhHiv/cKtPY+SGGIKluzSBb8+aLaR4iRTrAIuhMDHhYSGIVf+jlrSKB0XnTA3cC6XzSeFWAmv51130mGFRJMn8XnjKg2S1gvxnR9fxSagLUyBVBjg65uSMC+L2jLLzIcJke9zl4gFwm2O5QJ6Xmt8O+YBimHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uf4KyVwcAvNntoEj21P2H/GFPThcxmHUEFT5P6Kj6OM=;
+ b=VlOWcYXvEQiboPY0DwAN54fIgH8E9r1V9nvTp/VAQ+vE4Afu+Xzu11xBTcG6k+5iHbwOdIrEB5BHQxPJ/yUXXP+gcu+8SJvPlIXM63odxAknZiXTLHpJO/oBwHx2skEUiu8PHBJr34aieRNJIbi62JIYsxnY+bm02V+B2kQJAdxOyo4wzEQy3crnqIK7791FN3mOYBPUu7DnVEdIaZTAtEewXhyfPU9W+9BiHNrztEoCGCVtWZpcucfTRj6CzCedJfrliToKRSgW52Ex73q8BCIhODFFiIDgM3Os7Wiqfc/O2WYpOghNTNTZnimX4SG/4TMbgCZ1Y8y7eoaQzftOWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uf4KyVwcAvNntoEj21P2H/GFPThcxmHUEFT5P6Kj6OM=;
+ b=WOPKJU09z+luAT1P5UtFDlL+vTDgb72pIYikcV9QTws7DYUGI3/syTCEtO47GPiqDdjfbaubJJ/hoDn0zUfNBWFZA4tbDtjmjhYS1gDMng2Yj1HEUbxJeYr+zF4hew+6zLJ7qNZvjmGTkRfbrY4OZUGK3R3q7nsUpUWKxCtkmGY=
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
+ DM6PR21MB1196.namprd21.prod.outlook.com (20.179.49.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.2; Mon, 12 Aug 2019 18:20:54 +0000
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::ddd:8e5b:2930:6726]) by DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::ddd:8e5b:2930:6726%9]) with mapi id 15.20.2178.006; Mon, 12 Aug 2019
+ 18:20:54 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     "sashal@kernel.org" <sashal@kernel.org>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>
-Subject: Re: [PATCH v3 8/8] PCI: dw: Add support for
- PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
-Thread-Topic: [PATCH v3 8/8] PCI: dw: Add support for
- PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
-Thread-Index: AQHVQTjgJY6X9sfi40Wq6J7sfEVWx6bv+jIAgAEbEoCAABisgIAGwI8A
-Date:   Mon, 12 Aug 2019 18:05:07 +0000
-Message-ID: <6e2efdfb6d07526f934fcbeb0e6b9518c849b8a8.camel@amazon.com>
-References: <20190723092529.11310-1-jonnyc@amazon.com>
-         <20190723092711.11786-4-jonnyc@amazon.com>
-         <20190807163654.GC16214@e121166-lin.cambridge.arm.com>
-         <67c58ded2177beca030450c25d742d35890eb48a.camel@amazon.com>
-         <20190808105821.GB30230@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190808105821.GB30230@e121166-lin.cambridge.arm.com>
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Thread-Topic: [PATCH v3] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Thread-Index: AQHVUTqte27Lajt/EEyKPTfwyVUozw==
+Date:   Mon, 12 Aug 2019 18:20:53 +0000
+Message-ID: <1565634013-19404-1-git-send-email-haiyangz@microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.160.211]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B6A4A488E9E42C4AB6B760FA7F1FB027@amazon.com>
-Content-Transfer-Encoding: base64
+x-clientproxiedby: CO2PR04CA0076.namprd04.prod.outlook.com
+ (2603:10b6:102:1::44) To DM6PR21MB1242.namprd21.prod.outlook.com
+ (2603:10b6:5:169::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 2
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 142f42cb-29d3-4c0b-5583-08d71f51cfe9
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1196;
+x-ms-traffictypediagnostic: DM6PR21MB1196:|DM6PR21MB1196:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM6PR21MB1196B43A23B5ED9DD791BEB3ACD30@DM6PR21MB1196.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2201;
+x-forefront-prvs: 012792EC17
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(376002)(346002)(136003)(396003)(189003)(199004)(36756003)(66946007)(6436002)(386003)(476003)(6506007)(66066001)(4326008)(53936002)(14454004)(50226002)(25786009)(66446008)(6392003)(7846003)(71190400001)(102836004)(71200400001)(6486002)(2201001)(6512007)(66476007)(26005)(64756008)(305945005)(5660300002)(22452003)(110136005)(81156014)(316002)(99286004)(10090500001)(14444005)(2906002)(52116002)(6116002)(3846002)(81166006)(66556008)(478600001)(2501003)(10290500003)(256004)(7736002)(486006)(2616005)(54906003)(186003)(8936002)(4720700003)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1196;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: JkCbnkWv30vfUBeD4xEyTkOS6uWSpljYN/FjRPgwKGRa+j0LI2eKOO2gZDoHR0bP0Z2RuR2mcRexGKJ7ou95OfL42Ui9opdSx/8u5JJgi2rbz0KgZ62P7eer9tT6DSO/Rb4vWWcykFp32kKEN3keDW91NFlJdLEqUF3ap5NArL4jGoZ0x3E4xs8dWuki0XbLWvrZzHS7gbQc0lsNrjc7syMPdt1LeKbHIMe76k9UHmv2LpYxSSb1bhqhhae7eEnu2nZ+W5YH+4NoGZWEULzQjVXAOTRQejtNWzaxlMo4jTp9DyiDKVROzEZLm8/bP3Ka+V1E0p2wuh00t0pHLonmpR/oPHjG3yHFZN5RoiX+MNLNerXS6AuXXVR42ubtmudNGacLLfDPLODFnFLobfqPwE1NC7hHaXFY3ZbsLDDmhAc=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 142f42cb-29d3-4c0b-5583-08d71f51cfe9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 18:20:53.9580
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: teM4ich8tl42SdXcPpcZkgN5VV69/CiB7H1iBkfqi3/CQHfbC+gJ/uYvK+MN5equA35rMkDxdom+q2ybk77zxg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1196
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA4LTA4IGF0IDExOjU4ICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
-ZToNCj4gU2lkZSBub3RlLCBydW46DQo+IA0KPiBnaXQgbG9nIC0tb25lbGluZSBvbiBkcml2ZXJz
-L3BjaS9jb250cm9sbGVyL2R3YyBleGlzdGluZyBmaWxlcyBhbmQNCj4gbWFrZSBzdXJlIGNvbW1p
-dCBzdWJqZWN0cyBhcmUgaW4gbGluZSB3aXRoIHRob3NlLg0KPiANCj4gRWcgUENJOiBkdzogc2hv
-dWxkIGJlIFBDSTogZHdjOg0KPiANCkRvbmUuDQoNCj4gT24gVGh1LCBBdWcgMDgsIDIwMTkgYXQg
-MDk6MzA6MDVBTSArMDAwMCwgQ2hvY3JvbiwgSm9uYXRoYW4gd3JvdGU6DQo+ID4gT24gV2VkLCAy
-MDE5LTA4LTA3IGF0IDE3OjM2ICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90ZToNCj4gPiA+
-IE9uIFR1ZSwgSnVsIDIzLCAyMDE5IGF0IDEyOjI3OjExUE0gKzAzMDAsIEpvbmF0aGFuIENob2Ny
-b24gd3JvdGU6DQo+ID4gPiA+IFRoaXMgYmFzaWNhbGx5IGFsaWducyB0aGUgdXNhZ2Ugb2YgUENJ
-X1BST0JFX09OTFkgYW5kDQo+ID4gPiA+IFBDSV9SRUFTU0lHTl9BTExfQlVTIGluIGR3X3BjaWVf
-aG9zdF9pbml0KCkgd2l0aCB0aGUgbG9naWMgaW4NCj4gPiA+ID4gcGNpX2hvc3RfY29tbW9uX3By
-b2JlKCkuDQo+ID4gPiA+IA0KPiA+ID4gPiBOb3cgaXQgd2lsbCBiZSBwb3NzaWJsZSB0byBjb250
-cm9sIHZpYSB0aGUgZGV2aWNldHJlZSB3aGV0aGVyDQo+ID4gPiA+IHRvDQo+ID4gPiA+IGp1c3QN
-Cj4gPiA+ID4gcHJvYmUgdGhlIFBDSSBidXMgKGluIGNhc2VzIHdoZXJlIEZXIGFscmVhZHkgY29u
-ZmlndXJlZCBpdCkgb3INCj4gPiA+ID4gdG8NCj4gPiA+ID4gZnVsbHkNCj4gPiA+ID4gY29uZmln
-dXJlIGl0Lg0KPiA+ID4gPiANCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogSm9uYXRoYW4gQ2hvY3Jv
-biA8am9ubnljQGFtYXpvbi5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiAgLi4uL3BjaS9jb250
-cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtaG9zdC5jIHwgMjMNCj4gPiA+ID4gKysrKysrKysr
-KysrKysrLS0tLQ0KPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKyksIDQg
-ZGVsZXRpb25zKC0pDQo+ID4gPiA+IA0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kv
-Y29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWhvc3QuYw0KPiA+ID4gPiBiL2RyaXZlcnMv
-cGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1ob3N0LmMNCj4gPiA+ID4gaW5kZXgg
-ZDJjYTc0OGU0Yzg1Li4wYTI5NGQ4YWEyMWEgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2RyaXZlcnMv
-cGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1ob3N0LmMNCj4gPiA+ID4gKysrIGIv
-ZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWhvc3QuYw0KPiA+ID4g
-PiBAQCAtMzQyLDYgKzM0Miw4IEBAIGludCBkd19wY2llX2hvc3RfaW5pdChzdHJ1Y3QgcGNpZV9w
-b3J0ICpwcCkNCj4gPiA+ID4gIAlpZiAoIWJyaWRnZSkNCj4gPiA+ID4gIAkJcmV0dXJuIC1FTk9N
-RU07DQo+ID4gPiA+ICANCj4gPiA+ID4gKwlvZl9wY2lfY2hlY2tfcHJvYmVfb25seSgpOw0KPiA+
-ID4gPiArDQo+ID4gPiA+ICAJcmV0ID0gZGV2bV9vZl9wY2lfZ2V0X2hvc3RfYnJpZGdlX3Jlc291
-cmNlcyhkZXYsIDAsDQo+ID4gPiA+IDB4ZmYsDQo+ID4gPiA+ICAJCQkJCSZicmlkZ2UtPndpbmRv
-d3MsICZwcC0NCj4gPiA+ID4gPiBpb19iYXNlKTsNCj4gPiA+ID4gDQo+ID4gPiA+ICAJaWYgKHJl
-dCkNCj4gPiA+ID4gQEAgLTQ3NCw2ICs0NzYsMTAgQEAgaW50IGR3X3BjaWVfaG9zdF9pbml0KHN0
-cnVjdCBwY2llX3BvcnQNCj4gPiA+ID4gKnBwKQ0KPiA+ID4gPiAgDQo+ID4gPiA+ICAJcHAtPnJv
-b3RfYnVzX25yID0gcHAtPmJ1c24tPnN0YXJ0Ow0KPiA+ID4gPiAgDQo+ID4gPiA+ICsJLyogRG8g
-bm90IHJlYXNzaWduIGJ1cyBudW1zIGlmIHByb2JlIG9ubHkgKi8NCj4gPiA+ID4gKwlpZiAoIXBj
-aV9oYXNfZmxhZyhQQ0lfUFJPQkVfT05MWSkpDQo+ID4gPiA+ICsJCXBjaV9hZGRfZmxhZ3MoUENJ
-X1JFQVNTSUdOX0FMTF9CVVMpOw0KPiA+ID4gDQo+ID4gPiBUaGlzIGNoYW5nZXMgdGhlIGRlZmF1
-bHQgZm9yIGJ1cyByZWFzc2lnbm1lbnQgb24gYWxsIERXQyBob3N0DQo+ID4gPiAodGhhdA0KPiA+
-ID4gYXJlDQo+ID4gPiAhUENJX1BST0JFX09OTFkpLCB3ZSBzaG91bGQgZHJvcCB0aGlzIGxpbmUs
-IGl0IGNhbiB0cmlnZ2VyDQo+ID4gPiByZWdyZXNzaW9ucy4NCj4gPiA+IA0KPiA+IA0KPiA+IFdp
-bGwgYmUgZHJvcHBlZCBhcyBwYXJ0IG9mIHY0LiBUaGVyZSBtaWdodCBhbHNvIGJlIGEgYmVoYXZp
-b3JhbA0KPiA+IGRpZmZlcmVuY2UgYmVsb3cgd2hlcmUgSSBhZGRlZCB0aGUgaWYNCj4gPiAocGNp
-X2hhc19mbGFnKFBDSV9QUk9CRV9PTkxZKSkuDQo+ID4gSXMgdGhhdCBzdGlsbCBvaz8NCj4gDQo+
-IFRoYXQncyB0cnVlIGJ1dCBJIGRvdWJ0IGFueSBEV0MgaG9zdCBoYXMgYSBEVCBmaXJtd2FyZSB3
-aXRoDQo+ICJsaW51eCxwY2ktcHJvYmUtb25seSIgaW4gaXQuDQo+IA0KPiBJdCBpcyB0cmlhbCBh
-bmQgZXJyb3IgSSBhbSBhZnJhaWQsIHBsZWFzZSBtYWtlIHN1cmUgYWxsIERXQw0KPiBtYWludGFp
-bmVycyBhcmUgY29waWVkIGluLg0KPiANCj4gPiBBcyBJIHBvaW50ZWQgb3V0IGluIHRoZSBjb3Zl
-ciBsZXR0ZXIsIHNpbmNlIFBDSV9QUk9CRV9PTkxZIGlzIGENCj4gPiBzeXN0ZW0NCj4gPiB3aWRl
-IGZsYWcsIGRvZXMgaXQgbWFrZSBzZW5zZSB0byBjYWxsIG9mX3BjaV9jaGVja19wcm9iZV9vbmx5
-KCkNCj4gPiBoZXJlLA0KPiA+IGluIHRoZSBjb250ZXh0IG9mIGEgc3BlY2lmaWMgZHJpdmVyIChp
-bmNsdWRpbmcgdGhlIGV4aXN0aW5nDQo+ID4gaW52b2NhdGlvbg0KPiA+IGluIHBjaV9ob3N0X2Nv
-bW1vbl9wcm9iZSgpKSwgYXMgb3Bwb3NlZCB0byBhIHBsYXRmb3JtL2FyY2ggY29udGV4dD8NCj4g
-DQo+IEl0IGlzIGFuIG9uZ29pbmcgZGlzY3Vzc2lvbiB0byBkZWZpbmUgaG93IHdlIHNob3VsZCBo
-YW5kbGUNCj4gUENJX1BST0JFX09OTFkuIEFkZGluZyB0aGlzIGNvZGUgaW50byBEV0MgSSBkbyBu
-b3QgdGhpbmsgaXQNCj4gd291bGQgaHVydCBidXQgaWYgd2UgY2FuIHBvc3Rwb25lIGl0IGZvciB0
-aGUgbmV4dCAodjUuNSkgbWVyZ2UNCj4gd2luZG93IGFmdGVyIHdlIGRlYmF0ZSB0aGlzIGF0IExQ
-QyB3aXRoaW4gdGhlIFBDSSBtaWNyb2NvbmZlcmVuY2UNCj4gaXQgd291bGQgYmUgZ3JlYXQuDQo+
-IA0KVGhlIHByZWNlZGluZyBwYXRjaGVzIGFyZSBtb3JlIHVyZ2VudCwgc28gSSdtIGZpbmUgd2l0
-aCBwb3N0cG9uaW5nIHRoaXMNCnBhdGNoIHRvIHRoZSBuZXh0IG1lcmdlIHdpbmRvdyAoSSdsbCBk
-cm9wIGl0IGZyb20gdjQpLg0KDQo+IFBsZWFzZSBzeW5jIHdpdGggQmVuamFtaW4gYXMgYSBmaXJz
-dCBzdGVwLCBJIHRydXN0IGhlIHdvdWxkIGFzaw0KPiB5b3UgdG8gZG8gdGhlIHJpZ2h0IHRoaW5n
-Lg0KPiANCk9mIGNvdXJzZSwgSSdsbCBzeW5jIHdpdGggaGltLiBCdXQgYWdhaW4sIGxldCdzIG5v
-dCBoYXZlIHRoaXMgcGF0Y2gNCmRlbGF5IHRoZSBvdGhlcnMgcGxlYXNlLg0KDQo+ID4gPiBJZiB3
-ZSBzdGlsbCB3YW50IHRvIG1lcmdlIGl0IGFzIGEgc2VwYXJhdGUgY2hhbmdlIHdlIG11c3QgdGVz
-dCBpdA0KPiA+ID4gb24NCj4gPiA+IGFsbA0KPiA+ID4gRFdDIGhvc3QgYnJpZGdlcyB0byBtYWtl
-IHN1cmUgaXQgZG9lcyBub3QgdHJpZ2dlciBhbnkgaXNzdWVzIHdpdGgNCj4gPiA+IGN1cnJlbnQg
-c2V0LXVwcywgdGhhdCdzIG5vdCBnb2luZyB0byBiZSBlYXN5IHRob3VnaC4NCj4gPiA+IA0KPiA+
-IA0KPiA+IEp1c3Qgb3V0IG9mIGN1cmlvc2l0eSwgaG93IGFyZSBzdWNoIGV4aGF1c3RpdmUgdGVz
-dHMgYWNoaWV2ZWQgd2hlbg0KPiA+IGENCj4gPiBwYXRjaCByZXF1aXJlcyB0aGVtPw0KPiANCj4g
-Q0MgRFdDIGhvc3QgYnJpZGdlIG1haW50YWluZXJzIGFuZCBhc2sgdGhlbSB0byB0ZXN0IGl0LiBJ
-IGRvIG5vdCBoYXZlDQo+IHRoZSBIVyAoYW5kIEZXKSByZXF1aXJlZCwgSSBhbSBzb3JyeSwgdGhh
-dCdzIHRoZSBvbmx5IG9wdGlvbiBJIGNhbg0KPiBnaXZlDQo+IHlvdS4gLW5leHQgY292ZXJhZ2Ug
-d291bGQgaGVscCB0b28gYnV0IHRvIGEgbWlub3IgZXh0ZW50Lg0KPiANClRoYW5rcyBmb3IgdGhl
-IGluZm8hDQoNCj4gVGhhbmtzLA0KPiBMb3JlbnpvDQo+IA0KPiA+IA0KPiA+ID4gTG9yZW56bw0K
-PiA+ID4gDQo+ID4gPiA+ICsNCj4gPiA+ID4gIAlicmlkZ2UtPmRldi5wYXJlbnQgPSBkZXY7DQo+
-ID4gPiA+ICAJYnJpZGdlLT5zeXNkYXRhID0gcHA7DQo+ID4gPiA+ICAJYnJpZGdlLT5idXNuciA9
-IHBwLT5yb290X2J1c19ucjsNCj4gPiA+ID4gQEAgLTQ5MCwxMSArNDk2LDIwIEBAIGludCBkd19w
-Y2llX2hvc3RfaW5pdChzdHJ1Y3QgcGNpZV9wb3J0DQo+ID4gPiA+ICpwcCkNCj4gPiA+ID4gIAlp
-ZiAocHAtPm9wcy0+c2Nhbl9idXMpDQo+ID4gPiA+ICAJCXBwLT5vcHMtPnNjYW5fYnVzKHBwKTsN
-Cj4gPiA+ID4gIA0KPiA+ID4gPiAtCXBjaV9idXNfc2l6ZV9icmlkZ2VzKHBwLT5yb290X2J1cyk7
-DQo+ID4gPiA+IC0JcGNpX2J1c19hc3NpZ25fcmVzb3VyY2VzKHBwLT5yb290X2J1cyk7DQo+ID4g
-PiA+ICsJLyoNCj4gPiA+ID4gKwkgKiBXZSBpbnNlcnQgUENJIHJlc291cmNlcyBpbnRvIHRoZSBp
-b21lbV9yZXNvdXJjZSBhbmQNCj4gPiA+ID4gKwkgKiBpb3BvcnRfcmVzb3VyY2UgdHJlZXMgaW4g
-ZWl0aGVyDQo+ID4gPiA+IHBjaV9idXNfY2xhaW1fcmVzb3VyY2VzKCkNCj4gPiA+ID4gKwkgKiBv
-ciBwY2lfYnVzX2Fzc2lnbl9yZXNvdXJjZXMoKS4NCj4gPiA+ID4gKwkgKi8NCj4gPiA+ID4gKwlp
-ZiAocGNpX2hhc19mbGFnKFBDSV9QUk9CRV9PTkxZKSkgew0KPiA+ID4gPiArCQlwY2lfYnVzX2Ns
-YWltX3Jlc291cmNlcyhwcC0+cm9vdF9idXMpOw0KPiA+ID4gPiArCX0gZWxzZSB7DQo+ID4gPiA+
-ICsJCXBjaV9idXNfc2l6ZV9icmlkZ2VzKHBwLT5yb290X2J1cyk7DQo+ID4gPiA+ICsJCXBjaV9i
-dXNfYXNzaWduX3Jlc291cmNlcyhwcC0+cm9vdF9idXMpOw0KPiA+ID4gPiAgDQo+ID4gPiA+IC0J
-bGlzdF9mb3JfZWFjaF9lbnRyeShjaGlsZCwgJnBwLT5yb290X2J1cy0+Y2hpbGRyZW4sDQo+ID4g
-PiA+IG5vZGUpDQo+ID4gPiA+IC0JCXBjaWVfYnVzX2NvbmZpZ3VyZV9zZXR0aW5ncyhjaGlsZCk7
-DQo+ID4gPiA+ICsJCWxpc3RfZm9yX2VhY2hfZW50cnkoY2hpbGQsICZwcC0+cm9vdF9idXMtDQo+
-ID4gPiA+ID5jaGlsZHJlbiwNCj4gPiA+ID4gbm9kZSkNCj4gPiA+ID4gKwkJCXBjaWVfYnVzX2Nv
-bmZpZ3VyZV9zZXR0aW5ncyhjaGlsZCk7DQo+ID4gPiA+ICsJfQ0KPiA+ID4gPiAgDQo+ID4gPiA+
-ICAJcGNpX2J1c19hZGRfZGV2aWNlcyhwcC0+cm9vdF9idXMpOw0KPiA+ID4gPiAgCXJldHVybiAw
-Ow0KPiA+ID4gPiAtLSANCj4gPiA+ID4gMi4xNy4xDQo+ID4gPiA+IA0K
+Currently in Azure cloud, for passthrough devices including GPU, the host
+sets the device instance ID's bytes 8 - 15 to a value derived from the host
+HWID, which is the same on all devices in a VM. So, the device instance
+ID's bytes 8 and 9 provided by the host are no longer unique. This can
+cause device passthrough to VMs to fail because the bytes 8 and 9 are used
+as PCI domain number. Collision of domain numbers will cause the second
+device with the same domain number fail to load.
+
+As recommended by Azure host team, the bytes 4, 5 have more uniqueness
+(info entropy) than bytes 8, 9. So now we use bytes 4, 5 as the PCI domain
+numbers. On older hosts, bytes 4, 5 can also be used -- no backward
+compatibility issues here. The chance of collision is greatly reduced. In
+the rare cases of collision, we will detect and find another number that is
+not in use.
+
+Suggested-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Acked-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/controller/pci-hyperv.c | 92 +++++++++++++++++++++++++++++++--=
+----
+ 1 file changed, 79 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/p=
+ci-hyperv.c
+index 40b6254..4f3d97e 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2510,6 +2510,48 @@ static void put_hvpcibus(struct hv_pcibus_device *hb=
+us)
+ 		complete(&hbus->remove_event);
+ }
+=20
++#define HVPCI_DOM_MAP_SIZE (64 * 1024)
++static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
++
++/*
++ * PCI domain number 0 is used by emulated devices on Gen1 VMs, so define =
+0
++ * as invalid for passthrough PCI devices of this driver.
++ */
++#define HVPCI_DOM_INVALID 0
++
++/**
++ * hv_get_dom_num() - Get a valid PCI domain number
++ * Check if the PCI domain number is in use, and return another number if
++ * it is in use.
++ *
++ * @dom: Requested domain number
++ *
++ * return: domain number on success, HVPCI_DOM_INVALID on failure
++ */
++static u16 hv_get_dom_num(u16 dom)
++{
++	unsigned int i;
++
++	if (test_and_set_bit(dom, hvpci_dom_map) =3D=3D 0)
++		return dom;
++
++	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
++		if (test_and_set_bit(i, hvpci_dom_map) =3D=3D 0)
++			return i;
++	}
++
++	return HVPCI_DOM_INVALID;
++}
++
++/**
++ * hv_put_dom_num() - Mark the PCI domain number as free
++ * @dom: Domain number to be freed
++ */
++static void hv_put_dom_num(u16 dom)
++{
++	clear_bit(dom, hvpci_dom_map);
++}
++
+ /**
+  * hv_pci_probe() - New VMBus channel probe, for a root PCI bus
+  * @hdev:	VMBus's tracking struct for this root PCI bus
+@@ -2521,6 +2563,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 			const struct hv_vmbus_device_id *dev_id)
+ {
+ 	struct hv_pcibus_device *hbus;
++	u16 dom_req, dom;
+ 	int ret;
+=20
+ 	/*
+@@ -2535,19 +2578,34 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	hbus->state =3D hv_pcibus_init;
+=20
+ 	/*
+-	 * The PCI bus "domain" is what is called "segment" in ACPI and
+-	 * other specs.  Pull it from the instance ID, to get something
+-	 * unique.  Bytes 8 and 9 are what is used in Windows guests, so
+-	 * do the same thing for consistency.  Note that, since this code
+-	 * only runs in a Hyper-V VM, Hyper-V can (and does) guarantee
+-	 * that (1) the only domain in use for something that looks like
+-	 * a physical PCI bus (which is actually emulated by the
+-	 * hypervisor) is domain 0 and (2) there will be no overlap
+-	 * between domains derived from these instance IDs in the same
+-	 * VM.
++	 * The PCI bus "domain" is what is called "segment" in ACPI and other
++	 * specs. Pull it from the instance ID, to get something usually
++	 * unique. In rare cases of collision, we will find out another number
++	 * not in use.
++	 *
++	 * Note that, since this code only runs in a Hyper-V VM, Hyper-V
++	 * together with this guest driver can guarantee that (1) The only
++	 * domain used by Gen1 VMs for something that looks like a physical
++	 * PCI bus (which is actually emulated by the hypervisor) is domain 0.
++	 * (2) There will be no overlap between domains (after fixing possible
++	 * collisions) in the same VM.
+ 	 */
+-	hbus->sysdata.domain =3D hdev->dev_instance.b[9] |
+-			       hdev->dev_instance.b[8] << 8;
++	dom_req =3D hdev->dev_instance.b[5] << 8 | hdev->dev_instance.b[4];
++	dom =3D hv_get_dom_num(dom_req);
++
++	if (dom =3D=3D HVPCI_DOM_INVALID) {
++		dev_err(&hdev->device,
++			"Unable to use dom# 0x%hx or other numbers", dom_req);
++		ret =3D -EINVAL;
++		goto free_bus;
++	}
++
++	if (dom !=3D dom_req)
++		dev_info(&hdev->device,
++			 "PCI dom# 0x%hx has collision, using 0x%hx",
++			 dom_req, dom);
++
++	hbus->sysdata.domain =3D dom;
+=20
+ 	hbus->hdev =3D hdev;
+ 	refcount_set(&hbus->remove_lock, 1);
+@@ -2562,7 +2620,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 					   hbus->sysdata.domain);
+ 	if (!hbus->wq) {
+ 		ret =3D -ENOMEM;
+-		goto free_bus;
++		goto free_dom;
+ 	}
+=20
+ 	ret =3D vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
+@@ -2639,6 +2697,8 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	vmbus_close(hdev->channel);
+ destroy_wq:
+ 	destroy_workqueue(hbus->wq);
++free_dom:
++	hv_put_dom_num(hbus->sysdata.domain);
+ free_bus:
+ 	free_page((unsigned long)hbus);
+ 	return ret;
+@@ -2720,6 +2780,9 @@ static int hv_pci_remove(struct hv_device *hdev)
+ 	put_hvpcibus(hbus);
+ 	wait_for_completion(&hbus->remove_event);
+ 	destroy_workqueue(hbus->wq);
++
++	hv_put_dom_num(hbus->sysdata.domain);
++
+ 	free_page((unsigned long)hbus);
+ 	return 0;
+ }
+@@ -2747,6 +2810,9 @@ static void __exit exit_hv_pci_drv(void)
+=20
+ static int __init init_hv_pci_drv(void)
+ {
++	/* Set the invalid domain number's bit, so it will not be used */
++	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
++
+ 	return vmbus_driver_register(&hv_pci_drv);
+ }
+=20
+--=20
+1.8.3.1
+
