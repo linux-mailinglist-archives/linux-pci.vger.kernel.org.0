@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD2928960C
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 06:22:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C548A8960E
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 06:22:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfHLEW3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Aug 2019 00:22:29 -0400
+        id S1726509AbfHLEWd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Aug 2019 00:22:33 -0400
 Received: from mail-eopbgr10050.outbound.protection.outlook.com ([40.107.1.50]:13314
         "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726805AbfHLEW0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 12 Aug 2019 00:22:26 -0400
+        id S1726842AbfHLEWa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 12 Aug 2019 00:22:30 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VwuKDL1uNvC73N2CGHktEKw6eatEBCTnqEepCecgl+rkfb0CUvVOIpQuW1b4ue/q71s6qFpHHdPC4z4N07o022Nsmc+8vAQ0JXPSYh9vqMHJimiiCCksN0RKH03hdEs3Tf/N4Xb2l1/jqxZ9qMSUpnb4D7fE+oiew5PkmTVFyMwJgWB8K0YmBgwMo9CbsjT3C9+wj3XDUp4uoI7SUOa3cbEbo/5w5Jbi/9THJ9hQuINrLEZEZpyzwd+ztB48LVVxcaT0s2mF7zv5m7ro+9C1k5sYNaQBqN6Co9YHDvUfxAmoVVUrSM9bdsbCiUN0IBJ9L5Zzf9W+g9/Xpuo4DDW0Ew==
+ b=HBGfAQxPdqZ+qFu1Ht+3zS8sRoGxL/0JDZsB6hY9FtuTQKshOAyGAZjue4JCe8rTSB0Sa1YbFtZi/C/f3b+tPQ3hIAiHHoym+BWnJsYszf5iavwmAk6dXLwMyoDanmkFZjWhoEuJxst8mPtZgCff9veovNHrPkQzdHAJhY6SzZczid4XUSGb+jQj5kGiWwhEyTmAFZwezOR7sUJVDcS8NJmoBedZYzhXujm3gDYSix8k4vsxup3FOPQHf/1COyMMqLnVcgAbhEOQPdZGk7R74Oey6hicYm734LCEUzXa+WCDjQGZuxmKp0k+fGKROTsavo7ror9XPYOrMibHyVzLrg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EuPR9USDNJ0zLmZcNYBKTTfUb0Pc5v0J9W0qbSDkliw=;
- b=H9KqFHVIoJD0ub40fu0QuUM1t4DRiEj000cZ6SOIkyOr2PkLayM4pczZkZsXcuCTLm0FPGqcxlRH4OLi6dObCyy4lcoKkbP0piAGaAQSyJoB3cvE64A1yRJ6iXV616N7YEZ866dCiKYKzRIrlV4U2tam//6Iiv2+xdSTqJWsH6cE3aaSB93IX6OlJbD7ndkAtCn9MUoKBxmEFtYTF+wvpTVuj6f4mMqsnhcQWp+sIb/d4gb865/+YW28W9tc2A4T+QzoZX+Dim+wXLKdYgt6OmVP81NAcxHw4P1saNfgm0HWfD92SNiogm4AWBHyBsdam16bttyNGOK57lm8Tk5zVA==
+ bh=NlsvvGeC0t2U8knoO4OapukZYA+UnLsvvJuxHIgblvg=;
+ b=dovUMCdT/NjgHXN3wNCux5yaTTpLrffrNKgpFNgK3hRwbEywXedY+wRxiGue8Oavbu+H5Zp91nz+0m/omT9PpJ0Y83xtYH0D+juD4rJwioxz+4NLpMJ1API61WvmC90yJUNQ3M/gjl2vr3X8Sg8hhDFF7QWwobhvoV0O9J++qWG5haQELLO8POclLp3jbEoQOzC1vN4QMVm56HxFWK8QAPKp1Jf/bQnZ/tB7KeKpKCTrtbV+nFrlwKH4494dJrYQNESoSZ3xLqWBCJKYaBxWidR6ElxqVbXdaiAgp6exeNc/TN02JnpYP5TTNIruJ5qvwP0Rp5/Kr+8eQl2UUpPSXg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EuPR9USDNJ0zLmZcNYBKTTfUb0Pc5v0J9W0qbSDkliw=;
- b=gTy/agJMlNfZVJGl+WFBrFAO1/Qn2eztHrCbDCzOGk5W0ZlwUIVCapAS175Z7W8U7TVYAn3pzwliszW5iutRKVxGzeyzMwAP4oLvYaH+F1iDBNI1/QwIWPVZvT2uJ8KCzP9lrVLd7bvCMijKhlURDzkjxZ1v5uRBZjwfYEg3wEA=
+ bh=NlsvvGeC0t2U8knoO4OapukZYA+UnLsvvJuxHIgblvg=;
+ b=fSYnsV2a9ddXriAJ1+Z/2FNrlW0RSuWNyR9te+ynm7jhm2AKPsybC0K5XQJWvBqUDGHFnapm8ihBLifyPs699UFipSxHJb4gJB66hJTIr37Ej+cQ4Q+VwwdcshyY4YQE508e+txB8h2v1hJN2la2Uc35XzkByraxlykmt6Tkxs4=
 Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
  DB8PR04MB5931.eurprd04.prod.outlook.com (20.179.11.140) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.23; Mon, 12 Aug 2019 04:22:23 +0000
+ 15.20.2157.23; Mon, 12 Aug 2019 04:22:28 +0000
 Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
  ([fe80::19ec:cddf:5e07:37eb]) by DB8PR04MB6747.eurprd04.prod.outlook.com
  ([fe80::19ec:cddf:5e07:37eb%3]) with mapi id 15.20.2157.015; Mon, 12 Aug 2019
- 04:22:23 +0000
+ 04:22:28 +0000
 From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
 To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
@@ -48,12 +48,13 @@ To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
 CC:     "M.h. Lian" <minghuan.lian@nxp.com>,
         "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCH 2/4] PCI: dwc: Return directly when num-lanes is not found
-Thread-Topic: [PATCH 2/4] PCI: dwc: Return directly when num-lanes is not
- found
-Thread-Index: AQHVUMWJYdzIy46VokSNj8ZzDl4Zng==
-Date:   Mon, 12 Aug 2019 04:22:22 +0000
-Message-ID: <20190812042435.25102-3-Zhiqiang.Hou@nxp.com>
+Subject: [PATCH 3/4] ARM: dts: ls1021a: Remove num-lanes property from PCIe
+ nodes
+Thread-Topic: [PATCH 3/4] ARM: dts: ls1021a: Remove num-lanes property from
+ PCIe nodes
+Thread-Index: AQHVUMWMZFwmX+djskari+UjmO8phQ==
+Date:   Mon, 12 Aug 2019 04:22:27 +0000
+Message-ID: <20190812042435.25102-4-Zhiqiang.Hou@nxp.com>
 References: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
 In-Reply-To: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
 Accept-Language: zh-CN, en-US
@@ -69,30 +70,30 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.17.1
 x-originating-ip: [119.31.174.73]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ec292f5f-ba13-49dc-c1a8-08d71edcac25
+x-ms-office365-filtering-correlation-id: f6120ed1-5f45-4a36-acf5-08d71edcaf3f
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB8PR04MB5931;
 x-ms-traffictypediagnostic: DB8PR04MB5931:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB593156AA0AD90E15B86D424F84D30@DB8PR04MB5931.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2331;
+x-microsoft-antispam-prvs: <DB8PR04MB59310832980D706C849B8CE784D30@DB8PR04MB5931.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
 x-forefront-prvs: 012792EC17
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(39860400002)(396003)(366004)(189003)(199004)(6436002)(256004)(25786009)(66476007)(66556008)(66946007)(50226002)(2616005)(476003)(64756008)(186003)(11346002)(446003)(486006)(6486002)(66066001)(66446008)(53936002)(7416002)(71190400001)(6512007)(71200400001)(2501003)(8936002)(4326008)(4744005)(8676002)(6116002)(3846002)(76176011)(52116002)(110136005)(54906003)(305945005)(7736002)(1076003)(81166006)(81156014)(86362001)(5660300002)(14454004)(26005)(478600001)(36756003)(2201001)(2906002)(386003)(6506007)(102836004)(99286004)(316002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB5931;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(39860400002)(396003)(366004)(189003)(199004)(6436002)(256004)(25786009)(66476007)(66556008)(66946007)(50226002)(2616005)(476003)(64756008)(186003)(11346002)(446003)(486006)(6486002)(66066001)(66446008)(53936002)(7416002)(71190400001)(6512007)(71200400001)(2501003)(8936002)(4326008)(8676002)(6116002)(3846002)(76176011)(52116002)(110136005)(54906003)(305945005)(7736002)(1076003)(81166006)(81156014)(86362001)(5660300002)(14454004)(26005)(478600001)(36756003)(2201001)(2906002)(386003)(6506007)(102836004)(99286004)(316002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB5931;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: tR8ohjz6E/Rp1PIl5yJlCWk20lbro7Diom+951JzfB6MhRkNAm2RlHY2SO9O7XQxmFoWA3s14CNCMIiJ5bqW6XPW2/s4i4d3CS5hu962WfY+r4kT+xEJiH1dQRcWUsSGzPvel2xr/m/9sCj3nV9XEaKXJ+O1ch/GZKTygG1oy6XFshbUay6btZzQF4Tf/E4VFr/BNf62G8Eu0Rl5geNHxJJT/vjw0mqffChClSURSHaSAMOHF8Ecjtit/PwtTn4ExRlfP+tLDR9UDciet//KF/zw17OVWXUgfCf2ByecLVlLD9ZZvc+OXijlid1ykStFMzmqC3DCr1/dMRD1LqRGTocSaLQ6b7926cbnQRC6kyXHtgPy6setSCwrvZjpKyelVeqy5e3Psn6QOY9Kcn/1SrBu4lOoTjl7yHk0lqRrH6I=
+x-microsoft-antispam-message-info: 84ZGIlDtgggiLlHjtCbZHUAcTdm/ALZLYTPfb+U6z2gMUycQMOzFv6C41Y/iQW5BImRlfWuE3Q1OxXLN7z5fWi4Lgt8hFrCoxh8jiSSoZSe4MntPyp159Ab1hkRl01IY5XcQDovbszG7jChfZKpHQal3M3/lRAumYwG1kAHQbRDZnxXOSW9NAWNTKsE88Xm+Cx8BliCMnJjW0GkmIbMAy9YcfJr3GqJK8tdjqP8OuFTXqV+Tiegn1y1mm8HEcMAmU1UbeKI2nij85PCU9CWM7U+28A3dAgnS4gwQ1UBfX2IMELg43NJVnLVhm0E3MLwdf9QU+dvB1QuoOHEpJW84t+UwQNFOG3ww+Kl7kqOXzHzgWGn67dXnoaIEyszBUyzAasUpQFJWSwolt/6hWq6CUpAJW1tJZaLa/XbCtKl1Lsg=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec292f5f-ba13-49dc-c1a8-08d71edcac25
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 04:22:22.9676
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6120ed1-5f45-4a36-acf5-08d71edcaf3f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 04:22:27.9847
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ujcgmYEeyLeE1sc/ZYUQHrsZuoQSQZtPTYOfHtYekD/078USWxQOWYQAEM5dcEP4gJGkboecxGpjliDVaAL2qQ==
+X-MS-Exchange-CrossTenant-userprincipalname: 9YE+GaB51KNIVKKIiE7FMwazgRHCCWxWnBG6AYdBBRQb9/4dcYcDnCQL7r0DKNdeVMqYuVTLjnQ5e2bRpo6dCA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5931
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
@@ -101,33 +102,48 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-The num-lanes is optional, so probably it isn't added
-on some platforms. The subsequent programming is base
-on the num-lanes, hence return when it is not found.
+On FSL Layerscape SoCs, the number of lanes assigned to PCIe
+controller is not fixed, it is determined by the selected
+SerDes protocol in the RCW (Reset Configuration Word), and
+the PCIe link training is completed automatically base on
+the selected SerDes protocol, and the link width set-up is
+updated by hardware. So the num-lanes is not needed to
+specify the link width.
+
+The current num-lanes indicates the max lanes PCIe controller
+can support up to, instead of the lanes assigned to the PCIe
+controller. This can result in PCIe link training fail after
+hot-reset. So remove the num-lanes to avoid set-up to incorrect
+link width.
 
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 ---
- drivers/pci/controller/dwc/pcie-designware.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/ls1021a.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/con=
-troller/dwc/pcie-designware.c
-index 7d25102c304c..0a89bfd1636e 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -423,8 +423,10 @@ void dw_pcie_setup(struct dw_pcie *pci)
-=20
-=20
- 	ret =3D of_property_read_u32(np, "num-lanes", &lanes);
--	if (ret)
--		lanes =3D 0;
-+	if (ret) {
-+		dev_dbg(pci->dev, "property num-lanes isn't found\n");
-+		return;
-+	}
-=20
- 	/* Set the number of lanes */
- 	val =3D dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dts=
+i
+index 464df4290ffc..2f6977ada447 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -874,7 +874,6 @@
+ 			#address-cells =3D <3>;
+ 			#size-cells =3D <2>;
+ 			device_type =3D "pci";
+-			num-lanes =3D <4>;
+ 			num-viewport =3D <6>;
+ 			bus-range =3D <0x0 0xff>;
+ 			ranges =3D <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   =
+/* downstream I/O */
+@@ -899,7 +898,6 @@
+ 			#address-cells =3D <3>;
+ 			#size-cells =3D <2>;
+ 			device_type =3D "pci";
+-			num-lanes =3D <4>;
+ 			num-viewport =3D <6>;
+ 			bus-range =3D <0x0 0xff>;
+ 			ranges =3D <0x81000000 0x0 0x00000000 0x48 0x00010000 0x0 0x00010000   =
+/* downstream I/O */
 --=20
 2.17.1
 
