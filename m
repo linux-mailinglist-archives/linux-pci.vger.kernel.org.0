@@ -2,44 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A53E8A120
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 16:31:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 341C18A16A
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 16:45:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfHLObh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Aug 2019 10:31:37 -0400
-Received: from mga01.intel.com ([192.55.52.88]:37102 "EHLO mga01.intel.com"
+        id S1726600AbfHLOo2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Aug 2019 10:44:28 -0400
+Received: from mga02.intel.com ([134.134.136.20]:19856 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbfHLObh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 12 Aug 2019 10:31:37 -0400
+        id S1726581AbfHLOo2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 12 Aug 2019 10:44:28 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 07:31:37 -0700
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 07:41:48 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,377,1559545200"; 
-   d="scan'208";a="200152174"
+   d="scan'208";a="375262037"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 12 Aug 2019 07:31:34 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 12 Aug 2019 07:41:46 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 9604111C; Mon, 12 Aug 2019 17:31:33 +0300 (EEST)
+        id 39A8C2DD; Mon, 12 Aug 2019 17:41:44 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] PCI: pciehp: Prevent deadlock on disconnect
-Date:   Mon, 12 Aug 2019 17:31:33 +0300
-Message-Id: <20190812143133.75319-2-mika.westerberg@linux.intel.com>
+Subject: [PATCH] PCI: Use minimum window alignment when calculating memory window size
+Date:   Mon, 12 Aug 2019 17:41:44 +0300
+Message-Id: <20190812144144.2646-1-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190812143133.75319-1-mika.westerberg@linux.intel.com>
-References: <20190812143133.75319-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -47,251 +39,150 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If there are more than one PCIe switch with hotplug downstream ports
-hot-removing them leads to a following deadlock:
+There is an issue in Linux PCI resource allocation that if we remove an
+existing device that was initially configured by the BIOS and then issue
+rescan, it will not fit in to the memory space allocated by the BIOS
+even if it originally it fit there just fine.
 
- INFO: task irq/126-pciehp:198 blocked for more than 120 seconds.
- "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
- irq/126-pciehp  D    0   198      2 0x80000000
- Call Trace:
-  __schedule+0x2a2/0x880
-  schedule+0x2c/0x80
-  schedule_timeout+0x246/0x350
-  ? ttwu_do_activate+0x67/0x90
-  wait_for_completion+0xb7/0x140
-  ? wake_up_q+0x80/0x80
-  kthread_stop+0x49/0x110
-  __free_irq+0x15c/0x2a0
-  free_irq+0x32/0x70
-  pcie_shutdown_notification+0x2f/0x50
-  pciehp_remove+0x27/0x50
-  pcie_port_remove_service+0x36/0x50
-  device_release_driver_internal+0x18c/0x250
-  device_release_driver+0x12/0x20
-  bus_remove_device+0xec/0x160
-  device_del+0x13b/0x350
-  ? pcie_port_find_device+0x60/0x60
-  device_unregister+0x1a/0x60
-  remove_iter+0x1e/0x30
-  device_for_each_child+0x56/0x90
-  pcie_port_device_remove+0x22/0x40
-  pcie_portdrv_remove+0x20/0x60
-  pci_device_remove+0x3e/0xc0
-  device_release_driver_internal+0x18c/0x250
-  device_release_driver+0x12/0x20
-  pci_stop_bus_device+0x6f/0x90
-  pci_stop_bus_device+0x31/0x90
-  pci_stop_and_remove_bus_device+0x12/0x20
-  pciehp_unconfigure_device+0x88/0x140
-  pciehp_disable_slot+0x6a/0x110
-  pciehp_handle_presence_or_link_change+0x263/0x400
-  pciehp_ist+0x1c9/0x1d0
-  ? irq_forced_thread_fn+0x80/0x80
-  irq_thread_fn+0x24/0x60
-  irq_thread+0xeb/0x190
-  ? irq_thread_fn+0x60/0x60
-  kthread+0x120/0x140
-  ? irq_thread_check_affinity+0xf0/0xf0
-  ? kthread_park+0x90/0x90
-  ret_from_fork+0x35/0x40
- INFO: task irq/190-pciehp:2288 blocked for more than 120 seconds.
- irq/190-pciehp  D    0  2288      2 0x80000000
- Call Trace:
-  __schedule+0x2a2/0x880
-  schedule+0x2c/0x80
-  schedule_preempt_disabled+0xe/0x10
-  __mutex_lock.isra.9+0x2e0/0x4d0
-  ? __mutex_lock_slowpath+0x13/0x20
-  __mutex_lock_slowpath+0x13/0x20
-  mutex_lock+0x2c/0x30
-  pci_lock_rescan_remove+0x15/0x20
-  pciehp_unconfigure_device+0x4d/0x140
-  pciehp_disable_slot+0x6a/0x110
-  pciehp_handle_presence_or_link_change+0x263/0x400
-  pciehp_ist+0x1c9/0x1d0
-  ? irq_forced_thread_fn+0x80/0x80
-  irq_thread_fn+0x24/0x60
-  irq_thread+0xeb/0x190
-  ? irq_thread_fn+0x60/0x60
-  kthread+0x120/0x140
-  ? irq_thread_check_affinity+0xf0/0xf0
-  ? kthread_park+0x90/0x90
-  ret_from_fork+0x35/0x40
+The system in question is just a regular PC with a FPGA card connected
+to PCIe slot. The initial BIOS resource allocation right after boot
+looks like:
 
-What happens here is that the whole hierarchy is runtime resumed and the
-parent PCIe downstream port, who got the hot-remove event, starts
-removing devices below it taking pci_lock_rescan_remove() lock. When the
-child PCIe port is runtime resumed it calls pciehp_check_presence()
-which ends up calling pciehp_card_present() and pciehp_check_link_active().
-Both of these read their parts of PCIe config space by calling helper
-function pcie_capability_read_word(). Now, this function notices that
-the underlying device is already gone and returns PCIBIOS_DEVICE_NOT_FOUND
-with the capability value set to 0. When pciehp gets this value it
-thinks that its child device is also hot-removed and schedules its IRQ
-thread to handle the event.
+00:01.1 Root port
+  Memory behind bridge: d0000000-f01fffff	(514M)
+    02:00.0 PCI-Express to PCI/PCI-X Bridge
+      BAR 0: Memory at d0000000-dfffffff	(256M)
+      BAR 1: Memory at f0100000-f01fffff	(1M)
+      Memory behind bridge: e0000000-f00fffff	(257M)
+        03:0a.0 FPGA
+	  BAR 0: Memory at f0000000-f000ffff	(64k)
+	  BAR 2: Memory at e0000000-efffffff	(256M)
 
-The deadlock happens when the child's IRQ thread runs and tries to
-acquire pci_lock_rescan_remove() which is already taken by the parent
-and the parent waits for the child's IRQ thread to finish.
+The FPGA card consists of a PCIe-to-PCI-X bridge (02:00.0) and the FPGA
+device itself (03:0a.0) right below the bridge. In order to update the
+FPGA image to the card without need for rebooting the system we remove
+the device through sysfs:
 
-We can prevent this from happening by checking the return value of
-pcie_capability_read_word() and if it is PCIBIOS_DEVICE_NOT_FOUND stop
-performing any hot-removal activities.
+  # echo 1 > /sys/bus/pci/devices/0000:00:01.1/0000:02:00.0/remove
+
+At this point the same image is burned to the FPGA or alternatively it
+is just reset to make sure the config space gets cleared and the kernel
+needs to do the resource allocation in the next step. Next we issue
+rescan to find and re-configure the same device:
+
+  # echo 1 > /sys/bus/pci/devices/0000:00:01.1/rescan
+
+But the end result is not the same and in fact the FPGA device cannot
+enable its BARs because there is no memory window from bridge 02:00.0 to
+the FPGA:
+
+00:01.1 Root port
+  Memory behind bridge: d0000000-f01fffff	(514M)
+    02:00.0 PCI-Express to PCI/PCI-X Bridge
+      BAR 0: Memory at d0000000-dfffffff	(256M)
+      BAR 1: Memory at e0000000-e00fffff	(1M)
+
+Below are the messages from the rescan with the failure highlighted:
+
+[  208.396066] pci_bus 0000:02: scanning bus
+[  208.396090] pci 0000:02:00.0: [8086:0bcd] type 01 class 0x060400
+[  208.396119] pci 0000:02:00.0: reg 0x10: [mem 0x00000000-0x0fffffff]
+[  208.396128] pci 0000:02:00.0: reg 0x14: [mem 0x00000000-0x000fffff]
+[  208.396156] pci 0000:02:00.0: enabling Extended Tags
+[  208.396236] pci 0000:02:00.0: PME# supported from D0
+[  208.396241] pci 0000:02:00.0: PME# disabled
+[  208.407979] pci 0000:02:00.0: scanning [bus 00-00] behind bridge, pass 0
+[  208.407984] pci 0000:02:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+[  208.407994] pci 0000:02:00.0: scanning [bus 00-00] behind bridge, pass 1
+[  208.408039] pci_bus 0000:03: extended config space not accessible
+[  208.408119] pci_bus 0000:03: scanning bus
+[  208.456396] pci 0000:03:0a.0: [8086:0bce] type 00 class 0x000000
+[  208.456528] pci 0000:03:0a.0: reg 0x10: [mem 0xf0000000-0xf000ffff 64bit]
+[  208.456611] pci 0000:03:0a.0: reg 0x18: [mem 0xe0000000-0xefffffff 64bit]
+[  208.456664] pci 0000:03:0a.0: reg 0x20: [io  0xe000-0xe0ff]
+[  208.938323] pci_bus 0000:03: fixups for bus
+[  208.938324] pci 0000:02:00.0: PCI bridge to [bus 03]
+[  208.938330] pci 0000:02:00.0:   bridge window [io  0x0000-0x0fff]
+[  208.938334] pci 0000:02:00.0:   bridge window [mem 0x00000000-0x000fffff]
+[  208.938339] pci 0000:02:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
+[  208.938341] pci_bus 0000:03: bus scan returning with max=03
+[  208.938343] pci_bus 0000:03: busn_res: [bus 03] end is updated to 03
+[  208.938346] pci_bus 0000:02: bus scan returning with max=03
+[  208.938555] pci 0000:02:00.0: BAR 0: assigned [mem 0xd0000000-0xdfffffff]
+[  208.938558] pci 0000:02:00.0: BAR 14: no space for [mem size 0x18000000]
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[  208.938559] pci 0000:02:00.0: BAR 14: failed to assign [mem size 0x18000000]
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[  208.938560] pci 0000:02:00.0: BAR 1: assigned [mem 0xe0000000-0xe00fffff]
+[  208.938564] pci 0000:02:00.0: BAR 15: assigned [mem 0xbfb00000-0xbfbfffff 64bit pref]
+[  208.938565] pci 0000:02:00.0: BAR 13: assigned [io  0xe000-0xefff]
+[  208.938566] pci 0000:03:0a.0: BAR 2: no space for [mem size 0x10000000 64bit]
+[  208.938567] pci 0000:03:0a.0: BAR 2: failed to assign [mem size 0x10000000 64bit]
+[  208.938568] pci 0000:03:0a.0: BAR 0: no space for [mem size 0x00010000 64bit]
+[  208.938569] pci 0000:03:0a.0: BAR 0: failed to assign [mem size 0x00010000 64bit]
+[  208.938569] pci 0000:03:0a.0: BAR 4: assigned [io  0xe000-0xe0ff]
+
+It seems that Linux tries to open memory window of 0x18000000 (384M)
+from the bridge 02:00.0 towards the FPGA 03:0a.0. This of does not fit
+to the memory available for the bridge itself and thus the assignment
+fails.
+
+The size 0x18000000 comes from the following code which tries to
+calculate size of the devices below the bridge and the required
+alignment:
+
+drivers/pci/setup-bus.c::pbus_size_mem(...)
+{
+  // size = 0x10000000 + 0x10000 = 0x10010000 (256M + 64k)
+
+  min_align = calculate_mem_align(aligns, max_order);
+  min_align = max(min_align, window_alignment(bus, b_res->flags));
+  // min_align = 0x8000000 (128M)
+
+  size0 = calculate_memsize(size, min_size, 0, 0, resource_size(b_res), min_align);
+  // size0 = ALIGN(0x10010000, 0x8000000) = 0x18000000 (384M)
+
+We align the calculated size to the next 128M which increases to 384M
+and then later in pci_assign_resource() try to assing the resource which
+fails because there is no room available in the parent bridge.
+
+Since the minimum alignment (min_align) is kept as part of the window
+resource and taken into account later in pbus_assign_resources_sorted()
+and pci_assign_resource(), I think aligning size to min_align is not
+necessary.
+
+For this reason make the size calculation to use minimum memory window
+alignment (1M) instead. The resulting resource allocation matches the
+initial allocation done by the BIOS.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
-No changes from the previous version.
+The previous RFC version can be found here:
 
- drivers/pci/hotplug/pciehp.h      |  6 +++---
- drivers/pci/hotplug/pciehp_core.c | 11 ++++++++---
- drivers/pci/hotplug/pciehp_ctrl.c |  4 ++--
- drivers/pci/hotplug/pciehp_hpc.c  | 32 +++++++++++++++++++++++--------
- 4 files changed, 37 insertions(+), 16 deletions(-)
+  https://patchwork.kernel.org/patch/10917249/
 
-diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index 8c51a04b8083..81c514ab9518 100644
---- a/drivers/pci/hotplug/pciehp.h
-+++ b/drivers/pci/hotplug/pciehp.h
-@@ -173,10 +173,10 @@ int pciehp_query_power_fault(struct controller *ctrl);
- void pciehp_green_led_on(struct controller *ctrl);
- void pciehp_green_led_off(struct controller *ctrl);
- void pciehp_green_led_blink(struct controller *ctrl);
--bool pciehp_card_present(struct controller *ctrl);
--bool pciehp_card_present_or_link_active(struct controller *ctrl);
-+int pciehp_card_present(struct controller *ctrl);
-+int pciehp_card_present_or_link_active(struct controller *ctrl);
- int pciehp_check_link_status(struct controller *ctrl);
--bool pciehp_check_link_active(struct controller *ctrl);
-+int pciehp_check_link_active(struct controller *ctrl);
- void pciehp_release_ctrl(struct controller *ctrl);
- 
- int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot);
-diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
-index e9f82afa3773..4c032d75c874 100644
---- a/drivers/pci/hotplug/pciehp_core.c
-+++ b/drivers/pci/hotplug/pciehp_core.c
-@@ -134,10 +134,15 @@ static int get_adapter_status(struct hotplug_slot *hotplug_slot, u8 *value)
- {
- 	struct controller *ctrl = to_ctrl(hotplug_slot);
- 	struct pci_dev *pdev = ctrl->pcie->port;
-+	int ret;
- 
- 	pci_config_pm_runtime_get(pdev);
--	*value = pciehp_card_present_or_link_active(ctrl);
-+	ret = pciehp_card_present_or_link_active(ctrl);
- 	pci_config_pm_runtime_put(pdev);
-+	if (ret < 0)
-+		return ret;
-+
-+	*value = ret;
- 	return 0;
- }
- 
-@@ -153,13 +158,13 @@ static int get_adapter_status(struct hotplug_slot *hotplug_slot, u8 *value)
-  */
- static void pciehp_check_presence(struct controller *ctrl)
- {
--	bool occupied;
-+	int occupied;
- 
- 	down_read(&ctrl->reset_lock);
- 	mutex_lock(&ctrl->state_lock);
- 
- 	occupied = pciehp_card_present_or_link_active(ctrl);
--	if ((occupied && (ctrl->state == OFF_STATE ||
-+	if ((occupied > 0 && (ctrl->state == OFF_STATE ||
- 			  ctrl->state == BLINKINGON_STATE)) ||
- 	    (!occupied && (ctrl->state == ON_STATE ||
- 			   ctrl->state == BLINKINGOFF_STATE)))
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index 631ced0ab28a..5a433cc8621f 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -221,7 +221,7 @@ void pciehp_handle_disable_request(struct controller *ctrl)
- 
- void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- {
--	bool present, link_active;
-+	int present, link_active;
- 
- 	/*
- 	 * If the slot is on and presence or link has changed, turn it off.
-@@ -252,7 +252,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 	mutex_lock(&ctrl->state_lock);
- 	present = pciehp_card_present(ctrl);
- 	link_active = pciehp_check_link_active(ctrl);
--	if (!present && !link_active) {
-+	if (present <= 0 && link_active <= 0) {
- 		mutex_unlock(&ctrl->state_lock);
- 		return;
+There are no changes to that version except that I changed "RFC" to "PATCH"
+in the subject and included wider audience in Cc list.
+
+ drivers/pci/setup-bus.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 79b1fa6519be..c8c947f17675 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1049,9 +1049,10 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+ 		}
  	}
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index bd990e3371e3..1f918b043adb 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -201,13 +201,16 @@ static void pcie_write_cmd_nowait(struct controller *ctrl, u16 cmd, u16 mask)
- 	pcie_do_write_cmd(ctrl, cmd, mask, false);
- }
  
--bool pciehp_check_link_active(struct controller *ctrl)
-+int pciehp_check_link_active(struct controller *ctrl)
- {
- 	struct pci_dev *pdev = ctrl_dev(ctrl);
- 	u16 lnk_status;
--	bool ret;
-+	int ret;
-+
-+	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
-+	if (ret == PCIBIOS_DEVICE_NOT_FOUND)
-+		return -ENODEV;
- 
--	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
- 	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
- 
- 	if (ret)
-@@ -373,13 +376,17 @@ void pciehp_get_latch_status(struct controller *ctrl, u8 *status)
- 	*status = !!(slot_status & PCI_EXP_SLTSTA_MRLSS);
- }
- 
--bool pciehp_card_present(struct controller *ctrl)
-+int pciehp_card_present(struct controller *ctrl)
- {
- 	struct pci_dev *pdev = ctrl_dev(ctrl);
- 	u16 slot_status;
-+	int ret;
- 
--	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
--	return slot_status & PCI_EXP_SLTSTA_PDS;
-+	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
-+	if (ret == PCIBIOS_DEVICE_NOT_FOUND)
-+		return -ENODEV;
-+
-+	return !!(slot_status & PCI_EXP_SLTSTA_PDS);
- }
- 
- /**
-@@ -390,10 +397,19 @@ bool pciehp_card_present(struct controller *ctrl)
-  * Presence Detect State bit, this helper also returns true if the Link Active
-  * bit is set.  This is a concession to broken hotplug ports which hardwire
-  * Presence Detect State to zero, such as Wilocity's [1ae9:0200].
-+ *
-+ * Returns: %1 if the slot is occupied and %0 if it is not. If the hotplug
-+ *	    port is not present anymore returns %-ENODEV.
-  */
--bool pciehp_card_present_or_link_active(struct controller *ctrl)
-+int pciehp_card_present_or_link_active(struct controller *ctrl)
- {
--	return pciehp_card_present(ctrl) || pciehp_check_link_active(ctrl);
-+	int ret;
-+
-+	ret = pciehp_card_present(ctrl);
-+	if (ret)
-+		return ret;
-+
-+	return pciehp_check_link_active(ctrl);
- }
- 
- int pciehp_query_power_fault(struct controller *ctrl)
++	size0 = calculate_memsize(size, min_size, 0, 0, resource_size(b_res),
++				  window_alignment(bus, b_res->flags));
+ 	min_align = calculate_mem_align(aligns, max_order);
+ 	min_align = max(min_align, window_alignment(bus, b_res->flags));
+-	size0 = calculate_memsize(size, min_size, 0, 0, resource_size(b_res), min_align);
+ 	add_align = max(min_align, add_align);
+ 	size1 = (!realloc_head || (realloc_head && !add_size && !children_add_size)) ? size0 :
+ 		calculate_memsize(size, min_size, add_size, children_add_size,
 -- 
 2.20.1
 
