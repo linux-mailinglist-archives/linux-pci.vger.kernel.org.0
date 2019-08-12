@@ -2,97 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B54C8A47A
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 19:32:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A02018A4B5
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 19:34:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfHLRb0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Aug 2019 13:31:26 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:37794 "EHLO ale.deltatee.com"
+        id S1727248AbfHLReV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Aug 2019 13:34:21 -0400
+Received: from mga06.intel.com ([134.134.136.31]:26428 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727237AbfHLRbC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 12 Aug 2019 13:31:02 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hxE9l-0002sj-OE; Mon, 12 Aug 2019 11:31:01 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hxE9k-0002Pm-3A; Mon, 12 Aug 2019 11:30:52 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Pilmore <epilmore@gigaio.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Mon, 12 Aug 2019 11:30:48 -0600
-Message-Id: <20190812173048.9186-15-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190812173048.9186-1-logang@deltatee.com>
-References: <20190812173048.9186-1-logang@deltatee.com>
-MIME-Version: 1.0
+        id S1726267AbfHLReV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 12 Aug 2019 13:34:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 10:33:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,378,1559545200"; 
+   d="scan'208";a="376025887"
+Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.162])
+  by fmsmga006.fm.intel.com with ESMTP; 12 Aug 2019 10:33:35 -0700
+Message-ID: <1565632489.7042.17.camel@intel.com>
+Subject: Re: [RFC V1 RESEND 2/6] PCI/MSI: Dynamic allocation of MSI-X
+ vectors by group
+From:   Megha Dey <megha.dey@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        jacob.jun.pan@linux.intel.com
+Date:   Mon, 12 Aug 2019 10:54:49 -0700
+In-Reply-To: <alpine.DEB.2.21.1908110919310.7324@nanos.tec.linutronix.de>
+References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
+         <1561162778-12669-3-git-send-email-megha.dey@linux.intel.com>
+         <alpine.DEB.2.21.1906280739100.32342@nanos.tec.linutronix.de>
+         <1565118316.2401.112.camel@intel.com>
+         <alpine.DEB.2.21.1908071525390.24014@nanos.tec.linutronix.de>
+         <48a44ffc-4b5b-5eef-73de-020f1710c41e@arm.com>
+         <alpine.DEB.2.21.1908110919310.7324@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org, bhelgaas@google.com, hch@lst.de, Christian.Koenig@amd.com, jgg@mellanox.com, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, dan.j.williams@intel.com, epilmore@gigaio.com, sbates@raithlin.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,MYRULES_NO_TEXT autolearn=ham autolearn_force=no
-        version=3.4.2
-Subject: [PATCH v3 14/14] PCI/P2PDMA: Update pci_p2pdma_distance_many() documentation
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The comment describing pci_p2pdma_distance_many() still referred to
-the devices being behind the same root port. This no longer applies
-so reword the documentation.
+On Sun, 2019-08-11 at 09:20 +0200, Thomas Gleixner wrote:
+> On Wed, 7 Aug 2019, Marc Zyngier wrote:
+> > 
+> > On 07/08/2019 14:56, Thomas Gleixner wrote:
+> > > 
+> > > On Tue, 6 Aug 2019, Megha Dey wrote:
+> > > > 
+> > > > On Sat, 2019-06-29 at 09:59 +0200, Thomas Gleixner wrote:
+> > > > > 
+> > > > > On Fri, 21 Jun 2019, Megha Dey wrote:
+> > > > Totally agreed. The request to add a dynamic MSI-X
+> > > > infrastructure came
+> > > > from some driver teams internally and currently they do not
+> > > > have
+> > > > bandwidth to come up with relevant test cases. <sigh>
+> > > Hahahaha.
+> > > 
+> > > > 
+> > > > But we hope that this patch set could serve as a precursor to
+> > > > the
+> > > > interrupt message store (IMS) patch set, and we can use this
+> > > > patch set
+> > > > as the baseline for the IMS patches.
+> > > If IMS needs the same functionality, then we need to think about
+> > > it
+> > > slightly differently because IMS is not necessarily tied to PCI.
+> > >  
+> > > IMS has some similarity to the ARM GIC ITS stuff IIRC, which
+> > > already
+> > > provides these things outside of PCI. Marc?
+> > Indeed. We have MSI-like functionality almost everywhere, and make
+> > heavy
+> > use of the generic MSI framework. Platform-MSI is probably the most
+> > generic example we have (it's the Far West transposed to MSIs).
+> > 
+> > > 
+> > > We probably need some generic infrastructure for this so PCI and
+> > > everything
+> > > else can use it.
+> > Indeed. Overall, I'd like the concept of MSI on whatever bus to
+> > have one
+> > single behaviour across the board, as long as it makes sense for
+> > that
+> > bus (nobody needs another PCI MultiMSI, for example).
+> Right.
+> 
+> @Intel: Is there documentation and perhaps early code for that IMS
+> muck to
+> 	look at?
 
-Link: https://lore.kernel.org/r/20190730163545.4915-15-logang@deltatee.com
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/p2pdma.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+Hi Thomas,
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index d8c824097d26..0608aae72ccc 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -517,15 +517,14 @@ upstream_bridge_distance_warn(struct pci_dev *provider, struct pci_dev *client,
-  * @num_clients: number of clients in the array
-  * @verbose: if true, print warnings for devices when we return -1
-  *
-- * Returns -1 if any of the clients are not compatible (behind the same
-- * root port as the provider), otherwise returns a positive number where
-- * a lower number is the preferable choice. (If there's one client
-- * that's the same as the provider it will return 0, which is best choice).
-+ * Returns -1 if any of the clients are not compatible, otherwise returns a
-+ * positive number where a lower number is the preferable choice. (If there's
-+ * one client that's the same as the provider it will return 0, which is best
-+ * choice).
-  *
-- * For now, "compatible" means the provider and the clients are all behind
-- * the same PCI root port. This cuts out cases that may work but is safest
-- * for the user. Future work can expand this to white-list root complexes that
-- * can safely forward between each ports.
-+ * "compatible" means the provider and the clients are either all behind
-+ * the same PCI root port or the host bridges connected to each of the devices
-+ * are listed in the 'pci_p2pdma_whitelist'.
-  */
- int pci_p2pdma_distance_many(struct pci_dev *provider, struct device **clients,
- 			     int num_clients, bool verbose)
--- 
-2.20.1
+We have some early documentation on IMS which can be found here (part
+of the Scalable I/O Virtualization spec):
 
+https://software.intel.com/sites/default/files/managed/cc/0e/intel-scal
+able-io-virtualization-technical-specification.pdf
+(Section 3.4.1)
+
+Also, I do have some initial IMS patches that we use internally for
+testing. I will clean it up and send it as an RFC patchset shortly.
+ 
+> 
+> Thanks,
+> 
+> 	tglx
