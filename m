@@ -2,485 +2,358 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A1AD68A3EF
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 19:04:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 251708A439
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2019 19:26:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725887AbfHLRDv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Aug 2019 13:03:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:52862 "EHLO foss.arm.com"
+        id S1726889AbfHLRZ7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Aug 2019 13:25:59 -0400
+Received: from mga04.intel.com ([192.55.52.120]:55016 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726334AbfHLRDv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 12 Aug 2019 13:03:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E63915AB;
-        Mon, 12 Aug 2019 10:03:49 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 580963F706;
-        Mon, 12 Aug 2019 10:03:47 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 18:03:36 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Jonathan Chocron <jonnyc@amazon.com>
-Cc:     bhelgaas@google.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org,
-        alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com,
-        talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 6/8] PCI: al: Add support for DW based driver type
-Message-ID: <20190812170336.GA23142@e121166-lin.cambridge.arm.com>
-References: <20190723092529.11310-1-jonnyc@amazon.com>
- <20190723092711.11786-2-jonnyc@amazon.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723092711.11786-2-jonnyc@amazon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1726453AbfHLRZ6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 12 Aug 2019 13:25:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 10:25:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,378,1559545200"; 
+   d="scan'208";a="175952232"
+Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.162])
+  by fmsmga008.fm.intel.com with ESMTP; 12 Aug 2019 10:25:58 -0700
+Message-ID: <1565632032.7042.12.camel@intel.com>
+Subject: Re: [RFC V1 RESEND 2/6] PCI/MSI: Dynamic allocation of MSI-X
+ vectors by group
+From:   Megha Dey <megha.dey@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
+        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com
+Date:   Mon, 12 Aug 2019 10:47:12 -0700
+In-Reply-To: <alpine.DEB.2.21.1908071525390.24014@nanos.tec.linutronix.de>
+References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
+          <1561162778-12669-3-git-send-email-megha.dey@linux.intel.com>
+          <alpine.DEB.2.21.1906280739100.32342@nanos.tec.linutronix.de>
+         <1565118316.2401.112.camel@intel.com>
+         <alpine.DEB.2.21.1908071525390.24014@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-"PCI: dwc: al: Add support for DW based driver type"
-
-Make $SUBJECT compliant with other host controllers patches.
-
-On Tue, Jul 23, 2019 at 12:27:09PM +0300, Jonathan Chocron wrote:
-> This driver is DT based and utilizes the DesignWare APIs.
-> It allows using a smaller ECAM range for a larger bus range -
-> usually an entire bus uses 1MB of address space, but the driver
-> can use it for a larger number of buses.
-
-I would appreciate if you can add a simple explanation of
-the mechanism for completeness.
-
-AFAIU, with ACPI you don't support all these variants.
-
-> All link initializations are handled by the boot FW.
+On Wed, 2019-08-07 at 15:56 +0200, Thomas Gleixner wrote:
+> Megha,
 > 
-> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> ---
->  drivers/pci/controller/dwc/Kconfig   |  12 +
->  drivers/pci/controller/dwc/pcie-al.c | 367 +++++++++++++++++++++++++++
->  2 files changed, 379 insertions(+)
+> On Tue, 6 Aug 2019, Megha Dey wrote:
+> > 
+> > On Sat, 2019-06-29 at 09:59 +0200, Thomas Gleixner wrote:
+> > > 
+> > > On Fri, 21 Jun 2019, Megha Dey wrote:
+> > Totally agreed. The request to add a dynamic MSI-X infrastructure
+> > came
+> > from some driver teams internally and currently they do not have
+> > bandwidth to come up with relevant test cases. <sigh>
+> Hahahaha.
 > 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 6ea778ae4877..3c6094cbcc3b 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -230,4 +230,16 @@ config PCIE_UNIPHIER
->  	  Say Y here if you want PCIe controller support on UniPhier SoCs.
->  	  This driver supports LD20 and PXs3 SoCs.
->  
-> +config PCIE_AL
-> +	bool "Amazon Annapurna Labs PCIe controller"
-> +	depends on OF && (ARM64 || COMPILE_TEST)
-> +	depends on PCI_MSI_IRQ_DOMAIN
-> +	select PCIE_DW_HOST
-> +	help
-> +	  Say Y here to enable support of the Amazon's Annapurna Labs PCIe
-> +	  controller IP on Amazon SoCs. The PCIe controller uses the DesignWare
-> +	  core plus Annapurna Labs proprietary hardware wrappers. This is
-> +	  required only for DT-based platforms. ACPI platforms with the
-> +	  Annapurna Labs PCIe controller don't need to enable this.
-> +
->  endmenu
-> diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
-> index 3ab58f0584a8..3ffdd3c97617 100644
-> --- a/drivers/pci/controller/dwc/pcie-al.c
-> +++ b/drivers/pci/controller/dwc/pcie-al.c
-> @@ -91,3 +91,370 @@ struct pci_ecam_ops al_pcie_ops = {
->  };
->  
->  #endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
-> +
-> +#ifdef CONFIG_PCIE_AL
-> +
-> +#include <linux/of_pci.h>
-> +#include "pcie-designware.h"
-> +
-> +#define AL_PCIE_REV_ID_2	2
-> +#define AL_PCIE_REV_ID_3	3
-> +#define AL_PCIE_REV_ID_4	4
-> +
-> +#define AXI_BASE_OFFSET		0x0
-> +
-> +#define DEVICE_ID_OFFSET	0x16c
-> +
-> +#define DEVICE_REV_ID			0x0
-> +#define DEVICE_REV_ID_DEV_ID_MASK	GENMASK(31, 16)
-> +
-> +#define DEVICE_REV_ID_DEV_ID_X4		0
-> +#define DEVICE_REV_ID_DEV_ID_X8		2
-> +#define DEVICE_REV_ID_DEV_ID_X16	4
-> +
-> +#define OB_CTRL_REV1_2_OFFSET	0x0040
-> +#define OB_CTRL_REV3_5_OFFSET	0x0030
-> +
-> +#define CFG_TARGET_BUS			0x0
-> +#define CFG_TARGET_BUS_MASK_MASK	GENMASK(7, 0)
-> +#define CFG_TARGET_BUS_BUSNUM_MASK	GENMASK(15, 8)
-> +
-> +#define CFG_CONTROL			0x4
-> +#define CFG_CONTROL_SUBBUS_MASK		GENMASK(15, 8)
-> +#define CFG_CONTROL_SEC_BUS_MASK	GENMASK(23, 16)
-> +
-> +struct al_pcie_reg_offsets {
-> +	unsigned int ob_ctrl;
-> +};
-> +
-> +struct al_pcie_target_bus_cfg {
-> +	u8 reg_val;
-> +	u8 reg_mask;
-> +	u8 ecam_mask;
-> +};
-> +
-> +struct al_pcie {
-> +	struct dw_pcie *pci;
-> +	void __iomem *controller_base; /* base of PCIe unit (not DW core) */
-> +	struct device *dev;
-> +	resource_size_t ecam_size;
-> +	unsigned int controller_rev_id;
-> +	struct al_pcie_reg_offsets reg_offsets;
-> +	struct al_pcie_target_bus_cfg target_bus_cfg;
-> +};
-> +
-> +#define PCIE_ECAM_DEVFN(x)		(((x) & 0xff) << 12)
-> +
-> +#define to_al_pcie(x)		dev_get_drvdata((x)->dev)
-> +
-> +static inline u32 al_pcie_controller_readl(struct al_pcie *pcie, u32 offset)
-> +{
-> +	return readl(pcie->controller_base + offset);
-> +}
-> +
-> +static inline void al_pcie_controller_writel(struct al_pcie *pcie, u32 offset,
-> +					     u32 val)
-> +{
-> +	writel(val, pcie->controller_base + offset);
-> +}
-
-You should be able to use the read/write{_relaxed} API.
-
-> +
-> +static int al_pcie_rev_id_get(struct al_pcie *pcie, unsigned int *rev_id)
-> +{
-> +	u32 dev_rev_id_val;
-> +	u32 dev_id_val;
-> +
-> +	dev_rev_id_val = al_pcie_controller_readl(pcie, AXI_BASE_OFFSET +
-> +						  DEVICE_ID_OFFSET +
-> +						  DEVICE_REV_ID);
-> +	dev_id_val = FIELD_GET(DEVICE_REV_ID_DEV_ID_MASK, dev_rev_id_val);
-> +
-> +	switch (dev_id_val) {
-> +	case DEVICE_REV_ID_DEV_ID_X4:
-> +		*rev_id = AL_PCIE_REV_ID_2;
-> +		break;
-> +	case DEVICE_REV_ID_DEV_ID_X8:
-> +		*rev_id = AL_PCIE_REV_ID_3;
-> +		break;
-> +	case DEVICE_REV_ID_DEV_ID_X16:
-> +		*rev_id = AL_PCIE_REV_ID_4;
-> +		break;
-> +	default:
-> +		dev_err(pcie->dev, "Unsupported dev_id_val (0x%x)\n",
-> +			dev_id_val);
-> +		return -EINVAL;
-> +	}
-> +
-> +	dev_dbg(pcie->dev, "dev_id_val: 0x%x\n", dev_id_val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int al_pcie_reg_offsets_set(struct al_pcie *pcie)
-> +{
-> +	switch (pcie->controller_rev_id) {
-> +	case AL_PCIE_REV_ID_2:
-> +		pcie->reg_offsets.ob_ctrl = OB_CTRL_REV1_2_OFFSET;
-> +		break;
-> +	case AL_PCIE_REV_ID_3:
-> +	case AL_PCIE_REV_ID_4:
-> +		pcie->reg_offsets.ob_ctrl = OB_CTRL_REV3_5_OFFSET;
-> +		break;
-> +	default:
-> +		dev_err(pcie->dev, "Unsupported controller rev_id: 0x%x\n",
-> +			pcie->controller_rev_id);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static inline void al_pcie_target_bus_set(struct al_pcie *pcie,
-> +					  u8 target_bus,
-> +					  u8 mask_target_bus)
-> +{
-> +	u32 reg;
-> +
-> +	reg = FIELD_PREP(CFG_TARGET_BUS_MASK_MASK, mask_target_bus) |
-> +	      FIELD_PREP(CFG_TARGET_BUS_BUSNUM_MASK, target_bus);
-> +
-> +	al_pcie_controller_writel(pcie, AXI_BASE_OFFSET +
-> +				  pcie->reg_offsets.ob_ctrl + CFG_TARGET_BUS,
-> +				  reg);
-> +}
-> +
-> +static void __iomem *al_pcie_conf_addr_map(struct al_pcie *pcie,
-> +					   unsigned int busnr,
-> +					   unsigned int devfn)
-> +{
-> +	struct al_pcie_target_bus_cfg *target_bus_cfg = &pcie->target_bus_cfg;
-> +	unsigned int busnr_ecam = busnr & target_bus_cfg->ecam_mask;
-> +	unsigned int busnr_reg = busnr & target_bus_cfg->reg_mask;
-> +	struct pcie_port *pp = &pcie->pci->pp;
-> +	void __iomem *pci_base_addr;
-> +
-> +	pci_base_addr = (void __iomem *)((uintptr_t)pp->va_cfg0_base +
-> +					 (busnr_ecam << 20) +
-> +					 PCIE_ECAM_DEVFN(devfn));
-> +
-> +	if (busnr_reg != target_bus_cfg->reg_val) {
-> +		dev_dbg(pcie->pci->dev, "Changing target bus busnum val from 0x%x to 0x%x\n",
-> +			target_bus_cfg->reg_val, busnr_reg);
-> +		target_bus_cfg->reg_val = busnr_reg;
-> +		al_pcie_target_bus_set(pcie,
-> +				       target_bus_cfg->reg_val,
-> +				       target_bus_cfg->reg_mask);
-> +	}
-> +
-> +	return pci_base_addr;
-> +}
-> +
-> +static int al_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
-> +				 unsigned int devfn, int where, int size,
-> +				 u32 *val)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct al_pcie *pcie = to_al_pcie(pci);
-> +	unsigned int busnr = bus->number;
-> +	void __iomem *pci_addr;
-> +	int rc;
-> +
-> +	pci_addr = al_pcie_conf_addr_map(pcie, busnr, devfn);
-> +
-> +	rc = dw_pcie_read(pci_addr + where, size, val);
-> +
-> +	dev_dbg(pci->dev, "%d-byte config read from %04x:%02x:%02x.%d offset 0x%x (pci_addr: 0x%px) - val:0x%x\n",
-> +		size, pci_domain_nr(bus), bus->number,
-> +		PCI_SLOT(devfn), PCI_FUNC(devfn), where,
-> +		(pci_addr + where), *val);
-> +
-> +	return rc;
-> +}
-> +
-> +static int al_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
-> +				 unsigned int devfn, int where, int size,
-> +				 u32 val)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct al_pcie *pcie = to_al_pcie(pci);
-> +	unsigned int busnr = bus->number;
-> +	void __iomem *pci_addr;
-> +	int rc;
-> +
-> +	pci_addr = al_pcie_conf_addr_map(pcie, busnr, devfn);
-> +
-> +	rc = dw_pcie_write(pci_addr + where, size, val);
-> +
-> +	dev_err(pci->dev, "%d-byte config write to %04x:%02x:%02x.%d offset 0x%x (pci_addr: 0x%px) - val:0x%x\n",
-> +		size, pci_domain_nr(bus), bus->number,
-> +		PCI_SLOT(devfn), PCI_FUNC(devfn), where,
-> +		(pci_addr + where), val);
-
-dev_dbg() ?
-
-> +
-> +	return rc;
-> +}
-> +
-> +static void al_pcie_config_prepare(struct al_pcie *pcie)
-> +{
-> +	struct al_pcie_target_bus_cfg *target_bus_cfg;
-> +	struct pcie_port *pp = &pcie->pci->pp;
-> +	unsigned int ecam_bus_mask;
-> +	u32 cfg_control_offset;
-> +	u8 subordinate_bus;
-> +	u8 secondary_bus;
-> +	u32 cfg_control;
-> +	u32 reg;
-> +
-> +	target_bus_cfg = &pcie->target_bus_cfg;
-> +
-> +	ecam_bus_mask = (pcie->ecam_size >> 20) - 1;
-> +	if (ecam_bus_mask > 255) {
-> +		dev_warn(pcie->dev, "ECAM window size is larger than 256MB. Cutting off at 256\n");
-> +		ecam_bus_mask = 255;
-> +	}
-> +
-> +	/* This portion is taken from the transaction address */
-> +	target_bus_cfg->ecam_mask = ecam_bus_mask;
-> +	/* This portion is taken from the cfg_target_bus reg */
-> +	target_bus_cfg->reg_mask = ~target_bus_cfg->ecam_mask;
-> +	target_bus_cfg->reg_val = pp->busn->start & target_bus_cfg->reg_mask;
-> +
-> +	al_pcie_target_bus_set(pcie, target_bus_cfg->reg_val,
-> +			       target_bus_cfg->reg_mask);
-> +
-> +	secondary_bus = pp->busn->start + 1;
-> +	subordinate_bus = pp->busn->end;
-> +
-> +	/* Set the valid values of secondary and subordinate buses */
-> +	cfg_control_offset = AXI_BASE_OFFSET + pcie->reg_offsets.ob_ctrl +
-> +			     CFG_CONTROL;
-> +
-> +	cfg_control = al_pcie_controller_readl(pcie, cfg_control_offset);
-> +
-> +	reg = cfg_control &
-> +	      ~(CFG_CONTROL_SEC_BUS_MASK | CFG_CONTROL_SUBBUS_MASK);
-> +
-> +	reg |= FIELD_PREP(CFG_CONTROL_SUBBUS_MASK, subordinate_bus) |
-> +	       FIELD_PREP(CFG_CONTROL_SEC_BUS_MASK, secondary_bus);
-> +
-> +	al_pcie_controller_writel(pcie, cfg_control_offset, reg);
-> +}
-> +
-> +static int al_pcie_host_init(struct pcie_port *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct al_pcie *pcie = to_al_pcie(pci);
-> +	int link_up;
-> +	int rc;
-> +
-> +	rc = al_pcie_rev_id_get(pcie, &pcie->controller_rev_id);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = al_pcie_reg_offsets_set(pcie);
-> +	if (rc)
-> +		return rc;
-> +
-> +	al_pcie_config_prepare(pcie);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dw_pcie_host_ops al_pcie_host_ops = {
-> +	.rd_other_conf = al_pcie_rd_other_conf,
-> +	.wr_other_conf = al_pcie_wr_other_conf,
-> +	.host_init = al_pcie_host_init,
-> +};
-> +
-> +static int al_add_pcie_port(struct pcie_port *pp,
-> +			    struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	pp->ops = &al_pcie_host_ops;
-> +
-> +	ret = dw_pcie_host_init(pp);
-> +	if (ret) {
-> +		dev_err(dev, "failed to initialize host\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dw_pcie_ops dw_pcie_ops = {
-> +};
-
-I understand you have to have it - probably we should improve
-the generic DW layer to check for a pointer before dereferencing
-so that we avoid this empty struct. Anyway, that's for another
-series.
-
-> +
-> +static int al_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *controller_res;
-> +	struct resource *ecam_res;
-> +	struct resource *dbi_res;
-> +	struct al_pcie *al_pcie;
-> +	struct dw_pcie *pci;
-> +	int ret;
-> +
-> +	al_pcie = devm_kzalloc(dev, sizeof(*al_pcie), GFP_KERNEL);
-> +	if (!al_pcie)
-> +		return -ENOMEM;
-> +
-> +	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
-> +	if (!pci)
-> +		return -ENOMEM;
-> +
-> +	pci->dev = dev;
-> +	pci->ops = &dw_pcie_ops;
-> +
-> +	al_pcie->pci = pci;
-> +	al_pcie->dev = dev;
-> +
-> +	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-> +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_res);
-> +	if (IS_ERR(pci->dbi_base)) {
-> +		dev_err(dev, "couldn't remap dbi base %pR\n", dbi_res);
-> +		return PTR_ERR(pci->dbi_base);
-> +	}
-> +
-> +	ecam_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
-> +	if (!ecam_res) {
-> +		dev_err(dev, "couldn't find 'config' reg in DT\n");
-> +		return -ENOENT;
-> +	}
-> +	al_pcie->ecam_size = resource_size(ecam_res);
-> +
-> +	controller_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +						      "controller");
-> +	al_pcie->controller_base = devm_ioremap_resource(dev, controller_res);
-> +	if (IS_ERR(al_pcie->controller_base)) {
-> +		dev_err(dev, "couldn't remap controller base %pR\n",
-> +			controller_res);
-> +		return PTR_ERR(al_pcie->controller_base);
-> +	}
-> +
-> +	dev_dbg(dev, "From DT: dbi_base: %pR, controller_base: %pR\n",
-> +		dbi_res, controller_res);
-> +
-> +	platform_set_drvdata(pdev, al_pcie);
-> +
-> +	ret = al_add_pcie_port(&pci->pp, pdev);
-> +
-> +	return ret;
-
-Nit:
-
-return al_add_pcie_port(&pci->pp, pdev);
-
-?
-
-Lorenzo
-
-> +}
-> +
-> +static const struct of_device_id al_pcie_of_match[] = {
-> +	{ .compatible = "amazon,al-pcie",
-> +	},
-> +	{},
-> +};
-> +
-> +static struct platform_driver al_pcie_driver = {
-> +	.driver = {
-> +		.name	= "al-pcie",
-> +		.of_match_table = al_pcie_of_match,
-> +		.suppress_bind_attrs = true,
-> +	},
-> +	.probe = al_pcie_probe,
-> +};
-> +builtin_platform_driver(al_pcie_driver);
-> +
-> +#endif /* CONFIG_PCIE_AL*/
-> -- 
-> 2.17.1
+> > 
+> > But we hope that this patch set could serve as a precursor to the
+> > interrupt message store (IMS) patch set, and we can use this patch
+> > set
+> > as the baseline for the IMS patches.
+> If IMS needs the same functionality, then we need to think about it
+> slightly differently because IMS is not necessarily tied to PCI.
+>  
+> IMS has some similarity to the ARM GIC ITS stuff IIRC, which already
+> provides these things outside of PCI. Marc?
 > 
+> We probably need some generic infrastructure for this so PCI and
+> everything
+> else can use it.
+
+Yeah agreed, I will look at the ARM GIC ITS to see how we can
+consolidate this code.
+
+> 
+> > 
+> > > 
+> > > > 
+> > > > +		/*
+> > > > +		 * Save the pointer to the first msi_desc
+> > > > entry of
+> > > > every
+> > > > +		 * MSI-X group. This pointer is used by other
+> > > > functions
+> > > > +		 * as the starting point to iterate through
+> > > > each
+> > > > of the
+> > > > +		 * entries in that particular group.
+> > > > +		 */
+> > > > +		if (!i)
+> > > > +			dev->dev.grp_first_desc =
+> > > > list_last_entry
+> > > > +			(dev_to_msi_list(&dev->dev), struct
+> > > > msi_desc, list);
+> > > How is that supposed to work? The pointer gets overwritten on
+> > > every
+> > > invocation of that interface. I assume this is merily an
+> > > intermediate
+> > > storage for setup. Shudder.
+> > > 
+> > Yes, you are right.
+> > 
+> > The grp_first_desc is simply a temporary storage to store the
+> > first msi_desc entry of every group, which can be used by other
+> > functions to iterate through the entries belonging to that group
+> > only,
+> > using the for_each_pci_msi_entry/ for_each_msi_entry_from macro. It
+> > is
+> > not the cleanest of solutions, I agree.
+> Yeah, it's too ugly to exist.
+> 
+
+will get rid of it.
+
+> > 
+> > With your proposal of supporting a separate group list, I don't
+> > think
+> > there will be a need to use this kind of temporary storage
+> > variable.
+> Exactly.
+> 
+> > 
+> > > 
+> > > > 
+> > > > -	for_each_pci_msi_entry(entry, dev) {
+> > > > +	for_each_pci_msi_entry_from(entry, dev) {
+> > >   > +/* Iterate through MSI entries of device dev starting from a
+> > > given desc */
+> > >   > +#define for_each_msi_entry_from(desc,
+> > > dev)                             \
+> > >   > +       desc =
+> > > (*dev).grp_first_desc;                                   \
+> > >   > +       list_for_each_entry_from((desc),
+> > > dev_to_msi_list((dev)),
+> > > list)  \
+> > > 
+> > > So this hides the whole group stuff behind a hideous iterator.
+> > > 
+> > > for_each_pci_msi_entry_from() ? from what? from the device? Sane
+> > > iterators
+> > > which have a _from naming, have also a from argument.
+> > > 
+> > This was meant to be "iterate over all the entries belonging to a
+> > group", sorry if that was not clear. 
+> > 
+> > The current 'for_each_pci_msi_entry' macro iterates through all the
+> > msi_desc entries belonging to a particular device. Since we have a
+> > piecewise allocation of the MSI-X vectors with this change, we
+> > would
+> > want to iterate only through the newly added entries, i.e the
+> > entries
+> > allocated to the current group.
+> I understand that, but please make macros and function names so they
+> are
+> halfways self explaining and intuitive.
+> 
+
+yeah, point taken.
+
+>  > In V2, I will introduce a new macro,
+> 'for_each_pci_msi_entry_group',
+> > 
+> > which will only iterate through the msi_desc entries belonging to a
+> > particular group.
+> for_each_pci_msi_entry_group()
+> 
+> is ambiguous. It could mean to iterate over the groups. 
+> 
+> for_each_pci_msi_entry_in_group()
+> 
+> avoids that.
+
+Yes, agreed.
+>  
+> > 
+> > > 
+> > > > 
+> > > > -	ret = msix_setup_entries(dev, base, entries, nvec,
+> > > > affd);
+> > > > +	ret = msix_setup_entries(dev, dev->base, entries,
+> > > > nvec,
+> > > > affd, group);
+> > > >  	if (ret)
+> > > >  		return ret;
+> > > Any error exit in this function will leave MSIx disabled. That
+> > > means
+> > > if
+> > > this is a subsequent group allocation which fails for whatever
+> > > reason, this
+> > > will render all existing and possibly already in use interrupts
+> > > unusable.
+> > > 
+> > Hmmm yeah, I hadn't thought about this!
+> > 
+> > So according to the code, we must 'Ensure MSI-X is disabled while
+> > it is
+> > set up'. MSI-X would be disabled until the setup of the new vectors
+> > is
+> > complete, even if we do not take the error exit right?
+> > 
+> > Earlier this was not a problem since we disable the MSI-X, setup
+> > all
+> > the vectors at once, and then enable the MSI-X once and for all. 
+> > 
+> > I am not sure how to avoid disabling of MSI-X here.
+> The problem with your code is that is keeps it disabled in case of an
+> error, which makes all existing users (groups) starve.
+> 
+> But, yes there is also the question what happens during the time when
+> interrupts are raised on already configured devices exactly during
+> the time
+> where MSI-X is disabled temporarily to setup a new group. I fear that
+> will
+> end up with lost interrupts and/or spurious interrupts via the legacy
+> INT[ABCD]. That really needs to be investigated _before_ we go there.
+> 
+
+Hmm, yeah that is my concern, I do not know what the behavior would be.
+Any experiments that I can run to know more?
+
+> > 
+> > > 
+> > > > 
+> > > >  static int __pci_enable_msix_range(struct pci_dev *dev,
+> > > >  				   struct msix_entry *entries,
+> > > > int
+> > > > minvec,
+> > > > -				   int maxvec, struct
+> > > > irq_affinity
+> > > > *affd)
+> > > > +				   int maxvec, struct
+> > > > irq_affinity
+> > > > *affd,
+> > > > +				   bool one_shot, int group)
+> > > >  {
+> > > >  	int rc, nvec = maxvec;
+> > > >  
+> > > >  	if (maxvec < minvec)
+> > > >  		return -ERANGE;
+> > > >  
+> > > > -	if (WARN_ON_ONCE(dev->msix_enabled))
+> > > > -		return -EINVAL;
+> > > So any misbehaving PCI driver can now call into this without
+> > > being
+> > > caught.
+> > > 
+> > I do not understand what misbehaving PCI driver means :(
+> The one which calls into that interface _AFTER_ msix is enabled. We
+> catch
+> that right now and reject it.
+> 
+
+Right.
+> > 
+> > Basically this statement is what denies multiple MSI-X vector
+> > allocations, and I wanted to remove it so that we could do just
+> > that.
+> > 
+> > Please let me know how I could change this.
+> There are several ways to do that, but it needs to be made
+> conditionally on
+> things like 'device has group mode support' ...
+>  
+
+Ok.
+> > 
+> > > 
+> > > If you want to support group based allocations, then the PCI/MSI
+> > > facility
+> > > has to be refactored from ground up.
+> > > 
+> > >   1) Introduce the concept of groups by adding a group list head
+> > > to
+> > > struct
+> > >      pci_dev. Ideally you create a new struct pci_dev_msi or
+> > > whatever
+> > > where
+> > >      all this muck goes into.
+> > > 
+> > I think we can use the existing list_head 'msi_list' in the struct
+> > device for this, instead of having a new list_head for the group.
+> > So
+> > now instead of msi_list being a list of all the msi_desc entries,
+> > it
+> > will have a list of the different groups associated with the
+> > device.
+> > 
+> > IMHO, since IMS is non PCI compliant, having this group_list_head
+> > would
+> > be better off in struct device than struct pci_dev, which would
+> > enable
+> > code reuse.
+> Sure, but then we really need to look at the IMS requirements in
+> order not
+> to rewrite this whole thing over and over.
+> 
+
+Yeah, since IMS is non PCI compliant, if we make all these changes at
+the struct device level unlike the struct pci_dev level, I think we can
+reuse the same code for all MSI/ MSI like interrupts.
+
+Having said that I will send out an RFC of the initial IMS code, to
+avoid any sort of code duplication.
+> > 
+> > > 
+> > >   2) Change the existing code to treat the current allocation
+> > > mode as
+> > > a
+> > >      group allocation. Keep the entries in a new struct
+> > > msi_entry_group and
+> > >      have a group id, list head and the entries in there.
+> > > 
+> > I am thinking of something like this, please let me know if this is
+> > what you are suggesting:
+> > 
+> > 1. Introduce a new msi_entry_group struct:
+> > struct msi_entry_grp {
+> >   int group_id; // monotonically increasing group_id
+> >   int num_vecs; // number of msi_desc entries per group
+> >   struct list_head group_list; // Added to msi_list in struct
+> > device
+> >   struct list_head entry_list; // list of msi_desc entries for this
+> > grp
+> > }
+> Looks about right.
+
+Ok! 
+> > 
+> > 2. Add a new 'for_each_pci_msi_entry_group' macro. This macro
+> > should
+> > only iterate through the msi_desc entries belonging to a group.
+> See above.
+>  
+
+will update this is V2.
+
+> > 
+> > 3. The existing for_each_pci_msi_entry, needs to be modified so
+> > that it
+> > is backward compatible. This macro should still be able to iterate
+> > through all the entries in all the groups. 
+> I'm not sure. It might be just the thing which iterates over group 0,
+> which
+> is the default for all devices which do not use/support group mode,
+> but
+> let's see.
+>  
+
+Yeah, I am currently trying to get this approach to work i.e. reworking
+the for_each_pci_msi_entry macro to be group aware (not gotten it to
+work thus far, though).
+
+> Thanks,
+> 
+> 	tglx
