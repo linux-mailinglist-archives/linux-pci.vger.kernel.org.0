@@ -2,462 +2,330 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 347378C26E
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2019 22:58:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A85FA8C432
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2019 00:22:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfHMU5x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Aug 2019 16:57:53 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33429 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbfHMU5w (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Aug 2019 16:57:52 -0400
-Received: by mail-ot1-f66.google.com with SMTP id q20so24445650otl.0;
-        Tue, 13 Aug 2019 13:57:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=G4/mXfGdMfbxkj+kiw+C4kdCMb3dI9m8cSV0JgmGVQU=;
-        b=m+XuKd0Fqi1BicXE+aXv+f7rRRIj2Ft4RQQf9X5WPKLRxkvhaUeaYMttehuoQNRflQ
-         FRUcTN5DjJ4s0cml2uRDIzlq//n7I13ZtwBylHNlzSOO5Zd8yl3XFG8p8MIAs0NmGFOX
-         yDgAOH4oaJuX2CN9o2dprCpkLyv5pjkA2RTzykXbWtgbzSrL6RAjxuPMMf/OL8ZUAgXj
-         cD8r+uBTw7kI8va8TP+jJbIX9iiK2IbBFVVfl0aYWyhHONzOdgdO/XI28eJDtCE4gzuG
-         XM29FdJp5BJ18DywrmwpLUMkATbBoUgSo69IYcGMURO8A41LuR6mY3UoQVkJXalYRa1f
-         QP0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=G4/mXfGdMfbxkj+kiw+C4kdCMb3dI9m8cSV0JgmGVQU=;
-        b=AJKGRMWs8k+6h3m2GHGdCz4lOlp5NQqRhKcXM3fzNodmSwGb2Ls6do7WH7MCJ20QeC
-         ZN9xlNv0wKf/iX5yPfq+oN1mwVi+OYMRCP4FKKa6fjBk8L1LzTwgL2bjthn4QqC3MTPM
-         w9NJlcP8qEMNHMNDP1hTa6hET18W377oSbLFN7QjnXH+nHSZKZxuIDjn9XCaLgHHD9IX
-         7ui46/3+NaS1yogtv3P1d6jISZyhaDF8CUaaxT2jo4APaL1NAqKSTNEHUSKPrtiASKDy
-         p8G+spoS6DoV7+wwgQV+T4E8OjzSGCr9Tw8ISNDGM0G2OpErKp8GaOl74Lz8Z+b2/UT3
-         1P/g==
-X-Gm-Message-State: APjAAAUopFLC4CflZfHtPm4zcfZPUMbPHnmN9Gkdl+Aw5W6QKSlVTanc
-        ED31bGBfJVFi7rCI1VqxfCz9W8Rt6YLkig==
-X-Google-Smtp-Source: APXvYqyElKGQyIooNmBSDAT1mUw1rPQN+seezZu1ROt7h0Nql0PZ46xVSr3PoOQzM+3NbNSy3W8b6A==
-X-Received: by 2002:a5d:9749:: with SMTP id c9mr33731756ioo.258.1565729871392;
-        Tue, 13 Aug 2019 13:57:51 -0700 (PDT)
-Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id y25sm12874419iol.59.2019.08.13.13.57.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 13:57:50 -0700 (PDT)
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skunberg.kelsey@gmail.com
-Subject: [PATCH v2 3/3] PCI/IOV: Move sysfs SR-IOV functions to iov.c
-Date:   Tue, 13 Aug 2019 14:45:13 -0600
-Message-Id: <20190813204513.4790-4-skunberg.kelsey@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190813204513.4790-1-skunberg.kelsey@gmail.com>
-References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-1-skunberg.kelsey@gmail.com>
+        id S1726533AbfHMWWn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Aug 2019 18:22:43 -0400
+Received: from mga11.intel.com ([192.55.52.93]:14199 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbfHMWWn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 13 Aug 2019 18:22:43 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 15:22:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
+   d="scan'208";a="194289843"
+Received: from skuppusw-desk.jf.intel.com (HELO skuppusw-desk.amr.corp.intel.com) ([10.54.74.33])
+  by fmsmga001.fm.intel.com with ESMTP; 13 Aug 2019 15:22:42 -0700
+Date:   Tue, 13 Aug 2019 15:19:58 -0700
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+Subject: Re: [PATCH v5 5/7] PCI/ATS: Add PASID support for PCIe VF devices
+Message-ID: <20190813221958.GA139211@skuppusw-desk.amr.corp.intel.com>
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <d10b5f08212a42c4a710ec649bffe082599dbb46.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190812200508.GM11785@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812200508.GM11785@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The sysfs SR-IOV functions are for an optional feature and will be better
-organized to keep with the feature's code. Move the sysfs SR-IOV functions
-to /pci/iov.c.
+On Mon, Aug 12, 2019 at 03:05:08PM -0500, Bjorn Helgaas wrote:
+> On Thu, Aug 01, 2019 at 05:06:02PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > 
+> > When IOMMU tries to enable PASID for VF device in
+> > iommu_enable_dev_iotlb(), it always fails because PASID support for PCIe
+> > VF device is currently broken in PCIE driver. Current implementation
+> > expects the given PCIe device (PF & VF) to implement PASID capability
+> > before enabling the PASID support. But this assumption is incorrect. As
+> > per PCIe spec r4.0, sec 9.3.7.14, all VFs associated with PF can only
+> > use the PASID of the PF and not implement it.
+> > 
+> > Also, since PASID is a shared resource between PF/VF, following rules
+> > should apply.
+> > 
+> > 1. Use proper locking before accessing/modifying PF resources in VF
+> >    PASID enable/disable call.
+> > 2. Use reference count logic to track the usage of PASID resource.
+> > 3. Disable PASID only if the PASID reference count (pasid_ref_cnt) is zero.
+> > 
+> > Cc: Ashok Raj <ashok.raj@intel.com>
+> > Cc: Keith Busch <keith.busch@intel.com>
+> > Suggested-by: Ashok Raj <ashok.raj@intel.com>
+> > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > ---
+> >  drivers/pci/ats.c   | 113 ++++++++++++++++++++++++++++++++++----------
+> >  include/linux/pci.h |   2 +
+> >  2 files changed, 90 insertions(+), 25 deletions(-)
+> > 
+> > diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> > index 079dc5444444..9384afd7d00e 100644
+> > --- a/drivers/pci/ats.c
+> > +++ b/drivers/pci/ats.c
+> > @@ -402,6 +402,8 @@ void pci_pasid_init(struct pci_dev *pdev)
+> >  	if (pdev->is_virtfn)
+> >  		return;
+> >  
+> > +	mutex_init(&pdev->pasid_lock);
+> > +
+> >  	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
+> >  	if (!pos)
+> >  		return;
+> > @@ -436,32 +438,57 @@ void pci_pasid_init(struct pci_dev *pdev)
+> >  int pci_enable_pasid(struct pci_dev *pdev, int features)
+> >  {
+> >  	u16 control, supported;
+> > +	int ret = 0;
+> > +	struct pci_dev *pf = pci_physfn(pdev);
+> >  
+> > -	if (WARN_ON(pdev->pasid_enabled))
+> > -		return -EBUSY;
+> > +	mutex_lock(&pf->pasid_lock);
+> >  
+> > -	if (!pdev->eetlp_prefix_path)
+> > -		return -EINVAL;
+> > +	if (WARN_ON(pdev->pasid_enabled)) {
+> > +		ret = -EBUSY;
+> > +		goto pasid_unlock;
+> > +	}
+> >  
+> > -	if (!pdev->pasid_cap)
+> > -		return -EINVAL;
+> > +	if (!pdev->eetlp_prefix_path) {
+> > +		ret = -EINVAL;
+> > +		goto pasid_unlock;
+> > +	}
+> >  
+> > -	pci_read_config_word(pdev, pdev->pasid_cap + PCI_PASID_CAP,
+> > -			     &supported);
+> > +	if (!pf->pasid_cap) {
+> > +		ret = -EINVAL;
+> > +		goto pasid_unlock;
+> > +	}
+> > +
+> > +	if (pdev->is_virtfn && pf->pasid_enabled)
+> > +		goto update_status;
+> > +
+> > +	pci_read_config_word(pf, pf->pasid_cap + PCI_PASID_CAP, &supported);
+> >  	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
+> >  
+> >  	/* User wants to enable anything unsupported? */
+> > -	if ((supported & features) != features)
+> > -		return -EINVAL;
+> > +	if ((supported & features) != features) {
+> > +		ret = -EINVAL;
+> > +		goto pasid_unlock;
+> > +	}
+> >  
+> >  	control = PCI_PASID_CTRL_ENABLE | features;
+> > -	pdev->pasid_features = features;
+> > -
+> > +	pf->pasid_features = features;
+> >  	pci_write_config_word(pdev, pdev->pasid_cap + PCI_PASID_CTRL, control);
+> >  
+> > -	pdev->pasid_enabled = 1;
+> > +	/*
+> > +	 * If PASID is not already enabled in PF, increment pasid_ref_cnt
+> > +	 * to count PF PASID usage.
+> > +	 */
+> > +	if (pdev->is_virtfn && !pf->pasid_enabled) {
+> > +		atomic_inc(&pf->pasid_ref_cnt);
+> > +		pf->pasid_enabled = 1;
+> > +	}
+> >  
+> > -	return 0;
+> > +update_status:
+> > +	atomic_inc(&pf->pasid_ref_cnt);
+> > +	pdev->pasid_enabled = 1;
+> > +pasid_unlock:
+> > +	mutex_unlock(&pf->pasid_lock);
+> > +	return ret;
+> >  }
+> >  EXPORT_SYMBOL_GPL(pci_enable_pasid);
+> >  
+> > @@ -472,16 +499,29 @@ EXPORT_SYMBOL_GPL(pci_enable_pasid);
+> >  void pci_disable_pasid(struct pci_dev *pdev)
+> >  {
+> >  	u16 control = 0;
+> > +	struct pci_dev *pf = pci_physfn(pdev);
+> > +
+> > +	mutex_lock(&pf->pasid_lock);
+> >  
+> >  	if (WARN_ON(!pdev->pasid_enabled))
+> > -		return;
+> > +		goto pasid_unlock;
+> >  
+> > -	if (!pdev->pasid_cap)
+> > -		return;
+> > +	if (!pf->pasid_cap)
+> > +		goto pasid_unlock;
+> >  
+> > -	pci_write_config_word(pdev, pdev->pasid_cap + PCI_PASID_CTRL, control);
+> > +	atomic_dec(&pf->pasid_ref_cnt);
+> >  
+> > +	if (atomic_read(&pf->pasid_ref_cnt))
+> > +		goto done;
+> > +
+> > +	/* Disable PASID only if pasid_ref_cnt is zero */
+> > +	pci_write_config_word(pf, pf->pasid_cap + PCI_PASID_CTRL, control);
+> > +
+> > +done:
+> >  	pdev->pasid_enabled = 0;
+> > +pasid_unlock:
+> > +	mutex_unlock(&pf->pasid_lock);
+> > +
+> >  }
+> >  EXPORT_SYMBOL_GPL(pci_disable_pasid);
+> >  
+> > @@ -492,15 +532,25 @@ EXPORT_SYMBOL_GPL(pci_disable_pasid);
+> >  void pci_restore_pasid_state(struct pci_dev *pdev)
+> >  {
+> >  	u16 control;
+> > +	struct pci_dev *pf = pci_physfn(pdev);
+> >  
+> >  	if (!pdev->pasid_enabled)
+> >  		return;
+> >  
+> > -	if (!pdev->pasid_cap)
+> > +	if (!pf->pasid_cap)
+> >  		return;
+> >  
+> > +	mutex_lock(&pf->pasid_lock);
+> > +
+> > +	pci_read_config_word(pf, pf->pasid_cap + PCI_PASID_CTRL, &control);
+> > +	if (control & PCI_PASID_CTRL_ENABLE)
+> > +		goto pasid_unlock;
+> > +
+> >  	control = PCI_PASID_CTRL_ENABLE | pdev->pasid_features;
+> > -	pci_write_config_word(pdev, pdev->pasid_cap + PCI_PASID_CTRL, control);
+> > +	pci_write_config_word(pf, pf->pasid_cap + PCI_PASID_CTRL, control);
+> > +
+> > +pasid_unlock:
+> > +	mutex_unlock(&pf->pasid_lock);
+> >  }
+> >  EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
+> >  
+> > @@ -517,15 +567,22 @@ EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
+> >  int pci_pasid_features(struct pci_dev *pdev)
+> >  {
+> >  	u16 supported;
+> > +	struct pci_dev *pf = pci_physfn(pdev);
+> > +
+> > +	mutex_lock(&pf->pasid_lock);
+> >  
+> > -	if (!pdev->pasid_cap)
+> > +	if (!pf->pasid_cap) {
+> > +		mutex_unlock(&pf->pasid_lock);
+> >  		return -EINVAL;
+> > +	}
+> >  
+> > -	pci_read_config_word(pdev, pdev->pasid_cap + PCI_PASID_CAP,
+> > +	pci_read_config_word(pf, pf->pasid_cap + PCI_PASID_CAP,
+> >  			     &supported);
+> >  
+> >  	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
+> >  
+> > +	mutex_unlock(&pf->pasid_lock);
+> > +
+> >  	return supported;
+> >  }
+> >  EXPORT_SYMBOL_GPL(pci_pasid_features);
+> > @@ -579,15 +636,21 @@ EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
+> >  int pci_max_pasids(struct pci_dev *pdev)
+> >  {
+> >  	u16 supported;
+> > +	struct pci_dev *pf = pci_physfn(pdev);
+> > +
+> > +	mutex_lock(&pf->pasid_lock);
+> >  
+> > -	if (!pdev->pasid_cap)
+> > +	if (!pf->pasid_cap) {
+> > +		mutex_unlock(&pf->pasid_lock);
+> >  		return -EINVAL;
+> > +	}
+> >  
+> > -	pci_read_config_word(pdev, pdev->pasid_cap + PCI_PASID_CAP,
+> > -			     &supported);
+> > +	pci_read_config_word(pf, pf->pasid_cap + PCI_PASID_CAP, &supported);
+> >  
+> >  	supported = (supported & PASID_NUMBER_MASK) >> PASID_NUMBER_SHIFT;
+> >  
+> > +	mutex_unlock(&pf->pasid_lock);
+> > +
+> >  	return (1 << supported);
+> >  }
+> >  EXPORT_SYMBOL_GPL(pci_max_pasids);
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 3c9c4c82be27..4bfcca045afd 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -461,8 +461,10 @@ struct pci_dev {
+> >  	atomic_t	pri_ref_cnt;	/* Number of PF/VF PRI users */
+> >  #endif
+> >  #ifdef CONFIG_PCI_PASID
+> > +	struct mutex	pasid_lock;	/* PASID enable lock */
+> 
+> I think these locks are finer-grained than necessary.  I'm not sure
+> it's worth having two mutexes for every device (one for PRI and
+> another for PASID).  Is there really a performance benefit for having
+> two?
+Performance benefit should be minimal. But, PRI and PASID are functionally
+independent. So I don't think its correct to protect its resources with
+a common lock. Let me know your comments.
+> 
+> Do it (or do they) need to be in struct pci_dev?  You only use the PF
+> mutexes, so maybe it could be in the struct pci_sriov, which I think
+> is only one per PF.
+Its possible to move it to pci_sriov structure. But is that the right
+place for it? This lock is only used for protecting PRI and PASID feature
+updates and PRI/PASID are not dependent on IOV feature. Let me know your
+comments.
 
-Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
----
- drivers/pci/iov.c       | 168 ++++++++++++++++++++++++++++++++++++++
- drivers/pci/pci-sysfs.c | 173 ----------------------------------------
- drivers/pci/pci.h       |   2 +-
- 3 files changed, 169 insertions(+), 174 deletions(-)
+If you want to move this lock to pci_sriov structure and use one lock
+for both PRI/PASID, then the implementation would look like following. We
+could create physfn lock/unlock functions in include/linux/pci.h similar
+to pci_physfn() function.
 
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index 9b48818ced01..b335db21c85e 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -240,6 +240,174 @@ void pci_iov_remove_virtfn(struct pci_dev *dev, int id)
- 	pci_dev_put(dev);
- }
- 
-+static ssize_t sriov_totalvfs_show(struct device *dev,
-+				   struct device_attribute *attr,
-+				   char *buf)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	return sprintf(buf, "%u\n", pci_sriov_get_totalvfs(pdev));
-+}
-+
-+static ssize_t sriov_numvfs_show(struct device *dev,
-+				 struct device_attribute *attr,
-+				 char *buf)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	return sprintf(buf, "%u\n", pdev->sriov->num_VFs);
-+}
-+
-+/*
-+ * num_vfs > 0; number of VFs to enable
-+ * num_vfs = 0; disable all VFs
-+ *
-+ * Note: SRIOV spec does not allow partial VF
-+ *	 disable, so it's all or none.
-+ */
-+static ssize_t sriov_numvfs_store(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf, size_t count)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	int ret;
-+	u16 num_vfs;
-+
-+	ret = kstrtou16(buf, 0, &num_vfs);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (num_vfs > pci_sriov_get_totalvfs(pdev))
-+		return -ERANGE;
-+
-+	device_lock(&pdev->dev);
-+
-+	if (num_vfs == pdev->sriov->num_VFs)
-+		goto exit;
-+
-+	/* is PF driver loaded w/callback */
-+	if (!pdev->driver || !pdev->driver->sriov_configure) {
-+		pci_info(pdev, "Driver does not support SRIOV configuration via sysfs\n");
-+		ret = -ENOENT;
-+		goto exit;
-+	}
-+
-+	if (num_vfs == 0) {
-+		/* disable VFs */
-+		ret = pdev->driver->sriov_configure(pdev, 0);
-+		goto exit;
-+	}
-+
-+	/* enable VFs */
-+	if (pdev->sriov->num_VFs) {
-+		pci_warn(pdev, "%d VFs already enabled. Disable before enabling %d VFs\n",
-+			 pdev->sriov->num_VFs, num_vfs);
-+		ret = -EBUSY;
-+		goto exit;
-+	}
-+
-+	ret = pdev->driver->sriov_configure(pdev, num_vfs);
-+	if (ret < 0)
-+		goto exit;
-+
-+	if (ret != num_vfs)
-+		pci_warn(pdev, "%d VFs requested; only %d enabled\n",
-+			 num_vfs, ret);
-+
-+exit:
-+	device_unlock(&pdev->dev);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static ssize_t sriov_offset_show(struct device *dev,
-+				 struct device_attribute *attr,
-+				 char *buf)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	return sprintf(buf, "%u\n", pdev->sriov->offset);
-+}
-+
-+static ssize_t sriov_stride_show(struct device *dev,
-+				 struct device_attribute *attr,
-+				 char *buf)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	return sprintf(buf, "%u\n", pdev->sriov->stride);
-+}
-+
-+static ssize_t sriov_vf_device_show(struct device *dev,
-+				    struct device_attribute *attr,
-+				    char *buf)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	return sprintf(buf, "%x\n", pdev->sriov->vf_device);
-+}
-+
-+static ssize_t sriov_drivers_autoprobe_show(struct device *dev,
-+					    struct device_attribute *attr,
-+					    char *buf)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	return sprintf(buf, "%u\n", pdev->sriov->drivers_autoprobe);
-+}
-+
-+static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
-+					     struct device_attribute *attr,
-+					     const char *buf, size_t count)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	bool drivers_autoprobe;
-+
-+	if (kstrtobool(buf, &drivers_autoprobe) < 0)
-+		return -EINVAL;
-+
-+	pdev->sriov->drivers_autoprobe = drivers_autoprobe;
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RO(sriov_totalvfs);
-+static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
-+static DEVICE_ATTR_RO(sriov_offset);
-+static DEVICE_ATTR_RO(sriov_stride);
-+static DEVICE_ATTR_RO(sriov_vf_device);
-+static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
-+		   sriov_drivers_autoprobe_store);
-+
-+static struct attribute *sriov_dev_attrs[] = {
-+	&dev_attr_sriov_totalvfs.attr,
-+	&dev_attr_sriov_numvfs.attr,
-+	&dev_attr_sriov_offset.attr,
-+	&dev_attr_sriov_stride.attr,
-+	&dev_attr_sriov_vf_device.attr,
-+	&dev_attr_sriov_drivers_autoprobe.attr,
-+	NULL,
-+};
-+
-+static umode_t sriov_attrs_are_visible(struct kobject *kobj,
-+				       struct attribute *a, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+
-+	if (!dev_is_pf(dev))
-+		return 0;
-+
-+	return a->mode;
-+}
-+
-+const struct attribute_group sriov_dev_attr_group = {
-+	.attrs = sriov_dev_attrs,
-+	.is_visible = sriov_attrs_are_visible,
-+};
-+
- int __weak pcibios_sriov_enable(struct pci_dev *pdev, u16 num_vfs)
- {
- 	return 0;
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 346193ca4826..f48af6e01bb0 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -548,151 +548,6 @@ static ssize_t devspec_show(struct device *dev,
- static DEVICE_ATTR_RO(devspec);
- #endif
- 
--#ifdef CONFIG_PCI_IOV
--static ssize_t sriov_totalvfs_show(struct device *dev,
--				   struct device_attribute *attr,
--				   char *buf)
--{
--	struct pci_dev *pdev = to_pci_dev(dev);
--
--	return sprintf(buf, "%u\n", pci_sriov_get_totalvfs(pdev));
--}
--
--
--static ssize_t sriov_numvfs_show(struct device *dev,
--				 struct device_attribute *attr,
--				 char *buf)
--{
--	struct pci_dev *pdev = to_pci_dev(dev);
--
--	return sprintf(buf, "%u\n", pdev->sriov->num_VFs);
--}
--
--/*
-- * num_vfs > 0; number of VFs to enable
-- * num_vfs = 0; disable all VFs
-- *
-- * Note: SRIOV spec doesn't allow partial VF
-- *       disable, so it's all or none.
-- */
--static ssize_t sriov_numvfs_store(struct device *dev,
--				  struct device_attribute *attr,
--				  const char *buf, size_t count)
--{
--	struct pci_dev *pdev = to_pci_dev(dev);
--	int ret;
--	u16 num_vfs;
--
--	ret = kstrtou16(buf, 0, &num_vfs);
--	if (ret < 0)
--		return ret;
--
--	if (num_vfs > pci_sriov_get_totalvfs(pdev))
--		return -ERANGE;
--
--	device_lock(&pdev->dev);
--
--	if (num_vfs == pdev->sriov->num_VFs)
--		goto exit;
--
--	/* is PF driver loaded w/callback */
--	if (!pdev->driver || !pdev->driver->sriov_configure) {
--		pci_info(pdev, "Driver doesn't support SRIOV configuration via sysfs\n");
--		ret = -ENOENT;
--		goto exit;
--	}
--
--	if (num_vfs == 0) {
--		/* disable VFs */
--		ret = pdev->driver->sriov_configure(pdev, 0);
--		goto exit;
--	}
--
--	/* enable VFs */
--	if (pdev->sriov->num_VFs) {
--		pci_warn(pdev, "%d VFs already enabled. Disable before enabling %d VFs\n",
--			 pdev->sriov->num_VFs, num_vfs);
--		ret = -EBUSY;
--		goto exit;
--	}
--
--	ret = pdev->driver->sriov_configure(pdev, num_vfs);
--	if (ret < 0)
--		goto exit;
--
--	if (ret != num_vfs)
--		pci_warn(pdev, "%d VFs requested; only %d enabled\n",
--			 num_vfs, ret);
--
--exit:
--	device_unlock(&pdev->dev);
--
--	if (ret < 0)
--		return ret;
--
--	return count;
--}
--
--static ssize_t sriov_offset_show(struct device *dev,
--				 struct device_attribute *attr,
--				 char *buf)
--{
--	struct pci_dev *pdev = to_pci_dev(dev);
--
--	return sprintf(buf, "%u\n", pdev->sriov->offset);
--}
--
--static ssize_t sriov_stride_show(struct device *dev,
--				 struct device_attribute *attr,
--				 char *buf)
--{
--	struct pci_dev *pdev = to_pci_dev(dev);
--
--	return sprintf(buf, "%u\n", pdev->sriov->stride);
--}
--
--static ssize_t sriov_vf_device_show(struct device *dev,
--				    struct device_attribute *attr,
--				    char *buf)
--{
--	struct pci_dev *pdev = to_pci_dev(dev);
--
--	return sprintf(buf, "%x\n", pdev->sriov->vf_device);
--}
--
--static ssize_t sriov_drivers_autoprobe_show(struct device *dev,
--					    struct device_attribute *attr,
--					    char *buf)
--{
--	struct pci_dev *pdev = to_pci_dev(dev);
--
--	return sprintf(buf, "%u\n", pdev->sriov->drivers_autoprobe);
--}
--
--static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
--					     struct device_attribute *attr,
--					     const char *buf, size_t count)
--{
--	struct pci_dev *pdev = to_pci_dev(dev);
--	bool drivers_autoprobe;
--
--	if (kstrtobool(buf, &drivers_autoprobe) < 0)
--		return -EINVAL;
--
--	pdev->sriov->drivers_autoprobe = drivers_autoprobe;
--
--	return count;
--}
--
--static DEVICE_ATTR_RO(sriov_totalvfs);
--static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
--static DEVICE_ATTR_RO(sriov_offset);
--static DEVICE_ATTR_RO(sriov_stride);
--static DEVICE_ATTR_RO(sriov_vf_device);
--static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
--		   sriov_drivers_autoprobe_store);
--#endif /* CONFIG_PCI_IOV */
--
- static ssize_t driver_override_store(struct device *dev,
- 				     struct device_attribute *attr,
- 				     const char *buf, size_t count)
-@@ -1691,34 +1546,6 @@ static const struct attribute_group pci_dev_hp_attr_group = {
- 	.is_visible = pci_dev_hp_attrs_are_visible,
- };
- 
--#ifdef CONFIG_PCI_IOV
--static struct attribute *sriov_dev_attrs[] = {
--	&dev_attr_sriov_totalvfs.attr,
--	&dev_attr_sriov_numvfs.attr,
--	&dev_attr_sriov_offset.attr,
--	&dev_attr_sriov_stride.attr,
--	&dev_attr_sriov_vf_device.attr,
--	&dev_attr_sriov_drivers_autoprobe.attr,
--	NULL,
--};
--
--static umode_t sriov_attrs_are_visible(struct kobject *kobj,
--				       struct attribute *a, int n)
--{
--	struct device *dev = kobj_to_dev(kobj);
--
--	if (!dev_is_pf(dev))
--		return 0;
--
--	return a->mode;
--}
--
--static const struct attribute_group sriov_dev_attr_group = {
--	.attrs = sriov_dev_attrs,
--	.is_visible = sriov_attrs_are_visible,
--};
--#endif /* CONFIG_PCI_IOV */
--
- static const struct attribute_group pci_dev_attr_group = {
- 	.attrs = pci_dev_dev_attrs,
- 	.is_visible = pci_dev_attrs_are_visible,
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 61bbfd611140..7e3c6c8ae6f9 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -455,7 +455,7 @@ void pci_iov_update_resource(struct pci_dev *dev, int resno);
- resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev, int resno);
- void pci_restore_iov_state(struct pci_dev *dev);
- int pci_iov_bus_range(struct pci_bus *bus);
--
-+extern const struct attribute_group sriov_dev_attr_group;
- #else
- static inline int pci_iov_init(struct pci_dev *dev)
- {
+#ifdef CONFIG_PCI_IOV
+static inline void pci_physfn_reslock(struct pci_dev *dev)
+{
+    struct pci_dev *pf = pci_physfn(dev);
+
+    if (!pf->is_physfn)
+        return;
+
+    mutex_lock(&pf->sriov->reslock);
+
+}
+#else
+static inline void pci_physfn_reslock(struct pci_dev *dev) {}; 
+#endif
+
+> 
+> >  	u16		pasid_cap;	/* PASID Capability offset */
+> >  	u16		pasid_features;
+> > +	atomic_t	pasid_ref_cnt;	/* Number of VFs with PASID enabled */
+> >  #endif
+> >  #ifdef CONFIG_PCI_P2PDMA
+> >  	struct pci_p2pdma *p2pdma;
+> > -- 
+> > 2.21.0
+> > 
+
 -- 
-2.20.1
-
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
