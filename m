@@ -2,136 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D2D5E8B543
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2019 12:18:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 686508B5BC
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2019 12:38:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbfHMKSt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Aug 2019 06:18:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:33294 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727632AbfHMKSt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 13 Aug 2019 06:18:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F8E0337;
-        Tue, 13 Aug 2019 03:18:48 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 55BF33F694;
-        Tue, 13 Aug 2019 03:18:47 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 11:18:45 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Yuehaibing <yuehaibing@huawei.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] PCI: hv: Fix build error without CONFIG_SYSFS
-Message-ID: <20190813101845.GB14977@e121166-lin.cambridge.arm.com>
-References: <20190531150923.12376-1-yuehaibing@huawei.com>
- <BYAPR21MB12211EEA95200F437C8E37ECD71A0@BYAPR21MB1221.namprd21.prod.outlook.com>
- <7d8ca05e-7519-45d8-e694-d31e221696d5@huawei.com>
- <b049b0f9-e31e-897a-6f2e-e30d6d865f24@huawei.com>
+        id S1727150AbfHMKiF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Aug 2019 06:38:05 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33482 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfHMKiF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Aug 2019 06:38:05 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p77so772204wme.0;
+        Tue, 13 Aug 2019 03:38:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IRI9xzFxMKHfeehDsl2GFQBy7QLiUvO6l2kHk0UQE0g=;
+        b=aCI51qO34X/uPszR7lNNZE1/e1jxWIwIBk8l9oePyQwmSP0bFzbVeCDYVtMpEqNWr7
+         QdMZRXwK1Oveq4ovY3DMACXY3Hzznyx3JNqpQJE+GHlaEGQ4Lo+l3A31Ru66W6ACXEUh
+         NfsgAzBW43voti8rf6Zr7Zfj6jhG0petXi7SO0OQ6u9WOeKDBDB5rl9DBGb1KQCPGyYN
+         8II2YfhXnNEwdmofyxEiyhIEtNJHteNFx2aVymiK64VilodcocPKIZTKrZp7FygzGQKR
+         I17VuYM/66iXMfyeLqZDO2Iu9MxBe1DCL+nBMwzRFU7kDgi2H1fb4+eMjP9ThcnmSKo9
+         4WKw==
+X-Gm-Message-State: APjAAAVfqwwrJpQgFlZCWKstHwC+QCd1clanezcc2Lr/WNWax93i5yuZ
+        icjtCMks1VPag2GMiEh/APZor7rI9LzsoQ==
+X-Google-Smtp-Source: APXvYqykijlq6kdHHcALNJ7kMDqWm4cQ80tA6EmpKRsiGVizuQU+0b4coATfODqCKbQAlhZg4Rcazw==
+X-Received: by 2002:a1c:f409:: with SMTP id z9mr2408158wma.176.1565692682962;
+        Tue, 13 Aug 2019 03:38:02 -0700 (PDT)
+Received: from 1aq-andre.garage.tyco.com ([77.107.218.170])
+        by smtp.gmail.com with ESMTPSA id f70sm1484635wme.22.2019.08.13.03.38.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Aug 2019 03:38:02 -0700 (PDT)
+From:   =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/2] PCIe: imx6: imx7d: add support for internal phy refclk source
+Date:   Tue, 13 Aug 2019 11:37:58 +0100
+Message-Id: <20190813103759.38358-1-git@andred.net>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b049b0f9-e31e-897a-6f2e-e30d6d865f24@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jun 15, 2019 at 02:48:24PM +0800, Yuehaibing wrote:
-> +cc Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+The i.MX7D variant of the IP can use either an external
+crystal oscillator input or an internal clock input as
+a reference clock input for the PCIe PHY.
 
-Can we drop this patch and merge:
+Add support for an optional property 'fsl,pcie-phy-refclk-internal'
+If present then the internal clock input is used as
+PCIe PHY reference clock source. The previous default
+of using an external ocsillator input (if the property
+doesn't exist), doesn't change.
 
-https://patchwork.ozlabs.org/patch/1131444/
+Signed-off-by: André Draszik <git@andred.net>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/pci/controller/dwc/pci-imx6.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-instead ?
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 9b5cb5b70389..bb3700c9157c 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -63,6 +63,7 @@ struct imx6_pcie {
+ 	struct dw_pcie		*pci;
+ 	int			reset_gpio;
+ 	bool			gpio_active_high;
++	bool			phy_refclk_internal;
+ 	struct clk		*pcie_bus;
+ 	struct clk		*pcie_phy;
+ 	struct clk		*pcie_inbound_axi;
+@@ -635,7 +636,10 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+ 		break;
+ 	case IMX7D:
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+-				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL, 0);
++				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
++				   imx6_pcie->phy_refclk_internal
++				   ? IMX7D_GPR12_PCIE_PHY_REFCLK_SEL
++				   : 0);
+ 		break;
+ 	case IMX6SX:
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+@@ -1171,6 +1175,9 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		imx6_pcie->link_gen = 1;
+ 
++	imx6_pcie->phy_refclk_internal =
++		of_property_read_bool(node, "fsl,pcie-phy-refclk-internal");
++
+ 	imx6_pcie->vpcie = devm_regulator_get_optional(&pdev->dev, "vpcie");
+ 	if (IS_ERR(imx6_pcie->vpcie)) {
+ 		if (PTR_ERR(imx6_pcie->vpcie) == -EPROBE_DEFER)
+-- 
+2.23.0.rc1
 
-Thanks,
-Lorenzo
-
-> 
-> On 2019/6/15 14:18, Yuehaibing wrote:
-> > 
-> > On 2019/6/2 6:59, Michael Kelley wrote:
-> >> From: YueHaibing <yuehaibing@huawei.com>  Sent: Friday, May 31, 2019 8:09 AM
-> >>>
-> >>> while building without CONFIG_SYSFS, fails as below:
-> >>>
-> >>> drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_assign_slots':
-> >>> pci-hyperv.c:(.text+0x40a): undefined reference to 'pci_create_slot'
-> >>> drivers/pci/controller/pci-hyperv.o: In function 'pci_devices_present_work':
-> >>> pci-hyperv.c:(.text+0xc02): undefined reference to 'pci_destroy_slot'
-> >>> drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_remove':
-> >>> pci-hyperv.c:(.text+0xe50): undefined reference to 'pci_destroy_slot'
-> >>> drivers/pci/controller/pci-hyperv.o: In function 'hv_eject_device_work':
-> >>> pci-hyperv.c:(.text+0x11f9): undefined reference to 'pci_destroy_slot'
-> >>>
-> >>> Select SYSFS while PCI_HYPERV is set to fix this.
-> >>>
-> >>
-> >> I'm wondering if is the right way to fix the problem.  Conceptually
-> >> is it possible to setup & operate virtual PCI devices like 
-> >> pci-hyperv.c does, even if sysfs is not present?  Or is it right to
-> >> always required sysfs?
-> >>
-> >> The function pci_dev_assign_slot() in slot.c has a null implementation
-> >> in include/linux/pci.h when CONFIG_SYSFS is not defined, which
-> >> seems to be trying to solve the same problem for that function.  And
-> >> if CONFIG_HOTPLUG_PCI is defined but CONFIG_SYSFS is not,
-> >> pci_hp_create_module_link() and pci_hp_remove_module_link()
-> >> look like they would have the same problem.  Maybe there should
-> >> be degenerate implementations of pci_create_slot() and
-> >> pci_destroy_slot() for cases when CONFIG_SYSFS is not defined?
-> >>
-> >> But I'll admit I don't know the full story behind how PCI slots
-> >> are represented and used, so maybe I'm off base.  I just noticed
-> >> the inconsistency in how other functions in slot.c are handled.
-> >>
-> >> Thoughts?
-> > 
-> > 268a03a42d33 ("PCI: drivers/pci/slot.c should depend on CONFIG_SYSFS")
-> > 
-> > make slot.o depends CONFIG_SYSFS
-> > 
-> > commit 268a03a42d3377d5fb41e6e7cbdec4e0b65cab2e
-> > Author: Alex Chiang <achiang@hp.com>
-> > Date:   Wed Jun 17 19:03:57 2009 -0600
-> > 
-> >     PCI: drivers/pci/slot.c should depend on CONFIG_SYSFS
-> > 
-> >     There is no way to interact with a physical PCI slot without
-> >     sysfs, so encode the dependency and prevent this build error:
-> > 
-> >         drivers/pci/slot.c: In function 'pci_hp_create_module_link':
-> >         drivers/pci/slot.c:327: error: 'module_kset' undeclared
-> > 
-> >     This patch _should_ make pci-sysfs.o depend on CONFIG_SYSFS too,
-> >     but we cannot (yet) because the PCI core merrily assumes the
-> >     existence of sysfs:
-> > 
-> >         drivers/built-in.o: In function `pci_bus_add_device':
-> >         drivers/pci/bus.c:89: undefined reference to `pci_create_sysfs_dev_files'
-> >         drivers/built-in.o: In function `pci_stop_dev':
-> >         drivers/pci/remove.c:24: undefined reference to `pci_remove_sysfs_dev_files'
-> > 
-> >     So do the minimal bit for now and figure out how to untangle it
-> >     later.
-> > 
-> > If No CONFIG_SYSFS, slot.o is not build
-> > 
-> >>
-> >> Michael
-> >>
-> >>
-> > 
-> > 
-> > .
-> > 
-> 
