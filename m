@@ -2,330 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A85FA8C432
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2019 00:22:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A65D8C48E
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2019 00:59:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbfHMWWn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Aug 2019 18:22:43 -0400
-Received: from mga11.intel.com ([192.55.52.93]:14199 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbfHMWWn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 13 Aug 2019 18:22:43 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 15:22:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="194289843"
-Received: from skuppusw-desk.jf.intel.com (HELO skuppusw-desk.amr.corp.intel.com) ([10.54.74.33])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Aug 2019 15:22:42 -0700
-Date:   Tue, 13 Aug 2019 15:19:58 -0700
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
+        id S1727354AbfHMW7a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Aug 2019 18:59:30 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:43006 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfHMW7a (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Aug 2019 18:59:30 -0400
+Received: from 79.184.255.155.ipv4.supernova.orange.pl (79.184.255.155) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
+ id 8199637f5f8090f3; Wed, 14 Aug 2019 00:59:26 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v5 5/7] PCI/ATS: Add PASID support for PCIe VF devices
-Message-ID: <20190813221958.GA139211@skuppusw-desk.amr.corp.intel.com>
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <d10b5f08212a42c4a710ec649bffe082599dbb46.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190812200508.GM11785@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/5] PCI / PM: Check for error when reading Power State
+Date:   Wed, 14 Aug 2019 00:59:26 +0200
+Message-ID: <27964051.NtteWoIlyA@kreacher>
+In-Reply-To: <20190809220116.GA221706@google.com>
+References: <20190805205214.194981-1-helgaas@kernel.org> <CAJZ5v0jFPU38zDugumJB0iq5d-LctcMCdygTrFU4=gYP3UJ+oA@mail.gmail.com> <20190809220116.GA221706@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812200508.GM11785@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 03:05:08PM -0500, Bjorn Helgaas wrote:
-> On Thu, Aug 01, 2019 at 05:06:02PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Saturday, August 10, 2019 12:01:16 AM CEST Bjorn Helgaas wrote:
+> On Mon, Aug 05, 2019 at 11:09:19PM +0200, Rafael J. Wysocki wrote:
+> > On Mon, Aug 5, 2019 at 10:52 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >
+> > > From: Bjorn Helgaas <bhelgaas@google.com>
+> > >
+> > > The Power Management Status Register is in config space, and reads while
+> > > the device is in D3cold typically return ~0 data (PCI_ERROR_RESPONSE).  If
+> > > we just look at the PCI_PM_CTRL_STATE_MASK bits, that is 0x3, which looks
+> > > like D3hot, not D3cold.
+> > >
+> > > Check the entire register for PCI_ERROR_RESPONSE so we can distinguish
+> > > D3cold from D3hot.
+> > >
+> > > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > ---
+> > >  drivers/pci/pci.c   |  6 +++---
+> > >  include/linux/pci.h | 13 +++++++++++++
+> > >  2 files changed, 16 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > index af6a97d7012b..d8686e3cd5eb 100644
+> > > --- a/drivers/pci/pci.c
+> > > +++ b/drivers/pci/pci.c
+> > > @@ -894,7 +894,7 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+> > >                 udelay(PCI_PM_D2_DELAY);
+> > >
+> > >         pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+> > > -       dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
+> > > +       dev->current_state = pci_power_state(pmcsr);
 > > 
-> > When IOMMU tries to enable PASID for VF device in
-> > iommu_enable_dev_iotlb(), it always fails because PASID support for PCIe
-> > VF device is currently broken in PCIE driver. Current implementation
-> > expects the given PCIe device (PF & VF) to implement PASID capability
-> > before enabling the PASID support. But this assumption is incorrect. As
-> > per PCIe spec r4.0, sec 9.3.7.14, all VFs associated with PF can only
-> > use the PASID of the PF and not implement it.
-> > 
-> > Also, since PASID is a shared resource between PF/VF, following rules
-> > should apply.
-> > 
-> > 1. Use proper locking before accessing/modifying PF resources in VF
-> >    PASID enable/disable call.
-> > 2. Use reference count logic to track the usage of PASID resource.
-> > 3. Disable PASID only if the PASID reference count (pasid_ref_cnt) is zero.
-> > 
-> > Cc: Ashok Raj <ashok.raj@intel.com>
-> > Cc: Keith Busch <keith.busch@intel.com>
-> > Suggested-by: Ashok Raj <ashok.raj@intel.com>
-> > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > ---
-> >  drivers/pci/ats.c   | 113 ++++++++++++++++++++++++++++++++++----------
-> >  include/linux/pci.h |   2 +
-> >  2 files changed, 90 insertions(+), 25 deletions(-)
-> > 
-> > diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> > index 079dc5444444..9384afd7d00e 100644
-> > --- a/drivers/pci/ats.c
-> > +++ b/drivers/pci/ats.c
-> > @@ -402,6 +402,8 @@ void pci_pasid_init(struct pci_dev *pdev)
-> >  	if (pdev->is_virtfn)
-> >  		return;
-> >  
-> > +	mutex_init(&pdev->pasid_lock);
-> > +
-> >  	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
-> >  	if (!pos)
-> >  		return;
-> > @@ -436,32 +438,57 @@ void pci_pasid_init(struct pci_dev *pdev)
-> >  int pci_enable_pasid(struct pci_dev *pdev, int features)
-> >  {
-> >  	u16 control, supported;
-> > +	int ret = 0;
-> > +	struct pci_dev *pf = pci_physfn(pdev);
-> >  
-> > -	if (WARN_ON(pdev->pasid_enabled))
-> > -		return -EBUSY;
-> > +	mutex_lock(&pf->pasid_lock);
-> >  
-> > -	if (!pdev->eetlp_prefix_path)
-> > -		return -EINVAL;
-> > +	if (WARN_ON(pdev->pasid_enabled)) {
-> > +		ret = -EBUSY;
-> > +		goto pasid_unlock;
-> > +	}
-> >  
-> > -	if (!pdev->pasid_cap)
-> > -		return -EINVAL;
-> > +	if (!pdev->eetlp_prefix_path) {
-> > +		ret = -EINVAL;
-> > +		goto pasid_unlock;
-> > +	}
-> >  
-> > -	pci_read_config_word(pdev, pdev->pasid_cap + PCI_PASID_CAP,
-> > -			     &supported);
-> > +	if (!pf->pasid_cap) {
-> > +		ret = -EINVAL;
-> > +		goto pasid_unlock;
-> > +	}
-> > +
-> > +	if (pdev->is_virtfn && pf->pasid_enabled)
-> > +		goto update_status;
-> > +
-> > +	pci_read_config_word(pf, pf->pasid_cap + PCI_PASID_CAP, &supported);
-> >  	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
-> >  
-> >  	/* User wants to enable anything unsupported? */
-> > -	if ((supported & features) != features)
-> > -		return -EINVAL;
-> > +	if ((supported & features) != features) {
-> > +		ret = -EINVAL;
-> > +		goto pasid_unlock;
-> > +	}
-> >  
-> >  	control = PCI_PASID_CTRL_ENABLE | features;
-> > -	pdev->pasid_features = features;
-> > -
-> > +	pf->pasid_features = features;
-> >  	pci_write_config_word(pdev, pdev->pasid_cap + PCI_PASID_CTRL, control);
-> >  
-> > -	pdev->pasid_enabled = 1;
-> > +	/*
-> > +	 * If PASID is not already enabled in PF, increment pasid_ref_cnt
-> > +	 * to count PF PASID usage.
-> > +	 */
-> > +	if (pdev->is_virtfn && !pf->pasid_enabled) {
-> > +		atomic_inc(&pf->pasid_ref_cnt);
-> > +		pf->pasid_enabled = 1;
-> > +	}
-> >  
-> > -	return 0;
-> > +update_status:
-> > +	atomic_inc(&pf->pasid_ref_cnt);
-> > +	pdev->pasid_enabled = 1;
-> > +pasid_unlock:
-> > +	mutex_unlock(&pf->pasid_lock);
-> > +	return ret;
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_enable_pasid);
-> >  
-> > @@ -472,16 +499,29 @@ EXPORT_SYMBOL_GPL(pci_enable_pasid);
-> >  void pci_disable_pasid(struct pci_dev *pdev)
-> >  {
-> >  	u16 control = 0;
-> > +	struct pci_dev *pf = pci_physfn(pdev);
-> > +
-> > +	mutex_lock(&pf->pasid_lock);
-> >  
-> >  	if (WARN_ON(!pdev->pasid_enabled))
-> > -		return;
-> > +		goto pasid_unlock;
-> >  
-> > -	if (!pdev->pasid_cap)
-> > -		return;
-> > +	if (!pf->pasid_cap)
-> > +		goto pasid_unlock;
-> >  
-> > -	pci_write_config_word(pdev, pdev->pasid_cap + PCI_PASID_CTRL, control);
-> > +	atomic_dec(&pf->pasid_ref_cnt);
-> >  
-> > +	if (atomic_read(&pf->pasid_ref_cnt))
-> > +		goto done;
-> > +
-> > +	/* Disable PASID only if pasid_ref_cnt is zero */
-> > +	pci_write_config_word(pf, pf->pasid_cap + PCI_PASID_CTRL, control);
-> > +
-> > +done:
-> >  	pdev->pasid_enabled = 0;
-> > +pasid_unlock:
-> > +	mutex_unlock(&pf->pasid_lock);
-> > +
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_disable_pasid);
-> >  
-> > @@ -492,15 +532,25 @@ EXPORT_SYMBOL_GPL(pci_disable_pasid);
-> >  void pci_restore_pasid_state(struct pci_dev *pdev)
-> >  {
-> >  	u16 control;
-> > +	struct pci_dev *pf = pci_physfn(pdev);
-> >  
-> >  	if (!pdev->pasid_enabled)
-> >  		return;
-> >  
-> > -	if (!pdev->pasid_cap)
-> > +	if (!pf->pasid_cap)
-> >  		return;
-> >  
-> > +	mutex_lock(&pf->pasid_lock);
-> > +
-> > +	pci_read_config_word(pf, pf->pasid_cap + PCI_PASID_CTRL, &control);
-> > +	if (control & PCI_PASID_CTRL_ENABLE)
-> > +		goto pasid_unlock;
-> > +
-> >  	control = PCI_PASID_CTRL_ENABLE | pdev->pasid_features;
-> > -	pci_write_config_word(pdev, pdev->pasid_cap + PCI_PASID_CTRL, control);
-> > +	pci_write_config_word(pf, pf->pasid_cap + PCI_PASID_CTRL, control);
-> > +
-> > +pasid_unlock:
-> > +	mutex_unlock(&pf->pasid_lock);
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
-> >  
-> > @@ -517,15 +567,22 @@ EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
-> >  int pci_pasid_features(struct pci_dev *pdev)
-> >  {
-> >  	u16 supported;
-> > +	struct pci_dev *pf = pci_physfn(pdev);
-> > +
-> > +	mutex_lock(&pf->pasid_lock);
-> >  
-> > -	if (!pdev->pasid_cap)
-> > +	if (!pf->pasid_cap) {
-> > +		mutex_unlock(&pf->pasid_lock);
-> >  		return -EINVAL;
-> > +	}
-> >  
-> > -	pci_read_config_word(pdev, pdev->pasid_cap + PCI_PASID_CAP,
-> > +	pci_read_config_word(pf, pf->pasid_cap + PCI_PASID_CAP,
-> >  			     &supported);
-> >  
-> >  	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
-> >  
-> > +	mutex_unlock(&pf->pasid_lock);
-> > +
-> >  	return supported;
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_pasid_features);
-> > @@ -579,15 +636,21 @@ EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
-> >  int pci_max_pasids(struct pci_dev *pdev)
-> >  {
-> >  	u16 supported;
-> > +	struct pci_dev *pf = pci_physfn(pdev);
-> > +
-> > +	mutex_lock(&pf->pasid_lock);
-> >  
-> > -	if (!pdev->pasid_cap)
-> > +	if (!pf->pasid_cap) {
-> > +		mutex_unlock(&pf->pasid_lock);
-> >  		return -EINVAL;
-> > +	}
-> >  
-> > -	pci_read_config_word(pdev, pdev->pasid_cap + PCI_PASID_CAP,
-> > -			     &supported);
-> > +	pci_read_config_word(pf, pf->pasid_cap + PCI_PASID_CAP, &supported);
-> >  
-> >  	supported = (supported & PASID_NUMBER_MASK) >> PASID_NUMBER_SHIFT;
-> >  
-> > +	mutex_unlock(&pf->pasid_lock);
-> > +
-> >  	return (1 << supported);
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_max_pasids);
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 3c9c4c82be27..4bfcca045afd 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -461,8 +461,10 @@ struct pci_dev {
-> >  	atomic_t	pri_ref_cnt;	/* Number of PF/VF PRI users */
-> >  #endif
-> >  #ifdef CONFIG_PCI_PASID
-> > +	struct mutex	pasid_lock;	/* PASID enable lock */
+> > But pci_raw_set_power_state() should not even be called for devices in
+> > D3_cold, so this at best is redundant.
 > 
-> I think these locks are finer-grained than necessary.  I'm not sure
-> it's worth having two mutexes for every device (one for PRI and
-> another for PASID).  Is there really a performance benefit for having
-> two?
-Performance benefit should be minimal. But, PRI and PASID are functionally
-independent. So I don't think its correct to protect its resources with
-a common lock. Let me know your comments.
-> 
-> Do it (or do they) need to be in struct pci_dev?  You only use the PF
-> mutexes, so maybe it could be in the struct pci_sriov, which I think
-> is only one per PF.
-Its possible to move it to pci_sriov structure. But is that the right
-place for it? This lock is only used for protecting PRI and PASID feature
-updates and PRI/PASID are not dependent on IOV feature. Let me know your
-comments.
+> I tried to verify that we don't call pci_raw_set_power_state() for
+> devices in D3cold, but it wasn't obvious to me.  Is there an easy way
+> to verify that?  I'd rather have code that doesn't rely on deep
+> knowledge about other areas.
 
-If you want to move this lock to pci_sriov structure and use one lock
-for both PRI/PASID, then the implementation would look like following. We
-could create physfn lock/unlock functions in include/linux/pci.h similar
-to pci_physfn() function.
+It is called in two places, pci_power_up() and pci_set_power_state().
 
-#ifdef CONFIG_PCI_IOV
-static inline void pci_physfn_reslock(struct pci_dev *dev)
-{
-    struct pci_dev *pf = pci_physfn(dev);
+pci_power_up() is called on resume when the whole hierarchy is
+turned on and pci_set_power_state() explicitly powers up the
+device if in D3cold (with the help of the platform).
 
-    if (!pf->is_physfn)
-        return;
+And the "device not accessible at all" case should be covered by patch [2/5]
+in this series.
 
-    mutex_lock(&pf->sriov->reslock);
+> Even if the device was in, say D0, what if it is hot-removed just
+> before we read PCI_PM_CTRL?
 
-}
-#else
-static inline void pci_physfn_reslock(struct pci_dev *dev) {}; 
-#endif
+I guess you mean surprise-hot-removed?
 
-> 
-> >  	u16		pasid_cap;	/* PASID Capability offset */
-> >  	u16		pasid_features;
-> > +	atomic_t	pasid_ref_cnt;	/* Number of VFs with PASID enabled */
-> >  #endif
-> >  #ifdef CONFIG_PCI_P2PDMA
-> >  	struct pci_p2pdma *p2pdma;
-> > -- 
-> > 2.21.0
+Then it may as well be hot-removed after setting current_state.
+
+> We'll set dev->current_state to D3hot,
+> when I think D3cold would better correspond to the state of the
+> device.  Maybe that's harmless, but I don't know how to verify that.
+
+Well, D3cold may just be equally misleading, because the device may
+very well not be present at all any more.
+
+> > >         if (dev->current_state != state && printk_ratelimit())
+> > >                 pci_info(dev, "Refused to change power state, currently in D%d\n",
+> > >                          dev->current_state);
+> > > @@ -942,7 +942,7 @@ void pci_update_current_state(struct pci_dev *dev, pci_power_t state)
+> > >                 u16 pmcsr;
+> > >
+> > >                 pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+> > > -               dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
+> > > +               dev->current_state = pci_power_state(pmcsr);
 > > 
+> > The if () branch above should cover the D3cold case, shouldn't it?
+> 
+> You mean the "if (platform_pci_get_power_state(dev) == PCI_D3cold)"
+> test?
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+Not exactly.
+
+I mean "if (platform_pci_get_power_state(dev) == PCI_D3cold ||
+!pci_device_is_present(dev))".
+
+> platform_pci_get_power_state() returns PCI_UNKNOWN in some cases.
+> When that happens, might we not read PCI_PM_CTRL of a device in
+> D3cold?  I think this also has the same hotplug question as above.
+
+Surprise hot-removal can take place at any time, in particular after setting
+current_state, so adding extra checks here doesn't prevent the value of
+it from becoming stale at least sometimes anyway.
+
+> > >         } else {
+> > >                 dev->current_state = state;
+> > >         }
+> > > @@ -1677,7 +1677,7 @@ static int pci_enable_device_flags(struct pci_dev *dev, unsigned long flags)
+> > >         if (dev->pm_cap) {
+> > >                 u16 pmcsr;
+> > >                 pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+> > > -               dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
+> > > +               dev->current_state = pci_power_state(pmcsr);
+> > 
+> > So this appears to be only case in which pci_power_state(pmcsr) is
+> > useful at all.
+> > 
+> > It might be better to use the code from it directly here IMO.
+> 
+> If we're decoding CSR values, I think it's better to notice error
+> responses when we can than it is to try to figure out whether the
+> error response is theoretically impossible or the incorrectly decoded
+> value (e.g., D3hot instead of D3cold) is harmless.
+
+IMO this means more complex code and extra overhead for a very
+little practical value, however.
+
+
+
