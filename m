@@ -2,130 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FC5C8ADD5
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2019 06:38:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F2178ADDB
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2019 06:38:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725820AbfHMEiA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Aug 2019 00:38:00 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:51800 "EHLO
+        id S1725899AbfHMEiz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Aug 2019 00:38:55 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:51936 "EHLO
         lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbfHMEh7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Aug 2019 00:37:59 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7D4bfUa075008;
-        Mon, 12 Aug 2019 23:37:41 -0500
+        with ESMTP id S1725298AbfHMEiz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Aug 2019 00:38:55 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7D4cMHO075138;
+        Mon, 12 Aug 2019 23:38:22 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1565671061;
-        bh=FwJydpcr667N2/XPMOBcxx0wD/N0E+SUJhtqvw4Uofc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ZXoSPIGRf5bEd9CXF5888bXKA/dJVvEzd12eMCDYSiOBzIJd/NWnMSHge97ZmfqVN
-         jA3URMmrInM0u4TPbHr4inRbz1sDP3l5hWoeqXrEouBhjPpUcrcUgWWTRIQ9IomKS4
-         Zt2tRMZTzHzVZ8Oi58P4pW6t9AIgx3ylM/vzgs9I=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7D4bflI032016
+        s=ti-com-17Q1; t=1565671102;
+        bh=Ew8tzQEV3bzDzArZx0dSvuT8DgjzVr1McyreXZiBsSc=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=vZT9vUuHjeJfqpbHC4JPY+yhxRma4e4qSkeST+7paoKsG84W2UZByMArh6fPFnWJq
+         dIgNfQbSX2IfvtZnQIUuh1wRrWHV1Cl2fSl/20zrLzPmdAg0BUy5hJ4UdsWDpJTgAV
+         ZryYQFfcBi+I0FwLxytw7j2IyY14hveNKE/bPrU8=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7D4cMeS030426
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 12 Aug 2019 23:37:41 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 12 Aug 2019 23:38:22 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 12
- Aug 2019 23:37:40 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ Aug 2019 23:38:21 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 12 Aug 2019 23:37:40 -0500
+ Frontend Transport; Mon, 12 Aug 2019 23:38:21 -0500
 Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7D4bZp5072921;
-        Mon, 12 Aug 2019 23:37:36 -0500
-Subject: Re: [PATCH 1/4] dt-bingings: PCI: Remove the num-lanes from Required
- properties
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        Andrew Murray <andrew.murray@arm.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Gabriele Paoloni <gabriele.paoloni@huawei.com>
-References: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
- <20190812042435.25102-2-Zhiqiang.Hou@nxp.com>
- <20190812084517.GW56241@e119886-lin.cambridge.arm.com>
- <DB8PR04MB67476309D3F7E30FE35C47DF84D20@DB8PR04MB6747.eurprd04.prod.outlook.com>
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7D4cDdj022723;
+        Mon, 12 Aug 2019 23:38:14 -0500
+Subject: Re: [PATCHv4 1/2] PCI: layerscape: Add the bar_fixed_64bit property
+ in EP driver.
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>, <lorenzo.pieralisi@arm.com>,
+        <bhelgaas@google.com>, <minghuan.Lian@nxp.com>,
+        <mingkai.hu@nxp.com>, <roy.zang@nxp.com>, <l.stach@pengutronix.de>,
+        <tpiepho@impinj.com>, <leonard.crestez@nxp.com>,
+        <andrew.smirnov@gmail.com>, <yue.wang@amlogic.com>,
+        <hayashi.kunihiko@socionext.com>, <dwmw@amazon.co.uk>,
+        <jonnyc@amazon.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190813025317.48290-1-xiaowei.bao@nxp.com>
 From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <286ea8d2-5467-6cc2-07cb-7707db13ad1a@ti.com>
-Date:   Tue, 13 Aug 2019 10:05:42 +0530
+Message-ID: <4a456d72-f5b5-e860-0215-dd215e2edf09@ti.com>
+Date:   Tue, 13 Aug 2019 10:06:20 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <DB8PR04MB67476309D3F7E30FE35C47DF84D20@DB8PR04MB6747.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="gbk"
+In-Reply-To: <20190813025317.48290-1-xiaowei.bao@nxp.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
 
-On 13/08/19 8:37 AM, Z.q. Hou wrote:
-> Hi Andrew,
-> 
-> Thanks a lot for your comments!
-> 
->> -----Original Message-----
->> From: Andrew Murray <andrew.murray@arm.com>
->> Sent: 2019Äê8ÔÂ12ÈÕ 16:45
->> To: Z.q. Hou <zhiqiang.hou@nxp.com>
->> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org;
->> linux-kernel@vger.kernel.org; gustavo.pimentel@synopsys.com;
->> jingoohan1@gmail.com; bhelgaas@google.com; robh+dt@kernel.org;
->> mark.rutland@arm.com; shawnguo@kernel.org; Leo Li
->> <leoyang.li@nxp.com>; lorenzo.pieralisi@arm.com; M.h. Lian
->> <minghuan.lian@nxp.com>; Kishon Vijay Abraham I <kishon@ti.com>;
->> Gabriele Paoloni <gabriele.paoloni@huawei.com>
->> Subject: Re: [PATCH 1/4] dt-bingings: PCI: Remove the num-lanes from
->> Required properties
->>
->> On Mon, Aug 12, 2019 at 04:22:16AM +0000, Z.q. Hou wrote:
->>> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
->>>
->>> The num-lanes is not a mandatory property, e.g. on FSL Layerscape
->>> SoCs, the PCIe link training is completed automatically base on the
->>> selected SerDes protocol, it doesn't need the num-lanes to set-up the
->>> link width.
->>>
->>> It has been added in the Optional properties. This patch is to remove
->>> it from the Required properties.
->>
->> For clarity, maybe this paragraph can be reworded to:
->>
->> "It is previously in both Required and Optional properties,  let's remove it
->> from the Required properties".
-> 
-> Agree and will change in v2.
-> 
->>
->> I don't understand why this property is previously in both required and
->> optional...
->>
->> It looks like num-lanes was first made optional back in
->> 2015 and removed from the Required section (907fce090253).
->> But then re-added back into the Required section in 2017 with the adition of
->> bindings for EP mode (b12befecd7de).
->>
->> Is num-lanes actually required for EP mode?
-> 
-> Kishon, please help to answer this query?
 
-It should be optional for EP too.
+On 13/08/19 8:23 AM, Xiaowei Bao wrote:
+> The PCIe controller of layerscape just have 4 BARs, BAR0 and BAR1
+> is 32bit, BAR3 and BAR4 is 64bit, this is determined by hardware,
+
+Do you mean BAR2 instead of BAR3 here?
 
 Thanks
 Kishon
+
+> so set the bar_fixed_64bit with 0x14.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> ---
+> v2:
+>  - Replace value 0x14 with a macro.
+> v3:
+>  - No change.
+> v4:
+>  - send the patch again with '--to'.
+> 
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> index be61d96..227c33b 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -44,6 +44,7 @@ static int ls_pcie_establish_link(struct dw_pcie *pci)
+>  	.linkup_notifier = false,
+>  	.msi_capable = true,
+>  	.msix_capable = false,
+> +	.bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+>  };
+>  
+>  static const struct pci_epc_features*
+> 
