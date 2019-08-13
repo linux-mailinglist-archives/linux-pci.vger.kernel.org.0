@@ -2,178 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ABE28ADD9
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2019 06:38:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 940748AFEA
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2019 08:29:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725781AbfHMEij (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Aug 2019 00:38:39 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39307 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbfHMEii (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Aug 2019 00:38:38 -0400
-Received: by mail-pg1-f194.google.com with SMTP id u17so50578580pgi.6;
-        Mon, 12 Aug 2019 21:38:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KQPCTl794rAugb19t3k9pgcqB9NI9bu3aVo81wrxClU=;
-        b=oszJvGzgx/Z1+XOeonH6lr7kQGHeiWCbuEG1KJSG7QMKNydEY871mDi9hozYEn7NA2
-         7GHyCkhKzYYOOW3R1e3Q0Z729jOQ8ihnmTOee12zr9Oy+HCWB3sesEy4RqjlXV3CYept
-         7Kvaiy9dROIQvdQwdc2ln4gLB8xLsdnhKT+Z1UInVUypKbO5UzuMIGdStyF4qWGv4c2d
-         bkznaabJ0gz7LAfPZx4/1x55sY3w6252jcKAW48GIxFbRUVRNZePppk9cImsQf/FNiSv
-         eXzzAReL2SiyGtFSm5XlUFte28s8otYeQ2x/N7Pa74s6N/O/5Ag1jzJcjhwKq1Ha+KR7
-         vyCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KQPCTl794rAugb19t3k9pgcqB9NI9bu3aVo81wrxClU=;
-        b=M1B326EFpayBO+2vYpEyK8iwhfeB/VYsuAm7Z7YlA7X1qBVgTkb7c0g3ka9fAtbAcf
-         JCVhOR80n0szS7C4s8l55xv+0m6oABsQaIpM/eiuxE/yJHETAKqXAHPE5bPQbm33jAQ2
-         cIfxFLIem/HwuTxnYVEzrl0bDIhzIME2WruaImZxCsldoYq3r9qb2hod2xx2Bnpks4Q3
-         iwKoRIPuPbWWqIXQmKniIKWmZpQSiBWGDiaj66PVPg8TwG39slh2yhZw6+kQ197HPDR8
-         AQWN3EpJY9kVuqB0tjbKLOo+9cl7LElARWvLd75BTM0eO6gwn2mnh0QY2mOr5+4Gj0rj
-         JzBw==
-X-Gm-Message-State: APjAAAXVpiv6Vo7/zqMffET7D3rLtHmdNnMH/mr4xvjgxGl1ogP7c6Io
-        md7svv7DzFfkFdh+v/qbvYxwd8dB
-X-Google-Smtp-Source: APXvYqx1CMQL7kkSZBChBW77ttw2bvajeDQxH4izyuPRZG1wNNXUk0d4dQgk6RTL4Oq0Vs7SXChb2Q==
-X-Received: by 2002:a62:4d85:: with SMTP id a127mr39038177pfb.148.1565671117964;
-        Mon, 12 Aug 2019 21:38:37 -0700 (PDT)
-Received: from [10.0.2.15] ([122.163.110.75])
-        by smtp.gmail.com with ESMTPSA id v184sm100197756pgd.34.2019.08.12.21.38.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 21:38:37 -0700 (PDT)
-Subject: Re: [PATCH] PCI: tegra: Add of_node_put() before return to fix
- reference leak
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     thierry.reding@gmail.com, bhelgaas@google.com,
-        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-pci@vger.kernel.org
-References: <20190724082412.9943-1-nishkadg.linux@gmail.com>
- <20190812110543.GC20861@e121166-lin.cambridge.arm.com>
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-Message-ID: <1a01f9de-45ab-3a20-5a0c-8802c67115a0@gmail.com>
-Date:   Tue, 13 Aug 2019 10:08:32 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190812110543.GC20861@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        id S1726005AbfHMG3h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Aug 2019 02:29:37 -0400
+Received: from mail-eopbgr30060.outbound.protection.outlook.com ([40.107.3.60]:39589
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725867AbfHMG3h (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 13 Aug 2019 02:29:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FnK8hpoGkCEgkb8XdayXBXt5DzdOzzZTvNufEnW+o/HsZ7V+SjaERXOMzx3HJzKJAZyhRlPmqBsDTLuTmFvYrhNE+1OLgzNrK8abGIpwNnwuZL6KGscjZiv58BGUPJXihtnXrZSL0KoQUDlvT/oxLiPNaUNEDFfvtmYA8s2oT0DbMr6Kb/lKMZAfbr+qfSqPdNMSm3XPieCAyFgrF8G0nif/jhCTqmZ/2ZSc7bbA/BYNYDDPSOScFu/8PjFDk2xbuQcrL9+2MWVyeYQXKjQMFtfaR94OwfuLW/z60WVtY45YYqmrpVXMJWoca8xVzta/0mqaqps+vwRFdfcuHk6hgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iN38SAPpGh3M5H3fl7qAcEDa4JsDy6pvgoE5MRNmL2s=;
+ b=hMYL4QQVF6DXxVwqVUGFVYhig3TDGGgfAC+3lDBVshgqyOI3tUIwq8UFrLbShNBmhjXtCVHizmxLyUjuviONNH/82Zwy2a4DYlO4pJRmvAaoXPrgHutsL+5iQxArSZ1bn0OrcRSxUvCGlvbRiTIpUHEonboEh1/JF6bkJ4ya+V2QIeZp3XbFcb5vLTyN4LfYclNs2nx7d/2QWeB9QjCSJHXw7zywFqUB0HHT4zIbhO2Lp7ZRCLRPa01cTR2XIYGPDC+HIGz4wR164YsM7k7ILzCXkVx0dZBeH8quRmLe2MWSD6cflayTezPS/Ygp8DrUiIv1xrE0AWUWs5Vd7S/YCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iN38SAPpGh3M5H3fl7qAcEDa4JsDy6pvgoE5MRNmL2s=;
+ b=l5PVNhDZ9oipd1pdhrMR7gbs2Pr4qdf+u8bqUMRcPms9Mxbppc1o9W1qYkloqDVMeoTR1oqpEYz2uBDfMAQfDMq0Z824PzXaBH2Mtu0yyGXtqHwU7PlGeB5AJFbCIRpc8gsReOshJYQjeUWLNxcNlbQP4MzQM+rrMWSBBP5VMEY=
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
+ AM5PR04MB3090.eurprd04.prod.outlook.com (10.167.169.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.20; Tue, 13 Aug 2019 06:29:33 +0000
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::5012:d47a:1f5d:9b84]) by AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::5012:d47a:1f5d:9b84%5]) with mapi id 15.20.2157.022; Tue, 13 Aug 2019
+ 06:29:33 +0000
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "tpiepho@impinj.com" <tpiepho@impinj.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "yue.wang@amlogic.com" <yue.wang@amlogic.com>,
+        "hayashi.kunihiko@socionext.com" <hayashi.kunihiko@socionext.com>,
+        "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
+        "jonnyc@amazon.com" <jonnyc@amazon.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [EXT] Re: [PATCHv4 1/2] PCI: layerscape: Add the bar_fixed_64bit
+ property in EP driver.
+Thread-Topic: [EXT] Re: [PATCHv4 1/2] PCI: layerscape: Add the bar_fixed_64bit
+ property in EP driver.
+Thread-Index: AQHVUYOm7tfhNXqCL0aGeKjUvCbtGab4fkcAgAAe9XA=
+Date:   Tue, 13 Aug 2019 06:29:33 +0000
+Message-ID: <AM5PR04MB329910AC59AD7DCE39A6F6CDF5D20@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190813025317.48290-1-xiaowei.bao@nxp.com>
+ <4a456d72-f5b5-e860-0215-dd215e2edf09@ti.com>
+In-Reply-To: <4a456d72-f5b5-e860-0215-dd215e2edf09@ti.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaowei.bao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 49c6a725-aede-4ab1-cb9c-08d71fb79af0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM5PR04MB3090;
+x-ms-traffictypediagnostic: AM5PR04MB3090:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR04MB30901166DA59A71A06C871FEF5D20@AM5PR04MB3090.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1850;
+x-forefront-prvs: 01283822F8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(346002)(376002)(39860400002)(189003)(199004)(13464003)(52536014)(26005)(14454004)(66066001)(66946007)(66556008)(64756008)(66446008)(5660300002)(66476007)(2201001)(305945005)(486006)(478600001)(44832011)(110136005)(316002)(229853002)(8936002)(71190400001)(76116006)(74316002)(7736002)(6436002)(71200400001)(446003)(11346002)(76176011)(33656002)(8676002)(55016002)(7416002)(25786009)(2906002)(476003)(102836004)(99286004)(81166006)(86362001)(186003)(9686003)(81156014)(53546011)(7696005)(6506007)(256004)(6116002)(53936002)(3846002)(6246003)(2501003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3090;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: GF/JZLohP/WTxS7OazLCkA1CpnHOotiHyL296CXdGP9cyNrw9UzrrhMFcbT7PU218h6xl7UDgEuIyvV330ctenswf7oPSVoh3iUJus7dsB2iWE1THZiIvghxm9Z1NugtyjR1Dh4d4v1Lp5Ru+EJrQ4qn94fLZTQ3onD7yNl4irXcTQkSvhCNY83Mb8J2AlFiXsCardoDQUqTWckYbnSBItmIyoZwVO8Xgd0zMTaHst3d++58bjeenwIqvcUuU4AbBSObZ50LADZHTAaHcS1S9JaVl3Jl+nNY0wZ+0bU6q0Rf2eMJGEJ4+cN5TafkD2Yx/ArqCMG27/8wnXGq+aBI/AHR3IkJ2zq6qH+AoyLFW1uTP0qVq75U7JpH2WQwhg+lFTH3iSCZEIGjsiKYxx30OnPDcTY5whN5cEZ4F50+NtA=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49c6a725-aede-4ab1-cb9c-08d71fb79af0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2019 06:29:33.4183
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CvHyMyV9UNPYPpyNji1401XTkisHyKaWHvS5w+qiXP+kFb0imNRTUA9pR14X9JA8C9xPnkpqLgyPh1Y1bCXV/w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3090
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/08/19 4:35 PM, Lorenzo Pieralisi wrote:
-> On Wed, Jul 24, 2019 at 01:54:12PM +0530, Nishka Dasgupta wrote:
->> Each iteration of for_each_child_of_node() puts the previous node, but
->> in the case of a return from the middle of the loop, there is no put,
->> thus causing a reference leak.
->>
->> Hence store these mid-loop return values in variable err and add a new
->> label err_node_put which puts the previous node and returns err. Change
->> six mid-loop return statements to point to this new label instead.
->>
->> Issue found with Coccinelle.
->>
->> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
->> ---
->> Changes in v2:
-> 
-> If you are sending a v2 make it explicit in the patch $SUBJECT and send
-> the patch --in-reply-to=<message-ID-previous-version> otherwise *I* have
-> to fish out of mailing lists previous patches to understand what you are
-> doing.
-
-I am very sorry; it won't happen again.
-
-Thanking you,
-Nishka
-> 
->> - Edit subject line to better reflect changes and match other patches on
->>    this driver.
->> - Edit commit message for readability and accuracy.
->>
->>   drivers/pci/controller/pci-tegra.c | 22 +++++++++++++++-------
->>   1 file changed, 15 insertions(+), 7 deletions(-)
-> 
-> Applied to pci/tegra, thanks.
-> 
-> Lorenzo
-> 
->> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
->> index 9a917b2456f6..673a1725ef38 100644
->> --- a/drivers/pci/controller/pci-tegra.c
->> +++ b/drivers/pci/controller/pci-tegra.c
->> @@ -2237,14 +2237,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
->>   		err = of_pci_get_devfn(port);
->>   		if (err < 0) {
->>   			dev_err(dev, "failed to parse address: %d\n", err);
->> -			return err;
->> +			goto err_node_put;
->>   		}
->>   
->>   		index = PCI_SLOT(err);
->>   
->>   		if (index < 1 || index > soc->num_ports) {
->>   			dev_err(dev, "invalid port number: %d\n", index);
->> -			return -EINVAL;
->> +			err = -EINVAL;
->> +			goto err_node_put;
->>   		}
->>   
->>   		index--;
->> @@ -2253,12 +2254,13 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
->>   		if (err < 0) {
->>   			dev_err(dev, "failed to parse # of lanes: %d\n",
->>   				err);
->> -			return err;
->> +			goto err_node_put;
->>   		}
->>   
->>   		if (value > 16) {
->>   			dev_err(dev, "invalid # of lanes: %u\n", value);
->> -			return -EINVAL;
->> +			err = -EINVAL;
->> +			goto err_node_put;
->>   		}
->>   
->>   		lanes |= value << (index << 3);
->> @@ -2272,13 +2274,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
->>   		lane += value;
->>   
->>   		rp = devm_kzalloc(dev, sizeof(*rp), GFP_KERNEL);
->> -		if (!rp)
->> -			return -ENOMEM;
->> +		if (!rp) {
->> +			err = -ENOMEM;
->> +			goto err_node_put;
->> +		}
->>   
->>   		err = of_address_to_resource(port, 0, &rp->regs);
->>   		if (err < 0) {
->>   			dev_err(dev, "failed to parse address: %d\n", err);
->> -			return err;
->> +			goto err_node_put;
->>   		}
->>   
->>   		INIT_LIST_HEAD(&rp->list);
->> @@ -2330,6 +2334,10 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
->>   		return err;
->>   
->>   	return 0;
->> +
->> +err_node_put:
->> +	of_node_put(port);
->> +	return err;
->>   }
->>   
->>   /*
->> -- 
->> 2.19.1
->>
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS2lzaG9uIFZpamF5IEFi
+cmFoYW0gSSA8a2lzaG9uQHRpLmNvbT4NCj4gU2VudDogMjAxOeW5tDjmnIgxM+aXpSAxMjozNg0K
+PiBUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+OyBsb3JlbnpvLnBpZXJhbGlz
+aUBhcm0uY29tOw0KPiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyBNLmguIExpYW4gPG1pbmdodWFuLmxp
+YW5AbnhwLmNvbT47IE1pbmdrYWkgSHUNCj4gPG1pbmdrYWkuaHVAbnhwLmNvbT47IFJveSBaYW5n
+IDxyb3kuemFuZ0BueHAuY29tPjsNCj4gbC5zdGFjaEBwZW5ndXRyb25peC5kZTsgdHBpZXBob0Bp
+bXBpbmouY29tOyBMZW9uYXJkIENyZXN0ZXoNCj4gPGxlb25hcmQuY3Jlc3RlekBueHAuY29tPjsg
+YW5kcmV3LnNtaXJub3ZAZ21haWwuY29tOw0KPiB5dWUud2FuZ0BhbWxvZ2ljLmNvbTsgaGF5YXNo
+aS5rdW5paGlrb0Bzb2Npb25leHQuY29tOw0KPiBkd213QGFtYXpvbi5jby51azsgam9ubnljQGFt
+YXpvbi5jb207IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOw0KPiBsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogW0VYVF0gUmU6IFtQQVRDSHY0
+IDEvMl0gUENJOiBsYXllcnNjYXBlOiBBZGQgdGhlIGJhcl9maXhlZF82NGJpdA0KPiBwcm9wZXJ0
+eSBpbiBFUCBkcml2ZXIuDQo+IA0KPiBDYXV0aW9uOiBFWFQgRW1haWwNCj4gDQo+IE9uIDEzLzA4
+LzE5IDg6MjMgQU0sIFhpYW93ZWkgQmFvIHdyb3RlOg0KPiA+IFRoZSBQQ0llIGNvbnRyb2xsZXIg
+b2YgbGF5ZXJzY2FwZSBqdXN0IGhhdmUgNCBCQVJzLCBCQVIwIGFuZCBCQVIxIGlzDQo+ID4gMzJi
+aXQsIEJBUjMgYW5kIEJBUjQgaXMgNjRiaXQsIHRoaXMgaXMgZGV0ZXJtaW5lZCBieSBoYXJkd2Fy
+ZSwNCj4gDQo+IERvIHlvdSBtZWFuIEJBUjIgaW5zdGVhZCBvZiBCQVIzIGhlcmU/DQpZZXMuDQo+
+IA0KPiBUaGFua3MNCj4gS2lzaG9uDQo+IA0KPiA+IHNvIHNldCB0aGUgYmFyX2ZpeGVkXzY0Yml0
+IHdpdGggMHgxNC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFhpYW93ZWkgQmFvIDx4aWFvd2Vp
+LmJhb0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+IHYyOg0KPiA+ICAtIFJlcGxhY2UgdmFsdWUgMHgx
+NCB3aXRoIGEgbWFjcm8uDQo+ID4gdjM6DQo+ID4gIC0gTm8gY2hhbmdlLg0KPiA+IHY0Og0KPiA+
+ICAtIHNlbmQgdGhlIHBhdGNoIGFnYWluIHdpdGggJy0tdG8nLg0KPiA+DQo+ID4gIGRyaXZlcnMv
+cGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMgfCAgICAxICsNCj4gPiAgMSBm
+aWxlcyBjaGFuZ2VkLCAxIGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAu
+Yw0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0K
+PiA+IGluZGV4IGJlNjFkOTYuLjIyN2MzM2IgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kv
+Y29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNp
+L2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4gPiBAQCAtNDQsNiArNDQsNyBA
+QCBzdGF0aWMgaW50IGxzX3BjaWVfZXN0YWJsaXNoX2xpbmsoc3RydWN0IGR3X3BjaWUgKnBjaSkN
+Cj4gPiAgICAgICAubGlua3VwX25vdGlmaWVyID0gZmFsc2UsDQo+ID4gICAgICAgLm1zaV9jYXBh
+YmxlID0gdHJ1ZSwNCj4gPiAgICAgICAubXNpeF9jYXBhYmxlID0gZmFsc2UsDQo+ID4gKyAgICAg
+LmJhcl9maXhlZF82NGJpdCA9ICgxIDw8IEJBUl8yKSB8ICgxIDw8IEJBUl80KSwNCj4gPiAgfTsN
+Cj4gPg0KPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9lcGNfZmVhdHVyZXMqDQo+ID4NCg==
