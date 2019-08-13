@@ -2,113 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ADB48B001
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2019 08:38:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8C608B020
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2019 08:50:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfHMGiq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Aug 2019 02:38:46 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:42262 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726600AbfHMGip (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 13 Aug 2019 02:38:45 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 705381A02E1;
-        Tue, 13 Aug 2019 08:38:43 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2665A1A0135;
-        Tue, 13 Aug 2019 08:38:35 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CD44B40305;
-        Tue, 13 Aug 2019 14:38:24 +0800 (SGT)
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
-        l.stach@pengutronix.de, kishon@ti.com, tpiepho@impinj.com,
-        leonard.crestez@nxp.com, andrew.smirnov@gmail.com,
-        yue.wang@amlogic.com, hayashi.kunihiko@socionext.com,
-        dwmw@amazon.co.uk, jonnyc@amazon.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCHv5 2/2] PCI: layerscape: Add CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately
-Date:   Tue, 13 Aug 2019 14:28:40 +0800
-Message-Id: <20190813062840.2733-2-xiaowei.bao@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20190813062840.2733-1-xiaowei.bao@nxp.com>
-References: <20190813062840.2733-1-xiaowei.bao@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726637AbfHMGuj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Aug 2019 02:50:39 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41445 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbfHMGuj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Aug 2019 02:50:39 -0400
+Received: from mail-pg1-f199.google.com ([209.85.215.199])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hxQdh-0003ZZ-61
+        for linux-pci@vger.kernel.org; Tue, 13 Aug 2019 06:50:37 +0000
+Received: by mail-pg1-f199.google.com with SMTP id u1so66009203pgr.13
+        for <linux-pci@vger.kernel.org>; Mon, 12 Aug 2019 23:50:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=jVQ2Gzp/+e8TohHkm7q7ETycYMK/SMdCbf9g5Irvyvg=;
+        b=kZ4aMsFVWbd4iA47HJ0wgP0q3c3FozgAtQPR8ldrnl1bP826RajkIOLCpEyECHegI9
+         LD1PlblnGSVdNfvtsWE7+kbwcXiU7fiMqnbhvDxh/lEd+oyYITdYJLpw5wg0Zoq/4d+M
+         DTCykgvlD+E01g+ruq02DE+m69PEdpvv7sHDNaKUJxhl32KmDGwdWGpOnW41aLiIwb8D
+         ixWlgdy4YOnRUEVCujRM2ecMIpxQ3JCL3UDq8vY5tS22s+En7fd1WjxI6FK+8TT4cWa/
+         fBoTWVlrlT2Fl5bo1nEIJuqo6g1Rk1jy+ivyQmBboC+yiGykWDWgkQWnRebEOnlgQxMD
+         9dwA==
+X-Gm-Message-State: APjAAAW8WDPNRABJ9LaX9dLWlW23AxNenEe6dRsCKU1xXmnykr+lJRik
+        C9QcCRrcKr8iZ3nrUl5iRINQNxJWvqJThu86EuftPYBVecCsnC0eI4JfnjhTVuTH28wcS33r8N7
+        Vm0n+yJ3JGKmx8UOoT8nvyhXsv+v3lA6iDRzpJg==
+X-Received: by 2002:a17:902:2be6:: with SMTP id l93mr36889592plb.0.1565679035897;
+        Mon, 12 Aug 2019 23:50:35 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxV5JYh7OeuMp54v5e+FUiqIjAbEOKkw1M9m4C8tWlOvo6l1/zgoHx2bRdjtM4EG8QEJ730YA==
+X-Received: by 2002:a17:902:2be6:: with SMTP id l93mr36889576plb.0.1565679035632;
+        Mon, 12 Aug 2019 23:50:35 -0700 (PDT)
+Received: from 2001-b011-380f-37d3-69dc-5ce4-19b8-561b.dynamic-ip6.hinet.net (2001-b011-380f-37d3-69dc-5ce4-19b8-561b.dynamic-ip6.hinet.net. [2001:b011:380f:37d3:69dc:5ce4:19b8:561b])
+        by smtp.gmail.com with ESMTPSA id q126sm113270436pfq.123.2019.08.12.23.50.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 23:50:35 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: Titan Ridge xHCI may stop to working after re-plugging the dock
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <203745C2-85AF-4A37-8628-636632D14564@canonical.com>
+Date:   Tue, 13 Aug 2019 14:50:32 +0800
+Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kent Lin <kent.lin@canonical.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Message-Id: <78466959-E500-4AA0-8440-CBF80DBFE260@canonical.com>
+References: <993E78A1-2A60-46D8-AA51-F4CB077E48D1@canonical.com>
+ <1562759399.5312.6.camel@suse.com> <87pnm6sd10.fsf@linux.intel.com>
+ <77580193-D67B-48B1-8528-03ED4E7E8D64@canonical.com>
+ <87blxqs3fh.fsf@linux.intel.com>
+ <749516DB-65B6-4D59-8C77-7883649D1F25@canonical.com>
+ <8113f4a4-e96e-9b73-cd7a-1dbb800d68bb@linux.intel.com>
+ <203745C2-85AF-4A37-8628-636632D14564@canonical.com>
+To:     Mathias Nyman <mathias.nyman@linux.intel.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately.
+Hi Mathias,
 
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
----
-v2:
- - No change.
-v3:
- - modify the commit message.
-v4:
- - send the patch again with '--to'.
-v5:
- - No change.
+at 21:24, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
 
- drivers/pci/controller/dwc/Kconfig  | 20 ++++++++++++++++++--
- drivers/pci/controller/dwc/Makefile |  3 ++-
- 2 files changed, 20 insertions(+), 3 deletions(-)
+> at 22:45, Mathias Nyman <mathias.nyman@linux.intel.com> wrote:
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 6ea778a..869c645 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -131,13 +131,29 @@ config PCI_KEYSTONE_EP
- 	  DesignWare core functions to implement the driver.
- 
- config PCI_LAYERSCAPE
--	bool "Freescale Layerscape PCIe controller"
-+	bool "Freescale Layerscape PCIe controller - Host mode"
- 	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select MFD_SYSCON
- 	select PCIE_DW_HOST
- 	help
--	  Say Y here if you want PCIe controller support on Layerscape SoCs.
-+	  Say Y here if you want to enable PCIe controller support on Layerscape
-+	  SoCs to work in Host mode.
-+	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-+	  determines which PCIe controller works in EP mode and which PCIe
-+	  controller works in RC mode.
-+
-+config PCI_LAYERSCAPE_EP
-+	bool "Freescale Layerscape PCIe controller - Endpoint mode"
-+	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
-+	depends on PCI_ENDPOINT
-+	select PCIE_DW_EP
-+	help
-+	  Say Y here if you want to enable PCIe controller support on Layerscape
-+	  SoCs to work in Endpoint mode.
-+	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-+	  determines which PCIe controller works in EP mode and which PCIe
-+	  controller works in RC mode.
- 
- config PCI_HISI
- 	depends on OF && (ARM64 || COMPILE_TEST)
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index b085dfd..824fde7 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -8,7 +8,8 @@ obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
- obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
- obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
- obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
--obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o pci-layerscape-ep.o
-+obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
-+obj-$(CONFIG_PCI_LAYERSCAPE_EP) += pci-layerscape-ep.o
- obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
--- 
-2.9.5
+[snipped]
+
+> Yes, disabling runtime PM can workaround this issue.
+
+What’s next step here? Is it a firmware bug?
+
+Kai-Heng
+
+>
+> Kai-Heng
+>
+>> -Mathias
+
 
