@@ -2,186 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 445108BEA6
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2019 18:33:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC6B58BEF1
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2019 18:49:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfHMQd0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Aug 2019 12:33:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:40390 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726637AbfHMQd0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 13 Aug 2019 12:33:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AFD3337;
-        Tue, 13 Aug 2019 09:33:23 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C64A03F706;
-        Tue, 13 Aug 2019 09:33:20 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 17:33:18 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V16 00/13] PCI: tegra: Add Tegra194 PCIe support
-Message-ID: <20190813163318.GB5070@e121166-lin.cambridge.arm.com>
-References: <20190813113627.27251-1-vidyas@nvidia.com>
+        id S1726986AbfHMQtC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Aug 2019 12:49:02 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:14867 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbfHMQtC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Aug 2019 12:49:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1565714941; x=1597250941;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=dDOBz4vnkONayUHCFyTxOXbi2aI1o2S0rcTQvTWaqjY=;
+  b=LZOR6+sJtjQLG57YytRl4+N2RHm+Sjz5oQbVWHsQ3HxeTq1CZHDJ5C7S
+   NgG1tevExwjDSHxDN1fPk35UJ65fUGcXT1tvHHbPD5PsY/tFDUrHJz+lF
+   o4fJAhUuoXEaALe9YHfc9fqpnf0WE3Ia5M5vdPo8IgmTRSBKgDu3S9uw8
+   I=;
+X-IronPort-AV: E=Sophos;i="5.64,382,1559520000"; 
+   d="scan'208";a="779080235"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 13 Aug 2019 16:48:58 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com (Postfix) with ESMTPS id E2E06A24B4;
+        Tue, 13 Aug 2019 16:48:57 +0000 (UTC)
+Received: from EX13D13UWA002.ant.amazon.com (10.43.160.172) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 13 Aug 2019 16:48:57 +0000
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13D13UWA002.ant.amazon.com (10.43.160.172) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 13 Aug 2019 16:48:57 +0000
+Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
+ EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1367.000;
+ Tue, 13 Aug 2019 16:48:56 +0000
+From:   "Chocron, Jonathan" <jonnyc@amazon.com>
+To:     "robh@kernel.org" <robh@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Hanoch, Uri" <hanochu@amazon.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "Wasserstrom, Barak" <barakw@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>
+Subject: Re: [PATCH v3 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe
+ host bridge binding
+Thread-Topic: [PATCH v3 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs
+ PCIe host bridge binding
+Thread-Index: AQHVQTjX5ibJ8twrf0Koy9tsFtVyC6b5VbUAgAAV1QA=
+Date:   Tue, 13 Aug 2019 16:48:56 +0000
+Message-ID: <06c198ff2f8f9b1b29283a7b8764ab776c1e574b.camel@amazon.com>
+References: <20190723092529.11310-1-jonnyc@amazon.com>
+         <20190723092711.11786-1-jonnyc@amazon.com> <20190813153046.GA31480@bogus>
+In-Reply-To: <20190813153046.GA31480@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.162.67]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BB54D34F35A0854085A24351C45F19EB@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813113627.27251-1-vidyas@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 05:06:14PM +0530, Vidya Sagar wrote:
-> Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
-> There are two Universal PHY (UPHY) blocks with each supporting 12(HSIO:
-> Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
-> Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 uses
-> UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each PCIe
-> controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
-> core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is used
-> to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bricks)
-> to PCIe controller
-> This patch series
-> - Adds support for P2U PHY driver
-> - Adds support for PCIe host controller
-> - Adds device tree nodes each PCIe controllers
-> - Enables nodes applicable to p2972-0000 platform
-> - Adds helper APIs in Designware core driver to get capability regs offset
-> - Adds defines for new feature registers of PCIe spec revision 4
-> - Makes changes in DesignWare core driver to get Tegra194 PCIe working
-> 
-> Testing done on P2972-0000 platform
-> - Able to get PCIe link up with on-board Marvel eSATA controller
-> - Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
-> - Able to do data transfers with both SATA drives and NVMe cards
-> - Able to perform suspend-resume sequence
-> 
-> Note
-> - Enabling x8 slot on P2972-0000 platform requires pinmux driver for Tegra194.
->   It is being worked on currently and hence Controller:5 (i.e. x8 slot) is
->   disabled in this patch series. A future patch series would enable this.
-> - This series is based on top of the following series
->   Jisheng's patches to add support to .remove() in Designware sub-system
->   https://patchwork.kernel.org/project/linux-pci/list/?series=98559
->   (Update: Jisheng's patches are now accepted and applied for v5.2)
->   My patches made on top of Jisheng's patches to export various symbols
->   http://patchwork.ozlabs.org/project/linux-pci/list/?series=115671
->   (Update: My above patch series is accepted and applied for v5.3)
->   Another patch of mine to enable BPMP-FW resume in noirq phase
->   http://patchwork.ozlabs.org/patch/1140973/
->   (This is already accepted)
-> 
-> V16:
-> * Added empty lines (cosmetic changes) where required in pcie-tegra194.c file
->   to address Lorenzo's review comments.
-> 
-> V15:
-> * Refactored pcie-tegra194.c code to call only tegra_bpmp_transfer() API
->   in both .probe() path and .resume_noirq() path.
-> 
-> V14:
-> * Addressed Lorenzo's review comments in pcie-tegra194.c file (Patch 13/13)
-> * Added a new patch to export dw_pcie_wait_for_link() API
-> 
-> V13:
-> * Addressed Bjorn's review comments for adding Gen-4 specific defines to pci_regs.h header file
-> 
-> V12:
-> * Modified the commit message of patch-3 in this series to address review
->   comments from Lorenzo
-> 
-> V11:
-> * Removed device-tree patches from the series as they are applied to relevant
->   Tegra specific trees by Thierry Reding.
-> * Included older Tegra chips to extend quirk that disables MSI interrupt being
->   used for Tegra PCIe root ports.
-> * Addressed review comments in P2U driver file.
-> 
-> V10:
-> * Used _relaxed() versions of readl() & writel()
-> 
-> V9:
-> * Made the drivers dependent on ARCH_TEGRA_194_SOC directly
-> * Addressed review comments from Dmitry
-> 
-> V8:
-> * Changed P2U driver file name from pcie-p2u-tegra194.c to phy-tegra194-p2u.c
-> * Addressed review comments from Thierry and Rob
-> 
-> V7:
-> * Took care of review comments from Rob
-> * Added a quirk to disable MSI for root ports
-> * Removed using pcie_pme_disable_msi() API in host controller driver
-> 
-> V6:
-> * Removed patch that exports pcie_bus_config symbol
-> * Took care of review comments from Thierry and Rob
-> 
-> V5:
-> * Removed redundant APIs in pcie-designware-ep.c file after moving them
->   to pcie-designware.c file based on Bjorn's review comments
-> 
-> V4:
-> * Rebased on top of linux-next top of the tree
-> * Addressed Gustavo's comments and added his Ack for some of the changes.
-> 
-> V3:
-> * Addressed review comments from Thierry
-> 
-> V2:
-> * Addressed review comments from Bjorn, Thierry, Jonathan, Rob & Kishon
-> * Added more patches in v2 series
-> 
-> Vidya Sagar (13):
->   PCI: Add #defines for some of PCIe spec r4.0 features
->   PCI: Disable MSI for Tegra root ports
->   PCI: dwc: Perform dbi regs write lock towards the end
->   PCI: dwc: Move config space capability search API
->   PCI: dwc: Add ext config space capability search API
->   PCI: dwc: Export dw_pcie_wait_for_link() API
->   dt-bindings: PCI: designware: Add binding for CDM register check
->   PCI: dwc: Add support to enable CDM register check
->   dt-bindings: Add PCIe supports-clkreq property
->   dt-bindings: PCI: tegra: Add device tree support for Tegra194
->   dt-bindings: PHY: P2U: Add Tegra194 P2U block
->   phy: tegra: Add PCIe PIPE2UPHY support
->   PCI: tegra: Add Tegra194 PCIe support
-> 
->  .../bindings/pci/designware-pcie.txt          |    5 +
->  .../bindings/pci/nvidia,tegra194-pcie.txt     |  155 ++
->  Documentation/devicetree/bindings/pci/pci.txt |    5 +
->  .../bindings/phy/phy-tegra194-p2u.txt         |   28 +
->  drivers/pci/controller/dwc/Kconfig            |   10 +
->  drivers/pci/controller/dwc/Makefile           |    1 +
->  .../pci/controller/dwc/pcie-designware-ep.c   |   37 +-
->  .../pci/controller/dwc/pcie-designware-host.c |   14 +-
->  drivers/pci/controller/dwc/pcie-designware.c  |   88 +
->  drivers/pci/controller/dwc/pcie-designware.h  |   12 +
->  drivers/pci/controller/dwc/pcie-tegra194.c    | 1631 +++++++++++++++++
->  drivers/pci/quirks.c                          |   53 +
->  drivers/phy/tegra/Kconfig                     |    7 +
->  drivers/phy/tegra/Makefile                    |    1 +
->  drivers/phy/tegra/phy-tegra194-p2u.c          |  120 ++
->  include/uapi/linux/pci_regs.h                 |   14 +-
->  16 files changed, 2139 insertions(+), 42 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
->  create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
->  create mode 100644 drivers/phy/tegra/phy-tegra194-p2u.c
-> 
-
-I have applied it to pci/tegra, subject to kbuild test validation,
-for v5.4.
-
-Thanks,
-Lorenzo
+T24gVHVlLCAyMDE5LTA4LTEzIGF0IDA5OjMwIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gVHVlLCBKdWwgMjMsIDIwMTkgYXQgMTI6Mjc6MDhQTSArMDMwMCwgSm9uYXRoYW4gQ2hvY3Jv
+biB3cm90ZToNCj4gPiBEb2N1bWVudCBBbWF6b24ncyBBbm5hcHVybmEgTGFicyBQQ0llIGhvc3Qg
+YnJpZGdlLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEpvbmF0aGFuIENob2Nyb24gPGpvbm55
+Y0BhbWF6b24uY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kv
+cGNpZS1hbC50eHQgICAgICAgfCA0NQ0KPiA+ICsrKysrKysrKysrKysrKysrKysNCj4gPiAgTUFJ
+TlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDMgKy0NCj4gPiAg
+MiBmaWxlcyBjaGFuZ2VkLCA0NyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3Bj
+aWUtDQo+ID4gYWwudHh0DQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9wY2kvcGNpZS1hbC50eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9wY2kvcGNpZS1hbC50eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0
+NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uODk4NzYxOTBlYjVhDQo+ID4gLS0tIC9kZXYvbnVs
+bA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvcGNpZS1h
+bC50eHQNCj4gPiBAQCAtMCwwICsxLDQ1IEBADQo+ID4gKyogQW1hem9uIEFubmFwdXJuYSBMYWJz
+IFBDSWUgaG9zdCBicmlkZ2UNCj4gPiArDQo+ID4gK0FtYXpvbidzIEFubmFwdXJuYSBMYWJzIFBD
+SWUgSG9zdCBDb250cm9sbGVyIGlzIGJhc2VkIG9uIHRoZQ0KPiA+IFN5bm9wc3lzIERlc2lnbldh
+cmUNCj4gPiArUENJIGNvcmUuDQo+ID4gK0l0IHNoYXJlcyBjb21tb24gZnVuY3Rpb25zIHdpdGgg
+dGhlIFBDSWUgRGVzaWduV2FyZSBjb3JlIGRyaXZlcg0KPiA+IGFuZCBpbmhlcml0cw0KPiANCj4g
+RHJpdmVyIGRldGFpbHMgYXJlIGlycmVsZXZhbnQgdG8gdGhlIGJpbmRpbmcuDQo+IA0KV2lsbCBy
+ZW1vdmUuDQoNCj4gPiArY29tbW9uIHByb3BlcnRpZXMgZGVmaW5lZCBpbg0KPiA+IERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvZGVzaWdud2FyZS1wY2llLnR4dC4NCj4gPiAr
+UHJvcGVydGllcyBvZiB0aGUgaG9zdCBjb250cm9sbGVyIG5vZGUgdGhhdCBkaWZmZXIgZnJvbSBp
+dCBhcmU6DQo+ID4gKw0KPiA+ICstIGNvbXBhdGlibGU6DQo+ID4gKwlVc2FnZTogcmVxdWlyZWQN
+Cj4gPiArCVZhbHVlIHR5cGU6IDxzdHJpbmdsaXN0Pg0KPiA+ICsJRGVmaW5pdGlvbjogVmFsdWUg
+c2hvdWxkIGNvbnRhaW4NCj4gPiArCQkJLSAiYW1hem9uLGFsLXBjaWUiDQo+IA0KPiBOZWVkcyB0
+byBiZSBTb0Mgc3BlY2lmaWMuDQo+IA0KSSdtIG5vdCBzdXJlIEkgZm9sbG93LiBUaGUgUENJZSBj
+b250cm9sbGVyIGNhbiBiZSBpbXBsZW1lbnRlZCBpbg0KZGlmZmVyZW50IFNvQ3MuIENvdWxkIHlv
+dSBwbGVhc2UgY2xhcmlmeT8NCg0KPiA+ICsNCj4gPiArLSByZWc6DQo+ID4gKwlVc2FnZTogcmVx
+dWlyZWQNCj4gPiArCVZhbHVlIHR5cGU6IDxwcm9wLWVuY29kZWQtYXJyYXk+DQo+ID4gKwlEZWZp
+bml0aW9uOiBSZWdpc3RlciByYW5nZXMgYXMgbGlzdGVkIGluIHRoZSByZWctbmFtZXMgcHJvcGVy
+dHkNCj4gPiArDQo+ID4gKy0gcmVnLW5hbWVzOg0KPiA+ICsJVXNhZ2U6IHJlcXVpcmVkDQo+ID4g
+KwlWYWx1ZSB0eXBlOiA8c3RyaW5nbGlzdD4NCj4gPiArCURlZmluaXRpb246IE11c3QgaW5jbHVk
+ZSB0aGUgZm9sbG93aW5nIGVudHJpZXMNCj4gPiArCQkJLSAiY29uZmlnIglQQ0llIEVDQU0gc3Bh
+Y2UNCj4gPiArCQkJLSAiY29udHJvbGxlciIJQUwgcHJvcHJpZXRhcnkgcmVnaXN0ZXJzDQo+ID4g
+KwkJCS0gImRiaSIJCURlc2lnbndhcmUgUENJZSByZWdpc3RlcnMNCj4gPiArDQo+ID4gK0V4YW1w
+bGU6DQo+ID4gKw0KPiA+ICsJcGNpZS1leHRlcm5hbDA6IHBjaWVAZmI2MDAwMDAgew0KPiA+ICsJ
+CWNvbXBhdGlibGUgPSAiYW1hem9uLGFsLXBjaWUiOw0KPiA+ICsJCXJlZyA9IDwweDAgMHhmYjYw
+MDAwMCAweDAgMHgwMDEwMDAwMA0KPiA+ICsJCSAgICAgICAweDAgMHhmZDgwMDAwMCAweDAgMHgw
+MDAxMDAwMA0KPiA+ICsJCSAgICAgICAweDAgMHhmZDgxMDAwMCAweDAgMHgwMDAwMTAwMD47DQo+
+ID4gKwkJcmVnLW5hbWVzID0gImNvbmZpZyIsICJjb250cm9sbGVyIiwgImRiaSI7DQo+ID4gKwkJ
+YnVzLXJhbmdlID0gPDAgMjU1PjsNCj4gPiArCQlkZXZpY2VfdHlwZSA9ICJwY2kiOw0KPiA+ICsJ
+CSNhZGRyZXNzLWNlbGxzID0gPDM+Ow0KPiA+ICsJCSNzaXplLWNlbGxzID0gPDI+Ow0KPiA+ICsJ
+CSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47DQo+ID4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDQ5
+IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ICsJCWludGVycnVwdC1tYXAtbWFzayA9IDwweDAw
+IDAgMCA3PjsNCj4gPiArCQlpbnRlcnJ1cHQtbWFwID0gPDB4MDAwMCAwIDAgMSAmZ2ljIEdJQ19T
+UEkgNDENCj4gPiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsgLyogSU5UYSAqLw0KPiA+ICsJCXJhbmdl
+cyA9IDwweDAyMDAwMDAwIDB4MCAweGMwMDEwMDAwIDB4MCAweGMwMDEwMDAwIDB4MA0KPiA+IDB4
+MDdmZjAwMDA+Ow0KPiA+ICsJfTsNCj4gPiBkaWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlO
+VEFJTkVSUw0KPiA+IGluZGV4IDVhNjEzN2RmM2YwZS4uMjljY2ExNGEwNWE2IDEwMDY0NA0KPiA+
+IC0tLSBhL01BSU5UQUlORVJTDQo+ID4gKysrIGIvTUFJTlRBSU5FUlMNCj4gPiBAQCAtMTIyMDEs
+MTAgKzEyMjAxLDExIEBAIFQ6CWdpdA0KPiA+IGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20v
+bGludXgva2VybmVsL2dpdC9scGllcmFsaXNpL3BjaS5naXQvDQo+ID4gIFM6CVN1cHBvcnRlZA0K
+PiA+ICBGOglkcml2ZXJzL3BjaS9jb250cm9sbGVyLw0KPiA+ICANCj4gPiAtUENJRSBEUklWRVIg
+Rk9SIEFOTkFQVVJOQSBMQUJTDQo+ID4gK1BDSUUgRFJJVkVSIEZPUiBBTUFaT04gQU5OQVBVUk5B
+IExBQlMNCj4gPiAgTToJSm9uYXRoYW4gQ2hvY3JvbiA8am9ubnljQGFtYXpvbi5jb20+DQo+ID4g
+IEw6CWxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiAgUzoJTWFpbnRhaW5lZA0KPiA+ICtG
+OglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3BjaWUtYWwudHh0DQo+ID4g
+IEY6CWRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtYWwuYw0KPiA+ICANCj4gPiAgUENJ
+RSBEUklWRVIgRk9SIEFNTE9HSUMgTUVTT04NCj4gPiAtLSANCj4gPiAyLjE3LjENCj4gPiANCg==
