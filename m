@@ -2,18 +2,18 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A65D8C48E
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2019 00:59:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4814A8C4C7
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2019 01:27:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfHMW7a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Aug 2019 18:59:30 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:43006 "EHLO
+        id S1726155AbfHMX1A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Aug 2019 19:27:00 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:65239 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfHMW7a (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Aug 2019 18:59:30 -0400
+        with ESMTP id S1726126AbfHMX1A (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Aug 2019 19:27:00 -0400
 Received: from 79.184.255.155.ipv4.supernova.orange.pl (79.184.255.155) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 8199637f5f8090f3; Wed, 14 Aug 2019 00:59:26 +0200
+ id 24945f829697e88f; Wed, 14 Aug 2019 01:26:56 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -24,11 +24,11 @@ Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Linux PM <linux-pm@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/5] PCI / PM: Check for error when reading Power State
-Date:   Wed, 14 Aug 2019 00:59:26 +0200
-Message-ID: <27964051.NtteWoIlyA@kreacher>
-In-Reply-To: <20190809220116.GA221706@google.com>
-References: <20190805205214.194981-1-helgaas@kernel.org> <CAJZ5v0jFPU38zDugumJB0iq5d-LctcMCdygTrFU4=gYP3UJ+oA@mail.gmail.com> <20190809220116.GA221706@google.com>
+Subject: Re: [PATCH 3/5] PCI / PM: Check for error when reading PME status
+Date:   Wed, 14 Aug 2019 01:26:56 +0200
+Message-ID: <2341382.rHjnX2mYrU@kreacher>
+In-Reply-To: <20190806133638.GQ151852@google.com>
+References: <20190805205214.194981-1-helgaas@kernel.org> <CAJZ5v0i5oVuZMxFmYiLnYPk=BsFGGiYntez3m1V5xeWgTgA4hg@mail.gmail.com> <20190806133638.GQ151852@google.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -37,118 +37,111 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Saturday, August 10, 2019 12:01:16 AM CEST Bjorn Helgaas wrote:
-> On Mon, Aug 05, 2019 at 11:09:19PM +0200, Rafael J. Wysocki wrote:
+On Tuesday, August 6, 2019 3:36:38 PM CEST Bjorn Helgaas wrote:
+> On Mon, Aug 05, 2019 at 11:02:51PM +0200, Rafael J. Wysocki wrote:
 > > On Mon, Aug 5, 2019 at 10:52 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 > > >
-> > > From: Bjorn Helgaas <bhelgaas@google.com>
+> > > pci_check_pme_status() reads the Power Management capability to determine
+> > > whether a device has generated a PME.  The capability is in config space,
+> > > which is accessible in D0, D1, D2, and D3hot, but not in D3cold.
 > > >
-> > > The Power Management Status Register is in config space, and reads while
-> > > the device is in D3cold typically return ~0 data (PCI_ERROR_RESPONSE).  If
-> > > we just look at the PCI_PM_CTRL_STATE_MASK bits, that is 0x3, which looks
-> > > like D3hot, not D3cold.
+> > > If we call pci_check_pme_status() on a device that's in D3cold, config
+> > > reads fail and return ~0 data, which we erroneously interpreted as "the
+> > > device has generated a PME".
 > > >
-> > > Check the entire register for PCI_ERROR_RESPONSE so we can distinguish
-> > > D3cold from D3hot.
+> > > 000dd5316e1c ("PCI: Do not poll for PME if the device is in D3cold")
+> > > avoided many of these problems by avoiding pci_check_pme_status() if we
+> > > think the device is in D3cold.  However, it is not a complete fix because
+> > > the device may go to D3cold after we check its power state but before
+> > > pci_check_pme_status() reads the Power Management Status Register.
 > > >
+> > > Return false ("device has not generated a PME") if we get an error response
+> > > reading the Power Management Status Register.
+> > >
+> > > Fixes: 000dd5316e1c ("PCI: Do not poll for PME if the device is in D3cold")
+> > > Fixes: 71a83bd727cc ("PCI/PM: add runtime PM support to PCIe port")
 > > > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > > > ---
-> > >  drivers/pci/pci.c   |  6 +++---
-> > >  include/linux/pci.h | 13 +++++++++++++
-> > >  2 files changed, 16 insertions(+), 3 deletions(-)
+> > >  drivers/pci/pci.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
 > > >
 > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > index af6a97d7012b..d8686e3cd5eb 100644
+> > > index 984171d40858..af6a97d7012b 100644
 > > > --- a/drivers/pci/pci.c
 > > > +++ b/drivers/pci/pci.c
-> > > @@ -894,7 +894,7 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
-> > >                 udelay(PCI_PM_D2_DELAY);
+> > > @@ -2008,6 +2008,9 @@ bool pci_check_pme_status(struct pci_dev *dev)
 > > >
-> > >         pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> > > -       dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
-> > > +       dev->current_state = pci_power_state(pmcsr);
+> > >         pmcsr_pos = dev->pm_cap + PCI_PM_CTRL;
+> > >         pci_read_config_word(dev, pmcsr_pos, &pmcsr);
+> > > +       if (pmcsr == (u16) PCI_ERROR_RESPONSE)
+> > > +               return false;
 > > 
-> > But pci_raw_set_power_state() should not even be called for devices in
-> > D3_cold, so this at best is redundant.
+> > No, sorry.
+> > 
+> > We tried that and it didn't work.
+> > 
+> > pcie_pme_handle_request() depends on this returning "true" for all
+> > bits set, as from its perspective "device is not accessible" may very
+> > well mean "device may have signaled PME".
 > 
-> I tried to verify that we don't call pci_raw_set_power_state() for
-> devices in D3cold, but it wasn't obvious to me.  Is there an easy way
-> to verify that?  I'd rather have code that doesn't rely on deep
-> knowledge about other areas.
-
-It is called in two places, pci_power_up() and pci_set_power_state().
-
-pci_power_up() is called on resume when the whole hierarchy is
-turned on and pci_set_power_state() explicitly powers up the
-device if in D3cold (with the help of the platform).
-
-And the "device not accessible at all" case should be covered by patch [2/5]
-in this series.
-
-> Even if the device was in, say D0, what if it is hot-removed just
-> before we read PCI_PM_CTRL?
-
-I guess you mean surprise-hot-removed?
-
-Then it may as well be hot-removed after setting current_state.
-
-> We'll set dev->current_state to D3hot,
-> when I think D3cold would better correspond to the state of the
-> device.  Maybe that's harmless, but I don't know how to verify that.
-
-Well, D3cold may just be equally misleading, because the device may
-very well not be present at all any more.
-
-> > >         if (dev->current_state != state && printk_ratelimit())
-> > >                 pci_info(dev, "Refused to change power state, currently in D%d\n",
-> > >                          dev->current_state);
-> > > @@ -942,7 +942,7 @@ void pci_update_current_state(struct pci_dev *dev, pci_power_t state)
-> > >                 u16 pmcsr;
-> > >
-> > >                 pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> > > -               dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
-> > > +               dev->current_state = pci_power_state(pmcsr);
-> > 
-> > The if () branch above should cover the D3cold case, shouldn't it?
+> Right, it's obviously wrong in the case of devices that advertise
+> D3cold in PME_Support, i.e., devices that can generate PME even with
+> main power off.  Also, we may want to try to wake up devices if the
+> config read fails for a reason other than the device being in D3cold.
 > 
-> You mean the "if (platform_pci_get_power_state(dev) == PCI_D3cold)"
-> test?
+> What I don't like about the current code is that it checks
+> PCI_PM_CTRL_PME_STATUS in data that may be completely bogus.
 
-Not exactly.
+Whether or not the other bits in the register make sense doesn't
+matter here.  Only the PME_STATUS bit matters.
 
-I mean "if (platform_pci_get_power_state(dev) == PCI_D3cold ||
-!pci_device_is_present(dev))".
-
-> platform_pci_get_power_state() returns PCI_UNKNOWN in some cases.
-> When that happens, might we not read PCI_PM_CTRL of a device in
-> D3cold?  I think this also has the same hotplug question as above.
-
-Surprise hot-removal can take place at any time, in particular after setting
-current_state, so adding extra checks here doesn't prevent the value of
-it from becoming stale at least sometimes anyway.
-
-> > >         } else {
-> > >                 dev->current_state = state;
-> > >         }
-> > > @@ -1677,7 +1677,7 @@ static int pci_enable_device_flags(struct pci_dev *dev, unsigned long flags)
-> > >         if (dev->pm_cap) {
-> > >                 u16 pmcsr;
-> > >                 pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> > > -               dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
-> > > +               dev->current_state = pci_power_state(pmcsr);
-> > 
-> > So this appears to be only case in which pci_power_state(pmcsr) is
-> > useful at all.
-> > 
-> > It might be better to use the code from it directly here IMO.
+> Do you think it would be better to do something like this:
 > 
-> If we're decoding CSR values, I think it's better to notice error
-> responses when we can than it is to try to figure out whether the
-> error response is theoretically impossible or the incorrectly decoded
-> value (e.g., D3hot instead of D3cold) is harmless.
+>   pci_read_config_word(dev, pmcsr_pos, &pmcsr);
+>   if (pmcsr == (u16) PCI_ERROR_RESPONSE) {
+>     if (pci_pme_capable(dev, PCI_PM_CAP_PME_D3cold))
+>       return true;
+>     return false;
+>   }
+> 
+> or maybe this:
+> 
+>   pci_read_config_word(dev, pmcsr_pos, &pmcsr);
+>   if (pmcsr == (u16) PCI_ERROR_RESPONSE)
+>     return true;
 
-IMO this means more complex code and extra overhead for a very
-little practical value, however.
+In this case it still would be prudent to check PME_ENABLE before
+returning true and so there is no practical difference between
+ERROR_RESPONSE and the valid data with PME_STATUS set.
+
+Except that in the ERROR_RESPONSE case we may as well avoid the
+PMCSR write which is not going to make a difference.
+
+> We should get PCI_ERROR_RESPONSE pretty reliably from devices in
+> D3cold, so the first possibility would cover that case.
+>
+> But since pci_check_pme_status() basically returns a hint ("true"
+> means a device *may* have generated a PME), and even if the hint is
+> wrong, the worst that happens is an unnecessary wakeup, maybe the
+> second possibility is safer.
+> 
+> What do you think?
+
+So if you really want to avoid the PMCSR write in the ERROR_RESPONSE case,
+something like this can be done IMO:
+
+ 			return false;
+ 
+ 	/* Clear PME status. */
+-	pmcsr |= PCI_PM_CTRL_PME_STATUS;
+ 	if (pmcsr & PCI_PM_CTRL_PME_ENABLE) {
++		if (pmcsr == (u16) PCI_ERROR_RESPONSE)
++			return true;
++
+ 		/* Disable PME to avoid interrupt flood. */
+ 		pmcsr &= ~PCI_PM_CTRL_PME_ENABLE;
+ 		ret = true;
+
 
 
 
