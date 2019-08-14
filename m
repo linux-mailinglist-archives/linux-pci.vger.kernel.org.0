@@ -2,86 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D52EE8D51C
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2019 15:40:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 413C18D4C5
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2019 15:32:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfHNNkB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Aug 2019 09:40:01 -0400
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:37952 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbfHNNkB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Aug 2019 09:40:01 -0400
-X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Wed, 14 Aug 2019 09:40:01 EDT
-IronPort-SDR: empYqsDDpfPL0FZ7aLvdd6wptwPOiYVsVjLlHUWTGkFyl/sCNeEipgjT2hqCZHmo5XvHX7oDV3
- g1J3HayDxo8bMJjNAamalm2+4bxR14MuN6c1WbJJ47sAqxtCVltangW8uQE9RaoWTCp7db24Ye
- u5IIIaN4OwF0Hte+gCIx1JRyaHV9hIBL2yN/7aeJxfXXE255TQUAProUdGN5QwvbBX441yevGR
- wIGI41C3BCjOVRGoHGQ064P6TwIrZRTmOnxWe4tCuQcCnqm+h1TpTPqfx+SuwRDgQoFfoN8wPv
- 62E=
-X-IronPort-AV: E=Sophos;i="5.64,385,1559548800"; 
-   d="scan'208";a="42250322"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa1.mentor.iphmx.com with ESMTP; 14 Aug 2019 05:32:54 -0800
-IronPort-SDR: Nwk2ypDHsIOB/YPEqXqwelYn4OpbW62jm5Od77HGnrAEpvX43FLJFpxiW859FTR7aoz0Fd5uAj
- YESTmnNyEX+R1syDRQK5Op/UvRdefB2WJDsGkS37fYjSGmzyHxMkCqtyuXUlDFlyZX4Fszn7zD
- wBv1kQFyIcpK+3EwJcr2IcFcgemtxpvh3Ak8ROh5nEfCOyuy8/JQ240N5blPzr2fEkdMQX9ROS
- +ULoJWi9kyjfsMomg86VLmQF/Sz2jmQ3Dz3bpZk+y9Z+i+ia1B4i5ulZyY1nsOfnmY1UgfUzp5
- mj4=
-From:   "Schmid, Carsten" <Carsten_Schmid@mentor.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: AW: [PATCH] usb: xhci-pci: reorder removal to avoid use-after-free
-Thread-Topic: [PATCH] usb: xhci-pci: reorder removal to avoid use-after-free
-Thread-Index: AQHVUpSXBvBKq97fNkaS50QUUgX/8qb6iOeAgAAZUcA=
-Date:   Wed, 14 Aug 2019 13:32:49 +0000
-Message-ID: <29aadcf136bb4d5285afb4fc5b500b49@SVR-IES-MBX-03.mgc.mentorg.com>
-References: <1565782781938.37795@mentor.com>
- <15aa45c7-6e45-d03f-9336-4291f8b2dc66@redhat.com>
-In-Reply-To: <15aa45c7-6e45-d03f-9336-4291f8b2dc66@redhat.com>
-Accept-Language: de-DE, en-IE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [137.202.0.90]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1728100AbfHNNcs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Aug 2019 09:32:48 -0400
+Received: from mga04.intel.com ([192.55.52.120]:10031 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727558AbfHNNcr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 14 Aug 2019 09:32:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 06:32:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,385,1559545200"; 
+   d="scan'208";a="178157851"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.164]) ([10.237.72.164])
+  by fmsmga007.fm.intel.com with ESMTP; 14 Aug 2019 06:32:44 -0700
+Subject: Re: Titan Ridge xHCI may stop to working after re-plugging the dock
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kent Lin <kent.lin@canonical.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>
+References: <993E78A1-2A60-46D8-AA51-F4CB077E48D1@canonical.com>
+ <1562759399.5312.6.camel@suse.com> <87pnm6sd10.fsf@linux.intel.com>
+ <77580193-D67B-48B1-8528-03ED4E7E8D64@canonical.com>
+ <87blxqs3fh.fsf@linux.intel.com>
+ <749516DB-65B6-4D59-8C77-7883649D1F25@canonical.com>
+ <8113f4a4-e96e-9b73-cd7a-1dbb800d68bb@linux.intel.com>
+ <203745C2-85AF-4A37-8628-636632D14564@canonical.com>
+ <78466959-E500-4AA0-8440-CBF80DBFE260@canonical.com>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Message-ID: <9f05b78d-7b28-1e8c-bdf9-22d0c148c719@linux.intel.com>
+Date:   Wed, 14 Aug 2019 16:34:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <78466959-E500-4AA0-8440-CBF80DBFE260@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PiA+IE9uIGRyaXZlciByZW1vdmFsLCB0aGUgcGxhdGZvcm1fZGV2aWNlX3VucmVnaXN0ZXIgY2Fs
-bA0KPiA+IGF0dGFjaGVkIHRocm91Z2ggZGV2bV9hZGRfYWN0aW9uX29yX3Jlc2V0IHdhcyBleGVj
-dXRlZA0KPiA+IGFmdGVyIHVzYl9oY2RfcGNpX3JlbW92ZS4NCj4gPiBUaGlzIGxlYWQgdG8gYSB1
-c2UtYWZ0ZXItZnJlZSBmb3IgdGhlIGlvbWVtIHJlc29yY2Ugb2YNCj4gPiB0aGUgeGhjaS1leHQt
-Y2FwcyBkcml2ZXIgaW4gdGhlIHBsYXRmb3JtIHJlbW92YWwNCj4gPiBiZWNhdXNlIHRoZSBwYXJl
-bnQgb2YgdGhlIHJlc291cmNlIHdhcyBmcmVlZCBlYXJsaWVyLg0KPiA+DQo+ID4gRml4IHRoaXMg
-YnkgcmVvcmRlcmluZyBvZiB0aGUgcmVtb3ZhbCBzZXF1ZW5jZS4NCj4gPg0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IENhcnN0ZW4gU2NobWlkIDxjYXJzdGVuX3NjaG1pZEBtZW50b3IuY29tPg0KPiANCj4g
-QXNzdW1pbmcgdGhpcyBoYXMgYmVlbiB0ZXN0ZWQsIG92ZXJhbCB0aGlzIGxvb2tzIGdvb2QgdG8g
-bWUuDQoNClRlc3RlZCBvbiA0LjE0LjEyOSwgcG9ydGVkIHRvIHY1LjIuNywgY29tcGlsZWQgdGhl
-cmUuDQoNCj4gDQo+IEJ1dCB0aGVyZSBhcmUgMiB0aGluZ3MgdG8gZml4Og0KPiANCj4gMSkgTWF5
-YmUgcGljayBhIG1vcmUgZGVzY3JpcHRpdmUgc3RydWN0IG1lbWJlciBuYW1lIHRoZW4gcGRldi4N
-Cj4gICAgIHBkZXYgd2l0aCBwY2ktZGV2aWNlcyBvZnRlbiBwb2ludHMgdG8gYSBwY2lfZGV2aWNl
-IC4uLg0KPiAgICAgSG93IGFib3V0OiByb2xlX3N3aXRjaF9wZGV2ID8NCg0KT2ssIGdvb2QgcG9p
-bnQuIEhhZCBwbGF0Zm9ybSBkZXYgcGRldiBpbiBtaW5kIC4uLg0KDQo+IA0KPiAyKSB4aGNpX2V4
-dF9jYXBfaW5pdCgpIGlzIG5vdCB0aGUgbGFzdCBjYWxsIHdoaWNoIGNhbiBmYWlsIGluDQo+ICAg
-ICB4aGNpX3BjaV9wcm9iZSgpLCBzaW5jZSB5b3Ugbm93IG5vIGxvbmdlciB1c2UNCj4gZGV2bV9h
-ZGRfYWN0aW9uX29yX3Jlc2V0DQo+ICAgICBmb3IgYXV0by1jbGVhbnVwLCB5b3UgbXVzdCBub3cg
-bWFudWFsbHkgY2xlYW51cCBieSBjYWxsaW5nDQo+ICAgICB4aGNpX2V4dF9jYXBfcmVtb3ZlKCkg
-d2hlbiBsYXRlciBzdGVwcyBvZiB4aGNpX3BjaV9wcm9iZSgpIGZhaWwuDQo+ICAgICBpdCBsb29r
-cyBsaWtlIHlvdSB3aWxsIG5lZWQgYSBuZXcgZXh0X2NhcF9yZW1vdmUgZXJyb3ItZXhpdCBsYWJl
-bA0KPiAgICAgZm9yIHRoaXMgcHV0IGFib3ZlIHRoZSBwdXRfdXNiM19oY2QgbGFiZWwgYW5kIGdv
-dG8gdGhpcyBuZXcgbGFiZWwNCj4gICAgIGluc3RlYWQgb2YgdG8gcHV0X3VzYjNfaGNkIGluIGFs
-bCBlcnJvciBwYXRocyBhZnRlciBhIHN1Y2Nlc3NmdWwgY2FsbA0KPiAgICAgdG8geGhjaV9leHRf
-Y2FwX2luaXQoKQ0KDQpSaWdodC4gV2lsbCByZXZpZXcgdGhpcyBwYXRoIGFuZCBjb3JyZWN0IGFj
-Y29yZGluZ2x5Lg0KDQpNYXliZSBhbiBhZGRpdGlvbmFsIGxhYmVsIGlzbid0IHJlcXVpcmVkIGJl
-Y2F1c2UgcGRldiBpcyBvbmx5IHNldCB3aGVuDQp4aGNpX2V4dF9jYXBfaW5pdCBjcmVhdGVkIHRo
-ZSBwbGF0Zm9ybSBkZXZpY2UsIGFuZCB4aGNpX2V4dF9jYXBfcmVtb3ZlDQpjaGVja3MgZm9yIHBk
-ZXYgYmVpbmcgc2V0Lg0KU28gYSBjYWxsIHRvIHhoY2lfZXh0X2NhcF9yZW1vdmUgZG9lc24ndCBo
-YXJtIGlmIHBkZXYgaXMgbm90IHNldCB1cCB5ZXQuDQpCdXQgZm9yIHJlYWRhYmlsaXR5IGl0IG1p
-Z2h0IGJlIGJldHRlciB0byBjcmVhdGUgYSBsYWJlbC4NCg0KQmVzdCByZWdhcmRzDQpDYXJzdGVu
-DQo=
+On 13.8.2019 9.50, Kai-Heng Feng wrote:
+> Hi Mathias,
+> 
+> at 21:24, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+> 
+>> at 22:45, Mathias Nyman <mathias.nyman@linux.intel.com> wrote:
+> 
+> [snipped]
+> 
+>> Yes, disabling runtime PM can workaround this issue.
+> 
+> What’s next step here? Is it a firmware bug?
+> 
+
+Can't say.
+ From xhci driver point of view the 39:00.0 xHC controller isn't accessible after dock
+is plugged back in. Looks like PCI side has issues getting the controller back to D3
+after it was runtime suspended to D0 at dock unplug:
+
+[  346.455568] pci_raw_set_power_state: 25 callbacks suppressed
+[  346.455574] xhci_hcd 0000:39:00.0: Refused to change power state, currently in D3
+
+As Mika suggested in the bug take a look at PCI side, especially the PCI status before
+a failing dock replug.
+
+-Mathias
