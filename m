@@ -2,86 +2,234 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CD4408E069
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2019 00:14:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A230A8E11E
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2019 01:14:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729910AbfHNWOV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Aug 2019 18:14:21 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44414 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728557AbfHNWOU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Aug 2019 18:14:20 -0400
-Received: by mail-qt1-f195.google.com with SMTP id 44so332961qtg.11
-        for <linux-pci@vger.kernel.org>; Wed, 14 Aug 2019 15:14:20 -0700 (PDT)
+        id S1727848AbfHNXOc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Aug 2019 19:14:32 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38507 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbfHNXOc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Aug 2019 19:14:32 -0400
+Received: by mail-ot1-f68.google.com with SMTP id r20so2046266ota.5;
+        Wed, 14 Aug 2019 16:14:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=p6m83mGjllDiHyeRTSS1oVMHX5M/xE6ILn6PPhzsgs4=;
-        b=l5PC+4msT+R1VOq1FIInu61dIh2STHPN9aSBt/Y5M3n644FfA169IT6wzP+sfbruwG
-         5vHd8QNfmmF7FOlV1OW4+1ls9+argQAW0MZ9696kjqRFjMtNiRxkPVvom8CpuMz6+P3J
-         lvnykAE+N5ClLjt8+21Oenlj55mmWn47h6bOufTUj3iAyACG+cL0ImoQgj5m6u3w1/lr
-         fVPm9fs++0X3Li7mpOQ13No26+jYpH9OobXYps5GGnrfpp0Xq6qTsPtsJRMHzlRsuSi2
-         Q5RuPSHMeFGhG1MzboDTj+tp2IBpQDy9TN5wUYjWC528WeGARQxpLHz2F9meUvIkEvkQ
-         sSPA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HHq+oxQ+RcU0cpnKyr/UwNvGamPQ9xWpmgS+w5o7uPg=;
+        b=fyNob6e0SmKDM/Sf2JROj1no5CMDOJcQ/r3Fhyttou8SMF38hkOzsjNV5SnVaIrmYg
+         sldSWXgxREyRGwAxTWAm7Ijg+2HoP2+dscBLK+PIxcIutdRVrY89CGBmsrMDlv+4B3N4
+         jNaNtyYduM9lGN8I8JTBu5sdCbIzHy1zqea5jGkoXCtIoaHypKunY+pc9J8OasXNhJyF
+         CyzPhh4N1VU1GXuORyy1CJ1QU/zpH21gMCfGrtkofd5GHSFLKNJRVMtaFd72ym7+u5hs
+         68v5OCijBqE7B3jusYMc4I2aJG0CboFnEVhUUc/50MwzSR7yovYjRycH/Syp1yHjBb30
+         0dZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=p6m83mGjllDiHyeRTSS1oVMHX5M/xE6ILn6PPhzsgs4=;
-        b=c9DXMvBRWsmA8kJE/f/d8I/f953wEIC6OXX+KkSJDjXEVTRYTm6X0CV52+aRDwPQiC
-         8m51uhViZxTtGceujpxMAdnOTpUHavAvW3kepJaZryMS9Adr7g16JfZSE6rMtK0iIMnO
-         vokAbhRApgrR7Zz9h4c8BmMoTSRz3ySurbYsWJF2supuxr6fSQJZeBNIMWLMfBetomai
-         zXNY6G5py/o9yVEEv97R6N4AFJabTqugfwHdxaStbGuvckx1uhXWRuq1ghXW6FCRk3Of
-         UbT1E+1Dvukxtz8G3XPN6MbRWI3LkU32V5JAUAajBCeaJg6j0b6iqdThNqN+2yrYIYDg
-         mPZQ==
-X-Gm-Message-State: APjAAAWYzB/iAMQNlmFIouw5+CPtXGYCG96SXgHqvkrC7yZJDB6SYBfC
-        bipJFecO9zT6o4bmKezV9C/yPqGc+e1KJfGat5Y=
-X-Google-Smtp-Source: APXvYqwvEwq36YC/YcFdGthiFQqEswOUmu8y33AXL4ty34gsygcaTEjmhvj04/dFUfa1vFoE719aJcDSjuFoUwkSVes=
-X-Received: by 2002:aed:3826:: with SMTP id j35mr1333309qte.54.1565820860049;
- Wed, 14 Aug 2019 15:14:20 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HHq+oxQ+RcU0cpnKyr/UwNvGamPQ9xWpmgS+w5o7uPg=;
+        b=p0GiED/cWmI//FooiY3IwBdYscJd0QIIhjJtJxcU/WKOzxI7v0uTC296+IDJx9/15B
+         RZUuWCiP/WovOnsXhya2+rTpRdB+HVZTXJa2+hPUFVlefnT0eMUKWdiVYiLN7pblkt/B
+         2SJQ1sLP1Bh5gJSKrFCjPs3WyY3HQjePVoT8RNoVKbmN5UILJtogHFHvWHY/xmbWa/zO
+         GJARpVR1X+DIloiu4XyWjPE8+8q96BeVJIPfKzLDEu8Ls1gnWato71r84MShfE+n36Lg
+         sAWl2ilp5SRdzE4r1CLCIz57c9DqZcPSeIY4Ku0q2zZGxwo+6rmjF5X2FuSj4ggdNOth
+         JZZw==
+X-Gm-Message-State: APjAAAW8h1B/w/+FTa+rWOW1sjkIIT9qDWHAK/0FBnVtnCOmj+BRza+Y
+        ESKwJyC8y1WQ7lgwwC8PDnhAJ72ezv/caA==
+X-Google-Smtp-Source: APXvYqyDYueuD9QDZ+Rja/eGcDBvqaevTYEMGzYx861bh4J2sL2u6/qjE1LBMT4Vd8nXY6l+6oJ24g==
+X-Received: by 2002:a5d:924e:: with SMTP id e14mr483473iol.215.1565824470948;
+        Wed, 14 Aug 2019 16:14:30 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id 8sm1434519ion.26.2019.08.14.16.14.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2019 16:14:30 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 17:14:27 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: Re: [Linux-kernel-mentees] [PATCH v2 1/3] PCI: sysfs: Define device
+ attributes with DEVICE_ATTR*()
+Message-ID: <20190814231427.GC110786@JATN>
+References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
+ <20190813204513.4790-1-skunberg.kelsey@gmail.com>
+ <20190813204513.4790-2-skunberg.kelsey@gmail.com>
+ <20190814075220.GA4067@kroah.com>
 MIME-Version: 1.0
-Received: by 2002:aed:3544:0:0:0:0:0 with HTTP; Wed, 14 Aug 2019 15:14:19
- -0700 (PDT)
-Reply-To: Katerinejones19@gmail.com
-From:   "MS. MARYANNA B. THOMASON" <westernunion.benin982@gmail.com>
-Date:   Wed, 14 Aug 2019 23:14:19 +0100
-Message-ID: <CAP=nHB+U+By16HzeUHiDfPT5KNtemGam6gniZhL2s7_itZ3F8w@mail.gmail.com>
-Subject: TODAY, Wed, Aug 14, 2019 I AM READY FOR COMING TO YOUR ADDRESS WITH
- THIS ATM CARD
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814075220.GA4067@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-ATTN DEAR PARCEL BENEFICIARY.
+On Wed, Aug 14, 2019 at 09:52:20AM +0200, Greg KH wrote:
+> On Tue, Aug 13, 2019 at 02:45:11PM -0600, Kelsey Skunberg wrote:
+> > Defining device attributes should be done through the helper
+> > DEVICE_ATTR*(_name, _mode, _show, _store). Change all instances using
+> > __ATTR*() to now use DEVICE_ATTR*().
+> > 
+> > Example of old:
+> > 
+> > struct device_attribute dev_attr_##_name = __ATTR(_name, _mode, _show,
+> > 						  _store)
+> > 
+> > Example of new:
+> > 
+> > static DEVICE_ATTR(foo, S_IWUSR | S_IRUGO, show_foo, store_foo)
+> 
+> Why not DEVICE_ATTR_RO() and DEVICE_ATTR_RW() and friends?  "Raw"
+> DEVICE_ATTR() should almost never be used unless the files have a very
+> strange mode setting.  And if that is true, they should be audited to
+> find out why their permissions are so strange from the rest of the
+> kernel defaults.
+>
 
-I AM CATHY JONES,DIPLOMATIC AGENT ASIGNED ON THE DELIVERY OF YOUR ATM
-CARD THROUGH MS. MARYANNA B. THOMASON, DHL MANAGEMENT DIRECTOR NEW
-YORK.
-TODAY, Wed, Aug 14, 2019 I AM READY FOR COMING TO YOUR ADDRESS WITH
-THIS ATM CARD, So before i deliver I want you to send me.
-official diplomatic agent delivery fee sum of $150.00 us
- only. I am here at JFK Airport,Florida. USA
+This makes sense. I'll put together a patch to change the DEVICE_ATTR()
+applicable to be changed. Thank you, Greg!
 
-SEND THIS FEE BY WESTERN UNION OR MONEY WITH RECEIVER'S NAME AND ADDRESS BELOW.
+-Kelsey
 
-RECEIVER'S NAME-----------------ERROL PRINGLE
-ADDRESS----------------3500 OLD DENTON RD APT 208; CARROLLTON, TEXAS 75007
-COUNTRY----------------USA
-AMOUNT--------------------$150.00 ONLY
-TEST QUESTION----------------WHO IS THE CREATOR
-ANSWER------------------GOD
- meanwhile this $150.00 is required by the Custom Service,USA Homeland
-Security,for protection of your delivery, it will make the ATM CARD
-and funds worth $15.8MILLION US DOLLARS secure, Beleiev me, this is my
-word, remark my word,you will receive your delivery from me, Mrs.
-Cathy Jones once you send this only $150.00 today.
-I WAIT ON YOUR PAYMENT CONFIRMATION, ONCE I GOT YOUR PAYMENT, I WILL
-FINALLY ARRIVE TO YOUR NEAREST ADDRESS. today
-THANKS AND MAY GOD BLESS  YOU
-CATHY JONES,DIPLOMATIC AGENT
-EMAIL; katerinejones19@gmail.com
-CALL OR TEXT ME, DIPLOMATIC AGENT MS. CATHY JONES
-Phone Number; (408) 650-6103,
+> > 
+> > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+> > ---
+> >  drivers/pci/pci-sysfs.c | 59 +++++++++++++++++++----------------------
+> >  1 file changed, 27 insertions(+), 32 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > index 965c72104150..8af7944fdccb 100644
+> > --- a/drivers/pci/pci-sysfs.c
+> > +++ b/drivers/pci/pci-sysfs.c
+> > @@ -464,9 +464,7 @@ static ssize_t dev_rescan_store(struct device *dev,
+> >  	}
+> >  	return count;
+> >  }
+> > -static struct device_attribute dev_rescan_attr = __ATTR(rescan,
+> > -							(S_IWUSR|S_IWGRP),
+> > -							NULL, dev_rescan_store);
+> > +static DEVICE_ATTR(rescan, (S_IWUSR | S_IWGRP), NULL, dev_rescan_store);
+> 
+> DEVICE_ATTR_WO()?
+> 
+> >  static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+> >  			    const char *buf, size_t count)
+> > @@ -480,9 +478,8 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+> >  		pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
+> >  	return count;
+> >  }
+> > -static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
+> > -							(S_IWUSR|S_IWGRP),
+> > -							NULL, remove_store);
+> > +static DEVICE_ATTR_IGNORE_LOCKDEP(remove, (S_IWUSR | S_IWGRP), NULL,
+> > +				  remove_store);
+> 
+> DEVICE_ATTR_WO()?
+> 
+> Ugh, no lockdep?  ick, ok, leave this as-is, crazy "remove" files...
+> 
+> >  
+> >  static ssize_t dev_bus_rescan_store(struct device *dev,
+> >  				    struct device_attribute *attr,
+> > @@ -504,7 +501,7 @@ static ssize_t dev_bus_rescan_store(struct device *dev,
+> >  	}
+> >  	return count;
+> >  }
+> > -static DEVICE_ATTR(rescan, (S_IWUSR|S_IWGRP), NULL, dev_bus_rescan_store);
+> > +static DEVICE_ATTR(bus_rescan, (S_IWUSR | S_IWGRP), NULL, dev_bus_rescan_store);
+> 
+> DEVICE_ATTR_WO()?
+> 
+> >  
+> >  #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
+> >  static ssize_t d3cold_allowed_store(struct device *dev,
+> > @@ -687,16 +684,14 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
+> >  	return count;
+> >  }
+> >  
+> > -static struct device_attribute sriov_totalvfs_attr = __ATTR_RO(sriov_totalvfs);
+> > -static struct device_attribute sriov_numvfs_attr =
+> > -		__ATTR(sriov_numvfs, (S_IRUGO|S_IWUSR|S_IWGRP),
+> > -		       sriov_numvfs_show, sriov_numvfs_store);
+> > -static struct device_attribute sriov_offset_attr = __ATTR_RO(sriov_offset);
+> > -static struct device_attribute sriov_stride_attr = __ATTR_RO(sriov_stride);
+> > -static struct device_attribute sriov_vf_device_attr = __ATTR_RO(sriov_vf_device);
+> > -static struct device_attribute sriov_drivers_autoprobe_attr =
+> > -		__ATTR(sriov_drivers_autoprobe, (S_IRUGO|S_IWUSR|S_IWGRP),
+> > -		       sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
+> > +static DEVICE_ATTR_RO(sriov_totalvfs);
+> > +static DEVICE_ATTR(sriov_numvfs, (S_IRUGO | S_IWUSR | S_IWGRP),
+> > +				  sriov_numvfs_show, sriov_numvfs_store);
+> 
+> DEVICE_ATTR_RW()?
+> 
+> > +static DEVICE_ATTR_RO(sriov_offset);
+> > +static DEVICE_ATTR_RO(sriov_stride);
+> > +static DEVICE_ATTR_RO(sriov_vf_device);
+> > +static DEVICE_ATTR(sriov_drivers_autoprobe, (S_IRUGO | S_IWUSR | S_IWGRP),
+> > +		   sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
+> 
+> DEVICE_ATTR_RW()?
+> 
+> >  #endif /* CONFIG_PCI_IOV */
+> >  
+> >  static ssize_t driver_override_store(struct device *dev,
+> > @@ -792,7 +787,7 @@ static struct attribute *pcie_dev_attrs[] = {
+> >  };
+> >  
+> >  static struct attribute *pcibus_attrs[] = {
+> > -	&dev_attr_rescan.attr,
+> > +	&dev_attr_bus_rescan.attr,
+> >  	&dev_attr_cpuaffinity.attr,
+> >  	&dev_attr_cpulistaffinity.attr,
+> >  	NULL,
+> > @@ -820,7 +815,7 @@ static ssize_t boot_vga_show(struct device *dev, struct device_attribute *attr,
+> >  		!!(pdev->resource[PCI_ROM_RESOURCE].flags &
+> >  		   IORESOURCE_ROM_SHADOW));
+> >  }
+> > -static struct device_attribute vga_attr = __ATTR_RO(boot_vga);
+> > +static DEVICE_ATTR_RO(boot_vga);
+> >  
+> >  static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
+> >  			       struct bin_attribute *bin_attr, char *buf,
+> > @@ -1458,7 +1453,7 @@ static ssize_t reset_store(struct device *dev, struct device_attribute *attr,
+> >  	return count;
+> >  }
+> >  
+> > -static struct device_attribute reset_attr = __ATTR(reset, 0200, NULL, reset_store);
+> > +static DEVICE_ATTR(reset, 0200, NULL, reset_store);
+> 
+> DEVICE_ATTR_WO()?  Hm, root only, maybe not :(
+> 
+> >  
+> >  static int pci_create_capabilities_sysfs(struct pci_dev *dev)
+> >  {
+> > @@ -1468,7 +1463,7 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
+> >  	pcie_aspm_create_sysfs_dev_files(dev);
+> >  
+> >  	if (dev->reset_fn) {
+> > -		retval = device_create_file(&dev->dev, &reset_attr);
+> > +		retval = device_create_file(&dev->dev, &dev_attr_reset);
+> 
+> odds are this needs to be fixed up later to use attribute groups
+> properly.  But that's better left for another patch.
+> 
+> >  		if (retval)
+> >  			goto error;
+> >  	}
+> > @@ -1553,7 +1548,7 @@ static void pci_remove_capabilities_sysfs(struct pci_dev *dev)
+> >  	pcie_vpd_remove_sysfs_dev_files(dev);
+> >  	pcie_aspm_remove_sysfs_dev_files(dev);
+> >  	if (dev->reset_fn) {
+> > -		device_remove_file(&dev->dev, &reset_attr);
+> > +		device_remove_file(&dev->dev, &dev_attr_reset);
+> 
+> Same here, attribute groups will handle this.
+> 
+> thanks,
+> 
+> greg k-h
