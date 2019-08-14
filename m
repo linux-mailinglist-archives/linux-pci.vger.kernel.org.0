@@ -2,87 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2711C8CF89
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2019 11:30:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4720C8D003
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2019 11:48:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726047AbfHNJ37 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Aug 2019 05:29:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:50628 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725928AbfHNJ37 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 14 Aug 2019 05:29:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D9707344;
-        Wed, 14 Aug 2019 02:29:58 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A12C63F694;
-        Wed, 14 Aug 2019 02:29:57 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 10:29:52 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
-        bhelgaas@google.com, linuxppc-dev@lists.ozlabs.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv6 1/2] PCI: layerscape: Add the bar_fixed_64bit property
+        id S1726047AbfHNJsE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Aug 2019 05:48:04 -0400
+Received: from mail-eopbgr140048.outbound.protection.outlook.com ([40.107.14.48]:59719
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725955AbfHNJsE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 14 Aug 2019 05:48:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Bwkwpaawxu1ym0E7wQUUX6fOFksPdn/tK+awmcHqL5zEJHE0Y6Th3kAHQvJCKAXkWJKYqakKJyjENo5GFfflBqi1A5it3GoBvAP3lRtAPS1vSsOVzs878b3xcX1R5brzwSSjGdTkejo2yiiDhuP5vutsBI5XMrxcnv+xeGHWGPMDirT48iliRRMXzwagzW7VFzeq+ftwltE9v76JkTuTf+MN+QAIeDgZg/urQ91wiaD8vsa/hS7fDEuwOBy/giG1HHWIcvcuYeTi6EOCAZE+r+XtSFQsVfHeHFrhvYddZ5kszNJ0VyWvyAD4IVlH4WOIUmv6/n+ovRjbEfTnLA+ETQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=znncMx6vllCfJyxWkEqGwlGZhaNvryEUZOqe1Jjrcd0=;
+ b=L0Coq4SyFL5R4lZAkMmN4C0QcIF8LshE54h6YjWjfXzcBq1QAvcbxit43jyxwfghIYoFQ2WdLJli9/UXH8s+A6UcheeOU/KG4IYtxmomtV6K9KjJYyesqR+Mg4S3/k8jB7FY0DCQmG483qRE7G2ThK1eUH/700k2Q3mZH7DeTFyViE6Mfa+NMA6P+9a+wOD66Fuo7VFI9oZDpKBca+juAJOPWceez26lQ+KWTvp2SyW/MJCnGS+V8wEASmS2LfhylkJfsUqMrpPvAIdscz2qvv0DdvvHFj5rZnKzPMQIojgpyUqLQBbhAZHOSjbe7XRB1pcHBmz8R1o0mHbMBJskyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=znncMx6vllCfJyxWkEqGwlGZhaNvryEUZOqe1Jjrcd0=;
+ b=JFGDgndUsMc97MhxjLtbPFC9uKb0Sm14mZo+hhxLraAFTXQMiI0yzV8a4wQVZsDXzTEmQoPJxiE7uv8p6bESqTECq1t8Pje3NzlSJWE2sS++I9n7npn54zIHEYobpxoq3MHd7Ym6gWFZX0iUPh9M4kjkXUgZOEGz4K26L2bFwb0=
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
+ AM5PR04MB3297.eurprd04.prod.outlook.com (10.167.168.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.21; Wed, 14 Aug 2019 09:48:01 +0000
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::5012:d47a:1f5d:9b84]) by AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::5012:d47a:1f5d:9b84%5]) with mapi id 15.20.2157.022; Wed, 14 Aug 2019
+ 09:48:01 +0000
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCHv6 1/2] PCI: layerscape: Add the bar_fixed_64bit property
  in EP driver.
-Message-ID: <20190814092952.GA26840@e121166-lin.cambridge.arm.com>
+Thread-Topic: [PATCHv6 1/2] PCI: layerscape: Add the bar_fixed_64bit property
+ in EP driver.
+Thread-Index: AQHVUkXX4F7jGdZiC0eiDW46LdzUUKb6YRoAgAABy8A=
+Date:   Wed, 14 Aug 2019 09:48:00 +0000
+Message-ID: <AM5PR04MB32994A55A2951DD071C19F66F5AD0@AM5PR04MB3299.eurprd04.prod.outlook.com>
 References: <20190814020330.12133-1-xiaowei.bao@nxp.com>
+ <20190814092952.GA26840@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20190814092952.GA26840@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaowei.bao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 032b63a8-b94d-4125-2196-08d7209c7eec
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM5PR04MB3297;
+x-ms-traffictypediagnostic: AM5PR04MB3297:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR04MB32976EABAFAF0D81F000D736F5AD0@AM5PR04MB3297.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 01294F875B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(366004)(136003)(376002)(346002)(189003)(199004)(13464003)(99286004)(25786009)(53936002)(54906003)(478600001)(55016002)(5660300002)(316002)(6246003)(71190400001)(33656002)(256004)(81166006)(81156014)(8676002)(71200400001)(4326008)(9686003)(305945005)(74316002)(14454004)(26005)(52536014)(66446008)(76176011)(53546011)(6506007)(186003)(476003)(66476007)(6916009)(64756008)(66556008)(2906002)(7736002)(229853002)(86362001)(66946007)(8936002)(486006)(102836004)(76116006)(44832011)(66066001)(446003)(6436002)(11346002)(7696005)(3846002)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3297;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BintUsxUwyYfBwckeoBu+OFlqDFsxSIAnuXdOTAYVrrZTWpckI3i4NqhN4OpuXX9GEhwh3bedmU2tie9YnY4A3m1OgUNzJHgMIpJqu40T3NI8NzAdJPDY7qdSGC8ZkoJ/20XQf60z+X/vZBoVWj85su8NYoauJKuMp7gRc59kYmXoF7VbRskwPGpc2z8c896KCgqop9TvBpsXwOFekRZG/gJ4c+fqNLrKEpjxqbq47800VjMAAccJ0V6hloKFRJevZ1jyVKCbp7Y/G18EDfrYXTJIQYoHXuHQht2iZYB5bQDmRFk+26MOxnFYpxN61WC2RPPEl1hyTZeyEHEXgBBqHT1QoX34EoJQVbcQWZ6c59bVm9qlVxpzrgRsfdrSxrj6XxlQRVY3Qb1kQQvPavhR5UiazaIvmlll5cWimigZb4=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190814020330.12133-1-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 032b63a8-b94d-4125-2196-08d7209c7eec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 09:48:01.0497
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1cJup7C74HSirz/J66OznZIM1P/EwIGFvZsok3ZPDe6olYwbwdaMWNnUERoEVibIJ/bUri7b1oM6WCPZiXEAcQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3297
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I asked you to remove the period at the end of the patch $SUBJECT and
-you did not, either you do not read what I write or explain me what's
-going on.
-
-On Wed, Aug 14, 2019 at 10:03:29AM +0800, Xiaowei Bao wrote:
-> The PCIe controller of layerscape just have 4 BARs, BAR0 and BAR1
-> is 32bit, BAR2 and BAR4 is 64bit, this is determined by hardware,
-> so set the bar_fixed_64bit with 0x14.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-
-Kishon ACK'ed this patch and you have not carried his tag.
-
-I will make these changes but that's the last time I do that
-for you.
-
-Lorenzo
-
-> ---
-> v2:
->  - Replace value 0x14 with a macro.
-> v3:
->  - No change.
-> v4:
->  - send the patch again with '--to'.
-> v5:
->  - fix the commit message.
-> v6:
->  - remove the [EXT] tag of the $SUBJECT in email.
-> 
->  drivers/pci/controller/dwc/pci-layerscape-ep.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> index be61d96..ca9aa45 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> @@ -44,6 +44,7 @@ static const struct pci_epc_features ls_pcie_epc_features = {
->  	.linkup_notifier = false,
->  	.msi_capable = true,
->  	.msix_capable = false,
-> +	.bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
->  };
->  
->  static const struct pci_epc_features*
-> -- 
-> 2.9.5
-> 
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTG9yZW56byBQaWVyYWxp
+c2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+IFNlbnQ6IDIwMTnE6jjUwjE0yNUgMTc6
+MzANCj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzogTS5oLiBM
+aWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1DQo+IDxtaW5na2FpLmh1QG54
+cC5jb20+OyBSb3kgWmFuZyA8cm95LnphbmdAbnhwLmNvbT47DQo+IGJoZWxnYWFzQGdvb2dsZS5j
+b207IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOw0KPiBsaW51eC1wY2lAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnV4LWtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSHY2IDEvMl0gUENJOiBs
+YXllcnNjYXBlOiBBZGQgdGhlIGJhcl9maXhlZF82NGJpdCBwcm9wZXJ0eQ0KPiBpbiBFUCBkcml2
+ZXIuDQo+IA0KPiBJIGFza2VkIHlvdSB0byByZW1vdmUgdGhlIHBlcmlvZCBhdCB0aGUgZW5kIG9m
+IHRoZSBwYXRjaCAkU1VCSkVDVCBhbmQgeW91DQo+IGRpZCBub3QsIGVpdGhlciB5b3UgZG8gbm90
+IHJlYWQgd2hhdCBJIHdyaXRlIG9yIGV4cGxhaW4gbWUgd2hhdCdzIGdvaW5nIG9uLg0KU29ycnks
+IEkgZGlkbid0IHVuZGVyc3RhbmQgdGhlIG1lYW5pbmcgb2YgcGVyaW9kIGNvcnJlY3RseSBiZWZv
+cmUuIA0KPiANCj4gT24gV2VkLCBBdWcgMTQsIDIwMTkgYXQgMTA6MDM6MjlBTSArMDgwMCwgWGlh
+b3dlaSBCYW8gd3JvdGU6DQo+ID4gVGhlIFBDSWUgY29udHJvbGxlciBvZiBsYXllcnNjYXBlIGp1
+c3QgaGF2ZSA0IEJBUnMsIEJBUjAgYW5kIEJBUjEgaXMNCj4gPiAzMmJpdCwgQkFSMiBhbmQgQkFS
+NCBpcyA2NGJpdCwgdGhpcyBpcyBkZXRlcm1pbmVkIGJ5IGhhcmR3YXJlLCBzbyBzZXQNCj4gPiB0
+aGUgYmFyX2ZpeGVkXzY0Yml0IHdpdGggMHgxNC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFhp
+YW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiANCj4gS2lzaG9uIEFDSydlZCB0aGlz
+IHBhdGNoIGFuZCB5b3UgaGF2ZSBub3QgY2FycmllZCBoaXMgdGFnLg0KPiANCj4gSSB3aWxsIG1h
+a2UgdGhlc2UgY2hhbmdlcyBidXQgdGhhdCdzIHRoZSBsYXN0IHRpbWUgSSBkbyB0aGF0IGZvciB5
+b3UuDQpUaGFua3MgYSBsb3QsIHlvdXIgbWVhbnMgaXMgdGhhdCBJIGRvbid0IG5lZWQgdG8gc2Vu
+ZCB0aGUgdjcgcGF0Y2ggYW5kIHlvdSBoZWxwIG1lIHRvDQpDb3JyZWN0IHRoaXMgcGF0Y2gsIHll
+cz8gVGhhbmtzIGEgbG90IGZvciB5b3VyIGhlbHAgYWJvdXQgdGhlIHJ1bGVzIG9mIHRoZSB1cHN0
+cmVhbS4gSSB3aWxsDQpDb3JyZWN0IHRoaXMgZXJyb3IgbmV4dCB0aW1lLiBeLl4gDQo+IA0KPiBM
+b3JlbnpvDQo+IA0KPiA+IC0tLQ0KPiA+IHYyOg0KPiA+ICAtIFJlcGxhY2UgdmFsdWUgMHgxNCB3
+aXRoIGEgbWFjcm8uDQo+ID4gdjM6DQo+ID4gIC0gTm8gY2hhbmdlLg0KPiA+IHY0Og0KPiA+ICAt
+IHNlbmQgdGhlIHBhdGNoIGFnYWluIHdpdGggJy0tdG8nLg0KPiA+IHY1Og0KPiA+ICAtIGZpeCB0
+aGUgY29tbWl0IG1lc3NhZ2UuDQo+ID4gdjY6DQo+ID4gIC0gcmVtb3ZlIHRoZSBbRVhUXSB0YWcg
+b2YgdGhlICRTVUJKRUNUIGluIGVtYWlsLg0KPiA+DQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xs
+ZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMgfCAxICsNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEg
+aW5zZXJ0aW9uKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxl
+ci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9k
+d2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+IGluZGV4IGJlNjFkOTYuLmNhOWFhNDUgMTAwNjQ0
+DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAu
+Yw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVw
+LmMNCj4gPiBAQCAtNDQsNiArNDQsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9lcGNfZmVh
+dHVyZXMNCj4gbHNfcGNpZV9lcGNfZmVhdHVyZXMgPSB7DQo+ID4gIAkubGlua3VwX25vdGlmaWVy
+ID0gZmFsc2UsDQo+ID4gIAkubXNpX2NhcGFibGUgPSB0cnVlLA0KPiA+ICAJLm1zaXhfY2FwYWJs
+ZSA9IGZhbHNlLA0KPiA+ICsJLmJhcl9maXhlZF82NGJpdCA9ICgxIDw8IEJBUl8yKSB8ICgxIDw8
+IEJBUl80KSwNCj4gPiAgfTsNCj4gPg0KPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9lcGNf
+ZmVhdHVyZXMqDQo+ID4gLS0NCj4gPiAyLjkuNQ0KPiA+DQo=
