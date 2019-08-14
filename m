@@ -2,223 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF8578D636
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2019 16:32:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 293278D73E
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2019 17:33:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfHNOcw convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 14 Aug 2019 10:32:52 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:2401 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfHNOcw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Aug 2019 10:32:52 -0400
-IronPort-SDR: TC7J2TPCpQq+h5jzUzfERvFAtXZ3JoB9AGYyYLKiqfa+4tRcAtOr+JfmeQkEDqRM+t0ZALOyY1
- abiIC8qQkBmiIOSCnoyz8/7UJvY252dE/BlasE2x7dKKFY+dP/IMlyHRW4s7zv/CVQeqoRKP4h
- 3fAd50RZdUkYHXllQcI/sPLt0kKwnyx7rPqP6nQ1YjIubC6hiOSckLNB3AP6VOQtEUhlQwi//F
- F7mNTACRCNtA/xQVl3HDzLklSc/wkFepMoVtYkOQ84Op8Vvz85KiyhGnJ9CKJpXVJbdYmrYHD1
- QL0=
-X-IronPort-AV: E=Sophos;i="5.64,385,1559548800"; 
-   d="scan'208";a="40450057"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa3.mentor.iphmx.com with ESMTP; 14 Aug 2019 06:32:51 -0800
-IronPort-SDR: NLYVRwkFwNT7pjSE9ru1OFQVkT4FwXSoOHTzEgFStKGjx/9bs34IRNNtkLWR7ZfltULKTXJauj
- dWmfBwRJwH1l0CUAs5wvaS/Zx3CfDdsJqGbiWVnRtXcPmj47p3CHmBJtsRxCnaLsRqDaPuLE4T
- jB9YUhOEW4KGuPEfoZqdZkY3Xc9OIejC/O6FovCWPnkfDWVqKndThjzTdt3ma0CwL3emhMnJK0
- vm7dfsNmtA4x6LfJfze2vl6bueFMvGOpJGv77S87dFDQUuIwPbSibUiLNe5/ijb9sWmCAwudIv
- quY=
-From:   "Schmid, Carsten" <Carsten_Schmid@mentor.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: [PATCH v2] usb: xhci-pci: reorder removal to avoid use-after-free
-Thread-Topic: [PATCH v2] usb: xhci-pci: reorder removal to avoid
- use-after-free
-Thread-Index: AQHVUqy8Nhj3BRvGDEy2Ur9dpf2v1Q==
-Date:   Wed, 14 Aug 2019 14:32:45 +0000
-Message-ID: <1565793165678.11527@mentor.com>
-References: <1565782781938.37795@mentor.com>
- <15aa45c7-6e45-d03f-9336-4291f8b2dc66@redhat.com>
- <29aadcf136bb4d5285afb4fc5b500b49@SVR-IES-MBX-03.mgc.mentorg.com>,<662c2014-f52c-a4a7-cbf0-78d43c3a4f22@redhat.com>
-In-Reply-To: <662c2014-f52c-a4a7-cbf0-78d43c3a4f22@redhat.com>
-Accept-Language: de-DE, en-IE, en-US
-Content-Language: de-DE
+        id S1726522AbfHNPdQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Aug 2019 11:33:16 -0400
+Received: from mail-eopbgr800135.outbound.protection.outlook.com ([40.107.80.135]:35657
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726121AbfHNPdQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 14 Aug 2019 11:33:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nmE/kzzYaUI02dx5ODiectrkjlF/5fid527XrphHb6PC4dvp43SVGboj2+Qs3SW4AL+KVqdf7YGwo2vyRgVLHNa94J4K1DREwyee4bOa0fQ0luXtYdXZdnp7c2kCWXHglfwvEkAMLVggabRGX88FYkrBYEN8xQHZ+TexErS4h7Ey/7Fs+LV37aOotlFgw4DVcShzrYQ3qRZ9thj+EsM0lcVQlHxlBiXEqQzW2TmWgTS53c639peVApVJH1kBUG+6Idmb+mxipm3r9mu9nmo8aJT0djD78xnN4h8xSkkK1ob7wHvJS9vhIk6iAIy8tYKoHlU7zNntSCXr43l9aZNIjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dIhTOy2cuOIX2kHNoItxXfeaYTyKydVXhyGXAaEwkmc=;
+ b=npEqYD5A2bcZs/eUexWc6JAMJ8+6aCNn9//0sP/FfZyYJuk+9yS1hmBfbRi4y+Dr+2bqKJ54Ol/uhUIHUUnwU7ufWp+DDTd82nchU0Ut2WFQXGmC2V0KsPOKLuxeFnuqSQ7FXSmsgGOVBrVXueAhBU5bJixj29uDxMDHBWBrsPmZYmYLluZ5uQQJRsbNBb79n1nTbgpr5ULE+SkiiuIkEDv8dB+DihajQka+3+kBm40ludQ5RFeHdw0PgEUPJ0K8uQO58PMFpFCQLhOTLWVe3aAddMRM222nntNMPj8GWvhY8QOvDh9tIuZxur281eu/x7h3jCIvukmO5a5lF5+++A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dIhTOy2cuOIX2kHNoItxXfeaYTyKydVXhyGXAaEwkmc=;
+ b=hSientgCm3JxkGMbTM3X9gkYi+gE5/3z8e7N1XddC699yL0NHupx1Mx3xyTJjlf5eW/NGUrN2lAlRv0HsO7GQ2TiQHW3dQxxYaNwDaPCqy9Nz6FTIwe93gfVgY86Te2XQ1tWGAsMPHi18sDsgXHIgL24aaGAxwdww+zNGukmx3M=
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
+ DM6PR21MB1451.namprd21.prod.outlook.com (20.180.23.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.6; Wed, 14 Aug 2019 15:32:34 +0000
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::257a:6f7f:1126:a61d]) by DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::257a:6f7f:1126:a61d%6]) with mapi id 15.20.2178.006; Wed, 14 Aug 2019
+ 15:32:34 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "sashal@kernel.org" <sashal@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Thread-Topic: [PATCH v4,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Thread-Index: AQHVUjimvM3UBIvJXEiYaEn5NujA56b6DqwAgAC1WWA=
+Date:   Wed, 14 Aug 2019 15:32:34 +0000
+Message-ID: <DM6PR21MB133729FAFEBF5588F07C6F1ECAAD0@DM6PR21MB1337.namprd21.prod.outlook.com>
+References: <1565743084-2069-1-git-send-email-haiyangz@microsoft.com>
+ <20190814043428.GC206171@google.com>
+In-Reply-To: <20190814043428.GC206171@google.com>
+Accept-Language: en-US
+Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [137.202.0.90]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-14T15:32:32.3665756Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b78d3f55-dc9e-4578-9b76-462eae9ee97a;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=haiyangz@microsoft.com; 
+x-originating-ip: [96.61.92.94]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 87838a0e-b350-4d7f-0f69-08d720cca0e9
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600158)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1451;
+x-ms-traffictypediagnostic: DM6PR21MB1451:|DM6PR21MB1451:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM6PR21MB1451729E9A1BA786E4408522CAAD0@DM6PR21MB1451.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01294F875B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(136003)(376002)(346002)(366004)(13464003)(51444003)(189003)(199004)(76116006)(66946007)(64756008)(66446008)(229853002)(76176011)(66476007)(66556008)(10290500003)(54906003)(81156014)(81166006)(6436002)(55016002)(8676002)(9686003)(10090500001)(8990500004)(5660300002)(7696005)(8936002)(99286004)(486006)(6246003)(22452003)(11346002)(4326008)(476003)(25786009)(316002)(53936002)(74316002)(446003)(186003)(14454004)(66066001)(33656002)(478600001)(102836004)(53546011)(6506007)(14444005)(2906002)(26005)(86362001)(7736002)(305945005)(52536014)(6116002)(3846002)(256004)(71190400001)(6916009)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1451;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ESsc+VxkU28p8DVtivOQBtOsn0KdklLLHGGItZ+Y7NGiHuR9p/Yr3pNj1yqaHdyO/VZBdZvxwLYMS9nTsor9XZpzLnbGfUaAW53Gg7accdyHtd9+/u8472A9T/SM6ckV1DyTTv8xQW3eFKLZOxe7iduYSR4FQ7F1oHmjbCw2ngL8oLy34gNRSfgI2kr8O+AjM2txFiG4Pli1H8Uai5SUUbUtDzqe7dTQb1n2whv/Z2aBWkd44s3b41MIk4r/IW+067QcYXfCkI8cW/b3eC0474wozU3eMDCH9FRf4YmyIkGjTrKSRN1n4oiOIAbFClYH8Guw6PDJ0ibuIUF7hwNxGcDOQGjIpzvfhTYvtY+55rpCb19G0xJXOAxyHO9mDL+2kcJYAgynFG/B3eWpqDvqrQNKZgEDNtWRWj43s2vwXxU=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87838a0e-b350-4d7f-0f69-08d720cca0e9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 15:32:34.0722
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xZ93NglMh/A/P7kl7lvCH3pecYHfHZ6PZeUf2QbkR60+A6tkXjgsOcZBQB9ID3Ux2mNLF7jD/zixiY86P6lZxg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1451
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On driver removal, the platform_device_unregister call
-attached through devm_add_action_or_reset was executed
-after usb_hcd_pci_remove.
-This lead to a use-after-free for the iomem resorce of
-the xhci-ext-caps driver in the platform removal
-because the parent of the resource was freed earlier.
 
-Fix this by reordering of the removal sequence.
 
-Signed-off-by: Carsten Schmid <carsten_schmid@mentor.com>
----
-v2:
-  - more speaking name for private data element
-  - consider failure in driver init sequence
-  - fix minor issues found by checkpatch.pl
----
- drivers/usb/host/xhci-ext-caps.c | 25 +++++++++++++++----------
- drivers/usb/host/xhci-pci.c      |  8 +++++++-
- drivers/usb/host/xhci-pci.h      | 20 ++++++++++++++++++++
- drivers/usb/host/xhci.h          |  1 +
- 4 files changed, 43 insertions(+), 11 deletions(-)
- create mode 100644 drivers/usb/host/xhci-pci.h
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Wednesday, August 14, 2019 12:34 AM
+> To: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: sashal@kernel.org; lorenzo.pieralisi@arm.com; linux-
+> hyperv@vger.kernel.org; linux-pci@vger.kernel.org; KY Srinivasan
+> <kys@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> olaf@aepfle.de; vkuznets <vkuznets@redhat.com>; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [PATCH v4,1/2] PCI: hv: Detect and fix Hyper-V PCI domain
+> number collision
+>=20
+> Thanks for splitting these; I think that makes more sense.
+>=20
+> On Wed, Aug 14, 2019 at 12:38:54AM +0000, Haiyang Zhang wrote:
+> > Currently in Azure cloud, for passthrough devices including GPU, the ho=
+st
+> > sets the device instance ID's bytes 8 - 15 to a value derived from the =
+host
+> > HWID, which is the same on all devices in a VM. So, the device instance
+> > ID's bytes 8 and 9 provided by the host are no longer unique. This can
+> > cause device passthrough to VMs to fail because the bytes 8 and 9 are u=
+sed
+> > as PCI domain number. Collision of domain numbers will cause the second
+> > device with the same domain number fail to load.
+>=20
+> I think this patch is fine.  I could be misunderstanding the commit
+> log, but when you say "the ID bytes 8 and 9 are *no longer* unique",
+> that suggests that they *used* to be unique but stopped being unique
+> at some point, which of course raises the question of *when* they
+> became non-unique.
+>=20
+> The specific information about that point would be useful to have in
+> the commit log, e.g., is this related to a specific version of Azure,
+> a configuration change, etc?
+The host side change happened last year, rolled out to all azure hosts.
+I will put "all current azure hosts" in the commit log.
 
-diff --git a/drivers/usb/host/xhci-ext-caps.c b/drivers/usb/host/xhci-ext-caps.c
-index 399113f9fc5c..28a7d53ecf2c 100644
---- a/drivers/usb/host/xhci-ext-caps.c
-+++ b/drivers/usb/host/xhci-ext-caps.c
-@@ -7,21 +7,19 @@
- 
- #include <linux/platform_device.h>
- #include "xhci.h"
-+#include "xhci-pci.h"
- 
- #define USB_SW_DRV_NAME		"intel_xhci_usb_sw"
- #define USB_SW_RESOURCE_SIZE	0x400
- 
--static void xhci_intel_unregister_pdev(void *arg)
--{
--	platform_device_unregister(arg);
--}
--
- static int xhci_create_intel_xhci_sw_pdev(struct xhci_hcd *xhci, u32 cap_offset)
- {
- 	struct usb_hcd *hcd = xhci_to_hcd(xhci);
- 	struct device *dev = hcd->self.controller;
- 	struct platform_device *pdev;
- 	struct resource	res = { 0, };
-+	struct xhci_pci_priv *priv = (struct xhci_pci_priv *)xhci->priv;
-+
- 	int ret;
- 
- 	pdev = platform_device_alloc(USB_SW_DRV_NAME, PLATFORM_DEVID_NONE);
-@@ -52,11 +50,7 @@ static int xhci_create_intel_xhci_sw_pdev(struct xhci_hcd *xhci, u32 cap_offset)
- 		return ret;
- 	}
- 
--	ret = devm_add_action_or_reset(dev, xhci_intel_unregister_pdev, pdev);
--	if (ret) {
--		dev_err(dev, "couldn't add unregister action for intel_xhci_usb_sw pdev\n");
--		return ret;
--	}
-+	priv->role_switch_pdev = pdev;
- 
- 	return 0;
- }
-@@ -88,3 +82,14 @@ int xhci_ext_cap_init(struct xhci_hcd *xhci)
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(xhci_ext_cap_init);
-+
-+void xhci_ext_cap_remove(struct xhci_hcd *xhci)
-+{
-+	struct xhci_pci_priv *priv = (struct xhci_pci_priv *)xhci->priv;
-+
-+	if (priv->role_switch_pdev) {
-+		platform_device_unregister(priv->role_switch_pdev);
-+		priv->role_switch_pdev = NULL;
-+	}
-+}
-+EXPORT_SYMBOL_GPL(xhci_ext_cap_remove);
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index c2fe218e051f..f2201f380c17 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -14,6 +14,7 @@
- #include <linux/acpi.h>
- 
- #include "xhci.h"
-+#include "xhci-pci.h"
- #include "xhci-trace.h"
- 
- #define SSIC_PORT_NUM		2
-@@ -62,6 +63,7 @@ static struct hc_driver __read_mostly xhci_pci_hc_driver;
- static int xhci_pci_setup(struct usb_hcd *hcd);
- 
- static const struct xhci_driver_overrides xhci_pci_overrides __initconst = {
-+	.extra_priv_size = sizeof(struct xhci_pci_priv),
- 	.reset = xhci_pci_setup,
- };
- 
-@@ -350,7 +352,7 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	retval = usb_add_hcd(xhci->shared_hcd, dev->irq,
- 			IRQF_SHARED);
- 	if (retval)
--		goto put_usb3_hcd;
-+		goto remove_ext_cap;
- 	/* Roothub already marked as USB 3.0 speed */
- 
- 	if (!(xhci->quirks & XHCI_BROKEN_STREAMS) &&
-@@ -368,6 +370,8 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 
- 	return 0;
- 
-+remove_ext_cap:
-+	xhci_ext_cap_remove(xhci);
- put_usb3_hcd:
- 	usb_put_hcd(xhci->shared_hcd);
- dealloc_usb2_hcd:
-@@ -393,6 +397,8 @@ static void xhci_pci_remove(struct pci_dev *dev)
- 		xhci->shared_hcd = NULL;
- 	}
- 
-+	xhci_ext_cap_remove(xhci);
-+
- 	/* Workaround for spurious wakeups at shutdown with HSW */
- 	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
- 		pci_set_power_state(dev, PCI_D3hot);
-diff --git a/drivers/usb/host/xhci-pci.h b/drivers/usb/host/xhci-pci.h
-new file mode 100644
-index 000000000000..fc0cde231679
---- /dev/null
-+++ b/drivers/usb/host/xhci-pci.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * xhci-pci.h - xHCI extended capability handling platform Glue.
-+ *
-+ * Copyright (C) 2019 Mentor Graphics (Deutschland) GmbH
-+ * Derived from xhci-plat.h
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ */
-+
-+#ifndef _XHCI_PCI_H
-+#define _XHCI_PCI_H
-+
-+struct xhci_pci_priv {
-+	struct platform_device *role_switch_pdev;
-+};
-+
-+#endif	/* _XHCI_PCI_H */
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index fabbce1c542a..847d2021fc2c 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -2052,6 +2052,7 @@ void xhci_init_driver(struct hc_driver *drv,
- 		      const struct xhci_driver_overrides *over);
- int xhci_disable_slot(struct xhci_hcd *xhci, u32 slot_id);
- int xhci_ext_cap_init(struct xhci_hcd *xhci);
-+void xhci_ext_cap_remove(struct xhci_hcd *xhci);
- 
- int xhci_suspend(struct xhci_hcd *xhci, bool do_wakeup);
- int xhci_resume(struct xhci_hcd *xhci, bool hibernated);
--- 
-2.17.1
+> Does this problem affect GPUs more than other passthrough devices?  If
+> all passthrough devices are affected, why mention GPUs in particular?
+> I can't tell whether that information is relevant or superfluous.
+
+We found this issue initially on multiple passthrough GPUs, I mentioned thi=
+s
+just as an example. I will remove this word, because any PCI devices may
+be affected.
+
+Thanks,
+- Haiyang
