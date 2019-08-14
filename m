@@ -2,77 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D485B8CE78
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2019 10:31:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2711C8CF89
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2019 11:30:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfHNIbR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Aug 2019 04:31:17 -0400
-Received: from mga05.intel.com ([192.55.52.43]:41186 "EHLO mga05.intel.com"
+        id S1726047AbfHNJ37 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Aug 2019 05:29:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:50628 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726347AbfHNIbR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 14 Aug 2019 04:31:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 01:31:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,384,1559545200"; 
-   d="scan'208";a="167322667"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 14 Aug 2019 01:31:16 -0700
-Received: from [10.226.39.52] (ekotax-mobl.gar.corp.intel.com [10.226.39.52])
-        by linux.intel.com (Postfix) with ESMTP id 388D3580238;
-        Wed, 14 Aug 2019 01:31:15 -0700 (PDT)
-Subject: Re: [PATCH] PCI: dwc: Add map irq callback
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com
-References: <333e87c8ea92cd7442fbe874fc8c9eccabc62f58.1565763869.git.eswara.kota@linux.intel.com>
- <20190814073605.GA31526@infradead.org>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <fe722a89-37e7-9ef6-042b-a9584f234740@linux.intel.com>
-Date:   Wed, 14 Aug 2019 16:31:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        id S1725928AbfHNJ37 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 14 Aug 2019 05:29:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D9707344;
+        Wed, 14 Aug 2019 02:29:58 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A12C63F694;
+        Wed, 14 Aug 2019 02:29:57 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 10:29:52 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+        bhelgaas@google.com, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv6 1/2] PCI: layerscape: Add the bar_fixed_64bit property
+ in EP driver.
+Message-ID: <20190814092952.GA26840@e121166-lin.cambridge.arm.com>
+References: <20190814020330.12133-1-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190814073605.GA31526@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814020330.12133-1-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Christoph Hellwig,
+I asked you to remove the period at the end of the patch $SUBJECT and
+you did not, either you do not read what I write or explain me what's
+going on.
 
-On 8/14/2019 3:36 PM, Christoph Hellwig wrote:
-> On Wed, Aug 14, 2019 at 02:56:49PM +0800, Dilip Kota wrote:
->> Certain platforms like Intel need to configure
->> registers to enable the interrupts.
->> Map Irq callback helps to perform platform specific
->> configurations while assigning or enabling the interrupts.
-> This seems to miss the hunk that actually assigns the map_irq
-> callback.
-pp->map_irq() must assign the callback along with the platform specific 
-configuration.
-In Intel PCIe driver pp->map_irq() does the same. (Driver is not yet 
-present in mainline, i will submit for review once this change is approved).
->> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
->> index f93252d0da5b..5880d2b72ef8 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->> @@ -470,7 +470,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
->>   	bridge->sysdata = pp;
->>   	bridge->busnr = pp->root_bus_nr;
->>   	bridge->ops = &dw_pcie_ops;
->> -	bridge->map_irq = of_irq_parse_and_map_pci;
->> +	bridge->map_irq = pp->map_irq ? pp->map_irq : of_irq_parse_and_map_pci;
-> Pleae just use a classic if / else to make the code a little easier
-> to read.
+On Wed, Aug 14, 2019 at 10:03:29AM +0800, Xiaowei Bao wrote:
+> The PCIe controller of layerscape just have 4 BARs, BAR0 and BAR1
+> is 32bit, BAR2 and BAR4 is 64bit, this is determined by hardware,
+> so set the bar_fixed_64bit with 0x14.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 
-Noted, will update it.
+Kishon ACK'ed this patch and you have not carried his tag.
 
---Dilip
+I will make these changes but that's the last time I do that
+for you.
 
+Lorenzo
+
+> ---
+> v2:
+>  - Replace value 0x14 with a macro.
+> v3:
+>  - No change.
+> v4:
+>  - send the patch again with '--to'.
+> v5:
+>  - fix the commit message.
+> v6:
+>  - remove the [EXT] tag of the $SUBJECT in email.
+> 
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> index be61d96..ca9aa45 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -44,6 +44,7 @@ static const struct pci_epc_features ls_pcie_epc_features = {
+>  	.linkup_notifier = false,
+>  	.msi_capable = true,
+>  	.msix_capable = false,
+> +	.bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+>  };
+>  
+>  static const struct pci_epc_features*
+> -- 
+> 2.9.5
+> 
