@@ -2,75 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C3258CA6C
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2019 06:34:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19C9B8CAAA
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2019 07:38:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbfHNEea (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Aug 2019 00:34:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51814 "EHLO mail.kernel.org"
+        id S1727182AbfHNFis (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Aug 2019 01:38:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726875AbfHNEea (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 14 Aug 2019 00:34:30 -0400
+        id S1727095AbfHNFir (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 14 Aug 2019 01:38:47 -0400
 Received: from localhost (c-73-15-1-175.hsd1.ca.comcast.net [73.15.1.175])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09A732064A;
-        Wed, 14 Aug 2019 04:34:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4F1F20843;
+        Wed, 14 Aug 2019 05:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565757269;
-        bh=YXfRePtrpgOp4VoVjGqzpZyjQJeuzOvercRnHiUWlN4=;
+        s=default; t=1565761127;
+        bh=jbQInFjWCcnVxKfc7U99XY9coODUEn+idyykG/S6etY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=brJjf4O+x1eiH8OsOXOavdaAHfwFbDDfO80eCQ/6wJq0DMsZ+kZhifa6UHFKqeQ6R
-         qi1D1sCoSX4y+1l3akjYpeaeMM6AjPhEWtLZH4vN65IBWbz7Apndw1s24zNK9DIjjh
-         TVDNfpT3amygGdbsDVcXfMUhtfWUhews9XrJrKto=
-Date:   Tue, 13 Aug 2019 23:34:28 -0500
+        b=icdZw5dkw+xB/68m0F5VIkcHS3Y562JhnitWRYAyJO34yBtO33gj97J174/RmaIJt
+         dbZ1PZiVsvSgZx/H2yVa7EBKekeVS+XijvnYi8OW65ae/y/vVWE6rTCCwf6SiDlGZe
+         cUqjjXSjXzrDgboNIx2F5lusPtozsD86EjiZ7rIE=
+Date:   Wed, 14 Aug 2019 00:38:46 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     "sashal@kernel.org" <sashal@kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Message-ID: <20190814043428.GC206171@google.com>
-References: <1565743084-2069-1-git-send-email-haiyangz@microsoft.com>
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Bodong Wang <bodong@mellanox.com>,
+        Donald Dutile <ddutile@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [Linux-kernel-mentees] [PATCH v2 2/3] PCI: sysfs: Change
+ permissions from symbolic to octal
+Message-ID: <20190814053846.GA253360@google.com>
+References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
+ <20190813204513.4790-1-skunberg.kelsey@gmail.com>
+ <20190813204513.4790-3-skunberg.kelsey@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1565743084-2069-1-git-send-email-haiyangz@microsoft.com>
+In-Reply-To: <20190813204513.4790-3-skunberg.kelsey@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thanks for splitting these; I think that makes more sense.
+[+cc Bodong, Don, Greg for permission question]
 
-On Wed, Aug 14, 2019 at 12:38:54AM +0000, Haiyang Zhang wrote:
-> Currently in Azure cloud, for passthrough devices including GPU, the host
-> sets the device instance ID's bytes 8 - 15 to a value derived from the host
-> HWID, which is the same on all devices in a VM. So, the device instance
-> ID's bytes 8 and 9 provided by the host are no longer unique. This can
-> cause device passthrough to VMs to fail because the bytes 8 and 9 are used
-> as PCI domain number. Collision of domain numbers will cause the second
-> device with the same domain number fail to load.
+On Tue, Aug 13, 2019 at 02:45:12PM -0600, Kelsey Skunberg wrote:
+> Symbolic permissions such as "(S_IWUSR | S_IWGRP)" are not
+> preferred and octal permissions should be used instead. Change all
+> symbolic permissions to octal permissions.
+> 
+> Example of old:
+> 
+> "(S_IWUSR | S_IWGRP)"
+> 
+> Example of new:
+> 
+> "0220"
 
-I think this patch is fine.  I could be misunderstanding the commit
-log, but when you say "the ID bytes 8 and 9 are *no longer* unique",
-that suggests that they *used* to be unique but stopped being unique
-at some point, which of course raises the question of *when* they
-became non-unique.
 
-The specific information about that point would be useful to have in
-the commit log, e.g., is this related to a specific version of Azure,
-a configuration change, etc?
+>  static DEVICE_ATTR_RO(sriov_totalvfs);
+> -static DEVICE_ATTR(sriov_numvfs, (S_IRUGO | S_IWUSR | S_IWGRP),
+> -				  sriov_numvfs_show, sriov_numvfs_store);
+> +static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
+>  static DEVICE_ATTR_RO(sriov_offset);
+>  static DEVICE_ATTR_RO(sriov_stride);
+>  static DEVICE_ATTR_RO(sriov_vf_device);
+> -static DEVICE_ATTR(sriov_drivers_autoprobe, (S_IRUGO | S_IWUSR | S_IWGRP),
+> -		   sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
+> +static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
+> +		   sriov_drivers_autoprobe_store);
 
-Does this problem affect GPUs more than other passthrough devices?  If
-all passthrough devices are affected, why mention GPUs in particular?
-I can't tell whether that information is relevant or superfluous.
+Greg noticed that sriov_numvfs and sriov_drivers_autoprobe have
+"unusual" permissions.  These were added by:
+
+  0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
+  1789382a72a5 ("PCI: SRIOV control and status via sysfs")
+
+Kelsey's patch correctly preserves the existing permissions, but we
+should double-check that they are the permissions they want, and
+possibly add a comment about why they're different from the rest.
 
 Bjorn
