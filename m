@@ -2,211 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B7138F14F
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2019 18:55:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F7818F15D
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2019 19:00:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfHOQzU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Aug 2019 12:55:20 -0400
-Received: from mail-eopbgr680112.outbound.protection.outlook.com ([40.107.68.112]:24289
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        id S1729407AbfHORAI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Aug 2019 13:00:08 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:39957 "EHLO mx1.molgen.mpg.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726865AbfHOQzT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:55:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=angqzg1s6nZAuBrThzo2NkKkY3SQr1qptZwk9SoOxmaDegFiq9lRSVLxKh4mZwT+dLNQtwgMzSN3tP6kLpsAmiKvM9NwvPTi1N7HhfHXRQZ7uyUmX3VIfCcrUbcPXNUIR3MsBOFa6p2D+CEjsSyKwPUh33UtERjsEOSGBDeRlQDn3IILlgvcaz61LV5ufUBcCzbBFWov7HkEk9IBeclitpC8UhKATGyz0xbRlzxkIYgUSl01IrG6zrJdOvGCzaCa1F7vZEd2vEhZnUgZSWl0iRtIHNIisGnSU5VJJ4QIfRUhygj8RQSAHpqWUAC/+MNhq1tNfKFmqu5FcrsH+Ik5ag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5hn/GNKXWLC73UqjSyp7QkpR+PNpzVPjedT3Be9zAL4=;
- b=USWo7DBWQRMRunsMOFQjK4tWMbv9JHQutaetmNhhNPbx9m67SM/mxuTb4eECuWz1MsBBEufop1f0JHk/TS1Ygvle/PyMj9f5JCCjST9x0to2nYLfiHKLe7p4m6Utbuv8w7GFwvl1ur78/vxaqYlJtjVpv31YWvma9PbMeWhOLKPI9kxJBZTZ/zmSqGsMEc0COqEMECrH72q6B68n9nJOst3QZ1kbfMxkvpXQjnBsJ93FOQ5uvg0w+Mmq6Yf9mkpYQsedRwAAlvjyFj0tPBhzI1SobEo0x/6rAdNajJOd1BKDO9CJ5jRxnBZcDLDqzxSfjhjsq/O4afoZYQs++lwxHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5hn/GNKXWLC73UqjSyp7QkpR+PNpzVPjedT3Be9zAL4=;
- b=ZYZv0xZEv/AkA/6GBPtH0E871JR1S5ThEQan/xtBI0lPm1NRg8mKLAuOBhMeeAP348mUeu3qZfyFeidknXoH+VLY0iVyZ59ZEH4sBNJ83W11oxX1AjEGRMzoXAkL6TYcOdEixHy4du5UMCZsbS6nDCIoFgnjtfKppicMcFKbP7Q=
-Received: from BYAPR21MB1336.namprd21.prod.outlook.com (20.179.60.210) by
- BYAPR21MB1320.namprd21.prod.outlook.com (20.179.60.202) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.9; Thu, 15 Aug 2019 16:55:15 +0000
-Received: from BYAPR21MB1336.namprd21.prod.outlook.com
- ([fe80::75ae:360d:ad16:4c78]) by BYAPR21MB1336.namprd21.prod.outlook.com
- ([fe80::75ae:360d:ad16:4c78%4]) with mapi id 15.20.2199.004; Thu, 15 Aug 2019
- 16:55:15 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v5,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Thread-Topic: [PATCH v5,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Thread-Index: AQHVUrg+xNhbQy4qc0m3irmViCOzpab8YpOAgAAI7yA=
-Date:   Thu, 15 Aug 2019 16:55:15 +0000
-Message-ID: <BYAPR21MB13369B7B03B3CB7760D7D79ECAAC0@BYAPR21MB1336.namprd21.prod.outlook.com>
-References: <1565797908-5970-1-git-send-email-haiyangz@microsoft.com>
- <20190815160908.GA29157@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190815160908.GA29157@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-15T16:55:13.0391290Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=005d11c6-810f-41a8-a018-9ffd855ca5f1;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [96.61.92.94]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9822cd2f-6d51-42af-2475-08d721a15855
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600158)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR21MB1320;
-x-ms-traffictypediagnostic: BYAPR21MB1320:|BYAPR21MB1320:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <BYAPR21MB132089F66C488CB458834712CAAC0@BYAPR21MB1320.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 01304918F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(376002)(136003)(39860400002)(366004)(13464003)(189003)(199004)(81166006)(81156014)(8936002)(5660300002)(8676002)(10290500003)(8990500004)(229853002)(86362001)(14454004)(26005)(54906003)(99286004)(186003)(53546011)(478600001)(6916009)(6506007)(102836004)(33656002)(7696005)(52536014)(76176011)(11346002)(446003)(486006)(476003)(316002)(3846002)(4326008)(25786009)(22452003)(256004)(6436002)(74316002)(6116002)(14444005)(9686003)(2906002)(66476007)(64756008)(66446008)(55016002)(66946007)(66556008)(6246003)(76116006)(53936002)(10090500001)(66066001)(305945005)(71190400001)(71200400001)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR21MB1320;H:BYAPR21MB1336.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: hgdvHWcLgD4VW1Hf6LRgEkkwZJ23IfODET95nun+aP6GxBHa4RYJx/nCETfKCO/MY92zwk28vIUFVhm/LcinwRFB3CERNAxIOcCBP5WxH4welfcx+y6Ft3YZX3QorPARFNKyqBwHsSDTxnc501Ow8kuAhdVF129Xc4yN+jV8vt0sgc78m3M4LAahCvtINd+NxE5sOF0hQOhlOuCceQiE1OHUvfpGYHuyBLUCkPMbIGsgU3A2O+j8P/1capHWL1ScaAZCWzDG8Z5z54ZuaxOyYvKlQWmd02+VH/NUut/iqQf4oigyZPWI86YW836Y35/iPF8LTwBZTvJRLnDfGvG0laj6NCHuxZhvzjVAWWbMATNxJByLKfjy3uO/OALZ0uIYSRSmKLHgiTT0UrCzRePEpDaSZBzFGrxELxrMVfzWlKk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1729084AbfHORAI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 15 Aug 2019 13:00:08 -0400
+Received: from rabammel.molgen.mpg.de (rabammel.molgen.mpg.de [141.14.30.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id C3D0E2000C0B2;
+        Thu, 15 Aug 2019 19:00:04 +0200 (CEST)
+Subject: Messages to kexec@ get moderated (was: Crash kernel with 256 MB
+ reserved memory runs into OOM condition)
+To:     Dave Young <dyoung@redhat.com>, Michal Hocko <mhocko@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        =?UTF-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>,
+        "x86@kernel.org" <x86@kernel.org>, kexec@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org, kasong@redhat.com,
+        lijiang@redhat.com, Donald Buczek <buczek@molgen.mpg.de>
+References: <d65e4a42-1962-78c6-1b5a-65cb70529d62@molgen.mpg.de>
+ <20190812095029.GE5117@dhcp22.suse.cz>
+ <20190813024317.GA2862@dhcp-128-65.nay.redhat.com>
+ <20190813024600.GA2944@dhcp-128-65.nay.redhat.com>
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+Message-ID: <9f125599-33a9-4dfd-be05-04335a36c52e@molgen.mpg.de>
+Date:   Thu, 15 Aug 2019 19:00:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9822cd2f-6d51-42af-2475-08d721a15855
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 16:55:15.0236
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mJBJnE73JERSQNvzcy/Ljz76RUPTAxIOCMVWrt/uDsxkQbWF2WUjWYmfHwWkeeOXXAbTnOOAmylNyPsOyfqk3Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1320
+In-Reply-To: <20190813024600.GA2944@dhcp-128-65.nay.redhat.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms070400000301090606090306"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+This is a cryptographically signed message in MIME format.
+
+--------------ms070400000301090606090306
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+Dear Dave,
 
 
-> -----Original Message-----
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Sent: Thursday, August 15, 2019 12:11 PM
-> To: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: sashal@kernel.org; bhelgaas@google.com; linux-
-> hyperv@vger.kernel.org; linux-pci@vger.kernel.org; KY Srinivasan
-> <kys@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> olaf@aepfle.de; vkuznets <vkuznets@redhat.com>; linux-
-> kernel@vger.kernel.org
-> Subject: Re: [PATCH v5,1/2] PCI: hv: Detect and fix Hyper-V PCI domain
-> number collision
->=20
-> On Wed, Aug 14, 2019 at 03:52:15PM +0000, Haiyang Zhang wrote:
-> > Currently in Azure cloud, for passthrough devices, the host sets the de=
-vice
-> > instance ID's bytes 8 - 15 to a value derived from the host HWID, which=
- is
-> > the same on all devices in a VM. So, the device instance ID's bytes 8 a=
-nd 9
-> > provided by the host are no longer unique. This affects all Azure hosts
-> > since last year, and can cause device passthrough to VMs to fail becaus=
-e
->=20
-> Bjorn already asked, can you be a bit more specific than "since last
-> year" here please ?
->=20
-> It would be useful to understand when/how this became an issue.
-The host change happens around July 2018. The Azure roll out takes
-multi weeks, so there is no specific date. I will include the Month
-Year in the log.
+On 13.08.19 04:46, Dave Young wrote:
 
->=20
-> > the bytes 8 and 9 are used as PCI domain number. Collision of domain
-> > numbers will cause the second device with the same domain number fail t=
-o
-> > load.
-> >
-> > In the cases of collision, we will detect and find another number that =
-is
-> > not in use.
-> >
-> > Suggested-by: Michael Kelley <mikelley@microsoft.com>
-> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > Acked-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  drivers/pci/controller/pci-hyperv.c | 92
-> +++++++++++++++++++++++++++++++------
-> >  1 file changed, 79 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controll=
-er/pci-
-> hyperv.c
-> > index 40b6254..31b8fd5 100644
-> > --- a/drivers/pci/controller/pci-hyperv.c
-> > +++ b/drivers/pci/controller/pci-hyperv.c
-> > @@ -2510,6 +2510,48 @@ static void put_hvpcibus(struct
-> hv_pcibus_device *hbus)
-> >  		complete(&hbus->remove_event);
-> >  }
-> >
-> > +#define HVPCI_DOM_MAP_SIZE (64 * 1024)
-> > +static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
-> > +
-> > +/*
-> > + * PCI domain number 0 is used by emulated devices on Gen1 VMs, so
-> define 0
-> > + * as invalid for passthrough PCI devices of this driver.
-> > + */
-> > +#define HVPCI_DOM_INVALID 0
-> > +
-> > +/**
-> > + * hv_get_dom_num() - Get a valid PCI domain number
-> > + * Check if the PCI domain number is in use, and return another number=
- if
-> > + * it is in use.
-> > + *
-> > + * @dom: Requested domain number
-> > + *
-> > + * return: domain number on success, HVPCI_DOM_INVALID on failure
-> > + */
-> > +static u16 hv_get_dom_num(u16 dom)
-> > +{
-> > +	unsigned int i;
->=20
-> > +
-> > +	if (test_and_set_bit(dom, hvpci_dom_map) =3D=3D 0)
-> > +		return dom;
-> > +
-> > +	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
-> > +		if (test_and_set_bit(i, hvpci_dom_map) =3D=3D 0)
-> > +			return i;
-> > +	}
->=20
-> Don't you need locking around code reading/updating hvpci_dom_map ?
+> On 08/13/19 at 10:43am, Dave Young wrote:
 
-If the bit changes after for_each_clear_bit() considers it as a "clear bit"=
- - the
-test_and_set_bit() does test&set in an atomic operation - the return value
-will be 1 instead of 0. Then the loop will continue to the next clear bit, =
-until
-the test_and_set_bit() is successful. So no locking is necessary here.
+[=E2=80=A6]
 
-Thanks,
-- Haiyang
+> The question is to Paul,  also it would be always good to cc kexec mail=
 
+> list for kexec and kdump issues.
+
+kexec@ was CCed in my original mail, but my messages got moderated. It=E2=
+=80=99d
+great if you checked that with the list administrators.
+
+> Your mail to 'kexec' with the subject
+>=20
+>     Crash kernel with 256 MB reserved memory runs into OOM condition
+>=20
+> Is being held until the list moderator can review it for approval.
+>=20
+> The reason it is being held:
+>=20
+>     Message has a suspicious header
+>=20
+> Either the message will get posted to the list, or you will receive
+> notification of the moderator's decision.  If you would like to cancel
+> this posting, please visit the following URL:
+>=20
+>     http://lists.infradead.org/mailman/confirm/kexec/a23ab6162ef34d099a=
+f5dd86c46113def5152bb1
+
+
+Kind regards,
+
+Paul
+
+
+--------------ms070400000301090606090306
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
+EFowggUSMIID+qADAgECAgkA4wvV+K8l2YEwDQYJKoZIhvcNAQELBQAwgYIxCzAJBgNVBAYT
+AkRFMSswKQYDVQQKDCJULVN5c3RlbXMgRW50ZXJwcmlzZSBTZXJ2aWNlcyBHbWJIMR8wHQYD
+VQQLDBZULVN5c3RlbXMgVHJ1c3QgQ2VudGVyMSUwIwYDVQQDDBxULVRlbGVTZWMgR2xvYmFs
+Um9vdCBDbGFzcyAyMB4XDTE2MDIyMjEzMzgyMloXDTMxMDIyMjIzNTk1OVowgZUxCzAJBgNV
+BAYTAkRFMUUwQwYDVQQKEzxWZXJlaW4genVyIEZvZXJkZXJ1bmcgZWluZXMgRGV1dHNjaGVu
+IEZvcnNjaHVuZ3NuZXR6ZXMgZS4gVi4xEDAOBgNVBAsTB0RGTi1QS0kxLTArBgNVBAMTJERG
+Ti1WZXJlaW4gQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgMjCCASIwDQYJKoZIhvcNAQEBBQAD
+ggEPADCCAQoCggEBAMtg1/9moUHN0vqHl4pzq5lN6mc5WqFggEcVToyVsuXPztNXS43O+FZs
+FVV2B+pG/cgDRWM+cNSrVICxI5y+NyipCf8FXRgPxJiZN7Mg9mZ4F4fCnQ7MSjLnFp2uDo0p
+eQcAIFTcFV9Kltd4tjTTwXS1nem/wHdN6r1ZB+BaL2w8pQDcNb1lDY9/Mm3yWmpLYgHurDg0
+WUU2SQXaeMpqbVvAgWsRzNI8qIv4cRrKO+KA3Ra0Z3qLNupOkSk9s1FcragMvp0049ENF4N1
+xDkesJQLEvHVaY4l9Lg9K7/AjsMeO6W/VRCrKq4Xl14zzsjz9AkH4wKGMUZrAcUQDBHHWekC
+AwEAAaOCAXQwggFwMA4GA1UdDwEB/wQEAwIBBjAdBgNVHQ4EFgQUk+PYMiba1fFKpZFK4OpL
+4qIMz+EwHwYDVR0jBBgwFoAUv1kgNgB5oKAia4zV8mHSuCzLgkowEgYDVR0TAQH/BAgwBgEB
+/wIBAjAzBgNVHSAELDAqMA8GDSsGAQQBga0hgiwBAQQwDQYLKwYBBAGBrSGCLB4wCAYGZ4EM
+AQICMEwGA1UdHwRFMEMwQaA/oD2GO2h0dHA6Ly9wa2kwMzM2LnRlbGVzZWMuZGUvcmwvVGVs
+ZVNlY19HbG9iYWxSb290X0NsYXNzXzIuY3JsMIGGBggrBgEFBQcBAQR6MHgwLAYIKwYBBQUH
+MAGGIGh0dHA6Ly9vY3NwMDMzNi50ZWxlc2VjLmRlL29jc3ByMEgGCCsGAQUFBzAChjxodHRw
+Oi8vcGtpMDMzNi50ZWxlc2VjLmRlL2NydC9UZWxlU2VjX0dsb2JhbFJvb3RfQ2xhc3NfMi5j
+ZXIwDQYJKoZIhvcNAQELBQADggEBAIcL/z4Cm2XIVi3WO5qYi3FP2ropqiH5Ri71sqQPrhE4
+eTizDnS6dl2e6BiClmLbTDPo3flq3zK9LExHYFV/53RrtCyD2HlrtrdNUAtmB7Xts5et6u5/
+MOaZ/SLick0+hFvu+c+Z6n/XUjkurJgARH5pO7917tALOxrN5fcPImxHhPalR6D90Bo0fa3S
+PXez7vTXTf/D6OWST1k+kEcQSrCFWMBvf/iu7QhCnh7U3xQuTY+8npTD5+32GPg8SecmqKc2
+2CzeIs2LgtjZeOJVEqM7h0S2EQvVDFKvaYwPBt/QolOLV5h7z/0HJPT8vcP9SpIClxvyt7bP
+ZYoaorVyGTkwggWNMIIEdaADAgECAgwcOtRQhH7u81j4jncwDQYJKoZIhvcNAQELBQAwgZUx
+CzAJBgNVBAYTAkRFMUUwQwYDVQQKEzxWZXJlaW4genVyIEZvZXJkZXJ1bmcgZWluZXMgRGV1
+dHNjaGVuIEZvcnNjaHVuZ3NuZXR6ZXMgZS4gVi4xEDAOBgNVBAsTB0RGTi1QS0kxLTArBgNV
+BAMTJERGTi1WZXJlaW4gQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgMjAeFw0xNjExMDMxNTI0
+NDhaFw0zMTAyMjIyMzU5NTlaMGoxCzAJBgNVBAYTAkRFMQ8wDQYDVQQIDAZCYXllcm4xETAP
+BgNVBAcMCE11ZW5jaGVuMSAwHgYDVQQKDBdNYXgtUGxhbmNrLUdlc2VsbHNjaGFmdDEVMBMG
+A1UEAwwMTVBHIENBIC0gRzAyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnhx4
+59Lh4WqgOs/Md04XxU2yFtfM15ZuJV0PZP7BmqSJKLLPyqmOrADfNdJ5PIGBto2JBhtRRBHd
+G0GROOvTRHjzOga95WOTeura79T21FWwwAwa29OFnD3ZplQs6HgdwQrZWNi1WHNJxn/4mA19
+rNEBUc5urSIpZPvZi5XmlF3v3JHOlx3KWV7mUteB4pwEEfGTg4npPAJbp2o7arxQdoIq+Pu2
+OsvqhD7Rk4QeaX+EM1QS4lqd1otW4hE70h/ODPy1xffgbZiuotWQLC6nIwa65Qv6byqlIX0q
+Zuu99Vsu+r3sWYsL5SBkgecNI7fMJ5tfHrjoxfrKl/ErTAt8GQIDAQABo4ICBTCCAgEwEgYD
+VR0TAQH/BAgwBgEB/wIBATAOBgNVHQ8BAf8EBAMCAQYwKQYDVR0gBCIwIDANBgsrBgEEAYGt
+IYIsHjAPBg0rBgEEAYGtIYIsAQEEMB0GA1UdDgQWBBTEiKUH7rh7qgwTv9opdGNSG0lwFjAf
+BgNVHSMEGDAWgBST49gyJtrV8UqlkUrg6kviogzP4TCBjwYDVR0fBIGHMIGEMECgPqA8hjpo
+dHRwOi8vY2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1Yi9jcmwvY2Fjcmwu
+Y3JsMECgPqA8hjpodHRwOi8vY2RwMi5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1
+Yi9jcmwvY2FjcmwuY3JsMIHdBggrBgEFBQcBAQSB0DCBzTAzBggrBgEFBQcwAYYnaHR0cDov
+L29jc3AucGNhLmRmbi5kZS9PQ1NQLVNlcnZlci9PQ1NQMEoGCCsGAQUFBzAChj5odHRwOi8v
+Y2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNy
+dDBKBggrBgEFBQcwAoY+aHR0cDovL2NkcDIucGNhLmRmbi5kZS9nbG9iYWwtcm9vdC1nMi1j
+YS9wdWIvY2FjZXJ0L2NhY2VydC5jcnQwDQYJKoZIhvcNAQELBQADggEBABLpeD5FygzqOjj+
+/lAOy20UQOGWlx0RMuPcI4nuyFT8SGmK9lD7QCg/HoaJlfU/r78ex+SEide326evlFAoJXIF
+jVyzNltDhpMKrPIDuh2N12zyn1EtagqPL6hu4pVRzcBpl/F2HCvtmMx5K4WN1L1fmHWLcSap
+dhXLvAZ9RG/B3rqyULLSNN8xHXYXpmtvG0VGJAndZ+lj+BH7uvd3nHWnXEHC2q7iQlDUqg0a
+wIqWJgdLlx1Q8Dg/sodv0m+LN0kOzGvVDRCmowBdWGhhusD+duKV66pBl+qhC+4LipariWaM
+qK5ppMQROATjYeNRvwI+nDcEXr2vDaKmdbxgDVwwggWvMIIEl6ADAgECAgweKlJIhfynPMVG
+/KIwDQYJKoZIhvcNAQELBQAwajELMAkGA1UEBhMCREUxDzANBgNVBAgMBkJheWVybjERMA8G
+A1UEBwwITXVlbmNoZW4xIDAeBgNVBAoMF01heC1QbGFuY2stR2VzZWxsc2NoYWZ0MRUwEwYD
+VQQDDAxNUEcgQ0EgLSBHMDIwHhcNMTcxMTE0MTEzNDE2WhcNMjAxMTEzMTEzNDE2WjCBizEL
+MAkGA1UEBhMCREUxIDAeBgNVBAoMF01heC1QbGFuY2stR2VzZWxsc2NoYWZ0MTQwMgYDVQQL
+DCtNYXgtUGxhbmNrLUluc3RpdHV0IGZ1ZXIgbW9sZWt1bGFyZSBHZW5ldGlrMQ4wDAYDVQQL
+DAVNUElNRzEUMBIGA1UEAwwLUGF1bCBNZW56ZWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
+ggEKAoIBAQDIh/UR/AX/YQ48VWWDMLTYtXjYJyhRHMc81ZHMMoaoG66lWB9MtKRTnB5lovLZ
+enTIUyPsCrMhTqV9CWzDf6v9gOTWVxHEYqrUwK5H1gx4XoK81nfV8oGV4EKuVmmikTXiztGz
+peyDmOY8o/EFNWP7YuRkY/lPQJQBeBHYq9AYIgX4StuXu83nusq4MDydygVOeZC15ts0tv3/
+6WmibmZd1OZRqxDOkoBbY3Djx6lERohs3IKS6RKiI7e90rCSy9rtidJBOvaQS9wvtOSKPx0a
++2pAgJEVzZFjOAfBcXydXtqXhcpOi2VCyl+7+LnnTz016JJLsCBuWEcB3kP9nJYNAgMBAAGj
+ggIxMIICLTAJBgNVHRMEAjAAMA4GA1UdDwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcD
+AgYIKwYBBQUHAwQwHQYDVR0OBBYEFHM0Mc3XjMLlhWpp4JufRELL4A/qMB8GA1UdIwQYMBaA
+FMSIpQfuuHuqDBO/2il0Y1IbSXAWMCAGA1UdEQQZMBeBFXBtZW56ZWxAbW9sZ2VuLm1wZy5k
+ZTB9BgNVHR8EdjB0MDigNqA0hjJodHRwOi8vY2RwMS5wY2EuZGZuLmRlL21wZy1nMi1jYS9w
+dWIvY3JsL2NhY3JsLmNybDA4oDagNIYyaHR0cDovL2NkcDIucGNhLmRmbi5kZS9tcGctZzIt
+Y2EvcHViL2NybC9jYWNybC5jcmwwgc0GCCsGAQUFBwEBBIHAMIG9MDMGCCsGAQUFBzABhido
+dHRwOi8vb2NzcC5wY2EuZGZuLmRlL09DU1AtU2VydmVyL09DU1AwQgYIKwYBBQUHMAKGNmh0
+dHA6Ly9jZHAxLnBjYS5kZm4uZGUvbXBnLWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNydDBC
+BggrBgEFBQcwAoY2aHR0cDovL2NkcDIucGNhLmRmbi5kZS9tcGctZzItY2EvcHViL2NhY2Vy
+dC9jYWNlcnQuY3J0MEAGA1UdIAQ5MDcwDwYNKwYBBAGBrSGCLAEBBDARBg8rBgEEAYGtIYIs
+AQEEAwYwEQYPKwYBBAGBrSGCLAIBBAMGMA0GCSqGSIb3DQEBCwUAA4IBAQCQs6bUDROpFO2F
+Qz2FMgrdb39VEo8P3DhmpqkaIMC5ZurGbbAL/tAR6lpe4af682nEOJ7VW86ilsIJgm1j0ueY
+aOuL8jrN4X7IF/8KdZnnNnImW3QVni6TCcc+7+ggci9JHtt0IDCj5vPJBpP/dKXLCN4M+exl
+GXYpfHgxh8gclJPY1rquhQrihCzHfKB01w9h9tWZDVMtSoy9EUJFhCXw7mYUsvBeJwZesN2B
+fndPkrXx6XWDdU3S1LyKgHlLIFtarLFm2Hb5zAUR33h+26cN6ohcGqGEEzgIG8tXS8gztEaj
+1s2RyzmKd4SXTkKR3GhkZNVWy+gM68J7jP6zzN+cMYIDmjCCA5YCAQEwejBqMQswCQYDVQQG
+EwJERTEPMA0GA1UECAwGQmF5ZXJuMREwDwYDVQQHDAhNdWVuY2hlbjEgMB4GA1UECgwXTWF4
+LVBsYW5jay1HZXNlbGxzY2hhZnQxFTATBgNVBAMMDE1QRyBDQSAtIEcwMgIMHipSSIX8pzzF
+RvyiMA0GCWCGSAFlAwQCAQUAoIIB8TAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqG
+SIb3DQEJBTEPFw0xOTA4MTUxNzAwMDRaMC8GCSqGSIb3DQEJBDEiBCCYyEFSXayBEnPNgYGC
+YcMsTMPQo/6fCpp1yHkm+5pq5jBsBgkqhkiG9w0BCQ8xXzBdMAsGCWCGSAFlAwQBKjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMCAgFAMAcG
+BSsOAwIHMA0GCCqGSIb3DQMCAgEoMIGJBgkrBgEEAYI3EAQxfDB6MGoxCzAJBgNVBAYTAkRF
+MQ8wDQYDVQQIDAZCYXllcm4xETAPBgNVBAcMCE11ZW5jaGVuMSAwHgYDVQQKDBdNYXgtUGxh
+bmNrLUdlc2VsbHNjaGFmdDEVMBMGA1UEAwwMTVBHIENBIC0gRzAyAgweKlJIhfynPMVG/KIw
+gYsGCyqGSIb3DQEJEAILMXygejBqMQswCQYDVQQGEwJERTEPMA0GA1UECAwGQmF5ZXJuMREw
+DwYDVQQHDAhNdWVuY2hlbjEgMB4GA1UECgwXTWF4LVBsYW5jay1HZXNlbGxzY2hhZnQxFTAT
+BgNVBAMMDE1QRyBDQSAtIEcwMgIMHipSSIX8pzzFRvyiMA0GCSqGSIb3DQEBAQUABIIBADX9
+QCB7XSnM/7QrHJSUChxqDCCNQOGKQ6Zd6dToTt9zVGqWjievtNGmql6de62/uZcdBDDMpFDg
+dCvPeW34XX+pSXnbQI4dyEeO5q68HL8kEMx5vNm+OqlcpYQi1C+ErZGrREGax65HrCVSKKuY
+rIv/Z0wypzpT8NHtwa6o6/vBN2N1dErX+p3QLO/x9i1cssZY4/J6o5GYEpnCSJm+Mjg/0sFe
+SfeUINe5ogaYo8ce2ci4OZkNnbCR+Z7winWGNabJ+gAAlLiOPE0XxqfglV5onvlXVtDk4zJA
+x5czOlGOspEUeqjcJAPp8hBnyE/2MlYWlwWfFneiLk85WLQ5gykAAAAAAAA=
+--------------ms070400000301090606090306--
