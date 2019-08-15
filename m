@@ -2,585 +2,196 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C64E8EA4C
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2019 13:31:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA1818EA61
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2019 13:34:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729838AbfHOLbe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Aug 2019 07:31:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:42710 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725977AbfHOLbe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 15 Aug 2019 07:31:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C20DD360;
-        Thu, 15 Aug 2019 04:31:32 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E66903F694;
-        Thu, 15 Aug 2019 04:31:31 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 12:31:30 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
-        lorenzo.pieralisi@arm.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
-        mingkai.hu@nxp.com, roy.zang@nxp.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 01/10] PCI: designware-ep: Add multiple PFs support for
- DWC
-Message-ID: <20190815113129.GF43882@e119886-lin.cambridge.arm.com>
-References: <20190815083716.4715-1-xiaowei.bao@nxp.com>
+        id S1726120AbfHOLem (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Aug 2019 07:34:42 -0400
+Received: from mail-eopbgr50081.outbound.protection.outlook.com ([40.107.5.81]:58227
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726008AbfHOLem (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 15 Aug 2019 07:34:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QRRkv7cv9yJkAGr7RSGhowSIYnJ7B6kaX47XjrwscUTR6NrQxbRRge3EVz4lU1M5X7HQiF2sYom7DM17vrsUEPJEd+eDAFEioRdlpCQebn+sNyjb2LDApwAYWeajGOtlkiqLMqqCbLFUlnbQTo4dOsXk6ss3jTKqSVAHgxiAZfqfMTyQClZ4KMKcs8kQXp1ABf+pyft2Rz7b3SYUC+32fquCe90zzJeQBntk1wraEcN2MgO7VWGLkkJEewcWW3UwEKlPd8OtTPef2q1jKD93pxJLQKyaAwMLilqMgLfO/kZvpj1dXqhJsbNEkE9u3LSoNIewoMy4vWuGomgBwrkYwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cHVfnL2wS+ad6bQzmKx/FHNtefPa/ogoB6/ZuK0/BB0=;
+ b=IJ2xtjwNVw26/CcWWsc3Vjz9+BnB732J1y4/ktA+bNHqmupObyNqQspYaqPsinu2clTLIi//FSjAxdSfOenwBSU+wYnsS2vQ/G0aBId8fsnbqPWMPGfXCdlRQKrx48D1k4m/4LsJjUQ+8gHz7lUlTJIphZxrQsCXmFzreREqo9f2UFd/eRLnZT0rOjPlMzL6fas3aIdH3gURAavDVwEv2RMfPe72pQBtpY4x/lJpLG2fIVoI83M+Y5nVgec3Ze9GsrlDDMEm0ophTD6J20XG0e2eHsibTVt95Fz635pIQ6mrriqll1TUIR53zVhnUAkQgCGoO085X3FpLuel/HfQrA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cHVfnL2wS+ad6bQzmKx/FHNtefPa/ogoB6/ZuK0/BB0=;
+ b=ZHUJSKwN2hnX/XM8yUF0ai7sN3ZJm7GRxkuxyDfJAjoxXV481t5jTGpA6b1qw/xTED497njl50sYgbxsEfKKGM70ck9jG60ahRl58ML9zzI4vs74OFOSyhcHce/NybzdN3oKWfFvQuZP6895y0agCiWSj0qBejVv0l8w8M/n9X8=
+Received: from AM0PR0502MB4068.eurprd05.prod.outlook.com (52.133.38.142) by
+ AM0PR0502MB3633.eurprd05.prod.outlook.com (52.133.43.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Thu, 15 Aug 2019 11:34:36 +0000
+Received: from AM0PR0502MB4068.eurprd05.prod.outlook.com
+ ([fe80::9d51:ae68:d177:fc94]) by AM0PR0502MB4068.eurprd05.prod.outlook.com
+ ([fe80::9d51:ae68:d177:fc94%3]) with mapi id 15.20.2157.022; Thu, 15 Aug 2019
+ 11:34:36 +0000
+From:   Eran Ben Elisha <eranbe@mellanox.com>
+To:     Mark Bloch <markb@mellanox.com>, haiyangz <haiyangz@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     kys <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next, 3/6] net/mlx5: Add wrappers for HyperV PCIe
+ operations
+Thread-Topic: [PATCH net-next, 3/6] net/mlx5: Add wrappers for HyperV PCIe
+ operations
+Thread-Index: AQHVUtO7jZEMFZVmWUye6uAXmnR0Gab7G4QAgAD5bQA=
+Date:   Thu, 15 Aug 2019 11:34:36 +0000
+Message-ID: <f81d2a27-cedc-40ca-daf6-8f3053cc2d38@mellanox.com>
+References: <1565809632-39138-1-git-send-email-haiyangz@microsoft.com>
+ <1565809632-39138-4-git-send-email-haiyangz@microsoft.com>
+ <e2a38f24-5a63-ef89-9d69-6a0f2770a9e4@mellanox.com>
+In-Reply-To: <e2a38f24-5a63-ef89-9d69-6a0f2770a9e4@mellanox.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR0P264CA0022.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100::34)
+ To AM0PR0502MB4068.eurprd05.prod.outlook.com (2603:10a6:208:d::14)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=eranbe@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.47.165.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 19776057-28c1-4089-b29d-08d721748d3e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR0502MB3633;
+x-ms-traffictypediagnostic: AM0PR0502MB3633:
+x-ld-processed: a652971c-7d2e-4d9b-a6a4-d149256f461b,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR0502MB36339D9720A2A7D1680DE77EBAAC0@AM0PR0502MB3633.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 01304918F3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(366004)(376002)(39860400002)(396003)(199004)(189003)(6116002)(6246003)(229853002)(8936002)(81166006)(256004)(6436002)(81156014)(8676002)(3846002)(36756003)(6486002)(305945005)(71190400001)(71200400001)(31686004)(7736002)(2906002)(4326008)(110136005)(54906003)(2501003)(66446008)(64756008)(53936002)(66476007)(66946007)(66556008)(52116002)(316002)(99286004)(102836004)(25786009)(6506007)(53546011)(386003)(7416002)(86362001)(76176011)(6512007)(446003)(486006)(26005)(478600001)(31696002)(186003)(11346002)(1511001)(476003)(2201001)(2616005)(14454004)(66066001)(5660300002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0502MB3633;H:AM0PR0502MB4068.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BH9HnS2XpCeMUtEc88DvdU0fZPp7odyp4tUknwGDCmI/AJbfSOZ/bYenTf5o2FQm4usiO8qoF0OoRu7gbwt4hVoZeTbclGAYFS+TmDxlTUTRCou3hwafj+6hdhVLtP87LjDKA0U7U3vKk5jDs6kBESkYucFzaIRx4CHePoYoGI74CBtPhGdrYjIts2oTuVKcJpXnwiccwt79PRvuWypzEGNckQCBD73euf+S98J4w4HjeMAu9dxX9r+DLUsmXw/jWw0XbTElNyUoSgAN93p1RqpGPQBjOZ80/YfByScA5/uMU28TzINx/ZK0lE/+YYQnTjs+RTapfUKEfAo5QPAEDU5HmbUnnIrcVqq3rM/b+u3/D/pHMIqIXBoo0FFnemJwEHoEpe3pyOGojcxACYdVXj4NYSd1DvnSJQsWDb5UbSo=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <645EE4B897F2C54F9DEF282E1791BF53@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190815083716.4715-1-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19776057-28c1-4089-b29d-08d721748d3e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 11:34:36.7772
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OFgAkWZkuTT2qSGsME3MEVhokNiKkB48m3NZ9voAsKpw0xhrldX71UNpgpGE9JaTqnqveNMeaNbd5F8E29KFXQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0502MB3633
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 04:37:07PM +0800, Xiaowei Bao wrote:
-> Add multiple PFs support for DWC, different PF have different config space,
-> we use pf-offset property which get from the DTS to access the different pF
-> config space.
-
-Thanks for the patch. I haven't seen a cover letter for this series, is there
-one missing?
-
-
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c |  97 +++++++++++++---------
->  drivers/pci/controller/dwc/pcie-designware.c    | 105 ++++++++++++++++++++++--
->  drivers/pci/controller/dwc/pcie-designware.h    |  10 ++-
->  include/linux/pci-epc.h                         |   1 +
->  4 files changed, 164 insertions(+), 49 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 2bf5a35..75e2955 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -19,12 +19,14 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
->  	pci_epc_linkup(epc);
->  }
->  
-> -static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar,
-> -				   int flags)
-> +static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, u8 func_no,
-> +				   enum pci_barno bar, int flags)
->  {
->  	u32 reg;
-> +	struct pci_epc *epc = pci->ep.epc;
-> +	u32 pf_base = func_no * epc->pf_offset;
->  
-> -	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
-> +	reg = pf_base + PCI_BASE_ADDRESS_0 + (4 * bar);
-
-I think I'd rather see this arithmetic (and the one for determining pf_base)
-inside a macro or inline header function. This would make this code more readable
-and reduce the chances of an error by avoiding duplication of code.
-
-For example look at cdns_pcie_ep_fn_writeb and ROCKCHIP_PCIE_EP_FUNC_BASE for
-examples of other EP drivers that do this.
-
-
->  	dw_pcie_dbi_ro_wr_en(pci);
->  	dw_pcie_writel_dbi2(pci, reg, 0x0);
->  	dw_pcie_writel_dbi(pci, reg, 0x0);
-> @@ -37,7 +39,12 @@ static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar,
->  
->  void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
->  {
-> -	__dw_pcie_ep_reset_bar(pci, bar, 0);
-> +	u8 func_no, funcs;
-> +
-> +	funcs = pci->ep.epc->max_functions;
-> +
-> +	for (func_no = 0; func_no < funcs; func_no++)
-> +		__dw_pcie_ep_reset_bar(pci, func_no, bar, 0);
->  }
->  
->  static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
-> @@ -78,28 +85,29 @@ static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no,
->  {
->  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	u32 pf_base = func_no * epc->pf_offset;
->  
->  	dw_pcie_dbi_ro_wr_en(pci);
-> -	dw_pcie_writew_dbi(pci, PCI_VENDOR_ID, hdr->vendorid);
-> -	dw_pcie_writew_dbi(pci, PCI_DEVICE_ID, hdr->deviceid);
-> -	dw_pcie_writeb_dbi(pci, PCI_REVISION_ID, hdr->revid);
-> -	dw_pcie_writeb_dbi(pci, PCI_CLASS_PROG, hdr->progif_code);
-> -	dw_pcie_writew_dbi(pci, PCI_CLASS_DEVICE,
-> +	dw_pcie_writew_dbi(pci, pf_base + PCI_VENDOR_ID, hdr->vendorid);
-> +	dw_pcie_writew_dbi(pci, pf_base + PCI_DEVICE_ID, hdr->deviceid);
-> +	dw_pcie_writeb_dbi(pci, pf_base + PCI_REVISION_ID, hdr->revid);
-> +	dw_pcie_writeb_dbi(pci, pf_base + PCI_CLASS_PROG, hdr->progif_code);
-> +	dw_pcie_writew_dbi(pci, pf_base + PCI_CLASS_DEVICE,
->  			   hdr->subclass_code | hdr->baseclass_code << 8);
-> -	dw_pcie_writeb_dbi(pci, PCI_CACHE_LINE_SIZE,
-> +	dw_pcie_writeb_dbi(pci, pf_base + PCI_CACHE_LINE_SIZE,
->  			   hdr->cache_line_size);
-> -	dw_pcie_writew_dbi(pci, PCI_SUBSYSTEM_VENDOR_ID,
-> +	dw_pcie_writew_dbi(pci, pf_base + PCI_SUBSYSTEM_VENDOR_ID,
->  			   hdr->subsys_vendor_id);
-> -	dw_pcie_writew_dbi(pci, PCI_SUBSYSTEM_ID, hdr->subsys_id);
-> -	dw_pcie_writeb_dbi(pci, PCI_INTERRUPT_PIN,
-> +	dw_pcie_writew_dbi(pci, pf_base + PCI_SUBSYSTEM_ID, hdr->subsys_id);
-> +	dw_pcie_writeb_dbi(pci, pf_base + PCI_INTERRUPT_PIN,
->  			   hdr->interrupt_pin);
->  	dw_pcie_dbi_ro_wr_dis(pci);
->  
->  	return 0;
->  }
->  
-> -static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, enum pci_barno bar,
-> -				  dma_addr_t cpu_addr,
-> +static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no,
-> +				  enum pci_barno bar, dma_addr_t cpu_addr,
->  				  enum dw_pcie_as_type as_type)
->  {
->  	int ret;
-> @@ -112,7 +120,7 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, enum pci_barno bar,
->  		return -EINVAL;
->  	}
->  
-> -	ret = dw_pcie_prog_inbound_atu(pci, free_win, bar, cpu_addr,
-> +	ret = dw_pcie_prog_inbound_atu(pci, func_no, free_win, bar, cpu_addr,
->  				       as_type);
->  	if (ret < 0) {
->  		dev_err(pci->dev, "Failed to program IB window\n");
-> @@ -125,7 +133,8 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, enum pci_barno bar,
->  	return 0;
->  }
->  
-> -static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, phys_addr_t phys_addr,
-> +static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, u8 func_no,
-> +				   phys_addr_t phys_addr,
->  				   u64 pci_addr, size_t size)
->  {
->  	u32 free_win;
-> @@ -137,8 +146,8 @@ static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, phys_addr_t phys_addr,
->  		return -EINVAL;
->  	}
->  
-> -	dw_pcie_prog_outbound_atu(pci, free_win, PCIE_ATU_TYPE_MEM,
-> -				  phys_addr, pci_addr, size);
-> +	dw_pcie_prog_ep_outbound_atu(pci, func_no, free_win, PCIE_ATU_TYPE_MEM,
-> +				     phys_addr, pci_addr, size);
->  
->  	set_bit(free_win, ep->ob_window_map);
->  	ep->outbound_addr[free_win] = phys_addr;
-> @@ -154,7 +163,7 @@ static void dw_pcie_ep_clear_bar(struct pci_epc *epc, u8 func_no,
->  	enum pci_barno bar = epf_bar->barno;
->  	u32 atu_index = ep->bar_to_atu[bar];
->  
-> -	__dw_pcie_ep_reset_bar(pci, bar, epf_bar->flags);
-> +	__dw_pcie_ep_reset_bar(pci, func_no, bar, epf_bar->flags);
->  
->  	dw_pcie_disable_atu(pci, atu_index, DW_PCIE_REGION_INBOUND);
->  	clear_bit(atu_index, ep->ib_window_map);
-> @@ -170,14 +179,16 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no,
->  	size_t size = epf_bar->size;
->  	int flags = epf_bar->flags;
->  	enum dw_pcie_as_type as_type;
-> -	u32 reg = PCI_BASE_ADDRESS_0 + (4 * bar);
-> +	u32 pf_base = func_no * epc->pf_offset;
-> +	u32 reg = PCI_BASE_ADDRESS_0 + (4 * bar) + pf_base;
->  
->  	if (!(flags & PCI_BASE_ADDRESS_SPACE))
->  		as_type = DW_PCIE_AS_MEM;
->  	else
->  		as_type = DW_PCIE_AS_IO;
->  
-> -	ret = dw_pcie_ep_inbound_atu(ep, bar, epf_bar->phys_addr, as_type);
-> +	ret = dw_pcie_ep_inbound_atu(ep, func_no, bar,
-> +				     epf_bar->phys_addr, as_type);
->  	if (ret)
->  		return ret;
->  
-> @@ -235,7 +246,7 @@ static int dw_pcie_ep_map_addr(struct pci_epc *epc, u8 func_no,
->  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  
-> -	ret = dw_pcie_ep_outbound_atu(ep, addr, pci_addr, size);
-> +	ret = dw_pcie_ep_outbound_atu(ep, func_no, addr, pci_addr, size);
->  	if (ret) {
->  		dev_err(pci->dev, "Failed to enable address\n");
->  		return ret;
-> @@ -248,12 +259,13 @@ static int dw_pcie_ep_get_msi(struct pci_epc *epc, u8 func_no)
->  {
->  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	u32 pf_base = func_no * epc->pf_offset;
->  	u32 val, reg;
->  
->  	if (!ep->msi_cap)
->  		return -EINVAL;
->  
-> -	reg = ep->msi_cap + PCI_MSI_FLAGS;
-> +	reg = ep->msi_cap + pf_base + PCI_MSI_FLAGS;
->  	val = dw_pcie_readw_dbi(pci, reg);
->  	if (!(val & PCI_MSI_FLAGS_ENABLE))
->  		return -EINVAL;
-> @@ -267,12 +279,13 @@ static int dw_pcie_ep_set_msi(struct pci_epc *epc, u8 func_no, u8 interrupts)
->  {
->  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	u32 pf_base = func_no * epc->pf_offset;
->  	u32 val, reg;
->  
->  	if (!ep->msi_cap)
->  		return -EINVAL;
->  
-> -	reg = ep->msi_cap + PCI_MSI_FLAGS;
-> +	reg = ep->msi_cap + pf_base + PCI_MSI_FLAGS;
->  	val = dw_pcie_readw_dbi(pci, reg);
->  	val &= ~PCI_MSI_FLAGS_QMASK;
->  	val |= (interrupts << 1) & PCI_MSI_FLAGS_QMASK;
-> @@ -287,12 +300,13 @@ static int dw_pcie_ep_get_msix(struct pci_epc *epc, u8 func_no)
->  {
->  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	u32 pf_base = func_no * epc->pf_offset;
->  	u32 val, reg;
->  
->  	if (!ep->msix_cap)
->  		return -EINVAL;
->  
-> -	reg = ep->msix_cap + PCI_MSIX_FLAGS;
-> +	reg = ep->msix_cap + pf_base + PCI_MSIX_FLAGS;
->  	val = dw_pcie_readw_dbi(pci, reg);
->  	if (!(val & PCI_MSIX_FLAGS_ENABLE))
->  		return -EINVAL;
-> @@ -306,12 +320,13 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u16 interrupts)
->  {
->  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	u32 pf_base = func_no * epc->pf_offset;
->  	u32 val, reg;
->  
->  	if (!ep->msix_cap)
->  		return -EINVAL;
->  
-> -	reg = ep->msix_cap + PCI_MSIX_FLAGS;
-> +	reg = ep->msix_cap + pf_base + PCI_MSIX_FLAGS;
->  	val = dw_pcie_readw_dbi(pci, reg);
->  	val &= ~PCI_MSIX_FLAGS_QSIZE;
->  	val |= interrupts;
-> @@ -400,6 +415,7 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
->  	unsigned int aligned_offset;
->  	u16 msg_ctrl, msg_data;
->  	u32 msg_addr_lower, msg_addr_upper, reg;
-> +	u32 pf_base = func_no * epc->pf_offset;
->  	u64 msg_addr;
->  	bool has_upper;
->  	int ret;
-> @@ -408,19 +424,19 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
->  		return -EINVAL;
->  
->  	/* Raise MSI per the PCI Local Bus Specification Revision 3.0, 6.8.1. */
-> -	reg = ep->msi_cap + PCI_MSI_FLAGS;
-> +	reg = ep->msi_cap + pf_base + PCI_MSI_FLAGS;
->  	msg_ctrl = dw_pcie_readw_dbi(pci, reg);
->  	has_upper = !!(msg_ctrl & PCI_MSI_FLAGS_64BIT);
-> -	reg = ep->msi_cap + PCI_MSI_ADDRESS_LO;
-> +	reg = ep->msi_cap + pf_base + PCI_MSI_ADDRESS_LO;
->  	msg_addr_lower = dw_pcie_readl_dbi(pci, reg);
->  	if (has_upper) {
-> -		reg = ep->msi_cap + PCI_MSI_ADDRESS_HI;
-> +		reg = ep->msi_cap + pf_base + PCI_MSI_ADDRESS_HI;
->  		msg_addr_upper = dw_pcie_readl_dbi(pci, reg);
-> -		reg = ep->msi_cap + PCI_MSI_DATA_64;
-> +		reg = ep->msi_cap + pf_base + PCI_MSI_DATA_64;
->  		msg_data = dw_pcie_readw_dbi(pci, reg);
->  	} else {
->  		msg_addr_upper = 0;
-> -		reg = ep->msi_cap + PCI_MSI_DATA_32;
-> +		reg = ep->msi_cap + pf_base + PCI_MSI_DATA_32;
->  		msg_data = dw_pcie_readw_dbi(pci, reg);
->  	}
->  	aligned_offset = msg_addr_lower & (epc->mem->page_size - 1);
-> @@ -439,7 +455,7 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
->  }
->  
->  int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
-> -			     u16 interrupt_num)
-> +			      u16 interrupt_num)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  	struct pci_epc *epc = ep->epc;
-> @@ -447,16 +463,17 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
->  	u32 bar_addr_upper, bar_addr_lower;
->  	u32 msg_addr_upper, msg_addr_lower;
->  	u32 reg, msg_data, vec_ctrl;
-> +	u32 pf_base = func_no * epc->pf_offset;
->  	u64 tbl_addr, msg_addr, reg_u64;
->  	void __iomem *msix_tbl;
->  	int ret;
->  
-> -	reg = ep->msix_cap + PCI_MSIX_TABLE;
-> +	reg = ep->msix_cap + pf_base + PCI_MSIX_TABLE;
->  	tbl_offset = dw_pcie_readl_dbi(pci, reg);
->  	bir = (tbl_offset & PCI_MSIX_TABLE_BIR);
->  	tbl_offset &= PCI_MSIX_TABLE_OFFSET;
->  
-> -	reg = PCI_BASE_ADDRESS_0 + (4 * bir);
-> +	reg = PCI_BASE_ADDRESS_0 + pf_base + (4 * bir);
->  	bar_addr_upper = 0;
->  	bar_addr_lower = dw_pcie_readl_dbi(pci, reg);
->  	reg_u64 = (bar_addr_lower & PCI_BASE_ADDRESS_MEM_TYPE_MASK);
-> @@ -592,13 +609,17 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  	ep->epc = epc;
->  	epc_set_drvdata(epc, ep);
->  
-> -	if (ep->ops->ep_init)
-> -		ep->ops->ep_init(ep);
-> -
->  	ret = of_property_read_u8(np, "max-functions", &epc->max_functions);
->  	if (ret < 0)
->  		epc->max_functions = 1;
->  
-> +	ret = of_property_read_u32(np, "pf-offset", &epc->pf_offset);
-> +	if (ret < 0)
-> +		epc->pf_offset = 0;
-
-Bad things will likely happen if max_functions > 1 and pf-offset isn't set.
-I think the driver should bail in this situation. It would be very easy
-for someone to misconfigure this.
-
-
-> +
-> +	if (ep->ops->ep_init)
-> +		ep->ops->ep_init(ep);
-> +
->  	ret = __pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
->  				 ep->page_size);
->  	if (ret < 0) {
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 7d25102..c99cee4 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -158,6 +158,43 @@ static void dw_pcie_writel_ob_unroll(struct dw_pcie *pci, u32 index, u32 reg,
->  	dw_pcie_writel_atu(pci, offset + reg, val);
->  }
->  
-> +static void dw_pcie_prog_ep_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
-> +						int index, int type,
-> +						u64 cpu_addr, u64 pci_addr,
-> +						u32 size)
-> +{
-> +	u32 retries, val;
-> +
-> +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_LOWER_BASE,
-> +				 lower_32_bits(cpu_addr));
-> +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_BASE,
-> +				 upper_32_bits(cpu_addr));
-> +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_LIMIT,
-> +				 lower_32_bits(cpu_addr + size - 1));
-> +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_LOWER_TARGET,
-> +				 lower_32_bits(pci_addr));
-> +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
-> +				 upper_32_bits(pci_addr));
-> +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1,
-> +				 type | PCIE_ATU_FUNC_NUM(func_no));
-
-With the exception of this line, the rest of this function is identical to
-dw_pcie_prog_outbound_atu_unroll.
-
-> +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
-> +				 PCIE_ATU_ENABLE);
-> +
-> +	/*
-> +	 * Make sure ATU enable takes effect before any subsequent config
-> +	 * and I/O accesses.
-> +	 */
-> +	for (retries = 0; retries < LINK_WAIT_MAX_IATU_RETRIES; retries++) {
-> +		val = dw_pcie_readl_ob_unroll(pci, index,
-> +					      PCIE_ATU_UNR_REGION_CTRL2);
-> +		if (val & PCIE_ATU_ENABLE)
-> +			return;
-> +
-> +		mdelay(LINK_WAIT_IATU);
-> +	}
-> +	dev_err(pci->dev, "Outbound iATU is not being enabled\n");
-> +}
-> +
->  static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, int index,
->  					     int type, u64 cpu_addr,
->  					     u64 pci_addr, u32 size)
-> @@ -194,6 +231,51 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, int index,
->  	dev_err(pci->dev, "Outbound iATU is not being enabled\n");
->  }
->  
-> +void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
-> +				  int type, u64 cpu_addr, u64 pci_addr,
-> +				  u32 size)
-> +{
-> +	u32 retries, val;
-> +
-> +	if (pci->ops->cpu_addr_fixup)
-> +		cpu_addr = pci->ops->cpu_addr_fixup(pci, cpu_addr);
-> +
-> +	if (pci->iatu_unroll_enabled) {
-> +		dw_pcie_prog_ep_outbound_atu_unroll(pci, func_no, index, type,
-> +						    cpu_addr, pci_addr, size);
-> +		return;
-> +	}
-> +
-> +	dw_pcie_writel_dbi(pci, PCIE_ATU_VIEWPORT,
-> +			   PCIE_ATU_REGION_OUTBOUND | index);
-> +	dw_pcie_writel_dbi(pci, PCIE_ATU_LOWER_BASE,
-> +			   lower_32_bits(cpu_addr));
-> +	dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_BASE,
-> +			   upper_32_bits(cpu_addr));
-> +	dw_pcie_writel_dbi(pci, PCIE_ATU_LIMIT,
-> +			   lower_32_bits(cpu_addr + size - 1));
-> +	dw_pcie_writel_dbi(pci, PCIE_ATU_LOWER_TARGET,
-> +			   lower_32_bits(pci_addr));
-> +	dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET,
-> +			   upper_32_bits(pci_addr));
-> +	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
-> +			   PCIE_ATU_FUNC_NUM(func_no));
-
-The same here, this is identical to dw_pcie_prog_outbound_atu with the
-exception of this line.
-
-Is there a way you can avoid all of this duplicated code?
-
-Thanks,
-
-Andrew Murray 
-
-> +	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
-> +
-> +	/*
-> +	 * Make sure ATU enable takes effect before any subsequent config
-> +	 * and I/O accesses.
-> +	 */
-> +	for (retries = 0; retries < LINK_WAIT_MAX_IATU_RETRIES; retries++) {
-> +		val = dw_pcie_readl_dbi(pci, PCIE_ATU_CR2);
-> +		if (val & PCIE_ATU_ENABLE)
-> +			return;
-> +
-> +		mdelay(LINK_WAIT_IATU);
-> +	}
-> +	dev_err(pci->dev, "Outbound iATU is not being enabled\n");
-> +}
-> +
->  void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
->  			       u64 cpu_addr, u64 pci_addr, u32 size)
->  {
-> @@ -252,8 +334,8 @@ static void dw_pcie_writel_ib_unroll(struct dw_pcie *pci, u32 index, u32 reg,
->  	dw_pcie_writel_atu(pci, offset + reg, val);
->  }
->  
-> -static int dw_pcie_prog_inbound_atu_unroll(struct dw_pcie *pci, int index,
-> -					   int bar, u64 cpu_addr,
-> +static int dw_pcie_prog_inbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
-> +					   int index, int bar, u64 cpu_addr,
->  					   enum dw_pcie_as_type as_type)
->  {
->  	int type;
-> @@ -275,8 +357,10 @@ static int dw_pcie_prog_inbound_atu_unroll(struct dw_pcie *pci, int index,
->  		return -EINVAL;
->  	}
->  
-> -	dw_pcie_writel_ib_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, type);
-> +	dw_pcie_writel_ib_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, type |
-> +				 PCIE_ATU_FUNC_NUM(func_no));
->  	dw_pcie_writel_ib_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
-> +				 PCIE_ATU_FUNC_NUM_MATCH_EN |
->  				 PCIE_ATU_ENABLE |
->  				 PCIE_ATU_BAR_MODE_ENABLE | (bar << 8));
->  
-> @@ -297,14 +381,15 @@ static int dw_pcie_prog_inbound_atu_unroll(struct dw_pcie *pci, int index,
->  	return -EBUSY;
->  }
->  
-> -int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int bar,
-> -			     u64 cpu_addr, enum dw_pcie_as_type as_type)
-> +int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
-> +			     int bar, u64 cpu_addr,
-> +			     enum dw_pcie_as_type as_type)
->  {
->  	int type;
->  	u32 retries, val;
->  
->  	if (pci->iatu_unroll_enabled)
-> -		return dw_pcie_prog_inbound_atu_unroll(pci, index, bar,
-> +		return dw_pcie_prog_inbound_atu_unroll(pci, func_no, index, bar,
->  						       cpu_addr, as_type);
->  
->  	dw_pcie_writel_dbi(pci, PCIE_ATU_VIEWPORT, PCIE_ATU_REGION_INBOUND |
-> @@ -323,9 +408,11 @@ int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int bar,
->  		return -EINVAL;
->  	}
->  
-> -	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type);
-> -	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE
-> -			   | PCIE_ATU_BAR_MODE_ENABLE | (bar << 8));
-> +	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
-> +			   PCIE_ATU_FUNC_NUM(func_no));
-> +	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE |
-> +			   PCIE_ATU_FUNC_NUM_MATCH_EN |
-> +			   PCIE_ATU_BAR_MODE_ENABLE | (bar << 8));
->  
->  	/*
->  	 * Make sure ATU enable takes effect before any subsequent config
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index ffed084..2b291e8 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -71,9 +71,11 @@
->  #define PCIE_ATU_TYPE_IO		0x2
->  #define PCIE_ATU_TYPE_CFG0		0x4
->  #define PCIE_ATU_TYPE_CFG1		0x5
-> +#define PCIE_ATU_FUNC_NUM(pf)           (pf << 20)
->  #define PCIE_ATU_CR2			0x908
->  #define PCIE_ATU_ENABLE			BIT(31)
->  #define PCIE_ATU_BAR_MODE_ENABLE	BIT(30)
-> +#define PCIE_ATU_FUNC_NUM_MATCH_EN      BIT(19)
->  #define PCIE_ATU_LOWER_BASE		0x90C
->  #define PCIE_ATU_UPPER_BASE		0x910
->  #define PCIE_ATU_LIMIT			0x914
-> @@ -265,8 +267,12 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci);
->  void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
->  			       int type, u64 cpu_addr, u64 pci_addr,
->  			       u32 size);
-> -int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int bar,
-> -			     u64 cpu_addr, enum dw_pcie_as_type as_type);
-> +void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
-> +				  int type, u64 cpu_addr, u64 pci_addr,
-> +				  u32 size);
-> +int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
-> +			     int bar, u64 cpu_addr,
-> +			     enum dw_pcie_as_type as_type);
->  void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
->  			 enum dw_pcie_region_type type);
->  void dw_pcie_setup(struct dw_pcie *pci);
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index f641bad..fc2feee 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -96,6 +96,7 @@ struct pci_epc {
->  	const struct pci_epc_ops	*ops;
->  	struct pci_epc_mem		*mem;
->  	u8				max_functions;
-> +	u32				pf_offset;
->  	struct config_group		*group;
->  	/* spinlock to protect against concurrent access of EP controller */
->  	spinlock_t			lock;
-> -- 
-> 2.9.5
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+DQoNCk9uIDgvMTQvMjAxOSAxMTo0MSBQTSwgTWFyayBCbG9jaCB3cm90ZToNCj4gDQo+IA0KPiBP
+biA4LzE0LzE5IDEyOjA4IFBNLCBIYWl5YW5nIFpoYW5nIHdyb3RlOg0KPj4gRnJvbTogRXJhbiBC
+ZW4gRWxpc2hhIDxlcmFuYmVAbWVsbGFub3guY29tPg0KPj4NCj4+IEFkZCB3cmFwcGVyIGZ1bmN0
+aW9ucyBmb3IgSHlwZXJWIFBDSWUgcmVhZCAvIHdyaXRlIC8NCj4+IGJsb2NrX2ludmFsaWRhdGVf
+cmVnaXN0ZXIgb3BlcmF0aW9ucy4gIFRoaXMgd2lsbCBiZSB1c2VkIGFzIGFuDQo+PiBpbmZyYXN0
+cnVjdHVyZSBpbiB0aGUgZG93bnN0cmVhbSBwYXRjaCBmb3Igc29mdHdhcmUgY29tbXVuaWNhdGlv
+bi4NCj4+DQo+PiBUaGlzIHdpbGwgYmUgZW5hYmxlZCBieSBkZWZhdWx0IGlmIENPTkZJR19QQ0lf
+SFlQRVJWX01JTkkgaXMgc2V0Lg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEVyYW4gQmVuIEVsaXNo
+YSA8ZXJhbmJlQG1lbGxhbm94LmNvbT4NCj4+IFNpZ25lZC1vZmYtYnk6IFNhZWVkIE1haGFtZWVk
+IDxzYWVlZG1AbWVsbGFub3guY29tPg0KPj4gLS0tDQo+PiAgIGRyaXZlcnMvbmV0L2V0aGVybmV0
+L21lbGxhbm94L21seDUvY29yZS9NYWtlZmlsZSB8ICAxICsNCj4+ICAgZHJpdmVycy9uZXQvZXRo
+ZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2xpYi9odi5jIHwgNjQgKysrKysrKysrKysrKysrKysr
+KysrKysrDQo+PiAgIGRyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9saWIv
+aHYuaCB8IDIyICsrKysrKysrDQo+PiAgIDMgZmlsZXMgY2hhbmdlZCwgODcgaW5zZXJ0aW9ucygr
+KQ0KPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gv
+bWx4NS9jb3JlL2xpYi9odi5jDQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL25ldC9l
+dGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvbGliL2h2LmgNCj4+DQo+PiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL01ha2VmaWxlIGIvZHJpdmVy
+cy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL01ha2VmaWxlDQo+PiBpbmRleCA4Yjdl
+ZGFhLi5hODk1MGIxIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFu
+b3gvbWx4NS9jb3JlL01ha2VmaWxlDQo+PiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxs
+YW5veC9tbHg1L2NvcmUvTWFrZWZpbGUNCj4+IEBAIC00NSw2ICs0NSw3IEBAIG1seDVfY29yZS0k
+KENPTkZJR19NTFg1X0VTV0lUQ0gpICAgKz0gZXN3aXRjaC5vIGVzd2l0Y2hfb2ZmbG9hZHMubyBl
+c3dpdGNoX29mZmxvDQo+PiAgIG1seDVfY29yZS0kKENPTkZJR19NTFg1X01QRlMpICAgICAgKz0g
+bGliL21wZnMubw0KPj4gICBtbHg1X2NvcmUtJChDT05GSUdfVlhMQU4pICAgICAgICAgICs9IGxp
+Yi92eGxhbi5vDQo+PiAgIG1seDVfY29yZS0kKENPTkZJR19QVFBfMTU4OF9DTE9DSykgKz0gbGli
+L2Nsb2NrLm8NCj4+ICttbHg1X2NvcmUtJChDT05GSUdfUENJX0hZUEVSVl9NSU5JKSAgICAgKz0g
+bGliL2h2Lm8NCj4+ICAgDQo+PiAgICMNCj4+ICAgIyBJcG9pYiBuZXRkZXYNCj4+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvbGliL2h2LmMgYi9k
+cml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvbGliL2h2LmMNCj4+IG5ldyBm
+aWxlIG1vZGUgMTAwNjQ0DQo+PiBpbmRleCAwMDAwMDAwLi5jZjA4ZDAyDQo+PiAtLS0gL2Rldi9u
+dWxsDQo+PiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvbGli
+L2h2LmMNCj4+IEBAIC0wLDAgKzEsNjQgQEANCj4+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmll
+cjogR1BMLTIuMCBPUiBMaW51eC1PcGVuSUINCj4+ICsvLyBDb3B5cmlnaHQgKGMpIDIwMTggTWVs
+bGFub3ggVGVjaG5vbG9naWVzDQo+PiArDQo+PiArI2luY2x1ZGUgPGxpbnV4L2h5cGVydi5oPg0K
+Pj4gKyNpbmNsdWRlICJtbHg1X2NvcmUuaCINCj4+ICsjaW5jbHVkZSAibGliL2h2LmgiDQo+PiAr
+DQo+PiArc3RhdGljIGludCBtbHg1X2h2X2NvbmZpZ19jb21tb24oc3RydWN0IG1seDVfY29yZV9k
+ZXYgKmRldiwgdm9pZCAqYnVmLCBpbnQgbGVuLA0KPj4gKwkJCQkgaW50IG9mZnNldCwgYm9vbCBy
+ZWFkKQ0KPj4gK3sNCj4+ICsJaW50IHJjID0gLUVPUE5PVFNVUFA7DQo+PiArCWludCBieXRlc19y
+ZXR1cm5lZDsNCj4+ICsJaW50IGJsb2NrX2lkOw0KPj4gKw0KPj4gKwlpZiAob2Zmc2V0ICUgSFZf
+Q09ORklHX0JMT0NLX1NJWkVfTUFYIHx8IGxlbiAlIEhWX0NPTkZJR19CTE9DS19TSVpFX01BWCkN
+Cj4+ICsJCXJldHVybiAtRUlOVkFMOw0KPj4gKw0KPj4gKwlibG9ja19pZCA9IG9mZnNldCAvIEhW
+X0NPTkZJR19CTE9DS19TSVpFX01BWDsNCj4+ICsNCj4+ICsJcmMgPSByZWFkID8NCj4+ICsJICAg
+ICBoeXBlcnZfcmVhZF9jZmdfYmxrKGRldi0+cGRldiwgYnVmLA0KPj4gKwkJCQkgSFZfQ09ORklH
+X0JMT0NLX1NJWkVfTUFYLCBibG9ja19pZCwNCj4+ICsJCQkJICZieXRlc19yZXR1cm5lZCkgOg0K
+Pj4gKwkgICAgIGh5cGVydl93cml0ZV9jZmdfYmxrKGRldi0+cGRldiwgYnVmLA0KPj4gKwkJCQkg
+IEhWX0NPTkZJR19CTE9DS19TSVpFX01BWCwgYmxvY2tfaWQpOw0KPj4gKw0KPj4gKwkvKiBNYWtl
+IHN1cmUgbGVuIGJ5dGVzIHdlcmUgcmVhZCBzdWNjZXNzZnVsbHkgICovDQo+PiArCWlmIChyZWFk
+KQ0KPj4gKwkJcmMgfD0gIShsZW4gPT0gYnl0ZXNfcmV0dXJuZWQpOw0KPj4gKw0KPj4gKwlpZiAo
+cmMpIHsNCj4+ICsJCW1seDVfY29yZV9lcnIoZGV2LCAiRmFpbGVkIHRvICVzIGh2IGNvbmZpZywg
+ZXJyID0gJWQsIGxlbiA9ICVkLCBvZmZzZXQgPSAlZFxuIiwNCj4+ICsJCQkgICAgICByZWFkID8g
+InJlYWQiIDogIndyaXRlIiwgcmMsIGxlbiwNCj4+ICsJCQkgICAgICBvZmZzZXQpOw0KPj4gKwkJ
+cmV0dXJuIHJjOw0KPj4gKwl9DQo+PiArDQo+PiArCXJldHVybiAwOw0KPj4gK30NCj4gDQo+IFRo
+aXMgc2VlbXMgb3V0IG9mIHBsYWNlIHdoeSBub3QgZXhwb3NlIHRoaXMgZnVuY3Rpb24gYXMgcGFy
+dCBvZiBoeXBlcnYgYW5kIG1seDUNCj4gd2lsbCBqdXN0IHBhc3MgdGhlIHBkZXYuDQo+IA0KVGhl
+IEhWIGRyaXZlciB3b3JrcyB3aXRoIGJsb2NrIGNodW5rcy4gSSBmb3VuZCBpdCBsZXNzIGNvbnZl
+bmllbmNlIHRvIGRvIA0Kc28gZGlyZWN0bHksIHNvIEkgYWRkIGEgc21hbGwgd3JhcHBlciBmb3Ig
+bWx4NSBjb3JlLg0KDQpIYWl5YW5neiwNCkRvIHlvdSBzZWUgYSByZWFzb24gdG8gZXhwb3J0IHRo
+aXMgY2FsbGJhY2sgc3R5bGUgZnJvbSB0aGUgSFlQRVJWIGxldmVsIA0KaW5zdGVhZD8NCg0KPj4g
+Kw0KPj4gK2ludCBtbHg1X2h2X3JlYWRfY29uZmlnKHN0cnVjdCBtbHg1X2NvcmVfZGV2ICpkZXYs
+IHZvaWQgKmJ1ZiwgaW50IGxlbiwNCj4+ICsJCQlpbnQgb2Zmc2V0KQ0KPj4gK3sNCj4+ICsJcmV0
+dXJuIG1seDVfaHZfY29uZmlnX2NvbW1vbihkZXYsIGJ1ZiwgbGVuLCBvZmZzZXQsIHRydWUpOw0K
+Pj4gK30NCj4+ICsNCj4+ICtpbnQgbWx4NV9odl93cml0ZV9jb25maWcoc3RydWN0IG1seDVfY29y
+ZV9kZXYgKmRldiwgdm9pZCAqYnVmLCBpbnQgbGVuLA0KPj4gKwkJCSBpbnQgb2Zmc2V0KQ0KPj4g
+K3sNCj4+ICsJcmV0dXJuIG1seDVfaHZfY29uZmlnX2NvbW1vbihkZXYsIGJ1ZiwgbGVuLCBvZmZz
+ZXQsIGZhbHNlKTsNCj4+ICt9DQo+PiArDQo+PiAraW50IG1seDVfaHZfcmVnaXN0ZXJfaW52YWxp
+ZGF0ZShzdHJ1Y3QgbWx4NV9jb3JlX2RldiAqZGV2LCB2b2lkICpjb250ZXh0LA0KPj4gKwkJCQl2
+b2lkICgqYmxvY2tfaW52YWxpZGF0ZSkodm9pZCAqY29udGV4dCwNCj4+ICsJCQkJCQkJIHU2NCBi
+bG9ja19tYXNrKSkNCj4+ICt7DQo+PiArCXJldHVybiBoeXBlcnZfcmVnX2Jsb2NrX2ludmFsaWRh
+dGUoZGV2LT5wZGV2LCBjb250ZXh0LA0KPj4gKwkJCQkJICAgYmxvY2tfaW52YWxpZGF0ZSk7DQo+
+PiArfQ0KPj4gKw0KPj4gK3ZvaWQgbWx4NV9odl91bnJlZ2lzdGVyX2ludmFsaWRhdGUoc3RydWN0
+IG1seDVfY29yZV9kZXYgKmRldikNCj4+ICt7DQo+PiArCWh5cGVydl9yZWdfYmxvY2tfaW52YWxp
+ZGF0ZShkZXYtPnBkZXYsIE5VTEwsIE5VTEwpOw0KPj4gK30NCj4+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvbGliL2h2LmggYi9kcml2ZXJzL25l
+dC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvbGliL2h2LmgNCj4+IG5ldyBmaWxlIG1vZGUg
+MTAwNjQ0DQo+PiBpbmRleCAwMDAwMDAwLi43ZjY5NzcxDQo+PiAtLS0gL2Rldi9udWxsDQo+PiAr
+KysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvbGliL2h2LmgNCj4+
+IEBAIC0wLDAgKzEsMjIgQEANCj4+ICsvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIu
+MCBPUiBMaW51eC1PcGVuSUIgKi8NCj4+ICsvKiBDb3B5cmlnaHQgKGMpIDIwMTkgTWVsbGFub3gg
+VGVjaG5vbG9naWVzLiAqLw0KPj4gKw0KPj4gKyNpZm5kZWYgX19MSUJfSFZfSF9fDQo+PiArI2Rl
+ZmluZSBfX0xJQl9IVl9IX18NCj4+ICsNCj4+ICsjaWYgSVNfRU5BQkxFRChDT05GSUdfUENJX0hZ
+UEVSVl9NSU5JKQ0KPj4gKw0KPj4gKyNpbmNsdWRlIDxsaW51eC9oeXBlcnYuaD4NCj4+ICsjaW5j
+bHVkZSA8bGludXgvbWx4NS9kcml2ZXIuaD4NCj4+ICsNCj4+ICtpbnQgbWx4NV9odl9yZWFkX2Nv
+bmZpZyhzdHJ1Y3QgbWx4NV9jb3JlX2RldiAqZGV2LCB2b2lkICpidWYsIGludCBsZW4sDQo+PiAr
+CQkJaW50IG9mZnNldCk7DQo+PiAraW50IG1seDVfaHZfd3JpdGVfY29uZmlnKHN0cnVjdCBtbHg1
+X2NvcmVfZGV2ICpkZXYsIHZvaWQgKmJ1ZiwgaW50IGxlbiwNCj4+ICsJCQkgaW50IG9mZnNldCk7
+DQo+PiAraW50IG1seDVfaHZfcmVnaXN0ZXJfaW52YWxpZGF0ZShzdHJ1Y3QgbWx4NV9jb3JlX2Rl
+diAqZGV2LCB2b2lkICpjb250ZXh0LA0KPj4gKwkJCQl2b2lkICgqYmxvY2tfaW52YWxpZGF0ZSko
+dm9pZCAqY29udGV4dCwNCj4+ICsJCQkJCQkJIHU2NCBibG9ja19tYXNrKSk7DQo+PiArdm9pZCBt
+bHg1X2h2X3VucmVnaXN0ZXJfaW52YWxpZGF0ZShzdHJ1Y3QgbWx4NV9jb3JlX2RldiAqZGV2KTsN
+Cj4+ICsjZW5kaWYNCj4+ICsNCj4+ICsjZW5kaWYgLyogX19MSUJfSFZfSF9fICovDQo+Pg0KPiAN
+Cj4gTWFyaw0KPiANCg==
