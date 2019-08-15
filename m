@@ -2,95 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CE1798EE5D
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2019 16:37:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BE968EF1D
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2019 17:14:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733005AbfHOOhP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Aug 2019 10:37:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:22767 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730084AbfHOOhP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:37:15 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3ABABCF22;
-        Thu, 15 Aug 2019 14:37:15 +0000 (UTC)
-Received: from [10.3.117.107] (ovpn-117-107.phx2.redhat.com [10.3.117.107])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 42E0760CC0;
-        Thu, 15 Aug 2019 14:37:14 +0000 (UTC)
-Subject: Re: [Linux-kernel-mentees] [PATCH v2 2/3] PCI: sysfs: Change
- permissions from symbolic to octal
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Kelsey Skunberg <skunberg.kelsey@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Bodong Wang <bodong@mellanox.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-3-skunberg.kelsey@gmail.com>
- <20190814053846.GA253360@google.com>
-From:   Don Dutile <ddutile@redhat.com>
-Message-ID: <b4c0d5b4-7243-ba96-96d1-041a264ac499@redhat.com>
-Date:   Thu, 15 Aug 2019 10:37:13 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1732547AbfHOPO6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Aug 2019 11:14:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57284 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732517AbfHOPO6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Aug 2019 11:14:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=10q5T0aOD1la3+BpiY+S9zqCgRrKNaeZtsX3VZw5VxY=; b=gg4D1gWf8X+2Arko+oEkMeegw
+        UJw1OKqnBBmXrMYrmYbD3BjV+tZ1zPHj86w+/ofJDU7xwAmIUnXa8t9yQ+WdEeHJNEo+cHeBd5nX7
+        deZDXop9Jdtjw1E04bFBXSbmkiG9YkWsY93f23ig1ZCcAutpYl3tlQYQHTIE/PPweHBmDIFCC+Eu/
+        mkQ8ySnIoUMLOZHtt0XJHZC38IvH5L6nWcG3QYYgupmNWwN0MaalbowAh/0wsmBpRBILt8FgJBwNB
+        XOzYaaXWTCJu02wPP57sVrb/RayVlnrUJZQROH4uyBCLm6KYKG9eBbPiRZaqCjYUwXStHmVhRXhAh
+        eLtqoVR5g==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hyHSn-0000cI-1u; Thu, 15 Aug 2019 15:14:53 +0000
+Subject: Re: [PATCH] PCI: pci-hyperv: fix build errors on non-SYSFS config
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jake Oshins <jakeo@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dexuan Cui <decui@microsoft.com>
+References: <abbe8012-1e6f-bdea-1454-5c59ccbced3d@infradead.org>
+ <20190815104748.GB9511@e121166-lin.cambridge.arm.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <8e1b9297-c75d-3d64-1d40-c14e9033dc10@infradead.org>
+Date:   Thu, 15 Aug 2019 08:14:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190814053846.GA253360@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190815104748.GB9511@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 15 Aug 2019 14:37:15 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 08/14/2019 01:38 AM, Bjorn Helgaas wrote:
-> [+cc Bodong, Don, Greg for permission question]
-> 
-> On Tue, Aug 13, 2019 at 02:45:12PM -0600, Kelsey Skunberg wrote:
->> Symbolic permissions such as "(S_IWUSR | S_IWGRP)" are not
->> preferred and octal permissions should be used instead. Change all
->> symbolic permissions to octal permissions.
+On 8/15/19 3:47 AM, Lorenzo Pieralisi wrote:
+> On Fri, Jul 12, 2019 at 08:53:19AM -0700, Randy Dunlap wrote:
+>> From: Randy Dunlap <rdunlap@infradead.org>
 >>
->> Example of old:
+>> Fix build errors when building almost-allmodconfig but with SYSFS
+>> not set (not enabled).  Fixes these build errors:
 >>
->> "(S_IWUSR | S_IWGRP)"
+>> ERROR: "pci_destroy_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
+>> ERROR: "pci_create_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
 >>
->> Example of new:
+>> drivers/pci/slot.o is only built when SYSFS is enabled, so
+>> pci-hyperv.o has an implicit dependency on SYSFS.
+>> Make that explicit.
 >>
->> "0220"
+>> Also, depending on X86 && X86_64 is not needed, so just change that
+>> to depend on X86_64.
+>>
+>> Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot
+>> information")
 > 
-> 
->>   static DEVICE_ATTR_RO(sriov_totalvfs);
->> -static DEVICE_ATTR(sriov_numvfs, (S_IRUGO | S_IWUSR | S_IWGRP),
->> -				  sriov_numvfs_show, sriov_numvfs_store);
->> +static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
->>   static DEVICE_ATTR_RO(sriov_offset);
->>   static DEVICE_ATTR_RO(sriov_stride);
->>   static DEVICE_ATTR_RO(sriov_vf_device);
->> -static DEVICE_ATTR(sriov_drivers_autoprobe, (S_IRUGO | S_IWUSR | S_IWGRP),
->> -		   sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
->> +static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
->> +		   sriov_drivers_autoprobe_store);
-> 
-> Greg noticed that sriov_numvfs and sriov_drivers_autoprobe have
-> "unusual" permissions.  These were added by:
-> 
->    0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
->    1789382a72a5 ("PCI: SRIOV control and status via sysfs")
-> 
-> Kelsey's patch correctly preserves the existing permissions, but we
-> should double-check that they are the permissions they want, and
-> possibly add a comment about why they're different from the rest.
-> 
-> Bjorn
-> 
-The rest being? ... 0644 vs 0664 ?
-The file is read & written, thus the (first) 6; I'll have to dig through very old (7 yr) notes to see if the second 6 is needed for libvirt (so it doesn't have to be root to enable).
+> Fixed line break on Fixes tag, FYI.
 
--dd
+Thanks.
 
+> 
+>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>> Cc: Matthew Wilcox <willy@infradead.org>
+>> Cc: Jake Oshins <jakeo@microsoft.com>
+>> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+>> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+>> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+>> Cc: Stephen Hemminger <stephen@networkplumber.org>
+>> Cc: Sasha Levin <sashal@kernel.org>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Cc: linux-pci@vger.kernel.org
+>> Cc: linux-hyperv@vger.kernel.org
+>> Cc: Dexuan Cui <decui@microsoft.com>
+>> ---
+>> v3: corrected Fixes: tag [Dexuan Cui <decui@microsoft.com>]
+>>     This is the Microsoft-preferred version of the patch.
+>>
+>>  drivers/pci/Kconfig |    2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Applied to pci/hv for v5.4.
+> 
+> Thanks,
+> Lorenzo
+> 
+>> --- lnx-52.orig/drivers/pci/Kconfig
+>> +++ lnx-52/drivers/pci/Kconfig
+>> @@ -181,7 +181,7 @@ config PCI_LABEL
+>>  
+>>  config PCI_HYPERV
+>>          tristate "Hyper-V PCI Frontend"
+>> -        depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
+>> +        depends on X86_64 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
+>>          help
+>>            The PCI device frontend driver allows the kernel to import arbitrary
+>>            PCI devices from a PCI backend to support PCI driver domains.
+>>
+>>
+
+
+-- 
+~Randy
