@@ -2,75 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6228C8F71E
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2019 00:41:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5A9E8F744
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2019 00:55:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731959AbfHOWl1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Aug 2019 18:41:27 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38352 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731244AbfHOWl1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Aug 2019 18:41:27 -0400
-Received: by mail-pl1-f194.google.com with SMTP id m12so1610931plt.5
-        for <linux-pci@vger.kernel.org>; Thu, 15 Aug 2019 15:41:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=O+L+kO8Gi9tJ+LbkhXI1V3NKCWdBDyo6Y2nqvRyx6z8=;
-        b=SKXk0c2RdqWMCHEfBbel/YOlwewVflkaPqgbRdjDYr9qsRj3YpYARpr9hoAy996Aor
-         H9k7wVlMyjQuZ9sm8e07/C1rQ2U6opsR8wLW0T9JC2TaFUd3G+OA2QduN1v0pWNFBE0W
-         yWDxdFOinyBo+3ZrNw7ia4YLW1LEvCf5VuOYcG1FwJUVrUapsR3LwNTORuvgXk5m4Ict
-         N0kBywe3D+JzcLyoHJcJlhmTKofwd1rKcTWx2PS1lMA9qdOT4Ncy8BVatOHrGekBu/wF
-         Uce5AvI6NjcG3sycS48V+gmsrNBio7wYdu78sKe6dfnHx+e3Vc5SZN6s/zerBInNAia2
-         3zKg==
-X-Gm-Message-State: APjAAAUWR75wJuyGysN+yCHpxO35Rjs5+wSIVuuuKDWaRpBF6cIISpsK
-        CYk7NEQVdND7NmKjQN4KKHIe4Lbj
-X-Google-Smtp-Source: APXvYqyzFEyt3AHWI4zM4Ize9RZfXB8E3Y7KVfrNdXfI4xbUwhrpOmfSpCrJ+VlXjP3CbmsizgBVRg==
-X-Received: by 2002:a17:902:b905:: with SMTP id bf5mr5870979plb.342.1565908886815;
-        Thu, 15 Aug 2019 15:41:26 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id z28sm4444290pfj.74.2019.08.15.15.41.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Aug 2019 15:41:24 -0700 (PDT)
-Subject: Re: [PATCH] PCI/P2PDMA: Fix a source code comment
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Keith Busch <keith.busch@intel.com>
-References: <20190815212821.120929-1-bvanassche@acm.org>
- <3dc57299-199f-4583-9b66-748a6aec059f@deltatee.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <bc743620-7943-ba18-263f-027e532a11bd@acm.org>
-Date:   Thu, 15 Aug 2019 15:41:23 -0700
+        id S1730406AbfHOWzA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Aug 2019 18:55:00 -0400
+Received: from mga14.intel.com ([192.55.52.115]:38943 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733225AbfHOWzA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 15 Aug 2019 18:55:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 15:54:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
+   d="scan'208";a="206055505"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 15 Aug 2019 15:54:59 -0700
+Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
+        by linux.intel.com (Postfix) with ESMTP id 70DB75806C4;
+        Thu, 15 Aug 2019 15:54:59 -0700 (PDT)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v6 1/9] PCI/ERR: Update error status after reset_link()
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+References: <cover.1564177080.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <6be594215ae2ea0935d949537bfb84ff9e656a36.1564177080.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190815221629.GI253360@google.com>
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <d2521962-c72b-49b0-3ed0-00d53adba4c2@linux.intel.com>
+Date:   Thu, 15 Aug 2019 15:52:13 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <3dc57299-199f-4583-9b66-748a6aec059f@deltatee.com>
+In-Reply-To: <20190815221629.GI253360@google.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8/15/19 2:32 PM, Logan Gunthorpe wrote:
-> On 2019-08-15 3:28 p.m., Bart Van Assche wrote:
->> Commit 52916982af48 ("PCI/P2PDMA: Support peer-to-peer memory"; v4.20)
->> introduced the following text: "there's no way to determine whether the
->> root complex supports forwarding between them." A later commit added a
->> whitelist check in the function that comment applies to. Update the
->> comment to reflect the addition of the whitelist check.
-> 
-> Thanks for the vigilant patch, but I've already got a series[1] that
-> cleans up most of these commits. It looks like this patch will conflict
-> with that series.
+Hi,
 
-Hi Logan,
+On 8/15/19 3:16 PM, Bjorn Helgaas wrote:
+> On Fri, Jul 26, 2019 at 02:43:11PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>> Commit bdb5ac85777d ("PCI/ERR: Handle fatal error recovery") uses
+>> reset_link() to recover from fatal errors. But, if the reset is
+>> successful there is no need to continue the rest of the error recovery
+>> checks. Also, during fatal error recovery, if the initial value of error
+>> status is PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER then
+>> even after successful recovery (using reset_link()) pcie_do_recovery()
+>> will report the recovery result as failure. So update the status of
+>> error after reset_link().
+>>
+>> Fixes: bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
+>> Cc: Ashok Raj <ashok.raj@intel.com>
+>> Cc: Keith Busch <keith.busch@intel.com>
+>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> ---
+>>   drivers/pci/pcie/err.c | 11 ++++++++---
+>>   1 file changed, 8 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>> index 773197a12568..aecec124a829 100644
+>> --- a/drivers/pci/pcie/err.c
+>> +++ b/drivers/pci/pcie/err.c
+>> @@ -204,9 +204,13 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+>>   	else
+>>   		pci_walk_bus(bus, report_normal_detected, &status);
+>>   
+>> -	if (state == pci_channel_io_frozen &&
+>> -	    reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
+>> -		goto failed;
+>> +	if (state == pci_channel_io_frozen) {
+>> +		status = reset_link(dev, service);
+>> +		if (status != PCI_ERS_RESULT_RECOVERED)
+>> +			goto failed;
+>> +		else
+>> +			goto done;
+> This will be easier to read without the negation, i.e.,
+>
+>                  if (status == PCI_ERS_RESULT_RECOVERED)
+>                          goto done;
+>                  else
+>                          goto failed;
+will change it in next version.
 
-Thanks for the pointer. I'm fine with dropping this patch.
-
-Bart.
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
 
