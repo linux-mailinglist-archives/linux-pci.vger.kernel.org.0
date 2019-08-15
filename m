@@ -2,89 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 716468F66F
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2019 23:32:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A2248F6DC
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2019 00:16:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730540AbfHOVc0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Aug 2019 17:32:26 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:36732 "EHLO ale.deltatee.com"
+        id S1730908AbfHOWQC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Aug 2019 18:16:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730517AbfHOVcZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 15 Aug 2019 17:32:25 -0400
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hyNM3-0007aB-C8; Thu, 15 Aug 2019 15:32:21 -0600
-To:     Bart Van Assche <bvanassche@acm.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Keith Busch <keith.busch@intel.com>
-References: <20190815212821.120929-1-bvanassche@acm.org>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <3dc57299-199f-4583-9b66-748a6aec059f@deltatee.com>
-Date:   Thu, 15 Aug 2019 15:32:15 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728685AbfHOWQC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 15 Aug 2019 18:16:02 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D48F020644;
+        Thu, 15 Aug 2019 22:15:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565907361;
+        bh=S+HnNRjzevYqF/1E7oN2K3HGRc81RDrKMX1OcXkblsE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lYQLvuvDfrxb/sksuseUW5V/MAsUIo57vN82VjPUZoB43787ziWQ/gk17qDlFECb9
+         /StBjikx3IpFkZaYIg9csIL0ploUtgbOl/vRod8B6rjjtzSTHzQaUp+tdM+Pv9vS+x
+         qoLD9/VFRBxoJzRR1BUxN81EUSuS20ZNckCuQtvE=
+Date:   Thu, 15 Aug 2019 17:15:22 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     nouveau@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        Lukas Wunner <lukas@wunner.de>,
+        Daniel Drake <drake@endlessm.com>,
+        Aaron Plattner <aplattner@nvidia.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Ilia Mirkin <imirkin@alum.mit.edu>,
+        Karol Herbst <kherbst@redhat.com>,
+        Maik Freudenberg <hhfeuer@gmx.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Use pci_reset_bus() in
+ quirk_reset_lenovo_thinkpad_50_nvgpu()
+Message-ID: <20190815221522.GH253360@google.com>
+References: <20190801220117.14952-1-lyude@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190815212821.120929-1-bvanassche@acm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: keith.busch@intel.com, hch@lst.de, linux-pci@vger.kernel.org, bhelgaas@google.com, bvanassche@acm.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH] PCI/P2PDMA: Fix a source code comment
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801220117.14952-1-lyude@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2019-08-15 3:28 p.m., Bart Van Assche wrote:
-> Commit 52916982af48 ("PCI/P2PDMA: Support peer-to-peer memory"; v4.20)
-> introduced the following text: "there's no way to determine whether the
-> root complex supports forwarding between them." A later commit added a
-> whitelist check in the function that comment applies to. Update the
-> comment to reflect the addition of the whitelist check.
-
-Thanks for the vigilant patch, but I've already got a series[1] that
-cleans up most of these commits. It looks like this patch will conflict
-with that series.
-
-Logan
-
-[1]
-https://lore.kernel.org/linux-pci/20190812173048.9186-1-logang@deltatee.com/
-
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-> ---
->  drivers/pci/p2pdma.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On Thu, Aug 01, 2019 at 06:01:17PM -0400, Lyude Paul wrote:
+> Since quirk_nvidia_hda() was added there's now two nvidia device
+> functions on any laptops with nvidia GPUs: the HDA controller, and the
+> GPU itself. Unfortunately this has the sideaffect of breaking
+> quirk_reset_lenovo_thinkpad_50_nvgpu() since pci_reset_function() was
+> using pci_parent_bus_reset() to reset the GPU's respective PCI bus, and
+> pci_parent_bus_reset() does not work on busses which have more then a
+> single device function present.
 > 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index 234476226529..f719adc2b826 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -300,8 +300,8 @@ static bool root_complex_whitelist(struct pci_dev *dev)
->   * Any two devices that don't have a common upstream bridge will return -1.
->   * In this way devices on separate PCIe root ports will be rejected, which
->   * is what we want for peer-to-peer seeing each PCIe root port defines a
-> - * separate hierarchy domain and there's no way to determine whether the root
-> - * complex supports forwarding between them.
-> + * separate hierarchy domain and there's no way other than using a whitelist
-> + * to determine whether the root complex supports forwarding between them.
->   *
->   * In the case where two devices are connected to different PCIe switches,
->   * this function will still return a positive distance as long as both
+> So, fix this by simply calling pci_reset_bus() instead which properly
+> resets the GPU bus and all device functions under it, including both the
+> GPU and the HDA controller.
+> 
+> Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
+> Cc: Lukas Wunner <lukas@wunner.de>
+> Cc: Daniel Drake <drake@endlessm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Aaron Plattner <aplattner@nvidia.com>
+> Cc: Peter Wu <peter@lekensteyn.nl>
+> Cc: Ilia Mirkin <imirkin@alum.mit.edu>
+> Cc: Karol Herbst <kherbst@redhat.com>
+> Cc: Maik Freudenberg <hhfeuer@gmx.de>
+> Cc: linux-pci@vger.kernel.org
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+
+We merged b516ea586d71 for v5.3, so I applied this with Ben's ack to
+for-linus for v5.3, thanks!
+
+> ---
+>  drivers/pci/quirks.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 208aacf39329..44c4ae1abd00 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5256,7 +5256,7 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+>  	 */
+>  	if (ioread32(map + 0x2240c) & 0x2) {
+>  		pci_info(pdev, FW_BUG "GPU left initialized by EFI, resetting\n");
+> -		ret = pci_reset_function(pdev);
+> +		ret = pci_reset_bus(pdev);
+>  		if (ret < 0)
+>  			pci_err(pdev, "Failed to reset GPU: %d\n", ret);
+>  	}
+> -- 
+> 2.21.0
 > 
