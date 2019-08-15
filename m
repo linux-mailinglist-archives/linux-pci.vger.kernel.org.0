@@ -2,240 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C4C9B8EF4C
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2019 17:27:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EFB28EF82
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2019 17:37:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbfHOP1a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Aug 2019 11:27:30 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55965 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729514AbfHOP13 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Aug 2019 11:27:29 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f72so1601734wmf.5
-        for <linux-pci@vger.kernel.org>; Thu, 15 Aug 2019 08:27:27 -0700 (PDT)
+        id S1730412AbfHOPhM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Aug 2019 11:37:12 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38289 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729998AbfHOPhM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Aug 2019 11:37:12 -0400
+Received: by mail-oi1-f196.google.com with SMTP id p124so2519488oig.5;
+        Thu, 15 Aug 2019 08:37:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=suz4mKzGOm43s2AkTS32mygq2S1lAq1/2KkLJRCcuhI=;
+        b=BU+L/BikDVQeibw0EaDlqNH0M39YSDw4l2NssNBQ5HVSKf3PnMSL46YV3aGAlipVT6
+         j3UVmAAi5tAK0gH2D1mQABUsRBs7b/WdAkTm3zGadgUd24tSxdfwseZPyUkRNVWIaunE
+         1s9o3QJApWcej2KiMyjW5svK1eza9ICGsvjRxc+q8Cp0srbVW5DAf3vw8JKHcHh+lv72
+         y+SP7gkpwhUJQxuacUagwST9K1ZHP2Bp3Z/DQCuhKprEIAB2GMwRpyskkYJ6c5BC8HeN
+         yfHed+k4n4jSfOkZm2Yvq0gINHYpG3ISvIlxE6HOO5Ml/Q5luYmq9ORXOATC1MRxyXlU
+         1sjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XyD06YZS2Z9vjlAjxD/F+RLqC6OCWBrblTJoR3CHyz0=;
-        b=Xn3JTQOgXl+mQcM/zqDgeSHvfZseygMlge17mmxWyDewdGmU4b4Rsl5vZUlf4v0gOV
-         HsbzS5FGpWMIv/yHzSu+d9QEEunyonmy7mXtzSYpTVuSwoWqcBJBRVPytPU4Q4B4dz88
-         rcy3rV334o6YSRV0rzJpwVcJ/PnWzVI7EqKDMsDTTER8sIjZC1zHelLkKIXoL5RKX45t
-         UsycYHYiaAf7/i7yDrIuXR/WWgW1aTEKoXB1RwiL1Ze7KRsuzpWozKt0Tr65zWAY4eGy
-         L2ULJgCcv5sHz2C3oDBSu0zBAcRTPBmbWYVe81EHIb6nJXyuw62ttiwvt/D4S+DG07os
-         e4sA==
-X-Gm-Message-State: APjAAAWRSyYhb0r2XEAqwnr8q3UltHMisauY132TQS/FzEczVou/jJG0
-        XQtFbEdRGxIBnFM4IiPQhfBmcAHBxCU=
-X-Google-Smtp-Source: APXvYqxe3J9geeNRz3vyjHD53+OQ9de7Rnny6r2RtTiMr5lRzviRCKfNI6NE/YpaOkqoNTszUrn39g==
-X-Received: by 2002:a1c:f20a:: with SMTP id s10mr3397376wmc.145.1565882846338;
-        Thu, 15 Aug 2019 08:27:26 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id d16sm3726349wrj.47.2019.08.15.08.27.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Aug 2019 08:27:25 -0700 (PDT)
-Subject: Re: [PATCH v2] usb: xhci-pci: reorder removal to avoid use-after-free
-To:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>
-Cc:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <1565782781938.37795@mentor.com>
- <15aa45c7-6e45-d03f-9336-4291f8b2dc66@redhat.com>
- <29aadcf136bb4d5285afb4fc5b500b49@SVR-IES-MBX-03.mgc.mentorg.com>
- <662c2014-f52c-a4a7-cbf0-78d43c3a4f22@redhat.com>
- <1565793165678.11527@mentor.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <3cb06e75-70a8-0f59-ae08-5bbd99abbead@redhat.com>
-Date:   Thu, 15 Aug 2019 17:27:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=suz4mKzGOm43s2AkTS32mygq2S1lAq1/2KkLJRCcuhI=;
+        b=NbymDNoJmpc3cDghnnFtoylIDigNdxjQvVToURMscbvjpQStkyXtAjUpmFQgnDA/tn
+         2PDA0XKpWAoUaecs7KWKSxL0isvyGfrxjh8v5ETJ8yE99/zTIQ24OizULA2tnBEodf5m
+         XyFRM82HylkYTGpctqYYfC7oQW63t+kJzdDtFvC7wthm5noPrlmgmFf+tox/v2b6l6jF
+         qSRO1C4SmSaXukO8WQ0X3VOwKxy9hdJ7l55DbbqcK5V0pE+DuCGQP2N056xFyoCh3Sru
+         3RXmZscpTQRSkFhnKT1ocI7WQpS6500E3ZjeA5Od5SnfKbOWovxl9uT41XV0wD+ZWH6b
+         Ea7A==
+X-Gm-Message-State: APjAAAXVwydjiRG+ygg98VLytLYqTdz03lu1/YlZcfjlCwON3sIiwew9
+        kAKf10QomSDx5hMf0yRC+EY=
+X-Google-Smtp-Source: APXvYqyHna7FfuRasokgTH8PppSPOd+C93aaRzZFjLUIE4EtFikMOioFypedbkXo6otEajkh/cp2cA==
+X-Received: by 2002:a02:a383:: with SMTP id y3mr5754146jak.6.1565883431093;
+        Thu, 15 Aug 2019 08:37:11 -0700 (PDT)
+Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id c18sm1491856iod.19.2019.08.15.08.37.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2019 08:37:10 -0700 (PDT)
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        bodong@mellanox.com, ddutile@redhat.com,
+        gregkh@linuxfoundation.org, skunberg.kelsey@gmail.com
+Subject: [PATCH v3 0/4] PCI: Clean up pci-sysfs.c
+Date:   Thu, 15 Aug 2019 09:33:49 -0600
+Message-Id: <20190815153352.86143-1-skunberg.kelsey@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190813204513.4790-1-skunberg.kelsey@gmail.com>
+References: <20190813204513.4790-1-skunberg.kelsey@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1565793165678.11527@mentor.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+This series is designed to clean up device attributes and permissions in
+pci-sysfs.c. Then move the sysfs SR-IOV functions from pci-sysfs.c to
+iov.c for better organization.
 
-On 14-08-19 16:32, Schmid, Carsten wrote:
-> On driver removal, the platform_device_unregister call
-> attached through devm_add_action_or_reset was executed
-> after usb_hcd_pci_remove.
-> This lead to a use-after-free for the iomem resorce of
-> the xhci-ext-caps driver in the platform removal
-> because the parent of the resource was freed earlier.
-> 
-> Fix this by reordering of the removal sequence.
-> 
-> Signed-off-by: Carsten Schmid <carsten_schmid@mentor.com>
+Patch 1: Define device attributes with DEVICE_ATTR* instead of __ATTR*.
 
-Patch looks good to me:
+Patch 2: Change permissions from symbolic to the preferred octal.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Patch 3: Change DEVICE_ATTR() with 0220 permissions to DEVICE_ATTR_WO().
 
-Regards,
-
-Hans
+Patch 4: Move sysfs SR-IOV functions to iov.c to keep the feature's code
+together.
 
 
+Patch 1, 2, and 4 will report unusual permissions '0664' used from the
+following:
 
-> ---
-> v2:
->    - more speaking name for private data element
->    - consider failure in driver init sequence
->    - fix minor issues found by checkpatch.pl
-> ---
->   drivers/usb/host/xhci-ext-caps.c | 25 +++++++++++++++----------
->   drivers/usb/host/xhci-pci.c      |  8 +++++++-
->   drivers/usb/host/xhci-pci.h      | 20 ++++++++++++++++++++
->   drivers/usb/host/xhci.h          |  1 +
->   4 files changed, 43 insertions(+), 11 deletions(-)
->   create mode 100644 drivers/usb/host/xhci-pci.h
-> 
-> diff --git a/drivers/usb/host/xhci-ext-caps.c b/drivers/usb/host/xhci-ext-caps.c
-> index 399113f9fc5c..28a7d53ecf2c 100644
-> --- a/drivers/usb/host/xhci-ext-caps.c
-> +++ b/drivers/usb/host/xhci-ext-caps.c
-> @@ -7,21 +7,19 @@
->   
->   #include <linux/platform_device.h>
->   #include "xhci.h"
-> +#include "xhci-pci.h"
->   
->   #define USB_SW_DRV_NAME		"intel_xhci_usb_sw"
->   #define USB_SW_RESOURCE_SIZE	0x400
->   
-> -static void xhci_intel_unregister_pdev(void *arg)
-> -{
-> -	platform_device_unregister(arg);
-> -}
-> -
->   static int xhci_create_intel_xhci_sw_pdev(struct xhci_hcd *xhci, u32 cap_offset)
->   {
->   	struct usb_hcd *hcd = xhci_to_hcd(xhci);
->   	struct device *dev = hcd->self.controller;
->   	struct platform_device *pdev;
->   	struct resource	res = { 0, };
-> +	struct xhci_pci_priv *priv = (struct xhci_pci_priv *)xhci->priv;
-> +
->   	int ret;
->   
->   	pdev = platform_device_alloc(USB_SW_DRV_NAME, PLATFORM_DEVID_NONE);
-> @@ -52,11 +50,7 @@ static int xhci_create_intel_xhci_sw_pdev(struct xhci_hcd *xhci, u32 cap_offset)
->   		return ret;
->   	}
->   
-> -	ret = devm_add_action_or_reset(dev, xhci_intel_unregister_pdev, pdev);
-> -	if (ret) {
-> -		dev_err(dev, "couldn't add unregister action for intel_xhci_usb_sw pdev\n");
-> -		return ret;
-> -	}
-> +	priv->role_switch_pdev = pdev;
->   
->   	return 0;
->   }
-> @@ -88,3 +82,14 @@ int xhci_ext_cap_init(struct xhci_hcd *xhci)
->   	return 0;
->   }
->   EXPORT_SYMBOL_GPL(xhci_ext_cap_init);
-> +
-> +void xhci_ext_cap_remove(struct xhci_hcd *xhci)
-> +{
-> +	struct xhci_pci_priv *priv = (struct xhci_pci_priv *)xhci->priv;
-> +
-> +	if (priv->role_switch_pdev) {
-> +		platform_device_unregister(priv->role_switch_pdev);
-> +		priv->role_switch_pdev = NULL;
-> +	}
-> +}
-> +EXPORT_SYMBOL_GPL(xhci_ext_cap_remove);
-> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> index c2fe218e051f..f2201f380c17 100644
-> --- a/drivers/usb/host/xhci-pci.c
-> +++ b/drivers/usb/host/xhci-pci.c
-> @@ -14,6 +14,7 @@
->   #include <linux/acpi.h>
->   
->   #include "xhci.h"
-> +#include "xhci-pci.h"
->   #include "xhci-trace.h"
->   
->   #define SSIC_PORT_NUM		2
-> @@ -62,6 +63,7 @@ static struct hc_driver __read_mostly xhci_pci_hc_driver;
->   static int xhci_pci_setup(struct usb_hcd *hcd);
->   
->   static const struct xhci_driver_overrides xhci_pci_overrides __initconst = {
-> +	.extra_priv_size = sizeof(struct xhci_pci_priv),
->   	.reset = xhci_pci_setup,
->   };
->   
-> @@ -350,7 +352,7 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
->   	retval = usb_add_hcd(xhci->shared_hcd, dev->irq,
->   			IRQF_SHARED);
->   	if (retval)
-> -		goto put_usb3_hcd;
-> +		goto remove_ext_cap;
->   	/* Roothub already marked as USB 3.0 speed */
->   
->   	if (!(xhci->quirks & XHCI_BROKEN_STREAMS) &&
-> @@ -368,6 +370,8 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
->   
->   	return 0;
->   
-> +remove_ext_cap:
-> +	xhci_ext_cap_remove(xhci);
->   put_usb3_hcd:
->   	usb_put_hcd(xhci->shared_hcd);
->   dealloc_usb2_hcd:
-> @@ -393,6 +397,8 @@ static void xhci_pci_remove(struct pci_dev *dev)
->   		xhci->shared_hcd = NULL;
->   	}
->   
-> +	xhci_ext_cap_remove(xhci);
-> +
->   	/* Workaround for spurious wakeups at shutdown with HSW */
->   	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
->   		pci_set_power_state(dev, PCI_D3hot);
-> diff --git a/drivers/usb/host/xhci-pci.h b/drivers/usb/host/xhci-pci.h
-> new file mode 100644
-> index 000000000000..fc0cde231679
-> --- /dev/null
-> +++ b/drivers/usb/host/xhci-pci.h
-> @@ -0,0 +1,20 @@
-> +/* SPDX-License-Identifier: GPL-2.0
-> + *
-> + * xhci-pci.h - xHCI extended capability handling platform Glue.
-> + *
-> + * Copyright (C) 2019 Mentor Graphics (Deutschland) GmbH
-> + * Derived from xhci-plat.h
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * version 2 as published by the Free Software Foundation.
-> + */
-> +
-> +#ifndef _XHCI_PCI_H
-> +#define _XHCI_PCI_H
-> +
-> +struct xhci_pci_priv {
-> +	struct platform_device *role_switch_pdev;
-> +};
-> +
-> +#endif	/* _XHCI_PCI_H */
-> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-> index fabbce1c542a..847d2021fc2c 100644
-> --- a/drivers/usb/host/xhci.h
-> +++ b/drivers/usb/host/xhci.h
-> @@ -2052,6 +2052,7 @@ void xhci_init_driver(struct hc_driver *drv,
->   		      const struct xhci_driver_overrides *over);
->   int xhci_disable_slot(struct xhci_hcd *xhci, u32 slot_id);
->   int xhci_ext_cap_init(struct xhci_hcd *xhci);
-> +void xhci_ext_cap_remove(struct xhci_hcd *xhci);
->   
->   int xhci_suspend(struct xhci_hcd *xhci, bool do_wakeup);
->   int xhci_resume(struct xhci_hcd *xhci, bool hibernated);
-> 
+  static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show,
+                     sriov_numvfs_store);
+
+  static DEVICE_ATTR(sriov_drivers_autoprobe, 0664,
+                     sriov_drivers_autoprobe_show,
+                     sriov_drivers_autoprobe_store);
+
+This series preserves the existing permissions set in:
+
+
+  commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control
+                        VF driver binding")
+
+  commit 1789382a72a5 ("PCI: SRIOV control and status via sysfs")
+
+Either adding a comment verifying permissions are okay or changing the
+permissions is to be completed with a new patch.
+
+Changes since v1:
+        Add patch 1 and 2 to fix the way device attributes are defined
+        and change permissions from symbolic to octal. Patch 4 which moves
+        sysfs SR-IOV functions to iov.c will then apply cleaner.
+
+Changes since v2:
+
+        Patch 1: Commit log updated. Example shows DEVICE_ATTR_RO()
+        example instead of DEVICE_ATTR(). DEVICE_ATTR() should be avoided
+        unless the files have unusual permissions. Changed to reflect a
+        more encouraged usage.  Also updated regex to be accurate.
+
+        Patch 3: [NEW] Add patch to change DEVICE_ATTR() with 0220
+        permissions to DEVICE_ATTR_WO().
+
+        Updated series log to reflect new patch and unusual permissions
+        information.
+
+
+Kelsey Skunberg (4):
+  PCI: sysfs: Define device attributes with DEVICE_ATTR*
+  PCI: sysfs: Change permissions from symbolic to octal
+  PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()
+  PCI/IOV: Move sysfs SR-IOV functions to iov.c
+
+ drivers/pci/iov.c       | 168 ++++++++++++++++++++++++++++++
+ drivers/pci/pci-sysfs.c | 223 ++++------------------------------------
+ drivers/pci/pci.h       |   2 +-
+ 3 files changed, 191 insertions(+), 202 deletions(-)
+
+-- 
+2.20.1
+
