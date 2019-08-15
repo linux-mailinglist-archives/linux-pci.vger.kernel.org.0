@@ -2,97 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A2248F6DC
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2019 00:16:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E5D58F6E2
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2019 00:17:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730908AbfHOWQC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Aug 2019 18:16:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60166 "EHLO mail.kernel.org"
+        id S1726347AbfHOWRC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Aug 2019 18:17:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728685AbfHOWQC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 15 Aug 2019 18:16:02 -0400
+        id S1726302AbfHOWRC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 15 Aug 2019 18:17:02 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D48F020644;
-        Thu, 15 Aug 2019 22:15:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46ED720644;
+        Thu, 15 Aug 2019 22:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565907361;
-        bh=S+HnNRjzevYqF/1E7oN2K3HGRc81RDrKMX1OcXkblsE=;
+        s=default; t=1565907422;
+        bh=zYyZFhq7O1M4F4sAgDEOwatL2jcGmbzUeMrh99SI3e8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lYQLvuvDfrxb/sksuseUW5V/MAsUIo57vN82VjPUZoB43787ziWQ/gk17qDlFECb9
-         /StBjikx3IpFkZaYIg9csIL0ploUtgbOl/vRod8B6rjjtzSTHzQaUp+tdM+Pv9vS+x
-         qoLD9/VFRBxoJzRR1BUxN81EUSuS20ZNckCuQtvE=
-Date:   Thu, 15 Aug 2019 17:15:22 -0500
+        b=2okHcZFs3On2MHtpWAXrm/Q1WZIAWnceofWfnCK0OM9qshMVcNVXr7wgEZQqnIeqk
+         Q76yDHkTiJYWOAHbcvv81U9/DZzDjFqT40mpugwc4Va2Xsj2DB/jJwh9UmKaRlD5NT
+         kavIHd62Q8FNZVtmetqI7gsyyjoBXZ9PuTJGXv3s=
+Date:   Thu, 15 Aug 2019 17:16:29 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     nouveau@lists.freedesktop.org, linux-pci@vger.kernel.org,
-        Lukas Wunner <lukas@wunner.de>,
-        Daniel Drake <drake@endlessm.com>,
-        Aaron Plattner <aplattner@nvidia.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Ilia Mirkin <imirkin@alum.mit.edu>,
-        Karol Herbst <kherbst@redhat.com>,
-        Maik Freudenberg <hhfeuer@gmx.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Use pci_reset_bus() in
- quirk_reset_lenovo_thinkpad_50_nvgpu()
-Message-ID: <20190815221522.GH253360@google.com>
-References: <20190801220117.14952-1-lyude@redhat.com>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+Subject: Re: [PATCH v6 1/9] PCI/ERR: Update error status after reset_link()
+Message-ID: <20190815221629.GI253360@google.com>
+References: <cover.1564177080.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <6be594215ae2ea0935d949537bfb84ff9e656a36.1564177080.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190801220117.14952-1-lyude@redhat.com>
+In-Reply-To: <6be594215ae2ea0935d949537bfb84ff9e656a36.1564177080.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 06:01:17PM -0400, Lyude Paul wrote:
-> Since quirk_nvidia_hda() was added there's now two nvidia device
-> functions on any laptops with nvidia GPUs: the HDA controller, and the
-> GPU itself. Unfortunately this has the sideaffect of breaking
-> quirk_reset_lenovo_thinkpad_50_nvgpu() since pci_reset_function() was
-> using pci_parent_bus_reset() to reset the GPU's respective PCI bus, and
-> pci_parent_bus_reset() does not work on busses which have more then a
-> single device function present.
+On Fri, Jul 26, 2019 at 02:43:11PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> So, fix this by simply calling pci_reset_bus() instead which properly
-> resets the GPU bus and all device functions under it, including both the
-> GPU and the HDA controller.
+> Commit bdb5ac85777d ("PCI/ERR: Handle fatal error recovery") uses
+> reset_link() to recover from fatal errors. But, if the reset is
+> successful there is no need to continue the rest of the error recovery
+> checks. Also, during fatal error recovery, if the initial value of error
+> status is PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER then
+> even after successful recovery (using reset_link()) pcie_do_recovery()
+> will report the recovery result as failure. So update the status of
+> error after reset_link().
 > 
-> Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
-> Cc: Lukas Wunner <lukas@wunner.de>
-> Cc: Daniel Drake <drake@endlessm.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Aaron Plattner <aplattner@nvidia.com>
-> Cc: Peter Wu <peter@lekensteyn.nl>
-> Cc: Ilia Mirkin <imirkin@alum.mit.edu>
-> Cc: Karol Herbst <kherbst@redhat.com>
-> Cc: Maik Freudenberg <hhfeuer@gmx.de>
-> Cc: linux-pci@vger.kernel.org
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-
-We merged b516ea586d71 for v5.3, so I applied this with Ben's ack to
-for-linus for v5.3, thanks!
-
+> Fixes: bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > ---
->  drivers/pci/quirks.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/pci/pcie/err.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 208aacf39329..44c4ae1abd00 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5256,7 +5256,7 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
->  	 */
->  	if (ioread32(map + 0x2240c) & 0x2) {
->  		pci_info(pdev, FW_BUG "GPU left initialized by EFI, resetting\n");
-> -		ret = pci_reset_function(pdev);
-> +		ret = pci_reset_bus(pdev);
->  		if (ret < 0)
->  			pci_err(pdev, "Failed to reset GPU: %d\n", ret);
->  	}
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 773197a12568..aecec124a829 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -204,9 +204,13 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+>  	else
+>  		pci_walk_bus(bus, report_normal_detected, &status);
+>  
+> -	if (state == pci_channel_io_frozen &&
+> -	    reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
+> -		goto failed;
+> +	if (state == pci_channel_io_frozen) {
+> +		status = reset_link(dev, service);
+> +		if (status != PCI_ERS_RESULT_RECOVERED)
+> +			goto failed;
+> +		else
+> +			goto done;
+
+This will be easier to read without the negation, i.e.,
+
+                if (status == PCI_ERS_RESULT_RECOVERED)
+                        goto done;
+                else
+                        goto failed;
+
+> +	}
+>  
+>  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+>  		status = PCI_ERS_RESULT_RECOVERED;
+> @@ -228,6 +232,7 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+>  	if (status != PCI_ERS_RESULT_RECOVERED)
+>  		goto failed;
+>  
+> +done:
+>  	pci_dbg(dev, "broadcast resume message\n");
+>  	pci_walk_bus(bus, report_resume, &status);
+>  
 > -- 
 > 2.21.0
 > 
