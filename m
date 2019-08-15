@@ -2,234 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A230A8E11E
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2019 01:14:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 764578E42A
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2019 06:49:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbfHNXOc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Aug 2019 19:14:32 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38507 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbfHNXOc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Aug 2019 19:14:32 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r20so2046266ota.5;
-        Wed, 14 Aug 2019 16:14:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HHq+oxQ+RcU0cpnKyr/UwNvGamPQ9xWpmgS+w5o7uPg=;
-        b=fyNob6e0SmKDM/Sf2JROj1no5CMDOJcQ/r3Fhyttou8SMF38hkOzsjNV5SnVaIrmYg
-         sldSWXgxREyRGwAxTWAm7Ijg+2HoP2+dscBLK+PIxcIutdRVrY89CGBmsrMDlv+4B3N4
-         jNaNtyYduM9lGN8I8JTBu5sdCbIzHy1zqea5jGkoXCtIoaHypKunY+pc9J8OasXNhJyF
-         CyzPhh4N1VU1GXuORyy1CJ1QU/zpH21gMCfGrtkofd5GHSFLKNJRVMtaFd72ym7+u5hs
-         68v5OCijBqE7B3jusYMc4I2aJG0CboFnEVhUUc/50MwzSR7yovYjRycH/Syp1yHjBb30
-         0dZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HHq+oxQ+RcU0cpnKyr/UwNvGamPQ9xWpmgS+w5o7uPg=;
-        b=p0GiED/cWmI//FooiY3IwBdYscJd0QIIhjJtJxcU/WKOzxI7v0uTC296+IDJx9/15B
-         RZUuWCiP/WovOnsXhya2+rTpRdB+HVZTXJa2+hPUFVlefnT0eMUKWdiVYiLN7pblkt/B
-         2SJQ1sLP1Bh5gJSKrFCjPs3WyY3HQjePVoT8RNoVKbmN5UILJtogHFHvWHY/xmbWa/zO
-         GJARpVR1X+DIloiu4XyWjPE8+8q96BeVJIPfKzLDEu8Ls1gnWato71r84MShfE+n36Lg
-         sAWl2ilp5SRdzE4r1CLCIz57c9DqZcPSeIY4Ku0q2zZGxwo+6rmjF5X2FuSj4ggdNOth
-         JZZw==
-X-Gm-Message-State: APjAAAW8h1B/w/+FTa+rWOW1sjkIIT9qDWHAK/0FBnVtnCOmj+BRza+Y
-        ESKwJyC8y1WQ7lgwwC8PDnhAJ72ezv/caA==
-X-Google-Smtp-Source: APXvYqyDYueuD9QDZ+Rja/eGcDBvqaevTYEMGzYx861bh4J2sL2u6/qjE1LBMT4Vd8nXY6l+6oJ24g==
-X-Received: by 2002:a5d:924e:: with SMTP id e14mr483473iol.215.1565824470948;
-        Wed, 14 Aug 2019 16:14:30 -0700 (PDT)
-Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id 8sm1434519ion.26.2019.08.14.16.14.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2019 16:14:30 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 17:14:27 -0600
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v2 1/3] PCI: sysfs: Define device
- attributes with DEVICE_ATTR*()
-Message-ID: <20190814231427.GC110786@JATN>
-References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-2-skunberg.kelsey@gmail.com>
- <20190814075220.GA4067@kroah.com>
+        id S1725977AbfHOEq7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Aug 2019 00:46:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbfHOEq7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 15 Aug 2019 00:46:59 -0400
+Received: from localhost (c-73-15-1-175.hsd1.ca.comcast.net [73.15.1.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47D0C2067D;
+        Thu, 15 Aug 2019 04:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565844418;
+        bh=muop4VkBdxXgt9YydJe41sbU02zM6lsB0q3Ukq8Qzlo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rLALrF6sJM9KWumiFIrNK6YROHN3WR8rxKA9KpDG5QJkSTWC4Tj/S72almajpspG0
+         wCeJFkKS1H9qO/fh3qLi2PMzepCreYJErXpaxP6Iyl96NxumjW8d3bfordtIR4orZh
+         HHEJOFZ0s0ejvXtVGeK6Q4jzU4lY/la4HWo+0H9E=
+Date:   Wed, 14 Aug 2019 23:46:57 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+Subject: Re: [PATCH v5 2/7] PCI/ATS: Initialize PRI in pci_ats_init()
+Message-ID: <20190815044657.GD253360@google.com>
+References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <3dd8c36177ac52d9a87655badb000d11785a5a4a.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190814075220.GA4067@kroah.com>
+In-Reply-To: <3dd8c36177ac52d9a87655badb000d11785a5a4a.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 09:52:20AM +0200, Greg KH wrote:
-> On Tue, Aug 13, 2019 at 02:45:11PM -0600, Kelsey Skunberg wrote:
-> > Defining device attributes should be done through the helper
-> > DEVICE_ATTR*(_name, _mode, _show, _store). Change all instances using
-> > __ATTR*() to now use DEVICE_ATTR*().
-> > 
-> > Example of old:
-> > 
-> > struct device_attribute dev_attr_##_name = __ATTR(_name, _mode, _show,
-> > 						  _store)
-> > 
-> > Example of new:
-> > 
-> > static DEVICE_ATTR(foo, S_IWUSR | S_IRUGO, show_foo, store_foo)
+On Thu, Aug 01, 2019 at 05:05:59PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> Why not DEVICE_ATTR_RO() and DEVICE_ATTR_RW() and friends?  "Raw"
-> DEVICE_ATTR() should almost never be used unless the files have a very
-> strange mode setting.  And if that is true, they should be audited to
-> find out why their permissions are so strange from the rest of the
-> kernel defaults.
->
+> Currently, PRI Capability checks are repeated across all PRI API's.
+> Instead, cache the capability check result in pci_pri_init() and use it
+> in other PRI API's. Also, since PRI is a shared resource between PF/VF,
+> initialize default values for common PRI features in pci_pri_init().
+> 
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/pci/ats.c       | 80 ++++++++++++++++++++++++++++-------------
+>  include/linux/pci-ats.h |  5 +++
+>  include/linux/pci.h     |  1 +
+>  3 files changed, 61 insertions(+), 25 deletions(-)
+> 
 
-This makes sense. I'll put together a patch to change the DEVICE_ATTR()
-applicable to be changed. Thank you, Greg!
+> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> index cdd936d10f68..280be911f190 100644
+> --- a/drivers/pci/ats.c
+> +++ b/drivers/pci/ats.c
 
--Kelsey
+> @@ -28,6 +28,8 @@ void pci_ats_init(struct pci_dev *dev)
+>  		return;
+>  
+>  	dev->ats_cap = pos;
+> +
+> +	pci_pri_init(dev);
+>  }
+>  
+>  /**
+> @@ -170,36 +172,72 @@ int pci_ats_page_aligned(struct pci_dev *pdev)
+>  EXPORT_SYMBOL_GPL(pci_ats_page_aligned);
+>  
+>  #ifdef CONFIG_PCI_PRI
+> +
+> +void pci_pri_init(struct pci_dev *pdev)
+> +{
+> ...
+> +}
 
-> > 
-> > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
-> > ---
-> >  drivers/pci/pci-sysfs.c | 59 +++++++++++++++++++----------------------
-> >  1 file changed, 27 insertions(+), 32 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > index 965c72104150..8af7944fdccb 100644
-> > --- a/drivers/pci/pci-sysfs.c
-> > +++ b/drivers/pci/pci-sysfs.c
-> > @@ -464,9 +464,7 @@ static ssize_t dev_rescan_store(struct device *dev,
-> >  	}
-> >  	return count;
-> >  }
-> > -static struct device_attribute dev_rescan_attr = __ATTR(rescan,
-> > -							(S_IWUSR|S_IWGRP),
-> > -							NULL, dev_rescan_store);
-> > +static DEVICE_ATTR(rescan, (S_IWUSR | S_IWGRP), NULL, dev_rescan_store);
-> 
-> DEVICE_ATTR_WO()?
-> 
-> >  static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
-> >  			    const char *buf, size_t count)
-> > @@ -480,9 +478,8 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
-> >  		pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
-> >  	return count;
-> >  }
-> > -static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
-> > -							(S_IWUSR|S_IWGRP),
-> > -							NULL, remove_store);
-> > +static DEVICE_ATTR_IGNORE_LOCKDEP(remove, (S_IWUSR | S_IWGRP), NULL,
-> > +				  remove_store);
-> 
-> DEVICE_ATTR_WO()?
-> 
-> Ugh, no lockdep?  ick, ok, leave this as-is, crazy "remove" files...
-> 
-> >  
-> >  static ssize_t dev_bus_rescan_store(struct device *dev,
-> >  				    struct device_attribute *attr,
-> > @@ -504,7 +501,7 @@ static ssize_t dev_bus_rescan_store(struct device *dev,
-> >  	}
-> >  	return count;
-> >  }
-> > -static DEVICE_ATTR(rescan, (S_IWUSR|S_IWGRP), NULL, dev_bus_rescan_store);
-> > +static DEVICE_ATTR(bus_rescan, (S_IWUSR | S_IWGRP), NULL, dev_bus_rescan_store);
-> 
-> DEVICE_ATTR_WO()?
-> 
-> >  
-> >  #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
-> >  static ssize_t d3cold_allowed_store(struct device *dev,
-> > @@ -687,16 +684,14 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
-> >  	return count;
-> >  }
-> >  
-> > -static struct device_attribute sriov_totalvfs_attr = __ATTR_RO(sriov_totalvfs);
-> > -static struct device_attribute sriov_numvfs_attr =
-> > -		__ATTR(sriov_numvfs, (S_IRUGO|S_IWUSR|S_IWGRP),
-> > -		       sriov_numvfs_show, sriov_numvfs_store);
-> > -static struct device_attribute sriov_offset_attr = __ATTR_RO(sriov_offset);
-> > -static struct device_attribute sriov_stride_attr = __ATTR_RO(sriov_stride);
-> > -static struct device_attribute sriov_vf_device_attr = __ATTR_RO(sriov_vf_device);
-> > -static struct device_attribute sriov_drivers_autoprobe_attr =
-> > -		__ATTR(sriov_drivers_autoprobe, (S_IRUGO|S_IWUSR|S_IWGRP),
-> > -		       sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
-> > +static DEVICE_ATTR_RO(sriov_totalvfs);
-> > +static DEVICE_ATTR(sriov_numvfs, (S_IRUGO | S_IWUSR | S_IWGRP),
-> > +				  sriov_numvfs_show, sriov_numvfs_store);
-> 
-> DEVICE_ATTR_RW()?
-> 
-> > +static DEVICE_ATTR_RO(sriov_offset);
-> > +static DEVICE_ATTR_RO(sriov_stride);
-> > +static DEVICE_ATTR_RO(sriov_vf_device);
-> > +static DEVICE_ATTR(sriov_drivers_autoprobe, (S_IRUGO | S_IWUSR | S_IWGRP),
-> > +		   sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
-> 
-> DEVICE_ATTR_RW()?
-> 
-> >  #endif /* CONFIG_PCI_IOV */
-> >  
-> >  static ssize_t driver_override_store(struct device *dev,
-> > @@ -792,7 +787,7 @@ static struct attribute *pcie_dev_attrs[] = {
-> >  };
-> >  
-> >  static struct attribute *pcibus_attrs[] = {
-> > -	&dev_attr_rescan.attr,
-> > +	&dev_attr_bus_rescan.attr,
-> >  	&dev_attr_cpuaffinity.attr,
-> >  	&dev_attr_cpulistaffinity.attr,
-> >  	NULL,
-> > @@ -820,7 +815,7 @@ static ssize_t boot_vga_show(struct device *dev, struct device_attribute *attr,
-> >  		!!(pdev->resource[PCI_ROM_RESOURCE].flags &
-> >  		   IORESOURCE_ROM_SHADOW));
-> >  }
-> > -static struct device_attribute vga_attr = __ATTR_RO(boot_vga);
-> > +static DEVICE_ATTR_RO(boot_vga);
-> >  
-> >  static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
-> >  			       struct bin_attribute *bin_attr, char *buf,
-> > @@ -1458,7 +1453,7 @@ static ssize_t reset_store(struct device *dev, struct device_attribute *attr,
-> >  	return count;
-> >  }
-> >  
-> > -static struct device_attribute reset_attr = __ATTR(reset, 0200, NULL, reset_store);
-> > +static DEVICE_ATTR(reset, 0200, NULL, reset_store);
-> 
-> DEVICE_ATTR_WO()?  Hm, root only, maybe not :(
-> 
-> >  
-> >  static int pci_create_capabilities_sysfs(struct pci_dev *dev)
-> >  {
-> > @@ -1468,7 +1463,7 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
-> >  	pcie_aspm_create_sysfs_dev_files(dev);
-> >  
-> >  	if (dev->reset_fn) {
-> > -		retval = device_create_file(&dev->dev, &reset_attr);
-> > +		retval = device_create_file(&dev->dev, &dev_attr_reset);
-> 
-> odds are this needs to be fixed up later to use attribute groups
-> properly.  But that's better left for another patch.
-> 
-> >  		if (retval)
-> >  			goto error;
-> >  	}
-> > @@ -1553,7 +1548,7 @@ static void pci_remove_capabilities_sysfs(struct pci_dev *dev)
-> >  	pcie_vpd_remove_sysfs_dev_files(dev);
-> >  	pcie_aspm_remove_sysfs_dev_files(dev);
-> >  	if (dev->reset_fn) {
-> > -		device_remove_file(&dev->dev, &reset_attr);
-> > +		device_remove_file(&dev->dev, &dev_attr_reset);
-> 
-> Same here, attribute groups will handle this.
-> 
-> thanks,
-> 
-> greg k-h
+> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+> index 1a0bdaee2f32..33653d4ca94f 100644
+> --- a/include/linux/pci-ats.h
+> +++ b/include/linux/pci-ats.h
+> @@ -6,6 +6,7 @@
+>  
+>  #ifdef CONFIG_PCI_PRI
+>  
+> +void pci_pri_init(struct pci_dev *pdev);
+
+pci_pri_init() is implemented and called in drivers/pci/ats.c.  Unless
+there's a need to call this from outside ats.c, it should be static
+and should not be declared here.
+
+If you can make it static, please also reorder the code so you don't
+need a forward declaration in ats.c.
+
+>  int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
+>  void pci_disable_pri(struct pci_dev *pdev);
+>  void pci_restore_pri_state(struct pci_dev *pdev);
+> @@ -13,6 +14,10 @@ int pci_reset_pri(struct pci_dev *pdev);
+>  
+>  #else /* CONFIG_PCI_PRI */
+>  
+> +static inline void pci_pri_init(struct pci_dev *pdev)
+> +{
+> +}
+> +
+>  static inline int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
+>  {
+>  	return -ENODEV;
