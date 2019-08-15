@@ -2,194 +2,270 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F7818F15D
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2019 19:00:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7BDB8F179
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2019 19:01:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbfHORAI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Aug 2019 13:00:08 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:39957 "EHLO mx1.molgen.mpg.de"
+        id S1730466AbfHORBo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Aug 2019 13:01:44 -0400
+Received: from mail-eopbgr750113.outbound.protection.outlook.com ([40.107.75.113]:62849
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729084AbfHORAI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:00:08 -0400
-Received: from rabammel.molgen.mpg.de (rabammel.molgen.mpg.de [141.14.30.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id C3D0E2000C0B2;
-        Thu, 15 Aug 2019 19:00:04 +0200 (CEST)
-Subject: Messages to kexec@ get moderated (was: Crash kernel with 256 MB
- reserved memory runs into OOM condition)
-To:     Dave Young <dyoung@redhat.com>, Michal Hocko <mhocko@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        =?UTF-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>,
-        "x86@kernel.org" <x86@kernel.org>, kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, kasong@redhat.com,
-        lijiang@redhat.com, Donald Buczek <buczek@molgen.mpg.de>
-References: <d65e4a42-1962-78c6-1b5a-65cb70529d62@molgen.mpg.de>
- <20190812095029.GE5117@dhcp22.suse.cz>
- <20190813024317.GA2862@dhcp-128-65.nay.redhat.com>
- <20190813024600.GA2944@dhcp-128-65.nay.redhat.com>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <9f125599-33a9-4dfd-be05-04335a36c52e@molgen.mpg.de>
-Date:   Thu, 15 Aug 2019 19:00:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1729157AbfHORBn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 15 Aug 2019 13:01:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Be5QrdWuZvCKXcbZm+tfPCsnJhN0uCthgV4u7QqyNE5P+VIqKqdp239lBhBQAfdCaOisWHN3XZYBjxLXyLN+HdBjs6GRUuf+dkGauHvEUJOcv6PvGZvgy7vrTD9UmKJA5uILINb55gtCuUs8eSnSo+shmbjPjjBITjHoUaOXZbG9xKolOiplRYpxuAu18zOHBspDpNLQGvM5DFMiMpCsfgCw+89XIXOXBvKqPECVj6JDD87FpQkjGQ6X/vYXhQ3Mo2WyMwOVCVnBFc1D2FQwTlwowWlGQAIQo+PqDA2qfu6R+G025j6l3HtlGCL4ejeOkerIH7FLO0YmfgJfAY/b7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HYXLB9QH03DRrt/g7GmMnFuBvrhmdPH6xDGeDeuFD6o=;
+ b=KNcA4Ds/4yZF2zpb8T8hhOrgmRYnzshp4U0HqeXN0rCZIKUqYmAxSSI/9ncZEdnIqMepNEWA/s1Phdd+wyMk/IZmeCcseF9XVvQnEvXvhIexWSdlrdkChrWbqD+3PWfYrrvyohZR5US/2UL0I3eDZVDFBPLXZy6aYRyP0S3zyzFIEwM1VqGSPDPlCPbuSYsAAvUyuGqtR03TgIF2D1Zu6LliLrWq99RKbYFl1gJIgE6DRNS8uFPIxgr8qJI+eXKBdLudC7rN8NH4CeWSD7V3ciANta6yCoDRCgJNA/qEUpaQQE+r7b20mMkZGyQtMaZm6J+qQ/12tFNQ/FTC9iQbQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HYXLB9QH03DRrt/g7GmMnFuBvrhmdPH6xDGeDeuFD6o=;
+ b=IQ6BfTgK339I0Mk02eEU+y66tW1aQPjYOqN98YrgE/MsmakkqD2OKd3lJnaH2rSrbjK3TPRrUEfa5lzsshB3tuN/d5aFHHg/qIEYdzzE2gDMp+hUQtKnsZdbX55Rs/NciI10OaAytlAnWyneOJRwM1DCcMZms9n8m5WqptFJk6k=
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
+ DM6PR21MB1306.namprd21.prod.outlook.com (20.179.52.95) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.11; Thu, 15 Aug 2019 17:01:38 +0000
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::ddd:8e5b:2930:6726]) by DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::ddd:8e5b:2930:6726%9]) with mapi id 15.20.2178.006; Thu, 15 Aug 2019
+ 17:01:38 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     "sashal@kernel.org" <sashal@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v6,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Thread-Topic: [PATCH v6,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Thread-Index: AQHVU4sZzIMW0sD7mkCdS1T3X/90YA==
+Date:   Thu, 15 Aug 2019 17:01:37 +0000
+Message-ID: <1565888460-38694-1-git-send-email-haiyangz@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR13CA0008.namprd13.prod.outlook.com
+ (2603:10b6:300:16::18) To DM6PR21MB1242.namprd21.prod.outlook.com
+ (2603:10b6:5:169::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 2
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5635d337-877d-4e1a-3c80-08d721a23c16
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600158)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1306;
+x-ms-traffictypediagnostic: DM6PR21MB1306:|DM6PR21MB1306:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM6PR21MB13069787B449E4B550E4941FACAC0@DM6PR21MB1306.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2201;
+x-forefront-prvs: 01304918F3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(39860400002)(396003)(376002)(346002)(199004)(189003)(52116002)(6506007)(26005)(2501003)(6512007)(110136005)(316002)(66946007)(54906003)(7736002)(305945005)(22452003)(66556008)(4720700003)(6486002)(64756008)(8676002)(102836004)(3846002)(66446008)(99286004)(66476007)(6392003)(7846003)(6436002)(14454004)(6116002)(386003)(2906002)(476003)(2616005)(486006)(36756003)(25786009)(10290500003)(81166006)(478600001)(81156014)(66066001)(256004)(14444005)(50226002)(2201001)(5660300002)(186003)(8936002)(10090500001)(53936002)(71200400001)(71190400001)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1306;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: FB8DZNjBVkWTTo2uSIRKEWsFw1g5lIQNH7TdY/ZrOP795hAsihFUPn/Ri4yEx0K+P8qmKivjJ4PjdXzXcwxmVfc9W0tSNKs6PxGN7OB5NetMYJ+sJRT+DU/hiPeR6yvmqiST9aTUx4FssvX3sRJZjzd933hU5EMcrgMkhX5dmpWwAcUSUHlWH+TjQJLxzVk3a/nFhik/APjV9vcT5eKO/dSbkxTm8kULsO2LluV8rYiL5UkGzuQk6MCnpoQwJSe9SGF4MZwyJl/btUzjhu1Nfrolvphcvb5kUc5yLdTTCyY5VNIiVnvTivoaC/33cTNMlEVn3mrGJZtOi1TBgj3XqHxN9Lw3Z7M6QEDi0m3Yuhou15bomNiEFYBi3N8ZT5Ews/jL+crLWMf0XYlVPBkONgCzLVPhoepOXBrwgog0A/M=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190813024600.GA2944@dhcp-128-65.nay.redhat.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms070400000301090606090306"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5635d337-877d-4e1a-3c80-08d721a23c16
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 17:01:37.9499
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RmWRZLT2a6HQU/C5dMVhCgz62i2leGnVi1NuDaqbXSE3MeWpZ/lvXL6kT0ggox5H2UbYuFo08uLTHYRBCbN06g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1306
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This is a cryptographically signed message in MIME format.
+Currently in Azure cloud, for passthrough devices, the host sets the device
+instance ID's bytes 8 - 15 to a value derived from the host HWID, which is
+the same on all devices in a VM. So, the device instance ID's bytes 8 and 9
+provided by the host are no longer unique. This affects all Azure hosts
+since July 2018, and can cause device passthrough to VMs to fail because
+the bytes 8 and 9 are used as PCI domain number. Collision of domain
+numbers will cause the second device with the same domain number fail to
+load.
 
---------------ms070400000301090606090306
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+In the cases of collision, we will detect and find another number that is
+not in use.
 
-Dear Dave,
+Suggested-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Acked-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/controller/pci-hyperv.c | 92 +++++++++++++++++++++++++++++++--=
+----
+ 1 file changed, 79 insertions(+), 13 deletions(-)
 
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/p=
+ci-hyperv.c
+index 40b6254..31b8fd5 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2510,6 +2510,48 @@ static void put_hvpcibus(struct hv_pcibus_device *hb=
+us)
+ 		complete(&hbus->remove_event);
+ }
+=20
++#define HVPCI_DOM_MAP_SIZE (64 * 1024)
++static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
++
++/*
++ * PCI domain number 0 is used by emulated devices on Gen1 VMs, so define =
+0
++ * as invalid for passthrough PCI devices of this driver.
++ */
++#define HVPCI_DOM_INVALID 0
++
++/**
++ * hv_get_dom_num() - Get a valid PCI domain number
++ * Check if the PCI domain number is in use, and return another number if
++ * it is in use.
++ *
++ * @dom: Requested domain number
++ *
++ * return: domain number on success, HVPCI_DOM_INVALID on failure
++ */
++static u16 hv_get_dom_num(u16 dom)
++{
++	unsigned int i;
++
++	if (test_and_set_bit(dom, hvpci_dom_map) =3D=3D 0)
++		return dom;
++
++	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
++		if (test_and_set_bit(i, hvpci_dom_map) =3D=3D 0)
++			return i;
++	}
++
++	return HVPCI_DOM_INVALID;
++}
++
++/**
++ * hv_put_dom_num() - Mark the PCI domain number as free
++ * @dom: Domain number to be freed
++ */
++static void hv_put_dom_num(u16 dom)
++{
++	clear_bit(dom, hvpci_dom_map);
++}
++
+ /**
+  * hv_pci_probe() - New VMBus channel probe, for a root PCI bus
+  * @hdev:	VMBus's tracking struct for this root PCI bus
+@@ -2521,6 +2563,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 			const struct hv_vmbus_device_id *dev_id)
+ {
+ 	struct hv_pcibus_device *hbus;
++	u16 dom_req, dom;
+ 	int ret;
+=20
+ 	/*
+@@ -2535,19 +2578,34 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	hbus->state =3D hv_pcibus_init;
+=20
+ 	/*
+-	 * The PCI bus "domain" is what is called "segment" in ACPI and
+-	 * other specs.  Pull it from the instance ID, to get something
+-	 * unique.  Bytes 8 and 9 are what is used in Windows guests, so
+-	 * do the same thing for consistency.  Note that, since this code
+-	 * only runs in a Hyper-V VM, Hyper-V can (and does) guarantee
+-	 * that (1) the only domain in use for something that looks like
+-	 * a physical PCI bus (which is actually emulated by the
+-	 * hypervisor) is domain 0 and (2) there will be no overlap
+-	 * between domains derived from these instance IDs in the same
+-	 * VM.
++	 * The PCI bus "domain" is what is called "segment" in ACPI and other
++	 * specs. Pull it from the instance ID, to get something usually
++	 * unique. In rare cases of collision, we will find out another number
++	 * not in use.
++	 *
++	 * Note that, since this code only runs in a Hyper-V VM, Hyper-V
++	 * together with this guest driver can guarantee that (1) The only
++	 * domain used by Gen1 VMs for something that looks like a physical
++	 * PCI bus (which is actually emulated by the hypervisor) is domain 0.
++	 * (2) There will be no overlap between domains (after fixing possible
++	 * collisions) in the same VM.
+ 	 */
+-	hbus->sysdata.domain =3D hdev->dev_instance.b[9] |
+-			       hdev->dev_instance.b[8] << 8;
++	dom_req =3D hdev->dev_instance.b[8] << 8 | hdev->dev_instance.b[9];
++	dom =3D hv_get_dom_num(dom_req);
++
++	if (dom =3D=3D HVPCI_DOM_INVALID) {
++		dev_err(&hdev->device,
++			"Unable to use dom# 0x%hx or other numbers", dom_req);
++		ret =3D -EINVAL;
++		goto free_bus;
++	}
++
++	if (dom !=3D dom_req)
++		dev_info(&hdev->device,
++			 "PCI dom# 0x%hx has collision, using 0x%hx",
++			 dom_req, dom);
++
++	hbus->sysdata.domain =3D dom;
+=20
+ 	hbus->hdev =3D hdev;
+ 	refcount_set(&hbus->remove_lock, 1);
+@@ -2562,7 +2620,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 					   hbus->sysdata.domain);
+ 	if (!hbus->wq) {
+ 		ret =3D -ENOMEM;
+-		goto free_bus;
++		goto free_dom;
+ 	}
+=20
+ 	ret =3D vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
+@@ -2639,6 +2697,8 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	vmbus_close(hdev->channel);
+ destroy_wq:
+ 	destroy_workqueue(hbus->wq);
++free_dom:
++	hv_put_dom_num(hbus->sysdata.domain);
+ free_bus:
+ 	free_page((unsigned long)hbus);
+ 	return ret;
+@@ -2720,6 +2780,9 @@ static int hv_pci_remove(struct hv_device *hdev)
+ 	put_hvpcibus(hbus);
+ 	wait_for_completion(&hbus->remove_event);
+ 	destroy_workqueue(hbus->wq);
++
++	hv_put_dom_num(hbus->sysdata.domain);
++
+ 	free_page((unsigned long)hbus);
+ 	return 0;
+ }
+@@ -2747,6 +2810,9 @@ static void __exit exit_hv_pci_drv(void)
+=20
+ static int __init init_hv_pci_drv(void)
+ {
++	/* Set the invalid domain number's bit, so it will not be used */
++	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
++
+ 	return vmbus_driver_register(&hv_pci_drv);
+ }
+=20
+--=20
+1.8.3.1
 
-On 13.08.19 04:46, Dave Young wrote:
-
-> On 08/13/19 at 10:43am, Dave Young wrote:
-
-[=E2=80=A6]
-
-> The question is to Paul,  also it would be always good to cc kexec mail=
-
-> list for kexec and kdump issues.
-
-kexec@ was CCed in my original mail, but my messages got moderated. It=E2=
-=80=99d
-great if you checked that with the list administrators.
-
-> Your mail to 'kexec' with the subject
->=20
->     Crash kernel with 256 MB reserved memory runs into OOM condition
->=20
-> Is being held until the list moderator can review it for approval.
->=20
-> The reason it is being held:
->=20
->     Message has a suspicious header
->=20
-> Either the message will get posted to the list, or you will receive
-> notification of the moderator's decision.  If you would like to cancel
-> this posting, please visit the following URL:
->=20
->     http://lists.infradead.org/mailman/confirm/kexec/a23ab6162ef34d099a=
-f5dd86c46113def5152bb1
-
-
-Kind regards,
-
-Paul
-
-
---------------ms070400000301090606090306
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-EFowggUSMIID+qADAgECAgkA4wvV+K8l2YEwDQYJKoZIhvcNAQELBQAwgYIxCzAJBgNVBAYT
-AkRFMSswKQYDVQQKDCJULVN5c3RlbXMgRW50ZXJwcmlzZSBTZXJ2aWNlcyBHbWJIMR8wHQYD
-VQQLDBZULVN5c3RlbXMgVHJ1c3QgQ2VudGVyMSUwIwYDVQQDDBxULVRlbGVTZWMgR2xvYmFs
-Um9vdCBDbGFzcyAyMB4XDTE2MDIyMjEzMzgyMloXDTMxMDIyMjIzNTk1OVowgZUxCzAJBgNV
-BAYTAkRFMUUwQwYDVQQKEzxWZXJlaW4genVyIEZvZXJkZXJ1bmcgZWluZXMgRGV1dHNjaGVu
-IEZvcnNjaHVuZ3NuZXR6ZXMgZS4gVi4xEDAOBgNVBAsTB0RGTi1QS0kxLTArBgNVBAMTJERG
-Ti1WZXJlaW4gQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgMjCCASIwDQYJKoZIhvcNAQEBBQAD
-ggEPADCCAQoCggEBAMtg1/9moUHN0vqHl4pzq5lN6mc5WqFggEcVToyVsuXPztNXS43O+FZs
-FVV2B+pG/cgDRWM+cNSrVICxI5y+NyipCf8FXRgPxJiZN7Mg9mZ4F4fCnQ7MSjLnFp2uDo0p
-eQcAIFTcFV9Kltd4tjTTwXS1nem/wHdN6r1ZB+BaL2w8pQDcNb1lDY9/Mm3yWmpLYgHurDg0
-WUU2SQXaeMpqbVvAgWsRzNI8qIv4cRrKO+KA3Ra0Z3qLNupOkSk9s1FcragMvp0049ENF4N1
-xDkesJQLEvHVaY4l9Lg9K7/AjsMeO6W/VRCrKq4Xl14zzsjz9AkH4wKGMUZrAcUQDBHHWekC
-AwEAAaOCAXQwggFwMA4GA1UdDwEB/wQEAwIBBjAdBgNVHQ4EFgQUk+PYMiba1fFKpZFK4OpL
-4qIMz+EwHwYDVR0jBBgwFoAUv1kgNgB5oKAia4zV8mHSuCzLgkowEgYDVR0TAQH/BAgwBgEB
-/wIBAjAzBgNVHSAELDAqMA8GDSsGAQQBga0hgiwBAQQwDQYLKwYBBAGBrSGCLB4wCAYGZ4EM
-AQICMEwGA1UdHwRFMEMwQaA/oD2GO2h0dHA6Ly9wa2kwMzM2LnRlbGVzZWMuZGUvcmwvVGVs
-ZVNlY19HbG9iYWxSb290X0NsYXNzXzIuY3JsMIGGBggrBgEFBQcBAQR6MHgwLAYIKwYBBQUH
-MAGGIGh0dHA6Ly9vY3NwMDMzNi50ZWxlc2VjLmRlL29jc3ByMEgGCCsGAQUFBzAChjxodHRw
-Oi8vcGtpMDMzNi50ZWxlc2VjLmRlL2NydC9UZWxlU2VjX0dsb2JhbFJvb3RfQ2xhc3NfMi5j
-ZXIwDQYJKoZIhvcNAQELBQADggEBAIcL/z4Cm2XIVi3WO5qYi3FP2ropqiH5Ri71sqQPrhE4
-eTizDnS6dl2e6BiClmLbTDPo3flq3zK9LExHYFV/53RrtCyD2HlrtrdNUAtmB7Xts5et6u5/
-MOaZ/SLick0+hFvu+c+Z6n/XUjkurJgARH5pO7917tALOxrN5fcPImxHhPalR6D90Bo0fa3S
-PXez7vTXTf/D6OWST1k+kEcQSrCFWMBvf/iu7QhCnh7U3xQuTY+8npTD5+32GPg8SecmqKc2
-2CzeIs2LgtjZeOJVEqM7h0S2EQvVDFKvaYwPBt/QolOLV5h7z/0HJPT8vcP9SpIClxvyt7bP
-ZYoaorVyGTkwggWNMIIEdaADAgECAgwcOtRQhH7u81j4jncwDQYJKoZIhvcNAQELBQAwgZUx
-CzAJBgNVBAYTAkRFMUUwQwYDVQQKEzxWZXJlaW4genVyIEZvZXJkZXJ1bmcgZWluZXMgRGV1
-dHNjaGVuIEZvcnNjaHVuZ3NuZXR6ZXMgZS4gVi4xEDAOBgNVBAsTB0RGTi1QS0kxLTArBgNV
-BAMTJERGTi1WZXJlaW4gQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgMjAeFw0xNjExMDMxNTI0
-NDhaFw0zMTAyMjIyMzU5NTlaMGoxCzAJBgNVBAYTAkRFMQ8wDQYDVQQIDAZCYXllcm4xETAP
-BgNVBAcMCE11ZW5jaGVuMSAwHgYDVQQKDBdNYXgtUGxhbmNrLUdlc2VsbHNjaGFmdDEVMBMG
-A1UEAwwMTVBHIENBIC0gRzAyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnhx4
-59Lh4WqgOs/Md04XxU2yFtfM15ZuJV0PZP7BmqSJKLLPyqmOrADfNdJ5PIGBto2JBhtRRBHd
-G0GROOvTRHjzOga95WOTeura79T21FWwwAwa29OFnD3ZplQs6HgdwQrZWNi1WHNJxn/4mA19
-rNEBUc5urSIpZPvZi5XmlF3v3JHOlx3KWV7mUteB4pwEEfGTg4npPAJbp2o7arxQdoIq+Pu2
-OsvqhD7Rk4QeaX+EM1QS4lqd1otW4hE70h/ODPy1xffgbZiuotWQLC6nIwa65Qv6byqlIX0q
-Zuu99Vsu+r3sWYsL5SBkgecNI7fMJ5tfHrjoxfrKl/ErTAt8GQIDAQABo4ICBTCCAgEwEgYD
-VR0TAQH/BAgwBgEB/wIBATAOBgNVHQ8BAf8EBAMCAQYwKQYDVR0gBCIwIDANBgsrBgEEAYGt
-IYIsHjAPBg0rBgEEAYGtIYIsAQEEMB0GA1UdDgQWBBTEiKUH7rh7qgwTv9opdGNSG0lwFjAf
-BgNVHSMEGDAWgBST49gyJtrV8UqlkUrg6kviogzP4TCBjwYDVR0fBIGHMIGEMECgPqA8hjpo
-dHRwOi8vY2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1Yi9jcmwvY2Fjcmwu
-Y3JsMECgPqA8hjpodHRwOi8vY2RwMi5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1
-Yi9jcmwvY2FjcmwuY3JsMIHdBggrBgEFBQcBAQSB0DCBzTAzBggrBgEFBQcwAYYnaHR0cDov
-L29jc3AucGNhLmRmbi5kZS9PQ1NQLVNlcnZlci9PQ1NQMEoGCCsGAQUFBzAChj5odHRwOi8v
-Y2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNy
-dDBKBggrBgEFBQcwAoY+aHR0cDovL2NkcDIucGNhLmRmbi5kZS9nbG9iYWwtcm9vdC1nMi1j
-YS9wdWIvY2FjZXJ0L2NhY2VydC5jcnQwDQYJKoZIhvcNAQELBQADggEBABLpeD5FygzqOjj+
-/lAOy20UQOGWlx0RMuPcI4nuyFT8SGmK9lD7QCg/HoaJlfU/r78ex+SEide326evlFAoJXIF
-jVyzNltDhpMKrPIDuh2N12zyn1EtagqPL6hu4pVRzcBpl/F2HCvtmMx5K4WN1L1fmHWLcSap
-dhXLvAZ9RG/B3rqyULLSNN8xHXYXpmtvG0VGJAndZ+lj+BH7uvd3nHWnXEHC2q7iQlDUqg0a
-wIqWJgdLlx1Q8Dg/sodv0m+LN0kOzGvVDRCmowBdWGhhusD+duKV66pBl+qhC+4LipariWaM
-qK5ppMQROATjYeNRvwI+nDcEXr2vDaKmdbxgDVwwggWvMIIEl6ADAgECAgweKlJIhfynPMVG
-/KIwDQYJKoZIhvcNAQELBQAwajELMAkGA1UEBhMCREUxDzANBgNVBAgMBkJheWVybjERMA8G
-A1UEBwwITXVlbmNoZW4xIDAeBgNVBAoMF01heC1QbGFuY2stR2VzZWxsc2NoYWZ0MRUwEwYD
-VQQDDAxNUEcgQ0EgLSBHMDIwHhcNMTcxMTE0MTEzNDE2WhcNMjAxMTEzMTEzNDE2WjCBizEL
-MAkGA1UEBhMCREUxIDAeBgNVBAoMF01heC1QbGFuY2stR2VzZWxsc2NoYWZ0MTQwMgYDVQQL
-DCtNYXgtUGxhbmNrLUluc3RpdHV0IGZ1ZXIgbW9sZWt1bGFyZSBHZW5ldGlrMQ4wDAYDVQQL
-DAVNUElNRzEUMBIGA1UEAwwLUGF1bCBNZW56ZWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
-ggEKAoIBAQDIh/UR/AX/YQ48VWWDMLTYtXjYJyhRHMc81ZHMMoaoG66lWB9MtKRTnB5lovLZ
-enTIUyPsCrMhTqV9CWzDf6v9gOTWVxHEYqrUwK5H1gx4XoK81nfV8oGV4EKuVmmikTXiztGz
-peyDmOY8o/EFNWP7YuRkY/lPQJQBeBHYq9AYIgX4StuXu83nusq4MDydygVOeZC15ts0tv3/
-6WmibmZd1OZRqxDOkoBbY3Djx6lERohs3IKS6RKiI7e90rCSy9rtidJBOvaQS9wvtOSKPx0a
-+2pAgJEVzZFjOAfBcXydXtqXhcpOi2VCyl+7+LnnTz016JJLsCBuWEcB3kP9nJYNAgMBAAGj
-ggIxMIICLTAJBgNVHRMEAjAAMA4GA1UdDwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcD
-AgYIKwYBBQUHAwQwHQYDVR0OBBYEFHM0Mc3XjMLlhWpp4JufRELL4A/qMB8GA1UdIwQYMBaA
-FMSIpQfuuHuqDBO/2il0Y1IbSXAWMCAGA1UdEQQZMBeBFXBtZW56ZWxAbW9sZ2VuLm1wZy5k
-ZTB9BgNVHR8EdjB0MDigNqA0hjJodHRwOi8vY2RwMS5wY2EuZGZuLmRlL21wZy1nMi1jYS9w
-dWIvY3JsL2NhY3JsLmNybDA4oDagNIYyaHR0cDovL2NkcDIucGNhLmRmbi5kZS9tcGctZzIt
-Y2EvcHViL2NybC9jYWNybC5jcmwwgc0GCCsGAQUFBwEBBIHAMIG9MDMGCCsGAQUFBzABhido
-dHRwOi8vb2NzcC5wY2EuZGZuLmRlL09DU1AtU2VydmVyL09DU1AwQgYIKwYBBQUHMAKGNmh0
-dHA6Ly9jZHAxLnBjYS5kZm4uZGUvbXBnLWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNydDBC
-BggrBgEFBQcwAoY2aHR0cDovL2NkcDIucGNhLmRmbi5kZS9tcGctZzItY2EvcHViL2NhY2Vy
-dC9jYWNlcnQuY3J0MEAGA1UdIAQ5MDcwDwYNKwYBBAGBrSGCLAEBBDARBg8rBgEEAYGtIYIs
-AQEEAwYwEQYPKwYBBAGBrSGCLAIBBAMGMA0GCSqGSIb3DQEBCwUAA4IBAQCQs6bUDROpFO2F
-Qz2FMgrdb39VEo8P3DhmpqkaIMC5ZurGbbAL/tAR6lpe4af682nEOJ7VW86ilsIJgm1j0ueY
-aOuL8jrN4X7IF/8KdZnnNnImW3QVni6TCcc+7+ggci9JHtt0IDCj5vPJBpP/dKXLCN4M+exl
-GXYpfHgxh8gclJPY1rquhQrihCzHfKB01w9h9tWZDVMtSoy9EUJFhCXw7mYUsvBeJwZesN2B
-fndPkrXx6XWDdU3S1LyKgHlLIFtarLFm2Hb5zAUR33h+26cN6ohcGqGEEzgIG8tXS8gztEaj
-1s2RyzmKd4SXTkKR3GhkZNVWy+gM68J7jP6zzN+cMYIDmjCCA5YCAQEwejBqMQswCQYDVQQG
-EwJERTEPMA0GA1UECAwGQmF5ZXJuMREwDwYDVQQHDAhNdWVuY2hlbjEgMB4GA1UECgwXTWF4
-LVBsYW5jay1HZXNlbGxzY2hhZnQxFTATBgNVBAMMDE1QRyBDQSAtIEcwMgIMHipSSIX8pzzF
-RvyiMA0GCWCGSAFlAwQCAQUAoIIB8TAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqG
-SIb3DQEJBTEPFw0xOTA4MTUxNzAwMDRaMC8GCSqGSIb3DQEJBDEiBCCYyEFSXayBEnPNgYGC
-YcMsTMPQo/6fCpp1yHkm+5pq5jBsBgkqhkiG9w0BCQ8xXzBdMAsGCWCGSAFlAwQBKjALBglg
-hkgBZQMEAQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMCAgFAMAcG
-BSsOAwIHMA0GCCqGSIb3DQMCAgEoMIGJBgkrBgEEAYI3EAQxfDB6MGoxCzAJBgNVBAYTAkRF
-MQ8wDQYDVQQIDAZCYXllcm4xETAPBgNVBAcMCE11ZW5jaGVuMSAwHgYDVQQKDBdNYXgtUGxh
-bmNrLUdlc2VsbHNjaGFmdDEVMBMGA1UEAwwMTVBHIENBIC0gRzAyAgweKlJIhfynPMVG/KIw
-gYsGCyqGSIb3DQEJEAILMXygejBqMQswCQYDVQQGEwJERTEPMA0GA1UECAwGQmF5ZXJuMREw
-DwYDVQQHDAhNdWVuY2hlbjEgMB4GA1UECgwXTWF4LVBsYW5jay1HZXNlbGxzY2hhZnQxFTAT
-BgNVBAMMDE1QRyBDQSAtIEcwMgIMHipSSIX8pzzFRvyiMA0GCSqGSIb3DQEBAQUABIIBADX9
-QCB7XSnM/7QrHJSUChxqDCCNQOGKQ6Zd6dToTt9zVGqWjievtNGmql6de62/uZcdBDDMpFDg
-dCvPeW34XX+pSXnbQI4dyEeO5q68HL8kEMx5vNm+OqlcpYQi1C+ErZGrREGax65HrCVSKKuY
-rIv/Z0wypzpT8NHtwa6o6/vBN2N1dErX+p3QLO/x9i1cssZY4/J6o5GYEpnCSJm+Mjg/0sFe
-SfeUINe5ogaYo8ce2ci4OZkNnbCR+Z7winWGNabJ+gAAlLiOPE0XxqfglV5onvlXVtDk4zJA
-x5czOlGOspEUeqjcJAPp8hBnyE/2MlYWlwWfFneiLk85WLQ5gykAAAAAAAA=
---------------ms070400000301090606090306--
