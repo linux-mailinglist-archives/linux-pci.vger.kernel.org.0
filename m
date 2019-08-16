@@ -2,138 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 28162905AE
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2019 18:23:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 954F5905D1
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2019 18:32:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbfHPQXu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Aug 2019 12:23:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56782 "EHLO mx1.redhat.com"
+        id S1727097AbfHPQaJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Aug 2019 12:30:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726129AbfHPQXu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 16 Aug 2019 12:23:50 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B2ABD3084295;
-        Fri, 16 Aug 2019 16:23:49 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F213F27C49;
-        Fri, 16 Aug 2019 16:23:48 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 10:23:47 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 08/10] vfio_pci: Loop using PCI_STD_NUM_BARS
-Message-ID: <20190816102347.781a2ee1@x1.home>
-In-Reply-To: <20190816092437.31846-9-efremov@linux.com>
-References: <20190816092437.31846-1-efremov@linux.com>
-        <20190816092437.31846-9-efremov@linux.com>
-Organization: Red Hat
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 16 Aug 2019 16:23:49 +0000 (UTC)
+        id S1727457AbfHPQaI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 16 Aug 2019 12:30:08 -0400
+Subject: Re: [GIT PULL] Power management fixes for v5.3-rc5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565973007;
+        bh=XHjlZmKTF9nNMGhgjea6r5OALoj3MwKvj+3B+20nqFI=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=RT3tspNBfxudhjqy1BRPh2T1OxocwyBShKCEBeEj/NKaMJ+HxS6S+MHIE/Hy0Iv0k
+         IPemShark9xJhwpYnFuXj7ALffjBlfb9nbKtolb3lF/3d+qq6nXbeH1B0XKoP+5gNs
+         gE7hYjZGskOAQzbktfsqYg0WoU5j2nhUczA59np4=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAJZ5v0j4ezEuK1dk0J3wwjSuudzjhKWTXzJL=EkE1QG39HKRiw@mail.gmail.com>
+References: <CAJZ5v0j4ezEuK1dk0J3wwjSuudzjhKWTXzJL=EkE1QG39HKRiw@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAJZ5v0j4ezEuK1dk0J3wwjSuudzjhKWTXzJL=EkE1QG39HKRiw@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.3-rc5
+X-PR-Tracked-Commit-Id: a3ee2477c45f73184a64d9c6cf97855a52732dc6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 2d63ba3e41db3ceb0d23924ed2879b910276e24c
+Message-Id: <156597300748.15122.2547327554860184999.pr-tracker-bot@kernel.org>
+Date:   Fri, 16 Aug 2019 16:30:07 +0000
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 16 Aug 2019 12:24:35 +0300
-Denis Efremov <efremov@linux.com> wrote:
+The pull request you sent on Fri, 16 Aug 2019 15:11:27 +0200:
 
-> Refactor loops to use 'i < PCI_STD_NUM_BARS' instead of
-> 'i <= PCI_STD_RESOURCE_END'.
-> 
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  drivers/vfio/pci/vfio_pci.c         | 11 +++++++----
->  drivers/vfio/pci/vfio_pci_config.c  | 10 ++++++----
->  drivers/vfio/pci/vfio_pci_private.h |  4 ++--
->  3 files changed, 15 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index 703948c9fbe1..cb7d220d3246 100644
-> --- a/drivers/vfio/pci/vfio_pci.c
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -110,13 +110,15 @@ static inline bool vfio_pci_is_vga(struct pci_dev *pdev)
->  static void vfio_pci_probe_mmaps(struct vfio_pci_device *vdev)
->  {
->  	struct resource *res;
-> -	int bar;
-> +	int i;
->  	struct vfio_pci_dummy_resource *dummy_res;
->  
->  	INIT_LIST_HEAD(&vdev->dummy_resources_list);
->  
-> -	for (bar = PCI_STD_RESOURCES; bar <= PCI_STD_RESOURCE_END; bar++) {
-> -		res = vdev->pdev->resource + bar;
-> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> +		int bar = i + PCI_STD_RESOURCES;
-> +
-> +		res = &vdev->pdev->resource[bar];
->  
->  		if (!IS_ENABLED(CONFIG_VFIO_PCI_MMAP))
->  			goto no_mmap;
-> @@ -399,7 +401,8 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
->  
->  	vfio_config_free(vdev);
->  
-> -	for (bar = PCI_STD_RESOURCES; bar <= PCI_STD_RESOURCE_END; bar++) {
-> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> +		bar = i + PCI_STD_RESOURCES;
->  		if (!vdev->barmap[bar])
->  			continue;
->  		pci_iounmap(pdev, vdev->barmap[bar]);
-> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-> index f0891bd8444c..df8772395219 100644
-> --- a/drivers/vfio/pci/vfio_pci_config.c
-> +++ b/drivers/vfio/pci/vfio_pci_config.c
-> @@ -455,16 +455,18 @@ static void vfio_bar_fixup(struct vfio_pci_device *vdev)
->  
->  	bar = (__le32 *)&vdev->vconfig[PCI_BASE_ADDRESS_0];
->  
-> -	for (i = PCI_STD_RESOURCES; i <= PCI_STD_RESOURCE_END; i++, bar++) {
-> -		if (!pci_resource_start(pdev, i)) {
-> +	for (i = 0; i < PCI_STD_NUM_BARS; i++, bar++) {
-> +		int ibar = i + PCI_STD_RESOURCES;
-> +
-> +		if (!pci_resource_start(pdev, ibar)) {
->  			*bar = 0; /* Unmapped by host = unimplemented to user */
->  			continue;
->  		}
->  
-> -		mask = ~(pci_resource_len(pdev, i) - 1);
-> +		mask = ~(pci_resource_len(pdev, ibar) - 1);
->  
->  		*bar &= cpu_to_le32((u32)mask);
-> -		*bar |= vfio_generate_bar_flags(pdev, i);
-> +		*bar |= vfio_generate_bar_flags(pdev, ibar);
->  
->  		if (*bar & cpu_to_le32(PCI_BASE_ADDRESS_MEM_TYPE_64)) {
->  			bar++;
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.3-rc5
 
-It might be a bit cleaner to rename the 'bar' variable to 'vbar', then
-we have 'bar' available to use as the BAR number.  It seems more
-consistent with other uses.  Otherwise the logic looks fine.  Thanks,
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/2d63ba3e41db3ceb0d23924ed2879b910276e24c
 
-Alex
+Thank you!
 
-> diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
-> index ee6ee91718a4..8a2c7607d513 100644
-> --- a/drivers/vfio/pci/vfio_pci_private.h
-> +++ b/drivers/vfio/pci/vfio_pci_private.h
-> @@ -86,8 +86,8 @@ struct vfio_pci_reflck {
->  
->  struct vfio_pci_device {
->  	struct pci_dev		*pdev;
-> -	void __iomem		*barmap[PCI_STD_RESOURCE_END + 1];
-> -	bool			bar_mmap_supported[PCI_STD_RESOURCE_END + 1];
-> +	void __iomem		*barmap[PCI_STD_NUM_BARS];
-> +	bool			bar_mmap_supported[PCI_STD_NUM_BARS];
->  	u8			*pci_config_map;
->  	u8			*vconfig;
->  	struct perm_bits	*msi_perm;
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
