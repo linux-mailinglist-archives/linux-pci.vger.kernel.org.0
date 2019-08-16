@@ -2,112 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BA629073A
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2019 19:50:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA64F9077F
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2019 20:09:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfHPRu5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Aug 2019 13:50:57 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40779 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbfHPRu5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Aug 2019 13:50:57 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v19so4731914wmj.5;
-        Fri, 16 Aug 2019 10:50:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=99lef+DzaRhB266B6Q8i3mJwjk2AgTNvFX1QM/K3Qmo=;
-        b=PA7qHHmFNBCjoRVp58eSr0IeYw1LMldUTpadMinomLmHtFAMzbyHCC9NYe19lZQ+Kc
-         CYR/nCaj+TSqQpLEgNh4WcEe8X75Lyoh9vfJZBmuY8z5zKHBkxUTHGec2GZO5JbX7T9+
-         O46FXnOr/Q29XFBwkSkqTv7SfvwN3LMtu1WWx2B+uBL06M96AbDXxad1RQ3W09WhOybT
-         uTX4uVW2nG5DNiUZVdU2+C6RDAq/VBofe2mdA55y31io42d3+u+8v5LwqyYuT80C2rso
-         ow+XwQlGvi851SEvBEBzr76t1QjmRzW7J5ic4y7i8XJcy0GA1gAptZiFeSwgHr3FLIab
-         78BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=99lef+DzaRhB266B6Q8i3mJwjk2AgTNvFX1QM/K3Qmo=;
-        b=lon5YDOP+di6PQ8AqqbvhAN/k0Db+1AHoFuy0GXnGy2cthwXhzAT61whK80h9m/Cxt
-         DoWLrH/SqgPZfqW8QTbWvPpya9ucr0drZj6aAqdts24iR4hTBMSzmP6192bPUmBirdxp
-         EkCLACog0f42WP/Yvq9o4w4qnAA5h5QevBa2Z2QTebIZpB2AufFMiAkuZkEmy1rrQVti
-         VWR7MjOZTaMNrWUPF9pQx4DxvlwnprwbRRUPo7XNhKYtt7SPY37KcT7Q/x7peWIayiF9
-         NFcw3veh7fVTP6w0xhLBv1hBpNdMqbvqouZLnmAhyWBkmtCXCLIwmEZ5ucBetGGX5X1v
-         gtGA==
-X-Gm-Message-State: APjAAAWlWcLOHFH31OoHV1BgBDhBqQ6DMZ3DoOdAqEbX1OWGgikRbVq1
-        wfARtZMwSPHXrAnnVWZbzqMIO8WIc2s=
-X-Google-Smtp-Source: APXvYqzzr6VfL7xPvlvZDDbgeKXVFZ/DRRP8Igf5H2BxJmSySB9Uea4nBdkxIyzs6rfFEln+O3lUww==
-X-Received: by 2002:a05:600c:292:: with SMTP id 18mr8709997wmk.51.1565977381813;
-        Fri, 16 Aug 2019 10:43:01 -0700 (PDT)
-Received: from [192.168.42.150] (cst-prg-94-179.cust.vodafone.cz. [46.135.94.179])
-        by smtp.gmail.com with ESMTPSA id r17sm15475691wrg.93.2019.08.16.10.43.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Aug 2019 10:43:01 -0700 (PDT)
-From:   Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH V3 2/3] PCI: rcar: Do not abort on too many inbound
- dma-ranges
-To:     Simon Horman <horms@verge.net.au>
-Cc:     linux-pci@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        linux-renesas-soc@vger.kernel.org
-References: <20190809175741.7066-1-marek.vasut@gmail.com>
- <20190809175741.7066-2-marek.vasut@gmail.com>
- <20190816132305.gyyml5r3xsimmoor@verge.net.au>
- <8f1871ed-4820-1985-0090-bb9e2d8803d8@gmail.com>
- <20190816133816.4l463artoaswknj2@verge.net.au>
-Openpgp: preference=signencrypt
-Message-ID: <e78c29b7-fe26-5fa6-3813-11a87ac811fa@gmail.com>
-Date:   Fri, 16 Aug 2019 19:41:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727467AbfHPSJu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Aug 2019 14:09:50 -0400
+Received: from mga02.intel.com ([134.134.136.20]:32583 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727451AbfHPSJu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 16 Aug 2019 14:09:50 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 11:09:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,394,1559545200"; 
+   d="scan'208";a="182242381"
+Received: from skuppusw-desk.jf.intel.com (HELO skuppusw-desk.amr.corp.intel.com) ([10.54.74.33])
+  by orsmga006.jf.intel.com with ESMTP; 16 Aug 2019 11:09:24 -0700
+Date:   Fri, 16 Aug 2019 11:06:38 -0700
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+Subject: Re: [PATCH v5 1/7] PCI/ATS: Fix pci_prg_resp_pasid_required()
+ dependency issues
+Message-ID: <20190816180638.GA28404@skuppusw-desk.amr.corp.intel.com>
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <0d7e0e0d079c438897f4da8cdca4b55994b1233b.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190812200418.GJ11785@google.com>
+ <09a2faf0-a26f-6374-130a-3b33b1b712d5@linux.intel.com>
+ <20190813035148.GI7302@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190816133816.4l463artoaswknj2@verge.net.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813035148.GI7302@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8/16/19 3:38 PM, Simon Horman wrote:
-> On Fri, Aug 16, 2019 at 03:28:04PM +0200, Marek Vasut wrote:
->> On 8/16/19 3:23 PM, Simon Horman wrote:
->>> On Fri, Aug 09, 2019 at 07:57:40PM +0200, marek.vasut@gmail.com wrote:
->>>> From: Marek Vasut <marek.vasut+renesas@gmail.com>
->>>>
->>>> In case the "dma-ranges" DT property contains either too many ranges
->>>> or the range start address is unaligned in such a way that populating
->>>> the range into the controller requires multiple entries, a situation
->>>> may occur where all ranges cannot be loaded into the controller.
->>>>
->>>> Currently, the driver refuses to probe in such a situation. Relax this
->>>> behavior, load as many ranges as possible and warn if some ranges do
->>>> not fit anymore.
->>>
->>> What is the motivation for relaxing this?
->>
->> U-Boot can fill the ranges in properly now, the list would be longer in
->> such a case and the driver would fail to probe (because the list is
->> longer than what the hardware can support).
+On Mon, Aug 12, 2019 at 10:51:48PM -0500, Bjorn Helgaas wrote:
+> On Mon, Aug 12, 2019 at 01:20:55PM -0700, sathyanarayanan kuppuswamy wrote:
+> > On 8/12/19 1:04 PM, Bjorn Helgaas wrote:
+> > > On Thu, Aug 01, 2019 at 05:05:58PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > 
+> > > > Since pci_prg_resp_pasid_required() function has dependency on both
+> > > > PASID and PRI, define it only if both CONFIG_PCI_PRI and
+> > > > CONFIG_PCI_PASID config options are enabled.
 > 
-> Thanks, I think that would be worth adding to the changelog.
-
-It does describe exactly what I just said -- if there are too many
-ranges or they start in a way that cannot be easily fully programmed
-into the HW, this patch applies.
-
-> Regardless,
+> > > I don't really like this.  It makes the #ifdefs more complicated and I
+> > > don't think it really buys us anything.  Will anything break if we
+> > > just drop this patch?
 > 
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> > Yes, this function uses "pri_lock" mutex which is only defined if
+> > CONFIG_PCI_PRI is enabled. So not protecting this function within
+> > CONFIG_PCI_PRI will lead to compilation issues.
 > 
-
+> Ah, OK.  That helps a lot.  "pri_lock" doesn't exist at this point in
+> the series, so the patch makes no sense without knowing that.
+> 
+> I'm still not convinced this is the right thing because I'm not sure
+> the lock is necessary.  I'll respond to the patch that adds the lock.
+Its not only pri_lock. This function also uses "pri_cap" which is also
+only defined for CONFIG_PCI_PRI. "pri_cap" is added by next patch in the
+series which adds caching support for PRI capability check. So this
+patch is still required even if we remove use of pri_lock in this
+function.
+> 
+> > > > Fixes: e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required()
+> > > > interface.")
+> > > > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > ---
+> > > >   drivers/pci/ats.c       | 10 ++++++----
+> > > >   include/linux/pci-ats.h | 12 +++++++++---
+> > > >   2 files changed, 15 insertions(+), 7 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> > > > index e18499243f84..cdd936d10f68 100644
+> > > > --- a/drivers/pci/ats.c
+> > > > +++ b/drivers/pci/ats.c
+> > > > @@ -395,6 +395,8 @@ int pci_pasid_features(struct pci_dev *pdev)
+> > > >   }
+> > > >   EXPORT_SYMBOL_GPL(pci_pasid_features);
+> > > > +#ifdef CONFIG_PCI_PRI
+> > > > +
+> > > >   /**
+> > > >    * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
+> > > >    *				 status.
+> > > > @@ -402,10 +404,8 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
+> > > >    *
+> > > >    * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
+> > > >    *
+> > > > - * Even though the PRG response PASID status is read from PRI Status
+> > > > - * Register, since this API will mainly be used by PASID users, this
+> > > > - * function is defined within #ifdef CONFIG_PCI_PASID instead of
+> > > > - * CONFIG_PCI_PRI.
+> > > > + * Since this API has dependency on both PRI and PASID, protect it
+> > > > + * with both CONFIG_PCI_PRI and CONFIG_PCI_PASID.
+> > > >    */
+> > > >   int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+> > > >   {
+> > > > @@ -425,6 +425,8 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+> > > >   }
+> > > >   EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
+> > > > +#endif
+> > > > +
+> > > >   #define PASID_NUMBER_SHIFT	8
+> > > >   #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
+> > > >   /**
+> > > > diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+> > > > index 1ebb88e7c184..1a0bdaee2f32 100644
+> > > > --- a/include/linux/pci-ats.h
+> > > > +++ b/include/linux/pci-ats.h
+> > > > @@ -40,7 +40,6 @@ void pci_disable_pasid(struct pci_dev *pdev);
+> > > >   void pci_restore_pasid_state(struct pci_dev *pdev);
+> > > >   int pci_pasid_features(struct pci_dev *pdev);
+> > > >   int pci_max_pasids(struct pci_dev *pdev);
+> > > > -int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+> > > >   #else  /* CONFIG_PCI_PASID */
+> > > > @@ -67,11 +66,18 @@ static inline int pci_max_pasids(struct pci_dev *pdev)
+> > > >   	return -EINVAL;
+> > > >   }
+> > > > +#endif /* CONFIG_PCI_PASID */
+> > > > +
+> > > > +#if defined(CONFIG_PCI_PRI) && defined(CONFIG_PCI_PASID)
+> > > > +
+> > > > +int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+> > > > +
+> > > > +#else /* CONFIG_PCI_PASID && CONFIG_PCI_PRI */
+> > > > +
+> > > >   static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+> > > >   {
+> > > >   	return 0;
+> > > >   }
+> > > > -#endif /* CONFIG_PCI_PASID */
+> > > > -
+> > > > +#endif
+> > > >   #endif /* LINUX_PCI_ATS_H*/
+> > > > -- 
+> > > > 2.21.0
+> > > > 
+> > -- 
+> > Sathyanarayanan Kuppuswamy
+> > Linux kernel developer
+> > 
 
 -- 
-Best regards,
-Marek Vasut
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
