@@ -2,104 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3313E8F973
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2019 05:30:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B402E8F97B
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2019 05:33:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfHPDaP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Aug 2019 23:30:15 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46698 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726465AbfHPDaP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 15 Aug 2019 23:30:15 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A2D90E5A7ACA03E00971;
-        Fri, 16 Aug 2019 11:30:09 +0800 (CST)
-Received: from [127.0.0.1] (10.57.101.250) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 16 Aug 2019
- 11:29:59 +0800
-From:   Wei Xu <xuwei5@hisilicon.com>
-Subject: [GIT PULL] Hisilicon fixes for v5.3
-To:     <soc@kernel.org>, "arm@kernel.org" <arm@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Olof Johansson <olof@lixom.net>,
-        "Arnd Bergmann" <arnd@arndb.de>
-CC:     "xuwei (O)" <xuwei5@huawei.com>, Linuxarm <linuxarm@huawei.com>,
-        "John Garry" <john.garry@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        <jinying@hisilicon.com>, huangdaode <huangdaode@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>, <stable@vger.kernel.org>,
-        <sashal@kernel.org>
-Message-ID: <5D562335.7000902@hisilicon.com>
-Date:   Fri, 16 Aug 2019 11:29:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.2.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.101.250]
-X-CFilter-Loop: Reflected
+        id S1726500AbfHPDdz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Aug 2019 23:33:55 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36679 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbfHPDdz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Aug 2019 23:33:55 -0400
+Received: by mail-pf1-f195.google.com with SMTP id w2so2403200pfi.3;
+        Thu, 15 Aug 2019 20:33:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=s1lUchOg7iDiYDCvoYxYUrpcGLcaqdAZGXJKa54+yKY=;
+        b=Xlrq+MEfXEpHfl+xW59Wm0F+k7V5EXtxu4NRlG8AfJxcKQc+2BS0dnj2E1CnLJb0ed
+         tL3Hfj4oGTKsDGyeqA9ghwV8qUikDu+TC1AJf2WzpOnAnNEZPFO37BVO+hkldMNhKzYe
+         A5Xwq3HDpYQyZI+2+HbHj2Ugc/5YXkRfnx7QbQ9SLww9/ejWgLJlQVLjrF0uzeTyw6Fd
+         FG9f6PCbIWmJpoFiCCNSugHSZUUlXxHsCnIl8TCwfu9pKWzQYRZd6+/ZbQdP0NQnYN2b
+         gjOW7jKamORq6TQ2w0ryfg5puD/RbFDPAdMi6/8F1NZm6QIBUYPj7GxlbnJE7/2YZDtt
+         o7hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=s1lUchOg7iDiYDCvoYxYUrpcGLcaqdAZGXJKa54+yKY=;
+        b=PGnWqo30XEeVP/cblHxAK/QgXOBwSdSquU52qlogWy40uN0tqYVZSX/RecW/d0NmyJ
+         OBF179MY3csItEXzUmAPJtF8+M40uNGK9ufAK5LlojEW3L8KPYwqxlLbwYkjkN+3ziQd
+         BQkmzXPwyPfzDoWXOfwCqo2+7VXKIHRJijV90if56REhdGN3W2KNKPliw2qsICUmrrnv
+         A34Hpf+WN3UOfrjFIYSp+PdO4YQcBqTGa4aTXVar+t9aK2FExbHS29Eclz14SsPq0v3x
+         ZfI2IvVGYHP6PPj3kU3mdMqeqy2mBRhXA1zz/GGg8aNdwl3EyFxCVwb0kig6Wt/gFlP9
+         4sfQ==
+X-Gm-Message-State: APjAAAWseHWdosRxXfwwL17LzExc8jEBt2fQN2mIqQfAI0rBxETf1IG0
+        OpfPxX2m3biAKH+SD3U1l0w=
+X-Google-Smtp-Source: APXvYqzjJFdZFAbFqUmkkN+HsDnh74LnXUr81ataAhNkiO0QNZvrwRdOEknATYQ244Lb3mIC6ffxqA==
+X-Received: by 2002:a17:90a:bc42:: with SMTP id t2mr5157478pjv.121.1565926434689;
+        Thu, 15 Aug 2019 20:33:54 -0700 (PDT)
+Received: from localhost ([61.135.169.81])
+        by smtp.gmail.com with ESMTPSA id 203sm5089675pfz.107.2019.08.15.20.33.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 15 Aug 2019 20:33:54 -0700 (PDT)
+From:   hexin <hexin.op@gmail.com>
+X-Google-Original-From: hexin <hexin15@baidu.com>
+To:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     hexin <hexin15@baidu.com>, Liu Qi <liuqi16@baidu.com>,
+        Zhang Yu <zhangyu31@baidu.com>
+Subject: [PATCH] vfio_pci: Replace pci_try_reset_function() with __pci_reset_function_locked() to ensure that the pci device configuration space is restored to its original state
+Date:   Fri, 16 Aug 2019 11:33:47 +0800
+Message-Id: <1565926427-21675-1-git-send-email-hexin15@baidu.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi ARM-SoC team,
+In vfio_pci_enable(), save the device's initial configuration information
+and then restore the configuration in vfio_pci_disable(). However, the
+execution result is not the same. Since the pci_try_reset_function()
+function saves the current state before resetting, the configuration
+information restored by pci_load_and_free_saved_state() will be
+overwritten. The __pci_reset_function_locked() function can be used
+to prevent the configuration space from being overwritten.
 
-Please consider to pull the following fixes.
-Thanks!
-
-Best Regards,
-Wei
-
+Signed-off-by: hexin <hexin15@baidu.com>
+Signed-off-by: Liu Qi <liuqi16@baidu.com>
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
 ---
+ drivers/vfio/pci/vfio_pci.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
-
-   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
-
-are available in the Git repository at:
-
-   git://github.com/hisilicon/linux-hisi.git tags/hisi-fixes-for-5.3
-
-for you to fetch changes up to 10e62b47973b0b0ceda076255bcb147b83e20517:
-
-   bus: hisi_lpc: Add .remove method to avoid driver unbind crash 
-(2019-08-13 14:54:34 +0800)
-
-----------------------------------------------------------------
-Hisilicon fixes for v5.3-rc
-
-- Fixed RCU usage in logical PIO
-- Added a function to unregister a logical PIO range in logical PIO
-   to support the fixes in the hisi-lpc driver
-- Fixed and optimized hisi-lpc driver to avoid potential use-after-free
-   and driver unbind crash
-
-----------------------------------------------------------------
-John Garry (5):
-       lib: logic_pio: Fix RCU usage
-       lib: logic_pio: Avoid possible overlap for unregistering regions
-       lib: logic_pio: Add logic_pio_unregister_range()
-       bus: hisi_lpc: Unregister logical PIO range to avoid potential 
-use-after-free
-       bus: hisi_lpc: Add .remove method to avoid driver unbind crash
-
-  drivers/bus/hisi_lpc.c    | 47 ++++++++++++++++++++++++++----
-  include/linux/logic_pio.h |  1 +
-  lib/logic_pio.c           | 73 
-+++++++++++++++++++++++++++++++++++------------
-  3 files changed, 96 insertions(+), 25 deletions(-)
-
-
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 703948c..3c93492 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -441,8 +441,14 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
+ 	 * Try to reset the device.  The success of this is dependent on
+ 	 * being able to lock the device, which is not always possible.
+ 	 */
+-	if (vdev->reset_works && !pci_try_reset_function(pdev))
+-		vdev->needs_reset = false;
++	if (vdev->reset_works && pci_cfg_access_trylock(pdev)) {
++		if (device_trylock(&pdev->dev)) {
++			if (!__pci_reset_function_locked(pdev))
++				vdev->needs_reset = false;
++			device_unlock(&pdev->dev);
++		}
++		pci_cfg_access_unlock(pdev);
++	}
+ 
+ 	pci_restore_state(pdev);
+ out:
+-- 
+1.8.3.1
 
