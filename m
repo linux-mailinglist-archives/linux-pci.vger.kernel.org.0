@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 217EC90618
+	by mail.lfdr.de (Postfix) with ESMTP id 94C1590619
 	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2019 18:51:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfHPQvP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1726550AbfHPQvP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Fri, 16 Aug 2019 12:51:15 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:51326 "EHLO mta-01.yadro.com"
+Received: from mta-02.yadro.com ([89.207.88.252]:51338 "EHLO mta-01.yadro.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726550AbfHPQvO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1725956AbfHPQvO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Fri, 16 Aug 2019 12:51:14 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id B1A2442001;
-        Fri, 16 Aug 2019 16:51:12 +0000 (UTC)
+        by mta-01.yadro.com (Postfix) with ESMTP id 972BB42EED;
+        Fri, 16 Aug 2019 16:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
         content-type:content-type:content-transfer-encoding:mime-version
         :references:in-reply-to:x-mailer:message-id:date:date:subject
         :subject:from:from:received:received:received; s=mta-01; t=
-        1565974271; x=1567788672; bh=mKBbR82Srtto2VpJamxciNYssUs4Y4yDFRb
-        U7JWpUgg=; b=c+BFc0L0m+Qv/QlRbpX9tDaskY5kIMdSNcNHmYIiWfbB34veWtD
-        8ehXeCB0ECgNnK0j4YlAo6Na5Z6CGIyNgKGdUckvEgCqVMNrAlmV+1AikNcSxuUj
-        cp2+p1GRSFKZdBl3Xay7V/WwsLy4/BLLi1Bj801LbW8Jhq6S9GEbw8IU=
+        1565974272; x=1567788673; bh=UUdHgJhxaQgfi4cl/ddzHCHCSLhs0rYnkXJ
+        xePQqKTs=; b=o5TMjxJQxe2kEbdyHgVWbT+anifvu1C6KqBVPFnITzDf5sq1gWn
+        ZTmnaiKdO8XH8yIOlGFbbvcekOlaXtWoJ+TCvd0SDo4yCboWobCWhc6nkKSeZIYA
+        7cidBZFdwINyGE5cHeTxfUyQquJn4R7W8QzPyvbR+hq+5JWUWYWf6nB4=
 X-Virus-Scanned: amavisd-new at yadro.com
 Received: from mta-01.yadro.com ([127.0.0.1])
         by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0mtgKAkvT17A; Fri, 16 Aug 2019 19:51:11 +0300 (MSK)
+        with ESMTP id HKy2jYnnkb5n; Fri, 16 Aug 2019 19:51:12 +0300 (MSK)
 Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 861AC411F8;
+        by mta-01.yadro.com (Postfix) with ESMTPS id 8DFED42ECB;
         Fri, 16 Aug 2019 19:51:10 +0300 (MSK)
 Received: from NB-148.yadro.com (172.17.15.60) by T-EXCH-02.corp.yadro.com
  (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
@@ -39,9 +39,9 @@ From:   Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
 To:     <linux-pci@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
 CC:     Bjorn Helgaas <helgaas@kernel.org>, <linux@yadro.com>,
         Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
-Subject: [PATCH v5 04/23] PCI: Define PCI-specific version of the release_child_resources()
-Date:   Fri, 16 Aug 2019 19:50:42 +0300
-Message-ID: <20190816165101.911-5-s.miroshnichenko@yadro.com>
+Subject: [PATCH v5 05/23] PCI: hotplug: movable BARs: Fix reassigning the released bridge windows
+Date:   Fri, 16 Aug 2019 19:50:43 +0300
+Message-ID: <20190816165101.911-6-s.miroshnichenko@yadro.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190816165101.911-1-s.miroshnichenko@yadro.com>
 References: <20190816165101.911-1-s.miroshnichenko@yadro.com>
@@ -56,94 +56,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If release the bridge resources with standard release_child_resources(), it
-drops the .start field of children's BARs to zero, but with the STARTALIGN
-flag remaining set, which makes the resource invalid for reassignment.
+When a bridge window is temporarily released during the rescan, its old
+size is not relevant anymore - it will be recreated from pbus_size_*(), so
+it's start value should be zero.
 
-Some resources must preserve their offset and size: those marked with the
-PCI_FIXED and the immovable ones - which are bound by drivers without
-support of the movable BARs feature.
-
-Add the pci_release_child_resources() to replace release_child_resources()
-in handling the described PCI-specific cases.
+If such window can't be reassigned, don't apply reset_resource(), so the
+next retry may succeed.
 
 Signed-off-by: Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
 ---
- drivers/pci/setup-bus.c | 54 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 53 insertions(+), 1 deletion(-)
+ drivers/pci/setup-bus.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 79b1fa6519be..6cb8b293c576 100644
+index 6cb8b293c576..7c2c57f77c6f 100644
 --- a/drivers/pci/setup-bus.c
 +++ b/drivers/pci/setup-bus.c
-@@ -1482,6 +1482,55 @@ static void __pci_bridge_assign_resources(const struct pci_dev *bridge,
- 	(IORESOURCE_IO | IORESOURCE_MEM | IORESOURCE_PREFETCH |\
- 	 IORESOURCE_MEM_64)
- 
-+/*
-+ * Similar to generic release_child_resources(), but aware of immovable BARs and
-+ * PCI_FIXED and STARTALIGN flags
-+ */
-+static void pci_release_child_resources(struct pci_bus *bus, struct resource *r)
-+{
-+	struct pci_dev *dev;
-+
-+	if (!bus || !r)
-+		return;
-+
-+	if (r->flags & IORESOURCE_PCI_FIXED)
-+		return;
-+
-+	r->child = NULL;
-+
-+	list_for_each_entry(dev, &bus->devices, bus_list) {
-+		int i;
-+
-+		for (i = 0; i < PCI_NUM_RESOURCES; i++) {
-+			struct resource *tmp = &dev->resource[i];
-+			resource_size_t size = resource_size(tmp);
-+
-+			if (!tmp->flags || tmp->parent != r)
-+				continue;
-+
-+			tmp->parent = NULL;
-+			tmp->sibling = NULL;
-+
-+			pci_release_child_resources(dev->subordinate, tmp);
-+
-+			if ((tmp->flags & IORESOURCE_PCI_FIXED) ||
-+			    !pci_dev_movable_bars_supported(dev)) {
-+				pci_dbg(dev, "release immovable %pR (%s), keep its flags, base and size\n",
-+					tmp, tmp->name);
-+				continue;
-+			}
-+
-+			pci_dbg(dev, "release %pR (%s)\n", tmp, tmp->name);
-+
-+			tmp->start = 0;
-+			tmp->end = size - 1;
-+
-+			tmp->flags &= ~IORESOURCE_STARTALIGN;
-+			tmp->flags |= IORESOURCE_SIZEALIGN;
-+		}
-+	}
-+}
-+
- static void pci_bridge_release_resources(struct pci_bus *bus,
- 					 unsigned long type)
- {
-@@ -1522,7 +1571,10 @@ static void pci_bridge_release_resources(struct pci_bus *bus,
- 		return;
- 
- 	/* If there are children, release them all */
--	release_child_resources(r);
-+	if (pci_movable_bars_enabled())
-+		pci_release_child_resources(bus, r);
-+	else
-+		release_child_resources(r);
- 	if (!release_resource(r)) {
+@@ -295,7 +295,8 @@ static void assign_requested_resources_sorted(struct list_head *head,
+ 						    0 /* don't care */,
+ 						    0 /* don't care */);
+ 			}
+-			reset_resource(res);
++			if (!pci_movable_bars_enabled())
++				reset_resource(res);
+ 		}
+ 	}
+ }
+@@ -1579,8 +1580,8 @@ static void pci_bridge_release_resources(struct pci_bus *bus,
  		type = old_flags = r->flags & PCI_RES_TYPE_MASK;
  		pci_info(dev, "resource %d %pR released\n",
+ 			 PCI_BRIDGE_RESOURCES + idx, r);
+-		/* Keep the old size */
+-		r->end = resource_size(r) - 1;
++		/* Don't keep the old size if the bridge will be recalculated */
++		r->end = pci_movable_bars_enabled() ? 0 : (resource_size(r) - 1);
+ 		r->start = 0;
+ 		r->flags = 0;
+ 
 -- 
 2.21.0
 
