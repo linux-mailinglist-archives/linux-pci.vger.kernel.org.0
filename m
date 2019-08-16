@@ -2,61 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E871190310
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2019 15:31:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC51290320
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2019 15:35:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbfHPNbu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Aug 2019 09:31:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32872 "EHLO mail.kernel.org"
+        id S1727199AbfHPNfK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Aug 2019 09:35:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727263AbfHPNbu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 16 Aug 2019 09:31:50 -0400
+        id S1726032AbfHPNfK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 16 Aug 2019 09:35:10 -0400
 Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E28922086C;
-        Fri, 16 Aug 2019 13:31:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F6192086C;
+        Fri, 16 Aug 2019 13:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565962309;
-        bh=MttKe0yp/T1sDIDthL7yI1Dis6PQYbgmffNkmTOfatI=;
+        s=default; t=1565962508;
+        bh=ABxOftLwFXyEtVutr9yp4mVdKuJfymbfWw0PpyAU54k=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kn7n9FRwaRPPoxR93SNO+a6ImoR7ukr/jjPj2drzk1PO+MAH4mSmWrIYpr9zCdCMJ
-         gBbHLMuNBh6E/dJX8HsEfCwm638l6iPKD43eSe2lvChzbpJG1kUX3j7LoITJvpGgy/
-         1b74thu+9+ZXv/oaViO3vx7QPtztw1SHc3QqaPN4=
-Date:   Fri, 16 Aug 2019 08:31:47 -0500
+        b=qJ7XW4pB4oRR2wJecSKo5/EoIfu20RFdYa7/XabQkFzddIlh3mBwh4HDZuiXKFxPU
+         SvEV5PjiwW88n9OLgcCWvMgx9Z/ia+QmzkaswaxpDwUZbnHOb+iNwShwNNTFTANgEN
+         F15bBIGStYAxNZGMti+gxiIuC/+iSQAM6THA4Ulo=
+Date:   Fri, 16 Aug 2019 08:35:07 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Denis Efremov <efremov@linux.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 03/10] x86/PCI: Loop using PCI_STD_NUM_BARS
-Message-ID: <20190816133147.GM253360@google.com>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>, kvm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, netdev@vger.kernel.org,
+        x86@kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH v2 00/10] Add definition for the number of standard PCI
+ BARs
+Message-ID: <20190816133507.GN253360@google.com>
 References: <20190816092437.31846-1-efremov@linux.com>
- <20190816092437.31846-4-efremov@linux.com>
- <alpine.DEB.2.21.1908161131400.1873@nanos.tec.linutronix.de>
+ <20190816105128.GD14111@e119886-lin.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1908161131400.1873@nanos.tec.linutronix.de>
+In-Reply-To: <20190816105128.GD14111@e119886-lin.cambridge.arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 11:32:41AM +0200, Thomas Gleixner wrote:
-> On Fri, 16 Aug 2019, Denis Efremov wrote:
+On Fri, Aug 16, 2019 at 11:51:28AM +0100, Andrew Murray wrote:
+> On Fri, Aug 16, 2019 at 12:24:27PM +0300, Denis Efremov wrote:
+> > Code that iterates over all standard PCI BARs typically uses
+> > PCI_STD_RESOURCE_END, but this is error-prone because it requires
+> > "i <= PCI_STD_RESOURCE_END" rather than something like
+> > "i < PCI_STD_NUM_BARS". We could add such a definition and use it the same
+> > way PCI_SRIOV_NUM_BARS is used. There is already the definition
+> > PCI_BAR_COUNT for s390 only. Thus, this patchset introduces it globally.
+> > 
+> > Changes in v2:
+> >   - Reverse checks in pci_iomap_range,pci_iomap_wc_range.
+> >   - Refactor loops in vfio_pci to keep PCI_STD_RESOURCES.
+> >   - Add 2 new patches to replace the magic constant with new define.
+> >   - Split net patch in v1 to separate stmmac and dwc-xlgmac patches.
+> > 
+> > Denis Efremov (10):
+> >   PCI: Add define for the number of standard PCI BARs
+> >   s390/pci: Loop using PCI_STD_NUM_BARS
+> >   x86/PCI: Loop using PCI_STD_NUM_BARS
+> >   stmmac: pci: Loop using PCI_STD_NUM_BARS
+> >   net: dwc-xlgmac: Loop using PCI_STD_NUM_BARS
+> >   rapidio/tsi721: Loop using PCI_STD_NUM_BARS
+> >   efifb: Loop using PCI_STD_NUM_BARS
+> >   vfio_pci: Loop using PCI_STD_NUM_BARS
+> >   PCI: hv: Use PCI_STD_NUM_BARS
+> >   PCI: Use PCI_STD_NUM_BARS
+> > 
+> >  arch/s390/include/asm/pci.h                      |  5 +----
+> >  arch/s390/include/asm/pci_clp.h                  |  6 +++---
+> >  arch/s390/pci/pci.c                              | 16 ++++++++--------
+> >  arch/s390/pci/pci_clp.c                          |  6 +++---
+> >  arch/x86/pci/common.c                            |  2 +-
+> >  drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c |  4 ++--
+> >  drivers/net/ethernet/synopsys/dwc-xlgmac-pci.c   |  2 +-
+> >  drivers/pci/controller/pci-hyperv.c              | 10 +++++-----
+> >  drivers/pci/pci.c                                | 11 ++++++-----
+> >  drivers/pci/quirks.c                             |  4 ++--
+> >  drivers/rapidio/devices/tsi721.c                 |  2 +-
+> >  drivers/vfio/pci/vfio_pci.c                      | 11 +++++++----
+> >  drivers/vfio/pci/vfio_pci_config.c               | 10 ++++++----
+> >  drivers/vfio/pci/vfio_pci_private.h              |  4 ++--
+> >  drivers/video/fbdev/efifb.c                      |  2 +-
+> >  include/linux/pci.h                              |  2 +-
+> >  include/uapi/linux/pci_regs.h                    |  1 +
+> >  17 files changed, 51 insertions(+), 47 deletions(-)
 > 
-> > Refactor loops to use 'i < PCI_STD_NUM_BARS' instead of
-> > 'i <= PCI_STD_RESOURCE_END'.
+> I've come across a few more places where this change can be made. There
+> may be multiple instances in the same file, but only the first is shown
+> below:
 > 
-> Please describe the WHY not the WHAT. I can see the WHAT from the patch
-> itself, but I can't figure out WHY.
+> drivers/misc/pci_endpoint_test.c:       for (bar = BAR_0; bar <= BAR_5; bar++) {
+> drivers/net/ethernet/intel/e1000/e1000_main.c:          for (i = BAR_1; i <= BAR_5; i++) {
+> drivers/net/ethernet/intel/ixgb/ixgb_main.c:    for (i = BAR_1; i <= BAR_5; i++) {
+> drivers/pci/controller/dwc/pci-dra7xx.c:        for (bar = BAR_0; bar <= BAR_5; bar++)
+> drivers/pci/controller/dwc/pci-layerscape-ep.c: for (bar = BAR_0; bar <= BAR_5; bar++)
+> drivers/pci/controller/dwc/pcie-artpec6.c:      for (bar = BAR_0; bar <= BAR_5; bar++)
+> drivers/pci/controller/dwc/pcie-designware-plat.c:      for (bar = BAR_0; bar <= BAR_5; bar++)
+> drivers/pci/endpoint/functions/pci-epf-test.c:  for (bar = BAR_0; bar <= BAR_5; bar++) {
+> include/linux/pci-epc.h:        u64     bar_fixed_size[BAR_5 + 1];
+> drivers/scsi/pm8001/pm8001_hwi.c:       for (bar = 0; bar < 6; bar++) {
+> drivers/scsi/pm8001/pm8001_init.c:      for (bar = 0; bar < 6; bar++) {
+> drivers/ata/sata_nv.c:  for (bar = 0; bar < 6; bar++)
+> drivers/video/fbdev/core/fbmem.c:       for (idx = 0, bar = 0; bar < PCI_ROM_RESOURCE; bar++) {
+> drivers/staging/gasket/gasket_core.c:   for (i = 0; i < GASKET_NUM_BARS; i++) {
+> drivers/tty/serial/8250/8250_pci.c:     for (i = 0; i < PCI_NUM_BAR_RESOURCES; i++) { <-----------
 
-Good point; the WHY is to use idiomatic C style and avoid
-the fencepost error of using "i < PCI_STD_RESOURCE_END"
-when "i <= PCI_STD_RESOURCE_END" is required, e.g.,
-2f686f1d9bee ("PCI: Correct PCI_STD_RESOURCE_END usage")
+Thanks, I agree, these look like good candidates as well.
 
-Denis, can you include something along those lines in the next
-version?
+> It looks like BARs are often iterated with PCI_NUM_BAR_RESOURCES, there
+> are a load of these too found with:
+> 
+> git grep PCI_ROM_RESOURCE | grep "< "
+
+Good point, those are slightly questionable and I'd change those too.
+
+Bjorn
