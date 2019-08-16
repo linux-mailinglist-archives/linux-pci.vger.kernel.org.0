@@ -2,80 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B4E290599
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2019 18:16:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28162905AE
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2019 18:23:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfHPQQV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Aug 2019 12:16:21 -0400
-Received: from mail-wr1-f48.google.com ([209.85.221.48]:42698 "EHLO
-        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbfHPQQV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Aug 2019 12:16:21 -0400
-Received: by mail-wr1-f48.google.com with SMTP id b16so2051458wrq.9
-        for <linux-pci@vger.kernel.org>; Fri, 16 Aug 2019 09:16:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=aXOWm885zlSQjaOTNsiB6ixyEYYi9R71KVEE87CvUak=;
-        b=rP18+Zp2SU835Ledk4lWfn3iADWCoGcsQU7M/DEORPHV6CFd/lYs97USVUHLQbm5JS
-         bVZcQd1AtrI4cX6krVOgykfwx9dsqqRz3AG2XK4+43r3jPctRPQHU+ITc7MGYNa6UtLs
-         bKz7aDT0czAqYPAKwUk0Ga+frfJaDq85qXktwdp1oXmzmkWU++6gJ0DHkA0va829elSm
-         YQEa5K6LsPa+DcxfGHYFdG3c37PqrzDvclb2AXLhZLEp8cu02KSYo/ILZbY5L1L+YBPZ
-         PDVlDds0LIKCwLnvDWXyzC5NzkGbLPb8PvDZnr28hE+Nw//cxvw9olwN7Btw4XuuAQdz
-         bsug==
-X-Gm-Message-State: APjAAAV2ZcRx9ByEldcyx0RAW8/1c9v2iQl42YZ0pI9XzTnChiuMzEmf
-        t2EcBSEN7J5W/+3IvPe5XDNwpA==
-X-Google-Smtp-Source: APXvYqy6B4y9yrIXuG+5Spcygji8YfnMrNZIuzappqSMix4ReJs2eJshqSyIxnLvZ0v0kauGmsdKjg==
-X-Received: by 2002:a5d:6b84:: with SMTP id n4mr12261415wrx.118.1565972178874;
-        Fri, 16 Aug 2019 09:16:18 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id f70sm8693222wme.22.2019.08.16.09.16.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 09:16:18 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sashal\@kernel.org" <sashal@kernel.org>,
-        "davem\@davemloft.net" <davem@davemloft.net>,
-        "saeedm\@mellanox.com" <saeedm@mellanox.com>,
-        "leon\@kernel.org" <leon@kernel.org>,
-        "eranbe\@mellanox.com" <eranbe@mellanox.com>,
-        "lorenzo.pieralisi\@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas\@google.com" <bhelgaas@google.com>,
-        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH net-next, 2/6] PCI: hv: Add a Hyper-V PCI mini driver for software backchannel interface
-In-Reply-To: <DM6PR21MB13375FA0BA0220A91EF448E1CAAF0@DM6PR21MB1337.namprd21.prod.outlook.com>
-References: <1565809632-39138-1-git-send-email-haiyangz@microsoft.com> <1565809632-39138-3-git-send-email-haiyangz@microsoft.com> <878srt8fd8.fsf@vitty.brq.redhat.com> <DM6PR21MB13375FA0BA0220A91EF448E1CAAF0@DM6PR21MB1337.namprd21.prod.outlook.com>
-Date:   Fri, 16 Aug 2019 18:16:17 +0200
-Message-ID: <871rxl84ry.fsf@vitty.brq.redhat.com>
+        id S1726265AbfHPQXu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Aug 2019 12:23:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56782 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726129AbfHPQXu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 16 Aug 2019 12:23:50 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B2ABD3084295;
+        Fri, 16 Aug 2019 16:23:49 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F213F27C49;
+        Fri, 16 Aug 2019 16:23:48 +0000 (UTC)
+Date:   Fri, 16 Aug 2019 10:23:47 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 08/10] vfio_pci: Loop using PCI_STD_NUM_BARS
+Message-ID: <20190816102347.781a2ee1@x1.home>
+In-Reply-To: <20190816092437.31846-9-efremov@linux.com>
+References: <20190816092437.31846-1-efremov@linux.com>
+        <20190816092437.31846-9-efremov@linux.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 16 Aug 2019 16:23:49 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Haiyang Zhang <haiyangz@microsoft.com> writes:
+On Fri, 16 Aug 2019 12:24:35 +0300
+Denis Efremov <efremov@linux.com> wrote:
 
->
-> The pci_hyperv can only be loaded on VMs on Hyper-V and Azure. Other 
-> drivers like MLX5e will have symbolic dependency of pci_hyperv if they 
-> use functions exported by pci_hyperv. This dependency will cause other 
-> drivers fail to load on other platforms, like VMs on KVM. So we created 
-> this mini driver, which can be loaded on any platforms to provide the 
-> symbolic dependency.
+> Refactor loops to use 'i < PCI_STD_NUM_BARS' instead of
+> 'i <= PCI_STD_RESOURCE_END'.
+> 
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> ---
+>  drivers/vfio/pci/vfio_pci.c         | 11 +++++++----
+>  drivers/vfio/pci/vfio_pci_config.c  | 10 ++++++----
+>  drivers/vfio/pci/vfio_pci_private.h |  4 ++--
+>  3 files changed, 15 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index 703948c9fbe1..cb7d220d3246 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -110,13 +110,15 @@ static inline bool vfio_pci_is_vga(struct pci_dev *pdev)
+>  static void vfio_pci_probe_mmaps(struct vfio_pci_device *vdev)
+>  {
+>  	struct resource *res;
+> -	int bar;
+> +	int i;
+>  	struct vfio_pci_dummy_resource *dummy_res;
+>  
+>  	INIT_LIST_HEAD(&vdev->dummy_resources_list);
+>  
+> -	for (bar = PCI_STD_RESOURCES; bar <= PCI_STD_RESOURCE_END; bar++) {
+> -		res = vdev->pdev->resource + bar;
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+> +		int bar = i + PCI_STD_RESOURCES;
+> +
+> +		res = &vdev->pdev->resource[bar];
+>  
+>  		if (!IS_ENABLED(CONFIG_VFIO_PCI_MMAP))
+>  			goto no_mmap;
+> @@ -399,7 +401,8 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
+>  
+>  	vfio_config_free(vdev);
+>  
+> -	for (bar = PCI_STD_RESOURCES; bar <= PCI_STD_RESOURCE_END; bar++) {
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+> +		bar = i + PCI_STD_RESOURCES;
+>  		if (!vdev->barmap[bar])
+>  			continue;
+>  		pci_iounmap(pdev, vdev->barmap[bar]);
+> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> index f0891bd8444c..df8772395219 100644
+> --- a/drivers/vfio/pci/vfio_pci_config.c
+> +++ b/drivers/vfio/pci/vfio_pci_config.c
+> @@ -455,16 +455,18 @@ static void vfio_bar_fixup(struct vfio_pci_device *vdev)
+>  
+>  	bar = (__le32 *)&vdev->vconfig[PCI_BASE_ADDRESS_0];
+>  
+> -	for (i = PCI_STD_RESOURCES; i <= PCI_STD_RESOURCE_END; i++, bar++) {
+> -		if (!pci_resource_start(pdev, i)) {
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++, bar++) {
+> +		int ibar = i + PCI_STD_RESOURCES;
+> +
+> +		if (!pci_resource_start(pdev, ibar)) {
+>  			*bar = 0; /* Unmapped by host = unimplemented to user */
+>  			continue;
+>  		}
+>  
+> -		mask = ~(pci_resource_len(pdev, i) - 1);
+> +		mask = ~(pci_resource_len(pdev, ibar) - 1);
+>  
+>  		*bar &= cpu_to_le32((u32)mask);
+> -		*bar |= vfio_generate_bar_flags(pdev, i);
+> +		*bar |= vfio_generate_bar_flags(pdev, ibar);
+>  
+>  		if (*bar & cpu_to_le32(PCI_BASE_ADDRESS_MEM_TYPE_64)) {
+>  			bar++;
 
-(/me wondering is there a nicer way around this, by using __weak or
-something like that...)
+It might be a bit cleaner to rename the 'bar' variable to 'vbar', then
+we have 'bar' available to use as the BAR number.  It seems more
+consistent with other uses.  Otherwise the logic looks fine.  Thanks,
 
-In case this stub is the best solution I'd suggest to rename it to
-something like PCI_HYPERV_INTERFACE to make it clear it is not a
-separate driver (_MINI makes me think so).
+Alex
 
--- 
-Vitaly
+> diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
+> index ee6ee91718a4..8a2c7607d513 100644
+> --- a/drivers/vfio/pci/vfio_pci_private.h
+> +++ b/drivers/vfio/pci/vfio_pci_private.h
+> @@ -86,8 +86,8 @@ struct vfio_pci_reflck {
+>  
+>  struct vfio_pci_device {
+>  	struct pci_dev		*pdev;
+> -	void __iomem		*barmap[PCI_STD_RESOURCE_END + 1];
+> -	bool			bar_mmap_supported[PCI_STD_RESOURCE_END + 1];
+> +	void __iomem		*barmap[PCI_STD_NUM_BARS];
+> +	bool			bar_mmap_supported[PCI_STD_NUM_BARS];
+>  	u8			*pci_config_map;
+>  	u8			*vconfig;
+>  	struct perm_bits	*msi_perm;
+
