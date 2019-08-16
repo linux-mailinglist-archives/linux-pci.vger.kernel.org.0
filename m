@@ -2,222 +2,212 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AC688FF77
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2019 11:52:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76AE58FFE7
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2019 12:20:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfHPJwR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Aug 2019 05:52:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:54360 "EHLO foss.arm.com"
+        id S1726767AbfHPKU2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Aug 2019 06:20:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:54606 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726839AbfHPJwR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 16 Aug 2019 05:52:17 -0400
+        id S1726761AbfHPKU2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 16 Aug 2019 06:20:28 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDA8328;
-        Fri, 16 Aug 2019 02:52:16 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 699173F706;
-        Fri, 16 Aug 2019 02:52:15 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 10:52:08 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     "sashal@kernel.org" <sashal@kernel.org>,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A615828;
+        Fri, 16 Aug 2019 03:20:27 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 00EA33F706;
+        Fri, 16 Aug 2019 03:20:27 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 11:20:25 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Message-ID: <20190816095208.GA23677@e121166-lin.cambridge.arm.com>
-References: <1565888460-38694-1-git-send-email-haiyangz@microsoft.com>
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: Re: [PATCH 02/10] PCI: designware-ep: Add the doorbell mode of MSI-X
+ in EP mode
+Message-ID: <20190816102025.GB14111@e119886-lin.cambridge.arm.com>
+References: <20190815083716.4715-1-xiaowei.bao@nxp.com>
+ <20190815083716.4715-2-xiaowei.bao@nxp.com>
+ <20190815115340.GG43882@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB329973845D6396624AFDE547F5AF0@AM5PR04MB3299.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1565888460-38694-1-git-send-email-haiyangz@microsoft.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM5PR04MB329973845D6396624AFDE547F5AF0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 05:01:37PM +0000, Haiyang Zhang wrote:
-> Currently in Azure cloud, for passthrough devices, the host sets the device
-> instance ID's bytes 8 - 15 to a value derived from the host HWID, which is
-> the same on all devices in a VM. So, the device instance ID's bytes 8 and 9
-> provided by the host are no longer unique. This affects all Azure hosts
-> since July 2018, and can cause device passthrough to VMs to fail because
-> the bytes 8 and 9 are used as PCI domain number. Collision of domain
-> numbers will cause the second device with the same domain number fail to
-> load.
+On Fri, Aug 16, 2019 at 02:58:31AM +0000, Xiaowei Bao wrote:
 > 
-> In the cases of collision, we will detect and find another number that is
-> not in use.
 > 
-> Suggested-by: Michael Kelley <mikelley@microsoft.com>
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> Acked-by: Sasha Levin <sashal@kernel.org>
+> > -----Original Message-----
+> > From: Andrew Murray <andrew.murray@arm.com>
+> > Sent: 2019年8月15日 19:54
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Cc: jingoohan1@gmail.com; gustavo.pimentel@synopsys.com;
+> > bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
+> > lorenzo.pieralisi@arm.com; arnd@arndb.de; gregkh@linuxfoundation.org;
+> > M.h. Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>;
+> > Roy Zang <roy.zang@nxp.com>; linux-pci@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
+> > Subject: Re: [PATCH 02/10] PCI: designware-ep: Add the doorbell mode of
+> > MSI-X in EP mode
+> > 
+> > On Thu, Aug 15, 2019 at 04:37:08PM +0800, Xiaowei Bao wrote:
+> > > Add the doorbell mode of MSI-X in EP mode.
+> > >
+> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-designware-ep.c | 14 ++++++++++++++
+> > >  drivers/pci/controller/dwc/pcie-designware.h    | 14 ++++++++++++++
+> > >  2 files changed, 28 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > index 75e2955..e3a7cdf 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > @@ -454,6 +454,20 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep
+> > *ep, u8 func_no,
+> > >  	return 0;
+> > >  }
+> > >
+> > > +int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8
+> > func_no,
+> > > +				       u16 interrupt_num)
+> > > +{
+> > > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > > +	u32 msg_data;
+> > > +
+> > > +	msg_data = (func_no << PCIE_MSIX_DOORBELL_PF_SHIFT) |
+> > > +		   (interrupt_num - 1);
+> > > +
+> > > +	dw_pcie_writel_dbi(pci, PCIE_MSIX_DOORBELL, msg_data);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > >  int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > >  			      u16 interrupt_num)
+> > 
+> > Have I understood correctly that the hardware provides an alternative
+> > mechanism that allows for raising MSI-X interrupts without the bother of
+> > reading the capabilities registers?
+> Yes, the hardware provide two way to MSI-X, please check the page 492 of 
+> DWC_pcie_dm_registers_4.30 Menu.
+> MSIX_DOORBELL_OFF on page 492 0x948 Description: MSI-X Doorbell Register....>
 
-I assume you will take care of backporting and sending this patch
-to stable kernels given that you have not applied any tag with
-such request.
+Thanks for the reference.
 
-I appreciate it may not be easy to define but a Fixes: tag would help.
+> > 
+> > If so is there any good reason to keep dw_pcie_ep_raise_msix_irq? (And thus
+> > use it in dw_plat_pcie_ep_raise_irq also)?
+> I am not sure, but I think the dw_pcie_ep_raise_msix_irq function is not correct, 
+> because I think we can't get the MSIX table from the address ep->phys_base + tbl_addr, 
+> but I also don't know where I can get the correct MSIX table.
+
+Well it looks like this function is used by snps,dw-pcie-ep and snps,dw-pcie,
+perhaps the doorbell mode isn't available on that hardware.
+
+> > 
+> > 
+> > >  {
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
+> > > b/drivers/pci/controller/dwc/pcie-designware.h
+> > > index 2b291e8..cd903e9 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > > @@ -88,6 +88,11 @@
+> > >  #define PCIE_MISC_CONTROL_1_OFF		0x8BC
+> > >  #define PCIE_DBI_RO_WR_EN		BIT(0)
+> > >
+> > > +#define PCIE_MSIX_DOORBELL		0x948
+> > > +#define PCIE_MSIX_DOORBELL_PF_SHIFT	24
+> > > +#define PCIE_MSIX_DOORBELL_VF_SHIFT	16
+> > > +#define PCIE_MSIX_DOORBELL_VF_ACTIVE	BIT(15)
+> > 
+> > The _VF defines are not used, I'd suggest removing them.
+> In fact, I will add the SRIOV support in this file, the SRIOV feature have verified 
+> In my board, but I need wait the EP framework SRIOV patch merge, 
+> so I defined these two macros.
+
+I'd suggest adding the VF macros along with the SRIOV feature.
 
 Thanks,
-Lorenzo
 
-> ---
->  drivers/pci/controller/pci-hyperv.c | 92 +++++++++++++++++++++++++++++++------
->  1 file changed, 79 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 40b6254..31b8fd5 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -2510,6 +2510,48 @@ static void put_hvpcibus(struct hv_pcibus_device *hbus)
->  		complete(&hbus->remove_event);
->  }
->  
-> +#define HVPCI_DOM_MAP_SIZE (64 * 1024)
-> +static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
-> +
-> +/*
-> + * PCI domain number 0 is used by emulated devices on Gen1 VMs, so define 0
-> + * as invalid for passthrough PCI devices of this driver.
-> + */
-> +#define HVPCI_DOM_INVALID 0
-> +
-> +/**
-> + * hv_get_dom_num() - Get a valid PCI domain number
-> + * Check if the PCI domain number is in use, and return another number if
-> + * it is in use.
-> + *
-> + * @dom: Requested domain number
-> + *
-> + * return: domain number on success, HVPCI_DOM_INVALID on failure
-> + */
-> +static u16 hv_get_dom_num(u16 dom)
-> +{
-> +	unsigned int i;
-> +
-> +	if (test_and_set_bit(dom, hvpci_dom_map) == 0)
-> +		return dom;
-> +
-> +	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
-> +		if (test_and_set_bit(i, hvpci_dom_map) == 0)
-> +			return i;
-> +	}
-> +
-> +	return HVPCI_DOM_INVALID;
-> +}
-> +
-> +/**
-> + * hv_put_dom_num() - Mark the PCI domain number as free
-> + * @dom: Domain number to be freed
-> + */
-> +static void hv_put_dom_num(u16 dom)
-> +{
-> +	clear_bit(dom, hvpci_dom_map);
-> +}
-> +
->  /**
->   * hv_pci_probe() - New VMBus channel probe, for a root PCI bus
->   * @hdev:	VMBus's tracking struct for this root PCI bus
-> @@ -2521,6 +2563,7 @@ static int hv_pci_probe(struct hv_device *hdev,
->  			const struct hv_vmbus_device_id *dev_id)
->  {
->  	struct hv_pcibus_device *hbus;
-> +	u16 dom_req, dom;
->  	int ret;
->  
->  	/*
-> @@ -2535,19 +2578,34 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	hbus->state = hv_pcibus_init;
->  
->  	/*
-> -	 * The PCI bus "domain" is what is called "segment" in ACPI and
-> -	 * other specs.  Pull it from the instance ID, to get something
-> -	 * unique.  Bytes 8 and 9 are what is used in Windows guests, so
-> -	 * do the same thing for consistency.  Note that, since this code
-> -	 * only runs in a Hyper-V VM, Hyper-V can (and does) guarantee
-> -	 * that (1) the only domain in use for something that looks like
-> -	 * a physical PCI bus (which is actually emulated by the
-> -	 * hypervisor) is domain 0 and (2) there will be no overlap
-> -	 * between domains derived from these instance IDs in the same
-> -	 * VM.
-> +	 * The PCI bus "domain" is what is called "segment" in ACPI and other
-> +	 * specs. Pull it from the instance ID, to get something usually
-> +	 * unique. In rare cases of collision, we will find out another number
-> +	 * not in use.
-> +	 *
-> +	 * Note that, since this code only runs in a Hyper-V VM, Hyper-V
-> +	 * together with this guest driver can guarantee that (1) The only
-> +	 * domain used by Gen1 VMs for something that looks like a physical
-> +	 * PCI bus (which is actually emulated by the hypervisor) is domain 0.
-> +	 * (2) There will be no overlap between domains (after fixing possible
-> +	 * collisions) in the same VM.
->  	 */
-> -	hbus->sysdata.domain = hdev->dev_instance.b[9] |
-> -			       hdev->dev_instance.b[8] << 8;
-> +	dom_req = hdev->dev_instance.b[8] << 8 | hdev->dev_instance.b[9];
-> +	dom = hv_get_dom_num(dom_req);
-> +
-> +	if (dom == HVPCI_DOM_INVALID) {
-> +		dev_err(&hdev->device,
-> +			"Unable to use dom# 0x%hx or other numbers", dom_req);
-> +		ret = -EINVAL;
-> +		goto free_bus;
-> +	}
-> +
-> +	if (dom != dom_req)
-> +		dev_info(&hdev->device,
-> +			 "PCI dom# 0x%hx has collision, using 0x%hx",
-> +			 dom_req, dom);
-> +
-> +	hbus->sysdata.domain = dom;
->  
->  	hbus->hdev = hdev;
->  	refcount_set(&hbus->remove_lock, 1);
-> @@ -2562,7 +2620,7 @@ static int hv_pci_probe(struct hv_device *hdev,
->  					   hbus->sysdata.domain);
->  	if (!hbus->wq) {
->  		ret = -ENOMEM;
-> -		goto free_bus;
-> +		goto free_dom;
->  	}
->  
->  	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
-> @@ -2639,6 +2697,8 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	vmbus_close(hdev->channel);
->  destroy_wq:
->  	destroy_workqueue(hbus->wq);
-> +free_dom:
-> +	hv_put_dom_num(hbus->sysdata.domain);
->  free_bus:
->  	free_page((unsigned long)hbus);
->  	return ret;
-> @@ -2720,6 +2780,9 @@ static int hv_pci_remove(struct hv_device *hdev)
->  	put_hvpcibus(hbus);
->  	wait_for_completion(&hbus->remove_event);
->  	destroy_workqueue(hbus->wq);
-> +
-> +	hv_put_dom_num(hbus->sysdata.domain);
-> +
->  	free_page((unsigned long)hbus);
->  	return 0;
->  }
-> @@ -2747,6 +2810,9 @@ static void __exit exit_hv_pci_drv(void)
->  
->  static int __init init_hv_pci_drv(void)
->  {
-> +	/* Set the invalid domain number's bit, so it will not be used */
-> +	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
-> +
->  	return vmbus_driver_register(&hv_pci_drv);
->  }
->  
-> -- 
-> 1.8.3.1
-> 
+Andrew Murray
+
+> > 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > > +
+> > >  /*
+> > >   * iATU Unroll-specific register definitions
+> > >   * From 4.80 core version the address translation will be made by
+> > > unroll @@ -399,6 +404,8 @@ int dw_pcie_ep_raise_msi_irq(struct
+> > dw_pcie_ep *ep, u8 func_no,
+> > >  			     u8 interrupt_num);
+> > >  int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > >  			     u16 interrupt_num);
+> > > +int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8
+> > func_no,
+> > > +				       u16 interrupt_num);
+> > >  void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar);
+> > > #else  static inline void dw_pcie_ep_linkup(struct dw_pcie_ep *ep) @@
+> > > -431,6 +438,13 @@ static inline int dw_pcie_ep_raise_msix_irq(struct
+> > dw_pcie_ep *ep, u8 func_no,
+> > >  	return 0;
+> > >  }
+> > >
+> > > +static inline int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep
+> > *ep,
+> > > +						     u8 func_no,
+> > > +						     u16 interrupt_num)
+> > > +{
+> > > +	return 0;
+> > > +}
+> > > +
+> > >  static inline void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum
+> > > pci_barno bar)  {  }
+> > > --
+> > > 2.9.5
+> > >
+> > >
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Flists
+> > > .infradead.org%2Fmailman%2Flistinfo%2Flinux-arm-kernel&amp;data=02%
+> > 7C0
+> > >
+> > 1%7Cxiaowei.bao%40nxp.com%7C8489493003bb48a0139d08d721773972%
+> > 7C686ea1d
+> > >
+> > 3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637014668369499298&amp;sd
+> > ata=dyrXB
+> > >
+> > avljJBFUSNXW7K%2FRoXvwfWTE%2FoU2KMd1bZkJow%3D&amp;reserved=0
