@@ -2,14 +2,14 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A64D90BAD
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Aug 2019 02:13:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADCBB90BB0
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Aug 2019 02:13:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbfHQANi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Aug 2019 20:13:38 -0400
-Received: from mga05.intel.com ([192.55.52.43]:12917 "EHLO mga05.intel.com"
+        id S1726404AbfHQANp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Aug 2019 20:13:45 -0400
+Received: from mga05.intel.com ([192.55.52.43]:12918 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbfHQANY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1725911AbfHQANY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Fri, 16 Aug 2019 20:13:24 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -17,7 +17,7 @@ Received: from orsmga007.jf.intel.com ([10.7.209.58])
   by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 17:13:23 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,395,1559545200"; 
-   d="scan'208";a="168195004"
+   d="scan'208";a="168195006"
 Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
   by orsmga007.jf.intel.com with ESMTP; 16 Aug 2019 17:13:22 -0700
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
@@ -25,9 +25,9 @@ To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, keith.busch@intel.com,
         sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v6 3/8] PCI/ATS: Cache PASID capability check result
-Date:   Fri, 16 Aug 2019 17:10:17 -0700
-Message-Id: <8dab6ec5eb5b600311111986aaca0b831472c7e5.1565997310.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v6 4/8] PCI/IOV: Add pci_physfn_reslock/unlock() interfaces
+Date:   Fri, 16 Aug 2019 17:10:18 -0700
+Message-Id: <6763a208e1782d7e58d72d131b8faad5529b890a.1565997310.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1565997310.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1565997310.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -40,166 +40,106 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Currently, PASID capability checks are repeated across all PASID API's.
-Instead, cache the capability check result in pci_pasid_init() and use
-it in other PASID API's.
+As per PCIe spec r5.0, sec 9.3.7, in SR-IOV devices, capabilities like
+PASID, PRI, VC, etc are shared between PF and its associated VFs. So, to
+prevent race conditions between PF/VF while updating configuration
+registers of these shared capabilities, a new synchronization mechanism
+is required.
+
+As a first step, create shared resource lock and expose expose
+pci_physfn_reslock/unlock() API's. Users of these shared capabilities can
+use these lock/unlock interfaces to synchronize its access.
+
+Since the shared capability is always implemented by PF, reslock mutex
+has been added to pci_sriov structure which only exists for PF.
+
+NOTE: Currently this reslock is common for all shared capabilities
+between PF/VF. In future, if any performance impact has been noticed, we
+should create individual locks for each of the shared capability.
 
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- drivers/pci/ats.c   | 50 ++++++++++++++++++++++++++-------------------
- include/linux/pci.h |  1 +
- 2 files changed, 30 insertions(+), 21 deletions(-)
+ drivers/pci/iov.c |  1 +
+ drivers/pci/pci.h | 40 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 41 insertions(+)
 
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index b863562b6702..022698a85c98 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -29,6 +29,19 @@ static void pci_pri_init(struct pci_dev *pdev)
- #endif
- }
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index 525fd3f272b3..004e7076b065 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -507,6 +507,7 @@ static int sriov_init(struct pci_dev *dev, int pos)
+ 	else
+ 		iov->dev = dev;
  
-+static void pci_pasid_init(struct pci_dev *pdev)
-+{
-+#ifdef CONFIG_PCI_PASID
-+	int pos;
-+
-+	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
-+	if (!pos)
-+		return;
-+
-+	pdev->pasid_cap = pos;
-+#endif
-+}
-+
- void pci_ats_init(struct pci_dev *dev)
- {
- 	int pos;
-@@ -43,6 +56,8 @@ void pci_ats_init(struct pci_dev *dev)
- 	dev->ats_cap = pos;
- 
- 	pci_pri_init(dev);
-+
-+	pci_pasid_init(dev);
- }
++	mutex_init(&iov->reslock);
+ 	dev->sriov = iov;
+ 	dev->is_physfn = 1;
+ 	rc = compute_max_vf_buses(dev);
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index d22d1b807701..c7fa09f3389a 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -304,6 +304,19 @@ struct pci_sriov {
+ 	u16		subsystem_device; /* VF subsystem device */
+ 	resource_size_t	barsz[PCI_SRIOV_NUM_BARS];	/* VF BAR size */
+ 	bool		drivers_autoprobe; /* Auto probing of VFs by driver */
++	/*
++	 * reslock mutex is used for synchronizing updates to resources
++	 * shared between PF and all associated VFs. For example, in
++	 * SRIOV devices, PRI and PASID interfaces are shared between
++	 * PF an all VFs, and hence we need proper locking mechanism to
++	 * prevent both PF and VF update the PRI or PASID configuration
++	 * registers at the same time.
++	 * NOTE: Currently, this lock is shared by all capabilities that
++	 * has shared resource between PF and VFs. If there is any performance
++	 * impact then perhaps we need to create separate lock for each of
++	 * the independent capability that has shared resources.
++	 */
++	struct mutex	reslock;	/* PF/VF shared resource lock */
+ };
  
  /**
-@@ -303,7 +318,6 @@ EXPORT_SYMBOL_GPL(pci_reset_pri);
- int pci_enable_pasid(struct pci_dev *pdev, int features)
+@@ -433,6 +446,27 @@ void pci_iov_update_resource(struct pci_dev *dev, int resno);
+ resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev, int resno);
+ void pci_restore_iov_state(struct pci_dev *dev);
+ int pci_iov_bus_range(struct pci_bus *bus);
++static inline void pci_physfn_reslock(struct pci_dev *dev)
++{
++	struct pci_dev *pf = pci_physfn(dev);
++
++	/* For non SRIOV devices, locking is not needed */
++	if (!pf->is_physfn)
++		return;
++
++	mutex_lock(&pf->sriov->reslock);
++}
++
++static inline void pci_physfn_resunlock(struct pci_dev *dev)
++{
++	struct pci_dev *pf = pci_physfn(dev);
++
++	/* For non SRIOV devices, reslock is never held */
++	if (!pf->is_physfn)
++		return;
++
++	mutex_unlock(&pf->sriov->reslock);
++}
+ 
+ #else
+ static inline int pci_iov_init(struct pci_dev *dev)
+@@ -453,6 +487,12 @@ static inline int pci_iov_bus_range(struct pci_bus *bus)
  {
- 	u16 control, supported;
--	int pos;
- 
- 	if (WARN_ON(pdev->pasid_enabled))
- 		return -EBUSY;
-@@ -311,11 +325,11 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
- 	if (!pdev->eetlp_prefix_path)
- 		return -EINVAL;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
--	if (!pos)
-+	if (!pdev->pasid_cap)
- 		return -EINVAL;
- 
--	pci_read_config_word(pdev, pos + PCI_PASID_CAP, &supported);
-+	pci_read_config_word(pdev, pdev->pasid_cap + PCI_PASID_CAP,
-+			     &supported);
- 	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
- 
- 	/* User wants to enable anything unsupported? */
-@@ -325,7 +339,7 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
- 	control = PCI_PASID_CTRL_ENABLE | features;
- 	pdev->pasid_features = features;
- 
--	pci_write_config_word(pdev, pos + PCI_PASID_CTRL, control);
-+	pci_write_config_word(pdev, pdev->pasid_cap + PCI_PASID_CTRL, control);
- 
- 	pdev->pasid_enabled = 1;
- 
-@@ -340,16 +354,14 @@ EXPORT_SYMBOL_GPL(pci_enable_pasid);
- void pci_disable_pasid(struct pci_dev *pdev)
- {
- 	u16 control = 0;
--	int pos;
- 
- 	if (WARN_ON(!pdev->pasid_enabled))
- 		return;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
--	if (!pos)
-+	if (!pdev->pasid_cap)
- 		return;
- 
--	pci_write_config_word(pdev, pos + PCI_PASID_CTRL, control);
-+	pci_write_config_word(pdev, pdev->pasid_cap + PCI_PASID_CTRL, control);
- 
- 	pdev->pasid_enabled = 0;
+ 	return 0;
  }
-@@ -362,17 +374,15 @@ EXPORT_SYMBOL_GPL(pci_disable_pasid);
- void pci_restore_pasid_state(struct pci_dev *pdev)
- {
- 	u16 control;
--	int pos;
++static inline void pci_physfn_reslock(struct pci_dev *dev)
++{
++}
++static inline void pci_physfn_resunlock(struct pci_dev *dev)
++{
++}
  
- 	if (!pdev->pasid_enabled)
- 		return;
+ #endif /* CONFIG_PCI_IOV */
  
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
--	if (!pos)
-+	if (!pdev->pasid_cap)
- 		return;
- 
- 	control = PCI_PASID_CTRL_ENABLE | pdev->pasid_features;
--	pci_write_config_word(pdev, pos + PCI_PASID_CTRL, control);
-+	pci_write_config_word(pdev, pdev->pasid_cap + PCI_PASID_CTRL, control);
- }
- EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
- 
-@@ -389,13 +399,12 @@ EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
- int pci_pasid_features(struct pci_dev *pdev)
- {
- 	u16 supported;
--	int pos;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
--	if (!pos)
-+	if (!pdev->pasid_cap)
- 		return -EINVAL;
- 
--	pci_read_config_word(pdev, pos + PCI_PASID_CAP, &supported);
-+	pci_read_config_word(pdev, pdev->pasid_cap + PCI_PASID_CAP,
-+			     &supported);
- 
- 	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
- 
-@@ -445,13 +454,12 @@ EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
- int pci_max_pasids(struct pci_dev *pdev)
- {
- 	u16 supported;
--	int pos;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
--	if (!pos)
-+	if (!pdev->pasid_cap)
- 		return -EINVAL;
- 
--	pci_read_config_word(pdev, pos + PCI_PASID_CAP, &supported);
-+	pci_read_config_word(pdev, pdev->pasid_cap + PCI_PASID_CAP,
-+			     &supported);
- 
- 	supported = (supported & PASID_NUMBER_MASK) >> PASID_NUMBER_SHIFT;
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 56b55db099fc..27224c0db849 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -459,6 +459,7 @@ struct pci_dev {
- 	u32		pri_reqs_alloc; /* Number of PRI requests allocated */
- #endif
- #ifdef CONFIG_PCI_PASID
-+	u16		pasid_cap;	/* PASID Capability offset */
- 	u16		pasid_features;
- #endif
- #ifdef CONFIG_PCI_P2PDMA
 -- 
 2.21.0
 
