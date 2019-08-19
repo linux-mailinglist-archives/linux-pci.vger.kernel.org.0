@@ -2,59 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CFBD091CD7
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2019 08:06:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC76B91E0F
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2019 09:40:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbfHSGG2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Aug 2019 02:06:28 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43181 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfHSGG1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Aug 2019 02:06:27 -0400
-Received: by mail-wr1-f66.google.com with SMTP id y8so7335737wrn.10;
-        Sun, 18 Aug 2019 23:06:26 -0700 (PDT)
+        id S1726999AbfHSHkA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Aug 2019 03:40:00 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33647 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfHSHkA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Aug 2019 03:40:00 -0400
+Received: by mail-pl1-f195.google.com with SMTP id go14so568096plb.0
+        for <linux-pci@vger.kernel.org>; Mon, 19 Aug 2019 00:39:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=HoLMhosJKaAGre1eE3iRbK4QzCCIJ9YhOYsd1F7Y0pI=;
-        b=PLxoIaTttOAeCtvWfwbYCL94JNOR7VHN5A47KJ7T5Vn+cret/fAQ/+u7T4sJCh7hQD
-         5CEnbevR24ETpVU6RKiXBLbmbQCJppSJu3V/Uykd3cwa9nr4dcza+oJHgFuyWpA7yeDL
-         8poDnWoPK1C69N/c+DYxrNfPfIor5YCRDLUktjEmH+UfLnaK8Di3RYphgQYASoefFRI1
-         vw6r0wpYH/KWyEJtB/68ual93EsPWk0lHWzJNU3VFonaAmeBbH+aRg90/nluuUfwFiWo
-         EmCDxdf0ImPeVM1vezx4pBd7IdL0jutI21e7v9G9mz0vn7njy/k45u2bqgYftZlrU1Rh
-         SXyw==
+        bh=CaEyohzlQpJYqDCuXjIODakxTs9XRVBNPX1JZzttlCQ=;
+        b=pJK2jXyDeMWUjNBTjESp9kqhWZFgtxlpp9hT6a5dwxiZAWB2uz1U+Xdn0f6VfzUzdH
+         RAj/dxYd6IEljr+hE0ntxM2y7BgrE1o9Bn0RgUWRptHDjbpd4sklYSCsflHs9vh4BvTR
+         mHhu8qkmWBIepdI88+axbC3B+RK4n5Db56qfSWCGDBPvVxImDhfynsV9Ct5pxwFV98LT
+         AOHCpJB3H8k8WcBuREp6qKWisKFuWQSqAmmqmkqFtv06tZ5hYBxiCA9HvaS2wRKsJm7c
+         Y8ibCLf2GAMPl7USkicUQUdGD9sxi73pLrJfj4DIGUmOqxqZCHnyNxjjo7j5bvUeAhik
+         di+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=HoLMhosJKaAGre1eE3iRbK4QzCCIJ9YhOYsd1F7Y0pI=;
-        b=hZhrLgYGWBVuzNUrhmr3iqQhUWb2yxQORyvBRabMjGF1yNBa049i0wWvpYvNQoUvFS
-         y+7KyLRfcjbR52R5m2XZTtPEy+WOztFj1mq6K4/4CCbavgiHleL9vUyjgN72ZQKPi1af
-         p7557Vw6hCY7WXnPSdHAoqLpPuFHqSgHJOFe5z+5m9Gcsm21i4Zz2C2sHlurRxOv3SoL
-         sdW/6RzAggTJz4t5gEA7jkjpPbk9YELG/qo1EJck0muyOnp5ky/GV0OZcPcjki2T1JZd
-         UW2qV+a7CmYwt1FRikRlJniTxUhziu/utwu1tfxmrKm2fhUqWZdbsRmcv+f+7bYZg5QC
-         7Yjg==
-X-Gm-Message-State: APjAAAVeoFb9m8noQNjTdBM3ZJMg198/FAHCtNBg+RLLoaWgrH/rzDdN
-        t8C3iAO/X4YHSnydoRKyVDsYrS+VP4GywA==
-X-Google-Smtp-Source: APXvYqz4pyPO5sHS746siRIrO5OlF17Swq3OCjJa3HMaZEf7s2zsxw+tRkRWrXgYzuwABebLlfFLNA==
-X-Received: by 2002:adf:f705:: with SMTP id r5mr24521071wrp.342.1566194785846;
-        Sun, 18 Aug 2019 23:06:25 -0700 (PDT)
-Received: from localhost.localdomain (ip5f5aef41.dynamic.kabel-deutschland.de. [95.90.239.65])
-        by smtp.gmail.com with ESMTPSA id j9sm14008976wrx.66.2019.08.18.23.06.24
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CaEyohzlQpJYqDCuXjIODakxTs9XRVBNPX1JZzttlCQ=;
+        b=MrmMWO7lLOMC7ZUSy1NOnI66mbwTVn0Uuy6j/3E7K9xIUQ+NI42XrsIp/8pHImS8Yn
+         oPk8M5jfAjhRRfLvpWzmFnjmmO212WjOGpCd9eTNTLT6xHpPnNdULplkgtAepYhlFzUZ
+         HQvu6UgUUv2/oLmI6JBcv5NzJ2CrVlTiPhihUlJNiIj47F/jZRgugm+KmCvve3a/4JmH
+         3gb0w0fAU4yRGr0FrT6/IFqikquNMKk57rsug66If8EqrTKnPrsona+n6mSFP6SBqIgn
+         Dff4PwFWdJw+j3zHpSvby85lfFkO4SUAIdPsx261yqYu1KkXZOweKjcMvzlVf/spXpwG
+         hNEA==
+X-Gm-Message-State: APjAAAWG8Iw0KMAaL1WtTWPOc1lTOM43Y6y2GtMx9Yzicpuv5MGwOSD/
+        4OLe0l7vm16RHEzYLAfgogJ2aGB2
+X-Google-Smtp-Source: APXvYqzL2W3rIUkDov75vdvuPdgoVtF/U2J5xiRzAwkjJkduLXMgAx+mbtsSHzbpvfOzTYLdOndQOQ==
+X-Received: by 2002:a17:902:6a:: with SMTP id 97mr21331339pla.257.1566200399544;
+        Mon, 19 Aug 2019 00:39:59 -0700 (PDT)
+Received: from localhost.localdomain ([110.225.16.165])
+        by smtp.gmail.com with ESMTPSA id h11sm14855215pfn.120.2019.08.19.00.39.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Aug 2019 23:06:25 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Daniel J Blueman <daniel@numascale.com>, x86@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/PCI: Add missing SPDX license header.
-Date:   Mon, 19 Aug 2019 08:06:24 +0200
-Message-Id: <20190819060624.17305-1-kw@linux.com>
-X-Mailer: git-send-email 2.22.0
+        Mon, 19 Aug 2019 00:39:58 -0700 (PDT)
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+To:     songxiaowei@hisilicon.com, wangbinghui@hisilicon.com,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Subject: [PATCH] PCI: kirin: Make structure kirin_dw_pcie_ops constant
+Date:   Mon, 19 Aug 2019 13:09:46 +0530
+Message-Id: <20190819073946.32458-1-nishkadg.linux@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -62,24 +60,30 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add the missing "SPDX-License-Identifier" license header to the
-arch/x86/pci/numachip.c.  Use GPL-2.0 identifier derived using
-the comment mentioning license from the top of the file.
+Static variable kirin_dw_pcie_ops, of type dw_pcie_ops, is used only
+once, when it is assigned to the constant field ops of variable pci
+(having type dw_pcie). Hence kirin_dw_pcie_ops is never modified.
+Therefore, make it constant to protect it from unintended modification.
+Issue found with Coccinelle.
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
 ---
- arch/x86/pci/numachip.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/dwc/pcie-kirin.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/pci/numachip.c b/arch/x86/pci/numachip.c
-index 2e565e65c893..b73157e834e0 100644
---- a/arch/x86/pci/numachip.c
-+++ b/arch/x86/pci/numachip.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * This file is subject to the terms and conditions of the GNU General Public
-  * License.  See the file "COPYING" in the main directory of this archive
+diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+index 8df1914226be..c19617a912bd 100644
+--- a/drivers/pci/controller/dwc/pcie-kirin.c
++++ b/drivers/pci/controller/dwc/pcie-kirin.c
+@@ -436,7 +436,7 @@ static int kirin_pcie_host_init(struct pcie_port *pp)
+ 	return 0;
+ }
+ 
+-static struct dw_pcie_ops kirin_dw_pcie_ops = {
++static const struct dw_pcie_ops kirin_dw_pcie_ops = {
+ 	.read_dbi = kirin_pcie_read_dbi,
+ 	.write_dbi = kirin_pcie_write_dbi,
+ 	.link_up = kirin_pcie_link_up,
 -- 
-2.22.0
+2.19.1
 
