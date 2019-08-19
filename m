@@ -2,90 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B1EF592368
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2019 14:28:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FB849258F
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2019 15:53:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbfHSM2X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Aug 2019 08:28:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727039AbfHSM2W (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 19 Aug 2019 08:28:22 -0400
-Received: from [192.168.1.74] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CFA220843;
-        Mon, 19 Aug 2019 12:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566217701;
-        bh=4nNTJ7OlbEkrwoSuv0YafH77Uv/FiulB1zmykNGQe9c=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=uwi6y+1Ng4ZNJpaGOwR3PQhkifllhh17EascGCHt7UPDVfIf0ieMo8vOgQ/N0tcZK
-         pf/8djU8zpN1Pz+fGmOQvrF/6H3/G3DvONYC7zaiWx3EPUHZReyO0zpORlLcrtM8j+
-         sblAfNa2PiKIulpfCl2PLKpXWOlDmn7XuaokeahM=
-Subject: Re: [PATCH v2 2/2] PCI: pciehp: Prevent deadlock on disconnect
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190812143133.75319-1-mika.westerberg@linux.intel.com>
- <20190812143133.75319-2-mika.westerberg@linux.intel.com>
- <ba0380b1-e8d1-890a-82e2-61d0ab6e9cae@kernel.org>
- <20190819085620.GM19908@lahna.fi.intel.com>
-From:   Sinan Kaya <okaya@kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <3c29d829-0068-7135-ccf8-1a254e1fa253@kernel.org>
-Date:   Mon, 19 Aug 2019 08:28:19 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727635AbfHSNx2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Aug 2019 09:53:28 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40137 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727332AbfHSNx2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Aug 2019 09:53:28 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c3so8828670wrd.7;
+        Mon, 19 Aug 2019 06:53:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YmwaSC7HpE3oDWdiILvMJ+7rFncLXsPhOTLihzduEAM=;
+        b=Ot3ZB4C6DgDey7zy/58Y+Rc3b56iXid2BHQpRPmBJ1a2612DTBW9/utMJx6Ecva1DA
+         OPkU8vcN7h8i2pwZESBWgl1HKKCZYBIVq1VZnvEQvDGGYoDc44Mimc+F84lNe5QB12+8
+         Uh1PMdq4syNzNlx/0zXwMb8G7WhYklDiuhz0s45CVSbPNXm0xZQdERd35ZHuOLRJj3LR
+         5Sr4FWux8yOKROjr8krsryRi/h9oWVvkmANZfz/ZkYAcX+5NnPsVI3J9plF/b/t/Xb8R
+         v9waUvcXlvLe7DW93dvYJT/KkYWZ2/ubGpVGLh2/aSnbuzxHdpPHYKvV3TLFwB7+QhuL
+         vFFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=YmwaSC7HpE3oDWdiILvMJ+7rFncLXsPhOTLihzduEAM=;
+        b=ZPvn/VxK+oAYG+0w6YmOMMO4mEoFpWhsNbGzfYWFHPnr/7BxFmCaFzjEqYWkVqep6C
+         VuEhS7ze000cUxHRxLxcjWiQJoWEVRSGqAI5X39+gbf1yblygmUIvDFA723y+F/3EvEC
+         0ZaU1ePDVUkeXcOkIVNfehCjrwEUu7CNH4J2RHIA9yLgULRBR1+UD2yrqmpgvtLXC+qA
+         y6h9TFvP4Vqb+xs1jZEPr3H+bgb/kYxSFUOokb45xcycQNELIrgUcJpAxmVIEiRTHHzQ
+         4Vt/TobsoQGIvZi93l+3SKtSPwkfIhzalXqgVUCg044VSOEDetDKOFCeWjboaTeGQqxi
+         nKLg==
+X-Gm-Message-State: APjAAAW9odGFFvQ3PyiY4pJADv/ViPJbPJZHXK6I3s2VfNI3AReGn2Nq
+        +6IT7/iuu+9yX9o9dQPUPCE=
+X-Google-Smtp-Source: APXvYqzt7UogDLmQpJewHEHjU3K0zbT7DLuq8Rxo7t6kxsGKERRPMo+OBji8oHMrXmiJ/kNpmo5VOA==
+X-Received: by 2002:a05:6000:128d:: with SMTP id f13mr28346448wrx.241.1566222806055;
+        Mon, 19 Aug 2019 06:53:26 -0700 (PDT)
+Received: from localhost.localdomain (ip5f5aef41.dynamic.kabel-deutschland.de. [95.90.239.65])
+        by smtp.gmail.com with ESMTPSA id z2sm11308806wmi.2.2019.08.19.06.53.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 06:53:25 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ACPI/PCI: Remove surplus parentheses from a return statement
+Date:   Mon, 19 Aug 2019 15:53:24 +0200
+Message-Id: <20190819135324.29504-1-kw@linux.com>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-In-Reply-To: <20190819085620.GM19908@lahna.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8/19/2019 4:56 AM, Mika Westerberg wrote:
->> There are PCI controllers that won't report presence detect correctly,
->> but still report link active.
-> If that's the case then pciehp_card_present() returns false so we call
-> pciehp_check_link_active() which should work with those controllers.
-> 
-> What I'm missing here?
-> 
+Remove unnecessary parentheses enclosing the value in a return
+statement in the drivers/acpi/pci_link.c.
 
-You are right. I thought we'd somehow prematurely leave the function.
-That's not the case.
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+ drivers/acpi/pci_link.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
+index db11f7771ef1..00a6da2121be 100644
+--- a/drivers/acpi/pci_link.c
++++ b/drivers/acpi/pci_link.c
+@@ -661,7 +661,7 @@ int acpi_pci_link_allocate_irq(acpi_handle handle, int index, int *triggering,
+ 	ACPI_DEBUG_PRINT((ACPI_DB_INFO,
+ 			  "Link %s is referenced\n",
+ 			  acpi_device_bid(link->device)));
+-	return (link->irq.active);
++	return link->irq.active;
+ }
+ 
+ /*
+@@ -712,7 +712,7 @@ int acpi_pci_link_free_irq(acpi_handle handle)
+ 		acpi_evaluate_object(link->device->handle, "_DIS", NULL, NULL);
+ 
+ 	mutex_unlock(&acpi_link_lock);
+-	return (link->irq.active);
++	return link->irq.active;
+ }
+ 
+ /* --------------------------------------------------------------------------
+-- 
+2.22.1
+
