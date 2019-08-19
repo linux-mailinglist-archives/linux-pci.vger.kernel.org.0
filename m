@@ -2,103 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F345491B09
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2019 04:28:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01F1391CD5
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2019 08:05:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726354AbfHSC2Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 18 Aug 2019 22:28:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbfHSC2Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 18 Aug 2019 22:28:24 -0400
-Received: from [192.168.1.74] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 527F72087E;
-        Mon, 19 Aug 2019 02:28:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566181703;
-        bh=tRFaATwxagRnxg5e9oTIToxiP+fSshlHwHrwVBFW9tc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=1aR+005gOBEDxMAwYvR2kZYSd2DhGVquW5MCgs5pRpZcFp3BZYUkSyVDbw/9M7Kha
-         pboHlivuqlNohx+C2ymNp8JGs734juo08zi82BVlQBmzze/H5mW3rvUX+BQIUP5YSd
-         /Iy9yoWqqWmzJcot8tmP0GFF8rWGZcfHMdl5ncmM=
-Subject: Re: [PATCH v2 2/2] PCI: pciehp: Prevent deadlock on disconnect
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        id S1726149AbfHSGFh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Aug 2019 02:05:37 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39248 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfHSGFh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Aug 2019 02:05:37 -0400
+Received: by mail-wm1-f65.google.com with SMTP id i63so479186wmg.4;
+        Sun, 18 Aug 2019 23:05:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mN/6XEGXs1kDZ4ZZjwlZYjkzDXusecI2C8l+7vO+fpo=;
+        b=rCnQuB/Hv2Iu/iQaR2QfbZg/dmc+0Ie1bTnG1qIJ6xGg4EMNkcAuY+uJ6E0LZ6fuxL
+         Fth5VOWzdTnVr88F56jmTO66pP5rEzaCofrCffDm/ncTS021lpYAXs1bLsrhI4Ux5KFW
+         4RXr9aOxTnjA0Uw3jtVGXLKxx+15voHhW6n018cRS2eDKAubVE+HPPez4O3Mqz5ZCHZ5
+         W2UKZgFZIxP0Tc4552APoD/BB1oROrFtV80IafSfOko5I6INp4kBXMDvrtOubTy2UE7f
+         2O3TbDv0ayl1FEJDXOSBk0+ciMw5jufv/u4rFmGDL8OsidUX9FW8dVY4ntReGCFo8bIu
+         YLjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=mN/6XEGXs1kDZ4ZZjwlZYjkzDXusecI2C8l+7vO+fpo=;
+        b=W+8GtkycxVrQ392Q9tjLJWtG64ZOjnXVUW82T5J04lRQ/wspt2ToqKPgRgEYuGw0kV
+         3/3Tzk6YHt7FlQn0OQIE3GR3OIEWO6jQh41HC1z03QSey4jiFjiu400RLfjGZbCf/dWO
+         TV5JukHLq2N6DVpBcrk32zZkj+f6nKDMK/pGmCkFPomuQcu0IKYIAfTpt5yKtf+ABuq+
+         q4Eqsi0EyDPWNMxaScMDCMFAUCyeJOIKXJS9BFrx7aMX/J/NG/Rw8pIigF5uzVHWegtY
+         001gDZlDzJ3tTHVX9DPdIaUf4jdLetOP4cLzJ03GHHytLcCMFjUeHV+OnLRhBygiRHqF
+         Ovhg==
+X-Gm-Message-State: APjAAAUNwyi++jaAplr4ZOWFevsiBRxkjsgLpHRHuKBkzHt637p6WY++
+        JZPFkLaFopbI8LgrF0vdJA4=
+X-Google-Smtp-Source: APXvYqymEXzkOa+YoBfDufeIGWG8/FhZz0bW9SAFAOGUhem1uA7FgJXnnfTf2dAityZ+m7zQSDiMVA==
+X-Received: by 2002:a7b:ce02:: with SMTP id m2mr5780294wmc.7.1566194734848;
+        Sun, 18 Aug 2019 23:05:34 -0700 (PDT)
+Received: from localhost.localdomain (ip5f5aef41.dynamic.kabel-deutschland.de. [95.90.239.65])
+        by smtp.gmail.com with ESMTPSA id m23sm22282503wml.41.2019.08.18.23.05.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Aug 2019 23:05:33 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190812143133.75319-1-mika.westerberg@linux.intel.com>
- <20190812143133.75319-2-mika.westerberg@linux.intel.com>
-From:   Sinan Kaya <okaya@kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <ba0380b1-e8d1-890a-82e2-61d0ab6e9cae@kernel.org>
-Date:   Sun, 18 Aug 2019 22:28:13 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Subject: [PATCH] x86/PCI: Replace deprecated EXTRA_CFLAGS with ccflags-y.
+Date:   Mon, 19 Aug 2019 08:05:32 +0200
+Message-Id: <20190819060532.17093-1-kw@linux.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20190812143133.75319-2-mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8/12/2019 10:31 AM, Mika Westerberg wrote:
-> +int pciehp_card_present_or_link_active(struct controller *ctrl)
->  {
-> -	return pciehp_card_present(ctrl) || pciehp_check_link_active(ctrl);
-> +	int ret;
-> +
-> +	ret = pciehp_card_present(ctrl);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return pciehp_check_link_active(ctrl);
+Update arch/x86/pci/Makefile replacing the deprecated EXTRA_CFLAGS
+with the ccflags-y matching recommendation as per the section 3.7
+"Compilation flags" of the "Linux Kernel Makefiles" (see:
+Documentation/kbuild/makefiles.txt).
 
-The semantics of this function changed here. Before it was checking for
-either presence detect bit or link active bit. Now, it is looking to
-have both set.
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+ arch/x86/pci/Makefile | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-There are PCI controllers that won't report presence detect correctly,
-but still report link active.
-
-I think you want
-
-if (ret < 0)
-	return ret;
-
-here to match the previous behavior while still handling device removal.
+diff --git a/arch/x86/pci/Makefile b/arch/x86/pci/Makefile
+index c806b57d3f22..48bcada5cabe 100644
+--- a/arch/x86/pci/Makefile
++++ b/arch/x86/pci/Makefile
+@@ -24,6 +24,4 @@ obj-y				+= bus_numa.o
+ obj-$(CONFIG_AMD_NB)		+= amd_bus.o
+ obj-$(CONFIG_PCI_CNB20LE_QUIRK)	+= broadcom_bus.o
+ 
+-ifeq ($(CONFIG_PCI_DEBUG),y)
+-EXTRA_CFLAGS += -DDEBUG
+-endif
++ccflags-$(CONFIG_PCI_DEBUG)	+= -DDEBUG
+-- 
+2.22.0
 
