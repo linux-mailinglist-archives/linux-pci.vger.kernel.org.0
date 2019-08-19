@@ -2,71 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3242994BC0
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2019 19:30:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C54A94C06
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2019 19:51:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727690AbfHSRan (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Aug 2019 13:30:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:57806 "EHLO foss.arm.com"
+        id S1727991AbfHSRve (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Aug 2019 13:51:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:57956 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727653AbfHSRan (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 19 Aug 2019 13:30:43 -0400
+        id S1727945AbfHSRve (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 19 Aug 2019 13:51:34 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5954360;
-        Mon, 19 Aug 2019 10:30:42 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C21A360;
+        Mon, 19 Aug 2019 10:51:33 -0700 (PDT)
 Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 56A5A3F246;
-        Mon, 19 Aug 2019 10:30:42 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 18:30:40 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98FC63F246;
+        Mon, 19 Aug 2019 10:51:32 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 18:51:30 +0100
 From:   Andrew Murray <andrew.murray@arm.com>
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Cc:     songxiaowei@hisilicon.com, wangbinghui@hisilicon.com,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: kirin: Make structure kirin_dw_pcie_ops constant
-Message-ID: <20190819173039.GB23903@e119886-lin.cambridge.arm.com>
-References: <20190819073946.32458-1-nishkadg.linux@gmail.com>
+To:     Jonathan Chocron <jonnyc@amazon.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk,
+        benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com,
+        barakw@amazon.com, talel@amazon.com, hanochu@amazon.com,
+        hhhawa@amazon.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/8] PCI: Add Amazon's Annapurna Labs vendor ID
+Message-ID: <20190819175130.GC23903@e119886-lin.cambridge.arm.com>
+References: <20190723092529.11310-1-jonnyc@amazon.com>
+ <20190723092529.11310-2-jonnyc@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190819073946.32458-1-nishkadg.linux@gmail.com>
+In-Reply-To: <20190723092529.11310-2-jonnyc@amazon.com>
 User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 01:09:46PM +0530, Nishka Dasgupta wrote:
-> Static variable kirin_dw_pcie_ops, of type dw_pcie_ops, is used only
-> once, when it is assigned to the constant field ops of variable pci
-> (having type dw_pcie). Hence kirin_dw_pcie_ops is never modified.
-> Therefore, make it constant to protect it from unintended modification.
-> Issue found with Coccinelle.
+On Tue, Jul 23, 2019 at 12:25:26PM +0300, Jonathan Chocron wrote:
+> Add Amazon's Annapurna Labs vendor ID to pci_ids.h.
 > 
-> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 > ---
->  drivers/pci/controller/dwc/pcie-kirin.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  include/linux/pci_ids.h | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-> index 8df1914226be..c19617a912bd 100644
-> --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> @@ -436,7 +436,7 @@ static int kirin_pcie_host_init(struct pcie_port *pp)
->  	return 0;
->  }
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 40015609c4b5..63dfa4bace57 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2569,6 +2569,8 @@
 >  
-> -static struct dw_pcie_ops kirin_dw_pcie_ops = {
-> +static const struct dw_pcie_ops kirin_dw_pcie_ops = {
->  	.read_dbi = kirin_pcie_read_dbi,
->  	.write_dbi = kirin_pcie_write_dbi,
->  	.link_up = kirin_pcie_link_up,
-
-This makes sense, and const is applied to the same structure in many of
-the other controller drivers.
+>  #define PCI_VENDOR_ID_ASMEDIA		0x1b21
+>  
+> +#define PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS	0x1c36
+> +
+>  #define PCI_VENDOR_ID_CIRCUITCO		0x1cc8
+>  #define PCI_SUBSYSTEM_ID_CIRCUITCO_MINNOWBOARD	0x0001
+>  
 
 Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
 > -- 
-> 2.19.1
+> 2.17.1
 > 
