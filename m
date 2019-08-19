@@ -2,110 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E56A594E95
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2019 21:53:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6BA094FD5
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2019 23:23:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfHSTxT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Aug 2019 15:53:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58766 "EHLO mx1.redhat.com"
+        id S1728515AbfHSVXU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Aug 2019 17:23:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727925AbfHSTxT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 19 Aug 2019 15:53:19 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728018AbfHSVXU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 19 Aug 2019 17:23:20 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 63739308449A;
-        Mon, 19 Aug 2019 19:53:19 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C9F6C1CB;
-        Mon, 19 Aug 2019 19:53:18 +0000 (UTC)
-Date:   Mon, 19 Aug 2019 13:53:18 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     hexin <hexin.op@gmail.com>
-Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hexin <hexin15@baidu.com>,
-        Liu Qi <liuqi16@baidu.com>, Zhang Yu <zhangyu31@baidu.com>
-Subject: Re: [PATCH v2] vfio_pci: Replace pci_try_reset_function() with
- __pci_reset_function_locked() to ensure that the pci device configuration
- space is restored to its original state
-Message-ID: <20190819135318.72f64e0d@x1.home>
-In-Reply-To: <1566042663-16694-1-git-send-email-hexin15@baidu.com>
-References: <1566042663-16694-1-git-send-email-hexin15@baidu.com>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id F2C9922CE8;
+        Mon, 19 Aug 2019 21:23:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566249799;
+        bh=3Wg6NFHKKpBSbK1JQfpV0Z+KzBTBs501plCy+K3XQBA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QFM/RQBD3NheayW2hoVztJW9PKN5YydTgSEs0J4apIjMwxmAFdhpMSDDx84SYHHeN
+         LCAEWiDHsWe8huixtSjEhqxlohwG5CiqRnmRJ4DCCf2iIzXYkytT6UhlSOlfuQ4ioH
+         6n84pUKllbGMl0XFxx5cXRd8T4j2FsRxFMuBlQ3M=
+Date:   Mon, 19 Aug 2019 16:23:17 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ACPI / PCI: fix a memory leak bug
+Message-ID: <20190819212317.GU253360@google.com>
+References: <1565930002-5524-1-git-send-email-wenwen@cs.uga.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 19 Aug 2019 19:53:19 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565930002-5524-1-git-send-email-wenwen@cs.uga.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, 17 Aug 2019 19:51:03 +0800
-hexin <hexin.op@gmail.com> wrote:
+The subject line should give a clue about where the leak is, e.g.,
 
-> In vfio_pci_enable(), save the device's initial configuration information
-> and then restore the configuration in vfio_pci_disable(). However, the
-> execution result is not the same. Since the pci_try_reset_function()
-> function saves the current state before resetting, the configuration
-> information restored by pci_load_and_free_saved_state() will be
-> overwritten. The __pci_reset_function_locked() function can be used
-> to prevent the configuration space from being overwritten.
-> 
-> Fixes: 890ed578df82 ("vfio-pci: Use pci "try" reset interface")
-> Signed-off-by: hexin <hexin15@baidu.com>
-> Signed-off-by: Liu Qi <liuqi16@baidu.com>
-> Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+  ACPI / PCI: fix acpi_pci_irq_enable() memory leak
+
+On Thu, Aug 15, 2019 at 11:33:22PM -0500, Wenwen Wang wrote:
+> In acpi_pci_irq_enable(), 'entry' is allocated by invoking
+> acpi_pci_irq_lookup(). However, it is not deallocated if
+> acpi_pci_irq_valid() returns false, leading to a memory leak. To fix this
+> issue, free 'entry' before returning 0.
+
+I think the corresponding kzalloc() is the one in
+acpi_pci_irq_check_entry().
+
+> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 > ---
->  drivers/vfio/pci/vfio_pci.c | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
-
-This looks good, but the subject is too long and I find the commit log
-somewhat confusing.  May I update these as follows?
-
-    vfio_pci: Restore original state on release
-    
-    vfio_pci_enable() saves the device's initial configuration information
-    with the intent that it is restored in vfio_pci_disable().  However,
-    commit 890ed578df82 ("vfio-pci: Use pci "try" reset interface")
-    replaced the call to __pci_reset_function_locked(), which is not wrapped
-    in a state save and restore, with pci_try_reset_function(), which
-    overwrites the restored device state with the current state before
-    applying it to the device.  Restore use of __pci_reset_function_locked()
-    to return to the desired behavior.
-
-Thanks,
-Alex
-
-
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index 703948c..0220616 100644
-> --- a/drivers/vfio/pci/vfio_pci.c
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -438,11 +438,20 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
->  	pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
->  
->  	/*
-> -	 * Try to reset the device.  The success of this is dependent on
-> -	 * being able to lock the device, which is not always possible.
-> +	 * Try to get the locks ourselves to prevent a deadlock. The
-> +	 * success of this is dependent on being able to lock the device,
-> +	 * which is not always possible.
-> +	 * We can not use the "try" reset interface here, which will
-> +	 * overwrite the previously restored configuration information.
->  	 */
-> -	if (vdev->reset_works && !pci_try_reset_function(pdev))
-> -		vdev->needs_reset = false;
-> +	if (vdev->reset_works && pci_cfg_access_trylock(pdev)) {
-> +		if (device_trylock(&pdev->dev)) {
-> +			if (!__pci_reset_function_locked(pdev))
-> +				vdev->needs_reset = false;
-> +			device_unlock(&pdev->dev);
+>  drivers/acpi/pci_irq.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
+> index d2549ae..dea8a60 100644
+> --- a/drivers/acpi/pci_irq.c
+> +++ b/drivers/acpi/pci_irq.c
+> @@ -449,8 +449,10 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
+>  		 * No IRQ known to the ACPI subsystem - maybe the BIOS /
+>  		 * driver reported one, then use it. Exit in any case.
+>  		 */
+> -		if (!acpi_pci_irq_valid(dev, pin))
+> +		if (!acpi_pci_irq_valid(dev, pin)) {
+> +			kfree(entry);
+>  			return 0;
 > +		}
-> +		pci_cfg_access_unlock(pdev);
-> +	}
->  
->  	pci_restore_state(pdev);
->  out:
 
+Looks like we missed this when e237a5518425 ("x86/ACPI/PCI: Recognize
+that Interrupt Line 255 means "not connected"") was merged.
+
+You could add:
+
+Fixes: e237a5518425 ("x86/ACPI/PCI: Recognize that Interrupt Line 255 means "not connected"")
+
+>  		if (acpi_isa_register_gsi(dev))
+>  			dev_warn(&dev->dev, "PCI INT %c: no GSI\n",
+> -- 
+> 2.7.4
+> 
