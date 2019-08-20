@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B7689585A
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2019 09:29:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E3589585D
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2019 09:29:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbfHTH2l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Aug 2019 03:28:41 -0400
-Received: from mail-eopbgr50075.outbound.protection.outlook.com ([40.107.5.75]:17027
+        id S1729376AbfHTH2r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Aug 2019 03:28:47 -0400
+Received: from mail-eopbgr50042.outbound.protection.outlook.com ([40.107.5.42]:35297
         "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729047AbfHTH2l (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 20 Aug 2019 03:28:41 -0400
+        id S1729370AbfHTH2r (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 20 Aug 2019 03:28:47 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EttpRLP/oKC8L5LBZbmewVX022KdkwxjpHzYzwKGBeluFVe7RYGPKx+QSWfvVtrh6WpjCzlB88Pv7p8kxDh76By+85IOD3/6fPM6choBMBKVNd2XVJ9RB47eWAn9JGVBJcx8gYrroB/d1rdqLq9LNFPD9nzE+NNzSKyYCkRW1garvC5vcyAqLRZrwokT7YCSLXbZXz4/x68yjfmDrUfIblABB1/fP7VTvBDS6jY3v64QxqNkHH/8rKbgPz5GEcQCzM4HEgsOytQIHLHRtcjpa5W1ZCkFLcUxHfqJ7xNXvZ+aEDhJmS99gu5D7VMN8Zdwu4eUFcZ9KLqFq2xU+lfx3g==
+ b=OAb1XY6XALShoMYDbq9nvBZscpHkJFKPpUVzBMA5/rN/F5iqj550wIcXy+FOfXYcRPqIlmjT52IOP6un0DKP5ac5Tjgo1BGNF8XyoJZKE2fZtMLV3BHnQcpy1PTvZTfbiiz/pZh+UhPk66buUrRPpl1AdQM6hBgxYXd/oSWFPeIEEB5HOjQ6G3NUh5dq+4HgQH3A3fdGOFyuDt0AbhaqASq/ia9O6DRdPG2l6XZrR3Qx+JwFr8fKxfQeg8Uoy9MI/zyBZdQAR3fyWsrklveW5nBaUuAnQyNkIYiGRSckQraOq1Q2mtGsqOCnK1wdwZGvR4QXqMKllLaZaRhW9DFD6Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kBWVe7f1hdWwNB5lZ1CM4/0WFLgnoVFsRXTUKHkGc1c=;
- b=Yuvqb1Ip73+SAInUknAgHpuMgbV6Qm38/PtvWBdAhlbfFv5g34oQ4pw/grZvFnWo6GfMCSwo1SGIijxUb4glNTrFapsV3wmR/YjwTZvLPgHZ8+93OELJGCfU2g8pT1mkw3h5k2OWe6LSfb/3o1kt/NwYP6V6mlDWOcA8l0atv11ZeuK61c6cufP69ahgyk9tVRLjF8aZ5f1i+kUHU8Ym5Kh7W3VMwBwRyy5xpXue5DhJBB28jXCTeEOBOG1vwYB3xj5UnGXzd8/Sg9YR3auvdAb+kcEpuhQQX8GKo3trzXluwIKLnC4V1/2yOv6Sweg+rLVaPjvR7TCOQbgl2C4uOQ==
+ bh=P5i9txYWJMT8MYt5B7mqevbBv2T1FIEyxwXnJSDNCcI=;
+ b=SWceyVir+17JIjIpXHoA4t2XpcSBE1WBJGvmrxx9hViAlRZGnaAbPPk1vtFf9Mnsv6ZhMjM9zoTqwcIkYPxfzhxEfQy+cYvEGdv7y0HP5+CDwszwTVZgL7INxU02poA6qj8dvG9bZTC4DtCvcHpiQS8gGgqeGjRWoHhoQH5uxwHCElBZod2Fy26tD5OmBY9z7OZOiM//D0a0KWGegDH2B38fl3uK5/qp0MqyfqQqccKuP57uX1sB76XCseR9KAYRIY00wHE/I52mX8ncUW+q/ZgLOWgxjzUI4Xqjv66jE1LaTPkgg6S+mKdCxbxmWk/P3nRdaWB92hfJy9m2LMwcvg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kBWVe7f1hdWwNB5lZ1CM4/0WFLgnoVFsRXTUKHkGc1c=;
- b=R8kLNZGbzzg6ug4uZvFVdvq1dJ1UjevL0kOitChp78uCx1a0LamuhugVvyO6GOAm5hlqXrYJ5OyIpEF+8eR/ER5RcGBPJ+svsnrQftBpSLuzKb7shid+Glz6Sh/i4OlTJFXtRhvFW4oK2BXUHCA90yzLHHxGV8o1lhMYUwSNKVQ=
+ bh=P5i9txYWJMT8MYt5B7mqevbBv2T1FIEyxwXnJSDNCcI=;
+ b=GFJcxqZhkN9af3rGw0/JqeySkeOrBZ+aYUsTVfMvk7X7zKzo9lndeG4XBiUeY87Ts9dMsKYCsnsDCrM2/4ZP54992tKc1RkKqPXGJmgZJltNmdqrSp3GBaykXEwg5zh1jhtHiPJEUymjG2cdvM2yBEcFiyklI3NHRZrDska5dLU=
 Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
  DB8PR04MB5627.eurprd04.prod.outlook.com (20.179.9.77) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.18; Tue, 20 Aug 2019 07:28:37 +0000
+ 15.20.2178.18; Tue, 20 Aug 2019 07:28:43 +0000
 Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
  ([fe80::19ec:cddf:5e07:37eb]) by DB8PR04MB6747.eurprd04.prod.outlook.com
  ([fe80::19ec:cddf:5e07:37eb%3]) with mapi id 15.20.2178.018; Tue, 20 Aug 2019
- 07:28:37 +0000
+ 07:28:43 +0000
 From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
 To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
@@ -49,12 +49,15 @@ To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "andrew.murray@arm.com" <andrew.murray@arm.com>
 CC:     "M.h. Lian" <minghuan.lian@nxp.com>,
         "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv2 0/4] Layerscape: Remove num-lanes property from PCIe nodes
-Thread-Topic: [PATCHv2 0/4] Layerscape: Remove num-lanes property from PCIe
- nodes
-Thread-Index: AQHVVyjhmu2LPC3sb0qsw8uoz54tEA==
-Date:   Tue, 20 Aug 2019 07:28:37 +0000
-Message-ID: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv2 1/4] dt-bindings: PCI: designware: Remove the num-lanes from
+ Required properties
+Thread-Topic: [PATCHv2 1/4] dt-bindings: PCI: designware: Remove the num-lanes
+ from Required properties
+Thread-Index: AQHVVyjlrdLaxDNDsUGTjgUCHNzTaQ==
+Date:   Tue, 20 Aug 2019 07:28:43 +0000
+Message-ID: <20190820073022.24217-2-Zhiqiang.Hou@nxp.com>
+References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
 Accept-Language: zh-CN, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -68,30 +71,30 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.17.1
 x-originating-ip: [119.31.174.73]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 04e405a3-012b-4fa4-f271-08d7254003f7
+x-ms-office365-filtering-correlation-id: 82144e1d-aa0f-43fd-b2a2-08d725400796
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB8PR04MB5627;
 x-ms-traffictypediagnostic: DB8PR04MB5627:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB562775748020ADB051B4C40584AB0@DB8PR04MB5627.eurprd04.prod.outlook.com>
+x-microsoft-antispam-prvs: <DB8PR04MB5627E83942A479EDDA476D5184AB0@DB8PR04MB5627.eurprd04.prod.outlook.com>
 x-ms-oob-tlc-oobclassifiers: OLM:7691;
 x-forefront-prvs: 013568035E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(366004)(39860400002)(136003)(199004)(189003)(2616005)(4326008)(6512007)(1076003)(66446008)(66476007)(476003)(99286004)(66066001)(6436002)(478600001)(71200400001)(81156014)(66946007)(71190400001)(52116002)(66556008)(54906003)(110136005)(81166006)(7736002)(14454004)(305945005)(8676002)(316002)(8936002)(7416002)(25786009)(3846002)(6486002)(486006)(256004)(64756008)(53936002)(86362001)(386003)(186003)(6506007)(6116002)(2906002)(5660300002)(2501003)(102836004)(26005)(2201001)(36756003)(50226002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB5627;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(366004)(39860400002)(136003)(199004)(189003)(54534003)(2616005)(4326008)(6512007)(1076003)(66446008)(66476007)(476003)(76176011)(99286004)(66066001)(6436002)(478600001)(71200400001)(81156014)(66946007)(71190400001)(52116002)(66556008)(54906003)(110136005)(81166006)(7736002)(14454004)(305945005)(8676002)(316002)(8936002)(7416002)(25786009)(3846002)(6486002)(14444005)(486006)(256004)(64756008)(53936002)(86362001)(386003)(186003)(6506007)(6116002)(2906002)(5660300002)(446003)(2501003)(102836004)(26005)(2201001)(36756003)(11346002)(50226002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB5627;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 5hgh0R8tpv+OnQGXVVfVPZqAon/7Xboiu2wOOgql+LdAeS+EgoamdWHAlOYcdGLNRQiE9GazVHGmDAH2V+0jcKUpiltqGfPSSNqylLYqu9kUW9ob+sSTLN9NaZq2v9VFFg1xEo3opj1ti8WYV8hZPejeJ/QweCsI/xhY6fAd9n4RkmS9QpZ+9bETcznbjcadHZx9j88Ia2TuTk/976ZdsGAz+MmDU5StWnTeFc1dlSgKH2+4XLg8OQ9pzZ5+RSDvaV7dc5FAsuGphLBgc3tWkAj3xwIwjBTSiGjYgdHoBZZyc4jioUF43R60AmRs/p8oXpAZSeuo+5e/OBJew/nyhqwblm4bNmU0IyAKQOLEE32eVaeSlOLRyWhkhoZiSKfxYaCetWK+A2SBb13B8U6s7b+q9lel4qh3eJkV5Og+MB8=
+x-microsoft-antispam-message-info: usoT+PFsZrxs5ZSa2zcdhD8xpeh/uZ+SxcMI9iBDI7PPpuUuNN5vXBWvw/k13EqUnSIXWasE6gtcbtB3XiXNvVDSJhGRM9O+ePSGQEBHngP9WEFss610c2B5T/kQqScHpVQlVuzUQqxK5lvQ5cXrcpJmZ1anUlsxGLdr0coB+xQ5RtbXN1ULRglUT7Ohtdt9rTNMzincsedNbu2fsiGVBu+0WSraiZh1bvUFdZ0DO2H3WPBHXtHBG12+mrmMD8NwnSYLEuv8LCiUoB/c/SZ4CtsNUMgy4JGcreuG6oCcYm4pGfGlckOYZ3ZO/LML7rIv+I8dsFIAEBlm3Uki7skLOioY6r9aCtiU4Xcl0xpdI/wbhPNmCWsIH+PGOpc5aIbmFbyISl6Zk6NrwZMkOsvxiFxwCtAF5nu7I1ra6xq97m8=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04e405a3-012b-4fa4-f271-08d7254003f7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 07:28:37.6357
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82144e1d-aa0f-43fd-b2a2-08d725400796
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 07:28:43.6313
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: USiXkc+N0Z27fyTsoY+DUNCBFjRf3fMTBf38fPyGW4xq+x6msn9EtBRPl7KfCacmW9feQs0KV2osDy0g0Qs2ow==
+X-MS-Exchange-CrossTenant-userprincipalname: 4euP2iQ+pL7ViGXth6D1qr44FMPWubR53Qa/2buAr1qNof7HBYHAkDOrZPDmWVk9ddyadI1c+nqnWKk1eOBabg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5627
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
@@ -100,30 +103,36 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-On FSL Layerscape SoCs, the number of lanes assigned to PCIe
-controller is not fixed, it is determined by the selected
-SerDes protocol. The current num-lanes indicates the max lanes
-PCIe controller can support up to, instead of the lanes assigned
-to the PCIe controller. This can result in PCIe link training fail
-after hot-reset.
+The num-lanes is not a mandatory property, e.g. on FSL
+Layerscape SoCs, the PCIe link training is completed
+automatically base on the selected SerDes protocol, it
+doesn't need the num-lanes to set-up the link width.
 
-Hou Zhiqiang (4):
-  dt-bindings: PCI: designware: Remove the num-lanes from Required
-    properties
-  PCI: dwc: Return directly when num-lanes is not found
-  ARM: dts: ls1021a: Remove num-lanes property from PCIe nodes
-  arm64: dts: fsl: Remove num-lanes property from PCIe nodes
+It is previously in both Required and Optional properties,
+let's remove it from the Required properties.
+
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+---
+V2:
+ - Reworded the change log and subject.
+ - Fixed a typo in subject.
 
  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
- arch/arm/boot/dts/ls1021a.dtsi                            | 2 --
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi            | 1 -
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi            | 3 ---
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi            | 6 ------
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi            | 3 ---
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi            | 4 ----
- drivers/pci/controller/dwc/pcie-designware.c              | 6 ++++--
- 8 files changed, 4 insertions(+), 22 deletions(-)
+ 1 file changed, 1 deletion(-)
 
+diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Do=
+cumentation/devicetree/bindings/pci/designware-pcie.txt
+index 5561a1c060d0..bd880df39a79 100644
+--- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+@@ -11,7 +11,6 @@ Required properties:
+ 	     the ATU address space.
+     (The old way of getting the configuration address space from "ranges"
+     is deprecated and should be avoided.)
+-- num-lanes: number of lanes to use
+ RC mode:
+ - #address-cells: set to <3>
+ - #size-cells: set to <2>
 --=20
 2.17.1
 
