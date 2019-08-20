@@ -2,97 +2,221 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 00B9895E34
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2019 14:16:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47BD696102
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2019 15:44:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729707AbfHTMQr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Aug 2019 08:16:47 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34324 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728731AbfHTMQq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Aug 2019 08:16:46 -0400
-Received: by mail-ed1-f66.google.com with SMTP id s49so6080477edb.1;
-        Tue, 20 Aug 2019 05:16:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Aqrj4c9BMm607WKqADj4tux8jrP64CdYozdKcQKpxRs=;
-        b=ewASI7ty6m5g4yCE06rRZV2auDuRwCy39jW0oXYCPKGv30T2Dc4KcIoNIZlKfq05eJ
-         2YiIcshEGNT4u00GEcYjbhahowM4Zc60PJojDj3FUYR99L+dRKL7s/mG8eI4TV/DTPxN
-         3wgSn6Qp7T1A4fI1yddxSa9jIih5i42/SRZzLEPDfGEdTN/CUwuv6GogxFZ+a6pc6rCj
-         2+/JC7MdceNGTQxOT/wGGH4QmP3Evb1G2moFXrTPGaSNbHilycMJVT29U6PCSYhzKnRc
-         kPeIDpEW+RU5DA1UJPH7uuDmMtbF+FfnGHKRkgt2JI1G3S2xQFyB12osRKjbTu9bwW4r
-         eO3g==
-X-Gm-Message-State: APjAAAX3g+jmaAXGTtxZ4Pc/rKL11mBg0Um7v1gidi3fI/oghXEKpG6V
-        nZVruMjrpwZJ3u0yLJYFeGEm4I0S
-X-Google-Smtp-Source: APXvYqzEd+H40vyJ3xfj6d0RW5tR1qxm3lLFbeoBzqkYsyCyK2sntwu/nyVS1WkdzhdS9Gav5Hnmew==
-X-Received: by 2002:a17:906:a2cd:: with SMTP id by13mr18136971ejb.182.1566303404755;
-        Tue, 20 Aug 2019 05:16:44 -0700 (PDT)
-Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
-        by smtp.gmail.com with ESMTPSA id ks7sm2584431ejb.83.2019.08.20.05.16.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Aug 2019 05:16:44 -0700 (PDT)
-Reply-To: efremov@linux.com
-Subject: Re: [PATCH v3 0/4] Simplify PCIe hotplug indicator control
-To:     Lukas Wunner <lukas@wunner.de>,
-        sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190819160643.27998-1-efremov@linux.com>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <2f4c857e-a7cc-58da-8be5-cba581c56d9f@linux.com>
-Date:   Tue, 20 Aug 2019 15:16:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1730306AbfHTNod (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Aug 2019 09:44:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730770AbfHTNnF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:43:05 -0400
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 813CC22DD6;
+        Tue, 20 Aug 2019 13:43:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566308583;
+        bh=uOe278BjeSCVm0Yvei9g6yy3Td/QVwv+YDoMYSyE7WI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lSKbMSq0zejsWFJB1YSbXkWt+wsyx6hcibSOB+QrXjLDEZe3NefjzgvbnvtzXva5i
+         r+3h/HqS1Z1FhE29o+ORgaO9bsvYJH0IlyWcY+v6KOmbra+KbIzZHeOf4nZTD7ctNA
+         /Ed6ObdmQCBjAU4kWIwbyzEVCPsUUQpDMT81DJMU=
+Received: by mail-qk1-f172.google.com with SMTP id w18so4502334qki.0;
+        Tue, 20 Aug 2019 06:43:03 -0700 (PDT)
+X-Gm-Message-State: APjAAAWPwI11cDuSS5vWVLFLUfrKFeWFZ9zWwQdzEgg40HvCX8lRCwzC
+        CeSs0oyYadUAZzZcYsD1yuJ+Sj2qHiqU8EXBBA==
+X-Google-Smtp-Source: APXvYqxwnJs7OpFe00kgqK1JKcgVrR8tZM4OnOWTaEasRUoo9hbARCNCIplqORq2OIAVk3yZ6vHkZYPL4FHNsyPWpMQ=
+X-Received: by 2002:a37:6944:: with SMTP id e65mr23792510qkc.119.1566308582630;
+ Tue, 20 Aug 2019 06:43:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190819160643.27998-1-efremov@linux.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1566208109.git.eswara.kota@linux.intel.com> <5e6ee1245ee53a7726103a8de7c11a37ad99fbd6.1566208109.git.eswara.kota@linux.intel.com>
+In-Reply-To: <5e6ee1245ee53a7726103a8de7c11a37ad99fbd6.1566208109.git.eswara.kota@linux.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 20 Aug 2019 08:42:51 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+pvKHtw-ARRbNW-xReQ2MVNan8z3tfJbx4taGDCvEr5g@mail.gmail.com>
+Message-ID: <CAL_Jsq+pvKHtw-ARRbNW-xReQ2MVNan8z3tfJbx4taGDCvEr5g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        linux-pci@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8/19/19 7:06 PM, Denis Efremov wrote:
-> PCIe defines two optional hotplug indicators: a Power indicator and an
-> Attention indicator. Both are controlled by the same register, and each
-> can be on, off or blinking. The current interfaces
-> (pciehp_green_led_{on,off,blink}() and pciehp_set_attention_status()) are
-> non-uniform and require two register writes in many cases where we could
-> do one.
-> 
-> This patchset introduces the new function pciehp_set_indicators(). It
-> allows one to set two indicators with a single register write. All
-> calls to previous interfaces (pciehp_green_led_* and
-> pciehp_set_attention_status()) are replaced with a new one. Thus,
-> the amount of duplicated code for setting indicators is reduced.
-> 
-> Changes in v3:
->   - Changed pciehp_set_indicators() to work with existing
->     PCI_EXP_SLTCTL_* macros
->   - Reworked the inputs validation in pciehp_set_indicators()
->   - Removed pciehp_set_attention_status() and pciehp_green_led_*()
->     completely
-> 
-> Denis Efremov (4):
->   PCI: pciehp: Add pciehp_set_indicators() to jointly set LED indicators
->   PCI: pciehp: Switch LED indicators with a single write
->   PCI: pciehp: Remove pciehp_set_attention_status()
->   PCI: pciehp: Remove pciehp_green_led_{on,off,blink}()
+On Tue, Aug 20, 2019 at 4:40 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+>
+> The Intel PCIe RC controller is Synopsys Designware
+> based PCIe core. Add YAML schemas for PCIe in RC mode
+> present in Intel Universal Gateway soc.
 
-Lukas, Sathyanarayanan, sorry that I've dropped most of yours "Reviewed-by".
-The changes in the last 2 patches were significant.
+Run 'make dt_binding_check' and fix all the warnings.
 
-> 
->  drivers/pci/hotplug/pciehp.h      |  5 +-
->  drivers/pci/hotplug/pciehp_core.c |  7 ++-
->  drivers/pci/hotplug/pciehp_ctrl.c | 31 +++++++-----
->  drivers/pci/hotplug/pciehp_hpc.c  | 82 ++++++++++---------------------
->  include/uapi/linux/pci_regs.h     |  3 ++
->  5 files changed, 54 insertions(+), 74 deletions(-)
-> 
+>
+> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> ---
+>  .../devicetree/bindings/pci/intel-pcie.yaml        | 133 +++++++++++++++++++++
+>  1 file changed, 133 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/intel-pcie.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/pci/intel-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-pcie.yaml
+> new file mode 100644
+> index 000000000000..80caaaba5e2c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/intel-pcie.yaml
+> @@ -0,0 +1,133 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
+(GPL-2.0-only OR BSD-2-Clause) is preferred for new bindings.
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/intel-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Intel AXI bus based PCI express root complex
+> +
+> +maintainers:
+> +  - Dilip Kota <eswara.kota@linux.intel.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: intel,lgm-pcie
+> +
+> +  device_type:
+> +    const: pci
+> +
+> +  "#address-cells":
+> +    const: 3
+> +
+> +  "#size-cells":
+> +    const: 2
+> +
+> +  reg:
+> +    items:
+> +      - description: Controller control and status registers.
+> +      - description: PCIe configuration registers.
+> +      - description: Controller application registers.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: dbi
+> +      - const: config
+> +      - const: app
+> +
+> +  ranges:
+> +    description: Ranges for the PCI memory and I/O regions.
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: PCIe registers interface clock.
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +  phy-names:
+> +    const: phy
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +
+> +  num-lanes:
+> +    description: Number of lanes to use for this port.
+> +
+> +  linux,pci-domain:
+> +    description: PCI domain ID.
+> +
+> +  interrupts:
+> +    description: PCIe core integrated miscellaneous interrupt.
+> +
+> +  interrupt-map-mask:
+> +    description: Standard PCI IRQ mapping properties.
+> +
+> +  interrupt-map:
+> +    description: Standard PCI IRQ mapping properties.
+> +
+> +  max-link-speed:
+> +    description: Specify PCI Gen for link capability.
+> +
+> +  bus-range:
+> +    description: Range of bus numbers associated with this controller.
+> +
+> +  intel,rst-interval:
+
+Use 'reset-assert-us'
+
+> +    description: |
+> +      Device reset interval in ms. Some devices need an interval upto 500ms.
+> +      By default it is 100ms.
+> +
+> +required:
+> +  - compatible
+> +  - device_type
+> +  - reg
+> +  - reg-names
+> +  - ranges
+> +  - resets
+> +  - clocks
+> +  - phys
+> +  - phy-names
+> +  - reset-gpios
+> +  - num-lanes
+> +  - linux,pci-domain
+> +  - interrupts
+> +  - interrupt-map
+> +  - interrupt-map-mask
+> +
+> +examples:
+> +  - |
+> +    pcie10:pcie@d0e00000 {
+> +      compatible = "intel,lgm-pcie";
+> +      device_type = "pci";
+> +      #address-cells = <3>;
+> +      #size-cells = <2>;
+> +      reg = <
+> +            0xd0e00000 0x1000
+> +            0xd2000000 0x800000
+> +            0xd0a41000 0x1000
+> +            >;
+> +      reg-names = "dbi", "config", "app";
+> +      linux,pci-domain = <0>;
+> +      max-link-speed = <4>;
+> +      bus-range = <0x00 0x08>;
+> +      interrupt-parent = <&ioapic1>;
+> +      interrupts = <67 1>;
+> +      interrupt-map-mask = <0 0 0 0x7>;
+> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
+> +                      <0 0 0 2 &ioapic1 28 1>,
+> +                      <0 0 0 3 &ioapic1 29 1>,
+> +                      <0 0 0 4 &ioapic1 30 1>;
+> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
+> +      resets = <&rcu0 0x50 0>;
+> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
+> +      phys = <&cb0phy0>;
+> +      phy-names = "phy";
+> +    };
+> +
+> +    &pcie10 {
+
+Don't show this soc/board split in examples. Just combine to one node.
+
+> +      status = "okay";
+> +      intel,rst-interval = <100>;
+> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+> +      num-lanes = <2>;
+> +    };
+> --
+> 2.11.0
+>
