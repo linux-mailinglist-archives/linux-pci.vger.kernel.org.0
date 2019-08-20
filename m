@@ -2,93 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B3C796AF0
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2019 22:55:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B37AE96B09
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2019 23:04:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730466AbfHTUzt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Aug 2019 16:55:49 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42781 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729900AbfHTUzt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Aug 2019 16:55:49 -0400
-Received: by mail-lj1-f195.google.com with SMTP id l14so59734ljj.9
-        for <linux-pci@vger.kernel.org>; Tue, 20 Aug 2019 13:55:48 -0700 (PDT)
+        id S1730088AbfHTVEx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Aug 2019 17:04:53 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34050 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729833AbfHTVEx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Aug 2019 17:04:53 -0400
+Received: by mail-io1-f67.google.com with SMTP id s21so288442ioa.1
+        for <linux-pci@vger.kernel.org>; Tue, 20 Aug 2019 14:04:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kDtE7b4NYnNYIMbB1I2q4i0yK3tBX6HR4LJT1fdv2eE=;
-        b=gJPld9l2ErA0n690vu3wDj4eKvYBYriBt5CI8ZRAWFgoW7C5PpaKNpcDEijKtCCNv6
-         Rg6Fjug/oIfylvhgpGEtfDZJ2x3JLVgwDm7Em8NxI1jx4DN6yTdQ74Ys1W92mgaeP6BI
-         m6SjayfpFCO7fizz9Q3rYZb9lOEMYptlWISmXCzx3LHJ58avkvMGq4wPc5rPD78aeUWP
-         j52dxTBdx0uJfLvf/BzVGxmOvKDG58nwoFW1jcBoh79C4aoiQJgXmos5Qzsu8vno0t2A
-         AL3pUqgo7InHtFkWIH+Ye9qtpol+5KDu85zQdS1g9HPvJTphQpU6+fAw1xCfYFommfMM
-         20nQ==
+        bh=Hm9I+GQ2n0FdMH4XuFtRjwWwTD1E/V+vGExol6/H8fs=;
+        b=OPK0dobmp+UG+uCm1zUHDMJS/ctyDEWhRWvT2V85npX7tErymXiDmtDjc4c3rNun1a
+         HKd+d4hyD6fcNG4KOZ1BmKp0dVbq7jP1ztLcjCfbidOxVRTBPDveEtyTa/e81Cekht6e
+         lg1VlT5BuJW9VIYGhdymDuDTppd/HS3Czp4+SfG29UqUtmuzKhfTfloYW75AvwP40WHQ
+         FPPEHYEhznSgNu792pi4dKF2BvbGqR9OeXna4Ah1305SJ5n0riESbSAhTAb8/DOIrWw1
+         5AQAHL7vBJCTYismH4rRXTfNa1f5R32BWiX5gRhIZ3/e+N/qA/FojiowmsuFLVH0QkUV
+         d3cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kDtE7b4NYnNYIMbB1I2q4i0yK3tBX6HR4LJT1fdv2eE=;
-        b=EojZsIMpeqJCI/SkeWIukmiTtf4yo3yis6B4S5vNAbPVLD1FaDL4pDv2urrEDYcCTP
-         mATnSQLuOytYRvfW28xf+hFAFKiqifZ6rQcjT0M9V5F95N4F9nmNXs88J1x80gybpj/U
-         JmnEYiba2FSA1LQsPCghHtWbEOC5DBpAi70ZVN1boyzpk3F7pPJbsAN46L90bYH/RERH
-         /MRIJM9MuBhLVnsvQVGHyyHVXwHdjUL2IuLdMN4b3RENby3KzR0uWNlFuwXFxH9LY78d
-         VrmKRgUDib4kPb3O1/+n7aHZDKOYn6pu7+pKSGkNE0LfRmKQFhkM8xCm/sSYvPr+a9rR
-         /A9w==
-X-Gm-Message-State: APjAAAWIJxwmprQDgnwxtW7JNIKzZEC9IC/WetbjyeooDh0xFfRe/D1x
-        goPpopMI6mVAcNw0TRPcg5CO2GMrsUJniUtcH3ZcYw==
-X-Google-Smtp-Source: APXvYqzlvuVgHRZqAqRB/YyEqX59UM0QWHbNxhFKBnJ5OTXY0+mLAI8sKkdv7vDw8lrPe+PLNRvhW+YB6gaZ9ewyxFA=
-X-Received: by 2002:a2e:98c9:: with SMTP id s9mr1859768ljj.176.1566334547423;
- Tue, 20 Aug 2019 13:55:47 -0700 (PDT)
+        bh=Hm9I+GQ2n0FdMH4XuFtRjwWwTD1E/V+vGExol6/H8fs=;
+        b=EFt6FIvW3BuH16DZUKqMe1aB6yZegk+C6hUa5mE73M/0HS7Dbbj1ip3cQ6+h0EiRr5
+         VASGA839HAxHXNRWGywHcbQjKoaXJrFT4oDoh+ekFQl06zRQI9ecRDTpQChezpxgmUgZ
+         0up3VwM8dHH7L7boX3EW0JALvZDjyfYoTUBiuwqxFO1yYAz2OxFhV2BcPzZrrNbP/rcU
+         1OYM/G6HGcSecOXfxTCZChWw+sVg7SRu1PIEwQ3n+OF9oJfEkA/LYcw0elWmmW+yhcfG
+         EzEnFbIo0gJRWDUdBVbjrGKuUPD0eRHAwrRmsWI0/McMXcHXzYEgeVdAerCsqi658Rmx
+         Asow==
+X-Gm-Message-State: APjAAAURd2kzYqgMfgDGPa5/KG5XtFqM8f2nsfeThl5KVvgCCnK3mLtI
+        L1+1TjWxNF9tteHqurQriAWfAlvTuix3V5sAUw7KsQ==
+X-Google-Smtp-Source: APXvYqzhxeo9szF/4ykwTQk9wVoapKUSKSJBqxEqQLaMRF1qq9d3WcSi+ZBIGlrHPcm47UTiWE9r3tGCtJ36VVXdm40=
+X-Received: by 2002:a05:6638:303:: with SMTP id w3mr5861169jap.103.1566335092334;
+ Tue, 20 Aug 2019 14:04:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <7a6d2f14-f2a6-99ad-3a93-fdaa0726ce86@gmail.com>
- <a0c090cd-e3a4-f667-b99d-f31c48c2e0a3@gmail.com> <20190820103400.GY253360@google.com>
- <CACK8Z6HJBoJ_OkHEHY6oYtABDVwRx9eCh9GngHxGE63UPsOHig@mail.gmail.com>
- <20190820193252.GB14450@google.com> <CACK8Z6GuzQAoSnDD9chC9yXrPrc3FTtzkiDXMTXdY4MnePgj8g@mail.gmail.com>
- <20190820204845.GD14450@google.com>
-In-Reply-To: <20190820204845.GD14450@google.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Tue, 20 Aug 2019 13:55:10 -0700
-Message-ID: <CACK8Z6ECUwnupMZtY3fyM46za-7WZyJNQYYEFchUWLDsgOMbvA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] PCI/ASPM: add sysfs attribute for controlling ASPM
+References: <20190820001805.241928-1-matthewgarrett@google.com>
+ <20190820001805.241928-12-matthewgarrett@google.com> <20190820194514.GC14450@google.com>
+In-Reply-To: <20190820194514.GC14450@google.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Tue, 20 Aug 2019 14:04:40 -0700
+Message-ID: <CACdnJutVe5O2bJZLWQL=e2msudY_i0Mq6vj9B0NautnjRqRVfg@mail.gmail.com>
+Subject: Re: [PATCH V40 11/29] PCI: Lock down BAR access when the kernel is
+ locked down
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>
+Cc:     James Morris <jmorris@namei.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>, linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 1:48 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Aug 20, 2019 at 12:51:09PM -0700, Rajat Jain wrote:
-> >
-> > May be we're digressing now, but I'd like to point out that there is
-> > atleast one more file in ASPM that potentially violates the "1 value
-> > per file" rule:
-> >
-> > rajatja@rajat2:/sys/module/pcie_aspm/parameters$ cat policy
-> > [default] performance powersave powersupersave
-> > rajatja@rajat2:/sys/module/pcie_aspm/parameters$
-> >
-> > ... although I would argue in this case that it makes it much clear
-> > what are the allowable values to write, and which is the current
-> > selected one.
->
-> Huh, that's a good point.  That "policy" file is a little problematic
-> for several reasons, one being the config options
-> (CONFIG_PCIEASPM_PERFORMANCE, CONFIG_PCIEASPM_POWERSAVE, etc) that
-> lock a distro into some default choice.
->
-> Maybe there's something we can do there, although there's legacy use
-> to consider (there are a zillion web pages that document
-> pcie_aspm/parameters/policy as a way to fix things), and it's
-> certainly beyond the scope of *this* series.
+On Tue, Aug 20, 2019 at 12:45 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> Since I've acked this and it's 11/29, I've been assuming you intend
+> to merge the whole series together.  But the fact that it's up to V40
+> makes me wonder if you're waiting for me to merge this one.  Just let
+> me know either way.
 
-Agreed!
-
->
-> Bjorn
+James has merged the series.
