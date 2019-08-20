@@ -2,115 +2,217 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B94396471
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2019 17:31:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9439966FE
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2019 18:58:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730278AbfHTPbw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Aug 2019 11:31:52 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38423 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbfHTPbw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Aug 2019 11:31:52 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e11so3452546pga.5
-        for <linux-pci@vger.kernel.org>; Tue, 20 Aug 2019 08:31:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=GNTaQEUKw3DkFYPRjOd2+jlWbivaUPKZR0GlTO1D9vQ=;
-        b=cKOrZzGL6sT+oH42dorpn9LVy2TIxYp2XRnPXpZ1nq6yQgQ/eECm6ylClzkzFh+dko
-         Oi07UPSUyeCL54DZMr3FwWFk1it6Rix2zVZRzkf9R1lmVQdhE2LhX4W3U4YXG+k8ges7
-         9RxcIrFYyvLaBGCOr7raJi/3CQ7ljkA5gzzls=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=GNTaQEUKw3DkFYPRjOd2+jlWbivaUPKZR0GlTO1D9vQ=;
-        b=l2OWPJXJJVvSClrI45U64WdJCTEynDavgZSjx9oWHaq4tiZNELVt6unipx0/kYYOD4
-         9eYwV/tsOfr/BJmmzHDidic/SngquevtiMNeiqMGA3uCPLUv7atGu7KZlGGlCszUT+sS
-         EJvBYzO2scmloRFKJoBLAWA0NKZnicb9dc10/xPLwpdY7ksloVqJAhz7tv1Dy5CVxel0
-         MuwdNq906IR9yFM7F5i80Tp8YYQ7uXyG4aXKmGizwt36YWjVqRgn3LBWGwO+0Tf8lZVG
-         0Vg4FR+m3sr16vi5NsobDx6AJbY1CwQCeEzL51TtjlK7jHrevPzwcrfSg/+OFdq5cE6y
-         RVPg==
-X-Gm-Message-State: APjAAAVEqLRqE6fMov/1MbkHfU84sowQ479HfI8CzgE3dIsvKndHPo6u
-        9Jr5xyzFlPiud8gpDx9Alk2nZQ==
-X-Google-Smtp-Source: APXvYqwElzu1rPBlzknftcusYxSBT5g1kl1HIbsRc6PJpu2oNRxWkKsSgsPuuWbHWUx1qqGettKcLQ==
-X-Received: by 2002:a17:90a:d3cf:: with SMTP id d15mr611463pjw.34.1566315111331;
-        Tue, 20 Aug 2019 08:31:51 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id z14sm249632pjr.23.2019.08.20.08.31.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Aug 2019 08:31:50 -0700 (PDT)
-Subject: Re: [PATCH] PCI: Add PCIE ACS quirk for IPROC PAXB
-To:     Srinath Mannam <srinath.mannam@broadcom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Abhinav Ratna <abhinav.ratna@broadcom.com>
-References: <1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <d39bbda2-49ee-a6eb-38f8-347106bbf3ed@broadcom.com>
-Date:   Tue, 20 Aug 2019 08:31:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1729853AbfHTQ6s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Aug 2019 12:58:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:45076 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729820AbfHTQ6s (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 20 Aug 2019 12:58:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B5EB28;
+        Tue, 20 Aug 2019 09:58:47 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB5413F718;
+        Tue, 20 Aug 2019 09:58:45 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 17:58:40 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     "sashal@kernel.org" <sashal@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Message-ID: <20190820165840.GA8702@e121166-lin.cambridge.arm.com>
+References: <1565888460-38694-1-git-send-email-haiyangz@microsoft.com>
 MIME-Version: 1.0
-In-Reply-To: <1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565888460-38694-1-git-send-email-haiyangz@microsoft.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Looks good.
-
-On 2019-08-19 9:39 p.m., Srinath Mannam wrote:
-> From: Abhinav Ratna <abhinav.ratna@broadcom.com>
->
-> IPROC PAXB RC doesn't support ACS capabilities and control registers.
-> Add quirk to have separate IOMMU groups for all EPs and functions connected
-> to root port, by masking RR/CR/SV/UF bits.
->
-> Signed-off-by: Abhinav Ratna <abhinav.ratna@broadcom.com>
-> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-Acked-by: Scott Branden <scott.branden@broadcom.com>
+On Thu, Aug 15, 2019 at 05:01:37PM +0000, Haiyang Zhang wrote:
+> Currently in Azure cloud, for passthrough devices, the host sets the device
+> instance ID's bytes 8 - 15 to a value derived from the host HWID, which is
+> the same on all devices in a VM. So, the device instance ID's bytes 8 and 9
+> provided by the host are no longer unique. This affects all Azure hosts
+> since July 2018, and can cause device passthrough to VMs to fail because
+> the bytes 8 and 9 are used as PCI domain number. Collision of domain
+> numbers will cause the second device with the same domain number fail to
+> load.
+> 
+> In the cases of collision, we will detect and find another number that is
+> not in use.
+> 
+> Suggested-by: Michael Kelley <mikelley@microsoft.com>
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Acked-by: Sasha Levin <sashal@kernel.org>
 > ---
->   drivers/pci/quirks.c | 16 ++++++++++++++++
->   1 file changed, 16 insertions(+)
->
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 0f16acc..f9584c0 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4466,6 +4466,21 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
->   	return acs_flags ? 0 : 1;
->   }
->   
-> +static int pcie_quirk_brcm_bridge_acs(struct pci_dev *dev, u16 acs_flags)
+>  drivers/pci/controller/pci-hyperv.c | 92 +++++++++++++++++++++++++++++++------
+>  1 file changed, 79 insertions(+), 13 deletions(-)
+
+I have applied both patches to pci/hv for v5.4.
+
+Thanks,
+Lorenzo
+
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 40b6254..31b8fd5 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2510,6 +2510,48 @@ static void put_hvpcibus(struct hv_pcibus_device *hbus)
+>  		complete(&hbus->remove_event);
+>  }
+>  
+> +#define HVPCI_DOM_MAP_SIZE (64 * 1024)
+> +static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
+> +
+> +/*
+> + * PCI domain number 0 is used by emulated devices on Gen1 VMs, so define 0
+> + * as invalid for passthrough PCI devices of this driver.
+> + */
+> +#define HVPCI_DOM_INVALID 0
+> +
+> +/**
+> + * hv_get_dom_num() - Get a valid PCI domain number
+> + * Check if the PCI domain number is in use, and return another number if
+> + * it is in use.
+> + *
+> + * @dom: Requested domain number
+> + *
+> + * return: domain number on success, HVPCI_DOM_INVALID on failure
+> + */
+> +static u16 hv_get_dom_num(u16 dom)
 > +{
-> +	/*
-> +	 * IPROC PAXB RC doesn't support ACS capabilities and control registers.
-> +	 * Add quirk to to have separate IOMMU groups for all EPs and functions
-> +	 * connected to root port, by masking RR/CR/SV/UF bits.
-> +	 */
+> +	unsigned int i;
 > +
-> +	u16 flags = (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV);
-> +	int ret = acs_flags & ~flags ? 0 : 1;
+> +	if (test_and_set_bit(dom, hvpci_dom_map) == 0)
+> +		return dom;
 > +
-> +	return ret;
+> +	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
+> +		if (test_and_set_bit(i, hvpci_dom_map) == 0)
+> +			return i;
+> +	}
+> +
+> +	return HVPCI_DOM_INVALID;
 > +}
 > +
+> +/**
+> + * hv_put_dom_num() - Mark the PCI domain number as free
+> + * @dom: Domain number to be freed
+> + */
+> +static void hv_put_dom_num(u16 dom)
+> +{
+> +	clear_bit(dom, hvpci_dom_map);
+> +}
 > +
->   static const struct pci_dev_acs_enabled {
->   	u16 vendor;
->   	u16 device;
-> @@ -4559,6 +4574,7 @@ static const struct pci_dev_acs_enabled {
->   	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
->   	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
->   	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
-> +	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pcie_quirk_brcm_bridge_acs },
->   	{ 0 }
->   };
->   
+>  /**
+>   * hv_pci_probe() - New VMBus channel probe, for a root PCI bus
+>   * @hdev:	VMBus's tracking struct for this root PCI bus
+> @@ -2521,6 +2563,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  			const struct hv_vmbus_device_id *dev_id)
+>  {
+>  	struct hv_pcibus_device *hbus;
+> +	u16 dom_req, dom;
+>  	int ret;
+>  
+>  	/*
+> @@ -2535,19 +2578,34 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	hbus->state = hv_pcibus_init;
+>  
+>  	/*
+> -	 * The PCI bus "domain" is what is called "segment" in ACPI and
+> -	 * other specs.  Pull it from the instance ID, to get something
+> -	 * unique.  Bytes 8 and 9 are what is used in Windows guests, so
+> -	 * do the same thing for consistency.  Note that, since this code
+> -	 * only runs in a Hyper-V VM, Hyper-V can (and does) guarantee
+> -	 * that (1) the only domain in use for something that looks like
+> -	 * a physical PCI bus (which is actually emulated by the
+> -	 * hypervisor) is domain 0 and (2) there will be no overlap
+> -	 * between domains derived from these instance IDs in the same
+> -	 * VM.
+> +	 * The PCI bus "domain" is what is called "segment" in ACPI and other
+> +	 * specs. Pull it from the instance ID, to get something usually
+> +	 * unique. In rare cases of collision, we will find out another number
+> +	 * not in use.
+> +	 *
+> +	 * Note that, since this code only runs in a Hyper-V VM, Hyper-V
+> +	 * together with this guest driver can guarantee that (1) The only
+> +	 * domain used by Gen1 VMs for something that looks like a physical
+> +	 * PCI bus (which is actually emulated by the hypervisor) is domain 0.
+> +	 * (2) There will be no overlap between domains (after fixing possible
+> +	 * collisions) in the same VM.
+>  	 */
+> -	hbus->sysdata.domain = hdev->dev_instance.b[9] |
+> -			       hdev->dev_instance.b[8] << 8;
+> +	dom_req = hdev->dev_instance.b[8] << 8 | hdev->dev_instance.b[9];
+> +	dom = hv_get_dom_num(dom_req);
+> +
+> +	if (dom == HVPCI_DOM_INVALID) {
+> +		dev_err(&hdev->device,
+> +			"Unable to use dom# 0x%hx or other numbers", dom_req);
+> +		ret = -EINVAL;
+> +		goto free_bus;
+> +	}
+> +
+> +	if (dom != dom_req)
+> +		dev_info(&hdev->device,
+> +			 "PCI dom# 0x%hx has collision, using 0x%hx",
+> +			 dom_req, dom);
+> +
+> +	hbus->sysdata.domain = dom;
+>  
+>  	hbus->hdev = hdev;
+>  	refcount_set(&hbus->remove_lock, 1);
+> @@ -2562,7 +2620,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  					   hbus->sysdata.domain);
+>  	if (!hbus->wq) {
+>  		ret = -ENOMEM;
+> -		goto free_bus;
+> +		goto free_dom;
+>  	}
+>  
+>  	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
+> @@ -2639,6 +2697,8 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	vmbus_close(hdev->channel);
+>  destroy_wq:
+>  	destroy_workqueue(hbus->wq);
+> +free_dom:
+> +	hv_put_dom_num(hbus->sysdata.domain);
+>  free_bus:
+>  	free_page((unsigned long)hbus);
+>  	return ret;
+> @@ -2720,6 +2780,9 @@ static int hv_pci_remove(struct hv_device *hdev)
+>  	put_hvpcibus(hbus);
+>  	wait_for_completion(&hbus->remove_event);
+>  	destroy_workqueue(hbus->wq);
+> +
+> +	hv_put_dom_num(hbus->sysdata.domain);
+> +
+>  	free_page((unsigned long)hbus);
+>  	return 0;
+>  }
+> @@ -2747,6 +2810,9 @@ static void __exit exit_hv_pci_drv(void)
+>  
+>  static int __init init_hv_pci_drv(void)
+>  {
+> +	/* Set the invalid domain number's bit, so it will not be used */
+> +	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
+> +
+>  	return vmbus_driver_register(&hv_pci_drv);
+>  }
+>  
+> -- 
+> 1.8.3.1
+> 
