@@ -2,45 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0083F96302
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2019 16:52:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E8E89644B
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2019 17:26:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbfHTOwg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Aug 2019 10:52:36 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:37585 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729155AbfHTOwg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Aug 2019 10:52:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1566312754; x=1597848754;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=4RMdJ7g4RwqnmOdCpj3+2vRIufVWRdzPriy16h+7m+M=;
-  b=s1IgUD9L3NlIp8TEiqMaa7HsObyN0DqcGTbkmnpXp6S/iI6pGHTxF0Ef
-   sumuyRNnGRpktRWDQMByA0MFggmKa7ETbjVk5Vfv5+IkbspNnLq8FO+FP
-   AWdzyrH6tCgq3r5ErYBWTnTapwgP/ATDFlgeYXveKQjLpznCypVgE8AHo
-   E=;
-X-IronPort-AV: E=Sophos;i="5.64,408,1559520000"; 
-   d="scan'208";a="821673870"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2b-baacba05.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 20 Aug 2019 14:52:31 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-baacba05.us-west-2.amazon.com (Postfix) with ESMTPS id CF698A21AD;
-        Tue, 20 Aug 2019 14:52:30 +0000 (UTC)
-Received: from EX13D13UWA002.ant.amazon.com (10.43.160.172) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 20 Aug 2019 14:52:30 +0000
-Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
- EX13D13UWA002.ant.amazon.com (10.43.160.172) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 20 Aug 2019 14:52:30 +0000
-Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
- EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1367.000;
- Tue, 20 Aug 2019 14:52:30 +0000
-From:   "Chocron, Jonathan" <jonnyc@amazon.com>
-To:     "andrew.murray@arm.com" <andrew.murray@arm.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        id S1727304AbfHTPZ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Aug 2019 11:25:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:43184 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727006AbfHTPZ6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 20 Aug 2019 11:25:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E4D328;
+        Tue, 20 Aug 2019 08:25:57 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B6AF3F246;
+        Tue, 20 Aug 2019 08:25:56 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 16:25:55 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     "Chocron, Jonathan" <jonnyc@amazon.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
         "Woodhouse, David" <dwmw@amazon.co.uk>,
@@ -56,121 +36,176 @@ CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "Krupnik, Ronen" <ronenk@amazon.com>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
 Subject: Re: [PATCH v3 4/8] PCI: Add quirk to disable MSI-X support for
  Amazon's Annapurna Labs Root Port
-Thread-Topic: [PATCH v3 4/8] PCI: Add quirk to disable MSI-X support for
- Amazon's Annapurna Labs Root Port
-Thread-Index: AQHVQTimDPnKzgVgWUSS3N+Jgc+2EKcC9ACAgAFXUQA=
-Date:   Tue, 20 Aug 2019 14:52:30 +0000
-Message-ID: <5a079a466f74a866f1b17447eacb15d396478902.camel@amazon.com>
+Message-ID: <20190820152554.GG23903@e119886-lin.cambridge.arm.com>
 References: <20190723092529.11310-1-jonnyc@amazon.com>
-         <20190723092529.11310-5-jonnyc@amazon.com>
-         <20190819182339.GD23903@e119886-lin.cambridge.arm.com>
-In-Reply-To: <20190819182339.GD23903@e119886-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.160.245]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6E462D656BB32E4AB53CACA361AFD37D@amazon.com>
-Content-Transfer-Encoding: base64
+ <20190723092529.11310-5-jonnyc@amazon.com>
+ <20190819182339.GD23903@e119886-lin.cambridge.arm.com>
+ <5a079a466f74a866f1b17447eacb15d396478902.camel@amazon.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5a079a466f74a866f1b17447eacb15d396478902.camel@amazon.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA4LTE5IGF0IDE5OjIzICswMTAwLCBBbmRyZXcgTXVycmF5IHdyb3RlOg0K
-PiBPbiBUdWUsIEp1bCAyMywgMjAxOSBhdCAxMjoyNToyOVBNICswMzAwLCBKb25hdGhhbiBDaG9j
-cm9uIHdyb3RlOg0KPiA+IFRoZSBSb290IFBvcnQgKGlkZW50aWZpZWQgYnkgWzFjMzY6MDAzMl0p
-IGRvZXNuJ3Qgc3VwcG9ydCBNU0ktWC4gT24NCj4gPiBzb21lDQo+IA0KPiBTaG91bGRuJ3QgdGhp
-cyByZWFkIFsxYzM2OjAwMzFdPw0KPiANCkluZGVlZC4gVGhhbmtzIGZvciBjYXRjaGluZyB0aGlz
-Lg0KDQo+IA0KPiA+IHBsYXRmb3JtcyBpdCBpcyBjb25maWd1cmVkIHRvIG5vdCBhZHZlcnRpc2Ug
-dGhlIGNhcGFiaWxpdHkgYXQgYWxsLA0KPiA+IHdoaWxlDQo+ID4gb24gb3RoZXJzIGl0IChtaXN0
-YWtlbmx5KSBkb2VzLiBUaGlzIGNhdXNlcyBhIHBhbmljIGR1cmluZw0KPiA+IGluaXRpYWxpemF0
-aW9uIGJ5IHRoZSBwY2llcG9ydCBkcml2ZXIsIHNpbmNlIGl0IHRyaWVzIHRvIGNvbmZpZ3VyZQ0K
-PiA+IHRoZQ0KPiA+IE1TSS1YIGNhcGFiaWxpdHkuIFNwZWNpZmljYWxseSwgd2hlbiB0cnlpbmcg
-dG8gYWNjZXNzIHRoZSBNU0ktWA0KPiA+IHRhYmxlDQo+ID4gYSAibm9uLWV4aXN0aW5nIGFkZHIi
-IGV4Y2VwdGlvbiBvY2N1cnMuDQo+ID4gDQo+ID4gRXhhbXBsZSBzdGFja3RyYWNlIHNuaXBwZXQ6
-DQo+ID4gDQo+ID4gWyAgICAxLjYzMjM2M10gU0Vycm9yIEludGVycnVwdCBvbiBDUFUyLCBjb2Rl
-IDB4YmYwMDAwMDAgLS0gU0Vycm9yDQo+ID4gWyAgICAxLjYzMjM2NF0gQ1BVOiAyIFBJRDogMSBD
-b21tOiBzd2FwcGVyLzAgTm90IHRhaW50ZWQgNS4yLjAtcmMxLQ0KPiA+IEpvbm55LTE0ODQ3LWdl
-NzZmMWQ0YTE4MjgtZGlydHkgIzMzDQo+ID4gWyAgICAxLjYzMjM2NV0gSGFyZHdhcmUgbmFtZTog
-QW5uYXB1cm5hIExhYnMgQWxwaW5lIFYzIEVWUCAoRFQpDQo+ID4gWyAgICAxLjYzMjM2NV0gcHN0
-YXRlOiA4MDAwMDAwNSAoTnpjdiBkYWlmIC1QQU4gLVVBTykNCj4gPiBbICAgIDEuNjMyMzY2XSBw
-YyA6IF9fcGNpX2VuYWJsZV9tc2l4X3JhbmdlKzB4NGU0LzB4NjA4DQo+ID4gWyAgICAxLjYzMjM2
-N10gbHIgOiBfX3BjaV9lbmFibGVfbXNpeF9yYW5nZSsweDQ5OC8weDYwOA0KPiA+IFsgICAgMS42
-MzIzNjddIHNwIDogZmZmZmZmODAxMTdkYjcwMA0KPiA+IFsgICAgMS42MzIzNjhdIHgyOTogZmZm
-ZmZmODAxMTdkYjcwMCB4Mjg6IDAwMDAwMDAwMDAwMDAwMDENCj4gPiBbICAgIDEuNjMyMzcwXSB4
-Mjc6IDAwMDAwMDAwMDAwMDAwMDEgeDI2OiAwMDAwMDAwMDAwMDAwMDAwDQo+ID4gWyAgICAxLjYz
-MjM3Ml0geDI1OiBmZmZmZmZkM2U5ZDhjMGIwIHgyNDogMDAwMDAwMDAwMDAwMDAwMA0KPiA+IFsg
-ICAgMS42MzIzNzNdIHgyMzogMDAwMDAwMDAwMDAwMDAwMCB4MjI6IDAwMDAwMDAwMDAwMDAwMDAN
-Cj4gPiBbICAgIDEuNjMyMzc1XSB4MjE6IDAwMDAwMDAwMDAwMDAwMDEgeDIwOiAwMDAwMDAwMDAw
-MDAwMDAwDQo+ID4gWyAgICAxLjYzMjM3Nl0geDE5OiBmZmZmZmZkM2U5ZDhjMDAwIHgxODogZmZm
-ZmZmZmZmZmZmZmZmZg0KPiA+IFsgICAgMS42MzIzNzhdIHgxNzogMDAwMDAwMDAwMDAwMDAwMCB4
-MTY6IDAwMDAwMDAwMDAwMDAwMDANCj4gPiBbICAgIDEuNjMyMzc5XSB4MTU6IGZmZmZmZjgwMTE2
-NDk2YzggeDE0OiBmZmZmZmZkM2U5ODQ0NTAzDQo+ID4gWyAgICAxLjYzMjM4MF0geDEzOiBmZmZm
-ZmZkM2U5ODQ0NTAyIHgxMjogMDAwMDAwMDAwMDAwMDAzOA0KPiA+IFsgICAgMS42MzIzODJdIHgx
-MTogZmZmZmZmZmZmZmZmZmYwMCB4MTA6IDAwMDAwMDAwMDAwMDAwNDANCj4gPiBbICAgIDEuNjMy
-Mzg0XSB4OSA6IGZmZmZmZjgwMTE2NWUyNzAgeDggOiBmZmZmZmY4MDExNjVlMjY4DQo+ID4gWyAg
-ICAxLjYzMjM4NV0geDcgOiAwMDAwMDAwMDAwMDAwMDAyIHg2IDogMDAwMDAwMDAwMDAwMDBiMg0K
-PiA+IFsgICAgMS42MzIzODddIHg1IDogZmZmZmZmZDNlOWQ4YzJjMCB4NCA6IDAwMDAwMDAwMDAw
-MDAwMDANCj4gPiBbICAgIDEuNjMyMzg4XSB4MyA6IDAwMDAwMDAwMDAwMDAwMDAgeDIgOiAwMDAw
-MDAwMDAwMDAwMDAwDQo+ID4gWyAgICAxLjYzMjM5MF0geDEgOiAwMDAwMDAwMDAwMDAwMDAwIHgw
-IDogZmZmZmZmZDNlOTg0NDY4MA0KPiA+IFsgICAgMS42MzIzOTJdIEtlcm5lbCBwYW5pYyAtIG5v
-dCBzeW5jaW5nOiBBc3luY2hyb25vdXMgU0Vycm9yDQo+ID4gSW50ZXJydXB0DQo+ID4gWyAgICAx
-LjYzMjM5M10gQ1BVOiAyIFBJRDogMSBDb21tOiBzd2FwcGVyLzAgTm90IHRhaW50ZWQgNS4yLjAt
-cmMxLQ0KPiA+IEpvbm55LTE0ODQ3LWdlNzZmMWQ0YTE4MjgtZGlydHkgIzMzDQo+ID4gWyAgICAx
-LjYzMjM5NF0gSGFyZHdhcmUgbmFtZTogQW5uYXB1cm5hIExhYnMgQWxwaW5lIFYzIEVWUCAoRFQp
-DQo+ID4gWyAgICAxLjYzMjM5NF0gQ2FsbCB0cmFjZToNCj4gPiBbICAgIDEuNjMyMzk1XSAgZHVt
-cF9iYWNrdHJhY2UrMHgwLzB4MTQwDQo+ID4gWyAgICAxLjYzMjM5NV0gIHNob3dfc3RhY2srMHgx
-NC8weDIwDQo+ID4gWyAgICAxLjYzMjM5Nl0gIGR1bXBfc3RhY2srMHhhOC8weGNjDQo+ID4gWyAg
-ICAxLjYzMjM5Nl0gIHBhbmljKzB4MTQwLzB4MzM0DQo+ID4gWyAgICAxLjYzMjM5N10gIG5taV9w
-YW5pYysweDZjLzB4NzANCj4gPiBbICAgIDEuNjMyMzk4XSAgYXJtNjRfc2Vycm9yX3BhbmljKzB4
-NzQvMHg4OA0KPiA+IFsgICAgMS42MzIzOThdICBfX3B0ZV9lcnJvcisweDAvMHgyOA0KPiA+IFsg
-ICAgMS42MzIzOTldICBlbDFfZXJyb3IrMHg4NC8weGY4DQo+ID4gWyAgICAxLjYzMjQwMF0gIF9f
-cGNpX2VuYWJsZV9tc2l4X3JhbmdlKzB4NGU0LzB4NjA4DQo+ID4gWyAgICAxLjYzMjQwMF0gIHBj
-aV9hbGxvY19pcnFfdmVjdG9yc19hZmZpbml0eSsweGRjLzB4MTUwDQo+ID4gWyAgICAxLjYzMjQw
-MV0gIHBjaWVfcG9ydF9kZXZpY2VfcmVnaXN0ZXIrMHgyYjgvMHg0ZTANCj4gPiBbICAgIDEuNjMy
-NDAyXSAgcGNpZV9wb3J0ZHJ2X3Byb2JlKzB4MzQvMHhmMA0KPiA+IA0KPiA+IFNpZ25lZC1vZmYt
-Ynk6IEpvbmF0aGFuIENob2Nyb24gPGpvbm55Y0BhbWF6b24uY29tPg0KPiA+IFJldmlld2VkLWJ5
-OiBHdXN0YXZvIFBpbWVudGVsIDxndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lzLmNvbT4NCj4gPiAt
-LS0NCj4gPiAgZHJpdmVycy9wY2kvcXVpcmtzLmMgfCAxNSArKysrKysrKysrKysrKysNCj4gPiAg
-MSBmaWxlIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9wY2kvcXVpcmtzLmMgYi9kcml2ZXJzL3BjaS9xdWlya3MuYw0KPiA+IGluZGV4IDIz
-NjcyNjgwZGJhNy4uMTFmODQzYWE5NmIzIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL3F1
-aXJrcy5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvcXVpcmtzLmMNCj4gPiBAQCAtMjkyNSw2ICsy
-OTI1LDIxIEBADQo+ID4gREVDTEFSRV9QQ0lfRklYVVBfRklOQUwoUENJX1ZFTkRPUl9JRF9BVFRB
-TlNJQywgMHgxMGExLA0KPiA+ICAJCQlxdWlya19tc2lfaW50eF9kaXNhYmxlX3FjYV9idWcpOw0K
-PiA+ICBERUNMQVJFX1BDSV9GSVhVUF9GSU5BTChQQ0lfVkVORE9SX0lEX0FUVEFOU0lDLCAweGUw
-OTEsDQo+ID4gIAkJCXF1aXJrX21zaV9pbnR4X2Rpc2FibGVfcWNhX2J1Zyk7DQo+ID4gKw0KPiA+
-ICsvKg0KPiA+ICsgKiBBbWF6b24ncyBBbm5hcHVybmEgTGFicyAxYzM2OjAwMzEgUm9vdCBQb3J0
-cyBkb24ndCBzdXBwb3J0IE1TSS0NCj4gPiBYLCBzbyBpdA0KPiA+ICsgKiBzaG91bGQgYmUgZGlz
-YWJsZWQgb24gcGxhdGZvcm1zIHdoZXJlIHRoZSBkZXZpY2UgKG1pc3Rha2VubHkpDQo+ID4gYWR2
-ZXJ0aXNlcyBpdC4NCj4gPiArICoNCj4gPiArICogVGhlIDAwMzEgZGV2aWNlIGlkIGlzIHJldXNl
-ZCBmb3Igb3RoZXIgbm9uIFJvb3QgUG9ydCBkZXZpY2UNCj4gPiB0eXBlcywNCj4gPiArICogdGhl
-cmVmb3JlIHRoZSBxdWlyayBpcyByZWdpc3RlcmVkIGZvciB0aGUgUENJX0NMQVNTX0JSSURHRV9Q
-Q0kNCj4gPiBjbGFzcy4NCj4gPiArICovDQo+ID4gK3N0YXRpYyB2b2lkIHF1aXJrX2FsX21zaV9k
-aXNhYmxlKHN0cnVjdCBwY2lfZGV2ICpkZXYpDQo+ID4gK3sNCj4gPiArCWRldi0+bm9fbXNpID0g
-MTsNCj4gPiArCXBjaV93YXJuKGRldiwgIkRpc2FibGluZyBNU0ktWFxuIik7DQo+IA0KPiBUaGlz
-IHdpbGwgZGlzYWJsZSBib3RoIE1TSSBhbmQgTVNJLVggc3VwcG9ydCAtIGlzIHRoaXMgcmVhbGx5
-IHRoZQ0KPiBpbnRlbnRpb24NCj4gaGVyZT8gRG8gdGhlIHJvb3QgcG9ydHMgc3VwcG9ydCBNU0kg
-YW5kIGxlZ2FjeSwgb3IganVzdCBsZWdhY3k/DQo+IA0KVGhlIEhXIHNob3VsZCBzdXBwb3J0IE1T
-SSwgYnV0IHdlIGN1cnJlbnRseSBkb24ndCBoYXZlIGEgdXNlIGNhc2UgZm9yDQppdCBzbyBpdCBo
-YXNuJ3QgYmVlbiB0ZXN0ZWQgYW5kIHRoZXJlZm9yZSB3ZSBhcmUgb2theSB3aXRoIGRpc2FibGlu
-Zw0KaXQuDQoNCkZvciBmdXR1cmUga25vd2xlZGdlLCBob3cgY2FuIGp1c3QgTVNJLVggYmUgZGlz
-YWJsZWQ/DQpJIHNlZSB0aGF0IGluIHBjaWVfcG9ydF9lbmFibGVfaXJxX3ZlYygpLCB0aGUgcGNp
-ZXBvcnQgZHJpdmVyIGNhbGxzDQpwY2lfYWxsb2NfaXJxX3ZlY3RvcnMoKSB3aXRoIFBDSV9JUlFf
-TVNJWCB8IFBDSV9JUlFfTVNJLiBBbmQNCmludGVybmFsbHksIGJvdGggX19wY2lfZW5hYmxlX21z
-aXhfcmFuZ2UoKSBhbmQgX19wY2lfZW5hYmxlX21zaV9yYW5nZSgpDQp1c2UgcGNpX21zaV9zdXBw
-b3J0ZWQoKSB3aGljaCBkb2Vzbid0IGRpZmZlcmVudGlhdGUgYmV0d2VlbiBNU0kgYW5kDQpNU0kt
-eC4NCg0KPiBUaGFua3MsDQo+IA0KPiBBbmRyZXcgTXVycmF5DQo+IA0KPiA+ICt9DQo+ID4gK0RF
-Q0xBUkVfUENJX0ZJWFVQX0NMQVNTX0ZJTkFMKFBDSV9WRU5ET1JfSURfQU1BWk9OX0FOTkFQVVJO
-QV9MQUJTLA0KPiA+IDB4MDAzMSwNCj4gPiArCQkJICAgICAgUENJX0NMQVNTX0JSSURHRV9QQ0ks
-IDgsDQo+ID4gcXVpcmtfYWxfbXNpX2Rpc2FibGUpOw0KPiA+ICAjZW5kaWYgLyogQ09ORklHX1BD
-SV9NU0kgKi8NCj4gPiAgDQo+ID4gIC8qDQo+ID4gLS0gDQo+ID4gMi4xNy4xDQo+ID4gDQo=
+On Tue, Aug 20, 2019 at 02:52:30PM +0000, Chocron, Jonathan wrote:
+> On Mon, 2019-08-19 at 19:23 +0100, Andrew Murray wrote:
+> > On Tue, Jul 23, 2019 at 12:25:29PM +0300, Jonathan Chocron wrote:
+> > > The Root Port (identified by [1c36:0032]) doesn't support MSI-X. On
+> > > some
+> > 
+> > Shouldn't this read [1c36:0031]?
+> > 
+> Indeed. Thanks for catching this.
+> 
+> > 
+> > > platforms it is configured to not advertise the capability at all,
+> > > while
+> > > on others it (mistakenly) does. This causes a panic during
+> > > initialization by the pcieport driver, since it tries to configure
+> > > the
+> > > MSI-X capability. Specifically, when trying to access the MSI-X
+> > > table
+> > > a "non-existing addr" exception occurs.
+> > > 
+> > > Example stacktrace snippet:
+> > > 
+> > > [    1.632363] SError Interrupt on CPU2, code 0xbf000000 -- SError
+> > > [    1.632364] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-
+> > > Jonny-14847-ge76f1d4a1828-dirty #33
+> > > [    1.632365] Hardware name: Annapurna Labs Alpine V3 EVP (DT)
+> > > [    1.632365] pstate: 80000005 (Nzcv daif -PAN -UAO)
+> > > [    1.632366] pc : __pci_enable_msix_range+0x4e4/0x608
+> > > [    1.632367] lr : __pci_enable_msix_range+0x498/0x608
+> > > [    1.632367] sp : ffffff80117db700
+> > > [    1.632368] x29: ffffff80117db700 x28: 0000000000000001
+> > > [    1.632370] x27: 0000000000000001 x26: 0000000000000000
+> > > [    1.632372] x25: ffffffd3e9d8c0b0 x24: 0000000000000000
+> > > [    1.632373] x23: 0000000000000000 x22: 0000000000000000
+> > > [    1.632375] x21: 0000000000000001 x20: 0000000000000000
+> > > [    1.632376] x19: ffffffd3e9d8c000 x18: ffffffffffffffff
+> > > [    1.632378] x17: 0000000000000000 x16: 0000000000000000
+> > > [    1.632379] x15: ffffff80116496c8 x14: ffffffd3e9844503
+> > > [    1.632380] x13: ffffffd3e9844502 x12: 0000000000000038
+> > > [    1.632382] x11: ffffffffffffff00 x10: 0000000000000040
+> > > [    1.632384] x9 : ffffff801165e270 x8 : ffffff801165e268
+> > > [    1.632385] x7 : 0000000000000002 x6 : 00000000000000b2
+> > > [    1.632387] x5 : ffffffd3e9d8c2c0 x4 : 0000000000000000
+> > > [    1.632388] x3 : 0000000000000000 x2 : 0000000000000000
+> > > [    1.632390] x1 : 0000000000000000 x0 : ffffffd3e9844680
+> > > [    1.632392] Kernel panic - not syncing: Asynchronous SError
+> > > Interrupt
+> > > [    1.632393] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-
+> > > Jonny-14847-ge76f1d4a1828-dirty #33
+> > > [    1.632394] Hardware name: Annapurna Labs Alpine V3 EVP (DT)
+> > > [    1.632394] Call trace:
+> > > [    1.632395]  dump_backtrace+0x0/0x140
+> > > [    1.632395]  show_stack+0x14/0x20
+> > > [    1.632396]  dump_stack+0xa8/0xcc
+> > > [    1.632396]  panic+0x140/0x334
+> > > [    1.632397]  nmi_panic+0x6c/0x70
+> > > [    1.632398]  arm64_serror_panic+0x74/0x88
+> > > [    1.632398]  __pte_error+0x0/0x28
+> > > [    1.632399]  el1_error+0x84/0xf8
+> > > [    1.632400]  __pci_enable_msix_range+0x4e4/0x608
+> > > [    1.632400]  pci_alloc_irq_vectors_affinity+0xdc/0x150
+> > > [    1.632401]  pcie_port_device_register+0x2b8/0x4e0
+> > > [    1.632402]  pcie_portdrv_probe+0x34/0xf0
+> > > 
+> > > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> > > Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > > ---
+> > >  drivers/pci/quirks.c | 15 +++++++++++++++
+> > >  1 file changed, 15 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > > index 23672680dba7..11f843aa96b3 100644
+> > > --- a/drivers/pci/quirks.c
+> > > +++ b/drivers/pci/quirks.c
+> > > @@ -2925,6 +2925,21 @@
+> > > DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0x10a1,
+> > >  			quirk_msi_intx_disable_qca_bug);
+> > >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0xe091,
+> > >  			quirk_msi_intx_disable_qca_bug);
+> > > +
+> > > +/*
+> > > + * Amazon's Annapurna Labs 1c36:0031 Root Ports don't support MSI-
+> > > X, so it
+> > > + * should be disabled on platforms where the device (mistakenly)
+> > > advertises it.
+> > > + *
+> > > + * The 0031 device id is reused for other non Root Port device
+> > > types,
+> > > + * therefore the quirk is registered for the PCI_CLASS_BRIDGE_PCI
+> > > class.
+> > > + */
+> > > +static void quirk_al_msi_disable(struct pci_dev *dev)
+> > > +{
+> > > +	dev->no_msi = 1;
+> > > +	pci_warn(dev, "Disabling MSI-X\n");
+> > 
+> > This will disable both MSI and MSI-X support - is this really the
+> > intention
+> > here? Do the root ports support MSI and legacy, or just legacy?
+> > 
+> The HW should support MSI, but we currently don't have a use case for
+> it so it hasn't been tested and therefore we are okay with disabling
+> it.
+
+OK - then the commit message and comment (for quirk_al_msi_disable) should
+probably be updated to reflect this. Especially given that the device id
+may be used on other device types - implying that a use-case for this
+may later arise.
+
+> 
+> For future knowledge, how can just MSI-X be disabled?
+> I see that in pcie_port_enable_irq_vec(), the pcieport driver calls
+> pci_alloc_irq_vectors() with PCI_IRQ_MSIX | PCI_IRQ_MSI. And
+> internally, both __pci_enable_msix_range() and __pci_enable_msi_range()
+> use pci_msi_supported() which doesn't differentiate between MSI and
+> MSI-x.
+
+The documentation [1] would suggest that once upon a time pci_disable_msix
+was used - but now should let pci_alloc_irq_vectors cap the max number
+of vectors. However in your case it's the PCIe port driver that is attempting
+to allocate MSI-X's and so the solution isn't an obvious one.
+
+Setting dev->msix_enabled to false (i.e. through pci_disable_msix) would
+result in an un-necessary WARN_ON_ONCE. I think you'd need to ensure
+devi->msix_cap is NULL (which makes sense as your hardware shouldn't be
+exposing this capability).
+
+I guess the right way of achieving this would be through a quirk, though you'd
+be the first to do this and you'd have to ensure the quirk runs before
+anyone tests for msix_cap.
+
+That's my view, though others may have different suggestions.
+
+[1] Documentation/PCI/msi-howto.rst
+
+Thanks,
+
+Andrew Murray
+
+> 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > > +}
+> > > +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS,
+> > > 0x0031,
+> > > +			      PCI_CLASS_BRIDGE_PCI, 8,
+> > > quirk_al_msi_disable);
+> > >  #endif /* CONFIG_PCI_MSI */
+> > >  
+> > >  /*
+> > > -- 
+> > > 2.17.1
+> > > 
