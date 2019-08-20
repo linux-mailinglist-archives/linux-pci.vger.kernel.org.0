@@ -2,118 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 26A5E95C56
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2019 12:34:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00B9895E34
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2019 14:16:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729464AbfHTKeF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Aug 2019 06:34:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728545AbfHTKeE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 20 Aug 2019 06:34:04 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3C2122CE3;
-        Tue, 20 Aug 2019 10:34:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566297243;
-        bh=fqZuIvFM37lgb6CiOIy9O+jXrPlA0PzgurhoIR5df9I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KvH8USIbd/m91IV5FEvEhY+FTAsrpOezOk7ev3r9AWNS7XmzujWXr0ncRDE4flczC
-         Ruz3WY2LcSnqMpH6vw+gt3rNnSyMuIAsg2EblVjBv0dfnhnAXUsx2gG02hq7CGk0DY
-         SsvCiFLS8mY77E66Nhmr/+RuZRGQ1acWa41x3C9A=
-Date:   Tue, 20 Aug 2019 05:34:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Frederick Lawler <fred@fredlawl.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Rajat Jain <rajatja@google.com>
-Subject: Re: [PATCH 3/3] PCI/ASPM: add sysfs attribute for controlling ASPM
-Message-ID: <20190820103400.GY253360@google.com>
-References: <7a6d2f14-f2a6-99ad-3a93-fdaa0726ce86@gmail.com>
- <a0c090cd-e3a4-f667-b99d-f31c48c2e0a3@gmail.com>
+        id S1729707AbfHTMQr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Aug 2019 08:16:47 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34324 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728731AbfHTMQq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Aug 2019 08:16:46 -0400
+Received: by mail-ed1-f66.google.com with SMTP id s49so6080477edb.1;
+        Tue, 20 Aug 2019 05:16:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Aqrj4c9BMm607WKqADj4tux8jrP64CdYozdKcQKpxRs=;
+        b=ewASI7ty6m5g4yCE06rRZV2auDuRwCy39jW0oXYCPKGv30T2Dc4KcIoNIZlKfq05eJ
+         2YiIcshEGNT4u00GEcYjbhahowM4Zc60PJojDj3FUYR99L+dRKL7s/mG8eI4TV/DTPxN
+         3wgSn6Qp7T1A4fI1yddxSa9jIih5i42/SRZzLEPDfGEdTN/CUwuv6GogxFZ+a6pc6rCj
+         2+/JC7MdceNGTQxOT/wGGH4QmP3Evb1G2moFXrTPGaSNbHilycMJVT29U6PCSYhzKnRc
+         kPeIDpEW+RU5DA1UJPH7uuDmMtbF+FfnGHKRkgt2JI1G3S2xQFyB12osRKjbTu9bwW4r
+         eO3g==
+X-Gm-Message-State: APjAAAX3g+jmaAXGTtxZ4Pc/rKL11mBg0Um7v1gidi3fI/oghXEKpG6V
+        nZVruMjrpwZJ3u0yLJYFeGEm4I0S
+X-Google-Smtp-Source: APXvYqzEd+H40vyJ3xfj6d0RW5tR1qxm3lLFbeoBzqkYsyCyK2sntwu/nyVS1WkdzhdS9Gav5Hnmew==
+X-Received: by 2002:a17:906:a2cd:: with SMTP id by13mr18136971ejb.182.1566303404755;
+        Tue, 20 Aug 2019 05:16:44 -0700 (PDT)
+Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
+        by smtp.gmail.com with ESMTPSA id ks7sm2584431ejb.83.2019.08.20.05.16.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Aug 2019 05:16:44 -0700 (PDT)
+Reply-To: efremov@linux.com
+Subject: Re: [PATCH v3 0/4] Simplify PCIe hotplug indicator control
+To:     Lukas Wunner <lukas@wunner.de>,
+        sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190819160643.27998-1-efremov@linux.com>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <2f4c857e-a7cc-58da-8be5-cba581c56d9f@linux.com>
+Date:   Tue, 20 Aug 2019 15:16:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a0c090cd-e3a4-f667-b99d-f31c48c2e0a3@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190819160643.27998-1-efremov@linux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Greg, Rajat]
-
-On Thu, May 23, 2019 at 10:05:35PM +0200, Heiner Kallweit wrote:
-> Background of this extension is a problem with the r8169 network driver.
-> Several combinations of board chipsets and network chip versions have
-> problems if ASPM is enabled, therefore we have to disable ASPM per default.
-> However especially on notebooks ASPM can provide significant power-saving,
-> therefore we want to give users the option to enable ASPM. With the new sysfs
-> attribute users can control which ASPM link-states are enabled/disabled.
+On 8/19/19 7:06 PM, Denis Efremov wrote:
+> PCIe defines two optional hotplug indicators: a Power indicator and an
+> Attention indicator. Both are controlled by the same register, and each
+> can be on, off or blinking. The current interfaces
+> (pciehp_green_led_{on,off,blink}() and pciehp_set_attention_status()) are
+> non-uniform and require two register writes in many cases where we could
+> do one.
 > 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-pci |  13 ++
->  drivers/pci/pci.h                       |   8 +-
->  drivers/pci/pcie/aspm.c                 | 180 +++++++++++++++++++++++-
->  3 files changed, 193 insertions(+), 8 deletions(-)
+> This patchset introduces the new function pciehp_set_indicators(). It
+> allows one to set two indicators with a single register write. All
+> calls to previous interfaces (pciehp_green_led_* and
+> pciehp_set_attention_status()) are replaced with a new one. Thus,
+> the amount of duplicated code for setting indicators is reduced.
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-> index 8bfee557e..38fe358de 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-pci
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> @@ -347,3 +347,16 @@ Description:
->  		If the device has any Peer-to-Peer memory registered, this
->  	        file contains a '1' if the memory has been published for
->  		use outside the driver that owns the device.
-> +
-> +What:		/sys/bus/pci/devices/.../power/aspm_link_states
-> +Date:		May 2019
-> +Contact:	Heiner Kallweit <hkallweit1@gmail.com>
-> +Description:
-> +		If ASPM is supported for an endpoint, then this file can be
-> +		used to enable / disable link states. A link state
-> +		displayed in brackets is enabled, otherwise it's disabled.
-> +		To control link states (case insensitive):
-> +		+state : enables a supported state
-> +		-state : disables a state
-> +		none : disables all link states
-> +		all : enables all supported link states
+> Changes in v3:
+>   - Changed pciehp_set_indicators() to work with existing
+>     PCI_EXP_SLTCTL_* macros
+>   - Reworked the inputs validation in pciehp_set_indicators()
+>   - Removed pciehp_set_attention_status() and pciehp_green_led_*()
+>     completely
+> 
+> Denis Efremov (4):
+>   PCI: pciehp: Add pciehp_set_indicators() to jointly set LED indicators
+>   PCI: pciehp: Switch LED indicators with a single write
+>   PCI: pciehp: Remove pciehp_set_attention_status()
+>   PCI: pciehp: Remove pciehp_green_led_{on,off,blink}()
 
-IIUC this "aspm_link_states" file will contain things like this:
+Lukas, Sathyanarayanan, sorry that I've dropped most of yours "Reviewed-by".
+The changes in the last 2 patches were significant.
 
-  L0S L1 L1.1 L1.2                 # All states supported, all disabled
-  [L0S] L1                         # L0s enabled, L1 supported but disabled
-  [L0S] [L1]                       # L0s and L1 enabled
-  ...
+> 
+>  drivers/pci/hotplug/pciehp.h      |  5 +-
+>  drivers/pci/hotplug/pciehp_core.c |  7 ++-
+>  drivers/pci/hotplug/pciehp_ctrl.c | 31 +++++++-----
+>  drivers/pci/hotplug/pciehp_hpc.c  | 82 ++++++++++---------------------
+>  include/uapi/linux/pci_regs.h     |  3 ++
+>  5 files changed, 54 insertions(+), 74 deletions(-)
+> 
 
-and the control is by writing things like this to it:
-
-  +L1                              # enables L1
-  +L1.1                            # enables L1.1
-  -L0S                             # disables L0s
-
-I know this file structure is similar to protocol handling in
-drivers/media/rc/rc-main.c, but Documentation/filesystems/sysfs.txt
-suggests single values in a file, and Greg recently pointed out that
-we screwed up some PCI AER stats [1].
-
-So I'm thinking maybe we should split this into several files, e.g.,
-
-  /sys/devices/pci*/.../power/aspm_l0s
-  /sys/devices/pci*/.../power/aspm_l1
-  /sys/devices/pci*/.../power/aspm_l1.1
-  /sys/devices/pci*/.../power/aspm_l1.2
-
-which would contain just 1/0 values, and we'd write 1/0 to
-enable/disable things.
-
-Since the L1 PM Substates control register has separate enable bits
-for PCI-PM L1.1 and L1.2, we might also want a way to manage those.
-
-Bjorn
-
-[1] https://lore.kernel.org/r/20190621072911.GA21600@kroah.com
