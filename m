@@ -2,210 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E8E89644B
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2019 17:26:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B94396471
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2019 17:31:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbfHTPZ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Aug 2019 11:25:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:43184 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbfHTPZ6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:25:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E4D328;
-        Tue, 20 Aug 2019 08:25:57 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B6AF3F246;
-        Tue, 20 Aug 2019 08:25:56 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 16:25:55 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     "Chocron, Jonathan" <jonnyc@amazon.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Hanoch, Uri" <hanochu@amazon.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "Wasserstrom, Barak" <barakw@amazon.com>,
-        "Saidi, Ali" <alisaidi@amazon.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-Subject: Re: [PATCH v3 4/8] PCI: Add quirk to disable MSI-X support for
- Amazon's Annapurna Labs Root Port
-Message-ID: <20190820152554.GG23903@e119886-lin.cambridge.arm.com>
-References: <20190723092529.11310-1-jonnyc@amazon.com>
- <20190723092529.11310-5-jonnyc@amazon.com>
- <20190819182339.GD23903@e119886-lin.cambridge.arm.com>
- <5a079a466f74a866f1b17447eacb15d396478902.camel@amazon.com>
+        id S1730278AbfHTPbw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Aug 2019 11:31:52 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38423 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbfHTPbw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Aug 2019 11:31:52 -0400
+Received: by mail-pg1-f195.google.com with SMTP id e11so3452546pga.5
+        for <linux-pci@vger.kernel.org>; Tue, 20 Aug 2019 08:31:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=GNTaQEUKw3DkFYPRjOd2+jlWbivaUPKZR0GlTO1D9vQ=;
+        b=cKOrZzGL6sT+oH42dorpn9LVy2TIxYp2XRnPXpZ1nq6yQgQ/eECm6ylClzkzFh+dko
+         Oi07UPSUyeCL54DZMr3FwWFk1it6Rix2zVZRzkf9R1lmVQdhE2LhX4W3U4YXG+k8ges7
+         9RxcIrFYyvLaBGCOr7raJi/3CQ7ljkA5gzzls=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=GNTaQEUKw3DkFYPRjOd2+jlWbivaUPKZR0GlTO1D9vQ=;
+        b=l2OWPJXJJVvSClrI45U64WdJCTEynDavgZSjx9oWHaq4tiZNELVt6unipx0/kYYOD4
+         9eYwV/tsOfr/BJmmzHDidic/SngquevtiMNeiqMGA3uCPLUv7atGu7KZlGGlCszUT+sS
+         EJvBYzO2scmloRFKJoBLAWA0NKZnicb9dc10/xPLwpdY7ksloVqJAhz7tv1Dy5CVxel0
+         MuwdNq906IR9yFM7F5i80Tp8YYQ7uXyG4aXKmGizwt36YWjVqRgn3LBWGwO+0Tf8lZVG
+         0Vg4FR+m3sr16vi5NsobDx6AJbY1CwQCeEzL51TtjlK7jHrevPzwcrfSg/+OFdq5cE6y
+         RVPg==
+X-Gm-Message-State: APjAAAVEqLRqE6fMov/1MbkHfU84sowQ479HfI8CzgE3dIsvKndHPo6u
+        9Jr5xyzFlPiud8gpDx9Alk2nZQ==
+X-Google-Smtp-Source: APXvYqwElzu1rPBlzknftcusYxSBT5g1kl1HIbsRc6PJpu2oNRxWkKsSgsPuuWbHWUx1qqGettKcLQ==
+X-Received: by 2002:a17:90a:d3cf:: with SMTP id d15mr611463pjw.34.1566315111331;
+        Tue, 20 Aug 2019 08:31:51 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id z14sm249632pjr.23.2019.08.20.08.31.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Aug 2019 08:31:50 -0700 (PDT)
+Subject: Re: [PATCH] PCI: Add PCIE ACS quirk for IPROC PAXB
+To:     Srinath Mannam <srinath.mannam@broadcom.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Abhinav Ratna <abhinav.ratna@broadcom.com>
+References: <1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <d39bbda2-49ee-a6eb-38f8-347106bbf3ed@broadcom.com>
+Date:   Tue, 20 Aug 2019 08:31:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5a079a466f74a866f1b17447eacb15d396478902.camel@amazon.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 02:52:30PM +0000, Chocron, Jonathan wrote:
-> On Mon, 2019-08-19 at 19:23 +0100, Andrew Murray wrote:
-> > On Tue, Jul 23, 2019 at 12:25:29PM +0300, Jonathan Chocron wrote:
-> > > The Root Port (identified by [1c36:0032]) doesn't support MSI-X. On
-> > > some
-> > 
-> > Shouldn't this read [1c36:0031]?
-> > 
-> Indeed. Thanks for catching this.
-> 
-> > 
-> > > platforms it is configured to not advertise the capability at all,
-> > > while
-> > > on others it (mistakenly) does. This causes a panic during
-> > > initialization by the pcieport driver, since it tries to configure
-> > > the
-> > > MSI-X capability. Specifically, when trying to access the MSI-X
-> > > table
-> > > a "non-existing addr" exception occurs.
-> > > 
-> > > Example stacktrace snippet:
-> > > 
-> > > [    1.632363] SError Interrupt on CPU2, code 0xbf000000 -- SError
-> > > [    1.632364] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-
-> > > Jonny-14847-ge76f1d4a1828-dirty #33
-> > > [    1.632365] Hardware name: Annapurna Labs Alpine V3 EVP (DT)
-> > > [    1.632365] pstate: 80000005 (Nzcv daif -PAN -UAO)
-> > > [    1.632366] pc : __pci_enable_msix_range+0x4e4/0x608
-> > > [    1.632367] lr : __pci_enable_msix_range+0x498/0x608
-> > > [    1.632367] sp : ffffff80117db700
-> > > [    1.632368] x29: ffffff80117db700 x28: 0000000000000001
-> > > [    1.632370] x27: 0000000000000001 x26: 0000000000000000
-> > > [    1.632372] x25: ffffffd3e9d8c0b0 x24: 0000000000000000
-> > > [    1.632373] x23: 0000000000000000 x22: 0000000000000000
-> > > [    1.632375] x21: 0000000000000001 x20: 0000000000000000
-> > > [    1.632376] x19: ffffffd3e9d8c000 x18: ffffffffffffffff
-> > > [    1.632378] x17: 0000000000000000 x16: 0000000000000000
-> > > [    1.632379] x15: ffffff80116496c8 x14: ffffffd3e9844503
-> > > [    1.632380] x13: ffffffd3e9844502 x12: 0000000000000038
-> > > [    1.632382] x11: ffffffffffffff00 x10: 0000000000000040
-> > > [    1.632384] x9 : ffffff801165e270 x8 : ffffff801165e268
-> > > [    1.632385] x7 : 0000000000000002 x6 : 00000000000000b2
-> > > [    1.632387] x5 : ffffffd3e9d8c2c0 x4 : 0000000000000000
-> > > [    1.632388] x3 : 0000000000000000 x2 : 0000000000000000
-> > > [    1.632390] x1 : 0000000000000000 x0 : ffffffd3e9844680
-> > > [    1.632392] Kernel panic - not syncing: Asynchronous SError
-> > > Interrupt
-> > > [    1.632393] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-
-> > > Jonny-14847-ge76f1d4a1828-dirty #33
-> > > [    1.632394] Hardware name: Annapurna Labs Alpine V3 EVP (DT)
-> > > [    1.632394] Call trace:
-> > > [    1.632395]  dump_backtrace+0x0/0x140
-> > > [    1.632395]  show_stack+0x14/0x20
-> > > [    1.632396]  dump_stack+0xa8/0xcc
-> > > [    1.632396]  panic+0x140/0x334
-> > > [    1.632397]  nmi_panic+0x6c/0x70
-> > > [    1.632398]  arm64_serror_panic+0x74/0x88
-> > > [    1.632398]  __pte_error+0x0/0x28
-> > > [    1.632399]  el1_error+0x84/0xf8
-> > > [    1.632400]  __pci_enable_msix_range+0x4e4/0x608
-> > > [    1.632400]  pci_alloc_irq_vectors_affinity+0xdc/0x150
-> > > [    1.632401]  pcie_port_device_register+0x2b8/0x4e0
-> > > [    1.632402]  pcie_portdrv_probe+0x34/0xf0
-> > > 
-> > > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> > > Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> > > ---
-> > >  drivers/pci/quirks.c | 15 +++++++++++++++
-> > >  1 file changed, 15 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > > index 23672680dba7..11f843aa96b3 100644
-> > > --- a/drivers/pci/quirks.c
-> > > +++ b/drivers/pci/quirks.c
-> > > @@ -2925,6 +2925,21 @@
-> > > DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0x10a1,
-> > >  			quirk_msi_intx_disable_qca_bug);
-> > >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0xe091,
-> > >  			quirk_msi_intx_disable_qca_bug);
-> > > +
-> > > +/*
-> > > + * Amazon's Annapurna Labs 1c36:0031 Root Ports don't support MSI-
-> > > X, so it
-> > > + * should be disabled on platforms where the device (mistakenly)
-> > > advertises it.
-> > > + *
-> > > + * The 0031 device id is reused for other non Root Port device
-> > > types,
-> > > + * therefore the quirk is registered for the PCI_CLASS_BRIDGE_PCI
-> > > class.
-> > > + */
-> > > +static void quirk_al_msi_disable(struct pci_dev *dev)
-> > > +{
-> > > +	dev->no_msi = 1;
-> > > +	pci_warn(dev, "Disabling MSI-X\n");
-> > 
-> > This will disable both MSI and MSI-X support - is this really the
-> > intention
-> > here? Do the root ports support MSI and legacy, or just legacy?
-> > 
-> The HW should support MSI, but we currently don't have a use case for
-> it so it hasn't been tested and therefore we are okay with disabling
-> it.
+Looks good.
 
-OK - then the commit message and comment (for quirk_al_msi_disable) should
-probably be updated to reflect this. Especially given that the device id
-may be used on other device types - implying that a use-case for this
-may later arise.
-
-> 
-> For future knowledge, how can just MSI-X be disabled?
-> I see that in pcie_port_enable_irq_vec(), the pcieport driver calls
-> pci_alloc_irq_vectors() with PCI_IRQ_MSIX | PCI_IRQ_MSI. And
-> internally, both __pci_enable_msix_range() and __pci_enable_msi_range()
-> use pci_msi_supported() which doesn't differentiate between MSI and
-> MSI-x.
-
-The documentation [1] would suggest that once upon a time pci_disable_msix
-was used - but now should let pci_alloc_irq_vectors cap the max number
-of vectors. However in your case it's the PCIe port driver that is attempting
-to allocate MSI-X's and so the solution isn't an obvious one.
-
-Setting dev->msix_enabled to false (i.e. through pci_disable_msix) would
-result in an un-necessary WARN_ON_ONCE. I think you'd need to ensure
-devi->msix_cap is NULL (which makes sense as your hardware shouldn't be
-exposing this capability).
-
-I guess the right way of achieving this would be through a quirk, though you'd
-be the first to do this and you'd have to ensure the quirk runs before
-anyone tests for msix_cap.
-
-That's my view, though others may have different suggestions.
-
-[1] Documentation/PCI/msi-howto.rst
-
-Thanks,
-
-Andrew Murray
-
-> 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> > > +}
-> > > +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS,
-> > > 0x0031,
-> > > +			      PCI_CLASS_BRIDGE_PCI, 8,
-> > > quirk_al_msi_disable);
-> > >  #endif /* CONFIG_PCI_MSI */
-> > >  
-> > >  /*
-> > > -- 
-> > > 2.17.1
-> > > 
+On 2019-08-19 9:39 p.m., Srinath Mannam wrote:
+> From: Abhinav Ratna <abhinav.ratna@broadcom.com>
+>
+> IPROC PAXB RC doesn't support ACS capabilities and control registers.
+> Add quirk to have separate IOMMU groups for all EPs and functions connected
+> to root port, by masking RR/CR/SV/UF bits.
+>
+> Signed-off-by: Abhinav Ratna <abhinav.ratna@broadcom.com>
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+Acked-by: Scott Branden <scott.branden@broadcom.com>
+> ---
+>   drivers/pci/quirks.c | 16 ++++++++++++++++
+>   1 file changed, 16 insertions(+)
+>
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 0f16acc..f9584c0 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4466,6 +4466,21 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
+>   	return acs_flags ? 0 : 1;
+>   }
+>   
+> +static int pcie_quirk_brcm_bridge_acs(struct pci_dev *dev, u16 acs_flags)
+> +{
+> +	/*
+> +	 * IPROC PAXB RC doesn't support ACS capabilities and control registers.
+> +	 * Add quirk to to have separate IOMMU groups for all EPs and functions
+> +	 * connected to root port, by masking RR/CR/SV/UF bits.
+> +	 */
+> +
+> +	u16 flags = (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV);
+> +	int ret = acs_flags & ~flags ? 0 : 1;
+> +
+> +	return ret;
+> +}
+> +
+> +
+>   static const struct pci_dev_acs_enabled {
+>   	u16 vendor;
+>   	u16 device;
+> @@ -4559,6 +4574,7 @@ static const struct pci_dev_acs_enabled {
+>   	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
+>   	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
+>   	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
+> +	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pcie_quirk_brcm_bridge_acs },
+>   	{ 0 }
+>   };
+>   
