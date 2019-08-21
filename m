@@ -2,153 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 291EE98054
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2019 18:39:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B268980D2
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2019 18:59:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729358AbfHUQjT convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 21 Aug 2019 12:39:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33608 "EHLO mx1.redhat.com"
+        id S1727205AbfHUQ72 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Aug 2019 12:59:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:33672 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727037AbfHUQjT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:39:19 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 63935315C007;
-        Wed, 21 Aug 2019 16:39:18 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B0A6810016E9;
-        Wed, 21 Aug 2019 16:39:17 +0000 (UTC)
-Date:   Wed, 21 Aug 2019 10:39:17 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     hexin <hexin.op@gmail.com>
-Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hexin <hexin15@baidu.com>,
-        Liu Qi <liuqi16@baidu.com>, Zhang Yu <zhangyu31@baidu.com>
-Subject: Re: [PATCH v2] vfio_pci: Replace pci_try_reset_function() with
- __pci_reset_function_locked() to ensure that the pci device configuration
- space is restored to its original state
-Message-ID: <20190821103917.43487a1d@x1.home>
-In-Reply-To: <CAB_WELYZ80FHyjkcXj4WvBVx-N-3ZMURN3OXTqqbELVn90157g@mail.gmail.com>
-References: <1566042663-16694-1-git-send-email-hexin15@baidu.com>
-        <20190819135318.72f64e0d@x1.home>
-        <CAB_WELYZ80FHyjkcXj4WvBVx-N-3ZMURN3OXTqqbELVn90157g@mail.gmail.com>
-Organization: Red Hat
+        id S1726252AbfHUQ72 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 21 Aug 2019 12:59:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86E70337;
+        Wed, 21 Aug 2019 09:59:27 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9D0933F718;
+        Wed, 21 Aug 2019 09:59:26 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 17:59:22 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, l.subrahmanya@mobiveil.co.in,
+        leoyang.li@nxp.com
+Subject: Re: [PATCHv7] PCI: mobiveil: Fix the CPU base address setup in
+ inbound window
+Message-ID: <20190821165922.GA3915@e121166-lin.cambridge.arm.com>
+References: <20190713141129.32249-1-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 21 Aug 2019 16:39:18 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190713141129.32249-1-Zhiqiang.Hou@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 21 Aug 2019 23:13:08 +0800
-hexin <hexin.op@gmail.com> wrote:
-
-> Alex Williamson <alex.williamson@redhat.com> 于2019年8月20日周二 上午3:53写道：
-> >
-> > On Sat, 17 Aug 2019 19:51:03 +0800
-> > hexin <hexin.op@gmail.com> wrote:
-> >  
-> > > In vfio_pci_enable(), save the device's initial configuration information
-> > > and then restore the configuration in vfio_pci_disable(). However, the
-> > > execution result is not the same. Since the pci_try_reset_function()
-> > > function saves the current state before resetting, the configuration
-> > > information restored by pci_load_and_free_saved_state() will be
-> > > overwritten. The __pci_reset_function_locked() function can be used
-> > > to prevent the configuration space from being overwritten.
-> > >
-> > > Fixes: 890ed578df82 ("vfio-pci: Use pci "try" reset interface")
-> > > Signed-off-by: hexin <hexin15@baidu.com>
-> > > Signed-off-by: Liu Qi <liuqi16@baidu.com>
-> > > Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
-> > > ---
-> > >  drivers/vfio/pci/vfio_pci.c | 17 +++++++++++++----
-> > >  1 file changed, 13 insertions(+), 4 deletions(-)  
-> >
-> > This looks good, but the subject is too long and I find the commit log
-> > somewhat confusing.  May I update these as follows?
-> >
-> >     vfio_pci: Restore original state on release
-> >
-> >     vfio_pci_enable() saves the device's initial configuration information
-> >     with the intent that it is restored in vfio_pci_disable().  However,
-> >     commit 890ed578df82 ("vfio-pci: Use pci "try" reset interface")
-> >     replaced the call to __pci_reset_function_locked(), which is not wrapped
-> >     in a state save and restore, with pci_try_reset_function(), which
-> >     overwrites the restored device state with the current state before
-> >     applying it to the device.  Restore use of __pci_reset_function_locked()
-> >     to return to the desired behavior.
-> >
-> > Thanks,
-> > Alex
-> >
-> >  
+On Sat, Jul 13, 2019 at 10:11:29PM +0800, Hou Zhiqiang wrote:
+> The current code erroneously sets-up the CPU base address with
+> parameter 'pci_addr', which is passed to initialize the PCI
+> base address of the inbound window, and the upper 32-bit of the
+> CPU base address of the inbound window is not initialized. This
+> results in the current code only support 1:1 inbound window
+> with limitation that the base address must be < 4GB.
 > 
-> Thanks for your update, the updated commit log is clearer than before.
-> At the same time, when I use checkpatch.pl to detect the patch, there
-> will be the
-> following error:
+> This patch introduces a new parameter 'u64 cpu_addr' to initialize
+> both lower 32-bit and upper 32-bit of the CPU base address to make
+> it can support non 1:1 inbound window and fix the base address must
+> be < 4GB limitation.
 > 
-> ERROR: Please use git commit description style 'commit <12+ chars of
-> sha1> ("<title line>")'  
-> - ie: 'commit 890ed578df82 ("vfio-pci: Use pci "try" reset interface")'
+> Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> ---
+> V7:
+>  - This patch is #25 of V6 patches, rewrote the changelog.
 > 
-> Line 2785 ~ 2801 in checkpatch.pl, the script can't handle the commit message
-> which contains double quotes because of the expression `([^"]+)`. Like
-> the "try" above.
-> Maybe checkpatch.pl needs to be modified.
+>  drivers/pci/controller/pcie-mobiveil.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
 
-I think we're following the intention of the rule, and as you've
-identified it's the implementation of the rule checker that's unable
-to handle a commit title with internal quotes.  We can ignore it, and
-maybe follow up with a checkpatch.pl patch, or we could just avoid it
-as follows:
+Applied to pci/mobiveil for v5.4, thanks.
 
-    vfio_pci: Restore original state on release
-    
-    vfio_pci_enable() saves the device's initial configuration information
-    with the intent that it is restored in vfio_pci_disable().  However,
-    the commit referenced in Fixes: below replaced the call to
-    __pci_reset_function_locked(), which is not wrapped in a state save
-    and restore, with pci_try_reset_function(), which overwrites the
-    restored device state with the current state before applying it to the
-    device.  Reinstate use of __pci_reset_function_locked() to return to
-    the desired behavior.
+Lorenzo
 
-Thanks,
-Alex
-
-> > > diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> > > index 703948c..0220616 100644
-> > > --- a/drivers/vfio/pci/vfio_pci.c
-> > > +++ b/drivers/vfio/pci/vfio_pci.c
-> > > @@ -438,11 +438,20 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
-> > >       pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
-> > >
-> > >       /*
-> > > -      * Try to reset the device.  The success of this is dependent on
-> > > -      * being able to lock the device, which is not always possible.
-> > > +      * Try to get the locks ourselves to prevent a deadlock. The
-> > > +      * success of this is dependent on being able to lock the device,
-> > > +      * which is not always possible.
-> > > +      * We can not use the "try" reset interface here, which will
-> > > +      * overwrite the previously restored configuration information.
-> > >        */
-> > > -     if (vdev->reset_works && !pci_try_reset_function(pdev))
-> > > -             vdev->needs_reset = false;
-> > > +     if (vdev->reset_works && pci_cfg_access_trylock(pdev)) {
-> > > +             if (device_trylock(&pdev->dev)) {
-> > > +                     if (!__pci_reset_function_locked(pdev))
-> > > +                             vdev->needs_reset = false;
-> > > +                     device_unlock(&pdev->dev);
-> > > +             }
-> > > +             pci_cfg_access_unlock(pdev);
-> > > +     }
-> > >
-> > >       pci_restore_state(pdev);
-> > >  out:  
-> >  
-
+> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+> index 672e633..a45a644 100644
+> --- a/drivers/pci/controller/pcie-mobiveil.c
+> +++ b/drivers/pci/controller/pcie-mobiveil.c
+> @@ -88,6 +88,7 @@
+>  #define  AMAP_CTRL_TYPE_MASK		3
+>  
+>  #define PAB_EXT_PEX_AMAP_SIZEN(win)	PAB_EXT_REG_ADDR(0xbef0, win)
+> +#define PAB_EXT_PEX_AMAP_AXI_WIN(win)	PAB_EXT_REG_ADDR(0xb4a0, win)
+>  #define PAB_PEX_AMAP_AXI_WIN(win)	PAB_REG_ADDR(0x4ba4, win)
+>  #define PAB_PEX_AMAP_PEX_WIN_L(win)	PAB_REG_ADDR(0x4ba8, win)
+>  #define PAB_PEX_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR(0x4bac, win)
+> @@ -462,7 +463,7 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
+>  }
+>  
+>  static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+> -			       u64 pci_addr, u32 type, u64 size)
+> +			       u64 cpu_addr, u64 pci_addr, u32 type, u64 size)
+>  {
+>  	u32 value;
+>  	u64 size64 = ~(size - 1);
+> @@ -482,7 +483,10 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+>  	csr_writel(pcie, upper_32_bits(size64),
+>  		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
+>  
+> -	csr_writel(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
+> +	csr_writel(pcie, lower_32_bits(cpu_addr),
+> +		   PAB_PEX_AMAP_AXI_WIN(win_num));
+> +	csr_writel(pcie, upper_32_bits(cpu_addr),
+> +		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
+>  
+>  	csr_writel(pcie, lower_32_bits(pci_addr),
+>  		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
+> @@ -624,7 +628,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>  			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
+>  
+>  	/* memory inbound translation window */
+> -	program_ib_windows(pcie, WIN_NUM_0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
+> +	program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
+>  
+>  	/* Get the I/O and memory ranges from DT */
+>  	resource_list_for_each_entry(win, &pcie->resources) {
+> -- 
+> 2.9.5
+> 
