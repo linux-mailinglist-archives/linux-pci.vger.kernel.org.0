@@ -2,68 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B8FB4977C4
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2019 13:12:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C694C978BE
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2019 14:01:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbfHULMX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Aug 2019 07:12:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:56030 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbfHULMX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 21 Aug 2019 07:12:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 26A2928;
-        Wed, 21 Aug 2019 04:12:23 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5861D3F246;
-        Wed, 21 Aug 2019 04:12:22 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 12:12:17 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Cc:     songxiaowei@hisilicon.com, wangbinghui@hisilicon.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: kirin: Make structure kirin_dw_pcie_ops constant
-Message-ID: <20190821111217.GA30487@e121166-lin.cambridge.arm.com>
-References: <20190819073946.32458-1-nishkadg.linux@gmail.com>
+        id S1726749AbfHUMB2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Aug 2019 08:01:28 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:51807 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfHUMB2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Aug 2019 08:01:28 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i0PIq-0006W5-Lf; Wed, 21 Aug 2019 12:01:25 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Vidya Sagar <vidyas@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] PCI: tegra: tegra194: fix phy_count less than zero check
+Date:   Wed, 21 Aug 2019 13:01:23 +0100
+Message-Id: <20190821120123.14223-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819073946.32458-1-nishkadg.linux@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 01:09:46PM +0530, Nishka Dasgupta wrote:
-> Static variable kirin_dw_pcie_ops, of type dw_pcie_ops, is used only
-> once, when it is assigned to the constant field ops of variable pci
-> (having type dw_pcie). Hence kirin_dw_pcie_ops is never modified.
-> Therefore, make it constant to protect it from unintended modification.
-> Issue found with Coccinelle.
-> 
-> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
-> ---
->  drivers/pci/controller/dwc/pcie-kirin.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+From: Colin Ian King <colin.king@canonical.com>
 
-Applied to pci/dwc for v5.4, thanks.
+The check for pcie->phy_count < 0 is always false because phy_count
+is an unsigned int and can never be less than zero. Fix this by
+assigning ret to the return from of_property_count_strings and
+checking if this is less than zero instead.
 
-Lorenzo
+Addresses-Coverity: ("Dead code")
+Fixes: 6404441c8e13 ("PCI: tegra: Add Tegra194 PCIe support")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/pci/controller/dwc/pcie-tegra194.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-> index 8df1914226be..c19617a912bd 100644
-> --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> @@ -436,7 +436,7 @@ static int kirin_pcie_host_init(struct pcie_port *pp)
->  	return 0;
->  }
->  
-> -static struct dw_pcie_ops kirin_dw_pcie_ops = {
-> +static const struct dw_pcie_ops kirin_dw_pcie_ops = {
->  	.read_dbi = kirin_pcie_read_dbi,
->  	.write_dbi = kirin_pcie_write_dbi,
->  	.link_up = kirin_pcie_link_up,
-> -- 
-> 2.19.1
-> 
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index fc0dbeb31d78..b47ea3e68303 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -969,12 +969,13 @@ static int tegra_pcie_dw_parse_dt(struct tegra_pcie_dw *pcie)
+ 		return ret;
+ 	}
+ 
+-	pcie->phy_count = of_property_count_strings(np, "phy-names");
+-	if (pcie->phy_count < 0) {
++	ret = of_property_count_strings(np, "phy-names");
++	if (ret < 0) {
+ 		dev_err(pcie->dev, "Failed to find PHY entries: %d\n",
+-			pcie->phy_count);
+-		return pcie->phy_count;
++			ret);
++		return ret;
+ 	}
++	pcie->phy_count = ret;
+ 
+ 	if (of_property_read_bool(np, "nvidia,update-fc-fixup"))
+ 		pcie->update_fc_fixup = true;
+-- 
+2.20.1
+
