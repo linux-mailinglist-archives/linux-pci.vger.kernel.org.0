@@ -2,111 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B268980D2
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2019 18:59:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DA9C98279
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2019 20:14:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfHUQ72 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Aug 2019 12:59:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:33672 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726252AbfHUQ72 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:59:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86E70337;
-        Wed, 21 Aug 2019 09:59:27 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9D0933F718;
-        Wed, 21 Aug 2019 09:59:26 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 17:59:22 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com, l.subrahmanya@mobiveil.co.in,
-        leoyang.li@nxp.com
-Subject: Re: [PATCHv7] PCI: mobiveil: Fix the CPU base address setup in
- inbound window
-Message-ID: <20190821165922.GA3915@e121166-lin.cambridge.arm.com>
-References: <20190713141129.32249-1-Zhiqiang.Hou@nxp.com>
+        id S1726802AbfHUSOX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Aug 2019 14:14:23 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39284 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfHUSOW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Aug 2019 14:14:22 -0400
+Received: by mail-wr1-f65.google.com with SMTP id t16so2932835wra.6
+        for <linux-pci@vger.kernel.org>; Wed, 21 Aug 2019 11:14:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=KPEd3xKNdQ7XpPaQERMC0lbJMBtjmYGl6YTcFqi/auY=;
+        b=NaDLTAf2+ywWMjZpS0O54SolNJckVQJg9PS9IOTzGrHCaZ+0LfhartEc7KVZZJo3F/
+         mIwUzycSMftIiirX3WNyCfDacNV5HdST/9kjQ+eKbjAvhlUZbJRTgVYfec8+OjUFXsH/
+         TZMexRbpdkOFvjo+FcTwf+8sXAG+NrS8TkV3YwkoMb7Dhef64K89Nlt3Lq91+2FELCc8
+         KU5o3HKgcxZ2yDwMut/egUM4/mNL5ACuF/k+9URwcFMTFBq3WYBzf1OlTarRTor9NfVK
+         itQ0QmeeD+sD1xwxPLrigu21fTj0hjSbyE8qi7jOud5j1KikUgKVnX2Js2RvYxi/3jzH
+         KXHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=KPEd3xKNdQ7XpPaQERMC0lbJMBtjmYGl6YTcFqi/auY=;
+        b=RQr6S7XGuppLoFmfr/H3XNUfoMzRcyGtUZ8ULtc8skkCyb5/moMLGeIhH5u66ktIB2
+         xB/QPcbvYZtPMTGhDY4lQ4SAQewdQyY3yhogURD/InF8LWlw0dixmTNqzjuQ0Cc2mEoY
+         IYRG9HFxtLTNRALNXP4TggwMjAH2J5GY0KAYhnJTRQ1IfN4RImI8li/VSlMMyrsR1IPO
+         Hrx4KJTO6RaO7QqPFFwp41USmSQO5rXmDUEr+sQ7t2eCPC4u3ObZd1r3+FZtINrtFukN
+         cgmI6ZxZf1K/OSgkVyw7buzFGS5ryjEoGo+cTEWArMFFHLupClfX4G2Kc3yFt8g+EApY
+         mM2A==
+X-Gm-Message-State: APjAAAXj5N44zz5aMnVe3Ut7UHOM7fUVUa+urb5jkMZD8erLUqN2/iJS
+        mgitrZwQnmQIFdI7G6Ck5iQuePL/
+X-Google-Smtp-Source: APXvYqxG3jcUX6Z82beM70sqKZC+ktJbc7xTTEHqprr/YunBud5HcbqJQilonFd0WeGrJ79SS5s8Ug==
+X-Received: by 2002:adf:fe85:: with SMTP id l5mr40053050wrr.5.1566411260632;
+        Wed, 21 Aug 2019 11:14:20 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f04:7c00:3d5d:5315:9e29:1daf? (p200300EA8F047C003D5D53159E291DAF.dip0.t-ipconnect.de. [2003:ea:8f04:7c00:3d5d:5315:9e29:1daf])
+        by smtp.googlemail.com with ESMTPSA id f17sm1305062wmj.27.2019.08.21.11.14.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 21 Aug 2019 11:14:19 -0700 (PDT)
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH v2 0/3] PCI/ASPM: add sysfs attributes for controlling ASPM
+To:     Frederick Lawler <fred@fredlawl.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Rajat Jain <rajatja@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Message-ID: <b4b1518a-d0e8-9534-5211-115107e770e1@gmail.com>
+Date:   Wed, 21 Aug 2019 20:14:13 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190713141129.32249-1-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 10:11:29PM +0800, Hou Zhiqiang wrote:
-> The current code erroneously sets-up the CPU base address with
-> parameter 'pci_addr', which is passed to initialize the PCI
-> base address of the inbound window, and the upper 32-bit of the
-> CPU base address of the inbound window is not initialized. This
-> results in the current code only support 1:1 inbound window
-> with limitation that the base address must be < 4GB.
-> 
-> This patch introduces a new parameter 'u64 cpu_addr' to initialize
-> both lower 32-bit and upper 32-bit of the CPU base address to make
-> it can support non 1:1 inbound window and fix the base address must
-> be < 4GB limitation.
-> 
-> Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> ---
-> V7:
->  - This patch is #25 of V6 patches, rewrote the changelog.
-> 
->  drivers/pci/controller/pcie-mobiveil.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
+Background of this extension is a problem with the r8169 network driver.
+Several combinations of board chipsets and network chip versions have
+problems if ASPM is enabled, therefore we have to disable ASPM per
+default. However especially on notebooks ASPM can provide significant
+power-saving, therefore we want to give users the option to enable
+ASPM. With the new sysfs attributes users can control which ASPM
+link-states are disabled.
 
-Applied to pci/mobiveil for v5.4, thanks.
+v2:
+- use a dedicated sysfs attribute per link state
+- allow separate control of ASPM and PCI PM L1 sub-states
 
-Lorenzo
+Heiner Kallweit (3):
+  PCI/ASPM: add L1 sub-state support to pci_disable_link_state
+  PCI/ASPM: allow to re-enable Clock PM
+  PCI/ASPM: add sysfs attributes for controlling ASPM
 
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index 672e633..a45a644 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -88,6 +88,7 @@
->  #define  AMAP_CTRL_TYPE_MASK		3
->  
->  #define PAB_EXT_PEX_AMAP_SIZEN(win)	PAB_EXT_REG_ADDR(0xbef0, win)
-> +#define PAB_EXT_PEX_AMAP_AXI_WIN(win)	PAB_EXT_REG_ADDR(0xb4a0, win)
->  #define PAB_PEX_AMAP_AXI_WIN(win)	PAB_REG_ADDR(0x4ba4, win)
->  #define PAB_PEX_AMAP_PEX_WIN_L(win)	PAB_REG_ADDR(0x4ba8, win)
->  #define PAB_PEX_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR(0x4bac, win)
-> @@ -462,7 +463,7 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
->  }
->  
->  static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
-> -			       u64 pci_addr, u32 type, u64 size)
-> +			       u64 cpu_addr, u64 pci_addr, u32 type, u64 size)
->  {
->  	u32 value;
->  	u64 size64 = ~(size - 1);
-> @@ -482,7 +483,10 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
->  	csr_writel(pcie, upper_32_bits(size64),
->  		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
->  
-> -	csr_writel(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
-> +	csr_writel(pcie, lower_32_bits(cpu_addr),
-> +		   PAB_PEX_AMAP_AXI_WIN(win_num));
-> +	csr_writel(pcie, upper_32_bits(cpu_addr),
-> +		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
->  
->  	csr_writel(pcie, lower_32_bits(pci_addr),
->  		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
-> @@ -624,7 +628,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
->  			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
->  
->  	/* memory inbound translation window */
-> -	program_ib_windows(pcie, WIN_NUM_0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
-> +	program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
->  
->  	/* Get the I/O and memory ranges from DT */
->  	resource_list_for_each_entry(win, &pcie->resources) {
-> -- 
-> 2.9.5
-> 
+ Documentation/ABI/testing/sysfs-bus-pci |  13 ++
+ drivers/pci/pci.h                       |   8 +-
+ drivers/pci/pcie/aspm.c                 | 292 +++++++++++++++++++++++-
+ include/linux/pci-aspm.h                |  10 +-
+ 4 files changed, 304 insertions(+), 19 deletions(-)
+
+-- 
+2.23.0
+
