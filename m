@@ -2,128 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A051097F55
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2019 17:49:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 291EE98054
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2019 18:39:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728844AbfHUPsZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Aug 2019 11:48:25 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:62916 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728840AbfHUPsY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Aug 2019 11:48:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1566402504; x=1597938504;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=sNQOZhJUfbz+nC7+KNBC3O+NbzfXKJgSiWivUBW5VoI=;
-  b=FWFJ4Bai+EpJzhnh5LgUCeDRIj6YxMOWk7vJxLOMUavZXFqqQ2L0N2a2
-   6HsK4iKRqzTCjKPe5KIRlm/R2ZNtwPJTQRsMT4WbY7EInynRxpXPi8iuK
-   j+syS+xl4e2pnFiANmL4OHJC8pZHYKOunYhpd+39I/xgla93BIAnoERid
-   0=;
-X-IronPort-AV: E=Sophos;i="5.64,412,1559520000"; 
-   d="scan'208";a="822280226"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 21 Aug 2019 15:48:21 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id 7648AA2680;
-        Wed, 21 Aug 2019 15:48:17 +0000 (UTC)
-Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 21 Aug 2019 15:48:17 +0000
-Received: from u9ff250417f405e.ant.amazon.com (10.43.161.230) by
- EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 21 Aug 2019 15:48:10 +0000
-From:   Jonathan Chocron <jonnyc@amazon.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <andrew.murray@arm.com>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>, <alisaidi@amazon.com>,
-        <ronenk@amazon.com>, <barakw@amazon.com>, <talel@amazon.com>,
-        <hanochu@amazon.com>, <hhhawa@amazon.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
-Subject: [PATCH v4 7/7] PCI: dwc: Add validation that PCIe core is set to correct mode
-Date:   Wed, 21 Aug 2019 18:47:45 +0300
-Message-ID: <20190821154745.31834-3-jonnyc@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190821153545.17635-1-jonnyc@amazon.com>
-References: <20190821153545.17635-1-jonnyc@amazon.com>
+        id S1729358AbfHUQjT convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 21 Aug 2019 12:39:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33608 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727037AbfHUQjT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 21 Aug 2019 12:39:19 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 63935315C007;
+        Wed, 21 Aug 2019 16:39:18 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B0A6810016E9;
+        Wed, 21 Aug 2019 16:39:17 +0000 (UTC)
+Date:   Wed, 21 Aug 2019 10:39:17 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     hexin <hexin.op@gmail.com>
+Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hexin <hexin15@baidu.com>,
+        Liu Qi <liuqi16@baidu.com>, Zhang Yu <zhangyu31@baidu.com>
+Subject: Re: [PATCH v2] vfio_pci: Replace pci_try_reset_function() with
+ __pci_reset_function_locked() to ensure that the pci device configuration
+ space is restored to its original state
+Message-ID: <20190821103917.43487a1d@x1.home>
+In-Reply-To: <CAB_WELYZ80FHyjkcXj4WvBVx-N-3ZMURN3OXTqqbELVn90157g@mail.gmail.com>
+References: <1566042663-16694-1-git-send-email-hexin15@baidu.com>
+        <20190819135318.72f64e0d@x1.home>
+        <CAB_WELYZ80FHyjkcXj4WvBVx-N-3ZMURN3OXTqqbELVn90157g@mail.gmail.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.230]
-X-ClientProxiedBy: EX13D12UWA002.ant.amazon.com (10.43.160.88) To
- EX13D13UWA001.ant.amazon.com (10.43.160.136)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 21 Aug 2019 16:39:18 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Some PCIe controllers can be set to either Host or EP according to some
-early boot FW. To make sure there is no discrepancy (e.g. FW configured
-the port to EP mode while the DT specifies it as a host bridge or vice
-versa), a check has been added for each mode.
+On Wed, 21 Aug 2019 23:13:08 +0800
+hexin <hexin.op@gmail.com> wrote:
 
-Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
- drivers/pci/controller/dwc/pcie-designware-ep.c   | 8 ++++++++
- drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
- 2 files changed, 16 insertions(+)
+> Alex Williamson <alex.williamson@redhat.com> 于2019年8月20日周二 上午3:53写道：
+> >
+> > On Sat, 17 Aug 2019 19:51:03 +0800
+> > hexin <hexin.op@gmail.com> wrote:
+> >  
+> > > In vfio_pci_enable(), save the device's initial configuration information
+> > > and then restore the configuration in vfio_pci_disable(). However, the
+> > > execution result is not the same. Since the pci_try_reset_function()
+> > > function saves the current state before resetting, the configuration
+> > > information restored by pci_load_and_free_saved_state() will be
+> > > overwritten. The __pci_reset_function_locked() function can be used
+> > > to prevent the configuration space from being overwritten.
+> > >
+> > > Fixes: 890ed578df82 ("vfio-pci: Use pci "try" reset interface")
+> > > Signed-off-by: hexin <hexin15@baidu.com>
+> > > Signed-off-by: Liu Qi <liuqi16@baidu.com>
+> > > Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+> > > ---
+> > >  drivers/vfio/pci/vfio_pci.c | 17 +++++++++++++----
+> > >  1 file changed, 13 insertions(+), 4 deletions(-)  
+> >
+> > This looks good, but the subject is too long and I find the commit log
+> > somewhat confusing.  May I update these as follows?
+> >
+> >     vfio_pci: Restore original state on release
+> >
+> >     vfio_pci_enable() saves the device's initial configuration information
+> >     with the intent that it is restored in vfio_pci_disable().  However,
+> >     commit 890ed578df82 ("vfio-pci: Use pci "try" reset interface")
+> >     replaced the call to __pci_reset_function_locked(), which is not wrapped
+> >     in a state save and restore, with pci_try_reset_function(), which
+> >     overwrites the restored device state with the current state before
+> >     applying it to the device.  Restore use of __pci_reset_function_locked()
+> >     to return to the desired behavior.
+> >
+> > Thanks,
+> > Alex
+> >
+> >  
+> 
+> Thanks for your update, the updated commit log is clearer than before.
+> At the same time, when I use checkpatch.pl to detect the patch, there
+> will be the
+> following error:
+> 
+> ERROR: Please use git commit description style 'commit <12+ chars of
+> sha1> ("<title line>")'  
+> - ie: 'commit 890ed578df82 ("vfio-pci: Use pci "try" reset interface")'
+> 
+> Line 2785 ~ 2801 in checkpatch.pl, the script can't handle the commit message
+> which contains double quotes because of the expression `([^"]+)`. Like
+> the "try" above.
+> Maybe checkpatch.pl needs to be modified.
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 2bf5a35c0570..00e59a134b93 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -531,6 +531,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	int ret;
- 	u32 reg;
- 	void *addr;
-+	u8 hdr_type;
- 	unsigned int nbars;
- 	unsigned int offset;
- 	struct pci_epc *epc;
-@@ -543,6 +544,13 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 		return -EINVAL;
- 	}
- 
-+	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-+	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
-+		dev_err(pci->dev, "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
-+			hdr_type);
-+		return -EIO;
-+	}
-+
- 	ret = of_property_read_u32(np, "num-ib-windows", &ep->num_ib_windows);
- 	if (ret < 0) {
- 		dev_err(dev, "Unable to read *num-ib-windows* property\n");
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index f93252d0da5b..d2ca748e4c85 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -323,6 +323,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	struct pci_bus *child;
- 	struct pci_host_bridge *bridge;
- 	struct resource *cfg_res;
-+	u8 hdr_type;
- 	int ret;
- 
- 	raw_spin_lock_init(&pci->pp.lock);
-@@ -396,6 +397,13 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 		}
- 	}
- 
-+	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-+	if (hdr_type != PCI_HEADER_TYPE_BRIDGE) {
-+		dev_err(pci->dev, "PCIe controller is not set to bridge type (hdr_type: 0x%x)!\n",
-+			hdr_type);
-+		return -EIO;
-+	}
-+
- 	pp->mem_base = pp->mem->start;
- 
- 	if (!pp->va_cfg0_base) {
--- 
-2.17.1
+I think we're following the intention of the rule, and as you've
+identified it's the implementation of the rule checker that's unable
+to handle a commit title with internal quotes.  We can ignore it, and
+maybe follow up with a checkpatch.pl patch, or we could just avoid it
+as follows:
+
+    vfio_pci: Restore original state on release
+    
+    vfio_pci_enable() saves the device's initial configuration information
+    with the intent that it is restored in vfio_pci_disable().  However,
+    the commit referenced in Fixes: below replaced the call to
+    __pci_reset_function_locked(), which is not wrapped in a state save
+    and restore, with pci_try_reset_function(), which overwrites the
+    restored device state with the current state before applying it to the
+    device.  Reinstate use of __pci_reset_function_locked() to return to
+    the desired behavior.
+
+Thanks,
+Alex
+
+> > > diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> > > index 703948c..0220616 100644
+> > > --- a/drivers/vfio/pci/vfio_pci.c
+> > > +++ b/drivers/vfio/pci/vfio_pci.c
+> > > @@ -438,11 +438,20 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
+> > >       pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
+> > >
+> > >       /*
+> > > -      * Try to reset the device.  The success of this is dependent on
+> > > -      * being able to lock the device, which is not always possible.
+> > > +      * Try to get the locks ourselves to prevent a deadlock. The
+> > > +      * success of this is dependent on being able to lock the device,
+> > > +      * which is not always possible.
+> > > +      * We can not use the "try" reset interface here, which will
+> > > +      * overwrite the previously restored configuration information.
+> > >        */
+> > > -     if (vdev->reset_works && !pci_try_reset_function(pdev))
+> > > -             vdev->needs_reset = false;
+> > > +     if (vdev->reset_works && pci_cfg_access_trylock(pdev)) {
+> > > +             if (device_trylock(&pdev->dev)) {
+> > > +                     if (!__pci_reset_function_locked(pdev))
+> > > +                             vdev->needs_reset = false;
+> > > +                     device_unlock(&pdev->dev);
+> > > +             }
+> > > +             pci_cfg_access_unlock(pdev);
+> > > +     }
+> > >
+> > >       pci_restore_state(pdev);
+> > >  out:  
+> >  
 
