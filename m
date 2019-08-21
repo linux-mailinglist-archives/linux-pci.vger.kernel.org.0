@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E4C097EDF
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2019 17:38:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 571B997EE2
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2019 17:38:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729987AbfHUPgX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Aug 2019 11:36:23 -0400
+        id S1730007AbfHUPg2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Aug 2019 11:36:28 -0400
 Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:6724 "EHLO
         smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728454AbfHUPgX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Aug 2019 11:36:23 -0400
+        with ESMTP id S1730002AbfHUPg1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Aug 2019 11:36:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1566401782; x=1597937782;
+  t=1566401787; x=1597937787;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=1lQKq3hxKQkr7WB4YDlui/W/5OP1jSDsOKg2GvSonVs=;
-  b=RMP6xjhCkoAbQk1iS8UXgfW9YBV1N2nP4FYxdgLrNmrVDMhx21+VwqPQ
-   n7PfUJw2ihFLT0ajcKX9dJsS4aP32I8T1J3NSplrxjR0rXKcV6hKrbKX2
-   bWG4gRzHW9TcTZ0OWYCw2q00nTQsGhl/7tkUYp7WGDIWlrKngD2VaTWbQ
+  bh=yPw/cZErk19SmOK/njpJRQGVQoT+U5XdF/Qgj3DD9Ng=;
+  b=T8VaTM7ECgAGDj6A8BiqPsq7XG22eBpKOsoPZmNpM/10+tQLj+bqR5MR
+   VFj53SFMzLcBypd3VDife5DnSIYVJXae6Wr5KziqWoiSLby9MaFHLZ9mt
+   zYZVS4HrEm9PcZk5xAiA5umWJ4MgHqymTEA2E09Mnqlb/tbE0HAZUufHo
    8=;
 X-IronPort-AV: E=Sophos;i="5.64,412,1559520000"; 
-   d="scan'208";a="822276216"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 21 Aug 2019 15:36:20 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com (Postfix) with ESMTPS id 9527DC5D92;
-        Wed, 21 Aug 2019 15:36:19 +0000 (UTC)
+   d="scan'208";a="822276236"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 21 Aug 2019 15:36:26 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (Postfix) with ESMTPS id DCF84A28F4;
+        Wed, 21 Aug 2019 15:36:25 +0000 (UTC)
 Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
  EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 21 Aug 2019 15:36:19 +0000
+ id 15.0.1367.3; Wed, 21 Aug 2019 15:36:25 +0000
 Received: from u9ff250417f405e.ant.amazon.com (10.43.160.100) by
  EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 21 Aug 2019 15:36:13 +0000
+ id 15.0.1367.3; Wed, 21 Aug 2019 15:36:19 +0000
 From:   Jonathan Chocron <jonnyc@amazon.com>
 To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
         <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
@@ -44,9 +44,9 @@ CC:     <andrew.murray@arm.com>, <dwmw@amazon.co.uk>,
         <hanochu@amazon.com>, <hhhawa@amazon.com>,
         <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
-Subject: [PATCH v4 2/7] PCI: Add ACS quirk for Amazon Annapurna Labs root ports
-Date:   Wed, 21 Aug 2019 18:35:42 +0300
-Message-ID: <20190821153545.17635-3-jonnyc@amazon.com>
+Subject: [PATCH v4 3/7] PCI/VPD: Add VPD release quirk for Amazon's Annapurna Labs Root Port
+Date:   Wed, 21 Aug 2019 18:35:43 +0300
+Message-ID: <20190821153545.17635-4-jonnyc@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190821153545.17635-1-jonnyc@amazon.com>
 References: <20190821153545.17635-1-jonnyc@amazon.com>
@@ -60,57 +60,49 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Ali Saidi <alisaidi@amazon.com>
+The Amazon Annapurna Labs PCIe Root Port exposes the VPD capability,
+but there is no actual support for it.
 
-The Amazon's Annapurna Labs root ports don't advertise an ACS
-capability, but they don't allow peer-to-peer transactions and do
-validate bus numbers through the SMMU. Additionally, it's not possible
-for one RP to pass traffic to another RP.
+The reason for not using the already existing quirk_blacklist_vpd()
+is that, although this fails pci_vpd_read/write, the 'vpd' sysfs
+entry still exists. When running lspci -vv, for example, this
+results in the following error:
 
-Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+pcilib: sysfs_read_vpd: read failed: Input/output error
+
+This quirk removes the sysfs entry, which avoids the error print.
+
 Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
 Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 ---
- drivers/pci/quirks.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/pci/vpd.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 208aacf39329..23672680dba7 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4366,6 +4366,23 @@ static int pci_quirk_qcom_rp_acs(struct pci_dev *dev, u16 acs_flags)
- 	return ret;
- }
+diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+index 4963c2e2bd4c..c23a8ec08db9 100644
+--- a/drivers/pci/vpd.c
++++ b/drivers/pci/vpd.c
+@@ -644,4 +644,20 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+ 			quirk_chelsio_extend_vpd);
  
-+static int pci_quirk_al_acs(struct pci_dev *dev, u16 acs_flags)
++static void quirk_al_vpd_release(struct pci_dev *dev)
 +{
-+	/*
-+	 * Amazon's Annapurna Labs root ports don't include an ACS capability,
-+	 * but do include ACS-like functionality. The hardware doesn't support
-+	 * peer-to-peer transactions via the root port and each has a unique
-+	 * segment number.
-+	 * Additionally, the root ports cannot send traffic to each other.
-+	 */
-+	acs_flags &= ~(PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_SV | PCI_ACS_UF);
-+
-+	if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
-+		return -ENOTTY;
-+
-+	return acs_flags ? 0 : 1;
++	if (dev->vpd) {
++		pci_vpd_release(dev);
++		dev->vpd = NULL;
++		pci_warn(dev, FW_BUG "Releasing VPD capability (No support for VPD read/write transactions)\n");
++	}
 +}
 +
- /*
-  * Sunrise Point PCH root ports implement ACS, but unfortunately as shown in
-  * the datasheet (Intel 100 Series Chipset Family PCH Datasheet, Vol. 2,
-@@ -4559,6 +4576,8 @@ static const struct pci_dev_acs_enabled {
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
-+	/* Amazon Annapurna Labs */
-+	{ PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031, pci_quirk_al_acs },
- 	{ 0 }
- };
- 
++/*
++ * The 0031 device id is reused for other non Root Port device types,
++ * therefore the quirk is registered for the PCI_CLASS_BRIDGE_PCI class.
++ */
++DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031,
++			      PCI_CLASS_BRIDGE_PCI, 8, quirk_al_vpd_release);
++
+ #endif
 -- 
 2.17.1
 
