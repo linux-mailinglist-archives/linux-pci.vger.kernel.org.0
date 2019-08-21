@@ -2,108 +2,230 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 17C6497355
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2019 09:28:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30ED697685
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2019 11:57:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbfHUH2i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Aug 2019 03:28:38 -0400
-Received: from mga17.intel.com ([192.55.52.151]:9558 "EHLO mga17.intel.com"
+        id S1726916AbfHUJ42 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Aug 2019 05:56:28 -0400
+Received: from mga11.intel.com ([192.55.52.93]:35050 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727478AbfHUH2i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 21 Aug 2019 03:28:38 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1726869AbfHUJ42 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 21 Aug 2019 05:56:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 00:28:37 -0700
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 02:56:27 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,411,1559545200"; 
-   d="scan'208";a="195942515"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 21 Aug 2019 00:28:34 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 21 Aug 2019 10:28:33 +0300
-Date:   Wed, 21 Aug 2019 10:28:33 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Logan Gunthorpe <logang@deltatee.com>, linux-pci@vger.kernel.org,
-        Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add sysfs attribute for disabling PCIe link to
- downstream component
-Message-ID: <20190821072833.GM19908@lahna.fi.intel.com>
-References: <20190529104942.74991-1-mika.westerberg@linux.intel.com>
- <20190703133953.GK128603@google.com>
- <20190703150341.GW2640@lahna.fi.intel.com>
- <20190801215339.GF151852@google.com>
- <20190806101230.GI2548@lahna.fi.intel.com>
- <20190819235245.GX253360@google.com>
- <20190820095820.GD19908@lahna.fi.intel.com>
- <20190820141717.GA14450@google.com>
+X-IronPort-AV: E=Sophos;i="5.64,412,1559545200"; 
+   d="scan'208";a="169367262"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 21 Aug 2019 02:56:27 -0700
+Received: from [10.226.38.255] (ekotax-mobl.gar.corp.intel.com [10.226.38.255])
+        by linux.intel.com (Postfix) with ESMTP id 43B36580144;
+        Wed, 21 Aug 2019 02:56:25 -0700 (PDT)
+Subject: Re: [PATCH v2 2/3] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        linux-pci@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+References: <cover.1566208109.git.eswara.kota@linux.intel.com>
+ <5e6ee1245ee53a7726103a8de7c11a37ad99fbd6.1566208109.git.eswara.kota@linux.intel.com>
+ <CAL_Jsq+pvKHtw-ARRbNW-xReQ2MVNan8z3tfJbx4taGDCvEr5g@mail.gmail.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <cf47e8e8-9fbe-dfcb-60f3-76c48728328f@linux.intel.com>
+Date:   Wed, 21 Aug 2019 17:56:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820141717.GA14450@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAL_Jsq+pvKHtw-ARRbNW-xReQ2MVNan8z3tfJbx4taGDCvEr5g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 09:17:17AM -0500, Bjorn Helgaas wrote:
-> On Tue, Aug 20, 2019 at 12:58:20PM +0300, Mika Westerberg wrote:
-> > On Mon, Aug 19, 2019 at 06:52:45PM -0500, Bjorn Helgaas wrote:
-> > > > Right, it looks like we need some sort of flag there anyway.
-> > > 
-> > > Does this mean you're looking at getting rid of "has_secondary_link",
-> > > you think it's impossible, or you think it's not worth trying?
-> > 
-> > I was of thinking that we need some flag anyway for the downstream port
-> > (such as has_secondary_link) that tells us the which side of the port
-> > the link is.
-> > 
-> > > I'm pretty sure we could get rid of it by looking upstream, but I
-> > > haven't actually tried it.
-> > 
-> > So if we are downstream port, look at the parent and if it is also
-> > downstream port (or root port) we change the type to upstream port
-> > accordingly? That might work.
-> 
-> If we see a type of PCI_EXP_TYPE_ROOT_PORT or
-> PCI_EXP_TYPE_PCIE_BRIDGE, I think we have to assume that's accurate
-> (which we already do today -- for those types, we assume the device
-> has a secondary link).
-> 
-> For a device that claims to be PCI_EXP_TYPE_DOWNSTREAM, if a parent
-> device exists and is a Downstream Port (Root Port, Switch Downstream
-> Port, and I suppose a PCI-to-PCIe bridge (this is basically
-> pcie_downstream_port()), this device must actually be acting as a
-> PCI_EXP_TYPE_UPSTREAM device.
-> 
-> If a device claiming to be PCI_EXP_TYPE_UPSTREAM has a parent that is
-> PCI_EXP_TYPE_UPSTREAM, this device must actually be a
-> PCI_EXP_TYPE_DOWNSTREAM port.
-> 
-> For PCI_EXP_TYPE_DOWNSTREAM and PCI_EXP_TYPE_UPSTREAM devices that
-> don't have parents, we just have to assume they advertise the correct
-> type (as we do today).  There are sparc and virtualization configs
-> like this.
 
-OK, thanks for the details. I'll try to make patch based on the above.
+On 8/20/2019 9:42 PM, Rob Herring wrote:
+> On Tue, Aug 20, 2019 at 4:40 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+>> The Intel PCIe RC controller is Synopsys Designware
+>> based PCIe core. Add YAML schemas for PCIe in RC mode
+>> present in Intel Universal Gateway soc.
+> Run 'make dt_binding_check' and fix all the warnings.
+Sure, will run and fix them. Sorry for missing it.
+>
+>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>> ---
+>>   .../devicetree/bindings/pci/intel-pcie.yaml        | 133 +++++++++++++++++++++
+>>   1 file changed, 133 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/intel-pcie.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/intel-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-pcie.yaml
+>> new file mode 100644
+>> index 000000000000..80caaaba5e2c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/intel-pcie.yaml
+>> @@ -0,0 +1,133 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+> (GPL-2.0-only OR BSD-2-Clause) is preferred for new bindings.
+Sure, will update it.
+>
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pci/intel-pcie.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Intel AXI bus based PCI express root complex
+>> +
+>> +maintainers:
+>> +  - Dilip Kota <eswara.kota@linux.intel.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: intel,lgm-pcie
+>> +
+>> +  device_type:
+>> +    const: pci
+>> +
+>> +  "#address-cells":
+>> +    const: 3
+>> +
+>> +  "#size-cells":
+>> +    const: 2
+>> +
+>> +  reg:
+>> +    items:
+>> +      - description: Controller control and status registers.
+>> +      - description: PCIe configuration registers.
+>> +      - description: Controller application registers.
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: dbi
+>> +      - const: config
+>> +      - const: app
+>> +
+>> +  ranges:
+>> +    description: Ranges for the PCI memory and I/O regions.
+>> +
+>> +  resets:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    description: PCIe registers interface clock.
+>> +
+>> +  phys:
+>> +    maxItems: 1
+>> +
+>> +  phy-names:
+>> +    const: phy
+>> +
+>> +  reset-gpios:
+>> +    maxItems: 1
+>> +
+>> +  num-lanes:
+>> +    description: Number of lanes to use for this port.
+>> +
+>> +  linux,pci-domain:
+>> +    description: PCI domain ID.
+>> +
+>> +  interrupts:
+>> +    description: PCIe core integrated miscellaneous interrupt.
+>> +
+>> +  interrupt-map-mask:
+>> +    description: Standard PCI IRQ mapping properties.
+>> +
+>> +  interrupt-map:
+>> +    description: Standard PCI IRQ mapping properties.
+>> +
+>> +  max-link-speed:
+>> +    description: Specify PCI Gen for link capability.
+>> +
+>> +  bus-range:
+>> +    description: Range of bus numbers associated with this controller.
+>> +
+>> +  intel,rst-interval:
+> Use 'reset-assert-us'
 
-> > Another option may be to just add a quirk for these ports.
-> 
-> I don't really like the quirk approach because then we have to rely on
-> user reports of something being broken.
-> 
-> > Only concern for both is that we have functions that rely on the type
-> > such as pcie_capability_read_word() so if we change the type do we end
-> > up breaking something? I did not check too closely, though.
-> 
-> I don't think we'll break anything that's not already broken because
-> the type will reflect exactly what has_secondary_link now tells us.
-> In fact, we might *fix* some things, e.g., pcie_capability_read_word()
-> should work better if we fix the type that pcie_downstream_port()
-> checks.
+Sure.
+I am thinking of 'reset-assert-ms' to remain in Milli seconds.
+Please let me know your view.
 
-Fair enough :)
+>
+>> +    description: |
+>> +      Device reset interval in ms. Some devices need an interval upto 500ms.
+>> +      By default it is 100ms.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - device_type
+>> +  - reg
+>> +  - reg-names
+>> +  - ranges
+>> +  - resets
+>> +  - clocks
+>> +  - phys
+>> +  - phy-names
+>> +  - reset-gpios
+>> +  - num-lanes
+>> +  - linux,pci-domain
+>> +  - interrupts
+>> +  - interrupt-map
+>> +  - interrupt-map-mask
+>> +
+>> +examples:
+>> +  - |
+>> +    pcie10:pcie@d0e00000 {
+>> +      compatible = "intel,lgm-pcie";
+>> +      device_type = "pci";
+>> +      #address-cells = <3>;
+>> +      #size-cells = <2>;
+>> +      reg = <
+>> +            0xd0e00000 0x1000
+>> +            0xd2000000 0x800000
+>> +            0xd0a41000 0x1000
+>> +            >;
+>> +      reg-names = "dbi", "config", "app";
+>> +      linux,pci-domain = <0>;
+>> +      max-link-speed = <4>;
+>> +      bus-range = <0x00 0x08>;
+>> +      interrupt-parent = <&ioapic1>;
+>> +      interrupts = <67 1>;
+>> +      interrupt-map-mask = <0 0 0 0x7>;
+>> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
+>> +                      <0 0 0 2 &ioapic1 28 1>,
+>> +                      <0 0 0 3 &ioapic1 29 1>,
+>> +                      <0 0 0 4 &ioapic1 30 1>;
+>> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
+>> +      resets = <&rcu0 0x50 0>;
+>> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
+>> +      phys = <&cb0phy0>;
+>> +      phy-names = "phy";
+>> +    };
+>> +
+>> +    &pcie10 {
+> Don't show this soc/board split in examples. Just combine to one node.
+
+Sure, will combine.
+
+Thanks for the review comments.
+
+Regards,
+Dilip
+
+>
+>> +      status = "okay";
+>> +      intel,rst-interval = <100>;
+>> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+>> +      num-lanes = <2>;
+>> +    };
+>> --
+>> 2.11.0
+>>
