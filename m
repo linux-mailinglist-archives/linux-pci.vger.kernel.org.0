@@ -2,91 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 12A569892D
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2019 04:00:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E00B989DD
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2019 05:35:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbfHVCAU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Aug 2019 22:00:20 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5184 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727617AbfHVCAT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 21 Aug 2019 22:00:19 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3422818BE44A25F8E403;
-        Thu, 22 Aug 2019 10:00:10 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 22 Aug 2019 10:00:03 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "Jonathan Hunter" <jonathanh@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>, <linux-pci@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] PCI: tegra: Fix the error return code in tegra_pcie_dw_probe()
-Date:   Thu, 22 Aug 2019 02:03:52 +0000
-Message-ID: <20190822020352.35412-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+        id S1729668AbfHVDf1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Aug 2019 23:35:27 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38823 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728332AbfHVDf1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Aug 2019 23:35:27 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m125so4187240wmm.3;
+        Wed, 21 Aug 2019 20:35:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=WsaYFeAkte2NretrOo8yB7eLtn2MeRH7ZtBbeHqK9ss=;
+        b=mRigY60/acd7r9AbKb68l4BZVAfI6iTkq9tIoOCP/NzynKBOPNFtBnMgl88G3vKpv9
+         4nbLjfEHxDEUn+KlYQfPXsu/23xyYA8DfzDkwoT0ssJWXao7V6c1pvw7hol3oKDUdNEQ
+         lJLMOh2e7VXr5Tvep4FUu9ywmFnwGShlGQ7RybJqG+Ey6Ff1b7AqseT0+MqEtDudQHTo
+         HediKQtaQUxtLainWjPbEz7dUfZPht5bp8BB3FRsUN6cgUer1mD35+igZNtL+iZLlbAC
+         DEGVfj5bYxoghKLBjDbg0HMmJKas/B+ZMu+cPtjgLzWgZaQVrqVHIycJstWAUJT4Vd9z
+         6V8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WsaYFeAkte2NretrOo8yB7eLtn2MeRH7ZtBbeHqK9ss=;
+        b=KXW9d8SJejRgTsTIrJZGHVIdm5bed49HCRmXeJwYn8D2rkgAZMlR+wkdGNWx2E8Y57
+         sHDirt0El6N+kJPSsZj+vq+laPt9mMJYfYGQL0e5UH974p5jTn1jdysxb5V49ky1UpU/
+         bHNR2vMMV4ORr0Zxdb436a9GX3e32miYs+nTpALv/B0u6u1/wdExRXvEwjNaL+X5HQZV
+         IhhAACheuMLsbiMf9rSGvsKqKNSmVar5kgXESzoPsUGCiWCsrUMR5VsUNrP1ovjSXgSh
+         Yn8rS5ysRUJ9JxYrgwF12lT6j9tjjASgl0WzWHLPP3B02gU64486erDM8ocsXcO9kFD9
+         f3Sw==
+X-Gm-Message-State: APjAAAUtgtQL3gcgK7Bo6iDiq+BJeZPq6FmRGMroQHAOlj90bmH2TgFb
+        zCvC7YDYjkehtIh/aecwUlw=
+X-Google-Smtp-Source: APXvYqxpplXAscH90uc7IVjMnTI5K8IsuLoHO6ctq9wYYw2C2y4eh3XV0YiP0nw2niEWn1ZjB0odjw==
+X-Received: by 2002:a1c:d108:: with SMTP id i8mr3609222wmg.28.1566444924948;
+        Wed, 21 Aug 2019 20:35:24 -0700 (PDT)
+Received: from localhost ([165.22.121.176])
+        by smtp.gmail.com with ESMTPSA id o11sm17971037wrw.19.2019.08.21.20.35.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 21 Aug 2019 20:35:24 -0700 (PDT)
+From:   hexin <hexin.op@gmail.com>
+X-Google-Original-From: hexin <hexin15@baidu.com>
+To:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     hexin <hexin15@baidu.com>, Liu Qi <liuqi16@baidu.com>,
+        Zhang Yu <zhangyu31@baidu.com>
+Subject: [PATCH v3] vfio_pci: Restore original state on release
+Date:   Thu, 22 Aug 2019 11:35:19 +0800
+Message-Id: <1566444919-3331-1-git-send-email-hexin15@baidu.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fix the error return code in tegra_pcie_dw_probe() by using error code
-instead of PTR_ERR(NULL) which is always 0.
+vfio_pci_enable() saves the device's initial configuration information
+with the intent that it is restored in vfio_pci_disable().  However,
+the commit referenced in Fixes: below replaced the call to
+__pci_reset_function_locked(), which is not wrapped in a state save
+and restore, with pci_try_reset_function(), which overwrites the
+restored device state with the current state before applying it to the
+device.  Reinstate use of __pci_reset_function_locked() to return to
+the desired behavior.
 
-Fixes: 6404441c8e13 ("PCI: tegra: Add Tegra194 PCIe support")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Fixes: 890ed578df82 ("vfio-pci: Use pci "try" reset interface")
+Signed-off-by: hexin <hexin15@baidu.com>
+Signed-off-by: Liu Qi <liuqi16@baidu.com>
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
 ---
- drivers/pci/controller/dwc/pcie-tegra194.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+v2->v3:
+- change commit log 
+v1->v2:
+- add fixes tag
+- add comment to warn 
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index fc0dbeb31d78..678a6b51c7aa 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -1384,7 +1384,7 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
- 						      "appl");
- 	if (!pcie->appl_res) {
- 		dev_err(dev, "Failed to find \"appl\" region\n");
--		return PTR_ERR(pcie->appl_res);
-+		return -ENODEV;
- 	}
- 
- 	pcie->appl_base = devm_ioremap_resource(dev, pcie->appl_res);
-@@ -1400,7 +1400,7 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
- 
- 	phys = devm_kcalloc(dev, pcie->phy_count, sizeof(*phys), GFP_KERNEL);
- 	if (!phys)
--		return PTR_ERR(phys);
-+		return -ENOMEM;
- 
- 	for (i = 0; i < pcie->phy_count; i++) {
- 		name = kasprintf(GFP_KERNEL, "p2u-%u", i);
-@@ -1422,7 +1422,7 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
- 	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
- 	if (!dbi_res) {
- 		dev_err(dev, "Failed to find \"dbi\" region\n");
--		return PTR_ERR(dbi_res);
-+		return -ENODEV;
- 	}
- 	pcie->dbi_res = dbi_res;
- 
-@@ -1437,7 +1437,7 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
- 						   "atu_dma");
- 	if (!atu_dma_res) {
- 		dev_err(dev, "Failed to find \"atu_dma\" region\n");
--		return PTR_ERR(atu_dma_res);
-+		return -ENODEV;
- 	}
- 	pcie->atu_dma_res = atu_dma_res;
+[1] https://lore.kernel.org/linux-pci/1565926427-21675-1-git-send-email-hexin15@baidu.com
+[2] https://lore.kernel.org/linux-pci/1566042663-16694-1-git-send-email-hexin15@baidu.com
 
+ drivers/vfio/pci/vfio_pci.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 703948c..0220616 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -438,11 +438,20 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
+ 	pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
+ 
+ 	/*
+-	 * Try to reset the device.  The success of this is dependent on
+-	 * being able to lock the device, which is not always possible.
++	 * Try to get the locks ourselves to prevent a deadlock. The
++	 * success of this is dependent on being able to lock the device,
++	 * which is not always possible.
++	 * We can not use the "try" reset interface here, which will
++	 * overwrite the previously restored configuration information.
+ 	 */
+-	if (vdev->reset_works && !pci_try_reset_function(pdev))
+-		vdev->needs_reset = false;
++	if (vdev->reset_works && pci_cfg_access_trylock(pdev)) {
++		if (device_trylock(&pdev->dev)) {
++			if (!__pci_reset_function_locked(pdev))
++				vdev->needs_reset = false;
++			device_unlock(&pdev->dev);
++		}
++		pci_cfg_access_unlock(pdev);
++	}
+ 
+ 	pci_restore_state(pdev);
+ out:
+-- 
+1.8.3.1
 
