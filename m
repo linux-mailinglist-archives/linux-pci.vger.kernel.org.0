@@ -2,91 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1062299398
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2019 14:31:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2D4C993F0
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2019 14:38:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387463AbfHVMbk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Aug 2019 08:31:40 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37305 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732309AbfHVMbk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Aug 2019 08:31:40 -0400
-Received: by mail-lf1-f65.google.com with SMTP id c9so4413642lfh.4
-        for <linux-pci@vger.kernel.org>; Thu, 22 Aug 2019 05:31:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=aWwEGZ7IKPwlD1SyN53LweuoS+rG8j2WBRgPDxMagPA=;
-        b=HTiZwnq/M3TfXijzvWNxVT1w2LfIrWQGSI7AaFELWznEabALCocbEEsCS0ouQxAjTv
-         L2ppprdNx8PqHEjDgMo1KlEvq5ZmOFcZRUa5RYk1+WbJKNqVwsMmvFjli/VJe0LkyDf5
-         rITXAYx2JyEqUJvzcPYTKWW/MFA0QzHrIybTWVO/oov8ed6JGGhC4e/i3boV3dS+v3Cg
-         6szasMHEFAd59krNNio1T1fwXyGjodfq+HlChnEdEsmdAOnNwUDf+s7ypcyA6aulFsoe
-         +Jm/bwlLHaG3WFxkRZgE6lzlxsa93k/NRuUx++h4Uy5TqUImU1pT3eMf39vc2lmO/mQA
-         ZG4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=aWwEGZ7IKPwlD1SyN53LweuoS+rG8j2WBRgPDxMagPA=;
-        b=kfPJ0SSEAbxiuoJ0f/YavCqbhQVo67RfPA1/i0T0FtgbZBq4X6p3+bsqYhN5m8oGZk
-         xz2LQH0q0Pffm4XOrdP0kU/T7XzfO5Gtpes8EHXkAVbmE5ls1PDOSovO3IE7DDMSgZae
-         dNjP1soZ0QSqtp32Vr7LSKxYPGYjJy40TTWEA6G/+XGfFm7WqUWpNlqITke3hAhGc1fx
-         8M+aaIar6w0tX/uBoVD7hY4tSkztU14HsCBEVRlAfXp1c9DFqJpKUpJ69TIG74GkhEUR
-         xJDGZvrFzJtVeleKiwwyPt19FsTamcrHF0IAk/be/Le7a16waVl8RGSaiIaFj/TKCooh
-         zs+g==
-X-Gm-Message-State: APjAAAWGMvcZqDAkAWX+6lWDx70tieAWrKvoLcTFVZRCLtwu1Bs9aN+a
-        H3ezILflcOqBpjw7d8bEnyZqchEJcEbUCXwfybc=
-X-Google-Smtp-Source: APXvYqy0iXJu1OjjK1/w+dGR4lig1dJDuZAaySIndTcujkhpdPTdl55KZJyKAR1B8W+U0pR8yAAtA8Tc+YLhyFTL76s=
-X-Received: by 2002:ac2:560b:: with SMTP id v11mr18377191lfd.177.1566477098592;
- Thu, 22 Aug 2019 05:31:38 -0700 (PDT)
+        id S1725783AbfHVMiB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Aug 2019 08:38:01 -0400
+Received: from zimbra2.kalray.eu ([92.103.151.219]:41878 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729052AbfHVMiB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Aug 2019 08:38:01 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id CD98627E65B3;
+        Thu, 22 Aug 2019 14:37:59 +0200 (CEST)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id T1iT1EPvEIoG; Thu, 22 Aug 2019 14:37:59 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 5F90927E666C;
+        Thu, 22 Aug 2019 14:37:59 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 5F90927E666C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1566477479;
+        bh=aQw9A1g9cI3XUpS8jFSOKdXpFdrtxIkLZL7+5zjNWQw=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=bQHqxiTtjUjcVlq87ck/i4HrMC1cZMLAPt+wSXhifDKwGWfkWyiK0QMj0Ccm0I7Ds
+         /X+oCb+mrqw0cibbGWNAJFWQc9HwmLCJjsM/56f4SjAh0j9rHZjf0FeW7fVN++WNpa
+         NsIsiNgvL+3xhuq6V2A6+dRgRq8xl4PNEhh9Vyg8=
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id woZOGyPyypH8; Thu, 22 Aug 2019 14:37:59 +0200 (CEST)
+Received: from zimbra2.kalray.eu (zimbra2.kalray.eu [192.168.40.202])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 47D0927E65B3;
+        Thu, 22 Aug 2019 14:37:59 +0200 (CEST)
+Date:   Thu, 22 Aug 2019 14:37:59 +0200 (CEST)
+From:   Marta Rybczynska <mrybczyn@kalray.eu>
+To:     Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <helgaas@kernel.org>,
+        linux@yadro.com, Srinath Mannam <srinath.mannam@broadcom.com>
+Message-ID: <1907682156.57687176.1566477479224.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <20190816165101.911-2-s.miroshnichenko@yadro.com>
+References: <20190816165101.911-1-s.miroshnichenko@yadro.com> <20190816165101.911-2-s.miroshnichenko@yadro.com>
+Subject: Re: [PATCH v5 01/23] PCI: Fix race condition in
+ pci_enable/disable_device()
 MIME-Version: 1.0
-Received: by 2002:ab3:6a0f:0:0:0:0:0 with HTTP; Thu, 22 Aug 2019 05:31:36
- -0700 (PDT)
-Reply-To: eku.lawfirm@gmail.com
-From:   "Law firm(Eku and Associates)" <ezeobodo1@gmail.com>
-Date:   Thu, 22 Aug 2019 12:31:36 +0000
-Message-ID: <CAN-_bTb1nP9CfQXnKs-EEZxJ0E-1zUOGGdX-92pg5wotBiWzLg@mail.gmail.com>
-Subject: MY $25,000,000.00 INVESTMENT PROPOSAL WITH YOU AND IN YOUR COUNTRY.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [192.168.40.202]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF57 (Linux)/8.8.12_GA_3794)
+Thread-Topic: Fix race condition in pci_enable/disable_device()
+Thread-Index: O9C5qKK+P1vDneELlQbdEqY2P5q12A==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---=20
-Dear,
-With due respect this is not spam or Scam mail, because I have
-contacted you before and there was no response from you,I apologise if
-the contents of this mail are contrary to your moral ethics, which I
-feel may be of great disturbance to your person, but please treat this
-with absolute confidentiality, believing that this email reaches you
-in good faith. My contacting you is not a mistake or a coincidence
-because God can use any person known or unknown to accomplish great
-things.
-I am a lawyer and I have an investment business proposal to offer you.
-It is not official but should be considered as legal and confidential
-business. I have a customer's deposit of $US25 million dollars ready
-to be moved for investment if you can partner with us. We are ready to
-offer you 10% of this total amount as your compensation for supporting
-the transaction to completion. If you are interested to help me please
-reply me with your full details as stated below:
-(1) Your full names:
-(2) Your address:
-(3) Your occupation:
-(4) Your mobile telephone number:
-(5) Your nationality:
-(6) Your present location:
-(7) Your age:
-So that I will provide you more details on what to do and what is
-required for successful completion.
-Note: DO NOT REPLY ME IF YOU ARE NOT INTERESTED AND WITHOUT THE ABOVE
-MENTIONED DETAILS
 
-Sinc=C3=A8rement v=C3=B4tre,
-Avocat Etienne Eku Esq.(Lawfirm)
-Procureur principal. De Cabinet d=E2=80=99avocats de l=E2=80=99Afrique de l=
-=E2=80=99ouest.
-Skype:westafricalawfirm
+
+----- On 16 Aug, 2019, at 18:50, Sergey Miroshnichenko s.miroshnichenko@yadro.com wrote:
+
+> This is a yet another approach to fix an old [1-2] concurrency issue, when:
+> - two or more devices are being hot-added into a bridge which was
+>   initially empty;
+> - a bridge with two or more devices is being hot-added;
+> - during boot, if BIOS/bootloader/firmware doesn't pre-enable bridges.
+> 
+> The problem is that a bridge is reported as enabled before the MEM/IO bits
+> are actually written to the PCI_COMMAND register, so another driver thread
+> starts memory requests through the not-yet-enabled bridge:
+> 
+> CPU0                                        CPU1
+> 
+> pci_enable_device_mem()                     pci_enable_device_mem()
+>   pci_enable_bridge()                         pci_enable_bridge()
+>     pci_is_enabled()
+>       return false;
+>     atomic_inc_return(enable_cnt)
+>     Start actual enabling the bridge
+>     ...                                         pci_is_enabled()
+>     ...                                           return true;
+>     ...                                     Start memory requests <-- FAIL
+>     ...
+>     Set the PCI_COMMAND_MEMORY bit <-- Must wait for this
+> 
+> Protect the pci_enable/disable_device() and pci_enable_bridge(), which is
+> similar to the previous solution from commit 40f11adc7cd9 ("PCI: Avoid race
+> while enabling upstream bridges"), but adding a per-device mutexes and
+> preventing the dev->enable_cnt from from incrementing early.
+> 
+> CC: Srinath Mannam <srinath.mannam@broadcom.com>
+> CC: Marta Rybczynska <mrybczyn@kalray.eu>
+> Signed-off-by: Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
+> 
+> [1]
+> https://lore.kernel.org/linux-pci/1501858648-22228-1-git-send-email-srinath.mannam@broadcom.com/T/#u
+>    [RFC PATCH v3] pci: Concurrency issue during pci enable bridge
+> 
+> [2]
+> https://lore.kernel.org/linux-pci/744877924.5841545.1521630049567.JavaMail.zimbra@kalray.eu/T/#u
+>    [RFC PATCH] nvme: avoid race-conditions when enabling devices
+> ---
+> drivers/pci/pci.c   | 26 ++++++++++++++++++++++----
+> drivers/pci/probe.c |  1 +
+> include/linux/pci.h |  1 +
+> 3 files changed, 24 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 1b27b5af3d55..e7f8c354e644 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1645,6 +1645,8 @@ static void pci_enable_bridge(struct pci_dev *dev)
+> 	struct pci_dev *bridge;
+> 	int retval;
+> 
+> +	mutex_lock(&dev->enable_mutex);
+> +
+> 	bridge = pci_upstream_bridge(dev);
+> 	if (bridge)
+> 		pci_enable_bridge(bridge);
+> @@ -1652,6 +1654,7 @@ static void pci_enable_bridge(struct pci_dev *dev)
+> 	if (pci_is_enabled(dev)) {
+> 		if (!dev->is_busmaster)
+> 			pci_set_master(dev);
+> +		mutex_unlock(&dev->enable_mutex);
+> 		return;
+> 	}
+> 
+
+This code is used by numerous drivers and when we've seen that issue I was wondering
+if there are some use-cases when this (or pci_disable_device) is called with interrupts
+disabled. It seems that it shouldn't be, but a BUG_ON or error when someone calls
+it this way would be helpful when debugging.
+
+Marta
