@@ -2,397 +2,503 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 935929A01F
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2019 21:33:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A08A9A06B
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2019 21:46:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404321AbfHVTdQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Aug 2019 15:33:16 -0400
-Received: from mail-eopbgr20086.outbound.protection.outlook.com ([40.107.2.86]:60882
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726319AbfHVTdQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 22 Aug 2019 15:33:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hXf/AROG8Wvx4Dx/1Eavfgd6ABcj4+lmCqnkFBgPXMZ1oD4TL5oVgZTbm6hAkGX6wOCIFYeXX59r2zAKm0UhfUvaDX+3WH+XgUiCIDBZ0dka0iQeytURKg5kwXZjEUNF1iCTEgk3Nrv0G5yHdmCrEaLbwS7/qhC+pZOKtizQB/NnclL9QSuK+B8hjwOoDdNgdM2XoFx8efmkW5O5bmZGTbf3MdPk4fSnwoM3OLCiKh7lvWiBdAIEcuqkyo1FP3Ep+Px1ZqshoAFyMr9HEbRCtiIBv2vToARGveIjGxy0vuCmiOfF6kl1hgY1UzpOwiXnizt8Rt1xg3YzLwo3YpjTJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MSwaJJFhzzCH5aJze9JySMOxQHjf0hYrnIb7+JrNTTo=;
- b=kxuHMi20S5dXJaXwQHumRD6VZ/8C8RaDUqQ4k9Qn/4ZxNW8/QW6wADG0z0fvLJ969EXGWeZQ8KB5GIZuv7+ZJuEqwgavlAAObenM0WHpy8SCacMEqQwwczaiBn47rq8rCMYIZY/4O2AbdFxMahyuafZ+ZvqjfsqYCDBLiHF9+h6yMLgKTLD/qnekWwaLXWnJHAwPA3IXbDFs2irTzlkF46xYXxz/VkYOxpt3yI3vyGrNk3erdgORk2SCJEUu7efMxtXUwM5THDYMTVzyYQ+vJ9OfTxyA7R65yDb1wxpiuvM5wmWyonFiWWIIGSvy9reWzR+a+pxBFbdzXsZeyQ9sTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MSwaJJFhzzCH5aJze9JySMOxQHjf0hYrnIb7+JrNTTo=;
- b=Ik25foTmbZbbSBcLJnW2QoPkcxVhYptqgpkrvVn3OFi5Gxy84IajRxXGJytxDYMRolOHC78oxfDrp9l0GaM6ds3DlfRQCehKUz3GSRJ2TdFpv17lRVdGjNd76wcHmZyPQ9+HCM/KrISwtBcPTL8zjTfumjX4UtT/4jco4UJi1r8=
-Received: from AM0PR0502MB4068.eurprd05.prod.outlook.com (52.133.38.142) by
- AM0PR0502MB4065.eurprd05.prod.outlook.com (52.133.39.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Thu, 22 Aug 2019 19:33:07 +0000
-Received: from AM0PR0502MB4068.eurprd05.prod.outlook.com
- ([fe80::9d51:ae68:d177:fc94]) by AM0PR0502MB4068.eurprd05.prod.outlook.com
- ([fe80::9d51:ae68:d177:fc94%3]) with mapi id 15.20.2178.020; Thu, 22 Aug 2019
- 19:33:07 +0000
-From:   Eran Ben Elisha <eranbe@mellanox.com>
-To:     Leon Romanovsky <leon@kernel.org>,
-        haiyangz <haiyangz@microsoft.com>
-CC:     "sashal@kernel.org" <sashal@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        kys <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next,v4, 4/6] net/mlx5: Add HV VHCA infrastructure
-Thread-Topic: [PATCH net-next,v4, 4/6] net/mlx5: Add HV VHCA infrastructure
-Thread-Index: AQHVWKdP26XGR32tC027xb7YHJtOiacHhfKAgAAJOgA=
-Date:   Thu, 22 Aug 2019 19:33:07 +0000
-Message-ID: <1cbfc698-102d-dd07-ecae-ff8eb7e655ae@mellanox.com>
-References: <1566450236-36757-1-git-send-email-haiyangz@microsoft.com>
- <1566450236-36757-5-git-send-email-haiyangz@microsoft.com>
- <20190822185847.GP29433@mtr-leonro.mtl.com>
-In-Reply-To: <20190822185847.GP29433@mtr-leonro.mtl.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0071.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1d::35) To AM0PR0502MB4068.eurprd05.prod.outlook.com
- (2603:10a6:208:d::14)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=eranbe@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [77.126.5.150]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 770b2ca8-7fa4-4ba8-3460-08d727378ed1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM0PR0502MB4065;
-x-ms-traffictypediagnostic: AM0PR0502MB4065:
-x-ld-processed: a652971c-7d2e-4d9b-a6a4-d149256f461b,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR0502MB40655DEFB2D89A1AB258B7DEBAA50@AM0PR0502MB4065.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1186;
-x-forefront-prvs: 01371B902F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39850400004)(366004)(376002)(396003)(136003)(199004)(189003)(478600001)(52116002)(14454004)(26005)(99286004)(102836004)(186003)(53946003)(81166006)(81156014)(5660300002)(8936002)(446003)(8676002)(30864003)(486006)(76176011)(11346002)(7736002)(305945005)(6436002)(3846002)(6116002)(7416002)(6512007)(2906002)(6486002)(66556008)(64756008)(256004)(71200400001)(14444005)(229853002)(66066001)(1511001)(53936002)(4326008)(36756003)(2616005)(476003)(6246003)(31686004)(25786009)(316002)(31696002)(66446008)(66946007)(6506007)(386003)(53546011)(86362001)(66476007)(110136005)(54906003)(71190400001)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0502MB4065;H:AM0PR0502MB4068.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 6zy6J+RVx9HwZo3ZhlgApTzfxylRsLfl+hGFhPsE3tQtmrYpeudAIOSACrstW1Mft24kLImtPY8i3Dlshjb+6uPcz32AOTLOU6nKmpQGk3XVNuGKg4UQc4FVvk0JcMru6RobgXv3YrLk9Ok6oAC0zIiQfDTm/oX+fXmFjD/fMNG59TTYvSCYcsaOXu4l9qJ6ebHrIdjLfxCSlZ9lQFZ9BjVMj4rc6Z6RNJzXQv0TMQXW2rTNLxRBByYRl9XuZCD1Nr+k4Fe2hBEgV8ufsmNjFzadLkAKu8NhSFH2Rt6z6rzRYFaymfnglSopQv1BWBrdncdn4fc/0y9YZ1JyiOFj6v/MLMbzUTisLKWm9BtKJ51qqPuw4RnnxHg35aggSz1m1nYI0W5j7v+Ja+5W6+vxxFKtltDyyXXSK+mhjY5tV18=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4B57C6FF543DDA45882EE56381046BC2@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1730621AbfHVTqL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Aug 2019 15:46:11 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:56216 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730339AbfHVTqL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Aug 2019 15:46:11 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f72so6762764wmf.5
+        for <linux-pci@vger.kernel.org>; Thu, 22 Aug 2019 12:46:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WLKU1KYnqbgFiyHfUZ9jH7UsYlH7VvSZ0qT/YEthbpM=;
+        b=ZBNuAbtRhkHNeh/fD39xzw0yJccJKCtyVxXyWKxfAmy1hLucOMuHczi805A3/8gJRp
+         MurndxMYs0Qpf4rCas//IFm8eYqK/1ARscdIRlRcoyY7exl4b/f79PcknO1cxALCeZ+o
+         7ebkSk0V8H4RiLNv2ae+d6G4jX83nJehNly4FvG6VpUTX9ON44Ev0q5ag/dQjElB5os1
+         Czk6rrgscZORRZS+Qe5yja6IpauaQDyG3HxHsbrcG5dXmDH0KQK5kYYjG4Ck+Z74LD4B
+         gZqvlRPVOuyewEOYP2Huu+Tw6RTqB0+qGevDcRiv5NN6+ggRtS2YNKlb4+h6egytEI6d
+         F1rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WLKU1KYnqbgFiyHfUZ9jH7UsYlH7VvSZ0qT/YEthbpM=;
+        b=hY+J4y7O3RbjVJGk/EfobdDyhaXaKClbQz1h6dRu3T/rn96MTuHVxql2fn9giYti3X
+         2ab0ahftsT4fOM3Xa77OdzS7dXUmbwurStNzn/EjVDiZac38u6sd405dJtdyfWFcox6c
+         BXfrzx9du+whLj/fSzgBWyNDdaLIEUerRsMSP+BaqbNntkuUuJ2YWArVqIhVUmwGLUGl
+         mtJCW8dMFGOgqGz0T9CM4X05hjwQ87wNzmnzOdCBBrgOPirGT+ynRf8/OIWIHe7Aopyx
+         ZtNkVTn0awk/V4mI87AxdDVSd0jS6wKI2ihcoDffgS0y0lF+Qm4AHDRXsdzaCLR898eD
+         SK5A==
+X-Gm-Message-State: APjAAAXWnNQxwqk0bJcd3P8UJEIo0y8k/2mkpEUrDyi5JninYNEfcyqT
+        OfQ0rS7aLzHHNdsYm4msHVVGInKk
+X-Google-Smtp-Source: APXvYqykgoPMqC3zq1XxqgnG0jAwWPZpzF/nlHCDC3YKxhdS576LBPfaBUHZZ0V/Ej2xs6gz1qDN4A==
+X-Received: by 2002:a1c:7009:: with SMTP id l9mr758827wmc.159.1566503168283;
+        Thu, 22 Aug 2019 12:46:08 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f04:7c00:10fa:d7ad:8564:6aa9? (p200300EA8F047C0010FAD7AD85646AA9.dip0.t-ipconnect.de. [2003:ea:8f04:7c00:10fa:d7ad:8564:6aa9])
+        by smtp.googlemail.com with ESMTPSA id e6sm705079wrw.35.2019.08.22.12.46.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 22 Aug 2019 12:46:07 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] PCI/ASPM: add sysfs attributes for controlling
+ ASPM
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Frederick Lawler <fred@fredlawl.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rajat Jain <rajatja@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <b4b1518a-d0e8-9534-5211-115107e770e1@gmail.com>
+ <c75fe7ef-5045-fb53-047c-b7b06d4b7fe8@gmail.com>
+ <20190822130503.GD12941@kroah.com>
+ <e4a278f1-ac78-a2fd-ddfe-a4dd0d1685e3@gmail.com>
+Message-ID: <ff819b41-aab4-1bfd-e9f4-a7065ab789e4@gmail.com>
+Date:   Thu, 22 Aug 2019 21:46:02 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 770b2ca8-7fa4-4ba8-3460-08d727378ed1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2019 19:33:07.1205
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ix33D1JzWfA12FJuzWqe6xQge0ihYEoIb/wlCEmeKUub8b2culged2+NJUZRB4QmdOcGKIGvLQ957O019/Lf2A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0502MB4065
+In-Reply-To: <e4a278f1-ac78-a2fd-ddfe-a4dd0d1685e3@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQoNCk9uIDgvMjIvMjAxOSA5OjU4IFBNLCBMZW9uIFJvbWFub3Zza3kgd3JvdGU6DQo+IE9uIFRo
-dSwgQXVnIDIyLCAyMDE5IGF0IDA1OjA1OjUxQU0gKzAwMDAsIEhhaXlhbmcgWmhhbmcgd3JvdGU6
-DQo+PiBGcm9tOiBFcmFuIEJlbiBFbGlzaGEgPGVyYW5iZUBtZWxsYW5veC5jb20+DQo+Pg0KPj4g
-SFYgVkhDQSBpcyBhIGxheWVyIHdoaWNoIHByb3ZpZGVzIFBGIHRvIFZGIGNvbW11bmljYXRpb24g
-Y2hhbm5lbCBiYXNlZCBvbg0KPj4gSHlwZXJWIFBDSSBjb25maWcgY2hhbm5lbC4gSXQgaW1wbGVt
-ZW50cyBNZWxsYW5veCdzIEludGVyIFZIQ0EgY29udHJvbA0KPj4gY29tbXVuaWNhdGlvbiBwcm90
-b2NvbC4gVGhlIHByb3RvY29sIGNvbnRhaW5zIGNvbnRyb2wgYmxvY2sgaW4gb3JkZXIgdG8NCj4+
-IHBhc3MgbWVzc2FnZXMgYmV0d2VlbiB0aGUgUEYgYW5kIFZGIGRyaXZlcnMsIGFuZCBkYXRhIGJs
-b2NrcyBpbiBvcmRlciB0bw0KPj4gcGFzcyBhY3R1YWwgZGF0YS4NCj4+DQo+PiBUaGUgaW5mcmFz
-dHJ1Y3R1cmUgaXMgYWdlbnQgYmFzZWQuIEVhY2ggYWdlbnQgd2lsbCBiZSByZXNwb25zaWJsZSBv
-Zg0KPj4gY29udGlndW91cyBidWZmZXIgYmxvY2tzIGluIHRoZSBWSENBIGNvbmZpZyBzcGFjZS4g
-VGhpcyBpbmZyYXN0cnVjdHVyZSB3aWxsDQo+PiBiaW5kIGFnZW50cyB0byB0aGVpciBibG9ja3Ms
-IGFuZCB0aG9zZSBhZ2VudHMgY2FuIG9ubHkgYWNjZXNzIHJlYWQvd3JpdGUNCj4+IHRoZSBidWZm
-ZXIgYmxvY2tzIGFzc2lnbmVkIHRvIHRoZW0uIEVhY2ggYWdlbnQgd2lsbCBwcm92aWRlIHRocmVl
-DQo+PiBjYWxsYmFja3MgKGNvbnRyb2wsIGludmFsaWRhdGUsIGNsZWFudXApLiBDb250cm9sIHdp
-bGwgYmUgaW52b2tlZCB3aGVuDQo+PiBibG9jay0wIGlzIGludmFsaWRhdGVkIHdpdGggYSBjb21t
-YW5kIHRoYXQgY29uY2VybnMgdGhpcyBhZ2VudC4gSW52YWxpZGF0ZQ0KPj4gY2FsbGJhY2sgd2ls
-bCBiZSBpbnZva2VkIGlmIG9uZSBvZiB0aGUgYmxvY2tzIGFzc2lnbmVkIHRvIHRoaXMgYWdlbnQg
-d2FzDQo+PiBpbnZhbGlkYXRlZC4gQ2xlYW51cCB3aWxsIGJlIGludm9rZWQgYmVmb3JlIHRoZSBh
-Z2VudCBpcyBiZWluZyBmcmVlZCBpbg0KPj4gb3JkZXIgdG8gY2xlYW4gYWxsIG9mIGl0cyBvcGVu
-IHJlc291cmNlcyBvciBkZWZlcnJlZCB3b3Jrcy4NCj4+DQo+PiBCbG9jay0wIHNlcnZlcyBhcyB0
-aGUgY29udHJvbCBibG9jay4gQWxsIGV4ZWN1dGlvbiBjb21tYW5kcyBmcm9tIHRoZSBQRg0KPj4g
-d2lsbCBiZSB3cml0dGVuIGJ5IHRoZSBQRiBvdmVyIHRoaXMgYmxvY2suIFZGIHdpbGwgYWNrIG9u
-IHRob3NlIGJ5DQo+PiB3cml0aW5nIG9uIGJsb2NrLTAgYXMgd2VsbC4gSXRzIGZvcm1hdCBpcyBk
-ZXNjcmliZWQgYnkgc3RydWN0DQo+PiBtbHg1X2h2X3ZoY2FfY29udHJvbF9ibG9jayBsYXlvdXQu
-DQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogRXJhbiBCZW4gRWxpc2hhIDxlcmFuYmVAbWVsbGFub3gu
-Y29tPg0KPj4gU2lnbmVkLW9mZi1ieTogU2FlZWQgTWFoYW1lZWQgPHNhZWVkbUBtZWxsYW5veC5j
-b20+DQo+PiBTaWduZWQtb2ZmLWJ5OiBIYWl5YW5nIFpoYW5nIDxoYWl5YW5nekBtaWNyb3NvZnQu
-Y29tPg0KPj4gLS0tDQo+PiAgIGRyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29y
-ZS9NYWtlZmlsZSAgIHwgICAyICstDQo+PiAgIC4uLi9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4
-NS9jb3JlL2xpYi9odl92aGNhLmMgIHwgMjUzICsrKysrKysrKysrKysrKysrKysrKw0KPj4gICAu
-Li4vbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9saWIvaHZfdmhjYS5oICB8IDEwMiAr
-KysrKysrKysNCj4+ICAgZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL21h
-aW4uYyAgICAgfCAgIDcgKw0KPj4gICBpbmNsdWRlL2xpbnV4L21seDUvZHJpdmVyLmggICAgICAg
-ICAgICAgICAgICAgICAgICB8ICAgMiArDQo+PiAgIDUgZmlsZXMgY2hhbmdlZCwgMzY1IGluc2Vy
-dGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
-bmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9saWIvaHZfdmhjYS5jDQo+PiAgIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvbGli
-L2h2X3ZoY2EuaA0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxs
-YW5veC9tbHg1L2NvcmUvTWFrZWZpbGUgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9t
-bHg1L2NvcmUvTWFrZWZpbGUNCj4+IGluZGV4IGZkMzJhNWIuLjhkNDQzZmMgMTAwNjQ0DQo+PiAt
-LS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvTWFrZWZpbGUNCj4+
-ICsrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9NYWtlZmlsZQ0K
-Pj4gQEAgLTQ1LDcgKzQ1LDcgQEAgbWx4NV9jb3JlLSQoQ09ORklHX01MWDVfRVNXSVRDSCkgICAr
-PSBlc3dpdGNoLm8gZXN3aXRjaF9vZmZsb2Fkcy5vIGVzd2l0Y2hfb2ZmbG8NCj4+ICAgbWx4NV9j
-b3JlLSQoQ09ORklHX01MWDVfTVBGUykgICAgICArPSBsaWIvbXBmcy5vDQo+PiAgIG1seDVfY29y
-ZS0kKENPTkZJR19WWExBTikgICAgICAgICAgKz0gbGliL3Z4bGFuLm8NCj4+ICAgbWx4NV9jb3Jl
-LSQoQ09ORklHX1BUUF8xNTg4X0NMT0NLKSArPSBsaWIvY2xvY2subw0KPj4gLW1seDVfY29yZS0k
-KENPTkZJR19QQ0lfSFlQRVJWX0lOVEVSRkFDRSkgKz0gbGliL2h2Lm8NCj4+ICttbHg1X2NvcmUt
-JChDT05GSUdfUENJX0hZUEVSVl9JTlRFUkZBQ0UpICs9IGxpYi9odi5vIGxpYi9odl92aGNhLm8N
-Cj4+DQo+PiAgICMNCj4+ICAgIyBJcG9pYiBuZXRkZXYNCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvbGliL2h2X3ZoY2EuYyBiL2RyaXZlcnMv
-bmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9saWIvaHZfdmhjYS5jDQo+PiBuZXcgZmls
-ZSBtb2RlIDEwMDY0NA0KPj4gaW5kZXggMDAwMDAwMC4uODRkMWQ3NQ0KPj4gLS0tIC9kZXYvbnVs
-bA0KPj4gKysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2xpYi9o
-dl92aGNhLmMNCj4+IEBAIC0wLDAgKzEsMjUzIEBADQo+PiArLy8gU1BEWC1MaWNlbnNlLUlkZW50
-aWZpZXI6IEdQTC0yLjAgT1IgTGludXgtT3BlbklCDQo+PiArLy8gQ29weXJpZ2h0IChjKSAyMDE4
-IE1lbGxhbm94IFRlY2hub2xvZ2llcw0KPj4gKw0KPj4gKyNpbmNsdWRlIDxsaW51eC9oeXBlcnYu
-aD4NCj4+ICsjaW5jbHVkZSAibWx4NV9jb3JlLmgiDQo+PiArI2luY2x1ZGUgImxpYi9odi5oIg0K
-Pj4gKyNpbmNsdWRlICJsaWIvaHZfdmhjYS5oIg0KPj4gKw0KPj4gK3N0cnVjdCBtbHg1X2h2X3Zo
-Y2Egew0KPj4gKwlzdHJ1Y3QgbWx4NV9jb3JlX2RldiAgICAgICAqZGV2Ow0KPj4gKwlzdHJ1Y3Qg
-d29ya3F1ZXVlX3N0cnVjdCAgICAqd29ya19xdWV1ZTsNCj4+ICsJc3RydWN0IG1seDVfaHZfdmhj
-YV9hZ2VudCAgKmFnZW50c1tNTFg1X0hWX1ZIQ0FfQUdFTlRfTUFYXTsNCj4+ICsJc3RydWN0IG11
-dGV4ICAgICAgICAgICAgICAgIGFnZW50c19sb2NrOyAvKiBQcm90ZWN0IGFnZW50cyBhcnJheSAq
-Lw0KPj4gK307DQo+PiArDQo+PiArc3RydWN0IG1seDVfaHZfdmhjYV93b3JrIHsNCj4+ICsJc3Ry
-dWN0IHdvcmtfc3RydWN0ICAgICBpbnZhbGlkYXRlX3dvcms7DQo+PiArCXN0cnVjdCBtbHg1X2h2
-X3ZoY2EgICAqaHZfdmhjYTsNCj4+ICsJdTY0ICAgICAgICAgICAgICAgICAgICBibG9ja19tYXNr
-Ow0KPj4gK307DQo+PiArDQo+PiArc3RydWN0IG1seDVfaHZfdmhjYV9kYXRhX2Jsb2NrIHsNCj4+
-ICsJdTE2ICAgICBzZXF1ZW5jZTsNCj4+ICsJdTE2ICAgICBvZmZzZXQ7DQo+PiArCXU4ICAgICAg
-cmVzZXJ2ZWRbNF07DQo+PiArCXU2NCAgICAgZGF0YVsxNV07DQo+PiArfTsNCj4+ICsNCj4+ICtz
-dHJ1Y3QgbWx4NV9odl92aGNhX2FnZW50IHsNCj4+ICsJZW51bSBtbHg1X2h2X3ZoY2FfYWdlbnRf
-dHlwZQkgdHlwZTsNCj4+ICsJc3RydWN0IG1seDVfaHZfdmhjYQkJKmh2X3ZoY2E7DQo+PiArCXZv
-aWQJCQkJKnByaXY7DQo+PiArCXUxNiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNlcTsN
-Cj4+ICsJdm9pZCAoKmNvbnRyb2wpKHN0cnVjdCBtbHg1X2h2X3ZoY2FfYWdlbnQgKmFnZW50LA0K
-Pj4gKwkJCXN0cnVjdCBtbHg1X2h2X3ZoY2FfY29udHJvbF9ibG9jayAqYmxvY2spOw0KPj4gKwl2
-b2lkICgqaW52YWxpZGF0ZSkoc3RydWN0IG1seDVfaHZfdmhjYV9hZ2VudCAqYWdlbnQsDQo+PiAr
-CQkJICAgdTY0IGJsb2NrX21hc2spOw0KPj4gKwl2b2lkICgqY2xlYW51cCkoc3RydWN0IG1seDVf
-aHZfdmhjYV9hZ2VudCAqYWdlbnQpOw0KPj4gK307DQo+PiArDQo+PiArc3RydWN0IG1seDVfaHZf
-dmhjYSAqbWx4NV9odl92aGNhX2NyZWF0ZShzdHJ1Y3QgbWx4NV9jb3JlX2RldiAqZGV2KQ0KPj4g
-K3sNCj4+ICsJc3RydWN0IG1seDVfaHZfdmhjYSAqaHZfdmhjYSA9IE5VTEw7DQo+PiArDQo+PiAr
-CWh2X3ZoY2EgPSBremFsbG9jKHNpemVvZigqaHZfdmhjYSksIEdGUF9LRVJORUwpOw0KPj4gKwlp
-ZiAoIWh2X3ZoY2EpDQo+PiArCQlyZXR1cm4gRVJSX1BUUigtRU5PTUVNKTsNCj4+ICsNCj4+ICsJ
-aHZfdmhjYS0+d29ya19xdWV1ZSA9IGNyZWF0ZV9zaW5nbGV0aHJlYWRfd29ya3F1ZXVlKCJtbHg1
-X2h2X3ZoY2EiKTsNCj4gDQo+IEkgd2FzIHVuZGVyIGltcHJlc3Npb24gdGhhdCB1c2FnZSBvZiBj
-cmVhdGVfKiBpbnRlcmZhY2VzIGlzIGRpc2NvdXJhZ2VkLA0KPiBJdCBoYXMgV1FfTUVNT1JZX0xF
-R0FDWSBmbGFnIGluc2lkZSBhbmQgY29tbWl0IGI3MWFiOGMyMDI1Y2EgdGFsa3MgYWJvdXQNCj4g
-dGhpcyBpbnRlcmZhY2UgYXMgbGVnYWN5IG9uZS4NCg0KbWx4NSBkcml2ZXIgaGFzIGRvemVucyBv
-ZiBzaW5nbGV0aHJlYWQgd29ya3F1ZXVlcy4gQSBnZW5lcmFsIGVmZm9ydCB0byANCnJlbW92ZSB0
-aGVtIGNhbiBiZSBkb25lIGxhdGVyLg0KDQo+IA0KPj4gKwlpZiAoIWh2X3ZoY2EtPndvcmtfcXVl
-dWUpIHsNCj4+ICsJCWtmcmVlKGh2X3ZoY2EpOw0KPj4gKwkJcmV0dXJuIEVSUl9QVFIoLUVOT01F
-TSk7DQo+PiArCX0NCj4+ICsNCj4+ICsJaHZfdmhjYS0+ZGV2ID0gZGV2Ow0KPj4gKwltdXRleF9p
-bml0KCZodl92aGNhLT5hZ2VudHNfbG9jayk7DQo+PiArDQo+PiArCXJldHVybiBodl92aGNhOw0K
-Pj4gK30NCj4+ICsNCj4+ICt2b2lkIG1seDVfaHZfdmhjYV9kZXN0cm95KHN0cnVjdCBtbHg1X2h2
-X3ZoY2EgKmh2X3ZoY2EpDQo+PiArew0KPj4gKwlpZiAoSVNfRVJSX09SX05VTEwoaHZfdmhjYSkp
-DQo+PiArCQlyZXR1cm47DQo+PiArDQo+PiArCWRlc3Ryb3lfd29ya3F1ZXVlKGh2X3ZoY2EtPndv
-cmtfcXVldWUpOw0KPj4gKwlrZnJlZShodl92aGNhKTsNCj4+ICt9DQo+PiArDQo+PiArc3RhdGlj
-IHZvaWQgbWx4NV9odl92aGNhX2ludmFsaWRhdGVfd29yayhzdHJ1Y3Qgd29ya19zdHJ1Y3QgKndv
-cmspDQo+PiArew0KPj4gKwlzdHJ1Y3QgbWx4NV9odl92aGNhX3dvcmsgKmh3b3JrOw0KPj4gKwlz
-dHJ1Y3QgbWx4NV9odl92aGNhICpodl92aGNhOw0KPj4gKwlpbnQgaTsNCj4+ICsNCj4+ICsJaHdv
-cmsgPSBjb250YWluZXJfb2Yod29yaywgc3RydWN0IG1seDVfaHZfdmhjYV93b3JrLCBpbnZhbGlk
-YXRlX3dvcmspOw0KPj4gKwlodl92aGNhID0gaHdvcmstPmh2X3ZoY2E7DQo+PiArDQo+PiArCW11
-dGV4X2xvY2soJmh2X3ZoY2EtPmFnZW50c19sb2NrKTsNCj4+ICsJZm9yIChpID0gMDsgaSA8IE1M
-WDVfSFZfVkhDQV9BR0VOVF9NQVg7IGkrKykgew0KPj4gKwkJc3RydWN0IG1seDVfaHZfdmhjYV9h
-Z2VudCAqYWdlbnQgPSBodl92aGNhLT5hZ2VudHNbaV07DQo+PiArDQo+PiArCQlpZiAoIWFnZW50
-IHx8ICFhZ2VudC0+aW52YWxpZGF0ZSkNCj4+ICsJCQljb250aW51ZTsNCj4+ICsNCj4+ICsJCWlm
-ICghKEJJVChhZ2VudC0+dHlwZSkgJiBod29yay0+YmxvY2tfbWFzaykpDQo+PiArCQkJY29udGlu
-dWU7DQo+PiArDQo+PiArCQlhZ2VudC0+aW52YWxpZGF0ZShhZ2VudCwgaHdvcmstPmJsb2NrX21h
-c2spOw0KPj4gKwl9DQo+PiArCW11dGV4X3VubG9jaygmaHZfdmhjYS0+YWdlbnRzX2xvY2spOw0K
-Pj4gKw0KPj4gKwlrZnJlZShod29yayk7DQo+PiArfQ0KPj4gKw0KPj4gK3ZvaWQgbWx4NV9odl92
-aGNhX2ludmFsaWRhdGUodm9pZCAqY29udGV4dCwgdTY0IGJsb2NrX21hc2spDQo+PiArew0KPj4g
-KwlzdHJ1Y3QgbWx4NV9odl92aGNhICpodl92aGNhID0gKHN0cnVjdCBtbHg1X2h2X3ZoY2EgKilj
-b250ZXh0Ow0KPj4gKwlzdHJ1Y3QgbWx4NV9odl92aGNhX3dvcmsgKndvcms7DQo+PiArDQo+PiAr
-CXdvcmsgPSBremFsbG9jKHNpemVvZigqd29yayksIEdGUF9BVE9NSUMpOw0KPj4gKwlpZiAoIXdv
-cmspDQo+PiArCQlyZXR1cm47DQo+PiArDQo+PiArCUlOSVRfV09SSygmd29yay0+aW52YWxpZGF0
-ZV93b3JrLCBtbHg1X2h2X3ZoY2FfaW52YWxpZGF0ZV93b3JrKTsNCj4+ICsJd29yay0+aHZfdmhj
-YSAgICA9IGh2X3ZoY2E7DQo+PiArCXdvcmstPmJsb2NrX21hc2sgPSBibG9ja19tYXNrOw0KPj4g
-Kw0KPj4gKwlxdWV1ZV93b3JrKGh2X3ZoY2EtPndvcmtfcXVldWUsICZ3b3JrLT5pbnZhbGlkYXRl
-X3dvcmspOw0KPj4gK30NCj4+ICsNCj4+ICtpbnQgbWx4NV9odl92aGNhX2luaXQoc3RydWN0IG1s
-eDVfaHZfdmhjYSAqaHZfdmhjYSkNCj4+ICt7DQo+PiArCWlmIChJU19FUlJfT1JfTlVMTChodl92
-aGNhKSkNCj4+ICsJCXJldHVybiBJU19FUlJfT1JfTlVMTChodl92aGNhKTsNCj4+ICsNCj4+ICsJ
-cmV0dXJuIG1seDVfaHZfcmVnaXN0ZXJfaW52YWxpZGF0ZShodl92aGNhLT5kZXYsIGh2X3ZoY2Es
-DQo+PiArCQkJCQkgICBtbHg1X2h2X3ZoY2FfaW52YWxpZGF0ZSk7DQo+PiArfQ0KPj4gKw0KPj4g
-K3ZvaWQgbWx4NV9odl92aGNhX2NsZWFudXAoc3RydWN0IG1seDVfaHZfdmhjYSAqaHZfdmhjYSkN
-Cj4+ICt7DQo+PiArCWludCBpOw0KPj4gKw0KPj4gKwlpZiAoSVNfRVJSX09SX05VTEwoaHZfdmhj
-YSkpDQo+PiArCQlyZXR1cm47DQo+PiArDQo+PiArCW11dGV4X2xvY2soJmh2X3ZoY2EtPmFnZW50
-c19sb2NrKTsNCj4+ICsJZm9yIChpID0gMDsgaSA8IE1MWDVfSFZfVkhDQV9BR0VOVF9NQVg7IGkr
-KykNCj4+ICsJCVdBUk5fT04oaHZfdmhjYS0+YWdlbnRzW2ldKTsNCj4+ICsNCj4+ICsJbXV0ZXhf
-dW5sb2NrKCZodl92aGNhLT5hZ2VudHNfbG9jayk7DQo+PiArDQo+PiArCW1seDVfaHZfdW5yZWdp
-c3Rlcl9pbnZhbGlkYXRlKGh2X3ZoY2EtPmRldik7DQo+PiArfQ0KPj4gKw0KPj4gK3N0cnVjdCBt
-bHg1X2h2X3ZoY2FfYWdlbnQgKg0KPj4gK21seDVfaHZfdmhjYV9hZ2VudF9jcmVhdGUoc3RydWN0
-IG1seDVfaHZfdmhjYSAqaHZfdmhjYSwNCj4+ICsJCQkgIGVudW0gbWx4NV9odl92aGNhX2FnZW50
-X3R5cGUgdHlwZSwNCj4+ICsJCQkgIHZvaWQgKCpjb250cm9sKShzdHJ1Y3QgbWx4NV9odl92aGNh
-X2FnZW50KiwNCj4+ICsJCQkJCSAgc3RydWN0IG1seDVfaHZfdmhjYV9jb250cm9sX2Jsb2NrICpi
-bG9jayksDQo+PiArCQkJICB2b2lkICgqaW52YWxpZGF0ZSkoc3RydWN0IG1seDVfaHZfdmhjYV9h
-Z2VudCosDQo+PiArCQkJCQkgICAgIHU2NCBibG9ja19tYXNrKSwNCj4+ICsJCQkgIHZvaWQgKCpj
-bGVhdXApKHN0cnVjdCBtbHg1X2h2X3ZoY2FfYWdlbnQgKmFnZW50KSwNCj4+ICsJCQkgIHZvaWQg
-KnByaXYpDQo+PiArew0KPj4gKwlzdHJ1Y3QgbWx4NV9odl92aGNhX2FnZW50ICphZ2VudDsNCj4+
-ICsNCj4+ICsJaWYgKElTX0VSUl9PUl9OVUxMKGh2X3ZoY2EpKQ0KPj4gKwkJcmV0dXJuIEVSUl9Q
-VFIoLUVOT01FTSk7DQo+PiArDQo+PiArCWlmICh0eXBlID49IE1MWDVfSFZfVkhDQV9BR0VOVF9N
-QVgpDQo+PiArCQlyZXR1cm4gRVJSX1BUUigtRUlOVkFMKTsNCj4+ICsNCj4+ICsJbXV0ZXhfbG9j
-aygmaHZfdmhjYS0+YWdlbnRzX2xvY2spOw0KPj4gKwlpZiAoaHZfdmhjYS0+YWdlbnRzW3R5cGVd
-KSB7DQo+PiArCQltdXRleF91bmxvY2soJmh2X3ZoY2EtPmFnZW50c19sb2NrKTsNCj4+ICsJCXJl
-dHVybiBFUlJfUFRSKC1FSU5WQUwpOw0KPj4gKwl9DQo+PiArCW11dGV4X3VubG9jaygmaHZfdmhj
-YS0+YWdlbnRzX2xvY2spOw0KPj4gKw0KPj4gKwlhZ2VudCA9IGt6YWxsb2Moc2l6ZW9mKCphZ2Vu
-dCksIEdGUF9LRVJORUwpOw0KPj4gKwlpZiAoIWFnZW50KQ0KPj4gKwkJcmV0dXJuIEVSUl9QVFIo
-LUVOT01FTSk7DQo+PiArDQo+PiArCWFnZW50LT50eXBlICAgICAgPSB0eXBlOw0KPj4gKwlhZ2Vu
-dC0+aHZfdmhjYSAgID0gaHZfdmhjYTsNCj4+ICsJYWdlbnQtPnByaXYgICAgICA9IHByaXY7DQo+
-PiArCWFnZW50LT5jb250cm9sICAgPSBjb250cm9sOw0KPj4gKwlhZ2VudC0+aW52YWxpZGF0ZSA9
-IGludmFsaWRhdGU7DQo+PiArCWFnZW50LT5jbGVhbnVwICAgPSBjbGVhdXA7DQo+PiArDQo+PiAr
-CW11dGV4X2xvY2soJmh2X3ZoY2EtPmFnZW50c19sb2NrKTsNCj4+ICsJaHZfdmhjYS0+YWdlbnRz
-W3R5cGVdID0gYWdlbnQ7DQo+PiArCW11dGV4X3VubG9jaygmaHZfdmhjYS0+YWdlbnRzX2xvY2sp
-Ow0KPj4gKw0KPj4gKwlyZXR1cm4gYWdlbnQ7DQo+PiArfQ0KPj4gKw0KPj4gK3ZvaWQgbWx4NV9o
-dl92aGNhX2FnZW50X2Rlc3Ryb3koc3RydWN0IG1seDVfaHZfdmhjYV9hZ2VudCAqYWdlbnQpDQo+
-PiArew0KPj4gKwlzdHJ1Y3QgbWx4NV9odl92aGNhICpodl92aGNhID0gYWdlbnQtPmh2X3ZoY2E7
-DQo+PiArDQo+PiArCW11dGV4X2xvY2soJmh2X3ZoY2EtPmFnZW50c19sb2NrKTsNCj4+ICsNCj4+
-ICsJaWYgKFdBUk5fT04oYWdlbnQgIT0gaHZfdmhjYS0+YWdlbnRzW2FnZW50LT50eXBlXSkpIHsN
-Cj4+ICsJCW11dGV4X3VubG9jaygmaHZfdmhjYS0+YWdlbnRzX2xvY2spOw0KPj4gKwkJcmV0dXJu
-Ow0KPj4gKwl9DQo+PiArDQo+PiArCWh2X3ZoY2EtPmFnZW50c1thZ2VudC0+dHlwZV0gPSBOVUxM
-Ow0KPj4gKwltdXRleF91bmxvY2soJmh2X3ZoY2EtPmFnZW50c19sb2NrKTsNCj4+ICsNCj4+ICsJ
-aWYgKGFnZW50LT5jbGVhbnVwKQ0KPj4gKwkJYWdlbnQtPmNsZWFudXAoYWdlbnQpOw0KPj4gKw0K
-Pj4gKwlrZnJlZShhZ2VudCk7DQo+PiArfQ0KPj4gKw0KPj4gK3N0YXRpYyBpbnQgbWx4NV9odl92
-aGNhX2RhdGFfYmxvY2tfcHJlcGFyZShzdHJ1Y3QgbWx4NV9odl92aGNhX2FnZW50ICphZ2VudCwN
-Cj4+ICsJCQkJCSAgIHN0cnVjdCBtbHg1X2h2X3ZoY2FfZGF0YV9ibG9jayAqZGF0YV9ibG9jaywN
-Cj4+ICsJCQkJCSAgIHZvaWQgKnNyYywgaW50IGxlbiwgaW50ICpvZmZzZXQpDQo+PiArew0KPj4g
-KwlpbnQgYnl0ZXMgPSBtaW5fdChpbnQsIChpbnQpc2l6ZW9mKGRhdGFfYmxvY2stPmRhdGEpLCBs
-ZW4pOw0KPj4gKw0KPj4gKwlkYXRhX2Jsb2NrLT5zZXF1ZW5jZSA9IGFnZW50LT5zZXE7DQo+PiAr
-CWRhdGFfYmxvY2stPm9mZnNldCAgID0gKCpvZmZzZXQpKys7DQo+PiArCW1lbWNweShkYXRhX2Js
-b2NrLT5kYXRhLCBzcmMsIGJ5dGVzKTsNCj4+ICsNCj4+ICsJcmV0dXJuIGJ5dGVzOw0KPj4gK30N
-Cj4+ICsNCj4+ICtzdGF0aWMgdm9pZCBtbHg1X2h2X3ZoY2FfYWdlbnRfc2VxX3VwZGF0ZShzdHJ1
-Y3QgbWx4NV9odl92aGNhX2FnZW50ICphZ2VudCkNCj4+ICt7DQo+PiArCWFnZW50LT5zZXErKzsN
-Cj4+ICt9DQo+PiArDQo+PiAraW50IG1seDVfaHZfdmhjYV9hZ2VudF93cml0ZShzdHJ1Y3QgbWx4
-NV9odl92aGNhX2FnZW50ICphZ2VudCwNCj4+ICsJCQkgICAgIHZvaWQgKmJ1ZiwgaW50IGxlbikN
-Cj4+ICt7DQo+PiArCWludCBvZmZzZXQgPSBhZ2VudC0+dHlwZSAqIEhWX0NPTkZJR19CTE9DS19T
-SVpFX01BWDsNCj4+ICsJaW50IGJsb2NrX29mZnNldCA9IDA7DQo+PiArCWludCB0b3RhbCA9IDA7
-DQo+PiArCWludCBlcnI7DQo+PiArDQo+PiArCXdoaWxlIChsZW4pIHsNCj4+ICsJCXN0cnVjdCBt
-bHg1X2h2X3ZoY2FfZGF0YV9ibG9jayBkYXRhX2Jsb2NrID0gezB9Ow0KPj4gKwkJaW50IGJ5dGVz
-Ow0KPj4gKw0KPj4gKwkJYnl0ZXMgPSBtbHg1X2h2X3ZoY2FfZGF0YV9ibG9ja19wcmVwYXJlKGFn
-ZW50LCAmZGF0YV9ibG9jaywNCj4+ICsJCQkJCQkJYnVmICsgdG90YWwsDQo+PiArCQkJCQkJCWxl
-biwgJmJsb2NrX29mZnNldCk7DQo+PiArCQlpZiAoIWJ5dGVzKQ0KPj4gKwkJCXJldHVybiAtRU5P
-TUVNOw0KPj4gKw0KPj4gKwkJZXJyID0gbWx4NV9odl93cml0ZV9jb25maWcoYWdlbnQtPmh2X3Zo
-Y2EtPmRldiwgJmRhdGFfYmxvY2ssDQo+PiArCQkJCQkgICBzaXplb2YoZGF0YV9ibG9jayksIG9m
-ZnNldCk7DQo+PiArCQlpZiAoZXJyKQ0KPj4gKwkJCXJldHVybiBlcnI7DQo+PiArDQo+PiArCQl0
-b3RhbCArPSBieXRlczsNCj4+ICsJCWxlbiAgIC09IGJ5dGVzOw0KPj4gKwl9DQo+PiArDQo+PiAr
-CW1seDVfaHZfdmhjYV9hZ2VudF9zZXFfdXBkYXRlKGFnZW50KTsNCj4+ICsNCj4+ICsJcmV0dXJu
-IDA7DQo+PiArfQ0KPj4gKw0KPj4gK3ZvaWQgKm1seDVfaHZfdmhjYV9hZ2VudF9wcml2KHN0cnVj
-dCBtbHg1X2h2X3ZoY2FfYWdlbnQgKmFnZW50KQ0KPj4gK3sNCj4+ICsJcmV0dXJuIGFnZW50LT5w
-cml2Ow0KPj4gK30NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5v
-eC9tbHg1L2NvcmUvbGliL2h2X3ZoY2EuaCBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94
-L21seDUvY29yZS9saWIvaHZfdmhjYS5oDQo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPj4gaW5k
-ZXggMDAwMDAwMC4uY2RmMTMwMw0KPj4gLS0tIC9kZXYvbnVsbA0KPj4gKysrIGIvZHJpdmVycy9u
-ZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2xpYi9odl92aGNhLmgNCj4+IEBAIC0wLDAg
-KzEsMTAyIEBADQo+PiArLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAgT1IgTGlu
-dXgtT3BlbklCICovDQo+PiArLyogQ29weXJpZ2h0IChjKSAyMDE5IE1lbGxhbm94IFRlY2hub2xv
-Z2llcy4gKi8NCj4+ICsNCj4+ICsjaWZuZGVmIF9fTElCX0hWX1ZIQ0FfSF9fDQo+PiArI2RlZmlu
-ZSBfX0xJQl9IVl9WSENBX0hfXw0KPj4gKw0KPj4gKyNpbmNsdWRlICJlbi5oIg0KPj4gKyNpbmNs
-dWRlICJsaWIvaHYuaCINCj4+ICsNCj4+ICtzdHJ1Y3QgbWx4NV9odl92aGNhX2FnZW50Ow0KPj4g
-K3N0cnVjdCBtbHg1X2h2X3ZoY2E7DQo+PiArc3RydWN0IG1seDVfaHZfdmhjYV9jb250cm9sX2Js
-b2NrOw0KPj4gKw0KPj4gK2VudW0gbWx4NV9odl92aGNhX2FnZW50X3R5cGUgew0KPj4gKwlNTFg1
-X0hWX1ZIQ0FfQUdFTlRfTUFYID0gMzIsDQo+PiArfTsNCj4+ICsNCj4+ICsjaWYgSVNfRU5BQkxF
-RChDT05GSUdfUENJX0hZUEVSVl9JTlRFUkZBQ0UpDQo+PiArDQo+PiArc3RydWN0IG1seDVfaHZf
-dmhjYV9jb250cm9sX2Jsb2NrIHsNCj4+ICsJdTMyICAgICBjYXBhYmlsaXRpZXM7DQo+PiArCXUz
-MiAgICAgY29udHJvbDsNCj4+ICsJdTE2ICAgICBjb21tYW5kOw0KPj4gKwl1MTYgICAgIGNvbW1h
-bmRfYWNrOw0KPj4gKwl1MTYgICAgIHZlcnNpb247DQo+PiArCXUxNiAgICAgcmluZ3M7DQo+PiAr
-CXUzMiAgICAgcmVzZXJ2ZWQxWzI4XTsNCj4+ICt9Ow0KPj4gKw0KPj4gK3N0cnVjdCBtbHg1X2h2
-X3ZoY2EgKm1seDVfaHZfdmhjYV9jcmVhdGUoc3RydWN0IG1seDVfY29yZV9kZXYgKmRldik7DQo+
-PiArdm9pZCBtbHg1X2h2X3ZoY2FfZGVzdHJveShzdHJ1Y3QgbWx4NV9odl92aGNhICpodl92aGNh
-KTsNCj4+ICtpbnQgbWx4NV9odl92aGNhX2luaXQoc3RydWN0IG1seDVfaHZfdmhjYSAqaHZfdmhj
-YSk7DQo+PiArdm9pZCBtbHg1X2h2X3ZoY2FfY2xlYW51cChzdHJ1Y3QgbWx4NV9odl92aGNhICpo
-dl92aGNhKTsNCj4+ICt2b2lkIG1seDVfaHZfdmhjYV9pbnZhbGlkYXRlKHZvaWQgKmNvbnRleHQs
-IHU2NCBibG9ja19tYXNrKTsNCj4+ICsNCj4+ICtzdHJ1Y3QgbWx4NV9odl92aGNhX2FnZW50ICoN
-Cj4+ICttbHg1X2h2X3ZoY2FfYWdlbnRfY3JlYXRlKHN0cnVjdCBtbHg1X2h2X3ZoY2EgKmh2X3Zo
-Y2EsDQo+PiArCQkJICBlbnVtIG1seDVfaHZfdmhjYV9hZ2VudF90eXBlIHR5cGUsDQo+PiArCQkJ
-ICB2b2lkICgqY29udHJvbCkoc3RydWN0IG1seDVfaHZfdmhjYV9hZ2VudCosDQo+PiArCQkJCQkg
-IHN0cnVjdCBtbHg1X2h2X3ZoY2FfY29udHJvbF9ibG9jayAqYmxvY2spLA0KPj4gKwkJCSAgdm9p
-ZCAoKmludmFsaWRhdGUpKHN0cnVjdCBtbHg1X2h2X3ZoY2FfYWdlbnQqLA0KPj4gKwkJCQkJICAg
-ICB1NjQgYmxvY2tfbWFzayksDQo+PiArCQkJICB2b2lkICgqY2xlYW51cCkoc3RydWN0IG1seDVf
-aHZfdmhjYV9hZ2VudCAqYWdlbnQpLA0KPj4gKwkJCSAgdm9pZCAqY29udGV4dCk7DQo+PiArDQo+
-PiArdm9pZCBtbHg1X2h2X3ZoY2FfYWdlbnRfZGVzdHJveShzdHJ1Y3QgbWx4NV9odl92aGNhX2Fn
-ZW50ICphZ2VudCk7DQo+PiAraW50IG1seDVfaHZfdmhjYV9hZ2VudF93cml0ZShzdHJ1Y3QgbWx4
-NV9odl92aGNhX2FnZW50ICphZ2VudCwNCj4+ICsJCQkgICAgIHZvaWQgKmJ1ZiwgaW50IGxlbik7
-DQo+PiArdm9pZCAqbWx4NV9odl92aGNhX2FnZW50X3ByaXYoc3RydWN0IG1seDVfaHZfdmhjYV9h
-Z2VudCAqYWdlbnQpOw0KPj4gKw0KPj4gKyNlbHNlDQo+PiArDQo+PiArc3RhdGljIGlubGluZSBz
-dHJ1Y3QgbWx4NV9odl92aGNhICoNCj4+ICttbHg1X2h2X3ZoY2FfY3JlYXRlKHN0cnVjdCBtbHg1
-X2NvcmVfZGV2ICpkZXYpDQo+PiArew0KPj4gKwlyZXR1cm4gTlVMTDsNCj4+ICt9DQo+PiArDQo+
-PiArc3RhdGljIGlubGluZSB2b2lkIG1seDVfaHZfdmhjYV9kZXN0cm95KHN0cnVjdCBtbHg1X2h2
-X3ZoY2EgKmh2X3ZoY2EpDQo+PiArew0KPj4gK30NCj4+ICsNCj4+ICtzdGF0aWMgaW5saW5lIGlu
-dCBtbHg1X2h2X3ZoY2FfaW5pdChzdHJ1Y3QgbWx4NV9odl92aGNhICpodl92aGNhKQ0KPj4gK3sN
-Cj4+ICsJcmV0dXJuIDA7DQo+PiArfQ0KPj4gKw0KPj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBtbHg1
-X2h2X3ZoY2FfY2xlYW51cChzdHJ1Y3QgbWx4NV9odl92aGNhICpodl92aGNhKQ0KPj4gK3sNCj4+
-ICt9DQo+PiArDQo+PiArc3RhdGljIGlubGluZSB2b2lkIG1seDVfaHZfdmhjYV9pbnZhbGlkYXRl
-KHZvaWQgKmNvbnRleHQsDQo+PiArCQkJCQkgICB1NjQgYmxvY2tfbWFzaykNCj4+ICt7DQo+PiAr
-fQ0KPj4gKw0KPj4gK3N0YXRpYyBpbmxpbmUgc3RydWN0IG1seDVfaHZfdmhjYV9hZ2VudCAqDQo+
-PiArbWx4NV9odl92aGNhX2FnZW50X2NyZWF0ZShzdHJ1Y3QgbWx4NV9odl92aGNhICpodl92aGNh
-LA0KPj4gKwkJCSAgZW51bSBtbHg1X2h2X3ZoY2FfYWdlbnRfdHlwZSB0eXBlLA0KPj4gKwkJCSAg
-dm9pZCAoKmNvbnRyb2wpKHN0cnVjdCBtbHg1X2h2X3ZoY2FfYWdlbnQqLA0KPj4gKwkJCQkJICBz
-dHJ1Y3QgbWx4NV9odl92aGNhX2NvbnRyb2xfYmxvY2sgKmJsb2NrKSwNCj4+ICsJCQkgIHZvaWQg
-KCppbnZhbGlkYXRlKShzdHJ1Y3QgbWx4NV9odl92aGNhX2FnZW50KiwNCj4+ICsJCQkJCSAgICAg
-dTY0IGJsb2NrX21hc2spLA0KPj4gKwkJCSAgdm9pZCAoKmNsZWFudXApKHN0cnVjdCBtbHg1X2h2
-X3ZoY2FfYWdlbnQgKmFnZW50KSwNCj4+ICsJCQkgIHZvaWQgKmNvbnRleHQpDQo+PiArew0KPj4g
-KwlyZXR1cm4gTlVMTDsNCj4+ICt9DQo+PiArDQo+PiArc3RhdGljIGlubGluZSB2b2lkIG1seDVf
-aHZfdmhjYV9hZ2VudF9kZXN0cm95KHN0cnVjdCBtbHg1X2h2X3ZoY2FfYWdlbnQgKmFnZW50KQ0K
-Pj4gK3sNCj4+ICt9DQo+PiArDQo+PiArc3RhdGljIGlubGluZSBpbnQNCj4+ICttbHg1X2h2X3Zo
-Y2Ffd3JpdGVfYWdlbnQoc3RydWN0IG1seDVfaHZfdmhjYV9hZ2VudCAqYWdlbnQsDQo+PiArCQkJ
-IHZvaWQgKmJ1ZiwgaW50IGxlbikNCj4+ICt7DQo+PiArCXJldHVybiAwOw0KPj4gK30NCj4+ICsj
-ZW5kaWYNCj4+ICsNCj4+ICsjZW5kaWYgLyogX19MSUJfSFZfVkhDQV9IX18gKi8NCj4+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvbWFpbi5jIGIv
-ZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL21haW4uYw0KPj4gaW5kZXgg
-MGI3MGIxZC4uNjEzODhjYSAxMDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L21l
-bGxhbm94L21seDUvY29yZS9tYWluLmMNCj4+ICsrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L21l
-bGxhbm94L21seDUvY29yZS9tYWluLmMNCj4+IEBAIC02OSw2ICs2OSw3IEBADQo+PiAgICNpbmNs
-dWRlICJsaWIvcGNpX3ZzYy5oIg0KPj4gICAjaW5jbHVkZSAiZGlhZy9md190cmFjZXIuaCINCj4+
-ICAgI2luY2x1ZGUgImVjcGYuaCINCj4+ICsjaW5jbHVkZSAibGliL2h2X3ZoY2EuaCINCj4+DQo+
-PiAgIE1PRFVMRV9BVVRIT1IoIkVsaSBDb2hlbiA8ZWxpQG1lbGxhbm94LmNvbT4iKTsNCj4+ICAg
-TU9EVUxFX0RFU0NSSVBUSU9OKCJNZWxsYW5veCA1dGggZ2VuZXJhdGlvbiBuZXR3b3JrIGFkYXB0
-ZXJzIChDb25uZWN0WCBzZXJpZXMpIGNvcmUgZHJpdmVyIik7DQo+PiBAQCAtODcwLDYgKzg3MSw3
-IEBAIHN0YXRpYyBpbnQgbWx4NV9pbml0X29uY2Uoc3RydWN0IG1seDVfY29yZV9kZXYgKmRldikN
-Cj4+ICAgCX0NCj4+DQo+PiAgIAlkZXYtPnRyYWNlciA9IG1seDVfZndfdHJhY2VyX2NyZWF0ZShk
-ZXYpOw0KPj4gKwlkZXYtPmh2X3ZoY2EgPSBtbHg1X2h2X3ZoY2FfY3JlYXRlKGRldik7DQo+Pg0K
-Pj4gICAJcmV0dXJuIDA7DQo+Pg0KPj4gQEAgLTkwMCw2ICs5MDIsNyBAQCBzdGF0aWMgaW50IG1s
-eDVfaW5pdF9vbmNlKHN0cnVjdCBtbHg1X2NvcmVfZGV2ICpkZXYpDQo+Pg0KPj4gICBzdGF0aWMg
-dm9pZCBtbHg1X2NsZWFudXBfb25jZShzdHJ1Y3QgbWx4NV9jb3JlX2RldiAqZGV2KQ0KPj4gICB7
-DQo+PiArCW1seDVfaHZfdmhjYV9kZXN0cm95KGRldi0+aHZfdmhjYSk7DQo+PiAgIAltbHg1X2Z3
-X3RyYWNlcl9kZXN0cm95KGRldi0+dHJhY2VyKTsNCj4+ICAgCW1seDVfZnBnYV9jbGVhbnVwKGRl
-dik7DQo+PiAgIAltbHg1X2Vzd2l0Y2hfY2xlYW51cChkZXYtPnByaXYuZXN3aXRjaCk7DQo+PiBA
-QCAtMTA2Nyw2ICsxMDcwLDggQEAgc3RhdGljIGludCBtbHg1X2xvYWQoc3RydWN0IG1seDVfY29y
-ZV9kZXYgKmRldikNCj4+ICAgCQlnb3RvIGVycl9md190cmFjZXI7DQo+PiAgIAl9DQo+Pg0KPj4g
-KwltbHg1X2h2X3ZoY2FfaW5pdChkZXYtPmh2X3ZoY2EpOw0KPiANCj4gV2hhdCBpcyB0aGUgcG9p
-bnQgdG8gZGVjbGFyZSB0aGlzIGZ1bmN0aW9uIGFzICJpbnQgLi4uIiBpZiB5b3UgYXJlIG5vdA0K
-PiBpbnRlcmVzdGVkIGluIHJlc3VsdD8NCj4gDQo+PiArDQo+PiAgIAllcnIgPSBtbHg1X2ZwZ2Ff
-ZGV2aWNlX3N0YXJ0KGRldik7DQo+PiAgIAlpZiAoZXJyKSB7DQo+PiAgIAkJbWx4NV9jb3JlX2Vy
-cihkZXYsICJmcGdhIGRldmljZSBzdGFydCBmYWlsZWQgJWRcbiIsIGVycik7DQo+PiBAQCAtMTEy
-Miw2ICsxMTI3LDcgQEAgc3RhdGljIGludCBtbHg1X2xvYWQoc3RydWN0IG1seDVfY29yZV9kZXYg
-KmRldikNCj4+ICAgZXJyX2lwc2VjX3N0YXJ0Og0KPj4gICAJbWx4NV9mcGdhX2RldmljZV9zdG9w
-KGRldik7DQo+PiAgIGVycl9mcGdhX3N0YXJ0Og0KPj4gKwltbHg1X2h2X3ZoY2FfY2xlYW51cChk
-ZXYtPmh2X3ZoY2EpOw0KPj4gICAJbWx4NV9md190cmFjZXJfY2xlYW51cChkZXYtPnRyYWNlcik7
-DQo+PiAgIGVycl9md190cmFjZXI6DQo+PiAgIAltbHg1X2VxX3RhYmxlX2Rlc3Ryb3koZGV2KTsN
-Cj4+IEBAIC0xMTQyLDYgKzExNDgsNyBAQCBzdGF0aWMgdm9pZCBtbHg1X3VubG9hZChzdHJ1Y3Qg
-bWx4NV9jb3JlX2RldiAqZGV2KQ0KPj4gICAJbWx4NV9hY2NlbF9pcHNlY19jbGVhbnVwKGRldik7
-DQo+PiAgIAltbHg1X2FjY2VsX3Rsc19jbGVhbnVwKGRldik7DQo+PiAgIAltbHg1X2ZwZ2FfZGV2
-aWNlX3N0b3AoZGV2KTsNCj4+ICsJbWx4NV9odl92aGNhX2NsZWFudXAoZGV2LT5odl92aGNhKTsN
-Cj4+ICAgCW1seDVfZndfdHJhY2VyX2NsZWFudXAoZGV2LT50cmFjZXIpOw0KPj4gICAJbWx4NV9l
-cV90YWJsZV9kZXN0cm95KGRldik7DQo+PiAgIAltbHg1X2lycV90YWJsZV9kZXN0cm95KGRldik7
-DQo+PiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9tbHg1L2RyaXZlci5oIGIvaW5jbHVkZS9s
-aW51eC9tbHg1L2RyaXZlci5oDQo+PiBpbmRleCBkZjIzZjE3Li4xM2I0Y2YyIDEwMDY0NA0KPj4g
-LS0tIGEvaW5jbHVkZS9saW51eC9tbHg1L2RyaXZlci5oDQo+PiArKysgYi9pbmNsdWRlL2xpbnV4
-L21seDUvZHJpdmVyLmgNCj4+IEBAIC02NTksNiArNjU5LDcgQEAgc3RydWN0IG1seDVfY2xvY2sg
-ew0KPj4gICBzdHJ1Y3QgbWx4NV9md190cmFjZXI7DQo+PiAgIHN0cnVjdCBtbHg1X3Z4bGFuOw0K
-Pj4gICBzdHJ1Y3QgbWx4NV9nZW5ldmU7DQo+PiArc3RydWN0IG1seDVfaHZfdmhjYTsNCj4+DQo+
-PiAgIHN0cnVjdCBtbHg1X2NvcmVfZGV2IHsNCj4+ICAgCXN0cnVjdCBkZXZpY2UgKmRldmljZTsN
-Cj4+IEBAIC03MDYsNiArNzA3LDcgQEAgc3RydWN0IG1seDVfY29yZV9kZXYgew0KPj4gICAJc3Ry
-dWN0IG1seDVfaWJfY2xvY2tfaW5mbyAgKmNsb2NrX2luZm87DQo+PiAgIAlzdHJ1Y3QgbWx4NV9m
-d190cmFjZXIgICAqdHJhY2VyOw0KPj4gICAJdTMyICAgICAgICAgICAgICAgICAgICAgIHZzY19h
-ZGRyOw0KPj4gKwlzdHJ1Y3QgbWx4NV9odl92aGNhCSpodl92aGNhOw0KPj4gICB9Ow0KPj4NCj4+
-ICAgc3RydWN0IG1seDVfZGIgew0KPj4gLS0NCj4+IDEuOC4zLjENCj4+DQo=
+On 22.08.2019 21:15, Heiner Kallweit wrote:
+> On 22.08.2019 15:05, Greg KH wrote:
+>> On Wed, Aug 21, 2019 at 08:18:41PM +0200, Heiner Kallweit wrote:
+>>> Background of this extension is a problem with the r8169 network driver.
+>>> Several combinations of board chipsets and network chip versions have
+>>> problems if ASPM is enabled, therefore we have to disable ASPM per default.
+>>> However especially on notebooks ASPM can provide significant power-saving,
+>>> therefore we want to give users the option to enable ASPM. With the new sysfs
+>>> attributes users can control which ASPM link-states are enabled/disabled.
+>>>
+>>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>>> ---
+>>> v2:
+>>> - use a dedicated sysfs attribute per link state
+>>> - allow separate control of ASPM and PCI PM L1 sub-states
+>>> ---
+>>>  Documentation/ABI/testing/sysfs-bus-pci |  13 ++
+>>>  drivers/pci/pci.h                       |   8 +-
+>>>  drivers/pci/pcie/aspm.c                 | 263 +++++++++++++++++++++++-
+>>>  3 files changed, 276 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+>>> index 8bfee557e..38b565c30 100644
+>>> --- a/Documentation/ABI/testing/sysfs-bus-pci
+>>> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+>>> @@ -347,3 +347,16 @@ Description:
+>>>  		If the device has any Peer-to-Peer memory registered, this
+>>>  	        file contains a '1' if the memory has been published for
+>>>  		use outside the driver that owns the device.
+>>> +
+>>> +What		/sys/bus/pci/devices/.../power/aspm_l0s
+>>> +What		/sys/bus/pci/devices/.../power/aspm_l1
+>>> +What		/sys/bus/pci/devices/.../power/aspm_l1_1
+>>> +What		/sys/bus/pci/devices/.../power/aspm_l1_2
+>>> +What		/sys/bus/pci/devices/.../power/aspm_l1_1_pcipm
+>>> +What		/sys/bus/pci/devices/.../power/aspm_l1_2_pcipm
+>>> +What		/sys/bus/pci/devices/.../power/aspm_clkpm
+>>
+>> Wait, there already is a "power" subdirectory for all devices in the
+>> system, are you adding another one, or files to that already-created
+>> directory?
+>>
+> This is the standard "power" directory dynamically created by
+> dpm_sysfs_add().
+> 
+>>> +date:		August 2019
+>>> +Contact:	Heiner Kallweit <hkallweit1@gmail.com>
+>>> +Description:	If ASPM is supported for an endpoint, then these files
+>>> +		can be used to disable or enable the individual
+>>> +		power management states.
+>>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>>> index 3f126f808..e51c91f38 100644
+>>> --- a/drivers/pci/pci.h
+>>> +++ b/drivers/pci/pci.h
+>>> @@ -525,17 +525,13 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev);
+>>>  void pcie_aspm_exit_link_state(struct pci_dev *pdev);
+>>>  void pcie_aspm_pm_state_change(struct pci_dev *pdev);
+>>>  void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
+>>> +void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev);
+>>> +void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev);
+>>>  #else
+>>>  static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+>>>  static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+>>>  static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
+>>>  static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
+>>> -#endif
+>>> -
+>>> -#ifdef CONFIG_PCIEASPM_DEBUG
+>>> -void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev);
+>>> -void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev);
+>>> -#else
+>>>  static inline void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev) { }
+>>>  static inline void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev) { }
+>>>  #endif
+>>> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+>>> index 149b876c9..e7dfcd1bd 100644
+>>> --- a/drivers/pci/pcie/aspm.c
+>>> +++ b/drivers/pci/pcie/aspm.c
+>>> @@ -1275,38 +1275,297 @@ static ssize_t clk_ctl_store(struct device *dev,
+>>>  
+>>>  static DEVICE_ATTR_RW(link_state);
+>>>  static DEVICE_ATTR_RW(clk_ctl);
+>>> +#endif
+>>> +
+>>> +static const char power_group[] = "power";
+>>> +
+>>> +static struct pcie_link_state *aspm_get_parent_link(struct pci_dev *pdev)
+>>> +{
+>>> +	struct pci_dev *parent = pdev->bus->self;
+>>> +
+>>> +	if (pdev->has_secondary_link)
+>>> +		parent = pdev;
+>>> +
+>>> +	return parent ? parent->link_state : NULL;
+>>> +}
+>>> +
+>>> +static bool pcie_check_valid_aspm_endpoint(struct pci_dev *pdev)
+>>> +{
+>>> +	struct pcie_link_state *link;
+>>> +
+>>> +	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT)
+>>> +		return false;
+>>> +
+>>> +	link = aspm_get_parent_link(pdev);
+>>> +
+>>> +	return link && link->aspm_capable;
+>>> +}
+>>> +
+>>> +static ssize_t aspm_attr_show_common(struct device *dev,
+>>> +				     struct device_attribute *attr,
+>>> +				     char *buf, int state)
+>>> +{
+>>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>>> +	struct pcie_link_state *link;
+>>> +	int val;
+>>> +
+>>> +	link = aspm_get_parent_link(pdev);
+>>> +	if (!link)
+>>> +		return -EOPNOTSUPP;
+>>> +
+>>> +	mutex_lock(&aspm_lock);
+>>> +	val = !!(link->aspm_enabled & state);
+>>> +	mutex_unlock(&aspm_lock);
+>>> +
+>>> +	return snprintf(buf, PAGE_SIZE, "%d\n", val);
+>>
+>> For sysfs files, you never need to use snprintf() as you "know" the size
+>> of the buffer is big, and you are just printing out a single number.  So
+>> that can be cleaned up in all of these attribute files.
+>>
+>>> +}
+>>> +
+>>> +static ssize_t aspm_l0s_show(struct device *dev,
+>>> +			     struct device_attribute *attr, char *buf)
+>>> +{
+>>> +	return aspm_attr_show_common(dev, attr, buf, ASPM_STATE_L0S);
+>>> +}
+>>> +
+>>> +static ssize_t aspm_l1_show(struct device *dev,
+>>> +			    struct device_attribute *attr, char *buf)
+>>> +{
+>>> +	return aspm_attr_show_common(dev, attr, buf, ASPM_STATE_L1);
+>>> +}
+>>> +
+>>> +static ssize_t aspm_l1_1_show(struct device *dev,
+>>> +			      struct device_attribute *attr, char *buf)
+>>> +{
+>>> +	return aspm_attr_show_common(dev, attr, buf, ASPM_STATE_L1_1);
+>>> +}
+>>> +
+>>> +static ssize_t aspm_l1_2_show(struct device *dev,
+>>> +			      struct device_attribute *attr, char *buf)
+>>> +{
+>>> +	return aspm_attr_show_common(dev, attr, buf, ASPM_STATE_L1_2);
+>>> +}
+>>> +
+>>> +static ssize_t aspm_l1_1_pcipm_show(struct device *dev,
+>>> +				    struct device_attribute *attr, char *buf)
+>>> +{
+>>> +	return aspm_attr_show_common(dev, attr, buf, ASPM_STATE_L1_1_PCIPM);
+>>> +}
+>>> +
+>>> +static ssize_t aspm_l1_2_pcipm_show(struct device *dev,
+>>> +				    struct device_attribute *attr, char *buf)
+>>> +{
+>>> +	return aspm_attr_show_common(dev, attr, buf, ASPM_STATE_L1_2_PCIPM);
+>>> +}
+>>> +
+>>> +static ssize_t aspm_attr_store_common(struct device *dev,
+>>> +				      struct device_attribute *attr,
+>>> +				      const char *buf, size_t len, int state)
+>>> +{
+>>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>>> +	struct pcie_link_state *link;
+>>> +	bool state_enable;
+>>> +
+>>> +	if (aspm_disabled)
+>>> +		return -EPERM;
+>>> +
+>>> +	link = aspm_get_parent_link(pdev);
+>>> +	if (!link)
+>>> +		return -EOPNOTSUPP;
+>>> +
+>>> +	if (!(link->aspm_capable & state))
+>>> +		return -EOPNOTSUPP;
+>>> +
+>>> +	if (strtobool(buf, &state_enable) < 0)
+>>> +		return -EINVAL;
+>>> +
+>>> +	down_read(&pci_bus_sem);
+>>> +	mutex_lock(&aspm_lock);
+>>> +
+>>> +	if (state_enable)
+>>> +		link->aspm_disable &= ~state;
+>>> +	else
+>>> +		link->aspm_disable |= state;
+>>> +
+>>> +	if (link->aspm_disable & ASPM_STATE_L1)
+>>> +		link->aspm_disable |= ASPM_STATE_L1SS;
+>>> +
+>>> +	pcie_config_aspm_link(link, policy_to_aspm_state(link));
+>>
+>> This function can't fail?
+>>
+> It has no return value.
+> 
+>>> +
+>>> +	mutex_unlock(&aspm_lock);
+>>> +	up_read(&pci_bus_sem);
+>>> +
+>>> +	return len;
+>>> +}
+>>> +
+>>> +static ssize_t aspm_l0s_store(struct device *dev,
+>>> +			      struct device_attribute *attr,
+>>> +			      const char *buf, size_t len)
+>>> +{
+>>> +	return aspm_attr_store_common(dev, attr, buf, len, ASPM_STATE_L0S);
+>>> +}
+>>> +
+>>> +static ssize_t aspm_l1_store(struct device *dev,
+>>> +			     struct device_attribute *attr,
+>>> +			     const char *buf, size_t len)
+>>> +{
+>>> +	return aspm_attr_store_common(dev, attr, buf, len, ASPM_STATE_L1);
+>>> +}
+>>> +
+>>> +static ssize_t aspm_l1_1_store(struct device *dev,
+>>> +			       struct device_attribute *attr,
+>>> +			       const char *buf, size_t len)
+>>> +{
+>>> +	return aspm_attr_store_common(dev, attr, buf, len, ASPM_STATE_L1_1);
+>>> +}
+>>> +
+>>> +static ssize_t aspm_l1_2_store(struct device *dev,
+>>> +			       struct device_attribute *attr,
+>>> +			       const char *buf, size_t len)
+>>> +{
+>>> +	return aspm_attr_store_common(dev, attr, buf, len, ASPM_STATE_L1_2);
+>>> +}
+>>> +
+>>> +static ssize_t aspm_l1_1_pcipm_store(struct device *dev,
+>>> +				     struct device_attribute *attr,
+>>> +				     const char *buf, size_t len)
+>>> +{
+>>> +	return aspm_attr_store_common(dev, attr, buf, len,
+>>> +				      ASPM_STATE_L1_1_PCIPM);
+>>> +}
+>>> +
+>>> +static ssize_t aspm_l1_2_pcipm_store(struct device *dev,
+>>> +				     struct device_attribute *attr,
+>>> +				     const char *buf, size_t len)
+>>> +{
+>>> +	return aspm_attr_store_common(dev, attr, buf, len,
+>>> +				      ASPM_STATE_L1_2_PCIPM);
+>>> +}
+>>> +
+>>> +static ssize_t aspm_clkpm_show(struct device *dev,
+>>> +			       struct device_attribute *attr, char *buf)
+>>> +{
+>>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>>> +	struct pcie_link_state *link;
+>>> +	int val;
+>>> +
+>>> +	link = aspm_get_parent_link(pdev);
+>>> +	if (!link)
+>>> +		return -EOPNOTSUPP;
+>>> +
+>>> +	mutex_lock(&aspm_lock);
+>>> +	val = link->clkpm_enabled;
+>>> +	mutex_unlock(&aspm_lock);
+>>> +
+>>> +	return snprintf(buf, PAGE_SIZE, "%d\n", val);
+>>> +}
+>>> +
+>>> +static ssize_t aspm_clkpm_store(struct device *dev,
+>>> +				struct device_attribute *attr,
+>>> +				const char *buf, size_t len)
+>>> +{
+>>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>>> +	struct pcie_link_state *link;
+>>> +	bool state_enable;
+>>> +
+>>> +	if (aspm_disabled)
+>>> +		return -EPERM;
+>>> +
+>>> +	link = aspm_get_parent_link(pdev);
+>>> +	if (!link)
+>>> +		return -EOPNOTSUPP;
+>>> +
+>>> +	if (!link->clkpm_capable)
+>>> +		return -EOPNOTSUPP;
+>>> +
+>>> +	if (strtobool(buf, &state_enable) < 0)
+>>> +		return -EINVAL;
+>>> +
+>>> +	down_read(&pci_bus_sem);
+>>> +	mutex_lock(&aspm_lock);
+>>> +
+>>> +	link->clkpm_disable = !state_enable;
+>>> +	pcie_set_clkpm(link, policy_to_clkpm_state(link));
+>>> +
+>>> +	mutex_unlock(&aspm_lock);
+>>> +	up_read(&pci_bus_sem);
+>>> +
+>>> +	return len;
+>>> +}
+>>> +
+>>> +static DEVICE_ATTR_RW(aspm_l0s);
+>>> +static DEVICE_ATTR_RW(aspm_l1);
+>>> +static DEVICE_ATTR_RW(aspm_l1_1);
+>>> +static DEVICE_ATTR_RW(aspm_l1_2);
+>>> +static DEVICE_ATTR_RW(aspm_l1_1_pcipm);
+>>> +static DEVICE_ATTR_RW(aspm_l1_2_pcipm);
+>>> +static DEVICE_ATTR_RW(aspm_clkpm);
+>>>  
+>>> -static char power_group[] = "power";
+>>>  void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev)
+>>>  {
+>>>  	struct pcie_link_state *link_state = pdev->link_state;
+>>>  
+>>> +	if (pcie_check_valid_aspm_endpoint(pdev)) {
+>>> +		sysfs_add_file_to_group(&pdev->dev.kobj,
+>>> +			&dev_attr_aspm_l0s.attr, power_group);
+>>> +		sysfs_add_file_to_group(&pdev->dev.kobj,
+>>> +			&dev_attr_aspm_l1.attr, power_group);
+>>> +		sysfs_add_file_to_group(&pdev->dev.kobj,
+>>> +			&dev_attr_aspm_l1_1.attr, power_group);
+>>> +		sysfs_add_file_to_group(&pdev->dev.kobj,
+>>> +			&dev_attr_aspm_l1_2.attr, power_group);
+>>> +		sysfs_add_file_to_group(&pdev->dev.kobj,
+>>> +			&dev_attr_aspm_l1_1_pcipm.attr, power_group);
+>>> +		sysfs_add_file_to_group(&pdev->dev.kobj,
+>>> +			&dev_attr_aspm_l1_2_pcipm.attr, power_group);
+>>> +		sysfs_add_file_to_group(&pdev->dev.kobj,
+>>> +			&dev_attr_aspm_clkpm.attr, power_group);
+>>
+>> Huh?  First of, if you are ever in a driver, and you have to call a
+>> sysfs_* function, you know something is wrong.
+>>
+>> Why are you dynamically adding files to a group?  These should all be
+>> statically allocated and then at creation time you can dynamically
+>> determine if you need to show them or not.  Use the is_visable callback
+>> for that.
+>>
+> 
+> The "power" group is dynamically created by the base driver core
+> (dpm_sysfs_add). Not sure how the ASPM sysfs files could be statically
+> allocated. We could add an attribute group to the "pci" bus_type,
+> but this doesn't feel right.
+> What we could do to make it simpler:
+> Create an attribute group and then use sysfs_merge_group().
+> But I see no way not to use sysfs_xxx functions. Also functions
+> like device_add_groups() are just very simple wrappers around sysfs_
+> functions.
+> 
+> Alternatively we could not use the existing "power" group but create
+> our own group with device_add_group(). But I don't see that we gain much.
+> 
+After a little bit more checking:
+We could statically add an attribute group to pci_dev_attr_groups,
+similar to pcie_dev_attr_group.
+
+>>> +	}
+>>> +
+>>>  	if (!link_state)
+>>>  		return;
+>>>  
+>>> +#ifdef CONFIG_PCIEASPM_DEBUG
+>>>  	if (link_state->aspm_support)
+>>>  		sysfs_add_file_to_group(&pdev->dev.kobj,
+>>>  			&dev_attr_link_state.attr, power_group);
+>>>  	if (link_state->clkpm_capable)
+>>>  		sysfs_add_file_to_group(&pdev->dev.kobj,
+>>>  			&dev_attr_clk_ctl.attr, power_group);
+>>
+>> Same here.
+>>
+>>> +#endif
+>>>  }
+>>>  
+>>>  void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev)
+>>>  {
+>>>  	struct pcie_link_state *link_state = pdev->link_state;
+>>>  
+>>> +	if (pcie_check_valid_aspm_endpoint(pdev)) {
+>>> +		sysfs_remove_file_from_group(&pdev->dev.kobj,
+>>> +			&dev_attr_aspm_l0s.attr, power_group);
+>>> +		sysfs_remove_file_from_group(&pdev->dev.kobj,
+>>> +			&dev_attr_aspm_l1.attr, power_group);
+>>> +		sysfs_remove_file_from_group(&pdev->dev.kobj,
+>>> +			&dev_attr_aspm_l1_1.attr, power_group);
+>>> +		sysfs_remove_file_from_group(&pdev->dev.kobj,
+>>> +			&dev_attr_aspm_l1_2.attr, power_group);
+>>> +		sysfs_remove_file_from_group(&pdev->dev.kobj,
+>>> +			&dev_attr_aspm_l1_1_pcipm.attr, power_group);
+>>> +		sysfs_remove_file_from_group(&pdev->dev.kobj,
+>>> +			&dev_attr_aspm_l1_2_pcipm.attr, power_group);
+>>> +		sysfs_remove_file_from_group(&pdev->dev.kobj,
+>>> +			&dev_attr_aspm_clkpm.attr, power_group);
+>>
+>> And then you never have to do this type of messy logic at all.
+>>
+>> Ick.
+>>
+>>> +	}
+>>> +
+>>>  	if (!link_state)
+>>>  		return;
+>>>  
+>>> +#ifdef CONFIG_PCIEASPM_DEBUG
+>>>  	if (link_state->aspm_support)
+>>>  		sysfs_remove_file_from_group(&pdev->dev.kobj,
+>>>  			&dev_attr_link_state.attr, power_group);
+>>>  	if (link_state->clkpm_capable)
+>>>  		sysfs_remove_file_from_group(&pdev->dev.kobj,
+>>>  			&dev_attr_clk_ctl.attr, power_group);
+>>
+>> And you get to drop this nonsense as well.
+>>
+> Right, with the new attributes CONFIG_PCIEASPM_DEBUG and all
+> related stuff could be removed most likely.
+> 
+>> thanks,
+>>
+>> greg k-h
+>>
+> 
+> Heiner
+> 
+
