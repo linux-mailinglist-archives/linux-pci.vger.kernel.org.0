@@ -2,75 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E11C9918D
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2019 13:02:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF2B6991CE
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2019 13:13:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732505AbfHVLB4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Aug 2019 07:01:56 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:46530 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731280AbfHVLB4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Aug 2019 07:01:56 -0400
-IronPort-SDR: BsvS9NEWYPDJZj0azY/2TrryKB7256Q0QzMGhLiY1OlITNy8nggdb5a3yofsuQP9UwDf0OghzL
- b2e0Xr4FW64AAXWTqeYievuPUuOwvuQHlU2ciceuAvGRC1JWV2lGZ6I07oVXhk6uWNystPkrdw
- FPMMt4rikxPZibQGTVnl5G4Z4IEe+IHgO5xnwmSkgQjQGEHSQTCNLXuuY8goXEyxTAkoNINqMU
- u2fq4NUZlamB+6BLtGseskRTQUKMwpXcdR4xJ/RjuPlSf8aK1fyrflSlTgMdaVAL3xf0tl855O
- BWw=
-X-IronPort-AV: E=Sophos;i="5.64,416,1559548800"; 
-   d="scan'208";a="40679350"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa4.mentor.iphmx.com with ESMTP; 22 Aug 2019 03:01:55 -0800
-IronPort-SDR: GUR8j+0Go+nUoI0C3g+TY+M3S72kHnsBqnNvn0F51ujFTzkjV9sY1PXobIPTFyR03YPAb+faKN
- HpHSJq7Bonto06B7+1+xc1TlkEZ1HQbXHRXng7P4CvFDu4gebC8dhi4rKKGJEzaD0Ow3uKan82
- BkXaEUbOLqeNZgjZOMND3w73zw8q+VYr+wGqomaUjp0Xvk0kf74Kd9HJfx8yDm9KoqNf/Ls2nk
- d1KEgt1o0hunVaWOtLldC92JsMihFbUJkRQWc6Q9/kyv1jQBj0duCIgxTOgKwI11ves1iCe5Fo
- 890=
-From:   "Schmid, Carsten" <Carsten_Schmid@mentor.com>
-To:     Fawad Lateef <fawadlateef@gmail.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: AW: Unhandled fault: imprecise external abort (0x1406) when loading
- xhci_pci.ko - uPD720202, PEX8605, iMX6Q and linux-4.19.25
-Thread-Topic: Unhandled fault: imprecise external abort (0x1406) when loading
- xhci_pci.ko - uPD720202, PEX8605, iMX6Q and linux-4.19.25
-Thread-Index: AQHVSEHAMPaxqF08hEykKiPIRN/jH6bmeLKAgAEMruCAABtagIAfUy8AgAAUnVCAAANwgIAAFEBw
-Date:   Thu, 22 Aug 2019 11:01:50 +0000
-Message-ID: <bb206643df9346e7830dbf08ec458d18@SVR-IES-MBX-03.mgc.mentorg.com>
-References: <CAGgoGu5FfLFzCf0QiAd8UcMrZ7gtLyapgT3TZ-Hx0dknWy4LMQ@mail.gmail.com>
- <CAGgoGu4zP_7QpKHiXSkLfkb=zHEezBzstVfjQMQ4CO60+YubCw@mail.gmail.com>
- <CAGgoGu7rot61LSgu2syOMq9Onx26_u3PEtS7pf_QNQRxOaifhg@mail.gmail.com>
- <20190801171725.GD151852@google.com>
- <743ef7fab5144df69bfc8673fff7f0f7@SVR-IES-MBX-03.mgc.mentorg.com>
- <CAGgoGu4ZZR3ZVD5mx_oJN_8gwNM4fa=of=erwM+P8P7zzaMDrQ@mail.gmail.com>
- <CAGgoGu5WP1qQUf4HS8xWGXUuP0L9vM6HGz1OZoGBBh1B67ZYSg@mail.gmail.com>
- <5c4bae3d066e4f1084c7eeb394b8a7d7@SVR-IES-MBX-03.mgc.mentorg.com>
- <CAGgoGu5vH0LZsJDyTag2aWqicrTboLFHdYJ=0pWAsjuNp-J-BA@mail.gmail.com>
-In-Reply-To: <CAGgoGu5vH0LZsJDyTag2aWqicrTboLFHdYJ=0pWAsjuNp-J-BA@mail.gmail.com>
-Accept-Language: de-DE, en-IE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [137.202.0.90]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1732629AbfHVLNT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Aug 2019 07:13:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:44100 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728594AbfHVLNT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 22 Aug 2019 07:13:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 811CF344;
+        Thu, 22 Aug 2019 04:13:18 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CFA4E3F246;
+        Thu, 22 Aug 2019 04:13:17 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 12:13:16 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Jonathan Chocron <jonnyc@amazon.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk,
+        benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com,
+        barakw@amazon.com, talel@amazon.com, hanochu@amazon.com,
+        hhhawa@amazon.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 7/7] PCI: dwc: Add validation that PCIe core is set to
+ correct mode
+Message-ID: <20190822111315.GN23903@e119886-lin.cambridge.arm.com>
+References: <20190821153545.17635-1-jonnyc@amazon.com>
+ <20190821154745.31834-3-jonnyc@amazon.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821154745.31834-3-jonnyc@amazon.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PiANCj4gT2NjYXNpb25hbGx5IHdlIHNlZSBjcmFzaCBhdCBib290IHRvbyB3aXRob3V0IGV2ZW4g
-cmVhY2hpbmcgc3RhZ2Ugb2YNCj4gbG9hZGluZyB4aGNpLXBjaS5rbyBkcml2ZXIuDQo+IA0KPiBM
-b2cgaXMgYmVsb3cuIElzIHRoaXMgY2FuIGJlIGJlY2F1c2Ugb2YgYWdhaW4gdVBEIGNvbm5lY3Rl
-ZCBvbiBQQ0llDQo+IGJ1cyAodGhyb3VnaCBQQ0llIHN3aXRjaCk/DQo+IA0KPiBbICAgIDguMjYz
-MTE3XSBVbmhhbmRsZWQgZmF1bHQ6IGltcHJlY2lzZSBleHRlcm5hbCBhYm9ydCAoMHgxNDA2KSBh
-dCAweGZhZjA2YTViDQoNCkxvb2tzIGxpa2UgYSBoYXJkd2FyZSBpc3N1ZSBvbiB5b3VyIGJvYXJk
-LCBsaWtlIFBDSWUgYWNjZXNzZXMgc29tZXRpbWVzIGZhaWwuDQpPdXQgb2YgbXkgc2NvcGUsIHNv
-cnJ5Lg0KDQpBbnl3YXksIHRyeSB3aXRoIFBNIGRpc2FibGVkLg0KDQpCZXN0IHJlZ2FyZHMNCkNh
-cnN0ZW4NCg==
+On Wed, Aug 21, 2019 at 06:47:45PM +0300, Jonathan Chocron wrote:
+> Some PCIe controllers can be set to either Host or EP according to some
+> early boot FW. To make sure there is no discrepancy (e.g. FW configured
+> the port to EP mode while the DT specifies it as a host bridge or vice
+> versa), a check has been added for each mode.
+> 
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-ep.c   | 8 ++++++++
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 2bf5a35c0570..00e59a134b93 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -531,6 +531,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	int ret;
+>  	u32 reg;
+>  	void *addr;
+> +	u8 hdr_type;
+>  	unsigned int nbars;
+>  	unsigned int offset;
+>  	struct pci_epc *epc;
+> @@ -543,6 +544,13 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  		return -EINVAL;
+>  	}
+>  
+> +	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
+> +	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
+> +		dev_err(pci->dev, "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
+> +			hdr_type);
+> +		return -EIO;
+> +	}
+> +
+>  	ret = of_property_read_u32(np, "num-ib-windows", &ep->num_ib_windows);
+>  	if (ret < 0) {
+>  		dev_err(dev, "Unable to read *num-ib-windows* property\n");
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index f93252d0da5b..d2ca748e4c85 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -323,6 +323,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  	struct pci_bus *child;
+>  	struct pci_host_bridge *bridge;
+>  	struct resource *cfg_res;
+> +	u8 hdr_type;
+>  	int ret;
+>  
+>  	raw_spin_lock_init(&pci->pp.lock);
+> @@ -396,6 +397,13 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  		}
+>  	}
+>  
+> +	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
+
+Do we know if it's always safe to read these registers at this point in time?
+
+Later in dw_pcie_host_init we call pp->ops->host_init - looking at the
+implementations of .host_init I can see:
+
+ - resets being performed (qcom_ep_reset_assert,
+   artpec6_pcie_assert_core_reset, imx6_pcie_assert_core_reset)
+ - changes to config space registers (ks_pcie_init_id, dw_pcie_setup_rc)
+   including setting PCI_CLASS_DEVICE
+ - and clocks being enabled (qcom_pcie_init_1_0_0)
+
+I'm not sure if your changes would cause anything to break for these other
+controllers (or future controllers) as I couldn't see any other reads to the
+config.
+
+Given that we are reading config space should dw_pcie_rd_own_conf be used?
+(For example kirin_pcie_rd_own_conf does something special).
+
+Thanks,
+
+Andrew Murray
+
+> +	if (hdr_type != PCI_HEADER_TYPE_BRIDGE) {
+> +		dev_err(pci->dev, "PCIe controller is not set to bridge type (hdr_type: 0x%x)!\n",
+> +			hdr_type);
+> +		return -EIO;
+> +	}
+> +
+>  	pp->mem_base = pp->mem->start;
+>  
+>  	if (!pp->va_cfg0_base) {
+> -- 
+> 2.17.1
+> 
