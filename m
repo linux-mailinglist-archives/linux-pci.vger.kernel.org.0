@@ -2,55 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D4C39A1DD
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2019 23:15:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6EE39A299
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2019 00:09:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732993AbfHVVPI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Aug 2019 17:15:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45958 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732447AbfHVVPI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 22 Aug 2019 17:15:08 -0400
-Subject: Re: [GIT PULL] PCI fixes for v5.3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566508507;
-        bh=KgeuTIuadlXWsCpNhH8NufflIAPIfriFmJs7aNh4MR4=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=eLRQ2Pb6GhPu8NPvzZ59XaxzK/8DbTVVF8VqEXIuEXZ4WmW2N/GQU/jdPPjXy0A4q
-         Deyll9h8B6BFzan6n4XfHmGbz36P5jW2gyq1tM+VRUwde09BzZVjx6cqkh0/sJgYvW
-         5Nsp6CESJtU5zE/vRoZYgEV81cKADTBW/yRftIIA=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190822203239.GL14450@google.com>
-References: <20190822203239.GL14450@google.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190822203239.GL14450@google.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
- tags/pci-v5.3-fixes-1
-X-PR-Tracked-Commit-Id: 7bafda88de20b2990461d253c5475007436e355c
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 59c36bc8d377c8764eb617a92211e0fc2f1318da
-Message-Id: <156650850750.5209.13921717189408235811.pr-tracker-bot@kernel.org>
-Date:   Thu, 22 Aug 2019 21:15:07 +0000
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Lyude Paul <lyude@redhat.com>
+        id S2390287AbfHVWJr convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 22 Aug 2019 18:09:47 -0400
+Received: from mail.physics.pub.ro ([141.85.216.3]:33660 "EHLO
+        physics1.physics.pub.ro" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390281AbfHVWJr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Aug 2019 18:09:47 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by physics1.physics.pub.ro (Postfix) with ESMTP id 908EAE3BEE1;
+        Thu, 22 Aug 2019 13:39:48 +0300 (EEST)
+X-Virus-Scanned: amavisd-new at physics.pub.ro
+Received: from physics1.physics.pub.ro ([127.0.0.1])
+        by localhost (physics1.physics.pub.ro [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 59sMhzBh83uP; Thu, 22 Aug 2019 13:39:48 +0300 (EEST)
+Received: from [10.51.176.174] (unknown [105.4.6.61])
+        by physics1.physics.pub.ro (Postfix) with ESMTPSA id C591AE37BC0;
+        Thu, 22 Aug 2019 13:39:39 +0300 (EEST)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000_Millionen_Euro?=
+To:     Recipients <niculae-tiberiu.puscas@physics.pub.ro>
+From:   ''Tayeb Souami'' <niculae-tiberiu.puscas@physics.pub.ro>
+Date:   Thu, 22 Aug 2019 12:39:35 +0200
+Reply-To: Tayebsouam.spende@gmail.com
+Message-Id: <20190822103939.C591AE37BC0@physics1.physics.pub.ro>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The pull request you sent on Thu, 22 Aug 2019 15:32:39 -0500:
+Lieber Freund,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.3-fixes-1
+Ich bin Herr Tayeb Souami, New Jersey, Vereinigte Staaten von Amerika, der Mega-Gewinner von $ 315million In Mega Millions Jackpot, spende ich an 5 zufällige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Mail nach einem Spinball ausgewählt.Ich habe den größten Teil meines Vermögens auf eine Reihe von Wohltätigkeitsorganisationen und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die Summe von € 2.000.000,00 an Sie als eine der ausgewählten 5 zu spenden, um meine Gewinne zu überprüfen, sehen Sie bitte meine You Tube Seite unten.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/59c36bc8d377c8764eb617a92211e0fc2f1318da
+UHR MICH HIER: https://www.youtube.com/watch?v=Z6ui8ZDQ6Ks
 
-Thank you!
+Das ist dein Spendencode: [TS530342018]
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Antworten Sie mit dem SPENDE-CODE an diese E-Mail:Tayebsouam.spende@gmail.com
+
+Ich hoffe, Sie und Ihre Familie glücklich zu machen.
+
+Grüße
+Herr Tayeb Souami
