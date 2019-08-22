@@ -2,22 +2,22 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 86906997BE
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2019 17:09:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 656E9997C0
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2019 17:09:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389032AbfHVPH4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Aug 2019 11:07:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:47826 "EHLO foss.arm.com"
+        id S2387659AbfHVPIb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Aug 2019 11:08:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:47848 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387481AbfHVPH4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 22 Aug 2019 11:07:56 -0400
+        id S1732611AbfHVPIb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 22 Aug 2019 11:08:31 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC521337;
-        Thu, 22 Aug 2019 08:07:55 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D67D1337;
+        Thu, 22 Aug 2019 08:08:29 -0700 (PDT)
 Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A7F93F718;
-        Thu, 22 Aug 2019 08:07:55 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 16:07:53 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F7183F718;
+        Thu, 22 Aug 2019 08:08:29 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 16:08:27 +0100
 From:   Andrew Murray <andrew.murray@arm.com>
 To:     "Chocron, Jonathan" <jonnyc@amazon.com>
 Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
@@ -36,10 +36,11 @@ Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "Krupnik, Ronen" <ronenk@amazon.com>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        Babu Moger <babu.moger@oracle.com>
 Subject: Re: [PATCH v4 3/7] PCI/VPD: Add VPD release quirk for Amazon's
  Annapurna Labs Root Port
-Message-ID: <20190822150752.GQ23903@e119886-lin.cambridge.arm.com>
+Message-ID: <20190822150827.GR23903@e119886-lin.cambridge.arm.com>
 References: <20190821153545.17635-1-jonnyc@amazon.com>
  <20190821153545.17635-4-jonnyc@amazon.com>
  <20190822114146.GP23903@e119886-lin.cambridge.arm.com>
@@ -53,6 +54,10 @@ Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
+
+
+[+CC Babu Moger <babu.moger@oracle.com>]
+
 
 On Thu, Aug 22, 2019 at 02:36:24PM +0000, Chocron, Jonathan wrote:
 > On Thu, 2019-08-22 at 12:41 +0100, Andrew Murray wrote:
@@ -94,19 +99,8 @@ On Thu, Aug 22, 2019 at 02:36:24PM +0000, Chocron, Jonathan wrote:
 > I don't think that solution should be implemented in pcituils. It
 > rightfully warns when it fails to read from the vpd sysfs file - it
 > first 'open's the file which succeeds, and then fails when trying to
-> 'read' from it.
-
-Indeed - this is correct.
-
-> I don't think that it should specifically "mask" out
+> 'read' from it. I don't think that it should specifically "mask" out
 > -EIO, since it shouldn't have to "know" that the underlying reason is a
-
-You're probably right - I guess the kernel should document somewhere
-(ABI/testing/sysfs-bus-pci?) what the kernel does when such a quirk exists,
-then userspace can conform. For example if -EIO cannot be returned any
-other way then it would be OK for pciutils to mask it out - but its
-ambigious at the moment.
-
 > VPD quirk (or more precisely vpd->len == 0). Furthermore, it is
 > possible that this error code would be returned for some other reason
 > (not sure if currently this occurs).
@@ -117,23 +111,6 @@ ambigious at the moment.
 > In the long run, quirk_blacklist_vpd() should probably be modified to
 > do what our quirk does or something similar (and then the al quirk can
 > be removed). What do you think?
-
-When I first saw your quirk, I did wonder why quirk_blacklist_vpd doesn't
-do what your quirk does. Perhaps there isn't a reason. It was first
-introduced in 2016:
-
-7c20078a8197 ("PCI: Prevent VPD access for buggy devices")
-
-Some may argue that actually because your hardware has a VPD capability
-it should have the sysfs file - but the capability doesn't work and so
-the sysfs file should return an error.
-
-I'd be keen to change quirk_blacklist_vpd - Babu, Bjorn any objections?
-
-Thanks,
-
-Andrew Murray
-
 > 
 > > Thanks,
 > > 
