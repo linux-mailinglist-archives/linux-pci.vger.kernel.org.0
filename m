@@ -2,70 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 24C4E99229
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2019 13:34:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 881899926B
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2019 13:46:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388246AbfHVLdQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Aug 2019 07:33:16 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:35284 "EHLO inva020.nxp.com"
+        id S1731979AbfHVLlu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Aug 2019 07:41:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:44554 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388242AbfHVLdO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 22 Aug 2019 07:33:14 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DE4A41A02DE;
-        Thu, 22 Aug 2019 13:33:12 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0D87C1A00A2;
-        Thu, 22 Aug 2019 13:33:03 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 1EC0640326;
-        Thu, 22 Aug 2019 19:32:47 +0800 (SGT)
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
-        lorenzo.pieralisi@arm.co, arnd@arndb.de,
-        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
-        mingkai.hu@nxp.com, roy.zang@nxp.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, andrew.murray@arm.com
-Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v2 10/10] misc: pci_endpoint_test: Add LS1088a in pci_device_id table
-Date:   Thu, 22 Aug 2019 19:22:42 +0800
-Message-Id: <20190822112242.16309-10-xiaowei.bao@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20190822112242.16309-1-xiaowei.bao@nxp.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726844AbfHVLlu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 22 Aug 2019 07:41:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3084B337;
+        Thu, 22 Aug 2019 04:41:49 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D49F3F246;
+        Thu, 22 Aug 2019 04:41:48 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 12:41:47 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Jonathan Chocron <jonnyc@amazon.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk,
+        benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com,
+        barakw@amazon.com, talel@amazon.com, hanochu@amazon.com,
+        hhhawa@amazon.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 3/7] PCI/VPD: Add VPD release quirk for Amazon's
+ Annapurna Labs Root Port
+Message-ID: <20190822114146.GP23903@e119886-lin.cambridge.arm.com>
+References: <20190821153545.17635-1-jonnyc@amazon.com>
+ <20190821153545.17635-4-jonnyc@amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821153545.17635-4-jonnyc@amazon.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add LS1088a in pci_device_id table so that pci-epf-test can be used
-for testing PCIe EP in LS1088a.
+On Wed, Aug 21, 2019 at 06:35:43PM +0300, Jonathan Chocron wrote:
+> The Amazon Annapurna Labs PCIe Root Port exposes the VPD capability,
+> but there is no actual support for it.
+> 
+> The reason for not using the already existing quirk_blacklist_vpd()
+> is that, although this fails pci_vpd_read/write, the 'vpd' sysfs
+> entry still exists. When running lspci -vv, for example, this
+> results in the following error:
+> 
+> pcilib: sysfs_read_vpd: read failed: Input/output error
 
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
----
-v2:
- - No change.
+Oh that's not nice. It's probably triggered by the -EIO in pci_vpd_read.
+A quick search online seems to show that other people have experienced
+this too - though from as far as I can tell this just gives you a
+warning and pcilib will continnue to give other output?
 
- drivers/misc/pci_endpoint_test.c | 1 +
- 1 file changed, 1 insertion(+)
+I guess every vpd blacklist'd driver will have the same issue. And for
+this reason I don't think that this patch is the right solution - as
+otherwise all the other blacklisted drivers could follow your lead.
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 6e208a0..d531951 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -793,6 +793,7 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x80c0) },
- 	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, NULL) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
- 	  .driver_data = (kernel_ulong_t)&am654_data
--- 
-2.9.5
+I don't think you need to fix this specifically for the AL driver and so
+I'd suggest that you can probably drop this patch. (Ideally pciutils
+could be updated to not warn for this specific use-case).
 
+Thanks,
+
+Andrew Murray
+
+> 
+> This quirk removes the sysfs entry, which avoids the error print.
+> 
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> ---
+>  drivers/pci/vpd.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> index 4963c2e2bd4c..c23a8ec08db9 100644
+> --- a/drivers/pci/vpd.c
+> +++ b/drivers/pci/vpd.c
+> @@ -644,4 +644,20 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+>  			quirk_chelsio_extend_vpd);
+>  
+> +static void quirk_al_vpd_release(struct pci_dev *dev)
+> +{
+> +	if (dev->vpd) {
+> +		pci_vpd_release(dev);
+> +		dev->vpd = NULL;
+> +		pci_warn(dev, FW_BUG "Releasing VPD capability (No support for VPD read/write transactions)\n");
+> +	}
+> +}
+> +
+> +/*
+> + * The 0031 device id is reused for other non Root Port device types,
+> + * therefore the quirk is registered for the PCI_CLASS_BRIDGE_PCI class.
+> + */
+> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031,
+> +			      PCI_CLASS_BRIDGE_PCI, 8, quirk_al_vpd_release);
+> +
+>  #endif
+> -- 
+> 2.17.1
+> 
