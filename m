@@ -2,555 +2,495 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EBF899F42
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2019 20:58:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27FBF99FA7
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2019 21:16:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732148AbfHVS6v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Aug 2019 14:58:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731854AbfHVS6u (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 22 Aug 2019 14:58:50 -0400
-Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52F50233A2;
-        Thu, 22 Aug 2019 18:58:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566500328;
-        bh=uw+zZayE9pWlGqZpCmNG0u1fWQ7raTr8S9YCtjJzvp4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i4rGBMlt9whPcPtvpCvx5qsrpW4BSfOJeQ7EmDLxfgtqXij5gcuNYuIU1g645PjaY
-         hqTMg4bdY+AcABHH+NkFdmeRh/swCDoZ+AP2SFnpcFIpi/TvrwhJCHeMVzpSZSJTDl
-         DTX0QxI0wpqRiq59Pmmhn3J5Xk3UEvnv9OlaX+14=
-Date:   Thu, 22 Aug 2019 21:58:47 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     "sashal@kernel.org" <sashal@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "eranbe@mellanox.com" <eranbe@mellanox.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next,v4, 4/6] net/mlx5: Add HV VHCA infrastructure
-Message-ID: <20190822185847.GP29433@mtr-leonro.mtl.com>
-References: <1566450236-36757-1-git-send-email-haiyangz@microsoft.com>
- <1566450236-36757-5-git-send-email-haiyangz@microsoft.com>
+        id S2389212AbfHVTPm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Aug 2019 15:15:42 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41319 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730531AbfHVTPm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Aug 2019 15:15:42 -0400
+Received: by mail-wr1-f65.google.com with SMTP id j16so6428957wrr.8
+        for <linux-pci@vger.kernel.org>; Thu, 22 Aug 2019 12:15:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jbsGWkp23Fy8Ny0Lv/c3wFD1VqZrWVvY0ZCxMOSxp4Q=;
+        b=jXdlTNQfWZwmLolEpFeMqk8D2vIEe3PH5gtOpmXhxKSwW4k/IOFR+R2atdw8ccRA9E
+         +9Pt+eXSLb2BIuvpQJY6nSfTu+MfD4OwQULQS8vzYKjvYsaRpzC7EpBW/q4/2sWn6Rzt
+         vqgnsxEQHqmoTM4sDZb7q72c9r6IKtC00jw7SOBOg6gMrTFx4CkOjt4IE2QSOx1fneT7
+         W9XUIRDi2yyjNokVk4RyFa6F0xfFL61pwRiKknscQw/yZyt4OoOZW3g9D/buz4aMWSRd
+         avSws+kL5/zRFLtQci7GCcUlYmkujAA2YSDLTypJvXIYdu2ZC8Xap9AgUfGpB2cnQd/Z
+         ZQAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jbsGWkp23Fy8Ny0Lv/c3wFD1VqZrWVvY0ZCxMOSxp4Q=;
+        b=dBSHYK+4WHzgaSenuZkKjcQ+9O2+Qh2IBJ3EZhoc9Hfo5Ibv2XQnD0Es7S1MiM0wet
+         ka/5MJl3jHMFuTcYxmrFipNObAepdjBjBHogvjKwEvmX9eduCTbpktA6cf86j5VXy4gN
+         f5x/BaLKSgSYVtRNGnn/kC+agcSQsA/4jjeKFwRaAnCQJd38MqijHqc6h/DiDCH7pHwc
+         84yFTFkjwjGUf5GWvG/r/JHj0A6/aUgGZSqW3tMzHnW8g9lcnDsWwBp9pS7r5sK9Q7Qf
+         mzT+GPOpPSf9zk6j8E/fzkwuMbvPFh6im72RxJ8ZRefpbmVfgx1H5BaS2XQy5PBkeoGz
+         IAIQ==
+X-Gm-Message-State: APjAAAV4F0oUW0qgM+CqeBYT2blDFMGg77T15W8qMxUqNbxv36aUxycK
+        Nlu7IQBRWtbEz+XsGJbHOg5GfJyQ
+X-Google-Smtp-Source: APXvYqwjI+Hn8NhiEeOnH1jK8XWlGsRyqMEz0mahAvqsEHzv65kg7Ucobt8MWg2N4NnTrOlOcDVQHA==
+X-Received: by 2002:adf:c508:: with SMTP id q8mr518705wrf.287.1566501337992;
+        Thu, 22 Aug 2019 12:15:37 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f04:7c00:10fa:d7ad:8564:6aa9? (p200300EA8F047C0010FAD7AD85646AA9.dip0.t-ipconnect.de. [2003:ea:8f04:7c00:10fa:d7ad:8564:6aa9])
+        by smtp.googlemail.com with ESMTPSA id b26sm770545wmj.14.2019.08.22.12.15.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 22 Aug 2019 12:15:37 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] PCI/ASPM: add sysfs attributes for controlling
+ ASPM
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Frederick Lawler <fred@fredlawl.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rajat Jain <rajatja@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <b4b1518a-d0e8-9534-5211-115107e770e1@gmail.com>
+ <c75fe7ef-5045-fb53-047c-b7b06d4b7fe8@gmail.com>
+ <20190822130503.GD12941@kroah.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <e4a278f1-ac78-a2fd-ddfe-a4dd0d1685e3@gmail.com>
+Date:   Thu, 22 Aug 2019 21:15:31 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566450236-36757-5-git-send-email-haiyangz@microsoft.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190822130503.GD12941@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 05:05:51AM +0000, Haiyang Zhang wrote:
-> From: Eran Ben Elisha <eranbe@mellanox.com>
->
-> HV VHCA is a layer which provides PF to VF communication channel based on
-> HyperV PCI config channel. It implements Mellanox's Inter VHCA control
-> communication protocol. The protocol contains control block in order to
-> pass messages between the PF and VF drivers, and data blocks in order to
-> pass actual data.
->
-> The infrastructure is agent based. Each agent will be responsible of
-> contiguous buffer blocks in the VHCA config space. This infrastructure will
-> bind agents to their blocks, and those agents can only access read/write
-> the buffer blocks assigned to them. Each agent will provide three
-> callbacks (control, invalidate, cleanup). Control will be invoked when
-> block-0 is invalidated with a command that concerns this agent. Invalidate
-> callback will be invoked if one of the blocks assigned to this agent was
-> invalidated. Cleanup will be invoked before the agent is being freed in
-> order to clean all of its open resources or deferred works.
->
-> Block-0 serves as the control block. All execution commands from the PF
-> will be written by the PF over this block. VF will ack on those by
-> writing on block-0 as well. Its format is described by struct
-> mlx5_hv_vhca_control_block layout.
->
-> Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-> Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/Makefile   |   2 +-
->  .../net/ethernet/mellanox/mlx5/core/lib/hv_vhca.c  | 253 +++++++++++++++++++++
->  .../net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h  | 102 +++++++++
->  drivers/net/ethernet/mellanox/mlx5/core/main.c     |   7 +
->  include/linux/mlx5/driver.h                        |   2 +
->  5 files changed, 365 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.c
->  create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h
->
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-> index fd32a5b..8d443fc 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-> @@ -45,7 +45,7 @@ mlx5_core-$(CONFIG_MLX5_ESWITCH)   += eswitch.o eswitch_offloads.o eswitch_offlo
->  mlx5_core-$(CONFIG_MLX5_MPFS)      += lib/mpfs.o
->  mlx5_core-$(CONFIG_VXLAN)          += lib/vxlan.o
->  mlx5_core-$(CONFIG_PTP_1588_CLOCK) += lib/clock.o
-> -mlx5_core-$(CONFIG_PCI_HYPERV_INTERFACE) += lib/hv.o
-> +mlx5_core-$(CONFIG_PCI_HYPERV_INTERFACE) += lib/hv.o lib/hv_vhca.o
->
->  #
->  # Ipoib netdev
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.c
-> new file mode 100644
-> index 0000000..84d1d75
-> --- /dev/null
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.c
-> @@ -0,0 +1,253 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB
-> +// Copyright (c) 2018 Mellanox Technologies
-> +
-> +#include <linux/hyperv.h>
-> +#include "mlx5_core.h"
-> +#include "lib/hv.h"
-> +#include "lib/hv_vhca.h"
-> +
-> +struct mlx5_hv_vhca {
-> +	struct mlx5_core_dev       *dev;
-> +	struct workqueue_struct    *work_queue;
-> +	struct mlx5_hv_vhca_agent  *agents[MLX5_HV_VHCA_AGENT_MAX];
-> +	struct mutex                agents_lock; /* Protect agents array */
-> +};
-> +
-> +struct mlx5_hv_vhca_work {
-> +	struct work_struct     invalidate_work;
-> +	struct mlx5_hv_vhca   *hv_vhca;
-> +	u64                    block_mask;
-> +};
-> +
-> +struct mlx5_hv_vhca_data_block {
-> +	u16     sequence;
-> +	u16     offset;
-> +	u8      reserved[4];
-> +	u64     data[15];
-> +};
-> +
-> +struct mlx5_hv_vhca_agent {
-> +	enum mlx5_hv_vhca_agent_type	 type;
-> +	struct mlx5_hv_vhca		*hv_vhca;
-> +	void				*priv;
-> +	u16                              seq;
-> +	void (*control)(struct mlx5_hv_vhca_agent *agent,
-> +			struct mlx5_hv_vhca_control_block *block);
-> +	void (*invalidate)(struct mlx5_hv_vhca_agent *agent,
-> +			   u64 block_mask);
-> +	void (*cleanup)(struct mlx5_hv_vhca_agent *agent);
-> +};
-> +
-> +struct mlx5_hv_vhca *mlx5_hv_vhca_create(struct mlx5_core_dev *dev)
-> +{
-> +	struct mlx5_hv_vhca *hv_vhca = NULL;
-> +
-> +	hv_vhca = kzalloc(sizeof(*hv_vhca), GFP_KERNEL);
-> +	if (!hv_vhca)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	hv_vhca->work_queue = create_singlethread_workqueue("mlx5_hv_vhca");
+On 22.08.2019 15:05, Greg KH wrote:
+> On Wed, Aug 21, 2019 at 08:18:41PM +0200, Heiner Kallweit wrote:
+>> Background of this extension is a problem with the r8169 network driver.
+>> Several combinations of board chipsets and network chip versions have
+>> problems if ASPM is enabled, therefore we have to disable ASPM per default.
+>> However especially on notebooks ASPM can provide significant power-saving,
+>> therefore we want to give users the option to enable ASPM. With the new sysfs
+>> attributes users can control which ASPM link-states are enabled/disabled.
+>>
+>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>> ---
+>> v2:
+>> - use a dedicated sysfs attribute per link state
+>> - allow separate control of ASPM and PCI PM L1 sub-states
+>> ---
+>>  Documentation/ABI/testing/sysfs-bus-pci |  13 ++
+>>  drivers/pci/pci.h                       |   8 +-
+>>  drivers/pci/pcie/aspm.c                 | 263 +++++++++++++++++++++++-
+>>  3 files changed, 276 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+>> index 8bfee557e..38b565c30 100644
+>> --- a/Documentation/ABI/testing/sysfs-bus-pci
+>> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+>> @@ -347,3 +347,16 @@ Description:
+>>  		If the device has any Peer-to-Peer memory registered, this
+>>  	        file contains a '1' if the memory has been published for
+>>  		use outside the driver that owns the device.
+>> +
+>> +What		/sys/bus/pci/devices/.../power/aspm_l0s
+>> +What		/sys/bus/pci/devices/.../power/aspm_l1
+>> +What		/sys/bus/pci/devices/.../power/aspm_l1_1
+>> +What		/sys/bus/pci/devices/.../power/aspm_l1_2
+>> +What		/sys/bus/pci/devices/.../power/aspm_l1_1_pcipm
+>> +What		/sys/bus/pci/devices/.../power/aspm_l1_2_pcipm
+>> +What		/sys/bus/pci/devices/.../power/aspm_clkpm
+> 
+> Wait, there already is a "power" subdirectory for all devices in the
+> system, are you adding another one, or files to that already-created
+> directory?
+> 
+This is the standard "power" directory dynamically created by
+dpm_sysfs_add().
 
-I was under impression that usage of create_* interfaces is discouraged,
-It has WQ_MEMORY_LEGACY flag inside and commit b71ab8c2025ca talks about
-this interface as legacy one.
+>> +date:		August 2019
+>> +Contact:	Heiner Kallweit <hkallweit1@gmail.com>
+>> +Description:	If ASPM is supported for an endpoint, then these files
+>> +		can be used to disable or enable the individual
+>> +		power management states.
+>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>> index 3f126f808..e51c91f38 100644
+>> --- a/drivers/pci/pci.h
+>> +++ b/drivers/pci/pci.h
+>> @@ -525,17 +525,13 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev);
+>>  void pcie_aspm_exit_link_state(struct pci_dev *pdev);
+>>  void pcie_aspm_pm_state_change(struct pci_dev *pdev);
+>>  void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
+>> +void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev);
+>> +void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev);
+>>  #else
+>>  static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+>>  static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+>>  static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
+>>  static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
+>> -#endif
+>> -
+>> -#ifdef CONFIG_PCIEASPM_DEBUG
+>> -void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev);
+>> -void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev);
+>> -#else
+>>  static inline void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev) { }
+>>  static inline void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev) { }
+>>  #endif
+>> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+>> index 149b876c9..e7dfcd1bd 100644
+>> --- a/drivers/pci/pcie/aspm.c
+>> +++ b/drivers/pci/pcie/aspm.c
+>> @@ -1275,38 +1275,297 @@ static ssize_t clk_ctl_store(struct device *dev,
+>>  
+>>  static DEVICE_ATTR_RW(link_state);
+>>  static DEVICE_ATTR_RW(clk_ctl);
+>> +#endif
+>> +
+>> +static const char power_group[] = "power";
+>> +
+>> +static struct pcie_link_state *aspm_get_parent_link(struct pci_dev *pdev)
+>> +{
+>> +	struct pci_dev *parent = pdev->bus->self;
+>> +
+>> +	if (pdev->has_secondary_link)
+>> +		parent = pdev;
+>> +
+>> +	return parent ? parent->link_state : NULL;
+>> +}
+>> +
+>> +static bool pcie_check_valid_aspm_endpoint(struct pci_dev *pdev)
+>> +{
+>> +	struct pcie_link_state *link;
+>> +
+>> +	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT)
+>> +		return false;
+>> +
+>> +	link = aspm_get_parent_link(pdev);
+>> +
+>> +	return link && link->aspm_capable;
+>> +}
+>> +
+>> +static ssize_t aspm_attr_show_common(struct device *dev,
+>> +				     struct device_attribute *attr,
+>> +				     char *buf, int state)
+>> +{
+>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>> +	struct pcie_link_state *link;
+>> +	int val;
+>> +
+>> +	link = aspm_get_parent_link(pdev);
+>> +	if (!link)
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	mutex_lock(&aspm_lock);
+>> +	val = !!(link->aspm_enabled & state);
+>> +	mutex_unlock(&aspm_lock);
+>> +
+>> +	return snprintf(buf, PAGE_SIZE, "%d\n", val);
+> 
+> For sysfs files, you never need to use snprintf() as you "know" the size
+> of the buffer is big, and you are just printing out a single number.  So
+> that can be cleaned up in all of these attribute files.
+> 
+>> +}
+>> +
+>> +static ssize_t aspm_l0s_show(struct device *dev,
+>> +			     struct device_attribute *attr, char *buf)
+>> +{
+>> +	return aspm_attr_show_common(dev, attr, buf, ASPM_STATE_L0S);
+>> +}
+>> +
+>> +static ssize_t aspm_l1_show(struct device *dev,
+>> +			    struct device_attribute *attr, char *buf)
+>> +{
+>> +	return aspm_attr_show_common(dev, attr, buf, ASPM_STATE_L1);
+>> +}
+>> +
+>> +static ssize_t aspm_l1_1_show(struct device *dev,
+>> +			      struct device_attribute *attr, char *buf)
+>> +{
+>> +	return aspm_attr_show_common(dev, attr, buf, ASPM_STATE_L1_1);
+>> +}
+>> +
+>> +static ssize_t aspm_l1_2_show(struct device *dev,
+>> +			      struct device_attribute *attr, char *buf)
+>> +{
+>> +	return aspm_attr_show_common(dev, attr, buf, ASPM_STATE_L1_2);
+>> +}
+>> +
+>> +static ssize_t aspm_l1_1_pcipm_show(struct device *dev,
+>> +				    struct device_attribute *attr, char *buf)
+>> +{
+>> +	return aspm_attr_show_common(dev, attr, buf, ASPM_STATE_L1_1_PCIPM);
+>> +}
+>> +
+>> +static ssize_t aspm_l1_2_pcipm_show(struct device *dev,
+>> +				    struct device_attribute *attr, char *buf)
+>> +{
+>> +	return aspm_attr_show_common(dev, attr, buf, ASPM_STATE_L1_2_PCIPM);
+>> +}
+>> +
+>> +static ssize_t aspm_attr_store_common(struct device *dev,
+>> +				      struct device_attribute *attr,
+>> +				      const char *buf, size_t len, int state)
+>> +{
+>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>> +	struct pcie_link_state *link;
+>> +	bool state_enable;
+>> +
+>> +	if (aspm_disabled)
+>> +		return -EPERM;
+>> +
+>> +	link = aspm_get_parent_link(pdev);
+>> +	if (!link)
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	if (!(link->aspm_capable & state))
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	if (strtobool(buf, &state_enable) < 0)
+>> +		return -EINVAL;
+>> +
+>> +	down_read(&pci_bus_sem);
+>> +	mutex_lock(&aspm_lock);
+>> +
+>> +	if (state_enable)
+>> +		link->aspm_disable &= ~state;
+>> +	else
+>> +		link->aspm_disable |= state;
+>> +
+>> +	if (link->aspm_disable & ASPM_STATE_L1)
+>> +		link->aspm_disable |= ASPM_STATE_L1SS;
+>> +
+>> +	pcie_config_aspm_link(link, policy_to_aspm_state(link));
+> 
+> This function can't fail?
+> 
+It has no return value.
 
-> +	if (!hv_vhca->work_queue) {
-> +		kfree(hv_vhca);
-> +		return ERR_PTR(-ENOMEM);
-> +	}
-> +
-> +	hv_vhca->dev = dev;
-> +	mutex_init(&hv_vhca->agents_lock);
-> +
-> +	return hv_vhca;
-> +}
-> +
-> +void mlx5_hv_vhca_destroy(struct mlx5_hv_vhca *hv_vhca)
-> +{
-> +	if (IS_ERR_OR_NULL(hv_vhca))
-> +		return;
-> +
-> +	destroy_workqueue(hv_vhca->work_queue);
-> +	kfree(hv_vhca);
-> +}
-> +
-> +static void mlx5_hv_vhca_invalidate_work(struct work_struct *work)
-> +{
-> +	struct mlx5_hv_vhca_work *hwork;
-> +	struct mlx5_hv_vhca *hv_vhca;
-> +	int i;
-> +
-> +	hwork = container_of(work, struct mlx5_hv_vhca_work, invalidate_work);
-> +	hv_vhca = hwork->hv_vhca;
-> +
-> +	mutex_lock(&hv_vhca->agents_lock);
-> +	for (i = 0; i < MLX5_HV_VHCA_AGENT_MAX; i++) {
-> +		struct mlx5_hv_vhca_agent *agent = hv_vhca->agents[i];
-> +
-> +		if (!agent || !agent->invalidate)
-> +			continue;
-> +
-> +		if (!(BIT(agent->type) & hwork->block_mask))
-> +			continue;
-> +
-> +		agent->invalidate(agent, hwork->block_mask);
-> +	}
-> +	mutex_unlock(&hv_vhca->agents_lock);
-> +
-> +	kfree(hwork);
-> +}
-> +
-> +void mlx5_hv_vhca_invalidate(void *context, u64 block_mask)
-> +{
-> +	struct mlx5_hv_vhca *hv_vhca = (struct mlx5_hv_vhca *)context;
-> +	struct mlx5_hv_vhca_work *work;
-> +
-> +	work = kzalloc(sizeof(*work), GFP_ATOMIC);
-> +	if (!work)
-> +		return;
-> +
-> +	INIT_WORK(&work->invalidate_work, mlx5_hv_vhca_invalidate_work);
-> +	work->hv_vhca    = hv_vhca;
-> +	work->block_mask = block_mask;
-> +
-> +	queue_work(hv_vhca->work_queue, &work->invalidate_work);
-> +}
-> +
-> +int mlx5_hv_vhca_init(struct mlx5_hv_vhca *hv_vhca)
-> +{
-> +	if (IS_ERR_OR_NULL(hv_vhca))
-> +		return IS_ERR_OR_NULL(hv_vhca);
-> +
-> +	return mlx5_hv_register_invalidate(hv_vhca->dev, hv_vhca,
-> +					   mlx5_hv_vhca_invalidate);
-> +}
-> +
-> +void mlx5_hv_vhca_cleanup(struct mlx5_hv_vhca *hv_vhca)
-> +{
-> +	int i;
-> +
-> +	if (IS_ERR_OR_NULL(hv_vhca))
-> +		return;
-> +
-> +	mutex_lock(&hv_vhca->agents_lock);
-> +	for (i = 0; i < MLX5_HV_VHCA_AGENT_MAX; i++)
-> +		WARN_ON(hv_vhca->agents[i]);
-> +
-> +	mutex_unlock(&hv_vhca->agents_lock);
-> +
-> +	mlx5_hv_unregister_invalidate(hv_vhca->dev);
-> +}
-> +
-> +struct mlx5_hv_vhca_agent *
-> +mlx5_hv_vhca_agent_create(struct mlx5_hv_vhca *hv_vhca,
-> +			  enum mlx5_hv_vhca_agent_type type,
-> +			  void (*control)(struct mlx5_hv_vhca_agent*,
-> +					  struct mlx5_hv_vhca_control_block *block),
-> +			  void (*invalidate)(struct mlx5_hv_vhca_agent*,
-> +					     u64 block_mask),
-> +			  void (*cleaup)(struct mlx5_hv_vhca_agent *agent),
-> +			  void *priv)
-> +{
-> +	struct mlx5_hv_vhca_agent *agent;
-> +
-> +	if (IS_ERR_OR_NULL(hv_vhca))
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	if (type >= MLX5_HV_VHCA_AGENT_MAX)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	mutex_lock(&hv_vhca->agents_lock);
-> +	if (hv_vhca->agents[type]) {
-> +		mutex_unlock(&hv_vhca->agents_lock);
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +	mutex_unlock(&hv_vhca->agents_lock);
-> +
-> +	agent = kzalloc(sizeof(*agent), GFP_KERNEL);
-> +	if (!agent)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	agent->type      = type;
-> +	agent->hv_vhca   = hv_vhca;
-> +	agent->priv      = priv;
-> +	agent->control   = control;
-> +	agent->invalidate = invalidate;
-> +	agent->cleanup   = cleaup;
-> +
-> +	mutex_lock(&hv_vhca->agents_lock);
-> +	hv_vhca->agents[type] = agent;
-> +	mutex_unlock(&hv_vhca->agents_lock);
-> +
-> +	return agent;
-> +}
-> +
-> +void mlx5_hv_vhca_agent_destroy(struct mlx5_hv_vhca_agent *agent)
-> +{
-> +	struct mlx5_hv_vhca *hv_vhca = agent->hv_vhca;
-> +
-> +	mutex_lock(&hv_vhca->agents_lock);
-> +
-> +	if (WARN_ON(agent != hv_vhca->agents[agent->type])) {
-> +		mutex_unlock(&hv_vhca->agents_lock);
-> +		return;
-> +	}
-> +
-> +	hv_vhca->agents[agent->type] = NULL;
-> +	mutex_unlock(&hv_vhca->agents_lock);
-> +
-> +	if (agent->cleanup)
-> +		agent->cleanup(agent);
-> +
-> +	kfree(agent);
-> +}
-> +
-> +static int mlx5_hv_vhca_data_block_prepare(struct mlx5_hv_vhca_agent *agent,
-> +					   struct mlx5_hv_vhca_data_block *data_block,
-> +					   void *src, int len, int *offset)
-> +{
-> +	int bytes = min_t(int, (int)sizeof(data_block->data), len);
-> +
-> +	data_block->sequence = agent->seq;
-> +	data_block->offset   = (*offset)++;
-> +	memcpy(data_block->data, src, bytes);
-> +
-> +	return bytes;
-> +}
-> +
-> +static void mlx5_hv_vhca_agent_seq_update(struct mlx5_hv_vhca_agent *agent)
-> +{
-> +	agent->seq++;
-> +}
-> +
-> +int mlx5_hv_vhca_agent_write(struct mlx5_hv_vhca_agent *agent,
-> +			     void *buf, int len)
-> +{
-> +	int offset = agent->type * HV_CONFIG_BLOCK_SIZE_MAX;
-> +	int block_offset = 0;
-> +	int total = 0;
-> +	int err;
-> +
-> +	while (len) {
-> +		struct mlx5_hv_vhca_data_block data_block = {0};
-> +		int bytes;
-> +
-> +		bytes = mlx5_hv_vhca_data_block_prepare(agent, &data_block,
-> +							buf + total,
-> +							len, &block_offset);
-> +		if (!bytes)
-> +			return -ENOMEM;
-> +
-> +		err = mlx5_hv_write_config(agent->hv_vhca->dev, &data_block,
-> +					   sizeof(data_block), offset);
-> +		if (err)
-> +			return err;
-> +
-> +		total += bytes;
-> +		len   -= bytes;
-> +	}
-> +
-> +	mlx5_hv_vhca_agent_seq_update(agent);
-> +
-> +	return 0;
-> +}
-> +
-> +void *mlx5_hv_vhca_agent_priv(struct mlx5_hv_vhca_agent *agent)
-> +{
-> +	return agent->priv;
-> +}
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h b/drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h
-> new file mode 100644
-> index 0000000..cdf1303
-> --- /dev/null
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h
-> @@ -0,0 +1,102 @@
-> +/* SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB */
-> +/* Copyright (c) 2019 Mellanox Technologies. */
-> +
-> +#ifndef __LIB_HV_VHCA_H__
-> +#define __LIB_HV_VHCA_H__
-> +
-> +#include "en.h"
-> +#include "lib/hv.h"
-> +
-> +struct mlx5_hv_vhca_agent;
-> +struct mlx5_hv_vhca;
-> +struct mlx5_hv_vhca_control_block;
-> +
-> +enum mlx5_hv_vhca_agent_type {
-> +	MLX5_HV_VHCA_AGENT_MAX = 32,
-> +};
-> +
-> +#if IS_ENABLED(CONFIG_PCI_HYPERV_INTERFACE)
-> +
-> +struct mlx5_hv_vhca_control_block {
-> +	u32     capabilities;
-> +	u32     control;
-> +	u16     command;
-> +	u16     command_ack;
-> +	u16     version;
-> +	u16     rings;
-> +	u32     reserved1[28];
-> +};
-> +
-> +struct mlx5_hv_vhca *mlx5_hv_vhca_create(struct mlx5_core_dev *dev);
-> +void mlx5_hv_vhca_destroy(struct mlx5_hv_vhca *hv_vhca);
-> +int mlx5_hv_vhca_init(struct mlx5_hv_vhca *hv_vhca);
-> +void mlx5_hv_vhca_cleanup(struct mlx5_hv_vhca *hv_vhca);
-> +void mlx5_hv_vhca_invalidate(void *context, u64 block_mask);
-> +
-> +struct mlx5_hv_vhca_agent *
-> +mlx5_hv_vhca_agent_create(struct mlx5_hv_vhca *hv_vhca,
-> +			  enum mlx5_hv_vhca_agent_type type,
-> +			  void (*control)(struct mlx5_hv_vhca_agent*,
-> +					  struct mlx5_hv_vhca_control_block *block),
-> +			  void (*invalidate)(struct mlx5_hv_vhca_agent*,
-> +					     u64 block_mask),
-> +			  void (*cleanup)(struct mlx5_hv_vhca_agent *agent),
-> +			  void *context);
-> +
-> +void mlx5_hv_vhca_agent_destroy(struct mlx5_hv_vhca_agent *agent);
-> +int mlx5_hv_vhca_agent_write(struct mlx5_hv_vhca_agent *agent,
-> +			     void *buf, int len);
-> +void *mlx5_hv_vhca_agent_priv(struct mlx5_hv_vhca_agent *agent);
-> +
-> +#else
-> +
-> +static inline struct mlx5_hv_vhca *
-> +mlx5_hv_vhca_create(struct mlx5_core_dev *dev)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline void mlx5_hv_vhca_destroy(struct mlx5_hv_vhca *hv_vhca)
-> +{
-> +}
-> +
-> +static inline int mlx5_hv_vhca_init(struct mlx5_hv_vhca *hv_vhca)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline void mlx5_hv_vhca_cleanup(struct mlx5_hv_vhca *hv_vhca)
-> +{
-> +}
-> +
-> +static inline void mlx5_hv_vhca_invalidate(void *context,
-> +					   u64 block_mask)
-> +{
-> +}
-> +
-> +static inline struct mlx5_hv_vhca_agent *
-> +mlx5_hv_vhca_agent_create(struct mlx5_hv_vhca *hv_vhca,
-> +			  enum mlx5_hv_vhca_agent_type type,
-> +			  void (*control)(struct mlx5_hv_vhca_agent*,
-> +					  struct mlx5_hv_vhca_control_block *block),
-> +			  void (*invalidate)(struct mlx5_hv_vhca_agent*,
-> +					     u64 block_mask),
-> +			  void (*cleanup)(struct mlx5_hv_vhca_agent *agent),
-> +			  void *context)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline void mlx5_hv_vhca_agent_destroy(struct mlx5_hv_vhca_agent *agent)
-> +{
-> +}
-> +
-> +static inline int
-> +mlx5_hv_vhca_write_agent(struct mlx5_hv_vhca_agent *agent,
-> +			 void *buf, int len)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
-> +#endif /* __LIB_HV_VHCA_H__ */
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-> index 0b70b1d..61388ca 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-> @@ -69,6 +69,7 @@
->  #include "lib/pci_vsc.h"
->  #include "diag/fw_tracer.h"
->  #include "ecpf.h"
-> +#include "lib/hv_vhca.h"
->
->  MODULE_AUTHOR("Eli Cohen <eli@mellanox.com>");
->  MODULE_DESCRIPTION("Mellanox 5th generation network adapters (ConnectX series) core driver");
-> @@ -870,6 +871,7 @@ static int mlx5_init_once(struct mlx5_core_dev *dev)
->  	}
->
->  	dev->tracer = mlx5_fw_tracer_create(dev);
-> +	dev->hv_vhca = mlx5_hv_vhca_create(dev);
->
->  	return 0;
->
-> @@ -900,6 +902,7 @@ static int mlx5_init_once(struct mlx5_core_dev *dev)
->
->  static void mlx5_cleanup_once(struct mlx5_core_dev *dev)
->  {
-> +	mlx5_hv_vhca_destroy(dev->hv_vhca);
->  	mlx5_fw_tracer_destroy(dev->tracer);
->  	mlx5_fpga_cleanup(dev);
->  	mlx5_eswitch_cleanup(dev->priv.eswitch);
-> @@ -1067,6 +1070,8 @@ static int mlx5_load(struct mlx5_core_dev *dev)
->  		goto err_fw_tracer;
->  	}
->
-> +	mlx5_hv_vhca_init(dev->hv_vhca);
+>> +
+>> +	mutex_unlock(&aspm_lock);
+>> +	up_read(&pci_bus_sem);
+>> +
+>> +	return len;
+>> +}
+>> +
+>> +static ssize_t aspm_l0s_store(struct device *dev,
+>> +			      struct device_attribute *attr,
+>> +			      const char *buf, size_t len)
+>> +{
+>> +	return aspm_attr_store_common(dev, attr, buf, len, ASPM_STATE_L0S);
+>> +}
+>> +
+>> +static ssize_t aspm_l1_store(struct device *dev,
+>> +			     struct device_attribute *attr,
+>> +			     const char *buf, size_t len)
+>> +{
+>> +	return aspm_attr_store_common(dev, attr, buf, len, ASPM_STATE_L1);
+>> +}
+>> +
+>> +static ssize_t aspm_l1_1_store(struct device *dev,
+>> +			       struct device_attribute *attr,
+>> +			       const char *buf, size_t len)
+>> +{
+>> +	return aspm_attr_store_common(dev, attr, buf, len, ASPM_STATE_L1_1);
+>> +}
+>> +
+>> +static ssize_t aspm_l1_2_store(struct device *dev,
+>> +			       struct device_attribute *attr,
+>> +			       const char *buf, size_t len)
+>> +{
+>> +	return aspm_attr_store_common(dev, attr, buf, len, ASPM_STATE_L1_2);
+>> +}
+>> +
+>> +static ssize_t aspm_l1_1_pcipm_store(struct device *dev,
+>> +				     struct device_attribute *attr,
+>> +				     const char *buf, size_t len)
+>> +{
+>> +	return aspm_attr_store_common(dev, attr, buf, len,
+>> +				      ASPM_STATE_L1_1_PCIPM);
+>> +}
+>> +
+>> +static ssize_t aspm_l1_2_pcipm_store(struct device *dev,
+>> +				     struct device_attribute *attr,
+>> +				     const char *buf, size_t len)
+>> +{
+>> +	return aspm_attr_store_common(dev, attr, buf, len,
+>> +				      ASPM_STATE_L1_2_PCIPM);
+>> +}
+>> +
+>> +static ssize_t aspm_clkpm_show(struct device *dev,
+>> +			       struct device_attribute *attr, char *buf)
+>> +{
+>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>> +	struct pcie_link_state *link;
+>> +	int val;
+>> +
+>> +	link = aspm_get_parent_link(pdev);
+>> +	if (!link)
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	mutex_lock(&aspm_lock);
+>> +	val = link->clkpm_enabled;
+>> +	mutex_unlock(&aspm_lock);
+>> +
+>> +	return snprintf(buf, PAGE_SIZE, "%d\n", val);
+>> +}
+>> +
+>> +static ssize_t aspm_clkpm_store(struct device *dev,
+>> +				struct device_attribute *attr,
+>> +				const char *buf, size_t len)
+>> +{
+>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>> +	struct pcie_link_state *link;
+>> +	bool state_enable;
+>> +
+>> +	if (aspm_disabled)
+>> +		return -EPERM;
+>> +
+>> +	link = aspm_get_parent_link(pdev);
+>> +	if (!link)
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	if (!link->clkpm_capable)
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	if (strtobool(buf, &state_enable) < 0)
+>> +		return -EINVAL;
+>> +
+>> +	down_read(&pci_bus_sem);
+>> +	mutex_lock(&aspm_lock);
+>> +
+>> +	link->clkpm_disable = !state_enable;
+>> +	pcie_set_clkpm(link, policy_to_clkpm_state(link));
+>> +
+>> +	mutex_unlock(&aspm_lock);
+>> +	up_read(&pci_bus_sem);
+>> +
+>> +	return len;
+>> +}
+>> +
+>> +static DEVICE_ATTR_RW(aspm_l0s);
+>> +static DEVICE_ATTR_RW(aspm_l1);
+>> +static DEVICE_ATTR_RW(aspm_l1_1);
+>> +static DEVICE_ATTR_RW(aspm_l1_2);
+>> +static DEVICE_ATTR_RW(aspm_l1_1_pcipm);
+>> +static DEVICE_ATTR_RW(aspm_l1_2_pcipm);
+>> +static DEVICE_ATTR_RW(aspm_clkpm);
+>>  
+>> -static char power_group[] = "power";
+>>  void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev)
+>>  {
+>>  	struct pcie_link_state *link_state = pdev->link_state;
+>>  
+>> +	if (pcie_check_valid_aspm_endpoint(pdev)) {
+>> +		sysfs_add_file_to_group(&pdev->dev.kobj,
+>> +			&dev_attr_aspm_l0s.attr, power_group);
+>> +		sysfs_add_file_to_group(&pdev->dev.kobj,
+>> +			&dev_attr_aspm_l1.attr, power_group);
+>> +		sysfs_add_file_to_group(&pdev->dev.kobj,
+>> +			&dev_attr_aspm_l1_1.attr, power_group);
+>> +		sysfs_add_file_to_group(&pdev->dev.kobj,
+>> +			&dev_attr_aspm_l1_2.attr, power_group);
+>> +		sysfs_add_file_to_group(&pdev->dev.kobj,
+>> +			&dev_attr_aspm_l1_1_pcipm.attr, power_group);
+>> +		sysfs_add_file_to_group(&pdev->dev.kobj,
+>> +			&dev_attr_aspm_l1_2_pcipm.attr, power_group);
+>> +		sysfs_add_file_to_group(&pdev->dev.kobj,
+>> +			&dev_attr_aspm_clkpm.attr, power_group);
+> 
+> Huh?  First of, if you are ever in a driver, and you have to call a
+> sysfs_* function, you know something is wrong.
+> 
+> Why are you dynamically adding files to a group?  These should all be
+> statically allocated and then at creation time you can dynamically
+> determine if you need to show them or not.  Use the is_visable callback
+> for that.
+> 
 
-What is the point to declare this function as "int ..." if you are not
-interested in result?
+The "power" group is dynamically created by the base driver core
+(dpm_sysfs_add). Not sure how the ASPM sysfs files could be statically
+allocated. We could add an attribute group to the "pci" bus_type,
+but this doesn't feel right.
+What we could do to make it simpler:
+Create an attribute group and then use sysfs_merge_group().
+But I see no way not to use sysfs_xxx functions. Also functions
+like device_add_groups() are just very simple wrappers around sysfs_
+functions.
 
-> +
->  	err = mlx5_fpga_device_start(dev);
->  	if (err) {
->  		mlx5_core_err(dev, "fpga device start failed %d\n", err);
-> @@ -1122,6 +1127,7 @@ static int mlx5_load(struct mlx5_core_dev *dev)
->  err_ipsec_start:
->  	mlx5_fpga_device_stop(dev);
->  err_fpga_start:
-> +	mlx5_hv_vhca_cleanup(dev->hv_vhca);
->  	mlx5_fw_tracer_cleanup(dev->tracer);
->  err_fw_tracer:
->  	mlx5_eq_table_destroy(dev);
-> @@ -1142,6 +1148,7 @@ static void mlx5_unload(struct mlx5_core_dev *dev)
->  	mlx5_accel_ipsec_cleanup(dev);
->  	mlx5_accel_tls_cleanup(dev);
->  	mlx5_fpga_device_stop(dev);
-> +	mlx5_hv_vhca_cleanup(dev->hv_vhca);
->  	mlx5_fw_tracer_cleanup(dev->tracer);
->  	mlx5_eq_table_destroy(dev);
->  	mlx5_irq_table_destroy(dev);
-> diff --git a/include/linux/mlx5/driver.h b/include/linux/mlx5/driver.h
-> index df23f17..13b4cf2 100644
-> --- a/include/linux/mlx5/driver.h
-> +++ b/include/linux/mlx5/driver.h
-> @@ -659,6 +659,7 @@ struct mlx5_clock {
->  struct mlx5_fw_tracer;
->  struct mlx5_vxlan;
->  struct mlx5_geneve;
-> +struct mlx5_hv_vhca;
->
->  struct mlx5_core_dev {
->  	struct device *device;
-> @@ -706,6 +707,7 @@ struct mlx5_core_dev {
->  	struct mlx5_ib_clock_info  *clock_info;
->  	struct mlx5_fw_tracer   *tracer;
->  	u32                      vsc_addr;
-> +	struct mlx5_hv_vhca	*hv_vhca;
->  };
->
->  struct mlx5_db {
-> --
-> 1.8.3.1
->
+Alternatively we could not use the existing "power" group but create
+our own group with device_add_group(). But I don't see that we gain much.
+
+>> +	}
+>> +
+>>  	if (!link_state)
+>>  		return;
+>>  
+>> +#ifdef CONFIG_PCIEASPM_DEBUG
+>>  	if (link_state->aspm_support)
+>>  		sysfs_add_file_to_group(&pdev->dev.kobj,
+>>  			&dev_attr_link_state.attr, power_group);
+>>  	if (link_state->clkpm_capable)
+>>  		sysfs_add_file_to_group(&pdev->dev.kobj,
+>>  			&dev_attr_clk_ctl.attr, power_group);
+> 
+> Same here.
+> 
+>> +#endif
+>>  }
+>>  
+>>  void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev)
+>>  {
+>>  	struct pcie_link_state *link_state = pdev->link_state;
+>>  
+>> +	if (pcie_check_valid_aspm_endpoint(pdev)) {
+>> +		sysfs_remove_file_from_group(&pdev->dev.kobj,
+>> +			&dev_attr_aspm_l0s.attr, power_group);
+>> +		sysfs_remove_file_from_group(&pdev->dev.kobj,
+>> +			&dev_attr_aspm_l1.attr, power_group);
+>> +		sysfs_remove_file_from_group(&pdev->dev.kobj,
+>> +			&dev_attr_aspm_l1_1.attr, power_group);
+>> +		sysfs_remove_file_from_group(&pdev->dev.kobj,
+>> +			&dev_attr_aspm_l1_2.attr, power_group);
+>> +		sysfs_remove_file_from_group(&pdev->dev.kobj,
+>> +			&dev_attr_aspm_l1_1_pcipm.attr, power_group);
+>> +		sysfs_remove_file_from_group(&pdev->dev.kobj,
+>> +			&dev_attr_aspm_l1_2_pcipm.attr, power_group);
+>> +		sysfs_remove_file_from_group(&pdev->dev.kobj,
+>> +			&dev_attr_aspm_clkpm.attr, power_group);
+> 
+> And then you never have to do this type of messy logic at all.
+> 
+> Ick.
+> 
+>> +	}
+>> +
+>>  	if (!link_state)
+>>  		return;
+>>  
+>> +#ifdef CONFIG_PCIEASPM_DEBUG
+>>  	if (link_state->aspm_support)
+>>  		sysfs_remove_file_from_group(&pdev->dev.kobj,
+>>  			&dev_attr_link_state.attr, power_group);
+>>  	if (link_state->clkpm_capable)
+>>  		sysfs_remove_file_from_group(&pdev->dev.kobj,
+>>  			&dev_attr_clk_ctl.attr, power_group);
+> 
+> And you get to drop this nonsense as well.
+> 
+Right, with the new attributes CONFIG_PCIEASPM_DEBUG and all
+related stuff could be removed most likely.
+
+> thanks,
+> 
+> greg k-h
+> 
+
+Heiner
