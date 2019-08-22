@@ -2,165 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 45BCB9926F
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2019 13:46:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1062299398
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2019 14:31:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732314AbfHVLo2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Aug 2019 07:44:28 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55136 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732232AbfHVLo2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Aug 2019 07:44:28 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7MBhwER034910;
-        Thu, 22 Aug 2019 06:43:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566474238;
-        bh=R88tKsnOpDEB9S1LRWSQGhA26d8ouNZmNmaeHPXf16w=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=A6qBaPEky+0xRPYdBbTA+Wt+B6BEr64mQ3Ns/GX0C3uhlsrc0UB1BrQ/GAknMyMdI
-         mofJNZKL8sbfGQnPBDGiL26i6Aewg6vdUynWOiEn4CsQxF9FjT49Qmgi7p5UHMJJ9J
-         +ptLStNLyjpUunyxPyNZ0eopVIbFhXsvqUkQl1/w=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7MBhwj4124861
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 22 Aug 2019 06:43:58 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 22
- Aug 2019 06:43:58 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 22 Aug 2019 06:43:58 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7MBhqFv072553;
-        Thu, 22 Aug 2019 06:43:53 -0500
-Subject: Re: [PATCH v2 06/10] PCI: layerscape: Modify the way of getting
- capability with different PEX
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <shawnguo@kernel.org>, <leoyang.li@nxp.com>,
-        <lorenzo.pieralisi@arm.co>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>, <minghuan.Lian@nxp.com>,
-        <mingkai.hu@nxp.com>, <roy.zang@nxp.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <andrew.murray@arm.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-6-xiaowei.bao@nxp.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <0c02ac52-e4b1-8071-bf9e-d10b28fc9029@ti.com>
-Date:   Thu, 22 Aug 2019 17:13:51 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2387463AbfHVMbk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Aug 2019 08:31:40 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37305 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732309AbfHVMbk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Aug 2019 08:31:40 -0400
+Received: by mail-lf1-f65.google.com with SMTP id c9so4413642lfh.4
+        for <linux-pci@vger.kernel.org>; Thu, 22 Aug 2019 05:31:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=aWwEGZ7IKPwlD1SyN53LweuoS+rG8j2WBRgPDxMagPA=;
+        b=HTiZwnq/M3TfXijzvWNxVT1w2LfIrWQGSI7AaFELWznEabALCocbEEsCS0ouQxAjTv
+         L2ppprdNx8PqHEjDgMo1KlEvq5ZmOFcZRUa5RYk1+WbJKNqVwsMmvFjli/VJe0LkyDf5
+         rITXAYx2JyEqUJvzcPYTKWW/MFA0QzHrIybTWVO/oov8ed6JGGhC4e/i3boV3dS+v3Cg
+         6szasMHEFAd59krNNio1T1fwXyGjodfq+HlChnEdEsmdAOnNwUDf+s7ypcyA6aulFsoe
+         +Jm/bwlLHaG3WFxkRZgE6lzlxsa93k/NRuUx++h4Uy5TqUImU1pT3eMf39vc2lmO/mQA
+         ZG4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=aWwEGZ7IKPwlD1SyN53LweuoS+rG8j2WBRgPDxMagPA=;
+        b=kfPJ0SSEAbxiuoJ0f/YavCqbhQVo67RfPA1/i0T0FtgbZBq4X6p3+bsqYhN5m8oGZk
+         xz2LQH0q0Pffm4XOrdP0kU/T7XzfO5Gtpes8EHXkAVbmE5ls1PDOSovO3IE7DDMSgZae
+         dNjP1soZ0QSqtp32Vr7LSKxYPGYjJy40TTWEA6G/+XGfFm7WqUWpNlqITke3hAhGc1fx
+         8M+aaIar6w0tX/uBoVD7hY4tSkztU14HsCBEVRlAfXp1c9DFqJpKUpJ69TIG74GkhEUR
+         xJDGZvrFzJtVeleKiwwyPt19FsTamcrHF0IAk/be/Le7a16waVl8RGSaiIaFj/TKCooh
+         zs+g==
+X-Gm-Message-State: APjAAAWGMvcZqDAkAWX+6lWDx70tieAWrKvoLcTFVZRCLtwu1Bs9aN+a
+        H3ezILflcOqBpjw7d8bEnyZqchEJcEbUCXwfybc=
+X-Google-Smtp-Source: APXvYqy0iXJu1OjjK1/w+dGR4lig1dJDuZAaySIndTcujkhpdPTdl55KZJyKAR1B8W+U0pR8yAAtA8Tc+YLhyFTL76s=
+X-Received: by 2002:ac2:560b:: with SMTP id v11mr18377191lfd.177.1566477098592;
+ Thu, 22 Aug 2019 05:31:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190822112242.16309-6-xiaowei.bao@nxp.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Received: by 2002:ab3:6a0f:0:0:0:0:0 with HTTP; Thu, 22 Aug 2019 05:31:36
+ -0700 (PDT)
+Reply-To: eku.lawfirm@gmail.com
+From:   "Law firm(Eku and Associates)" <ezeobodo1@gmail.com>
+Date:   Thu, 22 Aug 2019 12:31:36 +0000
+Message-ID: <CAN-_bTb1nP9CfQXnKs-EEZxJ0E-1zUOGGdX-92pg5wotBiWzLg@mail.gmail.com>
+Subject: MY $25,000,000.00 INVESTMENT PROPOSAL WITH YOU AND IN YOUR COUNTRY.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+--=20
+Dear,
+With due respect this is not spam or Scam mail, because I have
+contacted you before and there was no response from you,I apologise if
+the contents of this mail are contrary to your moral ethics, which I
+feel may be of great disturbance to your person, but please treat this
+with absolute confidentiality, believing that this email reaches you
+in good faith. My contacting you is not a mistake or a coincidence
+because God can use any person known or unknown to accomplish great
+things.
+I am a lawyer and I have an investment business proposal to offer you.
+It is not official but should be considered as legal and confidential
+business. I have a customer's deposit of $US25 million dollars ready
+to be moved for investment if you can partner with us. We are ready to
+offer you 10% of this total amount as your compensation for supporting
+the transaction to completion. If you are interested to help me please
+reply me with your full details as stated below:
+(1) Your full names:
+(2) Your address:
+(3) Your occupation:
+(4) Your mobile telephone number:
+(5) Your nationality:
+(6) Your present location:
+(7) Your age:
+So that I will provide you more details on what to do and what is
+required for successful completion.
+Note: DO NOT REPLY ME IF YOU ARE NOT INTERESTED AND WITHOUT THE ABOVE
+MENTIONED DETAILS
 
-On 22/08/19 4:52 PM, Xiaowei Bao wrote:
-> The different PCIe controller in one board may be have different
-> capability of MSI or MSIX, so change the way of getting the MSI
-> capability, make it more flexible.
-
-please use different pci_epc_features table for different boards.
-
-Thanks
-Kishon
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
-> v2:
->  - Remove the repeated assignment code.
-> 
->  drivers/pci/controller/dwc/pci-layerscape-ep.c | 26 +++++++++++++++++++-------
->  1 file changed, 19 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> index 4e92a95..8461f62 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> @@ -22,6 +22,7 @@
->  
->  struct ls_pcie_ep {
->  	struct dw_pcie		*pci;
-> +	struct pci_epc_features	*ls_epc;
->  };
->  
->  #define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
-> @@ -40,25 +41,26 @@ static const struct of_device_id ls_pcie_ep_of_match[] = {
->  	{ },
->  };
->  
-> -static const struct pci_epc_features ls_pcie_epc_features = {
-> -	.linkup_notifier = false,
-> -	.msi_capable = true,
-> -	.msix_capable = false,
-> -};
-> -
->  static const struct pci_epc_features*
->  ls_pcie_ep_get_features(struct dw_pcie_ep *ep)
->  {
-> -	return &ls_pcie_epc_features;
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
-> +
-> +	return pcie->ls_epc;
->  }
->  
->  static void ls_pcie_ep_init(struct dw_pcie_ep *ep)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
->  	enum pci_barno bar;
->  
->  	for (bar = BAR_0; bar <= BAR_5; bar++)
->  		dw_pcie_ep_reset_bar(pci, bar);
-> +
-> +	pcie->ls_epc->msi_capable = ep->msi_cap ? true : false;
-> +	pcie->ls_epc->msix_capable = ep->msix_cap ? true : false;
->  }
->  
->  static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> @@ -118,6 +120,7 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct dw_pcie *pci;
->  	struct ls_pcie_ep *pcie;
-> +	struct pci_epc_features *ls_epc;
->  	struct resource *dbi_base;
->  	int ret;
->  
-> @@ -129,6 +132,10 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
->  	if (!pci)
->  		return -ENOMEM;
->  
-> +	ls_epc = devm_kzalloc(dev, sizeof(*ls_epc), GFP_KERNEL);
-> +	if (!ls_epc)
-> +		return -ENOMEM;
-> +
->  	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
->  	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
->  	if (IS_ERR(pci->dbi_base))
-> @@ -139,6 +146,11 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
->  	pci->ops = &ls_pcie_ep_ops;
->  	pcie->pci = pci;
->  
-> +	ls_epc->linkup_notifier = false,
-> +	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
-> +
-> +	pcie->ls_epc = ls_epc;
-> +
->  	platform_set_drvdata(pdev, pcie);
->  
->  	ret = ls_add_pcie_ep(pcie, pdev);
-> 
+Sinc=C3=A8rement v=C3=B4tre,
+Avocat Etienne Eku Esq.(Lawfirm)
+Procureur principal. De Cabinet d=E2=80=99avocats de l=E2=80=99Afrique de l=
+=E2=80=99ouest.
+Skype:westafricalawfirm
