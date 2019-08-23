@@ -2,86 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BC4B9B2FC
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2019 17:06:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1004D9B324
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2019 17:16:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732923AbfHWPF7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Aug 2019 11:05:59 -0400
-Received: from mga05.intel.com ([192.55.52.43]:20136 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732530AbfHWPF7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 23 Aug 2019 11:05:59 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 08:05:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,421,1559545200"; 
-   d="scan'208";a="186890433"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by FMSMGA003.fm.intel.com with ESMTP; 23 Aug 2019 08:05:58 -0700
-Date:   Fri, 23 Aug 2019 09:04:03 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 0/3] PCI: Add PCI_ERROR_RESPONSE, check for errors
-Message-ID: <20190823150403.GB16605@localhost.localdomain>
-References: <20190822200551.129039-1-helgaas@kernel.org>
+        id S2394093AbfHWPQa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Aug 2019 11:16:30 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:5376 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394059AbfHWPQa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Aug 2019 11:16:30 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d60034d0000>; Fri, 23 Aug 2019 08:16:29 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 23 Aug 2019 08:16:29 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 23 Aug 2019 08:16:29 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 23 Aug
+ 2019 15:16:28 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 23 Aug 2019 15:16:29 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d60034a0000>; Fri, 23 Aug 2019 08:16:28 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
+        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH] PCI: dwc: Use dev_info() instead of dev_err()
+Date:   Fri, 23 Aug 2019 20:46:18 +0530
+Message-ID: <20190823151618.13904-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190822200551.129039-1-helgaas@kernel.org>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1566573389; bh=/zU/Y/aUMBa0GvPoI85WCd4RIgUyWHb0mOiMZxkz0RM=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=LSaI8EqKJA4p+UFTvI8i7eMbces5+c2QmJwnb1DpvJDdy4Ocv8EX6TC/9ZUZa/Zav
+         ZJao7KZWEWjaWYY7fRPum+N9CkN4MyJAr0JOK2yWeW/hfgjzsagfVQdl84aK8gGbDd
+         AujdCj9/Kj3VIpibswBHQYHHK+bDlZKeC2CJGoCPG5E5+mJj8fL56vGzOKgNAHQWzG
+         y/tHDF0sg5/RZhRSFm+Pi9nMpTEEoaC3hFbcOah96HwgT/DgzNFg5U8/nJbnTLwNLE
+         jrmJNEahCVdj7FkMz01F/Dp79XoMaqwAlVItM3ltrzYcnk7IWXyv1Ua7oWMS/dxE+1
+         +oRCJuSoJXszQ==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 03:05:48PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Reads from a PCI device may fail if the device has been turned off (put
-> into D3cold), removed, or if some other error occurs.  The PCI host bridge
-> typically fabricates ~0 data to complete the CPU's read.
-> 
-> We check for that in a few places, but not in a consistent way.  This
-> series adds a PCI_ERROR_RESPONSE definition to make the checks more
-> consistent and easier to find.  Note that ~0 may indicate a PCI error, but
-> it may also be valid read data, so you need more information (such as
-> knowing that a register can never contain ~0) before concluding that it's
-> an error.
-> 
-> This series also adds a new check for PCI_ERROR_RESPONSE in the power
-> management code because that code frequently encounters devices in D3cold,
-> where we previously misinterpreted ~0 data.  It also uses pci_power_name()
-> to print D-state names more consistently.
-> 
-> Rafael, I didn't add your Reviewed-by to "PCI / PM: Return error when
-> changing power state from D3cold" because I made small changes to try to
-> make the messages more consistent, and I didn't want to presume they'd be
-> OK with you.
-> 
-> Changes since v1:
->   - Add Rafael's Reviewed-By to the first two patches
->   - Drop "PCI / PM: Check for error when reading PME status" because Rafael
->     pointed out that some devices can signal PME even when in D3cold, so
->     this would require additional rework
->   - Drop "PCI / PM: Check for error when reading Power State" because
->     Rafael thinks it's mostly redundant
-> 
-> Bjorn Helgaas (3):
->   PCI: Add PCI_ERROR_RESPONSE definition
->   PCI / PM: Decode D3cold power state correctly
->   PCI / PM: Return error when changing power state from D3cold
+When a platform has an open PCIe slot, not having a device connected to
+it doesn't have to result in a dev_err() print saying that the link is
+not up but a dev_info() would suffice.
 
-Series looks good to me.
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+---
+ drivers/pci/controller/dwc/pcie-designware.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Keith Busch <kbusch@kernel.org>
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 59eaeeb21dbe..4d6690b6ca36 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -456,7 +456,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+ 		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+ 	}
+ 
+-	dev_err(pci->dev, "Phy link never came up\n");
++	dev_info(pci->dev, "Phy link never came up\n");
+ 
+ 	return -ETIMEDOUT;
+ }
+-- 
+2.17.1
+
