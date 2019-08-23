@@ -2,105 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D6D239B7D8
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2019 22:46:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F7E19B82C
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2019 23:30:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392116AbfHWUqB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Aug 2019 16:46:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40996 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388903AbfHWUqB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 23 Aug 2019 16:46:01 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BF2F33090FC5;
-        Fri, 23 Aug 2019 20:46:00 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9F1E05DD61;
-        Fri, 23 Aug 2019 20:45:49 +0000 (UTC)
-Date:   Fri, 23 Aug 2019 14:45:49 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     hexin <hexin.op@gmail.com>
-Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hexin <hexin15@baidu.com>,
-        Liu Qi <liuqi16@baidu.com>, Zhang Yu <zhangyu31@baidu.com>
-Subject: Re: [PATCH v3] vfio_pci: Restore original state on release
-Message-ID: <20190823144549.58dce8e7@x1.home>
-In-Reply-To: <1566444919-3331-1-git-send-email-hexin15@baidu.com>
-References: <1566444919-3331-1-git-send-email-hexin15@baidu.com>
-Organization: Red Hat
+        id S2388437AbfHWVaZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Aug 2019 17:30:25 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54259 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388346AbfHWVaZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Aug 2019 17:30:25 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 10so10065813wmp.3
+        for <linux-pci@vger.kernel.org>; Fri, 23 Aug 2019 14:30:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4TX/BCsYLA6n54F0SKBuGWPjzRLgxITMCyGGvoS2eHw=;
+        b=ZaU/nqCSPN7BSy4Qb3MYvZDHEAZ5veJENMAPyyIKWVxiDBjC0TVcRnLR7Q7R9yX3t/
+         Whoz2er8j8XoIBPvo54U35gfxxSKYQxUdH715p1NnI8DaGJW4zWQ8lnNLk76lUA48zNB
+         w7WPg1Dpm3PUQ48ZJEt0UAUqzxia3W1l60AgaodklnYeCSdWsn7VclGSICYUBT//YlMW
+         qyc9EY84RWzgFoQ7+EGgw0jt4spwGQhJEyaIEWyKSBuIySoSdySVX04obHMpchbvNiTC
+         GRU7F0pl8J9OByPIGZmCG6y5KKj2XtF+mr/qdhBiZ4/XjXg/VtBm55E03vz1vhsEkH4u
+         OTBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4TX/BCsYLA6n54F0SKBuGWPjzRLgxITMCyGGvoS2eHw=;
+        b=W0theSvcNzAeKHQeEOBhUzgpbhwuuT6AjqauHAtMrnal4Rom7NAHKIguioLBhl2vKl
+         E/9J8qUtUp9BH2MrN6O04pLkwXQBSoIzh11bczOMpsYReERku5LfXhMA62rFH00AY6uC
+         VyBO38h62tx0GzKoR6H2mwc5xg/0nkH+k5ZnNXLkQx9OcLdWrMhNcOJ7SJ/m5QzlDm+B
+         /90UAlpUrI8O/yOw0ogBna7yt57a/MdYupVv2CIKGB2WdMzLvvxb16a+9raPKfFnSLtp
+         b2a/THVdsm8KTowVQqkKoZ8m4EKOfJX3C2KVBKQO+YF8vlq9J9OsQA3t0ulV5dXToYq/
+         VlDg==
+X-Gm-Message-State: APjAAAUJiQVZQKFjWZg6DlrHF8/GP5YCNLMAEULFpZG+3nFXpie+vXRq
+        gXxoa9BpuriHRiHZh8qZSoF9PicS
+X-Google-Smtp-Source: APXvYqxKV3lcn649r9Vv7OgZqAiSmho1qRPxXNd4rYzzcibvvoqLX+dKiMy7EI/GEDWvAQBk1YiH7Q==
+X-Received: by 2002:a1c:f106:: with SMTP id p6mr6852121wmh.148.1566595823089;
+        Fri, 23 Aug 2019 14:30:23 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f04:7c00:79ba:ea77:a36b:1ec0? (p200300EA8F047C0079BAEA77A36B1EC0.dip0.t-ipconnect.de. [2003:ea:8f04:7c00:79ba:ea77:a36b:1ec0])
+        by smtp.googlemail.com with ESMTPSA id l15sm2951850wru.56.2019.08.23.14.30.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 23 Aug 2019 14:30:22 -0700 (PDT)
+Subject: Re: [PATCH v3 0/4] PCI/ASPM: add sysfs attributes for controlling
+ ASPM
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+To:     Frederick Lawler <fred@fredlawl.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Rajat Jain <rajatja@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <9e5ef666-1ef9-709a-cd7a-ca43eeb9e4a4@gmail.com>
+Message-ID: <32e53ab5-148c-35df-2ac0-f770edc6ae5d@gmail.com>
+Date:   Fri, 23 Aug 2019 23:30:16 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <9e5ef666-1ef9-709a-cd7a-ca43eeb9e4a4@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 23 Aug 2019 20:46:00 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 22 Aug 2019 11:35:19 +0800
-hexin <hexin.op@gmail.com> wrote:
-
-> vfio_pci_enable() saves the device's initial configuration information
-> with the intent that it is restored in vfio_pci_disable().  However,
-> the commit referenced in Fixes: below replaced the call to
-> __pci_reset_function_locked(), which is not wrapped in a state save
-> and restore, with pci_try_reset_function(), which overwrites the
-> restored device state with the current state before applying it to the
-> device.  Reinstate use of __pci_reset_function_locked() to return to
-> the desired behavior.
+On 23.08.2019 08:11, Heiner Kallweit wrote:
+> Background of this extension is a problem with the r8169 network driver.
+> Several combinations of board chipsets and network chip versions have
+> problems if ASPM is enabled, therefore we have to disable ASPM per
+> default. However especially on notebooks ASPM can provide significant
+> power-saving, therefore we want to give users the option to enable
+> ASPM. With the new sysfs attributes users can control which ASPM
+> link-states are disabled.
 > 
-> Fixes: 890ed578df82 ("vfio-pci: Use pci "try" reset interface")
-> Signed-off-by: hexin <hexin15@baidu.com>
-> Signed-off-by: Liu Qi <liuqi16@baidu.com>
-> Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
-> ---
-
-Applied to vfio next branch for v5.4.  Thanks,
-
-Alex
-
-> v2->v3:
-> - change commit log 
-> v1->v2:
-> - add fixes tag
-> - add comment to warn 
+> v2:
+> - use a dedicated sysfs attribute per link state
+> - allow separate control of ASPM and PCI PM L1 sub-states
 > 
-> [1] https://lore.kernel.org/linux-pci/1565926427-21675-1-git-send-email-hexin15@baidu.com
-> [2] https://lore.kernel.org/linux-pci/1566042663-16694-1-git-send-email-hexin15@baidu.com
+> v3:
+> - patch 3: statically allocate the attribute group
+> - patch 3: replace snprintf with printf
+> - add patch 4
 > 
->  drivers/vfio/pci/vfio_pci.c | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
+> Heiner Kallweit (4):
+>   PCI/ASPM: add L1 sub-state support to pci_disable_link_state
+>   PCI/ASPM: allow to re-enable Clock PM
+>   PCI/ASPM: add sysfs attributes for controlling ASPM
+>   PCI/ASPM: remove Kconfig option PCIEASPM_DEBUG and related code
 > 
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index 703948c..0220616 100644
-> --- a/drivers/vfio/pci/vfio_pci.c
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -438,11 +438,20 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
->  	pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
->  
->  	/*
-> -	 * Try to reset the device.  The success of this is dependent on
-> -	 * being able to lock the device, which is not always possible.
-> +	 * Try to get the locks ourselves to prevent a deadlock. The
-> +	 * success of this is dependent on being able to lock the device,
-> +	 * which is not always possible.
-> +	 * We can not use the "try" reset interface here, which will
-> +	 * overwrite the previously restored configuration information.
->  	 */
-> -	if (vdev->reset_works && !pci_try_reset_function(pdev))
-> -		vdev->needs_reset = false;
-> +	if (vdev->reset_works && pci_cfg_access_trylock(pdev)) {
-> +		if (device_trylock(&pdev->dev)) {
-> +			if (!__pci_reset_function_locked(pdev))
-> +				vdev->needs_reset = false;
-> +			device_unlock(&pdev->dev);
-> +		}
-> +		pci_cfg_access_unlock(pdev);
-> +	}
->  
->  	pci_restore_state(pdev);
->  out:
-
+>  Documentation/ABI/testing/sysfs-bus-pci |  13 +
+>  drivers/pci/pci-sysfs.c                 |   6 +-
+>  drivers/pci/pci.h                       |  12 +-
+>  drivers/pci/pcie/Kconfig                |   7 -
+>  drivers/pci/pcie/aspm.c                 | 300 ++++++++++++++++++------
+>  include/linux/pci-aspm.h                |  10 +-
+>  6 files changed, 254 insertions(+), 94 deletions(-)
+> 
+Found a functional error during more testing. Will submit a v4 once fixed.
+Please disregard this series.
