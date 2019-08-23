@@ -2,50 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A44D9A77B
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2019 08:16:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73B859A77D
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2019 08:16:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404334AbfHWGQR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Aug 2019 02:16:17 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52379 "EHLO
+        id S2404117AbfHWGQS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Aug 2019 02:16:18 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52380 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404117AbfHWGQQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Aug 2019 02:16:16 -0400
-Received: by mail-wm1-f66.google.com with SMTP id o4so7775632wmh.2
-        for <linux-pci@vger.kernel.org>; Thu, 22 Aug 2019 23:16:15 -0700 (PDT)
+        with ESMTP id S2404341AbfHWGQR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Aug 2019 02:16:17 -0400
+Received: by mail-wm1-f66.google.com with SMTP id o4so7775725wmh.2
+        for <linux-pci@vger.kernel.org>; Thu, 22 Aug 2019 23:16:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=De2t+OnH9MfsoPT9GJMrVsUaBz55+3cJW9rOaEd+Kjs=;
-        b=q8gHohWqV2GtAEgYpR0rOaHAvNlud9E0YyOqBFN+R8ZdGQt2nnAy1hxVHPVQkBv0V7
-         qQ3968pLuAikdjum7G6rRINSrMbggI1swGbf+CAumBK45QE8D86A/RiLJAXwH3T3QtSj
-         KKz9zT+pSH8XvwJ6XSgoS6hY04JVmjMl2fu46T7f2uiHanle5OHz+j8xa81zTvsRXUPF
-         /RScxXqx4N1JdWZK1iU/7dClL7OMOZERC1LCRDnOK3PbTMzsHppP2XhMdqSz8YQhx4e6
-         JZraDGZXf+jY800Zs2OrSYHFje7mcJ+oV3GI1Hx/S1guGlnLOHocBoh3CtEq/QF6F1oa
-         VSEA==
+        bh=+4Bmc0ZpnjfSfSMfniH/rk4kYcHE1WYcpQwbIq12Y6g=;
+        b=EKnboRJv9MdawcXhFG61DfD9ZqGRMGGIugOKe904MDdZxf/03/6VNEPB1KIHQYSdYy
+         pAbTsRFuRfwcXaB1DzUHGGKfN9QP2bgxMpbBgGzY2mXxalSDQGOHIhZOJIz8Fp6S6KQM
+         5S67IAowAI2dOygmw1+ds2wo2z1JtshGDjgLoxg4eunuPL/r50SUducYowyKyQhJAkP/
+         DpKZjTYtddfeZWMRzhGRwJlRxYV6EKyCT2qpewMcLUSAGzjT30h+msRl6DipnwxzYm3i
+         mMz+uqdRJVBLJSeS0X5k5PQ0pTiks7AmM4B3OWhmbGIttwaPanhxto68EUPOVLRjOFgF
+         CAxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=De2t+OnH9MfsoPT9GJMrVsUaBz55+3cJW9rOaEd+Kjs=;
-        b=UtXUQaLADcdr0EQrrH7hHD5oTC1DeRMIbYoYjk0JBIYF38nWB9cx94exi/deSjDbw8
-         xTg7dB1+QHJLEdXfL14ThccV5lO93vct2dKnxhup2Y/KzdrGmR47XKQIWzjEIvHz1+Qm
-         tYGlyCOsufLc2Zzr+VqLtFllZDAsEagT10Xd8YU4CntJ5VmlP0oR5x4Ef9rQNoobKPN3
-         ncUcVxGQrYOYF8lOwrRHXECmU5yDTLKHRJusr7/kzR1e9PHVq4xTA80lUX+t5dFlC9Qt
-         UfgXEbd335CgtQFinYVmZfRcfLXyLaaGcFl+rYscURV5Q7X4PDjSVqinpsPACme7LhBw
-         IMdA==
-X-Gm-Message-State: APjAAAV7541PwQ31OCVNrM2THY+Iz8Tw3jz80f8iSgGByhU4IiakYksQ
-        J86bhh4F1TlcO5C0ic7ziIuLNU8R
-X-Google-Smtp-Source: APXvYqx+GkFj6s7b0SZ0qrnUghDK0fdzWs8Gu4Ia1y7+xaiuE5qsEPxSkIfC8dw0sPBkPuW1pA2DHw==
-X-Received: by 2002:a1c:45:: with SMTP id 66mr3006191wma.40.1566540974162;
-        Thu, 22 Aug 2019 23:16:14 -0700 (PDT)
+        bh=+4Bmc0ZpnjfSfSMfniH/rk4kYcHE1WYcpQwbIq12Y6g=;
+        b=btRbT5mGzrDXJ2lHPVYEqXySmnFsVMfvASQJ4xoJPTOJP9HdKoK/bkYA/BxY7D4QPy
+         vl4NGy5k+iGMncVCJ2HxHCScXswAVJGW2jAw9O0iYLrlzohaOiRqpWjIwTwLNX3a4hO8
+         ng+HscHUN1puDXy+C3aozP7HmSIHtupJC5KCi2o8SCsVvUw81z0d6mX2XUmINUXTfMda
+         57u6ENBamJ1if76T9tHXprbI0DCrkFma/6WznpPBgunEN+ds/yHVWTWS1bxO74medesZ
+         0jeQnXPRXGpl1D8AHxGZVYaURsemzNyiUhKNhsHYBIg5UpZtgiDCbMP0ks4JoWwenJJv
+         78rg==
+X-Gm-Message-State: APjAAAWn+siqqOhWe4YlQmyEDFkTQzS+R9RWVKc2/C2GQFAV1x7agGY7
+        tZA0gXJ7mxUWRvzY5PuLMNLy56gk
+X-Google-Smtp-Source: APXvYqwE8TZFlr9ue5SlaE709iOAKQQ7dyLymCbIp6jL8t9YGXVQ02yOm7huAwb7VNgvJ/g1pXlpsA==
+X-Received: by 2002:a1c:c1cd:: with SMTP id r196mr3129573wmf.127.1566540975502;
+        Thu, 22 Aug 2019 23:16:15 -0700 (PDT)
 Received: from ?IPv6:2003:ea:8f04:7c00:34d1:4088:cd1d:73a7? (p200300EA8F047C0034D14088CD1D73A7.dip0.t-ipconnect.de. [2003:ea:8f04:7c00:34d1:4088:cd1d:73a7])
-        by smtp.googlemail.com with ESMTPSA id c15sm6869666wrb.80.2019.08.22.23.16.13
+        by smtp.googlemail.com with ESMTPSA id f24sm1584058wmc.25.2019.08.22.23.16.14
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 22 Aug 2019 23:16:13 -0700 (PDT)
-Subject: [PATCH v3 3/4] PCI/ASPM: add sysfs attributes for controlling ASPM
+        Thu, 22 Aug 2019 23:16:15 -0700 (PDT)
+Subject: [PATCH v3 4/4] PCI/ASPM: remove Kconfig option PCIEASPM_DEBUG and
+ related code
 From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     Frederick Lawler <fred@fredlawl.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -53,8 +54,8 @@ To:     Frederick Lawler <fred@fredlawl.com>,
         Rajat Jain <rajatja@google.com>
 Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 References: <9e5ef666-1ef9-709a-cd7a-ca43eeb9e4a4@gmail.com>
-Message-ID: <e11c9f6f-a0ee-2f61-4201-25556a7dbcaf@gmail.com>
-Date:   Fri, 23 Aug 2019 08:15:14 +0200
+Message-ID: <5f705952-5a4c-579b-d059-98ff36f62261@gmail.com>
+Date:   Fri, 23 Aug 2019 08:15:54 +0200
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
@@ -67,334 +68,198 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Background of this extension is a problem with the r8169 network driver.
-Several combinations of board chipsets and network chip versions have
-problems if ASPM is enabled, therefore we have to disable ASPM per default.
-However especially on notebooks ASPM can provide significant power-saving,
-therefore we want to give users the option to enable ASPM. With the new sysfs
-attributes users can control which ASPM link-states are enabled/disabled.
+Now that we have sysfs attributes for enabling/disabling the individual
+ASPM link states, this debug code isn't needed any longer.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
-v2:
-- use a dedicated sysfs attribute per link state
-- allow separate control of ASPM and PCI PM L1 sub-states
-v3:
-- statically allocate the attribute group
-- replace snprintf with printf
-- base on top of "PCI: Make pcie_downstream_port() available outside of access.c"
----
- Documentation/ABI/testing/sysfs-bus-pci |  13 ++
- drivers/pci/pci-sysfs.c                 |   3 +
- drivers/pci/pci.h                       |   4 +
- drivers/pci/pcie/aspm.c                 | 246 ++++++++++++++++++++++++
- 4 files changed, 266 insertions(+)
+ drivers/pci/pci-sysfs.c  |   3 --
+ drivers/pci/pci.h        |   8 ---
+ drivers/pci/pcie/Kconfig |   7 ---
+ drivers/pci/pcie/aspm.c  | 105 ---------------------------------------
+ 4 files changed, 123 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index 8bfee557e..49249a165 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -347,3 +347,16 @@ Description:
- 		If the device has any Peer-to-Peer memory registered, this
- 	        file contains a '1' if the memory has been published for
- 		use outside the driver that owns the device.
-+
-+What		/sys/bus/pci/devices/.../aspm/aspm_l0s
-+What		/sys/bus/pci/devices/.../aspm/aspm_l1
-+What		/sys/bus/pci/devices/.../aspm/aspm_l1_1
-+What		/sys/bus/pci/devices/.../aspm/aspm_l1_2
-+What		/sys/bus/pci/devices/.../aspm/aspm_l1_1_pcipm
-+What		/sys/bus/pci/devices/.../aspm/aspm_l1_2_pcipm
-+What		/sys/bus/pci/devices/.../aspm/aspm_clkpm
-+date:		August 2019
-+Contact:	Heiner Kallweit <hkallweit1@gmail.com>
-+Description:	If ASPM is supported for an endpoint, then these files
-+		can be used to disable or enable the individual
-+		power management states.
 diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 793412954..0e76c02e0 100644
+index 0e76c02e0..92bf1b1ce 100644
 --- a/drivers/pci/pci-sysfs.c
 +++ b/drivers/pci/pci-sysfs.c
-@@ -1587,6 +1587,9 @@ static const struct attribute_group *pci_dev_attr_groups[] = {
- 	&pcie_dev_attr_group,
- #ifdef CONFIG_PCIEAER
- 	&aer_stats_attr_group,
-+#endif
-+#ifdef CONFIG_PCIEASPM
-+	&aspm_ctrl_attr_group,
- #endif
- 	NULL,
- };
+@@ -1330,7 +1330,6 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
+ 	int retval;
+ 
+ 	pcie_vpd_create_sysfs_dev_files(dev);
+-	pcie_aspm_create_sysfs_dev_files(dev);
+ 
+ 	if (dev->reset_fn) {
+ 		retval = device_create_file(&dev->dev, &dev_attr_reset);
+@@ -1340,7 +1339,6 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
+ 	return 0;
+ 
+ error:
+-	pcie_aspm_remove_sysfs_dev_files(dev);
+ 	pcie_vpd_remove_sysfs_dev_files(dev);
+ 	return retval;
+ }
+@@ -1416,7 +1414,6 @@ int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
+ static void pci_remove_capabilities_sysfs(struct pci_dev *dev)
+ {
+ 	pcie_vpd_remove_sysfs_dev_files(dev);
+-	pcie_aspm_remove_sysfs_dev_files(dev);
+ 	if (dev->reset_fn) {
+ 		device_remove_file(&dev->dev, &dev_attr_reset);
+ 		dev->reset_fn = 0;
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 85e9fc14e..3908fb23d 100644
+index 3908fb23d..9ede6a37a 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -649,4 +649,8 @@ static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
- static inline void pci_aer_clear_device_status(struct pci_dev *dev) { }
+@@ -532,14 +532,6 @@ static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
  #endif
  
-+#ifdef CONFIG_PCIEASPM
-+extern const struct attribute_group aspm_ctrl_attr_group;
-+#endif
-+
- #endif /* DRIVERS_PCI_H */
+-#ifdef CONFIG_PCIEASPM_DEBUG
+-void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev);
+-void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev);
+-#else
+-static inline void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev) { }
+-static inline void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev) { }
+-#endif
+-
+ #ifdef CONFIG_PCIE_ECRC
+ void pcie_set_ecrc_checking(struct pci_dev *dev);
+ void pcie_ecrc_get_policy(char *str);
+diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+index 362eb8cfa..a2e862d4e 100644
+--- a/drivers/pci/pcie/Kconfig
++++ b/drivers/pci/pcie/Kconfig
+@@ -79,13 +79,6 @@ config PCIEASPM
+ 
+ 	  When in doubt, say Y.
+ 
+-config PCIEASPM_DEBUG
+-	bool "Debug PCI Express ASPM"
+-	depends on PCIEASPM
+-	help
+-	  This enables PCI Express ASPM debug support. It will add per-device
+-	  interface to control ASPM.
+-
+ choice
+ 	prompt "Default ASPM policy"
+ 	default PCIEASPM_DEFAULT
 diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 149b876c9..0d54cd7c7 100644
+index 0d54cd7c7..8c13a152f 100644
 --- a/drivers/pci/pcie/aspm.c
 +++ b/drivers/pci/pcie/aspm.c
-@@ -1308,6 +1308,252 @@ void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev)
+@@ -1203,111 +1203,6 @@ bool pcie_aspm_enabled(struct pci_dev *pdev)
  }
- #endif
+ EXPORT_SYMBOL_GPL(pcie_aspm_enabled);
  
-+static struct pcie_link_state *aspm_get_parent_link(struct pci_dev *pdev)
-+{
-+	struct pci_dev *parent = pdev->bus->self;
-+
-+	if (pcie_downstream_port(pdev))
-+		parent = pdev;
-+
-+	return parent ? parent->link_state : NULL;
-+}
-+
-+static bool pcie_check_valid_aspm_endpoint(struct pci_dev *pdev)
-+{
-+	struct pcie_link_state *link;
-+
-+	if (!pci_is_pcie(pdev) || pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT)
-+		return false;
-+
-+	link = aspm_get_parent_link(pdev);
-+
-+	return link && link->aspm_capable;
-+}
-+
-+static ssize_t aspm_attr_show_common(struct device *dev,
-+				     struct device_attribute *attr,
-+				     char *buf, int state)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct pcie_link_state *link;
-+	int val;
-+
-+	link = aspm_get_parent_link(pdev);
-+	if (!link)
-+		return -EOPNOTSUPP;
-+
-+	mutex_lock(&aspm_lock);
-+	val = !!(link->aspm_enabled & state);
-+	mutex_unlock(&aspm_lock);
-+
-+	return sprintf(buf, "%d\n", val);
-+}
-+
-+static ssize_t aspm_l0s_show(struct device *dev,
-+			     struct device_attribute *attr, char *buf)
-+{
-+	return aspm_attr_show_common(dev, attr, buf, ASPM_STATE_L0S);
-+}
-+
-+static ssize_t aspm_l1_show(struct device *dev,
-+			    struct device_attribute *attr, char *buf)
-+{
-+	return aspm_attr_show_common(dev, attr, buf, ASPM_STATE_L1);
-+}
-+
-+static ssize_t aspm_l1_1_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	return aspm_attr_show_common(dev, attr, buf, ASPM_STATE_L1_1);
-+}
-+
-+static ssize_t aspm_l1_2_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	return aspm_attr_show_common(dev, attr, buf, ASPM_STATE_L1_2);
-+}
-+
-+static ssize_t aspm_l1_1_pcipm_show(struct device *dev,
-+				    struct device_attribute *attr, char *buf)
-+{
-+	return aspm_attr_show_common(dev, attr, buf, ASPM_STATE_L1_1_PCIPM);
-+}
-+
-+static ssize_t aspm_l1_2_pcipm_show(struct device *dev,
-+				    struct device_attribute *attr, char *buf)
-+{
-+	return aspm_attr_show_common(dev, attr, buf, ASPM_STATE_L1_2_PCIPM);
-+}
-+
-+static ssize_t aspm_attr_store_common(struct device *dev,
-+				      struct device_attribute *attr,
-+				      const char *buf, size_t len, int state)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct pcie_link_state *link;
-+	bool state_enable;
-+
-+	if (aspm_disabled)
-+		return -EPERM;
-+
-+	link = aspm_get_parent_link(pdev);
-+	if (!link)
-+		return -EOPNOTSUPP;
-+
-+	if (!(link->aspm_capable & state))
-+		return -EOPNOTSUPP;
-+
-+	if (strtobool(buf, &state_enable) < 0)
-+		return -EINVAL;
-+
-+	down_read(&pci_bus_sem);
-+	mutex_lock(&aspm_lock);
-+
-+	if (state_enable)
-+		link->aspm_disable &= ~state;
-+	else
-+		link->aspm_disable |= state;
-+
-+	if (link->aspm_disable & ASPM_STATE_L1)
-+		link->aspm_disable |= ASPM_STATE_L1SS;
-+
-+	pcie_config_aspm_link(link, policy_to_aspm_state(link));
-+
-+	mutex_unlock(&aspm_lock);
-+	up_read(&pci_bus_sem);
-+
-+	return len;
-+}
-+
-+static ssize_t aspm_l0s_store(struct device *dev,
-+			      struct device_attribute *attr,
-+			      const char *buf, size_t len)
-+{
-+	return aspm_attr_store_common(dev, attr, buf, len, ASPM_STATE_L0S);
-+}
-+
-+static ssize_t aspm_l1_store(struct device *dev,
-+			     struct device_attribute *attr,
-+			     const char *buf, size_t len)
-+{
-+	return aspm_attr_store_common(dev, attr, buf, len, ASPM_STATE_L1);
-+}
-+
-+static ssize_t aspm_l1_1_store(struct device *dev,
-+			       struct device_attribute *attr,
-+			       const char *buf, size_t len)
-+{
-+	return aspm_attr_store_common(dev, attr, buf, len, ASPM_STATE_L1_1);
-+}
-+
-+static ssize_t aspm_l1_2_store(struct device *dev,
-+			       struct device_attribute *attr,
-+			       const char *buf, size_t len)
-+{
-+	return aspm_attr_store_common(dev, attr, buf, len, ASPM_STATE_L1_2);
-+}
-+
-+static ssize_t aspm_l1_1_pcipm_store(struct device *dev,
-+				     struct device_attribute *attr,
-+				     const char *buf, size_t len)
-+{
-+	return aspm_attr_store_common(dev, attr, buf, len,
-+				      ASPM_STATE_L1_1_PCIPM);
-+}
-+
-+static ssize_t aspm_l1_2_pcipm_store(struct device *dev,
-+				     struct device_attribute *attr,
-+				     const char *buf, size_t len)
-+{
-+	return aspm_attr_store_common(dev, attr, buf, len,
-+				      ASPM_STATE_L1_2_PCIPM);
-+}
-+
-+static ssize_t aspm_clkpm_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct pcie_link_state *link;
-+	int val;
-+
-+	link = aspm_get_parent_link(pdev);
-+	if (!link)
-+		return -EOPNOTSUPP;
-+
-+	mutex_lock(&aspm_lock);
-+	val = link->clkpm_enabled;
-+	mutex_unlock(&aspm_lock);
-+
-+	return sprintf(buf, "%d\n", val);
-+}
-+
-+static ssize_t aspm_clkpm_store(struct device *dev,
-+				struct device_attribute *attr,
-+				const char *buf, size_t len)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct pcie_link_state *link;
-+	bool state_enable;
-+
-+	if (aspm_disabled)
-+		return -EPERM;
-+
-+	link = aspm_get_parent_link(pdev);
-+	if (!link)
-+		return -EOPNOTSUPP;
-+
-+	if (!link->clkpm_capable)
-+		return -EOPNOTSUPP;
-+
-+	if (strtobool(buf, &state_enable) < 0)
-+		return -EINVAL;
-+
-+	down_read(&pci_bus_sem);
-+	mutex_lock(&aspm_lock);
-+
-+	link->clkpm_disable = !state_enable;
-+	pcie_set_clkpm(link, policy_to_clkpm_state(link));
-+
-+	mutex_unlock(&aspm_lock);
-+	up_read(&pci_bus_sem);
-+
-+	return len;
-+}
-+
-+static DEVICE_ATTR_RW(aspm_l0s);
-+static DEVICE_ATTR_RW(aspm_l1);
-+static DEVICE_ATTR_RW(aspm_l1_1);
-+static DEVICE_ATTR_RW(aspm_l1_2);
-+static DEVICE_ATTR_RW(aspm_l1_1_pcipm);
-+static DEVICE_ATTR_RW(aspm_l1_2_pcipm);
-+static DEVICE_ATTR_RW(aspm_clkpm);
-+
-+static struct attribute *aspm_ctrl_attrs[] = {
-+	&dev_attr_aspm_l0s.attr,
-+	&dev_attr_aspm_l1.attr,
-+	&dev_attr_aspm_l1_1.attr,
-+	&dev_attr_aspm_l1_2.attr,
-+	&dev_attr_aspm_l1_1_pcipm.attr,
-+	&dev_attr_aspm_l1_2_pcipm.attr,
-+	&dev_attr_aspm_clkpm.attr,
-+	NULL
-+};
-+
-+static umode_t aspm_ctrl_attrs_are_visible(struct kobject *kobj,
-+					   struct attribute *a, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	return pcie_check_valid_aspm_endpoint(pdev) ? a->mode : 0;
-+}
-+
-+const struct attribute_group aspm_ctrl_attr_group = {
-+	.name = "aspm",
-+	.attrs = aspm_ctrl_attrs,
-+	.is_visible = aspm_ctrl_attrs_are_visible,
-+};
-+
- static int __init pcie_aspm_disable(char *str)
+-#ifdef CONFIG_PCIEASPM_DEBUG
+-static ssize_t link_state_show(struct device *dev,
+-		struct device_attribute *attr,
+-		char *buf)
+-{
+-	struct pci_dev *pci_device = to_pci_dev(dev);
+-	struct pcie_link_state *link_state = pci_device->link_state;
+-
+-	return sprintf(buf, "%d\n", link_state->aspm_enabled);
+-}
+-
+-static ssize_t link_state_store(struct device *dev,
+-		struct device_attribute *attr,
+-		const char *buf,
+-		size_t n)
+-{
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct pcie_link_state *link, *root = pdev->link_state->root;
+-	u32 state;
+-
+-	if (aspm_disabled)
+-		return -EPERM;
+-
+-	if (kstrtouint(buf, 10, &state))
+-		return -EINVAL;
+-	if ((state & ~ASPM_STATE_ALL) != 0)
+-		return -EINVAL;
+-
+-	down_read(&pci_bus_sem);
+-	mutex_lock(&aspm_lock);
+-	list_for_each_entry(link, &link_list, sibling) {
+-		if (link->root != root)
+-			continue;
+-		pcie_config_aspm_link(link, state);
+-	}
+-	mutex_unlock(&aspm_lock);
+-	up_read(&pci_bus_sem);
+-	return n;
+-}
+-
+-static ssize_t clk_ctl_show(struct device *dev,
+-		struct device_attribute *attr,
+-		char *buf)
+-{
+-	struct pci_dev *pci_device = to_pci_dev(dev);
+-	struct pcie_link_state *link_state = pci_device->link_state;
+-
+-	return sprintf(buf, "%d\n", link_state->clkpm_enabled);
+-}
+-
+-static ssize_t clk_ctl_store(struct device *dev,
+-		struct device_attribute *attr,
+-		const char *buf,
+-		size_t n)
+-{
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	bool state;
+-
+-	if (strtobool(buf, &state))
+-		return -EINVAL;
+-
+-	down_read(&pci_bus_sem);
+-	mutex_lock(&aspm_lock);
+-	pcie_set_clkpm_nocheck(pdev->link_state, state);
+-	mutex_unlock(&aspm_lock);
+-	up_read(&pci_bus_sem);
+-
+-	return n;
+-}
+-
+-static DEVICE_ATTR_RW(link_state);
+-static DEVICE_ATTR_RW(clk_ctl);
+-
+-static char power_group[] = "power";
+-void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev)
+-{
+-	struct pcie_link_state *link_state = pdev->link_state;
+-
+-	if (!link_state)
+-		return;
+-
+-	if (link_state->aspm_support)
+-		sysfs_add_file_to_group(&pdev->dev.kobj,
+-			&dev_attr_link_state.attr, power_group);
+-	if (link_state->clkpm_capable)
+-		sysfs_add_file_to_group(&pdev->dev.kobj,
+-			&dev_attr_clk_ctl.attr, power_group);
+-}
+-
+-void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev)
+-{
+-	struct pcie_link_state *link_state = pdev->link_state;
+-
+-	if (!link_state)
+-		return;
+-
+-	if (link_state->aspm_support)
+-		sysfs_remove_file_from_group(&pdev->dev.kobj,
+-			&dev_attr_link_state.attr, power_group);
+-	if (link_state->clkpm_capable)
+-		sysfs_remove_file_from_group(&pdev->dev.kobj,
+-			&dev_attr_clk_ctl.attr, power_group);
+-}
+-#endif
+-
+ static struct pcie_link_state *aspm_get_parent_link(struct pci_dev *pdev)
  {
- 	if (!strcmp(str, "off")) {
+ 	struct pci_dev *parent = pdev->bus->self;
 -- 
 2.23.0
 
