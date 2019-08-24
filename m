@@ -2,60 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D9909BE9C
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2019 17:39:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C1169BEA0
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2019 17:42:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfHXPjr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 24 Aug 2019 11:39:47 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37073 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbfHXPjr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Aug 2019 11:39:47 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z11so11299625wrt.4
-        for <linux-pci@vger.kernel.org>; Sat, 24 Aug 2019 08:39:45 -0700 (PDT)
+        id S1727248AbfHXPmV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 24 Aug 2019 11:42:21 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37549 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbfHXPmV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Aug 2019 11:42:21 -0400
+Received: by mail-wm1-f67.google.com with SMTP id d16so11846079wme.2
+        for <linux-pci@vger.kernel.org>; Sat, 24 Aug 2019 08:42:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=kIYK1ac8ue565+NeN3t8Pa2Eq+WWkCA+ZFYhNPul5eM=;
-        b=bZ3NyB4gM81YbJKsBisFWxn00IMp8VB62mrpUuCYHslNCnjQgCleXxG+4aDroQFYXr
-         MdF/513G2M9Et5RB4Arn6LWSSWeP/oTyu1GCJGtPT85DAKAAMQNOo6XBXyyBkwGzahG+
-         gICUONkqWpEDEK+8v3FD6pjirTjQ/sdAURPT56x6T/e7vGpxmb37ZpckF4Fd4iAYYTRA
-         PMwFYjyO6cipP2dgCwq3MgKsnr0xsYNz1JrI8yN647uXMlQ3HCKiSVYyCB0GMUCpdVGS
-         CqzqPBYFrMuOObZMdJ4bppKAYIfSECQMdMHpzGd8pPwQe52CCv03sNpPWJUplGkCWoXv
-         xbTw==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dk/6LfmE1oX8xh4qZCF6iNA2M7CxlYcaWLLLz9LpGWU=;
+        b=t/4sfsSG8sjCEsNg6WFYZHxD/hZ5lb+pBrjALrpzyfcyDMNtA/EaBEYO3VTVTxR2b/
+         jSlqKYgfN+sUssnYpHdcVXzTeKuTwttcBGQ5TjCtgrN8dNy4Ae35Q4Ya2KEqa1lU53c7
+         EDP+BVIPMEECKZ5/rCOUVFtPuSqE5kByxKrwAuyvLxOKIZGRHtVnMAP9Qx+nK/ZcYLrw
+         wpFiObjFo/nnmJVeZoZTKyqrATqK1rvT6d2c9BfBdrgjpkCVH3fqIH3vL5EbZ1VB00EW
+         WLOqNxq7dy9S0IeTUWI2lOeEZOMoQJK7hCTyGeH1SBhuhJhRWNjYftHbQPh8S7YiBF41
+         tUMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=kIYK1ac8ue565+NeN3t8Pa2Eq+WWkCA+ZFYhNPul5eM=;
-        b=a4QMBB6Z7ASzzjSY2KpKqAtXq7/5BORfpSecGclCI790epMPLLm3LJyo9vO/l9jnzY
-         Pwqv5vyg4Bws5M6HbUPXo9tjEQCS5jKCapnoIOareVqL6dvPWiosErLMTAKEwG+huzDj
-         Z7GT4XQJgXpo/ZqW+eBfvKdygRyL2UTLxacUWwtJYHAGY7E7z0lEFitJl0AZHNyZalS7
-         2Z+OhNWqtZ2WmkyDxbB02zz+QhlV1iFFAh/P6c9P1gNLthcM8MTIOt2us/PBe7WUu/Nd
-         ZMv37JvDp+teLnfITSMqCBGnfHxO9ecBfsWhVqjJ/KRmTMMPbXqcqfd+n80yv54rSQOC
-         gAmg==
-X-Gm-Message-State: APjAAAUD36lGy7r+ILNwgUO7q4hx6OsD/grOVppfqkTLUuvcGWovqm0A
-        c/1sA0Fitb5HBz3riYBPTqMGDB4f
-X-Google-Smtp-Source: APXvYqy5UqL/Q3TvrJDJYqG7S6TtwEtKiYDuJwhlWAA2HtRvBWXTDExmJ+PX8h6ZL3ff4T2Q+hMX4g==
-X-Received: by 2002:adf:df8b:: with SMTP id z11mr11471068wrl.62.1566661184956;
-        Sat, 24 Aug 2019 08:39:44 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dk/6LfmE1oX8xh4qZCF6iNA2M7CxlYcaWLLLz9LpGWU=;
+        b=fCwpITI5OhwXJLgxQtI3ElqSqZv/cSUNZkzQhdqyAjLYR1+A3mlIZBO1L9QWkt5ZoB
+         J9Y7aJmlDvDLj5il3FWa1bvrDJnOeasfVEMIa1/hjKAdNUlyjgPdnHao6MAfYk4V6yL1
+         miGe8r8VP5NGGllewcWWEYTtWJ7ulFQU+MRYW/U0wImn4MeKSTzZrrJkkZ9ZFvKaweqo
+         FZ0xHn/Q/mJu2t59OBacikeEiEiROYJsD8tRAKYG6x5Unww5gbJopDnfd2paP58uk1Li
+         vwH2UrSO89RHamE97L7qG2I3a3OvfNwUcyW7jv262SCAq5xc6UOABfut0oRUI486Ge6s
+         CBnQ==
+X-Gm-Message-State: APjAAAUHUtFdSf9hkxumlhKBHXsn3Atj5fTgIDGTdK57BRxdmCMGlhLn
+        PeS89uX0X61dMeQGOzQlVxw2IkL/
+X-Google-Smtp-Source: APXvYqw84W5lpVmbiJSIlSFv6ZWNCx9ldeUy27SlM5snKLITBe2HknmKvpS2mFK+qa+/8ckN9cwp2w==
+X-Received: by 2002:a1c:39c5:: with SMTP id g188mr11264342wma.167.1566661339011;
+        Sat, 24 Aug 2019 08:42:19 -0700 (PDT)
 Received: from ?IPv6:2003:ea:8f04:7c00:2069:2121:113c:4840? (p200300EA8F047C0020692121113C4840.dip0.t-ipconnect.de. [2003:ea:8f04:7c00:2069:2121:113c:4840])
-        by smtp.googlemail.com with ESMTPSA id 4sm10497237wro.78.2019.08.24.08.39.44
+        by smtp.googlemail.com with ESMTPSA id f197sm18304857wme.22.2019.08.24.08.42.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 24 Aug 2019 08:39:44 -0700 (PDT)
+        Sat, 24 Aug 2019 08:42:18 -0700 (PDT)
+Subject: [PATCH v4 1/4] PCI/ASPM: add L1 sub-state support to
+ pci_disable_link_state
 From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH v4 0/4] PCI/ASPM: add sysfs attributes for controlling ASPM
 To:     Frederick Lawler <fred@fredlawl.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Greg KH <gregkh@linuxfoundation.org>,
         Rajat Jain <rajatja@google.com>
 Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Message-ID: <3797de51-0135-07b6-9566-a1ce8cf3f24e@gmail.com>
-Date:   Sat, 24 Aug 2019 17:39:37 +0200
+References: <3797de51-0135-07b6-9566-a1ce8cf3f24e@gmail.com>
+Message-ID: <d7640b34-00b5-ec40-38e6-46ef144f1e75@gmail.com>
+Date:   Sat, 24 Aug 2019 17:40:20 +0200
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <3797de51-0135-07b6-9566-a1ce8cf3f24e@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -64,42 +68,63 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Background of this extension is a problem with the r8169 network driver.
-Several combinations of board chipsets and network chip versions have
-problems if ASPM is enabled, therefore we have to disable ASPM per
-default. However especially on notebooks ASPM can provide significant
-power-saving, therefore we want to give users the option to enable
-ASPM. With the new sysfs attributes users can control which ASPM
-link-states are disabled.
+Add support for disabling states L1.1 and L1.2 to
+pci_disable_link_state. Allow separate control of
+ASPM and PCI PM L1 sub-states.
 
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
 v2:
-- use a dedicated sysfs attribute per link state
 - allow separate control of ASPM and PCI PM L1 sub-states
+---
+ drivers/pci/pcie/aspm.c  | 11 ++++++++++-
+ include/linux/pci-aspm.h | 10 +++++++---
+ 2 files changed, 17 insertions(+), 4 deletions(-)
 
-v3:
-- patch 3: statically allocate the attribute group
-- patch 3: replace snprintf with printf
-- add patch 4
-
-v4:
-- patch 3: add call to sysfs_update_group because is_visible callback
-           returns false always at file creation time
-- patch 3: simplify code a little
-
-Heiner Kallweit (4):
-  PCI/ASPM: add L1 sub-state support to pci_disable_link_state
-  PCI/ASPM: allow to re-enable Clock PM
-  PCI/ASPM: add sysfs attributes for controlling ASPM link states
-  PCI/ASPM: remove Kconfig option PCIEASPM_DEBUG and related code
-
- Documentation/ABI/testing/sysfs-bus-pci |  13 ++
- drivers/pci/pci-sysfs.c                 |  10 +-
- drivers/pci/pci.h                       |  12 +-
- drivers/pci/pcie/Kconfig                |   7 -
- drivers/pci/pcie/aspm.c                 | 236 ++++++++++++++++--------
- include/linux/pci-aspm.h                |  10 +-
- 6 files changed, 195 insertions(+), 93 deletions(-)
-
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 464f8f926..1c1b9b7d6 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -1095,7 +1095,16 @@ static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
+ 	if (state & PCIE_LINK_STATE_L0S)
+ 		link->aspm_disable |= ASPM_STATE_L0S;
+ 	if (state & PCIE_LINK_STATE_L1)
+-		link->aspm_disable |= ASPM_STATE_L1;
++		/* sub-states require L1 */
++		link->aspm_disable |= ASPM_STATE_L1 | ASPM_STATE_L1SS;
++	if (state & PCIE_LINK_STATE_L1_1)
++		link->aspm_disable |= ASPM_STATE_L1_1;
++	if (state & PCIE_LINK_STATE_L1_2)
++		link->aspm_disable |= ASPM_STATE_L1_2;
++	if (state & PCIE_LINK_STATE_L1_1_PCIPM)
++		link->aspm_disable |= ASPM_STATE_L1_1_PCIPM;
++	if (state & PCIE_LINK_STATE_L1_2_PCIPM)
++		link->aspm_disable |= ASPM_STATE_L1_2_PCIPM;
+ 	pcie_config_aspm_link(link, policy_to_aspm_state(link));
+ 
+ 	if (state & PCIE_LINK_STATE_CLKPM) {
+diff --git a/include/linux/pci-aspm.h b/include/linux/pci-aspm.h
+index 67064145d..f635cbdff 100644
+--- a/include/linux/pci-aspm.h
++++ b/include/linux/pci-aspm.h
+@@ -19,9 +19,13 @@
+ 
+ #include <linux/pci.h>
+ 
+-#define PCIE_LINK_STATE_L0S	1
+-#define PCIE_LINK_STATE_L1	2
+-#define PCIE_LINK_STATE_CLKPM	4
++#define PCIE_LINK_STATE_L0S		BIT(0)
++#define PCIE_LINK_STATE_L1		BIT(1)
++#define PCIE_LINK_STATE_CLKPM		BIT(2)
++#define PCIE_LINK_STATE_L1_1		BIT(3)
++#define PCIE_LINK_STATE_L1_2		BIT(4)
++#define PCIE_LINK_STATE_L1_1_PCIPM	BIT(5)
++#define PCIE_LINK_STATE_L1_2_PCIPM	BIT(6)
+ 
+ #ifdef CONFIG_PCIEASPM
+ int pci_disable_link_state(struct pci_dev *pdev, int state);
 -- 
 2.23.0
+
 
