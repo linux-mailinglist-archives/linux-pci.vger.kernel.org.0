@@ -2,310 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 747FA9BC42
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2019 08:45:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D9909BE9C
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2019 17:39:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725807AbfHXGph (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 24 Aug 2019 02:45:37 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:1397 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725616AbfHXGph (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 24 Aug 2019 02:45:37 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46FpgK4QC0z9vBLS;
-        Sat, 24 Aug 2019 08:45:33 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=K3YiCIh5; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id HVVt0rLehSlm; Sat, 24 Aug 2019 08:45:33 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46FpgK3Dskz9vBLP;
-        Sat, 24 Aug 2019 08:45:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1566629133; bh=H+P6/n2dOvYwFGFSytUscS/dBww3QN53fSAFmSiZ3K4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=K3YiCIh5lrSWAP94i6J8ZjHRDTpfK4Kq+cbY0P4jJrq2ZSrBFLmTG5zRGnUmQ3LOP
-         fBk8C0AK5vQYN5jE2kfkuUXC1XQ/VMoXO3cdS3DOXjcGbkHtWMHY+C1PKrxJ6D6gg5
-         5kA/+97SwJpOJ5zbmMm6nGh449KQNrt6ZAw93tnY=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5E5AD8B79F;
-        Sat, 24 Aug 2019 08:45:34 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 2fGq4h0rAry2; Sat, 24 Aug 2019 08:45:34 +0200 (CEST)
-Received: from [192.168.232.53] (unknown [192.168.232.53])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 36D338B76F;
-        Sat, 24 Aug 2019 08:45:33 +0200 (CEST)
-Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for ls1088a
- and ls2088a
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Roy Zang <roy.zang@nxp.com>,
-        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-8-xiaowei.bao@nxp.com>
- <20190823142756.GI14582@e119886-lin.cambridge.arm.com>
- <AM5PR04MB32990473D4AD65354B5B2235F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
-From:   christophe leroy <christophe.leroy@c-s.fr>
-Message-ID: <89c90732-5e42-f87e-73b1-8d615355afc4@c-s.fr>
-Date:   Sat, 24 Aug 2019 08:45:27 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        id S1726670AbfHXPjr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 24 Aug 2019 11:39:47 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37073 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbfHXPjr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Aug 2019 11:39:47 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z11so11299625wrt.4
+        for <linux-pci@vger.kernel.org>; Sat, 24 Aug 2019 08:39:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=kIYK1ac8ue565+NeN3t8Pa2Eq+WWkCA+ZFYhNPul5eM=;
+        b=bZ3NyB4gM81YbJKsBisFWxn00IMp8VB62mrpUuCYHslNCnjQgCleXxG+4aDroQFYXr
+         MdF/513G2M9Et5RB4Arn6LWSSWeP/oTyu1GCJGtPT85DAKAAMQNOo6XBXyyBkwGzahG+
+         gICUONkqWpEDEK+8v3FD6pjirTjQ/sdAURPT56x6T/e7vGpxmb37ZpckF4Fd4iAYYTRA
+         PMwFYjyO6cipP2dgCwq3MgKsnr0xsYNz1JrI8yN647uXMlQ3HCKiSVYyCB0GMUCpdVGS
+         CqzqPBYFrMuOObZMdJ4bppKAYIfSECQMdMHpzGd8pPwQe52CCv03sNpPWJUplGkCWoXv
+         xbTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=kIYK1ac8ue565+NeN3t8Pa2Eq+WWkCA+ZFYhNPul5eM=;
+        b=a4QMBB6Z7ASzzjSY2KpKqAtXq7/5BORfpSecGclCI790epMPLLm3LJyo9vO/l9jnzY
+         Pwqv5vyg4Bws5M6HbUPXo9tjEQCS5jKCapnoIOareVqL6dvPWiosErLMTAKEwG+huzDj
+         Z7GT4XQJgXpo/ZqW+eBfvKdygRyL2UTLxacUWwtJYHAGY7E7z0lEFitJl0AZHNyZalS7
+         2Z+OhNWqtZ2WmkyDxbB02zz+QhlV1iFFAh/P6c9P1gNLthcM8MTIOt2us/PBe7WUu/Nd
+         ZMv37JvDp+teLnfITSMqCBGnfHxO9ecBfsWhVqjJ/KRmTMMPbXqcqfd+n80yv54rSQOC
+         gAmg==
+X-Gm-Message-State: APjAAAUD36lGy7r+ILNwgUO7q4hx6OsD/grOVppfqkTLUuvcGWovqm0A
+        c/1sA0Fitb5HBz3riYBPTqMGDB4f
+X-Google-Smtp-Source: APXvYqy5UqL/Q3TvrJDJYqG7S6TtwEtKiYDuJwhlWAA2HtRvBWXTDExmJ+PX8h6ZL3ff4T2Q+hMX4g==
+X-Received: by 2002:adf:df8b:: with SMTP id z11mr11471068wrl.62.1566661184956;
+        Sat, 24 Aug 2019 08:39:44 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f04:7c00:2069:2121:113c:4840? (p200300EA8F047C0020692121113C4840.dip0.t-ipconnect.de. [2003:ea:8f04:7c00:2069:2121:113c:4840])
+        by smtp.googlemail.com with ESMTPSA id 4sm10497237wro.78.2019.08.24.08.39.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 24 Aug 2019 08:39:44 -0700 (PDT)
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH v4 0/4] PCI/ASPM: add sysfs attributes for controlling ASPM
+To:     Frederick Lawler <fred@fredlawl.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Rajat Jain <rajatja@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Message-ID: <3797de51-0135-07b6-9566-a1ce8cf3f24e@gmail.com>
+Date:   Sat, 24 Aug 2019 17:39:37 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <AM5PR04MB32990473D4AD65354B5B2235F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Avast (VPS 190823-0, 23/08/2019), Outbound message
-X-Antivirus-Status: Clean
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Background of this extension is a problem with the r8169 network driver.
+Several combinations of board chipsets and network chip versions have
+problems if ASPM is enabled, therefore we have to disable ASPM per
+default. However especially on notebooks ASPM can provide significant
+power-saving, therefore we want to give users the option to enable
+ASPM. With the new sysfs attributes users can control which ASPM
+link-states are disabled.
 
+v2:
+- use a dedicated sysfs attribute per link state
+- allow separate control of ASPM and PCI PM L1 sub-states
 
-Le 24/08/2019 à 02:18, Xiaowei Bao a écrit :
-> 
-> 
->> -----Original Message-----
->> From: Andrew Murray <andrew.murray@arm.com>
->> Sent: 2019年8月23日 22:28
->> To: Xiaowei Bao <xiaowei.bao@nxp.com>
->> Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
->> shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
->> lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org; M.h.
->> Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
->> Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
->> gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
->> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
->> linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
->> Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for
->> ls1088a and ls2088a
->>
->> On Thu, Aug 22, 2019 at 07:22:40PM +0800, Xiaowei Bao wrote:
->>> Add PCIe EP mode support for ls1088a and ls2088a, there are some
->>> difference between LS1 and LS2 platform, so refactor the code of the
->>> EP driver.
->>>
->>> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
->>> ---
->>> v2:
->>>   - New mechanism for layerscape EP driver.
->>
->> Was there a v1 of this patch?
-> 
-> Yes, but I don't know how to comments, ^_^
+v3:
+- patch 3: statically allocate the attribute group
+- patch 3: replace snprintf with printf
+- add patch 4
 
-As far as I can see, in the previous version of the series 
-(https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=125315&state=*), 
-the 8/10 was something completely different, and I can't find any other 
-patch in the series that could have been the v1 of this patch.
+v4:
+- patch 3: add call to sysfs_update_group because is_visible callback
+           returns false always at file creation time
+- patch 3: simplify code a little
 
-Christophe
+Heiner Kallweit (4):
+  PCI/ASPM: add L1 sub-state support to pci_disable_link_state
+  PCI/ASPM: allow to re-enable Clock PM
+  PCI/ASPM: add sysfs attributes for controlling ASPM link states
+  PCI/ASPM: remove Kconfig option PCIEASPM_DEBUG and related code
 
-> 
->>
->>>
->>>   drivers/pci/controller/dwc/pci-layerscape-ep.c | 76
->>> ++++++++++++++++++++------
->>>   1 file changed, 58 insertions(+), 18 deletions(-)
->>>
->>> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
->>> b/drivers/pci/controller/dwc/pci-layerscape-ep.c
->>> index 7ca5fe8..2a66f07 100644
->>> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
->>> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
->>> @@ -20,27 +20,29 @@
->>>
->>>   #define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
->>>
->>> -struct ls_pcie_ep {
->>> -	struct dw_pcie		*pci;
->>> -	struct pci_epc_features	*ls_epc;
->>> +#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
->>> +
->>> +struct ls_pcie_ep_drvdata {
->>> +	u32				func_offset;
->>> +	const struct dw_pcie_ep_ops	*ops;
->>> +	const struct dw_pcie_ops	*dw_pcie_ops;
->>>   };
->>>
->>> -#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
->>> +struct ls_pcie_ep {
->>> +	struct dw_pcie			*pci;
->>> +	struct pci_epc_features		*ls_epc;
->>> +	const struct ls_pcie_ep_drvdata *drvdata; };
->>>
->>>   static int ls_pcie_establish_link(struct dw_pcie *pci)  {
->>>   	return 0;
->>>   }
->>>
->>> -static const struct dw_pcie_ops ls_pcie_ep_ops = {
->>> +static const struct dw_pcie_ops dw_ls_pcie_ep_ops = {
->>>   	.start_link = ls_pcie_establish_link,  };
->>>
->>> -static const struct of_device_id ls_pcie_ep_of_match[] = {
->>> -	{ .compatible = "fsl,ls-pcie-ep",},
->>> -	{ },
->>> -};
->>> -
->>>   static const struct pci_epc_features*  ls_pcie_ep_get_features(struct
->>> dw_pcie_ep *ep)  { @@ -82,10 +84,44 @@ static int
->>> ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
->>>   	}
->>>   }
->>>
->>> -static const struct dw_pcie_ep_ops pcie_ep_ops = {
->>> +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
->>> +						u8 func_no)
->>> +{
->>> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->>> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
->>> +	u8 header_type;
->>> +
->>> +	header_type = ioread8(pci->dbi_base + PCI_HEADER_TYPE);
->>> +
->>> +	if (header_type & (1 << 7))
->>> +		return pcie->drvdata->func_offset * func_no;
->>> +	else
->>> +		return 0;
->>
->> It looks like there isn't a PCI define for multi function, the nearest I could find
->> was PCI_HEADER_TYPE_MULTIDEVICE in hotplug/ibmphp.h. A comment
->> above the test might be helpful to explain the test.
-> 
-> Yes, I have not find the PCI_HEADER_TYPE_MULTIDEVICE define. OK, I will add
-> The comments in next version patch.
-> 
->>
->> As the ls_pcie_ep_drvdata structures are static, the unset .func_offset will be
->> initialised to 0, so you could just drop the test above.
-> 
-> OK, thanks
-> 
->>
->> However something to the effect of the following may help spot
->> misconfiguration:
->>
->> WARN_ON(func_no && !pcie->drvdata->func_offset); return
->> pcie->drvdata->func_offset * func_no;
-> 
-> Thanks a lot, this looks better.
-> 
->>
->> The WARN is probably quite useful as if you are attempting to use non-zero
->> functions and func_offset isn't set - then things may appear to work normally
->> but actually will break horribly.
-> 
-> got it, thanks.
-> 
->>
->> Thanks,
->>
->> Andrew Murray
->>
->>> +}
->>> +
->>> +static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
->>>   	.ep_init = ls_pcie_ep_init,
->>>   	.raise_irq = ls_pcie_ep_raise_irq,
->>>   	.get_features = ls_pcie_ep_get_features,
->>> +	.func_conf_select = ls_pcie_ep_func_conf_select, };
->>> +
->>> +static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
->>> +	.ops = &ls_pcie_ep_ops,
->>> +	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
->>> +};
->>> +
->>> +static const struct ls_pcie_ep_drvdata ls2_ep_drvdata = {
->>> +	.func_offset = 0x20000,
->>> +	.ops = &ls_pcie_ep_ops,
->>> +	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
->>> +};
->>> +
->>> +static const struct of_device_id ls_pcie_ep_of_match[] = {
->>> +	{ .compatible = "fsl,ls1046a-pcie-ep", .data = &ls1_ep_drvdata },
->>> +	{ .compatible = "fsl,ls1088a-pcie-ep", .data = &ls2_ep_drvdata },
->>> +	{ .compatible = "fsl,ls2088a-pcie-ep", .data = &ls2_ep_drvdata },
->>> +	{ },
->>>   };
->>>
->>>   static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie, @@ -98,7
->>> +134,7 @@ static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
->>>   	int ret;
->>>
->>>   	ep = &pci->ep;
->>> -	ep->ops = &pcie_ep_ops;
->>> +	ep->ops = pcie->drvdata->ops;
->>>
->>>   	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->> "addr_space");
->>>   	if (!res)
->>> @@ -137,14 +173,11 @@ static int __init ls_pcie_ep_probe(struct
->> platform_device *pdev)
->>>   	if (!ls_epc)
->>>   		return -ENOMEM;
->>>
->>> -	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->> "regs");
->>> -	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
->>> -	if (IS_ERR(pci->dbi_base))
->>> -		return PTR_ERR(pci->dbi_base);
->>> +	pcie->drvdata = of_device_get_match_data(dev);
->>>
->>> -	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
->>>   	pci->dev = dev;
->>> -	pci->ops = &ls_pcie_ep_ops;
->>> +	pci->ops = pcie->drvdata->dw_pcie_ops;
->>> +
->>>   	pcie->pci = pci;
->>>
->>>   	ls_epc->linkup_notifier = false,
->>> @@ -152,6 +185,13 @@ static int __init ls_pcie_ep_probe(struct
->>> platform_device *pdev)
->>>
->>>   	pcie->ls_epc = ls_epc;
->>>
->>> +	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->> "regs");
->>> +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
->>> +	if (IS_ERR(pci->dbi_base))
->>> +		return PTR_ERR(pci->dbi_base);
->>> +
->>> +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
->>> +
->>>   	platform_set_drvdata(pdev, pcie);
->>>
->>>   	ret = ls_add_pcie_ep(pcie, pdev);
->>> --
->>> 2.9.5
->>>
+ Documentation/ABI/testing/sysfs-bus-pci |  13 ++
+ drivers/pci/pci-sysfs.c                 |  10 +-
+ drivers/pci/pci.h                       |  12 +-
+ drivers/pci/pcie/Kconfig                |   7 -
+ drivers/pci/pcie/aspm.c                 | 236 ++++++++++++++++--------
+ include/linux/pci-aspm.h                |  10 +-
+ 6 files changed, 195 insertions(+), 93 deletions(-)
 
----
-L'absence de virus dans ce courrier électronique a été vérifiée par le logiciel antivirus Avast.
-https://www.avast.com/antivirus
+-- 
+2.23.0
 
