@@ -2,551 +2,310 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 157149BAD2
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2019 04:13:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 747FA9BC42
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2019 08:45:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfHXCNC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Aug 2019 22:13:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46720 "EHLO mail.kernel.org"
+        id S1725807AbfHXGph (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 24 Aug 2019 02:45:37 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:1397 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfHXCNC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 23 Aug 2019 22:13:02 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F038221726;
-        Sat, 24 Aug 2019 02:12:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566612780;
-        bh=Gs5k4MQxCRiTyWujkKCpnJkcAX3hhhy/Di8yvI7pZ2c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bksoQrjo82DHOBmsdGHx9th5YPqXiwIUC2HrRFPy5r6eyrV5n5zVM1DVLd0khWrrE
-         iznbEMEoAGS8XDrz6wQAnGEBlCXdmyeMX0lenbrpl8a48pAtxnLvpx23cZefyWur1a
-         jWPHU+Tt3M0oArhmOvm9sxbR1+FH0KjxBFaWlYzA=
-Date:   Fri, 23 Aug 2019 21:12:54 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Matthias Andree <matthias.andree@gmx.de>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Justin Forbes <jmforbes@linuxtx.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add missing link delays required by the PCIe spec
-Message-ID: <20190824021254.GB127465@google.com>
-References: <20190821124519.71594-1-mika.westerberg@linux.intel.com>
+        id S1725616AbfHXGph (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 24 Aug 2019 02:45:37 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46FpgK4QC0z9vBLS;
+        Sat, 24 Aug 2019 08:45:33 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=K3YiCIh5; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id HVVt0rLehSlm; Sat, 24 Aug 2019 08:45:33 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46FpgK3Dskz9vBLP;
+        Sat, 24 Aug 2019 08:45:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566629133; bh=H+P6/n2dOvYwFGFSytUscS/dBww3QN53fSAFmSiZ3K4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=K3YiCIh5lrSWAP94i6J8ZjHRDTpfK4Kq+cbY0P4jJrq2ZSrBFLmTG5zRGnUmQ3LOP
+         fBk8C0AK5vQYN5jE2kfkuUXC1XQ/VMoXO3cdS3DOXjcGbkHtWMHY+C1PKrxJ6D6gg5
+         5kA/+97SwJpOJ5zbmMm6nGh449KQNrt6ZAw93tnY=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5E5AD8B79F;
+        Sat, 24 Aug 2019 08:45:34 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 2fGq4h0rAry2; Sat, 24 Aug 2019 08:45:34 +0200 (CEST)
+Received: from [192.168.232.53] (unknown [192.168.232.53])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 36D338B76F;
+        Sat, 24 Aug 2019 08:45:33 +0200 (CEST)
+Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for ls1088a
+ and ls2088a
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>,
+        Andrew Murray <andrew.murray@arm.com>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Roy Zang <roy.zang@nxp.com>,
+        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-8-xiaowei.bao@nxp.com>
+ <20190823142756.GI14582@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB32990473D4AD65354B5B2235F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
+From:   christophe leroy <christophe.leroy@c-s.fr>
+Message-ID: <89c90732-5e42-f87e-73b1-8d615355afc4@c-s.fr>
+Date:   Sat, 24 Aug 2019 08:45:27 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821124519.71594-1-mika.westerberg@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <AM5PR04MB32990473D4AD65354B5B2235F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Avast (VPS 190823-0, 23/08/2019), Outbound message
+X-Antivirus-Status: Clean
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Mika,
 
-I'm trying to figure out specifically why we need this and where it
-should go.  Questions below.
 
-On Wed, Aug 21, 2019 at 03:45:19PM +0300, Mika Westerberg wrote:
-> Currently Linux does not follow PCIe spec regarding the required delays
-> after reset. A concrete example is a Thunderbolt add-in-card that
-> consists of a PCIe switch and two PCIe endpoints:
+Le 24/08/2019 à 02:18, Xiaowei Bao a écrit :
 > 
->   +-1b.0-[01-6b]----00.0-[02-6b]--+-00.0-[03]----00.0 TBT controller
->                                   +-01.0-[04-36]-- DS hotplug port
->                                   +-02.0-[37]----00.0 xHCI controller
->                                   \-04.0-[38-6b]-- DS hotplug port
 > 
-> The root port (1b.0) and the PCIe switch downstream ports are all PCIe
-> gen3 so they support 8GT/s link speeds.
+>> -----Original Message-----
+>> From: Andrew Murray <andrew.murray@arm.com>
+>> Sent: 2019年8月23日 22:28
+>> To: Xiaowei Bao <xiaowei.bao@nxp.com>
+>> Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+>> shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
+>> lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org; M.h.
+>> Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+>> Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+>> gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+>> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
+>> Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for
+>> ls1088a and ls2088a
+>>
+>> On Thu, Aug 22, 2019 at 07:22:40PM +0800, Xiaowei Bao wrote:
+>>> Add PCIe EP mode support for ls1088a and ls2088a, there are some
+>>> difference between LS1 and LS2 platform, so refactor the code of the
+>>> EP driver.
+>>>
+>>> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+>>> ---
+>>> v2:
+>>>   - New mechanism for layerscape EP driver.
+>>
+>> Was there a v1 of this patch?
 > 
-> We wait for the PCIe hierarchy to enter D3cold (runtime):
+> Yes, but I don't know how to comments, ^_^
+
+As far as I can see, in the previous version of the series 
+(https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=125315&state=*), 
+the 8/10 was something completely different, and I can't find any other 
+patch in the series that could have been the v1 of this patch.
+
+Christophe
+
 > 
->   pcieport 0000:00:1b.0: power state changed by ACPI to D3cold
+>>
+>>>
+>>>   drivers/pci/controller/dwc/pci-layerscape-ep.c | 76
+>>> ++++++++++++++++++++------
+>>>   1 file changed, 58 insertions(+), 18 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+>>> b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+>>> index 7ca5fe8..2a66f07 100644
+>>> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+>>> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+>>> @@ -20,27 +20,29 @@
+>>>
+>>>   #define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
+>>>
+>>> -struct ls_pcie_ep {
+>>> -	struct dw_pcie		*pci;
+>>> -	struct pci_epc_features	*ls_epc;
+>>> +#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+>>> +
+>>> +struct ls_pcie_ep_drvdata {
+>>> +	u32				func_offset;
+>>> +	const struct dw_pcie_ep_ops	*ops;
+>>> +	const struct dw_pcie_ops	*dw_pcie_ops;
+>>>   };
+>>>
+>>> -#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+>>> +struct ls_pcie_ep {
+>>> +	struct dw_pcie			*pci;
+>>> +	struct pci_epc_features		*ls_epc;
+>>> +	const struct ls_pcie_ep_drvdata *drvdata; };
+>>>
+>>>   static int ls_pcie_establish_link(struct dw_pcie *pci)  {
+>>>   	return 0;
+>>>   }
+>>>
+>>> -static const struct dw_pcie_ops ls_pcie_ep_ops = {
+>>> +static const struct dw_pcie_ops dw_ls_pcie_ep_ops = {
+>>>   	.start_link = ls_pcie_establish_link,  };
+>>>
+>>> -static const struct of_device_id ls_pcie_ep_of_match[] = {
+>>> -	{ .compatible = "fsl,ls-pcie-ep",},
+>>> -	{ },
+>>> -};
+>>> -
+>>>   static const struct pci_epc_features*  ls_pcie_ep_get_features(struct
+>>> dw_pcie_ep *ep)  { @@ -82,10 +84,44 @@ static int
+>>> ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+>>>   	}
+>>>   }
+>>>
+>>> -static const struct dw_pcie_ep_ops pcie_ep_ops = {
+>>> +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
+>>> +						u8 func_no)
+>>> +{
+>>> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>>> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+>>> +	u8 header_type;
+>>> +
+>>> +	header_type = ioread8(pci->dbi_base + PCI_HEADER_TYPE);
+>>> +
+>>> +	if (header_type & (1 << 7))
+>>> +		return pcie->drvdata->func_offset * func_no;
+>>> +	else
+>>> +		return 0;
+>>
+>> It looks like there isn't a PCI define for multi function, the nearest I could find
+>> was PCI_HEADER_TYPE_MULTIDEVICE in hotplug/ibmphp.h. A comment
+>> above the test might be helpful to explain the test.
 > 
-> When it wakes up from D3cold, according to the PCIe 4.0 section 5.8 the
-> PCIe switch is put to reset and its power is re-applied. This means that
-> we must follow the rules in PCIe 4.0 section 6.6.1.
+> Yes, I have not find the PCI_HEADER_TYPE_MULTIDEVICE define. OK, I will add
+> The comments in next version patch.
 > 
-> For the PCIe gen3 ports we are dealing with here, the following applies:
+>>
+>> As the ls_pcie_ep_drvdata structures are static, the unset .func_offset will be
+>> initialised to 0, so you could just drop the test above.
 > 
->   With a Downstream Port that supports Link speeds greater than 5.0
->   GT/s, software must wait a minimum of 100 ms after Link training
->   completes before sending a Configuration Request to the device
->   immediately below that Port. Software can determine when Link training
->   completes by polling the Data Link Layer Link Active bit or by setting
->   up an associated interrupt (see Section 6.7.3.3).
+> OK, thanks
 > 
-> Translating this into the above topology we would need to do this (DLLLA
-> stands for Data Link Layer Link Active):
+>>
+>> However something to the effect of the following may help spot
+>> misconfiguration:
+>>
+>> WARN_ON(func_no && !pcie->drvdata->func_offset); return
+>> pcie->drvdata->func_offset * func_no;
 > 
->   pcieport 0000:00:1b.0: wait for 100ms after DLLLA is set before access to 0000:01:00.0
->   pcieport 0000:02:00.0: wait for 100ms after DLLLA is set before access to 0000:03:00.0
->   pcieport 0000:02:02.0: wait for 100ms after DLLLA is set before access to 0000:37:00.0
+> Thanks a lot, this looks better.
 > 
-> I've instrumented the kernel with additional logging so we can see the
-> actual delays the kernel performs:
+>>
+>> The WARN is probably quite useful as if you are attempting to use non-zero
+>> functions and func_offset isn't set - then things may appear to work normally
+>> but actually will break horribly.
 > 
->   pcieport 0000:00:1b.0: power state changed by ACPI to D0
->   pcieport 0000:00:1b.0: waiting for D3cold delay of 100 ms
->   pcieport 0000:00:1b.0: waking up bus
->   pcieport 0000:00:1b.0: waiting for D3hot delay of 10 ms
->   pcieport 0000:00:1b.0: restoring config space at offset 0x2c (was 0x60, writing 0x60)
->   ...
->   pcieport 0000:00:1b.0: PME# disabled
->   pcieport 0000:01:00.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
->   ...
->   pcieport 0000:01:00.0: PME# disabled
->   pcieport 0000:02:00.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
->   ...
->   pcieport 0000:02:00.0: PME# disabled
->   pcieport 0000:02:01.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
->   ...
->   pcieport 0000:02:01.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100407)
->   pcieport 0000:02:01.0: PME# disabled
->   pcieport 0000:02:02.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
->   ...
->   pcieport 0000:02:02.0: PME# disabled
->   pcieport 0000:02:04.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
->   ...
->   pcieport 0000:02:04.0: PME# disabled
->   pcieport 0000:02:01.0: PME# enabled
->   pcieport 0000:02:01.0: waiting for D3hot delay of 10 ms
->   pcieport 0000:02:04.0: PME# enabled
->   pcieport 0000:02:04.0: waiting for D3hot delay of 10 ms
->   thunderbolt 0000:03:00.0: restoring config space at offset 0x14 (was 0x0, writing 0x8a040000)
->   ...
->   thunderbolt 0000:03:00.0: PME# disabled
->   xhci_hcd 0000:37:00.0: restoring config space at offset 0x10 (was 0x0, writing 0x73f00000)
->   ...
->   xhci_hcd 0000:37:00.0: PME# disabled
+> got it, thanks.
 > 
-> For the switch upstream port (01:00.0) we wait for 100ms but not taking
-> into account the DLLLA requirement. We then wait 10ms for D3hot -> D0
-> transition of the root port and the two downstream hotplug ports. This
-> means that we deviate from what the spec requires.
-> 
-> Performing the same check for system sleep (s2idle) transitions we can
-> see following when resuming from s2idle:
-> 
->   pcieport 0000:00:1b.0: power state changed by ACPI to D0
->   pcieport 0000:00:1b.0: restoring config space at offset 0x2c (was 0x60, writing 0x60)
->   ...
->   pcieport 0000:01:00.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
->   ...
+>>
+>> Thanks,
+>>
+>> Andrew Murray
+>>
+>>> +}
+>>> +
+>>> +static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
+>>>   	.ep_init = ls_pcie_ep_init,
+>>>   	.raise_irq = ls_pcie_ep_raise_irq,
+>>>   	.get_features = ls_pcie_ep_get_features,
+>>> +	.func_conf_select = ls_pcie_ep_func_conf_select, };
+>>> +
+>>> +static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
+>>> +	.ops = &ls_pcie_ep_ops,
+>>> +	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
+>>> +};
+>>> +
+>>> +static const struct ls_pcie_ep_drvdata ls2_ep_drvdata = {
+>>> +	.func_offset = 0x20000,
+>>> +	.ops = &ls_pcie_ep_ops,
+>>> +	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
+>>> +};
+>>> +
+>>> +static const struct of_device_id ls_pcie_ep_of_match[] = {
+>>> +	{ .compatible = "fsl,ls1046a-pcie-ep", .data = &ls1_ep_drvdata },
+>>> +	{ .compatible = "fsl,ls1088a-pcie-ep", .data = &ls2_ep_drvdata },
+>>> +	{ .compatible = "fsl,ls2088a-pcie-ep", .data = &ls2_ep_drvdata },
+>>> +	{ },
+>>>   };
+>>>
+>>>   static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie, @@ -98,7
+>>> +134,7 @@ static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
+>>>   	int ret;
+>>>
+>>>   	ep = &pci->ep;
+>>> -	ep->ops = &pcie_ep_ops;
+>>> +	ep->ops = pcie->drvdata->ops;
+>>>
+>>>   	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> "addr_space");
+>>>   	if (!res)
+>>> @@ -137,14 +173,11 @@ static int __init ls_pcie_ep_probe(struct
+>> platform_device *pdev)
+>>>   	if (!ls_epc)
+>>>   		return -ENOMEM;
+>>>
+>>> -	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> "regs");
+>>> -	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+>>> -	if (IS_ERR(pci->dbi_base))
+>>> -		return PTR_ERR(pci->dbi_base);
+>>> +	pcie->drvdata = of_device_get_match_data(dev);
+>>>
+>>> -	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+>>>   	pci->dev = dev;
+>>> -	pci->ops = &ls_pcie_ep_ops;
+>>> +	pci->ops = pcie->drvdata->dw_pcie_ops;
+>>> +
+>>>   	pcie->pci = pci;
+>>>
+>>>   	ls_epc->linkup_notifier = false,
+>>> @@ -152,6 +185,13 @@ static int __init ls_pcie_ep_probe(struct
+>>> platform_device *pdev)
+>>>
+>>>   	pcie->ls_epc = ls_epc;
+>>>
+>>> +	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> "regs");
+>>> +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+>>> +	if (IS_ERR(pci->dbi_base))
+>>> +		return PTR_ERR(pci->dbi_base);
+>>> +
+>>> +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+>>> +
+>>>   	platform_set_drvdata(pdev, pcie);
+>>>
+>>>   	ret = ls_add_pcie_ep(pcie, pdev);
+>>> --
+>>> 2.9.5
+>>>
 
-I think the important thing in all the above logging is that it
-doesn't show any delay, right?  If that's the case, you can just say
-that in one line; I trust you even without 40 lines of config space
-restore debug output :)
+---
+L'absence de virus dans ce courrier électronique a été vérifiée par le logiciel antivirus Avast.
+https://www.avast.com/antivirus
 
->   xhci_hcd 0000:37:00.0: restoring config space at offset 0x10 (was 0x0, writing 0x73f00000)
->   ...
->   thunderbolt 0000:03:00.0: restoring config space at offset 0x14 (was 0x0, writing 0x8a040000)
-> 
-> This is even worse. None of the mandatory delays are performed. If this
-> would be S3 instead of s2idle then according to PCI FW spec 3.2 section
-> 4.6.8.  there is a specific _DSM that allows the OS to skip the delays
-> but this platform does not provide the _DSM and does not go to S3 anyway
-> so no firmware is involved that could already handle these delays.
-> 
-> In this particular Intel Coffee Lake platform these delays are not
-> actually needed because there is an additional delay as part of the ACPI
-> power resource that is used to turn on power to the hierarchy but since
-> that additional delay is not required by any of standards (PCIe, ACPI)
-
-So it sounds like this Coffee Lake accidentally works because of
-unrelated firmware delay that's not actually required, or at least not
-related to the delay required by PCIe?
-
-I did notice that we don't implement all of _DSM function 9 and the
-parts we're missing look like they could be relevant.
-
-> it is not present in the Intel Ice Lake, for example where missing the
-> mandatory delays causes pciehp to start tearing down the stack too early
-> (links are not yet trained).
-
-I'm guessing the Coffee Lake/Ice Lake distinction is not really
-relevant and the important thing is that something about Ice Lake is
-faster and reduces the accidental delay to the point that things stop
-working.
-
-So probably the same thing could happen on Coffee Lake or any other
-system if it had different firmware.
-
-It *would* be interesting to mention what the pciehp/link training
-issue looks like to a user, just to help people who see it find this
-fix.
-
-> There is also one reported case (see the bugzilla link below) where the
-> missing delay causes xHCI on a Titan Ridge controller fail to runtime
-> resume when USB-C dock is plugged.
-> 
-> For this reason, introduce a new function pcie_wait_downstream_accessible()
-> that is called on PCI core resume and runtime resume paths accordingly
-> if downstream/root port with device below entered D3cold.
-> 
-> This is second attempt to add the missing delays. The previous solution
-> in commit c2bf1fc212f7 ("PCI: Add missing link delays required by the
-> PCIe spec") was reverted because of two issues it caused:
-
-c2bf1fc212f7 was merged for v5.3 (it appeared in v5.3-rc1).  I *guess*
-it addressed https://bugzilla.kernel.org/show_bug.cgi?id=203885, which
-was reported on v5.2-rc4, though c2bf1fc212f7 doesn't actually mention
-the bugzilla?
-
-0617bdede511 ("Revert "PCI: Add missing link delays required by the
-PCIe spec"") appeared in v5.3-rc4.  If c2bf1fc212f7 was supposed to
-address BZ 203885, I'm confused about why you asked Kai-Heng to test
-v5.3-rc4, where c2bf1fc212f7 had already been reverted.
-
-Or maybe c2bf1fc212f7 wasn't connected with BZ 203885 in the first
-place?
-
-The net result is that I think v5.3-rc4 is equivalent to v5.2 with
-respect to this issue.  It *is* a pretty serious usability issue, no
-question, but it's not completely obvious that this fix needs to be in
-v5.3 since it's not something we broke during the v5.3 merge window.
-So if we *do* want it in v5.3, we need to think about how to justify
-that, e.g., if this issue affects shipping systems that are likely to
-run an upstream kernel, etc.
-
->   1. One system become unresponsive after S3 resume due to PME service
->      spinning in pcie_pme_work_fn(). The root port in question reports
->      that the xHCI sent PME but the xHCI device itself does not have PME
->      status set. The PME status bit is never cleared in the root port
->      resulting the indefinite loop in pcie_pme_work_fn().
-
-I don't see the connection between PME and either c2bf1fc212f7 or this
-patch.  Is there a fix for this pcie_pme_work_fn() infinite loop?
-
-I do see that BZ 203885 mentions a flood of "PME: Spurious native
-interrupt!" messages, but I don't see how we've fixed that.
-
->   2. Slows down resume if the root/downstream port does not support
->      Data Link Layer Active Reporting because pcie_wait_for_link_delay()
->      waits 1100ms in that case.
-
-I don't see the slowdown mentioned in BZ 203885; is there another link
-to these reports?
-
-> This version should avoid the above issues because we restrict the delay
-> to happen only if the port went into D3cold (so it goes through reset)
-> and only when there is no firmware involved on resume path (so the
-> kernel is responsible for all the delays).
-> 
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203885
-> Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
-> Hi all,
-> 
-> As the changelog says this is reworked version that tries to avoid reported
-> issues while at the same time fix the missing delays so we can get ICL
-> systems and at least the one system with Titan Ridge controller working
-> properly.
-> 
-> @Matthias, @Paul and @Nicholas: it would be great if you could try the
-> patch on top of v5.4-rc5+ and verify that it does not cause any issues on
-> your systems.
-> 
->  drivers/pci/pci-driver.c |  19 ++++++
->  drivers/pci/pci.c        | 127 ++++++++++++++++++++++++++++++++++++---
->  drivers/pci/pci.h        |   1 +
->  3 files changed, 137 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index a8124e47bf6e..9aec78ed8907 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -918,6 +918,7 @@ static int pci_pm_resume_noirq(struct device *dev)
->  {
->  	struct pci_dev *pci_dev = to_pci_dev(dev);
->  	struct device_driver *drv = dev->driver;
-> +	pci_power_t state = pci_dev->current_state;
->  	int error = 0;
->  
->  	if (dev_pm_may_skip_resume(dev))
-> @@ -947,6 +948,15 @@ static int pci_pm_resume_noirq(struct device *dev)
->  
->  	pcie_pme_root_status_cleanup(pci_dev);
->  
-> +	/*
-> +	 * If resume involves firmware assume it takes care of any delays
-> +	 * for now. For suspend-to-idle case we need to do that here before
-> +	 * resuming PCIe port services to keep pciehp from tearing down the
-> +	 * downstream devices too early.
-> +	 */
-> +	if (state == PCI_D3cold && pm_suspend_no_platform())
-> +		pcie_wait_downstream_accessible(pci_dev);
-
-Aren't these paths used for Conventional PCI devices as well as PCIe
-devices?
-
-I think the D3cold and pm_suspend_no_platform() checks should move
-inside the new interface, whatever it's called.  I'm not sure what
-that means for the fact that you don't check pm_suspend_no_platform()
-in the runtime-resume path; maybe it needs a flag or something.
-
-But the "wait downstream" part seems a little too specific to be at
-the .resume_noirq and .runtime_resume level.
-
-Do we descend the hierarchy and call .resume_noirq and .runtime_resume
-for the children of the bridge, too?
-
->  	if (drv && drv->pm && drv->pm->resume_noirq)
->  		error = drv->pm->resume_noirq(dev);
->  
-> @@ -1329,6 +1339,7 @@ static int pci_pm_runtime_resume(struct device *dev)
->  	int rc = 0;
->  	struct pci_dev *pci_dev = to_pci_dev(dev);
->  	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
-> +	pci_power_t state = pci_dev->current_state;
->  
->  	/*
->  	 * Restoring config space is necessary even if the device is not bound
-> @@ -1344,6 +1355,14 @@ static int pci_pm_runtime_resume(struct device *dev)
->  	pci_enable_wake(pci_dev, PCI_D0, false);
->  	pci_fixup_device(pci_fixup_resume, pci_dev);
->  
-> +	/*
-> +	 * If the hierarcy went into D3cold wait for the link to be
-> +	 * reactivated before resuming PCIe port services to keep pciehp
-> +	 * from tearing down the downstream devices too early.
-
-s/hierarcy/hierarchy/
-
-> +	 */
-> +	if (state == PCI_D3cold)
-> +		pcie_wait_downstream_accessible(pci_dev);
-> +
->  	if (pm && pm->runtime_resume)
->  		rc = pm->runtime_resume(dev);
->  
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 1b27b5af3d55..9ac50710f1d4 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1025,15 +1025,11 @@ static void __pci_start_power_transition(struct pci_dev *dev, pci_power_t state)
->  	if (state == PCI_D0) {
->  		pci_platform_power_transition(dev, PCI_D0);
->  		/*
-> -		 * Mandatory power management transition delays, see
-> -		 * PCI Express Base Specification Revision 2.0 Section
-> -		 * 6.6.1: Conventional Reset.  Do not delay for
-> -		 * devices powered on/off by corresponding bridge,
-> -		 * because have already delayed for the bridge.
-> +		 * Mandatory power management transition delays are handled
-> +		 * in pci_pm_runtime_resume() of the corresponding
-> +		 * downstream/root port.
->  		 */
->  		if (dev->runtime_d3cold) {
-> -			if (dev->d3cold_delay && !dev->imm_ready)
-> -				msleep(dev->d3cold_delay);
->  			/*
->  			 * When powering on a bridge from D3cold, the
->  			 * whole hierarchy may be powered on into
-> @@ -4607,14 +4603,17 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
->  
->  	return pci_dev_wait(dev, "PM D3->D0", PCIE_RESET_READY_POLL_MS);
->  }
-> +
->  /**
-> - * pcie_wait_for_link - Wait until link is active or inactive
-> + * pcie_wait_for_link_delay - Wait until link is active or inactive
->   * @pdev: Bridge device
->   * @active: waiting for active or inactive?
-> + * @delay: Delay to wait after link has become active (in ms)
->   *
->   * Use this to wait till link becomes active or inactive.
->   */
-> -bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
-> +static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
-> +				     int delay)
->  {
->  	int timeout = 1000;
->  	bool ret;
-> @@ -4651,13 +4650,121 @@ bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
->  		timeout -= 10;
->  	}
->  	if (active && ret)
-> -		msleep(100);
-> +		msleep(delay);
->  	else if (ret != active)
->  		pci_info(pdev, "Data Link Layer Link Active not %s in 1000 msec\n",
->  			active ? "set" : "cleared");
->  	return ret == active;
->  }
->  
-> +/**
-> + * pcie_wait_for_link - Wait until link is active or inactive
-> + * @pdev: Bridge device
-> + * @active: waiting for active or inactive?
-> + *
-> + * Use this to wait till link becomes active or inactive.
-> + */
-> +bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
-> +{
-> +	return pcie_wait_for_link_delay(pdev, active, 100);
-> +}
-
-This part (adding pcie_wait_for_link_delay() to make the delay time
-configurable) could be a separate patch to reduce the size of this
-patch and make the important pieces a little more obvious.
-
-> +static int pcie_get_downstream_delay(struct pci_bus *bus)
-> +{
-> +	struct pci_dev *pdev;
-> +	int min_delay = 100;
-> +	int max_delay = 0;
-> +
-> +	list_for_each_entry(pdev, &bus->devices, bus_list) {
-> +		if (pdev->imm_ready)
-> +			min_delay = 0;
-> +		else if (pdev->d3cold_delay < min_delay)
-> +			min_delay = pdev->d3cold_delay;
-> +		if (pdev->d3cold_delay > max_delay)
-> +			max_delay = pdev->d3cold_delay;
-> +	}
-> +
-> +	return max(min_delay, max_delay);
-> +}
-> +
-> +/**
-> + * pcie_wait_downstream_accessible - Wait downstream device to be accessible
-> + * @pdev: PCIe port whose downstream device is waited
-> + *
-> + * Handle delays according to PCIe 4.0 section 6.6.1 before configuration
-> + * access to the downstream device is permitted. If the port does not have
-> + * any devices connected, does nothing.
-> + *
-> + * This is needed if the hierarchy below @pdev went through reset (after
-> + * exit from D3cold back to D0uninitialized).
-
-D3cold -> D0 is a cold reset by definition, isn't it?
-
-> + */
-> +void pcie_wait_downstream_accessible(struct pci_dev *pdev)
-> +{
-> +	struct pci_dev *child;
-> +	struct pci_bus *bus;
-> +	int delay;
-
-IIUC pdev is not guaranteed to be a PCIe device here.
-
-Do we need to observe the Trhfa requirements for Conventional PCI and
-PCI-X devices here?  If we don't do it here, where is it observed?
-
-> +	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT &&
-> +	    pci_pcie_type(pdev) != PCI_EXP_TYPE_DOWNSTREAM)
-> +		return;
-> +
-> +	if (pci_dev_is_disconnected(pdev))
-> +		return;
-> +
-> +	if (!pdev->bridge_d3)
-> +		return;
-> +
-> +	bus = pdev->subordinate;
-> +	if (!bus)
-> +		return;
-> +
-> +	child = list_first_entry_or_null(&bus->devices, struct pci_dev,
-> +					 bus_list);
-> +	if (!child)
-> +		return;
-
-I'm not convinced yet about skipping this if there's no subordinate
-bus or no children.  Don't we have to assume that the caller may
-immediately *probe* for children as soon as we return?
-
-> +	delay = pcie_get_downstream_delay(bus);
-> +	if (!delay)
-> +		return;
-
-I'm not sold on the idea that this delay depends on what's *below* the
-bridge.  We're using sec 6.6.1 to justify the delay, and that section
-doesn't say anything about downstream devices.
-
-If we call .resume_noirq/.runtime_resume for the downstream devices
-themselves, could we use d3cold_delay *there*?
-
-> +	/*
-> +	 * If downstream port does not support speeds greater than 5 GT/s
-> +	 * need to wait minimum 100ms. For higher speeds (gen3) we need to
-> +	 * wait first for the data link layer to become active.
-> +	 *
-> +	 * However, 100ms is the minimum and the spec says that the
-> +	 * software must allow at least 1s before it can determine that the
-> +	 * device that did not respond is a broken device. Also there is
-> +	 * evidence that the 100ms is not always enough so what we do here
-
-This sort of "there is evidence" statement needs a specific reference.
-Otherwise it ends up meaning "we don't know why it matters and we
-can't test any changes in this area".
-
-> +	 * is that we wait for the minimum 100ms (possibly after link
-> +	 * training completes) and then probe for the device presence once.
-> +	 * If we still don't get response we wait for another 100ms just to
-> +	 * give it some additional time to complete its initialization.
-> +	 */
-> +	if (pcie_get_speed_cap(pdev) <= PCIE_SPEED_5_0GT) {
-> +		dev_dbg(&pdev->dev, "waiting downstream link for %d ms\n",
-
-pci_dbg()
-s/waiting downstream link for %d ms/waiting %d ms for downstream link/
-
-> +			delay);
-> +		msleep(delay);
-> +	} else {
-> +		dev_dbg(&pdev->dev,
-> +			"waiting downstream link for %d ms after activation\n",
-> +			delay);
-> +		if (!pcie_wait_for_link_delay(pdev, true, delay)) {
-> +			/*
-> +			 * If the link did not train, no need to wait
-> +			 * further the device is probably gone.
-> +			 */
-> +			return;
-> +		}
-> +	}
-> +
-> +	if (!pci_device_is_present(child)) {
-> +		dev_dbg(&child->dev,
-> +			"waiting for additional 100 ms for the device to become accessible\n");
-> +		msleep(100);
-
-This seems like magic.  Can we relate this back to anything in the
-spec?  If we need this, maybe we're seeing CRRS?  I suppose this is
-related to the note above about evidence that 100ms may not be enough?
-
-> +	}
-> +}
-> +
->  void pci_reset_secondary_bus(struct pci_dev *dev)
->  {
->  	u16 ctrl;
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index d22d1b807701..9a83fcf612ca 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -498,6 +498,7 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
->  		      u32 service);
->  
->  bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
-> +void pcie_wait_downstream_accessible(struct pci_dev *pdev);
->  #ifdef CONFIG_PCIEASPM
->  void pcie_aspm_init_link_state(struct pci_dev *pdev);
->  void pcie_aspm_exit_link_state(struct pci_dev *pdev);
-> -- 
-> 2.23.0.rc1
-> 
