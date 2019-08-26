@@ -2,124 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D18649D74C
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2019 22:14:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 365809D7F5
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2019 23:13:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388026AbfHZUOi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Aug 2019 16:14:38 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45261 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388018AbfHZUOh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Aug 2019 16:14:37 -0400
-Received: by mail-oi1-f196.google.com with SMTP id v12so13133147oic.12;
-        Mon, 26 Aug 2019 13:14:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ONmOWKvBkqEH/6EhYi4M9WtYliZ0ZD+WEF16FDwCz2Y=;
-        b=aElc5Gqu7IZBqMgUQlepAcFFQWhg3XUita3Eg48UrKP0LL0M4v2VpLgA0T0riCudaI
-         C/AwEdZxwkUixjJ64yc8WmUom07VWuhXwSis05lPzZiJEQjao0kEClo/Ga3mseYQjgaM
-         GBIs/NxcfrVxnaFmGB3juSONtjL8eNPmXr0LQ1EqdFEye9NqLG3FNslS/39pPNpb6Hxe
-         Cb7xlSLkyd9W2VGPulQC5KERanyiTITn7n6xGZLAcYzZNk/o4b2on8xR5Q5AgydYi52A
-         95ckrj+cWwVuA3H8l4F6K2f4d/O9ozcnAj/RfuZ8Qv5Mh6t0gJrjHxsD+CiZHRvoRBBV
-         f4Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ONmOWKvBkqEH/6EhYi4M9WtYliZ0ZD+WEF16FDwCz2Y=;
-        b=FaUqC75xx5Lvesm3PbYXcJEvIelZnRNcjVmusiyCUzLfTA4+3myUoN1fRTcLLghBzQ
-         lrmtxEzfKOFG4QxuUVfvKuvmyX91FGop8undXj+6qXzp8Pqbgap8H4maK5Yihmjbb/na
-         yTdI2HUf5oOM9TWsDKJmGih77/49cH41NK3fMUAfCI3tNf8N73Vsi9onibJeTptAaxL4
-         F7Rm63socaZQyyA9Y/9sawVLocLQ0njF1Y/r60MdWY3+tYWCkmCb/hCvRrkIyr55Sose
-         kR4ssyMkLn/SH17WFYyMq3L3v4IHl2Ap2MV6OHrVDjqyhVqLQWUsHbWw5kUtvO0W7ynk
-         +JrQ==
-X-Gm-Message-State: APjAAAXYjLlsBx0na7p5KsMHNdYdnvmldad0gpg8QHnpWSwCgtBGPIST
-        bXH7W10FLYvjM7k1nbrvX38sQnv2LNMQJZoBPyg=
-X-Google-Smtp-Source: APXvYqx+wsqBR7LhuXaoGevhgB1lph1QB9TxB004jttF4vjCHdjjEMk/vm+aspko9Z9DT+mYvMOr4vitH26F4N8l39M=
-X-Received: by 2002:a05:6808:8e2:: with SMTP id d2mr14160818oic.47.1566850476997;
- Mon, 26 Aug 2019 13:14:36 -0700 (PDT)
+        id S1726150AbfHZVNs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Aug 2019 17:13:48 -0400
+Received: from emh02.mail.saunalahti.fi ([62.142.5.108]:51554 "EHLO
+        emh02.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfHZVNs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Aug 2019 17:13:48 -0400
+X-Greylist: delayed 475 seconds by postgrey-1.27 at vger.kernel.org; Mon, 26 Aug 2019 17:13:45 EDT
+Received: from ydin.reaktio.net (reaktio.net [85.76.255.15])
+        by emh02.mail.saunalahti.fi (Postfix) with ESMTP id 50E9C2000A;
+        Tue, 27 Aug 2019 00:05:48 +0300 (EEST)
+Received: by ydin.reaktio.net (Postfix, from userid 1001)
+        id 955DE36C0F6; Tue, 27 Aug 2019 00:05:47 +0300 (EEST)
+Date:   Tue, 27 Aug 2019 00:05:47 +0300
+From:   Pasi =?iso-8859-1?Q?K=E4rkk=E4inen?= <pasik@iki.fi>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>,
+        George Dunlap <George.Dunlap@citrix.com>,
+        Jan Beulich <JBeulich@suse.com>,
+        Juergen Gross <jgross@suse.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        =?iso-8859-1?Q?H=E5kon?= Alstadheim <hakon@alstadheim.priv.no>
+Subject: Re: [Xen-devel] [PATCH V3 2/2] Xen/PCIback: Implement PCI
+ flr/slot/bus reset with 'reset' SysFS attribute
+Message-ID: <20190826210547.GE2840@reaktio.net>
+References: <5A377E020200007800197FFA@prv-mh.provo.novell.com>
+ <559ffd12-b541-8a69-60bd-fbe10e3dc159@oracle.com>
+ <20180916114306.GF18222@reaktio.net>
+ <a726840b-8a5c-0890-73c6-3a95a7205153@oracle.com>
+ <20180918071519.GG18222@reaktio.net>
+ <5E7DDB68-4E68-48A5-AEEC-EE1B21A50E9E@citrix.com>
+ <352310b3-ec9b-2ceb-83f0-4550718120c3@oracle.com>
+ <20180919090526.s3ahnemrt2ik2tx3@mac.bytemobile.com>
+ <20181003155104.GH5318@reaktio.net>
+ <f6b8e055-7afc-b4de-af88-425d799dcd28@oracle.com>
 MIME-Version: 1.0
-References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
- <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
- <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com> <f1cb5ba9-b57a-971a-5a2f-1f13e0cc9507@linux.intel.com>
-In-Reply-To: <f1cb5ba9-b57a-971a-5a2f-1f13e0cc9507@linux.intel.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 26 Aug 2019 22:14:25 +0200
-Message-ID: <CAFBinCDojCN0Gxpa0fyh7t8TdvTLc_dwgJgMxC4PoAszK==BKg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
-        hch@infradead.org, jingoohan1@gmail.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        qi-ming.wu@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f6b8e055-7afc-b4de-af88-425d799dcd28@oracle.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Dilip,
+Hi,
 
-On Mon, Aug 26, 2019 at 8:42 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
-[...]
-> intel_pcie_port structure is having "struct dw_pcie" as mentioned below:
->
-> struct intel_pcie_port {
->         struct dw_pcie          *pci;
->         unsigned int            id; /* Physical RC Index */
->         void __iomem            *app_base;
->         struct gpio_desc        *reset_gpio;
-> [...]
-> };
->
-> Almost all the drivers are following the same way. I don't see any issue in this way.
-> Please help me with more description if you see an issue here.
->
-> struct qcom_pcie {
-> struct dw_pcie *pci;
-> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-qcom.c
->
-> struct armada8k_pcie {
-> struct dw_pcie *pci;
-> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-armada8k.c
->
-> struct artpec6_pcie {
-> struct dw_pcie *pci;
-> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-artpec6.c
->
-> struct kirin_pcie {
-> struct dw_pcie *pci;
-> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-kirin.c
->
-> struct spear13xx_pcie {
-> struct dw_pcie *pci;
-> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-spear13xx.c
-thank you for this detailed list.
-it seems that I picked the minority of drivers as "reference" where
-it's implemented differently:
+On Mon, Oct 08, 2018 at 10:32:45AM -0400, Boris Ostrovsky wrote:
+> On 10/3/18 11:51 AM, Pasi Kärkkäinen wrote:
+> > On Wed, Sep 19, 2018 at 11:05:26AM +0200, Roger Pau Monné wrote:
+> >> On Tue, Sep 18, 2018 at 02:09:53PM -0400, Boris Ostrovsky wrote:
+> >>> On 9/18/18 5:32 AM, George Dunlap wrote:
+> >>>>> On Sep 18, 2018, at 8:15 AM, Pasi Kärkkäinen <pasik@iki.fi> wrote:
+> >>>>>
+> >>>>> Hi,
+> >>>>>
+> >>>>> On Mon, Sep 17, 2018 at 02:06:02PM -0400, Boris Ostrovsky wrote:
+> >>>>>> What about the toolstack changes? Have they been accepted? I vaguely
+> >>>>>> recall there was a discussion about those changes but don't remember how
+> >>>>>> it ended.
+> >>>>>>
+> >>>>> I don't think toolstack/libxl patch has been applied yet either.
+> >>>>>
+> >>>>>
+> >>>>> "[PATCH V1 0/1] Xen/Tools: PCI reset using 'reset' SysFS attribute":
+> >>>>> https://lists.xen.org/archives/html/xen-devel/2017-12/msg00664.html
+> >>>>>
+> >>>>> "[PATCH V1 1/1] Xen/libxl: Perform PCI reset using 'reset' SysFS attribute":
+> >>>>> https://lists.xen.org/archives/html/xen-devel/2017-12/msg00663.html
+> >>>
+> >>> Will this patch work for *BSD? Roger?
+> >> At least FreeBSD don't support pci-passthrough, so none of this works
+> >> ATM. There's no sysfs on BSD, so much of what's in libxl_pci.c will
+> >> have to be moved to libxl_linux.c when BSD support is added.
+> >>
+> > Ok. That sounds like it's OK for the initial pci 'reset' implementation in xl/libxl to be linux-only.. 
+> >
+> 
+> Are these two patches still needed? ISTR they were  written originally
+> to deal with guest trying to use device that was previously assigned to
+> another guest. But pcistub_put_pci_dev() calls
+> __pci_reset_function_locked() which first tries FLR, and it looks like
+> it was added relatively recently.
+> 
 
-first example: pci-meson
-  struct meson_pcie {
-    struct dw_pcie pci;
-    ...
-  };
+Replying to an old thread.. I only now realized I forgot to reply to this message earlier.
 
-second example: pcie-tegra194 (only in -next, will be part of v5.4)
-  struct tegra_pcie_dw {
-    ...
-    struct dw_pcie pci;
-    ...
-  };
-
-so some drivers store a pointer pointer to the dw_pcie struct vs.
-embedding the dw_pcie struct directly.
-as far as I know the result will be equal, except that you don't have
-to use a second devm_kzalloc for struct dw_pcie (and thus reducing
-memory fragmentation).
+afaik these patches are still needed. Håkon (CC'd) wrote to me in private that
+he gets a (dom0) Linux kernel crash if he doesn't have these patches applied.
 
 
-Martin
+Here are the links to both the linux kernel and libxl patches:
+
+
+"[Xen-devel] [PATCH V3 0/2] Xen/PCIback: PCI reset using 'reset' SysFS attribute":
+https://lists.xen.org/archives/html/xen-devel/2017-12/msg00659.html
+
+[Note that PATCH V3 1/2 "Drivers/PCI: Export pcie_has_flr() interface" is already applied in upstream linux kernel, so it's not needed anymore]
+
+"[Xen-devel] [PATCH V3 2/2] Xen/PCIback: Implement PCI flr/slot/bus reset with 'reset' SysFS attribute":
+https://lists.xen.org/archives/html/xen-devel/2017-12/msg00661.html
+
+
+"[Xen-devel] [PATCH V1 0/1] Xen/Tools: PCI reset using 'reset' SysFS attribute":
+https://lists.xen.org/archives/html/xen-devel/2017-12/msg00664.html
+
+"[Xen-devel] [PATCH V1 1/1] Xen/libxl: Perform PCI reset using 'reset' SysFS attribute":
+https://lists.xen.org/archives/html/xen-devel/2017-12/msg00663.html
+
+
+> 
+> -boris
+
+
+Thanks,
+
+-- Pasi
+
