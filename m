@@ -2,294 +2,205 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 83ACE9D8C4
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2019 00:00:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A506A9D8CD
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2019 00:05:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbfHZWAA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Aug 2019 18:00:00 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:32960 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfHZWAA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Aug 2019 18:00:00 -0400
-Received: by mail-yw1-f68.google.com with SMTP id e65so7197309ywh.0
-        for <linux-pci@vger.kernel.org>; Mon, 26 Aug 2019 14:59:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MH7CkXPMaalnbkeMAiiA9YYT70nqAt4qD2eh1omxYuQ=;
-        b=Z0UhKiV4gMrPhcxtntVjAyBoTq9eE/z+eXN1gArLSrYH12kc5ei3b3asSCuPYAyZO4
-         WCmVyxKLfmcZbQZX5frZbkLIOQ+w6wfAP3ZE/QFjv4jsOAaTsyac+SVXxUMMRg45SGd8
-         ZM+RMHpXVZj2ttiutlPiTjPyJhaXsiqkbPzJrAOqbfb+u174f1Hfw7ysl4ASAPbtw/gk
-         VTMIH3a7jQqY6I6bKXkeZf2X31Qb4ja3shc+C8mHqwRUtH3UpxiR6dP15n1uEDpyas5w
-         90j3bsJrLtDRC6+g3+4Og4sLwVcR7ZJpwouAW4CF26iN4o6Cit+paeNip4qAmpycPiwY
-         MXmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MH7CkXPMaalnbkeMAiiA9YYT70nqAt4qD2eh1omxYuQ=;
-        b=tSKt8CLvq563ttDpKjDzhjRIvQy4BcUM36Bx3oII6Ramw1+f6Mjb+5v2rrJjjUsoFa
-         DeCpfLlfsI5XC8rXuJ64dMid49CgXbngF/n7Zkg3vpVJdlGI8pRY87q7jS3wAbw2wf/t
-         Wu6laGF0FJJADBMtkFyacOzD7ww9cUflItaVhL6cyeEoODUVhuYdXKD+ruAzG+LC9R+U
-         Z9SaELKmO+ukQ6cas4IHiSriXSidlxyBtfkGwJ4kgRb9MIKyL2mWZV+ct1Y3gPrvxwsV
-         IrHe212a7FoMbRec05U+kosgtOLybSQnM1lfZjXNilpAfUokxmXPYVsv8Sv5H0I47Job
-         ij3A==
-X-Gm-Message-State: APjAAAWvwNCePHq8FJ6tjdsatuv4x/sMl+cFLrvCirn/MZT0GHrZCzx7
-        NWNbJbVVvNZg8/sQRnR9JwUbAQ==
-X-Google-Smtp-Source: APXvYqx4oJCCn2w5CfAAxHw4uOOVph4KZI4kasWIRxtZDeEtDb/LuN8VM2KG91h6fCtJg9lHpysf3A==
-X-Received: by 2002:a81:5c87:: with SMTP id q129mr13635750ywb.403.1566856799182;
-        Mon, 26 Aug 2019 14:59:59 -0700 (PDT)
-Received: from jaxon.wireless.duke.edu ([152.3.43.42])
-        by smtp.gmail.com with ESMTPSA id d15sm2668070ywa.34.2019.08.26.14.59.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 14:59:58 -0700 (PDT)
-From:   Haotian Wang <haotian.wang@sifive.com>
-To:     kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com
-Cc:     haotian.wang@sifive.com, haotian.wang@duke.edu, mst@redhat.com,
-        jasowang@redhat.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] pci: endpoint: functions: Add a virtnet EP function
-Date:   Mon, 26 Aug 2019 17:59:57 -0400
-Message-Id: <20190826215957.6430-1-haotian.wang@sifive.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <c656fd34-68b1-46d9-38e4-c77138d3604f@ti.com>
-References: <c656fd34-68b1-46d9-38e4-c77138d3604f@ti.com>
+        id S1726435AbfHZWFG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Aug 2019 18:05:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51112 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726441AbfHZWFG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 26 Aug 2019 18:05:06 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03B4721872;
+        Mon, 26 Aug 2019 22:05:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566857104;
+        bh=o9Rw/G4Lfm9gr1ZvkCXsO3UOpleaOEFyNAANx3n4jIs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EwoA6GUGoGge8EoXje8VLHBikUottJWRNE5TNQ0cvnVjiVPcoe0NXc1AQwEtRmcrw
+         RFC//wQ6tKck4pv74SuNFEfaPYy22Xr4p5L1pHnf5zKJeQ1arHPjwEvTp7oz50zjMH
+         klr/FXzR4tdMCIIMRTM+GsheNZyp+E2f+xfZBCK4=
+Date:   Mon, 26 Aug 2019 17:05:02 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Matthias Andree <matthias.andree@gmx.de>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Justin Forbes <jmforbes@linuxtx.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add missing link delays required by the PCIe spec
+Message-ID: <20190826220502.GD127465@google.com>
+References: <20190821124519.71594-1-mika.westerberg@linux.intel.com>
+ <20190824021254.GB127465@google.com>
+ <20190826101726.GD19908@lahna.fi.intel.com>
+ <20190826140712.GC127465@google.com>
+ <20190826144242.GA2643@lahna.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190826144242.GA2643@lahna.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Kishon,
+On Mon, Aug 26, 2019 at 05:42:42PM +0300, Mika Westerberg wrote:
+> On Mon, Aug 26, 2019 at 09:07:12AM -0500, Bjorn Helgaas wrote:
+> > On Mon, Aug 26, 2019 at 01:17:26PM +0300, Mika Westerberg wrote:
+> > > On Fri, Aug 23, 2019 at 09:12:54PM -0500, Bjorn Helgaas wrote:
 
-Thank you so much for the reply!
-
-On Mon, Aug 26, 2019 at 6:51 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> > This function driver is tested on the following pair of systems. The PCI
-> > endpoint is a Xilinx VCU118 board programmed with a SiFive Linux-capable
-> > core running Linux 5.2. The PCI host is an x86_64 Intel(R) Core(TM)
-> > i3-6100 running unmodified Linux 5.2. The virtual link achieved a
-> > stable throughput of ~180KB/s during scp sessions of a 50M file. The
+> > > > But the "wait downstream" part seems a little too specific to be at
+> > > > the .resume_noirq and .runtime_resume level.
+> > > > 
+> > > > Do we descend the hierarchy and call .resume_noirq and .runtime_resume
+> > > > for the children of the bridge, too?
+> > > 
+> > > We do but at that time it is too late as we have already resumed pciehp
+> > > of the parent downstream port and it may have already started tearing
+> > > down the device stack below.
+> > > 
+> > > I'm open to any better ideas where this delay could be added, though :)
+> > 
+> > So we resume pciehp *before* we're finished resuming the Downstream
+> > Port?  That sounds wrong.
 > 
-> I assume this is not using DMA as below you mentioned you got worse throughput
-> with DMA. What's the throughput using DMA?
-From host to endpoint, scp speed was 180KB/s without dma and 130KB/s
-with dma. From endpoint to host, scp speed was 220KB/s without dma and
-150KB/s. My guess for the causes of lower throughput when dma is used is
-that there the two major reasons. Firstly, the platform dma
-implementation of the hardware I used was pretty new. It had many
-inefficient algorithms. Secondly, the dma transfer function of pci-epf
-seems to make blocking calls. In the pci_epf_tx() function,
-pci_epf_data_transfer() is called. pci_epf_data_transfer will wait on
-completion of the dma transfer. Since pci_epf_data_transfer runs on the
-same kernel thread as the main function that handles endpoint to
-host transfer in pci_epf_virtio, every packet that gets transferred via
-dma still blocks the thread for the duration of transfer. This sort of
-defeats the purpose of dma.
+> I mean once we resume the downstream port (the bridge) we also resume
+> "PCIe port services" including pciehp and only then descend to whatever
+> device is physically connected to that port.
 
-There was actually a critical error I made about dma in the patch. The
-dma patch to the endpoint framework,
-http://git.ti.com/cgit/cgit.cgi/ti-linux-kernel/ti-linux-kernel.git/tree/drivers/pci/endpoint/pci-epf-core.c?h=ti-linux-4.19.y,
-has not been merged into the upstream kernel yet. dma related code
-should not appear in this version of the patch. I apologize for this
-mistake.
+That order sounds right.  I guess I'd have to see more details about
+what's happening with pciehp to understand this.  Do you happen to
+have a trace (dmesg, backtrace, etc) of pciehp tearing things down?
 
-> At a high level, you need more layering as it'll help to add more virtio based
-> devices over PCIe. Ideally all the vring/virtqueue part should be added as a
-> library.
+> > > > > +static int pcie_get_downstream_delay(struct pci_bus *bus)
+> > > > > +{
+> > > > > +	struct pci_dev *pdev;
+> > > > > +	int min_delay = 100;
+> > > > > +	int max_delay = 0;
+> > > > > +
+> > > > > +	list_for_each_entry(pdev, &bus->devices, bus_list) {
+> > > > > +		if (pdev->imm_ready)
+> > > > > +			min_delay = 0;
+> > > > > +		else if (pdev->d3cold_delay < min_delay)
+> > > > > +			min_delay = pdev->d3cold_delay;
+> > > > > +		if (pdev->d3cold_delay > max_delay)
+> > > > > +			max_delay = pdev->d3cold_delay;
+> > > > > +	}
+> > > > > +
+> > > > > +	return max(min_delay, max_delay);
+> > > > > +}
+> > 
+> > > > > + */
+> > > > > +void pcie_wait_downstream_accessible(struct pci_dev *pdev)
+> > 
+> > > > Do we need to observe the Trhfa requirements for Conventional PCI and
+> > > > PCI-X devices here?  If we don't do it here, where is it observed?
+> > > 
+> > > We probably should but I intended this to be PCIe specific since there
+> > > we have issues. For conventional PCI/PCI-X things "seem" to work and we
+> > > don't power manage those bridges anyway.
+> > > 
+> > > I'm not aware if Trhfa is handled in anywhere in the PCI stack
+> > > currently.
+> > 
+> > I think we should make this agnostic of the Conventional/PCIe
+> > difference if possible.  I assume we can tell if we're dealing with a
+> > D3->D0 transition and we only add delays in that case.  If we don't
+> > power manage Conventional PCI devices, I assume we won't see D3->D0
+> > transitions for runtime resume so there won't be any harm.
+> >
+> > Making it PCIe-specific seems like it adds extra code ("dev-is-PCIe
+> > checks") with no obvious reason for existence and an implicit
+> > dependency on the fact that we only power manage PCIe devices.  If we
+> > ever *did* support runtime power-management for Conventional PCI, we'd
+> > trip over that implicit dependency and probably debug this issue
+> > again.
+> > 
+> > But I guess it might slow down system resume for Conventional PCI
+> > devices.  If we rely on delays in firmware, I wonder if there's
+> > any point during resume where we could grab an early timestamp, then
+> > take another timestamp here and deduce that we've already delayed the
+> > difference?
 > 
-> You've modeled the endpoint side as virtio_device. However I would have
-> expected this to be vhost_dev and would have tried re-using some parts of 
-> vhost (ignoring the userspace part). Was this considered during your design?
-Thank you for the suggestion about more layering. I have thought about
-that. virtio has done a very good job of separating out
-function-specific drivers (virtio_net etc.), vring/virtqueue setup
-(virtio_pci) and actual data transfer (virtio_ring). Thus in this
-endpoint function, I can easily set up a remote virtio_device
-representing the PCI host and a local virtio_device representing the
-endpoint itself. The difficulty lies in actual transfer of data. For
-example, virtio_net and virtio_blk use very different transfer
-mechanisms. The best I can do now is probably abstracting out the setup
-phase as a library of some sort.
+> That sounds rather complex, to be honest ;-)
 
-I haven't taken a close look at vhost. Using virtio_device was mainly
-because I did not change the code on the PCI host side, therefore using
-the same structs as virtio_pci and virtio_ring made it easy to access
-data structures on the PCI host from the endpoint. Another reason is
-that in this endpoint function, the use case of virtio_device was not
-entirely the same as that of kvm/qemu. Instead, this was probably closer
-to what veth did, in that it established a connection between a pair of
-virtio_devices. So far virtio_device has served the purpose well and I
-could reuse a lot of code from virtio.
+Maybe so, I was just trying to brainstorm possibilities for making
+sure we observe the delay requirements without slowing down resume.
 
-> Please add the Documentation as a separate patch.
-Should I submit that as a different patch in the same patch series or a
-totally different patch? Thanks!
+For example, if we have several devices on the same bus, we shouldn't
+have to do the delays serially; we should be able to take advantage of
+the fact that the Trhfa period starts at the same time for all of
+them.
 
-> > +	CONFIG_VIRTIO
-> > +	CONFIG_VIRTIO
+> > > > > +	delay = pcie_get_downstream_delay(bus);
+> > > > > +	if (!delay)
+> > > > > +		return;
+> > > > 
+> > > > I'm not sold on the idea that this delay depends on what's *below* the
+> > > > bridge.  We're using sec 6.6.1 to justify the delay, and that section
+> > > > doesn't say anything about downstream devices.
+> > > 
+> > > 6.6.1 indeed talks about Downstream Ports and devices immediately below
+> > > them.
+> > 
+> > Wait, I don't think we're reading this the same way.  6.6.1 mentions
+> > Downstream Ports: "With a Downstream Port that does not support Link
+> > speeds greater than 5.0 GT/s, software must wait a minimum of 100 ms
+> > before sending a Configuration Request to the device immediately below
+> > that Port."
+> > 
+> > This says we have to delay before sending a config request to a device
+> > below a Downstream Port, but it doesn't say anything about the
+> > characteristics of that device.  In particular, I don't think it says
+> > the delay can be shortened if that device supports Immediate Readiness
+> > or implements a readiness _DSM.
 > 
-> ^^redundant line.
-Will fix.
-
-> > +CONFIG_PCI_HOST_LITTLE_ENDIAN must be set at COMPILE TIME. Toggle it on to build
-> > +the module with the PCI host being in little endianness.
-> It would be better if we could get the endianness of the host at runtime. That
-> way irrespective of the host endianness we could use the same kernel image in
-> endpoint.
-There are two ways I can imagine of achieving this. The first is to
-change the whole endpoint function into using modern virtio interfaces,
-because those specify little endianness to be used in all of __virtio16,
-__virtio32 etc. I didn't take that path because the development platform
-did not allow me to access some PCI configuration space registers, such
-as the vendor-specific capabilities. These were required to configure a
-virtio_device representing the PCI host.
-
-The second way is to add a module parameter for host endianness. The
-user has to make sure that module parameter is setup correctly before
-this endpoint function calls linkup() though.
-
-> > +Enable PCI_ENDPOINT_DMAENGINE if your endpoint controller has an implementation
+> Well it says this:
 > 
-> Presence of dma engine could come from epc_features. Or try to get dma channel
-> always and use mem_copy if that fails. config option for dmaengine looks
-> un-necessary.
-This ties back to the previous point of the unmerged dma patch. The
-correct way to implement dma depends on that patch.
-
-> > +config PCI_EPF_VIRTIO_SUPPRESS_NOTIFICATION
-> > +	bool "PCI Virtio Endpoint Function Notification Suppression"
-> > +	default n
-> > +	depends on PCI_EPF_VIRTIO
-> > +	help
-> > +	  Enable this configuration option to allow virtio queues to suppress
-> > +	  some notifications and interrupts. Normally the host and the endpoint
-> > +	  send a notification/interrupt to each other after each packet has been
-> > +	  provided/consumed. Notifications/Interrupts can be generally expensive
-> > +	  across the PCI bus. If this config is enabled, both sides will only
-> > +	  signal the other end after a batch of packets has been consumed/
-> > +	  provided. However, in reality, this option does not offer significant
-> > +	  performance gain so far.
+>   To allow components to perform internal initialization, system software
+>   must wait a specified minimum period following the end of a Conventional
+>   Reset of one or more devices before it is permitted to issue
+>   Configuration Requests to those devices, unless Readiness Notifications
+>   mechanisms are used
 > 
-> Would be good to profile and document the bottle-neck so that this could be
-> improved upon.
-I have a theory for this. The only real "interrupt" is from the
-endpoint to host. The "notification" from the host to endpoint is
-actually enabled by the endpoint continuously polling for a value in
-BAR 0. When the host wants to notify the endpoint, it writes to an
-offset in BAR 0 with the index of the virtqueue where an event just
-occurs. The endpoint has a dedicated loop that monitors when that value.
-Because of this setup, making the host send fewer notifications does not
-help because the bottleneck is probably in the expensive polling on the
-endpoint. As a consequence, suppressing notification and interrupts does
-not seem to offer performance gain.
+> My understanding of the above (might be wrong) is that Readiness
+> Notification can shorten the delay.
 
-> > +/* Default bar sizes */
-> > +static size_t bar_size[] = { 512, 512, 1024, 16384, 131072, 1048576 };
+Yeeesss, but if we're talking about transitioning device X from
+D3->D0, I think this is talking about config requests to device X,
+not to something downstream from X.
+
+And we have no support for Readiness Notifications, although maybe the
+_DSM stuff qualifies as "a mechanism that supersedes FRS and/or DRS"
+(as mentioned in 6.23).
+
+If device X was in D3cold, don't we have to assume that devices
+downstream from X may have been added/removed while X was in D3cold?
+
+> > I don't think this delay has anything to do with devices downstream
+> > from the Port.  I think this is about giving the Downstream Port time
+> > to bring up the link.  That way config requests may fail because
+> > there's no device below the Port or it's not ready yet, but they
+> > shouldn't fail simply because the link isn't up yet.
 > 
-> Only use the BARs actually required by the function.
-Will do.
+> My understanding (again might be wrong) is that there are two factors
+> here. One is to get the link trained and the other is to give the
+> downstream device some time to perform its internal initialization so
+> that it is ready to answer config requests.
 
-> > +/*
-> > + * Clear mapped memory of a map. If there is memory allocated using the
-> > + * pci-ep framework, that memory will be released.
-> > + *
-> > + * @map: a map struct pointer that will be unmapped
-> > + */
-> > +static void pci_epf_unmap(struct pci_epf_map *map)
-> > +{
-> > +	if (map->iobase) {
-> 
-> how about this instead..
-> 	if (!map->iobase)
-> 		return;
-Sure.
+Yeah, maybe you're right.  The second item about waiting 100ms after
+Link training completes (for Ports that support speeds greater than
+5.0 GT/s) does suggest that the delay is related to the downstream
+device, since the Link is already up before the 100ms delay.
 
-> > +	align = map->align;
-> > +	iosize = (align > PAGE_SIZE && size < align) ? align : size;
-> 
-> The align parameter should already be configured correctly by epc_features and
-> the size should be already handled by pci_epc_mem_alloc_addr().
-This "align" is exactly the same as the align from epc_features. This
-line of code actually proved necessary in my development platform. The
-epc mem allocator only makes sure the memory allocated is aligned but it
-fails to operate on PCI host memory that is not properly aligned. The
-endpoint device I developed on had a disastrous 64K page size. When
-reading from a physical memory address on the PCI host, the lower 16
-bits of the memory address were all zeroed out. For example, when the
-endpoint tried to read the byte at 0x12345 (a phys_addr_t) on the PCI
-host, what it actually read was the byte at 0x10000. Because of this, I
-had to potentially allocate a much larger space than asked for. If
-wanted to access 0x12345, after mapping, map->phys_iobase would be
-0x10000, map->phys_ioaddr would be 0x12345, and a whole 64K memory
-region would be allocated.
-
-> This looks unnecessary.
-See above.
-
-> > +/*
-> > + * Get value from the virtio network config of the local virtio device.
-> > + *
-> > + * @vdev: local virtio device
-> > + * @offset: offset of starting memory address from the start of local
-> > + *	    virtio network config in bytes
-> > + * @buf: virtual memory address to store the value
-> > + * @len: size of requested data in bytes
-> > + */
-> > +static inline void epf_virtio_local_get(struct virtio_device *vdev,
-> > +					unsigned int offset,
-> > +					void *buf,
-> > +					unsigned int len)
-> > +{
-> > +	memcpy(buf,
-> > +	       (void *)&vdev_to_epf_vdev(vdev)->local_net_cfg + offset,
-> > +	       len);
-> > +}
-> 
-> Have all this network specific parts in a separate file. Use the layering
-> structure similar to vhost.
-Will try to do.
-
-> > +/*
-> > + * Initializes the virtio_pci and virtio_net config space that will be exposed
-> > + * to the remote virtio_pci and virtio_net modules on the PCI host. This
-> > + * includes setting up feature negotiation and default config setup etc.
-> > + *
-> > + * @epf_virtio: epf_virtio handler
-> > + */
-> > +static void pci_epf_virtio_init_cfg_legacy(struct pci_epf_virtio *epf_virtio)
-> > +{
-> > +	const u32 dev_feature =
-> > +		generate_dev_feature32(features, ARRAY_SIZE(features));
-> > +	struct virtio_legacy_cfg *const legacy_cfg = epf_virtio->reg[BAR_0];
-> 
-> virtio_reg_bar instead of BAR_0
-The dilemma was that the virtio_pci on PCI host will only write to BAR
-0. I may need to throw an error if the first free bar is not BAR 0.
-
-> > +	pci_epc_stop(epc);
-> 
-> You should never have pci_epc_stop() in function driver as that will break
-> multi-function endpoint devices. I'll fix this in pci-epf-test.c.
-Look forward to your progress on this.
-
-> > +	for (bar = BAR_0; bar <= BAR_5; bar += add) {
-> 
-> Are you using all these BARs? It's best to allocate and initialize the BARs we use.
-Will only use BAR 0 instead.
-
-> Please add a description for each of these structures.
-I had to copy these structures exactly as they were from virtio_ring.c
-unfortunately, because they were not exposed via any header file. If
-virtio_ring.c has some struct changes, this endpoint function will have
-to change accordingly.
-
-Thank you so much for taking time to review this patch. Now that I came
-back to university and continued my undergrad study, my kernel
-development work will probably slow down a lot. The heavy-lifting work
-such as creating more layers to allow more virtio devices will take a
-much longer time.
-
-Best,
-Haotian
+Bjorn
