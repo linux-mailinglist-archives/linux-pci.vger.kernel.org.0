@@ -2,134 +2,740 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 787F99C80B
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2019 05:52:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B449D9C9A1
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2019 08:49:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729346AbfHZDvj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 25 Aug 2019 23:51:39 -0400
-Received: from mail-eopbgr10088.outbound.protection.outlook.com ([40.107.1.88]:64131
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727086AbfHZDvj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 25 Aug 2019 23:51:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UauIugfyws2+vRr31GnlfyFI3ElVKO1bBWxRCpIoHrKgl7/eQQnYgHujx2wv9PZ/kLvg3aG6l4/3rqYW9S7FJXMLfFxKZ+H5IJbUixTbVOYES5s6LtYxp6L2E5TmB7PMYDLKn46KOqGQAjNysdkZN3EGCtZauwVTCQjF5ClCSyWzFna5Sr5jvn4jJ5vAELSzIg+cfpAKQMKzJIo0AY9/l0FrPMJrrI6F7RYzDopsNJIIRcERD7J++TdPZPvSAgW+ga7G1I5epU8ddQ+YE7AbH02P8xF4CKgExQUWyMwnyrKb13lnBrcnKhBovgOuPw/IXD1x5+qyYcazZ5YG3BeiCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ek6wvCAJrwG1V7CeeehOPF7bqNQlAPNFnDrKQqRLseY=;
- b=m6Nv+0OyQ+pUfxdOiH3bwRj7xM6diKbWkTTeeEzdQQbu0px+gOPnM63McflO/8Wpg3gKH2jao5CnZmDq2vR+zNnJBqSX3iIGjXizIjBI7xmTchaT6ee5BUrgu04kNjZXsQDUGLUmcy+C0XoJLZ1yYKOlHlqV/hA2knJvn+OhCPL7Qhg8AP3hxWvfCY1z+Nx3zUgLy1b/wpKwsLEDuqUYpsZLOlodW8H/r/glW+nYPZuFs5rx4Bdtk+g3j/3glJLI7PSAPJXFzfejdQy76EDnyFScEdIkWDUkLVDXuX9B4mvXnPNutrO6AvkEt8isSK1cr3WS+wgaxLu4YcSflZLsnw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ek6wvCAJrwG1V7CeeehOPF7bqNQlAPNFnDrKQqRLseY=;
- b=VveozXkxkfas4wcP3X5y7c09mjj1mUpHkBbyMI+7t5eeSaNMGXF7bPVeg/qktx/+m5Hx7CU6WleH8Lv8DIBGNaB+zxsvGuovThLBcT9s9zwBJ0/2GQPX9gbo3nTV3H3JOetXAOGcKkkZu9SCRKTdFoyJEVrUOxVwCXt209i3ajA=
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
- AM5PR04MB3012.eurprd04.prod.outlook.com (10.175.230.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Mon, 26 Aug 2019 03:51:34 +0000
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::1ce8:464b:3edf:4043]) by AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::1ce8:464b:3edf:4043%7]) with mapi id 15.20.2178.023; Mon, 26 Aug 2019
- 03:51:34 +0000
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-Subject: RE: [PATCH v4 1/3] dt-bindings: pci: layerscape-pci: add compatible
- strings "fsl,ls1028a-pcie"
-Thread-Topic: [PATCH v4 1/3] dt-bindings: pci: layerscape-pci: add compatible
- strings "fsl,ls1028a-pcie"
-Thread-Index: AQHVWY3s6uRWml0OaEOV4KW/xSS6MKcIxFWAgAQK8oA=
-Date:   Mon, 26 Aug 2019 03:51:34 +0000
-Message-ID: <AM5PR04MB3299C9DB7F9F21F6362ADDB2F5A10@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190823082643.10903-1-xiaowei.bao@nxp.com>
- <20190823140447.GA19283@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190823140447.GA19283@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaowei.bao@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 01c55c48-67f6-4d3f-4749-08d729d8b03a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM5PR04MB3012;
-x-ms-traffictypediagnostic: AM5PR04MB3012:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR04MB30126086D09A8168E430083AF5A10@AM5PR04MB3012.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 01415BB535
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(376002)(396003)(136003)(39860400002)(13464003)(189003)(199004)(2906002)(81156014)(81166006)(25786009)(54906003)(52536014)(229853002)(7736002)(76116006)(64756008)(66446008)(7416002)(66556008)(6436002)(5660300002)(99286004)(66946007)(26005)(102836004)(305945005)(186003)(76176011)(7696005)(53546011)(6506007)(11346002)(476003)(486006)(44832011)(66066001)(256004)(446003)(6116002)(55016002)(14454004)(6246003)(33656002)(71200400001)(9686003)(3846002)(86362001)(74316002)(6916009)(4326008)(8676002)(8936002)(478600001)(71190400001)(53936002)(316002)(66476007)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3012;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VAkr6Wn6QFPXAFPSFd08qroilTJ8aGE/qMuW7EDoWEMfHx0iaNNuLBk9bixgoVrTR9j9dmDyWu3LqW88CI7yGdYGq6lqv7nT9CFi/9Hu3vLD+jPIl1SuuRTeqyLK9YL0SfwNbeZDAG9oHc2wmtMkZk38M7l0ZkEFK6SHQSuoXuSDUs3cc1zGrne7Ty5L9MFGVof6ouR0AIcFdxdK8F9DOk78OkHxZCVYWR2i/0DZ6gHga8zWRunaQbjW/IEk8AHEaz7TeSBLi+cJf48B/rLsTdB4nqWbLVW6KRPrUAj+UpQsg77lib0Se0OkC/DWg2bCJ2Chq4M+pzRVhLfA1T/rjL4V8r4WLoBkqZ5qxKDuur3CpfOu2aZhvrHCrAlpz2kA8pTGY3upT3xxu3yOIziNquFLjPGejsbRJc3d48GgyQ4=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        id S1729226AbfHZGtB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Aug 2019 02:49:01 -0400
+Received: from mga17.intel.com ([192.55.52.151]:7079 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbfHZGtB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 26 Aug 2019 02:49:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Aug 2019 23:49:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,431,1559545200"; 
+   d="scan'208";a="187489501"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 25 Aug 2019 23:48:59 -0700
+Received: from [10.226.39.22] (ekotax-mobl.gar.corp.intel.com [10.226.39.22])
+        by linux.intel.com (Postfix) with ESMTP id 1E92A580444;
+        Sun, 25 Aug 2019 23:48:55 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
+To:     "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
+        hch@infradead.org, jingoohan1@gmail.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        qi-ming.wu@intel.com
+References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
+ <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
+ <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <c9001043-41f5-75c0-c59b-6e3b0e8500b0@linux.intel.com>
+Date:   Mon, 26 Aug 2019 14:48:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01c55c48-67f6-4d3f-4749-08d729d8b03a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 03:51:34.1269
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zK/APWX+TSLGYBLmK81MuGSuiLJIJ5ccdx7fkZ9pkz3z8GVR5l9IB9yl9E2hx9klZDBYIg8eDVZ3de8GuGxrtg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3012
+In-Reply-To: <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTG9yZW56byBQaWVyYWxp
-c2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+IFNlbnQ6IDIwMTnE6jjUwjIzyNUgMjI6
-MDUNCj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzogcm9iaCtk
-dEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsg
-TGVvDQo+IExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBNLmguIExpYW4gPG1pbmdodWFuLmxpYW5A
-bnhwLmNvbT47IE1pbmdrYWkgSHUNCj4gPG1pbmdrYWkuaHVAbnhwLmNvbT47IFJveSBaYW5nIDxy
-b3kuemFuZ0BueHAuY29tPjsNCj4gbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gbGludXhwcGMtZGV2QGxpc3RzLm96
-bGFicy5vcmc7IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT47DQo+IGJoZWxnYWFzQGdv
-b2dsZS5jb20NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NCAxLzNdIGR0LWJpbmRpbmdzOiBwY2k6
-IGxheWVyc2NhcGUtcGNpOiBhZGQgY29tcGF0aWJsZQ0KPiBzdHJpbmdzICJmc2wsbHMxMDI4YS1w
-Y2llIg0KPiANCj4gT24gRnJpLCBBdWcgMjMsIDIwMTkgYXQgMDQ6MjY6NDFQTSArMDgwMCwgWGlh
-b3dlaSBCYW8gd3JvdGU6DQo+ID4gQWRkIHRoZSBQQ0llIGNvbXBhdGlibGUgc3RyaW5nIGZvciBM
-UzEwMjhBDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9A
-bnhwLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBu
-eHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0K
-PiA+IC0tLQ0KPiA+IHYyOg0KPiA+ICAtIE5vIGNoYW5nZS4NCj4gPiB2MzoNCj4gPiAgLSBObyBj
-aGFuZ2UuDQo+ID4gdjQ6DQo+ID4gIC0gTm8gY2hhbmdlLg0KPiA+DQo+ID4gIERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0IHwgMSArDQo+ID4g
-IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaS50
-eHQNCj4gPiBpbmRleCBlMjBjZWFhLi45OWEzODZlIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+ID4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaS50
-eHQNCj4gPiBAQCAtMjEsNiArMjEsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAgICAg
-ICAgICJmc2wsbHMxMDQ2YS1wY2llIg0KPiA+ICAgICAgICAgICJmc2wsbHMxMDQzYS1wY2llIg0K
-PiA+ICAgICAgICAgICJmc2wsbHMxMDEyYS1wY2llIg0KPiA+ICsgICAgICAgICJmc2wsbHMxMDI4
-YS1wY2llIg0KPiA+ICAgIEVQIG1vZGU6DQo+ID4gIAkiZnNsLGxzMTA0NmEtcGNpZS1lcCIsICJm
-c2wsbHMtcGNpZS1lcCINCj4gPiAgLSByZWc6IGJhc2UgYWRkcmVzc2VzIGFuZCBsZW5ndGhzIG9m
-IHRoZSBQQ0llIGNvbnRyb2xsZXIgcmVnaXN0ZXIgYmxvY2tzLg0KPiANCj4gVGhpcyBzZXJpZXMg
-ZG9lcyBub3QgYXBwbHkgdG8gdjUuMy1yYzEsIHdoYXQgaXMgaXQgYmFzZWQgb24gPw0KDQp0aGVz
-ZSBzZXQgcGF0Y2hlcyBiYXNlIG9uIHY1LjMtcmMzLCB0aGFua3MuDQoNCj4gDQo+IExvcmVuem8N
-Cg==
+[Got delivery failure mail , so re-sending the mail]
+
+Hi Martin,
+
+Thanks for review comments, please find my response inline.
+
+On 8/26/2019 11:30 AM, Chuan Hua, Lei wrote:
+> Hi Martin,
+>
+> Thanks for your valuable comments. I reply some of them as below.
+>
+> Regards,
+>
+> Chuanhua
+>
+> On 8/25/2019 5:03 AM, Martin Blumenstingl wrote:
+>> Hi Dilip,
+>>
+>> first of all: thank you for submitting this upstream!
+>> I hope that we can use this driver to replace the out-of-tree PCIe
+>> driver that's used in OpenWrt for the Lantiq VRX200 SoCs.
+>>
+>> a small disclaimer: I don't have access to any Lantiq, Intel or
+>> DesignWare datasheets. so everything I write below is based on my own
+>> understanding of the Tegra public datasheet (which describes the
+>> DesignWare PCIe registers) as well as the public Lantiq UGW code drops
+>> with out-of-tree drivers for an older version of this PCIe IP.
+>> thus some of my statements below may be wrong - in this case I would
+>> appreciate an explanation of how the hardware really works.
+>>
+>> please keep me CC'ed on further revisions of this series. I am highly
+>> interested in making this driver work on the Lantiq VRX200 SoCs once
+>> the initial version has landed in linux-next.
+>>
+>>> +config PCIE_INTEL_AXI
+>>> +        bool "Intel AHB/AXI PCIe host controller support"
+>> I believe that this is mostly the same IP block as it's used in Lantiq
+>> (xDSL) VRX200 SoCs (with MIPS cores) which was introduced in 2010
+>> (before Intel acquired Lantiq).
+>> This is why I would have personally called the driver PCIE_LANTIQ
+>
+> VRX200 SoC(internally called VR9) was the first PCIe SoC product which 
+> was using synopsys
+>
+> controller v3.30a. It only supports PCIe Gen1.1/1.0. The phy is 
+> internal phy from infineon.
+>
+> After that, we have other PCe 1.1/10. products such as ARX300/390.  
+> However, these products are EOL,
+>
+> that is why we don't put effort to support VRX200/ARX300/390.
+>
+> PCIE_LANTIQ was also a name used internally in the product as in 
+> linux-3.10.x.
+>
+>
+>>
+>> [...]
+>>> +#define PCIE_CCRID                0x8
+>>> +
+>>> +#define PCIE_LCAP                0x7C
+>>> +#define PCIE_LCAP_MAX_LINK_SPEED        GENMASK(3, 0)
+>>> +#define PCIE_LCAP_MAX_LENGTH_WIDTH        GENMASK(9, 4)
+>>> +
+>>> +/* Link Control and Status Register */
+>>> +#define PCIE_LCTLSTS                0x80
+>>> +#define PCIE_LCTLSTS_ASPM_ENABLE        GENMASK(1, 0)
+>>> +#define PCIE_LCTLSTS_RCB128            BIT(3)
+>>> +#define PCIE_LCTLSTS_LINK_DISABLE        BIT(4)
+>>> +#define PCIE_LCTLSTS_COM_CLK_CFG        BIT(6)
+>>> +#define PCIE_LCTLSTS_HW_AW_DIS            BIT(9)
+>>> +#define PCIE_LCTLSTS_LINK_SPEED            GENMASK(19, 16)
+>>> +#define PCIE_LCTLSTS_NEGOTIATED_LINK_WIDTH    GENMASK(25, 20)
+>>> +#define PCIE_LCTLSTS_SLOT_CLK_CFG        BIT(28)
+>>> +
+>>> +#define PCIE_LCTLSTS2                0xA0
+>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED        GENMASK(3, 0)
+>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_25GT    0x1
+>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_5GT    0x2
+>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_8GT    0x3
+>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_16GT    0x4
+>>> +#define PCIE_LCTLSTS2_HW_AUTO_DIS        BIT(5)
+>>> +
+>>> +/* Ack Frequency Register */
+>>> +#define PCIE_AFR                0x70C
+>>> +#define PCIE_AFR_FTS_NUM            GENMASK(15, 8)
+>>> +#define PCIE_AFR_COM_FTS_NUM            GENMASK(23, 16)
+>>> +#define PCIE_AFR_GEN12_FTS_NUM_DFT        (SZ_128 - 1)
+>>> +#define PCIE_AFR_GEN3_FTS_NUM_DFT        180
+>>> +#define PCIE_AFR_GEN4_FTS_NUM_DFT        196
+>>> +
+>>> +#define PCIE_PLCR_DLL_LINK_EN            BIT(5)
+>>> +#define PCIE_PORT_LOGIC_FTS            GENMASK(7, 0)
+>>> +#define PCIE_PORT_LOGIC_DFT_FTS_NUM        (SZ_128 - 1)
+>>> +
+>>> +#define PCIE_MISC_CTRL                0x8BC
+>>> +#define PCIE_MISC_CTRL_DBI_RO_WR_EN        BIT(0)
+>>> +
+>>> +#define PCIE_MULTI_LANE_CTRL            0x8C0
+>>> +#define PCIE_UPCONFIG_SUPPORT            BIT(7)
+>>> +#define PCIE_DIRECT_LINK_WIDTH_CHANGE        BIT(6)
+>>> +#define PCIE_TARGET_LINK_WIDTH            GENMASK(5, 0)
+>>> +
+>>> +#define PCIE_IOP_CTRL                0x8C4
+>>> +#define PCIE_IOP_RX_STANDBY_CTRL        GENMASK(6, 0)
+> no need for IOP
+>> are you sure that you need any of the registers above?
+>> as far as I can tell most (all?) of them are part of the DesignWare
+>> register set. why doesn't pcie-designware-host initialize these?
+>> I don't have any datasheet or register documentation for the DesignWare
+>> PCIe core. In my own experiment from a month ago on the Lantiq VRX200
+>> SoC I didn't need any of this: [0]
+>
+> As I mentioned, VRX200 was a very old PCIe Gen1.1 product. In our 
+> latest SoC Lightning
+>
+> Mountain, we are using synopsys controller 5.20/5.50a. We support 
+> Gen2(XRX350/550),
+>
+> Gen3(PRX300) and GEN4(X86 based SoC). We also supported dual lane and 
+> single lane.
+>
+> Some of the above registers are needed to control FTS, link width and 
+> link speed.
+>
+>>
+>> this also makes me wonder if various functions below like
+>> intel_pcie_link_setup() and intel_pcie_max_speed_setup() (and probably
+>> more) are really needed or if it's just cargo cult / copy paste from
+>> an out-of-tree driver).
+>
+> intel_pcie_link_setup is to record maximum speed and and link width. 
+> We need these
+> to change speed and link width on the fly which is not supported by 
+> dwc driver common
+> source.
+> There are two major purposes.
+> 1. For cable applications, they have battery support mode. In this 
+> case, it has to
+> switch from x2 and gen4 to x1 and gen1 on the fly
+> 2. Some customers have high EMI issues. They can try to switch to 
+> lower speed and
+> lower link width to check on the fly. Otherwise, they have to change 
+> the device tree
+> and reboot the system.
+>
+>>
+>>> +/* APP RC Core Control Register */
+>>> +#define PCIE_RC_CCR                0x10
+>>> +#define PCIE_RC_CCR_LTSSM_ENABLE        BIT(0)
+>>> +#define PCIE_DEVICE_TYPE            GENMASK(7, 4)
+>>> +#define PCIE_RC_CCR_RC_MODE            BIT(2)
+>>> +
+>>> +/* PCIe Message Control */
+>>> +#define PCIE_MSG_CR                0x30
+>>> +#define PCIE_XMT_PM_TURNOFF            BIT(0)
+>>> +
+>>> +/* PCIe Power Management Control */
+>>> +#define PCIE_PMC                0x44
+>>> +#define PCIE_PM_IN_L2                BIT(20)
+>>> +
+>>> +/* Interrupt Enable Register */
+>>> +#define PCIE_IRNEN                0xF4
+>>> +#define PCIE_IRNCR                0xF8
+>>> +#define PCIE_IRN_AER_REPORT            BIT(0)
+>>> +#define PCIE_IRN_PME                BIT(2)
+>>> +#define PCIE_IRN_HOTPLUG            BIT(3)
+>>> +#define PCIE_IRN_RX_VDM_MSG            BIT(4)
+>>> +#define PCIE_IRN_PM_TO_ACK            BIT(9)
+>>> +#define PCIE_IRN_PM_TURNOFF_ACK            BIT(10)
+>>> +#define PCIE_IRN_LINK_AUTO_BW_STATUS        BIT(11)
+>>> +#define PCIE_IRN_BW_MGT                BIT(12)
+>>> +#define PCIE_IRN_WAKEUP                BIT(17)
+>>> +#define PCIE_IRN_MSG_LTR            BIT(18)
+>>> +#define PCIE_IRN_SYS_INT            BIT(28)
+>>> +#define PCIE_IRN_SYS_ERR_RC            BIT(29)
+>>> +
+>>> +#define PCIE_IRN_IR_INT    (PCIE_IRN_AER_REPORT | PCIE_IRN_PME | \
+>>> +            PCIE_IRN_RX_VDM_MSG | PCIE_IRN_SYS_ERR_RC | \
+>>> +            PCIE_IRN_PM_TO_ACK | PCIE_IRN_LINK_AUTO_BW_STATUS | \
+>>> +            PCIE_IRN_BW_MGT | PCIE_IRN_MSG_LTR)
+>> I would rename all of the APP register #defines to match the pattern
+>> PCIE_APP_*
+>> That makes it easy to differentiate the PCIe (DBI) registers from the
+>> APP registers.
+>>
+>> [...]
+> Agree.
+>>> +static inline u32 pcie_app_rd(struct intel_pcie_port *lpp, u32 ofs)
+>>> +{
+>>> +    return readl(lpp->app_base + ofs);
+>>> +}
+>>> +
+>>> +static inline void pcie_app_wr(struct intel_pcie_port *lpp, u32 
+>>> val, u32 ofs)
+>>> +{
+>>> +    writel(val, lpp->app_base + ofs);
+>>> +}
+>>> +
+>>> +static void pcie_app_wr_mask(struct intel_pcie_port *lpp,
+>>> +                 u32 mask, u32 val, u32 ofs)
+>>> +{
+>>> +    pcie_update_bits(lpp->app_base, mask, val, ofs);
+>>> +}
+>> do you have plans to support the MIPS SoCs (VRX200, ARX300, XRX350,
+>> XRX550)?
+>> These will need register writes in big endian. in my own experiment [0]
+>> I simply used the regmap interface which will default to little endian
+>> register access but switch to big endian when the devicetree node is
+>> marked with big-endian.
+>>
+>> [...]
+>
+> We can support up to XRX350/XRX500/PRX300 for MIPS SoC since we still
+>
+> sell these products. However, we have no effort to support EOL product
+>
+> such as VRX200 which also makes driver quite complex since the glue
+>
+> logic(reset, clock and endianness). For MIPS based platform, we have
+>
+> endianness control in device tree such as inbound_swap and outbound_swap
+>
+> For VRX200, we have another big concern, that is PCI and PCIe has 
+> coupling
+>
+> for endiannes which makes things very bad.
+>
+> However, if you are interested in supporting VRX200, it is highly 
+> appreciated.
+>
+>>> +static int intel_pcie_bios_map_irq(const struct pci_dev *dev, u8 
+>>> slot, u8 pin)
+>>> +{
+>>> +
+>>> +    struct pcie_port *pp = dev->bus->sysdata;
+>>> +    struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>> +    struct intel_pcie_port *lpp = dev_get_drvdata(pci->dev);
+>>> +    struct device *pdev = lpp->pci->dev;
+>>> +    u32 irq_bit;
+>>> +    int irq;
+>>> +
+>>> +    if (pin == PCI_INTERRUPT_UNKNOWN || pin > PCI_NUM_INTX) {
+>>> +        dev_warn(pdev, "WARNING: dev %s: invalid interrupt pin %d\n",
+>>> +             pci_name(dev), pin);
+>>> +        return -1;
+>>> +    }
+>>> +    irq = of_irq_parse_and_map_pci(dev, slot, pin);
+>>> +    if (!irq) {
+>>> +        dev_err(pdev, "trying to map irq for unknown slot:%d 
+>>> pin:%d\n",
+>>> +            slot, pin);
+>>> +        return -1;
+>>> +    }
+>>> +    /* Pin to irq offset bit position */
+>>> +    irq_bit = BIT(pin + PCIE_INTX_OFFSET);
+>>> +
+>>> +    /* Clear possible pending interrupts first */
+>>> +    pcie_app_wr(lpp, irq_bit, PCIE_IRNCR);
+>>> +
+>>> +    pcie_app_wr_mask(lpp, irq_bit, irq_bit, PCIE_IRNEN);
+>>> +    return irq;
+>>> +}
+>> my interpretation is that there's an interrupt controller embedded into
+>> the APP registers. The integrated interrupt controller takes 5
+>> interrupts and provides the legacy PCI_INTA/B/C/D interrupts as well as
+>> a WAKEUP IRQ. Each of it's own interrupts is tied to one of the parent
+>> interrupts.
+>
+> For MIPS base SoC, there is no interrupt controller for such APP 
+> registers.
+>
+> They are directly connected with centralized PIC(ICU for 
+> VRX200/ARX300, GIC
+>
+> for XRX500/PRX300, IOAPIC for lightning mountain).That is why we don't
+>
+> implement the interrupt controller here.
+>
+>>
+>> my solution (in the experiment on the VRX200 SoC [1]) was to 
+>> implement an
+>> interrupt controller and have it as a child devicetree node. then I used
+>> interrupt-map to route the interrupts to the PCIe interrupt controller.
+>> with that I didn't have to overwrite .map_irq.
+>>
+>> (note that this comment is only related to the PCI_INTx and WAKE
+>> interrupts but not the other interrupt configuration bits, because as
+>> far as I understand the other ones are only related to the controller)
+>>
+>>> +static void intel_pcie_bridge_class_code_setup(struct 
+>>> intel_pcie_port *lpp)
+>>> +{
+>>> +    pcie_rc_cfg_wr_mask(lpp, PCIE_MISC_CTRL_DBI_RO_WR_EN,
+>>> +                PCIE_MISC_CTRL_DBI_RO_WR_EN, PCIE_MISC_CTRL);
+>>> +    pcie_rc_cfg_wr_mask(lpp, 0xffffff00, PCI_CLASS_BRIDGE_PCI << 16,
+>>> +                PCIE_CCRID);
+>>> +    pcie_rc_cfg_wr_mask(lpp, PCIE_MISC_CTRL_DBI_RO_WR_EN, 0,
+>>> +                PCIE_MISC_CTRL);
+>>> +}
+>> in my own experiments I didn't need this - have you confirmed that it's
+>> required? and if it is required: why is that?
+>> if others are curious as well then maybe add the explanation as comment
+>> to the driver
+>>
+>> [...]
+>
+> This is needed. In the old driver, we fixed this by fixup. The 
+> original comment as follows,
+>
+> /*
+>  * The root complex has a hardwired class of PCI_CLASS_NETWORK_OTHER or
+>  * PCI_CLASS_BRIDGE_HOST, when it is operating as a root complex this
+>  * needs to be switched to * PCI_CLASS_BRIDGE_PCI
+>  */
+>
+>>> +static const char *pcie_link_gen_to_str(int gen)
+>>> +{
+>>> +    switch (gen) {
+>>> +    case PCIE_LINK_SPEED_GEN1:
+>>> +        return "2.5";
+>>> +    case PCIE_LINK_SPEED_GEN2:
+>>> +        return "5.0";
+>>> +    case PCIE_LINK_SPEED_GEN3:
+>>> +        return "8.0";
+>>> +    case PCIE_LINK_SPEED_GEN4:
+>>> +        return "16.0";
+>>> +    default:
+>>> +        return "???";
+>>> +    }
+>>> +}
+>> why duplicate PCIE_SPEED2STR from drivers/pci/pci.h?
+>
+> Great! even link_device_setup can be reduced since pcie_get_speed_cap is
+>
+> implementing similar stuff.
+>
+>>
+>>> +static int intel_pcie_ep_rst_init(struct intel_pcie_port *lpp)
+>>> +{
+>>> +    struct device *dev = lpp->pci->dev;
+>>> +    int ret = 0;
+>>> +
+>>> +    lpp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+>>> +    if (IS_ERR(lpp->reset_gpio)) {
+>>> +        ret = PTR_ERR(lpp->reset_gpio);
+>>> +        if (ret != -EPROBE_DEFER)
+>>> +            dev_err(dev, "failed to request PCIe GPIO: %d\n", ret);
+>>> +        return ret;
+>>> +    }
+>>> +    /* Make initial reset last for 100ms */
+>>> +    msleep(100);
+>> why is there lpp->rst_interval when you hardcode 100ms here?
+>
+> There are different purpose. rst_interval is purely for asserted reset 
+> pulse.
+>
+> Here 100ms is to make sure the initial state keeps at least 100ms, 
+> then we
+>
+> can reset.
+>
+>>
+>> [...]
+>>> +static int intel_pcie_setup_irq(struct intel_pcie_port *lpp)
+>>> +{
+>>> +    struct device *dev = lpp->pci->dev;
+>>> +    struct platform_device *pdev;
+>>> +    char *irq_name;
+>>> +    int irq, ret;
+>>> +
+>>> +    pdev = to_platform_device(dev);
+>>> +    irq = platform_get_irq(pdev, 0);
+>>> +    if (irq < 0) {
+>>> +        dev_err(dev, "missing sys integrated irq resource\n");
+>>> +        return irq;
+>>> +    }
+>>> +
+>>> +    irq_name = devm_kasprintf(dev, GFP_KERNEL, "pcie_misc%d", 
+>>> lpp->id);
+>>> +    if (!irq_name) {
+>>> +        dev_err(dev, "failed to alloc irq name\n");
+>>> +        return -ENOMEM;
+>> you are only requesting one IRQ line for the whole driver. personally
+>> I would drop the custom irq_name and pass NULL to devm_request_irq
+>> because that will then fall-back to auto-generating an IRQ name based
+>> on the devicetree node. I assume it's the same for ACPI but I haven't
+>> tried that yet.
+>
+> Not sure I understand what you mean.  As you know from the code, we 
+> have lpp->id which means
+>
+> we have multiple instances of Root Complex(1,2,3,4,8), so we need this 
+> for identification.
+>
+> this irq in old product called ir(integrated interrupt or misc 
+> interrupt).
+>
+>>
+>>> +static void intel_pcie_disable_clks(struct intel_pcie_port *lpp)
+>>> +{
+>>> +    clk_disable_unprepare(lpp->core_clk);
+>>> +}
+>>> +
+>>> +static int intel_pcie_enable_clks(struct intel_pcie_port *lpp)
+>>> +{
+>>> +    int ret = clk_prepare_enable(lpp->core_clk);
+>>> +
+>>> +    if (ret)
+>>> +        dev_err(lpp->pci->dev, "Core clock enable failed: %d\n", ret);
+>>> +
+>>> +    return ret;
+>>> +}
+>> you have some functions (using these two as an example) which are only
+>> used once. they add some boilerplate and (in my opinion) make the code
+>> harder to read.
+>
+> Yes. If we plan to support old MIPS SoC, we have a lot of clocks. The
+>
+> code is from old code. We can remove this wrapper for new SoC. Later we
+>
+> can add them back.
+>
+>>
+>>> +static int intel_pcie_get_resources(struct platform_device *pdev)
+>>> +{
+>>> +    struct intel_pcie_port *lpp;
+>>> +    struct device *dev;
+>>> +    int ret;
+>>> +
+>>> +    lpp = platform_get_drvdata(pdev);
+>>> +    dev = lpp->pci->dev;
+>>> +
+>>> +    lpp->core_clk = devm_clk_get(dev, NULL);
+>>> +    if (IS_ERR(lpp->core_clk)) {
+>>> +        ret = PTR_ERR(lpp->core_clk);
+>>> +        if (ret != -EPROBE_DEFER)
+>>> +            dev_err(dev, "failed to get clks: %d\n", ret);
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    lpp->core_rst = devm_reset_control_get(dev, NULL);
+>>> +    if (IS_ERR(lpp->core_rst)) {
+>>> +        ret = PTR_ERR(lpp->core_rst);
+>>> +        if (ret != -EPROBE_DEFER)
+>>> +            dev_err(dev, "failed to get resets: %d\n", ret);
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    ret = device_property_match_string(dev, "device_type", "pci");
+>>> +    if (ret) {
+>>> +        dev_err(dev, "failed to find pci device type: %d\n", ret);
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    if (device_property_read_u32(dev, "intel,rst-interval",
+>>> +                     &lpp->rst_interval))
+>>> +        lpp->rst_interval = RST_INTRVL_DFT_MS;
+>>> +
+>>> +    if (device_property_read_u32(dev, "max-link-speed", 
+>>> &lpp->link_gen))
+>>> +        lpp->link_gen = 0; /* Fallback to auto */
+>>> +
+>>> +    lpp->app_base = devm_platform_ioremap_resource(pdev, 2);
+>> I suggest using platform_get_resource_byname(pdev, "app") because
+>> pcie-designware uses named resources for the "config" space already
+>>
+>> that said, devm_platform_ioremap_resource_byname would be a great
+>> addition in my opinion ;)
+> Agree.
+>>
+>>> +    if (IS_ERR(lpp->app_base))
+>>> +        return PTR_ERR(lpp->app_base);
+>>> +
+>>> +    ret = intel_pcie_ep_rst_init(lpp);
+>>> +    if (ret)
+>>> +        return ret;
+>>> +
+>>> +    lpp->phy = devm_phy_get(dev, "phy");
+>> I suggest to use "pcie" as phy-name, otherwise the binding looks odd:
+>>    phys = <&pcie0_phy>;
+>>    phy-names = "phy";
+>> versus:
+>>    phys = <&pcie0_phy>;
+>>    phy-names = "pcie";
+> Agree.
+>>> +static ssize_t
+>>> +pcie_link_status_show(struct device *dev, struct device_attribute 
+>>> *attr,
+>>> +              char *buf)
+>>> +{
+>>> +    u32 reg, width, gen;
+>>> +    struct intel_pcie_port *lpp;
+>>> +
+>>> +    lpp = dev_get_drvdata(dev);
+>>> +
+>>> +    reg = pcie_rc_cfg_rd(lpp, PCIE_LCTLSTS);
+>>> +    width = FIELD_GET(PCIE_LCTLSTS_NEGOTIATED_LINK_WIDTH, reg);
+>>> +    gen = FIELD_GET(PCIE_LCTLSTS_LINK_SPEED, reg);
+>>> +    if (gen > lpp->max_speed)
+>>> +        return -EINVAL;
+>>> +
+>>> +    return sprintf(buf, "Port %2u Width x%u Speed %s GT/s\n", lpp->id,
+>>> +               width, pcie_link_gen_to_str(gen));
+>>> +}
+>>> +static DEVICE_ATTR_RO(pcie_link_status);
+>> "lspci -vv | grep LnkSta" already shows the link speed and width.
+>> why do you need this?
+>
+> In most embedded package, lspci from busybox only showed deviceid and 
+> vendor id.
+>
+> They don't install lspci utilities.
+>
+>>> +static ssize_t pcie_speed_store(struct device *dev,
+>>> +                struct device_attribute *attr,
+>>> +                const char *buf, size_t len)
+>>> +{
+>>> +    struct intel_pcie_port *lpp;
+>>> +    unsigned long val;
+>>> +    int ret;
+>>> +
+>>> +    lpp = dev_get_drvdata(dev);
+>>> +
+>>> +    ret = kstrtoul(buf, 10, &val);
+>>> +    if (ret)
+>>> +        return ret;
+>>> +
+>>> +    if (val > lpp->max_speed)
+>>> +        return -EINVAL;
+>>> +
+>>> +    lpp->link_gen = val;
+>>> +    intel_pcie_max_speed_setup(lpp);
+>>> +    intel_pcie_speed_change_disable(lpp);
+>>> +    intel_pcie_speed_change_enable(lpp);
+>>> +
+>>> +    return len;
+>>> +}
+>>> +static DEVICE_ATTR_WO(pcie_speed);
+>> this is already configurable via devicetree, why do you need this?
+> On the fly change as I mentioned in the beginning.
+>>
+>>> +/*
+>>> + * Link width change on the fly is not always successful.
+>>> + * It also depends on the partner.
+>>> + */
+>>> +static ssize_t pcie_width_store(struct device *dev,
+>>> +                struct device_attribute *attr,
+>>> +                const char *buf, size_t len)
+>>> +{
+>>> +    struct intel_pcie_port *lpp;
+>>> +    unsigned long val;
+>>> +
+>>> +    lpp = dev_get_drvdata(dev);
+>>> +
+>>> +    if (kstrtoul(buf, 10, &val))
+>>> +        return -EINVAL;
+>>> +
+>>> +    if (val > lpp->max_width)
+>>> +        return -EINVAL;
+>>> +
+>>> +    lpp->lanes = val;
+>>> +    intel_pcie_max_link_width_setup(lpp);
+>>> +
+>>> +    return len;
+>>> +}
+>>> +static DEVICE_ATTR_WO(pcie_width);
+>> is it needed because of a bug somewhere? who do you expect to use this
+>> sysfs attribute and when (which condition) do you expect people to use
+>> this?
+>>
+>> [...]
+> On the fly change as I mentioned in the beginning.
+>>> +static void __intel_pcie_remove(struct intel_pcie_port *lpp)
+>>> +{
+>>> +    pcie_rc_cfg_wr_mask(lpp, PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER,
+>>> +                0, PCI_COMMAND);
+>> I expect logic like this to be part of the PCI subsystem in Linux.
+>> why is this needed?
+>>
+>> [...]
+>
+> bind/unbind case we use this. For extreme cases, we use unbind and 
+> bind to reset
+>
+> PCI instead of rebooting.
+>
+>>> +int intel_pcie_msi_init(struct pcie_port *pp)
+>>> +{
+>>> +    struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>> +
+>>> +    dev_dbg(pci->dev, "MSI is handled in x86 arch\n");
+>> I would rephrase this to "MSI is handled by a separate MSI interrupt
+>> controller"
+>> on the VRX200 SoC there's also a MSI interrupt controller and it seems
+>> that "x86" has this as well (even though it might be two different MSI
+>> IRQ IP blocks).
+>>
+>> [...]
+>
+> Agree. For X86/64, MSI is handled by X86 arch. We don't need to
+>
+> implement another MSI controller separately.
+>
+> For MIPS based SoC, we don't use synopsys MSI controller. The MSI still
+>
+> connects with central interrupt controller with MSI decoding (we can 
+> name it
+>
+> as MSI controller)
+>
+>>> +static int intel_pcie_probe(struct platform_device *pdev)
+>>> +{
+>>> +    struct device *dev = &pdev->dev;
+>>> +    const struct intel_pcie_soc *data;
+>>> +    struct intel_pcie_port *lpp;
+>>> +    struct pcie_port *pp;
+>>> +    struct dw_pcie *pci;
+>>> +    int ret;
+>>> +
+>>> +    lpp = devm_kzalloc(dev, sizeof(*lpp), GFP_KERNEL);
+>>> +    if (!lpp)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
+>>> +    if (!pci)
+>>> +        return -ENOMEM;
+>> other drivers have a "struct dw_pcie    pci" struct member (I assume
+>> that it's to prevent memory fragmentation). why not do the same here
+>> and embed it into struct intel_pcie_port?
+> Dilip should explain this
+Almost all the drivers are following the same way. I don't see any issue 
+in this way.
+Please help me with more description if you see an issue here.
+
+struct qcom_pcie {
+     struct dw_pcie *pci;
+Ref: 
+https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-qcom.c
+
+struct armada8k_pcie {
+     struct dw_pcie *pci;
+Ref: 
+https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-armada8k.c
+
+struct artpec6_pcie {
+     struct dw_pcie        *pci;
+Ref: 
+https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-artpec6.c
+
+struct kirin_pcie {
+     struct dw_pcie    *pci;
+Ref: 
+https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-kirin.c
+
+struct spear13xx_pcie {
+     struct dw_pcie        *pci;
+Ref: 
+https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-spear13xx.c
+
+Regards,
+
+Dilip
+>>
+>>> +    platform_set_drvdata(pdev, lpp);
+>>> +    lpp->pci = pci;
+>>> +    pci->dev = dev;
+>>> +    pp = &pci->pp;
+>>> +
+>>> +    ret = device_property_read_u32(dev, "linux,pci-domain", &lpp->id);
+>>> +    if (ret) {
+>>> +        dev_err(dev, "failed to get domain id, errno %d\n", ret);
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    pci->dbi_base = devm_platform_ioremap_resource(pdev, 0);
+>>> +    if (IS_ERR(pci->dbi_base))
+>>> +        return PTR_ERR(pci->dbi_base);
+>>> +
+>> as stated above I would use the _byname variant
+> Agree.
+>>
+>>
+>> Martin
+>>
+>>
+>> [0] 
+>> https://github.com/xdarklight/linux/blob/lantiq-pcie-driver-next-20190727/drivers/pci/controller/dwc/pcie-lantiq.c
+>> [1] 
+>> https://github.com/xdarklight/linux/blob/lantiq-pcie-driver-next-20190727/Documentation/devicetree/bindings/pci/lantiq%2Cdw-pcie.yaml
