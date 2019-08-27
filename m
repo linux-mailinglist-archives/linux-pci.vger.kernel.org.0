@@ -2,98 +2,332 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AD7609EAFF
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2019 16:29:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 237F99EB72
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2019 16:48:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbfH0O3B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Aug 2019 10:29:01 -0400
-Received: from mga17.intel.com ([192.55.52.151]:58420 "EHLO mga17.intel.com"
+        id S1726333AbfH0Ose (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Aug 2019 10:48:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:46172 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726522AbfH0O3B (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:29:01 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 07:29:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,437,1559545200"; 
-   d="scan'208";a="331836540"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 27 Aug 2019 07:28:56 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1i2cSt-0004w9-C4; Tue, 27 Aug 2019 17:28:55 +0300
-Date:   Tue, 27 Aug 2019 17:28:55 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>,
-        eswara.kota@linux.intel.com, cheol.yong.kim@intel.com,
-        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
-        hch@infradead.org, jingoohan1@gmail.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
-Message-ID: <20190827142855.GG2680@smile.fi.intel.com>
-References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
- <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
- <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com>
- <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
+        id S1725920AbfH0Ose (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 27 Aug 2019 10:48:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CAF2337;
+        Tue, 27 Aug 2019 07:48:33 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6957B3F59C;
+        Tue, 27 Aug 2019 07:48:32 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 15:48:31 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     christophe leroy <christophe.leroy@c-s.fr>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Roy Zang <roy.zang@nxp.com>,
+        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for
+ ls1088a and ls2088a
+Message-ID: <20190827144830.GN14582@e119886-lin.cambridge.arm.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-8-xiaowei.bao@nxp.com>
+ <20190823142756.GI14582@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB32990473D4AD65354B5B2235F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <89c90732-5e42-f87e-73b1-8d615355afc4@c-s.fr>
+ <AM5PR04MB3299EBADE7BC04C3465B7DB7F5A60@AM5PR04MB3299.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM5PR04MB3299EBADE7BC04C3465B7DB7F5A60@AM5PR04MB3299.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 11:15:48PM +0200, Martin Blumenstingl wrote:
-> On Mon, Aug 26, 2019 at 5:31 AM Chuan Hua, Lei
-> <chuanhua.lei@linux.intel.com> wrote:
-
-> > As I mentioned, VRX200 was a very old PCIe Gen1.1 product. In our latest
-> > SoC Lightning
-> >
-> > Mountain, we are using synopsys controller 5.20/5.50a. We support
-> > Gen2(XRX350/550),
-> >
-> > Gen3(PRX300) and GEN4(X86 based SoC). We also supported dual lane and
-> > single lane.
-> >
-> > Some of the above registers are needed to control FTS, link width and
-> > link speed.
-> only now I noticed that I didn't explain why I was asking whether all
-> these registers are needed
-> my understanding of the DWC PCIe controller driver "library" is that:
-> - all functionality which is provided by the DesignWare PCIe core
-> should be added to drivers/pci/controller/dwc/pcie-designware*
-> - functionality which is built on top/around the DWC PCIe core should
-> be added to <vendor specific driver>
+On Sun, Aug 25, 2019 at 03:07:32AM +0000, Xiaowei Bao wrote:
 > 
-> the link width and link speed settings (I don't know about "FTS")
-> don't seem Intel/Lantiq controller specific to me
-> so the register setup for these bits should be moved to
-> drivers/pci/controller/dwc/pcie-designware*
+> 
+> > -----Original Message-----
+> > From: christophe leroy <christophe.leroy@c-s.fr>
+> > Sent: 2019年8月24日 14:45
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>; Andrew Murray
+> > <andrew.murray@arm.com>
+> > Cc: mark.rutland@arm.com; Roy Zang <roy.zang@nxp.com>;
+> > lorenzo.pieralisi@arm.co; arnd@arndb.de; devicetree@vger.kernel.org;
+> > gregkh@linuxfoundation.org; linuxppc-dev@lists.ozlabs.org;
+> > linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; kishon@ti.com; M.h.
+> > Lian <minghuan.lian@nxp.com>; robh+dt@kernel.org;
+> > gustavo.pimentel@synopsys.com; jingoohan1@gmail.com;
+> > bhelgaas@google.com; Leo Li <leoyang.li@nxp.com>; shawnguo@kernel.org;
+> > Mingkai Hu <mingkai.hu@nxp.com>; linux-arm-kernel@lists.infradead.org
+> > Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for
+> > ls1088a and ls2088a
+> > 
+> > 
+> > 
+> > Le 24/08/2019 à 02:18, Xiaowei Bao a écrit :
+> > >
+> > >
+> > >> -----Original Message-----
+> > >> From: Andrew Murray <andrew.murray@arm.com>
+> > >> Sent: 2019年8月23日 22:28
+> > >> To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > >> Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> > >> shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
+> > >> lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org;
+> > M.h.
+> > >> Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+> > >> Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+> > >> gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+> > >> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > >> linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
+> > >> Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support
+> > >> for ls1088a and ls2088a
+> > >>
+> > >> On Thu, Aug 22, 2019 at 07:22:40PM +0800, Xiaowei Bao wrote:
+> > >>> Add PCIe EP mode support for ls1088a and ls2088a, there are some
+> > >>> difference between LS1 and LS2 platform, so refactor the code of the
+> > >>> EP driver.
+> > >>>
+> > >>> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > >>> ---
+> > >>> v2:
+> > >>>   - New mechanism for layerscape EP driver.
+> > >>
+> > >> Was there a v1 of this patch?
+> > >
+> > > Yes, but I don't know how to comments, ^_^
+> > 
+> > As far as I can see, in the previous version of the series
+> > (https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatch
+> > work.ozlabs.org%2Fproject%2Flinuxppc-dev%2Flist%2F%3Fseries%3D125315
+> > %26state%3D*&amp;data=02%7C01%7Cxiaowei.bao%40nxp.com%7C1befe9
+> > a67c8046f9535e08d7285eaab6%7C686ea1d3bc2b4c6fa92cd99c5c301635%
+> > 7C0%7C0%7C637022259387139020&amp;sdata=p4wbycd04Z7qRUfAoZtwc
+> > UP7pR%2FuA3%2FjVcWMz6YyQVQ%3D&amp;reserved=0),
+> > the 8/10 was something completely different, and I can't find any other patch
+> > in the series that could have been the v1 of this patch.
+> 
+> Thanks, I will correct it to v1 in next version patch.
 
-I think it may be done this way. We have already example with stmmac
-(DWC network card IP) driver which split in similar way.
+I think you numbered it correctly (so please leave it as v2, referring to
+the patch series revision) - I got confused trying to find a previous
+version of this patch.
 
-> > We can support up to XRX350/XRX500/PRX300 for MIPS SoC since we still
-> > sell these products.
-> OK, I understand this.
-> switching to regmap will give you two benefits:
-> - big endian registers writes (without additional code) on the MIPS SoCs
-> - you can drop the pcie_app_* helper functions and use
-> regmap_{read,write,update_bits} instead
+Perhaps in the future when new patches are introduced in a series you can
+indicate that in the description patch revision history (e.g. introduced
+in v2).
 
-Actually one more, i.e. dump of the registers by request via debugfs, which
-I found very helpful.
+Thanks,
 
--- 
-With Best Regards,
-Andy Shevchenko
+Andrew Murray 
 
-
+> 
+> > 
+> > Christophe
+> > 
+> > >
+> > >>
+> > >>>
+> > >>>   drivers/pci/controller/dwc/pci-layerscape-ep.c | 76
+> > >>> ++++++++++++++++++++------
+> > >>>   1 file changed, 58 insertions(+), 18 deletions(-)
+> > >>>
+> > >>> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > >>> b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > >>> index 7ca5fe8..2a66f07 100644
+> > >>> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > >>> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > >>> @@ -20,27 +20,29 @@
+> > >>>
+> > >>>   #define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
+> > >>>
+> > >>> -struct ls_pcie_ep {
+> > >>> -	struct dw_pcie		*pci;
+> > >>> -	struct pci_epc_features	*ls_epc;
+> > >>> +#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> > >>> +
+> > >>> +struct ls_pcie_ep_drvdata {
+> > >>> +	u32				func_offset;
+> > >>> +	const struct dw_pcie_ep_ops	*ops;
+> > >>> +	const struct dw_pcie_ops	*dw_pcie_ops;
+> > >>>   };
+> > >>>
+> > >>> -#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> > >>> +struct ls_pcie_ep {
+> > >>> +	struct dw_pcie			*pci;
+> > >>> +	struct pci_epc_features		*ls_epc;
+> > >>> +	const struct ls_pcie_ep_drvdata *drvdata; };
+> > >>>
+> > >>>   static int ls_pcie_establish_link(struct dw_pcie *pci)  {
+> > >>>   	return 0;
+> > >>>   }
+> > >>>
+> > >>> -static const struct dw_pcie_ops ls_pcie_ep_ops = {
+> > >>> +static const struct dw_pcie_ops dw_ls_pcie_ep_ops = {
+> > >>>   	.start_link = ls_pcie_establish_link,  };
+> > >>>
+> > >>> -static const struct of_device_id ls_pcie_ep_of_match[] = {
+> > >>> -	{ .compatible = "fsl,ls-pcie-ep",},
+> > >>> -	{ },
+> > >>> -};
+> > >>> -
+> > >>>   static const struct pci_epc_features*
+> > >>> ls_pcie_ep_get_features(struct dw_pcie_ep *ep)  { @@ -82,10 +84,44
+> > >>> @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > >>>   	}
+> > >>>   }
+> > >>>
+> > >>> -static const struct dw_pcie_ep_ops pcie_ep_ops = {
+> > >>> +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
+> > >>> +						u8 func_no)
+> > >>> +{
+> > >>> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > >>> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+> > >>> +	u8 header_type;
+> > >>> +
+> > >>> +	header_type = ioread8(pci->dbi_base + PCI_HEADER_TYPE);
+> > >>> +
+> > >>> +	if (header_type & (1 << 7))
+> > >>> +		return pcie->drvdata->func_offset * func_no;
+> > >>> +	else
+> > >>> +		return 0;
+> > >>
+> > >> It looks like there isn't a PCI define for multi function, the
+> > >> nearest I could find was PCI_HEADER_TYPE_MULTIDEVICE in
+> > >> hotplug/ibmphp.h. A comment above the test might be helpful to explain
+> > the test.
+> > >
+> > > Yes, I have not find the PCI_HEADER_TYPE_MULTIDEVICE define. OK, I
+> > > will add The comments in next version patch.
+> > >
+> > >>
+> > >> As the ls_pcie_ep_drvdata structures are static, the unset
+> > >> .func_offset will be initialised to 0, so you could just drop the test above.
+> > >
+> > > OK, thanks
+> > >
+> > >>
+> > >> However something to the effect of the following may help spot
+> > >> misconfiguration:
+> > >>
+> > >> WARN_ON(func_no && !pcie->drvdata->func_offset); return
+> > >> pcie->drvdata->func_offset * func_no;
+> > >
+> > > Thanks a lot, this looks better.
+> > >
+> > >>
+> > >> The WARN is probably quite useful as if you are attempting to use
+> > >> non-zero functions and func_offset isn't set - then things may appear
+> > >> to work normally but actually will break horribly.
+> > >
+> > > got it, thanks.
+> > >
+> > >>
+> > >> Thanks,
+> > >>
+> > >> Andrew Murray
+> > >>
+> > >>> +}
+> > >>> +
+> > >>> +static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
+> > >>>   	.ep_init = ls_pcie_ep_init,
+> > >>>   	.raise_irq = ls_pcie_ep_raise_irq,
+> > >>>   	.get_features = ls_pcie_ep_get_features,
+> > >>> +	.func_conf_select = ls_pcie_ep_func_conf_select, };
+> > >>> +
+> > >>> +static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
+> > >>> +	.ops = &ls_pcie_ep_ops,
+> > >>> +	.dw_pcie_ops = &dw_ls_pcie_ep_ops, };
+> > >>> +
+> > >>> +static const struct ls_pcie_ep_drvdata ls2_ep_drvdata = {
+> > >>> +	.func_offset = 0x20000,
+> > >>> +	.ops = &ls_pcie_ep_ops,
+> > >>> +	.dw_pcie_ops = &dw_ls_pcie_ep_ops, };
+> > >>> +
+> > >>> +static const struct of_device_id ls_pcie_ep_of_match[] = {
+> > >>> +	{ .compatible = "fsl,ls1046a-pcie-ep", .data = &ls1_ep_drvdata },
+> > >>> +	{ .compatible = "fsl,ls1088a-pcie-ep", .data = &ls2_ep_drvdata },
+> > >>> +	{ .compatible = "fsl,ls2088a-pcie-ep", .data = &ls2_ep_drvdata },
+> > >>> +	{ },
+> > >>>   };
+> > >>>
+> > >>>   static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie, @@ -98,7
+> > >>> +134,7 @@ static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
+> > >>>   	int ret;
+> > >>>
+> > >>>   	ep = &pci->ep;
+> > >>> -	ep->ops = &pcie_ep_ops;
+> > >>> +	ep->ops = pcie->drvdata->ops;
+> > >>>
+> > >>>   	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > >> "addr_space");
+> > >>>   	if (!res)
+> > >>> @@ -137,14 +173,11 @@ static int __init ls_pcie_ep_probe(struct
+> > >> platform_device *pdev)
+> > >>>   	if (!ls_epc)
+> > >>>   		return -ENOMEM;
+> > >>>
+> > >>> -	dbi_base = platform_get_resource_byname(pdev,
+> > IORESOURCE_MEM,
+> > >> "regs");
+> > >>> -	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> > >>> -	if (IS_ERR(pci->dbi_base))
+> > >>> -		return PTR_ERR(pci->dbi_base);
+> > >>> +	pcie->drvdata = of_device_get_match_data(dev);
+> > >>>
+> > >>> -	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+> > >>>   	pci->dev = dev;
+> > >>> -	pci->ops = &ls_pcie_ep_ops;
+> > >>> +	pci->ops = pcie->drvdata->dw_pcie_ops;
+> > >>> +
+> > >>>   	pcie->pci = pci;
+> > >>>
+> > >>>   	ls_epc->linkup_notifier = false,
+> > >>> @@ -152,6 +185,13 @@ static int __init ls_pcie_ep_probe(struct
+> > >>> platform_device *pdev)
+> > >>>
+> > >>>   	pcie->ls_epc = ls_epc;
+> > >>>
+> > >>> +	dbi_base = platform_get_resource_byname(pdev,
+> > IORESOURCE_MEM,
+> > >> "regs");
+> > >>> +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> > >>> +	if (IS_ERR(pci->dbi_base))
+> > >>> +		return PTR_ERR(pci->dbi_base);
+> > >>> +
+> > >>> +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+> > >>> +
+> > >>>   	platform_set_drvdata(pdev, pcie);
+> > >>>
+> > >>>   	ret = ls_add_pcie_ep(pcie, pdev);
+> > >>> --
+> > >>> 2.9.5
+> > >>>
+> > 
+> > ---
+> > L'absence de virus dans ce courrier électronique a été vérifiée par le logiciel
+> > antivirus Avast.
+> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.
+> > avast.com%2Fantivirus&amp;data=02%7C01%7Cxiaowei.bao%40nxp.com%7
+> > C1befe9a67c8046f9535e08d7285eaab6%7C686ea1d3bc2b4c6fa92cd99c5c3
+> > 01635%7C0%7C0%7C637022259387139020&amp;sdata=JAYds7X%2FHVxgtrg
+> > e%2F%2FvnP84zdb2yReXcctQUiSLC11I%3D&amp;reserved=0
+> 
