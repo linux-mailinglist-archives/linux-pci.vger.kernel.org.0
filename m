@@ -2,77 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 207D79F635
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 00:33:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC8D39F648
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 00:39:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726178AbfH0Wc6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Aug 2019 18:32:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59908 "EHLO mail.kernel.org"
+        id S1725997AbfH0Wjv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Aug 2019 18:39:51 -0400
+Received: from mga02.intel.com ([134.134.136.20]:60493 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbfH0Wc5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 27 Aug 2019 18:32:57 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D726120856;
-        Tue, 27 Aug 2019 22:32:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566945176;
-        bh=1+QNJKUgz+gea1zCCXAK/Hc/T4SGAhK43TGzjR48Lmk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iZn1gGeISV7sMLyJAWPA3zeSgGFzMulVtOlCichsCyw2q3fdgawfyEsHjr4KL65bz
-         wCm7gNW2nm5lFa3R90WX//Grb6qYufDlmR7iFbjWqtbOy7Cpn7x3nErLKRZxDcbq/o
-         yCwTXt4Awd8wYq48Pu5CdmDCAOnwdhW8w0TQDmvc=
-Date:   Tue, 27 Aug 2019 17:32:54 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
+        id S1725989AbfH0Wju (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 27 Aug 2019 18:39:50 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 15:39:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,438,1559545200"; 
+   d="scan'208";a="192395592"
+Received: from skuppusw-desk.jf.intel.com (HELO skuppusw-desk.amr.corp.intel.com) ([10.54.74.33])
+  by orsmga002.jf.intel.com with ESMTP; 27 Aug 2019 15:39:50 -0700
+Date:   Tue, 27 Aug 2019 15:36:53 -0700
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
 To:     Denis Efremov <efremov@linux.com>
-Cc:     Lukas Wunner <lukas@wunner.de>,
-        sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/4] Simplify PCIe hotplug indicator control
-Message-ID: <20190827223254.GC9987@google.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] PCI: pciehp: Switch LED indicators with a single
+ write
+Message-ID: <20190827223653.GD28404@skuppusw-desk.amr.corp.intel.com>
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
 References: <20190819160643.27998-1-efremov@linux.com>
- <2f4c857e-a7cc-58da-8be5-cba581c56d9f@linux.com>
+ <20190819160643.27998-3-efremov@linux.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2f4c857e-a7cc-58da-8be5-cba581c56d9f@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190819160643.27998-3-efremov@linux.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 03:16:43PM +0300, Denis Efremov wrote:
-> On 8/19/19 7:06 PM, Denis Efremov wrote:
-> > PCIe defines two optional hotplug indicators: a Power indicator and an
-> > Attention indicator. Both are controlled by the same register, and each
-> > can be on, off or blinking. The current interfaces
-> > (pciehp_green_led_{on,off,blink}() and pciehp_set_attention_status()) are
-> > non-uniform and require two register writes in many cases where we could
-> > do one.
-> > 
-> > This patchset introduces the new function pciehp_set_indicators(). It
-> > allows one to set two indicators with a single register write. All
-> > calls to previous interfaces (pciehp_green_led_* and
-> > pciehp_set_attention_status()) are replaced with a new one. Thus,
-> > the amount of duplicated code for setting indicators is reduced.
-> > 
-> > Changes in v3:
-> >   - Changed pciehp_set_indicators() to work with existing
-> >     PCI_EXP_SLTCTL_* macros
-> >   - Reworked the inputs validation in pciehp_set_indicators()
-> >   - Removed pciehp_set_attention_status() and pciehp_green_led_*()
-> >     completely
-> > 
-> > Denis Efremov (4):
-> >   PCI: pciehp: Add pciehp_set_indicators() to jointly set LED indicators
-> >   PCI: pciehp: Switch LED indicators with a single write
-> >   PCI: pciehp: Remove pciehp_set_attention_status()
-> >   PCI: pciehp: Remove pciehp_green_led_{on,off,blink}()
+On Mon, Aug 19, 2019 at 07:06:41PM +0300, Denis Efremov wrote:
+> This patch replaces all consecutive switches of power and attention
+> indicators with pciehp_set_indicators() call. Thus, performing only
+> single write to a register.
 > 
-> Lukas, Sathyanarayanan, sorry that I've dropped most of yours "Reviewed-by".
-> The changes in the last 2 patches were significant.
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/pci/hotplug/pciehp_ctrl.c | 19 ++++++++++---------
+>  drivers/pci/hotplug/pciehp_hpc.c  |  4 ++--
+>  2 files changed, 12 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+> index 631ced0ab28a..232f7bfcfce9 100644
+> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+> @@ -42,8 +42,8 @@ static void set_slot_off(struct controller *ctrl)
+>  		msleep(1000);
+>  	}
+>  
+> -	pciehp_green_led_off(ctrl);
+> -	pciehp_set_attention_status(ctrl, 1);
+> +	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
+> +			      PCI_EXP_SLTCTL_ATTN_IND_ON);
+>  }
+>  
+>  /**
+> @@ -90,8 +90,8 @@ static int board_added(struct controller *ctrl)
+>  		}
+>  	}
+>  
+> -	pciehp_green_led_on(ctrl);
+> -	pciehp_set_attention_status(ctrl, 0);
+> +	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_ON,
+> +			      PCI_EXP_SLTCTL_ATTN_IND_OFF);
+>  	return 0;
+>  
+>  err_exit:
+> @@ -172,8 +172,8 @@ void pciehp_handle_button_press(struct controller *ctrl)
+>  				  slot_name(ctrl));
+>  		}
+>  		/* blink green LED and turn off amber */
+> -		pciehp_green_led_blink(ctrl);
+> -		pciehp_set_attention_status(ctrl, 0);
+> +		pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_BLINK,
+> +				      PCI_EXP_SLTCTL_ATTN_IND_OFF);
+>  		schedule_delayed_work(&ctrl->button_work, 5 * HZ);
+>  		break;
+>  	case BLINKINGOFF_STATE:
+> @@ -187,12 +187,13 @@ void pciehp_handle_button_press(struct controller *ctrl)
+>  		cancel_delayed_work(&ctrl->button_work);
+>  		if (ctrl->state == BLINKINGOFF_STATE) {
+>  			ctrl->state = ON_STATE;
+> -			pciehp_green_led_on(ctrl);
+> +			pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_ON,
+> +					      PCI_EXP_SLTCTL_ATTN_IND_OFF);
+>  		} else {
+>  			ctrl->state = OFF_STATE;
+> -			pciehp_green_led_off(ctrl);
+> +			pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
+> +					      PCI_EXP_SLTCTL_ATTN_IND_OFF);
+>  		}
+> -		pciehp_set_attention_status(ctrl, 0);
+>  		ctrl_info(ctrl, "Slot(%s): Action canceled due to button press\n",
+>  			  slot_name(ctrl));
+>  		break;
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index 5474b9854a7f..aa4252d11be2 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -667,8 +667,8 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
+>  	if ((events & PCI_EXP_SLTSTA_PFD) && !ctrl->power_fault_detected) {
+>  		ctrl->power_fault_detected = 1;
+>  		ctrl_err(ctrl, "Slot(%s): Power fault\n", slot_name(ctrl));
+> -		pciehp_set_attention_status(ctrl, 1);
+> -		pciehp_green_led_off(ctrl);
+> +		pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
+> +				      PCI_EXP_SLTCTL_ATTN_IND_ON);
+>  	}
+>  
+>  	/*
+> -- 
+> 2.21.0
+> 
 
-Anybody want to review these?
+-- 
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
