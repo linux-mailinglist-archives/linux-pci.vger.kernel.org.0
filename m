@@ -2,77 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 037DA9F0CB
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2019 18:54:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9275C9F0F4
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2019 18:57:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfH0Qx7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Aug 2019 12:53:59 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46209 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbfH0Qx7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Aug 2019 12:53:59 -0400
-Received: by mail-oi1-f194.google.com with SMTP id t24so15472099oij.13;
-        Tue, 27 Aug 2019 09:53:58 -0700 (PDT)
+        id S1730276AbfH0Q5p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Aug 2019 12:57:45 -0400
+Received: from mail-ot1-f53.google.com ([209.85.210.53]:39938 "EHLO
+        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729861AbfH0Q5o (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Aug 2019 12:57:44 -0400
+Received: by mail-ot1-f53.google.com with SMTP id c34so19356323otb.7;
+        Tue, 27 Aug 2019 09:57:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/cWnSwSnizJoPptrMCxgyU0EGIA7FE8H3qBw7ZxkmMM=;
-        b=FhlNulBcTRdzxP+A9ueXa99BmB0nmJD5lSOK6EK+cncRmhFudE7AjO4Z3STk6vKnPX
-         wxDodSPIu3UX3Y9It+fkP1m5eqcw4IFlCT1MqGZI5ttem7yoX9LzTFBNMKYsbBrLS2j2
-         cPhG8AYCq+tpSLBCES05HakH02jU++uee3/KGFF3JoR27PR8plF2p+X4eETGfOOrces/
-         9NhDQsz4FDqmFH7KCw/OO1rnzPWw/xSsCDhojVmWHIV+U8B5KrdJa53sqbDUzV3m1Tz8
-         jo0z4DIAhY9tlb+FXYHAVD34XmYvgL4b6Yn5pJHFMofGy4lQMfVkWJHqhVrevZ0SFFcL
-         /DdQ==
-X-Gm-Message-State: APjAAAUCFnMXgiHIXZNt+qyFfL6QMInDN/TBtiNCLstiwSACDtB4DXfM
-        Kvffv2V4OVETpuIP4oD+Ng==
-X-Google-Smtp-Source: APXvYqy/YlUNjEPP5QW/TvNLxzezivmnRm+zWoT/6RxwryHO+9wlLtBLicefYrG9cQNpNDQFaShGug==
-X-Received: by 2002:aca:5f46:: with SMTP id t67mr16825090oib.42.1566924838416;
-        Tue, 27 Aug 2019 09:53:58 -0700 (PDT)
+        bh=e34XC5omSPkrZmlMoY94//8TGLk1xQwBY2owDQuZ6pU=;
+        b=WwFCAQL6xjcL39RzeYzWqPIkDGliOto7KQQN3P8HoSxGt4xKGlLjDj/qX9aw9T4caL
+         clKrk4pvHI1lqayrX8mr7r2dTpDvRVNOVo7QMdMrnJRwhr2m1L+4oZkdtTSmZ2/WvEI5
+         HhyaNU5+TMEnUXepuztWb+0d4hkvd3meD96gF1+Vn68y0pDjG9lLSDXFO9joGqw/HHEM
+         FFPgbNLb++Otdv5uZarVGNvobir3V1sFx1YOiy+jbfqtvzu089npXG1M9yQxU0/iChez
+         DkO1OyJ1vHfjlVprW9/27Vr7LxaWj3U/360nDtSfNoBBP9VVkPGTpvBWxD3dFjLbVxpY
+         RwFw==
+X-Gm-Message-State: APjAAAW0JeZc8da7rZNiGNcq+xIoA1Y/HpKhEbKlJkpZYYeX09B7sEnA
+        j6goAMXc9Be/DEE1QKvl2w==
+X-Google-Smtp-Source: APXvYqxfJvReAk8gOPh8OBq+8npMo5SEDQRFFNpZg0W2AGejCsNo+idFunecxm0L/VujnvtLXPrsJQ==
+X-Received: by 2002:a9d:200c:: with SMTP id n12mr21465382ota.334.1566925063917;
+        Tue, 27 Aug 2019 09:57:43 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 44sm5772961otf.30.2019.08.27.09.53.57
+        by smtp.gmail.com with ESMTPSA id w10sm5452551otm.68.2019.08.27.09.57.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 09:53:57 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 11:53:57 -0500
+        Tue, 27 Aug 2019 09:57:43 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 11:57:42 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Wilczynski <kw@linux.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] PCI: Fix misspelled words.
-Message-ID: <20190827165357.GA31146@bogus>
-References: <20190819115306.27338-1-kw@linux.com>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: Re: [PATCHv2 1/4] dt-bindings: PCI: designware: Remove the num-lanes
+ from  Required properties
+Message-ID: <20190827165742.GA5083@bogus>
+References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
+ <20190820073022.24217-2-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190819115306.27338-1-kw@linux.com>
+In-Reply-To: <20190820073022.24217-2-Zhiqiang.Hou@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 19 Aug 2019 13:53:06 +0200, Krzysztof Wilczynski wrote:
-> Fix misspelled words in include/linux/pci.h, drivers/pci/Kconfig,
-> and in the documentation for Freescale i.MX6 and Marvell Armada 7K/8K
-> PCIe interfaces.  No functional change intended.
+On Tue, 20 Aug 2019 07:28:43 +0000, "Z.q. Hou" wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> Related commit 96291d565550 ("PCI: Fix typos and whitespace errors").
+> The num-lanes is not a mandatory property, e.g. on FSL
+> Layerscape SoCs, the PCIe link training is completed
+> automatically base on the selected SerDes protocol, it
+> doesn't need the num-lanes to set-up the link width.
 > 
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+> It is previously in both Required and Optional properties,
+> let's remove it from the Required properties.
+> 
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > ---
->  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 2 +-
->  Documentation/devicetree/bindings/pci/pci-armada8k.txt   | 2 +-
->  drivers/pci/Kconfig                                      | 2 +-
->  include/linux/pci.h                                      | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
+> V2:
+>  - Reworded the change log and subject.
+>  - Fixed a typo in subject.
+> 
+>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
+>  1 file changed, 1 deletion(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
