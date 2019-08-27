@@ -2,152 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B9FE59F65D
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 00:47:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EEF69F667
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 00:50:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbfH0Wr2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Aug 2019 18:47:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35624 "EHLO mail.kernel.org"
+        id S1726077AbfH0Wut (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Aug 2019 18:50:49 -0400
+Received: from mga05.intel.com ([192.55.52.43]:54470 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbfH0Wr2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 27 Aug 2019 18:47:28 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A2FC2186A;
-        Tue, 27 Aug 2019 22:47:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566946047;
-        bh=itvqkewzveFrjSvCl9gGUtqgFDrAF1y3svpBSbEfo7M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WIAZKpQjyKofyN6B53VGwPWp32/uvIpW9iPZKlBHFOQdpduhzMfn7hhGQ335f1N4J
-         8nY3/eapqzcQb4pp4RHye3T3rhbqEhZCYnIcGe6jkqHO4vuXjphhPKgYHPI8iz7J1A
-         ciGfJ2KnoryR08PNBoM2+MUHrlxhqHv/nM96lIRs=
-Date:   Tue, 27 Aug 2019 17:47:25 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof Wilczynski <kw@linux.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/PCI: Add missing log facility and move to use pr_
- macros in pcbios.c
-Message-ID: <20190827224725.GD9987@google.com>
-References: <20190825182557.23260-1-kw@linux.com>
+        id S1726044AbfH0Wut (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 27 Aug 2019 18:50:49 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 15:50:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,439,1559545200"; 
+   d="scan'208";a="331971435"
+Received: from skuppusw-desk.jf.intel.com (HELO skuppusw-desk.amr.corp.intel.com) ([10.54.74.33])
+  by orsmga004.jf.intel.com with ESMTP; 27 Aug 2019 15:50:48 -0700
+Date:   Tue, 27 Aug 2019 15:47:51 -0700
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] PCI: pciehp: Remove pciehp_set_attention_status()
+Message-ID: <20190827224751.GE28404@skuppusw-desk.amr.corp.intel.com>
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+References: <20190819160643.27998-1-efremov@linux.com>
+ <20190819160643.27998-4-efremov@linux.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190825182557.23260-1-kw@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190819160643.27998-4-efremov@linux.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Aug 25, 2019 at 08:25:57PM +0200, Krzysztof Wilczynski wrote:
-> Make the log facility used to print warnings to be KERN_WARNING
-> explicitly, rather than rely on the current (or default) value
-> of the MESSAGE_LOGLEVEL_DEFAULT set in Kconfig.  This will make
-> all the warnings in the arch/x86/pci/pcbios.c to be printed
-> consistently at the same log facility.
-
-This is slightly confusing.  There are only two messages that didn't
-supply a log level, so the avoidance of MESSAGE_LOGLEVEL_DEFAULT
-applies to those.
-
-The rest already supplied a log level, so converting printk(KERN_INFO)
-to pr_info() is purely simplification.
-
-> Replace printk(KERN_<level> ...) with corresponding pr_ macros,
-> while adding the missing log facility.
-
-Might be worth doing this as well:
-
-  #define pr_fmt(fmt) "PCI: " fmt
-
-and removing the "PCI: " prefix from the messages.  This would change
-the "bios32_service" output slightly, but I think the change would be
-a good one.
-
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-> ---
->  arch/x86/pci/pcbios.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
+On Mon, Aug 19, 2019 at 07:06:42PM +0300, Denis Efremov wrote:
+> Remove pciehp_set_attention_status() and use pciehp_set_indicators()
+> instead, since the code is mostly the same.
 > 
-> diff --git a/arch/x86/pci/pcbios.c b/arch/x86/pci/pcbios.c
-> index 9c97d814125e..0c3673f50bce 100644
-> --- a/arch/x86/pci/pcbios.c
-> +++ b/arch/x86/pci/pcbios.c
-> @@ -47,7 +47,7 @@ static inline void set_bios_x(void)
->  	pcibios_enabled = 1;
->  	set_memory_x(PAGE_OFFSET + BIOS_BEGIN, (BIOS_END - BIOS_BEGIN) >> PAGE_SHIFT);
->  	if (__supported_pte_mask & _PAGE_NX)
-> -		printk(KERN_INFO "PCI: PCI BIOS area is rw and x. Use pci=nobios if you want it NX.\n");
-> +		pr_info("PCI: PCI BIOS area is rw and x. Use pci=nobios if you want it NX.\n");
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/pci/hotplug/pciehp.h      |  1 -
+>  drivers/pci/hotplug/pciehp_core.c |  7 ++++++-
+>  drivers/pci/hotplug/pciehp_hpc.c  | 25 -------------------------
+>  include/uapi/linux/pci_regs.h     |  1 +
+>  4 files changed, 7 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+> index 0e272bf3deb4..acda513f37d7 100644
+> --- a/drivers/pci/hotplug/pciehp.h
+> +++ b/drivers/pci/hotplug/pciehp.h
+> @@ -168,7 +168,6 @@ void pciehp_power_off_slot(struct controller *ctrl);
+>  void pciehp_get_power_status(struct controller *ctrl, u8 *status);
+>  
+>  void pciehp_set_indicators(struct controller *ctrl, int pwr, int attn);
+> -void pciehp_set_attention_status(struct controller *ctrl, u8 status);
+>  void pciehp_get_latch_status(struct controller *ctrl, u8 *status);
+>  int pciehp_query_power_fault(struct controller *ctrl);
+>  void pciehp_green_led_on(struct controller *ctrl);
+> diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+> index 6ad0d86762cb..7a86ea90ed94 100644
+> --- a/drivers/pci/hotplug/pciehp_core.c
+> +++ b/drivers/pci/hotplug/pciehp_core.c
+> @@ -102,8 +102,13 @@ static int set_attention_status(struct hotplug_slot *hotplug_slot, u8 status)
+>  	struct controller *ctrl = to_ctrl(hotplug_slot);
+>  	struct pci_dev *pdev = ctrl->pcie->port;
+>  
+> +	if (status)
+> +		status <<= PCI_EXP_SLTCTL_ATTN_IND_SHIFT;
+> +	else
+> +		status = PCI_EXP_SLTCTL_ATTN_IND_OFF;
+> +
+>  	pci_config_pm_runtime_get(pdev);
+> -	pciehp_set_attention_status(ctrl, status);
+> +	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_NONE, status);
+>  	pci_config_pm_runtime_put(pdev);
+>  	return 0;
+>  }
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index aa4252d11be2..8f894fd5cd27 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -418,31 +418,6 @@ int pciehp_set_raw_indicator_status(struct hotplug_slot *hotplug_slot,
+>  	return 0;
 >  }
 >  
->  /*
-> @@ -111,10 +111,10 @@ static unsigned long __init bios32_service(unsigned long service)
->  		case 0:
->  			return address + entry;
->  		case 0x80:	/* Not present */
-> -			printk(KERN_WARNING "bios32_service(0x%lx): not present\n", service);
-> +			pr_warn("bios32_service(0x%lx): not present\n", service);
->  			return 0;
->  		default: /* Shouldn't happen */
-> -			printk(KERN_WARNING "bios32_service(0x%lx): returned 0x%x -- BIOS bug!\n",
-> +			pr_warn("bios32_service(0x%lx): returned 0x%x -- BIOS bug!\n",
->  				service, return_code);
->  			return 0;
->  	}
-> @@ -163,11 +163,11 @@ static int __init check_pcibios(void)
->  		DBG("PCI: BIOS probe returned s=%02x hw=%02x ver=%02x.%02x l=%02x\n",
->  			status, hw_mech, major_ver, minor_ver, pcibios_last_bus);
->  		if (status || signature != PCI_SIGNATURE) {
-> -			printk (KERN_ERR "PCI: BIOS BUG #%x[%08x] found\n",
-> +			pr_err("PCI: BIOS BUG #%x[%08x] found\n",
->  				status, signature);
->  			return 0;
->  		}
-> -		printk(KERN_INFO "PCI: PCI BIOS revision %x.%02x entry at 0x%lx, last bus=%d\n",
-> +		pr_info("PCI: PCI BIOS revision %x.%02x entry at 0x%lx, last bus=%d\n",
->  			major_ver, minor_ver, pcibios_entry, pcibios_last_bus);
->  #ifdef CONFIG_PCI_DIRECT
->  		if (!(hw_mech & PCIBIOS_HW_TYPE1))
-> @@ -316,13 +316,13 @@ static const struct pci_raw_ops *__init pci_find_bios(void)
->  		if (sum != 0)
->  			continue;
->  		if (check->fields.revision != 0) {
-> -			printk("PCI: unsupported BIOS32 revision %d at 0x%p\n",
-> +			pr_warn("PCI: unsupported BIOS32 revision %d at 0x%p\n",
->  				check->fields.revision, check);
->  			continue;
->  		}
->  		DBG("PCI: BIOS32 Service Directory structure at 0x%p\n", check);
->  		if (check->fields.entry >= 0x100000) {
-> -			printk("PCI: BIOS32 entry (0x%p) in high memory, "
-> +			pr_warn("PCI: BIOS32 entry (0x%p) in high memory, "
->  					"cannot use.\n", check);
->  			return NULL;
->  		} else {
-> @@ -386,7 +386,7 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
->  		: "memory");
->  	DBG("OK  ret=%d, size=%d, map=%x\n", ret, opt.size, map);
->  	if (ret & 0xff00)
-> -		printk(KERN_ERR "PCI: Error %02x when fetching IRQ routing table.\n", (ret >> 8) & 0xff);
-> +		pr_err("PCI: Error %02x when fetching IRQ routing table.\n", (ret >> 8) & 0xff);
->  	else if (opt.size) {
->  		rt = kmalloc(sizeof(struct irq_routing_table) + opt.size, GFP_KERNEL);
->  		if (rt) {
-> @@ -394,7 +394,7 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
->  			rt->size = opt.size + sizeof(struct irq_routing_table);
->  			rt->exclusive_irqs = map;
->  			memcpy(rt->slots, (void *) page, opt.size);
-> -			printk(KERN_INFO "PCI: Using BIOS Interrupt Routing Table\n");
-> +			pr_info("PCI: Using BIOS Interrupt Routing Table\n");
->  		}
->  	}
->  	free_page(page);
+> -void pciehp_set_attention_status(struct controller *ctrl, u8 value)
+> -{
+> -	u16 slot_cmd;
+> -
+> -	if (!ATTN_LED(ctrl))
+> -		return;
+> -
+> -	switch (value) {
+> -	case 0:		/* turn off */
+> -		slot_cmd = PCI_EXP_SLTCTL_ATTN_IND_OFF;
+> -		break;
+> -	case 1:		/* turn on */
+> -		slot_cmd = PCI_EXP_SLTCTL_ATTN_IND_ON;
+> -		break;
+> -	case 2:		/* turn blink */
+> -		slot_cmd = PCI_EXP_SLTCTL_ATTN_IND_BLINK;
+> -		break;
+> -	default:
+> -		return;
+> -	}
+> -	pcie_write_cmd_nowait(ctrl, slot_cmd, PCI_EXP_SLTCTL_AIC);
+> -	ctrl_dbg(ctrl, "%s: SLOTCTRL %x write cmd %x\n", __func__,
+> -		 pci_pcie_cap(ctrl->pcie->port) + PCI_EXP_SLTCTL, slot_cmd);
+> -}
+> -
+>  void pciehp_set_indicators(struct controller *ctrl, int pwr, int attn)
+>  {
+>  	u16 cmd = 0, mask = 0;
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index 291788b58f3a..27d9f5bc1812 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -591,6 +591,7 @@
+>  #define  PCI_EXP_SLTCTL_CCIE	0x0010	/* Command Completed Interrupt Enable */
+>  #define  PCI_EXP_SLTCTL_HPIE	0x0020	/* Hot-Plug Interrupt Enable */
+>  #define  PCI_EXP_SLTCTL_AIC	0x00c0	/* Attention Indicator Control */
+> +#define  PCI_EXP_SLTCTL_ATTN_IND_SHIFT 6      /* Attention Indicator shift */
+>  #define  PCI_EXP_SLTCTL_ATTN_IND_NONE  0x0    /* Attention Indicator noop */
+>  #define  PCI_EXP_SLTCTL_ATTN_IND_ON    0x0040 /* Attention Indicator on */
+>  #define  PCI_EXP_SLTCTL_ATTN_IND_BLINK 0x0080 /* Attention Indicator blinking */
 > -- 
-> 2.22.1
+> 2.21.0
 > 
+
+-- 
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
