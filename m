@@ -2,364 +2,476 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D00C9E4FD
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2019 11:56:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BF6A9E8C1
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2019 15:10:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbfH0J40 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Aug 2019 05:56:26 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33289 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfH0J40 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Aug 2019 05:56:26 -0400
-Received: by mail-wr1-f67.google.com with SMTP id u16so18150179wrr.0;
-        Tue, 27 Aug 2019 02:56:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OiTD+C0jKmBXLHpY3VxZvB1F+ChWta1qB/CxkBMhNkY=;
-        b=KHHzIlhlrei4kgkQpJgwcvxAE2lvUNDbzTRg0UctPEZu1zDp5FKnsDtBBm/xOebDnY
-         M70svbqMMtavSuc3/H31VBfXV/ZBMD+mU5Xmas4sTfYrR/ry7/mlmOTlkP9sMa2HKILw
-         x83vfoxLjbDWfPEyo2FHEs1M1XVVIdYr156/H8sYw10kCparHt703mrs3dKZBCj4pMGV
-         4ITkgZmuUY3Q/inUWcFqYq9rMy4UXm/7TBdB7ycIu3uehDbWrFT0Ppkmb44WvP+cYl7L
-         VrglzMQWXqdMHlklytaTSz6WJ35EyeMtoF8ZFcECPmdHbn3gI3bMF6P03p37RKsD3EFr
-         6L3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=OiTD+C0jKmBXLHpY3VxZvB1F+ChWta1qB/CxkBMhNkY=;
-        b=RpmGdA6ABDyoSoXYvfkLM9bQU3HPTRn3Sg8VJVLNk3x8Xe9uMdLdD2sO5vHGvMnnSu
-         DK5twrbODkxckdDRU3pc7qatxRs9j0FCtl1E9CoG6ZNSefu7wIhvjTqZp5h6znrKRMs9
-         6EFj+RhvM0XceLSpP1boxSUnICcGutMJQ/7QgRNMym8jMyY9QIfFovpW4pPvcxtZ6nOv
-         UNaVg0qCqd2mXwkwAbV04+Ixl6vZSI4zAnynG3RnESPYKwjOOJsI2QRivAJJcP+CPOR8
-         kss1W7d7ngRaz0QCW/zAeXpy1r1EwfcTfy0FK1W/NLl+1otSeKyuk2+SnwkXOArO7Ha9
-         MAxg==
-X-Gm-Message-State: APjAAAUDzuNWW27mmVeLkxf+1bFft4wD7r/k73H3ADBVy3l4JfipQez7
-        6hJbDVhpT3SiPd/sNOmiclo=
-X-Google-Smtp-Source: APXvYqwIEeQo0gHLA94adXJnQ1AUpN6TWQpVTentcQdM01vpoobXFJXNXZK/mc59hq8WkLoHQOYyrA==
-X-Received: by 2002:a5d:4950:: with SMTP id r16mr27576584wrs.347.1566899781916;
-        Tue, 27 Aug 2019 02:56:21 -0700 (PDT)
-Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id v12sm15713723wrr.87.2019.08.27.02.56.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 02:56:21 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: Move PCI Express ASPM function prototypes and definitions to pci.h
-Date:   Tue, 27 Aug 2019 11:56:20 +0200
-Message-Id: <20190827095620.11213-1-kw@linux.com>
-X-Mailer: git-send-email 2.22.1
+        id S1730063AbfH0NKy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Aug 2019 09:10:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:44274 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730104AbfH0NKw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:10:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E8166360;
+        Tue, 27 Aug 2019 06:10:50 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C5513F246;
+        Tue, 27 Aug 2019 06:10:50 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 14:10:48 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2 01/10] PCI: designware-ep: Add multiple PFs support
+ for DWC
+Message-ID: <20190827131048.GK14582@e119886-lin.cambridge.arm.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190823132526.GD14582@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB32997FFCD08E2C34541D2F9BF5A40@AM5PR04MB3299.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM5PR04MB32997FFCD08E2C34541D2F9BF5A40@AM5PR04MB3299.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Merge PCI Express ASPM function prototypes and definitions
-from include/linux/pci-aspm.h into include/linux/pci.h.
+On Fri, Aug 23, 2019 at 11:50:20PM +0000, Xiaowei Bao wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Andrew Murray <andrew.murray@arm.com>
+> > Sent: 2019年8月23日 21:25
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
+> > lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org; M.h.
+> > Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+> > Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+> > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
+> > Subject: Re: [PATCH v2 01/10] PCI: designware-ep: Add multiple PFs support
+> > for DWC
+> > 
+> > On Thu, Aug 22, 2019 at 07:22:33PM +0800, Xiaowei Bao wrote:
+> > > Add multiple PFs support for DWC, different PF have different config
+> > > space we use pf-offset property which get from the DTS to access the
+> > > different pF config space.
+> > 
+> > It looks like you're missing a --cover-letter again.
+> > 
+> > >
+> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > ---
+> > > v2:
+> > >  - Remove duplicate redundant code.
+> > >  - Reimplement the PF config space access way.
+> > >
+> > >  drivers/pci/controller/dwc/pcie-designware-ep.c | 122
+> > ++++++++++++++++--------
+> > >  drivers/pci/controller/dwc/pcie-designware.c    |  59 ++++++++----
+> > >  drivers/pci/controller/dwc/pcie-designware.h    |  11 ++-
+> > >  3 files changed, 134 insertions(+), 58 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > index 2bf5a35..3e2b740 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > @@ -19,12 +19,17 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
+> > >  	pci_epc_linkup(epc);
+> > >  }
+> > >
+> > > -static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno
+> > bar,
+> > > -				   int flags)
+> > > +static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, u8 func_no,
+> > > +				   enum pci_barno bar, int flags)
+> > >  {
+> > >  	u32 reg;
+> > > +	unsigned int func_offset = 0;
+> > > +	struct dw_pcie_ep *ep = &pci->ep;
+> > >
+> > > -	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
+> > > +	if (ep->ops->func_conf_select)
+> > > +		func_offset = ep->ops->func_conf_select(ep, func_no);
+> > > +
+> > > +	reg = func_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
+> > 
+> > This pattern of checking if func_conf_select exists and using it to get an offset
+> > is repeated a lot throughout this file. You could move this functionality into a
+> > new function (similar to dw_pcie_read_dbi etc). Or perhaps a new variant of
+> > dw_pcie_writel_ should be created that writes takes a func_no argument.
+> 
+> Thanks for your comments, I thought about this method before, but there is a issue
+> about the method of access the different func config space, due to our platform use
+> this method that different func have different offset from dbi_base to access the
+> different config space, but others platform maybe use the way that write a register
+> to implement different func config space access, so I think reserve a callback function 
 
-Function prototypes to move are pci_disable_link_state(),
-pci_disable_link_state_locked(), pcie_no_aspm() and
-pcie_aspm_support_enabled(), and definitions to move
-are PCIE_LINK_STATE_L0S, PCIE_LINK_STATE_L1 and
-PCIE_LINK_STATE_CLKPM.
+My point here was really to move out duplicated code to its own small function.
+I wasn't making any comment about (removing) the callback, just that the test and
+callback could be in one function.
 
-There are no functional changes.
+> to different platform to implement the own method, my point is that, if use register 
+> method they can implement the code in this function and return offset is 0, if use 
+> offset method, they can return the offset value which can be use by dw_pcie_ep driver.
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
----
- drivers/acpi/pci_root.c                       |  1 -
- drivers/char/xillybus/xillybus_pcie.c         |  1 -
- drivers/net/ethernet/intel/e1000e/e1000.h     |  1 -
- drivers/net/ethernet/jme.c                    |  1 -
- drivers/net/ethernet/realtek/r8169_main.c     |  1 -
- drivers/net/wireless/ath/ath5k/pci.c          |  1 -
- .../net/wireless/intel/iwlegacy/3945-mac.c    |  1 -
- .../net/wireless/intel/iwlegacy/4965-mac.c    |  1 -
- .../net/wireless/intel/iwlwifi/pcie/trans.c   |  1 -
- drivers/pci/pci-acpi.c                        |  1 -
- drivers/pci/pcie/aspm.c                       |  1 -
- drivers/pci/quirks.c                          |  1 -
- drivers/scsi/aacraid/linit.c                  |  1 -
- drivers/scsi/hpsa.c                           |  1 -
- drivers/scsi/mpt3sas/mpt3sas_scsih.c          |  1 -
- include/linux/pci-aspm.h                      | 36 -------------------
- include/linux/pci.h                           | 18 ++++++++++
- 17 files changed, 18 insertions(+), 51 deletions(-)
- delete mode 100644 include/linux/pci-aspm.h
+By the way, I haven't looked to see how many of the dw_pcie_write_xxx functions
+would benefit from a func_no argument - if there were many calls to
+dw_pcie_write_xxx that all used a reg value originated from func_conf_select
+then an approach similar to the implementation of dw_pcie_write_dbi could
+probably be justified (i.e. rather than change the value of reg) for writing to
+functions.
 
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index 314a187ed572..d1e666ef3fcc 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -15,7 +15,6 @@
- #include <linux/pm_runtime.h>
- #include <linux/pci.h>
- #include <linux/pci-acpi.h>
--#include <linux/pci-aspm.h>
- #include <linux/dmar.h>
- #include <linux/acpi.h>
- #include <linux/slab.h>
-diff --git a/drivers/char/xillybus/xillybus_pcie.c b/drivers/char/xillybus/xillybus_pcie.c
-index 02c15952b103..18b0c392bc93 100644
---- a/drivers/char/xillybus/xillybus_pcie.c
-+++ b/drivers/char/xillybus/xillybus_pcie.c
-@@ -9,7 +9,6 @@
- 
- #include <linux/module.h>
- #include <linux/pci.h>
--#include <linux/pci-aspm.h>
- #include <linux/slab.h>
- #include "xillybus.h"
- 
-diff --git a/drivers/net/ethernet/intel/e1000e/e1000.h b/drivers/net/ethernet/intel/e1000e/e1000.h
-index 34cd67951aec..6c51b1bad8c4 100644
---- a/drivers/net/ethernet/intel/e1000e/e1000.h
-+++ b/drivers/net/ethernet/intel/e1000e/e1000.h
-@@ -13,7 +13,6 @@
- #include <linux/io.h>
- #include <linux/netdevice.h>
- #include <linux/pci.h>
--#include <linux/pci-aspm.h>
- #include <linux/crc32.h>
- #include <linux/if_vlan.h>
- #include <linux/timecounter.h>
-diff --git a/drivers/net/ethernet/jme.c b/drivers/net/ethernet/jme.c
-index 0b668357db4d..57e8aea98969 100644
---- a/drivers/net/ethernet/jme.c
-+++ b/drivers/net/ethernet/jme.c
-@@ -14,7 +14,6 @@
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/pci.h>
--#include <linux/pci-aspm.h>
- #include <linux/netdevice.h>
- #include <linux/etherdevice.h>
- #include <linux/ethtool.h>
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-index e1dd6ea60d67..a8f373e49505 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -28,7 +28,6 @@
- #include <linux/dma-mapping.h>
- #include <linux/pm_runtime.h>
- #include <linux/prefetch.h>
--#include <linux/pci-aspm.h>
- #include <linux/ipv6.h>
- #include <net/ip6_checksum.h>
- 
-diff --git a/drivers/net/wireless/ath/ath5k/pci.c b/drivers/net/wireless/ath/ath5k/pci.c
-index c6156cc38940..d5ee32ce9eb3 100644
---- a/drivers/net/wireless/ath/ath5k/pci.c
-+++ b/drivers/net/wireless/ath/ath5k/pci.c
-@@ -18,7 +18,6 @@
- 
- #include <linux/nl80211.h>
- #include <linux/pci.h>
--#include <linux/pci-aspm.h>
- #include <linux/etherdevice.h>
- #include <linux/module.h>
- #include "../ath.h"
-diff --git a/drivers/net/wireless/intel/iwlegacy/3945-mac.c b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
-index b82da75a9ae3..4fbcc7fba3cc 100644
---- a/drivers/net/wireless/intel/iwlegacy/3945-mac.c
-+++ b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
-@@ -18,7 +18,6 @@
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/pci.h>
--#include <linux/pci-aspm.h>
- #include <linux/slab.h>
- #include <linux/dma-mapping.h>
- #include <linux/delay.h>
-diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-index fa2c02881939..ffb705b18fb1 100644
---- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-+++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-@@ -18,7 +18,6 @@
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/pci.h>
--#include <linux/pci-aspm.h>
- #include <linux/slab.h>
- #include <linux/dma-mapping.h>
- #include <linux/delay.h>
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-index f5df5b370d78..4c308e33ee21 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-@@ -62,7 +62,6 @@
-  *
-  *****************************************************************************/
- #include <linux/pci.h>
--#include <linux/pci-aspm.h>
- #include <linux/interrupt.h>
- #include <linux/debugfs.h>
- #include <linux/sched.h>
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index 45049f558860..dd520fe927db 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -14,7 +14,6 @@
- #include <linux/msi.h>
- #include <linux/pci_hotplug.h>
- #include <linux/module.h>
--#include <linux/pci-aspm.h>
- #include <linux/pci-acpi.h>
- #include <linux/pm_runtime.h>
- #include <linux/pm_qos.h>
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index e44af7f4d37f..ad6259ec51a6 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -18,7 +18,6 @@
- #include <linux/slab.h>
- #include <linux/jiffies.h>
- #include <linux/delay.h>
--#include <linux/pci-aspm.h>
- #include "../pci.h"
- 
- #ifdef MODULE_PARAM_PREFIX
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 208aacf39329..9ac1a7564c9e 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -20,7 +20,6 @@
- #include <linux/delay.h>
- #include <linux/acpi.h>
- #include <linux/dmi.h>
--#include <linux/pci-aspm.h>
- #include <linux/ioport.h>
- #include <linux/sched.h>
- #include <linux/ktime.h>
-diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
-index 644f7f5c61a2..4a858789e6c5 100644
---- a/drivers/scsi/aacraid/linit.c
-+++ b/drivers/scsi/aacraid/linit.c
-@@ -27,7 +27,6 @@
- #include <linux/moduleparam.h>
- #include <linux/pci.h>
- #include <linux/aer.h>
--#include <linux/pci-aspm.h>
- #include <linux/slab.h>
- #include <linux/mutex.h>
- #include <linux/spinlock.h>
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index 1bb6aada93fa..ac39ed79ccaa 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -21,7 +21,6 @@
- #include <linux/interrupt.h>
- #include <linux/types.h>
- #include <linux/pci.h>
--#include <linux/pci-aspm.h>
- #include <linux/kernel.h>
- #include <linux/slab.h>
- #include <linux/delay.h>
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-index 717ba0845a2a..27fdbc165446 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-@@ -51,7 +51,6 @@
- #include <linux/workqueue.h>
- #include <linux/delay.h>
- #include <linux/pci.h>
--#include <linux/pci-aspm.h>
- #include <linux/interrupt.h>
- #include <linux/aer.h>
- #include <linux/raid_class.h>
-diff --git a/include/linux/pci-aspm.h b/include/linux/pci-aspm.h
-deleted file mode 100644
-index 67064145d76e..000000000000
---- a/include/linux/pci-aspm.h
-+++ /dev/null
-@@ -1,36 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- *	aspm.h
-- *
-- *	PCI Express ASPM defines and function prototypes
-- *
-- *	Copyright (C) 2007 Intel Corp.
-- *		Zhang Yanmin (yanmin.zhang@intel.com)
-- *		Shaohua Li (shaohua.li@intel.com)
-- *
-- *	For more information, please consult the following manuals (look at
-- *	http://www.pcisig.com/ for how to get them):
-- *
-- *	PCI Express Specification
-- */
--
--#ifndef LINUX_ASPM_H
--#define LINUX_ASPM_H
--
--#include <linux/pci.h>
--
--#define PCIE_LINK_STATE_L0S	1
--#define PCIE_LINK_STATE_L1	2
--#define PCIE_LINK_STATE_CLKPM	4
--
--#ifdef CONFIG_PCIEASPM
--int pci_disable_link_state(struct pci_dev *pdev, int state);
--int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
--void pcie_no_aspm(void);
--#else
--static inline int pci_disable_link_state(struct pci_dev *pdev, int state)
--{ return 0; }
--static inline void pcie_no_aspm(void) { }
--#endif
--
--#endif /* LINUX_ASPM_H */
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 9e700d9f9f28..f07f52175606 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -6,12 +6,18 @@
-  *	Copyright 1994, Drew Eckhardt
-  *	Copyright 1997--1999 Martin Mares <mj@ucw.cz>
-  *
-+ *      PCI Express ASPM defines and function prototypes
-+ *      Copyright (c) 2007 Intel Corp.
-+ *              Zhang Yanmin (yanmin.zhang@intel.com)
-+ *              Shaohua Li (shaohua.li@intel.com)
-+ *
-  *	For more information, please consult the following manuals (look at
-  *	http://www.pcisig.com/ for how to get them):
-  *
-  *	PCI BIOS Specification
-  *	PCI Local Bus Specification
-  *	PCI to PCI Bridge Specification
-+ *	PCI Express Specification
-  *	PCI System Design Guide
-  */
- #ifndef LINUX_PCI_H
-@@ -1565,9 +1571,21 @@ extern bool pcie_ports_native;
- #define pcie_ports_native	false
- #endif
- 
-+#define PCIE_LINK_STATE_L0S	1
-+#define PCIE_LINK_STATE_L1	2
-+#define PCIE_LINK_STATE_CLKPM	4
-+
- #ifdef CONFIG_PCIEASPM
-+int pci_disable_link_state(struct pci_dev *pdev, int state);
-+int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
-+void pcie_no_aspm(void);
- bool pcie_aspm_support_enabled(void);
- #else
-+static inline int pci_disable_link_state(struct pci_dev *pdev, int state)
-+{ return 0; }
-+static inline int pci_disable_link_state_locked(struct pci_dev *pdev, int state)
-+{ return 0; }
-+static inline void pcie_no_aspm(void) { }
- static inline bool pcie_aspm_support_enabled(void) { return false; }
- #endif
- 
--- 
-2.22.1
+>  
+> > 
+> > 
+> > >  	dw_pcie_dbi_ro_wr_en(pci);
+> > >  	dw_pcie_writel_dbi2(pci, reg, 0x0);
+> > >  	dw_pcie_writel_dbi(pci, reg, 0x0);
+> > 
+> > 
+> > > @@ -235,7 +257,7 @@ static int dw_pcie_ep_map_addr(struct pci_epc
+> > *epc, u8 func_no,
+> > >  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > >
+> > > -	ret = dw_pcie_ep_outbound_atu(ep, addr, pci_addr, size);
+> > > +	ret = dw_pcie_ep_outbound_atu(ep, func_no, addr, pci_addr, size);
+> > >  	if (ret) {
+> > >  		dev_err(pci->dev, "Failed to enable address\n");
+> > >  		return ret;
+> > > @@ -249,11 +271,15 @@ static int dw_pcie_ep_get_msi(struct pci_epc
+> > *epc, u8 func_no)
+> > >  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > >  	u32 val, reg;
+> > > +	unsigned int func_offset = 0;
+> > > +
+> > > +	if (ep->ops->func_conf_select)
+> > > +		func_offset = ep->ops->func_conf_select(ep, func_no);
+> > >
+> > >  	if (!ep->msi_cap)
+> > >  		return -EINVAL;
+> > >
+> > > -	reg = ep->msi_cap + PCI_MSI_FLAGS;
+> > > +	reg = ep->msi_cap + func_offset + PCI_MSI_FLAGS;
+> > 
+> > This makes me nervous.
+> > 
+> > From a PCI viewpoint, each function has it's own capability structure and
+> > within each function there may exist a MSI capability. Yet what we're doing
+> > here is using dw_pcie_ep_find_capability to get the list of capabilities for
+> > function 0, and then applying offsets from that for subsequent functions. I.e.
+> > we're applying DW specific knowledge to find the correct capability, rather
+> > than following the general PCI approach.
+> > 
+> > I think the above hunk shouldn't be required - but instead
+> > dw_pcie_ep_find_capability is updated to take a func_no parameter.
+> > 
+> > Have I understood this correctly?
+> 
+> Yes, this is a issue, I think the different func maybe have different capability,
+> but the dw_pcie_ep_find_capability function is called by dw_pcie_ep_init 
+> function, we can't add func_no parameter to dw_pcie_ep_find_capability,
 
+Why not?
+
+Given that 'struct dw_pcie' represents a controller - and thus potentially
+multiple functions - then the _find_capability function should be able to
+provide the correct offset for the given function. Surely it needs to know
+which function number? Unless there is some reason why we can assume that all
+functions share the same capability offset.
+
+Also the 'struct dw_pcie_ep' which represents an endpoint controller - this
+has msi_cap and msix_cap fields - given this may be a multifunction device
+what do these fields actually refer to?
+
+Perhaps Jungoo/Gustavo can comment.
+
+
+> I will try to fix it use a new patch, I think move this function to ep_init callback
+> function If better, thanks. 
+> 
+> 
+> > 
+> > >  	val = dw_pcie_readw_dbi(pci, reg);
+> > >  	if (!(val & PCI_MSI_FLAGS_ENABLE))
+> > >  		return -EINVAL;
+> > > @@ -268,11 +294,15 @@ static int dw_pcie_ep_set_msi(struct pci_epc
+> > *epc, u8 func_no, u8 interrupts)
+> > >  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > >  	u32 val, reg;
+> > > +	unsigned int func_offset = 0;
+> > > +
+> > > +	if (ep->ops->func_conf_select)
+> > > +		func_offset = ep->ops->func_conf_select(ep, func_no);
+> > >
+> > >  	if (!ep->msi_cap)
+> > >  		return -EINVAL;
+> > >
+> > > -	reg = ep->msi_cap + PCI_MSI_FLAGS;
+> > > +	reg = ep->msi_cap + func_offset + PCI_MSI_FLAGS;
+> > >  	val = dw_pcie_readw_dbi(pci, reg);
+> > >  	val &= ~PCI_MSI_FLAGS_QMASK;
+> > >  	val |= (interrupts << 1) & PCI_MSI_FLAGS_QMASK; @@ -288,11 +318,15
+> > > @@ static int dw_pcie_ep_get_msix(struct pci_epc *epc, u8 func_no)
+> > >  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > >  	u32 val, reg;
+> > > +	unsigned int func_offset = 0;
+> > > +
+> > > +	if (ep->ops->func_conf_select)
+> > > +		func_offset = ep->ops->func_conf_select(ep, func_no);
+> > >
+> > >  	if (!ep->msix_cap)
+> > >  		return -EINVAL;
+> > >
+> > > -	reg = ep->msix_cap + PCI_MSIX_FLAGS;
+> > > +	reg = ep->msix_cap + func_offset + PCI_MSIX_FLAGS;
+> > 
+> > Same for MSIX.
+> 
+> Yes.
+> 
+> > 
+> > >  	val = dw_pcie_readw_dbi(pci, reg);
+> > >  	if (!(val & PCI_MSIX_FLAGS_ENABLE))
+> > >  		return -EINVAL;
+> > > @@ -307,11 +341,15 @@ static int dw_pcie_ep_set_msix(struct pci_epc
+> > *epc, u8 func_no, u16 interrupts)
+> > >  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > >  	u32 val, reg;
+> > > +	unsigned int func_offset = 0;
+> > > +
+> > > +	if (ep->ops->func_conf_select)
+> > > +		func_offset = ep->ops->func_conf_select(ep, func_no);
+> > >
+> > >  	if (!ep->msix_cap)
+> > >  		return -EINVAL;
+> > >
+> > > -	reg = ep->msix_cap + PCI_MSIX_FLAGS;
+> > > +	reg = ep->msix_cap + func_offset + PCI_MSIX_FLAGS;
+> > >  	val = dw_pcie_readw_dbi(pci, reg);
+> > >  	val &= ~PCI_MSIX_FLAGS_QSIZE;
+> > >  	val |= interrupts;
+> > > @@ -398,29 +436,33 @@ int dw_pcie_ep_raise_msi_irq(struct
+> > dw_pcie_ep *ep, u8 func_no,
+> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > >  	struct pci_epc *epc = ep->epc;
+> > >  	unsigned int aligned_offset;
+> > > +	unsigned int func_offset = 0;
+> > >  	u16 msg_ctrl, msg_data;
+> > >  	u32 msg_addr_lower, msg_addr_upper, reg;
+> > >  	u64 msg_addr;
+> > >  	bool has_upper;
+> > >  	int ret;
+> > >
+> > > +	if (ep->ops->func_conf_select)
+> > > +		func_offset = ep->ops->func_conf_select(ep, func_no);
+> > > +
+> > 
+> > You could probably move this hunk below the test for msi_cap to save some
+> > cycles.
+> 
+> Sorry, I didn't understand the means, please explain it detailly, thanks a lot, ^_^
+
+If you insert the call to func_conf_select *after* the test for
+!msi_cap below - then in the case where msi_cap is NULL then you will
+save some CPU cycles by not bothering to call func_conf_select.
+
+
+> > 
+> > >  	if (!ep->msi_cap)
+> > >  		return -EINVAL;
+> > >
+> > >  	/* Raise MSI per the PCI Local Bus Specification Revision 3.0, 6.8.1. */
+> > > -	reg = ep->msi_cap + PCI_MSI_FLAGS;
+> > > +	reg = ep->msi_cap + func_offset + PCI_MSI_FLAGS;
+> > >  	msg_ctrl = dw_pcie_readw_dbi(pci, reg);
+> > >  	has_upper = !!(msg_ctrl & PCI_MSI_FLAGS_64BIT);
+> > > -	reg = ep->msi_cap + PCI_MSI_ADDRESS_LO;
+> > > +	reg = ep->msi_cap + func_offset + PCI_MSI_ADDRESS_LO;
+> > >  	msg_addr_lower = dw_pcie_readl_dbi(pci, reg);
+> > >  	if (has_upper) {
+> > > -		reg = ep->msi_cap + PCI_MSI_ADDRESS_HI;
+> > > +		reg = ep->msi_cap + func_offset + PCI_MSI_ADDRESS_HI;
+> > >  		msg_addr_upper = dw_pcie_readl_dbi(pci, reg);
+> > > -		reg = ep->msi_cap + PCI_MSI_DATA_64;
+> > > +		reg = ep->msi_cap + func_offset + PCI_MSI_DATA_64;
+> > >  		msg_data = dw_pcie_readw_dbi(pci, reg);
+> > >  	} else {
+> > >  		msg_addr_upper = 0;
+> > > -		reg = ep->msi_cap + PCI_MSI_DATA_32;
+> > > +		reg = ep->msi_cap + func_offset + PCI_MSI_DATA_32;
+> > >  		msg_data = dw_pcie_readw_dbi(pci, reg);
+> > >  	}
+> > >  	aligned_offset = msg_addr_lower & (epc->mem->page_size - 1);
+> > 
+> > 
+> > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c
+> > > b/drivers/pci/controller/dwc/pcie-designware.c
+> > > index 7d25102..305e73d 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > > @@ -158,9 +158,10 @@ static void dw_pcie_writel_ob_unroll(struct
+> > dw_pcie *pci, u32 index, u32 reg,
+> > >  	dw_pcie_writel_atu(pci, offset + reg, val);  }
+> > >
+> > > -static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, int
+> > index,
+> > > -					     int type, u64 cpu_addr,
+> > > -					     u64 pci_addr, u32 size)
+> > > +static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8
+> > func_no,
+> > > +					     int index, int type,
+> > > +					     u64 cpu_addr, u64 pci_addr,
+> > > +					     u32 size)
+> > >  {
+> > >  	u32 retries, val;
+> > >
+> > > @@ -175,7 +176,7 @@ static void
+> > dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, int index,
+> > >  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
+> > >  				 upper_32_bits(pci_addr));
+> > >  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1,
+> > > -				 type);
+> > > +				 type | PCIE_ATU_FUNC_NUM(func_no));
+> > 
+> > Much better :)
+> 
+> Do you mean that use the expression "a? b:c"
+> 
+> > 
+> > >  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
+> > >  				 PCIE_ATU_ENABLE);
+> > >
+> > > @@ -194,8 +195,9 @@ static void
+> > dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, int index,
+> > >  	dev_err(pci->dev, "Outbound iATU is not being enabled\n");  }
+> > >
+> > > -void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
+> > > -			       u64 cpu_addr, u64 pci_addr, u32 size)
+> > > +static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8
+> > func_no,
+> > > +					int index, int type, u64 cpu_addr,
+> > > +					u64 pci_addr, u32 size)
+> > >  {
+> > >  	u32 retries, val;
+> > >
+> > > @@ -203,8 +205,8 @@ void dw_pcie_prog_outbound_atu(struct dw_pcie
+> > *pci, int index, int type,
+> > >  		cpu_addr = pci->ops->cpu_addr_fixup(pci, cpu_addr);
+> > >
+> > >  	if (pci->iatu_unroll_enabled) {
+> > > -		dw_pcie_prog_outbound_atu_unroll(pci, index, type, cpu_addr,
+> > > -						 pci_addr, size);
+> > > +		dw_pcie_prog_outbound_atu_unroll(pci, func_no, index, type,
+> > > +						 cpu_addr, pci_addr, size);
+> > >  		return;
+> > >  	}
+> > >
+> > 
+> > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
+> > > b/drivers/pci/controller/dwc/pcie-designware.h
+> > > index ffed084..a0fdbf7 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > > @@ -71,9 +71,11 @@
+> > >  #define PCIE_ATU_TYPE_IO		0x2
+> > >  #define PCIE_ATU_TYPE_CFG0		0x4
+> > >  #define PCIE_ATU_TYPE_CFG1		0x5
+> > > +#define PCIE_ATU_FUNC_NUM(pf)           (pf << 20)
+> > 
+> > "Macro argument 'pf' may be better as '(pf)' to avoid precedence issues"
+> > 
+> > >  #define PCIE_ATU_CR2			0x908
+> > >  #define PCIE_ATU_ENABLE			BIT(31)
+> > >  #define PCIE_ATU_BAR_MODE_ENABLE	BIT(30)
+> > > +#define PCIE_ATU_FUNC_NUM_MATCH_EN      BIT(19)
+> > >  #define PCIE_ATU_LOWER_BASE		0x90C
+> > >  #define PCIE_ATU_UPPER_BASE		0x910
+> > >  #define PCIE_ATU_LIMIT			0x914
+> > > @@ -197,6 +199,7 @@ struct dw_pcie_ep_ops {
+> > >  	int	(*raise_irq)(struct dw_pcie_ep *ep, u8 func_no,
+> > >  			     enum pci_epc_irq_type type, u16 interrupt_num);
+> > >  	const struct pci_epc_features* (*get_features)(struct dw_pcie_ep
+> > > *ep);
+> > > +	unsigned int (*func_conf_select)(struct dw_pcie_ep *ep, u8 func_no);
+> > 
+> > Given that this function will return an offset, I'm not sure the name you have
+> > is suitable. Something like get_pf_offset or similar is more descriptive.
+> 
+> As above explain, my initial view is that this function can return 0 or offset depends on
+> the platform implement mechanism, so I named it func_conf_select, I think add a
+> comment for this function, like this:
+> /*
+>  * provide a method to implement the method of different func config space access,
+>  * if use offset method, return the offset from dbi_base, if your register method, implement
+>  * the code in this callback function and return 0.
+>  */
+> How about it?
+
+This means that func_conf_select can never (easily) indicate an error to the
+caller as this would change the offset. Where func_conf_select doesn't change
+the offset there probably isn't much else it can do instead (unless it was
+responsible for doing the write as well). So I'm not sure how well this approach
+works.
+
+Thanks,
+
+Andrew Murray
+
+> 
+> > 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > >  };
+> > >
+> > >  struct dw_pcie_ep {
+> > > @@ -265,8 +268,12 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci);
+> > > void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
+> > >  			       int type, u64 cpu_addr, u64 pci_addr,
+> > >  			       u32 size);
+> > > -int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int bar,
+> > > -			     u64 cpu_addr, enum dw_pcie_as_type as_type);
+> > > +void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int
+> > index,
+> > > +				  int type, u64 cpu_addr, u64 pci_addr,
+> > > +				  u32 size);
+> > > +int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> > > +			     int bar, u64 cpu_addr,
+> > > +			     enum dw_pcie_as_type as_type);
+> > >  void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
+> > >  			 enum dw_pcie_region_type type);
+> > >  void dw_pcie_setup(struct dw_pcie *pci);
+> > > --
+> > > 2.9.5
+> > >
