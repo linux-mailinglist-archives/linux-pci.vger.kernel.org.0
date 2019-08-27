@@ -2,69 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 240F99E9E6
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2019 15:49:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD7609EAFF
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2019 16:29:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730021AbfH0NsI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Aug 2019 09:48:08 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37100 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728324AbfH0NsH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Aug 2019 09:48:07 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1i2bpN-0005tS-6V; Tue, 27 Aug 2019 13:48:05 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     bhelgaas@google.com, tiwai@suse.com
-Cc:     linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH 2/2] ALSA: hda: Allow HDA to be runtime suspended when dGPU is not bound
-Date:   Tue, 27 Aug 2019 21:47:56 +0800
-Message-Id: <20190827134756.10807-2-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190827134756.10807-1-kai.heng.feng@canonical.com>
-References: <20190827134756.10807-1-kai.heng.feng@canonical.com>
+        id S1726190AbfH0O3B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Aug 2019 10:29:01 -0400
+Received: from mga17.intel.com ([192.55.52.151]:58420 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726522AbfH0O3B (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 27 Aug 2019 10:29:01 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 07:29:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,437,1559545200"; 
+   d="scan'208";a="331836540"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 27 Aug 2019 07:28:56 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1i2cSt-0004w9-C4; Tue, 27 Aug 2019 17:28:55 +0300
+Date:   Tue, 27 Aug 2019 17:28:55 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>,
+        eswara.kota@linux.intel.com, cheol.yong.kim@intel.com,
+        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
+        hch@infradead.org, jingoohan1@gmail.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
+Message-ID: <20190827142855.GG2680@smile.fi.intel.com>
+References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
+ <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
+ <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com>
+ <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-It's a common practice to let dGPU unbound and use PCI port PM to
-disable its power through _PR3. When the dGPU comes with an HDA
-function, the HDA won't be suspended if the dGPU is unbound, so the dGPU
-power can't be disabled.
+On Mon, Aug 26, 2019 at 11:15:48PM +0200, Martin Blumenstingl wrote:
+> On Mon, Aug 26, 2019 at 5:31 AM Chuan Hua, Lei
+> <chuanhua.lei@linux.intel.com> wrote:
 
-Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
-discrete GPU") only allows HDA to be runtime-suspended once GPU is
-bound, to keep APU's HDA working.
+> > As I mentioned, VRX200 was a very old PCIe Gen1.1 product. In our latest
+> > SoC Lightning
+> >
+> > Mountain, we are using synopsys controller 5.20/5.50a. We support
+> > Gen2(XRX350/550),
+> >
+> > Gen3(PRX300) and GEN4(X86 based SoC). We also supported dual lane and
+> > single lane.
+> >
+> > Some of the above registers are needed to control FTS, link width and
+> > link speed.
+> only now I noticed that I didn't explain why I was asking whether all
+> these registers are needed
+> my understanding of the DWC PCIe controller driver "library" is that:
+> - all functionality which is provided by the DesignWare PCIe core
+> should be added to drivers/pci/controller/dwc/pcie-designware*
+> - functionality which is built on top/around the DWC PCIe core should
+> be added to <vendor specific driver>
+> 
+> the link width and link speed settings (I don't know about "FTS")
+> don't seem Intel/Lantiq controller specific to me
+> so the register setup for these bits should be moved to
+> drivers/pci/controller/dwc/pcie-designware*
 
-However, HDA on dGPU isn't that useful if dGPU is unbound. So let relax
-the runtime suspend requirement for dGPU's HDA function, to save lots of
-power.
+I think it may be done this way. We have already example with stmmac
+(DWC network card IP) driver which split in similar way.
 
-BugLink: https://bugs.launchpad.net/bugs/1840835
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- sound/pci/hda/hda_intel.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> > We can support up to XRX350/XRX500/PRX300 for MIPS SoC since we still
+> > sell these products.
+> OK, I understand this.
+> switching to regmap will give you two benefits:
+> - big endian registers writes (without additional code) on the MIPS SoCs
+> - you can drop the pcie_app_* helper functions and use
+> regmap_{read,write,update_bits} instead
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 99fc0917339b..d4ee070e1a29 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1285,7 +1285,8 @@ static void init_vga_switcheroo(struct azx *chip)
- 		dev_info(chip->card->dev,
- 			 "Handle vga_switcheroo audio client\n");
- 		hda->use_vga_switcheroo = 1;
--		hda->need_eld_notify_link = 1; /* cleared in gpu_bound op */
-+		/* cleared in gpu_bound op */
-+		hda->need_eld_notify_link = !pci_pr3_present(p);
- 		chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
- 		pci_dev_put(p);
- 	}
+Actually one more, i.e. dump of the registers by request via debugfs, which
+I found very helpful.
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
