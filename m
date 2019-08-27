@@ -2,168 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D87C9F6BC
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 01:17:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0891C9F6D3
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 01:24:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726025AbfH0XRO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Aug 2019 19:17:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43140 "EHLO mail.kernel.org"
+        id S1726091AbfH0XY5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Aug 2019 19:24:57 -0400
+Received: from lekensteyn.nl ([178.21.112.251]:39565 "EHLO lekensteyn.nl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725997AbfH0XRN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 27 Aug 2019 19:17:13 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F35DA20856;
-        Tue, 27 Aug 2019 23:17:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566947832;
-        bh=LHYP3wO1EM0CN7MZnuQ9uyPpTSuaC669PEWoJvNcjA4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wp2G22s2JiRw967LPOtC7TV8P1ym933f60GQCuP9jTKdhOqTI6+p5eZAJ0ic5NX6J
-         6mH+po7knLNM01dxN+2SAHO5hLA6asmWU0K7y+bFR6YVV+IX0UL+xFzf9QXIKCKS0E
-         LKK8hS8bnaKMHqrjAQF1xXI9iqvvNL0h0qE3zUUc=
-Date:   Tue, 27 Aug 2019 18:17:10 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof Wilczynski <kw@linux.com>
-Cc:     Scott Murray <scott@spiteful.org>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Lukas Wunner <lukas@wunner.de>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] PCI: hotplug: Remove surplus return from a void function
-Message-ID: <20190827231710.GH9987@google.com>
-References: <20190826095143.21353-1-kw@linux.com>
+        id S1725997AbfH0XY4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 27 Aug 2019 19:24:56 -0400
+X-Greylist: delayed 2697 seconds by postgrey-1.27 at vger.kernel.org; Tue, 27 Aug 2019 19:24:56 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lekensteyn.nl; s=s2048-2015-q1;
+        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date; bh=W755SOjG26JPvvqPajc576xDrzJZD3HASrkXEzOzrLI=;
+        b=MGqMIq0TngzkjMrWN5ZznKdYTGRhaljhOyJFFa+R6hRDSBkhAifGf90vBV7+/zirmtsd3rsBO7SNclUcIx4Ll+F04TZC+iFvDmAoaACRWQHBYBgEZLtyWil+tRQAHg8XJbBxWywM2XkqUw4d9tkv/vzoVzu/uhwNF+mn1UrtZBwxqfo15hEPadoZ5cHaV731KoG5hJUWNqx3k+44s1x3UbPVj0B9O9n05yQtgvFYhx6wZEE7DIb6UomxHiUuML0NEXDEzmHBZLQ1TKArcthzqo5Sg5EAlCehV9qcbpKL+pryg5irvWfM/IcTpr+iChvGGYkX2FQdT2psvHeRGqGU5Q==;
+Received: by lekensteyn.nl with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.84_2)
+        (envelope-from <peter@lekensteyn.nl>)
+        id 1i2k81-0001HF-Ng; Wed, 28 Aug 2019 00:39:54 +0200
+Date:   Tue, 27 Aug 2019 23:39:51 +0100
+From:   Peter Wu <peter@lekensteyn.nl>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Dave Airlie <airlied@redhat.com>
+Subject: Re: [PATCH 1/2] PCI: Add a helper to check Power Resource
+ Requirements _PR3 existence
+Message-ID: <20190827223951.GA27744@al>
+References: <20190827134756.10807-1-kai.heng.feng@canonical.com>
+ <s5hr2567hrd.wl-tiwai@suse.de>
+ <0379E973-651A-442C-AF74-51702388F55D@canonical.com>
+ <20190827221321.GA9987@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190826095143.21353-1-kw@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190827221321.GA9987@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Spam-Score: -0.0 (/)
+X-Spam-Status: No, hits=-0.0 required=5.0 tests=NO_RELAYS=-0.001 autolearn=unavailable autolearn_force=no
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 11:51:43AM +0200, Krzysztof Wilczynski wrote:
-> Remove unnecessary empty return statement at the end of a void
-> function in the following:
+On Tue, Aug 27, 2019 at 05:13:21PM -0500, Bjorn Helgaas wrote:
+> [+cc Peter, Mika, Dave]
 > 
->   - drivers/pci/hotplug/cpci_hotplug_core.c: cleanup_slots()
->   - drivers/pci/hotplug/cpqphp_core.c: pci_print_IRQ_route()
->   - drivers/pci/hotplug/cpqphp_ctrl.c: cpqhp_pushbutton_thread()
->   - drivers/pci/hotplug/cpqphp_ctrl.c: interrupt_event_handler()
->   - drivers/pci/hotplug/cpqphp_nvram.h: compaq_nvram_init()
->   - drivers/pci/hotplug/rpadlpar_core.c: rpadlpar_io_init()
->   - drivers/pci/hotplug/rpaphp_core.c: cleanup_slots()
+> https://lore.kernel.org/r/20190827134756.10807-1-kai.heng.feng@canonical.com
 > 
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+> On Wed, Aug 28, 2019 at 12:58:28AM +0800, Kai-Heng Feng wrote:
+> > at 23:25, Takashi Iwai <tiwai@suse.de> wrote:
+> > > On Tue, 27 Aug 2019 15:47:55 +0200,
+> > > Kai-Heng Feng wrote:
+> > > > A driver may want to know the existence of _PR3, to choose different
+> > > > runtime suspend behavior. A user will be add in next patch.
+> > > > 
+> > > > This is mostly the same as nouveau_pr3_present().
+> > > 
+> > > Then it'd be nice to clean up the nouveau part, too?
+> > 
+> > nouveau_pr3_present() may call pci_d3cold_disable(), and my intention is to
+> > only check the presence of _PR3 (i.e. a dGPU) without touching anything.
+> 
+> It looks like Peter added that code with 279cf3f23870
+> ("drm/nouveau/acpi: use DSM if bridge does not support D3cold").
+> 
+> I don't understand the larger picture, but it is somewhat surprising
+> that nouveau_pr3_present() *looks* like a simple predicate with no
+> side-effects, but in fact it disables the use of D3cold in some cases.
 
-Applied to pci/trivial for v5.4, thanks!
+The reason for disabling _PR3 from that point on is because mixing the
+ACPI firmware code that uses power resources (_PR3) with the legacy
+_DSM/_PS0/_PS3 methods to manage power states could break as that
+combination is unlikely to be supported nor tested by firmware authors.
 
-I squashed the mediatek patch into this since they're both trivial.
+If a user sets /sys/bus/pci/devices/.../d3cold_allowed to 0, then the
+pci_d3cold_disable call ensures that this action is remembered and
+prevents power resources from being used again.
 
-> ---
->  drivers/pci/hotplug/cpci_hotplug_core.c | 1 -
->  drivers/pci/hotplug/cpqphp_core.c       | 1 -
->  drivers/pci/hotplug/cpqphp_ctrl.c       | 4 ----
->  drivers/pci/hotplug/cpqphp_nvram.h      | 5 +----
->  drivers/pci/hotplug/rpadlpar_core.c     | 1 -
->  drivers/pci/hotplug/rpaphp_core.c       | 1 -
->  6 files changed, 1 insertion(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
-> index 603eadf3d965..d0559d2faf50 100644
-> --- a/drivers/pci/hotplug/cpci_hotplug_core.c
-> +++ b/drivers/pci/hotplug/cpci_hotplug_core.c
-> @@ -563,7 +563,6 @@ cleanup_slots(void)
->  	}
->  cleanup_null:
->  	up_write(&list_rwsem);
-> -	return;
->  }
->  
->  int
-> diff --git a/drivers/pci/hotplug/cpqphp_core.c b/drivers/pci/hotplug/cpqphp_core.c
-> index 16bbb183695a..b8aacb41a83c 100644
-> --- a/drivers/pci/hotplug/cpqphp_core.c
-> +++ b/drivers/pci/hotplug/cpqphp_core.c
-> @@ -173,7 +173,6 @@ static void pci_print_IRQ_route(void)
->  		dbg("%d %d %d %d\n", tbus, tdevice >> 3, tdevice & 0x7, tslot);
->  
->  	}
-> -	return;
->  }
->  
->  
-> diff --git a/drivers/pci/hotplug/cpqphp_ctrl.c b/drivers/pci/hotplug/cpqphp_ctrl.c
-> index b7f4e1f099d9..68de958a9be8 100644
-> --- a/drivers/pci/hotplug/cpqphp_ctrl.c
-> +++ b/drivers/pci/hotplug/cpqphp_ctrl.c
-> @@ -1872,8 +1872,6 @@ static void interrupt_event_handler(struct controller *ctrl)
->  			}
->  		}		/* End of FOR loop */
->  	}
-> -
-> -	return;
->  }
->  
->  
-> @@ -1943,8 +1941,6 @@ void cpqhp_pushbutton_thread(struct timer_list *t)
->  
->  		p_slot->state = STATIC_STATE;
->  	}
-> -
-> -	return;
->  }
->  
->  
-> diff --git a/drivers/pci/hotplug/cpqphp_nvram.h b/drivers/pci/hotplug/cpqphp_nvram.h
-> index 918ff8dbfe62..70e879b6a23f 100644
-> --- a/drivers/pci/hotplug/cpqphp_nvram.h
-> +++ b/drivers/pci/hotplug/cpqphp_nvram.h
-> @@ -16,10 +16,7 @@
->  
->  #ifndef CONFIG_HOTPLUG_PCI_COMPAQ_NVRAM
->  
-> -static inline void compaq_nvram_init(void __iomem *rom_start)
-> -{
-> -	return;
-> -}
-> +static inline void compaq_nvram_init(void __iomem *rom_start) { }
->  
->  static inline int compaq_nvram_load(void __iomem *rom_start, struct controller *ctrl)
->  {
-> diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
-> index 182f9e3443ee..977946e4e613 100644
-> --- a/drivers/pci/hotplug/rpadlpar_core.c
-> +++ b/drivers/pci/hotplug/rpadlpar_core.c
-> @@ -473,7 +473,6 @@ int __init rpadlpar_io_init(void)
->  void rpadlpar_io_exit(void)
->  {
->  	dlpar_sysfs_exit();
-> -	return;
->  }
->  
->  module_init(rpadlpar_io_init);
-> diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-> index c3899ee1db99..18627bb21e9e 100644
-> --- a/drivers/pci/hotplug/rpaphp_core.c
-> +++ b/drivers/pci/hotplug/rpaphp_core.c
-> @@ -408,7 +408,6 @@ static void __exit cleanup_slots(void)
->  		pci_hp_deregister(&slot->hotplug_slot);
->  		dealloc_slot_struct(slot);
->  	}
-> -	return;
->  }
->  
->  static int __init rpaphp_init(void)
-> -- 
-> 2.22.1
-> 
+For example, compare this power resource _OFF code:
+https://github.com/Lekensteyn/acpi-stuff/blob/b55f6bdb/dsl/Clevo_P651RA/ssdt3.dsl#L454-L471
+
+with this legacy _PS0/_PS3 code:
+https://github.com/Lekensteyn/acpi-stuff/blob/b55f6bdb/dsl/Clevo_P651RA/ssdt7.dsl#L113-L142
+
+The power resource code checks the "MSD3" variable to check whether a
+transition to OFF is required while the legacy _PS3 checks "DGPS". The
+sequence PG00._OFF followed by _DSM (to to change "OPCE") and _PS3 might
+trigger some device-specific code twice and could lead to lockups
+(infinite loops polling for power state) or worse. I am not sure if I
+have ever tested this scenario however.
+
+> If the disable were moved to the caller, Kai-Heng's new interface
+> could be used both places.
+
+Moving the pci_d3cold_disable call to the caller looks reasonable to me.
+After the first patch gets merged, nouveau could use something like:
+
+    *has_pr3 = pci_pr3_present(pdev);
+    if (*has_pr3 && !pdev->bridge_d3) {
+        /*
+         * ...
+         */
+        pci_d3cold_disable(pdev);
+        *has_pr3 = false;
+    }
+
+
+For the 1/2 patch,
+Reviewed-by: Peter Wu <peter@lekensteyn.nl>
+-- 
+Kind regards,
+Peter Wu
+https://lekensteyn.nl
