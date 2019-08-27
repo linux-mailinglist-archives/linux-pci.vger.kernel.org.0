@@ -2,39 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F8C79F1A0
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2019 19:32:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05FAD9F1FA
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2019 20:01:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730376AbfH0Rck (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Aug 2019 13:32:40 -0400
-Received: from mga18.intel.com ([134.134.136.126]:62456 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727887AbfH0Rcj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 27 Aug 2019 13:32:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 10:32:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,438,1559545200"; 
-   d="scan'208";a="171269814"
-Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
-  by orsmga007.jf.intel.com with ESMTP; 27 Aug 2019 10:32:38 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Huong Nguyen <huong.nguyen@dell.com>,
-        Austin Bolen <Austin.Bolen@dell.com>
-Subject: [PATCH v8 8/8] PCI/ACPI: Enable EDR support
-Date:   Tue, 27 Aug 2019 10:29:30 -0700
-Message-Id: <521fd5f6468b96b591fe7d0a44421e4e3ea0dbcf.1566865502.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1566865502.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <cover.1566865502.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        id S1727401AbfH0SBS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Aug 2019 14:01:18 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:40670 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbfH0SBR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Aug 2019 14:01:17 -0400
+Received: by mail-yw1-f68.google.com with SMTP id z64so8196451ywe.7
+        for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2019 11:01:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=buRd+oaYTniBe098opDcjSma8LR23N54U7H6uBYOk28=;
+        b=NBEZ1XptxSKUz1z0TH3DnNeYuNzrjdDvrIqpIsyOdkWR1qilCZew88ogpUNAZl598D
+         XIx4f8EQU2etJVEKNV8PJuH44DTZ2K5Ie8WrQK/buvYnNUQNC2OPdB6VYEReG1fMc24m
+         B575wuW4rV51rfz7FcyhND/KemilkRxByI+uz2MKXAJf1ZeXGge3pVxeukXic7/iiqyR
+         s/IApE8/XPIsGu+OthvMeKOSZ8WzlX7zDXtb+AQY2BR+coQZiEXC33fNFq2G1RY6dOIT
+         oXRzZ59oiAK1Kg85nbJomzCX5LaQN1c2VFSsnugjPPy8sNp+e4h1dKgxhdS2YQDv93Gf
+         IcxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=buRd+oaYTniBe098opDcjSma8LR23N54U7H6uBYOk28=;
+        b=DozAY7YezR6Xl79XgEM4Lcnag6G930/Us8bWEIS+Kp4P6Ct0VCZ99zeZW6EksACTwW
+         AFgFjQIjlpyCK5kkmdA0qkRtMksxSNQ3555ufGe1ECU5272WOboatEHogpcu4pu+sApX
+         zbVBNyz7Dw87+kIAQKhuH2DqhaQolfd5rokTBRIGhlOoZxtwY3NHyhZQ2VBbnjd8Ybpa
+         EHATSLEvyPlSFb6DOhvI22clEyroBjY1R76C68XnCgK3LGx2G54Ns10hkHBQM2cPH/YE
+         yrUf1cwyYXNYzMAVDc/OCcjjGnSZ4KYdfq7Awv/1+ahSQfB05chZNkcPwbo/U035OaNf
+         mQRg==
+X-Gm-Message-State: APjAAAUS8rYzcxa71DvuZ0gP0nicDCyeo2rKRM9jB+j29oIM4CdxdHuN
+        IiV/63fqcZQrtOZ4fEj7+xKS6A==
+X-Google-Smtp-Source: APXvYqyGs7zSbCiHYXBhl+PwQTlmoQwUJvXULrhhIj4PQBor38VhVFPYMVwSYToPtJrNJvKuVV/K+w==
+X-Received: by 2002:a81:4854:: with SMTP id v81mr133927ywa.412.1566928876193;
+        Tue, 27 Aug 2019 11:01:16 -0700 (PDT)
+Received: from jaxon.localdomain ([152.3.43.56])
+        by smtp.gmail.com with ESMTPSA id z9sm3121956ywj.84.2019.08.27.11.01.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 11:01:15 -0700 (PDT)
+From:   Haotian Wang <haotian.wang@sifive.com>
+To:     kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com
+Cc:     mst@redhat.com, jasowang@redhat.com, linux-pci@vger.kernel.org,
+        haotian.wang@duke.edu
+Subject: Re: [PATCH] pci: endpoint: functions: Add a virtnet EP function
+Date:   Tue, 27 Aug 2019 14:01:14 -0400
+Message-Id: <20190827180114.5979-1-haotian.wang@sifive.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <442f91a5-be7f-c4c2-dd24-81c510aab86b@ti.com>
+References: <442f91a5-be7f-c4c2-dd24-81c510aab86b@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -42,158 +61,111 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Hi Kishon,
 
-As per PCI firmware specification r3.2 Downstream Port Containment
-Related Enhancements ECN, sec 4.5.1, OS must implement following steps
-to enable/use EDR feature.
+On Tue, Aug 27, 2019 at 4:13 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> >>> +CONFIG_PCI_HOST_LITTLE_ENDIAN must be set at COMPILE TIME. Toggle it on to build
+> >>> +the module with the PCI host being in little endianness.
+> >> It would be better if we could get the endianness of the host at runtime. That
+> >> way irrespective of the host endianness we could use the same kernel image in
+> >> endpoint.
+> > There are two ways I can imagine of achieving this. The first is to
+> > change the whole endpoint function into using modern virtio interfaces,
+> > because those specify little endianness to be used in all of __virtio16,
+> > __virtio32 etc. I didn't take that path because the development platform
+> > did not allow me to access some PCI configuration space registers, such
+> > as the vendor-specific capabilities. These were required to configure a
+> > virtio_device representing the PCI host.
+> 
+> I would prefer this approach.
+> Do you need any vendor specific capabilities for virtio_device?
+The virtio modern interfaces write addresses of virtqueues, queue
+selections and some other important notification into the
+vendor-specific capabilities chain registers, while the legacy
+interfaces simply write to some offset of address stored in BAR 0.
 
-1. OS can use bit 7 of _OSC Control Field to negotiate control over
-Downstream Port Containment (DPC) configuration of PCIe port. After _OSC
-negotiation, firmware will Set this bit to grant OS control over PCIe
-DPC configuration and Clear it if this feature was requested and denied,
-or was not requested.
+> >>> +/*
+> >>> + * Initializes the virtio_pci and virtio_net config space that will be exposed
+> >>> + * to the remote virtio_pci and virtio_net modules on the PCI host. This
+> >>> + * includes setting up feature negotiation and default config setup etc.
+> >>> + *
+> >>> + * @epf_virtio: epf_virtio handler
+> >>> + */
+> >>> +static void pci_epf_virtio_init_cfg_legacy(struct pci_epf_virtio *epf_virtio)
+> >>> +{
+> >>> +	const u32 dev_feature =
+> >>> +		generate_dev_feature32(features, ARRAY_SIZE(features));
+> >>> +	struct virtio_legacy_cfg *const legacy_cfg = epf_virtio->reg[BAR_0];
+> >>
+> >> virtio_reg_bar instead of BAR_0
+> > The dilemma was that the virtio_pci on PCI host will only write to BAR
+> > 0. I may need to throw an error if the first free bar is not BAR 0.
+> 
+> hmm.. We need a better way to handle it. Just having
+> PCI_VENDOR_ID_REDHAT_QUMRANET in virtio_pci may not be sufficient then.
+Sorry I did not get the connection between these two issues. One is
+about the bar number used, the other is about satisfying the triggering
+the probe function of virtio_pci on the host side.
 
-2. Also, if OS supports EDR, it should expose its support to BIOS by
-setting bit 7 of _OSC Support Field. And if OS sets bit 7 of _OSC
-Control Field it must also expose support for EDR by setting bit 7 of
-_OSC Support Field.
+As a reference, the code on the host side legacy probe is:
 
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Len Brown <lenb@kernel.org>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Acked-by: Keith Busch <keith.busch@intel.com>
-Tested-by: Huong Nguyen <huong.nguyen@dell.com>
-Tested-by: Austin Bolen <Austin.Bolen@dell.com>
----
- drivers/acpi/pci_root.c         | 9 +++++++++
- drivers/pci/pcie/portdrv_core.c | 8 +++++++-
- drivers/pci/probe.c             | 1 +
- include/linux/acpi.h            | 6 ++++--
- include/linux/pci.h             | 3 ++-
- 5 files changed, 23 insertions(+), 4 deletions(-)
+vp_dev->ioaddr = pci_iomap(pci_dev, 0, 0);
+if (!vp_dev->ioaddr)
+	goto err_iomap;
 
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index 314a187ed572..988d09d788b6 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -132,6 +132,7 @@ static struct pci_osc_bit_struct pci_osc_support_bit[] = {
- 	{ OSC_PCI_CLOCK_PM_SUPPORT, "ClockPM" },
- 	{ OSC_PCI_SEGMENT_GROUPS_SUPPORT, "Segments" },
- 	{ OSC_PCI_MSI_SUPPORT, "MSI" },
-+	{ OSC_PCI_EDR_SUPPORT, "EDR" },
- 	{ OSC_PCI_HPX_TYPE_3_SUPPORT, "HPX-Type3" },
- };
- 
-@@ -142,6 +143,7 @@ static struct pci_osc_bit_struct pci_osc_control_bit[] = {
- 	{ OSC_PCI_EXPRESS_AER_CONTROL, "AER" },
- 	{ OSC_PCI_EXPRESS_CAPABILITY_CONTROL, "PCIeCapability" },
- 	{ OSC_PCI_EXPRESS_LTR_CONTROL, "LTR" },
-+	{ OSC_PCI_EXPRESS_DPC_CONTROL, "DPC" },
- };
- 
- static void decode_osc_bits(struct acpi_pci_root *root, char *msg, u32 word,
-@@ -441,6 +443,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
- 		support |= OSC_PCI_ASPM_SUPPORT | OSC_PCI_CLOCK_PM_SUPPORT;
- 	if (pci_msi_enabled())
- 		support |= OSC_PCI_MSI_SUPPORT;
-+	if (IS_ENABLED(CONFIG_PCIE_EDR))
-+		support |= OSC_PCI_EDR_SUPPORT;
- 
- 	decode_osc_support(root, "OS supports", support);
- 	status = acpi_pci_osc_support(root, support);
-@@ -488,6 +492,9 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
- 			control |= OSC_PCI_EXPRESS_AER_CONTROL;
- 	}
- 
-+	if (IS_ENABLED(CONFIG_PCIE_DPC))
-+		control |= OSC_PCI_EXPRESS_DPC_CONTROL;
-+
- 	requested = control;
- 	status = acpi_pci_osc_control_set(handle, &control,
- 					  OSC_PCI_EXPRESS_CAPABILITY_CONTROL);
-@@ -917,6 +924,8 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
- 		host_bridge->native_pme = 0;
- 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
- 		host_bridge->native_ltr = 0;
-+	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
-+		host_bridge->native_dpc = 0;
- 
- 	/*
- 	 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index 1b330129089f..1b54a39df795 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -250,8 +250,14 @@ static int get_port_device_capability(struct pci_dev *dev)
- 		pcie_pme_interrupt_enable(dev, false);
- 	}
- 
-+	/*
-+	 * If EDR support is enabled in OS, then even if AER is not handled in
-+	 * OS, DPC service can be enabled.
-+	 */
- 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
--	    pci_aer_available() && services & PCIE_PORT_SERVICE_AER)
-+	    ((IS_ENABLED(CONFIG_PCIE_EDR) && !host->native_dpc) ||
-+	    (pci_aer_available() && services & PCIE_PORT_SERVICE_AER &&
-+	    (pcie_ports_native || host->native_dpc))))
- 		services |= PCIE_PORT_SERVICE_DPC;
- 
- 	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index a3c7338fad86..cf8acdd62089 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -601,6 +601,7 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
- 	bridge->native_shpc_hotplug = 1;
- 	bridge->native_pme = 1;
- 	bridge->native_ltr = 1;
-+	bridge->native_dpc = 1;
- }
- 
- struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 9426b9aaed86..7b29c640a9db 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -515,8 +515,9 @@ extern bool osc_pc_lpi_support_confirmed;
- #define OSC_PCI_CLOCK_PM_SUPPORT		0x00000004
- #define OSC_PCI_SEGMENT_GROUPS_SUPPORT		0x00000008
- #define OSC_PCI_MSI_SUPPORT			0x00000010
-+#define OSC_PCI_EDR_SUPPORT			0x00000080
- #define OSC_PCI_HPX_TYPE_3_SUPPORT		0x00000100
--#define OSC_PCI_SUPPORT_MASKS			0x0000011f
-+#define OSC_PCI_SUPPORT_MASKS			0x0000019f
- 
- /* PCI Host Bridge _OSC: Capabilities DWORD 3: Control Field */
- #define OSC_PCI_EXPRESS_NATIVE_HP_CONTROL	0x00000001
-@@ -525,7 +526,8 @@ extern bool osc_pc_lpi_support_confirmed;
- #define OSC_PCI_EXPRESS_AER_CONTROL		0x00000008
- #define OSC_PCI_EXPRESS_CAPABILITY_CONTROL	0x00000010
- #define OSC_PCI_EXPRESS_LTR_CONTROL		0x00000020
--#define OSC_PCI_CONTROL_MASKS			0x0000003f
-+#define OSC_PCI_EXPRESS_DPC_CONTROL		0x00000080
-+#define OSC_PCI_CONTROL_MASKS			0x000000bf
- 
- #define ACPI_GSB_ACCESS_ATTRIB_QUICK		0x00000002
- #define ACPI_GSB_ACCESS_ATTRIB_SEND_RCV         0x00000004
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 82e4cd1b7ac3..0d699abaa364 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -509,8 +509,9 @@ struct pci_host_bridge {
- 	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
- 	unsigned int	native_pme:1;		/* OS may use PCIe PME */
- 	unsigned int	native_ltr:1;		/* OS may use PCIe LTR */
--	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
-+	unsigned int	native_dpc:1;		/* OS may use PCIe DPC */
- 
-+	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
- 	/* Resource alignment requirements */
- 	resource_size_t (*align_resource)(struct pci_dev *dev,
- 			const struct resource *res,
--- 
-2.21.0
+That's why only BAR 0 is used.
 
+> >> Please add a description for each of these structures.
+> > I had to copy these structures exactly as they were from virtio_ring.c
+> > unfortunately, because they were not exposed via any header file. If
+> > virtio_ring.c has some struct changes, this endpoint function will have
+> > to change accordingly.
+> 
+> Some of the structures are exposed in virtio_ring.h. We probably need to use
+> that instead of using the structures from virtio_ring.c.
+struct vring_virtqueue is not present in include/linux/virtio_ring.h or
+include/uapi/linux/virtio_ring.h. struct virtnet_info is not present in
+include/linux/virtio_net.h or include/uapi/linux/virtio_net.h. These two
+structures are only present in .c files, but they are necessary to this
+endpoint function.
+
+vring_virtqueue is a critical struct used by virtio_ring, and epf_virtio
+relies entirely on the vanilla virtio_ring for doing its work. Therefore
+all the memory allocation and field offsets must be exactly the same. I
+do not see an easy solution to this.
+
+virtnet_info on the other hand is used in only one line in epf_virtio:
+
+netdev = ((struct virtnet_info *)epf_vdev->vdev.priv)->dev;
+while (!(READ_ONCE(netdev->flags) & IFF_UP))
+	schedule();
+
+The local virtual net_device is created by virtio_net and the only way
+to access it is through virtnet_info. I need this net_device because I
+cannot start handling the two transfer handler threads before the
+net_device is brought up by `ifconfig eth0 up` in the userspace on the
+endpoint.
+
+> Great work in attempting to add virtnet driver.
+> How many hours are you planning to spend working on kernel? I'm interested in
+> seeing this completed and getting merged in kernel.
+Thank you! Honestly I cannot give an exact number of hours I can work.
+One reason is because now I have to deal with some school stuff. The
+other is simply that I do not have access to the FPGA anymore. I may
+have to rely on the goodwill of colleagues to do the testing on hardware
+for me. That's why I am a bit unsure about how to make major changes to
+the patch, such as modifying vhost, adding more layers, or switching to
+virtio modern interfaces (which will probably require talking to the
+hardware team at my previous company).
+
+> > Thank you so much for taking time to review this patch. Now that I came
+> > back to university and continued my undergrad study, my kernel
+> > development work will probably slow down a lot. The heavy-lifting work
+> 
+> Good luck with your studies :-)
+Thank you so much! Good luck with your work.
+
+What's your feedback on the dma engine?
+
+Cheers,
+Haotian
