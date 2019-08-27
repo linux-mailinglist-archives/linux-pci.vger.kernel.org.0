@@ -2,93 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 568D49F62C
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 00:31:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 207D79F635
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 00:33:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725992AbfH0Wb2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Aug 2019 18:31:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59592 "EHLO mail.kernel.org"
+        id S1726178AbfH0Wc6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Aug 2019 18:32:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbfH0Wb2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 27 Aug 2019 18:31:28 -0400
+        id S1726025AbfH0Wc5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 27 Aug 2019 18:32:57 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C760F20856;
-        Tue, 27 Aug 2019 22:31:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D726120856;
+        Tue, 27 Aug 2019 22:32:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566945087;
-        bh=z3lcNGmdvmqEXqVEX9g8KC0XV/I/hJtGSWKjLohh+3k=;
+        s=default; t=1566945176;
+        bh=1+QNJKUgz+gea1zCCXAK/Hc/T4SGAhK43TGzjR48Lmk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Migu+if62iFs5FV4qKaJ8LZCNRwNok5KflTlEHuwAOZ9iaxShqp/IWMO+EImucQVc
-         HD2pxOhjBOWs6s1j223Xn/n0+4yOH4Bg3uGkzkILe9q+GbkxbFe6WtEy54XmNqcZSV
-         mFh7XfmdHOserrq/VomMnyq6vQFKnxrs0/zG1cPs=
-Date:   Tue, 27 Aug 2019 17:31:25 -0500
+        b=iZn1gGeISV7sMLyJAWPA3zeSgGFzMulVtOlCichsCyw2q3fdgawfyEsHjr4KL65bz
+         wCm7gNW2nm5lFa3R90WX//Grb6qYufDlmR7iFbjWqtbOy7Cpn7x3nErLKRZxDcbq/o
+         yCwTXt4Awd8wYq48Pu5CdmDCAOnwdhW8w0TQDmvc=
+Date:   Tue, 27 Aug 2019 17:32:54 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     tiwai@suse.com, linux-pci@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] ALSA: hda: Allow HDA to be runtime suspended when
- dGPU is not bound
-Message-ID: <20190827223125.GB9987@google.com>
-References: <20190827134756.10807-1-kai.heng.feng@canonical.com>
- <20190827134756.10807-2-kai.heng.feng@canonical.com>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] Simplify PCIe hotplug indicator control
+Message-ID: <20190827223254.GC9987@google.com>
+References: <20190819160643.27998-1-efremov@linux.com>
+ <2f4c857e-a7cc-58da-8be5-cba581c56d9f@linux.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190827134756.10807-2-kai.heng.feng@canonical.com>
+In-Reply-To: <2f4c857e-a7cc-58da-8be5-cba581c56d9f@linux.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 09:47:56PM +0800, Kai-Heng Feng wrote:
-> It's a common practice to let dGPU unbound and use PCI port PM to
-> disable its power through _PR3. When the dGPU comes with an HDA
-> function, the HDA won't be suspended if the dGPU is unbound, so the dGPU
-> power can't be disabled.
-
-Just a terminology question:
-
-I thought "using PCI port PM" meant using the PCI Power Management
-Capability in config space to directly change the device's power
-state, e.g., in pci_raw_set_power_state().
-
-And I thought using _PS3, _PR3, etc would be part of "platform power
-management"?
-
-And AFAICT, _PR3 merely returns a list of power resources; it doesn't
-disable power itself.
-
-> Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
-> discrete GPU") only allows HDA to be runtime-suspended once GPU is
-> bound, to keep APU's HDA working.
+On Tue, Aug 20, 2019 at 03:16:43PM +0300, Denis Efremov wrote:
+> On 8/19/19 7:06 PM, Denis Efremov wrote:
+> > PCIe defines two optional hotplug indicators: a Power indicator and an
+> > Attention indicator. Both are controlled by the same register, and each
+> > can be on, off or blinking. The current interfaces
+> > (pciehp_green_led_{on,off,blink}() and pciehp_set_attention_status()) are
+> > non-uniform and require two register writes in many cases where we could
+> > do one.
+> > 
+> > This patchset introduces the new function pciehp_set_indicators(). It
+> > allows one to set two indicators with a single register write. All
+> > calls to previous interfaces (pciehp_green_led_* and
+> > pciehp_set_attention_status()) are replaced with a new one. Thus,
+> > the amount of duplicated code for setting indicators is reduced.
+> > 
+> > Changes in v3:
+> >   - Changed pciehp_set_indicators() to work with existing
+> >     PCI_EXP_SLTCTL_* macros
+> >   - Reworked the inputs validation in pciehp_set_indicators()
+> >   - Removed pciehp_set_attention_status() and pciehp_green_led_*()
+> >     completely
+> > 
+> > Denis Efremov (4):
+> >   PCI: pciehp: Add pciehp_set_indicators() to jointly set LED indicators
+> >   PCI: pciehp: Switch LED indicators with a single write
+> >   PCI: pciehp: Remove pciehp_set_attention_status()
+> >   PCI: pciehp: Remove pciehp_green_led_{on,off,blink}()
 > 
-> However, HDA on dGPU isn't that useful if dGPU is unbound. So let relax
-> the runtime suspend requirement for dGPU's HDA function, to save lots of
-> power.
-> 
-> BugLink: https://bugs.launchpad.net/bugs/1840835
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->  sound/pci/hda/hda_intel.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-> index 99fc0917339b..d4ee070e1a29 100644
-> --- a/sound/pci/hda/hda_intel.c
-> +++ b/sound/pci/hda/hda_intel.c
-> @@ -1285,7 +1285,8 @@ static void init_vga_switcheroo(struct azx *chip)
->  		dev_info(chip->card->dev,
->  			 "Handle vga_switcheroo audio client\n");
->  		hda->use_vga_switcheroo = 1;
-> -		hda->need_eld_notify_link = 1; /* cleared in gpu_bound op */
-> +		/* cleared in gpu_bound op */
-> +		hda->need_eld_notify_link = !pci_pr3_present(p);
->  		chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
->  		pci_dev_put(p);
->  	}
-> -- 
-> 2.17.1
-> 
+> Lukas, Sathyanarayanan, sorry that I've dropped most of yours "Reviewed-by".
+> The changes in the last 2 patches were significant.
+
+Anybody want to review these?
