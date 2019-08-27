@@ -2,29 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EE489EC73
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2019 17:24:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7BA99EC75
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2019 17:25:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfH0PYq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Aug 2019 11:24:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39812 "EHLO mx1.suse.de"
+        id S1727887AbfH0PZL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Aug 2019 11:25:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39908 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726345AbfH0PYq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:24:46 -0400
+        id S1726345AbfH0PZL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 27 Aug 2019 11:25:11 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 32015AED0;
-        Tue, 27 Aug 2019 15:24:45 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 17:24:45 +0200
-Message-ID: <s5hsgpm7hs2.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id 81D2EAED0;
+        Tue, 27 Aug 2019 15:25:10 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 17:25:10 +0200
+Message-ID: <s5hr2567hrd.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
 Cc:     <bhelgaas@google.com>, <alsa-devel@alsa-project.org>,
         <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 2/2] ALSA: hda: Allow HDA to be runtime suspended when dGPU is not bound
-In-Reply-To: <20190827134756.10807-2-kai.heng.feng@canonical.com>
+Subject: Re: [PATCH 1/2] PCI: Add a helper to check Power Resource Requirements _PR3 existence
+In-Reply-To: <20190827134756.10807-1-kai.heng.feng@canonical.com>
 References: <20190827134756.10807-1-kai.heng.feng@canonical.com>
-        <20190827134756.10807-2-kai.heng.feng@canonical.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -35,51 +34,15 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 27 Aug 2019 15:47:56 +0200,
+On Tue, 27 Aug 2019 15:47:55 +0200,
 Kai-Heng Feng wrote:
 > 
-> It's a common practice to let dGPU unbound and use PCI port PM to
-> disable its power through _PR3. When the dGPU comes with an HDA
-> function, the HDA won't be suspended if the dGPU is unbound, so the dGPU
-> power can't be disabled.
+> A driver may want to know the existence of _PR3, to choose different
+> runtime suspend behavior. A user will be add in next patch.
 > 
-> Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
-> discrete GPU") only allows HDA to be runtime-suspended once GPU is
-> bound, to keep APU's HDA working.
-> 
-> However, HDA on dGPU isn't that useful if dGPU is unbound. So let relax
-> the runtime suspend requirement for dGPU's HDA function, to save lots of
-> power.
-> 
-> BugLink: https://bugs.launchpad.net/bugs/1840835
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->  sound/pci/hda/hda_intel.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-> index 99fc0917339b..d4ee070e1a29 100644
-> --- a/sound/pci/hda/hda_intel.c
-> +++ b/sound/pci/hda/hda_intel.c
-> @@ -1285,7 +1285,8 @@ static void init_vga_switcheroo(struct azx *chip)
->  		dev_info(chip->card->dev,
->  			 "Handle vga_switcheroo audio client\n");
->  		hda->use_vga_switcheroo = 1;
-> -		hda->need_eld_notify_link = 1; /* cleared in gpu_bound op */
-> +		/* cleared in gpu_bound op */
-> +		hda->need_eld_notify_link = !pci_pr3_present(p);
+> This is mostly the same as nouveau_pr3_present().
 
-Oh, right now I have a fix patch to submit for turning on the runtime
-PM behavior upon the audio component registration, essentially for
-amdgpu and nouveau.  My fix includes the movement of this flag into
-hda_bus object, so this patch would become inapplicable (although it's
-trivial).
-
-So I can apply this patch with the correction to sound git tree if the
-first patch gets ack from PCI maintainers (and they agree to apply
-over sound git tree).
-
-In anyway, I'm going to post my patch that will conflict with this.
+Then it'd be nice to clean up the nouveau part, too?
 
 
 thanks,
