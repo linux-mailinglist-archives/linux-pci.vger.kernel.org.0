@@ -2,81 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E6B99F6D7
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 01:25:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 923AB9F6D4
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 01:25:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbfH0XZE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Aug 2019 19:25:04 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37875 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbfH0XZD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Aug 2019 19:25:03 -0400
-Received: by mail-io1-f66.google.com with SMTP id q12so1487372iog.4;
-        Tue, 27 Aug 2019 16:25:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AZp/zzBtS0EBiyMSUURJW6iNqR0pfIGhZlkgvULPVEo=;
-        b=BFSqj6OUgdwftYzzYXGPwUNHC8vNVsa9r2ChznpC7RkSDp2KTGdC7fe9DguD1V+tVQ
-         K8cBTkp5rHqDqGdxqDjclgASr4iyEILJq6x3Ke3xuU2apjbZ8fOLTtx5sl1GHS/8Syj9
-         pbjqo0PJE1BJaEOmruxYMsyErKfh0xuWO6kS/8smjDMKCiC1lQPC2Q44cBw5HBlau/3p
-         34bbDWG/ezWukZfefTBGNZ0qbiHF75LLsmHOiT/44ZTZ/aVNHXUAYlrmhThjmq98uqJo
-         Y/gEb7LzkZ9gOLIDhtDLPjAGApXtQrYV+df0XvyjjDp3Sj/jZUKO6RbpORLBDdMICg9d
-         lkxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AZp/zzBtS0EBiyMSUURJW6iNqR0pfIGhZlkgvULPVEo=;
-        b=o8Kg8cGM9SEyCDkNeNPhjf0dmXUrbFlCxvdCtUvdEoxdvBiJ+ypadx4bCvojbhjeYh
-         CNuJS2dhQoUCBgp4xs0ptu7JiWb9bHhZ2em7tqNW7c9c/LIZIyzsosG7yu93AL51bMmy
-         OLqhk69ThwbtQ5O2M/ULL/EwmkJnae5opPoLvEP55MUEIMxIUwjcxH/SNbWvs1jizO68
-         6EYuhmRVH9WxwFwsrfV2L9+cnGeqLCkxu0RC2cUNz6kuLesUypThW2Xb853XkLbA9Qax
-         pcZly/+Oqm8GnC5gUcgU1rmEAGMwo/gPpqHDQGeFWfaBDzWdvGhwBw1lq96TxDrO/KnI
-         Iy9A==
-X-Gm-Message-State: APjAAAXE0f/0lw7ywwLtwyusQ64Rdqj0s8fNu4sPWmdLgetA5vCE87wk
-        Z/i7edZFIwCb/PeI6tjwTpqZK0EMTUX1wu++BVA=
-X-Google-Smtp-Source: APXvYqyqSKNPjI3RqbHeyiPci/pb0qWE5PUDPxcELs94FqcSKNQOerajwYEUx+YZEhYXfNcva0enU+Mb4DAGP/p0KKs=
-X-Received: by 2002:a5d:9b02:: with SMTP id y2mr1072981ion.146.1566948302443;
- Tue, 27 Aug 2019 16:25:02 -0700 (PDT)
+        id S1726092AbfH0XZB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Aug 2019 19:25:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725997AbfH0XZA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 27 Aug 2019 19:25:00 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7308620856;
+        Tue, 27 Aug 2019 23:24:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566948300;
+        bh=hk7TGUZtvzdF0BPvIoD/1I2qm9Ai1d/Yj7zFwZFR2Xk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FmaxEaqy+R/uHzH132+D9Aos5GevG/k0RwgfXJs69dQh7+rU03Yu1h01avhuXo+xa
+         cGmWCjNX003PRHIHProDiAuCl/o5cRdIUg3Gjr9wBFUdwMvyQmfFuB5sphPaFeLaSx
+         H0sEgyJo7J52GNX4bGtz7g+VLKBRnlLi0+Y/KMT0=
+Date:   Tue, 27 Aug 2019 18:24:57 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Krzysztof Wilczynski <kw@linux.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Daniel J Blueman <daniel@numascale.com>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/PCI: Add missing SPDX license header.
+Message-ID: <20190827232457.GI9987@google.com>
+References: <20190819060624.17305-1-kw@linux.com>
 MIME-Version: 1.0
-References: <20190819160643.27998-1-efremov@linux.com> <20190819160643.27998-2-efremov@linux.com>
- <9cbb34b0-d6be-fbba-9992-9b6939018e5d@linux.com>
-In-Reply-To: <9cbb34b0-d6be-fbba-9992-9b6939018e5d@linux.com>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Wed, 28 Aug 2019 09:24:51 +1000
-Message-ID: <CAOSf1CH7KHmViRQUYBvEtTQz0vMV5oE4SXOHp_E_a69Xew90gw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] PCI: pciehp: Add pciehp_set_indicators() to
- jointly set LED indicators
-To:     efremov@linux.com
-Cc:     sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819060624.17305-1-kw@linux.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 2:17 AM Denis Efremov <efremov@linux.com> wrote:
->
-> Hi,
->
-> On 8/19/19 7:06 PM, Denis Efremov wrote:
-> On 8/12/19 11:25 AM, sathyanarayanan kuppuswamy wrote:
-> > Do we need to switch case here ? if (pwr > 0) {} should work right ?
->
-> I saved the switch here from v2. I think switch makes the inputs check more
-> precise and filters-out all non-valid values. Maybe this check is too strict?
+On Mon, Aug 19, 2019 at 08:06:24AM +0200, Krzysztof Wilczynski wrote:
+> Add the missing "SPDX-License-Identifier" license header to the
+> arch/x86/pci/numachip.c.  Use GPL-2.0 identifier derived using
+> the comment mentioning license from the top of the file.
+> 
+> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+> ---
+>  arch/x86/pci/numachip.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/x86/pci/numachip.c b/arch/x86/pci/numachip.c
+> index 2e565e65c893..b73157e834e0 100644
+> --- a/arch/x86/pci/numachip.c
+> +++ b/arch/x86/pci/numachip.c
+> @@ -1,3 +1,4 @@
+> +// SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * This file is subject to the terms and conditions of the GNU General Public
+>   * License.  See the file "COPYING" in the main directory of this archive
 
-Sounds like you're overthinking it tbh. If want to catch programming
-errors then a WARN_ON_ONCE() in the default case would be better than
-silently ignoring invalid values, but it's pretty hard to care.
-
-> We could use mask here ON|OFF|BLINK for the check, but I don't know how hardware
-> will handle a case, for example, pwr == ON|BLINK.
-
-ON|BLINK is the same as OFF
+You can remove this license text at the same time as in 8cfab3cf63cf
+("PCI: Add SPDX GPL-2.0 to replace GPL v2 boilerplate").
