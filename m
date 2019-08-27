@@ -2,59 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D2F119E4CB
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2019 11:50:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D00C9E4FD
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2019 11:56:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729690AbfH0JuB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Aug 2019 05:50:01 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37843 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729523AbfH0JuA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Aug 2019 05:50:00 -0400
-Received: by mail-wr1-f68.google.com with SMTP id z11so18133011wrt.4;
-        Tue, 27 Aug 2019 02:49:57 -0700 (PDT)
+        id S1728178AbfH0J40 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Aug 2019 05:56:26 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33289 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfH0J40 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Aug 2019 05:56:26 -0400
+Received: by mail-wr1-f67.google.com with SMTP id u16so18150179wrr.0;
+        Tue, 27 Aug 2019 02:56:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=B9OAwGBwoNjWHikis+gMw0Oi0fog8QmNv1hym0HD4Ts=;
-        b=qts/GHwD3Qtv9+bEUCt7ddw4tGUYPAS04eMtUqDNvtU9E9zle5OlyR9dybfP7ohq2e
-         jNoU75fmQ5FTn2Op+JF4D2/wXIv7L/of/CcopkmJJhrrCu05HLdREGhN5C4xxj9u/i3E
-         gPRR5BHVXvb/fnoV3MIiCfgXXFmVpCQtZAbyqv0GQf9yMhE+n1JTzxs/hFdJDhlJMO+R
-         JrRE4lsOWprVIUsZ3kJpSGk/9Kcp76B3KqHIP1pOUu8hTjBCKV62FMt/AgeA/3MB+JvE
-         LB3tPtKPYg6KoL57Jt1qsHyzDeuI2tYFzENklQx/bRMJx/0e0ArfkFuNMg+d8CPEx9Ur
-         63xg==
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OiTD+C0jKmBXLHpY3VxZvB1F+ChWta1qB/CxkBMhNkY=;
+        b=KHHzIlhlrei4kgkQpJgwcvxAE2lvUNDbzTRg0UctPEZu1zDp5FKnsDtBBm/xOebDnY
+         M70svbqMMtavSuc3/H31VBfXV/ZBMD+mU5Xmas4sTfYrR/ry7/mlmOTlkP9sMa2HKILw
+         x83vfoxLjbDWfPEyo2FHEs1M1XVVIdYr156/H8sYw10kCparHt703mrs3dKZBCj4pMGV
+         4ITkgZmuUY3Q/inUWcFqYq9rMy4UXm/7TBdB7ycIu3uehDbWrFT0Ppkmb44WvP+cYl7L
+         VrglzMQWXqdMHlklytaTSz6WJ35EyeMtoF8ZFcECPmdHbn3gI3bMF6P03p37RKsD3EFr
+         6L3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=B9OAwGBwoNjWHikis+gMw0Oi0fog8QmNv1hym0HD4Ts=;
-        b=TnvBVsc/x55xx67j3K8SyCaZjdVaw5XSl+ScYSAHGbXZoEEStRMUWgIFtX0/QO9CMW
-         E6X3U4PSNz4eCZaf61Cc54N5htfp9vbbPcr7pgiY93n75oUTT+t/Ramd3nCqE8Vt1/F6
-         JKrTGhAcb4qOcyGRLCiN3IKuh34IJclnfkYTLrJNGIyj8LOeBDa3GFebPdmihtSP+4kD
-         NSeFfqftl8/rCCFXkPWwHiAoDqQcqJWWN42kq9P7eA1l4GK1PJggQ3QJJtoZdEh+c6ms
-         fw04739YE+M+u3XJpXpAqjat2BGkrfSlO6TFfLLJ+/vHx4nLZoX6a77y1Y3CcwqywFsu
-         OlNA==
-X-Gm-Message-State: APjAAAXIf/ljDvIHjpLArnNEmLvCNDliT6An01VhbBOuao/4txGMjQvB
-        daKHIDrfcE0BqhikUrEai2E=
-X-Google-Smtp-Source: APXvYqypJr5fZBPeobkRfqtw3e95pPNszzEwpDTtdd5AZOgBxt6gQuH2Z8sKVcSSCSe+S7WOGGKsYw==
-X-Received: by 2002:adf:8541:: with SMTP id 59mr27913720wrh.298.1566899397061;
-        Tue, 27 Aug 2019 02:49:57 -0700 (PDT)
+         :mime-version:content-transfer-encoding;
+        bh=OiTD+C0jKmBXLHpY3VxZvB1F+ChWta1qB/CxkBMhNkY=;
+        b=RpmGdA6ABDyoSoXYvfkLM9bQU3HPTRn3Sg8VJVLNk3x8Xe9uMdLdD2sO5vHGvMnnSu
+         DK5twrbODkxckdDRU3pc7qatxRs9j0FCtl1E9CoG6ZNSefu7wIhvjTqZp5h6znrKRMs9
+         6EFj+RhvM0XceLSpP1boxSUnICcGutMJQ/7QgRNMym8jMyY9QIfFovpW4pPvcxtZ6nOv
+         UNaVg0qCqd2mXwkwAbV04+Ixl6vZSI4zAnynG3RnESPYKwjOOJsI2QRivAJJcP+CPOR8
+         kss1W7d7ngRaz0QCW/zAeXpy1r1EwfcTfy0FK1W/NLl+1otSeKyuk2+SnwkXOArO7Ha9
+         MAxg==
+X-Gm-Message-State: APjAAAUDzuNWW27mmVeLkxf+1bFft4wD7r/k73H3ADBVy3l4JfipQez7
+        6hJbDVhpT3SiPd/sNOmiclo=
+X-Google-Smtp-Source: APXvYqwIEeQo0gHLA94adXJnQ1AUpN6TWQpVTentcQdM01vpoobXFJXNXZK/mc59hq8WkLoHQOYyrA==
+X-Received: by 2002:a5d:4950:: with SMTP id r16mr27576584wrs.347.1566899781916;
+        Tue, 27 Aug 2019 02:56:21 -0700 (PDT)
 Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id p10sm2450087wma.8.2019.08.27.02.49.55
+        by smtp.gmail.com with ESMTPSA id v12sm15713723wrr.87.2019.08.27.02.56.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 02:49:55 -0700 (PDT)
+        Tue, 27 Aug 2019 02:56:21 -0700 (PDT)
 From:   Krzysztof Wilczynski <kw@linux.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
         linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] PCI/ACPI: Remove unnecessary struct hotplug_program_ops from pci-acpi.c
-Date:   Tue, 27 Aug 2019 11:49:51 +0200
-Message-Id: <20190827094951.10613-4-kw@linux.com>
+Subject: [PATCH] PCI: Move PCI Express ASPM function prototypes and definitions to pci.h
+Date:   Tue, 27 Aug 2019 11:56:20 +0200
+Message-Id: <20190827095620.11213-1-kw@linux.com>
 X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20190827094951.10613-1-kw@linux.com>
-References: <20190827094951.10613-1-kw@linux.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -62,379 +60,306 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Move the ACPI-specific structs hpx_type0, hpx_type1, hpx_type2 and
-hpx_type3 to drivers/pci/pci-acpi.c as they are not used anywhere
-else.  Then remove the struct hotplug_program_ops that has been
-shared between drivers/pci/probe.c and drivers/pci/pci-acpi.c
-from drivers/pci/pci.h as it is no longer needed.
+Merge PCI Express ASPM function prototypes and definitions
+from include/linux/pci-aspm.h into include/linux/pci.h.
 
-The struct hotplug_program_ops was introduced in the commit 87fcf12e846a
-("PCI/ACPI: Remove the need for 'struct hotplug_params'") and replaced
-previously used struct hotplug_params enabling the support for the _HPX
-Type 3 Setting Record that has been added in the commit f873c51a155a
-("PCI/ACPI: Implement _HPX Type 3 Setting Record").
+Function prototypes to move are pci_disable_link_state(),
+pci_disable_link_state_locked(), pcie_no_aspm() and
+pcie_aspm_support_enabled(), and definitions to move
+are PCIE_LINK_STATE_L0S, PCIE_LINK_STATE_L1 and
+PCIE_LINK_STATE_CLKPM.
 
-The new struct allowed for the static functions such program_hpx_type0(),
-program_hpx_type1(), etc., from the drivers/pci/probe.c to be called from
-the function pci_acpi_program_hp_params() in the drivers/pci/pci-acpi.c.
-
-Currently, a programming of _HPX Type 0 would be as follows:
-
-drivers/pci/probe.c:
-
-  program_hpx_type0()
-  ...
-  pci_configure_device()
-    hp_ops = {
-      .program_type0 = program_hpx_type0,
-      ...
-    }
-    pci_acpi_program_hp_params(&hp_ops)
-
-drivers/pci/pci-acpi.c:
-
-  pci_acpi_program_hp_params(&hp_ops)
-    acpi_run_hpx(hp_ops)
-      decode_type0_hpx_record()
-        hp_ops->program_type0 # program_hpx_type0() called via hp_ops
-
-After the ACPI-specific functions, structs, enums, etc., have been
-moved to drivers/pci/pci-acpi.c there will be no need to keep using
-the struct hotplug_program_ops as all of the _HPX Type 0, 1, 2 and 3
-would be directly accessible.
+There are no functional changes.
 
 Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
 ---
- drivers/pci/pci-acpi.c | 96 ++++++++++++++++++++++++++++++++----------
- drivers/pci/pci.h      | 74 +-------------------------------
- drivers/pci/probe.c    |  9 +---
- 3 files changed, 77 insertions(+), 102 deletions(-)
+ drivers/acpi/pci_root.c                       |  1 -
+ drivers/char/xillybus/xillybus_pcie.c         |  1 -
+ drivers/net/ethernet/intel/e1000e/e1000.h     |  1 -
+ drivers/net/ethernet/jme.c                    |  1 -
+ drivers/net/ethernet/realtek/r8169_main.c     |  1 -
+ drivers/net/wireless/ath/ath5k/pci.c          |  1 -
+ .../net/wireless/intel/iwlegacy/3945-mac.c    |  1 -
+ .../net/wireless/intel/iwlegacy/4965-mac.c    |  1 -
+ .../net/wireless/intel/iwlwifi/pcie/trans.c   |  1 -
+ drivers/pci/pci-acpi.c                        |  1 -
+ drivers/pci/pcie/aspm.c                       |  1 -
+ drivers/pci/quirks.c                          |  1 -
+ drivers/scsi/aacraid/linit.c                  |  1 -
+ drivers/scsi/hpsa.c                           |  1 -
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c          |  1 -
+ include/linux/pci-aspm.h                      | 36 -------------------
+ include/linux/pci.h                           | 18 ++++++++++
+ 17 files changed, 18 insertions(+), 51 deletions(-)
+ delete mode 100644 include/linux/pci-aspm.h
 
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index 314a187ed572..d1e666ef3fcc 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -15,7 +15,6 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/pci.h>
+ #include <linux/pci-acpi.h>
+-#include <linux/pci-aspm.h>
+ #include <linux/dmar.h>
+ #include <linux/acpi.h>
+ #include <linux/slab.h>
+diff --git a/drivers/char/xillybus/xillybus_pcie.c b/drivers/char/xillybus/xillybus_pcie.c
+index 02c15952b103..18b0c392bc93 100644
+--- a/drivers/char/xillybus/xillybus_pcie.c
++++ b/drivers/char/xillybus/xillybus_pcie.c
+@@ -9,7 +9,6 @@
+ 
+ #include <linux/module.h>
+ #include <linux/pci.h>
+-#include <linux/pci-aspm.h>
+ #include <linux/slab.h>
+ #include "xillybus.h"
+ 
+diff --git a/drivers/net/ethernet/intel/e1000e/e1000.h b/drivers/net/ethernet/intel/e1000e/e1000.h
+index 34cd67951aec..6c51b1bad8c4 100644
+--- a/drivers/net/ethernet/intel/e1000e/e1000.h
++++ b/drivers/net/ethernet/intel/e1000e/e1000.h
+@@ -13,7 +13,6 @@
+ #include <linux/io.h>
+ #include <linux/netdevice.h>
+ #include <linux/pci.h>
+-#include <linux/pci-aspm.h>
+ #include <linux/crc32.h>
+ #include <linux/if_vlan.h>
+ #include <linux/timecounter.h>
+diff --git a/drivers/net/ethernet/jme.c b/drivers/net/ethernet/jme.c
+index 0b668357db4d..57e8aea98969 100644
+--- a/drivers/net/ethernet/jme.c
++++ b/drivers/net/ethernet/jme.c
+@@ -14,7 +14,6 @@
+ #include <linux/module.h>
+ #include <linux/kernel.h>
+ #include <linux/pci.h>
+-#include <linux/pci-aspm.h>
+ #include <linux/netdevice.h>
+ #include <linux/etherdevice.h>
+ #include <linux/ethtool.h>
+diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+index e1dd6ea60d67..a8f373e49505 100644
+--- a/drivers/net/ethernet/realtek/r8169_main.c
++++ b/drivers/net/ethernet/realtek/r8169_main.c
+@@ -28,7 +28,6 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/prefetch.h>
+-#include <linux/pci-aspm.h>
+ #include <linux/ipv6.h>
+ #include <net/ip6_checksum.h>
+ 
+diff --git a/drivers/net/wireless/ath/ath5k/pci.c b/drivers/net/wireless/ath/ath5k/pci.c
+index c6156cc38940..d5ee32ce9eb3 100644
+--- a/drivers/net/wireless/ath/ath5k/pci.c
++++ b/drivers/net/wireless/ath/ath5k/pci.c
+@@ -18,7 +18,6 @@
+ 
+ #include <linux/nl80211.h>
+ #include <linux/pci.h>
+-#include <linux/pci-aspm.h>
+ #include <linux/etherdevice.h>
+ #include <linux/module.h>
+ #include "../ath.h"
+diff --git a/drivers/net/wireless/intel/iwlegacy/3945-mac.c b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+index b82da75a9ae3..4fbcc7fba3cc 100644
+--- a/drivers/net/wireless/intel/iwlegacy/3945-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+@@ -18,7 +18,6 @@
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/pci.h>
+-#include <linux/pci-aspm.h>
+ #include <linux/slab.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/delay.h>
+diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+index fa2c02881939..ffb705b18fb1 100644
+--- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+@@ -18,7 +18,6 @@
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/pci.h>
+-#include <linux/pci-aspm.h>
+ #include <linux/slab.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/delay.h>
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+index f5df5b370d78..4c308e33ee21 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+@@ -62,7 +62,6 @@
+  *
+  *****************************************************************************/
+ #include <linux/pci.h>
+-#include <linux/pci-aspm.h>
+ #include <linux/interrupt.h>
+ #include <linux/debugfs.h>
+ #include <linux/sched.h>
 diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index 0bfabb3f9931..c476b9ed009e 100644
+index 45049f558860..dd520fe927db 100644
 --- a/drivers/pci/pci-acpi.c
 +++ b/drivers/pci/pci-acpi.c
-@@ -118,6 +118,15 @@ phys_addr_t acpi_pci_root_get_mcfg_addr(acpi_handle handle)
- 	return (phys_addr_t)mcfg_addr;
- }
+@@ -14,7 +14,6 @@
+ #include <linux/msi.h>
+ #include <linux/pci_hotplug.h>
+ #include <linux/module.h>
+-#include <linux/pci-aspm.h>
+ #include <linux/pci-acpi.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/pm_qos.h>
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index e44af7f4d37f..ad6259ec51a6 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -18,7 +18,6 @@
+ #include <linux/slab.h>
+ #include <linux/jiffies.h>
+ #include <linux/delay.h>
+-#include <linux/pci-aspm.h>
+ #include "../pci.h"
  
-+/* _HPX PCI Setting Record (Type 0) */
-+struct hpx_type0 {
-+	u32 revision; /* Not present in _HPP */
-+	u8  cache_line_size; /* Not applicable to PCI Express */
-+	u8  latency_timer;   /* Not applicable to PCI Express */
-+	u8  enable_serr;
-+	u8  enable_perr;
-+};
-+
- static struct hpx_type0 pci_default_type0 = {
- 	.revision = 1,
- 	.cache_line_size = 8,
-@@ -126,7 +135,7 @@ static struct hpx_type0 pci_default_type0 = {
- 	.enable_perr = 0,
- };
- 
--void program_hpx_type0(struct pci_dev *dev, struct hpx_type0 *hpx)
-+static void program_hpx_type0(struct pci_dev *dev, struct hpx_type0 *hpx)
- {
- 	u16 pci_cmd, pci_bctl;
- 
-@@ -187,7 +196,15 @@ static acpi_status decode_type0_hpx_record(union acpi_object *record,
- 	return AE_OK;
- }
- 
--void program_hpx_type1(struct pci_dev *dev, struct hpx_type1 *hpx)
-+/* _HPX PCI-X Setting Record (Type 1) */
-+struct hpx_type1 {
-+	u32 revision;
-+	u8  max_mem_read;
-+	u8  avg_max_split;
-+	u16 tot_max_split;
-+};
-+
-+static void program_hpx_type1(struct pci_dev *dev, struct hpx_type1 *hpx)
- {
- 	int pos;
- 
-@@ -243,7 +260,28 @@ static bool pcie_root_rcb_set(struct pci_dev *dev)
- 	return false;
- }
- 
--void program_hpx_type2(struct pci_dev *dev, struct hpx_type2 *hpx)
-+/* _HPX PCI Express Setting Record (Type 2) */
-+struct hpx_type2 {
-+	u32 revision;
-+	u32 unc_err_mask_and;
-+	u32 unc_err_mask_or;
-+	u32 unc_err_sever_and;
-+	u32 unc_err_sever_or;
-+	u32 cor_err_mask_and;
-+	u32 cor_err_mask_or;
-+	u32 adv_err_cap_and;
-+	u32 adv_err_cap_or;
-+	u16 pci_exp_devctl_and;
-+	u16 pci_exp_devctl_or;
-+	u16 pci_exp_lnkctl_and;
-+	u16 pci_exp_lnkctl_or;
-+	u32 sec_unc_err_sever_and;
-+	u32 sec_unc_err_sever_or;
-+	u32 sec_unc_err_mask_and;
-+	u32 sec_unc_err_mask_or;
-+};
-+
-+static void program_hpx_type2(struct pci_dev *dev, struct hpx_type2 *hpx)
- {
- 	int pos;
- 	u32 reg32;
-@@ -369,6 +407,24 @@ static acpi_status decode_type2_hpx_record(union acpi_object *record,
- 	return AE_OK;
- }
- 
-+/* _HPX PCI Express Setting Record (Type 3) */
-+struct hpx_type3 {
-+	u16 device_type;
-+	u16 function_type;
-+	u16 config_space_location;
-+	u16 pci_exp_cap_id;
-+	u16 pci_exp_cap_ver;
-+	u16 pci_exp_vendor_id;
-+	u16 dvsec_id;
-+	u16 dvsec_rev;
-+	u16 match_offset;
-+	u32 match_mask_and;
-+	u32 match_value;
-+	u16 reg_offset;
-+	u32 reg_mask_and;
-+	u32 reg_mask_or;
-+};
-+
- enum hpx_type3_dev_type {
- 	HPX_TYPE_ENDPOINT	= BIT(0),
- 	HPX_TYPE_LEG_END	= BIT(1),
-@@ -498,7 +554,7 @@ static void program_hpx_type3_register(struct pci_dev *dev,
- 		pos, orig_value, write_reg);
- }
- 
--void program_hpx_type3(struct pci_dev *dev, struct hpx_type3 *hpx)
-+static void program_hpx_type3(struct pci_dev *dev, struct hpx_type3 *hpx)
- {
- 	if (!hpx)
- 		return;
-@@ -529,8 +585,7 @@ static void parse_hpx3_register(struct hpx_type3 *hpx3_reg,
- }
- 
- static acpi_status program_type3_hpx_record(struct pci_dev *dev,
--					   union acpi_object *record,
--					   const struct hotplug_program_ops *hp_ops)
-+					   union acpi_object *record)
- {
- 	union acpi_object *fields = record->package.elements;
- 	u32 desc_count, expected_length, revision;
-@@ -554,7 +609,7 @@ static acpi_status program_type3_hpx_record(struct pci_dev *dev,
- 		for (i = 0; i < desc_count; i++) {
- 			reg_fields = fields + 3 + i * 14;
- 			parse_hpx3_register(&hpx3, reg_fields);
--			hp_ops->program_type3(dev, &hpx3);
-+			program_hpx_type3(dev, &hpx3);
- 		}
- 
- 		break;
-@@ -567,8 +622,7 @@ static acpi_status program_type3_hpx_record(struct pci_dev *dev,
- 	return AE_OK;
- }
- 
--static acpi_status acpi_run_hpx(struct pci_dev *dev, acpi_handle handle,
--				const struct hotplug_program_ops *hp_ops)
-+static acpi_status acpi_run_hpx(struct pci_dev *dev, acpi_handle handle)
- {
- 	acpi_status status;
- 	struct acpi_buffer buffer = {ACPI_ALLOCATE_BUFFER, NULL};
-@@ -610,24 +664,24 @@ static acpi_status acpi_run_hpx(struct pci_dev *dev, acpi_handle handle,
- 			status = decode_type0_hpx_record(record, &hpx0);
- 			if (ACPI_FAILURE(status))
- 				goto exit;
--			hp_ops->program_type0(dev, &hpx0);
-+			program_hpx_type0(dev, &hpx0);
- 			break;
- 		case 1:
- 			memset(&hpx1, 0, sizeof(hpx1));
- 			status = decode_type1_hpx_record(record, &hpx1);
- 			if (ACPI_FAILURE(status))
- 				goto exit;
--			hp_ops->program_type1(dev, &hpx1);
-+			program_hpx_type1(dev, &hpx1);
- 			break;
- 		case 2:
- 			memset(&hpx2, 0, sizeof(hpx2));
- 			status = decode_type2_hpx_record(record, &hpx2);
- 			if (ACPI_FAILURE(status))
- 				goto exit;
--			hp_ops->program_type2(dev, &hpx2);
-+			program_hpx_type2(dev, &hpx2);
- 			break;
- 		case 3:
--			status = program_type3_hpx_record(dev, record, hp_ops);
-+			status = program_type3_hpx_record(dev, record);
- 			if (ACPI_FAILURE(status))
- 				goto exit;
- 			break;
-@@ -643,8 +697,7 @@ static acpi_status acpi_run_hpx(struct pci_dev *dev, acpi_handle handle,
- 	return status;
- }
- 
--static acpi_status acpi_run_hpp(struct pci_dev *dev, acpi_handle handle,
--				const struct hotplug_program_ops *hp_ops)
-+static acpi_status acpi_run_hpp(struct pci_dev *dev, acpi_handle handle)
- {
- 	acpi_status status;
- 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
-@@ -679,20 +732,18 @@ static acpi_status acpi_run_hpp(struct pci_dev *dev, acpi_handle handle,
- 	hpx0.enable_serr     = fields[2].integer.value;
- 	hpx0.enable_perr     = fields[3].integer.value;
- 
--	hp_ops->program_type0(dev, &hpx0);
-+	program_hpx_type0(dev, &hpx0);
- 
- exit:
- 	kfree(buffer.pointer);
- 	return status;
- }
- 
--/* pci_get_hp_params
-+/* pci_acpi_program_hp_params
+ #ifdef MODULE_PARAM_PREFIX
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 208aacf39329..9ac1a7564c9e 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -20,7 +20,6 @@
+ #include <linux/delay.h>
+ #include <linux/acpi.h>
+ #include <linux/dmi.h>
+-#include <linux/pci-aspm.h>
+ #include <linux/ioport.h>
+ #include <linux/sched.h>
+ #include <linux/ktime.h>
+diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
+index 644f7f5c61a2..4a858789e6c5 100644
+--- a/drivers/scsi/aacraid/linit.c
++++ b/drivers/scsi/aacraid/linit.c
+@@ -27,7 +27,6 @@
+ #include <linux/moduleparam.h>
+ #include <linux/pci.h>
+ #include <linux/aer.h>
+-#include <linux/pci-aspm.h>
+ #include <linux/slab.h>
+ #include <linux/mutex.h>
+ #include <linux/spinlock.h>
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index 1bb6aada93fa..ac39ed79ccaa 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -21,7 +21,6 @@
+ #include <linux/interrupt.h>
+ #include <linux/types.h>
+ #include <linux/pci.h>
+-#include <linux/pci-aspm.h>
+ #include <linux/kernel.h>
+ #include <linux/slab.h>
+ #include <linux/delay.h>
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+index 717ba0845a2a..27fdbc165446 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+@@ -51,7 +51,6 @@
+ #include <linux/workqueue.h>
+ #include <linux/delay.h>
+ #include <linux/pci.h>
+-#include <linux/pci-aspm.h>
+ #include <linux/interrupt.h>
+ #include <linux/aer.h>
+ #include <linux/raid_class.h>
+diff --git a/include/linux/pci-aspm.h b/include/linux/pci-aspm.h
+deleted file mode 100644
+index 67064145d76e..000000000000
+--- a/include/linux/pci-aspm.h
++++ /dev/null
+@@ -1,36 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- *	aspm.h
+- *
+- *	PCI Express ASPM defines and function prototypes
+- *
+- *	Copyright (C) 2007 Intel Corp.
+- *		Zhang Yanmin (yanmin.zhang@intel.com)
+- *		Shaohua Li (shaohua.li@intel.com)
+- *
+- *	For more information, please consult the following manuals (look at
+- *	http://www.pcisig.com/ for how to get them):
+- *
+- *	PCI Express Specification
+- */
+-
+-#ifndef LINUX_ASPM_H
+-#define LINUX_ASPM_H
+-
+-#include <linux/pci.h>
+-
+-#define PCIE_LINK_STATE_L0S	1
+-#define PCIE_LINK_STATE_L1	2
+-#define PCIE_LINK_STATE_CLKPM	4
+-
+-#ifdef CONFIG_PCIEASPM
+-int pci_disable_link_state(struct pci_dev *pdev, int state);
+-int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
+-void pcie_no_aspm(void);
+-#else
+-static inline int pci_disable_link_state(struct pci_dev *pdev, int state)
+-{ return 0; }
+-static inline void pcie_no_aspm(void) { }
+-#endif
+-
+-#endif /* LINUX_ASPM_H */
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 9e700d9f9f28..f07f52175606 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -6,12 +6,18 @@
+  *	Copyright 1994, Drew Eckhardt
+  *	Copyright 1997--1999 Martin Mares <mj@ucw.cz>
   *
-  * @dev - the pci_dev for which we want parameters
-- * @hpp - allocated by the caller
++ *      PCI Express ASPM defines and function prototypes
++ *      Copyright (c) 2007 Intel Corp.
++ *              Zhang Yanmin (yanmin.zhang@intel.com)
++ *              Shaohua Li (shaohua.li@intel.com)
++ *
+  *	For more information, please consult the following manuals (look at
+  *	http://www.pcisig.com/ for how to get them):
+  *
+  *	PCI BIOS Specification
+  *	PCI Local Bus Specification
+  *	PCI to PCI Bridge Specification
++ *	PCI Express Specification
+  *	PCI System Design Guide
   */
--int pci_acpi_program_hp_params(struct pci_dev *dev,
--			       const struct hotplug_program_ops *hp_ops)
-+int pci_acpi_program_hp_params(struct pci_dev *dev)
- {
- 	acpi_status status;
- 	acpi_handle handle, phandle;
-@@ -715,10 +766,10 @@ int pci_acpi_program_hp_params(struct pci_dev *dev,
- 	 * this pci dev.
- 	 */
- 	while (handle) {
--		status = acpi_run_hpx(dev, handle, hp_ops);
-+		status = acpi_run_hpx(dev, handle);
- 		if (ACPI_SUCCESS(status))
- 			return 0;
--		status = acpi_run_hpp(dev, handle, hp_ops);
-+		status = acpi_run_hpp(dev, handle);
- 		if (ACPI_SUCCESS(status))
- 			return 0;
- 		if (acpi_is_root_bridge(handle))
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -649,80 +649,10 @@ static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
- static inline void pci_aer_clear_device_status(struct pci_dev *dev) { }
+ #ifndef LINUX_PCI_H
+@@ -1565,9 +1571,21 @@ extern bool pcie_ports_native;
+ #define pcie_ports_native	false
  #endif
  
--/* _HPX PCI Setting Record (Type 0) */
--struct hpx_type0 {
--	u32 revision; /* Not present in _HPP */
--	u8  cache_line_size; /* Not applicable to PCI Express */
--	u8  latency_timer;   /* Not applicable to PCI Express */
--	u8  enable_serr;
--	u8  enable_perr;
--};
--
--/* _HPX PCI-X Setting Record (Type 1) */
--struct hpx_type1 {
--	u32 revision;
--	u8  max_mem_read;
--	u8  avg_max_split;
--	u16 tot_max_split;
--};
--
--/* _HPX PCI Express Setting Record (Type 2) */
--struct hpx_type2 {
--	u32 revision;
--	u32 unc_err_mask_and;
--	u32 unc_err_mask_or;
--	u32 unc_err_sever_and;
--	u32 unc_err_sever_or;
--	u32 cor_err_mask_and;
--	u32 cor_err_mask_or;
--	u32 adv_err_cap_and;
--	u32 adv_err_cap_or;
--	u16 pci_exp_devctl_and;
--	u16 pci_exp_devctl_or;
--	u16 pci_exp_lnkctl_and;
--	u16 pci_exp_lnkctl_or;
--	u32 sec_unc_err_sever_and;
--	u32 sec_unc_err_sever_or;
--	u32 sec_unc_err_mask_and;
--	u32 sec_unc_err_mask_or;
--};
--
--/* _HPX PCI Express Setting Record (Type 3) */
--struct hpx_type3 {
--	u16 device_type;
--	u16 function_type;
--	u16 config_space_location;
--	u16 pci_exp_cap_id;
--	u16 pci_exp_cap_ver;
--	u16 pci_exp_vendor_id;
--	u16 dvsec_id;
--	u16 dvsec_rev;
--	u16 match_offset;
--	u32 match_mask_and;
--	u32 match_value;
--	u16 reg_offset;
--	u32 reg_mask_and;
--	u32 reg_mask_or;
--};
--
--void program_hpx_type0(struct pci_dev *dev, struct hpx_type0 *hpx);
--void program_hpx_type1(struct pci_dev *dev, struct hpx_type1 *hpx);
--void program_hpx_type2(struct pci_dev *dev, struct hpx_type2 *hpx);
--void program_hpx_type3(struct pci_dev *dev, struct hpx_type3 *hpx);
--
--struct hotplug_program_ops {
--	void (*program_type0)(struct pci_dev *dev, struct hpx_type0 *hpx);
--	void (*program_type1)(struct pci_dev *dev, struct hpx_type1 *hpx);
--	void (*program_type2)(struct pci_dev *dev, struct hpx_type2 *hpx);
--	void (*program_type3)(struct pci_dev *dev, struct hpx_type3 *hpx);
--};
--
- #ifdef CONFIG_ACPI
--int pci_acpi_program_hp_params(struct pci_dev *dev,
--			       const struct hotplug_program_ops *hp_ops);
-+int pci_acpi_program_hp_params(struct pci_dev *dev);
++#define PCIE_LINK_STATE_L0S	1
++#define PCIE_LINK_STATE_L1	2
++#define PCIE_LINK_STATE_CLKPM	4
++
+ #ifdef CONFIG_PCIEASPM
++int pci_disable_link_state(struct pci_dev *pdev, int state);
++int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
++void pcie_no_aspm(void);
+ bool pcie_aspm_support_enabled(void);
  #else
--static inline int pci_acpi_program_hp_params(struct pci_dev *dev,
--				    const struct hotplug_program_ops *hp_ops)
-+static inline int pci_acpi_program_hp_params(struct pci_dev *dev)
- {
- 	return -ENODEV;
- }
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2095,13 +2095,6 @@ static void pci_configure_serr(struct pci_dev *dev)
++static inline int pci_disable_link_state(struct pci_dev *pdev, int state)
++{ return 0; }
++static inline int pci_disable_link_state_locked(struct pci_dev *pdev, int state)
++{ return 0; }
++static inline void pcie_no_aspm(void) { }
+ static inline bool pcie_aspm_support_enabled(void) { return false; }
+ #endif
  
- static void pci_configure_device(struct pci_dev *dev)
- {
--	static const struct hotplug_program_ops hp_ops = {
--		.program_type0 = program_hpx_type0,
--		.program_type1 = program_hpx_type1,
--		.program_type2 = program_hpx_type2,
--		.program_type3 = program_hpx_type3,
--	};
--
- 	pci_configure_mps(dev);
- 	pci_configure_extended_tags(dev, NULL);
- 	pci_configure_relaxed_ordering(dev);
-@@ -2109,7 +2102,7 @@ static void pci_configure_device(struct pci_dev *dev)
- 	pci_configure_eetlp_prefix(dev);
- 	pci_configure_serr(dev);
- 
--	pci_acpi_program_hp_params(dev, &hp_ops);
-+	pci_acpi_program_hp_params(dev);
- }
- 
- static void pci_release_capabilities(struct pci_dev *dev)
 -- 
 2.22.1
 
