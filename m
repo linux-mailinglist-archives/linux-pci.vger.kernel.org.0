@@ -2,97 +2,254 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D9E55A09D0
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 20:43:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20BE5A0A10
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 20:57:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfH1SnO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Aug 2019 14:43:14 -0400
-Received: from smtprelay0031.hostedemail.com ([216.40.44.31]:42354 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726515AbfH1SnO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Aug 2019 14:43:14 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 128C5181D33FB;
-        Wed, 28 Aug 2019 18:43:13 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::::::::::::::,RULES_HIT:41:355:379:599:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:2393:2559:2562:2693:2828:2900:3138:3139:3140:3141:3142:3353:3622:3865:3866:3867:3870:3871:3872:3873:3874:4321:5007:8828:10004:10400:10848:11232:11658:11914:12043:12296:12297:12663:12740:12760:12895:13069:13255:13311:13357:13439:14180:14659:14721:21063:21080:21433:21451:21627:21795:30003:30029:30051:30054:30091,0,RBL:23.242.196.136:@perches.com:.lbl8.mailshell.net-62.8.0.180 64.201.201.201,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:fn,MSBL:0,DNSBL:neutral,Custom_rules:0:0:0,LFtime:24,LUA_SUMMARY:none
-X-HE-Tag: turn77_73231392da913
-X-Filterd-Recvd-Size: 2909
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 28 Aug 2019 18:43:11 +0000 (UTC)
-Message-ID: <082d21ef9effc015de671ff51d689dab740cea16.camel@perches.com>
-Subject: Re: [PATCH v2] x86/PCI: Add missing log facility and move to use
- pr_ macros in pcbios.c
-From:   Joe Perches <joe@perches.com>
-To:     Krzysztof Wilczynski <kswilczynski@gmail.com>
-Cc:     Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 28 Aug 2019 11:43:09 -0700
-In-Reply-To: <1567017627.3507.0@gmail.com>
-References: <20190825182557.23260-1-kw@linux.com>
-         <20190828175120.22164-1-kw@linux.com>
-         <a13a086c2dd6dd6259d28e5d1d360e2b4d04ca83.camel@perches.com>
-         <1567017627.3507.0@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        id S1726603AbfH1S5O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Aug 2019 14:57:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47206 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726586AbfH1S5N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Aug 2019 14:57:13 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA58122CF5;
+        Wed, 28 Aug 2019 18:57:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567018632;
+        bh=YWRPIo5lY+npq8po6q8Hxw9uV+CVU6RPeUclOwdOxGQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QLKAwqiTPxwGgomTw1T2reBYMxE7Qpb8aaskA1lf/DvrIxznvfA40Vu2kmRI7kuIs
+         JvipCril8TxoMfqswwzTF1GWO3QE1cZFqFfvz8JF20a8d6Wwu7iFMt2X9knUNCLtNv
+         NCFm8KbORoWgOr7GVaRWUP09VxHmTfQK3HOVdSI4=
+Date:   Wed, 28 Aug 2019 13:57:10 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v5 4/7] PCI/ATS: Add PRI support for PCIe VF devices
+Message-ID: <20190828185710.GB7013@google.com>
+References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <827d051ef8c8bbfa815908ce927e607870780cb6.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190815222049.GL253360@google.com>
+ <f05eb779-9f78-f20f-7626-16b8bd28af40@linux.intel.com>
+ <20190819141500.GQ253360@google.com>
+ <20190819225331.GB28404@skuppusw-desk.amr.corp.intel.com>
+ <20190819231925.GW253360@google.com>
+ <20190828182153.GH28404@skuppusw-desk.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828182153.GH28404@skuppusw-desk.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2019-08-28 at 20:40 +0200, Krzysztof Wilczynski wrote:
-> Hello Joe,
-> 
-> Thank you for feedback.
-> [...]
-> > >    Move to pr_debug() over using DBG() from 
-> > > arch/x86/include/asm/pci_x86.h.
+On Wed, Aug 28, 2019 at 11:21:53AM -0700, Kuppuswamy Sathyanarayanan wrote:
+> On Mon, Aug 19, 2019 at 06:19:25PM -0500, Bjorn Helgaas wrote:
+> > On Mon, Aug 19, 2019 at 03:53:31PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> > > On Mon, Aug 19, 2019 at 09:15:00AM -0500, Bjorn Helgaas wrote:
+> > > > On Thu, Aug 15, 2019 at 03:39:03PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> > > > > On 8/15/19 3:20 PM, Bjorn Helgaas wrote:
+> > > > > > [+cc Joerg, David, iommu list: because IOMMU drivers are the only
+> > > > > > callers of pci_enable_pri() and pci_enable_pasid()]
+> > > > > > 
+> > > > > > On Thu, Aug 01, 2019 at 05:06:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > > > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > > > > 
+> > > > > > > When IOMMU tries to enable Page Request Interface (PRI) for VF device
+> > > > > > > in iommu_enable_dev_iotlb(), it always fails because PRI support for
+> > > > > > > PCIe VF device is currently broken. Current implementation expects
+> > > > > > > the given PCIe device (PF & VF) to implement PRI capability before
+> > > > > > > enabling the PRI support. But this assumption is incorrect. As per PCIe
+> > > > > > > spec r4.0, sec 9.3.7.11, all VFs associated with PF can only use the
+> > > > > > > PRI of the PF and not implement it. Hence we need to create exception
+> > > > > > > for handling the PRI support for PCIe VF device.
+> > > > > > > 
+> > > > > > > Also, since PRI is a shared resource between PF/VF, following rules
+> > > > > > > should apply.
+> > > > > > > 
+> > > > > > > 1. Use proper locking before accessing/modifying PF resources in VF
+> > > > > > >     PRI enable/disable call.
+> > > > > > > 2. Use reference count logic to track the usage of PRI resource.
+> > > > > > > 3. Disable PRI only if the PRI reference count (pri_ref_cnt) is zero.
+> > > > 
+> > > > > > Wait, why do we need this at all?  I agree the spec says VFs may not
+> > > > > > implement PRI or PASID capabilities and that VFs use the PRI and
+> > > > > > PASID of the PF.
+> > > > > > 
+> > > > > > But why do we need to support pci_enable_pri() and pci_enable_pasid()
+> > > > > > for VFs?  There's nothing interesting we can *do* in the VF, and
+> > > > > > passing it off to the PF adds all this locking mess.  For VFs, can we
+> > > > > > just make them do nothing or return -EINVAL?  What functionality would
+> > > > > > we be missing if we did that?
+> > > > > 
+> > > > > Currently PRI/PASID capabilities are not enabled by default. IOMMU can
+> > > > > enable PRI/PASID for VF first (and not enable it for PF). In this case,
+> > > > > doing nothing for VF device will break the functionality.
+> > > > 
+> > > > What is the path where we can enable PRI/PASID for VF but not for the
+> > > > PF?  The call chains leading to pci_enable_pri() go through the
+> > > > iommu_ops.add_device interface, which makes me think this is part of
+> > > > the device enumeration done by the PCI core, and in that case I would
+> > > > think this it should be done for the PF before VFs.  But maybe this
+> > > > path isn't exercised until a driver does a DMA map or something
+> > > > similar?
 > > 
-> > You might also consider the checkpatch output for this patch.
+> > > AFAIK, this path will only get exercised when the device does DMA and
+> > > hence there is no specific order in which PRI/PASID is enabled in PF/VF.
+> > > In fact, my v2 version of this patch set had a check to ensure PF
+> > > PRI/PASID enable is happened before VF attempts PRI/PASID
+> > > enable/disable. But I had to remove it in later version of this series
+> > > due to failure case reported by one the tester of this code. 
 > > 
-> > arch/x86/pci/pcbios.c:116: WARNING: line over 80 characters
-> > arch/x86/pci/pcbios.c:116: WARNING: Prefer using '"%s...", __func__' 
-> > to using 'bios32_service', this function's name, in a string
-> > arch/x86/pci/pcbios.c:119: WARNING: Prefer using '"%s...", __func__' 
-> > to using 'bios32_service', this function's name, in a string
-> > arch/x86/pci/pcbios.c:391: WARNING: line over 80 characters
+> > What's the path?  And does that path make sense?
+> > 
+> > I got this far before giving up:
+> > 
+> >     iommu_go_to_state                           # AMD
+> >       state_next
+> >         amd_iommu_init_pci
+> >           amd_iommu_init_api
+> >             bus_set_iommu
+> >               iommu_bus_init
+> >                 bus_for_each_dev(..., add_iommu_group)
+> >                   add_iommu_group
+> >                     iommu_probe_device
+> >                       amd_iommu_add_device                      # amd_iommu_ops.add_device
+> >                         init_iommu_group
+> >                           iommu_group_get_for_dev
+> >                             iommu_group_add_device
+> >                               __iommu_attach_device
+> >                                 amd_iommu_attach_device         # amd_iommu_ops.attach_dev
+> >                                   attach_device                 # amd_iommu
+> >                                     pdev_iommuv2_enable
+> >                                       pci_enable_pri
+> > 
+> > 
+> >     iommu_probe_device
+> >       intel_iommu_add_device                    # intel_iommu_ops.add_device
+> >         domain_add_dev_info
+> >           dmar_insert_one_dev_info
+> >             domain_context_mapping
+> >               domain_context_mapping_one
+> >                 iommu_enable_dev_iotlb
+> >                   pci_enable_pri
+> > 
+> > 
+> > These *look* like enumeration paths, not DMA setup paths.  But I could
+> > be wrong, since I gave up before getting to the source.
+> > 
+> > I don't want to add all this complexity because we *think* we need it.
+> > I want to think about whether it makes *sense*.  Maybe it's sensible
+> > for the PF enumeration or a PF driver to enable the hardware it owns.
+> > 
+> > If we leave it to the VFs, then we have issues with coordinating
+> > between VFs that want different settings, etc.
+> > 
+> > If we understand the whole picture and it needs to be in the VFs,
+> > that's fine.  But I don't think we understand the whole picture yet.
 > 
-> Good point.
+> After re-analyzing the code paths, I also could not find the use case
+> where PF/VF PRI/PASID is enabled in out of order(VF first and then PF).
+> Also, I had no luck in finding that old bug report email which triggered
+> me to come up with this complicated fix. As per my current analysis, as
+> you have mentioned, PF/VF PRI/PASID enable seems to happen only during
+> device creation time.
 > 
-> The lines over 80 characters wide would be taken care of when
-> moving to using the pr_ macros as the line length will now be
-> shorter contrary to when the e.g., printk(KERNEL_INFO ...),
-> etc., was used.
+> Following are some of the possible code paths:
+> 
+> VF PRI/PASID enable path is,
+> 
+> [ 8367.161880]  iommu_enable_dev_iotlb+0x83/0x180
+> [ 8367.168061]  domain_context_mapping_one+0x44f/0x500
+> [ 8367.174264]  ? domain_context_mapping_one+0x500/0x500
+> [ 8367.180429]  pci_for_each_dma_alias+0x30/0x170
+> [ 8367.186368]  dmar_insert_one_dev_info+0x43f/0x4d0
+> [ 8367.192288]  domain_add_dev_info+0x50/0x90
+> [ 8367.197973]  intel_iommu_attach_device+0x9c/0x130
+> [ 8367.203726]  __iommu_attach_device+0x47/0xb0
+> [ 8367.209292]  ? _cond_resched+0x15/0x40
+> [ 8367.214643]  iommu_group_add_device+0x13a/0x2c0
+> [ 8367.220102]  iommu_group_get_for_dev+0xa8/0x220
+> [ 8367.225460]  intel_iommu_add_device+0x61/0x590
+> [ 8367.230708]  iommu_bus_notifier+0xb1/0xe0
+> [ 8367.235768]  notifier_call_chain+0x47/0x70
+> [ 8367.240757]  blocking_notifier_call_chain+0x3e/0x60
+> [ 8367.245854]  device_add+0x3ec/0x690
+> [ 8367.250533]  pci_device_add+0x26b/0x660
+> [ 8367.255207]  pci_iov_add_virtfn+0x1ce/0x3b0
+> [ 8367.259873]  sriov_enable+0x254/0x410
+> [ 8367.264323]  dev_fops_ioctl+0x1378/0x1520 [sad8]
+> [ 8367.322115]  init_fops_ioctl+0x12c/0x150 [sad8]
+> [ 8367.324921]  do_vfs_ioctl+0xa4/0x630
+> [ 8367.327415]  ksys_ioctl+0x70/0x80
+> [ 8367.329822]  __x64_sys_ioctl+0x16/0x20
+> [ 8367.332310]  do_syscall_64+0x5b/0x1a0
+> [ 8367.334771]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> PF PRI/PASID enable path is,
+> 
+> [   11.084005] Call Trace:
+> [   11.084005]  dump_stack+0x5c/0x7b
+> [   11.084005]  iommu_enable_dev_iotlb+0x83/0x180
+> [   11.084005]  domain_context_mapping_one+0x44f/0x500
+> [   11.084005]  ? domain_context_mapping_one+0x500/0x500
+> [   11.084005]  pci_for_each_dma_alias+0x30/0x170
+> [   11.084005]  dmar_insert_one_dev_info+0x43f/0x4d0
+> [   11.084005]  domain_add_dev_info+0x50/0x90
+> [   11.084005]  intel_iommu_attach_device+0x9c/0x130
+> [   11.084005]  __iommu_attach_device+0x47/0xb0
+> [   11.084005]  ? _cond_resched+0x15/0x40
+> [   11.084005]  iommu_group_add_device+0x13a/0x2c0
+> [   11.084005]  iommu_group_get_for_dev+0xa8/0x220
+> [   11.084005]  intel_iommu_add_device+0x61/0x590
+> [   11.084005]  ? iommu_probe_device+0x40/0x40
+> [   11.084005]  add_iommu_group+0xa/0x20
+> [   11.084005]  bus_for_each_dev+0x76/0xc0
+> [   11.084005]  bus_set_iommu+0x85/0xc0
+> [   11.084005]  intel_iommu_init+0xfe5/0x11c1
+> [   11.084005]  ? __fput+0x134/0x220
+> [   11.084005]  ? set_debug_rodata+0x11/0x11
+> [   11.084005]  ? e820__memblock_setup+0x60/0x60
+> [   11.084005]  ? pci_iommu_init+0x16/0x3f
+> [   11.084005]  pci_iommu_init+0x16/0x3f
+> [   11.084005]  do_one_initcall+0x46/0x1f4
+> [   11.084005]  kernel_init_freeable+0x1ba/0x283
+> [   11.084005]  ? rest_init+0xb0/0xb0
+> [   11.084005]  kernel_init+0xa/0x120
+> [   11.084005]  ret_from_fork+0x1f/0x40
+> 
+> Similarly PF/VF PRI/PASID possible disable paths are,
+> 
+> iommu_hotplug_path->disable_dmar_iommu->__dmar_remove_one_dev_info->iommu_disable_dev_iotlb
+> 
+> domain_exit()->domain_remove_dev_info->iommu_disable_dev_iotlb
+> 
+> vfio_iommu_type1_detach_group()->iommu_detach_group()->intel_iommu_detach_device->dmar_remove_one_dev_info
+> 
+> But even in all of these paths, PF/VF PRI/PASID disable have to happen
+> in order (VF first and then PF).
+> 
+> So we can implement the logic of not doing anything for VF when its
+> related PRI/PASID calls. But my questions is, is it safe to go with
+> these assumptions? Since all these dependencies we have found are not
+> explicitly defined, if some one breaks it will also affect PRI/PASID
+> logic. Let me know your comments.
 
-Not really, those were the warnings checkpatch
-emits on your actual patch.
+I think we should assume PRI/PASID will be controlled via the PF.
+That's true today because we initialize them via the IOMMU binding
+path.  If the IOMMU path changes so that's no longer feasible, we
+could probably do the initialization in the PCI core.  These features
+are implemented in the PF, so I think the code will be simpler if it
+mirrors that instead of trying to provide the illusion that they're in
+the VF.
 
-> The other warnings I am going to address in v3.  I was thinking
-> of replacing the following:
-> 
-> pr_warn("bios32_service(0x%lx): not present\n", service);
-> 
-> With something that looks like this:
-> 
-> pr_warn("BIOS32 Service(0x%lx): not present\n", service);
-> 
-> Using "bios32_service" name directly or even moving to __func__
-> feels a lot like an implementation detail is exposed to the
-> end user.  I am not sure how useful that could be.  Also,
-> we are already using log lines starting with "BIOS32", thus
-> it seemed like following them would be the most sensible
-> choice, especially to keep messages consistent.
-> 
-> What do you think?
-
-Fine with me, your patch, your choices.
-
-
+Bjorn
