@@ -2,132 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 181919FCE1
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 10:25:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D4939FD33
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 10:35:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbfH1IZQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Aug 2019 04:25:16 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34378 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfH1IZQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Aug 2019 04:25:16 -0400
-Received: from mail-pf1-f200.google.com ([209.85.210.200])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1i2tGU-0005iR-7h
-        for linux-pci@vger.kernel.org; Wed, 28 Aug 2019 08:25:14 +0000
-Received: by mail-pf1-f200.google.com with SMTP id b8so1507021pfd.5
-        for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2019 01:25:14 -0700 (PDT)
+        id S1726321AbfH1Iez (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Aug 2019 04:34:55 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33669 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbfH1Iez (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Aug 2019 04:34:55 -0400
+Received: by mail-qk1-f195.google.com with SMTP id w18so1713797qki.0
+        for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2019 01:34:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bKbqkzBFkxNdJKJXQR+Wg8QV6rEOuQGhAn3aSf/gT7M=;
+        b=0LY5dSJgfo67dGEGIVRFLIWsHbcXhkEjfOWuVxFfBqzdIeSgoRnl9/zr+F662NYTtv
+         DAtLpJEhQdBbTxZJ9y/EcTuvEGMRslGOXJ0s1pwZHf4Qo2aniHeVfSYZdwTM8rPsGHKq
+         XsevQmVRJi5lG68+Aus5eM/Bggoy5u9XjenGQO72QTp2nBu2r2ylprVKy8sJ9vbYCPAi
+         5bqsvoX688duqLyMJkdEPIAIzz0ZK302QHLnPlOVqvxIR3S8Gq1XXRHD/tLy7uktAfDV
+         CGaFJx/w0ZqswFPkYEkBwoRGzmSD8RBT5gvbd7t101UjfC/mA3NSMDH++G0uFr3KNrk2
+         bNaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=yDQMhkjBqvMckIaETJ30I1V3/odVpy6UAuG1t5GavCg=;
-        b=HvYcEJzTyRaNSY68iFtluM5o4FrQVlFdOlxDzyv3Xq+CBGDFXxAnovRtY6lik/rr1X
-         y0n0Q6hrIYWWzK6WvZkKExle6ADIXFfWJYcRX8EOD+hwuliGqAtH9JteqBg++HR1T1a4
-         MdLxUM8OwWOJAh9xIF46OezrcZjlQD4Y9InuISrmx8YwuLNTl+D57gt7I5ClwmNNNR/B
-         AZiSLxjO13CIfesS96qxfIpUEOLiMLGBV26eIF9jWS2g9GGqO39NtDmpIgUZn7lgjXTv
-         z0SZc/nyiMU/uIk40S2qeB9v9270EvblLoyFQwhMsympdZ6+2Dy17xcQtBwWAPpxEzTP
-         QRjQ==
-X-Gm-Message-State: APjAAAXwXzrwUvC20gO6xQpO+JgrfH/lcTIcmewmrQGYbDwhXE18wYmG
-        ghuuLlMjWC9R+6Ybh/mi2skJs04cksP+95EjTkAcMFhgNtgWCKSAK321YSu6LmSfbamQ2SgTNy1
-        xEv9l+pjHt90tH04t7/GrCuCDE9h1qw3em+4aOQ==
-X-Received: by 2002:a17:902:6b81:: with SMTP id p1mr3053421plk.91.1566980712711;
-        Wed, 28 Aug 2019 01:25:12 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyg3xPhlxpHv0Jw3q47+NdHNvNzyyatg4MSCzNk9Lkvz07TQuVYjHaH9aQx5W+/tAUeIxm73Q==
-X-Received: by 2002:a17:902:6b81:: with SMTP id p1mr3053407plk.91.1566980712363;
-        Wed, 28 Aug 2019 01:25:12 -0700 (PDT)
-Received: from 2001-b011-380f-3c42-f8f8-a260-49a8-d1ed.dynamic-ip6.hinet.net (2001-b011-380f-3c42-f8f8-a260-49a8-d1ed.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:f8f8:a260:49a8:d1ed])
-        by smtp.gmail.com with ESMTPSA id y9sm1820302pfn.152.2019.08.28.01.25.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 01:25:11 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 2/2] ALSA: hda: Allow HDA to be runtime suspended when
- dGPU is not bound
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20190827223125.GB9987@google.com>
-Date:   Wed, 28 Aug 2019 16:25:08 +0800
-Cc:     tiwai@suse.com, linux-pci@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8bit
-Message-Id: <66C43B81-0A08-437F-B099-1C757A42E912@canonical.com>
-References: <20190827134756.10807-1-kai.heng.feng@canonical.com>
- <20190827134756.10807-2-kai.heng.feng@canonical.com>
- <20190827223125.GB9987@google.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.11)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bKbqkzBFkxNdJKJXQR+Wg8QV6rEOuQGhAn3aSf/gT7M=;
+        b=QNxMDT4AHf7Y1nJPe0tT6D1ZvvuQ8BUe8UbrBpNkfkdxAV5YYb8xuZyFHVT06HRq9F
+         Kw5Xnhlc8cn2zwO68fFvPaVgQmAQHlzxETOi4imJJYsHkRo4S4it2kyVB5uCF0gM3VkQ
+         rhsxWgM7Nj5qVK1g2+2HqP/vMELDj6NBVmxz7otJjb/A2o+y9BXGRQPNuRJw2qlvw4Mo
+         yM4u2lCaQTL+Y8kX9cE5j/W6jT/RF6NsWYtLD2I+xJe5S1Wu/EIR75euJpbrG3I/3JJJ
+         8s25/CScGLq7lPBw23vOXTatagvohlOcwVlvUjGU8yp8FDG4fKhD47cTpdCDc6PqalFT
+         pBAA==
+X-Gm-Message-State: APjAAAUjXiU5FTGWijlZ0zMPByYh9Wdt0Dl5iF4XZBJHOux/3HnWM7cK
+        trqwfQdj67jyX0mobR/PmMkhE0Okx83RM9QGTzLi+Q==
+X-Google-Smtp-Source: APXvYqxtwyFq4YxyCPY50hEgBSnFiGRmpJPgBZNALz6POFBCkxPUVDDj5mHn1JruCZ/L+mUaMIJQUWP4i6qbs6M0M+U=
+X-Received: by 2002:ae9:c206:: with SMTP id j6mr2683342qkg.14.1566981294229;
+ Wed, 28 Aug 2019 01:34:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAD8Lp47Vh69gQjROYG69=waJgL7hs1PwnLonL9+27S_TcRhixA@mail.gmail.com>
+ <CAJZ5v0g4T_0VD_oYMF_BF1VM-d1bg-BD8h8=STDrhVBgouPOPg@mail.gmail.com>
+ <01cf6be6-9175-87ca-f3ad-78c06b666893@linux.intel.com> <CAD8Lp4658-c=7KabiJ=xuNRCqPwF4BJauMHqh_8WSBfCFHWSSg@mail.gmail.com>
+ <CAJZ5v0gouaztf7tcKXBr90gjrVjOvqH70regD=o2r_d+9Bwvqg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0gouaztf7tcKXBr90gjrVjOvqH70regD=o2r_d+9Bwvqg@mail.gmail.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Wed, 28 Aug 2019 16:34:42 +0800
+Message-ID: <CAD8Lp47oNJb5N5i4oUQfN5b=xCtUc1Lt852pnXxhNq0vyWj=yg@mail.gmail.com>
+Subject: Re: Ryzen7 3700U xhci fails on resume from sleep
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Endless Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
-
-at 06:31, Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> On Tue, Aug 27, 2019 at 09:47:56PM +0800, Kai-Heng Feng wrote:
->> It's a common practice to let dGPU unbound and use PCI port PM to
->> disable its power through _PR3. When the dGPU comes with an HDA
->> function, the HDA won't be suspended if the dGPU is unbound, so the dGPU
->> power can't be disabled.
+On Tue, Aug 27, 2019 at 3:48 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> That depends on what exactly happens when you try to do the D0-D3-D0
+> with setpci.  If the device becomes unreachable (or worse) after that,
+> it indicates a platform issue.  It should not do any harm at the
+> least.
 >
-> Just a terminology question:
->
-> I thought "using PCI port PM" meant using the PCI Power Management
-> Capability in config space to directly change the device's power
-> state, e.g., in pci_raw_set_power_state().
+> However, in principle D0-D3-D0 at the PCI level alone may not be
+> sufficient, because ACPI may need to be involved.
 
-What I meant is to use pcieport.ko directly.
+After using setpci to do D0-D3-D0 transitions, the xhci module fails to probe.
 
->
-> And I thought using _PS3, _PR3, etc would be part of "platform power
-> management”?
+  xhci_hcd 0000:03:00.3: WARN: xHC restore state timeout
+  xhci_hcd 0000:03:00.3: PCI post-resume error -110!
 
-Ok, will update the wording.
+But maybe it's not a great test; as you say I'm not involving ACPI,
+and also if Linux has a reason for not runtime suspending PCI devices
+without drivers present then maybe I should also not be doing this.
 
->
-> And AFAICT, _PR3 merely returns a list of power resources; it doesn't
-> disable power itself.
+> I think that PM-runtime should suspend XHCI controllers without
+> anything on the bus under them, so I wonder what happens if
+> ".../power/control" is set to "on" and then to "auto" for that device,
+> with the driver loaded.
 
-Yes, through its _PS3 and _OFF. I’ll update the wording.
+Good hint.
 
-Kai-Heng
+# echo on > /sys/bus/pci/devices/0000\:03\:00.3/power/control
+# echo auto > /sys/bus/pci/devices/0000\:03\:00.3/power/control
+# echo 1 > /sys/bus/usb/devices/1-4/remove
+# cat /sys/bus/pci/devices/0000\:03\:00.3/power/runtime_status
+suspended
+# echo on > /sys/bus/pci/devices/0000\:03\:00.3/power/control
 
->
->> Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
->> discrete GPU") only allows HDA to be runtime-suspended once GPU is
->> bound, to keep APU's HDA working.
->>
->> However, HDA on dGPU isn't that useful if dGPU is unbound. So let relax
->> the runtime suspend requirement for dGPU's HDA function, to save lots of
->> power.
->>
->> BugLink: https://bugs.launchpad.net/bugs/1840835
->> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->> ---
->>  sound/pci/hda/hda_intel.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
->> index 99fc0917339b..d4ee070e1a29 100644
->> --- a/sound/pci/hda/hda_intel.c
->> +++ b/sound/pci/hda/hda_intel.c
->> @@ -1285,7 +1285,8 @@ static void init_vga_switcheroo(struct azx *chip)
->>  		dev_info(chip->card->dev,
->>  			 "Handle vga_switcheroo audio client\n");
->>  		hda->use_vga_switcheroo = 1;
->> -		hda->need_eld_notify_link = 1; /* cleared in gpu_bound op */
->> +		/* cleared in gpu_bound op */
->> +		hda->need_eld_notify_link = !pci_pr3_present(p);
->>  		chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
->>  		pci_dev_put(p);
->>  	}
->> -- 
->> 2.17.1
+The final command there triggers these messages (including a printk I
+added in pci_raw_set_power_state):
+ xhci_hcd 0000:03:00.3: pci_raw_set_power_state from 3 to 0
+ xhci_hcd 0000:03:00.3: Refused to change power state, currently in D3
+ xhci_hcd 0000:03:00.3: pci_raw_set_power_state from 3 to 0
+ xhci_hcd 0000:03:00.3: enabling device (0000 -> 0002)
+ xhci_hcd 0000:03:00.3: WARN: xHC restore state timeout
+ xhci_hcd 0000:03:00.3: PCI post-resume error -110!
+ xhci_hcd 0000:03:00.3: HC died; cleaning up
 
+So we just reproduced the same issue using runtime PM, without having
+to go through the whole suspend path.
 
+I guess that points towards a platform issue, although the weird thing
+is that Windows presumably does the D3-D0-D3 transition during
+suspend/resume and that appears to work fine.
+
+I'll report it to the vendor, but if you have any other debug ideas
+they would be much appreciated.
+
+Daniel
