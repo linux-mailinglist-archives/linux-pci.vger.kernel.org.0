@@ -2,124 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D98AB9FF11
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 12:04:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 771439FF1A
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 12:07:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbfH1KEL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Aug 2019 06:04:11 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:19073 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfH1KEL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Aug 2019 06:04:11 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d66519a0000>; Wed, 28 Aug 2019 03:04:10 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 28 Aug 2019 03:04:10 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 28 Aug 2019 03:04:10 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 28 Aug
- 2019 10:04:09 +0000
-Received: from [10.24.46.191] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 28 Aug
- 2019 10:04:04 +0000
-Subject: Re: [PATCH 0/6] PCI: tegra: Enable PCIe C5 controller of Tegra194 in
- p2972-0000 platform
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <jonathanh@nvidia.com>, <kishon@ti.com>,
-        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
-        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190826073143.4582-1-vidyas@nvidia.com>
- <20190828091028.GB2917@ulmo>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <57b55bde-0f59-27ef-8bd3-13408d6d4493@nvidia.com>
-Date:   Wed, 28 Aug 2019 15:34:02 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726300AbfH1KHm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Aug 2019 06:07:42 -0400
+Received: from mga05.intel.com ([192.55.52.43]:39882 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726292AbfH1KHm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Aug 2019 06:07:42 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 03:07:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
+   d="scan'208";a="210115035"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 28 Aug 2019 03:07:40 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i2urb-0006RD-2L; Wed, 28 Aug 2019 13:07:39 +0300
+Date:   Wed, 28 Aug 2019 13:07:39 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] PCI/AER: Update parameter descriptions to satisfy
+ kernel-doc validator
+Message-ID: <20190828100739.GJ2680@smile.fi.intel.com>
+References: <20190827151823.75312-1-andriy.shevchenko@linux.intel.com>
+ <20190827151823.75312-2-andriy.shevchenko@linux.intel.com>
+ <71eb8108-61a7-2815-4082-75c21f8bbf03@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190828091028.GB2917@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <71eb8108-61a7-2815-4082-75c21f8bbf03@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8/28/2019 2:40 PM, Thierry Reding wrote:
-> On Mon, Aug 26, 2019 at 01:01:37PM +0530, Vidya Sagar wrote:
->> This patch series enables Tegra194's C5 controller which owns x16 slot in
->> p2972-0000 platform. C5 controller's PERST# and CLKREQ# are not configured as
->> output and bi-directional signals by default and hence they need to be
->> configured explicitly. Also, x16 slot's 3.3V and 12V supplies are controlled
->> through GPIOs and hence they need to be enabled through regulator framework.
->> This patch series adds required infrastructural support to address both the
->> aforementioned requirements.
->> Testing done on p2972-0000 platform
->> - Able to enumerate devices connected to x16 slot (owned by C5 controller)
->> - Enumerated device's functionality verified
->> - Suspend-Resume sequence is verified with device connected to x16 slot
->>
->> Vidya Sagar (6):
->>    dt-bindings: PCI: tegra: Add sideband pins configuration entries
->>    arm64: tegra: Add configuration for PCIe C5 sideband signals
->>    PCI: tegra: Add support to configure sideband pins
->>    dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
->>    arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
->>    PCI: tegra: Add support to enable slot regulators
+On Tue, Aug 27, 2019 at 10:06:54AM -0700, Kuppuswamy Sathyanarayanan wrote:
 > 
-> Hi Vidya,
-> 
-> when you resend with review comments addressed, can you please reorder
-> the patches slightly? I think it's more natural to order them like this:
-> 
->      dt-bindings: PCI: tegra: Add sideband pins configuration entries
->      PCI: tegra: Add support to configure sideband pins
->      dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
->      PCI: tegra: Add support to enable slot regulators
->      arm64: tegra: Add configuration for PCIe C5 sideband signals
->      arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
-> 
-> Or perhaps even like this:
-> 
->      dt-bindings: PCI: tegra: Add sideband pins configuration entries
->      dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
->      PCI: tegra: Add support to configure sideband pins
->      PCI: tegra: Add support to enable slot regulators
->      arm64: tegra: Add configuration for PCIe C5 sideband signals
->      arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
-> 
-> That makes it more obvious that patches 1-2 need an Acked-by from Rob
-> and patches 1-4 need to go through Lorenzo's tree and that I'll pick up
-> patches 5-6.Sure.
-I'll do that.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-	t=1566986650; bh=fKSn9tEu0u/7kvehjleUQGVzZJJHx0MojZ9eQ2aJqWM=;
-	h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-	 X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-	 Content-Transfer-Encoding;
-	b=aSDWQiNYeJefaP3hT1F2Kc9CSOb6AJPVC1NOPnn4rLtaj7EOJb+j70r/h4+I3bKEk
-	 N6siO4F51Zz49OC3S0601fPefcag3AJZZQEdvrpk3pIhqGZ+62QMXTeG4f7t/ETsLY
-	 TPYf5ksG6Kb8vxeUEAY6ATiHOIhjJhbLjRn/uJ/Oat+8ZRv3VgTOtujSHpzsKf1rTz
-	 gJZbRa8GsOlGBEvMoc7xxgRDx1/GzUqaHw8T8GqLV/JDOW9qNy44TVpHkk4Exc7g5+
-	 bM5zCyghflgpfG+ZMzbwZEkd1b4gDyPfxYL2J+AzEjgQyVsBSU6+nXSjJg65VfzSd6
-	 bM8cWEfkmyeMA==
+> On 8/27/19 8:18 AM, Andy Shevchenko wrote:
+> > Kernel-doc validator complains:
+> > 
+> > aer.c:207: warning: Function parameter or member 'str' not described in 'pcie_ecrc_get_policy'
+> > aer.c:1209: warning: Function parameter or member 'irq' not described in 'aer_isr'
+> > aer.c:1209: warning: Function parameter or member 'context' not described in 'aer_isr'
+> > aer.c:1209: warning: Excess function parameter 'work' description in 'aer_isr'
+> > 
+> > Fix the above accordingly.
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Thanks,
-Vidya Sagar
+> Reviewed-by: Kuppuswamy Sathyanarayanan
+> <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-> 
-> Thierry
-> 
+Thanks!
+JFYI: Keep your tag on one line. Some bots require this IIRC (patchwork).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
