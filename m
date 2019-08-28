@@ -2,59 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BF7039FFAC
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 12:23:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 774EC9FFF3
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 12:32:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbfH1KXZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Aug 2019 06:23:25 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43372 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726447AbfH1KXZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Aug 2019 06:23:25 -0400
-Received: by mail-wr1-f66.google.com with SMTP id y8so1901576wrn.10;
-        Wed, 28 Aug 2019 03:23:23 -0700 (PDT)
+        id S1726413AbfH1KcF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Aug 2019 06:32:05 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37266 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbfH1KcF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Aug 2019 06:32:05 -0400
+Received: by mail-wm1-f65.google.com with SMTP id d16so2279259wme.2;
+        Wed, 28 Aug 2019 03:32:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:subject:to:cc:message-id:in-reply-to:references
          :mime-version;
-        bh=wyK/ROTq5hiGEtLsw4uZv9FHdnrdKjorIZI4r+cqjPc=;
-        b=Q+m7x1iHtQql3U5uyeXAsQMVp8PY+Wbb5pv1ssAxM1eeXIemKTN5oLIPRLWD2bS04l
-         iABhqmHvoSKsgEk3DQcr9zNNSLUhxqP14Kn40rd1mubFLE5y76Fnm3s8AryKR1Llr9RH
-         C2KmoukTjEOext3LNTg8shT5Lw8Jcnp1aGdas6pKu1kDeQzwAJehDjXVl2URwujnD5Og
-         e05okmNUDD6gdQiJL0+sNYvDYSTLmuw/IxPfp6MVoRQmektDxlHwki8R1zKJehzHa2vR
-         HdAfHp3rJREoBuSJ3MGGOcH8NJ8Vlq3K7zAOrTIKo0GePoZ9inc+c4BuYqIi2eqOBniN
-         oNaw==
+        bh=O9bYm+nsJ9IvBpQO/QVMQi2zV67cEqyaEMQRFcxhnAU=;
+        b=KDEmsUc7HCO4dnB3WwF+eR0XWJULy/HSWbfq6Tzib2PecM+pX4J6XeWbdR6mjPog9b
+         Ivvpck44TaTTQ88e6kzk5BIzV3aGTcfV+jHkRIACnbsSGdhJJYpNE4fUoBV7JmTYJH/x
+         3PuFcT9XKiY2PT9bZWU9YXuLac7a6zw2ek+r21S0ag7wljteE2tfDlsrDhgBrCtjo/TF
+         qxtkftZKlHDSTtpSfO20GNCGMaIuNktI2tIE5uaDf0vnbWYedZKz+hptfGASywIY/2Xx
+         1SgwzHnJP6NG0CjrG88b8xJLV3Qm7RR2aJ8tzXybOVx2m1nfoJaCv9OelAixySM29TFg
+         8jFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:subject:to:cc:message-id:in-reply-to
          :references:mime-version;
-        bh=wyK/ROTq5hiGEtLsw4uZv9FHdnrdKjorIZI4r+cqjPc=;
-        b=FcnasHLhv115dsPtNVND6aVUnv/2eW1w9+U3mZ9ew6JZc6WZUNq0d7Y10KEHVMrDvd
-         7MNzI029Bvi/4xSeF3tKFfFkuF91A5dNGtovY20Pzq1DRs3AuRkfKudKPYLj1MDBqEGD
-         +YXqI8n2/ma/3DuPrgQuNjp/BfYQgxIaNQlE6LHOmmDSelnaMdV/3haOO6I+dvdWXM6R
-         hFbdnpclT+H+/YOdOKIPi3YkMq77uBHp2n83sreMLTojxUKmQMld5og/t8nR+Am2D+bC
-         fkl7x3JY+OFqNfxU0TNKelLCTlz39yppjrjByJQ64uQpBNksaSk9cKrMb83jpoa8r+HK
-         omGQ==
-X-Gm-Message-State: APjAAAXpFNGgeT+rGGSfATdAymR811q/0p13yhhHsocIs/ao0ITZdc0c
-        dyEGan1LN3p5VPC9qbedgOI=
-X-Google-Smtp-Source: APXvYqx8NQ9jqeZ/HdIwUelTb2YC7sOIaSVHF9TPrp9J+/6sFS8endSgxj5pTGcV6IM+d4scRgIunQ==
-X-Received: by 2002:adf:ce08:: with SMTP id p8mr1070588wrn.161.1566987802533;
-        Wed, 28 Aug 2019 03:23:22 -0700 (PDT)
+        bh=O9bYm+nsJ9IvBpQO/QVMQi2zV67cEqyaEMQRFcxhnAU=;
+        b=M0LEbs/4gMjjXK0/Zc5+R597cxzpQk3FyuvyoZPzchUs3vDPvmUZXowyl+bgPzRMpF
+         yZCDhrvap5hDoZ1JN4AJuiEqRrQ2ubP/BzawhccnCWPkSqkIva8xUjOAWISSW/oQe9lN
+         AAcxwYegsOo5/T6Zabhtu9CcYdl88IOM4iBUAsu0IsPoPbDm3bGxeWR0ajHxyCp2H0tR
+         Bbi4yBTrdWTN19cyA4JcVP9Ns/Nyr70nHtP88445UDees4A1g+O6Jv3QU2eL6yB5XDRs
+         GY1e+kW7Rh0e51FDzPrIRtRQ9JrZLIZfHg43VI71AP9O1vhNY5ZebCuv7FHshlOUevkN
+         LW2g==
+X-Gm-Message-State: APjAAAUTPQ2dYSXupWlMjGVv7Dah0dkPNWuaeqWmyG6Qh7QwTj7Aolcz
+        7SXIBY7/ftEpyURX/3PtKQM=
+X-Google-Smtp-Source: APXvYqyd0950RxmumVL/1HKXnIl5wEhYU7GYA8pBokTHKVTP81dK9Zni52g5XauBTsmBAWhtjDXIKw==
+X-Received: by 2002:a7b:c8c1:: with SMTP id f1mr3628820wml.87.1566988323034;
+        Wed, 28 Aug 2019 03:32:03 -0700 (PDT)
 Received: from [192.168.1.105] (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id d19sm3252121wrb.7.2019.08.28.03.23.20
+        by smtp.gmail.com with ESMTPSA id g13sm2819125wrw.87.2019.08.28.03.32.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 03:23:21 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 12:23:19 +0200
+        Wed, 28 Aug 2019 03:32:02 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 12:32:00 +0200
 From:   Krzysztof Wilczynski <kswilczynski@gmail.com>
-Subject: Re: [PATCH] PCI: Move static keyword to the front of declarations in
- pci-bridge-emul.c
+Subject: Re: [PATCH] x86/PCI: Add missing SPDX license header.
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Message-Id: <1566987800.26704.0@gmail.com>
-In-Reply-To: <20190827233017.GK9987@google.com>
-References: <20190826151436.4672-1-kw@linux.com>
-        <20190827233017.GK9987@google.com>
+Cc:     Krzysztof Wilczynski <kw@linux.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Daniel J Blueman <daniel@numascale.com>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <1566988320.26704.1@gmail.com>
+In-Reply-To: <20190827232457.GI9987@google.com>
+References: <20190819060624.17305-1-kw@linux.com>
+        <20190827232457.GI9987@google.com>
 X-Mailer: geary/3.32.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
@@ -63,42 +66,22 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Bjorn and Thomas,
+Hello Bjorn,
 
 Thank you for the feedback.
 
 [...]
->>  Move the static keyword to the front of declarations of
->>  pci_regs_behavior and pcie_cap_regs_behavior, and resolve
->>  compiler warning that can be seen when building with
->>  warnings enabled (W=1).
+>>  +// SPDX-License-Identifier: GPL-2.0
+>>   /*
+>>    * This file is subject to the terms and conditions of the GNU 
+>> General Public
+>>    * License.  See the file "COPYING" in the main directory of this 
+>> archive
 > 
-> It would be useful to include the compiler warning in the commit log.
+> You can remove this license text at the same time as in 8cfab3cf63cf
+> ("PCI: Add SPDX GPL-2.0 to replace GPL v2 boilerplate").
 
-Good point.  Sorry about that.  I will send a v2 that includes
-updated commit message.
-
-> I notice there are a few similar occurrences elsewhere in the tree:
-> 
->   arch/csky/kernel/perf_event.c:const static struct of_device_id 
-> csky_pmu_of_device_ids[] = {
->   arch/nds32/kernel/perf_event_cpu.c:const static struct of_device_id 
-> cpu_pmu_of_device_ids[] = {
->   drivers/gpu/drm/msm/dsi/dsi_cfg.c:const static struct 
-> msm_dsi_host_cfg_ops msm_dsi_v2_host_ops = {
->   drivers/gpu/drm/msm/dsi/dsi_cfg.c:const static struct 
-> msm_dsi_host_cfg_ops msm_dsi_6g_host_ops = {
->   drivers/gpu/drm/msm/dsi/dsi_cfg.c:const static struct 
-> msm_dsi_host_cfg_ops msm_dsi_6g_v2_host_ops = {
->   drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c:const static 
-> struct wiphy_iftype_ext_capab he_iftypes_ext_capa[] = {
->   fs/unicode/utf8-selftest.c:const static struct {
->   fs/unicode/utf8-selftest.c:const static struct {
-> 
-> Those should probably be fixed, too (but in separate patches since
-> other maintainers would take them).
-
-I will take care about these too.
+Will do. I am going to send an updated v2 that takes care about this.
 
 Krzysztof
 
