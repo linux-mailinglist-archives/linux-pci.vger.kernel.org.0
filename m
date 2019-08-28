@@ -2,56 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C2917A0778
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 18:36:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C94A6A0779
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 18:36:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfH1Qgt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Aug 2019 12:36:49 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:35474 "EHLO
+        id S1726515AbfH1Qgv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Aug 2019 12:36:51 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45973 "EHLO
         mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfH1Qgt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Aug 2019 12:36:49 -0400
-Received: by mail-ed1-f66.google.com with SMTP id t50so755788edd.2
-        for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2019 09:36:47 -0700 (PDT)
+        with ESMTP id S1726472AbfH1Qgv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Aug 2019 12:36:51 -0400
+Received: by mail-ed1-f66.google.com with SMTP id x19so675456eda.12
+        for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2019 09:36:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=80ZrKgSivSW8WuAEFrIJj/qoImkkT28I8bgQGgM3b5k=;
-        b=LrM+ynsYR7GYORsfwTv8c7QKitpkwJN75gF+hRzbK+Vgo/MXzNKqSvS8vLWW1xMtG8
-         ET7L0yqhjluQecCxHpxpVaqGVJawp76CRaT84IXVxTKiRPVKdQ3S6Ogzqg7jMU1xZhOM
-         SIPioVekpDg3RQmj553WXzEsmzrFKEKoL9nEIkeQHBPPltinhlKiG18EqheA1YQCX203
-         uVIhpo0/ADDCr97CQtLqENWzGjI4fGEGriI8+9RnxMFIRCGma7S7ZX4nnP3PhtwvLdoz
-         L3sIeK/2sJGU5rO6LAQuiJnldi7ZIpoRkLlgdUUH7VNTMWGE5kWFwGDDXVZtjfBy2LEe
-         FRUw==
+        bh=kmCn7C0sRpOCWgYfI3KtN2oHKFZs45dKwXRqZzCSl9s=;
+        b=T2HUOvzjxuJj6Tq8jF+DxOjzEePhRRtX9NGwpDgDfxMBsFFXTRxOEmx5orPLpIhUyB
+         76qB2i/n00AEFTE66IeO+ppig4B7/tVTP5HPejafpegR3mveGVvmvjlIUNnKHgTV0LVy
+         4AoqwArr8AGg1nWmjhjzvdAKYMhDB3fhOw+38LsPEHw+rlH0OYnfP0iHgMC8JnBjfAAx
+         jERJl7eBVTaRyxmbriZXjNinV4SlY5qMSOqEf2FGKIPsj+Rszlm7Os+1w3md/Op23fjY
+         LpQNmTEfeAYccrbVdRhzmc3+vLoYGXeXp8T3rQCsUNN5HOA5F4/xNGTRZcHByAv5ofPw
+         9wzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=80ZrKgSivSW8WuAEFrIJj/qoImkkT28I8bgQGgM3b5k=;
-        b=dQDVRyR1rw57YBksd459kTXV90WPPj0v2SF3TS+4OaAzfP0qqFbDokoBlaQWENjXbr
-         y6JUFTjCKJFoH8dpNKfS9EuPHyxxGFZl2Hty8vgjqk7zMmUJDvWgXO2pn33OnTo3oi9r
-         Qj6zmNfURY1ODMldg3Jvku7urpCCAOVnPRnjZ28RGsGRfEwe763+dcTNv9oC+lmuWwGN
-         +s18uIg2DU3STNQ/klfrXqVlcmW+xuhIJ2Hrid27TA/s5VxrwApZoc+tUrjdlEw2hO+B
-         WAIutYDdqCarbJbfIn4pSYMSfqe1xSgDC+DJCgoAY5a2w4OkiOkQh2rTASYLsPZCf44U
-         C/Bg==
-X-Gm-Message-State: APjAAAUMjTFujpG+5xd+egeBNqfZ/JTTWEXdwg3/hifkzD585vVkBx+Q
-        J8CTEIPo9h9SrvYXRH0d+qs=
-X-Google-Smtp-Source: APXvYqzjoRSE84BDLem3z/1CwoRMcw5726zQzh7WEENOVFsbq/kJwYtrSyuBh2TYolObPQ8xmkdlNQ==
-X-Received: by 2002:a05:6402:789:: with SMTP id d9mr4884877edy.25.1567010207110;
-        Wed, 28 Aug 2019 09:36:47 -0700 (PDT)
+        bh=kmCn7C0sRpOCWgYfI3KtN2oHKFZs45dKwXRqZzCSl9s=;
+        b=mPpkUGheVecGhikbzpJts7bpODZLVPZjnwIjbn4NfWYf3JoOVyrP4yMvfYB6+68ROv
+         CkYCFZHQdoy9CmAZ5y50RKpP8PiXRgyvej2FL2tAUzzWl6QcGlTJe98NXG6j66z5aDes
+         yT09bCNw2qUUoUGu6XsL/xr30ZAxIcnD5hbbX7e6NQiNunzgT5grYKY5jRWfVLH5VuqK
+         VnPG91CgHMcpHuPuXrPgIhxiSuMjSaJUrR/GmSLnhXp6UtBCHlX2LWfyl2exWpVaPtc6
+         ThHUu7snJecJNA4sRWz57qPpc3orDUXsxwlDMlrb1d3ND48ULktw602lsqydCo7/SYyT
+         4aEQ==
+X-Gm-Message-State: APjAAAX4yVFfWL56BaItwcd8PwQ8RRdCzk03BzKzKPUfKPtTV4zX2vhZ
+        Cwf1j+xjCAJuuVtOW1mvhC0=
+X-Google-Smtp-Source: APXvYqzIf/XzwZtwNInsuJj1oavENaEWpR+UcoyCyExiTc1SnDuw/QyRfNS5Azoz94f0BkC55Ba91w==
+X-Received: by 2002:a50:f419:: with SMTP id r25mr5014817edm.57.1567010209371;
+        Wed, 28 Aug 2019 09:36:49 -0700 (PDT)
 Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id b3sm447457ejl.55.2019.08.28.09.36.45
+        by smtp.gmail.com with ESMTPSA id nn19sm449978ejb.12.2019.08.28.09.36.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 09:36:45 -0700 (PDT)
+        Wed, 28 Aug 2019 09:36:48 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Andrew Murray <andrew.murray@arm.com>, linux-pci@vger.kernel.org,
-        Shawn Guo <shawn.guo@linaro.org>
-Subject: [PATCH 4/5] PCI: histb: Properly handle optional regulators
-Date:   Wed, 28 Aug 2019 18:36:35 +0200
-Message-Id: <20190828163636.12967-4-thierry.reding@gmail.com>
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: [PATCH 5/5] PCI: iproc: Properly handle optional PHYs
+Date:   Wed, 28 Aug 2019 18:36:36 +0200
+Message-Id: <20190828163636.12967-5-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190828163636.12967-1-thierry.reding@gmail.com>
 References: <20190828163636.12967-1-thierry.reding@gmail.com>
@@ -64,39 +66,44 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-regulator_get_optional() can fail for a number of reasons besides probe
-deferral. It can for example return -ENOMEM if it runs out of memory as
-it tries to allocate data structures. Propagating only -EPROBE_DEFER is
+devm_phy_get() can fail for a number of resides besides probe deferral.
+It can for example return -ENOMEM if it runs out of memory as it tries
+to allocate devres structures. Propagating only -EPROBE_DEFER is
 problematic because it results in these legitimately fatal errors being
-treated as "regulator not specified in DT".
+treated as "PHY not specified in DT".
 
-What we really want is to ignore the optional regulators only if they
-have not been specified in DT. regulator_get_optional() returns -ENODEV
-in this case, so that's the special case that we need to handle. So we
-propagate all errors, except -ENODEV, so that real failures will still
-cause the driver to fail probe.
+What we really want is to ignore the optional PHYs only if they have not
+been specified in DT. devm_phy_optional_get() is a function that exactly
+does what's required here, so use that instead.
 
-Cc: Shawn Guo <shawn.guo@linaro.org>
+Cc: Ray Jui <rjui@broadcom.com>
+Cc: Scott Branden <sbranden@broadcom.com>
+Cc: bcm-kernel-feedback-list@broadcom.com
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/pci/controller/dwc/pcie-histb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-iproc-platform.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
-index 954bc2b74bbc..811b5c6d62ea 100644
---- a/drivers/pci/controller/dwc/pcie-histb.c
-+++ b/drivers/pci/controller/dwc/pcie-histb.c
-@@ -340,8 +340,8 @@ static int histb_pcie_probe(struct platform_device *pdev)
+diff --git a/drivers/pci/controller/pcie-iproc-platform.c b/drivers/pci/controller/pcie-iproc-platform.c
+index 5a3550b6bb29..9ee6200a66f4 100644
+--- a/drivers/pci/controller/pcie-iproc-platform.c
++++ b/drivers/pci/controller/pcie-iproc-platform.c
+@@ -93,12 +93,9 @@ static int iproc_pcie_pltfm_probe(struct platform_device *pdev)
+ 	pcie->need_ib_cfg = of_property_read_bool(np, "dma-ranges");
  
- 	hipcie->vpcie = devm_regulator_get_optional(dev, "vpcie");
- 	if (IS_ERR(hipcie->vpcie)) {
--		if (PTR_ERR(hipcie->vpcie) == -EPROBE_DEFER)
+ 	/* PHY use is optional */
+-	pcie->phy = devm_phy_get(dev, "pcie-phy");
+-	if (IS_ERR(pcie->phy)) {
+-		if (PTR_ERR(pcie->phy) == -EPROBE_DEFER)
 -			return -EPROBE_DEFER;
-+		if (PTR_ERR(hipcie->vpcie) != -ENODEV)
-+			return PTR_ERR(hipcie->vpcie);
- 		hipcie->vpcie = NULL;
- 	}
+-		pcie->phy = NULL;
+-	}
++	pcie->phy = devm_phy_optional_get(dev, "pcie-phy");
++	if (IS_ERR(pcie->phy))
++		return PTR_ERR(pcie->phy);
  
+ 	ret = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff, &resources,
+ 						    &iobase);
 -- 
 2.22.0
 
