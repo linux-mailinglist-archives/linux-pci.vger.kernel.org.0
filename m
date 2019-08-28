@@ -2,146 +2,225 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E1FECA0A86
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 21:36:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0703AA0AC2
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 21:54:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfH1Tgw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Aug 2019 15:36:52 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44044 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbfH1Tgw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Aug 2019 15:36:52 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k22so618316oiw.11;
-        Wed, 28 Aug 2019 12:36:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fMw4NAQR15jFRGg47hS9E1G9rDiMkZE/YWhS4jiC9BQ=;
-        b=KvpOLeo1KYyOkdOLdBNEM0yoTpH55Mkwam/x4ZcbDAsaNGyH7XvW3vpbOlRIBWK66L
-         SZP3Q15wmCUoUEqeOnXACRIocFIl3n+IQCtaOcCs2vBCy5xRPWoedHQkJzooTsggHhRz
-         1wQZYJHX+hlJSRCEqvw4yryxOCvljeEMYwGKL594eGxjovL4Qd8bDPTc+6pyRQk+m30g
-         d0bWdKCSpHu3L6SbpH5PrTmWcivnlARLOBxZIhhJbnBuIBSZSCXFSSDu61dfTsb4YCKp
-         YPIsiRGnf7XSHN9sRS5SdDoCj0OErQevSrYhbcZXU6qgBJceLokgm0VqyiikcI7Fu4E/
-         sW8w==
+        id S1726725AbfH1TyV convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 28 Aug 2019 15:54:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:24305 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726749AbfH1TyU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Aug 2019 15:54:20 -0400
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com [209.85.208.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2BF8E3DE0F
+        for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2019 19:54:19 +0000 (UTC)
+Received: by mail-lj1-f197.google.com with SMTP id k14so133055ljg.12
+        for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2019 12:54:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fMw4NAQR15jFRGg47hS9E1G9rDiMkZE/YWhS4jiC9BQ=;
-        b=BhRKkH5gVNDI/bPEwOyDVyctijuxUHqwORx82fYQ8PEcuqxN8VcgVXgGvSUQntLH6T
-         gYCFmp08MOkONi8OgUx6NrzVXeUuCUF1MrqTUHuf4uDU1XB3Uk7cUGHY1NSbjbPDVL7l
-         u++huAwa9Yk9vuTuVeHErziyxvg4WjVCRI5MqWuQswcZdnS/1v5wlj2rg1QbwDRTjhr7
-         6vn32sumBdmLL1a6EAfWJ/34xdw4u9Ns/kD7YMMwhiV4dpra4Dp33XF0a+KVD6CSTYTA
-         0ZnBRWvuypoZsRZO7/S6g1xj4a+SdB8YjiZ913C/vHXmSYYxTtj3cmwDZLOqHvLM/enZ
-         UEvg==
-X-Gm-Message-State: APjAAAWHnJogYwA6wag6FhtpbV0vCroYtsUNrQDjFyfHMttY4sfTg+30
-        6Y08JihkHrSQt8BJ+9mKmaZTyxa0GvSHxpewhhE=
-X-Google-Smtp-Source: APXvYqypkhHf1Qy3Lvx+8RZhtTrlK4uvkEnQVGQapo4EO4+SCydqNK3tQhPyJqT2P8ykOhp3rn1gkAMAuaWSnKfEZnU=
-X-Received: by 2002:aca:d650:: with SMTP id n77mr4083095oig.129.1567021010776;
- Wed, 28 Aug 2019 12:36:50 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=y8b+VQlMQkntqtzRJkYxCkt06xbQtLJ+059ETXIVBcY=;
+        b=eVV/qaoE8WSXWg6x/T6sNdaq3ti3d9uMbbFhKFMa/PfGsE+tKeJKnt+Jk90vcKQY9l
+         7/cSgDqcjl5KTfNr23gikr6U/aMjvrlPoX/VRbZjOBbwVpO5kT9xQ16/FQUZXRkoDGWs
+         89a/S5pJvOW1cEP0XQWsHZzaHYdrS03jTnnCIGdQcDO+JBJNK4eCyEezTvMHJBgfgckc
+         /xgHXDvIzOxSFL17N01MdYW06YH5rlpMAu8t22MjQ/oo4zQOM5v0UTEaK+ur/aRiMmWD
+         oA5sC7VR4lHYi9I05CMUDZeOsl5yLwzUx/xFHt5LOyLLPkse6rTYScA37Ey50ZqENJkB
+         cvkw==
+X-Gm-Message-State: APjAAAX4BS/lQtdpPcWfyXT7PY9giub9z5mJIIB1K6lPMXulmJrfxTd+
+        Sya7bz4SPMJVdOjDzJYZGjTE+Odjnz6+vxM8SSWHhtOfBOjVNrkxMv1//gZ2b+iNuX7TRyrSN7S
+        CJch1iXGoqBz/5+0M13R7POTlELUZeTScEFvf
+X-Received: by 2002:a19:f019:: with SMTP id p25mr2331026lfc.9.1567022056771;
+        Wed, 28 Aug 2019 12:54:16 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyK3ic1OLaVZh6w6r7sNWEw00SCGMigLXTbl6Ig4OQ18KJAPtcKKQ+iM9aDamQ1WHItNelFJFkeuL9Ga2H31LU=
+X-Received: by 2002:a19:f019:: with SMTP id p25mr2331013lfc.9.1567022056438;
+ Wed, 28 Aug 2019 12:54:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
- <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
- <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com> <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
- <9ba19f08-e25a-4d15-8854-8dc4f9b6faca@linux.intel.com> <CAFBinCDX2BqiKcZM-C0m7gsi4BPSK0gM15r0jHmL3+AKxff=wQ@mail.gmail.com>
- <7c0fd56f-ecc5-40c2-c435-3805ca1f97c7@linux.intel.com>
-In-Reply-To: <7c0fd56f-ecc5-40c2-c435-3805ca1f97c7@linux.intel.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 28 Aug 2019 21:36:38 +0200
-Message-ID: <CAFBinCBa9G+E+vjmQCGBx=zRG80ad1am_1TrNbAMvqKCQU38gw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
-To:     "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
-Cc:     eswara.kota@linux.intel.com, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
-        gustavo.pimentel@synopsys.com, hch@infradead.org,
-        jingoohan1@gmail.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, qi-ming.wu@intel.com, kishon@ti.com
+References: <c42060b0-12ae-d170-9ad4-03d85919948c@molgen.mpg.de> <b208dccd-63d9-e902-28e1-3a6cb44f082f@molgen.mpg.de>
+In-Reply-To: <b208dccd-63d9-e902-28e1-3a6cb44f082f@molgen.mpg.de>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+Date:   Thu, 29 Aug 2019 01:24:05 +0530
+Message-ID: <CACi5LpNOyLd9598Ks05t14+Mrc0YNRmmbTML5CmLAODOJQkzFA@mail.gmail.com>
+Subject: Re: /proc/vmcore and wrong PAGE_OFFSET
+To:     Donald Buczek <buczek@molgen.mpg.de>
+Cc:     iommu <iommu@lists.linux-foundation.org>,
+        linux-pci@vger.kernel.org, x86@kernel.org,
+        kexec mailing list <kexec@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Simon Horman <horms@verge.net.au>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 5:35 AM Chuan Hua, Lei
-<chuanhua.lei@linux.intel.com> wrote:
-[...]
-> >>>>>> +static int intel_pcie_ep_rst_init(struct intel_pcie_port *lpp)
-> >>>>>> +{
-> >>>>>> +    struct device *dev = lpp->pci->dev;
-> >>>>>> +    int ret = 0;
-> >>>>>> +
-> >>>>>> +    lpp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-> >>>>>> +    if (IS_ERR(lpp->reset_gpio)) {
-> >>>>>> +            ret = PTR_ERR(lpp->reset_gpio);
-> >>>>>> +            if (ret != -EPROBE_DEFER)
-> >>>>>> +                    dev_err(dev, "failed to request PCIe GPIO: %d\n", ret);
-> >>>>>> +            return ret;
-> >>>>>> +    }
-> >>>>>> +    /* Make initial reset last for 100ms */
-> >>>>>> +    msleep(100);
-> >>>>> why is there lpp->rst_interval when you hardcode 100ms here?
-> >>>> There are different purpose. rst_interval is purely for asserted reset
-> >>>> pulse.
-> >>>>
-> >>>> Here 100ms is to make sure the initial state keeps at least 100ms, then we
-> >>>> can reset.
-> >>> my interpretation is that it totally depends on the board design or
-> >>> the bootloader setup.
-> >> Partially, you are right. However, we should not add some dependency
-> >> here from
-> >> bootloader and board. rst_interval is just to make sure the pulse (low
-> >> active or high active)
-> >> lasts the specified the time.
-> > +Cc Kishon
-> >
-> > he recently added support for a GPIO reset line to the
-> > pcie-cadence-host.c [0] and I believe he's also maintaining
-> > pci-keystone.c which are both using a 100uS delay (instead of 100ms).
-> > I don't know the PCIe spec so maybe Kishon can comment on the values
-> > that should be used according to the spec.
-> > if there's then a reason why values other than the ones from the spec
-> > are needed then there should be a comment explaining why different
-> > values are needed (what problem does it solve).
+Hi Donald,
+
+On Wed, Aug 28, 2019 at 8:38 PM Donald Buczek <buczek@molgen.mpg.de> wrote:
 >
-> spec doesn't guide this part. It is a board or SoC specific setting.
-> 100us also should work. spec only requirs reset duration should last
-> 100ms. The idea is that before reset assert and deassert, make sure the
-> default deassert status keeps some time. We take this value from
-> hardware suggestion long time back. We can reduce this value to 100us,
-> but we need to test on the board.
-OK. I don't know how other PCI controller drivers manage this. if the
-PCI maintainers are happy with this then I am as well
-maybe it's worth changing the comment to indicate that this delay was
-suggested by the hardware team (so it's clear that this is not coming
-from the PCI spec)
+> On 8/20/19 11:21 PM, Donald Buczek wrote:
+> > Dear Linux folks,
+> >
+> > I'm investigating a problem, that the crash utility fails to work with our crash dumps:
+> >
+> >      buczek@kreios:/mnt$ crash vmlinux crash.vmcore
+> >      crash 7.2.6
+> >      Copyright (C) 2002-2019  Red Hat, Inc.
+> >      Copyright (C) 2004, 2005, 2006, 2010  IBM Corporation
+> >      Copyright (C) 1999-2006  Hewlett-Packard Co
+> >      Copyright (C) 2005, 2006, 2011, 2012  Fujitsu Limited
+> >      Copyright (C) 2006, 2007  VA Linux Systems Japan K.K.
+> >      Copyright (C) 2005, 2011  NEC Corporation
+> >      Copyright (C) 1999, 2002, 2007  Silicon Graphics, Inc.
+> >      Copyright (C) 1999, 2000, 2001, 2002  Mission Critical Linux, Inc.
+> >      This program is free software, covered by the GNU General Public License,
+> >      and you are welcome to change it and/or distribute copies of it under
+> >      certain conditions.  Enter "help copying" to see the conditions.
+> >      This program has absolutely no warranty.  Enter "help warranty" for details.
+> >      GNU gdb (GDB) 7.6
+> >      Copyright (C) 2013 Free Software Foundation, Inc.
+> >      License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+> >      This is free software: you are free to change and redistribute it.
+> >      There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+> >      and "show warranty" for details.
+> >      This GDB was configured as "x86_64-unknown-linux-gnu"...
+> >      crash: read error: kernel virtual address: ffff89807ff77000  type: "memory section root table"
+> >
+> > The crash file is a copy of /dev/vmcore taken by a crashkernel after a sysctl-forced panic.
+> >
+> > It looks to me, that  0xffff89807ff77000 is not readable, because the virtual addresses stored in the elf header of the dump file are off by 0x0000008000000000:
+> >
+> >      buczek@kreios:/mnt$ readelf -a crash.vmcore | grep LOAD | perl -lane 'printf "%s (%016x)\n",$_,hex($F[2])-hex($F[3])'
+> >        LOAD           0x000000000000d000 0xffffffff81000000 0x000001007d000000 (fffffeff04000000)
+> >        LOAD           0x0000000001c33000 0xffff880000001000 0x0000000000001000 (ffff880000000000)
+> >        LOAD           0x0000000001cc1000 0xffff880000090000 0x0000000000090000 (ffff880000000000)
+> >        LOAD           0x0000000001cd1000 0xffff880000100000 0x0000000000100000 (ffff880000000000)
+> >        LOAD           0x0000000001cd2070 0xffff880000100070 0x0000000000100070 (ffff880000000000)
+> >        LOAD           0x0000000019bd2000 0xffff880038000000 0x0000000038000000 (ffff880000000000)
+> >        LOAD           0x000000004e6a1000 0xffff88006ffff000 0x000000006ffff000 (ffff880000000000)
+> >        LOAD           0x000000004e6a2000 0xffff880100000000 0x0000000100000000 (ffff880000000000)
+> >        LOAD           0x0000001fcda22000 0xffff882080000000 0x0000002080000000 (ffff880000000000)
+> >        LOAD           0x0000003fcd9a2000 0xffff884080000000 0x0000004080000000 (ffff880000000000)
+> >        LOAD           0x0000005fcd922000 0xffff886080000000 0x0000006080000000 (ffff880000000000)
+> >        LOAD           0x0000007fcd8a2000 0xffff888080000000 0x0000008080000000 (ffff880000000000)
+> >        LOAD           0x0000009fcd822000 0xffff88a080000000 0x000000a080000000 (ffff880000000000)
+> >        LOAD           0x000000bfcd7a2000 0xffff88c080000000 0x000000c080000000 (ffff880000000000)
+> >        LOAD           0x000000dfcd722000 0xffff88e080000000 0x000000e080000000 (ffff880000000000)
+> >        LOAD           0x000000fc4d722000 0xffff88fe00000000 0x000000fe00000000 (ffff880000000000)
+> >
+> > (Columns are File offset, Virtual Address, Physical Address and computed offset).
+> >
+> > I would expect the offset between the virtual and the physical address to be PAGE_OFFSET, which is 0xffff88800000000 on x86_64, not 0xffff880000000000. Unlike /proc/vmcore, /proc/kcore shows the same physical memory (of the last memory section above) with a correct offset:
+> >
+> >      buczek@kreios:/mnt$ sudo readelf -a /proc/kcore | grep 0x000000fe00000000 | perl -lane 'printf "%s (%016x)\n",$_,hex($F[2])-hex($F[3])'
+> >        LOAD           0x0000097e00004000 0xffff897e00000000 0x000000fe00000000 (ffff888000000000)
+> >
+> > The failing address 0xffff89807ff77000 happens to be at the end of the last memory section. It is the mem_section array, which crash wants to load and which is visible in the running system:
+> >
+> >      buczek@kreios:/mnt$ sudo gdb vmlinux /proc/kcore
+> >      [...]
+> >      (gdb) print mem_section
+> >      $1 = (struct mem_section **) 0xffff89807ff77000
+> >      (gdb) print *mem_section
+> >      $2 = (struct mem_section *) 0xffff88a07f37b000
+> >      (gdb) print **mem_section
+> >      $3 = {section_mem_map = 18446719884453740551, pageblock_flags = 0xffff88a07f36f040}
+> >
+> > I can read the same information from the crash dump, if I account for the 0x0000008000000000 error:
+> >
+> >      buczek@kreios:/mnt$ gdb vmlinux crash.vmcore
+> >      [...]
+> >      (gdb) print mem_section
+> >      $1 = (struct mem_section **) 0xffff89807ff77000
+> >      (gdb) print *mem_section
+> >      Cannot access memory at address 0xffff89807ff77000
+> >      (gdb) set $t=(struct mem_section **) ((char *)mem_section - 0x0000008000000000)
+> >      (gdb) print *$t
+> >      $2 = (struct mem_section *) 0xffff88a07f37b000
+> >      (gdb) set $s=(struct mem_section *)((char *)*$t - 0x0000008000000000 )
+> >      (gdb) print *$s
+> >      $3 = {section_mem_map = 18446719884453740551, pageblock_flags = 0xffff88a07f36f040}
+> >
+> > In the above example, the running kernel, the crashed kernel and the crashkernel are all the same 4.19.57 compilation. But I've tried with several other versions ( crashkernel 4.4, running kernel from 4.0 to linux master) with the same result.
+> >
+> > The machine in the above example has several numa nodes (this is why there are so many LOAD headers). But I've tried this with a small kvm virtual machine and got the same result.
+> >
+> >      buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep RANDOMIZE_BASE .config
+> >      # CONFIG_RANDOMIZE_BASE is not set
+> >      buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep SPARSEMEM .config
+> >      CONFIG_ARCH_SPARSEMEM_ENABLE=y
+> >      CONFIG_ARCH_SPARSEMEM_DEFAULT=y
+> >      CONFIG_SPARSEMEM_MANUAL=y
+> >      CONFIG_SPARSEMEM=y
+> >      CONFIG_SPARSEMEM_EXTREME=y
+> >      CONFIG_SPARSEMEM_VMEMMAP_ENABLE=y
+> >      CONFIG_SPARSEMEM_VMEMMAP=y
+> >      buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep PAGE_TABLE_ISOLATION .config
+> >      CONFIG_PAGE_TABLE_ISOLATION=y
+> >
+> > Any ideas?
+> >
+> > Donald
+>
+> To answer my own question for the records:
 
-[...]
-> >>>>>> +static void __intel_pcie_remove(struct intel_pcie_port *lpp)
-> >>>>>> +{
-> >>>>>> +    pcie_rc_cfg_wr_mask(lpp, PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER,
-> >>>>>> +                        0, PCI_COMMAND);
-> >>>>> I expect logic like this to be part of the PCI subsystem in Linux.
-> >>>>> why is this needed?
-> >>>>>
-> >>>>> [...]
-> >>>> bind/unbind case we use this. For extreme cases, we use unbind and bind
-> >>>> to reset
-> >>>> PCI instead of rebooting.
-> >>> OK, but this does not seem Intel/Lantiq specific at all
-> >>> why isn't this managed by either pcie-designware-host.c or the generic
-> >>> PCI/PCIe subsystem in Linux?
-> >> I doubt if other RC driver will support bind/unbind. We do have this
-> >> requirement due to power management from WiFi devices.
-> > pcie-designware-host.c will gain .remove() support in Linux 5.4
-> > I don't understand how .remove() and then .probe() again is different
-> > from .unbind() followed by a .bind()
-> Good. If this is the case, bind/unbind eventually goes to probe/remove,
-> so we can remove this.
-OK. as far as I understand you need to call dw_pcie_host_deinit from
-the .remove() callback (which is missing in this version)
-(I'm using drivers/pci/controller/dwc/pcie-tegra194.c as an example,
-this driver is in linux-next and thus will appear in Linux 5.4)
+Thanks for the update.
 
+I think Paul (may be from your organization?) posted a similar issue
+and I had enquired about a few environment details from him for
+helping debug this issue (see <https://lkml.org/lkml/2019/8/19/938>).
+But he seems to be  OOO..
 
-Martin
+> Our kexec command line is
+>
+>      /usr/sbin/kexec -p /boot/bzImage.crash --initrd=/boot/grub/initramfs.igz --command-line="root=LABEL=root ro console=ttyS1,115200n8 console=tty0 irqpoll nr_cpus=1 reset_devices panic=5 CRASH"
+>
+> So we neither gave -s (--kexec-file-syscall) nor -a ( --kexec-syscall-auto ). For this reason, kexec used the kexec_load() syscall instead of the newer kexec_file_load syscall.
+
+'-p' flag is for indicating a kdump operation (i.e you want to load a
+crash kernel and want to execute it if the primary kernel crashes) and
+different from the kexec load ('-l' or '-s' operation where you want
+to load and execute another kernel).
+
+> With kexec_load(), the elf headers for the crash, which include program header for the old system ram, are not computed by the kernel, but by the userspace program from kexec-tools.
+
+See above, kdump and kexec-load are completely different operation and
+I am not sure how using kdump options seem to help your case when
+kexec_load() / kexec_file_load() don't seem to work.
+
+However looking at your and Paul's original email, I can decipher that
+you are able to generate a vmcore (although an incomplete one), so I
+am pretty sure you are using the kexec -p (i.e. kdump) feature rather
+than kexec to another kernel :)
+
+> Linux kernel commit d52888aa ("x86/mm: Move LDT remap out of KASLR region on 5-level paging") changed the base of the direct mapping from 0xffff880000000000 to 0xffff888000000000. This was merged into v4.20-rc2.
+>
+> kexec-tools, however, still has the old address hard coded:
+
+>      buczek@avaritia:/scratch/cluster/buczek/kexec-tools (master)$ git grep X86_64_PAGE_OFFSET
+>      kexec/arch/i386/crashdump-x86.c:                        elf_info->page_offset = X86_64_PAGE_OFFSET_PRE_2_6_27;
+>      kexec/arch/i386/crashdump-x86.c:                        elf_info->page_offset = X86_64_PAGE_OFFSET;
+>      kexec/arch/i386/crashdump-x86.h:#define X86_64_PAGE_OFFSET_PRE_2_6_27   0xffff810000000000ULL
+>      kexec/arch/i386/crashdump-x86.h:#define X86_64_PAGE_OFFSET              0xffff880000000000ULL
+
+Good catch.
+I see, while other user-space tools (for e.g. makedumpfile have
+migrated to using the available PT_LOADs for example in the
+'/proc/kcore' file (see [0] for reference) to determine the correct
+PAGE_OFFSET value, it seems kexec-tools is still using MACRO values
+for the same - which probably are not maintainable and need to be
+updated with changes in the kernel.
+
+I will try to reproduce this at my end (I think it should be easy to
+do so on Qemu) and send a kexec-tools fix shortly. I will Cc you for
+the fix patch.
+
+Please feel free to test the same and let me know in case you face any
+further issues.
+
+Thanks,
+Bhupesh
