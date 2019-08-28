@@ -2,129 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CBBDA02F7
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 15:16:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC3CFA0305
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 15:17:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbfH1NQE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Aug 2019 09:16:04 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:3268 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbfH1NQE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Aug 2019 09:16:04 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d667e940000>; Wed, 28 Aug 2019 06:16:04 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 28 Aug 2019 06:16:03 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 28 Aug 2019 06:16:03 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 28 Aug
- 2019 13:16:02 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 28 Aug 2019 13:16:02 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d667e8e0000>; Wed, 28 Aug 2019 06:16:02 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <andrew.murray@arm.com>
-CC:     <kishon@ti.com>, <gustavo.pimentel@synopsys.com>,
-        <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V2 6/6] arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
-Date:   Wed, 28 Aug 2019 18:45:05 +0530
-Message-ID: <20190828131505.28475-7-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190828131505.28475-1-vidyas@nvidia.com>
-References: <20190828131505.28475-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        id S1726395AbfH1NRi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Aug 2019 09:17:38 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38503 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbfH1NRh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Aug 2019 09:17:37 -0400
+Received: by mail-wr1-f66.google.com with SMTP id e16so2482691wro.5;
+        Wed, 28 Aug 2019 06:17:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=eeQmuRlJii9blLs3gsvZZwNMRSX9X8xvwY0ILQq50Ac=;
+        b=XOCTjKm46R75ZeTeiDtsqqXNciUbDOs/OsFliD4+CAEV8CYSdRwZUNhV6+OdOymVgq
+         KYB/jUKzaX6AIPrhdzKoKL/Ngt25jxRZqAhwLUtXounHnT28vq37iuyre+GaTkbUIzWQ
+         DaAh6wDdlc0jzJQl107Rp/iX4IWkcia3Z8XolH4JNtGY9vWuCMxNtJEsA/MLG+x0y0/j
+         uVAk3qhj65pWYDd5PCn2e69n+4e2l9JkLxIqGg2ZbVu7TmXWjou3Gq5Hs8S9VzZyxaOC
+         8V+W1fzXdeSBIkEpTAt5d7jAtyyQyhbqpAdHToXdn0HHdiRYcLTZhJuhg0tTlzJ4AcEd
+         pHHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=eeQmuRlJii9blLs3gsvZZwNMRSX9X8xvwY0ILQq50Ac=;
+        b=Yp6XNsBfJKhNkIWKqhqhPD+avVJVKNBKQH7SmcVd6sTobklcknZzaj8ovDqvH0EjUS
+         qTScbcVla4ACzr2v3sHzYa4M8hCRT/Ln7yCIY2YDYvSlPVeskAZslhOdokbUKSHQ2iTI
+         XnXP6PyljSi2Xu2YlMp8xozMTv9kPO7NceRkfe0Tfgc6Gny8Sp+5A/eEEh788zFGohxy
+         qicBOdRrhtk7HhjlQJE6piW/HwPjeiq7KhshQHmx/CVLb1scMYS7fbzmEO4FgsYHpiGU
+         rBtrIv5WPtr2HPrOW4AmcxmANxfJuEuPAPONiNjWIt9yaB0fbxvXVEGzGQJuyHvP59x6
+         D0Ow==
+X-Gm-Message-State: APjAAAVkYyao2/Eh/VQRXFPC8qZsS0WE7+s2OmH7UIdkRaEdDifWUEnt
+        opo0TFsE+fDjWP3rWrNj7iI=
+X-Google-Smtp-Source: APXvYqy5Qy3waAJF/k854RzuCCkef9hGw6sTkPYxOmArG8eDMvyktKS8ytB9OU/0bnJpuSY2i3SvmQ==
+X-Received: by 2002:adf:cd8e:: with SMTP id q14mr2194051wrj.187.1566998255405;
+        Wed, 28 Aug 2019 06:17:35 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id w7sm3114987wrn.11.2019.08.28.06.17.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 06:17:34 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] PCI: Move static keyword to the front of declarations in pci-bridge-emul.c
+Date:   Wed, 28 Aug 2019 15:17:33 +0200
+Message-Id: <20190828131733.5817-1-kw@linux.com>
+X-Mailer: git-send-email 2.22.1
+In-Reply-To: <20190826151436.4672-1-kw@linux.com>
+References: <20190826151436.4672-1-kw@linux.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566998164; bh=dSPWI8YSZcYMeDn1BdNH7BdoeuwKXjhAyEYyCUpFNhM=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=HW2qelDTRvUA/HQMM36+vv21ZxiZpSOqFhOYVIVJVMSkjCf/tT7ZlsMZOuoPrqRDT
-         VZsw4uqkyuwHWQQcyQ5JO0+Mt0gbAPsaoUpQTf2os8A5bgtfSNDZJLWwhRajcW7y3O
-         I1DP+9RiSauSPUZb6osZeH3ySzyQB8nii+5f72gwkYhQcCykHTHcwIdLpnrdTm+X8b
-         vx3Tg7BNAu7GP7oQHqZ23GV+U4+xI57WoHv1Qsu7iVzV8FLbsyoUQHWF6R5RCYDvbM
-         vKZa34rqJyly949/WSBLA1ToPZNoICaj4uFMLSfqa4SAFfY51f22TWee8eSpbXJ1DP
-         CkS6Bv9bt9wHg==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add 3.3V and 12V supplies regulators information of x16 PCIe slot in
-p2972-0000 platform which is owned by C5 controller and also enable C5
-controller.
+Move the static keyword to the front of declarations of
+pci_regs_behavior and pcie_cap_regs_behavior, and resolve
+the following compiler warning that can be seen when
+building with warnings enabled (W=1):
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+drivers/pci/pci-bridge-emul.c:41:1: warning: ‘static’ is not at beginning of declaration [-Wold-style-declaration]
+ const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
+ ^
+drivers/pci/pci-bridge-emul.c:176:1: warning: ‘static’ is not at beginning of declaration [-Wold-style-declaration]
+ const static struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
+ ^
+
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
 ---
-V2:
-* None
+Changes in v2:
+  Update commit message to include compiler warning.
 
- .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 24 +++++++++++++++++++
- .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  4 +++-
- 2 files changed, 27 insertions(+), 1 deletion(-)
+ drivers/pci/pci-bridge-emul.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-index 62e07e1197cc..4c38426a6969 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-@@ -289,5 +289,29 @@
- 			gpio = <&gpio TEGRA194_MAIN_GPIO(A, 3) GPIO_ACTIVE_HIGH>;
- 			enable-active-high;
- 		};
-+
-+		vdd_3v3_pcie: regulator@2 {
-+			compatible = "regulator-fixed";
-+			reg = <2>;
-+
-+			regulator-name = "PEX_3V3";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			gpio = <&gpio TEGRA194_MAIN_GPIO(Z, 2) GPIO_ACTIVE_HIGH>;
-+			regulator-boot-on;
-+			enable-active-high;
-+		};
-+
-+		vdd_12v_pcie: regulator@3 {
-+			compatible = "regulator-fixed";
-+			reg = <3>;
-+
-+			regulator-name = "VDD_12V";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			gpio = <&gpio TEGRA194_MAIN_GPIO(A, 1) GPIO_ACTIVE_LOW>;
-+			regulator-boot-on;
-+			enable-active-low;
-+		};
- 	};
+diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
+index 06083b86d4f4..5fd90105510d 100644
+--- a/drivers/pci/pci-bridge-emul.c
++++ b/drivers/pci/pci-bridge-emul.c
+@@ -38,7 +38,7 @@ struct pci_bridge_reg_behavior {
+ 	u32 rsvd;
  };
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-index 23597d53c9c9..d47cd8c4dd24 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-@@ -93,9 +93,11 @@
- 	};
  
- 	pcie@141a0000 {
--		status = "disabled";
-+		status = "okay";
+-const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
++static const struct pci_bridge_reg_behavior pci_regs_behavior[] = {
+ 	[PCI_VENDOR_ID / 4] = { .ro = ~0 },
+ 	[PCI_COMMAND / 4] = {
+ 		.rw = (PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
+@@ -173,7 +173,7 @@ const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
+ 	},
+ };
  
- 		vddio-pex-ctl-supply = <&vdd_1v8ao>;
-+		vpcie3v3-supply = <&vdd_3v3_pcie>;
-+		vpcie12v-supply = <&vdd_12v_pcie>;
- 
- 		phys = <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
- 		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
+-const static struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
++static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
+ 	[PCI_CAP_LIST_ID / 4] = {
+ 		/*
+ 		 * Capability ID, Next Capability Pointer and
 -- 
-2.17.1
+2.22.1
 
