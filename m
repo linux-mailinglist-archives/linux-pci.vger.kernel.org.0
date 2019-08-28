@@ -2,57 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D327A0C1D
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 23:04:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAF70A0C2C
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 23:08:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfH1VE5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Aug 2019 17:04:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33864 "EHLO mail.kernel.org"
+        id S1726583AbfH1VI6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Aug 2019 17:08:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:36362 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726583AbfH1VE5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 28 Aug 2019 17:04:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 802D522CF8;
-        Wed, 28 Aug 2019 21:04:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567026296;
-        bh=TJNgnj2hdoueFoeSJjtsLew01E0Lu+5GDGze89PUlkY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MzGy1sXZcPVNgmIhe0pqXZhuLoece8Imu2jO8KK7xWN2c5Hda1tME0+f9U0J1bFKm
-         qfak7rd97WUqRunS0p52U6esPSwIWsHw8RIS9gUVYLjDs5xim2P30ac1oByQ9GdRsL
-         krAzA7QPaqpwHhkBpakRLYbsW3BBmkxYYDO/rLmY=
-Date:   Wed, 28 Aug 2019 23:04:53 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Frederick Lawler <fred@fredlawl.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rajat Jain <rajatja@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v4 3/4] PCI/ASPM: add sysfs attributes for controlling
- ASPM link states
-Message-ID: <20190828210453.GA27791@kroah.com>
-References: <3797de51-0135-07b6-9566-a1ce8cf3f24e@gmail.com>
- <36db4d65-9a38-03aa-bad1-22b15ebb06c2@gmail.com>
+        id S1726315AbfH1VI6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Aug 2019 17:08:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 122A9337;
+        Wed, 28 Aug 2019 14:08:58 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8496A3F718;
+        Wed, 28 Aug 2019 14:08:56 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 22:08:55 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 1/5] PCI: exynos: Properly handle optional PHYs
+Message-ID: <20190828210854.GC14582@e119886-lin.cambridge.arm.com>
+References: <20190828163636.12967-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <36db4d65-9a38-03aa-bad1-22b15ebb06c2@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190828163636.12967-1-thierry.reding@gmail.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Aug 24, 2019 at 05:41:27PM +0200, Heiner Kallweit wrote:
-> Background of this extension is a problem with the r8169 network driver.
-> Several combinations of board chipsets and network chip versions have
-> problems if ASPM is enabled, therefore we have to disable ASPM per default.
-> However especially on notebooks ASPM can provide significant power-saving,
-> therefore we want to give users the option to enable ASPM. With the new sysfs
-> attributes users can control which ASPM link-states are enabled/disabled.
+On Wed, Aug 28, 2019 at 06:36:32PM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
 > 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> devm_of_phy_get() can fail for a number of resides besides probe
+> deferral. It can for example return -ENOMEM if it runs out of memory as
+> it tries to allocate devres structures. Propagating only -EPROBE_DEFER
+> is problematic because it results in these legitimately fatal errors
+> being treated as "PHY not specified in DT".
+> 
+> What we really want is to ignore the optional PHYs only if they have not
+> been specified in DT. devm_of_phy_get() returns -ENODEV in this case, so
+> that's the special case that we need to handle. So we propagate all
+> errors, except -ENODEV, so that real failures will still cause the
+> driver to fail probe.
+> 
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>  drivers/pci/controller/dwc/pci-exynos.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
+> index cee5f2f590e2..14a6ba4067fb 100644
+> --- a/drivers/pci/controller/dwc/pci-exynos.c
+> +++ b/drivers/pci/controller/dwc/pci-exynos.c
+> @@ -465,7 +465,7 @@ static int __init exynos_pcie_probe(struct platform_device *pdev)
+>  
+>  	ep->phy = devm_of_phy_get(dev, np, NULL);
+>  	if (IS_ERR(ep->phy)) {
+> -		if (PTR_ERR(ep->phy) == -EPROBE_DEFER)
+> +		if (PTR_ERR(ep->phy) != -ENODEV)
+>  			return PTR_ERR(ep->phy);
+>  
+>  		ep->phy = NULL;
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Once you've applied Bjorn's feedback you can add:
+
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+
+> -- 
+> 2.22.0
+> 
