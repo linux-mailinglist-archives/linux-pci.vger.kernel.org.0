@@ -2,195 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B337A0616
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 17:20:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3135EA065F
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 17:32:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfH1PUJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Aug 2019 11:20:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:33142 "EHLO foss.arm.com"
+        id S1726429AbfH1Pcr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Aug 2019 11:32:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:33320 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbfH1PUJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:20:09 -0400
+        id S1726415AbfH1Pcr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Aug 2019 11:32:47 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C77F28;
-        Wed, 28 Aug 2019 08:20:08 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B538D28;
+        Wed, 28 Aug 2019 08:32:46 -0700 (PDT)
 Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B19D3F59C;
-        Wed, 28 Aug 2019 08:20:07 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 16:20:05 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 27B523F59C;
+        Wed, 28 Aug 2019 08:32:45 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 16:32:44 +0100
 From:   Andrew Murray <andrew.murray@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V2 4/6] PCI: tegra: Add support to enable slot regulators
-Message-ID: <20190828152005.GY14582@e119886-lin.cambridge.arm.com>
-References: <20190828131505.28475-1-vidyas@nvidia.com>
- <20190828131505.28475-5-vidyas@nvidia.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] PCI: rockchip: Properly handle optional regulators
+Message-ID: <20190828153243.GZ14582@e119886-lin.cambridge.arm.com>
+References: <20190828150737.30285-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190828131505.28475-5-vidyas@nvidia.com>
+In-Reply-To: <20190828150737.30285-1-thierry.reding@gmail.com>
 User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 06:45:03PM +0530, Vidya Sagar wrote:
-> Add support to get regulator information of 3.3V and 12V supplies of a PCIe
-> slot from the respective controller's device-tree node and enable those
-> supplies. This is required in platforms like p2972-0000 where the supplies
-> to x16 slot owned by C5 controller need to be enabled before attempting to
-> enumerate the devices.
+On Wed, Aug 28, 2019 at 05:07:37PM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> regulator_get_optional() can fail for a number of reasons besides probe
+> deferral. It can for example return -ENOMEM if it runs out of memory as
+> it tries to allocate data structures. Propagating only -EPROBE_DEFER is
+> problematic because it results in these legitimately fatal errors being
+> treated as "regulator not specified in DT".
+> 
+> What we really want is to ignore the optional regulators only if they
+> have not been specified in DT. regulator_get_optional() returns -ENODEV
+> in this case, so that's the special case that we need to handle. So we
+> propagate all errors, except -ENODEV, so that real failures will still
+> cause the driver to fail probe.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 > ---
-> V2:
-> * Addressed review comments from Thierry Reding and Andrew Murray
-> * Handled failure case of devm_regulator_get_optional() for -ENODEV cleanly
+>  drivers/pci/controller/pcie-rockchip-host.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
 > 
->  drivers/pci/controller/dwc/pcie-tegra194.c | 80 ++++++++++++++++++++++
->  1 file changed, 80 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 057ba4f9fbcd..6a66101ec83d 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -278,6 +278,8 @@ struct tegra_pcie_dw {
->  	u32 aspm_l0s_enter_lat;
+> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+> index 8d20f1793a61..ef8e677ce9d1 100644
+> --- a/drivers/pci/controller/pcie-rockchip-host.c
+> +++ b/drivers/pci/controller/pcie-rockchip-host.c
+> @@ -608,29 +608,29 @@ static int rockchip_pcie_parse_host_dt(struct rockchip_pcie *rockchip)
 >  
->  	struct regulator *pex_ctl_supply;
-> +	struct regulator *slot_ctl_3v3;
-> +	struct regulator *slot_ctl_12v;
->  
->  	unsigned int phy_count;
->  	struct phy **phys;
-> @@ -1047,6 +1049,72 @@ static void tegra_pcie_downstream_dev_to_D0(struct tegra_pcie_dw *pcie)
->  	}
->  }
->  
-> +static int tegra_pcie_get_slot_regulators(struct tegra_pcie_dw *pcie)
-> +{
-> +	pcie->slot_ctl_3v3 = devm_regulator_get_optional(pcie->dev, "vpcie3v3");
-> +	if (IS_ERR(pcie->slot_ctl_3v3)) {
-> +		if (PTR_ERR(pcie->slot_ctl_3v3) != -ENODEV)
-> +			return PTR_ERR(pcie->slot_ctl_3v3);
-> +
-> +		pcie->slot_ctl_3v3 = NULL;
-> +	}
-> +
-> +	pcie->slot_ctl_12v = devm_regulator_get_optional(pcie->dev, "vpcie12v");
-> +	if (IS_ERR(pcie->slot_ctl_12v)) {
-> +		if (PTR_ERR(pcie->slot_ctl_12v) != -ENODEV)
-> +			return PTR_ERR(pcie->slot_ctl_12v);
-> +
-> +		pcie->slot_ctl_12v = NULL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int tegra_pcie_enable_slot_regulators(struct tegra_pcie_dw *pcie)
-> +{
-> +	int ret;
-> +
-> +	if (pcie->slot_ctl_3v3) {
-> +		ret = regulator_enable(pcie->slot_ctl_3v3);
-> +		if (ret < 0) {
-> +			dev_err(pcie->dev,
-> +				"Failed to enable 3V3 slot supply: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (pcie->slot_ctl_12v) {
-> +		ret = regulator_enable(pcie->slot_ctl_12v);
-> +		if (ret < 0) {
-> +			dev_err(pcie->dev,
-> +				"Failed to enable 12V slot supply: %d\n", ret);
-> +			goto fail_12v_enable;
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * According to PCI Express Card Electromechanical Specification
-> +	 * Revision 1.1, Table-2.4, T_PVPERL (Power stable to PERST# inactive)
-> +	 * should be a minimum of 100ms.
-> +	 */
-> +	msleep(100);
-> +
-> +	return 0;
-> +
-> +fail_12v_enable:
-> +	if (pcie->slot_ctl_3v3)
-> +		regulator_disable(pcie->slot_ctl_3v3);
-> +	return ret;
-> +}
-> +
-> +static void tegra_pcie_disable_slot_regulators(struct tegra_pcie_dw *pcie)
-> +{
-> +	if (pcie->slot_ctl_12v)
-> +		regulator_disable(pcie->slot_ctl_12v);
-> +	if (pcie->slot_ctl_3v3)
-> +		regulator_disable(pcie->slot_ctl_3v3);
-> +}
-> +
->  static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
->  					bool en_hw_hot_rst)
->  {
-> @@ -1060,6 +1128,10 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
->  		return ret;
+>  	rockchip->vpcie12v = devm_regulator_get_optional(dev, "vpcie12v");
+>  	if (IS_ERR(rockchip->vpcie12v)) {
+> -		if (PTR_ERR(rockchip->vpcie12v) == -EPROBE_DEFER)
+> -			return -EPROBE_DEFER;
+> +		if (PTR_ERR(rockchip->vpcie12v) != -ENODEV)
+> +			return PTR_ERR(rockchip->vpcie12v);
+>  		dev_info(dev, "no vpcie12v regulator found\n");
+
+In the event that -ENODEV is returned - we don't set vpcie12v to NULL, however
+it seems that this is OK as vpcie12v is tested with IS_ERR before use everywhere
+else in this file.
+
+By the way it looks like this patch pattern could be applied right across the
+kernel, there are also others in PCI: pci-imx6 and pcie-histb.c - not sure if
+you wanted to fix those up too.
+
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+
 >  	}
 >  
-> +	ret = tegra_pcie_enable_slot_regulators(pcie);
-> +	if (ret < 0)
-> +		goto fail_slot_reg_en;
-> +
->  	ret = regulator_enable(pcie->pex_ctl_supply);
->  	if (ret < 0) {
->  		dev_err(pcie->dev, "Failed to enable regulator: %d\n", ret);
-> @@ -1142,6 +1214,8 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
->  fail_core_clk:
->  	regulator_disable(pcie->pex_ctl_supply);
->  fail_reg_en:
-> +	tegra_pcie_disable_slot_regulators(pcie);
-> +fail_slot_reg_en:
->  	tegra_pcie_bpmp_set_ctrl_state(pcie, false);
->  
->  	return ret;
-> @@ -1174,6 +1248,8 @@ static int __deinit_controller(struct tegra_pcie_dw *pcie)
->  		return ret;
+>  	rockchip->vpcie3v3 = devm_regulator_get_optional(dev, "vpcie3v3");
+>  	if (IS_ERR(rockchip->vpcie3v3)) {
+> -		if (PTR_ERR(rockchip->vpcie3v3) == -EPROBE_DEFER)
+> -			return -EPROBE_DEFER;
+> +		if (PTR_ERR(rockchip->vpcie3v3) != -ENODEV)
+> +			return PTR_ERR(rockchip->vpcie3v3);
+>  		dev_info(dev, "no vpcie3v3 regulator found\n");
 >  	}
 >  
-> +	tegra_pcie_disable_slot_regulators(pcie);
-> +
->  	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, false);
->  	if (ret) {
->  		dev_err(pcie->dev, "Failed to disable controller %d: %d\n",
-> @@ -1373,6 +1449,10 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
->  		return ret;
+>  	rockchip->vpcie1v8 = devm_regulator_get_optional(dev, "vpcie1v8");
+>  	if (IS_ERR(rockchip->vpcie1v8)) {
+> -		if (PTR_ERR(rockchip->vpcie1v8) == -EPROBE_DEFER)
+> -			return -EPROBE_DEFER;
+> +		if (PTR_ERR(rockchip->vpcie1v8) != -ENODEV)
+> +			return PTR_ERR(rockchip->vpcie1v8);
+>  		dev_info(dev, "no vpcie1v8 regulator found\n");
 >  	}
 >  
-> +	ret = tegra_pcie_get_slot_regulators(pcie);
-> +	if (ret < 0)
-> +		return ret;
-
-All of the functions called from tegra_pcie_dw_probe appear to dev_err if
-something goes wrong, is there any reason why you haven't done that here?
-
-Thanks,
-
-Andrew Murray
-
-> +
->  	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
->  	if (IS_ERR(pcie->pex_ctl_supply)) {
->  		dev_err(dev, "Failed to get regulator: %ld\n",
+>  	rockchip->vpcie0v9 = devm_regulator_get_optional(dev, "vpcie0v9");
+>  	if (IS_ERR(rockchip->vpcie0v9)) {
+> -		if (PTR_ERR(rockchip->vpcie0v9) == -EPROBE_DEFER)
+> -			return -EPROBE_DEFER;
+> +		if (PTR_ERR(rockchip->vpcie0v9) != -ENODEV)
+> +			return PTR_ERR(rockchip->vpcie0v9);
+>  		dev_info(dev, "no vpcie0v9 regulator found\n");
+>  	}
+>  
 > -- 
-> 2.17.1
+> 2.22.0
 > 
