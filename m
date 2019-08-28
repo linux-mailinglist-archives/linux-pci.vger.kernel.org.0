@@ -2,137 +2,412 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A8AB9FD9D
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 10:55:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 274269FDC8
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2019 11:01:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfH1Iz1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Aug 2019 04:55:27 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40981 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbfH1Iz1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Aug 2019 04:55:27 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 196so1273953pfz.8
-        for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2019 01:55:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=4tt2ENFTFe5Eg7RyJm4kt1zaNDOy/8f5U31zRIZv65I=;
-        b=LcHIw+CZEXfRVziiWwb83Rl1r0BaJKLJakpIRvePqp2801Yn93HplPf6SiE/BVp/Ni
-         vPMFtI6MmuAgfVgSw+q3wnDjR7AVJ/DgNgi3zPk5YBJOOWaHu/B401LK4sGIeWjixoAg
-         35ksrf4zhBW6+Xndf50EnsM3qn6pSX8bcSSQY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=4tt2ENFTFe5Eg7RyJm4kt1zaNDOy/8f5U31zRIZv65I=;
-        b=KoGruNzQQD/3KBY6ZVJ1yOEjfzbhii6QBihOCKXYvx91TtQLgMykV4diB6nMxdYqk+
-         FVUHUdKXytAkXDV79Xjedny3x88nXhisRLx3IDm9hxdyACy0K0u4yz92G7cfZsWo6q+Z
-         MHGM4+kVr0ntVTCIEwsDcVGH/7czVJkZCOPacaYVgsglr8x6LiYZfB5tPUDtjc0hqIQi
-         JYg7tUejxyVl+5+iG1YBQ3BCA7DlueccsIRFYBLIKss3fThp35n3x8spLWSY75OAKGIv
-         /xfiVe5dilGejcOZLH5yrqlNchCuJld34yBYMRTl4DT1oPj6l6irPatkxLyBYrSlIUNJ
-         yfdQ==
-X-Gm-Message-State: APjAAAVEpmKOorbHA8yLG8SfpuRurJnQ7K8LyROpFslpQGoEKUH2BZ/8
-        65e9Db1CTfJqoNnamnYQYRGiFg==
-X-Google-Smtp-Source: APXvYqzjmQDEnBY8EF8T2/7xO0+gEVIbuaFzBwd9SxiFVr28UeDbwHgrG+kry4Vz/9vqLf89/lFf4Q==
-X-Received: by 2002:a62:83c9:: with SMTP id h192mr3280891pfe.57.1566982526310;
-        Wed, 28 Aug 2019 01:55:26 -0700 (PDT)
-Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id z189sm2431386pfb.137.2019.08.28.01.55.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 28 Aug 2019 01:55:25 -0700 (PDT)
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v2 6/6] arm64: dts: Change PCIe INTx mapping for NS2
-Date:   Wed, 28 Aug 2019 14:24:48 +0530
-Message-Id: <1566982488-9673-7-git-send-email-srinath.mannam@broadcom.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1566982488-9673-1-git-send-email-srinath.mannam@broadcom.com>
-References: <1566982488-9673-1-git-send-email-srinath.mannam@broadcom.com>
+        id S1726259AbfH1JBM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Aug 2019 05:01:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:55646 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbfH1JBM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Aug 2019 05:01:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 17F56337;
+        Wed, 28 Aug 2019 02:01:11 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6455C3F59C;
+        Wed, 28 Aug 2019 02:01:10 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 10:01:08 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for
+ ls1088a and ls2088a
+Message-ID: <20190828090105.GR14582@e119886-lin.cambridge.arm.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-8-xiaowei.bao@nxp.com>
+ <20190823142756.GI14582@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB3299B100D1029E90945CF7DDF5A10@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <20190827133429.GM14582@e119886-lin.cambridge.arm.com>
+ <VI1PR04MB3310F78C86F775BB1F5B7E0CF5A30@VI1PR04MB3310.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <VI1PR04MB3310F78C86F775BB1F5B7E0CF5A30@VI1PR04MB3310.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Ray Jui <ray.jui@broadcom.com>
+On Wed, Aug 28, 2019 at 04:29:32AM +0000, Xiaowei Bao wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Andrew Murray <andrew.murray@arm.com>
+> > Sent: 2019年8月27日 21:34
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
+> > lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org; M.h.
+> > Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+> > Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+> > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
+> > Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for
+> > ls1088a and ls2088a
+> > 
+> > On Mon, Aug 26, 2019 at 09:49:35AM +0000, Xiaowei Bao wrote:
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Andrew Murray <andrew.murray@arm.com>
+> > > > Sent: 2019年8月23日 22:28
+> > > > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > > Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> > > > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
+> > > > lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org;
+> > M.h.
+> > > > Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+> > > > Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+> > > > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+> > > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > > > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
+> > > > Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support
+> > > > for ls1088a and ls2088a
+> > > >
+> > > > On Thu, Aug 22, 2019 at 07:22:40PM +0800, Xiaowei Bao wrote:
+> > > > > Add PCIe EP mode support for ls1088a and ls2088a, there are some
+> > > > > difference between LS1 and LS2 platform, so refactor the code of
+> > > > > the EP driver.
+> > > > >
+> > > > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > > > ---
+> > > > > v2:
+> > > > >  - New mechanism for layerscape EP driver.
+> > > >
+> > > > Was there a v1 of this patch?
+> > > >
+> > > > >
+> > > > >  drivers/pci/controller/dwc/pci-layerscape-ep.c | 76
+> > > > > ++++++++++++++++++++------
+> > > > >  1 file changed, 58 insertions(+), 18 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > > > b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > > > index 7ca5fe8..2a66f07 100644
+> > > > > --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > > > +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > > > @@ -20,27 +20,29 @@
+> > > > >
+> > > > >  #define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
+> > > > >
+> > > > > -struct ls_pcie_ep {
+> > > > > -	struct dw_pcie		*pci;
+> > > > > -	struct pci_epc_features	*ls_epc;
+> > > > > +#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> > > > > +
+> > > > > +struct ls_pcie_ep_drvdata {
+> > > > > +	u32				func_offset;
+> > > > > +	const struct dw_pcie_ep_ops	*ops;
+> > > > > +	const struct dw_pcie_ops	*dw_pcie_ops;
+> > > > >  };
+> > > > >
+> > > > > -#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> > > > > +struct ls_pcie_ep {
+> > > > > +	struct dw_pcie			*pci;
+> > > > > +	struct pci_epc_features		*ls_epc;
+> > > > > +	const struct ls_pcie_ep_drvdata *drvdata; };
+> > > > >
+> > > > >  static int ls_pcie_establish_link(struct dw_pcie *pci)  {
+> > > > >  	return 0;
+> > > > >  }
+> > > > >
+> > > > > -static const struct dw_pcie_ops ls_pcie_ep_ops = {
+> > > > > +static const struct dw_pcie_ops dw_ls_pcie_ep_ops = {
+> > > > >  	.start_link = ls_pcie_establish_link,  };
+> > > > >
+> > > > > -static const struct of_device_id ls_pcie_ep_of_match[] = {
+> > > > > -	{ .compatible = "fsl,ls-pcie-ep",},
+> > > > > -	{ },
+> > > > > -};
+> > > > > -
+> > > > >  static const struct pci_epc_features*
+> > > > > ls_pcie_ep_get_features(struct dw_pcie_ep *ep)  { @@ -82,10 +84,44
+> > > > > @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > > > >  	}
+> > > > >  }
+> > > > >
+> > > > > -static const struct dw_pcie_ep_ops pcie_ep_ops = {
+> > > > > +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep
+> > *ep,
+> > > > > +						u8 func_no)
+> > > > > +{
+> > > > > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > > > > +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+> > > > > +	u8 header_type;
+> > > > > +
+> > > > > +	header_type = ioread8(pci->dbi_base + PCI_HEADER_TYPE);
+> > > > > +
+> > > > > +	if (header_type & (1 << 7))
+> > > > > +		return pcie->drvdata->func_offset * func_no;
+> > > > > +	else
+> > > > > +		return 0;
+> > > >
+> > > > It looks like there isn't a PCI define for multi function, the
+> > > > nearest I could find was PCI_HEADER_TYPE_MULTIDEVICE in
+> > > > hotplug/ibmphp.h. A comment above the test might be helpful to explain
+> > the test.
+> > >
+> > > OK, I will add a comment above this code.
+> > >
+> > > >
+> > > > As the ls_pcie_ep_drvdata structures are static, the unset
+> > > > .func_offset will be initialised to 0, so you could just drop the test above.
+> > >
+> > > Due to the different PCIe controller have different property, e.g.
+> > > PCIe controller1 support multiple function feature, but PCIe
+> > > controller2 don't support this feature, so I need to check which
+> > > controller support it and return the correct offset value, but each board only
+> > have one ls_pcie_ep_drvdata, ^_^.
+> > 
+> > Yes but if they don't support the feature then func_offset will be 0.
+> > 
+> > >
+> > > >
+> > > > However something to the effect of the following may help spot
+> > > > misconfiguration:
+> > > >
+> > > > WARN_ON(func_no && !pcie->drvdata->func_offset); return
+> > > > pcie->drvdata->func_offset * func_no;
+> > > >
+> > > > The WARN is probably quite useful as if you are attempting to use
+> > > > non-zero functions and func_offset isn't set - then things may
+> > > > appear to work normally but actually will break horribly.
+> > >
+> > > As discussion before, I think the func_offset should not depends on
+> > > the function number, even if other platforms of NXP may be use write
+> > > registers way to access the different function config space.
+> > 
+> > I agree that func_offset is an optional parameter. But if you are attempting to
+> > determine the offset of a function and you are given a non-zero function
+> > number - then something has gone wrong if func_offset is 0.
+> 
+> I have understood you means, maybe I need to set a flag in the driver_data struct,
+> because I may add other platform of NXP, these platform use the write register 
+> method to access different function, e.g. 
+> write func_num to register, then we can access this func_num config space.
+> 
+> I will modify the code like this? Do you have better advice?
+> Case1:
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> index 004a7e8..8a0d6df 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -23,6 +23,7 @@
+>  #define to_ls_pcie_ep(x)       dev_get_drvdata((x)->dev)
+> 
+>  struct ls_pcie_ep_drvdata {
+> +       u8                              func_config_flag;
+>         u32                             func_offset;
+>         const struct dw_pcie_ep_ops     *ops;
+>         const struct dw_pcie_ops        *dw_pcie_ops;
+> @@ -97,8 +98,14 @@ static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
+>          * Read the Header Type register of config space to check
+>          * whether this PCI device support the multiple function.
+>          */
+> -       if (header_type & (1 << 7))
+> -               return pcie->drvdata->func_offset * func_no;
+> +       if (header_type & (1 << 7)) {
+> +               if (pcie->drvdata->func_config_flag) {
+> +                       iowrite32((func_num << n), pci->dbi_base + PCI_XXXX_XXX);
+> +               } else {
+> +                       WARN_ON(func_no && !pcie->drvdata->func_offset);
+> +                       return pcie->drvdata->func_offset * func_no;
+> +               }
+> +       }
+> 
+>         return 0;
+>  }
+> 
+> Of course, I don't need to set the flag this time, because I don't use the second method(write
+> register method), so the code like this:
+> case2:
+> +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
+>                                                u8 func_no) {
+>        struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>        struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+>        u8 header_type;
+> 
+> 	   of course, this code is not requied, due to the 
+> 	   pcie->drvdata->func_offset is 0, but I think this is more clear
+> 	   if use this code.
+>        header_type = ioread8(pci->dbi_base + PCI_HEADER_TYPE);
+> 
+>        /*
+>         * Read the Header Type register of config space to check
+>         * whether this PCI device support the multiple function.
+>         */
+>        if (header_type & (1 << 7)) {
+> 			   WARN_ON(func_no && !pcie->drvdata->func_offset);
+>                return pcie->drvdata->func_offset * func_no; 
+> 		}
+> 		
+>        return 0;
+> }
+> 
+> Or like this:
+> Case3:
+> +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
+>                                                u8 func_no) {
+>        struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>        struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+> 
+> 	   WARN_ON(func_no && !pcie->drvdata->func_offset);
+>        return pcie->drvdata->func_offset * func_no;
 
-Change the PCIe INTx mapping to model the 4 INTx interrupts in the
-IRQ domain of the iProc PCIe controller itself
+This is better. Given there is only currently one method of calculating
+an offset for layerscape, I'd recommend you add additional methods when
+the need arises.
 
-Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
----
- arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi | 28 ++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
+Thanks,
 
-diff --git a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-index 15f7b0e..d639928 100644
---- a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-@@ -117,8 +117,11 @@
- 		dma-coherent;
- 
- 		#interrupt-cells = <1>;
--		interrupt-map-mask = <0 0 0 0>;
--		interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pcie0_intc 1>,
-+				<0 0 0 2 &pcie0_intc 2>,
-+				<0 0 0 3 &pcie0_intc 3>,
-+				<0 0 0 4 &pcie0_intc 4>;
- 
- 		linux,pci-domain = <0>;
- 
-@@ -140,6 +143,13 @@
- 		phy-names = "pcie-phy";
- 
- 		msi-parent = <&v2m0>;
-+		pcie0_intc: interrupt-controller {
-+			compatible = "brcm,iproc-intc";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
- 
- 	pcie4: pcie@50020000 {
-@@ -148,8 +158,11 @@
- 		dma-coherent;
- 
- 		#interrupt-cells = <1>;
--		interrupt-map-mask = <0 0 0 0>;
--		interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pcie4_intc 1>,
-+				<0 0 0 2 &pcie4_intc 2>,
-+				<0 0 0 3 &pcie4_intc 3>,
-+				<0 0 0 4 &pcie4_intc 4>;
- 
- 		linux,pci-domain = <4>;
- 
-@@ -171,6 +184,13 @@
- 		phy-names = "pcie-phy";
- 
- 		msi-parent = <&v2m0>;
-+		pcie4_intc: interrupt-controller {
-+			compatible = "brcm,iproc-intc";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
- 
- 	pcie8: pcie@60c00000 {
--- 
-2.7.4
+Andrew Murray
 
+> 
+> }
+> Of course, we can return a -1 by adjuring the (func_no && !pcie->drvdata->func_offset) 
+> Valu in case1
+> 
+> Thanks 
+> Xiaowei
+> 
+> > 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > >
+> > > I have added the comments above the code, as follow, do you have any
+> > advice?
+> > > +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
+> > > +                                               u8 func_no) {
+> > > +       struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > > +       struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+> > > +       u8 header_type;
+> > > +
+> > > +       header_type = ioread8(pci->dbi_base + PCI_HEADER_TYPE);
+> > > +
+> > > +       /*
+> > > +        * Read the Header Type register of config space to check
+> > > +        * whether this PCI device support the multiple function.
+> > > +        */
+> > > +       if (header_type & (1 << 7))
+> > > +               return pcie->drvdata->func_offset * func_no;
+> > > +
+> > > +       return 0;
+> > > +}
+> > >
+> > > Thanks a lot for your detail comments.
+> > >
+> > > >
+> > > > Thanks,
+> > > >
+> > > > Andrew Murray
+> > > >
+> > > > > +}
+> > > > > +
+> > > > > +static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
+> > > > >  	.ep_init = ls_pcie_ep_init,
+> > > > >  	.raise_irq = ls_pcie_ep_raise_irq,
+> > > > >  	.get_features = ls_pcie_ep_get_features,
+> > > > > +	.func_conf_select = ls_pcie_ep_func_conf_select, };
+> > > > > +
+> > > > > +static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
+> > > > > +	.ops = &ls_pcie_ep_ops,
+> > > > > +	.dw_pcie_ops = &dw_ls_pcie_ep_ops, };
+> > > > > +
+> > > > > +static const struct ls_pcie_ep_drvdata ls2_ep_drvdata = {
+> > > > > +	.func_offset = 0x20000,
+> > > > > +	.ops = &ls_pcie_ep_ops,
+> > > > > +	.dw_pcie_ops = &dw_ls_pcie_ep_ops, };
+> > > > > +
+> > > > > +static const struct of_device_id ls_pcie_ep_of_match[] = {
+> > > > > +	{ .compatible = "fsl,ls1046a-pcie-ep", .data = &ls1_ep_drvdata },
+> > > > > +	{ .compatible = "fsl,ls1088a-pcie-ep", .data = &ls2_ep_drvdata },
+> > > > > +	{ .compatible = "fsl,ls2088a-pcie-ep", .data = &ls2_ep_drvdata },
+> > > > > +	{ },
+> > > > >  };
+> > > > >
+> > > > >  static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie, @@
+> > > > > -98,7
+> > > > > +134,7 @@ static int __init ls_add_pcie_ep(struct ls_pcie_ep
+> > > > > +*pcie,
+> > > > >  	int ret;
+> > > > >
+> > > > >  	ep = &pci->ep;
+> > > > > -	ep->ops = &pcie_ep_ops;
+> > > > > +	ep->ops = pcie->drvdata->ops;
+> > > > >
+> > > > >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > > > "addr_space");
+> > > > >  	if (!res)
+> > > > > @@ -137,14 +173,11 @@ static int __init ls_pcie_ep_probe(struct
+> > > > platform_device *pdev)
+> > > > >  	if (!ls_epc)
+> > > > >  		return -ENOMEM;
+> > > > >
+> > > > > -	dbi_base = platform_get_resource_byname(pdev,
+> > IORESOURCE_MEM,
+> > > > "regs");
+> > > > > -	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> > > > > -	if (IS_ERR(pci->dbi_base))
+> > > > > -		return PTR_ERR(pci->dbi_base);
+> > > > > +	pcie->drvdata = of_device_get_match_data(dev);
+> > > > >
+> > > > > -	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+> > > > >  	pci->dev = dev;
+> > > > > -	pci->ops = &ls_pcie_ep_ops;
+> > > > > +	pci->ops = pcie->drvdata->dw_pcie_ops;
+> > > > > +
+> > > > >  	pcie->pci = pci;
+> > > > >
+> > > > >  	ls_epc->linkup_notifier = false, @@ -152,6 +185,13 @@ static int
+> > > > > __init ls_pcie_ep_probe(struct platform_device *pdev)
+> > > > >
+> > > > >  	pcie->ls_epc = ls_epc;
+> > > > >
+> > > > > +	dbi_base = platform_get_resource_byname(pdev,
+> > IORESOURCE_MEM,
+> > > > "regs");
+> > > > > +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> > > > > +	if (IS_ERR(pci->dbi_base))
+> > > > > +		return PTR_ERR(pci->dbi_base);
+> > > > > +
+> > > > > +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+> > > > > +
+> > > > >  	platform_set_drvdata(pdev, pcie);
+> > > > >
+> > > > >  	ret = ls_add_pcie_ep(pcie, pdev);
+> > > > > --
+> > > > > 2.9.5
+> > > > >
