@@ -2,56 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C0BE3A171D
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 12:53:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36828A171E
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 12:53:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbfH2KxY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Aug 2019 06:53:24 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:36313 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728509AbfH2KxX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Aug 2019 06:53:23 -0400
-Received: by mail-ed1-f67.google.com with SMTP id g24so3583849edu.3
-        for <linux-pci@vger.kernel.org>; Thu, 29 Aug 2019 03:53:21 -0700 (PDT)
+        id S1727360AbfH2KxZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Aug 2019 06:53:25 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43948 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728300AbfH2KxY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Aug 2019 06:53:24 -0400
+Received: by mail-ed1-f66.google.com with SMTP id h13so3531370edq.10
+        for <linux-pci@vger.kernel.org>; Thu, 29 Aug 2019 03:53:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZJGcjL5ZNns9h6GpIRf6+d7vQnIL7TBDz+MPWo53oqE=;
-        b=o3V+YEckCKwM/4WBC/Cutnb/IfOFSYYe0SdxFL4D6weMyDvR8ZuTzoALNQCbk4oSJV
-         0YB4YfVxTAO8QYm6IHwymiNmWDWclSFv4TikB4uCtUu7c0U2pVhd9KTz+6lWCeIFSeTl
-         vHChwGYb2BD1Laa0Y4tD+8pknspYTuW38yypbuhTgDFw8Fr/8BNYoB1ZZV01uCp1FDk4
-         ZWLmUY6u5E2sAFYS+OegkPE87VUH+x24dMtr8wldDbAjjSTWaNciMBfN71KcZf+iM1hw
-         36cNirvzpwTzAh3n+w7yJqACmOXCzIozYnp8swkI5dSBAlJDArTTIXQ2MHeP4s8kbZtS
-         wGqQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6CrKI9MhQzT9WqpEbXKyv6DhjyLfjSiz4qRQN1f/whw=;
+        b=DgTNRg87AQs/Ut2ARsvMwMQBNk7BXUVzcYL46IiYCDqUP/CeYWME6luaR3oDragNfK
+         toUZVDuX453YpYlJ8isTdax4cJbJ8bcjJJjt48fQ7i/WyQAo83gdrg8+v80XAC2qi0ZS
+         6srgHUKllQ0m7K214wVdDQCyw8VN9/BOl6Z52PN8+nvsyCJeZV7Z4qNScHdtQBwjHCUX
+         m+ddGqTXKHXK7h9s/eVE+mAFYpA4fE0lxAiajY0rLhbmzmVnnaM9QB1xF7mStxI1oBO1
+         j0yM96oSboyFcVp3L38Of0+c0TtAEgjvfEuVlMx7jU61UoRStU2SuSpAD9xWB9W6kdg0
+         OBYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZJGcjL5ZNns9h6GpIRf6+d7vQnIL7TBDz+MPWo53oqE=;
-        b=UVLiirFcHPwxRrV1rM9L0aXTubqsR+Nhod/yKDH7VPkfVwonzdBDP9TNHPTKJoe3hm
-         v8nins8EDb4iWuMbWyzgPZEijhkqmaNy8Go5guOe2srhKjKKwC4lT02vfZ8glLS0nkXq
-         WHY9vOSGR0kztZ3FsBI3LlU4ZNlz8BfhZKHQOHPozTP54wS3xWJAVLUshOhn3jidK+yn
-         WbVmwVGAqLpyMeIwu1WfrltFy6a1smnTlKMVs/jEGwyXKCm9m5z8QtQKszlCCSM7RK/0
-         D7EHEeUgU4Bq1JG5JVz9LD0NPXvDyDATS5SvIeutIY2cBmfCVPmJNsyVvx5VwM8uCe3G
-         AyRg==
-X-Gm-Message-State: APjAAAVCo/haKc/GkPQbkRGq02hywsWx8WlXIz2V0TMfhdPQ/JESgalX
-        XM6NQOZf9xHIYu+Lvo4kqZJTJ+Nl
-X-Google-Smtp-Source: APXvYqxjp+UcHMecB5I71gGCXWvjWVXFN3bgJOPKcGl8zGm31guGEAau0Tj6s4UdRJVODFfVDPU0Ew==
-X-Received: by 2002:aa7:c897:: with SMTP id p23mr8852405eds.220.1567076000994;
-        Thu, 29 Aug 2019 03:53:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6CrKI9MhQzT9WqpEbXKyv6DhjyLfjSiz4qRQN1f/whw=;
+        b=TqO5wERAoFCunQhD8u1trN622aKE/TExDPDxdHwi3E3nWn3OXtAk+qwejok8EcfNxq
+         msXb7YC6DYAo8PshIoXdzaS+4XjPA88uCVwQyNp8051F1xFTiJWSFbEdiomJBW2BXycp
+         4Lyx85Wdo1qh5KKAv/vxFD8Wu4pVg8v2NYkDP0MdGiKw5yCPJypGdoHA97BEDS4GvqHM
+         lkPc1iDnvwea2E4SHVItY11h2DL/82GJch0zGjncamFWIzHGK3fhiQqfBMZ6nXFCWODP
+         nIsiwkQLcE7Sf7oSv47LW5l912IQF/HypCqtOZELyAySduXlynPBhzQuGmN/OfUVo4zt
+         Pxog==
+X-Gm-Message-State: APjAAAVYYZh17MmH/3W+SsRgcmCTCZjmvWOBn7cE13I6uXzBeQpt0HhS
+        2lKiqLuF/TWtFxYx2LFcPsQ=
+X-Google-Smtp-Source: APXvYqyx/qJcgDZlIemQldwVnqLbbL+15wOWsgThaZHYnBCzryHVbown85YrmhjWLdJrNRbBMIx74w==
+X-Received: by 2002:a17:906:3518:: with SMTP id r24mr7473430eja.133.1567076002754;
+        Thu, 29 Aug 2019 03:53:22 -0700 (PDT)
 Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id c1sm376924edn.62.2019.08.29.03.53.19
+        by smtp.gmail.com with ESMTPSA id j2sm331094ejj.34.2019.08.29.03.53.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 03:53:20 -0700 (PDT)
+        Thu, 29 Aug 2019 03:53:21 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>, linux-pci@vger.kernel.org
-Subject: [PATCH v2 0/6] PCI: Propagate errors for optional resources
-Date:   Thu, 29 Aug 2019 12:53:13 +0200
-Message-Id: <20190829105319.14836-1-thierry.reding@gmail.com>
+Cc:     Andrew Murray <andrew.murray@arm.com>, linux-pci@vger.kernel.org,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH v2 1/6] PCI: rockchip: Propagate errors for optional regulators
+Date:   Thu, 29 Aug 2019 12:53:14 +0200
+Message-Id: <20190829105319.14836-2-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190829105319.14836-1-thierry.reding@gmail.com>
+References: <20190829105319.14836-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -61,45 +66,72 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-A common pattern exists among several PCI host controller drivers. Some
-of the resources that they support are optional, and the way that the
-drivers handle these resources is by propagating -EPROBE_DEFER and keep
-going without the resource otherwise. However, there can be several
-reasons for failing to obtain a resource (e.g. out of memory). Currently
-all of these reasons will cause the drivers to consider the optional
-resource to not be there. However, if the resource was in fact required
-in the specific case and requesting it failed because of some other
-reason, the drivers would still happily continue and cause potentially
-hard to find problems.
+regulator_get_optional() can fail for a number of reasons besides probe
+deferral. It can for example return -ENOMEM if it runs out of memory as
+it tries to allocate data structures. Propagating only -EPROBE_DEFER is
+problematic because it results in these legitimately fatal errors being
+treated as "regulator not specified in DT".
 
-Instead of rolling all error codes into one, reverse the check and only
-handle -ENODEV as meaning "resource was not specified". Fatal errors in
-that case will cause the driver to fail to probe rather than continuing
-as if nothing had happened.
+What we really want is to ignore the optional regulators only if they
+have not been specified in DT. regulator_get_optional() returns -ENODEV
+in this case, so that's the special case that we need to handle. So we
+propagate all errors, except -ENODEV, so that real failures will still
+cause the driver to fail probe.
 
-Changes in v2:
-- add Rockchip PCI patch which was previously separate
-- addressed Bjorn's comments regarding commit message
-- collected Reviewed-by, Tested-by and Acked-by tags
+Cc: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Tested-by: Heiko Stuebner <heiko@sntech.de>
+Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ drivers/pci/controller/pcie-rockchip-host.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-Thierry
-
-Thierry Reding (6):
-  PCI: rockchip: Propagate errors for optional regulators
-  PCI: exynos: Propagate errors for optional PHYs
-  PCI: imx6: Propagate errors for optional regulators
-  PCI: armada8x: Propagate errors for optional PHYs
-  PCI: histb: Propagate errors for optional regulators
-  PCI: iproc: Propagate errors for optional PHYs
-
- drivers/pci/controller/dwc/pci-exynos.c      |  2 +-
- drivers/pci/controller/dwc/pci-imx6.c        |  4 ++--
- drivers/pci/controller/dwc/pcie-armada8k.c   |  7 +++----
- drivers/pci/controller/dwc/pcie-histb.c      |  4 ++--
- drivers/pci/controller/pcie-iproc-platform.c |  9 +++------
- drivers/pci/controller/pcie-rockchip-host.c  | 16 ++++++++--------
- 6 files changed, 19 insertions(+), 23 deletions(-)
-
+diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+index 8d20f1793a61..ef8e677ce9d1 100644
+--- a/drivers/pci/controller/pcie-rockchip-host.c
++++ b/drivers/pci/controller/pcie-rockchip-host.c
+@@ -608,29 +608,29 @@ static int rockchip_pcie_parse_host_dt(struct rockchip_pcie *rockchip)
+ 
+ 	rockchip->vpcie12v = devm_regulator_get_optional(dev, "vpcie12v");
+ 	if (IS_ERR(rockchip->vpcie12v)) {
+-		if (PTR_ERR(rockchip->vpcie12v) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(rockchip->vpcie12v) != -ENODEV)
++			return PTR_ERR(rockchip->vpcie12v);
+ 		dev_info(dev, "no vpcie12v regulator found\n");
+ 	}
+ 
+ 	rockchip->vpcie3v3 = devm_regulator_get_optional(dev, "vpcie3v3");
+ 	if (IS_ERR(rockchip->vpcie3v3)) {
+-		if (PTR_ERR(rockchip->vpcie3v3) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(rockchip->vpcie3v3) != -ENODEV)
++			return PTR_ERR(rockchip->vpcie3v3);
+ 		dev_info(dev, "no vpcie3v3 regulator found\n");
+ 	}
+ 
+ 	rockchip->vpcie1v8 = devm_regulator_get_optional(dev, "vpcie1v8");
+ 	if (IS_ERR(rockchip->vpcie1v8)) {
+-		if (PTR_ERR(rockchip->vpcie1v8) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(rockchip->vpcie1v8) != -ENODEV)
++			return PTR_ERR(rockchip->vpcie1v8);
+ 		dev_info(dev, "no vpcie1v8 regulator found\n");
+ 	}
+ 
+ 	rockchip->vpcie0v9 = devm_regulator_get_optional(dev, "vpcie0v9");
+ 	if (IS_ERR(rockchip->vpcie0v9)) {
+-		if (PTR_ERR(rockchip->vpcie0v9) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(rockchip->vpcie0v9) != -ENODEV)
++			return PTR_ERR(rockchip->vpcie0v9);
+ 		dev_info(dev, "no vpcie0v9 regulator found\n");
+ 	}
+ 
 -- 
 2.22.0
 
