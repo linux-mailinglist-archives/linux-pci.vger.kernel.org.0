@@ -2,210 +2,295 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 496E3A2122
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 18:41:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87DAEA21EB
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 19:12:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbfH2QlW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Aug 2019 12:41:22 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36892 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727115AbfH2QlW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Aug 2019 12:41:22 -0400
-Received: by mail-wr1-f66.google.com with SMTP id z11so4137968wrt.4;
-        Thu, 29 Aug 2019 09:41:19 -0700 (PDT)
+        id S1727707AbfH2RMG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Aug 2019 13:12:06 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39615 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbfH2RMG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Aug 2019 13:12:06 -0400
+Received: by mail-wm1-f65.google.com with SMTP id n2so3222746wmk.4;
+        Thu, 29 Aug 2019 10:12:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7yR+2btUdVZzugNInICo4vnQNuN1EMp975yLN+tXmcs=;
-        b=Nr51xhgt9tORYUWvBQQm95aMApchSwYclJnaXP/uN2D3PCnFROMeV96h47hEqCZtFq
-         jd2Mp/8M0EoSfJLApxXhqm7cUoLqCSUjbOCu48TbMNufS9t2Ml1/z58Lx25+PKfbjP6/
-         DtSUtMiXvQtBXJsxgNxyU2xGgSRI6WA+/wJjYWLVncs+CxNLYXP2mwhO/HekUlslp9eM
-         rng+dCtd6tZ9lwQdaQhIyMEUVZT2vPtf26jsE03Xx7+4GaH8VvIyyM49gErUvkyyhqOM
-         MoTnitGGbFgUyQXNCpqvElfqYeV+iPo2B6+BrC7Y1o8jWndezMS2efOabGZwIHbtleeX
-         OjTw==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=sV+dOekBkFxZr+hFc3/RA8RiShlL0pkkBR29uK5vHNI=;
+        b=iAecnhLoY3EqD9cUGIB6sa4i8HpoaYF7STxxOxBt6zdJfROfOBTpCg1NW0ah0xAoAB
+         xAfuRqPIJmVJEIm+KT113W2GqdTFC8/m2PeP3r5PCtNRUH+2pAbFn3PRKex9AuANdO8x
+         QGzGhpnGDGGMThFqwBOc7115MiTXqkHF8SBFSesYhwnm512QkLuEQYCsTZC4qH0HUe6v
+         Kt+UzxLNEDSutNHp9vfjyt4s3TLDctMEQlQX9wpWyAVL7omjUnxEeoGdxQCa84GwV5YO
+         FJjraT5y8nm4icN/fAOXPHelTFtoObgaIbZzyhbnsnwtYh6fOF8LGLziOxonhbDj59pM
+         y6KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7yR+2btUdVZzugNInICo4vnQNuN1EMp975yLN+tXmcs=;
-        b=XiM85cX16KD7PYwLFy8Gel0jVSyUpwzsISXxJ/I4ypONGQfsCW5hEgsIrBWpn4O7RK
-         wOJyGDUjiubmX3xCTeoWD3qs9zqXTq0sWtKiANTIG88sMNCy6qa+H0uC5Z2QjzF93RGR
-         Z7cBYp0ZN24VY+Px6lBOB+KB5jaN9vG0xJe4RUJoFhoA5uGDfGExSc0issJ+QRySVpMZ
-         mWs5yzE58FH13RhKAR81GtkWMinYufzGTv1dzDfrgwQDUdKForiJXjpu/BjT8fdlGRtt
-         b2T1i9RU0NBPmo1NSFwqrbc+qLUXjO8Zosc7s0L6X5k9+8aSao0H5MR1fbiwjrSryXry
-         o01w==
-X-Gm-Message-State: APjAAAUVUN4yuE8iTKhpQoswL3mJ0dep89Ty4F3gz3i6gD2hsBa+yC2x
-        gn66iJijmolETbihnLbru6E=
-X-Google-Smtp-Source: APXvYqzH/Fb2rRJgC7QIBqkUDelILLM7o7FXNLzJWMFGznShGN50OrlVbmIDnTmkWuRLO1lAUsOcRA==
-X-Received: by 2002:adf:ee41:: with SMTP id w1mr12591389wro.102.1567096878914;
-        Thu, 29 Aug 2019 09:41:18 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id s64sm6260070wmf.16.2019.08.29.09.41.17
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=sV+dOekBkFxZr+hFc3/RA8RiShlL0pkkBR29uK5vHNI=;
+        b=GvU/fKuqatjGkIIN+lPUohstk8zqOWTNyIMP9wHYyJ3/cghMPI/E4gByvLpjA8myh2
+         dL8OedvYCmp92Wzrn7M1oR14tub2ZcYyUKluMMPjvBDO5t7lqw05W1B+aM6rTReohHyq
+         uUnQsFjRsPvcQHaTuOV/rVgeOLqV+Lwo06OKDtkO1XNScARzoKwEvNjqabutq85gDzTJ
+         IAc5zOTsqIvLGm7Prr6Pt1cGuOC0uZdIgS8kmIEZxvxS+AetgGpF6M09aZEmAQh0A7Fi
+         +6x7u95I9vdOjejZ7771En4jj2bVmVQxyZyqwMagEoedKfMr0mAiHpsAyKuL2lmbQDZd
+         0ivw==
+X-Gm-Message-State: APjAAAWLuuOp/17OQz9a9TduzzE5Z75tL2LEG4B16KH65hMagEoXNL3x
+        WLuucvc37qZh81srfmS/Hw0=
+X-Google-Smtp-Source: APXvYqwuPU1pcnomP9EBGIGmtCYdVMRzfBptAbh1+lsyl3+XSyCMa4IsK9zqtHAGer6igJYhWGeJoQ==
+X-Received: by 2002:a05:600c:228e:: with SMTP id 14mr13514039wmf.101.1567098722950;
+        Thu, 29 Aug 2019 10:12:02 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id 16sm4413308wmx.45.2019.08.29.10.12.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 09:41:17 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 18:41:15 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3 2/6] dt-bindings: PCI: tegra: Add PCIe slot supplies
- regulator entries
-Message-ID: <20190829164115.GD19842@ulmo>
-References: <20190828172850.19871-1-vidyas@nvidia.com>
- <20190828172850.19871-3-vidyas@nvidia.com>
- <20190829120329.GC13187@ulmo>
- <cd106d64-e06c-e7a2-d807-f5f080625363@nvidia.com>
+        Thu, 29 Aug 2019 10:12:01 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] x86/PCI: Add missing log facility and move to use pr_ macros
+Date:   Thu, 29 Aug 2019 19:11:59 +0200
+Message-Id: <20190829171159.18707-1-kw@linux.com>
+X-Mailer: git-send-email 2.22.1
+In-Reply-To: <20190828175120.22164-1-kw@linux.com>
+References: <20190828175120.22164-1-kw@linux.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="DiL7RhKs8rK9YGuF"
-Content-Disposition: inline
-In-Reply-To: <cd106d64-e06c-e7a2-d807-f5f080625363@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Add missing log facility where two instances of printk() that did not
+use any (so it would be using MESSAGE_LOGLEVEL_DEFAULT set in Kconfig)
+to make all the warnings in the arch/x86/pci/pcbios.c to be printed
+consistently at the same log facility.  This resolves the following
+checkpatch.pl script warning:
 
---DiL7RhKs8rK9YGuF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+WARNING: printk() should include KERN_<LEVEL> facility level
 
-On Thu, Aug 29, 2019 at 08:48:39PM +0530, Vidya Sagar wrote:
-> On 8/29/2019 5:33 PM, Thierry Reding wrote:
-> > On Wed, Aug 28, 2019 at 10:58:46PM +0530, Vidya Sagar wrote:
-> > > Add optional bindings "vpcie3v3-supply" and "vpcie12v-supply" to desc=
-ribe
-> > > regulators of a PCIe slot's supplies 3.3V and 12V provided the platfo=
-rm
-> > > is designed to have regulator controlled slot supplies.
-> > >=20
-> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > ---
-> > > V3:
-> > > * None
-> > >=20
-> > > V2:
-> > > * None
-> > >=20
-> > >   .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt      | 8 +++++=
-+++
-> > >   1 file changed, 8 insertions(+)
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pc=
-ie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> > > index 0ac1b867ac24..b739f92da58e 100644
-> > > --- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> > > +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> > > @@ -104,6 +104,12 @@ Optional properties:
-> > >      specified in microseconds
-> > >   - nvidia,aspm-l0s-entrance-latency-us: ASPM L0s entrance latency to=
- be
-> > >      specified in microseconds
-> > > +- vpcie3v3-supply: A phandle to the regulator node that supplies 3.3=
-V to the slot
-> > > +  if the platform has one such slot. (Ex:- x16 slot owned by C5 cont=
-roller
-> > > +  in p2972-0000 platform).
-> > > +- vpcie12v-supply: A phandle to the regulator node that supplies 12V=
- to the slot
-> > > +  if the platform has one such slot. (Ex:- x16 slot owned by C5 cont=
-roller
-> > > +  in p2972-0000 platform).
-> >=20
-> > There's an ongoing discussion regarding the use of optional power
-> > supplies and I'm wondering if we're not abusing this here. Why exactly
-> > are these regulators optional?
-> I made them optional because, the number and type of supplies typically d=
-epend on the
-> kind of slot the controller is owning. If it is a CEM slot, then, it need=
-s 3.3V & 12V
-> supplies and if it is an M.2 Key-E/M slot, it needs only 3.3V supply. Als=
-o, if there are
-> on-board PCIe endpoint devices, supplies may vary again from vendor to ve=
-ndor.
-> Considering all these, I made them optional instead of mandatory.
-> Also, I agree that regulator framework supplies a dummy regulator if we m=
-ake them mandatory
-> but doesn't supply one, but it does so with a warning print in the log wh=
-ich I feel is
-> an unwanted alert and to avoid that one has to supply dummy/fixed regulat=
-ors which again
-> seems an overkill when all of this can be addressed by making slot regula=
-tors optional.
+While adding the missing log facility move over to using pr_ macros
+over using printk(KERN_<level> ...) and DBG().
 
-Okay. That sounds like a good reason to make these optional indeed.
-There is no way for the PCI controller to know exactly which regulators
-will be needed. The only case where it is known is that of the regular
-PCIe slot where the 3.3 V and 12 V are mandatory. But since it isn't
-always a standard PCIe slot that the controller drives, I think optional
-is okay in this case.
+Also resolve the additional errors and warnings reported by the
+checkpatch.pl script:
 
-Thierry
+ERROR: trailing whitespace
+ERROR: "foo * bar" should be "foo *bar"
+ERROR: switch and case should be at the same indent
 
-> > The distinction is somewhat subtle, but the other way to look at
-> > modelling this in DT is that the supplies are in fact required, but may
-> > be connected to an always-on regulator with a fixed voltage. Or in some
-> > cases they may also be shorted to ground. In both cases the PCI
-> > controller, or rather the slot that the controller connects to, actually
-> > "requires" the supplies, it's just that we can get away without
-> > describing them because they can't be controlled anyway.
-> >=20
-> > Looking at the PCI connector pinout for PCI Express, I do see a bunch of
-> > +3.3 V and +12 V pins. To me that indicates that the 3.3 V and 12 V
-> > supplies are indeed required for PCI slots. I'm not sure about devices
-> > that are directly connected to the PCI controller, though. I'll need to
-> > go look at some schematics to get a better understanding of these.
-> >=20
-> > Bottom line: I'm wondering if we shouldn't really make these supplies
-> > mandatory and in case where we don't care either just leave them away
-> > (the regulator framework will supply a dummy regulator in that case) or
-> > hook them up to a fixed regulator if that matches the hardware design.
-> >=20
-> > Any thoughts?
-> >=20
-> > Thierry
-> >=20
-> > >   Examples:
-> > >   =3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > @@ -156,6 +162,8 @@ Tegra194:
-> > >   			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x4 0x00000000>;  /=
-* prefetchable memory (16GB) */
-> > >   		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> > > +		vpcie3v3-supply =3D <&vdd_3v3_pcie>;
-> > > +		vpcie12v-supply =3D <&vdd_12v_pcie>;
-> > >   		phys =3D <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
-> > >   		       <&p2u_hsio_5>;
-> > > --=20
-> > > 2.17.1
-> > >=20
->=20
+WARNING: please, no space before tabs
+WARNING: line over 80 characters
+WARNING: quoted string split across lines
+WARNING: __packed is preferred over __attribute__((packed))
+WARNING: Prefer using '"%s...", __func__' to using 'bios32_service',
+  this function's name, in a string
 
---DiL7RhKs8rK9YGuF
-Content-Type: application/pgp-signature; name="signature.asc"
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+Changes in v3:
+  Remove name of the file from the subject.
+  Address review feedback of v2, and resolve more checkpatch.pl
+  script errors and warnings.
 
------BEGIN PGP SIGNATURE-----
+Changes in v2:
+  Change wording and include checkpatch.pl script warning.
+  Leverage pr_fmt and remove "PCI: " prefix used throught.
+  Move to pr_debug() over using DBG() from arch/x86/include/asm/pci_x86.h.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1oACkACgkQ3SOs138+
-s6EGvw//aC8g/p1/uH6bQaFYayqHbvSXJkcs+qLM1pXP6sQs+Y78dkyd0bFY5d3I
-eWq7JMsg5syZh6vKYm8rYUQoOvmhKvgGJ2ICfXTe5Jj9F3pS2pK6PCcF3OpZIopk
-N9rsnpwUm/N5966NBkZyikA9iQat2EPJXSJA917kV8bAhs2uu4/xxBO2joG9GLPb
-hWD6EtgywvtYlRhpJ7irFlVjJ8VOj5j3zUi6ZpedMrtU8Bx/llbz+1bnrvyVlMjY
-HtcN2ndkRacf4nwu8/nB5GIzucOAE6jiKmwjpfv0PwV1GHkj8QggDZ6U8YEK98i3
-cYBL2iGlQw+k3dJgPl5poUrHmyHxvphHt3eEnrbOqXwe3jFtC/z4cKtc0d2h0omo
-5OQzeXZ9DNP26b2NvCkz/JCQlSGzlCp6M/MiJQu4Iu53DTAR9S2T650QG4s/hMVF
-cBujoyFuAc9rXwB+uxrkHHcHZZFNXDTawC8LQJgWIAfa5v8bhgfWKdaHbjhb0Bee
-R7fHHclqVSU2J1K6cRJ1d1daqme8VloCxg+eClg72UxXXnEPqRPP/PJS7tyX9Dzp
-uJMC4JfgRu+xShFywcXH9oif3ufSqHBnfIUiWNnKefLu5w6Y3Fg10nj5Shj0k0UL
-Jjk6JzRLE/h8QkgmNs49r3r7NkjzFfm4GZ5xBC0n/VAeVRxxW/8=
-=RTQ7
------END PGP SIGNATURE-----
+ arch/x86/pci/pcbios.c | 77 +++++++++++++++++++++++--------------------
+ 1 file changed, 41 insertions(+), 36 deletions(-)
 
---DiL7RhKs8rK9YGuF--
+diff --git a/arch/x86/pci/pcbios.c b/arch/x86/pci/pcbios.c
+index 9c97d814125e..dd8ca5636953 100644
+--- a/arch/x86/pci/pcbios.c
++++ b/arch/x86/pci/pcbios.c
+@@ -3,6 +3,8 @@
+  * BIOS32 and PCI BIOS handling.
+  */
+ 
++#define pr_fmt(fmt) "PCI: " fmt
++
+ #include <linux/pci.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
+@@ -47,15 +49,15 @@ static inline void set_bios_x(void)
+ 	pcibios_enabled = 1;
+ 	set_memory_x(PAGE_OFFSET + BIOS_BEGIN, (BIOS_END - BIOS_BEGIN) >> PAGE_SHIFT);
+ 	if (__supported_pte_mask & _PAGE_NX)
+-		printk(KERN_INFO "PCI: PCI BIOS area is rw and x. Use pci=nobios if you want it NX.\n");
++		pr_info("PCI BIOS area is rw and x. Use pci=nobios if you want it NX.\n");
+ }
+ 
+ /*
+  * This is the standard structure used to identify the entry point
+  * to the BIOS32 Service Directory, as documented in
+- * 	Standard BIOS 32-bit Service Directory Proposal
+- * 	Revision 0.4 May 24, 1993
+- * 	Phoenix Technologies Ltd.
++ *	Standard BIOS 32-bit Service Directory Proposal
++ *	Revision 0.4 May 24, 1993
++ *	Phoenix Technologies Ltd.
+  *	Norwood, MA
+  * and the PCI BIOS specification.
+  */
+@@ -67,7 +69,7 @@ union bios32 {
+ 		unsigned char revision;		/* Revision level, 0 */
+ 		unsigned char length;		/* Length in paragraphs should be 01 */
+ 		unsigned char checksum;		/* All bytes must add up to zero */
+-		unsigned char reserved[5]; 	/* Must be zero */
++		unsigned char reserved[5];	/* Must be zero */
+ 	} fields;
+ 	char chars[16];
+ };
+@@ -108,15 +110,16 @@ static unsigned long __init bios32_service(unsigned long service)
+ 	local_irq_restore(flags);
+ 
+ 	switch (return_code) {
+-		case 0:
+-			return address + entry;
+-		case 0x80:	/* Not present */
+-			printk(KERN_WARNING "bios32_service(0x%lx): not present\n", service);
+-			return 0;
+-		default: /* Shouldn't happen */
+-			printk(KERN_WARNING "bios32_service(0x%lx): returned 0x%x -- BIOS bug!\n",
+-				service, return_code);
+-			return 0;
++	case 0:
++		return address + entry;
++	case 0x80:	/* Not present */
++		pr_warn("%s(0x%lx): not present\n",
++			__func__, service);
++		return 0;
++	default: /* Shouldn't happen */
++		pr_warn("%s(0x%lx): returned 0x%x -- BIOS bug!\n",
++			__func__, service, return_code);
++		return 0;
+ 	}
+ }
+ 
+@@ -140,8 +143,7 @@ static int __init check_pcibios(void)
+ 		pci_indirect.address = pcibios_entry + PAGE_OFFSET;
+ 
+ 		local_irq_save(flags);
+-		__asm__(
+-			"lcall *(%%edi); cld\n\t"
++		__asm__("lcall *(%%edi); cld\n\t"
+ 			"jc 1f\n\t"
+ 			"xor %%ah, %%ah\n"
+ 			"1:"
+@@ -160,14 +162,15 @@ static int __init check_pcibios(void)
+ 		minor_ver = ebx & 0xff;
+ 		if (pcibios_last_bus < 0)
+ 			pcibios_last_bus = ecx & 0xff;
+-		DBG("PCI: BIOS probe returned s=%02x hw=%02x ver=%02x.%02x l=%02x\n",
+-			status, hw_mech, major_ver, minor_ver, pcibios_last_bus);
++		pr_debug("BIOS probe returned s=%02x hw=%02x ver=%02x.%02x l=%02x\n",
++			 status, hw_mech, major_ver, minor_ver,
++			 pcibios_last_bus);
+ 		if (status || signature != PCI_SIGNATURE) {
+-			printk (KERN_ERR "PCI: BIOS BUG #%x[%08x] found\n",
+-				status, signature);
++			pr_err("BIOS BUG #%x[%08x] found\n",
++			       status, signature);
+ 			return 0;
+ 		}
+-		printk(KERN_INFO "PCI: PCI BIOS revision %x.%02x entry at 0x%lx, last bus=%d\n",
++		pr_info("PCI BIOS revision %x.%02x entry at 0x%lx, last bus=%d\n",
+ 			major_ver, minor_ver, pcibios_entry, pcibios_last_bus);
+ #ifdef CONFIG_PCI_DIRECT
+ 		if (!(hw_mech & PCIBIOS_HW_TYPE1))
+@@ -239,7 +242,7 @@ static int pci_bios_write(unsigned int seg, unsigned int bus,
+ 	u16 number = 0;
+ 
+ 	WARN_ON(seg);
+-	if ((bus > 255) || (devfn > 255) || (reg > 255)) 
++	if ((bus > 255) || (devfn > 255) || (reg > 255))
+ 		return -EINVAL;
+ 
+ 	raw_spin_lock_irqsave(&pci_config_lock, flags);
+@@ -316,19 +319,19 @@ static const struct pci_raw_ops *__init pci_find_bios(void)
+ 		if (sum != 0)
+ 			continue;
+ 		if (check->fields.revision != 0) {
+-			printk("PCI: unsupported BIOS32 revision %d at 0x%p\n",
++			pr_warn("unsupported BIOS32 revision %d at 0x%p\n",
+ 				check->fields.revision, check);
+ 			continue;
+ 		}
+-		DBG("PCI: BIOS32 Service Directory structure at 0x%p\n", check);
++		pr_debug("BIOS32 Service Directory structure at 0x%p\n", check);
+ 		if (check->fields.entry >= 0x100000) {
+-			printk("PCI: BIOS32 entry (0x%p) in high memory, "
+-					"cannot use.\n", check);
++			pr_warn("BIOS32 entry (0x%p) in high memory, cannot use.\n",
++				check);
+ 			return NULL;
+ 		} else {
+ 			unsigned long bios32_entry = check->fields.entry;
+-			DBG("PCI: BIOS32 Service Directory entry at 0x%lx\n",
+-					bios32_entry);
++			pr_debug("BIOS32 Service Directory entry at 0x%lx\n",
++				 bios32_entry);
+ 			bios32_indirect.address = bios32_entry + PAGE_OFFSET;
+ 			set_bios_x();
+ 			if (check_pcibios())
+@@ -348,9 +351,9 @@ struct irq_routing_options {
+ 	u16 size;
+ 	struct irq_info *table;
+ 	u16 segment;
+-} __attribute__((packed));
++} __packed;
+ 
+-struct irq_routing_table * pcibios_get_irq_routing_table(void)
++struct irq_routing_table *pcibios_get_irq_routing_table(void)
+ {
+ 	struct irq_routing_options opt;
+ 	struct irq_routing_table *rt = NULL;
+@@ -366,7 +369,7 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
+ 	opt.size = PAGE_SIZE;
+ 	opt.segment = __KERNEL_DS;
+ 
+-	DBG("PCI: Fetching IRQ routing table... ");
++	pr_debug("Fetching IRQ routing table... ");
+ 	__asm__("push %%es\n\t"
+ 		"push %%ds\n\t"
+ 		"pop  %%es\n\t"
+@@ -384,17 +387,19 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
+ 		  "S" (&pci_indirect),
+ 		  "m" (opt)
+ 		: "memory");
+-	DBG("OK  ret=%d, size=%d, map=%x\n", ret, opt.size, map);
++	pr_debug("OK  ret=%d, size=%d, map=%x\n", ret, opt.size, map);
+ 	if (ret & 0xff00)
+-		printk(KERN_ERR "PCI: Error %02x when fetching IRQ routing table.\n", (ret >> 8) & 0xff);
++		pr_err("Error %02x when fetching IRQ routing table.\n",
++		       (ret >> 8) & 0xff);
+ 	else if (opt.size) {
+-		rt = kmalloc(sizeof(struct irq_routing_table) + opt.size, GFP_KERNEL);
++		rt = kmalloc(sizeof(struct irq_routing_table) + opt.size,
++			     GFP_KERNEL);
+ 		if (rt) {
+ 			memset(rt, 0, sizeof(struct irq_routing_table));
+ 			rt->size = opt.size + sizeof(struct irq_routing_table);
+ 			rt->exclusive_irqs = map;
+ 			memcpy(rt->slots, (void *) page, opt.size);
+-			printk(KERN_INFO "PCI: Using BIOS Interrupt Routing Table\n");
++			pr_info("Using BIOS Interrupt Routing Table\n");
+ 		}
+ 	}
+ 	free_page(page);
+@@ -421,7 +426,7 @@ EXPORT_SYMBOL(pcibios_set_irq_routing);
+ 
+ void __init pci_pcbios_init(void)
+ {
+-	if ((pci_probe & PCI_PROBE_BIOS) 
++	if ((pci_probe & PCI_PROBE_BIOS)
+ 		&& ((raw_pci_ops = pci_find_bios()))) {
+ 		pci_bios_present = 1;
+ 	}
+-- 
+2.22.1
+
