@@ -2,123 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59CC7A1F02
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 17:25:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7DC2A1FDA
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 17:51:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbfH2PZS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Aug 2019 11:25:18 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52892 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727207AbfH2PZS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Aug 2019 11:25:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=o5PQfJZQOG8oHG5cpK/3gJqdk0ZYueCvQ61l57g6XrA=; b=xyOUxJK2Zo/3/THWf1I4GGv4J
-        1yCJoSjeiB0gFOyijzZLDBgRrZ0X1OuF94JoFEI4DeWBFnXKyBBKIxkfQEMf3UhRnc+dPNJY92LkB
-        TiVdJE64mNT+UzkABbmvNFWDfJKl44QWW4H+0I8+l8FMsHJra9BI9X/YnO1O4AwRtshEY=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i3MIU-0002M7-DG; Thu, 29 Aug 2019 15:25:14 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 988BD27428D1; Thu, 29 Aug 2019 16:25:12 +0100 (BST)
-Date:   Thu, 29 Aug 2019 16:25:12 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        id S1728631AbfH2PvP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Aug 2019 11:51:15 -0400
+Received: from mail-eopbgr700114.outbound.protection.outlook.com ([40.107.70.114]:30122
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728295AbfH2PvL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 29 Aug 2019 11:51:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XOSpRxr3vO0k5rMOsoXd68aRrXdOZEErTFKtpRZmtwFTDP9J8sd/ioiKqT3ZteYH1XviKEPraRy3nXTgG3Ug7Yaa+o92DQI6w/zw5l5VvgUNip4oRIVQcNrBP2NlBDbHjwjFREbm9lXacOrNRlBXwZWX2DNJemirU/z1nEchp6JgTRdeBk0LHkEp/Ov37qRpDX7iHAglfraBUNOx56fWyAoDYedFHtitqgPw5vZ+iDWLctjeYjIypsBF3rhiBEH5XkA4WOb2Pa7MtxeC+MKVq6lOX4exgK5SYuzhVde9jNuJMmfs+ZUpFkdaTzq9aHwd+BRO6BEC/DkhZ5GJ2gVjDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9Z/UusHvvqFbHm/sbKGIG/GDL3GDSTbf5Eilocl4c70=;
+ b=CO9Dg66+0pHHDM6b7JvaE0PMS84qlCOinblQC/RYGLtwHPOBhSdZlQNHFZmwnYHu1K9EUvuDj0qegoB2bSMCF243S3b+859BuG7uisON7Cwoj1Cm+26KPdK58Um6LmX+NO2kzag6P3ZE3TQsBpnVBCF2D1T7Ua3NKTxMAxuN8pbwNYfxLVDyoKM/AtAy4QH5ksN5iM48N+gcfOjdG7SVaIdXhrMCwollElt2qm3DmvMt500eecas7SJl1qa17koqj3deDRppCntKvokkhUamkfu8BN+YM5FsgUpPalH9XFNuI+cduUsb7/tKcOWRGTV/lwKbO+OR4bqFCgh1RPSYfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9Z/UusHvvqFbHm/sbKGIG/GDL3GDSTbf5Eilocl4c70=;
+ b=luXRc716fDlVl9a8hnsJnq3e9Po8wC9G6FtlbomCDqFXczShZYHmq32uiozAM7gzywM5R3B50gaHe0tpIoRSrOkGcdEyeN59yh9Lw96Ut03xcT1yd9zAyFwrRE3beGJPvolo1kbOGhqTVfVrdE5+zvMk+e6GbyvlIft+OOYutWk=
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
+ DM6PR21MB1148.namprd21.prod.outlook.com (20.179.50.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.3; Thu, 29 Aug 2019 15:50:47 +0000
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::28a1:fa7:2ff:108b]) by DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::28a1:fa7:2ff:108b%5]) with mapi id 15.20.2220.000; Thu, 29 Aug 2019
+ 15:50:47 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: Re: [PATCH 5/5] PCI: iproc: Properly handle optional PHYs
-Message-ID: <20190829152512.GG4118@sirena.co.uk>
-References: <20190828163636.12967-1-thierry.reding@gmail.com>
- <20190828163636.12967-5-thierry.reding@gmail.com>
- <20190828212655.GG14582@e119886-lin.cambridge.arm.com>
- <20190828214901.GM4298@sirena.co.uk>
- <20190829100933.GH14582@e119886-lin.cambridge.arm.com>
- <20190829111728.GC4118@sirena.co.uk>
- <20190829114603.GB13187@ulmo>
- <20190829120824.GI14582@e119886-lin.cambridge.arm.com>
- <20190829131603.GF4118@sirena.co.uk>
- <20190829134345.GL14582@e119886-lin.cambridge.arm.com>
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: RE: [PATCH v3] PCI: hv: Make functions static
+Thread-Topic: [PATCH v3] PCI: hv: Make functions static
+Thread-Index: AQHVXkqQ0XAm95C7kkufbUVKItTSXacSRh+w
+Date:   Thu, 29 Aug 2019 15:50:47 +0000
+Message-ID: <DM6PR21MB13372349374A473FF98AD7BCCAA20@DM6PR21MB1337.namprd21.prod.outlook.com>
+References: <20190828221846.6672-1-kw@linux.com>
+ <20190829091713.27130-1-kw@linux.com>
+In-Reply-To: <20190829091713.27130-1-kw@linux.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-29T15:50:45.9921578Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=39b782ed-4752-40bd-9310-0105ca1563ca;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=haiyangz@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:0:9132:cdd:d641:5942]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4172b37e-7e2a-4d97-b835-08d72c98a8e5
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1148;
+x-ms-traffictypediagnostic: DM6PR21MB1148:|DM6PR21MB1148:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR21MB1148F14BE4B439D8B9D6CCB9CAA20@DM6PR21MB1148.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:83;
+x-forefront-prvs: 0144B30E41
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(136003)(366004)(346002)(376002)(199004)(189003)(13464003)(102836004)(8676002)(6506007)(25786009)(66446008)(86362001)(99286004)(53546011)(186003)(305945005)(446003)(7696005)(10090500001)(6436002)(6246003)(55016002)(478600001)(54906003)(22452003)(476003)(2906002)(74316002)(11346002)(110136005)(33656002)(52536014)(5660300002)(71190400001)(486006)(8936002)(14454004)(9686003)(64756008)(66476007)(53936002)(66946007)(316002)(76116006)(76176011)(7736002)(46003)(6116002)(256004)(71200400001)(14444005)(10290500003)(229853002)(81156014)(8990500004)(4326008)(81166006)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1148;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: mNwhKAcoVII7ul2uHZfb3knzNLlrSBjyrgKiBpEp87GcxsEvnDdUQuJKMQxoz+RUFtt8DeOpEDS7vSL855vyeE+HST4kB5TCdlev23psAbQO4U0OUo1YVP0wrepE8nWofde/NupTTPZJtXHBWZlmVfjfjKaz+tKAxs8tASKlj9qrjWZZvKVcfBpfYiYgnYVddqXj33cMBsgUb2vQUUn8Mwg07yBaIOeZ3ipLUAAiEHNd6RPMOnChre9JWdBn6Mx1lzv37RPhgFhIqz+b3C+A8bOjLTF5pYI/zdXUZtSEN2RoFGgGdEaQ0XxV4qm5UxgYtXgs3VQ9OhpDkS7AETRebqnuV8CKbP6MR/xl3QeJxUzfOSXOQWvz1sJfqdNNpo4QHcWQCaEd4P2WaJXFA8lBVqxHeJBPXFZbTW+15qqHDLM=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bO4vSxwwZtUjUWHo"
-Content-Disposition: inline
-In-Reply-To: <20190829134345.GL14582@e119886-lin.cambridge.arm.com>
-X-Cookie: Lensmen eat Jedi for breakfast.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4172b37e-7e2a-4d97-b835-08d72c98a8e5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2019 15:50:47.5178
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: g2AB9MKlMmevbB/ar9SCNfXOoizrmCIyulx+Gw4669NzuSTxJ3VA+ENrw4VO/AXdWV+QovuHh5syHWywJUx2RQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1148
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
---bO4vSxwwZtUjUWHo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Aug 29, 2019 at 02:43:46PM +0100, Andrew Murray wrote:
-
-> Where they are not specified, because there is really no reason for them to
-> be described in the DT - then these drivers should use regulator_get and
-> be happy with a dummy regulator. This gives a benefit as if another hardware
-> version uses the same driver but does have a regulator that needs software
-> control then we can be confident it will work.
-
-The common use case for this is that some boards have flexible power
-control which allows them save energy by powering off chips that are not
-in use, the driver doesn't super care if it actually gets powered off or
-not but it's nice to be able to do so.
-
-> Where regulators are really optional, then regulator_get_optional is used
-> and -ENODEV can be used by the caller to perform a different course of action
-> if required. (Does this use-case actually exist?)
-
-Yes.  There are two main use cases.  One is for things like MMC where
-there's optional supplies that can be used for some more advanced use
-cases but their use needs to be negotiated between the host and device,
-these typically enable lower power or higher performance modes at the
-cost of complexity.  The other is for devices which have the option of
-using an internal regulator but can use an external one.  This is
-typically used either for performance reasons (the external regulator
-might perform better but will increase board cost) or if some systems
-need multiple devices to be operating with the same reference voltage.
-
-> I guess I interpreted _optional as 'it's OK if you can't provide a regulator',
-> whereas the meaning is really 'get me a regulator that may not exist'.
-
-> Is my understanding correct? If so I guess another course of action would
-
-Yes.
-
-> be to clean-up users of _optional and convert them to regulator_get where
-> appropriate?
-
-Yes, I keep doing that intermittently (hence my frustration with more
-usages continually popping up in graphics drivers).
-
---bO4vSxwwZtUjUWHo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1n7lcACgkQJNaLcl1U
-h9A35gf8DS7xbyN6h2S9SOYy3eBqyQ5S4wdKhIQDLxtMqcIU4yV1YLi7hcJGgLbT
-z0FDwq9Hpt/C3JiG8sRn5eh2ige+VfR1ijaXdnZGhTHoGC/qlF1dg8DG1A4ekRWI
-h+ay7fHG8JtMNclqECh1iLAcjUqQ+eKqRKqEWzJcZAWMDJJRyYdrVVno1lNgK95h
-ZdlR9GY5jCGwKfUVAPPeNwKe1JCtPUbmylS70VT5L1UOqNpETRrLVDgJTr+EuhrT
-a3g4yQ0GYzkR1KBrNr7MqPufvUkukDwqb79jIMQZi0mt5TrcuAfLj9nuYYjMP/uS
-LAn050FwAG9od3fUQpVk+wmraD0yJQ==
-=PdwP
------END PGP SIGNATURE-----
-
---bO4vSxwwZtUjUWHo--
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS3J6eXN6dG9mIFdpbGN6
+eW5za2kgPGtzd2lsY3p5bnNraUBnbWFpbC5jb20+IE9uIEJlaGFsZiBPZiBLcnp5c3p0b2YNCj4g
+V2lsY3p5bnNraQ0KPiBTZW50OiBUaHVyc2RheSwgQXVndXN0IDI5LCAyMDE5IDI6MTcgQU0NCj4g
+VG86IEJqb3JuIEhlbGdhYXMgPGhlbGdhYXNAa2VybmVsLm9yZz4NCj4gQ2M6IEtZIFNyaW5pdmFz
+YW4gPGt5c0BtaWNyb3NvZnQuY29tPjsgSGFpeWFuZyBaaGFuZw0KPiA8aGFpeWFuZ3pAbWljcm9z
+b2Z0LmNvbT47IFN0ZXBoZW4gSGVtbWluZ2VyDQo+IDxzdGhlbW1pbkBtaWNyb3NvZnQuY29tPjsg
+U2FzaGEgTGV2aW4gPHNhc2hhbEBrZXJuZWwub3JnPjsgTG9yZW56bw0KPiBQaWVyYWxpc2kgPGxv
+cmVuem8ucGllcmFsaXNpQGFybS5jb20+OyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51
+eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtaHlwZXJ2QHZnZXIua2VybmVsLm9y
+Zw0KPiBTdWJqZWN0OiBbUEFUQ0ggdjNdIFBDSTogaHY6IE1ha2UgZnVuY3Rpb25zIHN0YXRpYw0K
+PiANCj4gRnVuY3Rpb25zIGh2X3JlYWRfY29uZmlnX2Jsb2NrKCksIGh2X3dyaXRlX2NvbmZpZ19i
+bG9jaygpIGFuZA0KPiBodl9yZWdpc3Rlcl9ibG9ja19pbnZhbGlkYXRlKCkgYXJlIG5vdCB1c2Vk
+IGFueXdoZXJlIGVsc2UgYW5kIGFyZSBsb2NhbCB0bw0KPiBkcml2ZXJzL3BjaS9jb250cm9sbGVy
+L3BjaS1oeXBlcnYuYywNCj4gYW5kIGRvIG5vdCBuZWVkIHRvIGJlIGluIGdsb2JhbCBzY29wZSwg
+c28gbWFrZSB0aGVzZSBzdGF0aWMuDQo+IA0KPiBSZXNvbHZlIGZvbGxvd2luZyBjb21waWxlciB3
+YXJuaW5nIHRoYXQgY2FuIGJlIHNlZW4gd2hlbiBidWlsZGluZyB3aXRoDQo+IHdhcm5pbmdzIGVu
+YWJsZWQgKFc9MSk6DQo+IA0KPiBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaS1oeXBlcnYuYzo5
+MzM6NTogd2FybmluZzoNCj4gIG5vIHByZXZpb3VzIHByb3RvdHlwZSBmb3Ig4oCYaHZfcmVhZF9j
+b25maWdfYmxvY2vigJkNCj4gICBbLVdtaXNzaW5nLXByb3RvdHlwZXNdDQo+IA0KPiBkcml2ZXJz
+L3BjaS9jb250cm9sbGVyL3BjaS1oeXBlcnYuYzoxMDEzOjU6IHdhcm5pbmc6DQo+ICBubyBwcmV2
+aW91cyBwcm90b3R5cGUgZm9yIOKAmGh2X3dyaXRlX2NvbmZpZ19ibG9ja+KAmQ0KPiAgIFstV21p
+c3NpbmctcHJvdG90eXBlc10NCj4gDQo+IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpLWh5cGVy
+di5jOjEwODI6NTogd2FybmluZzoNCj4gIG5vIHByZXZpb3VzIHByb3RvdHlwZSBmb3Ig4oCYaHZf
+cmVnaXN0ZXJfYmxvY2tfaW52YWxpZGF0ZeKAmQ0KPiAgIFstV21pc3NpbmctcHJvdG90eXBlc10N
+Cj4gDQo+IFNpZ25lZC1vZmYtYnk6IEtyenlzenRvZiBXaWxjenluc2tpIDxrd0BsaW51eC5jb20+
+DQoNClJldmlld2VkLWJ5OiBIYWl5YW5nIFpoYW5nIDxoYWl5YW5nekBtaWNyb3NvZnQuY29tPg0K
+DQpUaGFua3MhDQo=
