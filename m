@@ -2,178 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 097BEA197F
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 14:03:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05F06A1998
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 14:08:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfH2MDf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Aug 2019 08:03:35 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41856 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfH2MDe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Aug 2019 08:03:34 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w5so3770579edl.8;
-        Thu, 29 Aug 2019 05:03:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HC/6ZRZxQ7B5ep/47mrpg+acl95CprVZcHVqWh2iGp4=;
-        b=CZ5isuAnl2qiOdBcJGTg+2OxOzs4UgciMTbbX9B3oye1Xl6cDATQyhYTTK5MILsNAt
-         gjXHRCmObHw5rBRRgiZOI+/5SyCu5qVS+1G2EMnYMajc5/jRv3WTGkVqVEcfeo0JK91W
-         C+UpQlAtMWF51DpDFo5QELlcFuR/cw6Ml4g7a3hjuigOmnPvWgLP4vh91OiWBsUBMK/B
-         eqHywPSVeYt+rNPVF6K6QbZMrdwPObfoS7BwZA/5YpBiINlCdxJLzFURQ2h7NCHdYmch
-         Ulsc5Azg5406hVlTzAdAQJ0lQ2aSORDJ8x/tbrwcNdVJAC2h12p9Wi8uVrpegydkwvV5
-         iqWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HC/6ZRZxQ7B5ep/47mrpg+acl95CprVZcHVqWh2iGp4=;
-        b=K+NPtEx3a7WY6hkKnmvL97oCdYj/KpS+TfXuxZb6gMmVkr0lekG3GLG7IuTjQdoq6W
-         ZCbHecnibrYxJACwrltRXVJhbw357wtekGkPAZGMjWcVb6ZtqDFDfx3v1gUAGycW9nvL
-         qhyD50C951ppfuYqc+mwF00EQ/qfAXV+WC/txCHQpxFbt23Q3YjUHM1ms1xE0FyUQPVw
-         lj3u0vf2rop/BYJIppDYZ+i8usKOhILyxCOB4mK7NdCL+CL6XL7XkTWfbU7Hsujs2ZFZ
-         ig3bDlEFaiLsoSGDiyFMlWGL16Ccnn2D9uUgba1DgKRs2AdPwjMU8/S4QlF0l63i4kZX
-         0yBw==
-X-Gm-Message-State: APjAAAUm9OUGRXjLhYbLBlfbkioG7EvQi6rp2a05OH3mDrtm7SuQLSJF
-        KXDS02MrYMREu3SlmwxGDeU=
-X-Google-Smtp-Source: APXvYqySs/VqsSqJJBCJaCpwyKBYzvRJ3QSOgddlozsP6MDDfKle9c8EoWsfW0CM/wT3Nf3CMel9+g==
-X-Received: by 2002:a50:fc12:: with SMTP id i18mr9544917edr.23.1567080212005;
-        Thu, 29 Aug 2019 05:03:32 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id j2sm355111ejj.34.2019.08.29.05.03.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 05:03:30 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 14:03:29 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3 2/6] dt-bindings: PCI: tegra: Add PCIe slot supplies
- regulator entries
-Message-ID: <20190829120329.GC13187@ulmo>
-References: <20190828172850.19871-1-vidyas@nvidia.com>
- <20190828172850.19871-3-vidyas@nvidia.com>
+        id S1727012AbfH2MIj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Aug 2019 08:08:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:44214 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727017AbfH2MIi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 29 Aug 2019 08:08:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA0C7360;
+        Thu, 29 Aug 2019 05:08:37 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F15C3F59C;
+        Thu, 29 Aug 2019 05:08:37 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 13:08:35 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH 5/5] PCI: iproc: Properly handle optional PHYs
+Message-ID: <20190829120824.GI14582@e119886-lin.cambridge.arm.com>
+References: <20190828163636.12967-1-thierry.reding@gmail.com>
+ <20190828163636.12967-5-thierry.reding@gmail.com>
+ <20190828212655.GG14582@e119886-lin.cambridge.arm.com>
+ <20190828214901.GM4298@sirena.co.uk>
+ <20190829100933.GH14582@e119886-lin.cambridge.arm.com>
+ <20190829111728.GC4118@sirena.co.uk>
+ <20190829114603.GB13187@ulmo>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4ZLFUWh1odzi/v6L"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190828172850.19871-3-vidyas@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190829114603.GB13187@ulmo>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Aug 29, 2019 at 01:46:03PM +0200, Thierry Reding wrote:
+> On Thu, Aug 29, 2019 at 12:17:29PM +0100, Mark Brown wrote:
+> > On Thu, Aug 29, 2019 at 11:09:34AM +0100, Andrew Murray wrote:
+> > 
+> > > But why do we return -ENODEV and not NULL for OPTIONAL_GET?
+> > 
+> > Why would we return NULL?  The caller is going to have to check the
+> > error code anyway since they need to handle -EPROBE_DEFER and NULL is
+> > never a valid thing to use with the regulator API.
+> 
+> I think the idea is that consumers would do something like this:
+> 
+> 	supply = regulator_get_optional(dev, "foo");
+> 	if (IS_ERR(supply)) {
+> 		/* -EPROBE_DEFER handled as part of this */
+> 		return PTR_ERR(supply);
+> 	}
+> 
+> 	/*
+> 	 * Optional supply is NULL here, making it "easier" to check
+> 	 * whether or not to use it.
+> 	 */
 
---4ZLFUWh1odzi/v6L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Indeed. This way the error path is only for errors (if you consider that
+requesting an optional regulator that doesn't exist isn't an error - and
+if you also consider that -EPROBE_DEFER is an error, or at least a reason
+to bail).
 
-On Wed, Aug 28, 2019 at 10:58:46PM +0530, Vidya Sagar wrote:
-> Add optional bindings "vpcie3v3-supply" and "vpcie12v-supply" to describe
-> regulators of a PCIe slot's supplies 3.3V and 12V provided the platform
-> is designed to have regulator controlled slot supplies.
->=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> V3:
-> * None
->=20
-> V2:
-> * None
->=20
->  .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt      | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.t=
-xt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> index 0ac1b867ac24..b739f92da58e 100644
-> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> @@ -104,6 +104,12 @@ Optional properties:
->     specified in microseconds
->  - nvidia,aspm-l0s-entrance-latency-us: ASPM L0s entrance latency to be
->     specified in microseconds
-> +- vpcie3v3-supply: A phandle to the regulator node that supplies 3.3V to=
- the slot
-> +  if the platform has one such slot. (Ex:- x16 slot owned by C5 controll=
-er
-> +  in p2972-0000 platform).
-> +- vpcie12v-supply: A phandle to the regulator node that supplies 12V to =
-the slot
-> +  if the platform has one such slot. (Ex:- x16 slot owned by C5 controll=
-er
-> +  in p2972-0000 platform).
+> 
+> I suppose checking using IS_ERR() is equally simple, so this mostly
+> boils down to taste...
+> 
+> The PHY subsystem, for instance, uses a similar approach but it goes one
+> step further. All APIs can take NULL as their struct phy * argument and
+> return success in that case, which makes it really trivial to deal with
+> optional PHYs. You really don't have to care about them at all after you
+> get NULL from phy_get_optional().
 
-There's an ongoing discussion regarding the use of optional power
-supplies and I'm wondering if we're not abusing this here. Why exactly
-are these regulators optional?
+I can see how this makes everything very convenient for the driver, though
+this doesn't smell right.
 
-The distinction is somewhat subtle, but the other way to look at
-modelling this in DT is that the supplies are in fact required, but may
-be connected to an always-on regulator with a fixed voltage. Or in some
-cases they may also be shorted to ground. In both cases the PCI
-controller, or rather the slot that the controller connects to, actually
-"requires" the supplies, it's just that we can get away without
-describing them because they can't be controlled anyway.
+> 
+> > > Looking at some of the consumer drivers I can see that lots of them don't
+> > > correctly handle the return value of regulator_get_optional:
+> > 
+> > This API is *really* commonly abused, especially in the graphics
+> > subsystem which for some reason has lots of users even though I don't
+> > think I've ever seen a sensible use of the API there.  As far as I can
+> > tell the graphics subsystem mostly suffers from people cut'n'pasting
+> > from the Qualcomm BSP which is full of really bad practice.  It's really
+> > frustrating since I will intermittently go through and clean things up
+> > but the uses just keep coming back into the subsystem.
+> 
+> The intention here is to make it more difficult to abuse. Obviously if
+> people keep copying abuses from one driver to another that's a different
+> story. But if there was no way to abuse the API and if it automatically
+> did the right thing, even copy/paste abuse would be difficult to pull
+> off.
 
-Looking at the PCI connector pinout for PCI Express, I do see a bunch of
-+3.3 V and +12 V pins. To me that indicates that the 3.3 V and 12 V
-supplies are indeed required for PCI slots. I'm not sure about devices
-that are directly connected to the PCI controller, though. I'll need to
-go look at some schematics to get a better understanding of these.
+That's the motativation here.
 
-Bottom line: I'm wondering if we shouldn't really make these supplies
-mandatory and in case where we don't care either just leave them away
-(the regulator framework will supply a dummy regulator in that case) or
-hook them up to a fixed regulator if that matches the hardware design.
+> 
+> > > Given that a common pattern is to set a consumer regulator pointer to NULL
+> > > upon -ENODEV - if regulator_get_optional did this for them, then it would
+> > > be more difficult for consumer drivers to get the error handling wrong and
+> > > would remove some consumer boiler plate code.
+> > 
+> > No, they'd all still be broken for probe deferral (which is commonly
+> > caused by off-chip devices) and they'd crash as soon as they try to call
+> > any further regulator API functions.
 
-Any thoughts?
+regulator_get_optional would still return -EPROBE_DEFER and this would be
+caught in the above example set out by Thierry.
 
-Thierry
+> 
+> I think what Andrew was suggesting here was to make it easier for people
+> to determine whether or not an optional regulator was in fact requested
+> successfully or not. Many consumers already set the optional supply to
+> NULL and then check for that before calling any regulator API.
+> 
+> If regulator_get_optional() returned NULL for absent optional supplies,
+> this could be unified across all drivers. And it would allow treating
+> NULL regulators special, if that's something you'd be willing to do.
+> 
+> In either case, the number of abuses shows that people clearly don't
+> understand how to use this. So there are two options: a) fix abuse every
+> time we come across it or b) try to change the API to make it more
+> difficult to abuse.
 
-> =20
->  Examples:
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D
-> @@ -156,6 +162,8 @@ Tegra194:
->  			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x4 0x00000000>;  /* pre=
-fetchable memory (16GB) */
-> =20
->  		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> +		vpcie3v3-supply =3D <&vdd_3v3_pcie>;
-> +		vpcie12v-supply =3D <&vdd_12v_pcie>;
-> =20
->  		phys =3D <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
->  		       <&p2u_hsio_5>;
-> --=20
-> 2.17.1
->=20
+Sure. I think we end up with something like:
 
---4ZLFUWh1odzi/v6L
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index e0c0cf462004..67e2a6d7abf6 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -1868,6 +1868,9 @@ struct regulator *_regulator_get(struct device *dev, const char *id,
+                }
+ 
+                switch (get_type) {
++               case OPTIONAL_GET:
++                       return NULL;
++
+                case NORMAL_GET:
+                        /*
+                         * Assume that a regulator is physically present and
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1nvw4ACgkQ3SOs138+
-s6GI6w/+IG7mTCrwYZe0LN6qzkC7/2R7QVuV631kPcoyzIRoQZLYGkdNvI5EAfzF
-8NgV3IpZAIxJDeZl7slSZdXcrCF92OFxy77koBFKQncXlSc/YHKymyXx2trZLzmf
-b7+aO8xnOxaSfHCfdKPVQTndq2piK9APoyTtuVnE9mmgqEGQoEv7N4QiSMx8NabA
-q0MVvrA9l5ibiQ13lfw6QX8iT4txZ17yWQ4wcMSXOOSSnmGkxZq8kOr3OVzahIYY
-ibogwwQPEcV1Auz2TRyVdG4ZftKx21iflj+m/2sbiduh9l3p+aEuB8WIV6T2MbBk
-vXfiC+bWlOUsWpZlb+zb3zOHjte3/53YbVkrgXvdlE+66VYKK/Ok2uAnq9t9RDvT
-swdhH98bWTviSxfdvT3TXKcxX9DT1sI+4rQPqvEO5E2taflYw0VlVGklSMmZqy57
-BApIVrZoh1r0OKgVrTSr/VBkT0yVki8SyKBvH9UzKG42NDf9FNhLeg9ey5UOACZO
-A/ujEXHDjpqyTZmVlo0orYOvKB6qsaM3LS5PQD1FrIjSwFVqVWMPkGeVqZ0OE9za
-tT/v4MGRz9v7GSDTEqAYmTsVhjEzd8h2fuTsdykqxKmMlbTHohS1QVUj4MBkSwcB
-O6cGc3uLm1i5x+0980a+k7CXqmm5ooEcsRspCdi4egaGQdN1jRs=
-=CA6J
------END PGP SIGNATURE-----
+Of course there may be other approaches.
 
---4ZLFUWh1odzi/v6L--
+> 
+> > > I guess I'm looking here for something that can simplify consumer error
+> > > handling - it's easy to get wrong and it seems that many drivers may be wrong.
+> > 
+> > The overwhelming majority of the users just shouldn't be using this API.
+> > If there weren't devices that absolutely *need* this API it wouldn't be
+> > there in the first place since it seems like a magent for bad code, it's
+> > so disappointing how bad the majority of the consumer code is.
+> 
+> Yeah, I guess in many cases this API is used as a cheap way to model
+> always-on, fixed-voltage regulators. It's pretty hard to change those
+> after the fact, though, because they're usually happening as part of
+> device tree bindings implementation, so by the time we notice them,
+> they've often become ABI...
+
+Thanks,
+
+Andrew Murray
+
+> 
+> Thierry
+
+
