@@ -2,89 +2,199 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7637CA0E89
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 02:08:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E175A0E8E
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 02:12:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfH2AIf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Aug 2019 20:08:35 -0400
-Received: from mail-ed1-f52.google.com ([209.85.208.52]:43806 "EHLO
-        mail-ed1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbfH2AIe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Aug 2019 20:08:34 -0400
-Received: by mail-ed1-f52.google.com with SMTP id h13so1924296edq.10;
-        Wed, 28 Aug 2019 17:08:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:message-id:references:mime-version;
-        bh=xumOPnbGJ7cJyCLuLqJrCbBhj31yluZcv0TSABm5hIk=;
-        b=nmeB65EJ5fgm04f8+vY6gdupp0VzYKYF4aI+eQq5CPypfrXPu9BVwGB6vGXHMLE7qG
-         WuZGkaAxUDx9xCoD7p0tdgKDce8/jJDKHPvbeMwhEclDkQDOA6Ryl83jq7qEWyGgA6tx
-         yqShHQDtgNlcBZkuaF4BQpjst6+8iHTBPfzWWlGXGfElIAtMfk9L0G1+CCpobJf8xCnm
-         ElURu0OUyZXoVNXhV9Gx2vhp5oFfNBL/rs9qBJHG71Jv3oRFAzlDvd5x2Z6Q/sG7v4cf
-         nPW17JRaFXRzdQaORNebyvyzRKpuPUgeND5B4dQiYuMXtv+RwkG679BYdEldhWtXkASV
-         PXlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:message-id:references
-         :mime-version;
-        bh=xumOPnbGJ7cJyCLuLqJrCbBhj31yluZcv0TSABm5hIk=;
-        b=ira3mHqUtp2gv4MXxaImuTA46ZbvGli5YVX0EnueH+fwCBg4AqBijLoQ9vYCegz8KS
-         tIV2RyXGjO7TYiGbuU01TiiISIQvptgNhnKzzcRXwlyKc0FtQKvfLpR5Ksgf6ukCRPGC
-         iCiXvpG+Xa5+NEs98bV9ZU6FyeSy2u+rVUnjzifdS8UIsXsNHKHRtn3WV0FVxrZDoPbi
-         aNEvKqlPGr10VivJSSKjDcYTmtMvr2JHLBeC4yKdyvhCNiA17qOo5uAugqyvkmdWuS4E
-         8bMo1MumR52NqDm0EApV35or31Zs1gapzLU5ISDS1mro93fMI6qmso+2e9mgljys4J6V
-         9GbA==
-X-Gm-Message-State: APjAAAVqAcRA8DIG2tVoLQxaUyNLG8f/pJIDRtj4pW2QX2Nayyk0iWtP
-        W5iHXbp7TUbWuQ1v6FxbGpc=
-X-Google-Smtp-Source: APXvYqwnztlHP9wejSKsy5GjOEek1bCp/Na5WdTXLcyY0Ufnex1Cu88ug20O0hBMzgorn2dRL5G03A==
-X-Received: by 2002:a50:f19a:: with SMTP id x26mr6846144edl.144.1567037312658;
-        Wed, 28 Aug 2019 17:08:32 -0700 (PDT)
-Received: from [192.168.1.105] (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id h6sm122868eds.48.2019.08.28.17.08.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 17:08:31 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 02:08:29 +0200
-From:   Krzysztof Wilczynski <kswilczynski@gmail.com>
-Subject: RE: [PATCH v2] PCI: hv: Make functions only used locally static in
- pci-hyperv.c
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        id S1726971AbfH2AMs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Aug 2019 20:12:48 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50482 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726926AbfH2AMs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Aug 2019 20:12:48 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7T0Bt63119998;
+        Wed, 28 Aug 2019 20:12:05 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2umnmwje9n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 20:12:05 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7T0C4Cd120342;
+        Wed, 28 Aug 2019 20:12:04 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2umnmwje8n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 20:12:04 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7T0A5xV031574;
+        Thu, 29 Aug 2019 00:12:02 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma03dal.us.ibm.com with ESMTP id 2umpctmvq9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Aug 2019 00:12:02 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7T0C1sg26739146
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Aug 2019 00:12:01 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 44F57AE05C;
+        Thu, 29 Aug 2019 00:12:01 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BDD9AAE060;
+        Thu, 29 Aug 2019 00:11:59 +0000 (GMT)
+Received: from oc6857751186.ibm.com (unknown [9.80.202.51])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 29 Aug 2019 00:11:59 +0000 (GMT)
+Subject: Re: [PATCH] PCI: hotplug: Remove surplus return from a void function
+To:     Krzysztof Wilczynski <kw@linux.com>,
+        Scott Murray <scott@spiteful.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Lukas Wunner <lukas@wunner.de>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Message-Id: <1567037309.11524.1@gmail.com>
-References: <20190826154159.9005-1-kw@linux.com>
-        <20190828221846.6672-1-kw@linux.com>
-        <DM6PR21MB133796BB3D4A41278C513332CAA30@DM6PR21MB1337.namprd21.prod.outlook.com>
-X-Mailer: geary/3.32.0
+        linuxppc-dev@lists.ozlabs.org
+References: <20190826095143.21353-1-kw@linux.com>
+From:   Tyrel Datwyler <tyreld@linux.ibm.com>
+Message-ID: <064f3f5e-cf53-b6c8-654f-4654bf146428@linux.ibm.com>
+Date:   Wed, 28 Aug 2019 17:11:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+In-Reply-To: <20190826095143.21353-1-kw@linux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-28_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908290001
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Haiyang,
+On 8/26/19 2:51 AM, Krzysztof Wilczynski wrote:
+> Remove unnecessary empty return statement at the end of a void
+> function in the following:
+> 
+>   - drivers/pci/hotplug/cpci_hotplug_core.c: cleanup_slots()
+>   - drivers/pci/hotplug/cpqphp_core.c: pci_print_IRQ_route()
+>   - drivers/pci/hotplug/cpqphp_ctrl.c: cpqhp_pushbutton_thread()
+>   - drivers/pci/hotplug/cpqphp_ctrl.c: interrupt_event_handler()
+>   - drivers/pci/hotplug/cpqphp_nvram.h: compaq_nvram_init()
+>   - drivers/pci/hotplug/rpadlpar_core.c: rpadlpar_io_init()
+>   - drivers/pci/hotplug/rpaphp_core.c: cleanup_slots()
+> 
+> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
 
-Thank you for feedback.
+For rpa*_core.c portions,
 
-[...]
-> The second line should be aligned next to the "(" on the first line.
-> Also the first line is now over 80 chars.
+Acked-by: Tyrel Datwyler <tyreld@linux.ibm.com>
 
-Sorry about this.  I will fix it in v3.  Thank you for pointing this 
-out.
-
-To address both the alignment and line length of 
-hv_register_block_invalidate(),
-I took a hint from the way how hv_compose_msi_req_v1() is current 
-formatted.  I
-hope that this would be acceptable.
-
-Krzysztof
-
+> ---
+>  drivers/pci/hotplug/cpci_hotplug_core.c | 1 -
+>  drivers/pci/hotplug/cpqphp_core.c       | 1 -
+>  drivers/pci/hotplug/cpqphp_ctrl.c       | 4 ----
+>  drivers/pci/hotplug/cpqphp_nvram.h      | 5 +----
+>  drivers/pci/hotplug/rpadlpar_core.c     | 1 -
+>  drivers/pci/hotplug/rpaphp_core.c       | 1 -
+>  6 files changed, 1 insertion(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
+> index 603eadf3d965..d0559d2faf50 100644
+> --- a/drivers/pci/hotplug/cpci_hotplug_core.c
+> +++ b/drivers/pci/hotplug/cpci_hotplug_core.c
+> @@ -563,7 +563,6 @@ cleanup_slots(void)
+>  	}
+>  cleanup_null:
+>  	up_write(&list_rwsem);
+> -	return;
+>  }
+>  
+>  int
+> diff --git a/drivers/pci/hotplug/cpqphp_core.c b/drivers/pci/hotplug/cpqphp_core.c
+> index 16bbb183695a..b8aacb41a83c 100644
+> --- a/drivers/pci/hotplug/cpqphp_core.c
+> +++ b/drivers/pci/hotplug/cpqphp_core.c
+> @@ -173,7 +173,6 @@ static void pci_print_IRQ_route(void)
+>  		dbg("%d %d %d %d\n", tbus, tdevice >> 3, tdevice & 0x7, tslot);
+>  
+>  	}
+> -	return;
+>  }
+>  
+>  
+> diff --git a/drivers/pci/hotplug/cpqphp_ctrl.c b/drivers/pci/hotplug/cpqphp_ctrl.c
+> index b7f4e1f099d9..68de958a9be8 100644
+> --- a/drivers/pci/hotplug/cpqphp_ctrl.c
+> +++ b/drivers/pci/hotplug/cpqphp_ctrl.c
+> @@ -1872,8 +1872,6 @@ static void interrupt_event_handler(struct controller *ctrl)
+>  			}
+>  		}		/* End of FOR loop */
+>  	}
+> -
+> -	return;
+>  }
+>  
+>  
+> @@ -1943,8 +1941,6 @@ void cpqhp_pushbutton_thread(struct timer_list *t)
+>  
+>  		p_slot->state = STATIC_STATE;
+>  	}
+> -
+> -	return;
+>  }
+>  
+>  
+> diff --git a/drivers/pci/hotplug/cpqphp_nvram.h b/drivers/pci/hotplug/cpqphp_nvram.h
+> index 918ff8dbfe62..70e879b6a23f 100644
+> --- a/drivers/pci/hotplug/cpqphp_nvram.h
+> +++ b/drivers/pci/hotplug/cpqphp_nvram.h
+> @@ -16,10 +16,7 @@
+>  
+>  #ifndef CONFIG_HOTPLUG_PCI_COMPAQ_NVRAM
+>  
+> -static inline void compaq_nvram_init(void __iomem *rom_start)
+> -{
+> -	return;
+> -}
+> +static inline void compaq_nvram_init(void __iomem *rom_start) { }
+>  
+>  static inline int compaq_nvram_load(void __iomem *rom_start, struct controller *ctrl)
+>  {
+> diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
+> index 182f9e3443ee..977946e4e613 100644
+> --- a/drivers/pci/hotplug/rpadlpar_core.c
+> +++ b/drivers/pci/hotplug/rpadlpar_core.c
+> @@ -473,7 +473,6 @@ int __init rpadlpar_io_init(void)
+>  void rpadlpar_io_exit(void)
+>  {
+>  	dlpar_sysfs_exit();
+> -	return;
+>  }
+>  
+>  module_init(rpadlpar_io_init);
+> diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
+> index c3899ee1db99..18627bb21e9e 100644
+> --- a/drivers/pci/hotplug/rpaphp_core.c
+> +++ b/drivers/pci/hotplug/rpaphp_core.c
+> @@ -408,7 +408,6 @@ static void __exit cleanup_slots(void)
+>  		pci_hp_deregister(&slot->hotplug_slot);
+>  		dealloc_slot_struct(slot);
+>  	}
+> -	return;
+>  }
+>  
+>  static int __init rpaphp_init(void)
+> 
 
