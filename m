@@ -2,107 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A459DA1BB6
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 15:43:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B277CA1C75
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 16:13:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfH2Nnt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Aug 2019 09:43:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:45080 "EHLO foss.arm.com"
+        id S1727069AbfH2ONM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Aug 2019 10:13:12 -0400
+Received: from verein.lst.de ([213.95.11.211]:46615 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbfH2Nnt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 29 Aug 2019 09:43:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3BB428;
-        Thu, 29 Aug 2019 06:43:48 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 185A03F246;
-        Thu, 29 Aug 2019 06:43:47 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 14:43:46 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: Re: [PATCH 5/5] PCI: iproc: Properly handle optional PHYs
-Message-ID: <20190829134345.GL14582@e119886-lin.cambridge.arm.com>
-References: <20190828163636.12967-1-thierry.reding@gmail.com>
- <20190828163636.12967-5-thierry.reding@gmail.com>
- <20190828212655.GG14582@e119886-lin.cambridge.arm.com>
- <20190828214901.GM4298@sirena.co.uk>
- <20190829100933.GH14582@e119886-lin.cambridge.arm.com>
- <20190829111728.GC4118@sirena.co.uk>
- <20190829114603.GB13187@ulmo>
- <20190829120824.GI14582@e119886-lin.cambridge.arm.com>
- <20190829131603.GF4118@sirena.co.uk>
+        id S1726852AbfH2ONL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 29 Aug 2019 10:13:11 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 6E34F68B20; Thu, 29 Aug 2019 16:13:07 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 16:13:07 +0200
+From:   "hch@lst.de" <hch@lst.de>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "hch@lst.de" <hch@lst.de>, "kbusch@kernel.org" <kbusch@kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/5] x86/pci: Add a to_pci_sysdata helper
+Message-ID: <20190829141307.GA18677@lst.de>
+References: <20190828141443.5253-1-hch@lst.de> <20190828141443.5253-3-hch@lst.de> <809ad38b6aca8e828db7be6423cb03ac9208fb5a.camel@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190829131603.GF4118@sirena.co.uk>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <809ad38b6aca8e828db7be6423cb03ac9208fb5a.camel@intel.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 02:16:03PM +0100, Mark Brown wrote:
-> On Thu, Aug 29, 2019 at 01:08:35PM +0100, Andrew Murray wrote:
-> > On Thu, Aug 29, 2019 at 01:46:03PM +0200, Thierry Reding wrote:
-> 
-> > > If regulator_get_optional() returned NULL for absent optional supplies,
-> > > this could be unified across all drivers. And it would allow treating
-> > > NULL regulators special, if that's something you'd be willing to do.
-> 
-> > > In either case, the number of abuses shows that people clearly don't
-> > > understand how to use this. So there are two options: a) fix abuse every
-> > > time we come across it or b) try to change the API to make it more
-> > > difficult to abuse.
-> 
-> > Sure. I think we end up with something like:
-> 
-> > diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-> > index e0c0cf462004..67e2a6d7abf6 100644
-> > --- a/drivers/regulator/core.c
-> > +++ b/drivers/regulator/core.c
-> > @@ -1868,6 +1868,9 @@ struct regulator *_regulator_get(struct device *dev, const char *id,
-> >                 }
+On Wed, Aug 28, 2019 at 04:41:45PM +0000, Derrick, Jonathan wrote:
+> > diff --git a/arch/x86/include/asm/pci.h b/arch/x86/include/asm/pci.h
+> > index 6fa846920f5f..75fe28492290 100644
+> > --- a/arch/x86/include/asm/pci.h
+> > +++ b/arch/x86/include/asm/pci.h
+> > @@ -35,12 +35,15 @@ extern int noioapicreroute;
 > >  
-> >                 switch (get_type) {
-> > +               case OPTIONAL_GET:
-> > +                       return NULL;
-> > +
-> 
-> Implementing returning NULL is not hard.  How returning NULL discourages
-> people from using regulator_get_optional() when they shouldn't be using
-> it in the first place is not clear to me.
+> >  #ifdef CONFIG_PCI
+> >  
+> > +static inline struct pci_sysdata *to_pci_sysdata(struct pci_bus *bus)
+> Can you make the argument const to avoid all the warnings from callers
+> passing const struct pci_bus
 
-I think this is the part I haven't understood until now.
-
-There are many consumer drivers that will not have a regulator specified in
-the DT - this may be because they are optional (possibly a rare thing) or
-because they don't need to be specified (because they are always on and
-require no software interaction)...
-
-Where they are not specified, because there is really no reason for them to
-be described in the DT - then these drivers should use regulator_get and
-be happy with a dummy regulator. This gives a benefit as if another hardware
-version uses the same driver but does have a regulator that needs software
-control then we can be confident it will work.
-
-Where regulators are really optional, then regulator_get_optional is used
-and -ENODEV can be used by the caller to perform a different course of action
-if required. (Does this use-case actually exist?)
-
-I guess I interpreted _optional as 'it's OK if you can't provide a regulator',
-whereas the meaning is really 'get me a regulator that may not exist'.
-
-Is my understanding correct? If so I guess another course of action would
-be to clean-up users of _optional and convert them to regulator_get where
-appropriate?
-
-Thanks,
-
-Andrew Murray
+Yes, I already fixed this up after getting a build bot warning for a
+NUMA config (which seems to be the only one passing a const).
