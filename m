@@ -2,61 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DDD9A10AB
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 07:11:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA726A10B8
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 07:14:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725826AbfH2FLF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Aug 2019 01:11:05 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56854 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfH2FLF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Aug 2019 01:11:05 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7T5AI74066124;
-        Thu, 29 Aug 2019 00:10:18 -0500
+        id S1725882AbfH2FN6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Aug 2019 01:13:58 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:39562 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfH2FN6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Aug 2019 01:13:58 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7T5DVQ1080368;
+        Thu, 29 Aug 2019 00:13:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1567055418;
-        bh=RhWCtfcsf2MC9bAiCnYjqaLKzSINxy+e1qfbLxx2SuI=;
+        s=ti-com-17Q1; t=1567055611;
+        bh=LYyFnkusAO06maJIyAoLh4uHHcHnpkVbJ8SCEW6OJlg=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Ullb8FkoCQAe0n4YKyQhEw/xdY/HaqClFGHrV3wtv8Vsui3PD4DBSkE7uQXv7psqb
-         fPKRCNaUJSy3r3xnCR6xRPgTZxiPhd0tU8bzjyYuXNkzqtT/+JTUOqp295ckpPoY4n
-         1gJXx8EljqwxilpS/1nmW6+vaS41mmmDdTEImW+4=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7T5AIdv118034
+        b=xAvXEf/1vTB129pEHtXkhBGqX8JXqhzbbly6gS1T+vqU0Wn+9Yi+jY+g4E3aPNqVZ
+         bs2/RdD9XzUDZalkIWDSNadfyS+dVvioyPCUIQOo99sbAAb86ZifKDpYqA2RMaxQk3
+         0uTYPMDWLATmZWbjfLTy8NyNqesUw632YUQfGKm0=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7T5DVgk118886
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 29 Aug 2019 00:10:18 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 29 Aug 2019 00:13:31 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 29
- Aug 2019 00:10:18 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ Aug 2019 00:13:31 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 29 Aug 2019 00:10:18 -0500
+ Frontend Transport; Thu, 29 Aug 2019 00:13:31 -0500
 Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7T5AD4O062393;
-        Thu, 29 Aug 2019 00:10:14 -0500
-Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
-CC:     <eswara.kota@linux.intel.com>, <andriy.shevchenko@intel.com>,
-        <cheol.yong.kim@intel.com>, <devicetree@vger.kernel.org>,
-        <gustavo.pimentel@synopsys.com>, <hch@infradead.org>,
-        <jingoohan1@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <qi-ming.wu@intel.com>
-References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
- <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
- <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com>
- <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
- <9ba19f08-e25a-4d15-8854-8dc4f9b6faca@linux.intel.com>
- <CAFBinCDX2BqiKcZM-C0m7gsi4BPSK0gM15r0jHmL3+AKxff=wQ@mail.gmail.com>
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7T5DOv7066185;
+        Thu, 29 Aug 2019 00:13:25 -0500
+Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the doorbell
+ way
+To:     Andrew Murray <andrew.murray@arm.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-7-xiaowei.bao@nxp.com>
+ <20190823135816.GH14582@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB3299E50BA5D7579D41B8B4F9F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
 From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <023c9b59-70bb-ed8d-a4c0-76eae726b574@ti.com>
-Date:   Thu, 29 Aug 2019 10:40:07 +0530
+Message-ID: <e64a484c-7cf5-5f65-400c-47128ab45e52@ti.com>
+Date:   Thu, 29 Aug 2019 10:43:18 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCDX2BqiKcZM-C0m7gsi4BPSK0gM15r0jHmL3+AKxff=wQ@mail.gmail.com>
+In-Reply-To: <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -66,121 +79,53 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Martin,
+Gustavo,
 
-On 28/08/19 2:08 AM, Martin Blumenstingl wrote:
-> Hello,
-> 
-> On Tue, Aug 27, 2019 at 5:09 AM Chuan Hua, Lei
-> <chuanhua.lei@linux.intel.com> wrote:
+On 27/08/19 6:55 PM, Andrew Murray wrote:
+> On Sat, Aug 24, 2019 at 12:08:40AM +0000, Xiaowei Bao wrote:
 >>
->> Hi Martin,
 >>
->> Thanks for your feedback. Please check the comments below.
->>
->> On 8/27/2019 5:15 AM, Martin Blumenstingl wrote:
->>> Hello,
+>>> -----Original Message-----
+>>> From: Andrew Murray <andrew.murray@arm.com>
+>>> Sent: 2019年8月23日 21:58
+>>> To: Xiaowei Bao <xiaowei.bao@nxp.com>
+>>> Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+>>> shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
+>>> lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org; M.h.
+>>> Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+>>> Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+>>> gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+>>> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+>>> linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
+>>> Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
+>>> doorbell way
 >>>
->>> On Mon, Aug 26, 2019 at 5:31 AM Chuan Hua, Lei
->>> <chuanhua.lei@linux.intel.com> wrote:
->>>> Hi Martin,
+>>> On Thu, Aug 22, 2019 at 07:22:39PM +0800, Xiaowei Bao wrote:
+>>>> The layerscape platform use the doorbell way to trigger MSIX interrupt
+>>>> in EP mode.
 >>>>
->>>> Thanks for your valuable comments. I reply some of them as below.
->>> you're welcome
 >>>
->>> [...]
->>>>>> +config PCIE_INTEL_AXI
->>>>>> +        bool "Intel AHB/AXI PCIe host controller support"
->>>>> I believe that this is mostly the same IP block as it's used in Lantiq
->>>>> (xDSL) VRX200 SoCs (with MIPS cores) which was introduced in 2010
->>>>> (before Intel acquired Lantiq).
->>>>> This is why I would have personally called the driver PCIE_LANTIQ
->>>> VRX200 SoC(internally called VR9) was the first PCIe SoC product which
->>>> was using synopsys
->>>>
->>>> controller v3.30a. It only supports PCIe Gen1.1/1.0. The phy is internal
->>>> phy from infineon.
->>> thank you for these details
->>> I wasn't aware that the PCIe PHY on these SoCs was developed by
->>> Infineon nor is the DWC version documented anywhere
+>>> I have no problems with this patch, however...
+>>>
+>>> Are you able to add to this message a reason for why you are making this
+>>> change? Did dw_pcie_ep_raise_msix_irq not work when func_no != 0? Or did
+>>> it work yet dw_pcie_ep_raise_msix_irq_doorbell is more efficient?
 >>
->> VRX200/ARX300 PHY is internal value. There are a lot of hardcode which was
->> from hardware people. From XRX500, we switch to synopsis PHY. However, later
->> comboPHY is coming to the picture. Even though we have one same controller
->> with different versions, we most likely will have three different phy
->> drivers.
-> that is a good argument for using a separate PHY driver and
-> integrating that using the PHY subsystem (which is already the case in
-> this patch revision)
+>> The fact is that, this driver is verified in ls1046a platform of NXP before, and ls1046a don't
+>> support MSIX feature, so I set the msix_capable of pci_epc_features struct is false,
+>> but in other platform, e.g. ls1088a, it support the MSIX feature, I verified the MSIX
+>> feature in ls1088a, it is not OK, so I changed to another way. Thanks.
 > 
-.
-.
-<snip>
->>>>>> +static int intel_pcie_ep_rst_init(struct intel_pcie_port *lpp)
->>>>>> +{
->>>>>> +    struct device *dev = lpp->pci->dev;
->>>>>> +    int ret = 0;
->>>>>> +
->>>>>> +    lpp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
->>>>>> +    if (IS_ERR(lpp->reset_gpio)) {
->>>>>> +            ret = PTR_ERR(lpp->reset_gpio);
->>>>>> +            if (ret != -EPROBE_DEFER)
->>>>>> +                    dev_err(dev, "failed to request PCIe GPIO: %d\n", ret);
->>>>>> +            return ret;
->>>>>> +    }
->>>>>> +    /* Make initial reset last for 100ms */
->>>>>> +    msleep(100);
->>>>> why is there lpp->rst_interval when you hardcode 100ms here?
->>>> There are different purpose. rst_interval is purely for asserted reset
->>>> pulse.
->>>>
->>>> Here 100ms is to make sure the initial state keeps at least 100ms, then we
->>>> can reset.
->>> my interpretation is that it totally depends on the board design or
->>> the bootloader setup.
->>
->> Partially, you are right. However, we should not add some dependency
->> here from
->> bootloader and board. rst_interval is just to make sure the pulse (low
->> active or high active)
->> lasts the specified the time.
-> +Cc Kishon
+> Right, so the existing pci-layerscape-ep.c driver never supported MSIX yet it
+> erroneously had a switch case statement to call dw_pcie_ep_raise_msix_irq which
+> would never get used.
 > 
-> he recently added support for a GPIO reset line to the
-> pcie-cadence-host.c [0] and I believe he's also maintaining
-> pci-keystone.c which are both using a 100uS delay (instead of 100ms).
-> I don't know the PCIe spec so maybe Kishon can comment on the values
-> that should be used according to the spec.
-> if there's then a reason why values other than the ones from the spec
-> are needed then there should be a comment explaining why different
-> values are needed (what problem does it solve).
+> Now that we're adding a platform with MSIX support the existing
+> dw_pcie_ep_raise_msix_irq doesn't work (for this platform) so we are adding a
+> different method.
 
-The PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION defines the Power
-Sequencing and Reset Signal Timings in Table 2-4. Please also refer Figure
-2-10: Power Up of the CEM.
-
-╔═════════════╤══════════════════════════════════════╤═════╤═════╤═══════╗
-║ Symbol      │ Parameter                            │ Min │ Max │ Units ║
-╠═════════════╪══════════════════════════════════════╪═════╪═════╪═══════╣
-║ T PVPERL    │ Power stable to PERST# inactive      │ 100 │     │ ms    ║
-╟─────────────┼──────────────────────────────────────┼─────┼─────┼───────╢
-║ T PERST-CLK │ REFCLK stable before PERST# inactive │ 100 │     │ μs    ║
-╟─────────────┼──────────────────────────────────────┼─────┼─────┼───────╢
-║ T PERST     │ PERST# active time                   │ 100 │     │ μs    ║
-╟─────────────┼──────────────────────────────────────┼─────┼─────┼───────╢
-║ T FAIL      │ Power level invalid to PERST# active │     │ 500 │ ns    ║
-╟─────────────┼──────────────────────────────────────┼─────┼─────┼───────╢
-║ T WKRF      │ WAKE# rise – fall time               │     │ 100 │ ns    ║
-╚═════════════╧══════════════════════════════════════╧═════╧═════╧═══════╝
-
-In my code I used T PERST-CLK (i.e REFCLK stable before PERST# inactive).
-REFCLK to the card is enabled as part of PHY enable and then wait for 100μs
-before making PERST# inactive.
-
-Power to the device is given during board power up and the assumption here is
-it will take more the 100ms for the probe to be invoked after board power up
-(i.e after ROM, bootloaders and linux kernel). But if you have a regulator that
-is enabled in PCI probe, then T PVPERL (100ms) should also used in probe.
+Gustavo, can you confirm dw_pcie_ep_raise_msix_irq() works for designware as it
+didn't work for both me and Xiaowei?
 
 Thanks
 Kishon
