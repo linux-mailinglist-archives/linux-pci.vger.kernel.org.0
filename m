@@ -2,146 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F205A22D7
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 19:55:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CACB9A288D
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 23:01:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfH2Rzh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Aug 2019 13:55:37 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51558 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727314AbfH2Rzh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Aug 2019 13:55:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5b1z3wsMTj6Fc0lCxdaYS1Ks0PpSv86VRBGLPfw0HTo=; b=dnEOfDfHintJMltKgJoddaMu6
-        ioCR1afN3JjTsGTxFg10Tz6KSWC0rqPbU0+mr8l43DGdUERjFA9aS/U68ihA7aguWJ34SVYvu2EvR
-        78DuzgSoMctut6z/EKUiiCqevjSNGZKuNDCJywN4rh0egZ2Vf42G0+mpc6UsbFSo0/jYI=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i3Odx-0002hV-Ve; Thu, 29 Aug 2019 17:55:34 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id C568327428D1; Thu, 29 Aug 2019 18:55:32 +0100 (BST)
-Date:   Thu, 29 Aug 2019 18:55:32 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: Re: [PATCH 5/5] PCI: iproc: Properly handle optional PHYs
-Message-ID: <20190829175532.GH4118@sirena.co.uk>
-References: <20190828163636.12967-1-thierry.reding@gmail.com>
- <20190828163636.12967-5-thierry.reding@gmail.com>
- <20190828212655.GG14582@e119886-lin.cambridge.arm.com>
- <20190828214901.GM4298@sirena.co.uk>
- <20190829100933.GH14582@e119886-lin.cambridge.arm.com>
- <20190829111728.GC4118@sirena.co.uk>
- <20190829114603.GB13187@ulmo>
- <20190829130323.GE4118@sirena.co.uk>
- <20190829145820.GB19842@ulmo>
+        id S1726526AbfH2VBe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Aug 2019 17:01:34 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44269 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbfH2VBe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Aug 2019 17:01:34 -0400
+Received: by mail-ot1-f68.google.com with SMTP id w4so4796615ote.11;
+        Thu, 29 Aug 2019 14:01:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Q0LKYROnO/5Jtf/PK6jgGgvS0DoPlSzVpeE94fKs7PU=;
+        b=gHKBKFR5V0IntTFWx7iQpxi4nWYtIBUxyKiP2x/RNqfTWFWS6IYEpr9dclMb/OeNHL
+         D8CnNxsT5f9C8SOnEbxnBdtMYIw+hC40ik7m1UD12L6rht0Mu3+R7AMFRiiIp/aII6i8
+         qaWajxJXjBatkg4JLiDs1b0ZSYEs1VLmmdT9EuS5T37PCeakc8H2uJMzyiZ9Zl2diWnX
+         7gSkXzZulxsOad5DkxQZTo1/BPb3TI4Z8gx8hoDQx7bORNr8cfaLNOxnrOV2W8BBpW1k
+         VeaLzsSAuHV6eGEfD4b/M6Fup10ig9XVUc0hdXFTJRSzeHFOmklLe1HDCO6Zr9YwCRhr
+         tEBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Q0LKYROnO/5Jtf/PK6jgGgvS0DoPlSzVpeE94fKs7PU=;
+        b=ByDIh5d0zH9GwZWT7M6IBWKZxyIbUXJZ5iuSCBiMrFiktRrMCr4aPs3BiiVl4h29eR
+         +QKA32Gp1tozEVWkbrYLc5niv8Im58GYhH0COYH5a8xiqGwT3e/TKy6d/TbbMN/WhCAL
+         ius+9b4WnxlB32GKxuSVdyqsju2gDHbUtuWXj+uL6OgR9hNm5zZ21MP9gtwOvSlhWXps
+         XziPoP2vf6aDOVZU+/VKDYEqR1aN0pCy5+pakP5JwCyWOcDBST3+AFKjILR/xos1YMG0
+         U6sdvaAAUjVrh4VXIX5d5BxV6VA4Xuw1vqexczXkjLMPw+dN1vV4WylNWxI5AQP29AFD
+         CBaA==
+X-Gm-Message-State: APjAAAVVBmb9/ObAKckCEbEwpyY+Wgj6+pcz5Jr/N5/E4oLsoMIHz2V4
+        PNR1xaIuDachiP/+EJIECzzPE281y3BthCQMeJM=
+X-Google-Smtp-Source: APXvYqz8XKcVj5y8chDt54jfqFa4faagnw4jNnBX6f6wAr2Yielcw7NoAUyPgcN8oOW/C+AZOlvjUwN6Tir0AJaafiA=
+X-Received: by 2002:a9d:5c0f:: with SMTP id o15mr9936377otk.81.1567112493063;
+ Thu, 29 Aug 2019 14:01:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9sSKoi6Rw660DLir"
-Content-Disposition: inline
-In-Reply-To: <20190829145820.GB19842@ulmo>
-X-Cookie: Lensmen eat Jedi for breakfast.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
+ <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
+ <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com> <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
+ <9ba19f08-e25a-4d15-8854-8dc4f9b6faca@linux.intel.com> <CAFBinCDX2BqiKcZM-C0m7gsi4BPSK0gM15r0jHmL3+AKxff=wQ@mail.gmail.com>
+ <023c9b59-70bb-ed8d-a4c0-76eae726b574@ti.com>
+In-Reply-To: <023c9b59-70bb-ed8d-a4c0-76eae726b574@ti.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 29 Aug 2019 23:01:22 +0200
+Message-ID: <CAFBinCCdje3Q3=adk+gUkcxHfwvAuoB8sQERbDsyt6Q58fgcOg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>,
+        eswara.kota@linux.intel.com, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
+        gustavo.pimentel@synopsys.com, hch@infradead.org,
+        jingoohan1@gmail.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, qi-ming.wu@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
---9sSKoi6Rw660DLir
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Aug 29, 2019 at 04:58:20PM +0200, Thierry Reding wrote:
-
-> However, the same PCI controller can also be used with onboard devices
-> where no standard 3.3 V and 12 V need to be supplied (as in the PCIe
-> slot case above). Instead there are usually different power supplies
-> to power the device. Also, since these supplies are usually required to
-> bring the device up and make it detectable on the PCI bus, these
-> supplies are typically always on. Also, since the PCI controller is not
-> the consumer of the power supplies, it's impossible to specify which
-> supplies exactly are needed by the device (they'd have to be described
-> by a binding for these devices, but drivers couldn't be requesting them
-> because without the supplies being enabled the device would never show
-> up on the PCI bus and the driver would never bind).
-
-These on board devices that might have non-standard supplies are more of
-a problem as you say.  This is a general problem with enumerable buses
-that get deployed in embedded contexts, things like clocks and GPIOs can
-also be required for enumeration.  Ideally we'd have some pre-probe
-callback that could sort these things out but that's core device model
-work I've never found the time/enthusiasm to work on.  IIRC there is
-already a PCI binding for DT so I guess we could do something like say
-it's up to the driver for the PCI device and just call probe() even
-without enumeration and require the device to power things up but that
-feels very messy.
-
-> Do you think those 3.3 V and 12 V regulators would qualify for use of
-> the regulator_get_optional() API? Because in the case where the PCIe
-> controller doesn't drive a PCIe slot, the 3.3 V and 12 V supplies really
-> are not there.
-
-It doesn't fill me with joy.  I think the main thing is working out
-where to attach the supply.
-
-The cleanest and most idiomatic thing from a regulator perspective for
-the physical slots would be for the supplies to be attached to the PCI
-slot rather than the controller in the DT, even though they will get
-driven by the controller driver in practice.  This would mean that
-controllers would have optional slot objects with mandatory regulators,
-the controller would then have to cope with powering the slot up before
-enumerating it but would be able to power it off if nothing's plugged in
-and save a bit of power, it also copes with the case where individual
-slots have separately controllable power.  I'm not sure how this plays
-more generally but since the slots are a physical thing you can point to
-on the board it doesn't seem unreasonable.  Every time I see these
-supplies attached to the controller for a bus it always feels a bit
-wrong, especially in interactions with soldered down devices.
-
-That feels cleaner than saying that the controller has a couple of
-optional supplies, it plays a bit better with soldered down devices and
-with slots having distinct supplies and it generally feels a bit more
-consistent.  I'm not super sure I'm *happy* with this approach though,
-it feels a bit awkward with the device model.
-
-> > When I say users shouldn't be using this API I mean _get_optional()
-> > specifically.
-
-> True, even if the regulator is specified as optional in the bindings,
-> using regulator_get() would effectively make it optional for the driver
-> given that it returns the dummy.
-
-Unless the hardware can genuinely cope with there being literally no
-power supply there (as opposed to some fixed voltage thing) it probably
-shouldn't be specifying the supply as optional in the bindings either :/
-
---9sSKoi6Rw660DLir
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1oEZMACgkQJNaLcl1U
-h9BYzAgAg/2U6Vux/AUotH/WL8pVV3YWMdZrTT3k59KAYmok8Tl95Bu4/b1Ye0C9
-+PvYiued7lIerUAY3NBzocN+20kqV6MKiy0KikRkKHXLx04V3BB41NCZibjoRM1s
-pXESEq2UhuaOdrvTxR/6hokISkaO1knJP90U0t9mepqkweEcHBQHEk1IWC+PoFG1
-JQOYFDz8zXdACLIKYU0+CXCQxJ8jW1JN5dnCV7G9zAij+2/PVJjRIbw3w2kxQT6O
-tENzrsZuNeKzggvvDUnzD8YNrctEeIg4Ke11NfYPxcyAGXxBYKPzGRs+g263j7rG
-VTbwTOKAKEFqArxOlgCK83zml9DisQ==
-=lz1a
------END PGP SIGNATURE-----
-
---9sSKoi6Rw660DLir--
+SGkgS2lzaG9uLA0KDQpPbiBUaHUsIEF1ZyAyOSwgMjAxOSBhdCA3OjEwIEFNIEtpc2hvbiBWaWph
+eSBBYnJhaGFtIEkgPGtpc2hvbkB0aS5jb20+IHdyb3RlOg0KWy4uLl0NCj4gVGhlIFBDSSBFWFBS
+RVNTIENBUkQgRUxFQ1RST01FQ0hBTklDQUwgU1BFQ0lGSUNBVElPTiBkZWZpbmVzIHRoZSBQb3dl
+cg0KPiBTZXF1ZW5jaW5nIGFuZCBSZXNldCBTaWduYWwgVGltaW5ncyBpbiBUYWJsZSAyLTQuIFBs
+ZWFzZSBhbHNvIHJlZmVyIEZpZ3VyZQ0KPiAyLTEwOiBQb3dlciBVcCBvZiB0aGUgQ0VNLg0KPg0K
+PiDilZTilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilaTilZDilZDilZDi
+lZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDi
+lZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilaTilZDilZDi
+lZDilZDilZDilaTilZDilZDilZDilZDilZDilaTilZDilZDilZDilZDilZDilZDilZDilZcNCj4g
+4pWRIFN5bWJvbCAgICAgIOKUgiBQYXJhbWV0ZXIgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+4pSCIE1pbiDilIIgTWF4IOKUgiBVbml0cyDilZENCj4g4pWg4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ
+4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWq4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ
+4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ
+4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWq4pWQ4pWQ4pWQ4pWQ4pWQ4pWq4pWQ4pWQ4pWQ4pWQ4pWQ
+4pWq4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWjDQo+IOKVkSBUIFBWUEVSTCAgICDilIIgUG93ZXIg
+c3RhYmxlIHRvIFBFUlNUIyBpbmFjdGl2ZSAgICAgIOKUgiAxMDAg4pSCICAgICDilIIgbXMgICAg
+4pWRDQo+IOKVn+KUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUvOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUvOKU
+gOKUgOKUgOKUgOKUgOKUvOKUgOKUgOKUgOKUgOKUgOKUvOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKV
+og0KPiDilZEgVCBQRVJTVC1DTEsg4pSCIFJFRkNMSyBzdGFibGUgYmVmb3JlIFBFUlNUIyBpbmFj
+dGl2ZSDilIIgMTAwIOKUgiAgICAg4pSCIM68cyAgICDilZENCj4g4pWf4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pS84pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pS84pSA4pSA4pSA4pSA4pSA4pS84pSA4pSA4pSA
+4pSA4pSA4pS84pSA4pSA4pSA4pSA4pSA4pSA4pSA4pWiDQo+IOKVkSBUIFBFUlNUICAgICDilIIg
+UEVSU1QjIGFjdGl2ZSB0aW1lICAgICAgICAgICAgICAgICAgIOKUgiAxMDAg4pSCICAgICDilIIg
+zrxzICAgIOKVkQ0KPiDilZ/ilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lLzilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilLzilIDilIDilIDilIDilIDilLzilIDilIDilIDilIDilIDilLzilIDilIDilIDilIDilIDi
+lIDilIDilaINCj4g4pWRIFQgRkFJTCAgICAgIOKUgiBQb3dlciBsZXZlbCBpbnZhbGlkIHRvIFBF
+UlNUIyBhY3RpdmUg4pSCICAgICDilIIgNTAwIOKUgiBucyAgICDilZENCj4g4pWf4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pS84pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pS84pSA4pSA4pSA4pSA4pSA4pS84pSA
+4pSA4pSA4pSA4pSA4pS84pSA4pSA4pSA4pSA4pSA4pSA4pSA4pWiDQo+IOKVkSBUIFdLUkYgICAg
+ICDilIIgV0FLRSMgcmlzZSDigJMgZmFsbCB0aW1lICAgICAgICAgICAgICAg4pSCICAgICDilIIg
+MTAwIOKUgiBucyAgICDilZENCj4g4pWa4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ
+4pWQ4pWQ4pWn4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ
+4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ
+4pWQ4pWQ4pWQ4pWn4pWQ4pWQ4pWQ4pWQ4pWQ4pWn4pWQ4pWQ4pWQ4pWQ4pWQ4pWn4pWQ4pWQ4pWQ
+4pWQ4pWQ4pWQ4pWQ4pWdDQo+DQo+IEluIG15IGNvZGUgSSB1c2VkIFQgUEVSU1QtQ0xLIChpLmUg
+UkVGQ0xLIHN0YWJsZSBiZWZvcmUgUEVSU1QjIGluYWN0aXZlKS4NCj4gUkVGQ0xLIHRvIHRoZSBj
+YXJkIGlzIGVuYWJsZWQgYXMgcGFydCBvZiBQSFkgZW5hYmxlIGFuZCB0aGVuIHdhaXQgZm9yIDEw
+MM68cw0KPiBiZWZvcmUgbWFraW5nIFBFUlNUIyBpbmFjdGl2ZS4NCj4NCj4gUG93ZXIgdG8gdGhl
+IGRldmljZSBpcyBnaXZlbiBkdXJpbmcgYm9hcmQgcG93ZXIgdXAgYW5kIHRoZSBhc3N1bXB0aW9u
+IGhlcmUgaXMNCj4gaXQgd2lsbCB0YWtlIG1vcmUgdGhlIDEwMG1zIGZvciB0aGUgcHJvYmUgdG8g
+YmUgaW52b2tlZCBhZnRlciBib2FyZCBwb3dlciB1cA0KPiAoaS5lIGFmdGVyIFJPTSwgYm9vdGxv
+YWRlcnMgYW5kIGxpbnV4IGtlcm5lbCkuIEJ1dCBpZiB5b3UgaGF2ZSBhIHJlZ3VsYXRvciB0aGF0
+DQo+IGlzIGVuYWJsZWQgaW4gUENJIHByb2JlLCB0aGVuIFQgUFZQRVJMICgxMDBtcykgc2hvdWxk
+IGFsc28gdXNlZCBpbiBwcm9iZS4NCnRoYW5rIHlvdSBmb3IgdGhpcyBkZXRhaWxlZCBvdmVydmll
+dyBhbmQgZm9yIHRoZSBleHBsYW5hdGlvbiBhYm91dCB0aGUNCmFzc3VtcHRpb25zIHlvdSBtYWRl
+IChhbmQgd2h5KQ0KDQoNCk1hcnRpbg0K
