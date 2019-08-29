@@ -2,84 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F1311A12AD
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 09:34:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88F63A1483
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 11:17:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbfH2HeF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Aug 2019 03:34:05 -0400
-Received: from mail-qt1-f172.google.com ([209.85.160.172]:35926 "EHLO
-        mail-qt1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727161AbfH2HeF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Aug 2019 03:34:05 -0400
-Received: by mail-qt1-f172.google.com with SMTP id z4so2643154qtc.3
-        for <linux-pci@vger.kernel.org>; Thu, 29 Aug 2019 00:34:04 -0700 (PDT)
+        id S1726081AbfH2JRS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Aug 2019 05:17:18 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42818 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfH2JRS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Aug 2019 05:17:18 -0400
+Received: by mail-ed1-f67.google.com with SMTP id m44so3229882edd.9;
+        Thu, 29 Aug 2019 02:17:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EpGvJ7EKGGEBGzwNMrB1KOMHeIIQeGtnYLRMPOtnsC8=;
-        b=cY73HBTSZGqQxAnB2Ouc5f33JHph9ps8DodTiZiOiYI+7gI7+6MtRGqD8krrIbeOur
-         sJRIocU+1w5GmpcIYRLzX4JQB6hEGH7zy3gQEiydOis0JBoMUfRL1tPu95TF+oSAQLuX
-         ufbNq2G9tTvK3eIMSwfT8IW8wGaCDwSPW88dBAxZKalgEVHWJ1gVIIVtwY4CGtnlfWpi
-         4OvbnUENKuf8kXbuUzNXmTrB2RgZ9sfnNXnfQtsox4eAU742HKaP45jTYHbrq70BLaVm
-         QSok0eTw3ygxxyiKLflWNXsLftWdcQNgm4lvfe8ISJCTJK5/wCvNWHMLH99oE4KiTaae
-         IwOg==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Pj7f+sDqW2TJkX8VbNnafBgnm3E9qPWWRCV6G6c4Ssk=;
+        b=k19WPym2o2hprt/FjqTEoD+WYq5/IEJe/Spr+nkG5i2lRprzlHI9uhkIDyV+dja7GZ
+         P1qXN6rHGLT+/x5UZsC/MGB9WuoV4SQ+lZyUpMVZD1r0ISvOXrUay0hUwX5Okor0TwVa
+         vVO9WrnZ4ebvj2+uAl7tC3ts8NoOVzZVJ3W8WpAsuHAFkUhtkwGZVkXYb4EAmNHCmoVI
+         G/gGacO0too7Ax8OzJfdppUlXaAjdqNXDSWW70YPycQeyvzUMqIIPVcUPoqI9cNr2hv6
+         a1VtiJAOUTNTAug9UyfKQXPNmLj5ImX8F3nyn/fiMCzelQ99e6bqZtNCY6mGqQRojlSf
+         07SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EpGvJ7EKGGEBGzwNMrB1KOMHeIIQeGtnYLRMPOtnsC8=;
-        b=QVoMOQrFaKAGTGjpUKAcVQp7uzXjdev+roxuyhbVucWqAF+MFKQ1nVyRwXoFFBERv5
-         pgI6wate15mj38LmadSmcFFkH7c6Z46PutVbYB4O8K0lKfXo0+XQ/+UHO9TZyWFxDOgH
-         dtWzf0CWgEj0NvMm0aecSYMKQMLGkxI5PnpJyR75uTsJAQOxuZ5f5zsaTcIzSAaE2DMH
-         AufmtzcTOwirCbT+IxdU+G8JDYBN3aU63qCw7YokV1WVhzZokQKSTpdufDEW7De7jfLt
-         5h1Dm6O7CfYIJW6YsPPvSpr4B1otGFJEDZee80g2iLzkpNWZ3y0QClPl0XagXqKJNdKF
-         lKig==
-X-Gm-Message-State: APjAAAVPCmUubJuxZLxX/U8P/sAPzgEHEeQdoUekEZfYkQ2oYPb64qYa
-        eC6It+gY9uXLcoiFMplGFF0Try0HUkxQsd9n+yeGWQ==
-X-Google-Smtp-Source: APXvYqzcSsF5r5FNbgh7+MkKHql3jCyXn3Puk4CXzNt55mwJXBHGhHIuqsjpfMbP5qG91pTx34BRVrTSqErcSw9fIBw=
-X-Received: by 2002:ac8:2cd6:: with SMTP id 22mr8220626qtx.80.1567064044315;
- Thu, 29 Aug 2019 00:34:04 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=Pj7f+sDqW2TJkX8VbNnafBgnm3E9qPWWRCV6G6c4Ssk=;
+        b=KzN1xMFlYF+sf5gOue5iTDGePkYaso9WYB0UXcxD8A5fjdXYeLgkGAR9JUMoxg2fUE
+         gfQz4IywO4OEazJ4HhAuRRDrd2WXP3NROJM0A+OzbQLv+jsBEZjPSJL/z5b+ri+Jn6p6
+         YlXh42Ot+qTA4jhW/M/ivMJc+vd5fp3aumqyQNI+96tGUBTVLowO0iaEpJ7KsNd7SjZb
+         Pa55K3JgKsF3Ipd2BYfogin9D+nVGGLSsYD5MgxmkvOzQwVJdu+fhQEBpQbJ0XFUEeIQ
+         QfdfrXSa2HHE9uMqFEm3Xzb+jHC9lpIdAf0FG0Z3Y4YFXK03Fx/MxRoAWlj/JOvDCXJs
+         +jgQ==
+X-Gm-Message-State: APjAAAVZ4fIO+/aObIA9uWUaxZXd8lQY7wEWfclUy5zxPytGFFm0pKFT
+        KixZX2TTlszQFv0BP2TjWJI=
+X-Google-Smtp-Source: APXvYqyZGI6MDjRDplO415Nr0UzGhWhWlXrOAglxeH0HyAkVvixfKKnKPi3OjQdVoxU4rgxKIk+UPQ==
+X-Received: by 2002:a50:bf4f:: with SMTP id g15mr8455764edk.92.1567070236167;
+        Thu, 29 Aug 2019 02:17:16 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id h6sm334213eds.48.2019.08.29.02.17.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 02:17:15 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: [PATCH v3] PCI: hv: Make functions static
+Date:   Thu, 29 Aug 2019 11:17:13 +0200
+Message-Id: <20190829091713.27130-1-kw@linux.com>
+X-Mailer: git-send-email 2.22.1
+In-Reply-To: <20190828221846.6672-1-kw@linux.com>
+References: <20190828221846.6672-1-kw@linux.com>
 MIME-Version: 1.0
-References: <CAD8Lp47Vh69gQjROYG69=waJgL7hs1PwnLonL9+27S_TcRhixA@mail.gmail.com>
- <CAJZ5v0g4T_0VD_oYMF_BF1VM-d1bg-BD8h8=STDrhVBgouPOPg@mail.gmail.com>
- <01cf6be6-9175-87ca-f3ad-78c06b666893@linux.intel.com> <CAD8Lp4658-c=7KabiJ=xuNRCqPwF4BJauMHqh_8WSBfCFHWSSg@mail.gmail.com>
- <CAJZ5v0gouaztf7tcKXBr90gjrVjOvqH70regD=o2r_d+9Bwvqg@mail.gmail.com>
- <CAD8Lp47oNJb5N5i4oUQfN5b=xCtUc1Lt852pnXxhNq0vyWj=yg@mail.gmail.com> <CAJZ5v0j=x4HHOsJ6fCX-xOr29-4BMRzjR5H5UaoWW9v-Ci8ODQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0j=x4HHOsJ6fCX-xOr29-4BMRzjR5H5UaoWW9v-Ci8ODQ@mail.gmail.com>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Thu, 29 Aug 2019 15:33:52 +0800
-Message-ID: <CAD8Lp451B44QLqx2Zx+5Gm8pRP53JefYFjdEVdRz_DOmMP3CcQ@mail.gmail.com>
-Subject: Re: Ryzen7 3700U xhci fails on resume from sleep
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Endless Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 4:43 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> With the git branch mentioned previously merged in, you can enable
-> dynamic debug in device_pm.c, repeat the PM-runtime test and collect
-> the log.  There should be some additional messages from the ACPI layer
-> in it.
+Functions hv_read_config_block(), hv_write_config_block()
+and hv_register_block_invalidate() are not used anywhere
+else and are local to drivers/pci/controller/pci-hyperv.c,
+and do not need to be in global scope, so make these static.
 
-That's useful, thanks. Runtime suspend:
+Resolve following compiler warning that can be seen when
+building with warnings enabled (W=1):
 
-usb 1-4: USB disconnect, device number 2
-    power-0419 __acpi_power_off      : Power resource [P0U0] turned off
-device_pm-0278 device_set_power      : Device [XHC0] transitioned to D3hot
+drivers/pci/controller/pci-hyperv.c:933:5: warning:
+ no previous prototype for ‘hv_read_config_block’
+  [-Wmissing-prototypes]
 
-Runtime resume:
-    power-0363 __acpi_power_on       : Power resource [P0U0] turned on
-device_pm-0278 device_set_power      : Device [XHC0] transitioned to D0
-xhci_hcd 0000:03:00.3: Refused to change power state, currently in D3
-xhci_hcd 0000:03:00.3: enabling device (0000 -> 0002)
-xhci_hcd 0000:03:00.3: WARN: xHC restore state timeout
-xhci_hcd 0000:03:00.3: PCI post-resume error -110!
-xhci_hcd 0000:03:00.3: HC died; cleaning up
+drivers/pci/controller/pci-hyperv.c:1013:5: warning:
+ no previous prototype for ‘hv_write_config_block’
+  [-Wmissing-prototypes]
+
+drivers/pci/controller/pci-hyperv.c:1082:5: warning:
+ no previous prototype for ‘hv_register_block_invalidate’
+  [-Wmissing-prototypes]
+
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+Changes in v3:
+  Commit message has been wrapped to fit 75 columns.
+  Addressed formatting based on feedback from v2.
+
+Changes in v2:
+  Update commit message to include compiler warning.
+
+ drivers/pci/controller/pci-hyperv.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index f1f300218fab..ba988fe033b5 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -930,8 +930,9 @@ static void hv_pci_read_config_compl(void *context, struct pci_response *resp,
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-int hv_read_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+-			 unsigned int block_id, unsigned int *bytes_returned)
++static int hv_read_config_block(struct pci_dev *pdev, void *buf,
++				unsigned int len, unsigned int block_id,
++				unsigned int *bytes_returned)
+ {
+ 	struct hv_pcibus_device *hbus =
+ 		container_of(pdev->bus->sysdata, struct hv_pcibus_device,
+@@ -1010,8 +1011,8 @@ static void hv_pci_write_config_compl(void *context, struct pci_response *resp,
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+-			  unsigned int block_id)
++static int hv_write_config_block(struct pci_dev *pdev, void *buf,
++				 unsigned int len, unsigned int block_id)
+ {
+ 	struct hv_pcibus_device *hbus =
+ 		container_of(pdev->bus->sysdata, struct hv_pcibus_device,
+@@ -1079,9 +1080,9 @@ int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-int hv_register_block_invalidate(struct pci_dev *pdev, void *context,
+-				 void (*block_invalidate)(void *context,
+-							  u64 block_mask))
++static int hv_register_block_invalidate(
++	struct pci_dev *pdev, void *context,
++	void (*block_invalidate)(void *context, u64 block_mask))
+ {
+ 	struct hv_pcibus_device *hbus =
+ 		container_of(pdev->bus->sysdata, struct hv_pcibus_device,
+@@ -1097,7 +1098,6 @@ int hv_register_block_invalidate(struct pci_dev *pdev, void *context,
+ 
+ 	put_pcichild(hpdev);
+ 	return 0;
+-
+ }
+ 
+ /* Interrupt management hooks */
+-- 
+2.22.1
+
