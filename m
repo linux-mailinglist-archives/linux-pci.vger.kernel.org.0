@@ -2,130 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EA726A10B8
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 07:14:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1311A12AD
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2019 09:34:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbfH2FN6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Aug 2019 01:13:58 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:39562 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfH2FN6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Aug 2019 01:13:58 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7T5DVQ1080368;
-        Thu, 29 Aug 2019 00:13:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1567055611;
-        bh=LYyFnkusAO06maJIyAoLh4uHHcHnpkVbJ8SCEW6OJlg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=xAvXEf/1vTB129pEHtXkhBGqX8JXqhzbbly6gS1T+vqU0Wn+9Yi+jY+g4E3aPNqVZ
-         bs2/RdD9XzUDZalkIWDSNadfyS+dVvioyPCUIQOo99sbAAb86ZifKDpYqA2RMaxQk3
-         0uTYPMDWLATmZWbjfLTy8NyNqesUw632YUQfGKm0=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7T5DVgk118886
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 29 Aug 2019 00:13:31 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 29
- Aug 2019 00:13:31 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 29 Aug 2019 00:13:31 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7T5DOv7066185;
-        Thu, 29 Aug 2019 00:13:25 -0500
-Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the doorbell
- way
-To:     Andrew Murray <andrew.murray@arm.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>
-CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-7-xiaowei.bao@nxp.com>
- <20190823135816.GH14582@e119886-lin.cambridge.arm.com>
- <AM5PR04MB3299E50BA5D7579D41B8B4F9F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <e64a484c-7cf5-5f65-400c-47128ab45e52@ti.com>
-Date:   Thu, 29 Aug 2019 10:43:18 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727235AbfH2HeF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Aug 2019 03:34:05 -0400
+Received: from mail-qt1-f172.google.com ([209.85.160.172]:35926 "EHLO
+        mail-qt1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727161AbfH2HeF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Aug 2019 03:34:05 -0400
+Received: by mail-qt1-f172.google.com with SMTP id z4so2643154qtc.3
+        for <linux-pci@vger.kernel.org>; Thu, 29 Aug 2019 00:34:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EpGvJ7EKGGEBGzwNMrB1KOMHeIIQeGtnYLRMPOtnsC8=;
+        b=cY73HBTSZGqQxAnB2Ouc5f33JHph9ps8DodTiZiOiYI+7gI7+6MtRGqD8krrIbeOur
+         sJRIocU+1w5GmpcIYRLzX4JQB6hEGH7zy3gQEiydOis0JBoMUfRL1tPu95TF+oSAQLuX
+         ufbNq2G9tTvK3eIMSwfT8IW8wGaCDwSPW88dBAxZKalgEVHWJ1gVIIVtwY4CGtnlfWpi
+         4OvbnUENKuf8kXbuUzNXmTrB2RgZ9sfnNXnfQtsox4eAU742HKaP45jTYHbrq70BLaVm
+         QSok0eTw3ygxxyiKLflWNXsLftWdcQNgm4lvfe8ISJCTJK5/wCvNWHMLH99oE4KiTaae
+         IwOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EpGvJ7EKGGEBGzwNMrB1KOMHeIIQeGtnYLRMPOtnsC8=;
+        b=QVoMOQrFaKAGTGjpUKAcVQp7uzXjdev+roxuyhbVucWqAF+MFKQ1nVyRwXoFFBERv5
+         pgI6wate15mj38LmadSmcFFkH7c6Z46PutVbYB4O8K0lKfXo0+XQ/+UHO9TZyWFxDOgH
+         dtWzf0CWgEj0NvMm0aecSYMKQMLGkxI5PnpJyR75uTsJAQOxuZ5f5zsaTcIzSAaE2DMH
+         AufmtzcTOwirCbT+IxdU+G8JDYBN3aU63qCw7YokV1WVhzZokQKSTpdufDEW7De7jfLt
+         5h1Dm6O7CfYIJW6YsPPvSpr4B1otGFJEDZee80g2iLzkpNWZ3y0QClPl0XagXqKJNdKF
+         lKig==
+X-Gm-Message-State: APjAAAVPCmUubJuxZLxX/U8P/sAPzgEHEeQdoUekEZfYkQ2oYPb64qYa
+        eC6It+gY9uXLcoiFMplGFF0Try0HUkxQsd9n+yeGWQ==
+X-Google-Smtp-Source: APXvYqzcSsF5r5FNbgh7+MkKHql3jCyXn3Puk4CXzNt55mwJXBHGhHIuqsjpfMbP5qG91pTx34BRVrTSqErcSw9fIBw=
+X-Received: by 2002:ac8:2cd6:: with SMTP id 22mr8220626qtx.80.1567064044315;
+ Thu, 29 Aug 2019 00:34:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <CAD8Lp47Vh69gQjROYG69=waJgL7hs1PwnLonL9+27S_TcRhixA@mail.gmail.com>
+ <CAJZ5v0g4T_0VD_oYMF_BF1VM-d1bg-BD8h8=STDrhVBgouPOPg@mail.gmail.com>
+ <01cf6be6-9175-87ca-f3ad-78c06b666893@linux.intel.com> <CAD8Lp4658-c=7KabiJ=xuNRCqPwF4BJauMHqh_8WSBfCFHWSSg@mail.gmail.com>
+ <CAJZ5v0gouaztf7tcKXBr90gjrVjOvqH70regD=o2r_d+9Bwvqg@mail.gmail.com>
+ <CAD8Lp47oNJb5N5i4oUQfN5b=xCtUc1Lt852pnXxhNq0vyWj=yg@mail.gmail.com> <CAJZ5v0j=x4HHOsJ6fCX-xOr29-4BMRzjR5H5UaoWW9v-Ci8ODQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0j=x4HHOsJ6fCX-xOr29-4BMRzjR5H5UaoWW9v-Ci8ODQ@mail.gmail.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Thu, 29 Aug 2019 15:33:52 +0800
+Message-ID: <CAD8Lp451B44QLqx2Zx+5Gm8pRP53JefYFjdEVdRz_DOmMP3CcQ@mail.gmail.com>
+Subject: Re: Ryzen7 3700U xhci fails on resume from sleep
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Endless Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Gustavo,
+On Wed, Aug 28, 2019 at 4:43 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> With the git branch mentioned previously merged in, you can enable
+> dynamic debug in device_pm.c, repeat the PM-runtime test and collect
+> the log.  There should be some additional messages from the ACPI layer
+> in it.
 
-On 27/08/19 6:55 PM, Andrew Murray wrote:
-> On Sat, Aug 24, 2019 at 12:08:40AM +0000, Xiaowei Bao wrote:
->>
->>
->>> -----Original Message-----
->>> From: Andrew Murray <andrew.murray@arm.com>
->>> Sent: 2019年8月23日 21:58
->>> To: Xiaowei Bao <xiaowei.bao@nxp.com>
->>> Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
->>> shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
->>> lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org; M.h.
->>> Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
->>> Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
->>> gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
->>> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
->>> linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
->>> Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
->>> doorbell way
->>>
->>> On Thu, Aug 22, 2019 at 07:22:39PM +0800, Xiaowei Bao wrote:
->>>> The layerscape platform use the doorbell way to trigger MSIX interrupt
->>>> in EP mode.
->>>>
->>>
->>> I have no problems with this patch, however...
->>>
->>> Are you able to add to this message a reason for why you are making this
->>> change? Did dw_pcie_ep_raise_msix_irq not work when func_no != 0? Or did
->>> it work yet dw_pcie_ep_raise_msix_irq_doorbell is more efficient?
->>
->> The fact is that, this driver is verified in ls1046a platform of NXP before, and ls1046a don't
->> support MSIX feature, so I set the msix_capable of pci_epc_features struct is false,
->> but in other platform, e.g. ls1088a, it support the MSIX feature, I verified the MSIX
->> feature in ls1088a, it is not OK, so I changed to another way. Thanks.
-> 
-> Right, so the existing pci-layerscape-ep.c driver never supported MSIX yet it
-> erroneously had a switch case statement to call dw_pcie_ep_raise_msix_irq which
-> would never get used.
-> 
-> Now that we're adding a platform with MSIX support the existing
-> dw_pcie_ep_raise_msix_irq doesn't work (for this platform) so we are adding a
-> different method.
+That's useful, thanks. Runtime suspend:
 
-Gustavo, can you confirm dw_pcie_ep_raise_msix_irq() works for designware as it
-didn't work for both me and Xiaowei?
+usb 1-4: USB disconnect, device number 2
+    power-0419 __acpi_power_off      : Power resource [P0U0] turned off
+device_pm-0278 device_set_power      : Device [XHC0] transitioned to D3hot
 
-Thanks
-Kishon
+Runtime resume:
+    power-0363 __acpi_power_on       : Power resource [P0U0] turned on
+device_pm-0278 device_set_power      : Device [XHC0] transitioned to D0
+xhci_hcd 0000:03:00.3: Refused to change power state, currently in D3
+xhci_hcd 0000:03:00.3: enabling device (0000 -> 0002)
+xhci_hcd 0000:03:00.3: WARN: xHC restore state timeout
+xhci_hcd 0000:03:00.3: PCI post-resume error -110!
+xhci_hcd 0000:03:00.3: HC died; cleaning up
