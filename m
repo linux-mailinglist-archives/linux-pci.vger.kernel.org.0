@@ -2,58 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0094AA40C6
-	for <lists+linux-pci@lfdr.de>; Sat, 31 Aug 2019 01:06:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA81CA40E5
+	for <lists+linux-pci@lfdr.de>; Sat, 31 Aug 2019 01:18:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfH3XGY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Aug 2019 19:06:24 -0400
-Received: from mail-yb1-f179.google.com ([209.85.219.179]:47063 "EHLO
-        mail-yb1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728194AbfH3XGY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Aug 2019 19:06:24 -0400
-Received: by mail-yb1-f179.google.com with SMTP id y194so3035099ybe.13
-        for <linux-pci@vger.kernel.org>; Fri, 30 Aug 2019 16:06:23 -0700 (PDT)
+        id S1728248AbfH3XSf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Aug 2019 19:18:35 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38846 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728122AbfH3XSf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Aug 2019 19:18:35 -0400
+Received: by mail-pf1-f194.google.com with SMTP id o70so5552018pfg.5
+        for <linux-pci@vger.kernel.org>; Fri, 30 Aug 2019 16:18:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Zq93mxKoUwjJ0cp53Wf00OXZXPugaZasfQ8q5ucfsfY=;
-        b=bn3I6c1LLNVCs3pyazQPUfKtjNYk/GF3NGGCEgsPP0jTOBoPitrwgGI3nrjGByn64w
-         6bRaBF4QDcPz3ghd9OXSZHQ7zuNt3aHp2l7MHVCDYJ0rPgnKWffOqk6sh+8WziBW2JVg
-         S5B6XxoUJTVtVRJhuMZdN3zxiQgRNBFVAyYLGbjV+MhZAjrsjqLqpK6dPM+hKjR6GKDG
-         8Eb3fguBxUUDgbUTkHYbLNyfrhMwZ+tG3m0WKA5B9T+Ux35Wunb6fsQTY2YOtLxel44v
-         zAygX+tk1Lw/5D3HbfcwbrCxXgSi71XmyhWhvtlMKuQkNgC/ObqzJzC4wz53CZ2V6ECT
-         1p5w==
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PRkLiK2zQKW37sHjUWJi7ClUsfSJsVnDy5LzPyDzYvE=;
+        b=mJNxoFoPw68Pczu3Q5Tl9Hubb1oPwPMN4HNOUR5BMqcq1lrDlYBVP6S84iC0HCLgRk
+         bxc9EPapppZF4nytHiwbl/a1svpheNULWsFifiCEEtJxbx/2Nd5ec0nyECglpbsmGi7n
+         tU+hvwsEYwTZP9DetuJiTg4UUwmi2g/IyPVjU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Zq93mxKoUwjJ0cp53Wf00OXZXPugaZasfQ8q5ucfsfY=;
-        b=kA2GneVIHQEXEikA1p5ZZBAn2YGpmOA++JfJtcTWnUY3WPyKTycrG92QlWlfoXtxnd
-         bZHGI5grHQXR6aNp+Eb7aYgcm1PlIdGwP9XPTsro95zInvOLdeEo27W7Xwo+Z8vfVOVQ
-         U4Ni8t19vWvlHJMKmxVX3pO9yMuJr8fiGi3C3ph2RRkzM7T0jAyfuUAhMox1sA3te6c7
-         Hpq+b7A4ZfdZXr9nrnWhl4oazL3vFOWzxD3QGZne6aqkQAqyNcmk5guwUQElRIQ8NTvG
-         dMZc8z2FyCobaUL8iBv/MipWayDB0D91ORV5hjvdDeed6DWQqJItlOa1ZaoGIDswn2U6
-         OvgA==
-X-Gm-Message-State: APjAAAX1QAw0/xQNudXgUNzXl33wcRFJeSxVvXJVmh4ZCPeqHZ36QvWt
-        yg1W1lT5xor/tcPa28Dxa3M5YA==
-X-Google-Smtp-Source: APXvYqwNrjlZlOaYmsE6XAlnvFuj+Wtcpm3BCqKpeMAerOTFk/kRJO72tXp8kevpU6KO3XiN98kMlA==
-X-Received: by 2002:a25:cfca:: with SMTP id f193mr13444393ybg.69.1567206383279;
-        Fri, 30 Aug 2019 16:06:23 -0700 (PDT)
-Received: from jaxon.localdomain ([152.3.43.56])
-        by smtp.gmail.com with ESMTPSA id r20sm1542690ywe.41.2019.08.30.16.06.22
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PRkLiK2zQKW37sHjUWJi7ClUsfSJsVnDy5LzPyDzYvE=;
+        b=brIVydT5A2MZDpYKKNft05uGtgmQlp8XRcLbMb6l6/ZRH1d8usPStipSsf4l+Mt9t6
+         rPa2GFiKJWk9/LfRDhnNndp2kkcAk9k58YFy6e/9J7Y/AygpKPliaVLRzObbaGRNVC6x
+         bRv1G3bA886g0xn7js3j7hJu1UvfOzOwE4P5NG+N6v3lqx2UtY8+KD4juYP6/TV416H4
+         t6FhnDh58O9c3AvdLHk8SH8iXDi/YUshkgTnHKb2Yc1SbrUKPKIjDHOXr9/4t2+aue8F
+         qST9a1r52DyaYIejYYshulh080XJKjhDorxog0CPAOH3lrQ8QLw8HNrldxq3Q2QPb7LT
+         a7Ow==
+X-Gm-Message-State: APjAAAX3SrFMzuLyxUArKangHk+b09MUHbjd/kXqrcNVC8ohSDrx7N8t
+        E3avGSj4QC2NYsOk5ZnB45lhoyc9zUA=
+X-Google-Smtp-Source: APXvYqwWcIpjQmKfZ2KNw+QhAexpYhPxvb+SAlTByxWo8nuTzYepBvzn5LLXes3DPdl/v5VIIOmnfg==
+X-Received: by 2002:a17:90a:bc06:: with SMTP id w6mr1009296pjr.45.1567207114673;
+        Fri, 30 Aug 2019 16:18:34 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id t23sm8479395pfl.154.2019.08.30.16.18.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 16:06:22 -0700 (PDT)
-From:   Haotian Wang <haotian.wang@sifive.com>
-To:     jasowang@redhat.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com
-Cc:     mst@redhat.com, linux-pci@vger.kernel.org, haotian.wang@duke.edu
-Subject: Re: [PATCH] pci: endpoint: functions: Add a virtnet EP function
-Date:   Fri, 30 Aug 2019 19:06:21 -0400
-Message-Id: <20190830230621.8338-1-haotian.wang@sifive.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <f5e5dc8a-2e02-a675-8ab9-b2ab58640452@redhat.com>
-References: <f5e5dc8a-2e02-a675-8ab9-b2ab58640452@redhat.com>
+        Fri, 30 Aug 2019 16:18:33 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jonathan Derrick <jonathan.derrick@intel.com>,
+        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH 1/2] pci: Convert to use built-in RCU list checking
+Date:   Fri, 30 Aug 2019 19:18:16 -0400
+Message-Id: <20190830231817.76862-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -61,77 +63,30 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jason,
+CONFIG_PROVE_RCU_LIST requires list_for_each_entry_rcu() to pass a
+lockdep expression if using srcu or locking for protection. It can only
+check regular RCU protection, all other protection needs to be passed as
+lockdep expression.
 
-Thank you for your reply.
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ drivers/pci/controller/vmd.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-On Fri, Aug 30, 2019 at 2:12 AM Jason Wang <jasowang@redhat.com> wrote:
-> - Is there a doc for this endpoint device?
-The doc for the board is
-https://www.xilinx.com/support/documentation/boards_and_kits/vcu118/ug1224-vcu118-eval-bd.pdf,
-but this is not all that useful. The more important information is
-actually in the endpoint controller source code,
-drivers/pci/controller/dwc/pcie-designware-ep.c and
-drivers/pci/controller/dwc/pcie-designware-ep.h.
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 4575e0c6dc4b..127631d0c6da 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -718,7 +718,8 @@ static irqreturn_t vmd_irq(int irq, void *data)
+ 	int idx;
+ 
+ 	idx = srcu_read_lock(&irqs->srcu);
+-	list_for_each_entry_rcu(vmdirq, &irqs->irq_list, node)
++	list_for_each_entry_rcu(vmdirq, &irqs->irq_list, node,
++				srcu_read_lock_held(&irqs->srcu))
+ 		generic_handle_irq(vmdirq->virq);
+ 	srcu_read_unlock(&irqs->srcu, idx);
+ 
+-- 
+2.23.0.187.g17f5b7556c-goog
 
-> - You refer virtio specification in the above, does it mean your device
-> is fully compatible with virtio (or only datapath is compatible?)
-I discussed this issue with Kishon in the previous emails a lot.
-Theoretically this should be compatible with all virtio devices, but
-right now the code is closely coupled with virtio_net only. The reason
-is that this endpoint function does not use the intended datapath of
-virtio. I will explain in the answer to the next question.
-
-> - What's the reason for introducing kthreads for some kinds of
-> translation or copying of descriptor?
-So there is a virtio_device A on the endpoint, there is another
-virtio_device B on the endpoint that acts as a virtio_net device for the
-PCI host. Then I copied data from the tx virtqueue of B to rx virtqueue
-of A, and vice versa, directly. The PCI endpoint can interrupt the host
-but the host cannot interrupt the endpoint. Therefore, the endpoint has
-two dedicated kthreads that constantly poll for notifications and data
-changes that happen on the host side, one for tx and one for rx.
-Therefore, there is really no "vhost" involved. Data is transferred
-between two virtio_devices directly. 
-
-The descriptors are not copied. The data indicated by the physical
-addresses in those descriptors are copied using pci endpoint framework
-API.
-
-The problem is that this only works for virtio_net with the split
-virtio_ring configuration.
-
-> - Is it possible to reuse e.g vringh (by introducing new accesor) and
-> virtio core codes?
-Two structures are used that are not in source files. One is struct
-vring_virtqueue and the other is struct virtnet_info.
-
-After some thought, I can reduce the use of vring_virtqueue to be only
-in the function 
-
-static void epf_virtio_interrupt(struct vring *, struct device *)
-
-This function emulates the following function in virtio_ring.c
-
-irqreturn_t vring_interruptp(int irq, void *_vq)
-
-The motivation is that for the local virtio_device A, it does not need
-to use interrupt at all. When the a kthread got something from the
-PCI host and placed data in the rx queue of A, that same kthread could
-call the callback function associated with the rx queue directly.
-
-Specifically I need to access the fields "last_used_idx" and "broken" of
-vring_virtqueue somehow.
-
-virtnet_info can be solved more easily. For a virtio_net device.
-((struct virtnet_info *)virtio_device->priv)->dev is the struct
-net_device created together with the virtio_device. I just need a
-pointer to that struct net_device after all.
-
-> Btw, I'm going to post mdev transport for virtio (with a sample of
-> vringh loopback device). Technically, this can go through mdev bus as well.
-I am not that familiar with mdev, but will read up on it. Thank you for
-the info.
-
-Best,
-Haotian
