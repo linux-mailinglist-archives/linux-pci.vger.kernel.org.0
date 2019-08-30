@@ -2,96 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AC74A2F73
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2019 08:12:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BA6CA3780
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2019 15:05:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfH3GMF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Aug 2019 02:12:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44774 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727023AbfH3GMF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 30 Aug 2019 02:12:05 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EE3FE3084025;
-        Fri, 30 Aug 2019 06:12:04 +0000 (UTC)
-Received: from [10.72.12.92] (ovpn-12-92.pek2.redhat.com [10.72.12.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4A6315D717;
-        Fri, 30 Aug 2019 06:11:59 +0000 (UTC)
-Subject: Re: [PATCH] pci: endpoint: functions: Add a virtnet EP function
-To:     Haotian Wang <haotian.wang@sifive.com>, kishon@ti.com,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com
-Cc:     mst@redhat.com, linux-pci@vger.kernel.org, haotian.wang@duke.edu
-References: <20190823213145.2016-1-haotian.wang@sifive.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <f5e5dc8a-2e02-a675-8ab9-b2ab58640452@redhat.com>
-Date:   Fri, 30 Aug 2019 14:11:58 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727522AbfH3NFV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Aug 2019 09:05:21 -0400
+Received: from isilmar-4.linta.de ([136.243.71.142]:60068 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727417AbfH3NFV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Aug 2019 09:05:21 -0400
+X-Greylist: delayed 372 seconds by postgrey-1.27 at vger.kernel.org; Fri, 30 Aug 2019 09:05:20 EDT
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+Received: from owl.dominikbrodowski.net (owl-tcp.brodo.linta [10.1.0.111])
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id 2A1C02006F1;
+        Fri, 30 Aug 2019 12:59:01 +0000 (UTC)
+Received: by owl.dominikbrodowski.net (Postfix, from userid 1000)
+        id 21948807E2; Fri, 30 Aug 2019 14:58:48 +0200 (CEST)
+Date:   Fri, 30 Aug 2019 14:58:48 +0200
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     andreas.noever@gmail.com, michael.jamet@intel.com,
+        mika.westerberg@linux.intel.com, YehezkelShB@gmail.com,
+        bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: lockdep warning on thunderbolt docking
+Message-ID: <20190830125848.GA25929@owl.dominikbrodowski.net>
 MIME-Version: 1.0
-In-Reply-To: <20190823213145.2016-1-haotian.wang@sifive.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 30 Aug 2019 06:12:05 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-On 2019/8/24 上午5:31, Haotian Wang wrote:
-> This endpoint function enables the PCI endpoint to establish a virtual
-> ethernet link with the PCI host. The main features are:
->
-> - Zero modification of PCI host kernel. The only requirement for the
->   PCI host is to enable virtio, virtio_pci, virtio_pci_legacy and
->   virito_net.
->
-> - The virtual ethernet link is stable enough to support ordinary
->   capabilities of the Linux network stack. User space programs such as
->   ping, ssh, iperf and scp can run on the link without additional
->   hassle.
->
-> - This function fits in the PCI endpoint framework
->   (drivers/pci/endpoint/) and makes API calls provided by virtio_net
->   (drivers/net/virtio_net.c). It does not depend on
->   architecture-specific or hardware-specific features.
->
-> This function driver is tested on the following pair of systems. The PCI
-> endpoint is a Xilinx VCU118 board programmed with a SiFive Linux-capable
-> core running Linux 5.2. The PCI host is an x86_64 Intel(R) Core(TM)
-> i3-6100 running unmodified Linux 5.2. The virtual link achieved a
-> stable throughput of ~180KB/s during scp sessions of a 50M file. The
-> PCI host could setup ip-forwarding and NAT to enable the PCI endpoint to
-> have Internet access. Documentation for using this function driver is at
-> Documentation/PCI/endpoint/pci-epf-virtio-howto.rst.
->
-> Reference Docs,
-> - Documentation/PCI/endpoint/pci-endpoint.rst. Initialization and
->   removal of endpoint function device and driver.
-> - Documentation/PCI/endpoint/pci-endpoint-cfs.rst. Use configfs to
->   control bind, linkup and unbind behavior.
-> - https://docs.oasis-open.org/virtio/virtio/v1.1/csprd01/virtio-v1.1-
->   csprd01.html, drivers/virtio/ and drivers/net/virtio_net.c. Algorithms
->   and data structures used by the virtio framework.
+When connecting a thunderbolt-enabled docking station to my work laptop,
+the following lockdep warning is reported on v5.3.0-rc6+ as of Thursday
+morning (can look up the exact git id if so required):
 
 
-Interesting work, several questions:
+thunderbolt 0-1: new device found, vendor=0xd4 device=0xb070
+thunderbolt 0-1: Dell WD19TB Thunderbolt Dock
 
-- Is there a doc for this endpoint device?
-- You refer virtio specification in the above, does it mean your device
-is fully compatible with virtio (or only datapath is compatible?)
-- What's the reason for introducing kthreads for some kinds of
-translation or copying of descriptor?
-- Is it possible to reuse e.g vringh (by introducing new accesor) and
-virtio core codes?
+======================================================
+WARNING: possible circular locking dependency detected
+5.3.0-rc6+ #1 Tainted: G                T
+------------------------------------------------------
+pool-/usr/lib/b/1258 is trying to acquire lock:
+000000005ab0ad43 (pci_rescan_remove_lock){+.+.}, at: authorized_store+0xe8/0x210
+
+but task is already holding lock:
+00000000bfb796b5 (&tb->lock){+.+.}, at: authorized_store+0x7c/0x210
+
+which lock already depends on the new lock.
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (&tb->lock){+.+.}:
+       __mutex_lock+0xac/0x9a0
+       tb_domain_add+0x2d/0x130
+       nhi_probe+0x1dd/0x330
+       pci_device_probe+0xd2/0x150
+       really_probe+0xee/0x280
+       driver_probe_device+0x50/0xc0
+       bus_for_each_drv+0x84/0xd0
+       __device_attach+0xe4/0x150
+       pci_bus_add_device+0x4e/0x70
+       pci_bus_add_devices+0x2e/0x66
+       pci_bus_add_devices+0x59/0x66
+       pci_bus_add_devices+0x59/0x66
+       enable_slot+0x344/0x450
+       acpiphp_check_bridge.part.0+0x119/0x150
+       acpiphp_hotplug_notify+0xaa/0x140
+       acpi_device_hotplug+0xa2/0x3f0
+       acpi_hotplug_work_fn+0x1a/0x30
+       process_one_work+0x234/0x580
+       worker_thread+0x50/0x3b0
+       kthread+0x10a/0x140
+       ret_from_fork+0x3a/0x50
+
+-> #0 (pci_rescan_remove_lock){+.+.}:
+       __lock_acquire+0xe54/0x1ac0
+       lock_acquire+0xb8/0x1b0
+       __mutex_lock+0xac/0x9a0
+       authorized_store+0xe8/0x210
+       kernfs_fop_write+0x125/0x1b0
+       vfs_write+0xc2/0x1d0
+       ksys_write+0x6c/0xf0
+       do_syscall_64+0x50/0x180
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+       CPU0                    CPU1
+       ----                    ----
+  lock(&tb->lock);
+                               lock(pci_rescan_remove_lock);
+                               lock(&tb->lock);
+  lock(pci_rescan_remove_lock);
+
+ *** DEADLOCK ***
+5 locks held by pool-/usr/lib/b/1258:
+ #0: 000000003df1a1ad (&f->f_pos_lock){+.+.}, at: __fdget_pos+0x4d/0x60
+ #1: 0000000095a40b02 (sb_writers#6){.+.+}, at: vfs_write+0x185/0x1d0
+ #2: 0000000017a7d714 (&of->mutex){+.+.}, at: kernfs_fop_write+0xf2/0x1b0
+ #3: 000000004f262981 (kn->count#208){.+.+}, at: kernfs_fop_write+0xfa/0x1b0
+ #4: 00000000bfb796b5 (&tb->lock){+.+.}, at: authorized_store+0x7c/0x210
+
+stack backtrace:
+CPU: 0 PID: 1258 Comm: pool-/usr/lib/b Tainted: G                T 5.3.0-rc6+ #1
 
 
-Btw, I'm going to post mdev transport for virtio (with a sample of
-vringh loopback device). Technically, this can go through mdev bus as well.
-
-Thanks
-
+Thanks,
+	Dominik
