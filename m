@@ -2,114 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 291CFA2AAB
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2019 01:28:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AC74A2F73
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2019 08:12:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbfH2X2U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Aug 2019 19:28:20 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34864 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfH2X2Q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Aug 2019 19:28:16 -0400
-Received: by mail-pl1-f194.google.com with SMTP id gn20so2355643plb.2
-        for <linux-pci@vger.kernel.org>; Thu, 29 Aug 2019 16:28:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UELrewFF8NN0iH92okVL2LENf/NFX05X05hyTPWg0IU=;
-        b=k120kgxKbzdzvv8c0Tgeo+3CuDk8ZtJzhLlATwlcEqhC/5C5t+wUkeQnzhND/1Nmd1
-         6M78GmbDAJsrtaQhm6jNUjG7jee+RtBK7aetuQvupAYvXWRgoUlo+d7h6BzzrBTKefC2
-         1eXKS2n4azk4TMQm7MaIHIZVAVeQ21qmyL5DRY8DeuR8mRwKI4BGf8YT91scLV/mbCY0
-         /ZJUIuwC0lBbgdG1UZZI1l9/3QCMYOCLAhfCC3nZh/db85OEpcnhUEmoU/SK2N/LNq9U
-         e6kLGvZwbGxQZRHIf6uFAmkxLtXO5BpDKlq7OyeRIdkn7p8hEn4iYohyh7yXDD/CPAWh
-         ytZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UELrewFF8NN0iH92okVL2LENf/NFX05X05hyTPWg0IU=;
-        b=T/OSYdzZByW2wfO+fo8B131cZd9NLU56qVCVLvTulSdjt1BevrsI06GFz9TTMSDGSq
-         0A+006YTRo+Jg6+hoXmnKcSIWl8J/tuYMfBa6NATw0xJSQH/bZa2CBuNOD/evUm7auaj
-         7scW18iuQVKolrwiDn1TfhFOiYh2Yto0lhEjgn15P/M7V78JrOR++FWaBxrbfP1ZXv4S
-         g97h/lZfcxarxbxZTnBnAAdMbHhR7l3nS4cKAhExJKJ8xgc7BCAIBI9uRqZ+h6nLWmx2
-         PdayR1fMNv2E8p6zKh32WwDQsa79ZA03fKF8kG8hP2LjjLaYzJQvA/HSdDK5S22btw+D
-         foxg==
-X-Gm-Message-State: APjAAAXdWPw3tRO5hyRpAyuEBBEJJ1dcFJ45Ek80QDNgbqRGNnJKyoUT
-        3au3kYtJeMMlDwjZSwBg3dVYKlDaD6m9fyyZQbsHDg==
-X-Google-Smtp-Source: APXvYqxF8GTTIW5esjRxN2qu78uhNM5IBHoP85JOWcDzALTrrZV1TDADOXjuJ1weL4cTxfZFBAARSF+74BWd4bhJA9w=
-X-Received: by 2002:a17:902:96a:: with SMTP id 97mr12618288plm.264.1567121295532;
- Thu, 29 Aug 2019 16:28:15 -0700 (PDT)
+        id S1727170AbfH3GMF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Aug 2019 02:12:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44774 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727023AbfH3GMF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 30 Aug 2019 02:12:05 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EE3FE3084025;
+        Fri, 30 Aug 2019 06:12:04 +0000 (UTC)
+Received: from [10.72.12.92] (ovpn-12-92.pek2.redhat.com [10.72.12.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4A6315D717;
+        Fri, 30 Aug 2019 06:11:59 +0000 (UTC)
+Subject: Re: [PATCH] pci: endpoint: functions: Add a virtnet EP function
+To:     Haotian Wang <haotian.wang@sifive.com>, kishon@ti.com,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com
+Cc:     mst@redhat.com, linux-pci@vger.kernel.org, haotian.wang@duke.edu
+References: <20190823213145.2016-1-haotian.wang@sifive.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <f5e5dc8a-2e02-a675-8ab9-b2ab58640452@redhat.com>
+Date:   Fri, 30 Aug 2019 14:11:58 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190827062309.GA30987@kroah.com> <20190827222145.32642-1-rajatja@google.com>
-In-Reply-To: <20190827222145.32642-1-rajatja@google.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Thu, 29 Aug 2019 16:27:39 -0700
-Message-ID: <CACK8Z6EAqVb20rXHut8mqTaeO1R6uH_zLxi=3wVPgYycDuuPSQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] PCI/AER: Add PoisonTLPBlocked to Uncorrectable errors
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Rajat Jain <rajatxjain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190823213145.2016-1-haotian.wang@sifive.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 30 Aug 2019 06:12:05 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 3:21 PM Rajat Jain <rajatja@google.com> wrote:
->
-> The elements in the aer_uncorrectable_error_string[] refer to
-> the bit names in Uncorrectable Error status Register in the PCIe spec
-> (Sec 7.8.4.2 in PCIe 4.0)
->
-> Add the last error bit in the strings array that was missing.
->
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> ---
-> v3: same as v2
-> v2: same as v1
 
-Hi Bjorn,
-
-This patch seems like independent of the other patch to split the AER
-stats. Can you review and apply this one so that I don't have to keep
-sending v4, v5 (where each version is basically same as v1) ... of
-this patch with every iteration of the other patch?
-
-I'll be working on Greg's and your comments on the other patch.
-
-Thanks,
-
-Rajat
-
-
+On 2019/8/24 上午5:31, Haotian Wang wrote:
+> This endpoint function enables the PCI endpoint to establish a virtual
+> ethernet link with the PCI host. The main features are:
 >
->  drivers/pci/pcie/aer.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> - Zero modification of PCI host kernel. The only requirement for the
+>   PCI host is to enable virtio, virtio_pci, virtio_pci_legacy and
+>   virito_net.
 >
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index b45bc47d04fe..68060a290291 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -36,7 +36,7 @@
->  #define AER_ERROR_SOURCES_MAX          128
+> - The virtual ethernet link is stable enough to support ordinary
+>   capabilities of the Linux network stack. User space programs such as
+>   ping, ssh, iperf and scp can run on the link without additional
+>   hassle.
 >
->  #define AER_MAX_TYPEOF_COR_ERRS                16      /* as per PCI_ERR_COR_STATUS */
-> -#define AER_MAX_TYPEOF_UNCOR_ERRS      26      /* as per PCI_ERR_UNCOR_STATUS*/
-> +#define AER_MAX_TYPEOF_UNCOR_ERRS      27      /* as per PCI_ERR_UNCOR_STATUS*/
+> - This function fits in the PCI endpoint framework
+>   (drivers/pci/endpoint/) and makes API calls provided by virtio_net
+>   (drivers/net/virtio_net.c). It does not depend on
+>   architecture-specific or hardware-specific features.
 >
->  struct aer_err_source {
->         unsigned int status;
-> @@ -560,6 +560,7 @@ static const char *aer_uncorrectable_error_string[AER_MAX_TYPEOF_UNCOR_ERRS] = {
->         "BlockedTLP",                   /* Bit Position 23      */
->         "AtomicOpBlocked",              /* Bit Position 24      */
->         "TLPBlockedErr",                /* Bit Position 25      */
-> +       "PoisonTLPBlocked",             /* Bit Position 26      */
->  };
+> This function driver is tested on the following pair of systems. The PCI
+> endpoint is a Xilinx VCU118 board programmed with a SiFive Linux-capable
+> core running Linux 5.2. The PCI host is an x86_64 Intel(R) Core(TM)
+> i3-6100 running unmodified Linux 5.2. The virtual link achieved a
+> stable throughput of ~180KB/s during scp sessions of a 50M file. The
+> PCI host could setup ip-forwarding and NAT to enable the PCI endpoint to
+> have Internet access. Documentation for using this function driver is at
+> Documentation/PCI/endpoint/pci-epf-virtio-howto.rst.
 >
->  static const char *aer_agent_string[] = {
-> --
-> 2.23.0.187.g17f5b7556c-goog
->
+> Reference Docs,
+> - Documentation/PCI/endpoint/pci-endpoint.rst. Initialization and
+>   removal of endpoint function device and driver.
+> - Documentation/PCI/endpoint/pci-endpoint-cfs.rst. Use configfs to
+>   control bind, linkup and unbind behavior.
+> - https://docs.oasis-open.org/virtio/virtio/v1.1/csprd01/virtio-v1.1-
+>   csprd01.html, drivers/virtio/ and drivers/net/virtio_net.c. Algorithms
+>   and data structures used by the virtio framework.
+
+
+Interesting work, several questions:
+
+- Is there a doc for this endpoint device?
+- You refer virtio specification in the above, does it mean your device
+is fully compatible with virtio (or only datapath is compatible?)
+- What's the reason for introducing kthreads for some kinds of
+translation or copying of descriptor?
+- Is it possible to reuse e.g vringh (by introducing new accesor) and
+virtio core codes?
+
+
+Btw, I'm going to post mdev transport for virtio (with a sample of
+vringh loopback device). Technically, this can go through mdev bus as well.
+
+Thanks
+
