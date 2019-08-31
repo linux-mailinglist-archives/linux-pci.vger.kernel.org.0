@@ -2,61 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 96274A447E
-	for <lists+linux-pci@lfdr.de>; Sat, 31 Aug 2019 14:46:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84804A448A
+	for <lists+linux-pci@lfdr.de>; Sat, 31 Aug 2019 15:03:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbfHaMq0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 31 Aug 2019 08:46:26 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5262 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727672AbfHaMq0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 31 Aug 2019 08:46:26 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 87588B85DC32BEBC8C29;
-        Sat, 31 Aug 2019 20:46:24 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 31 Aug 2019 20:46:13 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-CC:     YueHaibing <yuehaibing@huawei.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] PCI: Use GFP_ATOMIC in resource_alignment_store()
-Date:   Sat, 31 Aug 2019 12:49:32 +0000
-Message-ID: <20190831124932.18759-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        id S1727501AbfHaNDV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 31 Aug 2019 09:03:21 -0400
+Received: from mga17.intel.com ([192.55.52.151]:54233 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726354AbfHaNDV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 31 Aug 2019 09:03:21 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Aug 2019 06:03:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,451,1559545200"; 
+   d="scan'208";a="198237941"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 31 Aug 2019 06:03:18 -0700
+Received: by lahna (sSMTP sendmail emulation); Sat, 31 Aug 2019 16:03:17 +0300
+Date:   Sat, 31 Aug 2019 16:03:17 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     andreas.noever@gmail.com, michael.jamet@intel.com,
+        YehezkelShB@gmail.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: lockdep warning on thunderbolt docking
+Message-ID: <20190831130317.GL3177@lahna.fi.intel.com>
+References: <20190830125848.GA25929@owl.dominikbrodowski.net>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830125848.GA25929@owl.dominikbrodowski.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When allocating memory, the GFP_KERNEL cannot be used during the
-spin_lock period. It may cause scheduling when holding spin_lock.
+Hi Dominik,
 
-Fixes: f13755318675 ("PCI: Move pci_[get|set]_resource_alignment_param() into their callers")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/pci/pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, Aug 30, 2019 at 02:58:48PM +0200, Dominik Brodowski wrote:
+> When connecting a thunderbolt-enabled docking station to my work laptop,
+> the following lockdep warning is reported on v5.3.0-rc6+ as of Thursday
+> morning (can look up the exact git id if so required):
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 484e35349565..0b5fc6736f3f 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6148,7 +6148,7 @@ static ssize_t resource_alignment_store(struct bus_type *bus,
- 	spin_lock(&resource_alignment_lock);
- 
- 	kfree(resource_alignment_param);
--	resource_alignment_param = kstrndup(buf, count, GFP_KERNEL);
-+	resource_alignment_param = kstrndup(buf, count, GFP_ATOMIC);
- 
- 	spin_unlock(&resource_alignment_lock);
+Thanks for reporting. No need to dig for the commit ID.
 
+I'll take a look at this next week.
 
-
+> thunderbolt 0-1: new device found, vendor=0xd4 device=0xb070
+> thunderbolt 0-1: Dell WD19TB Thunderbolt Dock
+> 
+> ======================================================
+> WARNING: possible circular locking dependency detected
+> 5.3.0-rc6+ #1 Tainted: G                T
+> ------------------------------------------------------
+> pool-/usr/lib/b/1258 is trying to acquire lock:
+> 000000005ab0ad43 (pci_rescan_remove_lock){+.+.}, at: authorized_store+0xe8/0x210
+> 
+> but task is already holding lock:
+> 00000000bfb796b5 (&tb->lock){+.+.}, at: authorized_store+0x7c/0x210
+> 
+> which lock already depends on the new lock.
+> 
+> the existing dependency chain (in reverse order) is:
+> 
+> -> #1 (&tb->lock){+.+.}:
+>        __mutex_lock+0xac/0x9a0
+>        tb_domain_add+0x2d/0x130
+>        nhi_probe+0x1dd/0x330
+>        pci_device_probe+0xd2/0x150
+>        really_probe+0xee/0x280
+>        driver_probe_device+0x50/0xc0
+>        bus_for_each_drv+0x84/0xd0
+>        __device_attach+0xe4/0x150
+>        pci_bus_add_device+0x4e/0x70
+>        pci_bus_add_devices+0x2e/0x66
+>        pci_bus_add_devices+0x59/0x66
+>        pci_bus_add_devices+0x59/0x66
+>        enable_slot+0x344/0x450
+>        acpiphp_check_bridge.part.0+0x119/0x150
+>        acpiphp_hotplug_notify+0xaa/0x140
+>        acpi_device_hotplug+0xa2/0x3f0
+>        acpi_hotplug_work_fn+0x1a/0x30
+>        process_one_work+0x234/0x580
+>        worker_thread+0x50/0x3b0
+>        kthread+0x10a/0x140
+>        ret_from_fork+0x3a/0x50
+> 
+> -> #0 (pci_rescan_remove_lock){+.+.}:
+>        __lock_acquire+0xe54/0x1ac0
+>        lock_acquire+0xb8/0x1b0
+>        __mutex_lock+0xac/0x9a0
+>        authorized_store+0xe8/0x210
+>        kernfs_fop_write+0x125/0x1b0
+>        vfs_write+0xc2/0x1d0
+>        ksys_write+0x6c/0xf0
+>        do_syscall_64+0x50/0x180
+>        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> other info that might help us debug this:
+>  Possible unsafe locking scenario:
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock(&tb->lock);
+>                                lock(pci_rescan_remove_lock);
+>                                lock(&tb->lock);
+>   lock(pci_rescan_remove_lock);
+> 
+>  *** DEADLOCK ***
+> 5 locks held by pool-/usr/lib/b/1258:
+>  #0: 000000003df1a1ad (&f->f_pos_lock){+.+.}, at: __fdget_pos+0x4d/0x60
+>  #1: 0000000095a40b02 (sb_writers#6){.+.+}, at: vfs_write+0x185/0x1d0
+>  #2: 0000000017a7d714 (&of->mutex){+.+.}, at: kernfs_fop_write+0xf2/0x1b0
+>  #3: 000000004f262981 (kn->count#208){.+.+}, at: kernfs_fop_write+0xfa/0x1b0
+>  #4: 00000000bfb796b5 (&tb->lock){+.+.}, at: authorized_store+0x7c/0x210
+> 
+> stack backtrace:
+> CPU: 0 PID: 1258 Comm: pool-/usr/lib/b Tainted: G                T 5.3.0-rc6+ #1
+> 
+> 
+> Thanks,
+> 	Dominik
