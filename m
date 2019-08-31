@@ -2,50 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A9C25A462A
-	for <lists+linux-pci@lfdr.de>; Sat, 31 Aug 2019 22:21:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F9AFA462B
+	for <lists+linux-pci@lfdr.de>; Sat, 31 Aug 2019 22:21:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbfHaUVP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 31 Aug 2019 16:21:15 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38253 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728512AbfHaUVP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 31 Aug 2019 16:21:15 -0400
-Received: by mail-wm1-f68.google.com with SMTP id o184so10825010wme.3
-        for <linux-pci@vger.kernel.org>; Sat, 31 Aug 2019 13:21:14 -0700 (PDT)
+        id S1728535AbfHaUVR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 31 Aug 2019 16:21:17 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39628 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbfHaUVR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 31 Aug 2019 16:21:17 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t16so10171100wra.6
+        for <linux-pci@vger.kernel.org>; Sat, 31 Aug 2019 13:21:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QwI7vXDYlvIApsTBwHQIWtgOUS8kocR7BXXXZ5uchHI=;
-        b=mLlQqVbFxMiusHHQ9jn9pTJRf0ovE40puaOy1oRPxIH8ZG8wPqoIeAPuH7UJr1HTdE
-         uht2tP4Ib5OV8MaZHA6lyDDQq4LTiuCvAQfGqodglTqo/TtdRbThU9fhs+nPZJ0tm8pg
-         Xr2D7MLZ5j6SwoTuDN1HeczIVMzqOb5OVZ67x7UDSVwuADbmZTZgD/BQOmnlBOREmwZ3
-         ADy2q78kHhY1gLGUEa95ekxGrRG/aMCUHgMHCu+XUlG82igEWiLEs9j09gk8m0nb0D1O
-         imYCbpWmP4uGn8xWi2uRWG0vy2qqHWw6NQikzwZMzhhxo0kBZas+QawN34B46V7esw2f
-         TJkQ==
+        bh=IJgntNFMeDEKUhV8HXAMOPKHkJCV2oBkuZRizPy8vqE=;
+        b=SEwkT8bGqEmZ9l2EGDINOqeLjsCQAeHTiJAE/TLVWEugbD4PfvgXWmbQSNp9Uqon1t
+         xroe28oMPcijcNfuq64S5bsj7tPjQ3/rdh572PPUIfqxlXUbopow+zs6NJ5xjhWwqqm2
+         sXjv3hqF05uF8/YYlzsLDpWqsf6E6PEjb/VgsoV2/FVP25aFPtrKwRG3RZdOQZFKXuSD
+         YfBDoc5czuDmQDXA0j7F04Xof8NngVUZJPmR7VY+13FFCH4bKs1hoGP1ui2JgwRmGKAX
+         QTWO2mXRiHVSnmQRaKbEyZEvRnPeHp0+YYUqeVAvIV/ZjkJB3tClnIvzWmPGD8VIFN9Z
+         G9iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=QwI7vXDYlvIApsTBwHQIWtgOUS8kocR7BXXXZ5uchHI=;
-        b=hje7uFiba2pJPnalignVgj41O9Qm0gCF/s9xyEgaAznz8R7CenN5K5KUwF6pzF22Z1
-         lZLquBkQPxRNici34sWqFMA5GRd+f8oSUdKwsDTmbNT7jTx3rRFX01C9DR9nK6Idku1r
-         osIE6Ri28mW6Nk+z1TSqn1irtV9QSVr4tIiGNeI2VqmNMAK17tIMtDpkFs2HBHmpxrhu
-         ljKwM57O/0zPL0/ktAfdp951IRe+k0BF0xCcBTnhA4CVxzncZemoT0Xu3oLctVBG0FzA
-         ZsfIDpoBRJes9+gUml7HCWjwn8IJGeUU+jHOoY14ihw88cYplY6OkbC2UMfbuGf7lxtj
-         ALPw==
-X-Gm-Message-State: APjAAAXBV8T92wf5vrnVRAmtru8R99S7H4PedMItneowdKCgkqhBnFvo
-        A0zqdrMARNCnYOF0QILWmGrAV8ZG
-X-Google-Smtp-Source: APXvYqy4yyWUNvmCu+3PnQd2r0/xOkybZnUWNRSpeaAXH8YkDbuO8CJoNsPIYhYAqQPBEp3A6762NA==
-X-Received: by 2002:a05:600c:24a:: with SMTP id 10mr9836668wmj.7.1567282873211;
-        Sat, 31 Aug 2019 13:21:13 -0700 (PDT)
+        bh=IJgntNFMeDEKUhV8HXAMOPKHkJCV2oBkuZRizPy8vqE=;
+        b=Obxj/LLsbtlTANo0HxfrppgFllE7qAF5GVRqhbBRW+jQvnxjukXMOBzTkKkg2DMERL
+         tb7GqM9yRuwtl49s+6xjmOxz0awwwhNXu0eqMOqMq8w4YKtTn5juV2oCNtNygvrDaMyE
+         BMOk0olSZykCjwKRbszCkQSW2Vz6TDoH7cBArvw9pdyPOHJPtXTxwjOCqLeX7iv/c9cj
+         4BXq/uT4hOm79pNZ1pmtSo61ZUnuhdo+GRgugHtBLe1e2xCKiuupf3epC+uIdL/lbtWT
+         guDrz1zgAhDk+YKkrJJFUidGVLeuOfeH8jCW7Bq9YDxHQivwxTyhqVpv3k6LCBJ/kcc6
+         c6Ag==
+X-Gm-Message-State: APjAAAVK5bNIVUSBnnc77PQYIsZASB96gDJGlhFWAIGsQ73F329oiKOT
+        8mgqcIz3NFpqxL/j/mD1IAghRhXc
+X-Google-Smtp-Source: APXvYqzSEkm6Jk4/nD2YVD2Bqqw0IWayyqyGDdIlqpHojD7YvxyeYH0O7w781xkP1SVyOA6HWHGdOA==
+X-Received: by 2002:adf:9050:: with SMTP id h74mr26189051wrh.191.1567282874500;
+        Sat, 31 Aug 2019 13:21:14 -0700 (PDT)
 Received: from ?IPv6:2003:ea:8f04:7c00:9586:e556:3a4d:c04? (p200300EA8F047C009586E5563A4D0C04.dip0.t-ipconnect.de. [2003:ea:8f04:7c00:9586:e556:3a4d:c04])
-        by smtp.googlemail.com with ESMTPSA id r23sm11538013wmc.38.2019.08.31.13.21.12
+        by smtp.googlemail.com with ESMTPSA id j20sm18462361wre.65.2019.08.31.13.21.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 31 Aug 2019 13:21:12 -0700 (PDT)
-Subject: [PATCH v5 2/4] PCI/ASPM: allow to re-enable Clock PM
+        Sat, 31 Aug 2019 13:21:13 -0700 (PDT)
+Subject: [PATCH v5 4/4] PCI/ASPM: remove Kconfig option PCIEASPM_DEBUG and
+ related code
 From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     Frederick Lawler <fred@fredlawl.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -53,8 +54,8 @@ To:     Frederick Lawler <fred@fredlawl.com>,
         Rajat Jain <rajatja@google.com>
 Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 References: <c63f507f-7f52-7164-dbc5-07fc18e433b8@gmail.com>
-Message-ID: <6a050164-8a63-f271-566f-2553ef579b5e@gmail.com>
-Date:   Sat, 31 Aug 2019 22:16:00 +0200
+Message-ID: <4096ba95-b132-fc0d-8516-85352e87d82a@gmail.com>
+Date:   Sat, 31 Aug 2019 22:18:28 +0200
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
@@ -67,66 +68,201 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-So far Clock PM can't be re-enabled once it has been disabled with
-a call to pci_disable_link_state(). Reason is that clkpm_capable
-is reset. Change this by adding a clkpm_disable field similar to
-aspm_disable.
+Now that we have sysfs attributes for enabling/disabling the individual
+ASPM link states, this debug code isn't needed any longer.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- drivers/pci/pcie/aspm.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+v5:
+- rebased to latest pci/next
+---
+ drivers/pci/pci-sysfs.c  |   3 --
+ drivers/pci/pci.h        |   8 ---
+ drivers/pci/pcie/Kconfig |   7 ---
+ drivers/pci/pcie/aspm.c  | 105 ---------------------------------------
+ 4 files changed, 123 deletions(-)
 
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 687240f55..acba3aff0 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -1314,7 +1314,6 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
+ 	int retval;
+ 
+ 	pcie_vpd_create_sysfs_dev_files(dev);
+-	pcie_aspm_create_sysfs_dev_files(dev);
+ #ifdef CONFIG_PCIEASPM
+ 	/* update visibility of attributes in this group */
+ 	sysfs_update_group(&dev->dev.kobj, &aspm_ctrl_attr_group);
+@@ -1328,7 +1327,6 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
+ 	return 0;
+ 
+ error:
+-	pcie_aspm_remove_sysfs_dev_files(dev);
+ 	pcie_vpd_remove_sysfs_dev_files(dev);
+ 	return retval;
+ }
+@@ -1404,7 +1402,6 @@ int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
+ static void pci_remove_capabilities_sysfs(struct pci_dev *dev)
+ {
+ 	pcie_vpd_remove_sysfs_dev_files(dev);
+-	pcie_aspm_remove_sysfs_dev_files(dev);
+ 	if (dev->reset_fn) {
+ 		device_remove_file(&dev->dev, &dev_attr_reset);
+ 		dev->reset_fn = 0;
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 9dc3e3673..b3d3da257 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -533,14 +533,6 @@ static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
+ #endif
+ 
+-#ifdef CONFIG_PCIEASPM_DEBUG
+-void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev);
+-void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev);
+-#else
+-static inline void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev) { }
+-static inline void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev) { }
+-#endif
+-
+ #ifdef CONFIG_PCIE_ECRC
+ void pcie_set_ecrc_checking(struct pci_dev *dev);
+ void pcie_ecrc_get_policy(char *str);
+diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+index 362eb8cfa..a2e862d4e 100644
+--- a/drivers/pci/pcie/Kconfig
++++ b/drivers/pci/pcie/Kconfig
+@@ -79,13 +79,6 @@ config PCIEASPM
+ 
+ 	  When in doubt, say Y.
+ 
+-config PCIEASPM_DEBUG
+-	bool "Debug PCI Express ASPM"
+-	depends on PCIEASPM
+-	help
+-	  This enables PCI Express ASPM debug support. It will add per-device
+-	  interface to control ASPM.
+-
+ choice
+ 	prompt "Default ASPM policy"
+ 	default PCIEASPM_DEFAULT
 diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 6de7a597a..f044ae4d1 100644
+index ce3425125..67a142251 100644
 --- a/drivers/pci/pcie/aspm.c
 +++ b/drivers/pci/pcie/aspm.c
-@@ -64,6 +64,7 @@ struct pcie_link_state {
- 	u32 clkpm_capable:1;		/* Clock PM capable? */
- 	u32 clkpm_enabled:1;		/* Current Clock PM state */
- 	u32 clkpm_default:1;		/* Default Clock PM state by BIOS */
-+	u32 clkpm_disable:1;		/* Clock PM disabled */
+@@ -1182,111 +1182,6 @@ static int pcie_aspm_get_policy(char *buffer, const struct kernel_param *kp)
+ module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
+ 	NULL, 0644);
  
- 	/* Exit latencies */
- 	struct aspm_latency latency_up;	/* Upstream direction exit latency */
-@@ -161,8 +162,11 @@ static void pcie_set_clkpm_nocheck(struct pcie_link_state *link, int enable)
- 
- static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
- {
--	/* Don't enable Clock PM if the link is not Clock PM capable */
--	if (!link->clkpm_capable)
-+	/*
-+	 * Don't enable Clock PM if the link is not Clock PM capable
-+	 * or Clock PM is disabled
-+	 */
-+	if (!link->clkpm_capable || link->clkpm_disable)
- 		enable = 0;
- 	/* Need nothing if the specified equals to current state */
- 	if (link->clkpm_enabled == enable)
-@@ -192,7 +196,8 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
- 	}
- 	link->clkpm_enabled = enabled;
- 	link->clkpm_default = enabled;
--	link->clkpm_capable = (blacklist) ? 0 : capable;
-+	link->clkpm_capable = capable;
-+	link->clkpm_disable = blacklist ? 1 : 0;
- }
- 
- static bool pcie_retrain_link(struct pcie_link_state *link)
-@@ -1106,10 +1111,9 @@ static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
- 		link->aspm_disable |= ASPM_STATE_L1_2_PCIPM;
- 	pcie_config_aspm_link(link, policy_to_aspm_state(link));
- 
--	if (state & PCIE_LINK_STATE_CLKPM) {
--		link->clkpm_capable = 0;
--		pcie_set_clkpm(link, 0);
+-#ifdef CONFIG_PCIEASPM_DEBUG
+-static ssize_t link_state_show(struct device *dev,
+-		struct device_attribute *attr,
+-		char *buf)
+-{
+-	struct pci_dev *pci_device = to_pci_dev(dev);
+-	struct pcie_link_state *link_state = pci_device->link_state;
+-
+-	return sprintf(buf, "%d\n", link_state->aspm_enabled);
+-}
+-
+-static ssize_t link_state_store(struct device *dev,
+-		struct device_attribute *attr,
+-		const char *buf,
+-		size_t n)
+-{
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct pcie_link_state *link, *root = pdev->link_state->root;
+-	u32 state;
+-
+-	if (aspm_disabled)
+-		return -EPERM;
+-
+-	if (kstrtouint(buf, 10, &state))
+-		return -EINVAL;
+-	if ((state & ~ASPM_STATE_ALL) != 0)
+-		return -EINVAL;
+-
+-	down_read(&pci_bus_sem);
+-	mutex_lock(&aspm_lock);
+-	list_for_each_entry(link, &link_list, sibling) {
+-		if (link->root != root)
+-			continue;
+-		pcie_config_aspm_link(link, state);
 -	}
-+	if (state & PCIE_LINK_STATE_CLKPM)
-+		link->clkpm_disable = 1;
-+	pcie_set_clkpm(link, policy_to_clkpm_state(link));
- 	mutex_unlock(&aspm_lock);
- 	if (sem)
- 		up_read(&pci_bus_sem);
+-	mutex_unlock(&aspm_lock);
+-	up_read(&pci_bus_sem);
+-	return n;
+-}
+-
+-static ssize_t clk_ctl_show(struct device *dev,
+-		struct device_attribute *attr,
+-		char *buf)
+-{
+-	struct pci_dev *pci_device = to_pci_dev(dev);
+-	struct pcie_link_state *link_state = pci_device->link_state;
+-
+-	return sprintf(buf, "%d\n", link_state->clkpm_enabled);
+-}
+-
+-static ssize_t clk_ctl_store(struct device *dev,
+-		struct device_attribute *attr,
+-		const char *buf,
+-		size_t n)
+-{
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	bool state;
+-
+-	if (strtobool(buf, &state))
+-		return -EINVAL;
+-
+-	down_read(&pci_bus_sem);
+-	mutex_lock(&aspm_lock);
+-	pcie_set_clkpm_nocheck(pdev->link_state, state);
+-	mutex_unlock(&aspm_lock);
+-	up_read(&pci_bus_sem);
+-
+-	return n;
+-}
+-
+-static DEVICE_ATTR_RW(link_state);
+-static DEVICE_ATTR_RW(clk_ctl);
+-
+-static char power_group[] = "power";
+-void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev)
+-{
+-	struct pcie_link_state *link_state = pdev->link_state;
+-
+-	if (!link_state)
+-		return;
+-
+-	if (link_state->aspm_support)
+-		sysfs_add_file_to_group(&pdev->dev.kobj,
+-			&dev_attr_link_state.attr, power_group);
+-	if (link_state->clkpm_capable)
+-		sysfs_add_file_to_group(&pdev->dev.kobj,
+-			&dev_attr_clk_ctl.attr, power_group);
+-}
+-
+-void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev)
+-{
+-	struct pcie_link_state *link_state = pdev->link_state;
+-
+-	if (!link_state)
+-		return;
+-
+-	if (link_state->aspm_support)
+-		sysfs_remove_file_from_group(&pdev->dev.kobj,
+-			&dev_attr_link_state.attr, power_group);
+-	if (link_state->clkpm_capable)
+-		sysfs_remove_file_from_group(&pdev->dev.kobj,
+-			&dev_attr_clk_ctl.attr, power_group);
+-}
+-#endif
+-
+ static struct pcie_link_state *aspm_get_parent_link(struct pci_dev *pdev)
+ {
+ 	struct pci_dev *parent = pdev->bus->self;
 -- 
 2.23.0
 
