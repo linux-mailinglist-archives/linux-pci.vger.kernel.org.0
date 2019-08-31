@@ -2,93 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE97DA40E6
-	for <lists+linux-pci@lfdr.de>; Sat, 31 Aug 2019 01:18:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1008A42F3
+	for <lists+linux-pci@lfdr.de>; Sat, 31 Aug 2019 08:58:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbfH3XSi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Aug 2019 19:18:38 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35392 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728242AbfH3XSh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Aug 2019 19:18:37 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 205so3086088pfw.2
-        for <linux-pci@vger.kernel.org>; Fri, 30 Aug 2019 16:18:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Z7Fsc+37SdglEjx6/P+VaXoRvmLqI7xYMe39+8FKKog=;
-        b=SRkoLbFdjxOOLUsGorlvwCDB8Y7h+4UZCxPAUooe5JUYDpPZoOm+hC88wSCIUVQUJi
-         FedLK4Mry/31IytlGZFBo09jNfGHCQpy+KeCRFEAjd/CHA9NXZ0xgmevw0j+ww4PVOri
-         NVgKz5E4oVN1UEDexyn1rDN7wNhQVIao8Kavw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Z7Fsc+37SdglEjx6/P+VaXoRvmLqI7xYMe39+8FKKog=;
-        b=TSP/1MNCUfNzugn1DE/6Lg2UUaOqNgptYcJYNwFD4K94zaDtf2nlYJFQFWxGwKa2Ke
-         5yvisxwV8HOILpRSSB9W9QE/HAZcnXPh5+jAbaEcG/v9dMuiX7/JaiKCT0i+yf3IB2y4
-         8ARCGcZO4fAhBbHx4yqFzGU6mRMsLe5p/wHMeVOolNIQant4h1zLif63b+JuKYqLE3zB
-         /e7WaYbyLMEXhSEQsRrhQ9G+roIoIo0CDqM4CfCvdqjB13zd7j8bJRZG4BnoVdOZEkne
-         oUTMl2qek86bUpQmrhXN8ifjD3SX56UEvq8ggdLCxQEYI4wp2hhUcAyZinRmK8S5+BpD
-         Ey1w==
-X-Gm-Message-State: APjAAAV7C26ET9N5zS0HbRMeKYjxIpQ2+c+BxkhFKXfwtUc2EONR3NZC
-        c9FFngKy4kiIv5MbUGV6uRqAUg==
-X-Google-Smtp-Source: APXvYqzsgIbQD1SS2U2BV8UWGEyzmoL50WWwQMMc6aPYggCkWNncKrpdEs1Qv0qQtklc19SPrZyVdA==
-X-Received: by 2002:a17:90a:3748:: with SMTP id u66mr1008427pjb.4.1567207116764;
-        Fri, 30 Aug 2019 16:18:36 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id t23sm8479395pfl.154.2019.08.30.16.18.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 16:18:36 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH 2/2] ipc/sem: Convert to use built-in RCU list checking
-Date:   Fri, 30 Aug 2019 19:18:17 -0400
-Message-Id: <20190830231817.76862-2-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-In-Reply-To: <20190830231817.76862-1-joel@joelfernandes.org>
-References: <20190830231817.76862-1-joel@joelfernandes.org>
+        id S1726130AbfHaG6h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 31 Aug 2019 02:58:37 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50750 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725903AbfHaG6h (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 31 Aug 2019 02:58:37 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 43B8B21F62B63874339A;
+        Sat, 31 Aug 2019 14:58:35 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.439.0; Sat, 31 Aug 2019 14:58:28 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>, <linux-pci@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] PCI: Use GFP_ATOMIC under spin lock
+Date:   Sat, 31 Aug 2019 07:01:47 +0000
+Message-ID: <20190831070147.25607-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-CONFIG_PROVE_RCU_LIST requires list_for_each_entry_rcu() to pass a
-lockdep expression if using srcu or locking for protection. It can only
-check regular RCU protection, all other protection needs to be passed as
-lockdep expression.
+A spin lock is taken here so we should use GFP_ATOMIC.
 
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Fixes: 41b5ef225daa ("PCI: Clean up resource_alignment parameter to not require static buffer")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 ---
- ipc/sem.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/ipc/sem.c b/ipc/sem.c
-index 7da4504bcc7c..ec97a7072413 100644
---- a/ipc/sem.c
-+++ b/ipc/sem.c
-@@ -1852,7 +1852,8 @@ static struct sem_undo *__lookup_undo(struct sem_undo_list *ulp, int semid)
- {
- 	struct sem_undo *un;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 484e35349565..0b5fc6736f3f 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6148,7 +6148,7 @@ static ssize_t resource_alignment_store(struct bus_type *bus,
+ 	spin_lock(&resource_alignment_lock);
  
--	list_for_each_entry_rcu(un, &ulp->list_proc, list_proc) {
-+	list_for_each_entry_rcu(un, &ulp->list_proc, list_proc,
-+				spin_is_locked(&ulp->lock)) {
- 		if (un->semid == semid)
- 			return un;
- 	}
--- 
-2.23.0.187.g17f5b7556c-goog
+ 	kfree(resource_alignment_param);
+-	resource_alignment_param = kstrndup(buf, count, GFP_KERNEL);
++	resource_alignment_param = kstrndup(buf, count, GFP_ATOMIC);
+ 
+ 	spin_unlock(&resource_alignment_lock);
+
+
 
