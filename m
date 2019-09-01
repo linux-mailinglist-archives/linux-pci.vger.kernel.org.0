@@ -2,74 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BE48A4831
-	for <lists+linux-pci@lfdr.de>; Sun,  1 Sep 2019 09:52:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 332F4A48DD
+	for <lists+linux-pci@lfdr.de>; Sun,  1 Sep 2019 13:25:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbfIAHv4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 1 Sep 2019 03:51:56 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:35586 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728712AbfIAHvy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 1 Sep 2019 03:51:54 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9D4812001BC;
-        Sun,  1 Sep 2019 09:51:52 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A743B20058B;
-        Sun,  1 Sep 2019 09:51:45 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E4AC1402FB;
-        Sun,  1 Sep 2019 15:51:36 +0800 (SGT)
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        leoyang.li@nxp.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
-        roy.zang@nxp.com, lorenzo.pieralisi@arm.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        id S1726640AbfIALZM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 1 Sep 2019 07:25:12 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37216 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbfIALZL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 1 Sep 2019 07:25:11 -0400
+Received: by mail-wm1-f66.google.com with SMTP id d16so11795085wme.2;
+        Sun, 01 Sep 2019 04:25:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=01HPTey408UCBL639ZxLYtnZytu5ResDsXDWNRYopFs=;
+        b=uNkmgSDRj0aCeJn8wLr/V5uo7ANHZI0Ir4fFw+tfD1CApEj8Mh/wK0Ze7wqdsdBTwD
+         wKWWEheNTcNp0sLjO2N31rD5C/mAyePd5I7tPCw+uazWklSplQpGR8VILBdNyVTG1EKy
+         x38I63zw9kYwo6PFRwKZyMWg6l3Z74zmSEaE4RXuSFukNISKQDboWeB8EAD5yrS+hfRN
+         dBNbudRWyt/FYS5Ire4D12/nCZX29mdcqnjnQpH42mVJ2xlBHRdGvB2PLhH/6QTKYCNe
+         DnUIsqnWL3uxsBg0t21xLKaRb609UUIlp8hgs52Bo9OTq4DscFhMg6CpMHf6BBQujP37
+         U7/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=01HPTey408UCBL639ZxLYtnZytu5ResDsXDWNRYopFs=;
+        b=sOguh9vnIqWTuurRgsk9KYNhHvjNWrVdD95hx1Lwv3x4QlbnYik/a8GUV2EP2ROIB4
+         5v2hEsvNwPNmFr96a2y+6tZZivu/gXMI0VnsZnMCKz/jnu1UdUfzL3Pg/r75ZvB90v4I
+         wViMxXHDov9jpBiPZfEL/FqE48dA7LDgj7eWlUd3C/wWQXL+cy45GwZt2bDeeRVJv/IQ
+         Lh+MmIb0i4UxNNFp1kOcJM44T/PQH1CnioB7PMq8gzQTwfTzEEDLsSeTNzgLtisyD9oe
+         6OGkqH1mP7z8ONX8OkjNvVUJ89IcFJrXTcLJxsX8hJgkzo+qP5Z09nf9CgUh5QUn+pM5
+         92RQ==
+X-Gm-Message-State: APjAAAW1uAb0y5/yZtFT4lg7QyONRDhsvp4c7e5WKfdXJGQ+dX/Jm541
+        0ORbobWVmVbZaaXuYkg793Bv4sf9q3r54A==
+X-Google-Smtp-Source: APXvYqy1j+qHgGkl142BUZQL/cgCiSDmmOxkvewbJoqW69rnrk6CVgyUWdrQETI/0pc6am1fndsuUg==
+X-Received: by 2002:a7b:c7c2:: with SMTP id z2mr28564345wmk.33.1567337109185;
+        Sun, 01 Sep 2019 04:25:09 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id x5sm747241wrg.69.2019.09.01.04.25.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Sep 2019 04:25:08 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Joerg Roedel <joro@8bytes.org>, Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     bhelgaas@google.com, Xiaowei Bao <xiaowei.bao@nxp.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCH v5 3/3] PCI: layerscape: Add LS1028a support
-Date:   Sun,  1 Sep 2019 15:41:34 +0800
-Message-Id: <20190901074134.24455-3-xiaowei.bao@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20190901074134.24455-1-xiaowei.bao@nxp.com>
-References: <20190901074134.24455-1-xiaowei.bao@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        devicetree@vger.kernel.org
+Subject: [PATCH] PCI: Remove unused includes and superfluous struct declaration
+Date:   Sun,  1 Sep 2019 13:25:06 +0200
+Message-Id: <20190901112506.8469-1-kw@linux.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add support for the LS1028a PCIe controller.
+Remove <linux/pci.h> and <linux/msi.h> from being included
+directly as part of the include/linux/of_pci.h, and remove
+superfluous declaration of struct of_phandle_args.
 
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Move users of include <linux/of_pci.h> to include <linux/pci.h>
+and <linux/msi.h> directly rather than rely on both being
+included transitively through <linux/of_pci.h>.
+
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
 ---
-v2:
- - No change.
-v3:
- - Reuse the ls2088 driver data structurt.
-v4:
- - No change.
-v5:
- - No change.
+ drivers/iommu/of_iommu.c                          | 2 ++
+ drivers/pci/controller/dwc/pcie-designware-host.c | 1 +
+ drivers/pci/controller/pci-aardvark.c             | 1 +
+ drivers/pci/pci.c                                 | 1 +
+ drivers/pci/probe.c                               | 1 +
+ include/linux/of_pci.h                            | 4 +---
+ 6 files changed, 7 insertions(+), 3 deletions(-)
 
- drivers/pci/controller/dwc/pci-layerscape.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-index 3a5fa26..f24f79a 100644
---- a/drivers/pci/controller/dwc/pci-layerscape.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape.c
-@@ -263,6 +263,7 @@ static const struct ls_pcie_drvdata ls2088_drvdata = {
- static const struct of_device_id ls_pcie_of_match[] = {
- 	{ .compatible = "fsl,ls1012a-pcie", .data = &ls1046_drvdata },
- 	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021_drvdata },
-+	{ .compatible = "fsl,ls1028a-pcie", .data = &ls2088_drvdata },
- 	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043_drvdata },
- 	{ .compatible = "fsl,ls1046a-pcie", .data = &ls1046_drvdata },
- 	{ .compatible = "fsl,ls2080a-pcie", .data = &ls2080_drvdata },
+diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+index 614a93aa5305..026ad2b29dcd 100644
+--- a/drivers/iommu/of_iommu.c
++++ b/drivers/iommu/of_iommu.c
+@@ -8,6 +8,8 @@
+ #include <linux/export.h>
+ #include <linux/iommu.h>
+ #include <linux/limits.h>
++#include <linux/pci.h>
++#include <linux/msi.h>
+ #include <linux/of.h>
+ #include <linux/of_iommu.h>
+ #include <linux/of_pci.h>
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index d3156446ff27..7a9bef993e57 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -10,6 +10,7 @@
+ 
+ #include <linux/irqchip/chained_irq.h>
+ #include <linux/irqdomain.h>
++#include <linux/msi.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+ #include <linux/pci_regs.h>
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index fc0fe4d4de49..3a05f6ca95b0 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -16,6 +16,7 @@
+ #include <linux/pci.h>
+ #include <linux/init.h>
+ #include <linux/platform_device.h>
++#include <linux/msi.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+ 
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 484e35349565..571e7e00984b 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -13,6 +13,7 @@
+ #include <linux/delay.h>
+ #include <linux/dmi.h>
+ #include <linux/init.h>
++#include <linux/msi.h>
+ #include <linux/of.h>
+ #include <linux/of_pci.h>
+ #include <linux/pci.h>
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 169943f17a4c..11b11a652d18 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -7,6 +7,7 @@
+ #include <linux/delay.h>
+ #include <linux/init.h>
+ #include <linux/pci.h>
++#include <linux/msi.h>
+ #include <linux/of_device.h>
+ #include <linux/of_pci.h>
+ #include <linux/pci_hotplug.h>
+diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+index 21a89c4880fa..7929b4c0e886 100644
+--- a/include/linux/of_pci.h
++++ b/include/linux/of_pci.h
+@@ -2,11 +2,9 @@
+ #ifndef __OF_PCI_H
+ #define __OF_PCI_H
+ 
+-#include <linux/pci.h>
+-#include <linux/msi.h>
++#include <linux/types.h>
+ 
+ struct pci_dev;
+-struct of_phandle_args;
+ struct device_node;
+ 
+ #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_PCI)
 -- 
-2.9.5
+2.23.0
 
