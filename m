@@ -2,30 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 46309A4991
-	for <lists+linux-pci@lfdr.de>; Sun,  1 Sep 2019 15:30:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5167CA49C3
+	for <lists+linux-pci@lfdr.de>; Sun,  1 Sep 2019 16:14:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbfIANaX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 1 Sep 2019 09:30:23 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:33485 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfIANaX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 1 Sep 2019 09:30:23 -0400
-X-Originating-IP: 88.190.179.123
+        id S1728908AbfIAOOO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 1 Sep 2019 10:14:14 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:35295 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728772AbfIAOOO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 1 Sep 2019 10:14:14 -0400
 Received: from localhost (unknown [88.190.179.123])
         (Authenticated sender: repk@triplefau.lt)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 75B9B240006;
-        Sun,  1 Sep 2019 13:30:20 +0000 (UTC)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id BD80E100005;
+        Sun,  1 Sep 2019 14:14:10 +0000 (UTC)
 From:   Remi Pommarel <repk@triplefau.lt>
-To:     Yue Wang <yue.wang@Amlogic.com>,
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Cc:     linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        Remi Pommarel <repk@triplefau.lt>
-Subject: [PATCH] PCI: amlogic: Fix reset assertion via gpio descriptor
-Date:   Sun,  1 Sep 2019 15:39:15 +0200
-Message-Id: <20190901133915.12899-1-repk@triplefau.lt>
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH] PCI: aardvark: Don't rely on jiffies while holding spinlock
+Date:   Sun,  1 Sep 2019 16:23:03 +0200
+Message-Id: <20190901142303.27815-1-repk@triplefau.lt>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -34,38 +32,54 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Normally asserting reset signal on gpio would be achieved with:
-	gpiod_set_value_cansleep(reset_gpio, 1);
+advk_pcie_wait_pio() can be called while holding a spinlock (from
+pci_bus_read_config_dword()), then depends on jiffies in order to
+timeout while polling on PIO state registers. In the case the PIO
+transaction failed, the timeout will never happen and will also cause
+the cpu to stall.
 
-Meson PCI driver set reset value to '0' instead of '1' as it takes into
-account the PERST# signal polarity. The polarity should be taken care
-in the device tree instead.
-
-This fixes the reset assertion meaning and moves out the polarity
-configuration in DT (please note that there is no DT currently using
-this driver).
+This decrements a variable and wait instead of using jiffies.
 
 Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 ---
- drivers/pci/controller/dwc/pci-meson.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pci-aardvark.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-index e35e9eaa50ee..541f37a6f6a5 100644
---- a/drivers/pci/controller/dwc/pci-meson.c
-+++ b/drivers/pci/controller/dwc/pci-meson.c
-@@ -287,9 +287,9 @@ static inline void meson_cfg_writel(struct meson_pcie *mp, u32 val, u32 reg)
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index fc0fe4d4de49..1fa6d04ad7aa 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -175,7 +175,8 @@
+ 	(PCIE_CONF_BUS(bus) | PCIE_CONF_DEV(PCI_SLOT(devfn))	| \
+ 	 PCIE_CONF_FUNC(PCI_FUNC(devfn)) | PCIE_CONF_REG(where))
  
- static void meson_pcie_assert_reset(struct meson_pcie *mp)
+-#define PIO_TIMEOUT_MS			1
++#define PIO_RETRY_CNT			10
++#define PIO_RETRY_DELAY			100 /* 100 us*/
+ 
+ #define LINK_WAIT_MAX_RETRIES		10
+ #define LINK_WAIT_USLEEP_MIN		90000
+@@ -383,17 +384,16 @@ static void advk_pcie_check_pio_status(struct advk_pcie *pcie)
+ static int advk_pcie_wait_pio(struct advk_pcie *pcie)
  {
--	gpiod_set_value_cansleep(mp->reset_gpio, 0);
--	udelay(500);
- 	gpiod_set_value_cansleep(mp->reset_gpio, 1);
-+	udelay(500);
-+	gpiod_set_value_cansleep(mp->reset_gpio, 0);
- }
+ 	struct device *dev = &pcie->pdev->dev;
+-	unsigned long timeout;
++	size_t i;
  
- static void meson_pcie_init_dw(struct meson_pcie *mp)
+-	timeout = jiffies + msecs_to_jiffies(PIO_TIMEOUT_MS);
+-
+-	while (time_before(jiffies, timeout)) {
++	for (i = 0; i < PIO_RETRY_CNT; ++i) {
+ 		u32 start, isr;
+ 
+ 		start = advk_readl(pcie, PIO_START);
+ 		isr = advk_readl(pcie, PIO_ISR);
+ 		if (!start && isr)
+ 			return 0;
++		udelay(PIO_RETRY_DELAY);
+ 	}
+ 
+ 	dev_err(dev, "config read/write timed out\n");
 -- 
 2.20.1
 
