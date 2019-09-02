@@ -2,78 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D4014A4C5A
-	for <lists+linux-pci@lfdr.de>; Sun,  1 Sep 2019 23:46:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1B5EA4D88
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2019 05:27:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728942AbfIAVq0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 1 Sep 2019 17:46:26 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40005 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728773AbfIAVqZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 1 Sep 2019 17:46:25 -0400
-Received: by mail-ot1-f66.google.com with SMTP id y39so1867281ota.7
-        for <linux-pci@vger.kernel.org>; Sun, 01 Sep 2019 14:46:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C8TZLebnGbANzOw8CueGexyIqbu30cWweQAWlVJcgqY=;
-        b=DYVZfSWJhmJpXCtDFZW+YgBkRAycI/cKRtW8n3Z804rBLcJz7zbIlM6e3SgucS+bgN
-         PlGJcbtsoBL7rDlp8KGBhursAXFOhlERP98LEQ7wAm31zgSQQH04mzYC7qZ+ndmkKIvJ
-         QqRrysLFv7EyeDI6ylnnEvEcfH7yaE/N4YQU+g9Ui32PjSNgQxkKL6z5zA2uRwJ36UVw
-         L6+/dw6M18NJjeeLjHNrFsrqxj6lOT3lJtQTTRxvPkYn4OniK2g8mBVS1EAs7f3SALOd
-         ZvGYfvkYnC/yk95yzj/5NoJ/kFg6XCWN3PtXkpw6xqaRSi17XRQCTlr09Ku03V3ChygA
-         3WTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C8TZLebnGbANzOw8CueGexyIqbu30cWweQAWlVJcgqY=;
-        b=AqfxVBtY5QPcw9S5GM/hq8eSQzmy4D4x0h+/iBgn3pRvSQ1paJ1yd77t0gWGQakfNa
-         uilw6oOBRH/hbNnkiSDmGE+lEZ9yTVfR5NCKmFz6ON8C7V+JIlxV1c5IHQfbYIHw6hkX
-         VLVn9qgIiWIH8SaAavqd87tRZyAaT4zSvwypRDfa5lGVJ5j/ySNC8ljKpHdn03NIp7pL
-         OvrgFO+85xU/AI8Uwd1ynV2cssgZuIQPVDOVvCt1hXpnpWBUxlhFG8W0s/NxH9mTZbev
-         gkQqMfRtYCX2HZ7zlMldZGypM8VlF6BLzB/yo+jwdnNhE56kjKMjKapu6nbYioNuMbrY
-         NGCg==
-X-Gm-Message-State: APjAAAXBPuj2Cr/wigD8XTaK5lmdglMSsuUQgMwntjdd99X0Rzj9F2nH
-        5GuzsntZ7LTR1n8uLYrKBETw9OOWU3i93FBCrYI=
-X-Google-Smtp-Source: APXvYqz8GsC7TJh2aUM9UBDKb4Ai81sj3noSRYLczdX8vjsdCZhPjPyzF5VvAjNsJ8zLy73WbsQMoc097YprC18nqv8=
-X-Received: by 2002:a9d:5c0f:: with SMTP id o15mr22152068otk.81.1567374385279;
- Sun, 01 Sep 2019 14:46:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190901133915.12899-1-repk@triplefau.lt>
-In-Reply-To: <20190901133915.12899-1-repk@triplefau.lt>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sun, 1 Sep 2019 23:46:14 +0200
-Message-ID: <CAFBinCD-eH8A7XqiCDBfdejHRVQc2+RVTRB+ZJfnG47Gs3fUuw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: amlogic: Fix reset assertion via gpio descriptor
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Yue Wang <yue.wang@amlogic.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Hilman <khilman@baylibre.com>, linux-pci@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+        id S1729259AbfIBD1i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 1 Sep 2019 23:27:38 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:47644 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729239AbfIBD1h (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 1 Sep 2019 23:27:37 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F18AD20067B;
+        Mon,  2 Sep 2019 05:27:35 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 739B020067A;
+        Mon,  2 Sep 2019 05:27:27 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CC7B0402B7;
+        Mon,  2 Sep 2019 11:27:16 +0800 (SGT)
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
+        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org, zhiqiang.hou@nxp.com,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCH v3 00/11] *** SUBJECT HERE ***
+Date:   Mon,  2 Sep 2019 11:17:05 +0800
+Message-Id: <20190902031716.43195-1-xiaowei.bao@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Sep 1, 2019 at 3:30 PM Remi Pommarel <repk@triplefau.lt> wrote:
->
-> Normally asserting reset signal on gpio would be achieved with:
->         gpiod_set_value_cansleep(reset_gpio, 1);
->
-> Meson PCI driver set reset value to '0' instead of '1' as it takes into
-> account the PERST# signal polarity. The polarity should be taken care
-> in the device tree instead.
->
-> This fixes the reset assertion meaning and moves out the polarity
-> configuration in DT (please note that there is no DT currently using
-> this driver).
->
+*** BLURB HERE ***
 
-Fixes: 9c0ef6d34fdb ("PCI: amlogic: Add the Amlogic Meson PCIe
-controller driver")
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Xiaowei Bao (11):
+  PCI: designware-ep: Add multiple PFs support for DWC
+  PCI: designware-ep: Add the doorbell mode of MSI-X in EP mode
+  PCI: designware-ep: Move the function of getting MSI capability
+    forward
+  PCI: designware-ep: Modify MSI and MSIX CAP way of finding
+  dt-bindings: pci: layerscape-pci: add compatible strings for ls1088a
+    and ls2088a
+  PCI: layerscape: Fix some format issue of the code
+  PCI: layerscape: Modify the way of getting capability with different
+    PEX
+  PCI: layerscape: Modify the MSIX to the doorbell mode
+  PCI: layerscape: Add EP mode support for ls1088a and ls2088a
+  arm64: dts: layerscape: Add PCIe EP node for ls1088a
+  misc: pci_endpoint_test: Add LS1088a in pci_device_id table
+
+ .../devicetree/bindings/pci/layerscape-pci.txt     |   4 +-
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi     |  31 +++
+ drivers/misc/pci_endpoint_test.c                   |   1 +
+ drivers/pci/controller/dwc/pci-layerscape-ep.c     | 100 ++++++--
+ drivers/pci/controller/dwc/pcie-designware-ep.c    | 255 +++++++++++++++++----
+ drivers/pci/controller/dwc/pcie-designware.c       |  59 +++--
+ drivers/pci/controller/dwc/pcie-designware.h       |  48 +++-
+ 7 files changed, 404 insertions(+), 94 deletions(-)
+
+-- 
+2.9.5
+
