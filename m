@@ -2,49 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A3315A550E
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2019 13:39:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00D69A5513
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2019 13:39:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730252AbfIBLik (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Sep 2019 07:38:40 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46394 "EHLO
+        id S1730648AbfIBLjF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Sep 2019 07:39:05 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39529 "EHLO
         mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbfIBLik (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Sep 2019 07:38:40 -0400
-Received: by mail-ed1-f66.google.com with SMTP id i8so1621810edn.13;
-        Mon, 02 Sep 2019 04:38:38 -0700 (PDT)
+        with ESMTP id S1726643AbfIBLjF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Sep 2019 07:39:05 -0400
+Received: by mail-ed1-f66.google.com with SMTP id u6so9480569edq.6;
+        Mon, 02 Sep 2019 04:39:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=A1jU8Kd8kaSBOirwnCIVWK0+MxxtP3zKULey0yqf3Fs=;
-        b=kmAUcOKMUugD/IszxroNxks32yx1nKZbnpoX4l3389KhNbSRtiSEEp8d1CVXS7TdiK
-         m+Ege9ha5mPyS0c02pzMrdwWiLq8Pw4TJlw1F5AGaJbSi9dDFw5sA0j6SdgbqRbhyrZt
-         zp/dAcsQQ0ta1MHVi9G3XCY7xp3vBquRO9ERvWO5naYz/1+45quUwj2ybrb6Y4cP7utU
-         WOuZiXwh/Iw2PdhnqEZblqQQWW+VFz4GmfweVBjHWo7U9tJYlZTvKcG2C7Ss4zg0Nre5
-         hJgumzeWHb3arPUgnwVrfRY4WCQ2rLEQ4s+mj/fhmw8xsEc2kHxxzbZaWfxZ9WvBYWuc
-         DQmQ==
+        bh=dJABXDobIWh1nooLsy7S53th7Uqr+4tppXx8bmIrX/E=;
+        b=srxps2g4NXpNgtJjDKxOu1fYmUhRVg5OTVtujqKbouQgKQhe7bdE7m37VmUsCLuLtb
+         YQ6IhHchMua1pC1YoY2mPAjvrgunUN+5WNBdMjbiumFxlPihFjJFAjIMcNwOuTSmq30o
+         PnlHAmwICgb+4iYJn73ht147Gy0J0E5QhjhqAh41AXsZbKS+bhymS0lDiqJWoh9kSRij
+         i1z5TgsmnU0LNtlk+Zmfv/NLPKYnO9lrmEMF4nszPyk7OdJjLyBj6F4FarGCurD28rM1
+         BlGFYJd3drJ+gSwsZ+HhLkT85Ye7cI0ekuKVnJgfFM5h9w4b3Ev3nV4bTvkeMI5lbgSL
+         ywIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=A1jU8Kd8kaSBOirwnCIVWK0+MxxtP3zKULey0yqf3Fs=;
-        b=d1zthXjGXQMSM6GI8qH/rSy+prVxeTAhb/H3tFr+YI7MfZwr1wjzfIUmaQtfKAWNkc
-         3qOi8h4hrRjuY6tZRaeFjLgXSa0bxUIMYA2ieTJ3r1XcjyuI6fH0eYJg3o7wABgzLiBq
-         MaGYf4ZcV+gWEUUdshL7ybSpwPB9G+CohMFBFNaP+4Hlt1zLXT6JxdzQvpu4ODKp7FRj
-         BtE+J7+7t4yZ5MYSg5wbfl316Q8aZ7a/ruQT5Wf8tDfzlvlmzdyCKiM5YkXSBiH/BhFI
-         fv3NY3DU0OHNSpnViiLEdHa/+7ZUDJI1YHVfPNZWFIMrmoaoE+22ENQKhckZMjsJdYO8
-         RC4g==
-X-Gm-Message-State: APjAAAVFdrT4I5TVI05Sjub5LoVF69b4pA0+FZ+iOHXFsYR6dACuVDnt
-        c6ENNsVqost17bvxZlO5YwI=
-X-Google-Smtp-Source: APXvYqyQPT8NxW+hvmY9U01+tXAZ5YfgoV3MfxbzA8OX3sMJ570CdsXTtchI1DDsOQXnq1onRbztWg==
-X-Received: by 2002:aa7:da54:: with SMTP id w20mr23284871eds.52.1567424318209;
-        Mon, 02 Sep 2019 04:38:38 -0700 (PDT)
+        bh=dJABXDobIWh1nooLsy7S53th7Uqr+4tppXx8bmIrX/E=;
+        b=f+p2Kr/tr3Pn0mnzNGBASKrYEC1jk0oNKYIyl7P3/FU421WohT6hJCe58+bki2VWSJ
+         y1UKaYO8yW9LVGTNMYT78yjwWtx+ZvXTIvAsJVdd/Grzpm9sLXj6zBTXoAx0zJR4WoPl
+         q77No+SqwpzBcnQKgHHLxYidhUCvNFChXD82+pazG0UG0sIRBdohNv9QAUxdKok3vrpr
+         L8pHP99K+SVBti7PSkkds5Dc7SH2KVFUbjnntXBaOF/F331+oFUsKeb3/RH1od7d0Io5
+         aBwnCbEsnsoPian+i40UEHnfI4GSL1CAnDfbLZMGoQb8PHTz5igMlGX5kp2c8JVKcnSK
+         Ax6w==
+X-Gm-Message-State: APjAAAU1Q+u1rN11xUoWs1aYw267Y/xWLyABOYZx7WxgX4DodtRBXFwQ
+        mINogqTWoBflEUIAysNMqP0=
+X-Google-Smtp-Source: APXvYqxD0OTk4zunuo+zB+jioNUHxiTrPa/e6jRWtgJj83asCZF0rf+8ALlsOJheTmDEANFXKtyzNg==
+X-Received: by 2002:aa7:c81a:: with SMTP id a26mr15644204edt.26.1567424342732;
+        Mon, 02 Sep 2019 04:39:02 -0700 (PDT)
 Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id f24sm2859546edt.82.2019.09.02.04.38.36
+        by smtp.gmail.com with ESMTPSA id c1sm1938836ejm.85.2019.09.02.04.39.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 04:38:37 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 13:38:35 +0200
+        Mon, 02 Sep 2019 04:39:00 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 13:38:59 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Vidya Sagar <vidyas@nvidia.com>
 Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
@@ -54,16 +54,15 @@ Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
         devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3 2/6] dt-bindings: PCI: tegra: Add PCIe slot supplies
- regulator entries
-Message-ID: <20190902113835.GE19263@ulmo>
+Subject: Re: [PATCH V3 3/6] PCI: tegra: Add support to configure sideband pins
+Message-ID: <20190902113859.GF19263@ulmo>
 References: <20190828172850.19871-1-vidyas@nvidia.com>
- <20190828172850.19871-3-vidyas@nvidia.com>
+ <20190828172850.19871-4-vidyas@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6e7ZaeXHKrTJCxdu"
+        protocol="application/pgp-signature"; boundary="924gEkU1VlJlwnwX"
 Content-Disposition: inline
-In-Reply-To: <20190828172850.19871-3-vidyas@nvidia.com>
+In-Reply-To: <20190828172850.19871-4-vidyas@nvidia.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
@@ -71,47 +70,47 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---6e7ZaeXHKrTJCxdu
+--924gEkU1VlJlwnwX
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 28, 2019 at 10:58:46PM +0530, Vidya Sagar wrote:
-> Add optional bindings "vpcie3v3-supply" and "vpcie12v-supply" to describe
-> regulators of a PCIe slot's supplies 3.3V and 12V provided the platform
-> is designed to have regulator controlled slot supplies.
+On Wed, Aug 28, 2019 at 10:58:47PM +0530, Vidya Sagar wrote:
+> Add support to configure sideband signal pins when information is present
+> in respective controller's device-tree node.
 >=20
 > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
 > V3:
-> * None
+> * Used 'dev' instead of 'pcie->dev'
 >=20
 > V2:
-> * None
+> * Addressed review comment from Andrew Murray
+> * Handled failure case of pinctrl_pm_select_default_state() cleanly
 >=20
->  .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt      | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
 
 Acked-by: Thierry Reding <treding@nvidia.com>
 
---6e7ZaeXHKrTJCxdu
+--924gEkU1VlJlwnwX
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1s/zsACgkQ3SOs138+
-s6FOWA/+L0+vUUclgoY9YfwR5cI+nK0iPHLC/9XLC8xZsVkBaeLEZPWXWlem7QsU
-CpdhO7J9sCK8TEW1h8MVKzIhn88paNynYuOLRhjBVJM7hoGCsRNS2/laeeulEvy0
-bgf7qphguM9m/sXkCcoj/wHfEyNcTrl71ZyYybG5OGxKMgawwLhdAh9iqNEHRHZX
-iR1TfnjIZSANuXcQsEnfHNkFwozF+NDdv7gr11mJm0BrHBmT8XwSZm3xVdPPCXeT
-m7rNkB+jtW3jCuxdfXSeUP1qptQT/ZtOdJuN+NudSaJOnV9KZ8CwNRoqWvWH3BFa
-1NbR4A1FxlOPLZg9SK2ya8HJQ4xpqXmQBwoPTgDFyypCyouBIC9XK/zLBvhrEfkc
-SRWS0nufk/ciXkMAJspPFmFpafr1TuMKlgLfQEQDoiaFBWozVSu3csBsg3917ejc
-GimoR1APSzLYU0L85BLekUF+nth7RpGz+VY+eKMSfCUS18mcmUTjpiPw1klrbzex
-UFQFCbbf6Sua5Ct5U5nL/uZmZFxj960SQo2d9I/HYbRSuS91D6t7SJvOtyeR1eRz
-HVFc6AIBV1J64ogQ6oZsa73b1mvkY+vOuMaqdcEdUn2xrilg3x+LGCpj7Ph6drXU
-wFBgvboTaI8RRMp1yZNvsv4HIX62CYDf3fLPVpYxuPr3ipMy6yU=
-=3vWd
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1s/1MACgkQ3SOs138+
+s6GwEQ/8DQfqPImwI/sN8KkGlUTrymHeb5p1LcJjyObL3s5FzC1VNuPP6ztRPNMj
+XUJ3C0LOyCBrPharGw9CyUpDmhzkhQaMqVmCekuocA6xMEQmG3ggIHaEW3wPwGwt
+3evIIRgTAwoYT84m/q2cy/zOvLq8omwFGwuknOWcQCy6upDCKJt1hQAcnfg4+GQN
+E/iGl21g1hfsZUlyGd9NAYZ2F9ZWbKaymoV+LmKRnB2R6U+D0dJb30w5oLnC+Gp/
+2vtjAAa4c7re7ZG4j3/rzdOqzPjpJFa5KLHDV1I05lZi7rmyxmclmrhbrT0Fvwht
+8l8lkb9WWcvAdpCv4aVPEqp/ocDN40uIPhqIwzjpbRmc28Z8/6Nc26Ps7xzn9WX1
+yj7nQSQWkczWQPbNADrAlPCDpDBke/tzpNpjEX3IY7ltLvdCbV9p1LP3BU+aqCiV
+nKcZIG1DMv70fmQ5ZZ9ln0ylERYt4c/69nGXiowdUNfwZ7/zD8tEhsmU332JHEOP
+SGdAkxiz3K5m2MZ3DzyECyBcASTwZTWWzHsYmgqM2yFEOa1k1Ih7joY+nmd3xrAe
+DnvcfZKW8dug/2zwdraLt/Dkju2bczWXHLVLhJpISEh8he9H1jsuZho7u+2wacQJ
+2LZA7HIIANTX/M06bh+sbv6UG+WL7AImXDhDVpUqpuqmqDk3uaI=
+=eL6G
 -----END PGP SIGNATURE-----
 
---6e7ZaeXHKrTJCxdu--
+--924gEkU1VlJlwnwX--
