@@ -2,180 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AA73FA4DD7
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2019 05:50:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53B19A4DDA
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2019 05:52:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbfIBDur (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 1 Sep 2019 23:50:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57204 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729070AbfIBDur (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 1 Sep 2019 23:50:47 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E5FD58B8F2D;
-        Mon,  2 Sep 2019 03:50:46 +0000 (UTC)
-Received: from [10.72.12.232] (ovpn-12-232.pek2.redhat.com [10.72.12.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 82E4F1001947;
-        Mon,  2 Sep 2019 03:50:41 +0000 (UTC)
-Subject: Re: [PATCH] pci: endpoint: functions: Add a virtnet EP function
-To:     Haotian Wang <haotian.wang@sifive.com>, kishon@ti.com,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com
-Cc:     mst@redhat.com, linux-pci@vger.kernel.org, haotian.wang@duke.edu
-References: <f5e5dc8a-2e02-a675-8ab9-b2ab58640452@redhat.com>
- <20190830230621.8338-1-haotian.wang@sifive.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <c8ce8d58-4456-2829-23ce-579b9d941e24@redhat.com>
-Date:   Mon, 2 Sep 2019 11:50:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190830230621.8338-1-haotian.wang@sifive.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        id S1729292AbfIBDwf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 1 Sep 2019 23:52:35 -0400
+Received: from mail-eopbgr20082.outbound.protection.outlook.com ([40.107.2.82]:23719
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729070AbfIBDwf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 1 Sep 2019 23:52:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W3Zh6CW1cB/EsPsNnGIZj0nnCRHf/1G1Q0KaIHvTExPuGQG/E0cKnDpZow+7GL1FN6ni74dh35eKEHGtJA23A0Xg0e+kaVk+IPvD1m4YRKOb7WFMSRIzaifa+HI54dFrjjy3zNMMqlS2JEf6AfZLxvDWmhGigkIRYJhjJnePIPB0ntHg8LZ5g2yYPaL2i4a/JnRmVvM/1b1nw2YVHmShKOV4Wn6u2Bbudd5fiQpTeg75pHif7gpM80o9qZPAODQczukKix7rlAumCF0+jzXqL7xKPBufGmX8/ZrlC4K1leMNXfKJCNKHl43ckJrd3mF3uoBWMCTarUaiZRv1Duyrhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iViaOJ/PuDhTV/SE7IuSMs1P/h0mpfYWWvDRLPrpPGM=;
+ b=NbDE4EpnaFwqa8i46C4YkOy8moG83W6EmqIjMyLxJSt6sxj9fH+mBMDXlSlXklOE/0WdVvqccWEoREr5ys8Zhn8DpcmjhWT4JMqrSTSa/eB1O/NqZoEHsBAKs2GRa7X4JloPzklDT0diDKh7M7fZ6Ij0z9fRtMGhtcv48Xbm5ykEV/uXEwdkBow1Xp/NpfLLtsKDLkmb39oC+g44BM5RaBlxe8ZryVmsAkddXMeeZd6zJnYBr5RHXgStkpZ2KR2A4b8WSJGjakFTYiI2QYoGlBhjuZxKW2RHPRzrIStT+KqwtqUY+5mcXlUzVluYlUsQIBM7Sc9k32gnYuIhGnjbYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iViaOJ/PuDhTV/SE7IuSMs1P/h0mpfYWWvDRLPrpPGM=;
+ b=jy6E6K/SeadzevkmE4OxyHQ05m2U9MAxu8SKe75NuKfO0uKHDtFUAHrfmghny++pyvKfTUz2VoZkOp2h64aFjGwQgHQzNJriwwp4GocsPl1uTV/0XMic346YPH8lxZnnBBH2MN88iivYYtnKTfjgFiHEDJ8tIByxU8NsOR9nhuY=
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
+ DB8PR04MB6858.eurprd04.prod.outlook.com (52.133.240.214) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.20; Mon, 2 Sep 2019 03:52:29 +0000
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::c563:1a9b:3c7e:95bb]) by DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::c563:1a9b:3c7e:95bb%3]) with mapi id 15.20.2220.021; Mon, 2 Sep 2019
+ 03:52:29 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+CC:     "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCH v3 00/11] *** SUBJECT HERE ***
+Thread-Topic: [PATCH v3 00/11] *** SUBJECT HERE ***
+Thread-Index: AQHVYT5exBCgPRKHQk6IMqnS6lDTvacXwNDg
+Date:   Mon, 2 Sep 2019 03:52:28 +0000
+Message-ID: <DB8PR04MB6747A1DAD5A83F686C987C6A84BE0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
+In-Reply-To: <20190902031716.43195-1-xiaowei.bao@nxp.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Mon, 02 Sep 2019 03:50:47 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4336d212-aab1-4054-eb49-08d72f58f9dc
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB6858;
+x-ms-traffictypediagnostic: DB8PR04MB6858:|DB8PR04MB6858:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB6858ABE5251CF91900332EEB84BE0@DB8PR04MB6858.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 01480965DA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(13464003)(189003)(199004)(9686003)(99286004)(316002)(53936002)(2906002)(26005)(6116002)(186003)(3846002)(55016002)(14454004)(74316002)(6246003)(6506007)(66066001)(53546011)(102836004)(7696005)(54906003)(478600001)(6436002)(110136005)(76176011)(256004)(33656002)(71200400001)(2201001)(86362001)(2501003)(229853002)(305945005)(7736002)(25786009)(64756008)(7416002)(52536014)(486006)(476003)(5660300002)(66446008)(446003)(11346002)(66556008)(4326008)(8936002)(66476007)(66946007)(76116006)(71190400001)(8676002)(81166006)(81156014)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6858;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: akBovAFl5Sj7wVcHtGFnk41OivYJQAc6Ty5HOxZJwZ3anoOEPhK0N2273CsD9XLFxROOCuCI7vzNpvs8O+rH4xqpUjBHyMSlwQrrI61tcb+bl09dQvkHDetXPPRqcYNSOTDxcFb1G5G4ggbn5k49RAm4aat2XyJRq7OQ7r+HbwRDNO9C1SQg2nKFe/YeaGoboo9AFd+e3ENlsrwNrQPj3sXVSndnEhDmwmvYQOHNXVZLrnaFhFrHtGjUH26Oisx+98wTUDWoR32z1cSJtNKasizVgvYMesl83bawF1b6ND8qfDS/bFbMVjxTXok5nCsePjQFfEW6eYFBYwJ1pGfnqybWhScxVmGSJz5c9CD11xDBkYFyGn0TtbCB9TwbnlsdW5Kp/i5F/DKV2mlYUAV4aIhzCWg7f8vtlv1oHeCXJOo=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4336d212-aab1-4054-eb49-08d72f58f9dc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2019 03:52:29.0048
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: upsQ7OYhz4X/pfk0mylZdf9Fx5R8yCD1LwzYA59CTvPrfeWskMISwSrIhxbmQ2ssJpSvwqDRy1MCmFf8cMHWgg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6858
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-On 2019/8/31 上午7:06, Haotian Wang wrote:
-> Hi Jason,
->
-> Thank you for your reply.
->
-> On Fri, Aug 30, 2019 at 2:12 AM Jason Wang <jasowang@redhat.com> wrote:
->> - Is there a doc for this endpoint device?
-> The doc for the board is
-> https://www.xilinx.com/support/documentation/boards_and_kits/vcu118/ug1224-vcu118-eval-bd.pdf,
-> but this is not all that useful.
-
-
-Yes it is.
-
-
->   The more important information is
-> actually in the endpoint controller source code,
-> drivers/pci/controller/dwc/pcie-designware-ep.c and
-> drivers/pci/controller/dwc/pcie-designware-ep.h.
->
->> - You refer virtio specification in the above, does it mean your device
->> is fully compatible with virtio (or only datapath is compatible?)
-> I discussed this issue with Kishon in the previous emails a lot.
-> Theoretically this should be compatible with all virtio devices, but
-> right now the code is closely coupled with virtio_net only.
-
-
-We probably want a generic solution like virtio transport instead of a 
-device specific one.
-
-
-> The reason
-> is that this endpoint function does not use the intended datapath of
-> virtio. I will explain in the answer to the next question.
->
->> - What's the reason for introducing kthreads for some kinds of
->> translation or copying of descriptor?
-> So there is a virtio_device A on the endpoint, there is another
-> virtio_device B on the endpoint that acts as a virtio_net device for the
-> PCI host. Then I copied data from the tx virtqueue of B to rx virtqueue
-> of A, and vice versa, directly.
-
-
-If my understanding is correct. You only want device B to be visible as 
-a virtio device for Linux?
-
-Another note, it looks to me that CAIF virtio is something similar but 
-the only differences are:
-
-1) rx virtqueue are flipped, which means it use virtio queue for TX and 
-vringh queue for RX
-2) accessors
-
-As you said, if the copying is done by software, can use manage to use 
-method 1 as CAIF virtio then we can try to use vringh code by simply 
-introducing new accessor (epf based)?
-
-
-> The PCI endpoint can interrupt the host
-> but the host cannot interrupt the endpoint. Therefore, the endpoint has
-> two dedicated kthreads that constantly poll for notifications and data
-> changes that happen on the host side, one for tx and one for rx.
-> Therefore, there is really no "vhost" involved. Data is transferred
-> between two virtio_devices directly.
-
-
-Right.
-
-
->
-> The descriptors are not copied. The data indicated by the physical
-> addresses in those descriptors are copied using pci endpoint framework
-> API.
->
-> The problem is that this only works for virtio_net with the split
-> virtio_ring configuration.
-
-
-I think do need to think of a way of using vringh, then we can try to 
-implement packed ring layout there.
-
-
->
->> - Is it possible to reuse e.g vringh (by introducing new accesor) and
->> virtio core codes?
-> Two structures are used that are not in source files. One is struct
-> vring_virtqueue and the other is struct virtnet_info.
-
-
-Note that, vringh allows different type of accessor. If the only 
-difference is the way to access the vring, it should work.
-
-
->
-> After some thought, I can reduce the use of vring_virtqueue to be only
-> in the function
->
-> static void epf_virtio_interrupt(struct vring *, struct device *)
->
-> This function emulates the following function in virtio_ring.c
->
-> irqreturn_t vring_interruptp(int irq, void *_vq)
->
-> The motivation is that for the local virtio_device A, it does not need
-> to use interrupt at all. When the a kthread got something from the
-> PCI host and placed data in the rx queue of A, that same kthread could
-> call the callback function associated with the rx queue directly.
->
-> Specifically I need to access the fields "last_used_idx" and "broken" of
-> vring_virtqueue somehow.
->
-> virtnet_info can be solved more easily. For a virtio_net device.
-> ((struct virtnet_info *)virtio_device->priv)->dev is the struct
-> net_device created together with the virtio_device. I just need a
-> pointer to that struct net_device after all.
-
-
-I'm still not clear why we need to expose virtnet_info. Usually, we just 
-need to set vendor id and device id and call register_virtio_device().
-
-
->
->> Btw, I'm going to post mdev transport for virtio (with a sample of
->> vringh loopback device). Technically, this can go through mdev bus as well.
-> I am not that familiar with mdev, but will read up on it. Thank you for
-> the info.
-
-
-Will cc you.
-
-Thanks
-
-
->
-> Best,
-> Haotian
+WGlhb3dlaSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBYaWFvd2Vp
+IEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gU2VudDogMjAxOcTqOdTCMsjVIDExOjE3DQo+
+IFRvOiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1b0Br
+ZXJuZWwub3JnOw0KPiBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IGtpc2hvbkB0aS5jb207
+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207DQo+IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBu
+eHAuY29tPjsgTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsNCj4gUm95IFphbmcgPHJv
+eS56YW5nQG54cC5jb20+OyBqaW5nb29oYW4xQGdtYWlsLmNvbTsNCj4gZ3VzdGF2by5waW1lbnRl
+bEBzeW5vcHN5cy5jb207IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVA
+dmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMu
+b3JnDQo+IENjOiBhcm5kQGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgWi5x
+LiBIb3UNCj4gPHpoaXFpYW5nLmhvdUBueHAuY29tPjsgWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFv
+QG54cC5jb20+DQo+IFN1YmplY3Q6IFtQQVRDSCB2MyAwMC8xMV0gKioqIFNVQkpFQ1QgSEVSRSAq
+KioNCj4gDQo+ICoqKiBCTFVSQiBIRVJFICoqKg0KDQpBZGQgc3ViamVjdCBhbmQgYmx1cmIgZm9y
+IHRoaXMgc2VyaWVzLg0KDQpUaGFua3MsDQpaaGlxaWFuZw0KDQo+IA0KPiBYaWFvd2VpIEJhbyAo
+MTEpOg0KPiAgIFBDSTogZGVzaWdud2FyZS1lcDogQWRkIG11bHRpcGxlIFBGcyBzdXBwb3J0IGZv
+ciBEV0MNCj4gICBQQ0k6IGRlc2lnbndhcmUtZXA6IEFkZCB0aGUgZG9vcmJlbGwgbW9kZSBvZiBN
+U0ktWCBpbiBFUCBtb2RlDQo+ICAgUENJOiBkZXNpZ253YXJlLWVwOiBNb3ZlIHRoZSBmdW5jdGlv
+biBvZiBnZXR0aW5nIE1TSSBjYXBhYmlsaXR5DQo+ICAgICBmb3J3YXJkDQo+ICAgUENJOiBkZXNp
+Z253YXJlLWVwOiBNb2RpZnkgTVNJIGFuZCBNU0lYIENBUCB3YXkgb2YgZmluZGluZw0KPiAgIGR0
+LWJpbmRpbmdzOiBwY2k6IGxheWVyc2NhcGUtcGNpOiBhZGQgY29tcGF0aWJsZSBzdHJpbmdzIGZv
+ciBsczEwODhhDQo+ICAgICBhbmQgbHMyMDg4YQ0KPiAgIFBDSTogbGF5ZXJzY2FwZTogRml4IHNv
+bWUgZm9ybWF0IGlzc3VlIG9mIHRoZSBjb2RlDQo+ICAgUENJOiBsYXllcnNjYXBlOiBNb2RpZnkg
+dGhlIHdheSBvZiBnZXR0aW5nIGNhcGFiaWxpdHkgd2l0aCBkaWZmZXJlbnQNCj4gICAgIFBFWA0K
+PiAgIFBDSTogbGF5ZXJzY2FwZTogTW9kaWZ5IHRoZSBNU0lYIHRvIHRoZSBkb29yYmVsbCBtb2Rl
+DQo+ICAgUENJOiBsYXllcnNjYXBlOiBBZGQgRVAgbW9kZSBzdXBwb3J0IGZvciBsczEwODhhIGFu
+ZCBsczIwODhhDQo+ICAgYXJtNjQ6IGR0czogbGF5ZXJzY2FwZTogQWRkIFBDSWUgRVAgbm9kZSBm
+b3IgbHMxMDg4YQ0KPiAgIG1pc2M6IHBjaV9lbmRwb2ludF90ZXN0OiBBZGQgTFMxMDg4YSBpbiBw
+Y2lfZGV2aWNlX2lkIHRhYmxlDQo+IA0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xh
+eWVyc2NhcGUtcGNpLnR4dCAgICAgfCAgIDQgKy0NCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
+ZXNjYWxlL2ZzbC1sczEwODhhLmR0c2kgICAgIHwgIDMxICsrKw0KPiAgZHJpdmVycy9taXNjL3Bj
+aV9lbmRwb2ludF90ZXN0LmMgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KPiAgZHJpdmVycy9w
+Y2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYyAgICAgfCAxMDAgKysrKysrLS0N
+Cj4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1lcC5jICAgIHwg
+MjU1DQo+ICsrKysrKysrKysrKysrKysrLS0tLQ0KPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9k
+d2MvcGNpZS1kZXNpZ253YXJlLmMgICAgICAgfCAgNTkgKysrLS0NCj4gIGRyaXZlcnMvcGNpL2Nv
+bnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS5oICAgICAgIHwgIDQ4ICsrKy0NCj4gIDcgZmls
+ZXMgY2hhbmdlZCwgNDA0IGluc2VydGlvbnMoKyksIDk0IGRlbGV0aW9ucygtKQ0KPiANCj4gLS0N
+Cj4gMi45LjUNCg0K
