@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C868A4DE1
+	by mail.lfdr.de (Postfix) with ESMTP id 767FAA4DE2
 	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2019 05:53:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbfIBDxg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 1 Sep 2019 23:53:36 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:38262 "EHLO inva021.nxp.com"
+        id S1729423AbfIBDxj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 1 Sep 2019 23:53:39 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:38314 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729283AbfIBDxf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 1 Sep 2019 23:53:35 -0400
+        id S1729283AbfIBDxj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 1 Sep 2019 23:53:39 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7AF7F20011C;
-        Mon,  2 Sep 2019 05:53:34 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3434F200672;
+        Mon,  2 Sep 2019 05:53:36 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 85FB8200679;
-        Mon,  2 Sep 2019 05:53:27 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 063FA2004AA;
+        Mon,  2 Sep 2019 05:53:29 +0200 (CEST)
 Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id BCE2F402B7;
-        Mon,  2 Sep 2019 11:53:18 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 488CB402BE;
+        Mon,  2 Sep 2019 11:53:20 +0800 (SGT)
 From:   Xiaowei Bao <xiaowei.bao@nxp.com>
 To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         leoyang.li@nxp.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
@@ -29,48 +29,100 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         linuxppc-dev@lists.ozlabs.org
 Cc:     bhelgaas@google.com, Xiaowei Bao <xiaowei.bao@nxp.com>,
         Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCH v6 1/3] dt-bindings: pci: layerscape-pci: add compatible strings "fsl,ls1028a-pcie"
-Date:   Mon,  2 Sep 2019 11:43:17 +0800
-Message-Id: <20190902034319.14026-1-xiaowei.bao@nxp.com>
+Subject: [PATCH v6 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
+Date:   Mon,  2 Sep 2019 11:43:18 +0800
+Message-Id: <20190902034319.14026-2-xiaowei.bao@nxp.com>
 X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20190902034319.14026-1-xiaowei.bao@nxp.com>
+References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add the PCIe compatible string for LS1028A
+LS1028a implements 2 PCIe 3.0 controllers.
 
 Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 v2:
- - No change.
+ - Fix up the legacy INTx allocate failed issue.
 v3:
  - No change.
 v4:
- - No change.
+ - Remove the num-lanes property.
 v5:
- - No change.
+ - Add the num-viewport property.
 v6:
- - No change.
+ - move num-viewport to 8.
 
- Documentation/devicetree/bindings/pci/layerscape-pci.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 52 ++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-index e20ceaa..99a386e 100644
---- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-@@ -21,6 +21,7 @@ Required properties:
-         "fsl,ls1046a-pcie"
-         "fsl,ls1043a-pcie"
-         "fsl,ls1012a-pcie"
-+        "fsl,ls1028a-pcie"
-   EP mode:
- 	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
- - reg: base addresses and lengths of the PCIe controller register blocks.
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 72b9a75..c043b1d 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -625,6 +625,58 @@
+ 			};
+ 		};
+ 
++		pcie@3400000 {
++			compatible = "fsl,ls1028a-pcie";
++			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
++			       0x80 0x00000000 0x0 0x00002000>; /* configuration space */
++			reg-names = "regs", "config";
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
++			interrupt-names = "pme", "aer";
++			#address-cells = <3>;
++			#size-cells = <2>;
++			device_type = "pci";
++			dma-coherent;
++			num-viewport = <8>;
++			bus-range = <0x0 0xff>;
++			ranges = <0x81000000 0x0 0x00000000 0x80 0x00010000 0x0 0x00010000   /* downstream I/O */
++				  0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
++			msi-parent = <&its>;
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 7>;
++			interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
++		pcie@3500000 {
++			compatible = "fsl,ls1028a-pcie";
++			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
++			       0x88 0x00000000 0x0 0x00002000>; /* configuration space */
++			reg-names = "regs", "config";
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "pme", "aer";
++			#address-cells = <3>;
++			#size-cells = <2>;
++			device_type = "pci";
++			dma-coherent;
++			num-viewport = <8>;
++			bus-range = <0x0 0xff>;
++			ranges = <0x81000000 0x0 0x00000000 0x88 0x00010000 0x0 0x00010000   /* downstream I/O */
++				  0x82000000 0x0 0x40000000 0x88 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
++			msi-parent = <&its>;
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 7>;
++			interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
+ 		pcie@1f0000000 { /* Integrated Endpoint Root Complex */
+ 			compatible = "pci-host-ecam-generic";
+ 			reg = <0x01 0xf0000000 0x0 0x100000>;
 -- 
 2.9.5
 
