@@ -2,94 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 251C3A547A
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2019 12:55:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E580A5506
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2019 13:38:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730785AbfIBKzj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Sep 2019 06:55:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:52180 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726273AbfIBKzj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 2 Sep 2019 06:55:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98C8428;
-        Mon,  2 Sep 2019 03:55:38 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1124E3F246;
-        Mon,  2 Sep 2019 03:55:37 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 11:55:36 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Yue Wang <yue.wang@Amlogic.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Hilman <khilman@baylibre.com>, linux-pci@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH] PCI: amlogic: Fix reset assertion via gpio descriptor
-Message-ID: <20190902105536.GG9720@e119886-lin.cambridge.arm.com>
-References: <20190901133915.12899-1-repk@triplefau.lt>
+        id S1730442AbfIBLiX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Sep 2019 07:38:23 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34478 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfIBLiX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Sep 2019 07:38:23 -0400
+Received: by mail-ed1-f68.google.com with SMTP id s49so15393637edb.1;
+        Mon, 02 Sep 2019 04:38:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Bs2n5sOSnZKXzoAXps0daq+vWvxl2WJKs7rvutsTT4E=;
+        b=XPNxsY5QH534cp64SXtvHluzlrL1NvvCKvuVIAkTY6t8H60YdWLXoxqa2sQ9+p2g9k
+         xohNmogX3ie67YGH8xuBCV+Hqzmc7IWBYM+OHATG2/QOXCgUkJhk3fzFitBDRVfbVl8L
+         VpZqMq2juawGFW8NMF8oWxsmbq7pjO39exiaUGddPAUghztghhwmRu1LrSlApHR0yn4S
+         OSmbrQMrA4XfoccFDI1BcOsStlqfjB2uTuVwQUIPpl6GJGr1soNlKLeGiZWdmOyjJZum
+         4Ik2TaQFCGNPyB0gVWxonj5gWuISSkbMgOigGQXByeSrtfF9y2AIWzgjLpcey7W7IH4O
+         Kh1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Bs2n5sOSnZKXzoAXps0daq+vWvxl2WJKs7rvutsTT4E=;
+        b=rsjV20WxKnxjONS+SD6IjtCjVVMBXRIIioUtPXyozuxiJXo/dBOlL7iDbAlWH+tD+o
+         3TLOaY/a+Pn07dl0qMEuNlR410Y04SX8U8Nn7+gnZeLbwbJh5WcLbllkbCPYAs9XQ5sJ
+         eqRviMumNgo9zJJhgL2TJhDdae8UO7f187D1N/2V+x9++0A4Coi38d49jUY9Ni2/Yuax
+         B/3n4i99IkxbvFgeWvUNkRl6SyHwTT1kEVZbcsYDywsbNBBp1M7hgWGunZK+0KJmgpVh
+         xtA6BqNQo6EAqjGsjwKKaDiQsHApuVII/uMasqiWGLmZNHBlo7ZpZWpSVc7b/tBXiiJz
+         o1pg==
+X-Gm-Message-State: APjAAAUoi+F0IAY5JV1AKuwHR4fS8IJRejASgozt8kpjkne/nVStDCRO
+        DZ2apMvsiJ0AHIn1dZ5ryJ0=
+X-Google-Smtp-Source: APXvYqxmE3s5EZUgIaOzgPLsOpwCF4lBTKm7zDmoM9dVth1ZO/tiUVK+qNUIJarcOaz9ECE9IhEs3Q==
+X-Received: by 2002:a17:906:c59:: with SMTP id t25mr23680384ejf.206.1567424300787;
+        Mon, 02 Sep 2019 04:38:20 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id r10sm2846825edp.25.2019.09.02.04.38.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 04:38:19 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 13:38:18 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V3 1/6] dt-bindings: PCI: tegra: Add sideband pins
+ configuration entries
+Message-ID: <20190902113818.GD19263@ulmo>
+References: <20190828172850.19871-1-vidyas@nvidia.com>
+ <20190828172850.19871-2-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="LTeJQqWS0MN7I/qa"
 Content-Disposition: inline
-In-Reply-To: <20190901133915.12899-1-repk@triplefau.lt>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20190828172850.19871-2-vidyas@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Sep 01, 2019 at 03:39:15PM +0200, Remi Pommarel wrote:
-> Normally asserting reset signal on gpio would be achieved with:
-> 	gpiod_set_value_cansleep(reset_gpio, 1);
-> 
-> Meson PCI driver set reset value to '0' instead of '1' as it takes into
-> account the PERST# signal polarity. The polarity should be taken care
-> in the device tree instead.
-> 
-> This fixes the reset assertion meaning and moves out the polarity
-> configuration in DT (please note that there is no DT currently using
-> this driver).
 
-The device tree bindings for this give an example configuration:
+--LTeJQqWS0MN7I/qa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-        pcie: pcie@f9800000 {
-                        compatible = "amlogic,axg-pcie", "snps,dw-pcie";
-                        reg = <0x0 0xf9800000 0x0 0x400000
-                                        0x0 0xff646000 0x0 0x2000
-                                        0x0 0xff644000 0x0 0x2000
-                                        0x0 0xf9f00000 0x0 0x100000>;
-                        reg-names = "elbi", "cfg", "phy", "config";
-                        reset-gpios = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
-
-Is the 'reset-gpios' line still consistent with this change, or does
-this need to be updated as well?
-
-Thanks,
-
-Andrew Murray
-
-> 
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+On Wed, Aug 28, 2019 at 10:58:45PM +0530, Vidya Sagar wrote:
+> Add optional bindings "pinctrl-names" and "pinctrl-0" to describe pin
+> configuration information of a particular PCIe controller.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
->  drivers/pci/controller/dwc/pci-meson.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-> index e35e9eaa50ee..541f37a6f6a5 100644
-> --- a/drivers/pci/controller/dwc/pci-meson.c
-> +++ b/drivers/pci/controller/dwc/pci-meson.c
-> @@ -287,9 +287,9 @@ static inline void meson_cfg_writel(struct meson_pcie *mp, u32 val, u32 reg)
->  
->  static void meson_pcie_assert_reset(struct meson_pcie *mp)
->  {
-> -	gpiod_set_value_cansleep(mp->reset_gpio, 0);
-> -	udelay(500);
->  	gpiod_set_value_cansleep(mp->reset_gpio, 1);
-> +	udelay(500);
-> +	gpiod_set_value_cansleep(mp->reset_gpio, 0);
->  }
->  
->  static void meson_pcie_init_dw(struct meson_pcie *mp)
-> -- 
-> 2.20.1
-> 
+> V3:
+> * None
+>=20
+> V2:
+> * None
+>=20
+>  .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt      | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--LTeJQqWS0MN7I/qa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1s/ycACgkQ3SOs138+
+s6FLlQ//RFadCCy0+ywuyNwstWFl2JPShvqLv7sExZxKzKf4dNbyo0pVeTDUFWDX
+Xs25hc51nQ3J6PSG/U8KFvEhhZjYizZNXlCr0kdFrsaM+NAOejcC2BQ+cArIDb2w
+Gq3FBww/kgr1UCbfiDIThGlBgwalXABkZ32vk7pu9TKbDpMZLWyCHPEms6fFwo1g
+RhSLQJlMkf7fm4sp1ZFUvzvUjm5lEkqqQreRAfMO7NgVKwziBsrpc2wkNNwHqj9w
+XjeQ0hP2pSwKeB6IHGA4JFioQlb1eYhG8dqTAQem7qV0uOV9n2oIE86GgjiBXqea
+F3LiggKv47SQFBbyx/0TofZW3UVHWgtPlbZm5dIb/qPreNBX4/CKyAIZhn2Nt073
+pj4IZdllTRlPGchj0eW9a6W4PKOz/q/ZksK1kWjbw3yd9oKI7gpePqOoed416ALO
+5sVkOi1siz7sIyj/VowG7rRfPC/QqRtoVGVEYHtrdox2cPqjvXb30uCp8hqB9PZ0
+gXBVi/b0kWfAzl1S5Bwuh2WcXSkNEaUtSC4mnNLsbgiSA3P4qszsb9g4GZwrVN5T
+TlrWTAk7Hsm8AefUMM1SxseUH/VrkHnWDBEuN/K9t620vz8lyWCLcyAj+UdAWzUZ
+IXXXM7Jy2zYyR319UK74mkMxGokz1Pue5oJLciykKIyy+g9cDMQ=
+=eTUT
+-----END PGP SIGNATURE-----
+
+--LTeJQqWS0MN7I/qa--
