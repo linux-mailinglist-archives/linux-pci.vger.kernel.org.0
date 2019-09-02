@@ -2,75 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 82709A5972
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2019 16:34:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92993A59D3
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2019 16:53:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730846AbfIBOeD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Sep 2019 10:34:03 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:53611 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbfIBOeD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Sep 2019 10:34:03 -0400
-X-Originating-IP: 88.190.179.123
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id E5B0B1BF20E;
-        Mon,  2 Sep 2019 14:34:00 +0000 (UTC)
-Date:   Mon, 2 Sep 2019 16:43:07 +0200
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Yue Wang <yue.wang@amlogic.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Hilman <khilman@baylibre.com>, linux-pci@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH] PCI: amlogic: Fix reset assertion via gpio descriptor
-Message-ID: <20190902144306.GA1011@voidbox.localdomain>
-References: <20190901133915.12899-1-repk@triplefau.lt>
- <20190902105536.GG9720@e119886-lin.cambridge.arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902105536.GG9720@e119886-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1731011AbfIBOxA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Sep 2019 10:53:00 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41506 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731741AbfIBOxA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Sep 2019 10:53:00 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1i4nhR-0007wC-T9; Mon, 02 Sep 2019 14:52:58 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] x86/PCI: Remove D0 PME capability on AMD FCH xHCI
+Date:   Mon,  2 Sep 2019 22:52:52 +0800
+Message-Id: <20190902145252.32111-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:55:36AM +0100, Andrew Murray wrote:
-> On Sun, Sep 01, 2019 at 03:39:15PM +0200, Remi Pommarel wrote:
-> > Normally asserting reset signal on gpio would be achieved with:
-> > 	gpiod_set_value_cansleep(reset_gpio, 1);
-> > 
-> > Meson PCI driver set reset value to '0' instead of '1' as it takes into
-> > account the PERST# signal polarity. The polarity should be taken care
-> > in the device tree instead.
-> > 
-> > This fixes the reset assertion meaning and moves out the polarity
-> > configuration in DT (please note that there is no DT currently using
-> > this driver).
-> 
-> The device tree bindings for this give an example configuration:
-> 
->         pcie: pcie@f9800000 {
->                         compatible = "amlogic,axg-pcie", "snps,dw-pcie";
->                         reg = <0x0 0xf9800000 0x0 0x400000
->                                         0x0 0xff646000 0x0 0x2000
->                                         0x0 0xff644000 0x0 0x2000
->                                         0x0 0xf9f00000 0x0 0x100000>;
->                         reg-names = "elbi", "cfg", "phy", "config";
->                         reset-gpios = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
-> 
-> Is the 'reset-gpios' line still consistent with this change, or does
-> this need to be updated as well?
+There's an xHCI device that doesn't wake when a USB 2.0 device gets
+plugged to its USB 3.0 port. The driver's own runtime suspend callback
+was called, PME# signaling was enabled, but it stays at PCI D0:
 
-Good catch, the polarity of the reset gpio will more likely be
-GPIO_ACTIVE_LOW.
+00:10.0 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller [1022:7914] (rev 20) (prog-if 30 [XHCI])
+        Subsystem: Dell FCH USB XHCI Controller [1028:087e]
+        Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Interrupt: pin A routed to IRQ 18
+        Region 0: Memory at f0b68000 (64-bit, non-prefetchable) [size=8K]
+        Capabilities: [50] Power Management version 3
+                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+                Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
 
-Do you want a separate patch for that or can I just include it in v2 ?
+A PCI device can be runtime suspended while still stays at D0 when it
+supports D0 PME# and its ACPI _S0W method reports D0. Though plugging
+USB 3.0 devices can wakeup the xHCI, it doesn't respond to USB 2.0
+devices.
 
-Thanks.
+So let's disable D0 PME capability on this device to avoid the issue.
 
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203673
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ arch/x86/pci/fixup.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+index 527e69b12002..0851a05d092f 100644
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -588,6 +588,17 @@ static void pci_fixup_amd_ehci_pme(struct pci_dev *dev)
+ }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x7808, pci_fixup_amd_ehci_pme);
+ 
++/*
++ * Device [1022:7914]
++ * D0 PME# doesn't get asserted when plugging USB 2.0 device.
++ */
++static void pci_fixup_amd_fch_xhci_pme(struct pci_dev *dev)
++{
++	dev_info(&dev->dev, "PME# does not work under D0, disabling it\n");
++	dev->pme_support &= ~(PCI_PM_CAP_PME_D0 >> PCI_PM_CAP_PME_SHIFT);
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x7914, pci_fixup_amd_fch_xhci_pme);
++
+ /*
+  * Apple MacBook Pro: Avoid [mem 0x7fa00000-0x7fbfffff]
+  *
 -- 
-Remi
+2.17.1
+
