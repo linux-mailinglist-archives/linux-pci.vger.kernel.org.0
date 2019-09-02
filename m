@@ -2,117 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A3179A544C
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2019 12:48:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D059A546B
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2019 12:51:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730900AbfIBKr7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Sep 2019 06:47:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:52000 "EHLO foss.arm.com"
+        id S1731365AbfIBKvA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Sep 2019 06:51:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:52090 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729806AbfIBKr7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 2 Sep 2019 06:47:59 -0400
+        id S1731347AbfIBKu7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 2 Sep 2019 06:50:59 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9561928;
-        Mon,  2 Sep 2019 03:47:58 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E7AF28;
+        Mon,  2 Sep 2019 03:50:59 -0700 (PDT)
 Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D76F03F246;
-        Mon,  2 Sep 2019 03:47:57 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 11:47:56 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9AA023F246;
+        Mon,  2 Sep 2019 03:50:58 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 11:50:56 +0100
 From:   Andrew Murray <andrew.murray@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3 6/6] arm64: tegra: Add PCIe slot supply information in
- p2972-0000 platform
-Message-ID: <20190902104756.GE9720@e119886-lin.cambridge.arm.com>
-References: <20190828172850.19871-1-vidyas@nvidia.com>
- <20190828172850.19871-7-vidyas@nvidia.com>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: aardvark: Don't rely on jiffies while holding
+ spinlock
+Message-ID: <20190902105056.GF9720@e119886-lin.cambridge.arm.com>
+References: <20190901142303.27815-1-repk@triplefau.lt>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190828172850.19871-7-vidyas@nvidia.com>
+In-Reply-To: <20190901142303.27815-1-repk@triplefau.lt>
 User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 10:58:50PM +0530, Vidya Sagar wrote:
-> Add 3.3V and 12V supplies regulators information of x16 PCIe slot in
-> p2972-0000 platform which is owned by C5 controller and also enable C5
-> controller.
+On Sun, Sep 01, 2019 at 04:23:03PM +0200, Remi Pommarel wrote:
+> advk_pcie_wait_pio() can be called while holding a spinlock (from
+> pci_bus_read_config_dword()), then depends on jiffies in order to
+> timeout while polling on PIO state registers. In the case the PIO
+> transaction failed, the timeout will never happen and will also cause
+> the cpu to stall.
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> This decrements a variable and wait instead of using jiffies.
+> 
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 
 Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
 > ---
-> V3:
-> * None
+>  drivers/pci/controller/pci-aardvark.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> V2:
-> * None
-> 
->  .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 24 +++++++++++++++++++
->  .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  4 +++-
->  2 files changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-> index 62e07e1197cc..4c38426a6969 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-> @@ -289,5 +289,29 @@
->  			gpio = <&gpio TEGRA194_MAIN_GPIO(A, 3) GPIO_ACTIVE_HIGH>;
->  			enable-active-high;
->  		};
-> +
-> +		vdd_3v3_pcie: regulator@2 {
-> +			compatible = "regulator-fixed";
-> +			reg = <2>;
-> +
-> +			regulator-name = "PEX_3V3";
-> +			regulator-min-microvolt = <3300000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			gpio = <&gpio TEGRA194_MAIN_GPIO(Z, 2) GPIO_ACTIVE_HIGH>;
-> +			regulator-boot-on;
-> +			enable-active-high;
-> +		};
-> +
-> +		vdd_12v_pcie: regulator@3 {
-> +			compatible = "regulator-fixed";
-> +			reg = <3>;
-> +
-> +			regulator-name = "VDD_12V";
-> +			regulator-min-microvolt = <1200000>;
-> +			regulator-max-microvolt = <1200000>;
-> +			gpio = <&gpio TEGRA194_MAIN_GPIO(A, 1) GPIO_ACTIVE_LOW>;
-> +			regulator-boot-on;
-> +			enable-active-low;
-> +		};
->  	};
->  };
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> index 23597d53c9c9..d47cd8c4dd24 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> @@ -93,9 +93,11 @@
->  	};
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index fc0fe4d4de49..1fa6d04ad7aa 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -175,7 +175,8 @@
+>  	(PCIE_CONF_BUS(bus) | PCIE_CONF_DEV(PCI_SLOT(devfn))	| \
+>  	 PCIE_CONF_FUNC(PCI_FUNC(devfn)) | PCIE_CONF_REG(where))
 >  
->  	pcie@141a0000 {
-> -		status = "disabled";
-> +		status = "okay";
+> -#define PIO_TIMEOUT_MS			1
+> +#define PIO_RETRY_CNT			10
+> +#define PIO_RETRY_DELAY			100 /* 100 us*/
 >  
->  		vddio-pex-ctl-supply = <&vdd_1v8ao>;
-> +		vpcie3v3-supply = <&vdd_3v3_pcie>;
-> +		vpcie12v-supply = <&vdd_12v_pcie>;
+>  #define LINK_WAIT_MAX_RETRIES		10
+>  #define LINK_WAIT_USLEEP_MIN		90000
+> @@ -383,17 +384,16 @@ static void advk_pcie_check_pio_status(struct advk_pcie *pcie)
+>  static int advk_pcie_wait_pio(struct advk_pcie *pcie)
+>  {
+>  	struct device *dev = &pcie->pdev->dev;
+> -	unsigned long timeout;
+> +	size_t i;
 >  
->  		phys = <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
->  		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
+> -	timeout = jiffies + msecs_to_jiffies(PIO_TIMEOUT_MS);
+> -
+> -	while (time_before(jiffies, timeout)) {
+> +	for (i = 0; i < PIO_RETRY_CNT; ++i) {
+>  		u32 start, isr;
+>  
+>  		start = advk_readl(pcie, PIO_START);
+>  		isr = advk_readl(pcie, PIO_ISR);
+>  		if (!start && isr)
+>  			return 0;
+> +		udelay(PIO_RETRY_DELAY);
+>  	}
+>  
+>  	dev_err(dev, "config read/write timed out\n");
 > -- 
-> 2.17.1
+> 2.20.1
 > 
