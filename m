@@ -2,78 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 82AEAA6F98
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2019 18:35:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EEE09A718D
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2019 19:20:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730714AbfICQde (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Sep 2019 12:33:34 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38984 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730823AbfICQdc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Sep 2019 12:33:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=E7M5OHCPCFGvSidMPlknkuDvFUT36qFbZFw1uswvZFM=; b=gXA92M+qRj1oJOmfHj6Hbgihwb
-        cXmqRb2s7gGx0C3dDRwlGKMVyI6YboNSetcl7skx30OYn1TxPXw1SYH1oVICQI+ywmWooxbiZ7GMF
-        QJg1x4zpoXkD7fjvz5f5bU9LLFTSO4JXBhcAt+N2PBRJBPrl76Ifgm7fAL5ZUIe8cfQ0el5gFkSqS
-        6hUqq3sLNdf68QBmQPzxIA1u1VMnfMiyGe9mCq8q/wPxumMAvikntDCAkUnnoku6Te9C4D1SdlDu9
-        ZA9J1RytDuqMtBsvyAbh0aQOBCUoe5358UC5SYyR9PqdJHoSR6tVDOGYCGzmS99eScsOwkm+2z9cO
-        HKkGg5rA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5BkJ-0003C9-U1; Tue, 03 Sep 2019 16:33:31 +0000
-Date:   Tue, 3 Sep 2019 09:33:31 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     =?utf-8?B?0JDQvdC00YDQtdC5INCb0LXQvtC90YfQuNC60L7Qsg==?= 
-        <andreil499@gmail.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Andrei Leonchikov <andreil499@gmail.com>
-Subject: Re: [PATCH 1/1] Fix ARI enabling for a NVME devices
-Message-ID: <20190903163331.GA32703@infradead.org>
-References: <20190903125315.10349-1-andreil499@gmail.com>
- <20190903131416.GA26756@infradead.org>
- <CA+kE0xQ+z4f8xQ=8oRVcTMC-VsU5dyqVUWxuDamTy59_HTYOeg@mail.gmail.com>
+        id S1729602AbfICRUP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Sep 2019 13:20:15 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33154 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728854AbfICRUP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Sep 2019 13:20:15 -0400
+Received: by mail-wr1-f68.google.com with SMTP id u16so18368221wrr.0;
+        Tue, 03 Sep 2019 10:20:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rar4+uC5q12KPtiyVYMv+PjJypYyOCyJrBGvZDXzi2k=;
+        b=GGmG9O3WqKE+O+cfhWFrCy4Zl9a1IwKnoMIcs4y4V6L/lpE7DKS9n4H85/cEHsqoM1
+         250VEhWOgfJO1QTyt4aFScWXLX4f0SEQ5bsBksj5FQ9UVAcxJgpsGgafXCBD+EA+Js9L
+         k6/zVpINrtxu9OkzNm80vdY2JVjLgyYGIc9XYIi4Jt1/gm3ugkTNz7KN4VxIpjFR/aHF
+         pgxJ3lGrQFeA7GSw1CQrl7LZ6ADUAVAW8oReDxGjSXdDkFHmFsy4eK5rwxBhbTYgO/Yx
+         Yh5oDTboYPV3zS0TGzgUGc3Z6z4VkRSuFB6IXYy8vb71YdUF6S+n1Cs7XzgP8oDbLW9e
+         O4OA==
+X-Gm-Message-State: APjAAAXkHB+Ae391EBWINSyF/v6ugdhqrRFPEMXes/o38oHFdgObkDcC
+        tD3YhqzpZjlelFWllKo9bA==
+X-Google-Smtp-Source: APXvYqyjkukxdrT5Es1J9haZ+DcUHsFn8ngRxdUl3OZDcQKy38QGzV98Fy3y/684yQ4P6QtkGLVBdA==
+X-Received: by 2002:adf:c613:: with SMTP id n19mr24481531wrg.109.1567531212863;
+        Tue, 03 Sep 2019 10:20:12 -0700 (PDT)
+Received: from localhost ([176.12.107.132])
+        by smtp.gmail.com with ESMTPSA id f10sm14511981wrm.31.2019.09.03.10.20.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 10:20:12 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 18:20:10 +0100
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Wilczynski <kw@linux.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Remove unused includes and superfluous struct
+ declaration
+Message-ID: <20190903172010.GA26505@bogus>
+References: <20190901112506.8469-1-kw@linux.com>
+ <20190903113059.2901-1-kw@linux.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+kE0xQ+z4f8xQ=8oRVcTMC-VsU5dyqVUWxuDamTy59_HTYOeg@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190903113059.2901-1-kw@linux.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[adding back the Cc list]
+On Tue, Sep 03, 2019 at 01:30:59PM +0200, Krzysztof Wilczynski wrote:
+> Remove <linux/pci.h> and <linux/msi.h> from being included
+> directly as part of the include/linux/of_pci.h, and remove
+> superfluous declaration of struct of_phandle_args.
+> 
+> Move users of include <linux/of_pci.h> to include <linux/pci.h>
+> and <linux/msi.h> directly rather than rely on both being
+> included transitively through <linux/of_pci.h>.
+> 
+> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+> ---
+>  drivers/iommu/of_iommu.c                          | 2 ++
+>  drivers/irqchip/irq-gic-v2m.c                     | 1 +
+>  drivers/irqchip/irq-gic-v3-its-pci-msi.c          | 1 +
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 1 +
+>  drivers/pci/controller/pci-aardvark.c             | 1 +
+>  drivers/pci/controller/pci-thunder-pem.c          | 1 +
+>  drivers/pci/pci.c                                 | 1 +
+>  drivers/pci/probe.c                               | 1 +
+>  include/linux/of_pci.h                            | 5 ++---
+>  9 files changed, 11 insertions(+), 3 deletions(-)
 
-On Tue, Sep 03, 2019 at 07:24:15PM +0300, Андрей Леончиков wrote:
-> All drives has ARI capability, but everywhere the PCI_EXP_DEVCAP2_ARI
-> in the DEVCAP2 register is reset (see NVMe specification, bit 5).
-> At the same time, when the device is initialized, the DEVSAP register is
-> requested and this bit is checked. And if it is reset, ARI will never turn
-> on.
-> Because of this, it will be impossible to correctly initialize more than 8
-> functions per interface (1 physical and 7 virtual).
-> At the moment we are developing a disk, one of the requirements for
-> which is the correct operation of up to 128 virtual functions on one
-> interface.
-> During testing of this device, this behavior was noticed.
-
-Looking at the PCIe spec this bit actually means "ARI forwarding
-supported" and isn't the actual ARI support.  And the PCIe spec says
-about that:
-
-"Applicable only to Switch
-Downstream Ports and Root Ports; must be 0b for other
-Function types. This bit must be set to 1b if a Switch
-Downstream Port or Root Port supports this optional capability.
-See Section 6.13 for additional details."
-
-So I don't see how we'd ever see this bit set on an actual NVMe device.
-
-And yes, the name for our define is a little misnamed.
+Reviewed-by: Rob Herring <robh@kernel.org>
