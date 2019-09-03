@@ -2,72 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 85CBCA62E5
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2019 09:43:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E7C6A63C2
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2019 10:23:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbfICHnQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Sep 2019 03:43:16 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38794 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbfICHnP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Sep 2019 03:43:15 -0400
-Received: by mail-oi1-f194.google.com with SMTP id 7so3865308oip.5;
-        Tue, 03 Sep 2019 00:43:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VtrJTlz/934AIhYmM6InHRxgMo7S9QIWe6BX+HcGZbw=;
-        b=mOf7E/Gtv0PQauwWsgsc3CGIUORrbSaTXj4DrXHjWFsbyKREJMBydxcDqosNPeHO/k
-         qAznXsb7W91+0Nw8GH9stD+GNrlF7zwsSLCUoPTGp1XPcOhX/u5sRnFhEWaYt/wCozxj
-         C8AG+idRqY7TlHY5AGdW6etUcUWMyUcCeKjW8clgxV6I3vIh8SDIfEygbXF2DrB7fpyk
-         qpeW5WYZhc/hYWZ2R0nIhHNMCdA54jGOmayycu5jP8y8o12wpyCygdHPAk4e7jJrVcxG
-         PHDNXNaSWIf0EEe5Tjl8xP8wuN2l9CWnPe7pZwa/ZfmLyJUN0+u26TVz5yKbD1mwZFat
-         yh0Q==
-X-Gm-Message-State: APjAAAUL9+Zfdg7/Iw3jYrH7T+wGH5eE2NPUDN34IF1c3hbds0cQfEjc
-        ++TICr/r3rlrNwlQfjafLsvmtoZEVwBDjvEehpQ=
-X-Google-Smtp-Source: APXvYqzuZuXy/yJKJbRDe7WOvpYY7XAyKsxtk48XfvsIfssNrVG9az3Pj5KT0bba1x8OBSt4v5dTxKKvB0u1+5ICdeM=
-X-Received: by 2002:aca:50ca:: with SMTP id e193mr10273740oib.110.1567496594789;
- Tue, 03 Sep 2019 00:43:14 -0700 (PDT)
+        id S1726452AbfICIXM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Sep 2019 04:23:12 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58488 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726631AbfICIXM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Sep 2019 04:23:12 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 709F1B0D7378A76946CA;
+        Tue,  3 Sep 2019 16:23:10 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Sep 2019
+ 16:23:00 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <bhelgaas@google.com>, <hch@infradead.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2 -next] PCI: Don't use GFP_KERNEL for kstrbdup in resource_alignment_store
+Date:   Tue, 3 Sep 2019 16:22:29 +0800
+Message-ID: <20190903082229.21488-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20190831124932.18759-1-yuehaibing@huawei.com>
+References: <20190831124932.18759-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-References: <1566359059-4844-1-git-send-email-wenwen@cs.uga.edu>
- <CAJZ5v0gm3Mv0-6fVe+7v4Kd49xG6W=TXcxfTJthpe9o46n4EEQ@mail.gmail.com> <20190902223424.GJ7013@google.com>
-In-Reply-To: <20190902223424.GJ7013@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 3 Sep 2019 09:43:03 +0200
-Message-ID: <CAJZ5v0iG_h1k9mAfsZ5QdTA++AgfR=h5d0nH0ACVNn_AunaSwA@mail.gmail.com>
-Subject: Re: [PATCH v2] ACPI / PCI: fix acpi_pci_irq_enable() memory leak
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Wenwen Wang <wenwen@cs.uga.edu>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 12:34 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Mon, Sep 02, 2019 at 11:19:58PM +0200, Rafael J. Wysocki wrote:
-> > On Wed, Aug 21, 2019 at 5:44 AM Wenwen Wang <wenwen@cs.uga.edu> wrote:
-> > >
-> > > In acpi_pci_irq_enable(), 'entry' is allocated by kzalloc() in
-> > > acpi_pci_irq_check_entry() (invoked from acpi_pci_irq_lookup()). However,
-> > > it is not deallocated if acpi_pci_irq_valid() returns false, leading to a
-> > > memory leak. To fix this issue, free 'entry' before returning 0.
-> > >
-> > > Fixes: e237a5518425 ("x86/ACPI/PCI: Recognize that Interrupt Line 255 means
-> > > "not connected"")
-> > >
-> > > Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-> >
-> > Bjorn, any more comments?
->
-> Nope, looks fine to me.
+When allocating memory, the GFP_KERNEL cannot be used during the
+spin_lock period. It may cause scheduling when holding spin_lock.
 
-Thanks, queuing it up for v5.4 then.
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Fixes: f13755318675 ("PCI: Move pci_[get|set]_resource_alignment_param() into their callers")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v2: move alloc out of spinlock
+---
+ drivers/pci/pci.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 484e353..a3d5920 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6145,14 +6145,17 @@ static ssize_t resource_alignment_show(struct bus_type *bus, char *buf)
+ static ssize_t resource_alignment_store(struct bus_type *bus,
+ 					const char *buf, size_t count)
+ {
+-	spin_lock(&resource_alignment_lock);
++	char *param = kstrndup(buf, count, GFP_KERNEL);
+ 
+-	kfree(resource_alignment_param);
+-	resource_alignment_param = kstrndup(buf, count, GFP_KERNEL);
++	if (!param)
++		return -ENOMEM;
+ 
++	spin_lock(&resource_alignment_lock);
++	kfree(resource_alignment_param);
++	resource_alignment_param = param;
+ 	spin_unlock(&resource_alignment_lock);
+ 
+-	return resource_alignment_param ? count : -ENOMEM;
++	return count;
+ }
+ 
+ static BUS_ATTR_RW(resource_alignment);
+-- 
+2.7.4
+
+
