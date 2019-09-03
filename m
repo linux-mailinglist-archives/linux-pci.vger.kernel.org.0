@@ -2,37 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C6CDA6FD3
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2019 18:35:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F2C4A6FA0
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2019 18:35:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730452AbfICQfV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Sep 2019 12:35:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49266 "EHLO mail.kernel.org"
+        id S1730135AbfICQdy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Sep 2019 12:33:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730949AbfICQ1s (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:27:48 -0400
+        id S1731068AbfICQ2P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:28:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D09B23789;
-        Tue,  3 Sep 2019 16:27:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98AE62343A;
+        Tue,  3 Sep 2019 16:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528068;
-        bh=j6ahewoxJK4BYyuBALFxGPGvZ7IjzlhY2rPpaa/CAvE=;
+        s=default; t=1567528094;
+        bh=9hITkvwS7RUR+NOyuSsEcOigWPALmP3ru1eoSEaWVu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ijo06llXVgpPjhyFtepr0bFmv5Ueu9zbKL/7BJkSwe2OHpOnP0jYVu7Y8dtRWSN9u
-         XG57Lytv6OsaVlgrcn9OrJzjgpw8zSpdiTZokyNMkZb4WwLi7tvedIFzmbG9RiwDDy
-         xpy5iVA4e+u/4aI0KF9u07s8Qx0zB/TXLLUCH4tY=
+        b=VMdJoln4t0/ssmwLXtcysSY4uJyat4IGu3tSASucMvwMEPxLYfSn9ghU+BKVPLq8S
+         xTklqDU3CqBQMBUZw76wCkf6qtcpTRLy6CGV6kaLpJpPowB1Px7fe5DhX+LsK6LtnS
+         RA6zvstvN2uCTOVmW0rrMqjLI6IXIHHjyVpgU4DY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 082/167] PCI: qcom: Don't deassert reset GPIO during probe
-Date:   Tue,  3 Sep 2019 12:23:54 -0400
-Message-Id: <20190903162519.7136-82-sashal@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 103/167] PCI: Add macro for Switchtec quirk declarations
+Date:   Tue,  3 Sep 2019 12:24:15 -0400
+Message-Id: <20190903162519.7136-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -45,47 +43,124 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 02b485e31d98265189b91f3e69c43df2ed50610c ]
+[ Upstream commit 01d5d7fa8376c6b5acda86e16fcad22de6bba486 ]
 
-Acquiring the reset GPIO low means that reset is being deasserted, this
-is followed almost immediately with qcom_pcie_host_init() asserting it,
-initializing it and then finally deasserting it again, for the link to
-come up.
+Add SWITCHTEC_QUIRK() to reduce redundancy in declaring devices that use
+quirk_switchtec_ntb_dma_alias().
 
-Some PCIe devices requires a minimum time between the initial deassert
-and subsequent reset cycles. In a platform that boots with the reset
-GPIO asserted this requirement is being violated by this deassert/assert
-pulse.
+By itself, this is no functional change, but a subsequent patch updates
+SWITCHTEC_QUIRK() to fix ad281ecf1c7d ("PCI: Add DMA alias quirk for
+Microsemi Switchtec NTB").
 
-Acquire the reset GPIO high to prevent this situation by matching the
-state to the subsequent asserted state.
-
-Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-[lorenzo.pieralisi@arm.com: updated commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: stable@vger.kernel.org
+Fixes: ad281ecf1c7d ("PCI: Add DMA alias quirk for Microsemi Switchtec NTB")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+[bhelgaas: split to separate patch]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/quirks.c | 90 +++++++++++++++++---------------------------
+ 1 file changed, 34 insertions(+), 56 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 79f06c76ae071..e292801fff7fd 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1230,7 +1230,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 
- 	pcie->ops = of_device_get_match_data(dev);
- 
--	pcie->reset = devm_gpiod_get_optional(dev, "perst", GPIOD_OUT_LOW);
-+	pcie->reset = devm_gpiod_get_optional(dev, "perst", GPIOD_OUT_HIGH);
- 	if (IS_ERR(pcie->reset)) {
- 		ret = PTR_ERR(pcie->reset);
- 		goto err_pm_runtime_put;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 28c64f84bfe72..6cda8b7ecc821 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5082,59 +5082,37 @@ static void quirk_switchtec_ntb_dma_alias(struct pci_dev *pdev)
+ 	pci_iounmap(pdev, mmio);
+ 	pci_disable_device(pdev);
+ }
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8531,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8532,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8533,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8534,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8535,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8536,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8543,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8544,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8545,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8546,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8551,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8552,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8553,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8554,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8555,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8556,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8561,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8562,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8563,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8564,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8565,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8566,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8571,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8572,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8573,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8574,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8575,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8576,
+-			quirk_switchtec_ntb_dma_alias);
++#define SWITCHTEC_QUIRK(vid) \
++	DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, vid, \
++				quirk_switchtec_ntb_dma_alias)
++
++SWITCHTEC_QUIRK(0x8531);  /* PFX 24xG3 */
++SWITCHTEC_QUIRK(0x8532);  /* PFX 32xG3 */
++SWITCHTEC_QUIRK(0x8533);  /* PFX 48xG3 */
++SWITCHTEC_QUIRK(0x8534);  /* PFX 64xG3 */
++SWITCHTEC_QUIRK(0x8535);  /* PFX 80xG3 */
++SWITCHTEC_QUIRK(0x8536);  /* PFX 96xG3 */
++SWITCHTEC_QUIRK(0x8541);  /* PSX 24xG3 */
++SWITCHTEC_QUIRK(0x8542);  /* PSX 32xG3 */
++SWITCHTEC_QUIRK(0x8543);  /* PSX 48xG3 */
++SWITCHTEC_QUIRK(0x8544);  /* PSX 64xG3 */
++SWITCHTEC_QUIRK(0x8545);  /* PSX 80xG3 */
++SWITCHTEC_QUIRK(0x8546);  /* PSX 96xG3 */
++SWITCHTEC_QUIRK(0x8551);  /* PAX 24XG3 */
++SWITCHTEC_QUIRK(0x8552);  /* PAX 32XG3 */
++SWITCHTEC_QUIRK(0x8553);  /* PAX 48XG3 */
++SWITCHTEC_QUIRK(0x8554);  /* PAX 64XG3 */
++SWITCHTEC_QUIRK(0x8555);  /* PAX 80XG3 */
++SWITCHTEC_QUIRK(0x8556);  /* PAX 96XG3 */
++SWITCHTEC_QUIRK(0x8561);  /* PFXL 24XG3 */
++SWITCHTEC_QUIRK(0x8562);  /* PFXL 32XG3 */
++SWITCHTEC_QUIRK(0x8563);  /* PFXL 48XG3 */
++SWITCHTEC_QUIRK(0x8564);  /* PFXL 64XG3 */
++SWITCHTEC_QUIRK(0x8565);  /* PFXL 80XG3 */
++SWITCHTEC_QUIRK(0x8566);  /* PFXL 96XG3 */
++SWITCHTEC_QUIRK(0x8571);  /* PFXI 24XG3 */
++SWITCHTEC_QUIRK(0x8572);  /* PFXI 32XG3 */
++SWITCHTEC_QUIRK(0x8573);  /* PFXI 48XG3 */
++SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
++SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
++SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
 -- 
 2.20.1
 
