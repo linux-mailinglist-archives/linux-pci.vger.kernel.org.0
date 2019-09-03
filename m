@@ -2,37 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ECA4A6F0C
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2019 18:32:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB739A6F56
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2019 18:32:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731105AbfICQ2W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Sep 2019 12:28:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50276 "EHLO mail.kernel.org"
+        id S1730506AbfICQcT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Sep 2019 12:32:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731100AbfICQ2V (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:28:21 -0400
+        id S1731304AbfICQcT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:32:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 084442343A;
-        Tue,  3 Sep 2019 16:28:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CFAC238C5;
+        Tue,  3 Sep 2019 16:32:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528100;
-        bh=3bk7rFt5HcTeej2SS3c2IS5nrXPLOpumDWzrVcjV0iY=;
+        s=default; t=1567528338;
+        bh=VdilDWcuzsVVqy1xSRAXyAiXDXeSNGwCwiyBUksGKcY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bsnJSUOyLpL1NJ+XCOTX5JRbpRY6kA54Jnb7kNefKND/gkPgNNg8S0yqLGn+yscme
-         7NcAMp9dgf81JHbZ3c8loYW1HPnT9sZd1RI0K+7QIS799ktLw3PLtdhO+MWLKAQoQC
-         9qbwn8TNnRm9ExXj10MBl9J/aHP05FWYS08fhd1I=
+        b=d/7Bc1Bwa7ewAtqfeuhjYSz2KvJdqiyWDiXRhbpc7QsWzNBvojbLma6+0DaooH9Ym
+         kXdim2N0tQyIkWy2omFVU78de4IczZjMWc5l6jR2qdo8w/j4XCCd5Ab2Oo/kfMpkz4
+         6ccYk8343tkVw8Pn5yFaziHsi3efiUZj1HU/d6jg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+Cc:     Lyude Paul <lyude@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Daniel Drake <drake@endlessm.com>,
+        Aaron Plattner <aplattner@nvidia.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Ilia Mirkin <imirkin@alum.mit.edu>,
+        Karol Herbst <kherbst@redhat.com>,
+        Maik Freudenberg <hhfeuer@gmx.de>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 108/167] PCI: dwc: Use devm_pci_alloc_host_bridge() to simplify code
-Date:   Tue,  3 Sep 2019 12:24:20 -0400
-Message-Id: <20190903162519.7136-108-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 167/167] PCI: Reset both NVIDIA GPU and HDA in ThinkPad P50 workaround
+Date:   Tue,  3 Sep 2019 12:25:19 -0400
+Message-Id: <20190903162519.7136-167-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -45,110 +50,52 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+From: Lyude Paul <lyude@redhat.com>
 
-[ Upstream commit e6fdd3bf5aecd8615f31a5128775b9abcf3e0d86 ]
+[ Upstream commit ad54567ad5d8e938ee6cf02e4f3867f18835ae6e ]
 
-Use devm_pci_alloc_host_bridge() to simplify the error code path.  This
-also fixes a leak in the dw_pcie_host_init() error path.
+quirk_reset_lenovo_thinkpad_50_nvgpu() resets NVIDIA GPUs to work around
+an apparent BIOS defect.  It previously used pci_reset_function(), and
+the available method was a bus reset, which was fine because there was
+only one function on the bus.  After b516ea586d71 ("PCI: Enable NVIDIA
+HDA controllers"), there are now two functions (the HDA controller and
+the GPU itself) on the bus, so the reset fails.
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Use pci_reset_bus() explicitly instead of pci_reset_function() since it's
+OK to reset both devices.
+
+[bhelgaas: commit log, add e0547c81bfcf]
+Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
+Fixes: e0547c81bfcf ("PCI: Reset Lenovo ThinkPad P50 nvgpu at boot if necessary")
+Link: https://lore.kernel.org/r/20190801220117.14952-1-lyude@redhat.com
+Signed-off-by: Lyude Paul <lyude@redhat.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-CC: stable@vger.kernel.org	# v4.13+
+Acked-by: Ben Skeggs <bskeggs@redhat.com>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Daniel Drake <drake@endlessm.com>
+Cc: Aaron Plattner <aplattner@nvidia.com>
+Cc: Peter Wu <peter@lekensteyn.nl>
+Cc: Ilia Mirkin <imirkin@alum.mit.edu>
+Cc: Karol Herbst <kherbst@redhat.com>
+Cc: Maik Freudenberg <hhfeuer@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../pci/controller/dwc/pcie-designware-host.c | 21 +++++++------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+ drivers/pci/quirks.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index acd50920c2ffd..b57ee79f6d699 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -356,7 +356,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 		dev_err(dev, "Missing *config* reg space\n");
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 311f8a33e62ff..06be52912dcdb 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5162,7 +5162,7 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+ 	 */
+ 	if (ioread32(map + 0x2240c) & 0x2) {
+ 		pci_info(pdev, FW_BUG "GPU left initialized by EFI, resetting\n");
+-		ret = pci_reset_function(pdev);
++		ret = pci_reset_bus(pdev);
+ 		if (ret < 0)
+ 			pci_err(pdev, "Failed to reset GPU: %d\n", ret);
  	}
- 
--	bridge = pci_alloc_host_bridge(0);
-+	bridge = devm_pci_alloc_host_bridge(dev, 0);
- 	if (!bridge)
- 		return -ENOMEM;
- 
-@@ -367,7 +367,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 
- 	ret = devm_request_pci_bus_resources(dev, &bridge->windows);
- 	if (ret)
--		goto error;
-+		return ret;
- 
- 	/* Get the I/O and memory ranges from DT */
- 	resource_list_for_each_entry_safe(win, tmp, &bridge->windows) {
-@@ -411,8 +411,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 						resource_size(pp->cfg));
- 		if (!pci->dbi_base) {
- 			dev_err(dev, "Error with ioremap\n");
--			ret = -ENOMEM;
--			goto error;
-+			return -ENOMEM;
- 		}
- 	}
- 
-@@ -423,8 +422,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 					pp->cfg0_base, pp->cfg0_size);
- 		if (!pp->va_cfg0_base) {
- 			dev_err(dev, "Error with ioremap in function\n");
--			ret = -ENOMEM;
--			goto error;
-+			return -ENOMEM;
- 		}
- 	}
- 
-@@ -434,8 +432,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 						pp->cfg1_size);
- 		if (!pp->va_cfg1_base) {
- 			dev_err(dev, "Error with ioremap\n");
--			ret = -ENOMEM;
--			goto error;
-+			return -ENOMEM;
- 		}
- 	}
- 
-@@ -458,14 +455,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 			    pp->num_vectors == 0) {
- 				dev_err(dev,
- 					"Invalid number of vectors\n");
--				goto error;
-+				return -EINVAL;
- 			}
- 		}
- 
- 		if (!pp->ops->msi_host_init) {
- 			ret = dw_pcie_allocate_domains(pp);
- 			if (ret)
--				goto error;
-+				return ret;
- 
- 			if (pp->msi_irq)
- 				irq_set_chained_handler_and_data(pp->msi_irq,
-@@ -474,7 +471,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 		} else {
- 			ret = pp->ops->msi_host_init(pp);
- 			if (ret < 0)
--				goto error;
-+				return ret;
- 		}
- 	}
- 
-@@ -514,8 +511,6 @@ int dw_pcie_host_init(struct pcie_port *pp)
- err_free_msi:
- 	if (pci_msi_enabled() && !pp->ops->msi_host_init)
- 		dw_pcie_free_msi(pp);
--error:
--	pci_free_host_bridge(bridge);
- 	return ret;
- }
- 
 -- 
 2.20.1
 
