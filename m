@@ -2,58 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A988EA7513
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2019 22:39:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87E03A77F4
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2019 02:55:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbfICUjl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Sep 2019 16:39:41 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:38025 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbfICUjk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Sep 2019 16:39:40 -0400
-Received: by mail-yw1-f65.google.com with SMTP id f187so6409845ywa.5
-        for <linux-pci@vger.kernel.org>; Tue, 03 Sep 2019 13:39:39 -0700 (PDT)
+        id S1727065AbfIDAzY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Sep 2019 20:55:24 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:41222 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfIDAzY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Sep 2019 20:55:24 -0400
+Received: by mail-yb1-f195.google.com with SMTP id 1so6685589ybj.8
+        for <linux-pci@vger.kernel.org>; Tue, 03 Sep 2019 17:55:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mfJtr3HmMw+Qly0P03/i6uDrpUIh5pdiVIES/f8cDk0=;
-        b=Y1jXofh98eoI4QnlVUJGxaeWEYYsZuTIiTLlAIHAvdLlejKeBRg8dIv121nwF1zQbw
-         pX5r0FWYgk7/KovGPhLPmiyO6P8AejdlFtng1qLslLaIOyo/X+SF6KagfJpxUB0PUJD7
-         QkjcVgq1Kn8yfS8JhT+yUssmqHYLvh404X+MQinXxGA1wkBbWBkw1p+2w2tCtp4nVVgH
-         AkCHCo8g7a2Kj7oatMWQM/3ActCG/J9Qm/peEPRFjriMuAex79LC7pyHXLkgsIFtGzfs
-         zwcFFmP+KSIXHDLT3u5JFHjwsgi3G4dTRC0kWFRMsbAd7/ndtUkPpufXSDMq9bdKW+WC
-         bGVA==
+        bh=BGjyfu/3FBGMF3xyvxxIMy1eqm67FZbwbJlNeNhhLUA=;
+        b=KWgZddVnWnPahpv4TiomF9kFAEXEN68wVV8OFnZ90ooYWHfWDwKqWo7Iq1OCqRRMAL
+         6Pv79sqtIoSH2VZW9lHsGaAhqlDw4SKD9EWw5eEs3qvoFsRnjzJAoqZOnP5E6JPh3U3z
+         GWWgWSxeEVTqLSj+gdPETikwzE+ZyRmBMHxx4yKOFFM6UIWBM6KWBdvUC6B6AN5Qu2fx
+         eCxtN4LXzqjH7ajDnuTngE5e29NghDfTQXZ2sUEb+vNXuGISSry1iBkKN1FryF9g7X5r
+         59uGFJGeQmaNxcEL6Yga8N5oS/ss14pfX3rGPUigwMx/1D7FabwLWDyRuTiz5ZIk4Tvo
+         hjLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mfJtr3HmMw+Qly0P03/i6uDrpUIh5pdiVIES/f8cDk0=;
-        b=XG5XZ/GahFmycBaVoT2jPXMJdZ0qZLd3fzWPN/INckPS7MU1ZWRjzwUOXApJipGAir
-         Es4QXOx/9pXlphGRpydyVpzyD+Jqd4xakGUJvW2MXI2I7sEM/FoL4aHjR+B/I5M4f13L
-         MS0m6FQlSDIx7ySGEDxOOJH6PYaFjJPyCYzhZdR8B97PpyyfAEoQNuYSHjnW7LFsbiB2
-         Y7r9jnAo9z+oBy2vlQrmUBLycvFUN5KhTuf+yl/hTO48y5uYgXG14B76DEsBE5TczgOx
-         vkd7FqY6wOHNulLaNckydPncccFa1fGc1oH3aqq0IlNkBrWxbtBPEVGW/V6TU3dTRTqA
-         1ZIA==
-X-Gm-Message-State: APjAAAUGddPg7adFgnlv1yA1gmuE01gwpmb+c1YcVNJnKceg96FuNbx/
-        Wl5G74N7UKCgh0YO5/VgttJlzw==
-X-Google-Smtp-Source: APXvYqxh9ovvF6bd5vAouWG17SOe1WwopPzetWOwQXC8fhMfYVl5xl0aHJaeretnKRwgEs5JoKyFjQ==
-X-Received: by 2002:a0d:c5c6:: with SMTP id h189mr25709529ywd.274.1567543179399;
-        Tue, 03 Sep 2019 13:39:39 -0700 (PDT)
-Received: from jaxon.wireless.duke.edu ([152.3.43.40])
-        by smtp.gmail.com with ESMTPSA id w123sm1454843yww.22.2019.09.03.13.39.38
+        bh=BGjyfu/3FBGMF3xyvxxIMy1eqm67FZbwbJlNeNhhLUA=;
+        b=eMH58D8j0LczqMZ/d3qvCpWHu/MRrdYrylXN592GuSOXlCmiLsXELR2vDocadKCqDb
+         yLus80oJZg8wfwjGCwLKL4yhQEnWvdBnc686gzx6cPXXqZ9FAw+D6a8yrbtej2AtWYMd
+         B+m6yWA7vqtON9P2PMbYqPX2VM1DK5bVgqHwOe21mJexJQ+1NHTkOIdqiPwrAWk/HNmZ
+         XgMTNod/soZ5U8fxE4qJdXVm+WF9K5iA0I77w5MFjsJD/hlhgfjH0uzKRNH5JHyzdef3
+         5dEvQrjmhDC0lgGGkrIf81Im7xvRR9ZsyYJvR1erblhVyRtcRQzLDemN0unZQxmriYmk
+         h/SQ==
+X-Gm-Message-State: APjAAAUU5QotB0zmNu99SXTQNGVdnDu6lt3xoc2jBvPbjuButSFe1UDT
+        Y6zVrIehe2wKBrI3Se6mk6FAPygb6tE9J8+n
+X-Google-Smtp-Source: APXvYqwMqna2GYkdyCxfiaM4NQL1T8dDFQbGOpfj+G/O9Qu04iZjX8emqQQExBG/pQH1JElAZLFMHg==
+X-Received: by 2002:a25:9908:: with SMTP id z8mr25830420ybn.283.1567558523523;
+        Tue, 03 Sep 2019 17:55:23 -0700 (PDT)
+Received: from jaxon.localdomain ([152.3.43.56])
+        by smtp.gmail.com with ESMTPSA id f68sm1275607ywb.96.2019.09.03.17.55.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 13:39:38 -0700 (PDT)
+        Tue, 03 Sep 2019 17:55:23 -0700 (PDT)
 From:   Haotian Wang <haotian.wang@sifive.com>
-To:     mst@redhat.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com, jasowang@redhat.com
+To:     kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        mst@redhat.com
 Cc:     linux-pci@vger.kernel.org, haotian.wang@duke.edu
 Subject: Re: [PATCH] pci: endpoint: functions: Add a virtnet EP function
-Date:   Tue,  3 Sep 2019 16:39:38 -0400
-Message-Id: <20190903203938.899-1-haotian.wang@sifive.com>
+Date:   Tue,  3 Sep 2019 20:55:22 -0400
+Message-Id: <20190904005522.2190-1-haotian.wang@sifive.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190903021403-mutt-send-email-mst@kernel.org>
-References: <20190903021403-mutt-send-email-mst@kernel.org>
+In-Reply-To: <7067e657-5c8e-b724-fa6a-086fece6e6c3@redhat.com>
+References: <7067e657-5c8e-b724-fa6a-086fece6e6c3@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -61,127 +61,75 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Michael,
-
-Thank you for your feedback!
-
-On Tue, Sep 3, 2019 at 2:25 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> On Fri, Aug 23, 2019 at 02:31:45PM -0700, Haotian Wang wrote:
-> > This endpoint function enables the PCI endpoint to establish a virtual
-> > ethernet link with the PCI host. The main features are:
-> > 
-> > - Zero modification of PCI host kernel. The only requirement for the
-> >   PCI host is to enable virtio, virtio_pci, virtio_pci_legacy and
-> >   virito_net.
+On Tue, Sep 3, 2019 at 6:42 AM Jason Wang <jasowang@redhat.com> wrote:
+> So if I understand correctly, what you want is:
 > 
-> Do we need to support legacy? Why not just the modern interface?
-> Even if yes, limiting device
-> to only legacy support is not a good idea.
-
-I absolutely agree with you on modern interfaces being better. The issue
-here is that I did not support legacy because of compatibility reasons
-but because I was forced to choose legacy.
-
-In the summer, I asked the hardware team whether I had read-write access
-to the capabilities registers from the endpoint but did not receive a
-response back then.
-
-Now I can write the code using modern virtio but I cannot easily verify
-the epf will actually function on the hardware.
-
-Reading and writing of capabilities list registers requires patches to
-the pci endpoint framework and the designware endpoint controller as
-well. I will probably work on that after I resolve these other issues.
-
-> > +	if (!atomic_xchg(pending, 0))
-> > +		usleep_range(check_queues_usec_min,
-> > +			     check_queues_usec_max);
+> 1) epf virtio actually represent a full virtio pci device to the host 
+> Linux.
+> 2) to endpoint Linux, you also want to represent a virtio device (by 
+> copying data between two vrings) that has its own config ops
 > 
-> What's the usleep hackery doing? Set it too low and you
-> waste cycles. Set it too high and your latency suffers.
-> It would be nicer to just use a completion or something like this.
+> This looks feasible but tricky. One part is the feature negotiation. You 
+> probably need to prepare two set of features for each side. Consider in 
+> your case, you claim the device to support GUEST_CSUM, but since no 
+> HOST_CUSM is advertised, neither side will send packet without csum. And 
+> if you claim HOST_CUSM, you need to deal with the case if one of side 
+> does not support GUEST_CSUM (e.g checksum by yourself). And things will 
+> be even more complex for other offloading features. Another part is the 
+> configuration space. You need to handle the inconsistency between two 
+> sides, e.g one side want 4 queues but the other only do 1.
 
-If the pending bit is set, the kthread will go directly into another
-round. The usleep is here because, in case the pending bit is not set,
-the kthread waits a certain while and then checks for buffers anyway as
-a sort of "fallback" check.
+You are right about the two bullet points. You are also right about the
+two sets of features.
 
-Problem with completion is that there is no condition to complete on. I
-can change the usleep_range() to schedule() if that is a more sensible
-thing to do.
+When I put GUEST_CSUM and HOST_CSUM in both devices' features, I always
+got the error that packets had incorrect "total length" in ip headers.
+There were a bunch of other problems when I tried to implement the other
+kinds of offloading.
 
-If you mean wait until the pending bit is set, I can do that. Back when
-I wrote this module, the reason for not doing that was the endpoint
-might fail to catch notification from the host.
+Also, I encountered another inconsistency with the virtio 1.1 spec.
+According to the spec, when legacy interface was used, we were supposed
+to put the virtio_net_hdr and the actual packet in two different
+descriptors in the rx queue. After a lot of trial and error, packets
+were supposed to be put directly after the virtio_net_hdr struct,
+together in the same descriptor.
 
-If you are interested, here is a more detailed expanation.
+Given that, I still did not address the situations where the two sides
+had different features. Therefore, the solution right now is to hardcode
+the features the epf support in the source code, including offloading
+features, mergeable buffers and number of queues.
 
-> > +static int pci_epf_virtio_catch_notif(void *data)
-> > +{
-> > +	u16 changed;
-> > +#ifdef CONFIG_PCI_EPF_VIRTIO_SUPPRESS_NOTIFICATION
-> > +	void __iomem *avail_idx;
-> > +	u16 event;
-> > +#endif
-> > +
-> > +	register const __virtio16 default_notify = epf_cpu_to_virtio16(2);
-> > +
-> > +	struct pci_epf_virtio *const epf_virtio = data;
-> > +	atomic_t *const pending = epf_virtio->pending;
-> > +
-> > +	while (!kthread_should_stop()) {
-> > +		changed = epf_virtio16_to_cpu(epf_virtio->legacy_cfg->q_notify);
-> > +		if (changed != 2) {
-> > +			epf_virtio->legacy_cfg->q_notify = default_notify;
-> > +			/* The pci host has made changes to virtqueues */
-> > +			if (changed)
-> > +				atomic_cmpxchg(pending, 0, 1);
-> > +#ifdef CONFIG_PCI_EPF_VIRTIO_SUPPRESS_NOTIFICATION
-> > +			avail_idx = IO_MEMBER_PTR(epf_virtio->avail[changed],
-> > +						  struct vring_avail,
-> > +						  idx);
-> > +			event = epf_ioread16(avail_idx) + event_suppression;
-> > +			write_avail_event(epf_virtio->used[changed], event);
-> > +#endif
-> > +		}
-> > +		usleep_range(notif_poll_usec_min,
-> > +			     notif_poll_usec_max);
-> > +	}
-> > +	return 0;
-> > +}
-
-The pending bit is set if the notification polling thread sees a value
-in legacy_cfg->q_notify that is not 2, because the PCI host virtio_pci
-will write either 0 when its rx queue consumes something or 1 if its tx
-queue has offered a new buffer. My endpoing function will then set that
-value back to 2. In this process there are numerous things that can go
-wrong.
-
-The host may write multiple 0 or 1's and the endpoint can only
-detect one of them in an notif_poll usleep interval.
-
-The host may write
-some non-2 value as the endpoint code just finishes detecting the last
-non-2 value and reverting that value back to 2, effectively nullifying
-the new non-2 value.
-
-The host may decide to write a non-2 value
-immediately after the endpoint revert that value back to 2 but before
-the endpoint code finishes the current loop of execution, effectively
-making the value not reverted back to 2.
-
-All these and other problems are made worse by the fact that the PCI
-host Linux usually runs on much faster cores than the one on PCI
-endpoint. This is why relying completely on pending bits is not always
-safe. Hence the "fallback" check using usleep hackery exists.
-Nevertheless I welcome any suggestion, because I do not like this
-treatment myself either.
-
-> > +	net_cfg->max_virtqueue_pairs = (__force __u16)epf_cpu_to_virtio16(1);
+> > Also that design uses the conventional virtio/vhost framework. In this
+> > epf, are you implying instead of creating a Device A, create some sort
+> > of vhost instead?
 > 
-> You don't need this without VIRTIO_NET_F_MQ.
+> 
+> Kind of, in order to address the above limitation, you probably want to 
+> implement a vringh based netdevice and driver. It will work like, 
+> instead of trying to represent a virtio-net device to endpoint, 
+> represent a new type of network device, it uses two vringh ring instead 
+> virtio ring. The vringh ring is usually used to implement the 
+> counterpart of virtio driver. The advantages are obvious:
+> 
+> - no need to deal with two sets of features, config space etc.
+> - network specific, from the point of endpoint linux, it's not a virtio 
+> device, no need to care about transport stuffs or embedding internal 
+> virtio-net specific data structures
+> - reuse the exist codes (vringh) to avoid duplicated bugs, implementing 
+> a virtqueue is kind of challenge
 
-Noted.
+Now I see what you mean. The data copying part stays the same but that
+data copying stays transparent to the whole vhost/virtio framework. You
+want me to create a new type of network_device based on vhost stuff
+instead of epf_virtio_device. Yeah, that is doable.
+
+There could be performance overheads with using vhost. The
+epf_virtio_device has the most straightforward way of calling callback
+functions, while in vhost I would imagine there are some kinds of task
+management/scheduling going on. But all this is congesture. I will write
+out the code and see if throughput really dropped.
+
+Thanks for clarifying.
 
 Best,
 Haotian
