@@ -2,105 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 13FABA9206
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2019 21:40:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39D44A925E
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2019 21:41:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387693AbfIDSpm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Sep 2019 14:45:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46416 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732798AbfIDSpl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:45:41 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3145D2077B;
-        Wed,  4 Sep 2019 18:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567622740;
-        bh=4ayV0ZK7/gnUuB1eJ6I6aCRk4tV24nhjprhkcptmwNo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=clKMoHf4f+cqeoN2lRe+nXQJ55QFAC7eIIXFhRk37MSPC2Jlpa+itQHz66dFnA/HL
-         XFHAQfV9adz0Vc0sKI91K9iD51rA2E0njbmYkgIgXKNuSxD7Nhmo0jR/rUhypbVslc
-         Pe3Tc1dxzwH/mcO7C38BHiSU9x0to6ZxXW6ySvb0=
-Date:   Wed, 4 Sep 2019 13:45:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Kelsey Skunberg <skunberg.kelsey@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Carolyn Wyborny <carolyn.wyborny@intel.com>
-Subject: Re: [PATCH 2/2] PCI: Unify pci_dev_is_disconnected() and
- pci_dev_is_inaccessible()
-Message-ID: <20190904184538.GC103977@google.com>
-References: <20190904043633.65026-1-skunberg.kelsey@gmail.com>
- <20190904043633.65026-3-skunberg.kelsey@gmail.com>
- <20190904053523.7lmuoo5zempxtsdq@wunner.de>
+        id S1731142AbfIDTg4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Sep 2019 15:36:56 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42525 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730686AbfIDTg4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Sep 2019 15:36:56 -0400
+Received: by mail-pf1-f196.google.com with SMTP id w22so5481848pfi.9;
+        Wed, 04 Sep 2019 12:36:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Wpep2LyOTWtiIBc4HmPe2hGyBzwA/CaDAWU9SYsEWFM=;
+        b=bjjXrrvYBE6O1PY9usMoum+IaEdozwCZQqvVUNfmL4QJU4/bSyKusQw74uMW+jdezP
+         s2Qhxvoc8zz0hGTnNSeZiCCbaC5VIktLN2eoFhphN3f0+FZ1l2x4tvc+OC5pRbUvogrx
+         G47jgvhkJLoN5waJEbyKEPfOc6P2lJSIqpeYUWRigmmp7rhIzi0NlVbdklvZPCXlo8vT
+         F81BnBCYMu9nVYMnEiYbvDJCm6cIMJfo7iIX9lq/+T7PHhuGuNRPgR22cxFn4p3AK/rI
+         QjhPMaj2UIeLQYXGt5zhoeMIa40zmz56XVfP7Vtr2/vqmOx1Zy3qCe7zT6Kr1/vmwhQt
+         03hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Wpep2LyOTWtiIBc4HmPe2hGyBzwA/CaDAWU9SYsEWFM=;
+        b=Qexc0rwwq9QZyWMoac/NazCOH8lqstkODa6REUWi3sBB0Sij9X07q24774dDbWt/gJ
+         yr0GVqticw2NhNxggVl2Q8TGExijaXd6nu+WlmmXn2ETxHSXRrDB9YDiV23VBHupsNTN
+         GAqwMt+NzF67VA1LYNFy8IfbVYmo+S0pB7Z6Ea8cxQngq+6fvmBDR7hPE/aY2/hlOfOG
+         /+N+tPgzCYYAi9GW1BWfB8VCIvc0OGlujzasu9uutR+0UpOhWl5/foSVBlyzhBixEDet
+         tkNEMgeBFNC8NdozZ4z2tn27F6u0Jc5qxoJvjOEygu0/GFjdVNBhEPuI7Yq876qKU58c
+         Wf4g==
+X-Gm-Message-State: APjAAAWBiqXyLOfHbGhD9O42V4gEC8YHbnjMgaCG7YqscF8nrq4FjXJc
+        tv8+f9eNIsWoy0NHXtsiZAl9hd2Ftv78F7Ty+bE=
+X-Google-Smtp-Source: APXvYqxGOM8h4zs6M0NDN3CDz20A1GiW6udPDCyH0rOObfk69vEJdPv/8XPStExdnQdvhgxSQl9udO7OimAFT8AhK2A=
+X-Received: by 2002:a63:6eca:: with SMTP id j193mr35727925pgc.74.1567625815434;
+ Wed, 04 Sep 2019 12:36:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904053523.7lmuoo5zempxtsdq@wunner.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190830231817.76862-1-joel@joelfernandes.org>
+ <201909041108.RSjNvfDL%lkp@intel.com> <20190904050419.GA102582@google.com>
+ <CAHp75Vdeoc1S_0Dn_vk2ULPRLk_sevWoxs8+Gscv9ki_kkPx4Q@mail.gmail.com> <CAEXW_YQyXSuT9o6pTdMJBM=7xRhUAGtVoteswY5hNcNZBc9bgg@mail.gmail.com>
+In-Reply-To: <CAEXW_YQyXSuT9o6pTdMJBM=7xRhUAGtVoteswY5hNcNZBc9bgg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 4 Sep 2019 22:36:43 +0300
+Message-ID: <CAHp75VeyxiamNvLJXDCWOwAP9v264b4KmUL82w2JvYj2EWpkXQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pci: Convert to use built-in RCU list checking
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jonathan Derrick <jonathan.derrick@intel.com>,
+        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Carolyn, author of 17a402a0075c]
+On Wed, Sep 4, 2019 at 9:01 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+> On Wed, Sep 4, 2019 at 1:13 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Wed, Sep 4, 2019 at 8:07 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+> > > On Wed, Sep 04, 2019 at 12:06:43PM +0800, kbuild test robot wrote:
 
-On Wed, Sep 04, 2019 at 07:35:23AM +0200, Lukas Wunner wrote:
-> On Tue, Sep 03, 2019 at 10:36:35PM -0600, Kelsey Skunberg wrote:
-> > Change pci_dev_is_disconnected() call inside pci_dev_is_inaccessible() to:
-> > 
-> > 	pdev->error_state == pci_channel_io_perm_failure
-> > 
-> > Change remaining pci_dev_is_disconnected() calls to
-> > pci_dev_is_inaccessible() calls.
-> 
-> I don't think that's a good idea because it introduces a config space read
-> (for the vendor ID) in places where we don't want that.  E.g., after the
-> check of pdev->error_state, a regular config space read may take place and
-> if that returns all ones, we may already be able to determine that the
-> device is inaccessible, obviating the need for a vendor ID check.
+> > > > [auto build test ERROR on linus/master]
 
-Oh, I think I see what you mean: Previously pci_read_config_byte() et
-al called pci_dev_is_disconnected(), which only checked
-dev->error_state.
+^^^ (1)
 
-If we applied this patch, those sites would call
-pci_dev_is_inaccessible(), which would check error_state and then (in
-the common case where we haven't set error_state) do a config read of
-the vendor ID.
+> > > > [cannot apply to v5.3-rc7 next-20190903]
 
-So we would basically double the config access overhead because we'd
-be doing an extra read of the vendor ID before every access.  That
-indeed doesn't seem practical.
+^^^ (2)
 
-I think what we need to figure out is whether we really need two
-interfaces (one that looks only at dev->error_state and a second that
-looks at dev->error_state and also reads the vendor ID).  If we do
-need both, then I think we need a little guidance in the function
-comments about when to use one vs the other.
 
-There are only a few uses of pci_device_is_present() (which looks at
-dev->error_state and also reads the vendor ID) and they were added
-here:
+> The dependency is already in -next and I pulled it and applied the
+> patch.
 
-  8496e85c20e7 ("PCI / tg3: Give up chip reset and carrier loss handling if PCI device is not present")
-  17a402a0075c ("igb: Fixes needed for surprise removal support")
-  6db28eda2660 ("nvme/pci: Disable on removal when disconnected")
-  b8a62d540240 ("ACPI / hotplug / PCI: Use pci_device_is_present()")
-  4ebe34503baa ("ACPI / hotplug / PCI: Check for new devices on enabled slots")
-  a6a64026c0cd ("PCI: Recognize D3cold in pci_update_current_state()")
+This is a problem. You must provide dependency even for maintainers
+(in form of immutable branch / tag).
+The easier way to provide Depends-on (when it's one patch), though
+kbuild bot doesn't support it. Yet?
 
-The ACPI and PCI core uses are basically enumeration-type things so
-that mostly makes sense to me.
+>  It is testing -next right?
 
-I'm not so sure about the driver uses though.  I wonder if those could
-be better handled by having the drivers check for ~0 error response
-data from MMIO and config reads.
+It testing (1) and (2). (it was unable to apply against next by some
+reason, but the build error is against latest vanilla failed. And this
+is completely correct. Just follow the process (see above).
 
-Bjorn
+-- 
+With Best Regards,
+Andy Shevchenko
