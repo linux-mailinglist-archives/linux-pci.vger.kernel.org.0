@@ -2,82 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AFDC6A88FB
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2019 21:23:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84D13A898E
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2019 21:24:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730141AbfIDOsq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Sep 2019 10:48:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:56660 "EHLO foss.arm.com"
+        id S1730011AbfIDPcQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Sep 2019 11:32:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56100 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727789AbfIDOsq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:48:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4DA8828;
-        Wed,  4 Sep 2019 07:48:45 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9BEEB3F59C;
-        Wed,  4 Sep 2019 07:48:44 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 15:48:42 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] PCI: Propagate errors for optional resources
-Message-ID: <20190904144842.GB28184@e121166-lin.cambridge.arm.com>
-References: <20190829105319.14836-1-thierry.reding@gmail.com>
+        id S1729773AbfIDPcQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:32:16 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D5B2830A76A2;
+        Wed,  4 Sep 2019 15:32:15 +0000 (UTC)
+Received: from [10.3.116.78] (ovpn-116-78.phx2.redhat.com [10.3.116.78])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DBABD60606;
+        Wed,  4 Sep 2019 15:32:14 +0000 (UTC)
+Subject: Re: [Linux-kernel-mentees] [PATCH v2 2/3] PCI: sysfs: Change
+ permissions from symbolic to octal
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Bodong Wang <bodong@mellanox.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
+ <20190813204513.4790-1-skunberg.kelsey@gmail.com>
+ <20190813204513.4790-3-skunberg.kelsey@gmail.com>
+ <20190814053846.GA253360@google.com>
+ <b4c0d5b4-7243-ba96-96d1-041a264ac499@redhat.com>
+ <20190904062229.GA66871@JATN>
+From:   Don Dutile <ddutile@redhat.com>
+Message-ID: <a7865a6a-4359-e989-7ef5-77d9a8135ae3@redhat.com>
+Date:   Wed, 4 Sep 2019 11:32:14 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829105319.14836-1-thierry.reding@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190904062229.GA66871@JATN>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 04 Sep 2019 15:32:16 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 12:53:13PM +0200, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
+On 09/04/2019 02:22 AM, Kelsey Skunberg wrote:
+> On Thu, Aug 15, 2019 at 10:37:13AM -0400, Don Dutile wrote:
+>> On 08/14/2019 01:38 AM, Bjorn Helgaas wrote:
+>>> [+cc Bodong, Don, Greg for permission question]
+>>>
+>>> On Tue, Aug 13, 2019 at 02:45:12PM -0600, Kelsey Skunberg wrote:
+>>>> Symbolic permissions such as "(S_IWUSR | S_IWGRP)" are not
+>>>> preferred and octal permissions should be used instead. Change all
+>>>> symbolic permissions to octal permissions.
+>>>>
+>>>> Example of old:
+>>>>
+>>>> "(S_IWUSR | S_IWGRP)"
+>>>>
+>>>> Example of new:
+>>>>
+>>>> "0220"
+>>>
+>>>
+>>>>    static DEVICE_ATTR_RO(sriov_totalvfs);
+>>>> -static DEVICE_ATTR(sriov_numvfs, (S_IRUGO | S_IWUSR | S_IWGRP),
+>>>> -				  sriov_numvfs_show, sriov_numvfs_store);
+>>>> +static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
+>>>>    static DEVICE_ATTR_RO(sriov_offset);
+>>>>    static DEVICE_ATTR_RO(sriov_stride);
+>>>>    static DEVICE_ATTR_RO(sriov_vf_device);
+>>>> -static DEVICE_ATTR(sriov_drivers_autoprobe, (S_IRUGO | S_IWUSR | S_IWGRP),
+>>>> -		   sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
+>>>> +static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
+>>>> +		   sriov_drivers_autoprobe_store);
+>>>
+>>> Greg noticed that sriov_numvfs and sriov_drivers_autoprobe have
+>>> "unusual" permissions.  These were added by:
+>>>
+>>>     0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
+>>>     1789382a72a5 ("PCI: SRIOV control and status via sysfs")
+>>>
+>>> Kelsey's patch correctly preserves the existing permissions, but we
+>>> should double-check that they are the permissions they want, and
+>>> possibly add a comment about why they're different from the rest.
+>>>
+>>> Bjorn
+>>>
 > 
-> A common pattern exists among several PCI host controller drivers. Some
-> of the resources that they support are optional, and the way that the
-> drivers handle these resources is by propagating -EPROBE_DEFER and keep
-> going without the resource otherwise. However, there can be several
-> reasons for failing to obtain a resource (e.g. out of memory). Currently
-> all of these reasons will cause the drivers to consider the optional
-> resource to not be there. However, if the resource was in fact required
-> in the specific case and requesting it failed because of some other
-> reason, the drivers would still happily continue and cause potentially
-> hard to find problems.
+> Hi Don,
 > 
-> Instead of rolling all error codes into one, reverse the check and only
-> handle -ENODEV as meaning "resource was not specified". Fatal errors in
-> that case will cause the driver to fail to probe rather than continuing
-> as if nothing had happened.
+>> The rest being? ... 0644 vs 0664 ?
+>> The file is read & written, thus the (first) 6; I'll have to dig through very old (7 yr) notes to see if the second 6 is needed for libvirt (so it doesn't have to be root to enable).
+>>
+>> -dd
+>>
 > 
-> Changes in v2:
-> - add Rockchip PCI patch which was previously separate
-> - addressed Bjorn's comments regarding commit message
-> - collected Reviewed-by, Tested-by and Acked-by tags
+> Were you able to see if the unusual permissions (0664) are needed for
+> libvirt? I appreciate your help!
 > 
-> Thierry
+> -Kelsey
 > 
-> Thierry Reding (6):
->   PCI: rockchip: Propagate errors for optional regulators
->   PCI: exynos: Propagate errors for optional PHYs
->   PCI: imx6: Propagate errors for optional regulators
->   PCI: armada8x: Propagate errors for optional PHYs
->   PCI: histb: Propagate errors for optional regulators
->   PCI: iproc: Propagate errors for optional PHYs
-> 
->  drivers/pci/controller/dwc/pci-exynos.c      |  2 +-
->  drivers/pci/controller/dwc/pci-imx6.c        |  4 ++--
->  drivers/pci/controller/dwc/pcie-armada8k.c   |  7 +++----
->  drivers/pci/controller/dwc/pcie-histb.c      |  4 ++--
->  drivers/pci/controller/pcie-iproc-platform.c |  9 +++------
->  drivers/pci/controller/pcie-rockchip-host.c  | 16 ++++++++--------
->  6 files changed, 19 insertions(+), 23 deletions(-)
+Asking libvirt team in RH; will get back as soon as I hear back.
+LPC time sink may delay the response.
 
-Applied to pci/misc for v5.4, thanks !
+-dd
 
-Lorenzo
