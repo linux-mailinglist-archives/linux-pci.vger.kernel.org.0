@@ -2,91 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 46E88A88C5
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2019 21:22:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5380A88D8
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2019 21:22:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729881AbfIDO1t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Sep 2019 10:27:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:56462 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729809AbfIDO1s (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:27:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C8E7E1570;
-        Wed,  4 Sep 2019 07:27:47 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F7E93F59C;
-        Wed,  4 Sep 2019 07:27:46 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 15:27:37 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: Re: [PATCH v3] PCI: hv: Make functions static
-Message-ID: <20190904142737.GA28184@e121166-lin.cambridge.arm.com>
-References: <20190828221846.6672-1-kw@linux.com>
- <20190829091713.27130-1-kw@linux.com>
- <DM6PR21MB13372349374A473FF98AD7BCCAA20@DM6PR21MB1337.namprd21.prod.outlook.com>
+        id S1730006AbfIDOdz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Sep 2019 10:33:55 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6209 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727083AbfIDOdz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:33:55 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 88FECCA4B544D53707B2;
+        Wed,  4 Sep 2019 22:33:53 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 22:33:52 +0800
+Subject: Re: PCI: Add stub pci_irq_vector and others
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>
+References: <20190902141910.1080-1-yuehaibing@huawei.com>
+ <20190903014518.20880-1-yuehaibing@huawei.com>
+ <MN2PR20MB29732EEECB217DDDF822EDA5CAB80@MN2PR20MB2973.namprd20.prod.outlook.com>
+ <CAKv+Gu8PVYyA-mzjrhR6r6upMc=xzpAhsbkuKRtb8T2noo_2XQ@mail.gmail.com>
+ <20190904122600.GA28660@gondor.apana.org.au>
+CC:     Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>,
+        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "pvanleeuwen@insidesecure.com" <pvanleeuwen@insidesecure.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <d5178f1e-0436-9d57-12c9-563e9bac82e2@huawei.com>
+Date:   Wed, 4 Sep 2019 22:33:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DM6PR21MB13372349374A473FF98AD7BCCAA20@DM6PR21MB1337.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190904122600.GA28660@gondor.apana.org.au>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 03:50:47PM +0000, Haiyang Zhang wrote:
+On 2019/9/4 20:26, Herbert Xu wrote:
+> On Wed, Sep 04, 2019 at 05:10:34AM -0700, Ard Biesheuvel wrote:
+>>
+>> This is the reason we have so many empty static inline functions in
+>> header files - it ensures that the symbols are declared even if the
+>> only invocations are from dead code.
 > 
+> Does this patch work?
+
+It works, Thanks.
+
+Tested-by: YueHaibing <yuehaibing@huawei.com>
+
 > 
-> > -----Original Message-----
-> > From: Krzysztof Wilczynski <kswilczynski@gmail.com> On Behalf Of Krzysztof
-> > Wilczynski
-> > Sent: Thursday, August 29, 2019 2:17 AM
-> > To: Bjorn Helgaas <helgaas@kernel.org>
-> > Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> > <haiyangz@microsoft.com>; Stephen Hemminger
-> > <sthemmin@microsoft.com>; Sasha Levin <sashal@kernel.org>; Lorenzo
-> > Pieralisi <lorenzo.pieralisi@arm.com>; linux-pci@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; linux-hyperv@vger.kernel.org
-> > Subject: [PATCH v3] PCI: hv: Make functions static
-> > 
-> > Functions hv_read_config_block(), hv_write_config_block() and
-> > hv_register_block_invalidate() are not used anywhere else and are local to
-> > drivers/pci/controller/pci-hyperv.c,
-> > and do not need to be in global scope, so make these static.
-> > 
-> > Resolve following compiler warning that can be seen when building with
-> > warnings enabled (W=1):
-> > 
-> > drivers/pci/controller/pci-hyperv.c:933:5: warning:
-> >  no previous prototype for ‘hv_read_config_block’
-> >   [-Wmissing-prototypes]
-> > 
-> > drivers/pci/controller/pci-hyperv.c:1013:5: warning:
-> >  no previous prototype for ‘hv_write_config_block’
-> >   [-Wmissing-prototypes]
-> > 
-> > drivers/pci/controller/pci-hyperv.c:1082:5: warning:
-> >  no previous prototype for ‘hv_register_block_invalidate’
-> >   [-Wmissing-prototypes]
-> > 
-> > Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+> ---8<---
+> This patch adds stub functions pci_alloc_irq_vectors_affinity and
+> pci_irq_vector when CONFIG_PCI is off so that drivers can use them
+> without resorting to ifdefs.
 > 
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> It also moves the PCI_IRQ_* macros outside of the ifdefs so that
+> they are always available.
+> 
+> Fixes: 625f269a5a7a ("crypto: inside-secure - add support for...")
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> 
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 9e700d9f9f28..74415ee62211 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -925,6 +925,11 @@ enum {
+>  	PCI_SCAN_ALL_PCIE_DEVS	= 0x00000040,	/* Scan all, not just dev 0 */
+>  };
+>  
+> +#define PCI_IRQ_LEGACY		(1 << 0) /* Allow legacy interrupts */
+> +#define PCI_IRQ_MSI		(1 << 1) /* Allow MSI interrupts */
+> +#define PCI_IRQ_MSIX		(1 << 2) /* Allow MSI-X interrupts */
+> +#define PCI_IRQ_AFFINITY	(1 << 3) /* Auto-assign affinity */
+> +
+>  /* These external functions are only available when PCI support is enabled */
+>  #ifdef CONFIG_PCI
+>  
+> @@ -1408,11 +1413,6 @@ resource_size_t pcibios_window_alignment(struct pci_bus *bus,
+>  int pci_set_vga_state(struct pci_dev *pdev, bool decode,
+>  		      unsigned int command_bits, u32 flags);
+>  
+> -#define PCI_IRQ_LEGACY		(1 << 0) /* Allow legacy interrupts */
+> -#define PCI_IRQ_MSI		(1 << 1) /* Allow MSI interrupts */
+> -#define PCI_IRQ_MSIX		(1 << 2) /* Allow MSI-X interrupts */
+> -#define PCI_IRQ_AFFINITY	(1 << 3) /* Auto-assign affinity */
+> -
+>  /*
+>   * Virtual interrupts allow for more interrupts to be allocated
+>   * than the device has interrupts for. These are not programmed
+> @@ -1517,14 +1517,6 @@ static inline int pci_irq_get_node(struct pci_dev *pdev, int vec)
+>  }
+>  #endif
+>  
+> -static inline int
+> -pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+> -		      unsigned int max_vecs, unsigned int flags)
+> -{
+> -	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags,
+> -					      NULL);
+> -}
+> -
+>  /**
+>   * pci_irqd_intx_xlate() - Translate PCI INTx value to an IRQ domain hwirq
+>   * @d: the INTx IRQ domain
+> @@ -1780,8 +1772,29 @@ static inline const struct pci_device_id *pci_match_id(const struct pci_device_i
+>  							 struct pci_dev *dev)
+>  { return NULL; }
+>  static inline bool pci_ats_disabled(void) { return true; }
+> +
+> +static inline int pci_irq_vector(struct pci_dev *dev, unsigned int nr)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static inline int
+> +pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+> +			       unsigned int max_vecs, unsigned int flags,
+> +			       struct irq_affinity *aff_desc)
+> +{
+> +	return -ENOSPC;
+> +}
+>  #endif /* CONFIG_PCI */
+>  
+> +static inline int
+> +pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+> +		      unsigned int max_vecs, unsigned int flags)
+> +{
+> +	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags,
+> +					      NULL);
+> +}
+> +
+>  #ifdef CONFIG_PCI_ATS
+>  /* Address Translation Service */
+>  void pci_ats_init(struct pci_dev *dev);
+> 
 
-This patch should go via the net tree - the code it is fixing
-is queued there, I will drop this patch from the PCI review
-queue.
-
-If it helps:
-
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
