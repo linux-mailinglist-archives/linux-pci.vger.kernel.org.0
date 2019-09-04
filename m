@@ -2,249 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 39592A7A60
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2019 06:46:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25F87A7A8A
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2019 07:04:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725938AbfIDEqj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Sep 2019 00:46:39 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38368 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbfIDEqj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Sep 2019 00:46:39 -0400
-Received: by mail-io1-f66.google.com with SMTP id p12so41323391iog.5;
-        Tue, 03 Sep 2019 21:46:38 -0700 (PDT)
+        id S1727374AbfIDFEW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Sep 2019 01:04:22 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42657 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfIDFEW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Sep 2019 01:04:22 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p3so10527431pgb.9
+        for <linux-pci@vger.kernel.org>; Tue, 03 Sep 2019 22:04:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=iv0qLpuR7sLWwOR4i5Pjgd55i1xxcdakcMdY3Zu+Myg=;
-        b=s5nPjsg7Z3oXHjd99cvFXQcA2JoqYRob7b6+TkOKdPkWoXkXEp0tAmvgfyND2sqPOg
-         nJHYruAT7jjAGpMhw60qkQfiDvxYP9Ofr46OZy4v32PQAJtKLWy7PesRBaHCx/pG6HB4
-         OivEUOzAdZGouKV2MhmbwRTTZymfb+6myyhHWR4rjX2Xqk+iL1LwuK1+C99OV7WgiKCs
-         wri5M5a/fmXcYVhuAkU1C1G4OJ9uvuEcYpxhrkIec+DDXbRkZFYx46hN96ODKYYMsql6
-         KmeyrYxDncoXFiDoxTBxth+dkrIOGU/VUjCistU2MO7CbJl+AzV9c24LXCQXy+qP+dmZ
-         6ijA==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lsq82oNvBEQIeF0WKJ+0h4DDWoEVAOmpOmGGWPrimjg=;
+        b=sSX9+LYSky7pVINOhuiSGCpzJfa3HJmKQK2ENjGQS8trcc5Ge/BA3AImBjV67Btlly
+         kXba3zW5GwwxPfXhf+29/2SxuIHn1gx3Cd8o0O+kEF8wXV0j5ORhJBc3n9a9III/2ZFr
+         H5L2KmnULH1LaMxIRXIgMGl8+6walA0wD4LSE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iv0qLpuR7sLWwOR4i5Pjgd55i1xxcdakcMdY3Zu+Myg=;
-        b=nNM+ctWmiCrst8ViCXs4ePp+HaS7Vtkt/Ub3RoVyFrA3glVjOZlccmpIZVF7yfOd92
-         w77of5x8p6TINl5MT6GV4ieG7kpMNPopjHOZ18a6/oLYwqXGbbFgAzsZWVeVjIBRDHxR
-         rwvAeVBiAFwERp3SW1FbillXGLmJAy74yb5rXPCWbw8qf8hHQm+bv+VEYJv7fgEa6BMn
-         sJ1DRMz4H7mrjPAacGw+AmkeSUxn6TPykFJ+gHj9ON9JdKwZ/arudoaPyOCfD7rd7EiT
-         CMAQGp5dQw9sX0sPSTmkUX7iyF/94pnervWgBxtNvuZVo4uQO7EkZIrqejY0R3JgHHlW
-         ti5A==
-X-Gm-Message-State: APjAAAXpzGQQG9IqnA3htJkNm61+HS+++v/tO3J08Kqr1VdoFIWHNU+s
-        6bM3MVpzjz0ixS7OcirV/vDyrDo0MYU=
-X-Google-Smtp-Source: APXvYqxys+cUKvwWqzLmuAoYeZPyTanlWNts40Uy6h0/VS05YBdQ0JWCAbphM7EhKTgO1byu8nsvvw==
-X-Received: by 2002:a5d:81cc:: with SMTP id t12mr3110186iol.157.1567571993732;
-        Tue, 03 Sep 2019 21:39:53 -0700 (PDT)
-Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id s5sm16471411iol.88.2019.09.03.21.39.52
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lsq82oNvBEQIeF0WKJ+0h4DDWoEVAOmpOmGGWPrimjg=;
+        b=DmouXN6ugJN6i4waie+pbdU+tjUB0kn4LxliTMFiLoKoA9W66d5xaTzuOgkvpu/tDt
+         SLX9MnIlACRJWKwcNQkn6U+lBjkjdnZYQrATkxM7FGAFRKHOmtNXib8YFPR7lIre66XQ
+         ee4XedhhQnR1XoDKBFFzQESNkFNo1U1HFsA3lhmLfVe88/LVSCeUBO4HspMSeNxoEbLk
+         HJUZcdGbZbzzGyEV+mWSU6NTRJINZCo2o0ZMlRqNCUVE0dXzYlYmmdTG4y/1AVcg6mrx
+         ONKKsHVIy/iADu+QYX8b7EfhxPynHNqE8q7Aaa1PXh01nvEQreVnfUQPewAlO4Kko4Vm
+         gKQw==
+X-Gm-Message-State: APjAAAUW+ST2p+Uzy/4pgBjfF12Kv/beuoChFfFk7vPxU1ZB2lG4uNN0
+        YFOCDacDm7HF3jMxK69x3PTYOA==
+X-Google-Smtp-Source: APXvYqx8+aLwpBI+yL/JAJGP3WN6LgZfckQim9p28+3ijWVor59if0jY7IKKr1PZPerfiDio+JKCdA==
+X-Received: by 2002:a17:90a:b292:: with SMTP id c18mr3042247pjr.1.1567573461329;
+        Tue, 03 Sep 2019 22:04:21 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id b13sm1185776pjz.10.2019.09.03.22.04.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 21:39:53 -0700 (PDT)
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skunberg.kelsey@gmail.com
-Cc:     skhan@linuxfoundation.org, rafael.j.wysocki@intel.com,
-        keith.busch@intel.com
-Subject: [PATCH 2/2] PCI: Unify pci_dev_is_disconnected() and pci_dev_is_inaccessible()
-Date:   Tue,  3 Sep 2019 22:36:35 -0600
-Message-Id: <20190904043633.65026-3-skunberg.kelsey@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190904043633.65026-1-skunberg.kelsey@gmail.com>
-References: <20190904043633.65026-1-skunberg.kelsey@gmail.com>
+        Tue, 03 Sep 2019 22:04:20 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 01:04:19 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jonathan Derrick <jonathan.derrick@intel.com>,
+        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 1/2] pci: Convert to use built-in RCU list checking
+Message-ID: <20190904050419.GA102582@google.com>
+References: <20190830231817.76862-1-joel@joelfernandes.org>
+ <201909041108.RSjNvfDL%lkp@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201909041108.RSjNvfDL%lkp@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Combine pci_dev_is_disconnected() with pci_dev_is_inaccessible() so only
-one function is used to learn if we should avoid accessing a device that's
-inaccessible due to surprise removal or an error condition.
+On Wed, Sep 04, 2019 at 12:06:43PM +0800, kbuild test robot wrote:
+> Hi "Joel,
+> 
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on linus/master]
+> [cannot apply to v5.3-rc7 next-20190903]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Joel-Fernandes-Google/pci-Convert-to-use-built-in-RCU-list-checking/20190901-211013
+> config: x86_64-rhel-7.6 (attached as .config)
+> compiler: gcc-7 (Debian 7.4.0-11) 7.4.0
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
 
-The use cases for pci_dev_is_disconnected() do not need to distinguish
-between a device being inaccessible due to a surprise removal or an error
-condition. This provides the opportunity to unify
-pci_dev_is_disconnected() and pci_dev_is_inaccessible() to reduce multiple
-functions used for the same task.
+This error seems bogus. I pulled -next and applied this patch and it builds
+fine. I am not sure what is wrong with the 0day tree, and the above 0day link
+is also dead.
 
-Change pci_dev_is_disconnected() call inside pci_dev_is_inaccessible() to:
+What's going on with 0day ?!
 
-	pdev->error_state == pci_channel_io_perm_failure
+thanks,
 
-Change remaining pci_dev_is_disconnected() calls to
-pci_dev_is_inaccessible() calls.
+ - Joel
 
-Remove pci_dev_is_disconnected() from /pci/pci.h which would now no longer
-be used.
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All error/warnings (new ones prefixed by >>):
+> 
+>    drivers/pci/controller/vmd.c: In function 'vmd_irq':
+> >> drivers/pci/controller/vmd.c:722:37: error: macro "list_for_each_entry_rcu" passed 4 arguments, but takes just 3
+>         srcu_read_lock_held(&irqs->srcu))
+>                                         ^
+> >> drivers/pci/controller/vmd.c:721:2: error: unknown type name 'list_for_each_entry_rcu'
+>      list_for_each_entry_rcu(vmdirq, &irqs->irq_list, node,
+>      ^~~~~~~~~~~~~~~~~~~~~~~
+> >> drivers/pci/controller/vmd.c:723:28: error: expected ')' before '->' token
+>       generic_handle_irq(vmdirq->virq);
+>                                ^~
+> >> drivers/pci/controller/vmd.c:721:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+>      list_for_each_entry_rcu(vmdirq, &irqs->irq_list, node,
+>      ^~~~~~~~~~~~~~~~~~~~~~~
+>    drivers/pci/controller/vmd.c:717:18: warning: unused variable 'vmdirq' [-Wunused-variable]
+>      struct vmd_irq *vmdirq;
+>                      ^~~~~~
+> 
+> vim +/list_for_each_entry_rcu +722 drivers/pci/controller/vmd.c
+> 
+>    713	
+>    714	static irqreturn_t vmd_irq(int irq, void *data)
+>    715	{
+>    716		struct vmd_irq_list *irqs = data;
+>    717		struct vmd_irq *vmdirq;
+>    718		int idx;
+>    719	
+>    720		idx = srcu_read_lock(&irqs->srcu);
+>  > 721		list_for_each_entry_rcu(vmdirq, &irqs->irq_list, node,
+>  > 722					srcu_read_lock_held(&irqs->srcu))
+>  > 723			generic_handle_irq(vmdirq->virq);
+>    724		srcu_read_unlock(&irqs->srcu, idx);
+>    725	
+>    726		return IRQ_HANDLED;
+>    727	}
+>    728	
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
-Demonstration of changes to pci_dev_is_disconnected() and
-pci_dev_is_inaccessible():
-
-Before combining:
-
-	static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
-	{
-		return dev->error_state == pci_channel_io_perm_failure;
-	}
-
-	bool pci_dev_is_inaccessible(struct pci_dev *pdev)
-	{
-		u32 v;
-
-		if (pci_dev_is_disconnected(pdev))
-			return true;
-		return !pci_bus_read_dev_vendor_id(pdev->bus, pdev->devfn, &v, 0);
-	}
-
-After combining:
-
-	bool pci_dev_is_inaccessible(struct pci_dev *pdev)
-	{
-		u32 v;
-
-		if (pdev->error_state == pci_channel_io_perm_failure)
-			return true;
-		return !pci_bus_read_dev_vendor_id(pdev->bus, pdev->devfn, &v, 0);
-	}
-
-Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
----
- drivers/pci/access.c            | 12 ++++++------
- drivers/pci/msi.c               |  4 ++--
- drivers/pci/pci.c               |  2 +-
- drivers/pci/pci.h               |  5 -----
- drivers/pci/pcie/portdrv_core.c |  2 +-
- 5 files changed, 10 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index 544922f097c0..c096340afb8c 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -535,7 +535,7 @@ EXPORT_SYMBOL(pcie_capability_clear_and_set_dword);
- 
- int pci_read_config_byte(const struct pci_dev *dev, int where, u8 *val)
- {
--	if (pci_dev_is_disconnected(dev)) {
-+	if (pci_dev_is_inaccessible(dev)) {
- 		*val = ~0;
- 		return PCIBIOS_DEVICE_NOT_FOUND;
- 	}
-@@ -545,7 +545,7 @@ EXPORT_SYMBOL(pci_read_config_byte);
- 
- int pci_read_config_word(const struct pci_dev *dev, int where, u16 *val)
- {
--	if (pci_dev_is_disconnected(dev)) {
-+	if (pci_dev_is_inaccessible(dev)) {
- 		*val = ~0;
- 		return PCIBIOS_DEVICE_NOT_FOUND;
- 	}
-@@ -556,7 +556,7 @@ EXPORT_SYMBOL(pci_read_config_word);
- int pci_read_config_dword(const struct pci_dev *dev, int where,
- 					u32 *val)
- {
--	if (pci_dev_is_disconnected(dev)) {
-+	if (pci_dev_is_inaccessible(dev)) {
- 		*val = ~0;
- 		return PCIBIOS_DEVICE_NOT_FOUND;
- 	}
-@@ -566,7 +566,7 @@ EXPORT_SYMBOL(pci_read_config_dword);
- 
- int pci_write_config_byte(const struct pci_dev *dev, int where, u8 val)
- {
--	if (pci_dev_is_disconnected(dev))
-+	if (pci_dev_is_inaccessible(dev))
- 		return PCIBIOS_DEVICE_NOT_FOUND;
- 	return pci_bus_write_config_byte(dev->bus, dev->devfn, where, val);
- }
-@@ -574,7 +574,7 @@ EXPORT_SYMBOL(pci_write_config_byte);
- 
- int pci_write_config_word(const struct pci_dev *dev, int where, u16 val)
- {
--	if (pci_dev_is_disconnected(dev))
-+	if (pci_dev_is_inaccessible(dev))
- 		return PCIBIOS_DEVICE_NOT_FOUND;
- 	return pci_bus_write_config_word(dev->bus, dev->devfn, where, val);
- }
-@@ -583,7 +583,7 @@ EXPORT_SYMBOL(pci_write_config_word);
- int pci_write_config_dword(const struct pci_dev *dev, int where,
- 					 u32 val)
- {
--	if (pci_dev_is_disconnected(dev))
-+	if (pci_dev_is_inaccessible(dev))
- 		return PCIBIOS_DEVICE_NOT_FOUND;
- 	return pci_bus_write_config_dword(dev->bus, dev->devfn, where, val);
- }
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 0884bedcfc7a..4680043aa315 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -311,7 +311,7 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
- {
- 	struct pci_dev *dev = msi_desc_to_pci_dev(entry);
- 
--	if (dev->current_state != PCI_D0 || pci_dev_is_disconnected(dev)) {
-+	if (dev->current_state != PCI_D0 || pci_dev_is_inaccessible(dev)) {
- 		/* Don't touch the hardware now */
- 	} else if (entry->msi_attrib.is_msix) {
- 		void __iomem *base = pci_msix_desc_addr(entry);
-@@ -1008,7 +1008,7 @@ static void pci_msix_shutdown(struct pci_dev *dev)
- 	if (!pci_msi_enable || !dev || !dev->msix_enabled)
- 		return;
- 
--	if (pci_dev_is_disconnected(dev)) {
-+	if (pci_dev_is_inaccessible(dev)) {
- 		dev->msix_enabled = 0;
- 		return;
- 	}
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 7b4e248db5f9..e5f46d98dbe1 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5910,7 +5910,7 @@ bool pci_dev_is_inaccessible(struct pci_dev *pdev)
- {
- 	u32 v;
- 
--	if (pci_dev_is_disconnected(pdev))
-+	if (pdev->error_state == pci_channel_io_perm_failure)
- 		return true;
- 	return !pci_bus_read_dev_vendor_id(pdev->bus, pdev->devfn, &v, 0);
- }
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 1be03a97cb92..f0dc86dc8aab 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -363,11 +363,6 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
- 	return 0;
- }
- 
--static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
--{
--	return dev->error_state == pci_channel_io_perm_failure;
--}
--
- /* pci_dev priv_flags */
- #define PCI_DEV_ADDED 0
- 
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index 308c3e0c4a34..8bf6b47dd2c6 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -416,7 +416,7 @@ static void wait_for_downstream_link(struct pci_dev *pdev)
- 	    pci_pcie_type(pdev) != PCI_EXP_TYPE_DOWNSTREAM)
- 		return;
- 
--	if (pci_dev_is_disconnected(pdev))
-+	if (pci_dev_is_inaccessible(pdev))
- 		return;
- 
- 	if (!pdev->subordinate || list_empty(&pdev->subordinate->devices) ||
--- 
-2.20.1
 
