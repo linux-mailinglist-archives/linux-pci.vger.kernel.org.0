@@ -2,151 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A36CA8051
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2019 12:25:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16EA2A8101
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2019 13:24:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729425AbfIDKZk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Sep 2019 06:25:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:51304 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725966AbfIDKZk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Sep 2019 06:25:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BAED2337;
-        Wed,  4 Sep 2019 03:25:39 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 338313F246;
-        Wed,  4 Sep 2019 03:25:39 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 11:25:37 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: PCI/kernel msi code vs GIC ITS driver conflict?
-Message-ID: <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
-References: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
- <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
- <ef258ec7-877c-406a-3d88-80ff79b823f2@huawei.com>
+        id S1726240AbfIDLW6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Sep 2019 07:22:58 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:37624 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725840AbfIDLW6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Sep 2019 07:22:58 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 77AFA435DC;
+        Wed,  4 Sep 2019 11:22:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-transfer-encoding:content-language:content-type
+        :content-type:in-reply-to:mime-version:user-agent:date:date
+        :message-id:from:from:references:subject:subject:received
+        :received:received; s=mta-01; t=1567596175; x=1569410576; bh=vLT
+        yzgkRKAUdylm5Y2rrPuQvabd1rl4FNwEJC+1uuEM=; b=dnM/J9cWQupztEUNh8J
+        ASwpHvsY3imekjVOfXgaQyD1O01Yz+m7pqex0jWUYIRn36RgV1kUToN9QYqN83Ml
+        DpR0j+/cW13LNrQfuIudJnYtspzHtwSW+oBbsqVZgJ8VANa3Od70zabfG9idkrcX
+        Urd6QtobP/4yCcVimV4xEgr4=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id WJ15DtN2wPly; Wed,  4 Sep 2019 14:22:55 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 4C6E5435DE;
+        Wed,  4 Sep 2019 14:22:55 +0300 (MSK)
+Received: from [172.17.15.60] (172.17.15.60) by T-EXCH-02.corp.yadro.com
+ (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Wed, 4 Sep
+ 2019 14:22:54 +0300
+Subject: Re: [PATCH v5 16/23] PCI: hotplug: movable BARs: Don't reserve IO/mem
+ bus space
+To:     Oliver O'Halloran <oohall@gmail.com>
+CC:     <linux-pci@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+        Bjorn Helgaas <helgaas@kernel.org>, <linux@yadro.com>
+References: <20190816165101.911-1-s.miroshnichenko@yadro.com>
+ <20190816165101.911-17-s.miroshnichenko@yadro.com>
+ <1edd23fd93386d8a69bc9280329b2d7c819155d4.camel@gmail.com>
+From:   Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=s.miroshnichenko@yadro.com; prefer-encrypt=mutual; keydata=
+ xsFNBFm31LoBEAC1wCndw8xXjGaJOinDBeVD1/8TFlVehvafur6V9xH3gsHhs0weDcMgw2Ki
+ r5ZVhS8BlltU0snpsnQHxYB5BF0gzCLwwPUjFPZ7E0/++ylbNJoGe53cVbE870NK5WqoSEUg
+ QtTQev2/Y5q0v7kfMh9g5p5jzeqfQSZzOrEP4d1cg5tPNKYji5cCfB/NQTHWV9w4EPj3UJQT
+ ZPp4xqMAXu0JU1W9/XecNobKaHfEv9T+UWdx2eufiNqCgfAkRVCl8V0tKhQ4PZlZdp0dQH/N
+ BreUg1+QJ4/t2SyEsiIPqYxFBW6qWAgOP5fzGNG31VHaQeJCA31keh84/8t632HZ4FDRrS3N
+ 6V7Oc0ew7h5AwgOca4d3TTn8ATfASQ5vAxHC2ZK9CZhfa3RgK+8X5+vwkqc8O70iTmE9Goap
+ uDMtgvIc0r0PHTiB3eZlyHExMD+FIOBOp2GvL7BmFHMgyOjNDdh2vBNqUwiv1RTQVWPhNX/J
+ 4ZhTAZuAr5+6S/iRFpWspCqKvgonPxSzfWRS5dWJ2kavuvXkSB5eyPx9XRgrWxZwVdseuTpi
+ CeTEW9/noDDl1edZdWHGWS9/4BC1nByitYYUcPXuzSkIsuae2tDw+lnsQfgAn+pXT6ESjEnZ
+ LGnnWMQNLISf8yIaEh6bft+vXT67o1G2/U6VN1+suUPcDgYEVQARAQABzTJTZXJnZWkgTWly
+ b3NobmljaGVua28gPHMubWlyb3NobmljaGVua29AeWFkcm8uY29tPsLBlAQTAQgAPhYhBB1u
+ 0+6Lz/3BafPm9wx0PmjRU7O1BQJZt9S6AhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4B
+ AheAAAoJEAx0PmjRU7O1WfEP/jdWabDp11EdD9ZCK8LlwZ/SgXVfr9lZ5Kx3VVI68KAcfupH
+ 3m+1lGTOktpRu7gQaj867KCbzRCWJjoVibrBgMMaFZQX2Bf2usxuBN9QxUnehg3R5Yr+c0KS
+ 9v2oSduWaMJ/Fs3IVg5gh0bhH3lMHISqAQLtl3ncyB+1O+X+MgReRGznj5tkjQWC960t85SO
+ hkNkhVMp0z2b1XfY51XxYRESdNkJswxv3UnpAvlgdh+ItzJU8fRmfUtOzRdGD6mukrkpkS1z
+ lAGNLayBOiEWUk8E1gm3rK46l/sm6Gq9ExCh+bgkwQHRp/JhyHpsid9V/o5nLh+jbh/CLYIF
+ onrG2RN6lePQpyh6TpiZfGbxz/4rny88HdCD31OdvTwbnNp5Fj48YXbUlo8WILg2OHWbSRQ9
+ w7OuTLcITPW084E/Uq/nL6+m316OZpY7iiVB+1e2reJRjnsqlK+TX7N1KsAamba3hGSqF8QC
+ 61RAzXS99D1ohL98G0hJNYyuHaeWus4wJRt8JBEe6D4r0hrS/O97oa0juygwY+zP9mtpYRr4
+ t9Im1hpIkV+cC3aJrRiQNaXJN4S+8F8DQnXMUitf0590NNKwYRuQuTg5URoqjYBFZtXGgS7w
+ vdyzevMt1bCBtZW6Rbdu6TcHoF3Aminx96wXlSizTGpo+xJ589xQ46U9KWXdzsFNBFm31LoB
+ EADAsXCTRufklKBW9jdUMwjltZjXwu5muxcVRj8XICi77oa9DgsGhA5v7vosbpNXzZAL018h
+ 1khPu6ca6X0shLm0Le2KQ6Q00VHEwrTjXQ0NN0aa+vRG3NKPb9t/SiXg6yNPKuQxTsYm0vP9
+ 4fIH6nHDtJpBXq8LK5C6GTD6G2R3VTSPpJz6tFPrfLrV4jPARFRAZ483Wjs9iBRygFTtb6YJ
+ r1YJnwmXcb8Z/ds3vPo5ULMcMlcXEA7NlkmN7r3LUkmE6Tjr1hZHGwEWRwSiw1CwkAQqLlMX
+ xRul5+nPz0pPrB8hBxONjnlGX3f0Ky2xdKxrFxlzd8HtRzhWb4R0vqgWQRXXFeKc++uEyk6g
+ KZ48zSjLq0Av4ZS8POCL1JisSV7Hbwe4Ik3qaeR61KEuVtBlySFijwvTs4p5b9PcG2fmNiyo
+ aFBdFkbI/pTuORRBYCLbjXwyRWnCGBWZ8b0NSCs4sb9vNyObxoLYN4RdRnKKLpkXz3EXdPWZ
+ WswxQQNopKs5pE3aAvYfTitIg0JmKSK57w3UJNS11s5xTRAmKDHj9PmLZcNLFhG7ceb9T41+
+ YLNCEu8/xvFEorp+AlJ6n0clfPsNsi8317ZJL0mgZ0XrD9efmuA+xvb/0T67D371qK6xDaZ2
+ xN71pfjhZl1OYNZ3FDJLpZSNZKNFluhRWOvTKQARAQABwsF8BBgBCAAmFiEEHW7T7ovP/cFp
+ 8+b3DHQ+aNFTs7UFAlm31LoCGwwFCQlmAYAACgkQDHQ+aNFTs7XITg/9GHcaTLjsRP7Pacu0
+ PFs2ubddBvZPC19sIILUNDlQHsOVKTpuFTtEmA6F4o4gf/SY8AvnHyVVqe8YYsQkPwhwfwbH
+ ihoDZyJxyr52mqanez3sQV6RQEqCZtKaJtMdZrtOZcjqrAxEG1arowCKnnoPF+ivtA4ZEtlm
+ xt9x5S0UfytTIZR0KKsRfO7XZvqfzbg6/NVRnUibSzCz2yzC5kbsyjPoK+c+C142BlnCdgai
+ 0It5xKX1BBoVT/YSeB5ACGijuRsuDH2mHzdOeEDlP/UOAB5gx9aBOdP8YMTAk2b4qfANX7Pc
+ W8BnI99mWuOP04KVgdQf5vgwMRDlgdtsQJw7l5YBQxprq8edAH3xsKung03qsV2inbQDkMnl
+ c+l79kx0ilh0oLwviRft5xVCOfCyVkvekUhN4qG+guGFJbxYffliFB02Kcf2e4CueCnGGZAw
+ +OkhHbtDmgmyslv7cxf1qzsObQfYc9eR5f8uiX41bLPwTMy18YnYk2hxJSW0g+LkPqBVQcAO
+ Nwdozk9DY6wY9cMQ8coYTctox5VsvYEz2rJCRiIc40NO76gdMVutEORjdSoeZK32srVNoBo9
+ L0EK2QCFFRDcslPDpZWE1uDZQPW+GC2Z/dmuEpaMzlrIgfZ8GLXxHbB+VdDQ7QE//lphXskF
+ lHi50np+KDDPzZS51tw=
+Message-ID: <e11fa8c6-4892-82a9-78ad-bc6bdb6f4037@yadro.com>
+Date:   Wed, 4 Sep 2019 14:22:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ef258ec7-877c-406a-3d88-80ff79b823f2@huawei.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <1edd23fd93386d8a69bc9280329b2d7c819155d4.camel@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.17.15.60]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 09:56:51AM +0100, John Garry wrote:
-> On 03/09/2019 17:16, Marc Zyngier wrote:
-> > Hi John,
-> > 
-> > On 03/09/2019 15:09, John Garry wrote:
-> > > Hi Marc, Bjorn, Thomas,
+On 9/4/19 8:42 AM, Oliver O'Halloran wrote:
+> On Fri, 2019-08-16 at 19:50 +0300, Sergey Miroshnichenko wrote:
+>> A hotplugged bridge with many hotplug-capable ports may request
+>> reserving more IO space than the machine has. This could be overridden
+>> with the "hpiosize=" kernel argument though.
+>>
+>> But when BARs are movable, there are no need to reserve space anymore:
+>> new BARs are allocated not from reserved gaps, but via rearranging the
+>> existing BARs. Requesting a precise amount of space for bridge windows
+>> increases the chances of adding the new bridge successfully.
 > 
-> Hi Marc,
+> It wouldn't hurt to reserve some memory space to prevent unnecessary
+> BAR shuffling at runtime. If it turns out that we need more space then
+> we can always fall back to re-assigning the whole tree.
 > 
-> > > 
-> > > We've come across a conflict with the kernel/pci msi code and GIC ITS
-> > > driver on our arm64 system, whereby we can't unbind and re-bind a PCI
-> > > device driver under special conditions. I'll explain...
-> > > 
-> > > Our PCI device support 32 MSIs. The driver attempts to allocate msi
-> > > vectors with min msi=17, max msi = 32, and affd.pre vectors = 16. For
-> > > our test we make nr_cpus = 1 (just anything less than 16).
-> > 
-> > Just to confirm: this PCI device is requiring Multi-MSI, right? As
-> > opposed to MSI-X?
-> 
-> Right, Multi-MSI.
-> 
-> > 
-> > > We find that the pci/kernel msi code gives us 17 vectors, but the GIC
-> > > ITS code reserves 32 lpi maps in its_irq_domain_alloc(). The problem
-> > > then occurs when unbinding the driver in its_irq_domain_free() call,
-> > > where we only clear bits for 17 vectors. So if we unbind the driver and
-> > > then attempt to bind again, it fails.
-> > 
-> > Is this device, by any chance, sharing its requested-id with another
-> > device? By being behind a bridge of some sort?There is some code to
-> > deal with it, but I'm not sure it has ever been verified in anger...
-> 
-> It's a RC iEP and there should be no requested-id sharing:
-> 
-> root@ubuntu:/home/john#  lspci -s 74:02.0 -v
-> 74:02.0 Serial Attached SCSI controller: Huawei Technologies Co., Ltd.
-> HiSilicon SAS 3.0 HBA (rev 20)
-> Flags: bus master, fast devsel, latency 0, IRQ 23, NUMA node 0
-> Memory at a2000000 (32-bit, non-prefetchable) [size=32K]
-> Capabilities: [40] Express Root Complex Integrated Endpoint, MSI 00
-> Capabilities: [80] MSI: Enable+ Count=32/32 Maskable+ 64bit+
-> Capabilities: [b0] Power Management version 3
-> Kernel driver in use: hisi_sas_v3_hw
-> 
-> > 
-> > > Where the fault lies, I can't say. Maybe the kernel msi code should
-> > > always give power of 2 vectors - as I understand, the PCI spec mandates
-> > > this. Or maybe the GIC ITS driver has a problem in the free path, as
-> > > above. Or maybe the PCI driver should not be allowed to request !power
-> > > of 2 min/max vectors.
-> > > 
-> > > Opinion?
-> > 
-> > My hunch is that it is an ITS driver bug: the PCI layer is allowed to
-> > give any number of MSIs to an endpoint driver, as long as they match the
-> > requirements of the allocation for Multi-MSI.
-> 
-> I would tend to say that, but isn't the requirement to allocate power of 2
-> msi vectors, which doesn't seem to be enforced in the kernel msi layer?
 
-For a PCI device that supports MSI but not MSI-X - my understanding is that
-pci_alloc_irq_vectors_affinity and pci_alloc_irq_vectors will request *from
-the device* a power of 2 msi vectors between the min and max given by the
-driver - msi_setup_entry rounds up to nearest power of 2.
+Hi Oliver,
 
-However this doesn't guarantee that pci_alloc_irq_vectors will return a
-power of 2. For example if you set maxvec to 17, then it will request
-32 from the device and pci_alloc_irq_vectors will return 17 (i.e. it satisfies
-your request by over allocating, but still gives you what you asked for).
+Thank you for your comments!
 
-I'm not yet familiar with ITS, however if it is reserving 32 yet you only
-clear 17, then there is mismatch between the number actually reserved from
-the hardware, and the value returned from pci_alloc_irq_vectors.
+We had an issue on a x86_64 PC with a small amount of IO space: after
+hotplugging an empty bridge of 32 ports even a DEFAULT_HOTPLUG_IO_SIZE
+(which is 256) was enough to exhaust the space. So another patch of
+this series ("Don't allow added devices to steal resources") had
+disabled the BAR allocating for this bridge. It took some time for me
+to guess that "hpiosize=0" can solve that.
 
-(It looks like its_alloc_device_irq rounds up to the nearest power of 2).
+For MEM and MEM64 spaces it will be harder to reproduce the same, but
+there can be a similar problem when fitting between two immovable BARs.
 
-Thanks,
+To implement a fallback it would need to add some flag indicating that
+allocating this bridge with reserved spaces has failed, so its windows
+should be recalculated without reserved spaces - and try again. Maybe
+even two types of retrials: with and without the full re-assignment.
+We've tried to avoid adding execution paths and code complicatedness.
 
-Andrew Murray
+Serge
 
-> 
->  That's the responsibility
-> > of the ITS driver. If unbind/bind fails, it means that somehow we've
-> > missed the freeing of the LPIs, which isn't good.
-> > 
-> > Is the device common enough that I can try and reproduce the issue?
-> 
-> No, it's integrated into the hi1620 SoC found in the D06 dev board only, but
-> I don't think that there is anything special about this HW.
-> 
-> If
-> > there's a Linux driver somewhere, I can always hack something in
-> > emulation and find out...
-> 
-> Ok, the interrupt allocation for this particular driver in this test is in https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c#n2393
-> 
-> Cheers,
-> John
-> 
-> > 
-> > Thanks,
-> > 
-> > 	M.
-> > 
-> 
+>> Signed-off-by: Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
+>> ---
+>>  drivers/pci/setup-bus.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+>> index c7b7e30c6284..7d64ec8e7088 100644
+>> --- a/drivers/pci/setup-bus.c
+>> +++ b/drivers/pci/setup-bus.c
+>> @@ -1287,7 +1287,7 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
+>>  
+>>  	case PCI_HEADER_TYPE_BRIDGE:
+>>  		pci_bridge_check_ranges(bus);
+>> -		if (bus->self->is_hotplug_bridge) {
+>> +		if (bus->self->is_hotplug_bridge && !pci_movable_bars_enabled()) {
+>>  			additional_io_size  = pci_hotplug_io_size;
+>>  			additional_mem_size = pci_hotplug_mem_size;
+>>  		}
 > 
