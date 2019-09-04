@@ -2,126 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE57AA7B99
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2019 08:22:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77998A7E93
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2019 10:57:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbfIDGWc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Sep 2019 02:22:32 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34857 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfIDGWc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Sep 2019 02:22:32 -0400
-Received: by mail-io1-f67.google.com with SMTP id b10so41771785ioj.2;
-        Tue, 03 Sep 2019 23:22:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ha13jbBTJ78NMGOciyWwaZeX7xMQMX408d8EPNxVmIs=;
-        b=LfD5oJENpa1oAY/gb/OD2LLz+K2jKvTt8+yeSZEVcHtD1k9VN/Ifr6qI4QB8BZzyjx
-         QOpxxSZ6JJO4O96hJMv8Tq0eL98tb6W+nr6YpnIISDuQcid+4C0k+PfhPVU5r44gSsrr
-         fScRxF2Bxw5otqKfBRhz8GHIIvGmHxXkhOg6OnYFAZeCv/QWY+jAVM0DitJzZ8cOrBNB
-         RQiJq6TKmigyAjxNiJ6+9viTdOt2pX/FyEU65PNHjFu8MAWmhSAeWFTLiph+ci8vDj4z
-         9ZQ39kdDrm4CwcYC4xXV2LBBogfQfOE3iwCxflTIil9N9yKriFL1l1uQ9NUdsjD9JDps
-         oVGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ha13jbBTJ78NMGOciyWwaZeX7xMQMX408d8EPNxVmIs=;
-        b=qFILi6/8WWk26A7lWwN+9eVGOmJ4A83jUT6ymhap7A6o4Psu3O/4Hih78p/yWJfypW
-         F4xbAHeUHn/VfVPSsn51IMJAJE+ZL/1e8a+4RDs4hUhV72id18005FW9Ahi75LZIskSq
-         Hs0PE0MibguhK8jNeszo2BsdotChJZzVaRi6dmVvW4kLbPIwTf+XOKPIPYP3CvTSkhC5
-         ACnggehFAZ454di8TycM3JAXcpHhk4N3ehtzGLKCQXcZVBL7FTVCwoLFHYs2azjd5G01
-         OtSi+lZx/J/rdK3k4ojhrtrvDU3wEjnWCDht/qk0VJpC2CS0Y/aBpLsacfLFu0q2iSLS
-         Tw5Q==
-X-Gm-Message-State: APjAAAXd9a1okt4pt/lHlechqwSkNvLcUfD5Zd28HZQLfxUGkZQxzPxq
-        TGKRPp3y+itWH3yHz0pxWOg=
-X-Google-Smtp-Source: APXvYqyGF/nT7hMCagXQoT3al4s5E9hCIUwMr8muaqs6rrZkEfVxma8D+VTyjUf4JfEBbaY11AwnVw==
-X-Received: by 2002:a5e:8c01:: with SMTP id n1mr1049078ioj.152.1567578151734;
-        Tue, 03 Sep 2019 23:22:31 -0700 (PDT)
-Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id t5sm17061967ios.33.2019.09.03.23.22.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 23:22:31 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 00:22:29 -0600
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     Don Dutile <ddutile@redhat.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Bodong Wang <bodong@mellanox.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [Linux-kernel-mentees] [PATCH v2 2/3] PCI: sysfs: Change
- permissions from symbolic to octal
-Message-ID: <20190904062229.GA66871@JATN>
-References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-3-skunberg.kelsey@gmail.com>
- <20190814053846.GA253360@google.com>
- <b4c0d5b4-7243-ba96-96d1-041a264ac499@redhat.com>
+        id S1727787AbfIDI5G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Sep 2019 04:57:06 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57506 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726358AbfIDI5G (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Sep 2019 04:57:06 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CDB8C341603829889F06;
+        Wed,  4 Sep 2019 16:57:04 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 16:56:56 +0800
+Subject: Re: PCI/kernel msi code vs GIC ITS driver conflict?
+To:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Bjorn Helgaas" <bhelgaas@google.com>
+References: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
+ <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
+CC:     Linux PCI <linux-pci@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <ef258ec7-877c-406a-3d88-80ff79b823f2@huawei.com>
+Date:   Wed, 4 Sep 2019 09:56:51 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b4c0d5b4-7243-ba96-96d1-041a264ac499@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 10:37:13AM -0400, Don Dutile wrote:
-> On 08/14/2019 01:38 AM, Bjorn Helgaas wrote:
-> > [+cc Bodong, Don, Greg for permission question]
-> > 
-> > On Tue, Aug 13, 2019 at 02:45:12PM -0600, Kelsey Skunberg wrote:
-> > > Symbolic permissions such as "(S_IWUSR | S_IWGRP)" are not
-> > > preferred and octal permissions should be used instead. Change all
-> > > symbolic permissions to octal permissions.
-> > > 
-> > > Example of old:
-> > > 
-> > > "(S_IWUSR | S_IWGRP)"
-> > > 
-> > > Example of new:
-> > > 
-> > > "0220"
-> > 
-> > 
-> > >   static DEVICE_ATTR_RO(sriov_totalvfs);
-> > > -static DEVICE_ATTR(sriov_numvfs, (S_IRUGO | S_IWUSR | S_IWGRP),
-> > > -				  sriov_numvfs_show, sriov_numvfs_store);
-> > > +static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
-> > >   static DEVICE_ATTR_RO(sriov_offset);
-> > >   static DEVICE_ATTR_RO(sriov_stride);
-> > >   static DEVICE_ATTR_RO(sriov_vf_device);
-> > > -static DEVICE_ATTR(sriov_drivers_autoprobe, (S_IRUGO | S_IWUSR | S_IWGRP),
-> > > -		   sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
-> > > +static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
-> > > +		   sriov_drivers_autoprobe_store);
-> > 
-> > Greg noticed that sriov_numvfs and sriov_drivers_autoprobe have
-> > "unusual" permissions.  These were added by:
-> > 
-> >    0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
-> >    1789382a72a5 ("PCI: SRIOV control and status via sysfs")
-> > 
-> > Kelsey's patch correctly preserves the existing permissions, but we
-> > should double-check that they are the permissions they want, and
-> > possibly add a comment about why they're different from the rest.
-> > 
-> > Bjorn
-> > 
+On 03/09/2019 17:16, Marc Zyngier wrote:
+> Hi John,
+>
+> On 03/09/2019 15:09, John Garry wrote:
+>> Hi Marc, Bjorn, Thomas,
 
-Hi Don,
+Hi Marc,
 
-> The rest being? ... 0644 vs 0664 ?
-> The file is read & written, thus the (first) 6; I'll have to dig through very old (7 yr) notes to see if the second 6 is needed for libvirt (so it doesn't have to be root to enable).
-> 
-> -dd
+>>
+>> We've come across a conflict with the kernel/pci msi code and GIC ITS
+>> driver on our arm64 system, whereby we can't unbind and re-bind a PCI
+>> device driver under special conditions. I'll explain...
+>>
+>> Our PCI device support 32 MSIs. The driver attempts to allocate msi
+>> vectors with min msi=17, max msi = 32, and affd.pre vectors = 16. For
+>> our test we make nr_cpus = 1 (just anything less than 16).
+>
+> Just to confirm: this PCI device is requiring Multi-MSI, right? As
+> opposed to MSI-X?
+
+Right, Multi-MSI.
+
+>
+>> We find that the pci/kernel msi code gives us 17 vectors, but the GIC
+>> ITS code reserves 32 lpi maps in its_irq_domain_alloc(). The problem
+>> then occurs when unbinding the driver in its_irq_domain_free() call,
+>> where we only clear bits for 17 vectors. So if we unbind the driver and
+>> then attempt to bind again, it fails.
+>
+> Is this device, by any chance, sharing its requested-id with another
+> device? By being behind a bridge of some sort?There is some code to
+> deal with it, but I'm not sure it has ever been verified in anger...
+
+It's a RC iEP and there should be no requested-id sharing:
+
+root@ubuntu:/home/john#  lspci -s 74:02.0 -v
+74:02.0 Serial Attached SCSI controller: Huawei Technologies Co., Ltd. 
+HiSilicon SAS 3.0 HBA (rev 20)
+Flags: bus master, fast devsel, latency 0, IRQ 23, NUMA node 0
+Memory at a2000000 (32-bit, non-prefetchable) [size=32K]
+Capabilities: [40] Express Root Complex Integrated Endpoint, MSI 00
+Capabilities: [80] MSI: Enable+ Count=32/32 Maskable+ 64bit+
+Capabilities: [b0] Power Management version 3
+Kernel driver in use: hisi_sas_v3_hw
+
+>
+>> Where the fault lies, I can't say. Maybe the kernel msi code should
+>> always give power of 2 vectors - as I understand, the PCI spec mandates
+>> this. Or maybe the GIC ITS driver has a problem in the free path, as
+>> above. Or maybe the PCI driver should not be allowed to request !power
+>> of 2 min/max vectors.
+>>
+>> Opinion?
+>
+> My hunch is that it is an ITS driver bug: the PCI layer is allowed to
+> give any number of MSIs to an endpoint driver, as long as they match the
+> requirements of the allocation for Multi-MSI.
+
+I would tend to say that, but isn't the requirement to allocate power of 
+2 msi vectors, which doesn't seem to be enforced in the kernel msi layer?
+
+  That's the responsibility
+> of the ITS driver. If unbind/bind fails, it means that somehow we've
+> missed the freeing of the LPIs, which isn't good.
+>
+> Is the device common enough that I can try and reproduce the issue?
+
+No, it's integrated into the hi1620 SoC found in the D06 dev board only, 
+but I don't think that there is anything special about this HW.
+
+If
+> there's a Linux driver somewhere, I can always hack something in
+> emulation and find out...
+
+Ok, the interrupt allocation for this particular driver in this test is 
+in 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c#n2393
+
+Cheers,
+John
+
+>
+> Thanks,
+>
+> 	M.
 >
 
-Were you able to see if the unusual permissions (0664) are needed for
-libvirt? I appreciate your help!
 
--Kelsey
