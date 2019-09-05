@@ -2,113 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 593EFA98E2
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 05:28:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AA91A992F
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 06:04:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729366AbfIED2D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Sep 2019 23:28:03 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:39047 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728008AbfIED2D (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Sep 2019 23:28:03 -0400
-Received: by mail-yb1-f194.google.com with SMTP id s142so263020ybc.6
-        for <linux-pci@vger.kernel.org>; Wed, 04 Sep 2019 20:28:02 -0700 (PDT)
+        id S1726115AbfIEEEh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 00:04:37 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45962 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725290AbfIEEEh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 00:04:37 -0400
+Received: by mail-io1-f67.google.com with SMTP id f12so1505208iog.12;
+        Wed, 04 Sep 2019 21:04:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0TTAvKAHjzeAJQ+6mMKnpPNjuI8vC91e63aZnW7VfDY=;
-        b=FM/Y91uQbdsVAAd/mmvKITutmeFbZUewskeCPgmPJy5i6/tXvizu0yIPPFDpUcbDuK
-         BotxuzauwEeqM5z5PtAtOGZW+YrPvRHufUODnBJmFKP6++UjQuBOz8clwqrYVJirKp+I
-         ZDH/ILXb7g85MpxnvejUlbwVZG717+rrvVBM/kwwR54G6aKdKHlKE+bUISjKh8UeLhtr
-         kilocU7ZIzTzMYo/0FHDserkcOP+qZ9+3VHZvc9u/kQVlZtEizGEQqXgoQe9RhKZnv37
-         XjCvmQ+Pb1qol0ziCCxQ71OXKPjqHPHgIYEowFN6M6cqVUADu1U8I3Ut36skErm4YkVg
-         ymSg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=M+IGfEYSGyyuOm2Prrx3ef40BKfyapHE5e/ScRcmzZ4=;
+        b=V7VsEvi/mTFLoVUoQ8JLQj1QujYpPOCL9e787N9xm/AzDYh+OHJL3axrAjBWP9MT/d
+         JGq20Sh718b741p8V1bPov0ywDuoE0aYrf58KXcjIh6nUAjNOPspMFghC2V9Uc1v+MiI
+         ZzcW3Ssp/w1hnmqU6i3U1FeJqtJw0elEYzIavAomftnsumWK1z6kzzfqKHJpsIEiuc41
+         s1KlGOmvVNZ0FLMrP3NJ/1i3l72CxOlFzSMOCXv1PWQiM1SgmZZz7uFmDxnQmOx0pjzl
+         oW7RvjMuf2YgOqE3/Ibe4sB4OPsx0VEBWkWIZxGXzfJ83H1oQUP8pgomcQxTprxMveJq
+         9y4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0TTAvKAHjzeAJQ+6mMKnpPNjuI8vC91e63aZnW7VfDY=;
-        b=lIeS9WuU0Kx405J8GCQnMNTHzNGY9wcYESVzw/w0sxawROOMsbMvFQqQAVDHClbdvT
-         mTLwsS5qKhZmePQcKXfGDHCDlY05/a6LKCsMeL1lleHvsw3IUw0mX7G8wsvBDnLIehBL
-         lZaz5p7xNH/b5Wh8X41n6RInPQi91ZJ4vXh/bkRpKz2D2BN1JOAtv3Df6xWGe69NUZXw
-         yvv5Bw9o7yTt/Nt1dvj32dYgtpCCeAY7OULXdLKRjGiyi+zlomDldd6vqA66iXdMN8qr
-         W+Dg+BnXZOrOS/kITpB7JYeb2HWE55ayT2RFjAOjjGlF5FWp3zNU/6eRbJ0cohTvUViy
-         OEbw==
-X-Gm-Message-State: APjAAAWs9LtI5Kq27qUMjtp9IjJGSWm3GfvR8SzBfhyfcPqNVMnxoXge
-        fot0buwqZGO3uSTh3lXcEMSwCg==
-X-Google-Smtp-Source: APXvYqzZFLdsJYh/nYkprlhVc2JM/scvZttYFUDoyg0Z96t976Sgj1hMwEjczoWVDkoZZ4/GPU9t4w==
-X-Received: by 2002:a25:c6d0:: with SMTP id k199mr821628ybf.153.1567654082472;
-        Wed, 04 Sep 2019 20:28:02 -0700 (PDT)
-Received: from jaxon.wireless.duke.edu ([152.3.43.42])
-        by smtp.gmail.com with ESMTPSA id l40sm201908ywk.79.2019.09.04.20.28.01
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=M+IGfEYSGyyuOm2Prrx3ef40BKfyapHE5e/ScRcmzZ4=;
+        b=XDmjX66GoMrqVzy9mLIoq0zUJMmNfiT2UuKoldXqMieMB8AAqwiOfaSo3o4wFprqiy
+         HCtLGdIdPQQ1MDgroxViyHiWIsN3qQWr3HONcBtvvLBHNeyCFrz+jcW/0tLOfRVP3mz9
+         c9G6e90IINt04HJwyxdRGgJOBXQwBn4qXx6FHdOYfCSB/Wyom3+5iSKhIFXAug16qlt4
+         unpPU6E7GmG/JoV/PxjhKSesRpVLUKiCegCHIvfM/Q+/iNu7qyyj6Qzs+XUE/57j5VRu
+         TWgkQ1Qg2Jgr7H+IT7UOtlNd2j0xN9M/Y7GYkCUIWlSy2cJhOhmVVOnpqeMeJ6PpaeKS
+         Hf8w==
+X-Gm-Message-State: APjAAAXiFkq5KyG6L/7QCVwwyu9V6mYPsRelrT74eRQsp7ofkox134JJ
+        NLFAoRmSF5Eb10HP6tWu12lZsPqFNqY=
+X-Google-Smtp-Source: APXvYqwTBzAOGP++Zt5gDzo0QxhcCRLghE7yC41c3bvkCvuDJODZ35HCgyCv3A0si3LLgXSQEJfnqA==
+X-Received: by 2002:a5d:8cc1:: with SMTP id k1mr1785446iot.286.1567656276246;
+        Wed, 04 Sep 2019 21:04:36 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id m67sm2047286iof.21.2019.09.04.21.04.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 20:28:01 -0700 (PDT)
-From:   Haotian Wang <haotian.wang@sifive.com>
-To:     jasowang@redhat.com, kishon@ti.com, mst@redhat.com,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, haotian.wang@duke.edu
-Subject: Re: [PATCH] pci: endpoint: functions: Add a virtnet EP function
-Date:   Wed,  4 Sep 2019 23:28:01 -0400
-Message-Id: <20190905032801.11138-1-haotian.wang@sifive.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <59982499-0fc1-2e39-9ff9-993fb4dd7dcc@redhat.com>
-References: <59982499-0fc1-2e39-9ff9-993fb4dd7dcc@redhat.com>
+        Wed, 04 Sep 2019 21:04:35 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 22:04:33 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Don Dutile <ddutile@redhat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Bodong Wang <bodong@mellanox.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [Linux-kernel-mentees] [PATCH v2 2/3] PCI: sysfs: Change
+ permissions from symbolic to octal
+Message-ID: <20190905040433.GA117297@JATN>
+References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
+ <20190813204513.4790-1-skunberg.kelsey@gmail.com>
+ <20190813204513.4790-3-skunberg.kelsey@gmail.com>
+ <20190814053846.GA253360@google.com>
+ <b4c0d5b4-7243-ba96-96d1-041a264ac499@redhat.com>
+ <20190904062229.GA66871@JATN>
+ <850cf536-0b72-d78c-efaf-855dcb391087@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <850cf536-0b72-d78c-efaf-855dcb391087@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thank you so much for the detailed explanation!
-
-On Wed, Sep 4, 2019 at 10:56 PM Jason Wang <jasowang@redhat.com> wrote:
-> Let me explain:
+On Wed, Sep 04, 2019 at 02:33:44PM -0400, Don Dutile wrote:
+> On 09/04/2019 02:22 AM, Kelsey Skunberg wrote:
+> > On Thu, Aug 15, 2019 at 10:37:13AM -0400, Don Dutile wrote:
+> > > On 08/14/2019 01:38 AM, Bjorn Helgaas wrote:
+> > > > [+cc Bodong, Don, Greg for permission question]
+> > > > 
+> > > > On Tue, Aug 13, 2019 at 02:45:12PM -0600, Kelsey Skunberg wrote:
+> > > > > Symbolic permissions such as "(S_IWUSR | S_IWGRP)" are not
+> > > > > preferred and octal permissions should be used instead. Change all
+> > > > > symbolic permissions to octal permissions.
+> > > > > 
+> > > > > Example of old:
+> > > > > 
+> > > > > "(S_IWUSR | S_IWGRP)"
+> > > > > 
+> > > > > Example of new:
+> > > > > 
+> > > > > "0220"
+> > > > 
+> > > > 
+> > > > >    static DEVICE_ATTR_RO(sriov_totalvfs);
+> > > > > -static DEVICE_ATTR(sriov_numvfs, (S_IRUGO | S_IWUSR | S_IWGRP),
+> > > > > -				  sriov_numvfs_show, sriov_numvfs_store);
+> > > > > +static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
+> > > > >    static DEVICE_ATTR_RO(sriov_offset);
+> > > > >    static DEVICE_ATTR_RO(sriov_stride);
+> > > > >    static DEVICE_ATTR_RO(sriov_vf_device);
+> > > > > -static DEVICE_ATTR(sriov_drivers_autoprobe, (S_IRUGO | S_IWUSR | S_IWGRP),
+> > > > > -		   sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
+> > > > > +static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
+> > > > > +		   sriov_drivers_autoprobe_store);
+> > > > 
+> > > > Greg noticed that sriov_numvfs and sriov_drivers_autoprobe have
+> > > > "unusual" permissions.  These were added by:
+> > > > 
+> > > >     0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
+> > > >     1789382a72a5 ("PCI: SRIOV control and status via sysfs")
+> > > > 
+> > > > Kelsey's patch correctly preserves the existing permissions, but we
+> > > > should double-check that they are the permissions they want, and
+> > > > possibly add a comment about why they're different from the rest.
+> > > > 
+> > > > Bjorn
+> > > > 
+> > 
+> > Hi Don,
+> > 
+> > > The rest being? ... 0644 vs 0664 ?
+> > > The file is read & written, thus the (first) 6; I'll have to dig through very old (7 yr) notes to see if the second 6 is needed for libvirt (so it doesn't have to be root to enable).
+> > > 
+> > > -dd
+> > > 
+> > 
+> > Were you able to see if the unusual permissions (0664) are needed for
+> > libvirt? I appreciate your help!
+> > 
+> > -Kelsey
+> > 
+> Daniel Berrangé reported that libvirt runs as root when dealing with anything PCI, and chowns files for qemu needs, so there is no need for the 664 permission.
+> For all I know, it's a simple typo that was allowed to creep in. :-/
 > 
-> - I'm not suggesting to use vhost_net since it can only deal with
-> userspace virtio rings.
-> - I suggest to introduce netdev that has vringh vring assoticated.
-> Vringh was designed to deal with virtio ring located at different types
-> of memory. It supports userspace vring and kernel vring currently, but
-> it should not be too hard to add support for e.g endpoint device that
-> requires DMA or whatever other method to access the vring. So it was by
-> design to talk directly with e.g kernel virtio device.
-> - In your case, you can read vring address from virtio config space
-> through endpoint framework and then create vringh. It's as simple as:
-> creating a netdev, read vring address, and initialize vringh. Then you
-> can use vringh helper to get iov and build skb etc (similar to caif_virti=
-> o).
+> Feel free to modify to 644.
+> 
+> -dd
+>
 
-You are right. It's easy to set up corresponding vringh's.
+Thank you for checking into this and getting back so quick! I'll cc you in
+the patch. :)
 
-> The differences is.
-> - Complexity: In your proposal, there will be two virtio devices and 4
-> virtqueues. It means you need to prepare two sets of features, config
-> ops etc. And dealing with inconsistent feature will be a pain. It may
-> work for simple case like a virtio-net device with only _F_MAC, but it
-> would be hard to be expanded. If we decide to go for vringh, there will
-> be a single virtio device and 2 virtqueues. In the endpoint part, it
-> will be 2 vringh vring (which is actually point the same virtqueue from
-> Host side) and a normal network device. There's no need for dealing with
-> inconsistency, since vringh basically sever as a a device
-> implementation, the feature negotiation is just between device (network
-> device with vringh) and driver (virtito-pci) from the view of Linux
-> running on the PCI Host.
-> - Maintainability: A third path for dealing virtio ring. We've already
-> had vhost and vringh, a third path will add a lot of overhead when
-> trying to maintaining them. My proposal will try to reuse vringh,
-> there's no need a new path.
+Thanks again!
 
-I also agree with this part. This is the more sustainable way to go also
-because vringh is actively maintained together with virtio.
-
-> not that hard as you imagine to have a new type of netdev, I suggest to
-> take a look at how caif_virtio is done, it would be helpful.
-
-This is the part where I had misunderstanding about. I would read how
-caif_virtio use vringh to for networking stuff.
-
-Again thank you for spending so much time and thought!
-
-Haotian
+-Kelsey
