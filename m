@@ -2,146 +2,270 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7619CAAD01
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 22:31:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1ACACAAD81
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 23:01:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389796AbfIEUbm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 16:31:42 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35347 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387491AbfIEUbm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 16:31:42 -0400
-Received: by mail-oi1-f193.google.com with SMTP id a127so3089316oii.2;
-        Thu, 05 Sep 2019 13:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cs7pSggiA638/NENn3nXpVetu5HgwNJEQ1fDCNSetg4=;
-        b=eMG14L3nTkKPDjnQt3Il0NaBunF7hnbOLozDIvNta4SyW4fjwipSZFTlImrxg1zHY0
-         0Onwwwa0G8XUEDs44pARBjafSWrKm+EBrySFUIllP7h1P9ahZ6Kl1bfJja1YVVYhNT1b
-         VmddePJa8cOpZje6DdalRuzzGqbXEu3jhgpWHdlZm6g1oXAByda9nbNxEIvgeO5vbjT7
-         fi/9y6+Z1zxnqvu+y9wz6tzOd9CJVLCjRSYq5O8t2+1cthvMYhwbkjGQHvRbR9xYwlba
-         nz3EOHFca39PoZAfRb9Whqb2DXC85+smqWFnUtn5VCoXnqhp6BA6ze4ytwKNJ7DfII/l
-         ilsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cs7pSggiA638/NENn3nXpVetu5HgwNJEQ1fDCNSetg4=;
-        b=YBHWhl3EwmhPfE/YX08LTSiacKiiaxb7Z286AIZGF3+FsbUEKuTsoe9tCdkx2DiOfw
-         wwtjBzxgwSSX71zDE9vOrlZE7rNs29cz6RdeEVvCaQ4WvsdDQMNWpLMH5hEn1LIMDPJ3
-         rj8fvSrnmA5xm84RIrvaBlxU3zHyVoPM/GYyHPnV+8uk3WKzUwVgrnnBjwsTykQG7EGI
-         SJxIO7AC0Jbuk9/zPZj3MV2x/HxIS7zWIWJOgq9xQM51Fw83vz0pDvqTLyxJSIhB+QQ6
-         PdDjpUJV2l+VWV3LGJ2SEed69X/hkIhzUrdyF0vOFGx2OayU3FmTPfubkOeCrVs+cu4+
-         muCQ==
-X-Gm-Message-State: APjAAAXV/1R/TdLEMVSo9x8gn8L2NMAAWODI2fe6fAGt/4TLSWEI+Ale
-        828ZHpRA80kIjuPbjsspkRB7WBqBryyxYfQottM=
-X-Google-Smtp-Source: APXvYqwUKj9QVoY719m4jv2mk0by7PXeu9zkQRWV7OtiqrYGrW3CNbjwsr5yaUuW4/iaHpW7DaBKGwSwHyEmopWn4Fo=
-X-Received: by 2002:a05:6808:b14:: with SMTP id s20mr4258444oij.15.1567715500998;
- Thu, 05 Sep 2019 13:31:40 -0700 (PDT)
+        id S1728916AbfIEVBF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 17:01:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39416 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728685AbfIEVBF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 5 Sep 2019 17:01:05 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0985C20640;
+        Thu,  5 Sep 2019 21:01:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567717264;
+        bh=NQJ3aMo3ua2SkkGbIaCQJL4Vu0OkMWqaAQcWo+0TUok=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jxK4M1SySAK/POxJrgL2hnYRRW35WOe71MMWin7nd+L6+B9hKBA88KV8dWx7avqm6
+         cUAYFL7rKgzD3eTJSz52A7T6wiFjNMPTZtE6U3nBxfvWHCdG2hbwT8rMm7R2yW8m6s
+         4/wN8YSJCinAy2IiucIWPII4LrnGz5XNN8DHXPNk=
+Date:   Thu, 5 Sep 2019 16:01:02 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/4] Simplify PCIe hotplug indicator control
+Message-ID: <20190905210102.GG103977@google.com>
+References: <20190903111021.1559-1-efremov@linux.com>
 MIME-Version: 1.0
-References: <cover.1567585181.git.eswara.kota@linux.intel.com> <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
-In-Reply-To: <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 5 Sep 2019 22:31:29 +0200
-Message-ID: <CAFBinCC5SH5OSUqOkLQhE2o7g5OhSuB_PBjsv93U2P=FNS5oPw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903111021.1559-1-efremov@linux.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Dilip,
+On Tue, Sep 03, 2019 at 02:10:17PM +0300, Denis Efremov wrote:
+> PCIe defines two optional hotplug indicators: a Power indicator and an
+> Attention indicator. Both are controlled by the same register, and each
+> can be on, off or blinking. The current interfaces
+> (pciehp_green_led_{on,off,blink}() and pciehp_set_attention_status()) are
+> non-uniform and require two register writes in many cases where we could
+> do one.
+> 
+> This patchset introduces the new function pciehp_set_indicators(). It
+> allows one to set two indicators with a single register write. All
+> calls to previous interfaces (pciehp_green_led_* and
+> pciehp_set_attention_status()) are replaced with a new one. Thus,
+> the amount of duplicated code for setting indicators is reduced.
+> 
+> Changes in v4:
+>   - Changed the inputs validation in pciehp_set_indicators()
+>   - Moved PCI_EXP_SLTCTL_ATTN_IND_NONE, PCI_EXP_SLTCTL_PWR_IND_NONE
+>     to drivers/pci/hotplug/pciehp.h and set to -1 for not interfering
+>     with reserved values in the PCIe Base spec
+>   - Added set_power_indicator define
+> 
+> Changes in v3:
+>   - Changed pciehp_set_indicators() to work with existing
+>     PCI_EXP_SLTCTL_* macros
+>   - Reworked the inputs validation in pciehp_set_indicators()
+>   - Removed pciehp_set_attention_status() and pciehp_green_led_*()
+>     completely
+> 
+> Denis Efremov (4):
+>   PCI: pciehp: Add pciehp_set_indicators() to jointly set LED indicators
+>   PCI: pciehp: Switch LED indicators with a single write
+>   PCI: pciehp: Remove pciehp_set_attention_status()
+>   PCI: pciehp: Remove pciehp_green_led_{on,off,blink}()
+> 
+>  drivers/pci/hotplug/pciehp.h      | 12 ++++--
+>  drivers/pci/hotplug/pciehp_core.c |  7 ++-
+>  drivers/pci/hotplug/pciehp_ctrl.c | 26 +++++------
+>  drivers/pci/hotplug/pciehp_hpc.c  | 72 +++++++------------------------
+>  include/uapi/linux/pci_regs.h     |  1 +
+>  5 files changed, 45 insertions(+), 73 deletions(-)
 
-On Wed, Sep 4, 2019 at 12:11 PM Dilip Kota <eswara.kota@linux.intel.com> wrote:
-[...]
-> +properties:
-> +  compatible:
-> +    const: intel,lgm-pcie
-should we add the "snps,dw-pcie" here (and in the example below) as well?
-(this is what for example
-Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt does)
+Thanks, Denis, I applied these to pci/pciehp for v5.4.  I think this
+is a great improvement.
 
-[...]
-> +  phy-names:
-> +    const: pciephy
-the most popular choice in Documentation/devicetree/bindings/pci/ is "pcie-phy"
-if Rob is happy with "pciephy" (which is already part of two other
-bindings) then I'm happy with "pciephy" as well
+I tweaked a few things:
 
-> +  num-lanes:
-> +    description: Number of lanes to use for this port.
-are there SoCs with more than 2 lanes?
-you can list the allowed values in an enum so "num-lanes = <16>"
-causes an error when someone accidentally has this in their .dts (and
-runs the dt-bindings validation)
+  - Updated comments to refer to "Power" intead of "green",
+    "Attention" instead of "amber", and "Indicator" instead of "LED".
 
-[...]
-> +  reset-assert-ms:
-maybe add:
-  $ref: /schemas/types.yaml#/definitions/uint32
+  - Replaced PCI_EXP_SLTCTL_ATTN_IND_NONE and
+    PCI_EXP_SLTCTL_PWR_IND_NONE with INDICATOR_NOOP because I didn't
+    want them to look like definitions from the spec.
 
-> +    description: |
-> +      Device reset interval in ms.
-> +      Some devices need an interval upto 500ms. By default it is 100ms.
-> +
-> +required:
-> +  - compatible
-> +  - device_type
-> +  - reg
-> +  - reg-names
-> +  - ranges
-> +  - resets
-> +  - clocks
-> +  - phys
-> +  - phy-names
-> +  - reset-gpios
-> +  - num-lanes
-> +  - linux,pci-domain
-> +  - interrupts
-> +  - interrupt-map
-> +  - interrupt-map-mask
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pcie10:pcie@d0e00000 {
-> +      compatible = "intel,lgm-pcie";
-> +      device_type = "pci";
-> +      #address-cells = <3>;
-> +      #size-cells = <2>;
-> +      reg = <
-> +            0xd0e00000 0x1000
-> +            0xd2000000 0x800000
-> +            0xd0a41000 0x1000
-> +            >;
-> +      reg-names = "dbi", "config", "app";
-> +      linux,pci-domain = <0>;
-> +      max-link-speed = <4>;
-> +      bus-range = <0x00 0x08>;
-> +      interrupt-parent = <&ioapic1>;
-> +      interrupts = <67 1>;
-> +      #interrupt-cells = <1>;
-> +      interrupt-map-mask = <0 0 0 0x7>;
-> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
-> +                      <0 0 0 2 &ioapic1 28 1>,
-> +                      <0 0 0 3 &ioapic1 29 1>,
-> +                      <0 0 0 4 &ioapic1 30 1>;
-is the "1" in the interrupts and interrupt-map properties IRQ_TYPE_EDGE_RISING?
-you can use these macros in this example as well, see
-Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml for
-example
+  - Dropped set_power_indicator().  It does make things locally easier
+    to read, but I think the overall benefit of having fewer
+    interfaces outweighs that.
+
+The interdiff from your v4 is below.  Let me know if I broke anything.
 
 
-Martin
+diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+index dcbf790b7508..654c972b8ea0 100644
+--- a/drivers/pci/hotplug/pciehp.h
++++ b/drivers/pci/hotplug/pciehp.h
+@@ -110,9 +110,9 @@ struct controller {
+  *
+  * @OFF_STATE: slot is powered off, no subordinate devices are enumerated
+  * @BLINKINGON_STATE: slot will be powered on after the 5 second delay,
+- *	green led is blinking
++ *	Power Indicator is blinking
+  * @BLINKINGOFF_STATE: slot will be powered off after the 5 second delay,
+- *	green led is blinking
++ *	Power Indicator is blinking
+  * @POWERON_STATE: slot is currently powering on
+  * @POWEROFF_STATE: slot is currently powering off
+  * @ON_STATE: slot is powered on, subordinate devices have been enumerated
+@@ -167,9 +167,7 @@ int pciehp_power_on_slot(struct controller *ctrl);
+ void pciehp_power_off_slot(struct controller *ctrl);
+ void pciehp_get_power_status(struct controller *ctrl, u8 *status);
+ 
+-/* Special values for leaving indicators unchanged */
+-#define PCI_EXP_SLTCTL_ATTN_IND_NONE -1 /* Attention Indicator noop */
+-#define PCI_EXP_SLTCTL_PWR_IND_NONE  -1 /* Power Indicator noop */
++#define INDICATOR_NOOP -1	/* Leave indicator unchanged */
+ void pciehp_set_indicators(struct controller *ctrl, int pwr, int attn);
+ 
+ void pciehp_get_latch_status(struct controller *ctrl, u8 *status);
+@@ -187,9 +185,6 @@ int pciehp_get_attention_status(struct hotplug_slot *hotplug_slot, u8 *status);
+ int pciehp_set_raw_indicator_status(struct hotplug_slot *h_slot, u8 status);
+ int pciehp_get_raw_indicator_status(struct hotplug_slot *h_slot, u8 *status);
+ 
+-#define set_power_indicator(ctrl, x) \
+-	pciehp_set_indicators(ctrl, (x), PCI_EXP_SLTCTL_ATTN_IND_NONE)
+-
+ static inline const char *slot_name(struct controller *ctrl)
+ {
+ 	return hotplug_slot_name(&ctrl->hotplug_slot);
+diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+index 7a86ea90ed94..b3122c151b80 100644
+--- a/drivers/pci/hotplug/pciehp_core.c
++++ b/drivers/pci/hotplug/pciehp_core.c
+@@ -95,7 +95,7 @@ static void cleanup_slot(struct controller *ctrl)
+ }
+ 
+ /*
+- * set_attention_status - Turns the Amber LED for a slot on, off or blink
++ * set_attention_status - Turns the Attention Indicator on, off or blinking
+  */
+ static int set_attention_status(struct hotplug_slot *hotplug_slot, u8 status)
+ {
+@@ -108,7 +108,7 @@ static int set_attention_status(struct hotplug_slot *hotplug_slot, u8 status)
+ 		status = PCI_EXP_SLTCTL_ATTN_IND_OFF;
+ 
+ 	pci_config_pm_runtime_get(pdev);
+-	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_NONE, status);
++	pciehp_set_indicators(ctrl, INDICATOR_NOOP, status);
+ 	pci_config_pm_runtime_put(pdev);
+ 	return 0;
+ }
+diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+index d0f55f695770..21af7b16d7a4 100644
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -30,7 +30,10 @@
+ 
+ static void set_slot_off(struct controller *ctrl)
+ {
+-	/* turn off slot, turn on Amber LED, turn off Green LED if supported*/
++	/*
++	 * Turn off slot, turn on attention indicator, turn off power
++	 * indicator
++	 */
+ 	if (POWER_CTRL(ctrl)) {
+ 		pciehp_power_off_slot(ctrl);
+ 
+@@ -65,7 +68,8 @@ static int board_added(struct controller *ctrl)
+ 			return retval;
+ 	}
+ 
+-	set_power_indicator(ctrl, PCI_EXP_SLTCTL_PWR_IND_BLINK);
++	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_BLINK,
++			      INDICATOR_NOOP);
+ 
+ 	/* Check link training status */
+ 	retval = pciehp_check_link_status(ctrl);
+@@ -100,7 +104,7 @@ static int board_added(struct controller *ctrl)
+ }
+ 
+ /**
+- * remove_board - Turns off slot and LEDs
++ * remove_board - Turn off slot and Power Indicator
+  * @ctrl: PCIe hotplug controller where board is being removed
+  * @safe_removal: whether the board is safely removed (versus surprise removed)
+  */
+@@ -123,8 +127,8 @@ static void remove_board(struct controller *ctrl, bool safe_removal)
+ 			   &ctrl->pending_events);
+ 	}
+ 
+-	/* turn off Green LED */
+-	set_power_indicator(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF);
++	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
++			      INDICATOR_NOOP);
+ }
+ 
+ static int pciehp_enable_slot(struct controller *ctrl);
+@@ -171,7 +175,7 @@ void pciehp_handle_button_press(struct controller *ctrl)
+ 			ctrl_info(ctrl, "Slot(%s) Powering on due to button press\n",
+ 				  slot_name(ctrl));
+ 		}
+-		/* blink green LED and turn off amber */
++		/* blink power indicator and turn off attention */
+ 		pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_BLINK,
+ 				      PCI_EXP_SLTCTL_ATTN_IND_OFF);
+ 		schedule_delayed_work(&ctrl->button_work, 5 * HZ);
+@@ -312,7 +316,8 @@ static int pciehp_enable_slot(struct controller *ctrl)
+ 	ret = __pciehp_enable_slot(ctrl);
+ 	if (ret && ATTN_BUTTN(ctrl))
+ 		/* may be blinking */
+-		set_power_indicator(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF);
++		pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
++				      INDICATOR_NOOP);
+ 	pm_runtime_put(&ctrl->pcie->port->dev);
+ 
+ 	mutex_lock(&ctrl->state_lock);
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 9fd8f99132bb..1a522c1c4177 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -418,17 +418,32 @@ int pciehp_set_raw_indicator_status(struct hotplug_slot *hotplug_slot,
+ 	return 0;
+ }
+ 
++/**
++ * pciehp_set_indicators() - set attention indicator, power indicator, or both
++ * @ctrl: PCIe hotplug controller
++ * @pwr: one of:
++ *	PCI_EXP_SLTCTL_PWR_IND_ON
++ *	PCI_EXP_SLTCTL_PWR_IND_BLINK
++ *	PCI_EXP_SLTCTL_PWR_IND_OFF
++ * @attn: one of:
++ *	PCI_EXP_SLTCTL_ATTN_IND_ON
++ *	PCI_EXP_SLTCTL_ATTN_IND_BLINK
++ *	PCI_EXP_SLTCTL_ATTN_IND_OFF
++ *
++ * Either @pwr or @attn can also be INDICATOR_NOOP to leave that indicator
++ * unchanged.
++ */
+ void pciehp_set_indicators(struct controller *ctrl, int pwr, int attn)
+ {
+ 	u16 cmd = 0, mask = 0;
+ 
+-	if (PWR_LED(ctrl) && pwr > 0) {
+-		cmd |= pwr;
++	if (PWR_LED(ctrl) && pwr != INDICATOR_NOOP) {
++		cmd |= (pwr & PCI_EXP_SLTCTL_PIC);
+ 		mask |= PCI_EXP_SLTCTL_PIC;
+ 	}
+ 
+-	if (ATTN_LED(ctrl) && attn > 0) {
+-		cmd |= attn;
++	if (ATTN_LED(ctrl) && attn != INDICATOR_NOOP) {
++		cmd |= (attn & PCI_EXP_SLTCTL_AIC);
+ 		mask |= PCI_EXP_SLTCTL_AIC;
+ 	}
+ 
