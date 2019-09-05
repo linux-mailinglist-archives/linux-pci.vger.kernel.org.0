@@ -2,143 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C2F26A9DC7
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 11:08:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07387A9E76
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 11:34:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731737AbfIEJIa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 05:08:30 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40402 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732160AbfIEJIa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 05:08:30 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y10so980881pll.7
-        for <linux-pci@vger.kernel.org>; Thu, 05 Sep 2019 02:08:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ghHRvQPVPbervCmbxcj9ka6t6kqgJGcJ0N1C9QEazv0=;
-        b=0z4xt+c7UhZ3WIZd0Lo1oEbNZK/Qp0TdkdYnv+TvMItGrucMc0skqhRM6tasUaqfPS
-         uHg0q90isJIsxHLEMhg/WMNiIJ37kBscPCSxpfSj2PFq2eIRCH0I9KCrG++SJKhP7hyl
-         GUB+1vuKBHn90Hl3VkrsE3w26JGa3iZ2ecmMpmf9VgCIr0HcDvAcLG0RBp+5g8R1MSdB
-         XTqC0MRjt+Qf8Q1OPKtB8kA7VpPTEy5ioHi5A0GY+JIsxVYDoLtA1hfotJGuVe0ez7Tz
-         HkGt0cIpHDIJHxtXS1CT8ZKm3o8rlrxuXt0ZjHaUSuRr0v+Y7T1XiZuAfiGj710/Qk2P
-         9TZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ghHRvQPVPbervCmbxcj9ka6t6kqgJGcJ0N1C9QEazv0=;
-        b=VehcWm07k8OUN1PSIMlkXslmViGM9NVyncOdY3UTDDFS22E9WMooB1YZ1K6dILn1p+
-         3PX+Ate98YVLf8TKlnGKpnGwHaNpdh2DU0m5Hk34pa9sewEgAdsYOMfhOp6bMzSQbs4P
-         AYtiupRCqxSAkb7wedDl6FBxm+kAtjshEdzwlCi3n2IZcUpukl9IBFpEIHyq7sbCt2AN
-         QIHNXJnvDaE2uh7Pt8kl85zjHEUvXEHvhGwwHZjBa8EqyV3G+oAmUKH8q1qrfOWEaVCy
-         7N8W1Y/KFZBKorKLmjjgO6bKtoGd5shiHqcgSiQTla7CkzVQUsCJrlC9NvKWimCqpMjf
-         d1zg==
-X-Gm-Message-State: APjAAAUI1L0F81alJ7cucsrAP2sZzDrJij4Cxmv/92kSBPxPy/5fNpEz
-        kdk6FUfyHB3/xnO5Y8jMMIlyb8Ixazo=
-X-Google-Smtp-Source: APXvYqxDe7RmUKZdRmOXfm85qGSMv0TNu4nPbOm/7M3aDQGBmOcx2bC0nYxjTuFwB1j6CM2+HZhJwg==
-X-Received: by 2002:a17:902:e493:: with SMTP id cj19mr2228022plb.292.1567674509883;
-        Thu, 05 Sep 2019 02:08:29 -0700 (PDT)
-Received: from [10.61.2.175] ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id s186sm2029034pfb.126.2019.09.05.02.08.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Sep 2019 02:08:29 -0700 (PDT)
-Subject: Re: [PATCH 0/2] Fix IOMMU setup for hotplugged devices on pseries
-To:     Shawn Anastasio <shawn@anastas.io>, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     bhelgaas@google.com, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        sbobroff@linux.ibm.com, oohall@gmail.com
-References: <20190905042215.3974-1-shawn@anastas.io>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Message-ID: <7a41184c-9b30-8d91-9d78-9d60c8d128ef@ozlabs.ru>
-Date:   Thu, 5 Sep 2019 19:08:24 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2387481AbfIEJew (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 05:34:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:40346 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731084AbfIEJew (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 5 Sep 2019 05:34:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 366941576;
+        Thu,  5 Sep 2019 02:34:51 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0E9E3F67D;
+        Thu,  5 Sep 2019 02:34:48 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 10:34:44 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V3 0/6] PCI: tegra: Enable PCIe C5 controller of Tegra194
+ in p2972-0000 platform
+Message-ID: <20190905093444.GA16642@e121166-lin.cambridge.arm.com>
+References: <20190828172850.19871-1-vidyas@nvidia.com>
+ <7751a77d-5812-49b7-0c6b-00e6740e209b@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20190905042215.3974-1-shawn@anastas.io>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7751a77d-5812-49b7-0c6b-00e6740e209b@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Sep 05, 2019 at 01:44:46PM +0530, Vidya Sagar wrote:
+> Hi Lorenzo / Bjorn,
+> Can you please review this series?
+> I have Reviewed-by and Acked-by from Rob, Thierry and Andrew already.
 
+Rebase it on top of my pci/tegra branch (it does not apply),
+resend it and I will merge it.
 
-On 05/09/2019 14:22, Shawn Anastasio wrote:
-> On pseries QEMU guests, IOMMU setup for hotplugged PCI devices is currently
-> broken for all but the first device on a given bus. The culprit is an ordering
-> issue in the pseries hotplug path (via pci_rescan_bus()) which results in IOMMU
-> group assigment occuring before device registration in sysfs. This triggers
-> the following check in arch/powerpc/kernel/iommu.c:
-> 
-> /*
->   * The sysfs entries should be populated before
->   * binding IOMMU group. If sysfs entries isn't
->   * ready, we simply bail.
->   */
-> if (!device_is_registered(dev))
-> 	return -ENOENT;
-> 
-> This fails for hotplugged devices since the pcibios_add_device() call in the
-> pseries hotplug path (in pci_device_add()) occurs before device_add().
-> Since the IOMMU groups are set up in pcibios_add_device(), this means that a
-> sysfs entry will not yet be present and it will fail.
+Thanks,
+Lorenzo
 
-I just tried hotplugging 3 virtio-net devices into a guest system with 
-v5.2 kernel and it seems working (i.e. BARs mapped, a driver is bound):
-
-
-root@le-dbg:~# lspci -v | egrep -i '(virtio|Memory)'
-00:00.0 Ethernet controller: Red Hat, Inc Virtio network device
-         Memory at 200080040000 (32-bit, non-prefetchable) [size=4K]
-         Memory at 210000000000 (64-bit, prefetchable) [size=16K]
-         Kernel driver in use: virtio-pci
-00:01.0 Ethernet controller: Red Hat, Inc Virtio network device
-         Memory at 200080041000 (32-bit, non-prefetchable) [size=4K]
-         Memory at 210000004000 (64-bit, prefetchable) [size=16K]
-         Kernel driver in use: virtio-pci
-00:02.0 Ethernet controller: Red Hat, Inc Virtio network device
-         Memory at 200080042000 (32-bit, non-prefetchable) [size=4K]
-         Memory at 210000008000 (64-bit, prefetchable) [size=16K]
-         Kernel driver in use: virtio-pci
-
-Can you explain in detail what you are doing exactly and what is failing 
-and what qemu/guest kernel/guest distro is used? Thanks,
-
-
+> Thanks,
+> Vidya Sagar
 > 
-> There is a special case that allows the first hotplugged device on a bus to
-> succeed, though. The powerpc pcibios_add_device() implementation will skip
-> initializing the device if bus setup is not yet complete.
-> Later, the pci core will call pcibios_fixup_bus() which will perform setup
-> for the first (and only) device on the bus and since it has already been
-> registered in sysfs, the IOMMU setup will succeed.
+> On 8/28/2019 10:58 PM, Vidya Sagar wrote:
+> > This patch series enables Tegra194's C5 controller which owns x16 slot in
+> > p2972-0000 platform. C5 controller's PERST# and CLKREQ# are not configured as
+> > output and bi-directional signals by default and hence they need to be
+> > configured explicitly. Also, x16 slot's 3.3V and 12V supplies are controlled
+> > through GPIOs and hence they need to be enabled through regulator framework.
+> > This patch series adds required infrastructural support to address both the
+> > aforementioned requirements.
+> > Testing done on p2972-0000 platform
+> > - Able to enumerate devices connected to x16 slot (owned by C5 controller)
+> > - Enumerated device's functionality verified
+> > - Suspend-Resume sequence is verified with device connected to x16 slot
+> > 
+> > V3:
+> > * Addressed some more review comments from Andrew Murray and Thierry Reding
+> > 
+> > V2:
+> > * Changed the order of patches in the series for easy merging
+> > * Addressed review comments from Thierry Reding and Andrew Murray
+> > 
+> > Vidya Sagar (6):
+> >    dt-bindings: PCI: tegra: Add sideband pins configuration entries
+> >    dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
+> >    PCI: tegra: Add support to configure sideband pins
+> >    PCI: tegra: Add support to enable slot regulators
+> >    arm64: tegra: Add configuration for PCIe C5 sideband signals
+> >    arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
+> > 
+> >   .../bindings/pci/nvidia,tegra194-pcie.txt     | 16 ++++
+> >   .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 24 +++++
+> >   .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  4 +-
+> >   arch/arm64/boot/dts/nvidia/tegra194.dtsi      | 38 +++++++-
+> >   drivers/pci/controller/dwc/pcie-tegra194.c    | 94 ++++++++++++++++++-
+> >   5 files changed, 172 insertions(+), 4 deletions(-)
+> > 
 > 
-> My current solution is to introduce another pcibios function, pcibios_fixup_dev,
-> which is called after device_add() in pci_device_add(). Then in powerpc code,
-> pcibios_setup_device() was moved from pcibios_add_device() to this new function
-> which will occur after sysfs registration so IOMMU assignment will succeed.
-> 
-> I added a new pcibios function rather than moving the pcibios_add_device() call
-> to after the device_add() call in pci_add_device() because there are other
-> architectures that use it and it wasn't immediately clear to me whether moving
-> it would break them.
-> 
-> If anybody has more insight or a better way to fix this, please let me know.
-> 
-> Shawn Anastasio (2):
->    PCI: Introduce pcibios_fixup_dev()
->    powerpc/pci: Fix IOMMU setup for hotplugged devices on pseries
-> 
->   arch/powerpc/kernel/pci-common.c | 13 ++++++-------
->   drivers/pci/probe.c              | 14 ++++++++++++++
->   include/linux/pci.h              |  1 +
->   3 files changed, 21 insertions(+), 7 deletions(-)
-> 
-
--- 
-Alexey
