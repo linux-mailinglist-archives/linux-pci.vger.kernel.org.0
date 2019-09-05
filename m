@@ -2,93 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BADCDA9BEF
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 09:34:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7693EA9CB0
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 10:15:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731660AbfIEHeT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 03:34:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731476AbfIEHeT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Sep 2019 03:34:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 383DF20828;
-        Thu,  5 Sep 2019 07:34:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567668858;
-        bh=JyKjIUt2nlf6YhRXvLFSLhZ5RiYcJdGMf3i+c+LHOyk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hILCyJtfJoxzeUKKtq2YIyKtBjRhelF7MHD+I4Igc4EqLvqKPJg4gdPrGT68kKM/k
-         D+lpZJ75X4dh0ucyS5F+2NaKgabPDOYV4C2XT+Hepz5ALgh7iGN/bxbHFZX5H6aWWF
-         7hVsBL7qlwVqTEGmiP588utsIMSqSJptHmZnfekU=
-Date:   Thu, 5 Sep 2019 09:34:16 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bodong@mellanox.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org, ddutile@redhat.com, berrange@redhat.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH] PCI/IOV: Make SR-IOV attributes with mode 0664 use 0644
-Message-ID: <20190905073416.GC29933@kroah.com>
-References: <20190905063226.43269-1-skunberg.kelsey@gmail.com>
+        id S1731301AbfIEIOz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 04:14:55 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:4608 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730849AbfIEIOz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 04:14:55 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d70c3ff0000>; Thu, 05 Sep 2019 01:14:55 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 05 Sep 2019 01:14:54 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 05 Sep 2019 01:14:54 -0700
+Received: from [10.24.45.110] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Sep
+ 2019 08:14:49 +0000
+Subject: Re: [PATCH V3 0/6] PCI: tegra: Enable PCIe C5 controller of Tegra194
+ in p2972-0000 platform
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <andrew.murray@arm.com>
+CC:     <kishon@ti.com>, <gustavo.pimentel@synopsys.com>,
+        <digetx@gmail.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190828172850.19871-1-vidyas@nvidia.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <7751a77d-5812-49b7-0c6b-00e6740e209b@nvidia.com>
+Date:   Thu, 5 Sep 2019 13:44:46 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905063226.43269-1-skunberg.kelsey@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190828172850.19871-1-vidyas@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1567671295; bh=PhBJxOMrfevbbVmLua/ziqr5zxQ+sCG62W4DYI/Bgpo=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=faj0pebruq92ZjPws0k6DdY21Mz3rgNGoE0m7xwpk6hVdEl2wk3kMoSovWx/x/o64
+         /iM7ABBr57k5e+bIUGoD/aJnbPCJnF9jW0Zhm11eY5bIDiaaCqyi8XFcQYYFK3C+VF
+         m6q8GOBWo3D8uP72yBRwDZ4gDP7XlazfiGdbN2WxcnyfKCSwAN7NMDWEFWpZeahdgB
+         bRmBFzQlhN9q8iCcYlnrDaYjLPj5rywGSi+DDgWQ1z9M3UVD48TMZYsuYC1zg0EEzA
+         9y+e+wQYi/8W7oomavqJzHRtoOY8SzMDL23ry2TiweI5R6ejfHda+tXY3Zw9e/19uD
+         T7VpBgRy94rGA==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 12:32:26AM -0600, Kelsey Skunberg wrote:
-> sriov_numvfs and sriov_drivers_autoprobe have "unusual" permissions (0664)
-> with no reported or found reason for allowing group write permissions.
-> libvirt runs as root when dealing with PCI, and chowns files for qemu
-> needs. There is not a need for the "0664" permissions.
-> 
-> sriov_numvfs was introduced in:
-> 	commit 1789382a72a5 ("PCI: SRIOV control and status via sysfs")
-> 
-> sriov_drivers_autoprobe was introduced in:
-> 	commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to
-> 			      control VF driver binding")
-> 
-> Change sriov_numvfs and sriov_drivers_autoprobe from "0664" permissions to
-> "0644" permissions.
-> 
-> Exchange DEVICE_ATTR() with DEVICE_ATTR_RW() which sets the mode to "0644".
-> DEVICE_ATTR() should only be used for "unusual" permissions.
-> 
-> Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
-> ---
->  drivers/pci/iov.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index b335db21c85e..b3f972e8cfed 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -375,12 +375,11 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
->  }
->  
->  static DEVICE_ATTR_RO(sriov_totalvfs);
-> -static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
-> +static DEVICE_ATTR_RW(sriov_numvfs);
->  static DEVICE_ATTR_RO(sriov_offset);
->  static DEVICE_ATTR_RO(sriov_stride);
->  static DEVICE_ATTR_RO(sriov_vf_device);
-> -static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
-> -		   sriov_drivers_autoprobe_store);
-> +static DEVICE_ATTR_RW(sriov_drivers_autoprobe);
->  
->  static struct attribute *sriov_dev_attrs[] = {
->  	&dev_attr_sriov_totalvfs.attr,
+Hi Lorenzo / Bjorn,
+Can you please review this series?
+I have Reviewed-by and Acked-by from Rob, Thierry and Andrew already.
 
+Thanks,
+Vidya Sagar
 
-Nice!!!
+On 8/28/2019 10:58 PM, Vidya Sagar wrote:
+> This patch series enables Tegra194's C5 controller which owns x16 slot in
+> p2972-0000 platform. C5 controller's PERST# and CLKREQ# are not configured as
+> output and bi-directional signals by default and hence they need to be
+> configured explicitly. Also, x16 slot's 3.3V and 12V supplies are controlled
+> through GPIOs and hence they need to be enabled through regulator framework.
+> This patch series adds required infrastructural support to address both the
+> aforementioned requirements.
+> Testing done on p2972-0000 platform
+> - Able to enumerate devices connected to x16 slot (owned by C5 controller)
+> - Enumerated device's functionality verified
+> - Suspend-Resume sequence is verified with device connected to x16 slot
+> 
+> V3:
+> * Addressed some more review comments from Andrew Murray and Thierry Reding
+> 
+> V2:
+> * Changed the order of patches in the series for easy merging
+> * Addressed review comments from Thierry Reding and Andrew Murray
+> 
+> Vidya Sagar (6):
+>    dt-bindings: PCI: tegra: Add sideband pins configuration entries
+>    dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
+>    PCI: tegra: Add support to configure sideband pins
+>    PCI: tegra: Add support to enable slot regulators
+>    arm64: tegra: Add configuration for PCIe C5 sideband signals
+>    arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
+> 
+>   .../bindings/pci/nvidia,tegra194-pcie.txt     | 16 ++++
+>   .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 24 +++++
+>   .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  4 +-
+>   arch/arm64/boot/dts/nvidia/tegra194.dtsi      | 38 +++++++-
+>   drivers/pci/controller/dwc/pcie-tegra194.c    | 94 ++++++++++++++++++-
+>   5 files changed, 172 insertions(+), 4 deletions(-)
+> 
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
