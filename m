@@ -2,125 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C838AA961
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 18:53:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AED2CAAA76
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 19:59:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732017AbfIEQx2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 12:53:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:47530 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728254AbfIEQx2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:53:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A06128;
-        Thu,  5 Sep 2019 09:53:27 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 529E83F718;
-        Thu,  5 Sep 2019 09:53:25 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 17:53:16 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Jonathan Chocron <jonnyc@amazon.com>, bhelgaas@google.com
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, andrew.murray@arm.com,
-        dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com,
-        ronenk@amazon.com, barakw@amazon.com, talel@amazon.com,
-        hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 0/7] Amazon's Annapurna Labs DT-based PCIe host
- controller driver
-Message-ID: <20190905165309.GA10248@e121166-lin.cambridge.arm.com>
-References: <20190905140018.5139-1-jonnyc@amazon.com>
+        id S1733133AbfIER7r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 13:59:47 -0400
+Received: from alpha.anastas.io ([104.248.188.109]:57561 "EHLO
+        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727143AbfIER7q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 13:59:46 -0400
+Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by alpha.anastas.io (Postfix) with ESMTPSA id C6A667E74E;
+        Thu,  5 Sep 2019 12:59:45 -0500 (CDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
+        t=1567706386; bh=61aoJjKj3xjkVn+bS+/OtYdskRw6zpPaF6JEETWOzDE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=mN1ifW4BHAXGjac5ZRUWGNdSopsnL4mwoPJqqWjcEvGEzcyB1MgFhc6/6+gy6PV9O
+         Ej9ehnE+ob6gIS3x6AYep8eol0GsMsNyqNcc8cZx2mQD82knj1kuT5X5Rz62u/GiR8
+         2ahln/ww1d4ajrsxzlSBksEXpM3DgmRn84rx6G/WGJPv3HTuDdq/sbkCUMUIAmfdrD
+         fjZgvGNGAIFp3zfqlOtvCqrjqNP1QAIEeykN9xkK3DxH1Tlzs4Tdkml4ErA4FFPoPE
+         37yxGGLry2bTOHxsmJHxwq3WSDzF6PT4GB2jSRUeShAVJdtY9XHtUlOjZ3bRcXquvG
+         xSX9j/7fXvNMw==
+Subject: Re: [PATCH 0/2] Fix IOMMU setup for hotplugged devices on pseries
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     bhelgaas@google.com, oohall@gmail.com, sbobroff@linux.ibm.com
+References: <20190905042215.3974-1-shawn@anastas.io>
+ <7a41184c-9b30-8d91-9d78-9d60c8d128ef@ozlabs.ru>
+From:   Shawn Anastasio <shawn@anastas.io>
+Message-ID: <7fb9fb72-2afd-451c-1411-54c7bb865d56@anastas.io>
+Date:   Thu, 5 Sep 2019 12:59:44 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905140018.5139-1-jonnyc@amazon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <7a41184c-9b30-8d91-9d78-9d60c8d128ef@ozlabs.ru>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 05:00:14PM +0300, Jonathan Chocron wrote:
-> This series adds support for Amazon's Annapurna Labs DT-based PCIe host
-> controller driver.
-> Additionally, it adds 3 quirks (ACS, VPD and MSI-X) and 2 generic DWC patches.
+On 9/5/19 4:08 AM, Alexey Kardashevskiy wrot>
+> I just tried hotplugging 3 virtio-net devices into a guest system with 
+> v5.2 kernel and it seems working (i.e. BARs mapped, a driver is bound):
+>
 > 
-> Changes since v4:
-> - Moved the HEADER_TYPE validations to after pp->ops->host_init() and
->   ep->ops->ep_init()
-> - Changed to dw_pcie_rd_own_conf() instead of dw_pcie_readb_dbi() for
->   reading the HEADER_TYPE
-> - Used exsitng quirk_blacklist_vpd() instead of quirk_al_vpd_release()
-> - Added a newline in ACS quirk comment
+> root@le-dbg:~# lspci -v | egrep -i '(virtio|Memory)'
+> 00:00.0 Ethernet controller: Red Hat, Inc Virtio network device
+>          Memory at 200080040000 (32-bit, non-prefetchable) [size=4K]
+>          Memory at 210000000000 (64-bit, prefetchable) [size=16K]
+>          Kernel driver in use: virtio-pci
+> 00:01.0 Ethernet controller: Red Hat, Inc Virtio network device
+>          Memory at 200080041000 (32-bit, non-prefetchable) [size=4K]
+>          Memory at 210000004000 (64-bit, prefetchable) [size=16K]
+>          Kernel driver in use: virtio-pci
+> 00:02.0 Ethernet controller: Red Hat, Inc Virtio network device
+>          Memory at 200080042000 (32-bit, non-prefetchable) [size=4K]
+>          Memory at 210000008000 (64-bit, prefetchable) [size=16K]
+>          Kernel driver in use: virtio-pci
 > 
-> Changes since v3:
-> - Removed PATCH 8/8 since the usage of the PCI flags will be discussed
->   in the upcoming LPC
-> - Align commit subject with the folder convention
-> - Added explanation regarding ECAM "overload" mechanism
-> - Switched to read/write{_relaxed} APIs
-> - Modified a dev_err to dev_dbg
-> - Removed unnecessary variable
-> - Removed driver details from dt-binding description
-> - Changed to SoC specific compatibles
-> - Fixed typo in a commit message
-> - Added comment regarding MSI in the MSI-X quirk
-> 
-> Changes since v2:
-> - Added al_pcie_controller_readl/writel() wrappers
-> - Reorganized local vars in several functions according to reverse
->   tree structure
-> - Removed unnecessary check of ret value
-> - Changed return type of al_pcie_config_prepare() from int to void
-> - Removed check if link is up from probe() [done internally in
->   dw_pcie_rd/wr_conf()]
-> 
-> Changes since v1:
-> - Added comment regarding 0x0031 being used as a dev_id for non root-port devices as well
-> - Fixed different message/comment/print wordings
-> - Added panic stacktrace to commit message of MSI-x quirk patch
-> - Changed to pci_warn() instead of dev_warn()
-> - Added unit_address after node_name in dt-binding
-> - Updated Kconfig help description
-> - Used GENMASK and FIELD_PREP/GET where appropriate
-> - Removed leftover field from struct al_pcie and moved all ptrs to
->   the beginning
-> - Re-wrapped function definitions and invocations to use fewer lines
-> - Change %p to %px in dbg prints in rd/wr_conf() functions
-> - Removed validation that the port is configured to RC mode (as this is
->   added generically in PATCH 7/8)
-> - Removed unnecessary variable initializations
-> - Swtiched to %pR for printing resources
-> 
-> 
-> Ali Saidi (1):
->   PCI: Add ACS quirk for Amazon Annapurna Labs root ports
-> 
-> Jonathan Chocron (6):
->   PCI: Add Amazon's Annapurna Labs vendor ID
->   PCI/VPD: Prevent VPD access for Amazon's Annapurna Labs Root Port
->   PCI: Add quirk to disable MSI-X support for Amazon's Annapurna Labs
->     Root Port
->   dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
->   PCI: dwc: al: Add support for DW based driver type
->   PCI: dwc: Add validation that PCIe core is set to correct mode
-> 
->  .../devicetree/bindings/pci/pcie-al.txt       |  46 +++
->  MAINTAINERS                                   |   3 +-
->  drivers/pci/controller/dwc/Kconfig            |  12 +
->  drivers/pci/controller/dwc/pcie-al.c          | 365 ++++++++++++++++++
->  .../pci/controller/dwc/pcie-designware-ep.c   |   8 +
->  .../pci/controller/dwc/pcie-designware-host.c |  16 +
->  drivers/pci/quirks.c                          |  38 ++
->  drivers/pci/vpd.c                             |   6 +
->  include/linux/pci_ids.h                       |   2 +
->  9 files changed, 495 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
+> Can you explain in detail what you are doing exactly and what is failing 
+> and what qemu/guest kernel/guest distro is used? Thanks,
 
-Hi Bjorn,
+Sure. I'm on host kernel 5.2.8, guest on 5.3-rc7 (also tested on 5.1.16)
+and I'm hotplugging ivshmem devices to a separate spapr-pci-host-bridge
+defined as follows:
 
-I would like to queue this series for v5.4 but I need your ACK on
-patches 2/3/4 for that to happen, please let me know.
+-device spapr-pci-host-bridge,index=1,id=pci.1
 
-Thanks,
-Lorenzo
+Device hotplug and BAR assignment does work, but IOMMU group assignment
+seems to fail. This is evidenced by the kernel log which shows the
+following message for the first device but not the second:
+
+[  136.849448] pci 0001:00:00.0: Adding to iommu group 1
+
+Trying to bind the second device to vfio-pci as a result of this
+fails:
+
+[  471.691948] vfio-pci: probe of 0001:00:01.0 failed with error -22
+
+I traced that failure to a call to iommu_group_get() which returns
+NULL for the second device. I then traced that back to the ordering
+issue I described.
+
+For your second and third virtio-net devices, was the
+"Adding to iommu group N" kernel message printed?
