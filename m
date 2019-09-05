@@ -2,144 +2,212 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 52870AA822
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 18:18:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34B36AA826
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 18:18:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732810AbfIEQSC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 12:18:02 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39732 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729790AbfIEQSB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 12:18:01 -0400
-Received: by mail-pl1-f195.google.com with SMTP id bd8so1525916plb.6
-        for <linux-pci@vger.kernel.org>; Thu, 05 Sep 2019 09:18:01 -0700 (PDT)
+        id S1733174AbfIEQSD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 12:18:03 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44762 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733104AbfIEQSD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 12:18:03 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i18so1664539pgl.11
+        for <linux-pci@vger.kernel.org>; Thu, 05 Sep 2019 09:18:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=mukYH+OPB5B2Q8cIXti1kEopT3yxftlik4aW1yItWl0=;
-        b=Kl4bnPESFCY769er88olLvIMydPIt7MSvRLFnbrMUBFJe2XGXC8oNJ+eB44CxUq8Z8
-         icVfI4Z7Zv2fzyYYpmgSfOeLpo80hrioId35SGiSFn9P8y2EAYTnu2zhJFWW2+ZCCuVB
-         Acsg/wxujlaWpromsOPO/XEkL8skQ8K6nxVzl/UgdDGnWguc6yvHxK/Wv797MeTMZZKg
-         uTS6IS/ihZs3WKvkhpct4BSG3iQljiRqCPgkcGGvlkMO9io8/jgOGOyYiaq1v5JzqePy
-         StJEuicwLxbARj/KoZGqt30jsFFl3ji38xfmmhdmOvICWnSF2ih5SFi0lKIRKtupViAc
-         aAVw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=LOcyk2Tlmy2C4zqKtlXcXvj1dEhOW89Bxfs+xhia+Lc=;
+        b=RAocJqNuFAo+8EWLGQowOck0TpzPvE7OJtl5QzpsxoyoNf9Ngy0QrVRD8QbNLan0SK
+         3atzqgCHL9vl7ujJipFG5mstF8vo8Cqw+J5f1YEz6GGZT2/PAdLdz7nI6i6jXlOhirHF
+         s+zLL4x57Pv/j2bnLfroXzBT8ECnmG7bWvVFun5AEwZ8nHcWWz6+lasnvBgrzIAVU7RZ
+         vO5xw8QOCOUZrUAHJcYqap8Q1iL7RIYViGVCWgaLpc0EWEHznv31BLWRVEeSeirK+C72
+         4z451i7BQb96tTMghJ2Erm9bY0f74GAzJxLfVWq4p3mQV8fTbc8fi617kBInlSo8dIoz
+         vCvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=mukYH+OPB5B2Q8cIXti1kEopT3yxftlik4aW1yItWl0=;
-        b=buO1mw39M9xf11lBex4BarObhwNysTE+iJtoUtSjGBmOOcjrU6MsY0PELns85/81di
-         PqMlLXU8aotv8s2OPqIxCDv9pg7xM5x/9hjZcEajG9OMt7myMVtsd4fGz8eHr0TRNlgY
-         HeBYNRFub/jKh88JLo0XqotVn5BVnK4pzhFMKblkqV5Ojx0r236X9XBm/QjldrMNRd70
-         CX+IxswBiis1gRdIpbqqLdsuFC/tY5qP/HP3WM7Ucbr5OYCWnCqLBfn6cpXRMDZLqP9g
-         3xaT/E5nw5urX9LjfSS6+m21n1YnX1eFMHgh5/wbmLvL/IQ33RIAG9w8gghRzllDI7xd
-         Aqdg==
-X-Gm-Message-State: APjAAAWyUiR5Qe1AZIMRlrLDehzCi2EGdyawRiZJqWqpSSKUTkobOyr7
-        dV3wXGd4voRWWb3v4BykkhrZAA==
-X-Google-Smtp-Source: APXvYqzStzXxTWL+1VFEsqINN1zYVOMyUuv7eD3n8K9EXYt6eOChXB640bT4MB9P7QjeXftsWyVKSw==
-X-Received: by 2002:a17:902:b583:: with SMTP id a3mr4258322pls.52.1567700281066;
-        Thu, 05 Sep 2019 09:18:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=LOcyk2Tlmy2C4zqKtlXcXvj1dEhOW89Bxfs+xhia+Lc=;
+        b=Dw/Nb17XkJZtBxqx77FngUZm14TYoGtIHVddIRdttxi8xbu1uohjEefPxVVXUrzWDq
+         jVQ7PRmBIDVXLI9l/qswQ/SHjgRt+ve6zhxnSpXxYh0/Vrk11oUA3tM5Ie7tgtCqH3u2
+         0dw2VwfroPf62UmgIhdE6U0Blus4gPW5MybGunGKa5FmwJtt2tDrEgJHXFc80xYHvNIN
+         XpnGVOWMHpFLF7Q95SrmXAwJwtBoTznYu2l2OaY/bvGZwOba64SLd7fI0HT9gXTTstIt
+         0CaTYpDgNrr/j3/nOMQbN1etIwf0c6EuJybbivOvBeK1FCce4fR5uOu9esxB8zy0EzsL
+         DTYw==
+X-Gm-Message-State: APjAAAWLLLAzcrCV6KwoY7dGsd1bEvP6mkggU2WKy9nAk29rPqHuj8mO
+        DfkHkzynhi2SOKl4oGOSkF7RpQ==
+X-Google-Smtp-Source: APXvYqyMgjxfkjP3YNECcB58WCY+NHLygBK/D+S4VWMd6L7YO3gjUZq9S9Du5KS72s1N8hLa4mIKqA==
+X-Received: by 2002:a63:db45:: with SMTP id x5mr3885637pgi.293.1567700282371;
+        Thu, 05 Sep 2019 09:18:02 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id m129sm6324005pga.39.2019.09.05.09.17.59
+        by smtp.gmail.com with ESMTPSA id m129sm6324005pga.39.2019.09.05.09.18.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 09:18:00 -0700 (PDT)
+        Thu, 05 Sep 2019 09:18:01 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     stable@vger.kernel.org
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: [BACKPORT 4.14.y 00/18] Backport candidate from TI 4.14 product kernel 
-Date:   Thu,  5 Sep 2019 10:17:41 -0600
-Message-Id: <20190905161759.28036-1-mathieu.poirier@linaro.org>
+Subject: [BACKPORT 4.14.y 01/18] PCI: designware-ep: Fix find_first_zero_bit() usage
+Date:   Thu,  5 Sep 2019 10:17:42 -0600
+Message-Id: <20190905161759.28036-2-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190905161759.28036-1-mathieu.poirier@linaro.org>
+References: <20190905161759.28036-1-mathieu.poirier@linaro.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-These patches are backport candidates picked out of TI's 4.14.y tree [1],
-with most of them already found in the 4.19.y stable tree.
+From: Niklas Cassel <niklas.cassel@axis.com>
 
-The set apply and compiles cleanly on 4.14.141.
+commit ad4a5becc689c3f32bbbc2b37eff89efe19dc2f9 upstream
 
-Thanks,
-Mathieu
+find_first_zero_bit()'s parameter 'size' is defined in bits,
+not in bytes.
 
+find_first_zero_bit() is called with size in bytes rather than bits,
+which thus defines a too low upper limit, causing
+dw_pcie_ep_inbound_atu() to assign iatu index #4 to both bar 4
+and bar 5, which makes bar 5 overwrite the settings set by bar 4.
 
-[1]. http://git.ti.com/gitweb/?p=ti-linux-kernel/ti-linux-kernel.git;a=shortlog;h=refs/heads/ti-linux-4.14.y
+Since the sizes of the bitmaps are known, dynamically allocate the
+bitmaps, and use the correct size when calling find_first_zero_bit().
 
-Andrew F. Davis (1):
-  ASoC: tlv320aic31xx: Handle inverted BCLK in non-DSP modes
+Additionally, make sure that ep->num_ob_windows and ep->num_ib_windows,
+which are obtained from device tree, are smaller than the maximum number
+of iATUs (MAX_IATU_IN/MAX_IATU_OUT).
 
-Arvind Yadav (1):
-  ASoC: davinci-mcasp: Handle return value of devm_kasprintf
+Fixes: f8aed6ec624f ("PCI: dwc: designware: Add EP mode support")
+Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+---
+ drivers/pci/dwc/pcie-designware-ep.c | 34 +++++++++++++++++++++-------
+ drivers/pci/dwc/pcie-designware.h    |  8 +++++--
+ 2 files changed, 32 insertions(+), 10 deletions(-)
 
-Christophe Jaillet (1):
-  ASoC: davinci-mcasp: Fix an error handling path in
-    'davinci_mcasp_probe()'
-
-Claudio Foellmi (1):
-  i2c: omap: Trigger bus recovery in lockup case
-
-Dan Carpenter (1):
-  misc: pci_endpoint_test: Prevent some integer overflows
-
-Gustavo A. R. Silva (1):
-  ASoC: tlv320dac31xx: mark expected switch fall-through
-
-Keerthy (2):
-  mfd: palmas: Assign the right powerhold mask for tps65917
-  PCI: dra7xx: Add shutdown handler to cleanly turn off clocks
-
-Kishon Vijay Abraham I (1):
-  misc: pci_endpoint_test: Fix BUG_ON error during pci_disable_msi()
-
-Niklas Cassel (1):
-  PCI: designware-ep: Fix find_first_zero_bit() usage
-
-Roger Quadros (1):
-  usb: dwc3: Allow disabling of metastability workaround
-
-Roman Yeryomin (1):
-  mtd: spi-nor: enable 4B opcodes for mx66l51235l
-
-Sudeep Holla (1):
-  mailbox: reset txdone_method TXDONE_BY_POLL if client knows_txdone
-
-Takashi Iwai (1):
-  ASoC: davinci: Kill BUG_ON() usage
-
-Tony Lindgren (1):
-  drm/omap: panel-dsi-cm: fix driver
-
-Vignesh R (2):
-  PCI: dra7xx: Fix legacy INTD IRQ handling
-  mtd: spi-nor: cadence-quadspi: add a delay in write sequence
-
-Zumeng Chen (1):
-  cpufreq: ti-cpufreq: add missing of_node_put()
-
- .../devicetree/bindings/usb/dwc3.txt          |  2 +
- drivers/cpufreq/ti-cpufreq.c                  |  1 +
- .../gpu/drm/omapdrm/displays/panel-dsi-cm.c   | 56 +++++++++++++++++--
- drivers/i2c/busses/i2c-omap.c                 | 25 ++++++++-
- drivers/mailbox/mailbox.c                     |  4 +-
- drivers/mailbox/pcc.c                         |  4 +-
- drivers/mfd/palmas.c                          | 10 +++-
- drivers/misc/pci_endpoint_test.c              | 17 ++++++
- drivers/mtd/spi-nor/cadence-quadspi.c         | 27 ++++++++-
- drivers/mtd/spi-nor/spi-nor.c                 |  2 +-
- drivers/pci/dwc/pci-dra7xx.c                  | 20 ++++++-
- drivers/pci/dwc/pcie-designware-ep.c          | 34 ++++++++---
- drivers/pci/dwc/pcie-designware.h             |  8 ++-
- drivers/usb/dwc3/core.c                       |  3 +
- drivers/usb/dwc3/core.h                       |  3 +
- drivers/usb/dwc3/gadget.c                     |  6 +-
- include/linux/mfd/palmas.h                    |  3 +
- sound/soc/codecs/tlv320aic31xx.c              | 30 ++++++----
- sound/soc/davinci/davinci-mcasp.c             | 21 ++++++-
- 19 files changed, 235 insertions(+), 41 deletions(-)
-
+diff --git a/drivers/pci/dwc/pcie-designware-ep.c b/drivers/pci/dwc/pcie-designware-ep.c
+index abcbf0770358..71795db41261 100644
+--- a/drivers/pci/dwc/pcie-designware-ep.c
++++ b/drivers/pci/dwc/pcie-designware-ep.c
+@@ -74,8 +74,7 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, enum pci_barno bar,
+ 	u32 free_win;
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 
+-	free_win = find_first_zero_bit(&ep->ib_window_map,
+-				       sizeof(ep->ib_window_map));
++	free_win = find_first_zero_bit(ep->ib_window_map, ep->num_ib_windows);
+ 	if (free_win >= ep->num_ib_windows) {
+ 		dev_err(pci->dev, "no free inbound window\n");
+ 		return -EINVAL;
+@@ -89,7 +88,7 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, enum pci_barno bar,
+ 	}
+ 
+ 	ep->bar_to_atu[bar] = free_win;
+-	set_bit(free_win, &ep->ib_window_map);
++	set_bit(free_win, ep->ib_window_map);
+ 
+ 	return 0;
+ }
+@@ -100,8 +99,7 @@ static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, phys_addr_t phys_addr,
+ 	u32 free_win;
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 
+-	free_win = find_first_zero_bit(&ep->ob_window_map,
+-				       sizeof(ep->ob_window_map));
++	free_win = find_first_zero_bit(ep->ob_window_map, ep->num_ob_windows);
+ 	if (free_win >= ep->num_ob_windows) {
+ 		dev_err(pci->dev, "no free outbound window\n");
+ 		return -EINVAL;
+@@ -110,7 +108,7 @@ static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, phys_addr_t phys_addr,
+ 	dw_pcie_prog_outbound_atu(pci, free_win, PCIE_ATU_TYPE_MEM,
+ 				  phys_addr, pci_addr, size);
+ 
+-	set_bit(free_win, &ep->ob_window_map);
++	set_bit(free_win, ep->ob_window_map);
+ 	ep->outbound_addr[free_win] = phys_addr;
+ 
+ 	return 0;
+@@ -125,7 +123,7 @@ static void dw_pcie_ep_clear_bar(struct pci_epc *epc, enum pci_barno bar)
+ 	dw_pcie_ep_reset_bar(pci, bar);
+ 
+ 	dw_pcie_disable_atu(pci, atu_index, DW_PCIE_REGION_INBOUND);
+-	clear_bit(atu_index, &ep->ib_window_map);
++	clear_bit(atu_index, ep->ib_window_map);
+ }
+ 
+ static int dw_pcie_ep_set_bar(struct pci_epc *epc, enum pci_barno bar,
+@@ -181,7 +179,7 @@ static void dw_pcie_ep_unmap_addr(struct pci_epc *epc, phys_addr_t addr)
+ 		return;
+ 
+ 	dw_pcie_disable_atu(pci, atu_index, DW_PCIE_REGION_OUTBOUND);
+-	clear_bit(atu_index, &ep->ob_window_map);
++	clear_bit(atu_index, ep->ob_window_map);
+ }
+ 
+ static int dw_pcie_ep_map_addr(struct pci_epc *epc, phys_addr_t addr,
+@@ -302,12 +300,32 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 		dev_err(dev, "unable to read *num-ib-windows* property\n");
+ 		return ret;
+ 	}
++	if (ep->num_ib_windows > MAX_IATU_IN) {
++		dev_err(dev, "invalid *num-ib-windows*\n");
++		return -EINVAL;
++	}
+ 
+ 	ret = of_property_read_u32(np, "num-ob-windows", &ep->num_ob_windows);
+ 	if (ret < 0) {
+ 		dev_err(dev, "unable to read *num-ob-windows* property\n");
+ 		return ret;
+ 	}
++	if (ep->num_ob_windows > MAX_IATU_OUT) {
++		dev_err(dev, "invalid *num-ob-windows*\n");
++		return -EINVAL;
++	}
++
++	ep->ib_window_map = devm_kzalloc(dev, sizeof(long) *
++					 BITS_TO_LONGS(ep->num_ib_windows),
++					 GFP_KERNEL);
++	if (!ep->ib_window_map)
++		return -ENOMEM;
++
++	ep->ob_window_map = devm_kzalloc(dev, sizeof(long) *
++					 BITS_TO_LONGS(ep->num_ob_windows),
++					 GFP_KERNEL);
++	if (!ep->ob_window_map)
++		return -ENOMEM;
+ 
+ 	addr = devm_kzalloc(dev, sizeof(phys_addr_t) * ep->num_ob_windows,
+ 			    GFP_KERNEL);
+diff --git a/drivers/pci/dwc/pcie-designware.h b/drivers/pci/dwc/pcie-designware.h
+index 5af29d125c7e..ba9dedc31bfa 100644
+--- a/drivers/pci/dwc/pcie-designware.h
++++ b/drivers/pci/dwc/pcie-designware.h
+@@ -114,6 +114,10 @@
+ #define MAX_MSI_IRQS			32
+ #define MAX_MSI_CTRLS			(MAX_MSI_IRQS / 32)
+ 
++/* Maximum number of inbound/outbound iATUs */
++#define MAX_IATU_IN			256
++#define MAX_IATU_OUT			256
++
+ struct pcie_port;
+ struct dw_pcie;
+ struct dw_pcie_ep;
+@@ -193,8 +197,8 @@ struct dw_pcie_ep {
+ 	size_t			page_size;
+ 	u8			bar_to_atu[6];
+ 	phys_addr_t		*outbound_addr;
+-	unsigned long		ib_window_map;
+-	unsigned long		ob_window_map;
++	unsigned long		*ib_window_map;
++	unsigned long		*ob_window_map;
+ 	u32			num_ib_windows;
+ 	u32			num_ob_windows;
+ };
 -- 
 2.17.1
 
