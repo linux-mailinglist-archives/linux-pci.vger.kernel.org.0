@@ -2,126 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 14D27AA812
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 18:15:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52870AA822
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 18:18:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731631AbfIEQPT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 12:15:19 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:46264 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727014AbfIEQPT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 12:15:19 -0400
-Received: by mail-yw1-f68.google.com with SMTP id 201so963246ywo.13
-        for <linux-pci@vger.kernel.org>; Thu, 05 Sep 2019 09:15:18 -0700 (PDT)
+        id S1732810AbfIEQSC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 12:18:02 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39732 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729790AbfIEQSB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 12:18:01 -0400
+Received: by mail-pl1-f195.google.com with SMTP id bd8so1525916plb.6
+        for <linux-pci@vger.kernel.org>; Thu, 05 Sep 2019 09:18:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=PXZGe/GMm1AP9tqn/kRJhU+fbFG+dBRvZ/JuzgZ9dAo=;
-        b=N9omsp7NCyKR+GZ4pgi8H30MeCim15w3VkiGjIMy4ljy/KwkU4MFduXrRg7xpnJPyF
-         BHctIYbQqySBxCk6RNa/ZxQ6p3wsSth4KvvEiVUsINkeCmwbqxZL/ostbY2gf2b9CKLg
-         Vn4OhTdkTIj/DvvCQRaZgulyBCn72gNH8Zkal7Uc9naOSiVUvfHHGlF/RwUoQjids+V4
-         HInV6Durvglx1OvfLs0eH7SttZ3wcZQVVuPMiRjA/LR/xVT4rnhfpkl1af5g9TVMA0Dy
-         yyVVBpwYfazjByU7zx2AYM85aiIvxeYShULf8fZi5C27GMHz5d5adzuJRtz0FGCTf3ys
-         Jprg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=mukYH+OPB5B2Q8cIXti1kEopT3yxftlik4aW1yItWl0=;
+        b=Kl4bnPESFCY769er88olLvIMydPIt7MSvRLFnbrMUBFJe2XGXC8oNJ+eB44CxUq8Z8
+         icVfI4Z7Zv2fzyYYpmgSfOeLpo80hrioId35SGiSFn9P8y2EAYTnu2zhJFWW2+ZCCuVB
+         Acsg/wxujlaWpromsOPO/XEkL8skQ8K6nxVzl/UgdDGnWguc6yvHxK/Wv797MeTMZZKg
+         uTS6IS/ihZs3WKvkhpct4BSG3iQljiRqCPgkcGGvlkMO9io8/jgOGOyYiaq1v5JzqePy
+         StJEuicwLxbARj/KoZGqt30jsFFl3ji38xfmmhdmOvICWnSF2ih5SFi0lKIRKtupViAc
+         aAVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PXZGe/GMm1AP9tqn/kRJhU+fbFG+dBRvZ/JuzgZ9dAo=;
-        b=pMRBQr/T2H281yFgRMQ8E88JW7kiVAtoKpRdDDIcTNjks9u3/iMgyituzdIyjJIIIw
-         C2ivVnZZ+mr+koFMIZXrLv3v/kd6nS6ZPHANO63GRTNo+kwK5wCiMrMdZae9bUjG9QRN
-         wMdHi1uASAi9RM/o27om4a1Qy8TKYDw0sLYn3FGhAq571VdYU4in/vYVx4hdwLgsHWM8
-         oP3qP4ytKcaUgLm4I+1tMqCZdFEVypOYsrs/L3FcfhLsoD5Epc/7Jrq5M5jEPHQIOtK5
-         mdpWgSLNUOFEYpPdMDGAnF1vpxn0Hh2/BhFhveUVyBGpAk4Cj2TEf7VYbbHEtww/fE78
-         w8hw==
-X-Gm-Message-State: APjAAAWnyZMfe5w5le4kELOtJddzgJ2MYDk30LA0l2/bRXLZh5UfUR3I
-        YVO+/T7xTMKbPOqlEyHsqpz8ew==
-X-Google-Smtp-Source: APXvYqyG5gYmd4gdk9cp1NnCY0cEEKQpGbyOz5hp+kGb0CXwR0NcO5DwgzcwFRrFcc7vZay1SahyVg==
-X-Received: by 2002:a81:99c1:: with SMTP id q184mr3087072ywg.70.1567700118360;
-        Thu, 05 Sep 2019 09:15:18 -0700 (PDT)
-Received: from jaxon.wireless.duke.edu ([152.3.43.45])
-        by smtp.gmail.com with ESMTPSA id q128sm549266ywe.75.2019.09.05.09.15.17
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=mukYH+OPB5B2Q8cIXti1kEopT3yxftlik4aW1yItWl0=;
+        b=buO1mw39M9xf11lBex4BarObhwNysTE+iJtoUtSjGBmOOcjrU6MsY0PELns85/81di
+         PqMlLXU8aotv8s2OPqIxCDv9pg7xM5x/9hjZcEajG9OMt7myMVtsd4fGz8eHr0TRNlgY
+         HeBYNRFub/jKh88JLo0XqotVn5BVnK4pzhFMKblkqV5Ojx0r236X9XBm/QjldrMNRd70
+         CX+IxswBiis1gRdIpbqqLdsuFC/tY5qP/HP3WM7Ucbr5OYCWnCqLBfn6cpXRMDZLqP9g
+         3xaT/E5nw5urX9LjfSS6+m21n1YnX1eFMHgh5/wbmLvL/IQ33RIAG9w8gghRzllDI7xd
+         Aqdg==
+X-Gm-Message-State: APjAAAWyUiR5Qe1AZIMRlrLDehzCi2EGdyawRiZJqWqpSSKUTkobOyr7
+        dV3wXGd4voRWWb3v4BykkhrZAA==
+X-Google-Smtp-Source: APXvYqzStzXxTWL+1VFEsqINN1zYVOMyUuv7eD3n8K9EXYt6eOChXB640bT4MB9P7QjeXftsWyVKSw==
+X-Received: by 2002:a17:902:b583:: with SMTP id a3mr4258322pls.52.1567700281066;
+        Thu, 05 Sep 2019 09:18:01 -0700 (PDT)
+Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id m129sm6324005pga.39.2019.09.05.09.17.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 09:15:17 -0700 (PDT)
-From:   Haotian Wang <haotian.wang@sifive.com>
-To:     mst@redhat.com, jasowang@redhat.com, kishon@ti.com,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com
-Cc:     haotian.wang@duke.edu, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] pci: endpoint: functions: Add a virtnet EP function
-Date:   Thu,  5 Sep 2019 12:15:16 -0400
-Message-Id: <20190905161516.2845-1-haotian.wang@sifive.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190905025823-mutt-send-email-mst@kernel.org>
-References: <20190905025823-mutt-send-email-mst@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 05 Sep 2019 09:18:00 -0700 (PDT)
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     stable@vger.kernel.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-mtd@lists.infradead.org
+Subject: [BACKPORT 4.14.y 00/18] Backport candidate from TI 4.14 product kernel 
+Date:   Thu,  5 Sep 2019 10:17:41 -0600
+Message-Id: <20190905161759.28036-1-mathieu.poirier@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 3:07 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > The host may write multiple 0 or 1's and the endpoint can only
-> > detect one of them in an notif_poll usleep interval.
-> 
-> Right. Notifications weren't designed to be implemented on top of RW
-> memory like this: the assumption was all notifications are buffered.
+These patches are backport candidates picked out of TI's 4.14.y tree [1],
+with most of them already found in the 4.19.y stable tree.
 
-I can implement notification as a counter instead of a pending bit to
-simulate a buffer. There will be many troublesome cases illustrated by
-the following example.
+The set apply and compiles cleanly on 4.14.141.
 
-The host sends a notification about available buffers 0-3. The endpoint
-will probably consume buffers 0-5 as the notification is polled and
-there is a delay. Then for some following notifications, the endpoint
-may realize there are no corresponding available buffers to consume.
-Those useless function calls waste cycles.
+Thanks,
+Mathieu
 
-> So if you implement modern instead, different queues can use
-> different addresses.
 
-Will start working on this after switching the endpoint to using
-vringh.c.
+[1]. http://git.ti.com/gitweb/?p=ti-linux-kernel/ti-linux-kernel.git;a=shortlog;h=refs/heads/ti-linux-4.14.y
 
-> > The host may write
-> > some non-2 value as the endpoint code just finishes detecting the last
-> > non-2 value and reverting that value back to 2, effectively nullifying
-> > the new non-2 value.
-> > 
-> > The host may decide to write a non-2 value
-> > immediately after the endpoint revert that value back to 2 but before
-> > the endpoint code finishes the current loop of execution, effectively
-> > making the value not reverted back to 2.
-> > 
-> > All these and other problems are made worse by the fact that the PCI
-> > host Linux usually runs on much faster cores than the one on PCI
-> > endpoint. This is why relying completely on pending bits is not always
-> > safe. Hence the "fallback" check using usleep hackery exists.
-> > Nevertheless I welcome any suggestion, because I do not like this
-> > treatment myself either.
-> 
-> As long as you have a small number of queues, you can poll both
-> of them. And to resolve racing with host, re-check
-> rings after you write 2 into the selector
+Andrew F. Davis (1):
+  ASoC: tlv320aic31xx: Handle inverted BCLK in non-DSP modes
 
-I assume your suggestion is based on modern virtio. vrings in legacy
-virtio share a common notification read-write area.
+Arvind Yadav (1):
+  ASoC: davinci-mcasp: Handle return value of devm_kasprintf
 
-> (btw you also need a bunch of memory barriers, atomics don't
-> imply them automatically).
+Christophe Jaillet (1):
+  ASoC: davinci-mcasp: Fix an error handling path in
+    'davinci_mcasp_probe()'
 
-Thank you for the reminder. In this doc,
-https://www.kernel.org/doc/html/latest/core-api/atomic_ops.html, it says
-"atomic_cmpxchg must provide explicit memory barriers around the operation,
-although if the comparison fails then no memory ordering guarantees are
-required". My understanding of this sentence is that the arch-specific
-implementer of atomic_cmpxchg already surrounds the operation with
-barriers in a more efficient way. The second part of the sentence
-implies the doc's target audience is the implementer of atomic_cmpxchg.
-Please correct me if I misunderstand this doc.
+Claudio Foellmi (1):
+  i2c: omap: Trigger bus recovery in lockup case
 
-Thank you for your feedback.
+Dan Carpenter (1):
+  misc: pci_endpoint_test: Prevent some integer overflows
 
-Best,
-Haotian
+Gustavo A. R. Silva (1):
+  ASoC: tlv320dac31xx: mark expected switch fall-through
+
+Keerthy (2):
+  mfd: palmas: Assign the right powerhold mask for tps65917
+  PCI: dra7xx: Add shutdown handler to cleanly turn off clocks
+
+Kishon Vijay Abraham I (1):
+  misc: pci_endpoint_test: Fix BUG_ON error during pci_disable_msi()
+
+Niklas Cassel (1):
+  PCI: designware-ep: Fix find_first_zero_bit() usage
+
+Roger Quadros (1):
+  usb: dwc3: Allow disabling of metastability workaround
+
+Roman Yeryomin (1):
+  mtd: spi-nor: enable 4B opcodes for mx66l51235l
+
+Sudeep Holla (1):
+  mailbox: reset txdone_method TXDONE_BY_POLL if client knows_txdone
+
+Takashi Iwai (1):
+  ASoC: davinci: Kill BUG_ON() usage
+
+Tony Lindgren (1):
+  drm/omap: panel-dsi-cm: fix driver
+
+Vignesh R (2):
+  PCI: dra7xx: Fix legacy INTD IRQ handling
+  mtd: spi-nor: cadence-quadspi: add a delay in write sequence
+
+Zumeng Chen (1):
+  cpufreq: ti-cpufreq: add missing of_node_put()
+
+ .../devicetree/bindings/usb/dwc3.txt          |  2 +
+ drivers/cpufreq/ti-cpufreq.c                  |  1 +
+ .../gpu/drm/omapdrm/displays/panel-dsi-cm.c   | 56 +++++++++++++++++--
+ drivers/i2c/busses/i2c-omap.c                 | 25 ++++++++-
+ drivers/mailbox/mailbox.c                     |  4 +-
+ drivers/mailbox/pcc.c                         |  4 +-
+ drivers/mfd/palmas.c                          | 10 +++-
+ drivers/misc/pci_endpoint_test.c              | 17 ++++++
+ drivers/mtd/spi-nor/cadence-quadspi.c         | 27 ++++++++-
+ drivers/mtd/spi-nor/spi-nor.c                 |  2 +-
+ drivers/pci/dwc/pci-dra7xx.c                  | 20 ++++++-
+ drivers/pci/dwc/pcie-designware-ep.c          | 34 ++++++++---
+ drivers/pci/dwc/pcie-designware.h             |  8 ++-
+ drivers/usb/dwc3/core.c                       |  3 +
+ drivers/usb/dwc3/core.h                       |  3 +
+ drivers/usb/dwc3/gadget.c                     |  6 +-
+ include/linux/mfd/palmas.h                    |  3 +
+ sound/soc/codecs/tlv320aic31xx.c              | 30 ++++++----
+ sound/soc/davinci/davinci-mcasp.c             | 21 ++++++-
+ 19 files changed, 235 insertions(+), 41 deletions(-)
+
+-- 
+2.17.1
+
