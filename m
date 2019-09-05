@@ -2,108 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7693EA9CB0
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 10:15:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BA2EA9D2A
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 10:38:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731301AbfIEIOz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 04:14:55 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:4608 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730849AbfIEIOz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 04:14:55 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d70c3ff0000>; Thu, 05 Sep 2019 01:14:55 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 05 Sep 2019 01:14:54 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 05 Sep 2019 01:14:54 -0700
-Received: from [10.24.45.110] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Sep
- 2019 08:14:49 +0000
-Subject: Re: [PATCH V3 0/6] PCI: tegra: Enable PCIe C5 controller of Tegra194
- in p2972-0000 platform
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <andrew.murray@arm.com>
-CC:     <kishon@ti.com>, <gustavo.pimentel@synopsys.com>,
-        <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190828172850.19871-1-vidyas@nvidia.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <7751a77d-5812-49b7-0c6b-00e6740e209b@nvidia.com>
-Date:   Thu, 5 Sep 2019 13:44:46 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        id S1731609AbfIEIiL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 04:38:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:39428 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730914AbfIEIiL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 5 Sep 2019 04:38:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C9A5337;
+        Thu,  5 Sep 2019 01:38:10 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14D713F67D;
+        Thu,  5 Sep 2019 01:38:08 -0700 (PDT)
+Subject: Re: PCI/kernel msi code vs GIC ITS driver conflict?
+To:     Andrew Murray <andrew.murray@arm.com>,
+        John Garry <john.garry@huawei.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
+ <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
+ <ef258ec7-877c-406a-3d88-80ff79b823f2@huawei.com>
+ <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <8f1c1fe6-c0d4-1805-b119-6a48a4900e6d@kernel.org>
+Date:   Thu, 5 Sep 2019 09:38:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190828172850.19871-1-vidyas@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1567671295; bh=PhBJxOMrfevbbVmLua/ziqr5zxQ+sCG62W4DYI/Bgpo=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=faj0pebruq92ZjPws0k6DdY21Mz3rgNGoE0m7xwpk6hVdEl2wk3kMoSovWx/x/o64
-         /iM7ABBr57k5e+bIUGoD/aJnbPCJnF9jW0Zhm11eY5bIDiaaCqyi8XFcQYYFK3C+VF
-         m6q8GOBWo3D8uP72yBRwDZ4gDP7XlazfiGdbN2WxcnyfKCSwAN7NMDWEFWpZeahdgB
-         bRmBFzQlhN9q8iCcYlnrDaYjLPj5rywGSi+DDgWQ1z9M3UVD48TMZYsuYC1zg0EEzA
-         9y+e+wQYi/8W7oomavqJzHRtoOY8SzMDL23ry2TiweI5R6ejfHda+tXY3Zw9e/19uD
-         T7VpBgRy94rGA==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo / Bjorn,
-Can you please review this series?
-I have Reviewed-by and Acked-by from Rob, Thierry and Andrew already.
+On 04/09/2019 11:25, Andrew Murray wrote:
+> On Wed, Sep 04, 2019 at 09:56:51AM +0100, John Garry wrote:
+>> On 03/09/2019 17:16, Marc Zyngier wrote:
+>>> Hi John,
+>>>
+>>> On 03/09/2019 15:09, John Garry wrote:
+>>>> Hi Marc, Bjorn, Thomas,
+>>
+>> Hi Marc,
+>>
+>>>>
+>>>> We've come across a conflict with the kernel/pci msi code and GIC ITS
+>>>> driver on our arm64 system, whereby we can't unbind and re-bind a PCI
+>>>> device driver under special conditions. I'll explain...
+>>>>
+>>>> Our PCI device support 32 MSIs. The driver attempts to allocate msi
+>>>> vectors with min msi=17, max msi = 32, and affd.pre vectors = 16. For
+>>>> our test we make nr_cpus = 1 (just anything less than 16).
+>>>
+>>> Just to confirm: this PCI device is requiring Multi-MSI, right? As
+>>> opposed to MSI-X?
+>>
+>> Right, Multi-MSI.
+>>
+>>>
+>>>> We find that the pci/kernel msi code gives us 17 vectors, but the GIC
+>>>> ITS code reserves 32 lpi maps in its_irq_domain_alloc(). The problem
+>>>> then occurs when unbinding the driver in its_irq_domain_free() call,
+>>>> where we only clear bits for 17 vectors. So if we unbind the driver and
+>>>> then attempt to bind again, it fails.
+>>>
+>>> Is this device, by any chance, sharing its requested-id with another
+>>> device? By being behind a bridge of some sort?There is some code to
+>>> deal with it, but I'm not sure it has ever been verified in anger...
+>>
+>> It's a RC iEP and there should be no requested-id sharing:
+>>
+>> root@ubuntu:/home/john#  lspci -s 74:02.0 -v
+>> 74:02.0 Serial Attached SCSI controller: Huawei Technologies Co., Ltd.
+>> HiSilicon SAS 3.0 HBA (rev 20)
+>> Flags: bus master, fast devsel, latency 0, IRQ 23, NUMA node 0
+>> Memory at a2000000 (32-bit, non-prefetchable) [size=32K]
+>> Capabilities: [40] Express Root Complex Integrated Endpoint, MSI 00
+>> Capabilities: [80] MSI: Enable+ Count=32/32 Maskable+ 64bit+
+>> Capabilities: [b0] Power Management version 3
+>> Kernel driver in use: hisi_sas_v3_hw
+>>
+>>>
+>>>> Where the fault lies, I can't say. Maybe the kernel msi code should
+>>>> always give power of 2 vectors - as I understand, the PCI spec mandates
+>>>> this. Or maybe the GIC ITS driver has a problem in the free path, as
+>>>> above. Or maybe the PCI driver should not be allowed to request !power
+>>>> of 2 min/max vectors.
+>>>>
+>>>> Opinion?
+>>>
+>>> My hunch is that it is an ITS driver bug: the PCI layer is allowed to
+>>> give any number of MSIs to an endpoint driver, as long as they match the
+>>> requirements of the allocation for Multi-MSI.
+>>
+>> I would tend to say that, but isn't the requirement to allocate power of 2
+>> msi vectors, which doesn't seem to be enforced in the kernel msi layer?
+> 
+> For a PCI device that supports MSI but not MSI-X - my understanding is that
+> pci_alloc_irq_vectors_affinity and pci_alloc_irq_vectors will request *from
+> the device* a power of 2 msi vectors between the min and max given by the
+> driver - msi_setup_entry rounds up to nearest power of 2.
+> 
+> However this doesn't guarantee that pci_alloc_irq_vectors will return a
+> power of 2. For example if you set maxvec to 17, then it will request
+> 32 from the device and pci_alloc_irq_vectors will return 17 (i.e. it satisfies
+> your request by over allocating, but still gives you what you asked for).
+> 
+> I'm not yet familiar with ITS, however if it is reserving 32 yet you only
+> clear 17, then there is mismatch between the number actually reserved from
+> the hardware, and the value returned from pci_alloc_irq_vectors.
+> 
+> (It looks like its_alloc_device_irq rounds up to the nearest power of 2).
+
+That's a "feature" of the architecture. The ITT is sized by the number
+of bits used to index the table, meaning that you can only describe a
+power of two >= 2.
+
+John, could you stick a "#define DEBUG 1" at the top of irq-gic-v3-its.c
+and report the LPI allocations for this device?
 
 Thanks,
-Vidya Sagar
 
-On 8/28/2019 10:58 PM, Vidya Sagar wrote:
-> This patch series enables Tegra194's C5 controller which owns x16 slot in
-> p2972-0000 platform. C5 controller's PERST# and CLKREQ# are not configured as
-> output and bi-directional signals by default and hence they need to be
-> configured explicitly. Also, x16 slot's 3.3V and 12V supplies are controlled
-> through GPIOs and hence they need to be enabled through regulator framework.
-> This patch series adds required infrastructural support to address both the
-> aforementioned requirements.
-> Testing done on p2972-0000 platform
-> - Able to enumerate devices connected to x16 slot (owned by C5 controller)
-> - Enumerated device's functionality verified
-> - Suspend-Resume sequence is verified with device connected to x16 slot
-> 
-> V3:
-> * Addressed some more review comments from Andrew Murray and Thierry Reding
-> 
-> V2:
-> * Changed the order of patches in the series for easy merging
-> * Addressed review comments from Thierry Reding and Andrew Murray
-> 
-> Vidya Sagar (6):
->    dt-bindings: PCI: tegra: Add sideband pins configuration entries
->    dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
->    PCI: tegra: Add support to configure sideband pins
->    PCI: tegra: Add support to enable slot regulators
->    arm64: tegra: Add configuration for PCIe C5 sideband signals
->    arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
-> 
->   .../bindings/pci/nvidia,tegra194-pcie.txt     | 16 ++++
->   .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 24 +++++
->   .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  4 +-
->   arch/arm64/boot/dts/nvidia/tegra194.dtsi      | 38 +++++++-
->   drivers/pci/controller/dwc/pcie-tegra194.c    | 94 ++++++++++++++++++-
->   5 files changed, 172 insertions(+), 4 deletions(-)
-> 
-
+	M.
+-- 
+Jazz is not dead, it just smells funny...
