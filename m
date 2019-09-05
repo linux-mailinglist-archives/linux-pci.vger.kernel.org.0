@@ -2,56 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 34B36AA826
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 18:18:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 679B4AA882
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 18:19:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733174AbfIEQSD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 12:18:03 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44762 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733104AbfIEQSD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 12:18:03 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i18so1664539pgl.11
-        for <linux-pci@vger.kernel.org>; Thu, 05 Sep 2019 09:18:02 -0700 (PDT)
+        id S2387925AbfIEQSJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 12:18:09 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37714 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387845AbfIEQSI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 12:18:08 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y9so2078547pfl.4
+        for <linux-pci@vger.kernel.org>; Thu, 05 Sep 2019 09:18:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LOcyk2Tlmy2C4zqKtlXcXvj1dEhOW89Bxfs+xhia+Lc=;
-        b=RAocJqNuFAo+8EWLGQowOck0TpzPvE7OJtl5QzpsxoyoNf9Ngy0QrVRD8QbNLan0SK
-         3atzqgCHL9vl7ujJipFG5mstF8vo8Cqw+J5f1YEz6GGZT2/PAdLdz7nI6i6jXlOhirHF
-         s+zLL4x57Pv/j2bnLfroXzBT8ECnmG7bWvVFun5AEwZ8nHcWWz6+lasnvBgrzIAVU7RZ
-         vO5xw8QOCOUZrUAHJcYqap8Q1iL7RIYViGVCWgaLpc0EWEHznv31BLWRVEeSeirK+C72
-         4z451i7BQb96tTMghJ2Erm9bY0f74GAzJxLfVWq4p3mQV8fTbc8fi617kBInlSo8dIoz
-         vCvg==
+        bh=3Bt6nNLlt+xUVNaG8TogY6q5T68efSQtUAFTBH8Xlsg=;
+        b=HI5tWkpkgDB2JApLY2ATp8wEzTgsgI7cUXG07/am8F65CP7VSB3lI0NXxyns+DWiX2
+         gaWTANI3zq2OwmaBZXn99DM6sZThpLtoRKLYi5a2I85zG/SH7P8SCjVgftKwhY5ktFuA
+         vJO992gbVyS1qZ7VJYG2btuxuSIAhhpNXMIqEzmVfiiabSsH0Mel1mVFYnYEbX7WVla8
+         tN7UFY3JcIVURcYH4ZeeV0a1XoRM7rgtLWf0/zDA5+VHxMm9oxNpGTujIBcQCjB7dge2
+         mpkITrf0/86JuXKn9lS53c6lBD7zg0AWMotgCzvCXmzDoFROpRfyCy8gCpdWJAq9a8Hw
+         RNtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=LOcyk2Tlmy2C4zqKtlXcXvj1dEhOW89Bxfs+xhia+Lc=;
-        b=Dw/Nb17XkJZtBxqx77FngUZm14TYoGtIHVddIRdttxi8xbu1uohjEefPxVVXUrzWDq
-         jVQ7PRmBIDVXLI9l/qswQ/SHjgRt+ve6zhxnSpXxYh0/Vrk11oUA3tM5Ie7tgtCqH3u2
-         0dw2VwfroPf62UmgIhdE6U0Blus4gPW5MybGunGKa5FmwJtt2tDrEgJHXFc80xYHvNIN
-         XpnGVOWMHpFLF7Q95SrmXAwJwtBoTznYu2l2OaY/bvGZwOba64SLd7fI0HT9gXTTstIt
-         0CaTYpDgNrr/j3/nOMQbN1etIwf0c6EuJybbivOvBeK1FCce4fR5uOu9esxB8zy0EzsL
-         DTYw==
-X-Gm-Message-State: APjAAAWLLLAzcrCV6KwoY7dGsd1bEvP6mkggU2WKy9nAk29rPqHuj8mO
-        DfkHkzynhi2SOKl4oGOSkF7RpQ==
-X-Google-Smtp-Source: APXvYqyMgjxfkjP3YNECcB58WCY+NHLygBK/D+S4VWMd6L7YO3gjUZq9S9Du5KS72s1N8hLa4mIKqA==
-X-Received: by 2002:a63:db45:: with SMTP id x5mr3885637pgi.293.1567700282371;
-        Thu, 05 Sep 2019 09:18:02 -0700 (PDT)
+        bh=3Bt6nNLlt+xUVNaG8TogY6q5T68efSQtUAFTBH8Xlsg=;
+        b=Y8IlHr8NXEo24hDZPKIv+KOx0hk/sgpdGjaSdxBvTYwOy1kmpMguS2su/LjKYNdgRt
+         DvKgzy123zfOitvgYkPC1KDCaGViHGRDdSeqi9B+D4wtIltGzd8/n5wlSOwvmct67TP7
+         DPRslZNnnTXduAZ+IiOyyWlarGijFQFI4Jle1N1UFo2H5St6JL11fZOTANawpr6WqxJC
+         QCnUp23L8T0zB3m19ZI1ekqSJuG+9UocxCinyqRmTj6NmpjAeji8mhb+OWeAT57gfCyH
+         JrEl89CX0ljpA7PdWrD00m90MnvH5SV0Q1XwRO6ZMAhinQViqNCmCDTDuN9lij4tH3IO
+         4cZA==
+X-Gm-Message-State: APjAAAUNiRR6UT/PLTUpzLyytZgVrJIM6p/TrIQknH5kcyRetCXba9gY
+        x6F06tQP8/grPXrwcYzYg8HM9A==
+X-Google-Smtp-Source: APXvYqyeuaXfpPcMY8LL3N9SzaC/DWAxU9D1agyzvWDKKPe/Or/72DzL6TV62pYkRSpSy8AT7z2T/g==
+X-Received: by 2002:a63:6686:: with SMTP id a128mr3841760pgc.361.1567700287353;
+        Thu, 05 Sep 2019 09:18:07 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id m129sm6324005pga.39.2019.09.05.09.18.01
+        by smtp.gmail.com with ESMTPSA id m129sm6324005pga.39.2019.09.05.09.18.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 09:18:01 -0700 (PDT)
+        Thu, 05 Sep 2019 09:18:06 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     stable@vger.kernel.org
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: [BACKPORT 4.14.y 01/18] PCI: designware-ep: Fix find_first_zero_bit() usage
-Date:   Thu,  5 Sep 2019 10:17:42 -0600
-Message-Id: <20190905161759.28036-2-mathieu.poirier@linaro.org>
+Subject: [BACKPORT 4.14.y 05/18] mfd: palmas: Assign the right powerhold mask for tps65917
+Date:   Thu,  5 Sep 2019 10:17:46 -0600
+Message-Id: <20190905161759.28036-6-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190905161759.28036-1-mathieu.poirier@linaro.org>
 References: <20190905161759.28036-1-mathieu.poirier@linaro.org>
@@ -60,154 +60,65 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Niklas Cassel <niklas.cassel@axis.com>
+From: Keerthy <j-keerthy@ti.com>
 
-commit ad4a5becc689c3f32bbbc2b37eff89efe19dc2f9 upstream
+commit 572ff4d560be3784205b224cd67d6715620092d7 upstream
 
-find_first_zero_bit()'s parameter 'size' is defined in bits,
-not in bytes.
+The powerhold mask for TPS65917 is different when comapred to
+the other palmas versions. Hence assign the right mask that enables
+power off of tps65917 pmic correctly.
 
-find_first_zero_bit() is called with size in bytes rather than bits,
-which thus defines a too low upper limit, causing
-dw_pcie_ep_inbound_atu() to assign iatu index #4 to both bar 4
-and bar 5, which makes bar 5 overwrite the settings set by bar 4.
-
-Since the sizes of the bitmaps are known, dynamically allocate the
-bitmaps, and use the correct size when calling find_first_zero_bit().
-
-Additionally, make sure that ep->num_ob_windows and ep->num_ib_windows,
-which are obtained from device tree, are smaller than the maximum number
-of iATUs (MAX_IATU_IN/MAX_IATU_OUT).
-
-Fixes: f8aed6ec624f ("PCI: dwc: designware: Add EP mode support")
-Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/pci/dwc/pcie-designware-ep.c | 34 +++++++++++++++++++++-------
- drivers/pci/dwc/pcie-designware.h    |  8 +++++--
- 2 files changed, 32 insertions(+), 10 deletions(-)
+ drivers/mfd/palmas.c       | 10 +++++++++-
+ include/linux/mfd/palmas.h |  3 +++
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/dwc/pcie-designware-ep.c b/drivers/pci/dwc/pcie-designware-ep.c
-index abcbf0770358..71795db41261 100644
---- a/drivers/pci/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/dwc/pcie-designware-ep.c
-@@ -74,8 +74,7 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, enum pci_barno bar,
- 	u32 free_win;
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c
+index 3922a93f9f92..663a2398b6b1 100644
+--- a/drivers/mfd/palmas.c
++++ b/drivers/mfd/palmas.c
+@@ -430,6 +430,7 @@ static void palmas_power_off(void)
+ {
+ 	unsigned int addr;
+ 	int ret, slave;
++	u8 powerhold_mask;
+ 	struct device_node *np = palmas_dev->dev->of_node;
  
--	free_win = find_first_zero_bit(&ep->ib_window_map,
--				       sizeof(ep->ib_window_map));
-+	free_win = find_first_zero_bit(ep->ib_window_map, ep->num_ib_windows);
- 	if (free_win >= ep->num_ib_windows) {
- 		dev_err(pci->dev, "no free inbound window\n");
- 		return -EINVAL;
-@@ -89,7 +88,7 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, enum pci_barno bar,
- 	}
+ 	if (of_property_read_bool(np, "ti,palmas-override-powerhold")) {
+@@ -437,8 +438,15 @@ static void palmas_power_off(void)
+ 					  PALMAS_PRIMARY_SECONDARY_PAD2);
+ 		slave = PALMAS_BASE_TO_SLAVE(PALMAS_PU_PD_OD_BASE);
  
- 	ep->bar_to_atu[bar] = free_win;
--	set_bit(free_win, &ep->ib_window_map);
-+	set_bit(free_win, ep->ib_window_map);
- 
- 	return 0;
- }
-@@ -100,8 +99,7 @@ static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, phys_addr_t phys_addr,
- 	u32 free_win;
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 
--	free_win = find_first_zero_bit(&ep->ob_window_map,
--				       sizeof(ep->ob_window_map));
-+	free_win = find_first_zero_bit(ep->ob_window_map, ep->num_ob_windows);
- 	if (free_win >= ep->num_ob_windows) {
- 		dev_err(pci->dev, "no free outbound window\n");
- 		return -EINVAL;
-@@ -110,7 +108,7 @@ static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, phys_addr_t phys_addr,
- 	dw_pcie_prog_outbound_atu(pci, free_win, PCIE_ATU_TYPE_MEM,
- 				  phys_addr, pci_addr, size);
- 
--	set_bit(free_win, &ep->ob_window_map);
-+	set_bit(free_win, ep->ob_window_map);
- 	ep->outbound_addr[free_win] = phys_addr;
- 
- 	return 0;
-@@ -125,7 +123,7 @@ static void dw_pcie_ep_clear_bar(struct pci_epc *epc, enum pci_barno bar)
- 	dw_pcie_ep_reset_bar(pci, bar);
- 
- 	dw_pcie_disable_atu(pci, atu_index, DW_PCIE_REGION_INBOUND);
--	clear_bit(atu_index, &ep->ib_window_map);
-+	clear_bit(atu_index, ep->ib_window_map);
- }
- 
- static int dw_pcie_ep_set_bar(struct pci_epc *epc, enum pci_barno bar,
-@@ -181,7 +179,7 @@ static void dw_pcie_ep_unmap_addr(struct pci_epc *epc, phys_addr_t addr)
- 		return;
- 
- 	dw_pcie_disable_atu(pci, atu_index, DW_PCIE_REGION_OUTBOUND);
--	clear_bit(atu_index, &ep->ob_window_map);
-+	clear_bit(atu_index, ep->ob_window_map);
- }
- 
- static int dw_pcie_ep_map_addr(struct pci_epc *epc, phys_addr_t addr,
-@@ -302,12 +300,32 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 		dev_err(dev, "unable to read *num-ib-windows* property\n");
- 		return ret;
- 	}
-+	if (ep->num_ib_windows > MAX_IATU_IN) {
-+		dev_err(dev, "invalid *num-ib-windows*\n");
-+		return -EINVAL;
-+	}
- 
- 	ret = of_property_read_u32(np, "num-ob-windows", &ep->num_ob_windows);
- 	if (ret < 0) {
- 		dev_err(dev, "unable to read *num-ob-windows* property\n");
- 		return ret;
- 	}
-+	if (ep->num_ob_windows > MAX_IATU_OUT) {
-+		dev_err(dev, "invalid *num-ob-windows*\n");
-+		return -EINVAL;
-+	}
++		if (of_device_is_compatible(np, "ti,tps65917"))
++			powerhold_mask =
++				TPS65917_PRIMARY_SECONDARY_PAD2_GPIO_5_MASK;
++		else
++			powerhold_mask =
++				PALMAS_PRIMARY_SECONDARY_PAD2_GPIO_7_MASK;
 +
-+	ep->ib_window_map = devm_kzalloc(dev, sizeof(long) *
-+					 BITS_TO_LONGS(ep->num_ib_windows),
-+					 GFP_KERNEL);
-+	if (!ep->ib_window_map)
-+		return -ENOMEM;
-+
-+	ep->ob_window_map = devm_kzalloc(dev, sizeof(long) *
-+					 BITS_TO_LONGS(ep->num_ob_windows),
-+					 GFP_KERNEL);
-+	if (!ep->ob_window_map)
-+		return -ENOMEM;
+ 		ret = regmap_update_bits(palmas_dev->regmap[slave], addr,
+-				PALMAS_PRIMARY_SECONDARY_PAD2_GPIO_7_MASK, 0);
++					 powerhold_mask, 0);
+ 		if (ret)
+ 			dev_err(palmas_dev->dev,
+ 				"Unable to write PRIMARY_SECONDARY_PAD2 %d\n",
+diff --git a/include/linux/mfd/palmas.h b/include/linux/mfd/palmas.h
+index 6dec43826303..cffb23b8bd70 100644
+--- a/include/linux/mfd/palmas.h
++++ b/include/linux/mfd/palmas.h
+@@ -3733,6 +3733,9 @@ enum usb_irq_events {
+ #define TPS65917_REGEN3_CTRL_MODE_ACTIVE			0x01
+ #define TPS65917_REGEN3_CTRL_MODE_ACTIVE_SHIFT			0x00
  
- 	addr = devm_kzalloc(dev, sizeof(phys_addr_t) * ep->num_ob_windows,
- 			    GFP_KERNEL);
-diff --git a/drivers/pci/dwc/pcie-designware.h b/drivers/pci/dwc/pcie-designware.h
-index 5af29d125c7e..ba9dedc31bfa 100644
---- a/drivers/pci/dwc/pcie-designware.h
-+++ b/drivers/pci/dwc/pcie-designware.h
-@@ -114,6 +114,10 @@
- #define MAX_MSI_IRQS			32
- #define MAX_MSI_CTRLS			(MAX_MSI_IRQS / 32)
- 
-+/* Maximum number of inbound/outbound iATUs */
-+#define MAX_IATU_IN			256
-+#define MAX_IATU_OUT			256
++/* POWERHOLD Mask field for PRIMARY_SECONDARY_PAD2 register */
++#define TPS65917_PRIMARY_SECONDARY_PAD2_GPIO_5_MASK		0xC
 +
- struct pcie_port;
- struct dw_pcie;
- struct dw_pcie_ep;
-@@ -193,8 +197,8 @@ struct dw_pcie_ep {
- 	size_t			page_size;
- 	u8			bar_to_atu[6];
- 	phys_addr_t		*outbound_addr;
--	unsigned long		ib_window_map;
--	unsigned long		ob_window_map;
-+	unsigned long		*ib_window_map;
-+	unsigned long		*ob_window_map;
- 	u32			num_ib_windows;
- 	u32			num_ob_windows;
- };
+ /* Registers for function RESOURCE */
+ #define TPS65917_REGEN1_CTRL					0x2
+ #define TPS65917_PLLEN_CTRL					0x3
 -- 
 2.17.1
 
