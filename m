@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 35968AAC0A
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 21:32:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82D85AAC0B
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 21:32:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730799AbfIETcO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 15:32:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56052 "EHLO mail.kernel.org"
+        id S2403890AbfIETcQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 15:32:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729209AbfIETcN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Sep 2019 15:32:13 -0400
+        id S2403870AbfIETcQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 5 Sep 2019 15:32:16 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D6B720825;
-        Thu,  5 Sep 2019 19:32:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FEF120825;
+        Thu,  5 Sep 2019 19:32:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567711933;
-        bh=OPMmCHgbsFi0lCF9+YlnzBgLFCDefCa0F0PH5xZy1yc=;
+        s=default; t=1567711936;
+        bh=dWtd5+nLhoJSM/SHkQ3WS9gV06tdwTIBSFEzPozW0Vo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aHwt4gPjfY7cjHquw3naVLDZsDVyW7chSAFaCDRuDROzjag72lXjXdelTQUgnbKml
-         ByhIxANTY7AaVPUIJMxkGna0uJsWuxuli+XHp45fWIfK/J52sxNmANmvgfG3cNb5IR
-         SiwzSTJJXKA+ir6FSBV6w8Gl/C1eiYd3xqsOS9vA=
+        b=q78vl1fchrY026ueIJKBt96kYirxW3RG3SvX05USlSF8XWFsZHqYGisifVMxr/kqB
+         lrXJr0YMIS2kUJaLrxdnGWFWqB4OXgRqCJZdS1u3hRLNYfEjnMeGDxvm22vLDtSD81
+         Rxg8BkvfESKLxyzVzRHcTcPW0QTMVHJCPs7loA6c=
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>
 Cc:     Ashok Raj <ashok.raj@intel.com>,
         Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4/5] PCI/ATS: Cache PRI Capability offset
-Date:   Thu,  5 Sep 2019 14:31:45 -0500
-Message-Id: <20190905193146.90250-5-helgaas@kernel.org>
+Subject: [PATCH 5/5] PCI/ATS: Cache PASID Capability offset
+Date:   Thu,  5 Sep 2019 14:31:46 -0500
+Message-Id: <20190905193146.90250-6-helgaas@kernel.org>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 In-Reply-To: <20190905193146.90250-1-helgaas@kernel.org>
 References: <20190905193146.90250-1-helgaas@kernel.org>
@@ -44,173 +44,160 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Previously each PRI interface searched for the PRI Capability.  Cache the
-capability offset the first time we use it instead of searching each time.
+Previously each PASID interface searched for the PASID Capability.  Cache
+the capability offset the first time we use it instead of searching each
+time.
 
 [bhelgaas: commit log, reorder patch to later, save offset directly in
-pci_enable_pri() rather than adding pci_pri_init()]
-Link: https://lore.kernel.org/r/0c5495d376faf6dbb8eb2165204c474438aaae65.156
-7029860.git.sathyanarayanan.kuppuswamy@linux.intel.com
+pci_enable_pasid() rather than adding pci_pasid_init()]
+Link: https://lore.kernel.org/r/4957778959fa34eab3e8b3065d1951989c61cb0f.1567029860.git.sathyanarayanan.kuppuswamy@linux.intel.com
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/ats.c   | 52 ++++++++++++++++++++++-----------------------
+ drivers/pci/ats.c   | 43 +++++++++++++++++++++----------------------
  include/linux/pci.h |  1 +
- 2 files changed, 27 insertions(+), 26 deletions(-)
+ 2 files changed, 22 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index 920deeccf38d..bc463e2ecc61 100644
+index bc463e2ecc61..cb4f62da7b8a 100644
 --- a/drivers/pci/ats.c
 +++ b/drivers/pci/ats.c
-@@ -169,7 +169,7 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
+@@ -305,7 +305,7 @@ EXPORT_SYMBOL_GPL(pci_reset_pri);
+ int pci_enable_pasid(struct pci_dev *pdev, int features)
  {
- 	u16 control, status;
- 	u32 max_requests;
+ 	u16 control, supported;
 -	int pos;
-+	int pri = pdev->pri_cap;
++	int pasid = pdev->pasid_cap;
  
  	/*
- 	 * VFs must not implement the PRI Capability.  If their PF
-@@ -185,21 +185,24 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
- 	if (WARN_ON(pdev->pri_enabled))
- 		return -EBUSY;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
--	if (!pos)
--		return -EINVAL;
-+	if (!pri) {
-+		pri = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
-+		if (!pri)
-+			return -EINVAL;
-+		pdev->pri_cap = pri;
-+	}
- 
--	pci_read_config_word(pdev, pos + PCI_PRI_STATUS, &status);
-+	pci_read_config_word(pdev, pri + PCI_PRI_STATUS, &status);
- 	if (!(status & PCI_PRI_STATUS_STOPPED))
- 		return -EBUSY;
- 
--	pci_read_config_dword(pdev, pos + PCI_PRI_MAX_REQ, &max_requests);
-+	pci_read_config_dword(pdev, pri + PCI_PRI_MAX_REQ, &max_requests);
- 	reqs = min(max_requests, reqs);
- 	pdev->pri_reqs_alloc = reqs;
--	pci_write_config_dword(pdev, pos + PCI_PRI_ALLOC_REQ, reqs);
-+	pci_write_config_dword(pdev, pri + PCI_PRI_ALLOC_REQ, reqs);
- 
- 	control = PCI_PRI_CTRL_ENABLE;
--	pci_write_config_word(pdev, pos + PCI_PRI_CTRL, control);
-+	pci_write_config_word(pdev, pri + PCI_PRI_CTRL, control);
- 
- 	pdev->pri_enabled = 1;
- 
-@@ -216,7 +219,7 @@ EXPORT_SYMBOL_GPL(pci_enable_pri);
- void pci_disable_pri(struct pci_dev *pdev)
- {
- 	u16 control;
--	int pos;
-+	int pri = pdev->pri_cap;
- 
- 	/* VFs share the PF PRI */
- 	if (pdev->is_virtfn)
-@@ -225,13 +228,12 @@ void pci_disable_pri(struct pci_dev *pdev)
- 	if (WARN_ON(!pdev->pri_enabled))
- 		return;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
--	if (!pos)
-+	if (!pri)
- 		return;
- 
--	pci_read_config_word(pdev, pos + PCI_PRI_CTRL, &control);
-+	pci_read_config_word(pdev, pri + PCI_PRI_CTRL, &control);
- 	control &= ~PCI_PRI_CTRL_ENABLE;
--	pci_write_config_word(pdev, pos + PCI_PRI_CTRL, control);
-+	pci_write_config_word(pdev, pri + PCI_PRI_CTRL, control);
- 
- 	pdev->pri_enabled = 0;
- }
-@@ -245,7 +247,7 @@ void pci_restore_pri_state(struct pci_dev *pdev)
- {
- 	u16 control = PCI_PRI_CTRL_ENABLE;
- 	u32 reqs = pdev->pri_reqs_alloc;
--	int pos;
-+	int pri = pdev->pri_cap;
- 
- 	if (pdev->is_virtfn)
- 		return;
-@@ -253,12 +255,11 @@ void pci_restore_pri_state(struct pci_dev *pdev)
- 	if (!pdev->pri_enabled)
- 		return;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
--	if (!pos)
-+	if (!pri)
- 		return;
- 
--	pci_write_config_dword(pdev, pos + PCI_PRI_ALLOC_REQ, reqs);
--	pci_write_config_word(pdev, pos + PCI_PRI_CTRL, control);
-+	pci_write_config_dword(pdev, pri + PCI_PRI_ALLOC_REQ, reqs);
-+	pci_write_config_word(pdev, pri + PCI_PRI_CTRL, control);
- }
- EXPORT_SYMBOL_GPL(pci_restore_pri_state);
- 
-@@ -272,7 +273,7 @@ EXPORT_SYMBOL_GPL(pci_restore_pri_state);
- int pci_reset_pri(struct pci_dev *pdev)
- {
- 	u16 control;
--	int pos;
-+	int pri = pdev->pri_cap;
- 
- 	if (pdev->is_virtfn)
- 		return 0;
-@@ -280,12 +281,11 @@ int pci_reset_pri(struct pci_dev *pdev)
- 	if (WARN_ON(pdev->pri_enabled))
- 		return -EBUSY;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
--	if (!pos)
-+	if (!pri)
+ 	 * VFs must not implement the PASID Capability, but if a PF
+@@ -323,11 +323,14 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
+ 	if (!pdev->eetlp_prefix_path)
  		return -EINVAL;
  
- 	control = PCI_PRI_CTRL_RESET;
--	pci_write_config_word(pdev, pos + PCI_PRI_CTRL, control);
-+	pci_write_config_word(pdev, pri + PCI_PRI_CTRL, control);
+-	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
+-	if (!pos)
+-		return -EINVAL;
++	if (!pasid) {
++		pasid = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
++		if (!pasid)
++			return -EINVAL;
++		pdev->pasid_cap = pasid;
++	}
  
- 	return 0;
- }
-@@ -440,16 +440,16 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
- int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+-	pci_read_config_word(pdev, pos + PCI_PASID_CAP, &supported);
++	pci_read_config_word(pdev, pasid + PCI_PASID_CAP, &supported);
+ 	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
+ 
+ 	/* User wants to enable anything unsupported? */
+@@ -337,7 +340,7 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
+ 	control = PCI_PASID_CTRL_ENABLE | features;
+ 	pdev->pasid_features = features;
+ 
+-	pci_write_config_word(pdev, pos + PCI_PASID_CTRL, control);
++	pci_write_config_word(pdev, pasid + PCI_PASID_CTRL, control);
+ 
+ 	pdev->pasid_enabled = 1;
+ 
+@@ -352,7 +355,7 @@ EXPORT_SYMBOL_GPL(pci_enable_pasid);
+ void pci_disable_pasid(struct pci_dev *pdev)
  {
- 	u16 status;
+ 	u16 control = 0;
 -	int pos;
-+	int pri;
++	int pasid = pdev->pasid_cap;
+ 
+ 	/* VFs share the PF PASID configuration */
+ 	if (pdev->is_virtfn)
+@@ -361,11 +364,10 @@ void pci_disable_pasid(struct pci_dev *pdev)
+ 	if (WARN_ON(!pdev->pasid_enabled))
+ 		return;
+ 
+-	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
+-	if (!pos)
++	if (!pasid)
+ 		return;
+ 
+-	pci_write_config_word(pdev, pos + PCI_PASID_CTRL, control);
++	pci_write_config_word(pdev, pasid + PCI_PASID_CTRL, control);
+ 
+ 	pdev->pasid_enabled = 0;
+ }
+@@ -378,7 +380,7 @@ EXPORT_SYMBOL_GPL(pci_disable_pasid);
+ void pci_restore_pasid_state(struct pci_dev *pdev)
+ {
+ 	u16 control;
+-	int pos;
++	int pasid = pdev->pasid_cap;
+ 
+ 	if (pdev->is_virtfn)
+ 		return;
+@@ -386,12 +388,11 @@ void pci_restore_pasid_state(struct pci_dev *pdev)
+ 	if (!pdev->pasid_enabled)
+ 		return;
+ 
+-	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
+-	if (!pos)
++	if (!pasid)
+ 		return;
+ 
+ 	control = PCI_PASID_CTRL_ENABLE | pdev->pasid_features;
+-	pci_write_config_word(pdev, pos + PCI_PASID_CTRL, control);
++	pci_write_config_word(pdev, pasid + PCI_PASID_CTRL, control);
+ }
+ EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
+ 
+@@ -408,16 +409,15 @@ EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
+ int pci_pasid_features(struct pci_dev *pdev)
+ {
+ 	u16 supported;
+-	int pos;
++	int pasid = pdev->pasid_cap;
  
  	if (pdev->is_virtfn)
  		pdev = pci_physfn(pdev);
  
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
+-	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
 -	if (!pos)
-+	pri = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
-+	if (!pri)
- 		return 0;
++	if (!pasid)
+ 		return -EINVAL;
  
--	pci_read_config_word(pdev, pos + PCI_PRI_STATUS, &status);
-+	pci_read_config_word(pdev, pri + PCI_PRI_STATUS, &status);
+-	pci_read_config_word(pdev, pos + PCI_PASID_CAP, &supported);
++	pci_read_config_word(pdev, pasid + PCI_PASID_CAP, &supported);
  
- 	if (status & PCI_PRI_STATUS_PASID)
- 		return 1;
+ 	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
+ 
+@@ -470,16 +470,15 @@ EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
+ int pci_max_pasids(struct pci_dev *pdev)
+ {
+ 	u16 supported;
+-	int pos;
++	int pasid = pdev->pasid_cap;
+ 
+ 	if (pdev->is_virtfn)
+ 		pdev = pci_physfn(pdev);
+ 
+-	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
+-	if (!pos)
++	if (!pasid)
+ 		return -EINVAL;
+ 
+-	pci_read_config_word(pdev, pos + PCI_PASID_CAP, &supported);
++	pci_read_config_word(pdev, pasid + PCI_PASID_CAP, &supported);
+ 
+ 	supported = (supported & PASID_NUMBER_MASK) >> PASID_NUMBER_SHIFT;
+ 
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index a73e8d28a896..c81a24172b14 100644
+index c81a24172b14..7ddbb6445e1a 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -454,6 +454,7 @@ struct pci_dev {
- 	u8		ats_stu;	/* ATS Smallest Translation Unit */
- #endif
- #ifdef CONFIG_PCI_PRI
-+	u16		pri_cap;	/* PRI Capability offset */
+@@ -458,6 +458,7 @@ struct pci_dev {
  	u32		pri_reqs_alloc; /* Number of PRI requests allocated */
  #endif
  #ifdef CONFIG_PCI_PASID
++	u16		pasid_cap;	/* PASID Capability offset */
+ 	u16		pasid_features;
+ #endif
+ #ifdef CONFIG_PCI_P2PDMA
 -- 
 2.23.0.187.g17f5b7556c-goog
 
