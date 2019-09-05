@@ -2,109 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 61EDCA9AB4
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 08:33:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10827A9ACB
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 08:43:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726032AbfIEGdv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 02:33:51 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45050 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbfIEGdv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 02:33:51 -0400
-Received: by mail-io1-f68.google.com with SMTP id j4so2125909iog.11;
-        Wed, 04 Sep 2019 23:33:50 -0700 (PDT)
+        id S1730704AbfIEGnL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 02:43:11 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44893 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729809AbfIEGnK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 02:43:10 -0400
+Received: by mail-io1-f65.google.com with SMTP id j4so2176222iog.11;
+        Wed, 04 Sep 2019 23:43:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=p8srOGTlB3IlFb1fG9Cy7TABLNTUxoNkjl+Xdp+XplQ=;
-        b=sjSsUGPEHpHy6b2bNKEIBqBa9fuBj1iAKUe72R4QABNK7+sUdUIhna8m1KGIrBj3//
-         W766SvdZMZJeMgZXhXAaEI0yD5U50Xs0Ge25Rq4N/cdU8+NxrQOc2+CoW9jfzwlgWW51
-         6GKuL0LhPoPs69wCveziIc7PBTFfDlxmZH2q5X3s/LKEhQBNMNKKOtABGsDiKP4GkqwG
-         i8WDJSmLK4/Lt+MS/H/ZfKvphGCfTphRitYtqInS/uyAnb61+PkmrghmpiXDYWTn+Ht2
-         ZPF59GL/tLaKcZ0ptX4saOAlaBVD08Id1cU4S4PuLnG/3VxkX60+d6Dcsejq3+fSjkFD
-         zoUA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=D3TOlpt4AzwL4vJMcx058iXMi4F3NzrLOUOTA0ioeGM=;
+        b=CxoEBriKvDfuHEA4jDWxEwMLbYr1YI0oDkRYE6SsvlE8dat8oRh7j6bCESWtq36vMP
+         CXhtlVpSrQAIyfXYGUqPMvk9GIZ/BpJAIYx6zzPkW0yEwap5l/KX7U43uX/JC+DRegRU
+         oE6WlH0O1Lfy5dy/NjjwmPKesbQgXCBt2LCxFSN77PCRJXU2i0Kcx3ZCiLOTLf2Jetqm
+         Gy3cco5AfHGO2Lw0WbEldzbBo8veKVVDw/QjZ2abwwuJS0O3GhmSmcW2gssz3auDclgq
+         /xdlI6y0eHW5YTxU29ee0W4aQpyc7SzA+6Ua9X3mwyF43CtvNHhIvRBQH5dSEdiQKz3L
+         s9AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=p8srOGTlB3IlFb1fG9Cy7TABLNTUxoNkjl+Xdp+XplQ=;
-        b=b2/sxQnQ8MRmW0PKnSbI1itruexr4hE2B99V0eRudY3MYLfc/FYV2z7dbsutxvcj74
-         sx0q1OnrgE+Uzh2w2Ru8X5APe2fCeUVkNjIS8jTwnSLME4gBE6Zs9BIVpSaRNTsgVmoI
-         wV6l+x/KJBODfRCWkBZWbqbHOI8EGFvSltGAOT0qDEh3CMoYSzBakXfLvVWwx9kAmllM
-         1hmt4KEggtuOAmZzcIIuWm2pxRNjCchDlELjqWXiWK1W+wkv7U5s0dvArFwO4ZIdkYSu
-         jFvxVIRyEKovanzfRdu6pyJq6urW0S3UWPfzpkAVtWqsE/79CXCk/fetEd8KXWW5BonG
-         vauQ==
-X-Gm-Message-State: APjAAAXU7DijUCAu1TLJeccEMo4cooDL2CAu9Y41DR90g2TVqrHRHmLW
-        yxWLgAKyfnAXDmvyZpSmxKE=
-X-Google-Smtp-Source: APXvYqzLL0pKn+dBfARGTTk5lBNR17qGT8mNHbYwaXFjNx1JfxGBXYYsLdCfYl3Tkjl2GPfpFrYNxg==
-X-Received: by 2002:a05:6638:155:: with SMTP id y21mr2384307jao.112.1567665230445;
-        Wed, 04 Sep 2019 23:33:50 -0700 (PDT)
-Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id n12sm965553ioc.19.2019.09.04.23.33.49
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=D3TOlpt4AzwL4vJMcx058iXMi4F3NzrLOUOTA0ioeGM=;
+        b=i6dA/2YBQi8k/YReZ2tQcKKvgEFY/a6wl0+5sOV72aEJAm4klmgOfl5o87OMhaYbcz
+         kWeAt/yoZtB75bPzNnlcNsdYl6WIReBA5jvxqBCikE0lkS2FtJ54BI4x5mH+P+KN04Rx
+         0t5qvg5yKtuRFiAhoUp7sfvnkncs62paI2asDwp4j6KFXptsqNTbMzJgfkY4VH4iLM4X
+         9po2vjHeGYQZFFkc+IczegS9ZUUslsR905jWWJj1AVN2Rb33xueN33LgBmEn/K/VeMTT
+         /VtbyooZyLn0Zzdc0t06lVQSpGKv6N9aYj5IvvBQewQv8stlyqK6tavYJml36lzNghA2
+         df2w==
+X-Gm-Message-State: APjAAAXmZwudzyH7VY8Iiws1crmU6vWwc3eTkxFmkb3zc6DXC0hLbNEQ
+        edu+zPauNQEjY9NDBq7CT6Q=
+X-Google-Smtp-Source: APXvYqy0aVdZmAANyHWj3sNWe6nogZumcPdiovz36LuXEAB8Zx/uV4furW6cIHuxt9rKEV1aRmwCwg==
+X-Received: by 2002:a6b:7503:: with SMTP id l3mr2134170ioh.244.1567665789932;
+        Wed, 04 Sep 2019 23:43:09 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id w14sm970531ioa.46.2019.09.04.23.43.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 23:33:49 -0700 (PDT)
+        Wed, 04 Sep 2019 23:43:09 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 00:43:07 -0600
 From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     bodong@mellanox.com, gregkh@linuxfoundation.org,
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org, ddutile@redhat.com, berrange@redhat.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        Kelsey Skunberg <skunberg.kelsey@gmail.com>
-Subject: [PATCH] PCI/IOV: Make SR-IOV attributes with mode 0664 use 0644
-Date:   Thu,  5 Sep 2019 00:32:26 -0600
-Message-Id: <20190905063226.43269-1-skunberg.kelsey@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        skhan@linuxfoundation.org, rafael.j.wysocki@intel.com,
+        keith.busch@intel.com
+Subject: Re: [PATCH 2/2] PCI: Unify pci_dev_is_disconnected() and
+ pci_dev_is_inaccessible()
+Message-ID: <20190905064307.GA43579@JATN>
+References: <20190904043633.65026-1-skunberg.kelsey@gmail.com>
+ <20190904043633.65026-3-skunberg.kelsey@gmail.com>
+ <20190904053523.7lmuoo5zempxtsdq@wunner.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904053523.7lmuoo5zempxtsdq@wunner.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-sriov_numvfs and sriov_drivers_autoprobe have "unusual" permissions (0664)
-with no reported or found reason for allowing group write permissions.
-libvirt runs as root when dealing with PCI, and chowns files for qemu
-needs. There is not a need for the "0664" permissions.
+On Wed, Sep 04, 2019 at 07:35:23AM +0200, Lukas Wunner wrote:
+> On Tue, Sep 03, 2019 at 10:36:35PM -0600, Kelsey Skunberg wrote:
+> > Change pci_dev_is_disconnected() call inside pci_dev_is_inaccessible() to:
+> > 
+> > 	pdev->error_state == pci_channel_io_perm_failure
+> > 
+> > Change remaining pci_dev_is_disconnected() calls to
+> > pci_dev_is_inaccessible() calls.
+> 
+> I don't think that's a good idea because it introduces a config space read
+> (for the vendor ID) in places where we don't want that.  E.g., after the
+> check of pdev->error_state, a regular config space read may take place and
+> if that returns all ones, we may already be able to determine that the
+> device is inaccessible, obviating the need for a vendor ID check.
+> Config space reads aren't for free.
+> 
+> Thanks,
+> 
+> Lukas
 
-sriov_numvfs was introduced in:
-	commit 1789382a72a5 ("PCI: SRIOV control and status via sysfs")
+Good note. I definitely see why that would be undesirable. Thanks for
+taking the time to point this out, Lukas. I'll look this over again to see
+if a better solution can be done, or as Bjorn suggested, at least see if
+clarification on when to use one vs. the other can be included.
 
-sriov_drivers_autoprobe was introduced in:
-	commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to
-			      control VF driver binding")
+Thanks again!
 
-Change sriov_numvfs and sriov_drivers_autoprobe from "0664" permissions to
-"0644" permissions.
-
-Exchange DEVICE_ATTR() with DEVICE_ATTR_RW() which sets the mode to "0644".
-DEVICE_ATTR() should only be used for "unusual" permissions.
-
-Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
----
- drivers/pci/iov.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index b335db21c85e..b3f972e8cfed 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -375,12 +375,11 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
- }
- 
- static DEVICE_ATTR_RO(sriov_totalvfs);
--static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
-+static DEVICE_ATTR_RW(sriov_numvfs);
- static DEVICE_ATTR_RO(sriov_offset);
- static DEVICE_ATTR_RO(sriov_stride);
- static DEVICE_ATTR_RO(sriov_vf_device);
--static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
--		   sriov_drivers_autoprobe_store);
-+static DEVICE_ATTR_RW(sriov_drivers_autoprobe);
- 
- static struct attribute *sriov_dev_attrs[] = {
- 	&dev_attr_sriov_totalvfs.attr,
--- 
-2.20.1
-
+-Kelsey
