@@ -2,168 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F1CBBAA8A4
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 18:20:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4B56AA8DB
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 18:24:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387742AbfIEQSH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 12:18:07 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33534 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387640AbfIEQSH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 12:18:07 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n190so1698288pgn.0
-        for <linux-pci@vger.kernel.org>; Thu, 05 Sep 2019 09:18:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=oxweDnammrNyIt2aaQLCe6r9vThCpXKTK19Q9yGm1E4=;
-        b=B+cZWsZuXFEQB01N9qcY/nKk7nFveM0bQSkHouQZ+2v8KRCDItQu12g91o55OqiDIl
-         SQnnn5r6vvZTn3KSmZR9+5rl9wxcTUw4H96aAEmGDnjJxx3uKAFfio+dNp5I+wQr3Vwe
-         gbXWR4hTOwsV+tXvAEB+6kyHio5Z54rthgV5q6RE89zhMs4lr/LJm01282eHycMXzU0z
-         U9a2VMJKcYvCVPouURNHnaM7gNG9pAlCnZKkh1Y0vrCEBkYcoJQ5dlKEJOS6mj8Rfcf/
-         3BOqGGxylR2E7voPViPNnWEY2QFJ0exUKtekqdkZckIcT8g6oOqpENw3lQbrUEfCQSqK
-         d4Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=oxweDnammrNyIt2aaQLCe6r9vThCpXKTK19Q9yGm1E4=;
-        b=TqrdGlBvZBGMt23gE/Q7vnLTkxPmGMMLk9dzYB1P0Phut8YsZbmVTzkiqD+sg+RVDU
-         vwLnAN5laRyhNvUx6ETTWp9UMxTZSq9sxY/QfWBgs0rCn5Or2AUSuPKYcZigfrUcAQXr
-         SgdBtvdBDEMubiB8HKvEMpgU2po03tM3jeFRcstjVAcRBaJgoqciOKgmM3osnoueN2Y0
-         MGK8jToEHFYp31kotWarlYbC2f2+06zNm6Le+dU1/WrwT5aFeRG4LQoYiGRbRj0LfAi/
-         TU6JpGJlzHXgGIVj1XoQm2m6hLTyeZa2jmSqcR8uhjM4giW8Zm23tfktx4tYnEz0aab4
-         ci+Q==
-X-Gm-Message-State: APjAAAUUF1ehA2mi+3N27LCrXsvGSWDrCGQ0UIL/pw1kezV5z0E/L23P
-        8Tzaaf494jHv3iSmQmMKsGpq8j6JKt8=
-X-Google-Smtp-Source: APXvYqztrUm14X1kqPalVQhtzDPhMyl9ZuipQZ2gB9IH4meo0O8XJPRIpaw1CUbOHUi6IeHE59j1dQ==
-X-Received: by 2002:a17:90a:303:: with SMTP id 3mr4750663pje.124.1567700285921;
-        Thu, 05 Sep 2019 09:18:05 -0700 (PDT)
-Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id m129sm6324005pga.39.2019.09.05.09.18.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 09:18:05 -0700 (PDT)
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     stable@vger.kernel.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: [BACKPORT 4.14.y 04/18] usb: dwc3: Allow disabling of metastability workaround
-Date:   Thu,  5 Sep 2019 10:17:45 -0600
-Message-Id: <20190905161759.28036-5-mathieu.poirier@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190905161759.28036-1-mathieu.poirier@linaro.org>
-References: <20190905161759.28036-1-mathieu.poirier@linaro.org>
+        id S1726008AbfIEQYV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 12:24:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56400 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbfIEQYV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 5 Sep 2019 12:24:21 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4075210F23F6;
+        Thu,  5 Sep 2019 16:24:21 +0000 (UTC)
+Received: from [10.3.116.78] (ovpn-116-78.phx2.redhat.com [10.3.116.78])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D05C660BE1;
+        Thu,  5 Sep 2019 16:24:19 +0000 (UTC)
+Subject: Re: [PATCH] PCI/IOV: Make SR-IOV attributes with mode 0664 use 0644
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     bodong@mellanox.com, gregkh@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, berrange@redhat.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+References: <20190905063226.43269-1-skunberg.kelsey@gmail.com>
+From:   Don Dutile <ddutile@redhat.com>
+Message-ID: <37736cd8-fc9f-5896-030a-d7957cc68113@redhat.com>
+Date:   Thu, 5 Sep 2019 12:24:19 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190905063226.43269-1-skunberg.kelsey@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Thu, 05 Sep 2019 16:24:21 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Roger Quadros <rogerq@ti.com>
+On 09/05/2019 02:32 AM, Kelsey Skunberg wrote:
+> sriov_numvfs and sriov_drivers_autoprobe have "unusual" permissions (0664)
+> with no reported or found reason for allowing group write permissions.
+> libvirt runs as root when dealing with PCI, and chowns files for qemu
+> needs. There is not a need for the "0664" permissions.
+> 
+> sriov_numvfs was introduced in:
+> 	commit 1789382a72a5 ("PCI: SRIOV control and status via sysfs")
+> 
+> sriov_drivers_autoprobe was introduced in:
+> 	commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to
+> 			      control VF driver binding")
+> 
+> Change sriov_numvfs and sriov_drivers_autoprobe from "0664" permissions to
+> "0644" permissions.
+> 
+> Exchange DEVICE_ATTR() with DEVICE_ATTR_RW() which sets the mode to "0644".
+> DEVICE_ATTR() should only be used for "unusual" permissions.
+> 
+> Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+> ---
+>   drivers/pci/iov.c | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index b335db21c85e..b3f972e8cfed 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -375,12 +375,11 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
+>   }
+>   
+>   static DEVICE_ATTR_RO(sriov_totalvfs);
+> -static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
+> +static DEVICE_ATTR_RW(sriov_numvfs);
+>   static DEVICE_ATTR_RO(sriov_offset);
+>   static DEVICE_ATTR_RO(sriov_stride);
+>   static DEVICE_ATTR_RO(sriov_vf_device);
+> -static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
+> -		   sriov_drivers_autoprobe_store);
+> +static DEVICE_ATTR_RW(sriov_drivers_autoprobe);
+>   
+>   static struct attribute *sriov_dev_attrs[] = {
+>   	&dev_attr_sriov_totalvfs.attr,
+> 
+Thanks again for the cleanup.
 
-commit 42bf02ec6e420e541af9a47437d0bdf961ca2972 upstream
-
-Some platforms (e.g. TI's DRA7 USB2 instance) have more trouble
-with the metastability workaround as it supports only
-a High-Speed PHY and the PHY can enter into an Erratic state [1]
-when the controller is set in SuperSpeed mode as part of
-the metastability workaround.
-
-This causes upto 2 seconds delay in enumeration on DRA7's USB2
-instance in gadget mode.
-
-If these platforms can be better off without the workaround,
-provide a device tree property to suggest that so the workaround
-is avoided.
-
-[1] Device mode enumeration trace showing PHY Erratic Error.
-     irq/90-dwc3-969   [000] d...    52.323145: dwc3_event: event (00000901): Erratic Error [U0]
-     irq/90-dwc3-969   [000] d...    52.560646: dwc3_event: event (00000901): Erratic Error [U0]
-     irq/90-dwc3-969   [000] d...    52.798144: dwc3_event: event (00000901): Erratic Error [U0]
-
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
- drivers/usb/dwc3/core.c                        | 3 +++
- drivers/usb/dwc3/core.h                        | 3 +++
- drivers/usb/dwc3/gadget.c                      | 6 ++++--
- 4 files changed, 12 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 52fb41046b34..44e8bab159ad 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -47,6 +47,8 @@ Optional properties:
- 			from P0 to P1/P2/P3 without delay.
-  - snps,dis-tx-ipgap-linecheck-quirk: when set, disable u2mac linestate check
- 			during HS transmit.
-+ - snps,dis_metastability_quirk: when set, disable metastability workaround.
-+			CAUTION: use only if you are absolutely sure of it.
-  - snps,is-utmi-l1-suspend: true when DWC3 asserts output signal
- 			utmi_l1_suspend_n, false when asserts utmi_sleep_n
-  - snps,hird-threshold: HIRD threshold
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 945330ea8d5c..9b093978bd24 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -1115,6 +1115,9 @@ static void dwc3_get_properties(struct dwc3 *dwc)
- 	device_property_read_u32(dev, "snps,quirk-frame-length-adjustment",
- 				 &dwc->fladj);
- 
-+	dwc->dis_metastability_quirk = device_property_read_bool(dev,
-+				"snps,dis_metastability_quirk");
-+
- 	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
- 	dwc->tx_de_emphasis = tx_de_emphasis;
- 
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index abd1142c9e4d..40bf0e0768d9 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -869,6 +869,7 @@ struct dwc3_scratchpad_array {
-  * 	1	- -3.5dB de-emphasis
-  * 	2	- No de-emphasis
-  * 	3	- Reserved
-+ * @dis_metastability_quirk: set to disable metastability quirk.
-  * @imod_interval: set the interrupt moderation interval in 250ns
-  *                 increments or 0 to disable.
-  */
-@@ -1025,6 +1026,8 @@ struct dwc3 {
- 	unsigned		tx_de_emphasis_quirk:1;
- 	unsigned		tx_de_emphasis:2;
- 
-+	unsigned		dis_metastability_quirk:1;
-+
- 	u16			imod_interval;
- };
- 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 1b99d44e52b9..5916340c4162 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -2034,7 +2034,8 @@ static void dwc3_gadget_set_speed(struct usb_gadget *g,
- 	 * STAR#9000525659: Clock Domain Crossing on DCTL in
- 	 * USB 2.0 Mode
- 	 */
--	if (dwc->revision < DWC3_REVISION_220A) {
-+	if (dwc->revision < DWC3_REVISION_220A &&
-+	    !dwc->dis_metastability_quirk) {
- 		reg |= DWC3_DCFG_SUPERSPEED;
- 	} else {
- 		switch (speed) {
-@@ -3265,7 +3266,8 @@ int dwc3_gadget_init(struct dwc3 *dwc)
- 	 * is less than super speed because we don't have means, yet, to tell
- 	 * composite.c that we are USB 2.0 + LPM ECN.
- 	 */
--	if (dwc->revision < DWC3_REVISION_220A)
-+	if (dwc->revision < DWC3_REVISION_220A &&
-+	    !dwc->dis_metastability_quirk)
- 		dev_info(dwc->dev, "changing max_speed on rev %08x\n",
- 				dwc->revision);
- 
--- 
-2.17.1
+Acked-by: Donald Dutile <ddutile@redhat.com>
 
