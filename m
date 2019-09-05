@@ -2,139 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CCF03AA04E
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 12:47:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6103AA079
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 12:50:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388145AbfIEKql (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 06:46:41 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:10052 "EHLO
+        id S2387911AbfIEKuk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 06:50:40 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:10312 "EHLO
         hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727900AbfIEKql (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 06:46:41 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d70e7930000>; Thu, 05 Sep 2019 03:46:43 -0700
+        with ESMTP id S1731476AbfIEKuk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 06:50:40 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d70e8820000>; Thu, 05 Sep 2019 03:50:42 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 05 Sep 2019 03:46:40 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 05 Sep 2019 03:50:39 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 05 Sep 2019 03:46:40 -0700
-Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Sep
- 2019 10:46:39 +0000
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by hqmail110.nvidia.com
- (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Sep
- 2019 10:46:39 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 5 Sep 2019 10:46:39 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d70e78a0002>; Thu, 05 Sep 2019 03:46:38 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <andrew.murray@arm.com>
-CC:     <kishon@ti.com>, <gustavo.pimentel@synopsys.com>,
-        <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        by hqpgpgate101.nvidia.com on Thu, 05 Sep 2019 03:50:39 -0700
+Received: from [10.24.45.110] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Sep
+ 2019 10:50:34 +0000
+Subject: Re: [PATCH V3 0/6] PCI: tegra: Enable PCIe C5 controller of Tegra194
+ in p2972-0000 platform
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <andrew.murray@arm.com>, <kishon@ti.com>,
+        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
+        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V4 6/6] arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
-Date:   Thu, 5 Sep 2019 16:15:53 +0530
-Message-ID: <20190905104553.2884-7-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190905104553.2884-1-vidyas@nvidia.com>
-References: <20190905104553.2884-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190828172850.19871-1-vidyas@nvidia.com>
+ <7751a77d-5812-49b7-0c6b-00e6740e209b@nvidia.com>
+ <20190905093444.GA16642@e121166-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <287e3013-9011-79f8-fc1d-56184480cdb7@nvidia.com>
+Date:   Thu, 5 Sep 2019 16:20:31 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190905093444.GA16642@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1567680403; bh=nyKuLeTIA5lFQ8rcT43LcJOlCizLUussQKLCCIzlvfo=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=hzV6ALI355TWeEPqn6T7xLHvqVSAxU74dLqT+pV/Kcea/ZsooTSOUtcDbaMQWCeOD
-         ydYD5sVkR1bGEFx3PMeqkxsd1WB1FL9ucjTXhBxPFT4skFzQW06Eu1O8ycqrgUpgwX
-         5eivCxxulCYGwBX6XPPP0wlUvLINQDthFtU0PxTDTXC/XvkwHQxoXKRN7F8nNLMgqc
-         wbhbEjrENY2R9Tp31eUkpScCltajay6/xHIhk6EFsEbJhAy0JA/oi0V4MDEY5uZUAm
-         JBmOvl/VsHpXWhygpSfSVU7//0m7Fk1kxgGnUHf0sOXJsSA6LwNMynoFVcmq6eb2Mu
-         Pmc25iyP0WJ5Q==
+        t=1567680642; bh=VKSLkWMTBZ8TeEsRAG5d5mg7LuR8kaAugx+O7CWKc1w=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=bXBy66CmsWTB1BXHGXjSJeS4s5qpZ5zpQRTF9GAYEixvZwJpaSxwZh5owvuGBXhAq
+         GZkVs9hIxA/wBVIG+wHljAkpeUeEg5Yyj7PL1LLazOpwbafcpwQA/ZQRH6UW5Enuez
+         hsgU0KKgW55KcoT9TyDdUsoJ4SsKSZz6cM9BJbCWh57crBex34BZ1W3G61hsLeXXNT
+         kvvM2ADt6FTzKWLehLfZlgpfDYyeK3RKrKmDLvs60AYxNv86odwzjOYmQdtiOI9d5q
+         hipAlFUSU4TEPXZCMYNl3fW1nX9qaAWvAuKGfQAEi95DbnlhB696YAyxgQIsR1sDB+
+         Bt1Lc76VspiJw==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add 3.3V and 12V supplies regulators information of x16 PCIe slot in
-p2972-0000 platform which is owned by C5 controller and also enable C5
-controller.
+On 9/5/2019 3:04 PM, Lorenzo Pieralisi wrote:
+> On Thu, Sep 05, 2019 at 01:44:46PM +0530, Vidya Sagar wrote:
+>> Hi Lorenzo / Bjorn,
+>> Can you please review this series?
+>> I have Reviewed-by and Acked-by from Rob, Thierry and Andrew already.
+> 
+> Rebase it on top of my pci/tegra branch (it does not apply),
+> resend it and I will merge it.
+I just sent V4 after rebasing the series on top of pci/tegra.
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
----
-V4:
-* None
-
-V3:
-* None
-
-V2:
-* None
-
- .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 24 +++++++++++++++++++
- .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  4 +++-
- 2 files changed, 27 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-index 62e07e1197cc..4c38426a6969 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-@@ -289,5 +289,29 @@
- 			gpio = <&gpio TEGRA194_MAIN_GPIO(A, 3) GPIO_ACTIVE_HIGH>;
- 			enable-active-high;
- 		};
-+
-+		vdd_3v3_pcie: regulator@2 {
-+			compatible = "regulator-fixed";
-+			reg = <2>;
-+
-+			regulator-name = "PEX_3V3";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			gpio = <&gpio TEGRA194_MAIN_GPIO(Z, 2) GPIO_ACTIVE_HIGH>;
-+			regulator-boot-on;
-+			enable-active-high;
-+		};
-+
-+		vdd_12v_pcie: regulator@3 {
-+			compatible = "regulator-fixed";
-+			reg = <3>;
-+
-+			regulator-name = "VDD_12V";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			gpio = <&gpio TEGRA194_MAIN_GPIO(A, 1) GPIO_ACTIVE_LOW>;
-+			regulator-boot-on;
-+			enable-active-low;
-+		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-index 23597d53c9c9..d47cd8c4dd24 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-@@ -93,9 +93,11 @@
- 	};
- 
- 	pcie@141a0000 {
--		status = "disabled";
-+		status = "okay";
- 
- 		vddio-pex-ctl-supply = <&vdd_1v8ao>;
-+		vpcie3v3-supply = <&vdd_3v3_pcie>;
-+		vpcie12v-supply = <&vdd_12v_pcie>;
- 
- 		phys = <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
- 		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
--- 
-2.17.1
+Thanks,
+Vidya Sagar
+> 
+> Thanks,
+> Lorenzo
+> 
+>> Thanks,
+>> Vidya Sagar
+>>
+>> On 8/28/2019 10:58 PM, Vidya Sagar wrote:
+>>> This patch series enables Tegra194's C5 controller which owns x16 slot in
+>>> p2972-0000 platform. C5 controller's PERST# and CLKREQ# are not configured as
+>>> output and bi-directional signals by default and hence they need to be
+>>> configured explicitly. Also, x16 slot's 3.3V and 12V supplies are controlled
+>>> through GPIOs and hence they need to be enabled through regulator framework.
+>>> This patch series adds required infrastructural support to address both the
+>>> aforementioned requirements.
+>>> Testing done on p2972-0000 platform
+>>> - Able to enumerate devices connected to x16 slot (owned by C5 controller)
+>>> - Enumerated device's functionality verified
+>>> - Suspend-Resume sequence is verified with device connected to x16 slot
+>>>
+>>> V3:
+>>> * Addressed some more review comments from Andrew Murray and Thierry Reding
+>>>
+>>> V2:
+>>> * Changed the order of patches in the series for easy merging
+>>> * Addressed review comments from Thierry Reding and Andrew Murray
+>>>
+>>> Vidya Sagar (6):
+>>>     dt-bindings: PCI: tegra: Add sideband pins configuration entries
+>>>     dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
+>>>     PCI: tegra: Add support to configure sideband pins
+>>>     PCI: tegra: Add support to enable slot regulators
+>>>     arm64: tegra: Add configuration for PCIe C5 sideband signals
+>>>     arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
+>>>
+>>>    .../bindings/pci/nvidia,tegra194-pcie.txt     | 16 ++++
+>>>    .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 24 +++++
+>>>    .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  4 +-
+>>>    arch/arm64/boot/dts/nvidia/tegra194.dtsi      | 38 +++++++-
+>>>    drivers/pci/controller/dwc/pcie-tegra194.c    | 94 ++++++++++++++++++-
+>>>    5 files changed, 172 insertions(+), 4 deletions(-)
+>>>
+>>
 
