@@ -2,971 +2,235 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 73F24A985A
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 04:30:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9308A98A0
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 04:56:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730722AbfIECai (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Sep 2019 22:30:38 -0400
-Received: from mga18.intel.com ([134.134.136.126]:13386 "EHLO mga18.intel.com"
+        id S1727544AbfIEC41 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Sep 2019 22:56:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47848 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728008AbfIECai (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Sep 2019 22:30:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 19:30:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,469,1559545200"; 
-   d="scan'208";a="212619432"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 04 Sep 2019 19:30:34 -0700
-Received: from [10.226.39.8] (leichuan-mobl.gar.corp.intel.com [10.226.39.8])
-        by linux.intel.com (Postfix) with ESMTP id 6824D58046E;
-        Wed,  4 Sep 2019 19:30:31 -0700 (PDT)
-Subject: Re: [PATCH v3 2/2] dwc: PCI: intel: Intel PCIe RC controller driver
-To:     Dilip Kota <eswara.kota@linux.intel.com>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-References: <cover.1567585181.git.eswara.kota@linux.intel.com>
- <35316bac59d3bc681e76d33e0345f4ef950c4414.1567585181.git.eswara.kota@linux.intel.com>
-From:   "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
-Message-ID: <b9dcb16f-f7a7-454a-15be-8aefde39934a@linux.intel.com>
-Date:   Thu, 5 Sep 2019 10:30:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        id S1727156AbfIEC41 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Sep 2019 22:56:27 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A116430025F1;
+        Thu,  5 Sep 2019 02:56:26 +0000 (UTC)
+Received: from [10.72.12.231] (ovpn-12-231.pek2.redhat.com [10.72.12.231])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2EBCA194B2;
+        Thu,  5 Sep 2019 02:56:20 +0000 (UTC)
+Subject: Re: [PATCH] pci: endpoint: functions: Add a virtnet EP function
+To:     Haotian Wang <haotian.wang@sifive.com>, kishon@ti.com,
+        mst@redhat.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, haotian.wang@duke.edu
+References: <7067e657-5c8e-b724-fa6a-086fece6e6c3@redhat.com>
+ <20190904215801.2971-1-haotian.wang@sifive.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <59982499-0fc1-2e39-9ff9-993fb4dd7dcc@redhat.com>
+Date:   Thu, 5 Sep 2019 10:56:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <35316bac59d3bc681e76d33e0345f4ef950c4414.1567585181.git.eswara.kota@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190904215801.2971-1-haotian.wang@sifive.com>
+Content-Type: multipart/mixed;
+ boundary="------------B8680429502EE7BA0E4D0CA4"
 Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 05 Sep 2019 02:56:26 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Dilip,
+This is a multi-part message in MIME format.
+--------------B8680429502EE7BA0E4D0CA4
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 9/4/2019 6:10 PM, Dilip Kota wrote:
-> Add support to PCIe RC controller on Intel Universal
-> Gateway SoC. PCIe controller is based of Synopsys
-> Designware pci core.
+
+On 2019/9/5 =E4=B8=8A=E5=8D=885:58, Haotian Wang wrote:
+> Hi Jason,
 >
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> ---
-> changes on v3:
-> 	Rename PCIe app logic registers with PCIE_APP prefix.
-> 	PCIE_IOP_CTRL configuration is not required. Remove respective code.
-> 	Remove wrapper functions for clk enable/disable APIs.
-> 	Use platform_get_resource_byname() instead of
-> 	  devm_platform_ioremap_resource() to be similar with DWC framework.
-> 	Rename phy name to "pciephy".
-> 	Modify debug message in msi_init() callback to be more specific.
-> 	Remove map_irq() callback.
-> 	Enable the INTx interrupts at the time of PCIe initialization.
-> 	Reduce memory fragmentation by using variable "struct dw_pcie pci"
-> 	  instead of allocating memory.
-> 	Reduce the delay to 100us during enpoint initialization
-> 	  intel_pcie_ep_rst_init().
-> 	Call  dw_pcie_host_deinit() during remove() instead of directly
-> 	  calling PCIe core APIs.
-> 	Rename "intel,rst-interval" to "reset-assert-ms".
-> 	Remove unused APP logic Interrupt bit macro definitions.
->   	Use dwc framework's dw_pcie_setup_rc() for PCIe host specific
-> 	 configuration instead of redefining the same functionality in
-> 	 the driver.
-> 	Move the whole DT parsing specific code to intel_pcie_get_resources()
+> I have an additional comment regarding using vring.
 >
->   drivers/pci/controller/dwc/Kconfig          |  13 +
->   drivers/pci/controller/dwc/Makefile         |   1 +
->   drivers/pci/controller/dwc/pcie-intel-axi.c | 840 ++++++++++++++++++++++++++++
->   3 files changed, 854 insertions(+)
->   create mode 100644 drivers/pci/controller/dwc/pcie-intel-axi.c
+> On Tue, Sep 3, 2019 at 6:42 AM Jason Wang <jasowang@redhat.com> wrote:
+>> Kind of, in order to address the above limitation, you probably want t=
+o=20
+>> implement a vringh based netdevice and driver. It will work like,=20
+>> instead of trying to represent a virtio-net device to endpoint,=20
+>> represent a new type of network device, it uses two vringh ring instea=
+d=20
+>> virtio ring. The vringh ring is usually used to implement the=20
+>> counterpart of virtio driver. The advantages are obvious:
+>>
+>> - no need to deal with two sets of features, config space etc.
+>> - network specific, from the point of endpoint linux, it's not a virti=
+o=20
+>> device, no need to care about transport stuffs or embedding internal=20
+>> virtio-net specific data structures
+>> - reuse the exist codes (vringh) to avoid duplicated bugs, implementin=
+g=20
+>> a virtqueue is kind of challenge
+> With vringh.c, there is no easy way to interface with virtio_net.c.
 >
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 6ea778ae4877..e44b9b6a6390 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -82,6 +82,19 @@ config PCIE_DW_PLAT_EP
->   	  order to enable device-specific features PCI_DW_PLAT_EP must be
->   	  selected.
->   
-> +config PCIE_INTEL_AXI
-> +        bool "Intel AHB/AXI PCIe host controller support"
-> +        depends on PCI_MSI
-> +        depends on PCI
-> +        depends on OF
-> +        select PCIE_DW_HOST
-> +        help
-> +          Say 'Y' here to enable support for Intel AHB/AXI PCIe Host
-> +	  controller driver.
-> +	  The Intel PCIe controller is based on the Synopsys Designware
-> +	  pcie core and therefore uses the Designware core functions to
-> +	  implement the driver.
-> +
->   config PCI_EXYNOS
->   	bool "Samsung Exynos PCIe controller"
->   	depends on SOC_EXYNOS5440 || COMPILE_TEST
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> index b085dfd4fab7..46e656ebdf90 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -3,6 +3,7 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
->   obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
->   obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
->   obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
-> +obj-$(CONFIG_PCIE_INTEL_AXI) += pcie-intel-axi.o
->   obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
->   obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
->   obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
-> diff --git a/drivers/pci/controller/dwc/pcie-intel-axi.c b/drivers/pci/controller/dwc/pcie-intel-axi.c
-> new file mode 100644
-> index 000000000000..75607ce03ebf
-> --- /dev/null
-> +++ b/drivers/pci/controller/dwc/pcie-intel-axi.c
-> @@ -0,0 +1,840 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCIe host controller driver for Intel AXI PCIe Bridge
-> + *
-> + * Copyright (c) 2019 Intel Corporation.
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_pci.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset.h>
-> +
-> +#include "../../pci.h"
-> +#include "pcie-designware.h"
-> +
-> +#define PCIE_CCRID				0x8
-> +
-> +#define PCIE_LCAP				0x7C
-> +#define PCIE_LCAP_MAX_LINK_SPEED		GENMASK(3, 0)
-> +#define PCIE_LCAP_MAX_LENGTH_WIDTH		GENMASK(9, 4)
-> +
-> +/* Link Control and Status Register */
-> +#define PCIE_LCTLSTS				0x80
-> +#define PCIE_LCTLSTS_ASPM_ENABLE		GENMASK(1, 0)
-> +#define PCIE_LCTLSTS_RCB128			BIT(3)
-> +#define PCIE_LCTLSTS_LINK_DISABLE		BIT(4)
-> +#define PCIE_LCTLSTS_COM_CLK_CFG		BIT(6)
-> +#define PCIE_LCTLSTS_HW_AW_DIS			BIT(9)
-> +#define PCIE_LCTLSTS_LINK_SPEED			GENMASK(19, 16)
-> +#define PCIE_LCTLSTS_NEGOTIATED_LINK_WIDTH	GENMASK(25, 20)
-> +#define PCIE_LCTLSTS_SLOT_CLK_CFG		BIT(28)
-> +
-> +#define PCIE_LCTLSTS2				0xA0
-> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED		GENMASK(3, 0)
-> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_25GT	0x1
-> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_5GT	0x2
-> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_8GT	0x3
-> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_16GT	0x4
-> +#define PCIE_LCTLSTS2_HW_AUTO_DIS		BIT(5)
-> +
-> +/* Ack Frequency Register */
-> +#define PCIE_AFR				0x70C
-> +#define PCIE_AFR_FTS_NUM			GENMASK(15, 8)
-> +#define PCIE_AFR_COM_FTS_NUM			GENMASK(23, 16)
-> +#define PCIE_AFR_GEN12_FTS_NUM_DFT		(SZ_128 - 1)
-> +#define PCIE_AFR_GEN3_FTS_NUM_DFT		180
-> +#define PCIE_AFR_GEN4_FTS_NUM_DFT		196
-> +
-> +#define PCIE_PLCR_DLL_LINK_EN			BIT(5)
-> +#define PCIE_PORT_LOGIC_FTS			GENMASK(7, 0)
-> +#define PCIE_PORT_LOGIC_DFT_FTS_NUM		(SZ_128 - 1)
-> +
-> +#define PCIE_MISC_CTRL				0x8BC
-> +#define PCIE_MISC_CTRL_DBI_RO_WR_EN		BIT(0)
-> +
-> +#define PCIE_MULTI_LANE_CTRL			0x8C0
-> +#define PCIE_UPCONFIG_SUPPORT			BIT(7)
-> +#define PCIE_DIRECT_LINK_WIDTH_CHANGE		BIT(6)
-> +#define PCIE_TARGET_LINK_WIDTH			GENMASK(5, 0)
-> +
-> +/* APP RC Core Control Register */
-> +#define PCIE_APP_CCR				0x10
-> +#define PCIE_APP_CCR_LTSSM_ENABLE		BIT(0)
-> +
-> +/* PCIe Message Control */
-> +#define PCIE_APP_MSG_CR				0x30
-> +#define PCIE_APP_MSG_XMT_PM_TURNOFF		BIT(0)
-> +
-> +/* PCIe Power Management Control */
-> +#define PCIE_APP_PMC				0x44
-> +#define PCIE_APP_PMC_IN_L2			BIT(20)
-> +
-> +/* Interrupt Enable Register */
-> +#define PCIE_APP_IRNEN				0xF4
-> +#define PCIE_APP_IRNCR				0xF8
-> +#define PCIE_APP_IRN_AER_REPORT			BIT(0)
-> +#define PCIE_APP_IRN_PME			BIT(2)
-> +#define PCIE_APP_IRN_RX_VDM_MSG			BIT(4)
-> +#define PCIE_APP_IRN_PM_TO_ACK			BIT(9)
-> +#define PCIE_APP_IRN_LINK_AUTO_BW_STAT		BIT(11)
-> +#define PCIE_APP_IRN_BW_MGT			BIT(12)
-> +#define PCIE_APP_IRN_MSG_LTR			BIT(18)
-> +#define PCIE_APP_IRN_SYS_ERR_RC			BIT(29)
-> +
-> +#define PCIE_APP_INTX_OFST	12
-> +#define PCIE_APP_IRN_INT	(PCIE_APP_IRN_AER_REPORT | PCIE_APP_IRN_PME | \
-> +			PCIE_APP_IRN_RX_VDM_MSG | PCIE_APP_IRN_SYS_ERR_RC | \
-> +			PCIE_APP_IRN_PM_TO_ACK | PCIE_APP_IRN_MSG_LTR | \
-> +			PCIE_APP_IRN_BW_MGT | PCIE_APP_IRN_LINK_AUTO_BW_STAT | \
-> +			(PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTA) | \
-> +			(PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTB) | \
-> +			(PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTC) | \
-> +			(PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTD))
-> +
-> +#define BUS_IATU_OFFS		SZ_256M
-> +#define RST_INTRVL_DFT_MS	100
-> +enum {
-> +	PCIE_LINK_SPEED_AUTO = 0,
-> +	PCIE_LINK_SPEED_GEN1,
-> +	PCIE_LINK_SPEED_GEN2,
-> +	PCIE_LINK_SPEED_GEN3,
-> +	PCIE_LINK_SPEED_GEN4,
-> +};
-> +
-> +struct intel_pcie_soc {
-> +	unsigned int pcie_ver;
-> +	unsigned int pcie_atu_offset;
-> +	u32 num_viewport;
-> +};
-> +
-> +struct intel_pcie_port {
-> +	struct dw_pcie		pci;
-> +	unsigned int		id; /* Physical RC Index */
-> +	void __iomem		*app_base;
-> +	struct gpio_desc	*reset_gpio;
-> +	u32			rst_interval;
-> +	u32			max_speed;
-> +	u32			link_gen;
-> +	u32			max_width;
-> +	u32			lanes;
-> +	struct clk		*core_clk;
-> +	struct reset_control	*core_rst;
-> +	struct phy		*phy;
-> +};
-> +
-> +static void pcie_update_bits(void __iomem *base, u32 mask, u32 val, u32 ofs)
-> +{
-> +	u32 orig, tmp;
-> +
-> +	orig = readl(base + ofs);
-> +
-> +	tmp = (orig & ~mask) | (val & mask);
-> +
-> +	if (tmp != orig)
-> +		writel(tmp, base + ofs);
-> +}
-> +
-> +static inline u32 pcie_app_rd(struct intel_pcie_port *lpp, u32 ofs)
-> +{
-> +	return readl(lpp->app_base + ofs);
-> +}
-> +
-> +static inline void pcie_app_wr(struct intel_pcie_port *lpp, u32 val, u32 ofs)
-> +{
-> +	writel(val, lpp->app_base + ofs);
-> +}
-> +
-> +static void pcie_app_wr_mask(struct intel_pcie_port *lpp,
-> +			     u32 mask, u32 val, u32 ofs)
-> +{
-> +	pcie_update_bits(lpp->app_base, mask, val, ofs);
-> +}
-> +
-> +static inline u32 pcie_rc_cfg_rd(struct intel_pcie_port *lpp, u32 ofs)
-> +{
-> +	return dw_pcie_readl_dbi(&lpp->pci, ofs);
-> +}
-> +
-> +static inline void pcie_rc_cfg_wr(struct intel_pcie_port *lpp, u32 val, u32 ofs)
-> +{
-> +	dw_pcie_writel_dbi(&lpp->pci, ofs, val);
-> +}
-> +
-> +static void pcie_rc_cfg_wr_mask(struct intel_pcie_port *lpp,
-> +				u32 mask, u32 val, u32 ofs)
-> +{
-> +	pcie_update_bits(lpp->pci.dbi_base, mask, val, ofs);
-> +}
-> +
-> +static void intel_pcie_mem_iatu(struct intel_pcie_port *lpp)
-> +{
-> +	struct pcie_port *pp = &lpp->pci.pp;
-> +	phys_addr_t cpu_addr = pp->mem_base;
-> +
-> +	dw_pcie_prog_outbound_atu(&lpp->pci, PCIE_ATU_REGION_INDEX0,
-> +				  PCIE_ATU_TYPE_MEM, cpu_addr,
-> +				  pp->mem_base, pp->mem_size);
-> +}
-> +
-> +static void intel_pcie_ltssm_enable(struct intel_pcie_port *lpp)
-> +{
-> +	pcie_app_wr_mask(lpp, PCIE_APP_CCR_LTSSM_ENABLE,
-> +			 PCIE_APP_CCR_LTSSM_ENABLE, PCIE_APP_CCR);
-> +}
-> +
-> +static void intel_pcie_ltssm_disable(struct intel_pcie_port *lpp)
-> +{
-> +	pcie_app_wr_mask(lpp, PCIE_APP_CCR_LTSSM_ENABLE, 0, PCIE_APP_CCR);
-> +}
-> +
-> +static const char *pcie_link_gen_to_str(int gen)
-> +{
-> +	switch (gen) {
-> +	case PCIE_LINK_SPEED_GEN1:
-> +		return "2.5";
-> +	case PCIE_LINK_SPEED_GEN2:
-> +		return "5.0";
-> +	case PCIE_LINK_SPEED_GEN3:
-> +		return "8.0";
-> +	case PCIE_LINK_SPEED_GEN4:
-> +		return "16.0";
-> +	default:
-> +		return "???";
-> +	}
-> +}
-> +
-> +static void intel_pcie_link_setup(struct intel_pcie_port *lpp)
-> +{
-> +	u32 val;
-> +
-> +	val = pcie_rc_cfg_rd(lpp, PCIE_LCAP);
-> +	lpp->max_speed = FIELD_GET(PCIE_LCAP_MAX_LINK_SPEED, val);
-> +	lpp->max_width = FIELD_GET(PCIE_LCAP_MAX_LENGTH_WIDTH, val);
-> +
-> +	val = pcie_rc_cfg_rd(lpp, PCIE_LCTLSTS);
-> +
-> +	val &= ~(PCIE_LCTLSTS_LINK_DISABLE | PCIE_LCTLSTS_ASPM_ENABLE);
-> +	val |= (PCIE_LCTLSTS_SLOT_CLK_CFG | PCIE_LCTLSTS_COM_CLK_CFG |
-> +		PCIE_LCTLSTS_RCB128);
-> +	pcie_rc_cfg_wr(lpp, val, PCIE_LCTLSTS);
-> +}
-> +
-> +static void intel_pcie_max_speed_setup(struct intel_pcie_port *lpp)
-> +{
-> +	u32 reg, val;
-> +
-> +	reg = pcie_rc_cfg_rd(lpp, PCIE_LCTLSTS2);
-> +	switch (lpp->link_gen) {
-> +	case PCIE_LINK_SPEED_GEN1:
-> +		reg &= ~PCIE_LCTLSTS2_TGT_LINK_SPEED;
-> +		reg |= PCIE_LCTLSTS2_HW_AUTO_DIS |
-> +			PCIE_LCTLSTS2_TGT_LINK_SPEED_25GT;
-> +		break;
-> +	case PCIE_LINK_SPEED_GEN2:
-> +		reg &= ~PCIE_LCTLSTS2_TGT_LINK_SPEED;
-> +		reg |= PCIE_LCTLSTS2_HW_AUTO_DIS |
-> +			PCIE_LCTLSTS2_TGT_LINK_SPEED_5GT;
-> +		break;
-> +	case PCIE_LINK_SPEED_GEN3:
-> +		reg &= ~PCIE_LCTLSTS2_TGT_LINK_SPEED;
-> +		reg |= PCIE_LCTLSTS2_HW_AUTO_DIS |
-> +			PCIE_LCTLSTS2_TGT_LINK_SPEED_8GT;
-> +		break;
-> +	case PCIE_LINK_SPEED_GEN4:
-> +		reg &= ~PCIE_LCTLSTS2_TGT_LINK_SPEED;
-> +		reg |= PCIE_LCTLSTS2_HW_AUTO_DIS |
-> +			PCIE_LCTLSTS2_TGT_LINK_SPEED_16GT;
-> +		break;
-> +	default:
-> +		/* Use hardware capability */
-> +		val = pcie_rc_cfg_rd(lpp, PCIE_LCAP);
-> +		val = FIELD_GET(PCIE_LCAP_MAX_LINK_SPEED, val);
-> +		reg &= ~PCIE_LCTLSTS2_HW_AUTO_DIS;
-> +		reg |= val;
-> +		break;
-> +	}
-> +	pcie_rc_cfg_wr(lpp, reg, PCIE_LCTLSTS2);
-> +}
-> +
-> +static void intel_pcie_speed_change_enable(struct intel_pcie_port *lpp)
-> +{
-> +	u32 mask, val;
-> +
-> +	mask = PORT_LOGIC_SPEED_CHANGE | PCIE_PORT_LOGIC_FTS;
-> +	val = PORT_LOGIC_SPEED_CHANGE | PCIE_PORT_LOGIC_DFT_FTS_NUM;
-> +
-> +	pcie_rc_cfg_wr_mask(lpp, mask, val, PCIE_LINK_WIDTH_SPEED_CONTROL);
-> +}
-> +
-> +static void intel_pcie_speed_change_disable(struct intel_pcie_port *lpp)
-> +{
-> +	pcie_rc_cfg_wr_mask(lpp, PORT_LOGIC_SPEED_CHANGE, 0,
-> +			    PCIE_LINK_WIDTH_SPEED_CONTROL);
-> +}
-> +
-> +static void intel_pcie_max_link_width_setup(struct intel_pcie_port *lpp)
-> +{
-> +	u32 mask, val;
-> +
-> +	/* HW auto bandwidth negotiation must be enabled */
-> +	pcie_rc_cfg_wr_mask(lpp, PCIE_LCTLSTS_HW_AW_DIS, 0, PCIE_LCTLSTS);
-> +
-> +	mask = PCIE_DIRECT_LINK_WIDTH_CHANGE | PCIE_TARGET_LINK_WIDTH;
-> +	val = PCIE_DIRECT_LINK_WIDTH_CHANGE | lpp->lanes;
-> +	pcie_rc_cfg_wr_mask(lpp, mask, val, PCIE_MULTI_LANE_CTRL);
-> +}
-> +
-> +static void intel_pcie_port_logic_setup(struct intel_pcie_port *lpp)
-> +{
-> +	u32 val, mask, fts;
-> +
-> +	switch (lpp->max_speed) {
-> +	case PCIE_LINK_SPEED_GEN1:
-> +	case PCIE_LINK_SPEED_GEN2:
-> +		fts = PCIE_AFR_GEN12_FTS_NUM_DFT;
-> +		break;
-> +	case PCIE_LINK_SPEED_GEN3:
-> +		fts = PCIE_AFR_GEN3_FTS_NUM_DFT;
-> +		break;
-> +	case PCIE_LINK_SPEED_GEN4:
-> +		fts = PCIE_AFR_GEN4_FTS_NUM_DFT;
-> +		break;
-> +	default:
-> +		fts = PCIE_AFR_GEN12_FTS_NUM_DFT;
-> +		break;
-> +	}
-> +	mask = PCIE_AFR_FTS_NUM | PCIE_AFR_COM_FTS_NUM;
-> +	val = FIELD_PREP(PCIE_AFR_FTS_NUM, fts) |
-> +	       FIELD_PREP(PCIE_AFR_COM_FTS_NUM, fts);
-> +	pcie_rc_cfg_wr_mask(lpp, mask, val, PCIE_AFR);
-> +
-> +	/* Port Link Control Register */
-> +	pcie_rc_cfg_wr_mask(lpp, PCIE_PLCR_DLL_LINK_EN,
-> +			    PCIE_PLCR_DLL_LINK_EN, PCIE_PORT_LINK_CONTROL);
-> +}
-> +
-> +static void intel_pcie_upconfig_setup(struct intel_pcie_port *lpp)
-> +{
-> +	pcie_rc_cfg_wr_mask(lpp, PCIE_UPCONFIG_SUPPORT,
-> +			    PCIE_UPCONFIG_SUPPORT, PCIE_MULTI_LANE_CTRL);
-> +}
-> +
-> +static void intel_pcie_rc_setup(struct intel_pcie_port *lpp)
-> +{
-> +	intel_pcie_ltssm_disable(lpp);
-> +	intel_pcie_link_setup(lpp);
-> +	dw_pcie_setup_rc(&lpp->pci.pp);
-> +	intel_pcie_upconfig_setup(lpp);
-> +
-> +	intel_pcie_max_speed_setup(lpp);
-> +	intel_pcie_speed_change_enable(lpp);
-> +	intel_pcie_port_logic_setup(lpp);
-> +	intel_pcie_mem_iatu(lpp);
-> +}
-> +
-> +static int intel_pcie_ep_rst_init(struct intel_pcie_port *lpp)
-> +{
-> +	struct device *dev = lpp->pci.dev;
-> +	int ret;
-> +
-> +	lpp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-> +	if (IS_ERR(lpp->reset_gpio)) {
-> +		ret = PTR_ERR(lpp->reset_gpio);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to request PCIe GPIO: %d\n", ret);
-> +		return ret;
-> +	}
-> +	/* Make initial reset last for 100us */
-> +	usleep_range(100, 200);
-> +
-> +	return 0;
-> +}
-> +
-> +static void intel_pcie_core_rst_assert(struct intel_pcie_port *lpp)
-> +{
-> +	reset_control_assert(lpp->core_rst);
-> +}
-> +
-> +static void intel_pcie_core_rst_deassert(struct intel_pcie_port *lpp)
-> +{
-> +	/*
-> +	 * One micro-second delay to make sure the reset pulse
-> +	 * wide enough so that core reset is clean.
-> +	 */
-> +	udelay(1);
-> +	reset_control_deassert(lpp->core_rst);
-> +
-> +	/*
-> +	 * Some SoC core reset also reset PHY, more delay needed
-> +	 * to make sure the reset process is done.
-> +	 */
-> +	usleep_range(1000, 2000);
-> +}
-> +
-> +static void intel_pcie_device_rst_assert(struct intel_pcie_port *lpp)
-> +{
-> +	gpiod_set_value_cansleep(lpp->reset_gpio, 1);
-> +}
-> +
-> +static void intel_pcie_device_rst_deassert(struct intel_pcie_port *lpp)
-> +{
-> +	msleep(lpp->rst_interval);
-> +	gpiod_set_value_cansleep(lpp->reset_gpio, 0);
-> +}
-> +
-> +static int intel_pcie_app_logic_setup(struct intel_pcie_port *lpp)
-> +{
-> +	intel_pcie_device_rst_deassert(lpp);
-> +	intel_pcie_ltssm_enable(lpp);
-> +
-> +	return dw_pcie_wait_for_link(&lpp->pci);
-> +}
-> +
-> +static irqreturn_t intel_pcie_core_isr(int irq, void *arg)
-> +{
-> +	struct intel_pcie_port *lpp = arg;
-> +	u32 val, reg;
-> +
-> +	reg = pcie_app_rd(lpp, PCIE_APP_IRNCR);
-> +	val = reg & PCIE_APP_IRN_INT;
-> +
-> +	pcie_app_wr(lpp, val, PCIE_APP_IRNCR);
-> +
-> +	trace_printk("PCIe misc interrupt status 0x%x\n", reg);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int intel_pcie_setup_irq(struct intel_pcie_port *lpp)
-> +{
-> +	struct device *dev = lpp->pci.dev;
-> +	struct platform_device *pdev;
-> +	char *irq_name;
-> +	int irq, ret;
-> +
-> +	pdev = to_platform_device(dev);
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(dev, "missing sys integrated irq resource\n");
-> +		return irq;
-> +	}
-> +
-> +	irq_name = devm_kasprintf(dev, GFP_KERNEL, "pcie_misc%d", lpp->id);
-> +	if (!irq_name) {
-> +		dev_err(dev, "failed to alloc irq name\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ret = devm_request_irq(dev, irq, intel_pcie_core_isr,
-> +			       IRQF_SHARED, irq_name, lpp);
-> +	if (ret) {
-> +		dev_err(dev, "request irq %d failed\n", irq);
-> +		return ret;
-> +	}
-> +	/* Enable integrated interrupts */
-> +	pcie_app_wr_mask(lpp, PCIE_APP_IRN_INT,
-> +			 PCIE_APP_IRN_INT, PCIE_APP_IRNEN);
-> +
-> +	return ret;
-> +}
-> +
-> +static void intel_pcie_core_irq_disable(struct intel_pcie_port *lpp)
-> +{
-> +	pcie_app_wr(lpp, 0, PCIE_APP_IRNEN);
-> +	pcie_app_wr(lpp, PCIE_APP_IRN_INT,  PCIE_APP_IRNCR);
-> +}
-> +
-> +static int intel_pcie_get_resources(struct platform_device *pdev)
-> +{
-> +	struct intel_pcie_port *lpp;
-> +	struct resource *res;
-> +	struct dw_pcie *pci;
-> +	struct device *dev;
-> +	int ret;
-> +
-> +	lpp = platform_get_drvdata(pdev);
-> +	pci = &lpp->pci;
-> +	dev = pci->dev;
-> +
-> +	ret = device_property_read_u32(dev, "linux,pci-domain", &lpp->id);
-> +	if (ret) {
-> +		dev_err(dev, "failed to get domain id, errno %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-> +	if (!res)
-> +		return -ENXIO;
-> +
-> +	pci->dbi_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(pci->dbi_base))
-> +		return PTR_ERR(pci->dbi_base);
-> +
-> +	lpp->core_clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(lpp->core_clk)) {
-> +		ret = PTR_ERR(lpp->core_clk);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to get clks: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	lpp->core_rst = devm_reset_control_get(dev, NULL);
-> +	if (IS_ERR(lpp->core_rst)) {
-> +		ret = PTR_ERR(lpp->core_rst);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to get resets: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = device_property_match_string(dev, "device_type", "pci");
-> +	if (ret) {
-> +		dev_err(dev, "failed to find pci device type: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	if (device_property_read_u32(dev, "reset-assert-ms",
-> +				     &lpp->rst_interval))
-> +		lpp->rst_interval = RST_INTRVL_DFT_MS;
-> +
-> +	if (device_property_read_u32(dev, "max-link-speed", &lpp->link_gen))
-> +		lpp->link_gen = 0; /* Fallback to auto */
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
-> +	if (!res)
-> +		return -ENXIO;
-> +
-> +	lpp->app_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(lpp->app_base))
-> +		return PTR_ERR(lpp->app_base);
-> +
-> +	ret = intel_pcie_ep_rst_init(lpp);
-> +	if (ret)
-> +		return ret;
-> +
-> +	lpp->phy = devm_phy_get(dev, "pciephy");
-> +	if (IS_ERR(lpp->phy)) {
-> +		ret = PTR_ERR(lpp->phy);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "couldn't get pcie-phy: %d\n", ret);
-> +		return ret;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static void intel_pcie_deinit_phy(struct intel_pcie_port *lpp)
-> +{
-> +	phy_exit(lpp->phy);
-> +}
-> +
-> +static int intel_pcie_wait_l2(struct intel_pcie_port *lpp)
-> +{
-> +	u32 value;
-> +	int ret;
-> +
-> +	if (lpp->max_speed < PCIE_LINK_SPEED_GEN3)
-> +		return 0;
-> +
-> +	/* Send PME_TURN_OFF message */
-> +	pcie_app_wr_mask(lpp, PCIE_APP_MSG_XMT_PM_TURNOFF,
-> +			 PCIE_APP_MSG_XMT_PM_TURNOFF, PCIE_APP_MSG_CR);
-> +
-> +	/* Read PMC status and wait for falling into L2 link state */
-> +	ret = readl_poll_timeout(lpp->app_base + PCIE_APP_PMC, value,
-> +				 (value & PCIE_APP_PMC_IN_L2), 20,
-> +				 jiffies_to_usecs(5 * HZ));
-> +	if (ret)
-> +		dev_err(lpp->pci.dev, "PCIe link enter L2 timeout!\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static void intel_pcie_turn_off(struct intel_pcie_port *lpp)
-> +{
-> +	if (dw_pcie_link_up(&lpp->pci))
-> +		intel_pcie_wait_l2(lpp);
-> +
-> +	/* Put EP in reset state */
-> +	intel_pcie_device_rst_assert(lpp);
-> +	pcie_rc_cfg_wr_mask(lpp, PCI_COMMAND_MEMORY, 0, PCI_COMMAND);
-> +}
-> +
-> +static int intel_pcie_host_setup(struct intel_pcie_port *lpp)
-> +{
-> +	int ret;
-> +
-> +	intel_pcie_core_rst_assert(lpp);
-> +	intel_pcie_device_rst_assert(lpp);
-> +
-> +	ret = phy_init(lpp->phy);
-> +	if (ret)
-> +		return ret;
-> +
-> +	intel_pcie_core_rst_deassert(lpp);
-> +
-> +	ret = clk_prepare_enable(lpp->core_clk);
-> +	if (ret) {
-> +		dev_err(lpp->pci.dev, "Core clock enable failed: %d\n", ret);
-> +		goto clk_err;
-> +	}
-> +
-> +	intel_pcie_rc_setup(lpp);
-> +	ret = intel_pcie_app_logic_setup(lpp);
-> +	if (ret)
-> +		goto app_init_err;
-> +
-> +	ret = intel_pcie_setup_irq(lpp);
-> +	if (!ret)
-> +		return ret;
-> +
-> +	intel_pcie_turn_off(lpp);
-> +app_init_err:
-> +	clk_disable_unprepare(lpp->core_clk);
-> +clk_err:
-> +	intel_pcie_core_rst_assert(lpp);
-> +	intel_pcie_deinit_phy(lpp);
-> +	return ret;
-> +}
-> +
-> +static ssize_t
-> +pcie_link_status_show(struct device *dev, struct device_attribute *attr,
-> +		      char *buf)
-> +{
-> +	u32 reg, width, gen;
-> +	struct intel_pcie_port *lpp;
-> +
-> +	lpp = dev_get_drvdata(dev);
-> +
-> +	reg = pcie_rc_cfg_rd(lpp, PCIE_LCTLSTS);
-> +	width = FIELD_GET(PCIE_LCTLSTS_NEGOTIATED_LINK_WIDTH, reg);
-> +	gen = FIELD_GET(PCIE_LCTLSTS_LINK_SPEED, reg);
-> +	if (gen > lpp->max_speed)
-> +		return -EINVAL;
-> +
-> +	return sprintf(buf, "Port %2u Width x%u Speed %s GT/s\n", lpp->id,
-> +		       width, pcie_link_gen_to_str(gen));
-> +}
-> +static DEVICE_ATTR_RO(pcie_link_status);
-> +
-> +static ssize_t pcie_speed_store(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t len)
-> +{
-> +	struct intel_pcie_port *lpp;
-> +	unsigned long val;
-> +	int ret;
-> +
-> +	lpp = dev_get_drvdata(dev);
-> +
-> +	ret = kstrtoul(buf, 10, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (val > lpp->max_speed)
-> +		return -EINVAL;
-> +
-> +	lpp->link_gen = val;
-> +	intel_pcie_max_speed_setup(lpp);
-> +	intel_pcie_speed_change_disable(lpp);
-> +	intel_pcie_speed_change_enable(lpp);
-> +
-> +	return len;
-> +}
-> +static DEVICE_ATTR_WO(pcie_speed);
-> +
-> +/*
-> + * Link width change on the fly is not always successful.
-> + * It also depends on the partner.
-> + */
-> +static ssize_t pcie_width_store(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t len)
-> +{
-> +	struct intel_pcie_port *lpp;
-> +	unsigned long val;
-> +
-> +	lpp = dev_get_drvdata(dev);
-> +
-> +	if (kstrtoul(buf, 10, &val))
-> +		return -EINVAL;
-> +
-> +	if (val > lpp->max_width)
-> +		return -EINVAL;
-> +
-> +	lpp->lanes = val;
-> +	intel_pcie_max_link_width_setup(lpp);
-> +
-> +	return len;
-> +}
-> +static DEVICE_ATTR_WO(pcie_width);
-> +
-> +static struct attribute *pcie_cfg_attrs[] = {
-> +	&dev_attr_pcie_link_status.attr,
-> +	&dev_attr_pcie_speed.attr,
-> +	&dev_attr_pcie_width.attr,
-> +	NULL,
-> +};
-> +ATTRIBUTE_GROUPS(pcie_cfg);
-> +
-> +static int intel_pcie_sysfs_init(struct intel_pcie_port *lpp)
-> +{
-> +	return devm_device_add_groups(lpp->pci.dev, pcie_cfg_groups);
-> +}
-> +
-> +static void __intel_pcie_remove(struct intel_pcie_port *lpp)
-> +{
-> +	pcie_rc_cfg_wr_mask(lpp, PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER,
-> +			    0, PCI_COMMAND);
-Does DWC handle this?
-> +	intel_pcie_core_irq_disable(lpp);
-> +	intel_pcie_turn_off(lpp);
-> +	clk_disable_unprepare(lpp->core_clk);
-> +	intel_pcie_core_rst_assert(lpp);
-> +	intel_pcie_deinit_phy(lpp);
-> +}
-> +
-> +static int intel_pcie_remove(struct platform_device *pdev)
-> +{
-> +	struct intel_pcie_port *lpp = platform_get_drvdata(pdev);
-> +	struct pcie_port *pp = &lpp->pci.pp;
-> +
-> +	dw_pcie_host_deinit(pp);
-> +	__intel_pcie_remove(lpp);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused intel_pcie_suspend_noirq(struct device *dev)
-> +{
-> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	intel_pcie_core_irq_disable(lpp);
-> +	ret = intel_pcie_wait_l2(lpp);
-> +	if (ret)
-> +		return ret;
-> +
-> +	intel_pcie_deinit_phy(lpp);
-> +	clk_disable_unprepare(lpp->core_clk);
-> +	return ret;
-> +}
-> +
-> +static int __maybe_unused intel_pcie_resume_noirq(struct device *dev)
-> +{
-> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
-> +
-> +	return intel_pcie_host_setup(lpp);
-> +}
-> +
-> +static int intel_pcie_rc_init(struct pcie_port *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct intel_pcie_port *lpp = dev_get_drvdata(pci->dev);
-> +	int ret;
-> +
-> +	/* RC/host initialization */
-Remove this comment
-> +	ret = intel_pcie_host_setup(lpp);
-> +	if (ret)
-> +		return ret;
-> +	ret = intel_pcie_sysfs_init(lpp);
-> +	if (ret)
-> +		__intel_pcie_remove(lpp);
-> +	return ret;
-> +}
-> +
-> +int intel_pcie_msi_init(struct pcie_port *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +
-> +	dev_dbg(pci->dev, "PCIe MSI/MSIx is handled by MSI in x86 processor\n");
-> +	return 0;
-> +}
-> +
-> +u64 intel_pcie_cpu_addr(struct dw_pcie *pcie, u64 cpu_addr)
-> +{
-> +	return cpu_addr + BUS_IATU_OFFS;
-> +}
-> +
-> +static const struct dw_pcie_ops intel_pcie_ops = {
-> +	.cpu_addr_fixup = intel_pcie_cpu_addr,
-> +};
-> +
-> +static const struct dw_pcie_host_ops intel_pcie_dw_ops = {
-> +	.host_init =		intel_pcie_rc_init,
-> +	.msi_host_init =	intel_pcie_msi_init,
-> +};
-> +
-> +static const struct intel_pcie_soc pcie_data = {
-> +	.pcie_ver =		0x520A,
-> +	.pcie_atu_offset =	0xC0000,
-> +	.num_viewport =		3,
-> +};
+> vringh.c is linked with vhost/net.c nicely=20
+
+
+Let me clarify, vhost_net doesn't use vringh at all (though there's a
+plan to switch to use vringh).
+
+
+> but again it's not easy to
+> interface vhost/net.c with the network stack of endpoint kernel. The
+> vhost drivers are not designed with the purpose of creating another
+> suite of virtual devices in the host kernel in the first place. If I tr=
+y
+> to manually write code for this interfacing, it seems that I will do
+> duplicate work that virtio_net.c does.
+
+
+Let me explain:
+
+- I'm not suggesting to use vhost_net since it can only deal with
+userspace virtio rings.
+- I suggest to introduce netdev that has vringh vring assoticated.
+Vringh was designed to deal with virtio ring located at different types
+of memory. It supports userspace vring and kernel vring currently, but
+it should not be too hard to add support for e.g endpoint device that
+requires DMA or whatever other method to access the vring. So it was by
+design to talk directly with e.g kernel virtio device.
+- In your case, you can read vring address from virtio config space
+through endpoint framework and then create vringh. It's as simple as:
+creating a netdev, read vring address, and initialize vringh. Then you
+can use vringh helper to get iov and build skb etc (similar to caif_virti=
+o).
+
+
 >
-> +static int intel_pcie_probe(struct platform_device *pdev)
-> +{
-> +	const struct intel_pcie_soc *data;
-> +	struct device *dev = &pdev->dev;
-> +	struct intel_pcie_port *lpp;
-> +	struct pcie_port *pp;
-> +	struct dw_pcie *pci;
-> +	int ret;
-> +
-> +	lpp = devm_kzalloc(dev, sizeof(*lpp), GFP_KERNEL);
-> +	if (!lpp)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, lpp);
-> +	pci = &lpp->pci;
-> +	pci->dev = dev;
-> +	pp = &pci->pp;
-> +
-> +	ret = intel_pcie_get_resources(pdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	data = device_get_match_data(dev);
-> +	pci->ops = &intel_pcie_ops;
-> +	pci->version = data->pcie_ver;
-> +	pci->atu_base = pci->dbi_base + data->pcie_atu_offset;
-> +	pp->ops = &intel_pcie_dw_ops;
-> +
-> +	ret = dw_pcie_host_init(pp);
-> +	if (ret) {
-> +		dev_err(dev, "cannot initialize host\n");
-> +		return ret;
-> +	}
-> +	/* Intel PCIe doesn't configure IO region, so configure
-> +	 * viewport to not to access IO region during register
-> +	 * read write operations.
-> +	 */
-> +	pci->num_viewport = data->num_viewport;
-> +	dev_info(dev,
-> +		 "Intel AXI PCIe Root Complex Port %d Init Done\n", lpp->id);
-> +	return ret;
-> +}
-> +
-> +static const struct dev_pm_ops intel_pcie_pm_ops = {
-> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(intel_pcie_suspend_noirq,
-> +				      intel_pcie_resume_noirq)
-> +};
-> +
-> +static const struct of_device_id of_intel_pcie_match[] = {
-> +	{ .compatible = "intel,lgm-pcie", .data = &pcie_data },
-> +	{}
-> +};
-> +
-> +static struct platform_driver intel_pcie_driver = {
-> +	.probe = intel_pcie_probe,
-> +	.remove = intel_pcie_remove,
-> +	.driver = {
-> +		.name = "intel-lgm-pcie",
-> +		.of_match_table = of_intel_pcie_match,
-> +		.pm = &intel_pcie_pm_ops,
-> +	},
-> +};
-> +builtin_platform_driver(intel_pcie_driver);
+> There will be two more main disadvantages probably.
+>
+> Firstly, there will be two layers of overheads. vhost/net.c uses
+> vringh.c to channel data buffers into some struct sockets. This is the
+> first layer of overhead. That the virtual network device will have to
+> use these sockets somehow adds another layer of overhead.
+
+
+As I said, it doesn't work like vhost and no socket is needed at all.
+
+
+>
+> Secondly, probing, intialization and de-initialization of the virtual
+> network_device are already non-trivial. I'll likely copy this part
+> almost verbatim from virtio_net.c in the end. So in the end, there will=
+
+> be more duplicate code.
+
+
+It will be a new type of network device instead of virtio, you don't
+need to care any virtio stuffs but vringh in your codes. So it looks to
+me it would be much simpler and compact.
+
+But I'm not saying your method is no way to go, but you should deal with
+lots of other issues like I've replied in the previous mail. What you
+want to achieve is
+
+1) Host (virtio-pci) <-> virtio ring <-> virtual eth device <-> virtio
+ring <-> Endpoint (virtio with customized config_ops).
+
+But I suggest is
+
+2) Host (virtio-pci) <-> virtio ring <-> virtual eth device <-> vringh
+vring (virtio ring in the Host) <-> network device
+
+The differences is.
+- Complexity: In your proposal, there will be two virtio devices and 4
+virtqueues. It means you need to prepare two sets of features, config
+ops etc. And dealing with inconsistent feature will be a pain. It may
+work for simple case like a virtio-net device with only _F_MAC, but it
+would be hard to be expanded. If we decide to go for vringh, there will
+be a single virtio device and 2 virtqueues. In the endpoint part, it
+will be 2 vringh vring (which is actually point the same virtqueue from
+Host side) and a normal network device. There's no need for dealing with
+inconsistency, since vringh basically sever as a a device
+implementation, the feature negotiation is just between device (network
+device with vringh) and driver (virtito-pci) from the view of Linux
+running on the PCI Host.
+- Maintainability: A third path for dealing virtio ring. We've already
+had vhost and vringh, a third path will add a lot of overhead when
+trying to maintaining them. My proposal will try to reuse vringh,
+there's no need a new path.
+- Layer violation: We want to hide the transport details from the device
+and make virito-net device can be used without modification. But your
+codes try to poke information like virtnet_info. My proposal is to just
+have a new networking device that won't need to care virtio at all. It's
+not that hard as you imagine to have a new type of netdev, I suggest to
+take a look at how caif_virtio is done, it would be helpful.
+
+If you still decide to go with two two virtio device model, you need
+probably:
+- Proving two sets of config and features, and deal with inconsistency
+- Try to reuse the vringh codes
+- Do not refer internal structures from virtio-net.c
+
+But I recommend to take a step of trying vringh method which should be
+much simpler.
+
+Thanks
+
+
+>
+> Thank you for your patience!
+>
+> Best,
+> Haotian
+
+--------------B8680429502EE7BA0E4D0CA4
+Content-Type: application/pgp-keys;
+ name="pEpkey.asc"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename="pEpkey.asc"
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+JJaQ8I7hEjBpmSTF4uR0ETUJmQbCBynU
+=3DCBPY
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------B8680429502EE7BA0E4D0CA4--
