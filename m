@@ -2,148 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AA91A992F
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 06:04:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21E5DA99A3
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 06:32:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfIEEEh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 00:04:37 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45962 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbfIEEEh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 00:04:37 -0400
-Received: by mail-io1-f67.google.com with SMTP id f12so1505208iog.12;
-        Wed, 04 Sep 2019 21:04:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=M+IGfEYSGyyuOm2Prrx3ef40BKfyapHE5e/ScRcmzZ4=;
-        b=V7VsEvi/mTFLoVUoQ8JLQj1QujYpPOCL9e787N9xm/AzDYh+OHJL3axrAjBWP9MT/d
-         JGq20Sh718b741p8V1bPov0ywDuoE0aYrf58KXcjIh6nUAjNOPspMFghC2V9Uc1v+MiI
-         ZzcW3Ssp/w1hnmqU6i3U1FeJqtJw0elEYzIavAomftnsumWK1z6kzzfqKHJpsIEiuc41
-         s1KlGOmvVNZ0FLMrP3NJ/1i3l72CxOlFzSMOCXv1PWQiM1SgmZZz7uFmDxnQmOx0pjzl
-         oW7RvjMuf2YgOqE3/Ibe4sB4OPsx0VEBWkWIZxGXzfJ83H1oQUP8pgomcQxTprxMveJq
-         9y4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=M+IGfEYSGyyuOm2Prrx3ef40BKfyapHE5e/ScRcmzZ4=;
-        b=XDmjX66GoMrqVzy9mLIoq0zUJMmNfiT2UuKoldXqMieMB8AAqwiOfaSo3o4wFprqiy
-         HCtLGdIdPQQ1MDgroxViyHiWIsN3qQWr3HONcBtvvLBHNeyCFrz+jcW/0tLOfRVP3mz9
-         c9G6e90IINt04HJwyxdRGgJOBXQwBn4qXx6FHdOYfCSB/Wyom3+5iSKhIFXAug16qlt4
-         unpPU6E7GmG/JoV/PxjhKSesRpVLUKiCegCHIvfM/Q+/iNu7qyyj6Qzs+XUE/57j5VRu
-         TWgkQ1Qg2Jgr7H+IT7UOtlNd2j0xN9M/Y7GYkCUIWlSy2cJhOhmVVOnpqeMeJ6PpaeKS
-         Hf8w==
-X-Gm-Message-State: APjAAAXiFkq5KyG6L/7QCVwwyu9V6mYPsRelrT74eRQsp7ofkox134JJ
-        NLFAoRmSF5Eb10HP6tWu12lZsPqFNqY=
-X-Google-Smtp-Source: APXvYqwTBzAOGP++Zt5gDzo0QxhcCRLghE7yC41c3bvkCvuDJODZ35HCgyCv3A0si3LLgXSQEJfnqA==
-X-Received: by 2002:a5d:8cc1:: with SMTP id k1mr1785446iot.286.1567656276246;
-        Wed, 04 Sep 2019 21:04:36 -0700 (PDT)
-Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id m67sm2047286iof.21.2019.09.04.21.04.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 21:04:35 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 22:04:33 -0600
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     Don Dutile <ddutile@redhat.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Bodong Wang <bodong@mellanox.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [Linux-kernel-mentees] [PATCH v2 2/3] PCI: sysfs: Change
- permissions from symbolic to octal
-Message-ID: <20190905040433.GA117297@JATN>
-References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-3-skunberg.kelsey@gmail.com>
- <20190814053846.GA253360@google.com>
- <b4c0d5b4-7243-ba96-96d1-041a264ac499@redhat.com>
- <20190904062229.GA66871@JATN>
- <850cf536-0b72-d78c-efaf-855dcb391087@redhat.com>
+        id S1725935AbfIEEcR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 00:32:17 -0400
+Received: from alpha.anastas.io ([104.248.188.109]:33281 "EHLO
+        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726097AbfIEEcR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 00:32:17 -0400
+Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by alpha.anastas.io (Postfix) with ESMTPSA id B366F7F36F;
+        Wed,  4 Sep 2019 23:22:36 -0500 (CDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
+        t=1567657357; bh=K6Ul0Tf6WBGzJ3DDSMKISfwTd9Ljf7uLpT71uwUiykg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OZFbCn8M3hBjC8mHFPqH+pxxDD0whlm+XYT+LQWGi/JbN4iE5ONkE1ZWaUvPp9v8z
+         xRyRe4ukehqLk2vBr3OKyu8ECMmNamJgCaHX6u9MXkIuoOo4OorTrZGyGNMr+DKxRe
+         Zyt81X1TreZRBFNYDinjUIOzvoIBecFVwyLDQlET1cv722hifFvHKu22ZTalQG7c8/
+         mxrJyo/gWlvWh3lRiAtx+KJ280OdyM9ODQMv540j/pMeJBajW0YnuK9fUMOCfL5kYs
+         NbzrH/z0/JOYam2OKUkTPA8LuxMdnS34dlanNTy/0OCWv1pdrMJV/fiVlJzdaSbIhG
+         MSKjGjbqi2Ynw==
+From:   Shawn Anastasio <shawn@anastas.io>
+To:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc:     bhelgaas@google.com, mpe@ellerman.id.au, aik@ozlabs.ru,
+        benh@kernel.crashing.org, sbobroff@linux.ibm.com, oohall@gmail.com
+Subject: [PATCH 0/2] Fix IOMMU setup for hotplugged devices on pseries
+Date:   Wed,  4 Sep 2019 23:22:13 -0500
+Message-Id: <20190905042215.3974-1-shawn@anastas.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <850cf536-0b72-d78c-efaf-855dcb391087@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 02:33:44PM -0400, Don Dutile wrote:
-> On 09/04/2019 02:22 AM, Kelsey Skunberg wrote:
-> > On Thu, Aug 15, 2019 at 10:37:13AM -0400, Don Dutile wrote:
-> > > On 08/14/2019 01:38 AM, Bjorn Helgaas wrote:
-> > > > [+cc Bodong, Don, Greg for permission question]
-> > > > 
-> > > > On Tue, Aug 13, 2019 at 02:45:12PM -0600, Kelsey Skunberg wrote:
-> > > > > Symbolic permissions such as "(S_IWUSR | S_IWGRP)" are not
-> > > > > preferred and octal permissions should be used instead. Change all
-> > > > > symbolic permissions to octal permissions.
-> > > > > 
-> > > > > Example of old:
-> > > > > 
-> > > > > "(S_IWUSR | S_IWGRP)"
-> > > > > 
-> > > > > Example of new:
-> > > > > 
-> > > > > "0220"
-> > > > 
-> > > > 
-> > > > >    static DEVICE_ATTR_RO(sriov_totalvfs);
-> > > > > -static DEVICE_ATTR(sriov_numvfs, (S_IRUGO | S_IWUSR | S_IWGRP),
-> > > > > -				  sriov_numvfs_show, sriov_numvfs_store);
-> > > > > +static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
-> > > > >    static DEVICE_ATTR_RO(sriov_offset);
-> > > > >    static DEVICE_ATTR_RO(sriov_stride);
-> > > > >    static DEVICE_ATTR_RO(sriov_vf_device);
-> > > > > -static DEVICE_ATTR(sriov_drivers_autoprobe, (S_IRUGO | S_IWUSR | S_IWGRP),
-> > > > > -		   sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
-> > > > > +static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
-> > > > > +		   sriov_drivers_autoprobe_store);
-> > > > 
-> > > > Greg noticed that sriov_numvfs and sriov_drivers_autoprobe have
-> > > > "unusual" permissions.  These were added by:
-> > > > 
-> > > >     0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
-> > > >     1789382a72a5 ("PCI: SRIOV control and status via sysfs")
-> > > > 
-> > > > Kelsey's patch correctly preserves the existing permissions, but we
-> > > > should double-check that they are the permissions they want, and
-> > > > possibly add a comment about why they're different from the rest.
-> > > > 
-> > > > Bjorn
-> > > > 
-> > 
-> > Hi Don,
-> > 
-> > > The rest being? ... 0644 vs 0664 ?
-> > > The file is read & written, thus the (first) 6; I'll have to dig through very old (7 yr) notes to see if the second 6 is needed for libvirt (so it doesn't have to be root to enable).
-> > > 
-> > > -dd
-> > > 
-> > 
-> > Were you able to see if the unusual permissions (0664) are needed for
-> > libvirt? I appreciate your help!
-> > 
-> > -Kelsey
-> > 
-> Daniel Berrangé reported that libvirt runs as root when dealing with anything PCI, and chowns files for qemu needs, so there is no need for the 664 permission.
-> For all I know, it's a simple typo that was allowed to creep in. :-/
-> 
-> Feel free to modify to 644.
-> 
-> -dd
->
+On pseries QEMU guests, IOMMU setup for hotplugged PCI devices is currently
+broken for all but the first device on a given bus. The culprit is an ordering
+issue in the pseries hotplug path (via pci_rescan_bus()) which results in IOMMU
+group assigment occuring before device registration in sysfs. This triggers
+the following check in arch/powerpc/kernel/iommu.c:
 
-Thank you for checking into this and getting back so quick! I'll cc you in
-the patch. :)
+/*
+ * The sysfs entries should be populated before
+ * binding IOMMU group. If sysfs entries isn't
+ * ready, we simply bail.
+ */
+if (!device_is_registered(dev))
+	return -ENOENT;
 
-Thanks again!
+This fails for hotplugged devices since the pcibios_add_device() call in the
+pseries hotplug path (in pci_device_add()) occurs before device_add().
+Since the IOMMU groups are set up in pcibios_add_device(), this means that a
+sysfs entry will not yet be present and it will fail.
 
--Kelsey
+There is a special case that allows the first hotplugged device on a bus to
+succeed, though. The powerpc pcibios_add_device() implementation will skip
+initializing the device if bus setup is not yet complete.
+Later, the pci core will call pcibios_fixup_bus() which will perform setup
+for the first (and only) device on the bus and since it has already been
+registered in sysfs, the IOMMU setup will succeed.
+
+My current solution is to introduce another pcibios function, pcibios_fixup_dev,
+which is called after device_add() in pci_device_add(). Then in powerpc code,
+pcibios_setup_device() was moved from pcibios_add_device() to this new function
+which will occur after sysfs registration so IOMMU assignment will succeed.
+
+I added a new pcibios function rather than moving the pcibios_add_device() call
+to after the device_add() call in pci_add_device() because there are other
+architectures that use it and it wasn't immediately clear to me whether moving
+it would break them.
+
+If anybody has more insight or a better way to fix this, please let me know.
+
+Shawn Anastasio (2):
+  PCI: Introduce pcibios_fixup_dev()
+  powerpc/pci: Fix IOMMU setup for hotplugged devices on pseries
+
+ arch/powerpc/kernel/pci-common.c | 13 ++++++-------
+ drivers/pci/probe.c              | 14 ++++++++++++++
+ include/linux/pci.h              |  1 +
+ 3 files changed, 21 insertions(+), 7 deletions(-)
+
+-- 
+2.20.1
+
