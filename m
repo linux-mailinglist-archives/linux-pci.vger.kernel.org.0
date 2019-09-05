@@ -2,202 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 82D85AAC0B
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 21:32:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7619CAAD01
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 22:31:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403890AbfIETcQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 15:32:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56104 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403870AbfIETcQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Sep 2019 15:32:16 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FEF120825;
-        Thu,  5 Sep 2019 19:32:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567711936;
-        bh=dWtd5+nLhoJSM/SHkQ3WS9gV06tdwTIBSFEzPozW0Vo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q78vl1fchrY026ueIJKBt96kYirxW3RG3SvX05USlSF8XWFsZHqYGisifVMxr/kqB
-         lrXJr0YMIS2kUJaLrxdnGWFWqB4OXgRqCJZdS1u3hRLNYfEjnMeGDxvm22vLDtSD81
-         Rxg8BkvfESKLxyzVzRHcTcPW0QTMVHJCPs7loA6c=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Ashok Raj <ashok.raj@intel.com>,
-        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5/5] PCI/ATS: Cache PASID Capability offset
-Date:   Thu,  5 Sep 2019 14:31:46 -0500
-Message-Id: <20190905193146.90250-6-helgaas@kernel.org>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-In-Reply-To: <20190905193146.90250-1-helgaas@kernel.org>
-References: <20190905193146.90250-1-helgaas@kernel.org>
+        id S2389796AbfIEUbm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 16:31:42 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35347 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387491AbfIEUbm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 16:31:42 -0400
+Received: by mail-oi1-f193.google.com with SMTP id a127so3089316oii.2;
+        Thu, 05 Sep 2019 13:31:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cs7pSggiA638/NENn3nXpVetu5HgwNJEQ1fDCNSetg4=;
+        b=eMG14L3nTkKPDjnQt3Il0NaBunF7hnbOLozDIvNta4SyW4fjwipSZFTlImrxg1zHY0
+         0Onwwwa0G8XUEDs44pARBjafSWrKm+EBrySFUIllP7h1P9ahZ6Kl1bfJja1YVVYhNT1b
+         VmddePJa8cOpZje6DdalRuzzGqbXEu3jhgpWHdlZm6g1oXAByda9nbNxEIvgeO5vbjT7
+         fi/9y6+Z1zxnqvu+y9wz6tzOd9CJVLCjRSYq5O8t2+1cthvMYhwbkjGQHvRbR9xYwlba
+         nz3EOHFca39PoZAfRb9Whqb2DXC85+smqWFnUtn5VCoXnqhp6BA6ze4ytwKNJ7DfII/l
+         ilsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cs7pSggiA638/NENn3nXpVetu5HgwNJEQ1fDCNSetg4=;
+        b=YBHWhl3EwmhPfE/YX08LTSiacKiiaxb7Z286AIZGF3+FsbUEKuTsoe9tCdkx2DiOfw
+         wwtjBzxgwSSX71zDE9vOrlZE7rNs29cz6RdeEVvCaQ4WvsdDQMNWpLMH5hEn1LIMDPJ3
+         rj8fvSrnmA5xm84RIrvaBlxU3zHyVoPM/GYyHPnV+8uk3WKzUwVgrnnBjwsTykQG7EGI
+         SJxIO7AC0Jbuk9/zPZj3MV2x/HxIS7zWIWJOgq9xQM51Fw83vz0pDvqTLyxJSIhB+QQ6
+         PdDjpUJV2l+VWV3LGJ2SEed69X/hkIhzUrdyF0vOFGx2OayU3FmTPfubkOeCrVs+cu4+
+         muCQ==
+X-Gm-Message-State: APjAAAXV/1R/TdLEMVSo9x8gn8L2NMAAWODI2fe6fAGt/4TLSWEI+Ale
+        828ZHpRA80kIjuPbjsspkRB7WBqBryyxYfQottM=
+X-Google-Smtp-Source: APXvYqwUKj9QVoY719m4jv2mk0by7PXeu9zkQRWV7OtiqrYGrW3CNbjwsr5yaUuW4/iaHpW7DaBKGwSwHyEmopWn4Fo=
+X-Received: by 2002:a05:6808:b14:: with SMTP id s20mr4258444oij.15.1567715500998;
+ Thu, 05 Sep 2019 13:31:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1567585181.git.eswara.kota@linux.intel.com> <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
+In-Reply-To: <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 5 Sep 2019 22:31:29 +0200
+Message-ID: <CAFBinCC5SH5OSUqOkLQhE2o7g5OhSuB_PBjsv93U2P=FNS5oPw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org,
+        linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Hi Dilip,
 
-Previously each PASID interface searched for the PASID Capability.  Cache
-the capability offset the first time we use it instead of searching each
-time.
+On Wed, Sep 4, 2019 at 12:11 PM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+[...]
+> +properties:
+> +  compatible:
+> +    const: intel,lgm-pcie
+should we add the "snps,dw-pcie" here (and in the example below) as well?
+(this is what for example
+Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt does)
 
-[bhelgaas: commit log, reorder patch to later, save offset directly in
-pci_enable_pasid() rather than adding pci_pasid_init()]
-Link: https://lore.kernel.org/r/4957778959fa34eab3e8b3065d1951989c61cb0f.1567029860.git.sathyanarayanan.kuppuswamy@linux.intel.com
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/ats.c   | 43 +++++++++++++++++++++----------------------
- include/linux/pci.h |  1 +
- 2 files changed, 22 insertions(+), 22 deletions(-)
+[...]
+> +  phy-names:
+> +    const: pciephy
+the most popular choice in Documentation/devicetree/bindings/pci/ is "pcie-phy"
+if Rob is happy with "pciephy" (which is already part of two other
+bindings) then I'm happy with "pciephy" as well
 
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index bc463e2ecc61..cb4f62da7b8a 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -305,7 +305,7 @@ EXPORT_SYMBOL_GPL(pci_reset_pri);
- int pci_enable_pasid(struct pci_dev *pdev, int features)
- {
- 	u16 control, supported;
--	int pos;
-+	int pasid = pdev->pasid_cap;
- 
- 	/*
- 	 * VFs must not implement the PASID Capability, but if a PF
-@@ -323,11 +323,14 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
- 	if (!pdev->eetlp_prefix_path)
- 		return -EINVAL;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
--	if (!pos)
--		return -EINVAL;
-+	if (!pasid) {
-+		pasid = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
-+		if (!pasid)
-+			return -EINVAL;
-+		pdev->pasid_cap = pasid;
-+	}
- 
--	pci_read_config_word(pdev, pos + PCI_PASID_CAP, &supported);
-+	pci_read_config_word(pdev, pasid + PCI_PASID_CAP, &supported);
- 	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
- 
- 	/* User wants to enable anything unsupported? */
-@@ -337,7 +340,7 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
- 	control = PCI_PASID_CTRL_ENABLE | features;
- 	pdev->pasid_features = features;
- 
--	pci_write_config_word(pdev, pos + PCI_PASID_CTRL, control);
-+	pci_write_config_word(pdev, pasid + PCI_PASID_CTRL, control);
- 
- 	pdev->pasid_enabled = 1;
- 
-@@ -352,7 +355,7 @@ EXPORT_SYMBOL_GPL(pci_enable_pasid);
- void pci_disable_pasid(struct pci_dev *pdev)
- {
- 	u16 control = 0;
--	int pos;
-+	int pasid = pdev->pasid_cap;
- 
- 	/* VFs share the PF PASID configuration */
- 	if (pdev->is_virtfn)
-@@ -361,11 +364,10 @@ void pci_disable_pasid(struct pci_dev *pdev)
- 	if (WARN_ON(!pdev->pasid_enabled))
- 		return;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
--	if (!pos)
-+	if (!pasid)
- 		return;
- 
--	pci_write_config_word(pdev, pos + PCI_PASID_CTRL, control);
-+	pci_write_config_word(pdev, pasid + PCI_PASID_CTRL, control);
- 
- 	pdev->pasid_enabled = 0;
- }
-@@ -378,7 +380,7 @@ EXPORT_SYMBOL_GPL(pci_disable_pasid);
- void pci_restore_pasid_state(struct pci_dev *pdev)
- {
- 	u16 control;
--	int pos;
-+	int pasid = pdev->pasid_cap;
- 
- 	if (pdev->is_virtfn)
- 		return;
-@@ -386,12 +388,11 @@ void pci_restore_pasid_state(struct pci_dev *pdev)
- 	if (!pdev->pasid_enabled)
- 		return;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
--	if (!pos)
-+	if (!pasid)
- 		return;
- 
- 	control = PCI_PASID_CTRL_ENABLE | pdev->pasid_features;
--	pci_write_config_word(pdev, pos + PCI_PASID_CTRL, control);
-+	pci_write_config_word(pdev, pasid + PCI_PASID_CTRL, control);
- }
- EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
- 
-@@ -408,16 +409,15 @@ EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
- int pci_pasid_features(struct pci_dev *pdev)
- {
- 	u16 supported;
--	int pos;
-+	int pasid = pdev->pasid_cap;
- 
- 	if (pdev->is_virtfn)
- 		pdev = pci_physfn(pdev);
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
--	if (!pos)
-+	if (!pasid)
- 		return -EINVAL;
- 
--	pci_read_config_word(pdev, pos + PCI_PASID_CAP, &supported);
-+	pci_read_config_word(pdev, pasid + PCI_PASID_CAP, &supported);
- 
- 	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
- 
-@@ -470,16 +470,15 @@ EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
- int pci_max_pasids(struct pci_dev *pdev)
- {
- 	u16 supported;
--	int pos;
-+	int pasid = pdev->pasid_cap;
- 
- 	if (pdev->is_virtfn)
- 		pdev = pci_physfn(pdev);
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
--	if (!pos)
-+	if (!pasid)
- 		return -EINVAL;
- 
--	pci_read_config_word(pdev, pos + PCI_PASID_CAP, &supported);
-+	pci_read_config_word(pdev, pasid + PCI_PASID_CAP, &supported);
- 
- 	supported = (supported & PASID_NUMBER_MASK) >> PASID_NUMBER_SHIFT;
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index c81a24172b14..7ddbb6445e1a 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -458,6 +458,7 @@ struct pci_dev {
- 	u32		pri_reqs_alloc; /* Number of PRI requests allocated */
- #endif
- #ifdef CONFIG_PCI_PASID
-+	u16		pasid_cap;	/* PASID Capability offset */
- 	u16		pasid_features;
- #endif
- #ifdef CONFIG_PCI_P2PDMA
--- 
-2.23.0.187.g17f5b7556c-goog
+> +  num-lanes:
+> +    description: Number of lanes to use for this port.
+are there SoCs with more than 2 lanes?
+you can list the allowed values in an enum so "num-lanes = <16>"
+causes an error when someone accidentally has this in their .dts (and
+runs the dt-bindings validation)
 
+[...]
+> +  reset-assert-ms:
+maybe add:
+  $ref: /schemas/types.yaml#/definitions/uint32
+
+> +    description: |
+> +      Device reset interval in ms.
+> +      Some devices need an interval upto 500ms. By default it is 100ms.
+> +
+> +required:
+> +  - compatible
+> +  - device_type
+> +  - reg
+> +  - reg-names
+> +  - ranges
+> +  - resets
+> +  - clocks
+> +  - phys
+> +  - phy-names
+> +  - reset-gpios
+> +  - num-lanes
+> +  - linux,pci-domain
+> +  - interrupts
+> +  - interrupt-map
+> +  - interrupt-map-mask
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pcie10:pcie@d0e00000 {
+> +      compatible = "intel,lgm-pcie";
+> +      device_type = "pci";
+> +      #address-cells = <3>;
+> +      #size-cells = <2>;
+> +      reg = <
+> +            0xd0e00000 0x1000
+> +            0xd2000000 0x800000
+> +            0xd0a41000 0x1000
+> +            >;
+> +      reg-names = "dbi", "config", "app";
+> +      linux,pci-domain = <0>;
+> +      max-link-speed = <4>;
+> +      bus-range = <0x00 0x08>;
+> +      interrupt-parent = <&ioapic1>;
+> +      interrupts = <67 1>;
+> +      #interrupt-cells = <1>;
+> +      interrupt-map-mask = <0 0 0 0x7>;
+> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
+> +                      <0 0 0 2 &ioapic1 28 1>,
+> +                      <0 0 0 3 &ioapic1 29 1>,
+> +                      <0 0 0 4 &ioapic1 30 1>;
+is the "1" in the interrupts and interrupt-map properties IRQ_TYPE_EDGE_RISING?
+you can use these macros in this example as well, see
+Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml for
+example
+
+
+Martin
