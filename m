@@ -2,76 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 986AFAA702
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 17:09:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14D27AA812
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 18:15:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731823AbfIEPJh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 11:09:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:46602 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731401AbfIEPJh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Sep 2019 11:09:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFCD81000;
-        Thu,  5 Sep 2019 08:09:36 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1B4B3F67D;
-        Thu,  5 Sep 2019 08:09:35 -0700 (PDT)
-Subject: Re: PCI/kernel msi code vs GIC ITS driver conflict?
-To:     John Garry <john.garry@huawei.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
- <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
- <ef258ec7-877c-406a-3d88-80ff79b823f2@huawei.com>
- <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
- <8f1c1fe6-c0d4-1805-b119-6a48a4900e6d@kernel.org>
- <84f6756f-79f2-2e46-fe44-9a46be69f99d@huawei.com>
- <651b4d5f-2d86-65dc-1232-580445852752@kernel.org>
- <8ac8e372-15a0-2f95-089c-c189b619ea62@huawei.com>
- <73c22eaa-172e-0fba-7a44-381106dee50d@kernel.org>
- <a73262e6-6ece-4946-896b-2dad5ca28417@huawei.com>
- <a90e6f99-cad3-8eda-dd08-0ab05ed9ca04@kernel.org>
- <ecdb638b-d5d3-efdc-becd-478ce6e6ff96@huawei.com>
- <e3a4a04a-4669-5a03-5115-84c6573b99e9@kernel.org>
- <d48c9e64-2a65-45a5-c61e-b69505531b1e@huawei.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <e14e2b68-1d72-46c7-0255-1b3039d089d7@kernel.org>
-Date:   Thu, 5 Sep 2019 16:09:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1731631AbfIEQPT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 12:15:19 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:46264 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727014AbfIEQPT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 12:15:19 -0400
+Received: by mail-yw1-f68.google.com with SMTP id 201so963246ywo.13
+        for <linux-pci@vger.kernel.org>; Thu, 05 Sep 2019 09:15:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=PXZGe/GMm1AP9tqn/kRJhU+fbFG+dBRvZ/JuzgZ9dAo=;
+        b=N9omsp7NCyKR+GZ4pgi8H30MeCim15w3VkiGjIMy4ljy/KwkU4MFduXrRg7xpnJPyF
+         BHctIYbQqySBxCk6RNa/ZxQ6p3wsSth4KvvEiVUsINkeCmwbqxZL/ostbY2gf2b9CKLg
+         Vn4OhTdkTIj/DvvCQRaZgulyBCn72gNH8Zkal7Uc9naOSiVUvfHHGlF/RwUoQjids+V4
+         HInV6Durvglx1OvfLs0eH7SttZ3wcZQVVuPMiRjA/LR/xVT4rnhfpkl1af5g9TVMA0Dy
+         yyVVBpwYfazjByU7zx2AYM85aiIvxeYShULf8fZi5C27GMHz5d5adzuJRtz0FGCTf3ys
+         Jprg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=PXZGe/GMm1AP9tqn/kRJhU+fbFG+dBRvZ/JuzgZ9dAo=;
+        b=pMRBQr/T2H281yFgRMQ8E88JW7kiVAtoKpRdDDIcTNjks9u3/iMgyituzdIyjJIIIw
+         C2ivVnZZ+mr+koFMIZXrLv3v/kd6nS6ZPHANO63GRTNo+kwK5wCiMrMdZae9bUjG9QRN
+         wMdHi1uASAi9RM/o27om4a1Qy8TKYDw0sLYn3FGhAq571VdYU4in/vYVx4hdwLgsHWM8
+         oP3qP4ytKcaUgLm4I+1tMqCZdFEVypOYsrs/L3FcfhLsoD5Epc/7Jrq5M5jEPHQIOtK5
+         mdpWgSLNUOFEYpPdMDGAnF1vpxn0Hh2/BhFhveUVyBGpAk4Cj2TEf7VYbbHEtww/fE78
+         w8hw==
+X-Gm-Message-State: APjAAAWnyZMfe5w5le4kELOtJddzgJ2MYDk30LA0l2/bRXLZh5UfUR3I
+        YVO+/T7xTMKbPOqlEyHsqpz8ew==
+X-Google-Smtp-Source: APXvYqyG5gYmd4gdk9cp1NnCY0cEEKQpGbyOz5hp+kGb0CXwR0NcO5DwgzcwFRrFcc7vZay1SahyVg==
+X-Received: by 2002:a81:99c1:: with SMTP id q184mr3087072ywg.70.1567700118360;
+        Thu, 05 Sep 2019 09:15:18 -0700 (PDT)
+Received: from jaxon.wireless.duke.edu ([152.3.43.45])
+        by smtp.gmail.com with ESMTPSA id q128sm549266ywe.75.2019.09.05.09.15.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 09:15:17 -0700 (PDT)
+From:   Haotian Wang <haotian.wang@sifive.com>
+To:     mst@redhat.com, jasowang@redhat.com, kishon@ti.com,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com
+Cc:     haotian.wang@duke.edu, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] pci: endpoint: functions: Add a virtnet EP function
+Date:   Thu,  5 Sep 2019 12:15:16 -0400
+Message-Id: <20190905161516.2845-1-haotian.wang@sifive.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190905025823-mutt-send-email-mst@kernel.org>
+References: <20190905025823-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <d48c9e64-2a65-45a5-c61e-b69505531b1e@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 05/09/2019 15:53, John Garry wrote:
-
-[...[
-
->> Awesome. Can I take this as a Tested-by?
+On Thu, Sep 5, 2019 at 3:07 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > The host may write multiple 0 or 1's and the endpoint can only
+> > detect one of them in an notif_poll usleep interval.
 > 
-> Sure, btw, could you please also add:
-> 
-> Reported-by: Jiaxing Luo <luojiaxing@huawei.com>
-> 
-> ... as he did initial discovery and analysis on the problem.
+> Right. Notifications weren't designed to be implemented on top of RW
+> memory like this: the assumption was all notifications are buffered.
 
-Sure. Now pushed to irqchip-next.
+I can implement notification as a counter instead of a pending bit to
+simulate a buffer. There will be many troublesome cases illustrated by
+the following example.
 
-Thanks,
-	
-	M.
--- 
-Jazz is not dead, it just smells funny...
+The host sends a notification about available buffers 0-3. The endpoint
+will probably consume buffers 0-5 as the notification is polled and
+there is a delay. Then for some following notifications, the endpoint
+may realize there are no corresponding available buffers to consume.
+Those useless function calls waste cycles.
+
+> So if you implement modern instead, different queues can use
+> different addresses.
+
+Will start working on this after switching the endpoint to using
+vringh.c.
+
+> > The host may write
+> > some non-2 value as the endpoint code just finishes detecting the last
+> > non-2 value and reverting that value back to 2, effectively nullifying
+> > the new non-2 value.
+> > 
+> > The host may decide to write a non-2 value
+> > immediately after the endpoint revert that value back to 2 but before
+> > the endpoint code finishes the current loop of execution, effectively
+> > making the value not reverted back to 2.
+> > 
+> > All these and other problems are made worse by the fact that the PCI
+> > host Linux usually runs on much faster cores than the one on PCI
+> > endpoint. This is why relying completely on pending bits is not always
+> > safe. Hence the "fallback" check using usleep hackery exists.
+> > Nevertheless I welcome any suggestion, because I do not like this
+> > treatment myself either.
+> 
+> As long as you have a small number of queues, you can poll both
+> of them. And to resolve racing with host, re-check
+> rings after you write 2 into the selector
+
+I assume your suggestion is based on modern virtio. vrings in legacy
+virtio share a common notification read-write area.
+
+> (btw you also need a bunch of memory barriers, atomics don't
+> imply them automatically).
+
+Thank you for the reminder. In this doc,
+https://www.kernel.org/doc/html/latest/core-api/atomic_ops.html, it says
+"atomic_cmpxchg must provide explicit memory barriers around the operation,
+although if the comparison fails then no memory ordering guarantees are
+required". My understanding of this sentence is that the arch-specific
+implementer of atomic_cmpxchg already surrounds the operation with
+barriers in a more efficient way. The second part of the sentence
+implies the doc's target audience is the implementer of atomic_cmpxchg.
+Please correct me if I misunderstand this doc.
+
+Thank you for your feedback.
+
+Best,
+Haotian
