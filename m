@@ -2,43 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BA2EA9D2A
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 10:38:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2F26A9DC7
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 11:08:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731609AbfIEIiL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 04:38:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:39428 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730914AbfIEIiL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:38:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C9A5337;
-        Thu,  5 Sep 2019 01:38:10 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14D713F67D;
-        Thu,  5 Sep 2019 01:38:08 -0700 (PDT)
-Subject: Re: PCI/kernel msi code vs GIC ITS driver conflict?
-To:     Andrew Murray <andrew.murray@arm.com>,
-        John Garry <john.garry@huawei.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
- <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
- <ef258ec7-877c-406a-3d88-80ff79b823f2@huawei.com>
- <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <8f1c1fe6-c0d4-1805-b119-6a48a4900e6d@kernel.org>
-Date:   Thu, 5 Sep 2019 09:38:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+        id S1731737AbfIEJIa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 05:08:30 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40402 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732160AbfIEJIa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 05:08:30 -0400
+Received: by mail-pl1-f194.google.com with SMTP id y10so980881pll.7
+        for <linux-pci@vger.kernel.org>; Thu, 05 Sep 2019 02:08:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ghHRvQPVPbervCmbxcj9ka6t6kqgJGcJ0N1C9QEazv0=;
+        b=0z4xt+c7UhZ3WIZd0Lo1oEbNZK/Qp0TdkdYnv+TvMItGrucMc0skqhRM6tasUaqfPS
+         uHg0q90isJIsxHLEMhg/WMNiIJ37kBscPCSxpfSj2PFq2eIRCH0I9KCrG++SJKhP7hyl
+         GUB+1vuKBHn90Hl3VkrsE3w26JGa3iZ2ecmMpmf9VgCIr0HcDvAcLG0RBp+5g8R1MSdB
+         XTqC0MRjt+Qf8Q1OPKtB8kA7VpPTEy5ioHi5A0GY+JIsxVYDoLtA1hfotJGuVe0ez7Tz
+         HkGt0cIpHDIJHxtXS1CT8ZKm3o8rlrxuXt0ZjHaUSuRr0v+Y7T1XiZuAfiGj710/Qk2P
+         9TZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ghHRvQPVPbervCmbxcj9ka6t6kqgJGcJ0N1C9QEazv0=;
+        b=VehcWm07k8OUN1PSIMlkXslmViGM9NVyncOdY3UTDDFS22E9WMooB1YZ1K6dILn1p+
+         3PX+Ate98YVLf8TKlnGKpnGwHaNpdh2DU0m5Hk34pa9sewEgAdsYOMfhOp6bMzSQbs4P
+         AYtiupRCqxSAkb7wedDl6FBxm+kAtjshEdzwlCi3n2IZcUpukl9IBFpEIHyq7sbCt2AN
+         QIHNXJnvDaE2uh7Pt8kl85zjHEUvXEHvhGwwHZjBa8EqyV3G+oAmUKH8q1qrfOWEaVCy
+         7N8W1Y/KFZBKorKLmjjgO6bKtoGd5shiHqcgSiQTla7CkzVQUsCJrlC9NvKWimCqpMjf
+         d1zg==
+X-Gm-Message-State: APjAAAUI1L0F81alJ7cucsrAP2sZzDrJij4Cxmv/92kSBPxPy/5fNpEz
+        kdk6FUfyHB3/xnO5Y8jMMIlyb8Ixazo=
+X-Google-Smtp-Source: APXvYqxDe7RmUKZdRmOXfm85qGSMv0TNu4nPbOm/7M3aDQGBmOcx2bC0nYxjTuFwB1j6CM2+HZhJwg==
+X-Received: by 2002:a17:902:e493:: with SMTP id cj19mr2228022plb.292.1567674509883;
+        Thu, 05 Sep 2019 02:08:29 -0700 (PDT)
+Received: from [10.61.2.175] ([122.99.82.10])
+        by smtp.gmail.com with ESMTPSA id s186sm2029034pfb.126.2019.09.05.02.08.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Sep 2019 02:08:29 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Fix IOMMU setup for hotplugged devices on pseries
+To:     Shawn Anastasio <shawn@anastas.io>, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     bhelgaas@google.com, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        sbobroff@linux.ibm.com, oohall@gmail.com
+References: <20190905042215.3974-1-shawn@anastas.io>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Message-ID: <7a41184c-9b30-8d91-9d78-9d60c8d128ef@ozlabs.ru>
+Date:   Thu, 5 Sep 2019 19:08:24 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190905042215.3974-1-shawn@anastas.io>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -46,94 +66,79 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 04/09/2019 11:25, Andrew Murray wrote:
-> On Wed, Sep 04, 2019 at 09:56:51AM +0100, John Garry wrote:
->> On 03/09/2019 17:16, Marc Zyngier wrote:
->>> Hi John,
->>>
->>> On 03/09/2019 15:09, John Garry wrote:
->>>> Hi Marc, Bjorn, Thomas,
->>
->> Hi Marc,
->>
->>>>
->>>> We've come across a conflict with the kernel/pci msi code and GIC ITS
->>>> driver on our arm64 system, whereby we can't unbind and re-bind a PCI
->>>> device driver under special conditions. I'll explain...
->>>>
->>>> Our PCI device support 32 MSIs. The driver attempts to allocate msi
->>>> vectors with min msi=17, max msi = 32, and affd.pre vectors = 16. For
->>>> our test we make nr_cpus = 1 (just anything less than 16).
->>>
->>> Just to confirm: this PCI device is requiring Multi-MSI, right? As
->>> opposed to MSI-X?
->>
->> Right, Multi-MSI.
->>
->>>
->>>> We find that the pci/kernel msi code gives us 17 vectors, but the GIC
->>>> ITS code reserves 32 lpi maps in its_irq_domain_alloc(). The problem
->>>> then occurs when unbinding the driver in its_irq_domain_free() call,
->>>> where we only clear bits for 17 vectors. So if we unbind the driver and
->>>> then attempt to bind again, it fails.
->>>
->>> Is this device, by any chance, sharing its requested-id with another
->>> device? By being behind a bridge of some sort?There is some code to
->>> deal with it, but I'm not sure it has ever been verified in anger...
->>
->> It's a RC iEP and there should be no requested-id sharing:
->>
->> root@ubuntu:/home/john#  lspci -s 74:02.0 -v
->> 74:02.0 Serial Attached SCSI controller: Huawei Technologies Co., Ltd.
->> HiSilicon SAS 3.0 HBA (rev 20)
->> Flags: bus master, fast devsel, latency 0, IRQ 23, NUMA node 0
->> Memory at a2000000 (32-bit, non-prefetchable) [size=32K]
->> Capabilities: [40] Express Root Complex Integrated Endpoint, MSI 00
->> Capabilities: [80] MSI: Enable+ Count=32/32 Maskable+ 64bit+
->> Capabilities: [b0] Power Management version 3
->> Kernel driver in use: hisi_sas_v3_hw
->>
->>>
->>>> Where the fault lies, I can't say. Maybe the kernel msi code should
->>>> always give power of 2 vectors - as I understand, the PCI spec mandates
->>>> this. Or maybe the GIC ITS driver has a problem in the free path, as
->>>> above. Or maybe the PCI driver should not be allowed to request !power
->>>> of 2 min/max vectors.
->>>>
->>>> Opinion?
->>>
->>> My hunch is that it is an ITS driver bug: the PCI layer is allowed to
->>> give any number of MSIs to an endpoint driver, as long as they match the
->>> requirements of the allocation for Multi-MSI.
->>
->> I would tend to say that, but isn't the requirement to allocate power of 2
->> msi vectors, which doesn't seem to be enforced in the kernel msi layer?
-> 
-> For a PCI device that supports MSI but not MSI-X - my understanding is that
-> pci_alloc_irq_vectors_affinity and pci_alloc_irq_vectors will request *from
-> the device* a power of 2 msi vectors between the min and max given by the
-> driver - msi_setup_entry rounds up to nearest power of 2.
-> 
-> However this doesn't guarantee that pci_alloc_irq_vectors will return a
-> power of 2. For example if you set maxvec to 17, then it will request
-> 32 from the device and pci_alloc_irq_vectors will return 17 (i.e. it satisfies
-> your request by over allocating, but still gives you what you asked for).
-> 
-> I'm not yet familiar with ITS, however if it is reserving 32 yet you only
-> clear 17, then there is mismatch between the number actually reserved from
-> the hardware, and the value returned from pci_alloc_irq_vectors.
-> 
-> (It looks like its_alloc_device_irq rounds up to the nearest power of 2).
 
-That's a "feature" of the architecture. The ITT is sized by the number
-of bits used to index the table, meaning that you can only describe a
-power of two >= 2.
 
-John, could you stick a "#define DEBUG 1" at the top of irq-gic-v3-its.c
-and report the LPI allocations for this device?
+On 05/09/2019 14:22, Shawn Anastasio wrote:
+> On pseries QEMU guests, IOMMU setup for hotplugged PCI devices is currently
+> broken for all but the first device on a given bus. The culprit is an ordering
+> issue in the pseries hotplug path (via pci_rescan_bus()) which results in IOMMU
+> group assigment occuring before device registration in sysfs. This triggers
+> the following check in arch/powerpc/kernel/iommu.c:
+> 
+> /*
+>   * The sysfs entries should be populated before
+>   * binding IOMMU group. If sysfs entries isn't
+>   * ready, we simply bail.
+>   */
+> if (!device_is_registered(dev))
+> 	return -ENOENT;
+> 
+> This fails for hotplugged devices since the pcibios_add_device() call in the
+> pseries hotplug path (in pci_device_add()) occurs before device_add().
+> Since the IOMMU groups are set up in pcibios_add_device(), this means that a
+> sysfs entry will not yet be present and it will fail.
 
-Thanks,
+I just tried hotplugging 3 virtio-net devices into a guest system with 
+v5.2 kernel and it seems working (i.e. BARs mapped, a driver is bound):
 
-	M.
+
+root@le-dbg:~# lspci -v | egrep -i '(virtio|Memory)'
+00:00.0 Ethernet controller: Red Hat, Inc Virtio network device
+         Memory at 200080040000 (32-bit, non-prefetchable) [size=4K]
+         Memory at 210000000000 (64-bit, prefetchable) [size=16K]
+         Kernel driver in use: virtio-pci
+00:01.0 Ethernet controller: Red Hat, Inc Virtio network device
+         Memory at 200080041000 (32-bit, non-prefetchable) [size=4K]
+         Memory at 210000004000 (64-bit, prefetchable) [size=16K]
+         Kernel driver in use: virtio-pci
+00:02.0 Ethernet controller: Red Hat, Inc Virtio network device
+         Memory at 200080042000 (32-bit, non-prefetchable) [size=4K]
+         Memory at 210000008000 (64-bit, prefetchable) [size=16K]
+         Kernel driver in use: virtio-pci
+
+Can you explain in detail what you are doing exactly and what is failing 
+and what qemu/guest kernel/guest distro is used? Thanks,
+
+
+> 
+> There is a special case that allows the first hotplugged device on a bus to
+> succeed, though. The powerpc pcibios_add_device() implementation will skip
+> initializing the device if bus setup is not yet complete.
+> Later, the pci core will call pcibios_fixup_bus() which will perform setup
+> for the first (and only) device on the bus and since it has already been
+> registered in sysfs, the IOMMU setup will succeed.
+> 
+> My current solution is to introduce another pcibios function, pcibios_fixup_dev,
+> which is called after device_add() in pci_device_add(). Then in powerpc code,
+> pcibios_setup_device() was moved from pcibios_add_device() to this new function
+> which will occur after sysfs registration so IOMMU assignment will succeed.
+> 
+> I added a new pcibios function rather than moving the pcibios_add_device() call
+> to after the device_add() call in pci_add_device() because there are other
+> architectures that use it and it wasn't immediately clear to me whether moving
+> it would break them.
+> 
+> If anybody has more insight or a better way to fix this, please let me know.
+> 
+> Shawn Anastasio (2):
+>    PCI: Introduce pcibios_fixup_dev()
+>    powerpc/pci: Fix IOMMU setup for hotplugged devices on pseries
+> 
+>   arch/powerpc/kernel/pci-common.c | 13 ++++++-------
+>   drivers/pci/probe.c              | 14 ++++++++++++++
+>   include/linux/pci.h              |  1 +
+>   3 files changed, 21 insertions(+), 7 deletions(-)
+> 
+
 -- 
-Jazz is not dead, it just smells funny...
+Alexey
