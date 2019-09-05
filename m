@@ -2,113 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 26097AABC5
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 21:13:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 611FFAABD2
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 21:16:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387413AbfIETN5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 15:13:57 -0400
-Received: from alpha.anastas.io ([104.248.188.109]:54973 "EHLO
-        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfIETN5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 15:13:57 -0400
-Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by alpha.anastas.io (Postfix) with ESMTPSA id 3818C7E74E;
-        Thu,  5 Sep 2019 14:13:56 -0500 (CDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
-        t=1567710836; bh=jkDnyyJxLCKRf9Hh3sYC8Cvd+CcM72dsoaJ1/VZoyXM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eJiz/bNfIq2gq62s8P6uE/cX9dvr2amsxdM1sSH4w9JN1qcmXpWwCfbYM4BybXt0p
-         CpEGqgHoVksQl5NNTNqVMiwNiQw0eQDILY37Rra9soEYrYxWMJlqXJOV4LpG9TDWpP
-         /Ooz0aPiRe3GMswgMwGGKbClH8EDxvsqET0mp5YXTP+we/Dr6ko4TuCNtQjz0vqTks
-         hjuvtfGwl1d9oiLuyPn9iBucUW5tMu1lMw7vJ4aBeM7969LOs8JLDINa7exg0sEwNK
-         kEAvb618MyrVplHG8aEEY20rQoulLuDQQyLG5ll0MH06//ZHmibs2LTg8susmD4GEE
-         XqUT832Kx2H3g==
-From:   Shawn Anastasio <shawn@anastas.io>
-To:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc:     bhelgaas@google.com, mpe@ellerman.id.au, aik@ozlabs.ru,
-        benh@kernel.crashing.org, sbobroff@linux.ibm.com, oohall@gmail.com,
-        lukas@wunner.de
-Subject: [PATCH v2 1/1] powerpc/pci: Fix pcibios_setup_device() ordering
-Date:   Thu,  5 Sep 2019 14:13:43 -0500
-Message-Id: <20190905191343.2919-2-shawn@anastas.io>
-In-Reply-To: <20190905191343.2919-1-shawn@anastas.io>
-References: <20190905191343.2919-1-shawn@anastas.io>
+        id S1729405AbfIETQl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 15:16:41 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33992 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729067AbfIETQl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 15:16:41 -0400
+Received: by mail-io1-f67.google.com with SMTP id s21so7349937ioa.1;
+        Thu, 05 Sep 2019 12:16:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SeNhzZJnbTj4DW4++p0vK7Bp7AcJgIkbPLU7cUgS82Y=;
+        b=trHCi8aaOFYCtIIbjw99+xFl3hanazQ81YvOunKQeR3rGonw1QhRzR3vb074+7QYst
+         frU5K92RhvZBg3yYZI50naNHvYj4u1jVo/O18jNA1AQmHgvL9IKENRMa2tYWkZheQuxV
+         R3FUCXxCK8ifhcMNfqRZfSEZ5G+KtDPyIGPi9Hq3wdZKxRA2hMxLTK6/eTE1NlML8YHc
+         ia/E0ts8NlJBOXvQgTmGcHAX3lkcz4Ri666fuoo/RHcUl8muazj4j+XUNNqBfix3rSQs
+         HLAxFaMGeWU0FGHsRT347oGieJh2DawFoEgetnTMkBHEZfcshZ7vGqKv5LXEPdRmGxMh
+         iCgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SeNhzZJnbTj4DW4++p0vK7Bp7AcJgIkbPLU7cUgS82Y=;
+        b=ancVdNkpv8kfbwsyfHf7mNiL7av8kkRpiI4IBQoJslf7mOm/KPll7jFN3Xof2y4Lq3
+         +/ZICQnzKmFpNGIqouNqQmnFYgMgI/7+EynkPQTKRzVu4QfMybC0AaJIgDdu4fXIElCU
+         0dsFz884+g175aIxhAx7JQ6HFmpDsV+8eo4fJF8AanG8TKxyHx1KsIVSd29NXGlgaubJ
+         t75aLHjOsQzsY4hFGLWf78g07ji1zA0yrnOE75/pKC8zUrC04jZbnDKXm+vsFrX2gfMJ
+         vK0Y3EzeGk7x7uA1WPcLRInGnHWiEA61/HiJvcHdgz4fO9NyvEsUatbLv+JO6pXoHRrG
+         x/mw==
+X-Gm-Message-State: APjAAAWx0W7QXAKvN7j/1L32gdWIj7gznPLsY5s1WECMzHIEowbsWhFl
+        nmO9ttuHu/lfi+ccP9xGqRQ=
+X-Google-Smtp-Source: APXvYqx9tHLXz1eLp/4aXO/Vef4AWTvUfN/xQL/YJmMXhTNtvCiEqccIipw8UN5VprCIcdbCvTviRw==
+X-Received: by 2002:a02:2e54:: with SMTP id u20mr5991984jae.5.1567710999653;
+        Thu, 05 Sep 2019 12:16:39 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id h70sm5177098iof.48.2019.09.05.12.16.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 12:16:38 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 13:16:37 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bodong@mellanox.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, ddutile@redhat.com, berrange@redhat.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH] PCI/IOV: Make SR-IOV attributes with mode 0664 use 0644
+Message-ID: <20190905191637.GA22813@JATN>
+References: <20190905063226.43269-1-skunberg.kelsey@gmail.com>
+ <20190905073416.GC29933@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905073416.GC29933@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Move PCI device setup from pcibios_add_device() and pcibios_fixup_bus() to
-pcibios_bus_add_device(). This ensures that platform-specific DMA and IOMMU
-setup occurs after the device has been registered in sysfs, which is a
-requirement for IOMMU group assignment to work
+On Thu, Sep 05, 2019 at 09:34:16AM +0200, Greg KH wrote:
+> On Thu, Sep 05, 2019 at 12:32:26AM -0600, Kelsey Skunberg wrote:
+> > sriov_numvfs and sriov_drivers_autoprobe have "unusual" permissions (0664)
+> > with no reported or found reason for allowing group write permissions.
+> > libvirt runs as root when dealing with PCI, and chowns files for qemu
+> > needs. There is not a need for the "0664" permissions.
+> > 
+> > sriov_numvfs was introduced in:
+> > 	commit 1789382a72a5 ("PCI: SRIOV control and status via sysfs")
+> > 
+> > sriov_drivers_autoprobe was introduced in:
+> > 	commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to
+> > 			      control VF driver binding")
+> > 
+> > Change sriov_numvfs and sriov_drivers_autoprobe from "0664" permissions to
+> > "0644" permissions.
+> > 
+> > Exchange DEVICE_ATTR() with DEVICE_ATTR_RW() which sets the mode to "0644".
+> > DEVICE_ATTR() should only be used for "unusual" permissions.
+> > 
+> > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+> > ---
+> >  drivers/pci/iov.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > index b335db21c85e..b3f972e8cfed 100644
+> > --- a/drivers/pci/iov.c
+> > +++ b/drivers/pci/iov.c
+> > @@ -375,12 +375,11 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
+> >  }
+> >  
+> >  static DEVICE_ATTR_RO(sriov_totalvfs);
+> > -static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
+> > +static DEVICE_ATTR_RW(sriov_numvfs);
+> >  static DEVICE_ATTR_RO(sriov_offset);
+> >  static DEVICE_ATTR_RO(sriov_stride);
+> >  static DEVICE_ATTR_RO(sriov_vf_device);
+> > -static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
+> > -		   sriov_drivers_autoprobe_store);
+> > +static DEVICE_ATTR_RW(sriov_drivers_autoprobe);
+> >  
+> >  static struct attribute *sriov_dev_attrs[] = {
+> >  	&dev_attr_sriov_totalvfs.attr,
+> 
+> 
+> Nice!!!
+> 
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This fixes IOMMU group assignment for hotplugged devices on pseries, where
-the existing behavior results in IOMMU assignment before registration.
+Thank you for reviewing!
 
-Thanks to Lukas Wunner <lukas@wunner.de> for the suggestion.
-
-Signed-off-by: Shawn Anastasio <shawn@anastas.io>
----
- arch/powerpc/kernel/pci-common.c | 25 +++++++++----------------
- 1 file changed, 9 insertions(+), 16 deletions(-)
-
-diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-index f627e15bb43c..d119c77efb69 100644
---- a/arch/powerpc/kernel/pci-common.c
-+++ b/arch/powerpc/kernel/pci-common.c
-@@ -261,12 +261,6 @@ int pcibios_sriov_disable(struct pci_dev *pdev)
- 
- #endif /* CONFIG_PCI_IOV */
- 
--void pcibios_bus_add_device(struct pci_dev *pdev)
--{
--	if (ppc_md.pcibios_bus_add_device)
--		ppc_md.pcibios_bus_add_device(pdev);
--}
--
- static resource_size_t pcibios_io_size(const struct pci_controller *hose)
- {
- #ifdef CONFIG_PPC64
-@@ -987,15 +981,17 @@ static void pcibios_setup_device(struct pci_dev *dev)
- 		ppc_md.pci_irq_fixup(dev);
- }
- 
--int pcibios_add_device(struct pci_dev *dev)
-+void pcibios_bus_add_device(struct pci_dev *pdev)
- {
--	/*
--	 * We can only call pcibios_setup_device() after bus setup is complete,
--	 * since some of the platform specific DMA setup code depends on it.
--	 */
--	if (dev->bus->is_added)
--		pcibios_setup_device(dev);
-+	/* Perform platform-specific device setup */
-+	pcibios_setup_device(pdev);
-+
-+	if (ppc_md.pcibios_bus_add_device)
-+		ppc_md.pcibios_bus_add_device(pdev);
-+}
- 
-+int pcibios_add_device(struct pci_dev *dev)
-+{
- #ifdef CONFIG_PCI_IOV
- 	if (ppc_md.pcibios_fixup_sriov)
- 		ppc_md.pcibios_fixup_sriov(dev);
-@@ -1037,9 +1033,6 @@ void pcibios_fixup_bus(struct pci_bus *bus)
- 
- 	/* Now fixup the bus bus */
- 	pcibios_setup_bus_self(bus);
--
--	/* Now fixup devices on that bus */
--	pcibios_setup_bus_devices(bus);
- }
- EXPORT_SYMBOL(pcibios_fixup_bus);
- 
--- 
-2.20.1
-
+-Kelsey
