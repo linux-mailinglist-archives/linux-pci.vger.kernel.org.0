@@ -2,36 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 16BC2A99A2
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 06:32:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0F8AA99A1
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 06:32:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726097AbfIEEcR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1726115AbfIEEcR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 5 Sep 2019 00:32:17 -0400
-Received: from alpha.anastas.io ([104.248.188.109]:47881 "EHLO
+Received: from alpha.anastas.io ([104.248.188.109]:43491 "EHLO
         alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbfIEEcR (ORCPT
+        with ESMTP id S1725935AbfIEEcR (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 00:32:17 -0400
+X-Greylist: delayed 580 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Sep 2019 00:32:17 EDT
 Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by alpha.anastas.io (Postfix) with ESMTPSA id 917C57FD2C;
-        Wed,  4 Sep 2019 23:22:37 -0500 (CDT)
+        by alpha.anastas.io (Postfix) with ESMTPSA id 7047184B9D;
+        Wed,  4 Sep 2019 23:22:38 -0500 (CDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
-        t=1567657358; bh=U9Hy1r4wWybxrfqHJoXQcodngTj6V3GZKa4Pdw7Ow9s=;
+        t=1567657359; bh=EmICgee2nNUFVTp9r6uhX6GMoMfnTqEaFNlse3ssPuc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CuoyYyQ/p51CZjJ3Ii5+QqxX4NYUdEW0g3JdQgjzdrXYEB/cUrDDfErPx+RGI7H7l
-         qj2gaXkjw2az0WlGb4010Lp+0TNgZXGAeash2vzAoPl0EroKpFr/Mufa+v9x6mi56Q
-         F04N2em4ZETL7P8EyslZ04uX+MsjTw5bozpBn9zctG/HiMPhrgkDw2jQdzMRttIbwr
-         xTpFgaSisa6oBMO1U9r6pcSB6v579TjHZez+uMnXfj/K1JLgFrSnMAPvu+RIzE+tMQ
-         8A1W4W07HkcRbtJ7yrDDtmlNa8Tj7w0XnFVrygela1x8Vz3d2T0oiJUIudy1r5uz/8
-         RVFUIxCTxvb4w==
+        b=jWXbsz+qQlJDwPgeEAudXQxT2TUqfzpY3dno5FjhVl+ySQe2k4YPNyAJiizFaGOW8
+         30eusimYMGDWVV7N5VurXjBJTEyl9yrF8DKNx07OkJqUG2CdXRF3XRiveqkvL/Agu/
+         R6S4+HhElHqIKVI/so6TWwk0f1gVazk4YZXazlJ55PF1irrgDOBWGOUXfsQIvvVwHJ
+         7j3xsXfcQuaVRbQMPLQRFFCKtF3+qi+oI/7z5Fdxia2KRbzsq1y0cm4CcmwenSb1pV
+         4P4WG4fVojFNGuUYaAN1N+DR6BxczBQEEjiY2rmffJyPKAxGrybqVtkVYodtVYRY/i
+         SAbsgciFBr2aA==
 From:   Shawn Anastasio <shawn@anastas.io>
 To:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 Cc:     bhelgaas@google.com, mpe@ellerman.id.au, aik@ozlabs.ru,
         benh@kernel.crashing.org, sbobroff@linux.ibm.com, oohall@gmail.com
-Subject: [PATCH 1/2] PCI: Introduce pcibios_fixup_dev()
-Date:   Wed,  4 Sep 2019 23:22:14 -0500
-Message-Id: <20190905042215.3974-2-shawn@anastas.io>
+Subject: [PATCH 2/2] powerpc/pci: Fix IOMMU setup for hotplugged devices on pseries
+Date:   Wed,  4 Sep 2019 23:22:15 -0500
+Message-Id: <20190905042215.3974-3-shawn@anastas.io>
 In-Reply-To: <20190905042215.3974-1-shawn@anastas.io>
 References: <20190905042215.3974-1-shawn@anastas.io>
 MIME-Version: 1.0
@@ -41,61 +42,45 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Introduce pcibios_fixup_dev to allow platform-specific code to perform
-final setup of a PCI device after it has been registered in sysfs.
+Move PCI device setup from pcibios_add_device() to pcibios_fixup_dev().
+This ensures that platform-specific DMA and IOMMU setup occurs after the
+device has been registered in sysfs, which is a requirement for IOMMU group
+assignment to work.
 
-The default implementation is a no-op.
+This fixes IOMMU group assignment for hotplugged devices on pseries, where
+the existing behavior results in IOMMU assignment before registration.
 
 Signed-off-by: Shawn Anastasio <shawn@anastas.io>
 ---
- drivers/pci/probe.c | 14 ++++++++++++++
- include/linux/pci.h |  1 +
- 2 files changed, 15 insertions(+)
+ arch/powerpc/kernel/pci-common.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index a3c7338fad86..14eb7ee38794 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2652,6 +2652,17 @@ static void pci_set_msi_domain(struct pci_dev *dev)
- 	dev_set_msi_domain(&dev->dev, d);
+diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
+index f627e15bb43c..21b4761bb0ed 100644
+--- a/arch/powerpc/kernel/pci-common.c
++++ b/arch/powerpc/kernel/pci-common.c
+@@ -987,15 +987,14 @@ static void pcibios_setup_device(struct pci_dev *dev)
+ 		ppc_md.pci_irq_fixup(dev);
  }
  
-+/**
-+ * pcibios_fixup_dev - Platform-specific device setup
-+ * @dev: Device to set up
-+ *
-+ * Default empty implementation. Replace with an architecture-specific
-+ * setup routine, if necessary.
-+ */
-+void __weak pcibios_fixup_dev(struct pci_dev *dev)
-+{
-+}
-+
- void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
+-int pcibios_add_device(struct pci_dev *dev)
++void pcibios_fixup_dev(struct pci_dev *dev)
  {
- 	int ret;
-@@ -2699,6 +2710,9 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
- 	dev->match_driver = false;
- 	ret = device_add(&dev->dev);
- 	WARN_ON(ret < 0);
-+
-+	/* Allow platform-specific code to perform final setup of device */
-+	pcibios_fixup_dev(dev);
- }
+-	/*
+-	 * We can only call pcibios_setup_device() after bus setup is complete,
+-	 * since some of the platform specific DMA setup code depends on it.
+-	 */
+-	if (dev->bus->is_added)
+-		pcibios_setup_device(dev);
++	/* Device is registered in sysfs and ready to be set up */
++	pcibios_setup_device(dev);
++}
  
- struct pci_dev *pci_scan_single_device(struct pci_bus *bus, int devfn)
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 82e4cd1b7ac3..83eb0e241137 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -960,6 +960,7 @@ void pcibios_bus_add_device(struct pci_dev *pdev);
- void pcibios_add_bus(struct pci_bus *bus);
- void pcibios_remove_bus(struct pci_bus *bus);
- void pcibios_fixup_bus(struct pci_bus *);
-+void pcibios_fixup_dev(struct pci_dev *);
- int __must_check pcibios_enable_device(struct pci_dev *, int mask);
- /* Architecture-specific versions may override this (weak) */
- char *pcibios_setup(char *str);
++int pcibios_add_device(struct pci_dev *dev)
++{
+ #ifdef CONFIG_PCI_IOV
+ 	if (ppc_md.pcibios_fixup_sriov)
+ 		ppc_md.pcibios_fixup_sriov(dev);
 -- 
 2.20.1
 
