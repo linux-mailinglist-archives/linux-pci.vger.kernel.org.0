@@ -2,184 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 78A2BAAEA1
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Sep 2019 00:41:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67C09AAEBC
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Sep 2019 00:54:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731294AbfIEWlF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 18:41:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47238 "EHLO mx1.redhat.com"
+        id S1727604AbfIEWx7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 18:53:59 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:60700 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726837AbfIEWlF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Sep 2019 18:41:05 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A015C300BEB4;
-        Thu,  5 Sep 2019 22:41:04 +0000 (UTC)
-Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 83EDB19C77;
-        Thu,  5 Sep 2019 22:41:02 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 23:41:00 +0100
-From:   Alex Williamson <alex.williamson@redhat.com>
+        id S1726837AbfIEWx7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 5 Sep 2019 18:53:59 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1i60dH-0003db-Tc; Fri, 06 Sep 2019 08:53:41 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 06 Sep 2019 08:53:32 +1000
+Date:   Fri, 6 Sep 2019 08:53:32 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Srinath Mannam <srinath.mannam@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Abhinav Ratna <abhinav.ratna@broadcom.com>
-Subject: Re: [PATCH] PCI: Add PCIE ACS quirk for IPROC PAXB
-Message-ID: <20190905234100.4799bad8@x1.home>
-In-Reply-To: <20190905222649.GK103977@google.com>
-References: <1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com>
-        <20190905222649.GK103977@google.com>
-Organization: Red Hat
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-pci@vger.kernel.org,
+        Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "pvanleeuwen@insidesecure.com" <pvanleeuwen@insidesecure.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: PCI: Add stub pci_irq_vector and others
+Message-ID: <20190905225332.GA4123@gondor.apana.org.au>
+References: <20190902141910.1080-1-yuehaibing@huawei.com>
+ <20190903014518.20880-1-yuehaibing@huawei.com>
+ <MN2PR20MB29732EEECB217DDDF822EDA5CAB80@MN2PR20MB2973.namprd20.prod.outlook.com>
+ <CAKv+Gu8PVYyA-mzjrhR6r6upMc=xzpAhsbkuKRtb8T2noo_2XQ@mail.gmail.com>
+ <20190904122600.GA28660@gondor.apana.org.au>
+ <20190905210722.GH103977@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 05 Sep 2019 22:41:04 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905210722.GH103977@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 5 Sep 2019 17:26:49 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> [+cc Alex]
-> 
-> On Tue, Aug 20, 2019 at 10:09:45AM +0530, Srinath Mannam wrote:
-> > From: Abhinav Ratna <abhinav.ratna@broadcom.com>
+On Thu, Sep 05, 2019 at 04:07:22PM -0500, Bjorn Helgaas wrote:
+>
+> > This patch adds stub functions pci_alloc_irq_vectors_affinity and
+> > pci_irq_vector when CONFIG_PCI is off so that drivers can use them
+> > without resorting to ifdefs.
 > > 
-> > IPROC PAXB RC doesn't support ACS capabilities and control registers.
-> > Add quirk to have separate IOMMU groups for all EPs and functions connected
-> > to root port, by masking RR/CR/SV/UF bits.
+> > It also moves the PCI_IRQ_* macros outside of the ifdefs so that
+> > they are always available.
 > > 
-> > Signed-off-by: Abhinav Ratna <abhinav.ratna@broadcom.com>
-> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>  
+> > Fixes: 625f269a5a7a ("crypto: inside-secure - add support for...")
 > 
-> I tentatively applied this to pci/misc with Scott's ack for v5.4.
+> I don't see this commit in Linus' tree yet.
 > 
-> I tweaked the patch itself to follow the style of similar quirks
-> (interdiff is below, plus a diff of the commit log).  Please make sure
-> I didn't break it.
-> 
-> I also went out on a limb and reworded the comment to give what I
-> *think* is the justification for this patch, as opposed to merely a
-> description of the code.  I'm making a lot of assumptions there, so
-> please confirm that they're correct, or supply alternate justification
-> if they're not.
+> I'd like to include the actual reason for this patch in the commit
+> log.  I assume it's fixing a build issue, but I'd like to be a little
+> more specific about it.
 
-Agreed, this really needs to be the vendor vouching for ACS equivalent
-functionality, not simply splitting IOMMU groups because it's
-inconvenient.  Thanks,
+The patch in question is
 
-Alex
+https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git/commit/?id=625f269a5a7a3643771320387e474bd0a61d9654
 
-> 
-> > ---
-> >  drivers/pci/quirks.c | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index 0f16acc..f9584c0 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -4466,6 +4466,21 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
-> >  	return acs_flags ? 0 : 1;
-> >  }
-> >  
-> > +static int pcie_quirk_brcm_bridge_acs(struct pci_dev *dev, u16 acs_flags)
-> > +{
-> > +	/*
-> > +	 * IPROC PAXB RC doesn't support ACS capabilities and control registers.
-> > +	 * Add quirk to to have separate IOMMU groups for all EPs and functions
-> > +	 * connected to root port, by masking RR/CR/SV/UF bits.
-> > +	 */
-> > +
-> > +	u16 flags = (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV);
-> > +	int ret = acs_flags & ~flags ? 0 : 1;
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +
-> >  static const struct pci_dev_acs_enabled {
-> >  	u16 vendor;
-> >  	u16 device;
-> > @@ -4559,6 +4574,7 @@ static const struct pci_dev_acs_enabled {
-> >  	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
-> >  	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
-> >  	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
-> > +	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pcie_quirk_brcm_bridge_acs },
-> >  	{ 0 }
-> >  };  
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 77c0330ac922..2edbce35e8c5 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4466,21 +4466,19 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
->  	return acs_flags ? 0 : 1;
->  }
->  
-> -static int pcie_quirk_brcm_bridge_acs(struct pci_dev *dev, u16 acs_flags)
-> +static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
->  {
->  	/*
-> -	 * IPROC PAXB RC doesn't support ACS capabilities and control registers.
-> -	 * Add quirk to to have separate IOMMU groups for all EPs and functions
-> -	 * connected to root port, by masking RR/CR/SV/UF bits.
-> +	 * iProc PAXB Root Ports don't advertise an ACS capability, but
-> +	 * they do not allow peer-to-peer transactions between Root Ports.
-> +	 * Allow each Root Port to be in a separate IOMMU group by masking
-> +	 * SV/RR/CR/UF bits.
->  	 */
-> +	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
->  
-> -	u16 flags = (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV);
-> -	int ret = acs_flags & ~flags ? 0 : 1;
-> -
-> -	return ret;
-> +	return acs_flags ? 0 : 1;
->  }
->  
-> -
->  static const struct pci_dev_acs_enabled {
->  	u16 vendor;
->  	u16 device;
-> @@ -4574,7 +4572,7 @@ static const struct pci_dev_acs_enabled {
->  	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
->  	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
->  	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
-> -	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pcie_quirk_brcm_bridge_acs },
-> +	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
->  	{ 0 }
->  };
->  
-> 
-> 
-> 
-> @@ -1,49 +1,49 @@
-> -commit b50ae502eff0
-> +commit 46b2c32df7a4
->  Author: Abhinav Ratna <abhinav.ratna@broadcom.com>
->  Date:   Tue Aug 20 10:09:45 2019 +0530
->  
-> -    PCI: Add PCIE ACS quirk for IPROC PAXB
-> +    PCI: Add ACS quirk for iProc PAXB
->      
-> -    IPROC PAXB RC doesn't support ACS capabilities and control registers.
-> -    Add quirk to have separate IOMMU groups for all EPs and functions connected
-> -    to root port, by masking RR/CR/SV/UF bits.
-> +    iProc PAXB Root Ports don't advertise an ACS capability, but they do not
-> +    allow peer-to-peer transactions between Root Ports.  Add an ACS quirk so
-> +    each Root Port can be in a separate IOMMU group.
->      
-> +    [bhelgaas: commit log, comment, use common implementation style]
->      Link: https://lore.kernel.org/r/1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com
->      Signed-off-by: Abhinav Ratna <abhinav.ratna@broadcom.com>
->      Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
->      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> +    Acked-by: Scott Branden <scott.branden@broadcom.com>
->  
-
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
