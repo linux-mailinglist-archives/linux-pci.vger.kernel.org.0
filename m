@@ -2,119 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 16FDFAA506
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 15:50:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CA17AA53F
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 16:00:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731917AbfIENu1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 09:50:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:45654 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731008AbfIENu1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:50:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BCEBC28;
-        Thu,  5 Sep 2019 06:50:26 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7CB63F67D;
-        Thu,  5 Sep 2019 06:50:25 -0700 (PDT)
-Subject: Re: PCI/kernel msi code vs GIC ITS driver conflict?
-To:     John Garry <john.garry@huawei.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
- <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
- <ef258ec7-877c-406a-3d88-80ff79b823f2@huawei.com>
- <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
- <8f1c1fe6-c0d4-1805-b119-6a48a4900e6d@kernel.org>
- <84f6756f-79f2-2e46-fe44-9a46be69f99d@huawei.com>
- <651b4d5f-2d86-65dc-1232-580445852752@kernel.org>
- <8ac8e372-15a0-2f95-089c-c189b619ea62@huawei.com>
- <73c22eaa-172e-0fba-7a44-381106dee50d@kernel.org>
- <a73262e6-6ece-4946-896b-2dad5ca28417@huawei.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <a90e6f99-cad3-8eda-dd08-0ab05ed9ca04@kernel.org>
-Date:   Thu, 5 Sep 2019 14:50:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1730778AbfIEOAp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 10:00:45 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:38982 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbfIEOAp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 10:00:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1567692045; x=1599228045;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=mOTha34gu7LiNjrKRb5+XMuiqCCl6REbYMmzCsT4pk0=;
+  b=mZoYWvbbbuWJjUthitgqqn/CPhKaIQk4nZoEWKX8tpmx7DCm0pHTc/Cp
+   /n6VaN+OD8mF7wZcnfdb/LHwc28SY1ogxtSO9QoUm34/8jC9x6OUSfT5U
+   rcr4vm5NDr41wIsr+Mero4/FOmU1j4nx+ZfWkugGA2djQB78R94doAYD1
+   I=;
+X-IronPort-AV: E=Sophos;i="5.64,470,1559520000"; 
+   d="scan'208";a="827733109"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 05 Sep 2019 14:00:42 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id A241CA1E4C;
+        Thu,  5 Sep 2019 14:00:38 +0000 (UTC)
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 5 Sep 2019 14:00:38 +0000
+Received: from u9ff250417f405e.ant.amazon.com (10.43.160.20) by
+ EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 5 Sep 2019 14:00:31 +0000
+From:   Jonathan Chocron <jonnyc@amazon.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <andrew.murray@arm.com>, <dwmw@amazon.co.uk>,
+        <benh@kernel.crashing.org>, <alisaidi@amazon.com>,
+        <ronenk@amazon.com>, <barakw@amazon.com>, <talel@amazon.com>,
+        <hanochu@amazon.com>, <hhhawa@amazon.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
+Subject: [PATCH v5 0/7] Amazon's Annapurna Labs DT-based PCIe host controller driver
+Date:   Thu, 5 Sep 2019 17:00:14 +0300
+Message-ID: <20190905140018.5139-1-jonnyc@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <a73262e6-6ece-4946-896b-2dad5ca28417@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.20]
+X-ClientProxiedBy: EX13D06UWA002.ant.amazon.com (10.43.160.143) To
+ EX13D13UWA001.ant.amazon.com (10.43.160.136)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 05/09/2019 14:26, John Garry wrote:
-> On 05/09/2019 12:22, Marc Zyngier wrote:
->> OK, debug was slightly off, but it is interesting that the driver didn't
->> unmap the device, either because it is flagged as shared (with what?) or
->> that additional interrupts are allocated in the lpi_map for this
->> instance.
->>
->> Here's an updated debug patch. Can you please run the same thing again?
->>
-> 
-> As requested:
-> 
-> root@(none)$ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/unbind
-> 
-> <snip>
-> 
-> [   78.593897] Freed devid 7410 event 0 LPI 0
-> [   78.597990] Freed devid 7410 event 1 LPI 0
-> [   78.602080] Freed devid 7410 event 2 LPI 0
-> [   78.606169] Freed devid 7410 event 3 LPI 0
-> [   78.610253] Freed devid 7410 event 4 LPI 0
-> [   78.614337] Freed devid 7410 event 5 LPI 0
-> [   78.618422] Freed devid 7410 event 6 LPI 0
-> [   78.622506] Freed devid 7410 event 7 LPI 0
-> [   78.626590] Freed devid 7410 event 8 LPI 0
-> [   78.630674] Freed devid 7410 event 9 LPI 0
-> [   78.634758] Freed devid 7410 event 10 LPI 0
-> [   78.638930] Freed devid 7410 event 11 LPI 0
-> [   78.643101] Freed devid 7410 event 12 LPI 0
-> [   78.647272] Freed devid 7410 event 13 LPI 0
-> [   78.651445] Freed devid 7410 event 14 LPI 0
-> [   78.655616] Freed devid 7410 event 15 LPI 0
-> [   78.659787] Freed devid 7410 event 16 LPI 0
-> [   78.663959] Unmap devid 7410 shared 0 lpi_map 17-31
+This series adds support for Amazon's Annapurna Labs DT-based PCIe host
+controller driver.
+Additionally, it adds 3 quirks (ACS, VPD and MSI-X) and 2 generic DWC patches.
 
-Bah. Try this for size...
+Changes since v4:
+- Moved the HEADER_TYPE validations to after pp->ops->host_init() and
+  ep->ops->ep_init()
+- Changed to dw_pcie_rd_own_conf() instead of dw_pcie_readb_dbi() for
+  reading the HEADER_TYPE
+- Used exsitng quirk_blacklist_vpd() instead of quirk_al_vpd_release()
+- Added a newline in ACS quirk comment
 
-	M.
+Changes since v3:
+- Removed PATCH 8/8 since the usage of the PCI flags will be discussed
+  in the upcoming LPC
+- Align commit subject with the folder convention
+- Added explanation regarding ECAM "overload" mechanism
+- Switched to read/write{_relaxed} APIs
+- Modified a dev_err to dev_dbg
+- Removed unnecessary variable
+- Removed driver details from dt-binding description
+- Changed to SoC specific compatibles
+- Fixed typo in a commit message
+- Added comment regarding MSI in the MSI-X quirk
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 1b5c3672aea2..c3a8d732805f 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2641,14 +2641,13 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 	struct its_node *its = its_dev->its;
- 	int i;
- 
-+	bitmap_release_region(its_dev->event_map.lpi_map,
-+			      its_get_event_id(irq_domain_get_irq_data(domain, virq)),
-+			      get_count_order(nr_irqs));
-+
- 	for (i = 0; i < nr_irqs; i++) {
- 		struct irq_data *data = irq_domain_get_irq_data(domain,
- 								virq + i);
--		u32 event = its_get_event_id(data);
--
--		/* Mark interrupt index as unused */
--		clear_bit(event, its_dev->event_map.lpi_map);
--
- 		/* Nuke the entry in the domain */
- 		irq_domain_reset_irq_data(data);
- 	}
+Changes since v2:
+- Added al_pcie_controller_readl/writel() wrappers
+- Reorganized local vars in several functions according to reverse
+  tree structure
+- Removed unnecessary check of ret value
+- Changed return type of al_pcie_config_prepare() from int to void
+- Removed check if link is up from probe() [done internally in
+  dw_pcie_rd/wr_conf()]
 
+Changes since v1:
+- Added comment regarding 0x0031 being used as a dev_id for non root-port devices as well
+- Fixed different message/comment/print wordings
+- Added panic stacktrace to commit message of MSI-x quirk patch
+- Changed to pci_warn() instead of dev_warn()
+- Added unit_address after node_name in dt-binding
+- Updated Kconfig help description
+- Used GENMASK and FIELD_PREP/GET where appropriate
+- Removed leftover field from struct al_pcie and moved all ptrs to
+  the beginning
+- Re-wrapped function definitions and invocations to use fewer lines
+- Change %p to %px in dbg prints in rd/wr_conf() functions
+- Removed validation that the port is configured to RC mode (as this is
+  added generically in PATCH 7/8)
+- Removed unnecessary variable initializations
+- Swtiched to %pR for printing resources
+
+
+Ali Saidi (1):
+  PCI: Add ACS quirk for Amazon Annapurna Labs root ports
+
+Jonathan Chocron (6):
+  PCI: Add Amazon's Annapurna Labs vendor ID
+  PCI/VPD: Prevent VPD access for Amazon's Annapurna Labs Root Port
+  PCI: Add quirk to disable MSI-X support for Amazon's Annapurna Labs
+    Root Port
+  dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
+  PCI: dwc: al: Add support for DW based driver type
+  PCI: dwc: Add validation that PCIe core is set to correct mode
+
+ .../devicetree/bindings/pci/pcie-al.txt       |  46 +++
+ MAINTAINERS                                   |   3 +-
+ drivers/pci/controller/dwc/Kconfig            |  12 +
+ drivers/pci/controller/dwc/pcie-al.c          | 365 ++++++++++++++++++
+ .../pci/controller/dwc/pcie-designware-ep.c   |   8 +
+ .../pci/controller/dwc/pcie-designware-host.c |  16 +
+ drivers/pci/quirks.c                          |  38 ++
+ drivers/pci/vpd.c                             |   6 +
+ include/linux/pci_ids.h                       |   2 +
+ 9 files changed, 495 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
 
 -- 
-Jazz is not dead, it just smells funny...
+2.17.1
+
