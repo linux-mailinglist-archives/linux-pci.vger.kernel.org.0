@@ -2,159 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BE9CAAD95
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 23:07:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3E0FAADB4
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 23:16:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387631AbfIEVHZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 17:07:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726115AbfIEVHZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Sep 2019 17:07:25 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04535206DF;
-        Thu,  5 Sep 2019 21:07:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567717644;
-        bh=F0QccAvsqT3G/VxnqWYuBJOd6TGCLtEmx4DD9gWPJr0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HbA9Rr2GXnyBxWpfnLlf/VmNlWOxLLa/gr/GklgbNkv2FvyjwdTNA0oeAlB5O0Wmi
-         i7E3MUwD1hZ36oMqwXT8mI0rh0MeHhvlGCM/rXj59oEz+RDHZULGHFCTPoJNKqo0PM
-         DH4quk04WsMxQLQlN/9Ig/Z5J5vJ2kPRPe/nz+dQ=
-Date:   Thu, 5 Sep 2019 16:07:22 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-pci@vger.kernel.org,
-        Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "pvanleeuwen@insidesecure.com" <pvanleeuwen@insidesecure.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: PCI: Add stub pci_irq_vector and others
-Message-ID: <20190905210722.GH103977@google.com>
-References: <20190902141910.1080-1-yuehaibing@huawei.com>
- <20190903014518.20880-1-yuehaibing@huawei.com>
- <MN2PR20MB29732EEECB217DDDF822EDA5CAB80@MN2PR20MB2973.namprd20.prod.outlook.com>
- <CAKv+Gu8PVYyA-mzjrhR6r6upMc=xzpAhsbkuKRtb8T2noo_2XQ@mail.gmail.com>
- <20190904122600.GA28660@gondor.apana.org.au>
+        id S2388359AbfIEVQL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 17:16:11 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35918 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfIEVQK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Sep 2019 17:16:10 -0400
+Received: by mail-ed1-f68.google.com with SMTP id g24so4275170edu.3;
+        Thu, 05 Sep 2019 14:16:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ke7ZiPqKDeHvlrOFd98Cv/8z7gFqetiE/M/oVJxGJv8=;
+        b=Nz21zDiPk1fH/DW15Q2R1V1IEkIvjk7dw3bLBTuwOY6qlkDW5O8rOONi9bGtaeCBbD
+         4tpVsWSE+QFnuZXoSJDePNyb+LORYtbGc3rMGVyFuW+9cmCnTmL577qUciD18aYC2SvQ
+         jc+SRjWRo0KW8I7RW6yrYK7ywP6FEm0b6LP/xV3mwOsOVEuYKjARvfj7xydO4CY4BmZN
+         WoK5zEqJhhujko1NCZCBtelpxVnI96RziJWGftgeZAd/OV71xqN1ZNPlYqC6kCHRGP0c
+         JhLhb0DqL9WQge7O3fZLqdLHzdM73pOkWhh8SMq5bU24DVl8VWMHk8YLm1vJ3Ev9A6nW
+         Fbag==
+X-Gm-Message-State: APjAAAU3l+FR4wKnrb/aVpMbvgoY3RnON70eE7D6uLlGHKuUzS8BctWv
+        5JapVvRJXXGQbaYoiVPZdX64+TxiO4U=
+X-Google-Smtp-Source: APXvYqxOuRTdfEcN5G+oqBahkGBcnt2M2uKQnJ013r2UU5HDk85O8jrPzFGaRykws6WjTWilnv8NGQ==
+X-Received: by 2002:a50:c10a:: with SMTP id l10mr6045903edf.79.1567718168828;
+        Thu, 05 Sep 2019 14:16:08 -0700 (PDT)
+Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.gmail.com with ESMTPSA id f23sm568892edd.39.2019.09.05.14.16.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Sep 2019 14:16:08 -0700 (PDT)
+Subject: Re: [PATCH v4 0/4] Simplify PCIe hotplug indicator control
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        linux-kernel@vger.kernel.org
+References: <20190903111021.1559-1-efremov@linux.com>
+ <20190905210102.GG103977@google.com>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <3e5cbc0f-ca9f-bbbe-5486-05915fe4ec63@linux.com>
+Date:   Fri, 6 Sep 2019 00:16:06 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904122600.GA28660@gondor.apana.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190905210102.GG103977@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 10:26:00PM +1000, Herbert Xu wrote:
-> On Wed, Sep 04, 2019 at 05:10:34AM -0700, Ard Biesheuvel wrote:
-> >
-> > This is the reason we have so many empty static inline functions in
-> > header files - it ensures that the symbols are declared even if the
-> > only invocations are from dead code.
-> 
-> Does this patch work?
-> 
-> ---8<---
-> This patch adds stub functions pci_alloc_irq_vectors_affinity and
-> pci_irq_vector when CONFIG_PCI is off so that drivers can use them
-> without resorting to ifdefs.
-> 
-> It also moves the PCI_IRQ_* macros outside of the ifdefs so that
-> they are always available.
-> 
-> Fixes: 625f269a5a7a ("crypto: inside-secure - add support for...")
 
-I don't see this commit in Linus' tree yet.
 
-I'd like to include the actual reason for this patch in the commit
-log.  I assume it's fixing a build issue, but I'd like to be a little
-more specific about it.
-
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: YueHaibing <yuehaibing@huawei.com>
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+On 06.09.2019 00:01, Bjorn Helgaas wrote:
+> On Tue, Sep 03, 2019 at 02:10:17PM +0300, Denis Efremov wrote:
+>> PCIe defines two optional hotplug indicators: a Power indicator and an
+>> Attention indicator. Both are controlled by the same register, and each
+>> can be on, off or blinking. The current interfaces
+>> (pciehp_green_led_{on,off,blink}() and pciehp_set_attention_status()) are
+>> non-uniform and require two register writes in many cases where we could
+>> do one.
+>>
+>> This patchset introduces the new function pciehp_set_indicators(). It
+>> allows one to set two indicators with a single register write. All
+>> calls to previous interfaces (pciehp_green_led_* and
+>> pciehp_set_attention_status()) are replaced with a new one. Thus,
+>> the amount of duplicated code for setting indicators is reduced.
+>>
+>> Changes in v4:
+>>   - Changed the inputs validation in pciehp_set_indicators()
+>>   - Moved PCI_EXP_SLTCTL_ATTN_IND_NONE, PCI_EXP_SLTCTL_PWR_IND_NONE
+>>     to drivers/pci/hotplug/pciehp.h and set to -1 for not interfering
+>>     with reserved values in the PCIe Base spec
+>>   - Added set_power_indicator define
+>>
+>> Changes in v3:
+>>   - Changed pciehp_set_indicators() to work with existing
+>>     PCI_EXP_SLTCTL_* macros
+>>   - Reworked the inputs validation in pciehp_set_indicators()
+>>   - Removed pciehp_set_attention_status() and pciehp_green_led_*()
+>>     completely
+>>
+>> Denis Efremov (4):
+>>   PCI: pciehp: Add pciehp_set_indicators() to jointly set LED indicators
+>>   PCI: pciehp: Switch LED indicators with a single write
+>>   PCI: pciehp: Remove pciehp_set_attention_status()
+>>   PCI: pciehp: Remove pciehp_green_led_{on,off,blink}()
+>>
+>>  drivers/pci/hotplug/pciehp.h      | 12 ++++--
+>>  drivers/pci/hotplug/pciehp_core.c |  7 ++-
+>>  drivers/pci/hotplug/pciehp_ctrl.c | 26 +++++------
+>>  drivers/pci/hotplug/pciehp_hpc.c  | 72 +++++++------------------------
+>>  include/uapi/linux/pci_regs.h     |  1 +
+>>  5 files changed, 45 insertions(+), 73 deletions(-)
 > 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 9e700d9f9f28..74415ee62211 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -925,6 +925,11 @@ enum {
->  	PCI_SCAN_ALL_PCIE_DEVS	= 0x00000040,	/* Scan all, not just dev 0 */
->  };
->  
-> +#define PCI_IRQ_LEGACY		(1 << 0) /* Allow legacy interrupts */
-> +#define PCI_IRQ_MSI		(1 << 1) /* Allow MSI interrupts */
-> +#define PCI_IRQ_MSIX		(1 << 2) /* Allow MSI-X interrupts */
-> +#define PCI_IRQ_AFFINITY	(1 << 3) /* Auto-assign affinity */
-> +
->  /* These external functions are only available when PCI support is enabled */
->  #ifdef CONFIG_PCI
->  
-> @@ -1408,11 +1413,6 @@ resource_size_t pcibios_window_alignment(struct pci_bus *bus,
->  int pci_set_vga_state(struct pci_dev *pdev, bool decode,
->  		      unsigned int command_bits, u32 flags);
->  
-> -#define PCI_IRQ_LEGACY		(1 << 0) /* Allow legacy interrupts */
-> -#define PCI_IRQ_MSI		(1 << 1) /* Allow MSI interrupts */
-> -#define PCI_IRQ_MSIX		(1 << 2) /* Allow MSI-X interrupts */
-> -#define PCI_IRQ_AFFINITY	(1 << 3) /* Auto-assign affinity */
-> -
->  /*
->   * Virtual interrupts allow for more interrupts to be allocated
->   * than the device has interrupts for. These are not programmed
-> @@ -1517,14 +1517,6 @@ static inline int pci_irq_get_node(struct pci_dev *pdev, int vec)
->  }
->  #endif
->  
-> -static inline int
-> -pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
-> -		      unsigned int max_vecs, unsigned int flags)
-> -{
-> -	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags,
-> -					      NULL);
-> -}
-> -
->  /**
->   * pci_irqd_intx_xlate() - Translate PCI INTx value to an IRQ domain hwirq
->   * @d: the INTx IRQ domain
-> @@ -1780,8 +1772,29 @@ static inline const struct pci_device_id *pci_match_id(const struct pci_device_i
->  							 struct pci_dev *dev)
->  { return NULL; }
->  static inline bool pci_ats_disabled(void) { return true; }
-> +
-> +static inline int pci_irq_vector(struct pci_dev *dev, unsigned int nr)
-> +{
-> +	return -EINVAL;
-> +}
-> +
-> +static inline int
-> +pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
-> +			       unsigned int max_vecs, unsigned int flags,
-> +			       struct irq_affinity *aff_desc)
-> +{
-> +	return -ENOSPC;
-> +}
->  #endif /* CONFIG_PCI */
->  
-> +static inline int
-> +pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
-> +		      unsigned int max_vecs, unsigned int flags)
-> +{
-> +	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags,
-> +					      NULL);
-> +}
-> +
->  #ifdef CONFIG_PCI_ATS
->  /* Address Translation Service */
->  void pci_ats_init(struct pci_dev *dev);
-> -- 
-> Email: Herbert Xu <herbert@gondor.apana.org.au>
-> Home Page: http://gondor.apana.org.au/~herbert/
-> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> Thanks, Denis, I applied these to pci/pciehp for v5.4.  I think this
+> is a great improvement.
+> 
+> I tweaked a few things:
+> 
+>   - Updated comments to refer to "Power" intead of "green",
+>     "Attention" instead of "amber", and "Indicator" instead of "LED".
+> 
+>   - Replaced PCI_EXP_SLTCTL_ATTN_IND_NONE and
+>     PCI_EXP_SLTCTL_PWR_IND_NONE with INDICATOR_NOOP because I didn't
+>     want them to look like definitions from the spec.
+> 
+>   - Dropped set_power_indicator().  It does make things locally easier
+>     to read, but I think the overall benefit of having fewer
+>     interfaces outweighs that.
+> 
+> The interdiff from your v4 is below.  Let me know if I broke anything.
+
+Thank you for the improvements. Looks good to me.
+
+Regards,
+Denis
