@@ -2,93 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B4B56AA8DB
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 18:24:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C245AA8E5
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2019 18:24:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726008AbfIEQYV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 12:24:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56400 "EHLO mx1.redhat.com"
+        id S1729066AbfIEQYn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 12:24:43 -0400
+Received: from sauhun.de ([88.99.104.3]:58922 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbfIEQYV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:24:21 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4075210F23F6;
-        Thu,  5 Sep 2019 16:24:21 +0000 (UTC)
-Received: from [10.3.116.78] (ovpn-116-78.phx2.redhat.com [10.3.116.78])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D05C660BE1;
-        Thu,  5 Sep 2019 16:24:19 +0000 (UTC)
-Subject: Re: [PATCH] PCI/IOV: Make SR-IOV attributes with mode 0664 use 0644
-To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     bodong@mellanox.com, gregkh@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org, berrange@redhat.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-References: <20190905063226.43269-1-skunberg.kelsey@gmail.com>
-From:   Don Dutile <ddutile@redhat.com>
-Message-ID: <37736cd8-fc9f-5896-030a-d7957cc68113@redhat.com>
-Date:   Thu, 5 Sep 2019 12:24:19 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1728815AbfIEQYn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 5 Sep 2019 12:24:43 -0400
+Received: from localhost (p54B335F6.dip0.t-ipconnect.de [84.179.53.246])
+        by pokefinder.org (Postfix) with ESMTPSA id 835902C00C0;
+        Thu,  5 Sep 2019 18:24:40 +0200 (CEST)
+Date:   Thu, 5 Sep 2019 18:24:40 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     stable@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Subject: Re: [BACKPORT 4.14.y 00/18] Backport candidate from TI 4.14 product
+ kernel
+Message-ID: <20190905162440.GB3695@kunai>
+References: <20190905161759.28036-1-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190905063226.43269-1-skunberg.kelsey@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Thu, 05 Sep 2019 16:24:21 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mojUlQ0s9EVzWg2t"
+Content-Disposition: inline
+In-Reply-To: <20190905161759.28036-1-mathieu.poirier@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 09/05/2019 02:32 AM, Kelsey Skunberg wrote:
-> sriov_numvfs and sriov_drivers_autoprobe have "unusual" permissions (0664)
-> with no reported or found reason for allowing group write permissions.
-> libvirt runs as root when dealing with PCI, and chowns files for qemu
-> needs. There is not a need for the "0664" permissions.
-> 
-> sriov_numvfs was introduced in:
-> 	commit 1789382a72a5 ("PCI: SRIOV control and status via sysfs")
-> 
-> sriov_drivers_autoprobe was introduced in:
-> 	commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to
-> 			      control VF driver binding")
-> 
-> Change sriov_numvfs and sriov_drivers_autoprobe from "0664" permissions to
-> "0644" permissions.
-> 
-> Exchange DEVICE_ATTR() with DEVICE_ATTR_RW() which sets the mode to "0644".
-> DEVICE_ATTR() should only be used for "unusual" permissions.
-> 
-> Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
-> ---
->   drivers/pci/iov.c | 5 ++---
->   1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index b335db21c85e..b3f972e8cfed 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -375,12 +375,11 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
->   }
->   
->   static DEVICE_ATTR_RO(sriov_totalvfs);
-> -static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
-> +static DEVICE_ATTR_RW(sriov_numvfs);
->   static DEVICE_ATTR_RO(sriov_offset);
->   static DEVICE_ATTR_RO(sriov_stride);
->   static DEVICE_ATTR_RO(sriov_vf_device);
-> -static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
-> -		   sriov_drivers_autoprobe_store);
-> +static DEVICE_ATTR_RW(sriov_drivers_autoprobe);
->   
->   static struct attribute *sriov_dev_attrs[] = {
->   	&dev_attr_sriov_totalvfs.attr,
-> 
-Thanks again for the cleanup.
 
-Acked-by: Donald Dutile <ddutile@redhat.com>
+--mojUlQ0s9EVzWg2t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Thu, Sep 05, 2019 at 10:17:41AM -0600, Mathieu Poirier wrote:
+> These patches are backport candidates picked out of TI's 4.14.y tree [1],
+> with most of them already found in the 4.19.y stable tree.
+
+Could you please update your scripting that only the cover-letter and
+I2C related patches will be sent to the I2C mailing list?
+
+
+--mojUlQ0s9EVzWg2t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1xNscACgkQFA3kzBSg
+KbbSXA//Qr7qcTKeYW+0LEBOI7jVtHAd2WvUvM5Dd4cDxWi9xFJLp3mq9RHpUp2n
+C+TcMxlcW7slL8ffeERAPOV3hF+IOWkWiMg+9VUHgK2MvWf+fd3wcmBC/8Cn4DQ3
+B8582lHxQQcVy6jYAvgxkojUFDRrVNS0nSb0Vfb8am062q1DIkiilFqdNPNFoGWy
+UMV6JnawALcKyWVHftb8p66KvJ0SRMNdm36It3CDQhr4ZBRnuLkZD5HN0QKljKYp
+0iFy2yoJnsnTZKmtuEetjVNM01avU8wE0CY9gUb3Oi0xQUfPkqOgQ3WtmeolsOLQ
+PriFq6j8Xt4knqOjVhkyPFpfm1uedxeqNF8uUtRL+r0Fm7ytDTwsGashc7so4D0O
+s1oOEKDeYT6EOVBVC/4oxYJmIeRk6PX8qeyt6+7dz4MEkfrR+yWr10zOFr7wX6Bh
+xmDd5nGeWLVCUnRWaXmph+QTjUlmsP/bKDuTtpkVSuM5X5y62NYpZ7WqsQV2Hob9
+NsYPtS4xag5ak71KlvQRVpqaK8Lzgna0qHrXrk9gynDOYpoN+bUsBf+JNfRCKCOa
+RO1DDv2S35m+mFLoS5Ddxo/j2urW36sfuLuUmdGcR3oxovCNcgUyG+CRIDJTwnFn
+HVVbHqEnxF7f+gw6CiKqAdhye4IWXYWxYbK4hKWi540R8iLVI6g=
+=3bwX
+-----END PGP SIGNATURE-----
+
+--mojUlQ0s9EVzWg2t--
