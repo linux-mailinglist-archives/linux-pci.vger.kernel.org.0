@@ -2,161 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EDCBAB533
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Sep 2019 12:01:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D228AB620
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Sep 2019 12:39:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbfIFKBR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Sep 2019 06:01:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:53846 "EHLO foss.arm.com"
+        id S1726133AbfIFKjr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Sep 2019 06:39:47 -0400
+Received: from mga14.intel.com ([192.55.52.115]:19708 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732160AbfIFKBR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:01:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B67721570;
-        Fri,  6 Sep 2019 03:01:16 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F8F23F59C;
-        Fri,  6 Sep 2019 03:01:16 -0700 (PDT)
-Date:   Fri, 6 Sep 2019 11:01:14 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Abhishek Shah <abhishek.shah@broadcom.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        linux-pci@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
-Subject: Re: [PATCH 1/1] PCI: iproc: Invalidate PAXB address mapping before
- programming it
-Message-ID: <20190906100114.GE9720@e119886-lin.cambridge.arm.com>
-References: <20190906035813.24046-1-abhishek.shah@broadcom.com>
- <20190906083816.GD9720@e119886-lin.cambridge.arm.com>
- <CAKUFe6ZuRGJSmLdXqTWJzX-nE_Vh4yEQF_-rf+BWFrD_r4BRaQ@mail.gmail.com>
+        id S1725946AbfIFKjr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:39:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 03:39:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,472,1559545200"; 
+   d="scan'208";a="199493528"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 06 Sep 2019 03:39:46 -0700
+Received: from [10.226.38.242] (ekotax-mobl.gar.corp.intel.com [10.226.38.242])
+        by linux.intel.com (Postfix) with ESMTP id 07DEA5800FE;
+        Fri,  6 Sep 2019 03:39:43 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+To:     "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+References: <cover.1567585181.git.eswara.kota@linux.intel.com>
+ <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
+ <54ec6a30-69d8-a4af-95fa-2f457d605142@linux.intel.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <e8ead144-dd4a-0ffc-6266-920f045250f3@linux.intel.com>
+Date:   Fri, 6 Sep 2019 18:39:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKUFe6ZuRGJSmLdXqTWJzX-nE_Vh4yEQF_-rf+BWFrD_r4BRaQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <54ec6a30-69d8-a4af-95fa-2f457d605142@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 02:55:19PM +0530, Abhishek Shah wrote:
-> Hi Andrew,
-> 
-> Thanks for the review. Please see my response inline:
-> 
-> On Fri, Sep 6, 2019 at 2:08 PM Andrew Murray <andrew.murray@arm.com> wrote:
-> >
-> > On Fri, Sep 06, 2019 at 09:28:13AM +0530, Abhishek Shah wrote:
-> > > Invalidate PAXB inbound/outbound address mapping each time before
-> > > programming it. This is helpful for the cases where we need to
-> > > reprogram inbound/outbound address mapping without resetting PAXB.
-> > > kexec kernel is one such example.
-> >
-> > Why is this approach better than resetting the PAXB (I assume that's
-> > the PCI controller IP)? Wouldn't resetting the PAXB address this issue,
-> > and ensure that no other configuration is left behind?
-> >
-> We normally reset PAXB in the firmware(ATF). But for cases like kexec
-> kernel boot,
-> we do not execute any firmware code and directly boot into kernel.
-> 
-> We could have done PAXB reset in the driver itself as you have suggested here.
-> But note that this detail could vary for each SoC, because these
-> registers are not part
-> of PAXB register space itself, rather exists in a register space responsible for
-> controlling power to various wrappers in PCIe IP. Normally, this kind
-> of SoC specific
-> details are handled in firmware itself, we don't bring them to driver level.
+Hi Chuan Hua,
 
-OK understood.
+On 9/5/2019 10:23 AM, Chuan Hua, Lei wrote:
+> Hi Dilip,
+>
+> On 9/4/2019 6:10 PM, Dilip Kota wrote:
+>> The Intel PCIe RC controller is Synopsys Designware
+>> based PCIe core. Add YAML schemas for PCIe in RC mode
+>> present in Intel Universal Gateway soc.
+>>
+>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>> ---
+>> changes on v3:
+>>     Add the appropriate License-Identifier
+>>     Rename intel,rst-interval to 'reset-assert-us'
+> rst->interval to reset-assert-ms(should be typo error)
 
-> 
-> > Or is this related to earlier boot stages loading firmware for the emulated
-> > downstream endpoints (ep_is_internal)?
-> >
-> > Finally, in the case where ep_is_internal do you need to disable anything
-> > prior to invalidating the mappings?
-> >
-> No, ep_is_internal  is indicator for PAXC IP. It does not have
-> mappings as in PAXB.
+Sure, i will fix it. That's a typo error.
+Thanks for pointing it.
 
-I think I meant !ep_is_internal. I.e. is there possibility of inbound traffic
-prior to invalidating the mappings. I'd assume not, but that's an assumption.
+Regards
+Dilip
 
-Either way:
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-
-> 
-> 
-> Regards,
-> Abhishek
-> > >
-> > > Signed-off-by: Abhishek Shah <abhishek.shah@broadcom.com>
-> > > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> > > Reviewed-by: Vikram Mysore Prakash <vikram.prakash@broadcom.com>
-> > > ---
-> > >  drivers/pci/controller/pcie-iproc.c | 28 ++++++++++++++++++++++++++++
-> > >  1 file changed, 28 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> > > index e3ca46497470..99a9521ba7ab 100644
-> > > --- a/drivers/pci/controller/pcie-iproc.c
-> > > +++ b/drivers/pci/controller/pcie-iproc.c
-> > > @@ -1245,6 +1245,32 @@ static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
-> > >       return ret;
-> > >  }
-> > >
-> > > +static void iproc_pcie_invalidate_mapping(struct iproc_pcie *pcie)
-> > > +{
-> > > +     struct iproc_pcie_ib *ib = &pcie->ib;
-> > > +     struct iproc_pcie_ob *ob = &pcie->ob;
-> > > +     int idx;
-> > > +
-> > > +     if (pcie->ep_is_internal)
-> > > +             return;
-> > > +
-> > > +     if (pcie->need_ob_cfg) {
-> > > +             /* iterate through all OARR mapping regions */
-> > > +             for (idx = ob->nr_windows - 1; idx >= 0; idx--) {
-> > > +                     iproc_pcie_write_reg(pcie,
-> > > +                                          MAP_REG(IPROC_PCIE_OARR0, idx), 0);
-> > > +             }
-> > > +     }
-> > > +
-> > > +     if (pcie->need_ib_cfg) {
-> > > +             /* iterate through all IARR mapping regions */
-> > > +             for (idx = 0; idx < ib->nr_regions; idx++) {
-> > > +                     iproc_pcie_write_reg(pcie,
-> > > +                                          MAP_REG(IPROC_PCIE_IARR0, idx), 0);
-> > > +             }
-> > > +     }
-> > > +}
-> > > +
-> > >  static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
-> > >                              struct device_node *msi_node,
-> > >                              u64 *msi_addr)
-> > > @@ -1517,6 +1543,8 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
-> > >       iproc_pcie_perst_ctrl(pcie, true);
-> > >       iproc_pcie_perst_ctrl(pcie, false);
-> > >
-> > > +     iproc_pcie_invalidate_mapping(pcie);
-> > > +
-> > >       if (pcie->need_ob_cfg) {
-> > >               ret = iproc_pcie_map_ranges(pcie, res);
-> > >               if (ret) {
-> >
-> > The code changes look good to me.
-> >
-> > Thanks,
-> >
-> > Andrew Murray
-> >
-> > > --
-> > > 2.17.1
-> > >
