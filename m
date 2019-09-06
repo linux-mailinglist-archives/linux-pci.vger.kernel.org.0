@@ -2,218 +2,188 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AEEC3AB0B0
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Sep 2019 04:37:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44463AB0E8
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Sep 2019 05:22:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391997AbfIFCh3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Sep 2019 22:37:29 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51128 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391988AbfIFCh3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Sep 2019 22:37:29 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5669F202190EE4AFE8CD;
-        Fri,  6 Sep 2019 10:37:23 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 6 Sep 2019 10:37:15 +0800
-From:   Jay Fang <f.fangjian@huawei.com>
-To:     <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>, <linuxarm@huawei.com>,
-        Jay Fang <f.fangjian@huawei.com>
-Subject: [PATCH] PCI/AER: Fix AER/sysfs sriov_numvfs deadlock in pcie_do_recovery()
-Date:   Fri, 6 Sep 2019 10:33:58 +0800
-Message-ID: <1567737238-48866-1-git-send-email-f.fangjian@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        id S1732454AbfIFDWc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Sep 2019 23:22:32 -0400
+Received: from mga04.intel.com ([192.55.52.120]:3028 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731938AbfIFDWc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 5 Sep 2019 23:22:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 20:22:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,472,1559545200"; 
+   d="scan'208";a="267231270"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 05 Sep 2019 20:22:30 -0700
+Received: from [10.226.39.8] (leichuan-mobl.gar.corp.intel.com [10.226.39.8])
+        by linux.intel.com (Postfix) with ESMTP id F14005808CB;
+        Thu,  5 Sep 2019 20:22:27 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org,
+        linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com
+References: <cover.1567585181.git.eswara.kota@linux.intel.com>
+ <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
+ <CAFBinCC5SH5OSUqOkLQhE2o7g5OhSuB_PBjsv93U2P=FNS5oPw@mail.gmail.com>
+From:   "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
+Message-ID: <ce4e04ee-9a8f-fbe1-0133-4a18c92dc136@linux.intel.com>
+Date:   Fri, 6 Sep 2019 11:22:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
-X-CFilter-Loop: Reflected
+In-Reply-To: <CAFBinCC5SH5OSUqOkLQhE2o7g5OhSuB_PBjsv93U2P=FNS5oPw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-A deadlock triggered by a NONFATAL AER event during a sysfs "sriov_numvfs"
-operation:
 
-  enable one VF
-  # echo 1 > /sys/devices/pci0000:74/0000:74:00.0/0000:75:00.0/sriov_numvfs
+On 9/6/2019 4:31 AM, Martin Blumenstingl wrote:
+> Hi Dilip,
+>
+> On Wed, Sep 4, 2019 at 12:11 PM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+> [...]
+>> +properties:
+>> +  compatible:
+>> +    const: intel,lgm-pcie
+> should we add the "snps,dw-pcie" here (and in the example below) as well?
+> (this is what for example
+> Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt does)
+Thanks for pointing out this. We should add this.
+>
+> [...]
+>> +  phy-names:
+>> +    const: pciephy
+> the most popular choice in Documentation/devicetree/bindings/pci/ is "pcie-phy"
+> if Rob is happy with "pciephy" (which is already part of two other
+> bindings) then I'm happy with "pciephy" as well
+Agree.
+>
+>> +  num-lanes:
+>> +    description: Number of lanes to use for this port.
+> are there SoCs with more than 2 lanes?
+> you can list the allowed values in an enum so "num-lanes = <16>"
+> causes an error when someone accidentally has this in their .dts (and
+> runs the dt-bindings validation)
+Our SoC(LGM) supports single lane or dual lane. Again this also depends 
+on the board. I wonder if we should put this into board specific dts.  
+To make multiple lanes work properly, it also depends on the phy mode. 
+In my internal version, I put it into board dts.
+>
+> [...]
+>> +  reset-assert-ms:
+> maybe add:
+>    $ref: /schemas/types.yaml#/definitions/uint32
+Agree
+>> +    description: |
+>> +      Device reset interval in ms.
+>> +      Some devices need an interval upto 500ms. By default it is 100ms.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - device_type
+>> +  - reg
+>> +  - reg-names
+>> +  - ranges
+>> +  - resets
+>> +  - clocks
+>> +  - phys
+>> +  - phy-names
+>> +  - reset-gpios
+>> +  - num-lanes
+>> +  - linux,pci-domain
+>> +  - interrupts
+>> +  - interrupt-map
+>> +  - interrupt-map-mask
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    pcie10:pcie@d0e00000 {
+>> +      compatible = "intel,lgm-pcie";
+>> +      device_type = "pci";
+>> +      #address-cells = <3>;
+>> +      #size-cells = <2>;
+>> +      reg = <
+>> +            0xd0e00000 0x1000
+>> +            0xd2000000 0x800000
+>> +            0xd0a41000 0x1000
+>> +            >;
+>> +      reg-names = "dbi", "config", "app";
+>> +      linux,pci-domain = <0>;
+>> +      max-link-speed = <4>;
+>> +      bus-range = <0x00 0x08>;
+>> +      interrupt-parent = <&ioapic1>;
+>> +      interrupts = <67 1>;
+>> +      #interrupt-cells = <1>;
+>> +      interrupt-map-mask = <0 0 0 0x7>;
+>> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
+>> +                      <0 0 0 2 &ioapic1 28 1>,
+>> +                      <0 0 0 3 &ioapic1 29 1>,
+>> +                      <0 0 0 4 &ioapic1 30 1>;
+> is the "1" in the interrupts and interrupt-map properties IRQ_TYPE_EDGE_RISING?
+> you can use these macros in this example as well, see
+> Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml for
+> example
 
-  The sysfs "sriov_numvfs" side is:
+No. 1 here means index from arch/x86/devicetree.c
 
-    sriov_numvfs_store
-      device_lock                         # hold the device_lock
-        ...
-        pci_enable_sriov
-          sriov_enable
-            ...
-            pci_device_add
-              down_write(&pci_bus_sem)    # wait for the pci_bus_sem
+static struct of_ioapic_type of_ioapic_type[] =
+{
+     {
+         .out_type    = IRQ_TYPE_EDGE_RISING,
+         .trigger    = IOAPIC_EDGE,
+         .polarity    = 1,
+     },
+     {
+         .out_type    = IRQ_TYPE_LEVEL_LOW,
+         .trigger    = IOAPIC_LEVEL,
+         .polarity    = 0,
+     },
+     {
+         .out_type    = IRQ_TYPE_LEVEL_HIGH,
+         .trigger    = IOAPIC_LEVEL,
+         .polarity    = 1,
+     },
+     {
+         .out_type    = IRQ_TYPE_EDGE_FALLING,
+         .trigger    = IOAPIC_EDGE,
+         .polarity    = 0,
+     },
+};
 
-  The AER side is:
+static int dt_irqdomain_alloc(struct irq_domain *domain, unsigned int virq,
+                   unsigned int nr_irqs, void *arg)
+{
+     struct irq_fwspec *fwspec = (struct irq_fwspec *)arg;
+     struct of_ioapic_type *it;
+     struct irq_alloc_info tmp;
+     int type_index;
 
-    pcie_do_recovery
-      pci_walk_bus
-        down_read(&pci_bus_sem)           # hold the pci_bus_sem
-          report_resume
-            device_lock                   # wait for device_unlock()
+     if (WARN_ON(fwspec->param_count < 2))
+         return -EINVAL;
 
-The calltrace is as below:
-[  258.411464] INFO: task kworker/0:1:13 blocked for more than 120 seconds.
-[  258.418139]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
-[  258.424379] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[  258.432172] kworker/0:1     D    0    13      2 0x00000028
-[  258.437640] Workqueue: events aer_recover_work_func
-[  258.442496] Call trace:
-[  258.444933]  __switch_to+0xb4/0x1b8
-[  258.448409]  __schedule+0x1ec/0x720
-[  258.451884]  schedule+0x38/0x90
-[  258.455012]  schedule_preempt_disabled+0x20/0x38
-[  258.459610]  __mutex_lock.isra.1+0x150/0x518
-[  258.463861]  __mutex_lock_slowpath+0x10/0x18
-[  258.468112]  mutex_lock+0x34/0x40
-[  258.471413]  report_resume+0x1c/0x78
-[  258.474973]  pci_walk_bus+0x58/0xb0
-[  258.478451]  pcie_do_recovery+0x18c/0x248
-[  258.482445]  aer_recover_work_func+0xe0/0x118
-[  258.486783]  process_one_work+0x1e4/0x468
-[  258.490776]  worker_thread+0x40/0x450
-[  258.494424]  kthread+0x128/0x130
-[  258.497639]  ret_from_fork+0x10/0x1c
-[  258.501329] INFO: task flr.sh:4534 blocked for more than 120 seconds.
-[  258.507742]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
-[  258.513980] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[  258.521774] flr.sh          D    0  4534   4504 0x00000000
-[  258.527235] Call trace:
-[  258.529671]  __switch_to+0xb4/0x1b8
-[  258.533146]  __schedule+0x1ec/0x720
-[  258.536619]  schedule+0x38/0x90
-[  258.539749]  rwsem_down_write_failed+0x14c/0x210
-[  258.544347]  down_write+0x48/0x60
-[  258.547648]  pci_device_add+0x1a0/0x290
-[  258.551469]  pci_iov_add_virtfn+0x190/0x358
-[  258.555633]  sriov_enable+0x24c/0x480
-[  258.559279]  pci_enable_sriov+0x14/0x28
-[  258.563101]  hisi_zip_sriov_configure+0x64/0x100 [hisi_zip]
-[  258.568649]  sriov_numvfs_store+0xc4/0x190
-[  258.572728]  dev_attr_store+0x18/0x28
-[  258.576375]  sysfs_kf_write+0x3c/0x50
-[  258.580024]  kernfs_fop_write+0x114/0x1d8
-[  258.584018]  __vfs_write+0x18/0x38
-[  258.587404]  vfs_write+0xa4/0x1b0
-[  258.590705]  ksys_write+0x60/0xd8
-[  258.594007]  __arm64_sys_write+0x18/0x20
-[  258.597914]  el0_svc_common+0x5c/0x100
-[  258.601646]  el0_svc_handler+0x2c/0x80
-[  258.605381]  el0_svc+0x8/0xc
-[  379.243461] INFO: task kworker/0:1:13 blocked for more than 241 seconds.
-[  379.250134]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
-[  379.256373] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+     type_index = fwspec->param[1]; // index.
+     if (type_index >= ARRAY_SIZE(of_ioapic_type))
+         return -EINVAL;
 
-Using the same locking order is a good way to solve this AB->BA kind of
-deadlock. Adjust the locking order of the AER side, taking device_lock
-firstly and then the pci_bus_sem, to make sure it's locking order is the
-same as the sriov side. This patch solves the above deadlock issue only
-with little changes.
+I would not see this definition is user-friendly. But it is how x86 
+handles at the moment.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203981
-Signed-off-by: Jay Fang <f.fangjian@huawei.com>
----
- drivers/pci/pcie/err.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 773197a..dcc8638 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -50,7 +50,6 @@ static int report_error_detected(struct pci_dev *dev,
-	pci_ers_result_t vote;
-	const struct pci_error_handlers *err_handler;
-
--	device_lock(&dev->dev);
-	if (!pci_dev_set_io_state(dev, state) ||
-		!dev->driver ||
-		!dev->driver->err_handler ||
-@@ -71,7 +70,6 @@ static int report_error_detected(struct pci_dev *dev,
-	}
-	pci_uevent_ers(dev, vote);
-	*result = merge_result(*result, vote);
--	device_unlock(&dev->dev);
-	return 0;
- }
-
-@@ -90,7 +88,6 @@ static int report_mmio_enabled(struct pci_dev *dev, void *data)
-	pci_ers_result_t vote, *result = data;
-	const struct pci_error_handlers *err_handler;
-
--	device_lock(&dev->dev);
-	if (!dev->driver ||
-		!dev->driver->err_handler ||
-		!dev->driver->err_handler->mmio_enabled)
-@@ -100,7 +97,6 @@ static int report_mmio_enabled(struct pci_dev *dev, void *data)
-	vote = err_handler->mmio_enabled(dev);
-	*result = merge_result(*result, vote);
- out:
--	device_unlock(&dev->dev);
-	return 0;
- }
-
-@@ -109,7 +105,6 @@ static int report_slot_reset(struct pci_dev *dev, void *data)
-	pci_ers_result_t vote, *result = data;
-	const struct pci_error_handlers *err_handler;
-
--	device_lock(&dev->dev);
-	if (!dev->driver ||
-		!dev->driver->err_handler ||
-		!dev->driver->err_handler->slot_reset)
-@@ -119,7 +114,6 @@ static int report_slot_reset(struct pci_dev *dev, void *data)
-	vote = err_handler->slot_reset(dev);
-	*result = merge_result(*result, vote);
- out:
--	device_unlock(&dev->dev);
-	return 0;
- }
-
-@@ -127,7 +121,6 @@ static int report_resume(struct pci_dev *dev, void *data)
- {
-	const struct pci_error_handlers *err_handler;
-
--	device_lock(&dev->dev);
-	if (!pci_dev_set_io_state(dev, pci_channel_io_normal) ||
-		!dev->driver ||
-		!dev->driver->err_handler ||
-@@ -138,7 +131,6 @@ static int report_resume(struct pci_dev *dev, void *data)
-	err_handler->resume(dev);
- out:
-	pci_uevent_ers(dev, PCI_ERS_RESULT_RECOVERED);
--	device_unlock(&dev->dev);
-	return 0;
- }
-
-@@ -198,6 +190,8 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
-		dev = dev->bus->self;
-	bus = dev->subordinate;
-
-+	device_lock(&dev->dev);
-+
-	pci_dbg(dev, "broadcast error_detected message\n");
-	if (state == pci_channel_io_frozen)
-		pci_walk_bus(bus, report_frozen_detected, &status);
-@@ -231,12 +225,14 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
-	pci_dbg(dev, "broadcast resume message\n");
-	pci_walk_bus(bus, report_resume, &status);
-
-+	device_unlock(&dev->dev);
-	pci_aer_clear_device_status(dev);
-	pci_cleanup_aer_uncorrect_error_status(dev);
-	pci_info(dev, "AER: Device recovery successful\n");
-	return;
-
- failed:
-+	device_unlock(&dev->dev);
-	pci_uevent_ers(dev, PCI_ERS_RESULT_DISCONNECT);
-
-	/* TODO: Should kernel panic here? */
---
-2.8.1
+>
+> Martin
