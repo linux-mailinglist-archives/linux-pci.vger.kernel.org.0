@@ -2,113 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 95CD3AC360
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Sep 2019 01:48:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AABFBAC3FD
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Sep 2019 03:52:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406237AbfIFXsi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Sep 2019 19:48:38 -0400
-Received: from mail-oi1-f178.google.com ([209.85.167.178]:41532 "EHLO
-        mail-oi1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405441AbfIFXsh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Sep 2019 19:48:37 -0400
-Received: by mail-oi1-f178.google.com with SMTP id h4so6415586oih.8
-        for <linux-pci@vger.kernel.org>; Fri, 06 Sep 2019 16:48:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gigaio-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:cc:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zgzwkt+5f1+/iBFBVoRN90jtDmZfYNKs9pY9DhgTDjc=;
-        b=JEEmEyZFTTQooYacCcG91OmWsvF7c3cq/rhjtA3a/nTuS6Ga+HEx7++8VnoK7w8wRL
-         AYj+NwydiEpRVewLjZ7o9w66FI7RCnkCHk70oKhqZeJ3dUB8GTdwBR+olMJrflH8LDVo
-         2R4yWPZY4VSBojDe5SjL/we465450kyr0QmNBAAPnDi22NTTWwtGTTFR+53vrNaAsTOS
-         HUT7ppkyFoHJeB/Z0JVBhJBH0CQuA+eKkqmhoew12kiuYyrcapIVPUIVZfjVp4Vsp7/7
-         F/OEzr7lPo5HnlJNCs7VsEXHwndntesEGmr4RzS7N3D1Zf/xNmTPXT+5fZ0ChrWgBSmL
-         VN0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:cc:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zgzwkt+5f1+/iBFBVoRN90jtDmZfYNKs9pY9DhgTDjc=;
-        b=fQSiX/8ekQKnIQ7xfsm9M1vyjvk45Pxeh3+YHKfBEbQnvUYnI8Cs/W33eo+qKOthWe
-         gzUAaQUrskfCmzsFdy2vGEsQlESdWZTQUk4Nc9X2BnQ8bRfxb9FXm32hCrvuAp7upN0A
-         gZaUkl2OLNcS65jyFzCR8VbOxXTybrVC9vr0vm5TotZXEfPaJrdu/7S7UlUJ5xpODZHu
-         bhJxocgEVIioY8i+9dFnOHfzkbH3JxjaJ1b2oCuOwyAxofLBm6eyBgw0rCilRXxTt8DC
-         +4SkeSmp2Mq+B25Qv8Qj0qk+W+sRKjzgACwVdZ0T3HjApjJ2Qg5BaLxKDrj7KXIwiKC2
-         DYug==
-X-Gm-Message-State: APjAAAVjo4avMhQBlHr77opGxAvtRNT1iPdKHHYjBhdmyEwO2KEEwNyD
-        RmCgjYv2EWtZpiJ+ETwIEBi9lA==
-X-Google-Smtp-Source: APXvYqwPNSpBLERK5GgL8C24yZ3QXvoJEelDepgsSvqfBDQjtuEXeygHb1WD9ypJTeyyK/iEFY8+Qw==
-X-Received: by 2002:aca:1004:: with SMTP id 4mr8798928oiq.92.1567813716654;
-        Fri, 06 Sep 2019 16:48:36 -0700 (PDT)
-Received: from [192.168.71.78] ([12.235.129.34])
-        by smtp.gmail.com with ESMTPSA id 23sm2218038oiz.8.2019.09.06.16.48.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Sep 2019 16:48:36 -0700 (PDT)
-Subject: Re: AMD Epyc iperf perfomance issues over NTB
-To:     linux-ntb <linux-ntb@googlegroups.com>, linux-pci@vger.kernel.org
-References: <CAOQPn8sX2G-Db-ZiFpP2SMKbkQnPyk63UZijAY0we+DoZsmDtQ@mail.gmail.com>
- <a5a2d312-f6af-f20f-0594-98a7f80c7a9d@deltatee.com>
- <bce9a1d6-1c37-b9f8-a613-2ba68211fee1@deltatee.com>
-From:   Kit Chow <kchow@gigaio.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        "Eric Pilmore (GigaIO)" <epilmore@gigaio.com>
-Message-ID: <d719f986-f9ce-a0c3-f9a1-1fe06a3cc0cc@gigaio.com>
-Date:   Fri, 6 Sep 2019 16:48:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2406441AbfIGBwT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Sep 2019 21:52:19 -0400
+Received: from mga18.intel.com ([134.134.136.126]:31367 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406415AbfIGBwT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Sep 2019 21:52:19 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 18:52:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,474,1559545200"; 
+   d="scan'208";a="213345264"
+Received: from dph9ls1.fm.intel.com (HELO dph9ls1) ([10.80.209.174])
+  by fmsmga002.fm.intel.com with ESMTP; 06 Sep 2019 18:52:18 -0700
+Date:   Fri, 6 Sep 2019 18:48:40 -0700
+From:   Ivan Gorinov <ivan.gorinov@intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>,
+        Dilip Kota <eswara.kota@linux.intel.com>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+Message-ID: <20190907014840.GA45371@dph9ls1>
+References: <cover.1567585181.git.eswara.kota@linux.intel.com>
+ <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
+ <CAFBinCC5SH5OSUqOkLQhE2o7g5OhSuB_PBjsv93U2P=FNS5oPw@mail.gmail.com>
+ <ce4e04ee-9a8f-fbe1-0133-4a18c92dc136@linux.intel.com>
+ <CAFBinCABoe89Z9CiG=3Bz6+JoRCYcpxWJ6jzEqMo16SCCoXPmQ@mail.gmail.com>
+ <20190906174815.GZ2680@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <bce9a1d6-1c37-b9f8-a613-2ba68211fee1@deltatee.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906174815.GZ2680@smile.fi.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This is a follow-up of the initial problems encountered trying to get 
-the AMD Epyc 7401server to do host to host communication through NTB. 
-(please see thread for background info).
+On Fri, Sep 06, 2019 at 08:48:15PM +0300, Andy Shevchenko wrote:
+> On Fri, Sep 06, 2019 at 07:17:11PM +0200, Martin Blumenstingl wrote:
+> > On Fri, Sep 6, 2019 at 5:22 AM Chuan Hua, Lei
+> > <chuanhua.lei@linux.intel.com> wrote:
+> 
+> > >      type_index = fwspec->param[1]; // index.
+> > >      if (type_index >= ARRAY_SIZE(of_ioapic_type))
+> > >          return -EINVAL;
+> > >
+> > > I would not see this definition is user-friendly. But it is how x86
+> > > handles at the moment.
+> > thank you for explaining this - I had no idea x86 is different from
+> > all other platforms I know
+> > the only upstream x86 .dts I could find
+> > (arch/x86/platform/ce4100/falconfalls.dts) also uses the magic x86
+> > numbers
+> > so I'm fine with this until someone else knows a better solution
+> 
+> Ivan, Cc'ed, had done few amendments to x86 DT support. Perhaps he may add
+> something to the discussion.
 
-The IO_PAGE_FAULT flags=0x0070 seen on write ops was in fact related to 
-proxy ID setup as Logan had suggested. The AMD iommu code only processed 
-the 'last' proxy ID/dma alias; the last proxy ID was associated with 
-Reads and this allowed Read ops to succeed and Write ops to fail. Adding 
-support to process all of the proxy IDs in the AMD iommu code (plus 
-adding dma_map_resource support), the AMD Epyc server can now be 
-configured in a 4 host NTB setup and communicate over NTB (tcp/ip over 
-ntb_netdev) to the other 3 hosts.
+I just fixed broken interrupt support in x86-specific DT implementation.
 
-The problem that we are now experiencing, for which I can use some help, 
-with the AMD Epyc 7401 server is very poor iperf performance over 
-NTB/ntb_netdev.
+In CE4100, PCI devices are directly connected to I/O APIC input lines.
+Conventional PCI devices other than bridges don't need to be described in
+Device Tree or if they use standard PCI routing.
+Mapping INTA .. INTD pins to inputs of the bridge's interrupt parent depends
+on device number on the bus. In Device Tree, this mapping is described by
+"interrupt-map-mask" and "interrupt-map" properties of the bridge device node.
 
-The iperf numbers over NTB start off initially at around 800 Mbits/s and 
-quickly degrades down to the 20 Mbits/s range. Running 'top' during 
-iperf, I see many instances (up to 25+) of ksoftirqd running which 
-suggests that interrupts are overwhelming the interrupt processing.
+Possible interrupt types described by Open Firmware Recomended Practice:
 
-/proc/interrupts show lots of 'ccp-5' dma interrupt activity as well as 
-ntb_netdev interrupt activity. After eliminating netdev interrupts by 
-configuring netdev to 'use_poll' and leaving ccp, the poor iperf 
-performance persists.
+    0 - Rising Edge
+    1 - Level triggered, active low
 
-As a comparison, I can replace the ccp dma with the plx dma (found on 
-the host adapter card) on the AMD server and get a steady 9.4 Gbits/s 
-with iperf over NTB.
-
-I've optmimized for numa via numactl in all test runs.
-
-So it appears that the iperf NTB performance issues on the AMD Epyc 
-server are related to the ccp dma and its interrupt processing.
-
-
-Does anyone have any experience with the ccp dma that might be able to help?
-
-Any help or suggestions on how to proceed would be very much appreciated.
-
-Thanks
-Kit
-
-kchow@gigaio.com
