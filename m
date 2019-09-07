@@ -2,85 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AABFBAC3FD
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Sep 2019 03:52:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AA0FAC7BD
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Sep 2019 18:55:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406441AbfIGBwT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Sep 2019 21:52:19 -0400
-Received: from mga18.intel.com ([134.134.136.126]:31367 "EHLO mga18.intel.com"
+        id S2404291AbfIGQy4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 7 Sep 2019 12:54:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406415AbfIGBwT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 6 Sep 2019 21:52:19 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 18:52:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,474,1559545200"; 
-   d="scan'208";a="213345264"
-Received: from dph9ls1.fm.intel.com (HELO dph9ls1) ([10.80.209.174])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Sep 2019 18:52:18 -0700
-Date:   Fri, 6 Sep 2019 18:48:40 -0700
-From:   Ivan Gorinov <ivan.gorinov@intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>,
-        Dilip Kota <eswara.kota@linux.intel.com>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-Message-ID: <20190907014840.GA45371@dph9ls1>
-References: <cover.1567585181.git.eswara.kota@linux.intel.com>
- <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
- <CAFBinCC5SH5OSUqOkLQhE2o7g5OhSuB_PBjsv93U2P=FNS5oPw@mail.gmail.com>
- <ce4e04ee-9a8f-fbe1-0133-4a18c92dc136@linux.intel.com>
- <CAFBinCABoe89Z9CiG=3Bz6+JoRCYcpxWJ6jzEqMo16SCCoXPmQ@mail.gmail.com>
- <20190906174815.GZ2680@smile.fi.intel.com>
+        id S2404220AbfIGQy4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 7 Sep 2019 12:54:56 -0400
+Received: from localhost (110.8.30.213.rev.vodafone.pt [213.30.8.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E561121835;
+        Sat,  7 Sep 2019 16:54:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567875294;
+        bh=WW2pqKWTuc80bEexpCHs8A4SULzbymeL6jLKMVanjj0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yNjyZgVbVWbkHErGVkKAHzdqL24AX3XFcY8NPTxJhEkeziczsrRenmJ90favyJ0Uj
+         ae5+tA08zlTOm9JUnrn9Oh7QR/X4QZl9mflKEbA/4vEhoCcTQrMn1nE5VkLL/5UceC
+         wO2yGXhtnujr5UVVQ0R7KZpHINkgG7kZwPb4KPOM=
+Date:   Sat, 7 Sep 2019 11:54:50 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jonathan Chocron <jonnyc@amazon.com>
+Cc:     lorenzo.pieralisi@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, andrew.murray@arm.com, dwmw@amazon.co.uk,
+        benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com,
+        barakw@amazon.com, talel@amazon.com, hanochu@amazon.com,
+        hhhawa@amazon.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 2/7] PCI: Add ACS quirk for Amazon Annapurna Labs root
+ ports
+Message-ID: <20190907165450.GL103977@google.com>
+References: <20190905140018.5139-1-jonnyc@amazon.com>
+ <20190905140018.5139-3-jonnyc@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190906174815.GZ2680@smile.fi.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190905140018.5139-3-jonnyc@amazon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 08:48:15PM +0300, Andy Shevchenko wrote:
-> On Fri, Sep 06, 2019 at 07:17:11PM +0200, Martin Blumenstingl wrote:
-> > On Fri, Sep 6, 2019 at 5:22 AM Chuan Hua, Lei
-> > <chuanhua.lei@linux.intel.com> wrote:
+On Thu, Sep 05, 2019 at 05:00:16PM +0300, Jonathan Chocron wrote:
+> From: Ali Saidi <alisaidi@amazon.com>
 > 
-> > >      type_index = fwspec->param[1]; // index.
-> > >      if (type_index >= ARRAY_SIZE(of_ioapic_type))
-> > >          return -EINVAL;
-> > >
-> > > I would not see this definition is user-friendly. But it is how x86
-> > > handles at the moment.
-> > thank you for explaining this - I had no idea x86 is different from
-> > all other platforms I know
-> > the only upstream x86 .dts I could find
-> > (arch/x86/platform/ce4100/falconfalls.dts) also uses the magic x86
-> > numbers
-> > so I'm fine with this until someone else knows a better solution
+> The Amazon's Annapurna Labs root ports don't advertise an ACS
+> capability, but they don't allow peer-to-peer transactions and do
+> validate bus numbers through the SMMU. Additionally, it's not possible
+> for one RP to pass traffic to another RP.
 > 
-> Ivan, Cc'ed, had done few amendments to x86 DT support. Perhaps he may add
-> something to the discussion.
+> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-I just fixed broken interrupt support in x86-specific DT implementation.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-In CE4100, PCI devices are directly connected to I/O APIC input lines.
-Conventional PCI devices other than bridges don't need to be described in
-Device Tree or if they use standard PCI routing.
-Mapping INTA .. INTD pins to inputs of the bridge's interrupt parent depends
-on device number on the bus. In Device Tree, this mapping is described by
-"interrupt-map-mask" and "interrupt-map" properties of the bridge device node.
+But please tweak it as below ...
 
-Possible interrupt types described by Open Firmware Recomended Practice:
+> ---
+>  drivers/pci/quirks.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index ded60757a573..8fe765592943 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4418,6 +4418,24 @@ static int pci_quirk_qcom_rp_acs(struct pci_dev *dev, u16 acs_flags)
+>  	return ret;
+>  }
+>  
+> +static int pci_quirk_al_acs(struct pci_dev *dev, u16 acs_flags)
+> +{
+> +	/*
+> +	 * Amazon's Annapurna Labs root ports don't include an ACS capability,
+> +	 * but do include ACS-like functionality. The hardware doesn't support
+> +	 * peer-to-peer transactions via the root port and each has a unique
+> +	 * segment number.
+> +	 *
+> +	 * Additionally, the root ports cannot send traffic to each other.
+> +	 */
+> +	acs_flags &= ~(PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_SV | PCI_ACS_UF);
 
-    0 - Rising Edge
-    1 - Level triggered, active low
+There are several quirks that use this same set of bits, but they
+don't use the same order, which is a needless difference.
 
+Can you reorder them in the bit 0 ... bit 7 order?  I.e.,
+
+    PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF
+
+> +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
+> +		return -ENOTTY;
+
+This could go first (above the comment) so all the acs_flags stuff is
+together.
+
+> +	return acs_flags ? 0 : 1;
+> +}
+> +
+>  /*
+>   * Sunrise Point PCH root ports implement ACS, but unfortunately as shown in
+>   * the datasheet (Intel 100 Series Chipset Family PCH Datasheet, Vol. 2,
+> @@ -4611,6 +4629,8 @@ static const struct pci_dev_acs_enabled {
+>  	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
+>  	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
+>  	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
+> +	/* Amazon Annapurna Labs */
+> +	{ PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031, pci_quirk_al_acs },
+>  	{ 0 }
+>  };
+>  
+> -- 
+> 2.17.1
+> 
