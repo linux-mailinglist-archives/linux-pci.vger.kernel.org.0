@@ -2,99 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C07D9ACEF3
-	for <lists+linux-pci@lfdr.de>; Sun,  8 Sep 2019 15:43:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1BBAACEF5
+	for <lists+linux-pci@lfdr.de>; Sun,  8 Sep 2019 15:43:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbfIHNnG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 8 Sep 2019 09:43:06 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51626 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728272AbfIHNnG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 8 Sep 2019 09:43:06 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 7so1273546wme.1
-        for <linux-pci@vger.kernel.org>; Sun, 08 Sep 2019 06:43:04 -0700 (PDT)
+        id S1728300AbfIHNnH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 8 Sep 2019 09:43:07 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42462 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728281AbfIHNnH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 8 Sep 2019 09:43:07 -0400
+Received: by mail-wr1-f66.google.com with SMTP id q14so10999727wrm.9
+        for <linux-pci@vger.kernel.org>; Sun, 08 Sep 2019 06:43:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=bhJiBihaPigA25kWimp1Wuk4duG+A/TW5bOjh0hx7qw=;
-        b=FbLKHFO3sy/P0LsX5o7Lup+JKzur4H4kJ75gquUD3SHLGIczGl85/lWck6sGMnBYAg
-         WuraeQeE84/NeiZuKBQAK7N9H1Tbzjb9ZahlQWMSgcqXezOev7edsEN/PnzMny+AYBbZ
-         xB2juX0GUvpdh55ITRxxgbp9rNzidWkL4rgedFsVY26bwlrT4VdwHUgR1f4Z+IMjWVo8
-         wfL/Xb1j8ivrQWg8m6S3A31KhBx7GmDA9r8KVefF5CBpC11SP2hf2m0wA3dIwsYM+DFx
-         9HGyFtFgiGihd56srnRwjg1StrJz+0jGNE39tXzxd58RyOGF2vZCEGJhfbEsAhWknHlr
-         l12Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=xt1ffsoUiU7bT/Gov0+R38ESRfVKrIaJ7x08/AD9uzc=;
+        b=lbql9c8+5mvR7s5hfpeYHEGX44nXAwByd9MoEUudRXKDCdeTIQe/4v38PDvQWQfZld
+         2IBA1YQXWdhy3Ww/R6HXHYdLi8j/vGRDOeMIB++OCr/0aQjHEY6Qq5JJ07scDhYtHBeh
+         7/DBLZbcBSPfOPrpuo1se9tVTrcHpCYDJiNShaWxyMwrHO2zKWMQCqRCjyYvZc7hz5rP
+         QLlBcksMZAX0b29TqiokQP9D91edjPv55/xfEc4U3PvTL8ZoxUb4leLIrg1jv9zpAlQe
+         hByQQF4mjzB8y20bZSXdFBvUeLXG2PneuC7fvxJKn3bkIwXNrHyNSuQG7qzj+0WozHmd
+         +OLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=bhJiBihaPigA25kWimp1Wuk4duG+A/TW5bOjh0hx7qw=;
-        b=lb4poNhWi67c+8d99fyydvQYEiAFdPxGNnJHwL4/Fj1kZZkgLvIJS23Ur619cbIoiw
-         SrTmXuJ/tOuUvNhl6WgJdZ1mD0zEzSNHE/dzblDy+m3kQUPAC2pG/vJnpbZLyjY/0iaV
-         0rQcjenyTghl0l0OIiNNalfm7dJgNiwbChMiZCsrhQW4cbKUVDFj8VEqsMH6EZywEeWs
-         klGRRAtCYhY91j3Wtwqo/u9dMvyFFwikTqAdJdNU6Va/7I+FPXqhgcbWfaKuQHQDNxTg
-         7Aoc6E32pfqckD7CCL5f3MqlDGmKwlhpZ65fJo5D43C7fPSKZig+OEnjtXB+G/JD1rfn
-         4wmA==
-X-Gm-Message-State: APjAAAUNf/A8aKEX2zrtkJCGkM+ZacZan8l5VSgvbWyLjT70r9UeZKuv
-        fQyvk5/1Zaq2zBzRhUS4QUq0Ew==
-X-Google-Smtp-Source: APXvYqzZDOffIFpKH0a5IrjJM+OMLi4OoraM+UJVMqR7MJ3TEHLDVrjUVrj3tt8e4i0+UESY/zZsig==
-X-Received: by 2002:a7b:cfd1:: with SMTP id f17mr14578586wmm.146.1567950184183;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=xt1ffsoUiU7bT/Gov0+R38ESRfVKrIaJ7x08/AD9uzc=;
+        b=TnOVG/YoOZ0ObKbRlAYqF2afX76yaOiMplD4GZPLT8eqbwzOkYi7gFIRrKPdI11YT+
+         mgNCOgofwHBXEOOWxj3bFW82r1kPmOLSelxWhpHEoNKo+cF4MS7rrZPZOa4WlDmrLvIL
+         Y5lsrX/zrHQt80A6qfZdHX+kabWLzGBloqNU5Up4+5sl32GNw/1OQ+wXLWYkLxMPkZr+
+         26us6A/YOhmq85R7kal7IcxT4qtSerRSbxqy3rmaKUTPyLufD2BVaAi7KTkH0gvzPKQn
+         Pvw1lDd6vwjSDng5tO5pQajz9zgWU0cYTXAuIAj59VeCD7+06MqZI7VFGuyrCN9eUkVA
+         I/Dw==
+X-Gm-Message-State: APjAAAVcoSKqWumNsL6DA5vBvbjNnEYtDplTHsztu/H7ZJv5uGXCgcU/
+        ICojaX68h7gQd5eLSHB8WklA2LoYRm0=
+X-Google-Smtp-Source: APXvYqyS25653EfNGnpyjyb3kIdPuTAn8ZaDNoaRLdF9Ag8xPDJ7VA8Zq5/dKaLqURBcQaOjHotmOA==
+X-Received: by 2002:a5d:5444:: with SMTP id w4mr14661533wrv.180.1567950184983;
         Sun, 08 Sep 2019 06:43:04 -0700 (PDT)
 Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.gmail.com with ESMTPSA id t203sm14313902wmf.42.2019.09.08.06.43.03
+        by smtp.gmail.com with ESMTPSA id t203sm14313902wmf.42.2019.09.08.06.43.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 08 Sep 2019 06:43:03 -0700 (PDT)
+        Sun, 08 Sep 2019 06:43:04 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com
+        lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com,
+        devicetree@vger.kernel.org
 Cc:     repk@triplefau.lt, Neil Armstrong <narmstrong@baylibre.com>,
         maz@kernel.org, linux-amlogic@lists.infradead.org,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/6] arm64: dts: meson-g12: add support for PCIe
-Date:   Sun,  8 Sep 2019 13:42:52 +0000
-Message-Id: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
+Subject: [PATCH 1/6] dt-bindings: pci: amlogic,meson-pcie: Add G12A bindings
+Date:   Sun,  8 Sep 2019 13:42:53 +0000
+Message-Id: <1567950178-4466-2-git-send-email-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
+References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patchset :
-- updates the Amlogic PCI bindings for G12A
-- reworks the Amlogic PCIe driver to make use of the
-G12a USB3+PCIe Combo PHY instead of directly writing in
-the PHY register
-- adds the necessary operations to the G12a USB3+PCIe Combo PHY driver
-- adds the PCIe Node for G12A, G12B and SM1 SoCs
-- adds the commented support for the S922X, A311D and S905D3 based
-VIM3 boards.
+Add PCIE bindings for the Amlogic G12A SoC, the support is the same
+but the PHY is shared with USB3 to control the differential lines.
 
-This patchset has been tested in a A311D VIM3 using a 128Go
-TS128GMTE110S NVMe PCIe module.
+Thus this adds a phy phandle to control the PHY, and sets invalid
+MIPI clock as optional for G12A.
 
-For indication, here is a bonnie++ run as ext4 formatted:
-     ------Sequential Output------ --Sequential Input- --Random-
-     -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
-Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP /sec %CP
-  4G 93865  99 312837  96 194487  23 102808  97 415501 21 +++++ +++
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../devicetree/bindings/pci/amlogic,meson-pcie.txt   | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-Neil Armstrong (6):
-  dt-bindings: pci: amlogic,meson-pcie: Add G12A bindings
-  PCI: amlogic: Fix probed clock names
-  PCI: amlogic: meson: Add support for G12A
-  phy: meson-g12a-usb3-pcie: Add support for PCIe mode
-  arm64: dts: meson-g12a: Add PCIe node
-  arm64: dts: khadas-vim3: add commented support for PCIe
-
- .../bindings/pci/amlogic,meson-pcie.txt       |  12 +-
- .../boot/dts/amlogic/meson-g12-common.dtsi    |  33 ++++++
- .../amlogic/meson-g12b-a311d-khadas-vim3.dts  |  22 ++++
- .../amlogic/meson-g12b-s922x-khadas-vim3.dts  |  22 ++++
- .../boot/dts/amlogic/meson-khadas-vim3.dtsi   |   4 +
- .../dts/amlogic/meson-sm1-khadas-vim3l.dts    |  22 ++++
- drivers/pci/controller/dwc/pci-meson.c        | 105 ++++++++++++++----
- .../phy/amlogic/phy-meson-g12a-usb3-pcie.c    |  70 ++++++++++--
- 8 files changed, 258 insertions(+), 32 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+index efa2c8b9b85a..84fdc422792e 100644
+--- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+@@ -9,13 +9,16 @@ Additional properties are described here:
+ 
+ Required properties:
+ - compatible:
+-	should contain "amlogic,axg-pcie" to identify the core.
++	should contain :
++	- "amlogic,axg-pcie" for AXG SoC Family
++	- "amlogic,g12a-pcie" for G12A SoC Family
++	to identify the core.
+ - reg:
+ 	should contain the configuration address space.
+ - reg-names: Must be
+ 	- "elbi"	External local bus interface registers
+ 	- "cfg"		Meson specific registers
+-	- "phy"		Meson PCIE PHY registers
++	- "phy"		Meson PCIE PHY registers for AXG SoC Family
+ 	- "config"	PCIe configuration space
+ - reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
+ - clocks: Must contain an entry for each entry in clock-names.
+@@ -23,12 +26,13 @@ Required properties:
+ 	- "pclk"       PCIe GEN 100M PLL clock
+ 	- "port"       PCIe_x(A or B) RC clock gate
+ 	- "general"    PCIe Phy clock
+-	- "mipi"       PCIe_x(A or B) 100M ref clock gate
++	- "mipi"       PCIe_x(A or B) 100M ref clock gate for AXG SoC Family
+ - resets: phandle to the reset lines.
+ - reset-names: must contain "phy" "port" and "apb"
+-       - "phy"         Share PHY reset
++       - "phy"         Share PHY reset for AXG SoC Family
+        - "port"        Port A or B reset
+        - "apb"         Share APB reset
++- phys: should contain a phandle to the shared phy for G12A SoC Family
+ - device_type:
+ 	should be "pci". As specified in designware-pcie.txt
+ 
 -- 
 2.17.1
 
