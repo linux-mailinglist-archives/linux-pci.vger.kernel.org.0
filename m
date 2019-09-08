@@ -2,252 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 89741AC936
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Sep 2019 22:34:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C07D9ACEF3
+	for <lists+linux-pci@lfdr.de>; Sun,  8 Sep 2019 15:43:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395271AbfIGUex (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 7 Sep 2019 16:34:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395270AbfIGUex (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 7 Sep 2019 16:34:53 -0400
-Received: from localhost (110.8.30.213.rev.vodafone.pt [213.30.8.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 711CC20863;
-        Sat,  7 Sep 2019 20:34:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567888492;
-        bh=JhvII6MYtVL9JiZJbLLIaaUwRG/8s657QXnu0VsUWwQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vzb6OzZ170CP2G5Rod7pP5QYpaAD6qVb28M0/kg7P/HqmEuADL/QoTGpADJFELbnN
-         DKPC3cO7z8tvuC17rx2VLEs521yIhkhDxTStcKfwSj1Q1rbZVfaVE88Cdm53PQEyz8
-         mjKt4Uw7kxWVLEt/9tkRxhFmFD0aY5ZKf2coOW2c=
-Date:   Sat, 7 Sep 2019 15:34:48 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Frederick Lawler <fred@fredlawl.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Rajat Jain <rajatja@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v5 4/4] PCI/ASPM: remove Kconfig option PCIEASPM_DEBUG
- and related code
-Message-ID: <20190907203448.GS103977@google.com>
-References: <c63f507f-7f52-7164-dbc5-07fc18e433b8@gmail.com>
- <4096ba95-b132-fc0d-8516-85352e87d82a@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4096ba95-b132-fc0d-8516-85352e87d82a@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1728290AbfIHNnG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 8 Sep 2019 09:43:06 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51626 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728272AbfIHNnG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 8 Sep 2019 09:43:06 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 7so1273546wme.1
+        for <linux-pci@vger.kernel.org>; Sun, 08 Sep 2019 06:43:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=bhJiBihaPigA25kWimp1Wuk4duG+A/TW5bOjh0hx7qw=;
+        b=FbLKHFO3sy/P0LsX5o7Lup+JKzur4H4kJ75gquUD3SHLGIczGl85/lWck6sGMnBYAg
+         WuraeQeE84/NeiZuKBQAK7N9H1Tbzjb9ZahlQWMSgcqXezOev7edsEN/PnzMny+AYBbZ
+         xB2juX0GUvpdh55ITRxxgbp9rNzidWkL4rgedFsVY26bwlrT4VdwHUgR1f4Z+IMjWVo8
+         wfL/Xb1j8ivrQWg8m6S3A31KhBx7GmDA9r8KVefF5CBpC11SP2hf2m0wA3dIwsYM+DFx
+         9HGyFtFgiGihd56srnRwjg1StrJz+0jGNE39tXzxd58RyOGF2vZCEGJhfbEsAhWknHlr
+         l12Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=bhJiBihaPigA25kWimp1Wuk4duG+A/TW5bOjh0hx7qw=;
+        b=lb4poNhWi67c+8d99fyydvQYEiAFdPxGNnJHwL4/Fj1kZZkgLvIJS23Ur619cbIoiw
+         SrTmXuJ/tOuUvNhl6WgJdZ1mD0zEzSNHE/dzblDy+m3kQUPAC2pG/vJnpbZLyjY/0iaV
+         0rQcjenyTghl0l0OIiNNalfm7dJgNiwbChMiZCsrhQW4cbKUVDFj8VEqsMH6EZywEeWs
+         klGRRAtCYhY91j3Wtwqo/u9dMvyFFwikTqAdJdNU6Va/7I+FPXqhgcbWfaKuQHQDNxTg
+         7Aoc6E32pfqckD7CCL5f3MqlDGmKwlhpZ65fJo5D43C7fPSKZig+OEnjtXB+G/JD1rfn
+         4wmA==
+X-Gm-Message-State: APjAAAUNf/A8aKEX2zrtkJCGkM+ZacZan8l5VSgvbWyLjT70r9UeZKuv
+        fQyvk5/1Zaq2zBzRhUS4QUq0Ew==
+X-Google-Smtp-Source: APXvYqzZDOffIFpKH0a5IrjJM+OMLi4OoraM+UJVMqR7MJ3TEHLDVrjUVrj3tt8e4i0+UESY/zZsig==
+X-Received: by 2002:a7b:cfd1:: with SMTP id f17mr14578586wmm.146.1567950184183;
+        Sun, 08 Sep 2019 06:43:04 -0700 (PDT)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.gmail.com with ESMTPSA id t203sm14313902wmf.42.2019.09.08.06.43.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 08 Sep 2019 06:43:03 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com
+Cc:     repk@triplefau.lt, Neil Armstrong <narmstrong@baylibre.com>,
+        maz@kernel.org, linux-amlogic@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] arm64: dts: meson-g12: add support for PCIe
+Date:   Sun,  8 Sep 2019 13:42:52 +0000
+Message-Id: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Aug 31, 2019 at 10:18:28PM +0200, Heiner Kallweit wrote:
-> Now that we have sysfs attributes for enabling/disabling the individual
-> ASPM link states, this debug code isn't needed any longer.
+This patchset :
+- updates the Amlogic PCI bindings for G12A
+- reworks the Amlogic PCIe driver to make use of the
+G12a USB3+PCIe Combo PHY instead of directly writing in
+the PHY register
+- adds the necessary operations to the G12a USB3+PCIe Combo PHY driver
+- adds the PCIe Node for G12A, G12B and SM1 SoCs
+- adds the commented support for the S922X, A311D and S905D3 based
+VIM3 boards.
 
-I think this removes some sysfs files, doesn't it?  Since this patch
-doesn't remove any documentation, I assume there wasn't any?  IIRC we
-had a little discussion on the mailing list about whether these files
-were used by anybody, and the conclusion was "not really".  It'd be
-nice to cite that discussion here if you can dig it up.
+This patchset has been tested in a A311D VIM3 using a 128Go
+TS128GMTE110S NVMe PCIe module.
 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
-> v5:
-> - rebased to latest pci/next
-> ---
->  drivers/pci/pci-sysfs.c  |   3 --
->  drivers/pci/pci.h        |   8 ---
->  drivers/pci/pcie/Kconfig |   7 ---
->  drivers/pci/pcie/aspm.c  | 105 ---------------------------------------
->  4 files changed, 123 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 687240f55..acba3aff0 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -1314,7 +1314,6 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
->  	int retval;
->  
->  	pcie_vpd_create_sysfs_dev_files(dev);
-> -	pcie_aspm_create_sysfs_dev_files(dev);
->  #ifdef CONFIG_PCIEASPM
->  	/* update visibility of attributes in this group */
->  	sysfs_update_group(&dev->dev.kobj, &aspm_ctrl_attr_group);
-> @@ -1328,7 +1327,6 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
->  	return 0;
->  
->  error:
-> -	pcie_aspm_remove_sysfs_dev_files(dev);
->  	pcie_vpd_remove_sysfs_dev_files(dev);
->  	return retval;
->  }
-> @@ -1404,7 +1402,6 @@ int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
->  static void pci_remove_capabilities_sysfs(struct pci_dev *dev)
->  {
->  	pcie_vpd_remove_sysfs_dev_files(dev);
-> -	pcie_aspm_remove_sysfs_dev_files(dev);
->  	if (dev->reset_fn) {
->  		device_remove_file(&dev->dev, &dev_attr_reset);
->  		dev->reset_fn = 0;
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 9dc3e3673..b3d3da257 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -533,14 +533,6 @@ static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
->  static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
->  #endif
->  
-> -#ifdef CONFIG_PCIEASPM_DEBUG
-> -void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev);
-> -void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev);
-> -#else
-> -static inline void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev) { }
-> -static inline void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev) { }
-> -#endif
-> -
->  #ifdef CONFIG_PCIE_ECRC
->  void pcie_set_ecrc_checking(struct pci_dev *dev);
->  void pcie_ecrc_get_policy(char *str);
-> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-> index 362eb8cfa..a2e862d4e 100644
-> --- a/drivers/pci/pcie/Kconfig
-> +++ b/drivers/pci/pcie/Kconfig
-> @@ -79,13 +79,6 @@ config PCIEASPM
->  
->  	  When in doubt, say Y.
->  
-> -config PCIEASPM_DEBUG
-> -	bool "Debug PCI Express ASPM"
-> -	depends on PCIEASPM
-> -	help
-> -	  This enables PCI Express ASPM debug support. It will add per-device
-> -	  interface to control ASPM.
-> -
->  choice
->  	prompt "Default ASPM policy"
->  	default PCIEASPM_DEFAULT
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index ce3425125..67a142251 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -1182,111 +1182,6 @@ static int pcie_aspm_get_policy(char *buffer, const struct kernel_param *kp)
->  module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
->  	NULL, 0644);
->  
-> -#ifdef CONFIG_PCIEASPM_DEBUG
-> -static ssize_t link_state_show(struct device *dev,
-> -		struct device_attribute *attr,
-> -		char *buf)
-> -{
-> -	struct pci_dev *pci_device = to_pci_dev(dev);
-> -	struct pcie_link_state *link_state = pci_device->link_state;
-> -
-> -	return sprintf(buf, "%d\n", link_state->aspm_enabled);
-> -}
-> -
-> -static ssize_t link_state_store(struct device *dev,
-> -		struct device_attribute *attr,
-> -		const char *buf,
-> -		size_t n)
-> -{
-> -	struct pci_dev *pdev = to_pci_dev(dev);
-> -	struct pcie_link_state *link, *root = pdev->link_state->root;
-> -	u32 state;
-> -
-> -	if (aspm_disabled)
-> -		return -EPERM;
-> -
-> -	if (kstrtouint(buf, 10, &state))
-> -		return -EINVAL;
-> -	if ((state & ~ASPM_STATE_ALL) != 0)
-> -		return -EINVAL;
-> -
-> -	down_read(&pci_bus_sem);
-> -	mutex_lock(&aspm_lock);
-> -	list_for_each_entry(link, &link_list, sibling) {
-> -		if (link->root != root)
-> -			continue;
-> -		pcie_config_aspm_link(link, state);
-> -	}
-> -	mutex_unlock(&aspm_lock);
-> -	up_read(&pci_bus_sem);
-> -	return n;
-> -}
-> -
-> -static ssize_t clk_ctl_show(struct device *dev,
-> -		struct device_attribute *attr,
-> -		char *buf)
-> -{
-> -	struct pci_dev *pci_device = to_pci_dev(dev);
-> -	struct pcie_link_state *link_state = pci_device->link_state;
-> -
-> -	return sprintf(buf, "%d\n", link_state->clkpm_enabled);
-> -}
-> -
-> -static ssize_t clk_ctl_store(struct device *dev,
-> -		struct device_attribute *attr,
-> -		const char *buf,
-> -		size_t n)
-> -{
-> -	struct pci_dev *pdev = to_pci_dev(dev);
-> -	bool state;
-> -
-> -	if (strtobool(buf, &state))
-> -		return -EINVAL;
-> -
-> -	down_read(&pci_bus_sem);
-> -	mutex_lock(&aspm_lock);
-> -	pcie_set_clkpm_nocheck(pdev->link_state, state);
-> -	mutex_unlock(&aspm_lock);
-> -	up_read(&pci_bus_sem);
-> -
-> -	return n;
-> -}
-> -
-> -static DEVICE_ATTR_RW(link_state);
-> -static DEVICE_ATTR_RW(clk_ctl);
-> -
-> -static char power_group[] = "power";
-> -void pcie_aspm_create_sysfs_dev_files(struct pci_dev *pdev)
-> -{
-> -	struct pcie_link_state *link_state = pdev->link_state;
-> -
-> -	if (!link_state)
-> -		return;
-> -
-> -	if (link_state->aspm_support)
-> -		sysfs_add_file_to_group(&pdev->dev.kobj,
-> -			&dev_attr_link_state.attr, power_group);
-> -	if (link_state->clkpm_capable)
-> -		sysfs_add_file_to_group(&pdev->dev.kobj,
-> -			&dev_attr_clk_ctl.attr, power_group);
-> -}
-> -
-> -void pcie_aspm_remove_sysfs_dev_files(struct pci_dev *pdev)
-> -{
-> -	struct pcie_link_state *link_state = pdev->link_state;
-> -
-> -	if (!link_state)
-> -		return;
-> -
-> -	if (link_state->aspm_support)
-> -		sysfs_remove_file_from_group(&pdev->dev.kobj,
-> -			&dev_attr_link_state.attr, power_group);
-> -	if (link_state->clkpm_capable)
-> -		sysfs_remove_file_from_group(&pdev->dev.kobj,
-> -			&dev_attr_clk_ctl.attr, power_group);
-> -}
-> -#endif
-> -
->  static struct pcie_link_state *aspm_get_parent_link(struct pci_dev *pdev)
->  {
->  	struct pci_dev *parent = pdev->bus->self;
-> -- 
-> 2.23.0
-> 
-> 
+For indication, here is a bonnie++ run as ext4 formatted:
+     ------Sequential Output------ --Sequential Input- --Random-
+     -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
+Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP /sec %CP
+  4G 93865  99 312837  96 194487  23 102808  97 415501 21 +++++ +++
+
+Neil Armstrong (6):
+  dt-bindings: pci: amlogic,meson-pcie: Add G12A bindings
+  PCI: amlogic: Fix probed clock names
+  PCI: amlogic: meson: Add support for G12A
+  phy: meson-g12a-usb3-pcie: Add support for PCIe mode
+  arm64: dts: meson-g12a: Add PCIe node
+  arm64: dts: khadas-vim3: add commented support for PCIe
+
+ .../bindings/pci/amlogic,meson-pcie.txt       |  12 +-
+ .../boot/dts/amlogic/meson-g12-common.dtsi    |  33 ++++++
+ .../amlogic/meson-g12b-a311d-khadas-vim3.dts  |  22 ++++
+ .../amlogic/meson-g12b-s922x-khadas-vim3.dts  |  22 ++++
+ .../boot/dts/amlogic/meson-khadas-vim3.dtsi   |   4 +
+ .../dts/amlogic/meson-sm1-khadas-vim3l.dts    |  22 ++++
+ drivers/pci/controller/dwc/pci-meson.c        | 105 ++++++++++++++----
+ .../phy/amlogic/phy-meson-g12a-usb3-pcie.c    |  70 ++++++++++--
+ 8 files changed, 258 insertions(+), 32 deletions(-)
+
+-- 
+2.17.1
+
