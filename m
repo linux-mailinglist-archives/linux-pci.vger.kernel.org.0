@@ -2,153 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E642BADAA5
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Sep 2019 16:02:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60E14ADD5E
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Sep 2019 18:37:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730866AbfIIOCn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Sep 2019 10:02:43 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33705 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730928AbfIIOCm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Sep 2019 10:02:42 -0400
-Received: by mail-io1-f65.google.com with SMTP id m11so28943203ioo.0
-        for <linux-pci@vger.kernel.org>; Mon, 09 Sep 2019 07:02:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8i5dkStrabNHsl7KV3zOIJ5RJgzj90AK9sxoEEJihIo=;
-        b=eeHn9BXhrxmfX9aye2EW2AnRlwbqWsP/9UGyIoyui1PwsLNVui38+z8yNFWGuXNTqu
-         5DlQJlAfRtR0zTYXc+rsc4XI6CfPNhE9/z7AUsVOQNcRVNG8hPcI+Dma0zWlEef0Kda5
-         YmZY1EnK9sf10kNt5oWN1BKtN3GZs3eyExgE3MFlb3ZZUJIklI76U4vYu8upWGzb84cx
-         ErpoYjOaD6//OdfwiefUwm5NTEWEi1GRCjyDIELHtp1VGYtZZV/US5AxH68IWdwBPYn2
-         7JhSBdpIlpO7vsaPsH0l45+XaG7HyGzH6yYDOU7fUx5bNM1tkUN6StJQcJNtlubK1EM4
-         6eKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8i5dkStrabNHsl7KV3zOIJ5RJgzj90AK9sxoEEJihIo=;
-        b=gF7Gt9btXF6J2V6NA33HmRZiyz+yxGKaO4qA6GXQBUVLgUhYlLqIMw0OQC3LZEv0Hi
-         qakGWAEhbS307HiS2xNkX+SjbXKcIXIL/dTwVgIjhBfdW5YL6i9gIPK6BolRlezrGe2y
-         C1XmeIUDVwgdyhD6g0y3SKKJln5x8LHBxqUbSt0QOebffdK8Fu1rOohO5s6g+aivHJTe
-         j2ZPvVWwJF4f79WZipLJltkePx9ZkW8k5sjmN333HDMTqrn1XRKaDHYbR86uuXnkdHBQ
-         CLxowAlyg1DLRwGXVJm4XzsxZCO0oIDjQ55qPSOrhUvxEmEpjJ1H02/epA7CH52S/MM8
-         JnyA==
-X-Gm-Message-State: APjAAAWyxrPV6nNTZ3BOdonWLYncqTvvcKoysyQfOtL8fhBuMugF1w8X
-        LQwgteIA2GoJ/tS8kB/at7xjOPsWoCKhRnXiCeg=
-X-Google-Smtp-Source: APXvYqyL386XCzrPyKA6S2bjdTj5LdfIJF3K+CS7kEa0ci3Yw2WTxtOi9ty8C8PnCPAwjUejB3RRqqLbCMNixIljCqU=
-X-Received: by 2002:a6b:bb86:: with SMTP id l128mr18026803iof.18.1568037761702;
- Mon, 09 Sep 2019 07:02:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190816165101.911-1-s.miroshnichenko@yadro.com>
- <20190816165101.911-19-s.miroshnichenko@yadro.com> <026a6bfbfd8268c5158bc48fb43907cc13442561.camel@gmail.com>
- <7af3d4cd-b786-19b1-1ddf-b93f9875976d@yadro.com>
-In-Reply-To: <7af3d4cd-b786-19b1-1ddf-b93f9875976d@yadro.com>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Tue, 10 Sep 2019 00:02:30 +1000
-Message-ID: <CAOSf1CG-oaKazKzZCULUjntc+3-dztiQ3U=6tcWu+OGer_77Ag@mail.gmail.com>
-Subject: Re: [PATCH v5 18/23] powerpc/pci: Handle BAR movement
-To:     Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
-Cc:     linux-pci@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux@yadro.com
-Content-Type: text/plain; charset="UTF-8"
+        id S1728012AbfIIQhi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Sep 2019 12:37:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:53562 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727006AbfIIQhi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 9 Sep 2019 12:37:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C891628;
+        Mon,  9 Sep 2019 09:37:37 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23A9A3F59C;
+        Mon,  9 Sep 2019 09:37:34 -0700 (PDT)
+Date:   Mon, 09 Sep 2019 17:37:33 +0100
+Message-ID: <864l1ls9wy.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com,
+        repk@triplefau.lt, linux-amlogic@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] arm64: dts: khadas-vim3: add commented support for PCIe
+In-Reply-To: <1567950178-4466-7-git-send-email-narmstrong@baylibre.com>
+References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
+        <1567950178-4466-7-git-send-email-narmstrong@baylibre.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: Approximate
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Sep 7, 2019 at 2:25 AM Sergey Miroshnichenko
-<s.miroshnichenko@yadro.com> wrote:
->
-> Hi Oliver,
->
-> On 9/4/19 8:37 AM, Oliver O'Halloran wrote:
-> > On Fri, 2019-08-16 at 19:50 +0300, Sergey Miroshnichenko wrote:
-> >> Add pcibios_rescan_prepare()/_done() hooks for the powerpc platform. Now if
-> >> the device's driver supports movable BARs, pcibios_rescan_prepare() will be
-> >> called after the device is stopped, and pcibios_rescan_done() - before it
-> >> resumes. There are no memory requests to this device between the hooks, so
-> >> it it safe to rebuild the EEH address cache during that.
-> >>
-> >> CC: Oliver O'Halloran <oohall@gmail.com>
-> >> Signed-off-by: Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
-> >> ---
-> >>  arch/powerpc/kernel/pci-hotplug.c | 10 ++++++++++
-> >>  1 file changed, 10 insertions(+)
-> >>
-> >> diff --git a/arch/powerpc/kernel/pci-hotplug.c b/arch/powerpc/kernel/pci-hotplug.c
-> >> index 0b0cf8168b47..18cf13bba228 100644
-> >> --- a/arch/powerpc/kernel/pci-hotplug.c
-> >> +++ b/arch/powerpc/kernel/pci-hotplug.c
-> >> @@ -144,3 +144,13 @@ void pci_hp_add_devices(struct pci_bus *bus)
-> >>      pcibios_finish_adding_to_bus(bus);
-> >>  }
-> >>  EXPORT_SYMBOL_GPL(pci_hp_add_devices);
-> >> +
-> >> +void pcibios_rescan_prepare(struct pci_dev *pdev)
-> >> +{
-> >> +    eeh_addr_cache_rmv_dev(pdev);
-> >> +}
-> >> +
-> >> +void pcibios_rescan_done(struct pci_dev *pdev)
-> >> +{
-> >> +    eeh_addr_cache_insert_dev(pdev);
-> >> +}
-> >
-> > Is this actually sufficent? The PE number for a device is largely
-> > determined by the location of the MMIO BARs. If you move a BAR far
-> > enough the PE number stored in the eeh_pe would need to be updated as
-> > well.
-> >
->
-> Thanks for the hint! I've checked on our PowerNV: for bridges with MEM
-> only it allocates PE numbers starting from 0xff down, and when there
-> are MEM64 - starting from 0 up, one PE number per 4GiB.
->
-> PEs are allocated during call to pnv_pci_setup_bridge(), and the I've
-> added invocation of pci_setup_bridge() after a hotplug event in the
-> "Recalculate all bridge windows during rescan" patch of this series.
+On Sun, 08 Sep 2019 14:42:58 +0100,
+Neil Armstrong <narmstrong@baylibre.com> wrote:
+> 
+> The VIM3 on-board  MCU can mux the PCIe/USB3.0 shared differential
+> lines using a FUSB340TMX USB 3.1 SuperSpeed Data Switch between
+> an USB3.0 Type A connector and a M.2 Key M slot.
+> The PHY driving these differential lines is shared between
+> the USB3.0 controller and the PCIe Controller, thus only
+> a single controller can use it.
+> 
+> The needed DT configuration when the MCU is configured to mux
+> the PCIe/USB3.0 differential lines to the M.2 Key M slot is
+> added commented and may uncommented to disable USB3.0 from the
+> USB Complex and enable the PCIe controller.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../amlogic/meson-g12b-a311d-khadas-vim3.dts  | 22 +++++++++++++++++++
+>  .../amlogic/meson-g12b-s922x-khadas-vim3.dts  | 22 +++++++++++++++++++
+>  .../boot/dts/amlogic/meson-khadas-vim3.dtsi   |  4 ++++
+>  .../dts/amlogic/meson-sm1-khadas-vim3l.dts    | 22 +++++++++++++++++++
+>  4 files changed, 70 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
+> index 3a6a1e0c1e32..0577b1435cbb 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
+> @@ -14,3 +14,25 @@
+>  / {
+>  	compatible = "khadas,vim3", "amlogic,a311d", "amlogic,g12b";
+>  };
+> +
+> +/*
+> + * The VIM3 on-board  MCU can mux the PCIe/USB3.0 shared differential
+> + * lines using a FUSB340TMX USB 3.1 SuperSpeed Data Switch between
+> + * an USB3.0 Type A connector and a M.2 Key M slot.
+> + * The PHY driving these differential lines is shared between
+> + * the USB3.0 controller and the PCIe Controller, thus only
+> + * a single controller can use it.
+> + * If the MCU is configured to mux the PCIe/USB3.0 differential lines
+> + * to the M.2 Key M slot, uncomment the following block to disable
+> + * USB3.0 from the USB Complex and enable the PCIe controller.
+> + */
+> +/*
+> +&pcie {
+> +	status = "okay";
+> +};
+> +
+> +&usb {
+> +	phys = <&usb2_phy0>, <&usb2_phy1>;
+> +	phy-names = "usb2-phy0", "usb2-phy1";
+> +};
+> + */
 
-Sort of.
+Although you can't do much more than this here, I'd expect firmware on
+the machine to provide the DT that matches its configuration. Is it
+the way it actually works? Or is the user actually expected to edit
+this file?
 
-On PHB3 both the 32bit and the 64bit MMIO windows are split into 256
-segments each of which is mapped to a PE number. For the 32bit space
-there's a remapping table in hardware that allows arbitrary mapping of
-segments to PE numbers, but in the 64bit space the mapping is fixed
-with the first segment being PE0, etc. If there's a 64 bit BAR under a
-bridge the PE is really "allocated" during the BAR assignment process,
-and the setup_bridge() step sets up the EEH state based on that.
+Thanks,
 
-It's worth pointing out that this is why the 64bit window is usually
-4GB. Bridge windows need to be aligned to a segment boundary to ensure
-the devices under them are placed into a unique PE.
+	M.
 
-> Currently, if a bus already has a PE, pnv_ioda_setup_bus_PE() takes it
-> and returns. I can see two ways to change it, both are not difficult to
-> implement:
->
->  a.1) check if MEM64 BARs appeared below the bus - allocate and assign
->       a new master PE with required number of slave PEs;
->
->  a.2) if the bus now has more MEM64 than before - check if more slave
->       PEs must be reserved;
->
->  b) release all the PEs before a PCI rescan and allocate+assign them
->     again after - with this approach the "Hook up the writes to
->     PCI_SECONDARY_BUS register" patch may be eliminated.
->
-> Do you find any of these suitable?
-
-I'm not sure a) would work, but even if it does b) is preferable.
-There's a lot of strangeness in the powerpc PCI code as-is without
-adding extra code paths to deal with. Keeping what happens at hotplug
-consistent with what happens at boot will help keep things sane.
-
-FYI in the next few days I'm going to post a series that rips out the
-use of pci_dn in powernv and the generic parts of EEH (pseries still
-uses it). Assuming Bjorn isn't picking this up for 5.4 you might want
-to wait for that before getting too deep into this.
-
-Oliver
+-- 
+Jazz is not dead, it just smells funny.
