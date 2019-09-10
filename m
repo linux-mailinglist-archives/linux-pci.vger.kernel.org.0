@@ -2,110 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EE544AEC98
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2019 16:05:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C7AEAED1D
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2019 16:35:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732103AbfIJOFG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Sep 2019 10:05:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:35856 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727289AbfIJOFF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:05:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA23928;
-        Tue, 10 Sep 2019 07:05:04 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4FF9E3F59C;
-        Tue, 10 Sep 2019 07:05:04 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 15:05:02 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Pankaj Dubey <pankaj.dubey@samsung.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        Anvesh Salveru <anvesh.s@samsung.com>
-Subject: Re: [PATCH 2/2] PCI: dwc: Add support to disable equalization phase
- 2 and 3
-Message-ID: <20190910140502.GL9720@e119886-lin.cambridge.arm.com>
-References: <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
- <CGME20190910122520epcas5p1faeb16f7c38ee057ce93783a637e6bf4@epcas5p1.samsung.com>
- <1568118302-10505-2-git-send-email-pankaj.dubey@samsung.com>
+        id S1727624AbfIJOfE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Sep 2019 10:35:04 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:50139 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726535AbfIJOfD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Sep 2019 10:35:03 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 2D199258;
+        Tue, 10 Sep 2019 10:35:02 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Tue, 10 Sep 2019 10:35:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=Yn2LW5Cn6NDpHwAp8OL/VHEBLuD
+        Ea+FvY5tcN4UAkhY=; b=E1l0FDeU0uUFm7pcZuFCt4iz6yOAMuia+vNX5NgkfB9
+        OZ+OCRjCjmAheEZ/c0h/S46faHhQNilYVNSjtRKtEaHY/kG/ecQRjLJyA2moFe/m
+        QiGLzarjz3ucq0RiMxzat8L+2491N7JAvPBXH5i/on3KZHNI2lQwlnftpgcTIunw
+        A2NMpap8CEX7RSvWM0WTG7HhOKYDG79boZ3pcNrA9xmbAaShQHWxTV1aAAcZUyjx
+        xXnPucNsfVuZ2moPw5EHpIQCIY/t7qYRleuWKHPRmlKSbgnCLB/7ZJGL/c4QiN1X
+        SMJaboUtlK9Z54p+uBTgSHA0yDYE70+fSngiiws5SHA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Yn2LW5
+        Cn6NDpHwAp8OL/VHEBLuDEa+FvY5tcN4UAkhY=; b=NNHX+V7aLEcSUnQcXHmGE3
+        nqfAJ1DZb+GMtyCwjtXktd01OmnSK0LMe3vSOTjBUaGAmSF46McHmEA3ASkbI6mz
+        /a7H9PN7qTW/0XsNw2iOX08ic59QTPZhc/VAXM3yORb5oQy1ZG0BW7a7s4EI5o4A
+        /YzepHaWkEb181HwyWTWK75/RkLk2p3ZQ4DqHJvdHCtGUCIF3dzUuYI803HJwnw8
+        jT18H5KQNk2bDKCwVxOKJO+PNKBMJcHn8B6sFBa90EWFzc5AoRr0afIFIuRBIZlH
+        sZLwttpozKF0w0dWRQ9TMqOwO6P5OOkSQC0WP40bhyaPhw7E+0td0sURk7cfXZKw
+        ==
+X-ME-Sender: <xms:lbR3XeLGvUx4O31kAw2oE1n5l3b6fsed1JR-zVy08lObam-UxyKvhQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrtddtgdehhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepvddufedrfedtrdekrdduud
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:lbR3XcGSgZBgfUJoxZBU4g8S3NN0RXfw57IHLBKmHhDJsEAasRbyAg>
+    <xmx:lbR3XcWakchC9nsJ8YlQPtYqK5DzoQcbNHxshQdTHqBMSbyym-Sh6Q>
+    <xmx:lbR3XSMePnZU-G5F6G3_gJC1yDjQfi6DXoXu20hx31ihEJ3K3AB3zA>
+    <xmx:lbR3XaV84X5qhBZCloMBm7H7idqNjs0OLhwR7hNP8BIkyQZHYjIeNg>
+Received: from localhost (110.8.30.213.rev.vodafone.pt [213.30.8.110])
+        by mail.messagingengine.com (Postfix) with ESMTPA id DE087D6005A;
+        Tue, 10 Sep 2019 10:35:00 -0400 (EDT)
+Date:   Tue, 10 Sep 2019 15:34:59 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     stable@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Subject: Re: [BACKPORT 4.14.y 03/18] drm/omap: panel-dsi-cm: fix driver
+Message-ID: <20190910143459.GC3362@kroah.com>
+References: <20190905161759.28036-1-mathieu.poirier@linaro.org>
+ <20190905161759.28036-4-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1568118302-10505-2-git-send-email-pankaj.dubey@samsung.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20190905161759.28036-4-mathieu.poirier@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 05:55:02PM +0530, Pankaj Dubey wrote:
-> From: Anvesh Salveru <anvesh.s@samsung.com>
+On Thu, Sep 05, 2019 at 10:17:44AM -0600, Mathieu Poirier wrote:
+> From: Tony Lindgren <tony@atomide.com>
 > 
-> In some platforms, PCIe PHY may have issues which will prevent linkup
-> to happen in GEN3 or high speed. In case equalization fails, link will
-> fallback to GEN1.
+> commit e128310ddd379b0fdd21dc41d176c3b3505a0832 upstream
 > 
-> Designware controller gives flexibility to disable GEN3 equalization
-> completely or only phase 2 and 3.
-
-Do some platforms have issues conducting phase 2 and 3 when they successfully
-conduct phase 0 and 1?
-
+> This adds support for get_timings() and check_timings()
+> to get the driver working and properly initializes the
+> timing information from DT.
 > 
-> Platform drivers can disable equalization phase 2 and 3, by setting
-> dwc_pci_quirk flag DWC_EQUALIZATION_DISABLE.
-> 
-> Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 > ---
->  drivers/pci/controller/dwc/pcie-designware.c | 3 +++
->  drivers/pci/controller/dwc/pcie-designware.h | 2 ++
->  2 files changed, 5 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index bf82091..97a8268 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -472,5 +472,8 @@ void dw_pcie_setup(struct dw_pcie *pci)
->  	if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE)
->  		val |= PORT_LOGIC_GEN3_EQ_DISABLE;
->  
-> +	if (pci->dwc_pci_quirk & DWC_EQ_PHASE_2_3_DISABLE)
-> +		val |= PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE;
-> +
->  	dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
->  }
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index a1453c5..b541508 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -31,6 +31,7 @@
->  
->  /* Parameters for PCIe Quirks */
->  #define DWC_EQUALIZATION_DISABLE	0x1
-> +#define DWC_EQ_PHASE_2_3_DISABLE	0x2
+>  .../gpu/drm/omapdrm/displays/panel-dsi-cm.c   | 56 +++++++++++++++++--
+>  1 file changed, 51 insertions(+), 5 deletions(-)
 
-It only makes sense for either DWC_EQUALIZATION_DISABLE or DWC_EQ_PHASE_2_3_DISABLE
-to be specified, though if dwc_pci_quirk intends to hold other quirks should these
-be numbers and not bit fields?
+THis looks like a "new feature", right?  Why is this a stable patch?
 
-Thanks,
+thanks,
 
-Andrew Murray
-
->  
->  /* Synopsys-specific PCIe configuration registers */
->  #define PCIE_PORT_LINK_CONTROL		0x710
-> @@ -65,6 +66,7 @@
->  
->  #define PCIE_PORT_GEN3_RELATED		0x890
->  #define PORT_LOGIC_GEN3_EQ_DISABLE	BIT(16)
-> +#define PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE	BIT(9)
->  
->  #define PCIE_ATU_VIEWPORT		0x900
->  #define PCIE_ATU_REGION_INBOUND		BIT(31)
-> -- 
-> 2.7.4
-> 
+greg k-h
