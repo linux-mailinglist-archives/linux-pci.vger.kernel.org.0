@@ -2,131 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 672A9AEF78
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2019 18:22:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4C60AEFC6
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2019 18:41:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394173AbfIJQVx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Sep 2019 12:21:53 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:45440 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394159AbfIJQVx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Sep 2019 12:21:53 -0400
-Received: by mail-yb1-f196.google.com with SMTP id u32so6310430ybi.12;
-        Tue, 10 Sep 2019 09:21:53 -0700 (PDT)
+        id S2436803AbfIJQle (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Sep 2019 12:41:34 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36179 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729580AbfIJQld (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Sep 2019 12:41:33 -0400
+Received: by mail-io1-f65.google.com with SMTP id b136so39066544iof.3
+        for <linux-pci@vger.kernel.org>; Tue, 10 Sep 2019 09:41:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PuYC847frxgHINuOOhOoZA3oEgF84P0aotCSUtzOwyE=;
+        b=We/JeeLSpFGQIN3oI+YX0ZmIGMBD/BvYCC5rXZYpTdk5GwMlZ0UAuo7WDhz4zNk4te
+         B6PDV93PovykItWCG05wcFNwFdwTkJEPBX1Viz4/d+fGhYxpGw/68mLE5PxWuR1weWcC
+         MoFnH5sNDl17TV0AEGlpoJ9VS0EFKmWIv7Txn+kLn0qhtstWxUnti+aDxX9Swe+UkXmI
+         S3m+tAaEDBBhqlw14dKBlI5zeeSaa7BWY4meUkBCkNNSDCLJ36SbvzWd683kRyydsY8W
+         41Tsljpj4QN/kuGNypUuFh/P00HxhxkFFPXQhoJbz83e0VcCokYIl0NQHy+e1PZXZFrd
+         raMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3EFG8GMdoWm20YXUmdUc6sNlJ41b0YnBqTWjjuYQ4/s=;
-        b=QdFBV7YRAWNNhYpMK0eB/qNvC7NgXODYdXUbQKw7FmaL+LkvmDXOiG4PzXLEGi/add
-         hB/6CH/z5zlqs0maskH4TWI3942fjOa4MLFigJUAktlUo40FcgsUVsSRTOEDm0XS6jL0
-         vfDZgnaI2+4LntOz1tvF1uozglJYM2L3r05c5QHcrIPfcuXg/cusUp6y40DVrcsUiYoH
-         +4FiyNEytQGrez/aObzgq+UekOyf5/d8uBabgU9uDp+AJokxGkzVZ/6qPy8Qy6ME8qw8
-         YkFDKyhvxM10+VEfcGL8zTdyD79CEN+RfXF+BNq5DunBrxO0TlLHAkCQXR70sET1WADp
-         CxhQ==
-X-Gm-Message-State: APjAAAWVGf33FQVSr1Pn1BfhF5bYaRd9EhKBr1Fj+X9JGb65162w4ROm
-        HdfhbusD2wS5B0ibB/9ICSH9EskaMzdTcEkZG2Y=
-X-Google-Smtp-Source: APXvYqyF3P9idq9zDTrvwWz84GVFga/Fi7j8wWBkRUutPwTrSqHwy0A+Nquvmx/x12REHS9GnaJGK0BdinGOVMfYFUE=
-X-Received: by 2002:a5b:645:: with SMTP id o5mr21428343ybq.175.1568132512518;
- Tue, 10 Sep 2019 09:21:52 -0700 (PDT)
+        bh=PuYC847frxgHINuOOhOoZA3oEgF84P0aotCSUtzOwyE=;
+        b=nQf6ODyyyf6d0GvgcDryJ/3mRooo+CGCcv4dEM5O80bs2Dw/J+RHv4PGju6JxI5hfN
+         jXfYerhrwPda4s4Rv7JH8qoFehXL394hsbO6S2YEYoGCaXrlrbxNjEYsrKWcFK6TRzVd
+         l4Q2zTgSKIqePR30yLEN4n/NUh6AU5IdgWt9HWWoVfvBCFF82Iev+YBv0LcJSIsFs49W
+         /SsbSj8P8vbip9vnINBQPA5DPTIgYZSHxruoXk2c/qOm/6cD3lyNKruj1h3XqKTjY+vP
+         vp2uFN/RkOvJbd1ia1t5ouC0B2LpUNjhLu3tH3Jmxd5w9R9E0z3Zw+zPVXC7OopnVcYa
+         prTg==
+X-Gm-Message-State: APjAAAUMNc0BZVE2ACM5fe8xa51TwYtDo58xaWUHKZR3JPm4ogcEBZbo
+        zqUVFeha6wu7SAWh8krCmiEOmAlz8TJvSlKuKPkt3g==
+X-Google-Smtp-Source: APXvYqxROhJ3fm9H1em04hVFrGU84MgcmLV2y9LjuszRFdZ+1fVjqDcud7QdlNneQxAk/rIG0VSfcUycOIj0tbhMF/s=
+X-Received: by 2002:a6b:7215:: with SMTP id n21mr6285570ioc.238.1568133691620;
+ Tue, 10 Sep 2019 09:41:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
- <CGME20190910122520epcas5p1faeb16f7c38ee057ce93783a637e6bf4@epcas5p1.samsung.com>
- <1568118302-10505-2-git-send-email-pankaj.dubey@samsung.com> <20190910140502.GL9720@e119886-lin.cambridge.arm.com>
-In-Reply-To: <20190910140502.GL9720@e119886-lin.cambridge.arm.com>
-From:   Pankaj Dubey <pankaj.dubey@samsung.com>
-Date:   Tue, 10 Sep 2019 21:51:41 +0530
-Message-ID: <CAGcde9Fm+WGamjAC6R4jmaShMYxAoCsofggfwdJ7viYt3NE_sQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PCI: dwc: Add support to disable equalization phase 2
- and 3
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Anvesh Salveru <anvesh.s@samsung.com>
+References: <20190716173448.eswemneatvjwnxny@yadro.com> <9428e069-19dd-d020-1a47-f33d99bd01ac@deltatee.com>
+In-Reply-To: <9428e069-19dd-d020-1a47-f33d99bd01ac@deltatee.com>
+From:   Jon Mason <jdmason@kudzu.us>
+Date:   Tue, 10 Sep 2019 17:41:23 +0100
+Message-ID: <CAPoiz9x4Gb6hZg3GBfOjw_zMShOJHmXGmCOm2Nj+-vCaOzDCMg@mail.gmail.com>
+Subject: Re: [PATCH] ntb_hw_switchtec: make ntb_mw_set_trans() work when addr
+ == 0
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Alexander Fomichev <fomichev.ru@gmail.com>,
+        linux-ntb <linux-ntb@googlegroups.com>,
+        linux-pci@vger.kernel.org, Allen Hubbe <allenbh@gmail.com>,
+        linux@yadro.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 10 Sep 2019 at 19:59, Andrew Murray <andrew.murray@arm.com> wrote:
+On Tue, Jul 16, 2019 at 6:41 PM Logan Gunthorpe <logang@deltatee.com> wrote:
 >
-> On Tue, Sep 10, 2019 at 05:55:02PM +0530, Pankaj Dubey wrote:
-> > From: Anvesh Salveru <anvesh.s@samsung.com>
+>
+>
+> On 2019-07-16 11:34 a.m., Alexander Fomichev wrote:
+> > On switchtec_ntb_mw_set_trans() call, when (only) address == 0, it acts as
+> > ntb_mw_clear_trans(). Fix this, since address == 0 and size != 0 is valid
+> > combination for setting translation.
 > >
-> > In some platforms, PCIe PHY may have issues which will prevent linkup
-> > to happen in GEN3 or high speed. In case equalization fails, link will
-> > fallback to GEN1.
-> >
-> > Designware controller gives flexibility to disable GEN3 equalization
-> > completely or only phase 2 and 3.
+> > Signed-off-by: Alexander Fomichev <fomichev.ru@gmail.com>
 >
-> Do some platforms have issues conducting phase 2 and 3 when they successfully
-> conduct phase 0 and 1?
+> Looks good, thanks.
 >
+> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 
-Yes, it is possible.
+Applied to ntb-next, thanks
 
-> >
-> > Platform drivers can disable equalization phase 2 and 3, by setting
-> > dwc_pci_quirk flag DWC_EQUALIZATION_DISABLE.
-> >
-> > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-> > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+>
 > > ---
-> >  drivers/pci/controller/dwc/pcie-designware.c | 3 +++
-> >  drivers/pci/controller/dwc/pcie-designware.h | 2 ++
-> >  2 files changed, 5 insertions(+)
+> >  drivers/ntb/hw/mscc/ntb_hw_switchtec.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > >
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > index bf82091..97a8268 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > @@ -472,5 +472,8 @@ void dw_pcie_setup(struct dw_pcie *pci)
-> >       if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE)
-> >               val |= PORT_LOGIC_GEN3_EQ_DISABLE;
+> > diff --git a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+> > index db49677..45b9513 100644
+> > --- a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+> > +++ b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+> > @@ -305,7 +305,7 @@ static int switchtec_ntb_mw_set_trans(struct ntb_dev *ntb, int pidx, int widx,
+> >       if (rc)
+> >               return rc;
 > >
-> > +     if (pci->dwc_pci_quirk & DWC_EQ_PHASE_2_3_DISABLE)
-> > +             val |= PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE;
-> > +
-> >       dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
-> >  }
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > index a1453c5..b541508 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > @@ -31,6 +31,7 @@
-> >
-> >  /* Parameters for PCIe Quirks */
-> >  #define DWC_EQUALIZATION_DISABLE     0x1
-> > +#define DWC_EQ_PHASE_2_3_DISABLE     0x2
->
-> It only makes sense for either DWC_EQUALIZATION_DISABLE or DWC_EQ_PHASE_2_3_DISABLE
-> to be specified, though if dwc_pci_quirk intends to hold other quirks should these
-> be numbers and not bit fields?
->
-Yes, you are right in a given platform it will be either
-DWC_EQUALIZATION_DISABLE or DWC_EQ_PHASE_2_3_DISABLE.
-
-Intention behind making it bit-field was to add other quirks in future.
-
-> Thanks,
->
-> Andrew Murray
->
-> >
-> >  /* Synopsys-specific PCIe configuration registers */
-> >  #define PCIE_PORT_LINK_CONTROL               0x710
-> > @@ -65,6 +66,7 @@
-> >
-> >  #define PCIE_PORT_GEN3_RELATED               0x890
-> >  #define PORT_LOGIC_GEN3_EQ_DISABLE   BIT(16)
-> > +#define PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE BIT(9)
-> >
-> >  #define PCIE_ATU_VIEWPORT            0x900
-> >  #define PCIE_ATU_REGION_INBOUND              BIT(31)
-> > --
-> > 2.7.4
+> > -     if (addr == 0 || size == 0) {
+> > +     if (size == 0) {
+> >               if (widx < nr_direct_mw)
+> >                       switchtec_ntb_mw_clr_direct(sndev, widx);
+> >               else
 > >
