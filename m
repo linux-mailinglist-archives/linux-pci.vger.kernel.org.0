@@ -2,182 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 47369AFC60
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Sep 2019 14:20:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38F71AFC6D
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Sep 2019 14:22:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbfIKMT7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Sep 2019 08:19:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:46592 "EHLO foss.arm.com"
+        id S1727854AbfIKMWy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Sep 2019 08:22:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:46656 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727786AbfIKMT7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 11 Sep 2019 08:19:59 -0400
+        id S1726198AbfIKMWy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Sep 2019 08:22:54 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D1D91000;
-        Wed, 11 Sep 2019 05:19:58 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CAD91000;
+        Wed, 11 Sep 2019 05:22:53 -0700 (PDT)
 Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A969D3F59C;
-        Wed, 11 Sep 2019 05:19:57 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 13:19:56 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A78693F59C;
+        Wed, 11 Sep 2019 05:22:52 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 13:22:50 +0100
 From:   Andrew Murray <andrew.murray@arm.com>
 To:     Neil Armstrong <narmstrong@baylibre.com>
 Cc:     khilman@baylibre.com, bhelgaas@google.com,
         lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com,
-        repk@triplefau.lt, maz@kernel.org,
+        devicetree@vger.kernel.org, repk@triplefau.lt, maz@kernel.org,
         linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/6] phy: meson-g12a-usb3-pcie: Add support for PCIe mode
-Message-ID: <20190911121954.GS9720@e119886-lin.cambridge.arm.com>
+Subject: Re: [PATCH 1/6] dt-bindings: pci: amlogic,meson-pcie: Add G12A
+ bindings
+Message-ID: <20190911122250.GT9720@e119886-lin.cambridge.arm.com>
 References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
- <1567950178-4466-5-git-send-email-narmstrong@baylibre.com>
+ <1567950178-4466-2-git-send-email-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1567950178-4466-5-git-send-email-narmstrong@baylibre.com>
+In-Reply-To: <1567950178-4466-2-git-send-email-narmstrong@baylibre.com>
 User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Sep 08, 2019 at 01:42:56PM +0000, Neil Armstrong wrote:
-> This adds extended PCIe PHY functions for the Amlogic G12A
-> USB3+PCIE Combo PHY to support reset, power_on and power_off for
-> PCIe exclusively.
+On Sun, Sep 08, 2019 at 01:42:53PM +0000, Neil Armstrong wrote:
+> Add PCIE bindings for the Amlogic G12A SoC, the support is the same
+> but the PHY is shared with USB3 to control the differential lines.
 > 
-> With these callbacks, we can handle all the needed operations of the
-> Amlogic PCIe controller driver.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../phy/amlogic/phy-meson-g12a-usb3-pcie.c    | 70 ++++++++++++++++---
->  1 file changed, 61 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
-> index ac322d643c7a..08e322789e59 100644
-> --- a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
-> +++ b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
-> @@ -50,6 +50,8 @@
->  	#define PHY_R5_PHY_CR_ACK				BIT(16)
->  	#define PHY_R5_PHY_BS_OUT				BIT(17)
->  
-> +#define PCIE_RESET_DELAY					500
-> +
->  struct phy_g12a_usb3_pcie_priv {
->  	struct regmap		*regmap;
->  	struct regmap		*regmap_cr;
-> @@ -196,6 +198,10 @@ static int phy_g12a_usb3_init(struct phy *phy)
->  	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
->  	int data, ret;
->  
-> +	ret = reset_control_reset(priv->reset);
-> +	if (ret)
-> +		return ret;
-> +
+> Thus this adds a phy phandle to control the PHY, and sets invalid
+> MIPI clock as optional for G12A.
 
-Right, so we've moved this to apply to USB only, thus assuming PCI will
-call .reset for its reset (why the asymmetry?).
+Perhaps reword to "Thus this adds a phy phandle to control the PHY,
+and only requires a MIPI clock for AXG SoC Family".
 
 Thanks,
 
 Andrew Murray
 
->  	/* Switch PHY to USB3 */
->  	/* TODO figure out how to handle when PCIe was set in the bootloader */
->  	regmap_update_bits(priv->regmap, PHY_R0,
-> @@ -272,24 +278,64 @@ static int phy_g12a_usb3_init(struct phy *phy)
->  	return 0;
->  }
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../devicetree/bindings/pci/amlogic,meson-pcie.txt   | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> index efa2c8b9b85a..84fdc422792e 100644
+> --- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> @@ -9,13 +9,16 @@ Additional properties are described here:
 >  
-> -static int phy_g12a_usb3_pcie_init(struct phy *phy)
-> +static int phy_g12a_usb3_pcie_power_on(struct phy *phy)
-> +{
-> +	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
-> +
-> +	if (priv->mode == PHY_TYPE_USB3)
-> +		return 0;
-> +
-> +	regmap_update_bits(priv->regmap, PHY_R0,
-> +			   PHY_R0_PCIE_POWER_STATE,
-> +			   FIELD_PREP(PHY_R0_PCIE_POWER_STATE, 0x1c));
-> +
-> +	return 0;
-> +}
-> +
-> +static int phy_g12a_usb3_pcie_power_off(struct phy *phy)
-> +{
-> +	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
-> +
-> +	if (priv->mode == PHY_TYPE_USB3)
-> +		return 0;
-> +
-> +	regmap_update_bits(priv->regmap, PHY_R0,
-> +			   PHY_R0_PCIE_POWER_STATE,
-> +			   FIELD_PREP(PHY_R0_PCIE_POWER_STATE, 0x1d));
-> +
-> +	return 0;
-> +}
-> +
-> +static int phy_g12a_usb3_pcie_reset(struct phy *phy)
->  {
->  	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
->  	int ret;
->  
-> -	ret = reset_control_reset(priv->reset);
-> +	if (priv->mode == PHY_TYPE_USB3)
-> +		return 0;
-> +
-> +	ret = reset_control_assert(priv->reset);
->  	if (ret)
->  		return ret;
->  
-> +	udelay(PCIE_RESET_DELAY);
-> +
-> +	ret = reset_control_deassert(priv->reset);
-> +	if (ret)
-> +		return ret;
-> +
-> +	udelay(PCIE_RESET_DELAY);
-> +
-> +	return 0;
-> +}
-> +
-> +static int phy_g12a_usb3_pcie_init(struct phy *phy)
-> +{
-> +	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
-> +
->  	if (priv->mode == PHY_TYPE_USB3)
->  		return phy_g12a_usb3_init(phy);
->  
-> -	/* Power UP PCIE */
-> -	/* TODO figure out when the bootloader has set USB3 mode before */
-> -	regmap_update_bits(priv->regmap, PHY_R0,
-> -			   PHY_R0_PCIE_POWER_STATE,
-> -			   FIELD_PREP(PHY_R0_PCIE_POWER_STATE, 0x1c));
-> -
->  	return 0;
->  }
->  
-> @@ -297,7 +343,10 @@ static int phy_g12a_usb3_pcie_exit(struct phy *phy)
->  {
->  	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
->  
-> -	return reset_control_reset(priv->reset);
-> +	if (priv->mode == PHY_TYPE_USB3)
-> +		return reset_control_reset(priv->reset);
-> +
-> +	return 0;
->  }
->  
->  static struct phy *phy_g12a_usb3_pcie_xlate(struct device *dev,
-> @@ -326,6 +375,9 @@ static struct phy *phy_g12a_usb3_pcie_xlate(struct device *dev,
->  static const struct phy_ops phy_g12a_usb3_pcie_ops = {
->  	.init		= phy_g12a_usb3_pcie_init,
->  	.exit		= phy_g12a_usb3_pcie_exit,
-> +	.power_on	= phy_g12a_usb3_pcie_power_on,
-> +	.power_off	= phy_g12a_usb3_pcie_power_off,
-> +	.reset		= phy_g12a_usb3_pcie_reset,
->  	.owner		= THIS_MODULE,
->  };
+>  Required properties:
+>  - compatible:
+> -	should contain "amlogic,axg-pcie" to identify the core.
+> +	should contain :
+> +	- "amlogic,axg-pcie" for AXG SoC Family
+> +	- "amlogic,g12a-pcie" for G12A SoC Family
+> +	to identify the core.
+>  - reg:
+>  	should contain the configuration address space.
+>  - reg-names: Must be
+>  	- "elbi"	External local bus interface registers
+>  	- "cfg"		Meson specific registers
+> -	- "phy"		Meson PCIE PHY registers
+> +	- "phy"		Meson PCIE PHY registers for AXG SoC Family
+>  	- "config"	PCIe configuration space
+>  - reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
+>  - clocks: Must contain an entry for each entry in clock-names.
+> @@ -23,12 +26,13 @@ Required properties:
+>  	- "pclk"       PCIe GEN 100M PLL clock
+>  	- "port"       PCIe_x(A or B) RC clock gate
+>  	- "general"    PCIe Phy clock
+> -	- "mipi"       PCIe_x(A or B) 100M ref clock gate
+> +	- "mipi"       PCIe_x(A or B) 100M ref clock gate for AXG SoC Family
+>  - resets: phandle to the reset lines.
+>  - reset-names: must contain "phy" "port" and "apb"
+> -       - "phy"         Share PHY reset
+> +       - "phy"         Share PHY reset for AXG SoC Family
+>         - "port"        Port A or B reset
+>         - "apb"         Share APB reset
+> +- phys: should contain a phandle to the shared phy for G12A SoC Family
+>  - device_type:
+>  	should be "pci". As specified in designware-pcie.txt
 >  
 > -- 
 > 2.17.1
