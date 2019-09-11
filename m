@@ -2,91 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 32DDDB05A9
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2019 00:33:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E499B0600
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2019 01:38:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbfIKWdJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Sep 2019 18:33:09 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:42738 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728224AbfIKWdJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Sep 2019 18:33:09 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CB60533A;
-        Thu, 12 Sep 2019 00:33:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1568241187;
-        bh=Ulyq4f+6Afiv/6bNgVB/ITS9goTMGa4W5xjkJwM8xXU=;
-        h=Subject:To:Cc:References:Reply-To:From:Date:In-Reply-To:From;
-        b=mHBN/3PK09Ya76f2yBDbwJBUjgvYRHFX5a74Hwn/XAlxVGEIjlhPOORLglYTqqrxy
-         36mrPoVlU7WeTmwOhcw6RlTKuqoFWiNl7IGuIwN6mVgaF4kGXJ4RQr/rsfaYFeGRkR
-         5RWNYAwtYWU38fHAYug+OvyTWi9uWaWfzN3zipjM=
-Subject: Re: [PATCH] PCI: rcar: Remove unnecessary header include (../pci.h)
-To:     Andrew Murray <andrew.murray@arm.com>,
-        Simon Horman <horms@verge.net.au>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <20190905150528.20417-1-andrew.murray@arm.com>
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <67fb0f5a-1bf1-596a-4012-8ae881220096@ideasonboard.com>
-Date:   Wed, 11 Sep 2019 23:33:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1729223AbfIKXiU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Sep 2019 19:38:20 -0400
+Received: from mail-eopbgr690132.outbound.protection.outlook.com ([40.107.69.132]:35718
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726525AbfIKXiU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Sep 2019 19:38:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iCqsY9THWs/nBgz+zFLL3ihiqBQtWzO2iyFeLOU56BIgt5L9yctBquoNBeZa77UQr2kPzAWi4Z+G0P5uxQjsOdFsaKK7N/zq3sB+tRosKXMndLNPd1nwzeR+lvesgOWbwiQqlGbc85ArI2swAOAecIZbHvm4s6WcTHqsSuEKpTad5RfuJJUN289BFMyGBIqWYtyTxAw6TlXRuNgREyneaV4Notm1YjM1DGQJaCryiKo03Dw1wN9r9eKhuK+kjGwltFz3mLVOSkAT7U70wVvjze5YPTfq5IiZpN/jMCm4Gsc9cT5RoLOcssquSgpJeGegcrViFAA7mfpYGCnmxfgSFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EQzneUZntFqm2MfzJHuhHO52Bu2qXFb3+Y+kAuXdeuE=;
+ b=WhpROJ++yL4KqoJHKfjvI8k6H5SiBumg5x76IKw6dZGKEiIoWfMNMsP5dW+adz0TXhKbJXFYrB/9FD9k24kkVs+QYE5Q43/3DA50wNdMypg3pZIyoiAhbN4xZP7iJz9Fjr2ChXbQPqDYH2U9G7kw4KummupvYqVtviNKPOMQcclwQvgVdfhvpOiFhG1EnzSJ/kdIa2/W1FvwZuRO3zvMUf5fZHk3M8CnnUPKyfU6us+dUfVBj9tfPM7k5wSWiChr0vry0GKL+fTIIyeWhs5Z3touyyakGkxPy0qna8W3BxP/+tnBFtxORkaihS2WafbIsKpEzIwp5gXHf4UhexrLgA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EQzneUZntFqm2MfzJHuhHO52Bu2qXFb3+Y+kAuXdeuE=;
+ b=j0Z7kUhEjRa9Whp7NMevmzZcxRmpmaslqPr7XG1oq7MIsxwrqzI7Rf9uLc7mcuXJWwtoX5XGkbtjR0HvERDQG+UMFZX8XEMvJu4KFXrwCzYK6CMrBtLb2uAc3mukyBOrntyEuafJfwFMGC9bAZpJ3sLokzsylfUKIw+LZtz0ygQ=
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
+ SN6PR2101MB1087.namprd21.prod.outlook.com (52.132.115.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.7; Wed, 11 Sep 2019 23:38:17 +0000
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::dd56:aa4f:204f:86a4]) by SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::dd56:aa4f:204f:86a4%3]) with mapi id 15.20.2263.005; Wed, 11 Sep 2019
+ 23:38:17 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH 0/4] Enhance pci-hyperv to support hibernation
+Thread-Topic: [PATCH 0/4] Enhance pci-hyperv to support hibernation
+Thread-Index: AQHVaPn8vIIXMuXG2k+dW/CDPjDTsg==
+Date:   Wed, 11 Sep 2019 23:38:17 +0000
+Message-ID: <1568245086-70601-1-git-send-email-decui@microsoft.com>
+Reply-To: Dexuan Cui <decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR19CA0072.namprd19.prod.outlook.com
+ (2603:10b6:300:94::34) To SN6PR2101MB0942.namprd21.prod.outlook.com
+ (2603:10b6:805:4::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9ea10a0c-23bd-498a-1610-08d737111efe
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR2101MB1087;
+x-ms-traffictypediagnostic: SN6PR2101MB1087:|SN6PR2101MB1087:
+x-ms-exchange-transport-forked: True
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <SN6PR2101MB1087AF4AE9AE2C818D778A21BFB10@SN6PR2101MB1087.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:813;
+x-forefront-prvs: 0157DEB61B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(346002)(39860400002)(396003)(366004)(199004)(189003)(10290500003)(2201001)(2501003)(256004)(7736002)(4744005)(6306002)(6436002)(305945005)(2906002)(14454004)(3846002)(2616005)(81156014)(81166006)(8936002)(50226002)(66066001)(26005)(8676002)(5660300002)(966005)(110136005)(6116002)(316002)(6512007)(66556008)(186003)(66946007)(86362001)(66446008)(6486002)(64756008)(66476007)(22452003)(71200400001)(476003)(71190400001)(107886003)(43066004)(25786009)(478600001)(14444005)(102836004)(6636002)(99286004)(1511001)(36756003)(4326008)(486006)(53936002)(52116002)(3450700001)(6506007)(386003)(4720700003)(10090500001)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1087;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: c6WmyEUGe8zOEWLaghTlGYhu1oq6r+0u38+hkxKkeWz7DSQ9pPXBSbP3pHCibBxTHOqamXgae6uwNP3GA/3UohZNasGTooqr9gfpQq/UXVBCOst0TiN78/CWhWAxQNNIMKmOxxgnYblxg5GjBggpQY/AwjCSduFVKHli/2Gwy6/8c2Hv4UKEOWo87xwJK9YC/JQQfoZO1jvsgWyDRM2j8h515wnm1bJZG8KUZriNH0jGjAX+N5TovRgMSSgvLqwd5LBAhRLqRKipXiDsHK5qrirK3gzKLtJbecl7z2pJBxasFCAgxSgGjCeyLTtcFV/E+F7V/Z3DbI/FJQBOsYwN043PcSymMyhjMmfvzBX+eGBNcjo0LDzLzypeHm+1cTy8NrbXPvzd6wlmZH3bcK0rKVBNZfmA4nsfl3LbuY/ztlU=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190905150528.20417-1-andrew.murray@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ea10a0c-23bd-498a-1610-08d737111efe
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2019 23:38:17.3072
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MqCL35eoow8eAldbxlmLxhrZvK2fhvL8MTUhKEsFWejB0FkKgr87YnvgGNJzElfVFHZMul26YsnsQkiDtU6kTw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1087
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Andy!
+This patchset is basically a pure Hyper-V specific change and it has a
+build dependency on the commit 271b2224d42f ("Drivers: hv: vmbus: Implement
+suspend/resume for VSC drivers for hibernation"), which is on Sasha Levin's
+Hyper-V tree's hyperv-next branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git/log/?h=3Dh=
+yperv-next
 
-On 05/09/2019 16:05, Andrew Murray wrote:
-> Remove unnecessary header include (../pci.h) since it doesn't
-> provide any needed symbols.
+I request this patch should go through Sasha's tree rather than the
+pci tree.
 
-This appears to have been added in 9e2aee80c78d ("PCI: Move private DT
-related functions into private header")
+Dexuan Cui (4):
+  PCI: hv: Reorganize the code in preparation of hibernation
+  PCI: hv: Add the support of hibernation
+  PCI: hv: Do not queue new work items on hibernation
+  PCI: hv: Change pci_protocol_version to per-hbus
 
-Several other drivers were touched in that commit too.
+ drivers/pci/controller/pci-hyperv.c | 166 ++++++++++++++++++++++++++++++--=
+----
+ 1 file changed, 140 insertions(+), 26 deletions(-)
 
-Have you checked to see if any others can also be cleaned up?
-
- (I only ask, because I only see this single patch on linux-renesas-soc,
-my apologies if others are on different lists.)
-
-Regardless of that, this looks fine to me, and passes a cursory compile
-check.
-
-And I've just tried with pcie-xilinx, and pcie-altera, but both still
-need this header - so perhaps pcie-rcar was just the odd one out.
-
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-
-
-> Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-> ---
->  drivers/pci/controller/pcie-rcar.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
-> index f6a669a9af41..ee1c38c2fac9 100644
-> --- a/drivers/pci/controller/pcie-rcar.c
-> +++ b/drivers/pci/controller/pcie-rcar.c
-> @@ -30,8 +30,6 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/slab.h>
->  
-> -#include "../pci.h"
-> -
->  #define PCIECAR			0x000010
->  #define PCIECCTLR		0x000018
->  #define  CONFIG_SEND_ENABLE	BIT(31)
-> 
+--=20
+1.8.3.1
 
