@@ -2,251 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91798B0F16
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2019 14:49:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA2B4B0F31
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2019 14:55:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731711AbfILMtu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Sep 2019 08:49:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:33712 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731685AbfILMtu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 12 Sep 2019 08:49:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED01A28;
-        Thu, 12 Sep 2019 05:49:48 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B34A3F71F;
-        Thu, 12 Sep 2019 05:49:48 -0700 (PDT)
-Date:   Thu, 12 Sep 2019 13:49:46 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        id S1731793AbfILMzW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Sep 2019 08:55:22 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:8077 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731788AbfILMzV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Sep 2019 08:55:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1568292920; x=1599828920;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=JaTc1chxleSvN0x3nLvZo/SABEUOWMYq1A/rnNqsaT4=;
+  b=YeGFHRYBi45tZnZ60d3PV/lsoNjBzQLhV1oMLlPSQ1Dryg356CXU/POa
+   wyTEmDdJT61Nca8cfJirhtiiW7F64w5n3iXjcXNH6bEKVSKkHBGCBJU3V
+   EzL+H84cESac8/S2iB8EXrWxPB/y8qF/aJpQrfAsKz+eRkGyNF0u8rR4g
+   0=;
+X-IronPort-AV: E=Sophos;i="5.64,497,1559520000"; 
+   d="scan'208";a="420817483"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 12 Sep 2019 12:55:09 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id D7F13A2041;
+        Thu, 12 Sep 2019 12:55:05 +0000 (UTC)
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 12 Sep 2019 12:55:04 +0000
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 12 Sep 2019 12:55:04 +0000
+Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
+ EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1367.000;
+ Thu, 12 Sep 2019 12:55:04 +0000
+From:   "Chocron, Jonathan" <jonnyc@amazon.com>
+To:     "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Hanoch, Uri" <hanochu@amazon.com>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: Re: [PATCH v3 09/11] PCI: layerscape: Add EP mode support for
- ls1088a and ls2088a
-Message-ID: <20190912124943.GD9720@e119886-lin.cambridge.arm.com>
-References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
- <20190902031716.43195-10-xiaowei.bao@nxp.com>
- <20190902124603.GJ9720@e119886-lin.cambridge.arm.com>
- <AM5PR04MB329970AE2C1812E88B9DE5A2F5B90@AM5PR04MB3299.eurprd04.prod.outlook.com>
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "Wasserstrom, Barak" <barakw@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>
+Subject: Re: [PATCH v5 6/7] PCI: dwc: al: Add support for DW based driver type
+Thread-Topic: [PATCH v5 6/7] PCI: dwc: al: Add support for DW based driver
+ type
+Thread-Index: AQHVY/KBlxXPHSUOKEWpD0aDO6n+D6cgcleAgAeYWQA=
+Date:   Thu, 12 Sep 2019 12:55:04 +0000
+Message-ID: <a8903f853cd37c23d3325e69b25e9e86942f5322.camel@amazon.com>
+References: <20190905140018.5139-1-jonnyc@amazon.com>
+         <20190905140144.7933-2-jonnyc@amazon.com>
+         <20190907165557.GO103977@google.com>
+In-Reply-To: <20190907165557.GO103977@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.162.218]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <67282EFB11D78B4C8D3EA9391B0AB75F@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM5PR04MB329970AE2C1812E88B9DE5A2F5B90@AM5PR04MB3299.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 01:47:36AM +0000, Xiaowei Bao wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Andrew Murray <andrew.murray@arm.com>
-> > Sent: 2019年9月2日 20:46
-> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Cc: robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo
-> > Li <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h.
-> > Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
-> > Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
-> > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org;
-> > arnd@arndb.de; gregkh@linuxfoundation.org; Z.q. Hou
-> > <zhiqiang.hou@nxp.com>
-> > Subject: Re: [PATCH v3 09/11] PCI: layerscape: Add EP mode support for
-> > ls1088a and ls2088a
-> > 
-> > On Mon, Sep 02, 2019 at 11:17:14AM +0800, Xiaowei Bao wrote:
-> > > Add PCIe EP mode support for ls1088a and ls2088a, there are some
-> > > difference between LS1 and LS2 platform, so refactor the code of the
-> > > EP driver.
-> > >
-> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > ---
-> > > v2:
-> > >  - This is a new patch for supporting the ls1088a and ls2088a platform.
-> > > v3:
-> > >  - Adjust the some struct assignment order in probe function.
-> > >
-> > >  drivers/pci/controller/dwc/pci-layerscape-ep.c | 72
-> > > +++++++++++++++++++-------
-> > >  1 file changed, 53 insertions(+), 19 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > > b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > > index 5f0cb99..723bbe5 100644
-> > > --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > > +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > > @@ -20,27 +20,29 @@
-> > >
-> > >  #define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
-> > >
-> > > -struct ls_pcie_ep {
-> > > -	struct dw_pcie		*pci;
-> > > -	struct pci_epc_features	*ls_epc;
-> > > +#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
-> > > +
-> > > +struct ls_pcie_ep_drvdata {
-> > > +	u32				func_offset;
-> > > +	const struct dw_pcie_ep_ops	*ops;
-> > > +	const struct dw_pcie_ops	*dw_pcie_ops;
-> > >  };
-> > >
-> > > -#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
-> > > +struct ls_pcie_ep {
-> > > +	struct dw_pcie			*pci;
-> > > +	struct pci_epc_features		*ls_epc;
-> > > +	const struct ls_pcie_ep_drvdata *drvdata; };
-> > >
-> > >  static int ls_pcie_establish_link(struct dw_pcie *pci)  {
-> > >  	return 0;
-> > >  }
-> > >
-> > > -static const struct dw_pcie_ops ls_pcie_ep_ops = {
-> > > +static const struct dw_pcie_ops dw_ls_pcie_ep_ops = {
-> > >  	.start_link = ls_pcie_establish_link,  };
-> > >
-> > > -static const struct of_device_id ls_pcie_ep_of_match[] = {
-> > > -	{ .compatible = "fsl,ls-pcie-ep",},
-> > > -	{ },
-> > > -};
-> > > -
-> > >  static const struct pci_epc_features*  ls_pcie_ep_get_features(struct
-> > > dw_pcie_ep *ep)  { @@ -87,10 +89,39 @@ static int
-> > > ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> > >  	}
-> > >  }
-> > >
-> > > -static const struct dw_pcie_ep_ops pcie_ep_ops = {
-> > > +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
-> > > +						u8 func_no)
-> > > +{
-> > > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
-> > > +
-> > > +	WARN_ON(func_no && !pcie->drvdata->func_offset);
-> > > +	return pcie->drvdata->func_offset * func_no; }
-> > > +
-> > > +static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
-> > >  	.ep_init = ls_pcie_ep_init,
-> > >  	.raise_irq = ls_pcie_ep_raise_irq,
-> > >  	.get_features = ls_pcie_ep_get_features,
-> > > +	.func_conf_select = ls_pcie_ep_func_conf_select, };
-> > > +
-> > > +static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
-> > > +	.ops = &ls_pcie_ep_ops,
-> > > +	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
-> > > +};
-> > > +
-> > > +static const struct ls_pcie_ep_drvdata ls2_ep_drvdata = {
-> > > +	.func_offset = 0x20000,
-> > > +	.ops = &ls_pcie_ep_ops,
-> > > +	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
-> > > +};
-> > > +
-> > > +static const struct of_device_id ls_pcie_ep_of_match[] = {
-> > > +	{ .compatible = "fsl,ls1046a-pcie-ep", .data = &ls1_ep_drvdata },
-> > > +	{ .compatible = "fsl,ls1088a-pcie-ep", .data = &ls2_ep_drvdata },
-> > > +	{ .compatible = "fsl,ls2088a-pcie-ep", .data = &ls2_ep_drvdata },
-> > > +	{ },
-> > 
-> > This removes support for "fsl,ls-pcie-ep" - was that intentional? If you do plan
-> > to drop it please make sure you explain why in the commit message. See also
-> > my comments in your dt-binding patch.
-> 
-> In fact, the u-boot will fixup the status property to 'status = enabled' in PCI node of 
-> the DTS base on "fsl,ls-pcie-ep" compatible, so "fsl,ls-pcie-ep" is used, I used this
-> compatible before, because the driver only support the LS1046a, but this time, I add
-> the LS1088a and LS2088a support, and these two boards have some difference form
-> LS1046a, so I changed the compatible. I am not sure whether need to add "fsl,ls-pcie-ep"
-> in there, could you give some advice, thanks a lot.
-
-It sounds like "fsl,ls-pcie-ep" can be a fallback for "fsl,ls1046a-pcie-ep".
-
-I'm assuming that if someone used "fsl,ls1046a-pcie-ep" on ls1088a or ls2088a
-hardware it would still work, but without the multiple PF support.
-
-I.e. if "fsl,ls-pcie-ep" is given, treat it as ls1046a.
-
-Thanks,
-
-Andrew Murray
-
-> 
-> Thanks 
-> Xiaowei
->  
-> > 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> > >  };
-> > >
-> > >  static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie, @@ -103,7
-> > > +134,7 @@ static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
-> > >  	int ret;
-> > >
-> > >  	ep = &pci->ep;
-> > > -	ep->ops = &pcie_ep_ops;
-> > > +	ep->ops = pcie->drvdata->ops;
-> > >
-> > >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > "addr_space");
-> > >  	if (!res)
-> > > @@ -142,20 +173,23 @@ static int __init ls_pcie_ep_probe(struct
-> > platform_device *pdev)
-> > >  	if (!ls_epc)
-> > >  		return -ENOMEM;
-> > >
-> > > -	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > "regs");
-> > > -	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
-> > > -	if (IS_ERR(pci->dbi_base))
-> > > -		return PTR_ERR(pci->dbi_base);
-> > > +	pcie->drvdata = of_device_get_match_data(dev);
-> > >
-> > > -	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
-> > >  	pci->dev = dev;
-> > > -	pci->ops = &ls_pcie_ep_ops;
-> > > -	pcie->pci = pci;
-> > > +	pci->ops = pcie->drvdata->dw_pcie_ops;
-> > >
-> > >  	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
-> > >
-> > > +	pcie->pci = pci;
-> > >  	pcie->ls_epc = ls_epc;
-> > >
-> > > +	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > "regs");
-> > > +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
-> > > +	if (IS_ERR(pci->dbi_base))
-> > > +		return PTR_ERR(pci->dbi_base);
-> > > +
-> > > +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
-> > > +
-> > >  	platform_set_drvdata(pdev, pcie);
-> > >
-> > >  	ret = ls_add_pcie_ep(pcie, pdev);
-> > > --
-> > > 2.9.5
-> > >
+T24gU2F0LCAyMDE5LTA5LTA3IGF0IDExOjU1IC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
+PiBzL0FkZCBzdXBwb3J0IGZvciBEVyBiYXNlZCBkcml2ZXIgdHlwZS9BZGQgQW1hem9uIEFubmFw
+dXJuYSBMYWJzIFBDSWUNCj4gY29udHJvbGxlciBkcml2ZXIvDQo+IA0KQWNrLg0KDQo+IE9uIFRo
+dSwgU2VwIDA1LCAyMDE5IGF0IDA1OjAxOjQzUE0gKzAzMDAsIEpvbmF0aGFuIENob2Nyb24gd3Jv
+dGU6DQo+ID4gVGhpcyBkcml2ZXIgaXMgRFQgYmFzZWQgYW5kIHV0aWxpemVzIHRoZSBEZXNpZ25X
+YXJlIEFQSXMuDQo+ID4gDQo+ID4gSXQgYWxsb3dzIHVzaW5nIGEgc21hbGxlciBFQ0FNIHJhbmdl
+IGZvciBhIGxhcmdlciBidXMgcmFuZ2UgLQ0KPiA+IHVzdWFsbHkgYW4gZW50aXJlIGJ1cyB1c2Vz
+IDFNQiBvZiBhZGRyZXNzIHNwYWNlLCBidXQgdGhlIGRyaXZlcg0KPiA+IGNhbiB1c2UgaXQgZm9y
+IGEgbGFyZ2VyIG51bWJlciBvZiBidXNlcy4gVGhpcyBpcyBhY2hpZXZlZCBieSB1c2luZw0KPiA+
+IGEgSFcNCj4gPiBtZWNoYW5pc20gd2hpY2ggYWxsb3dzIGNoYW5naW5nIHRoZSBCVVMgcGFydCBv
+ZiB0aGUgImZpbmFsIg0KPiA+IG91dGdvaW5nDQo+ID4gY29uZmlnIHRyYW5zYWN0aW9uLiBUaGVy
+ZSBhcmUgMiBIVyByZWdzLCBvbmUgd2hpY2ggaXMgYmFzaWNhbGx5IGENCj4gPiBiaXRtYXNrIGRl
+dGVybWluaW5nIHdoaWNoIGJpdHMgdG8gdGFrZSBmcm9tIHRoZSBBWEkgdHJhbnNhY3Rpb24NCj4g
+PiBpdHNlbGYNCj4gPiBhbmQgYW5vdGhlciB3aGljaCBob2xkcyB0aGUgY29tcGxlbWVudGFyeSBw
+YXJ0IHByb2dyYW1tZWQgYnkgdGhlDQo+ID4gZHJpdmVyLg0KPiA+IA0KPiA+IEFsbCBsaW5rIGlu
+aXRpYWxpemF0aW9ucyBhcmUgaGFuZGxlZCBieSB0aGUgYm9vdCBGVy4NCj4gPiANCj4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBKb25hdGhhbiBDaG9jcm9uIDxqb25ueWNAYW1hem9uLmNvbT4NCj4gPiBSZXZp
+ZXdlZC1ieTogR3VzdGF2byBQaW1lbnRlbCA8Z3VzdGF2by5waW1lbnRlbEBzeW5vcHN5cy5jb20+
+DQo+ID4gUmV2aWV3ZWQtYnk6IEFuZHJldyBNdXJyYXkgPGFuZHJldy5tdXJyYXlAYXJtLmNvbT4N
+Cj4gPiAtLS0NCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvS2NvbmZpZyAgIHwgIDEy
+ICsNCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1hbC5jIHwgMzY1DQo+ID4g
+KysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMzc3IGlu
+c2VydGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxl
+ci9kd2MvS2NvbmZpZw0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvS2NvbmZpZw0K
+PiA+IGluZGV4IDRmYWRhMmU5MzI4NS4uMGJhOTg4YjViNWJjIDEwMDY0NA0KPiA+IC0tLSBhL2Ry
+aXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL0tjb25maWcNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9j
+b250cm9sbGVyL2R3Yy9LY29uZmlnDQo+ID4gQEAgLTI1Niw0ICsyNTYsMTYgQEAgY29uZmlnIFBD
+SUVfVU5JUEhJRVINCj4gPiAgCSAgU2F5IFkgaGVyZSBpZiB5b3Ugd2FudCBQQ0llIGNvbnRyb2xs
+ZXIgc3VwcG9ydCBvbiBVbmlQaGllcg0KPiA+IFNvQ3MuDQo+ID4gIAkgIFRoaXMgZHJpdmVyIHN1
+cHBvcnRzIExEMjAgYW5kIFBYczMgU29Dcy4NCj4gPiAgDQo+ID4gK2NvbmZpZyBQQ0lFX0FMDQo+
+ID4gKwlib29sICJBbWF6b24gQW5uYXB1cm5hIExhYnMgUENJZSBjb250cm9sbGVyIg0KPiA+ICsJ
+ZGVwZW5kcyBvbiBPRiAmJiAoQVJNNjQgfHwgQ09NUElMRV9URVNUKQ0KPiA+ICsJZGVwZW5kcyBv
+biBQQ0lfTVNJX0lSUV9ET01BSU4NCj4gPiArCXNlbGVjdCBQQ0lFX0RXX0hPU1QNCj4gPiArCWhl
+bHANCj4gPiArCSAgU2F5IFkgaGVyZSB0byBlbmFibGUgc3VwcG9ydCBvZiB0aGUgQW1hem9uJ3Mg
+QW5uYXB1cm5hIExhYnMNCj4gPiBQQ0llDQo+ID4gKwkgIGNvbnRyb2xsZXIgSVAgb24gQW1hem9u
+IFNvQ3MuIFRoZSBQQ0llIGNvbnRyb2xsZXIgdXNlcyB0aGUNCj4gPiBEZXNpZ25XYXJlDQo+ID4g
+KwkgIGNvcmUgcGx1cyBBbm5hcHVybmEgTGFicyBwcm9wcmlldGFyeSBoYXJkd2FyZSB3cmFwcGVy
+cy4gVGhpcw0KPiA+IGlzDQo+ID4gKwkgIHJlcXVpcmVkIG9ubHkgZm9yIERULWJhc2VkIHBsYXRm
+b3Jtcy4gQUNQSSBwbGF0Zm9ybXMgd2l0aCB0aGUNCj4gPiArCSAgQW5uYXB1cm5hIExhYnMgUENJ
+ZSBjb250cm9sbGVyIGRvbid0IG5lZWQgdG8gZW5hYmxlIHRoaXMuDQo+IA0KPiBJbnRlcmVzdGlu
+Zy4gIEhvdyBkbyB5b3UgZGVhbCB3aXRoIHRoZSBmdW5reSBFQ0FNIHNwYWNlIG9uIEFDUEkNCj4g
+cGxhdGZvcm1zPyAgT2gsIG5ldmVyIG1pbmQsIEkgc2VlLCBpdCdzIHRoZSBwY2llLWFsLmMgRUNB
+TSBvcHMgcXVpcmsNCj4gdGhhdCdzIGFscmVhZHkgaW4gdGhlIHRyZWUuDQo+IA0KPiBCam9ybg0K
