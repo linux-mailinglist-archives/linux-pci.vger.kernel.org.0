@@ -2,137 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BEF3CB0F81
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2019 15:03:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B55FB0F86
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2019 15:04:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731814AbfILNDR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Sep 2019 09:03:17 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:47725 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731626AbfILNDR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Sep 2019 09:03:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1568293396; x=1599829396;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=YCI9/8/j431HdcQDOyry7Imqjc6V2OFviDdWb/2L/qc=;
-  b=OlAQGPUpoGNvz9JhHW3M2IFOBN+nv8Evi8xAUa3cfD5HqVxF6ikL6EuM
-   nfEYymKYFLFgfUuWGQ69ZZTinSMxB7Tool5BlNSK/blP1lpObUaq4qZLp
-   JlEUBQMdlUCCMqlRo6/gGRjZBDZUtd0cqPqEZOO+XI8RSUaJIUiSRMrux
-   w=;
-X-IronPort-AV: E=Sophos;i="5.64,497,1559520000"; 
-   d="scan'208";a="414911959"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-62350142.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 12 Sep 2019 13:03:13 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-62350142.us-east-1.amazon.com (Postfix) with ESMTPS id BB0CBA1DA2;
-        Thu, 12 Sep 2019 13:03:09 +0000 (UTC)
-Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 12 Sep 2019 13:03:09 +0000
-Received: from u9ff250417f405e.ant.amazon.com (10.43.161.99) by
- EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 12 Sep 2019 13:03:03 +0000
-From:   Jonathan Chocron <jonnyc@amazon.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <andrew.murray@arm.com>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>, <alisaidi@amazon.com>,
-        <ronenk@amazon.com>, <barakw@amazon.com>, <talel@amazon.com>,
-        <hanochu@amazon.com>, <hhhawa@amazon.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
-Subject: [PATCH v6 7/7] PCI: dwc: Add validation that PCIe core is set to correct mode
-Date:   Thu, 12 Sep 2019 16:02:38 +0300
-Message-ID: <20190912130238.15682-3-jonnyc@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190912130042.14597-1-jonnyc@amazon.com>
-References: <20190912130042.14597-1-jonnyc@amazon.com>
+        id S1731818AbfILNEe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Sep 2019 09:04:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:33958 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731320AbfILNEd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 12 Sep 2019 09:04:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2AAF628;
+        Thu, 12 Sep 2019 06:04:33 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9684F3F71F;
+        Thu, 12 Sep 2019 06:04:32 -0700 (PDT)
+Date:   Thu, 12 Sep 2019 14:04:30 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: dwc: fix find_next_bit() usage
+Message-ID: <20190912130430.GG9720@e119886-lin.cambridge.arm.com>
+References: <20190904160339.2800-1-niklas.cassel@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.99]
-X-ClientProxiedBy: EX13D07UWB003.ant.amazon.com (10.43.161.66) To
- EX13D13UWA001.ant.amazon.com (10.43.160.136)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904160339.2800-1-niklas.cassel@linaro.org>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Some PCIe controllers can be set to either Host or EP according to some
-early boot FW. To make sure there is no discrepancy (e.g. FW configured
-the port to EP mode while the DT specifies it as a host bridge or vice
-versa), a check has been added for each mode.
+On Wed, Sep 04, 2019 at 06:03:38PM +0200, Niklas Cassel wrote:
+> find_next_bit() takes a parameter of size long, and performs arithmetic
+> that assumes that the argument is of size long.
+> 
+> Therefore we cannot pass a u32, since this will cause find_next_bit()
+> to read outside the stack buffer and will produce the following print:
+> BUG: KASAN: stack-out-of-bounds in find_next_bit+0x38/0xb0
+> 
+> Fixes: 1b497e6493c4 ("PCI: dwc: Fix uninitialized variable in dw_handle_msi_irq()")
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> ---
 
-Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Reviewed-by: Andrew Murray <andrew.murray@arm.com>
----
- drivers/pci/controller/dwc/pcie-designware-ep.c  |  8 ++++++++
- .../pci/controller/dwc/pcie-designware-host.c    | 16 ++++++++++++++++
- 2 files changed, 24 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 65f479250087..3dd2e2697294 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -498,6 +498,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	int ret;
- 	u32 reg;
- 	void *addr;
-+	u8 hdr_type;
- 	unsigned int nbars;
- 	unsigned int offset;
- 	struct pci_epc *epc;
-@@ -562,6 +563,13 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	if (ep->ops->ep_init)
- 		ep->ops->ep_init(ep);
- 
-+	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-+	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
-+		dev_err(pci->dev, "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
-+			hdr_type);
-+		return -EIO;
-+	}
-+
- 	ret = of_property_read_u8(np, "max-functions", &epc->max_functions);
- 	if (ret < 0)
- 		epc->max_functions = 1;
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index d3156446ff27..0f36a926059a 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -323,6 +323,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	struct pci_bus *child;
- 	struct pci_host_bridge *bridge;
- 	struct resource *cfg_res;
-+	u32 hdr_type;
- 	int ret;
- 
- 	raw_spin_lock_init(&pci->pp.lock);
-@@ -464,6 +465,21 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 			goto err_free_msi;
- 	}
- 
-+	ret = dw_pcie_rd_own_conf(pp, PCI_HEADER_TYPE, 1, &hdr_type);
-+	if (ret != PCIBIOS_SUCCESSFUL) {
-+		dev_err(pci->dev, "Failed reading PCI_HEADER_TYPE cfg space reg (ret: 0x%x)\n",
-+			ret);
-+		ret = pcibios_err_to_errno(ret);
-+		goto err_free_msi;
-+	}
-+	if (hdr_type != PCI_HEADER_TYPE_BRIDGE) {
-+		dev_err(pci->dev,
-+			"PCIe controller is not set to bridge type (hdr_type: 0x%x)!\n",
-+			hdr_type);
-+		ret = -EIO;
-+		goto err_free_msi;
-+	}
-+
- 	pp->root_bus_nr = pp->busn->start;
- 
- 	bridge->dev.parent = dev;
--- 
-2.17.1
-
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index d3156446ff27..45f21640c977 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -78,7 +78,8 @@ static struct msi_domain_info dw_pcie_msi_domain_info = {
+>  irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+>  {
+>  	int i, pos, irq;
+> -	u32 val, num_ctrls;
+> +	unsigned long val;
+> +	u32 status, num_ctrls;
+>  	irqreturn_t ret = IRQ_NONE;
+>  
+>  	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
+> @@ -86,14 +87,14 @@ irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+>  	for (i = 0; i < num_ctrls; i++) {
+>  		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_STATUS +
+>  					(i * MSI_REG_CTRL_BLOCK_SIZE),
+> -				    4, &val);
+> -		if (!val)
+> +				    4, &status);
+> +		if (!status)
+>  			continue;
+>  
+>  		ret = IRQ_HANDLED;
+> +		val = status;
+>  		pos = 0;
+> -		while ((pos = find_next_bit((unsigned long *) &val,
+> -					    MAX_MSI_IRQS_PER_CTRL,
+> +		while ((pos = find_next_bit(&val, MAX_MSI_IRQS_PER_CTRL,
+>  					    pos)) != MAX_MSI_IRQS_PER_CTRL) {
+>  			irq = irq_find_mapping(pp->irq_domain,
+>  					       (i * MAX_MSI_IRQS_PER_CTRL) +
+> -- 
+> 2.21.0
+> 
