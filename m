@@ -2,87 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CAB43B0B68
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2019 11:29:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EF08B0BD2
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2019 11:47:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730781AbfILJ3T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Sep 2019 05:29:19 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45398 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730434AbfILJ3T (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Sep 2019 05:29:19 -0400
-Received: by mail-qk1-f193.google.com with SMTP id z67so23703484qkb.12;
-        Thu, 12 Sep 2019 02:29:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wtGU4iMWfZeQ/FsklpEfRM6iPwzDv+XphhtaUmBwgSA=;
-        b=conIQTsvjKBscv9fPglL4IoNMHeXhdGelKfEyP7V9Py/OHbTW5L9vi2l0Ni8MrtZUV
-         HtrIW3c0wamh53QqfI9RO3brCirVF1CL7PVohPSouQUKqIS60Q5bGPR1iB+4g+qgT+hN
-         HsIDARICv8BcBTWQUq4YJ1zXpz0kyHL7OdfsNLHWqIksyMyPmB19PvfO6FZ+2CYEslAW
-         XiSsLeJcZlU3Q0PjsPL5a4IWg1UXrWEHVi3tj4q95Ndp+pH6GpHBumlpNNQCH7i0BBYV
-         MBCO9pTo4xyckqNBvwmsazMqcJ6CLTphCvwfRzHTJhNbBBnObWsnYvFPiuWB4SPyvlUq
-         HC8w==
-X-Gm-Message-State: APjAAAXj4nAr6INGJ8T7rhe6Q5nFDSO/1yr9vTLs+exJUy9ekP/qF4uS
-        GiRpQglJ3eHUYmu1rhsaejh0YgNDREd9/T9CJAk=
-X-Google-Smtp-Source: APXvYqycQWX7fEy2jA5D+LxaO4u4opsppoZ4/cfOD3zMYVxe++YCYyGMd3QpWn3hGnNZZJlZplYFA331lIror8ITmVA=
-X-Received: by 2002:a05:620a:145a:: with SMTP id i26mr40226931qkl.352.1568280556796;
- Thu, 12 Sep 2019 02:29:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1568239378.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1568239378.git.amit.kucheria@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 12 Sep 2019 11:29:00 +0200
-Message-ID: <CAK8P3a2zGJx7SCA4LUHPGTybN8GU16Ah3H0FbaOEwR3H7uGCnA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] Cleanup arm64 driver dependencies
+        id S1730863AbfILJrK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Sep 2019 05:47:10 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55800 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730237AbfILJrK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Sep 2019 05:47:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Nd0o0f4/7BjLAconWp05z7n4at/FQXG4cF5ZBRu8Iz8=; b=FZECb2efh+R1EzviX/GYgZl2a
+        lPck10VYa9Dj7/IVHkMV6O21mBR2fETXaolP9KAiwHpIF6QqnHL6ru/4UvyDVhzNJXf1Zqt5EExpA
+        MzLsu1BM5dm+CI7+qFVmEDHujNsHNNRxWoRyH0xvvB8deJ6KUmyUZ/Lv3HU65DJOKqkQo=;
+Received: from 195-23-252-136.net.novis.pt ([195.23.252.136] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1i8Lgs-0006SK-MV; Thu, 12 Sep 2019 09:47:02 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id D4417D00AB0; Thu, 12 Sep 2019 10:46:51 +0100 (BST)
+Date:   Thu, 12 Sep 2019 10:46:51 +0100
+From:   Mark Brown <broonie@kernel.org>
 To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        arm-soc <arm@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        arm@kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Mark Brown <broonie@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
         Sebastian Reichel <sre@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 0/4] Cleanup arm64 driver dependencies
+Message-ID: <20190912094651.GH2036@sirena.org.uk>
+References: <cover.1568239378.git.amit.kucheria@linaro.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2eauhx3HRLXw1WRo"
+Content-Disposition: inline
+In-Reply-To: <cover.1568239378.git.amit.kucheria@linaro.org>
+X-Cookie: Be careful!  UGLY strikes 9 out of 10!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 12:18 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
->
+
+--2eauhx3HRLXw1WRo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Sep 12, 2019 at 03:48:44AM +0530, Amit Kucheria wrote:
+
 > I was using initcall_debugging on a QCOM platform and ran across a bunch of
 > driver initcalls that are enabled even if their SoC support is disabled.
->
-> Here are some fixups for a subset of them.
 
-The idea seems reasonable, disabling a platform may just turn off
-all the drivers that are not useful elsewhere, but there are mistakes
-in a lot of your changes, so I'm certainly not applying these for 5.4.
+What exactly is the problem you're trying to fix here?  For the
+drivers I looked at these were bog standard register the driver
+with the subsystem type initcalls on optional drivers so not
+doing anything particularly disruptive or anything like that.
+For any given system that's going to be an issue for the
+overwhelming majority of drivers on the tree, including those
+that aren't associated with any particular architecture.
 
-Generally speaking, the way that works best is
+--2eauhx3HRLXw1WRo
+Content-Type: application/pgp-signature; name="signature.asc"
 
-config SUBSYS_DRIVER_FOO
-       tristate "SUBSYS support for FOO platform"
-       depends on ARCH_FOO || COMPILE_TEST
-       depends on SUBSYS
-       default "m" if ARCH_FOO
+-----BEGIN PGP SIGNATURE-----
 
-This means it's enabled as a loadable module by default (use
-default "y" instead where necessary) as long as the platform
-is enabled, but an x86 allmodconfig build also includes it
-because of COMPILE_TEST, while any configuration without
-ARCH_FOO that is not compile-testing cannot enable it.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl16FAsACgkQJNaLcl1U
+h9DVVgf6Aty/MAqUrwPqV8+kec9c5CmVjUbla+Dxmxbc4XJOZLGCsCRCoPINUSy7
+IHCZ2hFHKKPnv5Jt7YQ0iwEiEQ4i93A1zc8OPGuiJ+R7I1MBAmtzS8OkLN+hTK2Y
+jtp8IcYRXPWPFSio2smmqIE0CoAlCVfxMYwgQp5a96Ra3qOnQm5x4LC5M278KJLP
+HrorLSGCRanptsaI5xCgfG0hUjMzJI8F4/Cd1LBt082FOXSaGMptsRmBKco2ea/4
+AWJ9eTsf+TYSSy1qJwFqd7GXKNRY03RU+PFhs76MNmVZdowkRKVFM8y+nGBNbPmp
+It+dwnrew9x+7L0s0apty/0gLRnzyA==
+=ZOLi
+-----END PGP SIGNATURE-----
 
-       Arnd
+--2eauhx3HRLXw1WRo--
