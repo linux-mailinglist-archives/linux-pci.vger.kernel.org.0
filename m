@@ -2,107 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B7CDB1D99
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2019 14:22:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8B8AB21AA
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2019 16:16:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728521AbfIMMWm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Sep 2019 08:22:42 -0400
-Received: from mga18.intel.com ([134.134.136.126]:16890 "EHLO mga18.intel.com"
+        id S1729273AbfIMOQz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Sep 2019 10:16:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:44442 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726771AbfIMMWm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Sep 2019 08:22:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Sep 2019 05:22:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,501,1559545200"; 
-   d="scan'208,223";a="192708498"
-Received: from irsmsx101.ger.corp.intel.com ([163.33.3.153])
-  by FMSMGA003.fm.intel.com with ESMTP; 13 Sep 2019 05:22:40 -0700
-Received: from irsmsx102.ger.corp.intel.com ([169.254.2.160]) by
- IRSMSX101.ger.corp.intel.com ([169.254.1.129]) with mapi id 14.03.0439.000;
- Fri, 13 Sep 2019 13:22:39 +0100
-From:   "Kitszel, PrzemyslawX" <przemyslawx.kitszel@intel.com>
-To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     "Maslowski, Karol" <karol.maslowski@intel.com>
-Subject: [PATCH] PCI: Add quirk for VCA NTB
-Thread-Topic: [PATCH] PCI: Add quirk for VCA NTB
-Thread-Index: AdVqLdE+OCBbT8aES7KpBccpTfPYBw==
-Date:   Fri, 13 Sep 2019 12:22:38 +0000
-Message-ID: <5683A335CC8BE1438C3C30C49DCC38DF637CDE70@IRSMSX102.ger.corp.intel.com>
-Accept-Language: pl-PL, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [163.33.239.180]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1727412AbfIMOQz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Sep 2019 10:16:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 195271000;
+        Fri, 13 Sep 2019 07:16:55 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4BC773F67D;
+        Fri, 13 Sep 2019 07:16:54 -0700 (PDT)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     linux-pci@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] MAINTAINERS: Add PCI native host/endpoint controllers designated reviewer
+Date:   Fri, 13 Sep 2019 15:16:46 +0100
+Message-Id: <20190913141646.13254-1-lorenzo.pieralisi@arm.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-RnJvbSA4NjNkOWVhMGQ4ODgyMzNkYmZjYmY1MjIxMmFlOTdiMmJjNTU3YWU2IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQ0KRnJvbTogU2xhd29taXIgUGF3bG93c2tpIDxzbGF3b21pci5wYXdsb3dz
-a2lAaW50ZWwuY29tPg0KRGF0ZTogRnJpLCAyMSBTZXAgMjAxOCAxNTo1NToxMiArMDIwMA0KU3Vi
-amVjdDogW1BBVENIXSBQQ0k6IEFkZCBxdWlyayBmb3IgVkNBIE5UQg0KDQpJbnRlbCBWaXN1YWwg
-Q29tcHV0ZSBBY2NlbGVyYXRvciAoVkNBKSBpcyBhIGZhbWlseSBvZiBQQ0llIGFkZC1pbiBkZXZp
-Y2VzDQpleHBvc2luZyBjb21wdXRhdGlvbmFsIHVuaXRzIHZpYSBOb24gVHJhbnNwYXJlbnQgQnJp
-ZGdlcyAoTlRCLCBQRVggODd4eCkuDQoNClNpbWlsYXJseSB0byBNSUMgeDIwMCwgdGhlcmUgaXMg
-bmVlZCB0byBhZGQgRE1BIGFsaWFzZXMgdG8gYWxsb3cgYnVmZmVyDQphY2Nlc3Mgd2hlbiBJT01N
-VSBpcyBlbmFibGVkLg0KRm9sbG93aW5nIGFsaWFzZXMgYXJlIGFsbG93aW5nIGhvc3QgZGV2aWNl
-IGFuZCBjb21wdXRhdGlvbmFsIHVuaXQgdG8gYWNjZXNzDQplYWNoIG90aGVyLg0KVG9nZXRoZXIg
-dGhvc2UgYWxpYXNlcyBtYXJrcyB3aG9sZSBWQ0EgZGV2aWNlIGFzIG9uZSBJT01NVSBncm91cC4N
-Cg0KQWxsIHBvc3NpYmxlIHNsb3QgbnVtYmVycyAoMHgyMCkgYXJlIHVzZWQsIHNpbmUgd2UgYXJl
-IHVuYWJsZSB0byB0ZWxsIHdoYXQNCnNsb3QgaXMgdXNlZCBvbiBvdGhlciBzaWRlLg0KVGhpcyBx
-dWlyayBpcyBpbnRlbmRlZCBmb3IgYm90aCBob3N0IGFuZCBjb21wdXRhdGlvbmFsIHVuaXQgc2lk
-ZXMuDQpUaGUgVkNBIGRldmljZXMgaGF2ZSB1cCB0byA1IGZ1bmN0aW9ucyAtIDQgZm9yIERNQSBj
-aGFubmVscyBhbmQgb25lDQphZGRpdGlvbmFsLg0KDQpTaWduZWQtb2ZmLWJ5OiBTbGF3b21pciBQ
-YXdsb3dza2kgPHNsYXdvbWlyLnBhd2xvd3NraUBpbnRlbC5jb20+DQpTaWduZWQtb2ZmLWJ5OiBQ
-cnplbWVrIEtpdHN6ZWwgPHByemVteXNsYXd4LmtpdHN6ZWxAaW50ZWwuY29tPg0KLS0tDQogZHJp
-dmVycy9wY2kvcXVpcmtzLmMgfCAzMiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0K
-IDEgZmlsZSBjaGFuZ2VkLCAzMiBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJz
-L3BjaS9xdWlya3MuYyBiL2RyaXZlcnMvcGNpL3F1aXJrcy5jDQppbmRleCBkZWQ2MDc1N2E1NzMu
-LjM0OWNhMjhlMGFlNCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvcGNpL3F1aXJrcy5jDQorKysgYi9k
-cml2ZXJzL3BjaS9xdWlya3MuYw0KQEAgLTQwNjIsNiArNDA2MiwzOCBAQCBzdGF0aWMgdm9pZCBx
-dWlya19taWNfeDIwMF9kbWFfYWxpYXMoc3RydWN0IHBjaV9kZXYgKnBkZXYpDQogREVDTEFSRV9Q
-Q0lfRklYVVBfSEVBREVSKFBDSV9WRU5ET1JfSURfSU5URUwsIDB4MjI2MCwgcXVpcmtfbWljX3gy
-MDBfZG1hX2FsaWFzKTsNCiBERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9J
-TlRFTCwgMHgyMjY0LCBxdWlya19taWNfeDIwMF9kbWFfYWxpYXMpOw0KIA0KKy8qDQorICogSW50
-ZWwgVmlzdWFsIENvbXB1dGUgQWNjZWxlcmF0b3IgKFZDQSkgaXMgYSBmYW1pbHkgb2YgUENJZSBh
-ZGQtaW4gZGV2aWNlcw0KKyAqIGV4cG9zaW5nIGNvbXB1dGF0aW9uYWwgdW5pdHMgdmlhIE5vbiBU
-cmFuc3BhcmVudCBCcmlkZ2VzIChOVEIsIFBFWCA4N3h4KS4NCisgKiBTaW1pbGFybHkgdG8gTUlD
-IHgyMDAsIHRoZXJlIGlzIG5lZWQgdG8gYWRkIERNQSBhbGlhc2VzIHRvIGFsbG93IGJ1ZmZlcg0K
-KyAqIGFjY2VzcyB3aGVuIElPTU1VIGlzIGVuYWJsZWQuDQorICogRm9sbG93aW5nIGFsaWFzZXMg
-YXJlIGFsbG93aW5nIGhvc3QgZGV2aWNlIGFuZCBjb21wdXRhdGlvbmFsIHVuaXQgdG8gYWNjZXNz
-DQorICogZWFjaCBvdGhlci4gVG9nZXRoZXIgdGhvc2UgYWxpYXNlcyBtYXJrcyB3aG9sZSBWQ0Eg
-ZGV2aWNlIGFzIG9uZSBJT01NVSBncm91cC4NCisgKiBBbGwgcG9zc2libGUgc2xvdCBudW1iZXJz
-ICgweDIwKSBhcmUgdXNlZCwgc2luZSB3ZSBhcmUgdW5hYmxlIHRvIHRlbGwgd2hhdA0KKyAqIHNs
-b3QgaXMgdXNlZCBvbiBvdGhlciBzaWRlLg0KKyAqIFRoaXMgcXVpcmsgaXMgaW50ZW5kZWQgZm9y
-IGJvdGggaG9zdCBhbmQgY29tcHV0YXRpb25hbCB1bml0IHNpZGVzLg0KKyAqIFRoZSBWQ0EgZGV2
-aWNlcyBoYXZlIHVwIHRvIDUgZnVuY3Rpb25zICg0IGZvciBETUEgY2hhbm5lbHMgYW5kIDEgYWRk
-aXRpb25hbCkuDQorICovDQorc3RhdGljIHZvaWQgcXVpcmtfcGV4X3ZjYV9hbGlhcyhzdHJ1Y3Qg
-cGNpX2RldiAqcGRldikNCit7DQorCWNvbnN0IHVuc2lnbmVkIGludCBudW1fcGNpX3Nsb3RzID0g
-MHgyMDsNCisJdW5zaWduZWQgaW50IHNsb3Q7DQorDQorCWZvciAoc2xvdCA9IDA7IHNsb3QgPCBu
-dW1fcGNpX3Nsb3RzOyBzbG90KyspIHsNCisJCXBjaV9hZGRfZG1hX2FsaWFzKHBkZXYsIFBDSV9E
-RVZGTihzbG90LCAweDApKTsNCisJCXBjaV9hZGRfZG1hX2FsaWFzKHBkZXYsIFBDSV9ERVZGTihz
-bG90LCAweDEpKTsNCisJCXBjaV9hZGRfZG1hX2FsaWFzKHBkZXYsIFBDSV9ERVZGTihzbG90LCAw
-eDIpKTsNCisJCXBjaV9hZGRfZG1hX2FsaWFzKHBkZXYsIFBDSV9ERVZGTihzbG90LCAweDMpKTsN
-CisJCXBjaV9hZGRfZG1hX2FsaWFzKHBkZXYsIFBDSV9ERVZGTihzbG90LCAweDQpKTsNCisJfQ0K
-K30NCitERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHgyOTU0
-LCBxdWlya19wZXhfdmNhX2FsaWFzKTsNCitERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZF
-TkRPUl9JRF9JTlRFTCwgMHgyOTU1LCBxdWlya19wZXhfdmNhX2FsaWFzKTsNCitERUNMQVJFX1BD
-SV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHgyOTU2LCBxdWlya19wZXhfdmNh
-X2FsaWFzKTsNCitERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwg
-MHgyOTU4LCBxdWlya19wZXhfdmNhX2FsaWFzKTsNCitERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIo
-UENJX1ZFTkRPUl9JRF9JTlRFTCwgMHgyOTU5LCBxdWlya19wZXhfdmNhX2FsaWFzKTsNCitERUNM
-QVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHgyOTVBLCBxdWlya19w
-ZXhfdmNhX2FsaWFzKTsNCisNCiAvKg0KICAqIFRoZSBJT01NVSBhbmQgaW50ZXJydXB0IGNvbnRy
-b2xsZXIgb24gQnJvYWRjb20gVnVsY2FuL0Nhdml1bSBUaHVuZGVyWDIgYXJlDQogICogYXNzb2Np
-YXRlZCBub3QgYXQgdGhlIHJvb3QgYnVzLCBidXQgYXQgYSBicmlkZ2UgYmVsb3cuIFRoaXMgcXVp
-cmsgYXZvaWRzDQotLSANCjIuMjIuMA0KDQo=
+Add Andrew Murray as designated reviewer for PCI native host
+and endpoint controller drivers.
+
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Andrew Murray <andrew.murray@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 783569e3c4b4..08d97988034d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12442,6 +12442,7 @@ F:	arch/x86/kernel/early-quirks.c
+ 
+ PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS
+ M:	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
++R:	Andrew Murray <andrew.murray@arm.com>
+ L:	linux-pci@vger.kernel.org
+ Q:	http://patchwork.ozlabs.org/project/linux-pci/list/
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
+-- 
+2.17.1
+
