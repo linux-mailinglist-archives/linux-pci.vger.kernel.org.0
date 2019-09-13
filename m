@@ -2,60 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B8B8AB21AA
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2019 16:16:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F608B2230
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2019 16:39:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbfIMOQz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Sep 2019 10:16:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:44442 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727412AbfIMOQz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Sep 2019 10:16:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 195271000;
-        Fri, 13 Sep 2019 07:16:55 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4BC773F67D;
-        Fri, 13 Sep 2019 07:16:54 -0700 (PDT)
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     linux-pci@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] MAINTAINERS: Add PCI native host/endpoint controllers designated reviewer
-Date:   Fri, 13 Sep 2019 15:16:46 +0100
-Message-Id: <20190913141646.13254-1-lorenzo.pieralisi@arm.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1730756AbfIMOgV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Sep 2019 10:36:21 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36855 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730648AbfIMOgV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Sep 2019 10:36:21 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k20so2820268oih.3;
+        Fri, 13 Sep 2019 07:36:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:subject:references
+         :in-reply-to:cc:cc:to;
+        bh=YbpiQzIM3eQL4XQ34vYEddsWeG9VMivV31FLcj+hIuc=;
+        b=svixVnZ7CKZWaP7JBaG/glH2tHA25Lb4bBiq2GIUrE7gYRVXEJSvCZsOHHBm2u1Qwp
+         5eKjDEdZTF7aNAZRT8VozO3zC5oW+w9d034K0tH9vbUyRqUmaH2Hz802U26mi6exDWD4
+         bWa0kg/C37GsvdQW/UYflW9sVwoBMsFSx8xI+RsVkht+fjUim7NR0VXmaDY8A5qmMB8/
+         tY3k+cfjTdKCL4uwpRuwRxmt3DsJrpTK/lxqXK+53YeQ0PdOciCexreIZmuj09J7opKv
+         ZYe5rU6KFjcWFRUYpdNSjmcU36nlUrxSmpZYupZQlqCmxfSYa8Wy3/XuA6FIjoerhDEs
+         eJBg==
+X-Gm-Message-State: APjAAAXALwTREIL+yb6sFZVqHyDCXgAyb8FpqPiq4BKPvYveFzTHMTBe
+        fWlAMUJiBR1t6yz+NQ+B/Q==
+X-Google-Smtp-Source: APXvYqyjj6rIVWDuqKwqqDB6O49ywBjZD3PZQ4+xjM00i6c2gbMnanfPNY4AfSDhsOstHiycfTtKVQ==
+X-Received: by 2002:aca:ed0a:: with SMTP id l10mr3624662oih.83.1568385380257;
+        Fri, 13 Sep 2019 07:36:20 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h20sm4239119otj.81.2019.09.13.07.36.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Sep 2019 07:36:19 -0700 (PDT)
+Message-ID: <5d7ba963.1c69fb81.4869.eb19@mx.google.com>
+Date:   Fri, 13 Sep 2019 15:36:18 +0100
+From:   Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/6] dt-bindings: pci: amlogic,meson-pcie: Add G12A bindings
+References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com> <1567950178-4466-2-git-send-email-narmstrong@baylibre.com>
+In-Reply-To: <1567950178-4466-2-git-send-email-narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com,
+        devicetree@vger.kernel.org
+Cc:     repk@triplefau.lt, Neil Armstrong <narmstrong@baylibre.com>,
+        maz@kernel.org, linux-amlogic@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+To:     Neil Armstrong <narmstrong@baylibre.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add Andrew Murray as designated reviewer for PCI native host
-and endpoint controller drivers.
+On Sun,  8 Sep 2019 13:42:53 +0000, Neil Armstrong wrote:
+> Add PCIE bindings for the Amlogic G12A SoC, the support is the same
+> but the PHY is shared with USB3 to control the differential lines.
+> 
+> Thus this adds a phy phandle to control the PHY, and sets invalid
+> MIPI clock as optional for G12A.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../devicetree/bindings/pci/amlogic,meson-pcie.txt   | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
 
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Andrew Murray <andrew.murray@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 783569e3c4b4..08d97988034d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12442,6 +12442,7 @@ F:	arch/x86/kernel/early-quirks.c
- 
- PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS
- M:	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-+R:	Andrew Murray <andrew.murray@arm.com>
- L:	linux-pci@vger.kernel.org
- Q:	http://patchwork.ozlabs.org/project/linux-pci/list/
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
--- 
-2.17.1
+Reviewed-by: Rob Herring <robh@kernel.org>
 
