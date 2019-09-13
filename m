@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 940D5B16FC
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2019 03:15:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52620B1704
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2019 03:15:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbfIMBOr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Sep 2019 21:14:47 -0400
+        id S1728811AbfIMBPG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Sep 2019 21:15:06 -0400
 Received: from mga12.intel.com ([192.55.52.136]:29376 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727518AbfIMBOq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 12 Sep 2019 21:14:46 -0400
+        id S1728507AbfIMBOr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 12 Sep 2019 21:14:47 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 18:14:46 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="197403705"
+   d="scan'208";a="197403708"
 Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.162])
-  by orsmga002.jf.intel.com with ESMTP; 12 Sep 2019 18:14:43 -0700
+  by orsmga002.jf.intel.com with ESMTP; 12 Sep 2019 18:14:46 -0700
 From:   Megha Dey <megha.dey@linux.intel.com>
 To:     linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-pci@vger.kernel.org, maz@kernel.org, bhelgaas@google.com,
@@ -29,225 +29,183 @@ Cc:     ashok.raj@intel.com, megha.dey@intel.com, jacob.jun.pan@intel.com,
         Megha Dey <megha.dey@linux.intel.com>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>,
         Sanjay Kumar <sanjay.k.kumar@intel.com>
-Subject: [RFC V1 3/7] x86/ims: Add support for a new IMS irq domain
-Date:   Thu, 12 Sep 2019 18:32:04 -0700
-Message-Id: <1568338328-22458-4-git-send-email-megha.dey@linux.intel.com>
+Subject: [RFC V1 4/7] irq_remapping: New interfaces to support IMS irqdomain
+Date:   Thu, 12 Sep 2019 18:32:05 -0700
+Message-Id: <1568338328-22458-5-git-send-email-megha.dey@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
 References: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch adds support for the creation of a new IMS irq domain. It
-creates a new irq_chip associated with the IMS domain and adds the
-necessary domain operations to it.
+Introduce new interfaces for interrupt remapping drivers to support
+IMS irqdomains:
+
+irq_remapping_get_ims_irq_domain(): get the IMS irqdomain for an IRQ
+allocation. We must build one IMS irqdomain for each interrupt remapping
+unit. The driver calls this interface to get the IMS irqdomain associated
+with an IR irqdomain which manages the devices.
+
+Architecture specific hooks:
+arch_create_ims_irq_domain(): create an IMS irqdomain associated with the
+interrupt remapping unit.
+
+We also add following callback into struct irq_remap_ops:
+struct irq_domain *(*get_ims_irq_domain)(struct irq_alloc_info *);
 
 Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
 Signed-off-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
 Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
 ---
- arch/x86/include/asm/msi.h       |  4 ++
- arch/x86/kernel/apic/Makefile    |  1 +
- arch/x86/kernel/apic/ims.c       | 93 ++++++++++++++++++++++++++++++++++++++++
- arch/x86/kernel/apic/msi.c       |  4 +-
- drivers/vfio/mdev/mdev_core.c    |  6 +++
- drivers/vfio/mdev/mdev_private.h |  1 -
- include/linux/mdev.h             |  2 +
- 7 files changed, 108 insertions(+), 3 deletions(-)
- create mode 100644 arch/x86/kernel/apic/ims.c
+ arch/x86/include/asm/irq_remapping.h | 13 +++++++++++++
+ drivers/iommu/intel_irq_remapping.c  | 30 ++++++++++++++++++++++++++++++
+ drivers/iommu/irq_remapping.c        |  9 +++++++++
+ drivers/iommu/irq_remapping.h        |  3 +++
+ include/linux/intel-iommu.h          |  1 +
+ 5 files changed, 56 insertions(+)
 
-diff --git a/arch/x86/include/asm/msi.h b/arch/x86/include/asm/msi.h
-index 25ddd09..51f9d25 100644
---- a/arch/x86/include/asm/msi.h
-+++ b/arch/x86/include/asm/msi.h
-@@ -11,4 +11,8 @@ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+diff --git a/arch/x86/include/asm/irq_remapping.h b/arch/x86/include/asm/irq_remapping.h
+index 4bc985f..a735507 100644
+--- a/arch/x86/include/asm/irq_remapping.h
++++ b/arch/x86/include/asm/irq_remapping.h
+@@ -48,11 +48,18 @@ extern struct irq_domain *
+ irq_remapping_get_ir_irq_domain(struct irq_alloc_info *info);
+ extern struct irq_domain *
+ irq_remapping_get_irq_domain(struct irq_alloc_info *info);
++extern struct irq_domain *
++irq_remapping_get_ims_irq_domain(struct irq_alloc_info *info);
  
- void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc);
+ /* Create PCI MSI/MSIx irqdomain, use @parent as the parent irqdomain. */
+ extern struct irq_domain *
+ arch_create_remap_msi_irq_domain(struct irq_domain *par, const char *n, int id);
  
-+struct msi_domain_info;
-+
-+irq_hw_number_t msi_get_hwirq(struct msi_domain_info *info,
-+						msi_alloc_info_t *arg);
- #endif /* _ASM_X86_MSI_H */
-diff --git a/arch/x86/kernel/apic/Makefile b/arch/x86/kernel/apic/Makefile
-index a6fcaf16..75a2270 100644
---- a/arch/x86/kernel/apic/Makefile
-+++ b/arch/x86/kernel/apic/Makefile
-@@ -12,6 +12,7 @@ obj-y				+= hw_nmi.o
- 
- obj-$(CONFIG_X86_IO_APIC)	+= io_apic.o
- obj-$(CONFIG_PCI_MSI)		+= msi.o
-+obj-$(CONFIG_MSI_IMS)		+= ims.o
- obj-$(CONFIG_SMP)		+= ipi.o
- 
- ifeq ($(CONFIG_X86_64),y)
-diff --git a/arch/x86/kernel/apic/ims.c b/arch/x86/kernel/apic/ims.c
-new file mode 100644
-index 0000000..d9808a5
---- /dev/null
-+++ b/arch/x86/kernel/apic/ims.c
-@@ -0,0 +1,93 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright © 2019 Intel Corporation.
-+ *
-+ * Author: Megha Dey <megha.dey@intel.com>
-+ */
-+
-+#include <linux/dmar.h>
-+#include <linux/irq.h>
-+#include <linux/mdev.h>
-+#include <linux/pci.h>
-+
-+/*
-+ * Determine if a dev is mdev or not. Return NULL if not mdev device.
-+ * Return mdev's parent dev if success.
-+ */
-+static inline struct device *mdev_to_parent(struct device *dev)
-+{
-+	struct device *ret = NULL;
-+	struct device *(*fn)(struct device *dev);
-+	struct bus_type *bus = symbol_get(mdev_bus_type);
-+
-+	if (bus && dev->bus == bus) {
-+		fn = symbol_get(mdev_dev_to_parent_dev);
-+		ret = fn(dev);
-+		symbol_put(mdev_dev_to_parent_dev);
-+		symbol_put(mdev_bus_type);
-+	}
-+
-+	return ret;
-+}
-+
-+static struct pci_dev *ims_get_pci_dev(struct device *dev)
-+{
-+	struct pci_dev *pdev;
-+
-+	if (dev_is_mdev(dev)) {
-+		struct device *parent = mdev_to_parent(dev);
-+
-+		pdev = to_pci_dev(parent);
-+	} else {
-+		pdev = to_pci_dev(dev);
-+	}
-+
-+	return pdev;
-+}
-+
-+int dev_ims_prepare(struct irq_domain *domain, struct device *dev, int nvec,
-+		    msi_alloc_info_t *arg)
-+{
-+	struct pci_dev *pdev = ims_get_pci_dev(dev);
-+
-+	init_irq_alloc_info(arg, NULL);
-+	arg->msi_dev = pdev;
-+	arg->type = X86_IRQ_ALLOC_TYPE_MSIX;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(dev_ims_prepare);
-+
-+#ifdef CONFIG_IRQ_REMAP
-+
-+static struct msi_domain_ops dev_ims_domain_ops = {
-+	.get_hwirq	= msi_get_hwirq,
-+	.msi_prepare	= dev_ims_prepare,
-+};
-+
-+static struct irq_chip dev_ims_ir_controller = {
-+	.name			= "IR-DEV-IMS",
-+	.irq_unmask		= dev_ims_unmask_irq,
-+	.irq_mask		= dev_ims_mask_irq,
-+	.irq_ack		= irq_chip_ack_parent,
-+	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-+	.irq_set_vcpu_affinity	= irq_chip_set_vcpu_affinity_parent,
-+	.flags			= IRQCHIP_SKIP_SET_WAKE,
-+	.irq_write_msi_msg	= dev_ims_write_msg,
-+};
-+
-+static struct msi_domain_info ims_ir_domain_info = {
-+	.flags		= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-+			  MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
-+	.ops		= &dev_ims_domain_ops,
-+	.chip		= &dev_ims_ir_controller,
-+	.handler	= handle_edge_irq,
-+	.handler_name	= "edge",
-+};
-+
-+struct irq_domain *arch_create_ims_irq_domain(struct irq_domain *parent)
-+{
-+	return pci_msi_create_irq_domain(NULL, &ims_ir_domain_info, parent);
-+}
-+
++/* Create IMS irqdomain, use @parent as the parent irqdomain. */
++#ifdef CONFIG_MSI_IMS
++extern struct irq_domain *arch_create_ims_irq_domain(struct irq_domain *parent);
 +#endif
-diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
-index 435bcda..65da813 100644
---- a/arch/x86/kernel/apic/msi.c
-+++ b/arch/x86/kernel/apic/msi.c
-@@ -84,7 +84,7 @@ void native_teardown_msi_irq(unsigned int irq)
- 	irq_domain_free_irqs(irq, 1);
- }
- 
--static irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
-+irq_hw_number_t msi_get_hwirq(struct msi_domain_info *info,
- 					 msi_alloc_info_t *arg)
- {
- 	return arg->msi_hwirq;
-@@ -116,7 +116,7 @@ void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
- EXPORT_SYMBOL_GPL(pci_msi_set_desc);
- 
- static struct msi_domain_ops pci_msi_domain_ops = {
--	.get_hwirq	= pci_msi_get_hwirq,
-+	.get_hwirq	= msi_get_hwirq,
- 	.msi_prepare	= pci_msi_prepare,
- 	.set_desc	= pci_msi_set_desc,
- };
-diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-index b558d4c..cecc6a6 100644
---- a/drivers/vfio/mdev/mdev_core.c
-+++ b/drivers/vfio/mdev/mdev_core.c
-@@ -33,6 +33,12 @@ struct device *mdev_parent_dev(struct mdev_device *mdev)
- }
- EXPORT_SYMBOL(mdev_parent_dev);
- 
-+struct device *mdev_dev_to_parent_dev(struct device *dev)
-+{
-+	return to_mdev_device(dev)->parent->dev;
-+}
-+EXPORT_SYMBOL(mdev_dev_to_parent_dev);
 +
- void *mdev_get_drvdata(struct mdev_device *mdev)
+ /* Get parent irqdomain for interrupt remapping irqdomain */
+ static inline struct irq_domain *arch_get_ir_parent_domain(void)
  {
- 	return mdev->driver_data;
-diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
-index 7d92295..c21f130 100644
---- a/drivers/vfio/mdev/mdev_private.h
-+++ b/drivers/vfio/mdev/mdev_private.h
-@@ -36,7 +36,6 @@ struct mdev_device {
+@@ -85,5 +92,11 @@ irq_remapping_get_irq_domain(struct irq_alloc_info *info)
+ 	return NULL;
+ }
+ 
++static inline struct irq_domain *
++irq_remapping_get_ims_irq_domain(struct irq_alloc_info *info)
++{
++	return NULL;
++}
++
+ #endif /* CONFIG_IRQ_REMAP */
+ #endif /* __X86_IRQ_REMAPPING_H */
+diff --git a/drivers/iommu/intel_irq_remapping.c b/drivers/iommu/intel_irq_remapping.c
+index 4786ca0..3c0c0cb 100644
+--- a/drivers/iommu/intel_irq_remapping.c
++++ b/drivers/iommu/intel_irq_remapping.c
+@@ -573,6 +573,10 @@ static int intel_setup_irq_remapping(struct intel_iommu *iommu)
+ 						 "INTEL-IR-MSI",
+ 						 iommu->seq_id);
+ 
++#ifdef CONFIG_MSI_IMS
++	iommu->ir_ims_domain = arch_create_ims_irq_domain(iommu->ir_domain);
++#endif
++
+ 	ir_table->base = page_address(pages);
+ 	ir_table->bitmap = bitmap;
+ 	iommu->ir_table = ir_table;
+@@ -633,6 +637,10 @@ static void intel_teardown_irq_remapping(struct intel_iommu *iommu)
+ 			irq_domain_remove(iommu->ir_msi_domain);
+ 			iommu->ir_msi_domain = NULL;
+ 		}
++		if (iommu->ir_ims_domain) {
++			irq_domain_remove(iommu->ir_ims_domain);
++			iommu->ir_ims_domain = NULL;
++		}
+ 		if (iommu->ir_domain) {
+ 			irq_domain_remove(iommu->ir_domain);
+ 			iommu->ir_domain = NULL;
+@@ -1139,6 +1147,27 @@ static struct irq_domain *intel_get_irq_domain(struct irq_alloc_info *info)
+ 	return NULL;
+ }
+ 
++static struct irq_domain *intel_get_ims_irq_domain(struct irq_alloc_info *info)
++{
++	struct intel_iommu *iommu;
++
++	if (!info)
++		return NULL;
++
++	switch (info->type) {
++	case X86_IRQ_ALLOC_TYPE_MSI:
++	case X86_IRQ_ALLOC_TYPE_MSIX:
++		iommu = map_dev_to_ir(info->msi_dev);
++		if (iommu)
++			return iommu->ir_ims_domain;
++		break;
++	default:
++		break;
++	}
++
++	return NULL;
++}
++
+ struct irq_remap_ops intel_irq_remap_ops = {
+ 	.prepare		= intel_prepare_irq_remapping,
+ 	.enable			= intel_enable_irq_remapping,
+@@ -1147,6 +1176,7 @@ struct irq_remap_ops intel_irq_remap_ops = {
+ 	.enable_faulting	= enable_drhd_fault_handling,
+ 	.get_ir_irq_domain	= intel_get_ir_irq_domain,
+ 	.get_irq_domain		= intel_get_irq_domain,
++	.get_ims_irq_domain     = intel_get_ims_irq_domain,
  };
  
- #define to_mdev_device(dev)	container_of(dev, struct mdev_device, dev)
--#define dev_is_mdev(d)		((d)->bus == &mdev_bus_type)
+ static void intel_ir_reconfigure_irte(struct irq_data *irqd, bool force)
+diff --git a/drivers/iommu/irq_remapping.c b/drivers/iommu/irq_remapping.c
+index 83f36f6..c4352fc 100644
+--- a/drivers/iommu/irq_remapping.c
++++ b/drivers/iommu/irq_remapping.c
+@@ -193,3 +193,12 @@ irq_remapping_get_irq_domain(struct irq_alloc_info *info)
  
- struct mdev_type {
- 	struct kobject kobj;
-diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-index 0ce30ca..9dcbffe 100644
---- a/include/linux/mdev.h
-+++ b/include/linux/mdev.h
-@@ -144,5 +144,7 @@ void mdev_unregister_driver(struct mdev_driver *drv);
- struct device *mdev_parent_dev(struct mdev_device *mdev);
- struct device *mdev_dev(struct mdev_device *mdev);
- struct mdev_device *mdev_from_dev(struct device *dev);
-+struct device *mdev_dev_to_parent_dev(struct device *dev);
+ 	return remap_ops->get_irq_domain(info);
+ }
++
++struct irq_domain *
++irq_remapping_get_ims_irq_domain(struct irq_alloc_info *info)
++{
++	if (!remap_ops || !remap_ops->get_ims_irq_domain)
++		return NULL;
++
++	return remap_ops->get_ims_irq_domain(info);
++}
+diff --git a/drivers/iommu/irq_remapping.h b/drivers/iommu/irq_remapping.h
+index 6a190d5..8e198ad 100644
+--- a/drivers/iommu/irq_remapping.h
++++ b/drivers/iommu/irq_remapping.h
+@@ -48,6 +48,9 @@ struct irq_remap_ops {
  
-+#define dev_is_mdev(d)          ((d)->bus == symbol_get(mdev_bus_type))
- #endif /* MDEV_H */
+ 	/* Get the MSI irqdomain associated with the IOMMU device */
+ 	struct irq_domain *(*get_irq_domain)(struct irq_alloc_info *);
++
++	/* Get the IMS irqdomain associated with the IOMMU device */
++	struct irq_domain *(*get_ims_irq_domain)(struct irq_alloc_info *);
+ };
+ 
+ extern struct irq_remap_ops intel_irq_remap_ops;
+diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+index 4fc6454f..26be769 100644
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -546,6 +546,7 @@ struct intel_iommu {
+ 	struct ir_table *ir_table;	/* Interrupt remapping info */
+ 	struct irq_domain *ir_domain;
+ 	struct irq_domain *ir_msi_domain;
++	struct irq_domain *ir_ims_domain;
+ #endif
+ 	struct iommu_device iommu;  /* IOMMU core code handle */
+ 	int		node;
 -- 
 2.7.4
 
