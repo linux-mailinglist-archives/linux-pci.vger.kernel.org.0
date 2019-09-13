@@ -2,115 +2,261 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ABD3B2797
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2019 23:57:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47DC6B2803
+	for <lists+linux-pci@lfdr.de>; Sat, 14 Sep 2019 00:07:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731249AbfIMV5h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Sep 2019 17:57:37 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46633 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731186AbfIMV5h (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Sep 2019 17:57:37 -0400
-Received: by mail-ed1-f65.google.com with SMTP id i8so28204017edn.13
-        for <linux-pci@vger.kernel.org>; Fri, 13 Sep 2019 14:57:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lXBmtndFJEiSa/yuibypv1aaQRLxwTUng1HNafafXIY=;
-        b=k6NvvxGL20jhmIbQNZHUehQSfjwxafrfGKMF+7Mszkt2KZeb4LPp0Qqy1S5zFk0q2g
-         W6ia+WdiQXO0gCeeGWwHmfghLR7pCB7YngFyIumjsinbmjC4BXPxsslVr5ZiqPTNoBTs
-         bgG+9M9HwwMQbSp38i5i1GVBel+ddoouQXqL2Y3Se+UftarnUzjcavmSfgACwzE3qvY1
-         rc1p3phfC5r/lTr5tMmJjop4Dr8eq3CwItaBifLeW2tIkNr3J7ulrfUiEJ1dBY6aD/Qy
-         kzLa1aIt4bO38Yj9rVet++7TvFTf55KnSeVY9lBRG67Vhc1UphXi+blm2RdyfoUXY81N
-         pr4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lXBmtndFJEiSa/yuibypv1aaQRLxwTUng1HNafafXIY=;
-        b=A2UVZ85x4F16+fx9PnJ+6PEQIvKIAFbK5+ohVNPUrT3z91uCNSDGiLr9kNxMIq5VUS
-         VcFiiRHoOjt+qgLnpVB38xUql3MkG0yIKU5kYujwS47PlwTXV7haXKDkkqTwCzxhRIsv
-         YnxxUqhb2miz6A1v6m1U3V7hkVPOKvJXQvk0HvMzTVcnG1TL8rvYAUbEIa6i0JOWW3+D
-         fkhnvsWGoydRwqGyzgu7UeTJhTZbEvog2b7y2MHV4s/foLqqjXN+p63n9sGZKjuNhCbK
-         5G7s6Rege3BbY0FgBIeD4Hje2rWxFGkifo3UUqA7KYppjfCq5k+/HXu5AGVts1cW2cCi
-         OJmA==
-X-Gm-Message-State: APjAAAVaAfaA8iWWBMeI16/nu+JIe5wHNvqXu3tFu1fpvDTIF/vsWYOM
-        fOLAD8cnW2EkQxINwF21fhf9vRZ1YxM2kckjZ/wnHA==
-X-Google-Smtp-Source: APXvYqyNOjOgrj3kaKKwB1QlWHXqQvBx4UDlJrb7HS+QDlZNVYw6g1q/V0tb1aYTJy5+4lGg4Xvm/wSth0HRmECmTt0=
-X-Received: by 2002:a50:9512:: with SMTP id u18mr49332377eda.182.1568411853796;
- Fri, 13 Sep 2019 14:57:33 -0700 (PDT)
+        id S2389867AbfIMWHH convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 13 Sep 2019 18:07:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51290 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389689AbfIMWHH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Sep 2019 18:07:07 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3EC45308FBA9;
+        Fri, 13 Sep 2019 22:07:06 +0000 (UTC)
+Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1517760BF1;
+        Fri, 13 Sep 2019 22:07:04 +0000 (UTC)
+Date:   Fri, 13 Sep 2019 16:07:04 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Megha Dey <megha.dey@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-pci@vger.kernel.org, maz@kernel.org, bhelgaas@google.com,
+        rafael@kernel.org, gregkh@linuxfoundation.org, tglx@linutronix.de,
+        hpa@zytor.com, jgg@mellanox.com, ashok.raj@intel.com,
+        megha.dey@intel.com, jacob.jun.pan@intel.com,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Sanjay Kumar <sanjay.k.kumar@intel.com>
+Subject: Re: [RFC V1 3/7] x86/ims: Add support for a new IMS irq domain
+Message-ID: <20190913160704.03d4df6c@x1.home>
+In-Reply-To: <1568338328-22458-4-git-send-email-megha.dey@linux.intel.com>
+References: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
+        <1568338328-22458-4-git-send-email-megha.dey@linux.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20190904160339.2800-1-niklas.cassel@linaro.org>
-In-Reply-To: <20190904160339.2800-1-niklas.cassel@linaro.org>
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-Date:   Fri, 13 Sep 2019 14:57:23 -0700
-Message-ID: <CAOCOHw7+0t-HPY5t8EA+vZ_A-CTt1m8V1KNUvTS7zz_3wFwhNw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: dwc: fix find_next_bit() usage
-To:     Niklas Cassel <niklas.cassel@linaro.org>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 13 Sep 2019 22:07:06 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 9:03 AM Niklas Cassel <niklas.cassel@linaro.org> wrote:
->
-> find_next_bit() takes a parameter of size long, and performs arithmetic
-> that assumes that the argument is of size long.
->
-> Therefore we cannot pass a u32, since this will cause find_next_bit()
-> to read outside the stack buffer and will produce the following print:
-> BUG: KASAN: stack-out-of-bounds in find_next_bit+0x38/0xb0
->
-> Fixes: 1b497e6493c4 ("PCI: dwc: Fix uninitialized variable in dw_handle_msi_irq()")
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+On Thu, 12 Sep 2019 18:32:04 -0700
+Megha Dey <megha.dey@linux.intel.com> wrote:
 
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
+> This patch adds support for the creation of a new IMS irq domain. It
+> creates a new irq_chip associated with the IMS domain and adds the
+> necessary domain operations to it.
+> 
+> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Signed-off-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
+> Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
 > ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index d3156446ff27..45f21640c977 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -78,7 +78,8 @@ static struct msi_domain_info dw_pcie_msi_domain_info = {
->  irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+>  arch/x86/include/asm/msi.h       |  4 ++
+>  arch/x86/kernel/apic/Makefile    |  1 +
+>  arch/x86/kernel/apic/ims.c       | 93 ++++++++++++++++++++++++++++++++++++++++
+>  arch/x86/kernel/apic/msi.c       |  4 +-
+>  drivers/vfio/mdev/mdev_core.c    |  6 +++
+>  drivers/vfio/mdev/mdev_private.h |  1 -
+>  include/linux/mdev.h             |  2 +
+>  7 files changed, 108 insertions(+), 3 deletions(-)
+>  create mode 100644 arch/x86/kernel/apic/ims.c
+> 
+> diff --git a/arch/x86/include/asm/msi.h b/arch/x86/include/asm/msi.h
+> index 25ddd09..51f9d25 100644
+> --- a/arch/x86/include/asm/msi.h
+> +++ b/arch/x86/include/asm/msi.h
+> @@ -11,4 +11,8 @@ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+>  
+>  void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc);
+>  
+> +struct msi_domain_info;
+> +
+> +irq_hw_number_t msi_get_hwirq(struct msi_domain_info *info,
+> +						msi_alloc_info_t *arg);
+>  #endif /* _ASM_X86_MSI_H */
+> diff --git a/arch/x86/kernel/apic/Makefile b/arch/x86/kernel/apic/Makefile
+> index a6fcaf16..75a2270 100644
+> --- a/arch/x86/kernel/apic/Makefile
+> +++ b/arch/x86/kernel/apic/Makefile
+> @@ -12,6 +12,7 @@ obj-y				+= hw_nmi.o
+>  
+>  obj-$(CONFIG_X86_IO_APIC)	+= io_apic.o
+>  obj-$(CONFIG_PCI_MSI)		+= msi.o
+> +obj-$(CONFIG_MSI_IMS)		+= ims.o
+>  obj-$(CONFIG_SMP)		+= ipi.o
+>  
+>  ifeq ($(CONFIG_X86_64),y)
+> diff --git a/arch/x86/kernel/apic/ims.c b/arch/x86/kernel/apic/ims.c
+> new file mode 100644
+> index 0000000..d9808a5
+> --- /dev/null
+> +++ b/arch/x86/kernel/apic/ims.c
+> @@ -0,0 +1,93 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright © 2019 Intel Corporation.
+> + *
+> + * Author: Megha Dey <megha.dey@intel.com>
+> + */
+> +
+> +#include <linux/dmar.h>
+> +#include <linux/irq.h>
+> +#include <linux/mdev.h>
+> +#include <linux/pci.h>
+> +
+> +/*
+> + * Determine if a dev is mdev or not. Return NULL if not mdev device.
+> + * Return mdev's parent dev if success.
+> + */
+> +static inline struct device *mdev_to_parent(struct device *dev)
+> +{
+> +	struct device *ret = NULL;
+> +	struct device *(*fn)(struct device *dev);
+> +	struct bus_type *bus = symbol_get(mdev_bus_type);
+> +
+> +	if (bus && dev->bus == bus) {
+> +		fn = symbol_get(mdev_dev_to_parent_dev);
+> +		ret = fn(dev);
+> +		symbol_put(mdev_dev_to_parent_dev);
+> +		symbol_put(mdev_bus_type);
+
+Leaks a reference to the mdev module if dev->bus != bus.  The new
+version of dev_is_mdev() unconditionally leaks a reference.  Thanks,
+
+Alex
+
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static struct pci_dev *ims_get_pci_dev(struct device *dev)
+> +{
+> +	struct pci_dev *pdev;
+> +
+> +	if (dev_is_mdev(dev)) {
+> +		struct device *parent = mdev_to_parent(dev);
+> +
+> +		pdev = to_pci_dev(parent);
+> +	} else {
+> +		pdev = to_pci_dev(dev);
+> +	}
+> +
+> +	return pdev;
+> +}
+> +
+> +int dev_ims_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+> +		    msi_alloc_info_t *arg)
+> +{
+> +	struct pci_dev *pdev = ims_get_pci_dev(dev);
+> +
+> +	init_irq_alloc_info(arg, NULL);
+> +	arg->msi_dev = pdev;
+> +	arg->type = X86_IRQ_ALLOC_TYPE_MSIX;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(dev_ims_prepare);
+> +
+> +#ifdef CONFIG_IRQ_REMAP
+> +
+> +static struct msi_domain_ops dev_ims_domain_ops = {
+> +	.get_hwirq	= msi_get_hwirq,
+> +	.msi_prepare	= dev_ims_prepare,
+> +};
+> +
+> +static struct irq_chip dev_ims_ir_controller = {
+> +	.name			= "IR-DEV-IMS",
+> +	.irq_unmask		= dev_ims_unmask_irq,
+> +	.irq_mask		= dev_ims_mask_irq,
+> +	.irq_ack		= irq_chip_ack_parent,
+> +	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+> +	.irq_set_vcpu_affinity	= irq_chip_set_vcpu_affinity_parent,
+> +	.flags			= IRQCHIP_SKIP_SET_WAKE,
+> +	.irq_write_msi_msg	= dev_ims_write_msg,
+> +};
+> +
+> +static struct msi_domain_info ims_ir_domain_info = {
+> +	.flags		= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+> +			  MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
+> +	.ops		= &dev_ims_domain_ops,
+> +	.chip		= &dev_ims_ir_controller,
+> +	.handler	= handle_edge_irq,
+> +	.handler_name	= "edge",
+> +};
+> +
+> +struct irq_domain *arch_create_ims_irq_domain(struct irq_domain *parent)
+> +{
+> +	return pci_msi_create_irq_domain(NULL, &ims_ir_domain_info, parent);
+> +}
+> +
+> +#endif
+> diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+> index 435bcda..65da813 100644
+> --- a/arch/x86/kernel/apic/msi.c
+> +++ b/arch/x86/kernel/apic/msi.c
+> @@ -84,7 +84,7 @@ void native_teardown_msi_irq(unsigned int irq)
+>  	irq_domain_free_irqs(irq, 1);
+>  }
+>  
+> -static irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
+> +irq_hw_number_t msi_get_hwirq(struct msi_domain_info *info,
+>  					 msi_alloc_info_t *arg)
 >  {
->         int i, pos, irq;
-> -       u32 val, num_ctrls;
-> +       unsigned long val;
-> +       u32 status, num_ctrls;
->         irqreturn_t ret = IRQ_NONE;
->
->         num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
-> @@ -86,14 +87,14 @@ irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
->         for (i = 0; i < num_ctrls; i++) {
->                 dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_STATUS +
->                                         (i * MSI_REG_CTRL_BLOCK_SIZE),
-> -                                   4, &val);
-> -               if (!val)
-> +                                   4, &status);
-> +               if (!status)
->                         continue;
->
->                 ret = IRQ_HANDLED;
-> +               val = status;
->                 pos = 0;
-> -               while ((pos = find_next_bit((unsigned long *) &val,
-> -                                           MAX_MSI_IRQS_PER_CTRL,
-> +               while ((pos = find_next_bit(&val, MAX_MSI_IRQS_PER_CTRL,
->                                             pos)) != MAX_MSI_IRQS_PER_CTRL) {
->                         irq = irq_find_mapping(pp->irq_domain,
->                                                (i * MAX_MSI_IRQS_PER_CTRL) +
-> --
-> 2.21.0
->
+>  	return arg->msi_hwirq;
+> @@ -116,7 +116,7 @@ void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
+>  EXPORT_SYMBOL_GPL(pci_msi_set_desc);
+>  
+>  static struct msi_domain_ops pci_msi_domain_ops = {
+> -	.get_hwirq	= pci_msi_get_hwirq,
+> +	.get_hwirq	= msi_get_hwirq,
+>  	.msi_prepare	= pci_msi_prepare,
+>  	.set_desc	= pci_msi_set_desc,
+>  };
+> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> index b558d4c..cecc6a6 100644
+> --- a/drivers/vfio/mdev/mdev_core.c
+> +++ b/drivers/vfio/mdev/mdev_core.c
+> @@ -33,6 +33,12 @@ struct device *mdev_parent_dev(struct mdev_device *mdev)
+>  }
+>  EXPORT_SYMBOL(mdev_parent_dev);
+>  
+> +struct device *mdev_dev_to_parent_dev(struct device *dev)
+> +{
+> +	return to_mdev_device(dev)->parent->dev;
+> +}
+> +EXPORT_SYMBOL(mdev_dev_to_parent_dev);
+> +
+>  void *mdev_get_drvdata(struct mdev_device *mdev)
+>  {
+>  	return mdev->driver_data;
+> diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
+> index 7d92295..c21f130 100644
+> --- a/drivers/vfio/mdev/mdev_private.h
+> +++ b/drivers/vfio/mdev/mdev_private.h
+> @@ -36,7 +36,6 @@ struct mdev_device {
+>  };
+>  
+>  #define to_mdev_device(dev)	container_of(dev, struct mdev_device, dev)
+> -#define dev_is_mdev(d)		((d)->bus == &mdev_bus_type)
+>  
+>  struct mdev_type {
+>  	struct kobject kobj;
+> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+> index 0ce30ca..9dcbffe 100644
+> --- a/include/linux/mdev.h
+> +++ b/include/linux/mdev.h
+> @@ -144,5 +144,7 @@ void mdev_unregister_driver(struct mdev_driver *drv);
+>  struct device *mdev_parent_dev(struct mdev_device *mdev);
+>  struct device *mdev_dev(struct mdev_device *mdev);
+>  struct mdev_device *mdev_from_dev(struct device *dev);
+> +struct device *mdev_dev_to_parent_dev(struct device *dev);
+>  
+> +#define dev_is_mdev(d)          ((d)->bus == symbol_get(mdev_bus_type))
+>  #endif /* MDEV_H */
+
