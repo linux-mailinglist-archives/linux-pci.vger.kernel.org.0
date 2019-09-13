@@ -2,141 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D188CB1C23
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2019 13:28:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61634B1D1E
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2019 14:12:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbfIML2t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Sep 2019 07:28:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:41924 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726266AbfIML2t (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Sep 2019 07:28:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 301F828;
-        Fri, 13 Sep 2019 04:28:48 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DFE3A3F59C;
-        Fri, 13 Sep 2019 04:28:45 -0700 (PDT)
-Date:   Fri, 13 Sep 2019 12:28:41 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Jonathan Chocron <jonnyc@amazon.com>, bhelgaas@google.com
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, andrew.murray@arm.com,
-        dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com,
-        ronenk@amazon.com, barakw@amazon.com, talel@amazon.com,
-        hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 4/7] PCI: Add quirk to disable MSI-X support for
- Amazon's Annapurna Labs Root Port
-Message-ID: <20190913112841.GA8153@e121166-lin.cambridge.arm.com>
-References: <20190912130042.14597-1-jonnyc@amazon.com>
- <20190912130042.14597-5-jonnyc@amazon.com>
+        id S1728617AbfIMMMB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Sep 2019 08:12:01 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:39636 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbfIMMMB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Sep 2019 08:12:01 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8DCBfTF029680;
+        Fri, 13 Sep 2019 07:11:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568376701;
+        bh=LDh14wMax5cYelccR2YxVkVYtjeK9DovOmYdwRMAozw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=fwgcbN9uRCohF/rMgheWo77AJ3u9XGF+rvdQmL76F7++oOQMUlee1dOKrty6ZNwaw
+         yYNEseEyEs/VwrIebopIDauIfbDPDkj2xrwYn8zh3OCKXi+ebecCB7c9Y6YXTkas5P
+         p1e58JpAombycTdLvkwsEcnwPGnCJ0OVAj8PZBKo=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8DCBfXB036693
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 13 Sep 2019 07:11:41 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 13
+ Sep 2019 07:11:40 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 13 Sep 2019 07:11:41 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8DCBZAo123690;
+        Fri, 13 Sep 2019 07:11:36 -0500
+Subject: Re: [PATCH] PCI: endpoint: Add DMA to Linux PCI EP Framework
+To:     Alan Mikhak <alan.mikhak@sifive.com>,
+        Haotian Wang <haotian.wang@sifive.com>, <haotian.wang@duke.edu>
+CC:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "wen.yang99@zte.com.cn" <wen.yang99@zte.com.cn>,
+        "kjlu@umn.edu" <kjlu@umn.edu>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        Vinod Koul <vkoul@kernel.org>
+References: <1558650258-15050-1-git-send-email-alan.mikhak@sifive.com>
+ <305100E33629484CBB767107E4246BBB0A6FAFFD@DE02WEMBXB.internal.synopsys.com>
+ <CABEDWGxsQ9NXrN7W_8HVrXQBb9HiBd+d1dNfv+cXmoBpXQnLwA@mail.gmail.com>
+ <305100E33629484CBB767107E4246BBB0A6FC308@DE02WEMBXB.internal.synopsys.com>
+ <CABEDWGxL-WYz1BY7yXJ6eKULgVtKeo67XhgHZjvtm5Ka5foKiA@mail.gmail.com>
+ <192e3a19-8b69-dfaf-aa5c-45c7087548cc@ti.com>
+ <CABEDWGxLeD-K8PjkD5hPSTFGJKs2hxEaAVO+nE5eC9Nx2yw=ig@mail.gmail.com>
+ <75d578c2-a98c-d1ef-1633-6dc5dc3b0913@ti.com>
+ <CABEDWGxBxmiKjoPUSUaUBXUhKkUTXVX0U9ooRou8tcWJojb52g@mail.gmail.com>
+ <6e692ff6-e64f-e651-c8ae-34d0034ad7b9@ti.com>
+ <CABEDWGx2N66L=27JY6Ywbfny78UaxENkxBTqxU37PfuQO-ZMZw@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <40fafe93-d2dd-b1f5-bc16-cd84ff07bd13@ti.com>
+Date:   Fri, 13 Sep 2019 17:41:23 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190912130042.14597-5-jonnyc@amazon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CABEDWGx2N66L=27JY6Ywbfny78UaxENkxBTqxU37PfuQO-ZMZw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 04:00:42PM +0300, Jonathan Chocron wrote:
-> The Root Port (identified by [1c36:0031]) doesn't support MSI-X. On some
-> platforms it is configured to not advertise the capability at all, while
-> on others it (mistakenly) does. This causes a panic during
-> initialization by the pcieport driver, since it tries to configure the
-> MSI-X capability. Specifically, when trying to access the MSI-X table
-> a "non-existing addr" exception occurs.
-> 
-> Example stacktrace snippet:
-> 
->   SError Interrupt on CPU2, code 0xbf000000 -- SError
->   CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-Jonny-14847-ge76f1d4a1828-dirty #33
->   Hardware name: Annapurna Labs Alpine V3 EVP (DT)
->   pstate: 80000005 (Nzcv daif -PAN -UAO)
->   pc : __pci_enable_msix_range+0x4e4/0x608
->   lr : __pci_enable_msix_range+0x498/0x608
->   sp : ffffff80117db700
->   x29: ffffff80117db700 x28: 0000000000000001
->   x27: 0000000000000001 x26: 0000000000000000
->   x25: ffffffd3e9d8c0b0 x24: 0000000000000000
->   x23: 0000000000000000 x22: 0000000000000000
->   x21: 0000000000000001 x20: 0000000000000000
->   x19: ffffffd3e9d8c000 x18: ffffffffffffffff
->   x17: 0000000000000000 x16: 0000000000000000
->   x15: ffffff80116496c8 x14: ffffffd3e9844503
->   x13: ffffffd3e9844502 x12: 0000000000000038
->   x11: ffffffffffffff00 x10: 0000000000000040
->   x9 : ffffff801165e270 x8 : ffffff801165e268
->   x7 : 0000000000000002 x6 : 00000000000000b2
->   x5 : ffffffd3e9d8c2c0 x4 : 0000000000000000
->   x3 : 0000000000000000 x2 : 0000000000000000
->   x1 : 0000000000000000 x0 : ffffffd3e9844680
->   Kernel panic - not syncing: Asynchronous SError Interrupt
->   CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-Jonny-14847-ge76f1d4a1828-dirty #33
->   Hardware name: Annapurna Labs Alpine V3 EVP (DT)
->   Call trace:
->    dump_backtrace+0x0/0x140
->    show_stack+0x14/0x20
->    dump_stack+0xa8/0xcc
->    panic+0x140/0x334
->    nmi_panic+0x6c/0x70
->    arm64_serror_panic+0x74/0x88
->    __pte_error+0x0/0x28
->    el1_error+0x84/0xf8
->    __pci_enable_msix_range+0x4e4/0x608
->    pci_alloc_irq_vectors_affinity+0xdc/0x150
->    pcie_port_device_register+0x2b8/0x4e0
->    pcie_portdrv_probe+0x34/0xf0
-> 
-> Notice that this quirk also disables MSI (which may work, but hasn't
-> been tested nor has a current use case), since currently there is no
-> standard way to disable only MSI-X.
-> 
-> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> ---
->  drivers/pci/quirks.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
++ Haotian Wang
 
-I will prepare this series for upstream but I would like to have Bjorn's
-ACK before pushing it out since you updated this patch following his
-review.
-
-Thanks,
-Lorenzo
-
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 2e983f2a0ee9..c1077e806291 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -2977,6 +2977,24 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0x10a1,
->  			quirk_msi_intx_disable_qca_bug);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0xe091,
->  			quirk_msi_intx_disable_qca_bug);
-> +
-> +/*
-> + * Amazon's Annapurna Labs 1c36:0031 Root Ports don't support MSI-X, so it
-> + * should be disabled on platforms where the device (mistakenly) advertises it.
-> + *
-> + * Notice that this quirk also disables MSI (which may work, but hasn't been
-> + * tested), since currently there is no standard way to disable only MSI-X.
-> + *
-> + * The 0031 device id is reused for other non Root Port device types,
-> + * therefore the quirk is registered for the PCI_CLASS_BRIDGE_PCI class.
-> + */
-> +static void quirk_al_msi_disable(struct pci_dev *dev)
-> +{
-> +	dev->no_msi = 1;
-> +	pci_warn(dev, "Disabling MSI/MSI-X\n");
-> +}
-> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031,
-> +			      PCI_CLASS_BRIDGE_PCI, 8, quirk_al_msi_disable);
->  #endif /* CONFIG_PCI_MSI */
->  
->  /*
-> -- 
-> 2.17.1
+On 03/06/19 11:12 PM, Alan Mikhak wrote:
+> On Sun, Jun 2, 2019 at 9:43 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>> Hi Alan,
+>> On 31/05/19 11:46 PM, Alan Mikhak wrote:
+>>> On Thu, May 30, 2019 at 10:08 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>>> Hi Alan,
+>>>>> Hi Kishon,
+>>>>
+>>>> I still have to look closer into your DMA patch but linked-list mode or single
+>>>> block mode shouldn't be an user select-able option but should be determined by
+>>>> the size of transfer.
+>>>
+>>> Please consider the following when taking a closer look at this patch.
+>>
+>> After seeing comments from Vinod and Arnd, it looks like the better way of
+>> adding DMA support would be to register DMA within PCI endpoint controller to
+>> DMA subsystem (as dmaengine) and use only dmaengine APIs in pci_epf_test.
+> 
+> Thanks Kishon. That makes it clear where these pieces should go.
+> 
+>>> In my specific use case, I need to verify that any valid block size,
+>>> including a one byte transfer, can be transferred across the PCIe bus
+>>> by memcpy_toio/fromio() or by DMA either as a single block or as
+>>> linked-list. That is why, instead of deciding based on transfer size,
+>>> this patch introduces the '-L' flag for pcitest to communicate the
+>>> user intent across the PCIe bus to pci-epf-test so the endpoint can
+>>> initiate the DMA transfer using a single block or in linked-list mode.
+>> The -L option seems to select an internal DMA configuration which might be
+>> specific to one implementation. As Gustavo already pointed, we should have only
+>> generic options in pcitest. This would no longer be applicable when we move to
+>> dmaengine.
+> 
+> Single-block DMA seemed as generic as linked-list DMA and
+> memcpy_toio/fromio. It remains unclear how else to communicate that
+> intent to pci_epf_test each time I invoke pcitest.
+> 
+> Regards,
+> Alan
 > 
