@@ -2,272 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BFAF3B1105
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2019 16:21:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAB43B16F6
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2019 03:14:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732603AbfILOVg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Sep 2019 10:21:36 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:55396 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732592AbfILOVg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Sep 2019 10:21:36 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost1.synopsys.com [10.12.135.161])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id BF24BC5658;
-        Thu, 12 Sep 2019 14:21:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1568298096; bh=i//E+oT3HTbsIxqWunXf3n7NL/qpAN1Z/z1ayCpDSRc=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=IjKBOJkWvwPa5iTPz8sc/nbNoTuh/1c91bEqphg8927lVX/ihy6hmgxvNH9fjf5Ap
-         kQnW5V5Hj8Zu++bnZjKUaESozBS0Z/HYWBiOAkvjg1wHc5HwsKfjrxRh6TF0+P1xnT
-         jVWbqdmE/4d796Iq5q+AzkYyE2jeFeSZqMFV9XdcRs9ysCTFY8UGNnqpAAzyp+6aAx
-         u/2XeK6CWCmasKPxuFPwGV1gpfwARgQycEaYv+56RbQQueQTBwQxr3KLhTgQwY5H16
-         Vv26drG6D7w0v4vN0WTu8Ef00x9KoSomqIrIVfQ64BH7qTqKPnPpBsfTiGRvs3BEDO
-         6Oi1eqpaFsDvA==
-Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 75889A008B;
-        Thu, 12 Sep 2019 14:21:35 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- us01wehtc1.internal.synopsys.com (10.12.239.231) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 12 Sep 2019 07:21:34 -0700
-Received: from NAM03-DM3-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Thu, 12 Sep 2019 07:21:34 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Bl5eea0cCY+SDjJolzb4xnYXdyyaWEelNFgTnhGI+VBpzO5/JqNbu1R1WK+ly+ASQR/7neiN+pfqWhXMcvuOQA01U8K4Bgm8Rs7QoDzCBfibTjpij05i7/ruFByO1oOHW4pGpmF5qqAGb0Qb8HRsC1jKimCrkMjUVloKNOUeimQUeFGi/YdeRSB/uAzyh1tJLoQZUSZgF5k5PZLrSnMKLjpjjdIT2eI/lWGI/ELhXNKHXwVbAiJJNkDwn6D9FaT4J7SD/3JEXMRsw9LxUoXR09F6FvFsQ3skivJT+fVBf3CUS7QasH4VI/G8Y1IJfEZK72FGxgCqi2+9QAYIJmfILg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i//E+oT3HTbsIxqWunXf3n7NL/qpAN1Z/z1ayCpDSRc=;
- b=Rc+9b3MwrTonEDgTjSKRjwyGLBrHB+RC8cEA6VV/ZWoVLKFPuN7JBR/9BQXtBH83ted3o45PL6yjBB7PLuG/QLJ0VmDiPcS4h5V99BU3HFqRDoeqeXxBoNIebMzt0HJYWfhXREFTP29rZwwzwaTuWt7iQhvhQDuHLM98ut89YXi726LwxcAddTV2eVbC0zKKvWZM8Y8D+ZpVjg3RWm9tYoxiEdMuW4PQkQ3g2YSgSWPSZj/r2egQIR7DS23KUnQh4RBIapYicUoM5qvXHq+qSRUcbVdGGz/TA6387D7SQGLqTBDPKGMZ9JVH3Me39zsL7trMrXoXengk13u0tDSNiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i//E+oT3HTbsIxqWunXf3n7NL/qpAN1Z/z1ayCpDSRc=;
- b=QAIgKPaIun/sX7D8BDM8XXEhu/T+5K0x5AvxWXtWvfeMG/DnRpN7YUuXhwMSCb9R2kKBLCwautjBw3PDd4e9vlYq8t03AFSKB5qsjKlPVqRGea10AtHFdJoLlPCIQOhrCOgSW1lZUrKL9++ZEEEjMQc4PPV0el3RIfViMj8FX7Y=
-Received: from DM6PR12MB4010.namprd12.prod.outlook.com (10.255.175.83) by
- DM6PR12MB3450.namprd12.prod.outlook.com (20.178.198.217) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.18; Thu, 12 Sep 2019 14:21:32 +0000
-Received: from DM6PR12MB4010.namprd12.prod.outlook.com
- ([fe80::dd4:2e5:e564:8684]) by DM6PR12MB4010.namprd12.prod.outlook.com
- ([fe80::dd4:2e5:e564:8684%5]) with mapi id 15.20.2263.016; Thu, 12 Sep 2019
- 14:21:32 +0000
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     Pankaj Dubey <pankaj.dubey@samsung.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <Gustavo.Pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Anvesh Salveru <anvesh.s@samsung.com>
-Subject: RE: [PATCH 1/2] PCI: dwc: Add support to disable GEN3 equalization
-Thread-Topic: [PATCH 1/2] PCI: dwc: Add support to disable GEN3 equalization
-Thread-Index: AQHVZ9LiagEtnhGV+E+4tfeH33MusqcoAYsQ
-Date:   Thu, 12 Sep 2019 14:21:32 +0000
-Message-ID: <DM6PR12MB4010B4CC5DD11D3607D157ABDAB00@DM6PR12MB4010.namprd12.prod.outlook.com>
-References: <CGME20190910122514epcas5p4f00c0f999333dd7707c0a353fd06b57f@epcas5p4.samsung.com>
- <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
-In-Reply-To: <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jWjNWemRHRjJiMXhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
- =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
- =?utf-8?B?Y2JYTm5MVGxpWlRaaVl6VmpMV1ExTmpndE1URmxPUzA1T0RobUxXWTRPVFJq?=
- =?utf-8?B?TWpjek9EQTBNbHhoYldVdGRHVnpkRnc1WW1VMlltTTFaQzFrTlRZNExURXha?=
- =?utf-8?B?VGt0T1RnNFppMW1PRGswWXpJM016Z3dOREppYjJSNUxuUjRkQ0lnYzNvOUlq?=
- =?utf-8?B?TXpORElpSUhROUlqRXpNakV5TnpjeE5qa3dNemcwT1RRMU9DSWdhRDBpV0Vw?=
- =?utf-8?B?MmQxa3ZUazExVlZKWVdGUnphWHBGV1Vrd1UyczBXSHBGUFNJZ2FXUTlJaUln?=
- =?utf-8?B?WW13OUlqQWlJR0p2UFNJeElpQmphVDBpWTBGQlFVRkZVa2hWTVZKVFVsVkdU?=
- =?utf-8?B?a05uVlVGQlFsRktRVUZFZVdwUmJHWmtWMjVXUVdGTE9HRm1TbFJqZVdjd2Iz?=
- =?utf-8?B?SjRjRGhzVG5wTFJGRlBRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVaEJRVUZCUTJ0RFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVWQlFWRkJRa0ZCUVVFdlNHOXphVkZCUVVGQlFVRkJRVUZCUVVGQlFVRktO?=
- =?utf-8?B?RUZCUVVKdFFVZHJRV0puUW1oQlJ6UkJXWGRDYkVGR09FRmpRVUp6UVVkRlFX?=
- =?utf-8?B?Sm5RblZCUjJ0QlltZENia0ZHT0VGa2QwSm9RVWhSUVZwUlFubEJSekJCV1ZG?=
- =?utf-8?B?Q2VVRkhjMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUlVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?blFVRkJRVUZCYm1kQlFVRkhXVUZpZDBJeFFVYzBRVnBCUW5sQlNHdEJXSGRD?=
- =?utf-8?B?ZDBGSFJVRmpaMEl3UVVjMFFWcFJRbmxCU0UxQldIZENia0ZIV1VGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFWRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkRRVUZCUVVGQlEyVkJRVUZCV21kQ2RrRklWVUZpWjBKclFV?=
- =?utf-8?B?aEpRV1ZSUW1aQlNFRkJXVkZDZVVGSVVVRmlaMEpzUVVoSlFXTjNRbVpCU0Ux?=
- =?utf-8?B?QldWRkNkRUZJVFVGa1VVSjFRVWRqUVZoM1FtcEJSemhCWW1kQ2JVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUpCUVVGQlFVRkJRVUZCU1VGQlFVRkJRVW8wUVVGQlFtMUJSemhC?=
- =?utf-8?B?WkZGQ2RVRkhVVUZqWjBJMVFVWTRRV05CUW1oQlNFbEJaRUZDZFVGSFZVRmpa?=
- =?utf-8?B?MEo2UVVZNFFXTjNRbWhCUnpCQlkzZENNVUZITkVGYWQwSm1RVWhKUVZwUlFu?=
- =?utf-8?B?cEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVGQlFXZEJRVUZCUVVGdVow?=
- =?utf-8?B?RkJRVWRaUVdKM1FqRkJSelJCV2tGQ2VVRklhMEZZZDBKM1FVZEZRV05uUWpC?=
- =?utf-8?B?QlJ6UkJXbEZDZVVGSVRVRllkMEo2UVVjd1FXRlJRbXBCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJVVUZCUVVGQlFVRkJRVU5C?=
- =?utf-8?B?UVVGQlFVRkRaVUZCUVVGYVowSjJRVWhWUVdKblFtdEJTRWxCWlZGQ1prRklR?=
- =?utf-8?B?VUZaVVVKNVFVaFJRV0puUW14QlNFbEJZM2RDWmtGSVRVRmtRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUWtGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGSlFVRkJRVUZCU2pSQlFVRkNiVUZIT0VGa1VVSjFRVWRSUVdO?=
- =?utf-8?B?blFqVkJSamhCWTBGQ2FFRklTVUZrUVVKMVFVZFZRV05uUW5wQlJqaEJaRUZD?=
- =?utf-8?B?ZWtGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVVkJRVUZCUVVGQlFVRkJaMEZCUVVGQlFXNW5RVUZCUjFsQlluZENN?=
- =?utf-8?B?VUZITkVGYVFVSjVRVWhyUVZoM1FuZEJSMFZCWTJkQ01FRkhORUZhVVVKNVFV?=
- =?utf-8?B?aE5RVmgzUWpGQlJ6QkJXWGRCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZSUVVGQlFVRkJRVUZCUTBGQlFVRkJRVU5sUVVG?=
- =?utf-8?B?QlFWcDNRakJCU0UxQldIZENkMEZJU1VGaWQwSnJRVWhWUVZsM1FqQkJSamhC?=
- =?utf-8?B?WkVGQ2VVRkhSVUZoVVVKMVFVZHJRV0puUW01QlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQ1FVRkJRVUZCUVVGQlFVbEJR?=
- =?utf-8?B?VUZCUVVGS05FRkJRVUo2UVVkRlFXSkJRbXhCU0UxQldIZENhRUZIVFVGWmQw?=
- =?utf-8?B?SjJRVWhWUVdKblFqQkJSamhCWTBGQ2MwRkhSVUZpWjBGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZuUVVGQlFVRkJibWRCUVVGSVRVRlpVVUp6UVVkVlFXTjNRbVpC?=
- =?utf-8?B?U0VWQlpGRkNka0ZJVVVGYVVVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVZGQlFVRkJRVUZCUVVGRFFVRkJRVUZCUTJWQlFVRkJZM2RDZFVGSVFV?=
- =?utf-8?B?RmpkMEptUVVkM1FXRlJRbXBCUjFWQlltZENla0ZIVlVGWWQwSXdRVWRWUVdO?=
- =?utf-8?B?blFuUkJSamhCVFZGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVSkJRVUZCUVVGQlFVRkJTVUZCUVVGQlFVbzBRVUZC?=
- =?utf-8?B?UW5wQlJ6UkJZMEZDZWtGR09FRmlRVUp3UVVkTlFWcFJRblZCU0UxQldsRkNa?=
- =?utf-8?B?a0ZJVVVGYVVVSjVRVWN3UVZoM1FucEJTRkZCWkZGQ2EwRkhWVUZpWjBJd1FV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdkQlFV?=
- =?utf-8?B?RkJRVUZ1WjBGQlFVaFpRVnAzUW1aQlIzTkJXbEZDTlVGSVkwRmlkMEo1UVVk?=
- =?utf-8?B?UlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJRVUZC?=
- =?utf-8?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=gustavo@synopsys.com; 
-x-originating-ip: [89.155.213.219]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 71229579-7093-4211-180c-08d7378c82be
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR12MB3450;
-x-ms-traffictypediagnostic: DM6PR12MB3450:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB3450F9E077456C17917085B4DAB00@DM6PR12MB3450.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 01583E185C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(136003)(366004)(376002)(346002)(396003)(199004)(189003)(8676002)(33656002)(2906002)(102836004)(26005)(14454004)(478600001)(3846002)(6116002)(6506007)(53546011)(186003)(476003)(5660300002)(486006)(66556008)(66446008)(64756008)(66476007)(66066001)(86362001)(2201001)(4326008)(76116006)(53936002)(6246003)(52536014)(25786009)(11346002)(2501003)(66946007)(71190400001)(71200400001)(256004)(8936002)(99286004)(74316002)(81166006)(81156014)(7696005)(305945005)(76176011)(110136005)(7736002)(54906003)(316002)(9686003)(55016002)(229853002)(6436002)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB3450;H:DM6PR12MB4010.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: A1LaEtsBIGN45LmPWECAfXflOjN0a2h6DshVCXtgKdmP0eCDAIEA7B/wOwih+lPQOPoUkkf6YPo7ms1NMMRvUN7Q4+MRah2hvn8pPDgzy/YeYzxqCyO5HEjDloeR35+CLAd+ZRPp+ulnPFm6L8T7drf3PJeBUSQ+CYWaqqojbOaOPYXuLU2l4WNqzFB5l2j5dqxrZFEHcjUmsWvndT64c4myjFjbRgFeYp9TSacvQhOTIdV0PLpPKUvlnzo+FWS331sdCNsRVvh7gC6qD4AwjvRIcWlDY2VkE+vfFj0vxA129VZOE9Z8MPXvQbgcTYzk/kYwMGgEZX2tEM2S8LnxGolpbL4VKhPuxYmEH9NS5X+MuTurl87N+kCAZLwugXvfNHxZfVMTDmy9nMENdjDd2HTbFM+5Ho1sngjzNZo8/Jo=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71229579-7093-4211-180c-08d7378c82be
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2019 14:21:32.3320
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5xYkeFGuUdc7f4wfiK3sBUKy7yYgpPVaHrOtvGdRCYbU2165mGQ3TpqZBfmeDa0Jv3F4RDbSJVPYe7/phbl+iw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3450
-X-OriginatorOrg: synopsys.com
+        id S1728296AbfIMBOn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Sep 2019 21:14:43 -0400
+Received: from mga12.intel.com ([192.55.52.136]:29376 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbfIMBOn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 12 Sep 2019 21:14:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 18:14:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
+   d="scan'208";a="197403690"
+Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.162])
+  by orsmga002.jf.intel.com with ESMTP; 12 Sep 2019 18:14:42 -0700
+From:   Megha Dey <megha.dey@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-pci@vger.kernel.org, maz@kernel.org, bhelgaas@google.com,
+        rafael@kernel.org, gregkh@linuxfoundation.org, tglx@linutronix.de,
+        hpa@zytor.com, alex.williamson@redhat.com, jgg@mellanox.com
+Cc:     ashok.raj@intel.com, megha.dey@intel.com, jacob.jun.pan@intel.com,
+        Megha Dey <megha.dey@linux.intel.com>
+Subject: [RFC V1 0/7] Add support for a new IMS interrupt mechanism
+Date:   Thu, 12 Sep 2019 18:32:01 -0700
+Message-Id: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGksDQoNCk9uIFR1ZSwgU2VwIDEwLCAyMDE5IGF0IDEzOjI1OjEsIFBhbmthaiBEdWJleSA8cGFu
-a2FqLmR1YmV5QHNhbXN1bmcuY29tPiANCndyb3RlOg0KDQo+IEZyb206IEFudmVzaCBTYWx2ZXJ1
-IDxhbnZlc2guc0BzYW1zdW5nLmNvbT4NCj4gDQo+IEluIHNvbWUgcGxhdGZvcm1zLCBQQ0llIFBI
-WSBtYXkgaGF2ZSBpc3N1ZXMgd2hpY2ggd2lsbCBwcmV2ZW50IGxpbmt1cA0KPiB0byBoYXBwZW4g
-aW4gR0VOMyBvciBoaWdoIHNwZWVkLiBJbiBjYXNlIGVxdWFsaXphdGlvbiBmYWlscywgbGluayB3
-aWxsDQo+IGZhbGxiYWNrIHRvIEdFTjEuDQo+IA0KPiBEZXNpZ253YXJlIGNvbnRyb2xsZXIgaGFz
-IHN1cHBvcnQgZm9yIGRpc2FibGluZyBHRU4zIGVxdWFsaXphdGlvbiBpZg0KPiByZXF1aXJlZC4g
-VGhpcyBwYXRjaCBlbmFibGVzIHRoZSBkZXNpZ253YXJlIGRyaXZlciB0byBkaXNhYmxlIHRoZSBQ
-Q0llDQo+IEdFTjMgZXF1YWxpemF0aW9uIGJ5IHdyaXRpbmcgaW50byBQQ0lFX1BPUlRfR0VOM19S
-RUxBVEVELg0KDQpzL0Rlc2lnbndhcmUvRGVzaWduV2FyZQ0Kcy9kZXNpZ253YXJlL0Rlc2lnbldh
-cmUNCg0KPiANCj4gUGxhdGZvcm0gZHJpdmVycyBjYW4gZGlzYWJsZSBlcXVhbGl6YXRpb24gYnkg
-c2V0dGluZyB0aGUgZHdjX3BjaV9xdWlyaw0KPiBmbGFnIERXQ19FUVVBTElaQVRJT05fRElTQUJM
-RS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFudmVzaCBTYWx2ZXJ1IDxhbnZlc2guc0BzYW1zdW5n
-LmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogUGFua2FqIER1YmV5IDxwYW5rYWouZHViZXlAc2Ftc3Vu
-Zy5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253
-YXJlLmMgfCA3ICsrKysrKysNCj4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVz
-aWdud2FyZS5oIHwgNyArKysrKysrDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDE0IGluc2VydGlvbnMo
-KykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRl
-c2lnbndhcmUuYyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS5j
-DQo+IGluZGV4IDdkMjUxMDIuLmJmODIwOTEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGNpL2Nv
-bnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS5jDQo+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRy
-b2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS5jDQo+IEBAIC00NjYsNCArNDY2LDExIEBAIHZvaWQg
-ZHdfcGNpZV9zZXR1cChzdHJ1Y3QgZHdfcGNpZSAqcGNpKQ0KPiAgCQlicmVhazsNCj4gIAl9DQo+
-ICAJZHdfcGNpZV93cml0ZWxfZGJpKHBjaSwgUENJRV9MSU5LX1dJRFRIX1NQRUVEX0NPTlRST0ws
-IHZhbCk7DQo+ICsNCj4gKwl2YWwgPSBkd19wY2llX3JlYWRsX2RiaShwY2ksIFBDSUVfUE9SVF9H
-RU4zX1JFTEFURUQpOw0KPiArDQo+ICsJaWYgKHBjaS0+ZHdjX3BjaV9xdWlyayAmIERXQ19FUVVB
-TElaQVRJT05fRElTQUJMRSkNCj4gKwkJdmFsIHw9IFBPUlRfTE9HSUNfR0VOM19FUV9ESVNBQkxF
-Ow0KPiArDQo+ICsJZHdfcGNpZV93cml0ZWxfZGJpKHBjaSwgUENJRV9QT1JUX0dFTjNfUkVMQVRF
-RCwgdmFsKTsNCj4gIH0NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdj
-L3BjaWUtZGVzaWdud2FyZS5oIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNp
-Z253YXJlLmgNCj4gaW5kZXggZmZlZDA4NC4uYTE0NTNjNSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
-cy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLmgNCj4gKysrIGIvZHJpdmVycy9w
-Y2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLmgNCj4gQEAgLTI5LDYgKzI5LDkgQEAN
-Cj4gICNkZWZpbmUgTElOS19XQUlUX01BWF9JQVRVX1JFVFJJRVMJNQ0KPiAgI2RlZmluZSBMSU5L
-X1dBSVRfSUFUVQkJCTkNCj4gIA0KPiArLyogUGFyYW1ldGVycyBmb3IgUENJZSBRdWlya3MgKi8N
-Cj4gKyNkZWZpbmUgRFdDX0VRVUFMSVpBVElPTl9ESVNBQkxFCTB4MQ0KPiArDQo+ICAvKiBTeW5v
-cHN5cy1zcGVjaWZpYyBQQ0llIGNvbmZpZ3VyYXRpb24gcmVnaXN0ZXJzICovDQo+ICAjZGVmaW5l
-IFBDSUVfUE9SVF9MSU5LX0NPTlRST0wJCTB4NzEwDQo+ICAjZGVmaW5lIFBPUlRfTElOS19NT0RF
-X01BU0sJCUdFTk1BU0soMjEsIDE2KQ0KPiBAQCAtNjAsNiArNjMsOSBAQA0KPiAgI2RlZmluZSBQ
-Q0lFX01TSV9JTlRSMF9NQVNLCQkweDgyQw0KPiAgI2RlZmluZSBQQ0lFX01TSV9JTlRSMF9TVEFU
-VVMJCTB4ODMwDQo+ICANCj4gKyNkZWZpbmUgUENJRV9QT1JUX0dFTjNfUkVMQVRFRAkJMHg4OTAN
-Cj4gKyNkZWZpbmUgUE9SVF9MT0dJQ19HRU4zX0VRX0RJU0FCTEUJQklUKDE2KQ0KPiArDQo+ICAj
-ZGVmaW5lIFBDSUVfQVRVX1ZJRVdQT1JUCQkweDkwMA0KPiAgI2RlZmluZSBQQ0lFX0FUVV9SRUdJ
-T05fSU5CT1VORAkJQklUKDMxKQ0KPiAgI2RlZmluZSBQQ0lFX0FUVV9SRUdJT05fT1VUQk9VTkQJ
-MA0KPiBAQCAtMjQ0LDYgKzI1MCw3IEBAIHN0cnVjdCBkd19wY2llIHsNCj4gIAlzdHJ1Y3QgZHdf
-cGNpZV9lcAllcDsNCj4gIAljb25zdCBzdHJ1Y3QgZHdfcGNpZV9vcHMgKm9wczsNCj4gIAl1bnNp
-Z25lZCBpbnQJCXZlcnNpb247DQo+ICsJdW5zaWduZWQgaW50CQlkd2NfcGNpX3F1aXJrOw0KDQpJ
-J2QgcHJlZmVyIGNhbGxlZCB0aGlzIHZhcmlhYmxlIGp1c3QgcXVpcmssIHRoZSBwcmVmaXggaXMg
-cmVkdW5kYW50IGhlcmUuDQoNCj4gIH07DQo+ICANCj4gICNkZWZpbmUgdG9fZHdfcGNpZV9mcm9t
-X3BwKHBvcnQpIGNvbnRhaW5lcl9vZigocG9ydCksIHN0cnVjdCBkd19wY2llLCBwcCkNCj4gLS0g
-DQo+IDIuNy40DQoNCkkgdW5kZXJzdGFuZCB5b3VyIGlkZWEgYW5kIEknbSBmaW5lIHdpdGggaXQs
-IGJ1dCBJIGp1c3Qgd29uZGVyIGlmIHRoZXJlIA0KaXNuJ3QgYW55IG90aGVyIHR5cGljYWwgd2F5
-IHRvIGRvIHRoaXMga2luZCBvZiBxdWlya3MuLi4gSSdtIG5vdCBzZWVpbmcgYSANCnNpbWlsYXIg
-Y2FzZSB0byB0aGlzIGFsdGhvdWdoLg0KRm9yIG1lIG1ha2VzIG1vcmUgc2Vuc2UgdG8gc3F1YXNo
-IGJvdGggcGF0Y2hlcyAoMSBhbmQgMiksIHNpbmNlIHdlIGFpbSB0byANCmFkZCB0aGlzIHF1aXJr
-IGVzcGVjaWFsbHkgYmVjYXVzZSBpdCBmb2N1c2VzIGlzIG9uIHRoaXMgIkdFTjNfUkVMQVRFRCIg
-DQpyZWdpc3RlciBpbiBhIGxvZ2ljYWwgcGF0Y2guDQoNClJlZ2FyZHMsDQpHdXN0YXZvIA0K
+Currently, MSI (Message signaled interrupts) and MSI-X are the de facto
+standard for device interrupt mechanism. MSI-X supports up to 2048
+interrupts per device while MSI supports 32, which seems more than enough
+for current devices. However, the introduction of SIOV (Scalable IO
+virtualization) shifts the creation of assignable virtual devices from
+hardware to a more software assisted approach. This flexible composition
+of direct assignable devices, a.k.a. assignable device interfaces (ADIs)
+unchains hardware from costly PCI standard. Under SIOV, device resource
+can now be mapped directly to a guest or other user space drivers for
+near native DMA performance. To complete functionality of ADIs, a matching
+interrupt resource must also be introduced which will be scalable.
+
+Interrupt message storage (IMS) is conceived  as a scalable albeit device
+specific interrupt mechanism to meet such a demand. With IMS, there is
+theoretically no upper bound on the number of interrupts which a device
+can support. The size and location of IMS is device-specific; some devices
+may implement IMS as on-device storage which are memory-mapped, others may
+opt to implement IMS in system memory. IMS stores each interrupt message as
+a DWORD size data payload and a 64-bit address(same as MSI-X). Access to
+the IMS is through the host driver due to the non-architectural nature of
+device IMS unlike the architectural MSI-X table which are accessed through
+PCI drivers.
+
+In this patchset, we introduce generic IMS APIs that fits the Linux IRQ
+subsystem, supports IMS IRQ chip and domains that can be used by drivers
+which are capable of generating IMS interrupts.
+
+The IMS has been introduced as part of Intel's Scalable I/O virtualization
+specification:
+https://software.intel.com/en-us/download/intel-scalable-io-virtualization-technical-specification
+
+This patchset is based on Linux 5.3-rc8.
+
+Currently there is no device out in the market which supports SIOV (Hence no
+device supports IMS).
+
+This series is a basic patchset to get the ball rolling and receive some
+inital comments. As per my discussion with Marc Zyngier and Thomas Gleixner
+at the Linux Plumbers, I need to do the following:
+1. Since a device can support MSI-X and IMS simultaneously, ensure proper
+   locking mechanism for the 'msi_list' in the device structure.
+2. Introduce dynamic allocation of IMS vectors perhaps by using a group ID
+3. IMS support of a device needs to be discoverable. A bit in the vendor
+   specific capability in the PCI config is to be added rather than getting
+   this information from each device driver.
+
+Jason Gunthorpe of Mellanox technologies is looking to do something similar
+on ARM platforms and was wondering why IMS is x86 sepcific. Perhaps we can
+use this thread to discuss further on this. 
+
+Megha Dey (7):
+  genirq/msi: Differentiate between various MSI based interrupts
+  drivers/base: Introduce callbacks for IMS interrupt domain
+  x86/ims: Add support for a new IMS irq domain
+  irq_remapping: New interfaces to support IMS irqdomain
+  x86/ims: Introduce x86_ims_ops
+  ims-msi: Add APIs to allocate/free IMS interrupts
+  ims: Add the set_desc callback
+
+ arch/mips/pci/msi-xlp.c              |   2 +-
+ arch/s390/pci/pci_irq.c              |   2 +-
+ arch/x86/include/asm/irq_remapping.h |  13 ++
+ arch/x86/include/asm/msi.h           |   4 +
+ arch/x86/include/asm/pci.h           |   4 +
+ arch/x86/include/asm/x86_init.h      |  10 +
+ arch/x86/kernel/apic/Makefile        |   1 +
+ arch/x86/kernel/apic/ims.c           | 118 ++++++++++++
+ arch/x86/kernel/apic/msi.c           |   6 +-
+ arch/x86/kernel/x86_init.c           |  23 +++
+ arch/x86/pci/xen.c                   |   2 +-
+ drivers/base/Kconfig                 |   7 +
+ drivers/base/Makefile                |   1 +
+ drivers/base/ims-msi.c               | 353 +++++++++++++++++++++++++++++++++++
+ drivers/iommu/intel_irq_remapping.c  |  30 +++
+ drivers/iommu/irq_remapping.c        |   9 +
+ drivers/iommu/irq_remapping.h        |   3 +
+ drivers/pci/msi.c                    |  19 +-
+ drivers/vfio/mdev/mdev_core.c        |   6 +
+ drivers/vfio/mdev/mdev_private.h     |   1 -
+ include/linux/intel-iommu.h          |   1 +
+ include/linux/mdev.h                 |   2 +
+ include/linux/msi.h                  |  55 +++++-
+ kernel/irq/msi.c                     |   2 +-
+ 24 files changed, 655 insertions(+), 19 deletions(-)
+ create mode 100644 arch/x86/kernel/apic/ims.c
+ create mode 100644 drivers/base/ims-msi.c
+
+-- 
+2.7.4
+
