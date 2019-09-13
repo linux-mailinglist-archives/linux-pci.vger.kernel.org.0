@@ -2,122 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 61634B1D1E
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2019 14:12:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B7CDB1D99
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2019 14:22:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728617AbfIMMMB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Sep 2019 08:12:01 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:39636 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbfIMMMB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Sep 2019 08:12:01 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8DCBfTF029680;
-        Fri, 13 Sep 2019 07:11:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568376701;
-        bh=LDh14wMax5cYelccR2YxVkVYtjeK9DovOmYdwRMAozw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fwgcbN9uRCohF/rMgheWo77AJ3u9XGF+rvdQmL76F7++oOQMUlee1dOKrty6ZNwaw
-         yYNEseEyEs/VwrIebopIDauIfbDPDkj2xrwYn8zh3OCKXi+ebecCB7c9Y6YXTkas5P
-         p1e58JpAombycTdLvkwsEcnwPGnCJ0OVAj8PZBKo=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8DCBfXB036693
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 13 Sep 2019 07:11:41 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 13
- Sep 2019 07:11:40 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 13 Sep 2019 07:11:41 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8DCBZAo123690;
-        Fri, 13 Sep 2019 07:11:36 -0500
-Subject: Re: [PATCH] PCI: endpoint: Add DMA to Linux PCI EP Framework
-To:     Alan Mikhak <alan.mikhak@sifive.com>,
-        Haotian Wang <haotian.wang@sifive.com>, <haotian.wang@duke.edu>
-CC:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "wen.yang99@zte.com.cn" <wen.yang99@zte.com.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        Vinod Koul <vkoul@kernel.org>
-References: <1558650258-15050-1-git-send-email-alan.mikhak@sifive.com>
- <305100E33629484CBB767107E4246BBB0A6FAFFD@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxsQ9NXrN7W_8HVrXQBb9HiBd+d1dNfv+cXmoBpXQnLwA@mail.gmail.com>
- <305100E33629484CBB767107E4246BBB0A6FC308@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxL-WYz1BY7yXJ6eKULgVtKeo67XhgHZjvtm5Ka5foKiA@mail.gmail.com>
- <192e3a19-8b69-dfaf-aa5c-45c7087548cc@ti.com>
- <CABEDWGxLeD-K8PjkD5hPSTFGJKs2hxEaAVO+nE5eC9Nx2yw=ig@mail.gmail.com>
- <75d578c2-a98c-d1ef-1633-6dc5dc3b0913@ti.com>
- <CABEDWGxBxmiKjoPUSUaUBXUhKkUTXVX0U9ooRou8tcWJojb52g@mail.gmail.com>
- <6e692ff6-e64f-e651-c8ae-34d0034ad7b9@ti.com>
- <CABEDWGx2N66L=27JY6Ywbfny78UaxENkxBTqxU37PfuQO-ZMZw@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <40fafe93-d2dd-b1f5-bc16-cd84ff07bd13@ti.com>
-Date:   Fri, 13 Sep 2019 17:41:23 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CABEDWGx2N66L=27JY6Ywbfny78UaxENkxBTqxU37PfuQO-ZMZw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+        id S1728521AbfIMMWm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Sep 2019 08:22:42 -0400
+Received: from mga18.intel.com ([134.134.136.126]:16890 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726771AbfIMMWm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Sep 2019 08:22:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Sep 2019 05:22:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,501,1559545200"; 
+   d="scan'208,223";a="192708498"
+Received: from irsmsx101.ger.corp.intel.com ([163.33.3.153])
+  by FMSMGA003.fm.intel.com with ESMTP; 13 Sep 2019 05:22:40 -0700
+Received: from irsmsx102.ger.corp.intel.com ([169.254.2.160]) by
+ IRSMSX101.ger.corp.intel.com ([169.254.1.129]) with mapi id 14.03.0439.000;
+ Fri, 13 Sep 2019 13:22:39 +0100
+From:   "Kitszel, PrzemyslawX" <przemyslawx.kitszel@intel.com>
+To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     "Maslowski, Karol" <karol.maslowski@intel.com>
+Subject: [PATCH] PCI: Add quirk for VCA NTB
+Thread-Topic: [PATCH] PCI: Add quirk for VCA NTB
+Thread-Index: AdVqLdE+OCBbT8aES7KpBccpTfPYBw==
+Date:   Fri, 13 Sep 2019 12:22:38 +0000
+Message-ID: <5683A335CC8BE1438C3C30C49DCC38DF637CDE70@IRSMSX102.ger.corp.intel.com>
+Accept-Language: pl-PL, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [163.33.239.180]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+ Haotian Wang
-
-On 03/06/19 11:12 PM, Alan Mikhak wrote:
-> On Sun, Jun 2, 2019 at 9:43 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->> Hi Alan,
->> On 31/05/19 11:46 PM, Alan Mikhak wrote:
->>> On Thu, May 30, 2019 at 10:08 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>>> Hi Alan,
->>>>> Hi Kishon,
->>>>
->>>> I still have to look closer into your DMA patch but linked-list mode or single
->>>> block mode shouldn't be an user select-able option but should be determined by
->>>> the size of transfer.
->>>
->>> Please consider the following when taking a closer look at this patch.
->>
->> After seeing comments from Vinod and Arnd, it looks like the better way of
->> adding DMA support would be to register DMA within PCI endpoint controller to
->> DMA subsystem (as dmaengine) and use only dmaengine APIs in pci_epf_test.
-> 
-> Thanks Kishon. That makes it clear where these pieces should go.
-> 
->>> In my specific use case, I need to verify that any valid block size,
->>> including a one byte transfer, can be transferred across the PCIe bus
->>> by memcpy_toio/fromio() or by DMA either as a single block or as
->>> linked-list. That is why, instead of deciding based on transfer size,
->>> this patch introduces the '-L' flag for pcitest to communicate the
->>> user intent across the PCIe bus to pci-epf-test so the endpoint can
->>> initiate the DMA transfer using a single block or in linked-list mode.
->> The -L option seems to select an internal DMA configuration which might be
->> specific to one implementation. As Gustavo already pointed, we should have only
->> generic options in pcitest. This would no longer be applicable when we move to
->> dmaengine.
-> 
-> Single-block DMA seemed as generic as linked-list DMA and
-> memcpy_toio/fromio. It remains unclear how else to communicate that
-> intent to pci_epf_test each time I invoke pcitest.
-> 
-> Regards,
-> Alan
-> 
+RnJvbSA4NjNkOWVhMGQ4ODgyMzNkYmZjYmY1MjIxMmFlOTdiMmJjNTU3YWU2IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQ0KRnJvbTogU2xhd29taXIgUGF3bG93c2tpIDxzbGF3b21pci5wYXdsb3dz
+a2lAaW50ZWwuY29tPg0KRGF0ZTogRnJpLCAyMSBTZXAgMjAxOCAxNTo1NToxMiArMDIwMA0KU3Vi
+amVjdDogW1BBVENIXSBQQ0k6IEFkZCBxdWlyayBmb3IgVkNBIE5UQg0KDQpJbnRlbCBWaXN1YWwg
+Q29tcHV0ZSBBY2NlbGVyYXRvciAoVkNBKSBpcyBhIGZhbWlseSBvZiBQQ0llIGFkZC1pbiBkZXZp
+Y2VzDQpleHBvc2luZyBjb21wdXRhdGlvbmFsIHVuaXRzIHZpYSBOb24gVHJhbnNwYXJlbnQgQnJp
+ZGdlcyAoTlRCLCBQRVggODd4eCkuDQoNClNpbWlsYXJseSB0byBNSUMgeDIwMCwgdGhlcmUgaXMg
+bmVlZCB0byBhZGQgRE1BIGFsaWFzZXMgdG8gYWxsb3cgYnVmZmVyDQphY2Nlc3Mgd2hlbiBJT01N
+VSBpcyBlbmFibGVkLg0KRm9sbG93aW5nIGFsaWFzZXMgYXJlIGFsbG93aW5nIGhvc3QgZGV2aWNl
+IGFuZCBjb21wdXRhdGlvbmFsIHVuaXQgdG8gYWNjZXNzDQplYWNoIG90aGVyLg0KVG9nZXRoZXIg
+dGhvc2UgYWxpYXNlcyBtYXJrcyB3aG9sZSBWQ0EgZGV2aWNlIGFzIG9uZSBJT01NVSBncm91cC4N
+Cg0KQWxsIHBvc3NpYmxlIHNsb3QgbnVtYmVycyAoMHgyMCkgYXJlIHVzZWQsIHNpbmUgd2UgYXJl
+IHVuYWJsZSB0byB0ZWxsIHdoYXQNCnNsb3QgaXMgdXNlZCBvbiBvdGhlciBzaWRlLg0KVGhpcyBx
+dWlyayBpcyBpbnRlbmRlZCBmb3IgYm90aCBob3N0IGFuZCBjb21wdXRhdGlvbmFsIHVuaXQgc2lk
+ZXMuDQpUaGUgVkNBIGRldmljZXMgaGF2ZSB1cCB0byA1IGZ1bmN0aW9ucyAtIDQgZm9yIERNQSBj
+aGFubmVscyBhbmQgb25lDQphZGRpdGlvbmFsLg0KDQpTaWduZWQtb2ZmLWJ5OiBTbGF3b21pciBQ
+YXdsb3dza2kgPHNsYXdvbWlyLnBhd2xvd3NraUBpbnRlbC5jb20+DQpTaWduZWQtb2ZmLWJ5OiBQ
+cnplbWVrIEtpdHN6ZWwgPHByemVteXNsYXd4LmtpdHN6ZWxAaW50ZWwuY29tPg0KLS0tDQogZHJp
+dmVycy9wY2kvcXVpcmtzLmMgfCAzMiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0K
+IDEgZmlsZSBjaGFuZ2VkLCAzMiBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJz
+L3BjaS9xdWlya3MuYyBiL2RyaXZlcnMvcGNpL3F1aXJrcy5jDQppbmRleCBkZWQ2MDc1N2E1NzMu
+LjM0OWNhMjhlMGFlNCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvcGNpL3F1aXJrcy5jDQorKysgYi9k
+cml2ZXJzL3BjaS9xdWlya3MuYw0KQEAgLTQwNjIsNiArNDA2MiwzOCBAQCBzdGF0aWMgdm9pZCBx
+dWlya19taWNfeDIwMF9kbWFfYWxpYXMoc3RydWN0IHBjaV9kZXYgKnBkZXYpDQogREVDTEFSRV9Q
+Q0lfRklYVVBfSEVBREVSKFBDSV9WRU5ET1JfSURfSU5URUwsIDB4MjI2MCwgcXVpcmtfbWljX3gy
+MDBfZG1hX2FsaWFzKTsNCiBERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9J
+TlRFTCwgMHgyMjY0LCBxdWlya19taWNfeDIwMF9kbWFfYWxpYXMpOw0KIA0KKy8qDQorICogSW50
+ZWwgVmlzdWFsIENvbXB1dGUgQWNjZWxlcmF0b3IgKFZDQSkgaXMgYSBmYW1pbHkgb2YgUENJZSBh
+ZGQtaW4gZGV2aWNlcw0KKyAqIGV4cG9zaW5nIGNvbXB1dGF0aW9uYWwgdW5pdHMgdmlhIE5vbiBU
+cmFuc3BhcmVudCBCcmlkZ2VzIChOVEIsIFBFWCA4N3h4KS4NCisgKiBTaW1pbGFybHkgdG8gTUlD
+IHgyMDAsIHRoZXJlIGlzIG5lZWQgdG8gYWRkIERNQSBhbGlhc2VzIHRvIGFsbG93IGJ1ZmZlcg0K
+KyAqIGFjY2VzcyB3aGVuIElPTU1VIGlzIGVuYWJsZWQuDQorICogRm9sbG93aW5nIGFsaWFzZXMg
+YXJlIGFsbG93aW5nIGhvc3QgZGV2aWNlIGFuZCBjb21wdXRhdGlvbmFsIHVuaXQgdG8gYWNjZXNz
+DQorICogZWFjaCBvdGhlci4gVG9nZXRoZXIgdGhvc2UgYWxpYXNlcyBtYXJrcyB3aG9sZSBWQ0Eg
+ZGV2aWNlIGFzIG9uZSBJT01NVSBncm91cC4NCisgKiBBbGwgcG9zc2libGUgc2xvdCBudW1iZXJz
+ICgweDIwKSBhcmUgdXNlZCwgc2luZSB3ZSBhcmUgdW5hYmxlIHRvIHRlbGwgd2hhdA0KKyAqIHNs
+b3QgaXMgdXNlZCBvbiBvdGhlciBzaWRlLg0KKyAqIFRoaXMgcXVpcmsgaXMgaW50ZW5kZWQgZm9y
+IGJvdGggaG9zdCBhbmQgY29tcHV0YXRpb25hbCB1bml0IHNpZGVzLg0KKyAqIFRoZSBWQ0EgZGV2
+aWNlcyBoYXZlIHVwIHRvIDUgZnVuY3Rpb25zICg0IGZvciBETUEgY2hhbm5lbHMgYW5kIDEgYWRk
+aXRpb25hbCkuDQorICovDQorc3RhdGljIHZvaWQgcXVpcmtfcGV4X3ZjYV9hbGlhcyhzdHJ1Y3Qg
+cGNpX2RldiAqcGRldikNCit7DQorCWNvbnN0IHVuc2lnbmVkIGludCBudW1fcGNpX3Nsb3RzID0g
+MHgyMDsNCisJdW5zaWduZWQgaW50IHNsb3Q7DQorDQorCWZvciAoc2xvdCA9IDA7IHNsb3QgPCBu
+dW1fcGNpX3Nsb3RzOyBzbG90KyspIHsNCisJCXBjaV9hZGRfZG1hX2FsaWFzKHBkZXYsIFBDSV9E
+RVZGTihzbG90LCAweDApKTsNCisJCXBjaV9hZGRfZG1hX2FsaWFzKHBkZXYsIFBDSV9ERVZGTihz
+bG90LCAweDEpKTsNCisJCXBjaV9hZGRfZG1hX2FsaWFzKHBkZXYsIFBDSV9ERVZGTihzbG90LCAw
+eDIpKTsNCisJCXBjaV9hZGRfZG1hX2FsaWFzKHBkZXYsIFBDSV9ERVZGTihzbG90LCAweDMpKTsN
+CisJCXBjaV9hZGRfZG1hX2FsaWFzKHBkZXYsIFBDSV9ERVZGTihzbG90LCAweDQpKTsNCisJfQ0K
+K30NCitERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHgyOTU0
+LCBxdWlya19wZXhfdmNhX2FsaWFzKTsNCitERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZF
+TkRPUl9JRF9JTlRFTCwgMHgyOTU1LCBxdWlya19wZXhfdmNhX2FsaWFzKTsNCitERUNMQVJFX1BD
+SV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHgyOTU2LCBxdWlya19wZXhfdmNh
+X2FsaWFzKTsNCitERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwg
+MHgyOTU4LCBxdWlya19wZXhfdmNhX2FsaWFzKTsNCitERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIo
+UENJX1ZFTkRPUl9JRF9JTlRFTCwgMHgyOTU5LCBxdWlya19wZXhfdmNhX2FsaWFzKTsNCitERUNM
+QVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHgyOTVBLCBxdWlya19w
+ZXhfdmNhX2FsaWFzKTsNCisNCiAvKg0KICAqIFRoZSBJT01NVSBhbmQgaW50ZXJydXB0IGNvbnRy
+b2xsZXIgb24gQnJvYWRjb20gVnVsY2FuL0Nhdml1bSBUaHVuZGVyWDIgYXJlDQogICogYXNzb2Np
+YXRlZCBub3QgYXQgdGhlIHJvb3QgYnVzLCBidXQgYXQgYSBicmlkZ2UgYmVsb3cuIFRoaXMgcXVp
+cmsgYXZvaWRzDQotLSANCjIuMjIuMA0KDQo=
