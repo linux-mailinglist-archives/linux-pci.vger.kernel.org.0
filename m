@@ -2,47 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE20CB4262
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Sep 2019 22:49:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 175CFB4265
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Sep 2019 22:49:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391649AbfIPUrn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Sep 2019 16:47:43 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36811 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727971AbfIPUrm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Sep 2019 16:47:42 -0400
-Received: by mail-wm1-f67.google.com with SMTP id t3so716328wmj.1;
-        Mon, 16 Sep 2019 13:47:41 -0700 (PDT)
+        id S1727971AbfIPUrp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Sep 2019 16:47:45 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38106 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391655AbfIPUrp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Sep 2019 16:47:45 -0400
+Received: by mail-wm1-f68.google.com with SMTP id o184so706934wme.3;
+        Mon, 16 Sep 2019 13:47:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IOS2e0UepoELcBHR5ni67YDdvRavbzFfhcVGtDlKQTM=;
-        b=XuITJ9/tp8KJKAOzlxh+TZajIZPbu3WOS+0GYuDCdB1P6CCJwR427RVA3O7p30prmn
-         vfSAg7YXYnqaTnFS9wx3Rbybi4a7eLo7sXrxNwCS3JBzfq0nnCxZwtHaLLTgc6jLtgL9
-         eXOjlpkr45umzNYfnvSEcfh6jexgaKDZl+e7RsmIWSqX3RO8+YBZ48VtbF4MC5QaaM7L
-         XOdGvEynhthhfaDyewdsJyhguGFGTRwgPG5STf0db4sVmOdC1/t4Vkgg1GyjAVnvugIp
-         gP5CByKEyjlomYJ8eecNEuEBtxuJcmRx61QQ2Pjew0bCVX8Od/usrvizNu3e2wJopX+O
-         jlnQ==
-X-Gm-Message-State: APjAAAXJ3IeFtAZAFL1Red45Fi5S3r2Mg9weE48nqhXVvNIa1YlODHQF
-        waGsMAL19QQZO3hXIRv/tUU=
-X-Google-Smtp-Source: APXvYqyX7XAbGO/BUSR5X35Cw9AHSwDhRRkjMy4wE0zfriRWnFmzs7vmkDcxj9/qRp/WecFZalwX9Q==
-X-Received: by 2002:a1c:bcd6:: with SMTP id m205mr631830wmf.129.1568666860528;
-        Mon, 16 Sep 2019 13:47:40 -0700 (PDT)
+        bh=3cjyw4iwufFr2TJPexscuSdiVbwU5mYSUwRk7WraBNI=;
+        b=Tr8MstYMiKd76A0jbU81wmUaK3mG8bOCOCjqAnKQjMSzM3+p2IOo5VlN3LLNoZYRz7
+         F7ed+xbcJCdl9c/jcME5w2fghr7deqNSw2HjuoHdzPszgI3r7EC+4o7UkOMFKfIfJhvo
+         R3gwvYk5yp75qXdfUffW3miAEUXLB5q2QpHL0c+NsOWXho2EwtZ4vczH5+1desM3SclK
+         13o+sPa2AwU87ktvHDAvBQe2vQKDNM4m3OOsKHYCDc31PpV3fFJj/Jq+VLJU0zfPwItN
+         cUuUuSZGmo37JjYW3ekQmRzJCgKsBXcJlQ1A3orreoXs1V/h/uxCl0ke2Pl2Oe+hy8el
+         ayhA==
+X-Gm-Message-State: APjAAAXnBT2PeyZnnbmXKyWJFHvGxqpYbBJp8QX/0C8oxERBwGXSlrRc
+        RS6kh0bqaR7wgQItHA1Tazjv+AMxhEs=
+X-Google-Smtp-Source: APXvYqzMPwcH5G6tl3Joo+Hv1PKsJgaFKV0jqz+iiMxqYzKNshopG5ryQA7iKmg12oFq25aYnYYLhA==
+X-Received: by 2002:a1c:9615:: with SMTP id y21mr704785wmd.5.1568666863156;
+        Mon, 16 Sep 2019 13:47:43 -0700 (PDT)
 Received: from black.home (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id x6sm231437wmf.38.2019.09.16.13.47.39
+        by smtp.googlemail.com with ESMTPSA id x6sm231437wmf.38.2019.09.16.13.47.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 13:47:40 -0700 (PDT)
+        Mon, 16 Sep 2019 13:47:42 -0700 (PDT)
 From:   Denis Efremov <efremov@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>,
-        linux-ide@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH v3 22/26] pata_atp867x: Use PCI_STD_NUM_BARS
-Date:   Mon, 16 Sep 2019 23:41:54 +0300
-Message-Id: <20190916204158.6889-23-efremov@linux.com>
+        linux-mmc@vger.kernel.org,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Alex Dubov <oakad@yahoo.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH v3 23/26] memstick: use PCI_STD_NUM_BARS
+Date:   Mon, 16 Sep 2019 23:41:55 +0300
+Message-Id: <20190916204158.6889-24-efremov@linux.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190916204158.6889-1-efremov@linux.com>
 References: <20190916204158.6889-1-efremov@linux.com>
@@ -56,26 +57,27 @@ X-Mailing-List: linux-pci@vger.kernel.org
 Use define PCI_STD_NUM_BARS instead of PCI_ROM_RESOURCE for the number of
 PCI BARs.
 
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Maxim Levitsky <maximlevitsky@gmail.com>
+Cc: Alex Dubov <oakad@yahoo.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- drivers/ata/pata_atp867x.c | 2 +-
+ drivers/memstick/host/jmb38x_ms.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ata/pata_atp867x.c b/drivers/ata/pata_atp867x.c
-index 2b9ed4ddef8d..019198eb7099 100644
---- a/drivers/ata/pata_atp867x.c
-+++ b/drivers/ata/pata_atp867x.c
-@@ -422,7 +422,7 @@ static int atp867x_ata_pci_sff_init_host(struct ata_host *host)
- #ifdef	ATP867X_DEBUG
- 	atp867x_check_res(pdev);
+diff --git a/drivers/memstick/host/jmb38x_ms.c b/drivers/memstick/host/jmb38x_ms.c
+index 32747425297d..fd281c1d39b1 100644
+--- a/drivers/memstick/host/jmb38x_ms.c
++++ b/drivers/memstick/host/jmb38x_ms.c
+@@ -848,7 +848,7 @@ static int jmb38x_ms_count_slots(struct pci_dev *pdev)
+ {
+ 	int cnt, rc = 0;
  
--	for (i = 0; i < PCI_ROM_RESOURCE; i++)
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++)
- 		printk(KERN_DEBUG "ATP867X: iomap[%d]=0x%llx\n", i,
- 			(unsigned long long)(host->iomap[i]));
- #endif
+-	for (cnt = 0; cnt < PCI_ROM_RESOURCE; ++cnt) {
++	for (cnt = 0; cnt < PCI_STD_NUM_BARS; ++cnt) {
+ 		if (!(IORESOURCE_MEM & pci_resource_flags(pdev, cnt)))
+ 			break;
+ 
 -- 
 2.21.0
 
