@@ -2,293 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A00D8B36ED
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Sep 2019 11:16:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0E5AB37DE
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Sep 2019 12:15:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731767AbfIPJQX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Sep 2019 05:16:23 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:37476 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731764AbfIPJQW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Sep 2019 05:16:22 -0400
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 29CA3C0E0E;
-        Mon, 16 Sep 2019 09:16:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1568625382; bh=tPsgdlKkDSlgToLRYDtwjhSwVCVRvOYluqZAOcn2UpQ=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=f4J96ztSr3oWEif3MsaxYl6MoXtMIiNAYLruJxSKkBNA3OdmokzMd4vt491dld7Po
-         d5mfzXW+KkgCDW6Cs0NQajmeR30/GAfpIyIoDTzmRduPZGG34RAfaD9cLxCFahVJob
-         P6TorckHI7Bk5gZ7nmTlFYo7TiVTBftyK/T3dm39ajtPNK+1mU0S/qmx9vR5Bnrg81
-         wrMlmsExj1a+1Hjq7mR2K05KkhyCo+RjXLGMek9WzXMr1XyUyLUmNUnJc/PGaIdOy1
-         MsbrZ/dI6pge2c3xBSgc1JQMP9iQfozC/0ETKLAM9MM3s9vS7x40JalpZAqsoRJGTa
-         2tvw2Hfij7FLA==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id D0314A005A;
-        Mon, 16 Sep 2019 09:16:21 +0000 (UTC)
-Received: from US01WEHTC2.internal.synopsys.com (10.12.239.237) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 16 Sep 2019 02:16:21 -0700
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 16 Sep 2019 02:16:21 -0700
-Received: from NAM01-BY2-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 16 Sep 2019 02:16:21 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iE53JA1xWrBxDetQPwd9hVINl5Sw66T8P22s4W4BPv9jvIwj78wMzp57WEe7JrXFYjc24dPgrf9+YwPLudJQgjAUPeGrYjOVam90hUuRA/O1b0b3YhVctaimTz+JO37z0cfwoXqjm2GJI7H9sCPr4a4XDJP9GOEvX8NADcyW+Wup7nOyLDYOUBUtpQHkAnYgQykuOMbhcUAAPjQY7VWA3k+8VOzgcqHCs7RnrmLA7pdWwRwuposXVSsqykjFWAuNcd1TUzSdX4umgX8jmrtonGA8xb11RvuBc2sLVVd5EdNR99neHrEMqpX/Wkt9vOmPAv/KidRmk2nTGi2MV3seUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tPsgdlKkDSlgToLRYDtwjhSwVCVRvOYluqZAOcn2UpQ=;
- b=ZIjEWaFSfYCERiw7BvSOeLGu+wqP77Wf4vSmixLOFIP1G3hXzrLtilHCcTcbqTDwZgpUYDMXK58dq+AYx7oTEoOw3XiIE0zFpV84Jc9J9vyYUueflRd1YF8bARxO4ZU8d4HCq2lPCwDZGh08KdiC87gNJlhX6VItJyG9LzG2bVpAsuMPjUHKLe+QoLRN8CPdtWptl6ev6pszwrb5jlomHWHnjyqbd5DPc2u2YcLmsc/KhGE9YrML8VhvmEjflbWSYmXayv4eQ3MJmBwXX/scNxN6nFf/c8g/LOg8w343rNbfBUfH81aoMcCjHg91ndT24jlREkLgA9HfehLDHLkIUQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tPsgdlKkDSlgToLRYDtwjhSwVCVRvOYluqZAOcn2UpQ=;
- b=Jc+aZSEFXyhjp65HySSzL2p4JYGqIt42JbV2MB7JHGtJ5DPE77A2nFx7U5m+yp28djQ2x/Ms+ZQuu3qfM3i2j8UfjVGB9vo3EbW/tIy3uPy2V62SnC5Eh67w8N86eMs/5Rb0e5CQB0q88yymMZwZU9dl0sq2x3fetUtqez3Sdsw=
-Received: from DM6PR12MB4010.namprd12.prod.outlook.com (10.255.175.83) by
- DM6PR12MB3178.namprd12.prod.outlook.com (20.179.104.209) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.17; Mon, 16 Sep 2019 09:16:20 +0000
-Received: from DM6PR12MB4010.namprd12.prod.outlook.com
- ([fe80::dd4:2e5:e564:8684]) by DM6PR12MB4010.namprd12.prod.outlook.com
- ([fe80::dd4:2e5:e564:8684%5]) with mapi id 15.20.2263.023; Mon, 16 Sep 2019
- 09:16:20 +0000
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     Pankaj Dubey <pankaj.dubey@samsung.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <Gustavo.Pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        id S1728030AbfIPKPr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Sep 2019 06:15:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:42904 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727945AbfIPKPq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 16 Sep 2019 06:15:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 54C851000;
+        Mon, 16 Sep 2019 03:15:46 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C16263F59C;
+        Mon, 16 Sep 2019 03:15:45 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 11:15:44 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
         Anvesh Salveru <anvesh.s@samsung.com>
-Subject: RE: [PATCH v2] PCI: dwc: Add support to add GEN3 related equalization
- quirks
-Thread-Topic: [PATCH v2] PCI: dwc: Add support to add GEN3 related
+Subject: Re: [PATCH v2] PCI: dwc: Add support to add GEN3 related
  equalization quirks
-Thread-Index: AQHVah+5gF0/hNt1Nki2L2svv36Tq6cuCoBQ
-Date:   Mon, 16 Sep 2019 09:16:19 +0000
-Message-ID: <DM6PR12MB4010C442FC8B52E2E7A18188DA8C0@DM6PR12MB4010.namprd12.prod.outlook.com>
+Message-ID: <20190916101543.GM9720@e119886-lin.cambridge.arm.com>
 References: <CGME20190913104018epcas5p3d93265a6786dc2b7b8a7d3231bfe9c14@epcas5p3.samsung.com>
  <1568371190-14590-1-git-send-email-pankaj.dubey@samsung.com>
-In-Reply-To: <1568371190-14590-1-git-send-email-pankaj.dubey@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jWjNWemRHRjJiMXhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
- =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
- =?utf-8?B?Y2JYTm5MV0V5WlRBNE1UQmhMV1E0TmpJdE1URmxPUzA1T0RobUxXWTRPVFJq?=
- =?utf-8?B?TWpjek9EQTBNbHhoYldVdGRHVnpkRnhoTW1Vd09ERXdZeTFrT0RZeUxURXha?=
- =?utf-8?B?VGt0T1RnNFppMW1PRGswWXpJM016Z3dOREppYjJSNUxuUjRkQ0lnYzNvOUlq?=
- =?utf-8?B?UXhNVGNpSUhROUlqRXpNakV6TURrNE9UYzNNall6TlRrek9TSWdhRDBpYjBw?=
- =?utf-8?B?MVJrVnFhbmhoT0VoUlVIRXJZemxSYUROVVNHRjBhWEp2UFNJZ2FXUTlJaUln?=
- =?utf-8?B?WW13OUlqQWlJR0p2UFNJeElpQmphVDBpWTBGQlFVRkZVa2hWTVZKVFVsVkdU?=
- =?utf-8?B?a05uVlVGQlFsRktRVUZCYWk5NlpHeGlNbnBXUVZwUVFXUm1NbWNyUTFoaWF6?=
- =?utf-8?B?aENNUzloUkRSS1pITlBRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVaEJRVUZCUTJ0RFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVWQlFWRkJRa0ZCUVVFdlNHOXphVkZCUVVGQlFVRkJRVUZCUVVGQlFVRktO?=
- =?utf-8?B?RUZCUVVKdFFVZHJRV0puUW1oQlJ6UkJXWGRDYkVGR09FRmpRVUp6UVVkRlFX?=
- =?utf-8?B?Sm5RblZCUjJ0QlltZENia0ZHT0VGa2QwSm9RVWhSUVZwUlFubEJSekJCV1ZG?=
- =?utf-8?B?Q2VVRkhjMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUlVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?blFVRkJRVUZCYm1kQlFVRkhXVUZpZDBJeFFVYzBRVnBCUW5sQlNHdEJXSGRD?=
- =?utf-8?B?ZDBGSFJVRmpaMEl3UVVjMFFWcFJRbmxCU0UxQldIZENia0ZIV1VGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFWRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkRRVUZCUVVGQlEyVkJRVUZCV21kQ2RrRklWVUZpWjBKclFV?=
- =?utf-8?B?aEpRV1ZSUW1aQlNFRkJXVkZDZVVGSVVVRmlaMEpzUVVoSlFXTjNRbVpCU0Ux?=
- =?utf-8?B?QldWRkNkRUZJVFVGa1VVSjFRVWRqUVZoM1FtcEJSemhCWW1kQ2JVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUpCUVVGQlFVRkJRVUZCU1VGQlFVRkJRVW8wUVVGQlFtMUJSemhC?=
- =?utf-8?B?WkZGQ2RVRkhVVUZqWjBJMVFVWTRRV05CUW1oQlNFbEJaRUZDZFVGSFZVRmpa?=
- =?utf-8?B?MEo2UVVZNFFXTjNRbWhCUnpCQlkzZENNVUZITkVGYWQwSm1RVWhKUVZwUlFu?=
- =?utf-8?B?cEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVGQlFXZEJRVUZCUVVGdVow?=
- =?utf-8?B?RkJRVWRaUVdKM1FqRkJSelJCV2tGQ2VVRklhMEZZZDBKM1FVZEZRV05uUWpC?=
- =?utf-8?B?QlJ6UkJXbEZDZVVGSVRVRllkMEo2UVVjd1FXRlJRbXBCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJVVUZCUVVGQlFVRkJRVU5C?=
- =?utf-8?B?UVVGQlFVRkRaVUZCUVVGYVowSjJRVWhWUVdKblFtdEJTRWxCWlZGQ1prRklR?=
- =?utf-8?B?VUZaVVVKNVFVaFJRV0puUW14QlNFbEJZM2RDWmtGSVRVRmtRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUWtGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGSlFVRkJRVUZCU2pSQlFVRkNiVUZIT0VGa1VVSjFRVWRSUVdO?=
- =?utf-8?B?blFqVkJSamhCWTBGQ2FFRklTVUZrUVVKMVFVZFZRV05uUW5wQlJqaEJaRUZD?=
- =?utf-8?B?ZWtGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVVkJRVUZCUVVGQlFVRkJaMEZCUVVGQlFXNW5RVUZCUjFsQlluZENN?=
- =?utf-8?B?VUZITkVGYVFVSjVRVWhyUVZoM1FuZEJSMFZCWTJkQ01FRkhORUZhVVVKNVFV?=
- =?utf-8?B?aE5RVmgzUWpGQlJ6QkJXWGRCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZSUVVGQlFVRkJRVUZCUTBGQlFVRkJRVU5sUVVG?=
- =?utf-8?B?QlFWcDNRakJCU0UxQldIZENkMEZJU1VGaWQwSnJRVWhWUVZsM1FqQkJSamhC?=
- =?utf-8?B?WkVGQ2VVRkhSVUZoVVVKMVFVZHJRV0puUW01QlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQ1FVRkJRVUZCUVVGQlFVbEJR?=
- =?utf-8?B?VUZCUVVGS05FRkJRVUo2UVVkRlFXSkJRbXhCU0UxQldIZENhRUZIVFVGWmQw?=
- =?utf-8?B?SjJRVWhWUVdKblFqQkJSamhCWTBGQ2MwRkhSVUZpWjBGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZuUVVGQlFVRkJibWRCUVVGSVRVRlpVVUp6UVVkVlFXTjNRbVpC?=
- =?utf-8?B?U0VWQlpGRkNka0ZJVVVGYVVVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVZGQlFVRkJRVUZCUVVGRFFVRkJRVUZCUTJWQlFVRkJZM2RDZFVGSVFV?=
- =?utf-8?B?RmpkMEptUVVkM1FXRlJRbXBCUjFWQlltZENla0ZIVlVGWWQwSXdRVWRWUVdO?=
- =?utf-8?B?blFuUkJSamhCVFZGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVSkJRVUZCUVVGQlFVRkJTVUZCUVVGQlFVbzBRVUZC?=
- =?utf-8?B?UW5wQlJ6UkJZMEZDZWtGR09FRmlRVUp3UVVkTlFWcFJRblZCU0UxQldsRkNa?=
- =?utf-8?B?a0ZJVVVGYVVVSjVRVWN3UVZoM1FucEJTRkZCWkZGQ2EwRkhWVUZpWjBJd1FV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdkQlFV?=
- =?utf-8?B?RkJRVUZ1WjBGQlFVaFpRVnAzUW1aQlIzTkJXbEZDTlVGSVkwRmlkMEo1UVVk?=
- =?utf-8?B?UlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJRVUZC?=
- =?utf-8?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=gustavo@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 62984de2-0fdd-4f14-f275-08d73a86896b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR12MB3178;
-x-ms-traffictypediagnostic: DM6PR12MB3178:
-x-ms-exchange-purlcount: 2
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB3178A62D89EB082C7BBAA6B5DA8C0@DM6PR12MB3178.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:983;
-x-forefront-prvs: 0162ACCC24
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39860400002)(396003)(346002)(366004)(376002)(199004)(189003)(316002)(33656002)(74316002)(76176011)(229853002)(6506007)(6116002)(3846002)(99286004)(7696005)(14454004)(966005)(53546011)(25786009)(8676002)(81156014)(2906002)(81166006)(2501003)(71200400001)(8936002)(71190400001)(52536014)(66946007)(66446008)(66476007)(66556008)(64756008)(76116006)(66066001)(5660300002)(2201001)(186003)(7736002)(305945005)(6436002)(53936002)(102836004)(478600001)(446003)(9686003)(4326008)(26005)(54906003)(110136005)(256004)(476003)(486006)(55016002)(6246003)(6306002)(86362001)(11346002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB3178;H:DM6PR12MB4010.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: K6t4YU7Fqw1Wt4ESoQRmp8eIORgGgtJehntOxBTqC8/Gu1VFiOprwAeCDdc9YlWWOpV/wBBoFxsr2KzFqH0n4Xmemb6Swlz0SqTJDKpEkwOhSwRaGWsma5D5WsM54SHgAcd7CRMrGtRRmi09fhw1R41pZCngwVvw1QbSQ0ePbKEzDTLGMIc8DII0pUcROm5eYMLpYwor1HU4TTUGfZ7mk+eRclrq2jSwqXm7kX/VPpfZV4IYPxEW5Ch8gpJ8/osvpb02CFzcKhWrWX0rpKg7We1WKPkoWfEPWRo19wdar/eS90UbNk2nkxPDPFRWdaX2RYY4XhW/CpT5CeLeHqEq8tAU1tq9zdyFTG/M5XlNKpo6k80K7/7Zw6OvapNISs8hgDZX1FIs3Hvr5KlgAbuglK9JUbj+AGZbDqdoCDSfhtY=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62984de2-0fdd-4f14-f275-08d73a86896b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2019 09:16:20.0207
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +0TNslkqsWcj9moA8g+xxC7frDVDlvzG9iYQtnQIktM5xZFpWIubOBRq705HrxTue3NHSW38iUAb+u/5vBm8HA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3178
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1568371190-14590-1-git-send-email-pankaj.dubey@samsung.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gRnJpLCBTZXAgMTMsIDIwMTkgYXQgMTE6Mzk6NTAsIFBhbmthaiBEdWJleSA8cGFua2FqLmR1
-YmV5QHNhbXN1bmcuY29tPiANCndyb3RlOg0KDQo+IEZyb206IEFudmVzaCBTYWx2ZXJ1IDxhbnZl
-c2guc0BzYW1zdW5nLmNvbT4NCj4gDQo+IEluIHNvbWUgcGxhdGZvcm1zLCBQQ0llIFBIWSBtYXkg
-aGF2ZSBpc3N1ZXMgd2hpY2ggd2lsbCBwcmV2ZW50IGxpbmt1cA0KPiB0byBoYXBwZW4gaW4gR0VO
-MyBvciBoaWdoZXIgc3BlZWQuIEluIGNhc2UgZXF1YWxpemF0aW9uIGZhaWxzLCBsaW5rIHdpbGwN
-Cj4gZmFsbGJhY2sgdG8gR0VOMS4NCj4gDQo+IERlc2lnbldhcmUgY29udHJvbGxlciBnaXZlcyBm
-bGV4aWJpbGl0eSB0byBkaXNhYmxlIEdFTjMgZXF1YWxpemF0aW9uDQo+IGNvbXBsZXRlbHkgb3Ig
-b25seSBwaGFzZSAyIGFuZCAzIG9mIGVxdWFsaXphdGlvbi4NCj4gDQo+IFRoaXMgcGF0Y2ggZW5h
-YmxlcyB0aGUgRGVzaWduV2FyZSBkcml2ZXIgdG8gZGlzYWJsZSB0aGUgUENJZSBHRU4zDQo+IGVx
-dWFsaXphdGlvbiBieSBlbmFibGluZyBvbmUgb2YgdGhlIGZvbGxvd2luZyBxdWlya3M6DQo+ICAt
-IERXQ19FUVVBTElaQVRJT05fRElTQUJMRTogVG8gZGlzYWJsZSBHRU4zIGVxdWFsaXphdGlvbiBh
-bGwgcGhhc2VzDQo+ICAtIERXQ19FUV9QSEFTRV8yXzNfRElTQUJMRTogVG8gZGlzYWJsZSBHRU4z
-IGVxdWFsaXphdGlvbiBwaGFzZSAyICYgMw0KPiANCj4gUGxhdGZvcm0gZHJpdmVycyBjYW4gc2V0
-IHRoZXNlIHF1aXJrcyB2aWEgInF1aXJrIiB2YXJpYWJsZSBvZiAiZHdfcGNpZSINCj4gc3RydWN0
-Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQW52ZXNoIFNhbHZlcnUgPGFudmVzaC5zQHNhbXN1bmcu
-Y29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBQYW5rYWogRHViZXkgPHBhbmthai5kdWJleUBzYW1zdW5n
-LmNvbT4NCj4gLS0tDQo+IFBhdGNoc2V0IHYxIGNhbiBiZSBmb3VuZCBhdDoNCj4gIC0gMS8yOiBo
-dHRwczovL3VybGRlZmVuc2UucHJvb2Zwb2ludC5jb20vdjIvdXJsP3U9aHR0cHMtM0FfX2xrbWwu
-b3JnX2xrbWxfMjAxOV85XzEwXzQ0MyZkPUR3SUJhUSZjPURQTDZfWF82SmtYRng3QVhXcUIwdGcm
-cj1ia1d4cExvVy1mLUUzRWRpRENDYTBfaDBQaWNzVmlhc1Nsdklwelp2UHhzJm09NUJsNTQ3dnZF
-Z3cweFBNaDRrWnZLSVVqMm5zdTV3UXh0WGs2bGowSjBYOCZzPXIwSi1FQVRvcldidzlMMlA0Z0cw
-elV0MWpxS0RDeVlZN0I1emNadXRuUDAmZT0gDQo+ICAtIDIvMjogaHR0cHM6Ly91cmxkZWZlbnNl
-LnByb29mcG9pbnQuY29tL3YyL3VybD91PWh0dHBzLTNBX19sa21sLm9yZ19sa21sXzIwMTlfOV8x
-MF80NDQmZD1Ed0lCYVEmYz1EUEw2X1hfNkprWEZ4N0FYV3FCMHRnJnI9YmtXeHBMb1ctZi1FM0Vk
-aURDQ2EwX2gwUGljc1ZpYXNTbHZJcHpadlB4cyZtPTVCbDU0N3Z2RWd3MHhQTWg0a1p2S0lVajJu
-c3U1d1F4dFhrNmxqMEowWDgmcz1JaTJzdk9RUXpQeWNpNkd6dHIzXy1SbENlX0Z6di1sQ2F2VVlo
-SHdadmJBJmU9IA0KPiANCj4gQ2hhbmdlcyB3LnIudCB2MToNCj4gIC0gU3F1YXNoZWQgdHdvIHBh
-dGNoZXMgZnJvbSB2MSBpbnRvIG9uZSBhcyBzdWdnZXN0ZWQgYnkgR3VzdGF2bw0KPiAgLSBBZGRy
-ZXNzZWQgcmV2aWV3IGNvbW1lbnRzIGZyb20gQW5kcmV3DQo+IA0KPiAgZHJpdmVycy9wY2kvY29u
-dHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLmMgfCAxMiArKysrKysrKysrKysNCj4gIGRyaXZl
-cnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS5oIHwgIDkgKysrKysrKysrDQo+
-ICAyIGZpbGVzIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUuYyBiL2RyaXZlcnMvcGNp
-L2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS5jDQo+IGluZGV4IDdkMjUxMDIuLjk3ZmIx
-OGQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdu
-d2FyZS5jDQo+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2Fy
-ZS5jDQo+IEBAIC00NjYsNCArNDY2LDE2IEBAIHZvaWQgZHdfcGNpZV9zZXR1cChzdHJ1Y3QgZHdf
-cGNpZSAqcGNpKQ0KPiAgCQlicmVhazsNCj4gIAl9DQo+ICAJZHdfcGNpZV93cml0ZWxfZGJpKHBj
-aSwgUENJRV9MSU5LX1dJRFRIX1NQRUVEX0NPTlRST0wsIHZhbCk7DQo+ICsNCj4gKwlpZiAocGNp
-LT5xdWlyayAmIERXQ19FUVVBTElaQVRJT05fRElTQUJMRSkgew0KPiArCQl2YWwgPSBkd19wY2ll
-X3JlYWRsX2RiaShwY2ksIFBDSUVfUE9SVF9HRU4zX1JFTEFURUQpOw0KPiArCQl2YWwgfD0gUE9S
-VF9MT0dJQ19HRU4zX0VRX0RJU0FCTEU7DQo+ICsJCWR3X3BjaWVfd3JpdGVsX2RiaShwY2ksIFBD
-SUVfUE9SVF9HRU4zX1JFTEFURUQsIHZhbCk7DQo+ICsJfQ0KPiArDQo+ICsJaWYgKHBjaS0+cXVp
-cmsgJiBEV0NfRVFfUEhBU0VfMl8zX0RJU0FCTEUpIHsNCj4gKwkJdmFsID0gZHdfcGNpZV9yZWFk
-bF9kYmkocGNpLCBQQ0lFX1BPUlRfR0VOM19SRUxBVEVEKTsNCj4gKwkJdmFsIHw9IFBPUlRfTE9H
-SUNfR0VOM19FUV9QSEFTRV8yXzNfRElTQUJMRTsNCj4gKwkJZHdfcGNpZV93cml0ZWxfZGJpKHBj
-aSwgUENJRV9QT1JUX0dFTjNfUkVMQVRFRCwgdmFsKTsNCj4gKwl9DQo+ICB9DQo+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUuaCBiL2RyaXZl
-cnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS5oDQo+IGluZGV4IGZmZWQwODQu
-LmU0MjhiNjIgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUt
-ZGVzaWdud2FyZS5oDQo+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVz
-aWdud2FyZS5oDQo+IEBAIC0yOSw2ICsyOSwxMCBAQA0KPiAgI2RlZmluZSBMSU5LX1dBSVRfTUFY
-X0lBVFVfUkVUUklFUwk1DQo+ICAjZGVmaW5lIExJTktfV0FJVF9JQVRVCQkJOQ0KPiAgDQo+ICsv
-KiBQYXJhbWV0ZXJzIGZvciBHRU4zIHJlbGF0ZWQgcXVpcmtzICovDQo+ICsjZGVmaW5lIERXQ19F
-UVVBTElaQVRJT05fRElTQUJMRQlCSVQoMSkNCj4gKyNkZWZpbmUgRFdDX0VRX1BIQVNFXzJfM19E
-SVNBQkxFCUJJVCgyKQ0KPiArDQo+ICAvKiBTeW5vcHN5cy1zcGVjaWZpYyBQQ0llIGNvbmZpZ3Vy
-YXRpb24gcmVnaXN0ZXJzICovDQo+ICAjZGVmaW5lIFBDSUVfUE9SVF9MSU5LX0NPTlRST0wJCTB4
-NzEwDQo+ICAjZGVmaW5lIFBPUlRfTElOS19NT0RFX01BU0sJCUdFTk1BU0soMjEsIDE2KQ0KPiBA
-QCAtNjAsNiArNjQsMTAgQEANCj4gICNkZWZpbmUgUENJRV9NU0lfSU5UUjBfTUFTSwkJMHg4MkMN
-Cj4gICNkZWZpbmUgUENJRV9NU0lfSU5UUjBfU1RBVFVTCQkweDgzMA0KPiAgDQo+ICsjZGVmaW5l
-IFBDSUVfUE9SVF9HRU4zX1JFTEFURUQJCTB4ODkwDQo+ICsjZGVmaW5lIFBPUlRfTE9HSUNfR0VO
-M19FUV9QSEFTRV8yXzNfRElTQUJMRQlCSVQoOSkNCj4gKyNkZWZpbmUgUE9SVF9MT0dJQ19HRU4z
-X0VRX0RJU0FCTEUJCUJJVCgxNikNCj4gKw0KPiAgI2RlZmluZSBQQ0lFX0FUVV9WSUVXUE9SVAkJ
-MHg5MDANCj4gICNkZWZpbmUgUENJRV9BVFVfUkVHSU9OX0lOQk9VTkQJCUJJVCgzMSkNCj4gICNk
-ZWZpbmUgUENJRV9BVFVfUkVHSU9OX09VVEJPVU5ECTANCj4gQEAgLTI0NCw2ICsyNTIsNyBAQCBz
-dHJ1Y3QgZHdfcGNpZSB7DQo+ICAJc3RydWN0IGR3X3BjaWVfZXAJZXA7DQo+ICAJY29uc3Qgc3Ry
-dWN0IGR3X3BjaWVfb3BzICpvcHM7DQo+ICAJdW5zaWduZWQgaW50CQl2ZXJzaW9uOw0KPiArCXVu
-c2lnbmVkIGludAkJcXVpcms7DQo+ICB9Ow0KPiAgDQo+ICAjZGVmaW5lIHRvX2R3X3BjaWVfZnJv
-bV9wcChwb3J0KSBjb250YWluZXJfb2YoKHBvcnQpLCBzdHJ1Y3QgZHdfcGNpZSwgcHApDQo+IC0t
-IA0KPiAyLjcuNA0KDQoNCkFja2VkLWJ5OiBHdXN0YXZvIFBpbWVudGVsIDxndXN0YXZvLnBpbWVu
-dGVsQHN5bm9wc3lzLmNvbT4NCg0KDQo=
+On Fri, Sep 13, 2019 at 04:09:50PM +0530, Pankaj Dubey wrote:
+> From: Anvesh Salveru <anvesh.s@samsung.com>
+> 
+> In some platforms, PCIe PHY may have issues which will prevent linkup
+> to happen in GEN3 or higher speed. In case equalization fails, link will
+> fallback to GEN1.
+> 
+> DesignWare controller gives flexibility to disable GEN3 equalization
+> completely or only phase 2 and 3 of equalization.
+> 
+> This patch enables the DesignWare driver to disable the PCIe GEN3
+> equalization by enabling one of the following quirks:
+>  - DWC_EQUALIZATION_DISABLE: To disable GEN3 equalization all phases
+>  - DWC_EQ_PHASE_2_3_DISABLE: To disable GEN3 equalization phase 2 & 3
+> 
+> Platform drivers can set these quirks via "quirk" variable of "dw_pcie"
+> struct.
+> 
+> Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> ---
+> Patchset v1 can be found at:
+>  - 1/2: https://lkml.org/lkml/2019/9/10/443
+>  - 2/2: https://lkml.org/lkml/2019/9/10/444
+> 
+> Changes w.r.t v1:
+>  - Squashed two patches from v1 into one as suggested by Gustavo
+>  - Addressed review comments from Andrew
+> 
+>  drivers/pci/controller/dwc/pcie-designware.c | 12 ++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h |  9 +++++++++
+>  2 files changed, 21 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 7d25102..97fb18d 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -466,4 +466,16 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>  		break;
+>  	}
+>  	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+> +
+> +	if (pci->quirk & DWC_EQUALIZATION_DISABLE) {
+> +		val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
+> +		val |= PORT_LOGIC_GEN3_EQ_DISABLE;
+> +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
+> +	}
+> +
+> +	if (pci->quirk & DWC_EQ_PHASE_2_3_DISABLE) {
+> +		val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
+> +		val |= PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE;
+> +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
+> +	}
+>  }
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index ffed084..e428b62 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -29,6 +29,10 @@
+>  #define LINK_WAIT_MAX_IATU_RETRIES	5
+>  #define LINK_WAIT_IATU			9
+>  
+> +/* Parameters for GEN3 related quirks */
+> +#define DWC_EQUALIZATION_DISABLE	BIT(1)
+> +#define DWC_EQ_PHASE_2_3_DISABLE	BIT(2)
+> +
+>  /* Synopsys-specific PCIe configuration registers */
+>  #define PCIE_PORT_LINK_CONTROL		0x710
+>  #define PORT_LINK_MODE_MASK		GENMASK(21, 16)
+> @@ -60,6 +64,10 @@
+>  #define PCIE_MSI_INTR0_MASK		0x82C
+>  #define PCIE_MSI_INTR0_STATUS		0x830
+>  
+> +#define PCIE_PORT_GEN3_RELATED		0x890
+
+I hadn't noticed this in the previous version - what is the proper
+name for this register? Does it end in _RELATED?
+
+Thanks,
+
+Andrew Murray
+
+> +#define PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE	BIT(9)
+> +#define PORT_LOGIC_GEN3_EQ_DISABLE		BIT(16)
+> +
+>  #define PCIE_ATU_VIEWPORT		0x900
+>  #define PCIE_ATU_REGION_INBOUND		BIT(31)
+>  #define PCIE_ATU_REGION_OUTBOUND	0
+> @@ -244,6 +252,7 @@ struct dw_pcie {
+>  	struct dw_pcie_ep	ep;
+>  	const struct dw_pcie_ops *ops;
+>  	unsigned int		version;
+> +	unsigned int		quirk;
+>  };
+>  
+>  #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
+> -- 
+> 2.7.4
+> 
