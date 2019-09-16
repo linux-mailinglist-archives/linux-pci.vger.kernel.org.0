@@ -2,46 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AA8F8B423D
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Sep 2019 22:46:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D326B4249
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Sep 2019 22:47:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391595AbfIPUpl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Sep 2019 16:45:41 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39853 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727851AbfIPUpk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Sep 2019 16:45:40 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r3so831768wrj.6;
-        Mon, 16 Sep 2019 13:45:39 -0700 (PDT)
+        id S1733197AbfIPUrQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Sep 2019 16:47:16 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35760 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727971AbfIPUrQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Sep 2019 16:47:16 -0400
+Received: by mail-wm1-f66.google.com with SMTP id y21so724089wmi.0;
+        Mon, 16 Sep 2019 13:47:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6eXx97jIUvnWKUhsHS/jDfcPmaEhHScsepaLww/BGjQ=;
-        b=se4ZXQsR3iyN4fqmN5C+nAf65xEPcucEC84URvhLQnNfDjay1x66bkSf+QDBdY0Yl5
-         8kkezgv83ea6FNzkKNOSt2lrbmkvWKhP1htk4qj1Ir6KcGXHwydMAWGqH4nxnwM2Nkmj
-         yqFtpeLOUzOztsrY7q2pRK6FOx8SEQlMjc3rDm23Phs3poUMfCgPY/OR0R9hjbRxv337
-         gP/sVhddCFLUJpTSZGOp+2ppyEGg/WfXf4xN4ElTjN5o04yWOeWuCeqMQU3arI6d50/p
-         3m3mH0p8rdEaPFr91NsHcTZZRUet8sXc0VrrQ7wnqMHWWNOG+s2vtuGRo27mcQEXIJUW
-         fGNQ==
-X-Gm-Message-State: APjAAAWvv3C6hu1Nb2M7QgJWZ90mOZaRtgpp1S/mXFnKDLmRR9alPaOx
-        MraoszOiFIS2YJy1xj5HqI21oxYqrFc=
-X-Google-Smtp-Source: APXvYqyHM8UA9SDJz1d8txwgNTURDLDNvolNfIMcs9JKwmOiilqCjpc62ifIaPkDslH6MdK8gAZZ4Q==
-X-Received: by 2002:a5d:5692:: with SMTP id f18mr198870wrv.68.1568666739007;
-        Mon, 16 Sep 2019 13:45:39 -0700 (PDT)
+        bh=ClDwwNU7E7yVLshOYSMVtt4b9UbBrgClZoV7wecu9U4=;
+        b=kx1FcIuxqvx/TvGD90QWt4xhIZr0MLjjtDVYiHMWkygeBFSujBP4FQDu5Vo+F6vaY3
+         stlQ4K7oUUXrBK1zm2R70twTq1Hg+exGa2hVWpJkUH7Ojpp3b+L0NikXbEDfiXIe4L82
+         ah+BTen1SSD1o/HY5A9y6U1YbsWXHvFyO8ZF2LU6eZF8Dv/kKaR1oXZsgoYx3wx8eKHU
+         CjxCH1bIHYi/hqrOaQr6E9F6SYwowTpcikuylyBSeLqD0Xt7QYAqaOICjapY2tMHi49r
+         TDPTTmP0uSBok/5Ch+JlwIGj11b/J8AAHzMrwCtK5cuFcsKU0S50Zt+VBxKc1oJ+tBCe
+         WBIg==
+X-Gm-Message-State: APjAAAUN7xBbYgORE2bYQUB3TnE4xxj99DMOg7NQp1t4BvYCr4TLexQw
+        ZLRzKSujOf2B4R5gd0kqz88=
+X-Google-Smtp-Source: APXvYqzA8iGacIv6b2eMRXNGIb5zr8TCz3Zb1d24cr0J6lDgd8GrnibalyRautcKXUroaMlIrfhYbw==
+X-Received: by 2002:a1c:7319:: with SMTP id d25mr675553wmb.56.1568666834587;
+        Mon, 16 Sep 2019 13:47:14 -0700 (PDT)
 Received: from black.home (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id x6sm231437wmf.38.2019.09.16.13.45.38
+        by smtp.googlemail.com with ESMTPSA id x6sm231437wmf.38.2019.09.16.13.47.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 13:45:38 -0700 (PDT)
+        Mon, 16 Sep 2019 13:47:14 -0700 (PDT)
 From:   Denis Efremov <efremov@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Alexandre Bounine <alex.bou9@gmail.com>
-Subject: [PATCH v3 14/26] rapidio/tsi721: Loop using PCI_STD_NUM_BARS
-Date:   Mon, 16 Sep 2019 23:41:46 +0300
-Message-Id: <20190916204158.6889-15-efremov@linux.com>
+        linux-fbdev@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Peter Jones <pjones@redhat.com>
+Subject: [PATCH v3 15/26] efifb: Loop using PCI_STD_NUM_BARS
+Date:   Mon, 16 Sep 2019 23:41:47 +0300
+Message-Id: <20190916204158.6889-16-efremov@linux.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190916204158.6889-1-efremov@linux.com>
 References: <20190916204158.6889-1-efremov@linux.com>
@@ -61,26 +62,26 @@ To iterate through all possible BARs, loop conditions changed to the
 *number* of BARs "i < PCI_STD_NUM_BARS", instead of the index of the last
 valid BAR "i <= PCI_STD_RESOURCE_END".
 
-Cc: Matt Porter <mporter@kernel.crashing.org>
-Cc: Alexandre Bounine <alex.bou9@gmail.com>
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Peter Jones <pjones@redhat.com>
 Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- drivers/rapidio/devices/tsi721.c | 2 +-
+ drivers/video/fbdev/efifb.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/rapidio/devices/tsi721.c b/drivers/rapidio/devices/tsi721.c
-index 125a173bed45..4dd31dd9feea 100644
---- a/drivers/rapidio/devices/tsi721.c
-+++ b/drivers/rapidio/devices/tsi721.c
-@@ -2755,7 +2755,7 @@ static int tsi721_probe(struct pci_dev *pdev,
- 	{
- 		int i;
+diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
+index 04a22663b4fb..6c72b825e92a 100644
+--- a/drivers/video/fbdev/efifb.c
++++ b/drivers/video/fbdev/efifb.c
+@@ -668,7 +668,7 @@ static void efifb_fixup_resources(struct pci_dev *dev)
+ 	if (!base)
+ 		return;
  
--		for (i = 0; i <= PCI_STD_RESOURCE_END; i++) {
-+		for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 			tsi_debug(INIT, &pdev->dev, "res%d %pR",
- 				  i, &pdev->resource[i]);
- 		}
+-	for (i = 0; i <= PCI_STD_RESOURCE_END; i++) {
++	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+ 		struct resource *res = &dev->resource[i];
+ 
+ 		if (!(res->flags & IORESOURCE_MEM))
 -- 
 2.21.0
 
