@@ -2,93 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B5528B33A0
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Sep 2019 04:58:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5AE3B33A7
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Sep 2019 05:03:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbfIPC63 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Sep 2019 22:58:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44282 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfIPC63 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Sep 2019 22:58:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GVblmzz3plDyZtzevh+6JM/SYfAETob1wlVIQfguZMY=; b=Q5znqb7FLZyKO6G3Fd8YkzOdS
-        gBtErLvRHK6K+fuDcQ14TIKk2mS3fqbsPc/9fXX0DONyfDqzCj4uoVnNlvOQG160mZSF2N/SH/Mod
-        HqKkcPLzsabRH0rBKg+uK2CprPJX7X/iiEbCkYPcNRSAWZSMjEaPApVHQnwX11ThyYUzx4d0C2mXu
-        RnFzj2P4/alRvj8v0W16o7fuZJHK8CMi+2mEowU/0J7v2SD+DKsAtc6GhSRHyJe3ox4MIDrN35IjB
-        IpUi3OmrODCCyA/jA967/spy6CIXR1FJ76yxQ7Jhg/5GQbpymTgtRinUgmPTB+JpvgiR7W8fOs91y
-        LLUylJDBQ==;
-Received: from [2601:1c0:6280:3f0::9a1f]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1i9hDc-00080R-Eq; Mon, 16 Sep 2019 02:58:24 +0000
-Subject: Re: pci: endpoint test BUG
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>
-References: <20190916020630.1584-1-hdanton@sina.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <fc884b12-c083-2d9f-0ec5-95c293931ed2@infradead.org>
-Date:   Sun, 15 Sep 2019 19:58:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1725971AbfIPDDp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 Sep 2019 23:03:45 -0400
+Received: from mga01.intel.com ([192.55.52.88]:1061 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725907AbfIPDDp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 15 Sep 2019 23:03:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Sep 2019 20:03:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,510,1559545200"; 
+   d="scan'208";a="201512321"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Sep 2019 20:03:44 -0700
+Received: from [10.226.39.42] (ekotax-mobl.gar.corp.intel.com [10.226.39.42])
+        by linux.intel.com (Postfix) with ESMTP id EE50A580258;
+        Sun, 15 Sep 2019 20:03:40 -0700 (PDT)
+Subject: Re: [PATCH v3 2/2] dwc: PCI: intel: Intel PCIe RC controller driver
+To:     "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
+        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
+        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
+References: <20190906112044.GF9720@e119886-lin.cambridge.arm.com>
+ <959a5f9b-2646-96e3-6a0f-0af1051ae1cb@linux.intel.com>
+ <20190909083117.GH9720@e119886-lin.cambridge.arm.com>
+ <22857835-1f98-b251-c94b-16b4b0a6dba2@linux.intel.com>
+ <20190911103058.GP9720@e119886-lin.cambridge.arm.com>
+ <aefd143c-66d2-b303-d992-a55f75a91b2e@linux.intel.com>
+ <20190912082517.GA9720@e119886-lin.cambridge.arm.com>
+ <cd73e351-5633-bfa8-a4dc-77357d917a0b@linux.intel.com>
+ <DM6PR12MB4010AEA876F20E25FFFE06BDDAB00@DM6PR12MB4010.namprd12.prod.outlook.com>
+ <b7a1b955-4c3e-6ffe-ec6a-04afe33e70cd@linux.intel.com>
+ <20190913101203.GE2680@smile.fi.intel.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <52ef93fd-d705-4163-d194-a1b749b2e7df@linux.intel.com>
+Date:   Mon, 16 Sep 2019 11:03:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-In-Reply-To: <20190916020630.1584-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190913101203.GE2680@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/15/19 7:06 PM, Hillf Danton wrote:
-> 
-> On Sun, 15 Sep 2019 09:34:37 -0700
->>
->> Kernel is 5.3-rc8 on x86_64.
->>
->> Loading and removing the pci-epf-test module causes a BUG.
->>
->>
->> [40928.435755] calling  pci_epf_test_init+0x0/0x1000 [pci_epf_test] @ 12132
->> [40928.436717] initcall pci_epf_test_init+0x0/0x1000 [pci_epf_test] returned 0 after 891 usecs
->> [40936.996081] ==================================================================
->> [40936.996125] BUG: KASAN: use-after-free in pci_epf_remove_cfs+0x1ae/0x1f0
->> [40936.996153] Write of size 8 at addr ffff88810a22a068 by task rmmod/12139
-> 
-> Fix fb0de5b8dcc6 and ef1433f717a2 if the current group::group_entry
-> used by pci epf does not break how configfs uses it.
-> 
-> --- a/drivers/pci/endpoint/pci-epf-core.c
-> +++ b/drivers/pci/endpoint/pci-epf-core.c
-> @@ -153,9 +153,11 @@ static void pci_epf_remove_cfs(struct pc
->  		return;
->  
->  	mutex_lock(&pci_epf_mutex);
-> -	list_for_each_entry_safe(group, tmp, &driver->epf_group, group_entry)
-> +	list_for_each_entry_safe(group, tmp, &driver->epf_group,
-> +							group_entry) {
-> +		list_del_init(&group->group_entry);
->  		pci_ep_cfs_remove_epf_group(group);
-> -	list_del(&driver->epf_group);
-> +	}
->  	mutex_unlock(&pci_epf_mutex);
->  }
->  
-> 
 
-Fixes the problem for me.  Thanks.
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
+On 9/13/2019 6:12 PM, andriy.shevchenko@intel.com wrote:
+> On Fri, Sep 13, 2019 at 05:20:26PM +0800, Dilip Kota wrote:
+>> On 9/12/2019 6:49 PM, Gustavo Pimentel wrote:
+>>> On Thu, Sep 12, 2019 at 10:23:31, Dilip Kota
+>>> <eswara.kota@linux.intel.com> wrote:
+>>> Hi, I just return from parental leave, therefore I still trying to get
+>>> the pace in mailing list discussion.
+>>>
+>>> However your suggestion looks good, I agree that can go into DesignWare
+>>> driver to be available to all.
+>> Thanks Gustavo for the confirmation, i will add it in the next patch version
+>>> Just a small request, please do in general:
+>>> s/designware/DesignWare
+>> Sorry, i didnt understand this.
+> It means the reviewer asks you to name DesignWare in this form,
+> i.o.w. designware -> DesignWare.
+>
+> `man 1 sed` gives you more about it :-)
+Thanks Andy for clarifying it.
+Could you please also comment let me know your opinion on the driver 
+naming. Below is the mail snippet.
 
-Please make a proper patch.
+======
+ >>> Add support to PCIe RC controller on Intel Universal
+ >>> Gateway SoC. PCIe controller is based of Synopsys
+ >>> Designware pci core.
+ >>> +config PCIE_INTEL_AXI
+ > [Andy]: I think that name here is too generic. Classical x86 seems 
+not using this.
 
--- 
-~Randy
+[Dilip Kota]:
+This PCIe driver is for the Intel Gateway SoCs. So how about naming it is as
+"pcie-intel-gw"; pcie-intel-gw.c and Kconfig as PCIE_INTEL_GW.
+
+Andrew Murray is ok with this naming, please let me know your view.
+=======
+
+Regards,
+Dilip
+
+>
