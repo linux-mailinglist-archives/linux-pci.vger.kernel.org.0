@@ -2,22 +2,22 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59540B3B2D
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Sep 2019 15:20:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2880B3B37
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Sep 2019 15:23:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733060AbfIPNUz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Sep 2019 09:20:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:44724 "EHLO foss.arm.com"
+        id S1733095AbfIPNXW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Sep 2019 09:23:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:44774 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733043AbfIPNUz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:20:55 -0400
+        id S1728014AbfIPNXW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 16 Sep 2019 09:23:22 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DF5D337;
-        Mon, 16 Sep 2019 06:20:54 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3B7E337;
+        Mon, 16 Sep 2019 06:23:21 -0700 (PDT)
 Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A792B3F67D;
-        Mon, 16 Sep 2019 06:20:53 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 14:20:51 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A9C53F67D;
+        Mon, 16 Sep 2019 06:23:21 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 14:23:19 +0100
 From:   Andrew Murray <andrew.murray@arm.com>
 To:     Neil Armstrong <narmstrong@baylibre.com>
 Cc:     khilman@baylibre.com, lorenzo.pieralisi@arm.com, kishon@ti.com,
@@ -25,279 +25,156 @@ Cc:     khilman@baylibre.com, lorenzo.pieralisi@arm.com, kishon@ti.com,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, yue.wang@Amlogic.com, maz@kernel.org,
         repk@triplefau.lt, nick@khadas.com, gouwa@khadas.com
-Subject: Re: [PATCH v2 3/6] PCI: amlogic: meson: Add support for G12A
-Message-ID: <20190916132051.GP9720@e119886-lin.cambridge.arm.com>
+Subject: Re: [PATCH v2 4/6] phy: meson-g12a-usb3-pcie: Add support for PCIe
+ mode
+Message-ID: <20190916132319.GQ9720@e119886-lin.cambridge.arm.com>
 References: <20190916125022.10754-1-narmstrong@baylibre.com>
- <20190916125022.10754-4-narmstrong@baylibre.com>
+ <20190916125022.10754-5-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190916125022.10754-4-narmstrong@baylibre.com>
+In-Reply-To: <20190916125022.10754-5-narmstrong@baylibre.com>
 User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 02:50:19PM +0200, Neil Armstrong wrote:
-> Add support for the Amlogic G12A SoC using a separate shared PHY.
+On Mon, Sep 16, 2019 at 02:50:20PM +0200, Neil Armstrong wrote:
+> This adds extended PCIe PHY functions for the Amlogic G12A
+> USB3+PCIE Combo PHY to support reset, power_on and power_off for
+> PCIe exclusively.
 > 
-> This adds support for fetching a PHY phandle and call the PHY init,
-> reset and power on/off calls instead of writing in the PHY register or
-> toggling the PHY reset line.
-> 
-> The MIPI clock and the PHY memory resource are only required for the
-> Amlogic AXG SoC PCIe PHY setup, thus these elements are ignored for
-> the Amlogic G12A having a separate shared PHY.
+> With these callbacks, we can handle all the needed operations of the
+> Amlogic PCIe controller driver.
 > 
 > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  drivers/pci/controller/dwc/pci-meson.c | 128 ++++++++++++++++++++-----
->  1 file changed, 105 insertions(+), 23 deletions(-)
+>  .../phy/amlogic/phy-meson-g12a-usb3-pcie.c    | 70 ++++++++++++++++---
+>  1 file changed, 61 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-> index ab79990798f8..3772b02a5c55 100644
-> --- a/drivers/pci/controller/dwc/pci-meson.c
-> +++ b/drivers/pci/controller/dwc/pci-meson.c
-> @@ -16,6 +16,7 @@
->  #include <linux/reset.h>
->  #include <linux/resource.h>
->  #include <linux/types.h>
-> +#include <linux/phy/phy.h>
+> diff --git a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
+> index ac322d643c7a..08e322789e59 100644
+> --- a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
+> +++ b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
+> @@ -50,6 +50,8 @@
+>  	#define PHY_R5_PHY_CR_ACK				BIT(16)
+>  	#define PHY_R5_PHY_BS_OUT				BIT(17)
 >  
->  #include "pcie-designware.h"
->  
-> @@ -96,12 +97,18 @@ struct meson_pcie_rc_reset {
->  	struct reset_control *apb;
->  };
->  
-> +struct meson_pcie_param {
-> +	bool has_shared_phy;
-> +};
+> +#define PCIE_RESET_DELAY					500
 > +
->  struct meson_pcie {
->  	struct dw_pcie pci;
->  	struct meson_pcie_mem_res mem_res;
->  	struct meson_pcie_clk_res clk_res;
->  	struct meson_pcie_rc_reset mrst;
->  	struct gpio_desc *reset_gpio;
-> +	struct phy *phy;
-> +	const struct meson_pcie_param *param;
->  };
+>  struct phy_g12a_usb3_pcie_priv {
+>  	struct regmap		*regmap;
+>  	struct regmap		*regmap_cr;
+> @@ -196,6 +198,10 @@ static int phy_g12a_usb3_init(struct phy *phy)
+>  	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
+>  	int data, ret;
 >  
->  static struct reset_control *meson_pcie_get_reset(struct meson_pcie *mp,
-> @@ -123,10 +130,12 @@ static int meson_pcie_get_resets(struct meson_pcie *mp)
->  {
->  	struct meson_pcie_rc_reset *mrst = &mp->mrst;
->  
-> -	mrst->phy = meson_pcie_get_reset(mp, "phy", PCIE_SHARED_RESET);
-> -	if (IS_ERR(mrst->phy))
-> -		return PTR_ERR(mrst->phy);
-> -	reset_control_deassert(mrst->phy);
-> +	if (!mp->param->has_shared_phy) {
-> +		mrst->phy = meson_pcie_get_reset(mp, "phy", PCIE_SHARED_RESET);
-> +		if (IS_ERR(mrst->phy))
-> +			return PTR_ERR(mrst->phy);
-> +		reset_control_deassert(mrst->phy);
-> +	}
->  
->  	mrst->port = meson_pcie_get_reset(mp, "port", PCIE_NORMAL_RESET);
->  	if (IS_ERR(mrst->port))
-> @@ -180,27 +189,52 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
->  	if (IS_ERR(mp->mem_res.cfg_base))
->  		return PTR_ERR(mp->mem_res.cfg_base);
->  
-> -	/* Meson SoC has two PCI controllers use same phy register*/
-> -	mp->mem_res.phy_base = meson_pcie_get_mem_shared(pdev, mp, "phy");
-> -	if (IS_ERR(mp->mem_res.phy_base))
-> -		return PTR_ERR(mp->mem_res.phy_base);
-> +	/* Meson AXG SoC has two PCI controllers use same phy register */
-> +	if (!mp->param->has_shared_phy) {
-> +		mp->mem_res.phy_base =
-> +			meson_pcie_get_mem_shared(pdev, mp, "phy");
-> +		if (IS_ERR(mp->mem_res.phy_base))
-> +			return PTR_ERR(mp->mem_res.phy_base);
-> +	}
->  
->  	return 0;
->  }
->  
-> -static void meson_pcie_power_on(struct meson_pcie *mp)
-> +static int meson_pcie_power_on(struct meson_pcie *mp)
->  {
-> -	writel(MESON_PCIE_PHY_POWERUP, mp->mem_res.phy_base);
-> +	int ret = 0;
-> +
-> +	if (mp->param->has_shared_phy) {
-> +		ret = phy_init(mp->phy);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = phy_power_on(mp->phy);
-> +		if (ret) {
-> +			phy_exit(mp->phy);
-> +			return ret;
-> +		}
-> +	} else
-> +		writel(MESON_PCIE_PHY_POWERUP, mp->mem_res.phy_base);
-> +
-> +	return 0;
->  }
->  
-> -static void meson_pcie_reset(struct meson_pcie *mp)
-> +static int meson_pcie_reset(struct meson_pcie *mp)
->  {
->  	struct meson_pcie_rc_reset *mrst = &mp->mrst;
-> -
-> -	reset_control_assert(mrst->phy);
-> -	udelay(PCIE_RESET_DELAY);
-> -	reset_control_deassert(mrst->phy);
-> -	udelay(PCIE_RESET_DELAY);
-> +	int ret = 0;
-> +
-> +	if (mp->param->has_shared_phy) {
-> +		ret = phy_reset(mp->phy);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		reset_control_assert(mrst->phy);
-> +		udelay(PCIE_RESET_DELAY);
-> +		reset_control_deassert(mrst->phy);
-> +		udelay(PCIE_RESET_DELAY);
-> +	}
->  
->  	reset_control_assert(mrst->port);
->  	reset_control_assert(mrst->apb);
-> @@ -208,6 +242,8 @@ static void meson_pcie_reset(struct meson_pcie *mp)
->  	reset_control_deassert(mrst->port);
->  	reset_control_deassert(mrst->apb);
->  	udelay(PCIE_RESET_DELAY);
-> +
-> +	return 0;
->  }
->  
->  static inline struct clk *meson_pcie_probe_clock(struct device *dev,
-> @@ -250,9 +286,11 @@ static int meson_pcie_probe_clocks(struct meson_pcie *mp)
->  	if (IS_ERR(res->port_clk))
->  		return PTR_ERR(res->port_clk);
->  
-> -	res->mipi_gate = meson_pcie_probe_clock(dev, "mipi", 0);
-> -	if (IS_ERR(res->mipi_gate))
-> -		return PTR_ERR(res->mipi_gate);
-> +	if (!mp->param->has_shared_phy) {
-> +		res->mipi_gate = meson_pcie_probe_clock(dev, "mipi", 0);
-> +		if (IS_ERR(res->mipi_gate))
-> +			return PTR_ERR(res->mipi_gate);
-> +	}
->  
->  	res->general_clk = meson_pcie_probe_clock(dev, "general", 0);
->  	if (IS_ERR(res->general_clk))
-> @@ -524,6 +562,7 @@ static const struct dw_pcie_ops dw_pcie_ops = {
->  
->  static int meson_pcie_probe(struct platform_device *pdev)
->  {
-> +	const struct meson_pcie_param *match_data;
->  	struct device *dev = &pdev->dev;
->  	struct dw_pcie *pci;
->  	struct meson_pcie *mp;
-> @@ -537,6 +576,19 @@ static int meson_pcie_probe(struct platform_device *pdev)
->  	pci->dev = dev;
->  	pci->ops = &dw_pcie_ops;
->  
-> +	match_data = of_device_get_match_data(dev);
-> +	if (!match_data) {
-> +		dev_err(dev, "failed to get match data\n");
-> +		return -ENODEV;
-> +	}
-> +	mp->param = match_data;
-> +
-> +	if (mp->param->has_shared_phy) {
-> +		mp->phy = devm_phy_get(dev, "pcie");
-> +		if (IS_ERR(mp->phy))
-> +			return PTR_ERR(mp->phy);
-> +	}
-> +
->  	mp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
->  	if (IS_ERR(mp->reset_gpio)) {
->  		dev_err(dev, "get reset gpio failed\n");
-> @@ -555,13 +607,22 @@ static int meson_pcie_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> -	meson_pcie_power_on(mp);
-> -	meson_pcie_reset(mp);
-> +	ret = meson_pcie_power_on(mp);
-> +	if (ret) {
-> +		dev_err(dev, "phy power on failed, %d\n", ret);
+> +	ret = reset_control_reset(priv->reset);
+> +	if (ret)
 > +		return ret;
-> +	}
-> +
-> +	ret = meson_pcie_reset(mp);
-> +	if (ret) {
-> +		dev_err(dev, "reset failed, %d\n", ret);
-> +		goto err_phy;
-> +	}
->  
->  	ret = meson_pcie_probe_clocks(mp);
->  	if (ret) {
->  		dev_err(dev, "init clock resources failed, %d\n", ret);
-> -		return ret;
-> +		goto err_phy;
->  	}
->  
->  	platform_set_drvdata(pdev, mp);
-> @@ -569,15 +630,36 @@ static int meson_pcie_probe(struct platform_device *pdev)
->  	ret = meson_add_pcie_port(mp, pdev);
->  	if (ret < 0) {
->  		dev_err(dev, "Add PCIe port failed, %d\n", ret);
-> -		return ret;
-> +		goto err_phy;
->  	}
->  
->  	return 0;
-> +
-> +err_phy:
-> +	if (mp->param->has_shared_phy) {
-> +		phy_power_off(mp->phy);
-> +		phy_exit(mp->phy);
-> +	}
-
-Interestingly for AXG, if the probe fails we don't seem to do the opposite
-of MESON_PCIE_PHY_POWERUP. Though I can see this is a pre-existing issue that
-has little impact and probably rarely gets hit, so:
 
 Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-However it would be *super really nice* to write a meson_pcie_power_off that
-mirrors meson_pcie_power_on that you could call here instead.
-
-Thanks,
-
-Andrew Murray 
-
 > +
-> +	return ret;
+>  	/* Switch PHY to USB3 */
+>  	/* TODO figure out how to handle when PCIe was set in the bootloader */
+>  	regmap_update_bits(priv->regmap, PHY_R0,
+> @@ -272,24 +278,64 @@ static int phy_g12a_usb3_init(struct phy *phy)
+>  	return 0;
 >  }
 >  
-> +static struct meson_pcie_param meson_pcie_axg_param = {
-> +	.has_shared_phy = false,
-> +};
+> -static int phy_g12a_usb3_pcie_init(struct phy *phy)
+> +static int phy_g12a_usb3_pcie_power_on(struct phy *phy)
+> +{
+> +	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
 > +
-> +static struct meson_pcie_param meson_pcie_g12a_param = {
-> +	.has_shared_phy = true,
-> +};
+> +	if (priv->mode == PHY_TYPE_USB3)
+> +		return 0;
 > +
->  static const struct of_device_id meson_pcie_of_match[] = {
->  	{
->  		.compatible = "amlogic,axg-pcie",
-> +		.data = &meson_pcie_axg_param,
-> +	},
-> +	{
-> +		.compatible = "amlogic,g12a-pcie",
-> +		.data = &meson_pcie_g12a_param,
->  	},
->  	{},
+> +	regmap_update_bits(priv->regmap, PHY_R0,
+> +			   PHY_R0_PCIE_POWER_STATE,
+> +			   FIELD_PREP(PHY_R0_PCIE_POWER_STATE, 0x1c));
+> +
+> +	return 0;
+> +}
+> +
+> +static int phy_g12a_usb3_pcie_power_off(struct phy *phy)
+> +{
+> +	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
+> +
+> +	if (priv->mode == PHY_TYPE_USB3)
+> +		return 0;
+> +
+> +	regmap_update_bits(priv->regmap, PHY_R0,
+> +			   PHY_R0_PCIE_POWER_STATE,
+> +			   FIELD_PREP(PHY_R0_PCIE_POWER_STATE, 0x1d));
+> +
+> +	return 0;
+> +}
+> +
+> +static int phy_g12a_usb3_pcie_reset(struct phy *phy)
+>  {
+>  	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
+>  	int ret;
+>  
+> -	ret = reset_control_reset(priv->reset);
+> +	if (priv->mode == PHY_TYPE_USB3)
+> +		return 0;
+> +
+> +	ret = reset_control_assert(priv->reset);
+>  	if (ret)
+>  		return ret;
+>  
+> +	udelay(PCIE_RESET_DELAY);
+> +
+> +	ret = reset_control_deassert(priv->reset);
+> +	if (ret)
+> +		return ret;
+> +
+> +	udelay(PCIE_RESET_DELAY);
+> +
+> +	return 0;
+> +}
+> +
+> +static int phy_g12a_usb3_pcie_init(struct phy *phy)
+> +{
+> +	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
+> +
+>  	if (priv->mode == PHY_TYPE_USB3)
+>  		return phy_g12a_usb3_init(phy);
+>  
+> -	/* Power UP PCIE */
+> -	/* TODO figure out when the bootloader has set USB3 mode before */
+> -	regmap_update_bits(priv->regmap, PHY_R0,
+> -			   PHY_R0_PCIE_POWER_STATE,
+> -			   FIELD_PREP(PHY_R0_PCIE_POWER_STATE, 0x1c));
+> -
+>  	return 0;
+>  }
+>  
+> @@ -297,7 +343,10 @@ static int phy_g12a_usb3_pcie_exit(struct phy *phy)
+>  {
+>  	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
+>  
+> -	return reset_control_reset(priv->reset);
+> +	if (priv->mode == PHY_TYPE_USB3)
+> +		return reset_control_reset(priv->reset);
+> +
+> +	return 0;
+>  }
+>  
+>  static struct phy *phy_g12a_usb3_pcie_xlate(struct device *dev,
+> @@ -326,6 +375,9 @@ static struct phy *phy_g12a_usb3_pcie_xlate(struct device *dev,
+>  static const struct phy_ops phy_g12a_usb3_pcie_ops = {
+>  	.init		= phy_g12a_usb3_pcie_init,
+>  	.exit		= phy_g12a_usb3_pcie_exit,
+> +	.power_on	= phy_g12a_usb3_pcie_power_on,
+> +	.power_off	= phy_g12a_usb3_pcie_power_off,
+> +	.reset		= phy_g12a_usb3_pcie_reset,
+>  	.owner		= THIS_MODULE,
 >  };
+>  
 > -- 
 > 2.22.0
 > 
