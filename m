@@ -2,46 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 47DCFB4254
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Sep 2019 22:49:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D1EBB4258
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Sep 2019 22:49:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbfIPUrb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Sep 2019 16:47:31 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52034 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727971AbfIPUrb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Sep 2019 16:47:31 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 7so797937wme.1;
-        Mon, 16 Sep 2019 13:47:28 -0700 (PDT)
+        id S2391441AbfIPUrd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Sep 2019 16:47:33 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39044 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727971AbfIPUrd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Sep 2019 16:47:33 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r3so836298wrj.6;
+        Mon, 16 Sep 2019 13:47:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QLQPAYHUACHzoMzXgGl4aMEibp9KP46d8BzQG7n7Uds=;
-        b=hm760oHm3uMSkpxZuRLuBvLrNOeyALAfldCHV1fv5zO0kMAXr9Vg6hYrsMdJdxoRRl
-         iP6pAOxGvvtlypfAf2m7olv+nkopteVT9K+4DmxuEk9fiqTvK3nxkyJUgDkftAhnsp+7
-         MTdVWhQDxmHCErYb4N8ZLbjNgLmUMnFb4rt64Z91GLefd9s29iKGvWOzuJHVv44bHpdX
-         GxD+ae5EtGMO2r3hDnkwAd1oFNhWqPBRR6tDgtxGT1tdXJFTmyC9WzFVFiE+fpxvIb33
-         GkXCRUwxzk2+GGBSw8/O3BwWqTFYB0r5Y0B1yQEo8jrk3kJPt6VzHyCjGiD+po34nnbM
-         UJrA==
-X-Gm-Message-State: APjAAAWxnD8kmzyWvIZZ/C27SIeqs74z95hA9Y6o8Gai+YdUJxuqIikx
-        ukCGvDPrzT03bbDL++sAUaw=
-X-Google-Smtp-Source: APXvYqxISkd0F2RDS0tk8mctmfGj06rkked0k46A5N+m1h5H/Qt5p0hKECOmJeL+5l43LAR/maBo9Q==
-X-Received: by 2002:a1c:dd0a:: with SMTP id u10mr674534wmg.100.1568666847741;
-        Mon, 16 Sep 2019 13:47:27 -0700 (PDT)
+        bh=epEuwg1xdHKPnwPm1RSe5GQMDsYIT9iwwxBPtEKOzsY=;
+        b=VH/BPBRoJc2UtuPBlt6h893+Rb9g0zeYgYN+IGMRAoi1+e2d3EHKAr6Fgwk6fPENN6
+         +JXy+fEBrgtbId09z3/S3BKJQlr9XkHysn+cSrq6PhRt+U4M1Zc35IAHaw3vUxEBBubV
+         42C4P60Q1W2jLtiP7sr5ehVCMMbsbRqk4z10rpMJLNEgAmHjuzlEGvKxsFhx9SnTCNUV
+         3WSfIpOrOWzpGv/VJTKLZOCaaK4PnPtCNHQCc2Q9lgD0lSXq12TVRTBbr4VpDTWZ7Pcq
+         1G8ETfuPaAguNOwm8rGNfH10nJ6B1SgxyIAFevQsQ1zgaaVYZZ/0L7z7tOyuvSDC80hr
+         EN7g==
+X-Gm-Message-State: APjAAAXK8slm0U3Uqb+VDWcqAMxFffDwPR+YAsnYrM6CkeqTRK+35g6s
+        KU2jr7jm3dwEEhuOFTEMHZg=
+X-Google-Smtp-Source: APXvYqzUQ8ilo7HfmXcpWyMR/2qbH1CpYDfMJItElWXHm2aMMFZcq3bt10sbQbWR1+fPh2AtB2M7Mw==
+X-Received: by 2002:adf:ab0b:: with SMTP id q11mr212288wrc.336.1568666851199;
+        Mon, 16 Sep 2019 13:47:31 -0700 (PDT)
 Received: from black.home (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id x6sm231437wmf.38.2019.09.16.13.47.26
+        by smtp.googlemail.com with ESMTPSA id x6sm231437wmf.38.2019.09.16.13.47.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 13:47:27 -0700 (PDT)
+        Mon, 16 Sep 2019 13:47:30 -0700 (PDT)
 From:   Denis Efremov <efremov@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>,
-        kvm@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: [PATCH v3 17/26] vfio_pci: Loop using PCI_STD_NUM_BARS
-Date:   Mon, 16 Sep 2019 23:41:49 +0300
-Message-Id: <20190916204158.6889-18-efremov@linux.com>
+        linux-scsi@vger.kernel.org, Jack Wang <jinpu.wang@cloud.ionos.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+Subject: [PATCH v3 18/26] scsi: pm80xx: Use PCI_STD_NUM_BARS
+Date:   Mon, 16 Sep 2019 23:41:50 +0300
+Message-Id: <20190916204158.6889-19-efremov@linux.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190916204158.6889-1-efremov@linux.com>
 References: <20190916204158.6889-1-efremov@linux.com>
@@ -52,139 +52,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Refactor loops to use idiomatic C style and avoid the fencepost error
-of using "i < PCI_STD_RESOURCE_END" when "i <= PCI_STD_RESOURCE_END"
-is required, e.g., commit 2f686f1d9bee ("PCI: Correct PCI_STD_RESOURCE_END
-usage").
+Replace the magic constant (6) with define PCI_STD_NUM_BARS representing
+the number of PCI BARs.
 
-To iterate through all possible BARs, loop conditions changed to the
-*number* of BARs "i < PCI_STD_NUM_BARS", instead of the index of the last
-valid BAR "i <= PCI_STD_RESOURCE_END".
-
-Cc: Cornelia Huck <cohuck@redhat.com>
-Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
 Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- drivers/vfio/pci/vfio_pci.c         | 11 ++++++----
- drivers/vfio/pci/vfio_pci_config.c  | 32 +++++++++++++++--------------
- drivers/vfio/pci/vfio_pci_private.h |  4 ++--
- 3 files changed, 26 insertions(+), 21 deletions(-)
+ drivers/scsi/pm8001/pm8001_hwi.c  | 2 +-
+ drivers/scsi/pm8001/pm8001_init.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 703948c9fbe1..cb7d220d3246 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -110,13 +110,15 @@ static inline bool vfio_pci_is_vga(struct pci_dev *pdev)
- static void vfio_pci_probe_mmaps(struct vfio_pci_device *vdev)
+diff --git a/drivers/scsi/pm8001/pm8001_hwi.c b/drivers/scsi/pm8001/pm8001_hwi.c
+index 68a8217032d0..1a3661d6be06 100644
+--- a/drivers/scsi/pm8001/pm8001_hwi.c
++++ b/drivers/scsi/pm8001/pm8001_hwi.c
+@@ -1186,7 +1186,7 @@ static void pm8001_hw_chip_rst(struct pm8001_hba_info *pm8001_ha)
+ void pm8001_chip_iounmap(struct pm8001_hba_info *pm8001_ha)
  {
- 	struct resource *res;
--	int bar;
-+	int i;
- 	struct vfio_pci_dummy_resource *dummy_res;
+ 	s8 bar, logical = 0;
+-	for (bar = 0; bar < 6; bar++) {
++	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
+ 		/*
+ 		** logical BARs for SPC:
+ 		** bar 0 and 1 - logical BAR0
+diff --git a/drivers/scsi/pm8001/pm8001_init.c b/drivers/scsi/pm8001/pm8001_init.c
+index 3374f553c617..aca913490eb5 100644
+--- a/drivers/scsi/pm8001/pm8001_init.c
++++ b/drivers/scsi/pm8001/pm8001_init.c
+@@ -401,7 +401,7 @@ static int pm8001_ioremap(struct pm8001_hba_info *pm8001_ha)
  
- 	INIT_LIST_HEAD(&vdev->dummy_resources_list);
- 
--	for (bar = PCI_STD_RESOURCES; bar <= PCI_STD_RESOURCE_END; bar++) {
--		res = vdev->pdev->resource + bar;
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-+		int bar = i + PCI_STD_RESOURCES;
-+
-+		res = &vdev->pdev->resource[bar];
- 
- 		if (!IS_ENABLED(CONFIG_VFIO_PCI_MMAP))
- 			goto no_mmap;
-@@ -399,7 +401,8 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
- 
- 	vfio_config_free(vdev);
- 
--	for (bar = PCI_STD_RESOURCES; bar <= PCI_STD_RESOURCE_END; bar++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-+		bar = i + PCI_STD_RESOURCES;
- 		if (!vdev->barmap[bar])
- 			continue;
- 		pci_iounmap(pdev, vdev->barmap[bar]);
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index f0891bd8444c..90c0b80f8acf 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -450,30 +450,32 @@ static void vfio_bar_fixup(struct vfio_pci_device *vdev)
- {
- 	struct pci_dev *pdev = vdev->pdev;
- 	int i;
--	__le32 *bar;
-+	__le32 *vbar;
- 	u64 mask;
- 
--	bar = (__le32 *)&vdev->vconfig[PCI_BASE_ADDRESS_0];
-+	vbar = (__le32 *)&vdev->vconfig[PCI_BASE_ADDRESS_0];
- 
--	for (i = PCI_STD_RESOURCES; i <= PCI_STD_RESOURCE_END; i++, bar++) {
--		if (!pci_resource_start(pdev, i)) {
--			*bar = 0; /* Unmapped by host = unimplemented to user */
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++, vbar++) {
-+		int bar = i + PCI_STD_RESOURCES;
-+
-+		if (!pci_resource_start(pdev, bar)) {
-+			*vbar = 0; /* Unmapped by host = unimplemented to user */
- 			continue;
- 		}
- 
--		mask = ~(pci_resource_len(pdev, i) - 1);
-+		mask = ~(pci_resource_len(pdev, bar) - 1);
- 
--		*bar &= cpu_to_le32((u32)mask);
--		*bar |= vfio_generate_bar_flags(pdev, i);
-+		*vbar &= cpu_to_le32((u32)mask);
-+		*vbar |= vfio_generate_bar_flags(pdev, bar);
- 
--		if (*bar & cpu_to_le32(PCI_BASE_ADDRESS_MEM_TYPE_64)) {
--			bar++;
--			*bar &= cpu_to_le32((u32)(mask >> 32));
-+		if (*vbar & cpu_to_le32(PCI_BASE_ADDRESS_MEM_TYPE_64)) {
-+			vbar++;
-+			*vbar &= cpu_to_le32((u32)(mask >> 32));
- 			i++;
- 		}
- 	}
- 
--	bar = (__le32 *)&vdev->vconfig[PCI_ROM_ADDRESS];
-+	vbar = (__le32 *)&vdev->vconfig[PCI_ROM_ADDRESS];
- 
- 	/*
- 	 * NB. REGION_INFO will have reported zero size if we weren't able
-@@ -483,14 +485,14 @@ static void vfio_bar_fixup(struct vfio_pci_device *vdev)
- 	if (pci_resource_start(pdev, PCI_ROM_RESOURCE)) {
- 		mask = ~(pci_resource_len(pdev, PCI_ROM_RESOURCE) - 1);
- 		mask |= PCI_ROM_ADDRESS_ENABLE;
--		*bar &= cpu_to_le32((u32)mask);
-+		*vbar &= cpu_to_le32((u32)mask);
- 	} else if (pdev->resource[PCI_ROM_RESOURCE].flags &
- 					IORESOURCE_ROM_SHADOW) {
- 		mask = ~(0x20000 - 1);
- 		mask |= PCI_ROM_ADDRESS_ENABLE;
--		*bar &= cpu_to_le32((u32)mask);
-+		*vbar &= cpu_to_le32((u32)mask);
- 	} else
--		*bar = 0;
-+		*vbar = 0;
- 
- 	vdev->bardirty = false;
- }
-diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
-index ee6ee91718a4..8a2c7607d513 100644
---- a/drivers/vfio/pci/vfio_pci_private.h
-+++ b/drivers/vfio/pci/vfio_pci_private.h
-@@ -86,8 +86,8 @@ struct vfio_pci_reflck {
- 
- struct vfio_pci_device {
- 	struct pci_dev		*pdev;
--	void __iomem		*barmap[PCI_STD_RESOURCE_END + 1];
--	bool			bar_mmap_supported[PCI_STD_RESOURCE_END + 1];
-+	void __iomem		*barmap[PCI_STD_NUM_BARS];
-+	bool			bar_mmap_supported[PCI_STD_NUM_BARS];
- 	u8			*pci_config_map;
- 	u8			*vconfig;
- 	struct perm_bits	*msi_perm;
+ 	pdev = pm8001_ha->pdev;
+ 	/* map pci mem (PMC pci base 0-3)*/
+-	for (bar = 0; bar < 6; bar++) {
++	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
+ 		/*
+ 		** logical BARs for SPC:
+ 		** bar 0 and 1 - logical BAR0
 -- 
 2.21.0
 
