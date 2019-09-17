@@ -2,109 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F3CCBB4A0D
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Sep 2019 11:06:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0962B4A29
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Sep 2019 11:16:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfIQJGW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Sep 2019 05:06:22 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40027 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbfIQJGV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Sep 2019 05:06:21 -0400
-Received: by mail-wm1-f67.google.com with SMTP id b24so2145152wmj.5
-        for <linux-pci@vger.kernel.org>; Tue, 17 Sep 2019 02:06:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nFF/4XckwgtJQC2Enr9cy65XMeRaKHCD6+b4rJzMQBQ=;
-        b=NQI/irYOEC0oW/wTvSbDnELKuUZeOpofWBHyAhmiMiiCEhNSbh4NplUrKqmII7kbWC
-         Q4G0P/l5i1MupUFwmcu5DFteIib7wU9MgNHMUaJNFixmlxPAuWXylmdDQaCiOe+sUrE5
-         3QiGm0Cb9e3q9ReqXGQfHfbfieGrxLaGWXul+xuyxl3/GHazE3oNK4MuKLHF/yl7sIRb
-         cNmsdVTLAKDGWytATZvP9VG1BS/7B2/RW4Kpxf0PJlzq/qask3x/4+rfYwpeNktmfig9
-         7vGPKDGgIRohp3hTtYv4y31AnvclEPpAmC3ZSAP+4t7z7IMHQl3Ddb8iyh9/KTiaJSpR
-         OXvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nFF/4XckwgtJQC2Enr9cy65XMeRaKHCD6+b4rJzMQBQ=;
-        b=dmH8OAOg4FxQSeoTUR/6zyJgGMMpFeXzjjCV5jTBn+B7WRp21Hpx5tYPGKKlGy+ljn
-         8au9pDRHK1y4oC2C91xIvawuU+qEJaqUlWQ8h6RO22B3jxO1mlUjohoCwwrIf9fxN+wK
-         H6QpKbs4vt+1Q96bD3oiCLPnDXR1iCvQCKM032QwGAP65qlxOnRFbGx7rvzLs43larBZ
-         +58BO6BwH0lgQQM3yBPg5i+aXQ+KFPWXIqpms7EWk+TPjK5XJMOcR3ndMpMQbWmRjF8W
-         YOO8OR+Yq4j4fM/ije0ZaJeagVIIfT1JJJyc5w3X9ptw49PrQwaezADGaDzcW91xPs1M
-         AMZg==
-X-Gm-Message-State: APjAAAU9o7JnbiOodn74tHvWQQ2i/2yHeA9kvzXDVBzLOqZLWZnuhegu
-        6mfNNvkC05jhRsxoft3Tpq9Tgn3DbceQ+K678UBsuw==
-X-Google-Smtp-Source: APXvYqy2Qpxco8CrOgIuQYRcL2hUkHM8zw0gIl2jvM254AOtptuMeubrSXnRgxqPY7xMUBI6qgrs+ImepthxQ7sZ4Us=
-X-Received: by 2002:a1c:4384:: with SMTP id q126mr2837215wma.153.1568711177926;
- Tue, 17 Sep 2019 02:06:17 -0700 (PDT)
+        id S1726710AbfIQJQu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Sep 2019 05:16:50 -0400
+Received: from mga02.intel.com ([134.134.136.20]:46416 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726250AbfIQJQt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 17 Sep 2019 05:16:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 02:16:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,515,1559545200"; 
+   d="scan'208";a="198631466"
+Received: from irsmsx152.ger.corp.intel.com ([163.33.192.66])
+  by orsmga002.jf.intel.com with ESMTP; 17 Sep 2019 02:16:47 -0700
+Received: from irsmsx155.ger.corp.intel.com (163.33.192.3) by
+ IRSMSX152.ger.corp.intel.com (163.33.192.66) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 17 Sep 2019 10:16:47 +0100
+Received: from irsmsx102.ger.corp.intel.com ([169.254.2.160]) by
+ irsmsx155.ger.corp.intel.com ([169.254.14.139]) with mapi id 14.03.0439.000;
+ Tue, 17 Sep 2019 10:16:46 +0100
+From:   "Kitszel, PrzemyslawX" <przemyslawx.kitszel@intel.com>
+To:     Andrew Murray <andrew.murray@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Maslowski, Karol" <karol.maslowski@intel.com>
+Subject: RE: [PATCH] PCI: Add quirk for VCA NTB
+Thread-Topic: [PATCH] PCI: Add quirk for VCA NTB
+Thread-Index: AdVqLdE+OCBbT8aES7KpBccpTfPYBwCcaLQAACZEuXA=
+Date:   Tue, 17 Sep 2019 09:16:46 +0000
+Message-ID: <5683A335CC8BE1438C3C30C49DCC38DF637CED6B@IRSMSX102.ger.corp.intel.com>
+References: <5683A335CC8BE1438C3C30C49DCC38DF637CDE70@IRSMSX102.ger.corp.intel.com>
+ <20190916160017.GV9720@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20190916160017.GV9720@e119886-lin.cambridge.arm.com>
+Accept-Language: pl-PL, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [163.33.239.180]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190916204158.6889-1-efremov@linux.com> <20190916204158.6889-19-efremov@linux.com>
-In-Reply-To: <20190916204158.6889-19-efremov@linux.com>
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Tue, 17 Sep 2019 11:06:06 +0200
-Message-ID: <CAMGffEk6=EoJTHKgsJzNs27mUdSj2zin5N8MsdtOK5rZh17JeQ@mail.gmail.com>
-Subject: Re: [PATCH v3 18/26] scsi: pm80xx: Use PCI_STD_NUM_BARS
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>,
-        Linux SCSI Mailinglist <linux-scsi@vger.kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 10:47 PM Denis Efremov <efremov@linux.com> wrote:
->
-> Replace the magic constant (6) with define PCI_STD_NUM_BARS representing
-> the number of PCI BARs.
->
-> Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
-> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-Looks fine, thanks!
-Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-> ---
->  drivers/scsi/pm8001/pm8001_hwi.c  | 2 +-
->  drivers/scsi/pm8001/pm8001_init.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/scsi/pm8001/pm8001_hwi.c b/drivers/scsi/pm8001/pm8001_hwi.c
-> index 68a8217032d0..1a3661d6be06 100644
-> --- a/drivers/scsi/pm8001/pm8001_hwi.c
-> +++ b/drivers/scsi/pm8001/pm8001_hwi.c
-> @@ -1186,7 +1186,7 @@ static void pm8001_hw_chip_rst(struct pm8001_hba_info *pm8001_ha)
->  void pm8001_chip_iounmap(struct pm8001_hba_info *pm8001_ha)
->  {
->         s8 bar, logical = 0;
-> -       for (bar = 0; bar < 6; bar++) {
-> +       for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
->                 /*
->                 ** logical BARs for SPC:
->                 ** bar 0 and 1 - logical BAR0
-> diff --git a/drivers/scsi/pm8001/pm8001_init.c b/drivers/scsi/pm8001/pm8001_init.c
-> index 3374f553c617..aca913490eb5 100644
-> --- a/drivers/scsi/pm8001/pm8001_init.c
-> +++ b/drivers/scsi/pm8001/pm8001_init.c
-> @@ -401,7 +401,7 @@ static int pm8001_ioremap(struct pm8001_hba_info *pm8001_ha)
->
->         pdev = pm8001_ha->pdev;
->         /* map pci mem (PMC pci base 0-3)*/
-> -       for (bar = 0; bar < 6; bar++) {
-> +       for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
->                 /*
->                 ** logical BARs for SPC:
->                 ** bar 0 and 1 - logical BAR0
-> --
-> 2.21.0
->
-
-
--- 
-Jack Wang
-Linux Kernel Developer
-Platform Engineering Compute (IONOS Cloud)
+T24gTW9uLCBTZXAgMTYsIDIwMTkgYXQgNjowMDowMFBNICswMDAwLCBBbmRyZXcgTXVycmF5IHdy
+b3RlOg0KPiBPbiBGcmksIFNlcCAxMywgMjAxOSBhdCAxMjoyMjozOFBNICswMDAwLCBLaXRzemVs
+LCBQcnplbXlzbGF3WCB3cm90ZToNCj4gPiBGcm9tIDg2M2Q5ZWEwZDg4ODIzM2RiZmNiZjUyMjEy
+YWU5N2IyYmM1NTdhZTYgTW9uIFNlcCAxNyAwMDowMDowMCAyMDAxDQo+ID4gRnJvbTogU2xhd29t
+aXIgUGF3bG93c2tpIDxzbGF3b21pci5wYXdsb3dza2lAaW50ZWwuY29tPg0KPiA+IERhdGU6IEZy
+aSwgMjEgU2VwIDIwMTggMTU6NTU6MTIgKzAyMDANCj4gPiBTdWJqZWN0OiBbUEFUQ0hdIFBDSTog
+QWRkIHF1aXJrIGZvciBWQ0EgTlRCDQo+ID4gDQo+ID4gSW50ZWwgVmlzdWFsIENvbXB1dGUgQWNj
+ZWxlcmF0b3IgKFZDQSkgaXMgYSBmYW1pbHkgb2YgUENJZSBhZGQtaW4gZGV2aWNlcw0KPiA+IGV4
+cG9zaW5nIGNvbXB1dGF0aW9uYWwgdW5pdHMgdmlhIE5vbiBUcmFuc3BhcmVudCBCcmlkZ2VzIChO
+VEIsIFBFWCA4N3h4KS4NCj4gPiANCj4gPiBTaW1pbGFybHkgdG8gTUlDIHgyMDAsIHRoZXJlIGlz
+IG5lZWQgdG8gYWRkIERNQSBhbGlhc2VzIHRvIGFsbG93IGJ1ZmZlcg0KPiA+IGFjY2VzcyB3aGVu
+IElPTU1VIGlzIGVuYWJsZWQuDQo+ID4gRm9sbG93aW5nIGFsaWFzZXMgYXJlIGFsbG93aW5nIGhv
+c3QgZGV2aWNlIGFuZCBjb21wdXRhdGlvbmFsIHVuaXQgdG8gYWNjZXNzDQo+ID4gZWFjaCBvdGhl
+ci4NCj4gPiBUb2dldGhlciB0aG9zZSBhbGlhc2VzIG1hcmtzIHdob2xlIFZDQSBkZXZpY2UgYXMg
+b25lIElPTU1VIGdyb3VwLg0KPiA+IA0KPiA+IEFsbCBwb3NzaWJsZSBzbG90IG51bWJlcnMgKDB4
+MjApIGFyZSB1c2VkLCBzaW5lIHdlIGFyZSB1bmFibGUgdG8gdGVsbCB3aGF0DQo+IA0KPiBzL3Np
+bmUvc2luY2UvZw0KPiANCj4gVGhhbmtzLA0KPiANCj4gQW5kcmV3IE11cnJheQ0KPg0KDQpUaGFu
+a3MsDQoNCkkgd2lsbCBzZW50IHYyIHBhdGNoIGluIGEgbW9tZW50Lg0KDQpQcnplbWVrIEtpdHN6
+ZWwNCg0KPiA+IHNsb3QgaXMgdXNlZCBvbiBvdGhlciBzaWRlLg0KPiA+IFRoaXMgcXVpcmsgaXMg
+aW50ZW5kZWQgZm9yIGJvdGggaG9zdCBhbmQgY29tcHV0YXRpb25hbCB1bml0IHNpZGVzLg0KPiA+
+IFRoZSBWQ0EgZGV2aWNlcyBoYXZlIHVwIHRvIDUgZnVuY3Rpb25zIC0gNCBmb3IgRE1BIGNoYW5u
+ZWxzIGFuZCBvbmUNCj4gPiBhZGRpdGlvbmFsLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFNs
+YXdvbWlyIFBhd2xvd3NraSA8c2xhd29taXIucGF3bG93c2tpQGludGVsLmNvbT4NCj4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBQcnplbWVrIEtpdHN6ZWwgPHByemVteXNsYXd4LmtpdHN6ZWxAaW50ZWwuY29t
+Pg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BjaS9xdWlya3MuYyB8IDMyICsrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzMiBpbnNlcnRpb25zKCsp
+DQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3F1aXJrcy5jIGIvZHJpdmVycy9w
+Y2kvcXVpcmtzLmMNCj4gPiBpbmRleCBkZWQ2MDc1N2E1NzMuLjM0OWNhMjhlMGFlNCAxMDA2NDQN
+Cj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9xdWlya3MuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL3F1
+aXJrcy5jDQo+ID4gQEAgLTQwNjIsNiArNDA2MiwzOCBAQCBzdGF0aWMgdm9pZCBxdWlya19taWNf
+eDIwMF9kbWFfYWxpYXMoc3RydWN0IHBjaV9kZXYgKnBkZXYpDQo+ID4gIERFQ0xBUkVfUENJX0ZJ
+WFVQX0hFQURFUihQQ0lfVkVORE9SX0lEX0lOVEVMLCAweDIyNjAsIHF1aXJrX21pY194MjAwX2Rt
+YV9hbGlhcyk7DQo+ID4gIERFQ0xBUkVfUENJX0ZJWFVQX0hFQURFUihQQ0lfVkVORE9SX0lEX0lO
+VEVMLCAweDIyNjQsIHF1aXJrX21pY194MjAwX2RtYV9hbGlhcyk7DQo+ID4gIA0KPiA+ICsvKg0K
+PiA+ICsgKiBJbnRlbCBWaXN1YWwgQ29tcHV0ZSBBY2NlbGVyYXRvciAoVkNBKSBpcyBhIGZhbWls
+eSBvZiBQQ0llIGFkZC1pbiBkZXZpY2VzDQo+ID4gKyAqIGV4cG9zaW5nIGNvbXB1dGF0aW9uYWwg
+dW5pdHMgdmlhIE5vbiBUcmFuc3BhcmVudCBCcmlkZ2VzIChOVEIsIFBFWCA4N3h4KS4NCj4gPiAr
+ICogU2ltaWxhcmx5IHRvIE1JQyB4MjAwLCB0aGVyZSBpcyBuZWVkIHRvIGFkZCBETUEgYWxpYXNl
+cyB0byBhbGxvdyBidWZmZXINCj4gPiArICogYWNjZXNzIHdoZW4gSU9NTVUgaXMgZW5hYmxlZC4N
+Cj4gPiArICogRm9sbG93aW5nIGFsaWFzZXMgYXJlIGFsbG93aW5nIGhvc3QgZGV2aWNlIGFuZCBj
+b21wdXRhdGlvbmFsIHVuaXQgdG8gYWNjZXNzDQo+ID4gKyAqIGVhY2ggb3RoZXIuIFRvZ2V0aGVy
+IHRob3NlIGFsaWFzZXMgbWFya3Mgd2hvbGUgVkNBIGRldmljZSBhcyBvbmUgSU9NTVUgZ3JvdXAu
+DQo+ID4gKyAqIEFsbCBwb3NzaWJsZSBzbG90IG51bWJlcnMgKDB4MjApIGFyZSB1c2VkLCBzaW5l
+IHdlIGFyZSB1bmFibGUgdG8gdGVsbCB3aGF0DQo+ID4gKyAqIHNsb3QgaXMgdXNlZCBvbiBvdGhl
+ciBzaWRlLg0KPiA+ICsgKiBUaGlzIHF1aXJrIGlzIGludGVuZGVkIGZvciBib3RoIGhvc3QgYW5k
+IGNvbXB1dGF0aW9uYWwgdW5pdCBzaWRlcy4NCj4gPiArICogVGhlIFZDQSBkZXZpY2VzIGhhdmUg
+dXAgdG8gNSBmdW5jdGlvbnMgKDQgZm9yIERNQSBjaGFubmVscyBhbmQgMSBhZGRpdGlvbmFsKS4N
+Cj4gPiArICovDQo+ID4gK3N0YXRpYyB2b2lkIHF1aXJrX3BleF92Y2FfYWxpYXMoc3RydWN0IHBj
+aV9kZXYgKnBkZXYpDQo+ID4gK3sNCj4gPiArCWNvbnN0IHVuc2lnbmVkIGludCBudW1fcGNpX3Ns
+b3RzID0gMHgyMDsNCj4gPiArCXVuc2lnbmVkIGludCBzbG90Ow0KPiA+ICsNCj4gPiArCWZvciAo
+c2xvdCA9IDA7IHNsb3QgPCBudW1fcGNpX3Nsb3RzOyBzbG90KyspIHsNCj4gPiArCQlwY2lfYWRk
+X2RtYV9hbGlhcyhwZGV2LCBQQ0lfREVWRk4oc2xvdCwgMHgwKSk7DQo+ID4gKwkJcGNpX2FkZF9k
+bWFfYWxpYXMocGRldiwgUENJX0RFVkZOKHNsb3QsIDB4MSkpOw0KPiA+ICsJCXBjaV9hZGRfZG1h
+X2FsaWFzKHBkZXYsIFBDSV9ERVZGTihzbG90LCAweDIpKTsNCj4gPiArCQlwY2lfYWRkX2RtYV9h
+bGlhcyhwZGV2LCBQQ0lfREVWRk4oc2xvdCwgMHgzKSk7DQo+ID4gKwkJcGNpX2FkZF9kbWFfYWxp
+YXMocGRldiwgUENJX0RFVkZOKHNsb3QsIDB4NCkpOw0KPiA+ICsJfQ0KPiA+ICt9DQo+ID4gK0RF
+Q0xBUkVfUENJX0ZJWFVQX0hFQURFUihQQ0lfVkVORE9SX0lEX0lOVEVMLCAweDI5NTQsIHF1aXJr
+X3BleF92Y2FfYWxpYXMpOw0KPiA+ICtERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRP
+Ul9JRF9JTlRFTCwgMHgyOTU1LCBxdWlya19wZXhfdmNhX2FsaWFzKTsNCj4gPiArREVDTEFSRV9Q
+Q0lfRklYVVBfSEVBREVSKFBDSV9WRU5ET1JfSURfSU5URUwsIDB4Mjk1NiwgcXVpcmtfcGV4X3Zj
+YV9hbGlhcyk7DQo+ID4gK0RFQ0xBUkVfUENJX0ZJWFVQX0hFQURFUihQQ0lfVkVORE9SX0lEX0lO
+VEVMLCAweDI5NTgsIHF1aXJrX3BleF92Y2FfYWxpYXMpOw0KPiA+ICtERUNMQVJFX1BDSV9GSVhV
+UF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHgyOTU5LCBxdWlya19wZXhfdmNhX2FsaWFz
+KTsNCj4gPiArREVDTEFSRV9QQ0lfRklYVVBfSEVBREVSKFBDSV9WRU5ET1JfSURfSU5URUwsIDB4
+Mjk1QSwgcXVpcmtfcGV4X3ZjYV9hbGlhcyk7DQo+ID4gKw0KPiA+ICAvKg0KPiA+ICAgKiBUaGUg
+SU9NTVUgYW5kIGludGVycnVwdCBjb250cm9sbGVyIG9uIEJyb2FkY29tIFZ1bGNhbi9DYXZpdW0g
+VGh1bmRlclgyIGFyZQ0KPiA+ICAgKiBhc3NvY2lhdGVkIG5vdCBhdCB0aGUgcm9vdCBidXMsIGJ1
+dCBhdCBhIGJyaWRnZSBiZWxvdy4gVGhpcyBxdWlyayBhdm9pZHMNCj4gPiAtLSANCj4gPiAyLjIy
+LjANCj4gPg0K
