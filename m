@@ -2,109 +2,242 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 174DEB43B2
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Sep 2019 00:01:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57187B457C
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Sep 2019 04:23:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732285AbfIPWBc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Sep 2019 18:01:32 -0400
-Received: from mail-me1aus01hn2101.outbound.protection.outlook.com ([52.103.198.101]:33965
-        "EHLO AUS01-ME1-obe.outbound.protection.outlook.com"
+        id S1731656AbfIQCXT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Sep 2019 22:23:19 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:55728 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730459AbfIPWBb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 16 Sep 2019 18:01:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EqjbPUza2A6d0lFNLGKmlG7ThvHD5vitTo+bi3FU/wIJJ/PDt8P1fyxXeTtiTZDmDAEXcG0rowkrHlAKGM31EWXj21nwaM0myR2Hnj5PBaABN7zNjgwZNd1sOQs9EFM9DVVpi7rJFsebS9mM8+NtFvgHAruXJOpRApdA/W/MojrmIAxEVcAXbZtzTg/0NncDa2+b+eYIww45ZSViTdYj5ZHytp14zbCzVHT0ZKrFGYAG6lf1zht8e6lgZYGM6siu84sAc15kfgfkBB53oCTDB2L0x8xm3hKQrxjUi/l74yfUeI2JNpfZ0fTRdoi7ePlkLc/rf2Yf5xYeogns+onbTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ctOHH2mTYytKOkOB/KQgjBv82LXnbGG7XKgNOOQYhPo=;
- b=Pklbay8EtIRSHHJ+giOLIjI4CALdIOQFKd9FxiC8S+0SUhOamobsnPu9ACyGSp2voZOVkNCH0pys31kvPsm/Pjw1wEfMz89jg8ez1TXPqwbaPUoF0GarKbeIrFlgjhl3a+oY5QFPd7lhtkAk+JAvGTbTyK/fxYJoE19Ie0v06yKfXAT9j2GFhElbysJKBPRYVfvZ0xaGOrTIQ1EuGc7A6wmbqZFuVYOmsr4Fv3muZm+wJ+qwgrqU1XSsI1UXhfmGMjCEn6RYHGqFGp2K17lEbWxsUXYgRMkBkW9HFo01PxViVL7BYSjKwGf1cnVHbmjq/DzqR5hIFS+1ekdGR1sFWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=student.uts.edu.au; dmarc=pass action=none
- header.from=student.uts.edu.au; dkim=pass header.d=student.uts.edu.au;
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=studentutsedu.onmicrosoft.com; s=selector2-studentutsedu-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ctOHH2mTYytKOkOB/KQgjBv82LXnbGG7XKgNOOQYhPo=;
- b=IjsCbRMhCduvV6L78tsb5KRKSVWmyy5++5QHnL2lTdcr9RJjTWVJnGQqu9KI9ApZzQdda76i37CmMRNMH79dSsWDBlkjfhgQa9VptuQqHRRsiDpn8AqzmjwcbdqFcnSW+JJ5CX9OF9p1hHaOFc17YDCEPSeJg6QvoVQ5MRvYiV8=
-Received: from SYBPR01MB3322.ausprd01.prod.outlook.com (20.177.136.22) by
- SYBPR01MB4780.ausprd01.prod.outlook.com (20.178.191.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.24; Mon, 16 Sep 2019 22:01:26 +0000
-Received: from SYBPR01MB3322.ausprd01.prod.outlook.com
- ([fe80::6442:4ab7:7fa:8342]) by SYBPR01MB3322.ausprd01.prod.outlook.com
- ([fe80::6442:4ab7:7fa:8342%5]) with mapi id 15.20.2263.023; Mon, 16 Sep 2019
- 22:01:26 +0000
-From:   <13190436@student.uts.edu.au>
-To:     Lily Fuller <Lily.J.Fuller@student.uts.edu.au>
-Subject: Darlehensangebot
-Thread-Topic: Darlehensangebot
-Thread-Index: AQHVbNpFaNSYxJWrm0Ogfk3NQgM/8w==
-Date:   Mon, 16 Sep 2019 22:01:20 +0000
-Message-ID: <SYBPR01MB3322D69DBA6CB9A89B262B04A48C0@SYBPR01MB3322.ausprd01.prod.outlook.com>
-Reply-To: "chelsealoan4@gmail.com" <chelsealoan4@gmail.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LNXP265CA0047.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:5c::35) To SYBPR01MB3322.ausprd01.prod.outlook.com
- (2603:10c6:10:20::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Lily.J.Fuller@student.uts.edu.au; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [154.160.24.146]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0cfb6736-f7d0-4ae0-1024-08d73af167c1
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:SYBPR01MB4780;
-x-ms-traffictypediagnostic: SYBPR01MB4780:
-x-microsoft-antispam-prvs: <SYBPR01MB47807AD7D9803DAD7810067BD18C0@SYBPR01MB4780.ausprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-forefront-prvs: 0162ACCC24
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(136003)(366004)(39860400002)(199004)(189003)(66476007)(66946007)(64756008)(66806009)(5660300002)(7696005)(2860700004)(786003)(22416003)(99286004)(316002)(486006)(25786009)(3846002)(6116002)(52116002)(88552002)(7416002)(26005)(102836004)(7116003)(6506007)(386003)(2906002)(6666004)(6636002)(2171002)(55016002)(33656002)(476003)(66556008)(66446008)(66574012)(256004)(6862004)(14444005)(9686003)(71190400001)(8796002)(71200400001)(43066004)(6436002)(186003)(305945005)(3480700005)(52536014)(5003540100004)(478600001)(8936002)(325944009)(81166006)(81156014)(14454004)(7736002)(221733001)(4744005)(66066001)(8676002)(74316002)(81742002);DIR:OUT;SFP:1501;SCL:1;SRVR:SYBPR01MB4780;H:SYBPR01MB3322.ausprd01.prod.outlook.com;FPR:;SPF:None;LANG:de;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: student.uts.edu.au does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Z8yzY1QT0MDE+gPp3+6ay5Ggdl9lFOLkskkeRQLsZRwZNtLt5cFR1IJ28mEgVRgjGqPlbDDlVSG2uMVKo9p42rTDRgWQRknmZr3xVlMmU8wGPGLakme7yHDqabGAnHLnry80ZJZ05VKn+478ay9LlpLQnQzYfoaMStmYcy3zq1qaQJPZoVaESvNXeES+Z+8Za+FfcNzeGONApcPQ7wRCPG4WCdtJH9Xbboz/VIi6gu7YQe8HWRTwm/dRTho9px+qfulHzPRGDcV1/bVShsas4UIneL2yfjYQopnm8Pc7Q5CvPF6JNvzYPYd411/CmtALUHuJXomvx6xxcV7hQP30QBuJnIBKjJ9t5INc/di5Vx0FXm92Rym9Cjrif1dJTqA5A3TVN6ouKC87ghOjKVtCr6CLAYGZ/ispAqiiiJRHsNg=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <BC2F1EB81C3C1642BF322FC0EBADF28C@ausprd01.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1728639AbfIQCXT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 16 Sep 2019 22:23:19 -0400
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 9B3063A5AE8D90C37CC6;
+        Tue, 17 Sep 2019 10:23:16 +0800 (CST)
+Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 17 Sep 2019 10:23:16 +0800
+Received: from [127.0.0.1] (10.40.49.11) by dggeme758-chm.china.huawei.com
+ (10.3.19.104) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Tue, 17
+ Sep 2019 10:23:16 +0800
+Subject: Re: [PATCH] PCI/AER: Fix AER/sysfs sriov_numvfs deadlock in
+ pcie_do_recovery()
+To:     <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <linuxarm@huawei.com>
+References: <1567737238-48866-1-git-send-email-f.fangjian@huawei.com>
+From:   Jay Fang <f.fangjian@huawei.com>
+Message-ID: <82c141d3-6346-c4a3-9ebb-41046ef42dfa@huawei.com>
+Date:   Tue, 17 Sep 2019 10:23:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-X-OriginatorOrg: student.uts.edu.au
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0cfb6736-f7d0-4ae0-1024-08d73af167c1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2019 22:01:20.6045
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e8911c26-cf9f-4a9c-878e-527807be8791
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: M4jJf7S7fVVEfZoa1RABm7859bwhNPboyGAZccQHDrLhI2MvzEI9mmpM9guL5s6TH9RUnZuKDF85pdVkoUTqwuvVap6mP3uovCvbN3Cw/7Y=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SYBPR01MB4780
+In-Reply-To: <1567737238-48866-1-git-send-email-f.fangjian@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.40.49.11]
+X-ClientProxiedBy: dggeme711-chm.china.huawei.com (10.1.199.107) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Sch=F6nen Tag
+Kindly Ping...
 
-Ben=F6tigen Sie ein echtes Darlehen online, um Ihre Rechnungen zu sichern u=
-nd starten Sie ein
-neues Gesch=E4ft? Ben=F6tigen Sie einen pers=F6nlichen Kredit? Wir bieten a=
-lle Arten von Darlehen
-mit 3% zinssatz und auch mit einem erschwinglichen r=FCckzahlungsbedingunge=
-n.
 
-F=FCr weitere Informationen antworten Sie mit den unten stehenden Informati=
-onen.
 
-Name:
-Land:
-Zustand:
-Ben=F6tigte Menge:
-Dauer:
-Telefonnummer:
-Monatliches Einkommen:
+Best Regards,
+Jay
 
-Bitte beachten Sie, dass auf Kontakt-E-Mail:
-chelsealoan4@gmail.com
+
+On 2019/9/6 10:33, Jay Fang wrote:
+> A deadlock triggered by a NONFATAL AER event during a sysfs "sriov_numvfs"
+> operation:
+> 
+>   enable one VF
+>   # echo 1 > /sys/devices/pci0000:74/0000:74:00.0/0000:75:00.0/sriov_numvfs
+> 
+>   The sysfs "sriov_numvfs" side is:
+> 
+>     sriov_numvfs_store
+>       device_lock                         # hold the device_lock
+>         ...
+>         pci_enable_sriov
+>           sriov_enable
+>             ...
+>             pci_device_add
+>               down_write(&pci_bus_sem)    # wait for the pci_bus_sem
+> 
+>   The AER side is:
+> 
+>     pcie_do_recovery
+>       pci_walk_bus
+>         down_read(&pci_bus_sem)           # hold the pci_bus_sem
+>           report_resume
+>             device_lock                   # wait for device_unlock()
+> 
+> The calltrace is as below:
+> [  258.411464] INFO: task kworker/0:1:13 blocked for more than 120 seconds.
+> [  258.418139]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
+> [  258.424379] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> [  258.432172] kworker/0:1     D    0    13      2 0x00000028
+> [  258.437640] Workqueue: events aer_recover_work_func
+> [  258.442496] Call trace:
+> [  258.444933]  __switch_to+0xb4/0x1b8
+> [  258.448409]  __schedule+0x1ec/0x720
+> [  258.451884]  schedule+0x38/0x90
+> [  258.455012]  schedule_preempt_disabled+0x20/0x38
+> [  258.459610]  __mutex_lock.isra.1+0x150/0x518
+> [  258.463861]  __mutex_lock_slowpath+0x10/0x18
+> [  258.468112]  mutex_lock+0x34/0x40
+> [  258.471413]  report_resume+0x1c/0x78
+> [  258.474973]  pci_walk_bus+0x58/0xb0
+> [  258.478451]  pcie_do_recovery+0x18c/0x248
+> [  258.482445]  aer_recover_work_func+0xe0/0x118
+> [  258.486783]  process_one_work+0x1e4/0x468
+> [  258.490776]  worker_thread+0x40/0x450
+> [  258.494424]  kthread+0x128/0x130
+> [  258.497639]  ret_from_fork+0x10/0x1c
+> [  258.501329] INFO: task flr.sh:4534 blocked for more than 120 seconds.
+> [  258.507742]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
+> [  258.513980] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> [  258.521774] flr.sh          D    0  4534   4504 0x00000000
+> [  258.527235] Call trace:
+> [  258.529671]  __switch_to+0xb4/0x1b8
+> [  258.533146]  __schedule+0x1ec/0x720
+> [  258.536619]  schedule+0x38/0x90
+> [  258.539749]  rwsem_down_write_failed+0x14c/0x210
+> [  258.544347]  down_write+0x48/0x60
+> [  258.547648]  pci_device_add+0x1a0/0x290
+> [  258.551469]  pci_iov_add_virtfn+0x190/0x358
+> [  258.555633]  sriov_enable+0x24c/0x480
+> [  258.559279]  pci_enable_sriov+0x14/0x28
+> [  258.563101]  hisi_zip_sriov_configure+0x64/0x100 [hisi_zip]
+> [  258.568649]  sriov_numvfs_store+0xc4/0x190
+> [  258.572728]  dev_attr_store+0x18/0x28
+> [  258.576375]  sysfs_kf_write+0x3c/0x50
+> [  258.580024]  kernfs_fop_write+0x114/0x1d8
+> [  258.584018]  __vfs_write+0x18/0x38
+> [  258.587404]  vfs_write+0xa4/0x1b0
+> [  258.590705]  ksys_write+0x60/0xd8
+> [  258.594007]  __arm64_sys_write+0x18/0x20
+> [  258.597914]  el0_svc_common+0x5c/0x100
+> [  258.601646]  el0_svc_handler+0x2c/0x80
+> [  258.605381]  el0_svc+0x8/0xc
+> [  379.243461] INFO: task kworker/0:1:13 blocked for more than 241 seconds.
+> [  379.250134]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
+> [  379.256373] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> 
+> Using the same locking order is a good way to solve this AB->BA kind of
+> deadlock. Adjust the locking order of the AER side, taking device_lock
+> firstly and then the pci_bus_sem, to make sure it's locking order is the
+> same as the sriov side. This patch solves the above deadlock issue only
+> with little changes.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203981
+> Signed-off-by: Jay Fang <f.fangjian@huawei.com>
+> ---
+>  drivers/pci/pcie/err.c | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 773197a..dcc8638 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -50,7 +50,6 @@ static int report_error_detected(struct pci_dev *dev,
+> 	pci_ers_result_t vote;
+> 	const struct pci_error_handlers *err_handler;
+> 
+> -	device_lock(&dev->dev);
+> 	if (!pci_dev_set_io_state(dev, state) ||
+> 		!dev->driver ||
+> 		!dev->driver->err_handler ||
+> @@ -71,7 +70,6 @@ static int report_error_detected(struct pci_dev *dev,
+> 	}
+> 	pci_uevent_ers(dev, vote);
+> 	*result = merge_result(*result, vote);
+> -	device_unlock(&dev->dev);
+> 	return 0;
+>  }
+> 
+> @@ -90,7 +88,6 @@ static int report_mmio_enabled(struct pci_dev *dev, void *data)
+> 	pci_ers_result_t vote, *result = data;
+> 	const struct pci_error_handlers *err_handler;
+> 
+> -	device_lock(&dev->dev);
+> 	if (!dev->driver ||
+> 		!dev->driver->err_handler ||
+> 		!dev->driver->err_handler->mmio_enabled)
+> @@ -100,7 +97,6 @@ static int report_mmio_enabled(struct pci_dev *dev, void *data)
+> 	vote = err_handler->mmio_enabled(dev);
+> 	*result = merge_result(*result, vote);
+>  out:
+> -	device_unlock(&dev->dev);
+> 	return 0;
+>  }
+> 
+> @@ -109,7 +105,6 @@ static int report_slot_reset(struct pci_dev *dev, void *data)
+> 	pci_ers_result_t vote, *result = data;
+> 	const struct pci_error_handlers *err_handler;
+> 
+> -	device_lock(&dev->dev);
+> 	if (!dev->driver ||
+> 		!dev->driver->err_handler ||
+> 		!dev->driver->err_handler->slot_reset)
+> @@ -119,7 +114,6 @@ static int report_slot_reset(struct pci_dev *dev, void *data)
+> 	vote = err_handler->slot_reset(dev);
+> 	*result = merge_result(*result, vote);
+>  out:
+> -	device_unlock(&dev->dev);
+> 	return 0;
+>  }
+> 
+> @@ -127,7 +121,6 @@ static int report_resume(struct pci_dev *dev, void *data)
+>  {
+> 	const struct pci_error_handlers *err_handler;
+> 
+> -	device_lock(&dev->dev);
+> 	if (!pci_dev_set_io_state(dev, pci_channel_io_normal) ||
+> 		!dev->driver ||
+> 		!dev->driver->err_handler ||
+> @@ -138,7 +131,6 @@ static int report_resume(struct pci_dev *dev, void *data)
+> 	err_handler->resume(dev);
+>  out:
+> 	pci_uevent_ers(dev, PCI_ERS_RESULT_RECOVERED);
+> -	device_unlock(&dev->dev);
+> 	return 0;
+>  }
+> 
+> @@ -198,6 +190,8 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+> 		dev = dev->bus->self;
+> 	bus = dev->subordinate;
+> 
+> +	device_lock(&dev->dev);
+> +
+> 	pci_dbg(dev, "broadcast error_detected message\n");
+> 	if (state == pci_channel_io_frozen)
+> 		pci_walk_bus(bus, report_frozen_detected, &status);
+> @@ -231,12 +225,14 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+> 	pci_dbg(dev, "broadcast resume message\n");
+> 	pci_walk_bus(bus, report_resume, &status);
+> 
+> +	device_unlock(&dev->dev);
+> 	pci_aer_clear_device_status(dev);
+> 	pci_cleanup_aer_uncorrect_error_status(dev);
+> 	pci_info(dev, "AER: Device recovery successful\n");
+> 	return;
+> 
+>  failed:
+> +	device_unlock(&dev->dev);
+> 	pci_uevent_ers(dev, PCI_ERS_RESULT_DISCONNECT);
+> 
+> 	/* TODO: Should kernel panic here? */
+> --
+> 2.8.1
+> 
+> .
+> 
+
