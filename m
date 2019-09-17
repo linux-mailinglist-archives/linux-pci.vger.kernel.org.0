@@ -2,101 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F42BB4FBE
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Sep 2019 15:57:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7DA7B4FE0
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Sep 2019 16:05:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbfIQN4c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Sep 2019 09:56:32 -0400
-Received: from mga01.intel.com ([192.55.52.88]:12998 "EHLO mga01.intel.com"
+        id S1726391AbfIQOFn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Sep 2019 10:05:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:56556 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725902AbfIQN4B (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 17 Sep 2019 09:56:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 06:56:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,516,1559545200"; 
-   d="scan'208";a="186151888"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by fmsmga008.fm.intel.com with ESMTP; 17 Sep 2019 06:56:00 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
- ORSMSX106.amr.corp.intel.com ([169.254.1.22]) with mapi id 14.03.0439.000;
- Tue, 17 Sep 2019 06:56:00 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        id S1725773AbfIQOFn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 17 Sep 2019 10:05:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E72028;
+        Tue, 17 Sep 2019 07:05:43 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70FEA3F575;
+        Tue, 17 Sep 2019 07:05:42 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 15:05:33 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "Busch, Keith" <keith.busch@intel.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "helgaas@kernel.org" <helgaas@kernel.org>
 Subject: Re: [PATCH 2/2] PCI: vmd: Fix shadow offsets to reflect spec changes
-Thread-Topic: [PATCH 2/2] PCI: vmd: Fix shadow offsets to reflect spec
- changes
-Thread-Index: AQHVbMjFlFehq2RCUUKRkku/dOKnLKcwJJgAgAA2cgA=
-Date:   Tue, 17 Sep 2019 13:55:59 +0000
-Message-ID: <87f1f92276becb6f83d040b36697ef8084e63105.camel@intel.com>
+Message-ID: <20190917140525.GA6377@e121166-lin.cambridge.arm.com>
 References: <20190916135435.5017-1-jonathan.derrick@intel.com>
-         <20190916135435.5017-3-jonathan.derrick@intel.com>
-         <20190917104106.GB32602@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190917104106.GB32602@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.255.2.79]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1B41BE72A9A3F74288515073D050B4FF@intel.com>
-Content-Transfer-Encoding: base64
+ <20190916135435.5017-3-jonathan.derrick@intel.com>
+ <20190917104106.GB32602@e121166-lin.cambridge.arm.com>
+ <87f1f92276becb6f83d040b36697ef8084e63105.camel@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87f1f92276becb6f83d040b36697ef8084e63105.camel@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA5LTE3IGF0IDExOjQxICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
-ZToNCj4gT24gTW9uLCBTZXAgMTYsIDIwMTkgYXQgMDc6NTQ6MzVBTSAtMDYwMCwgSm9uIERlcnJp
-Y2sgd3JvdGU6DQo+ID4gVGhlIHNoYWRvdyBvZmZzZXQgc2NyYXRjaHBhZCB3YXMgbW92ZWQgdG8g
-MHgyMDAwLTB4MjAxMC4gVXBkYXRlIHRoZQ0KPiA+IGxvY2F0aW9uIHRvIGdldCB0aGUgY29ycmVj
-dCBzaGFkb3cgb2Zmc2V0Lg0KPiANCj4gSGkgSm9uLA0KPiANCj4gd2hhdCBkb2VzICJ3YXMgbW92
-ZWQiIG1lYW4gPyBXb3VsZCB0aGlzIGNvZGUgc3RpbGwgd29yayBvbiBwcmV2aW91cyBIVyA/DQo+
-IA0KVGhlIHByZXZpb3VzIGNvZGUgd29uJ3Qgd29yayBvbiAobm90IHlldCByZWxlYXNlZCkgaHcu
-IEd1ZXN0cyB1c2luZyB0aGUNCmRvbWFpbiB3aWxsIHNlZSB0aGUgd3Jvbmcgb2Zmc2V0IGFuZCBl
-bnVtZXJhdGUgdGhlIGRvbWFpbiBpbmNvcnJlY3RseS4NCg0KDQo+IFdlIG11c3QgbWFrZSBzdXJl
-IHRoYXQgdGhlIGFkZHJlc3MgbW92ZSBpcyBtYW5hZ2VkIHNlYW1sZXNzbHkgYnkgdGhlDQo+IGtl
-cm5lbC4NCklmIHdlIG5lZWQgdG8gYXZvaWQgY2hhbmdpbmcgYWRkcmVzc2luZyB3aXRoaW4gc3Rh
-YmxlLCB0aGVuIHRoYXQncw0KZmluZS4gQnV0IG90aGVyd2lzZSBpcyB0aGVyZSBhbiBpc3N1ZSBt
-ZXJnaW5nIHdpdGggNS40Pw0KDQoNCj4gDQo+IEZvciB0aGUgdGltZSBiZWluZyBJIGhhdmUgdG8g
-ZHJvcCB0aGlzIGZpeCBhbmQgaXQgaXMgZXh0cmVtZWx5DQo+IHRpZ2h0IHRvIGdldCBpdCBpbiB2
-NS40LCBJIGNhbid0IHNlbmQgc3RhYmxlIGNoYW5nZXMgdGhhdCB3ZSBtYXkNCj4gaGF2ZSB0byBy
-ZXZlcnQuDQpBcmVuJ3Qgd2UgaW4gdGhlIGJlZ2lubmluZyBvZiB0aGUgbWVyZ2Ugd2luZG93Pw0K
-DQoNCj4gDQo+IFRoYW5rcywNCj4gTG9yZW56bw0KPiANCj4gPiBDYzogc3RhYmxlQHZnZXIua2Vy
-bmVsLm9yZyAjIHY1LjIrDQo+ID4gRml4ZXM6IDY3ODg5NThlICgiUENJOiB2bWQ6IEFzc2lnbiBt
-ZW1iYXIgYWRkcmVzc2VzIGZyb20gc2hhZG93IHJlZ2lzdGVycyIpDQo+ID4gU2lnbmVkLW9mZi1i
-eTogSm9uIERlcnJpY2sgPGpvbmF0aGFuLmRlcnJpY2tAaW50ZWwuY29tPg0KPiA+IC0tLQ0KPiA+
-ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jIHwgOSArKysrKystLS0NCj4gPiAgMSBmaWxl
-IGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci92bWQuYyBiL2RyaXZlcnMvcGNpL2NvbnRy
-b2xsZXIvdm1kLmMNCj4gPiBpbmRleCAyZTRkYTNmNTFkNmIuLmEzNWQzZjM5OTZkNyAxMDA2NDQN
-Cj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jDQo+ID4gKysrIGIvZHJpdmVy
-cy9wY2kvY29udHJvbGxlci92bWQuYw0KPiA+IEBAIC0zMSw2ICszMSw5IEBADQo+ID4gICNkZWZp
-bmUgUENJX1JFR19WTUxPQ0sJCTB4NzANCj4gPiAgI2RlZmluZSBNQjJfU0hBRE9XX0VOKHZtbG9j
-aykJKHZtbG9jayAmIDB4MikNCj4gPiAgDQo+ID4gKyNkZWZpbmUgTUIyX1NIQURPV19PRkZTRVQJ
-MHgyMDAwDQo+ID4gKyNkZWZpbmUgTUIyX1NIQURPV19TSVpFCQkxNg0KPiA+ICsNCj4gPiAgZW51
-bSB2bWRfZmVhdHVyZXMgew0KPiA+ICAJLyoNCj4gPiAgCSAqIERldmljZSBtYXkgY29udGFpbiBy
-ZWdpc3RlcnMgd2hpY2ggaGludCB0aGUgcGh5c2ljYWwgbG9jYXRpb24gb2YgdGhlDQo+ID4gQEAg
-LTU3OCw3ICs1ODEsNyBAQCBzdGF0aWMgaW50IHZtZF9lbmFibGVfZG9tYWluKHN0cnVjdCB2bWRf
-ZGV2ICp2bWQsIHVuc2lnbmVkIGxvbmcgZmVhdHVyZXMpDQo+ID4gIAkJdTMyIHZtbG9jazsNCj4g
-PiAgCQlpbnQgcmV0Ow0KPiA+ICANCj4gPiAtCQltZW1iYXIyX29mZnNldCA9IDB4MjAxODsNCj4g
-PiArCQltZW1iYXIyX29mZnNldCA9IE1CMl9TSEFET1dfT0ZGU0VUICsgTUIyX1NIQURPV19TSVpF
-Ow0KPiA+ICAJCXJldCA9IHBjaV9yZWFkX2NvbmZpZ19kd29yZCh2bWQtPmRldiwgUENJX1JFR19W
-TUxPQ0ssICZ2bWxvY2spOw0KPiA+ICAJCWlmIChyZXQgfHwgdm1sb2NrID09IH4wKQ0KPiA+ICAJ
-CQlyZXR1cm4gLUVOT0RFVjsNCj4gPiBAQCAtNTkwLDkgKzU5Myw5IEBAIHN0YXRpYyBpbnQgdm1k
-X2VuYWJsZV9kb21haW4oc3RydWN0IHZtZF9kZXYgKnZtZCwgdW5zaWduZWQgbG9uZyBmZWF0dXJl
-cykNCj4gPiAgCQkJaWYgKCFtZW1iYXIyKQ0KPiA+ICAJCQkJcmV0dXJuIC1FTk9NRU07DQo+ID4g
-IAkJCW9mZnNldFswXSA9IHZtZC0+ZGV2LT5yZXNvdXJjZVtWTURfTUVNQkFSMV0uc3RhcnQgLQ0K
-PiA+IC0JCQkJCQlyZWFkcShtZW1iYXIyICsgMHgyMDA4KTsNCj4gPiArCQkJCQlyZWFkcShtZW1i
-YXIyICsgTUIyX1NIQURPV19PRkZTRVQpOw0KPiA+ICAJCQlvZmZzZXRbMV0gPSB2bWQtPmRldi0+
-cmVzb3VyY2VbVk1EX01FTUJBUjJdLnN0YXJ0IC0NCj4gPiAtCQkJCQkJcmVhZHEobWVtYmFyMiAr
-IDB4MjAxMCk7DQo+ID4gKwkJCQkJcmVhZHEobWVtYmFyMiArIE1CMl9TSEFET1dfT0ZGU0VUICsg
-OCk7DQo+ID4gIAkJCXBjaV9pb3VubWFwKHZtZC0+ZGV2LCBtZW1iYXIyKTsNCj4gPiAgCQl9DQo+
-ID4gIAl9DQo+ID4gLS0gDQo+ID4gMi4yMC4xDQo+ID4gDQo=
+On Tue, Sep 17, 2019 at 01:55:59PM +0000, Derrick, Jonathan wrote:
+> On Tue, 2019-09-17 at 11:41 +0100, Lorenzo Pieralisi wrote:
+> > On Mon, Sep 16, 2019 at 07:54:35AM -0600, Jon Derrick wrote:
+> > > The shadow offset scratchpad was moved to 0x2000-0x2010. Update the
+> > > location to get the correct shadow offset.
+> > 
+> > Hi Jon,
+> > 
+> > what does "was moved" mean ? Would this code still work on previous HW ?
+> > 
+> The previous code won't work on (not yet released) hw. Guests using the
+> domain will see the wrong offset and enumerate the domain incorrectly.
+
+That's true also for new kernels on _current_ hardware, isn't it ?
+
+What I am saying is that there must be a way to detect the right
+offset from HW probing or firmware otherwise things will break
+one way of another.
+
+> > We must make sure that the address move is managed seamlessly by the
+> > kernel.
+> If we need to avoid changing addressing within stable, then that's
+> fine. But otherwise is there an issue merging with 5.4?
+
+See above. Would 5.4 with this patch applied work on systems where
+the offset is the same as the _current_ one without this patch
+applied ?
+
+> > For the time being I have to drop this fix and it is extremely
+> > tight to get it in v5.4, I can't send stable changes that we may
+> > have to revert.
+> Aren't we in the beginning of the merge window?
+
+Yes and that's the problem, patches for v5.4 should have already
+being queued a while ago, I do not know when Bjorn will send the
+PR for v5.4 but that's going to happen shortly, I am making an
+exception to squeeze these patches in since it is vmd only code
+but still it is very very tight.
+
+Thanks,
+Lorenzo
+
+> > Thanks,
+> > Lorenzo
+> > 
+> > > Cc: stable@vger.kernel.org # v5.2+
+> > > Fixes: 6788958e ("PCI: vmd: Assign membar addresses from shadow registers")
+> > > Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> > > ---
+> > >  drivers/pci/controller/vmd.c | 9 ++++++---
+> > >  1 file changed, 6 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> > > index 2e4da3f51d6b..a35d3f3996d7 100644
+> > > --- a/drivers/pci/controller/vmd.c
+> > > +++ b/drivers/pci/controller/vmd.c
+> > > @@ -31,6 +31,9 @@
+> > >  #define PCI_REG_VMLOCK		0x70
+> > >  #define MB2_SHADOW_EN(vmlock)	(vmlock & 0x2)
+> > >  
+> > > +#define MB2_SHADOW_OFFSET	0x2000
+> > > +#define MB2_SHADOW_SIZE		16
+> > > +
+> > >  enum vmd_features {
+> > >  	/*
+> > >  	 * Device may contain registers which hint the physical location of the
+> > > @@ -578,7 +581,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+> > >  		u32 vmlock;
+> > >  		int ret;
+> > >  
+> > > -		membar2_offset = 0x2018;
+> > > +		membar2_offset = MB2_SHADOW_OFFSET + MB2_SHADOW_SIZE;
+> > >  		ret = pci_read_config_dword(vmd->dev, PCI_REG_VMLOCK, &vmlock);
+> > >  		if (ret || vmlock == ~0)
+> > >  			return -ENODEV;
+> > > @@ -590,9 +593,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+> > >  			if (!membar2)
+> > >  				return -ENOMEM;
+> > >  			offset[0] = vmd->dev->resource[VMD_MEMBAR1].start -
+> > > -						readq(membar2 + 0x2008);
+> > > +					readq(membar2 + MB2_SHADOW_OFFSET);
+> > >  			offset[1] = vmd->dev->resource[VMD_MEMBAR2].start -
+> > > -						readq(membar2 + 0x2010);
+> > > +					readq(membar2 + MB2_SHADOW_OFFSET + 8);
+> > >  			pci_iounmap(vmd->dev, membar2);
+> > >  		}
+> > >  	}
+> > > -- 
+> > > 2.20.1
+> > > 
