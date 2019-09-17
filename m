@@ -2,109 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B2231B4A43
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Sep 2019 11:20:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA260B4AB7
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Sep 2019 11:37:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbfIQJUv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Sep 2019 05:20:51 -0400
-Received: from mga02.intel.com ([134.134.136.20]:46780 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbfIQJUv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 17 Sep 2019 05:20:51 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 02:20:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,515,1559545200"; 
-   d="scan'208,223";a="177330062"
-Received: from irsmsx101.ger.corp.intel.com ([163.33.3.153])
-  by orsmga007.jf.intel.com with ESMTP; 17 Sep 2019 02:20:49 -0700
-Received: from irsmsx102.ger.corp.intel.com ([169.254.2.160]) by
- IRSMSX101.ger.corp.intel.com ([169.254.1.129]) with mapi id 14.03.0439.000;
- Tue, 17 Sep 2019 10:20:49 +0100
-From:   "Kitszel, PrzemyslawX" <przemyslawx.kitszel@intel.com>
-To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     "Maslowski, Karol" <karol.maslowski@intel.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Subject: [PATCH v2] PCI: Add quirk for VCA NTB
-Thread-Topic: [PATCH v2] PCI: Add quirk for VCA NTB
-Thread-Index: AdVtOOaQdSICRsZWRI++mrPh949BAA==
-Date:   Tue, 17 Sep 2019 09:20:48 +0000
-Message-ID: <5683A335CC8BE1438C3C30C49DCC38DF637CED8E@IRSMSX102.ger.corp.intel.com>
-Accept-Language: pl-PL, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [163.33.239.180]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1727323AbfIQJhL convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 17 Sep 2019 05:37:11 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50334 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728104AbfIQJhG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Sep 2019 05:37:06 -0400
+Received: from mail-oi1-f199.google.com ([209.85.167.199])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iA9uy-0006s3-1d
+        for linux-pci@vger.kernel.org; Tue, 17 Sep 2019 09:37:04 +0000
+Received: by mail-oi1-f199.google.com with SMTP id k185so1382509oih.1
+        for <linux-pci@vger.kernel.org>; Tue, 17 Sep 2019 02:37:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EIbijquzMtQBr8kkr1tOGfR+o3tuxAs9+vpk/bBLO3Q=;
+        b=D4mYChy/AJa8yZuHpZJxKNal4C+dPsdBUcUYzUJuDVntoq0pTJi6zdwoAxyGfvOhiG
+         F8ZkLI/GwoRQ+2Ol4wttZFxdYgAGQnmW4lVRIlmg+8cnmy9hb+ZKPipE6x5ttzcoGe9V
+         ttf+9nYa4M08uMl/pY2EJWudjTYZpSUboq4qKC7S8YakpCuMVd5wjGAUSTzL5UJmwDI0
+         H5z8laU97LECMUP5KMyswI6jGowujxLcKeOEXEyr1XrVjVzHy/asvROxnmJe0qq43eIF
+         l+PCXw0c5V4RKcXPJwYMCfsIgTYeG7nLZ3+zw+oMRTXgBt7jthyOwYb1nGB1HROJwr6k
+         rUHg==
+X-Gm-Message-State: APjAAAVHu0w2dIY4XxsqbiVzmbtTrhbTBtsNGiz8+eTyMRNdQn+tD7O4
+        b4DS7Ta2pk6K6q4xf3CLOJjSJgDfzaQi3aWM9rYxD3om00IzHUlPk4MjCyt4nnebhfsd/4sJhja
+        60ApyTgUXchrVSWfn17pmwLTyO8KSDCQdfOlzAQbmWqSckqsrQW0jOg==
+X-Received: by 2002:a05:6830:2306:: with SMTP id u6mr2117286ote.0.1568713022838;
+        Tue, 17 Sep 2019 02:37:02 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwicLemrKh18hQPput+im8uQ+JqnJfWBVlweGggNmdSwQZv1LUrL1ZnqK0WlQoEBSHLeeBlQIMwrEGN5/Bcbgo=
+X-Received: by 2002:a05:6830:2306:: with SMTP id u6mr2117270ote.0.1568713022472;
+ Tue, 17 Sep 2019 02:37:02 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190827134756.10807-2-kai.heng.feng@canonical.com>
+ <20190828180128.1732-1-kai.heng.feng@canonical.com> <20190905213509.GI103977@google.com>
+In-Reply-To: <20190905213509.GI103977@google.com>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Tue, 17 Sep 2019 11:36:51 +0200
+Message-ID: <CAAd53p5LUat5MVkjbkk+st0TJA96y36keD898ZOepEdsnaiihw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] ALSA: hda: Allow HDA to be runtime suspended when
+ dGPU is not bound
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     tiwai@suse.com, Linux PCI <linux-pci@vger.kernel.org>,
+        alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-RnJvbSA4ZWM3MTdkOTEzYmJhNzBlM2UwZGQ3ODNlZWJmMzU1ZTBkNjRhMTU5IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQ0KRnJvbTogU2xhd29taXIgUGF3bG93c2tpIDxzbGF3b21pci5wYXdsb3dz
-a2lAaW50ZWwuY29tPg0KRGF0ZTogRnJpLCAyMSBTZXAgMjAxOCAxNTo1NToxMiArMDIwMA0KU3Vi
-amVjdDogW1BBVENIIHYyXSBQQ0k6IEFkZCBxdWlyayBmb3IgVkNBIE5UQg0KDQpJbnRlbCBWaXN1
-YWwgQ29tcHV0ZSBBY2NlbGVyYXRvciAoVkNBKSBpcyBhIGZhbWlseSBvZiBQQ0llIGFkZC1pbiBk
-ZXZpY2VzDQpleHBvc2luZyBjb21wdXRhdGlvbmFsIHVuaXRzIHZpYSBOb24gVHJhbnNwYXJlbnQg
-QnJpZGdlcyAoTlRCLCBQRVggODd4eCkuDQoNClNpbWlsYXJseSB0byBNSUMgeDIwMCwgdGhlcmUg
-aXMgbmVlZCB0byBhZGQgRE1BIGFsaWFzZXMgdG8gYWxsb3cgYnVmZmVyDQphY2Nlc3Mgd2hlbiBJ
-T01NVSBpcyBlbmFibGVkLg0KRm9sbG93aW5nIGFsaWFzZXMgYXJlIGFsbG93aW5nIGhvc3QgZGV2
-aWNlIGFuZCBjb21wdXRhdGlvbmFsIHVuaXQgdG8gYWNjZXNzDQplYWNoIG90aGVyLg0KVG9nZXRo
-ZXIgdGhvc2UgYWxpYXNlcyBtYXJrcyB3aG9sZSBWQ0EgZGV2aWNlIGFzIG9uZSBJT01NVSBncm91
-cC4NCg0KQWxsIHBvc3NpYmxlIHNsb3QgbnVtYmVycyAoMHgyMCkgYXJlIHVzZWQsIHNpbmNlIHdl
-IGFyZSB1bmFibGUgdG8gdGVsbCB3aGF0DQpzbG90IGlzIHVzZWQgb24gb3RoZXIgc2lkZS4NClRo
-aXMgcXVpcmsgaXMgaW50ZW5kZWQgZm9yIGJvdGggaG9zdCBhbmQgY29tcHV0YXRpb25hbCB1bml0
-IHNpZGVzLg0KVGhlIFZDQSBkZXZpY2VzIGhhdmUgdXAgdG8gNSBmdW5jdGlvbnMgLSA0IGZvciBE
-TUEgY2hhbm5lbHMgYW5kIG9uZQ0KYWRkaXRpb25hbC4NCg0KU2lnbmVkLW9mZi1ieTogU2xhd29t
-aXIgUGF3bG93c2tpIDxzbGF3b21pci5wYXdsb3dza2lAaW50ZWwuY29tPg0KU2lnbmVkLW9mZi1i
-eTogUHJ6ZW1layBLaXRzemVsIDxwcnplbXlzbGF3eC5raXRzemVsQGludGVsLmNvbT4NCi0tLQ0K
-Q2hhbmdlcyBpbiB2MjoNCiAgLSBmaXggdHlwb3M6IHMvc2luZS9zaW5jZS9nDQoNCiBkcml2ZXJz
-L3BjaS9xdWlya3MuYyB8IDMyICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQogMSBm
-aWxlIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNp
-L3F1aXJrcy5jIGIvZHJpdmVycy9wY2kvcXVpcmtzLmMNCmluZGV4IGRlZDYwNzU3YTU3My4uOTIx
-YTA4MDE0NmYzIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9wY2kvcXVpcmtzLmMNCisrKyBiL2RyaXZl
-cnMvcGNpL3F1aXJrcy5jDQpAQCAtNDA2Miw2ICs0MDYyLDM4IEBAIHN0YXRpYyB2b2lkIHF1aXJr
-X21pY194MjAwX2RtYV9hbGlhcyhzdHJ1Y3QgcGNpX2RldiAqcGRldikNCiBERUNMQVJFX1BDSV9G
-SVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHgyMjYwLCBxdWlya19taWNfeDIwMF9k
-bWFfYWxpYXMpOw0KIERFQ0xBUkVfUENJX0ZJWFVQX0hFQURFUihQQ0lfVkVORE9SX0lEX0lOVEVM
-LCAweDIyNjQsIHF1aXJrX21pY194MjAwX2RtYV9hbGlhcyk7DQogDQorLyoNCisgKiBJbnRlbCBW
-aXN1YWwgQ29tcHV0ZSBBY2NlbGVyYXRvciAoVkNBKSBpcyBhIGZhbWlseSBvZiBQQ0llIGFkZC1p
-biBkZXZpY2VzDQorICogZXhwb3NpbmcgY29tcHV0YXRpb25hbCB1bml0cyB2aWEgTm9uIFRyYW5z
-cGFyZW50IEJyaWRnZXMgKE5UQiwgUEVYIDg3eHgpLg0KKyAqIFNpbWlsYXJseSB0byBNSUMgeDIw
-MCwgdGhlcmUgaXMgbmVlZCB0byBhZGQgRE1BIGFsaWFzZXMgdG8gYWxsb3cgYnVmZmVyDQorICog
-YWNjZXNzIHdoZW4gSU9NTVUgaXMgZW5hYmxlZC4NCisgKiBGb2xsb3dpbmcgYWxpYXNlcyBhcmUg
-YWxsb3dpbmcgaG9zdCBkZXZpY2UgYW5kIGNvbXB1dGF0aW9uYWwgdW5pdCB0byBhY2Nlc3MNCisg
-KiBlYWNoIG90aGVyLiBUb2dldGhlciB0aG9zZSBhbGlhc2VzIG1hcmtzIHdob2xlIFZDQSBkZXZp
-Y2UgYXMgb25lIElPTU1VIGdyb3VwLg0KKyAqIEFsbCBwb3NzaWJsZSBzbG90IG51bWJlcnMgKDB4
-MjApIGFyZSB1c2VkLCBzaW5jZSB3ZSBhcmUgdW5hYmxlIHRvIHRlbGwgd2hhdA0KKyAqIHNsb3Qg
-aXMgdXNlZCBvbiBvdGhlciBzaWRlLg0KKyAqIFRoaXMgcXVpcmsgaXMgaW50ZW5kZWQgZm9yIGJv
-dGggaG9zdCBhbmQgY29tcHV0YXRpb25hbCB1bml0IHNpZGVzLg0KKyAqIFRoZSBWQ0EgZGV2aWNl
-cyBoYXZlIHVwIHRvIDUgZnVuY3Rpb25zICg0IGZvciBETUEgY2hhbm5lbHMgYW5kIDEgYWRkaXRp
-b25hbCkuDQorICovDQorc3RhdGljIHZvaWQgcXVpcmtfcGV4X3ZjYV9hbGlhcyhzdHJ1Y3QgcGNp
-X2RldiAqcGRldikNCit7DQorCWNvbnN0IHVuc2lnbmVkIGludCBudW1fcGNpX3Nsb3RzID0gMHgy
-MDsNCisJdW5zaWduZWQgaW50IHNsb3Q7DQorDQorCWZvciAoc2xvdCA9IDA7IHNsb3QgPCBudW1f
-cGNpX3Nsb3RzOyBzbG90KyspIHsNCisJCXBjaV9hZGRfZG1hX2FsaWFzKHBkZXYsIFBDSV9ERVZG
-TihzbG90LCAweDApKTsNCisJCXBjaV9hZGRfZG1hX2FsaWFzKHBkZXYsIFBDSV9ERVZGTihzbG90
-LCAweDEpKTsNCisJCXBjaV9hZGRfZG1hX2FsaWFzKHBkZXYsIFBDSV9ERVZGTihzbG90LCAweDIp
-KTsNCisJCXBjaV9hZGRfZG1hX2FsaWFzKHBkZXYsIFBDSV9ERVZGTihzbG90LCAweDMpKTsNCisJ
-CXBjaV9hZGRfZG1hX2FsaWFzKHBkZXYsIFBDSV9ERVZGTihzbG90LCAweDQpKTsNCisJfQ0KK30N
-CitERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHgyOTU0LCBx
-dWlya19wZXhfdmNhX2FsaWFzKTsNCitERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRP
-Ul9JRF9JTlRFTCwgMHgyOTU1LCBxdWlya19wZXhfdmNhX2FsaWFzKTsNCitERUNMQVJFX1BDSV9G
-SVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHgyOTU2LCBxdWlya19wZXhfdmNhX2Fs
-aWFzKTsNCitERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHgy
-OTU4LCBxdWlya19wZXhfdmNhX2FsaWFzKTsNCitERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJ
-X1ZFTkRPUl9JRF9JTlRFTCwgMHgyOTU5LCBxdWlya19wZXhfdmNhX2FsaWFzKTsNCitERUNMQVJF
-X1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHgyOTVBLCBxdWlya19wZXhf
-dmNhX2FsaWFzKTsNCisNCiAvKg0KICAqIFRoZSBJT01NVSBhbmQgaW50ZXJydXB0IGNvbnRyb2xs
-ZXIgb24gQnJvYWRjb20gVnVsY2FuL0Nhdml1bSBUaHVuZGVyWDIgYXJlDQogICogYXNzb2NpYXRl
-ZCBub3QgYXQgdGhlIHJvb3QgYnVzLCBidXQgYXQgYSBicmlkZ2UgYmVsb3cuIFRoaXMgcXVpcmsg
-YXZvaWRzDQotLSANCjIuMjIuMA0KDQo=
+Hi Bjorn,
+
+On Thu, Sep 5, 2019 at 11:35 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Aug 29, 2019 at 02:01:28AM +0800, Kai-Heng Feng wrote:
+> > It's a common practice to let dGPU unbound and use PCI platform power
+> > management to disable its power through _OFF method of power resource,
+> > which is listed by _PR3.
+> > When the dGPU comes with an HDA function, the HDA won't be suspended if
+> > the dGPU is unbound, so the power resource can't be turned off.
+>
+> I'm not involved in applying this patch, but from the peanut gallery:
+>
+>   - The above looks like it might be two paragraphs missing a blank
+>     line between?  Or maybe it's one paragraph that needs to be
+>     rewrapped?
+
+I think it can be both. I'll rephrase it.
+
+>
+>   - I can't parse the first sentence.  I guess "dGPU" and "HDA" are
+>     hardware devices, but I don't know what "unbound" means.  Is that
+>     something to do with a driver being bound to the dGPU?  Or is it
+>     some connection between the dGPU and the HDA?
+
+Yes, "unbound" in this context means the dGPU isn't bound to a driver.
+
+>
+>   - "PCI platform power management" is still confusing -- I think we
+>     either have "PCI power management" that uses the PCI PM Capability
+>     (i.e., writing PCI_PM_CTRL as in pci_raw_set_power_state()) OR we
+>     have "platform power management" that uses some other method,
+>     typically ACPI.  Since you refer to _OFF and _PR3, I guess you're
+>     referring to platform power management here.
+
+Yes, I'll make it clearer in next version. It's indeed referring to
+platform power management.
+
+>
+>   - "It's common practice to let dGPU unbound" -- does that refer to
+>     some programming technique common in drivers, or some user-level
+>     thing like unloading a driver, or ...?  My guess is it probably
+>     means "unbind the driver from the dGPU" but I still don't know
+>     what makes it common practice.
+
+Yes it means keep driver for dGPU unloaded. It's a common practice
+since the proprietary nvidia.ko doesn't support runtime power
+management, so when users are using integrated GPU, unload the dGPU
+driver can make PCI core use platform power management to disable the
+power source to save power.
+
+>
+> This probably all makes perfect sense to the graphics cognoscenti, but
+> for the rest of us there are a lot of dots here that are not
+> connected.
+
+Will send a v2 with clearer description.
+Kai-Heng
+
+>
+> > Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
+> > discrete GPU") only allows HDA to be runtime-suspended once GPU is
+> > bound, to keep APU's HDA working.
+> >
+> > However, HDA on dGPU isn't that useful if dGPU is unbound. So let's
+> > relax the runtime suspend requirement for dGPU's HDA function, to save
+> > lots of power.
+> >
+> > BugLink: https://bugs.launchpad.net/bugs/1840835
+> > Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers”)
+> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > ---
+> > v2:
+> > - Change wording.
+> > - Rebase to Tiwai's branch.
+> >
+> >  sound/pci/hda/hda_intel.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+> > index 91e71be42fa4..c3654d22795a 100644
+> > --- a/sound/pci/hda/hda_intel.c
+> > +++ b/sound/pci/hda/hda_intel.c
+> > @@ -1284,7 +1284,11 @@ static void init_vga_switcheroo(struct azx *chip)
+> >               dev_info(chip->card->dev,
+> >                        "Handle vga_switcheroo audio client\n");
+> >               hda->use_vga_switcheroo = 1;
+> > -             chip->bus.keep_power = 1; /* cleared in either gpu_bound op or codec probe */
+> > +
+> > +             /* cleared in either gpu_bound op or codec probe, or when its
+> > +              * root port has _PR3 (i.e. dGPU).
+> > +              */
+> > +             chip->bus.keep_power = !pci_pr3_present(p);
+> >               chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
+> >               pci_dev_put(p);
+> >       }
+> > --
+> > 2.17.1
+> >
