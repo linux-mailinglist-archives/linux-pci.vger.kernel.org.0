@@ -2,92 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BCD7AB5FC9
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Sep 2019 11:05:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0D7EB5FED
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Sep 2019 11:15:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbfIRJFv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Sep 2019 05:05:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:37806 "EHLO foss.arm.com"
+        id S1729145AbfIRJPk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Sep 2019 05:15:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:37942 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbfIRJFv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 18 Sep 2019 05:05:51 -0400
+        id S1728079AbfIRJPk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 18 Sep 2019 05:15:40 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75E90337;
-        Wed, 18 Sep 2019 02:05:50 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E06CF3F59C;
-        Wed, 18 Sep 2019 02:05:49 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 10:05:48 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, netdev@vger.kernel.org,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v3 13/26] e1000: Use PCI_STD_NUM_BARS
-Message-ID: <20190918090547.GZ9720@e119886-lin.cambridge.arm.com>
-References: <20190916204158.6889-1-efremov@linux.com>
- <20190916204158.6889-14-efremov@linux.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E1F48337;
+        Wed, 18 Sep 2019 02:15:39 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2165F3F59C;
+        Wed, 18 Sep 2019 02:15:39 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 10:15:32 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Jon Derrick <jonathan.derrick@intel.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] VMD fixes for v5.4
+Message-ID: <20190918091532.GA24503@e121166-lin.cambridge.arm.com>
+References: <20190916135435.5017-1-jonathan.derrick@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190916204158.6889-14-efremov@linux.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20190916135435.5017-1-jonathan.derrick@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 11:41:45PM +0300, Denis Efremov wrote:
-> To iterate through all possible BARs, loop conditions refactored to the
-> *number* of BARs "i < PCI_STD_NUM_BARS", instead of the index of the last
-> valid BAR "i <= BAR_5". This is more idiomatic C style and allows to avoid
-> the fencepost error.
+On Mon, Sep 16, 2019 at 07:54:33AM -0600, Jon Derrick wrote:
+> Hi Lorenzo, Bjorn, Keith,
 > 
-> Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  drivers/net/ethernet/intel/e1000/e1000.h      | 1 -
->  drivers/net/ethernet/intel/e1000/e1000_main.c | 2 +-
->  2 files changed, 1 insertion(+), 2 deletions(-)
+> Please consider the following patches for 5.4 inclusion.
 > 
-> diff --git a/drivers/net/ethernet/intel/e1000/e1000.h b/drivers/net/ethernet/intel/e1000/e1000.h
-> index c40729b2c184..7fad2f24dcad 100644
-> --- a/drivers/net/ethernet/intel/e1000/e1000.h
-> +++ b/drivers/net/ethernet/intel/e1000/e1000.h
-> @@ -45,7 +45,6 @@
->  
->  #define BAR_0		0
->  #define BAR_1		1
-> -#define BAR_5		5
+> These will apply to 5.2 stable. 4.19 has a few feature deps so I will instead
+> follow-up with a backport.
+> 
+> Jon Derrick (2):
+>   PCI: vmd: Fix config addressing when using bus offsets
+>   PCI: vmd: Fix shadow offsets to reflect spec changes
+> 
+>  drivers/pci/controller/vmd.c | 25 +++++++++++++++----------
+>  1 file changed, 15 insertions(+), 10 deletions(-)
 
-No issue with this patch. However I noticed that at least 5 of the network
-drivers have these same definitions, which are identical to the pci_barno enum
-of include/linux/pci-epf.h. There are mostly used with pci_ioremap_bar and
-pci_resource_** macros. I wonder if this is an indicator that these defintions
-should live in the core.
+I have pulled them into pci/vmd hopefully for v5.4.
 
 Thanks,
-
-Andrew Murray
-
->  
->  #define INTEL_E1000_ETHERNET_DEVICE(device_id) {\
->  	PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
-> diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
-> index f703fa58458e..db4fd82036af 100644
-> --- a/drivers/net/ethernet/intel/e1000/e1000_main.c
-> +++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
-> @@ -977,7 +977,7 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->  		goto err_ioremap;
->  
->  	if (adapter->need_ioport) {
-> -		for (i = BAR_1; i <= BAR_5; i++) {
-> +		for (i = BAR_1; i < PCI_STD_NUM_BARS; i++) {
->  			if (pci_resource_len(pdev, i) == 0)
->  				continue;
->  			if (pci_resource_flags(pdev, i) & IORESOURCE_IO) {
-> -- 
-> 2.21.0
-> 
+Lorenzo
