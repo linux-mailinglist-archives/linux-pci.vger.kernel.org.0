@@ -2,173 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EBDCFB6F2E
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Sep 2019 00:04:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 043ACB6F33
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Sep 2019 00:04:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbfIRWEK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Sep 2019 18:04:10 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42821 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730553AbfIRWEK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Sep 2019 18:04:10 -0400
-Received: by mail-ot1-f68.google.com with SMTP id c10so1261888otd.9;
-        Wed, 18 Sep 2019 15:04:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bJQPPaEQfRujWhva+eG3XWYsZN4JmOiFGTYIBU8GRfQ=;
-        b=pRYjGPKum5sL1wmzZ9BkqD8WS3k+maV7QIjP9a80SpLanQdxpuhayzpRdkmhrZa7Tp
-         lI7wrYSKIr9rz5AhAhuyg50ioxU1QDlWlfmIc/3R4mJB6yN5jQiJnXd5q29TkCGw9DZs
-         NVwCPi6WVfvLjoJ+nUFQ3FKrIK7ofeuo1oYuLhnOwlzWAoQKdzOIfC/XVSiKvI2ke5T6
-         TtjhjurAKAXa8x4Y9CrvuIEfAvds/noLSLEB+kUkZGjBBIkIBpW5s//DHHASaoHD+LXu
-         7NrzbIBqGWR2viBFoYfME+UXeV9dBF66B0xgk3PJ61felxO6/KpyvMK0bNN7WF2/0CkF
-         FKaw==
-X-Gm-Message-State: APjAAAVZSHR66Z20NEGjyWlv/uXrjyYpKrNXM1qCmW0o0+aYMvlgP3SM
-        0vaAoTDIyQDj5cVueIiwlgRs+iyL3MW2GDFdV3I=
-X-Google-Smtp-Source: APXvYqy4t38dZCR52mMACnH8PhL4bjKROen1EQLwOHpraGIwLh95YbB75ppd/j9YGKJ3hGlXh2Xry/BpznO93HaN/dM=
-X-Received: by 2002:a9d:798c:: with SMTP id h12mr4348107otm.167.1568844249341;
- Wed, 18 Sep 2019 15:04:09 -0700 (PDT)
+        id S2388366AbfIRWEz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Sep 2019 18:04:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40426 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388365AbfIRWEz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 18 Sep 2019 18:04:55 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0E3ACC057EC0;
+        Wed, 18 Sep 2019 22:04:55 +0000 (UTC)
+Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8152D60C05;
+        Wed, 18 Sep 2019 22:04:54 +0000 (UTC)
+Date:   Wed, 18 Sep 2019 16:04:54 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>
+Subject: Re: [PATCH] PCI: quirks: Fix register location for UPDCR
+Message-ID: <20190918160454.45857065@x1.home>
+In-Reply-To: <20190918104651.66535375@x1.home>
+References: <054ef65b-07de-7625-ebcb-f5ce64bc2726@kernkonzept.com>
+        <20190918104213.GD9720@e119886-lin.cambridge.arm.com>
+        <8da75cab-d3d4-14aa-1113-087d4a868072@kernkonzept.com>
+        <20190918120917.GF9720@e119886-lin.cambridge.arm.com>
+        <20190918104651.66535375@x1.home>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <1568245353-13787-1-git-send-email-mario.limonciello@dell.com>
- <4858057.cjDlXVALXj@kreacher> <346fd9ced98e40229d0cc0871ad5ed32@AUSX13MPC105.AMER.DELL.COM>
- <10489808.bq04Fa26WH@kreacher> <247e1ed126774d32b0d70092b65adb6a@AUSX13MPC105.AMER.DELL.COM>
-In-Reply-To: <247e1ed126774d32b0d70092b65adb6a@AUSX13MPC105.AMER.DELL.COM>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 19 Sep 2019 00:03:57 +0200
-Message-ID: <CAJZ5v0iwovZtCnnu+CF5Z6DjRsC2a43Jdi+9SEufADAOF8sCcg@mail.gmail.com>
-Subject: Re: [PATCH] nvme-pci: Save PCI state before putting drive into
- deepest state
-To:     Mario Limonciello <Mario.Limonciello@dell.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ryan.Hong@dell.com, Crag.Wang@dell.com, sjg@google.com,
-        Jared.Dominguez@dell.com, Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 18 Sep 2019 22:04:55 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 12:00 AM <Mario.Limonciello@dell.com> wrote:
->
-> > -----Original Message-----
-> > From: Rafael J. Wysocki <rjw@rjwysocki.net>
-> > Sent: Wednesday, September 18, 2019 4:57 PM
-> > To: Limonciello, Mario
-> > Cc: kbusch@kernel.org; axboe@fb.com; hch@lst.de; sagi@grimberg.me; linux-
-> > nvme@lists.infradead.org; linux-kernel@vger.kernel.org; Hong, Ryan; Wang,
-> > Crag; sjg@google.com; Dominguez, Jared; linux-pci@vger.kernel.org; linux-
-> > pm@vger.kernel.org
-> > Subject: Re: [PATCH] nvme-pci: Save PCI state before putting drive into deepest
-> > state
-> >
-> >
-> > [EXTERNAL EMAIL]
-> >
-> > On Wednesday, September 18, 2019 11:43:28 PM CEST
-> > Mario.Limonciello@dell.com wrote:
-> > > > -----Original Message-----
-> > > > From: Rafael J. Wysocki <rjw@rjwysocki.net>
-> > > > Sent: Wednesday, September 18, 2019 4:31 PM
-> > > > To: Limonciello, Mario
-> > > > Cc: Keith Busch; Jens Axboe; Christoph Hellwig; Sagi Grimberg; linux-
-> > > > nvme@lists.infradead.org; LKML; Hong, Ryan; Wang, Crag; sjg@google.com;
-> > > > Dominguez, Jared; Linux PCI; Linux PM
-> > > > Subject: Re: [PATCH] nvme-pci: Save PCI state before putting drive into
-> > deepest
-> > > > state
-> > > >
-> > > >
-> > > > [EXTERNAL EMAIL]
-> > > >
-> > > > On Thursday, September 12, 2019 1:42:33 AM CEST Mario Limonciello wrote:
-> > > > > The action of saving the PCI state will cause numerous PCI configuration
-> > > > > space reads which depending upon the vendor implementation may cause
-> > > > > the drive to exit the deepest NVMe state.
-> > > > >
-> > > > > In these cases ASPM will typically resolve the PCIe link state and APST
-> > > > > may resolve the NVMe power state.  However it has also been observed
-> > > > > that this register access after quiesced will cause PC10 failure
-> > > > > on some device combinations.
-> > > > >
-> > > > > To resolve this, move the PCI state saving to before SetFeatures has been
-> > > > > called.  This has been proven to resolve the issue across a 5000 sample
-> > > > > test on previously failing disk/system combinations.
-> > > >
-> > > > This sounds reasonable to me, but it would be nice to CC that to linux-pm
-> > > > and/or linux-pci too.
-> > > >
-> > > > > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> > > > > ---
-> > > > >  drivers/nvme/host/pci.c | 13 +++++++------
-> > > > >  1 file changed, 7 insertions(+), 6 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-> > > > > index 732d5b6..9b3fed4 100644
-> > > > > --- a/drivers/nvme/host/pci.c
-> > > > > +++ b/drivers/nvme/host/pci.c
-> > > > > @@ -2894,6 +2894,13 @@ static int nvme_suspend(struct device *dev)
-> > > > >         if (ret < 0)
-> > > > >                 goto unfreeze;
-> > > > >
-> > > > > +       /*
-> > > > > +        * A saved state prevents pci pm from generically controlling the
-> > > > > +        * device's power. If we're using protocol specific settings, we don't
-> > > > > +        * want pci interfering.
-> > > > > +        */
-> > > > > +       pci_save_state(pdev);
-> > > > > +
-> > > > >         ret = nvme_set_power_state(ctrl, ctrl->npss);
-> > > > >         if (ret < 0)
-> > > > >                 goto unfreeze;
-> > > > > @@ -2908,12 +2915,6 @@ static int nvme_suspend(struct device *dev)
-> > > >
-> > > > This is the case in which the PCI layer is expected to put the device into
-> > > > D3, so you need
-> > > >
-> > > > pdev->state_saved = 0;
-> > > >
-> > > > at this point, because you have saved the config space already.
-> > > >
-> > > > >                 ret = 0;
-> > > > >                 goto unfreeze;
-> > > >
-> > > > And here you don't need to jump to "unfreeze" any more.
-> > > >
-> > > > >         }
-> > > > > -       /*
-> > > > > -        * A saved state prevents pci pm from generically controlling the
-> > > > > -        * device's power. If we're using protocol specific settings, we don't
-> > > > > -        * want pci interfering.
-> > > > > -        */
-> > > > > -       pci_save_state(pdev);
-> > > > >  unfreeze:
-> > > > >         nvme_unfreeze(ctrl);
-> > > > >         return ret;
-> > > > >
-> > > >
-> > > >
-> > > >
-> > >
-> > > Thanks, I actually followed up with something along that line in a v2 sent out
-> > > today.  My apology you weren't in CC, but here is a weblink to it.
-> > > http://lists.infradead.org/pipermail/linux-nvme/2019-September/027251.html
-> > >
-> >
-> > I don't think that pci_load_saved_state() will work, because it sets
-> > state_saved at the end again (if all goes well).  You simply only need to
-> > clear state_saved here.
->
-> Explicitly calling it with NULL as the saved state to restore seemed to have that effect
-> of clearing state (there is an explicit check in there if it's NULL to just return 0).
+On Wed, 18 Sep 2019 10:46:51 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-Ah, OK, right.
+> On Wed, 18 Sep 2019 13:09:18 +0100
+> Andrew Murray <andrew.murray@arm.com> wrote:
+> 
+> > On Wed, Sep 18, 2019 at 02:02:59PM +0200, Steffen Liebergeld wrote:  
+> > > On 18/09/2019 12:42, Andrew Murray wrote:    
+> > > > On Tue, Sep 17, 2019 at 08:07:13PM +0200, Steffen Liebergeld wrote:    
+> > > >> According to documentation [0] the correct offset for the
+> > > >> Upstream Peer Decode Configuration Register (UPDCR) is 0x1014.
+> > > >> It was previously defined as 0x1114. This patch fixes it.
+> > > >>
+> > > >> [0]
+> > > >> https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/4th-gen-core-family-mobile-i-o-datasheet.pdf
+> > > >> (page 325)
+> > > >>
+> > > >> Signed-off-by: Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>    
+> > > > 
+> > > > You may also like to add:
+> > > > 
+> > > > Fixes: d99321b63b1f ("PCI: Enable quirks for PCIe ACS on Intel PCH root ports")
+> > > > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+> > > > 
+> > > > As well as CC'ing stable.    
+> > > 
+> > > Ok. Thank you.
+> > >     
+> > > > I guess the side effect of this bug is that we claim to have peer
+> > > > isolation when we do not. This fix ensures that we get the advertised
+> > > > isolation.    
+> > > Yes, that is also my understanding. Should I explain that in the commit
+> > > message?    
+> > 
+> > I think something similar to that would be helpful.  
+> 
+> This is unfortunate, but my initial impression is that this may have
+> just been a typo that slipped by everyone.  It's difficult to actually
+> test for isolation.  Maybe someone from Intel could review this.  Also,
+> Steffen discussed this with me prior to posting and I believe this is
+> untested, so while trivial from inspection, it would be preferable to
+> know that some sample of hardware doesn't fall over as a result.
 
-I still would rather clear the flag directly, though, as using
-pci_load_saved_state() for that is just more convoluted. :-)
+I've looked at 4 different systems, two 6-series (desktop + laptop), an
+8-series desktop, and an X79 workstation.  None of the 6/8 series even
+enter the branch where we read the UPDCR register, the value read from
+the BSPR register doesn't require it.  In the case of the X79, using
+0x1014 for UPDCR, the value read from the register is zero so code
+would not proceed into the inner branch to write the register, but
+using the current 0x1114 address, we read a non-zero value and changing
+it does stick on re-read.  Neither address is defined in the public
+specs for this chipset, we're basing the information on word of mouth
+and ack from Intel as noted in commit 1a30fd0dba77.
+
+So of these systems, if 0x1014 is the correct UPDCR register address,
+nothing actually changes with respect to isolation other than we're not
+changing the value in mystery register 0x1114.  Intel?  Thanks,
+
+Alex
