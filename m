@@ -2,238 +2,213 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6285DB5DAA
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Sep 2019 08:56:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FC72B5FAE
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Sep 2019 10:58:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfIRG4m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Sep 2019 02:56:42 -0400
-Received: from mga09.intel.com ([134.134.136.24]:24802 "EHLO mga09.intel.com"
+        id S1729861AbfIRI6K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Sep 2019 04:58:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:37732 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727074AbfIRG4m (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:56:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 23:56:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,519,1559545200"; 
-   d="scan'208";a="189175320"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 17 Sep 2019 23:56:40 -0700
-Received: from [10.226.39.42] (unknown [10.226.39.42])
-        by linux.intel.com (Postfix) with ESMTP id 5E79258012D;
-        Tue, 17 Sep 2019 23:56:37 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-References: <cover.1567585181.git.eswara.kota@linux.intel.com>
- <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
- <20190917184013.GB24684@bogus>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <bf5c8a24-e969-87d4-c62b-4032273e0824@linux.intel.com>
-Date:   Wed, 18 Sep 2019 14:56:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        id S1725909AbfIRI6J (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 18 Sep 2019 04:58:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFDD1337;
+        Wed, 18 Sep 2019 01:58:08 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 463C03F59C;
+        Wed, 18 Sep 2019 01:58:08 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 09:58:06 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Subject: Re: [PATCH v3 06/26] s390/pci: Use PCI_STD_NUM_BARS
+Message-ID: <20190918085805.GY9720@e119886-lin.cambridge.arm.com>
+References: <20190916204158.6889-1-efremov@linux.com>
+ <20190916204158.6889-7-efremov@linux.com>
 MIME-Version: 1.0
-In-Reply-To: <20190917184013.GB24684@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916204158.6889-7-efremov@linux.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, Sep 16, 2019 at 11:41:38PM +0300, Denis Efremov wrote:
+> Remove local definition PCI_BAR_COUNT for the number of PCI BARs and use
+> global one PCI_STD_NUM_BARS instead.
+> 
+> Acked-by: Sebastian Ott <sebott@linux.ibm.com>
+> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> ---
+>  arch/s390/include/asm/pci.h     |  5 +----
+>  arch/s390/include/asm/pci_clp.h |  6 +++---
+>  arch/s390/pci/pci.c             | 16 ++++++++--------
+>  arch/s390/pci/pci_clp.c         |  6 +++---
+>  4 files changed, 15 insertions(+), 18 deletions(-)
+> 
+> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
+> index a2399eff84ca..3a06c264ea53 100644
+> --- a/arch/s390/include/asm/pci.h
+> +++ b/arch/s390/include/asm/pci.h
+> @@ -2,9 +2,6 @@
+>  #ifndef __ASM_S390_PCI_H
+>  #define __ASM_S390_PCI_H
+>  
+> -/* must be set before including pci_clp.h */
+> -#define PCI_BAR_COUNT	6
+> -
+>  #include <linux/pci.h>
+>  #include <linux/mutex.h>
+>  #include <linux/iommu.h>
+> @@ -138,7 +135,7 @@ struct zpci_dev {
+>  
+>  	char res_name[16];
+>  	bool mio_capable;
+> -	struct zpci_bar_struct bars[PCI_BAR_COUNT];
+> +	struct zpci_bar_struct bars[PCI_STD_NUM_BARS];
+>  
+>  	u64		start_dma;	/* Start of available DMA addresses */
+>  	u64		end_dma;	/* End of available DMA addresses */
+> diff --git a/arch/s390/include/asm/pci_clp.h b/arch/s390/include/asm/pci_clp.h
+> index 50359172cc48..bd2cb4ea7d93 100644
+> --- a/arch/s390/include/asm/pci_clp.h
+> +++ b/arch/s390/include/asm/pci_clp.h
+> @@ -77,7 +77,7 @@ struct mio_info {
+>  	struct {
+>  		u64 wb;
+>  		u64 wt;
+> -	} addr[PCI_BAR_COUNT];
+> +	} addr[PCI_STD_NUM_BARS];
+>  	u32 reserved[6];
+>  } __packed;
+>  
+> @@ -98,9 +98,9 @@ struct clp_rsp_query_pci {
+>  	u16 util_str_avail	:  1;	/* utility string available? */
+>  	u16 pfgid		:  8;	/* pci function group id */
+>  	u32 fid;			/* pci function id */
+> -	u8 bar_size[PCI_BAR_COUNT];
+> +	u8 bar_size[PCI_STD_NUM_BARS];
+>  	u16 pchid;
+> -	__le32 bar[PCI_BAR_COUNT];
+> +	__le32 bar[PCI_STD_NUM_BARS];
+>  	u8 pfip[CLP_PFIP_NR_SEGMENTS];	/* pci function internal path */
+>  	u32			: 16;
+>  	u8 fmb_len;
+> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
+> index b0e3b9a0e488..aca372c8e34f 100644
+> --- a/arch/s390/pci/pci.c
+> +++ b/arch/s390/pci/pci.c
+> @@ -43,7 +43,7 @@ static DECLARE_BITMAP(zpci_domain, ZPCI_NR_DEVICES);
+>  static DEFINE_SPINLOCK(zpci_domain_lock);
+>  
+>  #define ZPCI_IOMAP_ENTRIES						\
+> -	min(((unsigned long) ZPCI_NR_DEVICES * PCI_BAR_COUNT / 2),	\
+> +	min(((unsigned long) ZPCI_NR_DEVICES * PCI_STD_NUM_BARS / 2),	\
+>  	    ZPCI_IOMAP_MAX_ENTRIES)
+>  
+>  static DEFINE_SPINLOCK(zpci_iomap_lock);
+> @@ -294,7 +294,7 @@ static void __iomem *pci_iomap_range_mio(struct pci_dev *pdev, int bar,
+>  void __iomem *pci_iomap_range(struct pci_dev *pdev, int bar,
+>  			      unsigned long offset, unsigned long max)
+>  {
+> -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
+> +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
+>  		return NULL;
+>  
+>  	if (static_branch_likely(&have_mio))
+> @@ -324,7 +324,7 @@ static void __iomem *pci_iomap_wc_range_mio(struct pci_dev *pdev, int bar,
+>  void __iomem *pci_iomap_wc_range(struct pci_dev *pdev, int bar,
+>  				 unsigned long offset, unsigned long max)
+>  {
+> -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
+> +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
+>  		return NULL;
 
-On 9/18/2019 2:40 AM, Rob Herring wrote:
-> On Wed, Sep 04, 2019 at 06:10:30PM +0800, Dilip Kota wrote:
->> The Intel PCIe RC controller is Synopsys Designware
->> based PCIe core. Add YAML schemas for PCIe in RC mode
->> present in Intel Universal Gateway soc.
->>
->> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->> ---
->> changes on v3:
->> 	Add the appropriate License-Identifier
->> 	Rename intel,rst-interval to 'reset-assert-us'
->> 	Add additionalProperties: false
->> 	Rename phy-names to 'pciephy'
->> 	Remove the dtsi node split of SoC and board in the example
->> 	Add #interrupt-cells = <1>; or else interrupt parsing will fail
->> 	Name yaml file with compatible name
->>
->>   .../devicetree/bindings/pci/intel,lgm-pcie.yaml    | 137 +++++++++++++++++++++
->>   1 file changed, 137 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml b/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
->> new file mode 100644
->> index 000000000000..5e5cc7fd66cd
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
->> @@ -0,0 +1,137 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pci/intel-pcie.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Intel AXI bus based PCI express root complex
->> +
->> +maintainers:
->> +  - Dilip Kota <eswara.kota@linux.intel.com>
->> +
->> +properties:
->> +  compatible:
->> +    const: intel,lgm-pcie
->> +
->> +  device_type:
->> +    const: pci
->> +
->> +  "#address-cells":
->> +    const: 3
->> +
->> +  "#size-cells":
->> +    const: 2
-> These all belong in a common schema.
->
->> +
->> +  reg:
->> +    items:
->> +      - description: Controller control and status registers.
->> +      - description: PCIe configuration registers.
->> +      - description: Controller application registers.
->> +
->> +  reg-names:
->> +    items:
->> +      - const: dbi
->> +      - const: config
->> +      - const: app
->> +
->> +  ranges:
->> +    description: Ranges for the PCI memory and I/O regions.
-> And this.
->
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    description: PCIe registers interface clock.
->> +
->> +  phys:
->> +    maxItems: 1
->> +
->> +  phy-names:
->> +    const: pciephy
->> +
->> +  reset-gpios:
->> +    maxItems: 1
->> +
->> +  num-lanes:
->> +    description: Number of lanes to use for this port.
->> +
->> +  linux,pci-domain:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description: PCI domain ID.
-> These 2 also should be common.
->
->> +
->> +  interrupts:
->> +    description: PCIe core integrated miscellaneous interrupt.
-> How many? No need for description if there's only 1.
->
->> +
->> +  '#interrupt-cells':
->> +    const: 1
->> +
->> +  interrupt-map-mask:
->> +    description: Standard PCI IRQ mapping properties.
->> +
->> +  interrupt-map:
->> +    description: Standard PCI IRQ mapping properties.
->> +
->> +  max-link-speed:
->> +    description: Specify PCI Gen for link capability.
->> +
->> +  bus-range:
->> +    description: Range of bus numbers associated with this controller.
-> All common.
-You mean to remove all the common schema entries description!.
-In most of the Documention/devicetree/binding/pci documents all the 
-common entries are described so I followed the same.
->
->> +
->> +  reset-assert-ms:
->> +    description: |
->> +      Device reset interval in ms.
->> +      Some devices need an interval upto 500ms. By default it is 100ms.
-> This is a property of a device, so it belongs in a device node. How
-> would you deal with this without DT?
-This property is for the PCIe RC to keep a delay before notifying the 
-reset to the device.
-If this entry is not present, PCIe driver will set a default value of 100ms.
->
->> +
->> +required:
->> +  - compatible
->> +  - device_type
->> +  - reg
->> +  - reg-names
->> +  - ranges
->> +  - resets
->> +  - clocks
->> +  - phys
->> +  - phy-names
->> +  - reset-gpios
->> +  - num-lanes
->> +  - linux,pci-domain
->> +  - interrupts
->> +  - interrupt-map
->> +  - interrupt-map-mask
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    pcie10:pcie@d0e00000 {
->> +      compatible = "intel,lgm-pcie";
->> +      device_type = "pci";
->> +      #address-cells = <3>;
->> +      #size-cells = <2>;
->> +      reg = <
->> +            0xd0e00000 0x1000
->> +            0xd2000000 0x800000
->> +            0xd0a41000 0x1000
->> +            >;
->> +      reg-names = "dbi", "config", "app";
->> +      linux,pci-domain = <0>;
->> +      max-link-speed = <4>;
->> +      bus-range = <0x00 0x08>;
->> +      interrupt-parent = <&ioapic1>;
->> +      interrupts = <67 1>;
->> +      #interrupt-cells = <1>;
->> +      interrupt-map-mask = <0 0 0 0x7>;
->> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
->> +                      <0 0 0 2 &ioapic1 28 1>,
->> +                      <0 0 0 3 &ioapic1 29 1>,
->> +                      <0 0 0 4 &ioapic1 30 1>;
->> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
->> +      resets = <&rcu0 0x50 0>;
->> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
->> +      phys = <&cb0phy0>;
->> +      phy-names = "pciephy";
->> +      status = "okay";
->> +      reset-assert-ms = <500>;
->> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
->> +      num-lanes = <2>;
->> +    };
->> -- 
->> 2.11.0
->>
+This looks like a latent bug fix here. If 'bar' is out of range we return
+NULL instead accessing an invalid item of an array. Should this not be
+a separate patch and tagged as stable?
+
+Thanks,
+
+Andrew Murray
+
+>  
+>  	if (static_branch_likely(&have_mio))
+> @@ -416,7 +416,7 @@ static void zpci_map_resources(struct pci_dev *pdev)
+>  	resource_size_t len;
+>  	int i;
+>  
+> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  		len = pci_resource_len(pdev, i);
+>  		if (!len)
+>  			continue;
+> @@ -451,7 +451,7 @@ static void zpci_unmap_resources(struct pci_dev *pdev)
+>  	if (zpci_use_mio(zdev))
+>  		return;
+>  
+> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  		len = pci_resource_len(pdev, i);
+>  		if (!len)
+>  			continue;
+> @@ -514,7 +514,7 @@ static int zpci_setup_bus_resources(struct zpci_dev *zdev,
+>  	snprintf(zdev->res_name, sizeof(zdev->res_name),
+>  		 "PCI Bus %04x:%02x", zdev->domain, ZPCI_BUS_NR);
+>  
+> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  		if (!zdev->bars[i].size)
+>  			continue;
+>  		entry = zpci_alloc_iomap(zdev);
+> @@ -551,7 +551,7 @@ static void zpci_cleanup_bus_resources(struct zpci_dev *zdev)
+>  {
+>  	int i;
+>  
+> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  		if (!zdev->bars[i].size || !zdev->bars[i].res)
+>  			continue;
+>  
+> @@ -573,7 +573,7 @@ int pcibios_add_device(struct pci_dev *pdev)
+>  	pdev->dev.dma_ops = &s390_pci_dma_ops;
+>  	zpci_map_resources(pdev);
+>  
+> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  		res = &pdev->resource[i];
+>  		if (res->parent || !res->flags)
+>  			continue;
+> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
+> index 9bdff4defef1..8b729b5f2972 100644
+> --- a/arch/s390/pci/pci_clp.c
+> +++ b/arch/s390/pci/pci_clp.c
+> @@ -145,7 +145,7 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
+>  {
+>  	int i;
+>  
+> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  		zdev->bars[i].val = le32_to_cpu(response->bar[i]);
+>  		zdev->bars[i].size = response->bar_size[i];
+>  	}
+> @@ -164,8 +164,8 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
+>  		       sizeof(zdev->util_str));
+>  	}
+>  	zdev->mio_capable = response->mio_addr_avail;
+> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+> -		if (!(response->mio.valid & (1 << (PCI_BAR_COUNT - i - 1))))
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+> +		if (!(response->mio.valid & (1 << (PCI_STD_NUM_BARS - i - 1))))
+>  			continue;
+>  
+>  		zdev->bars[i].mio_wb = (void __iomem *) response->mio.addr[i].wb;
+> -- 
+> 2.21.0
+> 
