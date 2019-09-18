@@ -2,214 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B4B6B661D
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Sep 2019 16:31:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6243DB686E
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Sep 2019 18:46:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726038AbfIRObj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Sep 2019 10:31:39 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40985 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbfIRObi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Sep 2019 10:31:38 -0400
-Received: by mail-ed1-f67.google.com with SMTP id f20so173553edv.8;
-        Wed, 18 Sep 2019 07:31:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=aBUovupIahAYGyBEbJJYQYWcKpMNigDli6Z35qgINDE=;
-        b=mjn3b2enW4qX6stNbo9qA/NxjOZ3QMb7e7LrrJOie2XYKHF567UrUnDDKgIz15xnOM
-         HksasiaeLUQD805q/Ehr5LPN7e7tQ6/vCtvf+ku2g9hTWAY8TUwrbsCGScqxUbS2/yUJ
-         gTzMvhM1V+cLM6zhxs8mpcxh/fUTgNAMFL/UMIzQjHy7DjFcL9G4ZiQWdJu8MIAw/+Bc
-         ujcTMZM/k7EaSAdrOm6chfAlJzBCdOafn5fT0RDtH/n1BfKmger5myUXBx8qDF3PXHXl
-         U+THzWNJhrwqMeza1khZkmNMOgmdHUUsR2H7RV7/zRfK4cHl0iI86WllAbycp6hKEhcA
-         T4pA==
-X-Gm-Message-State: APjAAAX5aOcTwpF7NDuwRulr+mIhruwTrgChErC5LidNu0aaby/Sq6la
-        v24KQXJSMofUrftHQ4YXcVo=
-X-Google-Smtp-Source: APXvYqzulPQd+vXUmWQEoMmxOk1mnx72mvpjn9QFdJLMa0AZcxKDkZ8k3fLyh2+OiPOCGjv4otwHNQ==
-X-Received: by 2002:aa7:cdd6:: with SMTP id h22mr8762631edw.132.1568817095172;
-        Wed, 18 Sep 2019 07:31:35 -0700 (PDT)
-Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
-        by smtp.gmail.com with ESMTPSA id i7sm1065817edk.42.2019.09.18.07.31.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Sep 2019 07:31:34 -0700 (PDT)
-Reply-To: efremov@linux.com
-Subject: Re: [PATCH v3 17/26] vfio_pci: Loop using PCI_STD_NUM_BARS
+        id S2387734AbfIRQqx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Sep 2019 12:46:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33482 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387733AbfIRQqw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 18 Sep 2019 12:46:52 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 53ECFEC524;
+        Wed, 18 Sep 2019 16:46:52 +0000 (UTC)
+Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C3041100197A;
+        Wed, 18 Sep 2019 16:46:51 +0000 (UTC)
+Date:   Wed, 18 Sep 2019 10:46:51 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
 To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        Cornelia Huck <cohuck@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-References: <20190916204158.6889-1-efremov@linux.com>
- <20190916204158.6889-18-efremov@linux.com>
- <20190918091719.GA9720@e119886-lin.cambridge.arm.com>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <b2783460-1d70-f4f0-17fd-c7a901c41670@linux.com>
-Date:   Wed, 18 Sep 2019 17:31:33 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Cc:     Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>
+Subject: Re: [PATCH] PCI: quirks: Fix register location for UPDCR
+Message-ID: <20190918104651.66535375@x1.home>
+In-Reply-To: <20190918120917.GF9720@e119886-lin.cambridge.arm.com>
+References: <054ef65b-07de-7625-ebcb-f5ce64bc2726@kernkonzept.com>
+        <20190918104213.GD9720@e119886-lin.cambridge.arm.com>
+        <8da75cab-d3d4-14aa-1113-087d4a868072@kernkonzept.com>
+        <20190918120917.GF9720@e119886-lin.cambridge.arm.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <20190918091719.GA9720@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 18 Sep 2019 16:46:52 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/18/19 12:17 PM, Andrew Murray wrote:
-> On Mon, Sep 16, 2019 at 11:41:49PM +0300, Denis Efremov wrote:
->> Refactor loops to use idiomatic C style and avoid the fencepost error
->> of using "i < PCI_STD_RESOURCE_END" when "i <= PCI_STD_RESOURCE_END"
->> is required, e.g., commit 2f686f1d9bee ("PCI: Correct PCI_STD_RESOURCE_END
->> usage").
->>
->> To iterate through all possible BARs, loop conditions changed to the
->> *number* of BARs "i < PCI_STD_NUM_BARS", instead of the index of the last
->> valid BAR "i <= PCI_STD_RESOURCE_END".
->>
->> Cc: Cornelia Huck <cohuck@redhat.com>
->> Cc: Alex Williamson <alex.williamson@redhat.com>
->> Signed-off-by: Denis Efremov <efremov@linux.com>
->> ---
->>  drivers/vfio/pci/vfio_pci.c         | 11 ++++++----
->>  drivers/vfio/pci/vfio_pci_config.c  | 32 +++++++++++++++--------------
->>  drivers/vfio/pci/vfio_pci_private.h |  4 ++--
->>  3 files changed, 26 insertions(+), 21 deletions(-)
->>
->> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
->> index 703948c9fbe1..cb7d220d3246 100644
->> --- a/drivers/vfio/pci/vfio_pci.c
->> +++ b/drivers/vfio/pci/vfio_pci.c
->> @@ -110,13 +110,15 @@ static inline bool vfio_pci_is_vga(struct pci_dev *pdev)
->>  static void vfio_pci_probe_mmaps(struct vfio_pci_device *vdev)
->>  {
->>  	struct resource *res;
->> -	int bar;
->> +	int i;
->>  	struct vfio_pci_dummy_resource *dummy_res;
->>  
->>  	INIT_LIST_HEAD(&vdev->dummy_resources_list);
->>  
->> -	for (bar = PCI_STD_RESOURCES; bar <= PCI_STD_RESOURCE_END; bar++) {
->> -		res = vdev->pdev->resource + bar;
->> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->> +		int bar = i + PCI_STD_RESOURCES;
->> +
->> +		res = &vdev->pdev->resource[bar];
-> 
-> Why can't we just drop PCI_STD_RESOURCES and replace it was 0. I understand
-> the abstraction here, but we don't do it elsewhere across the kernel. Is this
-> necessary?
+On Wed, 18 Sep 2019 13:09:18 +0100
+Andrew Murray <andrew.murray@arm.com> wrote:
 
-There was a discussion about this particular case:
-https://lkml.org/lkml/2019/8/12/999
-
-It was decided to save the original style for vfio drivers.
-
+> On Wed, Sep 18, 2019 at 02:02:59PM +0200, Steffen Liebergeld wrote:
+> > On 18/09/2019 12:42, Andrew Murray wrote:  
+> > > On Tue, Sep 17, 2019 at 08:07:13PM +0200, Steffen Liebergeld wrote:  
+> > >> According to documentation [0] the correct offset for the
+> > >> Upstream Peer Decode Configuration Register (UPDCR) is 0x1014.
+> > >> It was previously defined as 0x1114. This patch fixes it.
+> > >>
+> > >> [0]
+> > >> https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/4th-gen-core-family-mobile-i-o-datasheet.pdf
+> > >> (page 325)
+> > >>
+> > >> Signed-off-by: Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>  
+> > > 
+> > > You may also like to add:
+> > > 
+> > > Fixes: d99321b63b1f ("PCI: Enable quirks for PCIe ACS on Intel PCH root ports")
+> > > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+> > > 
+> > > As well as CC'ing stable.  
+> > 
+> > Ok. Thank you.
+> >   
+> > > I guess the side effect of this bug is that we claim to have peer
+> > > isolation when we do not. This fix ensures that we get the advertised
+> > > isolation.  
+> > Yes, that is also my understanding. Should I explain that in the commit
+> > message?  
 > 
-> Thanks,
-> 
-> Andrew Murray
-> 
->>  
->>  		if (!IS_ENABLED(CONFIG_VFIO_PCI_MMAP))
->>  			goto no_mmap;
->> @@ -399,7 +401,8 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
->>  
->>  	vfio_config_free(vdev);
->>  
->> -	for (bar = PCI_STD_RESOURCES; bar <= PCI_STD_RESOURCE_END; bar++) {
->> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->> +		bar = i + PCI_STD_RESOURCES;
->>  		if (!vdev->barmap[bar])
->>  			continue;
->>  		pci_iounmap(pdev, vdev->barmap[bar]);
->> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
->> index f0891bd8444c..90c0b80f8acf 100644
->> --- a/drivers/vfio/pci/vfio_pci_config.c
->> +++ b/drivers/vfio/pci/vfio_pci_config.c
->> @@ -450,30 +450,32 @@ static void vfio_bar_fixup(struct vfio_pci_device *vdev)
->>  {
->>  	struct pci_dev *pdev = vdev->pdev;
->>  	int i;
->> -	__le32 *bar;
->> +	__le32 *vbar;
->>  	u64 mask;
->>  
->> -	bar = (__le32 *)&vdev->vconfig[PCI_BASE_ADDRESS_0];
->> +	vbar = (__le32 *)&vdev->vconfig[PCI_BASE_ADDRESS_0];
->>  
->> -	for (i = PCI_STD_RESOURCES; i <= PCI_STD_RESOURCE_END; i++, bar++) {
->> -		if (!pci_resource_start(pdev, i)) {
->> -			*bar = 0; /* Unmapped by host = unimplemented to user */
->> +	for (i = 0; i < PCI_STD_NUM_BARS; i++, vbar++) {
->> +		int bar = i + PCI_STD_RESOURCES;
->> +
->> +		if (!pci_resource_start(pdev, bar)) {
->> +			*vbar = 0; /* Unmapped by host = unimplemented to user */
->>  			continue;
->>  		}
->>  
->> -		mask = ~(pci_resource_len(pdev, i) - 1);
->> +		mask = ~(pci_resource_len(pdev, bar) - 1);
->>  
->> -		*bar &= cpu_to_le32((u32)mask);
->> -		*bar |= vfio_generate_bar_flags(pdev, i);
->> +		*vbar &= cpu_to_le32((u32)mask);
->> +		*vbar |= vfio_generate_bar_flags(pdev, bar);
->>  
->> -		if (*bar & cpu_to_le32(PCI_BASE_ADDRESS_MEM_TYPE_64)) {
->> -			bar++;
->> -			*bar &= cpu_to_le32((u32)(mask >> 32));
->> +		if (*vbar & cpu_to_le32(PCI_BASE_ADDRESS_MEM_TYPE_64)) {
->> +			vbar++;
->> +			*vbar &= cpu_to_le32((u32)(mask >> 32));
->>  			i++;
->>  		}
->>  	}
->>  
->> -	bar = (__le32 *)&vdev->vconfig[PCI_ROM_ADDRESS];
->> +	vbar = (__le32 *)&vdev->vconfig[PCI_ROM_ADDRESS];
->>  
->>  	/*
->>  	 * NB. REGION_INFO will have reported zero size if we weren't able
->> @@ -483,14 +485,14 @@ static void vfio_bar_fixup(struct vfio_pci_device *vdev)
->>  	if (pci_resource_start(pdev, PCI_ROM_RESOURCE)) {
->>  		mask = ~(pci_resource_len(pdev, PCI_ROM_RESOURCE) - 1);
->>  		mask |= PCI_ROM_ADDRESS_ENABLE;
->> -		*bar &= cpu_to_le32((u32)mask);
->> +		*vbar &= cpu_to_le32((u32)mask);
->>  	} else if (pdev->resource[PCI_ROM_RESOURCE].flags &
->>  					IORESOURCE_ROM_SHADOW) {
->>  		mask = ~(0x20000 - 1);
->>  		mask |= PCI_ROM_ADDRESS_ENABLE;
->> -		*bar &= cpu_to_le32((u32)mask);
->> +		*vbar &= cpu_to_le32((u32)mask);
->>  	} else
->> -		*bar = 0;
->> +		*vbar = 0;
->>  
->>  	vdev->bardirty = false;
->>  }
->> diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
->> index ee6ee91718a4..8a2c7607d513 100644
->> --- a/drivers/vfio/pci/vfio_pci_private.h
->> +++ b/drivers/vfio/pci/vfio_pci_private.h
->> @@ -86,8 +86,8 @@ struct vfio_pci_reflck {
->>  
->>  struct vfio_pci_device {
->>  	struct pci_dev		*pdev;
->> -	void __iomem		*barmap[PCI_STD_RESOURCE_END + 1];
->> -	bool			bar_mmap_supported[PCI_STD_RESOURCE_END + 1];
->> +	void __iomem		*barmap[PCI_STD_NUM_BARS];
->> +	bool			bar_mmap_supported[PCI_STD_NUM_BARS];
->>  	u8			*pci_config_map;
->>  	u8			*vconfig;
->>  	struct perm_bits	*msi_perm;
->> -- 
->> 2.21.0
->>
+> I think something similar to that would be helpful.
 
+This is unfortunate, but my initial impression is that this may have
+just been a typo that slipped by everyone.  It's difficult to actually
+test for isolation.  Maybe someone from Intel could review this.  Also,
+Steffen discussed this with me prior to posting and I believe this is
+untested, so while trivial from inspection, it would be preferable to
+know that some sample of hardware doesn't fall over as a result.
+Thanks,
+
+Alex
