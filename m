@@ -2,81 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B890BB62CE
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Sep 2019 14:09:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C69C2B6371
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Sep 2019 14:43:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730606AbfIRMJV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Sep 2019 08:09:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:40342 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727637AbfIRMJU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 18 Sep 2019 08:09:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4DE7C337;
-        Wed, 18 Sep 2019 05:09:20 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B92363F575;
-        Wed, 18 Sep 2019 05:09:19 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 13:09:18 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH] PCI: quirks: Fix register location for UPDCR
-Message-ID: <20190918120917.GF9720@e119886-lin.cambridge.arm.com>
-References: <054ef65b-07de-7625-ebcb-f5ce64bc2726@kernkonzept.com>
- <20190918104213.GD9720@e119886-lin.cambridge.arm.com>
- <8da75cab-d3d4-14aa-1113-087d4a868072@kernkonzept.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8da75cab-d3d4-14aa-1113-087d4a868072@kernkonzept.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+        id S1727283AbfIRMnF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Sep 2019 08:43:05 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50430 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725902AbfIRMnF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Sep 2019 08:43:05 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iAZIU-00079V-MC; Wed, 18 Sep 2019 12:43:03 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com, tiwai@suse.com
+Cc:     linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH v3 2/2] ALSA: hda: Allow HDA to be runtime suspended when dGPU is not bound to a driver
+Date:   Wed, 18 Sep 2019 20:42:58 +0800
+Message-Id: <20190918124258.10744-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190828180128.1732-1-kai.heng.feng@canonical.com>
+References: <20190828180128.1732-1-kai.heng.feng@canonical.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 02:02:59PM +0200, Steffen Liebergeld wrote:
-> On 18/09/2019 12:42, Andrew Murray wrote:
-> > On Tue, Sep 17, 2019 at 08:07:13PM +0200, Steffen Liebergeld wrote:
-> >> According to documentation [0] the correct offset for the
-> >> Upstream Peer Decode Configuration Register (UPDCR) is 0x1014.
-> >> It was previously defined as 0x1114. This patch fixes it.
-> >>
-> >> [0]
-> >> https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/4th-gen-core-family-mobile-i-o-datasheet.pdf
-> >> (page 325)
-> >>
-> >> Signed-off-by: Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>
-> > 
-> > You may also like to add:
-> > 
-> > Fixes: d99321b63b1f ("PCI: Enable quirks for PCIe ACS on Intel PCH root ports")
-> > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> > 
-> > As well as CC'ing stable.
-> 
-> Ok. Thank you.
-> 
-> > I guess the side effect of this bug is that we claim to have peer
-> > isolation when we do not. This fix ensures that we get the advertised
-> > isolation.
-> Yes, that is also my understanding. Should I explain that in the commit
-> message?
+Nvidia proprietary driver doesn't support runtime power management, so
+when a user only wants to use the integrated GPU, it's a common practice
+to let dGPU not to bind any driver, and let its upstream port to be
+runtime suspended. At the end of runtime suspension the port uses
+platform power management to disable power through _OFF method of power
+resource, which is listed by _PR3.
 
-I think something similar to that would be helpful.
+After commit b516ea586d71 ("PCI: Enable NVIDIA HDA controllers"), when
+the dGPU comes with an HDA function, the HDA won't be suspended if the
+dGPU is unbound, so the power resource can't be turned off by its
+upstream port driver.
 
-Thanks,
+Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
+discrete GPU") only allows HDA to be runtime suspended once GPU is
+bound, to keep APU's HDA working.
 
-Andrew Murray
+However, HDA on dGPU isn't that useful if dGPU is not bound to any
+driver.  So let's relax the runtime suspend requirement for dGPU's HDA
+function, to disable the power source to save lots of power.
 
-> 
-> Best,
-> Steffen
-> -- 
-> Steffen Liebergeld +49-351-41 888 613
-> 
-> Kernkonzept GmbH.  Sitz: Dresden.  Amtsgericht Dresden, HRB 31129.
-> Geschäftsführer: Dr.-Ing. Michael Hohmuth
+BugLink: https://bugs.launchpad.net/bugs/1840835
+Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v3: 
+- Make changelog more clear.
+v2:
+- Change wording.
+- Rebase to Tiwai's branch.
+
+ sound/pci/hda/hda_intel.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 91e71be42fa4..c3654d22795a 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -1284,7 +1284,11 @@ static void init_vga_switcheroo(struct azx *chip)
+ 		dev_info(chip->card->dev,
+ 			 "Handle vga_switcheroo audio client\n");
+ 		hda->use_vga_switcheroo = 1;
+-		chip->bus.keep_power = 1; /* cleared in either gpu_bound op or codec probe */
++
++		/* cleared in either gpu_bound op or codec probe, or when its
++		 * root port has _PR3 (i.e. dGPU).
++		 */
++		chip->bus.keep_power = !pci_pr3_present(p);
+ 		chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
+ 		pci_dev_put(p);
+ 	}
+-- 
+2.17.1
+
