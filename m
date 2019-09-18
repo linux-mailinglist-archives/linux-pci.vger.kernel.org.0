@@ -2,116 +2,175 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E7D6B642A
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Sep 2019 15:16:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 346FEB65BD
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Sep 2019 16:21:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbfIRNQy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Sep 2019 09:16:54 -0400
-Received: from serv1.kernkonzept.com ([159.69.200.6]:60035 "EHLO
-        mx.kernkonzept.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729725AbfIRNQy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Sep 2019 09:16:54 -0400
-Received: from p2e50e985.dip0.t-ipconnect.de ([46.80.233.133] helo=[192.168.2.106])
-        by mx.kernkonzept.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128) (Exim 4.92)
-        id 1iAZpE-0001qo-Bt; Wed, 18 Sep 2019 15:16:52 +0200
-From:   Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>
-Subject: [PATCH v2] PCI: quirks: Fix register location for UPDCR
-To:     linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org
-Openpgp: preference=signencrypt
-Autocrypt: addr=steffen.liebergeld@kernkonzept.com; prefer-encrypt=mutual;
- keydata=
- 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
- h2oJWECcMvUvwfrFRBCDM67cmQ==
-Message-ID: <7a3505df-79ba-8a28-464c-88b83eefffa6@kernkonzept.com>
-Date:   Wed, 18 Sep 2019 15:16:52 +0200
+        id S1731128AbfIROUv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Sep 2019 10:20:51 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:33953 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728507AbfIROUv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Sep 2019 10:20:51 -0400
+Received: by mail-ed1-f65.google.com with SMTP id p10so182618edq.1;
+        Wed, 18 Sep 2019 07:20:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=mF9N/s8ILweTSnVuSXM/o539kT2v3tCxIskY2MUP33U=;
+        b=eI0UxDDFmeG5F7FW0s4aWFs/ez3fkEWLJEM58BXk/ZxJwLx1N5JNRSuYC4B+V/L2La
+         FwAcGEhsMae9AY7fWQlfsKhFWEPNx/8CLE4BLq0tid4cU/LqfP0kVWuNJ5ZT0iVPrmzm
+         uo9rgISzlZVnTeI993mKeExh/UA5T8xjhNp4xeID3yX57PcM9zyaRD1f0qZ5FY8jTMuo
+         5vy4Fq2U2GJij5gOgmZHEzB8LOatpQbArgkhPArU0oLIoZcQKMQjgGvbzVrYcplDhHyW
+         yS6Ef03YbY9N8gplT3Up8O5EjAjHKY0LL6FdLiU6feecfgf53T/duMZckPjeD34Eb0/m
+         GvVg==
+X-Gm-Message-State: APjAAAVflRj8DS/gJKWh4C5mPLDFNP9uO/yuGKIwJAjkqkvUxErjuTdh
+        yxuW37/OS+F5GgsgP0M5+Ic=
+X-Google-Smtp-Source: APXvYqxEijz/O+lgao2zenADPGmdrJHVUVPIC96IalBeKZkWKA2EF6b3MDX1hA/RuzkecmAalMxBfQ==
+X-Received: by 2002:a17:906:4890:: with SMTP id v16mr9837570ejq.3.1568816449140;
+        Wed, 18 Sep 2019 07:20:49 -0700 (PDT)
+Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
+        by smtp.gmail.com with ESMTPSA id g6sm1070532edk.40.2019.09.18.07.20.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Sep 2019 07:20:48 -0700 (PDT)
+Reply-To: efremov@linux.com
+Subject: Re: [PATCH v3 04/26] PCI: endpoint: Use PCI_STD_NUM_BARS
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+References: <20190916204158.6889-1-efremov@linux.com>
+ <20190916204158.6889-5-efremov@linux.com>
+ <20190918091949.GB9720@e119886-lin.cambridge.arm.com>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <2c5fa911-3aca-216f-7c38-e970840af26a@linux.com>
+Date:   Wed, 18 Sep 2019 17:20:47 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190918091949.GB9720@e119886-lin.cambridge.arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-According to documentation [0] the correct offset for the
-Upstream Peer Decode Configuration Register (UPDCR) is 0x1014.
-It was previously defined as 0x1114.
+On 9/18/19 12:19 PM, Andrew Murray wrote:
+> On Mon, Sep 16, 2019 at 11:41:36PM +0300, Denis Efremov wrote:
+>> To iterate through all possible BARs, loop conditions refactored to the
+>> *number* of BARs "i < PCI_STD_NUM_BARS", instead of the index of the last
+>> valid BAR "i <= BAR_5". This is more idiomatic C style and allows to avoid
+>> the fencepost error. Array definitions changed to PCI_STD_NUM_BARS where
+>> appropriate.
+>>
+>> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+>> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+>> Signed-off-by: Denis Efremov <efremov@linux.com>
+>> ---
+>>  drivers/pci/endpoint/functions/pci-epf-test.c | 10 +++++-----
+>>  include/linux/pci-epc.h                       |  2 +-
+>>  2 files changed, 6 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> index 1cfe3687a211..5d74f81ddfe4 100644
+>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> @@ -44,7 +44,7 @@
+>>  static struct workqueue_struct *kpcitest_workqueue;
+>>  
+>>  struct pci_epf_test {
+>> -	void			*reg[6];
+>> +	void			*reg[PCI_STD_NUM_BARS];
+>>  	struct pci_epf		*epf;
+>>  	enum pci_barno		test_reg_bar;
+>>  	struct delayed_work	cmd_handler;
+>> @@ -377,7 +377,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
+>>  
+>>  	cancel_delayed_work(&epf_test->cmd_handler);
+>>  	pci_epc_stop(epc);
+>> -	for (bar = BAR_0; bar <= BAR_5; bar++) {
+>> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
+>>  		epf_bar = &epf->bar[bar];
+>>  
+>>  		if (epf_test->reg[bar]) {
+>> @@ -400,7 +400,7 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+>>  
+>>  	epc_features = epf_test->epc_features;
+>>  
+>> -	for (bar = BAR_0; bar <= BAR_5; bar += add) {
+>> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar += add) {
+> 
+> Is it possible to completely remove the BAR_x macros, or are there exsiting
+> users after this patchset?
 
-Commit d99321b63b1f intends to enforce isolation between PCI
-devices allowing them to be put into separate IOMMU groups.
-Due to the wrong register offset the intended isolation was not
-fully enforced. This is fixed with this patch.
+They are still used in other parts of the code. So, I've decided to preserve
+the defines in this case.
 
-Please note that I did not test this patch because I have
-no hardware that implements this register.
+pci-epc-core.c
+400:        (epf_bar->barno == BAR_5 &&
+429:        (epf_bar->barno == BAR_5 &&
+functions/pci-epf-test.c
+497:    enum pci_barno test_reg_bar = BAR_0;
 
-[0]
-https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/4th-gen-core-family-mobile-i-o-datasheet.pdf
-(page 325)
+> 
+> As your patchset replaces BAR_0 with 0 and BAR_1 with 1, does this suggest
+> that other users of BAR_x should be removed and also replaced with a number?
 
-Fixes: d99321b63b1f ("PCI: Enable quirks for PCIe ACS on Intel PCH root ports")
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>
----
- drivers/pci/quirks.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I changed BAR_0 to 0 in order to not mix different notions, i.e. the number
+of bars and the concrete bar.
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 208aacf39329..7e184beb2aa4 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4602,7 +4602,7 @@ int pci_dev_specific_acs_enabled(struct pci_dev
-*dev, u16 acs_flags)
- #define INTEL_BSPR_REG_BPPD  (1 << 9)
-  /* Upstream Peer Decode Configuration Register */
--#define INTEL_UPDCR_REG 0x1114
-+#define INTEL_UPDCR_REG 0x1014
- /* 5:0 Peer Decode Enable bits */
- #define INTEL_UPDCR_REG_MASK 0x3f
- -- 2.11.0
+> 
+> Apologies if you this doesn't fall in the remit of this patchset.
 
+I don't know what is better here. It's simple enough to remove these defines.
+However, I would prefer to wait for the endpoint developers opinion.
+
+Thanks for the review!
+Denis
+
+> 
+> Thanks,
+> 
+> Andrew Murray
+> 
+>>  		epf_bar = &epf->bar[bar];
+>>  		/*
+>>  		 * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
+>> @@ -450,7 +450,7 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>>  	}
+>>  	epf_test->reg[test_reg_bar] = base;
+>>  
+>> -	for (bar = BAR_0; bar <= BAR_5; bar += add) {
+>> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar += add) {
+>>  		epf_bar = &epf->bar[bar];
+>>  		add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
+>>  
+>> @@ -478,7 +478,7 @@ static void pci_epf_configure_bar(struct pci_epf *epf,
+>>  	bool bar_fixed_64bit;
+>>  	int i;
+>>  
+>> -	for (i = BAR_0; i <= BAR_5; i++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>>  		epf_bar = &epf->bar[i];
+>>  		bar_fixed_64bit = !!(epc_features->bar_fixed_64bit & (1 << i));
+>>  		if (bar_fixed_64bit)
+>> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+>> index f641badc2c61..56f1846b9d39 100644
+>> --- a/include/linux/pci-epc.h
+>> +++ b/include/linux/pci-epc.h
+>> @@ -117,7 +117,7 @@ struct pci_epc_features {
+>>  	unsigned int	msix_capable : 1;
+>>  	u8	reserved_bar;
+>>  	u8	bar_fixed_64bit;
+>> -	u64	bar_fixed_size[BAR_5 + 1];
+>> +	u64	bar_fixed_size[PCI_STD_NUM_BARS];
+>>  	size_t	align;
+>>  };
+>>  
+>> -- 
+>> 2.21.0
+>>
 
