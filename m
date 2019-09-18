@@ -2,54 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 346FEB65BD
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Sep 2019 16:21:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB951B660B
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Sep 2019 16:27:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731128AbfIROUv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Sep 2019 10:20:51 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33953 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728507AbfIROUv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Sep 2019 10:20:51 -0400
-Received: by mail-ed1-f65.google.com with SMTP id p10so182618edq.1;
-        Wed, 18 Sep 2019 07:20:49 -0700 (PDT)
+        id S1726565AbfIRO1D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Sep 2019 10:27:03 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38951 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbfIRO1D (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Sep 2019 10:27:03 -0400
+Received: by mail-ed1-f67.google.com with SMTP id g12so169063eds.6;
+        Wed, 18 Sep 2019 07:27:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:reply-to:subject:to:cc:references:from
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=mF9N/s8ILweTSnVuSXM/o539kT2v3tCxIskY2MUP33U=;
-        b=eI0UxDDFmeG5F7FW0s4aWFs/ez3fkEWLJEM58BXk/ZxJwLx1N5JNRSuYC4B+V/L2La
-         FwAcGEhsMae9AY7fWQlfsKhFWEPNx/8CLE4BLq0tid4cU/LqfP0kVWuNJ5ZT0iVPrmzm
-         uo9rgISzlZVnTeI993mKeExh/UA5T8xjhNp4xeID3yX57PcM9zyaRD1f0qZ5FY8jTMuo
-         5vy4Fq2U2GJij5gOgmZHEzB8LOatpQbArgkhPArU0oLIoZcQKMQjgGvbzVrYcplDhHyW
-         yS6Ef03YbY9N8gplT3Up8O5EjAjHKY0LL6FdLiU6feecfgf53T/duMZckPjeD34Eb0/m
-         GvVg==
-X-Gm-Message-State: APjAAAVflRj8DS/gJKWh4C5mPLDFNP9uO/yuGKIwJAjkqkvUxErjuTdh
-        yxuW37/OS+F5GgsgP0M5+Ic=
-X-Google-Smtp-Source: APXvYqxEijz/O+lgao2zenADPGmdrJHVUVPIC96IalBeKZkWKA2EF6b3MDX1hA/RuzkecmAalMxBfQ==
-X-Received: by 2002:a17:906:4890:: with SMTP id v16mr9837570ejq.3.1568816449140;
-        Wed, 18 Sep 2019 07:20:49 -0700 (PDT)
+        bh=400pvBocvt0a62SbRKwLyz08gWO35MVfJMPe2DLlqA0=;
+        b=fnSwKR1VJeE3F4JaJydrKtOeTPqp12dpwM77BCPXUDdhvzgmHccXKrq/oCsmCq1FLG
+         U+mYI5xbw8JaZlT8Qg9Mp/FaMkYY3gQ/Wu+ZEBiBxtifdCyrqD28gXbMnesNP9VARrRN
+         0gVzbNehBj9OquvfHZl39p101gmIvuyvvUBW9S03klJuoyBTwJ/dR9gBVYotIhxIXTcU
+         tmc+VareCVxtjos5vNuGij/Eq+QSJAdUJnjTPJN3i1++vBt3tf2FH8m4m+TQT7qBpi09
+         PRNw6ZMrcGqXD740MgcdBjYDVIRDyT8o9Iy30OpiENexqd0HasM8c3XGR8Gpavjouu9p
+         BJ1Q==
+X-Gm-Message-State: APjAAAV3IIUAZgB/qHmtN5XuMfpK0KewUSoFlIIv/aRuvRdzArrQG2cm
+        NUHNX73V9DShikFFPsLm2U0=
+X-Google-Smtp-Source: APXvYqzaqGgg6lGItFTRHXIHvJvgJImWaglUXeJ4fzHPGSK/ke3TXsUH8vLlYYf5nYcHTun3x2qjAg==
+X-Received: by 2002:a17:906:493:: with SMTP id f19mr9629887eja.285.1568816821022;
+        Wed, 18 Sep 2019 07:27:01 -0700 (PDT)
 Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
-        by smtp.gmail.com with ESMTPSA id g6sm1070532edk.40.2019.09.18.07.20.48
+        by smtp.gmail.com with ESMTPSA id ci8sm245279ejb.71.2019.09.18.07.27.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Sep 2019 07:20:48 -0700 (PDT)
+        Wed, 18 Sep 2019 07:27:00 -0700 (PDT)
 Reply-To: efremov@linux.com
-Subject: Re: [PATCH v3 04/26] PCI: endpoint: Use PCI_STD_NUM_BARS
+Subject: Re: [PATCH v3 06/26] s390/pci: Use PCI_STD_NUM_BARS
 To:     Andrew Murray <andrew.murray@arm.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+        linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>
 References: <20190916204158.6889-1-efremov@linux.com>
- <20190916204158.6889-5-efremov@linux.com>
- <20190918091949.GB9720@e119886-lin.cambridge.arm.com>
+ <20190916204158.6889-7-efremov@linux.com>
+ <20190918085805.GY9720@e119886-lin.cambridge.arm.com>
 From:   Denis Efremov <efremov@linux.com>
-Message-ID: <2c5fa911-3aca-216f-7c38-e970840af26a@linux.com>
-Date:   Wed, 18 Sep 2019 17:20:47 +0300
+Message-ID: <c4496d3d-14c1-ffe7-fa38-0caffe81db54@linux.com>
+Date:   Wed, 18 Sep 2019 17:26:59 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190918091949.GB9720@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20190918085805.GY9720@e119886-lin.cambridge.arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -58,118 +59,183 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/18/19 12:19 PM, Andrew Murray wrote:
-> On Mon, Sep 16, 2019 at 11:41:36PM +0300, Denis Efremov wrote:
->> To iterate through all possible BARs, loop conditions refactored to the
->> *number* of BARs "i < PCI_STD_NUM_BARS", instead of the index of the last
->> valid BAR "i <= BAR_5". This is more idiomatic C style and allows to avoid
->> the fencepost error. Array definitions changed to PCI_STD_NUM_BARS where
->> appropriate.
+On 9/18/19 11:58 AM, Andrew Murray wrote:
+> On Mon, Sep 16, 2019 at 11:41:38PM +0300, Denis Efremov wrote:
+>> Remove local definition PCI_BAR_COUNT for the number of PCI BARs and use
+>> global one PCI_STD_NUM_BARS instead.
 >>
->> Cc: Kishon Vijay Abraham I <kishon@ti.com>
->> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+>> Acked-by: Sebastian Ott <sebott@linux.ibm.com>
+>> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
 >> Signed-off-by: Denis Efremov <efremov@linux.com>
 >> ---
->>  drivers/pci/endpoint/functions/pci-epf-test.c | 10 +++++-----
->>  include/linux/pci-epc.h                       |  2 +-
->>  2 files changed, 6 insertions(+), 6 deletions(-)
+>>  arch/s390/include/asm/pci.h     |  5 +----
+>>  arch/s390/include/asm/pci_clp.h |  6 +++---
+>>  arch/s390/pci/pci.c             | 16 ++++++++--------
+>>  arch/s390/pci/pci_clp.c         |  6 +++---
+>>  4 files changed, 15 insertions(+), 18 deletions(-)
 >>
->> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
->> index 1cfe3687a211..5d74f81ddfe4 100644
->> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
->> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
->> @@ -44,7 +44,7 @@
->>  static struct workqueue_struct *kpcitest_workqueue;
+>> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
+>> index a2399eff84ca..3a06c264ea53 100644
+>> --- a/arch/s390/include/asm/pci.h
+>> +++ b/arch/s390/include/asm/pci.h
+>> @@ -2,9 +2,6 @@
+>>  #ifndef __ASM_S390_PCI_H
+>>  #define __ASM_S390_PCI_H
 >>  
->>  struct pci_epf_test {
->> -	void			*reg[6];
->> +	void			*reg[PCI_STD_NUM_BARS];
->>  	struct pci_epf		*epf;
->>  	enum pci_barno		test_reg_bar;
->>  	struct delayed_work	cmd_handler;
->> @@ -377,7 +377,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
+>> -/* must be set before including pci_clp.h */
+>> -#define PCI_BAR_COUNT	6
+>> -
+>>  #include <linux/pci.h>
+>>  #include <linux/mutex.h>
+>>  #include <linux/iommu.h>
+>> @@ -138,7 +135,7 @@ struct zpci_dev {
 >>  
->>  	cancel_delayed_work(&epf_test->cmd_handler);
->>  	pci_epc_stop(epc);
->> -	for (bar = BAR_0; bar <= BAR_5; bar++) {
->> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
->>  		epf_bar = &epf->bar[bar];
+>>  	char res_name[16];
+>>  	bool mio_capable;
+>> -	struct zpci_bar_struct bars[PCI_BAR_COUNT];
+>> +	struct zpci_bar_struct bars[PCI_STD_NUM_BARS];
 >>  
->>  		if (epf_test->reg[bar]) {
->> @@ -400,7 +400,7 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+>>  	u64		start_dma;	/* Start of available DMA addresses */
+>>  	u64		end_dma;	/* End of available DMA addresses */
+>> diff --git a/arch/s390/include/asm/pci_clp.h b/arch/s390/include/asm/pci_clp.h
+>> index 50359172cc48..bd2cb4ea7d93 100644
+>> --- a/arch/s390/include/asm/pci_clp.h
+>> +++ b/arch/s390/include/asm/pci_clp.h
+>> @@ -77,7 +77,7 @@ struct mio_info {
+>>  	struct {
+>>  		u64 wb;
+>>  		u64 wt;
+>> -	} addr[PCI_BAR_COUNT];
+>> +	} addr[PCI_STD_NUM_BARS];
+>>  	u32 reserved[6];
+>>  } __packed;
 >>  
->>  	epc_features = epf_test->epc_features;
+>> @@ -98,9 +98,9 @@ struct clp_rsp_query_pci {
+>>  	u16 util_str_avail	:  1;	/* utility string available? */
+>>  	u16 pfgid		:  8;	/* pci function group id */
+>>  	u32 fid;			/* pci function id */
+>> -	u8 bar_size[PCI_BAR_COUNT];
+>> +	u8 bar_size[PCI_STD_NUM_BARS];
+>>  	u16 pchid;
+>> -	__le32 bar[PCI_BAR_COUNT];
+>> +	__le32 bar[PCI_STD_NUM_BARS];
+>>  	u8 pfip[CLP_PFIP_NR_SEGMENTS];	/* pci function internal path */
+>>  	u32			: 16;
+>>  	u8 fmb_len;
+>> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
+>> index b0e3b9a0e488..aca372c8e34f 100644
+>> --- a/arch/s390/pci/pci.c
+>> +++ b/arch/s390/pci/pci.c
+>> @@ -43,7 +43,7 @@ static DECLARE_BITMAP(zpci_domain, ZPCI_NR_DEVICES);
+>>  static DEFINE_SPINLOCK(zpci_domain_lock);
 >>  
->> -	for (bar = BAR_0; bar <= BAR_5; bar += add) {
->> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar += add) {
+>>  #define ZPCI_IOMAP_ENTRIES						\
+>> -	min(((unsigned long) ZPCI_NR_DEVICES * PCI_BAR_COUNT / 2),	\
+>> +	min(((unsigned long) ZPCI_NR_DEVICES * PCI_STD_NUM_BARS / 2),	\
+>>  	    ZPCI_IOMAP_MAX_ENTRIES)
+>>  
+>>  static DEFINE_SPINLOCK(zpci_iomap_lock);
+>> @@ -294,7 +294,7 @@ static void __iomem *pci_iomap_range_mio(struct pci_dev *pdev, int bar,
+>>  void __iomem *pci_iomap_range(struct pci_dev *pdev, int bar,
+>>  			      unsigned long offset, unsigned long max)
+>>  {
+>> -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
+>> +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
+>>  		return NULL;
+>>  
+>>  	if (static_branch_likely(&have_mio))
+>> @@ -324,7 +324,7 @@ static void __iomem *pci_iomap_wc_range_mio(struct pci_dev *pdev, int bar,
+>>  void __iomem *pci_iomap_wc_range(struct pci_dev *pdev, int bar,
+>>  				 unsigned long offset, unsigned long max)
+>>  {
+>> -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
+>> +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
+>>  		return NULL;
 > 
-> Is it possible to completely remove the BAR_x macros, or are there exsiting
-> users after this patchset?
-
-They are still used in other parts of the code. So, I've decided to preserve
-the defines in this case.
-
-pci-epc-core.c
-400:        (epf_bar->barno == BAR_5 &&
-429:        (epf_bar->barno == BAR_5 &&
-functions/pci-epf-test.c
-497:    enum pci_barno test_reg_bar = BAR_0;
-
+> This looks like a latent bug fix here. If 'bar' is out of range we return
+> NULL instead accessing an invalid item of an array. Should this not be
+> a separate patch and tagged as stable?
 > 
-> As your patchset replaces BAR_0 with 0 and BAR_1 with 1, does this suggest
-> that other users of BAR_x should be removed and also replaced with a number?
 
-I changed BAR_0 to 0 in order to not mix different notions, i.e. the number
-of bars and the concrete bar.
+This fix was suggested by Bjorn in v1 review:
+https://lkml.org/lkml/2019/8/12/997
 
-> 
-> Apologies if you this doesn't fall in the remit of this patchset.
 
-I don't know what is better here. It's simple enough to remove these defines.
-However, I would prefer to wait for the endpoint developers opinion.
-
-Thanks for the review!
-Denis
-
-> 
 > Thanks,
 > 
 > Andrew Murray
 > 
->>  		epf_bar = &epf->bar[bar];
->>  		/*
->>  		 * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
->> @@ -450,7 +450,7 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
->>  	}
->>  	epf_test->reg[test_reg_bar] = base;
 >>  
->> -	for (bar = BAR_0; bar <= BAR_5; bar += add) {
->> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar += add) {
->>  		epf_bar = &epf->bar[bar];
->>  		add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
->>  
->> @@ -478,7 +478,7 @@ static void pci_epf_configure_bar(struct pci_epf *epf,
->>  	bool bar_fixed_64bit;
+>>  	if (static_branch_likely(&have_mio))
+>> @@ -416,7 +416,7 @@ static void zpci_map_resources(struct pci_dev *pdev)
+>>  	resource_size_t len;
 >>  	int i;
 >>  
->> -	for (i = BAR_0; i <= BAR_5; i++) {
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
 >> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->>  		epf_bar = &epf->bar[i];
->>  		bar_fixed_64bit = !!(epc_features->bar_fixed_64bit & (1 << i));
->>  		if (bar_fixed_64bit)
->> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
->> index f641badc2c61..56f1846b9d39 100644
->> --- a/include/linux/pci-epc.h
->> +++ b/include/linux/pci-epc.h
->> @@ -117,7 +117,7 @@ struct pci_epc_features {
->>  	unsigned int	msix_capable : 1;
->>  	u8	reserved_bar;
->>  	u8	bar_fixed_64bit;
->> -	u64	bar_fixed_size[BAR_5 + 1];
->> +	u64	bar_fixed_size[PCI_STD_NUM_BARS];
->>  	size_t	align;
->>  };
+>>  		len = pci_resource_len(pdev, i);
+>>  		if (!len)
+>>  			continue;
+>> @@ -451,7 +451,7 @@ static void zpci_unmap_resources(struct pci_dev *pdev)
+>>  	if (zpci_use_mio(zdev))
+>>  		return;
 >>  
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>>  		len = pci_resource_len(pdev, i);
+>>  		if (!len)
+>>  			continue;
+>> @@ -514,7 +514,7 @@ static int zpci_setup_bus_resources(struct zpci_dev *zdev,
+>>  	snprintf(zdev->res_name, sizeof(zdev->res_name),
+>>  		 "PCI Bus %04x:%02x", zdev->domain, ZPCI_BUS_NR);
+>>  
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>>  		if (!zdev->bars[i].size)
+>>  			continue;
+>>  		entry = zpci_alloc_iomap(zdev);
+>> @@ -551,7 +551,7 @@ static void zpci_cleanup_bus_resources(struct zpci_dev *zdev)
+>>  {
+>>  	int i;
+>>  
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>>  		if (!zdev->bars[i].size || !zdev->bars[i].res)
+>>  			continue;
+>>  
+>> @@ -573,7 +573,7 @@ int pcibios_add_device(struct pci_dev *pdev)
+>>  	pdev->dev.dma_ops = &s390_pci_dma_ops;
+>>  	zpci_map_resources(pdev);
+>>  
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>>  		res = &pdev->resource[i];
+>>  		if (res->parent || !res->flags)
+>>  			continue;
+>> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
+>> index 9bdff4defef1..8b729b5f2972 100644
+>> --- a/arch/s390/pci/pci_clp.c
+>> +++ b/arch/s390/pci/pci_clp.c
+>> @@ -145,7 +145,7 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
+>>  {
+>>  	int i;
+>>  
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>>  		zdev->bars[i].val = le32_to_cpu(response->bar[i]);
+>>  		zdev->bars[i].size = response->bar_size[i];
+>>  	}
+>> @@ -164,8 +164,8 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
+>>  		       sizeof(zdev->util_str));
+>>  	}
+>>  	zdev->mio_capable = response->mio_addr_avail;
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> -		if (!(response->mio.valid & (1 << (PCI_BAR_COUNT - i - 1))))
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>> +		if (!(response->mio.valid & (1 << (PCI_STD_NUM_BARS - i - 1))))
+>>  			continue;
+>>  
+>>  		zdev->bars[i].mio_wb = (void __iomem *) response->mio.addr[i].wb;
 >> -- 
 >> 2.21.0
 >>
