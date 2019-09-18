@@ -2,58 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 16CDBB55AB
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Sep 2019 20:52:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67C04B59E6
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Sep 2019 04:55:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbfIQSwJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Sep 2019 14:52:09 -0400
-Received: from serv1.kernkonzept.com ([159.69.200.6]:42619 "EHLO
-        mx.kernkonzept.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfIQSwJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Sep 2019 14:52:09 -0400
-Received: from p2e50e985.dip0.t-ipconnect.de ([46.80.233.133] helo=[192.168.2.138])
-        by mx.kernkonzept.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128) (Exim 4.92)
-        id 1iAHsf-0005hO-VV; Tue, 17 Sep 2019 20:07:14 +0200
-From:   Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>
-Subject: [PATCH] PCI: quirks: Fix register location for UPDCR
-To:     linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>
-Message-ID: <054ef65b-07de-7625-ebcb-f5ce64bc2726@kernkonzept.com>
-Date:   Tue, 17 Sep 2019 20:07:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1726816AbfIRCzV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Sep 2019 22:55:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726791AbfIRCzV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 17 Sep 2019 22:55:21 -0400
+Subject: Re: [GIT PULL] ACPI updates for v5.4-rc1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568775321;
+        bh=Wa5nUNHuUc8GgHYrNCCYBYFTQGAD7VYOgndSgjMpuMQ=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=QO1AX0/qhDJ5zYv5Tc6SwFJDxdWkF1zL3k5jl2tZq8rIewyemsMpKidFm9i6lzfS5
+         6HVsrPrBS8uTe01WeaENZmHSpMjXeTYO1qyTEAYIrJ8jV7eSPYHifmlXxwuZol9lyM
+         ppmyUeL60/sLbmpxWL1DWhwU1CKg04Ep7zQY74JA=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAJZ5v0jHzVKJiLzMxC6eqqCkpeKA-UD_9fhy1KpVp6fM=XwiSQ@mail.gmail.com>
+References: <CAJZ5v0jHzVKJiLzMxC6eqqCkpeKA-UD_9fhy1KpVp6fM=XwiSQ@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAJZ5v0jHzVKJiLzMxC6eqqCkpeKA-UD_9fhy1KpVp6fM=XwiSQ@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
+ acpi-5.4-rc1
+X-PR-Tracked-Commit-Id: 0b3e7973128528e804b05dd7f79d54c2792318d6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d2aaa49e281959828370667edbc1cdcc7fc4026a
+Message-Id: <156877532122.3897.11937478419380294753.pr-tracker-bot@kernel.org>
+Date:   Wed, 18 Sep 2019 02:55:21 +0000
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-According to documentation [0] the correct offset for the
-Upstream Peer Decode Configuration Register (UPDCR) is 0x1014.
-It was previously defined as 0x1114. This patch fixes it.
+The pull request you sent on Tue, 17 Sep 2019 12:25:05 +0200:
 
-[0]
-https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/4th-gen-core-family-mobile-i-o-datasheet.pdf
-(page 325)
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git acpi-5.4-rc1
 
-Signed-off-by: Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>
----
-  drivers/pci/quirks.c | 2 +-
-  1 file changed, 1 insertion(+), 1 deletion(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d2aaa49e281959828370667edbc1cdcc7fc4026a
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 208aacf39329..7e184beb2aa4 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4602,7 +4602,7 @@ int pci_dev_specific_acs_enabled(struct pci_dev 
-*dev, u16 acs_flags)
-  #define INTEL_BSPR_REG_BPPD  (1 << 9)
-   /* Upstream Peer Decode Configuration Register */
--#define INTEL_UPDCR_REG 0x1114
-+#define INTEL_UPDCR_REG 0x1014
-  /* 5:0 Peer Decode Enable bits */
-  #define INTEL_UPDCR_REG_MASK 0x3f
-  -- 2.11.0
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
