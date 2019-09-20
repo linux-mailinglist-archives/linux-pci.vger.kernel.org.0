@@ -2,98 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D906DB89AC
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Sep 2019 05:17:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8961BB8BB2
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Sep 2019 09:43:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406042AbfITDRd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Sep 2019 23:17:33 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:2790 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405721AbfITDRd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Sep 2019 23:17:33 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d8444d20000>; Thu, 19 Sep 2019 20:17:38 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 19 Sep 2019 20:17:32 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 19 Sep 2019 20:17:32 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Sep
- 2019 03:17:32 +0000
-Received: from [10.25.73.234] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Sep
- 2019 03:17:28 +0000
-Subject: Re: [PATCH -next] PCI: tegra: Add missing include file
-To:     YueHaibing <yuehaibing@huawei.com>, <lorenzo.pieralisi@arm.com>,
-        <andrew.murray@arm.com>, <bhelgaas@google.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <treding@nvidia.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190920014807.38288-1-yuehaibing@huawei.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <1c864f34-a2a2-0057-5768-ed992871e927@nvidia.com>
-Date:   Fri, 20 Sep 2019 08:47:25 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S2393040AbfITHnD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Sep 2019 03:43:03 -0400
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:40720 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393062AbfITHnA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Sep 2019 03:43:00 -0400
+Received: by mail-vk1-f194.google.com with SMTP id d126so1382388vkf.7
+        for <linux-pci@vger.kernel.org>; Fri, 20 Sep 2019 00:42:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Og92PK7lYuYxZVroo0I3fiUsRwDg032RIvVPfcZDz9g=;
+        b=pytRpzDQlDd43MinOxKbi8uqIvJ3ntOh9vfhvnAVt87Jq56QaUx03Fg5JnldbvdAAY
+         0NTWM4iprCKUJyuzGw35eX863u9+ZtC02/IkTZCLFO5DI2qFnELZ2HlwpWh3suuk1Xwc
+         SxTr5+VtHrUc62XyPyA9S1FL5g3WzGTDYNKZK0wf3r2vKfKeCaLl7sFj8nkjdaNcXPN4
+         x4VLVZ2C/hBlkviyHixSyljJmUILQ1CC+Vn1lW1qYycdWUoF9fBid2e117FrqIQNjm/n
+         ZMBTgF3taIj2iuyx1eBLNHoX9WtgiU8FAtr6YxwvfrrRFNDVSqKz9QySnFuLX//HLhwS
+         dg9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Og92PK7lYuYxZVroo0I3fiUsRwDg032RIvVPfcZDz9g=;
+        b=Wm4Gk+CNCU/hi6xjrYNtc5OQMx2zLsbYYcIv52zZh/j1EVKE2ibqpEbugY95wUgx6h
+         tLi24pI2IDqMkIU+w6Dt21I4VJMXZETJxQNl8DV6U9wQ/KyeQ8JKpUNUPi5ZyQMlzlrp
+         t5BddaXwSvqefrbmEb2TE6l2MQZMpPvL/27NJzXx5h4vO2cnfo8uzDvFKnhbmiqjLgH5
+         ypTNqmI0IJUaHTxGA1Y//3WTAsUTrqEKQJ/+zuSOB3YCZvgwzVqITwNhdypss2iNUPWH
+         MnVyS4H5XrUp2V/ry4QIqhVnnzn/pGX3xi5zAH2v+7fulAoe7qK5qR5tMf3Os+ivAdRN
+         QHDw==
+X-Gm-Message-State: APjAAAWoCxVPClyTatf8mdscqciiSW0LjllFVQMMK0Cb+GMfyh7ZKdwj
+        wqtPpgbrCmGx9ywhExUYu0EF2/COAM7bm9TnJEVBzQ==
+X-Google-Smtp-Source: APXvYqzeAbPjybDZ+vBRhEdO6biNo/RravmZvb9w7AWjx86v7n7nmiui7V5NcVtaybCFi9rV9GIoxy35TYNC25gIh6g=
+X-Received: by 2002:a1f:da45:: with SMTP id r66mr3600161vkg.36.1568965377565;
+ Fri, 20 Sep 2019 00:42:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190920014807.38288-1-yuehaibing@huawei.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1568949458; bh=8VvBMAhlupWkjElUkwb5koZLPZoxvhNO2s04Qy7oytM=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=W6sz7fe2uDVN07YAbgnFgJb3HF358KpMHAQbbem2SPN6jA5NUEYJnoW/WHNOmQ4PS
-         9fyoFu0ALAb+MznhImWLXoxxwnCDSXA4rId7LXJev0UoFIkcmz55Tfo6q7Ygomr2nX
-         V0rEPqBllQuhQp81uijYKDezBK+/9s82+KWYnu3f9eBQP6p8PJQF0PlKjvi5YyJI5i
-         +VP7yoyd1p4JN7aoXIymClSPm4zLSpK60gQq4W6xeuBuTTTCK7kwlGdltCLstkQebI
-         EzHh4x6vdNIJIvpxaEsv9w1dImQJ0sVaqY9fqzE3jwyDR5z0oOPa2qim0zdf+IjgMd
-         UO4SwdagAdu0Q==
+References: <20190916204158.6889-1-efremov@linux.com> <20190916204158.6889-24-efremov@linux.com>
+In-Reply-To: <20190916204158.6889-24-efremov@linux.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 20 Sep 2019 09:42:20 +0200
+Message-ID: <CAPDyKFoVEMex2_p1M-cFZnGLuwgK0wZk-kL_eZ=eDiT1tjvDGA@mail.gmail.com>
+Subject: Re: [PATCH v3 23/26] memstick: use PCI_STD_NUM_BARS
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Alex Dubov <oakad@yahoo.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/20/2019 7:18 AM, YueHaibing wrote:
-> Fix build error without CONFIG_PINCTRL
-> 
-> drivers/pci/controller/dwc/pcie-tegra194.c: In function tegra_pcie_config_rp:
-> drivers/pci/controller/dwc/pcie-tegra194.c:1394:8: error: implicit declaration of function pinctrl_pm_select_default_state;
->   did you mean prandom_seed_full_state? [-Werror=implicit-function-declaration]
->    ret = pinctrl_pm_select_default_state(dev);
->          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->          prandom_seed_full_state
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: ab2a50e7602b ("PCI: tegra: Add support to configure sideband pins")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+On Mon, 16 Sep 2019 at 22:47, Denis Efremov <efremov@linux.com> wrote:
+>
+> Use define PCI_STD_NUM_BARS instead of PCI_ROM_RESOURCE for the number of
+> PCI BARs.
+>
+> Cc: Maxim Levitsky <maximlevitsky@gmail.com>
+> Cc: Alex Dubov <oakad@yahoo.com>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+
+Assuming this depends on other changes in the series? Thus this is
+probably for PCI maintainers to pick up?
+
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Kind regards
+Uffe
+
 > ---
->   drivers/pci/controller/dwc/pcie-tegra194.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 09ed8e4..b219d3b2 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -28,6 +28,7 @@
->   #include <linux/reset.h>
->   #include <linux/resource.h>
->   #include <linux/types.h>
-> +#include <linux/pinctrl/consumer.h>
->   #include "pcie-designware.h"
->   #include <soc/tegra/bpmp.h>
->   #include <soc/tegra/bpmp-abi.h>
-> 
-
-Thanks for pushing this change.
-
-Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
+>  drivers/memstick/host/jmb38x_ms.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/memstick/host/jmb38x_ms.c b/drivers/memstick/host/jmb38x_ms.c
+> index 32747425297d..fd281c1d39b1 100644
+> --- a/drivers/memstick/host/jmb38x_ms.c
+> +++ b/drivers/memstick/host/jmb38x_ms.c
+> @@ -848,7 +848,7 @@ static int jmb38x_ms_count_slots(struct pci_dev *pdev)
+>  {
+>         int cnt, rc = 0;
+>
+> -       for (cnt = 0; cnt < PCI_ROM_RESOURCE; ++cnt) {
+> +       for (cnt = 0; cnt < PCI_STD_NUM_BARS; ++cnt) {
+>                 if (!(IORESOURCE_MEM & pci_resource_flags(pdev, cnt)))
+>                         break;
+>
+> --
+> 2.21.0
+>
