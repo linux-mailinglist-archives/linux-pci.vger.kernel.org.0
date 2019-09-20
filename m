@@ -2,170 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 98607B8EEC
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Sep 2019 13:23:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09839B8F06
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Sep 2019 13:31:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393616AbfITLXf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Sep 2019 07:23:35 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45685 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393566AbfITLXf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Sep 2019 07:23:35 -0400
-Received: from mail-ot1-f72.google.com ([209.85.210.72])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iBH0f-0002aN-C7
-        for linux-pci@vger.kernel.org; Fri, 20 Sep 2019 11:23:33 +0000
-Received: by mail-ot1-f72.google.com with SMTP id z24so3432490otq.6
-        for <linux-pci@vger.kernel.org>; Fri, 20 Sep 2019 04:23:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iV27nI8Jtkumr2nEeO8gy6V9pQ8fT+/smrbZCaOLJgg=;
-        b=gUaxiSqO69nbiqK5Jz3nTxFtdl3d5SDVW8Ob8CA5ztXRtXAWMigiHA8bICwFldM6mR
-         ceAVx7zIBR//dil9Pn53byp+7DxsjK0duOVg/3LqzLJ1w/TmRM2clFo6bb+02FkFbHcz
-         WkkVOzbZYJN+Mu0deiEuP7Scd9ej4p9dCpw6VMk8v5WDrTWTWdv86qnAFG9/tGNU4Cvd
-         V+KclFUo8t6fR6WQSFOzt/uq0NTQXiC5nVcvyo+E6V0goJ4Ova/Xt7P6xtRCX4eUeTT7
-         COcXQKoOy3BnppjCYqd9fJfIkYP7wRvyR6wMsJe6C7DLieZ/YtQaQGEV/h4svnsduh/q
-         Bx6w==
-X-Gm-Message-State: APjAAAXOYCHor6917AsEmIVRDr6r0TRV7NSq6dwMuPwMBEUVVHXTwtIs
-        /6mIPJkiDmafM69umJFwjuYf4Ft4Rg5QUkDfX0kQX/DcfX5D6OPqJMJ2vnw1xXp9yzIuVgKtd+c
-        j1eujtkDx0jc3ZonB1t/gxP/NNzb+A5ACayC6kyHeG2rUN+EfDgSPEA==
-X-Received: by 2002:aca:d9c3:: with SMTP id q186mr2385457oig.53.1568978612344;
-        Fri, 20 Sep 2019 04:23:32 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxGE0CXP73wztiKAwRdZskwBr2gJgJJW4tcjb56ypIA/roYner5Ad1WU7kgluJgxuZoVUwvadLKzGua+CFsLXU=
-X-Received: by 2002:aca:d9c3:: with SMTP id q186mr2385434oig.53.1568978612029;
- Fri, 20 Sep 2019 04:23:32 -0700 (PDT)
+        id S2389098AbfITLba (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Sep 2019 07:31:30 -0400
+Received: from mtax.cdmx.gob.mx ([187.141.35.197]:8625 "EHLO mtaw.cdmx.gob.mx"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389010AbfITLb3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 20 Sep 2019 07:31:29 -0400
+X-NAI-Header: Modified by McAfee Email Gateway (4500)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cdmx.gob.mx; s=72359050-3965-11E6-920A-0192F7A2F08E;
+        t=1568963538; h=X-Virus-Scanned:Content-Type:
+         MIME-Version:Content-Transfer-Encoding:Content-Description:
+         Subject:To:From:Date:Reply-To:Message-Id:X-AnalysisOut:
+         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
+         X-AnalysisOut:X-AnalysisOut:X-SAAS-TrackingID:
+         X-NAIMIME-Disclaimer:X-NAIMIME-Modified:X-NAI-Spam-Flag:
+         X-NAI-Spam-Threshold:X-NAI-Spam-Score:X-NAI-Spam-Rules:
+         X-NAI-Spam-Version; bh=p7gWlwfEWOsbONfopC
+        8BPhtqdzKUJiGtXCGJ3YtSNOM=; b=ANZscj7wdNK/RUadztms
+        9Dycm6ov22JrVcLzy15fqjq0EvHNFkmmWbu0j2qxhsdpMdTMxg
+        XPx0jg3a+toGTmDB8168ZGoshJeGbYXBrXZVRyXp/kFSysv+hP
+        hWsnO36ZV4wv20NhLziYr3AWTt0Rbp0roUIV6x0G2uRRxbWKpm
+        g=
+Received: from correo.seciti.cdmx.gob.mx (gdf-correo.cdmx.gob.mx [10.250.102.17]) by mtaw.cdmx.gob.mx with smtp
+         id 14a8_501b_c380b35d_098b_4efd_bfd5_0a82a119ee96;
+        Fri, 20 Sep 2019 02:12:17 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by gdf-correo.df.gob.mx (Postfix) with ESMTP id 22E3B3445;
+        Fri, 20 Sep 2019 02:12:17 -0500 (CDT)
+Received: from correo.seciti.cdmx.gob.mx ([127.0.0.1])
+        by localhost (gdf-correo.df.gob.mx [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id sah-wewRRy5r; Fri, 20 Sep 2019 02:12:17 -0500 (CDT)
+Received: from localhost (localhost [127.0.0.1])
+        by gdf-correo.df.gob.mx (Postfix) with ESMTP id D5DC63430;
+        Fri, 20 Sep 2019 02:12:16 -0500 (CDT)
+X-Virus-Scanned: amavisd-new at gdf-correo.df.gob.mx
+Received: from correo.seciti.cdmx.gob.mx ([127.0.0.1])
+        by localhost (gdf-correo.df.gob.mx [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 9LclOLdopX-Z; Fri, 20 Sep 2019 02:12:16 -0500 (CDT)
+Received: from [100.80.130.141] (8ta-250-0-72.telkomadsl.co.za [102.250.0.72])
+        by gdf-correo.df.gob.mx (Postfix) with ESMTPSA id 39EB833BC;
+        Fri, 20 Sep 2019 02:12:07 -0500 (CDT)
+Content-Type: text/plain;
+  charset="utf-8"
 MIME-Version: 1.0
-References: <20190827134756.10807-1-kai.heng.feng@canonical.com> <20190909114129.GT103977@google.com>
-In-Reply-To: <20190909114129.GT103977@google.com>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Fri, 20 Sep 2019 13:23:20 +0200
-Message-ID: <CAAd53p4mc0tgCBiwfZRowr4os_bqDP+7Ko=d+do8OW2aH1Whzg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] PCI: Add a helper to check Power Resource
- Requirements _PR3 existence
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     tiwai@suse.com, Linux PCI <linux-pci@vger.kernel.org>,
-        alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Content-Description: Mail message body
+Subject: Spende von 5 Millionen Euro
+To:     Recipients <mramirezg@mexicocity.gob.mx>
+From:   "Shane Missler" <mramirezg@mexicocity.gob.mx>
+Date:   Fri, 20 Sep 2019 09:12:14 +0200
+Reply-To: "shanemissler.spende11@gmail.comshanemissler.spende11"@gmail.com
+Message-Id: <20190920071208.39EB833BC@gdf-correo.df.gob.mx>
+X-AnalysisOut: [v=2.2 cv=crfrqxwi c=1 sm=1 tr=0 p=09-KjHS_CW8A:10 p=bEr4i4]
+X-AnalysisOut: [eggGkA:10 p=Lyqu6MUUigPyaOuRX7ce:22 a=KsSCQl7LcZej77FuluUc]
+X-AnalysisOut: [Qw==:117 a=+/zS2XqOcqrzxqj0Epa8oQ==:17 a=IkcTkHD0fZMA:10 a]
+X-AnalysisOut: [=x7bEGLp0ZPQA:10 a=J70Eh1EUuV4A:10 a=pGLkceISAAAA:8 a=wN7r]
+X-AnalysisOut: [T8hNlMSaUXRpxSgA:9 a=K7tsimcRO30Sg2YH:21 a=QOCYt1FwmxBrUrR]
+X-AnalysisOut: [v:21 a=QEXdDO2ut3YA:10]
+X-SAAS-TrackingID: 2db748d5.0.86087610.00-2361.144723078.s12p02m015.mxlogic.net
+X-NAIMIME-Disclaimer: 1
+X-NAIMIME-Modified: 1
+X-NAI-Spam-Flag: NO
+X-NAI-Spam-Threshold: 3
+X-NAI-Spam-Score: -5000
+X-NAI-Spam-Rules: 1 Rules triggered
+        WHITELISTED=-5000
+X-NAI-Spam-Version: 2.3.0.9418 : core <6638> : inlines <7144> : streams
+ <1833283> : uri <2907334>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
-
-I didn't find your reply in my mailbox earlier.
-
-On Mon, Sep 9, 2019 at 1:41 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> Maybe:
->
->   PCI: Add pci_pr3_present() to check for Power Resources for D3hot
-
-Ok, this is a good title.
-
->
-> On Tue, Aug 27, 2019 at 09:47:55PM +0800, Kai-Heng Feng wrote:
-> > A driver may want to know the existence of _PR3, to choose different
-> > runtime suspend behavior. A user will be add in next patch.
->
-> Maybe include something like this in the commit lot?
->
->   Add pci_pr3_present() to check whether the platform supplies _PR3 to
->   tell us which power resources the device depends on when in D3hot.
-
-Ok.
-
->
-> > This is mostly the same as nouveau_pr3_present().
-> >
-> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > ---
-> >  drivers/pci/pci.c   | 20 ++++++++++++++++++++
-> >  include/linux/pci.h |  2 ++
-> >  2 files changed, 22 insertions(+)
-> >
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 1b27b5af3d55..776af15b92c2 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -5856,6 +5856,26 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
-> >       return 0;
-> >  }
-> >
-> > +bool pci_pr3_present(struct pci_dev *pdev)
-> > +{
-> > +     struct pci_dev *parent_pdev = pci_upstream_bridge(pdev);
-> > +     struct acpi_device *parent_adev;
-> > +
-> > +     if (acpi_disabled)
-> > +             return false;
-> > +
-> > +     if (!parent_pdev)
-> > +             return false;
-> > +
-> > +     parent_adev = ACPI_COMPANION(&parent_pdev->dev);
-> > +     if (!parent_adev)
-> > +             return false;
-> > +
-> > +     return parent_adev->power.flags.power_resources &&
-> > +             acpi_has_method(parent_adev->handle, "_PR3");
->
-> I think this is generally OK, but it doesn't actually check whether
-> *pdev* has a _PR3; it checks whether pdev's *parent* does.  So does
-> that mean this is dependent on the GPU topology, i.e., does it assume
-> that there is an upstream bridge and that power for everything under
-> that bridge can be managed together?
-
-Yes, the power resource is managed by its upstream port.
-
->
-> I'm wondering whether the "parent_pdev = pci_upstream_bridge()" part
-> should be in the caller rather than in pci_pr3_present()?
-
-This will make the function more align to its name, but needs more
-work from caller side.
-How about rename the function to pci_upstream_pr3_present()?
-
->
-> I can't connect any of the dots from _PR3 through to
-> "need_eld_notify_link" (whatever "eld" is :)) and the uses of
-> hda_intel.need_eld_notify_link (and needs_eld_notify_link()).
->
-> But that's beyond the scope of *this* patch and it makes sense that
-> you do want to discover the _PR3 existence, so I'm fine with this once
-> we figure out the pdev vs parent question.
-
-Thanks for your review.
-
-Kai-Heng
-
->
-> > +}
-> > +EXPORT_SYMBOL_GPL(pci_pr3_present);
-> > +
-> >  /**
-> >   * pci_add_dma_alias - Add a DMA devfn alias for a device
-> >   * @dev: the PCI device for which alias is added
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 82e4cd1b7ac3..9b6f7b67fac9 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -2348,9 +2348,11 @@ struct irq_domain *pci_host_bridge_acpi_msi_domain(struct pci_bus *bus);
-> >
-> >  void
-> >  pci_msi_register_fwnode_provider(struct fwnode_handle *(*fn)(struct device *));
-> > +bool pci_pr3_present(struct pci_dev *pdev);
-> >  #else
-> >  static inline struct irq_domain *
-> >  pci_host_bridge_acpi_msi_domain(struct pci_bus *bus) { return NULL; }
-> > +static bool pci_pr3_present(struct pci_dev *pdev) { return false; }
-> >  #endif
-> >
-> >  #ifdef CONFIG_EEH
-> > --
-> > 2.17.1
-> >
+RGllcyBpc3QgZWluZSBwZXJzw7ZubGljaGUgTWFpbCwgZGllIGljaCBhbiBTaWUgYWRyZXNzaWVy
+ZS4gSWNoIGJpbiBTSEFORSBNSVNTTEVSIGF1cyBGbG9yaWRhLCBVU0EuIFdpZSBTaWUgYmVyZWl0
+cyB3aXNzZW4sIGhhYmUgaWNoIGVpbmVuIExvdHRvLUphY2twb3QgaW4gSMO2aGUgdm9uIDQ1MSBN
+aW8uIFVTRCAoMzMwIE1pby4gR0JQKSBnZXdvbm5lbiB1bmQgZGFzIEdlbGQgaGF0IG1laW4gTGVi
+ZW4gdW5kIG1laW4gRmFtaWxpZW5sZWJlbiB2ZXLDpG5kZXJ0LCBhYmVyIGVzIHdpcmQgbWVpbiBI
+ZXJ6IG5pY2h0IHZlcsOkbmRlcm4sIHdpZSBpY2ggYW4gZGVtIFRhZyBzYWd0ZSwgYW4gZGVtIGlj
+aCBtZWluIEdlbGQgaGFiZSwgZGFzIGljaCB2ZXJ3ZW5kZW4gd2VyZGUgRGllc2VzIEdlbGQgZsO8
+ciBkaWUgSGlsZmUgZGVyIE1lbnNjaGhlaXQuIEljaCBoYWJlIGJlc2NobG9zc2VuLCBJaG5lbiB1
+bmQgSWhyZXIgR2VtZWluZGUgZWluZW4gQmV0cmFnIHZvbiA1IE1pbGxpb25lbiBFdXJvIHp1IHNw
+ZW5kZW4sIHVtIGRpZXNlIFNwZW5kZSBhbnp1Zm9yZGVybi4gRS1NYWlsOiAoc2hhbmVtaXNzbGVy
+MEBnbWFpbC5jb20pCgpDZWNpIGVzdCB1biBjb3VycmllciBwZXJzb25uZWwgcXVlIGplIHZvdXMg
+YWRyZXNzZS4gSmUgc3VpcyBTSEFORSBNSVNTTEVSLCBkZSBGbG9yaWRlLCDDiXRhdHMtVW5pcy4g
+Q29tbWUgdm91cyBsZSBzYXZleiBkw6lqw6AsIGonYWkgZ2FnbsOpIDQ1MSBtaWxsaW9ucyBkZSBk
+b2xsYXJzIChMb3R0byBKYWNrcG90KSBldCBsJ2FyZ2VudCBhIGNoYW5nw6kgbWEgdmllIGV0IGNl
+bGxlIGRlIG1hIGZhbWlsbGUsIG1haXMgY2VsYSBuZSBjaGFuZ2VyYSBwYXMgbW9uIGPFk3VyLCBj
+b21tZSBqZSBsJ2FpIGRpdCBsZSBqb3VyIG/DuSBqJ2FpIG1vbiBhcmdlbnQsIGondXRpbGlzZXJh
+aSBjZXQgYXJnZW50IHBvdXIgbCdhaWRlIGRlIGwnaHVtYW5pdMOpLkonYWkgZMOpY2lkw6kgZGUg
+dm91cyBkb25uZXIgbGEgc29tbWUgZGUgNSBtaWxsaW9ucyBkJ2V1cm9zIMOgIHZvdXMgZXQgw6Ag
+dm90cmUgY29tbXVuYXV0w6ksIHBvdXIgcsOpY2xhbWVyIGNlIGRvbiwgZW1haWwtIChzaGFuZW1p
+c3NsZXIwQGdtYWlsLmNvbSkKCgoKLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uCgoKTGEgaW5mb3JtYWNpb24gY29udGVuaWRhIGVuIGVzdGUgY29ycmVvLCBhc2kgY29t
+byBsYSBjb250ZW5pZGEgZW4gbG9zIGRvY3VtZW50b3MgYW5leG9zLCBwdWVkZSBjb250ZW5lciBk
+YXRvcyBwZXJzb25hbGVzLCBwb3IgbG8gcXVlIHN1IGRpZnVzaW9uIGVzIHJlc3BvbnNhYmlsaWRh
+ZCBkZSBxdWllbiBsb3MgdHJhbnNtaXRlIHkgcXVpZW4gbG9zIHJlY2liZSwgZW4gdMOpcm1pbm9z
+IGRlIGxvIGRpc3B1ZXN0byBwb3IgbGFzIGZyYWNjaW9uZXMgSUkgeSBWSUkgZGVsIGFydGljdWxv
+IDQsIHVsdGltbyBwYXJyYWZvIGRlbCBhcnRpY3VsbyA4LCBhcnRpY3VsbyAzNiBwYXJyYWZvIElJ
+LCAzOCBmcmFjY2lvbiBJIHkgZGVtYXMgYXBsaWNhYmxlcyBkZSBsYSBMZXkgZGUgVHJhbnNwYXJl
+bmNpYSB5IEFjY2VzbyBhIGxhIEluZm9ybWFjaW9uIFB1YmxpY2EgZGVsIERpc3RyaXRvIEZlZGVy
+YWwuDQpMb3MgRGF0b3MgUGVyc29uYWxlcyBzZSBlbmN1ZW50cmFuIHByb3RlZ2lkb3MgcG9yIGxh
+IExleSBkZSBQcm90ZWNjaW9uIGRlIERhdG9zIFBlcnNvbmFsZXMgZGVsIERpc3RyaXRvIEZlZGVy
+YWwsIHBvciBsbyBxdWUgc3UgZGlmdXNpb24gc2UgZW5jdWVudHJhIHR1dGVsYWRhIGVuIHN1cyBh
+cnRpY3Vsb3MgMiwgNSwgMTYsIDIxLCA0MSB5IGRlbWFzIHJlbGF0aXZvcyB5IGFwbGljYWJsZXMs
+IGRlYmllbmRvIHN1amV0YXJzZSBlbiBzdSBjYXNvLCBhIGxhcyBkaXNwb3NpY2lvbmVzIHJlbGF0
+aXZhcyBhIGxhIGNyZWFjaW9uLCBtb2RpZmljYWNpb24gbyBzdXByZXNpb24gZGUgZGF0b3MgcGVy
+c29uYWxlcyBwcmV2aXN0b3MuIEFzaW1pc21vLCBkZWJlcmEgZXN0YXJzZSBhIGxvIHNlw7FhbGFk
+byBlbiBsb3MgbnVtZXJhbGVzIDEgLCAzLCAxMiwgMTgsIDE5LCAyMCwgMjEsIDIzLCAyNCwgMjks
+IDM1IHkgZGVtYXMgYXBsaWNhYmxlcyBkZSBsb3MgTGluZWFtaWVudG9zIHBhcmEgbGEgUHJvdGVj
+Y2lvbiBkZSBEYXRvcyBQZXJzb25hbGVzIGVuIGVsIERpc3RyaXRvIEZlZGVyYWwuDQpFbiBlbCB1
+c28gZGUgbGFzIHRlY25vbG9naWFzIGRlIGxhIGluZm9ybWFjaW9uIHkgY29tdW5pY2FjaW9uZXMg
+ZGVsIEdvYmllcm5vIGRlbCBEaXN0cml0byBGZWRlcmFsLCBkZWJlcmEgb2JzZXJ2YXJzZSBwdW50
+dWFsbWVudGUgbG8gZGlzcHVlc3RvIHBvciBsYSBMZXkgR29iaWVybm8gRWxlY3Ryb25pY28gZGVs
+IERpc3RyaXRvIEZlZGVyYWwsIGxhIGxleSBwYXJhIGhhY2VyIGRlIGxhIENpdWRhZCBkZSBNZXhp
+Y28gdW5hIENpdWRhZCBNYXMgQWJpZXJ0YSwgZWwgYXBhcnRhZG8gMTAgZGUgbGEgQ2lyY3VsYXIg
+VW5vIHZpZ2VudGUgeSBsYXMgTm9ybWFzIEdlbmVyYWxlcyBxdWUgZGViZXJhbiBvYnNlcnZhcnNl
+IGVuIG1hdGVyaWEgZGUgU2VndXJpZGFkIGRlIGxhIEluZm9ybWFjaW9uIGVuIGxhIEFkbWluaXN0
+cmFjaW9uIFB1YmxpY2EgZGVsIERpc3RyaXRvIEZlZGVyYWwuCg==
