@@ -2,128 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 09839B8F06
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Sep 2019 13:31:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B920B9047
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Sep 2019 15:04:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389098AbfITLba (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Sep 2019 07:31:30 -0400
-Received: from mtax.cdmx.gob.mx ([187.141.35.197]:8625 "EHLO mtaw.cdmx.gob.mx"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389010AbfITLb3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Sep 2019 07:31:29 -0400
-X-NAI-Header: Modified by McAfee Email Gateway (4500)
+        id S1726953AbfITNEz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Sep 2019 09:04:55 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36132 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbfITNEy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Sep 2019 09:04:54 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y19so6724642wrd.3
+        for <linux-pci@vger.kernel.org>; Fri, 20 Sep 2019 06:04:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cdmx.gob.mx; s=72359050-3965-11E6-920A-0192F7A2F08E;
-        t=1568963538; h=X-Virus-Scanned:Content-Type:
-         MIME-Version:Content-Transfer-Encoding:Content-Description:
-         Subject:To:From:Date:Reply-To:Message-Id:X-AnalysisOut:
-         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
-         X-AnalysisOut:X-AnalysisOut:X-SAAS-TrackingID:
-         X-NAIMIME-Disclaimer:X-NAIMIME-Modified:X-NAI-Spam-Flag:
-         X-NAI-Spam-Threshold:X-NAI-Spam-Score:X-NAI-Spam-Rules:
-         X-NAI-Spam-Version; bh=p7gWlwfEWOsbONfopC
-        8BPhtqdzKUJiGtXCGJ3YtSNOM=; b=ANZscj7wdNK/RUadztms
-        9Dycm6ov22JrVcLzy15fqjq0EvHNFkmmWbu0j2qxhsdpMdTMxg
-        XPx0jg3a+toGTmDB8168ZGoshJeGbYXBrXZVRyXp/kFSysv+hP
-        hWsnO36ZV4wv20NhLziYr3AWTt0Rbp0roUIV6x0G2uRRxbWKpm
-        g=
-Received: from correo.seciti.cdmx.gob.mx (gdf-correo.cdmx.gob.mx [10.250.102.17]) by mtaw.cdmx.gob.mx with smtp
-         id 14a8_501b_c380b35d_098b_4efd_bfd5_0a82a119ee96;
-        Fri, 20 Sep 2019 02:12:17 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by gdf-correo.df.gob.mx (Postfix) with ESMTP id 22E3B3445;
-        Fri, 20 Sep 2019 02:12:17 -0500 (CDT)
-Received: from correo.seciti.cdmx.gob.mx ([127.0.0.1])
-        by localhost (gdf-correo.df.gob.mx [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id sah-wewRRy5r; Fri, 20 Sep 2019 02:12:17 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-        by gdf-correo.df.gob.mx (Postfix) with ESMTP id D5DC63430;
-        Fri, 20 Sep 2019 02:12:16 -0500 (CDT)
-X-Virus-Scanned: amavisd-new at gdf-correo.df.gob.mx
-Received: from correo.seciti.cdmx.gob.mx ([127.0.0.1])
-        by localhost (gdf-correo.df.gob.mx [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 9LclOLdopX-Z; Fri, 20 Sep 2019 02:12:16 -0500 (CDT)
-Received: from [100.80.130.141] (8ta-250-0-72.telkomadsl.co.za [102.250.0.72])
-        by gdf-correo.df.gob.mx (Postfix) with ESMTPSA id 39EB833BC;
-        Fri, 20 Sep 2019 02:12:07 -0500 (CDT)
-Content-Type: text/plain;
-  charset="utf-8"
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=jJ8kGTBYtlb/umVW1iRDm0Nvvm+8UUzgzphkr+DF4mg=;
+        b=bGKFJCNSZqbhRGQSYk+8nFZ5d5ZK2pv1I4QQAb234fugjY/gLAPEbEsCtPJliIo/wy
+         pTD4duXYhQxw8pulxxxq5q2JBbPF1kXWfuyXMoMTeGR3Yuy5Ufq4kRB76QX68aImudsW
+         xtvbNCS7T6QuDC3BSCeKuLrcMcrxgFutBRdY5J6DcZaeuvmx476uj600rVkVorbZgeG7
+         PIDBIewl/T9CGhFJ5LRY3KiGWz1UTKF8BrZ3dlYm+NqvRQ4pcYM7f0eOhkk1QQH66bTc
+         dvl08NpOO0qVsJydwrKNBV5P0L/mQpE0AyOpNcfM2Fkh/NKTdbtVixbVyZ5nLPS6mgMS
+         bXgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=jJ8kGTBYtlb/umVW1iRDm0Nvvm+8UUzgzphkr+DF4mg=;
+        b=YW+VITXQEiPBTmrXNBQ5cPq/10YIm9iIuwh5f9vBvSPSQrtAPlhUCqeRRkCrPQjwHw
+         5fUxo8jYhI0COpdK7qTsu46/tz6kDeMTUgHc25RUd+s7HMB95bQAO7s3z0GpMf47X2Du
+         T9bx2MqOcHaxX4YoFX4OyLcg8U5qq8JeLCPQ6jhj2buPaD0vgcgcZVrMoCyR0Q4WzJLI
+         7JNLaocfHfzE3jmkxIKZhFgSLuVUV86iRVtV9K3UtrWSiy7SLc0qAog5PsRwZPYl1a+M
+         gno0XO4KFeHfbIOiIMe42u8QYiDqmXUhWsGtEfP1rAwlTwn2sP2svDASdjcXmoOerLku
+         23wg==
+X-Gm-Message-State: APjAAAX/GcROHbk2Kmiq52XkFNf38KiP7AMd13lXrGJ98g7PHZOI5KBV
+        strVSS3nfmHTEF+faON/7WLrwDHAusqclXIBkRWsV37vUEE=
+X-Google-Smtp-Source: APXvYqyKBHZKlOa6ILBGqAK0H4D0k1agN2n6BoqXcfqABnWmeW++MBtSeko2LSzepEHq7gbUBltmUh8tpt+E4XoVwYM=
+X-Received: by 2002:adf:f404:: with SMTP id g4mr11057703wro.353.1568984692670;
+ Fri, 20 Sep 2019 06:04:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Description: Mail message body
-Subject: Spende von 5 Millionen Euro
-To:     Recipients <mramirezg@mexicocity.gob.mx>
-From:   "Shane Missler" <mramirezg@mexicocity.gob.mx>
-Date:   Fri, 20 Sep 2019 09:12:14 +0200
-Reply-To: "shanemissler.spende11@gmail.comshanemissler.spende11"@gmail.com
-Message-Id: <20190920071208.39EB833BC@gdf-correo.df.gob.mx>
-X-AnalysisOut: [v=2.2 cv=crfrqxwi c=1 sm=1 tr=0 p=09-KjHS_CW8A:10 p=bEr4i4]
-X-AnalysisOut: [eggGkA:10 p=Lyqu6MUUigPyaOuRX7ce:22 a=KsSCQl7LcZej77FuluUc]
-X-AnalysisOut: [Qw==:117 a=+/zS2XqOcqrzxqj0Epa8oQ==:17 a=IkcTkHD0fZMA:10 a]
-X-AnalysisOut: [=x7bEGLp0ZPQA:10 a=J70Eh1EUuV4A:10 a=pGLkceISAAAA:8 a=wN7r]
-X-AnalysisOut: [T8hNlMSaUXRpxSgA:9 a=K7tsimcRO30Sg2YH:21 a=QOCYt1FwmxBrUrR]
-X-AnalysisOut: [v:21 a=QEXdDO2ut3YA:10]
-X-SAAS-TrackingID: 2db748d5.0.86087610.00-2361.144723078.s12p02m015.mxlogic.net
-X-NAIMIME-Disclaimer: 1
-X-NAIMIME-Modified: 1
-X-NAI-Spam-Flag: NO
-X-NAI-Spam-Threshold: 3
-X-NAI-Spam-Score: -5000
-X-NAI-Spam-Rules: 1 Rules triggered
-        WHITELISTED=-5000
-X-NAI-Spam-Version: 2.3.0.9418 : core <6638> : inlines <7144> : streams
- <1833283> : uri <2907334>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 20 Sep 2019 15:04:39 +0200
+Message-ID: <CA+icZUWyihryeijbre3wVxpGoSPohcPJq3LwN6gktZrgLccMUQ@mail.gmail.com>
+Subject: [dmidecode] Crucial SODIMM-DDR3 RAM and Manufacturer: 859B
+To:     linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-RGllcyBpc3QgZWluZSBwZXJzw7ZubGljaGUgTWFpbCwgZGllIGljaCBhbiBTaWUgYWRyZXNzaWVy
-ZS4gSWNoIGJpbiBTSEFORSBNSVNTTEVSIGF1cyBGbG9yaWRhLCBVU0EuIFdpZSBTaWUgYmVyZWl0
-cyB3aXNzZW4sIGhhYmUgaWNoIGVpbmVuIExvdHRvLUphY2twb3QgaW4gSMO2aGUgdm9uIDQ1MSBN
-aW8uIFVTRCAoMzMwIE1pby4gR0JQKSBnZXdvbm5lbiB1bmQgZGFzIEdlbGQgaGF0IG1laW4gTGVi
-ZW4gdW5kIG1laW4gRmFtaWxpZW5sZWJlbiB2ZXLDpG5kZXJ0LCBhYmVyIGVzIHdpcmQgbWVpbiBI
-ZXJ6IG5pY2h0IHZlcsOkbmRlcm4sIHdpZSBpY2ggYW4gZGVtIFRhZyBzYWd0ZSwgYW4gZGVtIGlj
-aCBtZWluIEdlbGQgaGFiZSwgZGFzIGljaCB2ZXJ3ZW5kZW4gd2VyZGUgRGllc2VzIEdlbGQgZsO8
-ciBkaWUgSGlsZmUgZGVyIE1lbnNjaGhlaXQuIEljaCBoYWJlIGJlc2NobG9zc2VuLCBJaG5lbiB1
-bmQgSWhyZXIgR2VtZWluZGUgZWluZW4gQmV0cmFnIHZvbiA1IE1pbGxpb25lbiBFdXJvIHp1IHNw
-ZW5kZW4sIHVtIGRpZXNlIFNwZW5kZSBhbnp1Zm9yZGVybi4gRS1NYWlsOiAoc2hhbmVtaXNzbGVy
-MEBnbWFpbC5jb20pCgpDZWNpIGVzdCB1biBjb3VycmllciBwZXJzb25uZWwgcXVlIGplIHZvdXMg
-YWRyZXNzZS4gSmUgc3VpcyBTSEFORSBNSVNTTEVSLCBkZSBGbG9yaWRlLCDDiXRhdHMtVW5pcy4g
-Q29tbWUgdm91cyBsZSBzYXZleiBkw6lqw6AsIGonYWkgZ2FnbsOpIDQ1MSBtaWxsaW9ucyBkZSBk
-b2xsYXJzIChMb3R0byBKYWNrcG90KSBldCBsJ2FyZ2VudCBhIGNoYW5nw6kgbWEgdmllIGV0IGNl
-bGxlIGRlIG1hIGZhbWlsbGUsIG1haXMgY2VsYSBuZSBjaGFuZ2VyYSBwYXMgbW9uIGPFk3VyLCBj
-b21tZSBqZSBsJ2FpIGRpdCBsZSBqb3VyIG/DuSBqJ2FpIG1vbiBhcmdlbnQsIGondXRpbGlzZXJh
-aSBjZXQgYXJnZW50IHBvdXIgbCdhaWRlIGRlIGwnaHVtYW5pdMOpLkonYWkgZMOpY2lkw6kgZGUg
-dm91cyBkb25uZXIgbGEgc29tbWUgZGUgNSBtaWxsaW9ucyBkJ2V1cm9zIMOgIHZvdXMgZXQgw6Ag
-dm90cmUgY29tbXVuYXV0w6ksIHBvdXIgcsOpY2xhbWVyIGNlIGRvbiwgZW1haWwtIChzaGFuZW1p
-c3NsZXIwQGdtYWlsLmNvbSkKCgoKLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uCgoKTGEgaW5mb3JtYWNpb24gY29udGVuaWRhIGVuIGVzdGUgY29ycmVvLCBhc2kgY29t
-byBsYSBjb250ZW5pZGEgZW4gbG9zIGRvY3VtZW50b3MgYW5leG9zLCBwdWVkZSBjb250ZW5lciBk
-YXRvcyBwZXJzb25hbGVzLCBwb3IgbG8gcXVlIHN1IGRpZnVzaW9uIGVzIHJlc3BvbnNhYmlsaWRh
-ZCBkZSBxdWllbiBsb3MgdHJhbnNtaXRlIHkgcXVpZW4gbG9zIHJlY2liZSwgZW4gdMOpcm1pbm9z
-IGRlIGxvIGRpc3B1ZXN0byBwb3IgbGFzIGZyYWNjaW9uZXMgSUkgeSBWSUkgZGVsIGFydGljdWxv
-IDQsIHVsdGltbyBwYXJyYWZvIGRlbCBhcnRpY3VsbyA4LCBhcnRpY3VsbyAzNiBwYXJyYWZvIElJ
-LCAzOCBmcmFjY2lvbiBJIHkgZGVtYXMgYXBsaWNhYmxlcyBkZSBsYSBMZXkgZGUgVHJhbnNwYXJl
-bmNpYSB5IEFjY2VzbyBhIGxhIEluZm9ybWFjaW9uIFB1YmxpY2EgZGVsIERpc3RyaXRvIEZlZGVy
-YWwuDQpMb3MgRGF0b3MgUGVyc29uYWxlcyBzZSBlbmN1ZW50cmFuIHByb3RlZ2lkb3MgcG9yIGxh
-IExleSBkZSBQcm90ZWNjaW9uIGRlIERhdG9zIFBlcnNvbmFsZXMgZGVsIERpc3RyaXRvIEZlZGVy
-YWwsIHBvciBsbyBxdWUgc3UgZGlmdXNpb24gc2UgZW5jdWVudHJhIHR1dGVsYWRhIGVuIHN1cyBh
-cnRpY3Vsb3MgMiwgNSwgMTYsIDIxLCA0MSB5IGRlbWFzIHJlbGF0aXZvcyB5IGFwbGljYWJsZXMs
-IGRlYmllbmRvIHN1amV0YXJzZSBlbiBzdSBjYXNvLCBhIGxhcyBkaXNwb3NpY2lvbmVzIHJlbGF0
-aXZhcyBhIGxhIGNyZWFjaW9uLCBtb2RpZmljYWNpb24gbyBzdXByZXNpb24gZGUgZGF0b3MgcGVy
-c29uYWxlcyBwcmV2aXN0b3MuIEFzaW1pc21vLCBkZWJlcmEgZXN0YXJzZSBhIGxvIHNlw7FhbGFk
-byBlbiBsb3MgbnVtZXJhbGVzIDEgLCAzLCAxMiwgMTgsIDE5LCAyMCwgMjEsIDIzLCAyNCwgMjks
-IDM1IHkgZGVtYXMgYXBsaWNhYmxlcyBkZSBsb3MgTGluZWFtaWVudG9zIHBhcmEgbGEgUHJvdGVj
-Y2lvbiBkZSBEYXRvcyBQZXJzb25hbGVzIGVuIGVsIERpc3RyaXRvIEZlZGVyYWwuDQpFbiBlbCB1
-c28gZGUgbGFzIHRlY25vbG9naWFzIGRlIGxhIGluZm9ybWFjaW9uIHkgY29tdW5pY2FjaW9uZXMg
-ZGVsIEdvYmllcm5vIGRlbCBEaXN0cml0byBGZWRlcmFsLCBkZWJlcmEgb2JzZXJ2YXJzZSBwdW50
-dWFsbWVudGUgbG8gZGlzcHVlc3RvIHBvciBsYSBMZXkgR29iaWVybm8gRWxlY3Ryb25pY28gZGVs
-IERpc3RyaXRvIEZlZGVyYWwsIGxhIGxleSBwYXJhIGhhY2VyIGRlIGxhIENpdWRhZCBkZSBNZXhp
-Y28gdW5hIENpdWRhZCBNYXMgQWJpZXJ0YSwgZWwgYXBhcnRhZG8gMTAgZGUgbGEgQ2lyY3VsYXIg
-VW5vIHZpZ2VudGUgeSBsYXMgTm9ybWFzIEdlbmVyYWxlcyBxdWUgZGViZXJhbiBvYnNlcnZhcnNl
-IGVuIG1hdGVyaWEgZGUgU2VndXJpZGFkIGRlIGxhIEluZm9ybWFjaW9uIGVuIGxhIEFkbWluaXN0
-cmFjaW9uIFB1YmxpY2EgZGVsIERpc3RyaXRvIEZlZGVyYWwuCg==
+[ Please CC me I am not subscribed to this ML ]
+
+Hi,
+
+not sure if linux-pci ML is the correct place to ask my question.
+
+I wonder how I can teach dmidecode to give me the correct Manufacturer name.
+
+root@iniza:~# dmidecode --handle 0x0036
+# dmidecode 3.2
+Getting SMBIOS data from sysfs.
+SMBIOS 2.6 present.
+63 structures occupying 2524 bytes.
+Table at 0x000E0840.
+
+Handle 0x0036, DMI type 17, 28 bytes
+Memory Device
+        Array Handle: 0x0033
+        Error Information Handle: Not Provided
+        Total Width: 64 bits
+        Data Width: 64 bits
+        Size: 4096 MB
+        Form Factor: SODIMM
+        Set: None
+        Locator: ChannelB-DIMM0
+        Bank Locator: BANK 2
+        Type: DDR3
+        Type Detail: Synchronous
+        Speed: 1333 MT/s
+        Manufacturer: 859B
+        Serial Number: E0FBCF01
+        Asset Tag: 9876543210
+        Part Number: CT51264BF160B.C16F
+        Rank: Unknown
+
+I upgraded my local PCI-IDs via 'update-pciids' tool from pciutils
+Debian/buster AMD64 package.
+
+I tried...
+
+root@iniza:~# diff /usr/share/misc/pci.ids /usr/share/misc/pci.ids.dileks
+31390a31391
+> 959B  Crucial Technology
+
+Under Windows-7 with the SIW tool I can see...
+
+Memory Information;
+Device Locator || Memory Type || Capacity || Manufacturer || Model
+Slot 1 || DDR3 [PC3-12800] || 4096 MBytes || Crucial Technology ||
+CT51264BF160B.C16F
+
+How can I handle this correctly in Linux?
+
+Thanks in advance.
+
+Regards,
+- Sedat -
