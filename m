@@ -2,77 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B5ADB99FC
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Sep 2019 01:17:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AF5CB9BBB
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Sep 2019 02:57:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393850AbfITXRU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Sep 2019 19:17:20 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:34726 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391290AbfITXRT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Sep 2019 19:17:19 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1iBS8o-0002ql-AR; Sat, 21 Sep 2019 09:16:43 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Sat, 21 Sep 2019 09:16:34 +1000
-Date:   Sat, 21 Sep 2019 09:16:34 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-pci@vger.kernel.org,
-        Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "pvanleeuwen@insidesecure.com" <pvanleeuwen@insidesecure.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: PCI: Add stub pci_irq_vector and others
-Message-ID: <20190920231634.GA31195@gondor.apana.org.au>
-References: <20190902141910.1080-1-yuehaibing@huawei.com>
- <20190903014518.20880-1-yuehaibing@huawei.com>
- <MN2PR20MB29732EEECB217DDDF822EDA5CAB80@MN2PR20MB2973.namprd20.prod.outlook.com>
- <CAKv+Gu8PVYyA-mzjrhR6r6upMc=xzpAhsbkuKRtb8T2noo_2XQ@mail.gmail.com>
- <20190904122600.GA28660@gondor.apana.org.au>
- <20190920194216.GB226476@google.com>
+        id S2390128AbfIUA5s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Sep 2019 20:57:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49654 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389377AbfIUA5s (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Sep 2019 20:57:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ibKah86qfJa+k7wrtX/Du4Ejsuh4uymIntvn8KtXEOo=; b=j2lBIcHRUzKotrDDjaCr3Es/Y
+        3oxst3DhVtyBg8hw3D3m5QvuBlTGE7SyrkgEEduKdThMdszPFe0vYYjZD2eodFN/2jBMNGP0Fgg+l
+        fhfuDAkfwOuWLUEyLR2hWcdAxdBQ2e0A9Mgt3np6mNwbXFC4A6B6j/1m9zA7u683hPW0r6Lr85a/h
+        KS5lJuA5uAwffcmVLsJzjNRF2sMKR81uYT85YH12xPS6MXXDon8VuqysLuxHos02SmhxV+kIjIs4t
+        DbTW5+MwbJXxNBdQVb6lrvt/ae35QOzCMfMoztxEzTfp9kM+xwE5GZkp+rGMHv5hmomPiYpBntUAW
+        j5GvEe7Xw==;
+Received: from [2601:1c0:6280:3f0::9a1f]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iBTic-0000Ce-8n; Sat, 21 Sep 2019 00:57:46 +0000
+Subject: Re: pci: endpoint test BUG
+To:     Hillf Danton <hdanton@sina.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190916020630.1584-1-hdanton@sina.com>
+ <20190916112246.GA6693@e121166-lin.cambridge.arm.com>
+ <815ad936-8b98-0931-89f7-b97922a7c77d@ti.com>
+ <20190920152026.GC10172@e121166-lin.cambridge.arm.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <c1e7862c-d61d-6ecd-f70c-73870f343940@infradead.org>
+Date:   Fri, 20 Sep 2019 17:57:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190920194216.GB226476@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190920152026.GC10172@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 02:42:16PM -0500, Bjorn Helgaas wrote:
-> On Wed, Sep 04, 2019 at 10:26:00PM +1000, Herbert Xu wrote:
-> > On Wed, Sep 04, 2019 at 05:10:34AM -0700, Ard Biesheuvel wrote:
-> > >
-> > > This is the reason we have so many empty static inline functions in
-> > > header files - it ensures that the symbols are declared even if the
-> > > only invocations are from dead code.
-> > 
-> > Does this patch work?
-> > 
-> > ---8<---
-> > This patch adds stub functions pci_alloc_irq_vectors_affinity and
-> > pci_irq_vector when CONFIG_PCI is off so that drivers can use them
-> > without resorting to ifdefs.
-> > 
-> > It also moves the PCI_IRQ_* macros outside of the ifdefs so that
-> > they are always available.
-> > 
-> > Fixes: 625f269a5a7a ("crypto: inside-secure - add support for...")
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Reported-by: YueHaibing <yuehaibing@huawei.com>
-> > Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+On 9/20/19 5:38 PM, Hillf Danton wrote:
+>>Kishon, Hillf, can you turn it into a patch and send it asap please ?
 > 
-> Since you've already sent your crypto pull request for v5.4, would you
-> like me to include this in mine?
+>  
+> 
+> What was sent a couple of days before,
+> 
+>  
+> 
+> To: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Cc: linux-pci <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+> 
+> Subject: [PATCH] PCI: endpoint: Fix uaf on unregistering driver
+> 
+> ...
+> 
+>  
+> 
+> Fixes: ef1433f717a2 ("PCI: endpoint: Create configfs entry for each pci_epf_device_id table entry")
+> 
+> Reported-and-tested-by: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> 
+> Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> 
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> 
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> 
+> Cc: Andrey Konovalov <andreyknvl@google.com>
+> 
+> Signed-off-by: Hillf Danton <hdanton@sina.com>
+> 
+> ---
+> 
+>  
+> 
+> and it is certain that <lorenzo.pieralisi@arm.com> is on the Cc list.
+> 
+>  
+> 
+> It will be resent if no one saw the message.
 
-That would be great.  Thanks!
+I didn't see it and I can't find it on lore.kernel.org/linux-pci/.
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+~Randy
