@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BAE6EBAA36
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Sep 2019 21:53:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A37A8BA973
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Sep 2019 21:52:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725877AbfIVTXo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 22 Sep 2019 15:23:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53084 "EHLO mail.kernel.org"
+        id S1730763AbfIVTPU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 22 Sep 2019 15:15:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394047AbfIVSxU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:20 -0400
+        id S2408215AbfIVS4h (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:56:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F7F021D79;
-        Sun, 22 Sep 2019 18:53:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C6182190F;
+        Sun, 22 Sep 2019 18:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178399;
-        bh=1qcIqWVNgDnORZDuw7aMihN8tv/7ZLu/i1Km/FS0zBg=;
+        s=default; t=1569178596;
+        bh=QJorBsuu7/I+O7IoyuxkA/c3Do8nJw9lZYvwg/ZsupQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RymK96/G1z/81o8uRuhXxXsJTY/sxd+mI9XaUVFW65Caws/r2HNXLRS5KAFdVi23L
-         LibaKTwwspPsnvMrqUxxx6jRBJWHv2haLtLUj+0rDPFKE5P9GHproyHESQa5JXcuhr
-         mfvT42oSto9cgFXBWKIVZdwHqCN1+B+0MBcyVk9Y=
+        b=0o0TmClmDwmtnUUkAGyd3VRzgCHsK0DHHLA20K02W/dqomsT0SQTyL7u8Z3mFo/NB
+         n6438/R6Q/8XPfgTEM0VusS7mhAv2UKkgpO1SU9pNNcV5zPWArLm23HAOxG5KRAKxX
+         iaK+9r0oc86uqRz8eBGuyPKWpDAabrAdy4tuOngU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
         linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 143/185] ACPI / PCI: fix acpi_pci_irq_enable() memory leak
-Date:   Sun, 22 Sep 2019 14:48:41 -0400
-Message-Id: <20190922184924.32534-143-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 101/128] ACPI / PCI: fix acpi_pci_irq_enable() memory leak
+Date:   Sun, 22 Sep 2019 14:53:51 -0400
+Message-Id: <20190922185418.2158-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
-References: <20190922184924.32534-1-sashal@kernel.org>
+In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
+References: <20190922185418.2158-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,10 +62,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-index d2549ae65e1b6..dea8a60e18a4c 100644
+index c576a6fe4ebb3..94ded9513c73b 100644
 --- a/drivers/acpi/pci_irq.c
 +++ b/drivers/acpi/pci_irq.c
-@@ -449,8 +449,10 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
+@@ -462,8 +462,10 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
  		 * No IRQ known to the ACPI subsystem - maybe the BIOS /
  		 * driver reported one, then use it. Exit in any case.
  		 */
