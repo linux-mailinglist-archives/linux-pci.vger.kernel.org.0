@@ -2,114 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C530B9C11
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Sep 2019 05:32:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F1D5BA6D4
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Sep 2019 21:47:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405243AbfIUDcZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Sep 2019 23:32:25 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57450 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730800AbfIUDcZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Sep 2019 23:32:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=c1M/zfRrJYyk5NNSwiCtP5Tyw5TICxN7E3pYvG8jzDY=; b=D/1QOhYywb0nCoLJiPG1VrKwg
-        I2rGAAZQEKgTupl0LO8eXzv2EVoJ09kRgpZ63k7cj+oeE3dyiLbPRJqsCrvfPVHfOva4PJ01u6EWY
-        dmIKINRzjzd4bnqqGHrrOnO7bZTC0ySKUg4vdAZmNui2KCfryYLLwDiuNw5KsVwCl57KH5YE1lxDa
-        550Cq9adFvvveEiG2hHeeZUHoDVQK8TwzGWs7xi3zpVTzSt4vuspTA1mVuDGon26LU9qyhJY8M/p2
-        Ol97cTjByxxmEVX/3vc4H6SDCAlejRScyCQM5Apt+QLmmv1hGTtVtzFWJWOff/2ZC4lwCa6RuxLid
-        1gJnCOCWA==;
-Received: from [2601:1c0:6280:3f0::9a1f]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iBW8E-0004YP-F9; Sat, 21 Sep 2019 03:32:22 +0000
-Subject: Re: pci: endpoint test BUG
-To:     Hillf Danton <hdanton@sina.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190916020630.1584-1-hdanton@sina.com>
- <20190916112246.GA6693@e121166-lin.cambridge.arm.com>
- <815ad936-8b98-0931-89f7-b97922a7c77d@ti.com>
- <20190920152026.GC10172@e121166-lin.cambridge.arm.com>
- <c1e7862c-d61d-6ecd-f70c-73870f343940@infradead.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ca8d59d1-df3f-b6fe-37cb-ba3e3bed0440@infradead.org>
-Date:   Fri, 20 Sep 2019 20:32:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2393975AbfIVSxT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 22 Sep 2019 14:53:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393868AbfIVSxT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:19 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8E2021D7B;
+        Sun, 22 Sep 2019 18:53:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569178397;
+        bh=llSn4ydV9YXYEK8DA21d6QG0PtBC/cL9om0VFCk4OtM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1R1+U1g1MS7X6VGJ15VAV/po0XL5o8KifO/m8o6zCoBL6fOP4MdGuzBKUHLThaqIs
+         qgfWR1fN3832e3BhifmXi9Q8ouYzwIzTtC0fcOa7OuJdl5v5wKH0wk8botBZ8hKNuJ
+         PuHyzl0L6+33WV8QQc1jy/nWgikfSf3azk5MtL9g=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Marcel Bocu <marcel.p.bocu@gmail.com>, Vicki Pfau <vi@endrift.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Brian Woods <brian.woods@amd.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        "Woods, Brian" <Brian.Woods@amd.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 141/185] x86/amd_nb: Add PCI device IDs for family 17h, model 70h
+Date:   Sun, 22 Sep 2019 14:48:39 -0400
+Message-Id: <20190922184924.32534-141-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
+References: <20190922184924.32534-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <c1e7862c-d61d-6ecd-f70c-73870f343940@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/20/19 7:04 PM, Hillf Danton wrote:
->> 
-> 
->>> It will be resent if no one saw the message.
-> 
->> 
-> 
->> I didn't see it and I can't find it on lore.kernel.org/linux-pci/.
-> 
->> 
-> 
-> Respin, git send-email works/jj/pci-epf-uaf.txt
-> 
-> ...
-> 
-> From: Hillf Danton <hdanton@sina.com>
-> 
-> To: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Cc: linux-pci <linux-pci@vger.kernel.org>,
-> 
->         LKML <linux-kernel@vger.kernel.org>,
-> 
->         Randy Dunlap <rdunlap@infradead.org>,
-> 
->         Al Viro <viro@zeniv.linux.org.uk>,
-> 
->         Dan Carpenter <dan.carpenter@oracle.com>,
-> 
->         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-> 
->         Kishon Vijay Abraham I <kishon@ti.com>,
-> 
->         Andrey Konovalov <andreyknvl@google.com>,
-> 
->         Hillf Danton <hdanton@sina.com>
-> 
-> Subject: [PATCH] PCI: endpoint: Fix uaf on unregistering driver
-> 
-> Date: Sat, 21 Sep 2019 09:58:28 +0800
-> 
-> Message-Id: <20190921015828.15644-1-hdanton@sina.com>
-> 
-> MIME-Version: 1.0
-> 
-> Content-Transfer-Encoding: 8bit
-> 
->  
-> 
-> Result: 250
-> 
->  
-> 
-> And let me know you see it.
+From: Marcel Bocu <marcel.p.bocu@gmail.com>
 
-No, not seeing the patch in my Inbox nor on lore.kernel.org.
+[ Upstream commit af4e1c5eca95bed1192d8dc45c8ed63aea2209e8 ]
 
-It's a mystery to me.
+The AMD Ryzen gen 3 processors came with a different PCI IDs for the
+function 3 & 4 which are used to access the SMN interface. The root
+PCI address however remained at the same address as the model 30h.
 
+Adding the F3/F4 PCI IDs respectively to the misc and link ids appear
+to be sufficient for k10temp, so let's add them and follow up on the
+patch if other functions need more tweaking.
+
+Vicki Pfau sent an identical patch after I checked that no-one had
+written this patch. I would have been happy about dropping my patch but
+unlike for his patch series, I had already Cc:ed the x86 people and
+they already reviewed the changes. Since Vicki has not answered to
+any email after his initial series, let's assume she is on vacation
+and let's avoid duplication of reviews from the maintainers and merge
+my series. To acknowledge Vicki's anteriority, I added her S-o-b to
+the patch.
+
+v2, suggested by Guenter Roeck and Brian Woods:
+ - rename from 71h to 70h
+
+Signed-off-by: Vicki Pfau <vi@endrift.com>
+Signed-off-by: Marcel Bocu <marcel.p.bocu@gmail.com>
+Tested-by: Marcel Bocu <marcel.p.bocu@gmail.com>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Brian Woods <brian.woods@amd.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# pci_ids.h
+
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Cc: "Woods, Brian" <Brian.Woods@amd.com>
+Cc: Clemens Ladisch <clemens@ladisch.de>
+Cc: Jean Delvare <jdelvare@suse.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org
+Link: https://lore.kernel.org/r/20190722174510.2179-1-marcel.p.bocu@gmail.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kernel/amd_nb.c | 3 +++
+ include/linux/pci_ids.h  | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+index 002aedc693933..8c26b696d8930 100644
+--- a/arch/x86/kernel/amd_nb.c
++++ b/arch/x86/kernel/amd_nb.c
+@@ -21,6 +21,7 @@
+ #define PCI_DEVICE_ID_AMD_17H_DF_F4	0x1464
+ #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec
+ #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494
++#define PCI_DEVICE_ID_AMD_17H_M70H_DF_F4 0x1444
+ 
+ /* Protect the PCI config register pairs used for SMN and DF indirect access. */
+ static DEFINE_MUTEX(smn_mutex);
+@@ -50,6 +51,7 @@ const struct pci_device_id amd_nb_misc_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F3) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
+ 	{}
+ };
+ EXPORT_SYMBOL_GPL(amd_nb_misc_ids);
+@@ -63,6 +65,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_DF_F4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F4) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },
+ 	{}
+ };
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 70e86148cb1e9..862556761bbf4 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -548,6 +548,7 @@
+ #define PCI_DEVICE_ID_AMD_17H_DF_F3	0x1463
+ #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3 0x15eb
+ #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F3 0x1493
++#define PCI_DEVICE_ID_AMD_17H_M70H_DF_F3 0x1443
+ #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
+ #define PCI_DEVICE_ID_AMD_LANCE		0x2000
+ #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
 -- 
-~Randy
+2.20.1
+
