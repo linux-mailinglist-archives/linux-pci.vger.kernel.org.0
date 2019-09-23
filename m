@@ -2,88 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EEEFBBBE1E
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Sep 2019 23:50:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B640BBE20
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Sep 2019 23:51:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503114AbfIWVua (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Sep 2019 17:50:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56856 "EHLO mail.kernel.org"
+        id S2390605AbfIWVu6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Sep 2019 17:50:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389663AbfIWVu3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 23 Sep 2019 17:50:29 -0400
+        id S2387520AbfIWVu5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 23 Sep 2019 17:50:57 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5D582053B;
-        Mon, 23 Sep 2019 21:50:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67BB1207FD;
+        Mon, 23 Sep 2019 21:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569275429;
-        bh=uL09dUji+FB48rz9m57c3BRbd3Wt0dZwJd5rB9ibLic=;
+        s=default; t=1569275456;
+        bh=RfEazsydYXwieGVxuyWGcQk/WNwh9QBQW6FctAKAHGQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wQAK9extFxsky3WJhZyrFpApddpIWJSDKhmyYWWV6+15ZCgPPzWv7mE5+IFSI+VoZ
-         Ltf3YyzbrmEZh0g+GRx4zagN7417PeHvk74Ld1OayLuPk338bCicV8JE1XYAjpfYPS
-         mNIb7MBvoT6XspTuHBwoUia14v1GXp7vk1Wi7++0=
-Date:   Mon, 23 Sep 2019 16:50:27 -0500
+        b=TTmj9KuXjQp9ifrZEJQRm+yqZveUAJ7VTxyaQM+IEno2qtnoXlZbS7lAwkptjuhud
+         LZwGp7aunZcmCJ2velrj+wCiMU/pjbzsYfu4ZZSuErqaw352qOFbObszbozCsAkUe4
+         apPTT3MAmzA+zIuwlhzyRogWTP/bG117SZWMr0SU=
+Date:   Mon, 23 Sep 2019 16:50:55 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [RFC/PATCH] PCI: Protect pci_reassign_bridge_resources() against
- concurrent addition/removal
-Message-ID: <20190923215027.GA11938@google.com>
-References: <02ca29627597445442bb14c069678e549429dace.camel@kernel.crashing.org>
- <20190821130827.GF14450@google.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>, linux-pci@vger.kernel.org
+Subject: Re: [bug report] PCI: Protect pci_reassign_bridge_resources()
+ against addition/removal
+Message-ID: <20190923215055.GB11938@google.com>
+References: <20190904100303.GD7007@mwanda>
+ <d13c8d6b6bebba12331199200431fa407c5c1e1b.camel@kernel.crashing.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190821130827.GF14450@google.com>
+In-Reply-To: <d13c8d6b6bebba12331199200431fa407c5c1e1b.camel@kernel.crashing.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 08:08:27AM -0500, Bjorn Helgaas wrote:
-> On Mon, Jun 24, 2019 at 02:32:19PM +1000, Benjamin Herrenschmidt wrote:
-> > pci_reassign_bridge_resources() can be called by pci_resize_resource()
-> > at runtime.
+On Mon, Sep 09, 2019 at 09:13:28AM +0100, Benjamin Herrenschmidt wrote:
+> On Wed, 2019-09-04 at 13:03 +0300, Dan Carpenter wrote:
+> > Hello Benjamin Herrenschmidt,
 > > 
-> > It will walk the PCI tree up and down, and isn't currently protected
-> > against any changes or hotplug operation.
+> > The patch 540f62d26f02: "PCI: Protect pci_reassign_bridge_resources()
+> > against addition/removal" from Jun 24, 2019, leads to the following
+> > static checker warning:
 > > 
-> > Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > 	drivers/pci/setup-bus.c:2158 pci_reassign_bridge_resources()
+> > 	warn: inconsistent returns 'read_sem:&pci_bus_sem'.
 > 
-> Applied to pci/resource for v5.4, thanks!
+> Thanks, I missed that. I'll try to send something but from Plumbers
+> might be difficult...
 
-Dropped for now per Dan's bug report:
-https://lore.kernel.org/r/20190904100303.GD7007@mwanda
+I dropped this for now.
 
-> > ---
+> > drivers/pci/setup-bus.c
+> >   2066          unsigned int i;
+> >   2067          int ret;
+> >   2068  
+> >   2069          down_read(&pci_bus_sem);
 > > 
-> > --- a/drivers/pci/setup-bus.c
-> > +++ b/drivers/pci/setup-bus.c
-> > @@ -2104,6 +2104,8 @@ int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
-> >  	unsigned int i;
-> >  	int ret;
-> >  
-> > +	down_read(&pci_bus_sem);
-> > +
-> >  	/* Walk to the root hub, releasing bridge BARs when possible */
-> >  	next = bridge;
-> >  	do {
-> > @@ -2160,6 +2162,7 @@ int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
-> >  	}
-> >  
-> >  	free_list(&saved);
-> > +	up_read(&pci_bus_sem);
-> >  	return 0;
-> >  
-> >  cleanup:
-> > @@ -2188,6 +2191,7 @@ int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
-> >  		pci_setup_bridge(bridge->subordinate);
-> >  	}
-> >  	free_list(&saved);
-> > +	up_read(&pci_bus_sem);
-> >  
-> >  	return ret;
-> >  }
+> > We added some new locking here.
 > > 
+> >   2070  
+> >   2071          /* Walk to the root hub, releasing bridge BARs when
+> > possible */
+> >   2072          next = bridge;
+> >   2073          do {
+> >   2074                  bridge = next;
+> >   2075                  for (i = PCI_BRIDGE_RESOURCES; i <
+> > PCI_BRIDGE_RESOURCE_END;
+> >   2076                       i++) {
+> >   2077                          struct resource *res = &bridge-
+> > >resource[i];
+> >   2078  
+> >   2079                          if ((res->flags ^ type) &
+> > PCI_RES_TYPE_MASK)
+> >   2080                                  continue;
+> >   2081  
+> >   2082                          /* Ignore BARs which are still in use
+> > */
+> >   2083                          if (res->child)
+> >   2084                                  continue;
+> >   2085  
+> >   2086                          ret = add_to_list(&saved, bridge,
+> > res, 0, 0);
+> >   2087                          if (ret)
+> >   2088                                  goto cleanup;
+> >   2089  
+> >   2090                          pci_info(bridge, "BAR %d: releasing
+> > %pR\n",
+> >   2091                                   i, res);
+> >   2092  
+> >   2093                          if (res->parent)
+> >   2094                                  release_resource(res);
+> >   2095                          res->start = 0;
+> >   2096                          res->end = 0;
+> >   2097                          break;
+> >   2098                  }
+> >   2099                  if (i == PCI_BRIDGE_RESOURCE_END)
+> >   2100                          break;
+> >   2101  
+> >   2102                  next = bridge->bus ? bridge->bus->self :
+> > NULL;
+> >   2103          } while (next);
+> >   2104  
+> >   2105          if (list_empty(&saved))
+> >   2106                  return -ENOENT;
+> > 
+> > This needs an unlock.  It's not clear to me if any other clean up is
+> > required, but possibly it's worth looking at.
+> > 
+> >   2107  
+> >   2108          __pci_bus_size_bridges(bridge->subordinate, &added);
+> >   2109          __pci_bridge_assign_resources(bridge, &added,
+> > &failed);
+> > 
+> > regards,
+> > dan carpenter
+> 
