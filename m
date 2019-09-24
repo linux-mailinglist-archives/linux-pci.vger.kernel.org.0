@@ -2,405 +2,186 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C9FE2BC7B0
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2019 14:12:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22E73BCA07
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2019 16:19:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504891AbfIXML6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Sep 2019 08:11:58 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:37324 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387414AbfIXML5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Sep 2019 08:11:57 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190924121153epoutp04e79dee5aa5fb886cf0525eb57725289f~HXrH580000960709607epoutp042
-        for <linux-pci@vger.kernel.org>; Tue, 24 Sep 2019 12:11:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190924121153epoutp04e79dee5aa5fb886cf0525eb57725289f~HXrH580000960709607epoutp042
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1569327113;
-        bh=EGxGsRM7JqvSPF/mq76OsGiopeDeBorFdYM3QIJYUVk=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=nw1xeLtUJG+1IvtmYndNVxJPZyu+UdaGVzVfRchNceOMmn0R9EiWBhSVS/SOm1Nu4
-         pTPGj6m6Qi5GvemY23hqHqRddjNOQnJ30O1zNi3zZYxhxJ3/tGUVtU6miRkQwVl6FB
-         tKQXd0Zewuesemn+bOB6zC/v65NscueqRv+FwUYA=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20190924121152epcas5p39fc5d5708296a68f3ed2bf06247e124c~HXrHSdq9D1873318733epcas5p3r;
-        Tue, 24 Sep 2019 12:11:52 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        81.89.04647.8080A8D5; Tue, 24 Sep 2019 21:11:52 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190924121152epcas5p1f4034e404284d1af1916b6f4a7956787~HXrG7j_X91536315363epcas5p1U;
-        Tue, 24 Sep 2019 12:11:52 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190924121152epsmtrp162602f908662d886f927ad7092cce548~HXrG64QqT2062620626epsmtrp1Z;
-        Tue, 24 Sep 2019 12:11:52 +0000 (GMT)
-X-AuditID: b6c32a49-743ff70000001227-3f-5d8a08083f63
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C0.3C.03889.8080A8D5; Tue, 24 Sep 2019 21:11:52 +0900 (KST)
-Received: from pankajdubey02 (unknown [107.111.85.21]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190924121151epsmtip200cbbf9afb36bcf3d2b6fe37352a0d00~HXrFe5CtX0551405514epsmtip2E;
-        Tue, 24 Sep 2019 12:11:50 +0000 (GMT)
-From:   "Pankaj Dubey" <pankaj.dubey@samsung.com>
-To:     "'Vidya Sagar'" <vidyas@nvidia.com>,
-        "'Gustavo Pimentel'" <Gustavo.Pimentel@synopsys.com>,
-        "'Andrew Murray'" <andrew.murray@arm.com>
-Cc:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jingoohan1@gmail.com>, <lorenzo.pieralisi@arm.com>,
-        <bhelgaas@google.com>, "'Anvesh Salveru'" <anvesh.s@samsung.com>
-In-Reply-To: <72370258-2cbe-32d8-b444-a45b50efa3e0@nvidia.com>
-Subject: RE: [PATCH v2] PCI: dwc: Add support to add GEN3 related
- equalization quirks
-Date:   Tue, 24 Sep 2019 17:41:50 +0530
-Message-ID: <004c01d572d1$406882a0$c13987e0$@samsung.com>
+        id S2441274AbfIXOTP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Sep 2019 10:19:15 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:41446 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395526AbfIXOTP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Sep 2019 10:19:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nqgSCGmIm+IUwS3ERfhTDAE0sOJMUSKY9CXB5clg1ac=; b=MBoRit0WI62gppHlFbszCPg/7
+        2Vmhi99ihMp4LrvbXQwg5L4JsF3rPJnybeLFMlRtCJL8ZMwajAhQgtKdOY61KWZDIxB8LMN4fR5qZ
+        A9STURyZYndU2WWVvjVyBh+UvHp1poRRNZTXB3vHbwvWbpvMtgm/hIXvJ91sZlPXT/MlrzaKqIaK2
+        tvzkk2pQKZU0TtLTV0qd+6ILY6045cgAV248wGVfZm0NFj6PIVAHjMCBIIdi7bnw/vrOG1U1uOtom
+        sbn6vVaiJmRpfC0jSxNjn2SjC5O6c5ZQ4GQaivP7dW86C3vwZ1hZMyycc+rFVBL7EI5N2xeqt5TvO
+        mewYAokGg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47668)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iCleU-0002L8-IP; Tue, 24 Sep 2019 15:18:50 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iCleR-0001Jk-Nw; Tue, 24 Sep 2019 15:18:47 +0100
+Date:   Tue, 24 Sep 2019 15:18:47 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     Zhiqiang.Hou@nxp.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com,
+        kishon@ti.com, lorenzo.pieralisi@arm.com, Minghuan.Lian@nxp.com,
+        andrew.murray@arm.com, mingkai.hu@nxp.com,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] Add the Mobiveil EP and Layerscape Gen4 EP driver
+ support
+Message-ID: <20190924141847.GW25745@shell.armlinux.org.uk>
+References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQKZmfmIjaX5BaBnMA3N+7vtT2Qq7gGeUxCAAtEE+g8BbnK8pAGPYjqeAXaY7iIC0ICEfAKBzdlCAi6eLpqlL0fcwA==
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH+W27D6XFdUoe7b0o8ZEmVFypbILBjYwKsijSWnlRS6ftqqkQ
-        SdacC81HRQ6VaWZmi3CIc7NSljUrlSAriMQMLR9zgearGdX1LvK/zznf8/geOKRY1o75k8mq
-        DFatUqbIcU9Jy7PAgM0kqYvb8uLaDjr/txmje6w1GF13OYm29msJuuFHBUG/tVbidE+1Hacd
-        rhGCfm+WKjwYY7URMRZ9P8EYTJlMUb4TZ4qbGxHT3D6FmCnTmoPEcc+dCWxKcharDos85Zk0
-        /dUlSh88kt2hd+J5yL5HhzxIoLbCdLFGrEOepIxqQ3Crqg8XgkkEPQsOdzCDYLCpEP/Xkl/v
-        RILwBIGtwe4OxhHMaMdEfBVOhUHvXDXGCz6UDkHpvTaMF8SUFYFZs5pnDyoSnLUjBM/e1FHo
-        ann81wlJSqiNoHsTwqelVAQ03H4gEtgLXlYMSYQxwVBfMy4WHK2D+eH6xfE+1Fn4cv+mSKjx
-        hdHnnQTvAagCAhyfH7obouHjBwMhsDeM2Zvd7A+j1zVuToO5O2ViofkKgnJ7FSYIu6Gjr1LC
-        GxVTgfDIGiYsWw5FriERnwZKClqNTKjeBLPfut1rV8Fg/l2RwAzcaBrEStB6/ZLT9EtO0y85
-        Qf9/mQFJGpEfm86lJrLctvRwFXshlFOmcpmqxNAzaakmtPhWQXtbkb43xoYoEsmXSRWYLk6G
-        KbO4nFQbAlIs95GagjRxMmmCMieXVaedVGemsJwNrSQlcl9pGfbuhIxKVGaw51g2nVX/U0Wk
-        h38eylAEe5GtOUFR8VTURLTie4Si0NXdc6nUaPGyR5FesYF+2YcNFs2G+E9dfb/a9j/Nmxyd
-        eOW0ay+edroOTHbOOkbMTM3Pq/MFC90Vflx5u3PfrpLXdfUDIbXhPrm9AbYG0/a89gi7+rzB
-        r/+Q0RI7rMaOiQbWOpLw+JgVmnijXMIlKcODxGpO+QdZq0gEUgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsWy7bCSvC4HR1eswfaX8hbN/7ezWpzdtZDV
-        YklThsWuux3sFiu+zGS3uLxrDpvF2XnH2Sze/H7BbnFtO68Dp8eaeWsYPXbOusvusWBTqUdv
-        8zs2j74tqxg9tuz/zOjxeZNcAHsUl01Kak5mWWqRvl0CV8br8xMYC46EVlyZuJq5gXGOSxcj
-        J4eEgIlE87J3jF2MXBxCArsZJWbf2c0MkZCRmLx6BSuELSyx8t9zdhBbSOAlo8S6BmcQm01A
-        X+Lcj3msIM0iAj2MEjOfzAKbxCxwgFFiy41eJoix01kk3v1dxALSwilgJ/Fu0QuwUcICoRL/
-        f70BWsfBwSKgKtF1QQckzCtgKbFixmomCFtQ4uTMJ2CtzALaEk9vPoWzly18DXWpgsTPp8vA
-        LhURyJJ4tHIqE0SNuMTLo0fYJzAKz0IyahaSUbOQjJqFpGUBI8sqRsnUguLc9NxiwwKjvNRy
-        veLE3OLSvHS95PzcTYzgmNPS2sF44kT8IUYBDkYlHl4H1q5YIdbEsuLK3EOMEhzMSiK8m7Ta
-        YoV4UxIrq1KL8uOLSnNSiw8xSnOwKInzyucfixQSSE8sSc1OTS1ILYLJMnFwSjUwdh6+4Nuj
-        xvrDSb7+y1OHz4H899z+yncKJsUy/n/e9FI3yJpt7dn5N7Zsfl/M9cnkoca58AW7PesOaETf
-        POrUlLKx0zrsv8BTxo1HXR09hO7s7nA/N/3FRjHdsgXvl/gYfFO6d62Z97Xv+Xn5jHYze4rm
-        86v7Ktw2q7UI9rOb1JQR6eUlPW23EktxRqKhFnNRcSIAjVuuG7UCAAA=
-X-CMS-MailID: 20190924121152epcas5p1f4034e404284d1af1916b6f4a7956787
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20190913104018epcas5p3d93265a6786dc2b7b8a7d3231bfe9c14
-References: <CGME20190913104018epcas5p3d93265a6786dc2b7b8a7d3231bfe9c14@epcas5p3.samsung.com>
-        <1568371190-14590-1-git-send-email-pankaj.dubey@samsung.com>
-        <20190916101543.GM9720@e119886-lin.cambridge.arm.com>
-        <00a401d56c7e$cf3abd30$6db03790$@samsung.com>
-        <20190916122400.GO9720@e119886-lin.cambridge.arm.com>
-        <DM6PR12MB4010AE07CC6F1CC60A715EE4DA8C0@DM6PR12MB4010.namprd12.prod.outlook.com>
-        <7ad2b603-49ce-e955-58c4-fba1fb5ca6c8@nvidia.com>
-        <000001d572ba$6d3040a0$4790c1e0$@samsung.com>
-        <72370258-2cbe-32d8-b444-a45b50efa3e0@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916021742.22844-1-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, Sep 16, 2019 at 10:17:36AM +0800, Xiaowei Bao wrote:
+> This patch set are for adding Mobiveil EP driver and adding PCIe Gen4
+> EP driver of NXP Layerscape platform.
+> 
+> This patch set depends on:
+> https://patchwork.kernel.org/project/linux-pci/list/?series=159139
+> 
+> Xiaowei Bao (6):
+>   PCI: mobiveil: Add the EP driver support
+>   dt-bindings: Add DT binding for PCIE GEN4 EP of the layerscape
+>   PCI: mobiveil: Add PCIe Gen4 EP driver for NXP Layerscape SoCs
+>   PCI: mobiveil: Add workaround for unsupported request error
+>   arm64: dts: lx2160a: Add PCIe EP node
+>   misc: pci_endpoint_test: Add the layerscape PCIe GEN4 EP device
+>     support
+> 
+>  .../bindings/pci/layerscape-pcie-gen4.txt          |  28 +-
+>  MAINTAINERS                                        |   3 +
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |  56 ++
+>  drivers/misc/pci_endpoint_test.c                   |   2 +
+>  drivers/pci/controller/mobiveil/Kconfig            |  22 +-
+>  drivers/pci/controller/mobiveil/Makefile           |   2 +
+>  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 169 ++++++
+>  drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c | 568 +++++++++++++++++++++
+>  drivers/pci/controller/mobiveil/pcie-mobiveil.c    |  99 +++-
+>  drivers/pci/controller/mobiveil/pcie-mobiveil.h    |  72 +++
+>  10 files changed, 1009 insertions(+), 12 deletions(-)
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c
 
+Hi,
 
-> -----Original Message-----
-> From: Vidya Sagar <vidyas=40nvidia.com>
-> Sent: Tuesday, September 24, 2019 4:57 PM
-> To: Pankaj Dubey <pankaj.dubey=40samsung.com>; 'Gustavo Pimentel'
-> <Gustavo.Pimentel=40synopsys.com>; 'Andrew Murray'
-> <andrew.murray=40arm.com>
-> Cc: linux-pci=40vger.kernel.org; linux-kernel=40vger.kernel.org;
-> jingoohan1=40gmail.com; lorenzo.pieralisi=40arm.com; bhelgaas=40google.co=
-m;
-> 'Anvesh Salveru' <anvesh.s=40samsung.com>
-> Subject: Re: =5BPATCH v2=5D PCI: dwc: Add support to add GEN3 related equ=
-alization
-> quirks
->=20
-> On 9/24/2019 2:58 PM, Pankaj Dubey wrote:
-> >
-> >
-> >> -----Original Message-----
-> >> From: Vidya Sagar <vidyas=40nvidia.com>
-> >> Sent: Thursday, September 19, 2019 4:54 PM
-> >> Subject: Re: =5BPATCH v2=5D PCI: dwc: Add support to add GEN3 related
-> >> equalization quirks
-> >>
-> >> On 9/16/2019 6:22 PM, Gustavo Pimentel wrote:
-> >>> On Mon, Sep 16, 2019 at 13:24:1, Andrew Murray
-> >> <andrew.murray=40arm.com>
-> >>> wrote:
-> >>>
-> >>>> On Mon, Sep 16, 2019 at 04:36:33PM +0530, Pankaj Dubey wrote:
-> >>>>>
-> >>>>>
-> >>>>>> -----Original Message-----
-> >>>>>> From: Andrew Murray <andrew.murray=40arm.com>
-> >>>>>> Sent: Monday, September 16, 2019 3:46 PM
-> >>>>>> To: Pankaj Dubey <pankaj.dubey=40samsung.com>
-> >>>>>> Cc: linux-pci=40vger.kernel.org; linux-kernel=40vger.kernel.org;
-> >>>>>> jingoohan1=40gmail.com; gustavo.pimentel=40synopsys.com;
-> >>>>>> lorenzo.pieralisi=40arm.com; bhelgaas=40google.com; Anvesh Salveru
-> >>>>>> <anvesh.s=40samsung.com>
-> >>>>>> Subject: Re: =5BPATCH v2=5D PCI: dwc: Add support to add GEN3 rela=
-ted
-> >>>>> equalization
-> >>>>>> quirks
-> >>>>>>
-> >>>>>> On Fri, Sep 13, 2019 at 04:09:50PM +0530, Pankaj Dubey wrote:
-> >>>>>>> From: Anvesh Salveru <anvesh.s=40samsung.com>
-> >>>>>>>
-> >>>>>>> In some platforms, PCIe PHY may have issues which will prevent
-> >>>>>>> linkup to happen in GEN3 or higher speed. In case equalization
-> >>>>>>> fails, link will fallback to GEN1.
-> >>>>>>>
-> >>>>>>> DesignWare controller gives flexibility to disable GEN3
-> >>>>>>> equalization completely or only phase 2 and 3 of equalization.
-> >>>>>>>
-> >>>>>>> This patch enables the DesignWare driver to disable the PCIe
-> >>>>>>> GEN3 equalization by enabling one of the following quirks:
-> >>>>>>>    - DWC_EQUALIZATION_DISABLE: To disable GEN3 equalization all
-> >>>>>>> phases
-> >> I don't think Gen-3 equalization can be skipped altogether.
-> >> PCIe Spec Rev 4.0 Ver 1.0 in Section-4.2.3 has the following statement=
-.
-> >>
-> >> =22All the Lanes that are associated with the LTSSM (i.e., those Lanes
-> >> that are currently operational or may be operational in the future
-> >> due to Link
-> >> Upconfigure) must participate in the Equalization procedure=22
-> >>
-> >> and in Section-4.2.6.4.2.1.1 it says
-> >> =22Note: A transition to Recovery.RcvrLock might be used in the case
-> >> where the Downstream Port determines that Phase 2 and Phase 3 are not
-> >> needed based on the platform and channel characteristics.=22
-> >>
-> >> Based on the above statements, I think it is Ok to skip only Phases
-> >> 2&3 of equalization but not 0&1.
-> >> I even checked with our hardware engineers and it seems
-> >> DWC_EQUALIZATION_DISABLE is present only for debugging purpose in
-> >> hardware simulations and shouldn't be used on real silicon otherwise i=
-t seems.
-> >>
-> >
-> > In DesignWare manual we don't see any comment that this feature is for
-> debugging purpose only.
-> Agree and as I mentioned even I got to know about it offline.
->=20
-> > Even if it is meant for debugging purpose, if for some reason in an SoC=
-, Gen3/4
-> linkup is failing due to equalization, and if disabling equalization is h=
-elping then
-> IMO it is OK to do it.
-> Well, I don't have specific reservations to not have it. We can use this =
-as a fall
-> back option.
->=20
-> > Just to re-confirm we tested one of the NVMe device on Jatson AGX Xavie=
-r RC
-> with equalization disabled. We do see linkup works well in GEN3. As we ha=
-ve
-> added this feature as a platform-quirk so only platforms that required th=
-is
-> feature can enable it.
-> >
-> Curious to know...You did it because link didn't come up with equalizatio=
-n
-> enabled? or just as an experiment?
->=20
+I've applied "PCI: mobiveil: Fix the CPU base address setup in inbound
+window" and your patch set to 5.3, which seems to be able to detect the
+PCIe card I have plugged in:
 
-We did this, just as an experiment.
+layerscape-pcie-gen4 3800000.pcie: host bridge /soc/pcie@3800000 ranges:
+layerscape-pcie-gen4 3800000.pcie:   MEM 0xa040000000..0xa07fffffff -> 0x40000000
+layerscape-pcie-gen4 3800000.pcie: PCI host bridge to bus 0000:00
+pci_bus 0000:00: root bus resource [bus 00-ff]
+pci_bus 0000:00: root bus resource [mem 0xa040000000-0xa07fffffff] (bus address
+[0x40000000-0x7fffffff])
+pci 0000:00:00.0: [1957:8d90] type 01 class 0x060400
+pci 0000:00:00.0: enabling Extended Tags
+pci 0000:00:00.0: supports D1 D2
+pci 0000:00:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+pci 0000:01:00.0: [15b3:6750] type 00 class 0x020000
+pci 0000:01:00.0: reg 0x10: [mem 0xa040000000-0xa0400fffff 64bit]
+pci 0000:01:00.0: reg 0x18: [mem 0xa040800000-0xa040ffffff 64bit pref]
+pci 0000:01:00.0: reg 0x30: [mem 0xa041000000-0xa0410fffff pref]
+pci 0000:00:00.0: up support 3 enabled 0
+pci 0000:00:00.0: dn support 1 enabled 0
+pci 0000:00:00.0: BAR 9: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
+pci 0000:00:00.0: BAR 8: assigned [mem 0xa040800000-0xa0409fffff]
+pci 0000:01:00.0: BAR 2: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
+pci 0000:01:00.0: BAR 0: assigned [mem 0xa040800000-0xa0408fffff 64bit]
+pci 0000:01:00.0: BAR 6: assigned [mem 0xa040900000-0xa0409fffff pref]
+pci 0000:00:00.0: PCI bridge to [bus 01-ff]
+pci 0000:00:00.0:   bridge window [mem 0xa040800000-0xa0409fffff]
+pci 0000:00:00.0:   bridge window [mem 0xa040000000-0xa0407fffff 64bit pref]
+pci 0000:00:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pci 0000:01:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pcieport 0000:00:00.0: PCIe capabilities: 0x13
+pcieport 0000:00:00.0: init_service_irqs: -19
 
-> > Snippet of lspci (from Jatson AGX Xavier RC) is given below, showing
-> > EQ is completely disabled and GEN3 linkup
-> > -----
-> > 0005:01:00.0 Non-Volatile memory controller: Lite-On Technology
-> Corporation Device 21f1 (rev 01) (prog-if 02 =5BNVM Express=5D)
-> >          Subsystem: Marvell Technology Group Ltd. Device 1093
-> >           <snip>
-> >                  LnkCap: Port =230, Speed 8GT/s, Width x4, ASPM L1, Exi=
-t Latency L0s
-> <512ns, L1 <64us
-> >                          ClockPM+ Surprise- LLActRep- BwNot- ASPMOptCom=
-p+
-> >                  LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk+
-> >                          ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-> >                  LnkSta: Speed 8GT/s, Width x4, TrErr- Train- SlotClk+ =
-DLActive-
-> BWMgmt- ABWMgmt-
-> >                  DevCap2: Completion Timeout: Not Supported, TimeoutDis=
-+, LTR+,
-> OBFF Via message
-> >                  DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-=
-, LTR+,
-> OBFF Disabled
-> >                  LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- Sp=
-eedDis-
-> >                           Transmit Margin: Normal Operating Range,
-> EnterModifiedCompliance- ComplianceSOS-
-> >                           Compliance De-emphasis: -6dB
-> >                  LnkSta2: Current De-emphasis Level: -6dB, Equalization=
-Complete-,
-> EqualizationPhase1-
-> >                           EqualizationPhase2-, EqualizationPhase3-,
-> > LinkEqualizationRequest-
-> > -----
-> >> - Vidya Sagar
-> >>
-> >>
-> >>>>>>>    - DWC_EQ_PHASE_2_3_DISABLE: To disable GEN3 equalization
-> >>>>>>> phase 2 & 3
-> >>>>>>>
-> >>>>>>> Platform drivers can set these quirks via =22quirk=22 variable of=
- =22dw_pcie=22
-> >>>>>>> struct.
-> >>>>>>>
-> >>>>>>> Signed-off-by: Anvesh Salveru <anvesh.s=40samsung.com>
-> >>>>>>> Signed-off-by: Pankaj Dubey <pankaj.dubey=40samsung.com>
-> >>>>>>> ---
-> >>>>>>> Patchset v1 can be found at:
-> >>>>>>>    - 1/2: https://urldefense.proofpoint.com/v2/url?u=3Dhttps-
-> >>
-> 3A__lkml.org_lkml_2019_9_10_443&d=3DDwIBAg&c=3DDPL6_X_6JkXFx7AXWqB0tg
-> >> &r=3DbkWxpLoW-f-
-> >>
-> E3EdiDCCa0_h0PicsViasSlvIpzZvPxs&m=3DMtEKKeJsQvi2UM1eSZUv2vPLLxrYU0aI1
-> >> Ry4ICIDaiQ&s=3Ds_nPmMNbQFswYRxQgBkeg4H9J_0FEtzRE-0AruC5WI4&e=3D
-> >>>>>>>    - 2/2:
-> >>>>>>> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lkml.org_l=
-k
-> >>>>>>> ml
-> >>>>>>>
-> >> _2019_9_10_444&d=3DDwIBAg&c=3DDPL6_X_6JkXFx7AXWqB0tg&r=3DbkWxpLoW-
-> f-
-> >> E3Ed
-> >>>>>>>
-> >> iDCCa0_h0PicsViasSlvIpzZvPxs&m=3DMtEKKeJsQvi2UM1eSZUv2vPLLxrYU0aI1Ry
-> >>>>>>>
-> 4ICIDaiQ&s=3DkkfdwcX6bYcLrnJSgw_GcMMGAjnDTMtN2v6svWuANpk&e=3D
-> >>>>>>>
-> >>>>>>> Changes w.r.t v1:
-> >>>>>>>    - Squashed two patches from v1 into one as suggested by Gustav=
-o
-> >>>>>>>    - Addressed review comments from Andrew
-> >>>>>>>
-> >>>>>>>    drivers/pci/controller/dwc/pcie-designware.c =7C 12
-> >>>>>>> ++++++++++++ drivers/pci/controller/dwc/pcie-designware.h =7C  9
-> +++++++++
-> >>>>>>>    2 files changed, 21 insertions(+)
-> >>>>>>>
-> >>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c
-> >>>>>>> b/drivers/pci/controller/dwc/pcie-designware.c
-> >>>>>>> index 7d25102..97fb18d 100644
-> >>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> >>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> >>>>>>> =40=40 -466,4 +466,16 =40=40 void dw_pcie_setup(struct dw_pcie *p=
-ci)
-> >>>>>>>    		break;
-> >>>>>>>    	=7D
-> >>>>>>>    	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL,
-> val);
-> >>>>>>> +
-> >>>>>>> +	if (pci->quirk & DWC_EQUALIZATION_DISABLE) =7B
-> >>>>>>> +		val =3D dw_pcie_readl_dbi(pci,
-> PCIE_PORT_GEN3_RELATED);
-> >>>>>>> +		val =7C=3D PORT_LOGIC_GEN3_EQ_DISABLE;
-> >>>>>>> +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED,
-> val);
-> >>>>>>> +	=7D
-> >>>>>>> +
-> >>>>>>> +	if (pci->quirk & DWC_EQ_PHASE_2_3_DISABLE) =7B
-> >>>>>>> +		val =3D dw_pcie_readl_dbi(pci,
-> PCIE_PORT_GEN3_RELATED);
-> >>>>>>> +		val =7C=3D PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE;
-> >>>>>>> +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED,
-> val);
-> >>>>>>> +	=7D
-> >>>>>>>    =7D
-> >>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h
-> >>>>>>> b/drivers/pci/controller/dwc/pcie-designware.h
-> >>>>>>> index ffed084..e428b62 100644
-> >>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> >>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> >>>>>>> =40=40 -29,6 +29,10 =40=40
-> >>>>>>>    =23define LINK_WAIT_MAX_IATU_RETRIES	5
-> >>>>>>>    =23define LINK_WAIT_IATU			9
-> >>>>>>>
-> >>>>>>> +/* Parameters for GEN3 related quirks */
-> >>>>>>> +=23define DWC_EQUALIZATION_DISABLE	BIT(1)
-> >>>>>>> +=23define DWC_EQ_PHASE_2_3_DISABLE	BIT(2)
-> >>>>>>> +
-> >>>>>>>    /* Synopsys-specific PCIe configuration registers */
-> >>>>>>>    =23define PCIE_PORT_LINK_CONTROL		0x710
-> >>>>>>>    =23define PORT_LINK_MODE_MASK		GENMASK(21, 16)
-> >>>>>>> =40=40 -60,6 +64,10 =40=40
-> >>>>>>>    =23define PCIE_MSI_INTR0_MASK		0x82C
-> >>>>>>>    =23define PCIE_MSI_INTR0_STATUS		0x830
-> >>>>>>>
-> >>>>>>> +=23define PCIE_PORT_GEN3_RELATED		0x890
-> >>>>>>
-> >>>>>> I hadn't noticed this in the previous version - what is the
-> >>>>>> proper name
-> >>>>> for this
-> >>>>>> register? Does it end in _RELATED?
-> >>>>>
-> >>>>> As per SNPS databook the name of the register is =22GEN3_RELATED_OF=
-F=22.
-> >>>>> It is port logic register so, to keep similarity with other port
-> >>>>> logic registers in this file we named it as =22PCIE_PORT_GEN3_RELAT=
-ED=22.
-> >>>>
-> >>>> OK.
-> >>>>
-> >>>> Reviewed-by: Andrew Murray <andrew.murray=40arm.com>
-> >>>>
-> >>>> Also is the SNPS databook publicly available? I'd be interested in
-> >>>> reading it.
-> >>>
-> >>> The databook isn't openly available, sorry.
-> >>>
-> >>> Gustavo
-> >>>
-> >>>>
-> >>>> Thanks,
-> >>>>
-> >>>> Andrew Murray
-> >>>>
-> >>>>>
-> >>>>>>
-> >>>>>> Thanks,
-> >>>>>>
-> >>>>>> Andrew Murray
-> >>>>>>
-> >>>>>>> +=23define PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE	BIT(9)
-> >>>>>>> +=23define PORT_LOGIC_GEN3_EQ_DISABLE		BIT(16)
-> >>>>>>> +
-> >>>>>>>    =23define PCIE_ATU_VIEWPORT		0x900
-> >>>>>>>    =23define PCIE_ATU_REGION_INBOUND		BIT(31)
-> >>>>>>>    =23define PCIE_ATU_REGION_OUTBOUND	0
-> >>>>>>> =40=40 -244,6 +252,7 =40=40 struct dw_pcie =7B
-> >>>>>>>    	struct dw_pcie_ep	ep;
-> >>>>>>>    	const struct dw_pcie_ops *ops;
-> >>>>>>>    	unsigned int		version;
-> >>>>>>> +	unsigned int		quirk;
-> >>>>>>>    =7D;
-> >>>>>>>
-> >>>>>>>    =23define to_dw_pcie_from_pp(port) container_of((port), struct
-> >>>>>>> dw_pcie,
-> >>>>>>> pp)
-> >>>>>>> --
-> >>>>>>> 2.7.4
-> >>>>>>>
-> >>>>>
-> >>>
-> >>>
-> >
-> >
+However, a bit later in the kernel boot, I get:
 
+SError Interrupt on CPU1, code 0xbf000002 -- SError
+CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
+Hardware name: SolidRun LX2160A COM express type 7 module (DT)
+pstate: 60400085 (nZCv daIf +PAN -UAO)
+pc : pci_generic_config_read+0xb0/0xc0
+lr : pci_generic_config_read+0x1c/0xc0
+sp : ffffff8010f9baf0
+x29: ffffff8010f9baf0 x28: ffffff8010d620a0
+x27: ffffff8010d79000 x26: ffffff8010d62000
+x25: ffffff8010cb06d4 x24: 0000000000000000
+x23: ffffff8010e499b8 x22: ffffff8010f9bbaf
+x21: 0000000000000000 x20: ffffffe2eda11800
+x19: ffffff8010f62158 x18: ffffff8010bdede0
+x17: ffffff8010bdede8 x16: ffffff8010b96970
+x15: ffffffffffffffff x14: ffffffffff000000
+x13: ffffffffffffffff x12: 0000000000000030
+x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
+x9 : 2dff716475687163 x8 : ffffffffffffffff
+x7 : fefefefefefefefe x6 : 0000000000000000
+x5 : 0000000000000000 x4 : ffffff8010f9bb6c
+x3 : 0000000000000001 x2 : 0000000000000003
+x1 : 0000000000000000 x0 : 0000000000000000
+Kernel panic - not syncing: Asynchronous SError Interrupt
+CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
+Hardware name: SolidRun LX2160A COM express type 7 module (DT)
+Call trace:
+ dump_backtrace+0x0/0x120
+ show_stack+0x14/0x1c
+ dump_stack+0x9c/0xc0
+ panic+0x148/0x34c
+ print_tainted+0x0/0xa8
+ arm64_serror_panic+0x74/0x80
+ do_serror+0x8c/0x13c
+ el1_error+0xbc/0x160
+ pci_generic_config_read+0xb0/0xc0
+ pci_bus_read_config_byte+0x64/0x90
+ pci_read_config_byte+0x40/0x48
+ pci_assign_irq+0x34/0xc8
+ pci_device_probe+0x28/0x148
+ really_probe+0x1c4/0x2d0
+ driver_probe_device+0x58/0xfc
+ device_driver_attach+0x68/0x70
+ __driver_attach+0x94/0xdc
+ bus_for_each_dev+0x50/0xa0
+ driver_attach+0x20/0x28
+ bus_add_driver+0x14c/0x200
+ driver_register+0x6c/0x124
+ __pci_register_driver+0x48/0x50
+ mlx4_init+0x154/0x180
+ do_one_initcall+0x30/0x250
+ kernel_init_freeable+0x23c/0x32c
+ kernel_init+0x10/0xfc
+ ret_from_fork+0x10/0x18
+SMP: stopping secondary CPUs
+Kernel Offset: disabled
+CPU features: 0x0002,21006008
+Memory Limit: none
 
+and there it dies.  Any ideas?
+
+Thanks.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
