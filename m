@@ -2,66 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C7E0BD477
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2019 23:46:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41CD8BD478
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2019 23:46:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731571AbfIXVqe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Sep 2019 17:46:34 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44544 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728813AbfIXVqe (ORCPT
+        id S1728813AbfIXVqf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Sep 2019 17:46:35 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40501 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730387AbfIXVqe (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Sep 2019 17:46:34 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 21so2887760otj.11;
-        Tue, 24 Sep 2019 14:46:33 -0700 (PDT)
+Received: by mail-oi1-f195.google.com with SMTP id k9so3056330oib.7
+        for <linux-pci@vger.kernel.org>; Tue, 24 Sep 2019 14:46:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1EA8rb2xQcb5dg7rm6kSLl37zgnf6FJeYhc+aCc8i8Q=;
-        b=I4MqBB7D6G9IB9eikhptdpigVqlB8E9B8nERW92DNAswHz6a2HOiKOJePj2mCM2FRG
-         zuAZcwKAhv3MZAJfDrA3be+UOOxcmubtSCsRsQSr2FsO8pPerpLb6eRWuemoIueeedFX
-         HELYdLwi92qDWLEzaZ2LdyslJcErcCSXDDkliHf26Zs7vb1YhnsKdgcPVy6Kh3Pcbn2y
-         ESz/rUOkt/d6xm5qvwNNrlcaS0rOO9zniKFoIIr5NIbXE2jYO4gB/PimMrpQfGyMseFO
-         BKtv5wp1Vyp2qtLdX53p10yQFgZg7JOV0aE5wTBDxTVxigAPmTjb/NiS9zAdAZ8dhQcl
-         lnDg==
-X-Gm-Message-State: APjAAAWRamie8QhgtCuN6iYbc8U6TWmxN47+dM4yrOk0tEQC/tS5nPO9
-        AY/5PkKfypDgsbimKO2l0H2d9U0=
-X-Google-Smtp-Source: APXvYqyfVq4l/5/hBZkfgpAi1Pc1khFxc5Y5xwdvEOTzeXf8zarYTh54eCs4NscjomBDZ62d4/y0HA==
-X-Received: by 2002:a05:6830:16da:: with SMTP id l26mr3762822otr.339.1569361592670;
-        Tue, 24 Sep 2019 14:46:32 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mj2cHfPK1Lg/i3xyl7unPwCDQ0FPsiiGlXxaMpguDq4=;
+        b=WWqXMK+hntEY0D00cceGO59w8ixciz59MtP3p4zdGSi8fsNYKW6WLyf9jGyyMFMIiH
+         Yn76BKGgKMlIqvXrumSIKjfqOTrk7RXo8gjPtKV1c51GptieE80fvwkenOeSMEooWET9
+         hMRvmfsAJXv+5idzSnddtT4RHPNHNIMVr4j6gvpQuRoqd3zM6upSGhCkLPZr/RGC43gQ
+         uwGPnvFRCuGILUs/FQovvYHU3cu5HTLOSiQKm+LXC1Xf/NxcfuL/qvpEHzbt/OCm9G0d
+         vw4sUCrAFnm/adekL5OAU4GHIbwgwWoZnOrl+baZb9233ybqTAUwkuR03ddfwv8rregS
+         jC1A==
+X-Gm-Message-State: APjAAAVWc4O6lxAaoR/PapVn4gVPCth52BwSX+dfVxr2BAmE4Un4NaGm
+        zPL+pNxM8eTcyjp9N0RFcgi8xT8=
+X-Google-Smtp-Source: APXvYqzJ4oTIA1/Jq8Esdkdrq7dZsqt1eEao9dTNXYBUMMxJ++4DN0aBrQ0da6ZPPMILRTn37hQf4Q==
+X-Received: by 2002:a05:6808:647:: with SMTP id z7mr2028480oih.16.1569361593520;
+        Tue, 24 Sep 2019 14:46:33 -0700 (PDT)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id s66sm976787otb.65.2019.09.24.14.46.30
+        by smtp.googlemail.com with ESMTPSA id s66sm976787otb.65.2019.09.24.14.46.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 14:46:31 -0700 (PDT)
+        Tue, 24 Sep 2019 14:46:32 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc:     linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Ley Foon Tan <lftan@altera.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Ray Jui <rjui@broadcom.com>, rfi@lists.rocketboards.org,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Horman <horms@verge.net.au>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Tom Joseph <tjoseph@cadence.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH 00/11] PCI dma-ranges parsing consolidation
-Date:   Tue, 24 Sep 2019 16:46:19 -0500
-Message-Id: <20190924214630.12817-1-robh@kernel.org>
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH 01/11] PCI: aardvark: Use pci_parse_request_of_pci_ranges()
+Date:   Tue, 24 Sep 2019 16:46:20 -0500
+Message-Id: <20190924214630.12817-2-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190924214630.12817-1-robh@kernel.org>
+References: <20190924214630.12817-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -69,58 +51,100 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This series moves the DT 'dma-ranges' parsing into common helpers
-utilizing a resource list. In the process of doing this, I noticed
-several cases where pci_parse_request_of_pci_ranges() could be used so
-I converted those drivers first. The last 5 patches make the actual
-change to use the common 'dma_ranges' resource list. There's no
-(intended) functional change in this series though I'm also working on
-a separate series to improve the handling of 'dma-ranges' and dma
-masks.
+Convert aardvark to use the common pci_parse_request_of_pci_ranges().
 
-pci-rcar-gen2 is the only remaining driver doing its own dma-ranges
-handling as it is still using the old ARM PCI functions. Looks like it
-is the last one (in drivers/pci/).
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/pci/controller/pci-aardvark.c | 58 ++-------------------------
+ 1 file changed, 4 insertions(+), 54 deletions(-)
 
-Compile tested only.
-
-Rob
-
-Rob Herring (11):
-  PCI: aardvark: Use pci_parse_request_of_pci_ranges()
-  PCI: altera: Use pci_parse_request_of_pci_ranges()
-  PCI: mediatek: Use pci_parse_request_of_pci_ranges()
-  PCI: versatile: Enable COMPILE_TEST
-  PCI: versatile: Use pci_parse_request_of_pci_ranges()
-  PCI: of: Add inbound resource parsing to helpers
-  PCI: ftpci100: Use inbound resources for setup
-  PCI: v3-semi: Use inbound resources for setup
-  PCI: xgene: Use inbound resources for setup
-  PCI: iproc: Use inbound resources for setup
-  PCI: rcar: Use inbound resources for setup
-
- drivers/pci/controller/Kconfig                |  2 +-
- .../pci/controller/dwc/pcie-designware-host.c |  3 +-
- drivers/pci/controller/pci-aardvark.c         | 58 ++---------------
- drivers/pci/controller/pci-ftpci100.c         | 29 ++++-----
- drivers/pci/controller/pci-host-common.c      |  2 +-
- drivers/pci/controller/pci-v3-semi.c          | 40 +++++-------
- drivers/pci/controller/pci-versatile.c        | 62 ++++--------------
- drivers/pci/controller/pci-xgene.c            | 33 ++++------
- drivers/pci/controller/pcie-altera.c          | 38 +----------
- drivers/pci/controller/pcie-cadence-host.c    |  2 +-
- drivers/pci/controller/pcie-iproc-platform.c  |  1 +
- drivers/pci/controller/pcie-iproc.c           | 63 +++----------------
- drivers/pci/controller/pcie-mediatek.c        | 47 +++++---------
- drivers/pci/controller/pcie-mobiveil.c        |  4 +-
- drivers/pci/controller/pcie-rcar.c            | 48 ++++++--------
- drivers/pci/controller/pcie-rockchip-host.c   |  3 +-
- drivers/pci/controller/pcie-xilinx-nwl.c      |  2 +-
- drivers/pci/controller/pcie-xilinx.c          |  2 +-
- drivers/pci/of.c                              | 44 ++++++++++++-
- drivers/pci/pci.h                             |  8 ++-
- include/linux/pci.h                           |  2 +
- 21 files changed, 162 insertions(+), 331 deletions(-)
-
---
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index fc0fe4d4de49..ff3af3d34028 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -910,63 +910,11 @@ static irqreturn_t advk_pcie_irq_handler(int irq, void *arg)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static int advk_pcie_parse_request_of_pci_ranges(struct advk_pcie *pcie)
+-{
+-	int err, res_valid = 0;
+-	struct device *dev = &pcie->pdev->dev;
+-	struct resource_entry *win, *tmp;
+-	resource_size_t iobase;
+-
+-	INIT_LIST_HEAD(&pcie->resources);
+-
+-	err = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
+-						    &pcie->resources, &iobase);
+-	if (err)
+-		return err;
+-
+-	err = devm_request_pci_bus_resources(dev, &pcie->resources);
+-	if (err)
+-		goto out_release_res;
+-
+-	resource_list_for_each_entry_safe(win, tmp, &pcie->resources) {
+-		struct resource *res = win->res;
+-
+-		switch (resource_type(res)) {
+-		case IORESOURCE_IO:
+-			err = devm_pci_remap_iospace(dev, res, iobase);
+-			if (err) {
+-				dev_warn(dev, "error %d: failed to map resource %pR\n",
+-					 err, res);
+-				resource_list_destroy_entry(win);
+-			}
+-			break;
+-		case IORESOURCE_MEM:
+-			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
+-			break;
+-		case IORESOURCE_BUS:
+-			pcie->root_bus_nr = res->start;
+-			break;
+-		}
+-	}
+-
+-	if (!res_valid) {
+-		dev_err(dev, "non-prefetchable memory resource required\n");
+-		err = -EINVAL;
+-		goto out_release_res;
+-	}
+-
+-	return 0;
+-
+-out_release_res:
+-	pci_free_resource_list(&pcie->resources);
+-	return err;
+-}
+-
+ static int advk_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct advk_pcie *pcie;
+-	struct resource *res;
++	struct resource *res, *bus;
+ 	struct pci_host_bridge *bridge;
+ 	int ret, irq;
+ 
+@@ -991,11 +939,13 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	ret = advk_pcie_parse_request_of_pci_ranges(pcie);
++	ret = pci_parse_request_of_pci_ranges(dev, &pcie->resources,
++					      &bus);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to parse resources\n");
+ 		return ret;
+ 	}
++	pcie->root_bus_nr = bus->start;
+ 
+ 	advk_pcie_setup_hw(pcie);
+ 
+-- 
 2.20.1
+
