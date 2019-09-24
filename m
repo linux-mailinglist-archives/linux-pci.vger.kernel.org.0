@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BBC1BCE21
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2019 18:52:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B04F2BCFEC
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2019 19:02:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410238AbfIXQtI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Sep 2019 12:49:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41204 "EHLO mail.kernel.org"
+        id S1727538AbfIXRCP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Sep 2019 13:02:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410228AbfIXQtG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:49:06 -0400
+        id S2632839AbfIXQmz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:42:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD59B21D6C;
-        Tue, 24 Sep 2019 16:49:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87A4921D7C;
+        Tue, 24 Sep 2019 16:42:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343745;
-        bh=hYVt0RUpuwd8TcWj9uwviXzVdy6fGVwf5peNzZMmb6c=;
+        s=default; t=1569343374;
+        bh=11lJkN1wtJ5AhK02O4kXnVotVpGg6k+q3v4S5ecZOKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ihvCSFqIIj/GPL8hMTrhxTwJ3izH1FR8eT/1oYUQaryQvQvp4kKc66CuSVedRIjE1
-         1lKfJOiXMIrSNrWp4JL0NNCE6fv3UGZw8zZpLCrTYZFj3oKVB9jPxxetd61H1QEaGx
-         tYMlklKkU3qEop3hBwPuR7ckX0qtjh1THs8y+nT0=
+        b=PidovqNm5s+w0fwzzyCyuzKZ6mVysu3j7Ka6jh3HoI6KEs2LmtiqzBMDN7msk7ZjY
+         couvC094OK92Dvl6RcOqoajwLuN/5h5R+pU0cvpMfp6w4Li2yYPreHmW7rOjwZBHrg
+         J9fXaEZEE9L4XXZIPUyQNZwrItE21Cvwcuh55j5M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Nathan Chancellor <natechancellor@gmail.com>,
@@ -32,12 +32,12 @@ Cc:     Nathan Chancellor <natechancellor@gmail.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 11/50] PCI: rpaphp: Avoid a sometimes-uninitialized warning
-Date:   Tue, 24 Sep 2019 12:48:08 -0400
-Message-Id: <20190924164847.27780-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 24/87] PCI: rpaphp: Avoid a sometimes-uninitialized warning
+Date:   Tue, 24 Sep 2019 12:40:40 -0400
+Message-Id: <20190924164144.25591-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924164847.27780-1-sashal@kernel.org>
-References: <20190924164847.27780-1-sashal@kernel.org>
+In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
+References: <20190924164144.25591-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -90,7 +90,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 7 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-index 857c358b727b8..cc860c5f7d26f 100644
+index bcd5d357ca238..c3899ee1db995 100644
 --- a/drivers/pci/hotplug/rpaphp_core.c
 +++ b/drivers/pci/hotplug/rpaphp_core.c
 @@ -230,7 +230,7 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
