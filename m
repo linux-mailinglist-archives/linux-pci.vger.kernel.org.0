@@ -2,352 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BDA1BD6FB
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2019 06:11:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64FE4BD7C9
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2019 07:36:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387842AbfIYELU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Sep 2019 00:11:20 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:7650 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392218AbfIYELT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Sep 2019 00:11:19 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d8ae8ec0000>; Tue, 24 Sep 2019 21:11:24 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 24 Sep 2019 21:11:17 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 24 Sep 2019 21:11:17 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Sep
- 2019 04:11:16 +0000
-Received: from [10.24.47.46] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Sep
- 2019 04:11:14 +0000
-Subject: Re: [PATCH v2] PCI: dwc: Add support to add GEN3 related equalization
- quirks
-To:     Pankaj Dubey <pankaj.dubey@samsung.com>,
-        'Gustavo Pimentel' <Gustavo.Pimentel@synopsys.com>,
-        'Andrew Murray' <andrew.murray@arm.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jingoohan1@gmail.com>, <lorenzo.pieralisi@arm.com>,
-        <bhelgaas@google.com>, 'Anvesh Salveru' <anvesh.s@samsung.com>
-References: <CGME20190913104018epcas5p3d93265a6786dc2b7b8a7d3231bfe9c14@epcas5p3.samsung.com>
- <1568371190-14590-1-git-send-email-pankaj.dubey@samsung.com>
- <20190916101543.GM9720@e119886-lin.cambridge.arm.com>
- <00a401d56c7e$cf3abd30$6db03790$@samsung.com>
- <20190916122400.GO9720@e119886-lin.cambridge.arm.com>
- <DM6PR12MB4010AE07CC6F1CC60A715EE4DA8C0@DM6PR12MB4010.namprd12.prod.outlook.com>
- <7ad2b603-49ce-e955-58c4-fba1fb5ca6c8@nvidia.com>
- <000001d572ba$6d3040a0$4790c1e0$@samsung.com>
- <72370258-2cbe-32d8-b444-a45b50efa3e0@nvidia.com>
- <004c01d572d1$406882a0$c13987e0$@samsung.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <b81c8f18-7066-2a03-fe52-fb8d41e35fea@nvidia.com>
-Date:   Wed, 25 Sep 2019 09:41:11 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S2411717AbfIYFgh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Sep 2019 01:36:37 -0400
+Received: from mail-qk1-f179.google.com ([209.85.222.179]:34964 "EHLO
+        mail-qk1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404277AbfIYFgh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Sep 2019 01:36:37 -0400
+Received: by mail-qk1-f179.google.com with SMTP id w2so4252175qkf.2
+        for <linux-pci@vger.kernel.org>; Tue, 24 Sep 2019 22:36:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n4OkSaLpNdi0uLSUNENiAT5o+G4P+NMR/tdptF66Z3I=;
+        b=iyRFlBzIrYvGOOWlhqn+rRjFHWu51+wz+sFp2keLvkfA0dK+gopgYcrOdsln3IhuQ5
+         8nzIWwdWs+TJPFwKG3GcFtlkEm+VFC3pjouCpuh5Y7AxL8LWrtxWiuUFCfDzXoTQsAu2
+         aIzdol6kPQ2BeOJehaa89K1/y4awNETENu/sq6nwhr17MUzaMGJ4M/hXNFLhug98AqQ5
+         RelGTWy2nJ4L7H4wXVThA2cfYqlBAwKK0aItnAcRHCyNMrsejG/ZPAtBriIO61FkE9z3
+         dwqlKiSTP+N/pOi4jSe4O8rHlg4LZBhNU2L4uG4I3/ukUbrL4FQiu9O082CaP0oDgyUp
+         qgiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n4OkSaLpNdi0uLSUNENiAT5o+G4P+NMR/tdptF66Z3I=;
+        b=f2+eHXfuFDtu4a9KSzz4q5sBPCtKrfbz5U1Ebp9HJMpOROzs2XJJU2F5OU1pXDjagi
+         zcNLTHnXUVQeLk8kJRWh9ebZV2eAkcrYVHXIJzkQrKhvfRsrkYZ9ei8xAFV5J50AlrDC
+         gxQsh0xUVHa42lOcFFcxZsSPejJIXdLYpyZDVcqhhZEMC7Xx5pE1fmGiCBzIDEgJI2Eo
+         /tI9KB4A/M5azo5KX+eCzjHdSdKjOqB7/eRXWZfSgB8GKtHfqDLWomP8weRDNUkK4mUs
+         Bdpq11eS8yz+y+5IbJV19PwLiiFvARbUOo71I9Y3ucECIelDF6QCqZy5P0dGVi4PWm0g
+         6Qig==
+X-Gm-Message-State: APjAAAXJV6bMl894BpUvB7h8erNpiMBGcq+7gPPhhLU/1txWEqdYqAd5
+        8CgBphRM7sTzxOLgpnYFdehtjOqWC3lmlWRL6YOjgw==
+X-Google-Smtp-Source: APXvYqxaFV8T/oCBkaikYDBW2cR0TU7jGiBrlEWX4Aqh8n7slYKD1Ubm6p+Bq8NxOtSYcKrxsZn5aRN73s43tyULGPY=
+X-Received: by 2002:a37:a7c5:: with SMTP id q188mr1749753qke.445.1569389796371;
+ Tue, 24 Sep 2019 22:36:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <004c01d572d1$406882a0$c13987e0$@samsung.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1569384684; bh=08dvnNNRABjGFoXxot/+rTE1i0rCM4OYSwCk0vFf5SE=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mDimB9uireqHiUHq3+cFYhcaedb1cL09zrcda+BvmEuLu0kAQUZAus7GvdpV/YqnE
-         HSTLpbul5BjxsL3ymq4aiUGiJH+lElIAoyWderNDrvdFCDeZl/XxubW7GjyqCGj0p4
-         ebCxWnmu5GjmrhLC1lID+kSYPkXq3lSy08xN8K4U4WzLAP96TIjW79cs9I7CsgvKVl
-         IpFJF6zFofND5rtdlrMvbzCvrIF/VGOn1O519ThJpS7aIRR2dF9ATEuljcgoxmYqQK
-         M9oVTGEixnLHutUPgtD95cfWSnFbJ3wSBLgX/W9cJvSkUOpcAqmVddaCuqx+/m3ii2
-         LWTm1DeIvBBSQ==
+References: <CAD8Lp47Vh69gQjROYG69=waJgL7hs1PwnLonL9+27S_TcRhixA@mail.gmail.com>
+ <CAJZ5v0g4T_0VD_oYMF_BF1VM-d1bg-BD8h8=STDrhVBgouPOPg@mail.gmail.com>
+ <01cf6be6-9175-87ca-f3ad-78c06b666893@linux.intel.com> <CAD8Lp4658-c=7KabiJ=xuNRCqPwF4BJauMHqh_8WSBfCFHWSSg@mail.gmail.com>
+ <CAJZ5v0gouaztf7tcKXBr90gjrVjOvqH70regD=o2r_d+9Bwvqg@mail.gmail.com>
+ <CAD8Lp47oNJb5N5i4oUQfN5b=xCtUc1Lt852pnXxhNq0vyWj=yg@mail.gmail.com>
+ <CAJZ5v0j=x4HHOsJ6fCX-xOr29-4BMRzjR5H5UaoWW9v-Ci8ODQ@mail.gmail.com> <CAD8Lp47qSte0C6sUFBkXVAHa755R5PnNUSvjRYD=JehYJ2R0pQ@mail.gmail.com>
+In-Reply-To: <CAD8Lp47qSte0C6sUFBkXVAHa755R5PnNUSvjRYD=JehYJ2R0pQ@mail.gmail.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Wed, 25 Sep 2019 13:36:25 +0800
+Message-ID: <CAD8Lp4574C4QCA3mBb9iC_3hBj7pZ3kJi-fkg7dONQPjWcF8bQ@mail.gmail.com>
+Subject: Re: Ryzen7 3700U xhci fails on resume from sleep
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Endless Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/24/2019 5:41 PM, Pankaj Dubey wrote:
-> 
-> 
->> -----Original Message-----
->> From: Vidya Sagar <vidyas@nvidia.com>
->> Sent: Tuesday, September 24, 2019 4:57 PM
->> To: Pankaj Dubey <pankaj.dubey@samsung.com>; 'Gustavo Pimentel'
->> <Gustavo.Pimentel@synopsys.com>; 'Andrew Murray'
->> <andrew.murray@arm.com>
->> Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
->> jingoohan1@gmail.com; lorenzo.pieralisi@arm.com; bhelgaas@google.com;
->> 'Anvesh Salveru' <anvesh.s@samsung.com>
->> Subject: Re: [PATCH v2] PCI: dwc: Add support to add GEN3 related equalization
->> quirks
->>
->> On 9/24/2019 2:58 PM, Pankaj Dubey wrote:
->>>
->>>
->>>> -----Original Message-----
->>>> From: Vidya Sagar <vidyas@nvidia.com>
->>>> Sent: Thursday, September 19, 2019 4:54 PM
->>>> Subject: Re: [PATCH v2] PCI: dwc: Add support to add GEN3 related
->>>> equalization quirks
->>>>
->>>> On 9/16/2019 6:22 PM, Gustavo Pimentel wrote:
->>>>> On Mon, Sep 16, 2019 at 13:24:1, Andrew Murray
->>>> <andrew.murray@arm.com>
->>>>> wrote:
->>>>>
->>>>>> On Mon, Sep 16, 2019 at 04:36:33PM +0530, Pankaj Dubey wrote:
->>>>>>>
->>>>>>>
->>>>>>>> -----Original Message-----
->>>>>>>> From: Andrew Murray <andrew.murray@arm.com>
->>>>>>>> Sent: Monday, September 16, 2019 3:46 PM
->>>>>>>> To: Pankaj Dubey <pankaj.dubey@samsung.com>
->>>>>>>> Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
->>>>>>>> jingoohan1@gmail.com; gustavo.pimentel@synopsys.com;
->>>>>>>> lorenzo.pieralisi@arm.com; bhelgaas@google.com; Anvesh Salveru
->>>>>>>> <anvesh.s@samsung.com>
->>>>>>>> Subject: Re: [PATCH v2] PCI: dwc: Add support to add GEN3 related
->>>>>>> equalization
->>>>>>>> quirks
->>>>>>>>
->>>>>>>> On Fri, Sep 13, 2019 at 04:09:50PM +0530, Pankaj Dubey wrote:
->>>>>>>>> From: Anvesh Salveru <anvesh.s@samsung.com>
->>>>>>>>>
->>>>>>>>> In some platforms, PCIe PHY may have issues which will prevent
->>>>>>>>> linkup to happen in GEN3 or higher speed. In case equalization
->>>>>>>>> fails, link will fallback to GEN1.
->>>>>>>>>
->>>>>>>>> DesignWare controller gives flexibility to disable GEN3
->>>>>>>>> equalization completely or only phase 2 and 3 of equalization.
->>>>>>>>>
->>>>>>>>> This patch enables the DesignWare driver to disable the PCIe
->>>>>>>>> GEN3 equalization by enabling one of the following quirks:
->>>>>>>>>     - DWC_EQUALIZATION_DISABLE: To disable GEN3 equalization all
->>>>>>>>> phases
->>>> I don't think Gen-3 equalization can be skipped altogether.
->>>> PCIe Spec Rev 4.0 Ver 1.0 in Section-4.2.3 has the following statement.
->>>>
->>>> "All the Lanes that are associated with the LTSSM (i.e., those Lanes
->>>> that are currently operational or may be operational in the future
->>>> due to Link
->>>> Upconfigure) must participate in the Equalization procedure"
->>>>
->>>> and in Section-4.2.6.4.2.1.1 it says
->>>> "Note: A transition to Recovery.RcvrLock might be used in the case
->>>> where the Downstream Port determines that Phase 2 and Phase 3 are not
->>>> needed based on the platform and channel characteristics."
->>>>
->>>> Based on the above statements, I think it is Ok to skip only Phases
->>>> 2&3 of equalization but not 0&1.
->>>> I even checked with our hardware engineers and it seems
->>>> DWC_EQUALIZATION_DISABLE is present only for debugging purpose in
->>>> hardware simulations and shouldn't be used on real silicon otherwise it seems.
->>>>
->>>
->>> In DesignWare manual we don't see any comment that this feature is for
->> debugging purpose only.
->> Agree and as I mentioned even I got to know about it offline.
->>
->>> Even if it is meant for debugging purpose, if for some reason in an SoC, Gen3/4
->> linkup is failing due to equalization, and if disabling equalization is helping then
->> IMO it is OK to do it.
->> Well, I don't have specific reservations to not have it. We can use this as a fall
->> back option.
->>
->>> Just to re-confirm we tested one of the NVMe device on Jatson AGX Xavier RC
->> with equalization disabled. We do see linkup works well in GEN3. As we have
->> added this feature as a platform-quirk so only platforms that required this
->> feature can enable it.
->>>
->> Curious to know...You did it because link didn't come up with equalization
->> enabled? or just as an experiment?
->>
-> 
-> We did this, just as an experiment.
-Ok. Thanks for the clarification.
+On Mon, Sep 23, 2019 at 5:10 PM Daniel Drake <drake@endlessm.com> wrote:
+> Unfortunately it's not quite as simple as quirking d3_delay though,
+> because the problem still happens upon resume from s2idle. In that
+> case, pci_dev_d3_sleep() is not called at all.
+>
+>     if (state == PCI_D3hot || dev->current_state == PCI_D3hot)
+>         pci_dev_d3_sleep(dev);
+>
+> In the runtime resume case, dev->current_state == PCI_D3hot here (even
+> though pci_set_power_state had been called to put it into D3cold), so
+> the msleep happens.
+> But in the system sleep (s2idle) case, dev->current_state ==
+> PCI_D3cold here, so no sleep happens.
+> That is strangely inconsistent - is it a bug?
 
-Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
+In more detail:
 
-> 
->>> Snippet of lspci (from Jatson AGX Xavier RC) is given below, showing
->>> EQ is completely disabled and GEN3 linkup
->>> -----
->>> 0005:01:00.0 Non-Volatile memory controller: Lite-On Technology
->> Corporation Device 21f1 (rev 01) (prog-if 02 [NVM Express])
->>>           Subsystem: Marvell Technology Group Ltd. Device 1093
->>>            <snip>
->>>                   LnkCap: Port #0, Speed 8GT/s, Width x4, ASPM L1, Exit Latency L0s
->> <512ns, L1 <64us
->>>                           ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp+
->>>                   LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk+
->>>                           ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
->>>                   LnkSta: Speed 8GT/s, Width x4, TrErr- Train- SlotClk+ DLActive-
->> BWMgmt- ABWMgmt-
->>>                   DevCap2: Completion Timeout: Not Supported, TimeoutDis+, LTR+,
->> OBFF Via message
->>>                   DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR+,
->> OBFF Disabled
->>>                   LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
->>>                            Transmit Margin: Normal Operating Range,
->> EnterModifiedCompliance- ComplianceSOS-
->>>                            Compliance De-emphasis: -6dB
->>>                   LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-,
->> EqualizationPhase1-
->>>                            EqualizationPhase2-, EqualizationPhase3-,
->>> LinkEqualizationRequest-
->>> -----
->>>> - Vidya Sagar
->>>>
->>>>
->>>>>>>>>     - DWC_EQ_PHASE_2_3_DISABLE: To disable GEN3 equalization
->>>>>>>>> phase 2 & 3
->>>>>>>>>
->>>>>>>>> Platform drivers can set these quirks via "quirk" variable of "dw_pcie"
->>>>>>>>> struct.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
->>>>>>>>> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
->>>>>>>>> ---
->>>>>>>>> Patchset v1 can be found at:
->>>>>>>>>     - 1/2: https://urldefense.proofpoint.com/v2/url?u=https-
->>>>
->> 3A__lkml.org_lkml_2019_9_10_443&d=DwIBAg&c=DPL6_X_6JkXFx7AXWqB0tg
->>>> &r=bkWxpLoW-f-
->>>>
->> E3EdiDCCa0_h0PicsViasSlvIpzZvPxs&m=MtEKKeJsQvi2UM1eSZUv2vPLLxrYU0aI1
->>>> Ry4ICIDaiQ&s=s_nPmMNbQFswYRxQgBkeg4H9J_0FEtzRE-0AruC5WI4&e=
->>>>>>>>>     - 2/2:
->>>>>>>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lk
->>>>>>>>> ml
->>>>>>>>>
->>>> _2019_9_10_444&d=DwIBAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=bkWxpLoW-
->> f-
->>>> E3Ed
->>>>>>>>>
->>>> iDCCa0_h0PicsViasSlvIpzZvPxs&m=MtEKKeJsQvi2UM1eSZUv2vPLLxrYU0aI1Ry
->>>>>>>>>
->> 4ICIDaiQ&s=kkfdwcX6bYcLrnJSgw_GcMMGAjnDTMtN2v6svWuANpk&e=
->>>>>>>>>
->>>>>>>>> Changes w.r.t v1:
->>>>>>>>>     - Squashed two patches from v1 into one as suggested by Gustavo
->>>>>>>>>     - Addressed review comments from Andrew
->>>>>>>>>
->>>>>>>>>     drivers/pci/controller/dwc/pcie-designware.c | 12
->>>>>>>>> ++++++++++++ drivers/pci/controller/dwc/pcie-designware.h |  9
->> +++++++++
->>>>>>>>>     2 files changed, 21 insertions(+)
->>>>>>>>>
->>>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c
->>>>>>>>> b/drivers/pci/controller/dwc/pcie-designware.c
->>>>>>>>> index 7d25102..97fb18d 100644
->>>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware.c
->>>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
->>>>>>>>> @@ -466,4 +466,16 @@ void dw_pcie_setup(struct dw_pcie *pci)
->>>>>>>>>     		break;
->>>>>>>>>     	}
->>>>>>>>>     	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL,
->> val);
->>>>>>>>> +
->>>>>>>>> +	if (pci->quirk & DWC_EQUALIZATION_DISABLE) {
->>>>>>>>> +		val = dw_pcie_readl_dbi(pci,
->> PCIE_PORT_GEN3_RELATED);
->>>>>>>>> +		val |= PORT_LOGIC_GEN3_EQ_DISABLE;
->>>>>>>>> +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED,
->> val);
->>>>>>>>> +	}
->>>>>>>>> +
->>>>>>>>> +	if (pci->quirk & DWC_EQ_PHASE_2_3_DISABLE) {
->>>>>>>>> +		val = dw_pcie_readl_dbi(pci,
->> PCIE_PORT_GEN3_RELATED);
->>>>>>>>> +		val |= PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE;
->>>>>>>>> +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED,
->> val);
->>>>>>>>> +	}
->>>>>>>>>     }
->>>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h
->>>>>>>>> b/drivers/pci/controller/dwc/pcie-designware.h
->>>>>>>>> index ffed084..e428b62 100644
->>>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
->>>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->>>>>>>>> @@ -29,6 +29,10 @@
->>>>>>>>>     #define LINK_WAIT_MAX_IATU_RETRIES	5
->>>>>>>>>     #define LINK_WAIT_IATU			9
->>>>>>>>>
->>>>>>>>> +/* Parameters for GEN3 related quirks */
->>>>>>>>> +#define DWC_EQUALIZATION_DISABLE	BIT(1)
->>>>>>>>> +#define DWC_EQ_PHASE_2_3_DISABLE	BIT(2)
->>>>>>>>> +
->>>>>>>>>     /* Synopsys-specific PCIe configuration registers */
->>>>>>>>>     #define PCIE_PORT_LINK_CONTROL		0x710
->>>>>>>>>     #define PORT_LINK_MODE_MASK		GENMASK(21, 16)
->>>>>>>>> @@ -60,6 +64,10 @@
->>>>>>>>>     #define PCIE_MSI_INTR0_MASK		0x82C
->>>>>>>>>     #define PCIE_MSI_INTR0_STATUS		0x830
->>>>>>>>>
->>>>>>>>> +#define PCIE_PORT_GEN3_RELATED		0x890
->>>>>>>>
->>>>>>>> I hadn't noticed this in the previous version - what is the
->>>>>>>> proper name
->>>>>>> for this
->>>>>>>> register? Does it end in _RELATED?
->>>>>>>
->>>>>>> As per SNPS databook the name of the register is "GEN3_RELATED_OFF".
->>>>>>> It is port logic register so, to keep similarity with other port
->>>>>>> logic registers in this file we named it as "PCIE_PORT_GEN3_RELATED".
->>>>>>
->>>>>> OK.
->>>>>>
->>>>>> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
->>>>>>
->>>>>> Also is the SNPS databook publicly available? I'd be interested in
->>>>>> reading it.
->>>>>
->>>>> The databook isn't openly available, sorry.
->>>>>
->>>>> Gustavo
->>>>>
->>>>>>
->>>>>> Thanks,
->>>>>>
->>>>>> Andrew Murray
->>>>>>
->>>>>>>
->>>>>>>>
->>>>>>>> Thanks,
->>>>>>>>
->>>>>>>> Andrew Murray
->>>>>>>>
->>>>>>>>> +#define PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE	BIT(9)
->>>>>>>>> +#define PORT_LOGIC_GEN3_EQ_DISABLE		BIT(16)
->>>>>>>>> +
->>>>>>>>>     #define PCIE_ATU_VIEWPORT		0x900
->>>>>>>>>     #define PCIE_ATU_REGION_INBOUND		BIT(31)
->>>>>>>>>     #define PCIE_ATU_REGION_OUTBOUND	0
->>>>>>>>> @@ -244,6 +252,7 @@ struct dw_pcie {
->>>>>>>>>     	struct dw_pcie_ep	ep;
->>>>>>>>>     	const struct dw_pcie_ops *ops;
->>>>>>>>>     	unsigned int		version;
->>>>>>>>> +	unsigned int		quirk;
->>>>>>>>>     };
->>>>>>>>>
->>>>>>>>>     #define to_dw_pcie_from_pp(port) container_of((port), struct
->>>>>>>>> dw_pcie,
->>>>>>>>> pp)
->>>>>>>>> --
->>>>>>>>> 2.7.4
->>>>>>>>>
->>>>>>>
->>>>>
->>>>>
->>>
->>>
-> 
-> 
+During runtime suspend:
 
+pci_set_power_state() is called with state=D3cold
+ - This calls pci_raw_set_power_state() with state=D3hot
+ -- After transitioning to D3hot, dev->current_state is updated to
+D3hot based on pmcsr readback
+
+acpi_device_set_power() is called with state=D3cold
+ - acpi_power_transition() is called with state=D3cold, updates
+adev->power.state to D3cold
+ - adev->power.state is updated (again) to D0
+
+pci_update_current_state() is called
+ - platform_pci_get_power_state() returns D3cold
+ - dev->current_state is updated to D3cold
+
+Observations: everything seems to be in order
+
+
+During runtime resume:
+
+pci_update_current_state() is called
+ - platform_pci_get_power_state() returns D3cold
+ - dev->current_state is updated to D3cold
+
+pci_set_power_state() is called with state=D0
+ - Calls pci_platform_power_transition
+ -- Calls acpi_pci_set_power_state -> acpi_device_set_power with state=D0 :
+ --- acpi_power_transition() updates adev->power.state to D0
+ --- adev->power.state is updated (again) to D0
+ -- Calls pci_update_current_state
+ --- platform_pci_get_power_state() returns D0 (so this is ignored)
+ --- dev->current_state is updated to D3 via pmcsr read
+ - D3cold delay happens (good)
+ - Calls pci_raw_set_power_state() with state=D0
+ -- current_state is D3 so the D3 delay happens (good) (I quirked this
+delay to 20ms)
+ -- device is transitioned to D0 and dev->current_state is updated to
+D0 from pmcsr read
+
+Observations: everything seems to be in order, USB is working after resume
+
+
+During s2idle suspend:
+
+Exactly the same as runtime suspend above. Device transitions into
+D3cold and dev->current_state ends up as D3cold. Everything seems to
+be in order.
+
+
+During s2idle resume:
+
+acpi_device_set_power() is called with state=D0
+ - acpi_power_transition() is called with state=D0, updates
+adev->power.state to D0
+ - adev->power.state is updated (again) to D0
+
+pci_raw_set_power_state() is calld with state=D0
+ -- dev->current_state is D3cold so no D3 delay happens ***
+ -- device fails to transitioned to D0, pmcsr read indicates it's still in D3.
+
+Observations: that's a pretty clear difference between the s2idle
+resume and runtime resume paths.
+The s2idle resume path is arrived at via pci_pm_default_resume_early()
+--> pci_power_up().
+
+
+Should the s2idle resume path be modified to call into
+pci_update_current_state() to change the current_state to D3hot based
+on pmcsr (like the runtime resume path does)?
+Or should pci_raw_set_power_state() be modified to also apply the
+d3_delay when transitioning from D3cold to D0?
+
+Thanks
+Daniel
