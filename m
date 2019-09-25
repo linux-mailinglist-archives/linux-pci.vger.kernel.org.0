@@ -2,175 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A6ADBE74F
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2019 23:33:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31730BE847
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2019 00:25:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfIYVdi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Sep 2019 17:33:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727058AbfIYVdh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 25 Sep 2019 17:33:37 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95011222BD;
-        Wed, 25 Sep 2019 21:33:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569447215;
-        bh=TszXw7S5GIEzEo992EEMfz4W0WtzSxu1MBpaBhf4tmw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QlI2Sj1D5LJahPlbpQRPzC/Kfp42A3NwekR29GtyvfIPAZlvPN1zAfycydpBTfcd8
-         IvT8WVCyptqcO23hrQq7/1AbSsfzPRa68TLRQRP+hrXx+5Qsz/4M4CfEt25gMVn9on
-         EMq0EmayAeKNvnaIFqzE8CzGz5kGoSiMNjw4W64I=
-Received: by mail-qt1-f181.google.com with SMTP id m15so298885qtq.2;
-        Wed, 25 Sep 2019 14:33:35 -0700 (PDT)
-X-Gm-Message-State: APjAAAU/MDgYmsvDWUxhr0S/Q958v/NMn7J4JTGJNu6zn2KE6uwZuvLx
-        +uW755Pt4Q2Nc+sOQUjGxURuNzeHmiO1sPSfVA==
-X-Google-Smtp-Source: APXvYqy9YJ9VRUtFzrkZ+iKb5Tx5rlamJJuwaAKBRmCflwCEbYKpuVBbZPPVrEImTOCJgn8Jl5TlEwRQfbhe0HNZXOU=
-X-Received: by 2002:a0c:8a6d:: with SMTP id 42mr1647258qvu.138.1569447214653;
- Wed, 25 Sep 2019 14:33:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190924181244.7159-1-nsaenzjulienne@suse.de> <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
- <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de> <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
- <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de> <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
- <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
-In-Reply-To: <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 25 Sep 2019 16:33:23 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
-Message-ID: <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
-Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
+        id S1727491AbfIYWZJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Sep 2019 18:25:09 -0400
+Received: from mail-eopbgr1310098.outbound.protection.outlook.com ([40.107.131.98]:24192
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725868AbfIYWZJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 25 Sep 2019 18:25:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iKnZjPdbHTrnzW5IXdsXGMlOIvQIxe3l/+xEGXrXM9VetrgNUgbNzHBAzYBTr0gBSnpvb+d6EoB7jWaAO6Z7g7q15STbRinw7wIkgKwZ71/1rwNNWzATEHjVNDld1r51kJmoVfqhjuCq50/jNLmU8FrsrNCb9cKEVSuzYyEgYWaMYb0AR3yLaGs7CK0vD6yVKN6QD8xi9xWH9RyR7HUcO2ao/A1E2Io8bVAUGpDii3SN2lpKjk8OW8AZp/Ln5Fi57eiKz2EejvevZBpAvg4+a9mP+i7adn9kxZGXc04OkQmVK78h/fsvcxDGCgJOrMuvU3FAYwRnWIpZ19iUPcza/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CTIBkjK6fEASPkqskDhT4WRfUjNIVAN7ETUURVEQEB4=;
+ b=ZkzTL4b9YEIxDPrl1efHS3xwuLNTMIc3URHQLDuBtJCXksuzbrCkw5CQNpinVh5D7i1dG4bXBjISUc0ExcnmXggKeZcAp+cO9MQFtHHcxrhVb6Yo/hLTkxDGo8WAJWNPywV85BJ7XvSxCXEceQ60DfPK0/zuAlmhcpSvIJaXxySw/AffUFdveM07Od8WPfALuJiI4hvS2NbA5/vqxjw0ky7q6+bwsCpXU5pTUagfKvbWrnxr9rpukL1GwwEV8rBn4rOUCPULcedZUFlM5lN8S138XFlRru+5U04EVMYv1CdvltMYve+V1weX0ZhoOI1D+ZU9N/ajNplJBClgNQM30A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CTIBkjK6fEASPkqskDhT4WRfUjNIVAN7ETUURVEQEB4=;
+ b=JYcMLiIv6cbE/TnC+wdOUZ1rLtwSGBnP5tA/ENGei75jTZIbuo0kmS2pD3N3CkqCtE4TJnsrc8GFLSbePOnSxosOPFCabu8WLJMU0sNNI3EiGu0DLipRcLjT2b9ISZVI2NV2rEm7LC7lq0aWcd6atjFa+tPO8IsAEAzrzx64yJU=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0122.APCP153.PROD.OUTLOOK.COM (10.170.188.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.6; Wed, 25 Sep 2019 22:25:00 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
+ 22:25:00 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        etnaviv@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com,
-        linux-pci@vger.kernel.org,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>, xen-devel@lists.xenproject.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>
+Subject: RE: [PATCH v2] PCI: PM: Move to D0 before calling
+ pci_legacy_resume_early()
+Thread-Topic: [PATCH v2] PCI: PM: Move to D0 before calling
+ pci_legacy_resume_early()
+Thread-Index: AdVSPER5d22rbcvgTV28JV77HSffhgPsqanQBIAm+UA=
+Date:   Wed, 25 Sep 2019 22:25:00 +0000
+Message-ID: <PU1P153MB0169DECAA73E88F49B333CF7BF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <KU1P153MB016637CAEAD346F0AA8E3801BFAD0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
+ <KU1P153MB0166994305CF5B9CFA612AA7BFB90@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <KU1P153MB0166994305CF5B9CFA612AA7BFB90@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-14T01:06:51.2322584Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ab25360d-4a75-4436-9390-ec9b2f112f8b;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:2:35f9:636:b84a:df21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 04544e4f-460f-43a4-f0e8-08d74207346c
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: PU1P153MB0122:|PU1P153MB0122:|PU1P153MB0122:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB012256E31D8A3A354DF29FAFBF870@PU1P153MB0122.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01713B2841
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(376002)(346002)(396003)(136003)(366004)(54534003)(199004)(189003)(2906002)(66556008)(66476007)(478600001)(14444005)(74316002)(8990500004)(6116002)(8936002)(110136005)(14454004)(54906003)(6246003)(305945005)(7736002)(2201001)(4326008)(2501003)(22452003)(99286004)(64756008)(9686003)(7696005)(66446008)(66946007)(1511001)(6436002)(76176011)(229853002)(55016002)(76116006)(10090500001)(71200400001)(53546011)(33656002)(186003)(486006)(7416002)(52536014)(5660300002)(86362001)(46003)(25786009)(71190400001)(6506007)(81156014)(102836004)(8676002)(446003)(11346002)(81166006)(476003)(10290500003)(316002)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0122;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ULMBJjhKAXfatCJl/ceX66XYDL7Y8EXkTOO7KrUWokOR+QDUxe2Xld6oSSkCUIiPmx0W2Dzu2EOTc3G0cK75ea5v0yta+r9VCG6GvX7W43EazC13snU99QyfT1mnb46p3cPpxu6gjQSH8vVhkGMeFUaorY9Ali9R4JsBacyyaVXhA0Gylm5lcsrFe+aAGDVuLo8aJmOYR62gti1akZ9/1jrqST+fzxPWzBT6HF/B0W55+weolN+dFKU7xZdwndSFcjZJQxv30IboLhOBNJtbAR7ULzFU8/vGl3DlaV6Nbto11GFdGn6m6HDRoSjP0+EJ24Fl3zGvhxshOD/tNnZKiIi+HlwzvPwjmg7QHQ+h++cia78Y6c282borJ8vXM14vByqk6G86kHRqEK96sAn9TH3JamhiwR+1daF91eRanBs=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04544e4f-460f-43a4-f0e8-08d74207346c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 22:25:00.3316
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nVMJ0CIDJ7PbkgAqJv2VK8I7xVeJEHglcxh3jVfLOddu4tDUTjBqzI58kxg4eNBFAFHK+35Re3LhXJ+kgsbStg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0122
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 11:52 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 25/09/2019 17:16, Rob Herring wrote:
-> > On Wed, Sep 25, 2019 at 10:30 AM Nicolas Saenz Julienne
-> > <nsaenzjulienne@suse.de> wrote:
-> >>
-> >> On Wed, 2019-09-25 at 16:09 +0100, Robin Murphy wrote:
-> >>> On 25/09/2019 15:52, Nicolas Saenz Julienne wrote:
-> >>>> On Tue, 2019-09-24 at 16:59 -0500, Rob Herring wrote:
-> >>>>> On Tue, Sep 24, 2019 at 1:12 PM Nicolas Saenz Julienne
-> >>>>> <nsaenzjulienne@suse.de> wrote:
-> >>>>>> Hi All,
-> >>>>>> this series tries to address one of the issues blocking us from
-> >>>>>> upstreaming Broadcom's STB PCIe controller[1]. Namely, the fact that
-> >>>>>> devices not represented in DT which sit behind a PCI bus fail to get the
-> >>>>>> bus' DMA addressing constraints.
-> >>>>>>
-> >>>>>> This is due to the fact that of_dma_configure() assumes it's receiving a
-> >>>>>> DT node representing the device being configured, as opposed to the PCIe
-> >>>>>> bridge node we currently pass. This causes the code to directly jump
-> >>>>>> into PCI's parent node when checking for 'dma-ranges' and misses
-> >>>>>> whatever was set there.
-> >>>>>>
-> >>>>>> To address this I create a new API in OF - inspired from Robin Murphys
-> >>>>>> original proposal[2] - which accepts a bus DT node as it's input in
-> >>>>>> order to configure a device's DMA constraints. The changes go deep into
-> >>>>>> of/address.c's implementation, as a device being having a DT node
-> >>>>>> assumption was pretty strong.
-> >>>>>>
-> >>>>>> On top of this work, I also cleaned up of_dma_configure() removing its
-> >>>>>> redundant arguments and creating an alternative function for the special
-> >>>>>> cases
-> >>>>>> not applicable to either the above case or the default usage.
-> >>>>>>
-> >>>>>> IMO the resulting functions are more explicit. They will probably
-> >>>>>> surface some hacky usages that can be properly fixed as I show with the
-> >>>>>> DT fixes on the Layerscape platform.
-> >>>>>>
-> >>>>>> This was also tested on a Raspberry Pi 4 with a custom PCIe driver and
-> >>>>>> on a Seattle AMD board.
-> >>>>>
-> >>>>> Humm, I've been working on this issue too. Looks similar though yours
-> >>>>> has a lot more churn and there's some other bugs I've found.
-> >>>>
-> >>>> That's good news, and yes now that I see it, some stuff on my series is
-> >>>> overly
-> >>>> complicated. Specially around of_translate_*().
-> >>>>
-> >>>> On top of that, you removed in of_dma_get_range():
-> >>>>
-> >>>> -   /*
-> >>>> -    * At least empty ranges has to be defined for parent node if
-> >>>> -    * DMA is supported
-> >>>> -    */
-> >>>> -   if (!ranges)
-> >>>> -           break;
-> >>>>
-> >>>> Which I assumed was bound to the standard and makes things easier.
-> >>>>
-> >>>>> Can you test out this branch[1]. I don't have any h/w needing this,
-> >>>>> but wrote a unittest and tested with modified QEMU.
-> >>>>
-> >>>> I reviewed everything, I did find a minor issue, see the patch attached.
-> >>>
-> >>> WRT that patch, the original intent of "force_dma" was purely to
-> >>> consider a device DMA-capable regardless of the presence of
-> >>> "dma-ranges". Expecting of_dma_configure() to do anything for a non-OF
-> >>> device has always been bogus - magic paravirt devices which appear out
-> >>> of nowhere and expect to be treated as genuine DMA masters are a
-> >>> separate problem that we haven't really approached yet.
-> >>
-> >> I agree it's clearly abusing the function. I have no problem with the behaviour
-> >> change if it's OK with you.
->
-> Thinking about it, you could probably just remove that call from the Xen
-> DRM driver now anyway - since the dma-direct rework, we lost the ability
-> to set dma_dummy_ops by default, and NULL ops now represent what it
-> (presumably) wants.
-
-Not xen_dma_ops? In any case, I'll send out a patch for the the Xen
-folks to comment on.
-
-> >> Robin, have you looked into supporting multiple dma-ranges? It's the next thing
-> >> we need for BCM STB's PCIe. I'll have a go at it myself if nothing is in the
-> >> works already.
+> From: devel <driverdev-devel-bounces@linuxdriverproject.org> On Behalf Of
+> Dexuan Cui
+> Sent: Monday, September 2, 2019 5:35 PM
+> To: lorenzo.pieralisi@arm.com; bhelgaas@google.com;
+> linux-pci@vger.kernel.org
+> [..snipped...]
+> > ---
 > >
-> > Multiple dma-ranges as far as configuring inbound windows should work
-> > already other than the bug when there's any parent translation. But if
-> > you mean supporting multiple DMA offsets and masks per device in the
-> > DMA API, there's nothing in the works yet.
->
-> There's also the in-between step of making of_dma_get_range() return a
-> size based on all the dma-ranges entries rather than only the first one
-> - otherwise, something like [1] can lead to pretty unworkable default
-> masks. We implemented that when doing acpi_dma_get_range(), it's just
-> that the OF counterpart never caught up.
+> > changes in v2:
+> > 	Updated the changelog with more details.
+> >
+> >  drivers/pci/pci-driver.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> > index 36dbe960306b..27dfc68db9e7 100644
+> > --- a/drivers/pci/pci-driver.c
+> > +++ b/drivers/pci/pci-driver.c
+> > @@ -1074,15 +1074,16 @@ static int pci_pm_thaw_noirq(struct device
+> *dev)
+> >  			return error;
+> >  	}
+> >
+> > -	if (pci_has_legacy_pm_support(pci_dev))
+> > -		return pci_legacy_resume_early(dev);
+> > -
+> >  	/*
+> >  	 * pci_restore_state() requires the device to be in D0 (because of MS=
+I
+> >  	 * restoration among other things), so force it into D0 in case the
+> >  	 * driver's "freeze" callbacks put it into a low-power state directly=
+.
+> >  	 */
+> >  	pci_set_power_state(pci_dev, PCI_D0);
+> > +
+> > +	if (pci_has_legacy_pm_support(pci_dev))
+> > +		return pci_legacy_resume_early(dev);
+> > +
+> >  	pci_restore_state(pci_dev);
+> >
+> >  	if (drv && drv->pm && drv->pm->thaw_noirq)
+> > --
+>=20
+> Hi, Lorenzo, Bjorn,
+>=20
+> Can you please take a look at the v2 ?
+>=20
+> -- Dexuan
 
-Right. I suppose we assume any holes in the ranges are addressable by
-the device but won't get used for other reasons (such as no memory
-there). However, to be correct, the range of the dma offset plus mask
-would need to be within the min start and max end addresses. IOW,
-while we need to round up (0xa_8000_0000 - 0x2c1c_0000) to the next
-power of 2, the 'correct' thing to do is round down.
+Hi Lorenzo, Bjorn, and all,
+It looks this patch has not been acked by anyone.
 
-Rob
+Should I resend it? There is no change since v2.
 
-> [1]
-> http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=a2814af56b3486c2985a95540a88d8f9fa3a699f
+Thanks,
+-- Dexuan
