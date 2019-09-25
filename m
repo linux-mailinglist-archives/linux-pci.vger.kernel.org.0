@@ -2,140 +2,175 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EFD9BBE5F3
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2019 21:58:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A6ADBE74F
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2019 23:33:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387863AbfIYT6Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Sep 2019 15:58:25 -0400
-Received: from mail-eopbgr1310119.outbound.protection.outlook.com ([40.107.131.119]:22016
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731558AbfIYT6Z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 25 Sep 2019 15:58:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TNjCoqV8xB1CtmJ61JoFSRWXZHwzDl4u+iSvi75K5Dr1O+MRPoosqwSEQQ1DBtBEq4IkPKvou6zS0QHV2zUVUMrMXlYRx7j72+7vxeRwOsaTszqCFDKneElr3M2nF61aKrcxJL5KjGYdue1+dwGUOixAgKJ0ZkODxcnqv/ew2BU54ZVnWnFLZwoWC/D3MVvKn909OWTjpz+uan6WTgMWgm7ah5t9dfuTBLH8shGp1gZryHVYITbVIYWVWl2RqhqhvLZzF3rucIkbKEbF2PRxjlQ0TWUb2Fkfy074jT3GHG9YFNhsXEYMPK8xTMzlrnptENuUsnU1WVnhrWhUUECRng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ruImq6z2u7l/I9wGOdT5yc8ciXNcjkVsC6mAHYZJZ84=;
- b=gGx/fcWmKzxLb2KJ6Md31uYxdbpAMNKbVy2jzrVcf2eoPU+QseVENoiOuMdfV0hVajTYnIJOaMQmkozhoFl5mpzhCbrcXYpF2Hu1FeNeDVKcluKjUiR7pw2IdLlLmGjX+mNpT5GEjq21MWD09H4VO17HvSkDxOX9JjvQ94Jxl6idsnRAC9jK+PjXMk3qwnmuKfFNOSNrt6x2yzBuQbDP54jamM4/Ls31EJxc4OHa5XEdR+Jiu2s2S9LcU1KCb3i9Zt1BZtHUsQcG3UU3gA95zg8Bam6K7n83Od5nIr9OyHjd2RJ+xsr7fALtJF7/qAaC+aRQA1HEY+KWQLg9hqRfjg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ruImq6z2u7l/I9wGOdT5yc8ciXNcjkVsC6mAHYZJZ84=;
- b=gH2B7MRbMO2LaAEk9LfM05Ua6/2ySonUTQ6iFOghBd1WB3efaxlH8n7h/hEV00+vOOd4X7FgG8gj/lfj1bUZnBtr2FbsDIIDyIhB3Py5vmtzFCoynmKz6QPkFciLzKV7rH2B99roooB7UtxtM+ashsBZFQpy4hL8MN1R2Sr4UfA=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0139.APCP153.PROD.OUTLOOK.COM (10.170.188.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.5; Wed, 25 Sep 2019 19:58:16 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
- 19:58:16 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH 0/4] Enhance pci-hyperv to support hibernation
-Thread-Topic: [PATCH 0/4] Enhance pci-hyperv to support hibernation
-Thread-Index: AQHVaPn8vIIXMuXG2k+dW/CDPjDTsqc85Daw
-Date:   Wed, 25 Sep 2019 19:58:16 +0000
-Message-ID: <PU1P153MB0169DF37D4A5BCCD1BBDFA16BF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1568245086-70601-1-git-send-email-decui@microsoft.com>
-In-Reply-To: <1568245086-70601-1-git-send-email-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-25T19:58:14.6162445Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d9180726-6cb6-4fc6-be35-b7465a97f3f2;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:35f9:636:b84a:df21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cb65bb0a-db0e-4468-6aaf-08d741f2b4cb
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0139:|PU1P153MB0139:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB0139D83239C4042E9D27A333BF870@PU1P153MB0139.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01713B2841
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(199004)(189003)(66446008)(66476007)(66556008)(81166006)(64756008)(10090500001)(71190400001)(71200400001)(186003)(6436002)(6506007)(53546011)(110136005)(46003)(2501003)(7736002)(81156014)(14454004)(8676002)(229853002)(498600001)(446003)(10290500003)(11346002)(22452003)(8936002)(2201001)(25786009)(5660300002)(476003)(486006)(33656002)(9686003)(55016002)(6636002)(102836004)(7696005)(2906002)(76176011)(86362001)(99286004)(74316002)(6246003)(305945005)(6116002)(66946007)(256004)(14444005)(1511001)(76116006)(8990500004)(52536014)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0139;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4zJKT6tr37GIrSaThJLxow0p7HCHR56B/RLOj3uQjd4yaGzhq6f6n+C5739MNhB7DyFUvRCBLgohhGCHo0QFnmTJ1eTZ3GnK7ymZXswQFikfPC9ErriJNxfIfn5wfYyqqjdG+TmFUrTWdwT13Lcx0oNgKydxr44h6nWP8VhiUP0Vhf3xucZukr7bhefLVevPvsnZjTtS5ra+tfE7dlJM5S92P8LLihf2O62472/N5uWRhBg/dwKUsGIDKBuHSacortol0cXP+7FRnoBtmvWT5R0WgysbTzDlDLAEW1eB9YYpbJXwZEy0ZncXaaCJulgSPw+Pj8lZ9KQDrPPIOoxrh7qGY6/ixXc8n4K/OctnBHwVGIF6jzc+zwZuRqVre03W3us/TXOimCyrOIFrBdLoRd/x1g7AN1zDBG1lJCMIrD4=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1727139AbfIYVdi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Sep 2019 17:33:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45994 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727058AbfIYVdh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 25 Sep 2019 17:33:37 -0400
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95011222BD;
+        Wed, 25 Sep 2019 21:33:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569447215;
+        bh=TszXw7S5GIEzEo992EEMfz4W0WtzSxu1MBpaBhf4tmw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QlI2Sj1D5LJahPlbpQRPzC/Kfp42A3NwekR29GtyvfIPAZlvPN1zAfycydpBTfcd8
+         IvT8WVCyptqcO23hrQq7/1AbSsfzPRa68TLRQRP+hrXx+5Qsz/4M4CfEt25gMVn9on
+         EMq0EmayAeKNvnaIFqzE8CzGz5kGoSiMNjw4W64I=
+Received: by mail-qt1-f181.google.com with SMTP id m15so298885qtq.2;
+        Wed, 25 Sep 2019 14:33:35 -0700 (PDT)
+X-Gm-Message-State: APjAAAU/MDgYmsvDWUxhr0S/Q958v/NMn7J4JTGJNu6zn2KE6uwZuvLx
+        +uW755Pt4Q2Nc+sOQUjGxURuNzeHmiO1sPSfVA==
+X-Google-Smtp-Source: APXvYqy9YJ9VRUtFzrkZ+iKb5Tx5rlamJJuwaAKBRmCflwCEbYKpuVBbZPPVrEImTOCJgn8Jl5TlEwRQfbhe0HNZXOU=
+X-Received: by 2002:a0c:8a6d:: with SMTP id 42mr1647258qvu.138.1569447214653;
+ Wed, 25 Sep 2019 14:33:34 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb65bb0a-db0e-4468-6aaf-08d741f2b4cb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 19:58:16.2978
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tAo7Y9lO4gcB30o+9IucCPr8vZMsDVXdIqy1UDcT3vVOfeRr4ADAckyTKbuK8p6vYebscfGZN8P9wppPPOeqSQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0139
+References: <20190924181244.7159-1-nsaenzjulienne@suse.de> <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
+ <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de> <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
+ <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de> <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
+ <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
+In-Reply-To: <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 25 Sep 2019 16:33:23 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
+Message-ID: <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
+Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        etnaviv@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com,
+        linux-pci@vger.kernel.org,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>, xen-devel@lists.xenproject.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> From: Dexuan Cui <decui@microsoft.com>
-> Sent: Wednesday, September 11, 2019 4:38 PM
-> To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Stephen Hemminger
-> <sthemmin@microsoft.com>; sashal@kernel.org; lorenzo.pieralisi@arm.com;
-> bhelgaas@google.com; linux-hyperv@vger.kernel.org;
-> linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; Michael Kelley
-> <mikelley@microsoft.com>
-> Cc: Dexuan Cui <decui@microsoft.com>
-> Subject: [PATCH 0/4] Enhance pci-hyperv to support hibernation
->=20
-> This patchset is basically a pure Hyper-V specific change and it has a
-> build dependency on the commit 271b2224d42f ("Drivers: hv: vmbus:
-> Implement
-> suspend/resume for VSC drivers for hibernation"), which is on Sasha Levin=
-'s
-> Hyper-V tree's hyperv-next branch: [... snipped ...]
->=20
-> I request this patch should go through Sasha's tree rather than the
-> pci tree.
->=20
-> Dexuan Cui (4):
->   PCI: hv: Reorganize the code in preparation of hibernation
->   PCI: hv: Add the support of hibernation
->   PCI: hv: Do not queue new work items on hibernation
->   PCI: hv: Change pci_protocol_version to per-hbus
->=20
->  drivers/pci/controller/pci-hyperv.c | 166
-> ++++++++++++++++++++++++++++++------
->  1 file changed, 140 insertions(+), 26 deletions(-)
+On Wed, Sep 25, 2019 at 11:52 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 25/09/2019 17:16, Rob Herring wrote:
+> > On Wed, Sep 25, 2019 at 10:30 AM Nicolas Saenz Julienne
+> > <nsaenzjulienne@suse.de> wrote:
+> >>
+> >> On Wed, 2019-09-25 at 16:09 +0100, Robin Murphy wrote:
+> >>> On 25/09/2019 15:52, Nicolas Saenz Julienne wrote:
+> >>>> On Tue, 2019-09-24 at 16:59 -0500, Rob Herring wrote:
+> >>>>> On Tue, Sep 24, 2019 at 1:12 PM Nicolas Saenz Julienne
+> >>>>> <nsaenzjulienne@suse.de> wrote:
+> >>>>>> Hi All,
+> >>>>>> this series tries to address one of the issues blocking us from
+> >>>>>> upstreaming Broadcom's STB PCIe controller[1]. Namely, the fact that
+> >>>>>> devices not represented in DT which sit behind a PCI bus fail to get the
+> >>>>>> bus' DMA addressing constraints.
+> >>>>>>
+> >>>>>> This is due to the fact that of_dma_configure() assumes it's receiving a
+> >>>>>> DT node representing the device being configured, as opposed to the PCIe
+> >>>>>> bridge node we currently pass. This causes the code to directly jump
+> >>>>>> into PCI's parent node when checking for 'dma-ranges' and misses
+> >>>>>> whatever was set there.
+> >>>>>>
+> >>>>>> To address this I create a new API in OF - inspired from Robin Murphys
+> >>>>>> original proposal[2] - which accepts a bus DT node as it's input in
+> >>>>>> order to configure a device's DMA constraints. The changes go deep into
+> >>>>>> of/address.c's implementation, as a device being having a DT node
+> >>>>>> assumption was pretty strong.
+> >>>>>>
+> >>>>>> On top of this work, I also cleaned up of_dma_configure() removing its
+> >>>>>> redundant arguments and creating an alternative function for the special
+> >>>>>> cases
+> >>>>>> not applicable to either the above case or the default usage.
+> >>>>>>
+> >>>>>> IMO the resulting functions are more explicit. They will probably
+> >>>>>> surface some hacky usages that can be properly fixed as I show with the
+> >>>>>> DT fixes on the Layerscape platform.
+> >>>>>>
+> >>>>>> This was also tested on a Raspberry Pi 4 with a custom PCIe driver and
+> >>>>>> on a Seattle AMD board.
+> >>>>>
+> >>>>> Humm, I've been working on this issue too. Looks similar though yours
+> >>>>> has a lot more churn and there's some other bugs I've found.
+> >>>>
+> >>>> That's good news, and yes now that I see it, some stuff on my series is
+> >>>> overly
+> >>>> complicated. Specially around of_translate_*().
+> >>>>
+> >>>> On top of that, you removed in of_dma_get_range():
+> >>>>
+> >>>> -   /*
+> >>>> -    * At least empty ranges has to be defined for parent node if
+> >>>> -    * DMA is supported
+> >>>> -    */
+> >>>> -   if (!ranges)
+> >>>> -           break;
+> >>>>
+> >>>> Which I assumed was bound to the standard and makes things easier.
+> >>>>
+> >>>>> Can you test out this branch[1]. I don't have any h/w needing this,
+> >>>>> but wrote a unittest and tested with modified QEMU.
+> >>>>
+> >>>> I reviewed everything, I did find a minor issue, see the patch attached.
+> >>>
+> >>> WRT that patch, the original intent of "force_dma" was purely to
+> >>> consider a device DMA-capable regardless of the presence of
+> >>> "dma-ranges". Expecting of_dma_configure() to do anything for a non-OF
+> >>> device has always been bogus - magic paravirt devices which appear out
+> >>> of nowhere and expect to be treated as genuine DMA masters are a
+> >>> separate problem that we haven't really approached yet.
+> >>
+> >> I agree it's clearly abusing the function. I have no problem with the behaviour
+> >> change if it's OK with you.
+>
+> Thinking about it, you could probably just remove that call from the Xen
+> DRM driver now anyway - since the dma-direct rework, we lost the ability
+> to set dma_dummy_ops by default, and NULL ops now represent what it
+> (presumably) wants.
 
-Hi Lorenzo, Bjorn, and all,
+Not xen_dma_ops? In any case, I'll send out a patch for the the Xen
+folks to comment on.
 
-Can you please take a look at the patchset (4 patches in total)?
+> >> Robin, have you looked into supporting multiple dma-ranges? It's the next thing
+> >> we need for BCM STB's PCIe. I'll have a go at it myself if nothing is in the
+> >> works already.
+> >
+> > Multiple dma-ranges as far as configuring inbound windows should work
+> > already other than the bug when there's any parent translation. But if
+> > you mean supporting multiple DMA offsets and masks per device in the
+> > DMA API, there's nothing in the works yet.
+>
+> There's also the in-between step of making of_dma_get_range() return a
+> size based on all the dma-ranges entries rather than only the first one
+> - otherwise, something like [1] can lead to pretty unworkable default
+> masks. We implemented that when doing acpi_dma_get_range(), it's just
+> that the OF counterpart never caught up.
 
-Thanks,
--- Dexuan
+Right. I suppose we assume any holes in the ranges are addressable by
+the device but won't get used for other reasons (such as no memory
+there). However, to be correct, the range of the dma offset plus mask
+would need to be within the min start and max end addresses. IOW,
+while we need to round up (0xa_8000_0000 - 0x2c1c_0000) to the next
+power of 2, the 'correct' thing to do is round down.
 
+Rob
+
+> [1]
+> http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=a2814af56b3486c2985a95540a88d8f9fa3a699f
