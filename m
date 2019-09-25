@@ -2,141 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E592BDB0E
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2019 11:34:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 788BBBDC1A
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2019 12:24:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731963AbfIYJd5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Sep 2019 05:33:57 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:57543 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732789AbfIYJdz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Sep 2019 05:33:55 -0400
-X-Originating-IP: 86.250.200.211
-Received: from windsurf (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: thomas.petazzoni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 30D7820005;
-        Wed, 25 Sep 2019 09:33:52 +0000 (UTC)
-Date:   Wed, 25 Sep 2019 11:33:51 +0200
-From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: aardvark: Don't rely on jiffies while holding
- spinlock
-Message-ID: <20190925113351.0b53d2e9@windsurf>
-In-Reply-To: <20190901142303.27815-1-repk@triplefau.lt>
-References: <20190901142303.27815-1-repk@triplefau.lt>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S2389535AbfIYKY0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Sep 2019 06:24:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:46020 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389530AbfIYKY0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 25 Sep 2019 06:24:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA9F31570;
+        Wed, 25 Sep 2019 03:24:25 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 421EE3F694;
+        Wed, 25 Sep 2019 03:24:25 -0700 (PDT)
+Date:   Wed, 25 Sep 2019 11:24:23 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ley Foon Tan <lftan@altera.com>, rfi@lists.rocketboards.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 02/11] PCI: altera: Use pci_parse_request_of_pci_ranges()
+Message-ID: <20190925102423.GR9720@e119886-lin.cambridge.arm.com>
+References: <20190924214630.12817-1-robh@kernel.org>
+ <20190924214630.12817-3-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190924214630.12817-3-robh@kernel.org>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Remi,
-
-Thanks for the patch, I have a few comments/questions below.
-
-On Sun,  1 Sep 2019 16:23:03 +0200
-Remi Pommarel <repk@triplefau.lt> wrote:
-
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index fc0fe4d4de49..1fa6d04ad7aa 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -175,7 +175,8 @@
->  	(PCIE_CONF_BUS(bus) | PCIE_CONF_DEV(PCI_SLOT(devfn))	| \
->  	 PCIE_CONF_FUNC(PCI_FUNC(devfn)) | PCIE_CONF_REG(where))
+On Tue, Sep 24, 2019 at 04:46:21PM -0500, Rob Herring wrote:
+> Convert altera host bridge to use the common
+> pci_parse_request_of_pci_ranges().
+> 
+> Cc: Ley Foon Tan <lftan@altera.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: rfi@lists.rocketboards.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  drivers/pci/controller/pcie-altera.c | 38 ++--------------------------
+>  1 file changed, 2 insertions(+), 36 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+> index d2497ca43828..2ed00babff5a 100644
+> --- a/drivers/pci/controller/pcie-altera.c
+> +++ b/drivers/pci/controller/pcie-altera.c
+> @@ -670,39 +670,6 @@ static void altera_pcie_isr(struct irq_desc *desc)
+>  	chained_irq_exit(chip, desc);
+>  }
 >  
-> -#define PIO_TIMEOUT_MS			1
-> +#define PIO_RETRY_CNT			10
-> +#define PIO_RETRY_DELAY			100 /* 100 us*/
->  
->  #define LINK_WAIT_MAX_RETRIES		10
->  #define LINK_WAIT_USLEEP_MIN		90000
-> @@ -383,17 +384,16 @@ static void advk_pcie_check_pio_status(struct advk_pcie *pcie)
->  static int advk_pcie_wait_pio(struct advk_pcie *pcie)
+> -static int altera_pcie_parse_request_of_pci_ranges(struct altera_pcie *pcie)
+> -{
+> -	int err, res_valid = 0;
+> -	struct device *dev = &pcie->pdev->dev;
+> -	struct resource_entry *win;
+> -
+> -	err = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
+> -						    &pcie->resources, NULL);
+> -	if (err)
+> -		return err;
+> -
+> -	err = devm_request_pci_bus_resources(dev, &pcie->resources);
+> -	if (err)
+> -		goto out_release_res;
+> -
+> -	resource_list_for_each_entry(win, &pcie->resources) {
+> -		struct resource *res = win->res;
+> -
+> -		if (resource_type(res) == IORESOURCE_MEM)
+> -			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
+> -	}
+> -
+> -	if (res_valid)
+> -		return 0;
+> -
+> -	dev_err(dev, "non-prefetchable memory resource required\n");
+> -	err = -EINVAL;
+> -
+> -out_release_res:
+> -	pci_free_resource_list(&pcie->resources);
+> -	return err;
+> -}
+> -
+>  static int altera_pcie_init_irq_domain(struct altera_pcie *pcie)
 >  {
 >  	struct device *dev = &pcie->pdev->dev;
-> -	unsigned long timeout;
-> +	size_t i;
-
-Is it common to use a size_t for a loop counter ?
-
+> @@ -833,9 +800,8 @@ static int altera_pcie_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
 >  
-> -	timeout = jiffies + msecs_to_jiffies(PIO_TIMEOUT_MS);
+> -	INIT_LIST_HEAD(&pcie->resources);
 > -
-> -	while (time_before(jiffies, timeout)) {
-> +	for (i = 0; i < PIO_RETRY_CNT; ++i) {
+> -	ret = altera_pcie_parse_request_of_pci_ranges(pcie);
+> +	ret = pci_parse_request_of_pci_ranges(dev, &pcie->resources,
 
-I find it more common to use post-increment for loop counters rather
-than pre-increment, but that's a really nitpick and I don't care much.
+Does it matter that we now map any given IO ranges whereas we didn't
+previously?
 
->  		u32 start, isr;
->  
->  		start = advk_readl(pcie, PIO_START);
->  		isr = advk_readl(pcie, PIO_ISR);
->  		if (!start && isr)
->  			return 0;
-> +		udelay(PIO_RETRY_DELAY);
+As far as I can tell there are no users that pass an IO range, if they
+did then with the existing code the probe would fail and they'd get
+a "I/O range found for %pOF. Please provide an io_base pointer...".
+However with the new code if any IO range was given (which would
+probably represent a misconfiguration), then we'd proceed to map the
+IO range. When that IO is used, who knows what would happen.
 
-But the bigger issue is that this change causes a 100us delay at
-*every* single PIO read or write operation.
+I wonder if there is a better way for a host driver to indicate that
+it doesn't support IO?
 
-Indeed, at the first iteration of the loop, the PIO operation has not
-completed, so you will always hit the udelay(100) a first time, and
-it's only at the second iteration of the loop that the PIO operation
-has completed (for successful PIO operations of course, which don't hit
-the timeout).
+Thanks,
 
-I took a measurement around wait_pio() with sched_clock before and
-after the patch. Before the patch, I have measurements like this (in
-nanoseconds):
+Andrew Murray
 
-[    1.562801] time = 6000
-[    1.565310] time = 6000
-[    1.567809] time = 6080
-[    1.570327] time = 6080
-[    1.572836] time = 6080
-[    1.575339] time = 6080
-[    1.577858] time = 2720
-[    1.580366] time = 2720
-[    1.582862] time = 6000
-[    1.585377] time = 2720
-[    1.587890] time = 2720
-[    1.590393] time = 2720
-
-So it takes a few microseconds for each PIO operation.
-
-With your patch applied:
-
-[    2.267291] time = 101680
-[    2.270002] time = 100880
-[    2.272852] time = 100800
-[    2.275573] time = 100880
-[    2.278285] time = 100800
-[    2.281005] time = 100880
-[    2.283722] time = 100800
-[    2.286444] time = 100880
-[    2.289264] time = 100880
-[    2.291981] time = 100800
-[    2.294690] time = 100800
-[    2.297405] time = 100800
-
-We're jumping to 100us for every PIO read/write operation. To be
-honest, I don't know if this is very important, there are not that many
-PIO operations, and they are not used in any performance hot path. But
-I thought it was worth pointing out the additional delay caused by this
-implementation change.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> +					      NULL);
+>  	if (ret) {
+>  		dev_err(dev, "Failed add resources\n");
+>  		return ret;
+> -- 
+> 2.20.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
