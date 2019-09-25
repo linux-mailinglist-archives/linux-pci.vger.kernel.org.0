@@ -2,104 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A841FBD4BF
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2019 23:59:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7A45BD607
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2019 03:17:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633602AbfIXV7e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Sep 2019 17:59:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60378 "EHLO mail.kernel.org"
+        id S2390354AbfIYBRM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Sep 2019 21:17:12 -0400
+Received: from gate.crashing.org ([63.228.1.57]:38474 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387723AbfIXV7d (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 24 Sep 2019 17:59:33 -0400
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6156D217D7;
-        Tue, 24 Sep 2019 21:59:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569362372;
-        bh=7EnBQLGJXbJ0krx6sf9eAXMt0SpVcFYHvJ4Ffxc+GEI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZUjBfJ5y+ysHUqZVHvVQV6vmXEF5m5l7X/D3o8MMo6T+fnXCBe1Len91UdIVSmNm8
-         1+IgmCK2yWkyLXKdLfON0wTF2uVY6/Zj+z4CbqBQ8S1mTFhTzxJ4K+kIhlIbeitlp5
-         qXtcO6SJzhSJ74/8s14mN0YBxYms1LJJP0SwTimA=
-Received: by mail-qt1-f179.google.com with SMTP id x4so4100980qtq.8;
-        Tue, 24 Sep 2019 14:59:32 -0700 (PDT)
-X-Gm-Message-State: APjAAAUSipfNLAs0r3iY98Oq51rlrlAyRzY6XaLme2e9ZLFqmU4bXOcs
-        y3XFqQogK86HIUelflV99P3yYhl0p6JxbjmCsw==
-X-Google-Smtp-Source: APXvYqxu7lx2ORNXYuD01RyoAdK8YY//zQYn3oJnMVZaPVMMDgXcioCqkbUXveNdRfpBkQzN/4OY/SjTncH5t1k8eUk=
-X-Received: by 2002:ac8:6982:: with SMTP id o2mr5274643qtq.143.1569362371529;
- Tue, 24 Sep 2019 14:59:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
-In-Reply-To: <20190924181244.7159-1-nsaenzjulienne@suse.de>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 24 Sep 2019 16:59:20 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
-Message-ID: <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
-Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>, etnaviv@lists.freedesktop.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        xen-devel@lists.xenproject.org, linux-tegra@vger.kernel.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-pci@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        james.quinlan@broadcom.com, Stefan Wahren <wahrenst@gmx.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        freedreno <freedreno@lists.freedesktop.org>
+        id S2389624AbfIYBRM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 24 Sep 2019 21:17:12 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x8P1Gvcf031238;
+        Tue, 24 Sep 2019 20:16:58 -0500
+Message-ID: <7339fd73ccaf58552737ab10008333fd9f7723f2.camel@kernel.crashing.org>
+Subject: [PATCH v2] PCI: Protect pci_reassign_bridge_resources() against
+ concurrent addition/removal
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Date:   Wed, 25 Sep 2019 11:16:55 +1000
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 1:12 PM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> Hi All,
-> this series tries to address one of the issues blocking us from
-> upstreaming Broadcom's STB PCIe controller[1]. Namely, the fact that
-> devices not represented in DT which sit behind a PCI bus fail to get the
-> bus' DMA addressing constraints.
->
-> This is due to the fact that of_dma_configure() assumes it's receiving a
-> DT node representing the device being configured, as opposed to the PCIe
-> bridge node we currently pass. This causes the code to directly jump
-> into PCI's parent node when checking for 'dma-ranges' and misses
-> whatever was set there.
->
-> To address this I create a new API in OF - inspired from Robin Murphys
-> original proposal[2] - which accepts a bus DT node as it's input in
-> order to configure a device's DMA constraints. The changes go deep into
-> of/address.c's implementation, as a device being having a DT node
-> assumption was pretty strong.
->
-> On top of this work, I also cleaned up of_dma_configure() removing its
-> redundant arguments and creating an alternative function for the special cases
-> not applicable to either the above case or the default usage.
->
-> IMO the resulting functions are more explicit. They will probably
-> surface some hacky usages that can be properly fixed as I show with the
-> DT fixes on the Layerscape platform.
->
-> This was also tested on a Raspberry Pi 4 with a custom PCIe driver and
-> on a Seattle AMD board.
+pci_reassign_bridge_resources() can be called by pci_resize_resource()
+at runtime.
 
-Humm, I've been working on this issue too. Looks similar though yours
-has a lot more churn and there's some other bugs I've found.
+It will walk the PCI tree up and down, and isn't currently protected
+against any changes or hotplug operation.
 
-Can you test out this branch[1]. I don't have any h/w needing this,
-but wrote a unittest and tested with modified QEMU.
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+---
 
-Rob
+v2: Fix a missing exit case
+    Reported by: Dan Carpenter <dan.carpenter@oracle.com>
 
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dma-masks
+---
+ drivers/pci/setup-bus.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 79b1fa6519be..871dad7d02ea 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -2066,6 +2066,8 @@ int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
+ 	unsigned int i;
+ 	int ret;
+ 
++	down_read(&pci_bus_sem);
++
+ 	/* Walk to the root hub, releasing bridge BARs when possible */
+ 	next = bridge;
+ 	do {
+@@ -2100,8 +2102,10 @@ int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
+ 		next = bridge->bus ? bridge->bus->self : NULL;
+ 	} while (next);
+ 
+-	if (list_empty(&saved))
++	if (list_empty(&saved)) {
++		up_read(&pci_bus_sem);
+ 		return -ENOENT;
++	}
+ 
+ 	__pci_bus_size_bridges(bridge->subordinate, &added);
+ 	__pci_bridge_assign_resources(bridge, &added, &failed);
+@@ -2122,6 +2126,7 @@ int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
+ 	}
+ 
+ 	free_list(&saved);
++	up_read(&pci_bus_sem);
+ 	return 0;
+ 
+ cleanup:
+@@ -2150,6 +2155,7 @@ int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
+ 		pci_setup_bridge(bridge->subordinate);
+ 	}
+ 	free_list(&saved);
++	up_read(&pci_bus_sem);
+ 
+ 	return ret;
+ }
+
+
