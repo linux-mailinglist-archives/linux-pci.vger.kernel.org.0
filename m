@@ -2,20 +2,21 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B6469BDDC5
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2019 14:08:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48C9DBDE11
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2019 14:32:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391210AbfIYMIH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Sep 2019 08:08:07 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:36361 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388199AbfIYMIH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Sep 2019 08:08:07 -0400
+        id S2405286AbfIYMcE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Sep 2019 08:32:04 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:50877 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405285AbfIYMcE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Sep 2019 08:32:04 -0400
+X-Originating-IP: 86.250.200.211
 Received: from windsurf (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (Authenticated sender: thomas.petazzoni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 080A0240013;
-        Wed, 25 Sep 2019 12:08:04 +0000 (UTC)
-Date:   Wed, 25 Sep 2019 14:08:04 +0200
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 971A7FF80C;
+        Wed, 25 Sep 2019 12:32:01 +0000 (UTC)
+Date:   Wed, 25 Sep 2019 14:32:00 +0200
 From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 To:     Remi Pommarel <repk@triplefau.lt>
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -23,11 +24,11 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Ellie Reeves <ellierevves@gmail.com>,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Fix PCI_EXP_RTCTL register
- configuration
-Message-ID: <20190925140804.75ccf336@windsurf>
-In-Reply-To: <20190614101059.1664-1-repk@triplefau.lt>
-References: <20190614101059.1664-1-repk@triplefau.lt>
+Subject: Re: [PATCH v3] PCI: aardvark: Use LTSSM state to build link
+ training flag
+Message-ID: <20190925143200.696af4cf@windsurf>
+In-Reply-To: <20190522213351.21366-3-repk@triplefau.lt>
+References: <20190522213351.21366-3-repk@triplefau.lt>
 Organization: Bootlin
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
@@ -38,28 +39,36 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 14 Jun 2019 12:10:59 +0200
+Hello Remi,
+
+On Wed, 22 May 2019 23:33:51 +0200
 Remi Pommarel <repk@triplefau.lt> wrote:
 
-> PCI_EXP_RTCTL is used to activate PME interrupt only, so writing into it
-> should not modify other interrupts' mask. The ISR mask polarity was also
-> inverted, when PCI_EXP_RTCTL_PMEIE is set PCIE_MSG_PM_PME_MASK mask bit
-> should actually be cleared.
+> Aardvark's PCI_EXP_LNKSTA_LT flag in its link status register is not
+> implemented and does not reflect the actual link training state (the
+> flag is always set to 0). In order to support link re-training feature
+> this flag has to be emulated. The Link Training and Status State
+> Machine (LTSSM) flag in Aardvark LMI config register could be used as
+> a link training indicator. Indeed if the LTSSM is in L0 or upper state
+> then link training has completed (see [1]).
 > 
-> Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
+> Unfortunately because after asking a link retraining it takes a while
+> for the LTSSM state to become less than 0x10 (due to L0s to recovery
+> state transition delays), LTSSM can still be in L0 while link training
+> has not finished yet. So this waits for link to be in recovery or lesser
+> state before returning after asking for a link retrain.
+> 
+> [1] "PCI Express Base Specification", REV. 4.0
+>     PCI Express, February 19 2014, Table 4-14
+> 
 > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 
-Sorry for the long delay, but:
+Here as well, sorry for the very long delay, and many thanks for the
+great research work, including the arm-trusted-firmware fix. I reviewed
+the implementation, and tested on my Armada 3720 DB board with a E1000E
+NIC, and it all looks good to me.
 
 Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-
-I did verify that indeed the polarity of the PME interrupt bit is
-different between the standard PCI_EXP_RTCTL register and the
-Aardvark-specific ISR0 mask register. And obviously, we shouldn't
-clobber other bits of the ISR0 mask register when changing the PME
-interrupt enable/disable state.
-
-I did a quick test with a E1000E NIC and it worked fine.
 
 Thanks!
 
