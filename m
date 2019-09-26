@@ -2,165 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7980EBF6BF
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2019 18:30:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 516E5BF942
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2019 20:36:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfIZQay (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Sep 2019 12:30:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:54406 "EHLO foss.arm.com"
+        id S1728204AbfIZSg6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Sep 2019 14:36:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727388AbfIZQay (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 26 Sep 2019 12:30:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 70CAA28;
-        Thu, 26 Sep 2019 09:30:53 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BF313F534;
-        Thu, 26 Sep 2019 09:30:52 -0700 (PDT)
-Date:   Thu, 26 Sep 2019 17:30:49 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH 2/4] PCI: hv: Add the support of hibernation
-Message-ID: <20190926163049.GB7827@e121166-lin.cambridge.arm.com>
-References: <1568245086-70601-1-git-send-email-decui@microsoft.com>
- <1568245086-70601-3-git-send-email-decui@microsoft.com>
+        id S1728020AbfIZSg6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 26 Sep 2019 14:36:58 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37046206E0;
+        Thu, 26 Sep 2019 18:36:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569523017;
+        bh=xjjJ++Pq6pOD0Z6Bdeb/NVVwlH+p3eI+ZRk1UkqiyYo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ZcG3VjJrl3BAKIBfQjtCDBTWUYTWLaJXI7+Y00RIpzUCYRYonx4XTADUBDABzUZZ7
+         gjTsHFXMiRyxUrIWm0oqpbpbQM1PPwiQSp21NUcXQdRFDrwMIIPaIhASUlwMCZmoVT
+         KkVeQ62odeM+2uCiQIPN5atEcU1CJPJy1HRJHwBs=
+Date:   Thu, 26 Sep 2019 13:36:54 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     tiwai@suse.com, linux-pci@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] PCI: Add pci_pr3_present() helper to check Power
+ Resource for D3hot
+Message-ID: <20190926183654.GA171415@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1568245086-70601-3-git-send-email-decui@microsoft.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190925114353.25600-1-kai.heng.feng@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 11:38:20PM +0000, Dexuan Cui wrote:
-> Implement the suspend/resume callbacks for hibernation.
+On Wed, Sep 25, 2019 at 07:43:53PM +0800, Kai-Heng Feng wrote:
+> Add pci_pr3_present() to check whether the platform supplies _PR3 to
+> tell us which power resources the device depends on when in D3hot. This
+> information is useful to let drivers choose different runtime suspend
+> behavior. A user will be add in next patch.
 > 
-> hv_pci_suspend() needs to prevent any new work from being queued: a later
-> patch will address this issue.
+> This is mostly the same as nouveau_pr3_present().
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-I don't see why you have two separate patches, the second one fixing the
-previous (this one). Squash them together and merge them as such, or
-there is something I am missing here.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Lorenzo
+I assume Takashi will merge this along with the ALSA patch.
 
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
 > ---
->  drivers/pci/controller/pci-hyperv.c | 76 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
+> v5:
+> - Add wording suggestion from Bjorn.
+> v4:
+> - Let caller to find its upstream port device.
 > 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 03fa039..3b77a3a 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1398,6 +1398,23 @@ static void prepopulate_bars(struct hv_pcibus_device *hbus)
->  
->  	spin_lock_irqsave(&hbus->device_list_lock, flags);
->  
-> +	/*
-> +	 * Clear the memory enable bit, in case it's already set. This occurs
-> +	 * in the suspend path of hibernation, where the device is suspended,
-> +	 * resumed and suspended again: see hibernation_snapshot() and
-> +	 * hibernation_platform_enter().
-> +	 *
-> +	 * If the memory enable bit is already set, Hyper-V sliently ignores
-> +	 * the below BAR updates, and the related PCI device driver can not
-> +	 * work, because reading from the device register(s) always returns
-> +	 * 0xFFFFFFFF.
-> +	 */
-> +	list_for_each_entry(hpdev, &hbus->children, list_entry) {
-> +		_hv_pcifront_read_config(hpdev, PCI_COMMAND, 2, &command);
-> +		command &= ~PCI_COMMAND_MEMORY;
-> +		_hv_pcifront_write_config(hpdev, PCI_COMMAND, 2, command);
-> +	}
-> +
->  	/* Pick addresses for the BARs. */
->  	do {
->  		list_for_each_entry(hpdev, &hbus->children, list_entry) {
-> @@ -2737,6 +2754,63 @@ static int hv_pci_remove(struct hv_device *hdev)
->  	return ret;
+>  drivers/pci/pci.c   | 16 ++++++++++++++++
+>  include/linux/pci.h |  2 ++
+>  2 files changed, 18 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e7982af9a5d8..d03f624d8928 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5856,6 +5856,22 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+>  	return 0;
 >  }
 >  
-> +static int hv_pci_suspend(struct hv_device *hdev)
+> +bool pci_pr3_present(struct pci_dev *pdev)
 > +{
-> +	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
-> +	int ret;
+> +	struct acpi_device *adev;
 > +
-> +	/* XXX: Need to prevent any new work from being queued. */
-> +	flush_workqueue(hbus->wq);
+> +	if (acpi_disabled)
+> +		return false;
 > +
-> +	ret = hv_pci_bus_exit(hdev, true);
-> +	if (ret)
-> +		return ret;
+> +	adev = ACPI_COMPANION(&pdev->dev);
+> +	if (!adev)
+> +		return false;
 > +
-> +	vmbus_close(hdev->channel);
-> +
-> +	return 0;
+> +	return adev->power.flags.power_resources &&
+> +		acpi_has_method(adev->handle, "_PR3");
 > +}
+> +EXPORT_SYMBOL_GPL(pci_pr3_present);
 > +
-> +static int hv_pci_resume(struct hv_device *hdev)
-> +{
-> +	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
-> +	enum pci_protocol_version_t version[1];
-> +	int ret;
-> +
-> +	hbus->state = hv_pcibus_init;
-> +
-> +	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
-> +			 hv_pci_onchannelcallback, hbus);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Only use the version that was in use before hibernation. */
-> +	version[0] = pci_protocol_version;
-> +	ret = hv_pci_protocol_negotiation(hdev, version, 1);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = hv_pci_query_relations(hdev);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = hv_pci_enter_d0(hdev);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = hv_send_resources_allocated(hdev);
-> +	if (ret)
-> +		goto out;
-> +
-> +	prepopulate_bars(hbus);
-> +
-> +	hbus->state = hv_pcibus_installed;
-> +	return 0;
-> +out:
-> +	vmbus_close(hdev->channel);
-> +	return ret;
-> +}
-> +
->  static const struct hv_vmbus_device_id hv_pci_id_table[] = {
->  	/* PCI Pass-through Class ID */
->  	/* 44C4F61D-4444-4400-9D52-802E27EDE19F */
-> @@ -2751,6 +2825,8 @@ static int hv_pci_remove(struct hv_device *hdev)
->  	.id_table	= hv_pci_id_table,
->  	.probe		= hv_pci_probe,
->  	.remove		= hv_pci_remove,
-> +	.suspend	= hv_pci_suspend,
-> +	.resume		= hv_pci_resume,
->  };
+>  /**
+>   * pci_add_dma_alias - Add a DMA devfn alias for a device
+>   * @dev: the PCI device for which alias is added
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index f9088c89a534..1d15c5d49cdd 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2310,9 +2310,11 @@ struct irq_domain *pci_host_bridge_acpi_msi_domain(struct pci_bus *bus);
 >  
->  static void __exit exit_hv_pci_drv(void)
+>  void
+>  pci_msi_register_fwnode_provider(struct fwnode_handle *(*fn)(struct device *));
+> +bool pci_pr3_present(struct pci_dev *pdev);
+>  #else
+>  static inline struct irq_domain *
+>  pci_host_bridge_acpi_msi_domain(struct pci_bus *bus) { return NULL; }
+> +static bool pci_pr3_present(struct pci_dev *pdev) { return false; }
+>  #endif
+>  
+>  #ifdef CONFIG_EEH
 > -- 
-> 1.8.3.1
+> 2.17.1
 > 
