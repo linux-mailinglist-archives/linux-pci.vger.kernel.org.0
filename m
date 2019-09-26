@@ -2,85 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BFBCBF1AC
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2019 13:32:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2A68BF20D
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2019 13:47:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfIZLcN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Sep 2019 07:32:13 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:57298 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbfIZLcJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Sep 2019 07:32:09 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8QBW1d1026527;
-        Thu, 26 Sep 2019 06:32:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569497521;
-        bh=88Xv9IRV7+oNSxAgr2jq3XB2+SHFQvDvj39xR9Z58mQ=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=eyZNqkD+oH2zsbe88+Ktakn1JXraKUrcBJUMmBPftF8+Ry1V36N0LmBeo8NhyMzsr
-         NsqdZJ9Cbl3tcy85cp1uGVuJ5vkqfLZ4abIP2F+abI4YsOJ0NPn4skrL4ro/kBCybP
-         VFuPC3aepTsuTunrzfK/bKrjRW8jkJwx7chGJ4Pc=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8QBW1NA032455
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 26 Sep 2019 06:32:01 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 26
- Sep 2019 06:32:01 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 26 Sep 2019 06:31:54 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8QBUTkE069017;
-        Thu, 26 Sep 2019 06:31:57 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Mark Rutland <mark.rutland@arm.com>, <kishon@ti.com>,
-        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-ntb@googlegroups.com>
-Subject: [RFC PATCH 21/21] NTB: tool: Enable the NTB/PCIe link on the local or remote side of bridge
-Date:   Thu, 26 Sep 2019 16:59:33 +0530
-Message-ID: <20190926112933.8922-22-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190926112933.8922-1-kishon@ti.com>
-References: <20190926112933.8922-1-kishon@ti.com>
+        id S1725837AbfIZLrw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Sep 2019 07:47:52 -0400
+Received: from smtp-o-1.desy.de ([131.169.56.154]:40528 "EHLO smtp-o-1.desy.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725787AbfIZLrw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 26 Sep 2019 07:47:52 -0400
+Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [IPv6:2001:638:700:1038::1:a4])
+        by smtp-o-1.desy.de (Postfix) with ESMTP id 34824E0151
+        for <linux-pci@vger.kernel.org>; Thu, 26 Sep 2019 13:47:50 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-1.desy.de 34824E0151
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+        t=1569498470; bh=TmiBiLVY7p7SYbQParuzid8T5ohmLbhtJat2X49bXwE=;
+        h=To:From:Date:From;
+        b=1o02qVucEgxyKcka3X4acEeroJWJrzGs8Oa3uy7+8k+aBW/ZNnGQMSZi9Qi5DX9ww
+         N4iJ7D2eC//iraJn2r7tcitA5S4FuHIFC5O6IhIC2qzB+g+oL6HrNEpG+a60ZSJqhn
+         b/vBUokGLxrBNXA8Q1UrhJKozhonkcKxQW2I3yNI=
+Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [131.169.56.129])
+        by smtp-buf-1.desy.de (Postfix) with ESMTP id 308B51201DA
+        for <linux-pci@vger.kernel.org>; Thu, 26 Sep 2019 13:47:50 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at desy.de
+Received: from [131.169.146.36] (mcspetros.desy.de [131.169.146.36])
+        by smtp-intra-1.desy.de (Postfix) with ESMTP id 0D3C2C008A
+        for <linux-pci@vger.kernel.org>; Thu, 26 Sep 2019 13:47:50 +0200 (CEST)
+To:     linux-pci@vger.kernel.org
+From:   Ludwig Petrosyan <ludwig.petrosyan@desy.de>
+Message-ID: <5a89b964-8a6e-7e6c-b6e4-e81c8d4b65ca@desy.de>
+Date:   Thu, 26 Sep 2019 13:47:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Invoke ntb_link_enable() to enable the NTB/PCIe link on the local
-or remote side of the bridge.
+Dear Linux kernel group
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/ntb/test/ntb_tool.c | 1 +
- 1 file changed, 1 insertion(+)
+We are using MTCA systems with Ubuntu Linux and PCIe as a central bus
 
-diff --git a/drivers/ntb/test/ntb_tool.c b/drivers/ntb/test/ntb_tool.c
-index d592c0ffbd19..04138e6a371b 100644
---- a/drivers/ntb/test/ntb_tool.c
-+++ b/drivers/ntb/test/ntb_tool.c
-@@ -1638,6 +1638,7 @@ static int tool_probe(struct ntb_client *self, struct ntb_dev *ntb)
- 
- 	tool_setup_dbgfs(tc);
- 
-+	ntb_link_enable(ntb, NTB_SPEED_AUTO, NTB_WIDTH_AUTO);
- 	return 0;
- 
- err_clear_mws:
--- 
-2.17.1
+We got some problem:
+
+some times the memories of the PCIe endpoints not mapped and the lspci 
+gives strange otput:
+
+uname -a : Linux mcscpudev6 4.15.0-45-generic 48~16.04.1-Ubuntu SMP Tue 
+Jan 29 18:03:48 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+
+
+lspci  -vvvv -s 05:00.0
+05:00.0 Signal processing controller: Xilinx Corporation Device 0088
+     Subsystem: Device 3300:0088
+     Physical Slot: 4
+     Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- 
+Stepping- SERR- FastB2B- DisINTx+
+     Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+     Latency: 0, Cache Line Size: 64 bytes
+     Interrupt: pin A routed to IRQ 223
+     Region 0: Memory at <ignored> (32-bit, non-prefetchable)
+     Region 1: Memory at <ignored> (32-bit, non-prefetchable)
+     Region 2: Memory at <ignored> (32-bit, non-prefetchable)
+     Expansion ROM at 71c00000 [disabled] [size=1M]
+     Capabilities: [40] Power Management version 3
+         Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA 
+PME(D0-,D1-,D2-,D3hot-,D3cold-)
+         Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
+     Capabilities: [48] MSI: Enable+ Count=1/1 Maskable- 64bit+
+         Address: 00000000fee00ef8  Data: 0000
+     Capabilities: [60] Express (v1) Endpoint, MSI 00
+         DevCap:    MaxPayload 512 bytes, PhantFunc 1, Latency L0s 
+unlimited, L1 unlimited
+             ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset-
+         DevCtl:    Report errors: Correctable- Non-Fatal- Fatal- 
+Unsupported-
+             RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
+             MaxPayload 256 bytes, MaxReadReq 512 bytes
+         DevSta:    CorrErr- UncorrErr- FatalErr- UnsuppReq- AuxPwr- 
+TransPend-
+         LnkCap:    Port #0, Speed 2.5GT/s, Width x4, ASPM L0s, Exit 
+Latency L0s unlimited, L1 unlimited
+             ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
+         LnkCtl:    ASPM Disabled; RCB 64 bytes Disabled- CommClk-
+             ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+         LnkSta:    Speed 2.5GT/s, Width x4, TrErr- Train- SlotClk+ 
+DLActive- BWMgmt- ABWMgmt-
+     Capabilities: [100 v1] Device Serial Number 00-00-00-00-00-00-00-00
+     Kernel driver in use: pciedev
+     Kernel modules: pciedev
+
+but lspci with -H1:
+
+lspci -H1 -vvvv -s 05:00.0
+05:00.0 Signal processing controller: Xilinx Corporation Device 0088
+     Subsystem: Device 3300:0088
+     Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- 
+Stepping- SERR- FastB2B- DisINTx+
+     Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+     Latency: 0, Cache Line Size: 64 bytes
+     Interrupt: pin A routed to IRQ 10
+     Region 0: Memory at d8000000 (32-bit, non-prefetchable)
+     Region 1: Memory at d4000000 (32-bit, non-prefetchable)
+     Region 2: Memory at dc000000 (32-bit, non-prefetchable)
+     Expansion ROM at dd000000 [disabled]
+     Capabilities: [40] Power Management version 3
+         Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA 
+PME(D0-,D1-,D2-,D3hot-,D3cold-)
+         Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
+     Capabilities: [48] MSI: Enable+ Count=1/1 Maskable- 64bit+
+         Address: 00000000fee00ef8  Data: 0000
+     Capabilities: [60] Express (v1) Endpoint, MSI 00
+         DevCap:    MaxPayload 512 bytes, PhantFunc 1, Latency L0s 
+unlimited, L1 unlimited
+             ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset-
+         DevCtl:    Report errors: Correctable- Non-Fatal- Fatal- 
+Unsupported-
+             RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
+             MaxPayload 256 bytes, MaxReadReq 512 bytes
+         DevSta:    CorrErr- UncorrErr- FatalErr- UnsuppReq- AuxPwr- 
+TransPend-
+         LnkCap:    Port #0, Speed 2.5GT/s, Width x4, ASPM L0s, Exit 
+Latency L0s unlimited, L1 unlimited
+             ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
+         LnkCtl:    ASPM Disabled; RCB 64 bytes Disabled- CommClk-
+             ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+         LnkSta:    Speed 2.5GT/s, Width x4, TrErr- Train- SlotClk+ 
+DLActive- BWMgmt- ABWMgmt-
+
+adding pci=realloc=off solves with problem.
+
+Is it in general a good idea to use "pci=realloc=off"?
+
+And what the problem? Would some body so kinde to explane what the problem?!
+
+
+with best regards
+
+Ludwig Petrosyan
+
 
