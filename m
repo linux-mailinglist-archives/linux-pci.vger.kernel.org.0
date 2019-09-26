@@ -2,40 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 944C0BF160
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2019 13:31:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5243BBF165
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2019 13:31:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbfIZLaw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Sep 2019 07:30:52 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50076 "EHLO
+        id S1726252AbfIZLaz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Sep 2019 07:30:55 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50088 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfIZLav (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Sep 2019 07:30:51 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8QBUg2U025799;
-        Thu, 26 Sep 2019 06:30:42 -0500
+        with ESMTP id S1725554AbfIZLaz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Sep 2019 07:30:55 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8QBUkYQ025811;
+        Thu, 26 Sep 2019 06:30:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569497442;
-        bh=w4V1m2OIe5LxeaAVTxkVjAlE3hYEXz8xzCprrL6Lk3E=;
+        s=ti-com-17Q1; t=1569497446;
+        bh=kAwPRxdL1IzoZOayvlUYSsrr9LV2V6bEEofoVpSjJg8=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Uf7JmbNG6w90r/mXZUmOwfHwc9w/+6ts5g9vsD7NkUymYzdwe9dyvO+6wE7SC1Rm5
-         cN+vwTY7+MxWSYWMAKAdeoXJ2HCvuzwlTIYuHg3pSwccNIHb67pjHo0ABqHmoF+1Go
-         XbjyXbTKllanp7dKTj163h0SaWzKX0/UjoieX518=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8QBUg3m090981
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 26 Sep 2019 06:30:42 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+        b=TI7jM4NwXQzoUFUPR2HA2qpvyu4JpjUhuP8P5O5nsWLXjiWgTfmVtUU2EsCHicYhR
+         F+TUSEIBBeRj1XEDjN9qThsAcEidjvenuTCwJ5Jl+Jyg9RH+xnENXNC4wWk/sQIvxt
+         MCd+AwLGSz4XDg/pFG6XBKxv+WMLgaOv1eaYg9WY=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8QBUkLZ013299;
+        Thu, 26 Sep 2019 06:30:46 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 26
- Sep 2019 06:30:42 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2019 06:30:46 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 26 Sep 2019 06:30:35 -0500
+ Frontend Transport; Thu, 26 Sep 2019 06:30:46 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8QBUTjt069017;
-        Thu, 26 Sep 2019 06:30:38 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8QBUTju069017;
+        Thu, 26 Sep 2019 06:30:42 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -47,9 +46,9 @@ CC:     Mark Rutland <mark.rutland@arm.com>, <kishon@ti.com>,
         <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-ntb@googlegroups.com>
-Subject: [RFC PATCH 02/21] dt-bindings: PCI: Endpoint: Add DT bindings for PCI EPF Device
-Date:   Thu, 26 Sep 2019 16:59:14 +0530
-Message-ID: <20190926112933.8922-3-kishon@ti.com>
+Subject: [RFC PATCH 03/21] dt-bindings: PCI: Endpoint: Add DT bindings for PCI EPF NTB Device
+Date:   Thu, 26 Sep 2019 16:59:15 +0530
+Message-ID: <20190926112933.8922-4-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190926112933.8922-1-kishon@ti.com>
 References: <20190926112933.8922-1-kishon@ti.com>
@@ -61,37 +60,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add device tree bindings for PCI endpoint function device. The
-nodes for PCI endpoint function device should be attached to
-PCI endpoint function bus.
+Add device tree bindings for PCI endpoint NTB function device.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- .../bindings/pci/endpoint/pci-epf.txt         | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
+ .../bindings/pci/endpoint/pci-epf-ntb.txt     | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-ntb.txt
 
-diff --git a/Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt b/Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
+diff --git a/Documentation/devicetree/bindings/pci/endpoint/pci-epf-ntb.txt b/Documentation/devicetree/bindings/pci/endpoint/pci-epf-ntb.txt
 new file mode 100644
-index 000000000000..f006395fd526
+index 000000000000..e7896932423e
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
-@@ -0,0 +1,28 @@
-+PCI Endpoint Function Device
++++ b/Documentation/devicetree/bindings/pci/endpoint/pci-epf-ntb.txt
+@@ -0,0 +1,31 @@
++PCI Endpoint NTB Function Device
 +
-+This describes the generic bindings to be used when a device has to be
-+exposed to the remote host over PCIe. The device could be an actual
-+peripheral in the platform or a virtual device created by the software.
++This describes the bindings to be used when a NTB device has to be
++exposed to the remote host over PCIe.
 +
-+epcs : phandle to the endpoint controller device
-+epc-names : the names of the endpoint controller device corresponding
-+	    to the EPCs present in the *epcs* phandle
-+vendor-id: used to identify device manufacturer
-+device-id: used to identify a particular device
-+baseclass-code: used to classify the type of function the device performs
-+subclass-code: used to identify more specifically the function of the device
-+subsys-vendor-id: used to identify vendor of the add-in card or subsystem
-+subsys-id: used to specify an id that is specific to a vendor
++Required Properties:
++ - compatible: Should be "pci-epf-ntb"
++ - epcs: As defined in generic pci-epf bindings defined in pci-epf.txt
++ - epc-names: As defined in generic pci-epf bindings defined in pci-epf.txt
++ - vendor-id: As defined in generic pci-epf bindings defined in pci-epf.txt
++ - device-id: As defined in generic pci-epf bindings defined in pci-epf.txt
++ - num-mws: Specify the number of memory windows. Should not be more than 4.
++ - mws-size: List of 'num-mws' entries containing size of each memory window.
++
++Optional Properties:
++ - spad-count: Specify the number of scratchpad registers to be supported
++ - db-count: Specify the number of doorbell interrupts to be supported. Must
++	     not be greater than 32.
 +
 +Example:
 +Following is an example of NTB device exposed to the remote host.
