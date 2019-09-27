@@ -2,77 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D664C0A05
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2019 19:10:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 177ACC0B23
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2019 20:33:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbfI0RH2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Sep 2019 13:07:28 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42043 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfI0RH2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Sep 2019 13:07:28 -0400
-Received: by mail-oi1-f193.google.com with SMTP id i185so5782511oif.9;
-        Fri, 27 Sep 2019 10:07:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JmlKF4hMEHfzpRwq7atJ+qTxrDo2w2v+Z7AeG3RAxUE=;
-        b=MzGi9eqlXmRvoh04md29d07B2wxNaCsFGg1KPYJtJpuHGRPSCQ/rQ/oJDE6a0POfGi
-         78pJsqkKq8goJ4YvItvgCSIChx7UrPIEHzW7xsInQgRvtoBE7eHX2BwCcsZlcEKGLTtO
-         svNP4tfhpJMK5uPwRIF8+cgGPU5wTNasAs85SDuD+2HqU6BuoHPS4uhuCVRqOflfxFLr
-         PmBxvhiCYjOGj1R5y1O3qpIaoQYA5srRxiPLf9MpeI48CZVhGGlz/NCPnCGjWX6RE7Uh
-         zD7ZZKrEl9Pruj2jLa/hkbLvsI1Mgl7FWZDqSekDFNgfnnLkPXEDL0lXA3rGfdsVxyko
-         8iCA==
-X-Gm-Message-State: APjAAAXpV7nw/U+GkFHHfylBVeoeLg4QiJ86ydsMbcgQ/b4bNFErqWmX
-        eMGuMgkZ2PCsgc/oLg6RUg==
-X-Google-Smtp-Source: APXvYqy6XbAKw09JULTK3jY2nEL2mm1ktOd1lHG8UV4Z/DmKhKvtYR9KJiuaxJ397QE0WXhXkgIvaA==
-X-Received: by 2002:aca:f3d4:: with SMTP id r203mr7634907oih.164.1569604046646;
-        Fri, 27 Sep 2019 10:07:26 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m25sm1763994oie.39.2019.09.27.10.07.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 10:07:26 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 12:07:25 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
-        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        andrew.murray@arm.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCH v4 05/11] dt-bindings: pci: layerscape-pci: Add
- compatible strings for ls1088a and ls2088a
-Message-ID: <20190927170725.GA28135@bogus>
-References: <20190924021849.3185-1-xiaowei.bao@nxp.com>
- <20190924021849.3185-6-xiaowei.bao@nxp.com>
+        id S1728091AbfI0SdW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Sep 2019 14:33:22 -0400
+Received: from alpha.anastas.io ([104.248.188.109]:42585 "EHLO
+        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbfI0SdW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Sep 2019 14:33:22 -0400
+Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by alpha.anastas.io (Postfix) with ESMTPSA id 17EE87E01A;
+        Fri, 27 Sep 2019 13:33:21 -0500 (CDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
+        t=1569609201; bh=wk1mdhZxXbNyN8NdhJA3cUtm/ZxciUydA26w8eVYR2s=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=cFaZ9992JNzVHC7adO3hByHpKrVvF0DrbMWzA0uMqlQjiXnmacmrnHaIUWPOrF2mn
+         tsPygIlxWfZ07ObOtzM6C4EH1iMtsiXA3UB3bUvfhqZLGuWaXZ2XlqPNWuAoOXhRHU
+         K0JboLNKfVKiSFsOCamrNMA7tDmGBkO78rPCYK9xPTe9nLI5otyTxQW29pD8gy1kWM
+         ki0p/2PGet+olyl8xU2rOghW4izlfxC1aR+jmtrk4GkmLpIbQ9Xv5/kbkQcOXaMq7w
+         kwDKPNyQIHbG92Zvz8TTcxC/w9dwD9RxhLELedwEiAP5a02cN2w5lhe3L0TyE9DpKA
+         cJBjNphpaeNVw==
+Subject: Re: [PATCH v2 1/1] powerpc/pci: Fix pcibios_setup_device() ordering
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     bhelgaas@google.com, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        sbobroff@linux.ibm.com, oohall@gmail.com, lukas@wunner.de
+References: <20190905191343.2919-1-shawn@anastas.io>
+ <20190905191343.2919-2-shawn@anastas.io>
+ <e090d238-d452-6c82-d21b-aeda5f5310e6@ozlabs.ru>
+From:   Shawn Anastasio <shawn@anastas.io>
+Message-ID: <57bb4467-40ab-bdf7-4091-adc0236c3ea3@anastas.io>
+Date:   Fri, 27 Sep 2019 13:33:19 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924021849.3185-6-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e090d238-d452-6c82-d21b-aeda5f5310e6@ozlabs.ru>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 24 Sep 2019 10:18:43 +0800, Xiaowei Bao wrote:
-> Add compatible strings for ls1088a and ls2088a.
+On 9/9/19 2:59 AM, Alexey Kardashevskiy wrote:
 > 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
-> v2:
->  - No change.
-> v3:
->  - Use one valid combination of compatible strings.
-> v4:
->  - Add the comma between the two compatible.
 > 
->  Documentation/devicetree/bindings/pci/layerscape-pci.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> On 06/09/2019 05:13, Shawn Anastasio wrote:
+>> Move PCI device setup from pcibios_add_device() and pcibios_fixup_bus() to
+>> pcibios_bus_add_device(). This ensures that platform-specific DMA and IOMMU
+>> setup occurs after the device has been registered in sysfs, which is a
+>> requirement for IOMMU group assignment to work
+>>
+>> This fixes IOMMU group assignment for hotplugged devices on pseries, where
+>> the existing behavior results in IOMMU assignment before registration.
 > 
+> 
+> Although this is a correct approach which we should proceed with, this
+> breaks adding of SRIOV VFs from pnv_tce_iommu_bus_notifier (and possibly
+> the bare metal PCI hotplug), I am trying to fix that now...
 
-Acked-by: Rob Herring <robh@kernel.org>
+Were you able to make any progress? I can think of a couple of ways
+to fix SRIOV, but they're not particularly elegant and involve
+duplication.
