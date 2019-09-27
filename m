@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E1FCC0214
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2019 11:19:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C06CC0237
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2019 11:24:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725911AbfI0JS7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Sep 2019 05:18:59 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34002 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfI0JS7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Sep 2019 05:18:59 -0400
-Received: by mail-ot1-f68.google.com with SMTP id m19so1681309otp.1;
-        Fri, 27 Sep 2019 02:18:58 -0700 (PDT)
+        id S1726540AbfI0JYa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Sep 2019 05:24:30 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46576 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfI0JYa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Sep 2019 05:24:30 -0400
+Received: by mail-oi1-f196.google.com with SMTP id k25so4594346oiw.13;
+        Fri, 27 Sep 2019 02:24:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1BH0Vz3nqYEk3uBlmLrPdAWKkQEPayw9EpZKQBCwWhc=;
-        b=I0JDaqs6fyP+gRO5zyOduL0kpcligQ3/+TipnlTvgLQWhxlBQJBY0Ly8lzocCzaJVM
-         bM95A79JRCLtWlP8Lv4jOrB6bTPTez+En7nO0wTEyxWOVwZI3RUWwdidcgmO40mPi9GC
-         aDXaW4Uy1CcH2lorFskxsh4H6vXg03pPNSeDHwr7+CytIv4ETPRF/fmugV/61Xy99juS
-         9Ga024kvd0tlZ3J3PQB1p9xyO8hVdMEsf0/EbnL+4ruugIA1vbslEabaEGVW+uCunYge
-         6LETrSJGZ4jOwwY6fEpFVpGTUs7oFnr2w6fZ+MOfrTMnd3IhT341JOcIRCp3AdlqdEnQ
-         Kg1g==
-X-Gm-Message-State: APjAAAUsSQ71pJeDVw0Z3QVBiLjyJ+DNAmx4me1HMuMYx4530myhCAos
-        +7zaBTqw0c1XUpbQRwEn2QLUXE7ge2ZZL2S5fyQ=
-X-Google-Smtp-Source: APXvYqzbPjRiKTghIyriIKOe9Ucwh6OZNxL7ThafEIlwv9M07UyWLoDcrPJrT0NojwgaVgn5gQrCwXQhwitVJOPGwpw=
-X-Received: by 2002:a9d:193:: with SMTP id e19mr2283511ote.107.1569575938022;
- Fri, 27 Sep 2019 02:18:58 -0700 (PDT)
+        bh=PliSA9XuRMkzrOvLsXtt+pM6dMge6sikKc+gba1/4fE=;
+        b=O/ue2AWYELc86dyRJg/dYUtQ5ESkvRM8GzqfUsSOp++gS7AJzsQ/nfUXmfH4j68Tna
+         llINWYc/EuXivsMLqSRUi9ho86Wz2ah8vqc4hmp7X2b8qyX7jbNvMFjAEJlVqQf+4/gE
+         HFzsMtPpGjAHxo6i3m2eQ0kQY3nEVF/sxHqAV4wBxdkF7Y/Z/k+aWXkynwx/fEkXsHFr
+         W8hlKnXsZfLHZaCkyy0MP0Ujv5HLPVVKLgq3CzOehKMq2A4PTVC6LhBlOB6XPMJf5ihy
+         KBiN7uwyBcTYZgFPMPtmtv6RHADDugtl4do0QZXNRxmQvhmfppTCXhD9jTqIMDtokHAi
+         6FOg==
+X-Gm-Message-State: APjAAAWZWnJvXNCoiOcV2wOQ263IWmF9DKsJe437yjtn6O4Fy3T+gXWR
+        JSBt0kDHdc8U0w1DCQmZuVHuUdMRlesTB08dmMI=
+X-Google-Smtp-Source: APXvYqygMX80pvcFFJI5miUi9Z9iy/nlhZYIiWyd26NXPWeA2/LLNVg0ZajgnmkkOecL3MFc7O0DeaIY3bDnJetu3jM=
+X-Received: by 2002:aca:cdc7:: with SMTP id d190mr6065798oig.148.1569576269452;
+ Fri, 27 Sep 2019 02:24:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190927002455.13169-1-robh@kernel.org> <20190927002455.13169-3-robh@kernel.org>
-In-Reply-To: <20190927002455.13169-3-robh@kernel.org>
+References: <20190927002455.13169-1-robh@kernel.org> <20190927002455.13169-7-robh@kernel.org>
+In-Reply-To: <20190927002455.13169-7-robh@kernel.org>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 27 Sep 2019 11:18:47 +0200
-Message-ID: <CAMuHMdVmG9NJ3eDWTGbMtzH7+Q0HDOjDR_QoGoGFN4OcQUTbNQ@mail.gmail.com>
-Subject: Re: [PATCH 02/11] of: Make of_dma_get_range() private
+Date:   Fri, 27 Sep 2019 11:24:18 +0200
+Message-ID: <CAMuHMdWHGR2odz4nvY_Bjg8H7SKf1eio=tw9yRRO1VYbGCXAbg@mail.gmail.com>
+Subject: Re: [PATCH 06/11] of/address: Introduce of_get_next_dma_parent() helper
 To:     Rob Herring <robh@kernel.org>
 Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
@@ -51,8 +51,7 @@ Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
         Marek Vasut <marek.vasut@gmail.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Simon Horman <horms+renesas@verge.net.au>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Oza Pawandeep <oza.oza@broadcom.com>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
@@ -60,10 +59,13 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 On Fri, Sep 27, 2019 at 2:25 AM Rob Herring <robh@kernel.org> wrote:
-> of_dma_get_range() is only used within the DT core code, so remove the
-> export and move the header declaration to the private header.
+> From: Robin Murphy <robin.murphy@arm.com>
 >
-> Cc: Robin Murphy <robin.murphy@arm.com>
+> Add of_get_next_dma_parent() helper which is similar to
+> __of_get_dma_parent(), but can be used in iterators and decrements the
+> ref count on the prior parent.
+>
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 > Signed-off-by: Rob Herring <robh@kernel.org>
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
