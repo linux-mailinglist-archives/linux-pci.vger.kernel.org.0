@@ -2,50 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CD48DC0940
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2019 18:12:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9611C0943
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2019 18:12:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbfI0QMb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Sep 2019 12:12:31 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38347 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbfI0QMb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Sep 2019 12:12:31 -0400
-Received: by mail-pg1-f195.google.com with SMTP id x10so3759449pgi.5;
-        Fri, 27 Sep 2019 09:12:30 -0700 (PDT)
+        id S1727334AbfI0QMq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Sep 2019 12:12:46 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43255 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbfI0QMq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Sep 2019 12:12:46 -0400
+Received: by mail-pf1-f195.google.com with SMTP id a2so1856687pfo.10;
+        Fri, 27 Sep 2019 09:12:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:thread-topic:thread-index:date:message-id
          :references:in-reply-to:accept-language:content-language
          :content-transfer-encoding:mime-version;
         bh=BkVG3iqmCYH0eeVp/xh+5XrL/M0KG001eUUCkmNI95A=;
-        b=e/COpqTQALXS/QFYGHR1MkEudE13Jo0gu/GoimIqBLcFoQENfvDpbpnGH6rkcPSnRK
-         X+0JmFgBGbYt/klH5Zl5tYgSwttlfa07Ae5vQeQOhJ93uslS/kApiYjBJFw9PcZp45QL
-         oZsO4N4MwNcWs36Od/VGYu8ZoPZnEE6ceVxX5aYe9U2pDDKNoakb+nlQ+Mf/K+GabJcK
-         0H7H9VIYfKPbP2iwwpMCCeHhBVTBYK1aSjwW9QTk7RBopSXucwgbbrSwUGGPKjN36ZeJ
-         wAfdO4ExHw2qwAzUOC4diHPm7MvNIXFw0EmQRzt/tu9/PTAXiQEPE0DEhY1bVi8rrLkN
-         78oA==
+        b=Mn2aTSFJcLMbdJ0EDU05EbRCklKYGTviE75JGUm7L85MaO4x0BluxsXTdrT7r/1c5g
+         ef7FdH+DK4gBrLK9SP6Ssa3T9eS8g0cnggV2vycqPfoRr4TKzvQ40IcQ0AojCMYKfpni
+         UbChhtTqXyzLcsFEF3NUmE0OxKsqw7YDx5RW7fFY5g0Dr2MwIxKwQuAPSh90Hco9QIKL
+         /DHVEfFAONO+74Yfae6ckNUID+VmFipdI7Ia2jow0nxIQqbAe3zEq7wiZe2woLlHWHrw
+         Xv/8S8YMFuP1l+czE/Byy1e/KRZgB9s6bBPYYWDmzIKpheVtFDMSvnOS4XDOSTXWX0WJ
+         gPxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
          :date:message-id:references:in-reply-to:accept-language
          :content-language:content-transfer-encoding:mime-version;
         bh=BkVG3iqmCYH0eeVp/xh+5XrL/M0KG001eUUCkmNI95A=;
-        b=ZaFAqOEXz/PNv9kYeEzDnGYk5MxUXwZDVug9S9li9MS57R87t4jOEHLoU4TWqw1g6J
-         Gxwq0m3ilQDnh/rKQ3uC/KKsPgtEGSaCE2X1+VG8wcT4qJmhA2ggghmlcBLBlFo6Ppmz
-         6XwBTqMMTG0/HtKrQC5J41VkWhI5Nbtriz+1/wOJEJmtjCuv/D81i7mweHdPNDE1SK/E
-         XW1d8+AD2UbvmfY8v1c3Mu43Za276suMECCH43R/v0MaJc8Q7welUh6Zqf044lwpMBiA
-         cor53JZA04uShAhSuDdSjGaP2r6ph4i0z39qTGtdiXoY34+WxNGCVDvDx9xJJ/UgAWqS
-         w8Ow==
-X-Gm-Message-State: APjAAAULbpPzUfUMQCk5BJ7S/FNoejL3+4+DCeIwh8382q0pKKEiSn7C
-        5EP3pXnpyVweuFa0quymth0=
-X-Google-Smtp-Source: APXvYqzkAgoVkc6rj9y4WlIo7pSMPSSyceNGsbwh/2NjqKHcUSmCCNwo+nge9m/SUn9OJleP/CpFLQ==
-X-Received: by 2002:a65:4002:: with SMTP id f2mr10165853pgp.447.1569600749847;
-        Fri, 27 Sep 2019 09:12:29 -0700 (PDT)
+        b=Tg6Fko16re/xgEzP/RA29zrJ/q9RbZVmY0kBYclOQlR9Shl8ZbtZ8OKzRFDS0VZV3z
+         yAfeLtcRpt1hCDN3lzirVwWoxNuCi0C4u7WQUR21LFhgatr73pvX3bTnfTdvQ/WvTERh
+         XJrkNqFp8yZ9MxI6pCtutLhXZBwzdayKzbdJx0hUoFYZK/SjMSxwMb5zgvDSxdPku0Z6
+         ZH9vEadtD3jW5k66DzgraN4+/elx+HsPPUmlePiFgiBGzNfyXqDNGcoN4+jtEBjK23uK
+         LvoxR70hcOd3u5przggstUzCeZbbD2N3lkMu4/56QWVADpC8DhKx8nTCoW/yIj/TnqHV
+         21pA==
+X-Gm-Message-State: APjAAAWGeJsc9EMjq8Z6km9yIRzlTrnHfP7+t4j8aanpLWlyzMsEYEnu
+        EswV5rOI2klymBhPGbeEnu4=
+X-Google-Smtp-Source: APXvYqxitbAP3PcPa0X7X2zX+V7jMSsAuljIqXk3oFFlbn7LYzvFIn3W4VY61E9Z7VlJ3Yul0lMOQg==
+X-Received: by 2002:a17:90a:e28a:: with SMTP id d10mr9357077pjz.102.1569600764256;
+        Fri, 27 Sep 2019 09:12:44 -0700 (PDT)
 Received: from SL2P216MB0105.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:22::5])
-        by smtp.gmail.com with ESMTPSA id 64sm3894470pfx.31.2019.09.27.09.12.23
+        by smtp.gmail.com with ESMTPSA id l12sm7805593pgs.44.2019.09.27.09.12.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Sep 2019 09:12:28 -0700 (PDT)
+        Fri, 27 Sep 2019 09:12:43 -0700 (PDT)
 From:   Jingoo Han <jingoohan1@gmail.com>
 To:     Rob Herring <robh@kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
@@ -80,10 +80,10 @@ CC:     "linux-arm-kernel@lists.infradead.org"
         Han Jingoo <jingoohan1@gmail.com>
 Subject: Re: [PATCH 06/11] PCI: of: Add inbound resource parsing to helpers
 Thread-Topic: [PATCH 06/11] PCI: of: Add inbound resource parsing to helpers
-Thread-Index: AQHVcyGPS+dm5x72Oke0UZO8SHhXHqc/tmMt
+Thread-Index: AQHVcyGPS+dm5x72Oke0UZO8SHhXHqc/tnKx
 X-MS-Exchange-MessageSentRepresentingType: 1
-Date:   Fri, 27 Sep 2019 16:12:20 +0000
-Message-ID: <SL2P216MB0105248CAB7433BEB727E94CAA810@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+Date:   Fri, 27 Sep 2019 16:12:27 +0000
+Message-ID: <SL2P216MB0105EF7D414AE054835D25C9AA810@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
 References: <20190924214630.12817-1-robh@kernel.org>
  <20190924214630.12817-7-robh@kernel.org>
 In-Reply-To: <20190924214630.12817-7-robh@kernel.org>
