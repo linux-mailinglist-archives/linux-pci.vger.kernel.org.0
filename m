@@ -2,38 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 81741C03A7
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2019 12:44:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9388C054E
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2019 14:39:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbfI0Koh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Sep 2019 06:44:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37856 "EHLO mail.kernel.org"
+        id S1726251AbfI0MjP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Sep 2019 08:39:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725946AbfI0Koh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 27 Sep 2019 06:44:37 -0400
-Received: from localhost (unknown [69.71.4.100])
+        id S1725890AbfI0MjP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 27 Sep 2019 08:39:15 -0400
+Received: from localhost (173-25-179-30.client.mchsi.com [173.25.179.30])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37D1720673;
-        Fri, 27 Sep 2019 10:44:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B22220673;
+        Fri, 27 Sep 2019 12:39:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569581076;
-        bh=5Lac1CASlk0sJZm0YRYXdQK/2vCuj3n357uUlZay40k=;
+        s=default; t=1569587954;
+        bh=uPN9RyW4YW0TDfK8hXhtBneW2YpzqT6rO2P64YR4jtY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=eZydjFrDuSZnpesNdZsaPt4D2G0uqy5fIKVIF/YS2kuXkL8bWnm481fx2gs1yG4/S
-         4ScUI1NV2LO4EKmFkJ1zNFdAWSX+M6QsTZTfvajyMJwLW/BjVE2v/Im9kHEY4MVvbo
-         44+WJhG7XI5AUZfAj4U2uxwFQCtPCfUNL7bqOAEg=
-Date:   Fri, 27 Sep 2019 05:44:34 -0500
+        b=NRxnvfmzKHdgaIuyshJwcS0iwIlp5AAK4eN8sypPK8Ovxr4/eroGgPG1+r5sQRX7A
+         3KFWMi6wdJsgsMRQZWfdUebtvWDnQbLYtSudyqLNLDHco79brtd4IujFXnsszDhK1L
+         GxWTS19cUuSFAcz9fNLMQ7IHk+eLiCOA06ig3lP0=
+Date:   Fri, 27 Sep 2019 07:39:13 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Russell Currey <ruscur@russell.cc>,
         Sam Bobroff <sbobroff@linux.ibm.com>,
         Oliver O'Halloran <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
 Subject: Re: [PATCH v1 1/2] PCI/AER: Use for_each_set_bit()
-Message-ID: <20190927104434.GA23330@google.com>
+Message-ID: <20190927123913.GA32321@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -49,10 +47,6 @@ On Tue, Aug 27, 2019 at 06:18:22PM +0300, Andy Shevchenko wrote:
 > by using for_each_set_bit() library function.
 > 
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Applied both with Kuppuswamy's reviewed-by to pci/aer for v5.5,
-thanks!
-
 > ---
 >  drivers/pci/pcie/aer.c | 19 ++++++++-----------
 >  1 file changed, 8 insertions(+), 11 deletions(-)
@@ -88,6 +82,15 @@ thanks!
 > -		if (status & (1 << i))
 > -			counter[i]++;
 > +	for_each_set_bit(i, &status, max)
+
+I applied this, but I confess to being a little ambivalent.  It's
+arguably a little easier to read, but it's not nearly as efficient
+(not a great concern here) and more importantly much harder to verify
+that it's correct because you have to chase through
+for_each_set_bit(), find_first_bit(), _ffs(), etc, etc.  No doubt it's
+great for bitmaps of arbitrary size, but for a simple 32-bit register
+I'm a little hesitant.  But I applied it anyway.
+
 > +		counter[i]++;
 >  }
 >  
