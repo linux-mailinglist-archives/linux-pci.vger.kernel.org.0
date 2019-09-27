@@ -2,91 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C8E0C05C8
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2019 14:55:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D3BBC05E7
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2019 15:00:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfI0My7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Sep 2019 08:54:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55986 "EHLO mail.kernel.org"
+        id S1727195AbfI0NA2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Sep 2019 09:00:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfI0My6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 27 Sep 2019 08:54:58 -0400
+        id S1727076AbfI0NA2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 27 Sep 2019 09:00:28 -0400
 Received: from localhost (173-25-179-30.client.mchsi.com [173.25.179.30])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1207520872;
-        Fri, 27 Sep 2019 12:54:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1986217D9;
+        Fri, 27 Sep 2019 13:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569588898;
-        bh=w3XEylaO3Qc+K7bAJgMP04bk+svHue7waGNxI0le2lw=;
+        s=default; t=1569589227;
+        bh=ZRR5GpkwR6Aa/fDKrENAmahjuJ9MmYU6dJrGLK0V3IM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=195lv9RzhoE+bN696fHGZIL9z0prRuuLIdJ0HNFPsg2Xr1bguxTlr/QqlNVTu8FYr
-         Ym6ur319dPtAMsK8g4vzeJ6CRFM4P1qkBtzi9Yjr+lJNaeIW0AaWETieAgq7O1/9u3
-         sYZ5HBltvUCLbiqmgFm1tpSseNK7ZhLdBx5p1cWc=
-Date:   Fri, 27 Sep 2019 07:54:57 -0500
+        b=KLGDBjTbXzad8oglmmKMJkBY3QdwZGNWEqTeYBha0ElHoxMTT2hrgqjCgjoXZxZNm
+         9OEB/HIJx2kyrPpqOTpDvWxP/FHkmbzA5zVt3lgky1adf7UXlzw+kdURO8B0TeJqAo
+         4q3SUtGL9Ed/I+iD/QrosE2eIpzuZ9UbjCd+0zPQ=
+Date:   Fri, 27 Sep 2019 08:00:26 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>
-Cc:     linux-pci@vger.kernel.org, stable@vger.kernel.org,
-        Andrew Murray <andrew.murray@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v2] PCI: quirks: Fix register location for UPDCR
-Message-ID: <20190927125457.GA34765@google.com>
+To:     tiantao6 <tiantao6@huawei.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com
+Subject: Re: [PATCH] PCI: vc: fix warning: no previous prototype
+Message-ID: <20190927130026.GA40841@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7a3505df-79ba-8a28-464c-88b83eefffa6@kernkonzept.com>
+In-Reply-To: <1568205651-60209-1-git-send-email-tiantao6@huawei.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Andrew, Alex, Ashok]
+On Wed, Sep 11, 2019 at 08:40:51PM +0800, tiantao6 wrote:
+> From: tiantao <tiantao6@huawei.com>
+> 
+> drivers/pci/vc.c:351:5: warning: no previous prototype for
+> pci_save_vc_state [-Wmissing-prototypes]
+> int pci_save_vc_state(struct pci_dev *dev)
+> 
+> drivers/pci/vc.c:388:6: warning: no previous prototype for
+> pci_restore_vc_state [-Wmissing-prototypes]
+> void pci_restore_vc_state(struct pci_dev *dev)
+> 
+> drivers/pci/vc.c:412:6: warning: no previous prototype for
+> pci_allocate_vc_save_buffers [-Wmissing-prototypes]
+> void pci_allocate_vc_save_buffers(struct pci_dev *dev)
+> 
+> Signed-off-by: Tian Tao <tiantao6@huawei.com>
 
-Please cc people who commented on previous versions of a patch.  I
-added them for you here.
+Thanks, this was fixed incidentally by ca78410403dd ("PCI: Get rid of
+dev->has_secondary_link flag").
 
-This is probably fine, but I'm waiting to see if Ashok gets a response
-from the chipset folks.  Hopefully he can ack this as a simple typo
-fix.
-
-On Wed, Sep 18, 2019 at 03:16:52PM +0200, Steffen Liebergeld wrote:
-> According to documentation [0] the correct offset for the
-> Upstream Peer Decode Configuration Register (UPDCR) is 0x1014.
-> It was previously defined as 0x1114.
-> 
-> Commit d99321b63b1f intends to enforce isolation between PCI
-> devices allowing them to be put into separate IOMMU groups.
-> Due to the wrong register offset the intended isolation was not
-> fully enforced. This is fixed with this patch.
-> 
-> Please note that I did not test this patch because I have
-> no hardware that implements this register.
-> 
-> [0]
-> https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/4th-gen-core-family-mobile-i-o-datasheet.pdf
-> (page 325)
-> 
-> Fixes: d99321b63b1f ("PCI: Enable quirks for PCIe ACS on Intel PCH root ports")
-> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> Signed-off-by: Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>
 > ---
->  drivers/pci/quirks.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/pci/vc.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 208aacf39329..7e184beb2aa4 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4602,7 +4602,7 @@ int pci_dev_specific_acs_enabled(struct pci_dev
-> *dev, u16 acs_flags)
->  #define INTEL_BSPR_REG_BPPD  (1 << 9)
->   /* Upstream Peer Decode Configuration Register */
-> -#define INTEL_UPDCR_REG 0x1114
-> +#define INTEL_UPDCR_REG 0x1014
->  /* 5:0 Peer Decode Enable bits */
->  #define INTEL_UPDCR_REG_MASK 0x3f
->  -- 2.11.0
-> 
+> diff --git a/drivers/pci/vc.c b/drivers/pci/vc.c
+> index b39e854..111f6d3 100644
+> --- a/drivers/pci/vc.c
+> +++ b/drivers/pci/vc.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/pci.h>
+>  #include <linux/pci_regs.h>
+>  #include <linux/types.h>
+> +#include "pci.h"
+>  
+>  /**
+>   * pci_vc_save_restore_dwords - Save or restore a series of dwords
+> -- 
+> 2.7.4
 > 
