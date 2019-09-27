@@ -2,74 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8896DC015C
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2019 10:41:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF167C0166
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2019 10:46:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725890AbfI0Ilh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Sep 2019 04:41:37 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:37327 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfI0Ilh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Sep 2019 04:41:37 -0400
+        id S1725992AbfI0Iqr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Sep 2019 04:46:47 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:51479 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfI0Iqr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Sep 2019 04:46:47 -0400
 X-Originating-IP: 65.39.69.237
 Received: from localhost (unknown [65.39.69.237])
         (Authenticated sender: repk@triplefau.lt)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id B7CF2FF80F;
-        Fri, 27 Sep 2019 08:41:34 +0000 (UTC)
-Date:   Fri, 27 Sep 2019 10:50:00 +0200
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 0C35C1C000B;
+        Fri, 27 Sep 2019 08:46:44 +0000 (UTC)
 From:   Remi Pommarel <repk@triplefau.lt>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: aardvark: Don't rely on jiffies while holding
- spinlock
-Message-ID: <20190927084959.GC1208@voidbox.localdomain>
-References: <20190927083142.8571-1-repk@triplefau.lt>
- <20190927103420.48bb9335@windsurf>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH v3] PCI: aardvark: Don't rely on jiffies while holding spinlock
+Date:   Fri, 27 Sep 2019 10:55:02 +0200
+Message-Id: <20190927085502.1758-1-repk@triplefau.lt>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190927103420.48bb9335@windsurf>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Thomas,
+advk_pcie_wait_pio() can be called while holding a spinlock (from
+pci_bus_read_config_dword()), then depends on jiffies in order to
+timeout while polling on PIO state registers. In the case the PIO
+transaction failed, the timeout will never happen and will also cause
+the cpu to stall.
 
-On Fri, Sep 27, 2019 at 10:34:20AM +0200, Thomas Petazzoni wrote:
-> Hello Remi,
-> 
-> Thanks for the new iteration!
-> 
-> On Fri, 27 Sep 2019 10:31:42 +0200
-> Remi Pommarel <repk@triplefau.lt> wrote:
-> 
-> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > index fc0fe4d4de49..ee05ccb2b686 100644
-> > --- a/drivers/pci/controller/pci-aardvark.c
-> > +++ b/drivers/pci/controller/pci-aardvark.c
-> > @@ -175,7 +175,8 @@
-> >  	(PCIE_CONF_BUS(bus) | PCIE_CONF_DEV(PCI_SLOT(devfn))	| \
-> >  	 PCIE_CONF_FUNC(PCI_FUNC(devfn)) | PCIE_CONF_REG(where))
-> >  
-> > -#define PIO_TIMEOUT_MS			1
-> > +#define PIO_RETRY_CNT			10
-> > +#define PIO_RETRY_DELAY			2 /* 2 us*/
-> 
-> So this changes the timeout from 1ms to just 20us, a division by 50
-> from the previous timeout value. From my measurements, it could
-> sometime take up to 6us from a single PIO read operation to complete,
-> which is getting close to the 20us timeout.
-> 
-> Shouldn't PIO_RETRY_CNT be kept at 500, so that we keep using a 1ms
-> timeout ?
+This decrements a variable and wait instead of using jiffies.
 
-Damn. You right of course, sorry about that.
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+---
+Changes since v1:
+  - Reduce polling delay
+  - Change size_t into int for loop counter
+Changes since v2:
+  - Keep timeout to 1ms by increasing retry counter
+---
+ drivers/pci/controller/pci-aardvark.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Thanks
-
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index fc0fe4d4de49..7b5c9d6c8706 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -175,7 +175,8 @@
+ 	(PCIE_CONF_BUS(bus) | PCIE_CONF_DEV(PCI_SLOT(devfn))	| \
+ 	 PCIE_CONF_FUNC(PCI_FUNC(devfn)) | PCIE_CONF_REG(where))
+ 
+-#define PIO_TIMEOUT_MS			1
++#define PIO_RETRY_CNT			500
++#define PIO_RETRY_DELAY			2 /* 2 us*/
+ 
+ #define LINK_WAIT_MAX_RETRIES		10
+ #define LINK_WAIT_USLEEP_MIN		90000
+@@ -383,17 +384,16 @@ static void advk_pcie_check_pio_status(struct advk_pcie *pcie)
+ static int advk_pcie_wait_pio(struct advk_pcie *pcie)
+ {
+ 	struct device *dev = &pcie->pdev->dev;
+-	unsigned long timeout;
++	int i;
+ 
+-	timeout = jiffies + msecs_to_jiffies(PIO_TIMEOUT_MS);
+-
+-	while (time_before(jiffies, timeout)) {
++	for (i = 0; i < PIO_RETRY_CNT; i++) {
+ 		u32 start, isr;
+ 
+ 		start = advk_readl(pcie, PIO_START);
+ 		isr = advk_readl(pcie, PIO_ISR);
+ 		if (!start && isr)
+ 			return 0;
++		udelay(PIO_RETRY_DELAY);
+ 	}
+ 
+ 	dev_err(dev, "config read/write timed out\n");
 -- 
-Remi
+2.20.1
+
