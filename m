@@ -2,151 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D73D4C07D4
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2019 16:44:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB0A5C0888
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2019 17:26:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbfI0Oo1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Sep 2019 10:44:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44002 "EHLO mx1.redhat.com"
+        id S1727416AbfI0P0e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Sep 2019 11:26:34 -0400
+Received: from mga01.intel.com ([192.55.52.88]:28646 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727447AbfI0Oo1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 27 Sep 2019 10:44:27 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3362A5859E
-        for <linux-pci@vger.kernel.org>; Fri, 27 Sep 2019 14:44:26 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id j2so1138249wre.1
-        for <linux-pci@vger.kernel.org>; Fri, 27 Sep 2019 07:44:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tKJlXVu+C+SUSWhFcHR/cVLK3eVfpegwLk/6ZeTU4Lw=;
-        b=gX6TN3q4KpWhjflCzdKKtDoalUHjWM+QMEv1s9De4gJR3R8wk1jMWR+D5zV3P7PIYp
-         kAHwLEh6LhlvHGAM0pH06lUXMnmUAWqoSQmMj3ZfOLhFcrXCvn1ldLFT1f1kCGQIXbAO
-         DeAehqjbHNKw0dhugcuuGjE8Li3qfk8gXZo50wr2kfFEXYg6UDxvfGXykM8OX6v4qgDA
-         FO0EhEhxU1nd7GKbLZ7CqI5ZMCvjRfPEJkyEAa4N1XU6lRA38+DXZ116UjnRgNvghR1V
-         ynqYi0quJ5ikz4/cAno0T+txmt9bFwAqrtVH3FY74aUAdMmKYWQ53CsHsfWcrBj6Czea
-         RIaQ==
-X-Gm-Message-State: APjAAAVrdS7p8fMXoULsD8SGTGtJcuW+mRvDKdj6m7Xz6uEEe7DckjNO
-        sGcOnd2mmRA+JfX5cNdvP9SHsmoQ695APM8XubJ5W6yRnFr7kDWcsyQcARsHYuhspdv/Tk9MMxG
-        CYi3vrDfuzEJMBJs2vr9D
-X-Received: by 2002:a1c:1c7:: with SMTP id 190mr395780wmb.23.1569595464975;
-        Fri, 27 Sep 2019 07:44:24 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxC2IYP1DXa/fMg1u9ig7ZhBeyIkZ56QIfJYKHZiecxua/UDg6iVgqlCp0MKwat0LoPX/Jjxg==
-X-Received: by 2002:a1c:1c7:: with SMTP id 190mr395767wmb.23.1569595464744;
-        Fri, 27 Sep 2019 07:44:24 -0700 (PDT)
-Received: from kherbst.pingu.com ([2a02:8308:b0be:6900:6174:20eb:3f66:382f])
-        by smtp.gmail.com with ESMTPSA id e18sm4580926wrv.63.2019.09.27.07.44.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 07:44:23 -0700 (PDT)
-From:   Karol Herbst <kherbst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lyude Paul <lyude@redhat.com>, linux-pci@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [RFC PATCH] pci: prevent putting pcie devices into lower device states on certain intel bridges
-Date:   Fri, 27 Sep 2019 16:44:21 +0200
-Message-Id: <20190927144421.22608-1-kherbst@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        id S1726251AbfI0P0e (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 27 Sep 2019 11:26:34 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 08:26:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,555,1559545200"; 
+   d="scan'208";a="214866117"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.145])
+  by fmsmga004.fm.intel.com with ESMTP; 27 Sep 2019 08:26:32 -0700
+Date:   Fri, 27 Sep 2019 08:26:32 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>,
+        linux-pci@vger.kernel.org, stable@vger.kernel.org,
+        Andrew Murray <andrew.murray@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v2] PCI: quirks: Fix register location for UPDCR
+Message-ID: <20190927152632.GA4261@otc-nc-03>
+References: <7a3505df-79ba-8a28-464c-88b83eefffa6@kernkonzept.com>
+ <20190927125457.GA34765@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190927125457.GA34765@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fixes runpm breakage mainly on Nvidia GPUs as they are not able to resume.
+Hi Bjorn
 
-Works perfectly with this workaround applied.
 
-RFC comment:
-We are quite sure that there is a higher amount of bridges affected by this,
-but I was only testing it on my own machine for now.
 
-I've stresstested runpm by doing 5000 runpm cycles with that patch applied
-and never saw it fail.
+On Fri, Sep 27, 2019 at 07:54:57AM -0500, Bjorn Helgaas wrote:
+> [+cc Andrew, Alex, Ashok]
+> 
+> Please cc people who commented on previous versions of a patch.  I
+> added them for you here.
+> 
+> This is probably fine, but I'm waiting to see if Ashok gets a response
+> from the chipset folks.  Hopefully he can ack this as a simple typo
+> fix.
+> 
+> On Wed, Sep 18, 2019 at 03:16:52PM +0200, Steffen Liebergeld wrote:
+> > According to documentation [0] the correct offset for the
+> > Upstream Peer Decode Configuration Register (UPDCR) is 0x1014.
+> > It was previously defined as 0x1114.
 
-I mainly wanted to get a discussion going on if that's a feasable workaround
-indeed or if we need something better.
+Finally someone in the HW team was able to lookup the documentation and 
+it has stayed at 0x1014 per internal documentation. Apparently the genesis
+is about 10 years ago :-)... so it took some time to hunt this from the team.
 
-I am also sure, that the nouveau driver itself isn't at fault as I am able
-to reproduce the same issue by poking into some PCI registers on the PCIe
-bridge to put the GPU into D3cold as it's done in ACPI code.
+that's the final answer :-)
 
-I've written a little python script to reproduce this issue without the need
-of loading nouveau:
-https://raw.githubusercontent.com/karolherbst/pci-stub-runpm/master/nv_runpm_bug_test.py
+Cheers,
+Ashok
 
-Signed-off-by: Karol Herbst <kherbst@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: linux-pci@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: nouveau@lists.freedesktop.org
----
- drivers/pci/pci.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 088fcdc8d2b4..9dbd29ced1ac 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -799,6 +799,42 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
- 	return pci_platform_pm ? pci_platform_pm->bridge_d3(dev) : false;
- }
- 
-+/*
-+ * some intel bridges cause serious issues with runpm if the client device
-+ * is put into D1/D2/D3hot before putting the client into D3cold via
-+ * platform means (generally ACPI).
-+ *
-+ * skipping this makes runpm work perfectly fine on such devices.
-+ *
-+ * As far as we know only skylake and kaby lake SoCs are affected.
-+ */
-+static unsigned short intel_broken_d3_bridges[] = {
-+	/* kbl */
-+	0x1901,
-+};
-+
-+static inline bool intel_broken_pci_pm(struct pci_bus *bus)
-+{
-+	struct pci_dev *bridge;
-+	int i;
-+
-+	if (!bus || !bus->self)
-+		return false;
-+
-+	bridge = bus->self;
-+	if (bridge->vendor != PCI_VENDOR_ID_INTEL)
-+		return false;
-+
-+	for (i = 0; i < ARRAY_SIZE(intel_broken_d3_bridges); i++) {
-+		if (bridge->device == intel_broken_d3_bridges[i]) {
-+			pci_err(bridge, "found broken intel bridge\n");
-+			return true;
-+		}
-+	}
-+
-+	return false;
-+}
-+
- /**
-  * pci_raw_set_power_state - Use PCI PM registers to set the power state of
-  *			     given PCI device
-@@ -827,6 +863,9 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
- 	if (state < PCI_D0 || state > PCI_D3hot)
- 		return -EINVAL;
- 
-+	if (state != PCI_D0 && intel_broken_pci_pm(dev->bus))
-+		return 0;
-+
- 	/*
- 	 * Validate current state:
- 	 * Can enter D0 from any state, but if we can only go deeper
--- 
-2.21.0
-
+> > 
+> > Commit d99321b63b1f intends to enforce isolation between PCI
+> > devices allowing them to be put into separate IOMMU groups.
+> > Due to the wrong register offset the intended isolation was not
+> > fully enforced. This is fixed with this patch.
+> > 
+> > Please note that I did not test this patch because I have
+> > no hardware that implements this register.
+> > 
+> > [0]
+> > https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/4th-gen-core-family-mobile-i-o-datasheet.pdf
+> > (page 325)
+> > 
+> > Fixes: d99321b63b1f ("PCI: Enable quirks for PCIe ACS on Intel PCH root ports")
+> > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+> > Signed-off-by: Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>
+> > ---
+> >  drivers/pci/quirks.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index 208aacf39329..7e184beb2aa4 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -4602,7 +4602,7 @@ int pci_dev_specific_acs_enabled(struct pci_dev
+> > *dev, u16 acs_flags)
+> >  #define INTEL_BSPR_REG_BPPD  (1 << 9)
+> >   /* Upstream Peer Decode Configuration Register */
+> > -#define INTEL_UPDCR_REG 0x1114
+> > +#define INTEL_UPDCR_REG 0x1014
+> >  /* 5:0 Peer Decode Enable bits */
+> >  #define INTEL_UPDCR_REG_MASK 0x3f
+> >  -- 2.11.0
+> > 
+> > 
