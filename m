@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 761B4C0209
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2019 11:16:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEC37C020D
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2019 11:17:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725946AbfI0JQL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Sep 2019 05:16:11 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37037 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfI0JQL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Sep 2019 05:16:11 -0400
-Received: by mail-oi1-f194.google.com with SMTP id i16so4616146oie.4;
-        Fri, 27 Sep 2019 02:16:10 -0700 (PDT)
+        id S1726030AbfI0JRS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Sep 2019 05:17:18 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41125 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfI0JRS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Sep 2019 05:17:18 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g13so1637967otp.8;
+        Fri, 27 Sep 2019 02:17:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TrSMs+vxGV2tpo5fzGvnzPrC4xp2UbLMKgbm5e707os=;
-        b=ij59yh9A+IB1qVm63i9fBOd3bL0cDyobVsdJD//tBFeyRWTiiH1OCYN+sDPRpUl0tL
-         DlHldTa/c9CXZ1kPSwbL8nkB6xbbJvbgDLmdXqkxndoPx2yuHJ2Ooqq0daOnxyknPDB4
-         fi0ONDxY2vf0HiqvM9y/6/RCdBgegT/3c2VifcMRmbx7DLWBh7CYWPqGQBfCwty7VstL
-         khP8/bP9NTAc4dENTxbVxnPgHImOeWLQf7f1pWeJ74oUcM76a8V4vJ3FLAadlGbhgcSx
-         olV3xDDUEtgEP32cHgLUKN8gmhMKuFAOOh5hbrqZa+9/0QGq8jL5JQDFlhuSn0NaS6Ct
-         fcqg==
-X-Gm-Message-State: APjAAAUX25KCuz6/kdyWvlbbWGRXm5vOS69QDB5+5o1mgtuMERcULAi9
-        HMv1f7NnLW2g6RJhULzYNqL9xKHlOedAfm3Ta7E=
-X-Google-Smtp-Source: APXvYqzwRUzhC1kv7YWIlRcwxP2ZhSwoD+vpHKOeORZVMk6BEVywWUAanN0Ycv/YcVYLjOSwRFSwWhMeLqcMJPqG3Xs=
-X-Received: by 2002:aca:b654:: with SMTP id g81mr5914865oif.153.1569575769992;
- Fri, 27 Sep 2019 02:16:09 -0700 (PDT)
+        bh=3+QY+V36AacojxG/0XQzOM0qGjwlQNtKmC40kmfrXyA=;
+        b=VEr3uS+g607rS38Ireixl1RUsos0JTvkxzPM33/QUyqOgYJaJm0d6YoE0bcEbLyr00
+         iHGJjzYf5Wii0z/6QLYSMs47F0mEtyarcsB9dTo3pQ0vAKWNZtTAAifpeS+Nz3qR84kM
+         ov6nguNRET3YrcHVg1zw4DUpWEwRBZC5ShvnVBFJRrOyevMniCDRMpEFbQGPUtY0ETux
+         SKPMxkdh8XExlWBEWpSDA1zSGGbgSTebs45IYROtcj2rm1U+MU2qHdouzHD99M//O4SZ
+         9j3dxdy5l4SxoRBeof2k9btqNGZk8RyXxvNnl3vX7ipVmqnckAcv0XeFGXieiC48BXeg
+         nEAA==
+X-Gm-Message-State: APjAAAUCcOGrsVOhk6byTcyIAoWoCrKcAGlRUJqRNedg/q58hiTyp7j/
+        cZ0McHt0A1o6zYNb1Ivg1ND19dlW2bpeYwfQX3o=
+X-Google-Smtp-Source: APXvYqxpPf7tCldKfOBJDzwGiyRfjj2zWIOfYmy8OxVjpBvmQqIYxglyIQUEnniPwSyamhz/Xmsma9UWW6oCJBnwO8s=
+X-Received: by 2002:a9d:404d:: with SMTP id o13mr2414433oti.39.1569575837231;
+ Fri, 27 Sep 2019 02:17:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190927002455.13169-1-robh@kernel.org> <20190927002455.13169-4-robh@kernel.org>
-In-Reply-To: <20190927002455.13169-4-robh@kernel.org>
+References: <20190927002455.13169-1-robh@kernel.org> <20190927002455.13169-2-robh@kernel.org>
+In-Reply-To: <20190927002455.13169-2-robh@kernel.org>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 27 Sep 2019 11:15:58 +0200
-Message-ID: <CAMuHMdV5Dw2FZcp6K7Kytzxtp7apEQ0FuE1CiOi+R4QVDrhM3A@mail.gmail.com>
-Subject: Re: [PATCH 03/11] of: address: Report of_dma_get_range() errors meaningfully
+Date:   Fri, 27 Sep 2019 11:17:06 +0200
+Message-ID: <CAMuHMdX++iEaib2c9hptqeQH60dsx-pCEWCZVtirAAkvW5v51A@mail.gmail.com>
+Subject: Re: [PATCH 01/11] of: Remove unused of_find_matching_node_by_address()
 To:     Rob Herring <robh@kernel.org>
 Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
@@ -60,39 +60,12 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 On Fri, Sep 27, 2019 at 2:25 AM Rob Herring <robh@kernel.org> wrote:
-> From: Robin Murphy <robin.murphy@arm.com>
+> of_find_matching_node_by_address() is unused, so remove it.
 >
-> If we failed to translate a DMA address, at least show the offending
-> address rather than the uninitialised contents of the destination
-> argument.
->
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> Cc: Robin Murphy <robin.murphy@arm.com>
 > Signed-off-by: Rob Herring <robh@kernel.org>
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-> ---
->  drivers/of/address.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 8e354d12fb04..53d2656c2269 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -955,8 +955,8 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
->         dmaaddr = of_read_number(ranges, naddr);
->         *paddr = of_translate_dma_address(np, ranges);
->         if (*paddr == OF_BAD_ADDR) {
-> -               pr_err("translation of DMA address(%pad) to CPU address failed node(%pOF)\n",
-
-Yeah, the %pad was wrong on 32-bit without CONFIG_PHYS_ADDR_T_64BIT.
-
-> -                      dma_addr, np);
-> +               pr_err("translation of DMA address(%llx) to CPU address failed node(%pOF)\n",
-> +                      dmaaddr, np);
->                 ret = -EINVAL;
->                 goto out;
->         }
 
 Gr{oetje,eeting}s,
 
