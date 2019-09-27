@@ -2,92 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 903DCBFB84
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2019 00:52:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7CC8BFC3E
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2019 02:25:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728704AbfIZWwI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Sep 2019 18:52:08 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38810 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728564AbfIZWwH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Sep 2019 18:52:07 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8QMmqAE108680;
-        Thu, 26 Sep 2019 22:51:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=D2CwgQsbiGCjO4mkdfUAM40E41fLHHYcnso3Cx++n8Q=;
- b=kvLY2wYNe0sibiKZEwHz9J3YqUTBY9dzOmvqeRC8wsZFyc04Pi5I+OohcKUhZeq7pbYe
- G4QQeWAjDiSWizTbyyca02Wwtajuq7FrSBbCukzNjHJisSJqffOhKxsZkaT75TceoL1i
- aCsIP3GjRSH7+deh2MbgBJN0eKV0YZbLnCEL9MLFx+fPDQcviZvix/focMz5WFCvfH+f
- YzcT81NWRz9PwiS2XvSnfGdr6eD15GY/OAoAuVrfq9rofFw87GPbsmp/TZtkDs/zIbgQ
- 61gIKj/Ulv/orSjZDky3XkdrLlVeVD17iKvyXFJm+tWK53yfuQalUv2bThLRWjeNTAuU Pg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2v5cgrenn8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Sep 2019 22:51:57 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8QMm9hK142397;
-        Thu, 26 Sep 2019 22:51:57 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2v8yjxpqnw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Sep 2019 22:51:56 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8QMpsWI030809;
-        Thu, 26 Sep 2019 22:51:54 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 26 Sep 2019 15:51:53 -0700
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Denis Efremov <efremov@linux.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-scsi@vger.kernel.org, Jack Wang <jinpu.wang@cloud.ionos.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
-Subject: Re: [PATCH v3 18/26] scsi: pm80xx: Use PCI_STD_NUM_BARS
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190916204158.6889-1-efremov@linux.com>
-        <20190916204158.6889-19-efremov@linux.com>
-        <yq1wody4eml.fsf@oracle.com> <20190926022933.GB238374@google.com>
-Date:   Thu, 26 Sep 2019 18:51:51 -0400
-In-Reply-To: <20190926022933.GB238374@google.com> (Bjorn Helgaas's message of
-        "Wed, 25 Sep 2019 21:29:33 -0500")
-Message-ID: <yq1lfua1xiw.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        id S1725870AbfI0AY7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Sep 2019 20:24:59 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44994 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbfI0AY6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Sep 2019 20:24:58 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 21so755165otj.11;
+        Thu, 26 Sep 2019 17:24:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MDoHopVetDd/ID0m+/zdRqZFxmnQtClQZalMwkfcSrM=;
+        b=esP6iMYGDGzhd2yr3ZB5vGuLw1YMlsVq+M+KKOE/U00vUN1z6C647D+txTVmJ8m6Tl
+         +Cz9tZWKUt6Qd1+2bW4FTsk7khk9a5UjnyE1n/Dju3U06iaSUfMUahy2NgJfpb/fRC+k
+         kpyfGIZw8eiYdI25RuFUwEJn+bn/TLpRVovCLbcwfqRV3I3uT9A5Ch0o4Vm+eqMFEcSv
+         yxfDBGvJFirA6iGM9TspT4+9FeFYbIXVb40EiDgPZJf6C2mrzhEAvqD5fQSQ0Pg8rdnI
+         h8mO53yppJoWUpLr+JnSV79JRkCoZsNbLQPmLtD44JhL/267OrDg9XgZVg0x4Xlz4PHk
+         f32Q==
+X-Gm-Message-State: APjAAAWL0bHNftWvPDv0Orl5A9XpvfIy2xYC0O2OvIIan4jbu4kReVEP
+        iUlxH36dgO1wbAsnrXai0VJlu5Y=
+X-Google-Smtp-Source: APXvYqzH15vdHiGFUOLjLKdgsmpn5XMUNzTaDYTgGKc/l7EtTHCuYhD8i0suwTNWM2dQUMH+HskLHw==
+X-Received: by 2002:a9d:3e52:: with SMTP id h18mr1048250otg.275.1569543897338;
+        Thu, 26 Sep 2019 17:24:57 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id j11sm339866otk.80.2019.09.26.17.24.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Sep 2019 17:24:56 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Oza Pawandeep <oza.oza@broadcom.com>
+Subject: [PATCH 00/11] of: dma-ranges fixes and improvements
+Date:   Thu, 26 Sep 2019 19:24:44 -0500
+Message-Id: <20190927002455.13169-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9392 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=574
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909260180
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9392 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=656 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909260180
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+This series fixes several issues related to 'dma-ranges'. Primarily,
+'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
+devices not described in the DT. A common case needing dma-ranges is a
+32-bit PCIe bridge on a 64-bit system. This affects several platforms
+including Broadcom, NXP, Renesas, and Arm Juno. There's been several
+attempts to fix these issues, most recently earlier this week[1].
 
-Bjorn,
+In the process, I found several bugs in the address translation. It
+appears that things have happened to work as various DTs happen to use
+1:1 addresses.
 
-> I think this depends on a previous patch that actually adds the
-> PCI_STD_NUM_BARS definition.  It will probably be easier if I apply
-> the whole series via the PCI tree.
+First 3 patches are just some clean-up. The 4th patch adds a unittest
+exhibiting the issues. Patches 5-9 rework how of_dma_configure() works
+making it work on either a struct device child node or a struct
+device_node parent node so that it works on bus leaf nodes like PCI
+bridges. Patches 10 and 11 fix 2 issues with address translation for
+dma-ranges.
 
-Looks like my mail about this getting dropped due to the missing
-definition got lost in transit. In any case, feel free to take this
-through the PCI tree.
+My testing on this has been with QEMU virt machine hacked up to set PCI
+dma-ranges and the unittest. Nicolas reports this series resolves the
+issues on Rpi4 and NXP Layerscape platforms.
 
-Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
+Rob
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+[1] https://lore.kernel.org/linux-arm-kernel/20190924181244.7159-1-nsaenzjulienne@suse.de/
+
+Rob Herring (5):
+  of: Remove unused of_find_matching_node_by_address()
+  of: Make of_dma_get_range() private
+  of/unittest: Add dma-ranges address translation tests
+  of/address: Translate 'dma-ranges' for parent nodes missing
+    'dma-ranges'
+  of/address: Fix of_pci_range_parser_one translation of DMA addresses
+
+Robin Murphy (6):
+  of: address: Report of_dma_get_range() errors meaningfully
+  of: Ratify of_dma_configure() interface
+  of/address: Introduce of_get_next_dma_parent() helper
+  of: address: Follow DMA parent for "dma-coherent"
+  of: Factor out #{addr,size}-cells parsing
+  of: Make of_dma_get_range() work on bus nodes
+
+ drivers/of/address.c                        | 83 +++++++++----------
+ drivers/of/base.c                           | 32 ++++---
+ drivers/of/device.c                         | 12 ++-
+ drivers/of/of_private.h                     | 14 ++++
+ drivers/of/unittest-data/testcases.dts      |  1 +
+ drivers/of/unittest-data/tests-address.dtsi | 48 +++++++++++
+ drivers/of/unittest.c                       | 92 +++++++++++++++++++++
+ include/linux/of_address.h                  | 21 +----
+ include/linux/of_device.h                   |  4 +-
+ 9 files changed, 227 insertions(+), 80 deletions(-)
+ create mode 100644 drivers/of/unittest-data/tests-address.dtsi
+
+--
+2.20.1
