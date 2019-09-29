@@ -2,35 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3C62C16A1
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Sep 2019 19:34:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46800C16A4
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Sep 2019 19:34:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbfI2Rbr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 29 Sep 2019 13:31:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42342 "EHLO mail.kernel.org"
+        id S1729528AbfI2Rby (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 29 Sep 2019 13:31:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729443AbfI2Rbr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:31:47 -0400
+        id S1729518AbfI2Rby (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:31:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B59021925;
-        Sun, 29 Sep 2019 17:31:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0A3421925;
+        Sun, 29 Sep 2019 17:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778306;
-        bh=9T7/eaUJAeVaHklqNckNEqYtv7SCBRVS9WgcTLmyNp4=;
+        s=default; t=1569778313;
+        bh=fmz5hC3yBNgy6dgTbMASSrGRRvVOVbS1qhdGVdbjLH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Roe9f3WQO5UWgeC99mVva5nP6r4X6p6oi/VDBxZ6drPVm9gFdm81IGtbONmnxNM+W
-         iJa/buD41uvOpBRhD7Ua/P8RL7SPVF5EiqSXavZNpk6+rsnTTkVKb/JJX0NZs4vB/T
-         ghdSUhqV5aB2nX4YD8O1gbckLxCoVC0d2udhNh8o=
+        b=w/gIGKn+Udn7cPkhPrlW6jyYfE5dVcHg4/DRmcG2h8ShQ5JmsD5UTGPg3pGuEL3u+
+         Qmy5PSSWKY3Jfi/jUEeNdUrDh9iVgMftL8PQvh2Fx3L5m43qld4wduZpf0ARx6Wz1/
+         Qg3GV5d6QJNa6CX+737VLQRtOYv/hkuT12VymCi4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 25/49] PCI: Add pci_info_ratelimited() to ratelimit PCI separately
-Date:   Sun, 29 Sep 2019 13:30:25 -0400
-Message-Id: <20190929173053.8400-25-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 30/49] PCI: exynos: Propagate errors for optional PHYs
+Date:   Sun, 29 Sep 2019 13:30:30 -0400
+Message-Id: <20190929173053.8400-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
 References: <20190929173053.8400-1-sashal@kernel.org>
@@ -43,53 +47,46 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Krzysztof Wilczynski <kw@linux.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 7f1c62c443a453deb6eb3515e3c05650ffe0dcf0 ]
+[ Upstream commit ddd6960087d4b45759434146d681a94bbb1c54ad ]
 
-Do not use printk_ratelimit() in drivers/pci/pci.c as it shares the rate
-limiting state with all other callers to the printk_ratelimit().
+devm_of_phy_get() can fail for a number of reasons besides probe
+deferral. It can for example return -ENOMEM if it runs out of memory as
+it tries to allocate devres structures. Propagating only -EPROBE_DEFER
+is problematic because it results in these legitimately fatal errors
+being treated as "PHY not specified in DT".
 
-Add pci_info_ratelimited() (similar to pci_notice_ratelimited() added in
-the commit a88a7b3eb076 ("vfio: Use dev_printk() when possible")) and use
-it instead of printk_ratelimit() + pci_info().
+What we really want is to ignore the optional PHYs only if they have not
+been specified in DT. devm_of_phy_get() returns -ENODEV in this case, so
+that's the special case that we need to handle. So we propagate all
+errors, except -ENODEV, so that real failures will still cause the
+driver to fail probe.
 
-Link: https://lore.kernel.org/r/20190825224616.8021-1-kw@linux.com
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Kukjin Kim <kgene@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c   | 4 ++--
- include/linux/pci.h | 3 +++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pci-exynos.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 1b27b5af3d552..1f17da3dfeac5 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -890,8 +890,8 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
+index cee5f2f590e2d..14a6ba4067fbe 100644
+--- a/drivers/pci/controller/dwc/pci-exynos.c
++++ b/drivers/pci/controller/dwc/pci-exynos.c
+@@ -465,7 +465,7 @@ static int __init exynos_pcie_probe(struct platform_device *pdev)
  
- 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
- 	dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
--	if (dev->current_state != state && printk_ratelimit())
--		pci_info(dev, "Refused to change power state, currently in D%d\n",
-+	if (dev->current_state != state)
-+		pci_info_ratelimited(dev, "Refused to change power state, currently in D%d\n",
- 			 dev->current_state);
+ 	ep->phy = devm_of_phy_get(dev, np, NULL);
+ 	if (IS_ERR(ep->phy)) {
+-		if (PTR_ERR(ep->phy) == -EPROBE_DEFER)
++		if (PTR_ERR(ep->phy) != -ENODEV)
+ 			return PTR_ERR(ep->phy);
  
- 	/*
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 82e4cd1b7ac3c..ac8a6c4e17923 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2435,4 +2435,7 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
- #define pci_notice_ratelimited(pdev, fmt, arg...) \
- 	dev_notice_ratelimited(&(pdev)->dev, fmt, ##arg)
- 
-+#define pci_info_ratelimited(pdev, fmt, arg...) \
-+	dev_info_ratelimited(&(pdev)->dev, fmt, ##arg)
-+
- #endif /* LINUX_PCI_H */
+ 		ep->phy = NULL;
 -- 
 2.20.1
 
