@@ -2,36 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CCB8BC1685
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Sep 2019 19:31:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3572BC169B
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Sep 2019 19:34:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729182AbfI2RbL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 29 Sep 2019 13:31:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41540 "EHLO mail.kernel.org"
+        id S1729357AbfI2Rbg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 29 Sep 2019 13:31:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729176AbfI2RbK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:31:10 -0400
+        id S1729332AbfI2Rbe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:31:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38913218DE;
-        Sun, 29 Sep 2019 17:31:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3363721D71;
+        Sun, 29 Sep 2019 17:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778270;
-        bh=jLqHmcGJimG4CepNm67Hh12Os147e/ycQFw2SHlJX8Y=;
+        s=default; t=1569778293;
+        bh=PxSi+cTwfa9Lu6cGhKDYSq72x622R/OQZffxCTUfG8I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2wd+74V2eF7NA02zn2lL/FM0KA+Qs9x/jyeXcWsXPjUVsHYf0jrDYlZpHOUDOzTsR
-         vCfmk8T6tMcLbwVOeCG+slKdUhHsFO18SwS8XuHomVFo68zgDYS/8k3XaxjHUALeX6
-         vrs3LhdG4IYGLdy8A0o976hqe4h1eu99tky4YUzg=
+        b=GzNPtvifzVdeKa4ZCO3lykb2oPF485QCpxRmr0wrLE7sb0nBCfvEdgOS91SM0jqR0
+         g6TZtEE9gtUpoUCsHXzauwNkQwjBRngPD/eDFMgOwZSUePA5Zhqfqtsdv81ZmiTQcm
+         XOux3iuDQb4LzFvFIGwKG6v3PCkWdGLM5esnXaUc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>,
+Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 07/49] PCI: tegra: Fix OF node reference leak
-Date:   Sun, 29 Sep 2019 13:30:07 -0400
-Message-Id: <20190929173053.8400-7-sashal@kernel.org>
+        Minghuan Lian <Minghuan.Lian@nxp.com>,
+        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 17/49] PCI: mobiveil: Fix the CPU base address setup in inbound window
+Date:   Sun, 29 Sep 2019 13:30:17 -0400
+Message-Id: <20190929173053.8400-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
 References: <20190929173053.8400-1-sashal@kernel.org>
@@ -44,99 +45,73 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Nishka Dasgupta <nishkadg.linux@gmail.com>
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-[ Upstream commit 9e38e690ace3e7a22a81fc02652fc101efb340cf ]
+[ Upstream commit df901c85cc28b538c62f6bc20b16a8bd05fcb756 ]
 
-Each iteration of for_each_child_of_node() executes of_node_put() on the
-previous node, but in some return paths in the middle of the loop
-of_node_put() is missing thus causing a reference leak.
+Current code erroneously sets-up the CPU base address through the
+parameter 'pci_addr', which is passed to initialize the CPU (AXI) base
+address of the inbound window where the controller maps the PCI address
+space into CPU physical address space; furthermore, it also truncates it
+by programming only the lower 32-bit value into the inbound CPU address
+register.
 
-Hence stash these mid-loop return values in a variable 'err' and add a
-new label err_node_put which executes of_node_put() on the previous node
-and returns 'err' on failure.
+Fix both issues by introducing a new parameter 'u64 cpu_addr' to
+initialize both lower 32-bit and upper 32-bit of the CPU physical
+base address mapping PCI inbound transactions into CPU (AXI) ones.
 
-Change mid-loop return statements to point to jump to this label to
-fix the reference leak.
-
-Issue found with Coccinelle.
-
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
-[lorenzo.pieralisi@arm.com: rewrote commit log]
+Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-tegra.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 9a917b2456f6c..673a1725ef382 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2237,14 +2237,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		err = of_pci_get_devfn(port);
- 		if (err < 0) {
- 			dev_err(dev, "failed to parse address: %d\n", err);
--			return err;
-+			goto err_node_put;
- 		}
+diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+index 672e633601c78..a45a6447b01d9 100644
+--- a/drivers/pci/controller/pcie-mobiveil.c
++++ b/drivers/pci/controller/pcie-mobiveil.c
+@@ -88,6 +88,7 @@
+ #define  AMAP_CTRL_TYPE_MASK		3
  
- 		index = PCI_SLOT(err);
- 
- 		if (index < 1 || index > soc->num_ports) {
- 			dev_err(dev, "invalid port number: %d\n", index);
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto err_node_put;
- 		}
- 
- 		index--;
-@@ -2253,12 +2254,13 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		if (err < 0) {
- 			dev_err(dev, "failed to parse # of lanes: %d\n",
- 				err);
--			return err;
-+			goto err_node_put;
- 		}
- 
- 		if (value > 16) {
- 			dev_err(dev, "invalid # of lanes: %u\n", value);
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto err_node_put;
- 		}
- 
- 		lanes |= value << (index << 3);
-@@ -2272,13 +2274,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		lane += value;
- 
- 		rp = devm_kzalloc(dev, sizeof(*rp), GFP_KERNEL);
--		if (!rp)
--			return -ENOMEM;
-+		if (!rp) {
-+			err = -ENOMEM;
-+			goto err_node_put;
-+		}
- 
- 		err = of_address_to_resource(port, 0, &rp->regs);
- 		if (err < 0) {
- 			dev_err(dev, "failed to parse address: %d\n", err);
--			return err;
-+			goto err_node_put;
- 		}
- 
- 		INIT_LIST_HEAD(&rp->list);
-@@ -2330,6 +2334,10 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		return err;
- 
- 	return 0;
-+
-+err_node_put:
-+	of_node_put(port);
-+	return err;
+ #define PAB_EXT_PEX_AMAP_SIZEN(win)	PAB_EXT_REG_ADDR(0xbef0, win)
++#define PAB_EXT_PEX_AMAP_AXI_WIN(win)	PAB_EXT_REG_ADDR(0xb4a0, win)
+ #define PAB_PEX_AMAP_AXI_WIN(win)	PAB_REG_ADDR(0x4ba4, win)
+ #define PAB_PEX_AMAP_PEX_WIN_L(win)	PAB_REG_ADDR(0x4ba8, win)
+ #define PAB_PEX_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR(0x4bac, win)
+@@ -462,7 +463,7 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
  }
  
- /*
+ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+-			       u64 pci_addr, u32 type, u64 size)
++			       u64 cpu_addr, u64 pci_addr, u32 type, u64 size)
+ {
+ 	u32 value;
+ 	u64 size64 = ~(size - 1);
+@@ -482,7 +483,10 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+ 	csr_writel(pcie, upper_32_bits(size64),
+ 		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
+ 
+-	csr_writel(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
++	csr_writel(pcie, lower_32_bits(cpu_addr),
++		   PAB_PEX_AMAP_AXI_WIN(win_num));
++	csr_writel(pcie, upper_32_bits(cpu_addr),
++		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
+ 
+ 	csr_writel(pcie, lower_32_bits(pci_addr),
+ 		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
+@@ -624,7 +628,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ 			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
+ 
+ 	/* memory inbound translation window */
+-	program_ib_windows(pcie, WIN_NUM_0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
++	program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
+ 
+ 	/* Get the I/O and memory ranges from DT */
+ 	resource_list_for_each_entry(win, &pcie->resources) {
 -- 
 2.20.1
 
