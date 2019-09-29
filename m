@@ -2,42 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D05EFC1782
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Sep 2019 19:39:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2103C1768
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Sep 2019 19:38:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730751AbfI2RgI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 29 Sep 2019 13:36:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48492 "EHLO mail.kernel.org"
+        id S1726149AbfI2Rgh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 29 Sep 2019 13:36:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729806AbfI2RgI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:36:08 -0400
+        id S1729874AbfI2Rgf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:36:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E8B021906;
-        Sun, 29 Sep 2019 17:36:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A8E621A4C;
+        Sun, 29 Sep 2019 17:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778567;
-        bh=iAIYfvUKd0hsa/vMyexzWgcBLmOy2R8kyWpTrgJgQRk=;
+        s=default; t=1569778595;
+        bh=FQnyGHniUWZ8WUPvO966/aKiYAgXuWbjg5v6j5e9C98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=caIWnFHMm4jQWbPfgnGsz7fPuHlWj5ZVQBhah806pNuJJcOp6SGJhv/r/unO1JTRq
-         Boflr8oG7kG5YrRJCdhgshERniPBHxup9qaKQLz931Mp4prH2PxjDUXC+K9wpYEvN7
-         02Q3JvKjNRH3sGA3ROWAuHNR1Fr4H53R+cLqTbVQ=
+        b=cJXYAW2RPtZD6GNWgWu63uWK6KqU5NjH1P4mynAHwJK4koaM/aTXnsjYkaEq7eVzT
+         SsGuNboTApwoUmjUximiMM0yw95euKisPXcRF1gIxuNxmBuZQ1wUPIB0BPMtE40Ev9
+         +jn3Q4JLYTyK0XXaeI32uaz2Kx0IxpWqXxSzla6s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 15/23] PCI: exynos: Propagate errors for optional PHYs
-Date:   Sun, 29 Sep 2019 13:35:25 -0400
-Message-Id: <20190929173535.9744-15-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 04/13] PCI: tegra: Fix OF node reference leak
+Date:   Sun, 29 Sep 2019 13:36:14 -0400
+Message-Id: <20190929173625.10003-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190929173535.9744-1-sashal@kernel.org>
-References: <20190929173535.9744-1-sashal@kernel.org>
+In-Reply-To: <20190929173625.10003-1-sashal@kernel.org>
+References: <20190929173625.10003-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -47,46 +44,99 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Nishka Dasgupta <nishkadg.linux@gmail.com>
 
-[ Upstream commit ddd6960087d4b45759434146d681a94bbb1c54ad ]
+[ Upstream commit 9e38e690ace3e7a22a81fc02652fc101efb340cf ]
 
-devm_of_phy_get() can fail for a number of reasons besides probe
-deferral. It can for example return -ENOMEM if it runs out of memory as
-it tries to allocate devres structures. Propagating only -EPROBE_DEFER
-is problematic because it results in these legitimately fatal errors
-being treated as "PHY not specified in DT".
+Each iteration of for_each_child_of_node() executes of_node_put() on the
+previous node, but in some return paths in the middle of the loop
+of_node_put() is missing thus causing a reference leak.
 
-What we really want is to ignore the optional PHYs only if they have not
-been specified in DT. devm_of_phy_get() returns -ENODEV in this case, so
-that's the special case that we need to handle. So we propagate all
-errors, except -ENODEV, so that real failures will still cause the
-driver to fail probe.
+Hence stash these mid-loop return values in a variable 'err' and add a
+new label err_node_put which executes of_node_put() on the previous node
+and returns 'err' on failure.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Change mid-loop return statements to point to jump to this label to
+fix the reference leak.
+
+Issue found with Coccinelle.
+
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+[lorenzo.pieralisi@arm.com: rewrote commit log]
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/dwc/pci-exynos.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/host/pci-tegra.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/dwc/pci-exynos.c b/drivers/pci/dwc/pci-exynos.c
-index ea03f1ec12a47..01acb418d1fdb 100644
---- a/drivers/pci/dwc/pci-exynos.c
-+++ b/drivers/pci/dwc/pci-exynos.c
-@@ -683,7 +683,7 @@ static int __init exynos_pcie_probe(struct platform_device *pdev)
+diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
+index 8dfccf7332411..8e101b19c4d6f 100644
+--- a/drivers/pci/host/pci-tegra.c
++++ b/drivers/pci/host/pci-tegra.c
+@@ -1898,14 +1898,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		err = of_pci_get_devfn(port);
+ 		if (err < 0) {
+ 			dev_err(dev, "failed to parse address: %d\n", err);
+-			return err;
++			goto err_node_put;
+ 		}
  
- 	ep->phy = devm_of_phy_get(dev, np, NULL);
- 	if (IS_ERR(ep->phy)) {
--		if (PTR_ERR(ep->phy) == -EPROBE_DEFER)
-+		if (PTR_ERR(ep->phy) != -ENODEV)
- 			return PTR_ERR(ep->phy);
- 		dev_warn(dev, "Use the 'phy' property. Current DT of pci-exynos was deprecated!!\n");
- 	} else
+ 		index = PCI_SLOT(err);
+ 
+ 		if (index < 1 || index > soc->num_ports) {
+ 			dev_err(dev, "invalid port number: %d\n", index);
+-			return -EINVAL;
++			err = -EINVAL;
++			goto err_node_put;
+ 		}
+ 
+ 		index--;
+@@ -1914,12 +1915,13 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		if (err < 0) {
+ 			dev_err(dev, "failed to parse # of lanes: %d\n",
+ 				err);
+-			return err;
++			goto err_node_put;
+ 		}
+ 
+ 		if (value > 16) {
+ 			dev_err(dev, "invalid # of lanes: %u\n", value);
+-			return -EINVAL;
++			err = -EINVAL;
++			goto err_node_put;
+ 		}
+ 
+ 		lanes |= value << (index << 3);
+@@ -1933,13 +1935,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		lane += value;
+ 
+ 		rp = devm_kzalloc(dev, sizeof(*rp), GFP_KERNEL);
+-		if (!rp)
+-			return -ENOMEM;
++		if (!rp) {
++			err = -ENOMEM;
++			goto err_node_put;
++		}
+ 
+ 		err = of_address_to_resource(port, 0, &rp->regs);
+ 		if (err < 0) {
+ 			dev_err(dev, "failed to parse address: %d\n", err);
+-			return err;
++			goto err_node_put;
+ 		}
+ 
+ 		INIT_LIST_HEAD(&rp->list);
+@@ -1966,6 +1970,10 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		return err;
+ 
+ 	return 0;
++
++err_node_put:
++	of_node_put(port);
++	return err;
+ }
+ 
+ /*
 -- 
 2.20.1
 
