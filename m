@@ -2,39 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A2103C1768
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Sep 2019 19:38:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03C84C1892
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Sep 2019 19:45:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726149AbfI2Rgh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 29 Sep 2019 13:36:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49204 "EHLO mail.kernel.org"
+        id S1729248AbfI2RbV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 29 Sep 2019 13:31:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729874AbfI2Rgf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:36:35 -0400
+        id S1729238AbfI2RbV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:31:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A8E621A4C;
-        Sun, 29 Sep 2019 17:36:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D791D218DE;
+        Sun, 29 Sep 2019 17:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778595;
-        bh=FQnyGHniUWZ8WUPvO966/aKiYAgXuWbjg5v6j5e9C98=;
+        s=default; t=1569778280;
+        bh=qa0mUQv2VHTLNbiFSyncuiRPcluh1c6Y3izKC1A5WRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cJXYAW2RPtZD6GNWgWu63uWK6KqU5NjH1P4mynAHwJK4koaM/aTXnsjYkaEq7eVzT
-         SsGuNboTApwoUmjUximiMM0yw95euKisPXcRF1gIxuNxmBuZQ1wUPIB0BPMtE40Ev9
-         +jn3Q4JLYTyK0XXaeI32uaz2Kx0IxpWqXxSzla6s=
+        b=k9QedUbUurHXTdRUQ6Nljn8O1vMgE33NShOBJ0q8AmhGV3YjPA/8ffzI/5fChNPis
+         JM6Wjv/YilIuVHKlUzTp/hGFtyc9wPRSUwf6YqSygRFwD17BJq6oBlx5u3nXIprAoD
+         aHA7uWzFeYX1asbzlbzT+ljVDa22a7U9TzUwDsVU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>,
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 04/13] PCI: tegra: Fix OF node reference leak
-Date:   Sun, 29 Sep 2019 13:36:14 -0400
-Message-Id: <20190929173625.10003-4-sashal@kernel.org>
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jake Oshins <jakeo@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH AUTOSEL 5.3 11/49] PCI: pci-hyperv: Fix build errors on non-SYSFS config
+Date:   Sun, 29 Sep 2019 13:30:11 -0400
+Message-Id: <20190929173053.8400-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190929173625.10003-1-sashal@kernel.org>
-References: <20190929173625.10003-1-sashal@kernel.org>
+In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
+References: <20190929173053.8400-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,99 +51,56 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Nishka Dasgupta <nishkadg.linux@gmail.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit 9e38e690ace3e7a22a81fc02652fc101efb340cf ]
+[ Upstream commit f58ba5e3f6863ea4486952698898848a6db726c2 ]
 
-Each iteration of for_each_child_of_node() executes of_node_put() on the
-previous node, but in some return paths in the middle of the loop
-of_node_put() is missing thus causing a reference leak.
+Fix build errors when building almost-allmodconfig but with SYSFS
+not set (not enabled). Fixes these build errors:
 
-Hence stash these mid-loop return values in a variable 'err' and add a
-new label err_node_put which executes of_node_put() on the previous node
-and returns 'err' on failure.
+ERROR: "pci_destroy_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
+ERROR: "pci_create_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
 
-Change mid-loop return statements to point to jump to this label to
-fix the reference leak.
+drivers/pci/slot.o is only built when SYSFS is enabled, so
+pci-hyperv.o has an implicit dependency on SYSFS.
+Make that explicit.
 
-Issue found with Coccinelle.
+Also, depending on X86 && X86_64 is not needed, so just change that
+to depend on X86_64.
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
-[lorenzo.pieralisi@arm.com: rewrote commit log]
+Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Jake Oshins <jakeo@microsoft.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Stephen Hemminger <stephen@networkplumber.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-hyperv@vger.kernel.org
+Cc: Dexuan Cui <decui@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/host/pci-tegra.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ drivers/pci/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
-index 8dfccf7332411..8e101b19c4d6f 100644
---- a/drivers/pci/host/pci-tegra.c
-+++ b/drivers/pci/host/pci-tegra.c
-@@ -1898,14 +1898,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		err = of_pci_get_devfn(port);
- 		if (err < 0) {
- 			dev_err(dev, "failed to parse address: %d\n", err);
--			return err;
-+			goto err_node_put;
- 		}
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 2ab92409210af..297bf928d6522 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -181,7 +181,7 @@ config PCI_LABEL
  
- 		index = PCI_SLOT(err);
- 
- 		if (index < 1 || index > soc->num_ports) {
- 			dev_err(dev, "invalid port number: %d\n", index);
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto err_node_put;
- 		}
- 
- 		index--;
-@@ -1914,12 +1915,13 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		if (err < 0) {
- 			dev_err(dev, "failed to parse # of lanes: %d\n",
- 				err);
--			return err;
-+			goto err_node_put;
- 		}
- 
- 		if (value > 16) {
- 			dev_err(dev, "invalid # of lanes: %u\n", value);
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto err_node_put;
- 		}
- 
- 		lanes |= value << (index << 3);
-@@ -1933,13 +1935,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		lane += value;
- 
- 		rp = devm_kzalloc(dev, sizeof(*rp), GFP_KERNEL);
--		if (!rp)
--			return -ENOMEM;
-+		if (!rp) {
-+			err = -ENOMEM;
-+			goto err_node_put;
-+		}
- 
- 		err = of_address_to_resource(port, 0, &rp->regs);
- 		if (err < 0) {
- 			dev_err(dev, "failed to parse address: %d\n", err);
--			return err;
-+			goto err_node_put;
- 		}
- 
- 		INIT_LIST_HEAD(&rp->list);
-@@ -1966,6 +1970,10 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		return err;
- 
- 	return 0;
-+
-+err_node_put:
-+	of_node_put(port);
-+	return err;
- }
- 
- /*
+ config PCI_HYPERV
+         tristate "Hyper-V PCI Frontend"
+-        depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
++        depends on X86_64 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
+         help
+           The PCI device frontend driver allows the kernel to import arbitrary
+           PCI devices from a PCI backend to support PCI driver domains.
 -- 
 2.20.1
 
