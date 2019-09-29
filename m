@@ -2,37 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3572BC169B
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Sep 2019 19:34:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3C62C16A1
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Sep 2019 19:34:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbfI2Rbg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 29 Sep 2019 13:31:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41992 "EHLO mail.kernel.org"
+        id S1729447AbfI2Rbr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 29 Sep 2019 13:31:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729332AbfI2Rbe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:31:34 -0400
+        id S1729443AbfI2Rbr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:31:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3363721D71;
-        Sun, 29 Sep 2019 17:31:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B59021925;
+        Sun, 29 Sep 2019 17:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778293;
-        bh=PxSi+cTwfa9Lu6cGhKDYSq72x622R/OQZffxCTUfG8I=;
+        s=default; t=1569778306;
+        bh=9T7/eaUJAeVaHklqNckNEqYtv7SCBRVS9WgcTLmyNp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GzNPtvifzVdeKa4ZCO3lykb2oPF485QCpxRmr0wrLE7sb0nBCfvEdgOS91SM0jqR0
-         g6TZtEE9gtUpoUCsHXzauwNkQwjBRngPD/eDFMgOwZSUePA5Zhqfqtsdv81ZmiTQcm
-         XOux3iuDQb4LzFvFIGwKG6v3PCkWdGLM5esnXaUc=
+        b=Roe9f3WQO5UWgeC99mVva5nP6r4X6p6oi/VDBxZ6drPVm9gFdm81IGtbONmnxNM+W
+         iJa/buD41uvOpBRhD7Ua/P8RL7SPVF5EiqSXavZNpk6+rsnTTkVKb/JJX0NZs4vB/T
+         ghdSUhqV5aB2nX4YD8O1gbckLxCoVC0d2udhNh8o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Minghuan Lian <Minghuan.Lian@nxp.com>,
-        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
+Cc:     Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 17/49] PCI: mobiveil: Fix the CPU base address setup in inbound window
-Date:   Sun, 29 Sep 2019 13:30:17 -0400
-Message-Id: <20190929173053.8400-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 25/49] PCI: Add pci_info_ratelimited() to ratelimit PCI separately
+Date:   Sun, 29 Sep 2019 13:30:25 -0400
+Message-Id: <20190929173053.8400-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
 References: <20190929173053.8400-1-sashal@kernel.org>
@@ -45,73 +43,53 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+From: Krzysztof Wilczynski <kw@linux.com>
 
-[ Upstream commit df901c85cc28b538c62f6bc20b16a8bd05fcb756 ]
+[ Upstream commit 7f1c62c443a453deb6eb3515e3c05650ffe0dcf0 ]
 
-Current code erroneously sets-up the CPU base address through the
-parameter 'pci_addr', which is passed to initialize the CPU (AXI) base
-address of the inbound window where the controller maps the PCI address
-space into CPU physical address space; furthermore, it also truncates it
-by programming only the lower 32-bit value into the inbound CPU address
-register.
+Do not use printk_ratelimit() in drivers/pci/pci.c as it shares the rate
+limiting state with all other callers to the printk_ratelimit().
 
-Fix both issues by introducing a new parameter 'u64 cpu_addr' to
-initialize both lower 32-bit and upper 32-bit of the CPU physical
-base address mapping PCI inbound transactions into CPU (AXI) ones.
+Add pci_info_ratelimited() (similar to pci_notice_ratelimited() added in
+the commit a88a7b3eb076 ("vfio: Use dev_printk() when possible")) and use
+it instead of printk_ratelimit() + pci_info().
 
-Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Link: https://lore.kernel.org/r/20190825224616.8021-1-kw@linux.com
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-mobiveil.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/pci/pci.c   | 4 ++--
+ include/linux/pci.h | 3 +++
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index 672e633601c78..a45a6447b01d9 100644
---- a/drivers/pci/controller/pcie-mobiveil.c
-+++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -88,6 +88,7 @@
- #define  AMAP_CTRL_TYPE_MASK		3
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 1b27b5af3d552..1f17da3dfeac5 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -890,8 +890,8 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
  
- #define PAB_EXT_PEX_AMAP_SIZEN(win)	PAB_EXT_REG_ADDR(0xbef0, win)
-+#define PAB_EXT_PEX_AMAP_AXI_WIN(win)	PAB_EXT_REG_ADDR(0xb4a0, win)
- #define PAB_PEX_AMAP_AXI_WIN(win)	PAB_REG_ADDR(0x4ba4, win)
- #define PAB_PEX_AMAP_PEX_WIN_L(win)	PAB_REG_ADDR(0x4ba8, win)
- #define PAB_PEX_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR(0x4bac, win)
-@@ -462,7 +463,7 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
- }
+ 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+ 	dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
+-	if (dev->current_state != state && printk_ratelimit())
+-		pci_info(dev, "Refused to change power state, currently in D%d\n",
++	if (dev->current_state != state)
++		pci_info_ratelimited(dev, "Refused to change power state, currently in D%d\n",
+ 			 dev->current_state);
  
- static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
--			       u64 pci_addr, u32 type, u64 size)
-+			       u64 cpu_addr, u64 pci_addr, u32 type, u64 size)
- {
- 	u32 value;
- 	u64 size64 = ~(size - 1);
-@@ -482,7 +483,10 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
- 	csr_writel(pcie, upper_32_bits(size64),
- 		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
+ 	/*
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 82e4cd1b7ac3c..ac8a6c4e17923 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2435,4 +2435,7 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
+ #define pci_notice_ratelimited(pdev, fmt, arg...) \
+ 	dev_notice_ratelimited(&(pdev)->dev, fmt, ##arg)
  
--	csr_writel(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
-+	csr_writel(pcie, lower_32_bits(cpu_addr),
-+		   PAB_PEX_AMAP_AXI_WIN(win_num));
-+	csr_writel(pcie, upper_32_bits(cpu_addr),
-+		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
- 
- 	csr_writel(pcie, lower_32_bits(pci_addr),
- 		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
-@@ -624,7 +628,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
- 			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
- 
- 	/* memory inbound translation window */
--	program_ib_windows(pcie, WIN_NUM_0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
-+	program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
- 
- 	/* Get the I/O and memory ranges from DT */
- 	resource_list_for_each_entry(win, &pcie->resources) {
++#define pci_info_ratelimited(pdev, fmt, arg...) \
++	dev_info_ratelimited(&(pdev)->dev, fmt, ##arg)
++
+ #endif /* LINUX_PCI_H */
 -- 
 2.20.1
 
