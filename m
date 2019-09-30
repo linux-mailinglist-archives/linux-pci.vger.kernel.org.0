@@ -2,122 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CA8BBC26D0
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 22:41:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90E18C2755
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 22:53:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbfI3Uky (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Sep 2019 16:40:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35636 "EHLO mail.kernel.org"
+        id S1730071AbfI3UxI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Sep 2019 16:53:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:34228 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729180AbfI3Uky (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:40:54 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D12E224D2;
-        Mon, 30 Sep 2019 20:34:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569875651;
-        bh=Ia/sE7OsRwGmDutroMOdVbd3eXtqQ6ome2j9iwgAtQM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=W8TiKyqeBZc6pJ4n/x3zNcBQ+zNVfG5Jqyt7GuWexVjswNJ94IS4AZhlWNK6HpKgZ
-         hmJOu7FoPUwtNXAkVc6swG5WbDsCADl2YqGyc0VeWk4EYwJ43MW0EUgjrMfxUZhkUR
-         c7xsmMQIRDIEynQWykeEtOGczMovqRvvNWA8y03E=
-Date:   Mon, 30 Sep 2019 15:34:10 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     George Cherian <george.cherian@marvell.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shannon.zhao@linux.alibaba.com" <shannon.zhao@linux.alibaba.com>,
-        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
-        George Cherian <gcherian@marvell.com>,
-        Vadim Lomovtsev <Vadim.Lomovtsev@marvell.com>,
-        Manish Jaggi <mjaggi@caviumnetworks.com>
-Subject: Re: [PATCH] PCI: Enhance the ACS quirk for Cavium devices
-Message-ID: <20190930203409.GA195851@google.com>
+        id S1727118AbfI3UxI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Sep 2019 16:53:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68DD828;
+        Mon, 30 Sep 2019 12:36:59 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D50BB3F534;
+        Mon, 30 Sep 2019 12:36:58 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 20:36:57 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Peter Maydell <peter.maydell@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, Robin.Murphy@arm.com
+Subject: Re: [PATCH 05/11] PCI: versatile: Use
+ pci_parse_request_of_pci_ranges()
+Message-ID: <20190930193655.GH42880@e119886-lin.cambridge.arm.com>
+References: <20190924214630.12817-1-robh@kernel.org>
+ <20190924214630.12817-6-robh@kernel.org>
+ <20190925103752.GS9720@e119886-lin.cambridge.arm.com>
+ <CAL_JsqJW2t3F6HdKqcHguYLLiYQ6XWOsQbY-TFsDXhrDjjszew@mail.gmail.com>
+ <CAFEAcA_Lu73n9z-fyWNLvnxXyk-JcUbONHE5x06Uh9Upk4MVbw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190919024319.GA8792@dc5-eodlnx05.marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAFEAcA_Lu73n9z-fyWNLvnxXyk-JcUbONHE5x06Uh9Upk4MVbw@mail.gmail.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Vadim, Manish]
-
-On Thu, Sep 19, 2019 at 02:43:34AM +0000, George Cherian wrote:
-> Enhance the ACS quirk for Cavium Processors. Add the root port
-> vendor ID's in an array and use the same in match function.
-> For newer devices add the vendor ID's in the array so that the
-> match function is simpler.
+On Mon, Sep 30, 2019 at 05:56:51PM +0100, Peter Maydell wrote:
+> On Thu, 26 Sep 2019 at 22:45, Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Wed, Sep 25, 2019 at 5:37 AM Andrew Murray <andrew.murray@arm.com> wrote:
+> > >
+> > > On Tue, Sep 24, 2019 at 04:46:24PM -0500, Rob Herring wrote:
+> > > > Convert ARM Versatile host bridge to use the common
+> > > > pci_parse_request_of_pci_ranges().
+> > > >
+> > > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > > ---
 > 
-> Signed-off-by: George Cherian <george.cherian@marvell.com>
-> ---
->  drivers/pci/quirks.c | 28 +++++++++++++++++++---------
->  1 file changed, 19 insertions(+), 9 deletions(-)
+> > > >  static int versatile_pci_probe(struct platform_device *pdev)
+> > > >  {
+> > > >       struct device *dev = &pdev->dev;
+> > > >       struct resource *res;
+> > > > -     int ret, i, myslot = -1;
+> > > > +     struct resource_entry *entry;
+> > > > +     int ret, i, myslot = -1, mem = 0;
+> > >
+> > > I think 'mem' should be initialised to 1, at least that's what the original
+> > > code did. However I'm not sure why it should start from 1.
+> >
+> > The original code I moved from arch/arm had 32MB @ 0x0c000000 called
+> > "PCI unused" which was requested with request_resource(), but never
+> > provided to the PCI core. Otherwise, I kept the setup the same. No one
+> > has complained in 4 years, though I'm not sure anyone would have
+> > noticed if I just deleted PCI support...
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 44c4ae1abd00..64deeaddd51c 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4241,17 +4241,27 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
->  #endif
->  }
->  
-> +static const u16 pci_quirk_cavium_acs_ids[] = {
-> +	/* CN88xx family of devices */
-> +	0xa180, 0xa170,
-> +	/* CN99xx family of devices */
-> +	0xaf84,
-> +	/* CN11xxx family of devices */
-> +	0xb884,
-> +};
-> +
->  static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
->  {
-> -	/*
-> -	 * Effectively selects all downstream ports for whole ThunderX 1
-> -	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
-> -	 * bits of device ID are used to indicate which subdevice is used
-> -	 * within the SoC.
-> -	 */
-> -	return (pci_is_pcie(dev) &&
-> -		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
-> -		((dev->device & 0xf800) == 0xa000));
-> +	int i;
-> +
-> +	if (!pci_is_pcie(dev) || pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
-> +		return false;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(pci_quirk_cavium_acs_ids); i++)
-> +		if (pci_quirk_cavium_acs_ids[i] == dev->device)
-
-I'm a little skeptical of this because the previous test:
-
-  (dev->device & 0xf800) == 0xa000
-
-could match *many* devices, but of those, the new code only matches two
-(0xa180, 0xa170).
-
-And the comment says the new code matches the CN99xx and CN11xxx
-*families*, but it only matches a single device ID for each, which
-makes me think there may be more devices to come.
-
-Maybe this is all what you want, but please confirm.
-
-The commit log should be explicit that this adds CN99xx and CN11xxx,
-which previously were not matched.
-
-This looks like stable material?
-
-> +			return true;
-> +
-> +	return false;
->  }
->  
->  static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
-> -- 
-> 2.17.1
+> Yes, QEMU users will notice if you drop or break PCI support :-)
+> I don't think anybody is using real hardware PCI though.
 > 
+> Anyway, the 'mem' indexes here matter because you're passing
+> them to PCI_IMAP() and PCI_SMAP(), which are writing to
+> hardware registers. If you write to PCI_IMAP0 when we
+> were previously writing to PCI_IMAP1 then suddenly you're
+> not configuring the behaviour for accesses to the PCI
+> window that's at CPU physaddr 0x50000000, you're configuring
+> the window that's at CPU physaddr 0x44000000, which is
+> entirely different (and notably is smaller, being only
+> 0x0c000000 in size rather than 0x10000000).
+> 
+> If this is supposed to be a no-behaviour-change refactor
+> then it would probably be a good test to check that we're
+> writing exactly the same values to the hardware registers
+> on the device as we were before the change.
+
+As far as I understand...
+
+According to the device tree arch/arm/boot/dts/versatile-pb.dts we describe
+a 1:1 mapping between CPU and PCI addresses for the IORESOURCE_MEM resources:
+
+ ranges = <0x01000000 0 0x00000000 0x43000000 0 0x00010000   /* downstream I/O */
+           0x02000000 0 0x50000000 0x50000000 0 0x10000000   /* non-prefetchable memory */
+           0x42000000 0 0x60000000 0x60000000 0 0x10000000>; /* prefetchable memory */
+
+The existing code achieves this by shifting the CPU address and writing 0x5 to
+PCI_IMAP(1) and 0x6 >> 28 to PCI_IMAP(2). This value represents the top 4 bits of
+the outgoing PCI address, with the remainder of the bits as written to the AHB
+window. The hardware has three windows at 0x44000000, 0x50000000 and 0x60000000
+which relate to PCI_IMAP0, 1 and 2 respectively.
+
+Therefore the existing code creates an effective 1:1 mapping as follows:
+
+CPU 0x50000000 => PCI 0x50000000
+CPU 0x60000000 => PCI 0x60000000
+
+If we were to instead write 0x5 to PCI_IMAP(0) and 0x6 to PCI_IMAP(1), as per
+this patch - then we end up with an effective broken mapping of:
+
+CPU 0x50000000 => PCI 0x60000000
+CPU 0x60000000 => PCI unset
+
+Therefore I'd suggest we preserve the existing numbering and change mem back to
+1.
+
+More information about the hardware can be foud here:
+
+http://arminfo.emea.arm.com/help/index.jsp?topic=/com.arm.doc.dui0224i/Bbajjbce.html
+
+Thanks,
+
+Andrew Murray
+
+> 
+> thanks
+> -- PMM
