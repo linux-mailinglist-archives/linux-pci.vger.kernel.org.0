@@ -2,112 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A0980C1D6F
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 10:53:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FB4FC1D81
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 10:56:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbfI3IxU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Sep 2019 04:53:20 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:44872 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726008AbfI3IxT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Sep 2019 04:53:19 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 9F0FA42EF7;
-        Mon, 30 Sep 2019 08:53:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:content-language:content-type
-        :content-type:in-reply-to:mime-version:user-agent:date:date
-        :message-id:from:from:references:subject:subject:received
-        :received:received; s=mta-01; t=1569833597; x=1571647998; bh=bvq
-        AspNSXAgm7+a1tixwXZ+YfzxRVIUDNVFojutkECQ=; b=mPQ30gUrZp5J37Gjnmu
-        BIpO8rgw799IeQkWmFHi7Z/bTsRtOhMJChVKpSPm1kwYSKDJHU0ccoYYDRJhUrWg
-        /RWqE/r1P17aZyuFgX62qkLImisWJAeQXo8Dpo4j/1+55er+ndg7QHzcK7YYxSj5
-        qR1h1Vcp6ljRdGcu10CeNiM0=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id PBEtCfK5zJw8; Mon, 30 Sep 2019 11:53:17 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 55057411F8;
-        Mon, 30 Sep 2019 11:53:17 +0300 (MSK)
-Received: from [172.17.15.60] (172.17.15.60) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Mon, 30
- Sep 2019 11:53:16 +0300
-Subject: Re: [PATCH v5 01/23] PCI: Fix race condition in
- pci_enable/disable_device()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux@yadro.com>, Srinath Mannam <srinath.mannam@broadcom.com>,
-        Marta Rybczynska <mrybczyn@kalray.eu>
-References: <20190927215919.GA54330@google.com>
-From:   Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
-Message-ID: <00e9de2a-25f1-32ad-601b-e0c4d29f9799@yadro.com>
-Date:   Mon, 30 Sep 2019 11:53:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        id S1730217AbfI3I4M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Sep 2019 04:56:12 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45315 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730110AbfI3I4M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Sep 2019 04:56:12 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r5so10231925wrm.12;
+        Mon, 30 Sep 2019 01:56:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6fftjP5bUCArKKdB+VCYiLDFrQQtx2KZIvWcOKzDCTo=;
+        b=pkVnTk26YezVaP0QB6r6YgludHu532Mk2WYVTZVUK5YERoR7Cre0MLCfdUEVXwksmh
+         E/A4G9ZmWoZh3DyCXN9U6nYx4NR37V44cagnEPtHckwjRORmK3YYs+wVNOYpZL2eMn1w
+         i5HJrQU9kaoZshin+US3ypkKy7lvUt8lO3Gv3+su4rGmlNEABHsqTVGlV4C9T/XPHSh5
+         ETyK1J5wzAaKdV+AllRthATj0+wUpz8OAV4WEeQ/DwBbg2STqCpna3dJwDaHKtn27PGV
+         NBZodjacGxxe9x27WUBsxLENR8tfy17IYHp7oVr4X4sa21WDcqyH/VFvHo6XEhdQBenD
+         5m6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6fftjP5bUCArKKdB+VCYiLDFrQQtx2KZIvWcOKzDCTo=;
+        b=lYOX3TVsvBBVjG/g3mm6WxoNZLbvGKUTN5NC/ndR9VAHQ+2Uc3fLBDHCj4/fow1IDv
+         +FOXL1CsuRK0O9uoHaUCQf16CiMBtrK4/qdUqMZf06I4Iin/jEEnuIwrJ4dCXhFWd4dC
+         0kngCseNP0QEtaXvb/j3XxId9tvrLjHNga+jDewt451v2T9lF00Fzajj2FOT5OyROFxG
+         G5EI3/8TL4vZYat1uT0a9fvoH6Hflx8TyWGQUjIgqzbg/q9Qf2gO0Y6KzMqLhAWcMfMf
+         2eJfS1TiKKv4ZcrS+/1XO48PonOMsVSHSyykew1tUFELWxoK/5Fzamb+Q1AULNcF5kB/
+         izxw==
+X-Gm-Message-State: APjAAAUH7ZrO+LLWR3sbnHFqqkl/leV7xT3XIO0lDP7ZAWCmyUsfb1ym
+        LT8Z0O1iC7AmK4YgaKBsrkA=
+X-Google-Smtp-Source: APXvYqwWawM80XtnOjhYYvAiRzsk3JHKSsZXVdwQfDHIyltCNfgUlhCDMIJC6B8fbpk/Zl4xuFyAIA==
+X-Received: by 2002:a5d:4a8a:: with SMTP id o10mr5386140wrq.201.1569833769122;
+        Mon, 30 Sep 2019 01:56:09 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id e30sm23469234wra.48.2019.09.30.01.56.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 01:56:07 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 10:56:06 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Oza Pawandeep <oza.oza@broadcom.com>,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 00/11] of: dma-ranges fixes and improvements
+Message-ID: <20190930085606.GG1518582@ulmo>
+References: <20190927002455.13169-1-robh@kernel.org>
+ <CAK8P3a0oct0EOMi5t4BmpgdkiBM+LjC+2pTST4hcvNCa3MGLmw@mail.gmail.com>
+ <20190930082055.GA21971@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20190927215919.GA54330@google.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.17.15.60]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7lMq7vMTJT4tNk0a"
+Content-Disposition: inline
+In-Reply-To: <20190930082055.GA21971@infradead.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Bjorn,
 
-On 9/28/19 12:59 AM, Bjorn Helgaas wrote:
-> On Fri, Aug 16, 2019 at 07:50:39PM +0300, Sergey Miroshnichenko wrote:
->> This is a yet another approach to fix an old [1-2] concurrency issue, when:
->>   - two or more devices are being hot-added into a bridge which was
->>     initially empty;
->>   - a bridge with two or more devices is being hot-added;
->>   - during boot, if BIOS/bootloader/firmware doesn't pre-enable bridges.
->>
->> The problem is that a bridge is reported as enabled before the MEM/IO bits
->> are actually written to the PCI_COMMAND register, so another driver thread
->> starts memory requests through the not-yet-enabled bridge:
->>
->>   CPU0                                        CPU1
->>
->>   pci_enable_device_mem()                     pci_enable_device_mem()
->>     pci_enable_bridge()                         pci_enable_bridge()
->>       pci_is_enabled()
->>         return false;
->>       atomic_inc_return(enable_cnt)
->>       Start actual enabling the bridge
->>       ...                                         pci_is_enabled()
->>       ...                                           return true;
->>       ...                                     Start memory requests <-- FAIL
->>       ...
->>       Set the PCI_COMMAND_MEMORY bit <-- Must wait for this
->>
->> Protect the pci_enable/disable_device() and pci_enable_bridge(), which is
->> similar to the previous solution from commit 40f11adc7cd9 ("PCI: Avoid race
->> while enabling upstream bridges"), but adding a per-device mutexes and
->> preventing the dev->enable_cnt from from incrementing early.
-> 
-> This isn't directly related to the movable BARs functionality; is it
-> here because you see the problem more frequently when moving BARs?
-> 
+--7lMq7vMTJT4tNk0a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-First two patches of this series (including this one) are fixes for
-the boot and for the hotplug, not related to movable BARs.
+On Mon, Sep 30, 2019 at 01:20:55AM -0700, Christoph Hellwig wrote:
+> On Sun, Sep 29, 2019 at 01:16:20PM +0200, Arnd Bergmann wrote:
+> > On a semi-related note, Thierry asked about one aspect of the dma-ranges
+> > property recently, which is the behavior of dma_set_mask() and related
+> > functions when a driver sets a mask that is larger than the memory
+> > area in the bus-ranges but smaller than the available physical RAM.
+> > As I understood Thierry's problem and the current code, the generic
+> > dma_set_mask() will either reject the new mask entirely or override
+> > the mask set by of_dma_configure, but it fails to set a correct mask
+> > within the limitations of the parent bus in this case.
+>=20
+> There days dma_set_mask will only reject a mask if it is too small
+> to be supported by the hardware.  Larger than required masks are now
+> always accepted.
 
-Before these fixes, we were suffering from this issue on PowerNV until
-commit db2173198b9513f7add8009f225afa1f1c79bcc6 "powerpc/powernv/pci:
-Work around races in PCI bridge enabling" was backported to distros:
-NVMEs randomly failed to start during system boot. So we've tested the
-fixes with that commit reverted.
+Summarizing why this came up: the memory subsystem on Tegra194 has a
+mechanism controlled by bit 39 of physical addresses. This is used to
+support two variants of sector ordering for block linear formats. The
+GPU uses a slightly different ordering than other MSS clients, so the
+drivers have to set this bit depending on who they interoperate with.
 
-On x86 the BIOS does pre-enable the bridges, but they were still prone
-to races when hot-added or was initially "empty".
+I was running into this as I was adding support for IOMMU support for
+the Ethernet controller on Tegra194. The controller has a HW feature
+register that contains how many address bits it supports. This is 40
+for Tegra194, corresponding to the number of address bits to the MSS.
+Without IOMMU support that's not a problem because there are no systems
+with 40 bits of system memory. However, if we enable IOMMU support, the
+DMA/IOMMU code will allocate from the top of a 48-bit (constrained to
+40 bits via the DMA mask) input address space. This causes bit 39 to be
+set, which in turn will make the MSS reorder sectors and break network
+communications.
 
-Serge
+Since this reordering takes place at the MSS level, this applies to all
+MSS clients. Most of these clients always want bit 39 to be 0, whereas
+the clients that can and want to make use of the reordering always want
+bit 39 to be under their control, so they can control in a fine-grained
+way when to set it.
+
+This means that effectively all MSS clients can only address 39 bits, so
+instead of hard-coding that for each driver I thought it'd make sense to
+have a central place to configure this, so that all devices by default
+are restricted to 39-bit addressing. However, with the current DMA API
+implementation this causes a problem because the default 39-bit DMA mask
+would get overwritten by the driver (as in the example of the Ethernet
+controller setting a 40-bit DMA mask because that's what the hardware
+supports).
+
+I realize that this is somewhat exotic. On one hand it is correct for a
+driver to say that the hardware supports 40-bit addressing (i.e. the
+Ethernet controller can address bit 39), but from a system integration
+point of view, using bit 39 is wrong, except in a very restricted set of
+cases.
+
+If I understand correctly, describing this with a dma-ranges property is
+the right thing to do, but it wouldn't work with the current
+implementation because drivers can still override a lower DMA mask with
+a higher one.
+
+Thierry
+
+--7lMq7vMTJT4tNk0a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2RwyMACgkQ3SOs138+
+s6HYvBAAiJWcvv5xcJncOs7e0ol6y9Mk77w/r0hKJYeifVE572SDCmbwK8orp3zk
+P0DcZYqws8pYA0kK38w8FJO6ptv754PoJ7Gp8Io9SIsbrvY9YFUFZAK7OQ3SExGx
+LKwNoEeKNM5ceP0HFonHM2YTTuKL7soYqLm/4fTiOTACT2c42pRTLqonIXL73vxE
+gV3/ssj+hfwNkORM3vSqgiC14re/1fi7uzG5YLjhe1maobqJ8hVUD8rfZfKIcE17
+XFPHbBo8wILS6P6vYrrw8LJLsUNJMKrmqlxCYaAhuEQaosUatdHp9/KdDXOLZDxV
+NLu2jOD4RZ46PC8P6p4E9ZgEuAJMrh5NydXMdSuGIbACndvQchObUEWbHEP8W8Xi
+Cr70CmMxfFDGoqKO99X/07jvG0D/iEmF2CwQPO0QKaIDZPYN0weoIbcEm9r1KEAm
+XCvXQl80jaMmZH2xpqeSV+i1wO0dNpPZ0MZUutXqjIyE189WvrcHsTk8HAJIcbj+
+spwwo11tAR/x2t3WIgcrAHVbSEXUuK6hNwpeC44HBcQbWPOxa1sSJvNeYq0z/kPb
+YuYY9NvQaZBX87qVunbANq05ev4cK2oeFbZjkWHKKhdBsb4rcaUvHWCQOpgTL0wQ
+Sy9ckOP6goBXLArIFmTkuDyGxoNG5mqrcPGk1duSBP8nzDQvcVw=
+=Iybe
+-----END PGP SIGNATURE-----
+
+--7lMq7vMTJT4tNk0a--
