@@ -2,107 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 25E9FC2408
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 17:13:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6074C2415
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 17:16:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731748AbfI3PNu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Sep 2019 11:13:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:56632 "EHLO foss.arm.com"
+        id S1731504AbfI3PQg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Sep 2019 11:16:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:56708 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731504AbfI3PNu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Sep 2019 11:13:50 -0400
+        id S1730780AbfI3PQg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Sep 2019 11:16:36 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C996E1000;
-        Mon, 30 Sep 2019 08:13:49 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFC251000;
+        Mon, 30 Sep 2019 08:16:35 -0700 (PDT)
 Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 40F823F706;
-        Mon, 30 Sep 2019 08:13:49 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 16:13:47 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 46A1D3F706;
+        Mon, 30 Sep 2019 08:16:35 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 16:16:33 +0100
 From:   Andrew Murray <andrew.murray@arm.com>
 To:     Rob Herring <robh@kernel.org>
 Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ley Foon Tan <lftan@altera.com>, rfi@lists.rocketboards.org,
         "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 02/11] PCI: altera: Use pci_parse_request_of_pci_ranges()
-Message-ID: <20190930151346.GD42880@e119886-lin.cambridge.arm.com>
+Subject: Re: [PATCH 05/11] PCI: versatile: Use
+ pci_parse_request_of_pci_ranges()
+Message-ID: <20190930151633.GE42880@e119886-lin.cambridge.arm.com>
 References: <20190924214630.12817-1-robh@kernel.org>
- <20190924214630.12817-3-robh@kernel.org>
- <20190925102423.GR9720@e119886-lin.cambridge.arm.com>
- <CAL_JsqKN709cOLtDLdKXmDzeNLYtGekMT2BiZic4x45UopenwA@mail.gmail.com>
+ <20190924214630.12817-6-robh@kernel.org>
+ <20190925103752.GS9720@e119886-lin.cambridge.arm.com>
+ <CAL_JsqJW2t3F6HdKqcHguYLLiYQ6XWOsQbY-TFsDXhrDjjszew@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqKN709cOLtDLdKXmDzeNLYtGekMT2BiZic4x45UopenwA@mail.gmail.com>
+In-Reply-To: <CAL_JsqJW2t3F6HdKqcHguYLLiYQ6XWOsQbY-TFsDXhrDjjszew@mail.gmail.com>
 User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 07:33:35AM -0500, Rob Herring wrote:
-> On Wed, Sep 25, 2019 at 5:24 AM Andrew Murray <andrew.murray@arm.com> wrote:
+On Thu, Sep 26, 2019 at 04:44:31PM -0500, Rob Herring wrote:
+> On Wed, Sep 25, 2019 at 5:37 AM Andrew Murray <andrew.murray@arm.com> wrote:
 > >
-> > On Tue, Sep 24, 2019 at 04:46:21PM -0500, Rob Herring wrote:
-> > > Convert altera host bridge to use the common
+> > On Tue, Sep 24, 2019 at 04:46:24PM -0500, Rob Herring wrote:
+> > > Convert ARM Versatile host bridge to use the common
 > > > pci_parse_request_of_pci_ranges().
 > > >
-> > > Cc: Ley Foon Tan <lftan@altera.com>
 > > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > Cc: rfi@lists.rocketboards.org
 > > > Signed-off-by: Rob Herring <robh@kernel.org>
 > > > ---
-> 
-> > > @@ -833,9 +800,8 @@ static int altera_pcie_probe(struct platform_device *pdev)
-> > >               return ret;
-> > >       }
+> > >  drivers/pci/controller/pci-versatile.c | 62 +++++---------------------
+> > >  1 file changed, 11 insertions(+), 51 deletions(-)
 > > >
-> > > -     INIT_LIST_HEAD(&pcie->resources);
+> > > diff --git a/drivers/pci/controller/pci-versatile.c b/drivers/pci/controller/pci-versatile.c
+> > > index f59ad2728c0b..237b1abb26f2 100644
+> > > --- a/drivers/pci/controller/pci-versatile.c
+> > > +++ b/drivers/pci/controller/pci-versatile.c
+> > > @@ -62,60 +62,12 @@ static struct pci_ops pci_versatile_ops = {
+> > >       .write  = pci_generic_config_write,
+> > >  };
+> > >
+> > > -static int versatile_pci_parse_request_of_pci_ranges(struct device *dev,
+> > > -                                                  struct list_head *res)
+> > > -{
+> > > -     int err, mem = 1, res_valid = 0;
+> > > -     resource_size_t iobase;
+> > > -     struct resource_entry *win, *tmp;
 > > > -
-> > > -     ret = altera_pcie_parse_request_of_pci_ranges(pcie);
-> > > +     ret = pci_parse_request_of_pci_ranges(dev, &pcie->resources,
+> > > -     err = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff, res, &iobase);
+> > > -     if (err)
+> > > -             return err;
+> > > -
+> > > -     err = devm_request_pci_bus_resources(dev, res);
+> > > -     if (err)
+> > > -             goto out_release_res;
+> > > -
+> > > -     resource_list_for_each_entry_safe(win, tmp, res) {
+> > > -             struct resource *res = win->res;
+> > > -
+> > > -             switch (resource_type(res)) {
+> > > -             case IORESOURCE_IO:
+> > > -                     err = devm_pci_remap_iospace(dev, res, iobase);
+> > > -                     if (err) {
+> > > -                             dev_warn(dev, "error %d: failed to map resource %pR\n",
+> > > -                                      err, res);
+> > > -                             resource_list_destroy_entry(win);
+> > > -                     }
+> > > -                     break;
+> > > -             case IORESOURCE_MEM:
+> > > -                     res_valid |= !(res->flags & IORESOURCE_PREFETCH);
+> > > -
+> > > -                     writel(res->start >> 28, PCI_IMAP(mem));
+> > > -                     writel(PHYS_OFFSET >> 28, PCI_SMAP(mem));
+> > > -                     mem++;
+> > > -
+> > > -                     break;
+> > > -             }
+> > > -     }
+> > > -
+> > > -     if (res_valid)
+> > > -             return 0;
+> > > -
+> > > -     dev_err(dev, "non-prefetchable memory resource required\n");
+> > > -     err = -EINVAL;
+> > > -
+> > > -out_release_res:
+> > > -     pci_free_resource_list(res);
+> > > -     return err;
+> > > -}
+> > > -
+> > >  static int versatile_pci_probe(struct platform_device *pdev)
+> > >  {
+> > >       struct device *dev = &pdev->dev;
+> > >       struct resource *res;
+> > > -     int ret, i, myslot = -1;
+> > > +     struct resource_entry *entry;
+> > > +     int ret, i, myslot = -1, mem = 0;
 > >
-> > Does it matter that we now map any given IO ranges whereas we didn't
-> > previously?
-> >
-> > As far as I can tell there are no users that pass an IO range, if they
-> > did then with the existing code the probe would fail and they'd get
-> > a "I/O range found for %pOF. Please provide an io_base pointer...".
-> > However with the new code if any IO range was given (which would
-> > probably represent a misconfiguration), then we'd proceed to map the
-> > IO range. When that IO is used, who knows what would happen.
+> > I think 'mem' should be initialised to 1, at least that's what the original
+> > code did. However I'm not sure why it should start from 1.
 > 
-> Yeah, I'm assuming that the DT doesn't have an IO range if IO is not
-> supported. IMO, it is not the kernel's job to validate the DT.
+> The original code I moved from arch/arm had 32MB @ 0x0c000000 called
+> "PCI unused" which was requested with request_resource(), but never
+> provided to the PCI core. Otherwise, I kept the setup the same. No one
+> has complained in 4 years, though I'm not sure anyone would have
+> noticed if I just deleted PCI support...
 
-Sure. Is it worth mentioning in the commit message this subtle change
-in behaviour?
+OK, well it would be good to see a tested-by tag from someone for this.
 
-> 
-> > I wonder if there is a better way for a host driver to indicate that
-> > it doesn't support IO?
-> 
-> We can probably test for this in the schema.
-> 
-> ranges:
->   items:
->     minItems: 7
->     items:
->       - not: { const: 0x01000000 }
-> 
-> Or "- enum: [ 0x42000000, 0x02000000 ]"
-> 
-> Of course, in theory, the bus, dev, fn fields could be non-zero and we
-> could use minium/maximum to handle those, but in practice I think they
-> are rarely used for FDT.
-
-Many controllers also appear to set the top bit (relocatable), e.g.
-0x82000000...
-
-At present there are no PCI bindings that use the YAML schema, if I've
-understood correctly.
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
 Thanks,
 
