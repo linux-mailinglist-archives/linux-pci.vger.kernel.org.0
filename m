@@ -2,152 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 98C59C2871
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 23:16:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1511C28C1
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 23:24:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731937AbfI3VPz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Sep 2019 17:15:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46020 "EHLO mail.kernel.org"
+        id S1730176AbfI3VYe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Sep 2019 17:24:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731050AbfI3VPy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:15:54 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727469AbfI3VYe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Sep 2019 17:24:34 -0400
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67EDD224D7;
-        Mon, 30 Sep 2019 19:58:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 690E721920;
+        Mon, 30 Sep 2019 21:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569873536;
-        bh=5YkIavbcZo/fLAlcbxRAjN/RrUGTMkGP8SzMSvE3lfY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=eQ2EwAbhTnIoCao80RsHAjyuX0FiFTAlEN6giJaMJlAygtJFtLFebghluVb1IgARK
-         QJIQQXZWBQEH68It6VK2j2PAMzsVDbeK0hNpsI8f9l+BsiWY2zGIHPbIo8lDV07B5v
-         nuE1LfjWC+uyDHhdEx/TeJU/HbfFo2GBNRL7OTVo=
-Date:   Mon, 30 Sep 2019 14:58:55 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, x86@kernel.org,
-        linux-s390@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        netdev@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        kvm@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-usb@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-serial@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-Subject: Re: [PATCH RESEND v3 00/26] Add definition for the number of
- standard PCI BARs
-Message-ID: <20190930195855.GA191519@google.com>
+        s=default; t=1569878672;
+        bh=O0YTj2vhvn3cLJ9bXhjvMPrKFz9pub2mp+NyxMOgLgY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XbxRSBb5GzUwqvHLEh5933b2ncHabYYcy1H+PGoWAURC6L6OdvUSkMXSuI0Iao+qZ
+         0/XMhv/X8S8fJpHTkfs7dgHQrJiQtHY7DLVpLSN5KbV0sqXQhr4XPG2Cj2rZnridY7
+         w1jj9r+Rs3EGC9eEA/lZ15W3yzaU9R0022RF1Dto=
+Received: by mail-qt1-f177.google.com with SMTP id 3so18976777qta.1;
+        Mon, 30 Sep 2019 14:24:32 -0700 (PDT)
+X-Gm-Message-State: APjAAAXAshFanHEZgU5iZwlV8eAxuby5/lsuknWOk8eiTQuBJlikpRMh
+        vdfvLeuBnE+lnknRZiRQaqqByPZDb6CuLwWPoQ==
+X-Google-Smtp-Source: APXvYqwkGA20wZuKhUgCITJW9BMQhvKkz+h0oBRgQSxYR0zNJnVmKMOzb61pAR/bwav/Kg6q4m9o5OuCzIMOKst9NO8=
+X-Received: by 2002:ac8:31b3:: with SMTP id h48mr28091603qte.300.1569878671519;
+ Mon, 30 Sep 2019 14:24:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190927234026.23342-1-efremov@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190927002455.13169-1-robh@kernel.org> <20190927002455.13169-6-robh@kernel.org>
+ <20190930125752.GD12051@infradead.org> <95f8dabea99f104336491281b88c04b58d462258.camel@suse.de>
+In-Reply-To: <95f8dabea99f104336491281b88c04b58d462258.camel@suse.de>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 30 Sep 2019 16:24:20 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLnKxuQRR3sGGtXF3nwwDx7DOONPPYz37ROk7u_+cxRug@mail.gmail.com>
+Message-ID: <CAL_JsqLnKxuQRR3sGGtXF3nwwDx7DOONPPYz37ROk7u_+cxRug@mail.gmail.com>
+Subject: Re: [PATCH 05/11] of: Ratify of_dma_configure() interface
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Christoph Hellwig <hch@infradead.org>, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Oza Pawandeep <oza.oza@broadcom.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Sep 28, 2019 at 02:40:26AM +0300, Denis Efremov wrote:
-> Code that iterates over all standard PCI BARs typically uses
-> PCI_STD_RESOURCE_END, but this is error-prone because it requires
-> "i <= PCI_STD_RESOURCE_END" rather than something like
-> "i < PCI_STD_NUM_BARS". We could add such a definition and use it the same
-> way PCI_SRIOV_NUM_BARS is used. The patchset also replaces constant (6)
-> with new define PCI_STD_NUM_BARS where appropriate and removes local
-> declarations for the number of PCI BARs.
-> 
-> Changes in v3:
->   - Updated commits description.
->   - Refactored "< PCI_ROM_RESOURCE" with "< PCI_STD_NUM_BARS" in loops.
->   - Refactored "<= BAR_5" with "< PCI_STD_NUM_BARS" in loops.
->   - Removed local define GASKET_NUM_BARS.
->   - Removed local define PCI_NUM_BAR_RESOURCES.
-> 
-> Changes in v2:
->   - Reversed checks in pci_iomap_range,pci_iomap_wc_range.
->   - Refactored loops in vfio_pci to keep PCI_STD_RESOURCES.
->   - Added 2 new patches to replace the magic constant with new define.
->   - Splitted net patch in v1 to separate stmmac and dwc-xlgmac patches.
-> 
-> Denis Efremov (26):
->   PCI: Add define for the number of standard PCI BARs
->   PCI: hv: Use PCI_STD_NUM_BARS
->   PCI: dwc: Use PCI_STD_NUM_BARS
->   PCI: endpoint: Use PCI_STD_NUM_BARS
->   misc: pci_endpoint_test: Use PCI_STD_NUM_BARS
->   s390/pci: Use PCI_STD_NUM_BARS
->   x86/PCI: Loop using PCI_STD_NUM_BARS
->   alpha/PCI: Use PCI_STD_NUM_BARS
->   ia64: Use PCI_STD_NUM_BARS
->   stmmac: pci: Loop using PCI_STD_NUM_BARS
->   net: dwc-xlgmac: Loop using PCI_STD_NUM_BARS
->   ixgb: use PCI_STD_NUM_BARS
->   e1000: Use PCI_STD_NUM_BARS
->   rapidio/tsi721: Loop using PCI_STD_NUM_BARS
->   efifb: Loop using PCI_STD_NUM_BARS
->   fbmem: use PCI_STD_NUM_BARS
->   vfio_pci: Loop using PCI_STD_NUM_BARS
->   scsi: pm80xx: Use PCI_STD_NUM_BARS
->   ata: sata_nv: Use PCI_STD_NUM_BARS
->   staging: gasket: Use PCI_STD_NUM_BARS
->   serial: 8250_pci: Use PCI_STD_NUM_BARS
->   pata_atp867x: Use PCI_STD_NUM_BARS
->   memstick: use PCI_STD_NUM_BARS
->   USB: core: Use PCI_STD_NUM_BARS
->   usb: pci-quirks: Use PCI_STD_NUM_BARS
->   devres: use PCI_STD_NUM_BARS
-> 
->  arch/alpha/kernel/pci-sysfs.c                 |  8 ++---
->  arch/ia64/sn/pci/pcibr/pcibr_dma.c            |  4 +--
->  arch/s390/include/asm/pci.h                   |  5 +--
->  arch/s390/include/asm/pci_clp.h               |  6 ++--
->  arch/s390/pci/pci.c                           | 16 +++++-----
->  arch/s390/pci/pci_clp.c                       |  6 ++--
->  arch/x86/pci/common.c                         |  2 +-
->  arch/x86/pci/intel_mid_pci.c                  |  2 +-
->  drivers/ata/pata_atp867x.c                    |  2 +-
->  drivers/ata/sata_nv.c                         |  2 +-
->  drivers/memstick/host/jmb38x_ms.c             |  2 +-
->  drivers/misc/pci_endpoint_test.c              |  8 ++---
->  drivers/net/ethernet/intel/e1000/e1000.h      |  1 -
->  drivers/net/ethernet/intel/e1000/e1000_main.c |  2 +-
->  drivers/net/ethernet/intel/ixgb/ixgb.h        |  1 -
->  drivers/net/ethernet/intel/ixgb/ixgb_main.c   |  2 +-
->  .../net/ethernet/stmicro/stmmac/stmmac_pci.c  |  4 +--
->  .../net/ethernet/synopsys/dwc-xlgmac-pci.c    |  2 +-
->  drivers/pci/controller/dwc/pci-dra7xx.c       |  2 +-
->  .../pci/controller/dwc/pci-layerscape-ep.c    |  2 +-
->  drivers/pci/controller/dwc/pcie-artpec6.c     |  2 +-
->  .../pci/controller/dwc/pcie-designware-plat.c |  2 +-
->  drivers/pci/controller/dwc/pcie-designware.h  |  2 +-
->  drivers/pci/controller/pci-hyperv.c           | 10 +++---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 10 +++---
->  drivers/pci/pci-sysfs.c                       |  4 +--
->  drivers/pci/pci.c                             | 13 ++++----
->  drivers/pci/proc.c                            |  4 +--
->  drivers/pci/quirks.c                          |  4 +--
->  drivers/rapidio/devices/tsi721.c              |  2 +-
->  drivers/scsi/pm8001/pm8001_hwi.c              |  2 +-
->  drivers/scsi/pm8001/pm8001_init.c             |  2 +-
->  drivers/staging/gasket/gasket_constants.h     |  3 --
->  drivers/staging/gasket/gasket_core.c          | 12 +++----
->  drivers/staging/gasket/gasket_core.h          |  4 +--
->  drivers/tty/serial/8250/8250_pci.c            |  8 ++---
->  drivers/usb/core/hcd-pci.c                    |  2 +-
->  drivers/usb/host/pci-quirks.c                 |  2 +-
->  drivers/vfio/pci/vfio_pci.c                   | 11 ++++---
->  drivers/vfio/pci/vfio_pci_config.c            | 32 ++++++++++---------
->  drivers/vfio/pci/vfio_pci_private.h           |  4 +--
->  drivers/video/fbdev/core/fbmem.c              |  4 +--
->  drivers/video/fbdev/efifb.c                   |  2 +-
->  include/linux/pci-epc.h                       |  2 +-
->  include/linux/pci.h                           |  2 +-
->  include/uapi/linux/pci_regs.h                 |  1 +
->  lib/devres.c                                  |  2 +-
->  47 files changed, 112 insertions(+), 115 deletions(-)
+On Mon, Sep 30, 2019 at 8:32 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> On Mon, 2019-09-30 at 05:57 -0700, Christoph Hellwig wrote:
+> > On Thu, Sep 26, 2019 at 07:24:49PM -0500, Rob Herring wrote:
+> > > -int of_dma_configure(struct device *dev, struct device_node *np, bool
+> > > force_dma)
+> > > +int of_dma_configure(struct device *dev, struct device_node *parent, bool
+> > > force_dma)
+> >
+> > This creates a > 80 char line.
+> >
+> > >  {
+> > >     u64 dma_addr, paddr, size = 0;
+> > >     int ret;
+> > >     bool coherent;
+> > >     unsigned long offset;
+> > >     const struct iommu_ops *iommu;
+> > > +   struct device_node *np;
+> > >     u64 mask;
+> > >
+> > > +   np = dev->of_node;
+> > > +   if (!np)
+> > > +           np = parent;
+> > > +   if (!np)
+> > > +           return -ENODEV;
+> >
+> > I have to say I find the older calling convention simpler to understand.
+> > If we want to enforce the invariant I'd rather do that explicitly:
+> >
+> >       if (dev->of_node && np != dev->of_node)
+> >               return -EINVAL;
+>
+> As is, this would break Freescale Layerscape fsl-mc bus' dma_configure():
 
-Applied to pci/resource for v5.5, thanks!
+This may break PCI too for devices that have a DT node.
 
-I ended up squashing these all together because they're all related
-and tiny.
+> static int fsl_mc_dma_configure(struct device *dev)
+> {
+>         struct device *dma_dev = dev;
+>
+>         while (dev_is_fsl_mc(dma_dev))
+>                 dma_dev = dma_dev->parent;
+>
+>         return of_dma_configure(dev, dma_dev->of_node, 0);
+> }
+>
+> But I think that with this series, given the fact that we now treat the lack of
+> dma-ranges as a 1:1 mapping instead of an error, we could rewrite the function
+> like this:
+
+Now, I'm reconsidering allowing this abuse... It's better if the code
+which understands the bus structure in DT for a specific bus passes in
+the right thing. Maybe I should go back to Robin's version (below).
+OTOH, the existing assumption that 'dma-ranges' was in the immediate
+parent was an assumption on the bus structure which maybe doesn't
+always apply.
+
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index a45261e21144..6951450bb8f3 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -98,12 +98,15 @@ int of_dma_configure(struct device *dev, struct
+device_node *parent, bool force_
+        u64 mask;
+
+        np = dev->of_node;
+-       if (!np)
+-               np = parent;
++       if (np)
++               parent = of_get_dma_parent(np);
++       else
++               np = of_node_get(parent);
+        if (!np)
+                return -ENODEV;
+
+-       ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
++       ret = of_dma_get_range(parent, &dma_addr, &paddr, &size);
++       of_node_put(parent);
+        if (ret < 0) {
+                /*
+                 * For legacy reasons, we have to assume some devices need
