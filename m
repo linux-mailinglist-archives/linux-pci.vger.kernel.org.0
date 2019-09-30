@@ -2,143 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A317C2830
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 23:06:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90250C2865
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 23:15:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732441AbfI3VGL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Sep 2019 17:06:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44102 "EHLO mail.kernel.org"
+        id S1728424AbfI3VPy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Sep 2019 17:15:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731976AbfI3VFz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:05:55 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731051AbfI3VPx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Sep 2019 17:15:53 -0400
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 000C6224F0;
-        Mon, 30 Sep 2019 19:47:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68948224BF
+        for <linux-pci@vger.kernel.org>; Mon, 30 Sep 2019 17:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569872852;
-        bh=RglR3ukwElynROQk+l4tg76X5Ve88igj5T4s3Uya3V4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=AyhBGW2BD8aoBuP8uHPkEU0pNoy10LWHB1/Mi7A+TITCzHVAlpX8Lj3Dlm63Y1V34
-         6GGm/gY/wdQwWVAs00lQOhTGcoWnItLl9B2B+/x89Udz2h7QquvnhFoawikAOeCFB2
-         riwbdSExN2h7g1dZIQFBR2OsETDegxL6VHjmzQuI=
-Date:   Mon, 30 Sep 2019 14:47:24 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: Re: [PATCH v3 06/26] s390/pci: Use PCI_STD_NUM_BARS
-Message-ID: <20190930194724.GA188464@google.com>
+        s=default; t=1569864994;
+        bh=zv4Uxz31XKM+MyjvtqcSjJlGgyTtf32vJB/lTpIHbDc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cHvJD06PMIzqUbJ1zlwF5MFgINfQZlmbqEnm1VNd3xI6UtbILrXYDEjoSI8dt+1kZ
+         w+Bv83P7KaVeJBX2+40Xj6QI0uniL0cbCStECLik8uA4qNOitQ/w73EsvrP8us/hzd
+         7jx82UdGVO80vcwpjzgoi5dUMY34PYIJZwUPV8ss=
+Received: by mail-qk1-f170.google.com with SMTP id z67so8501470qkb.12
+        for <linux-pci@vger.kernel.org>; Mon, 30 Sep 2019 10:36:34 -0700 (PDT)
+X-Gm-Message-State: APjAAAXTnErIR8d/ilizXEZX+D9b89MRVIeh2qfUqLDZ52hqu5ufiQqi
+        ursKr02EHlV4P47iqncUAtpWA8BEd2aIwpeJVQ==
+X-Google-Smtp-Source: APXvYqxLrOssw9YrboppxecvjeDTysPUyAiqArm1DBIXe/0oTUVaz6AFg2izbbt7oMclPdk29NzrflIdhzCHlxZ4hB8=
+X-Received: by 2002:a05:620a:12d5:: with SMTP id e21mr1318692qkl.152.1569864993590;
+ Mon, 30 Sep 2019 10:36:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190918085805.GY9720@e119886-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190924214630.12817-1-robh@kernel.org> <20190924214630.12817-3-robh@kernel.org>
+ <20190925102423.GR9720@e119886-lin.cambridge.arm.com> <CAL_JsqKN709cOLtDLdKXmDzeNLYtGekMT2BiZic4x45UopenwA@mail.gmail.com>
+ <20190930151346.GD42880@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20190930151346.GD42880@e119886-lin.cambridge.arm.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 30 Sep 2019 12:36:22 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+3S7+E+a5E122aR7s0a9SxkMyxw2t=OkO4pS5QUR+0CA@mail.gmail.com>
+Message-ID: <CAL_Jsq+3S7+E+a5E122aR7s0a9SxkMyxw2t=OkO4pS5QUR+0CA@mail.gmail.com>
+Subject: Re: [PATCH 02/11] PCI: altera: Use pci_parse_request_of_pci_ranges()
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ley Foon Tan <lftan@altera.com>, rfi@lists.rocketboards.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 09:58:06AM +0100, Andrew Murray wrote:
-> On Mon, Sep 16, 2019 at 11:41:38PM +0300, Denis Efremov wrote:
-> > Remove local definition PCI_BAR_COUNT for the number of PCI BARs and use
-> > global one PCI_STD_NUM_BARS instead.
-> > 
-> > Acked-by: Sebastian Ott <sebott@linux.ibm.com>
-> > Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-> > Signed-off-by: Denis Efremov <efremov@linux.com>
-> > ---
-> >  arch/s390/include/asm/pci.h     |  5 +----
-> >  arch/s390/include/asm/pci_clp.h |  6 +++---
-> >  arch/s390/pci/pci.c             | 16 ++++++++--------
-> >  arch/s390/pci/pci_clp.c         |  6 +++---
-> >  4 files changed, 15 insertions(+), 18 deletions(-)
-> > 
-> > diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
-> > index a2399eff84ca..3a06c264ea53 100644
-> > --- a/arch/s390/include/asm/pci.h
-> > +++ b/arch/s390/include/asm/pci.h
-> > @@ -2,9 +2,6 @@
-> >  #ifndef __ASM_S390_PCI_H
-> >  #define __ASM_S390_PCI_H
-> >  
-> > -/* must be set before including pci_clp.h */
-> > -#define PCI_BAR_COUNT	6
-> > -
-> >  #include <linux/pci.h>
-> >  #include <linux/mutex.h>
-> >  #include <linux/iommu.h>
-> > @@ -138,7 +135,7 @@ struct zpci_dev {
-> >  
-> >  	char res_name[16];
-> >  	bool mio_capable;
-> > -	struct zpci_bar_struct bars[PCI_BAR_COUNT];
-> > +	struct zpci_bar_struct bars[PCI_STD_NUM_BARS];
-> >  
-> >  	u64		start_dma;	/* Start of available DMA addresses */
-> >  	u64		end_dma;	/* End of available DMA addresses */
-> > diff --git a/arch/s390/include/asm/pci_clp.h b/arch/s390/include/asm/pci_clp.h
-> > index 50359172cc48..bd2cb4ea7d93 100644
-> > --- a/arch/s390/include/asm/pci_clp.h
-> > +++ b/arch/s390/include/asm/pci_clp.h
-> > @@ -77,7 +77,7 @@ struct mio_info {
-> >  	struct {
-> >  		u64 wb;
-> >  		u64 wt;
-> > -	} addr[PCI_BAR_COUNT];
-> > +	} addr[PCI_STD_NUM_BARS];
-> >  	u32 reserved[6];
-> >  } __packed;
-> >  
-> > @@ -98,9 +98,9 @@ struct clp_rsp_query_pci {
-> >  	u16 util_str_avail	:  1;	/* utility string available? */
-> >  	u16 pfgid		:  8;	/* pci function group id */
-> >  	u32 fid;			/* pci function id */
-> > -	u8 bar_size[PCI_BAR_COUNT];
-> > +	u8 bar_size[PCI_STD_NUM_BARS];
-> >  	u16 pchid;
-> > -	__le32 bar[PCI_BAR_COUNT];
-> > +	__le32 bar[PCI_STD_NUM_BARS];
-> >  	u8 pfip[CLP_PFIP_NR_SEGMENTS];	/* pci function internal path */
-> >  	u32			: 16;
-> >  	u8 fmb_len;
-> > diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-> > index b0e3b9a0e488..aca372c8e34f 100644
-> > --- a/arch/s390/pci/pci.c
-> > +++ b/arch/s390/pci/pci.c
-> > @@ -43,7 +43,7 @@ static DECLARE_BITMAP(zpci_domain, ZPCI_NR_DEVICES);
-> >  static DEFINE_SPINLOCK(zpci_domain_lock);
-> >  
-> >  #define ZPCI_IOMAP_ENTRIES						\
-> > -	min(((unsigned long) ZPCI_NR_DEVICES * PCI_BAR_COUNT / 2),	\
-> > +	min(((unsigned long) ZPCI_NR_DEVICES * PCI_STD_NUM_BARS / 2),	\
-> >  	    ZPCI_IOMAP_MAX_ENTRIES)
-> >  
-> >  static DEFINE_SPINLOCK(zpci_iomap_lock);
-> > @@ -294,7 +294,7 @@ static void __iomem *pci_iomap_range_mio(struct pci_dev *pdev, int bar,
-> >  void __iomem *pci_iomap_range(struct pci_dev *pdev, int bar,
-> >  			      unsigned long offset, unsigned long max)
-> >  {
-> > -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
-> > +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
-> >  		return NULL;
-> >  
-> >  	if (static_branch_likely(&have_mio))
-> > @@ -324,7 +324,7 @@ static void __iomem *pci_iomap_wc_range_mio(struct pci_dev *pdev, int bar,
-> >  void __iomem *pci_iomap_wc_range(struct pci_dev *pdev, int bar,
-> >  				 unsigned long offset, unsigned long max)
-> >  {
-> > -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
-> > +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
-> >  		return NULL;
-> 
-> This looks like a latent bug fix here. If 'bar' is out of range we return
-> NULL instead accessing an invalid item of an array. Should this not be
-> a separate patch and tagged as stable?
+On Mon, Sep 30, 2019 at 10:13 AM Andrew Murray <andrew.murray@arm.com> wrote:
+>
+> On Wed, Sep 25, 2019 at 07:33:35AM -0500, Rob Herring wrote:
+> > On Wed, Sep 25, 2019 at 5:24 AM Andrew Murray <andrew.murray@arm.com> wrote:
+> > >
+> > > On Tue, Sep 24, 2019 at 04:46:21PM -0500, Rob Herring wrote:
+> > > > Convert altera host bridge to use the common
+> > > > pci_parse_request_of_pci_ranges().
+> > > >
+> > > > Cc: Ley Foon Tan <lftan@altera.com>
+> > > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > Cc: rfi@lists.rocketboards.org
+> > > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > > ---
+> >
+> > > > @@ -833,9 +800,8 @@ static int altera_pcie_probe(struct platform_device *pdev)
+> > > >               return ret;
+> > > >       }
+> > > >
+> > > > -     INIT_LIST_HEAD(&pcie->resources);
+> > > > -
+> > > > -     ret = altera_pcie_parse_request_of_pci_ranges(pcie);
+> > > > +     ret = pci_parse_request_of_pci_ranges(dev, &pcie->resources,
+> > >
+> > > Does it matter that we now map any given IO ranges whereas we didn't
+> > > previously?
+> > >
+> > > As far as I can tell there are no users that pass an IO range, if they
+> > > did then with the existing code the probe would fail and they'd get
+> > > a "I/O range found for %pOF. Please provide an io_base pointer...".
+> > > However with the new code if any IO range was given (which would
+> > > probably represent a misconfiguration), then we'd proceed to map the
+> > > IO range. When that IO is used, who knows what would happen.
+> >
+> > Yeah, I'm assuming that the DT doesn't have an IO range if IO is not
+> > supported. IMO, it is not the kernel's job to validate the DT.
+>
+> Sure. Is it worth mentioning in the commit message this subtle change
+> in behaviour?
 
-Sharp eyes!  I didn't think of this as accessing an invalid item, but
-indeed it does (if 'bar' is out of range).  But I doubt it's worth the
-hassle of a separate patch, since we return failure anyway.
+Will do.
+
+> > > I wonder if there is a better way for a host driver to indicate that
+> > > it doesn't support IO?
+> >
+> > We can probably test for this in the schema.
+> >
+> > ranges:
+> >   items:
+> >     minItems: 7
+> >     items:
+> >       - not: { const: 0x01000000 }
+> >
+> > Or "- enum: [ 0x42000000, 0x02000000 ]"
+> >
+> > Of course, in theory, the bus, dev, fn fields could be non-zero and we
+> > could use minium/maximum to handle those, but in practice I think they
+> > are rarely used for FDT.
+>
+> Many controllers also appear to set the top bit (relocatable), e.g.
+> 0x82000000...
+
+That begs the question how many should set the relocatable bit and don't...
+
+Anyways, it's still a smallish set of possible values and worthwhile
+to describe which ones a controller supports.
+
+> At present there are no PCI bindings that use the YAML schema, if I've
+> understood correctly.
+
+Probably so, there has been at least one under review. Intel LGM IIRC.
+We do need a common PCI schema too. Hopefully someone beats me to it.
+
+Rob
