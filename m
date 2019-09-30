@@ -2,140 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E6074C2415
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 17:16:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FC5BC2486
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 17:40:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731504AbfI3PQg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Sep 2019 11:16:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:56708 "EHLO foss.arm.com"
+        id S1730809AbfI3PkU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Sep 2019 11:40:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:57210 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730780AbfI3PQg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Sep 2019 11:16:36 -0400
+        id S1727767AbfI3PkU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Sep 2019 11:40:20 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFC251000;
-        Mon, 30 Sep 2019 08:16:35 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 589151000;
+        Mon, 30 Sep 2019 08:40:20 -0700 (PDT)
 Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 46A1D3F706;
-        Mon, 30 Sep 2019 08:16:35 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 16:16:33 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3C083F706;
+        Mon, 30 Sep 2019 08:40:19 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 16:40:18 +0100
 From:   Andrew Murray <andrew.murray@arm.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 05/11] PCI: versatile: Use
- pci_parse_request_of_pci_ranges()
-Message-ID: <20190930151633.GE42880@e119886-lin.cambridge.arm.com>
-References: <20190924214630.12817-1-robh@kernel.org>
- <20190924214630.12817-6-robh@kernel.org>
- <20190925103752.GS9720@e119886-lin.cambridge.arm.com>
- <CAL_JsqJW2t3F6HdKqcHguYLLiYQ6XWOsQbY-TFsDXhrDjjszew@mail.gmail.com>
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ellie Reeves <ellierevves@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: aardvark: Use LTSSM state to build link training
+ flag
+Message-ID: <20190930154017.GF42880@e119886-lin.cambridge.arm.com>
+References: <20190522213351.21366-3-repk@triplefau.lt>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJW2t3F6HdKqcHguYLLiYQ6XWOsQbY-TFsDXhrDjjszew@mail.gmail.com>
+In-Reply-To: <20190522213351.21366-3-repk@triplefau.lt>
 User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 04:44:31PM -0500, Rob Herring wrote:
-> On Wed, Sep 25, 2019 at 5:37 AM Andrew Murray <andrew.murray@arm.com> wrote:
-> >
-> > On Tue, Sep 24, 2019 at 04:46:24PM -0500, Rob Herring wrote:
-> > > Convert ARM Versatile host bridge to use the common
-> > > pci_parse_request_of_pci_ranges().
-> > >
-> > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > >  drivers/pci/controller/pci-versatile.c | 62 +++++---------------------
-> > >  1 file changed, 11 insertions(+), 51 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pci-versatile.c b/drivers/pci/controller/pci-versatile.c
-> > > index f59ad2728c0b..237b1abb26f2 100644
-> > > --- a/drivers/pci/controller/pci-versatile.c
-> > > +++ b/drivers/pci/controller/pci-versatile.c
-> > > @@ -62,60 +62,12 @@ static struct pci_ops pci_versatile_ops = {
-> > >       .write  = pci_generic_config_write,
-> > >  };
-> > >
-> > > -static int versatile_pci_parse_request_of_pci_ranges(struct device *dev,
-> > > -                                                  struct list_head *res)
-> > > -{
-> > > -     int err, mem = 1, res_valid = 0;
-> > > -     resource_size_t iobase;
-> > > -     struct resource_entry *win, *tmp;
-> > > -
-> > > -     err = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff, res, &iobase);
-> > > -     if (err)
-> > > -             return err;
-> > > -
-> > > -     err = devm_request_pci_bus_resources(dev, res);
-> > > -     if (err)
-> > > -             goto out_release_res;
-> > > -
-> > > -     resource_list_for_each_entry_safe(win, tmp, res) {
-> > > -             struct resource *res = win->res;
-> > > -
-> > > -             switch (resource_type(res)) {
-> > > -             case IORESOURCE_IO:
-> > > -                     err = devm_pci_remap_iospace(dev, res, iobase);
-> > > -                     if (err) {
-> > > -                             dev_warn(dev, "error %d: failed to map resource %pR\n",
-> > > -                                      err, res);
-> > > -                             resource_list_destroy_entry(win);
-> > > -                     }
-> > > -                     break;
-> > > -             case IORESOURCE_MEM:
-> > > -                     res_valid |= !(res->flags & IORESOURCE_PREFETCH);
-> > > -
-> > > -                     writel(res->start >> 28, PCI_IMAP(mem));
-> > > -                     writel(PHYS_OFFSET >> 28, PCI_SMAP(mem));
-> > > -                     mem++;
-> > > -
-> > > -                     break;
-> > > -             }
-> > > -     }
-> > > -
-> > > -     if (res_valid)
-> > > -             return 0;
-> > > -
-> > > -     dev_err(dev, "non-prefetchable memory resource required\n");
-> > > -     err = -EINVAL;
-> > > -
-> > > -out_release_res:
-> > > -     pci_free_resource_list(res);
-> > > -     return err;
-> > > -}
-> > > -
-> > >  static int versatile_pci_probe(struct platform_device *pdev)
-> > >  {
-> > >       struct device *dev = &pdev->dev;
-> > >       struct resource *res;
-> > > -     int ret, i, myslot = -1;
-> > > +     struct resource_entry *entry;
-> > > +     int ret, i, myslot = -1, mem = 0;
-> >
-> > I think 'mem' should be initialised to 1, at least that's what the original
-> > code did. However I'm not sure why it should start from 1.
+On Wed, May 22, 2019 at 11:33:51PM +0200, Remi Pommarel wrote:
+> Aardvark's PCI_EXP_LNKSTA_LT flag in its link status register is not
+> implemented and does not reflect the actual link training state (the
+> flag is always set to 0). In order to support link re-training feature
+> this flag has to be emulated. The Link Training and Status State
+> Machine (LTSSM) flag in Aardvark LMI config register could be used as
+> a link training indicator. Indeed if the LTSSM is in L0 or upper state
+> then link training has completed (see [1]).
 > 
-> The original code I moved from arch/arm had 32MB @ 0x0c000000 called
-> "PCI unused" which was requested with request_resource(), but never
-> provided to the PCI core. Otherwise, I kept the setup the same. No one
-> has complained in 4 years, though I'm not sure anyone would have
-> noticed if I just deleted PCI support...
+> Unfortunately because after asking a link retraining it takes a while
+> for the LTSSM state to become less than 0x10 (due to L0s to recovery
+> state transition delays), LTSSM can still be in L0 while link training
+> has not finished yet. So this waits for link to be in recovery or lesser
+> state before returning after asking for a link retrain.
+> 
+> [1] "PCI Express Base Specification", REV. 4.0
+>     PCI Express, February 19 2014, Table 4-14
+> 
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> ---
+> Changes since v1:
+>   - Rename retraining flag field
+>   - Fix DEVCTL register writing
+> 
+> Changes since v2:
+>   - Rewrite patch logic so it is more legible
+> 
+> Please note that I will unlikely be able to answer any comments from May
+> 24th to June 10th.
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 29 ++++++++++++++++++++++++++-
+>  1 file changed, 28 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 134e0306ff00..8803083b2174 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -180,6 +180,8 @@
+>  #define LINK_WAIT_MAX_RETRIES		10
+>  #define LINK_WAIT_USLEEP_MIN		90000
+>  #define LINK_WAIT_USLEEP_MAX		100000
+> +#define RETRAIN_WAIT_MAX_RETRIES	10
+> +#define RETRAIN_WAIT_USLEEP_US		2000
+>  
+>  #define MSI_IRQ_NUM			32
+>  
+> @@ -239,6 +241,17 @@ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
+>  	return -ETIMEDOUT;
+>  }
+>  
+> +static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
+> +{
+> +	size_t retries;
+> +
+> +	for (retries = 0; retries < RETRAIN_WAIT_MAX_RETRIES; ++retries) {
+> +		if (!advk_pcie_link_up(pcie))
+> +			break;
+> +		udelay(RETRAIN_WAIT_USLEEP_US);
+> +	}
+> +}
+> +
+>  static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+>  {
+>  	u32 reg;
+> @@ -426,11 +439,20 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+>  		return PCI_BRIDGE_EMUL_HANDLED;
+>  	}
+>  
+> +	case PCI_EXP_LNKCTL: {
+> +		/* u32 contains both PCI_EXP_LNKCTL and PCI_EXP_LNKSTA */
+> +		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
+> +			~(PCI_EXP_LNKSTA_LT << 16);
 
-OK, well it would be good to see a tested-by tag from someone for this.
+The commit message says "the flag is always set to 0" - therefore I guess
+you don't *need* to mask out the LT bit here? I assume this is just
+belt-and-braces but thought I'd check incase I've misunderstood or if your
+commit message is inaccurate.
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+In any case masking out the bit (or adding a comment) makes this code more
+readable as the reader doesn't need to know what the hardware does with this
+bit.
+
+
+> +		if (!advk_pcie_link_up(pcie))
+> +			val |= (PCI_EXP_LNKSTA_LT << 16);
+> +		*value = val;
+> +		return PCI_BRIDGE_EMUL_HANDLED;
+> +	}
+> +
+>  	case PCI_CAP_LIST_ID:
+>  	case PCI_EXP_DEVCAP:
+>  	case PCI_EXP_DEVCTL:
+>  	case PCI_EXP_LNKCAP:
+> -	case PCI_EXP_LNKCTL:
+>  		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
+>  		return PCI_BRIDGE_EMUL_HANDLED;
+>  	default:
+> @@ -447,8 +469,13 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+>  
+>  	switch (reg) {
+>  	case PCI_EXP_DEVCTL:
+> +		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+> +		break;
+
+Why is this here?
 
 Thanks,
 
 Andrew Murray
 
+> +
+>  	case PCI_EXP_LNKCTL:
+>  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+> +		if (new & PCI_EXP_LNKCTL_RL)
+> +			advk_pcie_wait_for_retrain(pcie);
+>  		break;
+>  
+>  	case PCI_EXP_RTCTL:
+> -- 
+> 2.20.1
 > 
-> Rob
