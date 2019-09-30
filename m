@@ -2,129 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 90250C2865
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 23:15:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98C59C2871
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 23:16:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbfI3VPy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Sep 2019 17:15:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46024 "EHLO mail.kernel.org"
+        id S1731937AbfI3VPz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Sep 2019 17:15:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731051AbfI3VPx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:15:53 -0400
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731050AbfI3VPy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Sep 2019 17:15:54 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68948224BF
-        for <linux-pci@vger.kernel.org>; Mon, 30 Sep 2019 17:36:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67EDD224D7;
+        Mon, 30 Sep 2019 19:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569864994;
-        bh=zv4Uxz31XKM+MyjvtqcSjJlGgyTtf32vJB/lTpIHbDc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cHvJD06PMIzqUbJ1zlwF5MFgINfQZlmbqEnm1VNd3xI6UtbILrXYDEjoSI8dt+1kZ
-         w+Bv83P7KaVeJBX2+40Xj6QI0uniL0cbCStECLik8uA4qNOitQ/w73EsvrP8us/hzd
-         7jx82UdGVO80vcwpjzgoi5dUMY34PYIJZwUPV8ss=
-Received: by mail-qk1-f170.google.com with SMTP id z67so8501470qkb.12
-        for <linux-pci@vger.kernel.org>; Mon, 30 Sep 2019 10:36:34 -0700 (PDT)
-X-Gm-Message-State: APjAAAXTnErIR8d/ilizXEZX+D9b89MRVIeh2qfUqLDZ52hqu5ufiQqi
-        ursKr02EHlV4P47iqncUAtpWA8BEd2aIwpeJVQ==
-X-Google-Smtp-Source: APXvYqxLrOssw9YrboppxecvjeDTysPUyAiqArm1DBIXe/0oTUVaz6AFg2izbbt7oMclPdk29NzrflIdhzCHlxZ4hB8=
-X-Received: by 2002:a05:620a:12d5:: with SMTP id e21mr1318692qkl.152.1569864993590;
- Mon, 30 Sep 2019 10:36:33 -0700 (PDT)
+        s=default; t=1569873536;
+        bh=5YkIavbcZo/fLAlcbxRAjN/RrUGTMkGP8SzMSvE3lfY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=eQ2EwAbhTnIoCao80RsHAjyuX0FiFTAlEN6giJaMJlAygtJFtLFebghluVb1IgARK
+         QJIQQXZWBQEH68It6VK2j2PAMzsVDbeK0hNpsI8f9l+BsiWY2zGIHPbIo8lDV07B5v
+         nuE1LfjWC+uyDHhdEx/TeJU/HbfFo2GBNRL7OTVo=
+Date:   Mon, 30 Sep 2019 14:58:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, x86@kernel.org,
+        linux-s390@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        netdev@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        kvm@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-usb@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-serial@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+Subject: Re: [PATCH RESEND v3 00/26] Add definition for the number of
+ standard PCI BARs
+Message-ID: <20190930195855.GA191519@google.com>
 MIME-Version: 1.0
-References: <20190924214630.12817-1-robh@kernel.org> <20190924214630.12817-3-robh@kernel.org>
- <20190925102423.GR9720@e119886-lin.cambridge.arm.com> <CAL_JsqKN709cOLtDLdKXmDzeNLYtGekMT2BiZic4x45UopenwA@mail.gmail.com>
- <20190930151346.GD42880@e119886-lin.cambridge.arm.com>
-In-Reply-To: <20190930151346.GD42880@e119886-lin.cambridge.arm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 30 Sep 2019 12:36:22 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+3S7+E+a5E122aR7s0a9SxkMyxw2t=OkO4pS5QUR+0CA@mail.gmail.com>
-Message-ID: <CAL_Jsq+3S7+E+a5E122aR7s0a9SxkMyxw2t=OkO4pS5QUR+0CA@mail.gmail.com>
-Subject: Re: [PATCH 02/11] PCI: altera: Use pci_parse_request_of_pci_ranges()
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ley Foon Tan <lftan@altera.com>, rfi@lists.rocketboards.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190927234026.23342-1-efremov@linux.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 10:13 AM Andrew Murray <andrew.murray@arm.com> wrote:
->
-> On Wed, Sep 25, 2019 at 07:33:35AM -0500, Rob Herring wrote:
-> > On Wed, Sep 25, 2019 at 5:24 AM Andrew Murray <andrew.murray@arm.com> wrote:
-> > >
-> > > On Tue, Sep 24, 2019 at 04:46:21PM -0500, Rob Herring wrote:
-> > > > Convert altera host bridge to use the common
-> > > > pci_parse_request_of_pci_ranges().
-> > > >
-> > > > Cc: Ley Foon Tan <lftan@altera.com>
-> > > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > > Cc: rfi@lists.rocketboards.org
-> > > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > > ---
-> >
-> > > > @@ -833,9 +800,8 @@ static int altera_pcie_probe(struct platform_device *pdev)
-> > > >               return ret;
-> > > >       }
-> > > >
-> > > > -     INIT_LIST_HEAD(&pcie->resources);
-> > > > -
-> > > > -     ret = altera_pcie_parse_request_of_pci_ranges(pcie);
-> > > > +     ret = pci_parse_request_of_pci_ranges(dev, &pcie->resources,
-> > >
-> > > Does it matter that we now map any given IO ranges whereas we didn't
-> > > previously?
-> > >
-> > > As far as I can tell there are no users that pass an IO range, if they
-> > > did then with the existing code the probe would fail and they'd get
-> > > a "I/O range found for %pOF. Please provide an io_base pointer...".
-> > > However with the new code if any IO range was given (which would
-> > > probably represent a misconfiguration), then we'd proceed to map the
-> > > IO range. When that IO is used, who knows what would happen.
-> >
-> > Yeah, I'm assuming that the DT doesn't have an IO range if IO is not
-> > supported. IMO, it is not the kernel's job to validate the DT.
->
-> Sure. Is it worth mentioning in the commit message this subtle change
-> in behaviour?
+On Sat, Sep 28, 2019 at 02:40:26AM +0300, Denis Efremov wrote:
+> Code that iterates over all standard PCI BARs typically uses
+> PCI_STD_RESOURCE_END, but this is error-prone because it requires
+> "i <= PCI_STD_RESOURCE_END" rather than something like
+> "i < PCI_STD_NUM_BARS". We could add such a definition and use it the same
+> way PCI_SRIOV_NUM_BARS is used. The patchset also replaces constant (6)
+> with new define PCI_STD_NUM_BARS where appropriate and removes local
+> declarations for the number of PCI BARs.
+> 
+> Changes in v3:
+>   - Updated commits description.
+>   - Refactored "< PCI_ROM_RESOURCE" with "< PCI_STD_NUM_BARS" in loops.
+>   - Refactored "<= BAR_5" with "< PCI_STD_NUM_BARS" in loops.
+>   - Removed local define GASKET_NUM_BARS.
+>   - Removed local define PCI_NUM_BAR_RESOURCES.
+> 
+> Changes in v2:
+>   - Reversed checks in pci_iomap_range,pci_iomap_wc_range.
+>   - Refactored loops in vfio_pci to keep PCI_STD_RESOURCES.
+>   - Added 2 new patches to replace the magic constant with new define.
+>   - Splitted net patch in v1 to separate stmmac and dwc-xlgmac patches.
+> 
+> Denis Efremov (26):
+>   PCI: Add define for the number of standard PCI BARs
+>   PCI: hv: Use PCI_STD_NUM_BARS
+>   PCI: dwc: Use PCI_STD_NUM_BARS
+>   PCI: endpoint: Use PCI_STD_NUM_BARS
+>   misc: pci_endpoint_test: Use PCI_STD_NUM_BARS
+>   s390/pci: Use PCI_STD_NUM_BARS
+>   x86/PCI: Loop using PCI_STD_NUM_BARS
+>   alpha/PCI: Use PCI_STD_NUM_BARS
+>   ia64: Use PCI_STD_NUM_BARS
+>   stmmac: pci: Loop using PCI_STD_NUM_BARS
+>   net: dwc-xlgmac: Loop using PCI_STD_NUM_BARS
+>   ixgb: use PCI_STD_NUM_BARS
+>   e1000: Use PCI_STD_NUM_BARS
+>   rapidio/tsi721: Loop using PCI_STD_NUM_BARS
+>   efifb: Loop using PCI_STD_NUM_BARS
+>   fbmem: use PCI_STD_NUM_BARS
+>   vfio_pci: Loop using PCI_STD_NUM_BARS
+>   scsi: pm80xx: Use PCI_STD_NUM_BARS
+>   ata: sata_nv: Use PCI_STD_NUM_BARS
+>   staging: gasket: Use PCI_STD_NUM_BARS
+>   serial: 8250_pci: Use PCI_STD_NUM_BARS
+>   pata_atp867x: Use PCI_STD_NUM_BARS
+>   memstick: use PCI_STD_NUM_BARS
+>   USB: core: Use PCI_STD_NUM_BARS
+>   usb: pci-quirks: Use PCI_STD_NUM_BARS
+>   devres: use PCI_STD_NUM_BARS
+> 
+>  arch/alpha/kernel/pci-sysfs.c                 |  8 ++---
+>  arch/ia64/sn/pci/pcibr/pcibr_dma.c            |  4 +--
+>  arch/s390/include/asm/pci.h                   |  5 +--
+>  arch/s390/include/asm/pci_clp.h               |  6 ++--
+>  arch/s390/pci/pci.c                           | 16 +++++-----
+>  arch/s390/pci/pci_clp.c                       |  6 ++--
+>  arch/x86/pci/common.c                         |  2 +-
+>  arch/x86/pci/intel_mid_pci.c                  |  2 +-
+>  drivers/ata/pata_atp867x.c                    |  2 +-
+>  drivers/ata/sata_nv.c                         |  2 +-
+>  drivers/memstick/host/jmb38x_ms.c             |  2 +-
+>  drivers/misc/pci_endpoint_test.c              |  8 ++---
+>  drivers/net/ethernet/intel/e1000/e1000.h      |  1 -
+>  drivers/net/ethernet/intel/e1000/e1000_main.c |  2 +-
+>  drivers/net/ethernet/intel/ixgb/ixgb.h        |  1 -
+>  drivers/net/ethernet/intel/ixgb/ixgb_main.c   |  2 +-
+>  .../net/ethernet/stmicro/stmmac/stmmac_pci.c  |  4 +--
+>  .../net/ethernet/synopsys/dwc-xlgmac-pci.c    |  2 +-
+>  drivers/pci/controller/dwc/pci-dra7xx.c       |  2 +-
+>  .../pci/controller/dwc/pci-layerscape-ep.c    |  2 +-
+>  drivers/pci/controller/dwc/pcie-artpec6.c     |  2 +-
+>  .../pci/controller/dwc/pcie-designware-plat.c |  2 +-
+>  drivers/pci/controller/dwc/pcie-designware.h  |  2 +-
+>  drivers/pci/controller/pci-hyperv.c           | 10 +++---
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 10 +++---
+>  drivers/pci/pci-sysfs.c                       |  4 +--
+>  drivers/pci/pci.c                             | 13 ++++----
+>  drivers/pci/proc.c                            |  4 +--
+>  drivers/pci/quirks.c                          |  4 +--
+>  drivers/rapidio/devices/tsi721.c              |  2 +-
+>  drivers/scsi/pm8001/pm8001_hwi.c              |  2 +-
+>  drivers/scsi/pm8001/pm8001_init.c             |  2 +-
+>  drivers/staging/gasket/gasket_constants.h     |  3 --
+>  drivers/staging/gasket/gasket_core.c          | 12 +++----
+>  drivers/staging/gasket/gasket_core.h          |  4 +--
+>  drivers/tty/serial/8250/8250_pci.c            |  8 ++---
+>  drivers/usb/core/hcd-pci.c                    |  2 +-
+>  drivers/usb/host/pci-quirks.c                 |  2 +-
+>  drivers/vfio/pci/vfio_pci.c                   | 11 ++++---
+>  drivers/vfio/pci/vfio_pci_config.c            | 32 ++++++++++---------
+>  drivers/vfio/pci/vfio_pci_private.h           |  4 +--
+>  drivers/video/fbdev/core/fbmem.c              |  4 +--
+>  drivers/video/fbdev/efifb.c                   |  2 +-
+>  include/linux/pci-epc.h                       |  2 +-
+>  include/linux/pci.h                           |  2 +-
+>  include/uapi/linux/pci_regs.h                 |  1 +
+>  lib/devres.c                                  |  2 +-
+>  47 files changed, 112 insertions(+), 115 deletions(-)
 
-Will do.
+Applied to pci/resource for v5.5, thanks!
 
-> > > I wonder if there is a better way for a host driver to indicate that
-> > > it doesn't support IO?
-> >
-> > We can probably test for this in the schema.
-> >
-> > ranges:
-> >   items:
-> >     minItems: 7
-> >     items:
-> >       - not: { const: 0x01000000 }
-> >
-> > Or "- enum: [ 0x42000000, 0x02000000 ]"
-> >
-> > Of course, in theory, the bus, dev, fn fields could be non-zero and we
-> > could use minium/maximum to handle those, but in practice I think they
-> > are rarely used for FDT.
->
-> Many controllers also appear to set the top bit (relocatable), e.g.
-> 0x82000000...
-
-That begs the question how many should set the relocatable bit and don't...
-
-Anyways, it's still a smallish set of possible values and worthwhile
-to describe which ones a controller supports.
-
-> At present there are no PCI bindings that use the YAML schema, if I've
-> understood correctly.
-
-Probably so, there has been at least one under review. Intel LGM IIRC.
-We do need a common PCI schema too. Hopefully someone beats me to it.
-
-Rob
+I ended up squashing these all together because they're all related
+and tiny.
