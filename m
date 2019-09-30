@@ -2,175 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 09382C2559
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 18:43:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51CA6C258C
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 18:57:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732353AbfI3QnX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Sep 2019 12:43:23 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:33765 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732183AbfI3QnW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Sep 2019 12:43:22 -0400
-X-Originating-IP: 88.190.179.123
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 7769AFF80C;
-        Mon, 30 Sep 2019 16:43:19 +0000 (UTC)
-Date:   Mon, 30 Sep 2019 18:52:30 +0200
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ellie Reeves <ellierevves@gmail.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Use LTSSM state to build link training
- flag
-Message-ID: <20190930165230.GA12568@voidbox>
-References: <20190522213351.21366-3-repk@triplefau.lt>
- <20190930154017.GF42880@e119886-lin.cambridge.arm.com>
+        id S1729590AbfI3Q5D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Sep 2019 12:57:03 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35931 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727702AbfI3Q5D (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Sep 2019 12:57:03 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 67so8965537oto.3
+        for <linux-pci@vger.kernel.org>; Mon, 30 Sep 2019 09:57:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GZJu5nMPyA3CcXPtrWusDX9FpZgNc7KiBqwKc0pCnNk=;
+        b=lDMXPyHH0b4q5PAmhy6A3YLJAkPCddp6btlDUZ0fPsYCu5yMeJTt74gZ5ZUXWWwe/w
+         QnXSoca9X+Ns+PkoKCftGvH+eaa8NqLQr1kdj58zJ2hiotXy2CBBNxVuUeD0NYk76Beu
+         YBIyyDFD6dc6upQ597O4TV60qpD4y3gXNE7Jery+lSUTFIndraj1O/EcZ1NBkAY+sVH2
+         v9Ff9yFBknkTGA7ZEnjAI/tM6OntsNWbkiRuV6dtG3p13i1YVPGbTfhVgwtVRieZkRmM
+         IFBRMzd0DiKPR74GE5cGaMLRvXbhOal7CevhadIXbfMyF4jjMUB76fGc/0EZmpPBcItS
+         cFSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GZJu5nMPyA3CcXPtrWusDX9FpZgNc7KiBqwKc0pCnNk=;
+        b=W+UWjcxmHyZPT5c032Lq/rUk3Ymk31lsHJ9pvj6W4bI0hZ8/mKdMe2SzClj7fwPjPo
+         CiuqxcJMBwHfJE3OhO9jJcQTJxSzPSwMj37bgj2tM54eszVPDKxwvMrOKoybO0GDsvO7
+         sgAwnDxT1RjGMN+5VjG/5w9tHlrhizUvD6bgjLmCb7aMCu8exZsrXUr63/WwOlM7YroK
+         S7N/VJ6761uN8z2uZHcZVFhUrtr0bg/AolrPc+Cs1ePHZYSQltfAdRdwiel4xizbjrob
+         H2BLsqxzzPRc4xNzcNgv3JRixUY12edjpkM9fTUcNWGnzmsagCXP/18h4frwMc9dBb2N
+         1hTA==
+X-Gm-Message-State: APjAAAXcREiynsq+WEppHDUkkpr0PeAqlKGJTYT95kNN9LgudxXjlBu9
+        sOo9tD7cfDCppcPQmmN+7ddinaG7yNQ+HOUkdhMiWQ==
+X-Google-Smtp-Source: APXvYqzB8H/7R2/+lg1XepUdOoHj928L8GWJV0m55A4x/X1lbYqO0HreOXXiM5k44rOocAfzJA5NKe2lpHDKrO0K8gI=
+X-Received: by 2002:a9d:562:: with SMTP id 89mr1391432otw.232.1569862622367;
+ Mon, 30 Sep 2019 09:57:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190930154017.GF42880@e119886-lin.cambridge.arm.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190924214630.12817-1-robh@kernel.org> <20190924214630.12817-6-robh@kernel.org>
+ <20190925103752.GS9720@e119886-lin.cambridge.arm.com> <CAL_JsqJW2t3F6HdKqcHguYLLiYQ6XWOsQbY-TFsDXhrDjjszew@mail.gmail.com>
+In-Reply-To: <CAL_JsqJW2t3F6HdKqcHguYLLiYQ6XWOsQbY-TFsDXhrDjjszew@mail.gmail.com>
+From:   Peter Maydell <peter.maydell@linaro.org>
+Date:   Mon, 30 Sep 2019 17:56:51 +0100
+Message-ID: <CAFEAcA_Lu73n9z-fyWNLvnxXyk-JcUbONHE5x06Uh9Upk4MVbw@mail.gmail.com>
+Subject: Re: [PATCH 05/11] PCI: versatile: Use pci_parse_request_of_pci_ranges()
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 04:40:18PM +0100, Andrew Murray wrote:
-> On Wed, May 22, 2019 at 11:33:51PM +0200, Remi Pommarel wrote:
-> > Aardvark's PCI_EXP_LNKSTA_LT flag in its link status register is not
-> > implemented and does not reflect the actual link training state (the
-> > flag is always set to 0). In order to support link re-training feature
-> > this flag has to be emulated. The Link Training and Status State
-> > Machine (LTSSM) flag in Aardvark LMI config register could be used as
-> > a link training indicator. Indeed if the LTSSM is in L0 or upper state
-> > then link training has completed (see [1]).
-> > 
-> > Unfortunately because after asking a link retraining it takes a while
-> > for the LTSSM state to become less than 0x10 (due to L0s to recovery
-> > state transition delays), LTSSM can still be in L0 while link training
-> > has not finished yet. So this waits for link to be in recovery or lesser
-> > state before returning after asking for a link retrain.
-> > 
-> > [1] "PCI Express Base Specification", REV. 4.0
-> >     PCI Express, February 19 2014, Table 4-14
-> > 
-> > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> > ---
-> > Changes since v1:
-> >   - Rename retraining flag field
-> >   - Fix DEVCTL register writing
-> > 
-> > Changes since v2:
-> >   - Rewrite patch logic so it is more legible
-> > 
-> > Please note that I will unlikely be able to answer any comments from May
-> > 24th to June 10th.
-> > ---
-> >  drivers/pci/controller/pci-aardvark.c | 29 ++++++++++++++++++++++++++-
-> >  1 file changed, 28 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > index 134e0306ff00..8803083b2174 100644
-> > --- a/drivers/pci/controller/pci-aardvark.c
-> > +++ b/drivers/pci/controller/pci-aardvark.c
-> > @@ -180,6 +180,8 @@
-> >  #define LINK_WAIT_MAX_RETRIES		10
-> >  #define LINK_WAIT_USLEEP_MIN		90000
-> >  #define LINK_WAIT_USLEEP_MAX		100000
-> > +#define RETRAIN_WAIT_MAX_RETRIES	10
-> > +#define RETRAIN_WAIT_USLEEP_US		2000
-> >  
-> >  #define MSI_IRQ_NUM			32
-> >  
-> > @@ -239,6 +241,17 @@ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
-> >  	return -ETIMEDOUT;
-> >  }
-> >  
-> > +static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
-> > +{
-> > +	size_t retries;
-> > +
-> > +	for (retries = 0; retries < RETRAIN_WAIT_MAX_RETRIES; ++retries) {
-> > +		if (!advk_pcie_link_up(pcie))
-> > +			break;
-> > +		udelay(RETRAIN_WAIT_USLEEP_US);
-> > +	}
-> > +}
-> > +
-> >  static void advk_pcie_setup_hw(struct advk_pcie *pcie)
-> >  {
-> >  	u32 reg;
-> > @@ -426,11 +439,20 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
-> >  		return PCI_BRIDGE_EMUL_HANDLED;
-> >  	}
-> >  
-> > +	case PCI_EXP_LNKCTL: {
-> > +		/* u32 contains both PCI_EXP_LNKCTL and PCI_EXP_LNKSTA */
-> > +		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
-> > +			~(PCI_EXP_LNKSTA_LT << 16);
-> 
-> The commit message says "the flag is always set to 0" - therefore I guess
-> you don't *need* to mask out the LT bit here? I assume this is just
-> belt-and-braces but thought I'd check incase I've misunderstood or if your
-> commit message is inaccurate.
-> 
-> In any case masking out the bit (or adding a comment) makes this code more
-> readable as the reader doesn't need to know what the hardware does with this
-> bit.
+On Thu, 26 Sep 2019 at 22:45, Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Sep 25, 2019 at 5:37 AM Andrew Murray <andrew.murray@arm.com> wrote:
+> >
+> > On Tue, Sep 24, 2019 at 04:46:24PM -0500, Rob Herring wrote:
+> > > Convert ARM Versatile host bridge to use the common
+> > > pci_parse_request_of_pci_ranges().
+> > >
+> > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > ---
 
-Actually vendor eventually responded that the bit was reserved, but
-during my tests it remains to 0.
+> > >  static int versatile_pci_probe(struct platform_device *pdev)
+> > >  {
+> > >       struct device *dev = &pdev->dev;
+> > >       struct resource *res;
+> > > -     int ret, i, myslot = -1;
+> > > +     struct resource_entry *entry;
+> > > +     int ret, i, myslot = -1, mem = 0;
+> >
+> > I think 'mem' should be initialised to 1, at least that's what the original
+> > code did. However I'm not sure why it should start from 1.
+>
+> The original code I moved from arch/arm had 32MB @ 0x0c000000 called
+> "PCI unused" which was requested with request_resource(), but never
+> provided to the PCI core. Otherwise, I kept the setup the same. No one
+> has complained in 4 years, though I'm not sure anyone would have
+> noticed if I just deleted PCI support...
 
-So yes I am masking this out mainly for belt-and-braces and legibility.
+Yes, QEMU users will notice if you drop or break PCI support :-)
+I don't think anybody is using real hardware PCI though.
 
-> > +		if (!advk_pcie_link_up(pcie))
-> > +			val |= (PCI_EXP_LNKSTA_LT << 16);
-> > +		*value = val;
-> > +		return PCI_BRIDGE_EMUL_HANDLED;
-> > +	}
-> > +
-> >  	case PCI_CAP_LIST_ID:
-> >  	case PCI_EXP_DEVCAP:
-> >  	case PCI_EXP_DEVCTL:
-> >  	case PCI_EXP_LNKCAP:
-> > -	case PCI_EXP_LNKCTL:
-> >  		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
-> >  		return PCI_BRIDGE_EMUL_HANDLED;
-> >  	default:
-> > @@ -447,8 +469,13 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
-> >  
-> >  	switch (reg) {
-> >  	case PCI_EXP_DEVCTL:
-> > +		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
-> > +		break;
-> 
-> Why is this here?
-> 
+Anyway, the 'mem' indexes here matter because you're passing
+them to PCI_IMAP() and PCI_SMAP(), which are writing to
+hardware registers. If you write to PCI_IMAP0 when we
+were previously writing to PCI_IMAP1 then suddenly you're
+not configuring the behaviour for accesses to the PCI
+window that's at CPU physaddr 0x50000000, you're configuring
+the window that's at CPU physaddr 0x44000000, which is
+entirely different (and notably is smaller, being only
+0x0c000000 in size rather than 0x10000000).
 
-Before PCI_EXP_DEVCTL and PCI_EXP_LNKCTL were doing the same thing, but
-as now PCI_EXP_LNKCTL does extra things (i.e. wait for link to
-successfully retrain), they do have different behaviours.
+If this is supposed to be a no-behaviour-change refactor
+then it would probably be a good test to check that we're
+writing exactly the same values to the hardware registers
+on the device as we were before the change.
 
-So this is here so PCI_EXP_DEVCTL keeps its old behaviour and do not
-wait for link retrain in case an unrelated (PCI_EXP_LNKCTL_RL) bit is
-set.
-
--- 
-Remi
-
-> > +
-> >  	case PCI_EXP_LNKCTL:
-> >  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
-> > +		if (new & PCI_EXP_LNKCTL_RL)
-> > +			advk_pcie_wait_for_retrain(pcie);
-> >  		break;
-> >  
-> >  	case PCI_EXP_RTCTL:
-> > -- 
-> > 2.20.1
-> > 
+thanks
+-- PMM
