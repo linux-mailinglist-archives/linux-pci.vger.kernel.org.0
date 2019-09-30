@@ -2,196 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6944BC206F
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 14:16:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3156C20CC
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 14:45:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfI3MQY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Sep 2019 08:16:24 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:48827 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfI3MQY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Sep 2019 08:16:24 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MZCX1-1iaW5x1SCX-00V7fF; Mon, 30 Sep 2019 14:16:00 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Pascal van Leeuwen <pvanleeuwen@verimatrix.com>,
-        Pascal van Leeuwen <pascalvanl@gmail.com>,
-        Kelsey Skunberg <skunberg.kelsey@gmail.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH 3/3] crypto: inside-secure - Remove #ifdef checks
-Date:   Mon, 30 Sep 2019 14:14:35 +0200
-Message-Id: <20190930121520.1388317-3-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190930121520.1388317-1-arnd@arndb.de>
-References: <20190930121520.1388317-1-arnd@arndb.de>
+        id S1730679AbfI3Mpt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Sep 2019 08:45:49 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46779 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726952AbfI3Mpt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Sep 2019 08:45:49 -0400
+Received: by mail-wr1-f66.google.com with SMTP id o18so11123405wrv.13;
+        Mon, 30 Sep 2019 05:45:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iI178b6o0qZVFBE5FgkMuuPfgQeMCHtWWim2bH0vxbY=;
+        b=jO6onDotzDWCKXEXFzt5lNj+IXe2cN21TYeChnFaKzRs7HYnmYbsPmIYHIi7enbNF4
+         mQa8u5bgxNDWXpiEFIs5ZU6+ff+9UycRj24TGk9n5RnpNPVRd43/j3BJ78zZDDMf+pRR
+         eB3SrMQ58CgKzB11kCbIOLDU5KRIEutAgyT8dgXTWRj2EJEPHS+ixySzNJTfLBNhxYgJ
+         68AGeSyl39hAgbzMKsNkX2YRRvfBbRGjNjtFunngdVEhPzQuH8b/tBZ6nu3SuLhPiP9g
+         yVX8bBsl9XObGaG++9XSz8OagizFufFlSRWqnFyFk1gq+W34kWd+Y4icip9DcFuwGZCh
+         aNfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iI178b6o0qZVFBE5FgkMuuPfgQeMCHtWWim2bH0vxbY=;
+        b=gOd8hldZfuQJR756Bl7LrlroILWsaYtF0nWAHjlW///U2de5emWh7j7RaNMRsiM/7Q
+         cACBMVUvUstX6GsVS0di346LYUGsPL3HAKLb5H12zjYX3t89hQvpHvK88ho3+D1U9g1P
+         Dd21NLsI9jfi15949abhVuFUQKzSqprjm7dL33mmuuJKa+P2UuA4BOHozVIFyyLIUxR9
+         313mhwQu2Hy61WO8AxUwGQtl1P4MBHRJ8GK24LfhOwPcfc4VIXqhalJVUGPTlpUHGLOM
+         a17Eq5U8kNKeVI6eZZxLpiHbRP4PJY1lbMX50BQFepuqSO1m8ZyV3mlNbtUZs1DIT6rl
+         SFDw==
+X-Gm-Message-State: APjAAAVptAZn2zmJsUbjAjhBBfE3cenyF5a9kaj3+k5nxAutPPO73QvH
+        KWD6SmV8qB/v25FeiSZ9ams=
+X-Google-Smtp-Source: APXvYqxXqlxnCTWpHdUcHd+CsyWUyx5za3cbr+Ty3uRN7gE1JPrkoUFKktywA+G0M4up4B1gCXbvvA==
+X-Received: by 2002:adf:e951:: with SMTP id m17mr12954736wrn.154.1569847546974;
+        Mon, 30 Sep 2019 05:45:46 -0700 (PDT)
+Received: from [192.168.1.4] (ip-86-49-35-8.net.upcbroadband.cz. [86.49.35.8])
+        by smtp.gmail.com with ESMTPSA id z1sm26014947wre.40.2019.09.30.05.45.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Sep 2019 05:45:46 -0700 (PDT)
+Subject: Re: [PATCH 00/11] of: dma-ranges fixes and improvements
+To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Oza Pawandeep <oza.oza@broadcom.com>
+References: <20190927002455.13169-1-robh@kernel.org>
+From:   Marek Vasut <marek.vasut@gmail.com>
+Message-ID: <106d5b37-5732-204f-4140-8d528256a59b@gmail.com>
+Date:   Mon, 30 Sep 2019 14:40:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:DhNMaznTViuOF1AalsUIbiZreKsHiyUrkj8fjXw2kpt+XaZVRMO
- J8YhptUq0zNreRZAe1ciQQ9P+7PwLZ4bVXmZ2zDxUx16GeaoE+uLbSBgsq4VqI/bllMTpUm
- IuOxnA/ocfiWg7kY8BpiqjzDbShczJ0gkj3X45qj6ROtPYNI1xWVIe84GaxjDxbJJT/Kxf4
- GCMm4UdcKSxI/O67jRoeA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:iwpPAhAApkg=:vp6ThXb05tXvclIdlpOKKK
- 9xeCeSq9XRyUpW/bqAqmJKKLGkk0Dmni/pOgc+KWFb/bUqE5jDBE6agHOI3v6VlhEO1iQ7CLV
- gR4/7DWERudbPYl09MEziUp/oWYSm4xo+QgUD68FnLuodMS1fbyderRJLzO1BcIZN9wuQML2a
- mz684aYB+X5HJQ2GJrw012PxdMfTu2myUmH7usdIcW/UDg5j1Eacg1YLo5eRtYeX7pYTorqLS
- 8vdOfsIsU8Xfs7E+d3gXKiSRlVncPB3mjJOtKzh7mmJnSCXbwtpMkwYEVAHjMqVvTaY4/cXC1
- aDJCggWuHj2cimOinhDTJ88N6x/hQSQY4q5j/F6AsviI/kS6UjqM+lvl1HKXexaK7thGZI5wI
- L9WFx8+JfUpFIPj9B2dOCwHOSmdn2YeCvoBM9aQ+sStypc1brRCggst6Af1THOj2tWV8qPGF8
- 3lfwmx2ejW1KKJCqEiWM9mZCo0fwtTmRYxZIpbJDqGSwPBXjtX2lV43tf5wgd+IvKXXosuiPg
- hkCZYTPNx109UA+M/erLPaX6c+FsKrrkbL/xETUsrW3AXHPXPnc/uolW8A1fo+cz9eVYqJ5jc
- buENIliHdYaUzgxniz0DavEs/1qAuRJ/br3MXKoYUbnKH7yvrcLso51UfRorcAiLmn+9KeHBC
- ktYJlTiDUSJqBP9eWE6v2pfR4S2uYCyLMHP8O6/AWmwnGKO/Av3dGrUABq339Es85ycXV9cYd
- jTK1Loj8PKsbklF1gEbzdEb4MijosQ+QGi//ne7NtoRQiYyyXDU5DHT+OG1UCthO/M3+XADuC
- u65TN7AgkL4g98Ypd9xTpptk550otgnsWlvWZ16J47yizTnz2fsyiVcxNyk2pLGHZbpcccy+T
- 64ls0o7jlMI1K1K5AYnA==
+In-Reply-To: <20190927002455.13169-1-robh@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When both PCI and OF are disabled, no drivers are registered, and
-we get some unused-function warnings:
+On 9/27/19 2:24 AM, Rob Herring wrote:
+> This series fixes several issues related to 'dma-ranges'. Primarily,
+> 'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
+> devices not described in the DT. A common case needing dma-ranges is a
+> 32-bit PCIe bridge on a 64-bit system. This affects several platforms
+> including Broadcom, NXP, Renesas, and Arm Juno. There's been several
+> attempts to fix these issues, most recently earlier this week[1].
+> 
+> In the process, I found several bugs in the address translation. It
+> appears that things have happened to work as various DTs happen to use
+> 1:1 addresses.
+> 
+> First 3 patches are just some clean-up. The 4th patch adds a unittest
+> exhibiting the issues. Patches 5-9 rework how of_dma_configure() works
+> making it work on either a struct device child node or a struct
+> device_node parent node so that it works on bus leaf nodes like PCI
+> bridges. Patches 10 and 11 fix 2 issues with address translation for
+> dma-ranges.
+> 
+> My testing on this has been with QEMU virt machine hacked up to set PCI
+> dma-ranges and the unittest. Nicolas reports this series resolves the
+> issues on Rpi4 and NXP Layerscape platforms.
 
-drivers/crypto/inside-secure/safexcel.c:1221:13: error: unused function 'safexcel_unregister_algorithms' [-Werror,-Wunused-function]
-static void safexcel_unregister_algorithms(struct safexcel_crypto_priv *priv)
-drivers/crypto/inside-secure/safexcel.c:1307:12: error: unused function 'safexcel_probe_generic' [-Werror,-Wunused-function]
-static int safexcel_probe_generic(void *pdev,
-drivers/crypto/inside-secure/safexcel.c:1531:13: error: unused function 'safexcel_hw_reset_rings' [-Werror,-Wunused-function]
-static void safexcel_hw_reset_rings(struct safexcel_crypto_priv *priv)
+With the following patches applied:
+      https://patchwork.ozlabs.org/patch/1144870/
+      https://patchwork.ozlabs.org/patch/1144871/
+on R8A7795 Salvator-XS
+Tested-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 
-It's better to make the compiler see what is going on and remove
-such ifdef checks completely. In case of PCI, this is trivial since
-pci_register_driver() is defined to an empty function that makes the
-compiler subsequently drop all unused code silently.
-
-The global pcireg_rc/ofreg_rc variables are not actually needed here
-since the driver registration does not fail in ways that would make
-it helpful.
-
-For CONFIG_OF, an IS_ENABLED() check is still required, since platform
-drivers can exist both with and without it.
-
-A little change to linux/pci.h is needed to ensure that
-pcim_enable_device() is visible to the driver. Moving the declaration
-outside of ifdef would be sufficient here, but for consistency with the
-rest of the file, adding an inline helper is probably best.
-
-Fixes: 212ef6f29e5b ("crypto: inside-secure - Fix unused variable warning when CONFIG_PCI=n")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/crypto/inside-secure/safexcel.c | 49 ++++++-------------------
- include/linux/pci.h                     |  1 +
- 2 files changed, 13 insertions(+), 37 deletions(-)
-
-diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/inside-secure/safexcel.c
-index 311bf60df39f..c4e8fd27314c 100644
---- a/drivers/crypto/inside-secure/safexcel.c
-+++ b/drivers/crypto/inside-secure/safexcel.c
-@@ -1547,7 +1547,6 @@ static void safexcel_hw_reset_rings(struct safexcel_crypto_priv *priv)
- 	}
- }
- 
--#if IS_ENABLED(CONFIG_OF)
- /* for Device Tree platform driver */
- 
- static int safexcel_probe(struct platform_device *pdev)
-@@ -1666,9 +1665,7 @@ static struct platform_driver  crypto_safexcel = {
- 		.of_match_table = safexcel_of_match_table,
- 	},
- };
--#endif
- 
--#if IS_ENABLED(CONFIG_PCI)
- /* PCIE devices - i.e. Inside Secure development boards */
- 
- static int safexcel_pci_probe(struct pci_dev *pdev,
-@@ -1789,54 +1786,32 @@ static struct pci_driver safexcel_pci_driver = {
- 	.probe         = safexcel_pci_probe,
- 	.remove        = safexcel_pci_remove,
- };
--#endif
--
--/* Unfortunately, we have to resort to global variables here */
--#if IS_ENABLED(CONFIG_PCI)
--int pcireg_rc = -EINVAL; /* Default safe value */
--#endif
--#if IS_ENABLED(CONFIG_OF)
--int ofreg_rc = -EINVAL; /* Default safe value */
--#endif
- 
- static int __init safexcel_init(void)
- {
--#if IS_ENABLED(CONFIG_PCI)
-+	int ret;
-+
- 	/* Register PCI driver */
--	pcireg_rc = pci_register_driver(&safexcel_pci_driver);
--#endif
-+	ret = pci_register_driver(&safexcel_pci_driver);
- 
--#if IS_ENABLED(CONFIG_OF)
- 	/* Register platform driver */
--	ofreg_rc = platform_driver_register(&crypto_safexcel);
-- #if IS_ENABLED(CONFIG_PCI)
--	/* Return success if either PCI or OF registered OK */
--	return pcireg_rc ? ofreg_rc : 0;
-- #else
--	return ofreg_rc;
-- #endif
--#else
-- #if IS_ENABLED(CONFIG_PCI)
--	return pcireg_rc;
-- #else
--	return -EINVAL;
-- #endif
--#endif
-+	if (IS_ENABLED(CONFIG_OF) && !ret) {
-+		ret = platform_driver_register(&crypto_safexcel);
-+		if (ret)
-+			pci_unregister_driver(&safexcel_pci_driver);
-+	}
-+
-+	return ret;
- }
- 
- static void __exit safexcel_exit(void)
- {
--#if IS_ENABLED(CONFIG_OF)
- 	/* Unregister platform driver */
--	if (!ofreg_rc)
-+	if (IS_ENABLED(CONFIG_OF))
- 		platform_driver_unregister(&crypto_safexcel);
--#endif
- 
--#if IS_ENABLED(CONFIG_PCI)
- 	/* Unregister PCI driver if successfully registered before */
--	if (!pcireg_rc)
--		pci_unregister_driver(&safexcel_pci_driver);
--#endif
-+	pci_unregister_driver(&safexcel_pci_driver);
- }
- 
- module_init(safexcel_init);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index f9088c89a534..1a6cf19eac2d 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1686,6 +1686,7 @@ static inline struct pci_dev *pci_get_class(unsigned int class,
- static inline void pci_set_master(struct pci_dev *dev) { }
- static inline int pci_enable_device(struct pci_dev *dev) { return -EIO; }
- static inline void pci_disable_device(struct pci_dev *dev) { }
-+static inline int pcim_enable_device(struct pci_dev *pdev) { return -EIO; }
- static inline int pci_assign_resource(struct pci_dev *dev, int i)
- { return -EBUSY; }
- static inline int __pci_register_driver(struct pci_driver *drv,
 -- 
-2.20.0
-
+Best regards,
+Marek Vasut
