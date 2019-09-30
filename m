@@ -2,121 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 38D4FC2977
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2019 00:27:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B0B2C2998
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2019 00:33:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbfI3W1d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Sep 2019 18:27:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34224 "EHLO mail.kernel.org"
+        id S1726303AbfI3WbU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Sep 2019 18:31:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726858AbfI3W1c (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Sep 2019 18:27:32 -0400
+        id S1726103AbfI3WbU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Sep 2019 18:31:20 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36EE82081B;
-        Mon, 30 Sep 2019 22:27:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCF6220842;
+        Mon, 30 Sep 2019 22:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569882451;
-        bh=drw2jqaygRfgFQ/qKNI7KdpkbRJVbTgoSvuGceP3BXw=;
+        s=default; t=1569882679;
+        bh=3hlrgytMsPG+Nev+4sXHGMfpWpuL+FFTmPNPIizXz4Q=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=2gOfuKZkZJ5L3EUFFddykrVuc4ZDWfyFyfPMxVniDfmLHp1+27zI2IHKgNzhUO2NG
-         2hO3aBRtMIJNUomJxfHTLrby0uneiFwHRlrLvqxuhqN/G6y1akkbyOI8U9bexB/otZ
-         Wt01l9kgjRIugPVsS6qpDtlf8cEdmPyllgWGVmec=
-Date:   Mon, 30 Sep 2019 17:27:29 -0500
+        b=QzDciQpN52a/HyjuM3ARibJ1X2XtHJbWTe0x/FhRta1fa7GozAQPiQm/Y7RA1Skew
+         KVQAOdj8auXOZTuby4unk9zaeFNcM+FNwqdG0ExczvJ8FRr5GfSRbALg9RJ+QEM1rU
+         +cDcUF2xmIarD1CMNIBuJZ9mk2eqAiC7paElK9QQ=
+Date:   Mon, 30 Sep 2019 17:31:17 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Kitszel, PrzemyslawX" <przemyslawx.kitszel@intel.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Maslowski, Karol" <karol.maslowski@intel.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v2] PCI: Add quirk for VCA NTB
-Message-ID: <20190930222729.GA215153@google.com>
+To:     Krzysztof Wilczynski <kw@linux.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Move ATS declarations to linux/pci-ats.h
+Message-ID: <20190930223117.GA215913@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5683A335CC8BE1438C3C30C49DCC38DF637CED8E@IRSMSX102.ger.corp.intel.com>
+In-Reply-To: <20190914213032.22314-1-kw@linux.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 09:20:48AM +0000, Kitszel, PrzemyslawX wrote:
-> From 8ec717d913bba70e3e0dd783eebf355e0d64a159 Mon Sep 17 00:00:00 2001
-> From: Slawomir Pawlowski <slawomir.pawlowski@intel.com>
-> Date: Fri, 21 Sep 2018 15:55:12 +0200
-> Subject: [PATCH v2] PCI: Add quirk for VCA NTB
+On Sat, Sep 14, 2019 at 11:30:32PM +0200, Krzysztof Wilczynski wrote:
+> Move ATS function prototypes from include/linux/pci.h
+> to include/linux/pci-ats.h as the ATS, PRI, and PASID
+> interfaces are related, and are used only by the IOMMU
+> drivers.  This effecively reverts the change done in
+> commit ff9bee895c4d ("PCI: Move ATS declarations to
+> linux/pci.h so they're all together").
 > 
-> Intel Visual Compute Accelerator (VCA) is a family of PCIe add-in devices
-> exposing computational units via Non Transparent Bridges (NTB, PEX 87xx).
+> Also, remove surplus forward declaration of struct pci_ats
+> from include/linux/pci.h, as it is no longer needed, since
+> the struct pci_ats has been embedded directly into struct
+> pci_dev in the commit d544d75ac96a ("PCI: Embed ATS info
+> directly into struct pci_dev").
 > 
-> Similarly to MIC x200, there is need to add DMA aliases to allow buffer
-> access when IOMMU is enabled.
-> Following aliases are allowing host device and computational unit to access
-> each other.
-> Together those aliases marks whole VCA device as one IOMMU group.
+> No functional changes intended.
 > 
-> All possible slot numbers (0x20) are used, since we are unable to tell what
-> slot is used on other side.
-> This quirk is intended for both host and computational unit sides.
-> The VCA devices have up to 5 functions - 4 for DMA channels and one
-> additional.
-> 
-> Signed-off-by: Slawomir Pawlowski <slawomir.pawlowski@intel.com>
-> Signed-off-by: Przemek Kitszel <przemyslawx.kitszel@intel.com>
+> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
 
 Applied to pci/virtualization for v5.5, thanks!
 
 > ---
-> Changes in v2:
->   - fix typos: s/sine/since/g
+> Related:
+>   https://lore.kernel.org/r/20190902211100.GH7013@google.com
+>   https://lore.kernel.org/r/20190724233848.73327-9-skunberg.kelsey@gmail.com
 > 
->  drivers/pci/quirks.c | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
+>  include/linux/pci-ats.h | 76 +++++++++++++++--------------------------
+>  include/linux/pci.h     | 14 --------
+>  2 files changed, 28 insertions(+), 62 deletions(-)
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index ded60757a573..921a080146f3 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4062,6 +4062,38 @@ static void quirk_mic_x200_dma_alias(struct pci_dev *pdev)
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2260, quirk_mic_x200_dma_alias);
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2264, quirk_mic_x200_dma_alias);
+> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+> index 1ebb88e7c184..a2001673d445 100644
+> --- a/include/linux/pci-ats.h
+> +++ b/include/linux/pci-ats.h
+> @@ -4,74 +4,54 @@
 >  
-> +/*
-> + * Intel Visual Compute Accelerator (VCA) is a family of PCIe add-in devices
-> + * exposing computational units via Non Transparent Bridges (NTB, PEX 87xx).
-> + * Similarly to MIC x200, there is need to add DMA aliases to allow buffer
-> + * access when IOMMU is enabled.
-> + * Following aliases are allowing host device and computational unit to access
-> + * each other. Together those aliases marks whole VCA device as one IOMMU group.
-> + * All possible slot numbers (0x20) are used, since we are unable to tell what
-> + * slot is used on other side.
-> + * This quirk is intended for both host and computational unit sides.
-> + * The VCA devices have up to 5 functions (4 for DMA channels and 1 additional).
-> + */
-> +static void quirk_pex_vca_alias(struct pci_dev *pdev)
-> +{
-> +	const unsigned int num_pci_slots = 0x20;
-> +	unsigned int slot;
-> +
-> +	for (slot = 0; slot < num_pci_slots; slot++) {
-> +		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x0));
-> +		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x1));
-> +		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x2));
-> +		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x3));
-> +		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x4));
-> +	}
-> +}
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2954, quirk_pex_vca_alias);
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2955, quirk_pex_vca_alias);
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2956, quirk_pex_vca_alias);
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2958, quirk_pex_vca_alias);
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2959, quirk_pex_vca_alias);
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x295A, quirk_pex_vca_alias);
-> +
->  /*
->   * The IOMMU and interrupt controller on Broadcom Vulcan/Cavium ThunderX2 are
->   * associated not at the root bus, but at a bridge below. This quirk avoids
+>  #include <linux/pci.h>
+>  
+> -#ifdef CONFIG_PCI_PRI
+> +#ifdef CONFIG_PCI_ATS
+> +/* Address Translation Service */
+> +int pci_enable_ats(struct pci_dev *dev, int ps);
+> +void pci_disable_ats(struct pci_dev *dev);
+> +int pci_ats_queue_depth(struct pci_dev *dev);
+> +int pci_ats_page_aligned(struct pci_dev *dev);
+> +#else /* CONFIG_PCI_ATS */
+> +static inline int pci_enable_ats(struct pci_dev *d, int ps)
+> +{ return -ENODEV; }
+> +static inline void pci_disable_ats(struct pci_dev *d) { }
+> +static inline int pci_ats_queue_depth(struct pci_dev *d)
+> +{ return -ENODEV; }
+> +static inline int pci_ats_page_aligned(struct pci_dev *dev)
+> +{ return 0; }
+> +#endif /* CONFIG_PCI_ATS */
+>  
+> +#ifdef CONFIG_PCI_PRI
+>  int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
+>  void pci_disable_pri(struct pci_dev *pdev);
+>  void pci_restore_pri_state(struct pci_dev *pdev);
+>  int pci_reset_pri(struct pci_dev *pdev);
+> -
+>  #else /* CONFIG_PCI_PRI */
+> -
+>  static inline int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
+> -{
+> -	return -ENODEV;
+> -}
+> -
+> -static inline void pci_disable_pri(struct pci_dev *pdev)
+> -{
+> -}
+> -
+> -static inline void pci_restore_pri_state(struct pci_dev *pdev)
+> -{
+> -}
+> -
+> +{ return -ENODEV; }
+> +static inline void pci_disable_pri(struct pci_dev *pdev) { }
+> +static inline void pci_restore_pri_state(struct pci_dev *pdev) { }
+>  static inline int pci_reset_pri(struct pci_dev *pdev)
+> -{
+> -	return -ENODEV;
+> -}
+> -
+> +{ return -ENODEV; }
+>  #endif /* CONFIG_PCI_PRI */
+>  
+>  #ifdef CONFIG_PCI_PASID
+> -
+>  int pci_enable_pasid(struct pci_dev *pdev, int features);
+>  void pci_disable_pasid(struct pci_dev *pdev);
+>  void pci_restore_pasid_state(struct pci_dev *pdev);
+>  int pci_pasid_features(struct pci_dev *pdev);
+>  int pci_max_pasids(struct pci_dev *pdev);
+>  int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+> -
+> -#else  /* CONFIG_PCI_PASID */
+> -
+> +#else /* CONFIG_PCI_PASID */
+>  static inline int pci_enable_pasid(struct pci_dev *pdev, int features)
+> -{
+> -	return -EINVAL;
+> -}
+> -
+> -static inline void pci_disable_pasid(struct pci_dev *pdev)
+> -{
+> -}
+> -
+> -static inline void pci_restore_pasid_state(struct pci_dev *pdev)
+> -{
+> -}
+> -
+> +{ return -EINVAL; }
+> +static inline void pci_disable_pasid(struct pci_dev *pdev) { }
+> +static inline void pci_restore_pasid_state(struct pci_dev *pdev) { }
+>  static inline int pci_pasid_features(struct pci_dev *pdev)
+> -{
+> -	return -EINVAL;
+> -}
+> -
+> +{ return -EINVAL; }
+>  static inline int pci_max_pasids(struct pci_dev *pdev)
+> -{
+> -	return -EINVAL;
+> -}
+> -
+> +{ return -EINVAL; }
+>  static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+> -{
+> -	return 0;
+> -}
+> +{ return 0; }
+>  #endif /* CONFIG_PCI_PASID */
+>  
+> -
+> -#endif /* LINUX_PCI_ATS_H*/
+> +#endif /* LINUX_PCI_ATS_H */
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 56767f50ad96..5f2ae580bd19 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -284,7 +284,6 @@ struct irq_affinity;
+>  struct pcie_link_state;
+>  struct pci_vpd;
+>  struct pci_sriov;
+> -struct pci_ats;
+>  struct pci_p2pdma;
+>  
+>  /* The pci_dev structure describes PCI devices */
+> @@ -1764,19 +1763,6 @@ static inline const struct pci_device_id *pci_match_id(const struct pci_device_i
+>  static inline bool pci_ats_disabled(void) { return true; }
+>  #endif /* CONFIG_PCI */
+>  
+> -#ifdef CONFIG_PCI_ATS
+> -/* Address Translation Service */
+> -int pci_enable_ats(struct pci_dev *dev, int ps);
+> -void pci_disable_ats(struct pci_dev *dev);
+> -int pci_ats_queue_depth(struct pci_dev *dev);
+> -int pci_ats_page_aligned(struct pci_dev *dev);
+> -#else
+> -static inline int pci_enable_ats(struct pci_dev *d, int ps) { return -ENODEV; }
+> -static inline void pci_disable_ats(struct pci_dev *d) { }
+> -static inline int pci_ats_queue_depth(struct pci_dev *d) { return -ENODEV; }
+> -static inline int pci_ats_page_aligned(struct pci_dev *dev) { return 0; }
+> -#endif
+> -
+>  /* Include architecture-dependent settings and functions */
+>  
+>  #include <asm/pci.h>
 > -- 
-> 2.22.0
+> 2.23.0
 > 
