@@ -2,89 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DCC3C2170
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 15:05:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A3BBC2207
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 15:34:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbfI3NFr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Sep 2019 09:05:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:53902 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729738AbfI3NFr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:05:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B17F11000;
-        Mon, 30 Sep 2019 06:05:46 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD2783F706;
-        Mon, 30 Sep 2019 06:05:44 -0700 (PDT)
-Subject: Re: [PATCH 00/11] of: dma-ranges fixes and improvements
-To:     Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        id S1731193AbfI3Nc7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Sep 2019 09:32:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55408 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729738AbfI3Nc7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:32:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 20575ADD5;
+        Mon, 30 Sep 2019 13:32:57 +0000 (UTC)
+Message-ID: <95f8dabea99f104336491281b88c04b58d462258.camel@suse.de>
+Subject: Re: [PATCH 05/11] of: Ratify of_dma_configure() interface
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Christoph Hellwig <hch@infradead.org>,
+        Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Frank Rowand <frowand.list@gmail.com>,
         Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marek Vasut <marek.vasut@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Oza Pawandeep <oza.oza@broadcom.com>
+        Oza Pawandeep <oza.oza@broadcom.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Robin Murphy <robin.murphy@arm.com>
+Date:   Mon, 30 Sep 2019 15:32:55 +0200
+In-Reply-To: <20190930125752.GD12051@infradead.org>
 References: <20190927002455.13169-1-robh@kernel.org>
- <106d5b37-5732-204f-4140-8d528256a59b@gmail.com>
- <40bdf7cf-3bb1-24f8-844d-3eefbc761aba@arm.com>
- <807a4f96-cbda-da4d-a3f1-2bfe5788105b@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <107d3a83-7448-b5c8-4b38-9b376848a1fa@arm.com>
-Date:   Mon, 30 Sep 2019 14:05:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+         <20190927002455.13169-6-robh@kernel.org>
+         <20190930125752.GD12051@infradead.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-J2uUUCx3PD1vZZDm+yYn"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-In-Reply-To: <807a4f96-cbda-da4d-a3f1-2bfe5788105b@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 30/09/2019 13:54, Marek Vasut wrote:
-> On 9/30/19 2:52 PM, Robin Murphy wrote:
->> On 30/09/2019 13:40, Marek Vasut wrote:
->>> On 9/27/19 2:24 AM, Rob Herring wrote:
->>>> This series fixes several issues related to 'dma-ranges'. Primarily,
->>>> 'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
->>>> devices not described in the DT. A common case needing dma-ranges is a
->>>> 32-bit PCIe bridge on a 64-bit system. This affects several platforms
->>>> including Broadcom, NXP, Renesas, and Arm Juno. There's been several
->>>> attempts to fix these issues, most recently earlier this week[1].
->>>>
->>>> In the process, I found several bugs in the address translation. It
->>>> appears that things have happened to work as various DTs happen to use
->>>> 1:1 addresses.
->>>>
->>>> First 3 patches are just some clean-up. The 4th patch adds a unittest
->>>> exhibiting the issues. Patches 5-9 rework how of_dma_configure() works
->>>> making it work on either a struct device child node or a struct
->>>> device_node parent node so that it works on bus leaf nodes like PCI
->>>> bridges. Patches 10 and 11 fix 2 issues with address translation for
->>>> dma-ranges.
->>>>
->>>> My testing on this has been with QEMU virt machine hacked up to set PCI
->>>> dma-ranges and the unittest. Nicolas reports this series resolves the
->>>> issues on Rpi4 and NXP Layerscape platforms.
->>>
->>> With the following patches applied:
->>>         https://patchwork.ozlabs.org/patch/1144870/
->>>         https://patchwork.ozlabs.org/patch/1144871/
->>
->> Can you try it without those additional patches? This series aims to
->> make the parsing work properly generically, such that we shouldn't need
->> to add an additional PCI-specific version of almost the same code.
-> 
-> Seems to work even without those.
 
-Great, thanks for confirming!
+--=-J2uUUCx3PD1vZZDm+yYn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Robin.
+On Mon, 2019-09-30 at 05:57 -0700, Christoph Hellwig wrote:
+> On Thu, Sep 26, 2019 at 07:24:49PM -0500, Rob Herring wrote:
+> > -int of_dma_configure(struct device *dev, struct device_node *np, bool
+> > force_dma)
+> > +int of_dma_configure(struct device *dev, struct device_node *parent, b=
+ool
+> > force_dma)
+>=20
+> This creates a > 80 char line.
+>=20
+> >  {
+> >  	u64 dma_addr, paddr, size =3D 0;
+> >  	int ret;
+> >  	bool coherent;
+> >  	unsigned long offset;
+> >  	const struct iommu_ops *iommu;
+> > +	struct device_node *np;
+> >  	u64 mask;
+> > =20
+> > +	np =3D dev->of_node;
+> > +	if (!np)
+> > +		np =3D parent;
+> > +	if (!np)
+> > +		return -ENODEV;
+>=20
+> I have to say I find the older calling convention simpler to understand.
+> If we want to enforce the invariant I'd rather do that explicitly:
+>=20
+> 	if (dev->of_node && np !=3D dev->of_node)
+> 		return -EINVAL;
+
+As is, this would break Freescale Layerscape fsl-mc bus' dma_configure():
+
+static int fsl_mc_dma_configure(struct device *dev)
+{
+	struct device *dma_dev =3D dev;
+
+	while (dev_is_fsl_mc(dma_dev))
+		dma_dev =3D dma_dev->parent;
+
+	return of_dma_configure(dev, dma_dev->of_node, 0);
+}
+
+But I think that with this series, given the fact that we now treat the lac=
+k of
+dma-ranges as a 1:1 mapping instead of an error, we could rewrite the funct=
+ion
+like this:
+
+static int fsl_mc_dma_configure(struct device *dev)
+{
+	return of_dma_configure(dev, false, 0);
+}
+
+If needed I can test this.
+
+Regards,
+Nicolas
+
+
+--=-J2uUUCx3PD1vZZDm+yYn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2SBAcACgkQlfZmHno8
+x/4Nzwf+LG0gvylrOQLw5x/IHv2Kgv6fhZ0lnwVON/shyUQa9M2SJ6AmcGSBXL/D
+poq3K8WHsQdr5e2yEyy2/lT92p6qSNbdIDjOeDyq3YskHZP6SBm/nC2l/dtDU9z6
+fv3/gGTWP7ckQI4v4690kUZ4Txb3ndCWgrf7GXn7JKT7uDaqmIsiefi0S+YU8Y2L
+mr1dudpZ3wAnCI0uA6Za8Db6QQ2lCtGHvchLzv0dC8n4qlMMipuWGFD8y/R6BGw7
+90iinlHnoJrL07DjWy4nVFPqvXnFUADXr5eXAijh+ZQ7kCFOKHwYvEB7Zrh0mEw8
+bdGzfMEbXgkzUdAaLb8mb48VqHBsOg==
+=Byb8
+-----END PGP SIGNATURE-----
+
+--=-J2uUUCx3PD1vZZDm+yYn--
+
