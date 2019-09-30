@@ -2,91 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E679C17B5
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Sep 2019 19:40:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E55A4C1A17
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 04:09:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730500AbfI2RfC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 29 Sep 2019 13:35:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47152 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730496AbfI2RfB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:35:01 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A329521925;
-        Sun, 29 Sep 2019 17:34:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778500;
-        bh=fmz5hC3yBNgy6dgTbMASSrGRRvVOVbS1qhdGVdbjLH0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cguj60YXczBAjkufClr0PoKDqcDOMHOJUsfiu9kj70ZIe/84d5tZIJgyQvZPoyoLu
-         he9lmtrspChI89oYpb9tKzAifWArSetKExqTHkNNQKE/sGCqPzHtPolmPFY24gamLV
-         z2ArLQkp6XpvOMP1kNj/ykPpMxVs99l08DqXKme0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 20/33] PCI: exynos: Propagate errors for optional PHYs
-Date:   Sun, 29 Sep 2019 13:34:08 -0400
-Message-Id: <20190929173424.9361-20-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190929173424.9361-1-sashal@kernel.org>
-References: <20190929173424.9361-1-sashal@kernel.org>
+        id S1729299AbfI3CJD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 29 Sep 2019 22:09:03 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41625 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbfI3CJD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 Sep 2019 22:09:03 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q7so4665710pfh.8
+        for <linux-pci@vger.kernel.org>; Sun, 29 Sep 2019 19:09:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EUoklqhdz+06Es4zydiqQcrTeUMxMd/mLUALLm71lfY=;
+        b=asNdDYu0omLbaxUEQaI81/0xPdH6rv7dCsYzRxa5Ypn+z7n3HhcsnxqqXJ71hDmPR1
+         xztElkuHfkuxIOzFh4a/AtJMWn0dSigtHeS+y8qFyQJ3xbXcoTcNrmBfswV57qKm3Y9b
+         wmDJkLvYRLZFJserkfEBtvuHEXaJI/ZyH3rXOPELswCKLz1SQkGjFIxkwVP/td7Y3ZeG
+         w6EKaJf+bvfYdxVTs/4LA5wX7dFZMiTtcFmHE0V5Xf+E0jrHF8YRRbr6PQbZ8J/hFoeY
+         ufdJ1zLjDRx/vAZVkRtfVofyB326sUtc17XXJZBsnm2lMjZuVPyhroXEU+iAqpy4bMKV
+         wW6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EUoklqhdz+06Es4zydiqQcrTeUMxMd/mLUALLm71lfY=;
+        b=DTO/257lahAUo9mCEVZK9yn26F2mr+TaWyg+N4oUYgppCsH73w+j6ycaEEG1/thQtE
+         PzFI42f0Y0lfk7eRtPYexEC/Jp0Mzj0R7+fEoFWX5mVGAKXyubPU/OrXYMaLSR4JB9W9
+         vFGxlu4rlPaCYdJhbnVrC62RlS5b/Wmvkb6C0JfqDvkwIpJw+1KWGGjAsxTzD1eyWLSo
+         3T18NtgCraxNlXybY0SLVolIaFWc7R8fUlKJl609BrsAVpRcUk9fFKb1z4GqoIXr08YE
+         nky69G+UlaQ1GzXSkARAXAnL+odoQJqtVON2cJ1nRNACe72n0Lu/ko6ZJYYlSRMdqerh
+         MMSg==
+X-Gm-Message-State: APjAAAXxiTm3qNivQULHyQCoqwxUnfhxRXqh9q5123i5V8MvxPBiiwxF
+        TzxJaIfQa2gGLtZiZNO0IDJhlRKA
+X-Google-Smtp-Source: APXvYqyK6ilpREDn7g+CUxhDDvcld71JHVsbWRjGK9GVV2y8MzPM3ByZJAbP+y91ViNrEB1ey2l3mg==
+X-Received: by 2002:a62:7912:: with SMTP id u18mr18249781pfc.242.1569809342296;
+        Sun, 29 Sep 2019 19:09:02 -0700 (PDT)
+Received: from wafer.ozlabs.ibm.com.ozlabs.ibm.com ([122.99.82.10])
+        by smtp.gmail.com with ESMTPSA id x72sm11450733pfc.89.2019.09.29.19.09.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Sep 2019 19:09:01 -0700 (PDT)
+From:   Oliver O'Halloran <oohall@gmail.com>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     aik@ozlabs.ru, shawn@anastas.io, linux-pci@vger.kernel.org
+Subject: IOMMU group creation for pseries hotplug, and powernv VFs
+Date:   Mon, 30 Sep 2019 12:08:45 +1000
+Message-Id: <20190930020848.25767-1-oohall@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+A couple of extra patches on top of Shawn's existing re-ordering patch.
+This seems to fix the problem Alexey noted with Shawn's change causing
+VFs to lose their IOMMU group. I've tried pretty hard to make this a
+minimal fix it's still a bit large.
 
-[ Upstream commit ddd6960087d4b45759434146d681a94bbb1c54ad ]
+If mpe is happy to take this as a fix for 5.4 then I'll leave it,
+otherwise we might want to look at different approaches.
 
-devm_of_phy_get() can fail for a number of reasons besides probe
-deferral. It can for example return -ENOMEM if it runs out of memory as
-it tries to allocate devres structures. Propagating only -EPROBE_DEFER
-is problematic because it results in these legitimately fatal errors
-being treated as "PHY not specified in DT".
-
-What we really want is to ignore the optional PHYs only if they have not
-been specified in DT. devm_of_phy_get() returns -ENODEV in this case, so
-that's the special case that we need to handle. So we propagate all
-errors, except -ENODEV, so that real failures will still cause the
-driver to fail probe.
-
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/controller/dwc/pci-exynos.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-index cee5f2f590e2d..14a6ba4067fbe 100644
---- a/drivers/pci/controller/dwc/pci-exynos.c
-+++ b/drivers/pci/controller/dwc/pci-exynos.c
-@@ -465,7 +465,7 @@ static int __init exynos_pcie_probe(struct platform_device *pdev)
- 
- 	ep->phy = devm_of_phy_get(dev, np, NULL);
- 	if (IS_ERR(ep->phy)) {
--		if (PTR_ERR(ep->phy) == -EPROBE_DEFER)
-+		if (PTR_ERR(ep->phy) != -ENODEV)
- 			return PTR_ERR(ep->phy);
- 
- 		ep->phy = NULL;
--- 
-2.20.1
 
