@@ -2,30 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 57099C20F4
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 14:53:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09A64C20FA
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 14:54:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730708AbfI3Mxo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Sep 2019 08:53:44 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50726 "EHLO
+        id S1729914AbfI3MyQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Sep 2019 08:54:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52118 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729914AbfI3Mxo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Sep 2019 08:53:44 -0400
+        with ESMTP id S1726072AbfI3MyP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Sep 2019 08:54:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=0uRDM7LscqyGGmgD0X4C8lR+d/8Zk+ETfC2SdYfM5aE=; b=WQaz/vv1sTqRFrAWlD1a2kUpb
-        wmyRXGJ1qL9FvQRY9ueLVEqtaBlwLAYpSTy4WEQJBiDJq/0ZXJz8KlRJz/cxeg7D5bF++ihyaXYpb
-        OmMQw4tzjMsWrqkV30WWZ822ejO/aa4zihF7C9oD2OM+zOpFAOfu3GoZyn1383zuDp15GKcs136qI
-        KDGdKilkA29X5p7gEiV/zthlmC/AZMhHtjjXXnMJ8TbjkLtV/AI9ZR8ihLr78fUyKN9RMXBzX6pxN
-        yxitnhDHikq5JnunQy3SJ0iKWWaSxIrZ7ErtfyCiQOVuhwQJ6c0Caw3dxtBGuV+5Jz4g8B4kSYkEF
-        X1N0z7zaQ==;
+         bh=TSVA7hryGOQk9kTNfaA8XKTQ6ykZk+OjutapPE0Tu6M=; b=BN4tTnB/ChFwoT8bIGW1pnhBP
+        PjIKkbeAhMqkDa4fmzf5F+kfnyr92X8JFH73Qdzc7z+VCXt/mxEn2pcqQnysBUdVJiBHwepmJbvSq
+        I8ZXYX2biSyLCODEYE+EK51FzrHotDeeO9r6WfpS5vW8iRGMDbfjsSQWhhkt+zMh2z9PbOFr6+Ne1
+        QfTOw4ey0wdzAye3mwEZB5ygrHC/0POtwzDc1XUNGnDUtrA5xuKAtuA86dXE9Ch+19RpF/YkWE71C
+        SZwKOmrJzGf6MnQRoP9M0AmpSzyq/ZAiMiRogPDv8ctL64OfAXIxTyPIPHbG0kqZV7Hh3zerK4N0V
+        tXmjs9DSg==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iEvBP-0005jM-NT; Mon, 30 Sep 2019 12:53:43 +0000
-Date:   Mon, 30 Sep 2019 05:53:43 -0700
+        id 1iEvBu-000604-Qj; Mon, 30 Sep 2019 12:54:14 +0000
+Date:   Mon, 30 Sep 2019 05:54:14 -0700
 From:   Christoph Hellwig <hch@infradead.org>
 To:     Rob Herring <robh@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -41,14 +41,15 @@ Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Robin Murphy <robin.murphy@arm.com>,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH 02/11] of: Make of_dma_get_range() private
-Message-ID: <20190930125343.GB12051@infradead.org>
+Subject: Re: [PATCH 03/11] of: address: Report of_dma_get_range() errors
+ meaningfully
+Message-ID: <20190930125414.GC12051@infradead.org>
 References: <20190927002455.13169-1-robh@kernel.org>
- <20190927002455.13169-3-robh@kernel.org>
+ <20190927002455.13169-4-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190927002455.13169-3-robh@kernel.org>
+In-Reply-To: <20190927002455.13169-4-robh@kernel.org>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
@@ -56,12 +57,16 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> +#ifdef CONFIG_OF_ADDRESS
-> +extern int of_dma_get_range(struct device_node *np, u64 *dma_addr,
-> +			    u64 *paddr, u64 *size);
+On Thu, Sep 26, 2019 at 07:24:47PM -0500, Rob Herring wrote:
+> From: Robin Murphy <robin.murphy@arm.com>
+> 
+> If we failed to translate a DMA address, at least show the offending
+> address rather than the uninitialised contents of the destination
+> argument.
+> 
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-No need for the extern here.
-
-Otherwise looks good:
+Looks good,
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
