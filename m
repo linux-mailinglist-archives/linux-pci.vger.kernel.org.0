@@ -2,132 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D3B06C1E7F
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 11:55:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5DF0C2065
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 14:13:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730348AbfI3JzZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Sep 2019 05:55:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:50864 "EHLO foss.arm.com"
+        id S1726314AbfI3MNR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Sep 2019 08:13:17 -0400
+Received: from mga06.intel.com ([134.134.136.31]:6683 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726504AbfI3JzZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Sep 2019 05:55:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 835C31000;
-        Mon, 30 Sep 2019 02:55:24 -0700 (PDT)
-Received: from [192.168.1.124] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ABDC83F739;
-        Mon, 30 Sep 2019 02:55:21 -0700 (PDT)
-Subject: Re: [PATCH 00/11] of: dma-ranges fixes and improvements
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Oza Pawandeep <oza.oza@broadcom.com>,
-        linux-tegra@vger.kernel.org
-References: <20190927002455.13169-1-robh@kernel.org>
- <CAK8P3a0oct0EOMi5t4BmpgdkiBM+LjC+2pTST4hcvNCa3MGLmw@mail.gmail.com>
- <20190930082055.GA21971@infradead.org> <20190930085606.GG1518582@ulmo>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <89e33aae-bc96-53c3-2a4e-e879e9a3c73e@arm.com>
-Date:   Mon, 30 Sep 2019 10:55:15 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1726008AbfI3MNR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Sep 2019 08:13:17 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 05:13:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,567,1559545200"; 
+   d="scan'208";a="194156456"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 30 Sep 2019 05:13:14 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iEuYD-0001Kd-BT; Mon, 30 Sep 2019 15:13:13 +0300
+Date:   Mon, 30 Sep 2019 15:13:13 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        David Howells <dhowells@redhat.com>
+Cc:     Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] PCI/AER: Use for_each_set_bit()
+Message-ID: <20190930121313.GV32742@smile.fi.intel.com>
+References: <20190827151823.75312-1-andriy.shevchenko@linux.intel.com>
+ <20190927123913.GA32321@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190930085606.GG1518582@ulmo>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190927123913.GA32321@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2019-09-30 9:56 am, Thierry Reding wrote:
-> On Mon, Sep 30, 2019 at 01:20:55AM -0700, Christoph Hellwig wrote:
->> On Sun, Sep 29, 2019 at 01:16:20PM +0200, Arnd Bergmann wrote:
->>> On a semi-related note, Thierry asked about one aspect of the dma-ranges
->>> property recently, which is the behavior of dma_set_mask() and related
->>> functions when a driver sets a mask that is larger than the memory
->>> area in the bus-ranges but smaller than the available physical RAM.
->>> As I understood Thierry's problem and the current code, the generic
->>> dma_set_mask() will either reject the new mask entirely or override
->>> the mask set by of_dma_configure, but it fails to set a correct mask
->>> within the limitations of the parent bus in this case.
->>
->> There days dma_set_mask will only reject a mask if it is too small
->> to be supported by the hardware.  Larger than required masks are now
->> always accepted.
-> 
-> Summarizing why this came up: the memory subsystem on Tegra194 has a
-> mechanism controlled by bit 39 of physical addresses. This is used to
-> support two variants of sector ordering for block linear formats. The
-> GPU uses a slightly different ordering than other MSS clients, so the
-> drivers have to set this bit depending on who they interoperate with.
-> 
-> I was running into this as I was adding support for IOMMU support for
-> the Ethernet controller on Tegra194. The controller has a HW feature
-> register that contains how many address bits it supports. This is 40
-> for Tegra194, corresponding to the number of address bits to the MSS.
-> Without IOMMU support that's not a problem because there are no systems
-> with 40 bits of system memory. However, if we enable IOMMU support, the
-> DMA/IOMMU code will allocate from the top of a 48-bit (constrained to
-> 40 bits via the DMA mask) input address space. This causes bit 39 to be
-> set, which in turn will make the MSS reorder sectors and break network
-> communications.
-> 
-> Since this reordering takes place at the MSS level, this applies to all
-> MSS clients. Most of these clients always want bit 39 to be 0, whereas
-> the clients that can and want to make use of the reordering always want
-> bit 39 to be under their control, so they can control in a fine-grained
-> way when to set it.
-> 
-> This means that effectively all MSS clients can only address 39 bits, so
-> instead of hard-coding that for each driver I thought it'd make sense to
-> have a central place to configure this, so that all devices by default
-> are restricted to 39-bit addressing. However, with the current DMA API
-> implementation this causes a problem because the default 39-bit DMA mask
-> would get overwritten by the driver (as in the example of the Ethernet
-> controller setting a 40-bit DMA mask because that's what the hardware
-> supports).
-> 
-> I realize that this is somewhat exotic. On one hand it is correct for a
-> driver to say that the hardware supports 40-bit addressing (i.e. the
-> Ethernet controller can address bit 39), but from a system integration
-> point of view, using bit 39 is wrong, except in a very restricted set of
-> cases.
-> 
-> If I understand correctly, describing this with a dma-ranges property is
-> the right thing to do, but it wouldn't work with the current
-> implementation because drivers can still override a lower DMA mask with
-> a higher one.
+On Fri, Sep 27, 2019 at 07:39:13AM -0500, Bjorn Helgaas wrote:
+> On Tue, Aug 27, 2019 at 06:18:22PM +0300, Andy Shevchenko wrote:
+> > This simplifies and standardizes slot manipulation code
+> > by using for_each_set_bit() library function.
 
-But that sounds like exactly the situation for which we introduced 
-bus_dma_mask. If "dma-ranges" is found, then we should initialise that 
-to reflect the limitation. Drivers may subsequently set a larger mask 
-based on what the device is natively capable of, but the DMA API 
-internals should quietly clamp that down to the bus mask wherever it 
-matters.
+> > +	unsigned long status = info->status & ~info->mask;
+> > +	int i, max = -1;
 
-Since that change, the initial value of dma_mask and coherent_dma_mask 
-doesn't really matter much, as we expect drivers to reset them anyway 
-(and in general they have to be able to enlarge them from a 32-bit 
-default value).
+> > -	for (i = 0; i < max; i++)
+> > -		if (status & (1 << i))
+> > -			counter[i]++;
+> > +	for_each_set_bit(i, &status, max)
+> 
+> I applied this,
 
-As far as I'm aware this has been working fine (albeit in equivalent 
-ACPI form) for at least one SoC with 64-bit device masks, a 48-bit 
-IOMMU, and a 44-bit interconnect in between - indeed if I avoid 
-distraction long enough to set up the big new box under my desk, the 
-sending of future emails will depend on it ;)
+Thank you!
 
-Robin.
+> but I confess to being a little ambivalent.  It's
+> arguably a little easier to read,
+
+I have another opinion here. Instead of parsing body of for-loop, the name of
+the function tells you exactly what it's done. Besides the fact that reading
+and parsing two lines, with zero conditionals, is faster.
+
+> but it's not nearly as efficient
+> (not a great concern here)
+
+David, do you know why for_each_set_bit() has no optimization for the cases
+when nbits <= BITS_PER_LONG? (Actually find_*bit() family of functions)
+
+> and more importantly much harder to verify
+> that it's correct because you have to chase through
+> for_each_set_bit(), find_first_bit(), _ffs(), etc, etc.
+
+If for_each_set_bit() or any other fundamental bit operation helper is broken,
+PCI subsystem is a little concern here.
+
+> No doubt it's
+> great for bitmaps of arbitrary size, but for a simple 32-bit register
+> I'm a little hesitant.  But I applied it anyway.
+> 
+> > +		counter[i]++;
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
