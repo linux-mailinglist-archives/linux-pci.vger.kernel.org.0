@@ -2,129 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 76BF6C24D4
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 18:05:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F4B1C24FB
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2019 18:17:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732020AbfI3QF1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Sep 2019 12:05:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42814 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727767AbfI3QF1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Sep 2019 12:05:27 -0400
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731996AbfI3QRh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Sep 2019 12:17:37 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:34216 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732164AbfI3QRh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Sep 2019 12:17:37 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 96250435D5;
+        Mon, 30 Sep 2019 16:17:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-transfer-encoding:content-language:content-type
+        :content-type:in-reply-to:mime-version:user-agent:date:date
+        :message-id:from:from:references:subject:subject:received
+        :received:received; s=mta-01; t=1569860254; x=1571674655; bh=NWL
+        ygga9rExfFZwxDh+/XNEofpiGFu+aCwixqG81NuI=; b=LOV43/nmmizxMT7CO5J
+        Ymm9dG5qY6PcIs5tC4Bs8yyaSBh+bijXmj6kjUCrPGrtSHuxDXDLw9OO3e2ctdfz
+        X75jetbGIw5NsOD56FhCaSQNgXcKABViKfV0Xp4SfogwdRoZR02bK8cGxvAWEV8o
+        TDotQ1QfyNIiH+MCcVFeJ35E=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id JIhTgMSQHxpV; Mon, 30 Sep 2019 19:17:34 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B6ED985362
-        for <linux-pci@vger.kernel.org>; Mon, 30 Sep 2019 16:05:26 +0000 (UTC)
-Received: by mail-io1-f69.google.com with SMTP id k14so31145690iot.14
-        for <linux-pci@vger.kernel.org>; Mon, 30 Sep 2019 09:05:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6Jo3uapkJwME3KNEX03kTFMW4ezdDySvqiZtAQI5QuE=;
-        b=TycUkxefpN7zFw/fj3hbJRcyqfNpy6DR14QbIYyvdnE73wV6xBF5av1+bFE53b5qlw
-         Ze1a07wSj4Un2loj4HqQ+maI+6O9uOVZk39QLauUOHSMjO6slJWXAQ6pyx7W6RaExvL7
-         x7d11TZFBwxx3ykHKcGhS4YToCx+YirCj9JH2JomTSXuhDZXrzw58Njcx4FZibxz5Lr+
-         Lw0LDjys6LGxIg+3PBFg8PAfKGJuilXyUpz31V5IE7sea+WNtMZGwj5oJ7eYPypqqzmu
-         dTUTyNMAIZDelHes0PKRbbZ987SiwcDvNtP8gfOzEpndgDqBmdOd/SpQum4zmOkBULym
-         ieTw==
-X-Gm-Message-State: APjAAAVklGvHwQ5rmM0begcBypgAyIDWElNRB3NVqJIAqFgj3Xwd/jk7
-        pKyHpj/pHxlWcF5Id5SUJj0prmiInWofgo4DgOawSfRho/DOCAl5pNoBOOovUrRPOTc9F1ofGKm
-        uWmVPHdf7opjTxAXK8lGd/H0iUtF9Tw4cOFVd
-X-Received: by 2002:a5d:9a17:: with SMTP id s23mr21659738iol.171.1569859526157;
-        Mon, 30 Sep 2019 09:05:26 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqypngOWw3ZSLYDhxUEQ9NgyFEx9J+foY40JfzIJvF4e6vjzQEx3SO7djN0Th8o3+JHT5FzrewlaBaaAcXyAtrE=
-X-Received: by 2002:a5d:9a17:: with SMTP id s23mr21659711iol.171.1569859525882;
- Mon, 30 Sep 2019 09:05:25 -0700 (PDT)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 076A54200A;
+        Mon, 30 Sep 2019 19:17:32 +0300 (MSK)
+Received: from [172.17.15.60] (172.17.15.60) by T-EXCH-02.corp.yadro.com
+ (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Mon, 30
+ Sep 2019 19:17:31 +0300
+Subject: Re: [PATCH v5 03/23] PCI: hotplug: Add a flag for the movable BARs
+ feature
+To:     David Laight <David.Laight@ACULAB.COM>,
+        'Bjorn Helgaas' <helgaas@kernel.org>
+CC:     Sam Bobroff <sbobroff@linux.ibm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux@yadro.com" <linux@yadro.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Rajat Jain <rajatja@google.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <20190816165101.911-4-s.miroshnichenko@yadro.com>
+ <20190927220219.GA57201@google.com>
+ <16a86a9e4b464897acee0aeba34d9346@AcuMS.aculab.com>
+From:   Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
+Message-ID: <18a27e45-bcba-cdc5-e07e-e73efffce4d9@yadro.com>
+Date:   Mon, 30 Sep 2019 19:17:31 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <20190927144421.22608-1-kherbst@redhat.com> <20190927214252.GA65801@google.com>
- <CACO55tuaY1jFXpJPeC9M4PoWEDyy547_tE8MpLaTDb+C+ffsbg@mail.gmail.com>
- <20190930080534.GS2714@lahna.fi.intel.com> <CACO55tuMo1aAA7meGtEey6J6sOS-ZA0ebZeL52i2zfkWtPqe_g@mail.gmail.com>
- <20190930092934.GT2714@lahna.fi.intel.com>
-In-Reply-To: <20190930092934.GT2714@lahna.fi.intel.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Mon, 30 Sep 2019 18:05:14 +0200
-Message-ID: <CACO55tu9M8_TWu2MxNe_NROit+d+rHJP5_Tb+t73q5vr19sd1w@mail.gmail.com>
-Subject: Re: [RFC PATCH] pci: prevent putting pcie devices into lower device
- states on certain intel bridges
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <16a86a9e4b464897acee0aeba34d9346@AcuMS.aculab.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.17.15.60]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-still happens with your patch applied. The machine simply gets shut down.
+Hello David,
 
-dmesg can be found here:
-https://gist.githubusercontent.com/karolherbst/40eb091c7b7b33ef993525de660f1a3b/raw/2380e31f566e93e5ba7c87ef545420965d4c492c/gistfile1.txt
+On 9/30/19 11:44 AM, David Laight wrote:
+> From: Bjorn Helgaas
+>> Sent: 27 September 2019 23:02
+>> On Fri, Aug 16, 2019 at 07:50:41PM +0300, Sergey Miroshnichenko wrote:
+>>> When hot-adding a device, the bridge may have windows not big enough (or
+>>> fragmented too much) for newly requested BARs to fit in. And expanding
+>>> these bridge windows may be impossible because blocked by "neighboring"
+>>> BARs and bridge windows.
+>>>
+>>> Still, it may be possible to allocate a memory region for new BARs with the
+>>> following procedure:
+>>>
+>>> 1) notify all the drivers which support movable BARs to pause and release
+>>>     the BARs; the rest of the drivers are guaranteed that their devices will
+>>>     not get BARs moved;
+>>>
+>>> 2) release all the bridge windows except of root bridges;
+>>>
+>>> 3) try to recalculate new bridge windows that will fit all the BAR types:
+>>>     - fixed;
+>>>     - immovable;
+>>>     - movable;
+>>>     - newly requested by hot-added devices;
+>>>
+>>> 4) if the previous step fails, disable BARs for one of the hot-added
+>>>     devices and retry from step 3;
+>>>
+>>> 5) notify the drivers, so they remap BARs and resume.
+>>
+>> You don't do the actual recalculation in *this* patch, but since you
+>> mention the procedure here, are we confident that we never make things
+>> worse?
+>>
+>> It's possible that a hot-add will trigger this attempt to move things
+>> around, and it's possible that we won't find space for the new device
+>> even if we move things around.  But are we certain that every device
+>> that worked *before* the hot-add will still work *afterwards*?
+>>
+>> Much of the assignment was probably done by the BIOS using different
+>> algorithms than Linux has, so I think there's some chance that the
+>> BIOS did a better job and if we lose that BIOS assignment, we might
+>> not be able to recreate it.
+> 
+> Yep, removing everything and starting again is probably OTT and most of the churn won't help.
+> 
+> I think you need to work out what can be moved in order to make the required resources available
+> to each bus and then make the required changes.
+> 
+> In the simplest case you are trying to add resource below a bridge so need to 'shuffle'
+> everything allocated after that bridge to later addresses (etc).
+> 
 
-If there are no other things to try out, I will post the updated patch shortly.
+Thank you for the review and suggestions!
 
-On Mon, Sep 30, 2019 at 11:29 AM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> On Mon, Sep 30, 2019 at 11:15:48AM +0200, Karol Herbst wrote:
-> > On Mon, Sep 30, 2019 at 10:05 AM Mika Westerberg
-> > <mika.westerberg@linux.intel.com> wrote:
-> > >
-> > > Hi Karol,
-> > >
-> > > On Fri, Sep 27, 2019 at 11:53:48PM +0200, Karol Herbst wrote:
-> > > > > What exactly is the serious issue?  I guess it's that the rescan
-> > > > > doesn't detect the GPU, which means it's not responding to config
-> > > > > accesses?  Is there any timing component here, e.g., maybe we're
-> > > > > missing some delay like the ones Mika is adding to the reset paths?
-> > > >
-> > > > When I was checking up on some of the PCI registers of the bridge
-> > > > controller, the slot detection told me that there is no device
-> > > > recognized anymore. I don't know which register it was anymore, though
-> > > > I guess one could read it up in the SoC spec document by Intel.
-> > > >
-> > > > My guess is, that the bridge controller fails to detect the GPU being
-> > > > here or actively threw it of the bus or something. But a normal system
-> > > > suspend/resume cycle brings the GPU back online (doing a rescan via
-> > > > sysfs gets the device detected again)
-> > >
-> > > Can you elaborate a bit what kind of scenario the issue happens (e.g
-> > > steps how it reproduces)? It was not 100% clear from the changelog. Also
-> > > what the result when the failure happens?
-> > >
-> >
-> > yeah, I already have an updated patch in the works which also does the
-> > rework Bjorn suggested. Had no time yet to test if I didn't mess it
-> > up.
-> >
-> > I am also thinking of adding a kernel parameter to enable this
-> > workaround on demand, but not quite sure on that one yet.
->
-> Right, I think it would be good to figure out the root cause before
-> adding any workarounds ;-) It might very well be that we are just
-> missing something the PCIe spec requires but not implemented in Linux.
->
-> > > I see there is a script that does something but unfortunately I'm not
-> > > fluent in Python so can't extract the steps how the issue can be
-> > > reproduced ;-)
-> > >
-> > > One thing that I'm working on is that Linux PCI subsystem misses certain
-> > > delays that are needed after D3cold -> D0 transition, otherwise the
-> > > device and/or link may not be ready before we access it. What you are
-> > > experiencing sounds similar. I wonder if you could try the following
-> > > patch and see if it makes any difference?
-> > >
-> > > https://patchwork.kernel.org/patch/11106611/
-> >
-> > I think I already tried this path. The problem isn't that the device
-> > isn't accessible too late, but that it seems that the device
-> > completely falls off the bus. But I can retest again just to be sure.
->
-> Yes, please try it and share full dmesg if/when the failure still happens.
+But a bridge window may be fragmented: its total free space is enough
+to fit everything, but no sufficient gaps for the new BARs. And this
+bridge window may be jammed between two immovable/fixed BARs.
+
+Or there may be lots of empty spaces in lower addresses after un-plugs,
+but everything if fixed/immovable on higher addresses.
+
+I've spent some time thinking on an optimization technique which can
+be efficient enough (touch as few BARs as possible) with as high
+success rate as calculating from scratch - and concluded that it is
+not worth it: if only release the "obstructing" BARs and bridge
+windows, a hotplug event will affect a half of (n+m) on average, which
+is still O(n+m), where n is a number of endpoints, and m is a
+number of bridges. But it's still need to resize windows of a root and
+other common bridges.
+
+Calculating bridge windows from scratch is relatively straightforward
+and fast, so I have just added support for fixed/immovable BARs there
+and reused.
+
+> Many devices that support address reassignment might not need to be moved - so there is
+> no point remmapping them.
+> 
+
+And it's the same algorithm that allocated BARs in first place, so it
+will reassign the same BARs for the non-affected part of the topology.
+
+> There is also the case when a device that is present but not currently is use could be taken
+> through a remove+insert sequence in order to change its resources.
+> Much easier to implement than 'remap while active'.
+> This would require a call into the driver (than can sleep) to request whether it is idle.
+> (and probably one at the end if the remove wasn't done).
+> 
+
+Unbind+rebind the "immovable" drivers of non-opened devices may
+increase the probability of successful BAR allocation, but I'm afraid
+this will produce some amount of false hotplug-like events in the logs.
+Probably also some undesired effects like spikes in power consumption
+because of driver initialization.
+
+Best regards,
+Serge
+
+> 	David
+> 
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+> 
