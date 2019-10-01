@@ -2,116 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AB8D4C3A61
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2019 18:22:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B92F9C40D0
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2019 21:16:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389959AbfJAQVl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Oct 2019 12:21:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41958 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389955AbfJAQVl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:21:41 -0400
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F2A5410B78
-        for <linux-pci@vger.kernel.org>; Tue,  1 Oct 2019 16:21:40 +0000 (UTC)
-Received: by mail-io1-f70.google.com with SMTP id f5so39321613iob.17
-        for <linux-pci@vger.kernel.org>; Tue, 01 Oct 2019 09:21:40 -0700 (PDT)
+        id S1725844AbfJATQD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Oct 2019 15:16:03 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51786 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbfJATQD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Oct 2019 15:16:03 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 7so4604190wme.1
+        for <linux-pci@vger.kernel.org>; Tue, 01 Oct 2019 12:16:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=GIO7GJfJxKMwKP+/m88jvKHnSu/jI3oDBt/ADTnsBaY=;
+        b=aiBbUiCGuicmMJkbzyKknGydd4RsfO9wSwSnRPcIxv1FzFDspoyUsQ3nhiBbvQn1JU
+         SlnsPw/ElbGmpOP/76QPO7bP1XIhWi43rSkj7fy1LNO3G+/ofEp4GVER0NLEX/r4N5p5
+         xxtkCOFbWDVNegFlPHxI36tTEqxlV5KCEibY2+XdvKews/pOmIXrbWac+Bth5gTpQy7Z
+         pKFteO+V59ngFTwL2Bp/U9iQrlcHJFHnlSINA5QaAs1JnOvzmQCbGRAv/ntRpWJ4TLMw
+         ayyes1yKRNCK3YkwJWGk5ZsaEO9Sp5I2qMDo5z0v7jnO8DyC5TXrXED0pUKBclN6SIQQ
+         NXIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x9XepyaA218QJeUBfPQdn3QeV/2Cs13v78OcqROetO0=;
-        b=VHJosLewyRi1a1sUDq3fL0QhPJeBAqUkE4ZgKkd9wU/1Zgh4nA56GQrUZdOM/Vto11
-         VAelM3W6yYI0V1srzWqtt9L0Heh+s3clIso6DkEiQxWyI2ug9gALtzG/Fv0nquL6kLd1
-         xFaK1S0+xlZbZO+E/eA69BPIJv48Inw+g2DSNoZljujbUqVJbNAZcCefT9IwL9mGgq0x
-         pc1IDcdCCU8Qp/6SV5wnv4bImwPwONbEwCFVup8nf+okaSAiWcy3+tS4T0d60HYlk9h9
-         xAgKgqh44gLV9XSljeYsA/GuJJJkzhlP1SVAZ0LuPe+hVXKjCcBmXi1+4DehQtiQFUN8
-         SN+Q==
-X-Gm-Message-State: APjAAAXgWAdGz0d58/wysjyjJdLtZIE3Beh50jtF2iYiILMYk0hzF/9f
-        bWnoEjv8LegrNQpALksyiKS05+MdIVk1XBhTzCrxLSvvAEeAR2hGu5IZttQW+yUYX76ruTdLunZ
-        qysaDa3IlUoZ8zX/4mZP9JDS0JIbMjwey0SJV
-X-Received: by 2002:a92:ca84:: with SMTP id t4mr27014697ilo.171.1569946900251;
-        Tue, 01 Oct 2019 09:21:40 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwtlqLpKQEmRbFAQajrYSquBKr2bsxZFd6EKkYBXsFWdm96/QShaGDSjfsdotkX0LJVFp9IEOIgc19NwrFhxQE=
-X-Received: by 2002:a92:ca84:: with SMTP id t4mr27014658ilo.171.1569946899958;
- Tue, 01 Oct 2019 09:21:39 -0700 (PDT)
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=GIO7GJfJxKMwKP+/m88jvKHnSu/jI3oDBt/ADTnsBaY=;
+        b=Y6Z5urO7TD4POmPBtsceZFIOgwnO7+Inm7k4aJUxBA/LPDCOkvkUT4Hf4LhyuzrWjd
+         RhMEq/XT01hlHwL63+CQ2Ts2vv05pB7qivUfq25s3qbUhlQPGACfqFuPxJWC/iSHOxGz
+         6nFGMuxjMW+wAQwcBiZyxzRX1MltoyOzGQdigF3U5qNFLwIQAhK38lJTcQKjPnm+pi8D
+         st18fCUST8SA1Ar39vNPvPHYJ7wNCoFaN0bD969l7y3ozSCKr4NBIW5NTE+dI902UxCT
+         lItsLsMLWURR7RnbC5CrMfX80DE+qG2Yv3lfoxBFMQy2rnjXzerYpTAe3ifs+P4ZLZHx
+         JOAQ==
+X-Gm-Message-State: APjAAAW5Acae985MjkBoeWWTbi/MAT9th1vNT7gUxWXj0XP63TQBO4IN
+        Uk5sCjvA7qHHMaAYiTUzhdDdXNYT
+X-Google-Smtp-Source: APXvYqxQazMqr2phNTQiVKp5hdSNLVYBA/q8Z+ifLZD1nbxsyzYXA3OjSOtq7SQpeHMAoXRmoDXanQ==
+X-Received: by 2002:a7b:c353:: with SMTP id l19mr4706849wmj.173.1569957361070;
+        Tue, 01 Oct 2019 12:16:01 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f26:6400:ad11:16fb:d8da:de15? (p200300EA8F266400AD1116FBD8DADE15.dip0.t-ipconnect.de. [2003:ea:8f26:6400:ad11:16fb:d8da:de15])
+        by smtp.googlemail.com with ESMTPSA id j1sm36726150wrg.24.2019.10.01.12.16.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 01 Oct 2019 12:16:00 -0700 (PDT)
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH v6 0/4] PCI/ASPM: Add sysfs attributes for controlling ASPM
+To:     Frederick Lawler <fred@fredlawl.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Rajat Jain <rajatja@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Message-ID: <0577b966-6290-0685-123d-c675baf97caa@gmail.com>
+Date:   Tue, 1 Oct 2019 21:15:53 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <CACO55tuk4SA6-xUtJ-oRePy8MPXYAp2cfmSPxwW3J5nQuX3y2g@mail.gmail.com>
- <20191001132721.GA46491@google.com>
-In-Reply-To: <20191001132721.GA46491@google.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Tue, 1 Oct 2019 18:21:28 +0200
-Message-ID: <CACO55tvjFPAMgz6DMGmJQ3adtJBX6yYnFRO9gVBEpMVTEBu0og@mail.gmail.com>
-Subject: Re: [RFC PATCH] pci: prevent putting pcie devices into lower device
- states on certain intel bridges
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 3:27 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Mon, Sep 30, 2019 at 06:36:12PM +0200, Karol Herbst wrote:
-> > On Mon, Sep 30, 2019 at 6:30 PM Mika Westerberg
-> > <mika.westerberg@linux.intel.com> wrote:
-> > >
-> > > On Mon, Sep 30, 2019 at 06:05:14PM +0200, Karol Herbst wrote:
-> > > > still happens with your patch applied. The machine simply gets shut down.
-> > > >
-> > > > dmesg can be found here:
-> > > > https://gist.githubusercontent.com/karolherbst/40eb091c7b7b33ef993525de660f1a3b/raw/2380e31f566e93e5ba7c87ef545420965d4c492c/gistfile1.txt
-> > >
-> > > Looking your dmesg:
-> > >
-> > > Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: DCB version 4.1
-> > > Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: MM: using COPY for buffer copies
-> > > Sep 30 17:24:27 kernel: [drm] Initialized nouveau 1.3.1 20120801 for 0000:01:00.0 on minor 1
-> > >
-> > > I would assume it runtime suspends here. Then it wakes up because of PCI
-> > > access from userspace:
-> > >
-> > > Sep 30 17:24:42 kernel: pci_raw_set_power_state: 56 callbacks suppressed
-> > >
-> > > and for some reason it does not get resumed properly. There are also few
-> > > warnings from ACPI that might be relevant:
-> > >
-> > > Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.GFX0._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
-> > > Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.PEG0.PEGP._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
-> >
-> > afaik this is the case for essentially every laptop out there.
->
-> I think we should look into this a little bit.
-> acpi_ns_check_argument_types() checks the argument type and prints
-> this message, but AFAICT it doesn't actually fix anything or prevent
-> execution of the method, so I have no idea what happens when we
-> actually execute the _DSM.
->
+Background of this extension is a problem with the r8169 network driver.
+Several combinations of board chipsets and network chip versions have
+problems if ASPM is enabled, therefore we have to disable ASPM per
+default. However especially on notebooks ASPM can provide significant
+power-saving, therefore we want to give users the option to enable
+ASPM. With the new sysfs attributes users can control which ASPM
+link-states are disabled.
 
-I can assure you that this warning happens on every single laptop out
-there with dual Nvidia graphics and it's essentially just a firmware
-bug. And it never caused any issues on any of the older laptops (or
-newest one for that matter).
+Note: Series depends on series "PCI: Make pcie_downstream_port()
+available outside of access.c" from Mika Westerberg that is still
+sitting in the PCI inbox. 
+Alternatively I could prepare a version w/o this dependency, but
+then Mika's series would need to be changed.
 
-> If we execute this _DSM as part of power management, and the _DSM
-> doesn't work right, it would be no surprise that we have problems.
->
-> Maybe we could learn something by turning on ACPI_DB_PARSE output (see
-> Documentation/firmware-guide/acpi/debug.rst).
->
-> You must have an acpidump already from all your investigation.  Can
-> you put it somewhere, e.g., bugzilla.kernel.org, and include a URL?
+v2:
+- use a dedicated sysfs attribute per link state
+- allow separate control of ASPM and PCI PM L1 sub-states
 
-Will do so later, right now I am traveling to XDC and will have more
-time for that then.
+v3:
+- patch 3: statically allocate the attribute group
+- patch 3: replace snprintf with printf
+- add patch 4
+
+v4:
+- patch 3: add call to sysfs_update_group because is_visible callback
+           returns false always at file creation time
+- patch 3: simplify code a little
+
+v5:
+- rebased to latest pci/next
+
+v6:
+- patch 3: consider several review comments from Bjorn
+- patch 4: add discussion link to commit message
+
+Heiner Kallweit (4):
+  PCI/ASPM: Add L1 PM Substate support to pci_disable_link_state
+  PCI/ASPM: Allow to re-enable Clock PM
+  PCI/ASPM: Add sysfs attributes for controlling ASPM link states
+  PCI/ASPM: Remove Kconfig option PCIEASPM_DEBUG and related code
+
+ Documentation/ABI/testing/sysfs-bus-pci |  14 ++
+ drivers/pci/pci-sysfs.c                 |  10 +-
+ drivers/pci/pci.h                       |  12 +-
+ drivers/pci/pcie/Kconfig                |   7 -
+ drivers/pci/pcie/aspm.c                 | 246 +++++++++++++++++-------
+ include/linux/pci.h                     |  10 +-
+ 6 files changed, 206 insertions(+), 93 deletions(-)
+
+-- 
+2.23.0
+
