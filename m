@@ -2,92 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07E2BC4184
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2019 22:02:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C13FC426B
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2019 23:14:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbfJAUCe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Oct 2019 16:02:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbfJAUCe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 1 Oct 2019 16:02:34 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78D2D2133F;
-        Tue,  1 Oct 2019 20:02:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569960153;
-        bh=xlZUpmFgQH3QfurVZdSrkgPMpFDOx60wfJXzh3sZXxw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=FFLjlRze/atn4kWOCCQKFsH7ZBBfCicUGw/oLbnxK2WLl8cWAK4piR7quUce1iz0O
-         nRiQ7YL6cW8yjjOxD6tHV962n70GJFkFsZb9rgGt6Fbe5ZZYwqJFTPEX5p+1VIfB7m
-         4Jf/HaE0mI31eofang7CrhVoZNh+HUO1lLncVXDE=
-Date:   Tue, 1 Oct 2019 15:02:29 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Tyrel Datwyler <tyreld@linux.ibm.com>
-Cc:     mpe@ellerman.id.au, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, nathanl@linux.ibm.com
-Subject: Re: [RFC PATCH 0/9] Fixes and Enablement of ibm,drc-info property
-Message-ID: <20191001200229.GA64312@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569910334-5972-1-git-send-email-tyreld@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727558AbfJAVOg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Oct 2019 17:14:36 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37103 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbfJAVOg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Oct 2019 17:14:36 -0400
+Received: by mail-ot1-f66.google.com with SMTP id k32so12864994otc.4;
+        Tue, 01 Oct 2019 14:14:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Z0lBrmztwlwxdokvs5UrPzWHos9na8KnNzUa662Ki4U=;
+        b=V3l2bPvomwEApGeIC42xksfM35fLkzstnuS71yvaINL1JdB8yQvqgm+kz6WMZCaAQS
+         NlOXRoJ4pMF0XkvcDF6JzGNl7eO+bHQ1RYFEsiaS1MxlhtdbaNTM7qnYTZHGA0iGnU03
+         Jl79tbxt9SDJUVjCO+TiXV4yRy7tXVIt+hBLs6J8twUrL/0v0csI1A55CTfCvHlTNWHw
+         U0MrJiQH+37vQ55hrvcSaR7LM+3KhP4EZa3YdNarWcZpjbmWS+510yQfKENj3XQ/Z3+4
+         r9VgPXXepOAMDgBX/WYoeZW6RbAqTUdU6mnewLdgwg3BqUExdnWuAPvJNWbNrg13pMC9
+         f64Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Z0lBrmztwlwxdokvs5UrPzWHos9na8KnNzUa662Ki4U=;
+        b=haX7XTRerAmTrjBfW74UajXllisfUQ2p2jyM/PkdCTaRWjwrn5/EsaP17OIZjN0UYJ
+         garc8ngYSQkDBrSAMa98xLMs0awfgrk0h6RVWPHScn9r40ZWMa7T4gbJi7tlq7fl16vO
+         1MGMlCCEv80AgAMqGJzuZDO9/J1CQJNFSfvDtd8Yh86iVRD+O+GvCfYR8DEZocSuqKDg
+         HzDnk4k46bXd2YqEcxsxdRPQLn6W7jPmR1gcb/NUHfIa8UfWgS05CCUSZ7/sj97otGYb
+         BtS5ba1hQj0sAYfMduJ969KZ5Fn5Ede3dfEGqDOm3ZHATjYra+0d1Aa5bUnt4izE+A3U
+         iC8A==
+X-Gm-Message-State: APjAAAWLlhinm/X1Qj1tKOYBqAyiSX1YxbxqcoxKHnDRxfExbjz3iv9d
+        tEiRtqd1vDJYuxkSf96bGRQ=
+X-Google-Smtp-Source: APXvYqyOyExxFkyt6iQmzMQZq4YBsCHZSfeeiKuGCJZp4623JJplHFZn/pKU1kaAC3y+JwjBE8eqOg==
+X-Received: by 2002:a05:6830:14c5:: with SMTP id t5mr35420otq.112.1569964475039;
+        Tue, 01 Oct 2019 14:14:35 -0700 (PDT)
+Received: from localhost.localdomain ([143.166.81.254])
+        by smtp.gmail.com with ESMTPSA id o23sm5220073ote.67.2019.10.01.14.14.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 14:14:34 -0700 (PDT)
+From:   Stuart Hayes <stuart.w.hayes@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lukas@wunner.de,
+        Stuart Hayes <stuart.w.hayes@gmail.com>
+Subject: [PATCH 0/3] PCI: pciehp: Do not turn off slot if presence comes up after link
+Date:   Tue,  1 Oct 2019 17:14:16 -0400
+Message-Id: <20191001211419.11245-1-stuart.w.hayes@gmail.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 01:12:05AM -0500, Tyrel Datwyler wrote:
-> There was an initial previous effort yo add support for the PAPR
-> architected ibm,drc-info property. This property provides a more
-> memory compact representation of a paritions Dynamic Reconfig
-> Connectors (DRC). These can otherwise be thought of the currently
-> partitioned, or available, but yet to be partitioned, system resources
-> such as cpus, memory, and physical/logical IOA devices.
-> 
-> The initial implementation proved buggy and was fully turned of by
-> disabling the bit in the appropriate CAS support vector. We now have
-> PowerVM firmware in the field that supports this new property, and 
-> further to suppport partitions with 24TB+ or possible memory this
-> property is required to perform platform migration.
-> 
-> This serious fixup the short comings of the previous implementation
-> in the areas of general implementation, cpu hotplug, and IOA hotplug.
-> 
-> Tyrel Datwyler (9):
->   powerpc/pseries: add cpu DLPAR support for drc-info property
->   powerpc/pseries: fix bad drc_index_start value parsing of drc-info
->     entry
->   powerpc/pseries: fix drc-info mappings of logical cpus to drc-index
->   PCI: rpaphp: fix up pointer to first drc-info entry
->   PCI: rpaphp: don't rely on firmware feature to imply drc-info support
->   PCI: rpaphp: add drc-info support for hotplug slot registration
->   PCI: rpaphp: annotate and correctly byte swap DRC properties
->   PCI: rpaphp: correctly match ibm,my-drc-index to drc-name when using
->     drc-info
->   powerpc: Enable support for ibm,drc-info property
-> 
->  arch/powerpc/kernel/prom_init.c                 |   2 +-
->  arch/powerpc/platforms/pseries/hotplug-cpu.c    | 117 ++++++++++++++++------
->  arch/powerpc/platforms/pseries/of_helpers.c     |   8 +-
->  arch/powerpc/platforms/pseries/pseries_energy.c |  23 ++---
->  drivers/pci/hotplug/rpaphp_core.c               | 124 +++++++++++++++++-------
->  5 files changed, 191 insertions(+), 83 deletions(-)
+In older PCIe specs, PDS (presence detect) would come up when the
+"in-band" presence detect pin connected, and would be up before DLLLA
+(link active).
 
-Michael, I assume you'll take care of this.  If I were applying, I
-would capitalize the commit subjects and fix the typos in the commit
-logs, e.g.,
+In PCIe 4.0 (as an ECN) and in PCIe 5.0, there is a new bit to show if
+in-band presence detection can be disabled for the slot, and another bit
+that disables it--and a recommendation that it should be disabled if it
+can be. In addition, certain OEMs disable in-band presence detection
+without implementing these bits.
 
-  s/the this/the/
-  s/the the/that the/
-  s/short coming/shortcoming/
-  s/seperate/separate/
-  s/bid endian/big endian/
-  s/were appropriate/where appropriate/
-  s/name form/name from/
+This means it is possible to get a "card present" interrupt after the
+link is up and the driver is loaded.  This causes an erroneous removal
+of the device driver, followed by an immediate re-probing.
 
-etc.  git am also complains about space before tab whitespace errors.
-And it adds a few lines >80 chars.
+This patch set defines these new bits, uses them to disable in-band
+presence detection if it can be, waits for PDS to go up if in-band
+presence detection is disabled, and adds a DMI table that will let us
+know if we should assume in-band presence is disabled on a system.
+
+This patch set is based on a patch set [1] submitted many months ago by
+Alexandru Gagniuc, who is no longer working on it.
+
+[1] https://patchwork.kernel.org/cover/10909167/
+    [v3,0/4] PCI: pciehp: Do not turn off slot if presence comes up after link
+
+Stuart Hayes (3):
+  PCI: pciehp: Add support for disabling in-band presence
+  PCI: pciehp: Wait for PDS when in-band presence is disabled
+  PCI: pciehp: Add dmi table for systems with in-band presence disabled
+
+ drivers/pci/hotplug/pciehp.h     |  1 +
+ drivers/pci/hotplug/pciehp_hpc.c | 45 +++++++++++++++++++++++++++++++-
+ include/uapi/linux/pci_regs.h    |  2 ++
+ 3 files changed, 47 insertions(+), 1 deletion(-)
+
+-- 
+2.18.1
+
