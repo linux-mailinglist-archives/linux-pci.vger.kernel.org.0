@@ -2,55 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49A10C2CF9
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2019 07:40:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CB8CC2CFA
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2019 07:40:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbfJAFju (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Oct 2019 01:39:50 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37137 "EHLO
+        id S1726806AbfJAFkB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Oct 2019 01:40:01 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42326 "EHLO
         mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbfJAFju (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Oct 2019 01:39:50 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y5so7113581pfo.4
-        for <linux-pci@vger.kernel.org>; Mon, 30 Sep 2019 22:39:49 -0700 (PDT)
+        with ESMTP id S1726672AbfJAFkA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Oct 2019 01:40:00 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q12so7098297pff.9
+        for <linux-pci@vger.kernel.org>; Mon, 30 Sep 2019 22:40:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kQcpm+slaaxd6F2CuzlaygEzTeyWF+hnFrIxqojKd0E=;
-        b=xSognUhU057avV/FmBVy7Kch14y43C+LhwTQffW8kZdecsY6zo5ekp6soC2+CV/7Dq
-         XEG2KFob9At0kNkLyO7BH+qHkD4wLFwAGcL0EAyP+3IiByvHf5zWkfCYY69xBYuvUAyO
-         vNobo3uQeVbvbRmOjIfendAZM1cDKallSFJ+qnLwsivX/GCDh+HaoHM7ddLfGTp1tSMF
-         fK+SG7tTh5CTPc+1wR9V1OF//f4y8rhEkZSe1SLyXz2PT8KO5GTuWgwAF5WSN4PU4AMq
-         CVboESw697Mysz8S9/q2DwmwlEwyKaSmA+EWC3BD42ncPV98fmI/57ApF1Uiy+z0saXP
-         Zr8A==
+        bh=6/Kap4nu6MbGqnLhW3rESTHtfSQrQHLiJCxKyYeZJLk=;
+        b=fpZTrB5WFyfqYdVh3pLORfNYzt/EadZNz+rwfIhuPQOViPSat51+fIVFIY7Fcfm93+
+         lBM3nJjO7Q26pT0qyYMrPsHzevtBywx8Qxwrp4tu0GCzOnbIqJ5I39y0iMZEle/uoi4R
+         zu+bIairXN3xWbNIjFJDQlOQ0pDwkVQxcZMpL6V/ziieHii9wqmDf/HpKCRKxIHd4SjA
+         XuV5bC1wAcYbKvTqBtdn12yIGywniWsVdUqEu6XUwafBG9PX5njvl/HRKIuQKEa3LMuY
+         NCNRNqSU2Xigjze6aOoiGzgMHRHf7cxe8cHVDLijAhUN4Pjkv4wocr3aSja30bJDHSen
+         lYdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=kQcpm+slaaxd6F2CuzlaygEzTeyWF+hnFrIxqojKd0E=;
-        b=UFowXt1G058OxFY+YSl/a0avnDUMeqGlM6Ipimf+OGOW/vrtctASSB08ZcXoCGc0TT
-         p9HZH2cZt2JcvzODDsdwxvhxvV7p0JsQCNG73R2/0GP6Av+sNidTHdyoR2t02FGmgiW7
-         bXoz7+EhNNbAaK232zoNiYdLz0Z3GKGlQ35RAVoPXLdIeTB3M12pFoDHBXeQRv2UNmI1
-         ya4dQ2xhx0zQrp6F+Qvu89VKHW7ia0raciEZXlVPR9BjX1rJ8asy/cxNeawcB1KQ1S3l
-         dKnmNr/Q0XlJW8KacyPGLzaLkoYsYCs2jKP4IEMoQhW0v8wb//WipcqDj2IAG1s2CReV
-         UkbQ==
-X-Gm-Message-State: APjAAAVzRLgaN8RBo9rfT+7/qOEkZDh04p7gryEfr3T2VSn+ct2iGcso
-        WErjSoCDOGlc8UDg6+ddbKidhTtBv46lUw==
-X-Google-Smtp-Source: APXvYqxY1j8bi5q6hzJaYD8pEmh5StfANSGm2JkR7RtM4RmWzVUhthyqTk24Q+1F1E7+6VeqdL8VSQ==
-X-Received: by 2002:a65:688a:: with SMTP id e10mr9443543pgt.221.1569908389250;
-        Mon, 30 Sep 2019 22:39:49 -0700 (PDT)
+        bh=6/Kap4nu6MbGqnLhW3rESTHtfSQrQHLiJCxKyYeZJLk=;
+        b=JmsjQGf4aR7UW41tiS0gZ3vsfcm/x1x8FwOE5stOJGeg2xs4Y1iGUS9/iHKh+Dm1gw
+         +xdp928eRhmJIgdqMzus2UZDPLU7/WCLjMxoy42aBN7ibX3l6STTyt8Z+R2IwuY45ekn
+         IfSai12wbMD8c8oJ8AHUPRtZeYSGbeggwzsGXqTL/QBURDBATJDDh4oZjR1GG9Z31pYK
+         vnyOrb+w1KO455H/M92vZXdNvbcCb26T8k9vxD9wrm1LDgKEMIfU7VCySAcnLwGxa18W
+         SIYJBceuBs3CPVLrB5myTJMzXWB8hC7Pet3YBZca0irQO29iKlEuYt7IWE3UZGfV4woy
+         vL+g==
+X-Gm-Message-State: APjAAAUcpV7dxmeuWUIgld0MCyPLTHmh2ZZl17jUiRJN9SJ9AswYyj3k
+        17KD1YLZ6W3HEvrgp/K+7N6HSVbb5D4grA==
+X-Google-Smtp-Source: APXvYqzM/WUDxsd4TCLeBMV4zXWr4ldrFUer2oxkYf5ItXgfMLywaDUyeBJXRmw6r42yiTSZDitkZQ==
+X-Received: by 2002:aa7:97b0:: with SMTP id d16mr26169646pfq.54.1569908399623;
+        Mon, 30 Sep 2019 22:39:59 -0700 (PDT)
 Received: from [10.61.2.175] ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id j16sm1339514pje.6.2019.09.30.22.39.47
+        by smtp.gmail.com with ESMTPSA id r24sm13374145pfh.69.2019.09.30.22.39.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2019 22:39:48 -0700 (PDT)
-Subject: Re: [PATCH 1/3] powernv/iov: Ensure the pdn for VFs always contains a
- valid PE number
+        Mon, 30 Sep 2019 22:39:59 -0700 (PDT)
+Subject: Re: [PATCH 2/3] powerpc/pci: Fix pcibios_setup_device() ordering
 To:     Oliver O'Halloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org
 Cc:     shawn@anastas.io, linux-pci@vger.kernel.org
 References: <20190930020848.25767-1-oohall@gmail.com>
- <20190930020848.25767-2-oohall@gmail.com>
+ <20190930020848.25767-3-oohall@gmail.com>
 From:   Alexey Kardashevskiy <aik@ozlabs.ru>
 Autocrypt: addr=aik@ozlabs.ru; keydata=
  mQINBE+rT0sBEADFEI2UtPRsLLvnRf+tI9nA8T91+jDK3NLkqV+2DKHkTGPP5qzDZpRSH6mD
@@ -125,12 +124,12 @@ Autocrypt: addr=aik@ozlabs.ru; keydata=
  c7E5M+/NpslPCmYnDjs5qg0/3ihh6XuOGggZQOqrYPC3PnsNs3NxirwOkVPQgO6mXxpuifvJ
  DG9EMkK8IBXnLulqVk54kf7fE0jT/d8RTtJIA92GzsgdK2rpT1MBKKVffjRFGwN7nQVOzi4T
  XrB5p+6ML7Bd84xOEGsj/vdaXmz1esuH7BOZAGEZfLRCHJ0GVCSssg==
-Message-ID: <36733743-3482-6a89-42b1-18d7caca7abb@ozlabs.ru>
-Date:   Tue, 1 Oct 2019 15:39:44 +1000
+Message-ID: <f657eeb4-a1d1-a68e-c656-9b1bc2f1fef3@ozlabs.ru>
+Date:   Tue, 1 Oct 2019 15:39:56 +1000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20190930020848.25767-2-oohall@gmail.com>
+In-Reply-To: <20190930020848.25767-3-oohall@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -142,140 +141,81 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 On 30/09/2019 12:08, Oliver O'Halloran wrote:
-> On PowerNV we use the pcibios_sriov_enable() hook to do two things:
+> From: Shawn Anastasio <shawn@anastas.io>
 > 
-> 1. Create a pci_dn structure for each of the VFs, and
-> 2. Configure the PHB's internal BARs that map MMIO ranges to PEs
->    so that each VF has it's own PE. Note that the PE also determines
->    the IOMMU table the HW uses for the device.
+> Move PCI device setup from pcibios_add_device() and pcibios_fixup_bus() to
+> pcibios_bus_add_device(). This ensures that platform-specific DMA and IOMMU
+> setup occurs after the device has been registered in sysfs, which is a
+> requirement for IOMMU group assignment to work
 > 
-> Currently we do not set the pe_number field of the pci_dn immediately after
-> assigning the PE number for the VF that it represents. Instead, we do that
-> in a fixup (see pnv_pci_dma_dev_setup) which is run inside the
-> pcibios_add_device() hook which is run prior to adding the device to the
-> bus.
+> This fixes IOMMU group assignment for hotplugged devices on pseries, where
+> the existing behavior results in IOMMU assignment before registration.
 > 
-> On PowerNV we add the device to it's IOMMU group using a bus notifier and
-> in order for this to work the PE number needs to be known when the bus
-> notifier is run. This works today since the PE number is set in the fixup
-> which runs before adding the device to the bus. However, if we want to move
-> the fixup to a later stage this will break.
+> Thanks to Lukas Wunner <lukas@wunner.de> for the suggestion.
 > 
-> We can fix this by setting the pdn->pe_number inside of
-> pcibios_sriov_enable(). There's no good to avoid this since we already have
-> all the required information at that point, so... do that. Moving this
-> earlier does cause two problems:
-> 
-> 1. We trip the WARN_ON() in the fixup code, and
-> 2. The EEH core will clear pdn->pe_number while recovering VFs.
-> 
-> The only justification for either of these is a comment in eeh_rmv_device()
-> suggesting that pdn->pe_number *must* be set to IODA_INVALID_PE in order
-> for the VF to be scanned. However, this comment appears to have no basis in
-> reality so just delete it.
-> 
-> Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+> Signed-off-by: Shawn Anastasio <shawn@anastas.io>
+
 
 
 Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
 Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-
-
 > ---
-> Can't get rid of the fixup entirely since we need it to set the
-> ioda_pe->pdev back-pointer. I'll look at killing that another time.
-> ---
->  arch/powerpc/kernel/eeh_driver.c          |  6 ------
->  arch/powerpc/platforms/powernv/pci-ioda.c | 19 +++++++++++++++----
->  arch/powerpc/platforms/powernv/pci.c      |  4 ----
->  3 files changed, 15 insertions(+), 14 deletions(-)
+>  arch/powerpc/kernel/pci-common.c | 25 +++++++++----------------
+>  1 file changed, 9 insertions(+), 16 deletions(-)
 > 
-> diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
-> index d9279d0..7955fba 100644
-> --- a/arch/powerpc/kernel/eeh_driver.c
-> +++ b/arch/powerpc/kernel/eeh_driver.c
-> @@ -541,12 +541,6 @@ static void eeh_rmv_device(struct eeh_dev *edev, void *userdata)
+> diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
+> index 1c448cf..b89925ed 100644
+> --- a/arch/powerpc/kernel/pci-common.c
+> +++ b/arch/powerpc/kernel/pci-common.c
+> @@ -261,12 +261,6 @@ int pcibios_sriov_disable(struct pci_dev *pdev)
 >  
->  		pci_iov_remove_virtfn(edev->physfn, pdn->vf_index);
->  		edev->pdev = NULL;
+>  #endif /* CONFIG_PCI_IOV */
+>  
+> -void pcibios_bus_add_device(struct pci_dev *pdev)
+> -{
+> -	if (ppc_md.pcibios_bus_add_device)
+> -		ppc_md.pcibios_bus_add_device(pdev);
+> -}
 > -
-> -		/*
-> -		 * We have to set the VF PE number to invalid one, which is
-> -		 * required to plug the VF successfully.
-> -		 */
-> -		pdn->pe_number = IODA_INVALID_PE;
->  #endif
->  		if (rmv_data)
->  			list_add(&edev->rmv_entry, &rmv_data->removed_vf_list);
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-> index 5e3172d..70508b3 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -1558,6 +1558,10 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
+>  static resource_size_t pcibios_io_size(const struct pci_controller *hose)
+>  {
+>  #ifdef CONFIG_PPC64
+> @@ -987,15 +981,17 @@ static void pcibios_setup_device(struct pci_dev *dev)
+>  		ppc_md.pci_irq_fixup(dev);
+>  }
 >  
->  	/* Reserve PE for each VF */
->  	for (vf_index = 0; vf_index < num_vfs; vf_index++) {
-> +		int vf_devfn = pci_iov_virtfn_devfn(pdev, vf_index);
-> +		int vf_bus = pci_iov_virtfn_bus(pdev, vf_index);
-> +		struct pci_dn *vf_pdn;
+> -int pcibios_add_device(struct pci_dev *dev)
+> +void pcibios_bus_add_device(struct pci_dev *pdev)
+>  {
+> -	/*
+> -	 * We can only call pcibios_setup_device() after bus setup is complete,
+> -	 * since some of the platform specific DMA setup code depends on it.
+> -	 */
+> -	if (dev->bus->is_added)
+> -		pcibios_setup_device(dev);
+> +	/* Perform platform-specific device setup */
+> +	pcibios_setup_device(pdev);
 > +
->  		if (pdn->m64_single_mode)
->  			pe_num = pdn->pe_num_map[vf_index];
->  		else
-> @@ -1570,13 +1574,11 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
->  		pe->pbus = NULL;
->  		pe->parent_dev = pdev;
->  		pe->mve_number = -1;
-> -		pe->rid = (pci_iov_virtfn_bus(pdev, vf_index) << 8) |
-> -			   pci_iov_virtfn_devfn(pdev, vf_index);
-> +		pe->rid = (vf_bus << 8) | vf_devfn;
+> +	if (ppc_md.pcibios_bus_add_device)
+> +		ppc_md.pcibios_bus_add_device(pdev);
+> +}
 >  
->  		pe_info(pe, "VF %04d:%02d:%02d.%d associated with PE#%x\n",
->  			hose->global_number, pdev->bus->number,
-> -			PCI_SLOT(pci_iov_virtfn_devfn(pdev, vf_index)),
-> -			PCI_FUNC(pci_iov_virtfn_devfn(pdev, vf_index)), pe_num);
-> +			PCI_SLOT(vf_devfn), PCI_FUNC(vf_devfn), pe_num);
->  
->  		if (pnv_ioda_configure_pe(phb, pe)) {
->  			/* XXX What do we do here ? */
-> @@ -1590,6 +1592,15 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
->  		list_add_tail(&pe->list, &phb->ioda.pe_list);
->  		mutex_unlock(&phb->ioda.pe_list_mutex);
->  
-> +		/* associate this pe to it's pdn */
-> +		list_for_each_entry(vf_pdn, &pdn->parent->child_list, list) {
-> +			if (vf_pdn->busno == vf_bus &&
-> +			    vf_pdn->devfn == vf_devfn) {
-> +				vf_pdn->pe_number = pe_num;
-> +				break;
-> +			}
-> +		}
-> +
->  		pnv_pci_ioda2_setup_dma_pe(phb, pe);
->  #ifdef CONFIG_IOMMU_API
->  		iommu_register_group(&pe->table_group,
-> diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-> index 2825d00..b7761e2 100644
-> --- a/arch/powerpc/platforms/powernv/pci.c
-> +++ b/arch/powerpc/platforms/powernv/pci.c
-> @@ -816,16 +816,12 @@ void pnv_pci_dma_dev_setup(struct pci_dev *pdev)
->  	struct pnv_phb *phb = hose->private_data;
+> +int pcibios_add_device(struct pci_dev *dev)
+> +{
 >  #ifdef CONFIG_PCI_IOV
->  	struct pnv_ioda_pe *pe;
-> -	struct pci_dn *pdn;
+>  	if (ppc_md.pcibios_fixup_sriov)
+>  		ppc_md.pcibios_fixup_sriov(dev);
+> @@ -1037,9 +1033,6 @@ void pcibios_fixup_bus(struct pci_bus *bus)
 >  
->  	/* Fix the VF pdn PE number */
->  	if (pdev->is_virtfn) {
-> -		pdn = pci_get_pdn(pdev);
-> -		WARN_ON(pdn->pe_number != IODA_INVALID_PE);
->  		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
->  			if (pe->rid == ((pdev->bus->number << 8) |
->  			    (pdev->devfn & 0xff))) {
-> -				pdn->pe_number = pe->pe_number;
->  				pe->pdev = pdev;
->  				break;
->  			}
+>  	/* Now fixup the bus bus */
+>  	pcibios_setup_bus_self(bus);
+> -
+> -	/* Now fixup devices on that bus */
+> -	pcibios_setup_bus_devices(bus);
+>  }
+>  EXPORT_SYMBOL(pcibios_fixup_bus);
+>  
 > 
 
 -- 
