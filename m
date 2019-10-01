@@ -2,249 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F189C2CFB
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2019 07:40:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE1C3C2D23
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2019 08:12:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfJAFkP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Oct 2019 01:40:15 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40794 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbfJAFkP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Oct 2019 01:40:15 -0400
-Received: by mail-pl1-f195.google.com with SMTP id d22so4897751pll.7
-        for <linux-pci@vger.kernel.org>; Mon, 30 Sep 2019 22:40:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UQbr0yQjseRgFfbw/LKfeNkkPgccfJkRMWBnK0BgSSc=;
-        b=tyhztGZ85F5U9Wb/zfZ1IFboVFlVJPQXbfuWDkYlSM0Ee0aGD8CmJWqpzK7bWhcLB+
-         Wm+RwGofsLFAIcamv68KWMqNt4TVKZFQST5iJwucOpoyMuphz/nzdxhSvJj39u02/s9Z
-         qeDRojDXKsJMl7K/FOoino00D/qoZ/sjBeL8hQCkg4rgA935pd1s+SZZlE21oIo3iWIx
-         W/ldnQIThaPE3TrVD8R+EQPd/mzTtVjCcIus4M33aso2bLCCQ/iIr91pvta+zj2Bvz/S
-         SiteIL9XH++G8z6QYmP24TOxSE3M8w/pJ38VPzgVAjLaKEpeD6mjH2alhanWKSPzRFTt
-         4YFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=UQbr0yQjseRgFfbw/LKfeNkkPgccfJkRMWBnK0BgSSc=;
-        b=PetCT47ccimnGglEfhPE5tIs9R/IGuLME3qjv28j2pooppoBcD8ggw+U1QHLOCvlm6
-         RcqzFslMjF/eF+XDUu8VE3frz75+Xfg6CGNfQ5e2gIO04zl8wShZlakIRc0SQpPcNSca
-         YvtriGFHLXGt6XdWwN72SzvFV04Tydz2YWSSn/wGkwwDYI8uI7OP9eHEO/UA6tOESl9m
-         SOOBsfttNQHjYm+S/Yt+hyqUb5MZVZxyMzBZEiv6Ypryyxz5z9zmP040uiN+iRhGkFtv
-         GbhOr0qENop0W6e9FC/sDYp1fTRgwwnKjnCyEn2e8b9qMlgUWbmx7gGjhu+gc9X+pl8M
-         MTpQ==
-X-Gm-Message-State: APjAAAX2Jul8UnlsRkE8madExSeID5QP7OmPF4FZlgnW5r/wFZrCQG7C
-        SsvfsC3fSh+iKYkqPSu7mGrkJ64NIF68VA==
-X-Google-Smtp-Source: APXvYqx55yQw1QGD6v/UO3U0O+wtmQmC9cfQwSZ8G3WIZXpgVuZqoHtSaOKhuTqeLfeKH2zwg1IeEQ==
-X-Received: by 2002:a17:902:690c:: with SMTP id j12mr2439554plk.83.1569908413951;
-        Mon, 30 Sep 2019 22:40:13 -0700 (PDT)
-Received: from [10.61.2.175] ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id o64sm2863191pjb.24.2019.09.30.22.40.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2019 22:40:13 -0700 (PDT)
-Subject: Re: [PATCH 3/3] powerpc/pci: Remove pcibios_setup_bus_devices()
-To:     Oliver O'Halloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org
-Cc:     shawn@anastas.io, linux-pci@vger.kernel.org
-References: <20190930020848.25767-1-oohall@gmail.com>
- <20190930020848.25767-4-oohall@gmail.com>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <c316c419-130e-0cf7-8584-e6c1b62237fc@ozlabs.ru>
-Date:   Tue, 1 Oct 2019 15:40:10 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20190930020848.25767-4-oohall@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1732140AbfJAGMd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Oct 2019 02:12:33 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36196 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731869AbfJAGMd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Oct 2019 02:12:33 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9168E4e031291;
+        Tue, 1 Oct 2019 02:12:22 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vbyueaa7p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Oct 2019 02:12:22 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x916BQQg039555;
+        Tue, 1 Oct 2019 02:12:22 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vbyueaa75-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Oct 2019 02:12:21 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x916A5bl015866;
+        Tue, 1 Oct 2019 06:12:21 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma03dal.us.ibm.com with ESMTP id 2v9y57y3kh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Oct 2019 06:12:21 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x916CJq449152488
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 1 Oct 2019 06:12:19 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B410B112063;
+        Tue,  1 Oct 2019 06:12:19 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3E0EF112061;
+        Tue,  1 Oct 2019 06:12:19 +0000 (GMT)
+Received: from ltcalpine2-lp18.aus.stglabs.ibm.com (unknown [9.40.195.201])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  1 Oct 2019 06:12:19 +0000 (GMT)
+From:   Tyrel Datwyler <tyreld@linux.ibm.com>
+To:     mpe@ellerman.id.au, bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        nathanl@linux.ibm.com, Tyrel Datwyler <tyreld@linux.ibm.com>
+Subject: [RFC PATCH 0/9] Fixes and Enablement of ibm,drc-info property
+Date:   Tue,  1 Oct 2019 01:12:05 -0500
+Message-Id: <1569910334-5972-1-git-send-email-tyreld@linux.ibm.com>
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-01_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910010060
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+There was an initial previous effort yo add support for the PAPR
+architected ibm,drc-info property. This property provides a more
+memory compact representation of a paritions Dynamic Reconfig
+Connectors (DRC). These can otherwise be thought of the currently
+partitioned, or available, but yet to be partitioned, system resources
+such as cpus, memory, and physical/logical IOA devices.
 
+The initial implementation proved buggy and was fully turned of by
+disabling the bit in the appropriate CAS support vector. We now have
+PowerVM firmware in the field that supports this new property, and 
+further to suppport partitions with 24TB+ or possible memory this
+property is required to perform platform migration.
 
-On 30/09/2019 12:08, Oliver O'Halloran wrote:
-> With the previous patch applied pcibios_setup_device() will always be run
-> when pcibios_bus_add_device() is called. There are several code paths where
-> pcibios_setup_bus_device() is still called (the PowerPC specific PCI
-> hotplug support is one) so with just the previous patch applied the setup
-> can be run multiple times on a device, once before the device is added
-> to the bus and once after.
-> 
-> There's no need to run the setup in the early case any more so just
-> remove it entirely.
-> 
-> Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+This serious fixup the short comings of the previous implementation
+in the areas of general implementation, cpu hotplug, and IOA hotplug.
 
+Tyrel Datwyler (9):
+  powerpc/pseries: add cpu DLPAR support for drc-info property
+  powerpc/pseries: fix bad drc_index_start value parsing of drc-info
+    entry
+  powerpc/pseries: fix drc-info mappings of logical cpus to drc-index
+  PCI: rpaphp: fix up pointer to first drc-info entry
+  PCI: rpaphp: don't rely on firmware feature to imply drc-info support
+  PCI: rpaphp: add drc-info support for hotplug slot registration
+  PCI: rpaphp: annotate and correctly byte swap DRC properties
+  PCI: rpaphp: correctly match ibm,my-drc-index to drc-name when using
+    drc-info
+  powerpc: Enable support for ibm,drc-info property
 
-
-Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-
-> ---
->  arch/powerpc/include/asm/pci.h    |  1 -
->  arch/powerpc/kernel/pci-common.c  | 25 -------------------------
->  arch/powerpc/kernel/pci-hotplug.c |  1 -
->  arch/powerpc/kernel/pci_of_scan.c |  1 -
->  4 files changed, 28 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/pci.h b/arch/powerpc/include/asm/pci.h
-> index 327567b..63ed7e3 100644
-> --- a/arch/powerpc/include/asm/pci.h
-> +++ b/arch/powerpc/include/asm/pci.h
-> @@ -113,7 +113,6 @@ extern pgprot_t	pci_phys_mem_access_prot(struct file *file,
->  					 pgprot_t prot);
->  
->  extern resource_size_t pcibios_io_space_offset(struct pci_controller *hose);
-> -extern void pcibios_setup_bus_devices(struct pci_bus *bus);
->  extern void pcibios_setup_bus_self(struct pci_bus *bus);
->  extern void pcibios_setup_phb_io_space(struct pci_controller *hose);
->  extern void pcibios_scan_phb(struct pci_controller *hose);
-> diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-> index b89925ed..f8a59d7 100644
-> --- a/arch/powerpc/kernel/pci-common.c
-> +++ b/arch/powerpc/kernel/pci-common.c
-> @@ -1000,24 +1000,6 @@ int pcibios_add_device(struct pci_dev *dev)
->  	return 0;
->  }
->  
-> -void pcibios_setup_bus_devices(struct pci_bus *bus)
-> -{
-> -	struct pci_dev *dev;
-> -
-> -	pr_debug("PCI: Fixup bus devices %d (%s)\n",
-> -		 bus->number, bus->self ? pci_name(bus->self) : "PHB");
-> -
-> -	list_for_each_entry(dev, &bus->devices, bus_list) {
-> -		/* Cardbus can call us to add new devices to a bus, so ignore
-> -		 * those who are already fully discovered
-> -		 */
-> -		if (pci_dev_is_added(dev))
-> -			continue;
-> -
-> -		pcibios_setup_device(dev);
-> -	}
-> -}
-> -
->  void pcibios_set_master(struct pci_dev *dev)
->  {
->  	/* No special bus mastering setup handling */
-> @@ -1036,13 +1018,6 @@ void pcibios_fixup_bus(struct pci_bus *bus)
->  }
->  EXPORT_SYMBOL(pcibios_fixup_bus);
->  
-> -void pci_fixup_cardbus(struct pci_bus *bus)
-> -{
-> -	/* Now fixup devices on that bus */
-> -	pcibios_setup_bus_devices(bus);
-> -}
-> -
-> -
->  static int skip_isa_ioresource_align(struct pci_dev *dev)
->  {
->  	if (pci_has_flag(PCI_CAN_SKIP_ISA_ALIGN) &&
-> diff --git a/arch/powerpc/kernel/pci-hotplug.c b/arch/powerpc/kernel/pci-hotplug.c
-> index fc62c4b..d6a67f8 100644
-> --- a/arch/powerpc/kernel/pci-hotplug.c
-> +++ b/arch/powerpc/kernel/pci-hotplug.c
-> @@ -134,7 +134,6 @@ void pci_hp_add_devices(struct pci_bus *bus)
->  		 */
->  		slotno = PCI_SLOT(PCI_DN(dn->child)->devfn);
->  		pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
-> -		pcibios_setup_bus_devices(bus);
->  		max = bus->busn_res.start;
->  		/*
->  		 * Scan bridges that are already configured. We don't touch
-> diff --git a/arch/powerpc/kernel/pci_of_scan.c b/arch/powerpc/kernel/pci_of_scan.c
-> index f91d7e9..c3024f1 100644
-> --- a/arch/powerpc/kernel/pci_of_scan.c
-> +++ b/arch/powerpc/kernel/pci_of_scan.c
-> @@ -414,7 +414,6 @@ static void __of_scan_bus(struct device_node *node, struct pci_bus *bus,
->  	 */
->  	if (!rescan_existing)
->  		pcibios_setup_bus_self(bus);
-> -	pcibios_setup_bus_devices(bus);
->  
->  	/* Now scan child busses */
->  	for_each_pci_bridge(dev, bus)
-> 
+ arch/powerpc/kernel/prom_init.c                 |   2 +-
+ arch/powerpc/platforms/pseries/hotplug-cpu.c    | 117 ++++++++++++++++------
+ arch/powerpc/platforms/pseries/of_helpers.c     |   8 +-
+ arch/powerpc/platforms/pseries/pseries_energy.c |  23 ++---
+ drivers/pci/hotplug/rpaphp_core.c               | 124 +++++++++++++++++-------
+ 5 files changed, 191 insertions(+), 83 deletions(-)
 
 -- 
-Alexey
+2.7.4
+
