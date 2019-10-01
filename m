@@ -2,73 +2,740 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B089C315E
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2019 12:30:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6856AC319C
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2019 12:39:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbfJAK3Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Oct 2019 06:29:16 -0400
-Received: from mga18.intel.com ([134.134.136.126]:12065 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730006AbfJAK3K (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 1 Oct 2019 06:29:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 03:29:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,570,1559545200"; 
-   d="scan'208";a="191418908"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 01 Oct 2019 03:29:06 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 2C12A234; Tue,  1 Oct 2019 13:29:06 +0300 (EEST)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Brad Campbell <lists2009@fnarfbargle.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
+        id S1726885AbfJAKjR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Oct 2019 06:39:17 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43334 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726494AbfJAKjR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Oct 2019 06:39:17 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x91Ad74I083773;
+        Tue, 1 Oct 2019 05:39:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569926347;
+        bh=LdaIKOL24rB9eCnFrbpPNgbXleYIfbCoxjXD87v2zJg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=uwHWw6100VxhFitGLVux0olhIOzTy9w0iDXpI0CnkuWdC9uDALpcn5WW4yTSIn1+W
+         tJmhxG5HvglHoDdoExMf+ZGCa6IoyKv0CtHDDW/fzcGdLo5VM3/Pj2zn8d++26PFoR
+         DyjGN+IibWi3vXgYGQPA0bCEDvhWJJ3a2ysDtWzE=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x91Ad7cb102784
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 1 Oct 2019 05:39:07 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 1 Oct
+ 2019 05:38:57 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 1 Oct 2019 05:38:57 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x91Ad4PX036314;
+        Tue, 1 Oct 2019 05:39:05 -0500
+Subject: Re: [PATCH] PCI:cadence:Driver refactored to use as a core library.
+To:     Andrew Murray <andrew.murray@arm.com>,
+        Tom Joseph <tjoseph@cadence.com>
+CC:     <linux-pci@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH 3/3] thunderbolt: Drop unnecessary read when writing LC command in Ice Lake
-Date:   Tue,  1 Oct 2019 13:29:05 +0300
-Message-Id: <20191001102905.21680-4-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191001102905.21680-1-mika.westerberg@linux.intel.com>
-References: <20191001102905.21680-1-mika.westerberg@linux.intel.com>
+        <linux-kernel@vger.kernel.org>
+References: <1569861768-10109-1-git-send-email-tjoseph@cadence.com>
+ <20191001100727.GJ42880@e119886-lin.cambridge.arm.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <073013e4-8e3c-93bd-229a-c8e4ff217472@ti.com>
+Date:   Tue, 1 Oct 2019 16:08:45 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191001100727.GJ42880@e119886-lin.cambridge.arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The read is not needed as we overwrite the returned value in the next
-line anyway so drop it.
+Hi Andrew Murray,
 
-Fixes: 3cdb9446a117 ("thunderbolt: Add support for Intel Ice Lake")
-Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
- drivers/thunderbolt/nhi_ops.c | 1 -
- 1 file changed, 1 deletion(-)
+On 01/10/19 3:37 PM, Andrew Murray wrote:
+> Hi Tom,
+> 
+> Thanks for the patch.
+> 
+> I'd suggest that you rename the subject of this series to "PCI: cadence: ..."
+> to be consistent with the existing commit history, e.g. git log 
+> --oneline drivers/pci/controller/pcie-cadence* - you'll also see that you
+> don't need a full stop at the end, and you ought to also change the tense
+> of the subject, e.g. Refactor driver to ...
+> 
+> See comments inline...
+> 
+> On Mon, Sep 30, 2019 at 05:42:48PM +0100, Tom Joseph wrote:
+>> All the platform related APIs/Structures in the driver has been extracted
+>>  out to a separate file (pcie-cadence-plat.c). This will enable the
+>>  driver to be used as a core library, which could be used by other
+>>  platform drivers.Testing was done using simulation environment.
+> 
+> Also change the tense for this description.
+> 
+> This patch appears to take the dwc approach of spliting itself into consise
+> parts, such that you can have a generic Cadence driver, yet also leave room
+> and share functionality with/for Cadence derivatives - this seems like a
+> sensible approach. Though, as you'll see in my comments below, because there
+> are no other platform drivers yet - we end up with unused code and confusing
+> Kconfig options.
+> 
+> Is there an immediate plan to add another Cadence based controller? - if so
+> I'd suggest that you include this patch in that patchset for this new
+> controller. Otherwise I'm happy with these changes once the Kconfig and unused
+> code are fixed.
 
-diff --git a/drivers/thunderbolt/nhi_ops.c b/drivers/thunderbolt/nhi_ops.c
-index 61cd09cef943..6795851aac95 100644
---- a/drivers/thunderbolt/nhi_ops.c
-+++ b/drivers/thunderbolt/nhi_ops.c
-@@ -80,7 +80,6 @@ static void icl_nhi_lc_mailbox_cmd(struct tb_nhi *nhi, enum icl_lc_mailbox_cmd c
- {
- 	u32 data;
- 
--	pci_read_config_dword(nhi->pdev, VS_CAP_19, &data);
- 	data = (cmd << VS_CAP_19_CMD_SHIFT) & VS_CAP_19_CMD_MASK;
- 	pci_write_config_dword(nhi->pdev, VS_CAP_19, data | VS_CAP_19_VALID);
- }
--- 
-2.23.0
+Yes, I'll send J721E support based on this series. I've sent the RFC series
+here [1]. I'll work on that while Tom could fix review comments on this series.
 
+[1] ->  https://lkml.org/lkml/2019/6/4/619
+
+Thanks
+Kishon
+
+> 
+>>
+>> Signed-off-by: Tom Joseph <tjoseph@cadence.com>
+>> ---
+>>  drivers/pci/controller/Kconfig             |  35 +++++++
+>>  drivers/pci/controller/Makefile            |   1 +
+>>  drivers/pci/controller/pcie-cadence-ep.c   |  78 ++-------------
+>>  drivers/pci/controller/pcie-cadence-host.c |  77 +++------------
+>>  drivers/pci/controller/pcie-cadence-plat.c | 154 +++++++++++++++++++++++++++++
+>>  drivers/pci/controller/pcie-cadence.h      |  69 +++++++++++++
+>>  6 files changed, 278 insertions(+), 136 deletions(-)
+>>  create mode 100644 drivers/pci/controller/pcie-cadence-plat.c
+>>
+>> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+>> index fe9f9f1..c175b21 100644
+>> --- a/drivers/pci/controller/Kconfig
+>> +++ b/drivers/pci/controller/Kconfig
+>> @@ -48,6 +48,41 @@ config PCIE_CADENCE_EP
+>>  	  endpoint mode. This PCIe controller may be embedded into many
+>>  	  different vendors SoCs.
+>>  
+>> +config PCIE_CADENCE_PLAT
+>> +	bool "Cadence PCIe endpoint controller"
+>> +	depends on OF
+>> +	depends on PCI_ENDPOINT
+>> +	select PCIE_CADENCE
+>> +	help
+>> +	  Say Y here if you want to support the Cadence PCIe  controller in
+>> +	  endpoint mode. This PCIe controller may be embedded into many
+>> +	  different vendors SoCs.
+>> +
+>> +config PCIE_CADENCE_PLAT_HOST
+>> +	bool "Cadence PCIe platform host controller"
+>> +	depends on OF
+>> +	depends on PCI
+>> +	select IRQ_DOMAIN
+>> +	select PCIE_CADENCE
+>> +	select PCIE_CADENCE_HOST
+>> +	select PCIE_CADENCE_PLAT
+>> +	help
+>> +	  Say Y here if you want to support the Cadence PCIe platform controller in
+>> +	  host mode. This PCIe controller may be embedded into many different
+>> +	  vendors SoCs.
+>> +
+>> +config PCIE_CADENCE_PLAT_EP
+>> +	bool "Cadence PCIe platform endpoint controller"
+>> +	depends on OF
+>> +	depends on PCI_ENDPOINT
+>> +	select PCIE_CADENCE
+>> +	select PCIE_CADENCE_EP
+>> +	select PCIE_CADENCE_PLAT
+>> +	help
+>> +	  Say Y here if you want to support the Cadence PCIe  platform controller in
+>> +	  endpoint mode. This PCIe controller may be embedded into many
+>> +	  different vendors SoCs.
+>> +
+> 
+> I find this too confusing, if I navigate to Cadence PCIe controllers support
+> in menuconfig I see these options:
+> 
+> Cadence PCIe host controller
+> Cadence PCIe endpoint controller
+> Cadence PCIe endpoint controller (NEW)
+> Cadence PCIe platform host controller (NEW)
+> Cadence PCIe platform endpoint controller (NEW)
+> 
+> I don't think users need to care about the platform/library support, surely
+> all they care about is enabling the EP or host bridge controllers for their
+> hardware (and then rely on Kconfig to select what is needed).
+> 
+>>  endmenu
+>>  
+>>  config PCIE_XILINX_NWL
+>> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+>> index d56a507..676a41e 100644
+>> --- a/drivers/pci/controller/Makefile
+>> +++ b/drivers/pci/controller/Makefile
+>> @@ -2,6 +2,7 @@
+>>  obj-$(CONFIG_PCIE_CADENCE) += pcie-cadence.o
+>>  obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
+>>  obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
+>> +obj-$(CONFIG_PCIE_CADENCE_PLAT) += pcie-cadence-plat.o
+>>  obj-$(CONFIG_PCI_FTPCI100) += pci-ftpci100.o
+>>  obj-$(CONFIG_PCI_HYPERV) += pci-hyperv.o
+>>  obj-$(CONFIG_PCI_MVEBU) += pci-mvebu.o
+>> diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/pcie-cadence-ep.c
+>> index def7820..617a71f 100644
+>> --- a/drivers/pci/controller/pcie-cadence-ep.c
+>> +++ b/drivers/pci/controller/pcie-cadence-ep.c
+>> @@ -17,35 +17,6 @@
+>>  #define CDNS_PCIE_EP_IRQ_PCI_ADDR_NONE		0x1
+>>  #define CDNS_PCIE_EP_IRQ_PCI_ADDR_LEGACY	0x3
+>>  
+>> -/**
+>> - * struct cdns_pcie_ep - private data for this PCIe endpoint controller driver
+>> - * @pcie: Cadence PCIe controller
+>> - * @max_regions: maximum number of regions supported by hardware
+>> - * @ob_region_map: bitmask of mapped outbound regions
+>> - * @ob_addr: base addresses in the AXI bus where the outbound regions start
+>> - * @irq_phys_addr: base address on the AXI bus where the MSI/legacy IRQ
+>> - *		   dedicated outbound regions is mapped.
+>> - * @irq_cpu_addr: base address in the CPU space where a write access triggers
+>> - *		  the sending of a memory write (MSI) / normal message (legacy
+>> - *		  IRQ) TLP through the PCIe bus.
+>> - * @irq_pci_addr: used to save the current mapping of the MSI/legacy IRQ
+>> - *		  dedicated outbound region.
+>> - * @irq_pci_fn: the latest PCI function that has updated the mapping of
+>> - *		the MSI/legacy IRQ dedicated outbound region.
+>> - * @irq_pending: bitmask of asserted legacy IRQs.
+>> - */
+>> -struct cdns_pcie_ep {
+>> -	struct cdns_pcie		pcie;
+>> -	u32				max_regions;
+>> -	unsigned long			ob_region_map;
+>> -	phys_addr_t			*ob_addr;
+>> -	phys_addr_t			irq_phys_addr;
+>> -	void __iomem			*irq_cpu_addr;
+>> -	u64				irq_pci_addr;
+>> -	u8				irq_pci_fn;
+>> -	u8				irq_pending;
+>> -};
+>> -
+>>  static int cdns_pcie_ep_write_header(struct pci_epc *epc, u8 fn,
+>>  				     struct pci_epf_header *hdr)
+>>  {
+>> @@ -396,6 +367,9 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+>>  		cfg |= BIT(epf->func_no);
+>>  	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, cfg);
+>>  
+>> +	if (pcie->ops->cdns_start_link)
+>> +		return  pcie->ops->cdns_start_link(pcie, true);
+>> +
+>>  	return 0;
+>>  }
+>>  
+>> @@ -424,30 +398,18 @@ static const struct pci_epc_ops cdns_pcie_epc_ops = {
+>>  	.get_features	= cdns_pcie_ep_get_features,
+>>  };
+>>  
+>> -static const struct of_device_id cdns_pcie_ep_of_match[] = {
+>> -	{ .compatible = "cdns,cdns-pcie-ep" },
+>> -
+>> -	{ },
+>> -};
+>>  
+>> -static int cdns_pcie_ep_probe(struct platform_device *pdev)
+>> +int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
+>>  {
+>> -	struct device *dev = &pdev->dev;
+>> +	struct device *dev = ep->dev;
+>> +	struct platform_device *pdev = to_platform_device(dev);
+>>  	struct device_node *np = dev->of_node;
+>> -	struct cdns_pcie_ep *ep;
+>> -	struct cdns_pcie *pcie;
+>> +	struct cdns_pcie *pcie = &ep->pcie;
+>>  	struct pci_epc *epc;
+>>  	struct resource *res;
+>>  	int ret;
+>>  	int phy_count;
+>>  
+>> -	ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+>> -	if (!ep)
+>> -		return -ENOMEM;
+>> -
+>> -	pcie = &ep->pcie;
+>> -	pcie->is_rc = false;
+>> -
+>>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
+>>  	pcie->reg_base = devm_ioremap_resource(dev, res);
+>>  	if (IS_ERR(pcie->reg_base)) {
+>> @@ -537,29 +499,3 @@ static int cdns_pcie_ep_probe(struct platform_device *pdev)
+>>  
+>>  	return ret;
+>>  }
+>> -
+>> -static void cdns_pcie_ep_shutdown(struct platform_device *pdev)
+>> -{
+>> -	struct device *dev = &pdev->dev;
+>> -	struct cdns_pcie *pcie = dev_get_drvdata(dev);
+>> -	int ret;
+>> -
+>> -	ret = pm_runtime_put_sync(dev);
+>> -	if (ret < 0)
+>> -		dev_dbg(dev, "pm_runtime_put_sync failed\n");
+>> -
+>> -	pm_runtime_disable(dev);
+>> -
+>> -	cdns_pcie_disable_phy(pcie);
+>> -}
+>> -
+>> -static struct platform_driver cdns_pcie_ep_driver = {
+>> -	.driver = {
+>> -		.name = "cdns-pcie-ep",
+>> -		.of_match_table = cdns_pcie_ep_of_match,
+>> -		.pm	= &cdns_pcie_pm_ops,
+>> -	},
+>> -	.probe = cdns_pcie_ep_probe,
+>> -	.shutdown = cdns_pcie_ep_shutdown,
+>> -};
+>> -builtin_platform_driver(cdns_pcie_ep_driver);
+>> diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/pcie-cadence-host.c
+>> index 97e2510..55c2085 100644
+>> --- a/drivers/pci/controller/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/pcie-cadence-host.c
+>> @@ -11,33 +11,6 @@
+>>  
+>>  #include "pcie-cadence.h"
+>>  
+>> -/**
+>> - * struct cdns_pcie_rc - private data for this PCIe Root Complex driver
+>> - * @pcie: Cadence PCIe controller
+>> - * @dev: pointer to PCIe device
+>> - * @cfg_res: start/end offsets in the physical system memory to map PCI
+>> - *           configuration space accesses
+>> - * @bus_range: first/last buses behind the PCIe host controller
+>> - * @cfg_base: IO mapped window to access the PCI configuration space of a
+>> - *            single function at a time
+>> - * @max_regions: maximum number of regions supported by the hardware
+>> - * @no_bar_nbits: Number of bits to keep for inbound (PCIe -> CPU) address
+>> - *                translation (nbits sets into the "no BAR match" register)
+>> - * @vendor_id: PCI vendor ID
+>> - * @device_id: PCI device ID
+>> - */
+>> -struct cdns_pcie_rc {
+>> -	struct cdns_pcie	pcie;
+>> -	struct device		*dev;
+>> -	struct resource		*cfg_res;
+>> -	struct resource		*bus_range;
+>> -	void __iomem		*cfg_base;
+>> -	u32			max_regions;
+>> -	u32			no_bar_nbits;
+>> -	u16			vendor_id;
+>> -	u16			device_id;
+>> -};
+>> -
+>>  static void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+>>  				      int where)
+>>  {
+>> @@ -92,11 +65,6 @@ static struct pci_ops cdns_pcie_host_ops = {
+>>  	.write		= pci_generic_config_write,
+>>  };
+>>  
+>> -static const struct of_device_id cdns_pcie_host_of_match[] = {
+>> -	{ .compatible = "cdns,cdns-pcie-host" },
+>> -
+>> -	{ },
+>> -};
+>>  
+>>  static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>>  {
+>> @@ -233,27 +201,23 @@ static int cdns_pcie_host_init(struct device *dev,
+>>  	return err;
+>>  }
+>>  
+>> -static int cdns_pcie_host_probe(struct platform_device *pdev)
+>> +int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>  {
+>> -	struct device *dev = &pdev->dev;
+>> +	struct device *dev = rc->dev;
+>> +	struct platform_device *pdev = to_platform_device(dev);
+>>  	struct device_node *np = dev->of_node;
+>>  	struct pci_host_bridge *bridge;
+>>  	struct list_head resources;
+>> -	struct cdns_pcie_rc *rc;
+>>  	struct cdns_pcie *pcie;
+>>  	struct resource *res;
+>>  	int ret;
+>>  	int phy_count;
+>>  
+>> -	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
+>> +	bridge = pci_host_bridge_from_priv(rc);
+>>  	if (!bridge)
+>>  		return -ENOMEM;
+>>  
+>> -	rc = pci_host_bridge_priv(bridge);
+>> -	rc->dev = dev;
+>> -
+>>  	pcie = &rc->pcie;
+>> -	pcie->is_rc = true;
+>>  
+>>  	rc->max_regions = 32;
+>>  	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
+>> @@ -303,6 +267,14 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
+>>  		goto err_get_sync;
+>>  	}
+>>  
+>> +	if (pcie->ops->cdns_start_link) {
+>> +		ret =  pcie->ops->cdns_start_link(pcie, true);
+>> +		if (ret) {
+>> +			dev_err(dev, "Failed to start link\n");
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+>>  	ret = cdns_pcie_host_init(dev, &resources, rc);
+>>  	if (ret)
+>>  		goto err_init;
+>> @@ -335,28 +307,3 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
+>>  
+>>  	return ret;
+>>  }
+>> -
+>> -static void cdns_pcie_shutdown(struct platform_device *pdev)
+>> -{
+>> -	struct device *dev = &pdev->dev;
+>> -	struct cdns_pcie *pcie = dev_get_drvdata(dev);
+>> -	int ret;
+>> -
+>> -	ret = pm_runtime_put_sync(dev);
+>> -	if (ret < 0)
+>> -		dev_dbg(dev, "pm_runtime_put_sync failed\n");
+>> -
+>> -	pm_runtime_disable(dev);
+>> -	cdns_pcie_disable_phy(pcie);
+>> -}
+>> -
+>> -static struct platform_driver cdns_pcie_host_driver = {
+>> -	.driver = {
+>> -		.name = "cdns-pcie-host",
+>> -		.of_match_table = cdns_pcie_host_of_match,
+>> -		.pm	= &cdns_pcie_pm_ops,
+>> -	},
+>> -	.probe = cdns_pcie_host_probe,
+>> -	.shutdown = cdns_pcie_shutdown,
+>> -};
+>> -builtin_platform_driver(cdns_pcie_host_driver);
+>> diff --git a/drivers/pci/controller/pcie-cadence-plat.c b/drivers/pci/controller/pcie-cadence-plat.c
+>> new file mode 100644
+>> index 0000000..274615d
+>> --- /dev/null
+>> +++ b/drivers/pci/controller/pcie-cadence-plat.c
+>> @@ -0,0 +1,154 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// Copyright (c) 2019 Cadence
+>> +// Cadence PCIe platform  driver.
+>> +// Author: Tom Joseph <tjoseph@cadence.com>
+>> +
+> 
+> The style of this comment block is consistent with the other cadence files in
+> the tree, however the cadence files aren't consistent with the other PCI
+> controller drivers (or probably much of the kernel). I don't have any objections
+> with this, but ideally we'd eventually move to this:
+> 
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Cadence PCIe platform driver.
+> + *
+> + * Copyright (c) 2019 Cadence
+> + *
+> + * Author: Tom Joseph <tjoseph@cadence.com>
+> + */
+> 
+>> +#include <linux/kernel.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_pci.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pm_runtime.h>
+>> +#include <linux/of_device.h>
+>> +#include "pcie-cadence.h"
+>> +
+>> +/**
+>> + * struct cdns_plat_pcie - private data for this PCIe platform driver
+>> + * @pcie: Cadence PCIe controller
+>> + * @regmap: pointer to PCIe device
+> 
+> regmap? A leftover from pcie-designware-plat.c?
+> 
+>> + * @is_rc: Set to 1 indicates the PCIe controller mode is Root Complex,
+>> + *         if 0 it is in Endpoint mode.
+>> + */
+>> +struct cdns_plat_pcie {
+>> +	struct cdns_pcie        *pcie;
+>> +	bool is_rc;
+>> +};
+>> +
+>> +struct cdns_plat_pcie_of_data {
+>> +	bool is_rc;
+>> +};
+>> +
+>> +static const struct of_device_id cdns_plat_pcie_of_match[];
+>> +
+>> +int cdns_plat_pcie_link_control(struct cdns_pcie *pcie, bool start)
+>> +{
+>> +	pr_debug(" %s called\n", __func__);
+>> +	return 0;
+>> +}
+>> +
+>> +bool cdns_plat_pcie_link_status(struct cdns_pcie *pcie)
+>> +{
+>> +	pr_debug(" %s called\n", __func__);
+>> +	return 0;
+>> +}
+> 
+> Given that these above two functions are only called through the
+> cdns_pcie_common_ops abstraction, they should be declared static.
+> 
+> I also don't understand why they are here in *this* patch -
+> cdns_plat_pcie_link_status isn't called anywhere, and even though
+> cdns_plat_pcie_link_control is called it doesn't do anything (start
+> is always true which makes me wonder if you'll ever get a caller
+> that sets it to false).
+> 
+> I'd suggest removing these two functions (and related logic) until
+> there is a user. This also makes reviewing the patch easier. 
+> 
+>> +
+>> +static const struct cdns_pcie_common_ops cdns_pcie_common_ops = {
+>> +	.cdns_start_link = cdns_plat_pcie_link_control,
+>> +	.cdns_is_link_up = cdns_plat_pcie_link_status,
+>> +};
+>> +
+>> +static int cdns_plat_pcie_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct cdns_plat_pcie *cdns_plat_pcie;
+>> +	const struct of_device_id *match;
+>> +	const struct cdns_plat_pcie_of_data *data;
+>> +	struct pci_host_bridge *bridge;
+>> +	struct cdns_pcie_rc *rc;
+>> +	struct cdns_pcie_ep *ep;
+>> +	int ret;
+>> +	bool is_rc;
+>> +
+>> +	match = of_match_device(cdns_plat_pcie_of_match, dev);
+>> +	if (!match)
+>> +		return -EINVAL;
+> 
+> Add a new line here.
+> 
+>> +	data = (struct cdns_plat_pcie_of_data *)match->data;
+>> +	is_rc = data->is_rc;
+>> +
+>> +	pr_debug(" Started %s with is_rc: %d\n", __func__, is_rc);
+>> +	cdns_plat_pcie = devm_kzalloc(dev, sizeof(*cdns_plat_pcie), GFP_KERNEL);
+>> +	if (!cdns_plat_pcie)
+>> +		return -ENOMEM;
+>> +
+>> +	platform_set_drvdata(pdev, cdns_plat_pcie);
+>> +	if (is_rc) {
+>> +		if (!IS_ENABLED(CONFIG_PCIE_CADENCE_PLAT_HOST))
+>> +			return -ENODEV;
+>> +
+>> +		bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
+>> +		if (!bridge)
+>> +			return -ENOMEM;
+>> +
+>> +		rc = pci_host_bridge_priv(bridge);
+>> +		rc->dev = dev;
+>> +		rc->pcie.ops = &cdns_pcie_common_ops;
+>> +		cdns_plat_pcie->pcie = &rc->pcie;
+>> +		cdns_plat_pcie->is_rc = is_rc;
+>> +
+>> +		ret = cdns_pcie_host_setup(rc);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +	} else {
+>> +		if (!IS_ENABLED(CONFIG_PCIE_CADENCE_PLAT_EP))
+>> +			return -ENODEV;
+>> +
+>> +		ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+>> +		if (!ep)
+>> +			return -ENOMEM;
+>> +		ep->dev = dev;
+>> +		ep->pcie.ops = &cdns_pcie_common_ops;
+>> +		cdns_plat_pcie->pcie = &ep->pcie;
+>> +		cdns_plat_pcie->is_rc = is_rc;
+>> +
+>> +		ret = cdns_pcie_ep_setup(ep);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +	}
+>> +	return 0;
+>> +}
+>> +
+>> +
+>> +static void cdns_plat_pcie_shutdown(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct cdns_pcie *pcie = dev_get_drvdata(dev);
+>> +	int ret;
+>> +
+>> +	ret = pm_runtime_put_sync(dev);
+>> +	if (ret < 0)
+>> +		dev_dbg(dev, "pm_runtime_put_sync failed\n");
+>> +
+>> +	pm_runtime_disable(dev);
+>> +
+>> +	cdns_pcie_disable_phy(pcie);
+>> +}
+>> +
+>> +static const struct cdns_plat_pcie_of_data cdns_plat_pcie_host_of_data = {
+>> +	.is_rc = true,
+>> +};
+>> +
+>> +static const struct cdns_plat_pcie_of_data cdns_plat_pcie_ep_of_data = {
+>> +	.is_rc = false,
+>> +};
+>> +
+>> +static const struct of_device_id cdns_plat_pcie_of_match[] = {
+>> +	{
+>> +		.compatible = "cdns,cdns-pcie-host",
+>> +		.data = &cdns_plat_pcie_host_of_data,
+>> +	},
+>> +	{
+>> +		.compatible = "cdns,cdns-pcie-ep",
+>> +		.data = &cdns_plat_pcie_ep_of_data,
+>> +	},
+>> +	{},
+>> +};
+>> +
+>> +static struct platform_driver cdns_plat_pcie_driver = {
+>> +	.driver = {
+>> +		.name = "cdns-pcie",
+>> +		.of_match_table = cdns_plat_pcie_of_match,
+>> +		.pm	= &cdns_pcie_pm_ops,
+>> +	},
+>> +	.probe = cdns_plat_pcie_probe,
+>> +	.shutdown = cdns_plat_pcie_shutdown,
+>> +};
+>> +builtin_platform_driver(cdns_plat_pcie_driver);
+>> diff --git a/drivers/pci/controller/pcie-cadence.h b/drivers/pci/controller/pcie-cadence.h
+>> index ae6bf2a..3df902a 100644
+>> --- a/drivers/pci/controller/pcie-cadence.h
+>> +++ b/drivers/pci/controller/pcie-cadence.h
+>> @@ -190,6 +190,8 @@ enum cdns_pcie_rp_bar {
+>>  	(((code) << 8) & CDNS_PCIE_NORMAL_MSG_CODE_MASK)
+>>  #define CDNS_PCIE_MSG_NO_DATA			BIT(16)
+>>  
+>> +struct cdns_pcie;
+>> +
+>>  enum cdns_pcie_msg_code {
+>>  	MSG_CODE_ASSERT_INTA	= 0x20,
+>>  	MSG_CODE_ASSERT_INTB	= 0x21,
+>> @@ -221,6 +223,11 @@ enum cdns_pcie_msg_routing {
+>>  	MSG_ROUTING_GATHER,
+>>  };
+>>  
+>> +
+>> +struct cdns_pcie_common_ops {
+>> +	int	(*cdns_start_link)(struct cdns_pcie *pcie, bool start);
+>> +	bool	(*cdns_is_link_up)(struct cdns_pcie *pcie);
+>> +};
+>>  /**
+>>   * struct cdns_pcie - private data for Cadence PCIe controller drivers
+>>   * @reg_base: IO mapped register base
+>> @@ -236,8 +243,67 @@ struct cdns_pcie {
+>>  	int			phy_count;
+>>  	struct phy		**phy;
+>>  	struct device_link	**link;
+>> +	const struct cdns_pcie_common_ops *ops;
+>> +};
+>> +
+>> +/**
+>> + * struct cdns_pcie_rc - private data for this PCIe Root Complex driver
+>> + * @pcie: Cadence PCIe controller
+>> + * @dev: pointer to PCIe device
+>> + * @cfg_res: start/end offsets in the physical system memory to map PCI
+>> + *           configuration space accesses
+>> + * @bus_range: first/last buses behind the PCIe host controller
+>> + * @cfg_base: IO mapped window to access the PCI configuration space of a
+>> + *            single function at a time
+>> + * @max_regions: maximum number of regions supported by the hardware
+>> + * @no_bar_nbits: Number of bits to keep for inbound (PCIe -> CPU) address
+>> + *                translation (nbits sets into the "no BAR match" register)
+>> + * @vendor_id: PCI vendor ID
+>> + * @device_id: PCI device ID
+>> + */
+>> +struct cdns_pcie_rc {
+>> +	struct cdns_pcie	pcie;
+>> +	struct device		*dev;
+>> +	struct resource		*cfg_res;
+>> +	struct resource		*bus_range;
+>> +	void __iomem		*cfg_base;
+>> +	u32			max_regions;
+>> +	u32			no_bar_nbits;
+>> +	u16			vendor_id;
+>> +	u16			device_id;
+>>  };
+>>  
+>> +/**
+>> + * struct cdns_pcie_ep - private data for this PCIe endpoint controller driver
+>> + * @pcie: Cadence PCIe controller
+>> + * @max_regions: maximum number of regions supported by hardware
+>> + * @ob_region_map: bitmask of mapped outbound regions
+>> + * @ob_addr: base addresses in the AXI bus where the outbound regions start
+>> + * @irq_phys_addr: base address on the AXI bus where the MSI/legacy IRQ
+>> + *		   dedicated outbound regions is mapped.
+>> + * @irq_cpu_addr: base address in the CPU space where a write access triggers
+>> + *		  the sending of a memory write (MSI) / normal message (legacy
+>> + *		  IRQ) TLP through the PCIe bus.
+>> + * @irq_pci_addr: used to save the current mapping of the MSI/legacy IRQ
+>> + *		  dedicated outbound region.
+>> + * @irq_pci_fn: the latest PCI function that has updated the mapping of
+>> + *		the MSI/legacy IRQ dedicated outbound region.
+>> + * @irq_pending: bitmask of asserted legacy IRQs.
+>> + */
+>> +struct cdns_pcie_ep {
+>> +	struct cdns_pcie	pcie;
+>> +	struct device		*dev;
+>> +	u32			max_regions;
+>> +	unsigned long		ob_region_map;
+>> +	phys_addr_t		*ob_addr;
+>> +	phys_addr_t		irq_phys_addr;
+>> +	void __iomem		*irq_cpu_addr;
+>> +	u64			irq_pci_addr;
+>> +	u8			irq_pci_fn;
+>> +	u8			irq_pending;
+>> +};
+>> +
+>> +
+>>  /* Register access */
+>>  static inline void cdns_pcie_writeb(struct cdns_pcie *pcie, u32 reg, u8 value)
+>>  {
+>> @@ -306,6 +372,9 @@ static inline u32 cdns_pcie_ep_fn_readl(struct cdns_pcie *pcie, u8 fn, u32 reg)
+>>  	return readl(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
+>>  }
+>>  
+>> +int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
+>> +int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep);
+>> +
+> 
+> What happens if a user only selects the host bridge, will you get a build
+> error relating to cdns_plat_pcie_probe not being able to find an
+> implementation of cdns_pcie_ep_setup?
+> 
+> Thanks,
+> 
+> Andrew Murray
+> 
+>>  void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 fn,
+>>  				   u32 r, bool is_io,
+>>  				   u64 cpu_addr, u64 pci_addr, size_t size);
+>> -- 
+>> 2.2.2
+>>
