@@ -2,205 +2,188 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 75104C2AC3
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2019 01:21:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A98CC2BB2
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2019 03:33:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbfI3XVC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Sep 2019 19:21:02 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:59934 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727621AbfI3XVC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Sep 2019 19:21:02 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8UNKt39019084;
-        Mon, 30 Sep 2019 16:20:55 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=vSpZGY4Rt4DhMZyDpVOBVqK5fEdztH3D7nzpfU9Gn+o=;
- b=x6sJG/LsE5EUAyKNz3MHZDTnrr5DntcN9gia2lkNfjcf0gA/czXt3xhgzJeWZwrU+tGo
- qzWXH9WLihdnWF2zCvr4EHzHXszZH3pZqYqdWFW4DD+hbfkU+92Nzwmczdn9HDJtu/n5
- UOEKGP83dFulUBRrZ48noWZ/XAeQvdU103QFatkE4XLLKZfmI9FZcFJWf1Hgp6UW+r6n
- lBGSBZNjpZSj0ojtiV3VGC/EdcTZ2PnqBgM3cZqPxaEItyj9uLWIM0Ft7z4bvUVkRmKy
- oOYwY+bzsO35IPLQJlrQptgd5TSAEpjZqdA40Y8XWP8a9UsqHCfg5K3kAiiZO120foVo dQ== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2va71mg5fb-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 30 Sep 2019 16:20:55 -0700
-Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 30 Sep
- 2019 16:20:53 -0700
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (104.47.40.50) by
- SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Mon, 30 Sep 2019 16:20:53 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P46oc5zVyHTOWHxIXBcPsOV9HZcmXIoL0oRBRRgJUfQPqArtvlTEuAitbGRvSbjerH5MVADWR5pHfbNHwQvV/4isdzk6IKJHoA3q/RXv+931tMy7bOCYkkA/4s8QNFNvQEPGsmgJEvy2lCyFcWEtJ4csBt5oI4DRXdWo2tLgN+rhMy73WoaD7AT3CFY9hwxDjTZXsfYACywzediX0R0wtDcsuC5rdlTA14XoNRuKkeDxT1GiY2UN06InLI+SEz962jPvEX1SBbGxeybP4OGU4CflRB7jROgPS1SVnawbu6+fkBSU/kloCCfQPBZzI8+4BWCBRWAUgaVykJkZoICF3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vSpZGY4Rt4DhMZyDpVOBVqK5fEdztH3D7nzpfU9Gn+o=;
- b=DdGgIlwoHCEYOIPSMAiA786supip7LlOJmsnAabOzSleB5XxsiMARFu5suSWdkx9cL0tC4e2OE1vDGD1vchONaRpmHpvX4PmktDxE6RNQEc7xQlhAE+SOFVASXuUdcxf/J6DXSb7R3eEQrfBV8228TFbHl7oZC3wrhBSxV9OuqJ2PSAlPacJ2DsQPnpMwgexDXWWGQaaynkvr75EPUuJ3mHjgFfN6XpcWxcb3wwTLDhypkYbqntHs4N23OZCbnpcVC30KtKc0st7ILSFTTUDSGhUOodvY3C1MyWoMUYDtjJApusOMT+kNo+YnJ0DpS8ZfYDlwzOKW5zCVrWEVRKdJQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
+        id S1726504AbfJABdN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Sep 2019 21:33:13 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46846 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726425AbfJABdN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Sep 2019 21:33:13 -0400
+Received: by mail-io1-f67.google.com with SMTP id c6so43436289ioo.13
+        for <linux-pci@vger.kernel.org>; Mon, 30 Sep 2019 18:33:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vSpZGY4Rt4DhMZyDpVOBVqK5fEdztH3D7nzpfU9Gn+o=;
- b=ee4MB0Z8+F9TtT8jLP1Cu2N1jihc7go6GlhGb3LXQHddTSA5hQDyPr2upaT9VfKE89yvEg346Zzd9+pWYHxATfYl/u5IWur2inamXmptIOi3CJ2y+wWPcbMqxNvMTcOAdJOSmByLg8DYtE9RnsS1HQJsYM0ZJvsyVS8cNQoETgw=
-Received: from CY4PR1801MB1895.namprd18.prod.outlook.com (10.171.254.153) by
- CY4PR1801MB2054.namprd18.prod.outlook.com (10.165.88.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.16; Mon, 30 Sep 2019 23:20:51 +0000
-Received: from CY4PR1801MB1895.namprd18.prod.outlook.com
- ([fe80::95d8:1a9a:a3b4:616b]) by CY4PR1801MB1895.namprd18.prod.outlook.com
- ([fe80::95d8:1a9a:a3b4:616b%7]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
- 23:20:51 +0000
-From:   Jayachandran Chandrasekharan Nair <jnair@marvell.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     George Cherian <gcherian@marvell.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shannon.zhao@linux.alibaba.com" <shannon.zhao@linux.alibaba.com>,
-        George Cherian <gcherian@marvell.com>,
-        Vadim Lomovtsev <vlomovtsev@marvell.com>,
-        Manish Jaggi <mjaggi@caviumnetworks.com>,
-        Robert Richter <rrichter@marvell.com>,
-        "Sunil Kovvuri Goutham" <sgoutham@marvell.com>
-Subject: Re: [PATCH] PCI: Enhance the ACS quirk for Cavium devices
-Thread-Topic: [PATCH] PCI: Enhance the ACS quirk for Cavium devices
-Thread-Index: AQHVd+WyQA/rX9/rek2UxMmqvqYW5w==
-Date:   Mon, 30 Sep 2019 23:20:50 +0000
-Message-ID: <20190930232041.GA22852@dc5-eodlnx05.marvell.com>
-References: <20190919024319.GA8792@dc5-eodlnx05.marvell.com>
- <20190930203409.GA195851@google.com>
-In-Reply-To: <20190930203409.GA195851@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR01CA0048.prod.exchangelabs.com (2603:10b6:a03:94::25)
- To CY4PR1801MB1895.namprd18.prod.outlook.com (2603:10b6:910:79::25)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [199.233.59.128]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 57e0ed37-f26d-4efe-7c7e-08d745fcd526
-x-ms-traffictypediagnostic: CY4PR1801MB2054:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR1801MB20542C006F2CF9BB7C59B785A6820@CY4PR1801MB2054.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 01762B0D64
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(396003)(366004)(39860400002)(189003)(199004)(14454004)(8936002)(81156014)(6916009)(7736002)(71200400001)(66946007)(71190400001)(64756008)(66476007)(66446008)(316002)(54906003)(25786009)(81166006)(6116002)(8676002)(66556008)(478600001)(305945005)(3846002)(6486002)(229853002)(256004)(6436002)(14444005)(2906002)(99286004)(107886003)(5660300002)(52116002)(6512007)(66066001)(102836004)(26005)(33656002)(86362001)(4326008)(6506007)(486006)(386003)(76176011)(1076003)(476003)(11346002)(186003)(6246003)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1801MB2054;H:CY4PR1801MB1895.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hATioA8Mf3IInbaFmpLQFDdZwtkfENwIjJG85e9O/LOxuUyhpKiYjAa8lUScXZ+5Cva3UqO0C3q0XDN5NiEMUsBHL5p83Ivo7M0Z2ew7Jww7UYvJBPGtGrODGoDyTOADyVoWWKlbBHL4ZbLaEHkV3Oq0X5SV1CHHC4LvVlrizpQf5RFelqS803NkN0H2/m6gereyIajM53Zc7BJvkzBvro8NntXKqTU3J/0bBjpm84vmf+5dPMDQtQ1Tge6Vnop246JdjCsvr0wUeeLWYQJfmbjKNO/iEqaIzONOrT6fM4JJRtZg1QPw2uKzFUc1aVTcofKiZevgTsFmpJYCT1UuFdQH3TG9+yhuCNXHCMaOrSuSWOjKQzfHCDZOeQIwwo7qbJ0zz8iUacpG4s2zoVgA3jGJ+wMeTMcRDyXRQgLFT6s=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <38B3535B4CAB6C48A52C23912428D2D4@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=19/fqplMu5ncq+Zw3uRvu3m9c9STNF0irlcsoosW0Co=;
+        b=al4gRHaeGg/cZqiZI795Rd78SRxqG84CjjJTGgVD1hrh/KEltmD3zrD7H7/JYMFpBj
+         TWOtxGhfwU6fvTlF4F5oyov/65ob151+ZQd6YcgauSjW5ZulZxQpInvwLyCDUCl0UwFk
+         s3t6vgSPNZ23BO6hvuEd/qDhD0lgGxHMrXoD2rZbjAkcd4G7CACCMeOtSQ+EW/rd0D1N
+         ioClIyw4FzduHEDixVPXOzkX5qTCzOpv4ZS5g/OAacc8/JrLD2NVK8xYPsVOd5PLclIy
+         XlxI8ZG1RPMy0TEc5EV+CpInsE6nRicSA+IIz1NipKdrArZxV72biLTev5UNbuDG8qcq
+         i3PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=19/fqplMu5ncq+Zw3uRvu3m9c9STNF0irlcsoosW0Co=;
+        b=nAPsBdvC4vzJeCy1F38BQDeYrMMMe2XpjHo4MnAoNjhnD5rp15ebMmz7CJCslQFqr7
+         BWIeStuwMxHDRTQw2GlDgiYRIbS29e1GGtpwPJ1lzCXSMd4B3UBwKDXSYHIRs7cCtQp0
+         FM4ZAIH5QB9HXfDLcxkPb7MzvaT3fOnqatVRfkrwwxHa/Ww+g6CUYcWvcln0kIATbYDN
+         WJpyb2q0TPgLy8ZJD0JAAnWp+hcpM8ufuIlrb/HfUqeO3D8fW5Sxc3bROdW1CidcRlas
+         CgP4bdSVj1PBJpTLnNxkSmtbe3UiB2x6Wc0aslORPvShk5xGJZQ1vVjNvDOx57RVVNHO
+         A+Xw==
+X-Gm-Message-State: APjAAAVDa2FdjtA9i7QcvxU3yYDzb0j1XeVA/xKjn0vO2SRLHItXlZbE
+        dQAtwZqNyJ1xrbFGAOwVGbkoWK6S/2EQXfa3Ay8=
+X-Google-Smtp-Source: APXvYqxoGSYSEq5KLwzbStd2aIGE9OIH0/k7KW8mb3xU3296xqnpTkwrsSzxIartHroxhzkiuVdW4vGI6APRF88Vwg0=
+X-Received: by 2002:a92:cecc:: with SMTP id z12mr24175183ilq.293.1569893592169;
+ Mon, 30 Sep 2019 18:33:12 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57e0ed37-f26d-4efe-7c7e-08d745fcd526
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 23:20:50.9756
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Qq45HuoHAAlc9TWRhmkAcONhMbpM5yT/xBXyIXdlSAsxRG0EaLko14+nj9I6Gu66OXv5sPr75U3frV0Ws/LkaQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1801MB2054
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-09-30_13:2019-09-30,2019-09-30 signatures=0
+References: <20190930020848.25767-2-oohall@gmail.com> <20190930170948.GA154567@google.com>
+In-Reply-To: <20190930170948.GA154567@google.com>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Tue, 1 Oct 2019 11:33:01 +1000
+Message-ID: <CAOSf1CH0hmhrDNpi0TVeGD2uKfcEnv8+hd_z+KLuL-4=sOVeeA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] powernv/iov: Ensure the pdn for VFs always contains a
+ valid PE number
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Shawn Anastasio <shawn@anastas.io>, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 03:34:10PM -0500, Bjorn Helgaas wrote:
-> [+cc Vadim, Manish]
+On Tue, Oct 1, 2019 at 3:09 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Mon, Sep 30, 2019 at 12:08:46PM +1000, Oliver O'Halloran wrote:
+>
+> This is all powerpc, so I assume Michael will handle this.  Just
+> random things I noticed; ignore if they don't make sense:
+>
+> > On PowerNV we use the pcibios_sriov_enable() hook to do two things:
+> >
+> > 1. Create a pci_dn structure for each of the VFs, and
+> > 2. Configure the PHB's internal BARs that map MMIO ranges to PEs
+> >    so that each VF has it's own PE. Note that the PE also determines
+>
+> s/it's/its/
+>
+> >    the IOMMU table the HW uses for the device.
+> >
+> > Currently we do not set the pe_number field of the pci_dn immediately after
+> > assigning the PE number for the VF that it represents. Instead, we do that
+> > in a fixup (see pnv_pci_dma_dev_setup) which is run inside the
+> > pcibios_add_device() hook which is run prior to adding the device to the
+> > bus.
+> >
+> > On PowerNV we add the device to it's IOMMU group using a bus notifier and
+>
+> s/it's/its/
+>
+> > in order for this to work the PE number needs to be known when the bus
+> > notifier is run. This works today since the PE number is set in the fixup
+> > which runs before adding the device to the bus. However, if we want to move
+> > the fixup to a later stage this will break.
+> >
+> > We can fix this by setting the pdn->pe_number inside of
+> > pcibios_sriov_enable(). There's no good to avoid this since we already have
+>
+> s/no good/no good reason/ ?
+>
+> Not quite sure what "this" refers to ... "no good reason to avoid
+> setting pdn->pe_number in pcibios_sriov_enable()"?  The double
+> negative makes it a little hard to parse.
 
-Manish and Vadim are no longer with Cavium, adding Robert for
-ThunderX1 and Sunil for Cavium networking processors.
+I agree it's a bit vague, I'll re-word it.
 
-> On Thu, Sep 19, 2019 at 02:43:34AM +0000, George Cherian wrote:
-> > Enhance the ACS quirk for Cavium Processors. Add the root port
-> > vendor ID's in an array and use the same in match function.
-> > For newer devices add the vendor ID's in the array so that the
-> > match function is simpler.
-> >=20
-> > Signed-off-by: George Cherian <george.cherian@marvell.com>
+> > all the required information at that point, so... do that. Moving this
+> > earlier does cause two problems:
+> >
+> > 1. We trip the WARN_ON() in the fixup code, and
+> > 2. The EEH core will clear pdn->pe_number while recovering VFs.
+> >
+> > The only justification for either of these is a comment in eeh_rmv_device()
+> > suggesting that pdn->pe_number *must* be set to IODA_INVALID_PE in order
+> > for the VF to be scanned. However, this comment appears to have no basis in
+> > reality so just delete it.
+> >
+> > Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
 > > ---
-> >  drivers/pci/quirks.c | 28 +++++++++++++++++++---------
-> >  1 file changed, 19 insertions(+), 9 deletions(-)
-> >=20
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index 44c4ae1abd00..64deeaddd51c 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -4241,17 +4241,27 @@ static int pci_quirk_amd_sb_acs(struct pci_dev =
-*dev, u16 acs_flags)
+> > Can't get rid of the fixup entirely since we need it to set the
+> > ioda_pe->pdev back-pointer. I'll look at killing that another time.
+> > ---
+> >  arch/powerpc/kernel/eeh_driver.c          |  6 ------
+> >  arch/powerpc/platforms/powernv/pci-ioda.c | 19 +++++++++++++++----
+> >  arch/powerpc/platforms/powernv/pci.c      |  4 ----
+> >  3 files changed, 15 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
+> > index d9279d0..7955fba 100644
+> > --- a/arch/powerpc/kernel/eeh_driver.c
+> > +++ b/arch/powerpc/kernel/eeh_driver.c
+> > @@ -541,12 +541,6 @@ static void eeh_rmv_device(struct eeh_dev *edev, void *userdata)
+> >
+> >               pci_iov_remove_virtfn(edev->physfn, pdn->vf_index);
+> >               edev->pdev = NULL;
+> > -
+> > -             /*
+> > -              * We have to set the VF PE number to invalid one, which is
+> > -              * required to plug the VF successfully.
+> > -              */
+> > -             pdn->pe_number = IODA_INVALID_PE;
 > >  #endif
-> >  }
-> > =20
-> > +static const u16 pci_quirk_cavium_acs_ids[] =3D {
-> > +	/* CN88xx family of devices */
-> > +	0xa180, 0xa170,
-> > +	/* CN99xx family of devices */
-> > +	0xaf84,
-> > +	/* CN11xxx family of devices */
-> > +	0xb884,
-> > +};
+> >               if (rmv_data)
+> >                       list_add(&edev->rmv_entry, &rmv_data->removed_vf_list);
+> > diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> > index 5e3172d..70508b3 100644
+> > --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> > +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> > @@ -1558,6 +1558,10 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
+> >
+> >       /* Reserve PE for each VF */
+> >       for (vf_index = 0; vf_index < num_vfs; vf_index++) {
+> > +             int vf_devfn = pci_iov_virtfn_devfn(pdev, vf_index);
+> > +             int vf_bus = pci_iov_virtfn_bus(pdev, vf_index);
+> > +             struct pci_dn *vf_pdn;
 > > +
-> >  static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
-> >  {
-> > -	/*
-> > -	 * Effectively selects all downstream ports for whole ThunderX 1
-> > -	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
-> > -	 * bits of device ID are used to indicate which subdevice is used
-> > -	 * within the SoC.
-> > -	 */
-> > -	return (pci_is_pcie(dev) &&
-> > -		(pci_pcie_type(dev) =3D=3D PCI_EXP_TYPE_ROOT_PORT) &&
-> > -		((dev->device & 0xf800) =3D=3D 0xa000));
-> > +	int i;
-> > +
-> > +	if (!pci_is_pcie(dev) || pci_pcie_type(dev) !=3D PCI_EXP_TYPE_ROOT_PO=
-RT)
-> > +		return false;
-> > +
-> > +	for (i =3D 0; i < ARRAY_SIZE(pci_quirk_cavium_acs_ids); i++)
-> > +		if (pci_quirk_cavium_acs_ids[i] =3D=3D dev->device)
->=20
-> I'm a little skeptical of this because the previous test:
->=20
->   (dev->device & 0xf800) =3D=3D 0xa000
->=20
-> could match *many* devices, but of those, the new code only matches two
-> (0xa180, 0xa170).
->=20
-> And the comment says the new code matches the CN99xx and CN11xxx
-> *families*, but it only matches a single device ID for each, which
-> makes me think there may be more devices to come.
->=20
-> Maybe this is all what you want, but please confirm.
+> >               if (pdn->m64_single_mode)
+> >                       pe_num = pdn->pe_num_map[vf_index];
+> >               else
+> > @@ -1570,13 +1574,11 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
+> >               pe->pbus = NULL;
+> >               pe->parent_dev = pdev;
+> >               pe->mve_number = -1;
+> > -             pe->rid = (pci_iov_virtfn_bus(pdev, vf_index) << 8) |
+> > -                        pci_iov_virtfn_devfn(pdev, vf_index);
+> > +             pe->rid = (vf_bus << 8) | vf_devfn;
+> >
+> >               pe_info(pe, "VF %04d:%02d:%02d.%d associated with PE#%x\n",
+>
+> Not related to *this* patch, but this looks like maybe it's supposed
+> to match the pci_name(), e.g., "%04x:%02x:%02x.%d" from
+> pci_setup_device()?  If so, the "%04d:%02d:%02d" here will be
+> confusing since the decimal & hex won't always match.
 
-There are only a very few device IDs for root ports, so just listing
-them out like this maybe better. The earlier match covered a lot of
-ThunderX1 devices, but did not really match the ThunderX2 root ports.
+That looks plain wrong. I'll send a separate patch to fix it.
 
-This looks ok for ThunderX2. Sunil & Robert can comment on other
-processor families I hope.
-=20
-> The commit log should be explicit that this adds CN99xx and CN11xxx,
-> which previously were not matched.
->=20
-> This looks like stable material?
->=20
-> > +			return true;
-> > +
-> > +	return false;
-> >  }
-> > =20
-> >  static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
+> >                       hose->global_number, pdev->bus->number,
+>
+> Consider pci_domain_nr(bus) instead of hose->global_number?  It would
+> be nice if you had the pci_dev * for each VF so you could just use
+> pci_name(vf) instead of all this domain/bus/PCI_SLOT/FUNC.
 
-JC
+Unfortunately, we don't have pci_devs for the VFs when
+pcibios_sriov_enable() is called. On powernv (and pseries) we only
+permit config accesses to a BDF when a pci_dn exists for that BDF
+because the platform code assumes that one will exist. As a result we
+can't scan the VFs until after pcibios_sriov_enable() is called since
+that's where pci_dn's are created for the VFs. I'm working on removing
+the use of pci_dn from powernv entirely though. Once that's done we
+should revisit whether any of this infrastructure is necessary...
+
+Oliver
