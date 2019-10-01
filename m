@@ -2,133 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F0778C441B
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2019 01:06:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19A42C4492
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2019 01:45:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfJAXGZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Oct 2019 19:06:25 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33873 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbfJAXGZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Oct 2019 19:06:25 -0400
-Received: by mail-ot1-f65.google.com with SMTP id m19so13130499otp.1;
-        Tue, 01 Oct 2019 16:06:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fytjfeL2hboW36P5ZuUGnqHSPo8QfeVFETfrBcqUG5k=;
-        b=ZTGpaP2g4NMZOIs14s7NeYu98JVG+DdiPC2DrhYdw0NmT1LIaAPI5iTpREmTgsLPdp
-         HGu9TEyjKdC0OTGR1OrigUrTyvZ5dwS6mIPygsz+72Vrr1iyJC0Q9U141rTy1QjqrnTV
-         ydZVxuUx2q9hvwThFYZ2nyl7Yg8+S88jj8j8nl010bU568L6ctG554GKEBw9L03a56ry
-         jHeZVx5qFKacKkog2Kt3adYCp+itsdoXRl3uMai8yuMo0w99IwyBVIk8EEtHe6d97uy5
-         bZgWwweRtHhMoS9lV/N21m/4wYFybZhl1VuN+8gJ56vSV5WYMTO9g1XK/9hjqp8wSPnL
-         Y+Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fytjfeL2hboW36P5ZuUGnqHSPo8QfeVFETfrBcqUG5k=;
-        b=UsUF7zUhrMp4CouyCVBvQP4xFE6wD+kxhf5vGtI9vFoen3mPp7ExAU5S2DDQi2xLay
-         ENBwCyzFtUdFnZYOgEQ31Pl/gX+lho1rnXOrsZhrKFBE9IrWVJ4cIhqrybU3UGtQZxb8
-         NiJNdlm3HY3mqR+Y38RShZ6/Notav6O7WFYb9DOBPehO/BnMc0LNncE6dr6wkuTM3+ll
-         d9OQni0/BJ0hpN0aWpzhAnQ2UxB4ygr24B2EN+HleV4B/WDcZg2xNZOTZVVVq83i8qDD
-         SpREdOsxIerllflkpjbQ/lyt52mKTKVcxcQ5khgErHRbR8OekNg8l403oopGrnyu+4dp
-         sR/w==
-X-Gm-Message-State: APjAAAXt1FOgtdTgiKHz4o57TXt2BkvJRvzMPSu2gciAib6tT/xUmAEO
-        tvyfl5UbX+twPuUCfVvJoTL0Fw+hgOESupDqsgM=
-X-Google-Smtp-Source: APXvYqyAPbUlTT2vTBJG8UBvvwFR8eifgmKPhHf1LuKPLyTznT9OARbyY06LozvEjr7X0NWxRQKfFlKkdHazJLzmEy4=
-X-Received: by 2002:a9d:6a59:: with SMTP id h25mr344859otn.324.1569971184510;
- Tue, 01 Oct 2019 16:06:24 -0700 (PDT)
+        id S1729239AbfJAXpY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Oct 2019 19:45:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32994 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729075AbfJAXpX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 1 Oct 2019 19:45:23 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AED521906;
+        Tue,  1 Oct 2019 23:45:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569973522;
+        bh=4dc7GBLC2gRvgsUFzPpuqN1X7GpaKXj4y6O/n3piYdA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=dOIDrOB2XUCXsTSaL5soREn99fZwrt2NfJs3YmPUPJ/aH4BC4/MNw6G0WajnG9NZr
+         XIbql5XlhX0ryuiXiy/c3qaGeEbwu7UZLr5E4BqEnt2KXnl2p1apQydaPF/V2zA26b
+         hCJ58GC4G2qZh18CBdiVTQ7DSQ/FKcNqJlRfoo8M=
+Date:   Tue, 1 Oct 2019 18:45:20 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
+Message-ID: <20191001234520.GA96866@google.com>
 MIME-Version: 1.0
-References: <20191001211419.11245-1-stuart.w.hayes@gmail.com>
- <20191001211419.11245-4-stuart.w.hayes@gmail.com> <b37c8640-9f48-8d0d-9e2e-80920c1e19e7@gmail.com>
-In-Reply-To: <b37c8640-9f48-8d0d-9e2e-80920c1e19e7@gmail.com>
-From:   Stuart Hayes <stuart.w.hayes@gmail.com>
-Date:   Tue, 1 Oct 2019 18:06:12 -0500
-Message-ID: <CAL5oW00xbnYk5=nT9v3rS4QTLShGfvzBgQLtsFh7xO2OyZqL3A@mail.gmail.com>
-Subject: Re: [PATCH 3/3] PCI: pciehp: Add dmi table for in-band presence disabled
-To:     "Alex G." <mr.nuke.me@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        lukas@wunner.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <744273fd-8045-7527-ad29-fa19adf6d015@orange.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 4:36 PM Alex G. <mr.nuke.me@gmail.com> wrote:
->
->
->
-> On 10/1/19 4:14 PM, Stuart Hayes wrote:
-> > Some systems have in-band presence detection disabled for hot-plug PCI slots,
-> > but do not report this in the slot capabilities 2 (SLTCAP2) register.  On
-> > these systems, presence detect can become active well after the link is
-> > reported to be active, which can cause the slots to be disabled after a
-> > device is connected.
-> >
-> > Add a dmi table to flag these systems as having in-band presence disabled.
-> >
-> > Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> > ---
-> >   drivers/pci/hotplug/pciehp_hpc.c | 14 ++++++++++++++
-> >   1 file changed, 14 insertions(+)
-> >
-> > diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> > index 1282641c6458..1dd01e752587 100644
-> > --- a/drivers/pci/hotplug/pciehp_hpc.c
-> > +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> > @@ -14,6 +14,7 @@
-> >
-> >   #define dev_fmt(fmt) "pciehp: " fmt
-> >
-> > +#include <linux/dmi.h>
-> >   #include <linux/kernel.h>
-> >   #include <linux/types.h>
-> >   #include <linux/jiffies.h>
-> > @@ -26,6 +27,16 @@
-> >   #include "../pci.h"
-> >   #include "pciehp.h"
-> >
-> > +static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
-> > +     {
-> > +             .ident = "Dell System",
-> > +             .matches = {
-> > +                     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc"),
-> > +             },
-> > +     },
-> > +     {}
-> > +};
-> > +
->
-> I'm not sure that all Dell systems that were ever made or will be made
-> have in-band presence disabled on all their hotplug slots.
->
-> This was a problem with the NVMe hot-swap bays on 14G servers. I can't
-> guarantee that any other slot or machine will need this workaround. The
-> best way I found to implement this is to check for the PCI-ID of the
-> switches behind the port.
->
-> Alex
+On Fri, Apr 26, 2019 at 10:11:54AM +0200, CREGUT Pierre IMT/OLN wrote:
+> I also initially thought that kobject_uevent generated the netlink event
+> but this is not the case. This is generated by the specific driver in use.
+> For the Intel i40e driver, this is the call to i40e_do_reset_safe in
+> i40e_pci_sriov_configure that sends the event.
+> It is followed by i40e_pci_sriov_enable that calls i40e_alloc_vfs that
+> finally calls the generic pci_enable_sriov function.
 
-That is definitely true, not all Dell systems actually disable in-band
-presence detect and need this.  However, we have a number of systems
-that need this, and we don't have the PCI IDs for all of these yet, so
-we decided it was preferable to just make all Dell systems wait for
-presence detect to go active.  Since all of our systems support
-presence detect (either in-band or out-of-band), it shouldn't have any
-negative effects--on systems that support in-band presence, it will
-already be active and it won't spend any extra time waiting for it.
-If someone plugs in a device that has hot-plug slots with no support
-for presence detect at all (even though Dell doesn't support any), it
-should still work--it'll just take an extra second for them to come
-up.
+I don't know anything about netlink.  The script from the bugzilla
+(https://bugzilla.kernel.org/show_bug.cgi?id=202991) looks like it
+runs
+
+  ip monitor dev enp9s0f2
+
+What are the actual netlink events you see?  Are they related to a
+device being removed?
+
+When we change num_VFs, I think we have to disable any existing VFs
+before enabling the new num_VFs, so if you trigger on a netlink
+"remove" event, I wouldn't be surprised that reading sriov_numvfs
+would give a zero until the new VFs are enabled.
+
+> So the proposed patch works well for the i40e driver (x710 cards) because
+> the update to num_VFs is fast enough to be committed before the event is
+> received. It may not work with other cards. The same is true for the zero
+> value and there is no guarantee for other cards.
+> 
+> The clean solution would be to lock the device in sriov_numvfs_show.
+> I guess that there are good reasons why locks have been avoided
+> in sysfs getter functions so let us explore other approaches.
+> 
+> We can either return a "not settled" value (-1) or (probably better)
+> do not return a value but an error (-EAGAIN returned by the show
+> function).
+> 
+> To distinguish this "not settled" situation we can either:
+> * overload the meaning of num_VFs (eg make it negative)
+>   but it is an unsigned short.
+> * add a bool to pci_sriov struct (rather simple but modifies a well
+>   established structure).
+> * use the fact that not_settled => device is locked and use
+>   mutex_is_locked as an over approximation.
+> 
+> The later is not perfect but requires minimal changes to
+> sriov_numvfs_show:
+> 
+>      if (mutex_is_locked(&dev->mutex))
+>          return -EAGAIN;
+
+I thought this was a good idea, but
+
+  - It does break the device_lock() encapsulation a little bit:
+    sriov_numvfs_store() uses device_lock(), which happens to be
+    implemented as "mutex_lock(&dev->mutex)", but we really shouldn't
+    rely on that implementation, and
+
+  - The netlink events are being generated via the NIC driver, and I'm
+    a little hesitant about changing the PCI core to deal with timing
+    issues "over there".
+
+> In all cases, the device could be locked or the boolean set just
+> after the test. But I don't think there is a case where causality
+> would be violated.Thank you in advance for your recommendations.  I will
+> update the patch according to your instructions.
+> 
+> Le 06/04/2019 à 00:33, Bjorn Helgaas a écrit :
+> > On Fri, Mar 29, 2019 at 09:00:58AM +0100, Pierre Crégut wrote:
+> > > Ensure that iov->num_VFs is set before a netlink message is sent
+> > > when the number of VFs is changed. Only the path for num_VFs > 0
+> > > is affected. The path for num_VFs = 0 is already correct.
+> > > 
+> > > Monitoring programs can relie on netlink messages to track interface
+> > > change and query their state in /sys. But when sriov_numvfs is set to a
+> > > positive value, the netlink message is sent before the value is available
+> > > in sysfs. The value read after the message is received is always zero.
+> > Thanks, Pierre!  Can you clue me in on where exactly the connection
+> > from sriov_enable() to netlink is?
+> > 
+> > I see one side of the race is with sriov_numvfs_show(), but I don't
+> > know where the netlink message is sent.  Is that connected with the
+> > kobject_uevent(KOBJ_CHANGE)?
+> > 
+> > One thing this would help with is figuring out exactly how *much*
+> > earlier we need to set iov->num_VFs.  It looks like the current patch
+> > sets it before we actually enable the VFs, so a user could read
+> > /sys/.../sriov_numvfs and get the wrong value.  Of course, that's
+> > unavoidable; the question is whether it's OK to get the new value
+> > *before* it actually takes effect, or whether we want to return a
+> > stale value until after it takes effect.
+> > 
+> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=202991
+> > > Signed-off-by: Pierre Crégut <pierre.cregut@orange.com>
+> > > ---
+> > > note: the behaviour can be tested with the following shell script also
+> > > available on the bugzilla (d being the phy device name):
+> > > 
+> > > ip monitor dev $d | grep --line-buffered "^[0-9]*:" | \
+> > > while read line; do cat /sys/class/net/$d/device/sriov_numvfs; done
+> > > 
+> > >   drivers/pci/iov.c | 3 ++-
+> > >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > > index 3aa115ed3a65..a9655c10e87f 100644
+> > > --- a/drivers/pci/iov.c
+> > > +++ b/drivers/pci/iov.c
+> > > @@ -351,6 +351,7 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
+> > >   		goto err_pcibios;
+> > >   	}
+> > > +	iov->num_VFs = nr_virtfn;
+> > >   	pci_iov_set_numvfs(dev, nr_virtfn);
+> > >   	iov->ctrl |= PCI_SRIOV_CTRL_VFE | PCI_SRIOV_CTRL_MSE;
+> > >   	pci_cfg_access_lock(dev);
+> > > @@ -363,7 +364,6 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
+> > >   		goto err_pcibios;
+> > >   	kobject_uevent(&dev->dev.kobj, KOBJ_CHANGE);
+> > > -	iov->num_VFs = nr_virtfn;
+> > >   	return 0;
+> > > @@ -379,6 +379,7 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
+> > >   	if (iov->link != dev->devfn)
+> > >   		sysfs_remove_link(&dev->dev.kobj, "dep_link");
+> > > +	iov->num_VFs = 0;
+> > >   	pci_iov_set_numvfs(dev, 0);
+> > >   	return rc;
+> > >   }
+> > > -- 
+> > > 2.17.1
+> > > 
