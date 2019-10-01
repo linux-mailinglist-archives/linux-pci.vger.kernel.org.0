@@ -2,46 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C13FC426B
+	by mail.lfdr.de (Postfix) with ESMTP id E4CEAC426C
 	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2019 23:14:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbfJAVOg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Oct 2019 17:14:36 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37103 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfJAVOg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Oct 2019 17:14:36 -0400
-Received: by mail-ot1-f66.google.com with SMTP id k32so12864994otc.4;
-        Tue, 01 Oct 2019 14:14:35 -0700 (PDT)
+        id S1727577AbfJAVOk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Oct 2019 17:14:40 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41575 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbfJAVOj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Oct 2019 17:14:39 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w65so2971277oiw.8;
+        Tue, 01 Oct 2019 14:14:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Z0lBrmztwlwxdokvs5UrPzWHos9na8KnNzUa662Ki4U=;
-        b=V3l2bPvomwEApGeIC42xksfM35fLkzstnuS71yvaINL1JdB8yQvqgm+kz6WMZCaAQS
-         NlOXRoJ4pMF0XkvcDF6JzGNl7eO+bHQ1RYFEsiaS1MxlhtdbaNTM7qnYTZHGA0iGnU03
-         Jl79tbxt9SDJUVjCO+TiXV4yRy7tXVIt+hBLs6J8twUrL/0v0csI1A55CTfCvHlTNWHw
-         U0MrJiQH+37vQ55hrvcSaR7LM+3KhP4EZa3YdNarWcZpjbmWS+510yQfKENj3XQ/Z3+4
-         r9VgPXXepOAMDgBX/WYoeZW6RbAqTUdU6mnewLdgwg3BqUExdnWuAPvJNWbNrg13pMC9
-         f64Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=h7zBxPIpqei6RdhutEMOr6Bfy8yNZwbOVfBFiC5FcV0=;
+        b=r+k0uy4N/G3hyn8ODXlnf5E3CNecPYE9A9kudrJdUoiV4IgjmpqflGQIMBS01s9dR3
+         1twN9XGw6Gbss/oYW0TrYcx6nuYNc7ate0o58JaMsx4kBJmYPLwftLSpFYHdyFZnWhg7
+         h8KwKVEM1HHduF0Z/p2DyD5zj183m741wI/XTksmQ3XJpRPO7Ehm99P0Bs/imhYRao3x
+         XFdMlnuIYZvzjVzaORr7UFjzOiSmcuo17apX/9nkLVjMwSslQ7DUfnhkSpfKfBZ+7fWC
+         2oJLWafDDG6vlsyFlRf9dtHh3dNaon0RkBzspBRpAibf06w9pZE3XGRWfwS/hwxHjKBy
+         Ds7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Z0lBrmztwlwxdokvs5UrPzWHos9na8KnNzUa662Ki4U=;
-        b=haX7XTRerAmTrjBfW74UajXllisfUQ2p2jyM/PkdCTaRWjwrn5/EsaP17OIZjN0UYJ
-         garc8ngYSQkDBrSAMa98xLMs0awfgrk0h6RVWPHScn9r40ZWMa7T4gbJi7tlq7fl16vO
-         1MGMlCCEv80AgAMqGJzuZDO9/J1CQJNFSfvDtd8Yh86iVRD+O+GvCfYR8DEZocSuqKDg
-         HzDnk4k46bXd2YqEcxsxdRPQLn6W7jPmR1gcb/NUHfIa8UfWgS05CCUSZ7/sj97otGYb
-         BtS5ba1hQj0sAYfMduJ969KZ5Fn5Ede3dfEGqDOm3ZHATjYra+0d1Aa5bUnt4izE+A3U
-         iC8A==
-X-Gm-Message-State: APjAAAWLlhinm/X1Qj1tKOYBqAyiSX1YxbxqcoxKHnDRxfExbjz3iv9d
-        tEiRtqd1vDJYuxkSf96bGRQ=
-X-Google-Smtp-Source: APXvYqyOyExxFkyt6iQmzMQZq4YBsCHZSfeeiKuGCJZp4623JJplHFZn/pKU1kaAC3y+JwjBE8eqOg==
-X-Received: by 2002:a05:6830:14c5:: with SMTP id t5mr35420otq.112.1569964475039;
-        Tue, 01 Oct 2019 14:14:35 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=h7zBxPIpqei6RdhutEMOr6Bfy8yNZwbOVfBFiC5FcV0=;
+        b=gJDgXztKoz4MCtcj6wzbyQ+hBfL/83jzpPG1LYVaAaXUKyYLUONUXJ/R6fT4OD+6mq
+         UUeK6PFKfhMc28VS1qExpoNFyFHQflh0tnVPqFl9Nm4APCx8nT1V6XyYUVDnj6X0zhQQ
+         rX0oyuwVplPg3dS++dPAPEZbO1gOaxOEVVWtMP/pH7T8yErV0sMchAImMJxmFeCffVV1
+         2METORrVodAdvnEUXmAFbxKHX/yyEI6cMD2GRELNB3dWzjl64j6ek5PiBYG/gqgmvpnp
+         KS9sDCTYAe9/OrdrvZH08cO1BoVbfvQt0+kIhVlvPCqrc5JklroMPjfXlb+GqHDdvEMd
+         cS2g==
+X-Gm-Message-State: APjAAAUm9a/nxxnrqLOio8P3v03jakxRvP8sxZth5QH6sTyr8twiI7d+
+        YRRl/KdagNWmx5kAE+fqwko=
+X-Google-Smtp-Source: APXvYqyzT9eUf0Gqpxg8KLfWlbsD4oPd46TsvpMArK83phhdmdFM9F7MUdFsHV+Z0rPGe9ScRkFF1Q==
+X-Received: by 2002:aca:dcd6:: with SMTP id t205mr38480oig.11.1569964478702;
+        Tue, 01 Oct 2019 14:14:38 -0700 (PDT)
 Received: from localhost.localdomain ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id o23sm5220073ote.67.2019.10.01.14.14.34
+        by smtp.gmail.com with ESMTPSA id o23sm5220073ote.67.2019.10.01.14.14.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 14:14:34 -0700 (PDT)
+        Tue, 01 Oct 2019 14:14:38 -0700 (PDT)
 From:   Stuart Hayes <stuart.w.hayes@gmail.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
@@ -54,50 +55,91 @@ Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
         Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, lukas@wunner.de,
         Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH 0/3] PCI: pciehp: Do not turn off slot if presence comes up after link
-Date:   Tue,  1 Oct 2019 17:14:16 -0400
-Message-Id: <20191001211419.11245-1-stuart.w.hayes@gmail.com>
+Subject: [PATCH 1/3] PCI: pciehp: Add support for disabling in-band presence
+Date:   Tue,  1 Oct 2019 17:14:17 -0400
+Message-Id: <20191001211419.11245-2-stuart.w.hayes@gmail.com>
 X-Mailer: git-send-email 2.18.1
+In-Reply-To: <20191001211419.11245-1-stuart.w.hayes@gmail.com>
+References: <20191001211419.11245-1-stuart.w.hayes@gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In older PCIe specs, PDS (presence detect) would come up when the
-"in-band" presence detect pin connected, and would be up before DLLLA
-(link active).
+The presence detect state (PDS) is normally a logical or of in-band and
+out-of-band presence. As of PCIe 4.0, there is the option to disable
+in-band presence so that the PDS bit always reflects the state of the
+out-of-band presence.
 
-In PCIe 4.0 (as an ECN) and in PCIe 5.0, there is a new bit to show if
-in-band presence detection can be disabled for the slot, and another bit
-that disables it--and a recommendation that it should be disabled if it
-can be. In addition, certain OEMs disable in-band presence detection
-without implementing these bits.
+The recommendation of the PCIe spec is to disable in-band presence
+whenever supported.
 
-This means it is possible to get a "card present" interrupt after the
-link is up and the driver is loaded.  This causes an erroneous removal
-of the device driver, followed by an immediate re-probing.
+Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+---
+ drivers/pci/hotplug/pciehp.h     | 1 +
+ drivers/pci/hotplug/pciehp_hpc.c | 9 ++++++++-
+ include/uapi/linux/pci_regs.h    | 2 ++
+ 3 files changed, 11 insertions(+), 1 deletion(-)
 
-This patch set defines these new bits, uses them to disable in-band
-presence detection if it can be, waits for PDS to go up if in-band
-presence detection is disabled, and adds a DMI table that will let us
-know if we should assume in-band presence is disabled on a system.
-
-This patch set is based on a patch set [1] submitted many months ago by
-Alexandru Gagniuc, who is no longer working on it.
-
-[1] https://patchwork.kernel.org/cover/10909167/
-    [v3,0/4] PCI: pciehp: Do not turn off slot if presence comes up after link
-
-Stuart Hayes (3):
-  PCI: pciehp: Add support for disabling in-band presence
-  PCI: pciehp: Wait for PDS when in-band presence is disabled
-  PCI: pciehp: Add dmi table for systems with in-band presence disabled
-
- drivers/pci/hotplug/pciehp.h     |  1 +
- drivers/pci/hotplug/pciehp_hpc.c | 45 +++++++++++++++++++++++++++++++-
- include/uapi/linux/pci_regs.h    |  2 ++
- 3 files changed, 47 insertions(+), 1 deletion(-)
-
+diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+index 654c972b8ea0..27e4cd6529b0 100644
+--- a/drivers/pci/hotplug/pciehp.h
++++ b/drivers/pci/hotplug/pciehp.h
+@@ -83,6 +83,7 @@ struct controller {
+ 	struct pcie_device *pcie;
+ 
+ 	u32 slot_cap;				/* capabilities and quirks */
++	unsigned int inband_presence_disabled:1;
+ 
+ 	u16 slot_ctrl;				/* control register access */
+ 	struct mutex ctrl_lock;
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 1a522c1c4177..dc109d521f30 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -811,7 +811,7 @@ static inline void dbg_ctrl(struct controller *ctrl)
+ struct controller *pcie_init(struct pcie_device *dev)
+ {
+ 	struct controller *ctrl;
+-	u32 slot_cap, link_cap;
++	u32 slot_cap, slot_cap2, link_cap;
+ 	u8 poweron;
+ 	struct pci_dev *pdev = dev->port;
+ 	struct pci_bus *subordinate = pdev->subordinate;
+@@ -869,6 +869,13 @@ struct controller *pcie_init(struct pcie_device *dev)
+ 		FLAG(link_cap, PCI_EXP_LNKCAP_DLLLARC),
+ 		pdev->broken_cmd_compl ? " (with Cmd Compl erratum)" : "");
+ 
++	pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP2, &slot_cap2);
++	if (slot_cap2 & PCI_EXP_SLTCAP2_IBPD) {
++		pcie_write_cmd_nowait(ctrl, PCI_EXP_SLTCTL_IBPD_DISABLE,
++				      PCI_EXP_SLTCTL_IBPD_DISABLE);
++		ctrl->inband_presence_disabled = 1;
++	}
++
+ 	/*
+ 	 * If empty slot's power status is on, turn power off.  The IRQ isn't
+ 	 * requested yet, so avoid triggering a notification with this command.
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index 29d6e93fd15e..ea1cf9546e4d 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -604,6 +604,7 @@
+ #define  PCI_EXP_SLTCTL_PWR_OFF        0x0400 /* Power Off */
+ #define  PCI_EXP_SLTCTL_EIC	0x0800	/* Electromechanical Interlock Control */
+ #define  PCI_EXP_SLTCTL_DLLSCE	0x1000	/* Data Link Layer State Changed Enable */
++#define  PCI_EXP_SLTCTL_IBPD_DISABLE	0x4000 /* In-band PD disable */
+ #define PCI_EXP_SLTSTA		26	/* Slot Status */
+ #define  PCI_EXP_SLTSTA_ABP	0x0001	/* Attention Button Pressed */
+ #define  PCI_EXP_SLTSTA_PFD	0x0002	/* Power Fault Detected */
+@@ -676,6 +677,7 @@
+ #define PCI_EXP_LNKSTA2		50	/* Link Status 2 */
+ #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	52	/* v2 endpoints with link end here */
+ #define PCI_EXP_SLTCAP2		52	/* Slot Capabilities 2 */
++#define  PCI_EXP_SLTCAP2_IBPD	0x0001	/* In-band PD Disable Supported */
+ #define PCI_EXP_SLTCTL2		56	/* Slot Control 2 */
+ #define PCI_EXP_SLTSTA2		58	/* Slot Status 2 */
+ 
 -- 
 2.18.1
 
