@@ -2,252 +2,196 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DE15C934C
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2019 23:11:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3F56C9355
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2019 23:14:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729319AbfJBVLK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Oct 2019 17:11:10 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45683 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729329AbfJBVLK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Oct 2019 17:11:10 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r5so525592wrm.12
-        for <linux-pci@vger.kernel.org>; Wed, 02 Oct 2019 14:11:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DfBXBUyiw97To+io1cJq9TUMttHsei1MNjbJG6hjvjo=;
-        b=M8sG7cmzF5l2TY1i6g309lgRuYeiBUTLDJtNryx2j6ERfOOiQWBnUBbcAoZ3CMHk2U
-         obQ9MVC7kCJKr/l7wtvkIncVMjCm3tmcmnNN98+sNIf9uTgcQ616GSQzdtNQGY575b5S
-         VdceNnEQ+DQ8BVQqlsSxG1GsLmu5W/aJCYWmremhrmQk7vm7sNelKPdh8GCw6DwbAqtK
-         u4lmdqmY7wNavJereHo6de4hfIa/GeNGEb4/TLYId18u+8w1cmd0vRRYC/qFaBD3xGWs
-         QSYrRBy98U94rEAYusCIjVKL83FtGygEThc8+6v9ZLtnrkE6awMrocf8XqLKphhscTs+
-         zSHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DfBXBUyiw97To+io1cJq9TUMttHsei1MNjbJG6hjvjo=;
-        b=aeiDvq9J2qSsCjDa42oT8fPLaEkq7J4JguiSeW6Pd4KX0JBUydy69NscPdO4vFwBlC
-         hGCP17FMDwswDvIOfh8UsNxjERqtZjuXlN7iG3Le2HpQ4s44IayJ9m+WqJgwJ6/QWVJB
-         owCSuopKInQ3GSXjmvmwwvQqRDC1NwgYKBR/s4TvkFTsjjfM5L3UFfT5ECrVIH/pm9sh
-         M0oRAPgnAI0dBpQm877cu7uHMjo1khOKsrGR/VsDWJSnxyTUp4ED75OxHCOQUZ3tsytR
-         7INTP+L0zRB744pWV0tLH18s3X6NSun4Sb3OpcomTzqoo8EIAmmiWIcyhsacwwuSu8tx
-         xRIw==
-X-Gm-Message-State: APjAAAVmbFWyagCNDK5iujcjEaHXXgWZszUNolkM6SbpGqbav9JhrEQM
-        6K+R5N3EciFMIiO6bAo+5OikbYb5
-X-Google-Smtp-Source: APXvYqxU392cbT38mrQ6aY+/6doTqm73HnHFmDo0l6OuOb0kQgcPDYHBjizy0ZaicyoHMvGwcghh+g==
-X-Received: by 2002:a5d:6ace:: with SMTP id u14mr4562246wrw.385.1570050667392;
-        Wed, 02 Oct 2019 14:11:07 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f26:6400:9cd0:52ca:b438:97d1? (p200300EA8F2664009CD052CAB43897D1.dip0.t-ipconnect.de. [2003:ea:8f26:6400:9cd0:52ca:b438:97d1])
-        by smtp.googlemail.com with ESMTPSA id z189sm502431wmc.25.2019.10.02.14.11.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 02 Oct 2019 14:11:06 -0700 (PDT)
-Subject: Re: [PATCH v5 3/4] PCI/ASPM: add sysfs attributes for controlling
- ASPM link states
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Frederick Lawler <fred@fredlawl.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Rajat Jain <rajatja@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <20191002195541.GA49632@google.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <a4d86993-46fc-ef15-8c7a-6e5e049a3065@gmail.com>
-Date:   Wed, 2 Oct 2019 23:10:55 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1729295AbfJBVOZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Oct 2019 17:14:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37418 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729293AbfJBVOY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 2 Oct 2019 17:14:24 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D5F221848;
+        Wed,  2 Oct 2019 21:14:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570050863;
+        bh=ukk2NQEjN/OXL9KA2LEsDC+CCz/HBeIXkd0X0JHpF4Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ot2euRUiRA+UBPNO+FeMqkkAGJEj3I0YPtiR0oqyr2Va1nyAUhw/e2LMe+Z9ay1Jt
+         JGTo5GuBLp8PO/AkYhI04z0Yu18kSqGRvgMSOqjFCOJwX7+guVnSxn1i45AyD/iutM
+         WmF8xgOJpGORq2fIs8MCb7MvRMv2e/EaJu+wb0Fk=
+Date:   Wed, 2 Oct 2019 16:14:21 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        linux-pci@vger.kernel.org, Zhiqiang.Hou@nxp.com,
+        linux-kernel@vger.kernel.org, leoyang.li@nxp.com,
+        Minghuan.Lian@nxp.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, andrew.murray@arm.com,
+        kishon@ti.com, shawnguo@kernel.org, mingkai.hu@nxp.com
+Subject: Re: [PATCH 0/6] Add the Mobiveil EP and Layerscape Gen4 EP driver
+ support
+Message-ID: <20191002211421.GA64972@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191002195541.GA49632@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190924155223.GX25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 02.10.2019 21:55, Bjorn Helgaas wrote:
-> On Sun, Sep 29, 2019 at 07:15:05PM +0200, Heiner Kallweit wrote:
->> On 07.09.2019 22:32, Bjorn Helgaas wrote:
->>> On Sat, Aug 31, 2019 at 10:20:47PM +0200, Heiner Kallweit wrote:
->>>> Background of this extension is a problem with the r8169 network driver.
->>>> Several combinations of board chipsets and network chip versions have
->>>> problems if ASPM is enabled, therefore we have to disable ASPM per default.
->>>> However especially on notebooks ASPM can provide significant power-saving,
->>>> therefore we want to give users the option to enable ASPM. With the new
->>>> sysfs attributes users can control which ASPM link-states are
->>>> enabled/disabled.
->>>>
->>>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->>>> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>> ---
->>>> v2:
->>>> - use a dedicated sysfs attribute per link state
->>>> - allow separate control of ASPM and PCI PM L1 sub-states
->>>> v3:
->>>> - statically allocate the attribute group
->>>> - replace snprintf with printf
->>>> - base on top of "PCI: Make pcie_downstream_port() available outside of access.c"
->>>> v4:
->>>> - add call to sysfs_update_group because is_visible callback returns false
->>>>   always at file creation time
->>>> - simplify code a little
->>>> v5:
->>>> - rebased to latest pci/next
->>>> ---
->>>>  Documentation/ABI/testing/sysfs-bus-pci |  13 ++
->>>>  drivers/pci/pci-sysfs.c                 |   7 +
->>>>  drivers/pci/pci.h                       |   4 +
->>>>  drivers/pci/pcie/aspm.c                 | 184 ++++++++++++++++++++++++
->>>>  4 files changed, 208 insertions(+)
->>>>
->>>> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
->>>> index 8bfee557e..49249a165 100644
->>>> --- a/Documentation/ABI/testing/sysfs-bus-pci
->>>> +++ b/Documentation/ABI/testing/sysfs-bus-pci
->>>> @@ -347,3 +347,16 @@ Description:
->>>>  		If the device has any Peer-to-Peer memory registered, this
->>>>  	        file contains a '1' if the memory has been published for
->>>>  		use outside the driver that owns the device.
->>>> +
->>>> +What		/sys/bus/pci/devices/.../aspm/aspm_l0s
->>>> +What		/sys/bus/pci/devices/.../aspm/aspm_l1
->>>> +What		/sys/bus/pci/devices/.../aspm/aspm_l1_1
->>>> +What		/sys/bus/pci/devices/.../aspm/aspm_l1_2
->>>> +What		/sys/bus/pci/devices/.../aspm/aspm_l1_1_pcipm
->>>> +What		/sys/bus/pci/devices/.../aspm/aspm_l1_2_pcipm
->>>> +What		/sys/bus/pci/devices/.../aspm/aspm_clkpm
->>>> +date:		August 2019
+On Tue, Sep 24, 2019 at 04:52:23PM +0100, Russell King - ARM Linux admin wrote:
+> On Tue, Sep 24, 2019 at 03:18:47PM +0100, Russell King - ARM Linux admin wrote:
+> > On Mon, Sep 16, 2019 at 10:17:36AM +0800, Xiaowei Bao wrote:
+> > > This patch set are for adding Mobiveil EP driver and adding PCIe Gen4
+> > > EP driver of NXP Layerscape platform.
+> > > 
+> > > This patch set depends on:
+> > > https://patchwork.kernel.org/project/linux-pci/list/?series=159139
+> > > 
+> > > Xiaowei Bao (6):
+> > >   PCI: mobiveil: Add the EP driver support
+> > >   dt-bindings: Add DT binding for PCIE GEN4 EP of the layerscape
+> > >   PCI: mobiveil: Add PCIe Gen4 EP driver for NXP Layerscape SoCs
+> > >   PCI: mobiveil: Add workaround for unsupported request error
+> > >   arm64: dts: lx2160a: Add PCIe EP node
+> > >   misc: pci_endpoint_test: Add the layerscape PCIe GEN4 EP device
+> > >     support
+> > > 
+> > >  .../bindings/pci/layerscape-pcie-gen4.txt          |  28 +-
+> > >  MAINTAINERS                                        |   3 +
+> > >  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |  56 ++
+> > >  drivers/misc/pci_endpoint_test.c                   |   2 +
+> > >  drivers/pci/controller/mobiveil/Kconfig            |  22 +-
+> > >  drivers/pci/controller/mobiveil/Makefile           |   2 +
+> > >  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 169 ++++++
+> > >  drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c | 568 +++++++++++++++++++++
+> > >  drivers/pci/controller/mobiveil/pcie-mobiveil.c    |  99 +++-
+> > >  drivers/pci/controller/mobiveil/pcie-mobiveil.h    |  72 +++
+> > >  10 files changed, 1009 insertions(+), 12 deletions(-)
+> > >  create mode 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> > >  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c
+> > 
+> > Hi,
+> > 
+> > I've applied "PCI: mobiveil: Fix the CPU base address setup in inbound
+> > window" and your patch set to 5.3, which seems to be able to detect the
+> > PCIe card I have plugged in:
+> > 
+> > layerscape-pcie-gen4 3800000.pcie: host bridge /soc/pcie@3800000 ranges:
+> > layerscape-pcie-gen4 3800000.pcie:   MEM 0xa040000000..0xa07fffffff -> 0x40000000
+> > layerscape-pcie-gen4 3800000.pcie: PCI host bridge to bus 0000:00
+> > pci_bus 0000:00: root bus resource [bus 00-ff]
+> > pci_bus 0000:00: root bus resource [mem 0xa040000000-0xa07fffffff] (bus address
+> > [0x40000000-0x7fffffff])
+> > pci 0000:00:00.0: [1957:8d90] type 01 class 0x060400
+> > pci 0000:00:00.0: enabling Extended Tags
+> > pci 0000:00:00.0: supports D1 D2
+> > pci 0000:00:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+> > pci 0000:01:00.0: [15b3:6750] type 00 class 0x020000
+> > pci 0000:01:00.0: reg 0x10: [mem 0xa040000000-0xa0400fffff 64bit]
+> > pci 0000:01:00.0: reg 0x18: [mem 0xa040800000-0xa040ffffff 64bit pref]
+> > pci 0000:01:00.0: reg 0x30: [mem 0xa041000000-0xa0410fffff pref]
+> > pci 0000:00:00.0: up support 3 enabled 0
+> > pci 0000:00:00.0: dn support 1 enabled 0
+> > pci 0000:00:00.0: BAR 9: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
+> > pci 0000:00:00.0: BAR 8: assigned [mem 0xa040800000-0xa0409fffff]
+> > pci 0000:01:00.0: BAR 2: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
+> > pci 0000:01:00.0: BAR 0: assigned [mem 0xa040800000-0xa0408fffff 64bit]
+> > pci 0000:01:00.0: BAR 6: assigned [mem 0xa040900000-0xa0409fffff pref]
+> > pci 0000:00:00.0: PCI bridge to [bus 01-ff]
+> > pci 0000:00:00.0:   bridge window [mem 0xa040800000-0xa0409fffff]
+> > pci 0000:00:00.0:   bridge window [mem 0xa040000000-0xa0407fffff 64bit pref]
+> > pci 0000:00:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pci 0000:01:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pcieport 0000:00:00.0: PCIe capabilities: 0x13
+> > pcieport 0000:00:00.0: init_service_irqs: -19
+> > 
+> > However, a bit later in the kernel boot, I get:
+> > 
+> > SError Interrupt on CPU1, code 0xbf000002 -- SError
+> > CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
+> > Hardware name: SolidRun LX2160A COM express type 7 module (DT)
+> > pstate: 60400085 (nZCv daIf +PAN -UAO)
+> > pc : pci_generic_config_read+0xb0/0xc0
+> > lr : pci_generic_config_read+0x1c/0xc0
+> > sp : ffffff8010f9baf0
+> > x29: ffffff8010f9baf0 x28: ffffff8010d620a0
+> > x27: ffffff8010d79000 x26: ffffff8010d62000
+> > x25: ffffff8010cb06d4 x24: 0000000000000000
+> > x23: ffffff8010e499b8 x22: ffffff8010f9bbaf
+> > x21: 0000000000000000 x20: ffffffe2eda11800
+> > x19: ffffff8010f62158 x18: ffffff8010bdede0
+> > x17: ffffff8010bdede8 x16: ffffff8010b96970
+> > x15: ffffffffffffffff x14: ffffffffff000000
+> > x13: ffffffffffffffff x12: 0000000000000030
+> > x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
+> > x9 : 2dff716475687163 x8 : ffffffffffffffff
+> > x7 : fefefefefefefefe x6 : 0000000000000000
+> > x5 : 0000000000000000 x4 : ffffff8010f9bb6c
+> > x3 : 0000000000000001 x2 : 0000000000000003
+> > x1 : 0000000000000000 x0 : 0000000000000000
+> > Kernel panic - not syncing: Asynchronous SError Interrupt
+> > CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
+> > Hardware name: SolidRun LX2160A COM express type 7 module (DT)
+> > Call trace:
+> >  dump_backtrace+0x0/0x120
+> >  show_stack+0x14/0x1c
+> >  dump_stack+0x9c/0xc0
+> >  panic+0x148/0x34c
+> >  print_tainted+0x0/0xa8
+> >  arm64_serror_panic+0x74/0x80
+> >  do_serror+0x8c/0x13c
+> >  el1_error+0xbc/0x160
+> >  pci_generic_config_read+0xb0/0xc0
+> >  pci_bus_read_config_byte+0x64/0x90
+> >  pci_read_config_byte+0x40/0x48
+> >  pci_assign_irq+0x34/0xc8
+> >  pci_device_probe+0x28/0x148
+> >  really_probe+0x1c4/0x2d0
+> >  driver_probe_device+0x58/0xfc
+> >  device_driver_attach+0x68/0x70
+> >  __driver_attach+0x94/0xdc
+> >  bus_for_each_dev+0x50/0xa0
+> >  driver_attach+0x20/0x28
+> >  bus_add_driver+0x14c/0x200
+> >  driver_register+0x6c/0x124
+> >  __pci_register_driver+0x48/0x50
+> >  mlx4_init+0x154/0x180
+> >  do_one_initcall+0x30/0x250
+> >  kernel_init_freeable+0x23c/0x32c
+> >  kernel_init+0x10/0xfc
+> >  ret_from_fork+0x10/0x18
+> > SMP: stopping secondary CPUs
+> > Kernel Offset: disabled
+> > CPU features: 0x0002,21006008
+> > Memory Limit: none
+> > 
+> > and there it dies.  Any ideas?
 > 
-> I didn't notice this before, but I wonder if one "aspm" in these paths
-> would be enough?  E.g., /sys/bus/pci/devices/.../aspm/l0s?
+> The failing access seems to be:
 > 
-Yes, that should be fine.
+>         pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &pin);
+> 
+> for the Mellanox Ethernet card.  Presumably, being a PCIe ethernet
+> card, it doesn't implement this register (just a guess), and aborts
+> the PCI transaction, which is presumably triggering the above SError.
 
->>>> @@ -1315,6 +1315,10 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
->>>>  
->>>>  	pcie_vpd_create_sysfs_dev_files(dev);
->>>>  	pcie_aspm_create_sysfs_dev_files(dev);
->>>> +#ifdef CONFIG_PCIEASPM
->>>> +	/* update visibility of attributes in this group */
->>>> +	sysfs_update_group(&dev->dev.kobj, &aspm_ctrl_attr_group);
->>>> +#endif
->>>
->>> Isn't there a way to do this in drivers/pci/pcie/aspm.c somehow,
->>> without using sysfs_update_group()?  There are only three callers of
->>> it in the tree, and I'd be surprised if ASPM is unique enough to have
->>> to be the fourth.
->>>
->> At least I didn't find any. Reason seems to be the following:
->> Static sysfs files are created in pci_scan_single_device ->
->> pci_device_add. And pci_scan_slot calls pci_scan_single_device
->> before calling pcie_aspm_init_link_state(bus->self).
->> Means the pcie_link_state doesn't exist yet and we have to update
->> visibility of the ASPM sysfs files later.
-> 
-> Ah, I see.  I think it's this call graph:
-> 
->   pci_scan_slot
->     pci_scan_single_device
->       pci_scan_device
->       pci_device_add
-> 	pci_init_capabilities
-> 	device_add
-> 	  device_add_attrs
-> 	    device_add_groups(dev->type->groups)
-> 	      sysfs_create_groups         # <-- sysfs files created
->     pcie_aspm_init_link_state(bridge)     # <-- link_states allocated
-> 
-> I think this part of the ASPM code is a little bit broken -- we wait
-> to initialize ASPM until we've enumerated all the devices on the link.
-> I think it would be better to initialize it somewhere in
-> pci_device_add(), maybe pci_init_capabilities(), which would solve
-> this ordering problem.  That's a pretty big project that can be done
-> later.
-> 
-> But I *think* we should be able to at least move the
-> sysfs_update_group() to the end of pcie_aspm_init_link_state().  We'd
-> have to iterate over the subordinate->devices, but it would at least
-> be in the ASPM code where we'll see it if/when we rework the
-> initialization.
-> 
+PCIe r5.0, sec 7.5.1.1.13, says Interrupt Pin is a read-only register,
+so there shouldn't be an issue with reading it.
 
-OK
+mobiveil_pcie_ops uses the generic pci_generic_config_read(), which
+will perform a readb() in this case.  Could mobiveil be a bridge that
+only supports 32-bit config accesses?
 
->>>> +static struct pcie_link_state *aspm_get_parent_link(struct pci_dev *pdev)
->>>
->>> I know the ASPM code is pretty confused, but I don't think "parent
->>> link" really makes sense.  "Parent" implies a parent/child
->>> relationship, but a link doesn't have a parent or a child; it only has
->>> an upstream end and a downstream end.
->>>
->> I basically copied this "parent" stuff from __pci_disable_link_state.
->> Fine with me to change the naming.
->> What confuses me a little is that we have different versions of getting
->> the pcie_link_state for a pci_dev in:
->>
->> - this new function of mine
->> - __pci_disable_link_state
->> - pcie_aspm_enabled
->>
->> The latter uses pci_upstream_bridge instead of accessing pdev->bus->self
->> directly and doesn't include the call to pcie_downstream_port.
->> I wonder whether the functionality could be factored out to a generic
->> helper that works in all these places.
+> Note that I've used this card with the Macchiatobin (Armada 8040)
+> without issue.
 > 
-> Definitely.  I think your pcie_aspm_get_link() (from the v6 patch)
-> could be used directly in those places.  You could add a new patch
-> that just adds pcie_aspm_get_link() and uses it.
-> 
-
-OK
-
->>>> +{
->>>> +	struct pci_dev *parent = pdev->bus->self;
->>>> +
->>>> +	if (pcie_downstream_port(pdev))
->>>> +		parent = pdev;
->>>> +
->>>> +	return parent ? parent->link_state : NULL;
->>>> +}
->>>> +
->>>> +static bool pcie_check_valid_aspm_endpoint(struct pci_dev *pdev)
->>>> +{
->>>> +	struct pcie_link_state *link;
->>>> +
->>>> +	if (!pci_is_pcie(pdev) || pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT)
->>>
->>> Do you intend to exclude other Upstream Ports like Legacy Endpoints,
->>> Upstream Switch Ports, and PCIe-to-PCI/PCI-X Bridges?  They also have
->>> a link leading to them, so we might want them to have knobs as well.
->>> Or if we don't want the knobs, a comment about why not would be
->>> useful.
->>>
->> My use case is about endpoints only and I'm not really a PCI expert.
->> Based on your list in addition to PCI_EXP_TYPE_ENDPOINT we'd enable
->> the ASPM sysfs fils for:
->> - PCI_EXP_TYPE_LEG_END
->> - PCI_EXP_TYPE_UPSTREAM
->> - PCI_EXP_TYPE_PCI_BRIDGE
->> - PCI_EXP_TYPE_PCIE_BRIDGE
->> If you can confirm the list I'd extend my patch accordingly.
-> 
-> Yes, I think the list would be right, but looking at this again, I
-> don't think you need this function at all -- you can just use
-> pcie_aspm_get_link().  Then aspm_ctrl_attrs_are_visible() uses exactly
-> the same test as the show/store functions.  Actually, I think then you
-> could omit the "if (!link)" tests from the show/store functions
-> because those functions can never be called unless
-> aspm_ctrl_attrs_are_visible() found a link.
-> 
-Right, the !link checks can be removed from the show/store functions.
-In pcie_is_aspm_dev() I think we need to check at least whether
-device is PCIe and whether link is ASPM-capable. Making the sysfs
-attributes visible for a non-PCIe device doesn't make sense,
-the same applies to PCIe devices with a link that is not ASPM-capable.
-
-> Bjorn
-> 
-Heiner
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+> According to speedtest.net: 11.9Mbps down 500kbps up
