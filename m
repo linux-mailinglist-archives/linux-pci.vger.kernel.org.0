@@ -2,152 +2,210 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CCDC5C90D4
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2019 20:29:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE638C92AD
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2019 21:55:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbfJBS2L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Oct 2019 14:28:11 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43682 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfJBS2L (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Oct 2019 14:28:11 -0400
-Received: by mail-pg1-f196.google.com with SMTP id v27so12326847pgk.10;
-        Wed, 02 Oct 2019 11:28:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=izcdKMTlTPXdg1rZpK9PkNPTeAL5ACc5p0aT6ECn+3o=;
-        b=nr6ZKcXN/729CI5YvKkqVc0Bz2wyp7AqMiNJbnneIbJ2S8a6/RpgT+vQxveooa1g8o
-         Tzstjrebdj0ch6CBEQIhLHedt+Meqh8poQODSN2lg0OykjXXZCvv3ItaPXFO7ZImXqcW
-         RuKmutNc32nfhTfdTSE+Gn+FP0hyvVehIb12ZNHr5rdWDezRIrhU/4qCY2koq02vv9hS
-         0JYsKwzPEkKLeHC0o1yMLr4lNeC7nIidqjJQlgZ17X3hwG7uMGUGlb0FYDKstybAoxSN
-         PuzGKEISFL71Mt9LOzHTLH19Bi/ikZqtSvsTTAUBs/9/pSrhf3mQrJw/Bi+Y2mWPIur/
-         yzHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=izcdKMTlTPXdg1rZpK9PkNPTeAL5ACc5p0aT6ECn+3o=;
-        b=pmsHGoI1ePqZE8TLIu0Dey8pVqh1NIIj/A8bMidf6zGs1MH2FE1AqnpVY91B+3CLt4
-         8BheWaKNwiIe64AuVFIJOqTmRF+wchCvko/tc6ceKJuIY8xNxd18XG4w7zxqtj7bOmQM
-         23z+BEWQzE3U6Kc5/wR3Ro7gBJr/RNPvTtzVCBwWjkobkxurHdBt8LgZEXKKObj/ijfp
-         V1Z9ByZuI2uY3INWNDsKubaNPWcLw4eDL/a8pIDp789JIRi43c9zAMNUZiMvu13fc4ug
-         oD3vwMBWsm5OejBjBXsSYU+mE8l75Yv7FuI+nl6TSMi5293fIXUyqTuPChzLR1LiXXB7
-         3y7Q==
-X-Gm-Message-State: APjAAAWttjPq1lnPKLQ3CMBX0r/izgeFIFB8DCBRwvf1KTLBlY3nuQVw
-        rLq29wRs+YQEyzQLoW9cqqNMYGeN
-X-Google-Smtp-Source: APXvYqwrs3FB89RH0+kgXBF3ejwmYPZLTgHaLNuUiXE1AjcShSZR76+3xPYW28RCBcE0p63294782w==
-X-Received: by 2002:a17:90a:c214:: with SMTP id e20mr5758828pjt.81.1570040889544;
-        Wed, 02 Oct 2019 11:28:09 -0700 (PDT)
-Received: from [10.69.78.41] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id b14sm162486pfi.95.2019.10.02.11.28.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Oct 2019 11:28:08 -0700 (PDT)
-Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        etnaviv@lists.freedesktop.org,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>, Stefan Wahren <wahrenst@gmx.net>,
-        james.quinlan@broadcom.com, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
- <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
- <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
- <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
- <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de>
- <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
- <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
- <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
- <307b988d0c67fb1c42166eca12742bcfda09d92d.camel@suse.de>
- <c27a51e1-1adf-ae6a-dc67-ae76222a1163@arm.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <fbae48ca-fbd4-e32b-e874-92b5bba5df4d@gmail.com>
-Date:   Wed, 2 Oct 2019 11:28:06 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1728429AbfJBTzp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Oct 2019 15:55:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47696 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728428AbfJBTzp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 2 Oct 2019 15:55:45 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7CD22133F;
+        Wed,  2 Oct 2019 19:55:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570046144;
+        bh=k7uI8oOKDXg+B+RG7jgWe6X7b/Iv2JUU9lk3BI5jEIQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=AJ2Yt+6+1x+QFqMtm605hydnSr5kqq10gZooH1WyMnZn9gA/HGNmzKmtXUaQSJkK7
+         w8K4f+vQ9nHG4hYhJR5GQKt3ZooPErsuW1fNkWs+Csk/u/SAJFLVwRPawlg/FkEpch
+         xL42HNsNpacP/W8f76KlvzIklyWmjvULLWtW9U3U=
+Date:   Wed, 2 Oct 2019 14:55:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Frederick Lawler <fred@fredlawl.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Rajat Jain <rajatja@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v5 3/4] PCI/ASPM: add sysfs attributes for controlling
+ ASPM link states
+Message-ID: <20191002195541.GA49632@google.com>
 MIME-Version: 1.0
-In-Reply-To: <c27a51e1-1adf-ae6a-dc67-ae76222a1163@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a12e0e2c-dcb8-9ec5-cf10-1029732a00fb@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Sun, Sep 29, 2019 at 07:15:05PM +0200, Heiner Kallweit wrote:
+> On 07.09.2019 22:32, Bjorn Helgaas wrote:
+> > On Sat, Aug 31, 2019 at 10:20:47PM +0200, Heiner Kallweit wrote:
+> >> Background of this extension is a problem with the r8169 network driver.
+> >> Several combinations of board chipsets and network chip versions have
+> >> problems if ASPM is enabled, therefore we have to disable ASPM per default.
+> >> However especially on notebooks ASPM can provide significant power-saving,
+> >> therefore we want to give users the option to enable ASPM. With the new
+> >> sysfs attributes users can control which ASPM link-states are
+> >> enabled/disabled.
+> >>
+> >> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> >> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >> ---
+> >> v2:
+> >> - use a dedicated sysfs attribute per link state
+> >> - allow separate control of ASPM and PCI PM L1 sub-states
+> >> v3:
+> >> - statically allocate the attribute group
+> >> - replace snprintf with printf
+> >> - base on top of "PCI: Make pcie_downstream_port() available outside of access.c"
+> >> v4:
+> >> - add call to sysfs_update_group because is_visible callback returns false
+> >>   always at file creation time
+> >> - simplify code a little
+> >> v5:
+> >> - rebased to latest pci/next
+> >> ---
+> >>  Documentation/ABI/testing/sysfs-bus-pci |  13 ++
+> >>  drivers/pci/pci-sysfs.c                 |   7 +
+> >>  drivers/pci/pci.h                       |   4 +
+> >>  drivers/pci/pcie/aspm.c                 | 184 ++++++++++++++++++++++++
+> >>  4 files changed, 208 insertions(+)
+> >>
+> >> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> >> index 8bfee557e..49249a165 100644
+> >> --- a/Documentation/ABI/testing/sysfs-bus-pci
+> >> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> >> @@ -347,3 +347,16 @@ Description:
+> >>  		If the device has any Peer-to-Peer memory registered, this
+> >>  	        file contains a '1' if the memory has been published for
+> >>  		use outside the driver that owns the device.
+> >> +
+> >> +What		/sys/bus/pci/devices/.../aspm/aspm_l0s
+> >> +What		/sys/bus/pci/devices/.../aspm/aspm_l1
+> >> +What		/sys/bus/pci/devices/.../aspm/aspm_l1_1
+> >> +What		/sys/bus/pci/devices/.../aspm/aspm_l1_2
+> >> +What		/sys/bus/pci/devices/.../aspm/aspm_l1_1_pcipm
+> >> +What		/sys/bus/pci/devices/.../aspm/aspm_l1_2_pcipm
+> >> +What		/sys/bus/pci/devices/.../aspm/aspm_clkpm
+> >> +date:		August 2019
 
+I didn't notice this before, but I wonder if one "aspm" in these paths
+would be enough?  E.g., /sys/bus/pci/devices/.../aspm/l0s?
 
-On 9/26/2019 4:20 AM, Robin Murphy wrote:
-> On 2019-09-26 11:44 am, Nicolas Saenz Julienne wrote:
->>>>>> Robin, have you looked into supporting multiple dma-ranges? It's the
->>>>>> next thing
->>>>>> we need for BCM STB's PCIe. I'll have a go at it myself if nothing
->>>>>> is in
->>>>>> the
->>>>>> works already.
->>>>>
->>>>> Multiple dma-ranges as far as configuring inbound windows should work
->>>>> already other than the bug when there's any parent translation. But if
->>>>> you mean supporting multiple DMA offsets and masks per device in the
->>>>> DMA API, there's nothing in the works yet.
->>
->> Sorry, I meant supporting multiple DMA offsets[1]. I think I could
->> still make
->> it with a single DMA mask though.
+> >> @@ -1315,6 +1315,10 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
+> >>  
+> >>  	pcie_vpd_create_sysfs_dev_files(dev);
+> >>  	pcie_aspm_create_sysfs_dev_files(dev);
+> >> +#ifdef CONFIG_PCIEASPM
+> >> +	/* update visibility of attributes in this group */
+> >> +	sysfs_update_group(&dev->dev.kobj, &aspm_ctrl_attr_group);
+> >> +#endif
+> > 
+> > Isn't there a way to do this in drivers/pci/pcie/aspm.c somehow,
+> > without using sysfs_update_group()?  There are only three callers of
+> > it in the tree, and I'd be surprised if ASPM is unique enough to have
+> > to be the fourth.
+> > 
+> At least I didn't find any. Reason seems to be the following:
+> Static sysfs files are created in pci_scan_single_device ->
+> pci_device_add. And pci_scan_slot calls pci_scan_single_device
+> before calling pcie_aspm_init_link_state(bus->self).
+> Means the pcie_link_state doesn't exist yet and we have to update
+> visibility of the ASPM sysfs files later.
+
+Ah, I see.  I think it's this call graph:
+
+  pci_scan_slot
+    pci_scan_single_device
+      pci_scan_device
+      pci_device_add
+	pci_init_capabilities
+	device_add
+	  device_add_attrs
+	    device_add_groups(dev->type->groups)
+	      sysfs_create_groups         # <-- sysfs files created
+    pcie_aspm_init_link_state(bridge)     # <-- link_states allocated
+
+I think this part of the ASPM code is a little bit broken -- we wait
+to initialize ASPM until we've enumerated all the devices on the link.
+I think it would be better to initialize it somewhere in
+pci_device_add(), maybe pci_init_capabilities(), which would solve
+this ordering problem.  That's a pretty big project that can be done
+later.
+
+But I *think* we should be able to at least move the
+sysfs_update_group() to the end of pcie_aspm_init_link_state().  We'd
+have to iterate over the subordinate->devices, but it would at least
+be in the ASPM code where we'll see it if/when we rework the
+initialization.
+
+> >> +static struct pcie_link_state *aspm_get_parent_link(struct pci_dev *pdev)
+> > 
+> > I know the ASPM code is pretty confused, but I don't think "parent
+> > link" really makes sense.  "Parent" implies a parent/child
+> > relationship, but a link doesn't have a parent or a child; it only has
+> > an upstream end and a downstream end.
+> > 
+> I basically copied this "parent" stuff from __pci_disable_link_state.
+> Fine with me to change the naming.
+> What confuses me a little is that we have different versions of getting
+> the pcie_link_state for a pci_dev in:
 > 
-> The main problem for supporting that case in general is the disgusting
-> carving up of the physical memory map you may have to do to guarantee
-> that a single buffer allocation cannot ever span two windows with
-> different offsets. I don't think we ever reached a conclusion on whether
-> that was even achievable in practice.
+> - this new function of mine
+> - __pci_disable_link_state
+> - pcie_aspm_enabled
+> 
+> The latter uses pci_upstream_bridge instead of accessing pdev->bus->self
+> directly and doesn't include the call to pcie_downstream_port.
+> I wonder whether the functionality could be factored out to a generic
+> helper that works in all these places.
 
-It is with the Broadcom STB SoCs which have between 1 and 3 memory
-controllers depending on the SoC, and multiple dma-ranges cells for PCIe
-as a consequence.
+Definitely.  I think your pcie_aspm_get_link() (from the v6 patch)
+could be used directly in those places.  You could add a new patch
+that just adds pcie_aspm_get_link() and uses it.
 
-Each memory controller has a different physical address aperture in the
-CPU's physical address map (e.g.: MEMC0 is 0x0 - 0x3fff_ffff, MEMC1
-0x4000_0000 - 0x7ffff_ffff and MEMC2 0x8000_0000 - 0xbfff_ffff, not
-counting the extension regions above 4GB), and while the CPU is
-scheduled and arbitrated the same way across all memory controllers
-(thus making it virtually UMA, almost) having a buffer span two memory
-controllers would be problematic because the memory controllers do not
-know how to guarantee the transaction ordering and buffer data
-consistency in both DRAM itself and for other memory controller clients,
-like PCIe.
+> >> +{
+> >> +	struct pci_dev *parent = pdev->bus->self;
+> >> +
+> >> +	if (pcie_downstream_port(pdev))
+> >> +		parent = pdev;
+> >> +
+> >> +	return parent ? parent->link_state : NULL;
+> >> +}
+> >> +
+> >> +static bool pcie_check_valid_aspm_endpoint(struct pci_dev *pdev)
+> >> +{
+> >> +	struct pcie_link_state *link;
+> >> +
+> >> +	if (!pci_is_pcie(pdev) || pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT)
+> > 
+> > Do you intend to exclude other Upstream Ports like Legacy Endpoints,
+> > Upstream Switch Ports, and PCIe-to-PCI/PCI-X Bridges?  They also have
+> > a link leading to them, so we might want them to have knobs as well.
+> > Or if we don't want the knobs, a comment about why not would be
+> > useful.
+> > 
+> My use case is about endpoints only and I'm not really a PCI expert.
+> Based on your list in addition to PCI_EXP_TYPE_ENDPOINT we'd enable
+> the ASPM sysfs fils for:
+> - PCI_EXP_TYPE_LEG_END
+> - PCI_EXP_TYPE_UPSTREAM
+> - PCI_EXP_TYPE_PCI_BRIDGE
+> - PCI_EXP_TYPE_PCIE_BRIDGE
+> If you can confirm the list I'd extend my patch accordingly.
 
-We historically had to reserve the last 4KB of each memory controller to
-avoid problematic controllers like EHCI to prefetch beyond the end of a
-memory controller's populated memory and that also incidentally takes
-care of never having a buffer cross a controller boundary. Either you
-can allocate the entire buffer on a given memory controller, or you
-cannot allocate memory at all on that zone/region and another one must
-be found (or there is no more memory and there is a genuine OOM).
+Yes, I think the list would be right, but looking at this again, I
+don't think you need this function at all -- you can just use
+pcie_aspm_get_link().  Then aspm_ctrl_attrs_are_visible() uses exactly
+the same test as the show/store functions.  Actually, I think then you
+could omit the "if (!link)" tests from the show/store functions
+because those functions can never be called unless
+aspm_ctrl_attrs_are_visible() found a link.
 
-The way we reserve memory right now is based on the first patch
-submitted by Jim:
-
-https://lore.kernel.org/patchwork/patch/988469/
-
-whereby we read the memory node's "reg" property and we map the physical
-addresses to the memory controller configuration read from the specific
-registers in the CPU's Bus Interface Unit (where the memory controller
-apertures are architecturally defined) and then we use that to call
-memblock_reserve() (not part of that patch, it should be though).
--- 
-Florian
+Bjorn
