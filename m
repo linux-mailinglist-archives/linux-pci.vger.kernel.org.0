@@ -2,138 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 80328C8F0D
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2019 18:55:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCDC5C90D4
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2019 20:29:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfJBQzc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Oct 2019 12:55:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbfJBQzc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 2 Oct 2019 12:55:32 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B343D21920;
-        Wed,  2 Oct 2019 16:55:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570035331;
-        bh=mu9aCUvfoBSr+JnILargJwqYnhZcLC84bjaOKSwi0gY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=O2fGMdskkKM+/grpEgTLlnQNvgWWTge/oAn6KeeJ5GADni7PuCGSQAeyorRRENpaD
-         etZywcmAhPD4cchasHFjMTt6U15ZTRdOkWjZ6Ck2xKuprG/ZDA4pf4oR3kDf6BsYQx
-         ygcMKcthiFKbtSniGJAvaF1Jn/q0+D5q/aE3bmKI=
-Date:   Wed, 2 Oct 2019 11:55:29 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH] x86/PCI: Remove D0 PME capability on AMD FCH xHCI
-Message-ID: <20191002165529.GA14065@google.com>
+        id S1728853AbfJBS2L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Oct 2019 14:28:11 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43682 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfJBS2L (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Oct 2019 14:28:11 -0400
+Received: by mail-pg1-f196.google.com with SMTP id v27so12326847pgk.10;
+        Wed, 02 Oct 2019 11:28:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=izcdKMTlTPXdg1rZpK9PkNPTeAL5ACc5p0aT6ECn+3o=;
+        b=nr6ZKcXN/729CI5YvKkqVc0Bz2wyp7AqMiNJbnneIbJ2S8a6/RpgT+vQxveooa1g8o
+         Tzstjrebdj0ch6CBEQIhLHedt+Meqh8poQODSN2lg0OykjXXZCvv3ItaPXFO7ZImXqcW
+         RuKmutNc32nfhTfdTSE+Gn+FP0hyvVehIb12ZNHr5rdWDezRIrhU/4qCY2koq02vv9hS
+         0JYsKwzPEkKLeHC0o1yMLr4lNeC7nIidqjJQlgZ17X3hwG7uMGUGlb0FYDKstybAoxSN
+         PuzGKEISFL71Mt9LOzHTLH19Bi/ikZqtSvsTTAUBs/9/pSrhf3mQrJw/Bi+Y2mWPIur/
+         yzHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=izcdKMTlTPXdg1rZpK9PkNPTeAL5ACc5p0aT6ECn+3o=;
+        b=pmsHGoI1ePqZE8TLIu0Dey8pVqh1NIIj/A8bMidf6zGs1MH2FE1AqnpVY91B+3CLt4
+         8BheWaKNwiIe64AuVFIJOqTmRF+wchCvko/tc6ceKJuIY8xNxd18XG4w7zxqtj7bOmQM
+         23z+BEWQzE3U6Kc5/wR3Ro7gBJr/RNPvTtzVCBwWjkobkxurHdBt8LgZEXKKObj/ijfp
+         V1Z9ByZuI2uY3INWNDsKubaNPWcLw4eDL/a8pIDp789JIRi43c9zAMNUZiMvu13fc4ug
+         oD3vwMBWsm5OejBjBXsSYU+mE8l75Yv7FuI+nl6TSMi5293fIXUyqTuPChzLR1LiXXB7
+         3y7Q==
+X-Gm-Message-State: APjAAAWttjPq1lnPKLQ3CMBX0r/izgeFIFB8DCBRwvf1KTLBlY3nuQVw
+        rLq29wRs+YQEyzQLoW9cqqNMYGeN
+X-Google-Smtp-Source: APXvYqwrs3FB89RH0+kgXBF3ejwmYPZLTgHaLNuUiXE1AjcShSZR76+3xPYW28RCBcE0p63294782w==
+X-Received: by 2002:a17:90a:c214:: with SMTP id e20mr5758828pjt.81.1570040889544;
+        Wed, 02 Oct 2019 11:28:09 -0700 (PDT)
+Received: from [10.69.78.41] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id b14sm162486pfi.95.2019.10.02.11.28.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Oct 2019 11:28:08 -0700 (PDT)
+Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        etnaviv@lists.freedesktop.org,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>, Stefan Wahren <wahrenst@gmx.net>,
+        james.quinlan@broadcom.com, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
+ <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
+ <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
+ <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
+ <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de>
+ <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
+ <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
+ <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
+ <307b988d0c67fb1c42166eca12742bcfda09d92d.camel@suse.de>
+ <c27a51e1-1adf-ae6a-dc67-ae76222a1163@arm.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <fbae48ca-fbd4-e32b-e874-92b5bba5df4d@gmail.com>
+Date:   Wed, 2 Oct 2019 11:28:06 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <30975CE5-7731-4777-B091-1F15F388D5C7@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c27a51e1-1adf-ae6a-dc67-ae76222a1163@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 01:32:07PM +0800, Kai-Heng Feng wrote:
-> On Oct 2, 2019, at 08:07, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Mon, Sep 02, 2019 at 10:52:52PM +0800, Kai-Heng Feng wrote:
-> >> There's an xHCI device that doesn't wake when a USB 2.0 device gets
-> >> plugged to its USB 3.0 port. The driver's own runtime suspend callback
-> >> was called, PME# signaling was enabled, but it stays at PCI D0:
-> >> 
-> >> 00:10.0 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller [1022:7914] (rev 20) (prog-if 30 [XHCI])
-> >>        Subsystem: Dell FCH USB XHCI Controller [1028:087e]
-> >>        Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-> >>        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-> >>        Interrupt: pin A routed to IRQ 18
-> >>        Region 0: Memory at f0b68000 (64-bit, non-prefetchable) [size=8K]
-> >>        Capabilities: [50] Power Management version 3
-> >>                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-> >>                Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
-> >> 
-> >> A PCI device can be runtime suspended while still stays at D0 when it
-> >> supports D0 PME# and its ACPI _S0W method reports D0. Though plugging
-> >> USB 3.0 devices can wakeup the xHCI, it doesn't respond to USB 2.0
-> >> devices.
-> > 
-> > I don't think _S0W and runtime suspend are relevant here.  What *is*
-> > relevant is that the device advertises that it can generate PME from
-> > D0, and it apparently does not do so.
-> 
-> Yes that's the case. It doesn't generate PME when USB2.0 or USB1.1
-> device gets plugged.
 
-OK, thanks.  I added a stable tag and applied this to pci/misc for v5.5.
 
-> > Table 10 in the xHCI spec r1.0, sec 4.15.2.3, says the xHC should
-> > assert PME# if enabled and the port's WCE bit is set.  Did you ever
-> > confirm that WCE is set?
+On 9/26/2019 4:20 AM, Robin Murphy wrote:
+> On 2019-09-26 11:44 am, Nicolas Saenz Julienne wrote:
+>>>>>> Robin, have you looked into supporting multiple dma-ranges? It's the
+>>>>>> next thing
+>>>>>> we need for BCM STB's PCIe. I'll have a go at it myself if nothing
+>>>>>> is in
+>>>>>> the
+>>>>>> works already.
+>>>>>
+>>>>> Multiple dma-ranges as far as configuring inbound windows should work
+>>>>> already other than the bug when there's any parent translation. But if
+>>>>> you mean supporting multiple DMA offsets and masks per device in the
+>>>>> DMA API, there's nothing in the works yet.
+>>
+>> Sorry, I meant supporting multiple DMA offsets[1]. I think I could
+>> still make
+>> it with a single DMA mask though.
 > 
-> How do I check WCE when xHCI is suspended?  If I want to read WCE
-> then I have the resume the device, but after resuming all USB
-> devices get enumerated, and checking WCE doesn't matter anymore.
+> The main problem for supporting that case in general is the disgusting
+> carving up of the physical memory map you may have to do to guarantee
+> that a single buffer allocation cannot ever span two windows with
+> different offsets. I don't think we ever reached a conclusion on whether
+> that was even achievable in practice.
 
-Yeah, that's a problem.  I guess you'd have to inspect or instrument
-the driver to ensure WCE is set in that path.  But if you get PME# for
-USB3 devices, it seems safe to assume WCE is set.
+It is with the Broadcom STB SoCs which have between 1 and 3 memory
+controllers depending on the SoC, and multiple dma-ranges cells for PCIe
+as a consequence.
 
-> > I assume WCE *is* set because plugging in a USB3 device *does*
-> > generate a PME#, and I don't see anything in Table 10 that says it
-> > would work for USB3 but not USB2.
-> 
-> It should work on all USB speeds, but it didn't.
-> That's why the OEM/ODM use the _S0W workaround on Windows.
-> 
-> Kai-Heng
-> 
-> > 
-> >> So let's disable D0 PME capability on this device to avoid the issue.
-> >> 
-> >> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203673
-> >> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> >> ---
-> >> arch/x86/pci/fixup.c | 11 +++++++++++
-> >> 1 file changed, 11 insertions(+)
-> >> 
-> >> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-> >> index 527e69b12002..0851a05d092f 100644
-> >> --- a/arch/x86/pci/fixup.c
-> >> +++ b/arch/x86/pci/fixup.c
-> >> @@ -588,6 +588,17 @@ static void pci_fixup_amd_ehci_pme(struct pci_dev *dev)
-> >> }
-> >> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x7808, pci_fixup_amd_ehci_pme);
-> >> 
-> >> +/*
-> >> + * Device [1022:7914]
-> >> + * D0 PME# doesn't get asserted when plugging USB 2.0 device.
-> >> + */
-> >> +static void pci_fixup_amd_fch_xhci_pme(struct pci_dev *dev)
-> >> +{
-> >> +	dev_info(&dev->dev, "PME# does not work under D0, disabling it\n");
-> > 
-> > Use pci_info() as in the rest of the file.
+Each memory controller has a different physical address aperture in the
+CPU's physical address map (e.g.: MEMC0 is 0x0 - 0x3fff_ffff, MEMC1
+0x4000_0000 - 0x7ffff_ffff and MEMC2 0x8000_0000 - 0xbfff_ffff, not
+counting the extension regions above 4GB), and while the CPU is
+scheduled and arbitrated the same way across all memory controllers
+(thus making it virtually UMA, almost) having a buffer span two memory
+controllers would be problematic because the memory controllers do not
+know how to guarantee the transaction ordering and buffer data
+consistency in both DRAM itself and for other memory controller clients,
+like PCIe.
 
-Sorry, this was just wrong.  I was assuming this was for
-drivers/pci/quirks.c, where dev_info() has been replaced by
-pci_info().  But that's not the case for this file.
+We historically had to reserve the last 4KB of each memory controller to
+avoid problematic controllers like EHCI to prefetch beyond the end of a
+memory controller's populated memory and that also incidentally takes
+care of never having a buffer cross a controller boundary. Either you
+can allocate the entire buffer on a given memory controller, or you
+cannot allocate memory at all on that zone/region and another one must
+be found (or there is no more memory and there is a genuine OOM).
 
-> >> +	dev->pme_support &= ~(PCI_PM_CAP_PME_D0 >> PCI_PM_CAP_PME_SHIFT);
-> >> +}
-> >> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x7914, pci_fixup_amd_fch_xhci_pme);
-> >> +
-> >> /*
-> >>  * Apple MacBook Pro: Avoid [mem 0x7fa00000-0x7fbfffff]
-> >>  *
-> >> -- 
-> >> 2.17.1
-> 
+The way we reserve memory right now is based on the first patch
+submitted by Jim:
+
+https://lore.kernel.org/patchwork/patch/988469/
+
+whereby we read the memory node's "reg" property and we map the physical
+addresses to the memory controller configuration read from the specific
+registers in the CPU's Bus Interface Unit (where the memory controller
+apertures are architecturally defined) and then we use that to call
+memblock_reserve() (not part of that patch, it should be though).
+-- 
+Florian
