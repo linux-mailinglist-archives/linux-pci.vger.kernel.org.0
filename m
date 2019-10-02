@@ -2,147 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F3F7C9421
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2019 00:11:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA567C942A
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2019 00:14:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfJBWK4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Oct 2019 18:10:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51638 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbfJBWK4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 2 Oct 2019 18:10:56 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97DD320659;
-        Wed,  2 Oct 2019 22:10:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570054255;
-        bh=Y9MkvBqplkZaMVNOADcx0iSmLR1BK1+qhTrHy72V/tk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ls8Rriu+SgP//dE5aghDxFo3hzJH8nqHM9TEs7eCjZScsto9tNFNg370QpemPXcqh
-         +hdM6bheGeVESsA2c7iB8PviAag3PlgXnTuOHVC2QeAVYswndtl9ltAG9J0jCKrmCb
-         +0F/ezkxmW+VpoQIfpvzgRbboWhh7pIe9OBvqQfg=
-Date:   Wed, 2 Oct 2019 17:10:54 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Frederick Lawler <fred@fredlawl.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Rajat Jain <rajatja@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v5 3/4] PCI/ASPM: add sysfs attributes for controlling
- ASPM link states
-Message-ID: <20191002221054.GA71395@google.com>
+        id S1726267AbfJBWOA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Oct 2019 18:14:00 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:32899 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfJBWOA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Oct 2019 18:14:00 -0400
+Received: by mail-oi1-f195.google.com with SMTP id e18so829746oii.0;
+        Wed, 02 Oct 2019 15:14:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Sqk/SFk4ZImYIBcERyKHjU6k+Y9P6R8FWyKPazl8xYA=;
+        b=YwTraDTntg1G+u7Q2S81u1noOW7tjCCMyd7P2/qmF5YM9/0NUfZL0Euw5BaM31YQ1F
+         NaGWJ9zr8QJRcxwPXD1haA3Q0L36Fwq5ltQXJG0BbRJX98ytSUF3DFM/PmA/1ReBpH0j
+         UZxHTpdX8CUPqhtQnX3PwoVKlz+jvNXZB0hFJJqibeqrOGtLM2gzH6NfSh1tMqOQUSAw
+         dETRblrltQ3id0qF8yLWmlRs8Av0X8I4SjGxDhzBzCreBrDudh5uAbVCF83A5je5dpat
+         oBlSkR+a2iLlbRdpX4QGlzdlIxeYDks6kUX6DVpePuLzS3TampizmNJyjj+QU3QwuBon
+         /A7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Sqk/SFk4ZImYIBcERyKHjU6k+Y9P6R8FWyKPazl8xYA=;
+        b=GuNaLmTf85Slv9pLqfPtlplv7u98Iow8uVJSIajkc7mecvx368fgv4z3TxcbqZdV+e
+         +EkyDZNuNrvRGPo4vkOTj2YM1+zQxSfZ4yBT16rV9HDKokQ8EAKscylW+RL0Pufhgnai
+         cA7ESPw8j7/Jrq8wT1PG9WrOibW/mQCY32bp+uLiy3QuQn7osTd6ddsUYWIDVxHOVEmg
+         JyM1hAziuPn1i4cgp1t5tC9SoIsg2b1IsgfGGGa9O6waOIEcxwoAYlRsEUT81llIzn1n
+         0wPYspycjVfWDwI354pXvWeJfeOi4Hj2n5Ji6bjwAE1ULa289+MA6QhOmz2omiKLl5ug
+         +NYg==
+X-Gm-Message-State: APjAAAUMn3Ye9F+ca9siQADdUQ9HchlecyoC+xIgWwUG4Iw8Fkm4nlBh
+        rXiNXy5Cdl4gjv2CA5dm1GMYCqbWWRy5Sg==
+X-Google-Smtp-Source: APXvYqy3haKfq5CSi7BfjH3KJ5olSRvyyEnJDllpCOIzv053tu35ipKl7mhVvvPQ8LLSDuZ0RMIZgA==
+X-Received: by 2002:aca:645:: with SMTP id 66mr233481oig.117.1570054439541;
+        Wed, 02 Oct 2019 15:13:59 -0700 (PDT)
+Received: from nuclearis2-1.gtech (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
+        by smtp.gmail.com with ESMTPSA id x38sm218466ota.59.2019.10.02.15.13.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Oct 2019 15:13:59 -0700 (PDT)
+Subject: Re: [PATCH 0/3] PCI: pciehp: Do not turn off slot if presence comes
+ up after link
+To:     Lukas Wunner <lukas@wunner.de>,
+        Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191001211419.11245-1-stuart.w.hayes@gmail.com>
+ <20191002041315.6dpqpis5zikosyyc@wunner.de>
+From:   "Alex G." <mr.nuke.me@gmail.com>
+Message-ID: <c494a7c4-8323-e75f-6a3f-5f342ce7b1c7@gmail.com>
+Date:   Wed, 2 Oct 2019 17:13:58 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a4d86993-46fc-ef15-8c7a-6e5e049a3065@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191002041315.6dpqpis5zikosyyc@wunner.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 11:10:55PM +0200, Heiner Kallweit wrote:
-> On 02.10.2019 21:55, Bjorn Helgaas wrote:
-> > On Sun, Sep 29, 2019 at 07:15:05PM +0200, Heiner Kallweit wrote:
-> >> On 07.09.2019 22:32, Bjorn Helgaas wrote:
-> >>> On Sat, Aug 31, 2019 at 10:20:47PM +0200, Heiner Kallweit wrote:
-
-> >>>> +static struct pcie_link_state *aspm_get_parent_link(struct pci_dev *pdev)
-> >>>
-> >>> I know the ASPM code is pretty confused, but I don't think "parent
-> >>> link" really makes sense.  "Parent" implies a parent/child
-> >>> relationship, but a link doesn't have a parent or a child; it only has
-> >>> an upstream end and a downstream end.
-> >>>
-> >> I basically copied this "parent" stuff from __pci_disable_link_state.
-> >> Fine with me to change the naming.
-> >> What confuses me a little is that we have different versions of getting
-> >> the pcie_link_state for a pci_dev in:
-> >>
-> >> - this new function of mine
-> >> - __pci_disable_link_state
-> >> - pcie_aspm_enabled
-> >>
-> >> The latter uses pci_upstream_bridge instead of accessing pdev->bus->self
-> >> directly and doesn't include the call to pcie_downstream_port.
-> >> I wonder whether the functionality could be factored out to a generic
-> >> helper that works in all these places.
-> > 
-> > Definitely.  I think your pcie_aspm_get_link() (from the v6 patch)
-> > could be used directly in those places.  You could add a new patch
-> > that just adds pcie_aspm_get_link() and uses it.
-> > 
+On 10/1/19 11:13 PM, Lukas Wunner wrote:
+> On Tue, Oct 01, 2019 at 05:14:16PM -0400, Stuart Hayes wrote:
+>> This patch set is based on a patch set [1] submitted many months ago by
+>> Alexandru Gagniuc, who is no longer working on it.
+>>
+>> [1] https://patchwork.kernel.org/cover/10909167/
+>>      [v3,0/4] PCI: pciehp: Do not turn off slot if presence comes up after link
 > 
-> OK
+> If I'm not mistaken, these two are identical to Alex' patches, right?
 > 
-> >>>> +{
-> >>>> +	struct pci_dev *parent = pdev->bus->self;
-> >>>> +
-> >>>> +	if (pcie_downstream_port(pdev))
-> >>>> +		parent = pdev;
-> >>>> +
-> >>>> +	return parent ? parent->link_state : NULL;
-> >>>> +}
-> >>>> +
-> >>>> +static bool pcie_check_valid_aspm_endpoint(struct pci_dev *pdev)
-> >>>> +{
-> >>>> +	struct pcie_link_state *link;
-> >>>> +
-> >>>> +	if (!pci_is_pcie(pdev) || pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT)
-> >>>
-> >>> Do you intend to exclude other Upstream Ports like Legacy Endpoints,
-> >>> Upstream Switch Ports, and PCIe-to-PCI/PCI-X Bridges?  They also have
-> >>> a link leading to them, so we might want them to have knobs as well.
-> >>> Or if we don't want the knobs, a comment about why not would be
-> >>> useful.
-> >>>
-> >> My use case is about endpoints only and I'm not really a PCI expert.
-> >> Based on your list in addition to PCI_EXP_TYPE_ENDPOINT we'd enable
-> >> the ASPM sysfs fils for:
-> >> - PCI_EXP_TYPE_LEG_END
-> >> - PCI_EXP_TYPE_UPSTREAM
-> >> - PCI_EXP_TYPE_PCI_BRIDGE
-> >> - PCI_EXP_TYPE_PCIE_BRIDGE
-> >> If you can confirm the list I'd extend my patch accordingly.
-> > 
-> > Yes, I think the list would be right, but looking at this again, I
-> > don't think you need this function at all -- you can just use
-> > pcie_aspm_get_link().  Then aspm_ctrl_attrs_are_visible() uses exactly
-> > the same test as the show/store functions.  Actually, I think then you
-> > could omit the "if (!link)" tests from the show/store functions
-> > because those functions can never be called unless
-> > aspm_ctrl_attrs_are_visible() found a link.
-> > 
-> Right, the !link checks can be removed from the show/store functions.
-> In pcie_is_aspm_dev() I think we need to check at least whether
-> device is PCIe and whether link is ASPM-capable. Making the sysfs
-> attributes visible for a non-PCIe device doesn't make sense,
-> the same applies to PCIe devices with a link that is not ASPM-capable.
+>    PCI: pciehp: Add support for disabling in-band presence
+>    PCI: pciehp: Wait for PDS when in-band presence is disabled
+> 
+> I'm not sure if it's appropriate to change the author and
+> omit Alex' Signed-off-by.
 
-I agree we don't want these attributes visible for non-PCIe or
-non-ASPM-capable situations, but I think you can do this:
+Legally Dell owns the patches. I have no objection on my end.
 
-  static struct pcie_link_state *pcie_aspm_get_link(struct pci_dev *pdev)
-  {
-    struct pci_dev *bridge = pci_upstream_bridge(pdev);
+Alex
 
-    if (bridge)
-      return bridge->link_state;
-
-    return NULL;
-  }
-
-  static umode_t aspm_ctrl_attrs_are_visible(...)
-  {
-    ...
-    if (pcie_aspm_get_link(pdev))
-      return a->mode;
-
-    return 0;
-  }
-
-We can rely on pcie_aspm_init_link_state() to only set
-bridge->link_state if the devices on both ends of the link are PCIe
-and support ASPM.
+> Otherwise I have no objections against this series.
+> 
+> Thanks,
+> 
+> Lukas
+> 
