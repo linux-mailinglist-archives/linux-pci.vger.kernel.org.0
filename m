@@ -2,156 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 66636C8DBA
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2019 18:07:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80328C8F0D
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2019 18:55:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729204AbfJBQHI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Oct 2019 12:07:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36258 "EHLO mail.kernel.org"
+        id S1727473AbfJBQzc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Oct 2019 12:55:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729190AbfJBQHH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 2 Oct 2019 12:07:07 -0400
-Received: from localhost.localdomain (unknown [194.230.155.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725975AbfJBQzc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 2 Oct 2019 12:55:32 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1851222BE;
-        Wed,  2 Oct 2019 16:06:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B343D21920;
+        Wed,  2 Oct 2019 16:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570032426;
-        bh=mQPcQHUPwO41tj6eZFL6xjysxPvRcXAHP637dM6rPBA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xqXgGJ9vZy7bk8yuGyGyCZ7HwYOrs+sZX0ScjPpHW2skiKsRVVRbzRGyQcfqtu4D8
-         sDlbVfZP8EPCOarDCvgd/OoIf7Cf8wm0Dk0jsfDjrCD4nx9pQtHbxNAKOrgy5zMzDi
-         vbSyChOYqADcyyWF+Gryao3inEuvv8/IJSvZMhXw=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, etnaviv@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 3/3] ARM: dts: exynos: Rename power domain nodes to "power-domain" in Exynos4
-Date:   Wed,  2 Oct 2019 18:06:32 +0200
-Message-Id: <20191002160632.11140-3-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191002160632.11140-1-krzk@kernel.org>
-References: <20191002160632.11140-1-krzk@kernel.org>
+        s=default; t=1570035331;
+        bh=mu9aCUvfoBSr+JnILargJwqYnhZcLC84bjaOKSwi0gY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=O2fGMdskkKM+/grpEgTLlnQNvgWWTge/oAn6KeeJ5GADni7PuCGSQAeyorRRENpaD
+         etZywcmAhPD4cchasHFjMTt6U15ZTRdOkWjZ6Ck2xKuprG/ZDA4pf4oR3kDf6BsYQx
+         ygcMKcthiFKbtSniGJAvaF1Jn/q0+D5q/aE3bmKI=
+Date:   Wed, 2 Oct 2019 11:55:29 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH] x86/PCI: Remove D0 PME capability on AMD FCH xHCI
+Message-ID: <20191002165529.GA14065@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <30975CE5-7731-4777-B091-1F15F388D5C7@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The device node name should reflect generic class of a device so rename
-power domain nodes to "power-domain".  No functional change.
+On Wed, Oct 02, 2019 at 01:32:07PM +0800, Kai-Heng Feng wrote:
+> On Oct 2, 2019, at 08:07, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Mon, Sep 02, 2019 at 10:52:52PM +0800, Kai-Heng Feng wrote:
+> >> There's an xHCI device that doesn't wake when a USB 2.0 device gets
+> >> plugged to its USB 3.0 port. The driver's own runtime suspend callback
+> >> was called, PME# signaling was enabled, but it stays at PCI D0:
+> >> 
+> >> 00:10.0 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller [1022:7914] (rev 20) (prog-if 30 [XHCI])
+> >>        Subsystem: Dell FCH USB XHCI Controller [1028:087e]
+> >>        Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+> >>        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+> >>        Interrupt: pin A routed to IRQ 18
+> >>        Region 0: Memory at f0b68000 (64-bit, non-prefetchable) [size=8K]
+> >>        Capabilities: [50] Power Management version 3
+> >>                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+> >>                Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
+> >> 
+> >> A PCI device can be runtime suspended while still stays at D0 when it
+> >> supports D0 PME# and its ACPI _S0W method reports D0. Though plugging
+> >> USB 3.0 devices can wakeup the xHCI, it doesn't respond to USB 2.0
+> >> devices.
+> > 
+> > I don't think _S0W and runtime suspend are relevant here.  What *is*
+> > relevant is that the device advertises that it can generate PME from
+> > D0, and it apparently does not do so.
+> 
+> Yes that's the case. It doesn't generate PME when USB2.0 or USB1.1
+> device gets plugged.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/exynos4.dtsi    | 14 +++++++-------
- arch/arm/boot/dts/exynos4210.dtsi |  2 +-
- arch/arm/boot/dts/exynos4412.dtsi |  2 +-
- 3 files changed, 9 insertions(+), 9 deletions(-)
+OK, thanks.  I added a stable tag and applied this to pci/misc for v5.5.
 
-diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-index 433f109d97ca..d2779a790ce3 100644
---- a/arch/arm/boot/dts/exynos4.dtsi
-+++ b/arch/arm/boot/dts/exynos4.dtsi
-@@ -111,28 +111,28 @@
- 			syscon = <&pmu_system_controller>;
- 		};
- 
--		pd_mfc: mfc-power-domain@10023c40 {
-+		pd_mfc: power-domain@10023c40 {
- 			compatible = "samsung,exynos4210-pd";
- 			reg = <0x10023C40 0x20>;
- 			#power-domain-cells = <0>;
- 			label = "MFC";
- 		};
- 
--		pd_g3d: g3d-power-domain@10023c60 {
-+		pd_g3d: power-domain@10023c60 {
- 			compatible = "samsung,exynos4210-pd";
- 			reg = <0x10023C60 0x20>;
- 			#power-domain-cells = <0>;
- 			label = "G3D";
- 		};
- 
--		pd_lcd0: lcd0-power-domain@10023c80 {
-+		pd_lcd0: power-domain@10023c80 {
- 			compatible = "samsung,exynos4210-pd";
- 			reg = <0x10023C80 0x20>;
- 			#power-domain-cells = <0>;
- 			label = "LCD0";
- 		};
- 
--		pd_tv: tv-power-domain@10023c20 {
-+		pd_tv: power-domain@10023c20 {
- 			compatible = "samsung,exynos4210-pd";
- 			reg = <0x10023C20 0x20>;
- 			#power-domain-cells = <0>;
-@@ -140,21 +140,21 @@
- 			label = "TV";
- 		};
- 
--		pd_cam: cam-power-domain@10023c00 {
-+		pd_cam: power-domain@10023c00 {
- 			compatible = "samsung,exynos4210-pd";
- 			reg = <0x10023C00 0x20>;
- 			#power-domain-cells = <0>;
- 			label = "CAM";
- 		};
- 
--		pd_gps: gps-power-domain@10023ce0 {
-+		pd_gps: power-domain@10023ce0 {
- 			compatible = "samsung,exynos4210-pd";
- 			reg = <0x10023CE0 0x20>;
- 			#power-domain-cells = <0>;
- 			label = "GPS";
- 		};
- 
--		pd_gps_alive: gps-alive-power-domain@10023d00 {
-+		pd_gps_alive: power-domain@10023d00 {
- 			compatible = "samsung,exynos4210-pd";
- 			reg = <0x10023D00 0x20>;
- 			#power-domain-cells = <0>;
-diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
-index f220716239db..ff9a3fb21a85 100644
---- a/arch/arm/boot/dts/exynos4210.dtsi
-+++ b/arch/arm/boot/dts/exynos4210.dtsi
-@@ -90,7 +90,7 @@
- 			};
- 		};
- 
--		pd_lcd1: lcd1-power-domain@10023ca0 {
-+		pd_lcd1: power-domain@10023ca0 {
- 			compatible = "samsung,exynos4210-pd";
- 			reg = <0x10023CA0 0x20>;
- 			#power-domain-cells = <0>;
-diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-index d20db2dfe8e2..1c40bd56ce00 100644
---- a/arch/arm/boot/dts/exynos4412.dtsi
-+++ b/arch/arm/boot/dts/exynos4412.dtsi
-@@ -206,7 +206,7 @@
- 			};
- 		};
- 
--		pd_isp: isp-power-domain@10023ca0 {
-+		pd_isp: power-domain@10023ca0 {
- 			compatible = "samsung,exynos4210-pd";
- 			reg = <0x10023CA0 0x20>;
- 			#power-domain-cells = <0>;
--- 
-2.17.1
+> > Table 10 in the xHCI spec r1.0, sec 4.15.2.3, says the xHC should
+> > assert PME# if enabled and the port's WCE bit is set.  Did you ever
+> > confirm that WCE is set?
+> 
+> How do I check WCE when xHCI is suspended?  If I want to read WCE
+> then I have the resume the device, but after resuming all USB
+> devices get enumerated, and checking WCE doesn't matter anymore.
 
+Yeah, that's a problem.  I guess you'd have to inspect or instrument
+the driver to ensure WCE is set in that path.  But if you get PME# for
+USB3 devices, it seems safe to assume WCE is set.
+
+> > I assume WCE *is* set because plugging in a USB3 device *does*
+> > generate a PME#, and I don't see anything in Table 10 that says it
+> > would work for USB3 but not USB2.
+> 
+> It should work on all USB speeds, but it didn't.
+> That's why the OEM/ODM use the _S0W workaround on Windows.
+> 
+> Kai-Heng
+> 
+> > 
+> >> So let's disable D0 PME capability on this device to avoid the issue.
+> >> 
+> >> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203673
+> >> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> >> ---
+> >> arch/x86/pci/fixup.c | 11 +++++++++++
+> >> 1 file changed, 11 insertions(+)
+> >> 
+> >> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+> >> index 527e69b12002..0851a05d092f 100644
+> >> --- a/arch/x86/pci/fixup.c
+> >> +++ b/arch/x86/pci/fixup.c
+> >> @@ -588,6 +588,17 @@ static void pci_fixup_amd_ehci_pme(struct pci_dev *dev)
+> >> }
+> >> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x7808, pci_fixup_amd_ehci_pme);
+> >> 
+> >> +/*
+> >> + * Device [1022:7914]
+> >> + * D0 PME# doesn't get asserted when plugging USB 2.0 device.
+> >> + */
+> >> +static void pci_fixup_amd_fch_xhci_pme(struct pci_dev *dev)
+> >> +{
+> >> +	dev_info(&dev->dev, "PME# does not work under D0, disabling it\n");
+> > 
+> > Use pci_info() as in the rest of the file.
+
+Sorry, this was just wrong.  I was assuming this was for
+drivers/pci/quirks.c, where dev_info() has been replaced by
+pci_info().  But that's not the case for this file.
+
+> >> +	dev->pme_support &= ~(PCI_PM_CAP_PME_D0 >> PCI_PM_CAP_PME_SHIFT);
+> >> +}
+> >> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x7914, pci_fixup_amd_fch_xhci_pme);
+> >> +
+> >> /*
+> >>  * Apple MacBook Pro: Avoid [mem 0x7fa00000-0x7fbfffff]
+> >>  *
+> >> -- 
+> >> 2.17.1
+> 
