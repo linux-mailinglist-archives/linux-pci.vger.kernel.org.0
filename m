@@ -2,114 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D5559C44BD
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2019 02:07:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BD7EC452D
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2019 02:54:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729428AbfJBAHV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Oct 2019 20:07:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35088 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729423AbfJBAHV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 1 Oct 2019 20:07:21 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDF602070B;
-        Wed,  2 Oct 2019 00:07:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569974840;
-        bh=tc19l2UGyPfaGtKN6q7o1lkGEB1wwDQHwhVr5+o2jIE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=a2qEyG5KcE2Rv/7aGJIMKvq/xygVIT7MuCU5j3sFnYy1wDfsaNW5zH+Nf72LIbRsC
-         aUyip9FtaySJGi93NnMTlUNGK89qqcNv0g+8hZsi8+gFemSQ/BFTqQ3YaP15NYJfZY
-         XevMHRntHmd9CtKaxE7eWg+yg9t8P++Z1qvK4DTg=
-Date:   Tue, 1 Oct 2019 19:07:18 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH] x86/PCI: Remove D0 PME capability on AMD FCH xHCI
-Message-ID: <20191002000718.GA100544@google.com>
+        id S1726931AbfJBAyB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Oct 2019 20:54:01 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:55873 "EHLO
+        mail.loongson.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbfJBAyA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Oct 2019 20:54:00 -0400
+Received: from [10.20.41.27] (unknown [10.20.41.27])
+        by mail (Coremail) with SMTP id QMiowPDxL18P9ZNdkUgGAA--.132S3;
+        Wed, 02 Oct 2019 08:53:54 +0800 (CST)
+Subject: Re: [PATCH] PCI: Add Loongson vendor ID and device IDs
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <20191001125010.GA38575@google.com>
+Cc:     Andrew Murray <andrew.murray@arm.com>, zenglu@loongson.cn,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <af586d51-3080-3667-b277-65a8338fbf6f@loongson.cn>
+Date:   Wed, 2 Oct 2019 08:53:36 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902145252.32111-1-kai.heng.feng@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191001125010.GA38575@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: QMiowPDxL18P9ZNdkUgGAA--.132S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxXF4DKw4DuFyxur18urWkCrg_yoW5KFW3pr
+        15ZFWayFs7ArW7Jwn2q3s8JFZayanIyFyUuF1agr47JFnIqw1xGryYvF45urZFqrn5X342
+        vr4Duws8uFnFy37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkSb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4
+        A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF
+        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
+        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+        1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
+        cVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUgg_TUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Alan, Mathias, Rafael, Lukas]
+On 10/01/2019 08:50 PM, Bjorn Helgaas wrote:
+> On Tue, Oct 01, 2019 at 10:53:44AM +0800, Tiezhu Yang wrote:
+>> On 09/30/2019 10:02 PM, Andrew Murray wrote:
+>>> On Mon, Sep 30, 2019 at 12:55:20PM +0800, Tiezhu Yang wrote:
+>>>> Add the Loongson vendor ID and device IDs to pci_ids.h
+>>>> to be used in the future.
+>>>>
+>>>> The Loongson IDs can be found at the following link:
+>>>> https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git/tree/pci.ids
+>>>>
+>>>> Co-developed-by: Lu Zeng <zenglu@loongson.cn>
+>>>> Signed-off-by: Lu Zeng <zenglu@loongson.cn>
+>>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>>>> ---
+>>>>    include/linux/pci_ids.h | 19 +++++++++++++++++++
+>>>>    1 file changed, 19 insertions(+)
+>>>>
+>>>> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+>>>> index 21a5724..119639d 100644
+>>>> --- a/include/linux/pci_ids.h
+>>>> +++ b/include/linux/pci_ids.h
+>>>> @@ -3111,4 +3111,23 @@
+>>>>
+>>>>    #define PCI_VENDOR_ID_NCUBE            0x10ff
+>>>>
+>>>> +#define PCI_VENDOR_ID_LOONGSON                 0x0014
+>>>> +#define PCI_DEVICE_ID_LOONGSON_HT              0x7a00
+>>>> +#define PCI_DEVICE_ID_LOONGSON_APB             0x7a02
+>>>> +#define PCI_DEVICE_ID_LOONGSON_GMAC            0x7a03
+>>>> +#define PCI_DEVICE_ID_LOONGSON_OTG             0x7a04
+>>>> +#define PCI_DEVICE_ID_LOONGSON_GPU_2K1000      0x7a05
+>>>> +#define PCI_DEVICE_ID_LOONGSON_DC              0x7a06
+>>>> +#define PCI_DEVICE_ID_LOONGSON_HDA             0x7a07
+>>>> +#define PCI_DEVICE_ID_LOONGSON_SATA            0x7a08
+>>>> +#define PCI_DEVICE_ID_LOONGSON_PCIE_X1         0x7a09
+>>>> +#define PCI_DEVICE_ID_LOONGSON_SPI             0x7a0b
+>>>> +#define PCI_DEVICE_ID_LOONGSON_LPC             0x7a0c
+>>>> +#define PCI_DEVICE_ID_LOONGSON_DMA             0x7a0f
+>>>> +#define PCI_DEVICE_ID_LOONGSON_EHCI            0x7a14
+>>>> +#define PCI_DEVICE_ID_LOONGSON_GPU_7A1000      0x7a15
+>>>> +#define PCI_DEVICE_ID_LOONGSON_PCIE_X4         0x7a19
+>>>> +#define PCI_DEVICE_ID_LOONGSON_OHCI            0x7a24
+>>>> +#define PCI_DEVICE_ID_LOONGSON_PCIE_X8         0x7a29
+>>> Hi Tiezhu,
+>>>
+>>> Thanks for the patch - however it is preferred to provide new PCI
+>>> definitions along with the drivers that use them. They don't
+>>> provide any useful value without drivers that use them.
+>> Thanks for your reply. This is the first step of the Loongson kernel
+>> team, we will submit other related individual driver patches step by
+>> step in the near future, these small patches make an easily
+>> understood change that can be verified by reviewers.
+> There are two opposing goals here:
+>
+>    1) The "publish early, publish often" idea that posting small things
+>    early helps get useful feedback.
+>
+>    2) The idea of waiting until things can be published in logical
+>    units so readers can see context and how things fit together.
+>
+> I think Andrew's point (which I agree with) is that an individual
+> trivial patch like this is not enough to give meaningful feedback.  I
+> think you'll get better feedback if you wait and collect things until
+> you can post a series that actually fixes a bug or adds a small
+> feature.  It also makes it easier for me to track patches if I can
+> deal with a whole series at once instead of trying to figure out which
+> individual patches are related.
+>
+> So I'd encourage you to think in terms of a series of 3-10 patches
+> that are all related and together produce something useful.  That's
+> easier for readers to digest than the same patches posted
+> incrementally over several days or weeks.
 
-On Mon, Sep 02, 2019 at 10:52:52PM +0800, Kai-Heng Feng wrote:
-> There's an xHCI device that doesn't wake when a USB 2.0 device gets
-> plugged to its USB 3.0 port. The driver's own runtime suspend callback
-> was called, PME# signaling was enabled, but it stays at PCI D0:
-> 
-> 00:10.0 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller [1022:7914] (rev 20) (prog-if 30 [XHCI])
->         Subsystem: Dell FCH USB XHCI Controller [1028:087e]
->         Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
->         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
->         Interrupt: pin A routed to IRQ 18
->         Region 0: Memory at f0b68000 (64-bit, non-prefetchable) [size=8K]
->         Capabilities: [50] Power Management version 3
->                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
->                 Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
-> 
-> A PCI device can be runtime suspended while still stays at D0 when it
-> supports D0 PME# and its ACPI _S0W method reports D0. Though plugging
-> USB 3.0 devices can wakeup the xHCI, it doesn't respond to USB 2.0
-> devices.
+Hi Bjorn,
 
-I don't think _S0W and runtime suspend are relevant here.  What *is*
-relevant is that the device advertises that it can generate PME from
-D0, and it apparently does not do so.
+Thanks for your valuable suggestion, it is very useful. In the next work,
+I will submit a series of patches as soon as possible.
 
-Table 10 in the xHCI spec r1.0, sec 4.15.2.3, says the xHC should
-assert PME# if enabled and the port's WCE bit is set.  Did you ever
-confirm that WCE is set?
+Thanks,
 
-I assume WCE *is* set because plugging in a USB3 device *does*
-generate a PME#, and I don't see anything in Table 10 that says it
-would work for USB3 but not USB2.
+Tiezhu Yang
 
-> So let's disable D0 PME capability on this device to avoid the issue.
-> 
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203673
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->  arch/x86/pci/fixup.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-> index 527e69b12002..0851a05d092f 100644
-> --- a/arch/x86/pci/fixup.c
-> +++ b/arch/x86/pci/fixup.c
-> @@ -588,6 +588,17 @@ static void pci_fixup_amd_ehci_pme(struct pci_dev *dev)
->  }
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x7808, pci_fixup_amd_ehci_pme);
->  
-> +/*
-> + * Device [1022:7914]
-> + * D0 PME# doesn't get asserted when plugging USB 2.0 device.
-> + */
-> +static void pci_fixup_amd_fch_xhci_pme(struct pci_dev *dev)
-> +{
-> +	dev_info(&dev->dev, "PME# does not work under D0, disabling it\n");
+>
+> Bjorn
 
-Use pci_info() as in the rest of the file.
-
-> +	dev->pme_support &= ~(PCI_PM_CAP_PME_D0 >> PCI_PM_CAP_PME_SHIFT);
-> +}
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x7914, pci_fixup_amd_fch_xhci_pme);
-> +
->  /*
->   * Apple MacBook Pro: Avoid [mem 0x7fa00000-0x7fbfffff]
->   *
-> -- 
-> 2.17.1
-> 
