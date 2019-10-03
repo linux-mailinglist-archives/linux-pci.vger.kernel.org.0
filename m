@@ -2,257 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 45074C984F
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2019 08:35:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BD25C9A66
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2019 11:05:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725860AbfJCGfI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Oct 2019 02:35:08 -0400
-Received: from mga12.intel.com ([192.55.52.136]:24154 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725770AbfJCGfI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Oct 2019 02:35:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 23:35:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,251,1566889200"; 
-   d="scan'208";a="205546053"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Oct 2019 23:35:06 -0700
-Received: from [10.226.39.36] (unknown [10.226.39.36])
-        by linux.intel.com (Postfix) with ESMTP id 86F485803A5;
-        Wed,  2 Oct 2019 23:35:03 -0700 (PDT)
-Subject: Re: Fwd: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas
- for the PCIe RC controller
-To:     Rob Herring <robh@kernel.org>
-References: <bf5c8a24-e969-87d4-c62b-4032273e0824@linux.intel.com>
- <b7e549bb-b46c-c393-50ac-9ef3b198fd49@linux.intel.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <655892bd-6b62-ec2b-ff85-89ca1f86326e@linux.intel.com>
-Date:   Thu, 3 Oct 2019 14:35:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1727611AbfJCJFA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Oct 2019 05:05:00 -0400
+Received: from p-mail-ext.rd.orange.com ([161.106.1.9]:46922 "EHLO
+        p-mail-ext.rd.orange.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727357AbfJCJFA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Oct 2019 05:05:00 -0400
+Received: from p-mail-ext.rd.orange.com (localhost [127.0.0.1])
+        by localhost (Postfix) with SMTP id 8A9315615AC;
+        Thu,  3 Oct 2019 12:42:01 +0200 (CEST)
+Received: from p-mail-int.rd.francetelecom.fr (p-mail-int.rd.francetelecom.fr [10.192.117.12])
+        by p-mail-ext.rd.orange.com (Postfix) with ESMTP id 8503A561596;
+        Thu,  3 Oct 2019 12:42:01 +0200 (CEST)
+Received: from p-mail-int.rd.francetelecom.fr (localhost.localdomain [127.0.0.1])
+        by localhost (Postfix) with SMTP id F084A1804EB;
+        Thu,  3 Oct 2019 11:04:45 +0200 (CEST)
+Received: from [10.193.71.64] (yd-CZC9059FTQ.rd.francetelecom.fr [10.193.71.64])
+        by p-mail-int.rd.francetelecom.fr (Postfix) with ESMTP id AFD081804B4;
+        Thu,  3 Oct 2019 11:04:45 +0200 (CEST)
+Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191001234520.GA96866@google.com>
+From:   CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>
+Message-ID: <49b0ad6d-7b6f-adbd-c4a3-5f9328a7ad9d@orange.com>
+Date:   Thu, 3 Oct 2019 11:04:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <b7e549bb-b46c-c393-50ac-9ef3b198fd49@linux.intel.com>
+In-Reply-To: <20191001234520.GA96866@google.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+X-PMX-Version: 6.4.7.2805085, Antispam-Engine: 2.7.2.2107409, Antispam-Data: 2019.10.3.85416, AntiVirus-Engine: 5.65.0, AntiVirus-Data: 2019.10.3.5650000
+X-PMX-Spam: Gauge=IIIIIIII, Probability=8%, Report='
+ MULTIPLE_RCPTS 0.1, HTML_00_01 0.05, HTML_00_10 0.05, BODY_SIZE_3000_3999 0, BODY_SIZE_5000_LESS 0, BODY_SIZE_7000_LESS 0, ECARD_WORD 0, FROM_NAME_PHRASE 0, IN_REP_TO 0, LEGITIMATE_SIGNS 0, MSG_THREAD 0, MULTIPLE_REAL_RCPTS 0, REFERENCES 0, SINGLE_URI_IN_BODY 0, URI_WITH_PATH_ONLY 0, __ANY_URI 0, __BODY_NO_MAILTO 0, __BOUNCE_CHALLENGE_SUBJ 0, __BOUNCE_NDR_SUBJ_EXEMPT 0, __CP_URI_IN_BODY 0, __CT 0, __CTE 0, __CT_TEXT_PLAIN 0, __DQ_NEG_HEUR 0, __DQ_NEG_IP 0, __FORWARDED_MSG 0, __HAS_CC_HDR 0, __HAS_FROM 0, __HAS_MSGID 0, __HAS_REFERENCES 0, __HTTPS_URI 0, __IN_REP_TO 0, __MIME_TEXT_ONLY 0, __MIME_TEXT_P 0, __MIME_TEXT_P1 0, __MIME_VERSION 0, __MOZILLA_USER_AGENT 0, __MULTIPLE_RCPTS_CC_X2 0, __NO_HTML_TAG_RAW 0, __PHISH_SPEAR_SUBJ_PREDICATE 0, __REFERENCES 0, __SANE_MSGID 0, __SINGLE_URI_TEXT 0, __SUBJ_ALPHA_END 0, __SUBJ_ALPHA_NEGATE 0, __SUBJ_REPLY 0, __TO_MALFORMED_2 0, __TO_NAME 0,
+ __TO_NAME_DIFF_FROM_ACC 0, __TO_REAL_NAMES 0, __URI_IN_BODY 0, __URI_NOT_IMG 0, __URI_NO_MAILTO 0, __URI_NO_WWW 0, __URI_NS , __URI_WITH_PATH 0, __USER_AGENT 0'
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
+Le 02/10/2019 à 01:45, Bjorn Helgaas a écrit :
+> On Fri, Apr 26, 2019 at 10:11:54AM +0200, CREGUT Pierre IMT/OLN wrote:
+>> I also initially thought that kobject_uevent generated the netlink event
+>> but this is not the case. This is generated by the specific driver in use.
+>> For the Intel i40e driver, this is the call to i40e_do_reset_safe in
+>> i40e_pci_sriov_configure that sends the event.
+>> It is followed by i40e_pci_sriov_enable that calls i40e_alloc_vfs that
+>> finally calls the generic pci_enable_sriov function.
+> I don't know anything about netlink.  The script from the bugzilla
+> (https://bugzilla.kernel.org/show_bug.cgi?id=202991) looks like it
+> runs
+>
+>    ip monitor dev enp9s0f2
+>
+> What are the actual netlink events you see?  Are they related to a
+> device being removed?
 
+We have netlink events both when num_vfs goes from 0 to N and from N to 0.
+Indeed you have to go to 0 before going to M with M != N.
+On an Intel card, when one goes from 0 to N, the netlink event is sent 
+"early". The
+value of num_vfs is still 0 and you get the impression that the number 
+of VFS has
+not changed. As the meaning of those events is overloaded, you have to 
+wait an
+arbitrary amount of time until it settles (there will be no other event).
+There is no such problem when it goes from N to 0 because of 
+implementation details
+but it may be different for another brand.
 
-On 18/9/2019 2:56 PM, Dilip Kota wrote:
-> On 9/18/2019 2:40 AM, Rob Herring wrote:
->> On Wed, Sep 04, 2019 at 06:10:30PM +0800, Dilip Kota wrote:
->>> The Intel PCIe RC controller is Synopsys Designware
->>> based PCIe core. Add YAML schemas for PCIe in RC mode
->>> present in Intel Universal Gateway soc.
->>>
->>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->>> ---
->>> changes on v3:
->>> Add the appropriate License-Identifier
->>> Rename intel,rst-interval to 'reset-assert-us'
->>> Add additionalProperties: false
->>> Rename phy-names to 'pciephy'
->>> Remove the dtsi node split of SoC and board in the example
->>> Add #interrupt-cells = <1>; or else interrupt parsing will fail
->>> Name yaml file with compatible name
->>>
->>> .../devicetree/bindings/pci/intel,lgm-pcie.yaml | 137 
->>> +++++++++++++++++++++
->>> 1 file changed, 137 insertions(+)
->>> create mode 100644 
->>> Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
->>>
->>> diff --git 
->>> a/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml 
->>> b/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
->>> new file mode 100644
->>> index 000000000000..5e5cc7fd66cd
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
->>> @@ -0,0 +1,137 @@
->>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/pci/intel-pcie.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Intel AXI bus based PCI express root complex
->>> +
->>> +maintainers:
->>> + - Dilip Kota <eswara.kota@linux.intel.com>
->>> +
->>> +properties:
->>> + compatible:
->>> + const: intel,lgm-pcie
->>> +
->>> + device_type:
->>> + const: pci
->>> +
->>> + "#address-cells":
->>> + const: 3
->>> +
->>> + "#size-cells":
->>> + const: 2
->> These all belong in a common schema.
->>
->>> +
->>> + reg:
->>> + items:
->>> + - description: Controller control and status registers.
->>> + - description: PCIe configuration registers.
->>> + - description: Controller application registers.
->>> +
->>> + reg-names:
->>> + items:
->>> + - const: dbi
->>> + - const: config
->>> + - const: app
->>> +
->>> + ranges:
->>> + description: Ranges for the PCI memory and I/O regions.
->> And this.
->>
->>> +
->>> + resets:
->>> + maxItems: 1
->>> +
->>> + clocks:
->>> + description: PCIe registers interface clock.
->>> +
->>> + phys:
->>> + maxItems: 1
->>> +
->>> + phy-names:
->>> + const: pciephy
->>> +
->>> + reset-gpios:
->>> + maxItems: 1
->>> +
->>> + num-lanes:
->>> + description: Number of lanes to use for this port.
->>> +
->>> + linux,pci-domain:
->>> + $ref: /schemas/types.yaml#/definitions/uint32
->>> + description: PCI domain ID.
->> These 2 also should be common.
->>
->>> +
->>> + interrupts:
->>> + description: PCIe core integrated miscellaneous interrupt.
->> How many? No need for description if there's only 1.
->>
->>> +
->>> + '#interrupt-cells':
->>> + const: 1
->>> +
->>> + interrupt-map-mask:
->>> + description: Standard PCI IRQ mapping properties.
->>> +
->>> + interrupt-map:
->>> + description: Standard PCI IRQ mapping properties.
->>> +
->>> + max-link-speed:
->>> + description: Specify PCI Gen for link capability.
->>> +
->>> + bus-range:
->>> + description: Range of bus numbers associated with this controller.
->> All common.
-> You mean to remove all the common schema entries description!.
-> In most of the Documention/devicetree/binding/pci documents all the 
-> common entries are described so I followed the same.
+> When we change num_VFs, I think we have to disable any existing VFs
+> before enabling the new num_VFs, so if you trigger on a netlink
+> "remove" event, I wouldn't be surprised that reading sriov_numvfs
+> would give a zero until the new VFs are enabled.
+Yes but we are speaking of the event sent when num_vfs is changed from 0 
+to N
+> [...]
+> I thought this was a good idea, but
+>
+>    - It does break the device_lock() encapsulation a little bit:
+>      sriov_numvfs_store() uses device_lock(), which happens to be
+>      implemented as "mutex_lock(&dev->mutex)", but we really shouldn't
+>      rely on that implementation, and
+The use of device_lock was the cheapest solution. It is true that lock 
+and trylock are
+exposed by device.h but not is_locked. To respect the abstraction, we 
+would have to
+lock the device (at least use trylock but it means locking when we can 
+access the
+value, in that case we may just make reading num_vfs blocking ?).
 
-If common schemas are removed, getting below warning during the 
-dt_binding_check.
+The other solution is to record the state of freshness of num_vfs but it 
+means a
+new Boolean in the pci_sriov data-structure.
 
-Documentation/devicetree/bindings/pci/intel,lgm-pcie.example.dt.yaml: 
-pcie@d0e00000: '#address-cells', '#interrupt-cells', '#size-cells', 
-'bus-range', 'device_type', 'interrupt-map', 'interrupt-map-mask', 
-'interrupt-parent', 'linux,pci-domain', 'ranges', 'reset-gpios' do not 
-match any of the regexes: 'pinctrl-[0-9]+'
+>    - The netlink events are being generated via the NIC driver, and I'm
+>      a little hesitant about changing the PCI core to deal with timing
+>      issues "over there".
 
-Regards,
-Dilip
+NIC drivers send netlink events when their state change, but it is the 
+core that changes
+the value of num_vfs. So I would think it is the core responsibility to 
+make sure the
+exposed value makes sense and it would be better to ignore the details 
+of the driver
+implementation.
+That is why the initial patch moving when the value was updated was 
+finally not
+such a good idea.
 
->>
->>> +
->>> + reset-assert-ms:
->>> + description: |
->>> + Device reset interval in ms.
->>> + Some devices need an interval upto 500ms. By default it is 100ms.
->> This is a property of a device, so it belongs in a device node. How
->> would you deal with this without DT?
-> This property is for the PCIe RC to keep a delay before notifying the 
-> reset to the device.
-> If this entry is not present, PCIe driver will set a default value of 
-> 100ms.
->>
->>> +
->>> +required:
->>> + - compatible
->>> + - device_type
->>> + - reg
->>> + - reg-names
->>> + - ranges
->>> + - resets
->>> + - clocks
->>> + - phys
->>> + - phy-names
->>> + - reset-gpios
->>> + - num-lanes
->>> + - linux,pci-domain
->>> + - interrupts
->>> + - interrupt-map
->>> + - interrupt-map-mask
->>> +
->>> +additionalProperties: false
->>> +
->>> +examples:
->>> + - |
->>> + pcie10:pcie@d0e00000 {
->>> + compatible = "intel,lgm-pcie";
->>> + device_type = "pci";
->>> + #address-cells = <3>;
->>> + #size-cells = <2>;
->>> + reg = <
->>> + 0xd0e00000 0x1000
->>> + 0xd2000000 0x800000
->>> + 0xd0a41000 0x1000
->>> + >;
->>> + reg-names = "dbi", "config", "app";
->>> + linux,pci-domain = <0>;
->>> + max-link-speed = <4>;
->>> + bus-range = <0x00 0x08>;
->>> + interrupt-parent = <&ioapic1>;
->>> + interrupts = <67 1>;
->>> + #interrupt-cells = <1>;
->>> + interrupt-map-mask = <0 0 0 0x7>;
->>> + interrupt-map = <0 0 0 1 &ioapic1 27 1>,
->>> + <0 0 0 2 &ioapic1 28 1>,
->>> + <0 0 0 3 &ioapic1 29 1>,
->>> + <0 0 0 4 &ioapic1 30 1>;
->>> + ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
->>> + resets = <&rcu0 0x50 0>;
->>> + clocks = <&cgu0 LGM_GCLK_PCIE10>;
->>> + phys = <&cb0phy0>;
->>> + phy-names = "pciephy";
->>> + status = "okay";
->>> + reset-assert-ms = <500>;
->>> + reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
->>> + num-lanes = <2>;
->>> + };
->>> -- 2.11.0
->>>
+[...]
