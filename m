@@ -2,118 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BD25C9A66
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2019 11:05:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DBD2C9A74
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2019 11:10:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfJCJFA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Oct 2019 05:05:00 -0400
-Received: from p-mail-ext.rd.orange.com ([161.106.1.9]:46922 "EHLO
-        p-mail-ext.rd.orange.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727357AbfJCJFA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Oct 2019 05:05:00 -0400
-Received: from p-mail-ext.rd.orange.com (localhost [127.0.0.1])
-        by localhost (Postfix) with SMTP id 8A9315615AC;
-        Thu,  3 Oct 2019 12:42:01 +0200 (CEST)
-Received: from p-mail-int.rd.francetelecom.fr (p-mail-int.rd.francetelecom.fr [10.192.117.12])
-        by p-mail-ext.rd.orange.com (Postfix) with ESMTP id 8503A561596;
-        Thu,  3 Oct 2019 12:42:01 +0200 (CEST)
-Received: from p-mail-int.rd.francetelecom.fr (localhost.localdomain [127.0.0.1])
-        by localhost (Postfix) with SMTP id F084A1804EB;
-        Thu,  3 Oct 2019 11:04:45 +0200 (CEST)
-Received: from [10.193.71.64] (yd-CZC9059FTQ.rd.francetelecom.fr [10.193.71.64])
-        by p-mail-int.rd.francetelecom.fr (Postfix) with ESMTP id AFD081804B4;
-        Thu,  3 Oct 2019 11:04:45 +0200 (CEST)
-Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191001234520.GA96866@google.com>
-From:   CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>
-Message-ID: <49b0ad6d-7b6f-adbd-c4a3-5f9328a7ad9d@orange.com>
-Date:   Thu, 3 Oct 2019 11:04:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728763AbfJCJKu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Oct 2019 05:10:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51290 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727912AbfJCJKu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Oct 2019 05:10:50 -0400
+Received: from X250 (li937-157.members.linode.com [45.56.119.157])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FAA3217D7;
+        Thu,  3 Oct 2019 09:10:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570093849;
+        bh=MMxJEs96BVXDKmKuJCphNcJwHlAfmZsNg6vA8HtDNS0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z8S71spy+Xp8DisodNAuE7wi8wIsa9qQOR+VeMzwJLbpw4Dz2CBl4oDhZUZg7KyCI
+         jKIATNnmJs4DhCYtb3wotBj33BxFRZNeLBIbIBtbocDEhzMwCTQxJd7mBGOpEAFDOG
+         rXAe6mVQ6Y0Su2CLdU80pQ4UTH4eE+qWy+ExCBTc=
+Date:   Thu, 3 Oct 2019 17:10:33 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com,
+        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+        lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Subject: Re: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
+Message-ID: <20191003091019.GB22491@X250>
+References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
+ <20190902034319.14026-3-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20191001234520.GA96866@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-PMX-Version: 6.4.7.2805085, Antispam-Engine: 2.7.2.2107409, Antispam-Data: 2019.10.3.85416, AntiVirus-Engine: 5.65.0, AntiVirus-Data: 2019.10.3.5650000
-X-PMX-Spam: Gauge=IIIIIIII, Probability=8%, Report='
- MULTIPLE_RCPTS 0.1, HTML_00_01 0.05, HTML_00_10 0.05, BODY_SIZE_3000_3999 0, BODY_SIZE_5000_LESS 0, BODY_SIZE_7000_LESS 0, ECARD_WORD 0, FROM_NAME_PHRASE 0, IN_REP_TO 0, LEGITIMATE_SIGNS 0, MSG_THREAD 0, MULTIPLE_REAL_RCPTS 0, REFERENCES 0, SINGLE_URI_IN_BODY 0, URI_WITH_PATH_ONLY 0, __ANY_URI 0, __BODY_NO_MAILTO 0, __BOUNCE_CHALLENGE_SUBJ 0, __BOUNCE_NDR_SUBJ_EXEMPT 0, __CP_URI_IN_BODY 0, __CT 0, __CTE 0, __CT_TEXT_PLAIN 0, __DQ_NEG_HEUR 0, __DQ_NEG_IP 0, __FORWARDED_MSG 0, __HAS_CC_HDR 0, __HAS_FROM 0, __HAS_MSGID 0, __HAS_REFERENCES 0, __HTTPS_URI 0, __IN_REP_TO 0, __MIME_TEXT_ONLY 0, __MIME_TEXT_P 0, __MIME_TEXT_P1 0, __MIME_VERSION 0, __MOZILLA_USER_AGENT 0, __MULTIPLE_RCPTS_CC_X2 0, __NO_HTML_TAG_RAW 0, __PHISH_SPEAR_SUBJ_PREDICATE 0, __REFERENCES 0, __SANE_MSGID 0, __SINGLE_URI_TEXT 0, __SUBJ_ALPHA_END 0, __SUBJ_ALPHA_NEGATE 0, __SUBJ_REPLY 0, __TO_MALFORMED_2 0, __TO_NAME 0,
- __TO_NAME_DIFF_FROM_ACC 0, __TO_REAL_NAMES 0, __URI_IN_BODY 0, __URI_NOT_IMG 0, __URI_NO_MAILTO 0, __URI_NO_WWW 0, __URI_NS , __URI_WITH_PATH 0, __USER_AGENT 0'
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902034319.14026-3-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Le 02/10/2019 à 01:45, Bjorn Helgaas a écrit :
-> On Fri, Apr 26, 2019 at 10:11:54AM +0200, CREGUT Pierre IMT/OLN wrote:
->> I also initially thought that kobject_uevent generated the netlink event
->> but this is not the case. This is generated by the specific driver in use.
->> For the Intel i40e driver, this is the call to i40e_do_reset_safe in
->> i40e_pci_sriov_configure that sends the event.
->> It is followed by i40e_pci_sriov_enable that calls i40e_alloc_vfs that
->> finally calls the generic pci_enable_sriov function.
-> I don't know anything about netlink.  The script from the bugzilla
-> (https://bugzilla.kernel.org/show_bug.cgi?id=202991) looks like it
-> runs
->
->    ip monitor dev enp9s0f2
->
-> What are the actual netlink events you see?  Are they related to a
-> device being removed?
+On Mon, Sep 02, 2019 at 11:43:19AM +0800, Xiaowei Bao wrote:
+> Add support for the LS1028a PCIe controller.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+> v2:
+>  - No change.
+> v3:
+>  - Reuse the ls2088 driver data structurt.
+> v4:
+>  - No change.
+> v5:
+>  - No change.
+> v6:
+>  - No change.
+> 
+>  drivers/pci/controller/dwc/pci-layerscape.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+> index 3a5fa26..f24f79a 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
+> @@ -263,6 +263,7 @@ static const struct ls_pcie_drvdata ls2088_drvdata = {
+>  static const struct of_device_id ls_pcie_of_match[] = {
+>  	{ .compatible = "fsl,ls1012a-pcie", .data = &ls1046_drvdata },
+>  	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021_drvdata },
+> +	{ .compatible = "fsl,ls1028a-pcie", .data = &ls2088_drvdata },
 
-We have netlink events both when num_vfs goes from 0 to N and from N to 0.
-Indeed you have to go to 0 before going to M with M != N.
-On an Intel card, when one goes from 0 to N, the netlink event is sent 
-"early". The
-value of num_vfs is still 0 and you get the impression that the number 
-of VFS has
-not changed. As the meaning of those events is overloaded, you have to 
-wait an
-arbitrary amount of time until it settles (there will be no other event).
-There is no such problem when it goes from N to 0 because of 
-implementation details
-but it may be different for another brand.
+I think you can save this driver change by using "fsl,ls2088a-pcie" as
+compatible fallback like below.
 
-> When we change num_VFs, I think we have to disable any existing VFs
-> before enabling the new num_VFs, so if you trigger on a netlink
-> "remove" event, I wouldn't be surprised that reading sriov_numvfs
-> would give a zero until the new VFs are enabled.
-Yes but we are speaking of the event sent when num_vfs is changed from 0 
-to N
-> [...]
-> I thought this was a good idea, but
->
->    - It does break the device_lock() encapsulation a little bit:
->      sriov_numvfs_store() uses device_lock(), which happens to be
->      implemented as "mutex_lock(&dev->mutex)", but we really shouldn't
->      rely on that implementation, and
-The use of device_lock was the cheapest solution. It is true that lock 
-and trylock are
-exposed by device.h but not is_locked. To respect the abstraction, we 
-would have to
-lock the device (at least use trylock but it means locking when we can 
-access the
-value, in that case we may just make reading num_vfs blocking ?).
+  compatible = "fsl,ls1028a-pcie", "fsl,ls2088a-pcie";
 
-The other solution is to record the state of freshness of num_vfs but it 
-means a
-new Boolean in the pci_sriov data-structure.
+Shawn
 
->    - The netlink events are being generated via the NIC driver, and I'm
->      a little hesitant about changing the PCI core to deal with timing
->      issues "over there".
-
-NIC drivers send netlink events when their state change, but it is the 
-core that changes
-the value of num_vfs. So I would think it is the core responsibility to 
-make sure the
-exposed value makes sense and it would be better to ignore the details 
-of the driver
-implementation.
-That is why the initial patch moving when the value was updated was 
-finally not
-such a good idea.
-
-[...]
+>  	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043_drvdata },
+>  	{ .compatible = "fsl,ls1046a-pcie", .data = &ls1046_drvdata },
+>  	{ .compatible = "fsl,ls2080a-pcie", .data = &ls2080_drvdata },
+> -- 
+> 2.9.5
+> 
