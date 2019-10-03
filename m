@@ -2,142 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F76ECB1EE
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2019 00:36:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 189EBCB1F0
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2019 00:37:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbfJCWg5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Oct 2019 18:36:57 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35879 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfJCWg5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Oct 2019 18:36:57 -0400
-Received: by mail-qt1-f196.google.com with SMTP id o12so5979961qtf.3
-        for <linux-pci@vger.kernel.org>; Thu, 03 Oct 2019 15:36:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=itG42API114huksgPQAHb88tSFIwWsAom19B6aoA+Qs=;
-        b=gIprMk8LelWg0uG/qfXeYCxNyxqYw9kTOe6Nwb6sO/SKr/62XIGhhY97GPaeuHbUU7
-         v8spLpK53iQXvC1sP3v/H2kNGQeNpcWMJUGYEHwVu58UrT8XfD+luRiWfjNXgmCtn7IT
-         6+AqMtubm/j7ah9AjiC+XqFP0+FgcIIgXmRkNrkGJCYibolqgVlaPPPzRDuZXlVjQMMd
-         Gf9zH3b4ebzGoAKIBFnVWPg1zL41TQlPX2rcCwJpR/HjE5sP8kOjOnMm+BeZOzav1D4W
-         1Xr1mcYvDlrs6gVvscSeoUqioGBkx77gfq+z6Mdl3OGExL73lZ+QlO4PXKdq0Agi2Nzb
-         iYqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=itG42API114huksgPQAHb88tSFIwWsAom19B6aoA+Qs=;
-        b=Hlih+BKcVINQ0l7ChPRa5tWSow62MkSjFsTOuOnLQLrOeVpoGgwew0R8M6cqAY3X9v
-         sJe1QZ4p8AKrfg3qZIrZIRdpywRRsh5ux1g0Xj7HlDC1nM3g14UXpsGfaq0ZptZ5SfND
-         wF4RWQqq8l0m8q5Y7K803qBJDFlhZBXYN5k5sFVzXQea+Sxsi6nyvpTGBbpqJThlu5DN
-         cYr6HUPwt8DHej9qPYC5GG0NH+ooWaC8j8ey+SrfB4B2ss81+TewlrP4vGGrfAProkeM
-         I0WTOg7RZC3NVdu0wu4KcznY7ZDectj5fNmggW/O41+TMCVezBJQMI9oCSu8H3fPPEm7
-         DuJA==
-X-Gm-Message-State: APjAAAXlzqtrHjWtDaWk+JThOw7TXIYBpsO5zfeJBl1N4LbL+BsT0MfL
-        MPUhhoNdVkr6VbG3XEsXnWyDsw==
-X-Google-Smtp-Source: APXvYqyJBL+Cwi7BNLxtZ/+uwGi0Sj7J6xZpTOr7ZfIMu6Q0WNIhJOV/vsOOtOMwEEfUfB0zGLoZPQ==
-X-Received: by 2002:ac8:5543:: with SMTP id o3mr12730023qtr.129.1570142215973;
-        Thu, 03 Oct 2019 15:36:55 -0700 (PDT)
-Received: from cakuba.hsd1.ca.comcast.net ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id z20sm2088520qtu.91.2019.10.03.15.36.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 15:36:55 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 15:36:48 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Donald Dutile <ddutile@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@intel.com>
+        id S1730611AbfJCWht (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Oct 2019 18:37:49 -0400
+Received: from mga06.intel.com ([134.134.136.31]:52264 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727302AbfJCWhs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Oct 2019 18:37:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 15:37:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,254,1566889200"; 
+   d="scan'208";a="182529271"
+Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
+  by orsmga007.jf.intel.com with ESMTP; 03 Oct 2019 15:37:47 -0700
+Received: from orsmsx158.amr.corp.intel.com (10.22.240.20) by
+ ORSMSX103.amr.corp.intel.com (10.22.225.130) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 3 Oct 2019 15:37:47 -0700
+Received: from orsmsx114.amr.corp.intel.com ([169.254.8.55]) by
+ ORSMSX158.amr.corp.intel.com ([169.254.10.46]) with mapi id 14.03.0439.000;
+ Thu, 3 Oct 2019 15:37:47 -0700
+From:   "Duyck, Alexander H" <alexander.h.duyck@intel.com>
+To:     "helgaas@kernel.org" <helgaas@kernel.org>,
+        "pierre.cregut@orange.com" <pierre.cregut@orange.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        "ddutile@redhat.com" <ddutile@redhat.com>
 Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
-Message-ID: <20191003153648.786ad0bf@cakuba.hsd1.ca.comcast.net>
+Thread-Topic: [PATCH] PCI/IOV: update num_VFs earlier
+Thread-Index: AQHVejdUPh/K89cDKEGw9NB+Xkpy3adJ90QA
+Date:   Thu, 3 Oct 2019 22:37:46 +0000
+Message-ID: <130e73dc54db174e4c7e4267aceee78c246986d6.camel@intel.com>
+References: <20191003221007.GA209602@google.com>
 In-Reply-To: <20191003221007.GA209602@google.com>
-References: <49b0ad6d-7b6f-adbd-c4a3-5f9328a7ad9d@orange.com>
-        <20191003221007.GA209602@google.com>
-Organization: Netronome Systems, Ltd.
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.7.198.76]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B98741D274E8E845BA274650FAD61993@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 3 Oct 2019 17:10:07 -0500, Bjorn Helgaas wrote:
-> On Thu, Oct 03, 2019 at 11:04:45AM +0200, CREGUT Pierre IMT/OLN wrote:
-> > Le 02/10/2019 =C3=A0 01:45, Bjorn Helgaas a =C3=A9crit=C2=A0: =20
-> > > On Fri, Apr 26, 2019 at 10:11:54AM +0200, CREGUT Pierre IMT/OLN wrote=
-: =20
-> > > > I also initially thought that kobject_uevent generated the netlink =
-event
-> > > > but this is not the case. This is generated by the specific driver =
-in use.
-> > > > For the Intel i40e driver, this is the call to i40e_do_reset_safe in
-> > > > i40e_pci_sriov_configure that sends the event.
-> > > > It is followed by i40e_pci_sriov_enable that calls i40e_alloc_vfs t=
-hat
-> > > > finally calls the generic pci_enable_sriov function. =20
-> > > I don't know anything about netlink.  The script from the bugzilla
-> > > (https://bugzilla.kernel.org/show_bug.cgi?id=3D202991) looks like it
-> > > runs
-> > >=20
-> > >    ip monitor dev enp9s0f2
-> > >=20
-> > > What are the actual netlink events you see?  Are they related to a
-> > > device being removed? =20
-> >=20
-> > We have netlink events both when num_vfs goes from 0 to N and from N to=
- 0.
-> > Indeed you have to go to 0 before going to M with M !=3D N. =20
->=20
-> Right.
-
-FWIW I think this netlink event is an artefact of i40e implementation,
-and is not something the networking stack generates. Hopefully Alex can
-correct me if I'm wrong, but I don't think most drivers will generate
-such an event.
-
-> commit 0940fc95da45
-> Author: Pierre Cr=C3=A9gut <pierre.cregut@orange.com>
-> Date:   Wed Sep 11 09:27:36 2019 +0200
->=20
->     PCI/IOV: Serialize sysfs sriov_numvfs reads vs writes
->    =20
->     When sriov_numvfs is being updated, drivers may notify about new devi=
-ces
->     before they are reflected in sriov->num_VFs, so concurrent sysfs reads
->     previously returned stale values.
->    =20
->     Serialize the sysfs read vs the write so the read returns the correct
->     num_VFs value.
->    =20
->     Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D202991
->     Link: https://lore.kernel.org/r/20190911072736.32091-1-pierre.cregut@=
-orange.com
->     Signed-off-by: Pierre Cr=C3=A9gut <pierre.cregut@orange.com>
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->=20
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index b3f972e8cfed..e77562aabbae 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -254,8 +254,14 @@ static ssize_t sriov_numvfs_show(struct device *dev,
->  				 char *buf)
->  {
->  	struct pci_dev *pdev =3D to_pci_dev(dev);
-> +	u16 num_vfs;
-> +
-> +	/* Serialize vs sriov_numvfs_store() so readers see valid num_VFs */
-> +	device_lock(&pdev->dev);
-> +	num_vfs =3D pdev->sriov->num_VFs;
-> +	device_lock(&pdev->dev);
-> =20
-> -	return sprintf(buf, "%u\n", pdev->sriov->num_VFs);
-> +	return sprintf(buf, "%u\n", num_vfs);
->  }
-> =20
->  /*
-
-The change makes sense to me!
+T24gVGh1LCAyMDE5LTEwLTAzIGF0IDE3OjEwIC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
+PiBbK2NjIERvbiwgQWxleCwgSmFrdWJdDQo+IA0KPiBPbiBUaHUsIE9jdCAwMywgMjAxOSBhdCAx
+MTowNDo0NUFNICswMjAwLCBDUkVHVVQgUGllcnJlIElNVC9PTE4gd3JvdGU6DQo+ID4gTGUgMDIv
+MTAvMjAxOSDDoCAwMTo0NSwgQmpvcm4gSGVsZ2FhcyBhIMOpY3JpdCA6DQo+ID4gPiBPbiBGcmks
+IEFwciAyNiwgMjAxOSBhdCAxMDoxMTo1NEFNICswMjAwLCBDUkVHVVQgUGllcnJlIElNVC9PTE4g
+d3JvdGU6DQo+ID4gPiA+IEkgYWxzbyBpbml0aWFsbHkgdGhvdWdodCB0aGF0IGtvYmplY3RfdWV2
+ZW50IGdlbmVyYXRlZCB0aGUgbmV0bGluayBldmVudA0KPiA+ID4gPiBidXQgdGhpcyBpcyBub3Qg
+dGhlIGNhc2UuIFRoaXMgaXMgZ2VuZXJhdGVkIGJ5IHRoZSBzcGVjaWZpYyBkcml2ZXIgaW4gdXNl
+Lg0KPiA+ID4gPiBGb3IgdGhlIEludGVsIGk0MGUgZHJpdmVyLCB0aGlzIGlzIHRoZSBjYWxsIHRv
+IGk0MGVfZG9fcmVzZXRfc2FmZSBpbg0KPiA+ID4gPiBpNDBlX3BjaV9zcmlvdl9jb25maWd1cmUg
+dGhhdCBzZW5kcyB0aGUgZXZlbnQuDQo+ID4gPiA+IEl0IGlzIGZvbGxvd2VkIGJ5IGk0MGVfcGNp
+X3NyaW92X2VuYWJsZSB0aGF0IGNhbGxzIGk0MGVfYWxsb2NfdmZzIHRoYXQNCj4gPiA+ID4gZmlu
+YWxseSBjYWxscyB0aGUgZ2VuZXJpYyBwY2lfZW5hYmxlX3NyaW92IGZ1bmN0aW9uLg0KPiA+ID4g
+SSBkb24ndCBrbm93IGFueXRoaW5nIGFib3V0IG5ldGxpbmsuICBUaGUgc2NyaXB0IGZyb20gdGhl
+IGJ1Z3ppbGxhDQo+ID4gPiAoaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3Nob3dfYnVnLmNn
+aT9pZD0yMDI5OTEpIGxvb2tzIGxpa2UgaXQNCj4gPiA+IHJ1bnMNCj4gPiA+IA0KPiA+ID4gICAg
+aXAgbW9uaXRvciBkZXYgZW5wOXMwZjINCj4gPiA+IA0KPiA+ID4gV2hhdCBhcmUgdGhlIGFjdHVh
+bCBuZXRsaW5rIGV2ZW50cyB5b3Ugc2VlPyAgQXJlIHRoZXkgcmVsYXRlZCB0byBhDQo+ID4gPiBk
+ZXZpY2UgYmVpbmcgcmVtb3ZlZD8NCj4gPiANCj4gPiBXZSBoYXZlIG5ldGxpbmsgZXZlbnRzIGJv
+dGggd2hlbiBudW1fdmZzIGdvZXMgZnJvbSAwIHRvIE4gYW5kIGZyb20gTiB0byAwLg0KPiA+IElu
+ZGVlZCB5b3UgaGF2ZSB0byBnbyB0byAwIGJlZm9yZSBnb2luZyB0byBNIHdpdGggTSAhPSBOLg0K
+PiANCj4gUmlnaHQuDQoNCkl0IGRvZXNuJ3QgbWFrZSBzZW5zZSB0byBtb25pdG9yIG5ldGxpbmsg
+Zm9yIFNSLUlPViBjaGFuZ2VzLiBBbGwgeW91IGFyZQ0KY2F0Y2hpbmcgaXMgdGhlIGluY2lkZW50
+YWwgZWZmZWN0IG9mIHRoZSByZXNldCBjYXVzaW5nIHRoZSBsaW5rIHRvIGJvdW5jZS4NCg0KRm9y
+IGV4YW1wbGUgaWYgeW91IHJ1biAiaXAgbGluayBzZXQgZW5wOXMwZjIgZG93biIgYW5kIHRoZW4g
+cnVuIHlvdXIgdGVzdA0KeW91IHdpbGwgbmV2ZXIgZ2V0IGFueSBub3RpZmljYXRpb25zIHdoZW4g
+eW91IGFsdGVyIHRoZSBudW1fdmZzIGJlY2F1c2UNCnRoZSBsaW5rIHdvbid0IGJvdW5jZSBiZWNh
+dXNlIHRoZSBsaW5rIGlzIGFscmVhZHkgZG93bi4NCg0KSXQgaXNuJ3Qgc3VycHJpc2luZyB0aGF0
+IHlvdSB3b3VsZCBzZWUgbm8gVkZzIGVuYWJsZWQgYXMgdGhlIGFjdCBvZg0KYnJpbmdpbmcgZG93
+biB0aGUgaW50ZXJmYWNlIHRvIHJlY29uZmlndXJlIGl0IHdpbGwgZ2l2ZSB5b3UgYSBuZXRsaW5r
+DQpldmVudC4gQXQgdGhhdCBwb2ludCB3ZSBoYXZlbid0IGV2ZW4gZW5hYmxlZCBTUi1JT1YgeWV0
+LCB3ZSB3ZXJlIGp1c3QNCnNodXR0aW5nIGRvd24gdGhlIGV4aXN0aW5nIGNvbmZpZyBiZWZvcmUg
+d2UgYXR0ZW1wdCB0byBlbmFibGUgU1ItSU9WLg0KDQo+ID4gT24gYW4gSW50ZWwgY2FyZCwgd2hl
+biBvbmUgZ29lcyBmcm9tIDAgdG8gTiwgdGhlIG5ldGxpbmsgZXZlbnQgaXMNCj4gPiBzZW50ICJl
+YXJseSIuIFRoZSB2YWx1ZSBvZiBudW1fdmZzIGlzIHN0aWxsIDAgYW5kIHlvdSBnZXQgdGhlDQo+
+ID4gaW1wcmVzc2lvbiB0aGF0IHRoZSBudW1iZXIgb2YgVkZTIGhhcyBub3QgY2hhbmdlZC4gQXMg
+dGhlIG1lYW5pbmcgb2YNCj4gPiB0aG9zZSBldmVudHMgaXMgb3ZlcmxvYWRlZCwgeW91IGhhdmUg
+dG8gd2FpdCBhbiBhcmJpdHJhcnkgYW1vdW50IG9mDQo+ID4gdGltZSB1bnRpbCBpdCBzZXR0bGVz
+ICh0aGVyZSB3aWxsIGJlIG5vIG90aGVyIGV2ZW50KS4gIFRoZXJlIGlzIG5vDQo+ID4gc3VjaCBw
+cm9ibGVtIHdoZW4gaXQgZ29lcyBmcm9tIE4gdG8gMCBiZWNhdXNlIG9mIGltcGxlbWVudGF0aW9u
+DQo+ID4gZGV0YWlscyBidXQgaXQgbWF5IGJlIGRpZmZlcmVudCBmb3IgYW5vdGhlciBicmFuZC4N
+Cj4gDQo+IEkgaGFkbid0IGxvb2tlZCBmYXIgZW5vdWdoLiAgSSB0aGluayB0aGUgInJlbW92ZSIg
+bmV0bGluayBldmVudHMgYXJlDQo+IHByb2JhYmx5IGZyb20gdGhlIGk0MGVfZG9fcmVzZXRfc2Fm
+ZSgpIHBhdGgsIHdoaWNoIGV2ZW50dWFsbHkgY2FsbHMNCj4gZnJlZV9uZXRkZXYoKSBhbmQgcHV0
+X2RldmljZSgpLg0KPiANCj4gVGhlIHBjaV9lbmFibGVfc3Jpb3YoKSBwYXRoIGNhbGxzIHRoZSBk
+cml2ZXIncyAtPnByb2JlIG1ldGhvZCwgYW5kIEkNCj4gc3VzcGVjdCB0aGUgImFkZCIgbmV0bGlu
+ayBldmVudHMgYXJlIGVtaXR0ZWQgdGhlcmUuDQoNClNvIHRoZSBpc3N1ZSBhcyBJIHNlZSBpdCBp
+cyB0aGF0IHRoaXMgaXMgYSBuYWl2ZSBhcHByb2FjaCB0byBob3cgdG8NCm1vbml0b3IgZm9yIFZG
+cyBiZWluZyBhZGRlZCBvciByZW1vdmVkLiBBbGwgdGhlIHNjcmlwdCBpbiB0aGUgYnVnemlsbGEN
+CnJlYWxseSBkb2VzIGlzIGNhdGNoIHJlc2V0cyB3aGVuIHRoZSBpbnRlcmZhY2UgaXMgdXAuDQoN
+CklkZWFsbHkgd2Ugc2hvdWxkbid0IGV2ZW4gaGF2ZSB0aGUgZHJpdmVyIGhhdmUgdG8gZG8gdGhl
+IHJlc2V0IGV4Y2VwdCBmb3INCnRoZSBmYWN0IHRoYXQgaXQgaGFzIHRvIHJlLXBhcnRpdGlvbiB0
+aGUgZGV2aWNlIHRvIHNwbGl0IHVwIHJlc291cmNlcy4NCg0KPiA+ID4gV2hlbiB3ZSBjaGFuZ2Ug
+bnVtX1ZGcywgSSB0aGluayB3ZSBoYXZlIHRvIGRpc2FibGUgYW55IGV4aXN0aW5nIFZGcw0KPiA+
+ID4gYmVmb3JlIGVuYWJsaW5nIHRoZSBuZXcgbnVtX1ZGcywgc28gaWYgeW91IHRyaWdnZXIgb24g
+YSBuZXRsaW5rDQo+ID4gPiAicmVtb3ZlIiBldmVudCwgSSB3b3VsZG4ndCBiZSBzdXJwcmlzZWQg
+dGhhdCByZWFkaW5nIHNyaW92X251bXZmcw0KPiA+ID4gd291bGQgZ2l2ZSBhIHplcm8gdW50aWwg
+dGhlIG5ldyBWRnMgYXJlIGVuYWJsZWQuDQo+ID4gWWVzIGJ1dCB3ZSBhcmUgc3BlYWtpbmcgb2Yg
+dGhlIGV2ZW50IHNlbnQgd2hlbiBudW1fdmZzIGlzIGNoYW5nZWQgZnJvbSAwIHRvDQo+ID4gTg0K
+PiA+ID4gWy4uLl0NCj4gPiA+IEkgdGhvdWdodCB0aGlzIHdhcyBhIGdvb2QgaWRlYSwgYnV0DQo+
+ID4gPiANCj4gPiA+ICAgIC0gSXQgZG9lcyBicmVhayB0aGUgZGV2aWNlX2xvY2soKSBlbmNhcHN1
+bGF0aW9uIGEgbGl0dGxlIGJpdDoNCj4gPiA+ICAgICAgc3Jpb3ZfbnVtdmZzX3N0b3JlKCkgdXNl
+cyBkZXZpY2VfbG9jaygpLCB3aGljaCBoYXBwZW5zIHRvIGJlDQo+ID4gPiAgICAgIGltcGxlbWVu
+dGVkIGFzICJtdXRleF9sb2NrKCZkZXYtPm11dGV4KSIsIGJ1dCB3ZSByZWFsbHkgc2hvdWxkbid0
+DQo+ID4gPiAgICAgIHJlbHkgb24gdGhhdCBpbXBsZW1lbnRhdGlvbiwgYW5kDQo+ID4gVGhlIHVz
+ZSBvZiBkZXZpY2VfbG9jayB3YXMgdGhlIGNoZWFwZXN0IHNvbHV0aW9uLiBJdCBpcyB0cnVlIHRo
+YXQNCj4gPiBsb2NrIGFuZCB0cnlsb2NrIGFyZSBleHBvc2VkIGJ5IGRldmljZS5oIGJ1dCBub3Qg
+aXNfbG9ja2VkLiBUbw0KPiA+IHJlc3BlY3QgdGhlIGFic3RyYWN0aW9uLCB3ZSB3b3VsZCBoYXZl
+IHRvIGxvY2sgdGhlIGRldmljZSAoYXQgbGVhc3QNCj4gPiB1c2UgdHJ5bG9jayBidXQgaXQgbWVh
+bnMgbG9ja2luZyB3aGVuIHdlIGNhbiBhY2Nlc3MgdGhlIHZhbHVlLCBpbg0KPiA+IHRoYXQgY2Fz
+ZSB3ZSBtYXkganVzdCBtYWtlIHJlYWRpbmcgbnVtX3ZmcyBibG9ja2luZyA/KS4NCj4gPiANCj4g
+PiBUaGUgb3RoZXIgc29sdXRpb24gaXMgdG8gcmVjb3JkIHRoZSBzdGF0ZSBvZiBmcmVzaG5lc3Mg
+b2YgbnVtX3Zmcw0KPiA+IGJ1dCBpdCBtZWFucyBhIG5ldyBCb29sZWFuIGluIHRoZSBwY2lfc3Jp
+b3YgZGF0YS1zdHJ1Y3R1cmUuDQo+ID4gPiAgICAtIFRoZSBuZXRsaW5rIGV2ZW50cyBhcmUgYmVp
+bmcgZ2VuZXJhdGVkIHZpYSB0aGUgTklDIGRyaXZlciwgYW5kIEknbQ0KPiA+ID4gICAgICBhIGxp
+dHRsZSBoZXNpdGFudCBhYm91dCBjaGFuZ2luZyB0aGUgUENJIGNvcmUgdG8gZGVhbCB3aXRoIHRp
+bWluZw0KPiA+ID4gICAgICBpc3N1ZXMgIm92ZXIgdGhlcmUiLg0KPiA+IA0KPiA+IE5JQyBkcml2
+ZXJzIHNlbmQgbmV0bGluayBldmVudHMgd2hlbiB0aGVpciBzdGF0ZSBjaGFuZ2UsIGJ1dCBpdCBp
+cw0KPiA+IHRoZSBjb3JlIHRoYXQgY2hhbmdlcyB0aGUgdmFsdWUgb2YgbnVtX3Zmcy4gU28gSSB3
+b3VsZCB0aGluayBpdCBpcw0KPiA+IHRoZSBjb3JlIHJlc3BvbnNpYmlsaXR5IHRvIG1ha2Ugc3Vy
+ZSB0aGUgZXhwb3NlZCB2YWx1ZSBtYWtlcyBzZW5zZQ0KPiA+IGFuZCBpdCB3b3VsZCBiZSBiZXR0
+ZXIgdG8gaWdub3JlIHRoZSBkZXRhaWxzIG9mIHRoZSBkcml2ZXINCj4gPiBpbXBsZW1lbnRhdGlv
+bi4NCj4gDQo+IFllcywgSSB0aGluayB5b3UncmUgcmlnaHQuICBBbmQgSSBsaWtlIHlvdXIgcHJl
+dmlvdXMgc3VnZ2VzdGlvbiBvZg0KPiBqdXN0IGxvY2tpbmcgdGhlIGRldmljZSBpbiB0aGUgcmVh
+ZGVyLiAgSSdtIG5vdCBlbm91Z2ggb2YgYSBzeXNmcw0KPiBleHBlcnQgdG8ga25vdyBpZiB0aGVy
+ZSdzIGEgZ29vZCByZWFzb24gdG8gYXZvaWQgYSBsb2NrIHRoZXJlLiAgRG9lcw0KPiB0aGUgZm9s
+bG93aW5nIGxvb2sgcmVhc29uYWJsZSB0byB5b3U/DQo+IA0KPiANCj4gY29tbWl0IDA5NDBmYzk1
+ZGE0NQ0KPiBBdXRob3I6IFBpZXJyZSBDcsOpZ3V0IDxwaWVycmUuY3JlZ3V0QG9yYW5nZS5jb20+
+DQo+IERhdGU6ICAgV2VkIFNlcCAxMSAwOToyNzozNiAyMDE5ICswMjAwDQo+IA0KPiAgICAgUENJ
+L0lPVjogU2VyaWFsaXplIHN5c2ZzIHNyaW92X251bXZmcyByZWFkcyB2cyB3cml0ZXMNCj4gICAg
+IA0KPiAgICAgV2hlbiBzcmlvdl9udW12ZnMgaXMgYmVpbmcgdXBkYXRlZCwgZHJpdmVycyBtYXkg
+bm90aWZ5IGFib3V0IG5ldyBkZXZpY2VzDQo+ICAgICBiZWZvcmUgdGhleSBhcmUgcmVmbGVjdGVk
+IGluIHNyaW92LT5udW1fVkZzLCBzbyBjb25jdXJyZW50IHN5c2ZzIHJlYWRzDQo+ICAgICBwcmV2
+aW91c2x5IHJldHVybmVkIHN0YWxlIHZhbHVlcy4NCj4gICAgIA0KPiAgICAgU2VyaWFsaXplIHRo
+ZSBzeXNmcyByZWFkIHZzIHRoZSB3cml0ZSBzbyB0aGUgcmVhZCByZXR1cm5zIHRoZSBjb3JyZWN0
+DQo+ICAgICBudW1fVkZzIHZhbHVlLg0KPiAgICAgDQo+ICAgICBMaW5rOiBodHRwczovL2J1Z3pp
+bGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTIwMjk5MQ0KPiAgICAgTGluazogaHR0cHM6
+Ly9sb3JlLmtlcm5lbC5vcmcvci8yMDE5MDkxMTA3MjczNi4zMjA5MS0xLXBpZXJyZS5jcmVndXRA
+b3JhbmdlLmNvbQ0KPiAgICAgU2lnbmVkLW9mZi1ieTogUGllcnJlIENyw6lndXQgPHBpZXJyZS5j
+cmVndXRAb3JhbmdlLmNvbT4NCj4gICAgIFNpZ25lZC1vZmYtYnk6IEJqb3JuIEhlbGdhYXMgPGJo
+ZWxnYWFzQGdvb2dsZS5jb20+DQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvaW92LmMg
+Yi9kcml2ZXJzL3BjaS9pb3YuYw0KPiBpbmRleCBiM2Y5NzJlOGNmZWQuLmU3NzU2MmFhYmJhZSAx
+MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9wY2kvaW92LmMNCj4gKysrIGIvZHJpdmVycy9wY2kvaW92
+LmMNCj4gQEAgLTI1NCw4ICsyNTQsMTQgQEAgc3RhdGljIHNzaXplX3Qgc3Jpb3ZfbnVtdmZzX3No
+b3coc3RydWN0IGRldmljZSAqZGV2LA0KPiAgCQkJCSBjaGFyICpidWYpDQo+ICB7DQo+ICAJc3Ry
+dWN0IHBjaV9kZXYgKnBkZXYgPSB0b19wY2lfZGV2KGRldik7DQo+ICsJdTE2IG51bV92ZnM7DQo+
+ICsNCj4gKwkvKiBTZXJpYWxpemUgdnMgc3Jpb3ZfbnVtdmZzX3N0b3JlKCkgc28gcmVhZGVycyBz
+ZWUgdmFsaWQgbnVtX1ZGcyAqLw0KPiArCWRldmljZV9sb2NrKCZwZGV2LT5kZXYpOw0KPiArCW51
+bV92ZnMgPSBwZGV2LT5zcmlvdi0+bnVtX1ZGczsNCj4gKwlkZXZpY2VfbG9jaygmcGRldi0+ZGV2
+KTsNCj4gIA0KPiAtCXJldHVybiBzcHJpbnRmKGJ1ZiwgIiV1XG4iLCBwZGV2LT5zcmlvdi0+bnVt
+X1ZGcyk7DQo+ICsJcmV0dXJuIHNwcmludGYoYnVmLCAiJXVcbiIsIG51bV92ZnMpOw0KPiAgfQ0K
+PiAgDQo+ICAvKg0KDQpJIHRoaW5rIHRoaXMgd291bGQgcHJvYmFibHkgYmUgYSBnb29kIHdheSB0
+byBnby4gVGhlbiBpZiB0aGUgZGV2aWNlIGhhcw0Kc29tZSBzb3J0IG9mIGlzc3VlcyBlbmFibGlu
+ZyBTUi1JT1Ygd2UgZG9uJ3QgaGF2ZSBhbiB1bmtub3duIHN0YXRlIHdoZW4NCnRoaXMgaXMgYmVp
+bmcgcmVhZC4gSXQgaXMgZWl0aGVyIHNldCBvciBpdCBpcyBub3QsIGFuZCB3ZSBwcmV2ZW50IHJl
+YWRpbmcNCnRoZSBzdGF0ZSB3aGlsZSBpdCBpcyBiZWluZyBhbHRlcmVkLg0KDQo=
