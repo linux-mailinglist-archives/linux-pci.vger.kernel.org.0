@@ -2,68 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BB94CA568
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2019 18:35:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63E71CAAFC
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2019 19:27:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404134AbfJCQeH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Oct 2019 12:34:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42382 "EHLO mail.kernel.org"
+        id S1731461AbfJCRZv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Oct 2019 13:25:51 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34645 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392095AbfJCQeG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:34:06 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4263921783;
-        Thu,  3 Oct 2019 16:34:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120445;
-        bh=3Bz1OUoxGDjgeT98hppsGEw91e3Ye36LUrMKlBtqcSU=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=j/K162GHR8smbdtnU3kJ9VWiqmsrEwDD+5DiuSNo/q0iv/ITY+YoqW2+yjI1POSoX
-         UhSWY7N6nAoeYF55YeI0ITa7Ya91LlcNCgn/L8LsNRbxn5mYuNKwbhWSHK+NX8cnXW
-         fLO2UPAEPnRh95wTpBNoIcAzJl/2QPOMSTploa9s=
-Content-Type: text/plain; charset="utf-8"
+        id S1730428AbfJCRZs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Oct 2019 13:25:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 10:22:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
+   d="scan'208";a="191329490"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 03 Oct 2019 10:22:44 -0700
+Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
+        by linux.intel.com (Postfix) with ESMTP id CC766580378;
+        Thu,  3 Oct 2019 10:22:44 -0700 (PDT)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v7 1/7] PCI/ATS: Fix pci_prg_resp_pasid_required()
+ dependency issues
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+References: <cover.1567029860.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <ef40dbdc4eae32490caec47bed5b57eeb438dd80.1567029860.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190905191854.GE103977@google.com>
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <abfb75fc-6f88-7117-b0d8-1a374ee99d3e@linux.intel.com>
+Date:   Thu, 3 Oct 2019 10:20:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191002160632.11140-1-krzk@kernel.org>
-References: <20191002160632.11140-1-krzk@kernel.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: power: Convert Generic Power Domain bindings to json-schema
-User-Agent: alot/0.8.1
-Date:   Thu, 03 Oct 2019 09:34:04 -0700
-Message-Id: <20191003163405.4263921783@mail.kernel.org>
+In-Reply-To: <20190905191854.GE103977@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Quoting Krzysztof Kozlowski (2019-10-02 09:06:30)
-> Convert Generic Power Domain bindings to DT schema format using
-> json-schema.  The consumer bindings are split to separate file.
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->=20
-> ---
+Hi Bjorn,
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+Thanks for looking into this patch set.
+
+On 9/5/19 12:18 PM, Bjorn Helgaas wrote:
+> On Wed, Aug 28, 2019 at 03:14:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>> Since pci_prg_resp_pasid_required() function has dependency on both
+>> PASID and PRI, define it only if both CONFIG_PCI_PRI and
+>> CONFIG_PCI_PASID config options are enabled.
+>>
+>> Fixes: e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required()
+>> interface.")
+> [Don't split tags, including "Fixes:" across lines]
+>
+> This definitely doesn't fix e5567f5f6762.  That commit added
+> pci_prg_resp_pasid_required(), but with no dependency on
+> CONFIG_PCI_PRI or CONFIG_PCI_PASID.
+>
+> This patch is only required when a subsequent patch is applied.  It
+> should be squashed into the commit that requires it so it's obvious
+> why it's needed.
+>
+> I've been poking at this series, and I'll post a v8 soon with this and
+> other fixes.
+In your v8 submission you did not merge this patch. You did not use
+pri_cap or pasid_cap cached values. Instead you have re-read the
+value from register. Is this intentional?
+
+Since this function will be called for every VF device we might loose 
+some performance benefit.
+
+>
+>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> ---
+>>   drivers/pci/ats.c       | 10 ++++++----
+>>   include/linux/pci-ats.h | 12 +++++++++---
+>>   2 files changed, 15 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+>> index e18499243f84..cdd936d10f68 100644
+>> --- a/drivers/pci/ats.c
+>> +++ b/drivers/pci/ats.c
+>> @@ -395,6 +395,8 @@ int pci_pasid_features(struct pci_dev *pdev)
+>>   }
+>>   EXPORT_SYMBOL_GPL(pci_pasid_features);
+>>   
+>> +#ifdef CONFIG_PCI_PRI
+>> +
+>>   /**
+>>    * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
+>>    *				 status.
+>> @@ -402,10 +404,8 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
+>>    *
+>>    * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
+>>    *
+>> - * Even though the PRG response PASID status is read from PRI Status
+>> - * Register, since this API will mainly be used by PASID users, this
+>> - * function is defined within #ifdef CONFIG_PCI_PASID instead of
+>> - * CONFIG_PCI_PRI.
+>> + * Since this API has dependency on both PRI and PASID, protect it
+>> + * with both CONFIG_PCI_PRI and CONFIG_PCI_PASID.
+>>    */
+>>   int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+>>   {
+>> @@ -425,6 +425,8 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+>>   }
+>>   EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
+>>   
+>> +#endif
+>> +
+>>   #define PASID_NUMBER_SHIFT	8
+>>   #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
+>>   /**
+>> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+>> index 1ebb88e7c184..1a0bdaee2f32 100644
+>> --- a/include/linux/pci-ats.h
+>> +++ b/include/linux/pci-ats.h
+>> @@ -40,7 +40,6 @@ void pci_disable_pasid(struct pci_dev *pdev);
+>>   void pci_restore_pasid_state(struct pci_dev *pdev);
+>>   int pci_pasid_features(struct pci_dev *pdev);
+>>   int pci_max_pasids(struct pci_dev *pdev);
+>> -int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+>>   
+>>   #else  /* CONFIG_PCI_PASID */
+>>   
+>> @@ -67,11 +66,18 @@ static inline int pci_max_pasids(struct pci_dev *pdev)
+>>   	return -EINVAL;
+>>   }
+>>   
+>> +#endif /* CONFIG_PCI_PASID */
+>> +
+>> +#if defined(CONFIG_PCI_PRI) && defined(CONFIG_PCI_PASID)
+>> +
+>> +int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+>> +
+>> +#else /* CONFIG_PCI_PASID && CONFIG_PCI_PRI */
+>> +
+>>   static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+>>   {
+>>   	return 0;
+>>   }
+>> -#endif /* CONFIG_PCI_PASID */
+>> -
+>> +#endif
+>>   
+>>   #endif /* LINUX_PCI_ATS_H*/
+>> -- 
+>> 2.21.0
+>>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
 
