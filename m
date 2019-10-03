@@ -2,227 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FEA4CB0E2
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2019 23:13:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5551ACB1C9
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2019 00:10:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729355AbfJCVNu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Oct 2019 17:13:50 -0400
-Received: from mga06.intel.com ([134.134.136.31]:45891 "EHLO mga06.intel.com"
+        id S1729534AbfJCWKK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Oct 2019 18:10:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727789AbfJCVNu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Oct 2019 17:13:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 14:13:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
-   d="scan'208";a="191384446"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Oct 2019 14:13:49 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id 39CE35803DA;
-        Thu,  3 Oct 2019 14:13:49 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v7 1/7] PCI/ATS: Fix pci_prg_resp_pasid_required()
- dependency issues
-To:     Bjorn Helgaas <helgaas@kernel.org>
+        id S1729490AbfJCWKK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Oct 2019 18:10:10 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE8BF20867;
+        Thu,  3 Oct 2019 22:10:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570140609;
+        bh=F6E2RvV20IDKK+8vbX46hyZ6gzaFZiM6GfmUhN5E1EM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=zu8WGpXZN1sGAbtPCJ1ddNvZhX+JVpBzcXYxUiAsYO4gdcdA2rE8hV1AEdNYGcBS6
+         BadYC0xhyZXUUnxHU20w+IT3uX5RLAdVL7JA5yo1jKaV4LLK+ed5l6bR0zt0BmxC0+
+         xC+crqB4jS7C2Dcq7obhj2TPkMCSEjG11sjcZyv4=
+Date:   Thu, 3 Oct 2019 17:10:07 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-References: <20191003210128.GA200289@google.com>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <1b310600-045a-2f02-d82b-edb44cbcffcd@linux.intel.com>
-Date:   Thu, 3 Oct 2019 14:11:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Donald Dutile <ddutile@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
+Message-ID: <20191003221007.GA209602@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191003210128.GA200289@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <49b0ad6d-7b6f-adbd-c4a3-5f9328a7ad9d@orange.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+[+cc Don, Alex, Jakub]
 
-On 10/3/19 2:01 PM, Bjorn Helgaas wrote:
-> On Thu, Oct 03, 2019 at 01:37:26PM -0700, Kuppuswamy Sathyanarayanan wrote:
->> On Thu, Oct 03, 2019 at 02:04:13PM -0500, Bjorn Helgaas wrote:
->>> On Thu, Oct 03, 2019 at 10:20:24AM -0700, Kuppuswamy Sathyanarayanan wrote:
->>>> Hi Bjorn,
->>>>
->>>> Thanks for looking into this patch set.
->>>>
->>>> On 9/5/19 12:18 PM, Bjorn Helgaas wrote:
->>>>> On Wed, Aug 28, 2019 at 03:14:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>>>
->>>>>> Since pci_prg_resp_pasid_required() function has dependency on both
->>>>>> PASID and PRI, define it only if both CONFIG_PCI_PRI and
->>>>>> CONFIG_PCI_PASID config options are enabled.
->>>>>>
->>>>>> Fixes: e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required()
->>>>>> interface.")
->>>>> [Don't split tags, including "Fixes:" across lines]
->>>>>
->>>>> This definitely doesn't fix e5567f5f6762.  That commit added
->>>>> pci_prg_resp_pasid_required(), but with no dependency on
->>>>> CONFIG_PCI_PRI or CONFIG_PCI_PASID.
->>>>>
->>>>> This patch is only required when a subsequent patch is applied.  It
->>>>> should be squashed into the commit that requires it so it's obvious
->>>>> why it's needed.
->>>>>
->>>>> I've been poking at this series, and I'll post a v8 soon with this and
->>>>> other fixes.
->>>> In your v8 submission you did not merge this patch. You did not use
->>>> pri_cap or pasid_cap cached values. Instead you have re-read the
->>>> value from register. Is this intentional?
->>>>
->>>> Since this function will be called for every VF device we might loose some
->>>> performance benefit.
->>> This particular patch doesn't do any caching.  IIRC it fiddles with
->>> ifdefs to solve a problem that would be introduced by a future patch.
->>> I don't remember the exact details, but I think the series I merged
->>> doesn't have that problem.  If it does, let me know the details and we
->>> can fix it.
->> This patch by itself does not do any caching. But your caching patch
->> missed modifying this function to use cached values. Please check the
->> current implementation of this function. It still reads
->> PCI_EXT_CAP_ID_PRI register instead of using cached value. Please let
->> me know your comments.
->>
->> int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->> {
->>      u16 status;
->>      int pri;
->>
->>      if (pdev->is_virtfn)
->>          pdev = pci_physfn(pdev);
->>
->>      pri = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
->>      if (!pri)
->>          return 0;
->>
->>      pci_read_config_word(pdev, pri + PCI_PRI_STATUS, &status);
->>
->>      if (status & PCI_PRI_STATUS_PASID)
->>          return 1;
->>
->>      return 0;
->> }
->> EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
->>
->> If caching is applied to this function then we need this #ifdef
->> dependency correction patch.
-> IIRC this #ifdef patch wasn't connected to the actual *need* for the
-> #ifdef, so it was very difficult to review.  I thought this function
-> would be infrequently used and it wasn't worth trying to sort out the
-> #ifdef muddle to do the caching.  But it does seem sort of pointless
-> to chase the capability list again here, so maybe it *is* worth
-> optimizing.
->
-> The PRG Response PASID Required bit is read-only, so I wonder if it
-> would be simpler if we just read PCI_PRI_STATUS once and save the bit
-> in the struct pci_dev?  We could do that in pci_enable_pri(), or if we
-> might need the value before that's called, we could add a
-> pci_pri_init() and do it there.
+On Thu, Oct 03, 2019 at 11:04:45AM +0200, CREGUT Pierre IMT/OLN wrote:
+> Le 02/10/2019 à 01:45, Bjorn Helgaas a écrit :
+> > On Fri, Apr 26, 2019 at 10:11:54AM +0200, CREGUT Pierre IMT/OLN wrote:
+> > > I also initially thought that kobject_uevent generated the netlink event
+> > > but this is not the case. This is generated by the specific driver in use.
+> > > For the Intel i40e driver, this is the call to i40e_do_reset_safe in
+> > > i40e_pci_sriov_configure that sends the event.
+> > > It is followed by i40e_pci_sriov_enable that calls i40e_alloc_vfs that
+> > > finally calls the generic pci_enable_sriov function.
+> > I don't know anything about netlink.  The script from the bugzilla
+> > (https://bugzilla.kernel.org/show_bug.cgi?id=202991) looks like it
+> > runs
+> > 
+> >    ip monitor dev enp9s0f2
+> > 
+> > What are the actual netlink events you see?  Are they related to a
+> > device being removed?
+> 
+> We have netlink events both when num_vfs goes from 0 to N and from N to 0.
+> Indeed you have to go to 0 before going to M with M != N.
 
-Yes, caching PASID Required bit in pci_pri_init() function would provide 
-performance
-benefits. But another thing to consider is, since this bit is same for 
-both PF/VF, is it worth to
-add this bit it to struct pci_dev?or struct pci_sriov is the more 
-appropriate place?
+Right.
 
->
->>> I did include the caching patches for both PRI and PASID capabilities,
->>> but they're only performance optimizations so I moved them to the end
->>> so the functional fixes would be smaller and earlier in the series.
->>>
->>>>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>>> ---
->>>>>>    drivers/pci/ats.c       | 10 ++++++----
->>>>>>    include/linux/pci-ats.h | 12 +++++++++---
->>>>>>    2 files changed, 15 insertions(+), 7 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
->>>>>> index e18499243f84..cdd936d10f68 100644
->>>>>> --- a/drivers/pci/ats.c
->>>>>> +++ b/drivers/pci/ats.c
->>>>>> @@ -395,6 +395,8 @@ int pci_pasid_features(struct pci_dev *pdev)
->>>>>>    }
->>>>>>    EXPORT_SYMBOL_GPL(pci_pasid_features);
->>>>>> +#ifdef CONFIG_PCI_PRI
->>>>>> +
->>>>>>    /**
->>>>>>     * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
->>>>>>     *				 status.
->>>>>> @@ -402,10 +404,8 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
->>>>>>     *
->>>>>>     * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
->>>>>>     *
->>>>>> - * Even though the PRG response PASID status is read from PRI Status
->>>>>> - * Register, since this API will mainly be used by PASID users, this
->>>>>> - * function is defined within #ifdef CONFIG_PCI_PASID instead of
->>>>>> - * CONFIG_PCI_PRI.
->>>>>> + * Since this API has dependency on both PRI and PASID, protect it
->>>>>> + * with both CONFIG_PCI_PRI and CONFIG_PCI_PASID.
->>>>>>     */
->>>>>>    int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->>>>>>    {
->>>>>> @@ -425,6 +425,8 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->>>>>>    }
->>>>>>    EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
->>>>>> +#endif
->>>>>> +
->>>>>>    #define PASID_NUMBER_SHIFT	8
->>>>>>    #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
->>>>>>    /**
->>>>>> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
->>>>>> index 1ebb88e7c184..1a0bdaee2f32 100644
->>>>>> --- a/include/linux/pci-ats.h
->>>>>> +++ b/include/linux/pci-ats.h
->>>>>> @@ -40,7 +40,6 @@ void pci_disable_pasid(struct pci_dev *pdev);
->>>>>>    void pci_restore_pasid_state(struct pci_dev *pdev);
->>>>>>    int pci_pasid_features(struct pci_dev *pdev);
->>>>>>    int pci_max_pasids(struct pci_dev *pdev);
->>>>>> -int pci_prg_resp_pasid_required(struct pci_dev *pdev);
->>>>>>    #else  /* CONFIG_PCI_PASID */
->>>>>> @@ -67,11 +66,18 @@ static inline int pci_max_pasids(struct pci_dev *pdev)
->>>>>>    	return -EINVAL;
->>>>>>    }
->>>>>> +#endif /* CONFIG_PCI_PASID */
->>>>>> +
->>>>>> +#if defined(CONFIG_PCI_PRI) && defined(CONFIG_PCI_PASID)
->>>>>> +
->>>>>> +int pci_prg_resp_pasid_required(struct pci_dev *pdev);
->>>>>> +
->>>>>> +#else /* CONFIG_PCI_PASID && CONFIG_PCI_PRI */
->>>>>> +
->>>>>>    static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->>>>>>    {
->>>>>>    	return 0;
->>>>>>    }
->>>>>> -#endif /* CONFIG_PCI_PASID */
->>>>>> -
->>>>>> +#endif
->>>>>>    #endif /* LINUX_PCI_ATS_H*/
->>>>>> -- 
->>>>>> 2.21.0
->>>>>>
->>>> -- 
->>>> Sathyanarayanan Kuppuswamy
->>>> Linux kernel developer
->>>>
->> -- 
->> Sathyanarayanan Kuppuswamy
->> Linux kernel developer
+> On an Intel card, when one goes from 0 to N, the netlink event is
+> sent "early". The value of num_vfs is still 0 and you get the
+> impression that the number of VFS has not changed. As the meaning of
+> those events is overloaded, you have to wait an arbitrary amount of
+> time until it settles (there will be no other event).  There is no
+> such problem when it goes from N to 0 because of implementation
+> details but it may be different for another brand.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+I hadn't looked far enough.  I think the "remove" netlink events are
+probably from the i40e_do_reset_safe() path, which eventually calls
+free_netdev() and put_device().
 
+The pci_enable_sriov() path calls the driver's ->probe method, and I
+suspect the "add" netlink events are emitted there.
+
+> > When we change num_VFs, I think we have to disable any existing VFs
+> > before enabling the new num_VFs, so if you trigger on a netlink
+> > "remove" event, I wouldn't be surprised that reading sriov_numvfs
+> > would give a zero until the new VFs are enabled.
+> Yes but we are speaking of the event sent when num_vfs is changed from 0 to
+> N
+> > [...]
+> > I thought this was a good idea, but
+> > 
+> >    - It does break the device_lock() encapsulation a little bit:
+> >      sriov_numvfs_store() uses device_lock(), which happens to be
+> >      implemented as "mutex_lock(&dev->mutex)", but we really shouldn't
+> >      rely on that implementation, and
+
+> The use of device_lock was the cheapest solution. It is true that
+> lock and trylock are exposed by device.h but not is_locked. To
+> respect the abstraction, we would have to lock the device (at least
+> use trylock but it means locking when we can access the value, in
+> that case we may just make reading num_vfs blocking ?).
+> 
+> The other solution is to record the state of freshness of num_vfs
+> but it means a new Boolean in the pci_sriov data-structure.
+
+> 
+> >    - The netlink events are being generated via the NIC driver, and I'm
+> >      a little hesitant about changing the PCI core to deal with timing
+> >      issues "over there".
+> 
+> NIC drivers send netlink events when their state change, but it is
+> the core that changes the value of num_vfs. So I would think it is
+> the core responsibility to make sure the exposed value makes sense
+> and it would be better to ignore the details of the driver
+> implementation.
+
+Yes, I think you're right.  And I like your previous suggestion of
+just locking the device in the reader.  I'm not enough of a sysfs
+expert to know if there's a good reason to avoid a lock there.  Does
+the following look reasonable to you?
+
+
+commit 0940fc95da45
+Author: Pierre Crégut <pierre.cregut@orange.com>
+Date:   Wed Sep 11 09:27:36 2019 +0200
+
+    PCI/IOV: Serialize sysfs sriov_numvfs reads vs writes
+    
+    When sriov_numvfs is being updated, drivers may notify about new devices
+    before they are reflected in sriov->num_VFs, so concurrent sysfs reads
+    previously returned stale values.
+    
+    Serialize the sysfs read vs the write so the read returns the correct
+    num_VFs value.
+    
+    Link: https://bugzilla.kernel.org/show_bug.cgi?id=202991
+    Link: https://lore.kernel.org/r/20190911072736.32091-1-pierre.cregut@orange.com
+    Signed-off-by: Pierre Crégut <pierre.cregut@orange.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index b3f972e8cfed..e77562aabbae 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -254,8 +254,14 @@ static ssize_t sriov_numvfs_show(struct device *dev,
+ 				 char *buf)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev);
++	u16 num_vfs;
++
++	/* Serialize vs sriov_numvfs_store() so readers see valid num_VFs */
++	device_lock(&pdev->dev);
++	num_vfs = pdev->sriov->num_VFs;
++	device_lock(&pdev->dev);
+ 
+-	return sprintf(buf, "%u\n", pdev->sriov->num_VFs);
++	return sprintf(buf, "%u\n", num_vfs);
+ }
+ 
+ /*
