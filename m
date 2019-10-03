@@ -2,162 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5551ACB1C9
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2019 00:10:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F76ECB1EE
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2019 00:36:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729534AbfJCWKK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Oct 2019 18:10:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729490AbfJCWKK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Oct 2019 18:10:10 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE8BF20867;
-        Thu,  3 Oct 2019 22:10:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570140609;
-        bh=F6E2RvV20IDKK+8vbX46hyZ6gzaFZiM6GfmUhN5E1EM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=zu8WGpXZN1sGAbtPCJ1ddNvZhX+JVpBzcXYxUiAsYO4gdcdA2rE8hV1AEdNYGcBS6
-         BadYC0xhyZXUUnxHU20w+IT3uX5RLAdVL7JA5yo1jKaV4LLK+ed5l6bR0zt0BmxC0+
-         xC+crqB4jS7C2Dcq7obhj2TPkMCSEjG11sjcZyv4=
-Date:   Thu, 3 Oct 2019 17:10:07 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        id S1727548AbfJCWg5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Oct 2019 18:36:57 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35879 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfJCWg5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Oct 2019 18:36:57 -0400
+Received: by mail-qt1-f196.google.com with SMTP id o12so5979961qtf.3
+        for <linux-pci@vger.kernel.org>; Thu, 03 Oct 2019 15:36:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=itG42API114huksgPQAHb88tSFIwWsAom19B6aoA+Qs=;
+        b=gIprMk8LelWg0uG/qfXeYCxNyxqYw9kTOe6Nwb6sO/SKr/62XIGhhY97GPaeuHbUU7
+         v8spLpK53iQXvC1sP3v/H2kNGQeNpcWMJUGYEHwVu58UrT8XfD+luRiWfjNXgmCtn7IT
+         6+AqMtubm/j7ah9AjiC+XqFP0+FgcIIgXmRkNrkGJCYibolqgVlaPPPzRDuZXlVjQMMd
+         Gf9zH3b4ebzGoAKIBFnVWPg1zL41TQlPX2rcCwJpR/HjE5sP8kOjOnMm+BeZOzav1D4W
+         1Xr1mcYvDlrs6gVvscSeoUqioGBkx77gfq+z6Mdl3OGExL73lZ+QlO4PXKdq0Agi2Nzb
+         iYqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=itG42API114huksgPQAHb88tSFIwWsAom19B6aoA+Qs=;
+        b=Hlih+BKcVINQ0l7ChPRa5tWSow62MkSjFsTOuOnLQLrOeVpoGgwew0R8M6cqAY3X9v
+         sJe1QZ4p8AKrfg3qZIrZIRdpywRRsh5ux1g0Xj7HlDC1nM3g14UXpsGfaq0ZptZ5SfND
+         wF4RWQqq8l0m8q5Y7K803qBJDFlhZBXYN5k5sFVzXQea+Sxsi6nyvpTGBbpqJThlu5DN
+         cYr6HUPwt8DHej9qPYC5GG0NH+ooWaC8j8ey+SrfB4B2ss81+TewlrP4vGGrfAProkeM
+         I0WTOg7RZC3NVdu0wu4KcznY7ZDectj5fNmggW/O41+TMCVezBJQMI9oCSu8H3fPPEm7
+         DuJA==
+X-Gm-Message-State: APjAAAXlzqtrHjWtDaWk+JThOw7TXIYBpsO5zfeJBl1N4LbL+BsT0MfL
+        MPUhhoNdVkr6VbG3XEsXnWyDsw==
+X-Google-Smtp-Source: APXvYqyJBL+Cwi7BNLxtZ/+uwGi0Sj7J6xZpTOr7ZfIMu6Q0WNIhJOV/vsOOtOMwEEfUfB0zGLoZPQ==
+X-Received: by 2002:ac8:5543:: with SMTP id o3mr12730023qtr.129.1570142215973;
+        Thu, 03 Oct 2019 15:36:55 -0700 (PDT)
+Received: from cakuba.hsd1.ca.comcast.net ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id z20sm2088520qtu.91.2019.10.03.15.36.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 15:36:55 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 15:36:48 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Donald Dutile <ddutile@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
+        Alexander Duyck <alexander.h.duyck@intel.com>
 Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
-Message-ID: <20191003221007.GA209602@google.com>
+Message-ID: <20191003153648.786ad0bf@cakuba.hsd1.ca.comcast.net>
+In-Reply-To: <20191003221007.GA209602@google.com>
+References: <49b0ad6d-7b6f-adbd-c4a3-5f9328a7ad9d@orange.com>
+        <20191003221007.GA209602@google.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <49b0ad6d-7b6f-adbd-c4a3-5f9328a7ad9d@orange.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Don, Alex, Jakub]
+On Thu, 3 Oct 2019 17:10:07 -0500, Bjorn Helgaas wrote:
+> On Thu, Oct 03, 2019 at 11:04:45AM +0200, CREGUT Pierre IMT/OLN wrote:
+> > Le 02/10/2019 =C3=A0 01:45, Bjorn Helgaas a =C3=A9crit=C2=A0: =20
+> > > On Fri, Apr 26, 2019 at 10:11:54AM +0200, CREGUT Pierre IMT/OLN wrote=
+: =20
+> > > > I also initially thought that kobject_uevent generated the netlink =
+event
+> > > > but this is not the case. This is generated by the specific driver =
+in use.
+> > > > For the Intel i40e driver, this is the call to i40e_do_reset_safe in
+> > > > i40e_pci_sriov_configure that sends the event.
+> > > > It is followed by i40e_pci_sriov_enable that calls i40e_alloc_vfs t=
+hat
+> > > > finally calls the generic pci_enable_sriov function. =20
+> > > I don't know anything about netlink.  The script from the bugzilla
+> > > (https://bugzilla.kernel.org/show_bug.cgi?id=3D202991) looks like it
+> > > runs
+> > >=20
+> > >    ip monitor dev enp9s0f2
+> > >=20
+> > > What are the actual netlink events you see?  Are they related to a
+> > > device being removed? =20
+> >=20
+> > We have netlink events both when num_vfs goes from 0 to N and from N to=
+ 0.
+> > Indeed you have to go to 0 before going to M with M !=3D N. =20
+>=20
+> Right.
 
-On Thu, Oct 03, 2019 at 11:04:45AM +0200, CREGUT Pierre IMT/OLN wrote:
-> Le 02/10/2019 à 01:45, Bjorn Helgaas a écrit :
-> > On Fri, Apr 26, 2019 at 10:11:54AM +0200, CREGUT Pierre IMT/OLN wrote:
-> > > I also initially thought that kobject_uevent generated the netlink event
-> > > but this is not the case. This is generated by the specific driver in use.
-> > > For the Intel i40e driver, this is the call to i40e_do_reset_safe in
-> > > i40e_pci_sriov_configure that sends the event.
-> > > It is followed by i40e_pci_sriov_enable that calls i40e_alloc_vfs that
-> > > finally calls the generic pci_enable_sriov function.
-> > I don't know anything about netlink.  The script from the bugzilla
-> > (https://bugzilla.kernel.org/show_bug.cgi?id=202991) looks like it
-> > runs
-> > 
-> >    ip monitor dev enp9s0f2
-> > 
-> > What are the actual netlink events you see?  Are they related to a
-> > device being removed?
-> 
-> We have netlink events both when num_vfs goes from 0 to N and from N to 0.
-> Indeed you have to go to 0 before going to M with M != N.
+FWIW I think this netlink event is an artefact of i40e implementation,
+and is not something the networking stack generates. Hopefully Alex can
+correct me if I'm wrong, but I don't think most drivers will generate
+such an event.
 
-Right.
+> commit 0940fc95da45
+> Author: Pierre Cr=C3=A9gut <pierre.cregut@orange.com>
+> Date:   Wed Sep 11 09:27:36 2019 +0200
+>=20
+>     PCI/IOV: Serialize sysfs sriov_numvfs reads vs writes
+>    =20
+>     When sriov_numvfs is being updated, drivers may notify about new devi=
+ces
+>     before they are reflected in sriov->num_VFs, so concurrent sysfs reads
+>     previously returned stale values.
+>    =20
+>     Serialize the sysfs read vs the write so the read returns the correct
+>     num_VFs value.
+>    =20
+>     Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D202991
+>     Link: https://lore.kernel.org/r/20190911072736.32091-1-pierre.cregut@=
+orange.com
+>     Signed-off-by: Pierre Cr=C3=A9gut <pierre.cregut@orange.com>
+>     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index b3f972e8cfed..e77562aabbae 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -254,8 +254,14 @@ static ssize_t sriov_numvfs_show(struct device *dev,
+>  				 char *buf)
+>  {
+>  	struct pci_dev *pdev =3D to_pci_dev(dev);
+> +	u16 num_vfs;
+> +
+> +	/* Serialize vs sriov_numvfs_store() so readers see valid num_VFs */
+> +	device_lock(&pdev->dev);
+> +	num_vfs =3D pdev->sriov->num_VFs;
+> +	device_lock(&pdev->dev);
+> =20
+> -	return sprintf(buf, "%u\n", pdev->sriov->num_VFs);
+> +	return sprintf(buf, "%u\n", num_vfs);
+>  }
+> =20
+>  /*
 
-> On an Intel card, when one goes from 0 to N, the netlink event is
-> sent "early". The value of num_vfs is still 0 and you get the
-> impression that the number of VFS has not changed. As the meaning of
-> those events is overloaded, you have to wait an arbitrary amount of
-> time until it settles (there will be no other event).  There is no
-> such problem when it goes from N to 0 because of implementation
-> details but it may be different for another brand.
-
-I hadn't looked far enough.  I think the "remove" netlink events are
-probably from the i40e_do_reset_safe() path, which eventually calls
-free_netdev() and put_device().
-
-The pci_enable_sriov() path calls the driver's ->probe method, and I
-suspect the "add" netlink events are emitted there.
-
-> > When we change num_VFs, I think we have to disable any existing VFs
-> > before enabling the new num_VFs, so if you trigger on a netlink
-> > "remove" event, I wouldn't be surprised that reading sriov_numvfs
-> > would give a zero until the new VFs are enabled.
-> Yes but we are speaking of the event sent when num_vfs is changed from 0 to
-> N
-> > [...]
-> > I thought this was a good idea, but
-> > 
-> >    - It does break the device_lock() encapsulation a little bit:
-> >      sriov_numvfs_store() uses device_lock(), which happens to be
-> >      implemented as "mutex_lock(&dev->mutex)", but we really shouldn't
-> >      rely on that implementation, and
-
-> The use of device_lock was the cheapest solution. It is true that
-> lock and trylock are exposed by device.h but not is_locked. To
-> respect the abstraction, we would have to lock the device (at least
-> use trylock but it means locking when we can access the value, in
-> that case we may just make reading num_vfs blocking ?).
-> 
-> The other solution is to record the state of freshness of num_vfs
-> but it means a new Boolean in the pci_sriov data-structure.
-
-> 
-> >    - The netlink events are being generated via the NIC driver, and I'm
-> >      a little hesitant about changing the PCI core to deal with timing
-> >      issues "over there".
-> 
-> NIC drivers send netlink events when their state change, but it is
-> the core that changes the value of num_vfs. So I would think it is
-> the core responsibility to make sure the exposed value makes sense
-> and it would be better to ignore the details of the driver
-> implementation.
-
-Yes, I think you're right.  And I like your previous suggestion of
-just locking the device in the reader.  I'm not enough of a sysfs
-expert to know if there's a good reason to avoid a lock there.  Does
-the following look reasonable to you?
-
-
-commit 0940fc95da45
-Author: Pierre Crégut <pierre.cregut@orange.com>
-Date:   Wed Sep 11 09:27:36 2019 +0200
-
-    PCI/IOV: Serialize sysfs sriov_numvfs reads vs writes
-    
-    When sriov_numvfs is being updated, drivers may notify about new devices
-    before they are reflected in sriov->num_VFs, so concurrent sysfs reads
-    previously returned stale values.
-    
-    Serialize the sysfs read vs the write so the read returns the correct
-    num_VFs value.
-    
-    Link: https://bugzilla.kernel.org/show_bug.cgi?id=202991
-    Link: https://lore.kernel.org/r/20190911072736.32091-1-pierre.cregut@orange.com
-    Signed-off-by: Pierre Crégut <pierre.cregut@orange.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index b3f972e8cfed..e77562aabbae 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -254,8 +254,14 @@ static ssize_t sriov_numvfs_show(struct device *dev,
- 				 char *buf)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
-+	u16 num_vfs;
-+
-+	/* Serialize vs sriov_numvfs_store() so readers see valid num_VFs */
-+	device_lock(&pdev->dev);
-+	num_vfs = pdev->sriov->num_VFs;
-+	device_lock(&pdev->dev);
- 
--	return sprintf(buf, "%u\n", pdev->sriov->num_VFs);
-+	return sprintf(buf, "%u\n", num_vfs);
- }
- 
- /*
+The change makes sense to me!
