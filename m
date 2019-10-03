@@ -2,171 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 189EBCB1F0
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2019 00:37:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FAFCCB26C
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2019 01:42:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730611AbfJCWht (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Oct 2019 18:37:49 -0400
-Received: from mga06.intel.com ([134.134.136.31]:52264 "EHLO mga06.intel.com"
+        id S1732219AbfJCXmL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Oct 2019 19:42:11 -0400
+Received: from mga11.intel.com ([192.55.52.93]:39183 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727302AbfJCWhs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Oct 2019 18:37:48 -0400
+        id S1731728AbfJCXlh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Oct 2019 19:41:37 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 15:37:48 -0700
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 16:41:36 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,254,1566889200"; 
-   d="scan'208";a="182529271"
-Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
-  by orsmga007.jf.intel.com with ESMTP; 03 Oct 2019 15:37:47 -0700
-Received: from orsmsx158.amr.corp.intel.com (10.22.240.20) by
- ORSMSX103.amr.corp.intel.com (10.22.225.130) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 3 Oct 2019 15:37:47 -0700
-Received: from orsmsx114.amr.corp.intel.com ([169.254.8.55]) by
- ORSMSX158.amr.corp.intel.com ([169.254.10.46]) with mapi id 14.03.0439.000;
- Thu, 3 Oct 2019 15:37:47 -0700
-From:   "Duyck, Alexander H" <alexander.h.duyck@intel.com>
-To:     "helgaas@kernel.org" <helgaas@kernel.org>,
-        "pierre.cregut@orange.com" <pierre.cregut@orange.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        "ddutile@redhat.com" <ddutile@redhat.com>
-Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
-Thread-Topic: [PATCH] PCI/IOV: update num_VFs earlier
-Thread-Index: AQHVejdUPh/K89cDKEGw9NB+Xkpy3adJ90QA
-Date:   Thu, 3 Oct 2019 22:37:46 +0000
-Message-ID: <130e73dc54db174e4c7e4267aceee78c246986d6.camel@intel.com>
-References: <20191003221007.GA209602@google.com>
-In-Reply-To: <20191003221007.GA209602@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.7.198.76]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B98741D274E8E845BA274650FAD61993@intel.com>
-Content-Transfer-Encoding: base64
+   d="scan'208";a="343819274"
+Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
+  by orsmga004.jf.intel.com with ESMTP; 03 Oct 2019 16:41:35 -0700
+From:   sathyanarayanan.kuppuswamy@linux.intel.com
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: [PATCH v9 0/8] Add Error Disconnect Recover (EDR) support
+Date:   Thu,  3 Oct 2019 16:38:56 -0700
+Message-Id: <cover.1570145778.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTEwLTAzIGF0IDE3OjEwIC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
-PiBbK2NjIERvbiwgQWxleCwgSmFrdWJdDQo+IA0KPiBPbiBUaHUsIE9jdCAwMywgMjAxOSBhdCAx
-MTowNDo0NUFNICswMjAwLCBDUkVHVVQgUGllcnJlIElNVC9PTE4gd3JvdGU6DQo+ID4gTGUgMDIv
-MTAvMjAxOSDDoCAwMTo0NSwgQmpvcm4gSGVsZ2FhcyBhIMOpY3JpdCA6DQo+ID4gPiBPbiBGcmks
-IEFwciAyNiwgMjAxOSBhdCAxMDoxMTo1NEFNICswMjAwLCBDUkVHVVQgUGllcnJlIElNVC9PTE4g
-d3JvdGU6DQo+ID4gPiA+IEkgYWxzbyBpbml0aWFsbHkgdGhvdWdodCB0aGF0IGtvYmplY3RfdWV2
-ZW50IGdlbmVyYXRlZCB0aGUgbmV0bGluayBldmVudA0KPiA+ID4gPiBidXQgdGhpcyBpcyBub3Qg
-dGhlIGNhc2UuIFRoaXMgaXMgZ2VuZXJhdGVkIGJ5IHRoZSBzcGVjaWZpYyBkcml2ZXIgaW4gdXNl
-Lg0KPiA+ID4gPiBGb3IgdGhlIEludGVsIGk0MGUgZHJpdmVyLCB0aGlzIGlzIHRoZSBjYWxsIHRv
-IGk0MGVfZG9fcmVzZXRfc2FmZSBpbg0KPiA+ID4gPiBpNDBlX3BjaV9zcmlvdl9jb25maWd1cmUg
-dGhhdCBzZW5kcyB0aGUgZXZlbnQuDQo+ID4gPiA+IEl0IGlzIGZvbGxvd2VkIGJ5IGk0MGVfcGNp
-X3NyaW92X2VuYWJsZSB0aGF0IGNhbGxzIGk0MGVfYWxsb2NfdmZzIHRoYXQNCj4gPiA+ID4gZmlu
-YWxseSBjYWxscyB0aGUgZ2VuZXJpYyBwY2lfZW5hYmxlX3NyaW92IGZ1bmN0aW9uLg0KPiA+ID4g
-SSBkb24ndCBrbm93IGFueXRoaW5nIGFib3V0IG5ldGxpbmsuICBUaGUgc2NyaXB0IGZyb20gdGhl
-IGJ1Z3ppbGxhDQo+ID4gPiAoaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3Nob3dfYnVnLmNn
-aT9pZD0yMDI5OTEpIGxvb2tzIGxpa2UgaXQNCj4gPiA+IHJ1bnMNCj4gPiA+IA0KPiA+ID4gICAg
-aXAgbW9uaXRvciBkZXYgZW5wOXMwZjINCj4gPiA+IA0KPiA+ID4gV2hhdCBhcmUgdGhlIGFjdHVh
-bCBuZXRsaW5rIGV2ZW50cyB5b3Ugc2VlPyAgQXJlIHRoZXkgcmVsYXRlZCB0byBhDQo+ID4gPiBk
-ZXZpY2UgYmVpbmcgcmVtb3ZlZD8NCj4gPiANCj4gPiBXZSBoYXZlIG5ldGxpbmsgZXZlbnRzIGJv
-dGggd2hlbiBudW1fdmZzIGdvZXMgZnJvbSAwIHRvIE4gYW5kIGZyb20gTiB0byAwLg0KPiA+IElu
-ZGVlZCB5b3UgaGF2ZSB0byBnbyB0byAwIGJlZm9yZSBnb2luZyB0byBNIHdpdGggTSAhPSBOLg0K
-PiANCj4gUmlnaHQuDQoNCkl0IGRvZXNuJ3QgbWFrZSBzZW5zZSB0byBtb25pdG9yIG5ldGxpbmsg
-Zm9yIFNSLUlPViBjaGFuZ2VzLiBBbGwgeW91IGFyZQ0KY2F0Y2hpbmcgaXMgdGhlIGluY2lkZW50
-YWwgZWZmZWN0IG9mIHRoZSByZXNldCBjYXVzaW5nIHRoZSBsaW5rIHRvIGJvdW5jZS4NCg0KRm9y
-IGV4YW1wbGUgaWYgeW91IHJ1biAiaXAgbGluayBzZXQgZW5wOXMwZjIgZG93biIgYW5kIHRoZW4g
-cnVuIHlvdXIgdGVzdA0KeW91IHdpbGwgbmV2ZXIgZ2V0IGFueSBub3RpZmljYXRpb25zIHdoZW4g
-eW91IGFsdGVyIHRoZSBudW1fdmZzIGJlY2F1c2UNCnRoZSBsaW5rIHdvbid0IGJvdW5jZSBiZWNh
-dXNlIHRoZSBsaW5rIGlzIGFscmVhZHkgZG93bi4NCg0KSXQgaXNuJ3Qgc3VycHJpc2luZyB0aGF0
-IHlvdSB3b3VsZCBzZWUgbm8gVkZzIGVuYWJsZWQgYXMgdGhlIGFjdCBvZg0KYnJpbmdpbmcgZG93
-biB0aGUgaW50ZXJmYWNlIHRvIHJlY29uZmlndXJlIGl0IHdpbGwgZ2l2ZSB5b3UgYSBuZXRsaW5r
-DQpldmVudC4gQXQgdGhhdCBwb2ludCB3ZSBoYXZlbid0IGV2ZW4gZW5hYmxlZCBTUi1JT1YgeWV0
-LCB3ZSB3ZXJlIGp1c3QNCnNodXR0aW5nIGRvd24gdGhlIGV4aXN0aW5nIGNvbmZpZyBiZWZvcmUg
-d2UgYXR0ZW1wdCB0byBlbmFibGUgU1ItSU9WLg0KDQo+ID4gT24gYW4gSW50ZWwgY2FyZCwgd2hl
-biBvbmUgZ29lcyBmcm9tIDAgdG8gTiwgdGhlIG5ldGxpbmsgZXZlbnQgaXMNCj4gPiBzZW50ICJl
-YXJseSIuIFRoZSB2YWx1ZSBvZiBudW1fdmZzIGlzIHN0aWxsIDAgYW5kIHlvdSBnZXQgdGhlDQo+
-ID4gaW1wcmVzc2lvbiB0aGF0IHRoZSBudW1iZXIgb2YgVkZTIGhhcyBub3QgY2hhbmdlZC4gQXMg
-dGhlIG1lYW5pbmcgb2YNCj4gPiB0aG9zZSBldmVudHMgaXMgb3ZlcmxvYWRlZCwgeW91IGhhdmUg
-dG8gd2FpdCBhbiBhcmJpdHJhcnkgYW1vdW50IG9mDQo+ID4gdGltZSB1bnRpbCBpdCBzZXR0bGVz
-ICh0aGVyZSB3aWxsIGJlIG5vIG90aGVyIGV2ZW50KS4gIFRoZXJlIGlzIG5vDQo+ID4gc3VjaCBw
-cm9ibGVtIHdoZW4gaXQgZ29lcyBmcm9tIE4gdG8gMCBiZWNhdXNlIG9mIGltcGxlbWVudGF0aW9u
-DQo+ID4gZGV0YWlscyBidXQgaXQgbWF5IGJlIGRpZmZlcmVudCBmb3IgYW5vdGhlciBicmFuZC4N
-Cj4gDQo+IEkgaGFkbid0IGxvb2tlZCBmYXIgZW5vdWdoLiAgSSB0aGluayB0aGUgInJlbW92ZSIg
-bmV0bGluayBldmVudHMgYXJlDQo+IHByb2JhYmx5IGZyb20gdGhlIGk0MGVfZG9fcmVzZXRfc2Fm
-ZSgpIHBhdGgsIHdoaWNoIGV2ZW50dWFsbHkgY2FsbHMNCj4gZnJlZV9uZXRkZXYoKSBhbmQgcHV0
-X2RldmljZSgpLg0KPiANCj4gVGhlIHBjaV9lbmFibGVfc3Jpb3YoKSBwYXRoIGNhbGxzIHRoZSBk
-cml2ZXIncyAtPnByb2JlIG1ldGhvZCwgYW5kIEkNCj4gc3VzcGVjdCB0aGUgImFkZCIgbmV0bGlu
-ayBldmVudHMgYXJlIGVtaXR0ZWQgdGhlcmUuDQoNClNvIHRoZSBpc3N1ZSBhcyBJIHNlZSBpdCBp
-cyB0aGF0IHRoaXMgaXMgYSBuYWl2ZSBhcHByb2FjaCB0byBob3cgdG8NCm1vbml0b3IgZm9yIFZG
-cyBiZWluZyBhZGRlZCBvciByZW1vdmVkLiBBbGwgdGhlIHNjcmlwdCBpbiB0aGUgYnVnemlsbGEN
-CnJlYWxseSBkb2VzIGlzIGNhdGNoIHJlc2V0cyB3aGVuIHRoZSBpbnRlcmZhY2UgaXMgdXAuDQoN
-CklkZWFsbHkgd2Ugc2hvdWxkbid0IGV2ZW4gaGF2ZSB0aGUgZHJpdmVyIGhhdmUgdG8gZG8gdGhl
-IHJlc2V0IGV4Y2VwdCBmb3INCnRoZSBmYWN0IHRoYXQgaXQgaGFzIHRvIHJlLXBhcnRpdGlvbiB0
-aGUgZGV2aWNlIHRvIHNwbGl0IHVwIHJlc291cmNlcy4NCg0KPiA+ID4gV2hlbiB3ZSBjaGFuZ2Ug
-bnVtX1ZGcywgSSB0aGluayB3ZSBoYXZlIHRvIGRpc2FibGUgYW55IGV4aXN0aW5nIFZGcw0KPiA+
-ID4gYmVmb3JlIGVuYWJsaW5nIHRoZSBuZXcgbnVtX1ZGcywgc28gaWYgeW91IHRyaWdnZXIgb24g
-YSBuZXRsaW5rDQo+ID4gPiAicmVtb3ZlIiBldmVudCwgSSB3b3VsZG4ndCBiZSBzdXJwcmlzZWQg
-dGhhdCByZWFkaW5nIHNyaW92X251bXZmcw0KPiA+ID4gd291bGQgZ2l2ZSBhIHplcm8gdW50aWwg
-dGhlIG5ldyBWRnMgYXJlIGVuYWJsZWQuDQo+ID4gWWVzIGJ1dCB3ZSBhcmUgc3BlYWtpbmcgb2Yg
-dGhlIGV2ZW50IHNlbnQgd2hlbiBudW1fdmZzIGlzIGNoYW5nZWQgZnJvbSAwIHRvDQo+ID4gTg0K
-PiA+ID4gWy4uLl0NCj4gPiA+IEkgdGhvdWdodCB0aGlzIHdhcyBhIGdvb2QgaWRlYSwgYnV0DQo+
-ID4gPiANCj4gPiA+ICAgIC0gSXQgZG9lcyBicmVhayB0aGUgZGV2aWNlX2xvY2soKSBlbmNhcHN1
-bGF0aW9uIGEgbGl0dGxlIGJpdDoNCj4gPiA+ICAgICAgc3Jpb3ZfbnVtdmZzX3N0b3JlKCkgdXNl
-cyBkZXZpY2VfbG9jaygpLCB3aGljaCBoYXBwZW5zIHRvIGJlDQo+ID4gPiAgICAgIGltcGxlbWVu
-dGVkIGFzICJtdXRleF9sb2NrKCZkZXYtPm11dGV4KSIsIGJ1dCB3ZSByZWFsbHkgc2hvdWxkbid0
-DQo+ID4gPiAgICAgIHJlbHkgb24gdGhhdCBpbXBsZW1lbnRhdGlvbiwgYW5kDQo+ID4gVGhlIHVz
-ZSBvZiBkZXZpY2VfbG9jayB3YXMgdGhlIGNoZWFwZXN0IHNvbHV0aW9uLiBJdCBpcyB0cnVlIHRo
-YXQNCj4gPiBsb2NrIGFuZCB0cnlsb2NrIGFyZSBleHBvc2VkIGJ5IGRldmljZS5oIGJ1dCBub3Qg
-aXNfbG9ja2VkLiBUbw0KPiA+IHJlc3BlY3QgdGhlIGFic3RyYWN0aW9uLCB3ZSB3b3VsZCBoYXZl
-IHRvIGxvY2sgdGhlIGRldmljZSAoYXQgbGVhc3QNCj4gPiB1c2UgdHJ5bG9jayBidXQgaXQgbWVh
-bnMgbG9ja2luZyB3aGVuIHdlIGNhbiBhY2Nlc3MgdGhlIHZhbHVlLCBpbg0KPiA+IHRoYXQgY2Fz
-ZSB3ZSBtYXkganVzdCBtYWtlIHJlYWRpbmcgbnVtX3ZmcyBibG9ja2luZyA/KS4NCj4gPiANCj4g
-PiBUaGUgb3RoZXIgc29sdXRpb24gaXMgdG8gcmVjb3JkIHRoZSBzdGF0ZSBvZiBmcmVzaG5lc3Mg
-b2YgbnVtX3Zmcw0KPiA+IGJ1dCBpdCBtZWFucyBhIG5ldyBCb29sZWFuIGluIHRoZSBwY2lfc3Jp
-b3YgZGF0YS1zdHJ1Y3R1cmUuDQo+ID4gPiAgICAtIFRoZSBuZXRsaW5rIGV2ZW50cyBhcmUgYmVp
-bmcgZ2VuZXJhdGVkIHZpYSB0aGUgTklDIGRyaXZlciwgYW5kIEknbQ0KPiA+ID4gICAgICBhIGxp
-dHRsZSBoZXNpdGFudCBhYm91dCBjaGFuZ2luZyB0aGUgUENJIGNvcmUgdG8gZGVhbCB3aXRoIHRp
-bWluZw0KPiA+ID4gICAgICBpc3N1ZXMgIm92ZXIgdGhlcmUiLg0KPiA+IA0KPiA+IE5JQyBkcml2
-ZXJzIHNlbmQgbmV0bGluayBldmVudHMgd2hlbiB0aGVpciBzdGF0ZSBjaGFuZ2UsIGJ1dCBpdCBp
-cw0KPiA+IHRoZSBjb3JlIHRoYXQgY2hhbmdlcyB0aGUgdmFsdWUgb2YgbnVtX3Zmcy4gU28gSSB3
-b3VsZCB0aGluayBpdCBpcw0KPiA+IHRoZSBjb3JlIHJlc3BvbnNpYmlsaXR5IHRvIG1ha2Ugc3Vy
-ZSB0aGUgZXhwb3NlZCB2YWx1ZSBtYWtlcyBzZW5zZQ0KPiA+IGFuZCBpdCB3b3VsZCBiZSBiZXR0
-ZXIgdG8gaWdub3JlIHRoZSBkZXRhaWxzIG9mIHRoZSBkcml2ZXINCj4gPiBpbXBsZW1lbnRhdGlv
-bi4NCj4gDQo+IFllcywgSSB0aGluayB5b3UncmUgcmlnaHQuICBBbmQgSSBsaWtlIHlvdXIgcHJl
-dmlvdXMgc3VnZ2VzdGlvbiBvZg0KPiBqdXN0IGxvY2tpbmcgdGhlIGRldmljZSBpbiB0aGUgcmVh
-ZGVyLiAgSSdtIG5vdCBlbm91Z2ggb2YgYSBzeXNmcw0KPiBleHBlcnQgdG8ga25vdyBpZiB0aGVy
-ZSdzIGEgZ29vZCByZWFzb24gdG8gYXZvaWQgYSBsb2NrIHRoZXJlLiAgRG9lcw0KPiB0aGUgZm9s
-bG93aW5nIGxvb2sgcmVhc29uYWJsZSB0byB5b3U/DQo+IA0KPiANCj4gY29tbWl0IDA5NDBmYzk1
-ZGE0NQ0KPiBBdXRob3I6IFBpZXJyZSBDcsOpZ3V0IDxwaWVycmUuY3JlZ3V0QG9yYW5nZS5jb20+
-DQo+IERhdGU6ICAgV2VkIFNlcCAxMSAwOToyNzozNiAyMDE5ICswMjAwDQo+IA0KPiAgICAgUENJ
-L0lPVjogU2VyaWFsaXplIHN5c2ZzIHNyaW92X251bXZmcyByZWFkcyB2cyB3cml0ZXMNCj4gICAg
-IA0KPiAgICAgV2hlbiBzcmlvdl9udW12ZnMgaXMgYmVpbmcgdXBkYXRlZCwgZHJpdmVycyBtYXkg
-bm90aWZ5IGFib3V0IG5ldyBkZXZpY2VzDQo+ICAgICBiZWZvcmUgdGhleSBhcmUgcmVmbGVjdGVk
-IGluIHNyaW92LT5udW1fVkZzLCBzbyBjb25jdXJyZW50IHN5c2ZzIHJlYWRzDQo+ICAgICBwcmV2
-aW91c2x5IHJldHVybmVkIHN0YWxlIHZhbHVlcy4NCj4gICAgIA0KPiAgICAgU2VyaWFsaXplIHRo
-ZSBzeXNmcyByZWFkIHZzIHRoZSB3cml0ZSBzbyB0aGUgcmVhZCByZXR1cm5zIHRoZSBjb3JyZWN0
-DQo+ICAgICBudW1fVkZzIHZhbHVlLg0KPiAgICAgDQo+ICAgICBMaW5rOiBodHRwczovL2J1Z3pp
-bGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTIwMjk5MQ0KPiAgICAgTGluazogaHR0cHM6
-Ly9sb3JlLmtlcm5lbC5vcmcvci8yMDE5MDkxMTA3MjczNi4zMjA5MS0xLXBpZXJyZS5jcmVndXRA
-b3JhbmdlLmNvbQ0KPiAgICAgU2lnbmVkLW9mZi1ieTogUGllcnJlIENyw6lndXQgPHBpZXJyZS5j
-cmVndXRAb3JhbmdlLmNvbT4NCj4gICAgIFNpZ25lZC1vZmYtYnk6IEJqb3JuIEhlbGdhYXMgPGJo
-ZWxnYWFzQGdvb2dsZS5jb20+DQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvaW92LmMg
-Yi9kcml2ZXJzL3BjaS9pb3YuYw0KPiBpbmRleCBiM2Y5NzJlOGNmZWQuLmU3NzU2MmFhYmJhZSAx
-MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9wY2kvaW92LmMNCj4gKysrIGIvZHJpdmVycy9wY2kvaW92
-LmMNCj4gQEAgLTI1NCw4ICsyNTQsMTQgQEAgc3RhdGljIHNzaXplX3Qgc3Jpb3ZfbnVtdmZzX3No
-b3coc3RydWN0IGRldmljZSAqZGV2LA0KPiAgCQkJCSBjaGFyICpidWYpDQo+ICB7DQo+ICAJc3Ry
-dWN0IHBjaV9kZXYgKnBkZXYgPSB0b19wY2lfZGV2KGRldik7DQo+ICsJdTE2IG51bV92ZnM7DQo+
-ICsNCj4gKwkvKiBTZXJpYWxpemUgdnMgc3Jpb3ZfbnVtdmZzX3N0b3JlKCkgc28gcmVhZGVycyBz
-ZWUgdmFsaWQgbnVtX1ZGcyAqLw0KPiArCWRldmljZV9sb2NrKCZwZGV2LT5kZXYpOw0KPiArCW51
-bV92ZnMgPSBwZGV2LT5zcmlvdi0+bnVtX1ZGczsNCj4gKwlkZXZpY2VfbG9jaygmcGRldi0+ZGV2
-KTsNCj4gIA0KPiAtCXJldHVybiBzcHJpbnRmKGJ1ZiwgIiV1XG4iLCBwZGV2LT5zcmlvdi0+bnVt
-X1ZGcyk7DQo+ICsJcmV0dXJuIHNwcmludGYoYnVmLCAiJXVcbiIsIG51bV92ZnMpOw0KPiAgfQ0K
-PiAgDQo+ICAvKg0KDQpJIHRoaW5rIHRoaXMgd291bGQgcHJvYmFibHkgYmUgYSBnb29kIHdheSB0
-byBnby4gVGhlbiBpZiB0aGUgZGV2aWNlIGhhcw0Kc29tZSBzb3J0IG9mIGlzc3VlcyBlbmFibGlu
-ZyBTUi1JT1Ygd2UgZG9uJ3QgaGF2ZSBhbiB1bmtub3duIHN0YXRlIHdoZW4NCnRoaXMgaXMgYmVp
-bmcgcmVhZC4gSXQgaXMgZWl0aGVyIHNldCBvciBpdCBpcyBub3QsIGFuZCB3ZSBwcmV2ZW50IHJl
-YWRpbmcNCnRoZSBzdGF0ZSB3aGlsZSBpdCBpcyBiZWluZyBhbHRlcmVkLg0KDQo=
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
+This patchset adds support for following features:
+
+1. Error Disconnect Recover (EDR) support.
+2. _OSC based negotiation support for DPC.
+
+You can find EDR spec in the following link.
+
+https://members.pcisig.com/wg/PCI-SIG/document/12614
+
+Changes since v8:
+ * Rebased on top of v5.4-rc1
+
+Changes since v7:
+ * Updated DSM version number to match the spec.
+
+Changes since v6:
+ * Modified the order of patches to enable EDR only after all necessary support is added in kernel.
+ * Addressed Bjorn comments.
+
+Changes since v5:
+ * Addressed Keith's comments.
+ * Added additional check for FF mode in pci_aer_init().
+ * Updated commit history of "PCI/DPC: Add support for DPC recovery on NON_FATAL errors" patch.
+
+Changes since v4:
+ * Rebased on top of v5.3-rc1
+ * Fixed lock/unlock issue in edr_handle_event().
+ * Merged "Update error status after reset_link()" patch into this patchset.
+
+Changes since v3:
+ * Moved EDR related ACPI functions/definitions to pci-acpi.c
+ * Modified commit history in few patches to include spec reference.
+ * Added support to handle DPC triggered by NON_FATAL errors.
+ * Added edr_lock to protect PCI device receiving duplicate EDR notifications.
+ * Addressed Bjorn comments.
+
+Changes since v2:
+ * Split EDR support patch into multiple patches.
+ * Addressed Bjorn comments.
+
+Changes since v1:
+ * Rebased on top of v5.1-rc1
+
+Kuppuswamy Sathyanarayanan (8):
+  PCI/ERR: Update error status after reset_link()
+  PCI/DPC: Allow dpc_probe() even if firmware first mode is enabled
+  PCI/DPC: Add dpc_process_error() wrapper function
+  PCI/DPC: Add Error Disconnect Recover (EDR) support
+  PCI/AER: Allow clearing Error Status Register in FF mode
+  PCI/DPC: Update comments related to DPC recovery on NON_FATAL errors
+  PCI/DPC: Clear AER registers in EDR mode
+  PCI/ACPI: Enable EDR support
+
+ drivers/acpi/pci_root.c         |   9 ++
+ drivers/pci/pci-acpi.c          |  91 +++++++++++++++
+ drivers/pci/pcie/Kconfig        |  10 ++
+ drivers/pci/pcie/aer.c          |  12 +-
+ drivers/pci/pcie/dpc.c          | 194 +++++++++++++++++++++++++++++---
+ drivers/pci/pcie/err.c          |  10 +-
+ drivers/pci/pcie/portdrv_core.c |   8 +-
+ drivers/pci/probe.c             |   1 +
+ include/linux/acpi.h            |   6 +-
+ include/linux/pci-acpi.h        |  11 ++
+ include/linux/pci.h             |   3 +-
+ 11 files changed, 321 insertions(+), 34 deletions(-)
+
+-- 
+2.21.0
+
