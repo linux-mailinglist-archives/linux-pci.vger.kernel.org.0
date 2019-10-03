@@ -2,91 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DBD2C9A74
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2019 11:10:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98C16C9AF5
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2019 11:47:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728763AbfJCJKu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Oct 2019 05:10:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51290 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727912AbfJCJKu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Oct 2019 05:10:50 -0400
-Received: from X250 (li937-157.members.linode.com [45.56.119.157])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FAA3217D7;
-        Thu,  3 Oct 2019 09:10:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570093849;
-        bh=MMxJEs96BVXDKmKuJCphNcJwHlAfmZsNg6vA8HtDNS0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z8S71spy+Xp8DisodNAuE7wi8wIsa9qQOR+VeMzwJLbpw4Dz2CBl4oDhZUZg7KyCI
-         jKIATNnmJs4DhCYtb3wotBj33BxFRZNeLBIbIBtbocDEhzMwCTQxJd7mBGOpEAFDOG
-         rXAe6mVQ6Y0Su2CLdU80pQ4UTH4eE+qWy+ExCBTc=
-Date:   Thu, 3 Oct 2019 17:10:33 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com,
-        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
-        lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: Re: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
-Message-ID: <20191003091019.GB22491@X250>
-References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
- <20190902034319.14026-3-xiaowei.bao@nxp.com>
+        id S1729094AbfJCJrW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Oct 2019 05:47:22 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:61932 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728812AbfJCJrV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Oct 2019 05:47:21 -0400
+Received: from 79.184.253.225.ipv4.supernova.orange.pl (79.184.253.225) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id eb26d2c531e81b51; Thu, 3 Oct 2019 11:47:18 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [RFC PATCH] pci: prevent putting pcie devices into lower device states on certain intel bridges
+Date:   Thu, 03 Oct 2019 11:47:17 +0200
+Message-ID: <6813970.88v0tjFSgF@kreacher>
+In-Reply-To: <CACO55ttqP8hnse0f2x0Tat-fCLBWjg9jmZHNb+ayZ5k7gSO7bw@mail.gmail.com>
+References: <20190927214252.GA65801@google.com> <20191001091134.GD2714@lahna.fi.intel.com> <CACO55ttqP8hnse0f2x0Tat-fCLBWjg9jmZHNb+ayZ5k7gSO7bw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902034319.14026-3-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:43:19AM +0800, Xiaowei Bao wrote:
-> Add support for the LS1028a PCIe controller.
+On Tuesday, October 1, 2019 12:00:50 PM CEST Karol Herbst wrote:
+> On Tue, Oct 1, 2019 at 11:11 AM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> >
+> > On Tue, Oct 01, 2019 at 10:56:39AM +0200, Karol Herbst wrote:
+> > > On Tue, Oct 1, 2019 at 10:47 AM Mika Westerberg
+> > > <mika.westerberg@linux.intel.com> wrote:
+> > > >
+> > > > On Mon, Sep 30, 2019 at 06:36:12PM +0200, Karol Herbst wrote:
+> > > > > On Mon, Sep 30, 2019 at 6:30 PM Mika Westerberg
+> > > > > <mika.westerberg@linux.intel.com> wrote:
+> > > > > >
+> > > > > > On Mon, Sep 30, 2019 at 06:05:14PM +0200, Karol Herbst wrote:
+> > > > > > > still happens with your patch applied. The machine simply gets shut down.
+> > > > > > >
+> > > > > > > dmesg can be found here:
+> > > > > > > https://gist.githubusercontent.com/karolherbst/40eb091c7b7b33ef993525de660f1a3b/raw/2380e31f566e93e5ba7c87ef545420965d4c492c/gistfile1.txt
+> > > > > >
+> > > > > > Looking your dmesg:
+> > > > > >
+> > > > > > Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: DCB version 4.1
+> > > > > > Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: MM: using COPY for buffer copies
+> > > > > > Sep 30 17:24:27 kernel: [drm] Initialized nouveau 1.3.1 20120801 for 0000:01:00.0 on minor 1
+> > > > > >
+> > > > > > I would assume it runtime suspends here. Then it wakes up because of PCI
+> > > > > > access from userspace:
+> > > > > >
+> > > > > > Sep 30 17:24:42 kernel: pci_raw_set_power_state: 56 callbacks suppressed
+> > > > > >
+> > > > > > and for some reason it does not get resumed properly. There are also few
+> > > > > > warnings from ACPI that might be relevant:
+> > > > > >
+> > > > > > Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.GFX0._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
+> > > > > > Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.PEG0.PEGP._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
+> > > > > >
+> > > > >
+> > > > > afaik this is the case for essentially every laptop out there.
+> > > >
+> > > > OK, so they are harmless?
+> > > >
+> > >
+> > > yes
+> > >
+> > > > > > This seems to be Dell XPS 9560 which I think has been around some time
+> > > > > > already so I wonder why we only see issues now. Has it ever worked for
+> > > > > > you or maybe there is a regression that causes it to happen now?
+> > > > >
+> > > > > oh, it's broken since forever, we just tried to get more information
+> > > > > from Nvidia if they know what this is all about, but we got nothing
+> > > > > useful.
+> > > > >
+> > > > > We were also hoping to find a reliable fix or workaround we could have
+> > > > > inside nouveau to fix that as I think nouveau is the only driver
+> > > > > actually hit by this issue, but nothing turned out to be reliable
+> > > > > enough.
+> > > >
+> > > > Can't you just block runtime PM from the nouveau driver until this is
+> > > > understood better? That can be done by calling pm_runtime_forbid() (or
+> > > > not calling pm_runtime_allow() in the driver). Or in case of PCI driver
+> > > > you just don't decrease the reference count when probe() ends.
+> > > >
+> > >
+> > > the thing is, it does work for a lot of laptops. We could only observe
+> > > this on kaby lake and skylake ones. Even on Cannon Lakes it seems to
+> > > work just fine.
+> >
+> > Can't you then limit it to those?
+> >
+> > I've experienced that Kabylake root ports can enter and exit in D3cold
+> > just fine because we do that for Thunderbolt for example. But that
+> > always requires help from ACPI. If the system is using non-standard ACPI
+> > methods for example that may require some tricks in the driver side.
+> >
 > 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> ---
-> v2:
->  - No change.
-> v3:
->  - Reuse the ls2088 driver data structurt.
-> v4:
->  - No change.
-> v5:
->  - No change.
-> v6:
->  - No change.
+> yeah.. I am not quite sure what's actually the root cause. I was also
+> trying to use the same PCI registers ACPI is using to trigger this
+> issue on a normal desktop, no luck. Using the same registers does
+> trigger the issue (hence the script).
 > 
->  drivers/pci/controller/dwc/pci-layerscape.c | 1 +
->  1 file changed, 1 insertion(+)
+> The script is essentially just doing what ACPI does, just skipping a lot.
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-> index 3a5fa26..f24f79a 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
-> @@ -263,6 +263,7 @@ static const struct ls_pcie_drvdata ls2088_drvdata = {
->  static const struct of_device_id ls_pcie_of_match[] = {
->  	{ .compatible = "fsl,ls1012a-pcie", .data = &ls1046_drvdata },
->  	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021_drvdata },
-> +	{ .compatible = "fsl,ls1028a-pcie", .data = &ls2088_drvdata },
-
-I think you can save this driver change by using "fsl,ls2088a-pcie" as
-compatible fallback like below.
-
-  compatible = "fsl,ls1028a-pcie", "fsl,ls2088a-pcie";
-
-Shawn
-
->  	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043_drvdata },
->  	{ .compatible = "fsl,ls1046a-pcie", .data = &ls1046_drvdata },
->  	{ .compatible = "fsl,ls2080a-pcie", .data = &ls2080_drvdata },
-> -- 
-> 2.9.5
+> > > > I think that would be much better than blocking any devices behind
+> > > > Kabylake PCIe root ports from entering D3 (I don't really think the
+> > > > problem is in the root ports itself but there is something we are
+> > > > missing when the NVIDIA GPU is put into D3cold or back from there).
+> > >
+> > > I highly doubt there is anything wrong with the GPU alone as we have
+> > > too many indications which tell us otherwise.
+> > >
+> > > Anyway, at this point I don't know where to look further for what's
+> > > actually wrong. And apparently it works on Windows, but I don't know
+> > > why and I have no idea what Windows does on such systems to make it
+> > > work reliably.
+> >
+> > By works you mean that Windows is able to put it into D3cold and back?
+> > If that's the case it may be that there is some ACPI magic that the
+> > Windows driver does and we of course are missing in Linux.
 > 
+> Afaik that's the case. We were talking with Nvidia about it, but they
+> are not aware of any issues generally. (on Windows, nor the hardware).
+> No idea if we can trust their statements though.
+> 
+> But yeah, it might be that on Windows they still do _DSM calls or
+> something... but until today, Nvidia didn't provide any documentation
+> to us for that.
+
+So IMO in that case the right approach is to quirk the combinations of
+GPU/root complex that are known problematic.
+
+Quirking the root complex alone is likely to affect working configurations
+which generally should be avoided.
+
+
+
