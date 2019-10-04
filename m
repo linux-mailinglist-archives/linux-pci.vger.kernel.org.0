@@ -2,79 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE08FCB854
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2019 12:33:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30816CBAA8
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2019 14:39:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730060AbfJDKdS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Oct 2019 06:33:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:41204 "EHLO foss.arm.com"
+        id S2387756AbfJDMjx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Oct 2019 08:39:53 -0400
+Received: from mga06.intel.com ([134.134.136.31]:46473 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729908AbfJDKdS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Oct 2019 06:33:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C038615AB;
-        Fri,  4 Oct 2019 03:33:17 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2130B3F706;
-        Fri,  4 Oct 2019 03:33:17 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 11:33:15 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>, xu_shunji@hoperun.com
-Subject: Re: [PATCH 3/7] dt-bindings: PCI: rcar: Add device tree support for
- r8a774b1
-Message-ID: <20191004103315.GS42880@e119886-lin.cambridge.arm.com>
-References: <1570178133-21532-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1570178133-21532-4-git-send-email-fabrizio.castro@bp.renesas.com>
+        id S2387412AbfJDMjw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Oct 2019 08:39:52 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 05:39:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,256,1566889200"; 
+   d="scan'208";a="222127758"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Oct 2019 05:39:48 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id AFFDB14E; Fri,  4 Oct 2019 15:39:47 +0300 (EEST)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Matthias Andree <matthias.andree@gmx.de>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] PCI: Add missing link delays
+Date:   Fri,  4 Oct 2019 15:39:45 +0300
+Message-Id: <20191004123947.11087-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570178133-21532-4-git-send-email-fabrizio.castro@bp.renesas.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 09:35:29AM +0100, Fabrizio Castro wrote:
-> Add PCIe support for the RZ/G2N (a.k.a. R8A774B1).
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> index 45bba9f..12702c8 100644
-> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> @@ -4,6 +4,7 @@ Required properties:
->  compatible: "renesas,pcie-r8a7743" for the R8A7743 SoC;
->  	    "renesas,pcie-r8a7744" for the R8A7744 SoC;
->  	    "renesas,pcie-r8a774a1" for the R8A774A1 SoC;
-> +	    "renesas,pcie-r8a774b1" for the R8A774B1 SoC;
+Hi,
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+This is second version of the reworked PCIe link delay patch posted earlier
+here:
 
->  	    "renesas,pcie-r8a774c0" for the R8A774C0 SoC;
->  	    "renesas,pcie-r8a7779" for the R8A7779 SoC;
->  	    "renesas,pcie-r8a7790" for the R8A7790 SoC;
-> -- 
-> 2.7.4
-> 
+  https://patchwork.kernel.org/patch/11106611/
+
+Changes from v1:
+
+  * Introduce pcie_wait_for_link_delay() in a separate patch
+  * Tidy up changelog, remove some debug output
+  * Rename pcie_wait_downstream_accessible() to
+    pci_bridge_wait_for_secondary_bus() and make it generic to all PCI
+    bridges.
+  * Handle Tpvrh + Trhfa for conventional PCI even though we don't do PM
+    for them right now.
+  * Use pci_dbg() instead of dev_dbg().
+  * Dropped check for pm_suspend_no_platform() and only check for D3cold.
+  * Drop pcie_get_downstream_delay(), same delay applies equally to all
+    devices (it is not entirely clear from the spec).
+
+I'm still checking for downstream device because I think we can skip the
+delays if there is nothing connected. The reason is that if device is added
+when the downstream/root port is in D3 the delay is handled by pciehp in
+its board_added(). In case of ACPI hotplug the firmware is supposed to
+configure the device (and handle the delay).
+
+I also checked we do resume sibling devices in paraller (I think due to
+async_suspend).
+
+@Matthias, @Paul and @Nicholas, I appreciate if you could check that this
+does not cause any issues for your systems.
+
+Mika Westerberg (2):
+  PCI: Introduce pcie_wait_for_link_delay()
+  PCI: Add missing link delays required by the PCIe spec
+
+ drivers/pci/pci-driver.c |  18 +++++++
+ drivers/pci/pci.c        | 113 +++++++++++++++++++++++++++++++++++----
+ drivers/pci/pci.h        |   1 +
+ 3 files changed, 122 insertions(+), 10 deletions(-)
+
+-- 
+2.23.0
+
