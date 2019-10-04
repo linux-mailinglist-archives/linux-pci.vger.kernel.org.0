@@ -2,86 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 25F6BCBE65
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2019 17:00:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FD21CBED8
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2019 17:16:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389113AbfJDPAg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Oct 2019 11:00:36 -0400
-Received: from mga05.intel.com ([192.55.52.43]:57546 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388802AbfJDPAg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Oct 2019 11:00:36 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 08:00:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,256,1566889200"; 
-   d="scan'208";a="205876407"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 04 Oct 2019 08:00:32 -0700
-Received: by lahna (sSMTP sendmail emulation); Fri, 04 Oct 2019 18:00:32 +0300
-Date:   Fri, 4 Oct 2019 18:00:32 +0300
-From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH v8 0/6] Patch series to support Thunderbolt without any
- BIOS support
-Message-ID: <20191004150032.GK2819@lahna.fi.intel.com>
-References: <20191003121946.GS2819@lahna.fi.intel.com>
- <20191004130803.GA41961@google.com>
+        id S2389690AbfJDPQg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Oct 2019 11:16:36 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45383 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388802AbfJDPQg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Oct 2019 11:16:36 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q64so6873368ljb.12
+        for <linux-pci@vger.kernel.org>; Fri, 04 Oct 2019 08:16:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=65IRqF9iEJ/IX4KJA6Ve1T8fQpJLO1C2LUNxK3vGQ5E=;
+        b=f2MRXP7pemwsE08WYBFD9zx+OBOxN/DK07TIslWduDw4ib8UA64hvMVOJ+pvmLVKy5
+         riOW9NzPV1EA2jIYev4z1TajsyZbQtzg4jVmdtOxhtJ4LDAYk4JEjUcz+RgohrotsBPf
+         fq0fLIK5egOj0nEUda3orPnCLOr3C1KVl9uqCjlh9mQ1/EesjvobEtxAbRt+Ovlk0/3C
+         Sn7NS1uMWVJjH1Jo0csSfl+Mn+NNZETreIU8jNL5DMxGIil8ptzVCBPse8O6V8CnTB4o
+         ougvmsiQFSwyfjJy5VNgY3uwK9Uldz/hq48Vyy0N/tDil/jF/X8Jpcp5DNhymZMKhytt
+         YY0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=65IRqF9iEJ/IX4KJA6Ve1T8fQpJLO1C2LUNxK3vGQ5E=;
+        b=Ps04OiQWBhnv1kmpg4adrJkCs137G+h+657jlGVefXw+hm3lfGbHc5m6G5T7XBEtN5
+         OqPcelOaKiofXzk973hZDUOYD53g1JN/hIlaiWC+wr9rzK4nIKKpnFX27NxZHtrqrUWT
+         BVt34HcP1QIMYDNTcm0a7HhyRvRhpb8wf19v4mQNnzmJLOKX2smT4M4CLt85yukEhcQi
+         WijtBclWtRw9j3gmNSrF8IcShJOo6XXd83SpqL5RdkoLsdxg7RYVbtYAC7eupz9FRZIK
+         QvxVvgB2e/7iMM7fgSakdJ+73JzilGWpLioZkHdoHjvgVGXzqejWfw48BnYvHNSk0bIS
+         l+HA==
+X-Gm-Message-State: APjAAAVzEVNr5MqQ0GB9LgyXnJfF9ewaEwgdOApK1+UVdTmryb9h02tp
+        4bofRCEfVclj5PkPVTiuCk9glDcoCG4=
+X-Google-Smtp-Source: APXvYqz776iPhohQxfb9KlUykDs4RJV21qYdoJSgz1L14ReT0rVprHhXKxqsHzQByVfcwFC3m3le4A==
+X-Received: by 2002:a2e:b00b:: with SMTP id y11mr10185468ljk.50.1570202193998;
+        Fri, 04 Oct 2019 08:16:33 -0700 (PDT)
+Received: from monakov-y.office.kontur-niirs.ru ([81.222.243.34])
+        by smtp.gmail.com with ESMTPSA id q3sm1309077ljq.4.2019.10.04.08.16.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 04 Oct 2019 08:16:33 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 18:16:31 +0300
+From:   Yurii Monakov <monakov.y@gmail.com>
+To:     linux-pci@vger.kernel.org
+Cc:     m-karicheri2@ti.com
+Subject: [PATCH] PCI: keystone: Fix outbound region mapping
+Message-ID: <20191004151631.GA29570@monakov-y.office.kontur-niirs.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191004130803.GA41961@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 08:08:03AM -0500, Bjorn Helgaas wrote:
-> On Thu, Oct 03, 2019 at 03:19:46PM +0300, mika.westerberg@linux.intel.com wrote:
-> > On Fri, Jul 26, 2019 at 12:52:58PM +0000, Nicholas Johnson wrote:
-> > > Patch series rebased to 5.3-rc1.
-> > > 
-> > > If possible, please have a quick read over while I am away (2019-07-27
-> > > to mid 2019-08-04), so I can fix any mistakes or make simple changes to
-> > > get problems out of the way for a more thorough examination later.
-> > > 
-> > > Thanks!
-> > > 
-> > > Kind regards,
-> > > Nicholas
-> > > 
-> > > Nicholas Johnson (6):
-> > >   PCI: Consider alignment of hot-added bridges when distributing
-> > >     available resources
-> > >   PCI: In extend_bridge_window() change available to new_size
-> > >   PCI: Change extend_bridge_window() to set resource size directly
-> > >   PCI: Allow extend_bridge_window() to shrink resource if necessary
-> > >   PCI: Add hp_mmio_size and hp_mmio_pref_size parameters
-> > >   PCI: Fix bug resulting in double hpmemsize being assigned to MMIO
-> > >     window
-> > 
-> > Hi Bjorn,
-> > 
-> > What's the status of this series? I don't see them in v5.4-rc1.
-> 
-> They're still on my to-do list but are currently languishing because
-> they touch critical but complicated code that I don't understand and
-> nobody else has chimed in to help review them.  Testing reports would
-> also be helpful.
+PCIe window memory start address should be incremented by OB_WIN_SIZE
+megabytes (8 MB) instead of plain OB_WIN_SIZE (8).
 
-I will test this next week as it solves one issue I reported some time ago.
+Signed-off-by: Yurii Monakov <monakov.y@gmail.com>
+---
+ drivers/pci/controller/dwc/pci-keystone.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I can also help you to review this, at least parts touching
-extend_bridge_window() and pci_bus_distribute_available_resources(),
-because those functions were added by me ;-)
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index af677254a072..f19de60ac991 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -422,7 +422,7 @@ static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
+ 				   lower_32_bits(start) | OB_ENABLEN);
+ 		ks_pcie_app_writel(ks_pcie, OB_OFFSET_HI(i),
+ 				   upper_32_bits(start));
+-		start += OB_WIN_SIZE;
++		start += OB_WIN_SIZE * SZ_1M;
+ 	}
+ 
+ 	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
+-- 
+2.17.1
+
