@@ -2,84 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D014CC0E6
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2019 18:37:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F042DCC3BF
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2019 21:48:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726082AbfJDQh2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Oct 2019 12:37:28 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35308 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfJDQh1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Oct 2019 12:37:27 -0400
-Received: by mail-lf1-f67.google.com with SMTP id w6so4931951lfl.2
-        for <linux-pci@vger.kernel.org>; Fri, 04 Oct 2019 09:37:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pogQvn83j4oJYWNXWDTkvZI3328XLhVSQasefvcRlEo=;
-        b=PdfDgpwIr1g4Y67mXvtlazABvYBvry20RKpT6nqDBwsoEMA1UggIaOA+GSES58t8j5
-         fMIx086UHm7/b88MsJCfN8ZOxAuepUyPrzzKpb1NqG8feQZza50pkWIZufJkiIyIJ5d3
-         UsGZwqwWo+p5Oav79q+Hf54Tj9iwHVNzNIl8yXczS0j4it193le9Toh/KWFliCnsFQws
-         wSuYrW8Djbc53qW/I+wxL5r+8EAlYHwN7oo6BV9Fie92HeL+Ho1gl9BUCRWNDmB5binx
-         IbNCjD+MxFBx7DwoG8nQE191Smp3x1b7DagE4EpMxk+tvCpq4oJ7Pses5GzpLf7I6RM8
-         fDnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pogQvn83j4oJYWNXWDTkvZI3328XLhVSQasefvcRlEo=;
-        b=cvEeuaYX54bSZd/jX2M0dA2iWmdkQGG9zKtsc+6klX5K83TLqpfpyg+L36TOZLdjhI
-         MOJAPgTAHfKeZ0FcYzU9jY4LDPIq8yxWFubbY5VvzEf8mEo3hxGsaa6Na/rDPFY/PSpW
-         Hs3Cgfgi9pt9q0HZ6hv7GQ3YOmX5MsAkoO7C3A58juhhUNIhFAzRiC2a0iyKSwrR8eXa
-         +f3UdUKi2GTh9b5jFXACugZ2it/POOrQZ67QxeI9eNtGYCZMaFhFl2tJLKtOXnOKpCre
-         VJDWhLOeX7CCC2HRvl491rpAC61Mo849hb97zVXf7jRRNVlRFDhEouBxX/DkBS4GQoYZ
-         GnKg==
-X-Gm-Message-State: APjAAAXK36idh/sN/sxqasS2ahgusWt7nCbpVlDkIG7Z4OJOYBQFIyTz
-        C6zPdWPxvIQ1UL3ReiKSnT39yjGceTbTfg==
-X-Google-Smtp-Source: APXvYqxsaxkILmIuwEC6EHGQcURnhpi1tOyeRpTAU7bCdHqa/7oO5GjTxDQPJqdv+5f4sACediXMTw==
-X-Received: by 2002:a19:f24d:: with SMTP id d13mr9593358lfk.127.1570207045962;
-        Fri, 04 Oct 2019 09:37:25 -0700 (PDT)
-Received: from monakov-y.office.kontur-niirs.ru ([81.222.243.34])
-        by smtp.gmail.com with ESMTPSA id x25sm1396078ljb.60.2019.10.04.09.37.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 04 Oct 2019 09:37:25 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 19:37:23 +0300
-From:   Yurii Monakov <monakov.y@gmail.com>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     linux-pci@vger.kernel.org, m-karicheri2@ti.com
-Subject: Re: [PATCH] PCI: keystone: Fix outbound region mapping
-Message-ID: <20191004163723.GA31823@monakov-y.office.kontur-niirs.ru>
-References: <20191004154811.GA31397@monakov-y.office.kontur-niirs.ru>
- <20191004160519.GV42880@e119886-lin.cambridge.arm.com>
+        id S1730643AbfJDTsS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Oct 2019 15:48:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42288 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727978AbfJDTsS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Oct 2019 15:48:18 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EDF92084D;
+        Fri,  4 Oct 2019 19:48:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570218496;
+        bh=YJvS4ja7QkCv/xeilE+vPBPFSgMehIFyb5QZZEJymuI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=CNHpFUafD0OqBoYBGlS8nwY8IPxdpCwd1umMDz6Bp61Jz+chsV2G4k1o8Vs3olmZm
+         qsb8NbW8BPEeGvNgnmWyL6dLhSzpNF59co0FdVCfj9NEMwDHASwHrRLKOhfkYM2pMB
+         9Gj7AoiQUfH1SYNtSjXGyKGH08O2tYf34UBCc52Q=
+Date:   Fri, 4 Oct 2019 14:48:13 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jayachandran Chandrasekharan Nair <jnair@marvell.com>
+Cc:     George Cherian <gcherian@marvell.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shannon.zhao@linux.alibaba.com" <shannon.zhao@linux.alibaba.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Sunil Kovvuri Goutham <sgoutham@marvell.com>
+Subject: Re: [PATCH] PCI: Enhance the ACS quirk for Cavium devices
+Message-ID: <20191004194813.GA76466@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191004160519.GV42880@e119886-lin.cambridge.arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190930232041.GA22852@dc5-eodlnx05.marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> This looks fine, however are the earlier lines still correct?
-Yes, according to TI Keystone PCIe datasheet pg. 3-10 OB_SIZE
-register should hold log2 of actual window size in MB (bits 2-0):
+On Mon, Sep 30, 2019 at 11:20:50PM +0000, Jayachandran Chandrasekharan Nair wrote:
+> On Mon, Sep 30, 2019 at 03:34:10PM -0500, Bjorn Helgaas wrote:
+> > On Thu, Sep 19, 2019 at 02:43:34AM +0000, George Cherian wrote:
+> > > Enhance the ACS quirk for Cavium Processors. Add the root port
+> > > vendor ID's in an array and use the same in match function.
+> > > For newer devices add the vendor ID's in the array so that the
+> > > match function is simpler.
+> > > 
+> > > Signed-off-by: George Cherian <george.cherian@marvell.com>
+> > > ---
+> > >  drivers/pci/quirks.c | 28 +++++++++++++++++++---------
+> > >  1 file changed, 19 insertions(+), 9 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > > index 44c4ae1abd00..64deeaddd51c 100644
+> > > --- a/drivers/pci/quirks.c
+> > > +++ b/drivers/pci/quirks.c
+> > > @@ -4241,17 +4241,27 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
+> > >  #endif
+> > >  }
+> > >  
+> > > +static const u16 pci_quirk_cavium_acs_ids[] = {
+> > > +	/* CN88xx family of devices */
+> > > +	0xa180, 0xa170,
+> > > +	/* CN99xx family of devices */
+> > > +	0xaf84,
+> > > +	/* CN11xxx family of devices */
+> > > +	0xb884,
+> > > +};
+> > > +
+> > >  static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
+> > >  {
+> > > -	/*
+> > > -	 * Effectively selects all downstream ports for whole ThunderX 1
+> > > -	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
+> > > -	 * bits of device ID are used to indicate which subdevice is used
+> > > -	 * within the SoC.
+> > > -	 */
+> > > -	return (pci_is_pcie(dev) &&
+> > > -		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
+> > > -		((dev->device & 0xf800) == 0xa000));
+> > > +	int i;
+> > > +
+> > > +	if (!pci_is_pcie(dev) || pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
+> > > +		return false;
+> > > +
+> > > +	for (i = 0; i < ARRAY_SIZE(pci_quirk_cavium_acs_ids); i++)
+> > > +		if (pci_quirk_cavium_acs_ids[i] == dev->device)
+> > 
+> > I'm a little skeptical of this because the previous test:
+> > 
+> >   (dev->device & 0xf800) == 0xa000
+> > 
+> > could match *many* devices, but of those, the new code only matches two
+> > (0xa180, 0xa170).
+> > 
+> > And the comment says the new code matches the CN99xx and CN11xxx
+> > *families*, but it only matches a single device ID for each, which
+> > makes me think there may be more devices to come.
+> > 
+> > Maybe this is all what you want, but please confirm.
+> 
+> There are only a very few device IDs for root ports, so just listing
+> them out like this maybe better. The earlier match covered a lot of
+> ThunderX1 devices, but did not really match the ThunderX2 root ports.
+> 
+> This looks ok for ThunderX2. Sunil & Robert can comment on other
+> processor families I hope.
 
-0h = 1MB
-1h = 2MB
-2h = 4MB
-3h = 8MB
+I don't know which of these are ThunderX2 vs ThunderX1.
 
-But OB_OFFSET_INDEXn/OB_OFFSETn_HI register pair hold absolute
-64-bit bus address, so 'start' variable sholud be incremented
-by 8M to map all PCIe data space (according to the comment above
-the loop).
+I currently have the change below on a branch waiting for confirmation
+that this is what you intend.
 
-TI confirms this bug for for kernel v4.14, but since then
-some driver code relocation happend and I've decided to
-report this here.
+> > The commit log should be explicit that this adds CN99xx and CN11xxx,
+> > which previously were not matched.
+> > 
+> > This looks like stable material?
+> > 
+> > > +			return true;
+> > > +
+> > > +	return false;
+> > >  }
+> > >  
+> > >  static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
 
-Regards,
-Yurii
+commit 37b22fbfec2d
+Author: George Cherian <george.cherian@marvell.com>
+Date:   Thu Sep 19 02:43:34 2019 +0000
 
+    PCI: Apply Cavium ACS quirk to CN99xx and CN11xxx Root Ports
+    
+    Add an array of Cavium Root Port device IDs and apply the quirk only to the
+    listed devices.
+    
+    Instead of applying the quirk to all Root Ports where
+    "(dev->device & 0xf800) == 0xa000", apply it only to CN88xx 0xa180 and
+    0xa170 Root Ports.
+    
+    Also apply the quirk to CN99xx (0xaf84) and CN11xxx (0xb884) Root Ports.
+    
+    Link: https://lore.kernel.org/r/20190919024319.GA8792@dc5-eodlnx05.marvell.com
+    Fixes: f2ddaf8dfd4a ("PCI: Apply Cavium ThunderX ACS quirk to more Root Ports")
+    Fixes: b404bcfbf035 ("PCI: Add ACS quirk for all Cavium devices")
+    Signed-off-by: George Cherian <george.cherian@marvell.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Cc: stable@vger.kernel.org      # v4.12+
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 320255e5e8f8..4e5048cb5ec6 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4311,17 +4311,24 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
+ #endif
+ }
+ 
++static const u16 pci_quirk_cavium_acs_ids[] = {
++	0xa180, 0xa170,		/* CN88xx family of devices */
++	0xaf84,			/* CN99xx family of devices */
++	0xb884,			/* CN11xxx family of devices */
++};
++
+ static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
+ {
+-	/*
+-	 * Effectively selects all downstream ports for whole ThunderX 1
+-	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
+-	 * bits of device ID are used to indicate which subdevice is used
+-	 * within the SoC.
+-	 */
+-	return (pci_is_pcie(dev) &&
+-		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
+-		((dev->device & 0xf800) == 0xa000));
++	int i;
++
++	if (!pci_is_pcie(dev) || pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
++		return false;
++
++	for (i = 0; i < ARRAY_SIZE(pci_quirk_cavium_acs_ids); i++)
++		if (pci_quirk_cavium_acs_ids[i] == dev->device)
++			return true;
++
++	return false;
+ }
+ 
+ static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
