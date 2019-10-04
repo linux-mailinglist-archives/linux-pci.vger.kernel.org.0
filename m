@@ -2,181 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CCD1BCB328
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2019 03:53:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7DF3CB379
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2019 05:18:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbfJDBxX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Oct 2019 21:53:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42496 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728360AbfJDBxX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Oct 2019 21:53:23 -0400
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64E4621848;
-        Fri,  4 Oct 2019 01:53:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570154001;
-        bh=6odMtoguJBjNIxmq0WvWcpWk1CrE1EvPomXzTsSYIrs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AwYuS5MYR5UrpmjoK052xwB8qTp8H9UDlMezDdYyl1pA840CiRONdKV/9uIsNNUqR
-         8lS/Fn/bEO6ooPXWi0TrohOTpOF3Ns2e31Xa3u0mQ1E/6uy2d7lmgYF3+oI2NEfjpu
-         hqjRtZ6gUBLiJNLCfnIPomVdwPxetJaQRrPlwlY8=
-Received: by mail-qk1-f171.google.com with SMTP id z67so4360929qkb.12;
-        Thu, 03 Oct 2019 18:53:21 -0700 (PDT)
-X-Gm-Message-State: APjAAAWYhBOVbr3BzHbOF/38i/QVFFCMCGkCjs+NW2K3eZqo6YdzXBst
-        gFNrqmW0B6riRUmUqtU6AJaPaGCQnYa9UICZhQ==
-X-Google-Smtp-Source: APXvYqy3/i1ov1ukyfSyJerD8h8tAJrCXAUbX0bSNjR5ZiZsqQGKwdIgHZwn3X3XEQRrLm3086Gb58Gtpxhh9D2C0Ws=
-X-Received: by 2002:a05:620a:12d5:: with SMTP id e21mr7829021qkl.152.1570154000420;
- Thu, 03 Oct 2019 18:53:20 -0700 (PDT)
+        id S1728443AbfJDDS6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Oct 2019 23:18:58 -0400
+Received: from ns3.fnarfbargle.com ([103.4.19.87]:39082 "EHLO
+        ns3.fnarfbargle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727758AbfJDDS6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Oct 2019 23:18:58 -0400
+X-Greylist: delayed 1918 seconds by postgrey-1.27 at vger.kernel.org; Thu, 03 Oct 2019 23:18:58 EDT
+Received: from [10.8.0.1] (helo=srv.home ident=heh19151)
+        by ns3.fnarfbargle.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.84_2)
+        (envelope-from <lists2009@fnarfbargle.com>)
+        id 1iGDZX-0001GQ-TE; Fri, 04 Oct 2019 10:43:59 +0800
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fnarfbargle.com; s=mail;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=JOyw9WqbGBm2Mu4SL6cJ20GQPUKDDNmOAM6PypbLkKg=;
+        b=NobExJzO4BKQfqxAguTeCdjv1RNo55e1U9Mit0cBCEV57xrPfG/W/vOAqS2cl7a0dGGWVf7xgf6qWj6gmfgzdn/LML1ByU7xWFXH+YmHODudfAfpu3xtA+Ketx1WpvgdpOa7k9BtRRd80z3phUigCAF7do49+VEVd4tZ2osSvSI=;
+Subject: Re: [PATCH 1/3] thunderbolt: Read DP IN adapter first two dwords in
+ one go
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        linux-pci@vger.kernel.org
+References: <20191001102905.21680-1-mika.westerberg@linux.intel.com>
+ <20191001102905.21680-2-mika.westerberg@linux.intel.com>
+From:   Brad Campbell <lists2009@fnarfbargle.com>
+Message-ID: <abad9eb5-ef39-5936-7d9d-bdf53a81a1c4@fnarfbargle.com>
+Date:   Fri, 4 Oct 2019 10:43:59 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190927002455.13169-1-robh@kernel.org> <20190927002455.13169-6-robh@kernel.org>
- <20190930125752.GD12051@infradead.org> <95f8dabea99f104336491281b88c04b58d462258.camel@suse.de>
- <CAL_JsqLnKxuQRR3sGGtXF3nwwDx7DOONPPYz37ROk7u_+cxRug@mail.gmail.com> <0557c83bcb781724a284811fef7fdb122039f336.camel@suse.de>
-In-Reply-To: <0557c83bcb781724a284811fef7fdb122039f336.camel@suse.de>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 3 Oct 2019 20:53:09 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLo0jtDcCDf5VTc+_grO3fJ1MsDTE8Bj=B0J+eLk3hpZg@mail.gmail.com>
-Message-ID: <CAL_JsqLo0jtDcCDf5VTc+_grO3fJ1MsDTE8Bj=B0J+eLk3hpZg@mail.gmail.com>
-Subject: Re: [PATCH 05/11] of: Ratify of_dma_configure() interface
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Arnd Bergmann <arnd@arndb.de>, PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Oza Pawandeep <oza.oza@broadcom.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191001102905.21680-2-mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 10:43 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> On Mon, 2019-09-30 at 16:24 -0500, Rob Herring wrote:
-> > On Mon, Sep 30, 2019 at 8:32 AM Nicolas Saenz Julienne
-> > <nsaenzjulienne@suse.de> wrote:
-> > > On Mon, 2019-09-30 at 05:57 -0700, Christoph Hellwig wrote:
-> > > > On Thu, Sep 26, 2019 at 07:24:49PM -0500, Rob Herring wrote:
-> > > > > -int of_dma_configure(struct device *dev, struct device_node *np, bool
-> > > > > force_dma)
-> > > > > +int of_dma_configure(struct device *dev, struct device_node *parent,
-> > > > > bool
-> > > > > force_dma)
-> > > >
-> > > > This creates a > 80 char line.
-> > > >
-> > > > >  {
-> > > > >     u64 dma_addr, paddr, size = 0;
-> > > > >     int ret;
-> > > > >     bool coherent;
-> > > > >     unsigned long offset;
-> > > > >     const struct iommu_ops *iommu;
-> > > > > +   struct device_node *np;
-> > > > >     u64 mask;
-> > > > >
-> > > > > +   np = dev->of_node;
-> > > > > +   if (!np)
-> > > > > +           np = parent;
-> > > > > +   if (!np)
-> > > > > +           return -ENODEV;
-> > > >
-> > > > I have to say I find the older calling convention simpler to understand.
-> > > > If we want to enforce the invariant I'd rather do that explicitly:
-> > > >
-> > > >       if (dev->of_node && np != dev->of_node)
-> > > >               return -EINVAL;
-> > >
-> > > As is, this would break Freescale Layerscape fsl-mc bus' dma_configure():
-> >
-> > This may break PCI too for devices that have a DT node.
-> >
-> > > static int fsl_mc_dma_configure(struct device *dev)
-> > > {
-> > >         struct device *dma_dev = dev;
-> > >
-> > >         while (dev_is_fsl_mc(dma_dev))
-> > >                 dma_dev = dma_dev->parent;
-> > >
-> > >         return of_dma_configure(dev, dma_dev->of_node, 0);
-> > > }
-> > >
-> > > But I think that with this series, given the fact that we now treat the lack
-> > > of
-> > > dma-ranges as a 1:1 mapping instead of an error, we could rewrite the
-> > > function
-> > > like this:
-> >
-> > Now, I'm reconsidering allowing this abuse... It's better if the code
-> > which understands the bus structure in DT for a specific bus passes in
-> > the right thing. Maybe I should go back to Robin's version (below).
-> > OTOH, the existing assumption that 'dma-ranges' was in the immediate
-> > parent was an assumption on the bus structure which maybe doesn't
-> > always apply.
-> >
-> > diff --git a/drivers/of/device.c b/drivers/of/device.c
-> > index a45261e21144..6951450bb8f3 100644
-> > --- a/drivers/of/device.c
-> > +++ b/drivers/of/device.c
-> > @@ -98,12 +98,15 @@ int of_dma_configure(struct device *dev, struct
-> > device_node *parent, bool force_
-> >         u64 mask;
-> >
-> >         np = dev->of_node;
-> > -       if (!np)
-> > -               np = parent;
-> > +       if (np)
-> > +               parent = of_get_dma_parent(np);
-> > +       else
-> > +               np = of_node_get(parent);
-> >         if (!np)
-> >                 return -ENODEV;
-> >
-> > -       ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
-> > +       ret = of_dma_get_range(parent, &dma_addr, &paddr, &size);
-> > +       of_node_put(parent);
-> >         if (ret < 0) {
-> >                 /*
-> >                  * For legacy reasons, we have to assume some devices need
->
-> I spent some time thinking about your comments and researching. I came to the
-> realization that both these solutions break the usage in
-> drivers/gpu/drm/sun4i/sun4i_backend.c:805. In that specific case both
-> 'dev->of_node' and 'parent' exist yet the device receiving the configuration
-> and 'parent' aren't related in any way.
+On 1/10/19 6:29 pm, Mika Westerberg wrote:
+> When we discover existing DP tunnels the code checks whether DP IN
+> adapter port is enabled by calling tb_dp_port_is_enabled() before it
+> continues the discovery process. On Light Ridge (gen 1) controller
+> reading only the first dword of the DP IN config space causes subsequent
+> access to the same DP IN port path config space to fail or return
+> invalid data as can be seen in the below splat:
+> 
+>    thunderbolt 0000:07:00.0: CFG_ERROR(0:d): Invalid config space or offset
+>    Call Trace:
+>     tb_cfg_read+0xb9/0xd0
+>     __tb_path_deactivate_hop+0x98/0x210
+>     tb_path_activate+0x228/0x7d0
+>     tb_tunnel_restart+0x95/0x200
+>     tb_handle_hotplug+0x30e/0x630
+>     process_one_work+0x1b4/0x340
+>     worker_thread+0x44/0x3d0
+>     kthread+0xeb/0x120
+>     ? process_one_work+0x340/0x340
+>     ? kthread_park+0xa0/0xa0
+>     ret_from_fork+0x1f/0x30
+> 
+> If both DP In adapter config dwords are read in one go the issue does
+> not reproduce. This is likely firmware bug but we can work it around by
+> always reading the two dwords in one go. There should be no harm for
+> other controllers either so can do it unconditionally.
+> 
+> Link: https://lkml.org/lkml/2019/8/28/160
+> Reported-by: Brad Campbell <lists2009@fnarfbargle.com>
 
-I knew there was some reason I didn't like those virtual DT nodes...
+Tested-by: Brad Campbell <lists2009@fnarfbargle.com>
 
-That does seem to be the oddest case. Several of the others are just
-non-DT child platform devices. Perhaps we need a "copy the DMA config
-from another struct device (or parent struct device)" function to
-avoid using a DT function on a non-DT device.
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>   drivers/thunderbolt/switch.c | 19 +++++++++++--------
+>   1 file changed, 11 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+> index 410bf1bceeee..8e712fbf8233 100644
+> --- a/drivers/thunderbolt/switch.c
+> +++ b/drivers/thunderbolt/switch.c
+> @@ -896,12 +896,13 @@ int tb_dp_port_set_hops(struct tb_port *port, unsigned int video,
+>    */
+>   bool tb_dp_port_is_enabled(struct tb_port *port)
+>   {
+> -	u32 data;
+> +	u32 data[2];
+>   
+> -	if (tb_port_read(port, &data, TB_CFG_PORT, port->cap_adap, 1))
+> +	if (tb_port_read(port, data, TB_CFG_PORT, port->cap_adap,
+> +			 ARRAY_SIZE(data)))
+>   		return false;
+>   
+> -	return !!(data & (TB_DP_VIDEO_EN | TB_DP_AUX_EN));
+> +	return !!(data[0] & (TB_DP_VIDEO_EN | TB_DP_AUX_EN));
+>   }
+>   
+>   /**
+> @@ -914,19 +915,21 @@ bool tb_dp_port_is_enabled(struct tb_port *port)
+>    */
+>   int tb_dp_port_enable(struct tb_port *port, bool enable)
+>   {
+> -	u32 data;
+> +	u32 data[2];
+>   	int ret;
+>   
+> -	ret = tb_port_read(port, &data, TB_CFG_PORT, port->cap_adap, 1);
+> +	ret = tb_port_read(port, data, TB_CFG_PORT, port->cap_adap,
+> +			   ARRAY_SIZE(data));
+>   	if (ret)
+>   		return ret;
+>   
+>   	if (enable)
+> -		data |= TB_DP_VIDEO_EN | TB_DP_AUX_EN;
+> +		data[0] |= TB_DP_VIDEO_EN | TB_DP_AUX_EN;
+>   	else
+> -		data &= ~(TB_DP_VIDEO_EN | TB_DP_AUX_EN);
+> +		data[0] &= ~(TB_DP_VIDEO_EN | TB_DP_AUX_EN);
+>   
+> -	return tb_port_write(port, &data, TB_CFG_PORT, port->cap_adap, 1);
+> +	return tb_port_write(port, data, TB_CFG_PORT, port->cap_adap,
+> +			     ARRAY_SIZE(data));
+>   }
+>   
+>   /* switch utility functions */
+> 
 
-> IOW we can't just use 'dev->of_node' as a starting point to walk upwards the
-> tree. We always have to respect whatever DT node the bus provided, and start
-> there. This clashes with the current solutions, as they are based on the fact
-> that we can use dev->of_node when present.
-
-Yes, you are right.
-
-> My guess at this point, if we're forced to honor that behaviour, is that we
-> have to create a new API for the PCI use case. Something the likes of
-> of_dma_configure_parent().
-
-I think of_dma_configure just has to work with the device_node of
-either the device or the device parent and dev->of_node is never used
-unless the caller sets it.
-
-Rob
