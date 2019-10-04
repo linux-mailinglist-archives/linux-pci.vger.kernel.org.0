@@ -2,60 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 19FB4CBB34
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2019 15:06:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A39F4CBB43
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2019 15:08:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387874AbfJDNG0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Oct 2019 09:06:26 -0400
-Received: from mga09.intel.com ([134.134.136.24]:4341 "EHLO mga09.intel.com"
+        id S2387916AbfJDNIG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Oct 2019 09:08:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387573AbfJDNGZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Oct 2019 09:06:25 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 06:06:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,256,1566889200"; 
-   d="scan'208";a="205849763"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 04 Oct 2019 06:06:20 -0700
-Received: by lahna (sSMTP sendmail emulation); Fri, 04 Oct 2019 16:06:19 +0300
-Date:   Fri, 4 Oct 2019 16:06:19 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Matthias Andree <matthias.andree@gmx.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] PCI: Add missing link delays
-Message-ID: <20191004130619.GI2819@lahna.fi.intel.com>
-References: <20191004123947.11087-1-mika.westerberg@linux.intel.com>
- <811277ae-bec1-1724-23ce-c13407bd79c5@gmx.de>
+        id S2387874AbfJDNIF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Oct 2019 09:08:05 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C17D5215EA;
+        Fri,  4 Oct 2019 13:08:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570194485;
+        bh=HhQ69B1WDttqkP35gsTsi8yNjEKoaJWoVrSxdX3Mblg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=SeSYW+Q8gv30sLvK4tKZE1hvuDAvospSwtjV7/z2VkMpHqizNd3HB1rr5g7soVPuV
+         l3/L2MKWk78SuBIGkQK+uMguRzosy7vTa1Gy445Z3E21q0el4egfijlmQq82XRAKy6
+         Zl5YLo4H3pJZXiBN2Y8j6+GQaP0EYiwbwPIrizjI=
+Date:   Fri, 4 Oct 2019 08:08:03 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: Re: [PATCH v8 0/6] Patch series to support Thunderbolt without any
+ BIOS support
+Message-ID: <20191004130803.GA41961@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <811277ae-bec1-1724-23ce-c13407bd79c5@gmx.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191003121946.GS2819@lahna.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 02:57:21PM +0200, Matthias Andree wrote:
-> Am 04.10.19 um 14:39 schrieb Mika Westerberg:
-> > @Matthias, @Paul and @Nicholas, I appreciate if you could check that this
-> > does not cause any issues for your systems.
+On Thu, Oct 03, 2019 at 03:19:46PM +0300, mika.westerberg@linux.intel.com wrote:
+> On Fri, Jul 26, 2019 at 12:52:58PM +0000, Nicholas Johnson wrote:
+> > Patch series rebased to 5.3-rc1.
+> > 
+> > If possible, please have a quick read over while I am away (2019-07-27
+> > to mid 2019-08-04), so I can fix any mistakes or make simple changes to
+> > get problems out of the way for a more thorough examination later.
+> > 
+> > Thanks!
+> > 
+> > Kind regards,
+> > Nicholas
+> > 
+> > Nicholas Johnson (6):
+> >   PCI: Consider alignment of hot-added bridges when distributing
+> >     available resources
+> >   PCI: In extend_bridge_window() change available to new_size
+> >   PCI: Change extend_bridge_window() to set resource size directly
+> >   PCI: Allow extend_bridge_window() to shrink resource if necessary
+> >   PCI: Add hp_mmio_size and hp_mmio_pref_size parameters
+> >   PCI: Fix bug resulting in double hpmemsize being assigned to MMIO
+> >     window
 > 
-> Just to be sure: is this intended to be applied against the 5.4-rc*
-> master branch?
+> Hi Bjorn,
+> 
+> What's the status of this series? I don't see them in v5.4-rc1.
 
-Yes, it applies on top of v5.4-rc1.
+They're still on my to-do list but are currently languishing because
+they touch critical but complicated code that I don't understand and
+nobody else has chimed in to help review them.  Testing reports would
+also be helpful.
+
+It's been a long time since I've looked at these, but I wonder if at
+least the incremental step of adding the parameter to set the
+MMIO_PREF size separately from the MMIO size would be more
+approachable.
+
+Bjorn
