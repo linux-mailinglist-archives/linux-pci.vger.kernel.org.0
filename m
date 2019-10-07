@@ -2,78 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 504AECDE3E
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2019 11:32:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 762B7CE066
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2019 13:27:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfJGJcm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Oct 2019 05:32:42 -0400
-Received: from mga18.intel.com ([134.134.136.126]:32438 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfJGJcm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 7 Oct 2019 05:32:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 02:32:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,267,1566889200"; 
-   d="scan'208";a="206374733"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 07 Oct 2019 02:32:37 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 07 Oct 2019 12:32:36 +0300
-Date:   Mon, 7 Oct 2019 12:32:36 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Matthias Andree <matthias.andree@gmx.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] PCI: Add missing link delays
-Message-ID: <20191007093236.GP2819@lahna.fi.intel.com>
-References: <20191004123947.11087-1-mika.westerberg@linux.intel.com>
- <811277ae-bec1-1724-23ce-c13407bd79c5@gmx.de>
- <20191004130619.GI2819@lahna.fi.intel.com>
- <ed169065-1a2a-4729-b052-6ec8b1bf4835@gmx.de>
+        id S1727791AbfJGL1N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Oct 2019 07:27:13 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35252 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727416AbfJGL1N (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Oct 2019 07:27:13 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z6so10636621otb.2;
+        Mon, 07 Oct 2019 04:27:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pRO/TI+2U+Mnp2n0LB3QUA+ksdxnhCB7M1sKuDwnBI8=;
+        b=kBd+eM3Zz0OEq0Jsx6D65Q0dPMbvIiytCFWLnpssrMkibLBmfLOpCjF6moavqDlkL/
+         +t8BgH02ORlxrg6M825hTpr6HZ9Y/7vwXMXhNUz6WGeDNRljQxizlDFioPk8ybW+YPuJ
+         XZq9yom2hSMKL1I4FGtOknYUEGMHJwmmd0V9KPMvB2ddNtFUVy4GP9M7hUfWMQYATda8
+         seN6GbZlR4G5LOZJT4VwoZ+YO+JWke/v3MnbWx1xjk04pFLg2tOlzssLpOm732NSpTb5
+         0wali9lN/a9gb+uKbzWvC0sd2GiJdRCiYuD5xPfaJhlMQAsOxqidB43NZSzi5GTVJpKM
+         ASkA==
+X-Gm-Message-State: APjAAAVIHB0eIYtCWc/c8AL9MNgOvoniYCFGKKwNCkmYMuZXOZ/8m+sr
+        0MXZKDiGnITL5HqV+Sw4HNLTD26z2DVvXw14rrA=
+X-Google-Smtp-Source: APXvYqxnu6U8S63dLV1lsHdXGQHef3F61XQEi70QpWOo4C33hmoMZwQPDD+rVz9AbxsCo4FSDAIrRYl9MD9JctgODeY=
+X-Received: by 2002:a9d:404d:: with SMTP id o13mr11205526oti.39.1570447632006;
+ Mon, 07 Oct 2019 04:27:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ed169065-1a2a-4729-b052-6ec8b1bf4835@gmx.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <1570178133-21532-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570178133-21532-3-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1570178133-21532-3-git-send-email-fabrizio.castro@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 7 Oct 2019 13:27:00 +0200
+Message-ID: <CAMuHMdW+FAYwuV876Y_BkHoSMtmV=0zUTU_cU1PGhX6zorqbwg@mail.gmail.com>
+Subject: Re: [PATCH 2/7] dt-bindings: spi: sh-msiof: Add r8a774b1 support
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>, xu_shunji@hoperun.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Oct 05, 2019 at 09:34:41AM +0200, Matthias Andree wrote:
-> Am 04.10.19 um 15:06 schrieb Mika Westerberg:
-> > On Fri, Oct 04, 2019 at 02:57:21PM +0200, Matthias Andree wrote:
-> >> Am 04.10.19 um 14:39 schrieb Mika Westerberg:
-> >>> @Matthias, @Paul and @Nicholas, I appreciate if you could check that this
-> >>> does not cause any issues for your systems.
-> >> Just to be sure: is this intended to be applied against the 5.4-rc*
-> >> master branch?
-> > Yes, it applies on top of v5.4-rc1.
-> 
-> I am sorry to say that I cannot currently test - my computer has a
-> GeForce 1060-6GB an no onboard/on-chip graphics.
-> The nvidia module 435.21 does not compile against 5.4-rc* for me (5.3.1
-> was fine).
+On Fri, Oct 4, 2019 at 10:35 AM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Document RZ/G2N (R8A774B1) SoC bindings.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-I think the two patches should apply cleanly on 5.3.x as well.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> For some reasons I don't understand, it first complains about missing or
-> empty  Module.symvers, (which I do have and which has 12967 lines)
-> and if I bypass that check, it complains about undeclared DRIVER_PRIME
-> "here (outside a function)" - sorry for the German locale:
+Gr{oetje,eeting}s,
 
-Possibly v5.4-rcX moved/renamed some symbol(s) which than makes the
-out-of-tree driver fail to build.
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
