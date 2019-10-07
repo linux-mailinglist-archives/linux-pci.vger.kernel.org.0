@@ -2,138 +2,232 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FA13CEC23
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2019 20:50:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2091ACEC3E
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2019 20:57:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbfJGSuG convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 7 Oct 2019 14:50:06 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58277 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728289AbfJGSuG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Oct 2019 14:50:06 -0400
-Received: from mail-pl1-f199.google.com ([209.85.214.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iHY57-0004gM-96
-        for linux-pci@vger.kernel.org; Mon, 07 Oct 2019 18:50:05 +0000
-Received: by mail-pl1-f199.google.com with SMTP id o9so9177494plk.13
-        for <linux-pci@vger.kernel.org>; Mon, 07 Oct 2019 11:50:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=j3n/ZkJyjbkCNJF6jyQHAc6ep3KG8jgIKugTOiAIquA=;
-        b=HzTtrkkXvtqFIUtnJ5onjm73ci9VFn7EV1FtGCJGag44zv7Y/tdZB3IeuaiAiTHyPa
-         L3O1hT4v9zwLWoFyCbO/v/PGz5vvV4yySyCPY7g5Qed7wvXNwc0avsuNoEckVe6aU+po
-         SQYyzNioOGI/a1YUQRpmchGQ49DP5Jp9MI4npqlPNyBbIBq1aCKYL5fh8nvPxB9WjmYm
-         /T+ryoWOitNZO+y+3IshJsvSqcFdoErFTHykBtaRmWTxT0PctfyFFiC2f4AHJz+/S1E/
-         lLMEhH6X2hE7xnlPJ6KxidJUA3X1OcLM3XMZjQvDl5ASr0M/xqwzBTD7+FY2/aSiGSN8
-         t5Hg==
-X-Gm-Message-State: APjAAAXY45eHJXDnOQe1Vz1FndYi7gsnn7dE8C2DuaryHow6FY6bwpcN
-        LPwxCrFUslEBAbvo0X5s8iPY/Hbnv+h1NXjzs4yrIxBr3KbnYADNMAjBr47YIhD7HJQhtEvqN6J
-        kVeBXmST7VdVDy6qmEB1VAJqdzqF7+Y/8b2+OuA==
-X-Received: by 2002:a63:cf4a:: with SMTP id b10mr31888985pgj.276.1570474203607;
-        Mon, 07 Oct 2019 11:50:03 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxYyjrNHb+/upkDF34lQqoJHpIsoJNhShTHUYsAQiE+4k5gVsln5/4pRkvWxwYkZjhr4KZGLQ==
-X-Received: by 2002:a63:cf4a:: with SMTP id b10mr31888961pgj.276.1570474203258;
-        Mon, 07 Oct 2019 11:50:03 -0700 (PDT)
-Received: from 2001-b011-380f-3c42-ecd4-c98e-b194-f9c1.dynamic-ip6.hinet.net (2001-b011-380f-3c42-ecd4-c98e-b194-f9c1.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:ecd4:c98e:b194:f9c1])
-        by smtp.gmail.com with ESMTPSA id ce16sm223338pjb.29.2019.10.07.11.50.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 11:50:02 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.19\))
-Subject: Re: [PATCH v4 2/2] ALSA: hda: Allow HDA to be runtime suspended when
- dGPU is not bound to a driver
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20190925113255.25062-2-kai.heng.feng@canonical.com>
-Date:   Tue, 8 Oct 2019 02:49:56 +0800
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <F3E69B3D-E11B-4D99-905A-CC5927D61D6C@canonical.com>
-References: <20190925113255.25062-1-kai.heng.feng@canonical.com>
- <20190925113255.25062-2-kai.heng.feng@canonical.com>
-To:     tiwai@suse.com
-X-Mailer: Apple Mail (2.3594.4.19)
+        id S1728081AbfJGS5w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Oct 2019 14:57:52 -0400
+Received: from mail-eopbgr1310118.outbound.protection.outlook.com ([40.107.131.118]:13761
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728071AbfJGS5v (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 7 Oct 2019 14:57:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cnoAuCuU5iiyu+FvHWOat7bQh+To8Ev2xBkCYFYX2oex0ojAPk9vrg7aJdrdvxw5CkutA6h27zcKX/0toVTnumO1JihOzi9RPoU5b+NxlnbdDQ7BWfBTnmP0Vd7FXjWuRS2Sb/AJ68Z26xcN42AeKpjdMqTPLmuftXC4lEmQ7iP5gwyoxHwCXpgFuZZRCZuMirENDRu1j4Oc5QfbZsMpbIIAL6MjYLk9veDju477Ei4FUEsMbdORTd5bvkQ5UmgHVnZAxMIRpJGyJs5Q/hDUD4i7JCB0oyYsgB9+OYtXqKi83VM2dEzSJjM73GyaVZx+3WWWDRWRTO5A8mlvTKUa4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KxoqGK84eMrAv8yOZ6WvCDlnwhKQS/d7aPRzIFy6ffg=;
+ b=bVqQkstc1Ef45sR8jCjszoY/NyPOnNXgGqw9HjmxnQV2SbkVI/1Jbf8DikGloUzd6loWviqIfWJKka8wsQ61U94RxLJlxc4gEvAQdulyaNDmt9/49K4wNXLJNeSkocp6p+xqXdMzowmU4qokj2oFu56jqZ8EYAyJSWCJAbVBIwWPxuQaPvvZ8iCJeKQlPID1ywScOtp+oLvSXxY40Jgk4E9sc7r03YlQwKhURMD3TYjr9AAmPf6UgJs4LWCI3BxRvAPyu66Dfv5x9ljPhL4obD1IIo7gmKboj3M0tFe1+0N86s2vGivmzSK/ZxoaKMytCnAwAfkRo/I4cSNw0OFMhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KxoqGK84eMrAv8yOZ6WvCDlnwhKQS/d7aPRzIFy6ffg=;
+ b=bth3kC50hjrl7Tky59UBoBTPVS661UR8BPWFzTFL4OkPyoqKF1ljeDN6yNmUKwaqqQzgEetfrCseRleh948mtLJ2YPcBiXKx5mK9hr4tLtZAigUIpn0gZtuKSAs5fSDFgrdStaoauXQdG0IdntP2q1iqbF15/utsTc9I1orCQFU=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0203.APCP153.PROD.OUTLOOK.COM (52.133.194.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.11; Mon, 7 Oct 2019 18:57:39 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2367.004; Mon, 7 Oct 2019
+ 18:57:39 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>
+Subject: RE: [PATCH v2] PCI: PM: Move to D0 before calling
+ pci_legacy_resume_early()
+Thread-Topic: [PATCH v2] PCI: PM: Move to D0 before calling
+ pci_legacy_resume_early()
+Thread-Index: AdVSPER5d22rbcvgTV28JV77HSffhgq1j6kAAAuTThA=
+Date:   Mon, 7 Oct 2019 18:57:38 +0000
+Message-ID: <PU1P153MB016996765F9BB827256D05DEBF9B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <KU1P153MB016637CAEAD346F0AA8E3801BFAD0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
+ <20191007132414.GA19294@google.com>
+In-Reply-To: <20191007132414.GA19294@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-07T18:57:35.7748996Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c4882525-48f5-4a48-9b5c-a0913e3efe36;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:44a6:f3e:a757:ee91]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3abe572f-7505-468e-c5f3-08d74b58398a
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: PU1P153MB0203:|PU1P153MB0203:|PU1P153MB0203:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB020385FEBA02F7FA8C1F3468BF9B0@PU1P153MB0203.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01834E39B7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(376002)(136003)(346002)(366004)(189003)(199004)(13464003)(54534003)(14444005)(256004)(76116006)(33656002)(99286004)(4326008)(229853002)(71190400001)(71200400001)(66446008)(64756008)(66556008)(6436002)(66476007)(66946007)(9686003)(55016002)(81156014)(81166006)(5660300002)(8936002)(52536014)(6246003)(7416002)(7736002)(305945005)(8676002)(74316002)(54906003)(316002)(22452003)(186003)(6116002)(102836004)(8990500004)(10090500001)(25786009)(6506007)(53546011)(478600001)(486006)(476003)(86362001)(2906002)(46003)(14454004)(446003)(11346002)(7696005)(76176011)(110136005)(10290500003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0203;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: a0xm1bFRcZBw6bqIvE+y38Z66eRP1eWgdX4H2yOVXFKN4xQVMz+NmGWVs/gaKuOP9l5CprUnQrzvEqtpSgr9GinGejOq4CyLz9efjRuPYA9P4TeT8yzKdG01J0PbyiaYR4WBQMCNm+Z4LCCty09Fj5819rIFdfS5A6MXMWcww60mRUqAv2aSs2OGg9TpjLYuE5nfNJZBCbeZ2n8dPkU6yHh+owHfT2CNaDDuLJGQecUcTfCTLe+Bg/sgFmFCD0JO4Hq40d437Xdt2MJtnKY7n/JUfnFtMfap5LhUtO56hUQ7JDm2JOnZMsxTQ/vUuc33To9j3iUTn5frwsM4Jyly50Juvm4Soxy95rv7VcTku5j5+6SJ6N48E/xceiv0xrAjXdAfTwJ3mJaG7iYB4qnHqUdnH7rh16vgimxufHvCF3U=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3abe572f-7505-468e-c5f3-08d74b58398a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 18:57:38.6778
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: u106Cx2vLaZg/uaamZ+mWDcW/fOpAwG+Tbe4TZ9x5HQq8EFPQ6oClWpBwO1wElq4mvro/iGnFJHgon3BDWrtAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0203
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Takashi,
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Monday, October 7, 2019 6:24 AM
+> To: Dexuan Cui <decui@microsoft.com>
+> Cc: lorenzo.pieralisi@arm.com; linux-pci@vger.kernel.org; Michael Kelley
+> <mikelley@microsoft.com>; linux-hyperv@vger.kernel.org;
+> linux-kernel@vger.kernel.org; driverdev-devel@linuxdriverproject.org; Sas=
+ha
+> Levin <Alexander.Levin@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; KY Srinivasan <kys@microsoft.com>;
+> olaf@aepfle.de; apw@canonical.com; jasowang@redhat.com; vkuznets
+> <vkuznets@redhat.com>; marcelo.cerri@canonical.com; Stephen Hemminger
+> <sthemmin@microsoft.com>; jackm@mellanox.com
+> Subject: Re: [PATCH v2] PCI: PM: Move to D0 before calling
+> pci_legacy_resume_early()
+>=20
+> On Wed, Aug 14, 2019 at 01:06:55AM +0000, Dexuan Cui wrote:
+> >
+> > In pci_legacy_suspend_late(), the device state is moved to PCI_UNKNOWN.
+> >
+> > In pci_pm_thaw_noirq(), the state is supposed to be moved back to PCI_D=
+0,
+> > but the current code misses the pci_legacy_resume_early() path, so the
+> > state remains in PCI_UNKNOWN in that path. As a result, in the resume
+> > phase of hibernation, this causes an error for the Mellanox VF driver,
+> > which fails to enable MSI-X because pci_msi_supported() is false due
+> > to dev->current_state !=3D PCI_D0:
+> >
+> > mlx4_core a6d1:00:02.0: Detected virtual function - running in slave mo=
+de
+> > mlx4_core a6d1:00:02.0: Sending reset
+> > mlx4_core a6d1:00:02.0: Sending vhcr0
+> > mlx4_core a6d1:00:02.0: HCA minimum page size:512
+> > mlx4_core a6d1:00:02.0: Timestamping is not supported in slave mode
+> > mlx4_core a6d1:00:02.0: INTx is not supported in multi-function mode,
+> aborting
+> > PM: dpm_run_callback(): pci_pm_thaw+0x0/0xd7 returns -95
+> > PM: Device a6d1:00:02.0 failed to thaw: error -95
+> >
+> > To be more accurate, the "resume" phase means the "thaw" callbacks whic=
+h
+> > run before the system enters hibernation: when the user runs the comman=
+d
+> > "echo disk > /sys/power/state" for hibernation, first the kernel "freez=
+es"
+> > all the devices and creates a hibernation image, then the kernel "thaws=
+"
+> > the devices including the disk/NIC, writes the memory to the disk, and
+> > powers down. This patch fixes the error message for the Mellanox VF dri=
+ver
+> > in this phase.
+> >
+> > When the system starts again, a fresh kernel starts to run, and when th=
+e
+> > kernel detects that a hibernation image was saved, the kernel "quiesces=
+"
+> > the devices, and then "restores" the devices from the saved image. In t=
+his
+> > path:
+> > device_resume_noirq() -> ... ->
+> >   pci_pm_restore_noirq() ->
+> >     pci_pm_default_resume_early() ->
+> >       pci_power_up() moves the device states back to PCI_D0. This path =
+is
+> > not broken and doesn't need my patch.
+> >
+> > Signed-off-by: Dexuan Cui <decui@microsoft.com>
+>=20
+> This looks like a bugfix for 5839ee7389e8 ("PCI / PM: Force devices to
+> D0 in pci_pm_thaw_noirq()") so maybe it should be marked for stable as
+> 5839ee7389e8 was?
+>=20
+> Rafael, could you confirm?
+>=20
+> > ---
+> >
+> > changes in v2:
+> > 	Updated the changelog with more details.
+> >
+> >  drivers/pci/pci-driver.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> > index 36dbe960306b..27dfc68db9e7 100644
+> > --- a/drivers/pci/pci-driver.c
+> > +++ b/drivers/pci/pci-driver.c
+> > @@ -1074,15 +1074,16 @@ static int pci_pm_thaw_noirq(struct device
+> *dev)
+> >  			return error;
+> >  	}
+> >
+> > -	if (pci_has_legacy_pm_support(pci_dev))
+> > -		return pci_legacy_resume_early(dev);
+> > -
+> >  	/*
+> >  	 * pci_restore_state() requires the device to be in D0 (because of MS=
+I
+> >  	 * restoration among other things), so force it into D0 in case the
+> >  	 * driver's "freeze" callbacks put it into a low-power state directly=
+.
+> >  	 */
+> >  	pci_set_power_state(pci_dev, PCI_D0);
+> > +
+> > +	if (pci_has_legacy_pm_support(pci_dev))
+> > +		return pci_legacy_resume_early(dev);
+> > +
+> >  	pci_restore_state(pci_dev);
+> >
+> >  	if (drv && drv->pm && drv->pm->thaw_noirq)
+> > --
+> > 2.19.1
+> >
 
-> On Sep 25, 2019, at 19:32, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
-> 
-> Nvidia proprietary driver doesn't support runtime power management, so
-> when a user only wants to use the integrated GPU, it's a common practice
-> to let dGPU not to bind any driver, and let its upstream port to be
-> runtime suspended. At the end of runtime suspension the port uses
-> platform power management to disable power through _OFF method of power
-> resource, which is listed by _PR3.
-> 
-> After commit b516ea586d71 ("PCI: Enable NVIDIA HDA controllers"), when
-> the dGPU comes with an HDA function, the HDA won't be suspended if the
-> dGPU is unbound, so the power resource can't be turned off by its
-> upstream port driver.
-> 
-> Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
-> discrete GPU") only allows HDA to be runtime suspended once GPU is
-> bound, to keep APU's HDA working.
-> 
-> However, HDA on dGPU isn't that useful if dGPU is not bound to any
-> driver.  So let's relax the runtime suspend requirement for dGPU's HDA
-> function, to disable the power source to save lots of power.
-> 
-> BugLink: https://bugs.launchpad.net/bugs/1840835
-> Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Added Rafael to "To".
 
-Do you still have any concern on this patch?
-Please merge [v5 1/2] and this patch [v4 2/2] if you think it's good.
-
-Thanks!
-
-Kai-Heng
-
-> ---
-> v4:
-> - Find upstream port, it's callee's responsibility now.
-> v3:
-> - Make changelog more clear.
-> v2:
-> - Change wording.
-> - Rebase to Tiwai's branch.
-> sound/pci/hda/hda_intel.c | 8 +++++++-
-> 1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-> index 240f4ca76391..e63b871343e5 100644
-> --- a/sound/pci/hda/hda_intel.c
-> +++ b/sound/pci/hda/hda_intel.c
-> @@ -1280,11 +1280,17 @@ static void init_vga_switcheroo(struct azx *chip)
-> {
-> 	struct hda_intel *hda = container_of(chip, struct hda_intel, chip);
-> 	struct pci_dev *p = get_bound_vga(chip->pci);
-> +	struct pci_dev *parent;
-> 	if (p) {
-> 		dev_info(chip->card->dev,
-> 			 "Handle vga_switcheroo audio client\n");
-> 		hda->use_vga_switcheroo = 1;
-> -		chip->bus.keep_power = 1; /* cleared in either gpu_bound op or codec probe */
-> +
-> +		/* cleared in either gpu_bound op or codec probe, or when its
-> +		 * upstream port has _PR3 (i.e. dGPU).
-> +		 */
-> +		parent = pci_upstream_bridge(p);
-> +		chip->bus.keep_power = parent ? !pci_pr3_present(parent) : 1;
-> 		chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
-> 		pci_dev_put(p);
-> 	}
-> -- 
-> 2.17.1
-> 
+Thanks,
+-- Dexuan
 
