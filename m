@@ -2,236 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E6652CFFBD
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2019 19:22:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC06BCFFF1
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2019 19:32:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725966AbfJHRWj convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 8 Oct 2019 13:22:39 -0400
-Received: from mga06.intel.com ([134.134.136.31]:28870 "EHLO mga06.intel.com"
+        id S1728342AbfJHRcd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Oct 2019 13:32:33 -0400
+Received: from mga03.intel.com ([134.134.136.65]:64562 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725900AbfJHRWi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Oct 2019 13:22:38 -0400
+        id S1726253AbfJHRcd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 8 Oct 2019 13:32:33 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 10:22:37 -0700
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 10:32:32 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
-   d="scan'208";a="277162796"
-Received: from irsmsx102.ger.corp.intel.com ([163.33.3.155])
-  by orsmga001.jf.intel.com with ESMTP; 08 Oct 2019 10:22:36 -0700
-Received: from irsmsx101.ger.corp.intel.com ([169.254.1.129]) by
- IRSMSX102.ger.corp.intel.com ([169.254.2.160]) with mapi id 14.03.0439.000;
- Tue, 8 Oct 2019 18:22:35 +0100
-From:   "Patel, Mayurkumar" <mayurkumar.patel@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-Subject: [RESEND PATCH v3] PCI/AER: Save and restore AER config state
-Thread-Topic: [RESEND PATCH v3] PCI/AER: Save and restore AER config state
-Thread-Index: AdV9/NREHFXBsULnSk+tvCdJHtrp6g==
-Date:   Tue, 8 Oct 2019 17:22:34 +0000
-Message-ID: <92EBB4272BF81E4089A7126EC1E7B28479AE1486@IRSMSX101.ger.corp.intel.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjhhNTZmNTgtODMwOC00ZjMzLTg3M2QtNjA4NDVjMjc0ZTQwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoienI5WTBzK1VhYXM4VERGMmJudnB4YktTb1wvMExcL2dEUWd3bVhodEMwWndFbG84bXI3cWVEOEJIc284ZElWMStPIn0=
-x-ctpclassification: CTP_NT
-x-originating-ip: [163.33.239.181]
-Content-Type: text/plain; charset="us-ascii"
+X-IronPort-AV: E=Sophos;i="5.67,272,1566889200"; 
+   d="scan'208";a="193439247"
+Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.147.52]) ([10.249.147.52])
+  by fmsmga007.fm.intel.com with ESMTP; 08 Oct 2019 10:32:28 -0700
+Subject: Re: [PATCH v2] PCI: PM: Move to D0 before calling
+ pci_legacy_resume_early()
+To:     Dexuan Cui <decui@microsoft.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>
+References: <KU1P153MB016637CAEAD346F0AA8E3801BFAD0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
+ <20191007132414.GA19294@google.com>
+ <PU1P153MB016996765F9BB827256D05DEBF9B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
+ 173, 80-298 Gdansk
+Message-ID: <a2d8ad9f-b59d-57e4-f014-645e7b796cc4@intel.com>
+Date:   Tue, 8 Oct 2019 19:32:27 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <PU1P153MB016996765F9BB827256D05DEBF9B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch provides AER config save and restore capabilities. After system
-resume AER config registers settings are lost. Not restoring AER root error
-command register bits on root port if they were set, disables generation
-of an AER interrupt reported by function as described in PCIe spec r4.0,
-sec 7.8.4.9. Moreover, AER config mask, severity and ECRC registers are
-also required to maintain same state prior to system suspend to maintain
-AER interrupts behavior.
+On 10/7/2019 8:57 PM, Dexuan Cui wrote:
+>> -----Original Message-----
+>> From: Bjorn Helgaas <helgaas@kernel.org>
+>> Sent: Monday, October 7, 2019 6:24 AM
+>> To: Dexuan Cui <decui@microsoft.com>
+>> Cc: lorenzo.pieralisi@arm.com; linux-pci@vger.kernel.org; Michael Kelley
+>> <mikelley@microsoft.com>; linux-hyperv@vger.kernel.org;
+>> linux-kernel@vger.kernel.org; driverdev-devel@linuxdriverproject.org; Sasha
+>> Levin <Alexander.Levin@microsoft.com>; Haiyang Zhang
+>> <haiyangz@microsoft.com>; KY Srinivasan <kys@microsoft.com>;
+>> olaf@aepfle.de; apw@canonical.com; jasowang@redhat.com; vkuznets
+>> <vkuznets@redhat.com>; marcelo.cerri@canonical.com; Stephen Hemminger
+>> <sthemmin@microsoft.com>; jackm@mellanox.com
+>> Subject: Re: [PATCH v2] PCI: PM: Move to D0 before calling
+>> pci_legacy_resume_early()
+>>
+>> On Wed, Aug 14, 2019 at 01:06:55AM +0000, Dexuan Cui wrote:
+>>> In pci_legacy_suspend_late(), the device state is moved to PCI_UNKNOWN.
+>>>
+>>> In pci_pm_thaw_noirq(), the state is supposed to be moved back to PCI_D0,
+>>> but the current code misses the pci_legacy_resume_early() path, so the
+>>> state remains in PCI_UNKNOWN in that path. As a result, in the resume
+>>> phase of hibernation, this causes an error for the Mellanox VF driver,
+>>> which fails to enable MSI-X because pci_msi_supported() is false due
+>>> to dev->current_state != PCI_D0:
+>>>
+>>> mlx4_core a6d1:00:02.0: Detected virtual function - running in slave mode
+>>> mlx4_core a6d1:00:02.0: Sending reset
+>>> mlx4_core a6d1:00:02.0: Sending vhcr0
+>>> mlx4_core a6d1:00:02.0: HCA minimum page size:512
+>>> mlx4_core a6d1:00:02.0: Timestamping is not supported in slave mode
+>>> mlx4_core a6d1:00:02.0: INTx is not supported in multi-function mode,
+>> aborting
+>>> PM: dpm_run_callback(): pci_pm_thaw+0x0/0xd7 returns -95
+>>> PM: Device a6d1:00:02.0 failed to thaw: error -95
+>>>
+>>> To be more accurate, the "resume" phase means the "thaw" callbacks which
+>>> run before the system enters hibernation: when the user runs the command
+>>> "echo disk > /sys/power/state" for hibernation, first the kernel "freezes"
+>>> all the devices and creates a hibernation image, then the kernel "thaws"
+>>> the devices including the disk/NIC, writes the memory to the disk, and
+>>> powers down. This patch fixes the error message for the Mellanox VF driver
+>>> in this phase.
+>>>
+>>> When the system starts again, a fresh kernel starts to run, and when the
+>>> kernel detects that a hibernation image was saved, the kernel "quiesces"
+>>> the devices, and then "restores" the devices from the saved image. In this
+>>> path:
+>>> device_resume_noirq() -> ... ->
+>>>    pci_pm_restore_noirq() ->
+>>>      pci_pm_default_resume_early() ->
+>>>        pci_power_up() moves the device states back to PCI_D0. This path is
+>>> not broken and doesn't need my patch.
+>>>
+>>> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+>> This looks like a bugfix for 5839ee7389e8 ("PCI / PM: Force devices to
+>> D0 in pci_pm_thaw_noirq()") so maybe it should be marked for stable as
+>> 5839ee7389e8 was?
+>>
+>> Rafael, could you confirm?
 
-Signed-off-by: Mayurkumar Patel <mayurkumar.patel@intel.com>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-drivers/pci/access.c   |  2 +-
-drivers/pci/pci.c      |  2 ++
-drivers/pci/pci.h      |  1 +
-drivers/pci/pcie/aer.c | 59 ++++++++++++++++++++++++++++++++++++++++++++++++++
-include/linux/aer.h    |  4 ++++
-5 files changed, 67 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index 544922f..962295c 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -364,7 +364,7 @@ static inline bool pcie_cap_has_sltctl(const struct pci_dev *dev)
-	       pcie_caps_reg(dev) & PCI_EXP_FLAGS_SLOT;
-}
-
--static inline bool pcie_cap_has_rtctl(const struct pci_dev *dev)
-+bool pcie_cap_has_rtctl(const struct pci_dev *dev)
-{
-	int type = pci_pcie_type(dev);
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 8abc843..40d5507 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1340,6 +1340,7 @@ int pci_save_state(struct pci_dev *dev)
-
- 	pci_save_ltr_state(dev);
-	pci_save_dpc_state(dev);
-+	pci_save_aer_state(dev);
-	return pci_save_vc_state(dev);
-}
-EXPORT_SYMBOL(pci_save_state);
-@@ -1453,6 +1454,7 @@ void pci_restore_state(struct pci_dev *dev)
-	pci_restore_dpc_state(dev);
-
- 	pci_cleanup_aer_error_status_regs(dev);
-+	pci_restore_aer_state(dev);
-
- 	pci_restore_config_space(dev);
-
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 9cb9938..268995b 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -12,6 +12,7 @@ extern const unsigned char pcie_link_speed[];
-extern bool pci_early_dump;
-
- bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
-+bool pcie_cap_has_rtctl(const struct pci_dev *dev);
-
- /* Functions internal to the PCI core code */
-
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index b45bc47..7c41dec 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -448,6 +448,53 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
-	return 0;
-}
-
-+
-+void pci_save_aer_state(struct pci_dev *dev)
-+{
-+	struct pci_cap_saved_state *save_state;
-+	u32 *cap;
-+	int pos;
-+
-+	pos = dev->aer_cap;
-+	if (!pos)
-+		return;
-+
-+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ERR);
-+	if (!save_state)
-+		return;
-+
-+	cap = &save_state->cap.data[0];
-+	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, cap++);
-+	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, cap++);
-+	pci_read_config_dword(dev, pos + PCI_ERR_COR_MASK, cap++);
-+	pci_read_config_dword(dev, pos + PCI_ERR_CAP, cap++);
-+	if (pcie_cap_has_rtctl(dev))
-+		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, cap++);
-+}
-+
-+void pci_restore_aer_state(struct pci_dev *dev)
-+{
-+	struct pci_cap_saved_state *save_state;
-+	u32 *cap;
-+	int pos;
-+
-+	pos = dev->aer_cap;
-+	if (!pos)
-+		return;
-+
-+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ERR);
-+	if (!save_state)
-+		return;
-+
-+	cap = &save_state->cap.data[0];
-+	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, *cap++);
-+	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, *cap++);
-+	pci_write_config_dword(dev, pos + PCI_ERR_COR_MASK, *cap++);
-+	pci_write_config_dword(dev, pos + PCI_ERR_CAP, *cap++);
-+	if (pcie_cap_has_rtctl(dev))
-+		pci_write_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, *cap++);
-+}
-+
-void pci_aer_init(struct pci_dev *dev)
-{
-	dev->aer_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ERR);
-@@ -455,6 +502,18 @@ void pci_aer_init(struct pci_dev *dev)
-	if (dev->aer_cap)
-		dev->aer_stats = kzalloc(sizeof(struct aer_stats), GFP_KERNEL);
-
-+	/*
-+	 * Since PCI_ERR_ROOT_COMMAND is only valid for root port and root
-+	 * complex event collector, as per PCIe 4.0 section 7.8.4, interpret
-+	 * the device/port type to determine the availability of additional
-+	 * root port and root complex event collector register.
-+	 */
-+	if (pcie_cap_has_rtctl(dev))
-+		pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ERR,
-+					sizeof(u32) * 5);
-+	else
-+		pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ERR,
-+					sizeof(u32) * 4);
-	pci_cleanup_aer_error_status_regs(dev);
-}
-
-diff --git a/include/linux/aer.h b/include/linux/aer.h
-index 514bffa..fa19e01 100644
---- a/include/linux/aer.h
-+++ b/include/linux/aer.h
-@@ -46,6 +46,8 @@ int pci_enable_pcie_error_reporting(struct pci_dev *dev);
-int pci_disable_pcie_error_reporting(struct pci_dev *dev);
-int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev);
-int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);
-+void pci_save_aer_state(struct pci_dev *dev);
-+void pci_restore_aer_state(struct pci_dev *dev);
-#else
-static inline int pci_enable_pcie_error_reporting(struct pci_dev *dev)
-{
-@@ -63,6 +65,8 @@ static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
-{
-	return -EINVAL;
-}
-+static inline void pci_save_aer_state(struct pci_dev *dev) {}
-+static inline void pci_restore_aer_state(struct pci_dev *dev) {}
-#endif
-
- void cper_print_aer(struct pci_dev *dev, int aer_severity,
--- 
-2.7.4
-
-Mayurkumar Patel
-Intel Deutschland GmbH
-Registered Address: Am Campeon 10-12, 85579 Neubiberg, Germany
-Registered Office: Munich
-Commercial Register: Amtsgericht Muenchen HRB 186928
+No, it is not a bug fix for that commit.  The underlying issue would be 
+there without that commit too.
 
 
+>>> ---
+>>>
+>>> changes in v2:
+>>> 	Updated the changelog with more details.
+>>>
+>>>   drivers/pci/pci-driver.c | 7 ++++---
+>>>   1 file changed, 4 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+>>> index 36dbe960306b..27dfc68db9e7 100644
+>>> --- a/drivers/pci/pci-driver.c
+>>> +++ b/drivers/pci/pci-driver.c
+>>> @@ -1074,15 +1074,16 @@ static int pci_pm_thaw_noirq(struct device
+>> *dev)
+>>>   			return error;
+>>>   	}
+>>>
+>>> -	if (pci_has_legacy_pm_support(pci_dev))
+>>> -		return pci_legacy_resume_early(dev);
+>>> -
+>>>   	/*
+>>>   	 * pci_restore_state() requires the device to be in D0 (because of MSI
+>>>   	 * restoration among other things), so force it into D0 in case the
+>>>   	 * driver's "freeze" callbacks put it into a low-power state directly.
+>>>   	 */
+>>>   	pci_set_power_state(pci_dev, PCI_D0);
+>>> +
+>>> +	if (pci_has_legacy_pm_support(pci_dev))
+>>> +		return pci_legacy_resume_early(dev);
+>>> +
+>>>   	pci_restore_state(pci_dev);
+>>>
+>>>   	if (drv && drv->pm && drv->pm->thaw_noirq)
+>>> --
+>>> 2.19.1
+>>>
+The patch looks reasonable to me, but the comment above the 
+pci_set_power_state() call needs to be updated too IMO.
 
-Intel Deutschland GmbH
-Registered Address: Am Campeon 10-12, 85579 Neubiberg, Germany
-Tel: +49 89 99 8853-0, www.intel.de
-Managing Directors: Christin Eisenschmid, Gary Kershaw
-Chairperson of the Supervisory Board: Nicole Lau
-Registered Office: Munich
-Commercial Register: Amtsgericht Muenchen HRB 186928
 
