@@ -2,139 +2,197 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DCECCF342
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2019 09:12:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3868CF4FD
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2019 10:25:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbfJHHMd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Oct 2019 03:12:33 -0400
-Received: from mail-eopbgr70087.outbound.protection.outlook.com ([40.107.7.87]:1734
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730134AbfJHHMc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Oct 2019 03:12:32 -0400
+        id S1730428AbfJHIZf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Oct 2019 04:25:35 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:62192 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728866AbfJHIZe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Oct 2019 04:25:34 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x988FcI0007503;
+        Tue, 8 Oct 2019 01:25:26 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=aTs0NM8gEkTongm8zDqDK+Xvfu26iuNyD2dHN1k5TmY=;
+ b=VZXJ/KS1dHmGVuj9j9s1qmB4Jcs+MwmCFF1guKqgN6yNs8wQzC1lo9odQXsYeS5oFWUn
+ oRWyRxGaP3rIOMF7dsYCyyAdq61xZAvKkCu95vDDSGQd9faJ3L2m7nxahMDZT/4gB/1r
+ DoG0LyX+qNfWtMjeEEpP/35O0+XygDtBNkHEaJQZQspHa+D4qTeelSwOcTcb/3mGpJZe
+ OYBA0X3vyMLnveJ/aAFGWhWmltSSJn6qeqXSA7qJ8i92koeQKnwOU3PWN1BGsxGLdfO/
+ 9ZKJ06l7bAnD1VmpD6eAHAAcOnqUBaShqmsfieXLDG0ygbqe/ckGxKRzR6sDClWpKjKp Zw== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2vetpn1j40-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 08 Oct 2019 01:25:26 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 8 Oct
+ 2019 01:25:24 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (104.47.38.50) by
+ SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Tue, 8 Oct 2019 01:25:24 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XsBuRVDSrN05pbTEalH5q3N9GUaJ8CySmJvAfAx9FnUq8nPjguNUwsz9L4vhOTtMEmxysW3aBse4ioRC7gPrfgg6Yt/gYLYmJ/WHgQe1HKi/lc1+aBzcUD1XJSA6ZqxPYCo9DX30VtOVdvVR+S+MPK8PSWdeEi0LWbyAy3W0eC9Rpz1g4NDsRtf7Fxgg00hw3FcYv5+95kHi5HlHjYlZ8orD8ZlMAsKt+iNXVOIQe5RBgMF3C60CH11rRumwtvaIXr7ca6l8SEiUYn2HyPnHoTmgrNHXWmmaAFifmeQHB4ib8GjezzR80HykIqb98U/uyGgi561k2QCYZk1ZSPzEEw==
+ b=iEg5F+lQhv1yBkD0X1p7U+4isKb2Y0dgTOPfUc7y6Zx57lxvobqzG12waD7xK012ys0CO5e8S8co+2mGWQzFvBWmcBlylUr4Ch4bsmyrV/hNsKhR9ngSuLIHuI3Bo2fgisAQN7rMnOtPMSfhLPG8wvs1sOCAswcA9F5xGbo/I4x5qQ3AeaUmh0Ws50+6WR0T2DKIDzaE4P8qSXqCPu0wWu3pQ3X5XaOmtIDpogmS3d9rpb+rMWJCKvlW8exCpUPo4a3DAjy2k8xmzpTl0BghfBqyCfhBuENJ8uI/G+EbYtPDSbGy442FfYZfMlGkYz/Q8i6C1/hAV3TgJbT6a3+iZg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gURbfuERhGYbv3O/PPdIz5N4hzCIG4zc36fhB9WI024=;
- b=kluyPPeCIONtJGsqvyveevWrR2RE9p3CwMEZjfcF14DB4ldl4VIBmZz3sgQphLPr9b1dnmtMcR8cI+RiaeBP2tYbrzqYdN9fvJbZy5ZPK2/9XiUuhupSYYC7PcueK7lxqNmTb2HT/zPIQLVDDikRqoHnqU6ZF00wJIZoloiytH6eOI6SpsvCCB2pOUwjW7s5sdAKuNRfkAH9d3BSuBhjpW7DXT/AKVnwZ2gXrUukLkVBCroWGat6lwEB2NsMpx6Q+T1JQ4Q8O1USlLQYvWHwUoTlJMpMX0QcRZObplkGjU3I9b0xVa0fDgJdVnuE8E/1NMO3STwz4D/m5pD9tO8kmQ==
+ bh=aTs0NM8gEkTongm8zDqDK+Xvfu26iuNyD2dHN1k5TmY=;
+ b=ZH/bZX238Cg99JBfU1bSnnfF6j06KIavIb19nj1n3FsYmOHTW6fhMConUV0G9+iKUyjZq8wGDm3w9VDhipqYMB4zFh25uShujiT5fEumFdXZUWhvEBoxIR8HFIp5zuYEpxDGZAILJwVBOGytENktpbeP+CqbLzIehAbFTjzqQrmJmJVOKSt1oyYrpFxFyGCxKWtkLWsSdVoD8zpsBZqANXXZX9RCmZFpgYECKE7p8IKb+h/jE+7ohrPME89ij76hb/mgTsK4tFG9ysowqfdCWuzpt60czLb1RMcbDWV/5C72L+L1kmwTzi0XU4EKLs2zMjkkD1zbAKF3DIjojnbNJQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gURbfuERhGYbv3O/PPdIz5N4hzCIG4zc36fhB9WI024=;
- b=bQ5OPb603qMWUdZg8NDuR3sWModNvuyXFToEN4lDUI3yD6i3Jq8NY5lGdS7DLP/krNsgYoYqH7tI44LxoQUmQo+Tyku7JLuFXv5Zw5MNGgtv78HOTszokOFHsGS00RKonnbLu8ct9NuTvAjtBNzWDsAk7RZnxNv3SiF04zQfAW0=
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
- AM5PR04MB3138.eurprd04.prod.outlook.com (10.167.170.151) with Microsoft SMTP
+ bh=aTs0NM8gEkTongm8zDqDK+Xvfu26iuNyD2dHN1k5TmY=;
+ b=dpLRQeibkLDXGte6FZxtXGN5AOQGp4UTJMgpRjogWFzBS+eLeWs/FSKh2g3oy802NG14D2VbCR2QAnW55YFsG2YlZ4UMCqPf01i+cpR/WXRfo32WCsPPIrMiiVmKUm4QLfXWctv8bCRouwbjAfy/PEl4f0QJ+B3Ev+Pgrpj9gZw=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
+ MN2PR18MB2637.namprd18.prod.outlook.com (20.179.80.147) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.24; Tue, 8 Oct 2019 07:11:47 +0000
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::5dd3:ddc9:411a:db41]) by AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::5dd3:ddc9:411a:db41%3]) with mapi id 15.20.2305.023; Tue, 8 Oct 2019
- 07:11:47 +0000
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+ 15.20.2327.24; Tue, 8 Oct 2019 08:25:23 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::d16d:8855:c030:2763]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::d16d:8855:c030:2763%3]) with mapi id 15.20.2327.026; Tue, 8 Oct 2019
+ 08:25:23 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
+        George Cherian <gcherian@marvell.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
-Thread-Topic: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
-Thread-Index: AQHVYUIADtGnPn3wtky/OvhdSoTT96dI0k6AgAddc3A=
-Date:   Tue, 8 Oct 2019 07:11:47 +0000
-Message-ID: <AM5PR04MB329984A4B6BAD35510310CF5F59A0@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
- <20190902034319.14026-3-xiaowei.bao@nxp.com> <20191003091019.GB22491@X250>
-In-Reply-To: <20191003091019.GB22491@X250>
+        "shannon.zhao@linux.alibaba.com" <shannon.zhao@linux.alibaba.com>,
+        Sunil Kovvuri Goutham <sgoutham@marvell.com>
+Subject: Re: [PATCH] PCI: Enhance the ACS quirk for Cavium devices
+Thread-Topic: [PATCH] PCI: Enhance the ACS quirk for Cavium devices
+Thread-Index: AQHVd+WyQA/rX9/rek2UxMmqvqYW56dK6YSAgAWKgoA=
+Date:   Tue, 8 Oct 2019 08:25:23 +0000
+Message-ID: <20191008082515.ldm2i7j4syuzampr@rric.localdomain>
+References: <20190930232041.GA22852@dc5-eodlnx05.marvell.com>
+ <20191004194813.GA76466@google.com>
+In-Reply-To: <20191004194813.GA76466@google.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaowei.bao@nxp.com; 
-x-originating-ip: [119.31.174.73]
+x-clientproxiedby: HE1PR05CA0207.eurprd05.prod.outlook.com
+ (2603:10a6:3:f9::31) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:165::10)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [31.208.96.227]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 72e852ca-9bcd-4f95-2ab7-08d74bbec844
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: AM5PR04MB3138:|AM5PR04MB3138:
+x-ms-office365-filtering-correlation-id: 3ed66596-c036-4e58-43fd-08d74bc91035
+x-ms-traffictypediagnostic: MN2PR18MB2637:
+x-ms-exchange-purlcount: 1
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR04MB3138BBE32B8DD10783119293F59A0@AM5PR04MB3138.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-microsoft-antispam-prvs: <MN2PR18MB26378DCDAFC12769E2197CB5D99A0@MN2PR18MB2637.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:569;
 x-forefront-prvs: 01842C458A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(346002)(39860400002)(376002)(396003)(13464003)(199004)(189003)(71200400001)(7696005)(53546011)(316002)(6506007)(229853002)(4326008)(6436002)(86362001)(66946007)(76116006)(76176011)(6246003)(55016002)(66556008)(66476007)(9686003)(66446008)(99286004)(64756008)(8676002)(81156014)(71190400001)(81166006)(8936002)(256004)(74316002)(6116002)(3846002)(7736002)(305945005)(14454004)(478600001)(66066001)(6916009)(7416002)(25786009)(2906002)(33656002)(102836004)(476003)(186003)(44832011)(486006)(54906003)(52536014)(11346002)(5660300002)(26005)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3138;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(366004)(136003)(346002)(39860400002)(189003)(199004)(26005)(66556008)(6116002)(66446008)(64756008)(66946007)(3846002)(66476007)(4326008)(386003)(6506007)(2906002)(53546011)(256004)(7736002)(99286004)(6246003)(107886003)(76176011)(25786009)(305945005)(71200400001)(86362001)(52116002)(71190400001)(186003)(476003)(9686003)(478600001)(6306002)(5660300002)(6916009)(316002)(1076003)(6512007)(66066001)(81166006)(6436002)(102836004)(486006)(6486002)(11346002)(8936002)(14454004)(229853002)(966005)(81156014)(8676002)(446003)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2637;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ThdypMZF2AkJ5xqrG/jMnMhvp2XiyGK2lupTEkkHkhilOdBvdg3jHzxSuV4sKvobIUlATVwfq0JjEr4zRCOV+PRBNCNVpXolXI5R4aSrpmYTLrF8LbwqUH3dOq9ybLDhWlCg5IYVSBN0Kns7D017a1MxfWREmy+9QmWqozv/nH0Tu1sr72/CeYoBfXBC0l3C1485Iy0BqT1h3NDPw4eZmTYPIuOhrXK/IGyUy18Vpx7CZKhX3rovbYbSwi/AROMSc/ntYO4QgOsBIizDlwWtV6x3jrOj5gpistQU6FKcXYLk4qAiCxfTRu1xBFgWID+QKm3bRajj9LiTQRzxs8Fc6iVBbKmizDsSNIGgCd5djQNDzy+3WF05PKEQBaRRsR21QTVPatTx+TzyScQNTS70/j/cFu6mLjI7hnguFmid5O8=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: /yQynt2oU9/QMJxtaHCmPS8CYsgMikaYtWT2G/Ni2BpOVRayOaXDJFrBjc/XEH1tlkVzw7T9hpfsWslOhAGD1eb1XWz/zcwq6Y5NNXylO8DsDup4WGkZ9jwJ12E6cNk9ttduflsDgiRge2VN/pp2uobB2srWOK8Ygst7VJIntPbyD65dtDDqrnfZazM54JPfoNVXSYHaVxgTsWkwyPNwmGuQp4LUJAMHug/TNBXnRclYhQkkVEE6wnCWxJGJPmv4CL2nMM+t4TsxSTlI1ENWlcl60h+XAosA65BB0vUIimT7HLSYKiFCC5P/RDXwnwSTnib75xAuIylFwYEfB32f95RIOaB86yQ8zJWPv8eHzyTY+N/Dd7sHI9DaBjpSrZZ+2ZL1AOiDw5OIW5yieNMlctRbFESI0Z8546dkyCVI79Jg/xVJCBbwF1km6Qv5TgBUmwCMDO7NKfoz1hkltFVdeQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C5BB84DF9C195D4981F30B73E71339F9@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72e852ca-9bcd-4f95-2ab7-08d74bbec844
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2019 07:11:47.0865
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ed66596-c036-4e58-43fd-08d74bc91035
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2019 08:25:23.1079
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CoLvnPo5jxgw8E2NltI1QC/Xq0qEGApgNTaqHhff06W0ecCm2dzBkEs7MO5HV3Evr6dpux8IWoGBi5X48Fd8cA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3138
+X-MS-Exchange-CrossTenant-userprincipalname: rxQGRHsbf7NaV7ShPkAM3XQuCCjSvGe5Ss0NyPYop8AYSQ5kMo9p6VOvKKb2PV8+iyEG28dLxAFz+Z3frWHdag==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2637
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-08_03:2019-10-07,2019-10-08 signatures=0
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIDxzaGF3
-bmd1b0BrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE5xOoxMNTCM8jVIDE3OjExDQo+IFRvOiBYaWFv
-d2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsg
-bWFyay5ydXRsYW5kQGFybS5jb207IExlbyBMaQ0KPiA8bGVveWFuZy5saUBueHAuY29tPjsgTS5o
-LiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1DQo+IDxtaW5na2FpLmh1
-QG54cC5jb20+OyBSb3kgWmFuZyA8cm95LnphbmdAbnhwLmNvbT47DQo+IGxvcmVuem8ucGllcmFs
-aXNpQGFybS5jb207IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3Jn
-Ow0KPiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+
-DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjYgMy8zXSBQQ0k6IGxheWVyc2NhcGU6IEFkZCBMUzEw
-MjhhIHN1cHBvcnQNCj4gDQo+IE9uIE1vbiwgU2VwIDAyLCAyMDE5IGF0IDExOjQzOjE5QU0gKzA4
-MDAsIFhpYW93ZWkgQmFvIHdyb3RlOg0KPiA+IEFkZCBzdXBwb3J0IGZvciB0aGUgTFMxMDI4YSBQ
-Q0llIGNvbnRyb2xsZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJhbyA8eGlh
-b3dlaS5iYW9AbnhwLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhpcWlhbmcgPFpoaXFp
-YW5nLkhvdUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+IHYyOg0KPiA+ICAtIE5vIGNoYW5nZS4NCj4g
-PiB2MzoNCj4gPiAgLSBSZXVzZSB0aGUgbHMyMDg4IGRyaXZlciBkYXRhIHN0cnVjdHVydC4NCj4g
-PiB2NDoNCj4gPiAgLSBObyBjaGFuZ2UuDQo+ID4gdjU6DQo+ID4gIC0gTm8gY2hhbmdlLg0KPiA+
-IHY2Og0KPiA+ICAtIE5vIGNoYW5nZS4NCj4gPg0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVy
-L2R3Yy9wY2ktbGF5ZXJzY2FwZS5jIHwgMSArDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2Vy
-dGlvbigrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdj
-L3BjaS1sYXllcnNjYXBlLmMNCj4gPiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1s
-YXllcnNjYXBlLmMNCj4gPiBpbmRleCAzYTVmYTI2Li5mMjRmNzlhIDEwMDY0NA0KPiA+IC0tLSBh
-L2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLmMNCj4gPiArKysgYi9k
-cml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS5jDQo+ID4gQEAgLTI2Myw2
-ICsyNjMsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGxzX3BjaWVfZHJ2ZGF0YSBsczIwODhfZHJ2
-ZGF0YQ0KPiA+ID0geyAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbHNfcGNpZV9v
-Zl9tYXRjaFtdID0gew0KPiA+ICAJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDEyYS1wY2llIiwg
-LmRhdGEgPSAmbHMxMDQ2X2RydmRhdGEgfSwNCj4gPiAgCXsgLmNvbXBhdGlibGUgPSAiZnNsLGxz
-MTAyMWEtcGNpZSIsIC5kYXRhID0gJmxzMTAyMV9kcnZkYXRhIH0sDQo+ID4gKwl7IC5jb21wYXRp
-YmxlID0gImZzbCxsczEwMjhhLXBjaWUiLCAuZGF0YSA9ICZsczIwODhfZHJ2ZGF0YSB9LA0KPiAN
-Cj4gSSB0aGluayB5b3UgY2FuIHNhdmUgdGhpcyBkcml2ZXIgY2hhbmdlIGJ5IHVzaW5nICJmc2ws
-bHMyMDg4YS1wY2llIiBhcw0KPiBjb21wYXRpYmxlIGZhbGxiYWNrIGxpa2UgYmVsb3cuDQo+IA0K
-PiAgIGNvbXBhdGlibGUgPSAiZnNsLGxzMTAyOGEtcGNpZSIsICJmc2wsbHMyMDg4YS1wY2llIjsN
-Cg0KWWVzLCBpdCBpcyBvayB0byBkbyBzbywgYnV0IGFjY29yZGluZyB0byB0aGUgcHJldmlvdXMg
-Y29kZSwgSSB0aGluayBhZGQgYSBuZXcgY29tcGF0aWJsZSAiIGZzbCxsczEwMjhhLXBjaWUgIiB0
-byBkcml2ZXIgaXMgYmV0dGVyLg0KDQpUaGFua3MgDQpYaWFvd2VpDQoNCj4gDQo+IFNoYXduDQo+
-IA0KPiA+ICAJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDQzYS1wY2llIiwgLmRhdGEgPSAmbHMx
-MDQzX2RydmRhdGEgfSwNCj4gPiAgCXsgLmNvbXBhdGlibGUgPSAiZnNsLGxzMTA0NmEtcGNpZSIs
-IC5kYXRhID0gJmxzMTA0Nl9kcnZkYXRhIH0sDQo+ID4gIAl7IC5jb21wYXRpYmxlID0gImZzbCxs
-czIwODBhLXBjaWUiLCAuZGF0YSA9ICZsczIwODBfZHJ2ZGF0YSB9LA0KPiA+IC0tDQo+ID4gMi45
-LjUNCj4gPg0K
+On 04.10.19 14:48:13, Bjorn Helgaas wrote:
+> commit 37b22fbfec2d
+> Author: George Cherian <george.cherian@marvell.com>
+> Date:   Thu Sep 19 02:43:34 2019 +0000
+>=20
+>     PCI: Apply Cavium ACS quirk to CN99xx and CN11xxx Root Ports
+>    =20
+>     Add an array of Cavium Root Port device IDs and apply the quirk only =
+to the
+>     listed devices.
+>    =20
+>     Instead of applying the quirk to all Root Ports where
+>     "(dev->device & 0xf800) =3D=3D 0xa000", apply it only to CN88xx 0xa18=
+0 and
+>     0xa170 Root Ports.
+
+No, this can't be removed. It is a match all for all CN8xxx variants
+(note the 3 'x', all TX1 cores). So all device ids from 0xa000 to
+0xa7FF are affected here and need the quirk.
+
+>    =20
+>     Also apply the quirk to CN99xx (0xaf84) and CN11xxx (0xb884) Root Por=
+ts.
+
+I thought the quirk is CN8xxx specific, but I could be wrong here.
+
+-Robert
+
+>    =20
+>     Link: https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lore.ker=
+nel.org_r_20190919024319.GA8792-40dc5-2Deodlnx05.marvell.com&d=3DDwIBAg&c=
+=3DnKjWec2b6R0mOyPaz7xtfQ&r=3D8vKOpC26NZGzQPAMiIlimxyEGCRSJiq-j8yyjPJ6VZ4&m=
+=3DVmml-rx3t63ZbbXZ0XaESAM9yAlexE29R-giTbcj4Qk&s=3D57jKIj8BAydbLpftLt5Ssva7=
+vD6GuoCaIpjTi-sB5kU&e=3D=20
+>     Fixes: f2ddaf8dfd4a ("PCI: Apply Cavium ThunderX ACS quirk to more Ro=
+ot Ports")
+>     Fixes: b404bcfbf035 ("PCI: Add ACS quirk for all Cavium devices")
+>     Signed-off-by: George Cherian <george.cherian@marvell.com>
+>     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>     Cc: stable@vger.kernel.org      # v4.12+
+>=20
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 320255e5e8f8..4e5048cb5ec6 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4311,17 +4311,24 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *d=
+ev, u16 acs_flags)
+>  #endif
+>  }
+> =20
+> +static const u16 pci_quirk_cavium_acs_ids[] =3D {
+> +	0xa180, 0xa170,		/* CN88xx family of devices */
+> +	0xaf84,			/* CN99xx family of devices */
+> +	0xb884,			/* CN11xxx family of devices */
+> +};
+> +
+>  static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
+>  {
+> -	/*
+> -	 * Effectively selects all downstream ports for whole ThunderX 1
+> -	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
+> -	 * bits of device ID are used to indicate which subdevice is used
+> -	 * within the SoC.
+> -	 */
+> -	return (pci_is_pcie(dev) &&
+> -		(pci_pcie_type(dev) =3D=3D PCI_EXP_TYPE_ROOT_PORT) &&
+> -		((dev->device & 0xf800) =3D=3D 0xa000));
+> +	int i;
+> +
+> +	if (!pci_is_pcie(dev) || pci_pcie_type(dev) !=3D PCI_EXP_TYPE_ROOT_PORT=
+)
+> +		return false;
+> +
+> +	for (i =3D 0; i < ARRAY_SIZE(pci_quirk_cavium_acs_ids); i++)
+> +		if (pci_quirk_cavium_acs_ids[i] =3D=3D dev->device)
+> +			return true;
+> +
+> +	return false;
+>  }
+> =20
+>  static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
