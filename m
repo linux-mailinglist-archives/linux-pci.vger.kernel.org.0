@@ -2,99 +2,236 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 66EEFCFF12
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2019 18:42:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6652CFFBD
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2019 19:22:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbfJHQmf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Oct 2019 12:42:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59420 "EHLO mail.kernel.org"
+        id S1725966AbfJHRWj convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 8 Oct 2019 13:22:39 -0400
+Received: from mga06.intel.com ([134.134.136.31]:28870 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726138AbfJHQmf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:42:35 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 585F721721;
-        Tue,  8 Oct 2019 16:42:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570552954;
-        bh=dfD/LccKHp0lGS2CMziU/zHzVg9aO+PkYE7XNdSLakQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=p98flAXeCXBQgLiZzJetRTH7+rIT/X/w9J+8l1LGifrT06NcN1WlGQJTEBskih8JV
-         tO5s4//CUpV+fzL5jYZBnm3Tj3vGfvqoRYoSpBn5HuHHX00pF1+pTatL/9+6/uB5ab
-         qYolDYY7sVvYpCIF8jQ23Y/YlaVAHBjtRubvqhoQ=
-Date:   Tue, 8 Oct 2019 11:42:32 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        AceLan Kao <acelan@gmail.com>
-Subject: [bugzilla-daemon@bugzilla.kernel.org: [Bug 205119] New: It takes
- long time to wake up from s2idle on Dell XPS 7390 2-in-1]
-Message-ID: <20191008164232.GA173643@google.com>
+        id S1725900AbfJHRWi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 8 Oct 2019 13:22:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 10:22:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
+   d="scan'208";a="277162796"
+Received: from irsmsx102.ger.corp.intel.com ([163.33.3.155])
+  by orsmga001.jf.intel.com with ESMTP; 08 Oct 2019 10:22:36 -0700
+Received: from irsmsx101.ger.corp.intel.com ([169.254.1.129]) by
+ IRSMSX102.ger.corp.intel.com ([169.254.2.160]) with mapi id 14.03.0439.000;
+ Tue, 8 Oct 2019 18:22:35 +0100
+From:   "Patel, Mayurkumar" <mayurkumar.patel@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>
+Subject: [RESEND PATCH v3] PCI/AER: Save and restore AER config state
+Thread-Topic: [RESEND PATCH v3] PCI/AER: Save and restore AER config state
+Thread-Index: AdV9/NREHFXBsULnSk+tvCdJHtrp6g==
+Date:   Tue, 8 Oct 2019 17:22:34 +0000
+Message-ID: <92EBB4272BF81E4089A7126EC1E7B28479AE1486@IRSMSX101.ger.corp.intel.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjhhNTZmNTgtODMwOC00ZjMzLTg3M2QtNjA4NDVjMjc0ZTQwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoienI5WTBzK1VhYXM4VERGMmJudnB4YktTb1wvMExcL2dEUWd3bVhodEMwWndFbG84bXI3cWVEOEJIc284ZElWMStPIn0=
+x-ctpclassification: CTP_NT
+x-originating-ip: [163.33.239.181]
+Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8BIT
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-AceLan, do you know if this is a regression and if so, when it was
-introduced?
+This patch provides AER config save and restore capabilities. After system
+resume AER config registers settings are lost. Not restoring AER root error
+command register bits on root port if they were set, disables generation
+of an AER interrupt reported by function as described in PCIe spec r4.0,
+sec 7.8.4.9. Moreover, AER config mask, severity and ECRC registers are
+also required to maintain same state prior to system suspend to maintain
+AER interrupts behavior.
 
------ Forwarded message from bugzilla-daemon@bugzilla.kernel.org -----
+Signed-off-by: Mayurkumar Patel <mayurkumar.patel@intel.com>
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+drivers/pci/access.c   |  2 +-
+drivers/pci/pci.c      |  2 ++
+drivers/pci/pci.h      |  1 +
+drivers/pci/pcie/aer.c | 59 ++++++++++++++++++++++++++++++++++++++++++++++++++
+include/linux/aer.h    |  4 ++++
+5 files changed, 67 insertions(+), 1 deletion(-)
 
-Date: Tue, 08 Oct 2019 02:56:27 +0000
-From: bugzilla-daemon@bugzilla.kernel.org
-To: bjorn@helgaas.com
-Subject: [Bug 205119] New: It takes long time to wake up from s2idle on Dell
-	XPS 7390 2-in-1
-Message-ID: <bug-205119-41252@https.bugzilla.kernel.org/>
+diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+index 544922f..962295c 100644
+--- a/drivers/pci/access.c
++++ b/drivers/pci/access.c
+@@ -364,7 +364,7 @@ static inline bool pcie_cap_has_sltctl(const struct pci_dev *dev)
+	       pcie_caps_reg(dev) & PCI_EXP_FLAGS_SLOT;
+}
 
-https://bugzilla.kernel.org/show_bug.cgi?id=205119
+-static inline bool pcie_cap_has_rtctl(const struct pci_dev *dev)
++bool pcie_cap_has_rtctl(const struct pci_dev *dev)
+{
+	int type = pci_pcie_type(dev);
 
-            Bug ID: 205119
-           Summary: It takes long time to wake up from s2idle on Dell XPS
-                    7390 2-in-1
-           Product: Drivers
-           Version: 2.5
-    Kernel Version: 5.4-rc2
-          Hardware: All
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: PCI
-          Assignee: drivers_pci@kernel-bugs.osdl.org
-          Reporter: acelan@gmail.com
-        Regression: No
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 8abc843..40d5507 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1340,6 +1340,7 @@ int pci_save_state(struct pci_dev *dev)
 
-Created attachment 285395
-  --> https://bugzilla.kernel.org/attachment.cgi?id=285395&action=edit
-dmesg log
+ 	pci_save_ltr_state(dev);
+	pci_save_dpc_state(dev);
++	pci_save_aer_state(dev);
+	return pci_save_vc_state(dev);
+}
+EXPORT_SYMBOL(pci_save_state);
+@@ -1453,6 +1454,7 @@ void pci_restore_state(struct pci_dev *dev)
+	pci_restore_dpc_state(dev);
 
-1. Enter s2idle at 28.39s
-2. Press power button at 246.10s
-3. The machine stuck until 412.30s and spit out thunderbolt warning messages
-4. thunderbolt port keeps working after s2idle, plug-in Dell WD19TB
-dock(472.45s), and the "boltctl list" shows the dock info correctly.
+ 	pci_cleanup_aer_error_status_regs(dev);
++	pci_restore_aer_state(dev);
 
-BTW, I also found that there are 2 tbt ports on the machine, and if I plug in
-one TBT dock, and the wakeup time could be reduced by 80 seconds. And if I plug
-in 2 docks in both TBT ports, the machine wakes up from s2idle quick enough as
-the normal system.
+ 	pci_restore_config_space(dev);
 
-I believe the 2 lines are related.
-[  330.388604] thunderbolt 0000:00:0d.3: failed to send driver ready to ICM
-[  412.308083] thunderbolt 0000:00:0d.2: failed to send driver ready to ICM
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 9cb9938..268995b 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -12,6 +12,7 @@ extern const unsigned char pcie_link_speed[];
+extern bool pci_early_dump;
 
+ bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
++bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+
+ /* Functions internal to the PCI core code */
+
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index b45bc47..7c41dec 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -448,6 +448,53 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+	return 0;
+}
+
++
++void pci_save_aer_state(struct pci_dev *dev)
++{
++	struct pci_cap_saved_state *save_state;
++	u32 *cap;
++	int pos;
++
++	pos = dev->aer_cap;
++	if (!pos)
++		return;
++
++	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ERR);
++	if (!save_state)
++		return;
++
++	cap = &save_state->cap.data[0];
++	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, cap++);
++	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, cap++);
++	pci_read_config_dword(dev, pos + PCI_ERR_COR_MASK, cap++);
++	pci_read_config_dword(dev, pos + PCI_ERR_CAP, cap++);
++	if (pcie_cap_has_rtctl(dev))
++		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, cap++);
++}
++
++void pci_restore_aer_state(struct pci_dev *dev)
++{
++	struct pci_cap_saved_state *save_state;
++	u32 *cap;
++	int pos;
++
++	pos = dev->aer_cap;
++	if (!pos)
++		return;
++
++	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ERR);
++	if (!save_state)
++		return;
++
++	cap = &save_state->cap.data[0];
++	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, *cap++);
++	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, *cap++);
++	pci_write_config_dword(dev, pos + PCI_ERR_COR_MASK, *cap++);
++	pci_write_config_dword(dev, pos + PCI_ERR_CAP, *cap++);
++	if (pcie_cap_has_rtctl(dev))
++		pci_write_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, *cap++);
++}
++
+void pci_aer_init(struct pci_dev *dev)
+{
+	dev->aer_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ERR);
+@@ -455,6 +502,18 @@ void pci_aer_init(struct pci_dev *dev)
+	if (dev->aer_cap)
+		dev->aer_stats = kzalloc(sizeof(struct aer_stats), GFP_KERNEL);
+
++	/*
++	 * Since PCI_ERR_ROOT_COMMAND is only valid for root port and root
++	 * complex event collector, as per PCIe 4.0 section 7.8.4, interpret
++	 * the device/port type to determine the availability of additional
++	 * root port and root complex event collector register.
++	 */
++	if (pcie_cap_has_rtctl(dev))
++		pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ERR,
++					sizeof(u32) * 5);
++	else
++		pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ERR,
++					sizeof(u32) * 4);
+	pci_cleanup_aer_error_status_regs(dev);
+}
+
+diff --git a/include/linux/aer.h b/include/linux/aer.h
+index 514bffa..fa19e01 100644
+--- a/include/linux/aer.h
++++ b/include/linux/aer.h
+@@ -46,6 +46,8 @@ int pci_enable_pcie_error_reporting(struct pci_dev *dev);
+int pci_disable_pcie_error_reporting(struct pci_dev *dev);
+int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev);
+int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);
++void pci_save_aer_state(struct pci_dev *dev);
++void pci_restore_aer_state(struct pci_dev *dev);
+#else
+static inline int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+{
+@@ -63,6 +65,8 @@ static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+{
+	return -EINVAL;
+}
++static inline void pci_save_aer_state(struct pci_dev *dev) {}
++static inline void pci_restore_aer_state(struct pci_dev *dev) {}
+#endif
+
+ void cper_print_aer(struct pci_dev *dev, int aer_severity,
 -- 
-You are receiving this mail because:
-You are watching the assignee of the bug.
+2.7.4
 
------ End forwarded message -----
+Mayurkumar Patel
+Intel Deutschland GmbH
+Registered Address: Am Campeon 10-12, 85579 Neubiberg, Germany
+Registered Office: Munich
+Commercial Register: Amtsgericht Muenchen HRB 186928
+
+
+
+Intel Deutschland GmbH
+Registered Address: Am Campeon 10-12, 85579 Neubiberg, Germany
+Tel: +49 89 99 8853-0, www.intel.de
+Managing Directors: Christin Eisenschmid, Gary Kershaw
+Chairperson of the Supervisory Board: Nicole Lau
+Registered Office: Munich
+Commercial Register: Amtsgericht Muenchen HRB 186928
+
