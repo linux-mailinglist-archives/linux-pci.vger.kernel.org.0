@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D1532CF999
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2019 14:16:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 780CDCF9BC
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2019 14:27:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730317AbfJHMQ2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Oct 2019 08:16:28 -0400
-Received: from mga06.intel.com ([134.134.136.31]:5029 "EHLO mga06.intel.com"
+        id S1730371AbfJHM1P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Oct 2019 08:27:15 -0400
+Received: from mga02.intel.com ([134.134.136.20]:30882 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730199AbfJHMQ2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:16:28 -0400
+        id S1730317AbfJHM1P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:27:15 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 05:16:27 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 05:27:14 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
-   d="scan'208";a="206625721"
+   d="scan'208";a="206626898"
 Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 08 Oct 2019 05:16:24 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 08 Oct 2019 15:16:24 +0300
-Date:   Tue, 8 Oct 2019 15:16:23 +0300
+  by fmsmga001.fm.intel.com with SMTP; 08 Oct 2019 05:27:11 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 08 Oct 2019 15:27:10 +0300
+Date:   Tue, 8 Oct 2019 15:27:10 +0300
 From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
 To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
 Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
@@ -31,14 +31,14 @@ Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "corbet@lwn.net" <corbet@lwn.net>,
         "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
         "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH v8 5/6] PCI: Add hp_mmio_size and hp_mmio_pref_size
- parameters
-Message-ID: <20191008121623.GJ2819@lahna.fi.intel.com>
-References: <SL2P216MB0187C45A8B38504D855A1DEA80C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+Subject: Re: [PATCH v8 6/6] PCI: Fix bug resulting in double hpmemsize being
+ assigned to MMIO window
+Message-ID: <20191008122710.GK2819@lahna.fi.intel.com>
+References: <SL2P216MB018781FEDD139047FCBE42AB80C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SL2P216MB0187C45A8B38504D855A1DEA80C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+In-Reply-To: <SL2P216MB018781FEDD139047FCBE42AB80C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
@@ -46,194 +46,74 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 12:54:44PM +0000, Nicholas Johnson wrote:
-> Add kernel parameter pci=hpmmiosize=nn[KMG] to set MMIO bridge window
-> size for hotplug bridges.
+On Fri, Jul 26, 2019 at 12:55:03PM +0000, Nicholas Johnson wrote:
+> Background
+> ==========================================================================
+
+I don't think the above are needed.
+
+> Currently, the kernel can sometimes assign the MMIO_PREF window
+> additional size into the MMIO window, resulting in double the MMIO
+> additional size, even if the MMIO_PREF window was successful.
 > 
-> Add kernel parameter pci=hpmmioprefsize=nn[KMG] to set MMIO_PREF bridge
-> window size for hotplug bridges.
+> This happens if in the first pass, the MMIO_PREF succeeds but the MMIO
+> fails. In the next pass, because MMIO_PREF is already assigned, the
+> attempt to assign MMIO_PREF returns an error code instead of success
+> (nothing more to do, already allocated).
 > 
-> Leave pci=hpmemsize=nn[KMG] unchanged, to prevent disruptions to
-> existing users. This sets both MMIO and MMIO_PREF to the same size.
+> Example of problem (more context can be found in the bug report URL):
+
+Maybe add bit more context in the changelog. Also explain how the
+problem can be reproduced.
+
+> Mainline kernel:
+> pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0xa00fffff] = 256M
+> pci 0000:06:04.0: BAR 14: assigned [mem 0xa0200000-0xb01fffff] = 256M
 > 
-> The two new parameters conform to the style of pci=hpiosize=nn[KMG].
+> Patched kernel:
+> pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0x980fffff] = 128M
+> pci 0000:06:04.0: BAR 14: assigned [mem 0x98200000-0xa01fffff] = 128M
 > 
-> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-
-This does not apply anymore because of 003d3b2c5f83 ("PCI: Make
-pci_hotplug_io_size, mem_size, and bus_size private") so I think you
-need to rebase this on top of current mainline.
-
-> ---
->  .../admin-guide/kernel-parameters.txt         |  9 ++++++-
->  drivers/pci/pci.c                             | 17 ++++++++++---
->  drivers/pci/setup-bus.c                       | 25 +++++++++++--------
->  include/linux/pci.h                           |  3 ++-
->  4 files changed, 38 insertions(+), 16 deletions(-)
+> This was using pci=realloc,hpmemsize=128M,nocrs - on the same machine
+> with the same configuration, with a Ubuntu mainline kernel and a kernel
+> patched with this patch series.
 > 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 46b826fcb..9bc54cb99 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -3467,8 +3467,15 @@
->  		hpiosize=nn[KMG]	The fixed amount of bus space which is
->  				reserved for hotplug bridge's IO window.
->  				Default size is 256 bytes.
-> +		hpmmiosize=nn[KMG]	The fixed amount of bus space which is
-> +				reserved for hotplug bridge's MMIO window.
-> +				Default size is 2 megabytes.
-> +		hpmmioprefsize=nn[KMG]	The fixed amount of bus space which is
-> +				reserved for hotplug bridge's MMIO_PREF window.
-> +				Default size is 2 megabytes.
->  		hpmemsize=nn[KMG]	The fixed amount of bus space which is
-> -				reserved for hotplug bridge's memory window.
-> +				reserved for hotplug bridge's MMIO and
-> +				MMIO_PREF window.
->  				Default size is 2 megabytes.
->  		hpbussize=nn	The minimum amount of additional bus numbers
->  				reserved for buses below a hotplug bridge.
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 29ed5ec1a..6b3857cad 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -85,10 +85,12 @@ unsigned long pci_cardbus_io_size = DEFAULT_CARDBUS_IO_SIZE;
->  unsigned long pci_cardbus_mem_size = DEFAULT_CARDBUS_MEM_SIZE;
->  
->  #define DEFAULT_HOTPLUG_IO_SIZE		(256)
-> -#define DEFAULT_HOTPLUG_MEM_SIZE	(2*1024*1024)
-> +#define DEFAULT_HOTPLUG_MMIO_SIZE	(2*1024*1024)
-> +#define DEFAULT_HOTPLUG_MMIO_PREF_SIZE	(2*1024*1024)
->  /* pci=hpmemsize=nnM,hpiosize=nn can override this */
->  unsigned long pci_hotplug_io_size  = DEFAULT_HOTPLUG_IO_SIZE;
-> -unsigned long pci_hotplug_mem_size = DEFAULT_HOTPLUG_MEM_SIZE;
-> +unsigned long pci_hotplug_mmio_size = DEFAULT_HOTPLUG_MMIO_SIZE;
-> +unsigned long pci_hotplug_mmio_pref_size = DEFAULT_HOTPLUG_MMIO_PREF_SIZE;
->  
->  #define DEFAULT_HOTPLUG_BUS_SIZE	1
->  unsigned long pci_hotplug_bus_size = DEFAULT_HOTPLUG_BUS_SIZE;
-> @@ -6281,8 +6283,17 @@ static int __init pci_setup(char *str)
->  				pcie_ecrc_get_policy(str + 5);
->  			} else if (!strncmp(str, "hpiosize=", 9)) {
->  				pci_hotplug_io_size = memparse(str + 9, &str);
-> +			} else if (!strncmp(str, "hpmmiosize=", 11)) {
-> +				pci_hotplug_mmio_size =
-> +					memparse(str + 11, &str);
+> This patch is vital for the next patch in the series. The next patch
 
-I would keep this in single line disregarding the 80 char limit.
+There is no next patch in the patch series ;-)
 
-> +			} else if (!strncmp(str, "hpmmioprefsize=", 15)) {
-> +				pci_hotplug_mmio_pref_size =
-> +					memparse(str + 15, &str);
+> allows the user to specify MMIO and MMIO_PREF independently. If the
+> MMIO_PREF is set to be very large, this bug will end up more than
+> doubling the MMIO size. The bug results in the MMIO_PREF being added to
+> the MMIO window, which means doubling if MMIO_PREF size == MMIO size.
+> With a large MMIO_PREF, without this patch, the MMIO window will likely
+> fail to be assigned altogether due to lack of 32-bit address space.
+> 
+> Patch notes
+> ==========================================================================
 
-Ditto
+Here also the above two lines are not needed.
 
->  			} else if (!strncmp(str, "hpmemsize=", 10)) {
-> -				pci_hotplug_mem_size = memparse(str + 10, &str);
-> +				pci_hotplug_mmio_size =
-> +					memparse(str + 10, &str);
-Ditto.
+> Change find_free_bus_resource() to not skip assigned resources with
+> non-null parent.
+> 
+> Add checks in pbus_size_io() and pbus_size_mem() to return success if
+> resource returned from find_free_bus_resource() is already allocated.
+> 
+> This avoids pbus_size_io() and pbus_size_mem() returning error code to
+> __pci_bus_size_bridges() when a resource has been successfully assigned
+> in a previous pass. This fixes the existing behaviour where space for a
+> resource could be reserved multiple times in different parent bridge
+> windows. This also greatly reduces the number of failed BAR messages in
+> dmesg when Linux assigns resources.
+> 
+> See related from Logan Gunthorpe (same problem, different solution):
+> https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
 
-> +				pci_hotplug_mmio_pref_size =
-> +					memparse(str + 10, &str);
+Link: https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
 
-Ditto.
+> Solves bug report: https://bugzilla.kernel.org/show_bug.cgi?id=203243
 
->  			} else if (!strncmp(str, "hpbussize=", 10)) {
->  				pci_hotplug_bus_size =
->  					simple_strtoul(str + 10, &str, 0);
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index 7e1dc892a..345ecf16d 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1178,7 +1178,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
->  {
->  	struct pci_dev *dev;
->  	unsigned long mask, prefmask, type2 = 0, type3 = 0;
-> -	resource_size_t additional_mem_size = 0, additional_io_size = 0;
-> +	resource_size_t additional_io_size = 0, additional_mmio_size = 0,
-> +		additional_mmio_pref_size = 0;
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203243
 
-Maybe align them like
-
-	resource_size_t additional_io_size = 0, additional_mmio_size = 0,
-			additional_mmio_pref_size = 0;
-
->  	struct resource *b_res;
->  	int ret;
->  
-> @@ -1212,7 +1213,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
->  		pci_bridge_check_ranges(bus);
->  		if (bus->self->is_hotplug_bridge) {
->  			additional_io_size  = pci_hotplug_io_size;
-> -			additional_mem_size = pci_hotplug_mem_size;
-> +			additional_mmio_size = pci_hotplug_mmio_size;
-> +			additional_mmio_pref_size = pci_hotplug_mmio_pref_size;
->  		}
->  		/* Fall through */
->  	default:
-> @@ -1230,9 +1232,9 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
->  		if (b_res[2].flags & IORESOURCE_MEM_64) {
->  			prefmask |= IORESOURCE_MEM_64;
->  			ret = pbus_size_mem(bus, prefmask, prefmask,
-> -				  prefmask, prefmask,
-> -				  realloc_head ? 0 : additional_mem_size,
-> -				  additional_mem_size, realloc_head);
-> +				prefmask, prefmask,
-> +				realloc_head ? 0 : additional_mmio_pref_size,
-> +				additional_mmio_pref_size, realloc_head);
->  
->  			/*
->  			 * If successful, all non-prefetchable resources
-> @@ -1254,9 +1256,9 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
->  		if (!type2) {
->  			prefmask &= ~IORESOURCE_MEM_64;
->  			ret = pbus_size_mem(bus, prefmask, prefmask,
-> -					 prefmask, prefmask,
-> -					 realloc_head ? 0 : additional_mem_size,
-> -					 additional_mem_size, realloc_head);
-> +				prefmask, prefmask,
-> +				realloc_head ? 0 : additional_mmio_pref_size,
-> +				additional_mmio_pref_size, realloc_head);
->  
->  			/*
->  			 * If successful, only non-prefetchable resources
-> @@ -1265,7 +1267,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
->  			if (ret == 0)
->  				mask = prefmask;
->  			else
-> -				additional_mem_size += additional_mem_size;
-> +				additional_mmio_size +=
-> +					additional_mmio_pref_size;
-
-Here also looks better if you put them single line.
-
->  
->  			type2 = type3 = IORESOURCE_MEM;
->  		}
-> @@ -1285,8 +1288,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
->  		 * prefetchable resource in a 64-bit prefetchable window.
->  		 */
->  		pbus_size_mem(bus, mask, IORESOURCE_MEM, type2, type3,
-> -				realloc_head ? 0 : additional_mem_size,
-> -				additional_mem_size, realloc_head);
-> +			realloc_head ? 0 : additional_mmio_size,
-> +			additional_mmio_size, realloc_head);
->  		break;
->  	}
->  }
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 9e700d9f9..1bde5763a 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2031,7 +2031,8 @@ extern u8 pci_dfl_cache_line_size;
->  extern u8 pci_cache_line_size;
->  
->  extern unsigned long pci_hotplug_io_size;
-> -extern unsigned long pci_hotplug_mem_size;
-> +extern unsigned long pci_hotplug_mmio_size;
-> +extern unsigned long pci_hotplug_mmio_pref_size;
->  extern unsigned long pci_hotplug_bus_size;
->  
->  /* Architecture-specific versions may override these (weak) */
-> -- 
-> 2.22.0
+The patch itself looks good to me.
