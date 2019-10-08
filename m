@@ -2,118 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 780CDCF9BC
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2019 14:27:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0AE6CFA4C
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2019 14:47:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbfJHM1P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Oct 2019 08:27:15 -0400
-Received: from mga02.intel.com ([134.134.136.20]:30882 "EHLO mga02.intel.com"
+        id S1730317AbfJHMrZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Oct 2019 08:47:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730317AbfJHM1P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:27:15 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 05:27:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
-   d="scan'208";a="206626898"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 08 Oct 2019 05:27:11 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 08 Oct 2019 15:27:10 +0300
-Date:   Tue, 8 Oct 2019 15:27:10 +0300
-From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH v8 6/6] PCI: Fix bug resulting in double hpmemsize being
- assigned to MMIO window
-Message-ID: <20191008122710.GK2819@lahna.fi.intel.com>
-References: <SL2P216MB018781FEDD139047FCBE42AB80C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+        id S1730316AbfJHMrY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:47:24 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1665F20640;
+        Tue,  8 Oct 2019 12:47:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570538844;
+        bh=gPpCa6p+Wso87HvLkhRvL+4LLCQTklIIhK4mGQjgaXA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ZhNc5wiP2bjwQKEPE96Jtm8B32XiDgHnk1lCcNhInf6MdIm3rZ5TRWMidk7plGOd8
+         sbb9kr4SvfvwNP4hHOt8DlAXpXC5vpzKny9kDZRx+1xrd1uilfGPhLXncxxdZMFu25
+         N1/M2Eu38NLnXvGOgZMdcd8WLpWWqnCx254KocPM=
+Date:   Tue, 8 Oct 2019 07:47:23 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
+        Kuldeep Dave <kuldeep.dave@xilinx.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/MSI: Enable PCI_MSI_IRQ_DOMAIN support for Microblaze
+Message-ID: <20191008124723.GA161444@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SL2P216MB018781FEDD139047FCBE42AB80C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <e0ead31283c74254e8c02c0e5e5123277ed1f927.1570531159.git.michal.simek@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 12:55:03PM +0000, Nicholas Johnson wrote:
-> Background
-> ==========================================================================
-
-I don't think the above are needed.
-
-> Currently, the kernel can sometimes assign the MMIO_PREF window
-> additional size into the MMIO window, resulting in double the MMIO
-> additional size, even if the MMIO_PREF window was successful.
+On Tue, Oct 08, 2019 at 12:39:22PM +0200, Michal Simek wrote:
+> From: Kuldeep Dave <kuldeep.dave@xilinx.com>
 > 
-> This happens if in the first pass, the MMIO_PREF succeeds but the MMIO
-> fails. In the next pass, because MMIO_PREF is already assigned, the
-> attempt to assign MMIO_PREF returns an error code instead of success
-> (nothing more to do, already allocated).
+> Add Microblaze as an arch that supports PCI_MSI_IRQ_DOMAIN.
+> Enabling msi.h generation is done by separate patch.
 > 
-> Example of problem (more context can be found in the bug report URL):
-
-Maybe add bit more context in the changelog. Also explain how the
-problem can be reproduced.
-
-> Mainline kernel:
-> pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0xa00fffff] = 256M
-> pci 0000:06:04.0: BAR 14: assigned [mem 0xa0200000-0xb01fffff] = 256M
+> Similar change was done by commit 2a9af0273c1c
+> ("PCI/MSI: Enable PCI_MSI_IRQ_DOMAIN support for RISC-V")
 > 
-> Patched kernel:
-> pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0x980fffff] = 128M
-> pci 0000:06:04.0: BAR 14: assigned [mem 0x98200000-0xa01fffff] = 128M
+> Signed-off-by: Kuldeep Dave <kuldeep.dave@xilinx.com>
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+> Arch part was sent here:
+> https://lkml.org/lkml/2019/10/8/277
+
+Can you please squash this drivers/pci/Kconfig change into the same
+patch as the arch/microblaze patch mentioned above?  That way there's
+no ordering issue between the two patches.  I'd be glad to merge it,
+or you can add my ack and apply it via the Microblaze tree.  Just let
+me know which you prefer so I know whether to do something with this.
+
+Sorry; I probably suggested the splitting in the first place for
+RISC-V, but I think that was a mistake.
+
+> ---
+>  drivers/pci/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> This was using pci=realloc,hpmemsize=128M,nocrs - on the same machine
-> with the same configuration, with a Ubuntu mainline kernel and a kernel
-> patched with this patch series.
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index a304f5ea11b9..9d259372fbfd 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -52,7 +52,7 @@ config PCI_MSI
+>  	   If you don't know what to do here, say Y.
+>  
+>  config PCI_MSI_IRQ_DOMAIN
+> -	def_bool ARC || ARM || ARM64 || X86 || RISCV
+> +	def_bool ARC || ARM || ARM64 || X86 || RISCV || MICROBLAZE
+>  	depends on PCI_MSI
+>  	select GENERIC_MSI_IRQ_DOMAIN
+>  
+> -- 
+> 2.17.1
 > 
-> This patch is vital for the next patch in the series. The next patch
-
-There is no next patch in the patch series ;-)
-
-> allows the user to specify MMIO and MMIO_PREF independently. If the
-> MMIO_PREF is set to be very large, this bug will end up more than
-> doubling the MMIO size. The bug results in the MMIO_PREF being added to
-> the MMIO window, which means doubling if MMIO_PREF size == MMIO size.
-> With a large MMIO_PREF, without this patch, the MMIO window will likely
-> fail to be assigned altogether due to lack of 32-bit address space.
-> 
-> Patch notes
-> ==========================================================================
-
-Here also the above two lines are not needed.
-
-> Change find_free_bus_resource() to not skip assigned resources with
-> non-null parent.
-> 
-> Add checks in pbus_size_io() and pbus_size_mem() to return success if
-> resource returned from find_free_bus_resource() is already allocated.
-> 
-> This avoids pbus_size_io() and pbus_size_mem() returning error code to
-> __pci_bus_size_bridges() when a resource has been successfully assigned
-> in a previous pass. This fixes the existing behaviour where space for a
-> resource could be reserved multiple times in different parent bridge
-> windows. This also greatly reduces the number of failed BAR messages in
-> dmesg when Linux assigns resources.
-> 
-> See related from Logan Gunthorpe (same problem, different solution):
-> https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
-
-Link: https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
-
-> Solves bug report: https://bugzilla.kernel.org/show_bug.cgi?id=203243
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203243
-
-The patch itself looks good to me.
