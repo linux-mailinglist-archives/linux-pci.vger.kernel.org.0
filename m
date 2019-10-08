@@ -2,68 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 68F1DCFE05
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2019 17:46:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D86CCFE9E
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2019 18:13:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbfJHPqx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Oct 2019 11:46:53 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55950 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfJHPqx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Oct 2019 11:46:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=gu8QuxTbWjjSVfL2vy0xkXyQp8/uuH9770PDPTzotQU=; b=Ga5eC1maOxKXdSfmA8ytKWiA4
-        lT6GUyZdknGGwJbGM/8ilR2SKzS3ZRaNBH1Vbb5Ev4ePpbWzD9IQzx8kg7S+gJ78j7M8KaRJQA7qP
-        Em2U/RXQJHSsexcdDErqQ5JR/Vrnt+p9Cyt2URvNjUWyRRqV6t6W3KY//dy6KUaUu8LH963xeICUG
-        c/YqEjaG2ClNAioC9iXyXOJCxHgqEbLneMxbsmTB8Wq/Hafrol8g0rxtHtspEnzO65sP4lDu3IWWt
-        C6J2ZntBU25yE36qsKqLbYeXS0rWojUXTU4BAW36pVXFylvkN1EYIz8ts/TVVNXGxlMBd71SzqKaB
-        AhTQUGPIw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iHrhM-0004lP-GK; Tue, 08 Oct 2019 15:46:52 +0000
-Date:   Tue, 8 Oct 2019 08:46:52 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
-        Kuldeep Dave <kuldeep.dave@xilinx.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Palmer Dabbelt <palmer@sifive.com>, linux-pci@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-riscv@lists.infradead.org, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v2] PCI/MSI: Enable PCI_MSI_IRQ_DOMAIN support for
- Microblaze
-Message-ID: <20191008154652.GB7903@infradead.org>
-References: <b5959a9f6bfa65f0ae1a6a184e1b09dcec8e8f15.1570539512.git.michal.simek@xilinx.com>
+        id S1727010AbfJHQNe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Oct 2019 12:13:34 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40482 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfJHQNe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Oct 2019 12:13:34 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 7so18198264ljw.7
+        for <linux-pci@vger.kernel.org>; Tue, 08 Oct 2019 09:13:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=j7gjx5G7Uz/FbkLOVtZemWXw8Fp3YEGXhMTNEIXEOQs=;
+        b=Nt6u0R3aTXoQUqetNz1K+Fz0AajxMgWUP3bL+LzaD/T7D0bBOmph5jTL1sBvwH0MBH
+         9NCvqBPX3TIgpZzAL+1iSClGYJ0q9okAZrRXxdxpyDtooIDM4OfNFNBCu+Bn6THiAmy7
+         Y9WMd4tmymvRulvXqr+gyHt9g0pt1qX3iD+6VraBwdoNL71mXU8vN5fvbxKP3ldUtEVh
+         gI9lWJxXl4neONNeA+CZVSAMppfVuOzgOZGOkOHS2c9Ielfmw6X6OXRvUgSl7hnQMPrz
+         9eMmNvFvc7qHJKUHlPJIQ+jTOvTS7k98Kgyl/Vme79GDjkKSlXTYl5jS24dBjJxN/M0D
+         aIlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=j7gjx5G7Uz/FbkLOVtZemWXw8Fp3YEGXhMTNEIXEOQs=;
+        b=Y1ZOC9gAbVicK/F2fQJObnULCjF/eP74t9lhAp4DeN9m2GI1EEPXR9s+BrqEVRwGDR
+         Q9gAjG3+t58RkEIUxYuokMLbtX2mU/Qw1Xwu/sdY8yDuMjFkMpw4hjShrXItkMldt95I
+         31qUkYtlR1XJqEAuyiEXAgp9uHs4dP+kcULZGTVcULGlz+dgjfG4fz0z1APQYl73GmBT
+         c7zvwf0g9g/at1gqQKZCWHHsoEdneZ84bBgVhImrQKBvligfJJddVVPdA/T3vQpD3ud1
+         5EhGhVyy07IcmAcuhf9KBb4ZQSOo6TTCa8VZUCii22CpPe6mJHnXAITbSZT3W0ES4R2/
+         E0aw==
+X-Gm-Message-State: APjAAAW0v2/x7uIfwBA51GbJ144wnDP14EaYpc7w5aHLHiIKyCHHj3Jz
+        QfXgMMpLH4l9v/N9XjvM3RTveg==
+X-Google-Smtp-Source: APXvYqzisb5iFHqt5AyKDsDhNQf3ZTW3WLhp4rt+e2lFxJ1NCIm3R1MaRIZNSm1qKirywzOFoygV5A==
+X-Received: by 2002:a2e:780d:: with SMTP id t13mr20238558ljc.251.1570551211111;
+        Tue, 08 Oct 2019 09:13:31 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:4297:2ce2:b8b8:e7f7:2cc8:e6b0])
+        by smtp.gmail.com with ESMTPSA id y13sm4173990ljd.51.2019.10.08.09.13.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Oct 2019 09:13:30 -0700 (PDT)
+Subject: Re: [PATCH] PCI: rcar: Fix writing the MACCTLR register value
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        horms@verge.net.au, linux-pci@vger.kernel.org
+Cc:     linux-renesas-soc@vger.kernel.org, stable@vger.kernel.org
+References: <1570529884-20888-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <2ae9793a-2500-496f-2e18-927237fbd02a@cogentembedded.com>
+Date:   Tue, 8 Oct 2019 19:13:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b5959a9f6bfa65f0ae1a6a184e1b09dcec8e8f15.1570539512.git.michal.simek@xilinx.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <1570529884-20888-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index a304f5ea11b9..9d259372fbfd 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -52,7 +52,7 @@ config PCI_MSI
->  	   If you don't know what to do here, say Y.
->  
->  config PCI_MSI_IRQ_DOMAIN
-> -	def_bool ARC || ARM || ARM64 || X86 || RISCV
-> +	def_bool ARC || ARM || ARM64 || X86 || RISCV || MICROBLAZE
+Hello!
 
-Can you find out what the actual dependency is so that we can
-automatically enabled this instead of the weird arch list?
+On 10/08/2019 01:18 PM, Yoshihiro Shimoda wrote:
+
+> According to the R-Car Gen2/3 manual, the bit 0 of MACCTLR register
+> should be written by 0. To avoid unexpected behaviors from this
+
+   s/by/to/. I'd also mention that this bit is set to 1 on reset.
+
+> incorrect setting, this patch fixes it.
+> 
+> Fixes: b3327f7fae66 ("PCI: rcar: Try increasing PCIe link speed to 5 GT/s at boot")
+> Cc: <stable@vger.kernel.org> # v4.9+
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+[...]
+
+MBR, Sergei
