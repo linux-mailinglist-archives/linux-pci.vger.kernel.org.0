@@ -2,150 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F3B35D02B4
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2019 23:16:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C967D02DF
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2019 23:32:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730674AbfJHVQ7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Oct 2019 17:16:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54894 "EHLO mail.kernel.org"
+        id S1730722AbfJHVcy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Oct 2019 17:32:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730912AbfJHVQ7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Oct 2019 17:16:59 -0400
+        id S1730523AbfJHVcy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 8 Oct 2019 17:32:54 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0D0121721;
-        Tue,  8 Oct 2019 21:16:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2180A2070B;
+        Tue,  8 Oct 2019 21:32:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570569418;
-        bh=Uqjzv4/P9OatGQAy44pX7Dr8dKQk8lXYGW74iZDcG4Y=;
+        s=default; t=1570570373;
+        bh=OkeZztjJfWka8pzSMPcOrgXMFjuPsLVWOcUK/R/EDaA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=lWsX2rDSQspNs1nahOSrFjhf8LzrmfUK4rnKcRSmKWoYPeMd7QazDZl+mE5hMlzN+
-         lOMGd6B0PHzFWgjeZbtyG+Ns0nazdRWbh+Cwy6NXB0BdsQ3l3O+vzZfQLBlP/ee2VQ
-         MoEDHX97hkbN2uWl8X1poEgNuuLN8mLLSqedIk/w=
-Date:   Tue, 8 Oct 2019 16:16:56 -0500
+        b=FlKH8Wqfszosjq1WbJV0TfiBvFF7oSzEPUnvg03BFlSgAxMIcTjU5AwgHOrrUWiWN
+         xm8lya7Zz4byPfy5RKYQ37t10WZH0YLHYFPCgNHGEUhqSWD2nIaKkQ5XVMYVfmUDDk
+         2Btbry32WgNiS/NTqZrPl892l3uHFrpe7HumUi+8=
+Date:   Tue, 8 Oct 2019 16:32:51 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v3 1/2] PCI: PCIe: ASPM: Introduce pcie_aspm_enabled()
-Message-ID: <20191008211656.GA163302@google.com>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
+        George Cherian <gcherian@marvell.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shannon.zhao@linux.alibaba.com" <shannon.zhao@linux.alibaba.com>,
+        Sunil Kovvuri Goutham <sgoutham@marvell.com>
+Subject: Re: [PATCH] PCI: Enhance the ACS quirk for Cavium devices
+Message-ID: <20191008213251.GA229610@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0iL4Rv=AQ-Qnma=wWaqBBbOdfRqu9uS9Gesa-G75oQpzQ@mail.gmail.com>
+In-Reply-To: <20191008082515.ldm2i7j4syuzampr@rric.localdomain>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 11:27:51AM +0200, Rafael J. Wysocki wrote:
-> On Tue, Oct 8, 2019 at 12:34 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Thu, Aug 08, 2019 at 11:55:07PM +0200, Rafael J. Wysocki wrote:
-> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > >
-> > > Add a function checking whether or not PCIe ASPM has been enabled for
-> > > a given device.
-> > >
-> > > It will be used by the NVMe driver to decide how to handle the
-> > > device during system suspend.
-> > >
-> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > ---
-> > >
-> > > v2 -> v3:
-> > >   * Make the new function return bool.
-> > >   * Change its name back to pcie_aspm_enabled().
-> > >   * Fix kerneldoc comment formatting.
-> > >
-> > > -> v2:
-> > >   * Move the PCI/PCIe ASPM changes to a separate patch.
-> > >   * Add the _mask suffix to the new function name.
-> > >   * Add EXPORT_SYMBOL_GPL() to the new function.
-> > >   * Avoid adding an unnecessary blank line.
-> > >
-> > > ---
-> > >  drivers/pci/pcie/aspm.c |   20 ++++++++++++++++++++
-> > >  include/linux/pci.h     |    3 +++
-> > >  2 files changed, 23 insertions(+)
-> > >
-> > > Index: linux-pm/drivers/pci/pcie/aspm.c
-> > > ===================================================================
-> > > --- linux-pm.orig/drivers/pci/pcie/aspm.c
-> > > +++ linux-pm/drivers/pci/pcie/aspm.c
-> > > @@ -1170,6 +1170,26 @@ static int pcie_aspm_get_policy(char *bu
-> > >  module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
-> > >       NULL, 0644);
-> > >
-> > > +/**
-> > > + * pcie_aspm_enabled - Check if PCIe ASPM has been enabled for a device.
-> > > + * @pci_device: Target device.
-> > > + */
-> > > +bool pcie_aspm_enabled(struct pci_dev *pci_device)
-> > > +{
-> > > +     struct pci_dev *bridge = pci_upstream_bridge(pci_device);
-> > > +     bool ret;
-> > > +
-> > > +     if (!bridge)
-> > > +             return false;
-> > > +
-> > > +     mutex_lock(&aspm_lock);
-> > > +     ret = bridge->link_state ? !!bridge->link_state->aspm_enabled : false;
-> > > +     mutex_unlock(&aspm_lock);
-> >
-> > Why do we need to acquire aspm_lock here?  We aren't modifying
-> > anything, and I don't think we're preventing a race.  If this races
-> > with another thread that changes aspm_enabled, we'll return either the
-> > old state or the new one, and I think that's still the case even if we
-> > don't acquire aspm_lock.
+On Tue, Oct 08, 2019 at 08:25:23AM +0000, Robert Richter wrote:
+> On 04.10.19 14:48:13, Bjorn Helgaas wrote:
+> > commit 37b22fbfec2d
+> > Author: George Cherian <george.cherian@marvell.com>
+> > Date:   Thu Sep 19 02:43:34 2019 +0000
+> > 
+> >     PCI: Apply Cavium ACS quirk to CN99xx and CN11xxx Root Ports
+> >     
+> >     Add an array of Cavium Root Port device IDs and apply the quirk only to the
+> >     listed devices.
+> >     
+> >     Instead of applying the quirk to all Root Ports where
+> >     "(dev->device & 0xf800) == 0xa000", apply it only to CN88xx 0xa180 and
+> >     0xa170 Root Ports.
 > 
-> Well, if we can guarantee that pci_remove_bus_device() will never be
-> called in parallel with this helper, then I agree, but can we
-> guarantee that?
+> No, this can't be removed. It is a match all for all CN8xxx variants
+> (note the 3 'x', all TX1 cores). So all device ids from 0xa000 to
+> 0xa7FF are affected here and need the quirk.
 
-Hmm, yeah, I guess that's the question.  It's not a race with another
-thread changing aspm_enabled; the potential race is with another
-thread removing the last child of "bridge", which will free the
-link_state and set bridge->link_state = NULL.
+OK, I'll drop the patch and wait for a new one.  Maybe what was needed
+was to keep the "(dev->device & 0xf800) == 0xa000" part and add the
+pci_quirk_cavium_acs_ids[] array in addition?
 
-I think it should be safe to call device-related PCI interfaces if
-you're holding a reference to the device, e.g., from a driver bound to
-the device or a sysfs accessor.  Since we call pcie_aspm_enabled(dev)
-from a driver bound to "dev", another thread should not be able to
-remove "dev" while we're using it.
-
-I know that's a little hand-wavey, but if it weren't true, I think
-we'd have a lot more locking sprinkled everywhere in the PCI core than
-we do.
-
-This has implications for Heiner's ASPM sysfs patches because we're
-currently doing this in sysfs accessors:
-
-  static ssize_t aspm_attr_show_common(struct device *dev, ...)
-  {
-    ...
-    link = pcie_aspm_get_link(pdev);
-
-    mutex_lock(&aspm_lock);
-    enabled = link->aspm_enabled & state;
-    mutex_unlock(&aspm_lock);
-    ...
-  }
-
-I assume sysfs must be holding a reference that guarantees "dev" is
-valid througout this code, and therefore we should not need to hold
-aspm_lock.
-
-Bjorn
+> >     Also apply the quirk to CN99xx (0xaf84) and CN11xxx (0xb884) Root Ports.
+> 
+> I thought the quirk is CN8xxx specific, but I could be wrong here.
+> 
+> -Robert
+> 
+> >     
+> >     Link: https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_r_20190919024319.GA8792-40dc5-2Deodlnx05.marvell.com&d=DwIBAg&c=nKjWec2b6R0mOyPaz7xtfQ&r=8vKOpC26NZGzQPAMiIlimxyEGCRSJiq-j8yyjPJ6VZ4&m=Vmml-rx3t63ZbbXZ0XaESAM9yAlexE29R-giTbcj4Qk&s=57jKIj8BAydbLpftLt5Ssva7vD6GuoCaIpjTi-sB5kU&e= 
+> >     Fixes: f2ddaf8dfd4a ("PCI: Apply Cavium ThunderX ACS quirk to more Root Ports")
+> >     Fixes: b404bcfbf035 ("PCI: Add ACS quirk for all Cavium devices")
+> >     Signed-off-by: George Cherian <george.cherian@marvell.com>
+> >     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> >     Cc: stable@vger.kernel.org      # v4.12+
+> > 
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index 320255e5e8f8..4e5048cb5ec6 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -4311,17 +4311,24 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
+> >  #endif
+> >  }
+> >  
+> > +static const u16 pci_quirk_cavium_acs_ids[] = {
+> > +	0xa180, 0xa170,		/* CN88xx family of devices */
+> > +	0xaf84,			/* CN99xx family of devices */
+> > +	0xb884,			/* CN11xxx family of devices */
+> > +};
+> > +
+> >  static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
+> >  {
+> > -	/*
+> > -	 * Effectively selects all downstream ports for whole ThunderX 1
+> > -	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
+> > -	 * bits of device ID are used to indicate which subdevice is used
+> > -	 * within the SoC.
+> > -	 */
+> > -	return (pci_is_pcie(dev) &&
+> > -		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
+> > -		((dev->device & 0xf800) == 0xa000));
+> > +	int i;
+> > +
+> > +	if (!pci_is_pcie(dev) || pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
+> > +		return false;
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(pci_quirk_cavium_acs_ids); i++)
+> > +		if (pci_quirk_cavium_acs_ids[i] == dev->device)
+> > +			return true;
+> > +
+> > +	return false;
+> >  }
+> >  
+> >  static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
