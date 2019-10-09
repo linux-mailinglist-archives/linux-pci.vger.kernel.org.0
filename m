@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 16DC4D1C43
+	by mail.lfdr.de (Postfix) with ESMTP id EB198D1C46
 	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 00:54:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732310AbfJIWyL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Oct 2019 18:54:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32962 "EHLO mail.kernel.org"
+        id S1732199AbfJIWyP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Oct 2019 18:54:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732287AbfJIWyK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 9 Oct 2019 18:54:10 -0400
+        id S1730815AbfJIWyP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 9 Oct 2019 18:54:15 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C57220B7C;
-        Wed,  9 Oct 2019 22:54:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 620DE2190F;
+        Wed,  9 Oct 2019 22:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570661650;
-        bh=8Nlqxp+t3d/SxUKiK4OInRALysoVn832+0LN9EyvS/Q=;
+        s=default; t=1570661653;
+        bh=vwAsHjIpJMFGa1o/24iffI4QWs6biqMN+sVglTxJguY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EyunVZAf/t7AAzUOk50vb9ICtbpAKLycfzckejjaZk0NQaoCpAdoUQKDymAMBrLIS
-         kwDGcBB7vMrZ23FfY3++/mT+qhYoUFsgO3vK6qOIk8Sla3TLK58iFU4Yu0C3Tzqkku
-         97fAiowVbzFyJKVvLHFGeBS5wi7fCM5aqBVafNOI=
+        b=ub814ZHm5F7VqMTZH495WNPdwgVouKWogdiDPrEY0/6y28I3KdzrDe9hMgIT971ae
+         gIsJA7tegnAH58ljiEHDoZHKzVyYHGM3OtRZoFoYwGhEa3kUDn+bj+lO8z3//a4SCv
+         Tfp+YvHwi0F9rlUXbdqAZsPqi4EkROQBlX4GYwT0=
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-pci@vger.kernel.org
 Cc:     Kuppuswamy Sathyanarayanan 
@@ -35,9 +35,9 @@ Cc:     Kuppuswamy Sathyanarayanan
         iommu@lists.linux-foundation.org,
         Krzysztof Wilczynski <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 1/3] PCI/ATS: Remove unused PRI and PASID stubs
-Date:   Wed,  9 Oct 2019 17:53:52 -0500
-Message-Id: <20191009225354.181018-2-helgaas@kernel.org>
+Subject: [PATCH 2/3] PCI/ATS: Remove unnecessary EXPORT_SYMBOL_GPL()
+Date:   Wed,  9 Oct 2019 17:53:53 -0500
+Message-Id: <20191009225354.181018-3-helgaas@kernel.org>
 X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
 In-Reply-To: <20191009225354.181018-1-helgaas@kernel.org>
 References: <20191009225354.181018-1-helgaas@kernel.org>
@@ -50,54 +50,147 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-The following functions are only used by amd_iommu.c and intel-iommu.c
-(when CONFIG_INTEL_IOMMU_SVM is enabled).  CONFIG_PCI_PRI and
-CONFIG_PCI_PASID are always defined in those cases, so there's no need for
-the stubs.
+The following functions are only used by the PCI core or by IOMMU drivers
+that cannot be modular, so there's no need to export them at all:
+
+  pci_enable_ats()
+  pci_disable_ats()
+  pci_restore_ats_state()
+  pci_ats_queue_depth()
+  pci_ats_page_aligned()
 
   pci_enable_pri()
-  pci_disable_pri()
+  pci_restore_pri_state()
   pci_reset_pri()
   pci_prg_resp_pasid_required()
+
   pci_enable_pasid()
   pci_disable_pasid()
+  pci_restore_pasid_state()
+  pci_pasid_features()
+  pci_max_pasids()
 
-Remove the unused stubs.
+Remove the unnecessary EXPORT_SYMBOL_GPL()s.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- include/linux/pci-ats.h | 10 ----------
- 1 file changed, 10 deletions(-)
+ drivers/pci/ats.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-index 67de3a9499bb..963c11f7c56b 100644
---- a/include/linux/pci-ats.h
-+++ b/include/linux/pci-ats.h
-@@ -27,14 +27,7 @@ void pci_restore_pri_state(struct pci_dev *pdev);
- int pci_reset_pri(struct pci_dev *pdev);
- int pci_prg_resp_pasid_required(struct pci_dev *pdev);
- #else /* CONFIG_PCI_PRI */
--static inline int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
--{ return -ENODEV; }
--static inline void pci_disable_pri(struct pci_dev *pdev) { }
- static inline void pci_restore_pri_state(struct pci_dev *pdev) { }
--static inline int pci_reset_pri(struct pci_dev *pdev)
--{ return -ENODEV; }
--static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
--{ return 0; }
+diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+index 76ae518d55f4..982b46f0a54d 100644
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -69,7 +69,6 @@ int pci_enable_ats(struct pci_dev *dev, int ps)
+ 	dev->ats_enabled = 1;
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(pci_enable_ats);
+ 
+ /**
+  * pci_disable_ats - disable the ATS capability
+@@ -88,7 +87,6 @@ void pci_disable_ats(struct pci_dev *dev)
+ 
+ 	dev->ats_enabled = 0;
+ }
+-EXPORT_SYMBOL_GPL(pci_disable_ats);
+ 
+ void pci_restore_ats_state(struct pci_dev *dev)
+ {
+@@ -102,7 +100,6 @@ void pci_restore_ats_state(struct pci_dev *dev)
+ 		ctrl |= PCI_ATS_CTRL_STU(dev->ats_stu - PCI_ATS_MIN_STU);
+ 	pci_write_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, ctrl);
+ }
+-EXPORT_SYMBOL_GPL(pci_restore_ats_state);
+ 
+ /**
+  * pci_ats_queue_depth - query the ATS Invalidate Queue Depth
+@@ -129,7 +126,6 @@ int pci_ats_queue_depth(struct pci_dev *dev)
+ 	pci_read_config_word(dev, dev->ats_cap + PCI_ATS_CAP, &cap);
+ 	return PCI_ATS_CAP_QDEP(cap) ? PCI_ATS_CAP_QDEP(cap) : PCI_ATS_MAX_QDEP;
+ }
+-EXPORT_SYMBOL_GPL(pci_ats_queue_depth);
+ 
+ /**
+  * pci_ats_page_aligned - Return Page Aligned Request bit status.
+@@ -156,7 +152,6 @@ int pci_ats_page_aligned(struct pci_dev *pdev)
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(pci_ats_page_aligned);
+ 
+ #ifdef CONFIG_PCI_PRI
+ void pci_pri_init(struct pci_dev *pdev)
+@@ -218,7 +213,6 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(pci_enable_pri);
+ 
+ /**
+  * pci_disable_pri - Disable PRI capability
+@@ -271,7 +265,6 @@ void pci_restore_pri_state(struct pci_dev *pdev)
+ 	pci_write_config_dword(pdev, pri + PCI_PRI_ALLOC_REQ, reqs);
+ 	pci_write_config_word(pdev, pri + PCI_PRI_CTRL, control);
+ }
+-EXPORT_SYMBOL_GPL(pci_restore_pri_state);
+ 
+ /**
+  * pci_reset_pri - Resets device's PRI state
+@@ -299,7 +292,6 @@ int pci_reset_pri(struct pci_dev *pdev)
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(pci_reset_pri);
+ 
+ /**
+  * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
+@@ -315,7 +307,6 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+ 
+ 	return pdev->pasid_required;
+ }
+-EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
  #endif /* CONFIG_PCI_PRI */
  
  #ifdef CONFIG_PCI_PASID
-@@ -44,9 +37,6 @@ void pci_restore_pasid_state(struct pci_dev *pdev);
- int pci_pasid_features(struct pci_dev *pdev);
- int pci_max_pasids(struct pci_dev *pdev);
- #else /* CONFIG_PCI_PASID */
--static inline int pci_enable_pasid(struct pci_dev *pdev, int features)
--{ return -EINVAL; }
--static inline void pci_disable_pasid(struct pci_dev *pdev) { }
- static inline void pci_restore_pasid_state(struct pci_dev *pdev) { }
- static inline int pci_pasid_features(struct pci_dev *pdev)
- { return -EINVAL; }
+@@ -373,7 +364,6 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(pci_enable_pasid);
+ 
+ /**
+  * pci_disable_pasid - Disable the PASID capability
+@@ -398,7 +388,6 @@ void pci_disable_pasid(struct pci_dev *pdev)
+ 
+ 	pdev->pasid_enabled = 0;
+ }
+-EXPORT_SYMBOL_GPL(pci_disable_pasid);
+ 
+ /**
+  * pci_restore_pasid_state - Restore PASID capabilities
+@@ -421,7 +410,6 @@ void pci_restore_pasid_state(struct pci_dev *pdev)
+ 	control = PCI_PASID_CTRL_ENABLE | pdev->pasid_features;
+ 	pci_write_config_word(pdev, pasid + PCI_PASID_CTRL, control);
+ }
+-EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
+ 
+ /**
+  * pci_pasid_features - Check which PASID features are supported
+@@ -450,7 +438,6 @@ int pci_pasid_features(struct pci_dev *pdev)
+ 
+ 	return supported;
+ }
+-EXPORT_SYMBOL_GPL(pci_pasid_features);
+ 
+ #define PASID_NUMBER_SHIFT	8
+ #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
+@@ -478,5 +465,4 @@ int pci_max_pasids(struct pci_dev *pdev)
+ 
+ 	return (1 << supported);
+ }
+-EXPORT_SYMBOL_GPL(pci_max_pasids);
+ #endif /* CONFIG_PCI_PASID */
 -- 
 2.23.0.581.g78d2f28ef7-goog
 
