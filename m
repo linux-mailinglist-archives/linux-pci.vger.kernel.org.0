@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D2DAD0F11
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2019 14:45:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FC3BD0F19
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2019 14:46:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729831AbfJIMp4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Oct 2019 08:45:56 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45087 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727878AbfJIMpz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Oct 2019 08:45:55 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 41so1556438oti.12;
-        Wed, 09 Oct 2019 05:45:53 -0700 (PDT)
+        id S1730111AbfJIMqp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Oct 2019 08:46:45 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40811 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727878AbfJIMqp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Oct 2019 08:46:45 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k9so1597642oib.7;
+        Wed, 09 Oct 2019 05:46:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+TSLR+mwxg9Q5+XE2yLQVwrJbE3+A+r0QrAVdeWr2cQ=;
-        b=P/s7Fn/RrhED7TQp8ccc2JWKLo7Eh2bjijSaclRHV5y9aQ82DBoBN4F75lOSCemM9x
-         VdfTG3f54G5Rr++Gbcs8XuKu4y7pLvnwzlcMh7VBVWndxtYy8aPL+ikae9ha6LmwR/9g
-         v2m4xhPpnC/8uuYHpKT3674+ElNo/pL7LBrjlHfCl96fAaS4IpbA3Bq81lny5KmANfpN
-         EVr7bVkTDNs8LsA9dMdobQWvkZsyJqAehLZzXd65Qzs0RP2qUI9MY82+L1ELsN8P+k+D
-         6aAt9l8EnD1KDgJllhlcWk9fEW0wrhUoK5qa1Q3wTOYijIbTCNluHb7RfBJKDrgtrOOE
-         yV3Q==
-X-Gm-Message-State: APjAAAWy/3UT2OCzf+4o1vIg25ANehGJ/iLeEixhnBKHwWV6PDvvi7n0
-        sIwkzQdGy2SEtHD04DMrw2UpowHLdnDSEAh8fNs=
-X-Google-Smtp-Source: APXvYqzPsTHOJqIszz4KgIhVWU18UOmy2KceYqxm07f+OeN/TcRbk4nBsPmkiuBtPfwaVHynQPqBQD/X6RsZeR4tMRM=
-X-Received: by 2002:a9d:70d0:: with SMTP id w16mr2514409otj.107.1570625153442;
- Wed, 09 Oct 2019 05:45:53 -0700 (PDT)
+        bh=J47bwEO6SH0I7ztat9/azJ8eziwhYPDazvWnJtRO0hs=;
+        b=IV3IXy48MvcvlflhJIR4R6EOPlxc1BIXZuIe2LGYM5LQKmFz24caqgFW+029pVJFY5
+         5yuFzXtjUBJkr3S/0lOX3jWx3LcbbpNQwHCGO+lvFyfqZ9xp0NQkIU5iAAtmPkEO4SYw
+         f1XzGCIzwPmC6EbiPnCiAaG+eLp7wGSYxK1WrIr9lheq+O0ltt4hToZGT4GhxpPyNCUM
+         k4yJMQMHSpy3/1+VuR53dTsBzKH8cwc6Q8xYM3Q3OAVONDKTeSs5oCs8b7K9KWMwz6jt
+         I9BTpIaWC1mMeUP3BDoIXg5S9kqXbWu4yTHGfSZ3iDGBdlRgmYPdoT27nX6hyN/lGE+z
+         ZbfA==
+X-Gm-Message-State: APjAAAUROoM0GDtRYvVV+I4/E65hUifu0mf3NSse0yLnh/hV5LN5ry+L
+        vkFlFhaK/wlx+GES0SgdOeqV03nVmOBVP0CZRZQ=
+X-Google-Smtp-Source: APXvYqyB8y75Qw1TwUCbQEH4ukLuMBxP24F5dZWNVSCJi4jSyKwiE5ahh7a9uDV/hbkXGttXzxAnWQLYkv+vpZCCGxA=
+X-Received: by 2002:aca:882:: with SMTP id 124mr2142307oii.54.1570625204258;
+ Wed, 09 Oct 2019 05:46:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <1570178133-21532-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570178133-21532-5-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1570178133-21532-5-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1570178133-21532-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570178133-21532-6-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1570178133-21532-6-git-send-email-fabrizio.castro@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 9 Oct 2019 14:45:42 +0200
-Message-ID: <CAMuHMdWjNBd_1M69WmeqL4s35BKzVmXpO3EjQ=q-TuqHTj0doQ@mail.gmail.com>
-Subject: Re: [PATCH 4/7] arm64: dts: renesas: r8a774b1: Add RWDT node
+Date:   Wed, 9 Oct 2019 14:46:33 +0200
+Message-ID: <CAMuHMdVuDg2cicp8w6fS5F3OWhH9gK1eCMJ_pDGsWAJoWh68yQ@mail.gmail.com>
+Subject: Re: [PATCH 5/7] arm64: dts: renesas: r8a774b1: Add all MSIOF nodes
 To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -64,8 +64,8 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 On Fri, Oct 4, 2019 at 10:36 AM Fabrizio Castro
 <fabrizio.castro@bp.renesas.com> wrote:
-> Populate the device tree node for the Watchdog Timer (RWDT)
-> controller on the Renesas RZ/G2N (r8a774b1) SoC.
+> Add the device nodes for all MSIOF SPI controllers on the RZ/G2N
+> SoC (a.k.a. r8a774b1).
 >
 > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
