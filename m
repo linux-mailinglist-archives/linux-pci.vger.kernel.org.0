@@ -2,118 +2,193 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D5B9BD1C48
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 00:54:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D13ABD1C4B
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 00:57:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732168AbfJIWyS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Oct 2019 18:54:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33156 "EHLO mail.kernel.org"
+        id S1731542AbfJIW5I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Oct 2019 18:57:08 -0400
+Received: from mga03.intel.com ([134.134.136.65]:7217 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732388AbfJIWyR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 9 Oct 2019 18:54:17 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 845C1218DE;
-        Wed,  9 Oct 2019 22:54:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570661656;
-        bh=qL8doCvFG2dqwmIvj9dzbxGepFbqsoz5/Woj99/nbXo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vCYBpDSEqgTFPHA35CvDGN8KQKfOHRdEpExO7VVi8wm1f8GSnzrDu65OcL3Mt4VWh
-         f6HZiyd5NYVqocLLFtSJkWie5M11dO/UkI4zWm+RtB32xxbf03jxTh6U96DwG/ZKeW
-         jSG5Cw8wMVCtpgBzaKnuUyECwzVB9t67O1qC0h+0=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        linux-kernel@vger.kernel.org,
+        id S1731134AbfJIW5I (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 9 Oct 2019 18:57:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 15:57:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,277,1566889200"; 
+   d="scan'208";a="193017895"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 09 Oct 2019 15:57:06 -0700
+Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
+        by linux.intel.com (Postfix) with ESMTP id D516B5803E4;
+        Wed,  9 Oct 2019 15:57:06 -0700 (PDT)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH 2/2] PCI/ATS: Move pci_prg_resp_pasid_required() to
+ CONFIG_PCI_PRI
+To:     Bjorn Helgaas <helgaas@kernel.org>,
         David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Krzysztof Wilczynski <kw@linux.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Ashok Raj <ashok.raj@intel.com>,
+        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 3/3] PCI/ATS: Make pci_restore_pri_state(), pci_restore_pasid_state() private
-Date:   Wed,  9 Oct 2019 17:53:54 -0500
-Message-Id: <20191009225354.181018-4-helgaas@kernel.org>
-X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
-In-Reply-To: <20191009225354.181018-1-helgaas@kernel.org>
-References: <20191009225354.181018-1-helgaas@kernel.org>
+References: <20191009224551.179497-1-helgaas@kernel.org>
+ <20191009224551.179497-3-helgaas@kernel.org>
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <67a573e9-3e04-5fca-6b8b-018b7bc75df8@linux.intel.com>
+Date:   Wed, 9 Oct 2019 15:55:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191009224551.179497-3-helgaas@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
 
-These interfaces:
+On 10/9/19 3:45 PM, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> pci_prg_resp_pasid_required() returns the value of the "PRG Response PASID
+> Required" bit from the PRI capability, but the interface was previously
+> defined under #ifdef CONFIG_PCI_PASID.
+>
+> Move it from CONFIG_PCI_PASID to CONFIG_PCI_PRI so it's with the other
+> PRI-related things.
+>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Kuppuswamy Sathyanarayanan 
+<sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>   drivers/pci/ats.c       | 55 +++++++++++++++++++----------------------
+>   include/linux/pci-ats.h | 11 ++++-----
+>   2 files changed, 30 insertions(+), 36 deletions(-)
+>
+> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> index e18499243f84..0d06177252c7 100644
+> --- a/drivers/pci/ats.c
+> +++ b/drivers/pci/ats.c
+> @@ -280,6 +280,31 @@ int pci_reset_pri(struct pci_dev *pdev)
+>   	return 0;
+>   }
+>   EXPORT_SYMBOL_GPL(pci_reset_pri);
+> +
+> +/**
+> + * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
+> + *				 status.
+> + * @pdev: PCI device structure
+> + *
+> + * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
+> + */
+> +int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+> +{
+> +	u16 status;
+> +	int pos;
+> +
+> +	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
+> +	if (!pos)
+> +		return 0;
+> +
+> +	pci_read_config_word(pdev, pos + PCI_PRI_STATUS, &status);
+> +
+> +	if (status & PCI_PRI_STATUS_PASID)
+> +		return 1;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
+>   #endif /* CONFIG_PCI_PRI */
+>   
+>   #ifdef CONFIG_PCI_PASID
+> @@ -395,36 +420,6 @@ int pci_pasid_features(struct pci_dev *pdev)
+>   }
+>   EXPORT_SYMBOL_GPL(pci_pasid_features);
+>   
+> -/**
+> - * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
+> - *				 status.
+> - * @pdev: PCI device structure
+> - *
+> - * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
+> - *
+> - * Even though the PRG response PASID status is read from PRI Status
+> - * Register, since this API will mainly be used by PASID users, this
+> - * function is defined within #ifdef CONFIG_PCI_PASID instead of
+> - * CONFIG_PCI_PRI.
+> - */
+> -int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+> -{
+> -	u16 status;
+> -	int pos;
+> -
+> -	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
+> -	if (!pos)
+> -		return 0;
+> -
+> -	pci_read_config_word(pdev, pos + PCI_PRI_STATUS, &status);
+> -
+> -	if (status & PCI_PRI_STATUS_PASID)
+> -		return 1;
+> -
+> -	return 0;
+> -}
+> -EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
+> -
+>   #define PASID_NUMBER_SHIFT	8
+>   #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
+>   /**
+> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+> index 1ebb88e7c184..a7a2b3d94fcc 100644
+> --- a/include/linux/pci-ats.h
+> +++ b/include/linux/pci-ats.h
+> @@ -10,6 +10,7 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
+>   void pci_disable_pri(struct pci_dev *pdev);
+>   void pci_restore_pri_state(struct pci_dev *pdev);
+>   int pci_reset_pri(struct pci_dev *pdev);
+> +int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+>   
+>   #else /* CONFIG_PCI_PRI */
+>   
+> @@ -31,6 +32,10 @@ static inline int pci_reset_pri(struct pci_dev *pdev)
+>   	return -ENODEV;
+>   }
+>   
+> +static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+> +{
+> +	return 0;
+> +}
+>   #endif /* CONFIG_PCI_PRI */
+>   
+>   #ifdef CONFIG_PCI_PASID
+> @@ -40,7 +45,6 @@ void pci_disable_pasid(struct pci_dev *pdev);
+>   void pci_restore_pasid_state(struct pci_dev *pdev);
+>   int pci_pasid_features(struct pci_dev *pdev);
+>   int pci_max_pasids(struct pci_dev *pdev);
+> -int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+>   
+>   #else  /* CONFIG_PCI_PASID */
+>   
+> @@ -66,11 +70,6 @@ static inline int pci_max_pasids(struct pci_dev *pdev)
+>   {
+>   	return -EINVAL;
+>   }
+> -
+> -static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+> -{
+> -	return 0;
+> -}
+>   #endif /* CONFIG_PCI_PASID */
+>   
+>   
 
-  void pci_restore_pri_state(struct pci_dev *pdev);
-  void pci_restore_pasid_state(struct pci_dev *pdev);
-
-are only used in drivers/pci and do not need to be seen by the rest of the
-kernel.  Most them to drivers/pci/pci.h so they're private to the PCI
-subsystem.
-
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/pci.h       | 4 ++++
- include/linux/pci-ats.h | 5 -----
- 2 files changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index ae84d28ba03a..e6b46d2b9846 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -458,14 +458,18 @@ static inline void pci_restore_ats_state(struct pci_dev *dev) { }
- 
- #ifdef CONFIG_PCI_PRI
- void pci_pri_init(struct pci_dev *dev);
-+void pci_restore_pri_state(struct pci_dev *pdev);
- #else
- static inline void pci_pri_init(struct pci_dev *dev) { }
-+static inline void pci_restore_pri_state(struct pci_dev *pdev) { }
- #endif
- 
- #ifdef CONFIG_PCI_PASID
- void pci_pasid_init(struct pci_dev *dev);
-+void pci_restore_pasid_state(struct pci_dev *pdev);
- #else
- static inline void pci_pasid_init(struct pci_dev *dev) { }
-+static inline void pci_restore_pasid_state(struct pci_dev *pdev) { }
- #endif
- 
- #ifdef CONFIG_PCI_IOV
-diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-index 963c11f7c56b..5d62e78946a3 100644
---- a/include/linux/pci-ats.h
-+++ b/include/linux/pci-ats.h
-@@ -23,21 +23,16 @@ static inline int pci_ats_page_aligned(struct pci_dev *dev)
- #ifdef CONFIG_PCI_PRI
- int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
- void pci_disable_pri(struct pci_dev *pdev);
--void pci_restore_pri_state(struct pci_dev *pdev);
- int pci_reset_pri(struct pci_dev *pdev);
- int pci_prg_resp_pasid_required(struct pci_dev *pdev);
--#else /* CONFIG_PCI_PRI */
--static inline void pci_restore_pri_state(struct pci_dev *pdev) { }
- #endif /* CONFIG_PCI_PRI */
- 
- #ifdef CONFIG_PCI_PASID
- int pci_enable_pasid(struct pci_dev *pdev, int features);
- void pci_disable_pasid(struct pci_dev *pdev);
--void pci_restore_pasid_state(struct pci_dev *pdev);
- int pci_pasid_features(struct pci_dev *pdev);
- int pci_max_pasids(struct pci_dev *pdev);
- #else /* CONFIG_PCI_PASID */
--static inline void pci_restore_pasid_state(struct pci_dev *pdev) { }
- static inline int pci_pasid_features(struct pci_dev *pdev)
- { return -EINVAL; }
- static inline int pci_max_pasids(struct pci_dev *pdev)
 -- 
-2.23.0.581.g78d2f28ef7-goog
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
 
