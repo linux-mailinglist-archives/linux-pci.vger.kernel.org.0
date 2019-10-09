@@ -2,167 +2,322 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 03B86D0399
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2019 00:54:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFEF5D04AE
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2019 02:16:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725935AbfJHWyu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Oct 2019 18:54:50 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35420 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfJHWyu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Oct 2019 18:54:50 -0400
-Received: by mail-oi1-f194.google.com with SMTP id x3so171586oig.2;
-        Tue, 08 Oct 2019 15:54:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SggbRRKNXqQlH49P3KzPfRoT4FOY8o89Xl8C5FlY+KA=;
-        b=SPc7Wo/xlhNBDSK+mjqXICQ8FyFQMeZ29jL29NzY1ngXkmv2/8vxP99YnTZzZ2Y9tF
-         uS6y/MXBEIBquJW9zKQzNi3pRI9WjbqTeAPQIqNYLg9XftTR8TRpuU6EvNsnk/0DcgE9
-         u9zJaVfNBEy9urK/XXrPKZANeoEKO3eJ2hl5Z1SRROu4jszB8HEwEcEbijmJuvnTPcHF
-         brmnGa6sEyLgq6eZEeMsd4VV9cAsj4o3kSDVhlKwuEhMg/26wBNYfOD2K/CnJO2r6dA5
-         8lXKryPt1IbMABOiIH+kCJ7XjVRZdW2IQtRkcLslronRC9QGpCy8K0ShqWUM8ltnVJSN
-         KkMA==
-X-Gm-Message-State: APjAAAUwy+rF4zejMQRlDW7ml/F2chTEVw0kn3fW1sIPb+i81uywfRGs
-        iI4k18ndyWjx3q7+FT/QWigKh7uidJus9ki2VHY=
-X-Google-Smtp-Source: APXvYqzAHIWDALJmWxny85y+zNIHc6fYu7ABhv0L9fiH6TsA/vMVV+jisYkSGZMtPlgYlfymiNkZrvEQvyEMSGQl7Vo=
-X-Received: by 2002:aca:d706:: with SMTP id o6mr7215oig.57.1570575288501; Tue,
- 08 Oct 2019 15:54:48 -0700 (PDT)
+        id S1729865AbfJIAQW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Oct 2019 20:16:22 -0400
+Received: from mail-eopbgr1300139.outbound.protection.outlook.com ([40.107.130.139]:20608
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728792AbfJIAQW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 8 Oct 2019 20:16:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FunGi9ms5KsXNGDxZ9FcdKfCQe65NPVlXqjykOImSwhL7+SGZnGmYQXctSwyuOYOrWWZaRmV5XHaES19m5KFoTFuazfaWNBpvOmEEgGFNPpQg+OaCIDIWTMaERQaFSAQoFKByNgmciMWYHUbSAn+6lJy492IrJRsY7yAW+xohx/AaiVCA8lXcOcPQGTKasAo8JKyHUTsmyQZyU1zlIa7X7djzVQGKeDyY2NlcMPGabgzc0qJdU5UKm7u+HT54oX/5hdhWtLlUcqDtnhIPHKPyhbFvtfzlzxPqC6+qMRqTtpfcdMhZE+gdi79pKvcWROFoRCYb4G43XN903W/cI3UZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7Okz/dP8GdW4F/ReC1j1fCe7QOcf6UWvSEb3E/+xKlo=;
+ b=ZyHw9X6sU416i84v+F5RGjdxl+EenlYhR8p9ym5xXcZOBDrzZOmPoJ9znYz/iAi1/hKmpnSm0qPaPeoxHT5P2TxG4OxN/YjV0yf2pynr3tun5m2w15LGx26Ep/F4UgEvgYo8ErnuqLfqlL3UQ3b6Tl+Ay3+XCd/JWibkCsTKA8pnD4zumW5gWwhx9HOrlT7EHg7JcRHnhWKIwGdG3BlnwsvlrFwTqgDminBcHt/X8o/2/ubihoOT4hKqlXKY9Y/RXu85jIegRLgW6QgGiB2hpks5Qzz1J/IV0f/xHguBTdYPcwLAk41OG9AV4dsgx+zjVQpAXFXFdQXKLN+VOmfi0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7Okz/dP8GdW4F/ReC1j1fCe7QOcf6UWvSEb3E/+xKlo=;
+ b=GNk+jMG3pO7eVGwYo76DwIiypOwuL+ypc6tIXjQHkPNIVQePvSDhKwI30d5NfZlW3ndsJ28lIrZA32q/h2CrIcjufWLbT09dinPV0C0ceZfdkLpcYpYJrVxoBxK6j38Dc5uxV4zQRLRpb8bqmb0V5zBLgic4BttCudJ2IKVL+Sw=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0172.APCP153.PROD.OUTLOOK.COM (10.170.189.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.2; Wed, 9 Oct 2019 00:16:05 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2367.004; Wed, 9 Oct 2019
+ 00:16:05 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>
+Subject: RE: [PATCH v2] PCI: PM: Move to D0 before calling
+ pci_legacy_resume_early()
+Thread-Topic: [PATCH v2] PCI: PM: Move to D0 before calling
+ pci_legacy_resume_early()
+Thread-Index: AQHVfhJ2d22rbcvgTV28JV77HSffhqdRa4KA
+Date:   Wed, 9 Oct 2019 00:16:05 +0000
+Message-ID: <PU1P153MB0169909FAD3032F462F48E9FBF950@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <a2d8ad9f-b59d-57e4-f014-645e7b796cc4@intel.com>
+ <20191008195624.GA198287@google.com>
+In-Reply-To: <20191008195624.GA198287@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-09T00:16:02.0523304Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2b92351c-f491-4b1f-bb63-d2e14e522426;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [167.220.2.148]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bb3e6445-3631-4549-06b7-08d74c4de078
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: PU1P153MB0172:|PU1P153MB0172:|PU1P153MB0172:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB0172BB72E8716DC34D2596C1BF950@PU1P153MB0172.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 018577E36E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(346002)(366004)(396003)(39860400002)(199004)(189003)(478600001)(76116006)(7416002)(229853002)(26005)(2906002)(186003)(33656002)(5660300002)(10090500001)(66446008)(486006)(64756008)(6246003)(9686003)(446003)(66556008)(11346002)(66476007)(86362001)(256004)(476003)(14444005)(10290500003)(6436002)(66946007)(99286004)(55016002)(14454004)(22452003)(102836004)(3846002)(316002)(4326008)(6116002)(8990500004)(110136005)(8936002)(6506007)(305945005)(8676002)(81166006)(81156014)(71200400001)(71190400001)(7696005)(66066001)(74316002)(52536014)(25786009)(7736002)(54906003)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0172;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: f6Z9tdBngugsf0ezBsN6NuSpYu3EcG0fKhzwUlW3RoCbphaN3RiNqA79jPS0hl5CaaYlKQhG83T5XiGAAZqgtZWYO++0dOHhjFiYj+YraMnbQYNtG5oBGfP73688wXimJDsnSeY6X9ZCNwcdzegvZZD9uB/jGDLbbjT2HELoDQOMeCh5J57yu8bv9bhLTuiFS2V+Bz9XRRK+tELokfBuIkNE72Cyxru8Z0fwI6FO5/cK+6yItwkavKazgT4gsoLJ3L7wsho5XLs1+wHIOLtoMLn78vvcO4YUX6h4E+Yk3l2/x8kbqpilGfg81wi/bu+jNa2VAdVEN7Rt8khGqM9/E6nsdE27DgJnr5q8G4Kjbi2c67/RmdHnCvA63wRl+sGJZ58Lzs/cJ7me0VGgzXV1UvJlXju/SnLMbLlMiuDmLjQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <CAJZ5v0iL4Rv=AQ-Qnma=wWaqBBbOdfRqu9uS9Gesa-G75oQpzQ@mail.gmail.com>
- <20191008211656.GA163302@google.com>
-In-Reply-To: <20191008211656.GA163302@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 9 Oct 2019 00:54:37 +0200
-Message-ID: <CAJZ5v0j-uSM2gheHViommWcrSaLVfzbwV3M7OOWz3GyzhHSwRA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] PCI: PCIe: ASPM: Introduce pcie_aspm_enabled()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb3e6445-3631-4549-06b7-08d74c4de078
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2019 00:16:05.3382
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HKrm2PxTEL1ykbFyBPVZCpChngspkL/nZvMqgbzec5e2UkUFqlurSwpCDabroCZiJlggJsecFHxDt7EndouN+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0172
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 11:16 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Oct 08, 2019 at 11:27:51AM +0200, Rafael J. Wysocki wrote:
-> > On Tue, Oct 8, 2019 at 12:34 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Thu, Aug 08, 2019 at 11:55:07PM +0200, Rafael J. Wysocki wrote:
-> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > >
-> > > > Add a function checking whether or not PCIe ASPM has been enabled for
-> > > > a given device.
-> > > >
-> > > > It will be used by the NVMe driver to decide how to handle the
-> > > > device during system suspend.
-> > > >
-> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > ---
-> > > >
-> > > > v2 -> v3:
-> > > >   * Make the new function return bool.
-> > > >   * Change its name back to pcie_aspm_enabled().
-> > > >   * Fix kerneldoc comment formatting.
-> > > >
-> > > > -> v2:
-> > > >   * Move the PCI/PCIe ASPM changes to a separate patch.
-> > > >   * Add the _mask suffix to the new function name.
-> > > >   * Add EXPORT_SYMBOL_GPL() to the new function.
-> > > >   * Avoid adding an unnecessary blank line.
-> > > >
-> > > > ---
-> > > >  drivers/pci/pcie/aspm.c |   20 ++++++++++++++++++++
-> > > >  include/linux/pci.h     |    3 +++
-> > > >  2 files changed, 23 insertions(+)
-> > > >
-> > > > Index: linux-pm/drivers/pci/pcie/aspm.c
-> > > > ===================================================================
-> > > > --- linux-pm.orig/drivers/pci/pcie/aspm.c
-> > > > +++ linux-pm/drivers/pci/pcie/aspm.c
-> > > > @@ -1170,6 +1170,26 @@ static int pcie_aspm_get_policy(char *bu
-> > > >  module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
-> > > >       NULL, 0644);
-> > > >
-> > > > +/**
-> > > > + * pcie_aspm_enabled - Check if PCIe ASPM has been enabled for a device.
-> > > > + * @pci_device: Target device.
-> > > > + */
-> > > > +bool pcie_aspm_enabled(struct pci_dev *pci_device)
-> > > > +{
-> > > > +     struct pci_dev *bridge = pci_upstream_bridge(pci_device);
-> > > > +     bool ret;
-> > > > +
-> > > > +     if (!bridge)
-> > > > +             return false;
-> > > > +
-> > > > +     mutex_lock(&aspm_lock);
-> > > > +     ret = bridge->link_state ? !!bridge->link_state->aspm_enabled : false;
-> > > > +     mutex_unlock(&aspm_lock);
-> > >
-> > > Why do we need to acquire aspm_lock here?  We aren't modifying
-> > > anything, and I don't think we're preventing a race.  If this races
-> > > with another thread that changes aspm_enabled, we'll return either the
-> > > old state or the new one, and I think that's still the case even if we
-> > > don't acquire aspm_lock.
-> >
-> > Well, if we can guarantee that pci_remove_bus_device() will never be
-> > called in parallel with this helper, then I agree, but can we
-> > guarantee that?
->
-> Hmm, yeah, I guess that's the question.  It's not a race with another
-> thread changing aspm_enabled; the potential race is with another
-> thread removing the last child of "bridge", which will free the
-> link_state and set bridge->link_state = NULL.
->
-> I think it should be safe to call device-related PCI interfaces if
-> you're holding a reference to the device, e.g., from a driver bound to
-> the device or a sysfs accessor.  Since we call pcie_aspm_enabled(dev)
-> from a driver bound to "dev", another thread should not be able to
-> remove "dev" while we're using it.
->
-> I know that's a little hand-wavey, but if it weren't true, I think
-> we'd have a lot more locking sprinkled everywhere in the PCI core than
-> we do.
->
-> This has implications for Heiner's ASPM sysfs patches because we're
-> currently doing this in sysfs accessors:
->
->   static ssize_t aspm_attr_show_common(struct device *dev, ...)
->   {
->     ...
->     link = pcie_aspm_get_link(pdev);
->
->     mutex_lock(&aspm_lock);
->     enabled = link->aspm_enabled & state;
->     mutex_unlock(&aspm_lock);
->     ...
->   }
->
-> I assume sysfs must be holding a reference that guarantees "dev" is
-> valid througout this code, and therefore we should not need to hold
-> aspm_lock.
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Tuesday, October 8, 2019 12:56 PM
+> ...
+> Wordsmithing nit: what the patch does is not "fix the error message";
+> what it does is fix the *problem*, i.e., the fact that we can't
+> operate the device because we can't enable MSI-X.  The message is only
+> a symptom.
 
-In principle, pcie_aspm_enabled() need not be called via sysfs.
+I totally agree. :-)
 
-In the particular NVMe use case, it is called from the driver's own PM
-callback, so it would be safe without the locking AFAICS.
+> IIUC the relevant part of the system hibernation sequence is:
+>=20
+>   pci_pm_freeze_noirq
+>   pci_pm_thaw_noirq
+>   pci_pm_thaw
+>=20
+> And the execution flow is:
+>=20
+>   pci_pm_freeze_noirq
+>     if (pci_has_legacy_pm_support(pci_dev)) # true for mlx4
+>       pci_legacy_suspend_late(dev, PMSG_FREEZE)
+> 	pci_pm_set_unknown_state
+> 	  dev->current_state =3D PCI_UNKNOWN  # <---
+>   pci_pm_thaw_noirq
+>     if (pci_has_legacy_pm_support(pci_dev)) # true
+>       pci_legacy_resume_early(dev)          # noop; mlx4 doesn't
+> implement
+>   pci_pm_thaw                               # returns -95
+> EOPNOTSUPP
+>     if (pci_has_legacy_pm_support(pci_dev)) # true
+>       pci_legacy_resume
+> 	drv->resume
+> 	  mlx4_resume                       # mlx4_driver.resume (legacy)
+> 	    mlx4_load_one
+> 	      mlx4_enable_msi_x
+> 		pci_enable_msix_range
+> 		  __pci_enable_msix_range
+> 		    __pci_enable_msix
+> 		      if (!pci_msi_supported())
+> 			if (dev->current_state !=3D PCI_D0)  # <---
+> 			  return 0
+> 			return -EINVAL
+> 		err =3D -EOPNOTSUPP
+> 		"INTx is not supported ..."
+>=20
+> (These are just my notes; you don't need to put them all into the
+> commit message.  I'm just sharing them in case I'm not understanding
+> correctly.)
 
-I guess it is safe to drop the locking from there, but then it would
-be good to mention in the kerneldoc that calling it is only safe under
-the assumption that the link_state object cannot go away while it is
-running.
+Yes, these notes are accurate.
+
+> > > > > When the system starts again, a fresh kernel starts to run, and w=
+hen the
+> > > > > kernel detects that a hibernation image was saved, the kernel
+> "quiesces"
+> > > > > the devices, and then "restores" the devices from the saved image=
+. In
+> this
+> > > > > path:
+> > > > > device_resume_noirq() -> ... ->
+> > > > >    pci_pm_restore_noirq() ->
+> > > > >      pci_pm_default_resume_early() ->
+> > > > >        pci_power_up() moves the device states back to PCI_D0. Thi=
+s
+> path is
+> > > > > not broken and doesn't need my patch.
+> > > > >
+>=20
+> The cc list suggests that this might be a fix for a user-reported
+> problem.  Is there a launchpad or similar link you could include here?
+
+I guess I'm the first one to notice the issue and there is not any bug link=
+ AFAIK.
+
+The hibernation process usually saves the states into a local disk (before =
+the
+system is powered off), and the Mellanox NIC is not needed during the proce=
+ss,
+so it's not a real issue that the NIC can not work between pci_pm_thaw() an=
+d=20
+power_down(). This may explain why nobody else noticed the issue. I happene=
+d
+to see the error message, and hence investigated the issue.
+
+> Should this be marked for stable?
+
+I think we should do it.
+=20
+> > > > > --- a/drivers/pci/pci-driver.c
+> > > > > +++ b/drivers/pci/pci-driver.c
+> > > > > @@ -1074,15 +1074,16 @@ static int pci_pm_thaw_noirq(struct devic=
+e
+> > > > *dev)
+> > > > >   			return error;
+> > > > >   	}
+> > > > >
+> > > > > -	if (pci_has_legacy_pm_support(pci_dev))
+> > > > > -		return pci_legacy_resume_early(dev);
+> > > > > -
+> > > > >   	/*
+> > > > >   	 * pci_restore_state() requires the device to be in D0 (becaus=
+e
+> of MSI
+> > > > >   	 * restoration among other things), so force it into D0 in cas=
+e
+> the
+> > > > >   	 * driver's "freeze" callbacks put it into a low-power state
+> directly.
+> > > > >   	 */
+> > > > >   	pci_set_power_state(pci_dev, PCI_D0);
+> > > > > +
+> > > > > +	if (pci_has_legacy_pm_support(pci_dev))
+> > > > > +		return pci_legacy_resume_early(dev);
+> > > > > +
+> > > > >   	pci_restore_state(pci_dev);
+> > > > >
+> > > > >   	if (drv && drv->pm && drv->pm->thaw_noirq)
+> > > > > --
+> > > > > 2.19.1
+> > > > >
+> > The patch looks reasonable to me, but the comment above the
+> > pci_set_power_state() call needs to be updated too IMO.
+>=20
+> Hmm.
+>=20
+> 1) pci_restore_state() mainly writes config space, which doesn't
+> require the device to be in D0.  The only thing I see that would
+> require D0 is the MSI-X MMIO space, so to be more specific, the
+> comment could say "restoring the MSI-X *MMIO* state requires the
+> device to be in D0".
+>=20
+> But I think you meant some other comment change.  Did you mean
+> something along the lines of "a legacy drv->resume_early() callback
+> and pci_restore_state() both require the device to be in D0"?
+>=20
+> If something else, maybe you could propose some text?
+>=20
+> 2) I assume pci_pm_thaw_noirq() should leave the device in a
+> functionally equivalent state, whether it uses legacy PM or not.  Do
+> we want something like the patch below instead?  If we *do* want to
+> skip pci_restore_state() for legacy PM, maybe we should add a comment.
+>=20
+> 3) Documentation/power/pci.rst says:
+>=20
+>   ... devices have to be brought back to the fully functional
+>   state ...
+>=20
+>   pci_pm_thaw_noirq() ... doesn't put the device into the full power
+>   state and doesn't attempt to restore its standard configuration
+>   registers.
+>=20
+> That doesn't seem consistent, and it looks like pci_pm_thaw_noirq()
+> actually *does* put the device in full power (D0) state and restore
+> config registers.
+
+I would leave these questions to Rafael.
+=20
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index a8124e47bf6e..30c721fd6bcf 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -1068,7 +1068,7 @@ static int pci_pm_thaw_noirq(struct device *dev)
+>  {
+>  	struct pci_dev *pci_dev =3D to_pci_dev(dev);
+>  	struct device_driver *drv =3D dev->driver;
+> -	int error =3D 0;
+> +	int error;
+>=20
+>  	if (pcibios_pm_ops.thaw_noirq) {
+>  		error =3D pcibios_pm_ops.thaw_noirq(dev);
+> @@ -1076,9 +1076,6 @@ static int pci_pm_thaw_noirq(struct device *dev)
+>  			return error;
+>  	}
+>=20
+> -	if (pci_has_legacy_pm_support(pci_dev))
+> -		return pci_legacy_resume_early(dev);
+> -
+>  	/*
+>  	 * pci_restore_state() requires the device to be in D0 (because of MSI
+>  	 * restoration among other things), so force it into D0 in case the
+> @@ -1087,10 +1084,13 @@ static int pci_pm_thaw_noirq(struct device *dev)
+>  	pci_set_power_state(pci_dev, PCI_D0);
+>  	pci_restore_state(pci_dev);
+>=20
+> +	if (pci_has_legacy_pm_support(pci_dev))
+> +		return pci_legacy_resume_early(dev);
+> +
+>  	if (drv && drv->pm && drv->pm->thaw_noirq)
+> -		error =3D drv->pm->thaw_noirq(dev);
+> +		return drv->pm->thaw_noirq(dev);
+>=20
+> -	return error;
+> +	return 0;
+>  }
+>=20
+>  static int pci_pm_thaw(struct device *dev)
+
+The only real difference from my patch is that you moved
+
+ +	if (pci_has_legacy_pm_support(pci_dev))
+ +		return pci_legacy_resume_early(dev);
+
+to after the line "pci_restore_state(pci_dev);"
+
+This change is good to me, and shoud also resolve the error message I saw.
+
+Thanks,
+-- Dexuan
