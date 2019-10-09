@@ -2,169 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CD00D0F26
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2019 14:49:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39620D110E
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2019 16:20:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729831AbfJIMtl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Oct 2019 08:49:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48454 "EHLO mail.kernel.org"
+        id S1731315AbfJIOUf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Oct 2019 10:20:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:4776 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729784AbfJIMtl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:49:41 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728019AbfJIOUf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 9 Oct 2019 10:20:35 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C2C920B7C;
-        Wed,  9 Oct 2019 12:49:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570625380;
-        bh=BS4jso9hypNio5lXJwUJxoGbh/2wvN6PY7GhM+KUNGo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=jH2fwKYGgUAT3yvVwlPaj40RpZcpMd28Pv1P0XTRASzDbfUec6elVvevVNgQPnl5L
-         SUolQjQLJky2IL2PxOIjStpZNm3Mnb717g61/tSzlO+i2tTIQjv1Iuy6WMQv+h9rJA
-         n0oJqlQTsS8MU9UPyPVj6ija2LN0Ad0y9AwzM7es=
-Date:   Wed, 9 Oct 2019 07:49:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v3 1/2] PCI: PCIe: ASPM: Introduce pcie_aspm_enabled()
-Message-ID: <20191009124938.GA67585@google.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 3406C307DA31;
+        Wed,  9 Oct 2019 14:20:35 +0000 (UTC)
+Received: from [10.3.117.216] (ovpn-117-216.phx2.redhat.com [10.3.117.216])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 577DE601AC;
+        Wed,  9 Oct 2019 14:20:34 +0000 (UTC)
+Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Duyck <alexander.h.duyck@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+References: <20191009123135.GA62790@google.com>
+From:   Don Dutile <ddutile@redhat.com>
+Message-ID: <4b08c218-790b-2f26-a5a0-b66a4d4e67e9@redhat.com>
+Date:   Wed, 9 Oct 2019 10:20:33 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0j-uSM2gheHViommWcrSaLVfzbwV3M7OOWz3GyzhHSwRA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191009123135.GA62790@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 09 Oct 2019 14:20:35 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 12:54:37AM +0200, Rafael J. Wysocki wrote:
-> On Tue, Oct 8, 2019 at 11:16 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Tue, Oct 08, 2019 at 11:27:51AM +0200, Rafael J. Wysocki wrote:
-> > > On Tue, Oct 8, 2019 at 12:34 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Thu, Aug 08, 2019 at 11:55:07PM +0200, Rafael J. Wysocki wrote:
-> > > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > >
-> > > > > Add a function checking whether or not PCIe ASPM has been enabled for
-> > > > > a given device.
-> > > > >
-> > > > > It will be used by the NVMe driver to decide how to handle the
-> > > > > device during system suspend.
-> > > > >
-> > > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > > ---
-> > > > >
-> > > > > v2 -> v3:
-> > > > >   * Make the new function return bool.
-> > > > >   * Change its name back to pcie_aspm_enabled().
-> > > > >   * Fix kerneldoc comment formatting.
-> > > > >
-> > > > > -> v2:
-> > > > >   * Move the PCI/PCIe ASPM changes to a separate patch.
-> > > > >   * Add the _mask suffix to the new function name.
-> > > > >   * Add EXPORT_SYMBOL_GPL() to the new function.
-> > > > >   * Avoid adding an unnecessary blank line.
-> > > > >
-> > > > > ---
-> > > > >  drivers/pci/pcie/aspm.c |   20 ++++++++++++++++++++
-> > > > >  include/linux/pci.h     |    3 +++
-> > > > >  2 files changed, 23 insertions(+)
-> > > > >
-> > > > > Index: linux-pm/drivers/pci/pcie/aspm.c
-> > > > > ===================================================================
-> > > > > --- linux-pm.orig/drivers/pci/pcie/aspm.c
-> > > > > +++ linux-pm/drivers/pci/pcie/aspm.c
-> > > > > @@ -1170,6 +1170,26 @@ static int pcie_aspm_get_policy(char *bu
-> > > > >  module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
-> > > > >       NULL, 0644);
-> > > > >
-> > > > > +/**
-> > > > > + * pcie_aspm_enabled - Check if PCIe ASPM has been enabled for a device.
-> > > > > + * @pci_device: Target device.
-> > > > > + */
-> > > > > +bool pcie_aspm_enabled(struct pci_dev *pci_device)
-> > > > > +{
-> > > > > +     struct pci_dev *bridge = pci_upstream_bridge(pci_device);
-> > > > > +     bool ret;
-> > > > > +
-> > > > > +     if (!bridge)
-> > > > > +             return false;
-> > > > > +
-> > > > > +     mutex_lock(&aspm_lock);
-> > > > > +     ret = bridge->link_state ? !!bridge->link_state->aspm_enabled : false;
-> > > > > +     mutex_unlock(&aspm_lock);
-> > > >
-> > > > Why do we need to acquire aspm_lock here?  We aren't modifying
-> > > > anything, and I don't think we're preventing a race.  If this races
-> > > > with another thread that changes aspm_enabled, we'll return either the
-> > > > old state or the new one, and I think that's still the case even if we
-> > > > don't acquire aspm_lock.
-> > >
-> > > Well, if we can guarantee that pci_remove_bus_device() will never be
-> > > called in parallel with this helper, then I agree, but can we
-> > > guarantee that?
-> >
-> > Hmm, yeah, I guess that's the question.  It's not a race with another
-> > thread changing aspm_enabled; the potential race is with another
-> > thread removing the last child of "bridge", which will free the
-> > link_state and set bridge->link_state = NULL.
-> >
-> > I think it should be safe to call device-related PCI interfaces if
-> > you're holding a reference to the device, e.g., from a driver bound to
-> > the device or a sysfs accessor.  Since we call pcie_aspm_enabled(dev)
-> > from a driver bound to "dev", another thread should not be able to
-> > remove "dev" while we're using it.
-> >
-> > I know that's a little hand-wavey, but if it weren't true, I think
-> > we'd have a lot more locking sprinkled everywhere in the PCI core than
-> > we do.
-> >
-> > This has implications for Heiner's ASPM sysfs patches because we're
-> > currently doing this in sysfs accessors:
-> >
-> >   static ssize_t aspm_attr_show_common(struct device *dev, ...)
-> >   {
-> >     ...
-> >     link = pcie_aspm_get_link(pdev);
-> >
-> >     mutex_lock(&aspm_lock);
-> >     enabled = link->aspm_enabled & state;
-> >     mutex_unlock(&aspm_lock);
-> >     ...
-> >   }
-> >
-> > I assume sysfs must be holding a reference that guarantees "dev" is
-> > valid througout this code, and therefore we should not need to hold
-> > aspm_lock.
+On 10/09/2019 08:31 AM, Bjorn Helgaas wrote:
+> On Tue, Oct 08, 2019 at 06:06:46PM -0400, Don Dutile wrote:
+>> On 10/08/2019 05:38 PM, Bjorn Helgaas wrote:
+>>> On Thu, Oct 03, 2019 at 05:10:07PM -0500, Bjorn Helgaas wrote:
+>>>> On Thu, Oct 03, 2019 at 11:04:45AM +0200, CREGUT Pierre IMT/OLN wrote:
+>>>>> ...
+>>>
+>>>>> NIC drivers send netlink events when their state change, but it is
+>>>>> the core that changes the value of num_vfs. So I would think it is
+>>>>> the core responsibility to make sure the exposed value makes sense
+>>>>> and it would be better to ignore the details of the driver
+>>>>> implementation.
+>>>>
+>>>> Yes, I think you're right.  And I like your previous suggestion of
+>>>> just locking the device in the reader.  I'm not enough of a sysfs
+>>>> expert to know if there's a good reason to avoid a lock there.  Does
+>>>> the following look reasonable to you?
+>>>
+>>> I applied the patch below to pci/virtualization for v5.5, thanks for
+>> I hope not... see below
+>>
+>>> your great patience!
+>>>
+>>>> commit 0940fc95da45
+>>>> Author: Pierre Crégut <pierre.cregut@orange.com>
+>>>> Date:   Wed Sep 11 09:27:36 2019 +0200
+>>>>
+>>>>       PCI/IOV: Serialize sysfs sriov_numvfs reads vs writes
+>>>>       When sriov_numvfs is being updated, drivers may notify about new devices
+>>>>       before they are reflected in sriov->num_VFs, so concurrent sysfs reads
+>>>>       previously returned stale values.
+>>>>       Serialize the sysfs read vs the write so the read returns the correct
+>>>>       num_VFs value.
+>>>>       Link: https://bugzilla.kernel.org/show_bug.cgi?id=202991
+>>>>       Link: https://lore.kernel.org/r/20190911072736.32091-1-pierre.cregut@orange.com
+>>>>       Signed-off-by: Pierre Crégut <pierre.cregut@orange.com>
+>>>>       Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>>>>
+>>>> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+>>>> index b3f972e8cfed..e77562aabbae 100644
+>>>> --- a/drivers/pci/iov.c
+>>>> +++ b/drivers/pci/iov.c
+>>>> @@ -254,8 +254,14 @@ static ssize_t sriov_numvfs_show(struct device *dev,
+>>>>    				 char *buf)
+>>>>    {
+>>>>    	struct pci_dev *pdev = to_pci_dev(dev);
+>>>> +	u16 num_vfs;
+>>>> +
+>>>> +	/* Serialize vs sriov_numvfs_store() so readers see valid num_VFs */
+>>>> +	device_lock(&pdev->dev);
+>>                 ^^^^^ lock
+>>>> +	num_vfs = pdev->sriov->num_VFs;
+>>>> +	device_lock(&pdev->dev);
+>>                 ^^^^ and lock again!
 > 
-> In principle, pcie_aspm_enabled() need not be called via sysfs.
+> Oops, sorry, my fault.  Fixed.
 > 
-> In the particular NVMe use case, it is called from the driver's own PM
-> callback, so it would be safe without the locking AFAICS.
+Thanks.
+--dd
 
-Right, pcie_aspm_enabled() is only used by drivers (actually only by
-the nvme driver so far).  And aspm_attr_show_common() is only used via
-new sysfs code being added by Heiner.
+>>>> -	return sprintf(buf, "%u\n", pdev->sriov->num_VFs);
+>>>> +	return sprintf(buf, "%u\n", num_vfs);
+>>>>    }
+>>>>    /*
+>>
 
-> I guess it is safe to drop the locking from there, but then it would
-> be good to mention in the kerneldoc that calling it is only safe under
-> the assumption that the link_state object cannot go away while it is
-> running.
-
-I'll post a patch to that effect.  Thanks!
-
-Bjorn
