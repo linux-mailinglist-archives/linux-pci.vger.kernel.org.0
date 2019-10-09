@@ -2,105 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 739E2D0DA3
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2019 13:30:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 502E0D0EC2
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2019 14:31:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725962AbfJILax (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Oct 2019 07:30:53 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37231 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfJILax (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Oct 2019 07:30:53 -0400
-Received: by mail-ot1-f68.google.com with SMTP id k32so1407692otc.4;
-        Wed, 09 Oct 2019 04:30:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RXacikU0AKH0a8cL4TI2rXH1Tzq/pqcytSrL8Dn3Zw8=;
-        b=RTx/AK10bD48wEe69Kaq2wVkXqU9LfM94WzgBfIzOgSe9MbJE3QZlyBKnylXqrBZm+
-         QVxeurGffn9nO2rXbQgqJ4ckJMW9kjSrjPgFbmEsFzTZef3upW0z67R5IqAXVYhsSmGS
-         irDCJ659yXOUuaX3qK2Rn8COhDCjsQvMmX7xQejYwYRbw0Aw9WCu+9OdFNV3Hc9nzaaj
-         kZfA9wSE4ftzEx3nmZJI4iel85twVP0/cEfAypzblpPMoHW7qlTXchEPafUDGPRfXRnD
-         4c2kAmNCKiB1j/SLdVRxZGEjthOhsGSc6EBDPDN+ELDL7PQvzP5U67qQ6Tr+AgK9miuW
-         wJyA==
-X-Gm-Message-State: APjAAAXTtUdJ+AanwiDQHkdF7qCUsvKDu6S/4G0Z8KPrtBQMYVQqTnye
-        uU4VCMTf7koM4BsFlMd2yFfde67KkjB/8tEOEEM=
-X-Google-Smtp-Source: APXvYqzgv6KySzCyCwbije3dycoip8/EkYhTSn/U8sbafZ+9IuVjS3Kvl7zSNX2/eZ2v4y89W5Lxm4LkZubFMtHPYi4=
-X-Received: by 2002:a9d:7a82:: with SMTP id l2mr2385387otn.297.1570620652071;
- Wed, 09 Oct 2019 04:30:52 -0700 (PDT)
+        id S1730110AbfJIMbh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Oct 2019 08:31:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45098 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728200AbfJIMbh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 9 Oct 2019 08:31:37 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 750C1206C0;
+        Wed,  9 Oct 2019 12:31:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570624296;
+        bh=qJNqWYgUP04FWWOyhZUVfn25DZyG752Qo/ZuAv9t3z4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=X/2o/lHUYyW9dA4IpOQVPKDMvH3l27/o6Z66nGTPND3rmtqUV1O78exJmzZ8Gjm/S
+         HOfqHqGyaed1ol3CEOaFIHLSZSIsLVKL3C9u8WLQhgGJp5Rq8wpjnJO+rhBBNxxhNA
+         QtYKzn1Jyc3QBA0hDNZGCtjFXoYU/0wXzCW9ufus=
+Date:   Wed, 9 Oct 2019 07:31:35 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Don Dutile <ddutile@redhat.com>
+Cc:     CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Duyck <alexander.h.duyck@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
+Message-ID: <20191009123135.GA62790@google.com>
 MIME-Version: 1.0
-References: <1570619086-30088-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1570619086-30088-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 9 Oct 2019 13:30:40 +0200
-Message-ID: <CAMuHMdWpxCwOL4Ewd_CQOMMXq9vKQ0zJCW0A0ume_XtsdEtwJA@mail.gmail.com>
-Subject: Re: [PATCH v3] PCI: rcar: Fix missing MACCTLR register setting in rcar_pcie_hw_init()
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Simon Horman <horms@verge.net.au>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4ac38c7a-b8d4-9a1c-10ab-ce8b4cf2991f@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Shimoda-san,
+On Tue, Oct 08, 2019 at 06:06:46PM -0400, Don Dutile wrote:
+> On 10/08/2019 05:38 PM, Bjorn Helgaas wrote:
+> > On Thu, Oct 03, 2019 at 05:10:07PM -0500, Bjorn Helgaas wrote:
+> > > On Thu, Oct 03, 2019 at 11:04:45AM +0200, CREGUT Pierre IMT/OLN wrote:
+> > > > ...
+> > 
+> > > > NIC drivers send netlink events when their state change, but it is
+> > > > the core that changes the value of num_vfs. So I would think it is
+> > > > the core responsibility to make sure the exposed value makes sense
+> > > > and it would be better to ignore the details of the driver
+> > > > implementation.
+> > > 
+> > > Yes, I think you're right.  And I like your previous suggestion of
+> > > just locking the device in the reader.  I'm not enough of a sysfs
+> > > expert to know if there's a good reason to avoid a lock there.  Does
+> > > the following look reasonable to you?
+> > 
+> > I applied the patch below to pci/virtualization for v5.5, thanks for
+> I hope not... see below
+> 
+> > your great patience!
+> > 
+> > > commit 0940fc95da45
+> > > Author: Pierre Crégut <pierre.cregut@orange.com>
+> > > Date:   Wed Sep 11 09:27:36 2019 +0200
+> > > 
+> > >      PCI/IOV: Serialize sysfs sriov_numvfs reads vs writes
+> > >      When sriov_numvfs is being updated, drivers may notify about new devices
+> > >      before they are reflected in sriov->num_VFs, so concurrent sysfs reads
+> > >      previously returned stale values.
+> > >      Serialize the sysfs read vs the write so the read returns the correct
+> > >      num_VFs value.
+> > >      Link: https://bugzilla.kernel.org/show_bug.cgi?id=202991
+> > >      Link: https://lore.kernel.org/r/20190911072736.32091-1-pierre.cregut@orange.com
+> > >      Signed-off-by: Pierre Crégut <pierre.cregut@orange.com>
+> > >      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > 
+> > > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > > index b3f972e8cfed..e77562aabbae 100644
+> > > --- a/drivers/pci/iov.c
+> > > +++ b/drivers/pci/iov.c
+> > > @@ -254,8 +254,14 @@ static ssize_t sriov_numvfs_show(struct device *dev,
+> > >   				 char *buf)
+> > >   {
+> > >   	struct pci_dev *pdev = to_pci_dev(dev);
+> > > +	u16 num_vfs;
+> > > +
+> > > +	/* Serialize vs sriov_numvfs_store() so readers see valid num_VFs */
+> > > +	device_lock(&pdev->dev);
+>                ^^^^^ lock
+> > > +	num_vfs = pdev->sriov->num_VFs;
+> > > +	device_lock(&pdev->dev);
+>                ^^^^ and lock again!
 
-On Wed, Oct 9, 2019 at 1:05 PM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> According to the R-Car Gen2/3 manual, the bit 0 of MACCTLR register
-> should be written to 0 before enabling PCIETCTLR.CFINIT because
-> the bit 0 is set to 1 on reset. To avoid unexpected behaviors from
-> this incorrect setting, this patch fixes it.
->
-> Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
-> Cc: <stable@vger.kernel.org> # v3.16+
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  Changes from v2:
->  - Change the subject.
->  - Fix commit log again.
->  - Add the register setting into the initialization, instead of speedup.
->  - Change commit hash/target version on Fixes and Cc stable tags.
->  - Add Geert-san's Reviewed-by.
->  https://patchwork.kernel.org/patch/11180429/
+Oops, sorry, my fault.  Fixed.
 
-Thanks for the update!
-
-> --- a/drivers/pci/controller/pcie-rcar.c
-> +++ b/drivers/pci/controller/pcie-rcar.c
-> @@ -93,6 +93,7 @@
->  #define  LINK_SPEED_2_5GTS     (1 << 16)
->  #define  LINK_SPEED_5_0GTS     (2 << 16)
->  #define MACCTLR                        0x011058
-> +#define  MACCTLR_RESERVED      BIT(0)
->  #define  SPEED_CHANGE          BIT(24)
->  #define  SCRAMBLE_DISABLE      BIT(27)
->  #define PMSR                   0x01105c
-> @@ -615,6 +616,8 @@ static int rcar_pcie_hw_init(struct rcar_pcie *pcie)
->         if (IS_ENABLED(CONFIG_PCI_MSI))
->                 rcar_pci_write_reg(pcie, 0x801f0000, PCIEMSITXR);
->
-> +       rcar_rmw32(pcie, MACCTLR, MACCTLR_RESERVED, 0);
-> +
->         /* Finish initialization - establish a PCI Express link */
->         rcar_pci_write_reg(pcie, CFINIT, PCIETCTLR);
-
-I guess the same should be added to rcar_pcie_resume_noirq(),
-as s2ram on R-Car Gen3 powers down the SoC?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> > > -	return sprintf(buf, "%u\n", pdev->sriov->num_VFs);
+> > > +	return sprintf(buf, "%u\n", num_vfs);
+> > >   }
+> > >   /*
+> 
