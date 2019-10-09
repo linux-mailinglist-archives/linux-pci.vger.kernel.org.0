@@ -2,59 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B22DD08EF
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2019 09:56:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83DA8D0A24
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2019 10:49:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725953AbfJIH4z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Oct 2019 03:56:55 -0400
-Received: from mga05.intel.com ([192.55.52.43]:11372 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725879AbfJIH4z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 9 Oct 2019 03:56:55 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 00:56:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,273,1566889200"; 
-   d="scan'208";a="206825677"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 09 Oct 2019 00:56:51 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 09 Oct 2019 10:56:50 +0300
-Date:   Wed, 9 Oct 2019 10:56:50 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     AceLan Kao <acelan@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>
-Subject: Re: [bugzilla-daemon@bugzilla.kernel.org: [Bug 205119] New: It takes
- long time to wake up from s2idle on Dell XPS 7390 2-in-1]
-Message-ID: <20191009075650.GM2819@lahna.fi.intel.com>
-References: <20191008164232.GA173643@google.com>
- <20191009040534.GL2819@lahna.fi.intel.com>
- <CAMz9Wg_8ZYkw1f3MyqcqNMBajJ_Q+qwojQhg8WqiPTPeUSNXZQ@mail.gmail.com>
+        id S1729696AbfJIItL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Oct 2019 04:49:11 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37589 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729616AbfJIItL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Oct 2019 04:49:11 -0400
+Received: by mail-lj1-f196.google.com with SMTP id l21so1637118lje.4
+        for <linux-pci@vger.kernel.org>; Wed, 09 Oct 2019 01:49:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Fw68qKfNBJ3MG20DUBqZIzVWDe20WI/LhFnx7roFxhs=;
+        b=k8jh3KUK49JxXE6byOUawxlBLoaHRDdaZPoEFbuQJTg4/15q2NUtUb/W5jpqOyX6bS
+         rqDd/e1ZuWc5mygYvEpbOYoHqosAx+8LI4KBntbJQqqGN7UVpY7NlNOHk8oksgUNmCok
+         alhnWOJLr8ca/e0Fpa2MtDm0bMkwDRGDMi8Gnc2BzNTf/I4s1r91pjeHfu8pnqsd04x4
+         FB7NN83/9VJjtlGjWiwfTVlBDJYCCerQeFvFG6Ti2iVeF+uR34VIo84hAyNPRrIZiCNB
+         9h4SWjpYnfhXcgO1qzySVBeKfC3cJjr+84SodfHoEqN8Gx26E3kcZFbCRBOvZN4vh4Cy
+         5uiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Fw68qKfNBJ3MG20DUBqZIzVWDe20WI/LhFnx7roFxhs=;
+        b=J3kznawIRBuf9SmE9YxwPYv+nggPSkIQ98cClrq6uVZBvz85vczd4pqUad1n2AeSjC
+         z5QsLi2eGOtmMJrmEjjWXQHSEgjsyVN8tkdKN1Z3shkx4MZ+nbnLmKoUzoVpkhKRxe+E
+         h20WEvcDrHM5L7oeVBkD5Wssz4DTEF9PSYQ5/qtju86l+7w9it259wgzz2WveMjwgTHJ
+         It5os1ehTbQy28JCTKiNzrqnTtvWZccrffPEOa3gvYDHjUYIy2fGv+6OYh1I3Ii6EgQi
+         iiD1NN46dkYFgtJQT+kx4V48FwELigwg5DoL3Cqdu3zwJNXdCEEuZ6hKd9CvF61Tz4JA
+         Qwcg==
+X-Gm-Message-State: APjAAAUPx4wmxZ/ibNpSDNw0eYPaC/lTDRoeaxk3/VVk+mKWcmbhOZdq
+        FS5rqzGI81kJvtS187uhgBqH8A==
+X-Google-Smtp-Source: APXvYqwRBfPUz4nmbVDYIdMECrm/KMEnqoMdu7wPMUcBwNhPxmh9+WUSgtLHQd3IGwU9SeIICSilUg==
+X-Received: by 2002:a2e:5dd5:: with SMTP id v82mr1629021lje.54.1570610949674;
+        Wed, 09 Oct 2019 01:49:09 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:88d:9246:fcd9:ed2e:f8ad:568f? ([2a00:1fa0:88d:9246:fcd9:ed2e:f8ad:568f])
+        by smtp.gmail.com with ESMTPSA id z72sm312363ljb.98.2019.10.09.01.49.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 09 Oct 2019 01:49:08 -0700 (PDT)
+Subject: Re: [PATCH v2] PCI: rcar: Fix writing the MACCTLR register value
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        horms@verge.net.au, linux-pci@vger.kernel.org
+Cc:     linux-renesas-soc@vger.kernel.org, stable@vger.kernel.org
+References: <1570593791-6958-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <2b0f09cd-323d-864d-09df-40d431693f19@cogentembedded.com>
+Date:   Wed, 9 Oct 2019 11:48:59 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMz9Wg_8ZYkw1f3MyqcqNMBajJ_Q+qwojQhg8WqiPTPeUSNXZQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1570593791-6958-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 03:50:25PM +0800, AceLan Kao wrote:
-> Right, the issue happens after we backport some ICL thunderbolt
-> patches to 5.3 kernel.
+On 09.10.2019 7:03, Yoshihiro Shimoda wrote:
 
-Does it happen only with backported patches or does it also happen with
-the mainline?
+> According to the R-Car Gen2/3 manual, the bit 0 of MACCTLR register
+> should be written to 0 because the register is set to 1 on reset.
 
-> There is a new BIOS v1.0.13 on dell website, but it requires windows
-> to upgrade it, I'll try it later.
+    The bit 0 set to 1, not the whole register (it has 1s also in the
+bits 16-23).
 
-OK, thanks.
+> To avoid unexpected behaviors from this incorrect setting, this
+> patch fixes it.
+> 
+> Fixes: b3327f7fae66 ("PCI: rcar: Try increasing PCIe link speed to 5 GT/s at boot")
+> Cc: <stable@vger.kernel.org> # v4.9+
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+[...]
+
+MBR, Sergei
