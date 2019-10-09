@@ -2,146 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A55CDD0A80
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2019 11:04:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6F87D0B99
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2019 11:44:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725935AbfJIJEB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Oct 2019 05:04:01 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44202 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJIJEB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Oct 2019 05:04:01 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9993t0W028585;
-        Wed, 9 Oct 2019 04:03:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570611835;
-        bh=jEegimTNJbOHR+TosMTLwdjur6SlXV6/KlNYDlpB+PY=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=msHx5Po+NS1W0yV7jb93vkkntFsEo2/fRtzCPbZeUcmzvjub+48Ad0mNAkFa5RZ4L
-         VWQXJg+kABGl4W/oR9lOFqJBJwSenFn3Rlv/QmLVAK4W6AyoGgM5obdtHTKF0y6csv
-         7AJQXBMkbQsJ2Fuuz+l15U7ci/Hv9386Xp1Hswdk=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9993tSJ093996;
-        Wed, 9 Oct 2019 04:03:55 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 9 Oct
- 2019 04:03:52 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 9 Oct 2019 04:03:52 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9993oSZ076819;
-        Wed, 9 Oct 2019 04:03:52 -0500
-Subject: Re: [PATCH] PCI: endpoint: cast the page number to phys_addr_t
-To:     Alan Mikhak <alan.mikhak@sifive.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-References: <1570240177-8934-1-git-send-email-alan.mikhak@sifive.com>
- <CABEDWGx5MzsdcKzNzCtt3DxXAEWK69Bm-QBK0248rGAvWaU22w@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <69ec3cdf-a7e8-d926-ccba-a1edbb92348d@ti.com>
-Date:   Wed, 9 Oct 2019 14:33:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1730490AbfJIJoU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Oct 2019 05:44:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:58252 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728200AbfJIJoU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 9 Oct 2019 05:44:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B74C628;
+        Wed,  9 Oct 2019 02:44:19 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B0F13F68E;
+        Wed,  9 Oct 2019 02:44:19 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 10:44:17 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     Zhiqiang.Hou@nxp.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com,
+        kishon@ti.com, lorenzo.pieralisi@arm.com, Minghuan.Lian@nxp.com,
+        mingkai.hu@nxp.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] Add the Mobiveil EP and Layerscape Gen4 EP driver
+ support
+Message-ID: <20191009094416.GO42880@e119886-lin.cambridge.arm.com>
+References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <CABEDWGx5MzsdcKzNzCtt3DxXAEWK69Bm-QBK0248rGAvWaU22w@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916021742.22844-1-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Alan,
-
-On 07/10/19 11:14 PM, Alan Mikhak wrote:
-> On Fri, Oct 4, 2019 at 6:49 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
->>
->> From: Alan Mikhak <alan.mikhak@sifive.com>
->>
->> Modify pci_epc_mem_alloc_addr() to cast the variable 'pageno'
->> from type 'int' to 'phys_addr_t' before shifting left. This
->> cast is needed to avoid treating bit 31 of 'pageno' as the
->> sign bit which would otherwise get sign-extended to produce
->> a negative value. When added to the base address of PCI memory
->> space, the negative value would produce an invalid physical
->> address which falls before the start of the PCI memory space.
->>
->> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-
-Thanks for the patch.
-
-The change-log title should start with "capitalized verb"
-
-linux-pci follows certain guidelines listed here
-
-https://lore.kernel.org/r/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com/
-
-Once that gets fixed
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-
->> ---
->>  drivers/pci/endpoint/pci-epc-mem.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
->> index 2bf8bd1f0563..d2b174ce15de 100644
->> --- a/drivers/pci/endpoint/pci-epc-mem.c
->> +++ b/drivers/pci/endpoint/pci-epc-mem.c
->> @@ -134,7 +134,7 @@ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
->>         if (pageno < 0)
->>                 return NULL;
->>
->> -       *phys_addr = mem->phys_base + (pageno << page_shift);
->> +       *phys_addr = mem->phys_base + ((phys_addr_t)pageno << page_shift);
->>         virt_addr = ioremap(*phys_addr, size);
->>         if (!virt_addr)
->>                 bitmap_release_region(mem->bitmap, pageno, order);
->> --
->> 2.7.4
->>
+On Mon, Sep 16, 2019 at 10:17:36AM +0800, Xiaowei Bao wrote:
+> This patch set are for adding Mobiveil EP driver and adding PCIe Gen4
+> EP driver of NXP Layerscape platform.
 > 
-> Hi Kishon,
+> This patch set depends on:
+> https://patchwork.kernel.org/project/linux-pci/list/?series=159139
 > 
-> This issue was observed when requesting pci_epc_mem_alloc_addr()
-> to allocate a region of size 0x40010000ULL (1GB + 64KB) from a
-> 128GB PCI address space with page sizes being 64KB. This resulted
-> in 'pageno' value of '0x8000' as the first available page in a
-> contiguous region for the requested size due to other smaller
-> regions having been allocated earlier. With 64KB page sizes,
-> the variable 'page_shift' holds a value of 0x10. Shifting 'pageno'
-> 16 bits to the left results in an 'int' value whose bit 31 is set.
-> 
-> [   10.565256] __pci_epc_mem_init: mem size 0x2000000000 page_size 0x10000
-> [   10.571613] __pci_epc_mem_init: mem pages 0x200000 bitmap_size
-> 0x40000 page_shift 0x10
-> 
-> PCI memory base 0x2000000000
-> PCI memory size 128M 0x2000000000
-> page_size 64K 0x10000
-> page_shift  16 0x10
-> pages 2M 0x200000
-> bitmap_size 256K 0x40000
-> 
-> [  702.050299] pci_epc_mem_alloc_addr: size 0x10000 order 0x0 pageno
-> 0x4 virt_add 0xffffffd0047b0000 phys_addr 0x2000040000
-> [  702.061424] pci_epc_mem_alloc_addr: size 0x10000 order 0x0 pageno
-> 0x5 virt_add 0xffffffd0047d0000 phys_addr 0x2000050000
-> [  702.203933] pci_epc_mem_alloc_addr: size 0x40010000 order 0xf
-> pageno 0x8000 virt_add 0xffffffd004800000 phys_addr 0x1f80000000
-> [  702.216547] Oops - store (or AMO) access fault [#1]
-> :::
-> [  702.310198] sstatus: 0000000200000120 sbadaddr: ffffffd004804000
-> scause: 0000000000000007
 
-Thank you Alan for testing this and sending a patch to fix it.
+I've not had any feedback on this earlier series (in your link), I was
+planning to review *this* patchset after that.
 
-Cheers
-Kishon
+Thanks,
+
+Andrew Murray
+
+> Xiaowei Bao (6):
+>   PCI: mobiveil: Add the EP driver support
+>   dt-bindings: Add DT binding for PCIE GEN4 EP of the layerscape
+>   PCI: mobiveil: Add PCIe Gen4 EP driver for NXP Layerscape SoCs
+>   PCI: mobiveil: Add workaround for unsupported request error
+>   arm64: dts: lx2160a: Add PCIe EP node
+>   misc: pci_endpoint_test: Add the layerscape PCIe GEN4 EP device
+>     support
+> 
+>  .../bindings/pci/layerscape-pcie-gen4.txt          |  28 +-
+>  MAINTAINERS                                        |   3 +
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |  56 ++
+>  drivers/misc/pci_endpoint_test.c                   |   2 +
+>  drivers/pci/controller/mobiveil/Kconfig            |  22 +-
+>  drivers/pci/controller/mobiveil/Makefile           |   2 +
+>  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 169 ++++++
+>  drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c | 568 +++++++++++++++++++++
+>  drivers/pci/controller/mobiveil/pcie-mobiveil.c    |  99 +++-
+>  drivers/pci/controller/mobiveil/pcie-mobiveil.h    |  72 +++
+>  10 files changed, 1009 insertions(+), 12 deletions(-)
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c
+> 
+> -- 
+> 2.9.5
+> 
