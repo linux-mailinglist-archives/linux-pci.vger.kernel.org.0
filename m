@@ -2,97 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 61901D1CF6
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 01:44:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85914D1D0C
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 01:50:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731145AbfJIXoB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Oct 2019 19:44:01 -0400
-Received: from mga18.intel.com ([134.134.136.126]:36281 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730815AbfJIXoB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 9 Oct 2019 19:44:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 16:44:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,278,1566889200"; 
-   d="scan'208";a="193027202"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 09 Oct 2019 16:44:00 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id EEC7E5802BC;
-        Wed,  9 Oct 2019 16:43:59 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH 1/2] iommu/vt-d: Select PCI_PRI for INTEL_IOMMU_SVM
-To:     Bjorn Helgaas <helgaas@kernel.org>,
+        id S1731834AbfJIXuR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Oct 2019 19:50:17 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51619 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731145AbfJIXuR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Oct 2019 19:50:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570665015;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YAtqhT5ONsjqWUWONs3upOQbCcX6WU5MkOT7sl7Bewo=;
+        b=I3G816pIrs5JzNswH8L+jg79EoPY0ZBz4gJVEMxnRSCdz/uvZh9bwsSGYPFqBA1tYXdlEz
+        Gp+8G3K47wZHXAo9D8Poj8yTZMaO5lvilRgpdwYs16iXQRrCyX5uEILYoJSC7D+kVgzubP
+        88tSYzqOeI+s3FtBBYZcMe1lK9iMBB8=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-50-gCTN2usyNsincUFZmlKQgg-1; Wed, 09 Oct 2019 19:50:14 -0400
+Received: by mail-io1-f70.google.com with SMTP id u18so6810777ioc.4
+        for <linux-pci@vger.kernel.org>; Wed, 09 Oct 2019 16:50:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=focIOQfcQNyrOXPkI531vbndDZb3WURIChJxW2xJzLs=;
+        b=KI/KsuDPBoNimlz3A6ZLwTZfVbNf2ZD+G6oKYCuvDjUTqeerW+fEEuteQh8h9JPrch
+         7p4g1hDN3A17I4r2vXnLti21uS2IIBQoCBhMQgBTQFpRDPLWRcLXmuqzqjI0bEnOzlEa
+         21KFOtKCFiiljSYIK1FTIQtMpKBMO9A5uwCwan+v8a9kknZxfdeJDdpc1RChOnIyFtuO
+         uv0uqvsQHw1me7xyKoDPFzYzsPefasOP+QHwLVft+0XI6gqJOkCWe3I73Nq6fkA+mEdn
+         RV7soVtxipR6oSI4udi457Oj0wAWIUSYdls6BqjL9k+NpOza5ORz5kHd2kth2jqyKeaR
+         vAAw==
+X-Gm-Message-State: APjAAAVrV8BjdeZP0iAFRIa7/CdWExpGP8e1BFjRnbZHuSu6lyw8D1su
+        q9moYnL+2wFd+TsZsAuVoSbpQQU/HvXkJGWu2Zfwn217t96iSBSwMCfmB0B9kE0zkYcJlJGctW/
+        SOU8DKoIDSEE30GlXBSaL
+X-Received: by 2002:a5d:8b49:: with SMTP id c9mr4491132iot.209.1570665013831;
+        Wed, 09 Oct 2019 16:50:13 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyBHaFMxZO0WJshtgxh7/OOthnkRt0Ri0Ng2qxBJgBmVLrUfw4ehvtKeNCwBnq7zLTnWQxQQg==
+X-Received: by 2002:a5d:8b49:: with SMTP id c9mr4491111iot.209.1570665013586;
+        Wed, 09 Oct 2019 16:50:13 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id f23sm2553411ioc.36.2019.10.09.16.50.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 16:50:12 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 16:50:09 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
         David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     Ashok Raj <ashok.raj@intel.com>,
-        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Joerg Roedel <joro@8bytes.org>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Keith Busch <keith.busch@intel.com>,
+        iommu@lists.linux-foundation.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 0/2] iommu/vt-d: Select PCI_PRI for INTEL_IOMMU_SVM
+Message-ID: <20191009235009.a3mxw4qrklkqwuzf@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Bjorn Helgaas <helgaas@kernel.org>,
+        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>, Ashok Raj <ashok.raj@intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Keith Busch <keith.busch@intel.com>,
+        iommu@lists.linux-foundation.org,
         Bjorn Helgaas <bhelgaas@google.com>
 References: <20191009224551.179497-1-helgaas@kernel.org>
- <20191009224551.179497-2-helgaas@kernel.org>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <76ec2ac0-129e-ef65-8229-6405020fdc9f@linux.intel.com>
-Date:   Wed, 9 Oct 2019 16:42:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191009224551.179497-2-helgaas@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+In-Reply-To: <20191009224551.179497-1-helgaas@kernel.org>
+User-Agent: NeoMutt/20180716
+X-MC-Unique: gCTN2usyNsincUFZmlKQgg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-On 10/9/19 3:45 PM, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Wed Oct 09 19, Bjorn Helgaas wrote:
+>From: Bjorn Helgaas <bhelgaas@google.com>
 >
-> When CONFIG_INTEL_IOMMU_SVM=y, iommu_enable_dev_iotlb() calls PRI
-> interfaces (pci_reset_pri() and pci_enable_pri()), but those are only
-> implemented when CONFIG_PCI_PRI is enabled.
+>I think intel-iommu.c depends on CONFIG_AMD_IOMMU in an undesirable way:
 >
-> Previously INTEL_IOMMU_SVM selected PCI_PASID but not PCI_PRI, so the state
-> of PCI_PRI depended on whether AMD_IOMMU (which selects PCI_PRI) was
-> enabled or PCI_PRI was enabled explicitly.
+>When CONFIG_INTEL_IOMMU_SVM=3Dy, iommu_enable_dev_iotlb() calls PRI
+>interfaces (pci_reset_pri() and pci_enable_pri()), but those are only
+>implemented when CONFIG_PCI_PRI is enabled.  If CONFIG_PCI_PRI is not
+>enabled, there are stubs that just return failure.
 >
-> The behavior of iommu_enable_dev_iotlb() should not depend on whether
-> AMD_IOMMU is enabled.  Make it predictable by having INTEL_IOMMU_SVM select
-> PCI_PRI so iommu_enable_dev_iotlb() always uses the full implementations of
-> PRI interfaces.
+>The INTEL_IOMMU_SVM Kconfig does nothing with PCI_PRI, but AMD_IOMMU
+>selects PCI_PRI.  So if AMD_IOMMU is enabled, intel-iommu.c gets the full
+>PRI interfaces.  If AMD_IOMMU is not enabled, it gets the PRI stubs.
 >
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Looks good to me.
-
-Reviewed-by: Kuppuswamy Sathyanarayanan 
-<sathyanarayanan.kuppuswamy@linux.intel.com>
-
-> ---
->   drivers/iommu/Kconfig | 1 +
->   1 file changed, 1 insertion(+)
+>This seems wrong.  The first patch here makes INTEL_IOMMU_SVM select
+>PCI_PRI so intel-iommu.c always gets the full PRI interfaces.
 >
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index e3842eabcfdd..b183c9f916b0 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -207,6 +207,7 @@ config INTEL_IOMMU_SVM
->   	bool "Support for Shared Virtual Memory with Intel IOMMU"
->   	depends on INTEL_IOMMU && X86
->   	select PCI_PASID
-> +	select PCI_PRI
->   	select MMU_NOTIFIER
->   	help
->   	  Shared Virtual Memory (SVM) provides a facility for devices
+>The second patch moves pci_prg_resp_pasid_required(), which simply returns
+>a bit from the PCI capability, from #ifdef CONFIG_PCI_PASID to #ifdef
+>CONFIG_PCI_PRI.  This is related because INTEL_IOMMU_SVM already *does*
+>select PCI_PASID, so it previously always got pci_prg_resp_pasid_required(=
+)
+>even though it got stubs for other PRI things.
+>
+>Since these are related and I have several follow-on ATS-related patches i=
+n
+>the queue, I'd like to take these both via the PCI tree.
+>
+>Bjorn Helgaas (2):
+>  iommu/vt-d: Select PCI_PRI for INTEL_IOMMU_SVM
+>  PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI
+>
+> drivers/iommu/Kconfig   |  1 +
+> drivers/pci/ats.c       | 55 +++++++++++++++++++----------------------
+> include/linux/pci-ats.h | 11 ++++-----
+> 3 files changed, 31 insertions(+), 36 deletions(-)
+>
+>--=20
+>2.23.0.581.g78d2f28ef7-goog
+>
+>_______________________________________________
+>iommu mailing list
+>iommu@lists.linux-foundation.org
+>https://lists.linuxfoundation.org/mailman/listinfo/iommu
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
