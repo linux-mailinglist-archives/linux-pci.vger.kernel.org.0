@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FC3BD0F19
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2019 14:46:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6212D0F1E
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2019 14:48:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730111AbfJIMqp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Oct 2019 08:46:45 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40811 "EHLO
+        id S1727878AbfJIMsN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Oct 2019 08:48:13 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43391 "EHLO
         mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727878AbfJIMqp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Oct 2019 08:46:45 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k9so1597642oib.7;
-        Wed, 09 Oct 2019 05:46:44 -0700 (PDT)
+        with ESMTP id S1727219AbfJIMsN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Oct 2019 08:48:13 -0400
+Received: by mail-oi1-f193.google.com with SMTP id t84so1593131oih.10;
+        Wed, 09 Oct 2019 05:48:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=J47bwEO6SH0I7ztat9/azJ8eziwhYPDazvWnJtRO0hs=;
-        b=IV3IXy48MvcvlflhJIR4R6EOPlxc1BIXZuIe2LGYM5LQKmFz24caqgFW+029pVJFY5
-         5yuFzXtjUBJkr3S/0lOX3jWx3LcbbpNQwHCGO+lvFyfqZ9xp0NQkIU5iAAtmPkEO4SYw
-         f1XzGCIzwPmC6EbiPnCiAaG+eLp7wGSYxK1WrIr9lheq+O0ltt4hToZGT4GhxpPyNCUM
-         k4yJMQMHSpy3/1+VuR53dTsBzKH8cwc6Q8xYM3Q3OAVONDKTeSs5oCs8b7K9KWMwz6jt
-         I9BTpIaWC1mMeUP3BDoIXg5S9kqXbWu4yTHGfSZ3iDGBdlRgmYPdoT27nX6hyN/lGE+z
-         ZbfA==
-X-Gm-Message-State: APjAAAUROoM0GDtRYvVV+I4/E65hUifu0mf3NSse0yLnh/hV5LN5ry+L
-        vkFlFhaK/wlx+GES0SgdOeqV03nVmOBVP0CZRZQ=
-X-Google-Smtp-Source: APXvYqyB8y75Qw1TwUCbQEH4ukLuMBxP24F5dZWNVSCJi4jSyKwiE5ahh7a9uDV/hbkXGttXzxAnWQLYkv+vpZCCGxA=
-X-Received: by 2002:aca:882:: with SMTP id 124mr2142307oii.54.1570625204258;
- Wed, 09 Oct 2019 05:46:44 -0700 (PDT)
+        bh=F9sihoD8xtf+xJJ/YN8Ttpi/IAoGkmrDo73SAP7wiuU=;
+        b=lEq7dDjBTWi1L0HDF0T6p3dbSb+HAbjN6m5Mf+PcNG0MsuYTZ7Xjr/aD21nEj9AC2P
+         4L3FCi2qaCH2IpFNdSd1PYxZ1OPns9imP12ZC5R908G4P8oBtFFR4GUkWmcyB9GQkwFA
+         +d9R26M2C/4VNN03pDfCHiefVwTxj6qmqGxDCfWoOeHkSBb1Oy5Ht24l24amHFXNLmgr
+         uj/2RUxy/HP4WRizxKIf8weBwSp9LV0kX9zQpIDoLz8pGmLkkrXo6XWwAAN3D+xrX15V
+         A8RD4f1yf8aWLwOTyJgTA7J5ONzQ9MhLOwzMyBgDaz6YckvA3HovRpkXI+UgcgVKnf+0
+         tlIA==
+X-Gm-Message-State: APjAAAUgbxOSP4IiYOtbUHEVvFRwqjggYVy6zwk6JAYi1yWTCan3MQJ+
+        i0TEhVwBK8gy6tS42cY7k405n2/SmZ9wGVvEcuE=
+X-Google-Smtp-Source: APXvYqz8RkrMAo1aVETLuTwYrdB2hkzhyiOgT81nepAIJT5UFEWrRqAdCBYAgc1IF85bemnI+YynzlBidICme1Cn/Nc=
+X-Received: by 2002:aca:4bd2:: with SMTP id y201mr2187936oia.102.1570625292202;
+ Wed, 09 Oct 2019 05:48:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <1570178133-21532-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570178133-21532-6-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1570178133-21532-6-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1570178133-21532-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570178133-21532-7-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1570178133-21532-7-git-send-email-fabrizio.castro@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 9 Oct 2019 14:46:33 +0200
-Message-ID: <CAMuHMdVuDg2cicp8w6fS5F3OWhH9gK1eCMJ_pDGsWAJoWh68yQ@mail.gmail.com>
-Subject: Re: [PATCH 5/7] arm64: dts: renesas: r8a774b1: Add all MSIOF nodes
+Date:   Wed, 9 Oct 2019 14:48:01 +0200
+Message-ID: <CAMuHMdWNmzWyUkHsJbY9A8of1B61SCcy3J8Friw0JDCctJa2=Q@mail.gmail.com>
+Subject: Re: [PATCH 6/7] arm64: dts: renesas: r8a774b1: Add PCIe device nodes
 To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -64,8 +64,7 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 On Fri, Oct 4, 2019 at 10:36 AM Fabrizio Castro
 <fabrizio.castro@bp.renesas.com> wrote:
-> Add the device nodes for all MSIOF SPI controllers on the RZ/G2N
-> SoC (a.k.a. r8a774b1).
+> This patch adds PCIe{0,1} device nodes for R8A774B1 SoC.
 >
 > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
