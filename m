@@ -2,62 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AB977D27F2
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 13:28:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24193D27FC
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 13:32:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfJJL2B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Oct 2019 07:28:01 -0400
-Received: from mail-ot1-f51.google.com ([209.85.210.51]:42292 "EHLO
-        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfJJL2B (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Oct 2019 07:28:01 -0400
-Received: by mail-ot1-f51.google.com with SMTP id c10so4518958otd.9
-        for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2019 04:27:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=jjjSC8wnncqQ+REAxcAxyJq820XIyCwgDWWune36i3s=;
-        b=gXARmWBll27KmHXPO0KVI8Dd/y9CjqhPnMmkyX0Io0gJ+hxtQJqzRpkfaHVMUypNjF
-         Boz2u+kCKQ9jtEWWP+GyxPcjK1TBTYxyFMwG6nUTR4qqtwQrN6j/76xksV0yRCqbnqpV
-         zsvpAVf6ejR1Tk3id5ejf4/uJTPPEbAarBAt76RHLndw/fAOWCkw1r0zOzqPWhchZm4z
-         6lWQ9dQuLESjzkQbtYFTwewywUPRhrjMt1y/UmWu/KUxjK0CfjhJlpi2vXsKbA34TxlU
-         8cadU7cGStRToOqp+dfgL7tJ0aoQnnt7XoKpENP+OusY7wUr2AjaiUeHGQ9V2Gb+ft8a
-         ZxyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=jjjSC8wnncqQ+REAxcAxyJq820XIyCwgDWWune36i3s=;
-        b=Hkvo0AJ6wBl+uKbbSTukl8hjtfjmCArJsdH1wzmevaadT+BjqAsI8tqOFiPpMpgmgx
-         pG6v+K1VTiWLdhPZjA8Bqk6F/5nuDfrp/25jgnIjFuJinaRKxV6FscrjiQxbc6c8v2mQ
-         DbZg5mfBQQJcCv5gOV4nQE4hupzsES86IIDrO/Pmc/EsWPqL1bVUSdv9mRi7zXU2ozG+
-         JbDi9CqQsRO6otLV5kwqjm3/1iUyBdJuKPAMQuwbIz6tyuvYGzoZjVFpjtfMd0pmPp6E
-         i7KX+1tHJyOMGj37lzoe7ZOEgQetcaB0OHp9T+w/WDIRUjucsXx7xSEnbtSKjqOpY0Bl
-         RKig==
-X-Gm-Message-State: APjAAAU8bXw5I5mqCjWPzQYcuQsKvAWizZBDiXA5nJCztEBCFamrUVrI
-        xLElDwa3DoxQRY2Jhinnyk3YdObsAJ7QRqfEyxdEsghu
-X-Google-Smtp-Source: APXvYqxPucfoYHB0sYmWpDGN4Ay5YjnZ5y1xltVYHsiizOdjRer6H2U/QJrPGaVSRO5pNdb7SSrD5bBrWPjHixE698A=
-X-Received: by 2002:a9d:5d09:: with SMTP id b9mr7522552oti.44.1570706879201;
- Thu, 10 Oct 2019 04:27:59 -0700 (PDT)
+        id S1726237AbfJJLcr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Oct 2019 07:32:47 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:60586 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfJJLcr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Oct 2019 07:32:47 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9ABWjjN016942;
+        Thu, 10 Oct 2019 06:32:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570707165;
+        bh=TpKArzSl6lBD7+MmSnD3ZjDvM3Q7de4dM9n8QXkNu+U=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=DcwvaIw993bG9WAtq8Y+Mk9ffRGkmPAa6i3tAybCvLoVKfJHIxUfMaHD8jaGVrXpm
+         nm2Xs+g6soJo0+0DL3CVYPisHf0dv8VK8NsYMzwiCGrWDIS1RbkV7ioyXvSUS3cQW9
+         MiDLK0yMc/h7K5dsQf2/3tgIEcM6u7g2I/Bu9b7I=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9ABWjXk022543
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Oct 2019 06:32:45 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 10
+ Oct 2019 06:32:44 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 10 Oct 2019 06:32:41 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9ABWhsW062910;
+        Thu, 10 Oct 2019 06:32:44 -0500
+Subject: Re: [Query] : PCIe - Endpoint Function
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        <linux-pci@vger.kernel.org>
+References: <CA+V-a8sCjSCgj_WKeEtxRwjF+PM392zeTQ3F3ZwQR=nPavFyXQ@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <b91c3f6e-cef5-c06d-4282-84c24d616533@ti.com>
+Date:   Thu, 10 Oct 2019 17:02:18 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 10 Oct 2019 12:27:33 +0100
-Message-ID: <CA+V-a8sCjSCgj_WKeEtxRwjF+PM392zeTQ3F3ZwQR=nPavFyXQ@mail.gmail.com>
-Subject: [Query] : PCIe - Endpoint Function
-To:     linux-pci@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CA+V-a8sCjSCgj_WKeEtxRwjF+PM392zeTQ3F3ZwQR=nPavFyXQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
+Hi Prabhakar,
 
-I am currently working on adding pcie-endpoint support for a
-controller, this controller doesn't support outbound- inbound address
-translations, it has 1-1 mapping between the CPU and PCI addresses,
-the current endpoint framework is based on  outbound-inbound
-translations, what is the best approach to add this support, or is
-there any WIP already for it ?
+On 10/10/19 4:57 PM, Lad, Prabhakar wrote:
+> Hello,
+> 
+> I am currently working on adding pcie-endpoint support for a
+> controller, this controller doesn't support outbound- inbound address
+> translations, it has 1-1 mapping between the CPU and PCI addresses,
+> the current endpoint framework is based on  outbound-inbound
+> translations, what is the best approach to add this support, or is
+> there any WIP already for it ?
 
-Cheers,
---Prabhakar
+How will the endpoint access host buffer without outbound ATU? I assume the PCI
+address reserved for endpoint is not the full 32-bit or 64-bit address space?
+In that case, the endpoint cannot directly access the host buffer (unless the
+host already knows the address space of the endpoint and gives the endpoint an
+address in its OB address space).
+
+Thanks
+Kishon
