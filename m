@@ -2,89 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB4DED3119
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 21:05:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A95A8D31DC
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 22:16:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbfJJTFP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Oct 2019 15:05:15 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60944 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726907AbfJJTFP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Oct 2019 15:05:15 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9AInmke003534;
-        Thu, 10 Oct 2019 15:05:02 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vj9n1sjdf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Oct 2019 15:05:01 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9AInnSp003570;
-        Thu, 10 Oct 2019 15:05:00 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vj9n1sjcq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Oct 2019 15:05:00 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9AIpi5i011947;
-        Thu, 10 Oct 2019 19:05:02 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma01wdc.us.ibm.com with ESMTP id 2vejt7cxgh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Oct 2019 19:05:02 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9AJ4xH553346728
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Oct 2019 19:04:59 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE725AC05F;
-        Thu, 10 Oct 2019 19:04:59 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A34FFAC05E;
-        Thu, 10 Oct 2019 19:04:59 +0000 (GMT)
-Received: from localhost (unknown [9.41.179.186])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 10 Oct 2019 19:04:59 +0000 (GMT)
-From:   Nathan Lynch <nathanl@linux.ibm.com>
-To:     Tyrel Datwyler <tyreld@linux.ibm.com>
-Cc:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        mpe@ellerman.id.au, bhelgaas@google.com
-Subject: Re: [RFC PATCH 2/9] powerpc/pseries: fix bad drc_index_start value parsing of drc-info entry
-In-Reply-To: <1569910334-5972-3-git-send-email-tyreld@linux.ibm.com>
-References: <1569910334-5972-1-git-send-email-tyreld@linux.ibm.com> <1569910334-5972-3-git-send-email-tyreld@linux.ibm.com>
-Date:   Thu, 10 Oct 2019 14:04:59 -0500
-Message-ID: <87y2xsifqc.fsf@linux.ibm.com>
+        id S1726132AbfJJUQl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Oct 2019 16:16:41 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:35809 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfJJUQl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Oct 2019 16:16:41 -0400
+Received: by mail-yb1-f193.google.com with SMTP id f4so2375760ybm.2
+        for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2019 13:16:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MLMwabB3+kykUPlj4jwFPRNN9g+7Qjcts+1oVZQGP5I=;
+        b=eVz4uwN6L4dlHnUbeDQytnIklKCYBFfhG/Zy9JsZAQBI1p0jIq0WSUytwJJlVbxGRF
+         XybqcC5miLvyo9M7y28N7S1cKDjsdlH8fHwHmEeQIvNKNYO6OuZMSHv/1nFAkhG8/aOP
+         7/+p+wL1oHoUS9nTHTXESUqaddpYHvpM/sMhkGdgs/C9jpN/yuxybF5MT5Jza0sdMicO
+         YlKgsAIoyoBuZwEkQoCccV4WE8jdMmvadeaHjqPL6w0E59TB8TIy5IRKqeDfwohYYB/n
+         AzQokFhzDGo536XFMrcvWXPLXMYBv2q8Q/WVbJK7m/2L9OwIxXKlNR6zLgPto+YbWXs9
+         u6sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MLMwabB3+kykUPlj4jwFPRNN9g+7Qjcts+1oVZQGP5I=;
+        b=FearjBCvSHgFtluUp6H5pTehNyOp1oS+8l5aPhnxyU8/Q97JQYibfYlkZj6AZR1/Ay
+         CNCb+Qdm44ue6r4MgabdGY8aImyFLv27IQziiU/YZ7xnhtUX4UZcSLqdYrxPQy2qDNr6
+         Xrd47j5gl1y7T81dowlmgqMT7DNcCLslU4jJGEHkQn3cWQn3S/NYldWBDnfdRFdhyvB3
+         cDzcTmEefbMQslv1yXvaZyAOXr0MsnFCWaJdDIrYcTPq66+nKX2OvpHoYOR2xw8jLcbO
+         /ZoYjnlxM2OB2w0S8bGtRnLX9cPMsXZtFRJPXK/e4BGTpo+cyqtOZ+N4Gc8CPAMmOReX
+         64Tg==
+X-Gm-Message-State: APjAAAXXTOslN0JKZabajA31hgaOWYPRwTRlpQOICAna6bUHfqpkrN3v
+        CyOZNcvbf6SFe70Ec5xw0JmqvpxSXDOyQgYZT6w=
+X-Google-Smtp-Source: APXvYqw45WqLwJrlA9w4vRZEoPfpmGaWyJjZCcGQsGhxt43neVBftJ2Br3H3WUvylDOh7nKkh+WLs6EaxXbtb3yU2fc=
+X-Received: by 2002:a25:8309:: with SMTP id s9mr368139ybk.34.1570738600160;
+ Thu, 10 Oct 2019 13:16:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-10_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=442 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910100160
+References: <1569910334-5972-1-git-send-email-tyreld@linux.ibm.com>
+ <1569910334-5972-3-git-send-email-tyreld@linux.ibm.com> <87y2xsifqc.fsf@linux.ibm.com>
+In-Reply-To: <87y2xsifqc.fsf@linux.ibm.com>
+From:   Carlo Pisani <carlojpisani@gmail.com>
+Date:   Thu, 10 Oct 2019 22:16:30 +0200
+Message-ID: <CA+QBN9Ae1aB-F0MBFF_5xWO=NLT9exG-2X+xS2RKXepKcHYRTg@mail.gmail.com>
+Subject: powerpc/405GP, cuImage and PCI support
+To:     linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
+Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>, mpe@ellerman.id.au,
+        bhelgaas@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Tyrel Datwyler <tyreld@linux.ibm.com> writes:
-> The ibm,drc-info property is an array property that contains drc-info
-> entries such that each entry is made up of 2 string encoded elements
-> followed by 5 int encoded elements. The of_read_drc_info_cell()
-> helper contains comments that correctly name the expected elements
-> and their encoding. However, the usage of of_prop_next_string() and
-> of_prop_next_u32() introduced a subtle skippage of the first u32.
-> This is a result of of_prop_next_string() returns a pointer to the
-> next property value which is not a string, but actually a (__be32 *).
-> As, a result the following call to of_prop_next_u32() passes over the
-> current int encoded value and actually stores the next one wrongly.
->
-> Simply endian swap the current value in place after reading the first
-> two string values. The remaining int encoded values can then be read
-> correctly using of_prop_next_u32().
+hi
+I wrote here (1) a couple of years ago, I am still working with kernel
+4.11.0 and there is broken support for initializing the PCI.
 
-Good but I think it would make more sense for a fix for
-of_read_drc_info_cell() to precede any patch in the series which
-introduces new callers, such as patch #1.
+arch/powerpc/book/cuimage-walnut.c requires "/plb" compatible with
+"fsl,pq2-localbus", while the device-tree file (walnut.dts) defines
+"/plb" compatible with "ibm,plb3"
+
+I am not an expert, but "fsl,pq2-localbus" != "ibm,plb3"
+
+Therefore the PCI initialization of the PPC405GP seems wrong and every
+kernel >= 2.6.26 is not able to correctly address the PDC20265
+
+(1) https://bugzilla.kernel.org/show_bug.cgi?id=195933
+
+an interesting not is:
+kernel 2.6.26 can be compiled with arch=ppc and arch=powerpc
+
+with arch=ppc the promise PDC20265 chip is correctly managed
+with arch=powerpc the PDC20265 is not correctly managed
+
+
+any idea? help? suggestion?
+
+thanks
+Carlo
+
+
+--------------------------------------------------------------------------------------
+    bus_node = finddevice("/plb");
+    if (!bus_node)
+    {
+        notify_error(module, id, "device /plb not found");
+        return;
+    }
+    if (!dt_is_compatible(bus_node, "fsl,pq2-localbus"))
+    {
+        notify_warn(module, id, "device fsl,pq2-localbus");
+        notify_error(module, id, "device /plb is not compatible");
+--------------------------------------------------------------------------------------
+plb
+        {
+                /*
+                 * Processor Local Bus (PLB)
+                 */
+                compatible = "ibm,plb3";
+--------------------------------------------------------------------------------------
+
+
+ide0 at 0x1f0-0x1f7,0x3f6 on irq 31
+ide1 at 0x170-0x177,0x376 on irq 31
