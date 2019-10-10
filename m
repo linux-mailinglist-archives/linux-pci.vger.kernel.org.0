@@ -2,104 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FC82D29F8
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 14:48:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD3BAD2A11
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 14:55:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387880AbfJJMsB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Oct 2019 08:48:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50332 "EHLO mail.kernel.org"
+        id S2387841AbfJJMzS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Oct 2019 08:55:18 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:37638 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733288AbfJJMsA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 10 Oct 2019 08:48:00 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDE66206B6;
-        Thu, 10 Oct 2019 12:47:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570711680;
-        bh=OcutfbH2J4Mrok55YXxQjXQOL7Vow7GNs62fKAtdayw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ACGbf5WV9FgMZWWHlRDKH+X3xK5rYuizRPwXQReJAkUn1VC9XxSGgBBFZLhyw2Pee
-         htQMV0v/XpiuMKE6r0ZvUpkxAH4YVgA+CrgGtA7IO4oOS66UhYRcARylrcNteIa/nC
-         /eniu9haa7GStSNv0P3F4mKKBcA3E3sWfG9UDKw0=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Rajat Jain <rajatja@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 1/1] PCI/ASPM: Remove pcie_aspm_enabled() unnecessary locking
-Date:   Thu, 10 Oct 2019 07:47:46 -0500
-Message-Id: <20191010124746.2882-2-helgaas@kernel.org>
-X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
-In-Reply-To: <20191010124746.2882-1-helgaas@kernel.org>
-References: <20191010124746.2882-1-helgaas@kernel.org>
+        id S1728274AbfJJMzS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 10 Oct 2019 08:55:18 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1iIXy9-0001sw-7h; Thu, 10 Oct 2019 23:55:02 +1100
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 10 Oct 2019 23:55:00 +1100
+Date:   Thu, 10 Oct 2019 23:55:00 +1100
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Pascal van Leeuwen <pvanleeuwen@verimatrix.com>,
+        Pascal van Leeuwen <pascalvanl@gmail.com>,
+        Kelsey Skunberg <skunberg.kelsey@gmail.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 3/3] crypto: inside-secure - Remove #ifdef checks
+Message-ID: <20191010125500.GE31566@gondor.apana.org.au>
+References: <20190930121520.1388317-1-arnd@arndb.de>
+ <20190930121520.1388317-3-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190930121520.1388317-3-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Mon, Sep 30, 2019 at 02:14:35PM +0200, Arnd Bergmann wrote:
+> When both PCI and OF are disabled, no drivers are registered, and
+> we get some unused-function warnings:
+> 
+> drivers/crypto/inside-secure/safexcel.c:1221:13: error: unused function 'safexcel_unregister_algorithms' [-Werror,-Wunused-function]
+> static void safexcel_unregister_algorithms(struct safexcel_crypto_priv *priv)
+> drivers/crypto/inside-secure/safexcel.c:1307:12: error: unused function 'safexcel_probe_generic' [-Werror,-Wunused-function]
+> static int safexcel_probe_generic(void *pdev,
+> drivers/crypto/inside-secure/safexcel.c:1531:13: error: unused function 'safexcel_hw_reset_rings' [-Werror,-Wunused-function]
+> static void safexcel_hw_reset_rings(struct safexcel_crypto_priv *priv)
+> 
+> It's better to make the compiler see what is going on and remove
+> such ifdef checks completely. In case of PCI, this is trivial since
+> pci_register_driver() is defined to an empty function that makes the
+> compiler subsequently drop all unused code silently.
+> 
+> The global pcireg_rc/ofreg_rc variables are not actually needed here
+> since the driver registration does not fail in ways that would make
+> it helpful.
+> 
+> For CONFIG_OF, an IS_ENABLED() check is still required, since platform
+> drivers can exist both with and without it.
+> 
+> A little change to linux/pci.h is needed to ensure that
+> pcim_enable_device() is visible to the driver. Moving the declaration
+> outside of ifdef would be sufficient here, but for consistency with the
+> rest of the file, adding an inline helper is probably best.
+> 
+> Fixes: 212ef6f29e5b ("crypto: inside-secure - Fix unused variable warning when CONFIG_PCI=n")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/crypto/inside-secure/safexcel.c | 49 ++++++-------------------
+>  include/linux/pci.h                     |  1 +
+>  2 files changed, 13 insertions(+), 37 deletions(-)
 
-The lifetime of the link_state structure (bridge->link_state) is not the
-same as the lifetime of "bridge" itself.  The link_state is allocated by
-pcie_aspm_init_link_state() after children of the bridge have been
-enumerated, and it is deallocated by pcie_aspm_exit_link_state() after all
-children of the bridge (but not the bridge itself) have been removed.
-
-Previously pcie_aspm_enabled() acquired aspm_lock to ensure that
-link_state was not deallocated while we're looking at it.  But the fact
-that the caller of pcie_aspm_enabled() holds a reference to @pdev means
-there's always at least one child of the bridge, which means link_state
-can't be deallocated.
-
-Remove the unnecessary locking in pcie_aspm_enabled().
-
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/pcie/aspm.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 652ef23bba35..f5c7138a34aa 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -1172,20 +1172,20 @@ module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
- /**
-  * pcie_aspm_enabled - Check if PCIe ASPM has been enabled for a device.
-  * @pdev: Target device.
-+ *
-+ * Relies on the upstream bridge's link_state being valid.  The link_state
-+ * is deallocated only when the last child of the bridge (i.e., @pdev or a
-+ * sibling) is removed, and the caller should be holding a reference to
-+ * @pdev, so this should be safe.
-  */
- bool pcie_aspm_enabled(struct pci_dev *pdev)
- {
- 	struct pci_dev *bridge = pci_upstream_bridge(pdev);
--	bool ret;
- 
- 	if (!bridge)
- 		return false;
- 
--	mutex_lock(&aspm_lock);
--	ret = bridge->link_state ? !!bridge->link_state->aspm_enabled : false;
--	mutex_unlock(&aspm_lock);
--
--	return ret;
-+	return bridge->link_state ? !!bridge->link_state->aspm_enabled : false;
- }
- EXPORT_SYMBOL_GPL(pcie_aspm_enabled);
- 
+Patch applied.  Thanks.
 -- 
-2.23.0.581.g78d2f28ef7-goog
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
