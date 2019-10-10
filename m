@@ -2,73 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EA7A6D224A
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 10:09:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB977D27F2
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 13:28:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733074AbfJJIJy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Oct 2019 04:09:54 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35651 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732947AbfJJIJx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Oct 2019 04:09:53 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m7so5256676lji.2
-        for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2019 01:09:50 -0700 (PDT)
+        id S1726513AbfJJL2B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Oct 2019 07:28:01 -0400
+Received: from mail-ot1-f51.google.com ([209.85.210.51]:42292 "EHLO
+        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbfJJL2B (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Oct 2019 07:28:01 -0400
+Received: by mail-ot1-f51.google.com with SMTP id c10so4518958otd.9
+        for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2019 04:27:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=chZ6Yc3njJFUucN4RPCdT+xkKIj3l+8CnJMOncb1PSs=;
-        b=XTHsYauFBddM80SzhC3hLS9h+chXshuFWuR60ByQSO5/vKsyEB6Z/ZBTxvYUUgJNpR
-         UCPIyHxfSEQufFX4GB28z3o/jUDM9piRsYoiKuBmUWX0j4fhGpfIYDJEmGlscetuy6N7
-         3ExWwZGCWWNpA1vVWAIg4LTub6MPkrO1e8JZ5547iehKpkZzItSZKzNmBhfxylltNyj5
-         9LBNkw7yTs1BuqzNB4jKIfzZKUHITksrc4hTVYYa33RBfxBxvghTld4Bxw0sDFDnnoeb
-         xw0ZyOiCZmNYSWaRgpgiQw1QtL0DwPwPjaLBCC/11srfR8LvzELtHKcf7BcvnpL9Dsd2
-         Ih9w==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=jjjSC8wnncqQ+REAxcAxyJq820XIyCwgDWWune36i3s=;
+        b=gXARmWBll27KmHXPO0KVI8Dd/y9CjqhPnMmkyX0Io0gJ+hxtQJqzRpkfaHVMUypNjF
+         Boz2u+kCKQ9jtEWWP+GyxPcjK1TBTYxyFMwG6nUTR4qqtwQrN6j/76xksV0yRCqbnqpV
+         zsvpAVf6ejR1Tk3id5ejf4/uJTPPEbAarBAt76RHLndw/fAOWCkw1r0zOzqPWhchZm4z
+         6lWQ9dQuLESjzkQbtYFTwewywUPRhrjMt1y/UmWu/KUxjK0CfjhJlpi2vXsKbA34TxlU
+         8cadU7cGStRToOqp+dfgL7tJ0aoQnnt7XoKpENP+OusY7wUr2AjaiUeHGQ9V2Gb+ft8a
+         ZxyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=chZ6Yc3njJFUucN4RPCdT+xkKIj3l+8CnJMOncb1PSs=;
-        b=TSn3G69fi9L6xJ3qYk0XJtrr9cXRpSVtATKEbW8che2ab9lOyjhk9JM/PZMjJ8FxAu
-         FzlIGL4qAZZl7FM23vDNlb7FSmguEaS2mohnIR+ExWUNIB+LWdP/jf+U4XjdogXK3FYH
-         mf7kg+0p4dX4PpV12hODiJfFpnhK8gr4u+ovo8jszXIR8XJNILzClcl+mowqjbZ3ofAy
-         yaB+hilV+UA9YKZBxzzki9hBEfGg4TWIXAB7xOGPPnO1BYtNnbMS3Q7WCwtw3zr4Ate4
-         MyW5B8+VaGqYCg+i4qQR+A9o9tJBYU1VieFpU8qC7m33ek99m7+d9ceEOaO9CExu7Img
-         j7Nw==
-X-Gm-Message-State: APjAAAXGr3vsOttXWoirJHyL32QcCgOovYX+B3WSoYcqYHHI6Hxxp/5k
-        LjCEGM5CQgvaMrbxFU8OZmbEjuWBgHRVg2Ik1yCs+dOKDu4=
-X-Google-Smtp-Source: APXvYqzPtYoeqA3MaEZviybn4GsONQhDSzePzTSaGgrAbLTeVQcagiIBcAS59aV/yBbr4yGLRO/oVhiM1yuZcUNCut0=
-X-Received: by 2002:a2e:b053:: with SMTP id d19mr5614060ljl.143.1570694989955;
- Thu, 10 Oct 2019 01:09:49 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=jjjSC8wnncqQ+REAxcAxyJq820XIyCwgDWWune36i3s=;
+        b=Hkvo0AJ6wBl+uKbbSTukl8hjtfjmCArJsdH1wzmevaadT+BjqAsI8tqOFiPpMpgmgx
+         pG6v+K1VTiWLdhPZjA8Bqk6F/5nuDfrp/25jgnIjFuJinaRKxV6FscrjiQxbc6c8v2mQ
+         DbZg5mfBQQJcCv5gOV4nQE4hupzsES86IIDrO/Pmc/EsWPqL1bVUSdv9mRi7zXU2ozG+
+         JbDi9CqQsRO6otLV5kwqjm3/1iUyBdJuKPAMQuwbIz6tyuvYGzoZjVFpjtfMd0pmPp6E
+         i7KX+1tHJyOMGj37lzoe7ZOEgQetcaB0OHp9T+w/WDIRUjucsXx7xSEnbtSKjqOpY0Bl
+         RKig==
+X-Gm-Message-State: APjAAAU8bXw5I5mqCjWPzQYcuQsKvAWizZBDiXA5nJCztEBCFamrUVrI
+        xLElDwa3DoxQRY2Jhinnyk3YdObsAJ7QRqfEyxdEsghu
+X-Google-Smtp-Source: APXvYqxPucfoYHB0sYmWpDGN4Ay5YjnZ5y1xltVYHsiizOdjRer6H2U/QJrPGaVSRO5pNdb7SSrD5bBrWPjHixE698A=
+X-Received: by 2002:a9d:5d09:: with SMTP id b9mr7522552oti.44.1570706879201;
+ Thu, 10 Oct 2019 04:27:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191008164232.GA173643@google.com> <20191009040534.GL2819@lahna.fi.intel.com>
- <CAMz9Wg_8ZYkw1f3MyqcqNMBajJ_Q+qwojQhg8WqiPTPeUSNXZQ@mail.gmail.com> <20191009075650.GM2819@lahna.fi.intel.com>
-In-Reply-To: <20191009075650.GM2819@lahna.fi.intel.com>
-From:   Yehezkel Bernat <yehezkelshb@gmail.com>
-Date:   Thu, 10 Oct 2019 11:09:33 +0300
-Message-ID: <CA+CmpXupMC5Kk_tCX8-TQESM2BQ9RFU196dzXGmpv9TcMgyb4A@mail.gmail.com>
-Subject: Re: [bugzilla-daemon@bugzilla.kernel.org: [Bug 205119] New: It takes
- long time to wake up from s2idle on Dell XPS 7390 2-in-1]
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     AceLan Kao <acelan@gmail.com>, Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 10 Oct 2019 12:27:33 +0100
+Message-ID: <CA+V-a8sCjSCgj_WKeEtxRwjF+PM392zeTQ3F3ZwQR=nPavFyXQ@mail.gmail.com>
+Subject: [Query] : PCIe - Endpoint Function
+To:     linux-pci@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 9, 2019 at 10:56 AM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> On Wed, Oct 09, 2019 at 03:50:25PM +0800, AceLan Kao wrote:
->
-> > There is a new BIOS v1.0.13 on dell website, but it requires windows
-> > to upgrade it, I'll try it later.
->
-> OK, thanks.
+Hello,
 
-I'd try to check fwupd if you haven't tried it yet.
-Dell FW is usually available there.
+I am currently working on adding pcie-endpoint support for a
+controller, this controller doesn't support outbound- inbound address
+translations, it has 1-1 mapping between the CPU and PCI addresses,
+the current endpoint framework is based on  outbound-inbound
+translations, what is the best approach to add this support, or is
+there any WIP already for it ?
+
+Cheers,
+--Prabhakar
