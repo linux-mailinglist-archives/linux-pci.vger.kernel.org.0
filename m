@@ -2,118 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E7019D201A
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 07:40:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA7A6D224A
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 10:09:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbfJJFkp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Oct 2019 01:40:45 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33432 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728912AbfJJFkp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Oct 2019 01:40:45 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i76so2936824pgc.0;
-        Wed, 09 Oct 2019 22:40:43 -0700 (PDT)
+        id S1733074AbfJJIJy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Oct 2019 04:09:54 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35651 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732947AbfJJIJx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Oct 2019 04:09:53 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m7so5256676lji.2
+        for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2019 01:09:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fS3zhEs2E2HrZ3PHJX+bOppih8Vd+cHD1zJ+LmOQ0gU=;
-        b=SEOhnRg6TMQTlLecTCBzAHS19lqshY915BrKmvEtHDm+98+lubpBO59C6vhBcA5rcF
-         wHwioY7uZbURd7hlfm3ghfPpQvv0q8zDufXoOekV5oHDkQMbZ2D5Y6TRS4a2bbdZNXFv
-         qHQVvSJvVvBA/gs76ePGS+BNszCyfb7iBmFl9MkG6exctb5ID35QWHpgqdSsO/dRsC2H
-         xXfmLY1OriFIy6r+9Mt1rH6ytl0jY14sqVk1xGXZ0SLPqE3ay2+EiEQSZvo9PIq75o8t
-         EmTijihzNo2bsQWtVb6rGXrKusBnAKpau6tmsKY0lzDFCbVv8N6tUD+1SqmY524+4mQO
-         b6FA==
+        bh=chZ6Yc3njJFUucN4RPCdT+xkKIj3l+8CnJMOncb1PSs=;
+        b=XTHsYauFBddM80SzhC3hLS9h+chXshuFWuR60ByQSO5/vKsyEB6Z/ZBTxvYUUgJNpR
+         UCPIyHxfSEQufFX4GB28z3o/jUDM9piRsYoiKuBmUWX0j4fhGpfIYDJEmGlscetuy6N7
+         3ExWwZGCWWNpA1vVWAIg4LTub6MPkrO1e8JZ5547iehKpkZzItSZKzNmBhfxylltNyj5
+         9LBNkw7yTs1BuqzNB4jKIfzZKUHITksrc4hTVYYa33RBfxBxvghTld4Bxw0sDFDnnoeb
+         xw0ZyOiCZmNYSWaRgpgiQw1QtL0DwPwPjaLBCC/11srfR8LvzELtHKcf7BcvnpL9Dsd2
+         Ih9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fS3zhEs2E2HrZ3PHJX+bOppih8Vd+cHD1zJ+LmOQ0gU=;
-        b=j6/Ht0eYx3WbmpvW4r3gmZQtunv5ksgPCwZVbtW8FH9z6bXhn+ePhvtlYd2COYcp8g
-         WjERCkuWDwX0wPRc6s8p8K2edzPtCqRgSxK65+qTG0pomaaGq/HOHBcNgzsj+zz3Y2Tw
-         7aB3mJGEgAigQow4MTnvCwE77FaZjkaCFBVVIdL2wDv/EqC14Oqw2KzoguR2V1l5Vpf6
-         1+dw7dYM/BptMq0caJk0U/Dqzx63FcM2aYO49sRLA4tOZAn99iDWCT5zoUgG93entCty
-         9t6CoCkeK9DKvvLXntOHU3ZwY3V9rjvG+2v+LhqPzXfKIxTe1St3FxXcXpZiXxkqjh6F
-         dYLQ==
-X-Gm-Message-State: APjAAAU2T7iJjYlx7J+9f55HyWjv4EQ5aJms8NBj11/qY7oRM4zOFpeH
-        uZdVlokFeYJA7oBuE+EGSjR1xf3MVQ/ma+f7yik=
-X-Google-Smtp-Source: APXvYqzXpiRvhdxxlU3FLptyt70sjJThUsp3AijDrhDIqRKG/k3omCJ41YQ+OQHUlNUlXrfhWffC42IU2xcr1VEc+dg=
-X-Received: by 2002:a17:90a:9416:: with SMTP id r22mr9177676pjo.20.1570686042755;
- Wed, 09 Oct 2019 22:40:42 -0700 (PDT)
+        bh=chZ6Yc3njJFUucN4RPCdT+xkKIj3l+8CnJMOncb1PSs=;
+        b=TSn3G69fi9L6xJ3qYk0XJtrr9cXRpSVtATKEbW8che2ab9lOyjhk9JM/PZMjJ8FxAu
+         FzlIGL4qAZZl7FM23vDNlb7FSmguEaS2mohnIR+ExWUNIB+LWdP/jf+U4XjdogXK3FYH
+         mf7kg+0p4dX4PpV12hODiJfFpnhK8gr4u+ovo8jszXIR8XJNILzClcl+mowqjbZ3ofAy
+         yaB+hilV+UA9YKZBxzzki9hBEfGg4TWIXAB7xOGPPnO1BYtNnbMS3Q7WCwtw3zr4Ate4
+         MyW5B8+VaGqYCg+i4qQR+A9o9tJBYU1VieFpU8qC7m33ek99m7+d9ceEOaO9CExu7Img
+         j7Nw==
+X-Gm-Message-State: APjAAAXGr3vsOttXWoirJHyL32QcCgOovYX+B3WSoYcqYHHI6Hxxp/5k
+        LjCEGM5CQgvaMrbxFU8OZmbEjuWBgHRVg2Ik1yCs+dOKDu4=
+X-Google-Smtp-Source: APXvYqzPtYoeqA3MaEZviybn4GsONQhDSzePzTSaGgrAbLTeVQcagiIBcAS59aV/yBbr4yGLRO/oVhiM1yuZcUNCut0=
+X-Received: by 2002:a2e:b053:: with SMTP id d19mr5614060ljl.143.1570694989955;
+ Thu, 10 Oct 2019 01:09:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191009200523.8436-1-stuart.w.hayes@gmail.com>
- <20191009200523.8436-3-stuart.w.hayes@gmail.com> <CAHp75Vc1mZ7qxKPGaqDVAQ9d_UjNq9LJDEPWHQHaYCfw7vGrmA@mail.gmail.com>
-In-Reply-To: <CAHp75Vc1mZ7qxKPGaqDVAQ9d_UjNq9LJDEPWHQHaYCfw7vGrmA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 10 Oct 2019 08:40:29 +0300
-Message-ID: <CAHp75VfNjnAxua6ESx1Vp=57O=pVM10P1UK8bGNQUk7FeY=Dmw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] PCI: pciehp: Wait for PDS if in-band presence is disabled
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>
+References: <20191008164232.GA173643@google.com> <20191009040534.GL2819@lahna.fi.intel.com>
+ <CAMz9Wg_8ZYkw1f3MyqcqNMBajJ_Q+qwojQhg8WqiPTPeUSNXZQ@mail.gmail.com> <20191009075650.GM2819@lahna.fi.intel.com>
+In-Reply-To: <20191009075650.GM2819@lahna.fi.intel.com>
+From:   Yehezkel Bernat <yehezkelshb@gmail.com>
+Date:   Thu, 10 Oct 2019 11:09:33 +0300
+Message-ID: <CA+CmpXupMC5Kk_tCX8-TQESM2BQ9RFU196dzXGmpv9TcMgyb4A@mail.gmail.com>
+Subject: Re: [bugzilla-daemon@bugzilla.kernel.org: [Bug 205119] New: It takes
+ long time to wake up from s2idle on Dell XPS 7390 2-in-1]
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     AceLan Kao <acelan@gmail.com>, Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 8:37 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Oct 9, 2019 at 11:05 PM Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
-
-> > +static void pcie_wait_for_presence(struct pci_dev *pdev)
-> > +{
-> > +       int timeout = 1250;
-
-> > +       bool pds;
-
-Also this is redundant. Just use the following outside the loop
-
- if (!retries)
-   pc_info(...);
-
-.
-
-> > +       u16 slot_status;
-> > +
-> > +       while (true) {
-> > +               pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
-> > +               pds = !!(slot_status & PCI_EXP_SLTSTA_PDS);
-> > +               if (pds || timeout <= 0)
-> > +                       break;
-> > +               msleep(10);
-> > +               timeout -= 10;
-> > +       }
+On Wed, Oct 9, 2019 at 10:56 AM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
 >
-> Can we avoid infinite loops? They are hard to parse (in most cases,
-> and especially when it's a timeout loop)
+> On Wed, Oct 09, 2019 at 03:50:25PM +0800, AceLan Kao wrote:
 >
-> unsigned int retries = 125; // 1250 ms
+> > There is a new BIOS v1.0.13 on dell website, but it requires windows
+> > to upgrade it, I'll try it later.
 >
-> do {
->  ...
-> } while (--retries);
->
-> > +
-> > +       if (!pds)
-> > +               pci_info(pdev, "Presence Detect state not set in 1250 msec\n");
-> > +}
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+> OK, thanks.
 
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+I'd try to check fwupd if you haven't tried it yet.
+Dell FW is usually available there.
