@@ -2,81 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD3BAD2A11
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 14:55:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CA73D2AE5
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 15:17:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387841AbfJJMzS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Oct 2019 08:55:18 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:37638 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728274AbfJJMzS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 10 Oct 2019 08:55:18 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1iIXy9-0001sw-7h; Thu, 10 Oct 2019 23:55:02 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 10 Oct 2019 23:55:00 +1100
-Date:   Thu, 10 Oct 2019 23:55:00 +1100
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Pascal van Leeuwen <pvanleeuwen@verimatrix.com>,
-        Pascal van Leeuwen <pascalvanl@gmail.com>,
-        Kelsey Skunberg <skunberg.kelsey@gmail.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 3/3] crypto: inside-secure - Remove #ifdef checks
-Message-ID: <20191010125500.GE31566@gondor.apana.org.au>
-References: <20190930121520.1388317-1-arnd@arndb.de>
- <20190930121520.1388317-3-arnd@arndb.de>
+        id S2388285AbfJJNRu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Oct 2019 09:17:50 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39706 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388088AbfJJNRo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Oct 2019 09:17:44 -0400
+Received: by mail-ot1-f65.google.com with SMTP id s22so4811162otr.6
+        for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2019 06:17:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ub-ac-id.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=QTZIdVmjWEaVgfwGRupI4vAqJVGET3VIX90hz2R16m0=;
+        b=kbDD0ETnfb+9T5ky4afnuU19WL5B3TgSTtrvr8/78l52RfSJ/bD7cjcm8C45XsJ4wr
+         kY8zUv/ms1sLDr56E/0rqAcpldgbTirzVsO1TqrlTRt5AL5IhxusLfWbWkCQZqSDApog
+         xVZixZPZF5pv+wD9wYHHFszyBuRJ0Z0/71+2E/SGgHwnMzv66/86w9uplcX1z0grTv9p
+         1TYZ7MtIagYr+hnMPgyspL8CH18dkY1RexU6NSgr6L6/lGHi7jHNMmmGOoiBuh2azqNd
+         aWHFVXbx5cxjkbX5kJe7PAp4IU2wf06fogqa+YoO9ylF7jna+POCU+xNsHXT6R2wFQg9
+         YqYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=QTZIdVmjWEaVgfwGRupI4vAqJVGET3VIX90hz2R16m0=;
+        b=mkpzly+GmjkJqv5TmeIYfq8VyhPBJ1p34xZ6JYzH9mk+aB+6Ts3zFFY0axd0YDNFSw
+         /AXdlguB7CWas1me24t0u/7v4c6QuRhGZtLjcYap5pb8Ip3q/dt3FXuEzRnYv7RxgyUY
+         e5U0Z7DxNFlbX8MoglNCuqkZmn3l9MzWjBFGyrgbkEdv9Jx1j8XoTGq/ozDG50xUn/lS
+         Tv6nNhkE5izEhwzS10SC2KOnFlP+na6bt9HU7K2K53aTwDW0nF4w6d8oQdlt53WOfpQJ
+         l4uji1jA7b6vlyH2wNAer1aaJCt0BQsLQdhxIhxHPw2dyXfK59nB4KSBIW11BTQbzXfT
+         mk9w==
+X-Gm-Message-State: APjAAAWdOh5IqSyVrY0VkhnJ8nSffFmkEpK32jZ/UKMPT7kZmgrznVII
+        /ap+i9VXf6BLAr/Wz5PJSfQBF+B8BH2ANfSjeZp7
+X-Google-Smtp-Source: APXvYqwe5B6z/3dUuNDQtQ0n2oQYOsdY3HQR3dkIin1gqVhu0NNteov05tKzv4DhJBBR4bjK2RG7Phnj6WUHoBrkRYc=
+X-Received: by 2002:a05:6830:1103:: with SMTP id w3mr7909437otq.312.1570713462861;
+ Thu, 10 Oct 2019 06:17:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190930121520.1388317-3-arnd@arndb.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: by 2002:a4a:3346:0:0:0:0:0 with HTTP; Thu, 10 Oct 2019 06:17:41
+ -0700 (PDT)
+Reply-To: sunrisefundingltd50@gmail.com
+From:   Valentina Yurina <v_yurina@ub.ac.id>
+Date:   Thu, 10 Oct 2019 14:17:41 +0100
+Message-ID: <CAKoEkvu4vc5Yn9-hzxQ5dYmUL=oO69=GSP0FC7O+CGz9Jni8+Q@mail.gmail.com>
+Subject: Apply For Financial investment at a lower rate 2%
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 02:14:35PM +0200, Arnd Bergmann wrote:
-> When both PCI and OF are disabled, no drivers are registered, and
-> we get some unused-function warnings:
-> 
-> drivers/crypto/inside-secure/safexcel.c:1221:13: error: unused function 'safexcel_unregister_algorithms' [-Werror,-Wunused-function]
-> static void safexcel_unregister_algorithms(struct safexcel_crypto_priv *priv)
-> drivers/crypto/inside-secure/safexcel.c:1307:12: error: unused function 'safexcel_probe_generic' [-Werror,-Wunused-function]
-> static int safexcel_probe_generic(void *pdev,
-> drivers/crypto/inside-secure/safexcel.c:1531:13: error: unused function 'safexcel_hw_reset_rings' [-Werror,-Wunused-function]
-> static void safexcel_hw_reset_rings(struct safexcel_crypto_priv *priv)
-> 
-> It's better to make the compiler see what is going on and remove
-> such ifdef checks completely. In case of PCI, this is trivial since
-> pci_register_driver() is defined to an empty function that makes the
-> compiler subsequently drop all unused code silently.
-> 
-> The global pcireg_rc/ofreg_rc variables are not actually needed here
-> since the driver registration does not fail in ways that would make
-> it helpful.
-> 
-> For CONFIG_OF, an IS_ENABLED() check is still required, since platform
-> drivers can exist both with and without it.
-> 
-> A little change to linux/pci.h is needed to ensure that
-> pcim_enable_device() is visible to the driver. Moving the declaration
-> outside of ifdef would be sufficient here, but for consistency with the
-> rest of the file, adding an inline helper is probably best.
-> 
-> Fixes: 212ef6f29e5b ("crypto: inside-secure - Fix unused variable warning when CONFIG_PCI=n")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/crypto/inside-secure/safexcel.c | 49 ++++++-------------------
->  include/linux/pci.h                     |  1 +
->  2 files changed, 13 insertions(+), 37 deletions(-)
-
-Patch applied.  Thanks.
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Hello,
+
+We are private lenders based in UK.
+
+Do you need a loan (credit) as soon as possible. Are you in search of
+money to solve your personal needs or finance your business venture,
+then get Your desired loan today! Consult us at Sunrise Funding Ltd.
+
+* We offer personal loan & huge capital loan at 2% interest rate to
+the general public both locally and internationally.
+* Credit amount range from $5,000.00 -- $500,000.00 and above.
+* Special $10,000,000.00 Loan offer for huge project also available.
+* Loan period of 6 months -- 10 years.
+* Loan is granted 24 hours after approval and accredited, directly in
+hand or bank account.
+
+Please note that you are advised to contact us for more details via
+the following e-mail address below;
+
+EMAIL : sunrisefundingltd50@gmail.com
+FIRM : Sunrise Funding Ltd UK.
