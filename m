@@ -2,215 +2,195 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91C8ED2EBF
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 18:45:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4150FD30F9
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 20:56:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbfJJQpJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Oct 2019 12:45:09 -0400
-Received: from mga14.intel.com ([192.55.52.115]:23346 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbfJJQpJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 10 Oct 2019 12:45:09 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 09:45:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,280,1566889200"; 
-   d="scan'208";a="395454754"
-Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.147.245]) ([10.249.147.245])
-  by fmsmga006.fm.intel.com with ESMTP; 10 Oct 2019 09:45:03 -0700
-Subject: Re: [PATCH v2] PCI: PM: Move to D0 before calling
- pci_legacy_resume_early()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "jackm@mellanox.com" <jackm@mellanox.com>
-References: <20191008195624.GA198287@google.com>
-From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
- 173, 80-298 Gdansk
-Message-ID: <b64aaaf0-7959-d429-2ee3-bfde07ed811e@intel.com>
-Date:   Thu, 10 Oct 2019 18:45:02 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726962AbfJJS4j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Oct 2019 14:56:39 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15836 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726387AbfJJS4j (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Oct 2019 14:56:39 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9AIlpKF190448;
+        Thu, 10 Oct 2019 14:56:30 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vj96ca8gs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Oct 2019 14:56:30 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9AImMln192161;
+        Thu, 10 Oct 2019 14:56:30 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vj96ca8gb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Oct 2019 14:56:30 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9AIpffI000934;
+        Thu, 10 Oct 2019 18:56:29 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma05wdc.us.ibm.com with ESMTP id 2vejt7vv0n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Oct 2019 18:56:29 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9AIuSCC53018942
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Oct 2019 18:56:28 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7D4E06E04E;
+        Thu, 10 Oct 2019 18:56:28 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 63A9F6E050;
+        Thu, 10 Oct 2019 18:56:28 +0000 (GMT)
+Received: from localhost (unknown [9.41.179.186])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 10 Oct 2019 18:56:28 +0000 (GMT)
+From:   Nathan Lynch <nathanl@linux.ibm.com>
+To:     Tyrel Datwyler <tyreld@linux.ibm.com>
+Cc:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        mpe@ellerman.id.au, bhelgaas@google.com
+Subject: Re: [RFC PATCH 1/9] powerpc/pseries: add cpu DLPAR support for drc-info property
+In-Reply-To: <1569910334-5972-2-git-send-email-tyreld@linux.ibm.com>
+References: <1569910334-5972-1-git-send-email-tyreld@linux.ibm.com> <1569910334-5972-2-git-send-email-tyreld@linux.ibm.com>
+Date:   Thu, 10 Oct 2019 13:56:28 -0500
+Message-ID: <871rvkjuoz.fsf@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20191008195624.GA198287@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-10_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910100160
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/8/2019 9:56 PM, Bjorn Helgaas wrote:
-> On Tue, Oct 08, 2019 at 07:32:27PM +0200, Rafael J. Wysocki wrote:
->> On 10/7/2019 8:57 PM, Dexuan Cui wrote:
->>>> -----Original Message-----
->>>> From: Bjorn Helgaas <helgaas@kernel.org>
->>>> Sent: Monday, October 7, 2019 6:24 AM
->>>> To: Dexuan Cui <decui@microsoft.com>
->>>> Cc: lorenzo.pieralisi@arm.com; linux-pci@vger.kernel.org; Michael Kelley
->>>> <mikelley@microsoft.com>; linux-hyperv@vger.kernel.org;
->>>> linux-kernel@vger.kernel.org; driverdev-devel@linuxdriverproject.org; Sasha
->>>> Levin <Alexander.Levin@microsoft.com>; Haiyang Zhang
->>>> <haiyangz@microsoft.com>; KY Srinivasan <kys@microsoft.com>;
->>>> olaf@aepfle.de; apw@canonical.com; jasowang@redhat.com; vkuznets
->>>> <vkuznets@redhat.com>; marcelo.cerri@canonical.com; Stephen Hemminger
->>>> <sthemmin@microsoft.com>; jackm@mellanox.com
->>>> Subject: Re: [PATCH v2] PCI: PM: Move to D0 before calling
->>>> pci_legacy_resume_early()
->>>>
->>>> On Wed, Aug 14, 2019 at 01:06:55AM +0000, Dexuan Cui wrote:
->>>>> In pci_legacy_suspend_late(), the device state is moved to PCI_UNKNOWN.
->>>>>
->>>>> In pci_pm_thaw_noirq(), the state is supposed to be moved back to PCI_D0,
->>>>> but the current code misses the pci_legacy_resume_early() path, so the
->>>>> state remains in PCI_UNKNOWN in that path. As a result, in the resume
->>>>> phase of hibernation, this causes an error for the Mellanox VF driver,
->>>>> which fails to enable MSI-X because pci_msi_supported() is false due
->>>>> to dev->current_state != PCI_D0:
->>>>>
->>>>> mlx4_core a6d1:00:02.0: Detected virtual function - running in slave mode
->>>>> mlx4_core a6d1:00:02.0: Sending reset
->>>>> mlx4_core a6d1:00:02.0: Sending vhcr0
->>>>> mlx4_core a6d1:00:02.0: HCA minimum page size:512
->>>>> mlx4_core a6d1:00:02.0: Timestamping is not supported in slave mode
->>>>> mlx4_core a6d1:00:02.0: INTx is not supported in multi-function mode,
->>>> aborting
->>>>> PM: dpm_run_callback(): pci_pm_thaw+0x0/0xd7 returns -95
->>>>> PM: Device a6d1:00:02.0 failed to thaw: error -95
->>>>>
->>>>> To be more accurate, the "resume" phase means the "thaw" callbacks which
->>>>> run before the system enters hibernation: when the user runs the command
->>>>> "echo disk > /sys/power/state" for hibernation, first the kernel "freezes"
->>>>> all the devices and creates a hibernation image, then the kernel "thaws"
->>>>> the devices including the disk/NIC, writes the memory to the disk, and
->>>>> powers down. This patch fixes the error message for the Mellanox VF driver
->>>>> in this phase.
-> Wordsmithing nit: what the patch does is not "fix the error message";
-> what it does is fix the *problem*, i.e., the fact that we can't
-> operate the device because we can't enable MSI-X.  The message is only
-> a symptom.
->
-> IIUC the relevant part of the system hibernation sequence is:
->
->    pci_pm_freeze_noirq
->    pci_pm_thaw_noirq
->    pci_pm_thaw
->
-> And the execution flow is:
->
->    pci_pm_freeze_noirq
->      if (pci_has_legacy_pm_support(pci_dev)) # true for mlx4
->        pci_legacy_suspend_late(dev, PMSG_FREEZE)
-> 	pci_pm_set_unknown_state
-> 	  dev->current_state = PCI_UNKNOWN  # <---
->    pci_pm_thaw_noirq
->      if (pci_has_legacy_pm_support(pci_dev)) # true
->        pci_legacy_resume_early(dev)          # noop; mlx4 doesn't implement
->    pci_pm_thaw                               # returns -95 EOPNOTSUPP
->      if (pci_has_legacy_pm_support(pci_dev)) # true
->        pci_legacy_resume
-> 	drv->resume
-> 	  mlx4_resume                       # mlx4_driver.resume (legacy)
-> 	    mlx4_load_one
-> 	      mlx4_enable_msi_x
-> 		pci_enable_msix_range
-> 		  __pci_enable_msix_range
-> 		    __pci_enable_msix
-> 		      if (!pci_msi_supported())
-> 			if (dev->current_state != PCI_D0)  # <---
-> 			  return 0
-> 			return -EINVAL
-> 		err = -EOPNOTSUPP
-> 		"INTx is not supported ..."
->
-> (These are just my notes; you don't need to put them all into the
-> commit message.  I'm just sharing them in case I'm not understanding
-> correctly.)
->
->>>>> When the system starts again, a fresh kernel starts to run, and when the
->>>>> kernel detects that a hibernation image was saved, the kernel "quiesces"
->>>>> the devices, and then "restores" the devices from the saved image. In this
->>>>> path:
->>>>> device_resume_noirq() -> ... ->
->>>>>     pci_pm_restore_noirq() ->
->>>>>       pci_pm_default_resume_early() ->
->>>>>         pci_power_up() moves the device states back to PCI_D0. This path is
->>>>> not broken and doesn't need my patch.
->>>>>
-> The cc list suggests that this might be a fix for a user-reported
-> problem.  Is there a launchpad or similar link you could include here?
->
-> Should this be marked for stable?
->
->>>>> Signed-off-by: Dexuan Cui <decui@microsoft.com>
->>>> This looks like a bugfix for 5839ee7389e8 ("PCI / PM: Force devices to
->>>> D0 in pci_pm_thaw_noirq()") so maybe it should be marked for stable as
->>>> 5839ee7389e8 was?
->>>>
->>>> Rafael, could you confirm?
->> No, it is not a bug fix for that commit.  The underlying issue would be
->> there without that commit too.
-> Oh, right, I dunno what I was thinking, sorry.
->
->>>>> --- a/drivers/pci/pci-driver.c
->>>>> +++ b/drivers/pci/pci-driver.c
->>>>> @@ -1074,15 +1074,16 @@ static int pci_pm_thaw_noirq(struct device
->>>> *dev)
->>>>>    			return error;
->>>>>    	}
->>>>>
->>>>> -	if (pci_has_legacy_pm_support(pci_dev))
->>>>> -		return pci_legacy_resume_early(dev);
->>>>> -
->>>>>    	/*
->>>>>    	 * pci_restore_state() requires the device to be in D0 (because of MSI
->>>>>    	 * restoration among other things), so force it into D0 in case the
->>>>>    	 * driver's "freeze" callbacks put it into a low-power state directly.
->>>>>    	 */
->>>>>    	pci_set_power_state(pci_dev, PCI_D0);
->>>>> +
->>>>> +	if (pci_has_legacy_pm_support(pci_dev))
->>>>> +		return pci_legacy_resume_early(dev);
->>>>> +
->>>>>    	pci_restore_state(pci_dev);
->>>>>
->>>>>    	if (drv && drv->pm && drv->pm->thaw_noirq)
->>>>> --
->>>>> 2.19.1
->>>>>
->> The patch looks reasonable to me, but the comment above the
->> pci_set_power_state() call needs to be updated too IMO.
-> Hmm.
->
-> 1) pci_restore_state() mainly writes config space, which doesn't
-> require the device to be in D0.  The only thing I see that would
-> require D0 is the MSI-X MMIO space, so to be more specific, the
-> comment could say "restoring the MSI-X *MMIO* state requires the
-> device to be in D0".
->
-> But I think you meant some other comment change.  Did you mean
-> something along the lines of "a legacy drv->resume_early() callback
-> and pci_restore_state() both require the device to be in D0"?
+Hi Tyrel,
 
-Yes, I did.
+Tyrel Datwyler <tyreld@linux.ibm.com> writes:
+> +static bool valid_cpu_drc_index(struct device_node *parent, u32 drc_index)
+> +{
+> +	const __be32 *indexes;
+> +	int i;
+> +
+> +	if (of_find_property(parent, "ibm,drc-info", NULL))
+> +		return drc_info_valid_index(parent, drc_index);
+> +
+> +	indexes = of_get_property(parent, "ibm,drc-indexes", NULL);
+> +	if (!indexes)
+> +		return false;
+> +
+> +	for (i = 0; i < indexes[0]; i++) {
+
+should this be:
+
+        for (i = 0; i < be32_to_cpu(indexes[0]); i++) {
+?
 
 
+> +		if (be32_to_cpu(indexes[i + 1]) == drc_index)
+> +			return true;
+> +	}
+> +
+> +	return false;
+>  }
+
+It looks like this rewrites valid_cpu_drc_index()'s existing code for
+parsing ibm,drc-indexes but I don't see the need for this.
+
+This patch would be easier to review if that were dropped or split out.
+
+>  
+>  static ssize_t dlpar_cpu_add(u32 drc_index)
+> @@ -720,8 +756,11 @@ static int dlpar_cpu_remove_by_count(u32 cpus_to_remove)
+>  static int find_dlpar_cpus_to_add(u32 *cpu_drcs, u32 cpus_to_add)
+>  {
+>  	struct device_node *parent;
+> +	struct property *info;
+> +	const __be32 *indexes;
+>  	int cpus_found = 0;
+> -	int index, rc;
+> +	int i, j;
+> +	u32 drc_index;
+>  
+>  	parent = of_find_node_by_path("/cpus");
+>  	if (!parent) {
+> @@ -730,24 +769,46 @@ static int find_dlpar_cpus_to_add(u32 *cpu_drcs, u32 cpus_to_add)
+>  		return -1;
+>  	}
+>  
+> -	/* Search the ibm,drc-indexes array for possible CPU drcs to
+> -	 * add. Note that the format of the ibm,drc-indexes array is
+> -	 * the number of entries in the array followed by the array
+> -	 * of drc values so we start looking at index = 1.
+> -	 */
+> -	index = 1;
+> -	while (cpus_found < cpus_to_add) {
+> -		u32 drc;
+> +	info = of_find_property(parent, "ibm,drc-info", NULL);
+> +	if (info) {
+> +		struct of_drc_info drc;
+> +		const __be32 *value;
+> +		int count;
+>  
+> -		rc = of_property_read_u32_index(parent, "ibm,drc-indexes",
+> -						index++, &drc);
+> -		if (rc)
+> -			break;
+> +		value = of_prop_next_u32(info, NULL, &count);
+> +		if (value)
+> +			value++;
+>  
+> -		if (dlpar_cpu_exists(parent, drc))
+> -			continue;
+> +		for (i = 0; i < count; i++) {
+> +			of_read_drc_info_cell(&info, &value, &drc);
+> +			if (strncmp(drc.drc_type, "CPU", 3))
+> +				break;
+> +
+> +			for (j = 0; j < drc.num_sequential_elems; j++) {
+> +				drc_index = drc.drc_index_start + (drc.sequential_inc * j);
+> +
+> +				if (dlpar_cpu_exists(parent, drc_index))
+> +					continue;
+>  
+> -		cpu_drcs[cpus_found++] = drc;
+> +				cpu_drcs[cpus_found++] = drc_index;
+
+I am failing to see how this loop is limited by the cpus_to_add
+parameter as it was before this change. It looks like this will overflow
+the cpu_drcs array when cpus_to_add is less than the number of cpus
+found.
+
+As an aside I don't understand how the add_by_count()/dlpar_cpu_exists()
+algorithm could be correct as it currently stands. It seems to pick the
+first X indexes for which a corresponding cpu node is absent, but that
+set of indexes does not necessarily match the set that is available to
+configure. Something to address separately I suppose.
+
+> +			}
+> +		}
+> +	} else {
+> +		indexes = of_get_property(parent, "ibm,drc-indexes", NULL);
+> +
+> +		/* Search the ibm,drc-indexes array for possible CPU drcs to
+> +	 	* add. Note that the format of the ibm,drc-indexes array is
+> +	 	* the number of entries in the array followed by the array
+> +	 	* of drc values so we start looking at index = 1.
+> +	 	*/
+> +		for (i = 1; i < indexes[0]; i++) {
+> +			drc_index = be32_to_cpu(indexes[i]);
+> +
+> +			if (dlpar_cpu_exists(parent, drc_index))
+> +				continue;
+> +
+> +			cpu_drcs[cpus_found++] = drc_index;
+> +		}
+>  	}
+
+As above, not sure why this was rewritten, and similar comments as
+before apply.
