@@ -2,109 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A95A8D31DC
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 22:16:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB393D3282
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2019 22:43:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726132AbfJJUQl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Oct 2019 16:16:41 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:35809 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfJJUQl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Oct 2019 16:16:41 -0400
-Received: by mail-yb1-f193.google.com with SMTP id f4so2375760ybm.2
-        for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2019 13:16:40 -0700 (PDT)
+        id S1727032AbfJJUhk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Oct 2019 16:37:40 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36002 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726976AbfJJUhk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Oct 2019 16:37:40 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 67so6089199oto.3;
+        Thu, 10 Oct 2019 13:37:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=MLMwabB3+kykUPlj4jwFPRNN9g+7Qjcts+1oVZQGP5I=;
-        b=eVz4uwN6L4dlHnUbeDQytnIklKCYBFfhG/Zy9JsZAQBI1p0jIq0WSUytwJJlVbxGRF
-         XybqcC5miLvyo9M7y28N7S1cKDjsdlH8fHwHmEeQIvNKNYO6OuZMSHv/1nFAkhG8/aOP
-         7/+p+wL1oHoUS9nTHTXESUqaddpYHvpM/sMhkGdgs/C9jpN/yuxybF5MT5Jza0sdMicO
-         YlKgsAIoyoBuZwEkQoCccV4WE8jdMmvadeaHjqPL6w0E59TB8TIy5IRKqeDfwohYYB/n
-         AzQokFhzDGo536XFMrcvWXPLXMYBv2q8Q/WVbJK7m/2L9OwIxXKlNR6zLgPto+YbWXs9
-         u6sw==
+        bh=d92cz9+ek3jXcWrW3Uf8eUh6Gt1ObIFPj64rzYVpR8k=;
+        b=g50Sz/pHnHWExn1i1sgk7vVB9BcieHWp6Sk5NUgysb1A3vs/bYYW9MFMq17sbay5d8
+         vIGA9a0EOOGRvo0a9iINfHslrC6B/a9/kjk9fddflW8/7EMdT1l6VZyDv555UAuHCgM5
+         bRCuicOkEkNpJq3V+lBWaFC+mJ4AJhHZxiGvEZnsBIyqpHCsvc99VPrnXpDJkuJFCqlh
+         5IeqwjW7XtHH3V8VbvDk/hRoyzG0GrJDf4m57OHSJf8LHzq2MLRsHMezN3hc+dycxLo3
+         IQm18YIyVqPTz92ggQU+wUYODJzmjZrHvvYzefkCQYamEaYVw1qKQ/PrjC+2LviZ0pIh
+         K9gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MLMwabB3+kykUPlj4jwFPRNN9g+7Qjcts+1oVZQGP5I=;
-        b=FearjBCvSHgFtluUp6H5pTehNyOp1oS+8l5aPhnxyU8/Q97JQYibfYlkZj6AZR1/Ay
-         CNCb+Qdm44ue6r4MgabdGY8aImyFLv27IQziiU/YZ7xnhtUX4UZcSLqdYrxPQy2qDNr6
-         Xrd47j5gl1y7T81dowlmgqMT7DNcCLslU4jJGEHkQn3cWQn3S/NYldWBDnfdRFdhyvB3
-         cDzcTmEefbMQslv1yXvaZyAOXr0MsnFCWaJdDIrYcTPq66+nKX2OvpHoYOR2xw8jLcbO
-         /ZoYjnlxM2OB2w0S8bGtRnLX9cPMsXZtFRJPXK/e4BGTpo+cyqtOZ+N4Gc8CPAMmOReX
-         64Tg==
-X-Gm-Message-State: APjAAAXXTOslN0JKZabajA31hgaOWYPRwTRlpQOICAna6bUHfqpkrN3v
-        CyOZNcvbf6SFe70Ec5xw0JmqvpxSXDOyQgYZT6w=
-X-Google-Smtp-Source: APXvYqw45WqLwJrlA9w4vRZEoPfpmGaWyJjZCcGQsGhxt43neVBftJ2Br3H3WUvylDOh7nKkh+WLs6EaxXbtb3yU2fc=
-X-Received: by 2002:a25:8309:: with SMTP id s9mr368139ybk.34.1570738600160;
- Thu, 10 Oct 2019 13:16:40 -0700 (PDT)
+        bh=d92cz9+ek3jXcWrW3Uf8eUh6Gt1ObIFPj64rzYVpR8k=;
+        b=PROYDeJ2jxFc9IbPzMDjV/ETjZQ+cVQ35/kFEp/tKY3MktVOWfgzg3JHF4Yr+bWS6z
+         MLZFgayEyUZrsKw+tGuzjNgdRgafbnBfkKPe3DYiRmnEDn985cDViHSPoJBrKrWRCdtM
+         Evd356CB2d2NLSTVRUHG0n+X6ftyGep/VomReCT0b8P+MVtd2LdcI0xc1Ha4DHpZQ+fL
+         HF+Vjk9OA2MUktDxeSkYpc6uG2apxGSJmaEPwIfIUnwSFpkNxPPj1VHHxipzyH+oTK77
+         nimSQPRQkSgZs/2XhZ5ujRGXfJSq/DFUzJ3AawGqy4wsTGayC3pPHbeYmtUMvLimfdOo
+         NhFQ==
+X-Gm-Message-State: APjAAAVbOvIdXzAq29gDev/rVclO9/Olrj3dDSzi+J2ikZ/aRiVaWODU
+        DIeqDxWVvA00I/2TVD6AfZ5LWaxhUEQA9hFox18=
+X-Google-Smtp-Source: APXvYqxpzB8h705YHdZ4X2xWMlt6+O4+yxqxb1NZRABO9Jutpieby+Bzd4GgM8hRpmlaWMNIxLUxB7WuWvjRnkZ0qzM=
+X-Received: by 2002:a9d:3b76:: with SMTP id z109mr9238640otb.193.1570739859383;
+ Thu, 10 Oct 2019 13:37:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <1569910334-5972-1-git-send-email-tyreld@linux.ibm.com>
- <1569910334-5972-3-git-send-email-tyreld@linux.ibm.com> <87y2xsifqc.fsf@linux.ibm.com>
-In-Reply-To: <87y2xsifqc.fsf@linux.ibm.com>
-From:   Carlo Pisani <carlojpisani@gmail.com>
-Date:   Thu, 10 Oct 2019 22:16:30 +0200
-Message-ID: <CA+QBN9Ae1aB-F0MBFF_5xWO=NLT9exG-2X+xS2RKXepKcHYRTg@mail.gmail.com>
-Subject: powerpc/405GP, cuImage and PCI support
-To:     linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
-Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>, mpe@ellerman.id.au,
-        bhelgaas@google.com
+References: <20191009200523.8436-1-stuart.w.hayes@gmail.com>
+ <20191009200523.8436-3-stuart.w.hayes@gmail.com> <CAHp75Vc1mZ7qxKPGaqDVAQ9d_UjNq9LJDEPWHQHaYCfw7vGrmA@mail.gmail.com>
+ <CAHp75VfNjnAxua6ESx1Vp=57O=pVM10P1UK8bGNQUk7FeY=Dmw@mail.gmail.com>
+In-Reply-To: <CAHp75VfNjnAxua6ESx1Vp=57O=pVM10P1UK8bGNQUk7FeY=Dmw@mail.gmail.com>
+From:   Stuart Hayes <stuart.w.hayes@gmail.com>
+Date:   Thu, 10 Oct 2019 15:37:28 -0500
+Message-ID: <CAL5oW02uRk-ZLMaE6Skt7rX6xy=sQNttfSZ2N1JRBXPfjJpZNg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] PCI: pciehp: Wait for PDS if in-band presence is disabled
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-hi
-I wrote here (1) a couple of years ago, I am still working with kernel
-4.11.0 and there is broken support for initializing the PCI.
+On Thu, Oct 10, 2019 at 12:40 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Thu, Oct 10, 2019 at 8:37 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Wed, Oct 9, 2019 at 11:05 PM Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
+>
+> > > +static void pcie_wait_for_presence(struct pci_dev *pdev)
+> > > +{
+> > > +       int timeout = 1250;
+>
+> > > +       bool pds;
+>
+> Also this is redundant. Just use the following outside the loop
+>
+>  if (!retries)
+>    pc_info(...);
+>
+> .
+>
+> > > +       u16 slot_status;
+> > > +
+> > > +       while (true) {
+> > > +               pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+> > > +               pds = !!(slot_status & PCI_EXP_SLTSTA_PDS);
+> > > +               if (pds || timeout <= 0)
+> > > +                       break;
+> > > +               msleep(10);
+> > > +               timeout -= 10;
+> > > +       }
+> >
+> > Can we avoid infinite loops? They are hard to parse (in most cases,
+> > and especially when it's a timeout loop)
+> >
+> > unsigned int retries = 125; // 1250 ms
+> >
+> > do {
+> >  ...
+> > } while (--retries);
+> >
+> > > +
+> > > +       if (!pds)
+> > > +               pci_info(pdev, "Presence Detect state not set in 1250 msec\n");
+> > > +}
+> >
+> > --
+> > With Best Regards,
+> > Andy Shevchenko
+>
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
 
-arch/powerpc/book/cuimage-walnut.c requires "/plb" compatible with
-"fsl,pq2-localbus", while the device-tree file (walnut.dts) defines
-"/plb" compatible with "ibm,plb3"
-
-I am not an expert, but "fsl,pq2-localbus" != "ibm,plb3"
-
-Therefore the PCI initialization of the PPC405GP seems wrong and every
-kernel >= 2.6.26 is not able to correctly address the PDC20265
-
-(1) https://bugzilla.kernel.org/show_bug.cgi?id=195933
-
-an interesting not is:
-kernel 2.6.26 can be compiled with arch=ppc and arch=powerpc
-
-with arch=ppc the promise PDC20265 chip is correctly managed
-with arch=powerpc the PDC20265 is not correctly managed
-
-
-any idea? help? suggestion?
-
-thanks
-Carlo
-
-
---------------------------------------------------------------------------------------
-    bus_node = finddevice("/plb");
-    if (!bus_node)
-    {
-        notify_error(module, id, "device /plb not found");
-        return;
-    }
-    if (!dt_is_compatible(bus_node, "fsl,pq2-localbus"))
-    {
-        notify_warn(module, id, "device fsl,pq2-localbus");
-        notify_error(module, id, "device /plb is not compatible");
---------------------------------------------------------------------------------------
-plb
-        {
-                /*
-                 * Processor Local Bus (PLB)
-                 */
-                compatible = "ibm,plb3";
---------------------------------------------------------------------------------------
-
-
-ide0 at 0x1f0-0x1f7,0x3f6 on irq 31
-ide1 at 0x170-0x177,0x376 on irq 31
+Thank you for the feedback!  An infinite loop is used several other places in
+this driver--this keeps the style similar.  I can change it as you suggest,
+though, if that would be preferable to consistency.
