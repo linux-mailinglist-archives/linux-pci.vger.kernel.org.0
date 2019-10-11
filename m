@@ -2,98 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 18647D3891
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2019 06:52:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 399AFD39A2
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2019 08:49:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbfJKEuf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Oct 2019 00:50:35 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:42056 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726099AbfJKEuf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Oct 2019 00:50:35 -0400
-X-IronPort-AV: E=Sophos;i="5.67,282,1566831600"; 
-   d="scan'208";a="28630154"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 11 Oct 2019 13:50:33 +0900
-Received: from localhost.localdomain (unknown [10.166.17.210])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id F10C3419A01A;
-        Fri, 11 Oct 2019 13:50:32 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     horms@verge.net.au, linux-pci@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org, stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v4] PCI: rcar: Fix missing MACCTLR register setting in rcar_pcie_hw_init()
-Date:   Fri, 11 Oct 2019 13:50:32 +0900
-Message-Id: <1570769432-15358-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
+        id S1727573AbfJKGtY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Oct 2019 02:49:24 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35946 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbfJKGtY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Oct 2019 02:49:24 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y22so5489235pfr.3;
+        Thu, 10 Oct 2019 23:49:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lI3FmveMxynn8iWgzzKvDCiGa3J1be8OYxVDzXPfJSc=;
+        b=D2UM+LCn4BVU41xDnmNgrqg5ccUwK+ssZ9iPB8fnVAq8LBzuIPXuTdkrZg3GfzMD7r
+         PaXnKlymynij21lOqOTX2zG4+0GVULLFIM872lKhPwFHB/yQ2Kh0iupeXlUjKqFXqdrt
+         VUpwuUpg2IZAE7hHDt/xoyrSqIfGX+gZ+u8UsQTEAB7BIAqzii4HGDJf0PYAdI2tJZ5W
+         hFVkRHh5bJ0GNgGT0OvJFTRw0Upe+px+4gkM+vIBtI281JYDVYWqCJLCdg4Kd5fjmujF
+         CvEs2mLMo+mRvSFnV4GGbnHflFL55jU5wvs6+uHy/zNtEOn15qcOPEU2pwF8MQviUu8e
+         OjKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lI3FmveMxynn8iWgzzKvDCiGa3J1be8OYxVDzXPfJSc=;
+        b=Dfhn7C4n9GfWpGFKTef59v3NxzTCrN/jaJtv8282YP+h/kWCdxTWl11jj7I4B9u/Tt
+         jDY5I8ky3czGEYpUW0XRi/3Nw9FthC/uEzZzmgRO3HGM/w8kCRuHUSKHVyBBbNG0cjGf
+         plh42W+v6jsQq+Y/C+9Xp69i5JMNwd6gTYtlfTP1EglKNBBBJ/Hj7RCb1lMepQc+DsXU
+         HJ8DxhDAbqtVfe6PdGUJQlZjEWl8tQMrRgJJT6I1DtFu6bnL6oIVwTNCSunqiUL13mxw
+         kVM5X9CNodKYGmALK432fc8wNzXG4buvvGykEOTrq9Z+CdRKqI9nJbJ1gOyGIWeaXDgM
+         AM3w==
+X-Gm-Message-State: APjAAAXS7zt9H2/+PI67jLFki3y3jLraBdgC0KyxiIhU2uhcAvnLJU4G
+        9W5q2odfE+uoxEckgukFHMZ45uSAoHXIaO5nnXM=
+X-Google-Smtp-Source: APXvYqxF4rgMB7mne3YjI7BIX+QLFeyDlO+TStNyEyk5w4cEM+xVJbqKgH+/enJJhaB4QOx7heUTxxME91AQep5JZug=
+X-Received: by 2002:a62:e206:: with SMTP id a6mr14818167pfi.64.1570776563039;
+ Thu, 10 Oct 2019 23:49:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191009200523.8436-1-stuart.w.hayes@gmail.com>
+ <20191009200523.8436-3-stuart.w.hayes@gmail.com> <CAHp75Vc1mZ7qxKPGaqDVAQ9d_UjNq9LJDEPWHQHaYCfw7vGrmA@mail.gmail.com>
+ <CAHp75VfNjnAxua6ESx1Vp=57O=pVM10P1UK8bGNQUk7FeY=Dmw@mail.gmail.com> <CAL5oW02uRk-ZLMaE6Skt7rX6xy=sQNttfSZ2N1JRBXPfjJpZNg@mail.gmail.com>
+In-Reply-To: <CAL5oW02uRk-ZLMaE6Skt7rX6xy=sQNttfSZ2N1JRBXPfjJpZNg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 11 Oct 2019 09:49:11 +0300
+Message-ID: <CAHp75VfEpH4Nv0J+wc3vhFWXYgVLcFdOr263dAFRZiz_ZEfZrw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] PCI: pciehp: Wait for PDS if in-band presence is disabled
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-According to the R-Car Gen2/3 manual, the bit 0 of MACCTLR register
-should be written to 0 before enabling PCIETCTLR.CFINIT because
-the bit 0 is set to 1 on reset. To avoid unexpected behaviors from
-this incorrect setting, this patch fixes it.
+On Thu, Oct 10, 2019 at 11:37 PM Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
 
-Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
-Fixes: be20bbcb0a8c ("PCI: rcar: Add the initialization of PCIe link in resume_noirq()")
-Cc: <stable@vger.kernel.org> # v5.2+
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Changes from v3:
- - Add the setting in rcar_pcie_resume_noirq().
- - Add Fixes tag for rcar_pcie_resume_noirq().
- - Change the version of the stable ML from v3.16 to v5.2.
- https://patchwork.kernel.org/patch/11181005/
+> Thank you for the feedback!  An infinite loop is used several other places in
+> this driver--this keeps the style similar.  I can change it as you suggest,
+> though, if that would be preferable to consistency.
 
- Changes from v2:
- - Change the subject.
- - Fix commit log again.
- - Add the register setting into the initialization, instead of speedup.
- - Change commit hash/target version on Fixes and Cc stable tags.
- - Add Geert-san's Reviewed-by.
- https://patchwork.kernel.org/patch/11180429/
+Better to start the change now. I'll look into the file and see how we
+can improve the rest.
 
- Changes from v1:
- - Fix commit log.
- - Add Sergei-san's Reviewed-by.
- https://patchwork.kernel.org/patch/11179279/
-
- drivers/pci/controller/pcie-rcar.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
-index f6a669a..302c9ea 100644
---- a/drivers/pci/controller/pcie-rcar.c
-+++ b/drivers/pci/controller/pcie-rcar.c
-@@ -93,6 +93,7 @@
- #define  LINK_SPEED_2_5GTS	(1 << 16)
- #define  LINK_SPEED_5_0GTS	(2 << 16)
- #define MACCTLR			0x011058
-+#define  MACCTLR_RESERVED	BIT(0)
- #define  SPEED_CHANGE		BIT(24)
- #define  SCRAMBLE_DISABLE	BIT(27)
- #define PMSR			0x01105c
-@@ -615,6 +616,8 @@ static int rcar_pcie_hw_init(struct rcar_pcie *pcie)
- 	if (IS_ENABLED(CONFIG_PCI_MSI))
- 		rcar_pci_write_reg(pcie, 0x801f0000, PCIEMSITXR);
- 
-+	rcar_rmw32(pcie, MACCTLR, MACCTLR_RESERVED, 0);
-+
- 	/* Finish initialization - establish a PCI Express link */
- 	rcar_pci_write_reg(pcie, CFINIT, PCIETCTLR);
- 
-@@ -1237,6 +1240,7 @@ static int rcar_pcie_resume_noirq(struct device *dev)
- 		return 0;
- 
- 	/* Re-establish the PCIe link */
-+	rcar_rmw32(pcie, MACCTLR, MACCTLR_RESERVED, 0);
- 	rcar_pci_write_reg(pcie, CFINIT, PCIETCTLR);
- 	return rcar_pcie_wait_for_dl(pcie);
- }
 -- 
-2.7.4
-
+With Best Regards,
+Andy Shevchenko
