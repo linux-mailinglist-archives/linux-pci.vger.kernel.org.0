@@ -2,80 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 399AFD39A2
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2019 08:49:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F462D3A17
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2019 09:35:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbfJKGtY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Oct 2019 02:49:24 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35946 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbfJKGtY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Oct 2019 02:49:24 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y22so5489235pfr.3;
-        Thu, 10 Oct 2019 23:49:23 -0700 (PDT)
+        id S1727247AbfJKHfg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Oct 2019 03:35:36 -0400
+Received: from mail-ot1-f45.google.com ([209.85.210.45]:33639 "EHLO
+        mail-ot1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726679AbfJKHfg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Oct 2019 03:35:36 -0400
+Received: by mail-ot1-f45.google.com with SMTP id 60so7175445otu.0
+        for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2019 00:35:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lI3FmveMxynn8iWgzzKvDCiGa3J1be8OYxVDzXPfJSc=;
-        b=D2UM+LCn4BVU41xDnmNgrqg5ccUwK+ssZ9iPB8fnVAq8LBzuIPXuTdkrZg3GfzMD7r
-         PaXnKlymynij21lOqOTX2zG4+0GVULLFIM872lKhPwFHB/yQ2Kh0iupeXlUjKqFXqdrt
-         VUpwuUpg2IZAE7hHDt/xoyrSqIfGX+gZ+u8UsQTEAB7BIAqzii4HGDJf0PYAdI2tJZ5W
-         hFVkRHh5bJ0GNgGT0OvJFTRw0Upe+px+4gkM+vIBtI281JYDVYWqCJLCdg4Kd5fjmujF
-         CvEs2mLMo+mRvSFnV4GGbnHflFL55jU5wvs6+uHy/zNtEOn15qcOPEU2pwF8MQviUu8e
-         OjKg==
+        bh=zLevZQnhaybY5aKcyCqsco2461EVCw4qKyv644p7bBs=;
+        b=HBFV7WQRWKwWdcxuQKc2Mjrj2x26784t2iZxF9ivnDGGVfGzf/j2LvlNLgk/mgH4Oi
+         pF3WJwmPXPF6qYC1FHC2uIRrmz5EM9gO/DvCpFNhgFkqdKz1afWEiwIg6Q17Dknx9HUU
+         AjkHEmm4E035PXH7uWxB4hbVXWou68DStvPerJJxSXiKb1pF6K11Kl1zqSPLUVF5h1Sh
+         Nyq/sdY9mMOimm0K9oQZyd3vrAKQaNkcDffjjvqOSJxOPdRkYKfXeQXGn4ROfWZrVW9E
+         5cemiNpItnQxCjexsf4cLLnj0RwHTiHbIJrzxqgid7o95aMJ4xY9vaJVv6atxRAAtyBj
+         P/jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lI3FmveMxynn8iWgzzKvDCiGa3J1be8OYxVDzXPfJSc=;
-        b=Dfhn7C4n9GfWpGFKTef59v3NxzTCrN/jaJtv8282YP+h/kWCdxTWl11jj7I4B9u/Tt
-         jDY5I8ky3czGEYpUW0XRi/3Nw9FthC/uEzZzmgRO3HGM/w8kCRuHUSKHVyBBbNG0cjGf
-         plh42W+v6jsQq+Y/C+9Xp69i5JMNwd6gTYtlfTP1EglKNBBBJ/Hj7RCb1lMepQc+DsXU
-         HJ8DxhDAbqtVfe6PdGUJQlZjEWl8tQMrRgJJT6I1DtFu6bnL6oIVwTNCSunqiUL13mxw
-         kVM5X9CNodKYGmALK432fc8wNzXG4buvvGykEOTrq9Z+CdRKqI9nJbJ1gOyGIWeaXDgM
-         AM3w==
-X-Gm-Message-State: APjAAAXS7zt9H2/+PI67jLFki3y3jLraBdgC0KyxiIhU2uhcAvnLJU4G
-        9W5q2odfE+uoxEckgukFHMZ45uSAoHXIaO5nnXM=
-X-Google-Smtp-Source: APXvYqxF4rgMB7mne3YjI7BIX+QLFeyDlO+TStNyEyk5w4cEM+xVJbqKgH+/enJJhaB4QOx7heUTxxME91AQep5JZug=
-X-Received: by 2002:a62:e206:: with SMTP id a6mr14818167pfi.64.1570776563039;
- Thu, 10 Oct 2019 23:49:23 -0700 (PDT)
+        bh=zLevZQnhaybY5aKcyCqsco2461EVCw4qKyv644p7bBs=;
+        b=Lr7eRl48zXfY4YFCDbcVTNs7xukqj/amp0GXk/ythJKwzb3jU2lZjyUckyWR5qJjt6
+         A85UqYMspN/RGc0jhhmFn0SN0j99J3mACXLayZ61zWId3et6V7rOY1V26IAAJ6dor+EN
+         EzCDMSIeFpxS85720qHBrfyBvo1SKPE10b5KS6sXH+y1/jWqoSpAHYRj+50gmlYX6iYt
+         6qKmMlvRGA0kd4dcPEK0kJG6AANedXYCHJIuoXkTM7tTeLtOtGdzZLiNob6EX+PuPDOO
+         0x9zMmSD54rCZOEvtobzvplj8Qs+ogMZ/7O8Byy9FB9PACeDrN9o9Y16s4TxvMMmwE/Z
+         laww==
+X-Gm-Message-State: APjAAAUwXY40GaYwxfVoDLAp4+EoifL/PjRRaaVo6xcUyCzcaf7inO1E
+        DSVcqpBQIuNu+AmIVLuYpF0h1S0NEGjoe9DLxTQ=
+X-Google-Smtp-Source: APXvYqzaEWTpWqc4fI+8Y9FpJm5Ge8BSA/VURWUP6exKaGyBFvC/jbRnelyvaBpf7XzSEbIIRwMKOVosa+mdh7BI/gk=
+X-Received: by 2002:a9d:3e4e:: with SMTP id h14mr11845447otg.198.1570779333554;
+ Fri, 11 Oct 2019 00:35:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191009200523.8436-1-stuart.w.hayes@gmail.com>
- <20191009200523.8436-3-stuart.w.hayes@gmail.com> <CAHp75Vc1mZ7qxKPGaqDVAQ9d_UjNq9LJDEPWHQHaYCfw7vGrmA@mail.gmail.com>
- <CAHp75VfNjnAxua6ESx1Vp=57O=pVM10P1UK8bGNQUk7FeY=Dmw@mail.gmail.com> <CAL5oW02uRk-ZLMaE6Skt7rX6xy=sQNttfSZ2N1JRBXPfjJpZNg@mail.gmail.com>
-In-Reply-To: <CAL5oW02uRk-ZLMaE6Skt7rX6xy=sQNttfSZ2N1JRBXPfjJpZNg@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 11 Oct 2019 09:49:11 +0300
-Message-ID: <CAHp75VfEpH4Nv0J+wc3vhFWXYgVLcFdOr263dAFRZiz_ZEfZrw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] PCI: pciehp: Wait for PDS if in-band presence is disabled
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>
+References: <CA+V-a8sCjSCgj_WKeEtxRwjF+PM392zeTQ3F3ZwQR=nPavFyXQ@mail.gmail.com>
+ <b91c3f6e-cef5-c06d-4282-84c24d616533@ti.com>
+In-Reply-To: <b91c3f6e-cef5-c06d-4282-84c24d616533@ti.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 11 Oct 2019 08:35:07 +0100
+Message-ID: <CA+V-a8tFB=giGvcLNhfTaaQ-R8svXijcoQ_QUdRMX3Hb4Ur95Q@mail.gmail.com>
+Subject: Re: [Query] : PCIe - Endpoint Function
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 11:37 PM Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
+Hi Kishon,
 
-> Thank you for the feedback!  An infinite loop is used several other places in
-> this driver--this keeps the style similar.  I can change it as you suggest,
-> though, if that would be preferable to consistency.
+On Thu, Oct 10, 2019 at 12:32 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> Hi Prabhakar,
+>
+> On 10/10/19 4:57 PM, Lad, Prabhakar wrote:
+> > Hello,
+> >
+> > I am currently working on adding pcie-endpoint support for a
+> > controller, this controller doesn't support outbound- inbound address
+> > translations, it has 1-1 mapping between the CPU and PCI addresses,
+> > the current endpoint framework is based on  outbound-inbound
+> > translations, what is the best approach to add this support, or is
+> > there any WIP already for it ?
+>
+> How will the endpoint access host buffer without outbound ATU? I assume the PCI
+> address reserved for endpoint is not the full 32-bit or 64-bit address space?
+> In that case, the endpoint cannot directly access the host buffer (unless the
+> host already knows the address space of the endpoint and gives the endpoint an
+> address in its OB address space).
+>
+for the address translation to happen on the endpoint I have to
+program the local cpu address prior to start of link,
+Yes the host somehow has to know the address space of endpoint and
+pass it to the endpoint.
 
-Better to start the change now. I'll look into the file and see how we
-can improve the rest.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Cheers,
+--Prabhakar Lad
