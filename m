@@ -2,112 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE4DDD4DFE
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Oct 2019 09:34:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47CC8D4E0D
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Oct 2019 09:40:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbfJLHet (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 12 Oct 2019 03:34:49 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38312 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727115AbfJLHet (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Oct 2019 03:34:49 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w3so167631pgt.5;
-        Sat, 12 Oct 2019 00:34:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5zqQxbggLDLgvUgrs/8xb+vZbp9BeRehGvstEP4vmcU=;
-        b=llaxfXY8WP09S7WoyOdiqe5wZ7iEb5yrB0ES1XuXYGPOxBd0r+PvyP68XLLA43cc4S
-         NkFu5QhcFXMdRGCvJ2WyIKsk+6NEUvFUYjfFe/KYwwyVn20zd1RsWwJp5Mn7Ww1MQCK6
-         8eooj4hVKn7Cyfw4hUgfYxEymGVwcmhp0H1XhsPHqnmEDr2CCdLAFQ79ggbY95mjJNTg
-         21Fw8n3PNbshoe12zpEhEzEtpQ/UecnYtNS0wX6D52X9ShKhvT2Q6gRyAKtyEt7CjFV+
-         MIO7VZiAQitmBRWqfWcqidryoyT8RGoJDz5OK2Btg6BIWMOZSHUKqT+Uvr9onyYCDztH
-         XAwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5zqQxbggLDLgvUgrs/8xb+vZbp9BeRehGvstEP4vmcU=;
-        b=QeOe4C7Omxfj2U1c2zcwMpFi8+f8U6UWy/MvmkjyG+UWt0KWkM02huotZIJgUXF60V
-         wImTKhK2rD5+/oKUHz4kp6/FBmc9oU5eQxzU/3Pgz1xED4j4iZKfnEd4jt7DTTEflzTa
-         D1R4uN9741m423gFI7/RMlCdUvDlTOReHnDNx7sflbS74vEod0tWUNA0VAmwD/tHMaPt
-         Xp1vZDlMULf7c4unMq08T68f9456F79AOBz/xsVkWkleZr2S+SUUCTws0VxkyIhL53U0
-         3dvkYMSE6HbIjRGWJkgXSoo4FkDgg9vIxG6oKgVPcWd4hbmAc90YbFo1Pqo0muynJPJv
-         pfCg==
-X-Gm-Message-State: APjAAAWBMkfD+N8BxviGitMq/knmgWhYEGgVD3g5SLbxPxXh4T2yikxc
-        sMsFfpCwdh3oQCTIA+qrOztIw4SC8qbDVpYw9D93udB+CN8=
-X-Google-Smtp-Source: APXvYqzZnbEGMH9gV50C2RabJ7R6ZHJ0OCK+mTD8SKiOqAQHC+yBrGcwJpzPM5BR1fvEwBlXLpaCLVuo/SuJVLxm25g=
-X-Received: by 2002:a62:e80b:: with SMTP id c11mr20351462pfi.241.1570865688320;
- Sat, 12 Oct 2019 00:34:48 -0700 (PDT)
+        id S1728843AbfJLHkj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 12 Oct 2019 03:40:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727014AbfJLHkj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 12 Oct 2019 03:40:39 -0400
+Received: from localhost (unknown [62.119.166.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B8F421850;
+        Sat, 12 Oct 2019 07:40:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570866037;
+        bh=ymNNDx8Fo6uelERv6sLz5FrpkUpLXJNH+cXIPy6IgQo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ot8f41TKzj8Uyk3uaJjDgmRmJCCUEX5IwsF6OZJejumM5mBiZmWoPWs0TNXw34Cvm
+         lc0PGWk6jgAwWW+ruUVJqAQEpuG/UBMsvUrDGYEz8PQHRKAzc1Z9YYyro/ls3L8ddT
+         9kwveJ9nnRcV63+0ftQ9noDCsvnzMi6Pp/krJ0jg=
+Date:   Sat, 12 Oct 2019 09:40:14 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        hpa@zytor.com, x86@kernel.org, dave.hansen@linux.intel.com,
+        luto@kernel.org, len.brown@intel.com, axboe@kernel.dk,
+        dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        lenb@kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20191012074014.GA2037204@kroah.com>
+References: <20190924131939.GS23050@dhcp22.suse.cz>
+ <1adcbe68-6753-3497-48a0-cc84ac503372@huawei.com>
+ <20190925104108.GE4553@hirez.programming.kicks-ass.net>
+ <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
+ <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
+ <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
+ <20191010073212.GB18412@dhcp22.suse.cz>
+ <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
+ <20191011111539.GX2311@hirez.programming.kicks-ass.net>
+ <7fad58d6-5126-e8b8-a7d8-a91814da53ba@huawei.com>
 MIME-Version: 1.0
-References: <20191011205127.4884-1-stuart.w.hayes@gmail.com> <20191011205127.4884-3-stuart.w.hayes@gmail.com>
-In-Reply-To: <20191011205127.4884-3-stuart.w.hayes@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 12 Oct 2019 10:34:35 +0300
-Message-ID: <CAHp75VdDWQ=t=JiMei5bJGE59P70yxbfx48j6ufp32aHz2mM3g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] PCI: pciehp: Wait for PDS if in-band presence is disabled
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7fad58d6-5126-e8b8-a7d8-a91814da53ba@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 11:51 PM Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
->
-> From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
->
-> When inband presence is disabled, PDS may come up at any time, or not
-> at all. PDS being low may indicate that the card is still mating, and
-> we could expect contact bounce to bring down the link as well.
->
-> It is reasonable to assume that most cards will mate in a hotplug slot
-> in about a second. Thus, when we know PDS only reflects out-of-band
-> presence, it's worthwhile to wait the extra second or so to make sure
-> the card is properly mated before loading the driver, and to prevent
-> the hotplug code from disabling a device if the presence detect change
-> goes active after the device is enabled.
+On Sat, Oct 12, 2019 at 02:17:26PM +0800, Yunsheng Lin wrote:
+> add pci and acpi maintainer
+> cc linux-pci@vger.kernel.org and linux-acpi@vger.kernel.org
+> 
+> On 2019/10/11 19:15, Peter Zijlstra wrote:
+> > On Fri, Oct 11, 2019 at 11:27:54AM +0800, Yunsheng Lin wrote:
+> >> But I failed to see why the above is related to making node_to_cpumask_map()
+> >> NUMA_NO_NODE aware?
+> > 
+> > Your initial bug is for hns3, which is a PCI device, which really _MUST_
+> > have a node assigned.
+> > 
+> > It not having one, is a straight up bug. We must not silently accept
+> > NO_NODE there, ever.
+> > 
+> 
+> I suppose you mean reporting a lack of affinity when the node of a pcie
+> device is not set by "not silently accept NO_NODE".
 
-Thank you!
-My comments below.
+If the firmware of a pci device does not provide the node information,
+then yes, warn about that.
 
-> +static void pcie_wait_for_presence(struct pci_dev *pdev)
-> +{
-> +       int timeout = 1250;
+> As Greg has asked about in [1]:
+> what is a user to do when the user sees the kernel reporting that?
+> 
+> We may tell user to contact their vendor for info or updates about
+> that when they do not know about their system well enough, but their
+> vendor may get away with this by quoting ACPI spec as the spec
+> considering this optional. Should the user believe this is indeed a
+> fw bug or a misreport from the kernel?
 
-> +       bool pds;
+Say it is a firmware bug, if it is a firmware bug, that's simple.
 
-make W=1 will issue a warning. Just remove the line.
+> If this kind of reporting is common pratice and will not cause any
+> misunderstanding, then maybe we can report that.
 
-> +       u16 slot_status;
-> +
-> +       do {
-> +               pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
-> +               if (!!(slot_status & PCI_EXP_SLTSTA_PDS))
-> +                       return;
-> +               msleep(10);
-> +               timeout -= 10;
-> +       } while (timeout > 0);
-> +
+Yes, please do so, that's the only way those boxes are ever going to get
+fixed.  And go add the test to the "firmware testing" tool that is based
+on Linux that Intel has somewhere, to give vendors a chance to fix this
+before they ship hardware.
 
-> +       pci_info(pdev, "Presence Detect state not set in 1250 msec\n");
+This shouldn't be a big deal, we warn of other hardware bugs all the
+time.
 
-Perhaps ("%d", timeout) ?
+thanks,
 
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
+greg k-h
