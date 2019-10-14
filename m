@@ -2,80 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E7481D60F8
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2019 13:09:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B012D6124
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2019 13:20:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731790AbfJNLJb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Oct 2019 07:09:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731686AbfJNLJb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 14 Oct 2019 07:09:31 -0400
-Received: from dragon (li937-157.members.linode.com [45.56.119.157])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 912D420650;
-        Mon, 14 Oct 2019 11:09:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571051370;
-        bh=IGUjFKwdFvBuHDUBTTMUkHOqWN+qrspmIFd3EP+r5D0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u6lV4BvTYW8QqsNve4UmSk9Z5IRL6ls+Ne+fUJeDqE/2kdCy6p2B3zszdb8a3CGfJ
-         zIUWNfhvJGX46ZQKGt0ADXS2mmtAPaMYHIMnAOQtJjH2drVoNnJIyH6+M8bbZA9fir
-         CCH+HHdvDRmqPLE15mDMW7UZttO+u5rVp++pF3JE=
-Date:   Mon, 14 Oct 2019 19:09:12 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        xen-devel@lists.xenproject.org, linux-tegra@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-        Li Yang <leoyang.li@nxp.com>, mbrugger@suse.com,
-        robin.murphy@arm.com, f.fainelli@gmail.com,
-        james.quinlan@broadcom.com, wahrenst@gmx.net,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 07/11] dts: arm64: layerscape: add dma-ranges property to
- qoric-mc node
-Message-ID: <20191014110911.GL12262@dragon>
-References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
- <20190924181244.7159-8-nsaenzjulienne@suse.de>
- <20191014082847.GH12262@dragon>
- <f6262e61f858c6f50164416f4ea816e203c0704f.camel@suse.de>
+        id S1730156AbfJNLUM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Oct 2019 07:20:12 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:51485 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbfJNLUM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Oct 2019 07:20:12 -0400
+Received: from 79.184.254.38.ipv4.supernova.orange.pl (79.184.254.38) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 3b3e8a8fcf365606; Mon, 14 Oct 2019 13:20:10 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Daniel Drake <drake@endlessm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PCI: PM: Consolidate runtime resume and system resume paths
+Date:   Mon, 14 Oct 2019 13:20:09 +0200
+Message-ID: <2570249.GdtrxVvIQ1@kreacher>
+In-Reply-To: <3118349.722IRLjr4b@kreacher>
+References: <20190927090202.1468-1-drake@endlessm.com> <CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com> <3118349.722IRLjr4b@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f6262e61f858c6f50164416f4ea816e203c0704f.camel@suse.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 12:00:25PM +0200, Nicolas Saenz Julienne wrote:
-> On Mon, 2019-10-14 at 16:28 +0800, Shawn Guo wrote:
-> > On Tue, Sep 24, 2019 at 08:12:38PM +0200, Nicolas Saenz Julienne wrote:
-> > > qoriq-mc's dpmacs DMA configuration is inherited from their parent node,
-> > > which acts a bus in this regard. So far it maked all devices as
-> > > dma-coherent but no dma-ranges recommendation is made.
-> > > 
-> > > The truth is that the underlying interconnect has DMA constraints, so
-> > > add an empty dma-ranges in qoriq-mc's node in order for DT's DMA
-> > > configuration code to get the DMA constraints from it.
-> > > 
-> > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > 
-> > Updated subject prefix as 'arm64: dts: ...', and applied the patch.
+On Monday, October 14, 2019 12:51:31 PM CEST Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> Hi Shawn,
-> these two patches are no longer needed. This series has been superseded by this
-> patch[1] 951d48855d ('of: Make of_dma_get_range() work on bus nodes', available
-> in linux-next) which fixed the issue directly in OF code.
+> There is an arbitrary difference between the system resume and
+> runtime resume code paths for PCI devices regarding the delay to
+> apply when switching the devices from D3cold to D0.
 > 
-> Sorry for the noise.
+> Namely, pci_restore_standard_config() used in the runtime resume
+> code path calls pci_set_power_state() which in turn invokes
+> __pci_start_power_transition() to power up the device through the
+> platform firmware and that function applies the transition delay
+> (as per PCI Express Base Specification Revision 2.0, Section 6.6.1).
+> However, pci_pm_default_resume_early() used in the system resume
+> code path calls pci_power_up() which doesn't apply the delay at
+> all and that causes issues to occur during resume from
+> suspend-to-idle on some systems where the delay is required.
+> 
+> Since there is no reason for that difference to exist, modify
+> pci_pm_default_resume_early() to invoke pci_restore_standard_config()
+> instead of pci_power_up() and drop the latter, but in order to
+> prevent the ACPI power state values (cached by the ACPI layer) from
+> becoming stale in some cases during resume from suspend-to-RAM
+> (ACPI S3), as per commit cc2893b6af52 ("PCI: Ensure we re-enable
+> devices on resume"), refresh the ACPI power state information in
+> pci_pm_default_resume_early() in that case.
+> 
+> [Note that while this change should take the issue originally
+>  addressed by commit cc2893b6af52 ("PCI: Ensure we re-enable devices
+>  on resume") into account in a generally safer way, an alternative
+>  would be to make pci_power_up() use __pci_start_power_transition()
+>  instead of calling platform_pci_set_power_state() directly.]
+> 
+> Fixes: db288c9c5f9d ("PCI / PM: restore the original behavior of pci_set_power_state()")
+> Reported-by: Daniel Drake <drake@endlessm.com> 
+> Tested-by: Daniel Drake <drake@endlessm.com> 
+> Link: https://lore.kernel.org/linux-pm/CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com/T/#m21be74af263c6a34f36e0fc5c77c5449d9406925
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/pci/pci-driver.c |    8 +++++---
+>  drivers/pci/pci.c        |   15 ---------------
+>  drivers/pci/pci.h        |    1 -
+>  3 files changed, 5 insertions(+), 19 deletions(-)
+> 
+> Index: linux-pm/drivers/pci/pci-driver.c
+> ===================================================================
+> --- linux-pm.orig/drivers/pci/pci-driver.c
+> +++ linux-pm/drivers/pci/pci-driver.c
+> @@ -523,9 +523,10 @@ static int pci_restore_standard_config(s
+>  
+>  static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
+>  {
+> -	pci_power_up(pci_dev);
+> -	pci_restore_state(pci_dev);
+> -	pci_pme_restore(pci_dev);
+> +	if (pm_resume_via_firmware())
+> +		pci_refresh_power_state(pci_dev);
 
-Okay, thanks for letting me know.  Dropped them.
+Well, this is still not going to work if the ACPI power state after the update
+above is not D0, but the pci_update_current_state() in pci_restore_standard_config()
+returns D0, which was the case that triggered commit cc2893b6af52 IIRC.
 
-Shawn
+So scratch this one, please, and I'll submit the safer option.
+
+> +
+> +	pci_restore_standard_config(pci_dev);
+>  }
+>  
+>  /*
+> @@ -713,6 +714,7 @@ static void pci_pm_complete(struct devic
+>  		pci_power_t pre_sleep_state = pci_dev->current_state;
+>  
+>  		pci_refresh_power_state(pci_dev);
+> +		pci_update_current_state(pci_dev, pci_dev->current_state);
+>  		/*
+>  		 * On platforms with ACPI this check may also trigger for
+>  		 * devices sharing power resources if one of those power
+
+
+
