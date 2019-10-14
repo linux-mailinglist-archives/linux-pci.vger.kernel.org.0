@@ -2,97 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 52C22D5FB3
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2019 12:04:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D58BD6068
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2019 12:40:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731153AbfJNKEz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Oct 2019 06:04:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49320 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730880AbfJNKEz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:04:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF3002084B;
-        Mon, 14 Oct 2019 10:04:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571047494;
-        bh=/dPCnM0sRa4kGSye3Rf0LjIhbgJ3x67VnI6L/yo5sgg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=s3xAAtEtwoBVhhGugBYvNxTSIX8Uq3e5eJ2d6fH2Bq8fz9SJqspDwTiEqQoFdudnn
-         gajGY+ZW6LtYxLL+jYRUsyOz53CO5VAu6lpbUt0i/WjQ9ccw2GdqtCtfwUh5pvZaqQ
-         pAaqr+nXAbM7sbZZ4XQPtaMCnd/BqevExcZRUHjw=
-Date:   Mon, 14 Oct 2019 12:04:52 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: msi: remove pci_irq_get_node() as no one is using it
-Message-ID: <20191014100452.GA6699@kroah.com>
+        id S1731305AbfJNKk2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Oct 2019 06:40:28 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43515 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731249AbfJNKk2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Oct 2019 06:40:28 -0400
+Received: by mail-oi1-f196.google.com with SMTP id t84so13325538oih.10;
+        Mon, 14 Oct 2019 03:40:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4yR/mNj1Zwd+yFbtuo6NH79a/l5OlQBK6Cgb3kmXbCs=;
+        b=Zk2t1BeAy4engQyx9iBaRD/aiEVkcFMRr6wT7wS4aaOrv+GP8SmbuHaqjBen674g/C
+         DII3cMfo8IkDRwvNqMYLMnw1/eEHh8S73Fzn5Hnm0ijZMWgDXmBSSV1ziRdvAn6aDprN
+         Q+M8bwGb/RU3WA6KKI/Crze3z7MH51naiRY8F70VNCnFuAk88+5QMIqsfPM9Rp0JZm30
+         j/W5fsf2of8VPwuZ9Pn1S2OyD4JA/P8IQktUARYeN9sGxc7QAsWser/gVJi2h3W3o4C5
+         w6pu4H1KDMzWAjJajq7Qc5jojiHs2ERcYBcO2enM1//zr5GZCCmUY9+wkMnFIzEhWAme
+         7WKg==
+X-Gm-Message-State: APjAAAVQLeYho16tKj5BbT/gNUClGHWIOK6Yfk/CPpuTx7vd7yzIVFIE
+        GsEHAWki/XAQdai9ZzHogkqEG18hGy/VllXUqljRgQ==
+X-Google-Smtp-Source: APXvYqzuhT8zAfliT03UCCUeVQ9wvw2YiBnPA2ndB71qcTtsV9ah1EZXLXBOBu3dA+ibOnzXqh8gTptJjIdIRXL94MY=
+X-Received: by 2002:aca:d405:: with SMTP id l5mr22892023oig.115.1571049627236;
+ Mon, 14 Oct 2019 03:40:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20190927090202.1468-1-drake@endlessm.com> <261805141.5tZyQaKU0z@kreacher>
+ <CAD8Lp46NF8rq55g0Mz40Mmz1+KzqrTzziK3oYcmfh=1RUCRzug@mail.gmail.com>
+ <4883845.KNzyzeMIEj@kreacher> <CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com>
+In-Reply-To: <CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 14 Oct 2019 12:40:15 +0200
+Message-ID: <CAJZ5v0jD_-phNM6NEonc6Z0ONkEdELT+6q_P1hnopM_iNVT2dw@mail.gmail.com>
+Subject: Re: [PATCH] PCI: also apply D3 delay when leaving D3cold
+To:     Daniel Drake <drake@endlessm.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The function pci_irq_get_node() is not used by anyone in the tree, so
-just delete it.
+On Mon, Oct 14, 2019 at 11:46 AM Daniel Drake <drake@endlessm.com> wrote:
+>
+> On Mon, Oct 14, 2019 at 5:22 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > While I still think that both the system resume and runtime resume code paths
+> > should be as similar as reasonably possible, the above needs to be taken into
+> > account IMO, so it is better to retain pci_pm_default_resume_early(), but make
+> > it do a conditional "ACPI power state refresh" and then call
+> > pci_restore_standard_config().
+> >
+> > So something like the patch below (can you please test it too?).
+>
+> This is also working fine, thanks for your help!
 
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
-
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 0884bedcfc7a..f95fe23830f0 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -1315,22 +1315,6 @@ const struct cpumask *pci_irq_get_affinity(struct pci_dev *dev, int nr)
- }
- EXPORT_SYMBOL(pci_irq_get_affinity);
- 
--/**
-- * pci_irq_get_node - return the NUMA node of a particular MSI vector
-- * @pdev:	PCI device to operate on
-- * @vec:	device-relative interrupt vector index (0-based).
-- */
--int pci_irq_get_node(struct pci_dev *pdev, int vec)
--{
--	const struct cpumask *mask;
--
--	mask = pci_irq_get_affinity(pdev, vec);
--	if (mask)
--		return local_memory_node(cpu_to_node(cpumask_first(mask)));
--	return dev_to_node(&pdev->dev);
--}
--EXPORT_SYMBOL(pci_irq_get_node);
--
- struct pci_dev *msi_desc_to_pci_dev(struct msi_desc *desc)
- {
- 	return to_pci_dev(desc->dev);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index f9088c89a534..755d8c0176b9 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1454,7 +1454,6 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
- void pci_free_irq_vectors(struct pci_dev *dev);
- int pci_irq_vector(struct pci_dev *dev, unsigned int nr);
- const struct cpumask *pci_irq_get_affinity(struct pci_dev *pdev, int vec);
--int pci_irq_get_node(struct pci_dev *pdev, int vec);
- 
- #else
- static inline int pci_msi_vec_count(struct pci_dev *dev) { return -ENOSYS; }
-@@ -1497,11 +1496,6 @@ static inline const struct cpumask *pci_irq_get_affinity(struct pci_dev *pdev,
- {
- 	return cpu_possible_mask;
- }
--
--static inline int pci_irq_get_node(struct pci_dev *pdev, int vec)
--{
--	return first_online_node;
--}
- #endif
- 
- /**
+Thanks for the confirmation and let me submit the patch properly.
