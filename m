@@ -2,61 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CAEDD5D7D
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2019 10:30:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51B34D5E05
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2019 10:58:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730461AbfJNIav (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Oct 2019 04:30:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56922 "EHLO mail.kernel.org"
+        id S1730587AbfJNI6s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Oct 2019 04:58:48 -0400
+Received: from mga06.intel.com ([134.134.136.31]:43474 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbfJNIau (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 14 Oct 2019 04:30:50 -0400
-Received: from dragon (li937-157.members.linode.com [45.56.119.157])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5443B207FF;
-        Mon, 14 Oct 2019 08:29:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571041850;
-        bh=p7mjM/EcKkarwYBL8yjO5OkJb2HPOW4/n1CL+uOOlMU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RTnfmVLrzT1mElpLV1XpxtXmAYaHC4vXjDk1D8B2kTsZLHBXEuOXdUn57LgcXb0Ej
-         h3mpF2mTZzuwOHBrv9gd3TZkQ4d/61IzyEHJNqi+GNSCzH6D3Q9rxbNjPNVhwsqsHm
-         enxUHSuGte972ZNKUuW2YUasfYnn5BuldVKKqFww=
-Date:   Mon, 14 Oct 2019 16:29:28 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        xen-devel@lists.xenproject.org, linux-tegra@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-        Li Yang <leoyang.li@nxp.com>, mbrugger@suse.com,
-        robin.murphy@arm.com, f.fainelli@gmail.com,
-        james.quinlan@broadcom.com, wahrenst@gmx.net,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 08/11] dts: arm64: layerscape: add dma-ranges property to
- pcie nodes
-Message-ID: <20191014082924.GI12262@dragon>
-References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
- <20190924181244.7159-9-nsaenzjulienne@suse.de>
+        id S1730354AbfJNI6s (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 14 Oct 2019 04:58:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 01:58:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,295,1566889200"; 
+   d="scan'208";a="207929957"
+Received: from vkuppusa-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.39.77])
+  by fmsmga001.fm.intel.com with ESMTP; 14 Oct 2019 01:58:41 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Changbin Du <changbin.du@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-fpga@vger.kernel.org,
+        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        Changbin Du <changbin.du@gmail.com>
+Subject: Re: [PATCH] kernel-doc: rename the kernel-doc directive 'functions' to 'specific'
+In-Reply-To: <20191013055359.23312-1-changbin.du@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20191013055359.23312-1-changbin.du@gmail.com>
+Date:   Mon, 14 Oct 2019 11:59:37 +0300
+Message-ID: <875zkrd7nq.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924181244.7159-9-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 08:12:39PM +0200, Nicolas Saenz Julienne wrote:
-> The bus behind the board's PCIe core has DMA addressing limitations. Add
-> an empty 'dma-ranges' property on all PCIe bus descriptions to inform
-> the OF core that a translation is due further down the line.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+On Sun, 13 Oct 2019, Changbin Du <changbin.du@gmail.com> wrote:
+> The 'functions' directive is not only for functions, but also works for
+> structs/unions. So the name is misleading. This patch renames it to
+> 'specific', so now we have export/internal/specific directives to limit
+> the functions/types to be included in documentation. Meanwhile we improved
+> the warning message.
 
-Applied, thanks.
+Agreed on "functions" being less than perfect. It directly exposes the
+idiosyncrasies of scripts/kernel-doc. I'm not sure "specific" is any
+better, though.
+
+Perhaps "symbols" would be more self-explanatory. Or, actually make
+"functions" only work on functions, and add a separate keyword for other
+stuff. *shrug*
+
+Seems like the patch is way too big. I'd probably add "symbols" (or
+whatever) as a synonym for "functions" for starters, and convert
+documents piecemeal, and finally drop the old one.
+
+The scripts/kernel-doc change should be a patch of its own.
+
+BR,
+Jani.
+
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
