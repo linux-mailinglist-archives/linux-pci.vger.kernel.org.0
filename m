@@ -2,90 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E11B4D5AEA
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2019 07:55:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67FD4D5B14
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2019 08:15:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfJNFzB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Oct 2019 01:55:01 -0400
-Received: from mail-ua1-f53.google.com ([209.85.222.53]:36223 "EHLO
-        mail-ua1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbfJNFzB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Oct 2019 01:55:01 -0400
-Received: by mail-ua1-f53.google.com with SMTP id r25so4632682uam.3
-        for <linux-pci@vger.kernel.org>; Sun, 13 Oct 2019 22:55:00 -0700 (PDT)
+        id S1729973AbfJNGOB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Oct 2019 02:14:01 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42958 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbfJNGOA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Oct 2019 02:14:00 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q12so9762864pff.9
+        for <linux-pci@vger.kernel.org>; Sun, 13 Oct 2019 23:14:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RnPm1nvmATxoGrHy+imAyvbNAEXi8Zri9vVJglGWOTM=;
-        b=pnoLvZ8WEWc++U1rgZmd5C0fHi5tR1VooVwwlGXiZkcH51D0YaKZDIzoG7zO12v5M3
-         GjEcU+nxR3wbcmLnh4EIrYNeksVZWYhiPbkpQ8c4o9zXcNkPR+EQjp5gM5hqztAC7vAd
-         nhRHF/9pHEoBuNPg5IUSK1154jTlxExchYn+VdZnvQS1mIHZ6Yt8vSDwP2ZhWnGgNHXr
-         KJ8Pw/wu9n8vE3Hpa1xlVo1BDpyPT6uGl9F1LbA2gvmZYGt5OBMOkRG/WKwRLoNQd6UR
-         lsBmSMETjCJWjdm6dJjDURXv/PWorLk1zdEKMzh5y2w913GqNe7j3H33YcVMF31Cb/Z1
-         BnYQ==
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SxGUJnst+Z9LYUe/x+To9UpSgZfsjSC5zAkllZtjf+4=;
+        b=bZl2xgOGiHdQDQxnROBaIuFohpDWTlh+1aSvMXOyjys330fNa80iIzuOZIL4r+YxLg
+         YkrRSMp0816VP9FgCpT5qdsjPMvgA2oDYZaDhJjzBN9FQB5YYjOTZlWttsDEs0GNSD/u
+         C6i7yz4IBUeuKbei1dyWTnzyR+Zx99Fje3yJKmD4Atx1AkReRrreojKQxv9d1DvnyTcc
+         StenxTnhhDOOLItCFhoCtJd219BmuQAC/7lg7QkHaLO7mIEHEl3xQE7mQW+AHC03IKNO
+         HgUZWHa5FrA4ufhvaDpVPg6rShp8tLkF8K+hcCfu4wqK46dWQ4EVADJB+0Fo5pghg0NB
+         ZrfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RnPm1nvmATxoGrHy+imAyvbNAEXi8Zri9vVJglGWOTM=;
-        b=J2xP2P9g9gWlagfHYthZZj7kb4WnKQgzvKNw4VtRlZSDD436C8qoNz3u29qEkjEWZP
-         7ye/nL+Gu2eFqK6CU5zXBcvvml6OhmDKkdbkvAQUnlnp9M3T3N71QkI/4U8IyZFEjCcN
-         2nxgSGv0+XWmS4/y6BT0nwV3V7jAX22DcJnF3vePqqQf+GjSWpGnnwE9mCIm/zKNIUDx
-         HBid7OOm+s8nayCfvoLw0Jbo15H1sqoWBAoLnL7c1hTJ7O9xI95ZRsglCXs+KafXHAvi
-         X20wzzEmfrrzbZegeI1DxD7xR3gaIopSEZl1jBfvzwfS51EoN6ZESUVBUcj0h9/nQRMJ
-         JEHA==
-X-Gm-Message-State: APjAAAVR4ozzz2+rHMYWifE6Jrh5YXGiNLZ7LfhK/L/FQ54iVmL2MrqM
-        3BbhlOMUj6Fsp1gZ1ZUkzoyO7Z5HHn01eQryIPw=
-X-Google-Smtp-Source: APXvYqzpi9SeNFGGBft2Wy0D9aohTwrrvHkm3fn0RQj3JXpAWVfBn0ZvRvbFCXEdTZm+UV5Ol8cGmvW21O72EwDcw14=
-X-Received: by 2002:ab0:628f:: with SMTP id z15mr11451149uao.126.1571032499698;
- Sun, 13 Oct 2019 22:54:59 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SxGUJnst+Z9LYUe/x+To9UpSgZfsjSC5zAkllZtjf+4=;
+        b=dXpLPLPa/xeryx8HuSY8JugtSKOzaROUK9pP4qY5yMdUkwixy+gT5ltvr4DHs2gpzT
+         dU4vlpRJOZqB7GAhFiIv4vOGygGdNnDsAcjoK/bjSyFT8DCUOfYFtnWA7u1Doro1KNk0
+         p6ZOkq6nQJS79F54vRVdH+lNLEVHsWRtKFCoB6vdufRTXlpNdM20vzgOajXvQfsbLrc0
+         hPDypx3qFTZpJY0Ve6IPVUr/5rJwkDTzHc2FOzTebe6ErgAFkSP0X4OS3sbpLR1CoLy2
+         74Fly0P8LEcYu4TVvJQYbc4sJGYEk5Oc3hQvY2IIyAGAzPWzE0gMkQhIiPD7TXvp0QzL
+         T1dA==
+X-Gm-Message-State: APjAAAXTzg/Mi37qeCOwxWunKcj4QIpyg1hzpO3gDTZ+EDL8mSxOzJCt
+        rKtATgni+8vHva7mQytICSD+WA==
+X-Google-Smtp-Source: APXvYqyqheBXHYAVz8Yor+xk1Ao/qF3goQCfYBpcYXrsoKT36d9U5c3UpZeI/1TZVa5JFWigNg/VSg==
+X-Received: by 2002:a63:6586:: with SMTP id z128mr17768326pgb.260.1571033639898;
+        Sun, 13 Oct 2019 23:13:59 -0700 (PDT)
+Received: from limbo.local (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id dw19sm14645458pjb.27.2019.10.13.23.13.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Oct 2019 23:13:59 -0700 (PDT)
+From:   Daniel Drake <drake@endlessm.com>
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, rafael.j.wysocki@intel.com,
+        linux@endlessm.com, linux-pm@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH] PCI: increase D3 delay for AMD Ryzen5/7 XHCI controllers
+Date:   Mon, 14 Oct 2019 14:13:55 +0800
+Message-Id: <20191014061355.29072-1-drake@endlessm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191008164232.GA173643@google.com> <20191009040534.GL2819@lahna.fi.intel.com>
- <CAMz9Wg_8ZYkw1f3MyqcqNMBajJ_Q+qwojQhg8WqiPTPeUSNXZQ@mail.gmail.com>
- <20191009075650.GM2819@lahna.fi.intel.com> <CA+CmpXupMC5Kk_tCX8-TQESM2BQ9RFU196dzXGmpv9TcMgyb4A@mail.gmail.com>
-In-Reply-To: <CA+CmpXupMC5Kk_tCX8-TQESM2BQ9RFU196dzXGmpv9TcMgyb4A@mail.gmail.com>
-From:   AceLan Kao <acelan@gmail.com>
-Date:   Mon, 14 Oct 2019 13:54:48 +0800
-Message-ID: <CAMz9Wg_2niJcSs_wOkiVm44zDd8_sVdhhM64MJd-+XTqEmbgMw@mail.gmail.com>
-Subject: Re: [bugzilla-daemon@bugzilla.kernel.org: [Bug 205119] New: It takes
- long time to wake up from s2idle on Dell XPS 7390 2-in-1]
-To:     Yehezkel Bernat <yehezkelshb@gmail.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-After upgrade the BIOS to v1.0.13, the issue is gone.
-Thanks.
+On Asus laptops with AMD Ryzen7 3700U and AMD Ryzen5 3500U,
+the XHCI controller fails to resume from runtime suspend or s2idle,
+and USB becomes unusable from that point.
 
-Yehezkel Bernat <yehezkelshb@gmail.com> =E6=96=BC 2019=E5=B9=B410=E6=9C=881=
-0=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=884:09=E5=AF=AB=E9=81=93=EF=
-=BC=9A
->
-> On Wed, Oct 9, 2019 at 10:56 AM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> >
-> > On Wed, Oct 09, 2019 at 03:50:25PM +0800, AceLan Kao wrote:
-> >
-> > > There is a new BIOS v1.0.13 on dell website, but it requires windows
-> > > to upgrade it, I'll try it later.
-> >
-> > OK, thanks.
->
-> I'd try to check fwupd if you haven't tried it yet.
-> Dell FW is usually available there.
+xhci_hcd 0000:03:00.4: Refused to change power state, currently in D3
+xhci_hcd 0000:03:00.4: enabling device (0000 -> 0002)
+xhci_hcd 0000:03:00.4: WARN: xHC restore state timeout
+xhci_hcd 0000:03:00.4: PCI post-resume error -110!
+xhci_hcd 0000:03:00.4: HC died; cleaning up
 
+The D3-to-D0 transition is successful if the D3 delay is increased
+to 20ms. Add an appropriate quirk for the affected hardware.
 
+Link: http://lkml.kernel.org/r/CAD8Lp47Vh69gQjROYG69=waJgL7hs1PwnLonL9+27S_TcRhixA@mail.gmail.com
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+---
+ drivers/pci/quirks.c | 30 +++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
---=20
-Chia-Lin Kao(AceLan)
-http://blog.acelan.idv.tw/
-E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 320255e5e8f8..4570439a6a6c 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -1871,19 +1871,35 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	0x2609, quirk_intel_pcie_pm);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	0x260a, quirk_intel_pcie_pm);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	0x260b, quirk_intel_pcie_pm);
+ 
++static void quirk_d3_delay(struct pci_dev *dev, unsigned int delay)
++{
++	if (dev->d3_delay >= delay)
++		return;
++
++	dev->d3_delay = delay;
++	pci_info(dev, "extending delay after power-on from D3 to %d msec\n",
++		 dev->d3_delay);
++}
++
+ static void quirk_radeon_pm(struct pci_dev *dev)
+ {
+ 	if (dev->subsystem_vendor == PCI_VENDOR_ID_APPLE &&
+-	    dev->subsystem_device == 0x00e2) {
+-		if (dev->d3_delay < 20) {
+-			dev->d3_delay = 20;
+-			pci_info(dev, "extending delay after power-on from D3 to %d msec\n",
+-				 dev->d3_delay);
+-		}
+-	}
++	    dev->subsystem_device == 0x00e2)
++		quirk_d3_delay(dev, 20);
+ }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6741, quirk_radeon_pm);
+ 
++/*
++ * Ryzen7 XHCI controllers fail upon resume from runtime suspend or s2idle
++ * unless an extended D3 delay is used.
++ */
++static void quirk_ryzen_xhci_d3(struct pci_dev *dev)
++{
++	quirk_d3_delay(dev, 20);
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e0, quirk_ryzen_xhci_d3);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e1, quirk_ryzen_xhci_d3);
++
+ #ifdef CONFIG_X86_IO_APIC
+ static int dmi_disable_ioapicreroute(const struct dmi_system_id *d)
+ {
+-- 
+2.20.1
+
