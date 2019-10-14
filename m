@@ -2,111 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 21ADDD64F1
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2019 16:18:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47626D65F1
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2019 17:12:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732502AbfJNOSc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Oct 2019 10:18:32 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:40576 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732362AbfJNOSc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Oct 2019 10:18:32 -0400
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iK1B7-0001sz-0w; Mon, 14 Oct 2019 16:18:29 +0200
-To:     Remi Pommarel <repk@triplefau.lt>
-Subject: Re: [PATCH v3] PCI: aardvark: Use LTSSM state to build link  training flag
-X-PHP-Originating-Script: 0:main.inc
+        id S1732647AbfJNPMM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Oct 2019 11:12:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732223AbfJNPMM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 14 Oct 2019 11:12:12 -0400
+Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C3752133F;
+        Mon, 14 Oct 2019 15:12:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571065931;
+        bh=KF9lPPdouuK9SQsaYgp33MOp4tIf20dFk8q5UKD3JIU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=dSvV12fiK+ueZOx9yN/TgVW9nmoHgErNUPSe2pAL8Ma8jLjRiTm9EKG5e47N5ZTOW
+         mQVoAjWacOe8ABUdxWKw5fmOogLVOVBrvA/fTcMeyzfVYdLDeifhe8H9twzjTn5aTa
+         tOfZXzuSsHLnu5xbaiMdLw5expWU4nyiZwAzB330=
+Date:   Mon, 14 Oct 2019 10:12:09 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: msi: remove pci_irq_get_node() as no one is using it
+Message-ID: <20191014151209.GA183158@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 14 Oct 2019 15:18:28 +0100
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Ellie Reeves <ellierevves@gmail.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        <linux-arm-kernel@lists.infradead.org>
-In-Reply-To: <20191014140026.GB1426@voidbox>
-References: <20190522213351.21366-3-repk@triplefau.lt>
- <20190930154017.GF42880@e119886-lin.cambridge.arm.com>
- <20190930165230.GA12568@voidbox>
- <20191001080546.GI42880@e119886-lin.cambridge.arm.com>
- <20191013113415.3c653526@why>
- <20191014100129.GA18832@e121166-lin.cambridge.arm.com>
- <20191014130627.GA1426@voidbox>
- <eda65141ee1006fe3a93a9989867dc31@www.loen.fr>
- <20191014140026.GB1426@voidbox>
-Message-ID: <971be151d24312cc533989a64bd454b4@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: repk@triplefau.lt, lorenzo.pieralisi@arm.com, andrew.murray@arm.com, ellierevves@gmail.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, helgaas@kernel.org, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014100452.GA6699@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2019-10-14 15:00, Remi Pommarel wrote:
-> On Mon, Oct 14, 2019 at 02:45:34PM +0100, Marc Zyngier wrote:
->> Hi Remi,
->>
->> On 2019-10-14 14:06, Remi Pommarel wrote:
->> > Hi Lorenzo, Marc,
+On Mon, Oct 14, 2019 at 12:04:52PM +0200, Greg Kroah-Hartman wrote:
+> The function pci_irq_get_node() is not used by anyone in the tree, so
+> just delete it.
+> 
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[...]
+Applied with Andrew's Reviewed-by to psi/msi for v5.5, thanks!
 
->> > Sure, I think this could be considered a fix for the following 
->> commit :
->> > Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI
->> > bridge config space")
->> >
->> > Moreover, Marc, I am also a bit supprised that you did not have to 
->> use
->> > [1] to even be able to boot.
->>
->> No, I don't have that one, and yet the system boots fine (although 
->> PCI
->> doesn't get much use on this box). I guess I'm lucky...
->>
->> > Also if you want to be completely immune to this kind of SError 
->> (that
->> > could theoretically happen if the link goes down for other reasons 
->> than
->> > being retrained) you would have to use mainline ATF along with 
->> [2]. But
->> > the chances to hit that are low (could only happen in case of link
->> > errors).
->>
->> Now you've got me worried. Can you point me to that ATF patch? I'm 
->> quite
->> curious as to how you recover from an SError on a v8.0 CPU given 
->> that it
->> has no syndrome information and may as well signal "CPU on fire!"...
->>
->
-> The patch is at [1]. Please note that this is done quite similarly 
-> for
-> rcar.
->
-> [1] 
-> https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/1541
-
-That patch, without any other information, looks quite flaky. Unless 
-there
-is a strong guarantee that ESR_EL3.ISS==2 only when the PCIe controller
-goes wrong, it looks like this only papers over the issue...
-
-That's pretty much independent from the patch at hand in this thread, 
-but
-I certainly wouldn't trust this ATF patch without some more information
-about how the fault is reported to the CPU.
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+> ---
+> 
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index 0884bedcfc7a..f95fe23830f0 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -1315,22 +1315,6 @@ const struct cpumask *pci_irq_get_affinity(struct pci_dev *dev, int nr)
+>  }
+>  EXPORT_SYMBOL(pci_irq_get_affinity);
+>  
+> -/**
+> - * pci_irq_get_node - return the NUMA node of a particular MSI vector
+> - * @pdev:	PCI device to operate on
+> - * @vec:	device-relative interrupt vector index (0-based).
+> - */
+> -int pci_irq_get_node(struct pci_dev *pdev, int vec)
+> -{
+> -	const struct cpumask *mask;
+> -
+> -	mask = pci_irq_get_affinity(pdev, vec);
+> -	if (mask)
+> -		return local_memory_node(cpu_to_node(cpumask_first(mask)));
+> -	return dev_to_node(&pdev->dev);
+> -}
+> -EXPORT_SYMBOL(pci_irq_get_node);
+> -
+>  struct pci_dev *msi_desc_to_pci_dev(struct msi_desc *desc)
+>  {
+>  	return to_pci_dev(desc->dev);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index f9088c89a534..755d8c0176b9 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1454,7 +1454,6 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+>  void pci_free_irq_vectors(struct pci_dev *dev);
+>  int pci_irq_vector(struct pci_dev *dev, unsigned int nr);
+>  const struct cpumask *pci_irq_get_affinity(struct pci_dev *pdev, int vec);
+> -int pci_irq_get_node(struct pci_dev *pdev, int vec);
+>  
+>  #else
+>  static inline int pci_msi_vec_count(struct pci_dev *dev) { return -ENOSYS; }
+> @@ -1497,11 +1496,6 @@ static inline const struct cpumask *pci_irq_get_affinity(struct pci_dev *pdev,
+>  {
+>  	return cpu_possible_mask;
+>  }
+> -
+> -static inline int pci_irq_get_node(struct pci_dev *pdev, int vec)
+> -{
+> -	return first_online_node;
+> -}
+>  #endif
+>  
+>  /**
