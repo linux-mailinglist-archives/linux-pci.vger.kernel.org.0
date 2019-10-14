@@ -2,184 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D0C4D5CFB
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2019 10:00:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AED9D5D46
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2019 10:20:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbfJNIAx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Oct 2019 04:00:53 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:36104 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726637AbfJNIAx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 14 Oct 2019 04:00:53 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 043818491006F9A592D1;
-        Mon, 14 Oct 2019 16:00:49 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 14 Oct 2019
- 16:00:46 +0800
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-        <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
-        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
-        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
-        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
-        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
-        <rafael@kernel.org>, <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, <lenb@kernel.org>,
-        <linux-acpi@vger.kernel.org>
-References: <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
- <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
- <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
- <20191010073212.GB18412@dhcp22.suse.cz>
- <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
- <20191011111539.GX2311@hirez.programming.kicks-ass.net>
- <7fad58d6-5126-e8b8-a7d8-a91814da53ba@huawei.com>
- <20191012074014.GA2037204@kroah.com>
- <1e1ec851-b5e7-8f35-a627-4c12ca9c2d3c@huawei.com>
- <20191012104001.GA2052933@kroah.com> <20191012104742.GA2053473@kroah.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <82000bc8-6912-205b-0251-25b9cc430973@huawei.com>
-Date:   Mon, 14 Oct 2019 16:00:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        id S1729044AbfJNIU3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Oct 2019 04:20:29 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:10985 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbfJNIU3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Oct 2019 04:20:29 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5da42fcf0000>; Mon, 14 Oct 2019 01:20:31 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 14 Oct 2019 01:20:27 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 14 Oct 2019 01:20:27 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 14 Oct
+ 2019 08:20:26 +0000
+Received: from localhost (10.124.1.5) by DRHQMAIL107.nvidia.com (10.27.9.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 14 Oct 2019 08:20:26
+ +0000
+Date:   Mon, 14 Oct 2019 10:20:23 +0200
+From:   Thierry Reding <treding@nvidia.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+CC:     <bhelgaas@google.com>, <lorenzo.pieralisi@arm.com>,
+        <jonathanh@nvidia.com>, <linux-tegra@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>
+Subject: Re: [PATCH] PCI: Add CRS timeout for pci_device_is_present()
+Message-ID: <20191014082023.GA232162@ulmo>
+References: <20191005182129.32538-1-vidyas@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20191012104742.GA2053473@kroah.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191005182129.32538-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
+Content-Disposition: inline
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1571041231; bh=3R3NhNbrwBjleRgLhoTnWJZLBZ7SGWD1nQCPrLJD/iw=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:In-Reply-To:X-NVConfidentiality:User-Agent:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:
+         Content-Disposition;
+        b=lXfj/XFo+iJJIDbILjAXEtl46HbuTAeJWK05/E1FcN144vfzDqb1s9Y5r7ShSEnYx
+         hF8y4kxQ9Nd4IrZzUCRJxiRW8j6exw6no/4mzJbgd+XJI/02HhkY/sqhNuzak9K7lj
+         n5tOw5BGV+7ZMiOs74oHHN5QNUmhqg5gtBDWL8va8EGnRuO2A3QXnUWeiHI3mxrrW8
+         oTlk5GvUVbNdcVTWvWbSO9/rr93KOalCRKaop0DO65dJUXKz+wdlu188G+ddHqUlp6
+         79oLMfVHbRGuuN4SHBNK+xSgBd/4oStEKTb7ShlucK3jdASJlgqK5zHuaaTb4Gt+f9
+         b4zq8jV+uhq/g==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2019/10/12 18:47, Greg KH wrote:
-> On Sat, Oct 12, 2019 at 12:40:01PM +0200, Greg KH wrote:
->> On Sat, Oct 12, 2019 at 05:47:56PM +0800, Yunsheng Lin wrote:
->>> On 2019/10/12 15:40, Greg KH wrote:
->>>> On Sat, Oct 12, 2019 at 02:17:26PM +0800, Yunsheng Lin wrote:
->>>>> add pci and acpi maintainer
->>>>> cc linux-pci@vger.kernel.org and linux-acpi@vger.kernel.org
->>>>>
->>>>> On 2019/10/11 19:15, Peter Zijlstra wrote:
->>>>>> On Fri, Oct 11, 2019 at 11:27:54AM +0800, Yunsheng Lin wrote:
->>>>>>> But I failed to see why the above is related to making node_to_cpumask_map()
->>>>>>> NUMA_NO_NODE aware?
->>>>>>
->>>>>> Your initial bug is for hns3, which is a PCI device, which really _MUST_
->>>>>> have a node assigned.
->>>>>>
->>>>>> It not having one, is a straight up bug. We must not silently accept
->>>>>> NO_NODE there, ever.
->>>>>>
->>>>>
->>>>> I suppose you mean reporting a lack of affinity when the node of a pcie
->>>>> device is not set by "not silently accept NO_NODE".
->>>>
->>>> If the firmware of a pci device does not provide the node information,
->>>> then yes, warn about that.
->>>>
->>>>> As Greg has asked about in [1]:
->>>>> what is a user to do when the user sees the kernel reporting that?
->>>>>
->>>>> We may tell user to contact their vendor for info or updates about
->>>>> that when they do not know about their system well enough, but their
->>>>> vendor may get away with this by quoting ACPI spec as the spec
->>>>> considering this optional. Should the user believe this is indeed a
->>>>> fw bug or a misreport from the kernel?
->>>>
->>>> Say it is a firmware bug, if it is a firmware bug, that's simple.
->>>>
->>>>> If this kind of reporting is common pratice and will not cause any
->>>>> misunderstanding, then maybe we can report that.
->>>>
->>>> Yes, please do so, that's the only way those boxes are ever going to get
->>>> fixed.  And go add the test to the "firmware testing" tool that is based
->>>> on Linux that Intel has somewhere, to give vendors a chance to fix this
->>>> before they ship hardware.
->>>>
->>>> This shouldn't be a big deal, we warn of other hardware bugs all the
->>>> time.
->>>
->>> Ok, thanks for clarifying.
->>>
->>> Will send a patch to catch the case when a pcie device without numa node
->>> being set and warn about it.
->>>
->>> Maybe use dev->bus to verify if it is a pci device?
->>
->> No, do that in the pci bus core code itself, when creating the devices
->> as that is when you know, or do not know, the numa node, right?
->>
->> This can't be in the driver core only, as each bus type will have a
->> different way of determining what the node the device is on.  For some
->> reason, I thought the PCI core code already does this, right?
-> 
-> Yes, pci_irq_get_node(), which NO ONE CALLS!  I should go delete that
-> thing...
-> 
-> Anyway, it looks like the pci core code does call set_dev_node() based
-> on the PCI bridge, so if that is set up properly, all should be fine.
-> 
-> If not, well, you have buggy firmware and you need to warn about that at
-> the time you are creating the bridge.  Look at the call to
-> pcibus_to_node() in pci_register_host_bridge().
+--qDbXVdCdHGoSgWSk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for pointing out the specific function.
-Maybe we do not need to warn about the case when the device has a parent,
-because we must have warned about the parent if the device has a parent
-and the parent also has a node of NO_NODE, so do not need to warn the child
-device anymore? like blew:
+On Sat, Oct 05, 2019 at 11:51:29PM +0530, Vidya Sagar wrote:
+> Adds a 60 seconds timeout to consider CRS (Configuration request Retry
+> Status) from a downstream device when Vendor ID read is attempted by
+> an upstream device. This helps to work with devices that return CRS
+> during system resume. This also makes pci_device_is_present() consistent
+> with the probe path where 60 seconds timeout is already being used.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  drivers/pci/pci.c   | 3 ++-
+>  drivers/pci/pci.h   | 2 ++
+>  drivers/pci/probe.c | 2 +-
+>  3 files changed, 5 insertions(+), 2 deletions(-)
 
-@@ -932,6 +932,10 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
-        list_add_tail(&bus->node, &pci_root_buses);
-        up_write(&pci_bus_sem);
+I think this makes sense, so:
 
-+       if (nr_node_ids > 1 && !parent &&
-+           dev_to_node(bus->bridge) == NUMA_NO_NODE)
-+               dev_err(bus->bridge, FW_BUG "No node assigned on NUMA capable HW. Please contact your vendor for updates.\n");
-+
-        return 0;
+Reviewed-by: Thierry Reding <treding@nvidia.com>
 
+However, it looks like Sinan has researched this extensively in the past
+and gave a presentation on this at Plumbers in 2017:
 
-Also, we do not need to warn about that in pci_device_add(), Right?
-Because we must have warned about the pci host bridge of the pci device.
+	https://blog.linuxplumbersconf.org/2017/ocw/system/presentations/4732/orig=
+inal/crs.pdf
 
-I may be wrong about above because I am not so familiar with the pci.
+Adding Sinan to see if he has any concerns about this, since resume time
+is explicitly mentioned in the above slides.
 
-> 
-> And yes, you need to do this all on a per-bus-type basis, as has been
-> pointed out.  It's up to the bus to create the device and set this up
-> properly.
+Thierry
 
-Thanks.
-Will do that on per-bus-type basis.
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 95dc78ebdded..3ab9f6d3c8a6 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5905,7 +5905,8 @@ bool pci_device_is_present(struct pci_dev *pdev)
+> =20
+>  	if (pci_dev_is_disconnected(pdev))
+>  		return false;
+> -	return pci_bus_read_dev_vendor_id(pdev->bus, pdev->devfn, &v, 0);
+> +	return pci_bus_read_dev_vendor_id(pdev->bus, pdev->devfn, &v,
+> +					  PCI_CRS_TIMEOUT);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_device_is_present);
+> =20
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 3f6947ee3324..aa25c5fdc6a5 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -4,6 +4,8 @@
+> =20
+>  #include <linux/pci.h>
+> =20
+> +#define PCI_CRS_TIMEOUT		(60 * 1000)	/* 60 sec*/
+> +
+>  #define PCI_FIND_CAP_TTL	48
+> =20
+>  #define PCI_VSEC_ID_INTEL_TBT	0x1234	/* Thunderbolt */
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 7c5d68b807ef..6e44a03283c8 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2258,7 +2258,7 @@ static struct pci_dev *pci_scan_device(struct pci_b=
+us *bus, int devfn)
+>  	struct pci_dev *dev;
+>  	u32 l;
+> =20
+> -	if (!pci_bus_read_dev_vendor_id(bus, devfn, &l, 60*1000))
+> +	if (!pci_bus_read_dev_vendor_id(bus, devfn, &l, PCI_CRS_TIMEOUT))
+>  		return NULL;
+> =20
+>  	dev =3D pci_alloc_dev(bus);
+> --=20
+> 2.17.1
+>=20
 
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> .
-> 
+--qDbXVdCdHGoSgWSk
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2kL8UACgkQ3SOs138+
+s6Gn4Q//VxI/PVxz+a9QSqpPhLaanrs3PZ6+rriFTOto/X/uePSP5UQeFQQDRSfs
+WlJf6SiZtENNc/tagAfFXrFqLdevt3LBYEZNS6FB7ecWArOvUFnfpqkpAqm5fBwz
+ZalLJNwX8USeUlkWNsxamRSJmQiqT1aWejM5eOd/oVLXXYb9M0jK9T1OVSQQJrMB
+vbFqn510ya7LVIr0gJKWYpsULh3XX1HGtdGHg21xua/IUk7M3qGFTPa+Los+Q8tg
+p5czrOjJci+ibeGt1pac7kYpc+KNbqcGJEAttU2cwUuJfMctOeneWyTac9aw1q8L
+Qr4jY4IwWtC5Qgi0sOg3pI4Q5FIFxUqJ5Qmk9wzb4EhTC0BDxb4E6F3wPEFqIW5K
+qdrDH6jxFrUssHTyrrL0JO9B5b5o0SSBD/r5L05BkPBHPkKD+5Mo9achnjqpm356
+rYqyWfrax2iUP8Y3x1F+T92PDfi1iCsFbM/S5n9gU0XcgCZRS6UxCHmE+CH48lY4
+XIDDStEjjsNqBgr6Xd1KcX03W5I8bGYkAZ9cGvo4/f5aJnFSQ1AJpMbTitoTU/o8
+8kLNxWd/fNjSOhpTvlMHSWSfnNKaP285SriQ9r5KHj/CCdbWQgotTueLnVdhGxao
+XiyNQmHc+/75/0t3dap30gforBnMPdLK8B2vioY1laGsBzKKLsc=
+=c9H9
+-----END PGP SIGNATURE-----
+
+--qDbXVdCdHGoSgWSk--
