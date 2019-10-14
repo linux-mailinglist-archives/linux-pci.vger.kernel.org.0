@@ -2,125 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ACFDCD6077
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2019 12:45:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94DF0D6096
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2019 12:51:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731487AbfJNKp0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Oct 2019 06:45:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:40298 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731305AbfJNKp0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:45:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42078337;
-        Mon, 14 Oct 2019 03:45:25 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD6B33F718;
-        Mon, 14 Oct 2019 03:45:24 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 11:45:23 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com, treding@nvidia.com,
-        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-pci@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH] PCI: Add CRS timeout for pci_device_is_present()
-Message-ID: <20191014104522.GR42880@e119886-lin.cambridge.arm.com>
-References: <20191005182129.32538-1-vidyas@nvidia.com>
+        id S1731728AbfJNKvf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Oct 2019 06:51:35 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:48649 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731449AbfJNKve (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Oct 2019 06:51:34 -0400
+Received: from 79.184.254.38.ipv4.supernova.orange.pl (79.184.254.38) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 9c378dd1878789af; Mon, 14 Oct 2019 12:51:32 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PCI <linux-pci@vger.kernel.org>
+Cc:     Daniel Drake <drake@endlessm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] PCI: PM: Consolidate runtime resume and system resume paths
+Date:   Mon, 14 Oct 2019 12:51:31 +0200
+Message-ID: <3118349.722IRLjr4b@kreacher>
+In-Reply-To: <CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com>
+References: <20190927090202.1468-1-drake@endlessm.com> <4883845.KNzyzeMIEj@kreacher> <CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191005182129.32538-1-vidyas@nvidia.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Oct 05, 2019 at 11:51:29PM +0530, Vidya Sagar wrote:
-> Adds a 60 seconds timeout to consider CRS (Configuration request Retry
-> Status) from a downstream device when Vendor ID read is attempted by
-> an upstream device. This helps to work with devices that return CRS
-> during system resume. This also makes pci_device_is_present() consistent
-> with the probe path where 60 seconds timeout is already being used.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-This looks like a good idea.
+There is an arbitrary difference between the system resume and
+runtime resume code paths for PCI devices regarding the delay to
+apply when switching the devices from D3cold to D0.
 
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
->  drivers/pci/pci.c   | 3 ++-
->  drivers/pci/pci.h   | 2 ++
->  drivers/pci/probe.c | 2 +-
->  3 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 95dc78ebdded..3ab9f6d3c8a6 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5905,7 +5905,8 @@ bool pci_device_is_present(struct pci_dev *pdev)
->  
->  	if (pci_dev_is_disconnected(pdev))
->  		return false;
-> -	return pci_bus_read_dev_vendor_id(pdev->bus, pdev->devfn, &v, 0);
-> +	return pci_bus_read_dev_vendor_id(pdev->bus, pdev->devfn, &v,
-> +					  PCI_CRS_TIMEOUT);
->  }
->  EXPORT_SYMBOL_GPL(pci_device_is_present);
->  
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 3f6947ee3324..aa25c5fdc6a5 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -4,6 +4,8 @@
->  
->  #include <linux/pci.h>
->  
-> +#define PCI_CRS_TIMEOUT		(60 * 1000)	/* 60 sec*/
-> +
+Namely, pci_restore_standard_config() used in the runtime resume
+code path calls pci_set_power_state() which in turn invokes
+__pci_start_power_transition() to power up the device through the
+platform firmware and that function applies the transition delay
+(as per PCI Express Base Specification Revision 2.0, Section 6.6.1).
+However, pci_pm_default_resume_early() used in the system resume
+code path calls pci_power_up() which doesn't apply the delay at
+all and that causes issues to occur during resume from
+suspend-to-idle on some systems where the delay is required.
 
-This has the same value as PCIE_RESET_READY_POLL_MS defined in pci.c, when
-I look at how PCIE_RESET_READY_POLL_MS is used, it seems that we have two
-nearly identical ways to handle the same thing.
+Since there is no reason for that difference to exist, modify
+pci_pm_default_resume_early() to invoke pci_restore_standard_config()
+instead of pci_power_up() and drop the latter, but in order to
+prevent the ACPI power state values (cached by the ACPI layer) from
+becoming stale in some cases during resume from suspend-to-RAM
+(ACPI S3), as per commit cc2893b6af52 ("PCI: Ensure we re-enable
+devices on resume"), refresh the ACPI power state information in
+pci_pm_default_resume_early() in that case.
 
-pci_dev_wait - this seems to be specifically used for handling SV CRS when
-reading the vendor ID.
+[Note that while this change should take the issue originally
+ addressed by commit cc2893b6af52 ("PCI: Ensure we re-enable devices
+ on resume") into account in a generally safer way, an alternative
+ would be to make pci_power_up() use __pci_start_power_transition()
+ instead of calling platform_pci_set_power_state() directly.]
 
-pci_dev_wait - this seems to be used after FLR, AF_FLR, bus reset and D3-D0,
-in all the use-cases the timeout is 60 seconds. This function waits for
-the function to return a non-CRS completion - however it doesn't rely on
-the SV value of 0x0001.
+Fixes: db288c9c5f9d ("PCI / PM: restore the original behavior of pci_set_power_state()")
+Reported-by: Daniel Drake <drake@endlessm.com> 
+Tested-by: Daniel Drake <drake@endlessm.com> 
+Link: https://lore.kernel.org/linux-pm/CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com/T/#m21be74af263c6a34f36e0fc5c77c5449d9406925
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/pci/pci-driver.c |    8 +++++---
+ drivers/pci/pci.c        |   15 ---------------
+ drivers/pci/pci.h        |    1 -
+ 3 files changed, 5 insertions(+), 19 deletions(-)
 
-What is the reason that pci_dev_wait polls on PCI_COMMAND instead of a SV
-CRS value? (Is this a hack to gain some CPU time on RC's without SV? I.e.
-rather than the hardware retrying, it just gives up allowing us to retry).
+Index: linux-pm/drivers/pci/pci-driver.c
+===================================================================
+--- linux-pm.orig/drivers/pci/pci-driver.c
++++ linux-pm/drivers/pci/pci-driver.c
+@@ -523,9 +523,10 @@ static int pci_restore_standard_config(s
+ 
+ static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
+ {
+-	pci_power_up(pci_dev);
+-	pci_restore_state(pci_dev);
+-	pci_pme_restore(pci_dev);
++	if (pm_resume_via_firmware())
++		pci_refresh_power_state(pci_dev);
++
++	pci_restore_standard_config(pci_dev);
+ }
+ 
+ /*
+@@ -713,6 +714,7 @@ static void pci_pm_complete(struct devic
+ 		pci_power_t pre_sleep_state = pci_dev->current_state;
+ 
+ 		pci_refresh_power_state(pci_dev);
++		pci_update_current_state(pci_dev, pci_dev->current_state);
+ 		/*
+ 		 * On platforms with ACPI this check may also trigger for
+ 		 * devices sharing power resources if one of those power
+Index: linux-pm/drivers/pci/pci.c
+===================================================================
+--- linux-pm.orig/drivers/pci/pci.c
++++ linux-pm/drivers/pci/pci.c
+@@ -954,21 +954,6 @@ void pci_refresh_power_state(struct pci_
+ {
+ 	if (platform_pci_power_manageable(dev))
+ 		platform_pci_refresh_power_state(dev);
+-
+-	pci_update_current_state(dev, dev->current_state);
+-}
+-
+-/**
+- * pci_power_up - Put the given device into D0 forcibly
+- * @dev: PCI device to power up
+- */
+-void pci_power_up(struct pci_dev *dev)
+-{
+-	if (platform_pci_power_manageable(dev))
+-		platform_pci_set_power_state(dev, PCI_D0);
+-
+-	pci_raw_set_power_state(dev, PCI_D0);
+-	pci_update_current_state(dev, PCI_D0);
+ }
+ 
+ /**
+Index: linux-pm/drivers/pci/pci.h
+===================================================================
+--- linux-pm.orig/drivers/pci/pci.h
++++ linux-pm/drivers/pci/pci.h
+@@ -85,7 +85,6 @@ struct pci_platform_pm_ops {
+ int pci_set_platform_pm(const struct pci_platform_pm_ops *ops);
+ void pci_update_current_state(struct pci_dev *dev, pci_power_t state);
+ void pci_refresh_power_state(struct pci_dev *dev);
+-void pci_power_up(struct pci_dev *dev);
+ void pci_disable_enabled_device(struct pci_dev *dev);
+ int pci_finish_runtime_suspend(struct pci_dev *dev);
+ void pcie_clear_root_pme_status(struct pci_dev *dev);
 
-Is there any reason why these two functions can be combined?
 
->  #define PCI_FIND_CAP_TTL	48
->  
->  #define PCI_VSEC_ID_INTEL_TBT	0x1234	/* Thunderbolt */
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 7c5d68b807ef..6e44a03283c8 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2258,7 +2258,7 @@ static struct pci_dev *pci_scan_device(struct pci_bus *bus, int devfn)
->  	struct pci_dev *dev;
->  	u32 l;
->  
-> -	if (!pci_bus_read_dev_vendor_id(bus, devfn, &l, 60*1000))
-> +	if (!pci_bus_read_dev_vendor_id(bus, devfn, &l, PCI_CRS_TIMEOUT))
 
-Should you also fix up acpiphp_add_context in drivers/pci/hotplug/acpiphp_glue.c
-to use PCI_CRS_TIMEOUT?
-
-Thanks,
-
-Andrew Murray
-
->  		return NULL;
->  
->  	dev = pci_alloc_dev(bus);
-> -- 
-> 2.17.1
-> 
