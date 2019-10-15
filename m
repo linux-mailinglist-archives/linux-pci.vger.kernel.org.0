@@ -2,152 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 38544D75BB
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 14:03:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5213D75D3
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 14:08:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbfJOMDk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Oct 2019 08:03:40 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:9373 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbfJOMDk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Oct 2019 08:03:40 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5da5b59d0000>; Tue, 15 Oct 2019 05:03:41 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 15 Oct 2019 05:03:38 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 15 Oct 2019 05:03:38 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 15 Oct
- 2019 12:03:38 +0000
-Received: from [10.25.73.96] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 15 Oct
- 2019 12:03:35 +0000
-Subject: Re: [PATCH] PCI: Add CRS timeout for pci_device_is_present()
-To:     Thierry Reding <treding@nvidia.com>, Sinan Kaya <okaya@kernel.org>
-CC:     <bhelgaas@google.com>, <lorenzo.pieralisi@arm.com>,
-        <jonathanh@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20191005182129.32538-1-vidyas@nvidia.com>
- <20191014082023.GA232162@ulmo>
- <ce411d27-5b92-8dae-fccd-73c63aa30f1c@kernel.org>
- <20191015093053.GA5778@ulmo>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <5b08ab4a-2f87-386b-596c-677435074f62@nvidia.com>
-Date:   Tue, 15 Oct 2019 17:33:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1730271AbfJOMIJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Oct 2019 08:08:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56142 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726540AbfJOMII (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 15 Oct 2019 08:08:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0D9E7B12C;
+        Tue, 15 Oct 2019 12:08:06 +0000 (UTC)
+Subject: Re: [PATCH] kernel-doc: rename the kernel-doc directive 'functions'
+ to 'specific'
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Tim.Bird@sony.com, jani.nikula@linux.intel.com,
+        changbin.du@gmail.com, corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-fpga@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org, linux-crypto@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, intel-gfx@lists.freedesktop.org
+References: <20191013055359.23312-1-changbin.du@gmail.com>
+ <875zkrd7nq.fsf@intel.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF977CAF09@USCULXMSG01.am.sony.com>
+ <7e7557b5-469f-3e63-6254-53dab2d7234a@suse.de>
+ <20191015115439.GE32665@bombadil.infradead.org>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <f4157a18-6c2e-9854-40a2-dd78c9bde5ea@suse.de>
+Date:   Tue, 15 Oct 2019 14:08:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191015093053.GA5778@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1571141021; bh=zrxGILwH8edZQFrszX8zgAxohqM234pR/AYFTIizvdI=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=A/h9IgjUYq51mmtyxG9+WwPovhKoK5lfhQzvb/ICe1b+bPPH71VXQ+bH0n6jOHvo4
-         vLxl0ADBkjWQ25CVX/5a2m9CtbaW5HtG09qkIpJWYwrh/ifB8PHSwDZQfJevcHFR/Q
-         Gt5TP6pjMVXnyNid7/SHSOniMOdwB0ITBHX42/nWa7F9dh5wCaOLZi/zPl9b5/wi7M
-         Ug47fjMFZ2tRJwM9lQs2uFkEAfAl6xgGKQ9XfHlFxIDIx+wAY5URYpRCoq4bE5QHAX
-         8zZagn6Vpa2BXh4xdTEVEEZZWAjeAMW7ohUPMVH9TCSE5gzsDoUJp4eOHZAD0Sm5mL
-         9ZtDDLdpmQswg==
+In-Reply-To: <20191015115439.GE32665@bombadil.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="xXjpgUbLDdBAUlDObA57HUQXDHzBsVHcH"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/15/2019 3:00 PM, Thierry Reding wrote:
-> On Mon, Oct 14, 2019 at 01:21:31PM -0700, Sinan Kaya wrote:
->> On 10/14/2019 1:20 AM, Thierry Reding wrote:
->>> I think this makes sense, so:
->>>
->>> Reviewed-by: Thierry Reding <treding@nvidia.com>
->>>
->>> However, it looks like Sinan has researched this extensively in the past
->>> and gave a presentation on this at Plumbers in 2017:
->>>
->>> 	https://blog.linuxplumbersconf.org/2017/ocw/system/presentations/4732/original/crs.pdf
->>>
->>> Adding Sinan to see if he has any concerns about this, since resume time
->>> is explicitly mentioned in the above slides.
->>
->>
->> Thanks for including me. Let me catch up here.
->>
->> pci_dev_wait() is supposed to handle this case via pci_pm_reset().
->>
->> /**
->>   * pci_pm_reset - Put device into PCI_D3 and back into PCI_D0.
->>   * @dev: Device to reset.
->>   * @probe: If set, only check if the device can be reset this way.
->>   */
->>
->> Do you know if your execution path hits this function? We might have
->> missed a use case.
->>
-> 
-> I see only a couple of callers of pci_device_is_present() in the tree,
-> this being from next-20191015:
-> 
-> 	$ git grep -n pci_device_is_present
-> 	drivers/net/ethernet/broadcom/tg3.c:9070:       if (!pci_device_is_present(tp->pdev))drivers/net/ethernet/broadcom/tg3.c:11785:      if (pci_device_is_present(tp->pdev)) {
-> 	drivers/net/ethernet/intel/igb/igb_main.c:8838: if (!pci_device_is_present(pdev))
-> 	drivers/nvme/host/pci.c:2866:   if (!pci_device_is_present(pdev)) {
-> 	drivers/pci/hotplug/acpiphp_glue.c:650:         alive = pci_device_is_present(dev);
-> 	drivers/pci/pci.c:935:      !pci_device_is_present(dev)) {
-> 	drivers/pci/pci.c:5902:bool pci_device_is_present(struct pci_dev *pdev)
-> 	drivers/pci/pci.c:5910:EXPORT_SYMBOL_GPL(pci_device_is_present);
-> 	drivers/thunderbolt/nhi.c:939:  if (!pci_device_is_present(pdev)) {
-> 	include/linux/pci.h:1206:bool pci_device_is_present(struct pci_dev *pdev);
-> 
-I think the important one is the following which is called from inside
-pci_update_current_state() function.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--xXjpgUbLDdBAUlDObA57HUQXDHzBsVHcH
+Content-Type: multipart/mixed; boundary="z434XuCeAEdMMPGCrDECpwMF4D7beqFx1";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Tim.Bird@sony.com, jani.nikula@linux.intel.com, changbin.du@gmail.com,
+ corbet@lwn.net, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-fpga@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+ linux-crypto@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ intel-gfx@lists.freedesktop.org
+Message-ID: <f4157a18-6c2e-9854-40a2-dd78c9bde5ea@suse.de>
+Subject: Re: [PATCH] kernel-doc: rename the kernel-doc directive 'functions'
+ to 'specific'
+References: <20191013055359.23312-1-changbin.du@gmail.com>
+ <875zkrd7nq.fsf@intel.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF977CAF09@USCULXMSG01.am.sony.com>
+ <7e7557b5-469f-3e63-6254-53dab2d7234a@suse.de>
+ <20191015115439.GE32665@bombadil.infradead.org>
+In-Reply-To: <20191015115439.GE32665@bombadil.infradead.org>
 
-drivers/pci/pci.c:935:      !pci_device_is_present(dev)) {
+--z434XuCeAEdMMPGCrDECpwMF4D7beqFx1
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-I've put a dump_stack() to see how this is called and following is the trace
-[   36.380726] Call trace:
-[   36.383270]  dump_backtrace+0x0/0x158
-[   36.386802]  show_stack+0x14/0x20
-[   36.389749]  dump_stack+0xb0/0xf8
-[   36.393451]  pci_update_current_state+0x58/0xe0
-[   36.398178]  pci_power_up+0x60/0x70
-[   36.401672]  pci_pm_resume_noirq+0x6c/0x130
-[   36.405669]  dpm_run_callback.isra.16+0x20/0x70
-[   36.410248]  device_resume_noirq+0x120/0x238
-[   36.414364]  async_resume_noirq+0x24/0x58
-[   36.418364]  async_run_entry_fn+0x40/0x148
-[   36.422418]  process_one_work+0x1e8/0x360
-[   36.426525]  worker_thread+0x40/0x488
-[   36.430201]  kthread+0x118/0x120
-[   36.433843]  ret_from_fork+0x10/0x1c
+Hi
+
+Am 15.10.19 um 13:54 schrieb Matthew Wilcox:
+> On Tue, Oct 15, 2019 at 11:25:53AM +0200, Thomas Zimmermann wrote:
+>>> My preference would be to use 'symbols'.  I tried to come up with som=
+ething
+>>> but 'symbols' is better than anything I came up with.
+>>
+>> Maybe 'interfaces' or 'artifacts'. The term 'symbols' is just as
+>> imprecise as 'functions'.
+>=20
+> I suggested 'identifier' because that's the term used in the C spec (6.=
+2.1):
+>=20
+> : An identifier can denote an object; a function; a tag or a member
+> : of a structure, union, or enumeration; a typedef name; a label name;
+> : a macro name; or a macro parameter.
+>=20
+> We don't allow documenting all those things separately, but it does cov=
+er
+> all the things we do allow to be individually documented.
+>=20
+
+Yeah, makes sense.
+
+Best regards
+Thomas
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
 
 
-> The NVME driver has the call in the ->remove() callback, so I don't
-> think it's relevant here. Both TG3 and IGB ethernet drivers seem to call
-> this during resume and so does Thunderbolt.
-> 
-> Vidya, can you clarify for which device you're seeing the issues? Sounds
-> like adding a call to pci_pm_reset() (via pci_reset_function()) at some
-> point.
-With 0 sec wait, I see issue with Intel 750 NVMe card. As I mentioned above,
-it is called from the PCI-PM subsystem which is where the timeout is required.
+--z434XuCeAEdMMPGCrDECpwMF4D7beqFx1--
 
-> 
-> Sinan, it looks as if pci_pm_reset() (or any of its callers) is not used
-> very widely. Is that just because most drivers haven't had a need for it
-> yet? Or am I missing some core functionality that calls this for every
-> device anyway?
-> 
-> Thierry
-> 
+--xXjpgUbLDdBAUlDObA57HUQXDHzBsVHcH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl2ltqUACgkQaA3BHVML
+eiO7bAf8DqpVa41x8h+LyR771/7XD6R9SM1oSqopIn1EaGndzepL2obOpvv7TM8J
+xdFUMac1FMD7pBfjtTfs6Ax/+KSIBGMJQxiiiGhsZ2Z9RXIiNMJpVV0pFwkEBCic
+Xwxmem2Hn+LhB98tlmtb1rUid5ZEWIqxJn0HEfOht/Y7iu+RZUfVre1GHP2W5OG+
+KSJSTG5ZwTIBzXvMS++NOh0kJWyzTiKY7Gaxl0ck76UKp34bdsTqFNVlOqNgfdiW
+tEmx0i6R/9ZZp3HGgsbN7waSqxjcYWI4M8sPApl7aPDDpTZC2ydWX1J5qzmp9/LF
+uRn+WrOCEMHCMSPfYsv/311cYx9oLw==
+=fbgk
+-----END PGP SIGNATURE-----
+
+--xXjpgUbLDdBAUlDObA57HUQXDHzBsVHcH--
