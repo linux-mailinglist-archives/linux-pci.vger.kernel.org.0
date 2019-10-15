@@ -2,154 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 78DBBD7FF7
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 21:20:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0531D8029
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 21:25:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389654AbfJOTUU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Oct 2019 15:20:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbfJOTUT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 15 Oct 2019 15:20:19 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83F5B20854;
-        Tue, 15 Oct 2019 19:20:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571167217;
-        bh=nm/8Au21VodRlss2uP12IzrkFOHeWZtsigxeMX4xdvg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Y9eQxQ8eeOLe4bEHt5LRnA/jIuE1RuSSEq1ZbkroD6GqEpkEajpxa/6OXzV77b9+N
-         4RHncj5xNgL9OTFt7KL2cXmo/RBVCL9jF/CrcxHnlxzwY8fvRh7NbyH0ZjkQZeLtba
-         OIexIAahn1cXKgcQKFveVZGW2FqlDpRy7iO5k+QE=
-Date:   Tue, 15 Oct 2019 14:20:13 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Daniel Drake <drake@endlessm.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: PM: Fix pci_power_up()
-Message-ID: <20191015192013.GA115182@google.com>
+        id S1732079AbfJOTZA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Oct 2019 15:25:00 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40313 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731968AbfJOTZA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Oct 2019 15:25:00 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k9so17868547oib.7;
+        Tue, 15 Oct 2019 12:24:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kyIrl1GE+9gjH4x9dLD9qpYH84cDi+R+Uj8YTerE0Ak=;
+        b=R+cK8qRprqxasnmLDhXSVZjGurImzrS1+2mXoNweAYks4szs1703GSAgh55rYb+1RW
+         sCddf1G9lo/QoVjJb/ITz+kWQVXusPThWiCKVpYPa4wsrLTZLbHT8mYMYZqjVIKaZtaB
+         uuYLBzK0rpeNyM0sTr2YRJ5f3Avh69xAFKXzk67T6646FGHpnCfmBoopRefuTckJydAc
+         c3ikDodwbfx6r191cAvjpjAjOGc0a1z3i54SkSOirDTNpKd/zQc33EAg8f/ddnKVcqVV
+         0Alpi8T/AEdWSvzytezerv8eGKMca21SA9QVMhdSNcaI9r+AkdDOcHnKPt7UoFTR7ART
+         3wPw==
+X-Gm-Message-State: APjAAAW2Eelf5I9/VqovfeedNq4cnztUdqTfmZuvRFz/ZpVKSOOKRr04
+        z/YWBg3HoLjf4c+cCdz9UlzfBFE=
+X-Google-Smtp-Source: APXvYqyCrUehiwj/WPDrgEVfLwqAslHQqnl9viQs2KI3xWSpXWrN8xq2YrHzi6M8plH+C3IOVDVyQQ==
+X-Received: by 2002:aca:4744:: with SMTP id u65mr143448oia.164.1571167497967;
+        Tue, 15 Oct 2019 12:24:57 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l4sm6713118otj.64.2019.10.15.12.24.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 12:24:57 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 14:24:56 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>, xu_shunji@hoperun.com
+Subject: Re: [PATCH 1/7] dt-bindings: watchdog: renesas-wdt: Document
+ r8a774b1 support
+Message-ID: <20191015192456.GA407@bogus>
+References: <1570178133-21532-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1570178133-21532-2-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5720276.eiOaOx1Qyb@kreacher>
+In-Reply-To: <1570178133-21532-2-git-send-email-fabrizio.castro@bp.renesas.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 01:25:00PM +0200, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Fri,  4 Oct 2019 09:35:27 +0100, Fabrizio Castro wrote:
+> RZ/G2N (a.k.a. R8A774B1) watchdog implementation is compatible
+> with R-Car Gen3, therefore add the relevant documentation.
 > 
-> There is an arbitrary difference between the system resume and
-> runtime resume code paths for PCI devices regarding the delay to
-> apply when switching the devices from D3cold to D0.
-> 
-> Namely, pci_restore_standard_config() used in the runtime resume
-> code path calls pci_set_power_state() which in turn invokes
-> __pci_start_power_transition() to power up the device through the
-> platform firmware and that function applies the transition delay
-> (as per PCI Express Base Specification Revision 2.0, Section 6.6.1).
-> However, pci_pm_default_resume_early() used in the system resume
-> code path calls pci_power_up() which doesn't apply the delay at
-> all and that causes issues to occur during resume from
-> suspend-to-idle on some systems where the delay is required.
-> 
-> Since there is no reason for that difference to exist, modify
-> pci_power_up() to follow pci_set_power_state() more closely and
-> invoke __pci_start_power_transition() from there to call the
-> platform firmware to power up the device (in case that's necessary).
-> 
-> Fixes: db288c9c5f9d ("PCI / PM: restore the original behavior of pci_set_power_state()")
-> Reported-by: Daniel Drake <drake@endlessm.com> 
-> Link: https://lore.kernel.org/linux-pm/CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com/T/#m21be74af263c6a34f36e0fc5c77c5449d9406925
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 > ---
+>  Documentation/devicetree/bindings/watchdog/renesas,wdt.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Daniel, please test this one.
-> 
-> ---
->  drivers/pci/pci.c |   24 +++++++++++-------------
->  1 file changed, 11 insertions(+), 13 deletions(-)
-> 
-> Index: linux-pm/drivers/pci/pci.c
-> ===================================================================
-> --- linux-pm.orig/drivers/pci/pci.c
-> +++ linux-pm/drivers/pci/pci.c
-> @@ -959,19 +959,6 @@ void pci_refresh_power_state(struct pci_
->  }
->  
->  /**
-> - * pci_power_up - Put the given device into D0 forcibly
-> - * @dev: PCI device to power up
-> - */
-> -void pci_power_up(struct pci_dev *dev)
-> -{
-> -	if (platform_pci_power_manageable(dev))
-> -		platform_pci_set_power_state(dev, PCI_D0);
-> -
-> -	pci_raw_set_power_state(dev, PCI_D0);
-> -	pci_update_current_state(dev, PCI_D0);
-> -}
-> -
-> -/**
->   * pci_platform_power_transition - Use platform to change device power state
->   * @dev: PCI device to handle.
->   * @state: State to put the device into.
-> @@ -1154,6 +1141,17 @@ int pci_set_power_state(struct pci_dev *
->  EXPORT_SYMBOL(pci_set_power_state);
->  
->  /**
-> + * pci_power_up - Put the given device into D0 forcibly
 
-Not specifically for this patch, but what does "forcibly" mean?
+Applied, thanks.
 
-> + * @dev: PCI device to power up
-> + */
-> +void pci_power_up(struct pci_dev *dev)
-> +{
-> +	__pci_start_power_transition(dev, PCI_D0);
-> +	pci_raw_set_power_state(dev, PCI_D0);
-> +	pci_update_current_state(dev, PCI_D0);
-
-There's not very much difference between:
-
-  pci_power_up(dev);
-
-and
-
-  pci_set_power_state(dev, PCI_D0);
-
-It looks like the main difference is that pci_set_power_state() calls
-__pci_complete_power_transition(), which ultimately calls
-acpi_pci_set_power_state() (for ACPI systems).
-
-So maybe "forcibly" means something like "ignoring any platform power
-management methods"?  It's not obvious to me when we should skip the
-platform stuff or whether the skipping should be done at the high
-level (like calling either pci_power_up() or pci_set_power_state()) or
-at a lower level (e.g., if everybody called pci_set_power_state() and
-it could internally tell whether we're skipping the platform part).
-
-If we could unify the paths as much as possible, that would be nice,
-but if it's not feasible, it's not feasible.  If you'd like me to push
-this for v5.4, let me know, otherwise you can apply my:
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> +}
-> +
-> +/**
->   * pci_choose_state - Choose the power state of a PCI device
->   * @dev: PCI device to be suspended
->   * @state: target sleep state for the whole system. This is the value
-> 
-> 
-> 
+Rob
