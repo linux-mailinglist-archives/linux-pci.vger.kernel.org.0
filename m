@@ -2,156 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E5213D75D3
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 14:08:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32DDED763B
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 14:15:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730271AbfJOMIJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Oct 2019 08:08:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56142 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726540AbfJOMII (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 15 Oct 2019 08:08:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0D9E7B12C;
-        Tue, 15 Oct 2019 12:08:06 +0000 (UTC)
-Subject: Re: [PATCH] kernel-doc: rename the kernel-doc directive 'functions'
- to 'specific'
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Tim.Bird@sony.com, jani.nikula@linux.intel.com,
-        changbin.du@gmail.com, corbet@lwn.net, linux-doc@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-fpga@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mm@kvack.org, linux-crypto@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, intel-gfx@lists.freedesktop.org
-References: <20191013055359.23312-1-changbin.du@gmail.com>
- <875zkrd7nq.fsf@intel.com>
- <ECADFF3FD767C149AD96A924E7EA6EAF977CAF09@USCULXMSG01.am.sony.com>
- <7e7557b5-469f-3e63-6254-53dab2d7234a@suse.de>
- <20191015115439.GE32665@bombadil.infradead.org>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <f4157a18-6c2e-9854-40a2-dd78c9bde5ea@suse.de>
-Date:   Tue, 15 Oct 2019 14:08:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1726168AbfJOMPB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Oct 2019 08:15:01 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:9562 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbfJOMPB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Oct 2019 08:15:01 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5da5b8490000>; Tue, 15 Oct 2019 05:15:05 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 15 Oct 2019 05:14:54 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 15 Oct 2019 05:14:54 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 15 Oct
+ 2019 12:14:53 +0000
+Received: from [10.25.73.96] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 15 Oct
+ 2019 12:14:50 +0000
+Subject: Re: [PATCH] PCI: Add CRS timeout for pci_device_is_present()
+To:     Sinan Kaya <okaya@kernel.org>, Thierry Reding <treding@nvidia.com>
+CC:     <bhelgaas@google.com>, <lorenzo.pieralisi@arm.com>,
+        <jonathanh@nvidia.com>, <linux-tegra@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+References: <20191005182129.32538-1-vidyas@nvidia.com>
+ <20191014082023.GA232162@ulmo>
+ <ce411d27-5b92-8dae-fccd-73c63aa30f1c@kernel.org>
+ <20191015093053.GA5778@ulmo>
+ <4953b718-8818-575e-2ec1-8197e6b32593@kernel.org>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <85267afb-c08e-5625-d3ee-bd32af9ecb12@nvidia.com>
+Date:   Tue, 15 Oct 2019 17:44:47 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191015115439.GE32665@bombadil.infradead.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="xXjpgUbLDdBAUlDObA57HUQXDHzBsVHcH"
+In-Reply-To: <4953b718-8818-575e-2ec1-8197e6b32593@kernel.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1571141705; bh=uK5nIirjWo7QOhWfaYL0ARhpVoeb0jjD0jO12CScz8M=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=f2gpZPRqjOH5H53aSr/AW+dWzystnBn5v/Mb7mQ0wupMkRQRcYmhE8dDsWnzdAlRv
+         vAHBhYiXVwAqafQVJUFtcqKpPm+MOmIi+nvU+FPjWxwRCneW3WalKRrsATrHkeWRQ3
+         vndCoQ9XHg1TatX0mALcslT3lVtaOSoRBbmYIBNDVYpcJgt8ZFJwkAk967jTrRcwxu
+         5hgIlbebu3KOWlvuMFYrky2GMhtzslLAPqhzhhaMBrTP4InbfyjsIA55h8S+Qm4Zz4
+         NLhDcMeG+WzarGNOuyKpdCbgG+ZymwE/AYDXpzBgHuiDMvIoNYNNxo1KvksfcvSSld
+         Oz93zSw6GJ09g==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---xXjpgUbLDdBAUlDObA57HUQXDHzBsVHcH
-Content-Type: multipart/mixed; boundary="z434XuCeAEdMMPGCrDECpwMF4D7beqFx1";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Tim.Bird@sony.com, jani.nikula@linux.intel.com, changbin.du@gmail.com,
- corbet@lwn.net, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-fpga@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
- linux-crypto@vger.kernel.org, linux-kselftest@vger.kernel.org,
- intel-gfx@lists.freedesktop.org
-Message-ID: <f4157a18-6c2e-9854-40a2-dd78c9bde5ea@suse.de>
-Subject: Re: [PATCH] kernel-doc: rename the kernel-doc directive 'functions'
- to 'specific'
-References: <20191013055359.23312-1-changbin.du@gmail.com>
- <875zkrd7nq.fsf@intel.com>
- <ECADFF3FD767C149AD96A924E7EA6EAF977CAF09@USCULXMSG01.am.sony.com>
- <7e7557b5-469f-3e63-6254-53dab2d7234a@suse.de>
- <20191015115439.GE32665@bombadil.infradead.org>
-In-Reply-To: <20191015115439.GE32665@bombadil.infradead.org>
-
---z434XuCeAEdMMPGCrDECpwMF4D7beqFx1
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-Hi
-
-Am 15.10.19 um 13:54 schrieb Matthew Wilcox:
-> On Tue, Oct 15, 2019 at 11:25:53AM +0200, Thomas Zimmermann wrote:
->>> My preference would be to use 'symbols'.  I tried to come up with som=
-ething
->>> but 'symbols' is better than anything I came up with.
+On 10/15/2019 4:40 PM, Sinan Kaya wrote:
+> +Rafael
+> 
+> On 10/15/2019 2:30 AM, Thierry Reding wrote:
+>> Vidya, can you clarify for which device you're seeing the issues? Sounds
+>> like adding a call to pci_pm_reset() (via pci_reset_function()) at some
+>> point.
 >>
->> Maybe 'interfaces' or 'artifacts'. The term 'symbols' is just as
->> imprecise as 'functions'.
->=20
-> I suggested 'identifier' because that's the term used in the C spec (6.=
-2.1):
->=20
-> : An identifier can denote an object; a function; a tag or a member
-> : of a structure, union, or enumeration; a typedef name; a label name;
-> : a macro name; or a macro parameter.
->=20
-> We don't allow documenting all those things separately, but it does cov=
-er
-> all the things we do allow to be individually documented.
->=20
+>> Sinan, it looks as if pci_pm_reset() (or any of its callers) is not used
+>> very widely. Is that just because most drivers haven't had a need for it
+>> yet? Or am I missing some core functionality that calls this for every
+>> device anyway?
+> 
+> pci_pm_reset() is there as an alternative reset path. We are not
+> supposed to call this function. Sorry for giving you wrong direction
+> here. pci_reset_function() should call it only if there is no other
+> suitable reset function is found.
+> 
+> I think the PCI core should be putting the device back D0 state as one
+> of the first actions before enumerating. Wake up could be a combination
+> of ACPI and/or PCI wake up depending on where your device sits in the
+> topology.
+Yup. It is indeed doing it as part of pci_power_up() in pci.c file.
+But, what is confusing to me is the order of the calls.
+pci_power_up() has following calls in the same order.
+	pci_raw_set_power_state(dev, PCI_D0);
+	pci_update_current_state(dev, PCI_D0);
+But, pci_raw_set_power_state() is accessing config space without calling
+pci_device_is_present() whereas pci_update_current_state() which is called
+later in the flow is calling pci_device_is_present()...!
 
-Yeah, makes sense.
+> 
+> On the other hand, wake up code doesn't perform the CRS wait. CRS
+> wait is deferred until the first vendor id read in pci_scan_device().
+> I see that it already waits for 60 seconds.
+> 
+> Going back to the patch...
+> 
+> I think we need to find the path that actually needs this sleep and
+> put pci_dev_wait() there.
+Following is the path in resume() flow.
+[   36.380726] Call trace:
+[   36.383270]  dump_backtrace+0x0/0x158
+[   36.386802]  show_stack+0x14/0x20
+[   36.389749]  dump_stack+0xb0/0xf8
+[   36.393451]  pci_update_current_state+0x58/0xe0
+[   36.398178]  pci_power_up+0x60/0x70
+[   36.401672]  pci_pm_resume_noirq+0x6c/0x130
+[   36.405669]  dpm_run_callback.isra.16+0x20/0x70
+[   36.410248]  device_resume_noirq+0x120/0x238
+[   36.414364]  async_resume_noirq+0x24/0x58
+[   36.418364]  async_run_entry_fn+0x40/0x148
+[   36.422418]  process_one_work+0x1e8/0x360
+[   36.426525]  worker_thread+0x40/0x488
+[   36.430201]  kthread+0x118/0x120
+[   36.433843]  ret_from_fork+0x10/0x1c
 
-Best regards
-Thomas
+> 
+> +++ b/drivers/pci/pci.c
+> @@ -5905,7 +5905,8 @@ bool pci_device_is_present(struct pci_dev *pdev)
+> 
+>   	if (pci_dev_is_disconnected(pdev))
+>   		return false;
+> -	return pci_bus_read_dev_vendor_id(pdev->bus, pdev->devfn, &v, 0);
+> +	return pci_bus_read_dev_vendor_id(pdev->bus, pdev->devfn, &v,
+> +					  PCI_CRS_TIMEOUT);
+>   }
+> 
+> pci_device_is_present() is a too low-level function and it may not
+> be allowed to sleep. It uses 0 as timeout value.
+> 
+> 
 
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---z434XuCeAEdMMPGCrDECpwMF4D7beqFx1--
-
---xXjpgUbLDdBAUlDObA57HUQXDHzBsVHcH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl2ltqUACgkQaA3BHVML
-eiO7bAf8DqpVa41x8h+LyR771/7XD6R9SM1oSqopIn1EaGndzepL2obOpvv7TM8J
-xdFUMac1FMD7pBfjtTfs6Ax/+KSIBGMJQxiiiGhsZ2Z9RXIiNMJpVV0pFwkEBCic
-Xwxmem2Hn+LhB98tlmtb1rUid5ZEWIqxJn0HEfOht/Y7iu+RZUfVre1GHP2W5OG+
-KSJSTG5ZwTIBzXvMS++NOh0kJWyzTiKY7Gaxl0ck76UKp34bdsTqFNVlOqNgfdiW
-tEmx0i6R/9ZZp3HGgsbN7waSqxjcYWI4M8sPApl7aPDDpTZC2ydWX1J5qzmp9/LF
-uRn+WrOCEMHCMSPfYsv/311cYx9oLw==
-=fbgk
------END PGP SIGNATURE-----
-
---xXjpgUbLDdBAUlDObA57HUQXDHzBsVHcH--
