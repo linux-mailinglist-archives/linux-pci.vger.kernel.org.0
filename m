@@ -2,85 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0646DD80D1
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 22:14:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11116D8107
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 22:30:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732665AbfJOUOU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Oct 2019 16:14:20 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53310 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727962AbfJOUOT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Oct 2019 16:14:19 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i16so406213wmd.3;
-        Tue, 15 Oct 2019 13:14:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2PqkplBf6NPIJ3WMj/EFZvUWChhaNZGEC/iL4ajfRno=;
-        b=CKREPJMXIFPF4bdVthphuXZaVVA8KVzKtRFegpSRU4aaZ5VkUdavQpOMebkD3ZQJCf
-         N1pQzGuM1Sm+OB1VGI+7FYTUTPcy4w1kPmaTvCXU1xpKDzXFSk/DG4G46+6k7muUxT4g
-         EZ4IqANYNXBWhTzJ3XGBciaxvsRqDrl2ilY8Rhd3yUgcA/6rAvAOUs2dPYdYRUpVQlpd
-         aMLV6//uU2JMGDzYopafCedYhWkmJFFokVRguk5AONMXuu3E61HXE0gCj8byrJeH3jqi
-         jY/bqJlxm5tv/AXS3L8fPy9HmpMRTc6wFLjsscOTDuKHyTmB8O1DImuYXVwoOKEyxHhF
-         A3RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2PqkplBf6NPIJ3WMj/EFZvUWChhaNZGEC/iL4ajfRno=;
-        b=JBhsw7EnWbdAZ3Y3Ql5DhV5gnbLxBepqa1iOLx1vIZPG0wfRmGBk9bPU9l+uRRA/E7
-         6qcN8cxC6N2+h/mKXufhhDHmH5Y8V3gtLsylEGzpmZVAnO7sx49huZ6IwU+3K8eMVQhU
-         rKi/zaFCbC23MUyUZhtuxDg02GPyKRtCWPcmgKQGn8wwvREDqxECBULUS5fZwqJBYy64
-         MwytUCyMOiv6GSnON9jp8R58yyvRgkSDWvK8eQ7oU2ERWICkNCHon2D/LNezjBUOQNtq
-         6GTD+Zolf8fqyFLFnA8EqufBxPPT3BHokrP8/AQBfOGvfJmKbrBOjN1wtluByzNaRK9t
-         EAXQ==
-X-Gm-Message-State: APjAAAUaqgyPWw2G3V9aFMsrcb51azC/eYC6SSHOZQY49+auoGwqVIhx
-        4KrrJxmIeE9EDiPeLz5jEVY=
-X-Google-Smtp-Source: APXvYqy4M7y9wIbN8k7lFLn97anPmLxFc7zjjSNq7mEHWENBsPAq1KqWTasQFGr+5YAl+zCb0vLdTA==
-X-Received: by 2002:a05:600c:2c2:: with SMTP id 2mr209856wmn.112.1571170457383;
-        Tue, 15 Oct 2019 13:14:17 -0700 (PDT)
-Received: from [192.168.1.4] (ip-86-49-35-8.net.upcbroadband.cz. [86.49.35.8])
-        by smtp.gmail.com with ESMTPSA id r18sm273728wme.48.2019.10.15.13.14.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Oct 2019 13:14:16 -0700 (PDT)
-Subject: Re: [PATCH V3 1/3] PCI: rcar: Move the inbound index check
-From:   Marek Vasut <marek.vasut@gmail.com>
-To:     linux-pci@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        linux-renesas-soc@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>
-References: <20190809175741.7066-1-marek.vasut@gmail.com>
-Message-ID: <7bbb35d1-d628-597d-7a96-4f3629e5ac8e@gmail.com>
-Date:   Tue, 15 Oct 2019 22:14:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1728410AbfJOUa3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Oct 2019 16:30:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727994AbfJOUa3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 15 Oct 2019 16:30:29 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBB7220872;
+        Tue, 15 Oct 2019 20:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571171428;
+        bh=f1U9OX+iCP4z8AJSrKneFtP475IqeMrFKyKimqU+Aeg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=k5ddW1F0HpOhT5Lp+UnxLwmTZro6HhItRvSJqJ+Ufb3NXb2MLYhJv3gZltLq58Ixy
+         ySg2xbtr0AP9Lcv+amNUoS5mMpZJ4vdsuGrsUcG/0EkDz/n+TDWFVpkDJRTNN6ZcD2
+         eqtvI2DeKb7LVYCySmM1kVmHMmd9UwTuAPDZ3yDc=
+Date:   Tue, 15 Oct 2019 15:30:26 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Frederick Lawler <fred@fredlawl.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Rajat Jain <rajatja@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v7 0/5] PCI/ASPM: Add sysfs attributes for controlling
+ ASPM
+Message-ID: <20191015203026.GA130300@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190809175741.7066-1-marek.vasut@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4a13d431-2b6f-4874-c959-9d0bad4fba53@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8/9/19 7:57 PM, Marek Vasut wrote:
-> Since the $idx variable value is stored across multiple calls to
-> rcar_pcie_inbound_ranges() function, and the $idx value is used to
-> index registers which are written, subsequent calls might cause
-> the $idx value to be high enough to trigger writes into nonexistent
-> registers.
-> 
-> Fix this by moving the $idx value check to the beginning of the loop.
+On Thu, Oct 10, 2019 at 10:45:52PM +0200, Heiner Kallweit wrote:
+> On 10.10.2019 15:22, Bjorn Helgaas wrote:
+> > On Tue, Oct 08, 2019 at 05:10:40PM -0500, Bjorn Helgaas wrote:
+> >> On Sat, Oct 05, 2019 at 02:02:29PM +0200, Heiner Kallweit wrote:
+> >>> Background of this extension is a problem with the r8169 network driver.
+> >>> Several combinations of board chipsets and network chip versions have
+> >>> problems if ASPM is enabled, therefore we have to disable ASPM per
+> >>> default. However especially on notebooks ASPM can provide significant
+> >>> power-saving, therefore we want to give users the option to enable
+> >>> ASPM. With the new sysfs attributes users can control which ASPM
+> >>> link-states are disabled.
+> >>>
+> >>> v2:
+> >>> - use a dedicated sysfs attribute per link state
+> >>> - allow separate control of ASPM and PCI PM L1 sub-states
+> >>>
+> >>> v3:
+> >>> - patch 3: statically allocate the attribute group
+> >>> - patch 3: replace snprintf with printf
+> >>> - add patch 4
+> >>>
+> >>> v4:
+> >>> - patch 3: add call to sysfs_update_group because is_visible callback
+> >>>            returns false always at file creation time
+> >>> - patch 3: simplify code a little
+> >>>
+> >>> v5:
+> >>> - rebased to latest pci/next
+> >>>
+> >>> v6:
+> >>> - patch 3: consider several review comments from Bjorn
+> >>> - patch 4: add discussion link to commit message
+> >>>
+> >>> v7:
+> >>> - Move adding pcie_aspm_get_link() to separate patch 3
+> >>> - patch 4: change group name from aspm to link_pm
+> >>> - patch 4: control visibility of attributes individually
+> >>>
+> >>> Heiner Kallweit (5):
+> >>>   PCI/ASPM: add L1 sub-state support to pci_disable_link_state
+> >>>   PCI/ASPM: allow to re-enable Clock PM
+> >>>   PCI/ASPM: Add and use helper pcie_aspm_get_link
+> >>>   PCI/ASPM: Add sysfs attributes for controlling ASPM link states
+> >>>   PCI/ASPM: Remove Kconfig option PCIEASPM_DEBUG and related code
+> >>>
+> >>>  Documentation/ABI/testing/sysfs-bus-pci |  14 ++
+> >>>  drivers/pci/pci-sysfs.c                 |   6 +-
+> >>>  drivers/pci/pci.h                       |  12 +-
+> >>>  drivers/pci/pcie/Kconfig                |   7 -
+> >>>  drivers/pci/pcie/aspm.c                 | 252 ++++++++++++++++--------
+> >>>  include/linux/pci.h                     |  10 +-
+> >>>  6 files changed, 199 insertions(+), 102 deletions(-)
+> >>
+> >> I applied these to pci/aspm for v5.5.  Thank you very much for all the
+> >> work you put into this!
+> >>
+> >> There are a couple questions that are still open, but I have no
+> >> problem if we want to make minor tweaks before the merge window opens.
+> > 
+> > To resolve these open questions, I propose the diff below, which:
+> > 
+> >   - Makes pcie_aspm_get_link() work only when called for an Upstream
+> >     Port (Endpoint, Switch Upstream Port, or other component at the
+> >     downstream end of a Link).  I don't think there's any caller that
+> >     needs to supply the upstream end.
+> > 
+> >   - Makes pcie_aspm_get_link() check that both ends are PCIe devices.
+> >     This might be overkill, but we can't rely on the PCI topology
+> >     being "correct", e.g., we have to deal gracefully with a
+> >     virtualization or similar scenario where a bridge is PCI and the
+> >     child is PCIe.  In that case, we shouldn't try to manage ASPM, so
+> >     we don't need a link_state, but I couldn't quite convince myself
+> >     that pcie_aspm_init_link_state() handles these cases.
+> > 
+> >   - Removes the aspm_lock from the sysfs show functions.  Per the
+> >     discussion with Rafael, I don't think it's necessary there:
+> > 
+> >       https://lore.kernel.org/r/20191007223428.GA72605@google.com
+> > 
+> >     I didn't remove it from the store functions because they do ASPM
+> >     reconfiguration and I didn't try to figure out the locking there.
+> > 
+> > Let me know what you think about this.  If it looks right, I'll just
+> > squash these changes into the relevant patches.
+> > 
+> Looks good to me. Thanks, Heiner
 
-Is there any reason why none of these patches got applied yet ?
-
-[...]
-
--- 
-Best regards,
-Marek Vasut
+Thanks, I squashed these in and updated pci/aspm.
