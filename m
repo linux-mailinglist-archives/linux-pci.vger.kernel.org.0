@@ -2,132 +2,199 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 11116D8107
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 22:30:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5546D81F1
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 23:20:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbfJOUa3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Oct 2019 16:30:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727994AbfJOUa3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 15 Oct 2019 16:30:29 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBB7220872;
-        Tue, 15 Oct 2019 20:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571171428;
-        bh=f1U9OX+iCP4z8AJSrKneFtP475IqeMrFKyKimqU+Aeg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=k5ddW1F0HpOhT5Lp+UnxLwmTZro6HhItRvSJqJ+Ufb3NXb2MLYhJv3gZltLq58Ixy
-         ySg2xbtr0AP9Lcv+amNUoS5mMpZJ4vdsuGrsUcG/0EkDz/n+TDWFVpkDJRTNN6ZcD2
-         eqtvI2DeKb7LVYCySmM1kVmHMmd9UwTuAPDZ3yDc=
-Date:   Tue, 15 Oct 2019 15:30:26 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Frederick Lawler <fred@fredlawl.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Rajat Jain <rajatja@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v7 0/5] PCI/ASPM: Add sysfs attributes for controlling
- ASPM
-Message-ID: <20191015203026.GA130300@google.com>
+        id S1726845AbfJOVT5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Oct 2019 17:19:57 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39208 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbfJOVT5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Oct 2019 17:19:57 -0400
+Received: by mail-ot1-f67.google.com with SMTP id s22so18257509otr.6;
+        Tue, 15 Oct 2019 14:19:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NwSWuftbUgGHTdFPApJuvKNyN7XsdaW8Fit8ZchKBoY=;
+        b=f9mdMu/W313556x+fpQGwusdUAWLKUf7ag+Le16N/FkC3BX8AQPFPgX3N2TAffD3Cz
+         b9hV1rBClNFOyieg8joIOQZZLNoJyH+PXNOSehLgVvyN0bM2TzBwujtdybgR5cEBbWt7
+         OsKoHYmYjufEkMoTuTIjhztta5SVGTkflPr+iJ9KJ7s6flyDzNRLLmApOAgiw4MG5tXg
+         FOCiiYJoRt0STgmk0pebJmiad+PMq+KktxF2YodtOkOr2sEsa49i3SxVRawze6cv/qJD
+         ZNqj+YyunKDyiXltSUu8aBtN6bTJB4RVukspFsPRFQh6VyJCGFQ003MOJZYWkurBMUjE
+         u4Kg==
+X-Gm-Message-State: APjAAAVsUsUukcI1A0kYrL8uZl731GHquztMi/NW4SaDC9pqLxoIXb3K
+        QBY2KbC3tBwecvAShRGcdLdZFSUzWRMYgDLD+LOTJK4x
+X-Google-Smtp-Source: APXvYqyLsJtoxGgofhwR5hK08b0Hi0cbUYi2KdDemnuwKHLLcBnxJN18buv98ShZJEGWZ/HnpNdz0w6c/YNNOgjXIs4=
+X-Received: by 2002:a9d:5a0f:: with SMTP id v15mr31684717oth.266.1571174396197;
+ Tue, 15 Oct 2019 14:19:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4a13d431-2b6f-4874-c959-9d0bad4fba53@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <5720276.eiOaOx1Qyb@kreacher> <20191015192013.GA115182@google.com>
+In-Reply-To: <20191015192013.GA115182@google.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 15 Oct 2019 23:19:44 +0200
+Message-ID: <CAJZ5v0jFSML6cf5Z6ot2vZs9b3QomYLM3SaDMvooTmngeSCcBQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: PM: Fix pci_power_up()
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Daniel Drake <drake@endlessm.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 10:45:52PM +0200, Heiner Kallweit wrote:
-> On 10.10.2019 15:22, Bjorn Helgaas wrote:
-> > On Tue, Oct 08, 2019 at 05:10:40PM -0500, Bjorn Helgaas wrote:
-> >> On Sat, Oct 05, 2019 at 02:02:29PM +0200, Heiner Kallweit wrote:
-> >>> Background of this extension is a problem with the r8169 network driver.
-> >>> Several combinations of board chipsets and network chip versions have
-> >>> problems if ASPM is enabled, therefore we have to disable ASPM per
-> >>> default. However especially on notebooks ASPM can provide significant
-> >>> power-saving, therefore we want to give users the option to enable
-> >>> ASPM. With the new sysfs attributes users can control which ASPM
-> >>> link-states are disabled.
-> >>>
-> >>> v2:
-> >>> - use a dedicated sysfs attribute per link state
-> >>> - allow separate control of ASPM and PCI PM L1 sub-states
-> >>>
-> >>> v3:
-> >>> - patch 3: statically allocate the attribute group
-> >>> - patch 3: replace snprintf with printf
-> >>> - add patch 4
-> >>>
-> >>> v4:
-> >>> - patch 3: add call to sysfs_update_group because is_visible callback
-> >>>            returns false always at file creation time
-> >>> - patch 3: simplify code a little
-> >>>
-> >>> v5:
-> >>> - rebased to latest pci/next
-> >>>
-> >>> v6:
-> >>> - patch 3: consider several review comments from Bjorn
-> >>> - patch 4: add discussion link to commit message
-> >>>
-> >>> v7:
-> >>> - Move adding pcie_aspm_get_link() to separate patch 3
-> >>> - patch 4: change group name from aspm to link_pm
-> >>> - patch 4: control visibility of attributes individually
-> >>>
-> >>> Heiner Kallweit (5):
-> >>>   PCI/ASPM: add L1 sub-state support to pci_disable_link_state
-> >>>   PCI/ASPM: allow to re-enable Clock PM
-> >>>   PCI/ASPM: Add and use helper pcie_aspm_get_link
-> >>>   PCI/ASPM: Add sysfs attributes for controlling ASPM link states
-> >>>   PCI/ASPM: Remove Kconfig option PCIEASPM_DEBUG and related code
-> >>>
-> >>>  Documentation/ABI/testing/sysfs-bus-pci |  14 ++
-> >>>  drivers/pci/pci-sysfs.c                 |   6 +-
-> >>>  drivers/pci/pci.h                       |  12 +-
-> >>>  drivers/pci/pcie/Kconfig                |   7 -
-> >>>  drivers/pci/pcie/aspm.c                 | 252 ++++++++++++++++--------
-> >>>  include/linux/pci.h                     |  10 +-
-> >>>  6 files changed, 199 insertions(+), 102 deletions(-)
-> >>
-> >> I applied these to pci/aspm for v5.5.  Thank you very much for all the
-> >> work you put into this!
-> >>
-> >> There are a couple questions that are still open, but I have no
-> >> problem if we want to make minor tweaks before the merge window opens.
-> > 
-> > To resolve these open questions, I propose the diff below, which:
-> > 
-> >   - Makes pcie_aspm_get_link() work only when called for an Upstream
-> >     Port (Endpoint, Switch Upstream Port, or other component at the
-> >     downstream end of a Link).  I don't think there's any caller that
-> >     needs to supply the upstream end.
-> > 
-> >   - Makes pcie_aspm_get_link() check that both ends are PCIe devices.
-> >     This might be overkill, but we can't rely on the PCI topology
-> >     being "correct", e.g., we have to deal gracefully with a
-> >     virtualization or similar scenario where a bridge is PCI and the
-> >     child is PCIe.  In that case, we shouldn't try to manage ASPM, so
-> >     we don't need a link_state, but I couldn't quite convince myself
-> >     that pcie_aspm_init_link_state() handles these cases.
-> > 
-> >   - Removes the aspm_lock from the sysfs show functions.  Per the
-> >     discussion with Rafael, I don't think it's necessary there:
-> > 
-> >       https://lore.kernel.org/r/20191007223428.GA72605@google.com
-> > 
-> >     I didn't remove it from the store functions because they do ASPM
-> >     reconfiguration and I didn't try to figure out the locking there.
-> > 
-> > Let me know what you think about this.  If it looks right, I'll just
-> > squash these changes into the relevant patches.
-> > 
-> Looks good to me. Thanks, Heiner
+On Tue, Oct 15, 2019 at 9:20 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Mon, Oct 14, 2019 at 01:25:00PM +0200, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > There is an arbitrary difference between the system resume and
+> > runtime resume code paths for PCI devices regarding the delay to
+> > apply when switching the devices from D3cold to D0.
+> >
+> > Namely, pci_restore_standard_config() used in the runtime resume
+> > code path calls pci_set_power_state() which in turn invokes
+> > __pci_start_power_transition() to power up the device through the
+> > platform firmware and that function applies the transition delay
+> > (as per PCI Express Base Specification Revision 2.0, Section 6.6.1).
+> > However, pci_pm_default_resume_early() used in the system resume
+> > code path calls pci_power_up() which doesn't apply the delay at
+> > all and that causes issues to occur during resume from
+> > suspend-to-idle on some systems where the delay is required.
+> >
+> > Since there is no reason for that difference to exist, modify
+> > pci_power_up() to follow pci_set_power_state() more closely and
+> > invoke __pci_start_power_transition() from there to call the
+> > platform firmware to power up the device (in case that's necessary).
+> >
+> > Fixes: db288c9c5f9d ("PCI / PM: restore the original behavior of pci_set_power_state()")
+> > Reported-by: Daniel Drake <drake@endlessm.com>
+> > Link: https://lore.kernel.org/linux-pm/CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com/T/#m21be74af263c6a34f36e0fc5c77c5449d9406925
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >
+> > Daniel, please test this one.
+> >
+> > ---
+> >  drivers/pci/pci.c |   24 +++++++++++-------------
+> >  1 file changed, 11 insertions(+), 13 deletions(-)
+> >
+> > Index: linux-pm/drivers/pci/pci.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/pci/pci.c
+> > +++ linux-pm/drivers/pci/pci.c
+> > @@ -959,19 +959,6 @@ void pci_refresh_power_state(struct pci_
+> >  }
+> >
+> >  /**
+> > - * pci_power_up - Put the given device into D0 forcibly
+> > - * @dev: PCI device to power up
+> > - */
+> > -void pci_power_up(struct pci_dev *dev)
+> > -{
+> > -     if (platform_pci_power_manageable(dev))
+> > -             platform_pci_set_power_state(dev, PCI_D0);
+> > -
+> > -     pci_raw_set_power_state(dev, PCI_D0);
+> > -     pci_update_current_state(dev, PCI_D0);
+> > -}
+> > -
+> > -/**
+> >   * pci_platform_power_transition - Use platform to change device power state
+> >   * @dev: PCI device to handle.
+> >   * @state: State to put the device into.
+> > @@ -1154,6 +1141,17 @@ int pci_set_power_state(struct pci_dev *
+> >  EXPORT_SYMBOL(pci_set_power_state);
+> >
+> >  /**
+> > + * pci_power_up - Put the given device into D0 forcibly
+>
+> Not specifically for this patch, but what does "forcibly" mean?
+>
+> > + * @dev: PCI device to power up
+> > + */
+> > +void pci_power_up(struct pci_dev *dev)
+> > +{
+> > +     __pci_start_power_transition(dev, PCI_D0);
+> > +     pci_raw_set_power_state(dev, PCI_D0);
+> > +     pci_update_current_state(dev, PCI_D0);
+>
+> There's not very much difference between:
+>
+>   pci_power_up(dev);
+>
+> and
+>
+>   pci_set_power_state(dev, PCI_D0);
+>
+> It looks like the main difference is that pci_set_power_state() calls
+> __pci_complete_power_transition(), which ultimately calls
+> acpi_pci_set_power_state() (for ACPI systems).
 
-Thanks, I squashed these in and updated pci/aspm.
+Yes, it does, for power states deeper than D0, which is not the case here.
+
+The main difference is the dev->current_state == state check in
+pci_set_power_state(), but in the resume case specifically
+dev->current_state == PCI_D0 doesn't matter, because the real power
+state of the device may be different.
+
+> So maybe "forcibly" means something like "ignoring any platform power
+> management methods"?
+
+It means "go into D0 no matter what the current cached value is".
+
+>  It's not obvious to me when we should skip the
+> platform stuff or whether the skipping should be done at the high
+> level (like calling either pci_power_up() or pci_set_power_state()) or
+> at a lower level (e.g., if everybody called pci_set_power_state() and
+> it could internally tell whether we're skipping the platform part).
+
+For transitions into D0 __pci_start_power_transition() is the platform
+stuff, so we don't skip it and the other things that are present in
+pci_set_power_state() and are not there in pci_power_up() are simply
+unnecessary for transitions to D0.
+
+> If we could unify the paths as much as possible, that would be nice,
+> but if it's not feasible, it's not feasible.
+
+It kind of is, but I'd prefer to do it on top of this patch.
+
+First, the pci_update_current_state() in pci_power_up() can be moved
+to pci_pm_default_resume_early() which is the only caller of
+pci_power_up(). [The role of that pci_update_current_state() is to
+change the current_state value to D3cold if the device is not
+accessible (or the platform firmware says that it is D3cold, which may
+be the case after a failing attempt to use it to switch the device
+over to D0).]  Next, if pci_power_up() is modified to return the
+return value of pci_raw_set_power_state(), pci_set_power_state() can
+be implemented (roughly) as
+
+sanitize the state argument
+
+if (dev->current_state == state)
+        return 0;
+
+if (state == PCI_D0)
+        return pci_power_up();
+
+carry out a transition into a deeper power state.
+
+And so pci_power_up() will be used by pci_set_power_state(), for
+transitions into D0, and (directly) by pci_pm_default_resume_early().
+
+How does that sound?
+
+> If you'd like me to push this for v5.4, let me know, otherwise you
+> can apply my:
+>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+I will, thanks!
