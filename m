@@ -2,74 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DF31D70DE
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 10:20:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB9D3D716A
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 10:48:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfJOIUm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Oct 2019 04:20:42 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44438 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbfJOIUm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Oct 2019 04:20:42 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 21so16124756otj.11;
-        Tue, 15 Oct 2019 01:20:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X0OIrA720x+aDqrTqdN+5ag6q1BbkecqENaXJV6YsTQ=;
-        b=V3Mgap19ZaURZpOwEaYH2av4/SNFhmcklNrV/lpnzysAFaRPISirzTRBarISsjM/D9
-         o/fwMD+0yGVwVQbrrK7CYrtOQWZgEzvLBxVJFxiIuzxGGBRYJ0k6cRhcTNGl0iv6Mj9C
-         AwzdoWpGPWy3Xsnq7S6VzLdQAtycKxXlbGoQpWeQO1UYq1Q3ZNzc4c3AwIB2tbrSZQ+P
-         D7njqroghd4noAwt2CMqXAHnBX342mHd2/kmqPOlK6RlOvTLaY3QOvxkXILmJ//jsb2X
-         q7UL4isLzH/V7MM9VKch9GxbI+IPwomhxQa7sS0KHbkHhTYPlIJ71yy2oAnRrtoiQ+nb
-         XE9w==
-X-Gm-Message-State: APjAAAXruq4XjPkezyUBav1AMSsv01U/xbBtDhUdV8Ja+v11s3cdDWJw
-        df0VIXIxMbL2tM1F7Cd90E9oDMPJqNm1GIpi3tM=
-X-Google-Smtp-Source: APXvYqxCVgqWHDr4+LFcWfZ0MfOsz6lGzoPw9ZwtG9f2jjSZEvZAKIktmnMZIzUaU1PCNCBBaH3SAN3yCwj+Z96Fwew=
-X-Received: by 2002:a9d:459b:: with SMTP id x27mr26564657ote.167.1571127641248;
- Tue, 15 Oct 2019 01:20:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190927090202.1468-1-drake@endlessm.com> <CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com>
- <3118349.722IRLjr4b@kreacher> <5720276.eiOaOx1Qyb@kreacher> <CAD8Lp45rKeLs5xSvS9ffs+G0D5iLMn5-MWypqCKWCn0jGdfGHQ@mail.gmail.com>
-In-Reply-To: <CAD8Lp45rKeLs5xSvS9ffs+G0D5iLMn5-MWypqCKWCn0jGdfGHQ@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 15 Oct 2019 10:20:29 +0200
-Message-ID: <CAJZ5v0jCzGrijtfnVz8jq0-QRhETau9rzvEt4jiXtwWauV9vPQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: PM: Fix pci_power_up()
-To:     Daniel Drake <drake@endlessm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1729156AbfJOIsH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Oct 2019 04:48:07 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:59346 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726430AbfJOIsH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 15 Oct 2019 04:48:07 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D22B51A07CA;
+        Tue, 15 Oct 2019 10:48:04 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 03A8E1A0460;
+        Tue, 15 Oct 2019 10:47:58 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 613E5402B3;
+        Tue, 15 Oct 2019 16:47:49 +0800 (SGT)
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Zhiqiang.Hou@nxp.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com,
+        kishon@ti.com, lorenzo.pieralisi@arm.com, Minghuan.Lian@nxp.com,
+        andrew.murray@arm.com, mingkai.hu@nxp.com,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCH v2 0/6] Add the Mobiveil EP and Layerscape Gen4 EP driver support
+Date:   Tue, 15 Oct 2019 16:36:56 +0800
+Message-Id: <20191015083702.21792-1-xiaowei.bao@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 7:11 AM Daniel Drake <drake@endlessm.com> wrote:
->
-> On Mon, Oct 14, 2019 at 7:25 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > Since there is no reason for that difference to exist, modify
-> > pci_power_up() to follow pci_set_power_state() more closely and
-> > invoke __pci_start_power_transition() from there to call the
-> > platform firmware to power up the device (in case that's necessary).
-> >
-> > Fixes: db288c9c5f9d ("PCI / PM: restore the original behavior of pci_set_power_state()")
-> > Reported-by: Daniel Drake <drake@endlessm.com>
-> > Link: https://lore.kernel.org/linux-pm/CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com/T/#m21be74af263c6a34f36e0fc5c77c5449d9406925
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >
-> > Daniel, please test this one.
->
-> This one is working too, thanks
+This patch set are for adding Mobiveil EP driver and adding PCIe Gen4
+EP driver of NXP Layerscape platform.
 
-Thank you!
+This patch set depends on:
+https://patchwork.kernel.org/project/linux-pci/list/?series=159139
 
-Bjorn, any concerns?
+Xiaowei Bao (6):
+  PCI: mobiveil: Add the EP driver support
+  dt-bindings: Add DT binding for PCIE GEN4 EP of the layerscape
+  PCI: mobiveil: Add PCIe Gen4 EP driver for NXP Layerscape SoCs
+  PCI: mobiveil: Add workaround for unsupported request error
+  arm64: dts: lx2160a: Add PCIe EP node
+  misc: pci_endpoint_test: Add the layerscape PCIe GEN4 EP device
+    support
+
+ .../bindings/pci/layerscape-pcie-gen4.txt          |  27 +-
+ MAINTAINERS                                        |   3 +
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |  56 ++
+ drivers/misc/pci_endpoint_test.c                   |   2 +
+ drivers/pci/controller/mobiveil/Kconfig            |  22 +-
+ drivers/pci/controller/mobiveil/Makefile           |   2 +
+ .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 169 ++++++
+ drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c | 569 +++++++++++++++++++++
+ drivers/pci/controller/mobiveil/pcie-mobiveil.c    |  99 +++-
+ drivers/pci/controller/mobiveil/pcie-mobiveil.h    |  72 +++
+ 10 files changed, 1009 insertions(+), 12 deletions(-)
+ create mode 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+ create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c
+
+-- 
+2.9.5
+
