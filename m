@@ -2,90 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C33DDD7F2B
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 20:42:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9467D7F3B
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 20:42:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389188AbfJOSmC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Oct 2019 14:42:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbfJOSmC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 15 Oct 2019 14:42:02 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9620E2086A;
-        Tue, 15 Oct 2019 18:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571164921;
-        bh=UfbMo4srtplXckwhdvkQ1pijpD6lZtwmuZ5zBKMFFKw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nJ9DD3sUsyARGvqPq1H2cPbcDGJHZ7alSYJwFlR3EEF0BOMEFY5WUnx2gWM5+guO5
-         dVPuLUppTj4aOI7zl5QnGZLJt//Vlq2Y/G4pNywqeSV78YSzzjJVTOjdYlHWujkYDf
-         tNhi/odRrJqWcoAI9LsWa1RDXDXk1bo0DDIxE0Nw=
-Date:   Tue, 15 Oct 2019 13:42:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        id S1731321AbfJOSmr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Oct 2019 14:42:47 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33399 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfJOSmr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Oct 2019 14:42:47 -0400
+Received: by mail-oi1-f194.google.com with SMTP id a15so17765334oic.0;
+        Tue, 15 Oct 2019 11:42:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GAHrLiAFlazwlF31Anvci8d6QY+LhAJg86S630nwFns=;
+        b=hL/tauRjah5rVImtp8vS/9VeejEN8woHZBR1hPjhrKQ7TwzXztTrmmEVVKlknoNf/i
+         kvPVPD3gaHqG1flXSvriGWutrhu/ERuOVLohVtHNgrev3J3/kc34Tr6t2/c+sotV6ere
+         bEVpCowUoHcNZxd6mtgaVRMb1D/c3kpNt7P4CbtoG2qsF8XvJMR6Z77W45oQ/C8rO4ex
+         DeIUnrb7WxbiPSvUVOlHWn/QI0wmUka4S6i6ueKFzxRPD5RDWqinZ18ecct/NuWeWoUD
+         LxUKqMK6c6410By2aO4zQm4t2BGahgf6xgEPc90jWqlrSUcVXR66LxHiG158FV/3S6VP
+         eM4w==
+X-Gm-Message-State: APjAAAXcIsazgYCnw4QNhQ/Nfy6uYfvpCX746PmGfDnzFN2LJ2bvbitR
+        Hwi9bSQQgEhVzPpSBt4k4Q==
+X-Google-Smtp-Source: APXvYqwfHoEV7ttuKqHdAbUE09Jpc6mRk4X+QQqULjfnpK4q+69BAnmHmrAl97D3fg6fznbpbVrX0Q==
+X-Received: by 2002:aca:d19:: with SMTP id 25mr15150oin.64.1571164964933;
+        Tue, 15 Oct 2019 11:42:44 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l19sm6293550oie.22.2019.10.15.11.42.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 11:42:44 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 13:42:43 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>, olaf@aepfle.de,
-        apw@canonical.com, jasowang@redhat.com, vkuznets@redhat.com,
-        marcelo.cerri@canonical.com, jackm@mellanox.com,
-        linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        driverdev-devel@linuxdriverproject.org
-Subject: Re: [PATCH v3 0/7] PCI: PM: Move to D0 before calling
- pci_legacy_resume_early()
-Message-ID: <20191015184200.GA114979@google.com>
+        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-ntb@googlegroups.com
+Subject: Re: [RFC PATCH 02/21] dt-bindings: PCI: Endpoint: Add DT bindings
+ for PCI EPF Device
+Message-ID: <20191015184243.GA10228@bogus>
+References: <20190926112933.8922-1-kishon@ti.com>
+ <20190926112933.8922-3-kishon@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191014230016.240912-1-helgaas@kernel.org>
+In-Reply-To: <20190926112933.8922-3-kishon@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 06:00:09PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Thu, Sep 26, 2019 at 04:59:14PM +0530, Kishon Vijay Abraham I wrote:
+> Add device tree bindings for PCI endpoint function device. The
+> nodes for PCI endpoint function device should be attached to
+> PCI endpoint function bus.
 > 
-> Dexuan, the important thing here is the first patch, which is your [1],
-> which I modified by doing pci_restore_state() as well as setting to D0:
-> 
->   pci_set_power_state(pci_dev, PCI_D0);
->   pci_restore_state(pci_dev);
-> 
-> I'm proposing some more patches on top.  None are relevant to the problem
-> you're solving; they're just minor doc and other updates in the same area.
-> 
-> Rafael, if you have a chance to look at these, I'd appreciate it.  I tried
-> to make the doc match the code, but I'm no PM expert.
-> 
-> [1] https://lore.kernel.org/r/KU1P153MB016637CAEAD346F0AA8E3801BFAD0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
-> 
-> 
-> Dexuan Cui (1):
->   PCI/PM: Always return devices to D0 when thawing
-> 
-> Bjorn Helgaas (6):
->   PCI/PM: Correct pci_pm_thaw_noirq() documentation
->   PCI/PM: Clear PCIe PME Status even for legacy power management
->   PCI/PM: Run resume fixups before disabling wakeup events
->   PCI/PM: Make power management op coding style consistent
->   PCI/PM: Wrap long lines in documentation
->   PCI/MSI: Move power state check out of pci_msi_supported()
-> 
->  Documentation/power/pci.rst | 38 +++++++-------
->  drivers/pci/msi.c           |  6 +--
->  drivers/pci/pci-driver.c    | 99 ++++++++++++++++++-------------------
->  3 files changed, 71 insertions(+), 72 deletions(-)
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  .../bindings/pci/endpoint/pci-epf.txt         | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
 
-Thanks Dexuan and Rafael for taking a look at these!
+This and the previous patch for the bus should be combined and please 
+convert to a schema.
 
-I applied the first six to pci/pm and the last to pci/msi, all for
-v5.5.
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt b/Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
+> new file mode 100644
+> index 000000000000..f006395fd526
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
+> @@ -0,0 +1,28 @@
+> +PCI Endpoint Function Device
+> +
+> +This describes the generic bindings to be used when a device has to be
+> +exposed to the remote host over PCIe. The device could be an actual
+> +peripheral in the platform or a virtual device created by the software.
+> +
+> +epcs : phandle to the endpoint controller device
+> +epc-names : the names of the endpoint controller device corresponding
+> +	    to the EPCs present in the *epcs* phandle
+
+Other than the NTB case, I'd expect the parent device to be the 
+controller. Let's make NTB the exception...
+
+
+> +vendor-id: used to identify device manufacturer
+> +device-id: used to identify a particular device
+> +baseclass-code: used to classify the type of function the device performs
+> +subclass-code: used to identify more specifically the function of the device
+
+Are these codes standard?
+
+Powerpc has "class-code" already...
+
+> +subsys-vendor-id: used to identify vendor of the add-in card or subsystem
+
+Powerpc has "subsystem-vendor-id" already...
+
+> +subsys-id: used to specify an id that is specific to a vendor
+> +
+> +Example:
+> +Following is an example of NTB device exposed to the remote host.
+> +
+> +ntb {
+
+This is going to need some sort of addressing (which implies 'reg')? If 
+not, I don't understand why you have 2 levels.
+
+> +	compatible = "pci-epf-ntb";
+> +	epcs = <&pcie0_ep>, <&pcie1_ep>;
+> +	epc-names = "primary", "secondary";
+> +	vendor-id = /bits/ 16 <0x104c>;
+> +	device-id = /bits/ 16 <0xb00d>;
+
+These have a long history in OF and should be 32-bits (yes, we've let 
+some cases of 16-bit creep in).
+
+> +	num-mws = <4>;
+
+Doesn't this apply to more than NTB?
+
+Can't you just get the length of 'mws-size'?
+
+> +	mws-size = <0x100000>, <0x100000>, <0x100000>, <0x100000>;
+
+Need to support 64-bit sizes?
+
+> +};
+> -- 
+> 2.17.1
+> 
