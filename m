@@ -2,70 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EDABD70D3
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 10:16:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DF31D70DE
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 10:20:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbfJOIQV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Oct 2019 04:16:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40152 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727962AbfJOIQV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Oct 2019 04:16:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Z7zb8hwdUvM4gWBjniUrfCCpeZFbxnEJV1qTM/lkvII=; b=OHDKau5y8c7YAepQgJhwyx+OE
-        1DX8y2NcUjlALU49vt3s8qRfvOIBXlOoJDHvviOemYJWZjHFpN6gd6wHraUIlTmxiUe9c+roa67fc
-        /ADANaqg0mE3kerF5EQlvhA2WO+oU6UNW0kEoiCSJQ0ByKsskbr79cWZXsN5/TVUcJ4e1MymZO3FV
-        1rnOfv4BLf5QfiirP5zYm+8gM3B8JftOBHIlj6l92646m4LpBJy2bqMHHo6cV+hYOyUPbUnT7p4UL
-        YWYbRiVQaZwnjg9q1SP/5anlZ5lte5BkOF+bFoYR9p/SSD5U7psBI6K1Pa1gezOIzATHJOR2rxAoy
-        J++tB0Pvw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iKI0C-0007wo-62; Tue, 15 Oct 2019 08:16:20 +0000
-Date:   Tue, 15 Oct 2019 01:16:20 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Pankaj Dubey <pankaj.dubey@samsung.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com, andrew.murray@arm.com,
-        lorenzo.pieralisi@arm.com, gustavo.pimentel@synopsys.com,
-        jingoohan1@gmail.com, vidyas@nvidia.com,
-        Anvesh Salveru <anvesh.s@samsung.com>
-Subject: Re: [PATCH v3] PCI: dwc: Add support to add GEN3 related
- equalization quirks
-Message-ID: <20191015081620.GA28204@infradead.org>
-References: <CGME20191015025933epcas5p1f0891dacc13648559ed8e037e49ee5b1@epcas5p1.samsung.com>
- <1571108362-25962-1-git-send-email-pankaj.dubey@samsung.com>
+        id S1726366AbfJOIUm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Oct 2019 04:20:42 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44438 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbfJOIUm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Oct 2019 04:20:42 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 21so16124756otj.11;
+        Tue, 15 Oct 2019 01:20:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X0OIrA720x+aDqrTqdN+5ag6q1BbkecqENaXJV6YsTQ=;
+        b=V3Mgap19ZaURZpOwEaYH2av4/SNFhmcklNrV/lpnzysAFaRPISirzTRBarISsjM/D9
+         o/fwMD+0yGVwVQbrrK7CYrtOQWZgEzvLBxVJFxiIuzxGGBRYJ0k6cRhcTNGl0iv6Mj9C
+         AwzdoWpGPWy3Xsnq7S6VzLdQAtycKxXlbGoQpWeQO1UYq1Q3ZNzc4c3AwIB2tbrSZQ+P
+         D7njqroghd4noAwt2CMqXAHnBX342mHd2/kmqPOlK6RlOvTLaY3QOvxkXILmJ//jsb2X
+         q7UL4isLzH/V7MM9VKch9GxbI+IPwomhxQa7sS0KHbkHhTYPlIJ71yy2oAnRrtoiQ+nb
+         XE9w==
+X-Gm-Message-State: APjAAAXruq4XjPkezyUBav1AMSsv01U/xbBtDhUdV8Ja+v11s3cdDWJw
+        df0VIXIxMbL2tM1F7Cd90E9oDMPJqNm1GIpi3tM=
+X-Google-Smtp-Source: APXvYqxCVgqWHDr4+LFcWfZ0MfOsz6lGzoPw9ZwtG9f2jjSZEvZAKIktmnMZIzUaU1PCNCBBaH3SAN3yCwj+Z96Fwew=
+X-Received: by 2002:a9d:459b:: with SMTP id x27mr26564657ote.167.1571127641248;
+ Tue, 15 Oct 2019 01:20:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571108362-25962-1-git-send-email-pankaj.dubey@samsung.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20190927090202.1468-1-drake@endlessm.com> <CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com>
+ <3118349.722IRLjr4b@kreacher> <5720276.eiOaOx1Qyb@kreacher> <CAD8Lp45rKeLs5xSvS9ffs+G0D5iLMn5-MWypqCKWCn0jGdfGHQ@mail.gmail.com>
+In-Reply-To: <CAD8Lp45rKeLs5xSvS9ffs+G0D5iLMn5-MWypqCKWCn0jGdfGHQ@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 15 Oct 2019 10:20:29 +0200
+Message-ID: <CAJZ5v0jCzGrijtfnVz8jq0-QRhETau9rzvEt4jiXtwWauV9vPQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: PM: Fix pci_power_up()
+To:     Daniel Drake <drake@endlessm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 08:29:22AM +0530, Pankaj Dubey wrote:
-> From: Anvesh Salveru <anvesh.s@samsung.com>
-> 
-> In some platforms, PCIe PHY may have issues which will prevent linkup
-> to happen in GEN3 or higher speed. In case equalization fails, link will
-> fallback to GEN1.
-> 
-> DesignWare controller gives flexibility to disable GEN3 equalization
-> completely or only phase 2 and 3 of equalization.
-> 
-> This patch enables the DesignWare driver to disable the PCIe GEN3
-> equalization by enabling one of the following quirks:
->  - DWC_EQUALIZATION_DISABLE: To disable GEN3 equalization all phases
->  - DWC_EQ_PHASE_2_3_DISABLE: To disable GEN3 equalization phase 2 & 3
-> 
-> Platform drivers can set these quirks via "quirk" variable of "dw_pcie"
-> struct.
+On Tue, Oct 15, 2019 at 7:11 AM Daniel Drake <drake@endlessm.com> wrote:
+>
+> On Mon, Oct 14, 2019 at 7:25 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > Since there is no reason for that difference to exist, modify
+> > pci_power_up() to follow pci_set_power_state() more closely and
+> > invoke __pci_start_power_transition() from there to call the
+> > platform firmware to power up the device (in case that's necessary).
+> >
+> > Fixes: db288c9c5f9d ("PCI / PM: restore the original behavior of pci_set_power_state()")
+> > Reported-by: Daniel Drake <drake@endlessm.com>
+> > Link: https://lore.kernel.org/linux-pm/CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com/T/#m21be74af263c6a34f36e0fc5c77c5449d9406925
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >
+> > Daniel, please test this one.
+>
+> This one is working too, thanks
 
-Please submit this together with the changes to the dwc frontend driver
-that actually wants to set these quirks.
+Thank you!
+
+Bjorn, any concerns?
