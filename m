@@ -2,100 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B68AD74B4
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 13:16:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB2F4D74BF
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 13:17:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbfJOLQb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Oct 2019 07:16:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:36032 "EHLO foss.arm.com"
+        id S1726259AbfJOLRg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Oct 2019 07:17:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725812AbfJOLQa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 15 Oct 2019 07:16:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E40F337;
-        Tue, 15 Oct 2019 04:16:30 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 262F63F68E;
-        Tue, 15 Oct 2019 04:16:29 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 12:16:24 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Don't rely on jiffies while holding
- spinlock
-Message-ID: <20191015111623.GA7193@e121166-lin.cambridge.arm.com>
-References: <20190927085502.1758-1-repk@triplefau.lt>
+        id S1725812AbfJOLRg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 15 Oct 2019 07:17:36 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BFF721835
+        for <linux-pci@vger.kernel.org>; Tue, 15 Oct 2019 11:17:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571138255;
+        bh=oJs4Nz/w5KcJqHZkCZCLIDvyah4l8VweCXBAgTjhNYs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=b32Cjb9nv5iuC2edc5oLuv0kNikzaqCU+laPpIrHyWfA8edNBRj1164v0Qeu5TZMV
+         0HSmF28RcGMyGbff/ShNudJDFleGB1X4fqOU0hmQCS4/tzdj69jEUTxZC1RhnA7D4i
+         98hOmbzOfncbKIOuXNIoFEX/G4MYJ+zTiy4ETvxo=
+Received: by mail-qt1-f175.google.com with SMTP id u40so29892182qth.11
+        for <linux-pci@vger.kernel.org>; Tue, 15 Oct 2019 04:17:35 -0700 (PDT)
+X-Gm-Message-State: APjAAAVoir63jJwtyqRhvHRr58ONMyxpVFevE/25Rc8Ammm5uxq52yOV
+        USWNkkBCIwAh4WH23FQxNkTln4ZDr9NBc0ScVA==
+X-Google-Smtp-Source: APXvYqxZBQjXM06pV3GgKICK1b1Wdn//r19XqyM/3vYWnaPxKSp5jNZnSkfg00Qy9v7U1ZTrW9FlkUNkrdvCpYUlXGI=
+X-Received: by 2002:ac8:6782:: with SMTP id b2mr37959337qtp.143.1571138254502;
+ Tue, 15 Oct 2019 04:17:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190927085502.1758-1-repk@triplefau.lt>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190924214630.12817-1-robh@kernel.org> <20190924214630.12817-3-robh@kernel.org>
+ <20190925102423.GR9720@e119886-lin.cambridge.arm.com> <CAL_JsqKN709cOLtDLdKXmDzeNLYtGekMT2BiZic4x45UopenwA@mail.gmail.com>
+ <20190930151346.GD42880@e119886-lin.cambridge.arm.com> <CAL_Jsq+3S7+E+a5E122aR7s0a9SxkMyxw2t=OkO4pS5QUR+0CA@mail.gmail.com>
+ <20191015110254.GA5160@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20191015110254.GA5160@e121166-lin.cambridge.arm.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 15 Oct 2019 06:17:22 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJwmiUZmJSmRU4RAecKd=Zw+vGKGrHZ4UXrAwOGCNMF5g@mail.gmail.com>
+Message-ID: <CAL_JsqJwmiUZmJSmRU4RAecKd=Zw+vGKGrHZ4UXrAwOGCNMF5g@mail.gmail.com>
+Subject: Re: [PATCH 02/11] PCI: altera: Use pci_parse_request_of_pci_ranges()
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ley Foon Tan <lftan@altera.com>, rfi@lists.rocketboards.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 10:55:02AM +0200, Remi Pommarel wrote:
-> advk_pcie_wait_pio() can be called while holding a spinlock (from
-> pci_bus_read_config_dword()), then depends on jiffies in order to
-> timeout while polling on PIO state registers. In the case the PIO
-> transaction failed, the timeout will never happen and will also cause
-> the cpu to stall.
-> 
-> This decrements a variable and wait instead of using jiffies.
-> 
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> ---
-> Changes since v1:
->   - Reduce polling delay
->   - Change size_t into int for loop counter
-> Changes since v2:
->   - Keep timeout to 1ms by increasing retry counter
-> ---
->  drivers/pci/controller/pci-aardvark.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+On Tue, Oct 15, 2019 at 6:03 AM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> On Mon, Sep 30, 2019 at 12:36:22PM -0500, Rob Herring wrote:
+> > On Mon, Sep 30, 2019 at 10:13 AM Andrew Murray <andrew.murray@arm.com> wrote:
+> > >
+> > > On Wed, Sep 25, 2019 at 07:33:35AM -0500, Rob Herring wrote:
+> > > > On Wed, Sep 25, 2019 at 5:24 AM Andrew Murray <andrew.murray@arm.com> wrote:
+> > > > >
+> > > > > On Tue, Sep 24, 2019 at 04:46:21PM -0500, Rob Herring wrote:
+> > > > > > Convert altera host bridge to use the common
+> > > > > > pci_parse_request_of_pci_ranges().
+> > > > > >
+> > > > > > Cc: Ley Foon Tan <lftan@altera.com>
+> > > > > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > > > Cc: rfi@lists.rocketboards.org
+> > > > > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > > > > ---
+> > > >
+> > > > > > @@ -833,9 +800,8 @@ static int altera_pcie_probe(struct platform_device *pdev)
+> > > > > >               return ret;
+> > > > > >       }
+> > > > > >
+> > > > > > -     INIT_LIST_HEAD(&pcie->resources);
+> > > > > > -
+> > > > > > -     ret = altera_pcie_parse_request_of_pci_ranges(pcie);
+> > > > > > +     ret = pci_parse_request_of_pci_ranges(dev, &pcie->resources,
+> > > > >
+> > > > > Does it matter that we now map any given IO ranges whereas we didn't
+> > > > > previously?
+> > > > >
+> > > > > As far as I can tell there are no users that pass an IO range, if they
+> > > > > did then with the existing code the probe would fail and they'd get
+> > > > > a "I/O range found for %pOF. Please provide an io_base pointer...".
+> > > > > However with the new code if any IO range was given (which would
+> > > > > probably represent a misconfiguration), then we'd proceed to map the
+> > > > > IO range. When that IO is used, who knows what would happen.
+> > > >
+> > > > Yeah, I'm assuming that the DT doesn't have an IO range if IO is not
+> > > > supported. IMO, it is not the kernel's job to validate the DT.
+> > >
+> > > Sure. Is it worth mentioning in the commit message this subtle change
+> > > in behaviour?
+> >
+> > Will do.
+>
+> Hi Rob,
+>
+> I would like to merge this series, are you resending it ? It does not
+> apply to v5.4-rc1, if you rebase it please also update this patch
+> log, as per comments above (I can do it too but if you resend it
+> there is no point).
 
-Applied to pci/aardvark, thanks.
+Yes, I plan to resend it.
 
-Lorenzo
-
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index fc0fe4d4de49..7b5c9d6c8706 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -175,7 +175,8 @@
->  	(PCIE_CONF_BUS(bus) | PCIE_CONF_DEV(PCI_SLOT(devfn))	| \
->  	 PCIE_CONF_FUNC(PCI_FUNC(devfn)) | PCIE_CONF_REG(where))
->  
-> -#define PIO_TIMEOUT_MS			1
-> +#define PIO_RETRY_CNT			500
-> +#define PIO_RETRY_DELAY			2 /* 2 us*/
->  
->  #define LINK_WAIT_MAX_RETRIES		10
->  #define LINK_WAIT_USLEEP_MIN		90000
-> @@ -383,17 +384,16 @@ static void advk_pcie_check_pio_status(struct advk_pcie *pcie)
->  static int advk_pcie_wait_pio(struct advk_pcie *pcie)
->  {
->  	struct device *dev = &pcie->pdev->dev;
-> -	unsigned long timeout;
-> +	int i;
->  
-> -	timeout = jiffies + msecs_to_jiffies(PIO_TIMEOUT_MS);
-> -
-> -	while (time_before(jiffies, timeout)) {
-> +	for (i = 0; i < PIO_RETRY_CNT; i++) {
->  		u32 start, isr;
->  
->  		start = advk_readl(pcie, PIO_START);
->  		isr = advk_readl(pcie, PIO_ISR);
->  		if (!start && isr)
->  			return 0;
-> +		udelay(PIO_RETRY_DELAY);
->  	}
->  
->  	dev_err(dev, "config read/write timed out\n");
-> -- 
-> 2.20.1
-> 
+Rob
