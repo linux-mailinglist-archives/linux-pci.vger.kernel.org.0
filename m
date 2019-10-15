@@ -2,249 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 35AA2D71F9
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 11:19:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99E3ED723C
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 11:26:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfJOJTI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Oct 2019 05:19:08 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:37304 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfJOJTI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Oct 2019 05:19:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=YIaOBNWN2tpG+RpI2kNEP0VXguIxNOWwrYW3F7DeUP8=; b=OMkoqyY0vapTbGrlufm/6ayOY
-        XSkrMEjXZT8h0b4GmtbZLBbtUTelQxluoeVreLNcdFjQ3+ceI/7EH9H4HSWoODT26X1rOm6DdWmFp
-        oRnlqVuSs8zXTw94Yq1mm+GHmz1UGUrzmVH7IYyRo+jgQT3B8i/m8iH0trQB3tn7gCI+TPdIEYzZK
-        elCvZorMO4eEfAhIZyeqFJDIvtEYWDvAKk4HK89yLFp02wurTrDCuj49xyFohoimuHy8BN0cGeEjN
-        q95FWUIV9VfODFWWmp6L1Jy/QOmc+As8DcvxIfzkA17ySv7MKXHXiP+2hKUSt9WrkKF68LPUP2e+X
-        4tzF+1+5w==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:43734)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iKIyh-0003VI-5O; Tue, 15 Oct 2019 10:18:51 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iKIyf-0005C9-SU; Tue, 15 Oct 2019 10:18:49 +0100
-Date:   Tue, 15 Oct 2019 10:18:49 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for NXP
- Layerscape SoCs
-Message-ID: <20191015091849.GT25745@shell.armlinux.org.uk>
-References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
- <20190916021742.22844-4-xiaowei.bao@nxp.com>
- <20190924163850.GY25745@shell.armlinux.org.uk>
- <AM5PR04MB32991D0D69769CE29E0F8DAEF5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <20191015090756.GS25745@shell.armlinux.org.uk>
- <AM5PR04MB3299919E5C4C8A764DB3A656F5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
+        id S1727936AbfJOJ0D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Oct 2019 05:26:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52530 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725890AbfJOJ0D (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 15 Oct 2019 05:26:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 489D9AC59;
+        Tue, 15 Oct 2019 09:25:59 +0000 (UTC)
+Subject: Re: [PATCH] kernel-doc: rename the kernel-doc directive 'functions'
+ to 'specific'
+To:     Tim.Bird@sony.com, jani.nikula@linux.intel.com,
+        changbin.du@gmail.com, corbet@lwn.net
+Cc:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org
+References: <20191013055359.23312-1-changbin.du@gmail.com>
+ <875zkrd7nq.fsf@intel.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF977CAF09@USCULXMSG01.am.sony.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <7e7557b5-469f-3e63-6254-53dab2d7234a@suse.de>
+Date:   Tue, 15 Oct 2019 11:25:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM5PR04MB3299919E5C4C8A764DB3A656F5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF977CAF09@USCULXMSG01.am.sony.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="xhqojG6Suv0J68B6aAC9CpKobUD0Yg8Vm"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 09:14:00AM +0000, Xiaowei Bao wrote:
-> > -----Original Message-----
-> > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> > Sent: 2019年10月15日 17:08
-> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Cc: Z.q. Hou <zhiqiang.hou@nxp.com>; bhelgaas@google.com;
-> > robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo Li
-> > <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h. Lian
-> > <minghuan.lian@nxp.com>; andrew.murray@arm.com; Mingkai Hu
-> > <mingkai.hu@nxp.com>; linux-pci@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> > linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for NXP
-> > Layerscape SoCs
-> > 
-> > On Tue, Oct 15, 2019 at 07:46:12AM +0000, Xiaowei Bao wrote:
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> > > > Sent: 2019年9月25日 0:39
-> > > > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > > Cc: Z.q. Hou <zhiqiang.hou@nxp.com>; bhelgaas@google.com;
-> > > > robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo
-> > > > robh+Li
-> > > > <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h.
-> > > > Lian <minghuan.lian@nxp.com>; andrew.murray@arm.com; Mingkai Hu
-> > > > <mingkai.hu@nxp.com>; linux-pci@vger.kernel.org;
-> > > > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> > > > linux-kernel@vger.kernel.org
-> > > > Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for
-> > > > NXP Layerscape SoCs
-> > > >
-> > > > On Mon, Sep 16, 2019 at 10:17:39AM +0800, Xiaowei Bao wrote:
-> > > > > This PCIe controller is based on the Mobiveil GPEX IP, it work in
-> > > > > EP mode if select this config opteration.
-> > > > >
-> > > > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > > > ---
-> > > > >  MAINTAINERS                                        |   2
-> > +
-> > > > >  drivers/pci/controller/mobiveil/Kconfig            |  17 ++-
-> > > > >  drivers/pci/controller/mobiveil/Makefile           |   1 +
-> > > > >  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 156
-> > > > > +++++++++++++++++++++
-> > > > >  4 files changed, 173 insertions(+), 3 deletions(-)  create mode
-> > > > > 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > > >
-> > > > > diff --git a/MAINTAINERS b/MAINTAINERS index b997056..0858b54
-> > > > > 100644
-> > > > > --- a/MAINTAINERS
-> > > > > +++ b/MAINTAINERS
-> > > > > @@ -12363,11 +12363,13 @@ F:
-> > > > 	drivers/pci/controller/dwc/*layerscape*
-> > > > >
-> > > > >  PCI DRIVER FOR NXP LAYERSCAPE GEN4 CONTROLLER
-> > > > >  M:	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > > > +M:	Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > > >  L:	linux-pci@vger.kernel.org
-> > > > >  L:	linux-arm-kernel@lists.infradead.org
-> > > > >  S:	Maintained
-> > > > >  F:	Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
-> > > > >  F:	drivers/pci/controller/mobibeil/pcie-layerscape-gen4.c
-> > > > > +F:	drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > > >
-> > > > >  PCI DRIVER FOR GENERIC OF HOSTS
-> > > > >  M:	Will Deacon <will@kernel.org>
-> > > > > diff --git a/drivers/pci/controller/mobiveil/Kconfig
-> > > > > b/drivers/pci/controller/mobiveil/Kconfig
-> > > > > index 2054950..0696b6e 100644
-> > > > > --- a/drivers/pci/controller/mobiveil/Kconfig
-> > > > > +++ b/drivers/pci/controller/mobiveil/Kconfig
-> > > > > @@ -27,13 +27,24 @@ config PCIE_MOBIVEIL_PLAT
-> > > > >  	  for address translation and it is a PCIe Gen4 IP.
-> > > > >
-> > > > >  config PCIE_LAYERSCAPE_GEN4
-> > > > > -	bool "Freescale Layerscape PCIe Gen4 controller"
-> > > > > +	bool "Freescale Layerscpe PCIe Gen4 controller in RC mode"
-> > > > >  	depends on PCI
-> > > > >  	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
-> > > > >  	depends on PCI_MSI_IRQ_DOMAIN
-> > > > >  	select PCIE_MOBIVEIL_HOST
-> > > > >  	help
-> > > > >  	  Say Y here if you want PCIe Gen4 controller support on
-> > > > > -	  Layerscape SoCs. The PCIe controller can work in RC or
-> > > > > -	  EP mode according to RCW[HOST_AGT_PEX] setting.
-> > > > > +	  Layerscape SoCs. And the PCIe controller work in RC mode
-> > > > > +	  by setting the RCW[HOST_AGT_PEX] to 0.
-> > > > > +
-> > > > > +config PCIE_LAYERSCAPE_GEN4_EP
-> > > > > +	bool "Freescale Layerscpe PCIe Gen4 controller in EP mode"
-> > > > > +	depends on PCI
-> > > > > +	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
-> > > > > +	depends on PCI_ENDPOINT
-> > > > > +	select PCIE_MOBIVEIL_EP
-> > > > > +	help
-> > > > > +	  Say Y here if you want PCIe Gen4 controller support on
-> > > > > +	  Layerscape SoCs. And the PCIe controller work in EP mode
-> > > > > +	  by setting the RCW[HOST_AGT_PEX] to 1.
-> > > > >  endmenu
-> > > > > diff --git a/drivers/pci/controller/mobiveil/Makefile
-> > > > > b/drivers/pci/controller/mobiveil/Makefile
-> > > > > index 686d41f..6f54856 100644
-> > > > > --- a/drivers/pci/controller/mobiveil/Makefile
-> > > > > +++ b/drivers/pci/controller/mobiveil/Makefile
-> > > > > @@ -4,3 +4,4 @@ obj-$(CONFIG_PCIE_MOBIVEIL_HOST) +=
-> > > > > pcie-mobiveil-host.o
-> > > > >  obj-$(CONFIG_PCIE_MOBIVEIL_EP) += pcie-mobiveil-ep.o
-> > > > >  obj-$(CONFIG_PCIE_MOBIVEIL_PLAT) += pcie-mobiveil-plat.o
-> > > > >  obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4) += pcie-layerscape-gen4.o
-> > > > > +obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4_EP) +=
-> > > > pcie-layerscape-gen4-ep.o
-> > > > > diff --git
-> > > > > a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > > > b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > > > new file mode 100644
-> > > > > index 0000000..7bfec51
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > > > @@ -0,0 +1,156 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > +/*
-> > > > > + * PCIe controller EP driver for Freescale Layerscape SoCs
-> > > > > + *
-> > > > > + * Copyright (C) 2019 NXP Semiconductor.
-> > > > > + *
-> > > > > + * Author: Xiaowei Bao <xiaowei.bao@nxp.com>  */
-> > > > > +
-> > > > > +#include <linux/kernel.h>
-> > > > > +#include <linux/init.h>
-> > > > > +#include <linux/of_pci.h>
-> > > > > +#include <linux/of_platform.h>
-> > > > > +#include <linux/of_address.h>
-> > > > > +#include <linux/pci.h>
-> > > > > +#include <linux/platform_device.h> #include <linux/resource.h>
-> > > > > +
-> > > > > +#include "pcie-mobiveil.h"
-> > > > > +
-> > > > > +#define PCIE_LX2_BAR_NUM	4
-> > > > > +
-> > > > > +#define to_ls_pcie_g4_ep(x)	dev_get_drvdata((x)->dev)
-> > > > > +
-> > > > > +struct ls_pcie_g4_ep {
-> > > > > +	struct mobiveil_pcie		*mv_pci;
-> > > > > +};
-> > > > > +
-> > > > > +static const struct of_device_id ls_pcie_g4_ep_of_match[] = {
-> > > > > +	{ .compatible = "fsl,lx2160a-pcie-ep",},
-> > > > > +	{ },
-> > > > > +};
-> > > > > +
-> > > > > +static const struct pci_epc_features ls_pcie_g4_epc_features = {
-> > > > > +	.linkup_notifier = false,
-> > > > > +	.msi_capable = true,
-> > > > > +	.msix_capable = true,
-> > > > > +	.reserved_bar = (1 << BAR_4) | (1 << BAR_5),
-> > > >
-> > > > 			BIT(BAR_4) | BIT(BAR_5) ?
-> > >
-> > > I think use .reserved_bar = (1 << BAR_4) | (1 << BAR_5), is better,
-> > > because BAR_4 is not a bit of register.
-> > 
-> > Why is whether it's a register or not relevent?
-> 
-> My understand is that the BIT is used to register, refer to other EP driver files,
-> it also use 1 << BAR_4 method.
-> 
-> [baoxw@titan controller]$ grep -r "reserved_bar" *
-> dwc/pci-keystone.c:     .reserved_bar = 1 << BAR_0 | 1 << BAR_1,
-> mobiveil/pcie-layerscape-gen4-ep.c:     .reserved_bar = (1 << BAR_4) | (1 << BAR_5),
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--xhqojG6Suv0J68B6aAC9CpKobUD0Yg8Vm
+Content-Type: multipart/mixed; boundary="e6U1SKLtu8YetFMprVb1L54zX2NmQYBjI";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Tim.Bird@sony.com, jani.nikula@linux.intel.com, changbin.du@gmail.com,
+ corbet@lwn.net
+Cc: linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-fpga@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+ linux-crypto@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ intel-gfx@lists.freedesktop.org
+Message-ID: <7e7557b5-469f-3e63-6254-53dab2d7234a@suse.de>
+Subject: Re: [PATCH] kernel-doc: rename the kernel-doc directive 'functions'
+ to 'specific'
+References: <20191013055359.23312-1-changbin.du@gmail.com>
+ <875zkrd7nq.fsf@intel.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF977CAF09@USCULXMSG01.am.sony.com>
+In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF977CAF09@USCULXMSG01.am.sony.com>
 
-$ grep '\<BIT(' fs kernel lib mm net -r
+--e6U1SKLtu8YetFMprVb1L54zX2NmQYBjI
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-About 695 non-device driver instances at the very least seem to disagree.
+Hi
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Am 14.10.19 um 22:48 schrieb Tim.Bird@sony.com:
+>=20
+>=20
+>> -----Original Message-----
+>> From: Jani Nikula on October 13, 2019 11:00 PM
+>> On Sun, 13 Oct 2019, Changbin Du <changbin.du@gmail.com> wrote:
+>>> The 'functions' directive is not only for functions, but also works f=
+or
+>>> structs/unions. So the name is misleading. This patch renames it to
+>>> 'specific', so now we have export/internal/specific directives to lim=
+it
+>>> the functions/types to be included in documentation. Meanwhile we
+>> improved
+>>> the warning message.
+>>
+>> Agreed on "functions" being less than perfect. It directly exposes the=
+
+>> idiosyncrasies of scripts/kernel-doc. I'm not sure "specific" is any
+>> better, though.
+>=20
+> I strongly agree with this.  'specific' IMHO, has no semantic value and=
+
+> I'd rather just leave the only-sometimes-wrong 'functions' than convert=
+
+> to something that obscures the meaning always.
+>=20
+>>
+>> Perhaps "symbols" would be more self-explanatory. Or, actually make
+>> "functions" only work on functions, and add a separate keyword for oth=
+er
+>> stuff. *shrug*
+> My preference would be to use 'symbols'.  I tried to come up with somet=
+hing
+> but 'symbols' is better than anything I came up with.
+
+Maybe 'interfaces' or 'artifacts'. The term 'symbols' is just as
+imprecise as 'functions'.
+
+Best regards
+Thomas
+
+>>
+>> Seems like the patch is way too big. I'd probably add "symbols" (or
+>> whatever) as a synonym for "functions" for starters, and convert
+>> documents piecemeal, and finally drop the old one.
+>>
+>> The scripts/kernel-doc change should be a patch of its own.
+> Agreed on these two points as well.
+>=20
+> Just adding my 2 cents.
+>  -- Tim
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--e6U1SKLtu8YetFMprVb1L54zX2NmQYBjI--
+
+--xhqojG6Suv0J68B6aAC9CpKobUD0Yg8Vm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl2lkKUACgkQaA3BHVML
+eiPfCAf/W0bkytCWyMq99ercABUIKnlOK53TBUZ9NR3Teor0EJtwx1giKdxBOLbe
+qAjTTABU3EcEtmCxmmsKLUEyDrBEmK+/T4YDbASwYt9qSRZQ5rJXRY7RrTsiIfkF
+TWYe27RbVMt7Vn4UC1f1FsShMPxv6fIrpyNoXtB8cCE/aFSLpdPafv0zNxvHFBe+
+SnDdVv+dR767Yhm8etpDlgpFtAD03PTH4hN+ZD9dLD/qgJh7NQiI1zyirt2ns6kv
+2RhyIDmEVltSEhgVDCMg+LOZG41UNmIqpjgNEUF1ReeJeYX3MecovgE4mdzYA4TD
+7q4r9GeyLGeoqsEUu0A4mGRY+ZBZ8g==
+=b8IK
+-----END PGP SIGNATURE-----
+
+--xhqojG6Suv0J68B6aAC9CpKobUD0Yg8Vm--
