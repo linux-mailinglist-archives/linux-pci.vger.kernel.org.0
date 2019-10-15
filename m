@@ -2,348 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 32276D796A
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 17:10:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D873AD7975
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2019 17:11:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732939AbfJOPHP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Oct 2019 11:07:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:40554 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732531AbfJOPHP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 15 Oct 2019 11:07:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 666211000;
-        Tue, 15 Oct 2019 08:07:14 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 620E93F718;
-        Tue, 15 Oct 2019 08:07:13 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 16:07:11 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Minghuan Lian <Minghuan.Lian@nxp.com>,
-        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
-        Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v3] PCI: mobiveil: Fix csr_read/write build issue
-Message-ID: <20191015150711.GC22698@e121166-lin.cambridge.arm.com>
-References: <20190930083116.GA38576@e119886-lin.cambridge.arm.com>
- <20191004041925.8996-1-wangkefeng.wang@huawei.com>
+        id S1732897AbfJOPL5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Oct 2019 11:11:57 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:1607 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbfJOPL5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Oct 2019 11:11:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1571152316; x=1602688316;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=u+I3dMwQI/KSkSqrBp+39zdAeGJeYw2xPhZwcNW/iQ0=;
+  b=F9isxWb6BoFggK6g9Y3Sq9OwaTgFOKl5A1rBYgYgOLqZ+h04/5Nl/v5I
+   kycdlhSdGDWaYnEHQvUkJlOw56w6VVchBYFeBXUKx/cQisifysQZTzxXJ
+   tzifOvlPTZ1S7VYbBkeghVVL/5m6vu4q73UMNgaC8V+dplj5VTiF+Z84q
+   U=;
+X-IronPort-AV: E=Sophos;i="5.67,300,1566864000"; 
+   d="scan'208";a="793097327"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-81e76b79.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 15 Oct 2019 15:11:55 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-81e76b79.us-west-2.amazon.com (Postfix) with ESMTPS id 86ABDA182D;
+        Tue, 15 Oct 2019 15:11:54 +0000 (UTC)
+Received: from EX13D13EUA004.ant.amazon.com (10.43.165.22) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 15 Oct 2019 15:11:53 +0000
+Received: from localhost (10.43.160.180) by EX13D13EUA004.ant.amazon.com
+ (10.43.165.22) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 15 Oct
+ 2019 15:11:51 +0000
+From:   Yuri Volchkov <volchkov@amazon.de>
+To:     <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+CC:     <joro@8bytes.org>, <bhelgaas@google.com>, <dwmw2@infradead.org>,
+        <neugebar@amazon.co.uk>, Yuri Volchkov <volchkov@amazon.de>
+Subject: [PATCH 0/2] iommu/dmar: expose fault counters via sysfs
+Date:   Tue, 15 Oct 2019 17:11:10 +0200
+Message-ID: <20191015151112.17225-1-volchkov@amazon.de>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191004041925.8996-1-wangkefeng.wang@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.43.160.180]
+X-ClientProxiedBy: EX13D13UWA004.ant.amazon.com (10.43.160.251) To
+ EX13D13EUA004.ant.amazon.com (10.43.165.22)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 12:19:25PM +0800, Kefeng Wang wrote:
-> The riscv has csr_read/write macro, see arch/riscv/include/asm/csr.h,
-> the same function naming will cause build error, using such generic names
-> in a driver is bad, rename csr_[read,write][l,] to mobiveil_csr_read/write
-> to fix it.
-> 
-> drivers/pci/controller/pcie-mobiveil.c:238:69: error: macro "csr_read" passed 3 arguments, but takes just 1
->  static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
-> 
-> drivers/pci/controller/pcie-mobiveil.c:253:80: error: macro "csr_write" passed 4 arguments, but takes just 2
->  static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
-> 
-> Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Minghuan Lian <Minghuan.Lian@nxp.com>
-> Cc: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> Cc: Andrew Murray <andrew.murray@arm.com> 
-> Fixes: bcbe0d9a8d93 ("PCI: mobiveil: Unify register accessors")
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
-> v3:
-> - reduce line lengths suggested by Andrew
-> 
-> v2:
-> - using mobiveil prefix suggested by Andrew and Christoph 
-> 
->  drivers/pci/controller/pcie-mobiveil.c | 119 +++++++++++++------------
->  1 file changed, 62 insertions(+), 57 deletions(-)
+For health monitoring, it can be useful to know if iommu is behaving as
+expected. DMAR faults can be an indicator that a device:
+ - has been misconfigured, or
+ - has experienced a hardware hiccup and replacement should
+   be considered, or
+ - has been issuing faults due to malicious activity
 
-Applied to pci/mobiveil, thanks.
+Currently the only way to check if there were any DMAR faults on the
+host is to scan the dmesg output. However this approach is not very
+elegant. The information we are looking for can be wrapped out of the
+buffer, or masked (since it is a rate-limited print) by another
+device.
 
-Lorenzo
+The series adds counters for DMAR faults and exposes them via sysfs.
 
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index a45a6447b01d..32f37d08d5bc 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -235,7 +235,7 @@ static int mobiveil_pcie_write(void __iomem *addr, int size, u32 val)
->  	return PCIBIOS_SUCCESSFUL;
->  }
->  
-> -static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
-> +static u32 mobiveil_csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
->  {
->  	void *addr;
->  	u32 val;
-> @@ -250,7 +250,8 @@ static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
->  	return val;
->  }
->  
-> -static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
-> +static void mobiveil_csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off,
-> +			       size_t size)
->  {
->  	void *addr;
->  	int ret;
-> @@ -262,19 +263,19 @@ static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
->  		dev_err(&pcie->pdev->dev, "write CSR address failed\n");
->  }
->  
-> -static u32 csr_readl(struct mobiveil_pcie *pcie, u32 off)
-> +static u32 mobiveil_csr_readl(struct mobiveil_pcie *pcie, u32 off)
->  {
-> -	return csr_read(pcie, off, 0x4);
-> +	return mobiveil_csr_read(pcie, off, 0x4);
->  }
->  
-> -static void csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
-> +static void mobiveil_csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
->  {
-> -	csr_write(pcie, val, off, 0x4);
-> +	mobiveil_csr_write(pcie, val, off, 0x4);
->  }
->  
->  static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
->  {
-> -	return (csr_readl(pcie, LTSSM_STATUS) &
-> +	return (mobiveil_csr_readl(pcie, LTSSM_STATUS) &
->  		LTSSM_STATUS_L0_MASK) == LTSSM_STATUS_L0;
->  }
->  
-> @@ -323,7 +324,7 @@ static void __iomem *mobiveil_pcie_map_bus(struct pci_bus *bus,
->  		PCI_SLOT(devfn) << PAB_DEVICE_SHIFT |
->  		PCI_FUNC(devfn) << PAB_FUNCTION_SHIFT;
->  
-> -	csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
-> +	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
->  
->  	return pcie->config_axi_slave_base + where;
->  }
-> @@ -353,13 +354,14 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
->  	chained_irq_enter(chip, desc);
->  
->  	/* read INTx status */
-> -	val = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
-> -	mask = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
-> +	val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
-> +	mask = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
->  	intr_status = val & mask;
->  
->  	/* Handle INTx */
->  	if (intr_status & PAB_INTP_INTX_MASK) {
-> -		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
-> +		shifted_status = mobiveil_csr_readl(pcie,
-> +						    PAB_INTP_AMBA_MISC_STAT);
->  		shifted_status &= PAB_INTP_INTX_MASK;
->  		shifted_status >>= PAB_INTX_START;
->  		do {
-> @@ -373,12 +375,13 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
->  							    bit);
->  
->  				/* clear interrupt handled */
-> -				csr_writel(pcie, 1 << (PAB_INTX_START + bit),
-> -					   PAB_INTP_AMBA_MISC_STAT);
-> +				mobiveil_csr_writel(pcie,
-> +						    1 << (PAB_INTX_START + bit),
-> +						    PAB_INTP_AMBA_MISC_STAT);
->  			}
->  
-> -			shifted_status = csr_readl(pcie,
-> -						   PAB_INTP_AMBA_MISC_STAT);
-> +			shifted_status = mobiveil_csr_readl(pcie,
-> +							    PAB_INTP_AMBA_MISC_STAT);
->  			shifted_status &= PAB_INTP_INTX_MASK;
->  			shifted_status >>= PAB_INTX_START;
->  		} while (shifted_status != 0);
-> @@ -413,7 +416,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
->  	}
->  
->  	/* Clear the interrupt status */
-> -	csr_writel(pcie, intr_status, PAB_INTP_AMBA_MISC_STAT);
-> +	mobiveil_csr_writel(pcie, intr_status, PAB_INTP_AMBA_MISC_STAT);
->  	chained_irq_exit(chip, desc);
->  }
->  
-> @@ -474,24 +477,24 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
->  		return;
->  	}
->  
-> -	value = csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
-> +	value = mobiveil_csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
->  	value &= ~(AMAP_CTRL_TYPE_MASK << AMAP_CTRL_TYPE_SHIFT | WIN_SIZE_MASK);
->  	value |= type << AMAP_CTRL_TYPE_SHIFT | 1 << AMAP_CTRL_EN_SHIFT |
->  		 (lower_32_bits(size64) & WIN_SIZE_MASK);
-> -	csr_writel(pcie, value, PAB_PEX_AMAP_CTRL(win_num));
-> +	mobiveil_csr_writel(pcie, value, PAB_PEX_AMAP_CTRL(win_num));
->  
-> -	csr_writel(pcie, upper_32_bits(size64),
-> -		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
-> +	mobiveil_csr_writel(pcie, upper_32_bits(size64),
-> +			    PAB_EXT_PEX_AMAP_SIZEN(win_num));
->  
-> -	csr_writel(pcie, lower_32_bits(cpu_addr),
-> -		   PAB_PEX_AMAP_AXI_WIN(win_num));
-> -	csr_writel(pcie, upper_32_bits(cpu_addr),
-> -		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
-> +	mobiveil_csr_writel(pcie, lower_32_bits(cpu_addr),
-> +			    PAB_PEX_AMAP_AXI_WIN(win_num));
-> +	mobiveil_csr_writel(pcie, upper_32_bits(cpu_addr),
-> +			    PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
->  
-> -	csr_writel(pcie, lower_32_bits(pci_addr),
-> -		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
-> -	csr_writel(pcie, upper_32_bits(pci_addr),
-> -		   PAB_PEX_AMAP_PEX_WIN_H(win_num));
-> +	mobiveil_csr_writel(pcie, lower_32_bits(pci_addr),
-> +			    PAB_PEX_AMAP_PEX_WIN_L(win_num));
-> +	mobiveil_csr_writel(pcie, upper_32_bits(pci_addr),
-> +			    PAB_PEX_AMAP_PEX_WIN_H(win_num));
->  
->  	pcie->ib_wins_configured++;
->  }
-> @@ -515,27 +518,29 @@ static void program_ob_windows(struct mobiveil_pcie *pcie, int win_num,
->  	 * program Enable Bit to 1, Type Bit to (00) base 2, AXI Window Size Bit
->  	 * to 4 KB in PAB_AXI_AMAP_CTRL register
->  	 */
-> -	value = csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
-> +	value = mobiveil_csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
->  	value &= ~(WIN_TYPE_MASK << WIN_TYPE_SHIFT | WIN_SIZE_MASK);
->  	value |= 1 << WIN_ENABLE_SHIFT | type << WIN_TYPE_SHIFT |
->  		 (lower_32_bits(size64) & WIN_SIZE_MASK);
-> -	csr_writel(pcie, value, PAB_AXI_AMAP_CTRL(win_num));
-> +	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_CTRL(win_num));
->  
-> -	csr_writel(pcie, upper_32_bits(size64), PAB_EXT_AXI_AMAP_SIZE(win_num));
-> +	mobiveil_csr_writel(pcie, upper_32_bits(size64),
-> +			    PAB_EXT_AXI_AMAP_SIZE(win_num));
->  
->  	/*
->  	 * program AXI window base with appropriate value in
->  	 * PAB_AXI_AMAP_AXI_WIN0 register
->  	 */
-> -	csr_writel(pcie, lower_32_bits(cpu_addr) & (~AXI_WINDOW_ALIGN_MASK),
-> -		   PAB_AXI_AMAP_AXI_WIN(win_num));
-> -	csr_writel(pcie, upper_32_bits(cpu_addr),
-> -		   PAB_EXT_AXI_AMAP_AXI_WIN(win_num));
-> +	mobiveil_csr_writel(pcie,
-> +			    lower_32_bits(cpu_addr) & (~AXI_WINDOW_ALIGN_MASK),
-> +			    PAB_AXI_AMAP_AXI_WIN(win_num));
-> +	mobiveil_csr_writel(pcie, upper_32_bits(cpu_addr),
-> +			    PAB_EXT_AXI_AMAP_AXI_WIN(win_num));
->  
-> -	csr_writel(pcie, lower_32_bits(pci_addr),
-> -		   PAB_AXI_AMAP_PEX_WIN_L(win_num));
-> -	csr_writel(pcie, upper_32_bits(pci_addr),
-> -		   PAB_AXI_AMAP_PEX_WIN_H(win_num));
-> +	mobiveil_csr_writel(pcie, lower_32_bits(pci_addr),
-> +			    PAB_AXI_AMAP_PEX_WIN_L(win_num));
-> +	mobiveil_csr_writel(pcie, upper_32_bits(pci_addr),
-> +			    PAB_AXI_AMAP_PEX_WIN_H(win_num));
->  
->  	pcie->ob_wins_configured++;
->  }
-> @@ -579,42 +584,42 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
->  	struct resource_entry *win;
->  
->  	/* setup bus numbers */
-> -	value = csr_readl(pcie, PCI_PRIMARY_BUS);
-> +	value = mobiveil_csr_readl(pcie, PCI_PRIMARY_BUS);
->  	value &= 0xff000000;
->  	value |= 0x00ff0100;
-> -	csr_writel(pcie, value, PCI_PRIMARY_BUS);
-> +	mobiveil_csr_writel(pcie, value, PCI_PRIMARY_BUS);
->  
->  	/*
->  	 * program Bus Master Enable Bit in Command Register in PAB Config
->  	 * Space
->  	 */
-> -	value = csr_readl(pcie, PCI_COMMAND);
-> +	value = mobiveil_csr_readl(pcie, PCI_COMMAND);
->  	value |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER;
-> -	csr_writel(pcie, value, PCI_COMMAND);
-> +	mobiveil_csr_writel(pcie, value, PCI_COMMAND);
->  
->  	/*
->  	 * program PIO Enable Bit to 1 (and PEX PIO Enable to 1) in PAB_CTRL
->  	 * register
->  	 */
-> -	pab_ctrl = csr_readl(pcie, PAB_CTRL);
-> +	pab_ctrl = mobiveil_csr_readl(pcie, PAB_CTRL);
->  	pab_ctrl |= (1 << AMBA_PIO_ENABLE_SHIFT) | (1 << PEX_PIO_ENABLE_SHIFT);
-> -	csr_writel(pcie, pab_ctrl, PAB_CTRL);
-> +	mobiveil_csr_writel(pcie, pab_ctrl, PAB_CTRL);
->  
-> -	csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
-> -		   PAB_INTP_AMBA_MISC_ENB);
-> +	mobiveil_csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
-> +			    PAB_INTP_AMBA_MISC_ENB);
->  
->  	/*
->  	 * program PIO Enable Bit to 1 and Config Window Enable Bit to 1 in
->  	 * PAB_AXI_PIO_CTRL Register
->  	 */
-> -	value = csr_readl(pcie, PAB_AXI_PIO_CTRL);
-> +	value = mobiveil_csr_readl(pcie, PAB_AXI_PIO_CTRL);
->  	value |= APIO_EN_MASK;
-> -	csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
-> +	mobiveil_csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
->  
->  	/* Enable PCIe PIO master */
-> -	value = csr_readl(pcie, PAB_PEX_PIO_CTRL);
-> +	value = mobiveil_csr_readl(pcie, PAB_PEX_PIO_CTRL);
->  	value |= 1 << PIO_ENABLE_SHIFT;
-> -	csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
-> +	mobiveil_csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
->  
->  	/*
->  	 * we'll program one outbound window for config reads and
-> @@ -647,10 +652,10 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
->  	}
->  
->  	/* fixup for PCIe class register */
-> -	value = csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
-> +	value = mobiveil_csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
->  	value &= 0xff;
->  	value |= (PCI_CLASS_BRIDGE_PCI << 16);
-> -	csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
-> +	mobiveil_csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
->  
->  	/* setup MSI hardware registers */
->  	mobiveil_pcie_enable_msi(pcie);
-> @@ -668,9 +673,9 @@ static void mobiveil_mask_intx_irq(struct irq_data *data)
->  	pcie = irq_desc_get_chip_data(desc);
->  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
->  	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
-> -	shifted_val = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
-> +	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
->  	shifted_val &= ~mask;
-> -	csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
-> +	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
->  	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
->  }
->  
-> @@ -684,9 +689,9 @@ static void mobiveil_unmask_intx_irq(struct irq_data *data)
->  	pcie = irq_desc_get_chip_data(desc);
->  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
->  	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
-> -	shifted_val = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
-> +	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
->  	shifted_val |= mask;
-> -	csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
-> +	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
->  	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
->  }
->  
-> -- 
-> 2.20.1
-> 
+Yuri Volchkov (2):
+  iommu/dmar: collect fault statistics
+  iommu/dmar: catch early fault occurrences
+
+ drivers/iommu/dmar.c        | 182 ++++++++++++++++++++++++++++++++----
+ drivers/iommu/intel-iommu.c |   1 +
+ drivers/pci/pci-sysfs.c     |  20 ++++
+ include/linux/intel-iommu.h |   4 +
+ include/linux/pci.h         |  11 +++
+ 5 files changed, 201 insertions(+), 17 deletions(-)
+
+-- 
+2.23.0
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
