@@ -2,160 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EFEB2D987A
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2019 19:29:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC302D98EB
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2019 20:13:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389405AbfJPR3Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Oct 2019 13:29:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49880 "EHLO mail.kernel.org"
+        id S1727856AbfJPSNM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Oct 2019 14:13:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389308AbfJPR3Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 16 Oct 2019 13:29:24 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726534AbfJPSNL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 16 Oct 2019 14:13:11 -0400
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11C3F2064B;
-        Wed, 16 Oct 2019 17:29:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C32721D7A;
+        Wed, 16 Oct 2019 18:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571246963;
-        bh=BEpB3EZXTTbBVHMZTuth4NJifvFzukmeM5QhNOdo5O8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=RXsXrlLHIT6c2YxY3aRTF3agjspzd2zA6EvbXspnsMyNWhY6qr+Mlnxz/ITGQF7JB
-         +WFkFg2u0vGjdcPMekt73bcWe3e3yUyValMWH2ZOW5Fb0pejyG6sawlvaZGGZRM0ve
-         sxfTXrVbGvaSc6yuhyOdF3QO/ikKKDqlKhzkr1pw=
-Date:   Wed, 16 Oct 2019 12:29:21 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
-Cc:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux@yadro.com, Sam Bobroff <sbobroff@linux.ibm.com>,
-        Rajat Jain <rajatja@google.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        David Laight <David.Laight@ACULAB.COM>
-Subject: Re: [PATCH v5 03/23] PCI: hotplug: Add a flag for the movable BARs
- feature
-Message-ID: <20191016172921.GA42365@google.com>
+        s=default; t=1571249590;
+        bh=BY+VuvMUkb8ysqC8cdpa2CLescffGaPMHGOSjrsEPXE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tYuhgV6HJ1mAxdk/Oad1XfawD7aPlvC9ohkBwp6PWKhtnXBSxTXto0ocYdNiqcCNZ
+         9Nk6/lkPazM2TbrkfTLM4jsqGGQyxcFGU95wT61ZXua01pdjGCtoT3K059aJGofMec
+         YNliNvgThPUCazyJ7WvculTkRbMV0cpoHCg3urdM=
+Received: by mail-qt1-f182.google.com with SMTP id u40so37445378qth.11;
+        Wed, 16 Oct 2019 11:13:10 -0700 (PDT)
+X-Gm-Message-State: APjAAAXwllbCMM6Cc+DVZXUrQRzR9rQqKI1PqlEYoPMvmZin+jCe+2Aw
+        I1g0paV5VRfoqea++uHUTHiwvkXBi3O3IKmPRg==
+X-Google-Smtp-Source: APXvYqy2sCZSuxBPCbz3Ga54d5TWhT+Ze7dsRkGs0H8BtnijPV7jfkAGFPEzWBIRBfIfsu1KgrB4+Ukl/ps1gMHVjKE=
+X-Received: by 2002:ac8:19f4:: with SMTP id s49mr46376758qtk.136.1571249589593;
+ Wed, 16 Oct 2019 11:13:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <63c6c630-fbfb-175c-2a1a-c9a1f732498a@yadro.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190809175741.7066-1-marek.vasut@gmail.com> <20190809175741.7066-2-marek.vasut@gmail.com>
+ <20191016150001.GA7457@e121166-lin.cambridge.arm.com> <c4353d63-6f78-92b3-91c9-acc9327e1d80@gmail.com>
+ <20191016152601.GB7457@e121166-lin.cambridge.arm.com> <75fb3519-80eb-fec2-d3eb-cc1b884fef25@gmail.com>
+ <20191016161846.GC7457@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20191016161846.GC7457@e121166-lin.cambridge.arm.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 16 Oct 2019 13:12:58 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqL2c-ODMkOo1tAJh8JeF0VRXahCq2zF2fX8dZV8wpQj+Q@mail.gmail.com>
+Message-ID: <CAL_JsqL2c-ODMkOo1tAJh8JeF0VRXahCq2zF2fX8dZV8wpQj+Q@mail.gmail.com>
+Subject: Re: [PATCH V3 2/3] PCI: rcar: Do not abort on too many inbound dma-ranges
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Marek Vasut <marek.vasut@gmail.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 06:50:30PM +0300, Sergey Miroshnichenko wrote:
-> On 10/16/19 1:14 AM, Bjorn Helgaas wrote:
-> > On Mon, Sep 30, 2019 at 03:59:25PM +0300, Sergey Miroshnichenko wrote:
-> > > On 9/28/19 1:02 AM, Bjorn Helgaas wrote:
+On Wed, Oct 16, 2019 at 11:18 AM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> [+RobH, Robin]
+>
+> On Wed, Oct 16, 2019 at 05:29:50PM +0200, Marek Vasut wrote:
+>
+> [...]
+>
+> > >> The firmware provides all the ranges which are available and usable,
+> > >> that's the hardware description and that should be in the DT.
+> > >
+> > > If the HW (given that those dma-ranges are declared for the PCI host
+> > > controller) can't be programmed to enable those DMA ranges - those
+> > > ranges are neither available nor usable, ergo DT is broken.
+> >
+> > The hardware can be programmed to enable those DMA ranges, just not all
+> > of them at the same time.
+>
+> Ok, we are down to DT bindings interpretation then.
+>
+> > It's not the job of the bootloader to guess which ranges might the next
+> > stage like best.
+>
+> By the time this series:
+>
+> https://patchwork.ozlabs.org/user/todo/linux-pci/?series=132419
+>
+> is merged, your policy will require the host controller driver to
+> remove the DMA ranges that could not be programmed in the inbound
+> address decoders from the dma_ranges list, otherwise things will
+> fall apart.
 
-> > > > It's possible that a hot-add will trigger this attempt to move things
-> > > > around, and it's possible that we won't find space for the new device
-> > > > even if we move things around.  But are we certain that every device
-> > > > that worked *before* the hot-add will still work *afterwards*?
-> > > > 
-> > > > Much of the assignment was probably done by the BIOS using different
-> > > > algorithms than Linux has, so I think there's some chance that the
-> > > > BIOS did a better job and if we lose that BIOS assignment, we might
-> > > > not be able to recreate it.
-> > > 
-> > > If a hardware has some special constraints on BAR assignment that the
-> > > kernel is not aware of yet, the movable BARs may break things after a
-> > > hotplug event. So the feature must be disabled there (manually) until
-> > > the kernel get support for that special needs.
-> > 
-> > I'm not talking about special constraints on BAR assignment.  (I'm not
-> > sure what those constraints would be -- AFAIK the constraints for a
-> > spec-compliant device are all discoverable via the BAR size and type
-> > (or the Enhanced Allocation capability)).
-> > 
-> > What I'm concerned about is the case where we boot with a working
-> > assignment, we hot-add a device, we move things around to try to
-> > accommodate the new device, and not only do we fail to find resources
-> > for the new device, we also fail to find a working assignment for the
-> > devices that were present at boot.  We've moved things around from
-> > what BIOS did, and since we use a different algorithm than the BIOS,
-> > there's no guarantee that we'll be able to find the assignment BIOS
-> > did.
-> 
-> If BAR assignment fails with a hot-added device, these patches will
-> disable BARs for this device and retry, falling back to the situation
-> where number of BARs and their size are the same as they were before
-> the hotplug event.
-> 
-> If all the BARs are immovable - they will just remain on their
-> positions. Nothing to break here I guess.
-> 
-> If almost all the BARs are immovable and there is one movable BAR,
-> after releasing the bridge windows there will be a free gap - right
-> where this movable BAR was. These patches are keeping the size of
-> released BARs, not requesting the size from the devices again - so the
-> device can't ask for a larger BAR. The space reserving is disabled by
-> this patchset, so the kernel will request the same size for the bridge
-> window containing this movable BAR. So there always will be a gap for
-> this BAR - in the same location it was before.
-> 
-> Based on these considerations I assume that the kernel is always able
-> to arrange BARs from scratch if a BIOS was able to make it before.
-> 
-> But! There is an implicit speculation that there will be the same
-> amount of BARs after the fallback (which is equivalent to a PCI rescan
-> triggered on unchanged topology). And two week ago I've found that
-> this is not always true!
-> 
-> I was testing on a "new" x86_64 PC, where BIOS doesn't reserve a space
-> for SR-IOV BARs (of a network adapter). On the boot, the kernel wasn't
-> arranging BARs itself - it took values written by the BIOS. And the
-> bridge window was "jammed" between immovable BARs, so it can't expand.
-> BARs of this device are also immovable, so the bridge window can't be
-> moved away. During the PCI rescan, the kernel tried to allocate both
-> "regular" and SR-IOV BARs - and failed. Even without changes in the
-> PCI topology.
-> 
-> So in the next version of this series there will be one more patch,
-> that allows the kernel to ignore BIOS's setting for the "safe" (non-IO
-> and non-VGA) BARs, so these BARs will be arranged kernel-way - and
-> also those forgotten by the BIOS.
+I don't think the above series has too much impact on this. It's my
+other series dealing with dma masks that's relevant because for dma
+masks we only ever look at the first dma-ranges entry. We either have
+to support multiple addresses and sizes per device (the only way to
+really support any possible dma-ranges), merge entries to single
+offset/mask or have some way to select which range entry to use.
 
-This still seems a little scary, so I'll probably ask about it again :)
+So things are broken to some extent regardless unless MAX_NR_INBOUND_MAPS == 1.
 
-> After modifying the code as you advised, it became possible to mark
-> only some BARs of the device as immovable. So the code is less ugly
-> now, and it also works for drivers/video/fbdev/efifb.c , which uses
-> the BAR in a weird way (dev->driver is NULL, but not the res->child):
-> 
->   static bool pci_dev_movable(struct pci_dev *dev,
->                               bool res_has_children)
->   {
->     if (!pci_can_move_bars)
->       return false;
-> 
->     if (dev->driver && dev->driver->rescan_prepare)
->       return true;
-> 
->     if (!dev->driver && !res_has_children)
->       return true;
-> 
->     return false;
->   }
-> 
->   bool pci_dev_bar_movable(struct pci_dev *dev, struct resource *res)
->   {
->     if (res->flags & IORESOURCE_PCI_FIXED)
->       return false;
-> 
->     #ifdef CONFIG_X86
->     /* Workaround for the legacy VGA memory 0xa0000-0xbffff */
->     if (res->start == 0xa0000)
+> > >> The firmware cannot decide the policy for the next stage (Linux in
+> > >> this case) on which ranges are better to use for Linux and which are
+> > >> less good. Linux can then decide which ranges are best suited for it
+> > >> and ignore the other ones.
+> > >
+> > > dma-ranges is a property that is used by other kernel subsystems eg
+> > > IOMMU other than the RCAR host controller driver. The policy, provided
+> > > there is one should be shared across them. You can't leave a PCI
+> > > host controller half-programmed and expect other subsystems (that
+> > > *expect* those ranges to be DMA'ble) to work.
+> > >
+> > > I reiterate my point: if firmware is broken it is better to fail
+> > > the probe rather than limp on hoping that things will keep on
+> > > working.
+> >
+> > But the firmware is not broken ?
+>
+> See above, it depends on how the dma-ranges property is interpreted,
+> hopefully we can reach consensus in this thread, I won't merge a patch
+> that can backfire later unless we all agree that what it does is
+> correct.
 
-Nit here; "res->start" is the CPU address, but what you need to check
-is the PCI bus address, e.g., something from pcibios_resource_to_bus().
-And this is not x86-specific.  0xa0000 is magic on PCI no matter what
-the processor architecture.
+Defining more dma-ranges entries than the h/w has inbound windows for
+sounds like a broken DT to me.
 
->       return false;
->     #endif
-> 
->     return pci_dev_movable(dev, res->child);
->   }
+What exactly does dma-ranges contain in this case? I'm not really
+visualizing how different clients would pick different dma-ranges
+entries.
+
+Rob
