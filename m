@@ -2,62 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D5D2D8DEC
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2019 12:32:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 009A4D904E
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2019 14:03:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404577AbfJPKcA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Oct 2019 06:32:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:35480 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726645AbfJPKcA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 16 Oct 2019 06:32:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E660328;
-        Wed, 16 Oct 2019 03:31:59 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4CB0C3F6C4;
-        Wed, 16 Oct 2019 03:31:59 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 11:31:56 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
-Cc:     linux-pci@vger.kernel.org
-Subject: Mobiveil legacy IRQ binding erroneous interrupt-map
-Message-ID: <20191016103156.GC22848@e121166-lin.cambridge.arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1731938AbfJPMDW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Oct 2019 08:03:22 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:60972 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729585AbfJPMDV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Oct 2019 08:03:21 -0400
+Received: from penelope.horms.nl (ip4dab7138.direct-adsl.nl [77.171.113.56])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 744E725AD78;
+        Wed, 16 Oct 2019 23:03:19 +1100 (AEDT)
+Received: by penelope.horms.nl (Postfix, from userid 7100)
+        id 577F0E2248D; Wed, 16 Oct 2019 14:03:17 +0200 (CEST)
+From:   Simon Horman <horms@verge.net.au>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>
+Subject: [PATCH] MAINTAINERS: Add Marek and Shimoda-san as R-Car PCIE co-maintainers
+Date:   Wed, 16 Oct 2019 14:02:49 +0200
+Message-Id: <20191016120249.16776-1-horms@verge.net.au>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Hou, Karthikeyan,
+At the end of the v5.3 upstream development cycle I stepped down
+from my role at Renesas.
 
-I have just noticed the mobiveil interrupt-map DT bindings example
-is wrong:
+Pass maintainership of the R-Car PCIE to Marek and Shimoda-san.
 
-This:
+Signed-off-by: Simon Horman <horms@verge.net.au>
+---
+ MAINTAINERS | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-interrupt-map = <0 0 0 0 &pci_express 0>,
-		<0 0 0 1 &pci_express 1>,
-		<0 0 0 2 &pci_express 2>,
-		<0 0 0 3 &pci_express 3>;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 783569e3c4b4..b61ade7afd64 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12337,7 +12337,8 @@ F:	Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+ F:	drivers/pci/controller/pci-tegra.c
+ 
+ PCI DRIVER FOR RENESAS R-CAR
+-M:	Simon Horman <horms@verge.net.au>
++M:	Marek Vasut <marek.vasut+renesas@gmail.com>
++M:	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+ L:	linux-pci@vger.kernel.org
+ L:	linux-renesas-soc@vger.kernel.org
+ S:	Maintained
+-- 
+2.11.0
 
-should be:
-
-interrupt-map = <0 0 0 1 &pci_express 0>,
-		<0 0 0 2 &pci_express 1>,
-		<0 0 0 3 &pci_express 2>,
-		<0 0 0 4 &pci_express 3>;
-
-Legacy IRQs Interrupt pins map this way:
-
-{{1, INTA}, {2, INTB}, {3,INTC}, {4,INTD}}
-
-(as read from Interrupt pin register in the config space header) (ie
-refer to PCI local bus specification 3.0), please fix it as soon as
-possible.
-
-Lorenzo
