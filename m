@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 01D3FD9AF6
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2019 22:07:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52D93D9AF8
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2019 22:07:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732948AbfJPUHY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Oct 2019 16:07:24 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43782 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732749AbfJPUHY (ORCPT
+        id S1733065AbfJPUHZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Oct 2019 16:07:25 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36267 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733045AbfJPUHY (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Oct 2019 16:07:24 -0400
-Received: by mail-ot1-f68.google.com with SMTP id o44so21291058ota.10;
-        Wed, 16 Oct 2019 13:07:22 -0700 (PDT)
+Received: by mail-ot1-f66.google.com with SMTP id 67so21295036oto.3;
+        Wed, 16 Oct 2019 13:07:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=8EjZCMf9X25YL2xnDGvatS6WOhekTnEbr44pTFr9BnI=;
-        b=Pc14sNLH2MYPntKCUpHbKC9ns5k0COm1oQkSEHK//7f7L6j4H/Fi3jyffoO/gCqWJ+
-         0hej7SiV6x0vrDfN28vds8gzTplnAHVCuKsDyDxMmMVsS/vpxIgrYkcjR4svO8l5UQTX
-         Yc8ZTVdrjKDnJRqb/FlifI4GEOd1LyajFhn2yPyT49Xqc9T2yzY+92twr115WR4+NN+S
-         6t/eEp1YFLn5VAJf+PaZcJh9flYnWd7uTAgOrVa95LyJ3HkqWewreIr0Y/8mEiUrRVjt
-         /60MppiGMQpJDHFdiMVsHM1wIzv+IY80IH0hUj5E09EdwegReSqPIFMvCoOToW+k2yEr
-         OsBQ==
-X-Gm-Message-State: APjAAAWv86skolw6qfIlCYbccBQLAqhOPE55rawHnY6SU+pT7+l2xpjr
-        6zSidWf4lfr5y2vmAC0+ag==
-X-Google-Smtp-Source: APXvYqzTJeYoQM+BkZM8HRDuXdjqrFMtTYAuFWBkh10dsGSfzyliazEsJrxYjIRJ2m4HiNIDFy9TSw==
-X-Received: by 2002:a9d:5914:: with SMTP id t20mr35250oth.344.1571256442080;
-        Wed, 16 Oct 2019 13:07:22 -0700 (PDT)
+        bh=3EQHmxhtyQ0FW8KKG3OU1ZuRq6/S0PaAKIhLXxkbZok=;
+        b=qsYHomGqKvvPem5ys0uHAId0lV68lPbmQ2Q3aWDaC5MuKQR31Zjf7ERXXK+N4N8IA2
+         ar9kghol6BTp/lUIGf56FmYk7meTxIFhDgzQ0yfTvMTatb1Kwu06+6NvgR0osM/59rBD
+         vfD28hfYZbmS2y9tPjorUHn4/B9QAZxgBYvjtIbQlo2ltWx/I8PmkVwVSgRy7BxHmean
+         Xj7gRcuw2AM0K3HwtlnI7JG3EBrJKvfcgW8QsRlv53aJMdfxTUuxxvWZZLAE0F9j+3h6
+         Lxuv5SI0Kqd7b9r9SYIS0wLi9JdzS1dsrSpi/vzzpmlqovjM268nCwEaYaD7O9f3xfAx
+         K16g==
+X-Gm-Message-State: APjAAAVcLUirK7zqqqpd1TF1pC85ndD3NrB9G9MxGSPIIRCF11Mig23k
+        XvL+r327dKMK3+3NFzg+ZQ==
+X-Google-Smtp-Source: APXvYqxfy07UxT1e2YWP1cod5gpc4Orw7/BMqXRZOexcKu0FIf+wZSpdoyf29cKC7t3/8xf0Exrt8g==
+X-Received: by 2002:a05:6830:12d6:: with SMTP id a22mr47577otq.146.1571256443835;
+        Wed, 16 Oct 2019 13:07:23 -0700 (PDT)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id a9sm7412463oie.7.2019.10.16.13.07.20
+        by smtp.googlemail.com with ESMTPSA id a9sm7412463oie.7.2019.10.16.13.07.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 13:07:21 -0700 (PDT)
+        Wed, 16 Oct 2019 13:07:23 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Andrew Murray <andrew.murray@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -60,9 +60,9 @@ Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Toan Le <toan@os.amperecomputing.com>,
         Tom Joseph <tjoseph@cadence.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH v2 17/25] PCI: versatile: Remove usage of PHYS_OFFSET
-Date:   Wed, 16 Oct 2019 15:06:39 -0500
-Message-Id: <20191016200647.32050-18-robh@kernel.org>
+Subject: [PATCH v2 18/25] PCI: versatile: Enable COMPILE_TEST
+Date:   Wed, 16 Oct 2019 15:06:40 -0500
+Message-Id: <20191016200647.32050-19-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191016200647.32050-1-robh@kernel.org>
 References: <20191016200647.32050-1-robh@kernel.org>
@@ -73,50 +73,31 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PHYS_OFFSET is not universally defined on all arches and using it prevents
-enabling COMPILE_TEST. PAGE_OFFSET and __pa() are always available, so use
-them to get the physical start of memory address.
+Since commit a574795bc383 ("PCI: generic,versatile: Remove unused
+pci_sys_data structures") the build dependency on ARM is gone, so let's
+enable COMPILE_TEST for versatile.
 
-This should have probably used 'dma-ranges' to get the address, but we
-don't want to force a DT update to do that. At least in QEMU, the SMAP
-registers have no effect (or perhaps the only value that is handled is 0).
-
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Andrew Murray <andrew.murray@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-v2:
-- New patch to fix build failure on some arches.
+ drivers/pci/controller/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/pci/controller/pci-versatile.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-versatile.c b/drivers/pci/controller/pci-versatile.c
-index 18697f2ea345..eae1b859990b 100644
---- a/drivers/pci/controller/pci-versatile.c
-+++ b/drivers/pci/controller/pci-versatile.c
-@@ -99,7 +99,7 @@ static int versatile_pci_probe(struct platform_device *pdev)
- 	resource_list_for_each_entry(entry, &bridge->windows) {
- 		if (resource_type(entry->res) == IORESOURCE_MEM) {
- 			writel(entry->res->start >> 28, PCI_IMAP(mem));
--			writel(PHYS_OFFSET >> 28, PCI_SMAP(mem));
-+			writel(__pa(PAGE_OFFSET) >> 28, PCI_SMAP(mem));
- 			mem++;
- 		}
- 	}
-@@ -136,9 +136,9 @@ static int versatile_pci_probe(struct platform_device *pdev)
- 	/*
- 	 * Configure the PCI inbound memory windows to be 1:1 mapped to SDRAM
- 	 */
--	writel(PHYS_OFFSET, local_pci_cfg_base + PCI_BASE_ADDRESS_0);
--	writel(PHYS_OFFSET, local_pci_cfg_base + PCI_BASE_ADDRESS_1);
--	writel(PHYS_OFFSET, local_pci_cfg_base + PCI_BASE_ADDRESS_2);
-+	writel(__pa(PAGE_OFFSET), local_pci_cfg_base + PCI_BASE_ADDRESS_0);
-+	writel(__pa(PAGE_OFFSET), local_pci_cfg_base + PCI_BASE_ADDRESS_1);
-+	writel(__pa(PAGE_OFFSET), local_pci_cfg_base + PCI_BASE_ADDRESS_2);
-
- 	/*
- 	 * For many years the kernel and QEMU were symbiotically buggy
---
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index 70e078238899..f5de9119e8d3 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -135,7 +135,7 @@ config PCI_V3_SEMI
+ 
+ config PCI_VERSATILE
+ 	bool "ARM Versatile PB PCI controller"
+-	depends on ARCH_VERSATILE
++	depends on ARCH_VERSATILE || COMPILE_TEST
+ 
+ config PCIE_IPROC
+ 	tristate
+-- 
 2.20.1
+
