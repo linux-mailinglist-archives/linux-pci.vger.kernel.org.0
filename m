@@ -2,113 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E955D92A8
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2019 15:36:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B262D930B
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2019 15:52:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbfJPNge (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Oct 2019 09:36:34 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38124 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727619AbfJPNge (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:36:34 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6DF9E476CBDCC42BCA3A;
-        Wed, 16 Oct 2019 21:36:33 +0800 (CST)
-Received: from [127.0.0.1] (10.133.224.57) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 16 Oct 2019
- 21:36:24 +0800
-From:   Xiang Zheng <zhengxiang9@huawei.com>
-To:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <mingo@redhat.com>,
-        <peterz@infradead.org>, <alex.williamson@redhat.com>
-CC:     Wang Haibin <wanghaibin.wang@huawei.com>,
-        Guoheyi <guoheyi@huawei.com>,
-        yebiaoxiang <yebiaoxiang@huawei.com>
-Subject: Kernel panic while doing vfio-pci hot-plug/unplug test
-Message-ID: <79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com>
-Date:   Wed, 16 Oct 2019 21:36:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        id S2389877AbfJPNwv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Oct 2019 09:52:51 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:34922 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388108AbfJPNwv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Oct 2019 09:52:51 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9GDnadY072397;
+        Wed, 16 Oct 2019 13:52:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=RT6WwgIAQ124uGpiC/zTSw0NchbyOlxzq3SDduZSmwQ=;
+ b=GpxV3Yir75uCm3qsU+Be3dsU9hcQLqlHxSI7TTBBgJvFi3qCwuLgRQqusnTNlQ0DwTc5
+ 3qreNb1hE3cR/gUZcmRBJkwDecgLG5+8XQgaK1/JTxuNokpgNbaLdDQHEkqr+/K9WNT+
+ 4MyrAXXwZVmp8i4htnPgz0Rh9z0EtfQY08NlCaSkKqW+j8W8bpWvlXI0mtA5rAOGFdLy
+ 26yZuj4J/kBzHdO4aXZAdqLgX+Vi/d4RAPD3nVtWqZixfKh9/mUFcgQ9K4N/YLoU99iS
+ QfArAsSoEWq+SlO6LTwpscHVdGNP0eRGavGAWaDNUtwFiu/pArHO7YFHCs+Fhwm8HTVF xg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2vk7frewux-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Oct 2019 13:52:19 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9GDgrMt186456;
+        Wed, 16 Oct 2019 13:50:18 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2vnf7tdyed-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Oct 2019 13:50:18 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9GDoDs6029673;
+        Wed, 16 Oct 2019 13:50:13 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 16 Oct 2019 06:50:13 -0700
+Date:   Wed, 16 Oct 2019 16:50:02 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        driverdev-devel@linuxdriverproject.org, olaf@aepfle.de,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>, jackm@mellanox.com,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-hyperv@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        marcelo.cerri@canonical.com, linux-pci@vger.kernel.org,
+        apw@canonical.com, vkuznets@redhat.com,
+        Bjorn Helgaas <bhelgaas@google.com>, jasowang@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/7] PCI/PM: Make power management op coding style
+ consistent
+Message-ID: <20191016135002.GA24678@kadam>
+References: <20191014230016.240912-1-helgaas@kernel.org>
+ <20191014230016.240912-6-helgaas@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.224.57]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014230016.240912-6-helgaas@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=931
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910160121
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910160122
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi all,
+On Mon, Oct 14, 2019 at 06:00:14PM -0500, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Some of the power management ops use this style:
+> 
+>   struct device_driver *drv = dev->driver;
+>   if (drv && drv->pm && drv->pm->prepare(dev))
+>     drv->pm->prepare(dev);
+> 
+> while others use this:
+> 
+>   const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
 
-Recently I encountered a kernel panic while doing vfio-pci hot-plug/unplug test repeatly on my Arm-KVM virtual machines.
-See the call stack below:
+I like this patch a lot, especially the direct returns.  But it
+occurs to me that in the future this conditional would look better as
 
-[66628.697280] vfio-pci 0000:06:03.5: enabling device (0000 -> 0002)
-[66628.809290] vfio-pci 0000:06:03.1: enabling device (0000 -> 0002)
-[66628.921283] vfio-pci 0000:06:02.7: enabling device (0000 -> 0002)
-[66629.029280] vfio-pci 0000:06:03.6: enabling device (0000 -> 0002)
-[66629.137338] vfio-pci 0000:06:03.2: enabling device (0000 -> 0002)
-[66629.249285] vfio-pci 0000:06:03.7: enabling device (0000 -> 0002)
-[66630.237261] Unable to handle kernel read from unreadable memory at virtual address ffff802dac469000
-[66630.246266] Mem abort info:
-[66630.249047]   ESR = 0x8600000d
-[66630.252088]   Exception class = IABT (current EL), IL = 32 bits
-[66630.257981]   SET = 0, FnV = 0
-[66630.261022]   EA = 0, S1PTW = 0
-[66630.264150] swapper pgtable: 4k pages, 48-bit VAs, pgdp = 00000000fb16886e
-[66630.270992] [ffff802dac469000] pgd=0000203fffff6803, pud=00e8002d80000f11
-[66630.277751] Internal error: Oops: 8600000d [#1] SMP
-[66630.282606] Process qemu-kvm (pid: 37201, stack limit = 0x00000000d8f19858)
-[66630.289537] CPU: 41 PID: 37201 Comm: qemu-kvm Kdump: loaded Tainted: G           OE     4.19.36-vhulk1907.1.0.h453.eulerosv2r8.aarch64 #1
-[66630.301822] Hardware name: Huawei TaiShan 2280 V2/BC82AMDDA, BIOS 0.88 07/24/2019
-[66630.309270] pstate: 80400089 (Nzcv daIf +PAN -UAO)
-[66630.314042] pc : 0xffff802dac469000
-[66630.317519] lr : __wake_up_common+0x90/0x1a8
-[66630.321768] sp : ffff00027746bb00
-[66630.325067] x29: ffff00027746bb00 x28: 0000000000000000
-[66630.330355] x27: 0000000000000000 x26: ffff0000092755b8
-[66630.335643] x25: 0000000000000000 x24: 0000000000000000
-[66630.340930] x23: 0000000000000003 x22: ffff00027746bbc0
-[66630.346219] x21: 000000000954c000 x20: ffff0001f542bc6c
-[66630.351506] x19: ffff0001f542bb90 x18: 0000000000000000
-[66630.356793] x17: 0000000000000000 x16: 0000000000000000
-[66630.362081] x15: 0000000000000000 x14: 0000000000000000
-[66630.367368] x13: 0000000000000000 x12: 0000000000000000
-[66630.372655] x11: 0000000000000000 x10: 0000000000000bb0
-[66630.377942] x9 : ffff00027746ba50 x8 : ffff80367ff6ca10
-[66630.383229] x7 : ffff802e20d59200 x6 : 000000000000003f
-[66630.388517] x5 : ffff00027746bbc0 x4 : ffff802dac469000
-[66630.393806] x3 : 0000000000000000 x2 : 0000000000000000
-[66630.399093] x1 : 0000000000000003 x0 : ffff0001f542bb90
-[66630.404381] Call trace:
-[66630.406818]  0xffff802dac469000
-[66630.409945]  __wake_up_common_lock+0xa8/0x1a0
-[66630.414283]  __wake_up+0x40/0x50
-[66630.417499]  pci_cfg_access_unlock+0x9c/0xd0
-[66630.421752]  pci_try_reset_function+0x58/0x78
-[66630.426095]  vfio_pci_ioctl+0x478/0xdb8 [vfio_pci]
-[66630.430870]  vfio_device_fops_unl_ioctl+0x44/0x70 [vfio]
-[66630.436158]  do_vfs_ioctl+0xc4/0x8c0
-[66630.439718]  ksys_ioctl+0x8c/0xa0
-[66630.443018]  __arm64_sys_ioctl+0x28/0x38
-[66630.446925]  el0_svc_common+0x78/0x130
-[66630.450657]  el0_svc_handler+0x38/0x78
-[66630.454389]  el0_svc+0x8/0xc
-[66630.457260] Code: 00000000 00000000 00000000 00000000 (ac46d000)
-[66630.463325] kernel fault(0x1) notification starting on CPU 41
-[66630.469044] kernel fault(0x1) notification finished on CPU 41
+	const struct dev_pm_ops *pm = driver_to_pm(dev->driver);
 
-The chance to reproduce this problem is very small. We had an initial analysis of this problem,
-and found it was caused by the illegal value of the 'curr->func' in the __wake_up_common() function.
+or something.
 
-I cannot image how 'curr->func' can be wrote to 0xffff802dac469000. Is there any problem about
-concurrent competition between the pci_wait_cfg() function and the wake_up_all() function?
-
-
--- 
-
-Thanks,
-Xiang
+regards,
+dan carpenter
 
