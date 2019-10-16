@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42BB4D9AFA
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2019 22:07:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E9AAD9AFE
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2019 22:07:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733222AbfJPUH2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Oct 2019 16:07:28 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37391 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733109AbfJPUH2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Oct 2019 16:07:28 -0400
-Received: by mail-ot1-f66.google.com with SMTP id k32so21293222otc.4;
-        Wed, 16 Oct 2019 13:07:28 -0700 (PDT)
+        id S2387575AbfJPUHa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Oct 2019 16:07:30 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35626 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727366AbfJPUHa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Oct 2019 16:07:30 -0400
+Received: by mail-oi1-f194.google.com with SMTP id x3so141671oig.2;
+        Wed, 16 Oct 2019 13:07:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XzKyx3hGWss5OyYjnaux42GwkpReDhw7ttXIKJ3XApk=;
-        b=gTxQi2P+y09QAqXQxD5bZysoBpJdSshVmQLS4HIBgEVMDRNpi/kTRZ1iVDmtBe8rEY
-         5XHiGhGfYnVjOZl8aKhyK7Aj1wjJOJZE+pQ4nIRbeFhsr/vVxeLWDggWpykxm6AaYCQh
-         7JQPfaQfLMwzbmtRHS1vafn/EqNgPk/swT6j9iHFgz2seztJ5Fs0Jpc1BJ1Gfj7bMd6J
-         6/WTogsNdQeqCqPkKoy//O2/o4EilLozeRAF+DbUlQE7x9zC2U6Ar8oO+9SoLZte74b8
-         1nvWvE8PIYXEDypIu/46sTLz/42+ZjvLTbgYrrbKmLNeVE9GmnEQNBrDSSFPyWpInFzY
-         UIQg==
-X-Gm-Message-State: APjAAAVq9RowHnLZ58/nTBJ0MIQV9fTahRIfjOp/PHgaT3f18RNmm9Mp
-        DlcbLSWD+u6U0izBlosfXw==
-X-Google-Smtp-Source: APXvYqzuOOI5O9nPE4chqz7q1M50UXLGHgUlkPl19eYyojabF8hEv3WJogI/0IUIWHhrDxD1NedNKw==
-X-Received: by 2002:a05:6830:1e59:: with SMTP id e25mr36910otj.342.1571256447566;
-        Wed, 16 Oct 2019 13:07:27 -0700 (PDT)
+        bh=9dn1tmxzjQTI9PAUk6uuXXt7CY5FAAIGihQa/Sw5ORA=;
+        b=CJSjpJjFvuUkticBkJecnwIi+1100MyeciKOzlxju3VbBKNghb3W5ukHc5X/uZceMI
+         OzFoBdYEy8Trr4gUE972RiaNrPdqIjuUFAP7sPGEHwfVJU6Z0663T6iyJ1blA+c3xBOz
+         Vam5pOymImv7AlveGi63a6kkMM73M4Aq/TSzswqQ1HQR+Id9auErjwGwGPg1UF636Ufz
+         kZpylI+A9t83h719znOsuuKjbwxqNh80d+Op+opWiEI+zTmxI5BSAd4FtEMfLmpgPHVU
+         emgZsSPYiXalc6qPsnftL+589XhEk+sGP96DA3SRScsm85EC9L3p9GkBk2fplmXIY6hl
+         PnZw==
+X-Gm-Message-State: APjAAAXP+uL/HkZ0lbqDvq66UUs88j3oiJJHu7fYxLpad3qVlAlii5O3
+        ckrWmKRn2GdFaTRM/Ai+8Q==
+X-Google-Smtp-Source: APXvYqy4BvFE0JVjSY2m/IplvmhNeMcI4gWkgM+9uLk0Ec5UKDxEz7AyuW1jP9gWK7a0Hcsgd1QA3Q==
+X-Received: by 2002:a54:410f:: with SMTP id l15mr109468oic.140.1571256449199;
+        Wed, 16 Oct 2019 13:07:29 -0700 (PDT)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id a9sm7412463oie.7.2019.10.16.13.07.25
+        by smtp.googlemail.com with ESMTPSA id a9sm7412463oie.7.2019.10.16.13.07.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 13:07:26 -0700 (PDT)
+        Wed, 16 Oct 2019 13:07:28 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Andrew Murray <andrew.murray@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -60,9 +60,9 @@ Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Toan Le <toan@os.amperecomputing.com>,
         Tom Joseph <tjoseph@cadence.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH v2 20/25] PCI: ftpci100: Use inbound resources for setup
-Date:   Wed, 16 Oct 2019 15:06:42 -0500
-Message-Id: <20191016200647.32050-21-robh@kernel.org>
+Subject: [PATCH v2 21/25] PCI: v3-semi: Use inbound resources for setup
+Date:   Wed, 16 Oct 2019 15:06:43 -0500
+Message-Id: <20191016200647.32050-22-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191016200647.32050-1-robh@kernel.org>
 References: <20191016200647.32050-1-robh@kernel.org>
@@ -74,40 +74,82 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Now that the helpers provide the inbound resources in the host bridge
-'dma_ranges' resource list, convert Faraday ftpci100 host bridge to use
+'dma_ranges' resource list, convert the v3-semi host bridge to use
 the resource list to setup the inbound addresses.
 
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
 Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/pci-ftpci100.c | 26 +++++++++-----------------
- 1 file changed, 9 insertions(+), 17 deletions(-)
+ drivers/pci/controller/pci-v3-semi.c | 38 ++++++++++++----------------
+ 1 file changed, 16 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-ftpci100.c b/drivers/pci/controller/pci-ftpci100.c
-index 5824913e311b..e6b498de35e1 100644
---- a/drivers/pci/controller/pci-ftpci100.c
-+++ b/drivers/pci/controller/pci-ftpci100.c
-@@ -375,12 +375,11 @@ static int faraday_pci_setup_cascaded_irq(struct faraday_pci *p)
- 	return 0;
+diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
+index 2209c7671115..bd05221f5a22 100644
+--- a/drivers/pci/controller/pci-v3-semi.c
++++ b/drivers/pci/controller/pci-v3-semi.c
+@@ -598,28 +598,30 @@ static int v3_pci_setup_resource(struct v3_pci *v3,
  }
  
--static int faraday_pci_parse_map_dma_ranges(struct faraday_pci *p,
--					    struct device_node *np)
-+static int faraday_pci_parse_map_dma_ranges(struct faraday_pci *p)
+ static int v3_get_dma_range_config(struct v3_pci *v3,
+-				   struct of_pci_range *range,
++				   struct resource_entry *entry,
+ 				   u32 *pci_base, u32 *pci_map)
+ {
+ 	struct device *dev = v3->dev;
+-	u64 cpu_end = range->cpu_addr + range->size - 1;
+-	u64 pci_end = range->pci_addr + range->size - 1;
++	u64 cpu_addr = entry->res->start;
++	u64 cpu_end = entry->res->end;
++	u64 pci_end = cpu_end - entry->offset;
++	u64 pci_addr = entry->res->start - entry->offset;
+ 	u32 val;
+ 
+-	if (range->pci_addr & ~V3_PCI_BASE_M_ADR_BASE) {
++	if (pci_addr & ~V3_PCI_BASE_M_ADR_BASE) {
+ 		dev_err(dev, "illegal range, only PCI bits 31..20 allowed\n");
+ 		return -EINVAL;
+ 	}
+-	val = ((u32)range->pci_addr) & V3_PCI_BASE_M_ADR_BASE;
++	val = ((u32)pci_addr) & V3_PCI_BASE_M_ADR_BASE;
+ 	*pci_base = val;
+ 
+-	if (range->cpu_addr & ~V3_PCI_MAP_M_MAP_ADR) {
++	if (cpu_addr & ~V3_PCI_MAP_M_MAP_ADR) {
+ 		dev_err(dev, "illegal range, only CPU bits 31..20 allowed\n");
+ 		return -EINVAL;
+ 	}
+-	val = ((u32)range->cpu_addr) & V3_PCI_MAP_M_MAP_ADR;
++	val = ((u32)cpu_addr) & V3_PCI_MAP_M_MAP_ADR;
+ 
+-	switch (range->size) {
++	switch (resource_size(entry->res)) {
+ 	case SZ_1M:
+ 		val |= V3_LB_BASE_ADR_SIZE_1MB;
+ 		break;
+@@ -667,8 +669,8 @@ static int v3_get_dma_range_config(struct v3_pci *v3,
+ 	dev_dbg(dev,
+ 		"DMA MEM CPU: 0x%016llx -> 0x%016llx => "
+ 		"PCI: 0x%016llx -> 0x%016llx base %08x map %08x\n",
+-		range->cpu_addr, cpu_end,
+-		range->pci_addr, pci_end,
++		cpu_addr, cpu_end,
++		pci_addr, pci_end,
+ 		*pci_base, *pci_map);
+ 
+ 	return 0;
+@@ -677,24 +679,16 @@ static int v3_get_dma_range_config(struct v3_pci *v3,
+ static int v3_pci_parse_map_dma_ranges(struct v3_pci *v3,
+ 				       struct device_node *np)
  {
 -	struct of_pci_range range;
 -	struct of_pci_range_parser parser;
- 	struct device *dev = p->dev;
-+	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(p);
++	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(v3);
+ 	struct device *dev = v3->dev;
 +	struct resource_entry *entry;
- 	u32 confreg[3] = {
- 		FARADAY_PCI_MEM1_BASE_SIZE,
- 		FARADAY_PCI_MEM2_BASE_SIZE,
-@@ -389,19 +388,12 @@ static int faraday_pci_parse_map_dma_ranges(struct faraday_pci *p,
  	int i = 0;
- 	u32 val;
  
 -	if (of_pci_dma_range_parser_init(&parser, np)) {
 -		dev_err(dev, "missing dma-ranges property\n");
@@ -118,34 +160,14 @@ index 5824913e311b..e6b498de35e1 100644
 -	 * Get the dma-ranges from the device tree
 -	 */
 -	for_each_of_pci_range(&parser, &range) {
--		u64 end = range.pci_addr + range.size - 1;
 +	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
-+		u64 pci_addr = entry->res->start - entry->offset;
-+		u64 end = entry->res->end - entry->offset;
  		int ret;
+ 		u32 pci_base, pci_map;
  
--		ret = faraday_res_to_memcfg(range.pci_addr, range.size, &val);
-+		ret = faraday_res_to_memcfg(pci_addr, resource_size(entry->res), &val);
- 		if (ret) {
- 			dev_err(dev,
- 				"DMA range %d: illegal MEM resource size\n", i);
-@@ -409,7 +401,7 @@ static int faraday_pci_parse_map_dma_ranges(struct faraday_pci *p,
- 		}
- 
- 		dev_info(dev, "DMA MEM%d BASE: 0x%016llx -> 0x%016llx config %08x\n",
--			 i + 1, range.pci_addr, end, val);
-+			 i + 1, pci_addr, end, val);
- 		if (i <= 2) {
- 			faraday_raw_pci_write_config(p, 0, 0, confreg[i],
- 						     4, val);
-@@ -539,7 +531,7 @@ static int faraday_pci_probe(struct platform_device *pdev)
- 			cur_bus_speed = PCI_SPEED_66MHz;
- 	}
- 
--	ret = faraday_pci_parse_map_dma_ranges(p, dev->of_node);
-+	ret = faraday_pci_parse_map_dma_ranges(p);
- 	if (ret)
- 		return ret;
+-		ret = v3_get_dma_range_config(v3, &range, &pci_base, &pci_map);
++		ret = v3_get_dma_range_config(v3, entry, &pci_base, &pci_map);
+ 		if (ret)
+ 			return ret;
  
 -- 
 2.20.1
