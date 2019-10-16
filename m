@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DE59D9ADB
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2019 22:07:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC709D9ADD
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2019 22:07:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731790AbfJPUHB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Oct 2019 16:07:01 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41096 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731066AbfJPUHB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Oct 2019 16:07:01 -0400
-Received: by mail-oi1-f195.google.com with SMTP id g81so109095oib.8;
-        Wed, 16 Oct 2019 13:07:00 -0700 (PDT)
+        id S1732011AbfJPUHD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Oct 2019 16:07:03 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33416 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731066AbfJPUHC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Oct 2019 16:07:02 -0400
+Received: by mail-oi1-f194.google.com with SMTP id a15so151363oic.0;
+        Wed, 16 Oct 2019 13:07:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YA57ID7HssfptBArCep2MY8T32tzTOpp6n73JZLWHrY=;
-        b=UAZIEXtjtzdPa0W2gLYOh1KRpFa/BLEhaUV9VVgvreSkNAQLHO55pptKxcY9N/6xp0
-         mGt/kOoH+OShn4DFydiEfjKblosDGX2vq17yZHKbJwDlm0KsePEkPUJQgntW7DwFIuav
-         ORMNzu6mCAtEGhjYTXTQ0c+E7AgYs//0xVETRPT9wfJ1BEBG+zmBWDXfG6+2zN/out+b
-         GunCOeJmV2RYJqj5zDierZixzYhEbTlQYk6VKvdYz5c8XYIidPJtiitjp9jvmW4Fc5Qj
-         EEwGZerLSZQBjWzVEA3wrE7GcQEHYEYmmR7CutnGFjrxS7DQu1LxemF9FfQZirmE9yJQ
-         ZmrA==
-X-Gm-Message-State: APjAAAXaKqvTe9E/rPkk4iryfvhCs7au4ne4VoMpdoV6QJKkQzTVCkmx
-        x7iOtUKloWHXIRgpR0vy5w==
-X-Google-Smtp-Source: APXvYqyakPWBO0mkOpMpK5U/GSZnT1haaiWULUW+yiLTI26g2Lgw4JGeutIuaV6f+nslk+Tc2+/0YA==
-X-Received: by 2002:aca:5b02:: with SMTP id p2mr111363oib.94.1571256420107;
-        Wed, 16 Oct 2019 13:07:00 -0700 (PDT)
+        bh=1wQepvUEyhoVmvx8KNqIDl96oC7fkoL0Znn4D/qcaeY=;
+        b=epZKNb1mmHlHRHKu9W8NsM0YQ4cspqE2QK+X+3I+sguZbu/zCSba5j1PSy8pLbC1Q2
+         Zc//+WjxEqK7AeWuOwDfrVEzUpFfnp4+lNXOUWk4oMoPLgO8HeLpk3wjqKgAQ8ByaNTz
+         dhHIJ+zyXIvODWQ+JkIL9yFGUUVl2NnS8+0tNvVk0io1IwzW0llJis5YP3uFTOr+bfUw
+         66ox/xk2n7pfXteeac04+TIpn+DqjHh79kSEgVFt/1Mta25LRgq8F7puZO9JuU0w/s1v
+         +7w8fQBW8W6RxJrpTCHvvyMqwX8Qzjp+y2SLIu7XzwOEJVOSCEIOjpXaMMyRbyArfQTY
+         60jA==
+X-Gm-Message-State: APjAAAXNFtBl2T42hYmDDdiU+tHJ/2LgR2+uI/D6n/6P3Poc5hZjVYC6
+        ZOfIXPFq7GGkRPFa2zPs4w==
+X-Google-Smtp-Source: APXvYqwmDaAbx79jpwPxWun/bS589WutW9tyb1IoIzVDaMHclzoxPvZEk8Lr6qH4mfa4hXLWDO9fDQ==
+X-Received: by 2002:a05:6808:11a:: with SMTP id b26mr89503oie.37.1571256422032;
+        Wed, 16 Oct 2019 13:07:02 -0700 (PDT)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id a9sm7412463oie.7.2019.10.16.13.06.58
+        by smtp.googlemail.com with ESMTPSA id a9sm7412463oie.7.2019.10.16.13.07.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 13:06:59 -0700 (PDT)
+        Wed, 16 Oct 2019 13:07:01 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Andrew Murray <andrew.murray@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -60,9 +60,9 @@ Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Toan Le <toan@os.amperecomputing.com>,
         Tom Joseph <tjoseph@cadence.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH v2 05/25] PCI: dwc: Use pci_parse_request_of_pci_ranges()
-Date:   Wed, 16 Oct 2019 15:06:27 -0500
-Message-Id: <20191016200647.32050-6-robh@kernel.org>
+Subject: [PATCH v2 06/25] PCI: faraday: Use pci_parse_request_of_pci_ranges
+Date:   Wed, 16 Oct 2019 15:06:28 -0500
+Message-Id: <20191016200647.32050-7-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191016200647.32050-1-robh@kernel.org>
 References: <20191016200647.32050-1-robh@kernel.org>
@@ -73,11 +73,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Convert the Designware host bridge to use the common
+Convert the Faraday host bridge to use the common
 pci_parse_request_of_pci_ranges().
 
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+There's no need to assign the resources to a temporary list first. Just
+use bridge->windows directly and remove all the temporary list handling.
+
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Andrew Murray <andrew.murray@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
@@ -86,60 +87,103 @@ Signed-off-by: Rob Herring <robh@kernel.org>
 v2:
 - New patch
 
- .../pci/controller/dwc/pcie-designware-host.c | 28 ++++++-------------
- 1 file changed, 8 insertions(+), 20 deletions(-)
+ drivers/pci/controller/pci-ftpci100.c | 51 ++++++---------------------
+ 1 file changed, 11 insertions(+), 40 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 0f36a926059a..aeec8b65eb97 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -319,7 +319,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	struct device *dev = pci->dev;
- 	struct device_node *np = dev->of_node;
- 	struct platform_device *pdev = to_platform_device(dev);
--	struct resource_entry *win, *tmp;
-+	struct resource_entry *win;
- 	struct pci_bus *child;
- 	struct pci_host_bridge *bridge;
- 	struct resource *cfg_res;
-@@ -342,31 +342,19 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (!bridge)
- 		return -ENOMEM;
+diff --git a/drivers/pci/controller/pci-ftpci100.c b/drivers/pci/controller/pci-ftpci100.c
+index bf5ece5d9291..12bc7daef5b5 100644
+--- a/drivers/pci/controller/pci-ftpci100.c
++++ b/drivers/pci/controller/pci-ftpci100.c
+@@ -430,10 +430,8 @@ static int faraday_pci_probe(struct platform_device *pdev)
+ 	const struct faraday_pci_variant *variant =
+ 		of_device_get_match_data(dev);
+ 	struct resource *regs;
+-	resource_size_t io_base;
+ 	struct resource_entry *win;
+ 	struct faraday_pci *p;
+-	struct resource *mem;
+ 	struct resource *io;
+ 	struct pci_host_bridge *host;
+ 	struct clk *clk;
+@@ -441,7 +439,6 @@ static int faraday_pci_probe(struct platform_device *pdev)
+ 	unsigned char cur_bus_speed = PCI_SPEED_33MHz;
+ 	int ret;
+ 	u32 val;
+-	LIST_HEAD(res);
+
+ 	host = devm_pci_alloc_host_bridge(dev, sizeof(*p));
+ 	if (!host)
+@@ -480,44 +477,20 @@ static int faraday_pci_probe(struct platform_device *pdev)
+ 	if (IS_ERR(p->base))
+ 		return PTR_ERR(p->base);
 
 -	ret = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
--					&bridge->windows, &pp->io_base);
--	if (ret)
--		return ret;
--
--	ret = devm_request_pci_bus_resources(dev, &bridge->windows);
-+	ret = pci_parse_request_of_pci_ranges(dev, &bridge->windows, NULL);
+-						    &res, &io_base);
++	ret = pci_parse_request_of_pci_ranges(dev, &host->windows, NULL);
  	if (ret)
  		return ret;
 
- 	/* Get the I/O and memory ranges from DT */
--	resource_list_for_each_entry_safe(win, tmp, &bridge->windows) {
-+	resource_list_for_each_entry(win, &bridge->windows) {
- 		switch (resource_type(win->res)) {
- 		case IORESOURCE_IO:
--			ret = devm_pci_remap_iospace(dev, win->res,
--						     pp->io_base);
--			if (ret) {
--				dev_warn(dev, "Error %d: failed to map resource %pR\n",
--					 ret, win->res);
--				resource_list_destroy_entry(win);
+-	ret = devm_request_pci_bus_resources(dev, &res);
+-	if (ret)
+-		return ret;
+-
+-	/* Get the I/O and memory ranges from DT */
+-	resource_list_for_each_entry(win, &res) {
+-		switch (resource_type(win->res)) {
+-		case IORESOURCE_IO:
+-			io = win->res;
+-			io->name = "Gemini PCI I/O";
+-			if (!faraday_res_to_memcfg(io->start - win->offset,
+-						   resource_size(io), &val)) {
+-				/* setup I/O space size */
+-				writel(val, p->base + PCI_IOSIZE);
 -			} else {
--				pp->io = win->res;
--				pp->io->name = "I/O";
--				pp->io_size = resource_size(pp->io);
--				pp->io_bus_addr = pp->io->start - win->offset;
+-				dev_err(dev, "illegal IO mem size\n");
+-				return -EINVAL;
 -			}
-+			pp->io = win->res;
-+			pp->io->name = "I/O";
-+			pp->io_size = resource_size(pp->io);
-+			pp->io_bus_addr = pp->io->start - win->offset;
-+			pp->io_base = pci_pio_to_address(pp->io->start);
- 			break;
- 		case IORESOURCE_MEM:
- 			pp->mem = win->res;
+-			ret = devm_pci_remap_iospace(dev, io, io_base);
+-			if (ret) {
+-				dev_warn(dev, "error %d: failed to map resource %pR\n",
+-					 ret, io);
+-				continue;
+-			}
+-			break;
+-		case IORESOURCE_MEM:
+-			mem = win->res;
+-			mem->name = "Gemini PCI MEM";
+-			break;
+-		case IORESOURCE_BUS:
+-			break;
+-		default:
+-			break;
++	win = resource_list_get_entry_of_type(&host->windows, IORESOURCE_IO);
++	if (win) {
++		io = win->res;
++		if (!faraday_res_to_memcfg(io->start - win->offset,
++					   resource_size(io), &val)) {
++			/* setup I/O space size */
++			writel(val, p->base + PCI_IOSIZE);
++		} else {
++			dev_err(dev, "illegal IO mem size\n");
++			return -EINVAL;
+ 		}
+ 	}
+
+@@ -569,7 +542,6 @@ static int faraday_pci_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+
+-	list_splice_init(&res, &host->windows);
+ 	ret = pci_scan_root_bus_bridge(host);
+ 	if (ret) {
+ 		dev_err(dev, "failed to scan host: %d\n", ret);
+@@ -581,7 +553,6 @@ static int faraday_pci_probe(struct platform_device *pdev)
+
+ 	pci_bus_assign_resources(p->bus);
+ 	pci_bus_add_devices(p->bus);
+-	pci_free_resource_list(&res);
+
+ 	return 0;
+ }
 --
 2.20.1
