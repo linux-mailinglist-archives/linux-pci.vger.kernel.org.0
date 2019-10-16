@@ -2,106 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B262D930B
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2019 15:52:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5A70D942A
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2019 16:44:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389877AbfJPNwv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Oct 2019 09:52:51 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34922 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388108AbfJPNwv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Oct 2019 09:52:51 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9GDnadY072397;
-        Wed, 16 Oct 2019 13:52:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=RT6WwgIAQ124uGpiC/zTSw0NchbyOlxzq3SDduZSmwQ=;
- b=GpxV3Yir75uCm3qsU+Be3dsU9hcQLqlHxSI7TTBBgJvFi3qCwuLgRQqusnTNlQ0DwTc5
- 3qreNb1hE3cR/gUZcmRBJkwDecgLG5+8XQgaK1/JTxuNokpgNbaLdDQHEkqr+/K9WNT+
- 4MyrAXXwZVmp8i4htnPgz0Rh9z0EtfQY08NlCaSkKqW+j8W8bpWvlXI0mtA5rAOGFdLy
- 26yZuj4J/kBzHdO4aXZAdqLgX+Vi/d4RAPD3nVtWqZixfKh9/mUFcgQ9K4N/YLoU99iS
- QfArAsSoEWq+SlO6LTwpscHVdGNP0eRGavGAWaDNUtwFiu/pArHO7YFHCs+Fhwm8HTVF xg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2vk7frewux-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Oct 2019 13:52:19 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9GDgrMt186456;
-        Wed, 16 Oct 2019 13:50:18 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2vnf7tdyed-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Oct 2019 13:50:18 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9GDoDs6029673;
-        Wed, 16 Oct 2019 13:50:13 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 16 Oct 2019 06:50:13 -0700
-Date:   Wed, 16 Oct 2019 16:50:02 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        driverdev-devel@linuxdriverproject.org, olaf@aepfle.de,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>, jackm@mellanox.com,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-hyperv@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        marcelo.cerri@canonical.com, linux-pci@vger.kernel.org,
-        apw@canonical.com, vkuznets@redhat.com,
-        Bjorn Helgaas <bhelgaas@google.com>, jasowang@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/7] PCI/PM: Make power management op coding style
- consistent
-Message-ID: <20191016135002.GA24678@kadam>
-References: <20191014230016.240912-1-helgaas@kernel.org>
- <20191014230016.240912-6-helgaas@kernel.org>
+        id S1727873AbfJPOoW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Oct 2019 10:44:22 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33727 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731768AbfJPOoV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Oct 2019 10:44:21 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q10so14888513pfl.0;
+        Wed, 16 Oct 2019 07:44:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language
+         :content-transfer-encoding:mime-version;
+        bh=0wM1+4IO1bY5BTi6K7Yji/0+jGvbIiPygIqwyuwJlfU=;
+        b=tOvEAIgqFTKi5LFuzuzGZixhErKJm3yjDG6HKm30AMcV2JhEnsOdP9rJ1oVbKSrb7l
+         mOGXYib8/sgyEXtNKdVfvxD0jC8gybPrFM38DsfdkMoGKA3MbcCyM9xZZcgdhrukzLv6
+         4gMKstUxUeIuxYbj1WrTF+SaC6Hs6IffTeq7gHHC2jvyvh7Qkpi3Bgq/6aw8LzSBxSSg
+         tlTT8fwT/bHTMnZ0hzeQAInq3oz7xhxv11AhhGUry5y7awa0eV0bDUUmb0ceyvhoiNLR
+         PaGD7BtgtqH6nb/DylBbtJLjDHEPev/wI2Oh6X98Mi9GN/7aCCxXgGUhLLJ56nDXXtQO
+         T/2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
+         :date:message-id:references:in-reply-to:accept-language
+         :content-language:content-transfer-encoding:mime-version;
+        bh=0wM1+4IO1bY5BTi6K7Yji/0+jGvbIiPygIqwyuwJlfU=;
+        b=WJwu7YiLhA9EMHMaHr58wZpZ5zEO9VPZCEt1U8hT55BbHs6EqxZoFr6DCgomAbBx4U
+         jG7NeF2cibpXONd7NWxo1wd73yF0MMZoujDRGf2peEXAzfKSiAq7NPEw+P+ydPIWPFgF
+         VdDPJ89w7gTtdgL2j+4aoD41mXWSGz+yaQ2tZdGkTIsXXWlgb2/0Q4iPvXtXu+KoH5Af
+         gXhxcQUs7sdkCbR6I5VFnrMqeIeHCKZ40xsKQ+cwkC5gJ6x42x3eJkl/UInw8ZVKH27F
+         MRaZ++w5gaPKADTtU/FTwfRAEaAf1I2GWDtBtv2NDCOppg2WadNW+vPVksDPMsaF48V5
+         1FaA==
+X-Gm-Message-State: APjAAAW3nvFnY7yOmL+II8nzIYSjQQUqa8AWBVbJxq73fup47eu3coZR
+        IGTDvTQTZHhIQYgcaEhRpnc=
+X-Google-Smtp-Source: APXvYqy3lpffubpVvlmyh30qUtp1f0ncXogj09ETjm55Zk00R4WxRN8QY95MvMfdqWaKHhLIbWziSg==
+X-Received: by 2002:a63:d0a:: with SMTP id c10mr44006817pgl.203.1571237059486;
+        Wed, 16 Oct 2019 07:44:19 -0700 (PDT)
+Received: from SL2P216MB0105.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:22::5])
+        by smtp.gmail.com with ESMTPSA id v9sm23693755pfe.1.2019.10.16.07.44.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 16 Oct 2019 07:44:18 -0700 (PDT)
+From:   Jingoo Han <jingoohan1@gmail.com>
+To:     'Christoph Hellwig' <hch@infradead.org>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "vidyas@nvidia.com" <vidyas@nvidia.com>,
+        'Anvesh Salveru' <anvesh.s@samsung.com>,
+        Han Jingoo <jingoohan1@gmail.com>
+Subject: Re: [PATCH v3] PCI: dwc: Add support to add GEN3 related equalization
+ quirks
+Thread-Topic: [PATCH v3] PCI: dwc: Add support to add GEN3 related
+ equalization quirks
+Thread-Index: ATFlMXAyX9siOHFasDKw4/raoiQM8nluLS0yNDIwODAkNDkkZDlBNDAxJDkxJGQ1QTMwMb0Ze/7q
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date:   Wed, 16 Oct 2019 14:44:12 +0000
+Message-ID: <SL2P216MB010526CC784E2F4364B4197DAA920@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+References: <CGME20191015025933epcas5p1f0891dacc13648559ed8e037e49ee5b1@epcas5p1.samsung.com>
+ <1571108362-25962-1-git-send-email-pankaj.dubey@samsung.com>
+ <20191015081620.GA28204@infradead.org>
+ <068001d58336$a76ed970$f64c8c50$@samsung.com>
+ <20191015090547.GA7199@infradead.org>
+ <000e01d5836b$ac871190$059534b0$@samsung.com>
+ <20191016065234.GA6825@infradead.org>
+In-Reply-To: <20191016065234.GA6825@infradead.org>
+Accept-Language: ko-KR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator: 
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014230016.240912-6-helgaas@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=931
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910160121
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910160122
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 06:00:14PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Some of the power management ops use this style:
-> 
->   struct device_driver *drv = dev->driver;
->   if (drv && drv->pm && drv->pm->prepare(dev))
->     drv->pm->prepare(dev);
-> 
-> while others use this:
-> 
->   const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+On 10/16/19, 2:52 AM, 'Christoph Hellwig' wrote:
+>
+> On Tue, Oct 15, 2019 at 08:47:32PM +0530, Pankaj Dubey wrote:
+> > OK, but do we think the current driver has only code which is being use=
+d by
+> > some user?
+>
+> That is at least the intent of how we do kernel development.=20
 
-I like this patch a lot, especially the direct returns.  But it
-occurs to me that in the future this conditional would look better as
+Agreed!
 
-	const struct dev_pm_ops *pm = driver_to_pm(dev->driver);
+>
+> > At least I can see current driver has some features which is not being =
+used
+> > by any current driver. =20
+>
+> Please send patches to remove them.
 
-or something.
+Agreed!
 
-regards,
-dan carpenter
+Mainline kernel should not include features that have not been used.
+Thank you.
 
+Best regards,
+Jingoo Han
