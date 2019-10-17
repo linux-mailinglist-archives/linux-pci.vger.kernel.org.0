@@ -2,47 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A9BDDB794
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2019 21:33:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B7C5DB78F
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2019 21:33:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394566AbfJQTdI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Oct 2019 15:33:08 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46603 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728591AbfJQTdH (ORCPT
+        id S2394468AbfJQTdH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Oct 2019 15:33:07 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40430 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394412AbfJQTdH (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Oct 2019 15:33:07 -0400
-Received: by mail-oi1-f194.google.com with SMTP id k25so3141781oiw.13;
-        Thu, 17 Oct 2019 12:33:05 -0700 (PDT)
+Received: by mail-oi1-f196.google.com with SMTP id k9so3173622oib.7;
+        Thu, 17 Oct 2019 12:33:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=r5z1PSBgdgyQOytDnCk9ConnRnIEa9FCO7qAX4IBOjg=;
-        b=Kj7ASfvguY6wBUMecEIYld56+GzdZRax3xSMKjqzbmU7SirW8NlLpRUOXif664zZQj
-         vl03f5fkn4Zh5MUZ4s6HyMRa8ranAv63WHWbedumJqElEDC+lAI0l5LUHCIWBYBZWhvg
-         qGNCk+IPcOnLb4bO6ENZXpmxbqcUdgWSG9qTCDiETj7WPgJiyPDEP5WwLItUupXXcXTn
-         ezGqyNnlxFwCH6y6yqftlsC1I/lSyaPrMG6PptjzjJUqj7b5zF3WOOU3s/Vfosx25mbG
-         5qpDIrLNs0Kq3YNSLzEgLYHfOi1eTwir5yeqF4iRpRWo6A/x5FlGOMrtCYS5KHBVsCOg
-         XY7A==
+        bh=76iHHEqG+0CI32ACRZLZ+F0kTpO3F1ob+KjYzdlorVM=;
+        b=hdC93QzOcuW7+cnj2wrHbq4Pkd9VsZ5k9rpGhEiBOdM8j7lmLAuh1kRpCyUKAh2giU
+         3OXlEHGLN4S1sfeQEn5Gu3oZRoezXGMeDDDUtNaZ+mwzY9DCETk7Tjz3gjXau82joPCc
+         YYrnTpq+KPPAGO/Ba3F7AeHoA5Dn6fYY5JVTsu42xj17d535IIVWMLylRiXOETRdjSAW
+         Sr99dLDBNxmB0v8rlKJAUcfwnHx2ozllVkT9i2X7y0KTPKjz2J85APUiOo1uhwqx6hFr
+         Op0aeBdZVA6vLYOd/VOq0ANpdhHG0ASR7MaGnxeBisO3lSeR2UUoRnn8HE4RyuKpuRak
+         avpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=r5z1PSBgdgyQOytDnCk9ConnRnIEa9FCO7qAX4IBOjg=;
-        b=gG5rFX/WBu1Vfrr1QqMODIALLe8B74T2VNT0qylMOR3m/EM40YQ768qHh1qVTIjue+
-         vsiT5cZY9KFGqmNEvEfUqVxIdmgmqcPiCiT4dOCn7LpZvWNSoL+fYrgfeLtaRmJEFB6m
-         kkoQwxf7dNTPWrzGm8YjJFVNJkKSJRl60eW7KqJDooYViFRXdqXNRSag8szGIXj1Rkhf
-         3iXXjqTOktpz0hnnacCPlWjlVwCDT1uo7UfYCl19HrQLB8PMBuTjni6LbBGVIDYMMoXN
-         5KkZCXqJ/GrwvS8DKuxaCTsi16qUHUbNfq+m7IZx8gK5TcjFGwho3PWqjWjRqLaqwE1h
-         qq5g==
-X-Gm-Message-State: APjAAAVcDTV0PO8rtyn2ciOTY9pBxOpOrUvvnguO8l/rIqTKvTGbS5cg
-        +8tg60A4Kn7O3rdUrbolYmI=
-X-Google-Smtp-Source: APXvYqzq5u6h8Am1mSL0YM+lPW1DwccTDsRQCMbbEyLHkfS2uhmZVfKfFjpLZeucCYJ/dUgdIv2IqQ==
-X-Received: by 2002:aca:b503:: with SMTP id e3mr4683557oif.177.1571340784785;
-        Thu, 17 Oct 2019 12:33:04 -0700 (PDT)
+        bh=76iHHEqG+0CI32ACRZLZ+F0kTpO3F1ob+KjYzdlorVM=;
+        b=b2RfHkEBVG9NBe8NITf28Ou0Dt+BwjuRClPF8GaH+v2TJQmlJJpj3AKyCjbFovl1Nt
+         i9SlHJsIGFrU67DXFoi6CFhgldoJ1jivTh5VH4p2RVra+QEhh0BhauxTxozaLuAbS1GZ
+         rmCLr3BswsANLXSXVtBae6flmN1DKpKyXXp8PbbMOE7U7GpWgp1SFhMGnrf1EX5py+TT
+         GCqiXa4Qoc/1hZCL3LFYWsOuMsoRJAhtJ5MZ4rexE69xtqUrCIVmpFSm/QRHyZ1W6Pz3
+         pEg8sTaM0K5EMRpgvwIxnv57ZHbnznNNN7AdunlK/WvFN+V/CVUU46iMqYVwANopzwH+
+         7q6Q==
+X-Gm-Message-State: APjAAAX/RsQORRZNlMbrwwkahHL9EKIg/UT2Z/NJrGHKF7jg1dlKr4NH
+        0J9rHLMTafE5xRm6PmZIRCA=
+X-Google-Smtp-Source: APXvYqzTgK3cVvxOv/1OIsVlLID/7VEM3Z+UpjnCAl0Tx/F52J7k7t0IVizf66bQO+qKbBDD75Al1Q==
+X-Received: by 2002:aca:30ce:: with SMTP id w197mr4616144oiw.82.1571340786681;
+        Thu, 17 Oct 2019 12:33:06 -0700 (PDT)
 Received: from localhost.localdomain ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id z12sm823273oth.71.2019.10.17.12.33.03
+        by smtp.gmail.com with ESMTPSA id z12sm823273oth.71.2019.10.17.12.33.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 12:33:04 -0700 (PDT)
+        Thu, 17 Oct 2019 12:33:06 -0700 (PDT)
 From:   Stuart Hayes <stuart.w.hayes@gmail.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
@@ -53,10 +53,11 @@ Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
         "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
         Sinan Kaya <okaya@kernel.org>,
         Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lukas@wunner.de
-Subject: [PATCH v3 1/3] PCI: pciehp: Add support for disabling in-band presence
-Date:   Thu, 17 Oct 2019 15:32:54 -0400
-Message-Id: <20191017193256.3636-2-stuart.w.hayes@gmail.com>
+        linux-kernel@vger.kernel.org, lukas@wunner.de,
+        Stuart Hayes <stuart.w.hayes@gmail.com>
+Subject: [PATCH v3 2/3] PCI: pciehp: Wait for PDS if in-band presence is disabled
+Date:   Thu, 17 Oct 2019 15:32:55 -0400
+Message-Id: <20191017193256.3636-3-stuart.w.hayes@gmail.com>
 X-Mailer: git-send-email 2.18.1
 In-Reply-To: <20191017193256.3636-1-stuart.w.hayes@gmail.com>
 References: <20191017193256.3636-1-stuart.w.hayes@gmail.com>
@@ -67,79 +68,65 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
 
-The presence detect state (PDS) is normally a logical or of in-band and
-out-of-band presence. As of PCIe 4.0, there is the option to disable
-in-band presence so that the PDS bit always reflects the state of the
-out-of-band presence.
+When inband presence is disabled, PDS may come up at any time, or not
+at all. PDS being low may indicate that the card is still mating, and
+we could expect contact bounce to bring down the link as well.
 
-The recommendation of the PCIe spec is to disable in-band presence
-whenever supported.
+It is reasonable to assume that most cards will mate in a hotplug slot
+in about a second. Thus, when we know PDS only reflects out-of-band
+presence, it's worthwhile to wait the extra second or so to make sure
+the card is properly mated before loading the driver, and to prevent
+the hotplug code from disabling a device if the presence detect change
+goes active after the device is enabled.
 
 Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
 ---
- drivers/pci/hotplug/pciehp.h     | 1 +
- drivers/pci/hotplug/pciehp_hpc.c | 9 ++++++++-
- include/uapi/linux/pci_regs.h    | 2 ++
- 3 files changed, 11 insertions(+), 1 deletion(-)
+v2:
+  replace while(true) loop with do...while
+v3
+  remove unused variable declaration (pds)
+  modify text of warning message
 
-diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index 654c972b8ea0..27e4cd6529b0 100644
---- a/drivers/pci/hotplug/pciehp.h
-+++ b/drivers/pci/hotplug/pciehp.h
-@@ -83,6 +83,7 @@ struct controller {
- 	struct pcie_device *pcie;
- 
- 	u32 slot_cap;				/* capabilities and quirks */
-+	unsigned int inband_presence_disabled:1;
- 
- 	u16 slot_ctrl;				/* control register access */
- 	struct mutex ctrl_lock;
+ drivers/pci/hotplug/pciehp_hpc.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
 diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 1a522c1c4177..dc109d521f30 100644
+index dc109d521f30..02eb811a014f 100644
 --- a/drivers/pci/hotplug/pciehp_hpc.c
 +++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -811,7 +811,7 @@ static inline void dbg_ctrl(struct controller *ctrl)
- struct controller *pcie_init(struct pcie_device *dev)
- {
- 	struct controller *ctrl;
--	u32 slot_cap, link_cap;
-+	u32 slot_cap, slot_cap2, link_cap;
- 	u8 poweron;
- 	struct pci_dev *pdev = dev->port;
- 	struct pci_bus *subordinate = pdev->subordinate;
-@@ -869,6 +869,13 @@ struct controller *pcie_init(struct pcie_device *dev)
- 		FLAG(link_cap, PCI_EXP_LNKCAP_DLLLARC),
- 		pdev->broken_cmd_compl ? " (with Cmd Compl erratum)" : "");
+@@ -242,6 +242,22 @@ static bool pci_bus_check_dev(struct pci_bus *bus, int devfn)
+ 	return found;
+ }
  
-+	pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP2, &slot_cap2);
-+	if (slot_cap2 & PCI_EXP_SLTCAP2_IBPD) {
-+		pcie_write_cmd_nowait(ctrl, PCI_EXP_SLTCTL_IBPD_DISABLE,
-+				      PCI_EXP_SLTCTL_IBPD_DISABLE);
-+		ctrl->inband_presence_disabled = 1;
-+	}
++static void pcie_wait_for_presence(struct pci_dev *pdev)
++{
++	int timeout = 1250;
++	u16 slot_status;
 +
- 	/*
- 	 * If empty slot's power status is on, turn power off.  The IRQ isn't
- 	 * requested yet, so avoid triggering a notification with this command.
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 29d6e93fd15e..ea1cf9546e4d 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -604,6 +604,7 @@
- #define  PCI_EXP_SLTCTL_PWR_OFF        0x0400 /* Power Off */
- #define  PCI_EXP_SLTCTL_EIC	0x0800	/* Electromechanical Interlock Control */
- #define  PCI_EXP_SLTCTL_DLLSCE	0x1000	/* Data Link Layer State Changed Enable */
-+#define  PCI_EXP_SLTCTL_IBPD_DISABLE	0x4000 /* In-band PD disable */
- #define PCI_EXP_SLTSTA		26	/* Slot Status */
- #define  PCI_EXP_SLTSTA_ABP	0x0001	/* Attention Button Pressed */
- #define  PCI_EXP_SLTSTA_PFD	0x0002	/* Power Fault Detected */
-@@ -676,6 +677,7 @@
- #define PCI_EXP_LNKSTA2		50	/* Link Status 2 */
- #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	52	/* v2 endpoints with link end here */
- #define PCI_EXP_SLTCAP2		52	/* Slot Capabilities 2 */
-+#define  PCI_EXP_SLTCAP2_IBPD	0x0001	/* In-band PD Disable Supported */
- #define PCI_EXP_SLTCTL2		56	/* Slot Control 2 */
- #define PCI_EXP_SLTSTA2		58	/* Slot Status 2 */
++	do {
++		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
++		if (!!(slot_status & PCI_EXP_SLTSTA_PDS))
++			return;
++		msleep(10);
++		timeout -= 10;
++	} while (timeout > 0);
++
++	pci_info(pdev, "Timeout waiting for Presence Detect state to be set\n");
++}
++
+ int pciehp_check_link_status(struct controller *ctrl)
+ {
+ 	struct pci_dev *pdev = ctrl_dev(ctrl);
+@@ -251,6 +267,9 @@ int pciehp_check_link_status(struct controller *ctrl)
+ 	if (!pcie_wait_for_link(pdev, true))
+ 		return -1;
+ 
++	if (ctrl->inband_presence_disabled)
++		pcie_wait_for_presence(pdev);
++
+ 	found = pci_bus_check_dev(ctrl->pcie->port->subordinate,
+ 					PCI_DEVFN(0, 0));
  
 -- 
 2.18.1
