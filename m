@@ -2,89 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27F15DABEC
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2019 14:25:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC565DAC97
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2019 14:44:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406119AbfJQMZD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Oct 2019 08:25:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38498 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728554AbfJQMZD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:25:03 -0400
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A864021D7D;
-        Thu, 17 Oct 2019 12:25:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571315102;
-        bh=LrQnz98uOVhoyL8C9jQ/wywj8PjyWmRHMV/7DS2tY4Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Zu+0INm1hJy9vc9v5kn3GgXSkcVIG6uOYhfSj3digX3umNQnSVVQnmVmEG3zhPLa+
-         m/6i4tKlKnjpgFq/AXCMtLY1+Rpq1Viq52FfvW0UObUiT28jIhvn7/lKGECBJKcEn+
-         dABuMoopMqlt5uUyA0LtKMpMXmpu8chzMOcmfhJE=
-Received: by mail-qk1-f173.google.com with SMTP id h126so1619912qke.10;
-        Thu, 17 Oct 2019 05:25:02 -0700 (PDT)
-X-Gm-Message-State: APjAAAXmHGyio2hBvZsVhJqm8Ca5PwIAE+ZboMMwGeWX1hZSQ1ZLCzFF
-        xUck95nEHmNCRZqPV3Hun65Q+87jR/B1nc1TiA==
-X-Google-Smtp-Source: APXvYqykgRdraUNdbziBpUQsRMBhKGPDacKw+vE+jl7H1/l6Fb7fZ4vekhfagyfuSNF6yc1qHpHfVqZsnpUaNiSiAoQ=
-X-Received: by 2002:a05:620a:12f1:: with SMTP id f17mr3039133qkl.152.1571315101761;
- Thu, 17 Oct 2019 05:25:01 -0700 (PDT)
+        id S2502480AbfJQMo2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Oct 2019 08:44:28 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:41754 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2502502AbfJQMo1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 17 Oct 2019 08:44:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34E741993;
+        Thu, 17 Oct 2019 05:44:05 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D59D3F6C4;
+        Thu, 17 Oct 2019 05:44:04 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 13:43:59 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Grzegorz Jaszczyk <jaz@semihalf.com>
+Cc:     thomas.petazzoni@bootlin.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        mw@semihalf.com
+Subject: Re: [PATCH v2] PCI: aardvark: fix big endian support
+Message-ID: <20191017124359.GA19340@e121166-lin.cambridge.arm.com>
+References: <1563279127-30678-1-git-send-email-jaz@semihalf.com>
 MIME-Version: 1.0
-References: <20191016200647.32050-1-robh@kernel.org> <20191016200647.32050-12-robh@kernel.org>
- <20191017072625.GB19517@infradead.org>
-In-Reply-To: <20191017072625.GB19517@infradead.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 17 Oct 2019 07:24:50 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+Hmwy04-XtTCp+H=H5BeaFVeHXgq1R0xVvBdgPEsDbPw@mail.gmail.com>
-Message-ID: <CAL_Jsq+Hmwy04-XtTCp+H=H5BeaFVeHXgq1R0xVvBdgPEsDbPw@mail.gmail.com>
-Subject: Re: [PATCH v2 11/25] PCI: rockchip: Drop storing driver private
- outbound resource data
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Ley Foon Tan <lftan@altera.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Ray Jui <rjui@broadcom.com>, rfi@lists.rocketboards.org,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Horman <horms@verge.net.au>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Tom Joseph <tjoseph@cadence.com>, Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1563279127-30678-1-git-send-email-jaz@semihalf.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 2:26 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Wed, Oct 16, 2019 at 03:06:33PM -0500, Rob Herring wrote:
-> > +     entry = resource_list_get_entry_of_type(&bridge->windows, IORESOURCE_MEM);
->
-> This add another too long line.  Please audit the whole series for that.
+On Tue, Jul 16, 2019 at 02:12:07PM +0200, Grzegorz Jaszczyk wrote:
+> Initialise every not-byte wide fields of emulated pci bridge config
+> space with proper cpu_to_le* macro. This is required since the structure
+> describing config space of emulated bridge assumes little-endian
+> convention.
+> 
+> Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+> ---
+> v1->v2
+> - add missing cpu_to_le32 for class_revison assignment (issues found by
+> Thomas Petazzoni and also detected by Sparse tool).
+> 
+>  drivers/pci/controller/pci-aardvark.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
 
-82 characters didn't seem worth a line break...
+Applied to pci/aardvark, thanks.
 
-Rob
+Lorenzo
+
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 134e030..178e92f 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -479,18 +479,20 @@ static void advk_sw_pci_bridge_init(struct advk_pcie *pcie)
+>  {
+>  	struct pci_bridge_emul *bridge = &pcie->bridge;
+>  
+> -	bridge->conf.vendor = advk_readl(pcie, PCIE_CORE_DEV_ID_REG) & 0xffff;
+> -	bridge->conf.device = advk_readl(pcie, PCIE_CORE_DEV_ID_REG) >> 16;
+> +	bridge->conf.vendor =
+> +		cpu_to_le16(advk_readl(pcie, PCIE_CORE_DEV_ID_REG) & 0xffff);
+> +	bridge->conf.device =
+> +		cpu_to_le16(advk_readl(pcie, PCIE_CORE_DEV_ID_REG) >> 16);
+>  	bridge->conf.class_revision =
+> -		advk_readl(pcie, PCIE_CORE_DEV_REV_REG) & 0xff;
+> +		cpu_to_le32(advk_readl(pcie, PCIE_CORE_DEV_REV_REG) & 0xff);
+>  
+>  	/* Support 32 bits I/O addressing */
+>  	bridge->conf.iobase = PCI_IO_RANGE_TYPE_32;
+>  	bridge->conf.iolimit = PCI_IO_RANGE_TYPE_32;
+>  
+>  	/* Support 64 bits memory pref */
+> -	bridge->conf.pref_mem_base = PCI_PREF_RANGE_TYPE_64;
+> -	bridge->conf.pref_mem_limit = PCI_PREF_RANGE_TYPE_64;
+> +	bridge->conf.pref_mem_base = cpu_to_le16(PCI_PREF_RANGE_TYPE_64);
+> +	bridge->conf.pref_mem_limit = cpu_to_le16(PCI_PREF_RANGE_TYPE_64);
+>  
+>  	/* Support interrupt A for MSI feature */
+>  	bridge->conf.intpin = PCIE_CORE_INT_A_ASSERT_ENABLE;
+> -- 
+> 2.7.4
+> 
