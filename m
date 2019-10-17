@@ -2,127 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A7B5DB6BF
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2019 21:03:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 184C7DB711
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2019 21:12:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407138AbfJQTDN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Oct 2019 15:03:13 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46659 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728796AbfJQTDN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Oct 2019 15:03:13 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 89so2809374oth.13;
-        Thu, 17 Oct 2019 12:03:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+qxiN1i8NgnAmFnuqifw0bfYtiKy3k77tTLRGy5BhP4=;
-        b=O/Oo1gEpAcxCAUaEZll3xiDTGBUIoSZ1NVehn4WYIm1NtaLjVvATVLLo6pFsC3h4Zs
-         zM85mFFFlMqweP1HA9fTcrfhtrtjBmhbltqaTsC67MGqL+DNXveEIi1USe1PgW3jEFtc
-         Nq4EMSJ1o8G5YTZzljQZb18LpRwz/S6CD/L6TSHaNYSUIhEQnsh3O194wPuGc/qJbeVH
-         tP/T/sk89Fv4/+w1ixzjV7skQd7jcU7bSS92CqNfgxbVoMhAiLhcEVdIYimW6PNCw/kv
-         MvKBwCMpWdxtO3w8iw93TMu5I0a9HdGHhB7tdGjq3qN0WgMtyd+x5qBW4S97S1/bSeqa
-         cwmg==
-X-Gm-Message-State: APjAAAWDSNyhpevYkqiMq33+xeGuTSj6STCH0GZBD/+kUaNpsbNQz5wd
-        lmjgWm9VaDBVgk2cJaPIrQ==
-X-Google-Smtp-Source: APXvYqwfC0xQT9R4BEm53I1uAtAHkdVvYNYiviZLIvLVL5SP8gE5++QtXNV/rJ83zRkat6VY30bZIw==
-X-Received: by 2002:a9d:6c0a:: with SMTP id f10mr4511862otq.155.1571338992427;
-        Thu, 17 Oct 2019 12:03:12 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m14sm799068otl.26.2019.10.17.12.03.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 12:03:10 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 14:03:10 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     Zhiqiang.Hou@nxp.com, bhelgaas@google.com, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
-        lorenzo.pieralisi@arm.com, Minghuan.Lian@nxp.com,
-        andrew.murray@arm.com, mingkai.hu@nxp.com,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] dt-bindings: Add DT binding for PCIE GEN4 EP of
- the layerscape
-Message-ID: <20191017190310.GA32063@bogus>
-References: <20191015083702.21792-1-xiaowei.bao@nxp.com>
- <20191015083702.21792-3-xiaowei.bao@nxp.com>
+        id S2441494AbfJQTL7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Oct 2019 15:11:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41848 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727646AbfJQTL7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 17 Oct 2019 15:11:59 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9E97B307D985;
+        Thu, 17 Oct 2019 19:11:58 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-123-81.rdu2.redhat.com [10.10.123.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 45D23600C8;
+        Thu, 17 Oct 2019 19:11:56 +0000 (UTC)
+Subject: Re: [PATCH 3/3] pci: Default to PCI_MSI_IRQ_DOMAIN
+To:     Palmer Dabbelt <palmer@sifive.com>,
+        Christoph Hellwig <hch@infradead.org>, michal.simek@xilinx.com,
+        helgaas@kernel.org
+Cc:     tony.luck@intel.com, fenghua.yu@intel.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, bhelgaas@google.com, will@kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        kstewart@linuxfoundation.org, pbonzini@redhat.com,
+        firoz.khan@linaro.org, yamada.masahiro@socionext.com,
+        mingo@kernel.org, peterz@infradead.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20191017181937.7004-1-palmer@sifive.com>
+ <20191017181937.7004-4-palmer@sifive.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <38389bfa-3fb2-c941-9f9d-0fa573112c58@redhat.com>
+Date:   Thu, 17 Oct 2019 15:11:55 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015083702.21792-3-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191017181937.7004-4-palmer@sifive.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 17 Oct 2019 19:11:59 +0000 (UTC)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 04:36:58PM +0800, Xiaowei Bao wrote:
-> Add the documentation for the Device Tree binding of the layerscape
-> PCIe GEN4 controller with EP mode.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+On 10/17/19 2:19 PM, Palmer Dabbelt wrote:
+> As far as I can tell, the only reason there was an architecture
+> whitelist for PCI_MSI_IRQ_DOMAIN is because it requires msi.h.  I've
+> built this for all the architectures that play nice with make.cross, but
+> I haven't boot tested it anywhere.
+>
+> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
 > ---
-> v2: 
->  - remove the status entry in EP Example.
-> 
->  .../bindings/pci/layerscape-pcie-gen4.txt          | 27 +++++++++++++++++++++-
->  1 file changed, 26 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt b/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
-> index b40fb5d..06f9309 100644
-> --- a/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
-> +++ b/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
-> @@ -3,6 +3,8 @@ NXP Layerscape PCIe Gen4 controller
->  This PCIe controller is based on the Mobiveil PCIe IP and thus inherits all
->  the common properties defined in mobiveil-pcie.txt.
+>  drivers/pci/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index a304f5ea11b9..77c1428cd945 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -52,7 +52,7 @@ config PCI_MSI
+>  	   If you don't know what to do here, say Y.
 >  
-> +HOST MODE
-> +=========
->  Required properties:
->  - compatible: should contain the platform identifier such as:
->    "fsl,lx2160a-pcie"
-> @@ -23,7 +25,20 @@ Required properties:
->  - msi-parent : See the generic MSI binding described in
->    Documentation/devicetree/bindings/interrupt-controller/msi.txt.
+>  config PCI_MSI_IRQ_DOMAIN
+> -	def_bool ARC || ARM || ARM64 || X86 || RISCV
+> +	def_bool y
+>  	depends on PCI_MSI
+>  	select GENERIC_MSI_IRQ_DOMAIN
 >  
-> -Example:
-> +DEVICE MODE
-> +=========
-> +Required properties:
-> +- compatible: should contain the platform identifier such as:
-> +  "fsl,lx2160a-pcie-ep"
-> +- reg: base addresses and lengths of the PCIe controller register blocks.
-> +  "regs": PCIe controller registers.
-> +  "addr_space" EP device CPU address.
-> +- apio-wins: number of requested apio outbound windows.
-> +
-> +Optional Property:
-> +- max-functions: Maximum number of functions that can be configured (default 1).
-> +
-> +RC Example:
->  
->  	pcie@3400000 {
->  		compatible = "fsl,lx2160a-pcie";
-> @@ -50,3 +65,13 @@ Example:
->  				<0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
->  				<0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
->  	};
-> +
-> +EP Example:
-> +
-> +	pcie_ep@3400000 {
 
-To repeat my previous comment:
+The linking of asm-generic/msi.h is currently enabled for
 
-pcie-endpoint@...
+./arch/powerpc/include/asm/Kbuild:generic-y += msi.h
+./arch/arm/include/asm/Kbuild:generic-y += msi.h
+./arch/mips/include/asm/Kbuild:generic-y += msi.h
+./arch/riscv/include/asm/Kbuild:generic-y += msi.h
+./arch/arc/include/asm/Kbuild:generic-y += msi.h
+./arch/arm64/include/asm/Kbuild:generic-y += msi.h
+./arch/sparc/include/asm/Kbuild:generic-y += msi.h
 
-> +		compatible = "fsl,lx2160a-pcie-ep";
-> +		reg = <0x00 0x03400000 0x0 0x00100000
-> +		       0x80 0x00000000 0x8 0x00000000>;
-> +		reg-names = "regs", "addr_space";
-> +		apio-wins = <8>;
-> +	};
-> -- 
-> 2.9.5
-> 
+Your patchset adds 2 more and x86 has its own asm/msi.h. That leads to a
+total of 10 archs, but there are 37 sub-directories under arch. It is
+possible that the other architectures don't have PCI_MSI set. Still it
+may be a bit risky to set it to "def_bool y".
+
+Cheers,
+Longman
+
