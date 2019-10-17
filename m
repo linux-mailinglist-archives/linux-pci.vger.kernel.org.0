@@ -2,107 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 12382DAEB4
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2019 15:48:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28E4FDAEF0
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2019 16:00:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436804AbfJQNsF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Oct 2019 09:48:05 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40616 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394727AbfJQNsE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Oct 2019 09:48:04 -0400
-Received: by mail-qt1-f195.google.com with SMTP id m61so3629223qte.7;
-        Thu, 17 Oct 2019 06:48:04 -0700 (PDT)
+        id S2437366AbfJQOAP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Oct 2019 10:00:15 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40751 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437275AbfJQOAP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Oct 2019 10:00:15 -0400
+Received: by mail-wm1-f66.google.com with SMTP id b24so2653638wmj.5;
+        Thu, 17 Oct 2019 07:00:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ho9hHtEoiD9z6LT1AaMW0OmfFWET0fxL0uTws2EXWjQ=;
+        b=kErgLvLhHRktTMtS+eHbAIQIdS7k9ZWfrceiJIvnEjKXQtAc7HKT1Yq5CWT+Pvey51
+         ar2hIF9A4vkWIDQzBsV8JCLt0jINOCJlo8AiU8LkCYeIKSF150vfML29yaNGXtewy/JZ
+         gll/8QGpO7tPpg8zBC9jYhH0786DiCCrabZWFJ5SalV9WvKXT7b39Lwe7iiOUpJHmqxX
+         S+2wy/a83IS6ahUwBuZPEFogq+oWfJ5mQWGh+4XEGfUy9mFDvM+W5Br7t9e0aLZn355X
+         jDuyzfrr/XPRROj4y1ilJevgVANOGemfiyixhKU4UZp7s6Ny3JC9PNVfNxm6VzsArTvv
+         unmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V9F1NynHBe9lfMAB/ZrN6cWXHTh5u4L4sRwtLfhngWc=;
-        b=G+facC80VhcAvLi/e6A7TrduLWn0vD2qJhwCrXCQM3M5ILpu7FXJbXruo/38blvJR5
-         Q9oLLeaCrnK44x/5Iju8xFk4HjeGNEu8EJAtJzKdeJlU40QpeDu7KikFtBXkeL0EpofJ
-         Wehvt2p6B7cM8Ub1BPoCUh1tIiWug2UFg00NAXwu2T5EdY7duo662MRQQA7vMfPtBnhr
-         mSqkgU+scwS6+zqRnMWS7LazQ3L7sA34yyI+rqDVn03k9VJD5ALQzh3dMciU948nlxoP
-         Ajitc4MmV6M46JL/91n4aTOi2mOmgoZmFwpYshjmkKfcEHKHbS4m3FA4/c2VYhRbCjXb
-         m+VQ==
-X-Gm-Message-State: APjAAAXSOsXBzY9+d6+zJ5ejcNPbiEEoJ/ZVzs78OY1c9awftUPobS52
-        m83lQK0zdCOJUPsfVDy9gK4P7r7Z5trw6EQGUrU=
-X-Google-Smtp-Source: APXvYqxrCvbM940pdLdmtVqE4d93GXlx6MUaBU251o7f5GEXzpxhDY9oTpugTTbJy9ZdJgE4C/nnBZc9xI85Q3+56Lw=
-X-Received: by 2002:a0c:c70a:: with SMTP id w10mr3972472qvi.222.1571320083293;
- Thu, 17 Oct 2019 06:48:03 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ho9hHtEoiD9z6LT1AaMW0OmfFWET0fxL0uTws2EXWjQ=;
+        b=clX6uo2rA8HYmRNpwEg7C34NqZx+HRxVMkqiJxxUHuFHwl8TcwWx8pCWqVe93aFW4L
+         mGpPU9SI0UUop0gjQMkbmkv/BEqDOzQv1z3i4kBQ06EUqfaa22DOmgFlvsiS4EgvZz4b
+         eZXempqKIbQ/Tr/Jdy72YwIOo8DytNbkuJlrImFFBOxrSOvPCCMBDt7o/75Pn55t0nT0
+         c3tGSX/U+R3ITXkwtguX7cbmIp9A72xw4SOkcBzonFgAK/ybqK/t4FQ24lXRFiDE57qw
+         HnUNHhmYpf+hhvRdGsvGTYtveO1rsUxbsRXlrQLbjUSUFIVi0gu0rJAE2uMMfNou7j7r
+         9/mQ==
+X-Gm-Message-State: APjAAAW9HLyTglF4ZZT4XeMb7ZrFSu49n7dahgpPBCcJYElWgGlbHbth
+        wCSDlHsU5XFqOZfSewLx6GVH58ff
+X-Google-Smtp-Source: APXvYqwpsm5tjoaUumTd5mK/xxgwcOCR3HgqvuMXb4xu6XunKiv/jZe6HB9RwVpYe1KZX4d53143Mw==
+X-Received: by 2002:a1c:ed0d:: with SMTP id l13mr2996195wmh.54.1571320811671;
+        Thu, 17 Oct 2019 07:00:11 -0700 (PDT)
+Received: from [192.168.1.4] (ip-86-49-35-8.net.upcbroadband.cz. [86.49.35.8])
+        by smtp.gmail.com with ESMTPSA id l11sm2319389wmh.34.2019.10.17.07.00.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Oct 2019 07:00:11 -0700 (PDT)
+Subject: Re: [PATCH V3 2/3] PCI: rcar: Do not abort on too many inbound
+ dma-ranges
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>
+References: <20190809175741.7066-1-marek.vasut@gmail.com>
+ <20190809175741.7066-2-marek.vasut@gmail.com>
+ <20191016150001.GA7457@e121166-lin.cambridge.arm.com>
+ <c4353d63-6f78-92b3-91c9-acc9327e1d80@gmail.com>
+ <20191016152601.GB7457@e121166-lin.cambridge.arm.com>
+ <75fb3519-80eb-fec2-d3eb-cc1b884fef25@gmail.com>
+ <20191016161846.GC7457@e121166-lin.cambridge.arm.com>
+ <CAL_JsqL2c-ODMkOo1tAJh8JeF0VRXahCq2zF2fX8dZV8wpQj+Q@mail.gmail.com>
+ <c835701d-ff0e-f1b8-af16-fe53febe5519@gmail.com>
+ <CAL_Jsq+4uaFJzk5jUPw+KssZvnji0WDh+QcFMok99XXntEhNTQ@mail.gmail.com>
+ <88099c4f-4fb4-626e-f66f-3eb8861dfb2c@gmail.com>
+ <CAL_JsqLzmk5dfn0Re3y7VjY5ehE29vKLOV-2tM5B_jPbB2YiPQ@mail.gmail.com>
+ <06d093b2-dcc2-a01f-fce0-5db0bc47325e@gmail.com>
+ <CAMuHMdXjZs6Gvar3o7wXd2-1tkPtpt3qxZLG5vzDfrCG4d9SeQ@mail.gmail.com>
+ <ca16e883-27d3-2cd0-7d71-fa9b169dcccd@gmail.com>
+ <ccf8a4f9-1758-bafc-797c-714f06810db3@arm.com>
+From:   Marek Vasut <marek.vasut@gmail.com>
+Message-ID: <6af92fb1-a154-3e03-d239-0417da5a5094@gmail.com>
+Date:   Thu, 17 Oct 2019 16:00:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20190930121520.1388317-1-arnd@arndb.de> <20190930121520.1388317-3-arnd@arndb.de>
- <MN2PR20MB2973D14C38B7BC7E081A73A9CA6D0@MN2PR20MB2973.namprd20.prod.outlook.com>
-In-Reply-To: <MN2PR20MB2973D14C38B7BC7E081A73A9CA6D0@MN2PR20MB2973.namprd20.prod.outlook.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 17 Oct 2019 15:47:47 +0200
-Message-ID: <CAK8P3a3+UrqS0nQxcG7UuMt4s5FDnowFq-C5-K5XU-CKpciM8g@mail.gmail.com>
-Subject: Re: [PATCH 3/3] crypto: inside-secure - Remove #ifdef checks
-To:     Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Pascal van Leeuwen <pascalvanl@gmail.com>,
-        Kelsey Skunberg <skunberg.kelsey@gmail.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ccf8a4f9-1758-bafc-797c-714f06810db3@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 3:26 PM Pascal Van Leeuwen
-<pvanleeuwen@verimatrix.com> wrote:
+On 10/17/19 3:06 PM, Robin Murphy wrote:
+> On 17/10/2019 11:55, Marek Vasut wrote:
+>> On 10/17/19 9:06 AM, Geert Uytterhoeven wrote:
+>>
+>> [...]
+>>
+>>>>>>> I suppose if your intent is to use inbound windows as a poor man's
+>>>>>>> IOMMU to prevent accesses to the holes, then yes you would list them
+>>>>>>> out. But I think that's wrong and difficult to maintain. You'd also
+>>>>>>> need to deal with reserved-memory regions too.
+>>>>>>
+>>>>>> What's the problem with that? The bootloader has all that information
+>>>>>> and can patch the DT correctly. In fact, in my specific case, I have
+>>>>>> platform which can be populated with differently sized DRAM, so the
+>>>>>> holes are also dynamically calculated ; there is no one DT then, the
+>>>>>> bootloader is responsible to generate the dma-ranges accordingly.
+>>>>>
+>>>>> The problems are it doesn't work:
+>>>>>
+>>>>> Your dma-mask and offset are not going to be correct.
+>>>>>
+>>>>> You are running out of inbound windows. Your patch does nothing to
+>>>>> solve that. The solution would be merging multiple dma-ranges entries
+>>>>> to a single inbound window. We'd have to do that both for dma-mask and
+>>>>> inbound windows. The former would also have to figure out which
+>>>>> entries apply to setting up dma-mask. I'm simply suggesting just do
+>>>>> that up front and avoid any pointless splits.
+>>>>
+>>>> But then the PCI device can trigger a transaction to non-existent DRAM
+>>>> and cause undefined behavior. Surely we do not want that ?
+>>>
+>>> The PCI device will trigger transactions to memory only when instructed
+>>> to do so by Linux, right?  Hence if Linux takes into account
+>>> chosen/memory
+>>> and dma-ranges, there is no problem?
+>>
+>> Unless of course the remote device initiates a transfer. And if the
+>> controller is programmed such that accesses to the missing DRAM in the
+>> holes are not filtered out by the controller, then the controller will
+>> gladly let the transaction through. Do we really want to let this
+>> happen ?
+> 
+> If you've got devices making random unsolicited accesses then who's to
+> say they wouldn't also hit valid windows and corrupt memory? If it's
+> happening at all you've already lost.
 
-> >       /* Register PCI driver */
-> > -     pcireg_rc = pci_register_driver(&safexcel_pci_driver);
-> > -#endif
-> > +     ret = pci_register_driver(&safexcel_pci_driver);
-> >
-> > -#if IS_ENABLED(CONFIG_OF)
-> >       /* Register platform driver */
-> > -     ofreg_rc = platform_driver_register(&crypto_safexcel);
-> > - #if IS_ENABLED(CONFIG_PCI)
-> > -     /* Return success if either PCI or OF registered OK */
-> > -     return pcireg_rc ? ofreg_rc : 0;
-> > - #else
-> > -     return ofreg_rc;
-> > - #endif
-> > -#else
-> > - #if IS_ENABLED(CONFIG_PCI)
-> > -     return pcireg_rc;
-> > - #else
-> > -     return -EINVAL;
-> > - #endif
-> > -#endif
-> > +     if (IS_ENABLED(CONFIG_OF) && !ret) {
-> >
-> Hmm ... this would make it skip the OF registration if the PCIE
-> registration failed. Note that the typical embedded  system will
-> have a PCIE subsystem (e.g. Marvell A7K/A8K does) but will have
-> the EIP embedded on the SoC as an OF device.
->
-> So the question is: is it possible somehow that PCIE registration
-> fails while OF registration does pass? Because in that case, this
-> code would be wrong ...
+Not necessarily. If your controller is programmed correctly with just
+the ranges that are valid, then it will filter out at least the accesses
+outside of valid memory. If it is programmed incorrectly, as you
+suggest, then the accesses will go through, causing undefined behavior.
 
-I don't see how it would fail. When CONFIG_PCI is disabled,
-pci_register_driver() does nothing, and the pci_driver as well
-as everything referenced from it will be silently dropped from
-the object file.
-If CONFIG_PCI is enabled, then the driver will be registered
-to the PCI subsystem, waiting for a device to show up, but
-the driver registration does not care about whether there is
-such a device.
+And note that there is such weird buggy PCI hardware. A slightly
+unrelated example are some of the ath9k, which are generating spurious
+MSIs even if they are in legacy PCI IRQ mode. If the controller is
+configured correctly, even those buggy cards work, because it can filter
+the spurious MSIs out. If not, they do not.
 
-> Other than that, I don't care much how this code is implemented
-> as long as it works for both my use cases, being an OF embedded
-> device (on a SoC _with_ or _without_ PCIE support) and a device
-> on a PCIE board in a PCI (which has both PCIE and OF support).
+That's why I would prefer to configure the controller correctly, not
+just hope that nothing bad will come out of misconfiguring it slightly.
 
-Yes, that should be fine. There are a lot of drivers that support
-multiple bus interfaces, and this is the normal way to handle them.
+> And realistically, if the address
+> isn't valid then it's not going to make much difference anyway - in
+> probably 99% of cases, either the transaction doesn't hit a window and
+> the host bridge returns a completer abort, or it does hit a window, the
+> AXI side returns DECERR or SLVERR, and the host bridge translates that
+> into a completer abort. Consider also that many PCI IPs don't have
+> discrete windows and just map the entirety of PCI mem space directly to
+> the system PA space.
 
-    Arnd
+And in that 1% of cases, we are OK with failure which could have been
+easily prevented if the controller was programmed correctly ? That does
+not look like a good thing.
+
+> I don't believe this is a valid argument for anything whichever way round.
+-- 
+Best regards,
+Marek Vasut
