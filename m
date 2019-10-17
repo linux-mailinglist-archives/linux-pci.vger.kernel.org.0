@@ -2,114 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C741DB774
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2019 21:26:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF9CFDB78C
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2019 21:33:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503493AbfJQT0S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Oct 2019 15:26:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393438AbfJQT0S (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 17 Oct 2019 15:26:18 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB44E20869;
-        Thu, 17 Oct 2019 19:26:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571340377;
-        bh=E1IMidIFIGHKqHdOBlCnWZ2bTAQeqDmbNUfulv783io=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qOSVqRz6n3cM0XoiN4A8DYjLyH42LPOzvPWldVUFwKYQV1ZRup4/F919H+2JHbW1b
-         Qt7RD701BvbvndZh+8U2bSxxdl/ed3NVSQuZVoMVdZLePgjjiKNaN5nH8M7pe7mJgv
-         tPYp7GC19DL4iJykJ0DUYoSnH/4TkerCWhpJ1qnc=
-Date:   Thu, 17 Oct 2019 14:26:15 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, linux-pci@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [pci:pci/pm 4/7] drivers/pci/pci-driver.c:1348:2: error:
- implicit declaration of function 'pci_pm_default_resume'; did you mean
- 'pci_pm_runtime_resume'?
-Message-ID: <20191017192615.GA240632@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201910170851.fNrXjGg1%lkp@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1729060AbfJQTdD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Oct 2019 15:33:03 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:32934 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728591AbfJQTdC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Oct 2019 15:33:02 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 60so2943942otu.0;
+        Thu, 17 Oct 2019 12:33:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=/eOJNPW1GybwH65ZRCbz3mziNf6IHtBGR8VmrLMA+Bw=;
+        b=RWheJ8BHZ0K92Ha9jadaREHXm8SZoRBG4fjzu0XGmZXjPa0wewBDvDb+Li/viTOueM
+         YlWTql4v6cvI6T7SoP9GpaMulC9+10xvfryUc415dERYPj64r374eTpp+Wfakboh1H3n
+         BvM1m387MwsAnKXVlQ/XHnBKVQfDDwrABj1B0UoYiEE4XNd/dkP5G4hBkVi8R7346yaN
+         sECnFw4SpBPp3dluzLMSU69eMqi+g+fk+BqYu1q4uRJkUAcZR42VAgQw61DLXeWqeuyO
+         KwPl73zH6nsN//k1UtVgjsjgbo29rU29g4n6YB7FL0yqUTJX4PwnXCV8g74LP/s0stCF
+         qH0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/eOJNPW1GybwH65ZRCbz3mziNf6IHtBGR8VmrLMA+Bw=;
+        b=kDlYsPQUqcIcCNs6dAiYFChCYVkuptYxTeoAU+VZoalDU2vXtxE23kWr9qPn4gBvLO
+         7ZZQDSXc+ABns6u2ZBTVKYHs1pjmBWEOsgsbs0Q8llylFjBAnh2XSqaIMXo52J4XBq76
+         ZP0VbzbrUsyHnyNHqbyGrvOJmvyMK7g4eGy5iNsT0rMuTheZCKiu5LMZjCmS0dYTOFee
+         30xvSlyuz4RRC4hNfDk/uj1PVdZr9YGIx5YosD4zaorYrRF6JrY8+cn+M282T4vPhE2N
+         MLKDub0s45TBgLZEa3GFZcGLp2pAJEIBvMgHijM/BFhkQ1VTmzEjeekoUcvd14+2zZQo
+         jQvw==
+X-Gm-Message-State: APjAAAVQl3bAxjOkr3/pRwnN2tIkCcCVwVF2ORb0kUX2s10G0pohjWBz
+        kIXV7j9WaqR9TKkMdYepgMs=
+X-Google-Smtp-Source: APXvYqyqraIO18V/Ca2vVKPAbuqO2akSybsPOuIZnh4iIagGmG5/u9YN6/q0kQEh1V5s34fCgb4rQg==
+X-Received: by 2002:a9d:5c0e:: with SMTP id o14mr4638631otk.79.1571340781722;
+        Thu, 17 Oct 2019 12:33:01 -0700 (PDT)
+Received: from localhost.localdomain ([143.166.81.254])
+        by smtp.gmail.com with ESMTPSA id z12sm823273oth.71.2019.10.17.12.33.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 12:33:01 -0700 (PDT)
+From:   Stuart Hayes <stuart.w.hayes@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lukas@wunner.de,
+        Stuart Hayes <stuart.w.hayes@gmail.com>
+Subject: [PATCH v3 0/3] PCI: pciehp: Do not turn off slot if presence comes up after link
+Date:   Thu, 17 Oct 2019 15:32:53 -0400
+Message-Id: <20191017193256.3636-1-stuart.w.hayes@gmail.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 08:59:56AM +0800, kbuild test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/pm
-> head:   d17ff4ab7daac4bf26d59a4de3ca22f42492425b
-> commit: 6d133f6f1934493a0dc0504fa115e5140d010522 [4/7] PCI/PM: Run resume fixups before disabling wakeup events
-> config: ia64-allmodconfig (attached as .config)
-> compiler: ia64-linux-gcc (GCC) 7.4.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout 6d133f6f1934493a0dc0504fa115e5140d010522
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.4.0 make.cross ARCH=ia64 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/pci/pci-driver.c: In function 'pci_pm_runtime_resume':
-> >> drivers/pci/pci-driver.c:1348:2: error: implicit declaration of function 'pci_pm_default_resume'; did you mean 'pci_pm_runtime_resume'? [-Werror=implicit-function-declaration]
->      pci_pm_default_resume(pci_dev);
->      ^~~~~~~~~~~~~~~~~~~~~
->      pci_pm_runtime_resume
->    cc1: some warnings being treated as errors
+In older PCIe specs, PDS (presence detect) would come up when the
+"in-band" presence detect pin connected, and would be up before DLLLA
+(link active).
 
-I think I fixed this by moving the pci_pm_default_resume() definition
-as follows:
+In PCIe 4.0 (as an ECN) and in PCIe 5.0, there is a new bit to show if
+in-band presence detection can be disabled for the slot, and another bit
+that disables it--and a recommendation that it should be disabled if it
+can be. In addition, certain OEMs disable in-band presence detection
+without implementing these bits.
 
-    pci_pm_default_resume() is called from pci_pm_runtime_resume(), which is
-    under #ifdef CONFIG_PM.  If SUSPEND and HIBERNATION are disabled, PM_SLEEP
-    is disabled also, so move pci_pm_default_resume() from #ifdef
-    CONFIG_PM_SLEEP to #ifdef CONFIG_PM.
+This means it is possible to get a "card present" interrupt after the
+link is up and the driver is loaded.  This causes an erroneous removal
+of the device driver, followed by an immediate re-probing.
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 55acb658273f..abee2a790a10 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -517,6 +517,12 @@ static int pci_restore_standard_config(struct pci_dev *pci_dev)
- 	return 0;
- }
- 
-+static void pci_pm_default_resume(struct pci_dev *pci_dev)
-+{
-+	pci_fixup_device(pci_fixup_resume, pci_dev);
-+	pci_enable_wake(pci_dev, PCI_D0, false);
-+}
-+
- #endif
- 
- #ifdef CONFIG_PM_SLEEP
-@@ -645,12 +651,6 @@ static int pci_legacy_resume(struct device *dev)
- 
- /* Auxiliary functions used by the new power management framework */
- 
--static void pci_pm_default_resume(struct pci_dev *pci_dev)
--{
--	pci_fixup_device(pci_fixup_resume, pci_dev);
--	pci_enable_wake(pci_dev, PCI_D0, false);
--}
--
- static void pci_pm_default_suspend(struct pci_dev *pci_dev)
- {
- 	/* Disable non-bridge devices without PM support */
-@@ -992,7 +992,6 @@ static int pci_pm_resume(struct device *dev)
- 
- #ifdef CONFIG_HIBERNATE_CALLBACKS
- 
--
- /*
-  * pcibios_pm_ops - provide arch-specific hooks when a PCI device is doing
-  * a hibernate transition
+This patch set defines these new bits, uses them to disable in-band
+presence detection if it can be, waits for PDS to go up if in-band
+presence detection is disabled, and adds a DMI table that will let us
+know if we should assume in-band presence is disabled on a system.
+
+The first two patches in this set come from a patch set that was
+submitted but not accepted many months ago by Alexandru Gagniuc [1].
+The first is unmodified, the second has the commit message and timeout 
+modified.
+
+[1] https://patchwork.kernel.org/cover/10909167/
+    [v3,0/4] PCI: pciehp: Do not turn off slot if presence comes up after link
+
+v2:
+- modify loop in pcie_wait_for_presence to do..while
+
+v3:
+- remove unused variable declaration
+- modify text of warning message
+
+Alexandru Gagniuc (2):
+  PCI: pciehp: Add support for disabling in-band presence
+  PCI: pciehp: Wait for PDS if in-band presence is disabled
+
+Stuart Hayes (1):
+  PCI: pciehp: Add dmi table for in-band presence disabled
+
+ drivers/pci/hotplug/pciehp.h     |  1 +
+ drivers/pci/hotplug/pciehp_hpc.c | 45 +++++++++++++++++++++++++++++++-
+ include/uapi/linux/pci_regs.h    |  2 ++
+ 3 files changed, 47 insertions(+), 1 deletion(-)
+
+-- 
+2.18.1
+
