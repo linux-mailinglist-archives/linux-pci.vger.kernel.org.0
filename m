@@ -2,175 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7114EDB00E
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2019 16:28:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29954DB02B
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2019 16:36:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfJQO2M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Oct 2019 10:28:12 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52469 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731664AbfJQO2M (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Oct 2019 10:28:12 -0400
-Received: by mail-wm1-f66.google.com with SMTP id r19so2804784wmh.2
-        for <linux-pci@vger.kernel.org>; Thu, 17 Oct 2019 07:28:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S2aBeWNRxDtTRHfUI9htMJzW/AtuitZvg8GIzAAl28Q=;
-        b=dBe6YjaxoHZnJhbTRjkiiW25KskKFuyEEzNZwJ3xB0fHdrmMgZNiXJ0YOJz+a9Edna
-         SxqTulViehkQ8MxhZ1JzcAs/0ag5fwwYrZZag4c9ffQFKCW1lCuRXqmzkWQwOGWg0d6V
-         ISljxqOj7xejKJGlCLKqFiRnbm9LJcvM4v4nA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S2aBeWNRxDtTRHfUI9htMJzW/AtuitZvg8GIzAAl28Q=;
-        b=RNuqORwBtwyKWCDru8Zkrbystq2j05mQTdfgHpb0Hh8DZBmZ1TD+6xXhUGLsvR6pgH
-         pDkG2Q+ZgPmQCGDavIIj7rfqnH3N+SivK5wvtQtL2U4bPUK+sZoE9eKAxymUHx/RYMwK
-         1HsPtp7oQ6qe41nT1h2G0qkAvbXSjO4nJwj08BCTADYU4wxyUCTsycR7yrvILMXFDoss
-         BxCMYpM8l03gS9hxGXP5BP5ZAtOEktlGqlGIP/MS17+hoVzTN4NflZklsyYUwd6oy6c4
-         YYKHD3giNG4ngITH5zWZGlkMLW8dYbSf9ZBDSeJciN2XCrr0whI4icf5aMKmCFa8xj/1
-         n3ow==
-X-Gm-Message-State: APjAAAVa2PjayrrauXnCVQjvKtaub9zuFBOJLI1QcCmJpywl8rbPIKf7
-        HOR40HFTL6lRkSRdtgqxrWIHwjQNwgubNdP77kHfqw==
-X-Google-Smtp-Source: APXvYqw1AUbLjfiWzfHvCBnmIR1upVknDfmaHDyI/L5HIOSueUVlPr33+tGstbzFvY6ybaVHvFP6LjdMT4TIIKsBc+g=
-X-Received: by 2002:a7b:ce12:: with SMTP id m18mr3107079wmc.108.1571322488120;
- Thu, 17 Oct 2019 07:28:08 -0700 (PDT)
+        id S2403783AbfJQOgW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Oct 2019 10:36:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726583AbfJQOgW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 17 Oct 2019 10:36:22 -0400
+Received: from mail-yw1-f54.google.com (mail-yw1-f54.google.com [209.85.161.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48E2621A4C;
+        Thu, 17 Oct 2019 14:36:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571322980;
+        bh=AG//YUCWsLvuxyKqIU2c00YCMG3tBP/YEO0deworjIc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=w3RGGxYOH6lkF34Ys+1f4Gwq9K1k/iSnUDZYwkqxFVUAU/2IIf6SM//nmADwMiuKb
+         HvyUtvD732jkTO7fZElWn+tUsUJEqQl16cAhMuNTrIOsgqmcH0UI+vhbwpJFmW1865
+         KebLArCPuubB8RZaNQzOYHzCPN/e8Chxcg507S+A=
+Received: by mail-yw1-f54.google.com with SMTP id n11so938260ywn.6;
+        Thu, 17 Oct 2019 07:36:20 -0700 (PDT)
+X-Gm-Message-State: APjAAAWz7bAqKh0+1Li6GsmNMMs9L0iZdlBCRosmHCTMR02Wo1TVbqpb
+        R5jErhS5HGRKhgZTJM4pXy5BRnrP6gKFxUkYoA==
+X-Google-Smtp-Source: APXvYqwtBM/3RWXCdIJDc+WosVIg15qhdSC2/jDk1PkbVTojGA1ZbOMx8shiHhiTG8x721ZN/ZUfKjqu3GKfxr7pE/s=
+X-Received: by 2002:a81:748a:: with SMTP id p132mr2952177ywc.174.1571322979480;
+ Thu, 17 Oct 2019 07:36:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190906035813.24046-1-abhishek.shah@broadcom.com> <20191015164303.GC25674@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20191015164303.GC25674@e121166-lin.cambridge.arm.com>
-From:   Abhishek Shah <abhishek.shah@broadcom.com>
-Date:   Thu, 17 Oct 2019 19:57:56 +0530
-Message-ID: <CAKUFe6bQPMirQ01s-ezaQcUU85J+moFKMO8sLZgvtG2EPowrGA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] PCI: iproc: Invalidate PAXB address mapping before
- programming it
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        linux-pci@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+References: <20190809175741.7066-1-marek.vasut@gmail.com> <20190809175741.7066-2-marek.vasut@gmail.com>
+ <20191016150001.GA7457@e121166-lin.cambridge.arm.com> <c4353d63-6f78-92b3-91c9-acc9327e1d80@gmail.com>
+ <20191016152601.GB7457@e121166-lin.cambridge.arm.com> <75fb3519-80eb-fec2-d3eb-cc1b884fef25@gmail.com>
+ <20191016161846.GC7457@e121166-lin.cambridge.arm.com> <CAL_JsqL2c-ODMkOo1tAJh8JeF0VRXahCq2zF2fX8dZV8wpQj+Q@mail.gmail.com>
+ <c835701d-ff0e-f1b8-af16-fe53febe5519@gmail.com> <CAL_Jsq+4uaFJzk5jUPw+KssZvnji0WDh+QcFMok99XXntEhNTQ@mail.gmail.com>
+ <88099c4f-4fb4-626e-f66f-3eb8861dfb2c@gmail.com> <CAL_JsqLzmk5dfn0Re3y7VjY5ehE29vKLOV-2tM5B_jPbB2YiPQ@mail.gmail.com>
+ <06d093b2-dcc2-a01f-fce0-5db0bc47325e@gmail.com> <CAMuHMdXjZs6Gvar3o7wXd2-1tkPtpt3qxZLG5vzDfrCG4d9SeQ@mail.gmail.com>
+ <ca16e883-27d3-2cd0-7d71-fa9b169dcccd@gmail.com> <ccf8a4f9-1758-bafc-797c-714f06810db3@arm.com>
+ <6af92fb1-a154-3e03-d239-0417da5a5094@gmail.com>
+In-Reply-To: <6af92fb1-a154-3e03-d239-0417da5a5094@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 17 Oct 2019 09:36:07 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKEjzO3s=bBf_TxTAXTzLTcX=8ccFXLfowhPOHWzNET9A@mail.gmail.com>
+Message-ID: <CAL_JsqKEjzO3s=bBf_TxTAXTzLTcX=8ccFXLfowhPOHWzNET9A@mail.gmail.com>
+Subject: Re: [PATCH V3 2/3] PCI: rcar: Do not abort on too many inbound dma-ranges
+To:     Marek Vasut <marek.vasut@gmail.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo,
-
-Please see my comments inline:
-
-On Tue, Oct 15, 2019 at 10:13 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
+On Thu, Oct 17, 2019 at 9:00 AM Marek Vasut <marek.vasut@gmail.com> wrote:
 >
-> On Fri, Sep 06, 2019 at 09:28:13AM +0530, Abhishek Shah wrote:
-> > Invalidate PAXB inbound/outbound address mapping each time before
-> > programming it. This is helpful for the cases where we need to
-> > reprogram inbound/outbound address mapping without resetting PAXB.
-> > kexec kernel is one such example.
->
-> This looks like a hack, explain to us please what it actually solves and
-> why a full reset is not necessary.
->
-The PAXB IP performs address translation(PCI<->AXI address) for both inbound and
-outbound addresses (amongst other things) based on version of IP being used.
-It does so using the IMAP/IARR/OMAP/OARR registers.
-
-These registers get programmed as per mappings specified in device tree during
-PCI driver probe for each RC and do not get reset when kexec/kdump kernel boots.
-This results in driver assuming valid mappings in place for some mapping windows
-during kexec/kdump kernel boot, consequently it skips those windows and
-we run out of available mapping windows, leading to mapping failure.
-
-Normally, we take care of resetting PAXB block in firmware, but in
-primary kernel
-to kexec/kdump kernel handover, no firmware is executed in between.
-So, we just, by default, invalidate the mapping registers each time before
-programming them to solve the issue described above..
-We do not need full reset for handling this.
-
-> > Signed-off-by: Abhishek Shah <abhishek.shah@broadcom.com>
-> > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> > Reviewed-by: Vikram Mysore Prakash <vikram.prakash@broadcom.com>
->
-> Patches are reviewed on public mailing lists, remove tags given
-> on internal reviews - they are not relevant.
->
-Ok, will remove.
-
-> > ---
-> >  drivers/pci/controller/pcie-iproc.c | 28 ++++++++++++++++++++++++++++
-> >  1 file changed, 28 insertions(+)
+> On 10/17/19 3:06 PM, Robin Murphy wrote:
+> > On 17/10/2019 11:55, Marek Vasut wrote:
+> >> On 10/17/19 9:06 AM, Geert Uytterhoeven wrote:
+> >>
+> >> [...]
+> >>
+> >>>>>>> I suppose if your intent is to use inbound windows as a poor man's
+> >>>>>>> IOMMU to prevent accesses to the holes, then yes you would list them
+> >>>>>>> out. But I think that's wrong and difficult to maintain. You'd also
+> >>>>>>> need to deal with reserved-memory regions too.
+> >>>>>>
+> >>>>>> What's the problem with that? The bootloader has all that information
+> >>>>>> and can patch the DT correctly. In fact, in my specific case, I have
+> >>>>>> platform which can be populated with differently sized DRAM, so the
+> >>>>>> holes are also dynamically calculated ; there is no one DT then, the
+> >>>>>> bootloader is responsible to generate the dma-ranges accordingly.
+> >>>>>
+> >>>>> The problems are it doesn't work:
+> >>>>>
+> >>>>> Your dma-mask and offset are not going to be correct.
+> >>>>>
+> >>>>> You are running out of inbound windows. Your patch does nothing to
+> >>>>> solve that. The solution would be merging multiple dma-ranges entries
+> >>>>> to a single inbound window. We'd have to do that both for dma-mask and
+> >>>>> inbound windows. The former would also have to figure out which
+> >>>>> entries apply to setting up dma-mask. I'm simply suggesting just do
+> >>>>> that up front and avoid any pointless splits.
+> >>>>
+> >>>> But then the PCI device can trigger a transaction to non-existent DRAM
+> >>>> and cause undefined behavior. Surely we do not want that ?
+> >>>
+> >>> The PCI device will trigger transactions to memory only when instructed
+> >>> to do so by Linux, right?  Hence if Linux takes into account
+> >>> chosen/memory
+> >>> and dma-ranges, there is no problem?
+> >>
+> >> Unless of course the remote device initiates a transfer. And if the
+> >> controller is programmed such that accesses to the missing DRAM in the
+> >> holes are not filtered out by the controller, then the controller will
+> >> gladly let the transaction through. Do we really want to let this
+> >> happen ?
 > >
-> > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> > index e3ca46497470..99a9521ba7ab 100644
-> > --- a/drivers/pci/controller/pcie-iproc.c
-> > +++ b/drivers/pci/controller/pcie-iproc.c
-> > @@ -1245,6 +1245,32 @@ static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
-> >       return ret;
-> >  }
-> >
-> > +static void iproc_pcie_invalidate_mapping(struct iproc_pcie *pcie)
-> > +{
-> > +     struct iproc_pcie_ib *ib = &pcie->ib;
-> > +     struct iproc_pcie_ob *ob = &pcie->ob;
-> > +     int idx;
-> > +
-> > +     if (pcie->ep_is_internal)
+> > If you've got devices making random unsolicited accesses then who's to
+> > say they wouldn't also hit valid windows and corrupt memory? If it's
+> > happening at all you've already lost.
 >
-> What's this check for and why leaving mappings in place is safe for
-> this category of IPs ?
-For this category of IP(PAXC), no mappings need to be programmed in
-the first place.
+> Not necessarily. If your controller is programmed correctly with just
+> the ranges that are valid, then it will filter out at least the accesses
+> outside of valid memory. If it is programmed incorrectly, as you
+> suggest, then the accesses will go through, causing undefined behavior.
+>
+> And note that there is such weird buggy PCI hardware. A slightly
+> unrelated example are some of the ath9k, which are generating spurious
+> MSIs even if they are in legacy PCI IRQ mode. If the controller is
+> configured correctly, even those buggy cards work, because it can filter
+> the spurious MSIs out. If not, they do not.
 
->
-> > +             return;
-> > +
-> > +     if (pcie->need_ob_cfg) {
-> > +             /* iterate through all OARR mapping regions */
-> > +             for (idx = ob->nr_windows - 1; idx >= 0; idx--) {
-> > +                     iproc_pcie_write_reg(pcie,
-> > +                                          MAP_REG(IPROC_PCIE_OARR0, idx), 0);
-> > +             }
-> > +     }
-> > +
-> > +     if (pcie->need_ib_cfg) {
-> > +             /* iterate through all IARR mapping regions */
-> > +             for (idx = 0; idx < ib->nr_regions; idx++) {
-> > +                     iproc_pcie_write_reg(pcie,
-> > +                                          MAP_REG(IPROC_PCIE_IARR0, idx), 0);
-> > +             }
-> > +     }
-> > +}
-> > +
-> >  static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
-> >                              struct device_node *msi_node,
-> >                              u64 *msi_addr)
-> > @@ -1517,6 +1543,8 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
-> >       iproc_pcie_perst_ctrl(pcie, true);
-> >       iproc_pcie_perst_ctrl(pcie, false);
-> >
-> > +     iproc_pcie_invalidate_mapping(pcie);
->
-> It makes more sense to call this in the .shutdown() method if I
-> understand what it does.
->
-It would work for kexec kernel, but not for kdump kernel as only for
-kexec'ed kernel,
-"device_shutdown" callback is present. We are here taking care of both the cases
-with this patch.
+How do those devices work on h/w without inbound window configuration
+or they don't?
 
+How do the spurious MSIs only go to invalid addresses and not valid addresses?
 
-Regards,
-Abhishek
+> That's why I would prefer to configure the controller correctly, not
+> just hope that nothing bad will come out of misconfiguring it slightly.
 
-> Lorenzo
+Again, just handling the first N dma-ranges entries and ignoring the
+rest is not 'configure the controller correctly'.
+
+> > And realistically, if the address
+> > isn't valid then it's not going to make much difference anyway - in
+> > probably 99% of cases, either the transaction doesn't hit a window and
+> > the host bridge returns a completer abort, or it does hit a window, the
+> > AXI side returns DECERR or SLVERR, and the host bridge translates that
+> > into a completer abort. Consider also that many PCI IPs don't have
+> > discrete windows and just map the entirety of PCI mem space directly to
+> > the system PA space.
 >
-> >       if (pcie->need_ob_cfg) {
-> >               ret = iproc_pcie_map_ranges(pcie, res);
-> >               if (ret) {
-> > --
-> > 2.17.1
-> >
+> And in that 1% of cases, we are OK with failure which could have been
+> easily prevented if the controller was programmed correctly ? That does
+> not look like a good thing.
+
+You don't need dma-ranges if you want to handle holes in DRAM. Use
+memblock to get this information. Then it will work if you boot using
+UEFI too.
+
+dma-ranges at the PCI bridge should be restrictions in the PCI bridge,
+not ones somewhere else in the system.
+
+Rob
