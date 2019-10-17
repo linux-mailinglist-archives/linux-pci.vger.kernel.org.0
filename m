@@ -2,75 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 785F3DA665
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2019 09:26:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E599DA9AD
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2019 12:18:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408131AbfJQH03 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Oct 2019 03:26:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41264 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408072AbfJQH03 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Oct 2019 03:26:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fp2pe+U09WC9ApIxlN/mw2GqVq/iMxQH66A96e+1BJ8=; b=nuNvxTuyhrO35jbCtHSKHVNol
-        LHfGNVLFywXJJpz9t6EzULst88E6vhm+qgmOV5/hzgo3z58kyCn7fD2hWp+/LCSQ44aO8nMQoXRJQ
-        hmU4izk8la8LO/JbWcuelPPpKEVgDn5PBq6VOVlX1Oo16XfHE/Nukp6qk6/sy460wPbA32DN1ietS
-        5Lpn8Rl+w8pqOQIH8JN65MYVvkpuTbZrTyijsyScXQhCyKAP2b5uKFr2fUwgnTkqBYkoQwM4FkN8p
-        7+Z4yCgdnL4a7/ip4/rkRrKfWc5qp2AZ+6Tt/TVoRVDRqvllpMvf1csMP6Olrtuz0sRgcfCDjSFE6
-        YlB7+4aWQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iL0Az-00081E-Rg; Thu, 17 Oct 2019 07:26:25 +0000
-Date:   Thu, 17 Oct 2019 00:26:25 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
+        id S2408745AbfJQKSH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Oct 2019 06:18:07 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:38140 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1731515AbfJQKSH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 17 Oct 2019 06:18:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 45FD51BA8;
+        Thu, 17 Oct 2019 03:17:38 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5D2F3F718;
+        Thu, 17 Oct 2019 03:17:36 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 11:17:27 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Andrew Murray <andrew.murray@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Ley Foon Tan <lftan@altera.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Ray Jui <rjui@broadcom.com>, rfi@lists.rocketboards.org,
-        Ryder Lee <ryder.lee@mediatek.com>,
+        Ray Jui <rjui@broadcom.com>,
         Scott Branden <sbranden@broadcom.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Horman <horms@verge.net.au>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Tom Joseph <tjoseph@cadence.com>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v2 11/25] PCI: rockchip: Drop storing driver private
- outbound resource data
-Message-ID: <20191017072625.GB19517@infradead.org>
-References: <20191016200647.32050-1-robh@kernel.org>
- <20191016200647.32050-12-robh@kernel.org>
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pci: iproc-msi: fix __iomem annotation in
+ decode_msi_hwirq()
+Message-ID: <20191017101720.GA9589@e121166-lin.cambridge.arm.com>
+References: <20191015160702.9457-1-ben.dooks@codethink.co.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191016200647.32050-12-robh@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20191015160702.9457-1-ben.dooks@codethink.co.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 03:06:33PM -0500, Rob Herring wrote:
-> +	entry = resource_list_get_entry_of_type(&bridge->windows, IORESOURCE_MEM);
+On Tue, Oct 15, 2019 at 05:07:02PM +0100, Ben Dooks (Codethink) wrote:
+> Fix __iomem attribute on msg variable passed to readl() in
+> the decode_msi_hwirq() function. Fixes the following sparse
+> warning:
+> 
+> drivers/pci/controller/pcie-iproc-msi.c:301:17: warning: incorrect type in argument 1 (different address spaces)
+> drivers/pci/controller/pcie-iproc-msi.c:301:17:    expected void const volatile [noderef] <asn:2> *addr
+> drivers/pci/controller/pcie-iproc-msi.c:301:17:    got unsigned int [usertype] *[assigned] msg
+> 
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> ---
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Andrew Murray <andrew.murray@arm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Ray Jui <rjui@broadcom.com>
+> Cc: Scott Branden <sbranden@broadcom.com>
+> Cc: bcm-kernel-feedback-list@broadcom.com
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> .. (open list)
+> ---
+>  drivers/pci/controller/pcie-iproc-msi.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
-This add another too long line.  Please audit the whole series for that.
+Applied to pci/misc, thanks.
+
+Lorenzo
+
+> diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
+> index 0a3f61be5625..3176ad3ab0e5 100644
+> --- a/drivers/pci/controller/pcie-iproc-msi.c
+> +++ b/drivers/pci/controller/pcie-iproc-msi.c
+> @@ -293,11 +293,12 @@ static const struct irq_domain_ops msi_domain_ops = {
+>  
+>  static inline u32 decode_msi_hwirq(struct iproc_msi *msi, u32 eq, u32 head)
+>  {
+> -	u32 *msg, hwirq;
+> +	u32 __iomem *msg;
+> +	u32 hwirq;
+>  	unsigned int offs;
+>  
+>  	offs = iproc_msi_eq_offset(msi, eq) + head * sizeof(u32);
+> -	msg = (u32 *)(msi->eq_cpu + offs);
+> +	msg = (u32 __iomem *)(msi->eq_cpu + offs);
+>  	hwirq = readl(msg);
+>  	hwirq = (hwirq >> 5) + (hwirq & 0x1f);
+>  
+> -- 
+> 2.23.0
+> 
