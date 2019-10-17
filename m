@@ -2,96 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 184C7DB711
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2019 21:12:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C741DB774
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2019 21:26:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441494AbfJQTL7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Oct 2019 15:11:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41848 "EHLO mx1.redhat.com"
+        id S2503493AbfJQT0S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Oct 2019 15:26:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727646AbfJQTL7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 17 Oct 2019 15:11:59 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2393438AbfJQT0S (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 17 Oct 2019 15:26:18 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9E97B307D985;
-        Thu, 17 Oct 2019 19:11:58 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-123-81.rdu2.redhat.com [10.10.123.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 45D23600C8;
-        Thu, 17 Oct 2019 19:11:56 +0000 (UTC)
-Subject: Re: [PATCH 3/3] pci: Default to PCI_MSI_IRQ_DOMAIN
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Christoph Hellwig <hch@infradead.org>, michal.simek@xilinx.com,
-        helgaas@kernel.org
-Cc:     tony.luck@intel.com, fenghua.yu@intel.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, bhelgaas@google.com, will@kernel.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        kstewart@linuxfoundation.org, pbonzini@redhat.com,
-        firoz.khan@linaro.org, yamada.masahiro@socionext.com,
-        mingo@kernel.org, peterz@infradead.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-pci@vger.kernel.org
-References: <20191017181937.7004-1-palmer@sifive.com>
- <20191017181937.7004-4-palmer@sifive.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <38389bfa-3fb2-c941-9f9d-0fa573112c58@redhat.com>
-Date:   Thu, 17 Oct 2019 15:11:55 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        by mail.kernel.org (Postfix) with ESMTPSA id EB44E20869;
+        Thu, 17 Oct 2019 19:26:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571340377;
+        bh=E1IMidIFIGHKqHdOBlCnWZ2bTAQeqDmbNUfulv783io=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qOSVqRz6n3cM0XoiN4A8DYjLyH42LPOzvPWldVUFwKYQV1ZRup4/F919H+2JHbW1b
+         Qt7RD701BvbvndZh+8U2bSxxdl/ed3NVSQuZVoMVdZLePgjjiKNaN5nH8M7pe7mJgv
+         tPYp7GC19DL4iJykJ0DUYoSnH/4TkerCWhpJ1qnc=
+Date:   Thu, 17 Oct 2019 14:26:15 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-pci@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [pci:pci/pm 4/7] drivers/pci/pci-driver.c:1348:2: error:
+ implicit declaration of function 'pci_pm_default_resume'; did you mean
+ 'pci_pm_runtime_resume'?
+Message-ID: <20191017192615.GA240632@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191017181937.7004-4-palmer@sifive.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 17 Oct 2019 19:11:59 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201910170851.fNrXjGg1%lkp@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/17/19 2:19 PM, Palmer Dabbelt wrote:
-> As far as I can tell, the only reason there was an architecture
-> whitelist for PCI_MSI_IRQ_DOMAIN is because it requires msi.h.  I've
-> built this for all the architectures that play nice with make.cross, but
-> I haven't boot tested it anywhere.
->
-> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
-> ---
->  drivers/pci/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index a304f5ea11b9..77c1428cd945 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -52,7 +52,7 @@ config PCI_MSI
->  	   If you don't know what to do here, say Y.
->  
->  config PCI_MSI_IRQ_DOMAIN
-> -	def_bool ARC || ARM || ARM64 || X86 || RISCV
-> +	def_bool y
->  	depends on PCI_MSI
->  	select GENERIC_MSI_IRQ_DOMAIN
->  
+On Thu, Oct 17, 2019 at 08:59:56AM +0800, kbuild test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/pm
+> head:   d17ff4ab7daac4bf26d59a4de3ca22f42492425b
+> commit: 6d133f6f1934493a0dc0504fa115e5140d010522 [4/7] PCI/PM: Run resume fixups before disabling wakeup events
+> config: ia64-allmodconfig (attached as .config)
+> compiler: ia64-linux-gcc (GCC) 7.4.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout 6d133f6f1934493a0dc0504fa115e5140d010522
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.4.0 make.cross ARCH=ia64 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    drivers/pci/pci-driver.c: In function 'pci_pm_runtime_resume':
+> >> drivers/pci/pci-driver.c:1348:2: error: implicit declaration of function 'pci_pm_default_resume'; did you mean 'pci_pm_runtime_resume'? [-Werror=implicit-function-declaration]
+>      pci_pm_default_resume(pci_dev);
+>      ^~~~~~~~~~~~~~~~~~~~~
+>      pci_pm_runtime_resume
+>    cc1: some warnings being treated as errors
 
-The linking of asm-generic/msi.h is currently enabled for
+I think I fixed this by moving the pci_pm_default_resume() definition
+as follows:
 
-./arch/powerpc/include/asm/Kbuild:generic-y += msi.h
-./arch/arm/include/asm/Kbuild:generic-y += msi.h
-./arch/mips/include/asm/Kbuild:generic-y += msi.h
-./arch/riscv/include/asm/Kbuild:generic-y += msi.h
-./arch/arc/include/asm/Kbuild:generic-y += msi.h
-./arch/arm64/include/asm/Kbuild:generic-y += msi.h
-./arch/sparc/include/asm/Kbuild:generic-y += msi.h
+    pci_pm_default_resume() is called from pci_pm_runtime_resume(), which is
+    under #ifdef CONFIG_PM.  If SUSPEND and HIBERNATION are disabled, PM_SLEEP
+    is disabled also, so move pci_pm_default_resume() from #ifdef
+    CONFIG_PM_SLEEP to #ifdef CONFIG_PM.
 
-Your patchset adds 2 more and x86 has its own asm/msi.h. That leads to a
-total of 10 archs, but there are 37 sub-directories under arch. It is
-possible that the other architectures don't have PCI_MSI set. Still it
-may be a bit risky to set it to "def_bool y".
-
-Cheers,
-Longman
-
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 55acb658273f..abee2a790a10 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -517,6 +517,12 @@ static int pci_restore_standard_config(struct pci_dev *pci_dev)
+ 	return 0;
+ }
+ 
++static void pci_pm_default_resume(struct pci_dev *pci_dev)
++{
++	pci_fixup_device(pci_fixup_resume, pci_dev);
++	pci_enable_wake(pci_dev, PCI_D0, false);
++}
++
+ #endif
+ 
+ #ifdef CONFIG_PM_SLEEP
+@@ -645,12 +651,6 @@ static int pci_legacy_resume(struct device *dev)
+ 
+ /* Auxiliary functions used by the new power management framework */
+ 
+-static void pci_pm_default_resume(struct pci_dev *pci_dev)
+-{
+-	pci_fixup_device(pci_fixup_resume, pci_dev);
+-	pci_enable_wake(pci_dev, PCI_D0, false);
+-}
+-
+ static void pci_pm_default_suspend(struct pci_dev *pci_dev)
+ {
+ 	/* Disable non-bridge devices without PM support */
+@@ -992,7 +992,6 @@ static int pci_pm_resume(struct device *dev)
+ 
+ #ifdef CONFIG_HIBERNATE_CALLBACKS
+ 
+-
+ /*
+  * pcibios_pm_ops - provide arch-specific hooks when a PCI device is doing
+  * a hibernate transition
