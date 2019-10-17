@@ -2,30 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CBB1DA65C
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2019 09:25:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 785F3DA665
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2019 09:26:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408133AbfJQHZZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Oct 2019 03:25:25 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39002 "EHLO
+        id S2408131AbfJQH03 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Oct 2019 03:26:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41264 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405115AbfJQHZZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Oct 2019 03:25:25 -0400
+        with ESMTP id S2408072AbfJQH03 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Oct 2019 03:26:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Xv9FkiQ+X0x5sxf1ddCsRfV44YrgjCL/XV/azq6v0YA=; b=rTyvD+1GcALIpqmWQUmuxp39m
-        GpQehEnt92BBfx1lifeuZIPmisv6igd5+pHFadnPWQCdeJzkiupFH8yzVhuo6Fufgls4bRSjyUQQc
-        0tld3oJep1wqm8O+mBfWRzb5GdNQMLwcCUbW/536t5hH+bkDv/1IqzAiRuYqCo8W6AAk1ff9aFAvH
-        n7nIWjaObpvDDejcpoYAJ5YmpFY6S37Ig2WWM7etzZOsIyZAO9n1784eYcLiAV4sk67cwN9PGvH2G
-        /6Bqb5pkOcmiPgRS2OQla08pW9vIooKx/RQ3WeKKe2eEXiUs1Iok55BXjmBLRATC1+6R3IcDd77yT
-        Gx27RPOfA==;
+         bh=fp2pe+U09WC9ApIxlN/mw2GqVq/iMxQH66A96e+1BJ8=; b=nuNvxTuyhrO35jbCtHSKHVNol
+        LHfGNVLFywXJJpz9t6EzULst88E6vhm+qgmOV5/hzgo3z58kyCn7fD2hWp+/LCSQ44aO8nMQoXRJQ
+        hmU4izk8la8LO/JbWcuelPPpKEVgDn5PBq6VOVlX1Oo16XfHE/Nukp6qk6/sy460wPbA32DN1ietS
+        5Lpn8Rl+w8pqOQIH8JN65MYVvkpuTbZrTyijsyScXQhCyKAP2b5uKFr2fUwgnTkqBYkoQwM4FkN8p
+        7+Z4yCgdnL4a7/ip4/rkRrKfWc5qp2AZ+6Tt/TVoRVDRqvllpMvf1csMP6Olrtuz0sRgcfCDjSFE6
+        YlB7+4aWQ==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iL09v-0007VB-O1; Thu, 17 Oct 2019 07:25:19 +0000
-Date:   Thu, 17 Oct 2019 00:25:19 -0700
+        id 1iL0Az-00081E-Rg; Thu, 17 Oct 2019 07:26:25 +0000
+Date:   Thu, 17 Oct 2019 00:26:25 -0700
 From:   Christoph Hellwig <hch@infradead.org>
 To:     Rob Herring <robh@kernel.org>
 Cc:     Andrew Murray <andrew.murray@arm.com>,
@@ -54,15 +54,15 @@ Cc:     Andrew Murray <andrew.murray@arm.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Toan Le <toan@os.amperecomputing.com>,
         Tom Joseph <tjoseph@cadence.com>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v2 01/25] resource: Add a resource_list_get_entry_of_type
- helper
-Message-ID: <20191017072519.GA19517@infradead.org>
+Subject: Re: [PATCH v2 11/25] PCI: rockchip: Drop storing driver private
+ outbound resource data
+Message-ID: <20191017072625.GB19517@infradead.org>
 References: <20191016200647.32050-1-robh@kernel.org>
- <20191016200647.32050-2-robh@kernel.org>
+ <20191016200647.32050-12-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191016200647.32050-2-robh@kernel.org>
+In-Reply-To: <20191016200647.32050-12-robh@kernel.org>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
@@ -70,11 +70,7 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 03:06:23PM -0500, Rob Herring wrote:
-> +static inline struct resource_entry *resource_list_get_entry_of_type(struct list_head *list,
-> +							      unsigned long type)
+On Wed, Oct 16, 2019 at 03:06:33PM -0500, Rob Herring wrote:
+> +	entry = resource_list_get_entry_of_type(&bridge->windows, IORESOURCE_MEM);
 
-This adds a way too long line.
-
-Part of that is that the name just seems way too long as well, any
-good shorter name?  resourse_list_first_type?
+This add another too long line.  Please audit the whole series for that.
