@@ -2,108 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BC62DC7FC
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2019 17:01:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98ADBDC8F4
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2019 17:42:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634266AbfJRPBE convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Fri, 18 Oct 2019 11:01:04 -0400
-Received: from mga03.intel.com ([134.134.136.65]:4242 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392463AbfJRPBE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:01:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 08:01:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,312,1566889200"; 
-   d="scan'208";a="397960152"
-Received: from irsmsx102.ger.corp.intel.com ([163.33.3.155])
-  by fmsmga006.fm.intel.com with ESMTP; 18 Oct 2019 08:01:01 -0700
-Received: from irsmsx101.ger.corp.intel.com ([169.254.1.76]) by
- IRSMSX102.ger.corp.intel.com ([169.254.2.40]) with mapi id 14.03.0439.000;
- Fri, 18 Oct 2019 16:01:01 +0100
-From:   "Patel, Mayurkumar" <mayurkumar.patel@intel.com>
-To:     "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>,
-        "Busch, Keith" <keith.busch@intel.com>
-Subject: RE: [RESEND PATCH v3] PCI/AER: Save and restore AER config state
-Thread-Topic: [RESEND PATCH v3] PCI/AER: Save and restore AER config state
-Thread-Index: AdV9/NREHFXBsULnSk+tvCdJHtrp6gHOqrcAABQxqYAACAmOgAACNOcAAATPNFA=
-Date:   Fri, 18 Oct 2019 15:01:00 +0000
-Message-ID: <92EBB4272BF81E4089A7126EC1E7B28492C3AF96@IRSMSX101.ger.corp.intel.com>
-References: <20191018084721.GS32742@smile.fi.intel.com>
- <20191018123729.GA158700@google.com>
- <20191018134040.GG32742@smile.fi.intel.com>
-In-Reply-To: <20191018134040.GG32742@smile.fi.intel.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYWRhNmI1MTQtNDhjMS00ZTEwLTg1YTEtZWQzNDJkNTFkZTFlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiRk82SE13aWk5cnFDdGNVcmRUUGZmRXFEMjRGakxyQ1NvTk4zaTgrMnNlUjdqcVhxSXBNMmxUTmFmUXZzbW1raCJ9
-x-ctpclassification: CTP_NT
-x-originating-ip: [163.33.239.180]
-Content-Type: text/plain; charset="us-ascii"
+        id S2404352AbfJRPmJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Oct 2019 11:42:09 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:43008 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1728464AbfJRPmI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 18 Oct 2019 11:42:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84B7FC8F;
+        Fri, 18 Oct 2019 08:41:43 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB5643F718;
+        Fri, 18 Oct 2019 08:41:42 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 16:41:41 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Ley Foon Tan <lftan@altera.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Ray Jui <rjui@broadcom.com>, rfi@lists.rocketboards.org,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Simon Horman <horms@verge.net.au>,
+        Srinath Mannam <srinath.mannam@broadcom.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Tom Joseph <tjoseph@cadence.com>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v2 09/25] PCI: mobiveil: Use
+ pci_parse_request_of_pci_ranges()
+Message-ID: <20191018154141.GJ47056@e119886-lin.cambridge.arm.com>
+References: <20191016200647.32050-1-robh@kernel.org>
+ <20191016200647.32050-10-robh@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016200647.32050-10-robh@kernel.org>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Oct 16, 2019 at 03:06:31PM -0500, Rob Herring wrote:
+> Convert the Mobiveil host bridge to use the common
+> pci_parse_request_of_pci_ranges().
 > 
-> On Fri, Oct 18, 2019 at 07:37:29AM -0500, Bjorn Helgaas wrote:
-> > On Fri, Oct 18, 2019 at 11:47:21AM +0300, andriy.shevchenko@linux.intel.com wrote:
-> > > On Thu, Oct 17, 2019 at 06:09:08PM -0500, Bjorn Helgaas wrote:
-> > > > On Tue, Oct 08, 2019 at 05:22:34PM +0000, Patel, Mayurkumar wrote:
-> > > > > This patch provides AER config save and restore capabilities. After system
-> > > > > resume AER config registers settings are lost. Not restoring AER root error
-> > > > > command register bits on root port if they were set, disables generation
-> > > > > of an AER interrupt reported by function as described in PCIe spec r4.0,
-> > > > > sec 7.8.4.9. Moreover, AER config mask, severity and ECRC registers are
-> > > > > also required to maintain same state prior to system suspend to maintain
-> > > > > AER interrupts behavior.
-> > >
-> > > > Can you send this as plain text?  The patch seems to be a
-> > > > quoted-printable attachment, and I can't figure out how to decode it
-> > > > in a way "patch" will understand.
-> > >
-> > > I understand that it changes your workflow and probably you won't like,
-> > > though you can use patchwork (either thru web, or directly thru client(s)
-> > > like git pw): https://patchwork.ozlabs.org/patch/1173439/
-> >
-> > I had already tried that and "patch" still thought it was corrupted.
-> > Same thing happens when downloading from lore.kernel.org.  Did you try
-> > it and it worked for you?
+> There's no need to assign the resources to a temporary list first. Just
+> use bridge->windows directly and remove all the temporary list handling.
 > 
-> Hmm... indeed. patch work recognizes the patch, but fails to validate it...
-> 
-> Original mbox is broken :(
-> https://marc.info/?l=linux-pci&m=157055537210812&w=2&q=mbox
-> 
-> So, here is for sure the problem on the sender's side.
-> Sorry for the noise from me.
-> 
+> Cc: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+> Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Andrew Murray <andrew.murray@arm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
 
-Sorry my mistake. My mail client seems to have re-formatted this patch and removed spaces from
-the front of untouch lines. I ll fix my mail client settigns and resend it in plain text again.
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
+> v2:
+> - New patch
+> 
+>  drivers/pci/controller/pcie-mobiveil.c | 26 +++++++-------------------
+>  1 file changed, 7 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+> index a45a6447b01d..4eab8624ce4d 100644
+> --- a/drivers/pci/controller/pcie-mobiveil.c
+> +++ b/drivers/pci/controller/pcie-mobiveil.c
+> @@ -140,7 +140,6 @@ struct mobiveil_msi {			/* MSI information */
+> 
+>  struct mobiveil_pcie {
+>  	struct platform_device *pdev;
+> -	struct list_head resources;
+>  	void __iomem *config_axi_slave_base;	/* endpoint config base */
+>  	void __iomem *csr_axi_slave_base;	/* root port config base */
+>  	void __iomem *apb_csr_base;	/* MSI register base */
+> @@ -575,6 +574,7 @@ static void mobiveil_pcie_enable_msi(struct mobiveil_pcie *pcie)
+> 
+>  static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>  {
+> +	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+>  	u32 value, pab_ctrl, type;
+>  	struct resource_entry *win;
+> 
+> @@ -631,7 +631,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>  	program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
+> 
+>  	/* Get the I/O and memory ranges from DT */
+> -	resource_list_for_each_entry(win, &pcie->resources) {
+> +	resource_list_for_each_entry(win, &bridge->windows) {
+>  		if (resource_type(win->res) == IORESOURCE_MEM)
+>  			type = MEM_WINDOW_TYPE;
+>  		else if (resource_type(win->res) == IORESOURCE_IO)
+> @@ -857,7 +857,6 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+>  	struct pci_bus *child;
+>  	struct pci_host_bridge *bridge;
+>  	struct device *dev = &pdev->dev;
+> -	resource_size_t iobase;
+>  	int ret;
+> 
+>  	/* allocate the PCIe port */
+> @@ -875,11 +874,8 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+> 
+> -	INIT_LIST_HEAD(&pcie->resources);
+> -
+>  	/* parse the host bridge base addresses from the device tree file */
+> -	ret = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
+> -						    &pcie->resources, &iobase);
+> +	ret = pci_parse_request_of_pci_ranges(dev, &bridge->windows, NULL);
+>  	if (ret) {
+>  		dev_err(dev, "Getting bridge resources failed\n");
+>  		return ret;
+> @@ -892,24 +888,19 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+>  	ret = mobiveil_host_init(pcie);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to initialize host\n");
+> -		goto error;
+> +		return ret;
+>  	}
+> 
+>  	/* initialize the IRQ domains */
+>  	ret = mobiveil_pcie_init_irq_domain(pcie);
+>  	if (ret) {
+>  		dev_err(dev, "Failed creating IRQ Domain\n");
+> -		goto error;
+> +		return ret;
+>  	}
+> 
+>  	irq_set_chained_handler_and_data(pcie->irq, mobiveil_pcie_isr, pcie);
+> 
+> -	ret = devm_request_pci_bus_resources(dev, &pcie->resources);
+> -	if (ret)
+> -		goto error;
+> -
+>  	/* Initialize bridge */
+> -	list_splice_init(&pcie->resources, &bridge->windows);
+>  	bridge->dev.parent = dev;
+>  	bridge->sysdata = pcie;
+>  	bridge->busnr = pcie->root_bus_nr;
+> @@ -920,13 +911,13 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+>  	ret = mobiveil_bringup_link(pcie);
+>  	if (ret) {
+>  		dev_info(dev, "link bring-up failed\n");
+> -		goto error;
+> +		return ret;
+>  	}
+> 
+>  	/* setup the kernel resources for the newly added PCIe root bus */
+>  	ret = pci_scan_root_bus_bridge(bridge);
+>  	if (ret)
+> -		goto error;
+> +		return ret;
+> 
+>  	bus = bridge->bus;
+> 
+> @@ -936,9 +927,6 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+>  	pci_bus_add_devices(bus);
+> 
+>  	return 0;
+> -error:
+> -	pci_free_resource_list(&pcie->resources);
+> -	return ret;
+>  }
+> 
+>  static const struct of_device_id mobiveil_pcie_of_match[] = {
 > --
-> With Best Regards,
-> Andy Shevchenko
-> 
-
-Intel Deutschland GmbH
-Registered Address: Am Campeon 10-12, 85579 Neubiberg, Germany
-Tel: +49 89 99 8853-0, www.intel.de
-Managing Directors: Christin Eisenschmid, Gary Kershaw
-Chairperson of the Supervisory Board: Nicole Lau
-Registered Office: Munich
-Commercial Register: Amtsgericht Muenchen HRB 186928
-
+> 2.20.1
