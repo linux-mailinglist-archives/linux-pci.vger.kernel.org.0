@@ -2,44 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 66EE3DD2DA
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Oct 2019 00:16:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B5C3DD427
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Oct 2019 00:23:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387786AbfJRWI1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Oct 2019 18:08:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40856 "EHLO mail.kernel.org"
+        id S1730474AbfJRWWg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Oct 2019 18:22:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387759AbfJRWI0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:08:26 -0400
+        id S1730173AbfJRWFt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:05:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD3442245C;
-        Fri, 18 Oct 2019 22:08:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FC4E222C2;
+        Fri, 18 Oct 2019 22:05:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436505;
-        bh=eB8OcREBndT+A5hyfQrTyGkWl3QxuRF+jZflQikaaIU=;
+        s=default; t=1571436349;
+        bh=0gUaHbmUNWSuBhVlbrDOsK+zcamryfNCf/wCRKeD/t8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0tqOiDE0sKqrvGZcosVqo3EHIat64BeZ7tRzUvQTeO3DJHixqyEdPovHsuzz0dXYK
-         v6x0xpkNBC334pQC/fdduaA94ZpDVk7hsl81X0PJOJA/iivZmbjVXkfq+V/K357l2Q
-         MqsQZER4Cq85vIlyuUMPnPqtbAAn1HdpW3eHoUbQ=
+        b=AxgC6pSAKzvDghxnrySDCuCHNivuNPikBsS8SXr71GqI1LpNkgPJGXg1UJZQAVT6v
+         Pz75PMbdEq5PkpItrAFO8VKxGvMdlZ09Ht6d3RiclWab5Hl6F2184KXbX54tI/d5tj
+         s1ruE018QY5dEbad5hpcxWyq1EI8G1M27kuRbp3w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Stephen Bates <sbates@raithlin.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Frederick Lawler <fred@fredlawl.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Doug Meyer <dmeyer@gigaio.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 17/56] PCI/PME: Fix possible use-after-free on remove
-Date:   Fri, 18 Oct 2019 18:07:14 -0400
-Message-Id: <20191018220753.10002-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 014/100] PCI: Fix Switchtec DMA aliasing quirk dmesg noise
+Date:   Fri, 18 Oct 2019 18:03:59 -0400
+Message-Id: <20191018220525.9042-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
-References: <20191018220753.10002-1-sashal@kernel.org>
+In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
+References: <20191018220525.9042-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -49,39 +46,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Sven Van Asbroeck <thesven73@gmail.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 7cf58b79b3072029af127ae865ffc6f00f34b1f8 ]
+[ Upstream commit 742bbe1ee35b5699c092541f97c7cec326556bb1 ]
 
-In remove(), ensure that the PME work cannot run after kfree() is called.
-Otherwise, this could result in a use-after-free.
+Currently the Switchtec quirk runs on all endpoints in the switch,
+including all the upstream and downstream ports.  These other functions do
+not contain BARs, so the quirk fails when trying to map the BAR and prints
+the error "Cannot iomap Switchtec device".  The user will see a few of
+these useless and scary errors, one for each port in the switch.
 
-This issue was detected with the help of Coccinelle.
+At most, the quirk should only run on either a management endpoint
+(PCI_CLASS_MEMORY_OTHER) or an NTB endpoint (PCI_CLASS_BRIDGE_OTHER).
+However, the quirk is useless except in NTB applications, so we will
+only run it when the class is PCI_CLASS_BRIDGE_OTHER.
 
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Switch to using DECLARE_PCI_FIXUP_CLASS_FINAL and only match
+PCI_CLASS_BRIDGE_OTHER.
+
+Reported-by: Stephen Bates <sbates@raithlin.com>
+Fixes: ad281ecf1c7d ("PCI: Add DMA alias quirk for Microsemi Switchtec NTB")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+[bhelgaas: split SWITCHTEC_QUIRK() introduction to separate patch]
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Sinan Kaya <okaya@kernel.org>
-Cc: Frederick Lawler <fred@fredlawl.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Doug Meyer <dmeyer@gigaio.com>
+Cc: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/pme.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/quirks.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-index c2e6e3d1073f8..5500660bbb104 100644
---- a/drivers/pci/pcie/pme.c
-+++ b/drivers/pci/pcie/pme.c
-@@ -441,6 +441,7 @@ static void pcie_pme_remove(struct pcie_device *srv)
- 
- 	pcie_pme_disable_interrupt(srv->port, data);
- 	free_irq(srv->irq, srv);
-+	cancel_work_sync(&data->work);
- 	kfree(data);
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 06be52912dcdb..64933994f7722 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5083,8 +5083,8 @@ static void quirk_switchtec_ntb_dma_alias(struct pci_dev *pdev)
+ 	pci_disable_device(pdev);
  }
+ #define SWITCHTEC_QUIRK(vid) \
+-	DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, vid, \
+-				quirk_switchtec_ntb_dma_alias)
++	DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_MICROSEMI, vid, \
++		PCI_CLASS_BRIDGE_OTHER, 8, quirk_switchtec_ntb_dma_alias)
  
+ SWITCHTEC_QUIRK(0x8531);  /* PFX 24xG3 */
+ SWITCHTEC_QUIRK(0x8532);  /* PFX 32xG3 */
 -- 
 2.20.1
 
