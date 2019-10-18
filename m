@@ -2,139 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C50E0DC6B2
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2019 15:58:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52372DC74C
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2019 16:26:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392230AbfJRN6s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Oct 2019 09:58:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390337AbfJRN6s (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 18 Oct 2019 09:58:48 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15A39222BD;
-        Fri, 18 Oct 2019 13:58:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571407127;
-        bh=5ia8NGh9oV0oRETLyqBs2w/I0qb3W3LwGh81no80yjA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hWN83XhngTkln3ZULY64XXr+qgku3r+3pwqh44JgZWHPcLXUUPZ8P7eeth3YteZ+Q
-         aM189YFE5EhNcFylGwwI23f6i9p8wpx3NQe+EMGI4wO5jU168gCHz2RGXupiJxWdak
-         tXw7Ev4jrsq5Ev7ZOIDrAq18cdmdDut07Q6To2w4=
-Date:   Fri, 18 Oct 2019 08:58:46 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Xiang Zheng <zhengxiang9@huawei.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, peterz@infradead.org, alex.williamson@redhat.com,
-        Wang Haibin <wanghaibin.wang@huawei.com>,
-        Guoheyi <guoheyi@huawei.com>,
-        yebiaoxiang <yebiaoxiang@huawei.com>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: Kernel panic while doing vfio-pci hot-plug/unplug test
-Message-ID: <20191018135846.GA161054@google.com>
+        id S2410221AbfJRO0g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Oct 2019 10:26:36 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44876 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2410093AbfJRO0g (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Oct 2019 10:26:36 -0400
+Received: by mail-wr1-f65.google.com with SMTP id z9so6475263wrl.11;
+        Fri, 18 Oct 2019 07:26:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yLORsBla+gSK0zkUj6PuSi1/ZMG9BCIPlaUEcTHmQ4k=;
+        b=CX0TSAunfvTcEpLzWAwPO9hVdAuCWU7jg4MrcqdAZwNo+ycm+JOa8eQxrKyFX1UMtS
+         zLFPqtDL3mK7Pa6gcl1cREtIkhVJVVPjhKYKBE4p2UBL3fHcCb+5dI/h1LtHvYoRYWwA
+         lt1tYjFaFe22Nwgv4xN+j+0spxlWqLwre6vrpoyqEHqN4Loq+CzN2Lo8vg505iWykGXq
+         0W4vVxz/QXriipI2qjE1Zd5hGfhB1NugC7bZ7u/ctdwrCNi03+c1y8QU9T+CNChqSuho
+         aFOTsH90wuTerSIgwkOWVQL3X6eaNncFJgiCf9ivyNhQ2yJxFiDhpR+cY5aNZUS5fJ6o
+         Ff0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yLORsBla+gSK0zkUj6PuSi1/ZMG9BCIPlaUEcTHmQ4k=;
+        b=BhZP7sTItO3ktXGLvkimDNlNT9VnA1ezZvMO8MrOrgQCJ2sscMf3Jp0+LbtYJCLTce
+         SOKCqBM9VtOp4xisGCVQ545E32MGm38SnSQfYkla5f5UFYZ9GTssK7HYMqj15ofsSlvU
+         Rit5vMI1BP3JvEciluk4R88VxjbhSsGU6RbUWcZdPZFIZNe1eKclj3OnVo4YwMRXIMe+
+         wD9N0SjMTB0OwTfPlybxFUXWhVy6mERmpOxE1hVJWCgzuTa4pWsHWV0dbCOMbtBhhP0H
+         xLMlJwM362tZwsnnT1b4k5lOaqTl+HACKzNysL5wGV57LLj7qOW5Lxd3HS8xhyJCcQ0x
+         bGlQ==
+X-Gm-Message-State: APjAAAXrPCA+eAgaJCkeKxvPjgP4Z0xLjqSrAab60s1/8xISrArUyF7l
+        YLrXuiqISbFQhyfkzJ85TDV77RZn
+X-Google-Smtp-Source: APXvYqwM9Iyq/nrcXi5NyN04IWzMVYiuI9O8G7S3J34cmCtFpEG3oadL7BjEKpNeie0kUk9IW4IAkg==
+X-Received: by 2002:adf:f78f:: with SMTP id q15mr7874741wrp.282.1571408793027;
+        Fri, 18 Oct 2019 07:26:33 -0700 (PDT)
+Received: from [192.168.1.4] (ip-86-49-35-8.net.upcbroadband.cz. [86.49.35.8])
+        by smtp.gmail.com with ESMTPSA id b12sm5566524wrt.21.2019.10.18.07.26.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Oct 2019 07:26:31 -0700 (PDT)
+Subject: Re: [PATCH V3 2/3] PCI: rcar: Do not abort on too many inbound
+ dma-ranges
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>
+References: <CAL_Jsq+4uaFJzk5jUPw+KssZvnji0WDh+QcFMok99XXntEhNTQ@mail.gmail.com>
+ <88099c4f-4fb4-626e-f66f-3eb8861dfb2c@gmail.com>
+ <CAL_JsqLzmk5dfn0Re3y7VjY5ehE29vKLOV-2tM5B_jPbB2YiPQ@mail.gmail.com>
+ <06d093b2-dcc2-a01f-fce0-5db0bc47325e@gmail.com>
+ <CAMuHMdXjZs6Gvar3o7wXd2-1tkPtpt3qxZLG5vzDfrCG4d9SeQ@mail.gmail.com>
+ <ca16e883-27d3-2cd0-7d71-fa9b169dcccd@gmail.com>
+ <ccf8a4f9-1758-bafc-797c-714f06810db3@arm.com>
+ <6af92fb1-a154-3e03-d239-0417da5a5094@gmail.com>
+ <CAL_JsqKEjzO3s=bBf_TxTAXTzLTcX=8ccFXLfowhPOHWzNET9A@mail.gmail.com>
+ <5a19fcd3-2071-334a-1c4a-59d07f4a387d@gmail.com>
+ <20191018095345.GD25918@e121166-lin.cambridge.arm.com>
+ <fd53f532-9b78-a64e-6d34-bda5a7639586@gmail.com>
+ <ce7d16ab-31b8-0992-b1d7-24f4a652ce5f@arm.com>
+From:   Marek Vasut <marek.vasut@gmail.com>
+Message-ID: <3f2f3868-676c-edc4-0de1-d42b63186128@gmail.com>
+Date:   Fri, 18 Oct 2019 16:26:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ce7d16ab-31b8-0992-b1d7-24f4a652ce5f@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Matthew]
-
-On Wed, Oct 16, 2019 at 09:36:23PM +0800, Xiang Zheng wrote:
-> Hi all,
+On 10/18/19 2:53 PM, Robin Murphy wrote:
+> On 18/10/2019 13:22, Marek Vasut wrote:
+>> On 10/18/19 11:53 AM, Lorenzo Pieralisi wrote:
+>>> On Thu, Oct 17, 2019 at 05:01:26PM +0200, Marek Vasut wrote:
+>>>
+>>> [...]
+>>>
+>>>>> Again, just handling the first N dma-ranges entries and ignoring the
+>>>>> rest is not 'configure the controller correctly'.
+>>>>
+>>>> It's the best effort thing to do. It's well possible the next
+>>>> generation
+>>>> of the controller will have more windows, so could accommodate the
+>>>> whole
+>>>> list of ranges.
 > 
-> Recently I encountered a kernel panic while doing vfio-pci hot-plug/unplug test repeatly on my Arm-KVM virtual machines.
-> See the call stack below:
+> In the context of DT describing the platform that doesn't make any
+> sense. It's like saying it's fine for U-Boot to also describe a bunch of
+> non-existent CPUs just because future SoCs might have them. Just because
+> the system would probably still boot doesn't mean it's right.
+
+It's the exact opposite of what you just described -- the last release
+of U-Boot currently populates a subset of the DMA ranges, not a
+superset. The dma-ranges in the Linux DT currently are a superset of
+available DRAM on the platform.
+
+>>>> Thinking about this further, this patch should be OK either way, if
+>>>> there is a DT which defines more DMA ranges than the controller can
+>>>> handle, handling some is better than failing outright -- a PCI which
+>>>> works with a subset of memory is better than PCI that does not work
+>>>> at all.
+>>>
+>>> OK to sum it up, this patch is there to deal with u-boot adding multiple
+>>> dma-ranges to DT.
+>>
+>> Yes, this patch was posted over two months ago, about the same time this
+>> functionality was posted for inclusion in U-Boot. It made it into recent
+>> U-Boot release, but there was no feedback on the Linux patch until
+>> recently.
+>>
+>> U-Boot can be changed for the next release, assuming we agree on how it
+>> should behave.
+>>
+>>> I still do not understand the benefit given that for
+>>> DMA masks they are useless as Rob pointed out and ditto for inbound
+>>> windows programming (given that AFAICS the PCI controller filters out
+>>> any transaction that does not fall within its inbound windows by default
+>>> so adding dma-ranges has the net effect of widening the DMA'able address
+>>> space rather than limiting it).
+>>>
+>>> In short, what's the benefit of adding more dma-ranges regions to the
+>>> DT (and consequently handling them in the kernel) ?
+>>
+>> The benefit is programming the controller inbound windows correctly.
+>> But if there is a better way to do that, I am open to implement that.
+>> Are there any suggestions / examples of that ?
 > 
-> [66628.697280] vfio-pci 0000:06:03.5: enabling device (0000 -> 0002)
-> [66628.809290] vfio-pci 0000:06:03.1: enabling device (0000 -> 0002)
-> [66628.921283] vfio-pci 0000:06:02.7: enabling device (0000 -> 0002)
-> [66629.029280] vfio-pci 0000:06:03.6: enabling device (0000 -> 0002)
-> [66629.137338] vfio-pci 0000:06:03.2: enabling device (0000 -> 0002)
-> [66629.249285] vfio-pci 0000:06:03.7: enabling device (0000 -> 0002)
-> [66630.237261] Unable to handle kernel read from unreadable memory at virtual address ffff802dac469000
-> [66630.246266] Mem abort info:
-> [66630.249047]   ESR = 0x8600000d
-> [66630.252088]   Exception class = IABT (current EL), IL = 32 bits
-> [66630.257981]   SET = 0, FnV = 0
-> [66630.261022]   EA = 0, S1PTW = 0
-> [66630.264150] swapper pgtable: 4k pages, 48-bit VAs, pgdp = 00000000fb16886e
-> [66630.270992] [ffff802dac469000] pgd=0000203fffff6803, pud=00e8002d80000f11
-> [66630.277751] Internal error: Oops: 8600000d [#1] SMP
-> [66630.282606] Process qemu-kvm (pid: 37201, stack limit = 0x00000000d8f19858)
-> [66630.289537] CPU: 41 PID: 37201 Comm: qemu-kvm Kdump: loaded Tainted: G           OE     4.19.36-vhulk1907.1.0.h453.eulerosv2r8.aarch64 #1
-> [66630.301822] Hardware name: Huawei TaiShan 2280 V2/BC82AMDDA, BIOS 0.88 07/24/2019
-> [66630.309270] pstate: 80400089 (Nzcv daIf +PAN -UAO)
-> [66630.314042] pc : 0xffff802dac469000
-> [66630.317519] lr : __wake_up_common+0x90/0x1a8
-> [66630.321768] sp : ffff00027746bb00
-> [66630.325067] x29: ffff00027746bb00 x28: 0000000000000000
-> [66630.330355] x27: 0000000000000000 x26: ffff0000092755b8
-> [66630.335643] x25: 0000000000000000 x24: 0000000000000000
-> [66630.340930] x23: 0000000000000003 x22: ffff00027746bbc0
-> [66630.346219] x21: 000000000954c000 x20: ffff0001f542bc6c
-> [66630.351506] x19: ffff0001f542bb90 x18: 0000000000000000
-> [66630.356793] x17: 0000000000000000 x16: 0000000000000000
-> [66630.362081] x15: 0000000000000000 x14: 0000000000000000
-> [66630.367368] x13: 0000000000000000 x12: 0000000000000000
-> [66630.372655] x11: 0000000000000000 x10: 0000000000000bb0
-> [66630.377942] x9 : ffff00027746ba50 x8 : ffff80367ff6ca10
-> [66630.383229] x7 : ffff802e20d59200 x6 : 000000000000003f
-> [66630.388517] x5 : ffff00027746bbc0 x4 : ffff802dac469000
-> [66630.393806] x3 : 0000000000000000 x2 : 0000000000000000
-> [66630.399093] x1 : 0000000000000003 x0 : ffff0001f542bb90
-> [66630.404381] Call trace:
-> [66630.406818]  0xffff802dac469000
-> [66630.409945]  __wake_up_common_lock+0xa8/0x1a0
-> [66630.414283]  __wake_up+0x40/0x50
-> [66630.417499]  pci_cfg_access_unlock+0x9c/0xd0
-> [66630.421752]  pci_try_reset_function+0x58/0x78
-> [66630.426095]  vfio_pci_ioctl+0x478/0xdb8 [vfio_pci]
-> [66630.430870]  vfio_device_fops_unl_ioctl+0x44/0x70 [vfio]
-> [66630.436158]  do_vfs_ioctl+0xc4/0x8c0
-> [66630.439718]  ksys_ioctl+0x8c/0xa0
-> [66630.443018]  __arm64_sys_ioctl+0x28/0x38
-> [66630.446925]  el0_svc_common+0x78/0x130
-> [66630.450657]  el0_svc_handler+0x38/0x78
-> [66630.454389]  el0_svc+0x8/0xc
-> [66630.457260] Code: 00000000 00000000 00000000 00000000 (ac46d000)
-> [66630.463325] kernel fault(0x1) notification starting on CPU 41
-> [66630.469044] kernel fault(0x1) notification finished on CPU 41
-> 
-> The chance to reproduce this problem is very small. We had an initial analysis of this problem,
-> and found it was caused by the illegal value of the 'curr->func' in the __wake_up_common() function.
-> 
-> I cannot image how 'curr->func' can be wrote to 0xffff802dac469000. Is there any problem about
-> concurrent competition between the pci_wait_cfg() function and the wake_up_all() function?
+> The crucial thing is that once we improve the existing "dma-ranges"
+> handling in the DMA layer such that it *does* consider multiple entries
+> properly, platforms presenting ranges which don't actually exist will
+> almost certainly start going wrong, and are either going to have to fix
+> their broken bootloaders or try to make a case for platform-specific
+> workarounds in core code.
+Again, this is exactly the other way around, the dma-ranges populated by
+U-Boot cover only existing DRAM. The single dma-range in Linux DT covers
+even the holes without existing DRAM.
 
-I haven't heard of a problem there, but that doesn't mean there isn't
-one.
+So even if the Linux dma-ranges handling changes, there should be no
+problem.
 
-The fact that pci_wait_cfg() uses __add_wait_queue() (not
-add_wait_queue(), which does more locking) makes me a little
-suspicious.  Most of the other callers of __add_wait_queue() acquire
-the wait_queue lock themselves, but pci_wait_cfg() doesn't.
+[...]
 
-This was added by 7ea7e98fd8d0 ("PCI: Block on access to temporarily
-unavailable pci device"), and the commit log suggests that the
-pci_lock is sufficient.  All callers of pci_wait_cfg() do hold
-pci_lock, and the "pci_cfg_wait" queue is private, but ...
-pci_cfg_access_unlock() calls wake_up_all(&pci_cfg_wait) *without*
-holding pci_lock.  That path leads to __wake_up_common_lock(), which
-depends on wq_head->lock, which pci_wait_cfg() doesn't use.
-
-pci_cfg_access_unlock() originally *did* hold pci_lock while calling
-wake_up_all(), but I changed that with cdcb33f98244 ("PCI: Avoid
-possible deadlock on pci_lock and p->pi_lock") without understanding
-both sides of the wait_queue locking issue.
-
-But I still don't understand enough to know whether this is actually
-the problem or to propose a fix.
-
-Bjorn
+-- 
+Best regards,
+Marek Vasut
