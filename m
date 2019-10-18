@@ -2,113 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B319DC0AF
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2019 11:17:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E624DC1E3
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2019 11:54:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391069AbfJRJRp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Oct 2019 05:17:45 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35817 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389986AbfJRJRp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Oct 2019 05:17:45 -0400
-Received: by mail-oi1-f194.google.com with SMTP id x3so4651453oig.2;
-        Fri, 18 Oct 2019 02:17:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=j8z1SM48UZuUXU8cTwzQych7cq4zT468OcaLYrLAHoc=;
-        b=g1TTJELLzSCQ96x5h+HOZFbeCaPUQuUYugOqk5Qw0IVZSrFDaHLv9EddoK4FbJdtdp
-         spSg6Jr3AdDpen20RUice/YTGmUwkUs6n+I3OheMK9KX4mVr+ndYzwk05rPmM3+y9j4U
-         GD+UPiyPIClzcK5LYt3KqB7sSTfyKbycKPvi7lGvcbkFomJYGg6OHOwlVtdVWB07ZB2G
-         yawkf+Z9w41QdLvGCRQUCx7Y3HBmQbjRhJZ3nTWuzrlTJxjnnJqPmqrvyfI9/x+heEQh
-         JTdoL1zAVPwCS8MaB6/LDfSbv1qTWA3AVhCbfzdY+uLRzZG7nXIY9WKQ0ufTopA8rYxx
-         jCZw==
-X-Gm-Message-State: APjAAAVcjaFIwyXV7Pueuqq8zhnoVKl25FOnpd6mpcP3nfrLv2E/J7TG
-        GY5lFgIfYwrY4he6F4k8Z1UYvjH7DyW0FvmyJPaI/xSW
-X-Google-Smtp-Source: APXvYqzyYAXhAoQkimCi9kQHw3PEfQL51Fk/qbhnBd3+8Oku0qmZ/h0tjCh8EffnfNqaU2khxg3i+VXVJXmBVeYYec8=
-X-Received: by 2002:aca:d706:: with SMTP id o6mr7309802oig.57.1571390264244;
- Fri, 18 Oct 2019 02:17:44 -0700 (PDT)
+        id S2389363AbfJRJyM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Oct 2019 05:54:12 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:60334 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2389081AbfJRJyM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 18 Oct 2019 05:54:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38B4A494;
+        Fri, 18 Oct 2019 02:53:49 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A24F3F6C4;
+        Fri, 18 Oct 2019 02:53:47 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 10:53:45 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Marek Vasut <marek.vasut@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH V3 2/3] PCI: rcar: Do not abort on too many inbound
+ dma-ranges
+Message-ID: <20191018095345.GD25918@e121166-lin.cambridge.arm.com>
+References: <CAL_Jsq+4uaFJzk5jUPw+KssZvnji0WDh+QcFMok99XXntEhNTQ@mail.gmail.com>
+ <88099c4f-4fb4-626e-f66f-3eb8861dfb2c@gmail.com>
+ <CAL_JsqLzmk5dfn0Re3y7VjY5ehE29vKLOV-2tM5B_jPbB2YiPQ@mail.gmail.com>
+ <06d093b2-dcc2-a01f-fce0-5db0bc47325e@gmail.com>
+ <CAMuHMdXjZs6Gvar3o7wXd2-1tkPtpt3qxZLG5vzDfrCG4d9SeQ@mail.gmail.com>
+ <ca16e883-27d3-2cd0-7d71-fa9b169dcccd@gmail.com>
+ <ccf8a4f9-1758-bafc-797c-714f06810db3@arm.com>
+ <6af92fb1-a154-3e03-d239-0417da5a5094@gmail.com>
+ <CAL_JsqKEjzO3s=bBf_TxTAXTzLTcX=8ccFXLfowhPOHWzNET9A@mail.gmail.com>
+ <5a19fcd3-2071-334a-1c4a-59d07f4a387d@gmail.com>
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 18 Oct 2019 11:17:32 +0200
-Message-ID: <CAJZ5v0iMdUWVv8G1D075eSEBOMoqUfoWC_ik6qy5CxNapUo1xg@mail.gmail.com>
-Subject: [GIT PULL] Power management fixes for v5.4-rc4
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5a19fcd3-2071-334a-1c4a-59d07f4a387d@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Linus,
+On Thu, Oct 17, 2019 at 05:01:26PM +0200, Marek Vasut wrote:
 
-Please pull from the tag
+[...]
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.4-rc4
+> > Again, just handling the first N dma-ranges entries and ignoring the
+> > rest is not 'configure the controller correctly'.
+> 
+> It's the best effort thing to do. It's well possible the next generation
+> of the controller will have more windows, so could accommodate the whole
+> list of ranges.
+> 
+> Thinking about this further, this patch should be OK either way, if
+> there is a DT which defines more DMA ranges than the controller can
+> handle, handling some is better than failing outright -- a PCI which
+> works with a subset of memory is better than PCI that does not work at all.
 
-with top-most commit b23eb5c74e6eb6a0b3fb9cf3eb64481a17ce1cd1
+OK to sum it up, this patch is there to deal with u-boot adding multiple
+dma-ranges to DT. I still do not understand the benefit given that for
+DMA masks they are useless as Rob pointed out and ditto for inbound
+windows programming (given that AFAICS the PCI controller filters out
+any transaction that does not fall within its inbound windows by default
+so adding dma-ranges has the net effect of widening the DMA'able address
+space rather than limiting it).
 
- Merge branches 'pm-cpufreq' and 'pm-sleep'
+In short, what's the benefit of adding more dma-ranges regions to the
+DT (and consequently handling them in the kernel) ?
 
-on top of commit 4f5cafb5cb8471e54afdc9054d973535614f7675
+Thanks,
+Lorenzo
 
- Linux 5.4-rc3
-
-to receive power management fixes for 5.4-rc4.
-
-These include a fix for a recent regression in the ACPI CPU
-performance scaling code, a PCI device power management fix,
-a system shutdown fix related to cpufreq, a removal of an ACPI
-suspend-to-idle blacklist entry and a build warning fix.
-
-Specifics:
-
- - Fix possible NULL pointer dereference in the ACPI processor
-   scaling initialization code introduced by a recent cpufreq
-   update (Rafael Wysocki).
-
- - Fix possible deadlock due to suspending cpufreq too late during
-   system shutdown (Rafael Wysocki).
-
- - Make the PCI device system resume code path be more consistent
-   with its PM-runtime counterpart to fix an issue with missing
-   delay on transitions from D3cold to D0 during system resume from
-   suspend-to-idle on some systems (Rafael Wysocki).
-
- - Drop Dell XPS13 9360 from the LPS0 Idle _DSM blacklist to make it
-   use suspend-to-idle by default (Mario Limonciello).
-
- - Fix build warning in the core system suspend support code (Ben
-   Dooks).
-
-Thanks!
-
-
----------------
-
-Ben Dooks (1):
-      PM: sleep: include <linux/pm_runtime.h> for pm_wq
-
-Mario Limonciello (1):
-      ACPI: PM: Drop Dell XPS13 9360 from LPS0 Idle _DSM blacklist
-
-Rafael J. Wysocki (3):
-      cpufreq: Avoid cpufreq_suspend() deadlock on system shutdown
-      PCI: PM: Fix pci_power_up()
-      ACPI: processor: Avoid NULL pointer dereferences at init time
-
----------------
-
- drivers/acpi/processor_perflib.c | 10 ++++++----
- drivers/acpi/processor_thermal.c | 10 ++++++----
- drivers/acpi/sleep.c             | 13 -------------
- drivers/base/core.c              |  3 +++
- drivers/cpufreq/cpufreq.c        | 10 ----------
- drivers/pci/pci.c                | 24 +++++++++++-------------
- kernel/power/main.c              |  1 +
- 7 files changed, 27 insertions(+), 44 deletions(-)
+> >>> And realistically, if the address
+> >>> isn't valid then it's not going to make much difference anyway - in
+> >>> probably 99% of cases, either the transaction doesn't hit a window and
+> >>> the host bridge returns a completer abort, or it does hit a window, the
+> >>> AXI side returns DECERR or SLVERR, and the host bridge translates that
+> >>> into a completer abort. Consider also that many PCI IPs don't have
+> >>> discrete windows and just map the entirety of PCI mem space directly to
+> >>> the system PA space.
+> >>
+> >> And in that 1% of cases, we are OK with failure which could have been
+> >> easily prevented if the controller was programmed correctly ? That does
+> >> not look like a good thing.
+> > 
+> > You don't need dma-ranges if you want to handle holes in DRAM. Use
+> > memblock to get this information. Then it will work if you boot using
+> > UEFI too.
+> 
+> Do you have any further details about this ?
+> 
+> > dma-ranges at the PCI bridge should be restrictions in the PCI bridge,
+> > not ones somewhere else in the system.
+> 
+> -- 
+> Best regards,
+> Marek Vasut
