@@ -2,55 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BEBCDD763
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Oct 2019 10:34:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B88A5DDD73
+	for <lists+linux-pci@lfdr.de>; Sun, 20 Oct 2019 11:17:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbfJSIel (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 19 Oct 2019 04:34:41 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60182 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfJSIel (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Oct 2019 04:34:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=efxDZLovhWIsVcKlBeoAv6/PbDTOqjRHdFPX6c+nSqI=; b=sA/UjIesauDMAOC8QbNr7SoNs
-        4REJpMZYaeLtw/RXa2i39bQefpGee1IVtiLTCW0s1tYGJAzeoMQyYUlRYa8/Kk92/HnKP9Gdb0aW7
-        yWWtRpw7t5PI1HN3PzRAOWvKrMI+/JR75//jaTllBitf1RaLEGa7mNHwVCj35E2ms1fc+yL2wx02t
-        EpmCtDJktGTDABTuokYKzR8/i3JuCZx1d0+/nV0PX0FICIftJEu+y0em89gt0LOp6kyg/8mR2CCyz
-        i/lgJYoj+hiVXHQib0xd9lRiG06LnPohkubCI0+OItJ6CV1h7ggHne69xKfQH//18fX5GQpo0zxPE
-        VdQNOCwMA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iLkBz-0006ty-5X; Sat, 19 Oct 2019 08:34:31 +0000
-Date:   Sat, 19 Oct 2019 01:34:31 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mhocko@kernel.org,
-        peterz@infradead.org, robin.murphy@arm.com, geert@linux-m68k.org,
-        gregkh@linuxfoundation.org, paul.burton@mips.com
-Subject: Re: [PATCH] PCI: Warn about host bridge device when its numa node is
- NO_NODE
-Message-ID: <20191019083431.GA26340@infradead.org>
-References: <1571467543-26125-1-git-send-email-linyunsheng@huawei.com>
+        id S1726019AbfJTJRV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 20 Oct 2019 05:17:21 -0400
+Received: from isilmar-4.linta.de ([136.243.71.142]:41790 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfJTJRV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Oct 2019 05:17:21 -0400
+X-Greylist: delayed 524 seconds by postgrey-1.27 at vger.kernel.org; Sun, 20 Oct 2019 05:17:20 EDT
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id 343082006DB;
+        Sun, 20 Oct 2019 09:08:35 +0000 (UTC)
+Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
+        id 4B01C20552; Sun, 20 Oct 2019 11:08:00 +0200 (CEST)
+Date:   Sun, 20 Oct 2019 11:08:00 +0200
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     bhelgaas@google.com, linux-pci@vger.kernel.org
+Cc:     "Michael ." <keltoiboy@gmail.com>, linux-kernel@vger.kernel.org,
+        Trevor Jacobs <trevor_jacobs@aol.com>,
+        Kris Cleveland <tridentperfusion@yahoo.com>,
+        Jeff <bluerocksaddles@willitsonline.com>,
+        Morgan Klym <moklym@gmail.com>
+Subject: PCI device function not being enumerated [Was: PCMCIA not working on
+ Panasonic Toughbook CF-29]
+Message-ID: <20191020090800.GA2778@light.dominikbrodowski.net>
+References: <CAFjuqNh1=B7Ft6v7nzo3BW70EbAvK=Eko_4yqrJ4Z4N3w_Y+Xw@mail.gmail.com>
+ <CAFjuqNjLJw8J0nU2oo8rDfDUBavHLC7D0=AAwM62tp6=kHHk-A@mail.gmail.com>
+ <20191015064801.GA104469@owl.dominikbrodowski.net>
+ <CAFjuqNgxAuf+JTkWqhimDspzPd0+s5yGJro=Zi164uoxu4CmOA@mail.gmail.com>
+ <CANfzparZ17SMzE1qzzF=Rixu=aYpf1RiKqR4KXXS0S+u7Q3TwQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571467543-26125-1-git-send-email-linyunsheng@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <CANfzparZ17SMzE1qzzF=Rixu=aYpf1RiKqR4KXXS0S+u7Q3TwQ@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Oct 19, 2019 at 02:45:43PM +0800, Yunsheng Lin wrote:
-> +	if (nr_node_ids > 1 && dev_to_node(bus->bridge) == NUMA_NO_NODE)
-> +		dev_err(bus->bridge, FW_BUG "No node assigned on NUMA capable HW by BIOS. Please contact your vendor for updates.\n");
-> +
+On the basis of the additional information (thanks), there might be a
+more specific path to investigate: It is that the PCI code does not
+enumerate the second cardbus bridge PCI function in the more recent 4.19
+kernel compared to the anvient (and working) 2.6 kernel.
 
-The whole idea of mentioning a BIOS in architeture indepent code doesn't
-make sense at all.
+Namely, only one CardBus bridge is recognized
+
+...
+06:01.0 CardBus bridge: Ricoh Co Ltd RL5c476 II (rev 8b)
+06:01.1 SD Host controller: Ricoh Co Ltd R5C822 SD/SDIO/MMC/MS/MSPro Host Adapter (rev 11)
+06:02.0 Network controller: Intel Corporation PRO/Wireless 2915ABG [Calexico2] Network Connection (rev 05)
+...
+
+instead of the two which really should be present:
+
+...
+06:01.0 CardBus bridge: Ricoh Co Ltd RL5c476 II (rev 8b)
+06:01.1 CardBus bridge: Ricoh Co Ltd RL5c476 II (rev 8b)
+06:01.2 SD Host controller: Ricoh Co Ltd R5C822 SD/SDIO/MMC/MS/MSPro Host Adapter (rev 11)
+06:02.0 Network controller: Intel Corporation PRO/Wireless 2915ABG [Calexico2] Network Connection (rev 05)
+...
+
+To the PCI folks: any idea on what may cause the second cardbus bridge PCI
+device function to be missed? Are there any command line options the users
+who reported this issue[*] may try?
+
+As this isn't really a PCMCIA (16bit) issue, but a PCI enumeration issue,
+this issue is outside my area of expertise.
+
+Thanks,
+	Dominik
+
+[*] For more information, see this thread:
+	https://lore.kernel.org/lkml/CAFjuqNi+knSb9WVQOahCVFyxsiqoGgwoM7Z1aqDBebNzp_-jYw@mail.gmail.com/
