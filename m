@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C6C30DE186
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2019 02:40:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9321ADE18C
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2019 02:41:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfJUAkm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 20 Oct 2019 20:40:42 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40491 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfJUAkl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Oct 2019 20:40:41 -0400
-Received: by mail-lj1-f194.google.com with SMTP id 7so11389519ljw.7
-        for <linux-pci@vger.kernel.org>; Sun, 20 Oct 2019 17:40:40 -0700 (PDT)
+        id S1726610AbfJUAlk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 20 Oct 2019 20:41:40 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39951 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbfJUAlk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Oct 2019 20:41:40 -0400
+Received: by mail-lf1-f66.google.com with SMTP id i15so1161384lfo.7
+        for <linux-pci@vger.kernel.org>; Sun, 20 Oct 2019 17:41:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=m6Xo9B6o9SIZMKltywI4CiX1SZ99OwUFgC+m3ay2Ymo=;
-        b=zroUUUrfgfHLCjgOyR2uQ2lLhWyKSM7uEj1yfxnkSSToT1Elup+0aFqlDLFwh9G/n2
-         KmTyKhUQBndxk5V92CCxunqRlxvT1jz39Hi0bjTlcO8/JBejG5joPR6goquCAbY1q8r5
-         c4pKHfEl0bulWgTXTtr+82ImDmgMw2jNre53NjUrfx2uQJugQo9wuJWUaquqK5XdTNWa
-         wWxphcewpaq4w17KtJTsfDZ/G/9tO6b1j3OEyi+2KchtoK+DEqJnQ+3c6IUkzZHm7KCf
-         s5m8n4Dl+/ZQ+m8Jd5Kh/kDLz/KDGqnFn1t5nhMws+ktDfHLGN+r3tgJ4NqeOx0DdF9m
-         GLwQ==
+        bh=G+bmNIcrnyOIzrPmxwvjVgZiBAJd1fM+3wbATTNFbEI=;
+        b=mLAX2bW2iX5ydQdQba6GHiEYCGuP3ryiI3ZGiaySwfC3y8Qhd9wrPmUBZI5OiTWvwT
+         wPQOA7PyZyWL2zcmKOeQYLc5fwcB20NjJgUletSLLOah1HsnJ29+iSbQWuDyeB8SQWTn
+         Ld9wXWuG66dbY+YAzanSVTWfpZmcgDAXgJNhEPK2VzpwUHVRm1zO39/xCUi38A7323Oi
+         8WDhYNPbYDeIKFkc63K7uVj7xqE2WZfnxrd0duu6RROq5ixmu/g8+fs0dtIJUe/Ifdu9
+         SuQWLo/Gfs8DPn2mc6jejc3Iw/NOwYGQNv5V97tLh1nivdcvh1Iyg/RHcLvVBnaKRX2g
+         xGMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=m6Xo9B6o9SIZMKltywI4CiX1SZ99OwUFgC+m3ay2Ymo=;
-        b=N5OdPni5QZZOHKdslmHG3ikZSgSsvkQWF7+rTwr2OjcouE2qvw9yTT5+wA4ef6Ih4Z
-         wuZUko4Ih1MM1b1LqmfFcnvqyxr6+fb3t7YwBZuGhnMOAvE5CvcZ3RnZjjSVki4SxMq7
-         BmjYIRHaXd0ZYXObo21Fz63yZQSr8t5cbmclzV7kWcF5x9UDz6mT8V2b0jSPqyC4uF16
-         Rqi2E0lcorLLHMPS7Gh0LJSAyotJ1or6swtkf0I3wSwtx8mfjnHWLh/3ZejeYU7rDxOv
-         JHWEFBQVHUpNZc/EGLCjlcOOzajbPmUm/gzofywtudUO1OBd35AHwrDD7KhZgIh4xeuK
-         ks2A==
-X-Gm-Message-State: APjAAAWRcM7oQp0WCKzW1rPJDtdxtnP2FcKO99vmlz7mNp/zKjtkjsD7
-        WDO2djX7fnJmHTkAum5MB9r72iTMVVfj4yqdxRT7rA==
-X-Google-Smtp-Source: APXvYqzrokn9M/Ubcg0CEqbAzJJBvsXnB3LI0TFr0LTW5W/Xiku2p7auDuAK7OWy/bhF9IEAr+uI2BTb4+ImUhUhYhk=
-X-Received: by 2002:a2e:a0c9:: with SMTP id f9mr13031793ljm.77.1571618440273;
- Sun, 20 Oct 2019 17:40:40 -0700 (PDT)
+        bh=G+bmNIcrnyOIzrPmxwvjVgZiBAJd1fM+3wbATTNFbEI=;
+        b=ZZpklmOSAFlIw10X8P9KS5z7WlTgKLvnEb0iNHufOnT16yfdZq6UF/Ei6w+30xb9eP
+         bk66aDO3L/IMzCeWz+Azq1B7EoZhewCg6+B2tTobUAR7DFIl+onFKu6dfqBqUPc5F2kZ
+         mSKXYcELCUgHnaPd8iVuy+3ei3gvC6z+HtXOst4ejKIMvHEDaG1ReZJw2yYtzWUO6v/b
+         M7BG7oFmhSJnn3FOA9vKCfvW7w2SmhcdHBXM9+NpDlvvTizNdquJBsI2RBOKVxxb1YKc
+         z1UFGetVvNnxIN9FFTIjPHJN64sGYAf7nikfrz4mTzZgOFtkROOg97DzFFxqp8hUPh/h
+         zviA==
+X-Gm-Message-State: APjAAAUmhFdtP2I5ELIKNNYLA1nGkOmiLz83CjKnlmZ+lqQVoZA5bz8T
+        AGwQJblul7HEtvzoOb8c5Hoz0uX1GjX9PmDRagHuIQ==
+X-Google-Smtp-Source: APXvYqwIyNjawN1mEod1YyKYfTSA83orVXCv2STO/nJGv1866U3Q0y95F+b9JrmTVy90oQrZGDMZUrGbFb9ILn0rOUI=
+X-Received: by 2002:a19:f018:: with SMTP id p24mr2105108lfc.93.1571618496433;
+ Sun, 20 Oct 2019 17:41:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191016200647.32050-1-robh@kernel.org> <20191016200647.32050-18-robh@kernel.org>
-In-Reply-To: <20191016200647.32050-18-robh@kernel.org>
+References: <20191016200647.32050-1-robh@kernel.org> <20191016200647.32050-19-robh@kernel.org>
+In-Reply-To: <20191016200647.32050-19-robh@kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 21 Oct 2019 02:40:27 +0200
-Message-ID: <CACRpkdbhPPRDixrR4rWSopFEd-5AKpjHF1-Su-ViAGMDLQiKkw@mail.gmail.com>
-Subject: Re: [PATCH v2 17/25] PCI: versatile: Remove usage of PHYS_OFFSET
+Date:   Mon, 21 Oct 2019 02:41:24 +0200
+Message-ID: <CACRpkdYq86_h7yPr3+UJryNWHLqrzrR0SbhWRALcEVCR-pE9+Q@mail.gmail.com>
+Subject: Re: [PATCH v2 18/25] PCI: versatile: Enable COMPILE_TEST
 To:     Rob Herring <robh@kernel.org>
 Cc:     Andrew Murray <andrew.murray@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -83,23 +83,15 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 On Wed, Oct 16, 2019 at 10:07 PM Rob Herring <robh@kernel.org> wrote:
 
-> PHYS_OFFSET is not universally defined on all arches and using it prevents
-> enabling COMPILE_TEST. PAGE_OFFSET and __pa() are always available, so use
-> them to get the physical start of memory address.
+> Since commit a574795bc383 ("PCI: generic,versatile: Remove unused
+> pci_sys_data structures") the build dependency on ARM is gone, so let's
+> enable COMPILE_TEST for versatile.
 >
-> This should have probably used 'dma-ranges' to get the address, but we
-> don't want to force a DT update to do that. At least in QEMU, the SMAP
-> registers have no effect (or perhaps the only value that is handled is 0).
->
+> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Andrew Murray <andrew.murray@arm.com>
 > Cc: Bjorn Helgaas <bhelgaas@google.com>
 > Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> v2:
-> - New patch to fix build failure on some arches.
 
-Always wondered how to do this right, now I can fix other stuff!
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
