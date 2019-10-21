@@ -2,164 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 67F2ADF4EE
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2019 20:17:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1403DF4F3
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2019 20:19:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbfJUSRP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Oct 2019 14:17:15 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34829 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729880AbfJUSRP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Oct 2019 14:17:15 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z6so11867588otb.2;
-        Mon, 21 Oct 2019 11:17:14 -0700 (PDT)
+        id S1727953AbfJUSTP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Oct 2019 14:19:15 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37258 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727017AbfJUSTP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Oct 2019 14:19:15 -0400
+Received: by mail-oi1-f195.google.com with SMTP id i16so11896454oie.4;
+        Mon, 21 Oct 2019 11:19:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=VQ0yxSypAHnmTVia1KKk9xBQO5JaYYYTVlAYdXCJrEM=;
-        b=pWaPLFx6yPit4mrXRY3TFDplkYzgvXWXEki4yByePJfywUvLSZFuIkPRIccvbJizOb
-         FgW36DKkExX2ksq50jPvVZOo8yaDQXhHOuZjVd0+pvSVkZaw+ywnV45Vt5qD1NkXbN+q
-         Vzf7J8h3oXT6D4WGQ2hf4slVTGQMjIZPA9RpIrOf76ka2vnLIdDpmlZ5sPcCYQ0BKE1w
-         LddCk/0OH1YUKkU3pwkGyK8JAtKFGsAfljs0WdHs6i10G9zmKfvLyRbVMJodvnUBeMyC
-         tvcDgKtWK867EDeIoZ9I6AUH6oF/kOqinyAt7j1qKxm0AmrkQD/gl0MjmJuRpmmAuDjS
-         Orkw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GhRRKX0fxrsZsxuGGvSqETLa9jJ6bP3uK2nviMUaww8=;
+        b=dce21xf3wyCRXQ6e5Tq/YbqDUOR1ILOJCmTNPC6DLdfR32wZK+ceOx2QuGlRM+BhuZ
+         62JDTgvaCFyBrGOrC1m2pRwPEkLkbBV0m3L1zxtCS1hDV5y6UCfWcN9LCTqcbbyh3UEt
+         t61Q8dS3YoGxtBbGEbkTHiJYkxeomTxFrTDQYjwgt8nHdMM3sYQweKFVzFUbKiENuhJe
+         5YhxU1DcWk7LBzAoM7sso5lLUdlxQMJ7sy6tkuN3zMwf2ygG9PWQerdNP7Y+IHB/BgSn
+         Gk7dXeW3DgxafGXgq6EbvnHzNIP1jvkOMjVn/zjt8RSkF8zGEHPEskmxIbJOFUuG0KWO
+         9B3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=VQ0yxSypAHnmTVia1KKk9xBQO5JaYYYTVlAYdXCJrEM=;
-        b=fwYgIiBp7FfFiJNxVBqN7CoLDugN560Y+gnKVMj4Ti8WZzlmCNCDC9COaWFHGIIxWD
-         2L1CGaAEhEXSgVR4pKLlIouGRGXxcj5dZ+ehkuevDe0g0F/4C5Flaf/Uy8fCLpMj7TdJ
-         cOqVu+v2oA2CAmJR0h+87jgde933dmKKQaTWWhqufsnNN8pR7CZlXAkr0NX3XTlqJXT+
-         Uf6t1uii5izkmL4D6x0wm17FzWbNy2stSC4l4+zoBc4WPIVubBDIzWkRCa3Uk/EFo1Z+
-         Qu3qxxnDNqlbri8IA/HAOdWETuj7z55SSjjSBdF+KJuQEInmNSRpGYugRMpj1SqOq0XC
-         pOcQ==
-X-Gm-Message-State: APjAAAV9HKEotiJgIg8EA1HLHfSZtmVgQyXIwUqmdp63bEnnck/UNdd2
-        fzuKW63WxSvP5csKx30EtYLeBLku4PB1foG5j5s=
-X-Google-Smtp-Source: APXvYqzJ34iojFtoSpQNiuTeFTXsG2wKdA+8wnirYpSXyu3F52aftC3ugFL6CeMwdKyjWDBamD6WbkWp1fx98Fi8t2A=
-X-Received: by 2002:a05:6830:1693:: with SMTP id k19mr1836698otr.233.1571681833779;
- Mon, 21 Oct 2019 11:17:13 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GhRRKX0fxrsZsxuGGvSqETLa9jJ6bP3uK2nviMUaww8=;
+        b=kZXP/VAHN4G52hYirYVTziDzWk4uWHYPEbp4gplbnxILM7UIccSYe66sv8CHBvhWrm
+         mHppL+yRlJZ2XpfFfir87u5w6p5tWeDQ16CD+tjw+XQou1gB8DkzxS6XN7llxk1qKm0+
+         BdD1jH8whbxxSfdNHz7yJgcijTi/SoeNyuO8JTvSfpZDWILqZ4Ku0ltR0bNrEzVrVDsi
+         bXWqDrCD9qFu2AhyMPyOZkBJAj6cF0+bGNtJOnCd0/fF7TZR2F9ui2hOySaT9jj/xjps
+         WvdXaZv8cNgbUvZld11XrYIFzSRN2fJqFWlU0H2RttRju/GPr87le4e+LCgOHOz7NPD3
+         B27Q==
+X-Gm-Message-State: APjAAAX2OXwlbsWvu8G5vWWtop2hDXbYGJ1gch7vADUxK8slu1f3eiU2
+        7H+iJmPL1PrqWK60b41Dq3w=
+X-Google-Smtp-Source: APXvYqw+dmlB6g/B6OjNDClm1dwW3Ewl8TIrKVG8Rkn/D5hzQbkJJc8ZUPzperBrsW07E0rICGUBUg==
+X-Received: by 2002:aca:4155:: with SMTP id o82mr18894534oia.103.1571681954130;
+        Mon, 21 Oct 2019 11:19:14 -0700 (PDT)
+Received: from [100.71.96.87] ([143.166.81.254])
+        by smtp.gmail.com with ESMTPSA id t82sm4002463oie.12.2019.10.21.11.19.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 21 Oct 2019 11:19:13 -0700 (PDT)
+Subject: Re: [PATCH v3 3/3] PCI: pciehp: Add dmi table for in-band presence
+ disabled
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lukas@wunner.de
+References: <20191017193256.3636-1-stuart.w.hayes@gmail.com>
+ <20191017193256.3636-4-stuart.w.hayes@gmail.com>
+ <20191021134729.GL2819@lahna.fi.intel.com>
+From:   Stuart Hayes <stuart.w.hayes@gmail.com>
+Message-ID: <f4ace3ab-1b39-8a82-4cb6-a7a5d3bfbc72@gmail.com>
+Date:   Mon, 21 Oct 2019 13:19:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Received: by 2002:a9d:648:0:0:0:0:0 with HTTP; Mon, 21 Oct 2019 11:17:12 -0700 (PDT)
-In-Reply-To: <20191021160952.GA229204@google.com>
-References: <20191020090800.GA2778@light.dominikbrodowski.net> <20191021160952.GA229204@google.com>
-From:   "Michael ." <keltoiboy@gmail.com>
-Date:   Tue, 22 Oct 2019 05:17:12 +1100
-Message-ID: <CAFjuqNg2BjbxsOeOpoo8FQRwatQHeHKhj01hbwNrSHjz9p3vYw@mail.gmail.com>
-Subject: Re: PCI device function not being enumerated [Was: PCMCIA not working
- on Panasonic Toughbook CF-29]
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Trevor Jacobs <trevor_jacobs@aol.com>,
-        Kris Cleveland <tridentperfusion@yahoo.com>,
-        Jeff <bluerocksaddles@willitsonline.com>,
-        Morgan Klym <moklym@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191021134729.GL2819@lahna.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thank you Dominik for looking at this for us and passing it on.
 
-Good morning Bjorn, thank you also for looking into this for us and
-thank you for CCing us into this as non of us are on the mailing list.
-One question how do we apply this patch or is this for Dominik to try?
 
-Cheers.
-Michael
+On 10/21/19 8:47 AM, Mika Westerberg wrote:
+> On Thu, Oct 17, 2019 at 03:32:56PM -0400, Stuart Hayes wrote:
+>> Some systems have in-band presence detection disabled for hot-plug PCI
+>> slots, but do not report this in the slot capabilities 2 (SLTCAP2) register.
+>> On these systems, presence detect can become active well after the link is
+>> reported to be active, which can cause the slots to be disabled after a
+>> device is connected.
+>>
+>> Add a dmi table to flag these systems as having in-band presence disabled.
+>>
+>> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+>> ---
+>>  drivers/pci/hotplug/pciehp_hpc.c | 14 ++++++++++++++
+>>  1 file changed, 14 insertions(+)
+>>
+>> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+>> index 02eb811a014f..4d377a2a62ce 100644
+>> --- a/drivers/pci/hotplug/pciehp_hpc.c
+>> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+>> @@ -14,6 +14,7 @@
+>>  
+>>  #define dev_fmt(fmt) "pciehp: " fmt
+>>  
+>> +#include <linux/dmi.h>
+>>  #include <linux/kernel.h>
+>>  #include <linux/types.h>
+>>  #include <linux/jiffies.h>
+>> @@ -26,6 +27,16 @@
+>>  #include "../pci.h"
+>>  #include "pciehp.h"
+>>  
+>> +static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
+>> +	{
+>> +		.ident = "Dell System",
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_OEM_STRING, "Dell System"),
+> 
+> Sorry if this has been discussed previously already but isn't this going
+> to apply on all Dell systems, not just the affected ones? Is this the
+> intention?
+> 
 
-On 22/10/2019, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> On Sun, Oct 20, 2019 at 11:08:00AM +0200, Dominik Brodowski wrote:
->> On the basis of the additional information (thanks), there might be a
->> more specific path to investigate: It is that the PCI code does not
->> enumerate the second cardbus bridge PCI function in the more recent 4.19
->> kernel compared to the anvient (and working) 2.6 kernel.
->>
->> Namely, only one CardBus bridge is recognized
->>
->> ...
->> 06:01.0 CardBus bridge: Ricoh Co Ltd RL5c476 II (rev 8b)
->> 06:01.1 SD Host controller: Ricoh Co Ltd R5C822 SD/SDIO/MMC/MS/MSPro Host
->> Adapter (rev 11)
->> 06:02.0 Network controller: Intel Corporation PRO/Wireless 2915ABG
->> [Calexico2] Network Connection (rev 05)
->> ...
->>
->> instead of the two which really should be present:
->>
->> ...
->> 06:01.0 CardBus bridge: Ricoh Co Ltd RL5c476 II (rev 8b)
->> 06:01.1 CardBus bridge: Ricoh Co Ltd RL5c476 II (rev 8b)
->> 06:01.2 SD Host controller: Ricoh Co Ltd R5C822 SD/SDIO/MMC/MS/MSPro Host
->> Adapter (rev 11)
->> 06:02.0 Network controller: Intel Corporation PRO/Wireless 2915ABG
->> [Calexico2] Network Connection (rev 05)
->> ...
->>
->> To the PCI folks: any idea on what may cause the second cardbus bridge
->> PCI
->> device function to be missed? Are there any command line options the
->> users
->> who reported this issue[*] may try?
->
-> Thanks for the report.  Could you try disabling
-> ricoh_mmc_fixup_rl5c476(), e.g., with the patch below (this is based
-> on v5.4-rc1, but you can use v4.9 if that's easier for you)?  This
-> isn't a fix; it's just something that looks like it might be related.
->
->> [*] For more information, see this thread:
->> 	https://lore.kernel.org/lkml/CAFjuqNi+knSb9WVQOahCVFyxsiqoGgwoM7Z1aqDBebNzp_-jYw@mail.gmail.com/
->
->
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 320255e5e8f8..7a1e1a242506 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -3036,38 +3036,6 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HINT, 0x0020,
-> quirk_hotplug_bridge);
->   * #1, and this will confuse the PCI core.
->   */
->  #ifdef CONFIG_MMC_RICOH_MMC
-> -static void ricoh_mmc_fixup_rl5c476(struct pci_dev *dev)
-> -{
-> -	u8 write_enable;
-> -	u8 write_target;
-> -	u8 disable;
-> -
-> -	/*
-> -	 * Disable via CardBus interface
-> -	 *
-> -	 * This must be done via function #0
-> -	 */
-> -	if (PCI_FUNC(dev->devfn))
-> -		return;
-> -
-> -	pci_read_config_byte(dev, 0xB7, &disable);
-> -	if (disable & 0x02)
-> -		return;
-> -
-> -	pci_read_config_byte(dev, 0x8E, &write_enable);
-> -	pci_write_config_byte(dev, 0x8E, 0xAA);
-> -	pci_read_config_byte(dev, 0x8D, &write_target);
-> -	pci_write_config_byte(dev, 0x8D, 0xB7);
-> -	pci_write_config_byte(dev, 0xB7, disable | 0x02);
-> -	pci_write_config_byte(dev, 0x8E, write_enable);
-> -	pci_write_config_byte(dev, 0x8D, write_target);
-> -
-> -	pci_notice(dev, "proprietary Ricoh MMC controller disabled (via CardBus
-> function)\n");
-> -	pci_notice(dev, "MMC cards are now supported by standard SDHCI
-> controller\n");
-> -}
-> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_RICOH, PCI_DEVICE_ID_RICOH_RL5C476,
-> ricoh_mmc_fixup_rl5c476);
-> -DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_RICOH,
-> PCI_DEVICE_ID_RICOH_RL5C476, ricoh_mmc_fixup_rl5c476);
-> -
->  static void ricoh_mmc_fixup_r5c832(struct pci_dev *dev)
->  {
->  	u8 write_enable;
->
+Yes, that is the intention. Applying this just makes the hotplug code wait for 
+the presence detect bit to be set before proceeding, which ideally wouldn't hurt 
+anything--for devices that don't have inband presence detect disabled, presence
+detect should already be up when the code in patch 2/3 starts to wait for it.
+
+The only issue should be with broken hotplug implementations that don't ever 
+bring presence detect active (these apparently exist)--but even those would still 
+work, they would just take an extra second to come up.
+
+On the other hand, a number of Dell systems have (and will have) NVMe 
+implementations that have inband presence detect disabled (but they won't have
+the new bit implemented to report that), and they don't work correctly without 
+this.
