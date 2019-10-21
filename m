@@ -2,125 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DEC00DF280
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2019 18:10:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D981EDF3FF
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2019 19:17:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbfJUQJy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Oct 2019 12:09:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35514 "EHLO mail.kernel.org"
+        id S1728188AbfJURRk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Oct 2019 13:17:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbfJUQJy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:09:54 -0400
+        id S1726289AbfJURRj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 21 Oct 2019 13:17:39 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 665D3205C9;
-        Mon, 21 Oct 2019 16:09:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D961B20882;
+        Mon, 21 Oct 2019 17:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571674193;
-        bh=yAFVLkxjq0Sx/TKG/3FFK7vmvO0S13xxudXXKeP8cls=;
+        s=default; t=1571678258;
+        bh=8n+BilFqcAeLRiVDMfASlZVZ2WRjYrEYHbkF6OeRIoc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UJLPRlaUWuFmpX+NxO/8w1KbZGIRH4d0ob9OZ1lhjvd7SyHzsvySc7DcUoLh3ZXTn
-         Y4bB/59GrW2t07f4+eAY985zcRpPVQES2Ejwytla7wMFbkuUQssn5Q6uidZG7iDJvg
-         Hs6/5hZyZQF2qN0iZ6oZsMsmW7I2rVXRZxU5NdH0=
-Date:   Mon, 21 Oct 2019 11:09:52 -0500
+        b=CZz7qhtg0/UcMkgVdbX/vzQvisa+oRoS37bpEG/7ojCxGpfPK4TFDqy7r1DX/H/Bl
+         nMzYYEP0psYBx/QMsNizDB9Pxy2WA7ltfA1HS+nLxHuOG3YQKeWg+SvzEOAGwsTwPf
+         SdCoOtVxEq2v7HTaN03RUvMAL249fKmzp7mC31Lw=
+Date:   Mon, 21 Oct 2019 12:17:36 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     linux-pci@vger.kernel.org, "Michael ." <keltoiboy@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Trevor Jacobs <trevor_jacobs@aol.com>,
-        Kris Cleveland <tridentperfusion@yahoo.com>,
-        Jeff <bluerocksaddles@willitsonline.com>,
-        Morgan Klym <moklym@gmail.com>
-Subject: Re: PCI device function not being enumerated [Was: PCMCIA not
- working on Panasonic Toughbook CF-29]
-Message-ID: <20191021160952.GA229204@google.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, andrew.murray@arm.com, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v4 2/3] dwc: PCI: intel: PCIe RC controller driver
+Message-ID: <20191021171736.GA233393@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191020090800.GA2778@light.dominikbrodowski.net>
+In-Reply-To: <c46ba3f4187fe53807948b4f10996b89a75c492c.1571638827.git.eswara.kota@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Oct 20, 2019 at 11:08:00AM +0200, Dominik Brodowski wrote:
-> On the basis of the additional information (thanks), there might be a
-> more specific path to investigate: It is that the PCI code does not
-> enumerate the second cardbus bridge PCI function in the more recent 4.19
-> kernel compared to the anvient (and working) 2.6 kernel.
+On Mon, Oct 21, 2019 at 02:39:19PM +0800, Dilip Kota wrote:
+> Add support to PCIe RC controller on Intel Gateway SoCs.
+> PCIe controller is based of Synopsys DesignWare pci core.
 > 
-> Namely, only one CardBus bridge is recognized
+> Intel PCIe driver requires Upconfig support, fast training
+> sequence configuration and link speed change. So adding the
+> respective helper functions in the pcie DesignWare framework.
+> It also programs hardware autonomous speed during speed
+> configuration so defining it in pci_regs.h.
 > 
-> ...
-> 06:01.0 CardBus bridge: Ricoh Co Ltd RL5c476 II (rev 8b)
-> 06:01.1 SD Host controller: Ricoh Co Ltd R5C822 SD/SDIO/MMC/MS/MSPro Host Adapter (rev 11)
-> 06:02.0 Network controller: Intel Corporation PRO/Wireless 2915ABG [Calexico2] Network Connection (rev 05)
-> ...
-> 
-> instead of the two which really should be present:
-> 
-> ...
-> 06:01.0 CardBus bridge: Ricoh Co Ltd RL5c476 II (rev 8b)
-> 06:01.1 CardBus bridge: Ricoh Co Ltd RL5c476 II (rev 8b)
-> 06:01.2 SD Host controller: Ricoh Co Ltd R5C822 SD/SDIO/MMC/MS/MSPro Host Adapter (rev 11)
-> 06:02.0 Network controller: Intel Corporation PRO/Wireless 2915ABG [Calexico2] Network Connection (rev 05)
-> ...
-> 
-> To the PCI folks: any idea on what may cause the second cardbus bridge PCI
-> device function to be missed? Are there any command line options the users
-> who reported this issue[*] may try?
 
-Thanks for the report.  Could you try disabling
-ricoh_mmc_fixup_rl5c476(), e.g., with the patch below (this is based
-on v5.4-rc1, but you can use v4.9 if that's easier for you)?  This
-isn't a fix; it's just something that looks like it might be related.
+> +static void intel_pcie_link_setup(struct intel_pcie_port *lpp)
+> +{
+> +	u32 val;
+> +
+> +	val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCAP);
+> +	lpp->max_speed = FIELD_GET(PCI_EXP_LNKCAP_SLS, val);
+> +	lpp->max_width = FIELD_GET(PCI_EXP_LNKCAP_MLW, val);
+> +
+> +	val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
+> +
+> +	val &= ~(PCI_EXP_LNKCTL_LD | PCI_EXP_LNKCTL_ASPMC);
+> +	val |= (PCI_EXP_LNKSTA_SLC << 16) | PCI_EXP_LNKCTL_CCC |
+> +	       PCI_EXP_LNKCTL_RCB;
 
-> [*] For more information, see this thread:
-> 	https://lore.kernel.org/lkml/CAFjuqNi+knSb9WVQOahCVFyxsiqoGgwoM7Z1aqDBebNzp_-jYw@mail.gmail.com/
+Link Control is only 16 bits wide, so "PCI_EXP_LNKSTA_SLC << 16"
+wouldn't make sense.  But I guess you're writing a device-specific
+register that is not actually the Link Control as documented in PCIe
+r5.0, sec 7.5.3.7, even though the bits are similar?
 
+Likewise, PCI_EXP_LNKCTL_RCB is RO for Root Ports, but maybe you're
+telling the device what it should advertise in its Link Control?
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 320255e5e8f8..7a1e1a242506 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3036,38 +3036,6 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HINT, 0x0020, quirk_hotplug_bridge);
-  * #1, and this will confuse the PCI core.
-  */
- #ifdef CONFIG_MMC_RICOH_MMC
--static void ricoh_mmc_fixup_rl5c476(struct pci_dev *dev)
--{
--	u8 write_enable;
--	u8 write_target;
--	u8 disable;
--
--	/*
--	 * Disable via CardBus interface
--	 *
--	 * This must be done via function #0
--	 */
--	if (PCI_FUNC(dev->devfn))
--		return;
--
--	pci_read_config_byte(dev, 0xB7, &disable);
--	if (disable & 0x02)
--		return;
--
--	pci_read_config_byte(dev, 0x8E, &write_enable);
--	pci_write_config_byte(dev, 0x8E, 0xAA);
--	pci_read_config_byte(dev, 0x8D, &write_target);
--	pci_write_config_byte(dev, 0x8D, 0xB7);
--	pci_write_config_byte(dev, 0xB7, disable | 0x02);
--	pci_write_config_byte(dev, 0x8E, write_enable);
--	pci_write_config_byte(dev, 0x8D, write_target);
--
--	pci_notice(dev, "proprietary Ricoh MMC controller disabled (via CardBus function)\n");
--	pci_notice(dev, "MMC cards are now supported by standard SDHCI controller\n");
--}
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_RICOH, PCI_DEVICE_ID_RICOH_RL5C476, ricoh_mmc_fixup_rl5c476);
--DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_RICOH, PCI_DEVICE_ID_RICOH_RL5C476, ricoh_mmc_fixup_rl5c476);
--
- static void ricoh_mmc_fixup_r5c832(struct pci_dev *dev)
- {
- 	u8 write_enable;
+PCI_EXP_LNKCTL_CCC is RW.  But doesn't it depend on the components on
+both ends of the link?  Do you know what device is at the other end?
+I would have assumed that you'd have to start with CCC==0, which
+should be most conservative, then set CCC=1 only if you know both ends
+have a common clock.
+
+> +	pcie_rc_cfg_wr(lpp, val, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
+> +}
+> +
+
+> +static void intel_pcie_max_speed_setup(struct intel_pcie_port *lpp)
+> +{
+> +	u32 reg, val;
+> +
+> +	reg = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL2);
+> +	switch (lpp->link_gen) {
+> +	case PCIE_LINK_SPEED_GEN1:
+> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
+> +		reg |= PCI_EXP_LNKCTL2_HASD|
+> +			PCI_EXP_LNKCTL2_TLS_2_5GT;
+> +		break;
+> +	case PCIE_LINK_SPEED_GEN2:
+> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
+> +		reg |= PCI_EXP_LNKCTL2_HASD|
+> +			PCI_EXP_LNKCTL2_TLS_5_0GT;
+> +		break;
+> +	case PCIE_LINK_SPEED_GEN3:
+> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
+> +		reg |= PCI_EXP_LNKCTL2_HASD|
+> +			PCI_EXP_LNKCTL2_TLS_8_0GT;
+> +		break;
+> +	case PCIE_LINK_SPEED_GEN4:
+> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
+> +		reg |= PCI_EXP_LNKCTL2_HASD|
+> +			PCI_EXP_LNKCTL2_TLS_16_0GT;
+> +		break;
+> +	default:
+> +		/* Use hardware capability */
+> +		val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCAP);
+> +		val = FIELD_GET(PCI_EXP_LNKCAP_SLS, val);
+> +		reg &= ~PCI_EXP_LNKCTL2_HASD;
+> +		reg |= val;
+> +		break;
+> +	}
+> +
+> +	pcie_rc_cfg_wr(lpp, reg, PCIE_CAP_OFST + PCI_EXP_LNKCTL2);
+> +	dw_pcie_link_set_n_fts(&lpp->pci, lpp->n_fts);
+
+There are other users of of_pci_get_max_link_speed() that look sort of
+similar to this (dra7xx_pcie_establish_link(),
+ks_pcie_set_link_speed(), tegra_pcie_prepare_host()).  Do these *need*
+to be different, or is there something that could be factored out?
+
+> +}
+> +
+> +
+> +
+
+Remove extra blank lines here.
+
+> +static void intel_pcie_port_logic_setup(struct intel_pcie_port *lpp)
+> ...
+
+> +	/* Intel PCIe doesn't configure IO region, so configure
+> +	 * viewport to not to access IO region during register
+> +	 * read write operations.
+> +	 */
+
+This comment doesn't describe the code.  Is there supposed to be some
+code here that configures the viewport?  Where do we tell the viewport
+not to access IO?
+
+I guess maybe this means something like "tell
+dw_pcie_access_other_conf() not to program an outbound ATU for I/O"?
+I don't know that structure well enough to write this in a way that
+makes sense, but this code doesn't look like it's configuring any
+viewports.
+
+Please use usual multi-line comment style, i.e.,
+
+  /*
+   * Intel PCIe ...
+   */
+
+> +	pci->num_viewport = data->num_viewport;
+> +	dev_info(dev, "Intel PCIe Root Complex Port %d init done\n", lpp->id);
+> +
+> +	return ret;
+> +}
