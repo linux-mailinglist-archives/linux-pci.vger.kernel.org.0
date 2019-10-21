@@ -2,70 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BF11DE2E1
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2019 06:05:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32F4DDE4AB
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2019 08:39:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725497AbfJUEFu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Oct 2019 00:05:50 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37138 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725468AbfJUEFt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 21 Oct 2019 00:05:49 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2A4A356633E3751C2050;
-        Mon, 21 Oct 2019 12:05:48 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 21 Oct 2019
- 12:05:44 +0800
-Subject: Re: [PATCH] PCI: Warn about host bridge device when its numa node is
- NO_NODE
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <mhocko@kernel.org>,
-        <peterz@infradead.org>, <robin.murphy@arm.com>,
-        <geert@linux-m68k.org>, <gregkh@linuxfoundation.org>,
-        <paul.burton@mips.com>
-References: <1571467543-26125-1-git-send-email-linyunsheng@huawei.com>
- <20191019083431.GA26340@infradead.org>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <96b8737d-5fbf-7942-bf10-7521cf954d6e@huawei.com>
-Date:   Mon, 21 Oct 2019 12:05:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-In-Reply-To: <20191019083431.GA26340@infradead.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+        id S1726307AbfJUGjc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Oct 2019 02:39:32 -0400
+Received: from mga01.intel.com ([192.55.52.88]:14496 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726039AbfJUGjb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 21 Oct 2019 02:39:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 23:39:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,322,1566889200"; 
+   d="scan'208";a="209378615"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by fmsmga001.fm.intel.com with ESMTP; 20 Oct 2019 23:39:28 -0700
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, andrew.murray@arm.com, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
+Subject: [PATCH v4 0/3] PCI: Add Intel PCIe Driver and respective dt-binding yaml file
+Date:   Mon, 21 Oct 2019 14:39:17 +0800
+Message-Id: <cover.1571638827.git.eswara.kota@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2019/10/19 16:34, Christoph Hellwig wrote:
-> On Sat, Oct 19, 2019 at 02:45:43PM +0800, Yunsheng Lin wrote:
->> +	if (nr_node_ids > 1 && dev_to_node(bus->bridge) == NUMA_NO_NODE)
->> +		dev_err(bus->bridge, FW_BUG "No node assigned on NUMA capable HW by BIOS. Please contact your vendor for updates.\n");
->> +
-> 
-> The whole idea of mentioning a BIOS in architeture indepent code doesn't
-> make sense at all.
+Intel PCIe is synopsys based controller utilizes the Designware
+framework for host initialization and intel application
+specific register configurations.
 
-Mentioning the BIOS is to tell user what firmware is broken, so that
-user can report this to their vendor by referring the specific firmware.
+Changes on v4:
+	Add lane resizing API in PCIe DesignWare driver.
+	Intel PCIe driver uses it for lane resizing which
+	 is being exposed through sysfs attributes.
+	Add Intel PCIe sysfs attributes is in separate patch.
+	Address review comments given on v3.
 
-It seems we can specific the node through different ways(DT, ACPI, etc).
+Changes on v3:
+	Compared to v2, map_irq() patch is removed as it is no longer
+	  required for Intel PCIe driver. Intel PCIe driver does platform
+	  specific interrupt configuration during core initialization. So
+	  changed the subject line too.
+	Address v2 review comments for DT binding and PCIe driver
 
-Is there a better name for mentioning instead of BIOS, or we should do
-the checking and warning in the architeture dependent code?
+Dilip Kota (3):
+  dt-bindings: PCI: intel: Add YAML schemas for the PCIe RC controller
+  dwc: PCI: intel: PCIe RC controller driver
+  pci: intel: Add sysfs attributes to configure pcie link
 
-Or maybe just remove the BIOS from the above log?
+ .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 135 ++++
+ drivers/pci/controller/dwc/Kconfig                 |  10 +
+ drivers/pci/controller/dwc/Makefile                |   1 +
+ drivers/pci/controller/dwc/pcie-designware.c       |  43 ++
+ drivers/pci/controller/dwc/pcie-designware.h       |  15 +
+ drivers/pci/controller/dwc/pcie-intel-gw.c         | 700 +++++++++++++++
+ include/uapi/linux/pci_regs.h                      |   1 +
+ 7 files changed, 905 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-intel-gw.c
 
-Thanks.
-
-> 
-> .
-> 
+-- 
+2.11.0
 
