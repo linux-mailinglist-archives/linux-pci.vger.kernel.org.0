@@ -2,226 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C820DEAB0
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2019 13:19:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF363DEB02
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2019 13:34:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbfJULTk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Oct 2019 07:19:40 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:49666 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbfJULTk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:19:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C448EBD;
-        Mon, 21 Oct 2019 04:19:05 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C73533F718;
-        Mon, 21 Oct 2019 04:19:04 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 12:19:03 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        hch@infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-Message-ID: <20191021111902.GO47056@e119886-lin.cambridge.arm.com>
-References: <cover.1571638827.git.eswara.kota@linux.intel.com>
- <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
+        id S1727962AbfJULd7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Oct 2019 07:33:59 -0400
+Received: from mga02.intel.com ([134.134.136.20]:58087 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727685AbfJULd7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 21 Oct 2019 07:33:59 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 04:33:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,323,1566889200"; 
+   d="scan'208";a="209427634"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 21 Oct 2019 04:33:54 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 21 Oct 2019 14:33:53 +0300
+Date:   Mon, 21 Oct 2019 14:33:53 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Daniel Drake <drake@endlessm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH] PCI: increase D3 delay for AMD Ryzen5/7 XHCI controllers
+Message-ID: <20191021113353.GX2819@lahna.fi.intel.com>
+References: <20191014061355.29072-1-drake@endlessm.com>
+ <20191014154322.GA190693@google.com>
+ <CAD8Lp45hmYhrj9v-=7NKrG2YHmxZKFExDsHCL67hap+Y2iM-uw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <CAD8Lp45hmYhrj9v-=7NKrG2YHmxZKFExDsHCL67hap+Y2iM-uw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 02:39:18PM +0800, Dilip Kota wrote:
-> Add YAML shcemas for PCIe RC controller on Intel Gateway SoCs
+Hi,
 
-s/shcemas/schemas/
+Sorry for the delay. I was on vacation last week.
 
-> which is Synopsys DesignWare based PCIe core.
-
-The revision history below doesn't need to be in the commit mesage and
-so you should add a '---' before the following (and thanks for the
-detailed history).
-
-Besides that:
-
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-
+On Tue, Oct 15, 2019 at 01:31:32PM +0800, Daniel Drake wrote:
+> On Mon, Oct 14, 2019 at 11:43 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > Can you tell if this is because the Ryzen7 XHCI controller is out of
+> > spec, or is the Linux PCI core missing some delay?  If the latter,
+> > fixing the core might fix other devices as well.
+> >
+> > Mika has this patch:
+> > https://lore.kernel.org/r/20190821124519.71594-1-mika.westerberg@linux.intel.com
+> > for similar issues, but I think that patch fixes D3cold->D0
+> > transitions, and your patch appears to be concerned with D3hot->D0
+> > transitions.
 > 
-> changes on v4:
-> 	Add "snps,dw-pcie" compatible.
-> 	Rename phy-names property value to pcie.
-> 	And maximum and minimum values to num-lanes.
-> 	Add ref for reset-assert-ms entry and update the
-> 	 description for easy understanding.
-> 	Remove pcie core interrupt entry.
+> It's actually coming out of D3cold here, however what happens right
+> before this is that __pci_start_power_transition() calls
+> pci_platform_power_transition(D0) to leave D3cold state, then
+> pci_update_current_state() reads PMCSR and updates dev->current_state
+> to D3hot.
 > 
-> changes on v3:
->         Add the appropriate License-Identifier
->         Rename intel,rst-interval to 'reset-assert-us'
->         Add additionalProperties: false
->         Rename phy-names to 'pciephy'
->         Remove the dtsi node split of SoC and board in the example
->         Add #interrupt-cells = <1>; or else interrupt parsing will fail
->         Name yaml file with compatible name
+> The 20ms delay for these XHCI controllers is needed precisely at this
+> point - after writing PMCSR to move to D0, and before reading it back
+> to check the result.
+> I tried moving the delay immediately before writing PMCSR, but that
+> doesn't work. Based on that, it seems like it's just a little out of
+> spec.
 > 
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> ---
->  .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 135 +++++++++++++++++++++
->  1 file changed, 135 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> new file mode 100644
-> index 000000000000..49dd87ec1e3d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> @@ -0,0 +1,135 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/intel-gw-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: PCIe RC controller on Intel Gateway SoCs
-> +
-> +maintainers:
-> +  - Dilip Kota <eswara.kota@linux.intel.com>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: intel,lgm-pcie
-> +      - const: snps,dw-pcie
-> +
-> +  device_type:
-> +    const: pci
-> +
-> +  "#address-cells":
-> +    const: 3
-> +
-> +  "#size-cells":
-> +    const: 2
-> +
-> +  reg:
-> +    items:
-> +      - description: Controller control and status registers.
-> +      - description: PCIe configuration registers.
-> +      - description: Controller application registers.
-> +
-> +  reg-names:
-> +    items:
-> +      - const: dbi
-> +      - const: config
-> +      - const: app
-> +
-> +  ranges:
-> +    description: Ranges for the PCI memory and I/O regions.
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: PCIe registers interface clock.
-> +
-> +  phys:
-> +    maxItems: 1
-> +
-> +  phy-names:
-> +    const: pcie
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +
-> +  num-lanes:
-> +    minimum: 1
-> +    maximum: 2
-> +    description: Number of lanes to use for this port.
-> +
-> +  linux,pci-domain:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: PCI domain ID.
-> +
-> +  '#interrupt-cells':
-> +    const: 1
-> +
-> +  interrupt-map-mask:
-> +    description: Standard PCI IRQ mapping properties.
-> +
-> +  interrupt-map:
-> +    description: Standard PCI IRQ mapping properties.
-> +
-> +  max-link-speed:
-> +    description: Specify PCI Gen for link capability.
-> +
-> +  bus-range:
-> +    description: Range of bus numbers associated with this controller.
-> +
-> +  reset-assert-ms:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Delay after asserting reset to the PCIe device.
-> +      Some devices need an interval upto 500ms. By default it is 100ms.
-> +
-> +required:
-> +  - compatible
-> +  - device_type
-> +  - reg
-> +  - reg-names
-> +  - ranges
-> +  - resets
-> +  - clocks
-> +  - phys
-> +  - phy-names
-> +  - reset-gpios
-> +  - num-lanes
-> +  - linux,pci-domain
-> +  - interrupt-map
-> +  - interrupt-map-mask
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pcie10:pcie@d0e00000 {
-> +      compatible = "intel,lgm-pcie", "snps,dw-pcie";
-> +      device_type = "pci";
-> +      #address-cells = <3>;
-> +      #size-cells = <2>;
-> +      reg = <0xd0e00000 0x1000>,
-> +            <0xd2000000 0x800000>,
-> +            <0xd0a41000 0x1000>;
-> +      reg-names = "dbi", "config", "app";
-> +      linux,pci-domain = <0>;
-> +      max-link-speed = <4>;
-> +      bus-range = <0x00 0x08>;
-> +      interrupt-parent = <&ioapic1>;
-> +      #interrupt-cells = <1>;
-> +      interrupt-map-mask = <0 0 0 0x7>;
-> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
-> +                      <0 0 0 2 &ioapic1 28 1>,
-> +                      <0 0 0 3 &ioapic1 29 1>,
-> +                      <0 0 0 4 &ioapic1 30 1>;
-> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
-> +      resets = <&rcu0 0x50 0>;
-> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
-> +      phys = <&cb0phy0>;
-> +      phy-names = "pcie";
-> +      status = "okay";
-> +      reset-assert-ms = <500>;
-> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
-> +      num-lanes = <2>;
-> +    };
-> -- 
-> 2.11.0
-> 
+> With Mika's patch, pcie_wait_downstream_accessible() is called for
+> these devices after the state transition has already failed. It also
+> doesn't do any delaying at that point because pci_pcie_type(pdev) ==
+> 0.
+
+Just to be sure, did you try the patch or just looked at it? Because
+what the patch does is that it does the delay when the downstream/root
+port is resumed, not the xHCI itself.
