@@ -2,88 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB545DF57A
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2019 20:59:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87A88DF966
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2019 02:14:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbfJUS7g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Oct 2019 14:59:36 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38816 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728353AbfJUS7g (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Oct 2019 14:59:36 -0400
-Received: by mail-oi1-f193.google.com with SMTP id d140so7688657oib.5;
-        Mon, 21 Oct 2019 11:59:35 -0700 (PDT)
+        id S1730501AbfJVANf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Oct 2019 20:13:35 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41805 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730472AbfJVANf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Oct 2019 20:13:35 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g13so12626988otp.8;
+        Mon, 21 Oct 2019 17:13:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=oTI80X6gMyjYQOMp/OT40Ib53Jwx5S7b8ZvaxS8S+Dw=;
-        b=hjrmofze+IcSx9OLGssRiOm0Ic0DDjpMQE3Ly0ygDJyMGDliFrYjrSFTpYyi6QI5LB
-         /3MktAJbodbaD0+1/g+WcTv0FU6uSysF74B1+gE17JwtePBrspmT+gr1N/z+nBXD5XOm
-         e0eHWVtPnVi8c5b6MoIxDJdqfmmse5jSOJmsQ6qQ+pZAHFOJncSdZuw8iFCzXuxb+RyA
-         F3n0eO7flDKSRVpAUfCEI+HwMnBQMF9+3yztkM0fS//RgkRi8/qoh7yzIsWhWYvAQtiP
-         PR1ekdYoQtyBoOb8a08K0dbThgg2EiuYaW4c0D+WFbR/UgwspcTDIDcBuN8g9OIvNMwh
-         DT2g==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=M+6bF5g/YSE/QuOb6sBnF/qNNP/gyev5JR5+wvN0sXw=;
+        b=b2c8gm4Bbd0OmbDp99yDuCcsXVVEsGL2SvjN68dqGEwR+KknD5UpRk/6NszK4b2rg5
+         aw/bUjPfQlOepsOnIbFhSwBtvsP6o8/05dNHbcKmg9DkogYhX3KtZApt+vF09kl5+4xA
+         IX9oz+GTfHKpW8xlAnEfaS6VkdWK9+Tgy4n6CKpcm8OZK0lmpYHwlnZhldhtOGObSlxi
+         MBD8kc8J2bU+78fxZTVkJ0qFxCD+0BamvidGtVlyBF+L3QqCakODr4lD04jOpB6FYWyY
+         QlGIATUJieZik7oOPlgwyGlGXO+/mmrVAE5mSd/N9upD7h+Q49gGxSrxOaW3VXHz2kPA
+         7/1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=oTI80X6gMyjYQOMp/OT40Ib53Jwx5S7b8ZvaxS8S+Dw=;
-        b=Oae6oZML6yGHZCkU7fJJicNs5Ws4nBjWEti+Ek184qDZHl/Vb/ppywDDMKjblpjyqS
-         UOVGdhakTTq4RHaXEfqEBOu9DN/vJ3+O9ZRQEM11y/4xNGGLdmWklcPsPF7FRNd48Spa
-         dLhGFNk4bl8zhkQ1ulz16YAzVJlpnXe26G0FLj/Nwd8RJ4+OTN1rJIu9sP7Wa1MPaiX1
-         J5sPCvAHPTH9mGML7YznKBMyX8VqkbJJJJPleagdssL6CVFHUmhxx92GDy20YMDSk8N8
-         9ycHoUq8S98y50E+2t2fAeAo+YCe8LRHg1PKYeagqWJhSWIlxQuRKX0dX0KhUCF4uF0+
-         sWpw==
-X-Gm-Message-State: APjAAAVB1BoZpIzVcNv3Dbxf62vCh2KucK4jW3kK30P6SIubUT7JStZ/
-        MX8JAe6N3GOu/MqdLE30texcPdlaQ6V9lKHcTh4=
-X-Google-Smtp-Source: APXvYqzbfHlud+FlAXAAcaIr3wj8bignujUbwOwX0dfLtGsI14bJBOaa4keO2vKEACQ+99VSXlB6pzVkeehqh3em8JI=
-X-Received: by 2002:a05:6808:491:: with SMTP id z17mr20331947oid.62.1571684375103;
- Mon, 21 Oct 2019 11:59:35 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=M+6bF5g/YSE/QuOb6sBnF/qNNP/gyev5JR5+wvN0sXw=;
+        b=mawwIV8ZzoB+oHKB4CAmwWR+LmHudPyG+axAg9/34JnwNySBA9Dy5oxwrGjE3pn8mz
+         0tYIH0DGAVBfhyu6hibstZpNdAYULxWT7dW2y/p/Tf7zmdxICOHcCiZyQelTQ3gBo4Iw
+         f8kk5Bl3i1rhtyRmsgsakCHNoZvROpq8WzwpnLv8Dj5cVS7FiddP7q7Q1FkLEBKmrX7D
+         /fobe6X3GCskVoWzi05HaMl75CVReFIaEKFtZaXFC4vsLgaQMzsuNrueXhRPYmnZOp7u
+         bsVGcaWy+ElgBkfRiDdFwLkRMpWXsFZYVNSpzX4t7nfCZr9xU/G2QiY8/OisrvGbhhHm
+         uLNA==
+X-Gm-Message-State: APjAAAWCdPd0ZJVNfzuYata3fETU7ozLCjSApYsG+y8ZuBun2nRA0U8d
+        P2KEq6Toy7Lx+EFSFOx3jpE=
+X-Google-Smtp-Source: APXvYqwA8kBZTBbWwYarMvf9QjlqphWph1OVZOn7BM2jiojzIiQ/xZOfEy0+BTJfGiWPwn8d49SCvw==
+X-Received: by 2002:a05:6830:1aef:: with SMTP id c15mr474833otd.200.1571703214113;
+        Mon, 21 Oct 2019 17:13:34 -0700 (PDT)
+Received: from nuclearis2-1.gtech (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
+        by smtp.gmail.com with ESMTPSA id k24sm4198786oic.29.2019.10.21.17.13.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Oct 2019 17:13:33 -0700 (PDT)
+Subject: Re: [PATCH v3 3/3] PCI: pciehp: Add dmi table for in-band presence
+ disabled
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lukas@wunner.de
+References: <20191017193256.3636-1-stuart.w.hayes@gmail.com>
+ <20191017193256.3636-4-stuart.w.hayes@gmail.com>
+ <20191021134729.GL2819@lahna.fi.intel.com>
+ <f4ace3ab-1b39-8a82-4cb6-a7a5d3bfbc72@gmail.com>
+From:   "Alex G." <mr.nuke.me@gmail.com>
+Message-ID: <d41c69c6-fa7b-d271-95e0-bf6e51b981ec@gmail.com>
+Date:   Mon, 21 Oct 2019 19:13:32 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Received: by 2002:a9d:648:0:0:0:0:0 with HTTP; Mon, 21 Oct 2019 11:59:34 -0700 (PDT)
-In-Reply-To: <20191021184701.GA1823@light.dominikbrodowski.net>
-References: <20191020090800.GA2778@light.dominikbrodowski.net>
- <20191021160952.GA229204@google.com> <CAFjuqNg2BjbxsOeOpoo8FQRwatQHeHKhj01hbwNrSHjz9p3vYw@mail.gmail.com>
- <20191021184701.GA1823@light.dominikbrodowski.net>
-From:   "Michael ." <keltoiboy@gmail.com>
-Date:   Tue, 22 Oct 2019 05:59:34 +1100
-Message-ID: <CAFjuqNiyS4cd=YEFvn3tLkp5zSPbO2vj8JfHsymUuDyEmLydUA@mail.gmail.com>
-Subject: Re: PCI device function not being enumerated [Was: PCMCIA not working
- on Panasonic Toughbook CF-29]
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Trevor Jacobs <trevor_jacobs@aol.com>,
-        Kris Cleveland <tridentperfusion@yahoo.com>,
-        Jeff <bluerocksaddles@willitsonline.com>,
-        Morgan Klym <moklym@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <f4ace3ab-1b39-8a82-4cb6-a7a5d3bfbc72@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thanks Domunik I'll get onto this and report back the results.
-
-On 22/10/2019, Dominik Brodowski <linux@dominikbrodowski.net> wrote:
-> On Tue, Oct 22, 2019 at 05:17:12AM +1100, Michael . wrote:
->> Thank you Dominik for looking at this for us and passing it on.
+On 10/21/19 1:19 PM, Stuart Hayes wrote:
+> 
+> 
+> On 10/21/19 8:47 AM, Mika Westerberg wrote:
+>> On Thu, Oct 17, 2019 at 03:32:56PM -0400, Stuart Hayes wrote:
+>>> Some systems have in-band presence detection disabled for hot-plug PCI
+>>> slots, but do not report this in the slot capabilities 2 (SLTCAP2) register.
+>>> On these systems, presence detect can become active well after the link is
+>>> reported to be active, which can cause the slots to be disabled after a
+>>> device is connected.
+>>>
+>>> Add a dmi table to flag these systems as having in-band presence disabled.
+>>>
+>>> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+>>> ---
+>>>   drivers/pci/hotplug/pciehp_hpc.c | 14 ++++++++++++++
+>>>   1 file changed, 14 insertions(+)
+>>>
+>>> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+>>> index 02eb811a014f..4d377a2a62ce 100644
+>>> --- a/drivers/pci/hotplug/pciehp_hpc.c
+>>> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+>>> @@ -14,6 +14,7 @@
+>>>   
+>>>   #define dev_fmt(fmt) "pciehp: " fmt
+>>>   
+>>> +#include <linux/dmi.h>
+>>>   #include <linux/kernel.h>
+>>>   #include <linux/types.h>
+>>>   #include <linux/jiffies.h>
+>>> @@ -26,6 +27,16 @@
+>>>   #include "../pci.h"
+>>>   #include "pciehp.h"
+>>>   
+>>> +static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
+>>> +	{
+>>> +		.ident = "Dell System",
+>>> +		.matches = {
+>>> +			DMI_MATCH(DMI_OEM_STRING, "Dell System"),
 >>
->> Good morning Bjorn, thank you also for looking into this for us and
->> thank you for CCing us into this as non of us are on the mailing list.
->> One question how do we apply this patch or is this for Dominik to try?
->
-> That's for you and/or other users of this hardware; I cannot test this
-> myself, sorry. As to how to apply the patch: you'd need to apply the patch
-> for the linux kernel sources, and then build a custom kernel. Some hints on
-> that (details depend on the distribtion):
->
-> 	https://wiki.ubuntu.com/Kernel/BuildYourOwnKernel
-> 	https://wiki.ubuntu.com/KernelTeam/GitKernelBuild
-> 	https://wiki.archlinux.org/index.php/Kernels/Arch_Build_System
-> 	https://kernelnewbies.org/KernelBuild
->
-> Best,
-> 	Dominik
->
+>> Sorry if this has been discussed previously already but isn't this going
+>> to apply on all Dell systems, not just the affected ones? Is this the
+>> intention?
+>>
+> 
+> Yes, that is the intention. Applying this just makes the hotplug code wait for
+> the presence detect bit to be set before proceeding, which ideally wouldn't hurt
+> anything--for devices that don't have inband presence detect disabled, presence
+> detect should already be up when the code in patch 2/3 starts to wait for it.
+> 
+> The only issue should be with broken hotplug implementations that don't ever
+> bring presence detect active (these apparently exist)--but even those would still
+> work, they would just take an extra second to come up.
+> 
+> On the other hand, a number of Dell systems have (and will have) NVMe
+> implementations that have inband presence detect disabled (but they won't have
+> the new bit implemented to report that), and they don't work correctly without
+> this.
+
+I think it's clearer if this is explained in a comment. That it doesn't 
+break anything, and we're okay this applies to all hotplug ports, even 
+those that are not in front of an NVMe backplane.
+
+Alex
