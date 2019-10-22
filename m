@@ -2,192 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E95EE0052
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2019 11:08:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 363DBE007F
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2019 11:16:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731408AbfJVJHy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Oct 2019 05:07:54 -0400
-Received: from mga03.intel.com ([134.134.136.65]:25818 "EHLO mga03.intel.com"
+        id S2388235AbfJVJQ1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Oct 2019 05:16:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34276 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731234AbfJVJHy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:07:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 02:07:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,326,1566889200"; 
-   d="scan'208";a="196377052"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 22 Oct 2019 02:07:52 -0700
-Received: from [10.226.39.21] (unknown [10.226.39.21])
-        by linux.intel.com (Postfix) with ESMTP id F2EA9580127;
-        Tue, 22 Oct 2019 02:07:48 -0700 (PDT)
-Subject: Re: [PATCH v4 2/3] dwc: PCI: intel: PCIe RC controller driver
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, andrew.murray@arm.com, robh@kernel.org,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        hch@infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-References: <20191021171736.GA233393@google.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <0914051f-b726-f15f-7f86-c0b26ff0f04c@linux.intel.com>
-Date:   Tue, 22 Oct 2019 17:07:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S2388385AbfJVJQ1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 22 Oct 2019 05:16:27 -0400
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 73B0737E79
+        for <linux-pci@vger.kernel.org>; Tue, 22 Oct 2019 09:16:26 +0000 (UTC)
+Received: by mail-qk1-f198.google.com with SMTP id s3so16099379qkd.6
+        for <linux-pci@vger.kernel.org>; Tue, 22 Oct 2019 02:16:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1NaftjpZ7q0/7FUFVe9FC7tfQH1ZMRLJsGxSpJEAYR0=;
+        b=jgx4fetu3Z0FqYsjWDnA9NW+bUGD7NEKCVldWkL/SyAyW9IJn53zNeLypy0fUzZdCW
+         xe5HmokFKXkVWw3YxWMLnPgYeskyS0ThkQUXUnXCGQ2ReOB1Jq11H6O8VEYGUf68qeaa
+         gr+CH9g9rZuM1iQiwNH4caOyycpEDVsNUz+iEBu4ZYWMjrX8Sr2EHRRkNTUMcy+ECCeP
+         iQ/uIYeLrGPlz49O7ghtscH5EDAa5vuJvHwCRx98gzGKCIthDK2vY6yR9Sc63SnfgSta
+         SL8Im4wQ/l5QSAW7pq9SLduvYidCIb0aU685OKQB81HTQXYex1oPYgwynfgD4uDVR0Yz
+         3WiA==
+X-Gm-Message-State: APjAAAW7tmOegnxLGsvvHgxgzBg6IshrJROUYD0myIi0jXjYCxrdSTaz
+        g8cn4IGGpGJYTvazvSP5IFwoENGTLzi+1dfvTxF5K8SOSBtaMFdSpVfmN3qItD8tIKCRq1Ds7FS
+        YyD7Vna9Mgc6gJDZgk+vbcagI5wPJF1TmoNEf
+X-Received: by 2002:ac8:664b:: with SMTP id j11mr2246841qtp.137.1571735785693;
+        Tue, 22 Oct 2019 02:16:25 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxh+htVaSt1EHk6f2pMjctNRL+6dMevykS1gSHbmTJ7kc2awbIl5sahcS8cpGCaPnstRND7kRjzMbWgqOesrio=
+X-Received: by 2002:ac8:664b:: with SMTP id j11mr2246814qtp.137.1571735785316;
+ Tue, 22 Oct 2019 02:16:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191021171736.GA233393@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <CACO55ttOJaXKWmKQQbMAQRJHLXF-VtNn58n4BZhFKYmAdfiJjA@mail.gmail.com>
+ <20191016213722.GA72810@google.com> <CACO55tuXck7vqGVLmMBGFg6A2pr3h8koRuvvWHLNDH8XvBVxew@mail.gmail.com>
+ <20191021133328.GI2819@lahna.fi.intel.com> <CACO55tujUZr+rKkyrkfN+wkNOJWdNEVhVc-eZ3RCXJD+G1z=7A@mail.gmail.com>
+ <20191021140852.GM2819@lahna.fi.intel.com> <CACO55tvp6n2ahizwhc70xRJ1uTohs2ep962vwtHGQK-MkcLmsw@mail.gmail.com>
+ <20191021154606.GT2819@lahna.fi.intel.com> <CACO55tsGhvG1qapRkdu_j7R534cFa5o=Gv2s4VZDrWUrxjBFwA@mail.gmail.com>
+In-Reply-To: <CACO55tsGhvG1qapRkdu_j7R534cFa5o=Gv2s4VZDrWUrxjBFwA@mail.gmail.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Tue, 22 Oct 2019 11:16:14 +0200
+Message-ID: <CACO55ts7hivYgN7=3bcAjWx2h8FfbR5UiKiOOExYY9m-TGRNfw@mail.gmail.com>
+Subject: Re: [PATCH v3] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     Mika Westerberg <mika.westerberg@intel.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn Helgaas,
+I think there is something I totally forgot about:
 
-On 10/22/2019 1:17 AM, Bjorn Helgaas wrote:
-> On Mon, Oct 21, 2019 at 02:39:19PM +0800, Dilip Kota wrote:
->> Add support to PCIe RC controller on Intel Gateway SoCs.
->> PCIe controller is based of Synopsys DesignWare pci core.
->>
->> Intel PCIe driver requires Upconfig support, fast training
->> sequence configuration and link speed change. So adding the
->> respective helper functions in the pcie DesignWare framework.
->> It also programs hardware autonomous speed during speed
->> configuration so defining it in pci_regs.h.
->>
->> +static void intel_pcie_link_setup(struct intel_pcie_port *lpp)
->> +{
->> +	u32 val;
->> +
->> +	val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCAP);
->> +	lpp->max_speed = FIELD_GET(PCI_EXP_LNKCAP_SLS, val);
->> +	lpp->max_width = FIELD_GET(PCI_EXP_LNKCAP_MLW, val);
->> +
->> +	val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
->> +
->> +	val &= ~(PCI_EXP_LNKCTL_LD | PCI_EXP_LNKCTL_ASPMC);
->> +	val |= (PCI_EXP_LNKSTA_SLC << 16) | PCI_EXP_LNKCTL_CCC |
->> +	       PCI_EXP_LNKCTL_RCB;
-> Link Control is only 16 bits wide, so "PCI_EXP_LNKSTA_SLC << 16"
-> wouldn't make sense.  But I guess you're writing a device-specific
-> register that is not actually the Link Control as documented in PCIe
-> r5.0, sec 7.5.3.7, even though the bits are similar?
-It is not device specific.
-You are correct about register size that pcie spec mentions 
-PCIE_EXP_LNKCTL at 0x10 and PCIE_EXP_LNKSTS at 0x12 each of 2bytes. 
-Accessing 4bytes at offset 0x10 ends up accessing LNK control and status 
-register.
-In Synopsys PCIe controller LINK_CONTROL_LINK_STATUS_REG is of 4bytes 
-size at offset 0x10,
-In both the cases everything is same except the size of the register, so 
-i used PCIE_EXP_LNKCTL macro which is already defined in pci_regs.h
+When there was never a driver bound to the GPU, and if runtime power
+management gets enabled on that device, runtime suspend/resume works
+as expected (I am not 100% sure on if that always works, but I will
+recheck that).
+In the past I know that at some point I "bisected" the nouveau driver
+to figure out what actually breaks it and found out that some script
+executed with the help of an on-chip engine (signed script, signed
+firmware, both vbios provided) makes it break. Debugging the script
+lead me to the PCIe link speed changes done inside the script breaking
+it.
 
+But as "reverting" the speed change didn't make it work reliably
+again, I think I need to get back on that and check if it's something
+else. I will try to convert the script into C or python code to make
+it more accessible to debug and hopefully I'll find something I
+overlooked the last time.
 
+On Mon, Oct 21, 2019 at 6:40 PM Karol Herbst <kherbst@redhat.com> wrote:
 >
-> Likewise, PCI_EXP_LNKCTL_RCB is RO for Root Ports, but maybe you're
-> telling the device what it should advertise in its Link Control?
-You are correct, PCI_EXP_LNKCTL_RCB is RO. I will remove it.
+> On Mon, Oct 21, 2019 at 5:46 PM Mika Westerberg
+> <mika.westerberg@intel.com> wrote:
+> >
+> > On Mon, Oct 21, 2019 at 04:49:09PM +0200, Karol Herbst wrote:
+> > > On Mon, Oct 21, 2019 at 4:09 PM Mika Westerberg
+> > > <mika.westerberg@intel.com> wrote:
+> > > >
+> > > > On Mon, Oct 21, 2019 at 03:54:09PM +0200, Karol Herbst wrote:
+> > > > > > I really would like to provide you more information about such
+> > > > > > workaround but I'm not aware of any ;-) I have not seen any issues like
+> > > > > > this when D3cold is properly implemented in the platform.  That's why
+> > > > > > I'm bit skeptical that this has anything to do with specific Intel PCIe
+> > > > > > ports. More likely it is some power sequence in the _ON/_OFF() methods
+> > > > > > that is run differently on Windows.
+> > > > >
+> > > > > yeah.. maybe. I really don't know what's the actual root cause. I just
+> > > > > know that with this workaround it works perfectly fine on my and some
+> > > > > other systems it was tested on. Do you know who would be best to
+> > > > > approach to get proper documentation about those methods and what are
+> > > > > the actual prerequisites of those methods?
+> > > >
+> > > > Those should be documented in the ACPI spec. Chapter 7 should explain
+> > > > power resources and the device power methods in detail.
+> > >
+> > > either I looked up the wrong spec or the documentation isn't really
+> > > saying much there.
+> >
+> > Well it explains those methods, _PSx, _PRx and _ON()/_OFF(). In case of
+> > PCIe device you also want to check PCIe spec. PCIe 5.0 section 5.8 "PCI
+> > Function Power State Transitions" has a picture about the supported
+> > power state transitions and there we can find that function must be in
+> > D3hot before it can be transitioned into D3cold so if the _OFF() for
+> > example blindly assumes that the device is in D0 when it is called, it
+> > is a bug in the BIOS.
+> >
+> > BTW, where can I find acpidump of such system?
 >
-> PCI_EXP_LNKCTL_CCC is RW.  But doesn't it depend on the components on
-> both ends of the link?  Do you know what device is at the other end?
-> I would have assumed that you'd have to start with CCC==0, which
-> should be most conservative, then set CCC=1 only if you know both ends
-> have a common clock.
-PCIe RC and endpoint device are having the common clock so set the CCC=1.
+> I am sure it's uploaded somewhere already. But it's not an issue of
+> just one system. It's essentially hitting every single laptop with a
+> skylake or kaby lake CPU + Nvidia GPU. I didn't see any system where
+> it's actually working right now (and we are pestering nvidia about
+> this issue for over a year already with no solution)
 >
->> +	pcie_rc_cfg_wr(lpp, val, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
->> +}
->> +
->> +static void intel_pcie_max_speed_setup(struct intel_pcie_port *lpp)
->> +{
->> +	u32 reg, val;
->> +
->> +	reg = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL2);
->> +	switch (lpp->link_gen) {
->> +	case PCIE_LINK_SPEED_GEN1:
->> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
->> +		reg |= PCI_EXP_LNKCTL2_HASD|
->> +			PCI_EXP_LNKCTL2_TLS_2_5GT;
->> +		break;
->> +	case PCIE_LINK_SPEED_GEN2:
->> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
->> +		reg |= PCI_EXP_LNKCTL2_HASD|
->> +			PCI_EXP_LNKCTL2_TLS_5_0GT;
->> +		break;
->> +	case PCIE_LINK_SPEED_GEN3:
->> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
->> +		reg |= PCI_EXP_LNKCTL2_HASD|
->> +			PCI_EXP_LNKCTL2_TLS_8_0GT;
->> +		break;
->> +	case PCIE_LINK_SPEED_GEN4:
->> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
->> +		reg |= PCI_EXP_LNKCTL2_HASD|
->> +			PCI_EXP_LNKCTL2_TLS_16_0GT;
->> +		break;
->> +	default:
->> +		/* Use hardware capability */
->> +		val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCAP);
->> +		val = FIELD_GET(PCI_EXP_LNKCAP_SLS, val);
->> +		reg &= ~PCI_EXP_LNKCTL2_HASD;
->> +		reg |= val;
->> +		break;
->> +	}
->> +
->> +	pcie_rc_cfg_wr(lpp, reg, PCIE_CAP_OFST + PCI_EXP_LNKCTL2);
->> +	dw_pcie_link_set_n_fts(&lpp->pci, lpp->n_fts);
-> There are other users of of_pci_get_max_link_speed() that look sort of
-> similar to this (dra7xx_pcie_establish_link(),
-> ks_pcie_set_link_speed(), tegra_pcie_prepare_host()).  Do these *need*
-> to be different, or is there something that could be factored out?
-dra7xx_pcie_establish_link() and ks_pcie_set_link_speed() are doing 
-speed configuration for GEN1 and GEN1 &2 respectively.
-
-intel_pcie_max_speed_setup() can be moved to dwc framework and dra7xx and ks_pcie drivers can call.
-
->
->> +}
->> +
->> +
->> +
-> Remove extra blank lines here.
-i will remove it.
->
->> +static void intel_pcie_port_logic_setup(struct intel_pcie_port *lpp)
->> ...
->> +	/* Intel PCIe doesn't configure IO region, so configure
->> +	 * viewport to not to access IO region during register
->> +	 * read write operations.
->> +	 */
-> This comment doesn't describe the code.  Is there supposed to be some
-> code here that configures the viewport?  Where do we tell the viewport
-> not to access IO?
->
-> I guess maybe this means something like "tell
-> dw_pcie_access_other_conf() not to program an outbound ATU for I/O"?
-> I don't know that structure well enough to write this in a way that
-> makes sense, but this code doesn't look like it's configuring any
-> viewports.
-Yes, you are correct. Telling not to program an outbound ATU for IO.
-I will update the description.
-> Please use usual multi-line comment style, i.e.,
->
->    /*
->     * Intel PCIe ...
->     */
-Sure, i will correct it.
-
-Thanks for reviewing and providing the valuable inputs!
-Regards,
-Dilip
-
->> +	pci->num_viewport = data->num_viewport;
->> +	dev_info(dev, "Intel PCIe Root Complex Port %d init done\n", lpp->id);
->> +
->> +	return ret;
->> +}
+> I've attached an acpidump from my system.
