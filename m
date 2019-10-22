@@ -2,79 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42F8EE0598
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2019 15:56:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F32FE0713
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2019 17:11:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729869AbfJVN4C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Oct 2019 09:56:02 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:53356 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1727831AbfJVN4C (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 22 Oct 2019 09:56:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7C2A1763;
-        Tue, 22 Oct 2019 06:55:37 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3342A3F71A;
-        Tue, 22 Oct 2019 06:55:36 -0700 (PDT)
-Subject: Re: [PATCH] PCI: Warn about host bridge device when its numa node is
- NO_NODE
-To:     Yunsheng Lin <linyunsheng@huawei.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mhocko@kernel.org,
-        peterz@infradead.org, geert@linux-m68k.org,
-        gregkh@linuxfoundation.org, paul.burton@mips.com
-References: <1571467543-26125-1-git-send-email-linyunsheng@huawei.com>
- <20191019083431.GA26340@infradead.org>
- <96b8737d-5fbf-7942-bf10-7521cf954d6e@huawei.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <e35bd451-bdb7-ec02-d691-aa3720d1e10b@arm.com>
-Date:   Tue, 22 Oct 2019 14:55:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <96b8737d-5fbf-7942-bf10-7521cf954d6e@huawei.com>
+        id S1732214AbfJVPKy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Oct 2019 11:10:54 -0400
+Received: from mail-pf1-f176.google.com ([209.85.210.176]:42392 "EHLO
+        mail-pf1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732181AbfJVPKw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Oct 2019 11:10:52 -0400
+Received: by mail-pf1-f176.google.com with SMTP id q12so10828664pff.9
+        for <linux-pci@vger.kernel.org>; Tue, 22 Oct 2019 08:10:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=8AwEM/obC8LRWaCg0EJY39OUdBAOiIs+mtoo3/7ay7o=;
+        b=TY/O5sgfbP83gCIJYbSOwp2pSlXitJ52LK2TSFB7tfZHpYh1N/jc6uQPgKUW1cfaO9
+         JhmXA6LAR9HtTJjJTD4RGVzcD+Hqmd0iLE5KNn8NmZakqyzU5QhzevM+0Is41C6D/afR
+         Cqzs33Fca2LEAueSK4bCnTDIsNbWyA1zB0iXlz1oHoG5MNdedOA/oMeJKvudZYYcQseE
+         FqYUA6CUS/V887/Btn7StQ1ED2pKApjfpRV8PHqsibaIaWMy0VjUr8kmXlh8QAE+z7MN
+         wEExywby+9ypE2NuoEJgrkHG183v6Kl0MfR7FMLQI/u1sI+7tW07ATsd1kouqokhzgdA
+         TCig==
+X-Gm-Message-State: APjAAAVVmtpnnEd6Im/ImoZDHbrSH4M+tcuQBL1bKW3lJ5RtSjDugtqT
+        DFpYUJS2CrDKmEtE5+N0bsIr64eAOGk=
+X-Google-Smtp-Source: APXvYqwpcdig5U0KlygiWr/07ufZuXhgsDfX0+P8KVKTiRMi0+u8a5sKyE5qZZmPdgiu+6Nh3jLGkg==
+X-Received: by 2002:aa7:9156:: with SMTP id 22mr4907293pfi.246.1571757049387;
+        Tue, 22 Oct 2019 08:10:49 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id t12sm15557832pjq.18.2019.10.22.08.10.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 08:10:48 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 08:10:48 -0700 (PDT)
+X-Google-Original-Date: Tue, 22 Oct 2019 08:10:42 PDT (-0700)
+Subject:     Re: PCI/MSI: Remove the PCI_MSI_IRQ_DOMAIN architecture whitelist
+In-Reply-To: <995f625b-1f56-6d97-ba99-9a4298e9dd37@xilinx.com>
+CC:     Christoph Hellwig <hch@infradead.org>, michal.simek@xilinx.com,
+        helgaas@kernel.org, tony.luck@intel.com, fenghua.yu@intel.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, bhelgaas@google.com, will@kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        kstewart@linuxfoundation.org, pbonzini@redhat.com,
+        firoz.khan@linaro.org, yamada.masahiro@socionext.com,
+        longman@redhat.com, mingo@kernel.org, peterz@infradead.org,
+        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     michal.simek@xilinx.com
+Message-ID: <mhng-d42f23ae-e51f-49cd-9533-a4c793cd70fe@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21/10/2019 05:05, Yunsheng Lin wrote:
-> On 2019/10/19 16:34, Christoph Hellwig wrote:
->> On Sat, Oct 19, 2019 at 02:45:43PM +0800, Yunsheng Lin wrote:
->>> +	if (nr_node_ids > 1 && dev_to_node(bus->bridge) == NUMA_NO_NODE)
->>> +		dev_err(bus->bridge, FW_BUG "No node assigned on NUMA capable HW by BIOS. Please contact your vendor for updates.\n");
->>> +
->>
->> The whole idea of mentioning a BIOS in architeture indepent code doesn't
->> make sense at all.
+On Thu, 17 Oct 2019 23:20:09 PDT (-0700), michal.simek@xilinx.com wrote:
+> Hi,
+>
+> On 17. 10. 19 20:19, Palmer Dabbelt wrote:
+>> This came up in the context of the microblaze port, where a patch was
+>> recently posted to extend the whitelist.
+>
+> I hoped you were aware about this discussion we have with Christoph.
+> https://lkml.org/lkml/2019/10/8/682
+>
+> It means 1/3 and 2/3 should be replaced by mandatory-y and I expect
+> msi.h can be removed from architecture Kbuild too.
 
-[ Come to think of it, I'm sure an increasing number of x86 firmwares 
-don't even implement a PC BIOS any more... ]
+I'd missed it, but that seems like a better way to do it.  I'm going to assume 
+you guys are going to handle this, so feel free to drop my patch set.
 
-In all fairness, the server-class Arm-based machines I've come across so 
-far do seem to consistently call their EFI firmware images "BIOS" 
-despite the clear anachronism. At least the absurdity of conflating a 
-system setup program with a semiconductor process seems to have mostly 
-died out ;)
-
-> Mentioning the BIOS is to tell user what firmware is broken, so that
-> user can report this to their vendor by referring the specific firmware.
-> 
-> It seems we can specific the node through different ways(DT, ACPI, etc).
-> 
-> Is there a better name for mentioning instead of BIOS, or we should do
-> the checking and warning in the architeture dependent code?
-> 
-> Or maybe just remove the BIOS from the above log?
-
-Even though there may be some degree of historical convention hanging 
-around on ACPI-based systems, that argument almost certainly doesn't 
-hold for OF/FDT/etc. - the "[Firmware Bug]:" prefix is hopefully 
-indicative enough, so I'd say just drop the "by BIOS" part.
-
-Robin.
+Thanks!
