@@ -2,83 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BB36E1413
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2019 10:24:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90C96E145E
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2019 10:37:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390275AbfJWIYh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Oct 2019 04:24:37 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4709 "EHLO huawei.com"
+        id S2390183AbfJWIhF convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 23 Oct 2019 04:37:05 -0400
+Received: from mail-oln040092253103.outbound.protection.outlook.com ([40.92.253.103]:22016
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732361AbfJWIYh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:24:37 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7545AC6B1BB05781A2B9;
-        Wed, 23 Oct 2019 16:24:34 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 23 Oct 2019
- 16:24:30 +0800
-Subject: Re: [PATCH] PCI: Warn about host bridge device when its numa node is
- NO_NODE
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@infradead.org>
-CC:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <mhocko@kernel.org>,
-        <peterz@infradead.org>, <geert@linux-m68k.org>,
-        <gregkh@linuxfoundation.org>, <paul.burton@mips.com>
-References: <1571467543-26125-1-git-send-email-linyunsheng@huawei.com>
- <20191019083431.GA26340@infradead.org>
- <96b8737d-5fbf-7942-bf10-7521cf954d6e@huawei.com>
- <e35bd451-bdb7-ec02-d691-aa3720d1e10b@arm.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <26918051-66bb-b27e-2ce1-7339499c5da2@huawei.com>
-Date:   Wed, 23 Oct 2019 16:24:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-In-Reply-To: <e35bd451-bdb7-ec02-d691-aa3720d1e10b@arm.com>
-Content-Type: text/plain; charset="utf-8"
+        id S2390231AbfJWIhF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 23 Oct 2019 04:37:05 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Tozzed29u41jNQbPWpgr+FEj7l6hdW5eNrcufXTmiRI9svfs4cpvtVRjNrLcYYoyNUIa+3tuGIcuhmc6JU4gmVcut3QkbDNLCRsspydxpyd7BES6QwdKwvUcUI54UNOrZIT+66aSIOXtG5HJavc31d/Qh/MXsXwLmzwZFrIbIoVqTj0lOhPb+/+VqMx2Z5ljR3Y13H4KB6Stm6WyBJoZ3W9rBGFUa7Z3ndqPwIz9QuDxOX5Z4HWnaPkBxTbNZqRhsjBhwr9NQ9MRnx9sE6g381z23E77WXf+ftCNMlNGNf9TSVCRMuZg7/82CdUZFxverIe0/+y7svlKf3a3KeEGSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ijCFpU/c0wAaTc+jGxyCj1GTWL1HE0mVaDXliaO3W0k=;
+ b=YSO1/UDG8V36hBcUc7qGiY0ySwy94lCljYrDsFlo+Hll1eLbXuwJO4rU+MQB4ZVJethDoQvn18wReqXW8FDDdSlUCgD31ex3t7c6m3TZKR/IiCPlsASBTIAP8lfADgsoFDajQZAOHYeM2jXn+rtzqcFX4W0sh7CxnTEqS3NJoGNL37t6E3kbiohwEH5q4Lbo9NspmMQxAkmpedz/TvoneJwvv6P6jLOKqxqDwh0RQTiQ3y2GpMQp5jQKdNjuv2mFkd4ZTbIqDz4MPRb5m7fz0br5uCOzHGpBFmCUNR3RdtJTdVxBNJT7tvyJJ3uHsAwj5PezmAcC+aTPglaNwLIe1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from PU1APC01FT009.eop-APC01.prod.protection.outlook.com
+ (10.152.252.56) by PU1APC01HT124.eop-APC01.prod.protection.outlook.com
+ (10.152.253.58) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.14; Wed, 23 Oct
+ 2019 08:36:59 +0000
+Received: from PSXP216MB0183.KORP216.PROD.OUTLOOK.COM (10.152.252.54) by
+ PU1APC01FT009.mail.protection.outlook.com (10.152.252.103) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.14 via Frontend Transport; Wed, 23 Oct 2019 08:36:59 +0000
+Received: from PSXP216MB0183.KORP216.PROD.OUTLOOK.COM
+ ([fe80::707c:4884:c137:2266]) by PSXP216MB0183.KORP216.PROD.OUTLOOK.COM
+ ([fe80::707c:4884:c137:2266%5]) with mapi id 15.20.2367.025; Wed, 23 Oct 2019
+ 08:36:59 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: [PATCH 0/1] Add support for setting MMIO PREF hotplug bridge size
+Thread-Topic: [PATCH 0/1] Add support for setting MMIO PREF hotplug bridge
+ size
+Thread-Index: AQHViX0IscNJYyHchk6j0ubA//SaQA==
+Date:   Wed, 23 Oct 2019 08:36:59 +0000
+Message-ID: <PSXP216MB01832E0DD8892B52A3FA2589806B0@PSXP216MB0183.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ME2PR01CA0110.ausprd01.prod.outlook.com
+ (2603:10c6:201:2c::26) To PSXP216MB0183.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:b::17)
+x-incomingtopheadermarker: OriginalChecksum:A56C3385AC70E360929D0003897C35202BA7E0CBFB80A5900E24EEDDB78B5516;UpperCasedChecksum:D6F2A8E27BDBCEC2C1341999D481193C6C96DA42CA3C4909A8F52CE3231879CB;SizeAsReceived:7765;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [ISr/nj35f9JQUpCE+STkcUX9EzAiB5YwVpct4TQ9VaI=]
+x-microsoft-original-message-id: <20191023083650.GA3836@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-ms-traffictypediagnostic: PU1APC01HT124:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /xBkDUPpkVUwuCz0XctBcPZKZxWCZHTULzK1JAklo5NAC+ehOQa17LMVl02GKXlx3XglwOLGlclrLlOx5hL4EmxOm6v7+qgDZcUVrSEf5fo1LW5FOTHRsreYQKXx62ASD/uyeCIAZGHJBvh+nHmI5EluXE2lU3+0Vlj+YS6rbt793XTO3Er+SlA+enZhym2t
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F17C8EFC3714BF45B732D1B50D45C45D@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9231436-7176-4eeb-9af8-08d757942b26
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 08:36:59.2328
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT124
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2019/10/22 21:55, Robin Murphy wrote:
-> On 21/10/2019 05:05, Yunsheng Lin wrote:
->> On 2019/10/19 16:34, Christoph Hellwig wrote:
->>> On Sat, Oct 19, 2019 at 02:45:43PM +0800, Yunsheng Lin wrote:
->>>> +    if (nr_node_ids > 1 && dev_to_node(bus->bridge) == NUMA_NO_NODE)
->>>> +        dev_err(bus->bridge, FW_BUG "No node assigned on NUMA capable HW by BIOS. Please contact your vendor for updates.\n");
->>>> +
->>>
->>> The whole idea of mentioning a BIOS in architeture indepent code doesn't
->>> make sense at all.
-> 
-> [ Come to think of it, I'm sure an increasing number of x86 firmwares don't even implement a PC BIOS any more... ]
-> 
-> In all fairness, the server-class Arm-based machines I've come across so far do seem to consistently call their EFI firmware images "BIOS" despite the clear anachronism. At least the absurdity of conflating a system setup program with a semiconductor process seems to have mostly died out ;)
-> 
->> Mentioning the BIOS is to tell user what firmware is broken, so that
->> user can report this to their vendor by referring the specific firmware.
->>
->> It seems we can specific the node through different ways(DT, ACPI, etc).
->>
->> Is there a better name for mentioning instead of BIOS, or we should do
->> the checking and warning in the architeture dependent code?
->>
->> Or maybe just remove the BIOS from the above log?
-> 
-> Even though there may be some degree of historical convention hanging around on ACPI-based systems, that argument almost certainly doesn't hold for OF/FDT/etc. - the "[Firmware Bug]:" prefix is hopefully indicative enough, so I'd say just drop the "by BIOS" part.
+This patch adds support for two new kernel parameters. This patch has
+been in the making for quite some time, and has changed several times
+based on feedback.
 
-Will drop the "by BIOS" part if there is another version.
-Tnanks for clarifying.
+I realised I was making the mistake of putting it as part of my
+Thunderbolt patch series. Although the other patches in the series are
+very important for my goal, I realised that they are just a heap of
+patches that are not Thunderbolt-specific. The only thing that is
+Thunderbolt-related is the intended use case.
 
-> 
-> Robin.
-> 
-> .
-> 
+I hope that posting this alone can ease the difficulty of reviewing it.
+
+Nicholas Johnson (1):
+  PCI: Add hp_mmio_size and hp_mmio_pref_size parameters
+
+ .../admin-guide/kernel-parameters.txt         |  9 ++++++-
+ drivers/pci/pci.c                             | 17 ++++++++++---
+ drivers/pci/pci.h                             |  3 ++-
+ drivers/pci/setup-bus.c                       | 25 +++++++++++--------
+ 4 files changed, 38 insertions(+), 16 deletions(-)
+
+-- 
+2.23.0
 
