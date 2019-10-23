@@ -2,97 +2,186 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7669EE1654
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2019 11:39:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B03FDE1662
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2019 11:40:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390656AbfJWJjg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Oct 2019 05:39:36 -0400
-Received: from mga05.intel.com ([192.55.52.43]:55175 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390380AbfJWJjg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:39:36 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 02:39:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
-   d="scan'208";a="209888327"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 23 Oct 2019 02:39:32 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 23 Oct 2019 12:39:32 +0300
-Date:   Wed, 23 Oct 2019 12:39:32 +0300
-From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH v8 4/6] PCI: Allow extend_bridge_window() to shrink
- resource if necessary
-Message-ID: <20191023093932.GS2819@lahna.fi.intel.com>
-References: <SL2P216MB01879766498AA7746C2E5FB780C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <20191008120907.GI2819@lahna.fi.intel.com>
- <SL2P216MB018711E3699EE682FD4437E8806B0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+        id S2404002AbfJWJkf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Oct 2019 05:40:35 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41580 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729191AbfJWJkf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 23 Oct 2019 05:40:35 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 54D6B99A478B06500BF9;
+        Wed, 23 Oct 2019 17:40:31 +0800 (CST)
+Received: from [127.0.0.1] (10.133.224.57) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 23 Oct 2019
+ 17:40:22 +0800
+Subject: Re: Kernel panic while doing vfio-pci hot-plug/unplug test
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mingo@redhat.com>, <peterz@infradead.org>,
+        <alex.williamson@redhat.com>,
+        Wang Haibin <wanghaibin.wang@huawei.com>,
+        Guoheyi <guoheyi@huawei.com>,
+        yebiaoxiang <yebiaoxiang@huawei.com>,
+        Matthew Wilcox <willy@infradead.org>
+References: <20191018135846.GA161054@google.com>
+From:   Xiang Zheng <zhengxiang9@huawei.com>
+Message-ID: <2e7293dc-eb27-bce3-c209-e0ba15409f16@huawei.com>
+Date:   Wed, 23 Oct 2019 17:40:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SL2P216MB018711E3699EE682FD4437E8806B0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191018135846.GA161054@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.224.57]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 09:16:10AM +0000, Nicholas Johnson wrote:
-> On Tue, Oct 08, 2019 at 03:09:07PM +0300, mika.westerberg@linux.intel.com wrote:
-> > On Fri, Jul 26, 2019 at 12:54:22PM +0000, Nicholas Johnson wrote:
-> > > Remove checks for resource size in extend_bridge_window(). This is
-> > > necessary to allow the pci_bus_distribute_available_resources() to
-> > > function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
-> > > allocate resources. Because the kernel parameter sets the size of all
-> > > hotplug bridges to be the same, there are problems when nested hotplug
-> > > bridges are encountered. Fitting a downstream hotplug bridge with size X
-> > > and normal bridges with size Y into parent hotplug bridge with size X is
-> > > impossible, and hence the downstream hotplug bridge needs to shrink to
-> > > fit into its parent.
-> > 
-> > Maybe you could show the topology here which needs shrinking.
-> > 
-> > > Add check for if bridge is extended or shrunken and adjust pci_dbg to
-> > > reflect this.
-> > > 
-> > > Reset the resource if its new size is zero (if we have run out of a
-> > > bridge window resource). If it is set to zero size and left, it can
-> > > cause significant problems when it comes to enabling devices.
-> > 
-> > Same comment here about explaining the "significant problems".
-> I have in the past, but because the problems are very hard to describe succinctly, it just turns into a 
-> nightmare. I can try to do it again.
-> 
-> > > 
-> > > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > > ---
-> > >  drivers/pci/setup-bus.c | 16 +++++++++++-----
-> > >  1 file changed, 11 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> > > index a072781ab..7e1dc892a 100644
-> > > --- a/drivers/pci/setup-bus.c
-> > > +++ b/drivers/pci/setup-bus.c
-> > > @@ -1823,13 +1823,19 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
-> > 
-> > Since it is also shrinking now maybe name it adjust_bridge_window() instead?
-> I am happy to do this.
-> 
-> If we can drop the pci_dbg() calls, then I might be able to drop this 
-> function entirely. During the development of this patch, that is exactly 
-> what I did. How important are the pci_dbg calls to you?
+Hi Bjorn,
 
-Well they are still useful when debugging resource allocation issues
-(and they match similar we do when extending number of buses). I would
-like to keep them if possible.
+Thanks for your reply!
+
+On 2019/10/18 21:58, Bjorn Helgaas wrote:
+> [+cc Matthew]
+> 
+> On Wed, Oct 16, 2019 at 09:36:23PM +0800, Xiang Zheng wrote:
+>> Hi all,
+>>
+>> Recently I encountered a kernel panic while doing vfio-pci hot-plug/unplug test repeatly on my Arm-KVM virtual machines.
+>> See the call stack below:
+>>
+>> [66628.697280] vfio-pci 0000:06:03.5: enabling device (0000 -> 0002)
+>> [66628.809290] vfio-pci 0000:06:03.1: enabling device (0000 -> 0002)
+>> [66628.921283] vfio-pci 0000:06:02.7: enabling device (0000 -> 0002)
+>> [66629.029280] vfio-pci 0000:06:03.6: enabling device (0000 -> 0002)
+>> [66629.137338] vfio-pci 0000:06:03.2: enabling device (0000 -> 0002)
+>> [66629.249285] vfio-pci 0000:06:03.7: enabling device (0000 -> 0002)
+>> [66630.237261] Unable to handle kernel read from unreadable memory at virtual address ffff802dac469000
+>> [66630.246266] Mem abort info:
+>> [66630.249047]   ESR = 0x8600000d
+>> [66630.252088]   Exception class = IABT (current EL), IL = 32 bits
+>> [66630.257981]   SET = 0, FnV = 0
+>> [66630.261022]   EA = 0, S1PTW = 0
+>> [66630.264150] swapper pgtable: 4k pages, 48-bit VAs, pgdp = 00000000fb16886e
+>> [66630.270992] [ffff802dac469000] pgd=0000203fffff6803, pud=00e8002d80000f11
+>> [66630.277751] Internal error: Oops: 8600000d [#1] SMP
+>> [66630.282606] Process qemu-kvm (pid: 37201, stack limit = 0x00000000d8f19858)
+>> [66630.289537] CPU: 41 PID: 37201 Comm: qemu-kvm Kdump: loaded Tainted: G           OE     4.19.36-vhulk1907.1.0.h453.eulerosv2r8.aarch64 #1
+>> [66630.301822] Hardware name: Huawei TaiShan 2280 V2/BC82AMDDA, BIOS 0.88 07/24/2019
+>> [66630.309270] pstate: 80400089 (Nzcv daIf +PAN -UAO)
+>> [66630.314042] pc : 0xffff802dac469000
+>> [66630.317519] lr : __wake_up_common+0x90/0x1a8
+>> [66630.321768] sp : ffff00027746bb00
+>> [66630.325067] x29: ffff00027746bb00 x28: 0000000000000000
+>> [66630.330355] x27: 0000000000000000 x26: ffff0000092755b8
+>> [66630.335643] x25: 0000000000000000 x24: 0000000000000000
+>> [66630.340930] x23: 0000000000000003 x22: ffff00027746bbc0
+>> [66630.346219] x21: 000000000954c000 x20: ffff0001f542bc6c
+>> [66630.351506] x19: ffff0001f542bb90 x18: 0000000000000000
+>> [66630.356793] x17: 0000000000000000 x16: 0000000000000000
+>> [66630.362081] x15: 0000000000000000 x14: 0000000000000000
+>> [66630.367368] x13: 0000000000000000 x12: 0000000000000000
+>> [66630.372655] x11: 0000000000000000 x10: 0000000000000bb0
+>> [66630.377942] x9 : ffff00027746ba50 x8 : ffff80367ff6ca10
+>> [66630.383229] x7 : ffff802e20d59200 x6 : 000000000000003f
+>> [66630.388517] x5 : ffff00027746bbc0 x4 : ffff802dac469000
+>> [66630.393806] x3 : 0000000000000000 x2 : 0000000000000000
+>> [66630.399093] x1 : 0000000000000003 x0 : ffff0001f542bb90
+>> [66630.404381] Call trace:
+>> [66630.406818]  0xffff802dac469000
+>> [66630.409945]  __wake_up_common_lock+0xa8/0x1a0
+>> [66630.414283]  __wake_up+0x40/0x50
+>> [66630.417499]  pci_cfg_access_unlock+0x9c/0xd0
+>> [66630.421752]  pci_try_reset_function+0x58/0x78
+>> [66630.426095]  vfio_pci_ioctl+0x478/0xdb8 [vfio_pci]
+>> [66630.430870]  vfio_device_fops_unl_ioctl+0x44/0x70 [vfio]
+>> [66630.436158]  do_vfs_ioctl+0xc4/0x8c0
+>> [66630.439718]  ksys_ioctl+0x8c/0xa0
+>> [66630.443018]  __arm64_sys_ioctl+0x28/0x38
+>> [66630.446925]  el0_svc_common+0x78/0x130
+>> [66630.450657]  el0_svc_handler+0x38/0x78
+>> [66630.454389]  el0_svc+0x8/0xc
+>> [66630.457260] Code: 00000000 00000000 00000000 00000000 (ac46d000)
+>> [66630.463325] kernel fault(0x1) notification starting on CPU 41
+>> [66630.469044] kernel fault(0x1) notification finished on CPU 41
+>>
+>> The chance to reproduce this problem is very small. We had an initial analysis of this problem,
+>> and found it was caused by the illegal value of the 'curr->func' in the __wake_up_common() function.
+>>
+>> I cannot image how 'curr->func' can be wrote to 0xffff802dac469000. Is there any problem about
+>> concurrent competition between the pci_wait_cfg() function and the wake_up_all() function?
+> 
+> I haven't heard of a problem there, but that doesn't mean there isn't
+> one.
+> 
+> The fact that pci_wait_cfg() uses __add_wait_queue() (not
+> add_wait_queue(), which does more locking) makes me a little
+> suspicious.  Most of the other callers of __add_wait_queue() acquire
+> the wait_queue lock themselves, but pci_wait_cfg() doesn't.
+> 
+> This was added by 7ea7e98fd8d0 ("PCI: Block on access to temporarily
+> unavailable pci device"), and the commit log suggests that the
+> pci_lock is sufficient.  All callers of pci_wait_cfg() do hold
+> pci_lock, and the "pci_cfg_wait" queue is private, but ...
+> pci_cfg_access_unlock() calls wake_up_all(&pci_cfg_wait) *without*
+> holding pci_lock.  That path leads to __wake_up_common_lock(), which
+> depends on wq_head->lock, which pci_wait_cfg() doesn't use.
+
+Yes, we was also suspicious about this point and had a further analysis of this problem.
+We found that the "pci_cfg_wait" queue was empty when the "curr->func" callback function
+was called:
+
+crash> p pci_cfg_wait.head
+$2 = {
+  next = 0xffff0000092755b8 <pci_cfg_wait+8>,
+  prev = 0xffff0000092755b8 <pci_cfg_wait+8>
+}
+crash> p &(pci_cfg_wait.head)
+$3 = (struct list_head *) 0xffff0000092755b8 <pci_cfg_wait+8>
+crash>
+
+The "ps" command also shows that there was no processes on "UN" state at that time.
+
+According to the above two clues, we finally reached a conclusion: there must be two processes,
+'A' was calling pci_wait_cfg() and 'B' was calling __wake_up_common(). And there is a very
+small chance that 'A' called __remove_wait_queue() before 'B' called the "curr->func", after
+'B' got the queue entry "curr". Since the queue entry was a local variable, it would be
+invalid after pci_wait_cfg() returned and eventually we got an invalid value of "curr->func".
+
+In order to verify this conclusion, we add a delay(e.g. 300ms) before calling "curr->func"
+in the __wake_up_common() function. Then this problem can be easily reproduced.
+
+> 
+> pci_cfg_access_unlock() originally *did* hold pci_lock while calling
+> wake_up_all(), but I changed that with cdcb33f98244 ("PCI: Avoid
+> possible deadlock on pci_lock and p->pi_lock") without understanding
+> both sides of the wait_queue locking issue.
+
+Before your change was merged, any operations to the "pci_cfg_wait" was safe because they all
+did hold pci_lock. So the pci_lock was sufficient.
+
+> 
+> But I still don't understand enough to know whether this is actually
+> the problem or to propose a fix.
+
+I think we need to fix it. A simple solution is to use add_wait_queue()/remove_wait_queue()
+instead of __add_wait_queue()/__remove_wait_queue() and this works for me. What do you think?
+
+> 
+> Bjorn
+> 
+> .
+> 
+
+-- 
+
+Thanks,
+Xiang
+
