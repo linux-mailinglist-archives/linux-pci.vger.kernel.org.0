@@ -2,100 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 87DA0E20C9
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2019 18:38:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B6D8E2173
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2019 19:10:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733230AbfJWQiy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Oct 2019 12:38:54 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55890 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733010AbfJWQiy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Oct 2019 12:38:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=g0rPJmNeTmtTxNbr9OQMo3pBMMOXbOS/kJjZ7bJPmkI=; b=nphQWFQTNkKWc5QEe0IdwN48p
-        e/VdIDPsCZ/c9RDmnxJUMa9yie4sKXvvh5uKsghz7UEVLbTPSt7HaieuqgIclq78S9N8TcOlNL/On
-        mZL9B3uUIx/kyZbqwOP08sMO1ZE2lF/nY7TzlScTyC9fSYg2QIf35ETmp8P89CLwn8wOLrIn427vc
-        bKlwsqLVUZYwa7D3ipzUWGPSlB7anlyJfPnFuvW7UZ2PP2IwLsBf7goWrHV1t6pm2qTi3w48p8DB/
-        7J3oJUsvc8Lw1ds9p6DAlqqMUpw4lFBDFPnP1py5RsoCR3CZtMqbXckqMUBG+elvZsabhMdFNK9c6
-        yu3O+3K9w==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iNJeu-0001Ny-0e; Wed, 23 Oct 2019 16:38:52 +0000
-Date:   Wed, 23 Oct 2019 09:38:51 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Xiang Zheng <zhengxiang9@huawei.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, alex.williamson@redhat.com,
-        Wang Haibin <wanghaibin.wang@huawei.com>,
-        Guoheyi <guoheyi@huawei.com>,
-        yebiaoxiang <yebiaoxiang@huawei.com>
-Subject: Re: Kernel panic while doing vfio-pci hot-plug/unplug test
-Message-ID: <20191023163851.GA2963@bombadil.infradead.org>
-References: <2e7293dc-eb27-bce3-c209-e0ba15409f16@huawei.com>
- <20191023151540.GA168080@google.com>
+        id S1726620AbfJWRKm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Oct 2019 13:10:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726589AbfJWRKm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 23 Oct 2019 13:10:42 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A403E2086D;
+        Wed, 23 Oct 2019 17:10:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571850640;
+        bh=6VlhDLDQ6Z3w9QbsBW1qts+NF31RU0o3S2U2reNH0jw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=0apF5PPqM/gOAU+pWEKp3CM+5ENSrgaRJlot9DsNkNE9N6hxdPG1w6+k5zrvyDUH2
+         8164s2Rgbaw9d6FFjq3pzUcwRHba55me0SYX548JFTQvyjlzkEcFvOkBghbH1hF2nx
+         TYYjeUpEw1on1dStHFylaFRqzjouge3u3A6FeaIs=
+Date:   Wed, 23 Oct 2019 12:10:39 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mhocko@kernel.org, peterz@infradead.org, robin.murphy@arm.com,
+        geert@linux-m68k.org, gregkh@linuxfoundation.org,
+        paul.burton@mips.com
+Subject: Re: [PATCH] PCI: Warn about host bridge device when its numa node is
+ NO_NODE
+Message-ID: <20191023171039.GA173290@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191023151540.GA168080@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <76d37d5b-49bd-e45c-d42c-415235504893@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 10:15:40AM -0500, Bjorn Helgaas wrote:
-> I don't like being one of a handful of callers of __add_wait_queue(),
-> so I like that solution from that point of view.
+On Wed, Oct 23, 2019 at 04:22:43PM +0800, Yunsheng Lin wrote:
+> On 2019/10/23 5:04, Bjorn Helgaas wrote:
+> > On Sat, Oct 19, 2019 at 02:45:43PM +0800, Yunsheng Lin wrote:
+
+> > I think the underlying problem you're addressing is that:
+> > 
+> >   - NUMA_NO_NODE == -1,
+> >   - dev_to_node(dev) may return NUMA_NO_NODE,
+> >   - kmalloc(dev) relies on cpumask_of_node(dev_to_node(dev)), and
+> >   - cpumask_of_node(NUMA_NO_NODE) makes an invalid array reference
+> > 
+> > For example, on arm64, mips loongson, s390, and x86,
+> > cpumask_of_node(node) returns "node_to_cpumask_map[node]", and -1 is
+> > an invalid array index.
 > 
-> The 7ea7e98fd8d0 ("PCI: Block on access to temporarily unavailable pci
-> device") commit log suggests that using __add_wait_queue() is a
-> significant optimization, but I don't know how important that is in
-> practical terms.  Config accesses are never a performance path anyway,
-> so I'd be inclined to use add_wait_queue() unless somebody complains.
+> The invalid array index of -1 is the underlying problem here when
+> cpumask_of_node(dev_to_node(dev)) is called and cpumask_of_node()
+> is not NUMA_NO_NODE aware yet.
+> 
+> In the "numa: make node_to_cpumask_map() NUMA_NO_NODE aware" thread
+> disscusion, it is requested that it is better to warn about the pcie
+> device without a node assigned by the firmware before making the
+> cpumask_of_node() NUMA_NO_NODE aware, so that the system with pci
+> devices of "NUMA_NO_NODE" node can be fixed by their vendor.
+> 
+> See: https://lore.kernel.org/lkml/20191011111539.GX2311@hirez.programming.kicks-ass.net/
 
-Wow, this has got pretty messy in the umpteen years since I last looked
-at it.
+Right.  We should warn if the NUMA node number would help us but DT or
+the firmware didn't give us one.
 
-Some problems I see:
+But we can do that independently of any cpumask_of_node() changes.
+There's no need to do one patch before the other.  Even if you make
+cpumask_of_node() tolerate NUMA_NO_NODE, we'll still get the warning
+because we're not actually changing any node assignments.
 
-1. Commit df65c1bcd9b7b639177a5a15da1b8dc3bee4f5fa (tglx) says:
+> So maybe change the warning to below:
+> 
+> if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE)
+> 	dev_err(&bus->dev, FW_BUG "No node assigned on NUMA capable HW. Please contact your vendor for updates.\n");
 
-    x86/PCI: Select CONFIG_PCI_LOCKLESS_CONFIG
+I think this is perfect and I don't see the need for the refinement
+below:
+
+> And it seems a pci device's parent will always set to the bridge
+> device in pci_setup_device(), and device_add() which will set the
+> node to its parent's when the child device' node is NUMA_NO_NODE,
+> maybe we can add the bridge device' node checking to make sure
+> the pci device really does not have a node assigned, as below:
+> 
+> if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE &&
+>     dev_to_node(bus->bridge) == NUMA_NO_NODE)
+> 	dev_err(&bus->dev, FW_BUG "No node assigned on NUMA capable HW. Please contact your vendor for updates.\n");
+
+Anyway, would the attached patch work for you?  I have it tentatively
+queued up on pci/enumeration for v5.5.
+
+> >> It is possible to
+> >> have a PCI bridge shared between two nodes, such that the PCI
+> >> devices have equidistance. But the moment you scale this out, you
+> >> either get devices that are 'local' to a package while having
+> >> multiple packages, or if you maintain a single bridge in a big
+> >> system, things become so slow it all doesn't matter anyway.
+> >> Assigning a node (one of the shared) is, in the generic ase of
+> >> multiple packages, the better solution over assigning all nodes.
+> >>
+> >> As pci_device_add() will assign the pci device' node according to
+> >> the bus the device is on, which is decided by pcibus_to_node().
+> >> Currently different arch may implement the pcibus_to_node() based
+> >> on bus->sysdata or bus device' node, which has the same node as
+> >> the bridge device.
+> >>
+> >> And for devices behind another bridge case, the child bus device
+> >> is setup with proper parent bus device and inherit its parent'
+> >> sysdata in pci_alloc_child_bus(), so the pcie device under the
+> >> child bus should have the same node as the parent bridge when
+> >> device_add() is called, which will set the node to its parent's
+> >> node when the child device' node is NUMA_NO_NODE.
+> >>
+> >> So this patch only warns about the case when a host bridge device
+> >> is registered with a node of NO_NODE in pci_register_host_bridge().
+> >> And it only warns about that when there are more than one numa
+> >> nodes in the system.
+> > 
+> > 
+> >> [1] https://lore.kernel.org/lkml/1568724534-146242-1-git-send-email-linyunsheng@huawei.com/
+> >>
+> >> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> >> ---
+> >>  drivers/pci/probe.c | 3 +++
+> >>  1 file changed, 3 insertions(+)
+> >>
+> >> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> >> index 3d5271a..22be96a 100644
+> >> --- a/drivers/pci/probe.c
+> >> +++ b/drivers/pci/probe.c
+> >> @@ -927,6 +927,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+> >>  	list_add_tail(&bus->node, &pci_root_buses);
+> >>  	up_write(&pci_bus_sem);
+> >>  
+> >> +	if (nr_node_ids > 1 && dev_to_node(bus->bridge) == NUMA_NO_NODE)
+> >> +		dev_err(bus->bridge, FW_BUG "No node assigned on NUMA capable HW by BIOS. Please contact your vendor for updates.\n");
+> >> +
+> >>  	return 0;
+> >>  
+> >>  unregister:
+
+commit 8f8cf239c4f1
+Author: Yunsheng Lin <linyunsheng@huawei.com>
+Date:   Sat Oct 19 14:45:43 2019 +0800
+
+    PCI: Warn if no host bridge NUMA node info
     
-    All x86 PCI configuration space accessors have either their own
-    serialization or can operate completely lockless (ECAM).
+    In pci_call_probe(), we try to run driver probe functions on the node where
+    the device is attached.  If we don't know which node the device is attached
+    to, the driver will likely run on the wrong node.  This will still work,
+    but performance will not be as good as it could be.
     
-    Disable the global lock in the generic PCI configuration space accessors.
+    On NUMA systems, warn if we don't know which node a PCI host bridge is
+    attached to.  This is likely an indication that ACPI didn't supply a _PXM
+    method or the DT didn't supply a "numa-node-id" property.
+    
+    [bhelgaas: commit log, check bus node]
+    Link: https://lore.kernel.org/r/1571467543-26125-1-git-send-email-linyunsheng@huawei.com
+    Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-The concept behind this patch is broken.  We still need to lock out
-config space accesses when devices are undergoing D-state transitions.
-I would suggest that for the contention case that tglx is concerned about,
-we should have a pci_bus_read_config_unlocked_##size set of functions
-which can be used for devices we know never go into D states.
-
-
-2. Commit a2e27787f893621c5a6b865acf6b7766f8671328 (jan kiszka)
-   exports pci_lock.  I think this is a mistake; at best there should be
-   accessors for the pci_lock.  But I don't understand why it needs to
-   exclude PCI config space changes throughout pci_check_and_set_intx_mask().
-   Why can it not do:
-
--	bus->ops->read(bus, dev->devfn, PCI_COMMAND, 4, &cmd_status_dword);
-+	pci_read_config_dword(dev, PCI_COMMAND, &cmd_status_dword);
-
-3. I don't understand why 511dd98ce8cf6dc4f8f2cb32a8af31ce9f4ba4a1
-   changed pci_lock to be a raw spinlock.  The patch description
-   essentially says "We need it for RT" which isn't terribly helpful.
-
-4. Finally, getting back to the original problem report here, I wouldn't
-   write this code this way today.  There's no reason not to use the
-   regular add_wait_queue etc.  BUT!  Why are we using this custom locking
-   mechanism?  It pretty much screams to me of an rwsem (reads/writes
-   of config space take it for read; changes to config space accesses
-   (disabling and changing of accessor methods) take it for write.
-
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 3d5271a7a849..40259c38d66a 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -897,6 +897,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+ 	else
+ 		pr_info("PCI host bridge to bus %s\n", name);
+ 
++	if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE)
++		dev_warn(&bus->dev, "Unknown NUMA node; performance will be reduced\n");
++
+ 	/* Add initial resources to the bus */
+ 	resource_list_for_each_entry_safe(window, n, &resources) {
+ 		list_move_tail(&window->node, &bridge->windows);
