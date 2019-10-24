@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B8784E398C
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2019 19:12:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6603E398B
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2019 19:12:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439954AbfJXRM6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S2439953AbfJXRM6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 24 Oct 2019 13:12:58 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:48816 "EHLO mta-01.yadro.com"
+Received: from mta-02.yadro.com ([89.207.88.252]:48802 "EHLO mta-01.yadro.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2439946AbfJXRM6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S2439951AbfJXRM6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Thu, 24 Oct 2019 13:12:58 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id F03F6437F6;
-        Thu, 24 Oct 2019 17:12:56 +0000 (UTC)
+        by mta-01.yadro.com (Postfix) with ESMTP id 31136438D1;
+        Thu, 24 Oct 2019 17:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
         content-type:content-type:content-transfer-encoding:mime-version
         :references:in-reply-to:x-mailer:message-id:date:date:subject
         :subject:from:from:received:received:received; s=mta-01; t=
-        1571937175; x=1573751576; bh=BvsEhzhdlSaFHugg08Hbv0nvpwWr5AVr2aa
-        4bqlxehk=; b=eG207hBfekp7gIVP9tYX87mJmnN20Wm0vkPCRBxt1glvBS11Ef7
-        ubY8GIY5QMUMG1rkl5/CZi+kgPZPLZ7aR83CFYrv5w1L8rgVE18h5WjSrC47J4rN
-        XKQ383EPrB5beTrDQ/06vBUMP6kNVmRJQKPyLD/TaEanvVhn/LJcVSYk=
+        1571937176; x=1573751577; bh=siX5+YSMeoM/DO0y3MLeeru9IHUDsIROYua
+        KtHFaz2I=; b=jn02e3pLoFm0jLK1xraa8TmbPdNHvs6c8dKtLpynLqGJksBIPie
+        SWETUxjd/2r78UCP2plAUYqvMT00yWtPcaxQ4K7bfFS57QiA84n2PqavcmvvdFmD
+        moacvXo5AgLXTHPShu2kFWOrl9dihTA2Atu7GOsIKlpoIAsYv9jx7ots=
 X-Virus-Scanned: amavisd-new at yadro.com
 Received: from mta-01.yadro.com ([127.0.0.1])
         by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id l66uyQuYIjNe; Thu, 24 Oct 2019 20:12:55 +0300 (MSK)
+        with ESMTP id wfSg_j1etxU7; Thu, 24 Oct 2019 20:12:56 +0300 (MSK)
 Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id D5A2443E10;
-        Thu, 24 Oct 2019 20:12:44 +0300 (MSK)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 118A943E16;
+        Thu, 24 Oct 2019 20:12:45 +0300 (MSK)
 Received: from NB-148.yadro.com (172.17.15.136) by T-EXCH-02.corp.yadro.com
  (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Thu, 24
@@ -38,11 +38,10 @@ Received: from NB-148.yadro.com (172.17.15.136) by T-EXCH-02.corp.yadro.com
 From:   Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
 To:     <linux-pci@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
 CC:     Bjorn Helgaas <helgaas@kernel.org>, <linux@yadro.com>,
-        Sergey Miroshnichenko <s.miroshnichenko@yadro.com>,
-        <linux-nvme@lists.infradead.org>, Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v6 27/30] nvme-pci: Handle movable BARs
-Date:   Thu, 24 Oct 2019 20:12:25 +0300
-Message-ID: <20191024171228.877974-28-s.miroshnichenko@yadro.com>
+        Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
+Subject: [PATCH v6 28/30] PCI/portdrv: Declare support of movable BARs
+Date:   Thu, 24 Oct 2019 20:12:26 +0300
+Message-ID: <20191024171228.877974-29-s.miroshnichenko@yadro.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191024171228.877974-1-s.miroshnichenko@yadro.com>
 References: <20191024171228.877974-1-s.miroshnichenko@yadro.com>
@@ -57,95 +56,44 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hotplugged devices can affect the existing ones by moving their BARs. The
-PCI subsystem will inform the NVME driver about this by invoking the
-.rescan_prepare() and .rescan_done() hooks, so the BARs can by re-mapped.
+Switch's BARs are not used by the portdrv driver, but they are still
+considered as immovable until the .rescan_prepare() and .rescan_done()
+hooks are added. Add these hooks to increase chances to allocate new BARs.
 
-Tested under the "randrw" mode of the fio tool. Before the hotplugging:
-
-  % sudo cat /proc/iomem
-  ...
-                3fe800000000-3fe8007fffff : PCI Bus 0020:0b
-                  3fe800000000-3fe8007fffff : PCI Bus 0020:18
-                    3fe800000000-3fe8000fffff : 0020:18:00.0
-                      3fe800000000-3fe8000fffff : nvme
-                    3fe800100000-3fe80017ffff : 0020:18:00.0
-  ...
-
-, then another NVME drive was hot-added, so BARs of the 0020:18:00.0 are
-moved:
-
-  % sudo cat /proc/iomem
-    ...
-                3fe800000000-3fe800ffffff : PCI Bus 0020:0b
-                  3fe800000000-3fe8007fffff : PCI Bus 0020:10
-                    3fe800000000-3fe800003fff : 0020:10:00.0
-                      3fe800000000-3fe800003fff : nvme
-                    3fe800010000-3fe80001ffff : 0020:10:00.0
-                  3fe800800000-3fe800ffffff : PCI Bus 0020:18
-                    3fe800800000-3fe8008fffff : 0020:18:00.0
-                      3fe800800000-3fe8008fffff : nvme
-                    3fe800900000-3fe80097ffff : 0020:18:00.0
-    ...
-
-During the rescanning, both READ and WRITE speeds drop to zero for a while
-due to driver's pause, then restore.
-
-Also tested with an NVME as a system drive.
-
-Cc: linux-nvme@lists.infradead.org
-Cc: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
 ---
- drivers/nvme/host/pci.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ drivers/pci/pcie/portdrv_pci.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 869f462e6b6e..5f162ea5a5f1 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -1650,7 +1650,7 @@ static int nvme_remap_bar(struct nvme_dev *dev, unsigned long size)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev->dev);
- 
--	if (size <= dev->bar_mapped_size)
-+	if (dev->bar && size <= dev->bar_mapped_size)
- 		return 0;
- 	if (size > pci_resource_len(pdev, 0))
- 		return -ENOMEM;
-@@ -3059,6 +3059,23 @@ static void nvme_error_resume(struct pci_dev *pdev)
- 	flush_work(&dev->ctrl.reset_work);
- }
- 
-+static void nvme_rescan_prepare(struct pci_dev *pdev)
-+{
-+	struct nvme_dev *dev = pci_get_drvdata(pdev);
-+
-+	nvme_dev_disable(dev, false);
-+	nvme_dev_unmap(dev);
-+	dev->bar = NULL;
-+}
-+
-+static void nvme_rescan_done(struct pci_dev *pdev)
-+{
-+	struct nvme_dev *dev = pci_get_drvdata(pdev);
-+
-+	nvme_dev_map(dev);
-+	nvme_reset_ctrl_sync(&dev->ctrl);
-+}
-+
- static const struct pci_error_handlers nvme_err_handler = {
- 	.error_detected	= nvme_error_detected,
- 	.slot_reset	= nvme_slot_reset,
-@@ -3135,6 +3152,8 @@ static struct pci_driver nvme_driver = {
- #endif
- 	.sriov_configure = pci_sriov_configure_simple,
- 	.err_handler	= &nvme_err_handler,
-+	.rescan_prepare	= nvme_rescan_prepare,
-+	.rescan_done	= nvme_rescan_done,
+diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+index 0a87091a0800..9dbddc7faaa7 100644
+--- a/drivers/pci/pcie/portdrv_pci.c
++++ b/drivers/pci/pcie/portdrv_pci.c
+@@ -197,6 +197,14 @@ static const struct pci_error_handlers pcie_portdrv_err_handler = {
+ 	.resume = pcie_portdrv_err_resume,
  };
  
- static int __init nvme_init(void)
++static void pcie_portdrv_rescan_prepare(struct pci_dev *pdev)
++{
++}
++
++static void pcie_portdrv_rescan_done(struct pci_dev *pdev)
++{
++}
++
+ static struct pci_driver pcie_portdriver = {
+ 	.name		= "pcieport",
+ 	.id_table	= &port_pci_ids[0],
+@@ -207,6 +215,9 @@ static struct pci_driver pcie_portdriver = {
+ 
+ 	.err_handler	= &pcie_portdrv_err_handler,
+ 
++	.rescan_prepare	= pcie_portdrv_rescan_prepare,
++	.rescan_done	= pcie_portdrv_rescan_done,
++
+ 	.driver.pm	= PCIE_PORTDRV_PM_OPS,
+ };
+ 
 -- 
 2.23.0
 
