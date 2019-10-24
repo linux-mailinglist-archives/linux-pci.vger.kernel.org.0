@@ -2,81 +2,207 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29726E3969
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2019 19:11:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A24E6E3971
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2019 19:12:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439877AbfJXRLF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Oct 2019 13:11:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439855AbfJXRLE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:11:04 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2405931AbfJXRMn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Oct 2019 13:12:43 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:48726 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2405901AbfJXRMn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 24 Oct 2019 13:12:43 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 8565C43611;
+        Thu, 24 Oct 2019 17:12:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:date:subject:subject:from:from
+        :received:received:received; s=mta-01; t=1571937159; x=
+        1573751560; bh=koaFWGbPyyMd70kSZQvFrsLHnKJvFwfZN48hcL2Dbr0=; b=T
+        EFT+CBm2rb3VNnTYhkeyiZIB4CAptsv5mpJi0A8ye5o15aVDSEJXK8TIcaY5pVnD
+        jW6V3Qbmb2setWD5WJWLhYXXSzGGiqGBmTk3VU/blt7/lKROENCJpZ849f1LcIk+
+        AfK4Y/LQWKcJEKx7sdhzPf4IKM3SFCR1zk2WSr+R6k=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id LrgnkNzVe_Af; Thu, 24 Oct 2019 20:12:39 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC4FC20650;
-        Thu, 24 Oct 2019 17:11:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571937064;
-        bh=50LiASavYQZLbe6nfO7wdHLLLfE3YL2HyvzWd+ySzPE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qtbTWnH9LA3tbkJFClj5FPXT3Mtrc4X0jALff5Ub3dJQBOsMB9ZTw5xWY6LnRIT1K
-         DshfISJ7KzW+Ubkjy5thaBOIiRSFSEC/CxfvkfZtPfvzDzpw4YMQP+D0Rz4BiCbtJq
-         kIZ8ib0J215lecEYJkXFVeeKcJ6aULHrnG+QixvI=
-Date:   Thu, 24 Oct 2019 12:11:02 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: pciehp: Prevent deadlock on disconnect
-Message-ID: <20191024171102.GA147451@google.com>
+        by mta-01.yadro.com (Postfix) with ESMTPS id 041CD42F14;
+        Thu, 24 Oct 2019 20:12:39 +0300 (MSK)
+Received: from NB-148.yadro.com (172.17.15.136) by T-EXCH-02.corp.yadro.com
+ (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Thu, 24
+ Oct 2019 20:12:38 +0300
+From:   Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
+To:     <linux-pci@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
+CC:     Bjorn Helgaas <helgaas@kernel.org>, <linux@yadro.com>,
+        Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
+Subject: [PATCH v6 00/30] PCI: Allow BAR movement during hotplug
+Date:   Thu, 24 Oct 2019 20:11:58 +0300
+Message-ID: <20191024171228.877974-1-s.miroshnichenko@yadro.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024093803.GU2819@lahna.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.17.15.136]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 12:38:03PM +0300, Mika Westerberg wrote:
-> On Wed, Oct 23, 2019 at 10:52:53AM +0300, Mika Westerberg wrote:
-> > > Shouldn't we check for slot_status being an error response (~0)
-> > > instead of looking for PCIBIOS_DEVICE_NOT_FOUND?  There are 7 RsvdP
-> > > bits in Slot Status, so ~0 is not a valid value for the register.
-> > > 
-> > > All 16 bits of Link Status are defined, but ~0 is still an invalid
-> > > value because the Current Link Speed and Negotiated Link Width fields
-> > > only define a few valid encodings.
-> > 
-> > Indeed that's a good point. I'll try that.
-> 
-> Just checking if I understand correctly what you are suggesting.
-> 
-> Currently we use pcie_capability_read_word() and check the return value.
-> If the device is gone it returns an error and resets *val to 0. That
-> only works if pci_dev_is_disconnected() is true so we would need to do
-> something like below.
-> 
-> pciehp_check_link_active():
-> 
-> 	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
-> 	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)~0)
-> 		return -ENODEV;
+Currently PCI hotplug works on top of resources, which are usually reserved
+not by the kernel, but by BIOS, bootloader, firmware, etc. These resources
+are gaps in the address space where BARs of new devices may fit, and extra
+bus number per port, so bridges can be hot-added. This series aim the
+former problem: it shows the kernel how to redistribute on the run, so the
+hotplug becomes predictable and cross-platform. A follow-up patchset will
+propose a solution for bus numbers.
 
-Yes, I guess this is what you'd have to do.
+If the memory is arranged in a way that doesn't provide enough space for
+BARs of a new hotplugged device, the kernel can pause the drivers of the
+"obstructing" devices and move their BARs, so the new BARs can fit into the
+freed spaces.
 
-> Or you mean that we check only for ~0 in which case we either need to
-> use pci_read_config_word() directly here or modify pcie_capability_read_word()
-> return ~0 instead of clearing it?
+To rearrange the BARs and bridge windows these patches releases all of them
+after a rescan and re-assigns in the same way as during the initial PCIe
+topology scan at system boot.
 
-I *would* like to explore removing the "*val = 0" code from
-pci_capability_read*(), but not in the context of this issue.
+When a driver is un-paused by the kernel after the PCIe rescan, it should
+ioremap() the new addresses of its BARs.
+
+Drivers indicate their support of the feature by implementing the new hooks
+.rescan_prepare() and .rescan_done() in the struct pci_driver. If a driver
+doesn't yet support the feature, BARs of its devices will be considered as
+immovable (by checking the pci_dev_movable_bars_supported(dev)) and handled
+in the same way as resources with the IORESOURCE_PCI_FIXED flag.
+
+If a driver doesn't yet support the feature, its devices are guaranteed to
+have their BARs remaining untouched.
+
+Tested on:
+ - x86_64 with "pci=pcie_bus_peer2peer"
+ - POWER8 PowerNV+OPAL+PHB3 ppc64le with "pci=pcie_bus_peer2peer".
+
+This patchset is a part of our work on adding support for hotplugging
+bridges full of other bridges, NVME drives, SAS HBAs and GPUs without
+special requirements such as Hot-Plug Controller, reservation of bus
+numbers or memory regions by firmware, etc.
+
+Changes since v5:
+ - Simplified the disable flag, now it is "pci=no_movable_buses";
+ - More deliberate marking the BARs as immovable;
+ - Mark as immovable BARs which are used by unbound drivers;
+ - Ignoring BAR assignment by non-kernel program components, so the kernel
+   is able now to distribute BARs in optimal and predictable way;
+ - Move here PowerNV-specific patches from the older "powerpc/powernv/pci:
+   Make hotplug self-sufficient, independent of FW and DT" series;
+ - Fix EEH cache rebuilding and PE allocation for PowerNV during rescan.
+
+Changes since v4:
+ - Feature is enabled by default (turned on by one of the latest patches);
+ - Add pci_dev_movable_bars_supported(dev) instead of marking the immovable
+   BARs with the IORESOURCE_PCI_FIXED flag;
+ - Set up PCIe bridges during rescan via sysfs, so MPS settings are now
+   configured not only during system boot or pcihp events;
+ - Allow movement of switch's BARs if claimed by portdrv;
+ - Update EEH address caches after rescan for powerpc;
+ - Don't disable completely hot-added devices which can't have BARs being
+   fit - just disable their BARs, so they are still visible in lspci etc;
+ - Clearer names: fixed_range_hard -> immovable_range, fixed_range_soft ->
+   realloc_range;
+ - Drop the patch for pci_restore_config_space() - fixed by properly using
+   the runtime PM.
+
+Changes since v3:
+ - Rebased to the upstream, so the patches apply cleanly again.
+
+Changes since v2:
+ - Fixed double-assignment of bridge windows;
+ - Fixed assignment of fixed prefetched resources;
+ - Fixed releasing of fixed resources;
+ - Fixed a debug message;
+ - Removed auto-enabling the movable BARs for x86 - let's rely on the
+   "pcie_movable_bars=force" option for now;
+ - Reordered the patches - bugfixes first.
+
+Changes since v1:
+ - Add a "pcie_movable_bars={ off | force }" command line argument;
+ - Handle the IORESOURCE_PCI_FIXED flag properly;
+ - Don't move BARs of devices which don't support the feature;
+ - Guarantee that new hotplugged devices will not steal memory from working
+   devices by ignoring the failing new devices with the new PCI_DEV_IGNORE
+   flag;
+ - Add rescan_prepare()+rescan_done() to the struct pci_driver instead of
+   using the reset_prepare()+reset_done() from struct pci_error_handlers;
+ - Add a bugfix of a race condition;
+ - Fixed hotplug in a non-pre-enabled (by BIOS/firmware) bridge;
+ - Fix the compatibility of the feature with pm_runtime and D3-state;
+ - Hotplug events from pciehp also can move BARs;
+ - Add support of the feature to the NVME driver.
+
+Sergey Miroshnichenko (30):
+  PCI: Fix race condition in pci_enable/disable_device()
+  PCI: Enable bridge's I/O and MEM access for hotplugged devices
+  PCI: hotplug: Add a flag for the movable BARs feature
+  PCI: Define PCI-specific version of the release_child_resources()
+  PCI: hotplug: movable BARs: Fix reassigning the released bridge
+    windows
+  PCI: hotplug: movable BARs: Recalculate all bridge windows during
+    rescan
+  PCI: hotplug: movable BARs: Don't disable the released bridge windows
+  PCI: hotplug: movable BARs: Don't allow added devices to steal
+    resources
+  PCI: Include fixed and immovable BARs into the bus size calculating
+  PCI: Prohibit assigning BARs and bridge windows to non-direct parents
+  PCI: hotplug: movable BARs: Try to assign unassigned resources only
+    once
+  PCI: hotplug: movable BARs: Calculate immovable parts of bridge
+    windows
+  PCI: hotplug: movable BARs: Compute limits for relocated bridge
+    windows
+  PCI: Make sure bridge windows include their fixed BARs
+  PCI: Fix assigning the fixed prefetchable resources
+  PCI: hotplug: movable BARs: Assign fixed and immovable BARs before
+    others
+  PCI: hotplug: movable BARs: Don't reserve IO/mem bus space
+  PCI: hotplug: Configure MPS for hot-added bridges during bus rescan
+  PCI: hotplug: movable BARs: Ignore the MEM BAR offsets from bootloader
+  powerpc/pci: Fix crash with enabled movable BARs
+  powerpc/pci: Access PCI config space directly w/o pci_dn
+  powerpc/pci: Create pci_dn on demand
+  powerpc/pci: hotplug: Add support for movable BARs
+  powerpc/powernv/pci: Suppress an EEH error when reading an empty slot
+  PNP: Don't reserve BARs for PCI when enabled movable BARs
+  PCI: hotplug: movable BARs: Enable the feature by default
+  nvme-pci: Handle movable BARs
+  PCI/portdrv: Declare support of movable BARs
+  PCI: pciehp: movable BARs: Trigger a domain rescan on hp events
+  Revert "powerpc/powernv/pci: Work around races in PCI bridge enabling"
+
+ .../admin-guide/kernel-parameters.txt         |   1 +
+ arch/powerpc/kernel/pci-hotplug.c             |  43 +++
+ arch/powerpc/kernel/pci_dn.c                  |  88 ++++-
+ arch/powerpc/kernel/rtas_pci.c                |  97 ++++--
+ arch/powerpc/platforms/powernv/pci-ioda.c     |  40 +--
+ arch/powerpc/platforms/powernv/pci.c          |  73 ++--
+ arch/powerpc/platforms/pseries/setup.c        |   2 +
+ drivers/nvme/host/pci.c                       |  21 +-
+ drivers/pci/bus.c                             |   2 +-
+ drivers/pci/hotplug/pciehp_pci.c              |   5 +
+ drivers/pci/pci.c                             |  38 ++-
+ drivers/pci/pci.h                             |  30 ++
+ drivers/pci/pcie/portdrv_pci.c                |  11 +
+ drivers/pci/probe.c                           | 315 +++++++++++++++++-
+ drivers/pci/setup-bus.c                       | 277 +++++++++++++--
+ drivers/pci/setup-res.c                       |  50 ++-
+ drivers/pnp/system.c                          |   4 +
+ include/linux/pci.h                           |  21 ++
+ 18 files changed, 965 insertions(+), 153 deletions(-)
+
+-- 
+2.23.0
+
