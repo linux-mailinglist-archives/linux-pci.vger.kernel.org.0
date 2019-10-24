@@ -2,209 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 567E1E28C0
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2019 05:23:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5064AE28CC
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2019 05:27:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392909AbfJXDW5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Oct 2019 23:22:57 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45893 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392896AbfJXDWz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Oct 2019 23:22:55 -0400
-Received: by mail-wr1-f68.google.com with SMTP id q13so19278722wrs.12
-        for <linux-pci@vger.kernel.org>; Wed, 23 Oct 2019 20:22:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LxgWmQM7qtnhNLoqpfev4EbCbpYsYSC4gKmtA8VlS7s=;
-        b=f3+EkB1SkTxtFa2qO8z9TpGkjdUu2bpOoeZixAvg5AvMLs1euNJB2LCIjuIU+VuWSY
-         /eQ6HtO6E5bSED1EJovtj6M35hInbZqufaXyst1OMfjXE30u7L8vENRqCXPVt3M8l3jY
-         lizvm2R12l/SJ2GFoXx5LeXNv4+9XrfxW7qoU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LxgWmQM7qtnhNLoqpfev4EbCbpYsYSC4gKmtA8VlS7s=;
-        b=CL1un1kHOPo9lIovhtH9QsPyUyKQralCGSx08PxlBqCSrrlX+RU1pxXTDDizRtzpGT
-         4btxLGBjo4RQh/JdctElEAMgOeuUBJXbfgjCNLju1vypvyvIozcsM7Co68ze/OxxAFTu
-         xmraDt0W1MKaq7+/ZiFyoi+73LkdsV5jyKBbJAKyFx9j4bdtZLdjXw2kCu2mGcDILndr
-         o1lk9eiThHg54c5vYT7m9wIfVbNQnDZSmxloi1x8LfkPHU87KIBUsogW5bb2eZnCNadw
-         1Js9p4xX97+ojulaU3yweNDA09ujEhFAXgDch2TIwkUQDuxJFxd3/tHR44IOiDC28cv3
-         H5cw==
-X-Gm-Message-State: APjAAAWZ/YT0AX9++U1Z9XbNdg8uifc/RChxuQWL4/Om5x8iMBvRRMje
-        TPGVu10T/boZiBiU/6Ld8MQSkWicXFrUdKC7c3tuNQ==
-X-Google-Smtp-Source: APXvYqyG9MzlQubrRgYExs+l/UMdE69TF938LH25z81UsvSyDHsfm4yK4JD+INrJnrkrCy1n5uL+O2aESo4czMbI4u4=
-X-Received: by 2002:adf:e9c7:: with SMTP id l7mr1603850wrn.57.1571887372518;
- Wed, 23 Oct 2019 20:22:52 -0700 (PDT)
+        id S2408327AbfJXD1N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Oct 2019 23:27:13 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4754 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2403962AbfJXD1N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 23 Oct 2019 23:27:13 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4DCBAD337FCCB9B119C0;
+        Thu, 24 Oct 2019 11:27:11 +0800 (CST)
+Received: from [127.0.0.1] (10.133.224.57) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 24 Oct 2019
+ 11:27:01 +0800
+Subject: Re: Kernel panic while doing vfio-pci hot-plug/unplug test
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mingo@redhat.com>, <peterz@infradead.org>,
+        <alex.williamson@redhat.com>,
+        Wang Haibin <wanghaibin.wang@huawei.com>,
+        Guoheyi <guoheyi@huawei.com>,
+        yebiaoxiang <yebiaoxiang@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+References: <20191023204638.GA8868@google.com>
+From:   Xiang Zheng <zhengxiang9@huawei.com>
+Message-ID: <2b43a560-787b-9e59-d74a-2f454759563c@huawei.com>
+Date:   Thu, 24 Oct 2019 11:26:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <20190906035813.24046-1-abhishek.shah@broadcom.com>
- <20191015164303.GC25674@e121166-lin.cambridge.arm.com> <CAKUFe6bQPMirQ01s-ezaQcUU85J+moFKMO8sLZgvtG2EPowrGA@mail.gmail.com>
- <20191021103808.GA29528@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20191021103808.GA29528@e121166-lin.cambridge.arm.com>
-From:   Abhishek Shah <abhishek.shah@broadcom.com>
-Date:   Thu, 24 Oct 2019 08:52:41 +0530
-Message-ID: <CAKUFe6Yg4ZiDfTZyAcerHa7q9TGqsUikGNOqv4eDOhkPjh5rJQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] PCI: iproc: Invalidate PAXB address mapping before
- programming it
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        linux-pci@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191023204638.GA8868@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.224.57]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 4:08 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Thu, Oct 17, 2019 at 07:57:56PM +0530, Abhishek Shah wrote:
-> > Hi Lorenzo,
-> >
-> > Please see my comments inline:
-> >
-> > On Tue, Oct 15, 2019 at 10:13 PM Lorenzo Pieralisi
-> > <lorenzo.pieralisi@arm.com> wrote:
-> > >
-> > > On Fri, Sep 06, 2019 at 09:28:13AM +0530, Abhishek Shah wrote:
-> > > > Invalidate PAXB inbound/outbound address mapping each time before
-> > > > programming it. This is helpful for the cases where we need to
-> > > > reprogram inbound/outbound address mapping without resetting PAXB.
-> > > > kexec kernel is one such example.
-> > >
-> > > This looks like a hack, explain to us please what it actually solves and
-> > > why a full reset is not necessary.
-> > >
-> > The PAXB IP performs address translation(PCI<->AXI address) for both inbound and
-> > outbound addresses (amongst other things) based on version of IP being used.
-> > It does so using the IMAP/IARR/OMAP/OARR registers.
-> >
-> > These registers get programmed as per mappings specified in device tree during
-> > PCI driver probe for each RC and do not get reset when kexec/kdump kernel boots.
-> > This results in driver assuming valid mappings in place for some mapping windows
-> > during kexec/kdump kernel boot, consequently it skips those windows and
-> > we run out of available mapping windows, leading to mapping failure.
-> >
-> > Normally, we take care of resetting PAXB block in firmware, but in
-> > primary kernel to kexec/kdump kernel handover, no firmware is executed
-> > in between.  So, we just, by default, invalidate the mapping registers
-> > each time before
-> > programming them to solve the issue described above..
-> > We do not need full reset for handling this.
->
-> I see. A simple bitmap to detect which windows are *actually*
-> programmed by the current kernel (that can be used by
->
-> iproc_pcie_ob_is_valid()
->
-> to carry out a valid check) would do as well instead of having to
-> invalidate all the OB registers.
->
-Okay, so you are suggesting to use variable/bitmap to hold status of
-ib/ob windows (mapped/unmapped)
-instead of using registers to check it. Please note that we would
-still be programming corresponding
-window register to mark it valid (HW requirement).
 
-@Ray, could you please provide feedback on this? I think existing way
-is proper for given driver design.
+On 2019/10/24 4:46, Bjorn Helgaas wrote:
+> [+cc Thomas, Rafael, beginning of thread at
+> https://lore.kernel.org/r/79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com]
+> 
+> On Wed, Oct 23, 2019 at 09:38:51AM -0700, Matthew Wilcox wrote:
+>> On Wed, Oct 23, 2019 at 10:15:40AM -0500, Bjorn Helgaas wrote:
+>>> I don't like being one of a handful of callers of __add_wait_queue(),
+>>> so I like that solution from that point of view.
+>>>
+>>> The 7ea7e98fd8d0 ("PCI: Block on access to temporarily unavailable pci
+>>> device") commit log suggests that using __add_wait_queue() is a
+>>> significant optimization, but I don't know how important that is in
+>>> practical terms.  Config accesses are never a performance path anyway,
+>>> so I'd be inclined to use add_wait_queue() unless somebody complains.
+>>
+>> Wow, this has got pretty messy in the umpteen years since I last looked
+>> at it.
+>>
+>> Some problems I see:
+>>
+>> 1. Commit df65c1bcd9b7b639177a5a15da1b8dc3bee4f5fa (tglx) says:
+>>
+>>     x86/PCI: Select CONFIG_PCI_LOCKLESS_CONFIG
+>>     
+>>     All x86 PCI configuration space accessors have either their own
+>>     serialization or can operate completely lockless (ECAM).
+>>     
+>>     Disable the global lock in the generic PCI configuration space accessors.
+>>
+>> The concept behind this patch is broken.  We still need to lock out
+>> config space accesses when devices are undergoing D-state transitions.
+>> I would suggest that for the contention case that tglx is concerned about,
+>> we should have a pci_bus_read_config_unlocked_##size set of functions
+>> which can be used for devices we know never go into D states.
+> 
+> Host bridges that can't do config accesses atomically, e.g., they have
+> something like the 0xcf8/0xcfc addr/data ports, need serialization.
+> CONFIG_PCI_LOCKLESS_CONFIG removes the use of pci_lock for that, and I
+> think that part makes sense regardless of whether devices can enter D
+> states.
+> 
+> We *should* prevent config accesses during D-state transitions (per
+> PCIe r5.0, sec 5.9), but I don't think pci_lock ever did that.
+> pci_raw_set_power_state() contains delays, but that only prevents
+> accesses from the caller, not from other threads or from userspace.
+> I suppose we should also prevent accesses by other threads during
+> transitions done by ACPI, e.g., _PS0, _PS1, _PS2, _PS3.  AFAICT we
+> don't do any of that.
+> 
+> It looks like pci_lock currently:
+> 
+>   - Serializes all kernel config accesses system-wide in
+>     pci_bus_read_config_##size() (unless CONFIG_PCI_LOCKLESS_CONFIG=y).
+> 
+>   - Serializes all userspace config accesses system-wide in
+>     pci_user_read_config_##size() (this seems unnecessary when
+>     CONFIG_PCI_LOCKLESS_CONFIG=y).
+> 
+>   - Serializes userspace config accesses with resets of the device via
+>     the dev->block_cfg_access bit and waitqueue mechanism.
+> 
+>   - Serializes kernel and userspace config accesses with bus->ops
+>     changes in pci_bus_set_ops() (except that we don't serialize
+>     kernel config accesses if CONFIG_PCI_LOCKLESS_CONFIG=y, which is
+>     probably a problem).  But pci_bus_set_ops() is hardly used and I'm
+>     not sure it's worth keeping it.
+> 
+>> 2. Commit a2e27787f893621c5a6b865acf6b7766f8671328 (jan kiszka)
+>>    exports pci_lock.  I think this is a mistake; at best there should be
+>>    accessors for the pci_lock.  But I don't understand why it needs to
+>>    exclude PCI config space changes throughout pci_check_and_set_intx_mask().
+>>    Why can it not do:
+>>
+>> -	bus->ops->read(bus, dev->devfn, PCI_COMMAND, 4, &cmd_status_dword);
+>> +	pci_read_config_dword(dev, PCI_COMMAND, &cmd_status_dword);
+>>
+>> 3. I don't understand why 511dd98ce8cf6dc4f8f2cb32a8af31ce9f4ba4a1
+>>    changed pci_lock to be a raw spinlock.  The patch description
+>>    essentially says "We need it for RT" which isn't terribly helpful.
+>>
+>> 4. Finally, getting back to the original problem report here, I wouldn't
+>>    write this code this way today.  There's no reason not to use the
+>>    regular add_wait_queue etc.  BUT!  Why are we using this custom locking
+>>    mechanism?  It pretty much screams to me of an rwsem (reads/writes
+>>    of config space take it for read; changes to config space accesses
+>>    (disabling and changing of accessor methods) take it for write.
+> 
+> So maybe the immediate thing is to just convert to add_wait_queue()?
 
-Also, as internal review tags are irrelevant as suggested by Lorenzo earlier,
-could you please put sign again once reviewed?
+Hmmm... May I push a patch? :)
 
+> 
+> There's a lot we could clean up here, but I think it would take a fair
+> bit of untangling before we actually solve this panic.
+> 
+> Bjorn
+> 
+> .
+> 
 
-Regards,
-Abhishek
+-- 
 
-> It is up to you, let me know and I will merge code accordingly.
->
-> Lorenzo
->
-> > > > Signed-off-by: Abhishek Shah <abhishek.shah@broadcom.com>
-> > > > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> > > > Reviewed-by: Vikram Mysore Prakash <vikram.prakash@broadcom.com>
-> > >
-> > > Patches are reviewed on public mailing lists, remove tags given
-> > > on internal reviews - they are not relevant.
-> > >
-> > Ok, will remove.
-> >
-> > > > ---
-> > > >  drivers/pci/controller/pcie-iproc.c | 28 ++++++++++++++++++++++++++++
-> > > >  1 file changed, 28 insertions(+)
-> > > >
-> > > > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> > > > index e3ca46497470..99a9521ba7ab 100644
-> > > > --- a/drivers/pci/controller/pcie-iproc.c
-> > > > +++ b/drivers/pci/controller/pcie-iproc.c
-> > > > @@ -1245,6 +1245,32 @@ static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
-> > > >       return ret;
-> > > >  }
-> > > >
-> > > > +static void iproc_pcie_invalidate_mapping(struct iproc_pcie *pcie)
-> > > > +{
-> > > > +     struct iproc_pcie_ib *ib = &pcie->ib;
-> > > > +     struct iproc_pcie_ob *ob = &pcie->ob;
-> > > > +     int idx;
-> > > > +
-> > > > +     if (pcie->ep_is_internal)
-> > >
-> > > What's this check for and why leaving mappings in place is safe for
-> > > this category of IPs ?
-> > For this category of IP(PAXC), no mappings need to be programmed in
-> > the first place.
-> >
-> > >
-> > > > +             return;
-> > > > +
-> > > > +     if (pcie->need_ob_cfg) {
-> > > > +             /* iterate through all OARR mapping regions */
-> > > > +             for (idx = ob->nr_windows - 1; idx >= 0; idx--) {
-> > > > +                     iproc_pcie_write_reg(pcie,
-> > > > +                                          MAP_REG(IPROC_PCIE_OARR0, idx), 0);
-> > > > +             }
-> > > > +     }
-> > > > +
-> > > > +     if (pcie->need_ib_cfg) {
-> > > > +             /* iterate through all IARR mapping regions */
-> > > > +             for (idx = 0; idx < ib->nr_regions; idx++) {
-> > > > +                     iproc_pcie_write_reg(pcie,
-> > > > +                                          MAP_REG(IPROC_PCIE_IARR0, idx), 0);
-> > > > +             }
-> > > > +     }
-> > > > +}
-> > > > +
-> > > >  static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
-> > > >                              struct device_node *msi_node,
-> > > >                              u64 *msi_addr)
-> > > > @@ -1517,6 +1543,8 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
-> > > >       iproc_pcie_perst_ctrl(pcie, true);
-> > > >       iproc_pcie_perst_ctrl(pcie, false);
-> > > >
-> > > > +     iproc_pcie_invalidate_mapping(pcie);
-> > >
-> > > It makes more sense to call this in the .shutdown() method if I
-> > > understand what it does.
-> > >
-> > It would work for kexec kernel, but not for kdump kernel as only for
-> > kexec'ed kernel,
-> > "device_shutdown" callback is present. We are here taking care of both the cases
-> > with this patch.
-> >
-> >
-> > Regards,
-> > Abhishek
-> >
-> > > Lorenzo
-> > >
-> > > >       if (pcie->need_ob_cfg) {
-> > > >               ret = iproc_pcie_map_ranges(pcie, res);
-> > > >               if (ret) {
-> > > > --
-> > > > 2.17.1
-> > > >
+Thanks,
+Xiang
+
