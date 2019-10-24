@@ -2,108 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C970EE28FF
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2019 05:45:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02622E2BC0
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2019 10:07:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392948AbfJXDpN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Oct 2019 23:45:13 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38005 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392926AbfJXDpM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Oct 2019 23:45:12 -0400
-Received: by mail-io1-f68.google.com with SMTP id u8so27696558iom.5
-        for <linux-pci@vger.kernel.org>; Wed, 23 Oct 2019 20:45:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mD92XtRViE3fuwX27/t4J88Vliq5/m5DxH+E0QdDcfY=;
-        b=np4oLXeE8XD06z6WLNxROOXayg/7ADY4dvhHQRnY2EXH3D4wrZ4uvVBzCLMBAl1YKs
-         X3kjp8uzPDq4VFJgPdRFGu+FIl4wDfiqtU7w6PZp+88i4oloYYBmdlOIiElf/8JWsI1Z
-         Asi6bKnndFHWV2XnQ7GtzdTCxFqXBosXW6SW7BTP4mM/aa8KaGla/jn36tffYO0Wt5WZ
-         v07XyDQEpncMj1ATg9d8591dV5+amUkJ8XZE3wwTs15BAh2IP3CMjZNWG3jRNsPU2znN
-         nUG3QgiKea3A6gmmbuQUPKoqxBCEyOdOKc4JWkScnPgEO4NAoOElT2mBNY1hnetWB3TF
-         uPIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mD92XtRViE3fuwX27/t4J88Vliq5/m5DxH+E0QdDcfY=;
-        b=VZ+4lh+wSmG0JNJruSDzm8reALQas66CqUbLKNdd849pA+Alkv46x8szSWdLXelE/R
-         nArZI+clGno1HhYzsDOaCkGgOESkuVjTYYIY/5JaPiDAvQuPG2mQGfwn0vr6w0hhObcf
-         Yn2xzuNsYCVF98abBRJ8/vEXn9EFrpqr2SzGpsbH8eqUKbeRzgSwxKcqIuok9CEHQgTH
-         G5ctoAjkmcfbyeEWEtd+31rWzJFr/2U0aH63XZiuQxf+oPhcTWP23nXKDkqXg9Vtkvbe
-         TrKegoYIn/eFHmnU+vwrWcw7rnVCZp1HBYJ/K2eA9TNElngqAwP+rVmywNcKkOAdcKP9
-         NWig==
-X-Gm-Message-State: APjAAAUdqrWwoztZ6TDqLSfeqsvn3XyFYtGyB1oFarwI74uY4kZDXBkq
-        fVhe2RyG934bovlPSeXnzqtIE9IUINKXj12Yt9jr4A==
-X-Google-Smtp-Source: APXvYqwrUjk8l2F1yVqbPWkm0wkJV8sufdaMmeDVQTVHJSKP7u8y4ic/BWRmmzodfowZBBFsGH12nFuVxyoZKg2IkUo=
-X-Received: by 2002:a5d:87ce:: with SMTP id q14mr985334ios.278.1571888711746;
- Wed, 23 Oct 2019 20:45:11 -0700 (PDT)
+        id S2438010AbfJXIH3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Oct 2019 04:07:29 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52704 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfJXIH3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Oct 2019 04:07:29 -0400
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iNY9U-0000HG-T3; Thu, 24 Oct 2019 10:07:25 +0200
+Date:   Thu, 24 Oct 2019 10:07:23 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Matthew Wilcox <willy@infradead.org>
+cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Xiang Zheng <zhengxiang9@huawei.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, peterz@infradead.org, alex.williamson@redhat.com,
+        Wang Haibin <wanghaibin.wang@huawei.com>,
+        Guoheyi <guoheyi@huawei.com>,
+        yebiaoxiang <yebiaoxiang@huawei.com>
+Subject: Re: Kernel panic while doing vfio-pci hot-plug/unplug test
+In-Reply-To: <20191023163851.GA2963@bombadil.infradead.org>
+Message-ID: <alpine.DEB.2.21.1910241001250.1852@nanos.tec.linutronix.de>
+References: <2e7293dc-eb27-bce3-c209-e0ba15409f16@huawei.com> <20191023151540.GA168080@google.com> <20191023163851.GA2963@bombadil.infradead.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20191023192205.97024-1-olof@lixom.net> <20191024023704.GA3152@redsun51.ssa.fujisawa.hgst.com>
-In-Reply-To: <20191024023704.GA3152@redsun51.ssa.fujisawa.hgst.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Wed, 23 Oct 2019 20:45:00 -0700
-Message-ID: <CAOesGMjXc1ezF+sC+Nc+VoXScE8kSzy1ZG_iBUBgs5RS4M0y2g@mail.gmail.com>
-Subject: Re: [PATCH] PCI/DPC: Add pcie_ports=dpc-native parameter to bring
- back old behavior
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 7:37 PM Keith Busch <kbusch@kernel.org> wrote:
->
-> On Wed, Oct 23, 2019 at 12:22:05PM -0700, Olof Johansson wrote:
-> > In commit eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
-> > the behavior was changed such that native (kernel) handling of DPC
-> > got tied to whether the kernel also handled AER. While this is what
-> > the standard recommends, there are BIOSes out there that lack the DPC
-> > handling since it was never required in the past.
-> >
-> > To make DPC still work on said platforms the same way they did before,
-> > add a "pcie_ports=dpc-native" kernel parameter that can be passed in
-> > if needed, while keeping defaults unchanged.
->
-> If platform firmware wants to handle AER events, but the kernel enables
-> the DPC capability, the ports will be trapping events that firmware is
-> expecting to handle. Not that that's a bad thing: firmware is generally
-> worse at handling these errors.
+On Wed, 23 Oct 2019, Matthew Wilcox wrote:
+> Some problems I see:
+> 
+> 1. Commit df65c1bcd9b7b639177a5a15da1b8dc3bee4f5fa (tglx) says:
+> 
+>     x86/PCI: Select CONFIG_PCI_LOCKLESS_CONFIG
+>     
+>     All x86 PCI configuration space accessors have either their own
+>     serialization or can operate completely lockless (ECAM).
+>     
+>     Disable the global lock in the generic PCI configuration space accessors.
+> 
+> The concept behind this patch is broken.  We still need to lock out
+> config space accesses when devices are undergoing D-state transitions.
+> I would suggest that for the contention case that tglx is concerned about,
+> we should have a pci_bus_read_config_unlocked_##size set of functions
+> which can be used for devices we know never go into D states.
 
-Right, and in particular (and what I'm looking for here): It brings
-back the older behavior that some platforms rely on. :-/
+I don't think that it's broken. A D-state transition has to make sure that
+the rest of stuff which might be touching the config space is
+quiescent. pci_lock cannot provide that protection
+ 
+> 
+> 2. Commit a2e27787f893621c5a6b865acf6b7766f8671328 (jan kiszka)
+>    exports pci_lock.  I think this is a mistake; at best there should be
+>    accessors for the pci_lock.  But I don't understand why it needs to
+>    exclude PCI config space changes throughout pci_check_and_set_intx_mask().
+>    Why can it not do:
+> 
+> -	bus->ops->read(bus, dev->devfn, PCI_COMMAND, 4, &cmd_status_dword);
+> +	pci_read_config_dword(dev, PCI_COMMAND, &cmd_status_dword);
 
-> > +/*
-> > + * If the user specified "pcie_ports=dpc-native", use the PCIe services
-> > + * for DPC, but cuse platform defaults for the others.
->
-> s/cuse/use
+Hmm. Need to look closer on that.
+ 
+> 3. I don't understand why 511dd98ce8cf6dc4f8f2cb32a8af31ce9f4ba4a1
+>    changed pci_lock to be a raw spinlock.  The patch description
+>    essentially says "We need it for RT" which isn't terribly helpful.
 
-Thanks
+Yes, I could slap myself for writing such a useless changelog. The reason
+why it is a raw spinlock is that config space access happens from very low
+level contexts, which require to have interrupts disabled even on RT,
+e.g. from the guts of the interrupt code.
 
-> > @@ -1534,9 +1534,11 @@ static inline int pci_irqd_intx_xlate(struct irq_domain *d,
-> >  #ifdef CONFIG_PCIEPORTBUS
-> >  extern bool pcie_ports_disabled;
-> >  extern bool pcie_ports_native;
-> > +extern bool pcie_ports_dpc_native;
-> >  #else
-> >  #define pcie_ports_disabled  true
-> >  #define pcie_ports_native    false
-> > +#define pcie_ports_dpc_native        false
-> >  #endif
->
-> You do not have any references to pcie_ports_dpc_native outside of files that
-> require CONFIG_PCIEPORTBUS, so no need to define a default.
+> 4. Finally, getting back to the original problem report here, I wouldn't
+>    write this code this way today.  There's no reason not to use the
+>    regular add_wait_queue etc.  BUT!  Why are we using this custom locking
+>    mechanism?  It pretty much screams to me of an rwsem (reads/writes
+>    of config space take it for read; changes to config space accesses
+>    (disabling and changing of accessor methods) take it for write.
 
-If these are the only comments, maybe Bjorn can fixup when applying.
-Bjorn; let me know if you prefer that or if you want a fresh version.
-Either is fine with me.
+You cannot use a RWSEM as low level interrupt code needs to access the
+config space with interrupts disabled and raw spinlocks held, e.g. to
+fiddle with the interrupt and MSI stuff.
+
+Thanks,
+
+	tglx
 
 
--Olof
+    
