@@ -2,125 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD64FE2DAB
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2019 11:39:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB57DE2E74
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2019 12:13:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391001AbfJXJjf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Oct 2019 05:39:35 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4757 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388539AbfJXJjf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 24 Oct 2019 05:39:35 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4D269938E1B8B66A7C0E;
-        Thu, 24 Oct 2019 17:39:32 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 24 Oct 2019
- 17:39:31 +0800
-Subject: Re: [PATCH] PCI: Warn about host bridge device when its numa node is
- NO_NODE
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mhocko@kernel.org>, <peterz@infradead.org>,
-        <robin.murphy@arm.com>, <geert@linux-m68k.org>,
-        <gregkh@linuxfoundation.org>, <paul.burton@mips.com>
-References: <20191023171039.GA173290@google.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <eb14d1ae-4077-0ce0-d64e-7c25f5aebbb6@huawei.com>
-Date:   Thu, 24 Oct 2019 17:39:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-In-Reply-To: <20191023171039.GA173290@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+        id S2391823AbfJXKNW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Oct 2019 06:13:22 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36309 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391875AbfJXKNW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Oct 2019 06:13:22 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w18so24861246wrt.3
+        for <linux-pci@vger.kernel.org>; Thu, 24 Oct 2019 03:13:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=4e4CMe8f6py1Yt2lWLrn331C7GRW8uLQcBzyGRI9nf4=;
+        b=cTWe2LNoVh1mOyCENVn7zpGv3Jprre8rDXIaPx76j+yvm1hAVwpu6ypxuWj/UlDG97
+         I2oGLcNkL8BrxO7xHx2/ggo3DF85rMITBcd3ReMP4P9wlSe/Km4gkC2pZ+KiWQRbD1Ub
+         oUOBZe7O6NpUfMuls2FITbvA/QIqoL2gGBGoTs3Sn6F5kl9WU1rliddwVhPBlkqkn9m1
+         Lphmv7GnryVkgYA2cAn/Us7kHpjQ0Omkljg9UkRBs0ezBVER1StVBdwBnkO4Pzx7gs//
+         2BwDWL51kb6jgX/pMfJ4olGJpU45RWhG1faxx4yo1ZoMybOydnuSGIvh54WChKjDxe8h
+         lKFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=4e4CMe8f6py1Yt2lWLrn331C7GRW8uLQcBzyGRI9nf4=;
+        b=e/trGSHU45bkD4wrAQLd8GHRw92YEvmuUM4FNeKad7zxpsZwG5RYNeNhyc+utSOYF2
+         m/I3EO9w7insZyMwo07NJ1netn0cGZW6QSI4RnzAAKL3uRWdZQs2NBKbMaH5RujzFQ1f
+         BTNKL6ygkT2i080G0h6GHX169gGHwxMGItzCxnTyei3HwLhTVHfNswXPfcSWtj74N/iJ
+         zXUqTrXd73oDc69pCxyELkugrpZ/sG5m1VZWCZwLFtT+Anet+8IU6azsKIi9ERZhmKBZ
+         w7zu4Pt4A1DXrh0hru7IOX8AIrUsKl0/fhUK3qB1ZEMvAdjVCJn/kmmuwndnGBv7U4v0
+         swuw==
+X-Gm-Message-State: APjAAAUDoX/ro/ewU1Je6xZxpz5etY7SvZUfO8Hjf7Chr8M3X8ylvVet
+        wYKcMQUMQNQIsE6o53vs7dkbRg==
+X-Google-Smtp-Source: APXvYqwcFnA4ofb/Q4g7Tcra8udIzZaJReC4T76gGILoFLWpLp7LWZeYpE1c6/ZFH9jYdiQyaQs7MQ==
+X-Received: by 2002:adf:92a5:: with SMTP id 34mr2881720wrn.337.1571911998458;
+        Thu, 24 Oct 2019 03:13:18 -0700 (PDT)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id i3sm20429658wrw.69.2019.10.24.03.13.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 24 Oct 2019 03:13:17 -0700 (PDT)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com, palmer@sifive.com,
+        hch@infradead.org, longman@redhat.com, helgaas@kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Jackie Liu <liuyun01@kylinos.cn>,
+        Wesley Terpstra <wesley@sifive.com>,
+        Firoz Khan <firoz.khan@linaro.org>, sparclinux@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+        James Hogan <jhogan@kernel.org>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-snps-arc@lists.infradead.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Biggers <ebiggers@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-mips@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 0/2] Enabling MSI for Microblaze
+Date:   Thu, 24 Oct 2019 12:13:10 +0200
+Message-Id: <cover.1571911976.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2019/10/24 1:10, Bjorn Helgaas wrote:
-> On Wed, Oct 23, 2019 at 04:22:43PM +0800, Yunsheng Lin wrote:
->> On 2019/10/23 5:04, Bjorn Helgaas wrote:
->>> On Sat, Oct 19, 2019 at 02:45:43PM +0800, Yunsheng Lin wrote:
->> And it seems a pci device's parent will always set to the bridge
->> device in pci_setup_device(), and device_add() which will set the
->> node to its parent's when the child device' node is NUMA_NO_NODE,
->> maybe we can add the bridge device' node checking to make sure
->> the pci device really does not have a node assigned, as below:
->>
->> if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE &&
->>     dev_to_node(bus->bridge) == NUMA_NO_NODE)
->> 	dev_err(&bus->dev, FW_BUG "No node assigned on NUMA capable HW. Please contact your vendor for updates.\n");
-> 
-> Anyway, would the attached patch work for you?  I have it tentatively
-> queued up on pci/enumeration for v5.5.
-> 
+Hi,
 
-Yes, thanks for making the change when applying.
+these two patches come from discussion with Christoph, Bjorn, Palmer and
+Waiman. The first patch was suggestion by Christoph here
+https://lore.kernel.org/linux-riscv/20191008154604.GA7903@infradead.org/
+The second part was discussed
+https://lore.kernel.org/linux-pci/mhng-5d9bcb53-225e-441f-86cc-b335624b3e7c@palmer-si-x1e/
+and
+https://lore.kernel.org/linux-pci/20191017181937.7004-1-palmer@sifive.com/
 
->>>
->>>
->>>> [1] https://lore.kernel.org/lkml/1568724534-146242-1-git-send-email-linyunsheng@huawei.com/
->>>>
->>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->>>> ---
->>>>  drivers/pci/probe.c | 3 +++
->>>>  1 file changed, 3 insertions(+)
->>>>
->>>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->>>> index 3d5271a..22be96a 100644
->>>> --- a/drivers/pci/probe.c
->>>> +++ b/drivers/pci/probe.c
->>>> @@ -927,6 +927,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
->>>>  	list_add_tail(&bus->node, &pci_root_buses);
->>>>  	up_write(&pci_bus_sem);
->>>>  
->>>> +	if (nr_node_ids > 1 && dev_to_node(bus->bridge) == NUMA_NO_NODE)
->>>> +		dev_err(bus->bridge, FW_BUG "No node assigned on NUMA capable HW by BIOS. Please contact your vendor for updates.\n");
->>>> +
->>>>  	return 0;
->>>>  
->>>>  unregister:
-> 
-> commit 8f8cf239c4f1
-> Author: Yunsheng Lin <linyunsheng@huawei.com>
-> Date:   Sat Oct 19 14:45:43 2019 +0800
-> 
->     PCI: Warn if no host bridge NUMA node info
->     
->     In pci_call_probe(), we try to run driver probe functions on the node where
->     the device is attached.  If we don't know which node the device is attached
->     to, the driver will likely run on the wrong node.  This will still work,
->     but performance will not be as good as it could be.
->     
->     On NUMA systems, warn if we don't know which node a PCI host bridge is
->     attached to.  This is likely an indication that ACPI didn't supply a _PXM
->     method or the DT didn't supply a "numa-node-id" property.
->     
->     [bhelgaas: commit log, check bus node]
->     Link: https://lore.kernel.org/r/1571467543-26125-1-git-send-email-linyunsheng@huawei.com
->     Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 3d5271a7a849..40259c38d66a 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -897,6 +897,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
->  	else
->  		pr_info("PCI host bridge to bus %s\n", name);
->  
-> +	if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE)
-> +		dev_warn(&bus->dev, "Unknown NUMA node; performance will be reduced\n");
-> +
->  	/* Add initial resources to the bus */
->  	resource_list_for_each_entry_safe(window, n, &resources) {
->  		list_move_tail(&window->node, &bridge->windows);
-> 
-> .
-> 
+Thanks,
+Michal
+
+
+Michal Simek (1):
+  asm-generic: Make msi.h a mandatory include/asm header
+
+Palmer Dabbelt (1):
+  pci: Default to PCI_MSI_IRQ_DOMAIN
+
+ arch/arc/include/asm/Kbuild     | 1 -
+ arch/arm/include/asm/Kbuild     | 1 -
+ arch/arm64/include/asm/Kbuild   | 1 -
+ arch/mips/include/asm/Kbuild    | 1 -
+ arch/powerpc/include/asm/Kbuild | 1 -
+ arch/riscv/include/asm/Kbuild   | 1 -
+ arch/sparc/include/asm/Kbuild   | 1 -
+ drivers/pci/Kconfig             | 2 +-
+ include/asm-generic/Kbuild      | 1 +
+ 9 files changed, 2 insertions(+), 8 deletions(-)
+
+-- 
+2.17.1
 
