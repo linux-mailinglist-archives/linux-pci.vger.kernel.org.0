@@ -2,119 +2,210 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 70B40E3F62
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 00:32:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3D64E3FF7
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 01:08:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731592AbfJXWcC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Oct 2019 18:32:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36860 "EHLO mail.kernel.org"
+        id S2387682AbfJXXH4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Oct 2019 19:07:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731152AbfJXWcC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 24 Oct 2019 18:32:02 -0400
-Received: from localhost (unknown [69.71.4.100])
+        id S2387620AbfJXXHz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 24 Oct 2019 19:07:55 -0400
+Received: from lore-desk.lan (unknown [151.66.11.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 895E720578;
-        Thu, 24 Oct 2019 22:32:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B477E21A4C;
+        Thu, 24 Oct 2019 23:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571956321;
-        bh=w/WNbEhCYReBCGhJK/JvS+wNspAgCCxkJ/ZDpf0dz0Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=GCSCdhbiPQVzfrntQjeAbI7xZNmQLoHty2THFOvCOU/jqCmme03KHxZoeanRQs3Sb
-         fr8Ua0J9tQuZrpY3riPNv9g0WBxFKyxcEgrfJ+2glj7l2htQathKRt6fgkwyezgxj6
-         y466EiCIesFxXuSHTyPNLV0W//vc5pk1j7Oq+CyM=
-Date:   Thu, 24 Oct 2019 17:32:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Xiang Zheng <zhengxiang9@huawei.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, alex.williamson@redhat.com,
-        Wang Haibin <wanghaibin.wang@huawei.com>,
-        Guoheyi <guoheyi@huawei.com>,
-        yebiaoxiang <yebiaoxiang@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: Kernel panic while doing vfio-pci hot-plug/unplug test
-Message-ID: <20191024223200.GA22495@google.com>
+        s=default; t=1571958473;
+        bh=o1NcdslAzBGfbyYaRz54TWyHpL3SLcEnEF/mZYPzsqY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yYtYwytN3tCFfbfGg5aJK/PA6FoaE0QsGbieeLrYOc0bXBm8CGW381RUMLHMLHV+o
+         CCLqu+HUww35OR0vRC2MCjlq4lA9qTLTZ2X40sOMQ8sZengjIp5xKUSIVU9MVHhA92
+         ekcqDGacVoSSew5/vePwhvn21DhGxssXXlqvvsus=
+Date:   Fri, 25 Oct 2019 01:07:47 +0200
+From:   Lorenzo Bianconi <lorenzo@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     kvalo@codeaurora.org, linux-wireless@vger.kernel.org, nbd@nbd.name,
+        sgruszka@redhat.com, lorenzo.bianconi@redhat.com,
+        oleksandr@natalenko.name, netdev@vger.kernel.org,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH wireless-drivers 1/2] mt76: mt76x2e: disable pcie_aspm by
+ default
+Message-ID: <20191024230747.GA30614@lore-desk.lan>
+References: <cover.1571868221.git.lorenzo@kernel.org>
+ <fec60f066bab1936d58b2e69bae3f20e645d1304.1571868221.git.lorenzo@kernel.org>
+ <5924c8eb-7269-b8ef-ad0e-957104645638@gmail.com>
+ <20191024215451.GA30822@lore-desk.lan>
+ <9cac34a5-0bfe-0443-503f-218210dab4d6@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
 Content-Disposition: inline
-In-Reply-To: <20191024112232.GD2963@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <9cac34a5-0bfe-0443-503f-218210dab4d6@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 04:22:32AM -0700, Matthew Wilcox wrote:
-> On Wed, Oct 23, 2019 at 03:46:38PM -0500, Bjorn Helgaas wrote:
-> > [+cc Thomas, Rafael, beginning of thread at
-> > https://lore.kernel.org/r/79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com]
-> > 
-> > On Wed, Oct 23, 2019 at 09:38:51AM -0700, Matthew Wilcox wrote:
-> > > On Wed, Oct 23, 2019 at 10:15:40AM -0500, Bjorn Helgaas wrote:
-> > > > I don't like being one of a handful of callers of __add_wait_queue(),
-> > > > so I like that solution from that point of view.
-> > > > 
-> > > > The 7ea7e98fd8d0 ("PCI: Block on access to temporarily unavailable pci
-> > > > device") commit log suggests that using __add_wait_queue() is a
-> > > > significant optimization, but I don't know how important that is in
-> > > > practical terms.  Config accesses are never a performance path anyway,
-> > > > so I'd be inclined to use add_wait_queue() unless somebody complains.
-> > > 
-> > > Wow, this has got pretty messy in the umpteen years since I last looked
-> > > at it.
-> > > 
-> > > Some problems I see:
-> > > 
-> > > 1. Commit df65c1bcd9b7b639177a5a15da1b8dc3bee4f5fa (tglx) says:
-> > > 
-> > >     x86/PCI: Select CONFIG_PCI_LOCKLESS_CONFIG
-> > >     
-> > >     All x86 PCI configuration space accessors have either their own
-> > >     serialization or can operate completely lockless (ECAM).
-> > >     
-> > >     Disable the global lock in the generic PCI configuration space accessors.
-> > > 
-> > > The concept behind this patch is broken.  We still need to lock out
-> > > config space accesses when devices are undergoing D-state transitions.
-> > > I would suggest that for the contention case that tglx is concerned about,
-> > > we should have a pci_bus_read_config_unlocked_##size set of functions
-> > > which can be used for devices we know never go into D states.
-> > 
-> > Host bridges that can't do config accesses atomically, e.g., they have
-> > something like the 0xcf8/0xcfc addr/data ports, need serialization.
-> > CONFIG_PCI_LOCKLESS_CONFIG removes the use of pci_lock for that, and I
-> > think that part makes sense regardless of whether devices can enter D
-> > states.
-> 
-> I disagree.  If a device is in D state, we need to block the access.
-> Maybe there needs to be a different mechanism for doing it that's not
-> a machine-wide lock, but it needs to happen.
 
-I'm missing something here.  If we're using 0xcf8/0xcfc, we need to
-serialize so the address in 0xcf8 is preserved until we do the load or
-store to 0xcfc, and x86 does that with pci_config_lock.  If we're
-using ECAM, we don't need that serialization.
+--jRHKVT23PllUwdXP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-We might need serialization for some other reason, but not because of
-that host bridge config access mechanism.
+> On 24.10.2019 23:54, Lorenzo Bianconi wrote:
+> >> On 24.10.2019 00:23, Lorenzo Bianconi wrote:
+> >>> On same device (e.g. U7612E-H1) PCIE_ASPM causes continuous mcu hangs=
+ and
+> >>> instability and so let's disable PCIE_ASPM by default. This patch has
+> >>> been successfully tested on U7612E-H1 mini-pice card
+> >>>
+> >>> Signed-off-by: Felix Fietkau <nbd@nbd.name>
+> >>> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> >>> ---
+> >>>  drivers/net/wireless/mediatek/mt76/mmio.c     | 47 +++++++++++++++++=
+++
+> >>>  drivers/net/wireless/mediatek/mt76/mt76.h     |  1 +
+> >>>  .../net/wireless/mediatek/mt76/mt76x2/pci.c   |  2 +
+> >>>  3 files changed, 50 insertions(+)
+> >>>
+> >=20
+> > [...]
+> >=20
+> >>> +
+> >>> +	if (parent)
+> >>> +		pcie_capability_clear_word(parent, PCI_EXP_LNKCTL,
+> >>> +					   aspm_conf);
+> >>
+> >> + linux-pci mailing list
+> >=20
+> > Hi Heiner,
+> >=20
+> >>
+> >> All this seems to be legacy code copied from e1000e.
+> >> Fiddling with the low-level PCI(e) registers should be left to the
+> >> PCI core. It shouldn't be needed here, a simple call to
+> >> pci_disable_link_state() should be sufficient. Note that this function
+> >> has a return value meanwhile that you can check instead of reading
+> >> back low-level registers.
+> >=20
+> > ack, I will add it to v2
+> >=20
+> >> If BIOS forbids that OS changes ASPM settings, then this should be
+> >> respected (like PCI core does). Instead the network chip may provide
+> >> the option to configure whether it activates certain ASPM (sub-)states
+> >> or not. We went through a similar exercise with the r8169 driver,
+> >> you can check how it's done there.
+> >=20
+> > looking at the vendor sdk (at least in the version I currently have) th=
+ere are
+> > no particular ASPM configurations, it just optionally disables it writi=
+ng directly
+> > in pci registers.
+> > Moreover there are multiple drivers that are currently using this appro=
+ach:
+> > - ath9k in ath_pci_aspm_init()
+> > - tg3 in tg3_chip_reset()
+> > - e1000e in __e1000e_disable_aspm()
+> > - r8169 in rtl_enable_clock_request()/rtl_disable_clock_request()
+> >=20
+> All these drivers include quite some legacy code. I can mainly speak for =
+r8169:
+> First versions of the driver are almost as old as Linux. And even though I
+> refactored most of the driver still some legacy code for older chip versi=
+ons
+> (like the two functions you mentioned) is included.
+>=20
+> > Is disabling the ASPM for the system the only option to make this minip=
+cie
+> > work?
+> >=20
+>=20
+> No. What we do in r8169:
+>=20
+> - call pci_disable_link_state(pdev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE=
+_L1)
+> - If it returns 0, then ASPM (including the L1 sub-states) is disabled.
+> - If it returns an errno, then disabling ASPM failed (most likely due to
+>   BIOS forbidding ASPM changes - pci_disable_link_state will spit out
+>   a related warning). In this case r8169 configures the chip to not initi=
+ate
+>   transitions to L0s/L1 (the other end of the link may still try to enter
+>   ASPM states). See rtl_hw_aspm_clkreq_enable(). That's sufficient
+>   to avoid the ASPM-related problems with certain versions of this chip.
+>   Maybe your HW provides similar functionality.
 
-Config accesses are supposed to work fine in all D states except
-D3cold, as long as any upstream bridges are in D0.  At least, I think
-that's what the spec says.
+yep, I looked at rtl_hw_aspm_clkreq_enable. This is more or less what I did=
+ but
+unfortunately there is no specific code or documentation I can use for mt76=
+x2e.
+So as last chance I decided to disable ASPM directly (in this way the chip =
+is
+working fine).
+Do you think a kernel parameter to disable ASPM directly would be acceptabl=
+e?
 
-> > We *should* prevent config accesses during D-state transitions (per
-> > PCIe r5.0, sec 5.9), but I don't think pci_lock ever did that.
-> 
-> It used to set block_ucfg_access.  Maybe that's been lost; I see
-> there are still calls to pci_dev_lock() in pci_reset_function(),
-> for example.
+Regards,
+Lorenzo
 
-You have an incredible memory!  pci_ucfg_wait was renamed to
-pci_cfg_wait in 2011 with fb51ccbf217c ("PCI: Rework config space
-blocking services").
+>=20
+> > Regards,
+> > Lorenzo
+> >=20
+> Heiner
+>=20
+> >>
+> >>> +}
+> >>> +EXPORT_SYMBOL_GPL(mt76_mmio_disable_aspm);
+> >>> +
+> >>>  void mt76_mmio_init(struct mt76_dev *dev, void __iomem *regs)
+> >>>  {
+> >>>  	static const struct mt76_bus_ops mt76_mmio_ops =3D {
+> >>> diff --git a/drivers/net/wireless/mediatek/mt76/mt76.h b/drivers/net/=
+wireless/mediatek/mt76/mt76.h
+> >>> index 570c159515a0..962812b6247d 100644
+> >>> --- a/drivers/net/wireless/mediatek/mt76/mt76.h
+> >>> +++ b/drivers/net/wireless/mediatek/mt76/mt76.h
+> >>> @@ -578,6 +578,7 @@ bool __mt76_poll_msec(struct mt76_dev *dev, u32 o=
+ffset, u32 mask, u32 val,
+> >>>  #define mt76_poll_msec(dev, ...) __mt76_poll_msec(&((dev)->mt76), __=
+VA_ARGS__)
+> >>> =20
+> >>>  void mt76_mmio_init(struct mt76_dev *dev, void __iomem *regs);
+> >>> +void mt76_mmio_disable_aspm(struct pci_dev *pdev);
+> >>> =20
+> >>>  static inline u16 mt76_chip(struct mt76_dev *dev)
+> >>>  {
+> >>> diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c b/driver=
+s/net/wireless/mediatek/mt76/mt76x2/pci.c
+> >>> index 73c3104f8858..264bef87e5c7 100644
+> >>> --- a/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
+> >>> +++ b/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
+> >>> @@ -81,6 +81,8 @@ mt76pci_probe(struct pci_dev *pdev, const struct pc=
+i_device_id *id)
+> >>>  	/* RG_SSUSB_CDR_BR_PE1D =3D 0x3 */
+> >>>  	mt76_rmw_field(dev, 0x15c58, 0x3 << 6, 0x3);
+> >>> =20
+> >>> +	mt76_mmio_disable_aspm(pdev);
+> >>> +
+> >>>  	return 0;
+> >>> =20
+> >>>  error:
+> >>>
+> >>
+>=20
 
-But even then, I don't see a connection with D-state transitions,
-e.g., there's nothing in pci_raw_set_power_state() that calls
-pci_dev_lock() or otherwise sets block_cfg_wait.
+--jRHKVT23PllUwdXP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXbIuwAAKCRA6cBh0uS2t
+rN4BAQC6kPrwoEkmBP/u2ACDWJqjB4/X5iBWvx+HXhpVCu/eJQEAzV6WoLtAS7cB
+GfOExWhpf+rKfH58pSeOzArmgBsRago=
+=524V
+-----END PGP SIGNATURE-----
+
+--jRHKVT23PllUwdXP--
