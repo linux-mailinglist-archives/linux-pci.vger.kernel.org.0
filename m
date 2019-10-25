@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E684EE4E2A
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 16:05:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB8EBE4DE1
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 16:03:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505236AbfJYN4H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Oct 2019 09:56:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50266 "EHLO mail.kernel.org"
+        id S2505032AbfJYN5S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Oct 2019 09:57:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2632773AbfJYN4F (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:56:05 -0400
+        id S2632860AbfJYN5R (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:57:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 747FB2084C;
-        Fri, 25 Oct 2019 13:56:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B5D8222CD;
+        Fri, 25 Oct 2019 13:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011765;
-        bh=c0TQ9TU8D9mzimPcnMDQ6JW2zlHSnWl8KaABvWCTNr0=;
+        s=default; t=1572011837;
+        bh=Sj36tnrRRQFdrL/jhKlFBZYqwV2M/qzEaEe5cOTJFlc=;
         h=From:To:Cc:Subject:Date:From;
-        b=GMcrN1P4H7MIZdZC/VJOwpK7qwW2IyFb8BUyraLaqo7e47gQgjNDg/Bm/BYpt6isW
-         MXneFBSL3bzvpajNKazOsG4U6Vwd+CVuVicrYwJEmPB+FMO7iJiZyFg07LUaCQBaRx
-         S9r1A2Nlww1+ZBeWPuqYdiar4EeuLKX3mjljirCI=
+        b=WRUB6OsM0lVcKXbpJQhnCi/+p5PCnFV/zhLm4bHNZQIQRKBr6wrShqQpsH+WUXjnF
+         ffErS/2HU5GPtEYpHjTLLPIg/rrV8KXZ1MJNVHNEQtgBZv0a8WLAzRkNVLyWKUI1sU
+         2iJX/ZHWTcZZkRCfkk8MlTWP7oX5iR1I4oLkZSuI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Patrick Talbert <ptalbert@redhat.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 01/37] PCI/ASPM: Do not initialize link state when aspm_disabled is set
-Date:   Fri, 25 Oct 2019 09:55:25 -0400
-Message-Id: <20191025135603.25093-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 01/25] PCI/ASPM: Do not initialize link state when aspm_disabled is set
+Date:   Fri, 25 Oct 2019 09:56:49 -0400
+Message-Id: <20191025135715.25468-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 X-stable: review
@@ -68,10 +68,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 1117b25fbe0bb..ce218b32724db 100644
+index 6b4e82a4b64e0..370c3459e8845 100644
 --- a/drivers/pci/pcie/aspm.c
 +++ b/drivers/pci/pcie/aspm.c
-@@ -912,7 +912,7 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev)
+@@ -858,7 +858,7 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev)
  	struct pcie_link_state *link;
  	int blacklist = !!pcie_aspm_sanity_check(pdev);
  
