@@ -2,210 +2,177 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C3D64E3FF7
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 01:08:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DC31E40FE
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 03:23:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387682AbfJXXH4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Oct 2019 19:07:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44966 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387620AbfJXXHz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 24 Oct 2019 19:07:55 -0400
-Received: from lore-desk.lan (unknown [151.66.11.57])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B477E21A4C;
-        Thu, 24 Oct 2019 23:07:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571958473;
-        bh=o1NcdslAzBGfbyYaRz54TWyHpL3SLcEnEF/mZYPzsqY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yYtYwytN3tCFfbfGg5aJK/PA6FoaE0QsGbieeLrYOc0bXBm8CGW381RUMLHMLHV+o
-         CCLqu+HUww35OR0vRC2MCjlq4lA9qTLTZ2X40sOMQ8sZengjIp5xKUSIVU9MVHhA92
-         ekcqDGacVoSSew5/vePwhvn21DhGxssXXlqvvsus=
-Date:   Fri, 25 Oct 2019 01:07:47 +0200
-From:   Lorenzo Bianconi <lorenzo@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     kvalo@codeaurora.org, linux-wireless@vger.kernel.org, nbd@nbd.name,
-        sgruszka@redhat.com, lorenzo.bianconi@redhat.com,
-        oleksandr@natalenko.name, netdev@vger.kernel.org,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH wireless-drivers 1/2] mt76: mt76x2e: disable pcie_aspm by
- default
-Message-ID: <20191024230747.GA30614@lore-desk.lan>
-References: <cover.1571868221.git.lorenzo@kernel.org>
- <fec60f066bab1936d58b2e69bae3f20e645d1304.1571868221.git.lorenzo@kernel.org>
- <5924c8eb-7269-b8ef-ad0e-957104645638@gmail.com>
- <20191024215451.GA30822@lore-desk.lan>
- <9cac34a5-0bfe-0443-503f-218210dab4d6@gmail.com>
+        id S2388820AbfJYBXC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Oct 2019 21:23:02 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37462 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388701AbfJYBXC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Oct 2019 21:23:02 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p1so417579pgi.4
+        for <linux-pci@vger.kernel.org>; Thu, 24 Oct 2019 18:23:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oj8CbLoY7Nwi9xXeXDkx9bREmq4mqBp85kWTmf/WEoM=;
+        b=E2mKOOsII8BLsHrcK+qlBTIIxCaSakmoUpu1t85brTfzZDkHPwt1o+/FkCgMqDmeUr
+         nAQqljWHlRpufBcJbfyjL8fUibRQsWeCz2AHUhjNXvT2jua6qG/QFBTyUXWUJek7CKuN
+         VfPAXr3/WYrrpYm4LmuRZpzpl3Q50w+C7OKf8H0oSlHGctGvGfEHTYwZiUdmBTiSN6+2
+         3ykXsn/Li1wVby1kpoMJ2LrtBbP4glmCch7ReO0R42HPX4v72PsYhH1Zj0PukmbjgIhE
+         EAxKIOwdSol7Ifw+SAzsSYbnUdthdMOEDKFiornYwA5POSRy+U6l3Re56jMUkdFjEX/S
+         q+0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=oj8CbLoY7Nwi9xXeXDkx9bREmq4mqBp85kWTmf/WEoM=;
+        b=V/0Gy5kHzCBgsz4jB1Tl39xdZLqn1WJJHUKFfggUjTuXDLCpzr1qSsWHldNjfQJb6m
+         UEaXykNuceGVG68NS9fJivy6BQJNuqJpukVXG/BK4QgcfthNptdKKTaazKlydOBXOzUE
+         j6w3mbi/wefVz/3JZmv4xaEQNn/yQ4HAjtoYS84ohV/Kss1sb2kSl8iEQ3ehuziO4VB/
+         ++M5K+AVHwag+Sh9PxoV5nFUsfjxIs0l/hPxpc9wPEs0ZQEIuv2i/ONbtxz7xzijMtYS
+         c6xxXrdUnZgf9iXinVUQ8nPdpJQB8kNzdSWoaUTVp2JmZti6xkcDBayuiZXHsYkefXgd
+         g+2g==
+X-Gm-Message-State: APjAAAWvUt507zawAlpqIqwKfs2Is6lfbBt3+Rb7F0oqOXP6PfsOGiGg
+        FbILOtqE1lQfSeOFnnSnd8i1Wg==
+X-Google-Smtp-Source: APXvYqyVybhfizAUW7kSEpD9Fc9hSGMDt89xail49svuoX2cEKJrSBhRf2B8q+5dXYAZNAoKFUwXow==
+X-Received: by 2002:a17:90a:17e1:: with SMTP id q88mr713026pja.134.1571966581274;
+        Thu, 24 Oct 2019 18:23:01 -0700 (PDT)
+Received: from [10.61.2.175] ([122.99.82.10])
+        by smtp.gmail.com with ESMTPSA id t4sm71433pjo.26.2019.10.24.18.22.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Oct 2019 18:23:00 -0700 (PDT)
+Subject: Re: [PATCH v6 20/30] powerpc/pci: Fix crash with enabled movable BARs
+To:     Sergey Miroshnichenko <s.miroshnichenko@yadro.com>,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux@yadro.com,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Sam Bobroff <sbobroff@linux.ibm.com>
+References: <20191024171228.877974-1-s.miroshnichenko@yadro.com>
+ <20191024171228.877974-21-s.miroshnichenko@yadro.com>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <d7d4465e-31c0-4521-6cd5-029d79e1eba8@ozlabs.ru>
+Date:   Fri, 25 Oct 2019 12:22:55 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
-Content-Disposition: inline
-In-Reply-To: <9cac34a5-0bfe-0443-503f-218210dab4d6@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191024171228.877974-21-s.miroshnichenko@yadro.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---jRHKVT23PllUwdXP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-> On 24.10.2019 23:54, Lorenzo Bianconi wrote:
-> >> On 24.10.2019 00:23, Lorenzo Bianconi wrote:
-> >>> On same device (e.g. U7612E-H1) PCIE_ASPM causes continuous mcu hangs=
- and
-> >>> instability and so let's disable PCIE_ASPM by default. This patch has
-> >>> been successfully tested on U7612E-H1 mini-pice card
-> >>>
-> >>> Signed-off-by: Felix Fietkau <nbd@nbd.name>
-> >>> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> >>> ---
-> >>>  drivers/net/wireless/mediatek/mt76/mmio.c     | 47 +++++++++++++++++=
-++
-> >>>  drivers/net/wireless/mediatek/mt76/mt76.h     |  1 +
-> >>>  .../net/wireless/mediatek/mt76/mt76x2/pci.c   |  2 +
-> >>>  3 files changed, 50 insertions(+)
-> >>>
-> >=20
-> > [...]
-> >=20
-> >>> +
-> >>> +	if (parent)
-> >>> +		pcie_capability_clear_word(parent, PCI_EXP_LNKCTL,
-> >>> +					   aspm_conf);
-> >>
-> >> + linux-pci mailing list
-> >=20
-> > Hi Heiner,
-> >=20
-> >>
-> >> All this seems to be legacy code copied from e1000e.
-> >> Fiddling with the low-level PCI(e) registers should be left to the
-> >> PCI core. It shouldn't be needed here, a simple call to
-> >> pci_disable_link_state() should be sufficient. Note that this function
-> >> has a return value meanwhile that you can check instead of reading
-> >> back low-level registers.
-> >=20
-> > ack, I will add it to v2
-> >=20
-> >> If BIOS forbids that OS changes ASPM settings, then this should be
-> >> respected (like PCI core does). Instead the network chip may provide
-> >> the option to configure whether it activates certain ASPM (sub-)states
-> >> or not. We went through a similar exercise with the r8169 driver,
-> >> you can check how it's done there.
-> >=20
-> > looking at the vendor sdk (at least in the version I currently have) th=
-ere are
-> > no particular ASPM configurations, it just optionally disables it writi=
-ng directly
-> > in pci registers.
-> > Moreover there are multiple drivers that are currently using this appro=
-ach:
-> > - ath9k in ath_pci_aspm_init()
-> > - tg3 in tg3_chip_reset()
-> > - e1000e in __e1000e_disable_aspm()
-> > - r8169 in rtl_enable_clock_request()/rtl_disable_clock_request()
-> >=20
-> All these drivers include quite some legacy code. I can mainly speak for =
-r8169:
-> First versions of the driver are almost as old as Linux. And even though I
-> refactored most of the driver still some legacy code for older chip versi=
-ons
-> (like the two functions you mentioned) is included.
->=20
-> > Is disabling the ASPM for the system the only option to make this minip=
-cie
-> > work?
-> >=20
->=20
-> No. What we do in r8169:
->=20
-> - call pci_disable_link_state(pdev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE=
-_L1)
-> - If it returns 0, then ASPM (including the L1 sub-states) is disabled.
-> - If it returns an errno, then disabling ASPM failed (most likely due to
->   BIOS forbidding ASPM changes - pci_disable_link_state will spit out
->   a related warning). In this case r8169 configures the chip to not initi=
-ate
->   transitions to L0s/L1 (the other end of the link may still try to enter
->   ASPM states). See rtl_hw_aspm_clkreq_enable(). That's sufficient
->   to avoid the ASPM-related problems with certain versions of this chip.
->   Maybe your HW provides similar functionality.
+On 25/10/2019 04:12, Sergey Miroshnichenko wrote:
+> Add a check for the UNSET resource flag to skip the released BARs
 
-yep, I looked at rtl_hw_aspm_clkreq_enable. This is more or less what I did=
- but
-unfortunately there is no specific code or documentation I can use for mt76=
-x2e.
-So as last chance I decided to disable ASPM directly (in this way the chip =
-is
-working fine).
-Do you think a kernel parameter to disable ASPM directly would be acceptabl=
-e?
 
-Regards,
-Lorenzo
+Where/why does it crash exactly? It is not extremely clear from the code. Thanks,
 
->=20
-> > Regards,
-> > Lorenzo
-> >=20
-> Heiner
->=20
-> >>
-> >>> +}
-> >>> +EXPORT_SYMBOL_GPL(mt76_mmio_disable_aspm);
-> >>> +
-> >>>  void mt76_mmio_init(struct mt76_dev *dev, void __iomem *regs)
-> >>>  {
-> >>>  	static const struct mt76_bus_ops mt76_mmio_ops =3D {
-> >>> diff --git a/drivers/net/wireless/mediatek/mt76/mt76.h b/drivers/net/=
-wireless/mediatek/mt76/mt76.h
-> >>> index 570c159515a0..962812b6247d 100644
-> >>> --- a/drivers/net/wireless/mediatek/mt76/mt76.h
-> >>> +++ b/drivers/net/wireless/mediatek/mt76/mt76.h
-> >>> @@ -578,6 +578,7 @@ bool __mt76_poll_msec(struct mt76_dev *dev, u32 o=
-ffset, u32 mask, u32 val,
-> >>>  #define mt76_poll_msec(dev, ...) __mt76_poll_msec(&((dev)->mt76), __=
-VA_ARGS__)
-> >>> =20
-> >>>  void mt76_mmio_init(struct mt76_dev *dev, void __iomem *regs);
-> >>> +void mt76_mmio_disable_aspm(struct pci_dev *pdev);
-> >>> =20
-> >>>  static inline u16 mt76_chip(struct mt76_dev *dev)
-> >>>  {
-> >>> diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c b/driver=
-s/net/wireless/mediatek/mt76/mt76x2/pci.c
-> >>> index 73c3104f8858..264bef87e5c7 100644
-> >>> --- a/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
-> >>> +++ b/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
-> >>> @@ -81,6 +81,8 @@ mt76pci_probe(struct pci_dev *pdev, const struct pc=
-i_device_id *id)
-> >>>  	/* RG_SSUSB_CDR_BR_PE1D =3D 0x3 */
-> >>>  	mt76_rmw_field(dev, 0x15c58, 0x3 << 6, 0x3);
-> >>> =20
-> >>> +	mt76_mmio_disable_aspm(pdev);
-> >>> +
-> >>>  	return 0;
-> >>> =20
-> >>>  error:
-> >>>
-> >>
->=20
+> 
+> CC: Alexey Kardashevskiy <aik@ozlabs.ru>
+> CC: Oliver O'Halloran <oohall@gmail.com>
+> CC: Sam Bobroff <sbobroff@linux.ibm.com>
+> Signed-off-by: Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
+> ---
+>  arch/powerpc/platforms/powernv/pci-ioda.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index c28d0d9b7ee0..33d5ed8c258f 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -2976,7 +2976,8 @@ static void pnv_ioda_setup_pe_res(struct pnv_ioda_pe *pe,
+>  	int index;
+>  	int64_t rc;
+>  
+> -	if (!res || !res->flags || res->start > res->end)
+> +	if (!res || !res->flags || res->start > res->end ||
+> +	    (res->flags & IORESOURCE_UNSET))
+>  		return;
+>  
+>  	if (res->flags & IORESOURCE_IO) {
+> 
 
---jRHKVT23PllUwdXP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXbIuwAAKCRA6cBh0uS2t
-rN4BAQC6kPrwoEkmBP/u2ACDWJqjB4/X5iBWvx+HXhpVCu/eJQEAzV6WoLtAS7cB
-GfOExWhpf+rKfH58pSeOzArmgBsRago=
-=524V
------END PGP SIGNATURE-----
-
---jRHKVT23PllUwdXP--
+-- 
+Alexey
