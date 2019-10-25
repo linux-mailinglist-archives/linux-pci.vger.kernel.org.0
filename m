@@ -2,167 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BDE4E4F2D
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 16:33:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C95CE4F7E
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 16:48:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438844AbfJYOdY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Oct 2019 10:33:24 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:40995 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438752AbfJYOdX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Oct 2019 10:33:23 -0400
-Received: by mail-yb1-f196.google.com with SMTP id 206so922997ybc.8
-        for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2019 07:33:23 -0700 (PDT)
+        id S2395191AbfJYOsK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Oct 2019 10:48:10 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:47056 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394082AbfJYOsJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Oct 2019 10:48:09 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n15so2619858wrw.13;
+        Fri, 25 Oct 2019 07:48:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VpLlVrXP050XVnJUIXmpDOE06SBLEojfDEDD5nCjdx8=;
-        b=aXVD993EyjjlRE/4BDk931Uo2YpeNAtohcIStuXUMcmzwU+3gUHAQ4nJNTBSUOl3Wx
-         MtFmyLreQ2tZgFvlv3aHSJwLX/pGtK1hyPvgo8dHWq0N1bryYpE+0ETxi2FOx2Zw4drr
-         EHSBUhlfZRLBBemzPkSNwDJvLoSTvNlmdgI9YKkfADWJ8Xoe17ybwfHB5MiVAVKHBtDj
-         pxGksbzwxkZtcSBNMa9SW5gnP2EGR+R2I/naLTVQ9AtEU/8h/mXV+EYxNQgVWqiFJVk9
-         V0wxUIEoSuh8nrZWqW3GZ6Sc7E+HpibYvJw/Sxsho+NWasKJW5RUNR96elbrbSuVlWqo
-         y2Dg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bIQBfe8sGIHTcc6sIk8ML0XGqqJRWtOG/huxYjSxgWs=;
+        b=ReQEnplZs6d9r7FMszuAt1KQpVhgBAK8HrNTFjUqY3S/9APV1+HGvrsZ9waq7e63YU
+         qE3MBI4hqWqVJcX+VWmtAW85YKN71otDbfGbheixnIP6tSrWow7JIdFnGpXtiV+mVJW2
+         1p2ctbskyMZMfpkAuSXvh/NwSIRIncEVf4MMrb16d505nLujE9HTPHxu4LuAIaDSZ+Jc
+         KyD8GrKirgOQpcezDEDjZuvpDgE4yTBKNJS+69u7yUoDohsPtX/u+wyEaGIbvTZHormM
+         1LsppGHi80Arm2rQS0fl8o4nF9UjLZIsJPeKNNAtOJQk0Dc1AvH/QKIDvuZYoU6aXOrF
+         VoIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VpLlVrXP050XVnJUIXmpDOE06SBLEojfDEDD5nCjdx8=;
-        b=FAOxUa7W/OJI4ebLmdqBRDg50fW7Rh/AN0LFbOAcr3oTnER7wENkgoj7v5xMkLnCfs
-         DYL4AVGmAC81nd4CZ18gKiEsmXlpsGi6l9gPCCRaZXn2N3D67VOdUBfPDQkqbMo/tmwZ
-         Xe/ssbb6JObSRVn33LbyepbPyC7WYkPyEd3/bS9H23Ezs3MnH7IoG8L44JAHb8mjhnPE
-         gwSXoOg+M2W7awX+poYGqdLkOQhr4RCwkJijru+g9MN6ge/hO6M3RtkXLTIINi5BkGPU
-         wCp/9fzRphGCMHe1aRhi4EbMQ133As0Jq9rCCbFN3dG4wy52EWky/gHBB5VKi25VgPPH
-         qOIQ==
-X-Gm-Message-State: APjAAAXWTGAyCffM+Un+0Et3sIVpI8XJoVTUNPlV5axGIZ7W0sO9YzIL
-        IPWEIBNMOS/3VoMsBGGPRomqOhcwbb9mNov5B5wUInKZ
-X-Google-Smtp-Source: APXvYqzUyqixnUEX3eyIPitt4o6OCLL0sX0/q8zK369OM2OxCQgq4yNTFjgQQMYY155qq7w/cN7UgykWwp6YvnltHHc=
-X-Received: by 2002:a25:30d5:: with SMTP id w204mr3459375ybw.382.1572014002286;
- Fri, 25 Oct 2019 07:33:22 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bIQBfe8sGIHTcc6sIk8ML0XGqqJRWtOG/huxYjSxgWs=;
+        b=WhjmwmWapfeXRhBFDu8d/qB3iUL7FMy4Wmydi93rBjYhG76MuJzdhD1YBvnFpqn+FT
+         dnX1SPbAXdowQVjjLZ+PqE9XjWUTj7cBZ2C9J0A893jqHyFjK92Qe13U96MLx1G1pOwG
+         PBQSyMyHBmFHa2yDun/xTUbO+NGzQrr3GRrjcmsuSpz2sL25yvVbnZqYtNqwM7Be2yYH
+         OCDASejiZWOiX9FKPv8Tiks7hJ01jRkXje/Q8dos2EmV2bmNZQNZ5/tG40AH/3rL9J2t
+         u9erg18cDwkQEn4r8M0SikS0zulAneJ7JtYvOZ9qCwlNq4lcWi2VsKBEtXRAGqNNtYAG
+         +6AQ==
+X-Gm-Message-State: APjAAAWZNH4H1w0uNfv5R1aM2gEXSdL2eSET9aaMn/otQwKNyejaYNI8
+        8TKPgpP8f+WA/IbQ274TcbI=
+X-Google-Smtp-Source: APXvYqxsX3C8tseMrdTDPvXw+m20Jy/sW7m38w3vpts8ZabQ38lGcQ4VQLB8VI+iJPUaxLQS52CZqA==
+X-Received: by 2002:a5d:4847:: with SMTP id n7mr3349140wrs.398.1572014885771;
+        Fri, 25 Oct 2019 07:48:05 -0700 (PDT)
+Received: from mail.google.com ([104.238.174.53])
+        by smtp.gmail.com with ESMTPSA id 26sm2126489wmf.20.2019.10.25.07.48.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 25 Oct 2019 07:48:05 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 14:48:03 +0000
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Changbin Du <changbin.du@gmail.com>, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-crypto@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-usb@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: [PATCH v2] kernel-doc: rename the kernel-doc directive
+ 'functions' to 'identifiers'
+Message-ID: <20191025144802.uixg2crhw6h7gghq@mail.google.com>
+References: <20191020131717.28990-1-changbin.du@gmail.com>
+ <20191024121940.1d6a64df@lwn.net>
+ <87woctb9cj.fsf@intel.com>
 MIME-Version: 1.0
-References: <20191024171228.877974-1-s.miroshnichenko@yadro.com> <20191024171228.877974-2-s.miroshnichenko@yadro.com>
-In-Reply-To: <20191024171228.877974-2-s.miroshnichenko@yadro.com>
-From:   Carlo Pisani <carlojpisani@gmail.com>
-Date:   Fri, 25 Oct 2019 16:33:13 +0200
-Message-ID: <CA+QBN9AR+drU0zC2-C2zVetTv0GxNs0KRF1BG51mwcRyu=TxpA@mail.gmail.com>
-Subject: Oxford Semiconductor Ltd OX16PCI954 - weird dmesg
-To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux@yadro.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87woctb9cj.fsf@intel.com>
+User-Agent: NeoMutt/20180716-508-7c9a6d
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-pci_bus 0000:00: root bus resource [mem 0x50000000-0x5fffffff]
-pci_bus 0000:00: root bus resource [io  0x18800000-0x188fffff]
-pci_bus 0000:00: root bus resource [??? 0x00000000 flags 0x0]
-pci_bus 0000:00: No busn resource found for root bus, will use [bus 00-ff]
-pci 0000:00:00.0: [Firmware Bug]: reg 0x14: invalid BAR (can't size)
-pci 0000:00:00.0: [Firmware Bug]: reg 0x18: invalid BAR (can't size)
-pci 0000:00:04.0: BAR 0: assigned [mem 0x50000000-0x5000ffff]
-pci 0000:00:05.0: BAR 1: assigned [mem 0x50010000-0x50010fff]
-pci 0000:00:05.0: BAR 3: assigned [mem 0x50011000-0x50011fff]
-pci 0000:00:0a.0: BAR 1: assigned [mem 0x50012000-0x50012fff]
-pci 0000:00:0a.0: BAR 3: assigned [mem 0x50013000-0x50013fff]
-pci 0000:00:02.0: BAR 0: assigned [io  0x18800000-0x188000ff]
-pci 0000:00:02.0: BAR 1: assigned [mem 0x50014000-0x500140ff]
-pci 0000:00:03.0: BAR 0: assigned [io  0x18800400-0x188004ff]
-pci 0000:00:03.0: BAR 1: assigned [mem 0x50014100-0x500141ff]
-pci 0000:00:05.0: BAR 0: assigned [io  0x18800800-0x1880081f]
-pci 0000:00:05.0: BAR 2: assigned [io  0x18800820-0x1880083f]
-pci 0000:00:0a.0: BAR 0: assigned [io  0x18800840-0x1880085f]
-pci 0000:00:0a.0: BAR 2: assigned [io  0x18800860-0x1880087f]
+On Fri, Oct 25, 2019 at 09:57:48AM +0300, Jani Nikula wrote:
+> On Thu, 24 Oct 2019, Jonathan Corbet <corbet@lwn.net> wrote:
+> > On Sun, 20 Oct 2019 21:17:17 +0800
+> > Changbin Du <changbin.du@gmail.com> wrote:
+> >
+> >> The 'functions' directive is not only for functions, but also works for
+> >> structs/unions. So the name is misleading. This patch renames it to
+> >> 'identifiers', which specific the functions/types to be included in
+> >> documentation. We keep the old name as an alias of the new one before
+> >> all documentation are updated.
+> >> 
+> >> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> >
+> > So I think this is basically OK, but I have one more request...
+> >
+> > [...]
+> >
+> >> diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
+> >> index 1159405cb920..0689f9c37f1e 100644
+> >> --- a/Documentation/sphinx/kerneldoc.py
+> >> +++ b/Documentation/sphinx/kerneldoc.py
+> >> @@ -59,9 +59,10 @@ class KernelDocDirective(Directive):
+> >>      optional_arguments = 4
+> >>      option_spec = {
+> >>          'doc': directives.unchanged_required,
+> >> -        'functions': directives.unchanged,
+> >>          'export': directives.unchanged,
+> >>          'internal': directives.unchanged,
+> >> +        'identifiers': directives.unchanged,
+> >> +        'functions': directives.unchanged,  # alias of 'identifiers'
+> >>      }
+> >>      has_content = False
+> >>  
+> >> @@ -71,6 +72,7 @@ class KernelDocDirective(Directive):
+> >>  
+> >>          filename = env.config.kerneldoc_srctree + '/' + self.arguments[0]
+> >>          export_file_patterns = []
+> >> +        identifiers = None
+> >>  
+> >>          # Tell sphinx of the dependency
+> >>          env.note_dependency(os.path.abspath(filename))
+> >> @@ -86,19 +88,22 @@ class KernelDocDirective(Directive):
+> >>              export_file_patterns = str(self.options.get('internal')).split()
+> >>          elif 'doc' in self.options:
+> >>              cmd += ['-function', str(self.options.get('doc'))]
+> >> +        elif 'identifiers' in self.options:
+> >> +            identifiers = self.options.get('identifiers').split()
+> >>          elif 'functions' in self.options:
+> >> -            functions = self.options.get('functions').split()
+> >> -            if functions:
+> >> -                for f in functions:
+> >> -                    cmd += ['-function', f]
+> >> -            else:
+> >> -                cmd += ['-no-doc-sections']
+> >> +            identifiers = self.options.get('functions').split()
+> >
+> > Rather than do this, can you just change the elif line to read:
+> >
+> >     elif ('identifiers' in self.options) or ('functions' in self.options):
+> >
+> > ...then leave the rest of the code intact?  It keeps the logic together,
+> > and avoids the confusing distinction between identifiers=='' and
+> > identifiers==None .
+> 
+> I think the problem is you still need to distinguish between the two for
+> the get('functions') part.
+> 
+> One option is to rename 'functions' to 'identifiers' in the above block,
+> and put something like this above the whole if ladder (untested):
+> 
+>         # backward compat
+>         if 'functions' in self.options:
+>             if 'identifiers' in self.options:
+>                 kernellog.warn(env.app, "fail")
+This will miss the content of 'functions' directive if both exist in
+same doc.
 
+>             else:
+>                 self.options.set('identifiers', self.options.get('functions'))
+> 
+> BR,
+> Jani.
+>
+After comparing, I still perfer my original code which is simpler. :)
 
-00:00.0 Non-VGA unclassified device: Integrated Device Technology,
-Inc. Device 0000
-        Subsystem: Device 0214:011d
-        Flags: bus master, 66MHz, medium devsel, latency 60, IRQ 140
-        Memory at <unassigned> (32-bit, prefetchable)
-        I/O ports at <ignored>
-        I/O ports at <ignored>
+> 
+> -- 
+> Jani Nikula, Intel Open Source Graphics Center
 
-00:02.0 Ethernet controller: VIA Technologies, Inc. VT6105/VT6106S
-[Rhine-III] (rev 86)
-        Subsystem: AST Research Inc Device 086c
-        Flags: bus master, stepping, medium devsel, latency 64, IRQ 142
-        I/O ports at 18800000 [size=256]
-        Memory at 50014000 (32-bit, non-prefetchable) [size=256]
-        Capabilities: [40] Power Management version 2
-        Kernel driver in use: via-rhine
-
-00:03.0 Ethernet controller: VIA Technologies, Inc. VT6105/VT6106S
-[Rhine-III] (rev 86)
-        Subsystem: AST Research Inc Device 086c
-        Flags: bus master, stepping, medium devsel, latency 64, IRQ 143
-        I/O ports at 18800400 [size=256]
-        Memory at 50014100 (32-bit, non-prefetchable) [size=256]
-        Capabilities: [40] Power Management version 2
-        Kernel driver in use: via-rhine
-
-00:04.0 Network controller: Atheros Communications Inc. Device 0029 (rev 01)
-        Subsystem: Atheros Communications Inc. Device 2091
-        Flags: bus master, 66MHz, medium devsel, latency 168, IRQ 142
-        Memory at 50000000 (32-bit, non-prefetchable) [size=64K]
-        Capabilities: [44] Power Management version 2
-        Kernel driver in use: ath9k
-
-00:05.0 Serial controller: Oxford Semiconductor Ltd OX16PCI954 (Quad
-16950 UART) function 0 (Uart) (rev 01) (prog-if 06 [)
-        Subsystem: Oxford Semiconductor Ltd Device 0000
-        Flags: medium devsel, IRQ 143
-        I/O ports at 18800800 [size=32]
-        Memory at 50010000 (32-bit, non-prefetchable) [size=4K]
-        I/O ports at 18800820 [size=32]
-        Memory at 50011000 (32-bit, non-prefetchable) [size=4K]
-        Capabilities: [40] Power Management version 2
-        Kernel driver in use: serial
-
-00:05.1 Non-VGA unclassified device: Oxford Semiconductor Ltd
-OX16PCI954 (Quad 16950 UART) function 0 (Disabled) (rev 01)
-        Subsystem: Oxford Semiconductor Ltd Device 0000
-        Flags: medium devsel, IRQ 143
-        I/O ports at <unassigned> [disabled]
-        I/O ports at <unassigned> [disabled]
-        I/O ports at <unassigned> [disabled]
-        Capabilities: [40] Power Management version 2
-
-00:0a.0 Serial controller: Oxford Semiconductor Ltd OX16PCI954 (Quad
-16950 UART) function 0 (Uart) (rev 01) (prog-if 06 [)
-        Subsystem: Oxford Semiconductor Ltd Device 0000
-        Flags: medium devsel, IRQ 140
-        I/O ports at 18800840 [size=32]
-        Memory at 50012000 (32-bit, non-prefetchable) [size=4K]
-        I/O ports at 18800860 [size=32]
-        Memory at 50013000 (32-bit, non-prefetchable) [size=4K]
-        Capabilities: [40] Power Management version 2
-        Kernel driver in use: serial
-
-00:0a.1 Non-VGA unclassified device: Oxford Semiconductor Ltd
-OX16PCI954 (Quad 16950 UART) function 0 (Disabled) (rev 01)
-        Subsystem: Oxford Semiconductor Ltd Device 0000
-        Flags: medium devsel, IRQ 140
-        I/O ports at <unassigned> [disabled]
-        I/O ports at <unassigned> [disabled]
-        I/O ports at <unassigned> [disabled]
-        Capabilities: [40] Power Management version 2
-
-
-hi guys
-I have a couple of miniPCI Oxford Semiconductor Ltd OX16PCI954 cards
-installed, and the dmesg looks weird
-
-espeially these lines
-pci_bus 0000:00: root bus resource [mem 0x50000000-0x5fffffff]
-pci_bus 0000:00: root bus resource [io  0x18800000-0x188fffff]
-pci_bus 0000:00: root bus resource [??? 0x00000000 flags 0x0]
-pci_bus 0000:00: No busn resource found for root bus, will use [bus 00-ff]
-pci 0000:00:00.0: [Firmware Bug]: reg 0x14: invalid BAR (can't size)
-pci 0000:00:00.0: [Firmware Bug]: reg 0x18: invalid BAR (can't size)
-
-besides, I am experimenting crashes happening in burn-in tests, and I
-do suspect it's something related to the newly added cards
-
-any enlightenment?
+-- 
+Cheers,
+Changbin Du
