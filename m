@@ -2,167 +2,278 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ECC16E5164
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 18:37:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF850E51A5
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 18:53:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633103AbfJYQh2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Oct 2019 12:37:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38208 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2633079AbfJYQh1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 25 Oct 2019 12:37:27 -0400
-Received: from localhost (odyssey.drury.edu [64.22.249.253])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BB4C21872;
-        Fri, 25 Oct 2019 16:37:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572021445;
-        bh=WhIoGgltuLJwktQnUdu37d8EQjzrGwE98l51YGKpHoM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=i7via2c09Y8LHo35j1mwPm7qBRnwGFKjoxH2jIbLp1Zn07l1ytjd7Ud/Wx5gsSz7C
-         M3fw7kimAnqMiaLvUhx3xyr/dhACu+7Sje3GMtC/1eGYsEkCyIEjDWJRSjj74GKh2F
-         aiUwqQ4tU+H36Gwrug5pmEOy3CeFuQjkIs9TPkY0=
-Date:   Fri, 25 Oct 2019 11:37:24 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Carlo Pisani <carlojpisani@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux@yadro.com
-Subject: Re: Oxford Semiconductor Ltd OX16PCI954 - weird dmesg
-Message-ID: <20191025163724.GA144828@google.com>
+        id S2502677AbfJYQx4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Oct 2019 12:53:56 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45018 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502610AbfJYQxz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Oct 2019 12:53:55 -0400
+Received: by mail-oi1-f196.google.com with SMTP id s71so2033111oih.11;
+        Fri, 25 Oct 2019 09:53:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=icjpLxHFOmLwGX3PIdb6QE5jh9DXyIm3EA+j6DEnq+s=;
+        b=Z01QM47ZO3lVzwL+cr6zBorBCvWXLaen+AjfPE7y1tp42V+A689sPAU7mWK5jKQJp/
+         1csyHEgXJ4uuNxvWA4hSiGVZ6fYP2yWj8RUjD5HO/hjtg1mtZMjituA865Rsg4Q69sVX
+         sAQrGLqeD4nIYYKcsxQGt1dXhUG7IVTPeKzzOdF6aXlrffCa2jnBjKjyWom+6AM1bRj1
+         AfhHBupReE64vDv995pow0ad1uEv+l0c2YGnuR0m5QkVhkbXBWVryYmI6PHSOXFADtya
+         1iahEP6/uaWnIdedzAzX5tBTHcOBU8G7iy0P6VfhwHURVLtD1wyU6MIdzfe2ufmqfRYE
+         2nOA==
+X-Gm-Message-State: APjAAAXzIFOmCb67vjnpXcsNyr8AdjkXVzv0js19XohmvKP8yuwVtOfO
+        mwkd/QdS7o9M17hD0Uw84A==
+X-Google-Smtp-Source: APXvYqwlusvuRVtlD/XuJYr4K4iyWb6z0on18g6/SENicyigu+soJlyojXsozYn5fYjb1Tf38IS1tA==
+X-Received: by 2002:aca:210e:: with SMTP id 14mr3904071oiz.62.1572022434687;
+        Fri, 25 Oct 2019 09:53:54 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w26sm876453otm.52.2019.10.25.09.53.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 09:53:53 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 11:53:52 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, andrew.murray@arm.com,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+Message-ID: <20191025165352.GA30602@bogus>
+References: <cover.1571638827.git.eswara.kota@linux.intel.com>
+ <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+QBN9AR+drU0zC2-C2zVetTv0GxNs0KRF1BG51mwcRyu=TxpA@mail.gmail.com>
+In-Reply-To: <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 04:33:13PM +0200, Carlo Pisani wrote:
-> pci_bus 0000:00: root bus resource [mem 0x50000000-0x5fffffff]
-> pci_bus 0000:00: root bus resource [io  0x18800000-0x188fffff]
-> pci_bus 0000:00: root bus resource [??? 0x00000000 flags 0x0]
-> pci_bus 0000:00: No busn resource found for root bus, will use [bus 00-ff]
-> pci 0000:00:00.0: [Firmware Bug]: reg 0x14: invalid BAR (can't size)
-> pci 0000:00:00.0: [Firmware Bug]: reg 0x18: invalid BAR (can't size)
-> pci 0000:00:04.0: BAR 0: assigned [mem 0x50000000-0x5000ffff]
-> pci 0000:00:05.0: BAR 1: assigned [mem 0x50010000-0x50010fff]
-> pci 0000:00:05.0: BAR 3: assigned [mem 0x50011000-0x50011fff]
-> pci 0000:00:0a.0: BAR 1: assigned [mem 0x50012000-0x50012fff]
-> pci 0000:00:0a.0: BAR 3: assigned [mem 0x50013000-0x50013fff]
-> pci 0000:00:02.0: BAR 0: assigned [io  0x18800000-0x188000ff]
-> pci 0000:00:02.0: BAR 1: assigned [mem 0x50014000-0x500140ff]
-> pci 0000:00:03.0: BAR 0: assigned [io  0x18800400-0x188004ff]
-> pci 0000:00:03.0: BAR 1: assigned [mem 0x50014100-0x500141ff]
-> pci 0000:00:05.0: BAR 0: assigned [io  0x18800800-0x1880081f]
-> pci 0000:00:05.0: BAR 2: assigned [io  0x18800820-0x1880083f]
-> pci 0000:00:0a.0: BAR 0: assigned [io  0x18800840-0x1880085f]
-> pci 0000:00:0a.0: BAR 2: assigned [io  0x18800860-0x1880087f]
+On Mon, Oct 21, 2019 at 02:39:18PM +0800, Dilip Kota wrote:
+> Add YAML shcemas for PCIe RC controller on Intel Gateway SoCs
+> which is Synopsys DesignWare based PCIe core.
 > 
+> changes on v4:
+> 	Add "snps,dw-pcie" compatible.
+> 	Rename phy-names property value to pcie.
+> 	And maximum and minimum values to num-lanes.
+> 	Add ref for reset-assert-ms entry and update the
+> 	 description for easy understanding.
+> 	Remove pcie core interrupt entry.
 > 
-> 00:00.0 Non-VGA unclassified device: Integrated Device Technology,
-> Inc. Device 0000
->         Subsystem: Device 0214:011d
->         Flags: bus master, 66MHz, medium devsel, latency 60, IRQ 140
->         Memory at <unassigned> (32-bit, prefetchable)
->         I/O ports at <ignored>
->         I/O ports at <ignored>
+> changes on v3:
+>         Add the appropriate License-Identifier
+>         Rename intel,rst-interval to 'reset-assert-us'
+>         Add additionalProperties: false
+>         Rename phy-names to 'pciephy'
+>         Remove the dtsi node split of SoC and board in the example
+>         Add #interrupt-cells = <1>; or else interrupt parsing will fail
+>         Name yaml file with compatible name
 > 
-> 00:02.0 Ethernet controller: VIA Technologies, Inc. VT6105/VT6106S
-> [Rhine-III] (rev 86)
->         Subsystem: AST Research Inc Device 086c
->         Flags: bus master, stepping, medium devsel, latency 64, IRQ 142
->         I/O ports at 18800000 [size=256]
->         Memory at 50014000 (32-bit, non-prefetchable) [size=256]
->         Capabilities: [40] Power Management version 2
->         Kernel driver in use: via-rhine
-> 
-> 00:03.0 Ethernet controller: VIA Technologies, Inc. VT6105/VT6106S
-> [Rhine-III] (rev 86)
->         Subsystem: AST Research Inc Device 086c
->         Flags: bus master, stepping, medium devsel, latency 64, IRQ 143
->         I/O ports at 18800400 [size=256]
->         Memory at 50014100 (32-bit, non-prefetchable) [size=256]
->         Capabilities: [40] Power Management version 2
->         Kernel driver in use: via-rhine
-> 
-> 00:04.0 Network controller: Atheros Communications Inc. Device 0029 (rev 01)
->         Subsystem: Atheros Communications Inc. Device 2091
->         Flags: bus master, 66MHz, medium devsel, latency 168, IRQ 142
->         Memory at 50000000 (32-bit, non-prefetchable) [size=64K]
->         Capabilities: [44] Power Management version 2
->         Kernel driver in use: ath9k
-> 
-> 00:05.0 Serial controller: Oxford Semiconductor Ltd OX16PCI954 (Quad
-> 16950 UART) function 0 (Uart) (rev 01) (prog-if 06 [)
->         Subsystem: Oxford Semiconductor Ltd Device 0000
->         Flags: medium devsel, IRQ 143
->         I/O ports at 18800800 [size=32]
->         Memory at 50010000 (32-bit, non-prefetchable) [size=4K]
->         I/O ports at 18800820 [size=32]
->         Memory at 50011000 (32-bit, non-prefetchable) [size=4K]
->         Capabilities: [40] Power Management version 2
->         Kernel driver in use: serial
-> 
-> 00:05.1 Non-VGA unclassified device: Oxford Semiconductor Ltd
-> OX16PCI954 (Quad 16950 UART) function 0 (Disabled) (rev 01)
->         Subsystem: Oxford Semiconductor Ltd Device 0000
->         Flags: medium devsel, IRQ 143
->         I/O ports at <unassigned> [disabled]
->         I/O ports at <unassigned> [disabled]
->         I/O ports at <unassigned> [disabled]
->         Capabilities: [40] Power Management version 2
-> 
-> 00:0a.0 Serial controller: Oxford Semiconductor Ltd OX16PCI954 (Quad
-> 16950 UART) function 0 (Uart) (rev 01) (prog-if 06 [)
->         Subsystem: Oxford Semiconductor Ltd Device 0000
->         Flags: medium devsel, IRQ 140
->         I/O ports at 18800840 [size=32]
->         Memory at 50012000 (32-bit, non-prefetchable) [size=4K]
->         I/O ports at 18800860 [size=32]
->         Memory at 50013000 (32-bit, non-prefetchable) [size=4K]
->         Capabilities: [40] Power Management version 2
->         Kernel driver in use: serial
-> 
-> 00:0a.1 Non-VGA unclassified device: Oxford Semiconductor Ltd
-> OX16PCI954 (Quad 16950 UART) function 0 (Disabled) (rev 01)
->         Subsystem: Oxford Semiconductor Ltd Device 0000
->         Flags: medium devsel, IRQ 140
->         I/O ports at <unassigned> [disabled]
->         I/O ports at <unassigned> [disabled]
->         I/O ports at <unassigned> [disabled]
->         Capabilities: [40] Power Management version 2
-> 
-> 
-> hi guys
-> I have a couple of miniPCI Oxford Semiconductor Ltd OX16PCI954 cards
-> installed, and the dmesg looks weird
-> 
-> espeially these lines
-> pci_bus 0000:00: root bus resource [mem 0x50000000-0x5fffffff]
-> pci_bus 0000:00: root bus resource [io  0x18800000-0x188fffff]
-> pci_bus 0000:00: root bus resource [??? 0x00000000 flags 0x0]
-> pci_bus 0000:00: No busn resource found for root bus, will use [bus 00-ff]
+> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> ---
+>  .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 135 +++++++++++++++++++++
+>  1 file changed, 135 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
 
-These resources are supplied to the PCI core, probably from DT.  A
-complete dmesg log would show more.
+Fails to validate:
 
-> pci 0000:00:00.0: [Firmware Bug]: reg 0x14: invalid BAR (can't size)
-> pci 0000:00:00.0: [Firmware Bug]: reg 0x18: invalid BAR (can't size)
+Error: Documentation/devicetree/bindings/pci/intel-gw-pcie.example.dts:38.27-28 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:321: recipe for target 'Documentation/devicetree/bindings/pci/intel-gw-pcie.example.dt.yaml' failed
 
-> besides, I am experimenting crashes happening in burn-in tests, and I
-> do suspect it's something related to the newly added cards
+Please run 'make -k dt_binding_check' (-k because there are some 
+unrelated failures).
 
-If you take the cards out do the lines you mention above change?
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+> new file mode 100644
+> index 000000000000..49dd87ec1e3d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+> @@ -0,0 +1,135 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/intel-gw-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: PCIe RC controller on Intel Gateway SoCs
+> +
+> +maintainers:
+> +  - Dilip Kota <eswara.kota@linux.intel.com>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: intel,lgm-pcie
+> +      - const: snps,dw-pcie
+> +
+> +  device_type:
+> +    const: pci
+> +
+> +  "#address-cells":
+> +    const: 3
+> +
+> +  "#size-cells":
+> +    const: 2
+> +
+> +  reg:
+> +    items:
+> +      - description: Controller control and status registers.
+> +      - description: PCIe configuration registers.
+> +      - description: Controller application registers.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: dbi
+> +      - const: config
+> +      - const: app
+> +
+> +  ranges:
+> +    description: Ranges for the PCI memory and I/O regions.
 
-What sort of crashes do you see?  I assume it doesn't crash without
-the cards?
+How many entries do you expect? Add a 'maxItems' to define.
 
-It *looks* like the miniPCI cards should be these devices:
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: PCIe registers interface clock.
 
-  00:05.0 Serial controller: Oxford Semiconductor Ltd OX16PCI954 (Quad 16950 UART) function 0 (Uart) (rev 01) (prog-if 06 [)
-  00:0a.0 Serial controller: Oxford Semiconductor Ltd OX16PCI954 (Quad 16950 UART) function 0 (Uart) (rev 01) (prog-if 06 [)
+How many clocks?
 
-which are unrelated to the 00:00.0 device with the broken BAR.
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +  phy-names:
+> +    const: pcie
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +
+> +  num-lanes:
+> +    minimum: 1
+> +    maximum: 2
+> +    description: Number of lanes to use for this port.
+> +
+> +  linux,pci-domain:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: PCI domain ID.
+
+Just a value of 'true' is fine here.
+
+> +
+> +  '#interrupt-cells':
+> +    const: 1
+> +
+> +  interrupt-map-mask:
+> +    description: Standard PCI IRQ mapping properties.
+> +
+> +  interrupt-map:
+> +    description: Standard PCI IRQ mapping properties.
+> +
+> +  max-link-speed:
+> +    description: Specify PCI Gen for link capability.
+
+Allowed values? Default?
+
+> +
+> +  bus-range:
+> +    description: Range of bus numbers associated with this controller.
+> +
+> +  reset-assert-ms:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+
+Don't need a type for standard units.
+
+> +    description: |
+> +      Delay after asserting reset to the PCIe device.
+> +      Some devices need an interval upto 500ms. By default it is 100ms.
+
+Express as a schema:
+
+maximum: 500
+default: 100
+
+> +
+> +required:
+> +  - compatible
+> +  - device_type
+> +  - reg
+> +  - reg-names
+> +  - ranges
+> +  - resets
+> +  - clocks
+> +  - phys
+> +  - phy-names
+> +  - reset-gpios
+> +  - num-lanes
+
+Shouldn't be required. It should have a default.
+
+> +  - linux,pci-domain
+
+Is this really required? AIUI, domains are optional and only used if 
+you have more than one host.
+
+> +  - interrupt-map
+> +  - interrupt-map-mask
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pcie10:pcie@d0e00000 {
+
+space         ^
+
+> +      compatible = "intel,lgm-pcie", "snps,dw-pcie";
+> +      device_type = "pci";
+> +      #address-cells = <3>;
+> +      #size-cells = <2>;
+> +      reg = <0xd0e00000 0x1000>,
+> +            <0xd2000000 0x800000>,
+> +            <0xd0a41000 0x1000>;
+> +      reg-names = "dbi", "config", "app";
+> +      linux,pci-domain = <0>;
+> +      max-link-speed = <4>;
+> +      bus-range = <0x00 0x08>;
+> +      interrupt-parent = <&ioapic1>;
+> +      #interrupt-cells = <1>;
+> +      interrupt-map-mask = <0 0 0 0x7>;
+> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
+> +                      <0 0 0 2 &ioapic1 28 1>,
+> +                      <0 0 0 3 &ioapic1 29 1>,
+> +                      <0 0 0 4 &ioapic1 30 1>;
+> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
+> +      resets = <&rcu0 0x50 0>;
+> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
+
+You need to include any defines you use. That's why the example fails to 
+build.
+
+> +      phys = <&cb0phy0>;
+> +      phy-names = "pcie";
+> +      status = "okay";
+
+Don't show status in examples.
+
+> +      reset-assert-ms = <500>;
+> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+> +      num-lanes = <2>;
+> +    };
+> -- 
+> 2.11.0
+> 
