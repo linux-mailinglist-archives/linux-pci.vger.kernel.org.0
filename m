@@ -2,99 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 88631E442A
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 09:12:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36113E4569
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 10:16:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406600AbfJYHMC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Oct 2019 03:12:02 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:39358 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406166AbfJYHMB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Oct 2019 03:12:01 -0400
-Received: by mail-qt1-f196.google.com with SMTP id t8so1803112qtc.6
-        for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2019 00:12:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y7vqZokkWR7+GS48fmUuYPLXAvMVfo/8O1D4NDWeFmk=;
-        b=pUUaQH/DWoTBzQnNWB49dUdGsOItZ8Aw3Z1dpyC4yDjlb3YPs0Vlt1zYm7jMKzhU+1
-         tD/wEqY6JXtuNzmgznccgw8Ws7Kza/6M00d6PL6nYmeDrSldcurPwryoWtCGOBmNUcy3
-         LJ+klXQDEQQ0BE9k3X5GECDYO5L+VDT0uaX/zNJtm5SIDSqBoElQGlT6pIpJJlbDsXBw
-         aYT4FYxp5z7ZU1qRBbQq4MKS56NMl0GiqMqat4OdwC+dNLOt3DdLmaZH1771NfKHCdbO
-         PrxOC3oLuCzWLYipExuIFT+BqpWbB4kfm7yq1dc6NDBdyDWICDx+Qluy247SFdZAA6dn
-         9dTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y7vqZokkWR7+GS48fmUuYPLXAvMVfo/8O1D4NDWeFmk=;
-        b=da6HhZXdC5Eg3Srygx3xTvq0UQBX7H6hLxdFaBwR6bl1YZgpaSToWUm5+yh8XW/O6T
-         wQBhNTqgS6Np52fJfUehd6mJ4Iv7m6KUOGlT4AdQ7KsjtgGD0vwcK8azZCYaW3p+L45x
-         n63vSrH9iBrs5q5QxGqaRejP9Zf8OwgsM5yq2wnCAkgpbOJZALz0+yFW63ih/6ZBmF/y
-         JmUBcSvjVa3TiqcGFWufKII1FIBLOSBdvb/VTqy/hkGNcfKD/dfjmTzX0hWptstXRbvD
-         UliDy8WzcKLXb1p1L0b3IVHtOVA1tEc5WtqDgDokGVn4SIuWCSV+z7lT9WebiFwf5zKy
-         uHIg==
-X-Gm-Message-State: APjAAAXCDQWIRpfNbyCT0HzSwyahrL5zAyPuGWPqrlcvn32W/vMhJtfB
-        beomrONxd/JBbGcV+I0RbOFJpVb8mt1PldPXK1hbeA==
-X-Google-Smtp-Source: APXvYqxi0EwTymF9nPtPsY0B3bV61Maul6DeZgSQS9AcKD6MolLYaJRmKgrwOZcedSJQ5182NorU5pc7KvYAJ3TWejs=
-X-Received: by 2002:ac8:4508:: with SMTP id q8mr1655147qtn.110.1571987520725;
- Fri, 25 Oct 2019 00:12:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAD8Lp46KZmTzxjYN6T7u1xH0AODr38hFcCgR-COtvduK9ZuANQ@mail.gmail.com>
- <20191024170023.GA135695@google.com>
-In-Reply-To: <20191024170023.GA135695@google.com>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Fri, 25 Oct 2019 15:11:49 +0800
-Message-ID: <CAD8Lp47HgAi-86ni5WHhZT1-sEd7oJEZUiG6KNU66qpmRCfaXw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: increase D3 delay for AMD Ryzen5/7 XHCI controllers
+        id S2407697AbfJYIQV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Oct 2019 04:16:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60320 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2407695AbfJYIQU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 25 Oct 2019 04:16:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6CED2B184;
+        Fri, 25 Oct 2019 08:16:18 +0000 (UTC)
+Date:   Fri, 25 Oct 2019 10:16:17 +0200
+From:   Michal Hocko <mhocko@kernel.org>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     peterz@infradead.org, Yunsheng Lin <linyunsheng@huawei.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robin.murphy@arm.com, geert@linux-m68k.org,
+        gregkh@linuxfoundation.org, paul.burton@mips.com
+Subject: Re: [PATCH] PCI: Warn about host bridge device when its numa node is
+ NO_NODE
+Message-ID: <20191025081617.GA17610@dhcp22.suse.cz>
+References: <20191024092013.GW17610@dhcp22.suse.cz>
+ <20191024174013.GA149516@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024174013.GA149516@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 1:00 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> That's really strange.  Your original message showed:
->
->   xhci_hcd 0000:03:00.4: Refused to change power state, currently in D3
->   xhci_hcd 0000:03:00.4: enabling device (0000 -> 0002)
->
-> The first line is from pci_raw_set_power_state() reading PCI_PM_CTRL,
-> but we can't tell whether the read failed and we got ~0, or it
-> succeeded and we got something with just the low two bits set.  Can
-> you print out the whole value so we can see what happened?
->
-> The second line is from pci_enable_resources() reading PCI_COMMAND,
-> and it got *0*, not 0x0403 as you got from the CRS experiment.
+On Thu 24-10-19 12:40:13, Bjorn Helgaas wrote:
+> On Thu, Oct 24, 2019 at 11:20:13AM +0200, Michal Hocko wrote:
+> > On Wed 23-10-19 12:10:39, Bjorn Helgaas wrote:
+> > > On Wed, Oct 23, 2019 at 04:22:43PM +0800, Yunsheng Lin wrote:
+> > > > On 2019/10/23 5:04, Bjorn Helgaas wrote:
+> > > > > On Sat, Oct 19, 2019 at 02:45:43PM +0800, Yunsheng Lin wrote:
+> > > 
+> > > > > I think the underlying problem you're addressing is that:
+> > > > > 
+> > > > >   - NUMA_NO_NODE == -1,
+> > > > >   - dev_to_node(dev) may return NUMA_NO_NODE,
+> > > > >   - kmalloc(dev) relies on cpumask_of_node(dev_to_node(dev)), and
+> > > > >   - cpumask_of_node(NUMA_NO_NODE) makes an invalid array reference
+> > > > > 
+> > > > > For example, on arm64, mips loongson, s390, and x86,
+> > > > > cpumask_of_node(node) returns "node_to_cpumask_map[node]", and -1 is
+> > > > > an invalid array index.
+> > > > 
+> > > > The invalid array index of -1 is the underlying problem here when
+> > > > cpumask_of_node(dev_to_node(dev)) is called and cpumask_of_node()
+> > > > is not NUMA_NO_NODE aware yet.
+> > > > 
+> > > > In the "numa: make node_to_cpumask_map() NUMA_NO_NODE aware" thread
+> > > > disscusion, it is requested that it is better to warn about the pcie
+> > > > device without a node assigned by the firmware before making the
+> > > > cpumask_of_node() NUMA_NO_NODE aware, so that the system with pci
+> > > > devices of "NUMA_NO_NODE" node can be fixed by their vendor.
+> > > > 
+> > > > See: https://lore.kernel.org/lkml/20191011111539.GX2311@hirez.programming.kicks-ass.net/
+> > > 
+> > > Right.  We should warn if the NUMA node number would help us but DT or
+> > > the firmware didn't give us one.
+> > > 
+> > > But we can do that independently of any cpumask_of_node() changes.
+> > > There's no need to do one patch before the other.  Even if you make
+> > > cpumask_of_node() tolerate NUMA_NO_NODE, we'll still get the warning
+> > > because we're not actually changing any node assignments.
+> > 
+> > Agreed. And this has been proposed previously I believe but my
+> > understanding was that Petr was against that.
+> 
+> I don't think Peter was opposed to a warning.
 
-Thanks for persisting here. In more detail:
+Now, he was opposed to cpumask_of_node handling IIRC.
 
-pci_pm_resume_noirq
-- pci_pm_default_resume_early
--- pci_raw_set_power_state(D0)
+> I assume you're
+> referring to [1], which is about how cpumask_of_node() should work.
+> That's not my area, so I don't have a strong opinion.  From that
+> discussion:
+> 
+> Yunsheng> From what I can see, the problem can be fixed in three
+> Yunsheng> place:
+> Yunsheng> 1. Make user dev_to_node return a valid node id
+> Yunsheng>    even when proximity domain is not set by bios(or node id
+> Yunsheng>    set by buggy bios is not valid), which may need info from
+> Yunsheng>    the numa system to make sure it will return a valid node.
+> Yunsheng>
+> Yunsheng> 2. User that call cpumask_of_node should ensure the node
+> Yunsheng>    id is valid before calling cpumask_of_node, and user also
+> Yunsheng>    need some info to make ensure node id is valid.
+> Yunsheng>
+> Yunsheng> 3. Make sure cpumask_of_node deal with invalid node id as
+> Yunsheng>    this patchset.
+> 
+> Peter> 1) because even it is not set, the device really does belong
+> Peter> to a node.  It is impossible a device will have magic
+> Peter> uniform access to memory when CPUs cannot.
+> Peter> 
+> Peter> 2) is already true today, cpumask_of_node() requires a valid
+> Peter> node_id.
+> Peter> 
+> Peter> 3) is just wrong and increases overhead for everyone.
+> 
+> I think Peter is advocating (1), i.e., if firmware doesn't tell us a
+> node ID, we just pick one.  We can certainly do that in *addition* to
+> adding a warning.  I'd like it to be a separate patch because I think
+> we want the warning no matter what so users have some clue that
+> performance could be better.
 
-At this point, pci_dev_wait() reads PCI_COMMAND to be 0x100403 (32-bit
-read) - so no wait.
-pci_raw_set_power_state writes to PM_CTRL and then reads it back with value 0x3.
->   xhci_hcd 0000:03:00.4: Refused to change power state, currently in D3
+Yes, those should be two different patches.
 
-At the point of return from pci_pm_resume_noirq, an extra check I
-added shows that PCI_COMMAND has value 0x403 (16-bit read).
-35ms later, pci_pm_resume is entered, and I checked that at this
-point, PCI_COMMAND has value 0.
-It then goes on to reach pci_enable_resources().
->   xhci_hcd 0000:03:00.4: enabling device (0000 -> 0002)
+> If we pick one, I guess we either assign some default, like node 0, to
+> everything; or we somehow pick a random node to assign.
 
-The change in PCI_COMMAND value is just down to timing.
-At the end of pci_pm_resume_noirq(), if I log PCI_COMMAND, wait 10ms,
-and log PCI_COMMAND again, I see it transition from 0x403 to 0.
+I have tried to explain that picking a default node is tricky because
+node 0 is not generally available and you never know when a node might
+just disappear if the device is not bound to it.
 
-Daniel
+I really do not see why the proposed online_cpu_mask for that case is
+such a big deal. It will likely lead to suboptimal performance but what
+do you expect from a suboptimal HW description. There is no question
+that the proper node affinity should be set and the warning might really
+help here but trying to be clever and find a replacement sounds like
+potential for more subtly broken results than doing a straightforward
+thing.
+
+But I will just go silent now because I am just repeating myself.
+
+-- 
+Michal Hocko
+SUSE Labs
