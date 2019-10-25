@@ -2,165 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C95CE4F7E
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 16:48:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA852E5131
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 18:28:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395191AbfJYOsK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Oct 2019 10:48:10 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:47056 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394082AbfJYOsJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Oct 2019 10:48:09 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n15so2619858wrw.13;
-        Fri, 25 Oct 2019 07:48:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bIQBfe8sGIHTcc6sIk8ML0XGqqJRWtOG/huxYjSxgWs=;
-        b=ReQEnplZs6d9r7FMszuAt1KQpVhgBAK8HrNTFjUqY3S/9APV1+HGvrsZ9waq7e63YU
-         qE3MBI4hqWqVJcX+VWmtAW85YKN71otDbfGbheixnIP6tSrWow7JIdFnGpXtiV+mVJW2
-         1p2ctbskyMZMfpkAuSXvh/NwSIRIncEVf4MMrb16d505nLujE9HTPHxu4LuAIaDSZ+Jc
-         KyD8GrKirgOQpcezDEDjZuvpDgE4yTBKNJS+69u7yUoDohsPtX/u+wyEaGIbvTZHormM
-         1LsppGHi80Arm2rQS0fl8o4nF9UjLZIsJPeKNNAtOJQk0Dc1AvH/QKIDvuZYoU6aXOrF
-         VoIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bIQBfe8sGIHTcc6sIk8ML0XGqqJRWtOG/huxYjSxgWs=;
-        b=WhjmwmWapfeXRhBFDu8d/qB3iUL7FMy4Wmydi93rBjYhG76MuJzdhD1YBvnFpqn+FT
-         dnX1SPbAXdowQVjjLZ+PqE9XjWUTj7cBZ2C9J0A893jqHyFjK92Qe13U96MLx1G1pOwG
-         PBQSyMyHBmFHa2yDun/xTUbO+NGzQrr3GRrjcmsuSpz2sL25yvVbnZqYtNqwM7Be2yYH
-         OCDASejiZWOiX9FKPv8Tiks7hJ01jRkXje/Q8dos2EmV2bmNZQNZ5/tG40AH/3rL9J2t
-         u9erg18cDwkQEn4r8M0SikS0zulAneJ7JtYvOZ9qCwlNq4lcWi2VsKBEtXRAGqNNtYAG
-         +6AQ==
-X-Gm-Message-State: APjAAAWZNH4H1w0uNfv5R1aM2gEXSdL2eSET9aaMn/otQwKNyejaYNI8
-        8TKPgpP8f+WA/IbQ274TcbI=
-X-Google-Smtp-Source: APXvYqxsX3C8tseMrdTDPvXw+m20Jy/sW7m38w3vpts8ZabQ38lGcQ4VQLB8VI+iJPUaxLQS52CZqA==
-X-Received: by 2002:a5d:4847:: with SMTP id n7mr3349140wrs.398.1572014885771;
-        Fri, 25 Oct 2019 07:48:05 -0700 (PDT)
-Received: from mail.google.com ([104.238.174.53])
-        by smtp.gmail.com with ESMTPSA id 26sm2126489wmf.20.2019.10.25.07.48.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 25 Oct 2019 07:48:05 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 14:48:03 +0000
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Changbin Du <changbin.du@gmail.com>, linux-pci@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-crypto@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-fpga@vger.kernel.org, linux-usb@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH v2] kernel-doc: rename the kernel-doc directive
- 'functions' to 'identifiers'
-Message-ID: <20191025144802.uixg2crhw6h7gghq@mail.google.com>
-References: <20191020131717.28990-1-changbin.du@gmail.com>
- <20191024121940.1d6a64df@lwn.net>
- <87woctb9cj.fsf@intel.com>
+        id S2633042AbfJYQ2R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Oct 2019 12:28:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2633030AbfJYQ2Q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 25 Oct 2019 12:28:16 -0400
+Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EDEB2084C;
+        Fri, 25 Oct 2019 16:28:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572020895;
+        bh=F4aiAi9ADhSGPQCvGinop62RHQp0ZQn5qwx29oeDixA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=2bGYBxw+568mSl8OsguyvePly25AljkkwKgzBxProDmgj+SDk1zHWuc8z0bcWQLR2
+         gai7EXWk/RAqIWZcAgHIqlQ9UO4sFJAL1Q5Yf0KUaS8ztRaPNXDkHo+RQbYI6uHfVs
+         hYVWQaamwj0t74GtqJOIX2JY8F+VHfhkA4bCHtOY=
+Date:   Fri, 25 Oct 2019 11:28:14 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Daniel Drake <drake@endlessm.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH] PCI: increase D3 delay for AMD Ryzen5/7 XHCI controllers
+Message-ID: <20191025162814.GA130180@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87woctb9cj.fsf@intel.com>
-User-Agent: NeoMutt/20180716-508-7c9a6d
+In-Reply-To: <CAD8Lp47HgAi-86ni5WHhZT1-sEd7oJEZUiG6KNU66qpmRCfaXw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 09:57:48AM +0300, Jani Nikula wrote:
-> On Thu, 24 Oct 2019, Jonathan Corbet <corbet@lwn.net> wrote:
-> > On Sun, 20 Oct 2019 21:17:17 +0800
-> > Changbin Du <changbin.du@gmail.com> wrote:
+On Fri, Oct 25, 2019 at 03:11:49PM +0800, Daniel Drake wrote:
+> On Fri, Oct 25, 2019 at 1:00 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > That's really strange.  Your original message showed:
 > >
-> >> The 'functions' directive is not only for functions, but also works for
-> >> structs/unions. So the name is misleading. This patch renames it to
-> >> 'identifiers', which specific the functions/types to be included in
-> >> documentation. We keep the old name as an alias of the new one before
-> >> all documentation are updated.
-> >> 
-> >> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> >   xhci_hcd 0000:03:00.4: Refused to change power state, currently in D3
+> >   xhci_hcd 0000:03:00.4: enabling device (0000 -> 0002)
 > >
-> > So I think this is basically OK, but I have one more request...
+> > The first line is from pci_raw_set_power_state() reading PCI_PM_CTRL,
+> > but we can't tell whether the read failed and we got ~0, or it
+> > succeeded and we got something with just the low two bits set.  Can
+> > you print out the whole value so we can see what happened?
 > >
-> > [...]
-> >
-> >> diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
-> >> index 1159405cb920..0689f9c37f1e 100644
-> >> --- a/Documentation/sphinx/kerneldoc.py
-> >> +++ b/Documentation/sphinx/kerneldoc.py
-> >> @@ -59,9 +59,10 @@ class KernelDocDirective(Directive):
-> >>      optional_arguments = 4
-> >>      option_spec = {
-> >>          'doc': directives.unchanged_required,
-> >> -        'functions': directives.unchanged,
-> >>          'export': directives.unchanged,
-> >>          'internal': directives.unchanged,
-> >> +        'identifiers': directives.unchanged,
-> >> +        'functions': directives.unchanged,  # alias of 'identifiers'
-> >>      }
-> >>      has_content = False
-> >>  
-> >> @@ -71,6 +72,7 @@ class KernelDocDirective(Directive):
-> >>  
-> >>          filename = env.config.kerneldoc_srctree + '/' + self.arguments[0]
-> >>          export_file_patterns = []
-> >> +        identifiers = None
-> >>  
-> >>          # Tell sphinx of the dependency
-> >>          env.note_dependency(os.path.abspath(filename))
-> >> @@ -86,19 +88,22 @@ class KernelDocDirective(Directive):
-> >>              export_file_patterns = str(self.options.get('internal')).split()
-> >>          elif 'doc' in self.options:
-> >>              cmd += ['-function', str(self.options.get('doc'))]
-> >> +        elif 'identifiers' in self.options:
-> >> +            identifiers = self.options.get('identifiers').split()
-> >>          elif 'functions' in self.options:
-> >> -            functions = self.options.get('functions').split()
-> >> -            if functions:
-> >> -                for f in functions:
-> >> -                    cmd += ['-function', f]
-> >> -            else:
-> >> -                cmd += ['-no-doc-sections']
-> >> +            identifiers = self.options.get('functions').split()
-> >
-> > Rather than do this, can you just change the elif line to read:
-> >
-> >     elif ('identifiers' in self.options) or ('functions' in self.options):
-> >
-> > ...then leave the rest of the code intact?  It keeps the logic together,
-> > and avoids the confusing distinction between identifiers=='' and
-> > identifiers==None .
+> > The second line is from pci_enable_resources() reading PCI_COMMAND,
+> > and it got *0*, not 0x0403 as you got from the CRS experiment.
 > 
-> I think the problem is you still need to distinguish between the two for
-> the get('functions') part.
+> Thanks for persisting here. In more detail:
 > 
-> One option is to rename 'functions' to 'identifiers' in the above block,
-> and put something like this above the whole if ladder (untested):
+> pci_pm_resume_noirq
+> - pci_pm_default_resume_early
+> -- pci_raw_set_power_state(D0)
 > 
->         # backward compat
->         if 'functions' in self.options:
->             if 'identifiers' in self.options:
->                 kernellog.warn(env.app, "fail")
-This will miss the content of 'functions' directive if both exist in
-same doc.
+> At this point, pci_dev_wait() reads PCI_COMMAND to be 0x100403 (32-bit
+> read) - so no wait.
 
->             else:
->                 self.options.set('identifiers', self.options.get('functions'))
-> 
-> BR,
-> Jani.
->
-After comparing, I still perfer my original code which is simpler. :)
+Just thinking out loud here: This is before writing PCI_PM_CTRL.  The
+device should be in D3hot and 0x100403 is PCI_COMMAND_IO |
+PCI_COMMAND_MEMORY | PCI_COMMAND_INTX_DISABLE (and
+PCI_STATUS_CAP_LIST), which mostly matches your lspci (it's missing
+PCI_COMMAND_MASTER, but maybe that got turned off during suspend).
+It's a little strange that PCI_COMMAND_IO is set because 03:00.3 has
+no I/O BARs, but maybe that was set by BIOS at boot-time.
 
-> 
-> -- 
-> Jani Nikula, Intel Open Source Graphics Center
+> pci_raw_set_power_state writes to PM_CTRL and then reads it back
+> with value 0x3.
 
--- 
-Cheers,
-Changbin Du
+When you write D0 to PCI_PM_CTRL the device does a soft reset, so
+pci_raw_set_power_state() delays before the next access.
+
+When you read PCI_PM_CTRL again, I think you *should* get either
+0x0000 (indicating that the device is in D0) or 0xffff (if the read
+failed with a Config Request Retry Status (CRS) because the device
+wasn't ready yet).
+
+I can't explain why you would read 0x0003 (not 0xffff) from
+PCI_PM_CTRL.
+
+What happens if you do a dword read from PCI_VENDOR_ID here (after the
+delay but before pci_dev_wait() or reading PCI_PM_CTRL)?
+
+We have CRS "software visibility" enabled, and the expectation in the
+spec is that software will read PCI_VENDOR_ID to see whether the
+device is ready: 0x0001 means the read got a CRS completion (device
+isn't ready), valid Vendor ID means device is ready, and 0xffff
+indicates some other error.
+
+pci_dev_wait() reads PCI_COMMAND, not PCI_VENDOR_ID, so maybe there's
+some wrinkle in how that's handled.
+
+You might also try changing pci_enable_crs() to disable
+PCI_EXP_RTCTL_CRSSVE instead of enabling it to see if that makes any
+difference.  CRS SV has kind of a checkered history and I'm a little
+dubious about whether it buys us anything.
+
+> >   xhci_hcd 0000:03:00.4: Refused to change power state, currently in D3
+> 
+> At the point of return from pci_pm_resume_noirq, an extra check I
+> added shows that PCI_COMMAND has value 0x403 (16-bit read).
+
+If PCI_COMMAND is non-zero at that point, I think something's wrong.
+It should be zero by the time pci_raw_set_power_state() reads
+PCI_PM_CTRL after the D3 delay.  By that time, we assume the reset has
+happened and the device is in D0uninitialized and fully accessible.
+
+> 35ms later, pci_pm_resume is entered, and I checked that at this
+> point, PCI_COMMAND has value 0.
+> It then goes on to reach pci_enable_resources().
+> >   xhci_hcd 0000:03:00.4: enabling device (0000 -> 0002)
+> 
+> The change in PCI_COMMAND value is just down to timing.
+> At the end of pci_pm_resume_noirq(), if I log PCI_COMMAND, wait 10ms,
+> and log PCI_COMMAND again, I see it transition from 0x403 to 0.
+> 
+> Daniel
