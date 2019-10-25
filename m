@@ -2,278 +2,257 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF850E51A5
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 18:53:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71FECE51D4
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 19:01:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502677AbfJYQx4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Oct 2019 12:53:56 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45018 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502610AbfJYQxz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Oct 2019 12:53:55 -0400
-Received: by mail-oi1-f196.google.com with SMTP id s71so2033111oih.11;
-        Fri, 25 Oct 2019 09:53:55 -0700 (PDT)
+        id S2390063AbfJYRB0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Oct 2019 13:01:26 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36312 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505794AbfJYRAz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Oct 2019 13:00:55 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w18so3160278wrt.3;
+        Fri, 25 Oct 2019 10:00:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZLnBfPuEk6KXZdaYDNJk596OLD0nVmu/9wHrzv3ZgVk=;
+        b=i7Um2DoZY4iznc1jmsINI9O6UsbYXuKtep3IKgo1RCiIkF4XjuiYMRQntGggVIpvyd
+         tIg7L3ZpCEDG73yJxhOQg5obynHVb615kn8unHbFkQ6p/yJ7yMvcI1sX2UnvVwcOdF0o
+         swcaET4lVAXtwl+s/NO/NCrdPCxmG3viAMOVuoGp8YgIkHZhljKTbdGr+lfVy8XRX08E
+         kfH6P0rZRo4kVkPFcaF4U/1kXWP2SLTFrLN6mWaPVmHdUVKfj4sQIWXA4MsSHNGmDCRp
+         KbDlglknUSS4Gy+bVFKcBpKqd0b0SslVKuTDxFNfvWfFu5aTZgwU5sQRF3sqV7gkgwaI
+         zeAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=icjpLxHFOmLwGX3PIdb6QE5jh9DXyIm3EA+j6DEnq+s=;
-        b=Z01QM47ZO3lVzwL+cr6zBorBCvWXLaen+AjfPE7y1tp42V+A689sPAU7mWK5jKQJp/
-         1csyHEgXJ4uuNxvWA4hSiGVZ6fYP2yWj8RUjD5HO/hjtg1mtZMjituA865Rsg4Q69sVX
-         sAQrGLqeD4nIYYKcsxQGt1dXhUG7IVTPeKzzOdF6aXlrffCa2jnBjKjyWom+6AM1bRj1
-         AfhHBupReE64vDv995pow0ad1uEv+l0c2YGnuR0m5QkVhkbXBWVryYmI6PHSOXFADtya
-         1iahEP6/uaWnIdedzAzX5tBTHcOBU8G7iy0P6VfhwHURVLtD1wyU6MIdzfe2ufmqfRYE
-         2nOA==
-X-Gm-Message-State: APjAAAXzIFOmCb67vjnpXcsNyr8AdjkXVzv0js19XohmvKP8yuwVtOfO
-        mwkd/QdS7o9M17hD0Uw84A==
-X-Google-Smtp-Source: APXvYqwlusvuRVtlD/XuJYr4K4iyWb6z0on18g6/SENicyigu+soJlyojXsozYn5fYjb1Tf38IS1tA==
-X-Received: by 2002:aca:210e:: with SMTP id 14mr3904071oiz.62.1572022434687;
-        Fri, 25 Oct 2019 09:53:54 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w26sm876453otm.52.2019.10.25.09.53.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 09:53:53 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 11:53:52 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, andrew.murray@arm.com,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        hch@infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-Message-ID: <20191025165352.GA30602@bogus>
-References: <cover.1571638827.git.eswara.kota@linux.intel.com>
- <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZLnBfPuEk6KXZdaYDNJk596OLD0nVmu/9wHrzv3ZgVk=;
+        b=jgRp7bTm6Fq3Jq5K6XNlU80d6Ve6mYqJ692cdgvZw+G7oaeZhVO1w+N0U3BHm6ofru
+         G13iC5FJBjacVRMzj4Jb5MRAks8TZ18CJrcPoJxXbab56hoWt5KulC+GR7XU5XAgF7K8
+         M5lnh4Twmw4NjvKvnp1PQBBvz6RGD5QQ4uqM8GkRIYNgbDfD1ZrvbwpkeTTec6OAjzxg
+         /uL62Cwhwzj6dj6VxS+qTLRgXrEf03wYngC24C/gAJX/dXffjVX1pnqFk1CX1K1aqksA
+         8qHNz0YOidCXEZaRCAAhZWg8Fhj7xRhnARaFy670B2ypRfwsjnpHQBxRuuJKYW9kP6dL
+         zEOA==
+X-Gm-Message-State: APjAAAVyK1reDuIHYBPGwTKqEsAgBHnbpaShmpSp5WbMCU9cn3oHCP9Z
+        kFGlrb5kSWV7o8DC8qLhPyw=
+X-Google-Smtp-Source: APXvYqxy1rjgXDLjIcLOYSHl5EFkIyLEWhrssrczRpN0X3w7T6KdEmw9FaYDA0JqqBC93q5+vAKjJg==
+X-Received: by 2002:adf:ef4f:: with SMTP id c15mr4076089wrp.296.1572022852306;
+        Fri, 25 Oct 2019 10:00:52 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f26:6400:9c22:97cd:5a13:a0fa? (p200300EA8F2664009C2297CD5A13A0FA.dip0.t-ipconnect.de. [2003:ea:8f26:6400:9c22:97cd:5a13:a0fa])
+        by smtp.googlemail.com with ESMTPSA id w7sm2505254wmd.22.2019.10.25.10.00.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 25 Oct 2019 10:00:51 -0700 (PDT)
+Subject: Re: [PATCH wireless-drivers 1/2] mt76: mt76x2e: disable pcie_aspm by
+ default
+To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>, kvalo@codeaurora.org,
+        linux-wireless@vger.kernel.org, nbd@nbd.name, sgruszka@redhat.com,
+        oleksandr@natalenko.name, netdev@vger.kernel.org,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        sean.wang@mediatek.com, ryder.lee@mediatek.com, royluo@google.com
+References: <cover.1571868221.git.lorenzo@kernel.org>
+ <fec60f066bab1936d58b2e69bae3f20e645d1304.1571868221.git.lorenzo@kernel.org>
+ <5924c8eb-7269-b8ef-ad0e-957104645638@gmail.com>
+ <20191024215451.GA30822@lore-desk.lan>
+ <9cac34a5-0bfe-0443-503f-218210dab4d6@gmail.com>
+ <20191024230747.GA30614@lore-desk.lan>
+ <1de75f53-ab28-9951-092c-19a854ef4907@gmail.com>
+ <20191025114631.GB2898@localhost.localdomain>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <9b963799-6d12-029d-a43a-db52f42203dc@gmail.com>
+Date:   Fri, 25 Oct 2019 19:00:44 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191025114631.GB2898@localhost.localdomain>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 02:39:18PM +0800, Dilip Kota wrote:
-> Add YAML shcemas for PCIe RC controller on Intel Gateway SoCs
-> which is Synopsys DesignWare based PCIe core.
+On 25.10.2019 13:46, Lorenzo Bianconi wrote:
+>> On 25.10.2019 01:07, Lorenzo Bianconi wrote:
+>>>> On 24.10.2019 23:54, Lorenzo Bianconi wrote:
+>>>>>> On 24.10.2019 00:23, Lorenzo Bianconi wrote:
+>>>>>>> On same device (e.g. U7612E-H1) PCIE_ASPM causes continuous mcu hangs and
+>>>>>>> instability and so let's disable PCIE_ASPM by default. This patch has
+>>>>>>> been successfully tested on U7612E-H1 mini-pice card
+>>>>>>>
+>>>>>>> Signed-off-by: Felix Fietkau <nbd@nbd.name>
+>>>>>>> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+>>>>>>> ---
+>>>>>>>  drivers/net/wireless/mediatek/mt76/mmio.c     | 47 +++++++++++++++++++
+>>>>>>>  drivers/net/wireless/mediatek/mt76/mt76.h     |  1 +
+>>>>>>>  .../net/wireless/mediatek/mt76/mt76x2/pci.c   |  2 +
+>>>>>>>  3 files changed, 50 insertions(+)
+>>>>>>>
+>>>>>
+>>>>> [...]
+>>>>>
+>>>>>>> +
+>>>>>>> +	if (parent)
+>>>>>>> +		pcie_capability_clear_word(parent, PCI_EXP_LNKCTL,
+>>>>>>> +					   aspm_conf);
+>>>>>>
+>>>>>> + linux-pci mailing list
+>>>>>
+>>>>> Hi Heiner,
+>>>>>
+>>>>>>
+>>>>>> All this seems to be legacy code copied from e1000e.
+>>>>>> Fiddling with the low-level PCI(e) registers should be left to the
+>>>>>> PCI core. It shouldn't be needed here, a simple call to
+>>>>>> pci_disable_link_state() should be sufficient. Note that this function
+>>>>>> has a return value meanwhile that you can check instead of reading
+>>>>>> back low-level registers.
+>>>>>
+>>>>> ack, I will add it to v2
+>>>>>
+>>>>>> If BIOS forbids that OS changes ASPM settings, then this should be
+>>>>>> respected (like PCI core does). Instead the network chip may provide
+>>>>>> the option to configure whether it activates certain ASPM (sub-)states
+>>>>>> or not. We went through a similar exercise with the r8169 driver,
+>>>>>> you can check how it's done there.
+>>>>>
+>>>>> looking at the vendor sdk (at least in the version I currently have) there are
+>>>>> no particular ASPM configurations, it just optionally disables it writing directly
+>>>>> in pci registers.
+>>>>> Moreover there are multiple drivers that are currently using this approach:
+>>>>> - ath9k in ath_pci_aspm_init()
+>>>>> - tg3 in tg3_chip_reset()
+>>>>> - e1000e in __e1000e_disable_aspm()
+>>>>> - r8169 in rtl_enable_clock_request()/rtl_disable_clock_request()
+>>>>>
+>>>> All these drivers include quite some legacy code. I can mainly speak for r8169:
+>>>> First versions of the driver are almost as old as Linux. And even though I
+>>>> refactored most of the driver still some legacy code for older chip versions
+>>>> (like the two functions you mentioned) is included.
+>>>>
+>>>>> Is disabling the ASPM for the system the only option to make this minipcie
+>>>>> work?
+>>>>>
+>>>>
+>>>> No. What we do in r8169:
+>>>>
+>>>> - call pci_disable_link_state(pdev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1)
+>>>> - If it returns 0, then ASPM (including the L1 sub-states) is disabled.
+>>>> - If it returns an errno, then disabling ASPM failed (most likely due to
+>>>>   BIOS forbidding ASPM changes - pci_disable_link_state will spit out
+>>>>   a related warning). In this case r8169 configures the chip to not initiate
+>>>>   transitions to L0s/L1 (the other end of the link may still try to enter
+>>>>   ASPM states). See rtl_hw_aspm_clkreq_enable(). That's sufficient
+>>>>   to avoid the ASPM-related problems with certain versions of this chip.
+>>>>   Maybe your HW provides similar functionality.
+>>>
+>>> yep, I looked at rtl_hw_aspm_clkreq_enable. This is more or less what I did but
+>>> unfortunately there is no specific code or documentation I can use for mt76x2e.
+>>> So as last chance I decided to disable ASPM directly (in this way the chip is
+>>> working fine).
+>>> Do you think a kernel parameter to disable ASPM directly would be acceptable?
+>>>
+>> Module parameters are not the preferred approach, even though some maintainers
+>> may consider it acceptable. I think it should be ok if you disable ASPM per
+>> default. Who wants ASPM can enable the individual states via brand-new
+>> sysfs attributes (provided BIOS allows OS to control ASPM).
+>> However changing ASPM settings via direct register writes may cause
+>> inconsistencies between PCI core and actual settings.
+>> I'm not sure whether there's any general best practice how to deal with the
+>> scenario that a device misbehaves with ASPM enabled and OS isn't allowed to
+>> change ASPM settings. 
+>> Maybe the PCI guys can advise on these points.
 > 
-> changes on v4:
-> 	Add "snps,dw-pcie" compatible.
-> 	Rename phy-names property value to pcie.
-> 	And maximum and minimum values to num-lanes.
-> 	Add ref for reset-assert-ms entry and update the
-> 	 description for easy understanding.
-> 	Remove pcie core interrupt entry.
+> Hi Heiner,
 > 
-> changes on v3:
->         Add the appropriate License-Identifier
->         Rename intel,rst-interval to 'reset-assert-us'
->         Add additionalProperties: false
->         Rename phy-names to 'pciephy'
->         Remove the dtsi node split of SoC and board in the example
->         Add #interrupt-cells = <1>; or else interrupt parsing will fail
->         Name yaml file with compatible name
+> I reviewed the mtk sdk and it seems mt7662/mt7612/mt7602 series does not
+> have hw pcie ps support (not sure if it just not implemented or so). In my
+> scenario without disabling ASPM the card does not work at all, so I guess we
+> can proceed with current approach and then try to understand if we can do
+> something better. What do you think?
 > 
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> ---
->  .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 135 +++++++++++++++++++++
->  1 file changed, 135 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
 
-Fails to validate:
+If there's no proper way to deal with the issue, then you may have to go with
+the current approach. Just what you could do is calling pci_disable_link_state()
+first and do the direct register modification limbo only as a fallback if
+function returns an errno or CONFIG_PCIEASPM isn't defined.
 
-Error: Documentation/devicetree/bindings/pci/intel-gw-pcie.example.dts:38.27-28 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:321: recipe for target 'Documentation/devicetree/bindings/pci/intel-gw-pcie.example.dt.yaml' failed
+It may make sense to change the return value of the pci_disable_link_state
+dummy if CONFIG_PCIEASPM isn't defined: from 0 to e.g. -EOPNOTSUPP
+Then in the driver it wouldn't be needed to check CONFIG_PCIEASPM.
 
-Please run 'make -k dt_binding_check' (-k because there are some 
-unrelated failures).
+Interestingly in mt76x2/pci.c there's the following:
 
+/* Fix up ASPM configuration */
+
+	/* RG_SSUSB_G1_CDR_BIR_LTR = 0x9 */
+	mt76_rmw_field(dev, 0x15a10, 0x1f << 16, 0x9);
+
+	/* RG_SSUSB_G1_CDR_BIC_LTR = 0xf */
+	mt76_rmw_field(dev, 0x15a0c, 0xf << 28, 0xf);
+
+	/* RG_SSUSB_CDR_BR_PE1D = 0x3 */
+	mt76_rmw_field(dev, 0x15c58, 0x3 << 6, 0x3);
+
+Would be helpful to know what this does and whether it may need to be adjusted.
+At least in your case this fix attempt doesn't seem to be sufficient.
+
+
+> @Ryder, Sean: do you have any hint on this topic?
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> new file mode 100644
-> index 000000000000..49dd87ec1e3d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> @@ -0,0 +1,135 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/intel-gw-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: PCIe RC controller on Intel Gateway SoCs
-> +
-> +maintainers:
-> +  - Dilip Kota <eswara.kota@linux.intel.com>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: intel,lgm-pcie
-> +      - const: snps,dw-pcie
-> +
-> +  device_type:
-> +    const: pci
-> +
-> +  "#address-cells":
-> +    const: 3
-> +
-> +  "#size-cells":
-> +    const: 2
-> +
-> +  reg:
-> +    items:
-> +      - description: Controller control and status registers.
-> +      - description: PCIe configuration registers.
-> +      - description: Controller application registers.
-> +
-> +  reg-names:
-> +    items:
-> +      - const: dbi
-> +      - const: config
-> +      - const: app
-> +
-> +  ranges:
-> +    description: Ranges for the PCI memory and I/O regions.
-
-How many entries do you expect? Add a 'maxItems' to define.
-
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: PCIe registers interface clock.
-
-How many clocks?
-
-> +
-> +  phys:
-> +    maxItems: 1
-> +
-> +  phy-names:
-> +    const: pcie
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +
-> +  num-lanes:
-> +    minimum: 1
-> +    maximum: 2
-> +    description: Number of lanes to use for this port.
-> +
-> +  linux,pci-domain:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: PCI domain ID.
-
-Just a value of 'true' is fine here.
-
-> +
-> +  '#interrupt-cells':
-> +    const: 1
-> +
-> +  interrupt-map-mask:
-> +    description: Standard PCI IRQ mapping properties.
-> +
-> +  interrupt-map:
-> +    description: Standard PCI IRQ mapping properties.
-> +
-> +  max-link-speed:
-> +    description: Specify PCI Gen for link capability.
-
-Allowed values? Default?
-
-> +
-> +  bus-range:
-> +    description: Range of bus numbers associated with this controller.
-> +
-> +  reset-assert-ms:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-Don't need a type for standard units.
-
-> +    description: |
-> +      Delay after asserting reset to the PCIe device.
-> +      Some devices need an interval upto 500ms. By default it is 100ms.
-
-Express as a schema:
-
-maximum: 500
-default: 100
-
-> +
-> +required:
-> +  - compatible
-> +  - device_type
-> +  - reg
-> +  - reg-names
-> +  - ranges
-> +  - resets
-> +  - clocks
-> +  - phys
-> +  - phy-names
-> +  - reset-gpios
-> +  - num-lanes
-
-Shouldn't be required. It should have a default.
-
-> +  - linux,pci-domain
-
-Is this really required? AIUI, domains are optional and only used if 
-you have more than one host.
-
-> +  - interrupt-map
-> +  - interrupt-map-mask
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pcie10:pcie@d0e00000 {
-
-space         ^
-
-> +      compatible = "intel,lgm-pcie", "snps,dw-pcie";
-> +      device_type = "pci";
-> +      #address-cells = <3>;
-> +      #size-cells = <2>;
-> +      reg = <0xd0e00000 0x1000>,
-> +            <0xd2000000 0x800000>,
-> +            <0xd0a41000 0x1000>;
-> +      reg-names = "dbi", "config", "app";
-> +      linux,pci-domain = <0>;
-> +      max-link-speed = <4>;
-> +      bus-range = <0x00 0x08>;
-> +      interrupt-parent = <&ioapic1>;
-> +      #interrupt-cells = <1>;
-> +      interrupt-map-mask = <0 0 0 0x7>;
-> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
-> +                      <0 0 0 2 &ioapic1 28 1>,
-> +                      <0 0 0 3 &ioapic1 29 1>,
-> +                      <0 0 0 4 &ioapic1 30 1>;
-> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
-> +      resets = <&rcu0 0x50 0>;
-> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
-
-You need to include any defines you use. That's why the example fails to 
-build.
-
-> +      phys = <&cb0phy0>;
-> +      phy-names = "pcie";
-> +      status = "okay";
-
-Don't show status in examples.
-
-> +      reset-assert-ms = <500>;
-> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
-> +      num-lanes = <2>;
-> +    };
-> -- 
-> 2.11.0
+> Regards,
+> Lorenzo
 > 
+>>
+>>> Regards,
+>>> Lorenzo
+>>>
+>> Heiner
+>>
+>>>>
+>>>>> Regards,
+>>>>> Lorenzo
+>>>>>
+>>>> Heiner
+>>>>
+>>>>>>
+>>>>>>> +}
+>>>>>>> +EXPORT_SYMBOL_GPL(mt76_mmio_disable_aspm);
+>>>>>>> +
+>>>>>>>  void mt76_mmio_init(struct mt76_dev *dev, void __iomem *regs)
+>>>>>>>  {
+>>>>>>>  	static const struct mt76_bus_ops mt76_mmio_ops = {
+>>>>>>> diff --git a/drivers/net/wireless/mediatek/mt76/mt76.h b/drivers/net/wireless/mediatek/mt76/mt76.h
+>>>>>>> index 570c159515a0..962812b6247d 100644
+>>>>>>> --- a/drivers/net/wireless/mediatek/mt76/mt76.h
+>>>>>>> +++ b/drivers/net/wireless/mediatek/mt76/mt76.h
+>>>>>>> @@ -578,6 +578,7 @@ bool __mt76_poll_msec(struct mt76_dev *dev, u32 offset, u32 mask, u32 val,
+>>>>>>>  #define mt76_poll_msec(dev, ...) __mt76_poll_msec(&((dev)->mt76), __VA_ARGS__)
+>>>>>>>  
+>>>>>>>  void mt76_mmio_init(struct mt76_dev *dev, void __iomem *regs);
+>>>>>>> +void mt76_mmio_disable_aspm(struct pci_dev *pdev);
+>>>>>>>  
+>>>>>>>  static inline u16 mt76_chip(struct mt76_dev *dev)
+>>>>>>>  {
+>>>>>>> diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c b/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
+>>>>>>> index 73c3104f8858..264bef87e5c7 100644
+>>>>>>> --- a/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
+>>>>>>> +++ b/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
+>>>>>>> @@ -81,6 +81,8 @@ mt76pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>>>>>>>  	/* RG_SSUSB_CDR_BR_PE1D = 0x3 */
+>>>>>>>  	mt76_rmw_field(dev, 0x15c58, 0x3 << 6, 0x3);
+>>>>>>>  
+>>>>>>> +	mt76_mmio_disable_aspm(pdev);
+>>>>>>> +
+>>>>>>>  	return 0;
+>>>>>>>  
+>>>>>>>  error:
+>>>>>>>
+>>>>>>
+>>>>
+>>
+
