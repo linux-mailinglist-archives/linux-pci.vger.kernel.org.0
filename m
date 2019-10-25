@@ -2,122 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 10860E4349
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 08:11:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31368E4347
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 08:11:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404412AbfJYGK6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Oct 2019 02:10:58 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34852 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394092AbfJYGKv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Oct 2019 02:10:51 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v6so712931wmj.0
+        id S2403996AbfJYGKu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Oct 2019 02:10:50 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38568 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394261AbfJYGKu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Oct 2019 02:10:50 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v9so859260wrq.5
         for <linux-pci@vger.kernel.org>; Thu, 24 Oct 2019 23:10:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=UZtQcpZNm2bgRElTtB0/YYRtxpmigD0UWuciJCpp5gM=;
-        b=QrKWgESwGfrtCnkB4ANF4RDTIvZX+3mgrn+F048ehqIGeg2PIMapuhi5B29YdIPJRF
-         OuF/1XgB1E3hujF7fmLSGOWHCpq+9DlFVEduBO8ipDdnjmiangiskHjwO3FsA7j8x1KD
-         1Smuo6qnW1seJDFFROI5kLkQKHJzW7j8nL7QRsx6D6T92OoNZE6hSbJWqfQ2kzquPzUV
-         EGGwKGRq2Dt/b39DcGka7dZFK17Wt7MIOIDReJEBLetmCZXSMWSBNVp4MthobvqT9E3G
-         LimR87SPwJ5FuFVOpPQc3/2WoUZLiJcnk52cJ7R4bO2cA7rCH/FuOM9im/yZQR0mR3/u
-         6apw==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=urdSZrEfORclk6zL/+g0MK1/k4SMP80YLlGcZvUazOk=;
+        b=kshr2qIhGH1DuUvrqG0fFgLfQD827XA+G8f/XiEq0Ilxcg1KMf8hVPn243UErKq4w/
+         ZqdcFd/xi6aB9CMpjRGEumXNJcJconNO99nJWY5GGOxOMnweK1Dht1ywjgD72PF89hGg
+         wyU5zRBE9SXS9vgASbCv4P1Phu3LYS+hRO3y+D5NyJlmsY66fsuX/M6fCRFWKL+q2UxI
+         wqJQ3OG5k5Vv+JWYgfdqdgRZUc9sFGWYZO1DedrcoCOmrJkhtorw4o91ZfH+kpOz/cML
+         ce11UnICMKHEzoSBvRmSy63bb3Q3ONY6zoa7MO10UXndnHUe1mrXDDfAMQnJvU0WferN
+         bTtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=UZtQcpZNm2bgRElTtB0/YYRtxpmigD0UWuciJCpp5gM=;
-        b=Bvxne/q0YJOMyhXhsvPUm0dZU8qkqmrMvj1XrGcQJE+a09QW3QAgJBTfqK5En7yZuV
-         KtGP19Uo/hkuy8KPnu7AZpYe+A0M8PiM3Da7n/exH/P2iPLC6upUZQQG6icXsyouzpNb
-         CU2DgWewJ3Lg2dse6IVw1IDDwamQuTlmx0C70QgfanqzSIbbQ1R7+5WTBZTm9mti5wEo
-         RcTaQcYl3w8q/C9FidQ2XZhyQ4Yd7eLaKxkHpTS9pbdJ76BHq9BPRjgj94sPt0Wzy606
-         7SN4r+3zZz2/OWAd3pUA2O4zGTVJoAVbVJlO+LKkUKD+IOCSe+5cGTsrTPjBKE9LJDAI
-         qQqg==
-X-Gm-Message-State: APjAAAV+aiAGuFWDUnQbQyJcNS2JUpFlom9pCoerdXX0jxk1pt1bnsJw
-        C1CT5nu/nSyYV8AY39WVPb/OHQ==
-X-Google-Smtp-Source: APXvYqwEgYO6Ro5u2lCKSVB90BazD7V/pF/lyQv5RjmcJQ3shOXOE39URbi4sRXKy/2ygEnJau+JXA==
-X-Received: by 2002:a7b:c924:: with SMTP id h4mr1846926wml.46.1571983844471;
-        Thu, 24 Oct 2019 23:10:44 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:in-reply-to:references;
+        bh=urdSZrEfORclk6zL/+g0MK1/k4SMP80YLlGcZvUazOk=;
+        b=NRdrBZb8aeX65aEWl6h5zmL/xvcUiMaXV/rKGqvohi16cPVGSYu59+Y1KmnJlJ286b
+         KIjLDmU/69hX4mJWCRDZxMA5i0wluJXnt8i2f/tcVHNxHMhZfAt6UDFQ9IkNAhIy9FoS
+         tMjmF/Xyn23ZCmre+QwRpfJVFeml25i3sZzHYny5xNsxcAIfk3C1QtXjTgzPncZH53ln
+         v8ELC0/UyEBROAxuAUAgTXwnEkqNAVOZ4dUh9uK2i2wMaKFjgCyvcDrErgLNM/PUdnv9
+         /wj2mNmt63LMb/qmw5V/92BymmK9gbNQm6GbN4sA0/JsSYT6X5L0H1xrJT4Yy8Y+HwAu
+         9LdA==
+X-Gm-Message-State: APjAAAXPfe87oXYsh1g4OHg/Ch7zvpGmgbmJiY7WeFYBBLc39ERSTt1Z
+        uiHPls5UGNb25C3aQjez5luCZA==
+X-Google-Smtp-Source: APXvYqz8LkDtEZTzsDKuLH9UrK6btdapTCbVwzfYkAqutNcBUrskoovD+oFz0se0O3wUik65+/qPDA==
+X-Received: by 2002:a5d:6892:: with SMTP id h18mr1110459wru.370.1571983848501;
+        Thu, 24 Oct 2019 23:10:48 -0700 (PDT)
 Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id k24sm6458006wmi.1.2019.10.24.23.10.43
+        by smtp.gmail.com with ESMTPSA id w22sm1097375wmc.16.2019.10.24.23.10.47
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 24 Oct 2019 23:10:43 -0700 (PDT)
+        Thu, 24 Oct 2019 23:10:47 -0700 (PDT)
 From:   Michal Simek <michal.simek@xilinx.com>
 To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
         michal.simek@xilinx.com, git@xilinx.com, palmer@sifive.com,
         hch@infradead.org, longman@redhat.com, helgaas@kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jackie Liu <liuyun01@kylinos.cn>,
-        Wesley Terpstra <wesley@sifive.com>,
-        Firoz Khan <firoz.khan@linaro.org>, sparclinux@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
-        James Hogan <jhogan@kernel.org>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-snps-arc@lists.infradead.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Biggers <ebiggers@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-mips@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 0/2] Enabling MSI for Microblaze
-Date:   Fri, 25 Oct 2019 08:10:36 +0200
-Message-Id: <cover.1571983829.git.michal.simek@xilinx.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: [PATCH v2 2/2] pci: Default to PCI_MSI_IRQ_DOMAIN
+Date:   Fri, 25 Oct 2019 08:10:38 +0200
+Message-Id: <514e7b040be8ccd69088193aba260da1b89e919c.1571983829.git.michal.simek@xilinx.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1571983829.git.michal.simek@xilinx.com>
+References: <cover.1571983829.git.michal.simek@xilinx.com>
+In-Reply-To: <cover.1571983829.git.michal.simek@xilinx.com>
+References: <cover.1571983829.git.michal.simek@xilinx.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+From: Palmer Dabbelt <palmer@sifive.com>
 
-these two patches come from discussion with Christoph, Bjorn, Palmer and
-Waiman. The first patch was suggestion by Christoph here
-https://lore.kernel.org/linux-riscv/20191008154604.GA7903@infradead.org/
-The second part was discussed
-https://lore.kernel.org/linux-pci/mhng-5d9bcb53-225e-441f-86cc-b335624b3e7c@palmer-si-x1e/
-and
-https://lore.kernel.org/linux-pci/20191017181937.7004-1-palmer@sifive.com/
+As far as I can tell, the only reason there was an architecture
+whitelist for PCI_MSI_IRQ_DOMAIN is because it requires msi.h.  I've
+built this for all the architectures that play nice with make.cross, but
+I haven't boot tested it anywhere.
 
-Thanks,
-Michal
+Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Acked-by: Waiman Long <longman@redhat.com>
+---
 
-Changes in v2:
-- Fix typo in commit message s/expect/except/ - Reported-by: Masahiro
+Changes in v2: None
 
-Michal Simek (1):
-  asm-generic: Make msi.h a mandatory include/asm header
+Origin patch here:
+https://lore.kernel.org/linux-pci/20191017181937.7004-4-palmer@sifive.com/
 
-Palmer Dabbelt (1):
-  pci: Default to PCI_MSI_IRQ_DOMAIN
+---
+ drivers/pci/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- arch/arc/include/asm/Kbuild     | 1 -
- arch/arm/include/asm/Kbuild     | 1 -
- arch/arm64/include/asm/Kbuild   | 1 -
- arch/mips/include/asm/Kbuild    | 1 -
- arch/powerpc/include/asm/Kbuild | 1 -
- arch/riscv/include/asm/Kbuild   | 1 -
- arch/sparc/include/asm/Kbuild   | 1 -
- drivers/pci/Kconfig             | 2 +-
- include/asm-generic/Kbuild      | 1 +
- 9 files changed, 2 insertions(+), 8 deletions(-)
-
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index a304f5ea11b9..77c1428cd945 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -52,7 +52,7 @@ config PCI_MSI
+ 	   If you don't know what to do here, say Y.
+ 
+ config PCI_MSI_IRQ_DOMAIN
+-	def_bool ARC || ARM || ARM64 || X86 || RISCV
++	def_bool y
+ 	depends on PCI_MSI
+ 	select GENERIC_MSI_IRQ_DOMAIN
+ 
 -- 
 2.17.1
 
