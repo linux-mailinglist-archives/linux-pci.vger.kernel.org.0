@@ -2,126 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E489BE43DF
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 08:58:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88631E442A
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 09:12:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404469AbfJYG6E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Oct 2019 02:58:04 -0400
-Received: from mga12.intel.com ([192.55.52.136]:27447 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727595AbfJYG6E (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 25 Oct 2019 02:58:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 23:58:03 -0700
-X-IronPort-AV: E=Sophos;i="5.68,227,1569308400"; 
-   d="scan'208";a="192446754"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 23:57:52 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Changbin Du <changbin.du@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-fpga@vger.kernel.org,
-        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH v2] kernel-doc: rename the kernel-doc directive 'functions' to 'identifiers'
-In-Reply-To: <20191024121940.1d6a64df@lwn.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20191020131717.28990-1-changbin.du@gmail.com> <20191024121940.1d6a64df@lwn.net>
-Date:   Fri, 25 Oct 2019 09:57:48 +0300
-Message-ID: <87woctb9cj.fsf@intel.com>
+        id S2406600AbfJYHMC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Oct 2019 03:12:02 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39358 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406166AbfJYHMB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Oct 2019 03:12:01 -0400
+Received: by mail-qt1-f196.google.com with SMTP id t8so1803112qtc.6
+        for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2019 00:12:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y7vqZokkWR7+GS48fmUuYPLXAvMVfo/8O1D4NDWeFmk=;
+        b=pUUaQH/DWoTBzQnNWB49dUdGsOItZ8Aw3Z1dpyC4yDjlb3YPs0Vlt1zYm7jMKzhU+1
+         tD/wEqY6JXtuNzmgznccgw8Ws7Kza/6M00d6PL6nYmeDrSldcurPwryoWtCGOBmNUcy3
+         LJ+klXQDEQQ0BE9k3X5GECDYO5L+VDT0uaX/zNJtm5SIDSqBoElQGlT6pIpJJlbDsXBw
+         aYT4FYxp5z7ZU1qRBbQq4MKS56NMl0GiqMqat4OdwC+dNLOt3DdLmaZH1771NfKHCdbO
+         PrxOC3oLuCzWLYipExuIFT+BqpWbB4kfm7yq1dc6NDBdyDWICDx+Qluy247SFdZAA6dn
+         9dTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y7vqZokkWR7+GS48fmUuYPLXAvMVfo/8O1D4NDWeFmk=;
+        b=da6HhZXdC5Eg3Srygx3xTvq0UQBX7H6hLxdFaBwR6bl1YZgpaSToWUm5+yh8XW/O6T
+         wQBhNTqgS6Np52fJfUehd6mJ4Iv7m6KUOGlT4AdQ7KsjtgGD0vwcK8azZCYaW3p+L45x
+         n63vSrH9iBrs5q5QxGqaRejP9Zf8OwgsM5yq2wnCAkgpbOJZALz0+yFW63ih/6ZBmF/y
+         JmUBcSvjVa3TiqcGFWufKII1FIBLOSBdvb/VTqy/hkGNcfKD/dfjmTzX0hWptstXRbvD
+         UliDy8WzcKLXb1p1L0b3IVHtOVA1tEc5WtqDgDokGVn4SIuWCSV+z7lT9WebiFwf5zKy
+         uHIg==
+X-Gm-Message-State: APjAAAXCDQWIRpfNbyCT0HzSwyahrL5zAyPuGWPqrlcvn32W/vMhJtfB
+        beomrONxd/JBbGcV+I0RbOFJpVb8mt1PldPXK1hbeA==
+X-Google-Smtp-Source: APXvYqxi0EwTymF9nPtPsY0B3bV61Maul6DeZgSQS9AcKD6MolLYaJRmKgrwOZcedSJQ5182NorU5pc7KvYAJ3TWejs=
+X-Received: by 2002:ac8:4508:: with SMTP id q8mr1655147qtn.110.1571987520725;
+ Fri, 25 Oct 2019 00:12:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <CAD8Lp46KZmTzxjYN6T7u1xH0AODr38hFcCgR-COtvduK9ZuANQ@mail.gmail.com>
+ <20191024170023.GA135695@google.com>
+In-Reply-To: <20191024170023.GA135695@google.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Fri, 25 Oct 2019 15:11:49 +0800
+Message-ID: <CAD8Lp47HgAi-86ni5WHhZT1-sEd7oJEZUiG6KNU66qpmRCfaXw@mail.gmail.com>
+Subject: Re: [PATCH] PCI: increase D3 delay for AMD Ryzen5/7 XHCI controllers
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 24 Oct 2019, Jonathan Corbet <corbet@lwn.net> wrote:
-> On Sun, 20 Oct 2019 21:17:17 +0800
-> Changbin Du <changbin.du@gmail.com> wrote:
+On Fri, Oct 25, 2019 at 1:00 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> That's really strange.  Your original message showed:
 >
->> The 'functions' directive is not only for functions, but also works for
->> structs/unions. So the name is misleading. This patch renames it to
->> 'identifiers', which specific the functions/types to be included in
->> documentation. We keep the old name as an alias of the new one before
->> all documentation are updated.
->> 
->> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+>   xhci_hcd 0000:03:00.4: Refused to change power state, currently in D3
+>   xhci_hcd 0000:03:00.4: enabling device (0000 -> 0002)
 >
-> So I think this is basically OK, but I have one more request...
+> The first line is from pci_raw_set_power_state() reading PCI_PM_CTRL,
+> but we can't tell whether the read failed and we got ~0, or it
+> succeeded and we got something with just the low two bits set.  Can
+> you print out the whole value so we can see what happened?
 >
-> [...]
->
->> diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
->> index 1159405cb920..0689f9c37f1e 100644
->> --- a/Documentation/sphinx/kerneldoc.py
->> +++ b/Documentation/sphinx/kerneldoc.py
->> @@ -59,9 +59,10 @@ class KernelDocDirective(Directive):
->>      optional_arguments = 4
->>      option_spec = {
->>          'doc': directives.unchanged_required,
->> -        'functions': directives.unchanged,
->>          'export': directives.unchanged,
->>          'internal': directives.unchanged,
->> +        'identifiers': directives.unchanged,
->> +        'functions': directives.unchanged,  # alias of 'identifiers'
->>      }
->>      has_content = False
->>  
->> @@ -71,6 +72,7 @@ class KernelDocDirective(Directive):
->>  
->>          filename = env.config.kerneldoc_srctree + '/' + self.arguments[0]
->>          export_file_patterns = []
->> +        identifiers = None
->>  
->>          # Tell sphinx of the dependency
->>          env.note_dependency(os.path.abspath(filename))
->> @@ -86,19 +88,22 @@ class KernelDocDirective(Directive):
->>              export_file_patterns = str(self.options.get('internal')).split()
->>          elif 'doc' in self.options:
->>              cmd += ['-function', str(self.options.get('doc'))]
->> +        elif 'identifiers' in self.options:
->> +            identifiers = self.options.get('identifiers').split()
->>          elif 'functions' in self.options:
->> -            functions = self.options.get('functions').split()
->> -            if functions:
->> -                for f in functions:
->> -                    cmd += ['-function', f]
->> -            else:
->> -                cmd += ['-no-doc-sections']
->> +            identifiers = self.options.get('functions').split()
->
-> Rather than do this, can you just change the elif line to read:
->
->     elif ('identifiers' in self.options) or ('functions' in self.options):
->
-> ...then leave the rest of the code intact?  It keeps the logic together,
-> and avoids the confusing distinction between identifiers=='' and
-> identifiers==None .
+> The second line is from pci_enable_resources() reading PCI_COMMAND,
+> and it got *0*, not 0x0403 as you got from the CRS experiment.
 
-I think the problem is you still need to distinguish between the two for
-the get('functions') part.
+Thanks for persisting here. In more detail:
 
-One option is to rename 'functions' to 'identifiers' in the above block,
-and put something like this above the whole if ladder (untested):
+pci_pm_resume_noirq
+- pci_pm_default_resume_early
+-- pci_raw_set_power_state(D0)
 
-        # backward compat
-        if 'functions' in self.options:
-            if 'identifiers' in self.options:
-                kernellog.warn(env.app, "fail")
-            else:
-                self.options.set('identifiers', self.options.get('functions'))
+At this point, pci_dev_wait() reads PCI_COMMAND to be 0x100403 (32-bit
+read) - so no wait.
+pci_raw_set_power_state writes to PM_CTRL and then reads it back with value 0x3.
+>   xhci_hcd 0000:03:00.4: Refused to change power state, currently in D3
 
-BR,
-Jani.
+At the point of return from pci_pm_resume_noirq, an extra check I
+added shows that PCI_COMMAND has value 0x403 (16-bit read).
+35ms later, pci_pm_resume is entered, and I checked that at this
+point, PCI_COMMAND has value 0.
+It then goes on to reach pci_enable_resources().
+>   xhci_hcd 0000:03:00.4: enabling device (0000 -> 0002)
 
+The change in PCI_COMMAND value is just down to timing.
+At the end of pci_pm_resume_noirq(), if I log PCI_COMMAND, wait 10ms,
+and log PCI_COMMAND again, I see it transition from 0x403 to 0.
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Daniel
