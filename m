@@ -2,271 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E67FBE4A3E
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 13:46:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A81BE4A9E
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 13:58:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502147AbfJYLqh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Oct 2019 07:46:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55992 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730372AbfJYLqg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 25 Oct 2019 07:46:36 -0400
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4F0EB85540
-        for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2019 11:46:36 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id f4so960586wrj.12
-        for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2019 04:46:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cFHU09wBjpsgLwHf44LiEP8jLq8cbX4indFXQskgc2E=;
-        b=DDATn5HGEhcRzslN0+a4MaLQ1SPsO0eKyL5SP/L/OgLJi+NMtU5krbbNj/9tFmsG59
-         f5giY5qa7pLuEhJkDQFHQl3iCvvtiOS2QbubEVA7uDpUCPKmAgEJJZaGzaE7+bLzEYEp
-         5iWOqVZEZ4K37OqUSXGuEnu4GdeA6M19HpwCCi9KVF5UsaWPu0vSRWNPNtMNKg9Xlt5g
-         lZ641IbY+HdQrbz+8V5E6rYJ4YFzp3zwMYI1iB8EbdgVzBUhlksjm/zor5o7hr849hrS
-         rs3QY6uPnSStLRi9rdNlc1NE2sF6M2K5Rg2FLG/yc0wHG9V3DRxLarvK63z90B8Lzvpl
-         cB8g==
-X-Gm-Message-State: APjAAAW9CZdp9jykCINxA/CTfm1yZbTN11MulOwDv6diyrf6zJ4thBfK
-        EW/QmvHHAIVI7boE5X7kIX62buPU8/OVRdDiCK3t0sodGkThsDnaYsNJ9raaiszr3hFPVIWeYc6
-        ud4f/JwkET+yI5a33EtO4
-X-Received: by 2002:adf:ce87:: with SMTP id r7mr2609085wrn.307.1572003994711;
-        Fri, 25 Oct 2019 04:46:34 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwV6LS+tmeIOc2lcvag9+NUuWfiCs6yqLkqltANJQ0kynAe2xikLzXKtfuLR4ip3sF2hZMT4Q==
-X-Received: by 2002:adf:ce87:: with SMTP id r7mr2609039wrn.307.1572003994334;
-        Fri, 25 Oct 2019 04:46:34 -0700 (PDT)
-Received: from localhost.localdomain (nat-pool-mxp-t.redhat.com. [149.6.153.186])
-        by smtp.gmail.com with ESMTPSA id q14sm2521539wre.27.2019.10.25.04.46.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 04:46:33 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 13:46:31 +0200
-From:   Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>, kvalo@codeaurora.org,
-        linux-wireless@vger.kernel.org, nbd@nbd.name, sgruszka@redhat.com,
-        oleksandr@natalenko.name, netdev@vger.kernel.org,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        sean.wang@mediatek.com, ryder.lee@mediatek.com, royluo@google.com
-Subject: Re: [PATCH wireless-drivers 1/2] mt76: mt76x2e: disable pcie_aspm by
- default
-Message-ID: <20191025114631.GB2898@localhost.localdomain>
-References: <cover.1571868221.git.lorenzo@kernel.org>
- <fec60f066bab1936d58b2e69bae3f20e645d1304.1571868221.git.lorenzo@kernel.org>
- <5924c8eb-7269-b8ef-ad0e-957104645638@gmail.com>
- <20191024215451.GA30822@lore-desk.lan>
- <9cac34a5-0bfe-0443-503f-218210dab4d6@gmail.com>
- <20191024230747.GA30614@lore-desk.lan>
- <1de75f53-ab28-9951-092c-19a854ef4907@gmail.com>
+        id S2390977AbfJYL6h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Oct 2019 07:58:37 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:15731 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393497AbfJYL6f (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Oct 2019 07:58:35 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5db2e36e0000>; Fri, 25 Oct 2019 04:58:38 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 25 Oct 2019 04:58:34 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 25 Oct 2019 04:58:34 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 25 Oct
+ 2019 11:58:33 +0000
+Received: from [10.25.74.2] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 25 Oct
+ 2019 11:58:30 +0000
+Subject: Re: [PATCH] PCI: Add CRS timeout for pci_device_is_present()
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     Sinan Kaya <okaya@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+CC:     Thierry Reding <treding@nvidia.com>, <bhelgaas@google.com>,
+        <lorenzo.pieralisi@arm.com>, <jonathanh@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20191005182129.32538-1-vidyas@nvidia.com>
+ <20191014082023.GA232162@ulmo>
+ <ce411d27-5b92-8dae-fccd-73c63aa30f1c@kernel.org>
+ <20191015093053.GA5778@ulmo>
+ <4953b718-8818-575e-2ec1-8197e6b32593@kernel.org>
+ <85267afb-c08e-5625-d3ee-bd32af9ecb12@nvidia.com>
+ <afa16546-e63d-6eba-8be0-8e52339cd100@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <aed391af-f54c-c25e-43b9-ed9db01bd3cf@nvidia.com>
+Date:   Fri, 25 Oct 2019 17:28:27 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cmJC7u66zC7hs+87"
-Content-Disposition: inline
-In-Reply-To: <1de75f53-ab28-9951-092c-19a854ef4907@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <afa16546-e63d-6eba-8be0-8e52339cd100@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572004718; bh=IlDlcHct4/oq8rGYrubP5GYHoA3BlKdtsEE8gkKZRKM=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=dTQQnRakehi+GYBdyocVxDceZSLOHqx+7sxO60bvM5oKUwEXoe/LtN4WnIG0WrAq+
+         +EDeRDl6kZcdSz68bjNxXX7u/6Y9dR+HWDLAdkSTctU9PIyCElN0FeEHN0qDEHst9G
+         1i18y5+89LpohtpbhVvYi4kBwzOH72GDQlkzQIqEJ6Inc+OleG7eXznuj1UNhic5YQ
+         CiwBmbYJSpojGeF7me93YvxDWHd7g6vilrzLClKd/kYUCxgYBaCRh7FFYl7ddvny35
+         hOU+sAdkSOlB9UoE3MI0/k1rSzvewknkpo8ELxq/+lpVWV5rszpxSRhNIb5iQDV1RP
+         ckpS1njanB9og==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 10/21/2019 11:13 AM, Vidya Sagar wrote:
 
---cmJC7u66zC7hs+87
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Sinan / Rafael,
+Apologies for the ping again.
+Do you guys have any further comments on this?
 
-> On 25.10.2019 01:07, Lorenzo Bianconi wrote:
-> >> On 24.10.2019 23:54, Lorenzo Bianconi wrote:
-> >>>> On 24.10.2019 00:23, Lorenzo Bianconi wrote:
-> >>>>> On same device (e.g. U7612E-H1) PCIE_ASPM causes continuous mcu han=
-gs and
-> >>>>> instability and so let's disable PCIE_ASPM by default. This patch h=
-as
-> >>>>> been successfully tested on U7612E-H1 mini-pice card
-> >>>>>
-> >>>>> Signed-off-by: Felix Fietkau <nbd@nbd.name>
-> >>>>> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> >>>>> ---
-> >>>>>  drivers/net/wireless/mediatek/mt76/mmio.c     | 47 +++++++++++++++=
-++++
-> >>>>>  drivers/net/wireless/mediatek/mt76/mt76.h     |  1 +
-> >>>>>  .../net/wireless/mediatek/mt76/mt76x2/pci.c   |  2 +
-> >>>>>  3 files changed, 50 insertions(+)
-> >>>>>
-> >>>
-> >>> [...]
-> >>>
-> >>>>> +
-> >>>>> +	if (parent)
-> >>>>> +		pcie_capability_clear_word(parent, PCI_EXP_LNKCTL,
-> >>>>> +					   aspm_conf);
-> >>>>
-> >>>> + linux-pci mailing list
-> >>>
-> >>> Hi Heiner,
-> >>>
-> >>>>
-> >>>> All this seems to be legacy code copied from e1000e.
-> >>>> Fiddling with the low-level PCI(e) registers should be left to the
-> >>>> PCI core. It shouldn't be needed here, a simple call to
-> >>>> pci_disable_link_state() should be sufficient. Note that this functi=
-on
-> >>>> has a return value meanwhile that you can check instead of reading
-> >>>> back low-level registers.
-> >>>
-> >>> ack, I will add it to v2
-> >>>
-> >>>> If BIOS forbids that OS changes ASPM settings, then this should be
-> >>>> respected (like PCI core does). Instead the network chip may provide
-> >>>> the option to configure whether it activates certain ASPM (sub-)stat=
-es
-> >>>> or not. We went through a similar exercise with the r8169 driver,
-> >>>> you can check how it's done there.
-> >>>
-> >>> looking at the vendor sdk (at least in the version I currently have) =
-there are
-> >>> no particular ASPM configurations, it just optionally disables it wri=
-ting directly
-> >>> in pci registers.
-> >>> Moreover there are multiple drivers that are currently using this app=
-roach:
-> >>> - ath9k in ath_pci_aspm_init()
-> >>> - tg3 in tg3_chip_reset()
-> >>> - e1000e in __e1000e_disable_aspm()
-> >>> - r8169 in rtl_enable_clock_request()/rtl_disable_clock_request()
-> >>>
-> >> All these drivers include quite some legacy code. I can mainly speak f=
-or r8169:
-> >> First versions of the driver are almost as old as Linux. And even thou=
-gh I
-> >> refactored most of the driver still some legacy code for older chip ve=
-rsions
-> >> (like the two functions you mentioned) is included.
-> >>
-> >>> Is disabling the ASPM for the system the only option to make this min=
-ipcie
-> >>> work?
-> >>>
-> >>
-> >> No. What we do in r8169:
-> >>
-> >> - call pci_disable_link_state(pdev, PCIE_LINK_STATE_L0S | PCIE_LINK_ST=
-ATE_L1)
-> >> - If it returns 0, then ASPM (including the L1 sub-states) is disabled.
-> >> - If it returns an errno, then disabling ASPM failed (most likely due =
-to
-> >>   BIOS forbidding ASPM changes - pci_disable_link_state will spit out
-> >>   a related warning). In this case r8169 configures the chip to not in=
-itiate
-> >>   transitions to L0s/L1 (the other end of the link may still try to en=
-ter
-> >>   ASPM states). See rtl_hw_aspm_clkreq_enable(). That's sufficient
-> >>   to avoid the ASPM-related problems with certain versions of this chi=
-p.
-> >>   Maybe your HW provides similar functionality.
-> >=20
-> > yep, I looked at rtl_hw_aspm_clkreq_enable. This is more or less what I=
- did but
-> > unfortunately there is no specific code or documentation I can use for =
-mt76x2e.
-> > So as last chance I decided to disable ASPM directly (in this way the c=
-hip is
-> > working fine).
-> > Do you think a kernel parameter to disable ASPM directly would be accep=
-table?
-> >=20
-> Module parameters are not the preferred approach, even though some mainta=
-iners
-> may consider it acceptable. I think it should be ok if you disable ASPM p=
-er
-> default. Who wants ASPM can enable the individual states via brand-new
-> sysfs attributes (provided BIOS allows OS to control ASPM).
-> However changing ASPM settings via direct register writes may cause
-> inconsistencies between PCI core and actual settings.
-> I'm not sure whether there's any general best practice how to deal with t=
-he
-> scenario that a device misbehaves with ASPM enabled and OS isn't allowed =
-to
-> change ASPM settings.=20
-> Maybe the PCI guys can advise on these points.
+-Vidya Sagar
 
-Hi Heiner,
-
-I reviewed the mtk sdk and it seems mt7662/mt7612/mt7602 series does not
-have hw pcie ps support (not sure if it just not implemented or so). In my
-scenario without disabling ASPM the card does not work at all, so I guess we
-can proceed with current approach and then try to understand if we can do
-something better. What do you think?
-
-@Ryder, Sean: do you have any hint on this topic?
-
-Regards,
-Lorenzo
-
+> On 10/15/2019 5:44 PM, Vidya Sagar wrote:
 >=20
-> > Regards,
-> > Lorenzo
-> >=20
-> Heiner
+> Hi Sinan / Rafael,
+> Do you have any further comments on this patch?
 >=20
-> >>
-> >>> Regards,
-> >>> Lorenzo
-> >>>
-> >> Heiner
-> >>
-> >>>>
-> >>>>> +}
-> >>>>> +EXPORT_SYMBOL_GPL(mt76_mmio_disable_aspm);
-> >>>>> +
-> >>>>>  void mt76_mmio_init(struct mt76_dev *dev, void __iomem *regs)
-> >>>>>  {
-> >>>>>  	static const struct mt76_bus_ops mt76_mmio_ops =3D {
-> >>>>> diff --git a/drivers/net/wireless/mediatek/mt76/mt76.h b/drivers/ne=
-t/wireless/mediatek/mt76/mt76.h
-> >>>>> index 570c159515a0..962812b6247d 100644
-> >>>>> --- a/drivers/net/wireless/mediatek/mt76/mt76.h
-> >>>>> +++ b/drivers/net/wireless/mediatek/mt76/mt76.h
-> >>>>> @@ -578,6 +578,7 @@ bool __mt76_poll_msec(struct mt76_dev *dev, u32=
- offset, u32 mask, u32 val,
-> >>>>>  #define mt76_poll_msec(dev, ...) __mt76_poll_msec(&((dev)->mt76), =
-__VA_ARGS__)
-> >>>>> =20
-> >>>>>  void mt76_mmio_init(struct mt76_dev *dev, void __iomem *regs);
-> >>>>> +void mt76_mmio_disable_aspm(struct pci_dev *pdev);
-> >>>>> =20
-> >>>>>  static inline u16 mt76_chip(struct mt76_dev *dev)
-> >>>>>  {
-> >>>>> diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c b/driv=
-ers/net/wireless/mediatek/mt76/mt76x2/pci.c
-> >>>>> index 73c3104f8858..264bef87e5c7 100644
-> >>>>> --- a/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
-> >>>>> +++ b/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
-> >>>>> @@ -81,6 +81,8 @@ mt76pci_probe(struct pci_dev *pdev, const struct =
-pci_device_id *id)
-> >>>>>  	/* RG_SSUSB_CDR_BR_PE1D =3D 0x3 */
-> >>>>>  	mt76_rmw_field(dev, 0x15c58, 0x3 << 6, 0x3);
-> >>>>> =20
-> >>>>> +	mt76_mmio_disable_aspm(pdev);
-> >>>>> +
-> >>>>>  	return 0;
-> >>>>> =20
-> >>>>>  error:
-> >>>>>
-> >>>>
-> >>
+> - Vidya Sagar
+>=20
+>> On 10/15/2019 4:40 PM, Sinan Kaya wrote:
+>>> +Rafael
+>>>
+>>> On 10/15/2019 2:30 AM, Thierry Reding wrote:
+>>>> Vidya, can you clarify for which device you're seeing the issues? Soun=
+ds
+>>>> like adding a call to pci_pm_reset() (via pci_reset_function()) at som=
+e
+>>>> point.
+>>>>
+>>>> Sinan, it looks as if pci_pm_reset() (or any of its callers) is not us=
+ed
+>>>> very widely. Is that just because most drivers haven't had a need for =
+it
+>>>> yet? Or am I missing some core functionality that calls this for every
+>>>> device anyway?
+>>>
+>>> pci_pm_reset() is there as an alternative reset path. We are not
+>>> supposed to call this function. Sorry for giving you wrong direction
+>>> here. pci_reset_function() should call it only if there is no other
+>>> suitable reset function is found.
+>>>
+>>> I think the PCI core should be putting the device back D0 state as one
+>>> of the first actions before enumerating. Wake up could be a combination
+>>> of ACPI and/or PCI wake up depending on where your device sits in the
+>>> topology.
+>> Yup. It is indeed doing it as part of pci_power_up() in pci.c file.
+>> But, what is confusing to me is the order of the calls.
+>> pci_power_up() has following calls in the same order.
+>> =A0=A0=A0=A0=A0pci_raw_set_power_state(dev, PCI_D0);
+>> =A0=A0=A0=A0=A0pci_update_current_state(dev, PCI_D0);
+>> But, pci_raw_set_power_state() is accessing config space without calling
+>> pci_device_is_present() whereas pci_update_current_state() which is call=
+ed
+>> later in the flow is calling pci_device_is_present()...!
+>>
+>>>
+>>> On the other hand, wake up code doesn't perform the CRS wait. CRS
+>>> wait is deferred until the first vendor id read in pci_scan_device().
+>>> I see that it already waits for 60 seconds.
+>>>
+>>> Going back to the patch...
+>>>
+>>> I think we need to find the path that actually needs this sleep and
+>>> put pci_dev_wait() there.
+>> Following is the path in resume() flow.
+>> [=A0=A0 36.380726] Call trace:
+>> [=A0=A0 36.383270]=A0 dump_backtrace+0x0/0x158
+>> [=A0=A0 36.386802]=A0 show_stack+0x14/0x20
+>> [=A0=A0 36.389749]=A0 dump_stack+0xb0/0xf8
+>> [=A0=A0 36.393451]=A0 pci_update_current_state+0x58/0xe0
+>> [=A0=A0 36.398178]=A0 pci_power_up+0x60/0x70
+>> [=A0=A0 36.401672]=A0 pci_pm_resume_noirq+0x6c/0x130
+>> [=A0=A0 36.405669]=A0 dpm_run_callback.isra.16+0x20/0x70
+>> [=A0=A0 36.410248]=A0 device_resume_noirq+0x120/0x238
+>> [=A0=A0 36.414364]=A0 async_resume_noirq+0x24/0x58
+>> [=A0=A0 36.418364]=A0 async_run_entry_fn+0x40/0x148
+>> [=A0=A0 36.422418]=A0 process_one_work+0x1e8/0x360
+>> [=A0=A0 36.426525]=A0 worker_thread+0x40/0x488
+>> [=A0=A0 36.430201]=A0 kthread+0x118/0x120
+>> [=A0=A0 36.433843]=A0 ret_from_fork+0x10/0x1c
+>>
+>>>
+>>> +++ b/drivers/pci/pci.c
+>>> @@ -5905,7 +5905,8 @@ bool pci_device_is_present(struct pci_dev *pdev)
+>>>
+>>> =A0=A0=A0=A0=A0 if (pci_dev_is_disconnected(pdev))
+>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0 return false;
+>>> -=A0=A0=A0 return pci_bus_read_dev_vendor_id(pdev->bus, pdev->devfn, &v=
+, 0);
+>>> +=A0=A0=A0 return pci_bus_read_dev_vendor_id(pdev->bus, pdev->devfn, &v=
+,
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 PCI_CR=
+S_TIMEOUT);
+>>> =A0 }
+>>>
+>>> pci_device_is_present() is a too low-level function and it may not
+>>> be allowed to sleep. It uses 0 as timeout value.
+>>>
+>>>
+>>
 >=20
 
---cmJC7u66zC7hs+87
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXbLgkwAKCRA6cBh0uS2t
-rHfnAQCLoD02kio19gy+U8XToasZDcPIadAlFlX2/iy9cPWZRgEAnbBv05bpmG/K
-f3evMl5rOPE8S4PDCo5o/s6KV1rCHgg=
-=06x3
------END PGP SIGNATURE-----
-
---cmJC7u66zC7hs+87--
