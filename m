@@ -2,100 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 31368E4347
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 08:11:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E489BE43DF
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2019 08:58:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403996AbfJYGKu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Oct 2019 02:10:50 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38568 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394261AbfJYGKu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Oct 2019 02:10:50 -0400
-Received: by mail-wr1-f67.google.com with SMTP id v9so859260wrq.5
-        for <linux-pci@vger.kernel.org>; Thu, 24 Oct 2019 23:10:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=urdSZrEfORclk6zL/+g0MK1/k4SMP80YLlGcZvUazOk=;
-        b=kshr2qIhGH1DuUvrqG0fFgLfQD827XA+G8f/XiEq0Ilxcg1KMf8hVPn243UErKq4w/
-         ZqdcFd/xi6aB9CMpjRGEumXNJcJconNO99nJWY5GGOxOMnweK1Dht1ywjgD72PF89hGg
-         wyU5zRBE9SXS9vgASbCv4P1Phu3LYS+hRO3y+D5NyJlmsY66fsuX/M6fCRFWKL+q2UxI
-         wqJQ3OG5k5Vv+JWYgfdqdgRZUc9sFGWYZO1DedrcoCOmrJkhtorw4o91ZfH+kpOz/cML
-         ce11UnICMKHEzoSBvRmSy63bb3Q3ONY6zoa7MO10UXndnHUe1mrXDDfAMQnJvU0WferN
-         bTtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:in-reply-to:references;
-        bh=urdSZrEfORclk6zL/+g0MK1/k4SMP80YLlGcZvUazOk=;
-        b=NRdrBZb8aeX65aEWl6h5zmL/xvcUiMaXV/rKGqvohi16cPVGSYu59+Y1KmnJlJ286b
-         KIjLDmU/69hX4mJWCRDZxMA5i0wluJXnt8i2f/tcVHNxHMhZfAt6UDFQ9IkNAhIy9FoS
-         tMjmF/Xyn23ZCmre+QwRpfJVFeml25i3sZzHYny5xNsxcAIfk3C1QtXjTgzPncZH53ln
-         v8ELC0/UyEBROAxuAUAgTXwnEkqNAVOZ4dUh9uK2i2wMaKFjgCyvcDrErgLNM/PUdnv9
-         /wj2mNmt63LMb/qmw5V/92BymmK9gbNQm6GbN4sA0/JsSYT6X5L0H1xrJT4Yy8Y+HwAu
-         9LdA==
-X-Gm-Message-State: APjAAAXPfe87oXYsh1g4OHg/Ch7zvpGmgbmJiY7WeFYBBLc39ERSTt1Z
-        uiHPls5UGNb25C3aQjez5luCZA==
-X-Google-Smtp-Source: APXvYqz8LkDtEZTzsDKuLH9UrK6btdapTCbVwzfYkAqutNcBUrskoovD+oFz0se0O3wUik65+/qPDA==
-X-Received: by 2002:a5d:6892:: with SMTP id h18mr1110459wru.370.1571983848501;
-        Thu, 24 Oct 2019 23:10:48 -0700 (PDT)
-Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id w22sm1097375wmc.16.2019.10.24.23.10.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 24 Oct 2019 23:10:47 -0700 (PDT)
-From:   Michal Simek <michal.simek@xilinx.com>
-To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
-        michal.simek@xilinx.com, git@xilinx.com, palmer@sifive.com,
-        hch@infradead.org, longman@redhat.com, helgaas@kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH v2 2/2] pci: Default to PCI_MSI_IRQ_DOMAIN
-Date:   Fri, 25 Oct 2019 08:10:38 +0200
-Message-Id: <514e7b040be8ccd69088193aba260da1b89e919c.1571983829.git.michal.simek@xilinx.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1571983829.git.michal.simek@xilinx.com>
-References: <cover.1571983829.git.michal.simek@xilinx.com>
-In-Reply-To: <cover.1571983829.git.michal.simek@xilinx.com>
-References: <cover.1571983829.git.michal.simek@xilinx.com>
+        id S2404469AbfJYG6E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Oct 2019 02:58:04 -0400
+Received: from mga12.intel.com ([192.55.52.136]:27447 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727595AbfJYG6E (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 25 Oct 2019 02:58:04 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 23:58:03 -0700
+X-IronPort-AV: E=Sophos;i="5.68,227,1569308400"; 
+   d="scan'208";a="192446754"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 23:57:52 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Changbin Du <changbin.du@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-fpga@vger.kernel.org,
+        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: [PATCH v2] kernel-doc: rename the kernel-doc directive 'functions' to 'identifiers'
+In-Reply-To: <20191024121940.1d6a64df@lwn.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20191020131717.28990-1-changbin.du@gmail.com> <20191024121940.1d6a64df@lwn.net>
+Date:   Fri, 25 Oct 2019 09:57:48 +0300
+Message-ID: <87woctb9cj.fsf@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Palmer Dabbelt <palmer@sifive.com>
+On Thu, 24 Oct 2019, Jonathan Corbet <corbet@lwn.net> wrote:
+> On Sun, 20 Oct 2019 21:17:17 +0800
+> Changbin Du <changbin.du@gmail.com> wrote:
+>
+>> The 'functions' directive is not only for functions, but also works for
+>> structs/unions. So the name is misleading. This patch renames it to
+>> 'identifiers', which specific the functions/types to be included in
+>> documentation. We keep the old name as an alias of the new one before
+>> all documentation are updated.
+>> 
+>> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+>
+> So I think this is basically OK, but I have one more request...
+>
+> [...]
+>
+>> diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
+>> index 1159405cb920..0689f9c37f1e 100644
+>> --- a/Documentation/sphinx/kerneldoc.py
+>> +++ b/Documentation/sphinx/kerneldoc.py
+>> @@ -59,9 +59,10 @@ class KernelDocDirective(Directive):
+>>      optional_arguments = 4
+>>      option_spec = {
+>>          'doc': directives.unchanged_required,
+>> -        'functions': directives.unchanged,
+>>          'export': directives.unchanged,
+>>          'internal': directives.unchanged,
+>> +        'identifiers': directives.unchanged,
+>> +        'functions': directives.unchanged,  # alias of 'identifiers'
+>>      }
+>>      has_content = False
+>>  
+>> @@ -71,6 +72,7 @@ class KernelDocDirective(Directive):
+>>  
+>>          filename = env.config.kerneldoc_srctree + '/' + self.arguments[0]
+>>          export_file_patterns = []
+>> +        identifiers = None
+>>  
+>>          # Tell sphinx of the dependency
+>>          env.note_dependency(os.path.abspath(filename))
+>> @@ -86,19 +88,22 @@ class KernelDocDirective(Directive):
+>>              export_file_patterns = str(self.options.get('internal')).split()
+>>          elif 'doc' in self.options:
+>>              cmd += ['-function', str(self.options.get('doc'))]
+>> +        elif 'identifiers' in self.options:
+>> +            identifiers = self.options.get('identifiers').split()
+>>          elif 'functions' in self.options:
+>> -            functions = self.options.get('functions').split()
+>> -            if functions:
+>> -                for f in functions:
+>> -                    cmd += ['-function', f]
+>> -            else:
+>> -                cmd += ['-no-doc-sections']
+>> +            identifiers = self.options.get('functions').split()
+>
+> Rather than do this, can you just change the elif line to read:
+>
+>     elif ('identifiers' in self.options) or ('functions' in self.options):
+>
+> ...then leave the rest of the code intact?  It keeps the logic together,
+> and avoids the confusing distinction between identifiers=='' and
+> identifiers==None .
 
-As far as I can tell, the only reason there was an architecture
-whitelist for PCI_MSI_IRQ_DOMAIN is because it requires msi.h.  I've
-built this for all the architectures that play nice with make.cross, but
-I haven't boot tested it anywhere.
+I think the problem is you still need to distinguish between the two for
+the get('functions') part.
 
-Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Acked-by: Waiman Long <longman@redhat.com>
----
+One option is to rename 'functions' to 'identifiers' in the above block,
+and put something like this above the whole if ladder (untested):
 
-Changes in v2: None
+        # backward compat
+        if 'functions' in self.options:
+            if 'identifiers' in self.options:
+                kernellog.warn(env.app, "fail")
+            else:
+                self.options.set('identifiers', self.options.get('functions'))
 
-Origin patch here:
-https://lore.kernel.org/linux-pci/20191017181937.7004-4-palmer@sifive.com/
+BR,
+Jani.
 
----
- drivers/pci/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index a304f5ea11b9..77c1428cd945 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -52,7 +52,7 @@ config PCI_MSI
- 	   If you don't know what to do here, say Y.
- 
- config PCI_MSI_IRQ_DOMAIN
--	def_bool ARC || ARM || ARM64 || X86 || RISCV
-+	def_bool y
- 	depends on PCI_MSI
- 	select GENERIC_MSI_IRQ_DOMAIN
- 
 -- 
-2.17.1
-
+Jani Nikula, Intel Open Source Graphics Center
