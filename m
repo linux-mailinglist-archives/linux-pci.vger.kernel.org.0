@@ -2,155 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE144E5EA6
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Oct 2019 20:27:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B4F5E5F8E
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Oct 2019 22:36:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbfJZS1M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 26 Oct 2019 14:27:12 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40889 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfJZS1L (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Oct 2019 14:27:11 -0400
-Received: by mail-wr1-f68.google.com with SMTP id o28so5755376wro.7;
-        Sat, 26 Oct 2019 11:27:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+FQQhcfOPZya8MAxlVOl/fI91d8FcIELIgTsbKp4qbw=;
-        b=vXkkWsopH3WbTvIhF7sGtrS/ssJH2M++VpTzvJk0lQqMUc63vgj1y2+ey8rW4C2Ttx
-         0SLWIJlBK/ICmLjgcaNFgIvQalaENaoxvmLr0/KrTtY3T3AOauCzyZ06K7eCDz6UYa/b
-         C7cIVkxF9fMkb/SMWR7eH4JhPHorpeLUNpC4yCZLa27Uuh+6JgPiUWRcMulVCM23x1xI
-         XXTRXlnCWf6/u92tr/0mr8S47vjHRCRBOHJn4+k8LFzQYjF1kcvRl5Af5aOxZvQmYpvg
-         zphxCdikNUJ8sG0kgy54xnJSbxNV8Y04yPX+RE/PHKfHaTNmSKnxVy1KhyEUOc2oNL4f
-         3iMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+FQQhcfOPZya8MAxlVOl/fI91d8FcIELIgTsbKp4qbw=;
-        b=KqVwfjHX0FWJomwbRHkZh4Hy0f/vcf0TeJ4lxAs2/EGHfvcnAGOo0GgSqVUqQLK66y
-         vMPcyKQn4SMCZ+4p5BiQtQz0qIuzBM/YM83LMJoZxJUNzdBAzOQHZTPxwey9CDaTZ9OO
-         P1NpRwXbKJmlqNkn++sS/IUi/Lht41PouJPq28DXcUlNuIOuXDNQ6mYNRMI5ZmwaIJ0r
-         22hj0U/Ur/WVAkMNHHUgLE1YFmkd2+UAhTH5wwta/DG+tcS/+B8WaxG/Lh314cQd+qwq
-         fDDLJbRs0+ZnFvLLGKpKjJQYB5WbiDL682T4TKvs6jZK2Oeqr14LIssIcOyTqq5NCYBh
-         bUHQ==
-X-Gm-Message-State: APjAAAUWhlKU+TvHG/1cGeECVBOHZPTUKNZfGUrlUIT7CPZowkx+TVNc
-        ZznuFkK1KD0PSgMiBbQZOFmXrkcV
-X-Google-Smtp-Source: APXvYqyXRGRpvFBhawFL1PBgkGJe/49pwRp3F/A6QfcCQF9TFgLy7cWcwwUb4GC3vOEFw4lEuM88Yw==
-X-Received: by 2002:adf:9481:: with SMTP id 1mr4254385wrr.77.1572114427559;
-        Sat, 26 Oct 2019 11:27:07 -0700 (PDT)
-Received: from desktop.lan (ip-86-49-35-8.net.upcbroadband.cz. [86.49.35.8])
-        by smtp.gmail.com with ESMTPSA id p17sm7637982wrn.4.2019.10.26.11.27.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Oct 2019 11:27:06 -0700 (PDT)
-From:   marek.vasut@gmail.com
-To:     linux-pci@vger.kernel.org
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        id S1726443AbfJZUgb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 26 Oct 2019 16:36:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:50290 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726409AbfJZUgb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 26 Oct 2019 16:36:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 553AE1FB;
+        Sat, 26 Oct 2019 13:36:30 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE5973F6C4;
+        Sat, 26 Oct 2019 13:36:29 -0700 (PDT)
+Date:   Sat, 26 Oct 2019 21:36:28 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Marek Vasut <marek.vasut@gmail.com>
+Cc:     Simon Horman <horms@verge.net.au>, linux-pci@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Wolfram Sang <wsa@the-dreams.de>,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH V4 2/2] PCI: rcar: Recalculate inbound range alignment for each controller entry
-Date:   Sat, 26 Oct 2019 20:26:59 +0200
-Message-Id: <20191026182659.2390-2-marek.vasut@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191026182659.2390-1-marek.vasut@gmail.com>
-References: <20191026182659.2390-1-marek.vasut@gmail.com>
+        linux-renesas-soc@vger.kernel.org, Robin.Murphy@arm.com
+Subject: Re: [PATCH V3 2/3] PCI: rcar: Do not abort on too many inbound
+ dma-ranges
+Message-ID: <20191026203627.GA47056@e119886-lin.cambridge.arm.com>
+References: <20190809175741.7066-1-marek.vasut@gmail.com>
+ <20190809175741.7066-2-marek.vasut@gmail.com>
+ <20190816132305.gyyml5r3xsimmoor@verge.net.au>
+ <8f1871ed-4820-1985-0090-bb9e2d8803d8@gmail.com>
+ <20191021101805.GM47056@e119886-lin.cambridge.arm.com>
+ <fef9502f-d51c-b922-afb3-8891267ae6c3@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fef9502f-d51c-b922-afb3-8891267ae6c3@gmail.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Marek Vasut <marek.vasut+renesas@gmail.com>
+On Sat, Oct 26, 2019 at 08:03:12PM +0200, Marek Vasut wrote:
+> On 10/21/19 12:18 PM, Andrew Murray wrote:
+> [...]
+> >>>> In case the "dma-ranges" DT property contains either too many ranges
+> >>>> or the range start address is unaligned in such a way that populating
+> >>>> the range into the controller requires multiple entries, a situation
+> >>>> may occur where all ranges cannot be loaded into the controller.
+> >>>>
+> >>>> Currently, the driver refuses to probe in such a situation. Relax this
+> >>>> behavior, load as many ranges as possible and warn if some ranges do
+> >>>> not fit anymore.
+> >>>
+> >>> What is the motivation for relaxing this?
+> >>
+> >> U-Boot can fill the ranges in properly now, the list would be longer in
+> >> such a case and the driver would fail to probe (because the list is
+> >> longer than what the hardware can support).
+> > 
+> > Is this the U-Boot patch you refer to:
+> > 
+> > https://patchwork.ozlabs.org/patch/1129436/
+> 
+> Yes.
+> 
+> > As pci_set_region is called with the same address for PCI and CPU memory
+> > this implies there is a 1:1 mapping - therefore I don't see a need for
+> > multiple mappings for each DRAM bank. (Also if this controller has a
+> > 32 bit limitation, shouldn't this code limit the addresses before calling
+> > pci_set_region?).
+> It would certainly be helpful to know about this dma-ranges detail
+> earlier, this whole thing could've been avoided. Now all I can do is get
+> that patch reverted for the next U-Boot release.
 
-Due to hardware constraints, the size of each inbound range entry
-populated into the controller cannot be larger than the alignment
-of the entry's start address. Currently, the alignment for each
-"dma-ranges" inbound range is calculated only once for each range
-and the increment for programming the controller is also derived
-from it only once. Thus, a "dma-ranges" entry describing a memory
-at 0x48000000 and size 0x38000000 would lead to multiple controller
-entries, each 0x08000000 long.
+Yes, I can appreciate the frustration this delay has caused. Though as there
+are now more reviewers for PCI controllers on this list, future patches ought
+to get feedback sooner.
 
-This is inefficient, especially considering that by adding the size
-to the start address, the alignment increases. This patch moves the
-alignment calculation into the loop populating the controller entries,
-thus updating the alignment for each controller entry.
+> 
+> But this still leaves me with one open question -- how do I figure out
+> what to program into the PCI controller inbound windows, so that the
+> controller correctly filters inbound transfers which are targetting
+> nonexisting memory ?
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-renesas-soc@vger.kernel.org
-To: linux-pci@vger.kernel.org
----
-V2: Update on top of 1/3
-V3: No change
-V4: Rebase on next/master and dropped 2/3 patch
----
- drivers/pci/controller/pcie-rcar.c | 37 +++++++++++++++---------------
- 1 file changed, 19 insertions(+), 18 deletions(-)
+Your driver should program into the RC->CPU windows, the exact ranges
+described in the dma-ranges. Whilst also respecting the alignment and
+max-size rules your controller has (e.g. the existing upstream logic
+and also the new logic that recalculates the alignment per entry).
 
-diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
-index b2a5c3e94245..0dadccb61051 100644
---- a/drivers/pci/controller/pcie-rcar.c
-+++ b/drivers/pci/controller/pcie-rcar.c
-@@ -1030,29 +1030,30 @@ static int rcar_pcie_inbound_ranges(struct rcar_pcie *pcie,
- 	if (restype & IORESOURCE_PREFETCH)
- 		flags |= LAM_PREFETCH;
- 
--	/*
--	 * If the size of the range is larger than the alignment of the start
--	 * address, we have to use multiple entries to perform the mapping.
--	 */
--	if (cpu_addr > 0) {
--		unsigned long nr_zeros = __ffs64(cpu_addr);
--		u64 alignment = 1ULL << nr_zeros;
--
--		size = min(range->size, alignment);
--	} else {
--		size = range->size;
--	}
--	/* Hardware supports max 4GiB inbound region */
--	size = min(size, 1ULL << 32);
--
--	mask = roundup_pow_of_two(size) - 1;
--	mask &= ~0xf;
--
- 	while (cpu_addr < cpu_end) {
- 		if (idx >= MAX_NR_INBOUND_MAPS - 1) {
- 			dev_err(pcie->dev, "Failed to map inbound regions!\n");
- 			return -EINVAL;
- 		}
-+		/*
-+		 * If the size of the range is larger than the alignment of
-+		 * the start address, we have to use multiple entries to
-+		 * perform the mapping.
-+		 */
-+		if (cpu_addr > 0) {
-+			unsigned long nr_zeros = __ffs64(cpu_addr);
-+			u64 alignment = 1ULL << nr_zeros;
-+
-+			size = min(range->size, alignment);
-+		} else {
-+			size = range->size;
-+		}
-+		/* Hardware supports max 4GiB inbound region */
-+		size = min(size, 1ULL << 32);
-+
-+		mask = roundup_pow_of_two(size) - 1;
-+		mask &= ~0xf;
-+
- 		/*
- 		 * Set up 64-bit inbound regions as the range parser doesn't
- 		 * distinguish between 32 and 64-bit types.
--- 
-2.23.0
+As far as I can tell from looking at your U-Boot patch, I think I'd expect
+a single dma-range to be presented in the DT, that describes
+0:0xFFFFFFFF => 0:0xFFFFFFFF. This is because 1) I understand your
+controller is limited to 32 bits. And 2) there is a linear mapping between
+PCI and CPU addresses (given that the second and third arguments on
+pci_set_region are both the same).
 
+As you point out, this range includes lots of things that you don't
+want the RC to touch - such as non-existent memory. This is OK, when
+Linux programs addresses into the various EP's for them to DMA to host
+memory, it uses its own logic to select addresses that are in RAM, the
+purpose of the dma-range is to describe what the CPU RAM address looks
+like from the perspective of the RC (for example if the RC was wired
+with an offset such that made memory writes from the RC made to
+0x00000000 end up on the system map at 0x80000000, we need to tell Linux
+about this offset. Otherwise when a EP device driver programs a DMA
+address of a RAM buffer at 0x90000000, it'll end up targetting
+0x110000000. Thankfully our dma-range will tell Linux to apply an offset
+such that the actual address written to the EP is 0x10000000.).
+
+In your case the dma-range also serves to describe a limit to the range
+of addresses we can reach.
+
+Thanks,
+
+Andrew Murray
+
+> 
+> -- 
+> Best regards,
+> Marek Vasut
