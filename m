@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B1A7E763C
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2019 17:33:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D84BE763E
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2019 17:33:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732940AbfJ1QdG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Oct 2019 12:33:06 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41392 "EHLO
+        id S1732978AbfJ1QdI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Oct 2019 12:33:08 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37013 "EHLO
         mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730772AbfJ1QdG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Oct 2019 12:33:06 -0400
-Received: by mail-oi1-f193.google.com with SMTP id g81so6399615oib.8;
-        Mon, 28 Oct 2019 09:33:05 -0700 (PDT)
+        with ESMTP id S1730772AbfJ1QdI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Oct 2019 12:33:08 -0400
+Received: by mail-oi1-f193.google.com with SMTP id y194so1822446oie.4;
+        Mon, 28 Oct 2019 09:33:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Y8FNka9VqW+GuyHhrg3YYeRr9rwrH+ifXsb5oKqpMlo=;
-        b=quOp+Wj+X/WnwH/353nM+Hv6mTyrNSmGLT3+gh3mTwiAZnzczGMR1NaZQigTqj3VH7
-         dcVMtwC1zY2Rjrx//AvDR2jOg7+c+Dqx6QhiNgl8MaoPV8sKjmHSKNpQzlj0KC+iJhh3
-         Q2pV0fXSfdD7OkGyHwpVYuGAHM+vEGeHz4W6v+G49dP6+ZrpPdKXjx9k/1nfnshgStaK
-         cC0CP/ih+6dxfO4GBBIphed7GeJshH+/G3SI1+0ScBlY68YKFZ24t524X5y/mVlEiFOZ
-         QwfZ4tMtJ7eL+KJRL5PnYG+/nfPcDrPVQOC6xF5oBELpEpZ2kClitUkMeJnEweL0C1vs
-         dXSA==
-X-Gm-Message-State: APjAAAWwXBuTy/VQ8DkWgLrzkkUo2JW1zUN3Gp6Ki99X+/qOBrht8D0t
-        gmVI5BKqMdc5mBJDbX98QQ==
-X-Google-Smtp-Source: APXvYqyUIRHPK2FSnzpcsAJEGlsEmDJCiz/greX4s1l3COXvilcvI5rrPN21yJJxsAwhuvZFPOfz2Q==
-X-Received: by 2002:a05:6808:ab1:: with SMTP id r17mr118801oij.75.1572280385099;
-        Mon, 28 Oct 2019 09:33:05 -0700 (PDT)
+        bh=k2xpUbChHFjHyLZeTvcqjOOLjHW6EiB7rU1pguJS2Eg=;
+        b=r9TTe8iQM2Y2K+5+c1im6s2qjoTvjmw/AW67bIsWp2GoaOVQWkGQVc56XIm/UZBFKD
+         8gYg/WCflTASK9gK9D276gXmS6gCokb8yznE/svFM5p/hMhf+ziv6VhGB4okQnyGYpev
+         1doj0BJcSIFlbrvuX8QFsnz9X1tYerl6zdpUHLrY769rh0PP9h/pZw2j5Ie7XgymuMgY
+         Y/b9l5ebI4Mb14Uccncz9iIKQADozXW92mAdOU+pQzIvnLnsWA87zc5QUuA2n4l8UOxK
+         GDs+56XQtl35VUz+kVDSBOlaxyMWelv9FeEfSDqZqtvQf0DZ2HHls89rjh26lML2GHHu
+         xhig==
+X-Gm-Message-State: APjAAAXac+peCtkcOBZinMkNAKmwFw7HWbwSG+VErNnLaSBi5xKCtQXN
+        iOgTRvo0nl8d9AkAZUNEhIRdyTQ=
+X-Google-Smtp-Source: APXvYqxZ8ey0YEh8bAOZGGeVRLpA2ZABAh6GC8RKam9rkxWgH4qFebetMS5T/qIzXrvDlJgloyLHhA==
+X-Received: by 2002:a05:6808:1c7:: with SMTP id x7mr122892oic.67.1572280387584;
+        Mon, 28 Oct 2019 09:33:07 -0700 (PDT)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id e186sm354991oia.47.2019.10.28.09.33.03
+        by smtp.googlemail.com with ESMTPSA id e186sm354991oia.47.2019.10.28.09.33.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 09:33:04 -0700 (PDT)
+        Mon, 28 Oct 2019 09:33:06 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Andrew Murray <andrew.murray@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -61,9 +61,9 @@ Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Toan Le <toan@os.amperecomputing.com>,
         Tom Joseph <tjoseph@cadence.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH v3 03/25] PCI: aardvark: Use pci_parse_request_of_pci_ranges()
-Date:   Mon, 28 Oct 2019 11:32:34 -0500
-Message-Id: <20191028163256.8004-4-robh@kernel.org>
+Subject: [PATCH v3 04/25] PCI: altera: Use pci_parse_request_of_pci_ranges()
+Date:   Mon, 28 Oct 2019 11:32:35 -0500
+Message-Id: <20191028163256.8004-5-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191028163256.8004-1-robh@kernel.org>
 References: <20191028163256.8004-1-robh@kernel.org>
@@ -74,50 +74,52 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Convert aardvark to use the common pci_parse_request_of_pci_ranges().
+Convert altera host bridge to use the common
+pci_parse_request_of_pci_ranges().
 
 There's no need to assign the resources to a temporary list first. Just
 use bridge->windows directly and remove all the temporary list handling.
 
+If an I/O range is present, then it will now be mapped. It's expected
+that h/w which doesn't support I/O range will not define one.
+
+Cc: Ley Foon Tan <lftan@altera.com>
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
-Tested-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: rfi@lists.rocketboards.org
 Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
 v2:
-- Remove the temporary list
+- Remove temporary resource list
 ---
- drivers/pci/controller/pci-aardvark.c | 60 ++-------------------------
- 1 file changed, 4 insertions(+), 56 deletions(-)
+ drivers/pci/controller/pcie-altera.c | 41 ++--------------------------
+ 1 file changed, 2 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index fc0fe4d4de49..9cbeba507f0c 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -186,7 +186,6 @@
- struct advk_pcie {
- 	struct platform_device *pdev;
- 	void __iomem *base;
--	struct list_head resources;
- 	struct irq_domain *irq_domain;
- 	struct irq_chip irq_chip;
- 	struct irq_domain *msi_domain;
-@@ -910,63 +909,11 @@ static irqreturn_t advk_pcie_irq_handler(int irq, void *arg)
- 	return IRQ_HANDLED;
+diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+index d2497ca43828..ba025efeae28 100644
+--- a/drivers/pci/controller/pcie-altera.c
++++ b/drivers/pci/controller/pcie-altera.c
+@@ -92,7 +92,6 @@ struct altera_pcie {
+ 	u8			root_bus_nr;
+ 	struct irq_domain	*irq_domain;
+ 	struct resource		bus_range;
+-	struct list_head	resources;
+ 	const struct altera_pcie_data	*pcie_data;
+ };
+ 
+@@ -670,39 +669,6 @@ static void altera_pcie_isr(struct irq_desc *desc)
+ 	chained_irq_exit(chip, desc);
  }
  
--static int advk_pcie_parse_request_of_pci_ranges(struct advk_pcie *pcie)
+-static int altera_pcie_parse_request_of_pci_ranges(struct altera_pcie *pcie)
 -{
 -	int err, res_valid = 0;
 -	struct device *dev = &pcie->pdev->dev;
--	struct resource_entry *win, *tmp;
--	resource_size_t iobase;
--
--	INIT_LIST_HEAD(&pcie->resources);
+-	struct resource_entry *win;
 -
 -	err = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
--						    &pcie->resources, &iobase);
+-						    &pcie->resources, NULL);
 -	if (err)
 -		return err;
 -
@@ -125,72 +127,55 @@ index fc0fe4d4de49..9cbeba507f0c 100644
 -	if (err)
 -		goto out_release_res;
 -
--	resource_list_for_each_entry_safe(win, tmp, &pcie->resources) {
+-	resource_list_for_each_entry(win, &pcie->resources) {
 -		struct resource *res = win->res;
 -
--		switch (resource_type(res)) {
--		case IORESOURCE_IO:
--			err = devm_pci_remap_iospace(dev, res, iobase);
--			if (err) {
--				dev_warn(dev, "error %d: failed to map resource %pR\n",
--					 err, res);
--				resource_list_destroy_entry(win);
--			}
--			break;
--		case IORESOURCE_MEM:
+-		if (resource_type(res) == IORESOURCE_MEM)
 -			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
--			break;
--		case IORESOURCE_BUS:
--			pcie->root_bus_nr = res->start;
--			break;
--		}
 -	}
 -
--	if (!res_valid) {
--		dev_err(dev, "non-prefetchable memory resource required\n");
--		err = -EINVAL;
--		goto out_release_res;
--	}
+-	if (res_valid)
+-		return 0;
 -
--	return 0;
+-	dev_err(dev, "non-prefetchable memory resource required\n");
+-	err = -EINVAL;
 -
 -out_release_res:
 -	pci_free_resource_list(&pcie->resources);
 -	return err;
 -}
 -
- static int advk_pcie_probe(struct platform_device *pdev)
+ static int altera_pcie_init_irq_domain(struct altera_pcie *pcie)
  {
- 	struct device *dev = &pdev->dev;
- 	struct advk_pcie *pcie;
--	struct resource *res;
-+	struct resource *res, *bus;
- 	struct pci_host_bridge *bridge;
- 	int ret, irq;
- 
-@@ -991,11 +938,13 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 	struct device *dev = &pcie->pdev->dev;
+@@ -833,9 +799,8 @@ static int altera_pcie_probe(struct platform_device *pdev)
  		return ret;
  	}
  
--	ret = advk_pcie_parse_request_of_pci_ranges(pcie);
+-	INIT_LIST_HEAD(&pcie->resources);
+-
+-	ret = altera_pcie_parse_request_of_pci_ranges(pcie);
 +	ret = pci_parse_request_of_pci_ranges(dev, &bridge->windows,
-+					      &bus);
++					      NULL);
  	if (ret) {
- 		dev_err(dev, "Failed to parse resources\n");
+ 		dev_err(dev, "Failed add resources\n");
  		return ret;
- 	}
-+	pcie->root_bus_nr = bus->start;
- 
- 	advk_pcie_setup_hw(pcie);
- 
-@@ -1014,7 +963,6 @@ static int advk_pcie_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+@@ -853,7 +818,6 @@ static int altera_pcie_probe(struct platform_device *pdev)
+ 	cra_writel(pcie, P2A_INT_ENA_ALL, P2A_INT_ENABLE);
+ 	altera_pcie_host_init(pcie);
  
 -	list_splice_init(&pcie->resources, &bridge->windows);
  	bridge->dev.parent = dev;
  	bridge->sysdata = pcie;
- 	bridge->busnr = 0;
+ 	bridge->busnr = pcie->root_bus_nr;
+@@ -884,7 +848,6 @@ static int altera_pcie_remove(struct platform_device *pdev)
+ 
+ 	pci_stop_root_bus(bridge->bus);
+ 	pci_remove_root_bus(bridge->bus);
+-	pci_free_resource_list(&pcie->resources);
+ 	altera_pcie_irq_teardown(pcie);
+ 
+ 	return 0;
 -- 
 2.20.1
 
