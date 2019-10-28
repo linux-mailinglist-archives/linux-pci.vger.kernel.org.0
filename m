@@ -2,157 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D863E712D
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2019 13:18:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0286CE71AE
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2019 13:42:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389007AbfJ1MSC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Oct 2019 08:18:02 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:50736 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389006AbfJ1MSC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Oct 2019 08:18:02 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191028121800epoutp04982ace1edd9ae41d88d432607b8f7a7a~RzsKo3i4H1123811238epoutp04z
-        for <linux-pci@vger.kernel.org>; Mon, 28 Oct 2019 12:18:00 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191028121800epoutp04982ace1edd9ae41d88d432607b8f7a7a~RzsKo3i4H1123811238epoutp04z
+        id S2389203AbfJ1Mmo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Oct 2019 08:42:44 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:25183 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389201AbfJ1Mmo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Oct 2019 08:42:44 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191028124239epoutp026a8c3e168291eae748a9a94066402a47~R0BrybRF11285612856epoutp02b
+        for <linux-pci@vger.kernel.org>; Mon, 28 Oct 2019 12:42:39 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191028124239epoutp026a8c3e168291eae748a9a94066402a47~R0BrybRF11285612856epoutp02b
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1572265080;
-        bh=0LFmfyIwGTeUHxbQOwSG3EtppNsBrL7xPrgGbm4gJ3U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HraHgELTectkUt24BWos4igHtbDeAGUPYEe9aO1zu7YuF2BlSSvkd9XjONgWgnERW
-         oWHukiKIubdyEe9QV192yy56PqE6zXn2hQPCoJ2S0H3TeGHyzZPiQaT204Wteq/TmV
-         e+dMxyCHDGXi3DWgFDt38UAFSAUEtX7pw/vwHADY=
+        s=mail20170921; t=1572266559;
+        bh=HiuklP0cYH3jIvujolcAfEAhpwjfw+PqhX1kaOGJoFE=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=cIMk0XHUdzsA9aRaijkUMmrR//RkvQQo8RJQULsJ08zZFkUHkDF7wofFWoNm5nEJy
+         IeZuATC01O7CpnsYY39Us8s4jNyZJwZCt78XEeGqlB+VlO7NCgfhaQ2nRCkNijnhIM
+         ucqp0ZgodgmbLg7U9PnCF6BhES5wZuuog+yKL5bI=
 Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20191028121759epcas5p24cdfa929093897d184248c0411080847~RzsJe6nDJ1905819058epcas5p29;
-        Mon, 28 Oct 2019 12:17:59 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20191028124238epcas5p38ba9fff1728d661c230ec319ca46cc0e~R0BrP_r_r1784817848epcas5p3U;
+        Mon, 28 Oct 2019 12:42:38 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
         epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AF.CD.20245.77CD6BD5; Mon, 28 Oct 2019 21:17:59 +0900 (KST)
+        37.7F.20245.E32E6BD5; Mon, 28 Oct 2019 21:42:38 +0900 (KST)
 Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191028121758epcas5p2dda6d0842be32bcab2e6025fac1f3e78~RzsI_jMAw1905819058epcas5p28;
-        Mon, 28 Oct 2019 12:17:58 +0000 (GMT)
+        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+        20191028124238epcas5p451c77e6f4b37e4db69c87f839bd25574~R0Bq2QFnG0725707257epcas5p4h;
+        Mon, 28 Oct 2019 12:42:38 +0000 (GMT)
 Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
         epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191028121758epsmtrp25c2fed104ab163f2955307216c65aa6e~RzsI924o51489714897epsmtrp2f;
-        Mon, 28 Oct 2019 12:17:58 +0000 (GMT)
-X-AuditID: b6c32a4b-fa1ff70000014f15-b7-5db6dc77cfc9
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        20191028124238epsmtrp249e1c59749d9de0b4acbd9f8d3bfe704~R0Bq1kGyA2925729257epsmtrp2Z;
+        Mon, 28 Oct 2019 12:42:38 +0000 (GMT)
+X-AuditID: b6c32a4b-fa1ff70000014f15-34-5db6e23eb4b1
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
         epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        84.89.24756.67CD6BD5; Mon, 28 Oct 2019 21:17:58 +0900 (KST)
+        80.0A.24756.D32E6BD5; Mon, 28 Oct 2019 21:42:37 +0900 (KST)
 Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
-        [107.108.83.125]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191028121756epsmtip155a5e7347bd6cdbf346af49bf49b989c~RzsHZtJH72323023230epsmtip1W;
-        Mon, 28 Oct 2019 12:17:56 +0000 (GMT)
+        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191028124236epsmtip2ca97c20a4519b88e7a6b1d9e1a9dc300~R0BpnL7YO0999809998epsmtip2l;
+        Mon, 28 Oct 2019 12:42:36 +0000 (GMT)
 From:   Anvesh Salveru <anvesh.s@samsung.com>
 To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     bhelgaas@google.com, gustavo.pimentel@synopsys.com,
-        jingoohan1@gmail.com, pankaj.dubey@samsung.com,
-        Anvesh Salveru <anvesh.s@samsung.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Subject: [PATCH v2 2/2] PCI: dwc: Add support to handle ZRX-DC Compliant
- PHYs
-Date:   Mon, 28 Oct 2019 17:46:28 +0530
-Message-Id: <1572264988-17455-3-git-send-email-anvesh.s@samsung.com>
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+Cc:     pankaj.dubey@samsung.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, Anvesh Salveru <anvesh.s@samsung.com>
+Subject: [PATCH 0/2] Add support for ZRX-DC phy property
+Date:   Mon, 28 Oct 2019 18:12:18 +0530
+Message-Id: <1572266540-17626-1-git-send-email-anvesh.s@samsung.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572264988-17455-1-git-send-email-anvesh.s@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSa0hTYRjHeXeuzpaHKfhk6IehhIZamXSgMimDkUGFn4osRx5UmtvYdGpG
-        SJY5aSYaoqbO7rrMYpqZ4m2pq3ALnRLi7GZlidZSsXRKNc+kb7////k/F15eGhP/wgPoNEUG
-        p1bI5BJSiLc+Dw0Nz3K0Jm7rasbY/D9PCdbafpNg71xMZQ19NoJtnyik2PqFSoq1t1eTrLXW
-        QrIzrq8Ue+vJAhUrlDbWNiLps6oJSlpnypQWtxiRtKV7HknnTUFHyRPCPcmcPE3LqSNjkoSp
-        Nb39AtWgOHvu2k+Uh/KZIuRFA7MT9DNDZBES0mKmA4F1shjjxRyCweU6j1hEYP9RT663vPk4
-        4il0InCUmxAvLglgpqIFuVMksxWW+jupIkTTfsxxsOQR7gzGfEMwPmsj3Blf5gh0X5laY5wJ
-        gTqbGXeziImDlQanZ1sQjNl0mJu9mIPgshrXjgWmjYRxyw2cD8XBbF+Zh31h2tJC8RwA8987
-        PYOUoJ+46/HPw/WJQsTzPugZqcbdh2JMKDxqj3TbGLMR9K5PArcNjAgKC8Q8SqCgMpdvBLht
-        GMN4lkKNYZjgn6ECwe8P5WQJCqz6P7QOISPaxKk06SmcJloVpeCyIjSydE2mIiXijDLdhNa+
-        Q1h8GzLZDpsRQyPJBlGJvTVRTMi0mpx0MwIak/iJhgb/WaJkWc45Tq08rc6Ucxoz2kzjEn9R
-        KTF6UsykyDK4sxyn4tTrVQHtFZCHyqhdPkpqsQkTiQq7wwNXUx4v08PNS00vvLPjO4yG+2OO
-        steE7EFT76rqgs8pXe3xpsCrjuD9PrFbFvZG9VwewHu/vMOnX4Ycs/q/1UU5lVPCV95yY/lA
-        aXxSjK4qdyVx2nXvkLOhK/pAQvLD8NH3I58NO+yTAq0+2Lk7IkGrkOCaVNn2MEytkf0F6PY/
-        PAoDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKLMWRmVeSWpSXmKPExsWy7bCSnG7ZnW2xBhtmSVs0/9/OanF210JW
-        iyVNGRbzj5xjtdh1t4PdYsWXmewWl3fNYbM4O+84m8Wb3y/YLRZt/cLuwOWxZt4aRo+ds+6y
-        eyzYVOrRt2UVo8eW/Z8ZPT5vkgtgi+KySUnNySxLLdK3S+DKmHvwKFPBGaGKT/0fGRsYmwW6
-        GDk5JARMJK4/usLcxcjFISSwm1Fi1bUzjBAJCYkve7+yQdjCEiv/PWcHsYUEmpgkHm0KBrHZ
-        BLQlfh7dCxTn4BARiJbY8EoIZA6zwHtGiZmXn4DNERbwlZi34TfYHBYBVYkF5w6xgNi8Ai4S
-        f1Z+gJovJ3HzXCcziM0p4Crx++wqNohdLhIrzu5gncDIt4CRYRWjZGpBcW56brFhgWFearle
-        cWJucWleul5yfu4mRnBgamnuYLy8JP4QowAHoxIP74ur22KFWBPLiitzDzFKcDArifBePAMU
-        4k1JrKxKLcqPLyrNSS0+xCjNwaIkzvs071ikkEB6YklqdmpqQWoRTJaJg1OqgbFcn4EtcGF0
-        Bm/X7BwmWVm33QVbPVPbtzZpPeNNOtb+/z7zoy69J/qvr3Ym3io70JwjnNbSuV4oXn3usXe2
-        tuJeFt7n5RRMJuyuOLHx2qvJa/RXPpx++jCXyto4mU2zPNb+WsRb0rgs+NFn7XThWQHv+WZY
-        8jjEWinmMSo0lC47syblz7nTOkosxRmJhlrMRcWJALwWJz1IAgAA
-X-CMS-MailID: 20191028121758epcas5p2dda6d0842be32bcab2e6025fac1f3e78
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRmVeSWpSXmKPExsWy7bCmuq7do22xBk3nZS3O7lrIajH/yDlW
+        i5ZZi1gsLu+aw2Zxdt5xNovOL7PYLBZt/cJu8XPXPBYHDo+ds+6ye/Q2v2Pz6NuyitHj8ya5
+        AJYoLpuU1JzMstQifbsErozTV7ewFvxlqVj2ezJbA2MPSxcjJ4eEgInEg1l3gWwuDiGB3YwS
+        aw/cZIZwPjFKrGpogXK+MUpc67/DCNOyZ95KVojEXkaJHz0HoapamCSOb2sAq2IT0Jb4eXQv
+        O4gtIlAmMavpClicWaBUomv+RDYQW1jAQmL9gnYwm0VAVaKhbRYTiM0r4CKx/t52VohtchI3
+        z3UyQ9h/WSW+zEmCsF0k7l6fBxUXlnh1fAs7hC0l8fndXjYIO1+i9+5SqHiNxJS7HVAf2Esc
+        uDIH6GkOoHs0Jdbv0oc4jU+i9/cTJpCwhACvREebEISpJNE2sxqiUUJi8fybUEs9JO6d3sgG
+        UiIkECtx+A/3BEaZWQgjFzAyrmKUTC0ozk1PLTYtMM5LLdcrTswtLs1L10vOz93ECI5tLe8d
+        jJvO+RxiFOBgVOLhnXB5W6wQa2JZcWXuIUYJDmYlEd6LZ4BCvCmJlVWpRfnxRaU5qcWHGKU5
+        WJTEeSexXo0REkhPLEnNTk0tSC2CyTJxcEo1MFbtyPm4hClrRc1SSWt/q/D7Cs+M895OvyoQ
+        t/PzoolVi59EHpet3dx0sWrarTPdTRs85cI+rdpxMm3lH4tEldzC5sK6E76FBVu/isTF5i3w
+        l2Nvrjnmceh38O8F73tsRK4t5dRMfH1OMzFu5hpPKfbrP2skTq6249HS3uF/2/DAytYTXmf2
+        H1diKc5INNRiLipOBADSj04G6QIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmluLIzCtJLcpLzFFi42LZdlhJXtfu0bZYg0eCFmd3LWS1mH/kHKtF
+        y6xFLBaXd81hszg77zibReeXWWwWi7Z+Ybf4uWseiwOHx85Zd9k9epvfsXn0bVnF6PF5k1wA
+        SxSXTUpqTmZZapG+XQJXxumrW1gL/rJULPs9ma2BsYeli5GTQ0LARGLPvJWsXYxcHEICuxkl
+        1v16zwaRkJD4svcrlC0ssfLfc3aIoiYmiZYf/8ESbALaEj+P7mUHsUUEqiQOdPSBTWUWqJS4
+        3vGQCcQWFrCQWL+gHayeRUBVoqFtFlicV8BFYv297awQC+Qkbp7rZJ7AyLOAkWEVo2RqQXFu
+        em6xYYFhXmq5XnFibnFpXrpecn7uJkZwEGlp7mC8vCT+EKMAB6MSD++Lq9tihVgTy4orcw8x
+        SnAwK4nwXjwDFOJNSaysSi3Kjy8qzUktPsQozcGiJM77NO9YpJBAemJJanZqakFqEUyWiYNT
+        qoFxmpLplm+7PIsUo72a5/Y25DQf1HpV7ZG9uCR90l3j2qWO8QzqWe1bJJeJVJoZRi9kntTl
+        cbb3YEnSWftQ1432mfYOAiu3ePLnsvPkq/0pdU171xrdJLwzu2Ceicj2NVl1TbKXl8zUu/5u
+        5q1TcwLs1PuVeJwad//PaHvs2XJmneraxV8UfiuxFGckGmoxFxUnAgAmgzw/HgIAAA==
+X-CMS-MailID: 20191028124238epcas5p451c77e6f4b37e4db69c87f839bd25574
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 CMS-TYPE: 105P
-X-CMS-RootMailID: 20191028121758epcas5p2dda6d0842be32bcab2e6025fac1f3e78
-References: <1572264988-17455-1-git-send-email-anvesh.s@samsung.com>
-        <CGME20191028121758epcas5p2dda6d0842be32bcab2e6025fac1f3e78@epcas5p2.samsung.com>
+X-CMS-RootMailID: 20191028124238epcas5p451c77e6f4b37e4db69c87f839bd25574
+References: <CGME20191028124238epcas5p451c77e6f4b37e4db69c87f839bd25574@epcas5p4.samsung.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Many platforms use DesignWare controller but the PHY can be different in
-different platforms. If the PHY is compliant to the ZRX-DC specification
-it helps lower power consumption during power states.
+DesignWare controller driver provides the support to handle the PHYs which
+are compliant to ZRX-DC specification based on "snps,phy-zrxdc-compliant"
+DT property. So, add "snps,phy-zrxdc-compliant" property in tegra pcie
+controller DT nodes and remove platform specific code from platform driver.
 
-If current data rate is 8.0 GT/s or higher and PHY is not compliant to
-ZRX-DC specification, then after every 100ms link should transition to
-recovery state during the low power states.
+Anvesh Salveru (2):
+  PCI: tegra: Remove support for ZRX-DC compliant PHY from platform
+    driver
+  arm64: tegra: Add support for ZRX-DC phy property
 
-DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
-GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi   | 6 ++++++
+ drivers/pci/controller/dwc/pcie-tegra194.c | 4 ----
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-Platforms with ZRX-DC compliant PHY can set "snps,phy-zrxdc-compliant"
-property in controller DT node to specify this property to the controller.
-
-CC: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
-Change in v2:
- - trivial change in patch description
-
- drivers/pci/controller/dwc/pcie-designware.c | 7 +++++++
- drivers/pci/controller/dwc/pcie-designware.h | 3 +++
- 2 files changed, 10 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 820488dfeaed..6560d9f765d7 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -556,4 +556,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
- 		       PCIE_PL_CHK_REG_CHK_REG_START;
- 		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
- 	}
-+
-+	if (of_property_read_bool(np, "snps,phy-zrxdc-compliant")) {
-+		val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
-+		val &= ~PORT_LOGIC_GEN3_ZRXDC_NONCOMPL;
-+		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
-+	}
-+
- }
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 5a18e94e52c8..427a55ec43c6 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -60,6 +60,9 @@
- #define PCIE_MSI_INTR0_MASK		0x82C
- #define PCIE_MSI_INTR0_STATUS		0x830
- 
-+#define PCIE_PORT_GEN3_RELATED		0x890
-+#define PORT_LOGIC_GEN3_ZRXDC_NONCOMPL		BIT(0)
-+
- #define PCIE_ATU_VIEWPORT		0x900
- #define PCIE_ATU_REGION_INBOUND		BIT(31)
- #define PCIE_ATU_REGION_OUTBOUND	0
 -- 
 2.17.1
 
