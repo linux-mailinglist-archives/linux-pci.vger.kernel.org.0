@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A434E766C
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2019 17:33:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23B0FE766F
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2019 17:34:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391050AbfJ1Qd5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Oct 2019 12:33:57 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36193 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729420AbfJ1Qd5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Oct 2019 12:33:57 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c7so7185813otm.3;
-        Mon, 28 Oct 2019 09:33:56 -0700 (PDT)
+        id S2391052AbfJ1Qd7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Oct 2019 12:33:59 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33882 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729420AbfJ1Qd7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Oct 2019 12:33:59 -0400
+Received: by mail-oi1-f194.google.com with SMTP id 83so6434460oii.1;
+        Mon, 28 Oct 2019 09:33:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DUL+m3NhP58NWVgq+Qieb9x0OfdgTK/3u8ZTlPRNpf8=;
-        b=M5zu+zDBcywzsIOBcaU3SNc1/CPj2AI/W+QjLLUHVmEHebApspAAhAis44m5lLE+yF
-         jvRCYd93Q4q92NvKUtNko/rT96lWp+SSMNylaNL6j+GnW0tZH4TGMN5Q46z2+p+LVl0I
-         PT/ZdCDnDjK7oL/KNzh2w1B0fQg6QkbTs8gb7HUhodvGNTnwfpDsvV+m+8r+h+VO7wXF
-         AfCJDfqKXM9s0cn4naKLK3puXYi6kkCbENDeQhvQeLbAknZADw2lw34y5vht3PoFux/S
-         OHw0Kwu/uAAmjyQyJgV226a1nTeSth0brKagKWU+SSTEP9mJvrcTUcw8X2ddz3Ij7RLD
-         pk1Q==
-X-Gm-Message-State: APjAAAVsUF3r2GSEpueB0DFsfH5Z/urFSbziOsg2vDIuUgpnegqyjgET
-        cczoGC/AfE9TzWJUdqfpfg==
-X-Google-Smtp-Source: APXvYqyPxtg2swpf530JxdQcsdiawBZNYu+uT+14bkBsB8TaDWNTfBY9ewk7vPf38ETbIHCmQW7g2w==
-X-Received: by 2002:a9d:1c9c:: with SMTP id l28mr8888143ota.10.1572280435975;
-        Mon, 28 Oct 2019 09:33:55 -0700 (PDT)
+        bh=KRER0q+mlfhxTDAY0c1+VI59pLZZnQ9VLJY13cVFl4Y=;
+        b=AlYJFjD45NJ+DWIZmKmCKB1gBxXnUmx/E0MzTNZiBSwPn9RVZJVEw8+zi+8nXyyVRj
+         mbqqmK3it5406RA4kPIMQMe7E6WArqQq8GsvXFlDxTB5nbbnVjH4x3vai+5McknCgi45
+         9dZafeCfSFShmaLnQXdUi9/Pl9G8+SlMPd7/KSIqupK/kmhWox+TmJq1Agvi8KSeK96d
+         6GkpxJncPFTOKMSi3Y1FI2Hh7C+P1oz1usS3wSXpzCieni0j5KD/eNUQeGHRrBK+xBHy
+         /7yHJfXhfzW9E33eAQGyd6LoavSjcifYEWRVk7RZRTRT1BkCoGXEji7jLPN/LPAaNWyc
+         dFaw==
+X-Gm-Message-State: APjAAAXBa502rxFGf0bzqLBKzkS20SxNMVYJcq2MaIb/3g26IRSZP3f6
+        tQcTftaN9bncpkm0qBqH0A==
+X-Google-Smtp-Source: APXvYqzT0VPnOPdPwF3Vz9tQT4AF71pvOJiHKIpOHt2Q3w8psOl69/xNpsNI3ONaaYbY/akHURqGlg==
+X-Received: by 2002:a05:6808:5cf:: with SMTP id d15mr132310oij.144.1572280437917;
+        Mon, 28 Oct 2019 09:33:57 -0700 (PDT)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id e186sm354991oia.47.2019.10.28.09.33.54
+        by smtp.googlemail.com with ESMTPSA id e186sm354991oia.47.2019.10.28.09.33.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 09:33:55 -0700 (PDT)
+        Mon, 28 Oct 2019 09:33:57 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Andrew Murray <andrew.murray@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -61,9 +61,9 @@ Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Toan Le <toan@os.amperecomputing.com>,
         Tom Joseph <tjoseph@cadence.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH v3 23/25] PCI: iproc: Use inbound resources for setup
-Date:   Mon, 28 Oct 2019 11:32:54 -0500
-Message-Id: <20191028163256.8004-24-robh@kernel.org>
+Subject: [PATCH v3 24/25] PCI: rcar: Use inbound resources for setup
+Date:   Mon, 28 Oct 2019 11:32:55 -0500
+Message-Id: <20191028163256.8004-25-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191028163256.8004-1-robh@kernel.org>
 References: <20191028163256.8004-1-robh@kernel.org>
@@ -75,140 +75,102 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Now that the helpers provide the inbound resources in the host bridge
-'dma_ranges' resource list, convert Broadcom iProc host bridge to use
-the resource list to setup the inbound addresses.
+'dma_ranges' resource list, convert Renesas R-Car PCIe host bridge to
+use the resource list to setup the inbound addresses.
 
+Cc: Simon Horman <horms@verge.net.au>
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Ray Jui <rjui@broadcom.com>
-Cc: Scott Branden <sbranden@broadcom.com>
-Cc: bcm-kernel-feedback-list@broadcom.com
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-v2:
- - Fix iproc_pcie_paxb_v2_msi_steer() to use resource_entry
----
- drivers/pci/controller/pcie-iproc.c | 77 +++++++----------------------
- 1 file changed, 17 insertions(+), 60 deletions(-)
+ drivers/pci/controller/pcie-rcar.c | 45 +++++++++++-------------------
+ 1 file changed, 16 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-index 223335ee791a..f4d78e66846e 100644
---- a/drivers/pci/controller/pcie-iproc.c
-+++ b/drivers/pci/controller/pcie-iproc.c
-@@ -1122,15 +1122,16 @@ static int iproc_pcie_ib_write(struct iproc_pcie *pcie, int region_idx,
+diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
+index b8d6e86a5539..453c931aaf77 100644
+--- a/drivers/pci/controller/pcie-rcar.c
++++ b/drivers/pci/controller/pcie-rcar.c
+@@ -1014,16 +1014,16 @@ static int rcar_pcie_get_resources(struct rcar_pcie *pcie)
  }
  
- static int iproc_pcie_setup_ib(struct iproc_pcie *pcie,
--			       struct of_pci_range *range,
-+			       struct resource_entry *entry,
- 			       enum iproc_pcie_ib_map_type type)
+ static int rcar_pcie_inbound_ranges(struct rcar_pcie *pcie,
+-				    struct of_pci_range *range,
++				    struct resource_entry *entry,
+ 				    int *index)
  {
- 	struct device *dev = pcie->dev;
- 	struct iproc_pcie_ib *ib = &pcie->ib;
- 	int ret;
- 	unsigned int region_idx, size_idx;
--	u64 axi_addr = range->cpu_addr, pci_addr = range->pci_addr;
--	resource_size_t size = range->size;
-+	u64 axi_addr = entry->res->start;
+-	u64 restype = range->flags;
+-	u64 cpu_addr = range->cpu_addr;
+-	u64 cpu_end = range->cpu_addr + range->size;
+-	u64 pci_addr = range->pci_addr;
++	u64 restype = entry->res->flags;
++	u64 cpu_addr = entry->res->start;
++	u64 cpu_end = entry->res->end;
 +	u64 pci_addr = entry->res->start - entry->offset;
-+	resource_size_t size = resource_size(entry->res);
+ 	u32 flags = LAM_64BIT | LAR_ENABLE;
+ 	u64 mask;
+-	u64 size;
++	u64 size = resource_size(entry->res);
+ 	int idx = *index;
  
- 	/* iterate through all IARR mapping regions */
- 	for (region_idx = 0; region_idx < ib->nr_regions; region_idx++) {
-@@ -1182,66 +1183,19 @@ static int iproc_pcie_setup_ib(struct iproc_pcie *pcie,
- 	return ret;
+ 	if (restype & IORESOURCE_PREFETCH)
+@@ -1037,9 +1037,7 @@ static int rcar_pcie_inbound_ranges(struct rcar_pcie *pcie,
+ 		unsigned long nr_zeros = __ffs64(cpu_addr);
+ 		u64 alignment = 1ULL << nr_zeros;
+ 
+-		size = min(range->size, alignment);
+-	} else {
+-		size = range->size;
++		size = min(size, alignment);
+ 	}
+ 	/* Hardware supports max 4GiB inbound region */
+ 	size = min(size, 1ULL << 32);
+@@ -1078,30 +1076,19 @@ static int rcar_pcie_inbound_ranges(struct rcar_pcie *pcie,
+ 	return 0;
  }
  
--static int iproc_pcie_add_dma_range(struct device *dev,
--				    struct list_head *resources,
--				    struct of_pci_range *range)
--{
--	struct resource *res;
--	struct resource_entry *entry, *tmp;
--	struct list_head *head = resources;
--
--	res = devm_kzalloc(dev, sizeof(struct resource), GFP_KERNEL);
--	if (!res)
--		return -ENOMEM;
--
--	resource_list_for_each_entry(tmp, resources) {
--		if (tmp->res->start < range->cpu_addr)
--			head = &tmp->node;
--	}
--
--	res->start = range->cpu_addr;
--	res->end = res->start + range->size - 1;
--
--	entry = resource_list_create_entry(res, 0);
--	if (!entry)
--		return -ENOMEM;
--
--	entry->offset = res->start - range->cpu_addr;
--	resource_list_add(entry, head);
--
--	return 0;
--}
--
- static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
+-static int rcar_pcie_parse_map_dma_ranges(struct rcar_pcie *pcie,
+-					  struct device_node *np)
++static int rcar_pcie_parse_map_dma_ranges(struct rcar_pcie *pcie)
  {
- 	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
 -	struct of_pci_range range;
 -	struct of_pci_range_parser parser;
--	int ret;
--	LIST_HEAD(resources);
+-	int index = 0;
+-	int err;
+-
+-	if (of_pci_dma_range_parser_init(&parser, np))
+-		return -EINVAL;
 -
 -	/* Get the dma-ranges from DT */
--	ret = of_pci_dma_range_parser_init(&parser, pcie->dev->of_node);
--	if (ret)
--		return ret;
-+	struct resource_entry *entry;
-+	int ret = 0;
- 
 -	for_each_of_pci_range(&parser, &range) {
--		ret = iproc_pcie_add_dma_range(pcie->dev,
--					       &resources,
--					       &range);
--		if (ret)
--			goto out;
-+	resource_list_for_each_entry(entry, &host->dma_ranges) {
- 		/* Each range entry corresponds to an inbound mapping region */
--		ret = iproc_pcie_setup_ib(pcie, &range, IPROC_PCIE_IB_MAP_MEM);
-+		ret = iproc_pcie_setup_ib(pcie, entry, IPROC_PCIE_IB_MAP_MEM);
- 		if (ret)
--			goto out;
+-		u64 end = range.cpu_addr + range.size - 1;
+-
+-		dev_dbg(pcie->dev, "0x%08x 0x%016llx..0x%016llx -> 0x%016llx\n",
+-			range.flags, range.cpu_addr, end, range.pci_addr);
++	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
++	struct resource_entry *entry;
++	int index = 0, err = 0;
+ 
+-		err = rcar_pcie_inbound_ranges(pcie, &range, &index);
++	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
++		err = rcar_pcie_inbound_ranges(pcie, entry, &index);
+ 		if (err)
+-			return err;
 +			break;
  	}
  
--	list_splice_init(&resources, &host->dma_ranges);
--
 -	return 0;
--out:
--	pci_free_resource_list(&resources);
- 	return ret;
++	return err;
  }
  
-@@ -1276,13 +1230,16 @@ static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
- static int iproc_pcie_paxb_v2_msi_steer(struct iproc_pcie *pcie, u64 msi_addr)
- {
- 	int ret;
--	struct of_pci_range range;
-+	struct resource_entry entry;
-+
-+	memset(&entry, 0, sizeof(entry));
-+	entry.res = &entry.__res;
+ static const struct of_device_id rcar_pcie_of_match[] = {
+@@ -1162,7 +1149,7 @@ static int rcar_pcie_probe(struct platform_device *pdev)
+ 		goto err_unmap_msi_irqs;
+ 	}
  
--	memset(&range, 0, sizeof(range));
--	range.size = SZ_32K;
--	range.pci_addr = range.cpu_addr = msi_addr & ~(range.size - 1);
-+	msi_addr &= ~(SZ_32K - 1);
-+	entry.res->start = msi_addr;
-+	entry.res->end = msi_addr + SZ_32K - 1;
- 
--	ret = iproc_pcie_setup_ib(pcie, &range, IPROC_PCIE_IB_MAP_IO);
-+	ret = iproc_pcie_setup_ib(pcie, &entry, IPROC_PCIE_IB_MAP_IO);
- 	return ret;
- }
+-	err = rcar_pcie_parse_map_dma_ranges(pcie, dev->of_node);
++	err = rcar_pcie_parse_map_dma_ranges(pcie);
+ 	if (err)
+ 		goto err_clk_disable;
  
 -- 
 2.20.1
