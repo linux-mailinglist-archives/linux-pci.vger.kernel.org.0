@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 053FEE7642
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2019 17:33:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3EDEE7644
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2019 17:33:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732984AbfJ1QdO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Oct 2019 12:33:14 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37294 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730772AbfJ1QdO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Oct 2019 12:33:14 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 53so7175096otv.4;
-        Mon, 28 Oct 2019 09:33:13 -0700 (PDT)
+        id S1732990AbfJ1QdQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Oct 2019 12:33:16 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:46655 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730772AbfJ1QdQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Oct 2019 12:33:16 -0400
+Received: by mail-oi1-f194.google.com with SMTP id c2so6374691oic.13;
+        Mon, 28 Oct 2019 09:33:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=t7u4vSL0DP54jAwq/M7JASt/IhO5e5uqSLWCi0kiWfU=;
-        b=aTLWCJBDyEOPqGoHFBk1nLnQBtxRoq733j7APdUJbg8p+vKnoyoe4UvnQBjIsF5Ogo
-         mMV74RBzWv/UMvkBvAZr4PjUnNZ3W3OMieDhqMaCf+Z2p4l6eDskA2xexyyMIlr+XNbl
-         39I6kOOwlWwYF67IHeO11tdVDpLXhxRpam5TdOIgS0BH6t+dwGA6oY5Tbsba9q+6WXeP
-         m9LMyNzFhyl8JAPTS5ktVct61yHUto7DP5GhMAZO8rtXrqlagS8/KSKThiCnLJLcKOPM
-         Xsk81uTZmsf/Jp8Nddsa5A4EFOQgtQ6WdNu2wFMRigy/Bkz6vaD6WyvrSRwi2wIWD1J1
-         F1/g==
-X-Gm-Message-State: APjAAAWU38S4wipN5X6j7ZInSXC1B/sG6udy9S86q7lGmkGqgD2yB4wO
-        JsqbbMfky89i8sZCdgx3zA==
-X-Google-Smtp-Source: APXvYqySAp0eSGQqHJLCI+ocWp45cw+8XpbJ73Hq5r/2RLRIlfj8dRzgqT5GxLaG1O+5Nr5aFn7huw==
-X-Received: by 2002:a9d:12f0:: with SMTP id g103mr8868885otg.219.1572280392987;
-        Mon, 28 Oct 2019 09:33:12 -0700 (PDT)
+        bh=YIfpHXHDoS6BpoLM/5OtgGD1veZ0kiS1z+l67O5mhv0=;
+        b=stzsuHe0hPWnVaIAsKn2V+F0fPyQG0OsT9ESdLuEXD9EvkfFGrMp1tExIVWfoHsuyS
+         Cz6Rsqr37WOMy7+FA0/3dlpQgegXOobsx1Kb33iUKQmBuuxxWVaLoSGMszthaF3vdD6f
+         aG2ombLVT4xf1PXRCDacLMvGadfIT2zOt3wVyHvJ0MFrGhsa/TJqaeM2a3kuozahWrYa
+         nHtS/f+qntrT9PSjUpoSrKyjjxIlPE/bvqKLL0KOt5aDUKJwPHBRgLJfAb3RtteS/rNb
+         BPB2WPeGkMv0wRk7F1d6DOcMsg+tW6axxB4yQHcJ6pRbOy7CLwD4/KPlPM+8TtlPBOSO
+         BkPw==
+X-Gm-Message-State: APjAAAVeuMpXhuq0F9ibUKqJif9vaOK+AAhQQfIGQ3ZLZEy43ony2jT0
+        uNHZkxFhPCuH2ftFoXg+hQ==
+X-Google-Smtp-Source: APXvYqwiII4tT6mUV/WZPdOOYCJP3razv09fHNkFp9JLAVkZPyu7pCRKafjRWtkftQVgR7SzFninKQ==
+X-Received: by 2002:aca:494e:: with SMTP id w75mr95048oia.159.1572280394774;
+        Mon, 28 Oct 2019 09:33:14 -0700 (PDT)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id e186sm354991oia.47.2019.10.28.09.33.10
+        by smtp.googlemail.com with ESMTPSA id e186sm354991oia.47.2019.10.28.09.33.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 09:33:12 -0700 (PDT)
+        Mon, 28 Oct 2019 09:33:14 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Andrew Murray <andrew.murray@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -61,9 +61,9 @@ Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Toan Le <toan@os.amperecomputing.com>,
         Tom Joseph <tjoseph@cadence.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH v3 06/25] PCI: faraday: Use pci_parse_request_of_pci_ranges()
-Date:   Mon, 28 Oct 2019 11:32:37 -0500
-Message-Id: <20191028163256.8004-7-robh@kernel.org>
+Subject: [PATCH v3 07/25] PCI: iproc: Use pci_parse_request_of_pci_ranges()
+Date:   Mon, 28 Oct 2019 11:32:38 -0500
+Message-Id: <20191028163256.8004-8-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191028163256.8004-1-robh@kernel.org>
 References: <20191028163256.8004-1-robh@kernel.org>
@@ -74,118 +74,82 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Convert the Faraday host bridge to use the common
+Convert the iProc host bridge to use the common
 pci_parse_request_of_pci_ranges().
 
-There's no need to assign the resources to a temporary list first. Just
-use bridge->windows directly and remove all the temporary list handling.
+There's no need to assign the resources to a temporary list, so just use
+bridge->windows directly.
 
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Ray Jui <rjui@broadcom.com>
+Cc: Scott Branden <sbranden@broadcom.com>
+Cc: bcm-kernel-feedback-list@broadcom.com
 Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-v2:
- - Remove temporary resource list
----
- drivers/pci/controller/pci-ftpci100.c | 51 ++++++---------------------
- 1 file changed, 11 insertions(+), 40 deletions(-)
+ drivers/pci/controller/pcie-iproc-platform.c | 8 ++------
+ drivers/pci/controller/pcie-iproc.c          | 5 -----
+ 2 files changed, 2 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-ftpci100.c b/drivers/pci/controller/pci-ftpci100.c
-index bf5ece5d9291..75603348b88a 100644
---- a/drivers/pci/controller/pci-ftpci100.c
-+++ b/drivers/pci/controller/pci-ftpci100.c
-@@ -430,10 +430,8 @@ static int faraday_pci_probe(struct platform_device *pdev)
- 	const struct faraday_pci_variant *variant =
- 		of_device_get_match_data(dev);
- 	struct resource *regs;
--	resource_size_t io_base;
- 	struct resource_entry *win;
- 	struct faraday_pci *p;
--	struct resource *mem;
- 	struct resource *io;
- 	struct pci_host_bridge *host;
- 	struct clk *clk;
-@@ -441,7 +439,6 @@ static int faraday_pci_probe(struct platform_device *pdev)
- 	unsigned char cur_bus_speed = PCI_SPEED_33MHz;
+diff --git a/drivers/pci/controller/pcie-iproc-platform.c b/drivers/pci/controller/pcie-iproc-platform.c
+index 9ee6200a66f4..375d815f7301 100644
+--- a/drivers/pci/controller/pcie-iproc-platform.c
++++ b/drivers/pci/controller/pcie-iproc-platform.c
+@@ -43,8 +43,6 @@ static int iproc_pcie_pltfm_probe(struct platform_device *pdev)
+ 	struct iproc_pcie *pcie;
+ 	struct device_node *np = dev->of_node;
+ 	struct resource reg;
+-	resource_size_t iobase = 0;
+-	LIST_HEAD(resources);
+ 	struct pci_host_bridge *bridge;
  	int ret;
- 	u32 val;
--	LIST_HEAD(res);
  
- 	host = devm_pci_alloc_host_bridge(dev, sizeof(*p));
- 	if (!host)
-@@ -480,44 +477,20 @@ static int faraday_pci_probe(struct platform_device *pdev)
- 	if (IS_ERR(p->base))
- 		return PTR_ERR(p->base);
+@@ -97,8 +95,7 @@ static int iproc_pcie_pltfm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(pcie->phy))
+ 		return PTR_ERR(pcie->phy);
  
--	ret = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
--						    &res, &io_base);
-+	ret = pci_parse_request_of_pci_ranges(dev, &host->windows, NULL);
- 	if (ret)
+-	ret = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff, &resources,
+-						    &iobase);
++	ret = pci_parse_request_of_pci_ranges(dev, &bridge->windows, NULL);
+ 	if (ret) {
+ 		dev_err(dev, "unable to get PCI host bridge resources\n");
  		return ret;
+@@ -113,10 +110,9 @@ static int iproc_pcie_pltfm_probe(struct platform_device *pdev)
+ 		pcie->map_irq = of_irq_parse_and_map_pci;
+ 	}
  
--	ret = devm_request_pci_bus_resources(dev, &res);
+-	ret = iproc_pcie_setup(pcie, &resources);
++	ret = iproc_pcie_setup(pcie, &bridge->windows);
+ 	if (ret) {
+ 		dev_err(dev, "PCIe controller setup failed\n");
+-		pci_free_resource_list(&resources);
+ 		return ret;
+ 	}
+ 
+diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+index 2d457bfdaf66..223335ee791a 100644
+--- a/drivers/pci/controller/pcie-iproc.c
++++ b/drivers/pci/controller/pcie-iproc.c
+@@ -1498,10 +1498,6 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
+ 		return ret;
+ 	}
+ 
+-	ret = devm_request_pci_bus_resources(dev, res);
 -	if (ret)
 -		return ret;
 -
--	/* Get the I/O and memory ranges from DT */
--	resource_list_for_each_entry(win, &res) {
--		switch (resource_type(win->res)) {
--		case IORESOURCE_IO:
--			io = win->res;
--			io->name = "Gemini PCI I/O";
--			if (!faraday_res_to_memcfg(io->start - win->offset,
--						   resource_size(io), &val)) {
--				/* setup I/O space size */
--				writel(val, p->base + PCI_IOSIZE);
--			} else {
--				dev_err(dev, "illegal IO mem size\n");
--				return -EINVAL;
--			}
--			ret = devm_pci_remap_iospace(dev, io, io_base);
--			if (ret) {
--				dev_warn(dev, "error %d: failed to map resource %pR\n",
--					 ret, io);
--				continue;
--			}
--			break;
--		case IORESOURCE_MEM:
--			mem = win->res;
--			mem->name = "Gemini PCI MEM";
--			break;
--		case IORESOURCE_BUS:
--			break;
--		default:
--			break;
-+	win = resource_list_first_type(&host->windows, IORESOURCE_IO);
-+	if (win) {
-+		io = win->res;
-+		if (!faraday_res_to_memcfg(io->start - win->offset,
-+					   resource_size(io), &val)) {
-+			/* setup I/O space size */
-+			writel(val, p->base + PCI_IOSIZE);
-+		} else {
-+			dev_err(dev, "illegal IO mem size\n");
-+			return -EINVAL;
- 		}
- 	}
- 
-@@ -569,7 +542,6 @@ static int faraday_pci_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	list_splice_init(&res, &host->windows);
- 	ret = pci_scan_root_bus_bridge(host);
+ 	ret = phy_init(pcie->phy);
  	if (ret) {
- 		dev_err(dev, "failed to scan host: %d\n", ret);
-@@ -581,7 +553,6 @@ static int faraday_pci_probe(struct platform_device *pdev)
+ 		dev_err(dev, "unable to initialize PCIe PHY\n");
+@@ -1543,7 +1539,6 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
+ 		if (iproc_pcie_msi_enable(pcie))
+ 			dev_info(dev, "not using iProc MSI\n");
  
- 	pci_bus_assign_resources(p->bus);
- 	pci_bus_add_devices(p->bus);
--	pci_free_resource_list(&res);
- 
- 	return 0;
- }
+-	list_splice_init(res, &host->windows);
+ 	host->busnr = 0;
+ 	host->dev.parent = dev;
+ 	host->ops = &iproc_pcie_ops;
 -- 
 2.20.1
 
