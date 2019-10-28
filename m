@@ -2,97 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EA6CE79FE
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2019 21:21:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94F25E7B60
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2019 22:33:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733045AbfJ1UVz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Oct 2019 16:21:55 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33821 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732924AbfJ1UVz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Oct 2019 16:21:55 -0400
-Received: by mail-pg1-f194.google.com with SMTP id e4so3401693pgs.1;
-        Mon, 28 Oct 2019 13:21:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=o3RYmNY37sf+6DZhfgwoRw3pPEWurA9fTDFSIhMeWeU=;
-        b=Oked80GciIxQk1i/LR2xCPTKwGdtHhZxyUq2WWOVcfXgw0QLfGwTKSya0fFMyXHtjs
-         3AbRxlvW0j09zV7fmaXlpfIS1dMK7mr8MuFY2WEFdBy6HJ1RYD0hiloMysUpzCljhzrI
-         ZKK/t6YfTEPwojUcpk4fuRj4+cfm641mdi3Wzs0y/OhMQkeolPTdwh2ClmdFDdAqMlX4
-         Bj3PZiqDHS9HORzfHhTa2ekYwbrQt805VoctgMyx6pb73lLWoHNXPPL+2RybnV7fwz/2
-         TlIfAphcosj9xIuxhpNKOsCqccOcPpzAqkkcCg5+5pBT4FV60WobxJZa4glF1yuLJF/w
-         EzzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=o3RYmNY37sf+6DZhfgwoRw3pPEWurA9fTDFSIhMeWeU=;
-        b=m2oUMBxzBeFs1A0o+ZuB3bNc14j/eWiA+gh/a1fXYoq+oiT1C8eEu+5arlS+6I5lN7
-         mI8eS4iUWXOV2RbU0cBUna+BQHYiWSVWzDsBm0EPAkyh6p2sUbiqvzZGcRLGTCfm7HY7
-         J75HSwI4qxWVgXm2cGFFiKuPCPMFKFPiIwxMAkfyGG4vryUsOUueEGmvI9FgFBHFey1h
-         xLVEDLJWa5DYacQuioG+DRDKe/VclT3ozf984tLzfbzYp864nEwfjhinIVaZAore9242
-         QO4bvPVwouYufvPVKRLi4XrMlNOtofKK+4iHc/rb9Dp8uOTAeB+kgguPr31Dtb8lDTzB
-         fAIQ==
-X-Gm-Message-State: APjAAAXCO5GiKn36HrVxcWNMBGBvc0xUJUvXL+JQ+ztMpr6WoJRy5Nfp
-        h7r3Ut/jNwiDvXfgXcSZPnk=
-X-Google-Smtp-Source: APXvYqwgMOgg9DoyjQ+QwjBbA0L2tFTAq78jMqvQKpUC2a2zoXo/IV6DRJzV2kNa8UPQGMxgPJo3JQ==
-X-Received: by 2002:a17:90a:a00e:: with SMTP id q14mr1489905pjp.132.1572294114235;
-        Mon, 28 Oct 2019 13:21:54 -0700 (PDT)
-Received: from saurav ([27.62.167.137])
-        by smtp.gmail.com with ESMTPSA id e198sm11908096pfh.83.2019.10.28.13.21.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 13:21:53 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 01:51:44 +0530
-From:   Saurav Girepunje <saurav.girepunje@gmail.com>
-To:     jingoohan1@gmail.com, lorenzo.pieralisi@arm.com,
-        andrew.murray@arm.com, bhelgaas@google.com, kgene@kernel.org,
-        krzk@kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     saurav.girepunje@hotmail.com
-Subject: [PATCH] pci: controller: dwc: Remove dev_err use after
- platform_get_irq
-Message-ID: <20191028202144.GA29158@saurav>
+        id S1730647AbfJ1VdQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Oct 2019 17:33:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52426 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730436AbfJ1VdP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 28 Oct 2019 17:33:15 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0135021835;
+        Mon, 28 Oct 2019 21:33:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572298395;
+        bh=lmMfAD+tZO388+G3Fy7oHWZhE81AEHzfYNN97enIOCU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Blr0CL0hAGGHn1BYTPEdJQIiktuaYuZOi8P4iuRHmaVJCMdIPo9enqQmp+YSTkM2i
+         pRmjo7HZrp6qnOvir5uqlvtD54e79FWrxW5UR1OIOno1hxKV56iWmGTBh8pbfP7ija
+         pGeTwYuXbvWEIPWoNmaW4cJy6PMVWpuMjTR4afq8=
+Date:   Mon, 28 Oct 2019 16:33:13 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     George Cherian <gcherian@marvell.com>
+Cc:     Robert Richter <rrichter@marvell.com>,
+        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shannon.zhao@linux.alibaba.com" <shannon.zhao@linux.alibaba.com>,
+        Sunil Kovvuri Goutham <sgoutham@marvell.com>
+Subject: Re: [EXT] Re: [PATCH] PCI: Enhance the ACS quirk for Cavium devices
+Message-ID: <20191028213313.GA145605@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191022211539.GA34867@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Don't need dev_err() messages when platform_get_irq() fails now that
-platform_get_irq() prints an error message itself when something goes
-wrong.
+On Tue, Oct 22, 2019 at 04:15:39PM -0500, Bjorn Helgaas wrote:
+> On Wed, Oct 09, 2019 at 07:42:53AM -0500, Bjorn Helgaas wrote:
+> > On Wed, Oct 09, 2019 at 02:51:15AM +0000, George Cherian wrote:
+> > > Hi Bjorn,
+> > > 
+> > > Sorry for the late reply I was off for couple of days.
+> > > 
+> > > On 10/8/19 2:32 PM, Bjorn Helgaas wrote:
+> > > > External Email
+> > > >
+> > > > ----------------------------------------------------------------------
+> > > > On Tue, Oct 08, 2019 at 08:25:23AM +0000, Robert Richter wrote:
+> > > >> On 04.10.19 14:48:13, Bjorn Helgaas wrote:
+> > > >>> commit 37b22fbfec2d
+> > > >>> Author: George Cherian <george.cherian@marvell.com>
+> > > >>> Date:   Thu Sep 19 02:43:34 2019 +0000
+> > > >>>
+> > > >>>      PCI: Apply Cavium ACS quirk to CN99xx and CN11xxx Root Ports
+> > > >>>      
+> > > >>>      Add an array of Cavium Root Port device IDs and apply the quirk only to the
+> > > >>>      listed devices.
+> > > >>>      
+> > > >>>      Instead of applying the quirk to all Root Ports where
+> > > >>>      "(dev->device & 0xf800) == 0xa000", apply it only to CN88xx 0xa180 and
+> > > >>>      0xa170 Root Ports.
+> > > 
+> > > All the root ports of CN88xx series will have device id's 0xa180 and 0xa170.
+> > > 
+> > > This patch currently targets only CN88xx series and not all of the CN8xxx.
+> > > 
+> > > For eg:- 83xx devices don't wont the quirk to be applied as of today. 
+> > > The quirk
+> > > 
+> > > needs to be applied only for TX1 series and not oncteon-tx1 series.
+> > > 
+> > > >> No, this can't be removed. It is a match all for all CN8xxx variants
+> > > >> (note the 3 'x', all TX1 cores). So all device ids from 0xa000 to
+> > > >> 0xa7FF are affected here and need the quirk.
+> > > > OK, I'll drop the patch and wait for a new one.  Maybe what was needed
+> > > > was to keep the "(dev->device & 0xf800) == 0xa000" part and add the
+> > > > pci_quirk_cavium_acs_ids[] array in addition?
+> > > >
+> > > >>>      Also apply the quirk to CN99xx (0xaf84) and CN11xxx (0xb884) Root Ports.
+> > > 
+> > > The device id's for all variants of CN99xx is 0xaf84 and CN11xxx will be 
+> > > 0xb884.
+> > > 
+> > > So this patch holds good for TX2 as well as TX3 series of processors.
+> > 
+> > OK, can you and Robert get together and post something with Robert's
+> > Reviewed-by?  Please make the commit log a little more specific about
+> > which families/variants are supported (the vendor IDs are very
+> > specific, but not as user-friendly as CN99xx, etc).
+> 
+> Just to make sure this doesn't get lost, please post an update.  I
+> currently do not have this patch queued up for v5.5 because I haven't
+> seen a clear consensus on what it should look like.
 
-Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
----
- drivers/pci/controller/dwc/pci-exynos.c | 2 --
- 1 file changed, 2 deletions(-)
+Ping?
 
-diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-index 14a6ba4067fb..2293b346d96a 100644
---- a/drivers/pci/controller/dwc/pci-exynos.c
-+++ b/drivers/pci/controller/dwc/pci-exynos.c
-@@ -403,7 +403,6 @@ static int __init exynos_add_pcie_port(struct exynos_pcie *ep,
- 
- 	pp->irq = platform_get_irq(pdev, 1);
- 	if (pp->irq < 0) {
--		dev_err(dev, "failed to get irq\n");
- 		return pp->irq;
- 	}
- 	ret = devm_request_irq(dev, pp->irq, exynos_pcie_irq_handler,
-@@ -416,7 +415,6 @@ static int __init exynos_add_pcie_port(struct exynos_pcie *ep,
- 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
- 		pp->msi_irq = platform_get_irq(pdev, 0);
- 		if (pp->msi_irq < 0) {
--			dev_err(dev, "failed to get msi irq\n");
- 			return pp->msi_irq;
- 		}
- 	}
--- 
-2.20.1
-
+> > > >> I thought the quirk is CN8xxx specific, but I could be wrong here.
+> > > >>
+> > > >> -Robert
+> > > >>
+> > > >>>      
+> > > >>>      Link: https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_r_20190919024319.GA8792-40dc5-2Deodlnx05.marvell.com&d=DwIBAg&c=nKjWec2b6R0mOyPaz7xtfQ&r=8vKOpC26NZGzQPAMiIlimxyEGCRSJiq-j8yyjPJ6VZ4&m=Vmml-rx3t63ZbbXZ0XaESAM9yAlexE29R-giTbcj4Qk&s=57jKIj8BAydbLpftLt5Ssva7vD6GuoCaIpjTi-sB5kU&e=
+> > > >>>      Fixes: f2ddaf8dfd4a ("PCI: Apply Cavium ThunderX ACS quirk to more Root Ports")
+> > > >>>      Fixes: b404bcfbf035 ("PCI: Add ACS quirk for all Cavium devices")
+> > > >>>      Signed-off-by: George Cherian <george.cherian@marvell.com>
+> > > >>>      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > >>>      Cc: stable@vger.kernel.org      # v4.12+
+> > > >>>
+> > > >>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > > >>> index 320255e5e8f8..4e5048cb5ec6 100644
+> > > >>> --- a/drivers/pci/quirks.c
+> > > >>> +++ b/drivers/pci/quirks.c
+> > > >>> @@ -4311,17 +4311,24 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
+> > > >>>   #endif
+> > > >>>   }
+> > > >>>   
+> > > >>> +static const u16 pci_quirk_cavium_acs_ids[] = {
+> > > >>> +	0xa180, 0xa170,		/* CN88xx family of devices */
+> > > >>> +	0xaf84,			/* CN99xx family of devices */
+> > > >>> +	0xb884,			/* CN11xxx family of devices */
+> > > >>> +};
+> > > >>> +
+> > > >>>   static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
+> > > >>>   {
+> > > >>> -	/*
+> > > >>> -	 * Effectively selects all downstream ports for whole ThunderX 1
+> > > >>> -	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
+> > > >>> -	 * bits of device ID are used to indicate which subdevice is used
+> > > >>> -	 * within the SoC.
+> > > >>> -	 */
+> > > >>> -	return (pci_is_pcie(dev) &&
+> > > >>> -		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
+> > > >>> -		((dev->device & 0xf800) == 0xa000));
+> > > >>> +	int i;
+> > > >>> +
+> > > >>> +	if (!pci_is_pcie(dev) || pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
+> > > >>> +		return false;
+> > > >>> +
+> > > >>> +	for (i = 0; i < ARRAY_SIZE(pci_quirk_cavium_acs_ids); i++)
+> > > >>> +		if (pci_quirk_cavium_acs_ids[i] == dev->device)
+> > > >>> +			return true;
+> > > >>> +
+> > > >>> +	return false;
+> > > >>>   }
+> > > >>>   
+> > > >>>   static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
