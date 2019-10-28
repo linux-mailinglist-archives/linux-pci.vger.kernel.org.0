@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3EDEE7644
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2019 17:33:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D2B3E7646
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2019 17:33:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732990AbfJ1QdQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Oct 2019 12:33:16 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46655 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730772AbfJ1QdQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Oct 2019 12:33:16 -0400
-Received: by mail-oi1-f194.google.com with SMTP id c2so6374691oic.13;
-        Mon, 28 Oct 2019 09:33:15 -0700 (PDT)
+        id S1732991AbfJ1QdR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Oct 2019 12:33:17 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43694 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730772AbfJ1QdR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Oct 2019 12:33:17 -0400
+Received: by mail-ot1-f67.google.com with SMTP id b19so4818117otq.10;
+        Mon, 28 Oct 2019 09:33:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YIfpHXHDoS6BpoLM/5OtgGD1veZ0kiS1z+l67O5mhv0=;
-        b=stzsuHe0hPWnVaIAsKn2V+F0fPyQG0OsT9ESdLuEXD9EvkfFGrMp1tExIVWfoHsuyS
-         Cz6Rsqr37WOMy7+FA0/3dlpQgegXOobsx1Kb33iUKQmBuuxxWVaLoSGMszthaF3vdD6f
-         aG2ombLVT4xf1PXRCDacLMvGadfIT2zOt3wVyHvJ0MFrGhsa/TJqaeM2a3kuozahWrYa
-         nHtS/f+qntrT9PSjUpoSrKyjjxIlPE/bvqKLL0KOt5aDUKJwPHBRgLJfAb3RtteS/rNb
-         BPB2WPeGkMv0wRk7F1d6DOcMsg+tW6axxB4yQHcJ6pRbOy7CLwD4/KPlPM+8TtlPBOSO
-         BkPw==
-X-Gm-Message-State: APjAAAVeuMpXhuq0F9ibUKqJif9vaOK+AAhQQfIGQ3ZLZEy43ony2jT0
-        uNHZkxFhPCuH2ftFoXg+hQ==
-X-Google-Smtp-Source: APXvYqwiII4tT6mUV/WZPdOOYCJP3razv09fHNkFp9JLAVkZPyu7pCRKafjRWtkftQVgR7SzFninKQ==
-X-Received: by 2002:aca:494e:: with SMTP id w75mr95048oia.159.1572280394774;
-        Mon, 28 Oct 2019 09:33:14 -0700 (PDT)
+        bh=nW63jMBvuV1jC5LkGgClq/3WYdWidZxNV+2Nh/Z21ew=;
+        b=f6XhQb2bSUfm18KtdF56KNSGD+GSK3K1d917LJxutPKxPEdy//xh1lrlFdjw5vlqoa
+         6Nf5qxaG/q8fZFHTGaoEjSjTReI+MK/TD0nWDmmnjxlKSN5FxYrALrNjhuwMJg2KG2hG
+         bEelCgHDfiNn5OO6+13gl8GanxG2KhIZ9yde9+AhNRZDsFoxCX8dNvuiiOtTdHDU0qbE
+         QDlM9tltmudzpG04uWqwgqOINZqXdgWyVuVUzjAgfayw+2yFFCYRB6rESthPKuxjjfIr
+         vmVqxNYr8bwR5T/uJBUKh5ORQhWyKIM4mzPe5s3YLBtKedllgJDewO7H2qHSPZtpN/sE
+         lzqg==
+X-Gm-Message-State: APjAAAXgC33ew7oTd9qQCJglazvYM7yoOJPXxqlgLcmoCwMi3KgYB1/D
+        LU2a9GQ2RwpmhJpQP/+05g==
+X-Google-Smtp-Source: APXvYqxhr3QGGC8pHRguZ0KGcav4CFccx7LcyeEsqrM8IAog45S1MROIl6X64sUTv9Rs+FE/3FigSg==
+X-Received: by 2002:a05:6830:1695:: with SMTP id k21mr11501497otr.339.1572280396672;
+        Mon, 28 Oct 2019 09:33:16 -0700 (PDT)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id e186sm354991oia.47.2019.10.28.09.33.13
+        by smtp.googlemail.com with ESMTPSA id e186sm354991oia.47.2019.10.28.09.33.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 09:33:14 -0700 (PDT)
+        Mon, 28 Oct 2019 09:33:16 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Andrew Murray <andrew.murray@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -61,9 +61,9 @@ Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Toan Le <toan@os.amperecomputing.com>,
         Tom Joseph <tjoseph@cadence.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH v3 07/25] PCI: iproc: Use pci_parse_request_of_pci_ranges()
-Date:   Mon, 28 Oct 2019 11:32:38 -0500
-Message-Id: <20191028163256.8004-8-robh@kernel.org>
+Subject: [PATCH v3 08/25] PCI: mediatek: Use pci_parse_request_of_pci_ranges()
+Date:   Mon, 28 Oct 2019 11:32:39 -0500
+Message-Id: <20191028163256.8004-9-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191028163256.8004-1-robh@kernel.org>
 References: <20191028163256.8004-1-robh@kernel.org>
@@ -74,82 +74,100 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Convert the iProc host bridge to use the common
+Convert Mediatek host bridge to use the common
 pci_parse_request_of_pci_ranges().
 
-There's no need to assign the resources to a temporary list, so just use
-bridge->windows directly.
-
+Cc: Ryder Lee <ryder.lee@mediatek.com>
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Ray Jui <rjui@broadcom.com>
-Cc: Scott Branden <sbranden@broadcom.com>
-Cc: bcm-kernel-feedback-list@broadcom.com
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-mediatek@lists.infradead.org
 Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/pcie-iproc-platform.c | 8 ++------
- drivers/pci/controller/pcie-iproc.c          | 5 -----
- 2 files changed, 2 insertions(+), 11 deletions(-)
+v2:
+- Use resource_list_get_entry_of_type
+---
+ drivers/pci/controller/pcie-mediatek.c | 43 ++++++++------------------
+ 1 file changed, 13 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-iproc-platform.c b/drivers/pci/controller/pcie-iproc-platform.c
-index 9ee6200a66f4..375d815f7301 100644
---- a/drivers/pci/controller/pcie-iproc-platform.c
-+++ b/drivers/pci/controller/pcie-iproc-platform.c
-@@ -43,8 +43,6 @@ static int iproc_pcie_pltfm_probe(struct platform_device *pdev)
- 	struct iproc_pcie *pcie;
- 	struct device_node *np = dev->of_node;
- 	struct resource reg;
--	resource_size_t iobase = 0;
--	LIST_HEAD(resources);
- 	struct pci_host_bridge *bridge;
- 	int ret;
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index 626a7c352dfd..d9206a3cd56b 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -216,7 +216,6 @@ struct mtk_pcie {
+ 	void __iomem *base;
+ 	struct clk *free_ck;
  
-@@ -97,8 +95,7 @@ static int iproc_pcie_pltfm_probe(struct platform_device *pdev)
- 	if (IS_ERR(pcie->phy))
- 		return PTR_ERR(pcie->phy);
+-	struct resource mem;
+ 	struct list_head ports;
+ 	const struct mtk_pcie_soc *soc;
+ 	unsigned int busnr;
+@@ -661,11 +660,19 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
+ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+ {
+ 	struct mtk_pcie *pcie = port->pcie;
+-	struct resource *mem = &pcie->mem;
++	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
++	struct resource *mem = NULL;
++	struct resource_entry *entry;
+ 	const struct mtk_pcie_soc *soc = port->pcie->soc;
+ 	u32 val;
+ 	int err;
  
--	ret = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff, &resources,
--						    &iobase);
-+	ret = pci_parse_request_of_pci_ranges(dev, &bridge->windows, NULL);
- 	if (ret) {
- 		dev_err(dev, "unable to get PCI host bridge resources\n");
- 		return ret;
-@@ -113,10 +110,9 @@ static int iproc_pcie_pltfm_probe(struct platform_device *pdev)
- 		pcie->map_irq = of_irq_parse_and_map_pci;
- 	}
++	entry = resource_list_first_type(&host->windows, IORESOURCE_MEM);
++	if (entry)
++		mem = entry->res;
++	if (!mem)
++		return -EINVAL;
++
+ 	/* MT7622 platforms need to enable LTSSM and ASPM from PCIe subsys */
+ 	if (pcie->base) {
+ 		val = readl(pcie->base + PCIE_SYS_CFG_V2);
+@@ -1023,39 +1030,15 @@ static int mtk_pcie_setup(struct mtk_pcie *pcie)
+ 	struct mtk_pcie_port *port, *tmp;
+ 	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
+ 	struct list_head *windows = &host->windows;
+-	struct resource_entry *win, *tmp_win;
+-	resource_size_t io_base;
++	struct resource *bus;
+ 	int err;
  
--	ret = iproc_pcie_setup(pcie, &resources);
-+	ret = iproc_pcie_setup(pcie, &bridge->windows);
- 	if (ret) {
- 		dev_err(dev, "PCIe controller setup failed\n");
--		pci_free_resource_list(&resources);
- 		return ret;
- 	}
+-	err = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
+-						    windows, &io_base);
++	err = pci_parse_request_of_pci_ranges(dev, windows,
++					      &bus);
+ 	if (err)
+ 		return err;
  
-diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-index 2d457bfdaf66..223335ee791a 100644
---- a/drivers/pci/controller/pcie-iproc.c
-+++ b/drivers/pci/controller/pcie-iproc.c
-@@ -1498,10 +1498,6 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
- 		return ret;
- 	}
- 
--	ret = devm_request_pci_bus_resources(dev, res);
--	if (ret)
--		return ret;
+-	err = devm_request_pci_bus_resources(dev, windows);
+-	if (err < 0)
+-		return err;
 -
- 	ret = phy_init(pcie->phy);
- 	if (ret) {
- 		dev_err(dev, "unable to initialize PCIe PHY\n");
-@@ -1543,7 +1539,6 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
- 		if (iproc_pcie_msi_enable(pcie))
- 			dev_info(dev, "not using iProc MSI\n");
+-	/* Get the I/O and memory ranges from DT */
+-	resource_list_for_each_entry_safe(win, tmp_win, windows) {
+-		switch (resource_type(win->res)) {
+-		case IORESOURCE_IO:
+-			err = devm_pci_remap_iospace(dev, win->res, io_base);
+-			if (err) {
+-				dev_warn(dev, "error %d: failed to map resource %pR\n",
+-					 err, win->res);
+-				resource_list_destroy_entry(win);
+-			}
+-			break;
+-		case IORESOURCE_MEM:
+-			memcpy(&pcie->mem, win->res, sizeof(*win->res));
+-			pcie->mem.name = "non-prefetchable";
+-			break;
+-		case IORESOURCE_BUS:
+-			pcie->busnr = win->res->start;
+-			break;
+-		}
+-	}
++	pcie->busnr = bus->start;
  
--	list_splice_init(res, &host->windows);
- 	host->busnr = 0;
- 	host->dev.parent = dev;
- 	host->ops = &iproc_pcie_ops;
+ 	for_each_available_child_of_node(node, child) {
+ 		int slot;
 -- 
 2.20.1
 
