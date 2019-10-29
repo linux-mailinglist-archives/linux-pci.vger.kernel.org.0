@@ -2,85 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A4882E7FC7
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2019 06:40:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6A24E7FEF
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2019 06:53:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbfJ2Fko (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Oct 2019 01:40:44 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:57172 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfJ2Fko (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Oct 2019 01:40:44 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9T5eVQa123431;
-        Tue, 29 Oct 2019 00:40:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572327631;
-        bh=TLIG+N2ulLyByssQEEKVgxs+nraNcwf+u9BpyOQyR18=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=NcxvC5pdB2/a8lx58UwxXcUHftv+jGVmkokzU1d3G8yMWmhSbEdk7CufEp0W8E7P8
-         46Cpv3rMqGwl093nfGGpbe+NJsFhsaxhmMh7gaG58wd6+0sKZUxJYXJGWFrKma7IqS
-         TEOswO/fHNcXC3BQ2QfcP2xVVC5UaZRS6Ypv8FL8=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9T5eVEI014555
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 29 Oct 2019 00:40:31 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 29
- Oct 2019 00:40:18 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 29 Oct 2019 00:40:30 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9T5eSk4130719;
-        Tue, 29 Oct 2019 00:40:28 -0500
-Subject: Re: [PATCH] tools: PCI: Fix fd leakage
-To:     Hewenliang <hewenliang4@huawei.com>, <lorenzo.pieralisi@arm.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bhelgaas@google.com>
-CC:     <linfeilong@huawei.com>
-References: <20191026013555.61016-1-hewenliang4@huawei.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <d384da9a-c417-fb5f-2881-b3039af0e997@ti.com>
-Date:   Tue, 29 Oct 2019 11:09:55 +0530
+        id S1730155AbfJ2FxX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Oct 2019 01:53:23 -0400
+Received: from smtp3-1.goneo.de ([85.220.129.38]:49373 "EHLO smtp3-1.goneo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726034AbfJ2FxX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 29 Oct 2019 01:53:23 -0400
+X-Greylist: delayed 629 seconds by postgrey-1.27 at vger.kernel.org; Tue, 29 Oct 2019 01:53:20 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by smtp3.goneo.de (Postfix) with ESMTP id 1EC9B24007F;
+        Tue, 29 Oct 2019 06:42:49 +0100 (CET)
+X-Virus-Scanned: by goneo
+X-Spam-Flag: NO
+X-Spam-Score: -2.747
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.747 tagged_above=-999 tests=[ALL_TRUSTED=-1,
+        AWL=0.153, BAYES_00=-1.9] autolearn=ham
+Received: from smtp3.goneo.de ([127.0.0.1])
+        by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qZjqyjNzm7GN; Tue, 29 Oct 2019 06:42:47 +0100 (CET)
+Received: from [192.168.1.103] (dyndsl-037-138-239-146.ewe-ip-backbone.de [37.138.239.146])
+        by smtp3.goneo.de (Postfix) with ESMTPSA id 024AA23F854;
+        Tue, 29 Oct 2019 06:42:46 +0100 (CET)
+Subject: Re: [PATCH v2] kernel-doc: rename the kernel-doc directive
+ 'functions' to 'identifiers'
+To:     Changbin Du <changbin.du@gmail.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-crypto@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-usb@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+References: <20191020131717.28990-1-changbin.du@gmail.com>
+ <20191024121940.1d6a64df@lwn.net> <87woctb9cj.fsf@intel.com>
+ <20191025144802.uixg2crhw6h7gghq@mail.google.com> <87v9s99q9l.fsf@intel.com>
+ <20191029003120.llve32crfw63ovpw@mail.google.com>
+From:   Markus Heiser <markus.heiser@darmarit.de>
+Message-ID: <36c4dcfb-5425-b4bc-a5e9-4fd1458c8385@darmarit.de>
+Date:   Tue, 29 Oct 2019 06:42:46 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191026013555.61016-1-hewenliang4@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <20191029003120.llve32crfw63ovpw@mail.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Am 29.10.19 um 01:31 schrieb Changbin Du:
+>> But is it, really? I agree with Jon about the distinction between None
+>> and '' being confusing.
+>>
+> Here python is different from C. Both empty string and None are False in python.
+> Note such condition is common in python.
+
+The one is a empty string str(''), its bool('') value is False.
+
+| >>> type(''), bool('')
+| (<class 'str'>, False)
+
+The other is a NoneType, its bool(None) value is False.
+
+| >>> type(None), bool(None)
+| (<class 'NoneType'>, False)
+
+None often used like NULL (pointer). E.g if a function does not give an explicit 
+return value, the returned value is None.
+
+| >>> def foo():
+| ...     pass
+| ...
+| >>> print(foo())
+| None
 
 
-On 26/10/19 7:05 AM, Hewenliang wrote:
-> We should close fd before the return of run_test.
-> 
-> Fixes: 3f2ed8134834 ("tools: PCI: Add a userspace tool to test PCI endpoint")
-> Signed-off-by: Hewenliang <hewenliang4@huawei.com>
+-- Markus --
 
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  tools/pci/pcitest.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
-> index cb1e51fcc84e..32b7c6f9043d 100644
-> --- a/tools/pci/pcitest.c
-> +++ b/tools/pci/pcitest.c
-> @@ -129,6 +129,7 @@ static int run_test(struct pci_test *test)
->  	}
->  
->  	fflush(stdout);
-> +	close(fd);
->  	return (ret < 0) ? ret : 1 - ret; /* return 0 if test succeeded */
->  }
->  
-> 
