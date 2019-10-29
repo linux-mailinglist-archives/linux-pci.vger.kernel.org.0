@@ -2,276 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A37AE8348
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2019 09:34:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA513E8387
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2019 09:53:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbfJ2IeK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Oct 2019 04:34:10 -0400
-Received: from mga03.intel.com ([134.134.136.65]:35656 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728892AbfJ2IeK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:34:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 01:34:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
-   d="scan'208";a="202775353"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 29 Oct 2019 01:34:09 -0700
-Received: from [10.226.39.46] (ekotax-MOBL.gar.corp.intel.com [10.226.39.46])
-        by linux.intel.com (Postfix) with ESMTP id 4518A58049B;
-        Tue, 29 Oct 2019 01:34:04 -0700 (PDT)
-Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, andrew.murray@arm.com,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        hch@infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-References: <cover.1571638827.git.eswara.kota@linux.intel.com>
- <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
- <20191025165352.GA30602@bogus>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <72d46086-0918-a5af-d798-7488b55a8e07@linux.intel.com>
-Date:   Tue, 29 Oct 2019 16:34:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1728104AbfJ2Ixv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Oct 2019 04:53:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60248 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727377AbfJ2Ixv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 29 Oct 2019 04:53:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A3A1DB43E;
+        Tue, 29 Oct 2019 08:53:44 +0000 (UTC)
+Date:   Tue, 29 Oct 2019 09:53:36 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Robin Murphy <robin.murphy@arm.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        hpa@zytor.com, x86@kernel.org, dave.hansen@linux.intel.com,
+        luto@kernel.org, len.brown@intel.com, axboe@kernel.dk,
+        dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        lenb@kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20191029085336.GF31513@dhcp22.suse.cz>
+References: <20190925104108.GE4553@hirez.programming.kicks-ass.net>
+ <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
+ <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
+ <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
+ <20191010073212.GB18412@dhcp22.suse.cz>
+ <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
+ <20191011111539.GX2311@hirez.programming.kicks-ass.net>
+ <7fad58d6-5126-e8b8-a7d8-a91814da53ba@huawei.com>
+ <20191012074014.GA2037204@kroah.com>
+ <1ec704df-97a5-04b7-1f20-8e3db19440a3@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20191025165352.GA30602@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1ec704df-97a5-04b7-1f20-8e3db19440a3@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon 28-10-19 17:20:33, Yunsheng Lin wrote:
+> On 2019/10/12 15:40, Greg KH wrote:
+> > On Sat, Oct 12, 2019 at 02:17:26PM +0800, Yunsheng Lin wrote:
+> >> add pci and acpi maintainer
+> >> cc linux-pci@vger.kernel.org and linux-acpi@vger.kernel.org
+> >>
+> >> On 2019/10/11 19:15, Peter Zijlstra wrote:
+> >>> On Fri, Oct 11, 2019 at 11:27:54AM +0800, Yunsheng Lin wrote:
+> >>>> But I failed to see why the above is related to making node_to_cpumask_map()
+> >>>> NUMA_NO_NODE aware?
+> >>>
+> >>> Your initial bug is for hns3, which is a PCI device, which really _MUST_
+> >>> have a node assigned.
+> >>>
+> >>> It not having one, is a straight up bug. We must not silently accept
+> >>> NO_NODE there, ever.
+> >>>
+> >>
+> >> I suppose you mean reporting a lack of affinity when the node of a pcie
+> >> device is not set by "not silently accept NO_NODE".
+> > 
+> > If the firmware of a pci device does not provide the node information,
+> > then yes, warn about that.
+> > 
+> >> As Greg has asked about in [1]:
+> >> what is a user to do when the user sees the kernel reporting that?
+> >>
+> >> We may tell user to contact their vendor for info or updates about
+> >> that when they do not know about their system well enough, but their
+> >> vendor may get away with this by quoting ACPI spec as the spec
+> >> considering this optional. Should the user believe this is indeed a
+> >> fw bug or a misreport from the kernel?
+> > 
+> > Say it is a firmware bug, if it is a firmware bug, that's simple.
+> > 
+> >> If this kind of reporting is common pratice and will not cause any
+> >> misunderstanding, then maybe we can report that.
+> > 
+> > Yes, please do so, that's the only way those boxes are ever going to get
+> > fixed.  And go add the test to the "firmware testing" tool that is based
+> > on Linux that Intel has somewhere, to give vendors a chance to fix this
+> > before they ship hardware.
+> > 
+> > This shouldn't be a big deal, we warn of other hardware bugs all the
+> > time.
+> 
+> Hi, all.
+> 
+> The warning for the above case has been added in [1].
+> 
+> So maybe it makes sense to make node_to_cpumask_map() NUMA_NO_NODE aware
+> now?
+> 
+> If Yes, this patch still can be applied to the latest linus' tree cleanly,
+> Do I need to resend it?
+> 
 
-On 10/26/2019 12:53 AM, Rob Herring wrote:
-> On Mon, Oct 21, 2019 at 02:39:18PM +0800, Dilip Kota wrote:
->> Add YAML shcemas for PCIe RC controller on Intel Gateway SoCs
->> which is Synopsys DesignWare based PCIe core.
->>
->> changes on v4:
->> 	Add "snps,dw-pcie" compatible.
->> 	Rename phy-names property value to pcie.
->> 	And maximum and minimum values to num-lanes.
->> 	Add ref for reset-assert-ms entry and update the
->> 	 description for easy understanding.
->> 	Remove pcie core interrupt entry.
->>
->> changes on v3:
->>          Add the appropriate License-Identifier
->>          Rename intel,rst-interval to 'reset-assert-us'
->>          Add additionalProperties: false
->>          Rename phy-names to 'pciephy'
->>          Remove the dtsi node split of SoC and board in the example
->>          Add #interrupt-cells = <1>; or else interrupt parsing will fail
->>          Name yaml file with compatible name
->>
->> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->> ---
->>   .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 135 +++++++++++++++++++++
->>   1 file changed, 135 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> Fails to validate:
->
-> Error: Documentation/devicetree/bindings/pci/intel-gw-pcie.example.dts:38.27-28 syntax error
-> FATAL ERROR: Unable to parse input tree
-> scripts/Makefile.lib:321: recipe for target 'Documentation/devicetree/bindings/pci/intel-gw-pcie.example.dt.yaml' failed
->
-> Please run 'make -k dt_binding_check' (-k because there are some
-> unrelated failures).
->
->> diff --git a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
->> new file mode 100644
->> index 000000000000..49dd87ec1e3d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
->> @@ -0,0 +1,135 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pci/intel-gw-pcie.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: PCIe RC controller on Intel Gateway SoCs
->> +
->> +maintainers:
->> +  - Dilip Kota <eswara.kota@linux.intel.com>
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - const: intel,lgm-pcie
->> +      - const: snps,dw-pcie
->> +
->> +  device_type:
->> +    const: pci
->> +
->> +  "#address-cells":
->> +    const: 3
->> +
->> +  "#size-cells":
->> +    const: 2
->> +
->> +  reg:
->> +    items:
->> +      - description: Controller control and status registers.
->> +      - description: PCIe configuration registers.
->> +      - description: Controller application registers.
->> +
->> +  reg-names:
->> +    items:
->> +      - const: dbi
->> +      - const: config
->> +      - const: app
->> +
->> +  ranges:
->> +    description: Ranges for the PCI memory and I/O regions.
-> How many entries do you expect? Add a 'maxItems' to define.
-Agree will add it.
->
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    description: PCIe registers interface clock.
-> How many clocks?
-One. I will mention maxItems: 1
->
->> +
->> +  phys:
->> +    maxItems: 1
->> +
->> +  phy-names:
->> +    const: pcie
->> +
->> +  reset-gpios:
->> +    maxItems: 1
->> +
->> +  num-lanes:
->> +    minimum: 1
->> +    maximum: 2
->> +    description: Number of lanes to use for this port.
->> +
->> +  linux,pci-domain:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description: PCI domain ID.
-> Just a value of 'true' is fine here.
-Ok.
->
->> +
->> +  '#interrupt-cells':
->> +    const: 1
->> +
->> +  interrupt-map-mask:
->> +    description: Standard PCI IRQ mapping properties.
->> +
->> +  interrupt-map:
->> +    description: Standard PCI IRQ mapping properties.
->> +
->> +  max-link-speed:
->> +    description: Specify PCI Gen for link capability.
-> Allowed values? Default?
-Sure, will add it.
->
->> +
->> +  bus-range:
->> +    description: Range of bus numbers associated with this controller.
->> +
->> +  reset-assert-ms:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
-> Don't need a type for standard units.
-Ok.
->
->> +    description: |
->> +      Delay after asserting reset to the PCIe device.
->> +      Some devices need an interval upto 500ms. By default it is 100ms.
-> Express as a schema:
->
-> maximum: 500
-> default: 100
-Sure i will update it.
->
->> +
->> +required:
->> +  - compatible
->> +  - device_type
->> +  - reg
->> +  - reg-names
->> +  - ranges
->> +  - resets
->> +  - clocks
->> +  - phys
->> +  - phy-names
->> +  - reset-gpios
->> +  - num-lanes
-> Shouldn't be required. It should have a default.
-Agree, will fix it.
->
->> +  - linux,pci-domain
-> Is this really required? AIUI, domains are optional and only used if
-> you have more than one host.
-Yes, not required. I will update,
->
->> +  - interrupt-map
->> +  - interrupt-map-mask
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    pcie10:pcie@d0e00000 {
-> space         ^
-Agree, i will fix it.
->
->> +      compatible = "intel,lgm-pcie", "snps,dw-pcie";
->> +      device_type = "pci";
->> +      #address-cells = <3>;
->> +      #size-cells = <2>;
->> +      reg = <0xd0e00000 0x1000>,
->> +            <0xd2000000 0x800000>,
->> +            <0xd0a41000 0x1000>;
->> +      reg-names = "dbi", "config", "app";
->> +      linux,pci-domain = <0>;
->> +      max-link-speed = <4>;
->> +      bus-range = <0x00 0x08>;
->> +      interrupt-parent = <&ioapic1>;
->> +      #interrupt-cells = <1>;
->> +      interrupt-map-mask = <0 0 0 0x7>;
->> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
->> +                      <0 0 0 2 &ioapic1 28 1>,
->> +                      <0 0 0 3 &ioapic1 29 1>,
->> +                      <0 0 0 4 &ioapic1 30 1>;
->> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
->> +      resets = <&rcu0 0x50 0>;
->> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
-> You need to include any defines you use. That's why the example fails to
-> build.
-Yes, i will add it.
->
->> +      phys = <&cb0phy0>;
->> +      phy-names = "pcie";
->> +      status = "okay";
-> Don't show status in examples.
-OK, will fix it.
+By this patch you mean http://lkml.kernel.org/r/1568724534-146242-1-git-send-email-linyunsheng@huawei.com
+right?
 
-Thanks for reviewing it.
+I would just resend it unless there is still a clear disagreement over
+it.
 
-Regards,
-Dilip
->
->> +      reset-assert-ms = <500>;
->> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
->> +      num-lanes = <2>;
->> +    };
->> -- 
->> 2.11.0
->>
+> [1] https://lore.kernel.org/linux-pci/1571467543-26125-1-git-send-email-linyunsheng@huawei.com/
+
+-- 
+Michal Hocko
+SUSE Labs
