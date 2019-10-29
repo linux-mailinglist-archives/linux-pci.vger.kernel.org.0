@@ -2,156 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 01C41E8573
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2019 11:25:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D0410E85CA
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2019 11:35:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbfJ2KZA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Oct 2019 06:25:00 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36918 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfJ2KY7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Oct 2019 06:24:59 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 53so9288283otv.4
-        for <linux-pci@vger.kernel.org>; Tue, 29 Oct 2019 03:24:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DWSOpk043XyoaW56F5BhqM8BDTB+YFnzKIIJkQ0BYSA=;
-        b=ULY/j3HDm4kv22wikXGsAmamYXevjHj+o/pinVNJbC3aI9xyOKN23KO9uc/fHOgiFt
-         Ga1YxahyuzdSILSy/qL6OSPI3oXk4JIvrAITnsonSXoM9+/V6mbfypCnT3fa7Zreyf7M
-         YdOHVl+BKRMfdrqCSUM8mxg0HzqdWti1q9iDs8SecEPGPeJm33eqwYq7pX5xyh3M68ep
-         T/LJv4UMqSEbZvcW4w0vO5eGSYalL5Jh4ZJuJAIFFmyYmpYTKbN5us8DR50aoB8RciWS
-         o2V7K+SvDkLVsYkL/hHcPeqKwde4Fkx1gMb992fs+EUm9syPWDRumvBMvbNVvzMLzSmj
-         gTzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DWSOpk043XyoaW56F5BhqM8BDTB+YFnzKIIJkQ0BYSA=;
-        b=rC3yfAU3XVGMcXtqBuCBtTCwuFWY83J9KvLx4htfX3hwv/DD5x9NKtfdR1ScGD7Y21
-         6QAZVXmbUo6SRYeJNeqPcCmHlw9BwRjN82mpQVPvU2XM7iEPfCTgJuzGv0xXh65MH9nT
-         cgzGDUHBGqqNtyR9CURrZWN44nDbfmMTja0XIDMWed+H9ncmTpLRLm2Q1VZS0qNsmNaG
-         RRZH+GgrdJNt80wcFRvusAGIoRiSHdwcgAc8qFEc8xRaK1kzdRMatWW+WzNth0ZyEXf0
-         +vGGVjKOcxmCGOrYuGVj257IDn346/zqzNfClKpvgpw5Y1kI+bMtHrzlCm9WKSJH4uxw
-         msZg==
-X-Gm-Message-State: APjAAAUsSI8mK8VIuhfZTjwgTcetm0Wi6DkbUhpQYNW/cGStGyOMhm/r
-        u+cHT9HREXpFQJiEYRPBj7jZ0js888zIGdyW5+GJ1rLlsz4=
-X-Google-Smtp-Source: APXvYqyaidlzWQxPwkMVkijwCcZwkjf9tWN4WOclIxB0MY7fhvkZVNG4bofpr/WvOeZYB1CH5uu94HJSv2GPEwO1+y8=
-X-Received: by 2002:a9d:6452:: with SMTP id m18mr17261812otl.325.1572344698080;
- Tue, 29 Oct 2019 03:24:58 -0700 (PDT)
+        id S1727720AbfJ2Ke7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Oct 2019 06:34:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:50176 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726716AbfJ2Ke7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 29 Oct 2019 06:34:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79E43337;
+        Tue, 29 Oct 2019 03:34:58 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 402143F71F;
+        Tue, 29 Oct 2019 03:34:57 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 10:34:52 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH V4 2/2] PCI: rcar: Recalculate inbound range alignment
+ for each controller entry
+Message-ID: <20191029103452.GA27171@e121166-lin.cambridge.arm.com>
+References: <20191026182659.2390-1-marek.vasut@gmail.com>
+ <20191026182659.2390-2-marek.vasut@gmail.com>
+ <TYAPR01MB45441C49E8E4C33DDBB09071D8660@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+ <20191028102048.GA4414@e121166-lin.cambridge.arm.com>
+ <TYAPR01MB4544E78D7F49E2A1F9C53103D8610@TYAPR01MB4544.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-References: <CA+V-a8sCjSCgj_WKeEtxRwjF+PM392zeTQ3F3ZwQR=nPavFyXQ@mail.gmail.com>
- <b91c3f6e-cef5-c06d-4282-84c24d616533@ti.com> <CA+V-a8tFB=giGvcLNhfTaaQ-R8svXijcoQ_QUdRMX3Hb4Ur95Q@mail.gmail.com>
- <CA+V-a8vR+xar-TsTOiBtNfbYuP8Wb_ktuf-i7tOkQ+==rs7Rug@mail.gmail.com>
- <1ccb98e7-837d-059a-1292-f001b4bb66c6@ti.com> <CA+V-a8tesARYDpZ8n6=DJ2DMCuykikWfXx2bKe9XPRSq1yfZgg@mail.gmail.com>
-In-Reply-To: <CA+V-a8tesARYDpZ8n6=DJ2DMCuykikWfXx2bKe9XPRSq1yfZgg@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Tue, 29 Oct 2019 10:24:31 +0000
-Message-ID: <CA+V-a8ugFfLaapNcQdvzHEYfyT8UajY6psc0G1K7sdAgGzpSOQ@mail.gmail.com>
-Subject: Re: [Query] : PCIe - Endpoint Function
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TYAPR01MB4544E78D7F49E2A1F9C53103D8610@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Kishon,
-
-On Tue, Oct 22, 2019 at 7:06 AM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
->
-> Hi Kishon,
->
->
-> On Tue, Oct 15, 2019 at 8:53 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> >
-> > Hi Prabhakar,
-> >
-> > On 11/10/19 7:07 PM, Lad, Prabhakar wrote:
-> > > Hi Kishon
+On Tue, Oct 29, 2019 at 01:18:04AM +0000, Yoshihiro Shimoda wrote:
+> Hi Lorenzo,
+> 
+> > From: Lorenzo Pieralisi, Sent: Monday, October 28, 2019 7:21 PM
+> > 
+> > On Mon, Oct 28, 2019 at 08:35:32AM +0000, Yoshihiro Shimoda wrote:
+> > > Hi Marek-san.
 > > >
-> > > On Fri, Oct 11, 2019 at 8:35 AM Lad, Prabhakar
-> > > <prabhakar.csengg@gmail.com> wrote:
-> > >>
-> > >> Hi Kishon,
-> > >>
-> > >> On Thu, Oct 10, 2019 at 12:32 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> > >>>
-> > >>> Hi Prabhakar,
-> > >>>
-> > >>> On 10/10/19 4:57 PM, Lad, Prabhakar wrote:
-> > >>>> Hello,
-> > >>>>
-> > >>>> I am currently working on adding pcie-endpoint support for a
-> > >>>> controller, this controller doesn't support outbound- inbound address
-> > >>>> translations, it has 1-1 mapping between the CPU and PCI addresses,
-> > >>>> the current endpoint framework is based on  outbound-inbound
-> > >>>> translations, what is the best approach to add this support, or is
-> > >>>> there any WIP already for it ?
-> > >>>
-> > >>> How will the endpoint access host buffer without outbound ATU? I assume the PCI
-> > >>> address reserved for endpoint is not the full 32-bit or 64-bit address space?
-> > >>> In that case, the endpoint cannot directly access the host buffer (unless the
-> > >>> host already knows the address space of the endpoint and gives the endpoint an
-> > >>> address in its OB address space).
-> > >>>
-> > > I lied in my previous mail.
+> > > > From: Marek Vasut, Sent: Sunday, October 27, 2019 3:27 AM
+> > > >
+> > > > Due to hardware constraints, the size of each inbound range entry
+> > > > populated into the controller cannot be larger than the alignment
+> > > > of the entry's start address. Currently, the alignment for each
+> > > > "dma-ranges" inbound range is calculated only once for each range
+> > > > and the increment for programming the controller is also derived
+> > > > from it only once. Thus, a "dma-ranges" entry describing a memory
+> > > > at 0x48000000 and size 0x38000000 would lead to multiple controller
+> > > > entries, each 0x08000000 long.
 > > >
-> > > a] The controller needs the cpu_address before starting the link, ie
-> > > with the current implementation,the bars physical address in endpoint
-> > > are assigned
-> > > using dma_alloc_coherent(), but I what I actually want here is the
-> > > phys_addr returned by pci_epc_mem_alloc_addr().
+> > > I added a debug code [1] and I confirmed that each entry is not 0x08000000 long [2].
 > > >
-> > > b] In the pci_endpoint_test driver, the pci_address sent to the
-> > > endpoint driver is again dma_alloc_coherent(), but the address which I
-> > > actually want to
-> > > send to endpoint is the BAR's assigned regions in the RC.
-> >
-> > The BAR assigned regions are usually used by RC to access EP memory.
-> > dma_alloc_coherent() is used in pci_endpoint_test to allocate buffer in host
-> > memory to be accessed by EP. Can you again check if statement 'b' is accurate?
-> >
-> yes you were correct, I misread the manual I have a rough driver
-> working now, will post as
-> soon as I tidy it up.
->
-after several runs of pcitest I hit the following issue any pointers
-on would this be the RC/endpoint ?
+> > > After fixed the commit log above,
+> > 
+> > So what does this mean in practice ? Does it mean that the commit log is
+> > wrong or that the issue is not present as described, in the mainline
+> > code ?
+> 
+> I meant the commit log is wrong. In such the case, the multiple controller
+> entries has 3 kind of size like below.
 
-[  153.637906] Internal error: synchronous external abort: 96000210
-[#1] PREEMPT SMP
-[  153.664156] Workqueue: kpcitest pci_epf_test_cmd_handler
-[  153.669505] pstate: 80000005 (Nzcv daif -PAN -UAO)
-[  153.674333] pc : __memcpy_fromio+0x40/0x80
-[  153.678456] lr : pci_epf_test_cmd_handler+0x44c/0x670
-[  153.683537] sp : ffff8000123abd10
-[  153.686871] x29: ffff8000123abd10 x28: 0000000000000000
-[  153.692217] x27: ffff000076b20000 x26: ffff8000124a0000
-[  153.697563] x25: ffff000076ecd000 x24: ffff00007c4ac000
-[  153.702909] x23: ffff800011bb9000 x22: ffff00007af7cc80
-[  153.708254] x21: ffff800011bb9000 x20: ffff800010eef000
-[  153.713600] x19: ffff00007af7ccc0 x18: 0000000000000000
-[  153.718946] x17: 0000000000000000 x16: 0000000000000000
-[  153.724291] x15: 0000000000000000 x14: 0000000000000000
-[  153.729637] x13: 0000000000000000 x12: 0000000000000001
-[  153.734984] x11: 0000000000000002 x10: 0000000000000050
-[  153.740330] x9 : ffff00007dbf2d98 x8 : 0000000000000000
-[  153.745676] x7 : 0000000000000001 x6 : 0000000000019000
-[  153.751021] x5 : ffff000076b39000 x4 : e7c67145d9acb067
-[  153.756367] x3 : ffff8000124afa78 x2 : 0000000000019000
-[  153.761714] x1 : ffff8000124a0000 x0 : ffff000076b2fa78
-[  153.767063] Call trace:
-[  153.769527]  __memcpy_fromio+0x40/0x80
-[  153.773307]  process_one_work+0x29c/0x718
-[  153.777343]  worker_thread+0x40/0x460
-[  153.781032]  kthread+0x11c/0x120
-[  153.784285]  ret_from_fork+0x10/0x18
-[  153.787887] Code: aa0103e3 927df0c6 910020c6 8b060005 (f9400064)
-[  153.794024] ---[ end trace d88a2a6a414998d3 ]---
+OK, that's confusing. The commit log is describing the issue it is
+fixing and you are reporting that's not what happens in practice, so in
+short my question is, is it possible to describe the issue you
+are fixing with an example representative of what's happening and
+explaining why we need to apply this patch please ?
 
-Cheers,
---Prabhakar
+Thanks,
+Lorenzo
+
+> > > +		dev_dbg(pcie->dev, "idx%d: 0x%016llx..0x%016llx -> 0x%016llx\n",
+> > > +			idx, cpu_addr, size, pci_addr);
+> <snip>
+> > > [    0.374771] rcar-pcie fe000000.pcie: idx0: 0x0000000048000000..0x0000000008000000 -> 0x0000000048000000
+> 
+> The first entry's size is 0x08000000.
+> 
+> > > [    0.374777] rcar-pcie fe000000.pcie: idx2: 0x0000000050000000..0x0000000010000000 -> 0x0000000050000000
+> 
+> The second one's size is 0x10000000.
+> 
+> > > [    0.374782] rcar-pcie fe000000.pcie: idx4: 0x0000000060000000..0x0000000020000000 -> 0x0000000060000000
+> 
+> The third one's size is 0x20000000.
+> 
+> > Please clarify and send a v5 accordingly.
+> 
+> Marek-san, would you send a v5 patch series?
+> 
+> Best regards,
+> Yoshihiro Shimoda
+> 
+> > Thanks,
+> > Lorenzo
+> > 
+> > > Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > >
+> > > And I tested on r8a7795-salvator-xs with my debug code. So,
+> > >
+> > > Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > >
+> > > Best regards,
+> > > Yoshihiro Shimoda
+> > >
+> > > ---
+> > > [1] Based on next-20191025 with this patch series:
+> > > diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> > > index fde6ec1..9bdd39e 100644
+> > > --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> > > +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> > > @@ -2684,7 +2684,7 @@
+> > >  				0x02000000 0 0x30000000 0 0x30000000 0 0x08000000
+> > >  				0x42000000 0 0x38000000 0 0x38000000 0 0x08000000>;
+> > >  			/* Map all possible DDR as inbound ranges */
+> > > -			dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x40000000>;
+> > > +			dma-ranges = <0x42000000 0 0x48000000 0 0x48000000 0 0x38000000>;
+> > >  			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
+> > >  				<GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
+> > >  				<GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+> > > diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
+> > > index 0dadccb..54ad977 100644
+> > > --- a/drivers/pci/controller/pcie-rcar.c
+> > > +++ b/drivers/pci/controller/pcie-rcar.c
+> > > @@ -11,6 +11,8 @@
+> > >   * Author: Phil Edworthy <phil.edworthy@renesas.com>
+> > >   */
+> > >
+> > > +#define DEBUG
+> > > +
+> > >  #include <linux/bitops.h>
+> > >  #include <linux/clk.h>
+> > >  #include <linux/delay.h>
+> > > @@ -1054,6 +1056,8 @@ static int rcar_pcie_inbound_ranges(struct rcar_pcie *pcie,
+> > >  		mask = roundup_pow_of_two(size) - 1;
+> > >  		mask &= ~0xf;
+> > >
+> > > +		dev_dbg(pcie->dev, "idx%d: 0x%016llx..0x%016llx -> 0x%016llx\n",
+> > > +			idx, cpu_addr, size, pci_addr);
+> > >  		/*
+> > >  		 * Set up 64-bit inbound regions as the range parser doesn't
+> > >  		 * distinguish between 32 and 64-bit types.
+> > > ---
+> > > [2]
+> > > [    0.374771] rcar-pcie fe000000.pcie: idx0: 0x0000000048000000..0x0000000008000000 -> 0x0000000048000000
+> > > [    0.374777] rcar-pcie fe000000.pcie: idx2: 0x0000000050000000..0x0000000010000000 -> 0x0000000050000000
+> > > [    0.374782] rcar-pcie fe000000.pcie: idx4: 0x0000000060000000..0x0000000020000000 -> 0x0000000060000000
+> > > ---
+> > >
