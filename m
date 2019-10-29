@@ -2,44 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FF2DE7EE2
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2019 04:34:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A4882E7FC7
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2019 06:40:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbfJ2Der (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Oct 2019 23:34:47 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5216 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726025AbfJ2Der (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 28 Oct 2019 23:34:47 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 875B859B04CB6891E704;
-        Tue, 29 Oct 2019 11:34:42 +0800 (CST)
-Received: from [127.0.0.1] (10.133.224.57) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 29 Oct 2019
- 11:34:34 +0800
-Subject: Re: [PATCH] pci: lock the pci_cfg_wait queue for the consistency of
- data
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     <bhelgaas@google.com>, <wangxiongfeng2@huawei.com>,
-        <wanghaibin.wang@huawei.com>, <guoheyi@huawei.com>,
-        <yebiaoxiang@huawei.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <tglx@linutronix.de>, <guohanjun@huawei.com>,
-        <yangyingliang@huawei.com>
-References: <20191028091809.35212-1-zhengxiang9@huawei.com>
- <20191028163041.GA8257@bombadil.infradead.org>
-From:   Xiang Zheng <zhengxiang9@huawei.com>
-Message-ID: <14e7d02e-215d-30dc-548c-e605f3ffdf1e@huawei.com>
-Date:   Tue, 29 Oct 2019 11:34:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        id S1728312AbfJ2Fko (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Oct 2019 01:40:44 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57172 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfJ2Fko (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Oct 2019 01:40:44 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9T5eVQa123431;
+        Tue, 29 Oct 2019 00:40:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572327631;
+        bh=TLIG+N2ulLyByssQEEKVgxs+nraNcwf+u9BpyOQyR18=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=NcxvC5pdB2/a8lx58UwxXcUHftv+jGVmkokzU1d3G8yMWmhSbEdk7CufEp0W8E7P8
+         46Cpv3rMqGwl093nfGGpbe+NJsFhsaxhmMh7gaG58wd6+0sKZUxJYXJGWFrKma7IqS
+         TEOswO/fHNcXC3BQ2QfcP2xVVC5UaZRS6Ypv8FL8=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9T5eVEI014555
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 29 Oct 2019 00:40:31 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 29
+ Oct 2019 00:40:18 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 29 Oct 2019 00:40:30 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9T5eSk4130719;
+        Tue, 29 Oct 2019 00:40:28 -0500
+Subject: Re: [PATCH] tools: PCI: Fix fd leakage
+To:     Hewenliang <hewenliang4@huawei.com>, <lorenzo.pieralisi@arm.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <bhelgaas@google.com>
+CC:     <linfeilong@huawei.com>
+References: <20191026013555.61016-1-hewenliang4@huawei.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <d384da9a-c417-fb5f-2881-b3039af0e997@ti.com>
+Date:   Tue, 29 Oct 2019 11:09:55 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191028163041.GA8257@bombadil.infradead.org>
+In-Reply-To: <20191026013555.61016-1-hewenliang4@huawei.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.224.57]
-X-CFilter-Loop: Reflected
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
@@ -47,65 +60,27 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 2019/10/29 0:30, Matthew Wilcox wrote:
-> On Mon, Oct 28, 2019 at 05:18:09PM +0800, Xiang Zheng wrote:
->> Commit "7ea7e98fd8d0" suggests that the "pci_lock" is sufficient,
->> and all the callers of pci_wait_cfg() are wrapped with the "pci_lock".
->>
->> However, since the commit "cdcb33f98244" merged, the accesses to
->> the pci_cfg_wait queue are not safe anymore. A "pci_lock" is
->> insufficient and we need to hold an additional queue lock while
->> read/write the wait queue.
->>
->> So let's use the add_wait_queue()/remove_wait_queue() instead of
->> __add_wait_queue()/__remove_wait_queue().
+On 26/10/19 7:05 AM, Hewenliang wrote:
+> We should close fd before the return of run_test.
 > 
-> As I said earlier, this reintroduces the deadlock addressed by
-> cdcb33f9824429a926b971bf041a6cec238f91ff
+> Fixes: 3f2ed8134834 ("tools: PCI: Add a userspace tool to test PCI endpoint")
+> Signed-off-by: Hewenliang <hewenliang4@huawei.com>
+
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  tools/pci/pcitest.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-
-Thanks Matthew, sorry for that I did not understand the way to reintroduce
-the deadlock and sent this patch. If what I think is right, the possible
-deadlock may be caused by the condition in which there are three processes:
-
-   *Process*                          *Acquired*         *Wait For*
-   wake_up_all()                      wq_head->lock      pi_lock
-   snbep_uncore_pci_read_counter()    pi_lock            pci_lock
-   pci_wait_cfg()                     pci_lock           wq_head->lock
-
-These processes suffer from the nested locks.:)
-
-But for this problem, what do you think about the solution below:
-
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index 2fccb5762c76..09342a74e5ea 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -207,14 +207,14 @@ static noinline void pci_wait_cfg(struct pci_dev *dev)
- {
-        DECLARE_WAITQUEUE(wait, current);
-
--       __add_wait_queue(&pci_cfg_wait, &wait);
-        do {
-                set_current_state(TASK_UNINTERRUPTIBLE);
-                raw_spin_unlock_irq(&pci_lock);
-+               add_wait_queue(&pci_cfg_wait, &wait);
-                schedule();
-+               remove_wait_queue(&pci_cfg_wait, &wait);
-                raw_spin_lock_irq(&pci_lock);
-        } while (dev->block_cfg_access);
--       __remove_wait_queue(&pci_cfg_wait, &wait);
- }
-
- /* Returns 0 on success, negative values indicate error. */
-
-
-
-> .
+> diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
+> index cb1e51fcc84e..32b7c6f9043d 100644
+> --- a/tools/pci/pcitest.c
+> +++ b/tools/pci/pcitest.c
+> @@ -129,6 +129,7 @@ static int run_test(struct pci_test *test)
+>  	}
+>  
+>  	fflush(stdout);
+> +	close(fd);
+>  	return (ret < 0) ? ret : 1 - ret; /* return 0 if test succeeded */
+>  }
+>  
 > 
-
--- 
-
-Thanks,
-Xiang
-
