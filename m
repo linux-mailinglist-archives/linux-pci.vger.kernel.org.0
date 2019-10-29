@@ -2,153 +2,221 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A6F3E865C
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2019 12:12:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 628B2E8664
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2019 12:15:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbfJ2LMh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Oct 2019 07:12:37 -0400
-Received: from mail-eopbgr1410095.outbound.protection.outlook.com ([40.107.141.95]:32409
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727453AbfJ2LMg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:12:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y6DOCc4t39ifsNzpwGg0x40cFuxTmx/LDEc3+K8YVeekmFbAW5kQEi7dnf5WvNB1AmONXQVE6mQx9P4D7p10n4VtSTJ7lb76zmLl8HT0juojLP37ogJ8dlNlXxAS/LyPDZB3doXy7/G6RP4Tjdkid/1RS2ONecCxpPtT3bjS8JvlEVlKJ/n+KVnbHk4nc6WwjDwV0qVDL4hq3TqKFlGJEnF7c+JTaP4rLGamaGGjUj4ix0Y5jCXhLyQ7H9eeh0Ykbg3IOc6geICvgvbsuFgDRHxd1UcEFKxm49LLUv0IEanKcf2Y6oQ9Ke0j7uDphqhu2iQQziB46pc9423A1Jye4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dk1puDQ4/RIeb+eljSWUNM2oCyk3QVzuvZqhL/1HzA4=;
- b=m19nELDL3bifWTg4+iKvdE4FYmEizj68/lnkRgESF3dtf5mu08L2tcMS8tQV1ziGSGU4YBbS20i4kr8ui29Xl0efUbkdLS/2DakwBvsVRBqBSe6ydv308D2ScW8HOQCtVCouwD/vJoj99cvVRSBS6BWKhuvJGrfmfYUguGdu0VytQu3y13/HOFQN37nbEKxTJE7MNVGozDeLsUAq+ui51+j8ZgHCPu7fFIzhNudVsZJkl18MO1cCMTOwARR3KF8K/0xNbPprPSlx6VuTr+tOUYrkw2AtXsrU2hOzIp2fl1fBpn9Z1MmNNwVMGwcsvGOHPdp2coBP4dxeKfryWjwxlw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dk1puDQ4/RIeb+eljSWUNM2oCyk3QVzuvZqhL/1HzA4=;
- b=rImlMELNgCPzmUBwMPZG7u2y8NDZB9L2GlKM4opIMLZqkS+yWBOT1QTEG/01NtZVpplF+3PH8Em2bsUOr6hj0SL2t0S8Zl02GpYaC6yt5ovGSzvCwXo9TCroLiZ2p6I+e0EOM6PnFzN9Icz1lnaUoYGxePG0IPqcOYB4dB0iI0k=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB3597.jpnprd01.prod.outlook.com (20.178.140.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.22; Tue, 29 Oct 2019 11:12:32 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::548:32de:c810:1947]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::548:32de:c810:1947%4]) with mapi id 15.20.2387.025; Tue, 29 Oct 2019
- 11:12:32 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH V4 2/2] PCI: rcar: Recalculate inbound range alignment for
- each controller entry
-Thread-Topic: [PATCH V4 2/2] PCI: rcar: Recalculate inbound range alignment
- for each controller entry
-Thread-Index: AQHVjCsJKpaGn6Kn8EmC1egFxu/pWadvudHAgAAglACAAPhiQIAAneEAgAAImKA=
-Date:   Tue, 29 Oct 2019 11:12:32 +0000
-Message-ID: <TYAPR01MB45442DBF6F1308E693DC2274D8610@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <20191026182659.2390-1-marek.vasut@gmail.com>
- <20191026182659.2390-2-marek.vasut@gmail.com>
- <TYAPR01MB45441C49E8E4C33DDBB09071D8660@TYAPR01MB4544.jpnprd01.prod.outlook.com>
- <20191028102048.GA4414@e121166-lin.cambridge.arm.com>
- <TYAPR01MB4544E78D7F49E2A1F9C53103D8610@TYAPR01MB4544.jpnprd01.prod.outlook.com>
- <20191029103452.GA27171@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20191029103452.GA27171@e121166-lin.cambridge.arm.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [150.249.235.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c6ddb4ef-b10c-40db-adb8-08d75c60e516
-x-ms-traffictypediagnostic: TYAPR01MB3597:
-x-microsoft-antispam-prvs: <TYAPR01MB3597777DFDA419F752BA9890D8610@TYAPR01MB3597.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0205EDCD76
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(39860400002)(136003)(396003)(346002)(189003)(199004)(3846002)(66556008)(25786009)(8676002)(26005)(7736002)(66066001)(305945005)(4326008)(8936002)(9686003)(74316002)(6506007)(2906002)(6436002)(102836004)(486006)(186003)(6116002)(55016002)(478600001)(229853002)(6246003)(6916009)(14454004)(66476007)(54906003)(33656002)(5660300002)(99286004)(316002)(86362001)(81166006)(256004)(7696005)(76176011)(476003)(446003)(71190400001)(11346002)(71200400001)(64756008)(52536014)(66946007)(66446008)(76116006)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB3597;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WYdFjUa4hQUg83SsY/y0D77fgK+awzSpfdE76Qelg2bxtyv9TyZrE/fz41x0rDJgtxRUX5OHA5WxBhJ45cXREewKbWOMoAa0wBgjW5nkIfJAXACOPANUVHvk7iMz17LqrcgkymR49mgr0rPImROHm549NdOjdlKinzR8u2HkiFCqpMj95+m2eYB6XXcruKtbjRfZBGOej+dzhDrD2zPekwe9mM5mc72G7JKIy4HyKKA2udmd4bht5w+qeUmpzNRWve5dnYOBvIFVHEwX1XxctWtzH5fBKz6lSdRAjd0EwZAakbHLnpoB/HJ6Ji/4/MvMWH1KnGJxZzjTkuzyLUKHiih8Ne5CSutWfsgfwXlhR7aGs5ihByTFNBdF3iHh4gk+U5j208zyBxfxxn/OnOG6q9NBcXNWZUjvybUk0al4iifZo53aZ8jjUOEzKTmY+Y73
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1727453AbfJ2LP1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Oct 2019 07:15:27 -0400
+Received: from mga12.intel.com ([192.55.52.136]:31180 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725776AbfJ2LP1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 29 Oct 2019 07:15:27 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 04:15:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
+   d="scan'208";a="211085589"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 29 Oct 2019 04:15:21 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 29 Oct 2019 13:15:20 +0200
+Date:   Tue, 29 Oct 2019 13:15:20 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Matthias Andree <matthias.andree@gmx.de>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
+ spec
+Message-ID: <20191029111520.GE2593@lahna.fi.intel.com>
+References: <20191028180601.GA2593@lahna.fi.intel.com>
+ <20191028201653.GA124445@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6ddb4ef-b10c-40db-adb8-08d75c60e516
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 11:12:32.5059
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dd2agaiVYWR5JWNya0uIKi+LaVTklPD/bdEQhnjOoMFWNNy6HK8JE7x0fJ/sOVagy6wrilOqRfgH63BWBmj9tq/tqgjH41EbnUT22gDQ3VOMAEIz3tsuEoH03kLHmL1F
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3597
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028201653.GA124445@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo,
+On Mon, Oct 28, 2019 at 03:16:53PM -0500, Bjorn Helgaas wrote:
+> > The related hardware event is resume in this case. Can you point me to
+> > the actual point where you want me to put this?
+> 
+> "Resume" is a Linux software concept, so of course the PCIe spec
+> doesn't say anything about it.  The spec talks about delays related to
+> resets and device power and link state transitions, so somehow we have
+> to connect the Linux delay with those hardware events.
+> 
+> Since we're talking about a transition from D3cold, this has to be
+> done via something external to the device such as power regulators.
+> For ACPI systems that's probably hidden inside _PS0 or something
+> similar.  That's opaque, but at least it's a hook that says "here's
+> where we put the device into D0".  I suggested
+> acpi_pci_set_power_state() as a possibility since I think that's the
+> lowest-level point where we have the pci_dev so we know the current
+> state and the new state.
 
-> From: Lorenzo Pieralisi, Sent: Tuesday, October 29, 2019 7:35 PM
->=20
-> On Tue, Oct 29, 2019 at 01:18:04AM +0000, Yoshihiro Shimoda wrote:
-> > Hi Lorenzo,
-> >
-> > > From: Lorenzo Pieralisi, Sent: Monday, October 28, 2019 7:21 PM
-> > >
-> > > On Mon, Oct 28, 2019 at 08:35:32AM +0000, Yoshihiro Shimoda wrote:
-> > > > Hi Marek-san.
-> > > >
-> > > > > From: Marek Vasut, Sent: Sunday, October 27, 2019 3:27 AM
-> > > > >
-> > > > > Due to hardware constraints, the size of each inbound range entry
-> > > > > populated into the controller cannot be larger than the alignment
-> > > > > of the entry's start address. Currently, the alignment for each
-> > > > > "dma-ranges" inbound range is calculated only once for each range
-> > > > > and the increment for programming the controller is also derived
-> > > > > from it only once. Thus, a "dma-ranges" entry describing a memory
-> > > > > at 0x48000000 and size 0x38000000 would lead to multiple controll=
-er
-> > > > > entries, each 0x08000000 long.
-> > > >
-> > > > I added a debug code [1] and I confirmed that each entry is not 0x0=
-8000000 long [2].
-> > > >
-> > > > After fixed the commit log above,
-> > >
-> > > So what does this mean in practice ? Does it mean that the commit log=
- is
-> > > wrong or that the issue is not present as described, in the mainline
-> > > code ?
-> >
-> > I meant the commit log is wrong. In such the case, the multiple control=
-ler
-> > entries has 3 kind of size like below.
->=20
-> OK, that's confusing. The commit log is describing the issue it is
-> fixing and you are reporting that's not what happens in practice, so in
-> short my question is, is it possible to describe the issue you
-> are fixing with an example representative of what's happening and
-> explaining why we need to apply this patch please ?
+I looked at how we could use acpi_pci_set_power_state() but I don't
+think it is possible because it is likely that only the root port has
+the power resource that is used to bring the link to L2 or L3. However,
+we would need to repeat the delay for each downstream/root port if there
+are multiple PCIe switches in the topology.
 
-I'm very sorry, I completely misunderstood the original commit description.
-I misunderstood "each 0x08000000 log" was a behavior of after we applied
-this patch...
+Also the delay needs to be issued after the downstream link is trained
+so the downstream/root port needs to be in D0 first.
 
-So, the description is no problem. In other words, we don't need to fix
-any description on this patch.
+> > > > > For D3cold->D0, I guess that would be somewhere down in
+> > > > > platform_pci_set_power_state()?  Maybe acpi_pci_set_power_state()?
+> > > > > What about the mid_pci_set_power_state() path?  Does that need this
+> > > > > too?
+> > > > 
+> > > > I can take a look if it can be placed there. Yes,
+> > > > mid_pci_set_power_state() may at least in theory need it too although I
+> > > > don't remember any MID platforms with real PCIe devices.
+> > > 
+> > > I don't know how the OS is supposed to know if these are real PCIe
+> > > devices or not.  If we don't know, we have to assume they work per
+> > > spec and may require the delays per spec.
+> > 
+> > Well MID devices are pretty much "hard-coded" the OS knows everything
+> > there is connected.
+> 
+> MID seems to be magic in that it wants to use the normal PCI core
+> without having to abide by all the assumptions in the spec.  That's
+> OK, but MID needs to be explicit about when it is OK to violate those
+> assumptions.  In this case, I think it means that if we add the delay
+> to acpi_pci_set_power_state(), we should at least add a comment to
+> mid_pci_set_power_state() about why the delay is or is not required
+> for MID.
+> 
+> > > > > In the ACPI spec, _PS0 doesn't say anything about delays.  _ON (which
+> > > > > I assume is not for PCI devices themselves) *does* say firmware is
+> > > > > responsible for sequencing delays, so I would tend to assume it's
+> > > > > really firmware's job and we shouldn't need to do this in the kernel
+> > > > > at all.
+> > > > 
+> > > > _ON is also for PCI device itself but all those methods are not just for
+> > > > PCI so they don't really talk about any PCI specific delays. You need to
+> > > > look at other specs. For example PCI FW spec v3.2 section 4.6.9 says
+> > > > this about the _DSM that can be used to decrease the delays:
+> > > > 
+> > > >   This function is optional. If the platform does not provide it, the
+> > > >   operating system must adhere to all timing requirements as described
+> > > >   in the PCI Express Base specification and/or applicable form factor
+> > > >   specification, including values contained in Readiness Time Reporting
+> > > >   capability structure.
+> > > 
+> > > I don't think this _DSM tells us anything about delays after _ON,
+> > > _PS0, etc.  All the delays it mentions are for transitions the OS can
+> > > do natively without the _ON, _PS0, etc methods.  It makes no mention
+> > > of those methods, or of the D3cold->D0 transition (which would require
+> > > them).
+> > 
+> > D3cold->D0 transition is explained in PCI spec 5.0 page 492 (there is
+> > picture). You can see that D3cold -> D0 involves fundamental reset.
+> > Section 6.6.1 (page 551) then says that fundamental reset is one
+> > category of conventional reset. Now, that _DSM allows lowering the init
+> > time after conventional reset. So to me it talks exactly about those
+> > delays (also PCIe cannot go into D3cold without help from the platform,
+> > ACPI in this case).
+> 
+> Everything on the _DSM list is something the OS can do natively (even
+> conventional reset can be done via Secondary Bus Reset), and it says
+> nothing about a connection with ACPI power management methods (_PS0,
+> etc), so I think it's ambiguous at best.  A simple "OS is responsible
+> for any bus-specific delays after a transition" in the ACPI _PS0
+> documentation would have trivially resolved this.
 
-Best regards,
-Yoshihiro Shimoda
+But I would imagine that is not always the case, that's the reason we
+have documents such as PCI FW.
 
+> But it seems that at least some ACPI firmware doesn't do those delays,
+> so I guess our only alternatives are to always do it in the OS or have
+> some sort of blacklist.  And it doesn't really seem practical to
+> maintain a blacklist.
+
+I really think this is crystal clear:
+
+The OS is always responsible for the delays described in the PCIe spec.
+However, if the platform implements some of them say in _ON or _PS0
+methods then it can notify the OS about this by using the _DSM so the OS
+does not need to duplicate all of them.
+
+> > > > Relevant PCIe spec section is 6.6.1 (also referenced in the changelog).
+> > > > 
+> > > > [If you have access to ECN titled "Async Hot-Plug Updates" (you can find
+> > > > it in PCI-SIG site) that document has a nice table about the delays in
+> > > > page 32. It compares surprise hotplug with downstream port containment
+> > > > for async hotplug]
+> > > 
+> > > Thanks for the pointer, that ECN looks very useful.  It does talk
+> > > about delays in general, but I don't see anything that clarifies
+> > > whether ACPI methods or the OS is responsible for them.
+> > 
+> > No but the _DSM description above is pretty clear about that. At least
+> > for me it is clear.
+> > 
+> > > > > What about D3hot->D0?  When a bridge (Root Port or Switch Downstream
+> > > > > Port) is in D3hot, I'm not really clear on the state of its link.  If
+> > > > > the link is down, I assume putting the bridge in D0 will bring it up
+> > > > > and we'd have to wait for that?  If so, we'd need to do something in
+> > > > > the reset path, e.g., pci_pm_reset()?
+> > > > 
+> > > > AFAIK the link goes into L1 when the function is programmed to any other
+> > > > D state than D0. 
+> > > 
+> > > Yes, and the "function" here is the one on the *downstream* end, e.g.,
+> > > the Endpoint or Switch Upstream Port.  When the upstream bridge (Root
+> > > Port or Switch Downstream Port) is in a non-D0 state, the downstream
+> > > component is unreachable (memory, I/O, and type 1 config requests are
+> > > terminated by the bridge as unsupported requests).
+> > 
+> > Yes, the link is in L1 (its PM state is determined by the D-state of the
+> > downstream component. From there you can get it back to functional state
+> > by programming the downstream port to D0 (the link is still in L1)
+> > followed by programming the function itself to D0 which brings the link
+> > back to L0. It does not involve conventional reset (see picture in page
+> > 492 of PCIe 5.0 spec). The recovery delays needed are listed in the same
+> > page.
+> > 
+> > > > If we don't put the device into D3cold then I think it
+> > > > stays in L1 where it can be brought back by writing D0 to PM register
+> > > > which does not need any other delay than the D3hot -> D0 (10ms).
+> > > 
+> > > In pci_pm_reset(), we're doing the D0->D3hot->D0 transitions
+> > > specifically to do a reset, so No_Soft_Reset is false.  Doesn't 6.6.1
+> > > say we need at least 100ms here?
+> > 
+> > No since it does not go into D3cold. It just "reset" the thing if it
+> > happens to do internal reset after D3hot -> D0.
+> 
+> Sec 5.8, Figure 5-18 says D3hot->D0uninitialized is a "Soft Reset", which
+> unfortunately is not defined.
+> 
+> My guess is that in sec 5.9, Table 5-13, the 10ms delay is for the
+> D3hot->D0active (i.e., No_Soft_Reset=1) transition, and the
+> D3hot->D0uninitialized (i.e., No_Soft_Reset=0) that does a "soft
+> reset" (whatever that is) probably requires more and we should handle
+> it like a conventional reset to be safe.
+
+I think it simply means the device functional context is lost (there is
+more in section 5.3.1.4). Linux handles this properly already (well at
+least according the minimum timings required by the spec) and restores
+the context accordingly after it has waited for the 10ms.
+
+It is the D3cold (where links go to L2 or L3) where we really need the
+delays so that the link gets properly trained before we start poking the
+downstream device.
