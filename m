@@ -2,105 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 665B0E874C
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2019 12:38:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8797FE8763
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2019 12:45:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725880AbfJ2Li2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Oct 2019 07:38:28 -0400
-Received: from mail-eopbgr40041.outbound.protection.outlook.com ([40.107.4.41]:15045
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727082AbfJ2Li2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:38:28 -0400
+        id S1725776AbfJ2Lpl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Oct 2019 07:45:41 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:47566 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730214AbfJ2Lpl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Oct 2019 07:45:41 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9TBTP9i031767;
+        Tue, 29 Oct 2019 04:45:36 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=R2+KvFbVEt6MFhW+3JYJvx/TTozMHQ7Lxc7+p/uUOMc=;
+ b=O7KSXM1oF8XE2ZuRmll2/E2EOscGRPSPdzA6EhETsKQtaxJX1kxnAQ3cHDybc16Zgidd
+ HEdt6eV7xENwTN0mGYbLK5dH8GVMii7wIAmRsx/09vW5jMKxpNwHt+UeQLZ7hN1JI2/i
+ 7J5Nu4zTfilkB09vBsMgIFzlqbeOCtVx3OwlZQ5Y0E0oUWlowoCh4WH1CCHfUhECOFld
+ /VBWsHWryVjCNkLQRNhOUxfX2aQMrejhDoXLqIVMtqdvEgijeGScxNmIkogQHx4yPKJK
+ DD/FpeWVK77FFXE0cotM/GnXyaYHJnQxtqkGgaLmWR/XmsIwETX5cJDl4LvvvnOgTezs fQ== 
+Received: from nam04-sn1-obe.outbound.protection.outlook.com (mail-sn1nam04lp2058.outbound.protection.outlook.com [104.47.44.58])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2vvhqx9m9g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 29 Oct 2019 04:45:35 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k3n02fkZwmZS8QbXM3M/gJXetZ3N7fEbDl30mFVNOOjfVnoQpSQVC659HBQKWNfkqQwXDSYGV6r01XE1ui1hELlflJLqrWsrqHD81bZpPL55ri4qFk59lnx5/z31AwlFVUGzglfimFjZ7WxEuV3UpHheSp7FcxzwvLdqSHZwFXDRl7SbIAn6QwOOBLlETMbbe4hY0nmLm869SqrkccIGx+VrOnKr+NvZm0cJpH+nnHQ8WObgyzU5W+JfQY6lqXkU82zRz+UPLR+1iTWaRELsoD4bd0BoJ5hWINLihNaz4/aZPvLWI2gHQfDmbdnw7pVWI7G0hrXctm6z1wRZejKuDg==
+ b=NXws08UnhJ68E0kG94dOXPnweXr8wE6S+dacgFTgFem+rsXnkAv1Z7/gnkCD5H9XWwnuc80IVIMt/c7M2nVPR7E2LTJ6HeBIyEU4jyRRW3C+Br1PnVC0YBUQpwfkiQspgDogDwY1ZQSmIo22bGWvE4ANcB2I4/y5OQTDFfhlivpJ/HZReB8jOYasckjElV2CDucY7kJe1k1pUmNtPP2s/4hWv2DhhN06xVGwBzxLDNIRXIv7sfUens/eOBYh/pTm3nXFot3SHZt+yVpdKYxJ/yYA1BREoPqqbcNWjCavzYu2YFIn3jDPbj33A6btvP/wskPsxcbjT2oRPDnzzJ8IAw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Umu+H05qPNmF5LXZsLaFuNkd9fe/JwJzfRUVH5xM0rI=;
- b=fJoVBaMKvKIt42BicDTWxi3CgOUHssErGR1v118xpik3VOy+AOq9H9YIy0YfrfuCLm/oXz5WAuxaxHnQc5cxofjQ+AKp/vsRpi4pnsNz9JkUl09PSRyvVeZHIAQ8551ZDZA/IFObmDMWA7vtpwZtRcrKpW1DNlab6Enk5bi5u0VRQoki9AuF4C3gYQCmj+lQ2qQeQxmsKsf6A2oi37P6NxLFGmSdbBLafB0rIa5Ali9TThQzy7rMh6sZ+NVHP7ZLYYsI7UUk3ysS2osO7Bt06/SkznVyAWunQEi0Fm3S8289467TPrJCKjPZgzyE/k0o4OPHEdVlInuZ5p1Bayboug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ bh=R2+KvFbVEt6MFhW+3JYJvx/TTozMHQ7Lxc7+p/uUOMc=;
+ b=l3qvC0ooptVMC0ejkLan85Mc1JgZY/8EE1c6g4/gghYVBed/J9v7rtqFP5t1hBZkVDkJaKOJCGjjx+80b3PKAW7F5lToo5XBVmLRzmQ/4UzyG+hR1jl0rpvm6PxuwARZdL/SufBOgx3JHBCJCOlQURrH2UCS8K2g5uOW8l9w/wz70GaadTKbz+KiDsE5MHWdzS1/YumssqFHMQjjtulQSA3hQu97WTmDeiDmRN/WvsOcx5AhtLP74AY+/xsHeAc6ANcmJ/6GuMz93qaFuqEPYVMs1LBUrWcDVV8ShwLVHjvzZjdNjolfr1RoXmOMrvBl4Yy57nRhzDIci+pnzccP6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 199.43.4.28) smtp.rcpttodomain=arm.com smtp.mailfrom=cadence.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Umu+H05qPNmF5LXZsLaFuNkd9fe/JwJzfRUVH5xM0rI=;
- b=jPrsDVV53eEmcYVgN9A9vQSS74D/mWSbNKQ+6JgqkHiIeRQmr4/BKjzGn9YqDW1jqJM43ZuOfMoufKUw+P74ItxJXvCkDjMRkNx29H9Vwkwrax7pOBBWLoqyfBTRqMjOb5zMtErQkjjSwT295TzQK3y010HjbeqCx/XjmT2jw70=
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
- DB8PR04MB6971.eurprd04.prod.outlook.com (52.133.240.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.17; Tue, 29 Oct 2019 11:38:22 +0000
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::f54f:12e3:3d7c:167b]) by DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::f54f:12e3:3d7c:167b%3]) with mapi id 15.20.2367.031; Tue, 29 Oct 2019
- 11:38:22 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: RE: Mobiveil legacy IRQ binding erroneous interrupt-map
-Thread-Topic: Mobiveil legacy IRQ binding erroneous interrupt-map
-Thread-Index: AQHVhAzztyV80rOdUEeX01X1c1IXDqdxj21w
-Date:   Tue, 29 Oct 2019 11:38:22 +0000
-Message-ID: <DB8PR04MB67470C5AD54BC91BA5E2294F84610@DB8PR04MB6747.eurprd04.prod.outlook.com>
-References: <20191016103156.GC22848@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20191016103156.GC22848@e121166-lin.cambridge.arm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9d7e4dc8-1c20-4fed-d168-08d75c648119
-x-ms-traffictypediagnostic: DB8PR04MB6971:
-x-microsoft-antispam-prvs: <DB8PR04MB697148EE409EF1F85DB7481D84610@DB8PR04MB6971.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0205EDCD76
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(189003)(199004)(13464003)(99286004)(7696005)(86362001)(6506007)(53546011)(102836004)(71190400001)(256004)(14444005)(71200400001)(498600001)(8676002)(186003)(110136005)(8936002)(81156014)(81166006)(486006)(26005)(476003)(446003)(11346002)(4326008)(6246003)(55016002)(66066001)(9686003)(66476007)(66556008)(64756008)(33656002)(52536014)(66446008)(6436002)(229853002)(2906002)(7736002)(25786009)(76176011)(305945005)(74316002)(3846002)(76116006)(5660300002)(14454004)(6116002)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6971;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Q0Shi7SU4ehBw2F+2DjqOIr62te3NEdAYSVWo4Cov2qZua7E0ZYEkASxsYK/heMV/6/m84hsF1ZDxviGqLSvXVIZZCNMx67TS7ZPfQlfQP796p/Mxck8GvkvMAK+e0a2CzytCupjCejqGob7OpUV38uUyCJt46AfwR8AkiqtEq3aPm6H/rxbrwksP1I676XQJbAfu0rmBhnHBcdJEDe09pZLm+XEvdv1LY6NIDNvAKubt87NyIx4QUxLdZsViLpmhxvoQ9GT45+UkRYeBQebl86WOdiU9P26CsFm6mcT+sn9Eu9E/g7B9nPUdzJYyD0MXuCYFUuEdAS+mX1Mvxic8Gs/pAW3hw/DZYphJd+CC5HGfoIcVCYN6Udr7Gdoo1B/Tsod+kKOrl6zX3pooGc426qj0816V0V07JwAEjpxJdKyWIvqOKc2cZSut/dVT19T
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+ bh=R2+KvFbVEt6MFhW+3JYJvx/TTozMHQ7Lxc7+p/uUOMc=;
+ b=Bb6XwXaJ2JoPZ72UhoTALz3LQo43jUHyFYMRfyhaKyLmU1ofY9hfl1ixXduWZN+bwJEgZWJ1fln053eKj8PYBVG1qq1G0Hko/fOP/8+5h4t8761bH8pIA9Y7UJoao5hnWzbQIlxuPeCbcQR+5OAQyJy21RkWn5PL0/YyfeXKhNw=
+Received: from CY1PR07CA0020.namprd07.prod.outlook.com
+ (2a01:111:e400:c60a::30) by MN2PR07MB5903.namprd07.prod.outlook.com
+ (2603:10b6:208:105::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.24; Tue, 29 Oct
+ 2019 11:45:33 +0000
+Received: from CO1NAM05FT042.eop-nam05.prod.protection.outlook.com
+ (2a01:111:f400:7e50::201) by CY1PR07CA0020.outlook.office365.com
+ (2a01:111:e400:c60a::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.25 via Frontend
+ Transport; Tue, 29 Oct 2019 11:45:33 +0000
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ cadence.com discourages use of 199.43.4.28 as permitted sender)
+Received: from rmmaillnx1.cadence.com (199.43.4.28) by
+ CO1NAM05FT042.mail.protection.outlook.com (10.152.96.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2387.9 via Frontend Transport; Tue, 29 Oct 2019 11:45:33 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id x9TBjRPH003769
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Tue, 29 Oct 2019 07:45:29 -0400
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Tue, 29 Oct 2019 12:45:28 +0100
+Received: from lvlogina.cadence.com (10.165.176.102) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Tue, 29 Oct 2019 12:45:28 +0100
+Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
+        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x9TBjRhR007963;
+        Tue, 29 Oct 2019 11:45:27 GMT
+Received: (from tjoseph@localhost)
+        by lvlogina.cadence.com (8.14.4/8.14.4/Submit) id x9TBjQcu007960;
+        Tue, 29 Oct 2019 11:45:26 GMT
+From:   Tom Joseph <tjoseph@cadence.com>
+To:     <linux-pci@vger.kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-kernel@vger.kernel.org>, Tom Joseph <tjoseph@cadence.com>
+Subject: [PATCH v3 0/2]PCI: cadence: Convert drivers to core library
+Date:   Tue, 29 Oct 2019 11:45:10 +0000
+Message-ID: <1572349512-7776-1-git-send-email-tjoseph@cadence.com>
+X-Mailer: git-send-email 2.2.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9d7e4dc8-1c20-4fed-d168-08d75c648119
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 11:38:22.6843
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:199.43.4.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(396003)(376002)(136003)(36092001)(189003)(199004)(36756003)(476003)(4326008)(51416003)(6916009)(2616005)(86362001)(186003)(47776003)(8676002)(2351001)(126002)(305945005)(81166006)(8936002)(336012)(81156014)(486006)(107886003)(316002)(356004)(16586007)(48376002)(26005)(50466002)(42186006)(26826003)(50226002)(76130400001)(54906003)(70206006)(6666004)(5660300002)(70586007)(478600001)(87636003)(426003)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR07MB5903;H:rmmaillnx1.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:InfoDomainNonexistent;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1e3f9c73-5436-4b25-7e78-08d75c658198
+X-MS-TrafficTypeDiagnostic: MN2PR07MB5903:
+X-Microsoft-Antispam-PRVS: <MN2PR07MB5903D05F48A483613A8794BCA1610@MN2PR07MB5903.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 0205EDCD76
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: fXZJKm/UexB/rktDy1hLhD7lSdqTf96pbhB0VHxbzsZjqIdN+SQKWG8Jr+hVuiGjb9hOGAZhQQiaPLQHM8HSW7fpTdKWsC38lwjnSqCROen7H0fGQ5Z4i/H1IvuTKcmgllEGmamG9WfBjEKzOmJrYXB1UVWTYA8FBpVZzfJAJRScuclkeZIMTtAs2WdLnj1LGPS5vuAfi5CFCBxpaj/vTeQei/wx2/XUcjZueuozamUKLk1++Fr+CUBT4QYnxGFtqhnBrB9W7HdUbWNWzfO2Y61GxT/VuGlmxHo79RSx/bZtfInDbYN+36+lyPszrFCLM8v3hPtylzu1kHLZ7sFFP7cYYmUYmo1QRa6Y+jXWZCy/GDTSLjnWaRcmeMjmp2erwa36PLvYSxa3mZI9l9sV3npyHxZRWoGJXPxdntziJA0iY89HJAiglH9qatgTIlLW8CcGcUUUvNmnrLI6rr72aw==
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2019 11:45:33.0350
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XyCT3QFUvdShEv8mK2J0oIJNGT/XiOj/k1Vr8yQmRQFxvOiaA528icDzMpNQLe/PPtmi9QEO0N5ixBTrEIW4YA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6971
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e3f9c73-5436-4b25-7e78-08d75c658198
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.28];Helo=[rmmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR07MB5903
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-29_03:2019-10-28,2019-10-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 adultscore=0
+ clxscore=1015 impostorscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ priorityscore=1501 phishscore=0 malwarescore=0 suspectscore=1 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910290118
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgTG9yZW56bywNCg0KVGhlIE1vYml2ZWlsIElOVHggY29udHJvbGxlciBpcyBub3QgdXNlZCBv
-biBOWFAncyBwbGF0Zm9ybSwgc28gSSBjYW5ub3QgdmVyaWZ5IHRoaXMgZmVhdHVyZS4gDQoNCkth
-cnRoaWtleWFuLCBwbGVhc2UgaGF2ZSBhIGxvb2sgb24gdGhpcyBpc3N1ZS4NCg0KVGhhbmtzLA0K
-WmhpcWlhbmcNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMb3Jlbnpv
-IFBpZXJhbGlzaSA8bG9yZW56by5waWVyYWxpc2lAYXJtLmNvbT4NCj4gU2VudDogMjAxOcTqMTDU
-wjE2yNUgMTg6MzINCj4gVG86IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT47IEthcnRo
-aWtleWFuIE1pdHJhbg0KPiA8bS5rYXJ0aGlrZXlhbkBtb2JpdmVpbC5jby5pbj4NCj4gQ2M6IGxp
-bnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogTW9iaXZlaWwgbGVnYWN5IElSUSBi
-aW5kaW5nIGVycm9uZW91cyBpbnRlcnJ1cHQtbWFwDQo+IA0KPiBIaSBIb3UsIEthcnRoaWtleWFu
-LA0KPiANCj4gSSBoYXZlIGp1c3Qgbm90aWNlZCB0aGUgbW9iaXZlaWwgaW50ZXJydXB0LW1hcCBE
-VCBiaW5kaW5ncyBleGFtcGxlIGlzIHdyb25nOg0KPiANCj4gVGhpczoNCj4gDQo+IGludGVycnVw
-dC1tYXAgPSA8MCAwIDAgMCAmcGNpX2V4cHJlc3MgMD4sDQo+IAkJPDAgMCAwIDEgJnBjaV9leHBy
-ZXNzIDE+LA0KPiAJCTwwIDAgMCAyICZwY2lfZXhwcmVzcyAyPiwNCj4gCQk8MCAwIDAgMyAmcGNp
-X2V4cHJlc3MgMz47DQo+IA0KPiBzaG91bGQgYmU6DQo+IA0KPiBpbnRlcnJ1cHQtbWFwID0gPDAg
-MCAwIDEgJnBjaV9leHByZXNzIDA+LA0KPiAJCTwwIDAgMCAyICZwY2lfZXhwcmVzcyAxPiwNCj4g
-CQk8MCAwIDAgMyAmcGNpX2V4cHJlc3MgMj4sDQo+IAkJPDAgMCAwIDQgJnBjaV9leHByZXNzIDM+
-Ow0KPiANCj4gTGVnYWN5IElSUXMgSW50ZXJydXB0IHBpbnMgbWFwIHRoaXMgd2F5Og0KPiANCj4g
-e3sxLCBJTlRBfSwgezIsIElOVEJ9LCB7MyxJTlRDfSwgezQsSU5URH19DQo+IA0KPiAoYXMgcmVh
-ZCBmcm9tIEludGVycnVwdCBwaW4gcmVnaXN0ZXIgaW4gdGhlIGNvbmZpZyBzcGFjZSBoZWFkZXIp
-IChpZSByZWZlciB0bw0KPiBQQ0kgbG9jYWwgYnVzIHNwZWNpZmljYXRpb24gMy4wKSwgcGxlYXNl
-IGZpeCBpdCBhcyBzb29uIGFzIHBvc3NpYmxlLg0KPiANCj4gTG9yZW56bw0K
+This patch series intend to refactor the cadence pcie host and endpoint
+driver files as a library, such that this can be used by other platform
+drivers. A new folder 'cadence' is created to group all the cadence
+derivatives.  
+
+v3:
+- Commit logs rephrased and corrected as suggested by Andrew and Kishon
+- Created a new folder 'cadence', as suggested by Kishon.
+- Removed few unwanted codes, as pointed out by review comments
+
+Tom Joseph (2):
+  PCI: cadence: Refactor driver to use as a core library
+  PCI: cadence: Create new folder 'cadence' and move all cadence files
+    to it
+
+ drivers/pci/controller/Kconfig                     |  29 +---
+ drivers/pci/controller/Makefile                    |   4 +-
+ drivers/pci/controller/cadence/Kconfig             |  45 ++++++
+ drivers/pci/controller/cadence/Makefile            |   5 +
+ .../pci/controller/{ => cadence}/pcie-cadence-ep.c |  96 +-----------
+ .../controller/{ => cadence}/pcie-cadence-host.c   |  95 +----------
+ drivers/pci/controller/cadence/pcie-cadence-plat.c | 174 +++++++++++++++++++++
+ .../pci/controller/{ => cadence}/pcie-cadence.c    |   0
+ .../pci/controller/{ => cadence}/pcie-cadence.h    |  77 +++++++++
+ 9 files changed, 315 insertions(+), 210 deletions(-)
+ create mode 100644 drivers/pci/controller/cadence/Kconfig
+ create mode 100644 drivers/pci/controller/cadence/Makefile
+ rename drivers/pci/controller/{ => cadence}/pcie-cadence-ep.c (83%)
+ rename drivers/pci/controller/{ => cadence}/pcie-cadence-host.c (76%)
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-plat.c
+ rename drivers/pci/controller/{ => cadence}/pcie-cadence.c (100%)
+ rename drivers/pci/controller/{ => cadence}/pcie-cadence.h (82%)
+
+-- 
+2.2.2
+
