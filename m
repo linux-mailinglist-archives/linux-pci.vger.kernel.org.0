@@ -2,134 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EED8E92DE
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2019 23:12:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B262E9313
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2019 23:40:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726175AbfJ2WM1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Oct 2019 18:12:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55160 "EHLO mail.kernel.org"
+        id S1725840AbfJ2Wk6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Oct 2019 18:40:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbfJ2WM0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 29 Oct 2019 18:12:26 -0400
+        id S1725830AbfJ2Wk5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 29 Oct 2019 18:40:57 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DFA92054F;
-        Tue, 29 Oct 2019 22:12:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2DE12087E;
+        Tue, 29 Oct 2019 22:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572387146;
-        bh=yEsO971/WTtVJLXlhquhSunZEYk3y36yVtfl9IyRQc8=;
+        s=default; t=1572388857;
+        bh=v5gzJmE2dln6pw4yR+knU1rOZCh6ulPeLzSS5/eKRUs=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=JQxF2ReJIJ7HE+ov3dSB9pHFT4qEi+2+PRmzDYx/wE97ofUZJlW9AL3HMlRzQ534u
-         3INp7qC4QAwRRUAO0VGQTijuKTP3jKlSyVc2yKtF5bUgCIK3Y3FeNYPGxWXM2SjaNl
-         djqjvmJIiduYTwavBL4KBL29ax5z4eFrsCgHSXDM=
-Date:   Tue, 29 Oct 2019 17:12:24 -0500
+        b=YyzvrccGJtv6P7XbJWkwLOxpn3gfmAzSunSOIpzvtcZdGDZHe2HTWwfoAkV1EgXTy
+         L6RryWakIJFNMqfpwDlsGdkup6A48pPYZFxwbT3ytDkGJwmwNypiZWgrVAQuIeKSli
+         dJlBmNojhmZY+gM1KJShlrfhcEGcPA7W/Tzm9Hjs=
+Date:   Tue, 29 Oct 2019 17:40:55 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Christoph Hellwig <hch@infradead.org>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Ley Foon Tan <lftan@altera.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Ray Jui <rjui@broadcom.com>, rfi@lists.rocketboards.org,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Horman <horms@verge.net.au>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Tom Joseph <tjoseph@cadence.com>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v3 19/25] PCI: of: Add inbound resource parsing to helpers
-Message-ID: <20191029221224.GA117069@google.com>
+To:     m.karthikeyan@mobiveil.co.in
+Cc:     linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        mingkai.hu@nxp.com, mark.rutland@arm.com, minghuan.lian@nxp.com,
+        zhiqiang.hou@nxp.com, l.subrahmanya@mobiveil.co.in
+Subject: Re: [PATCH] PCI: mobiveil: Modified the Device tree bindings
+ interrupt-map example
+Message-ID: <20191029224055.GA117186@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191029110751.GB27171@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20191029155342.29342-1-m.karthikeyan@mobiveil.co.in>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 11:07:51AM +0000, Lorenzo Pieralisi wrote:
-> On Mon, Oct 28, 2019 at 11:32:50AM -0500, Rob Herring wrote:
-> > Extend devm_of_pci_get_host_bridge_resources() and
-> > pci_parse_request_of_pci_ranges() helpers to also parse the inbound
-> > addresses from DT 'dma-ranges' and populate a resource list with the
-> > translated addresses. This will help ensure 'dma-ranges' is always
-> > parsed in a consistent way.
-> > 
-> > Cc: Jingoo Han <jingoohan1@gmail.com>
-> > Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Toan Le <toan@os.amperecomputing.com>
-> > Cc: Ley Foon Tan <lftan@altera.com>
-> > Cc: Tom Joseph <tjoseph@cadence.com>
-> > Cc: Ray Jui <rjui@broadcom.com>
-> > Cc: Scott Branden <sbranden@broadcom.com>
-> > Cc: bcm-kernel-feedback-list@broadcom.com
-> > Cc: Ryder Lee <ryder.lee@mediatek.com>
-> > Cc: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
-> > Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > Cc: Simon Horman <horms@verge.net.au>
-> > Cc: Shawn Lin <shawn.lin@rock-chips.com>
-> > Cc: Heiko Stuebner <heiko@sntech.de>
-> > Cc: Michal Simek <michal.simek@xilinx.com>
-> > Cc: rfi@lists.rocketboards.org
-> > Cc: linux-mediatek@lists.infradead.org
-> > Cc: linux-renesas-soc@vger.kernel.org
-> > Cc: linux-rockchip@lists.infradead.org
-> > Tested-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com> # for AArdvark
-> > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> > Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> > v2:
-> >  - Fix crash in INIT_LIST_HEAD when ib_resources is NULL
-> > ---
-> >  .../pci/controller/dwc/pcie-designware-host.c |  3 +-
-> >  drivers/pci/controller/pci-aardvark.c         |  2 +-
-> >  drivers/pci/controller/pci-ftpci100.c         |  3 +-
-> >  drivers/pci/controller/pci-host-common.c      |  2 +-
-> >  drivers/pci/controller/pci-v3-semi.c          |  3 +-
-> >  drivers/pci/controller/pci-versatile.c        |  3 +-
-> >  drivers/pci/controller/pci-xgene.c            |  3 +-
-> >  drivers/pci/controller/pcie-altera.c          |  2 +-
-> >  drivers/pci/controller/pcie-cadence-host.c    |  2 +-
-> >  drivers/pci/controller/pcie-iproc-platform.c  |  3 +-
-> >  drivers/pci/controller/pcie-mediatek.c        |  2 +-
-> >  drivers/pci/controller/pcie-mobiveil.c        |  3 +-
-> >  drivers/pci/controller/pcie-rcar.c            |  3 +-
-> >  drivers/pci/controller/pcie-rockchip-host.c   |  3 +-
-> >  drivers/pci/controller/pcie-xilinx-nwl.c      |  3 +-
-> >  drivers/pci/controller/pcie-xilinx.c          |  3 +-
-> >  drivers/pci/of.c                              | 45 ++++++++++++++++++-
-> >  drivers/pci/pci.h                             |  8 +++-
-> >  include/linux/pci.h                           |  9 ++--
-> >  19 files changed, 82 insertions(+), 23 deletions(-)
-> 
-> Hi Bjorn,
-> 
-> please let me know if you are OK with this patch, the series is
-> ready to go upstream IMO.
+On Tue, Oct 29, 2019 at 09:23:42PM +0530, m.karthikeyan@mobiveil.co.in wrote:
+> From: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
 
-Yep, looks good to me.  If you want it:
+*All* patches modify something, so the subject line isn't very
+informative.  I think you're actually fixing a bug:
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> -		interrupt-map = <0 0 0 0 &pci_express 0>,
+> +		interrupt-map = <0 0 0 1 &pci_express 0>,
+
+and *that* should be clear in the subject.  Maybe something like:
+
+  dt-bindings: PCI: mobiveil: Correct INTx mapping
+
+I don't know the implications of this for backwards compatibility.
+
+> Legacy IRQs Interrupt pins map 01h, 02h, 03h, and 04h while value of 00h
+> indicates Function uses no legacy interrupt Message
+> 
+> Signed-off-by: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+> ---
+>  .../devicetree/bindings/pci/mobiveil-pcie.txt | 19 ++++++++++++-------
+>  1 file changed, 12 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+> index 64156993e05..b9dcb0ddc19 100644
+> --- a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+> @@ -31,9 +31,14 @@ Required properties:
+>  - interrupts: The interrupt line of the PCIe controller
+>  		last cell of this field is set to 4 to
+>  		denote it as IRQ_TYPE_LEVEL_HIGH type interrupt.
+> -- interrupt-map-mask,
+> -	interrupt-map: standard PCI properties to define the mapping of the
+> -	PCI interface to interrupt numbers.
+> +- interrupt-map-mask:
+> +		Its a 4-tuple like structure denoting phys.hi, phys.mid,
+> +		phys.low and interrupt-cell
+> +- interrupt-map: standard PCI properties to define the mapping of the
+> +		PCI interface to interrupt numbers. Here the first 4-tuple
+> +		are represented similar to interrupt-map-mask representation
+> +		while the next fields represents Interrupt controller phandle
+> +		and its #interrupt-cells fields
+
+The original text was basically the same as all the other bindings, so
+I don't really see the point of changing this to be different from all
+the rest.
+
+A few (mediatek, nvidia) refer to the "standard PCI bus binding
+document" for more details.
+
+Maybe there should be a common place in the Linux source for
+describing these "standard properties" so it's not repeated
+everywhere?
+
+>  - ranges: ranges for the PCI memory regions (I/O space region is not
+>  	supported by hardware)
+>  	Please refer to the standard PCI bus binding document for a more
+> @@ -63,10 +68,10 @@ Example:
+>  		#interrupt-cells = <1>;
+>  		interrupts = < 0 89 4 >;
+>  		interrupt-map-mask = <0 0 0 7>;
+> -		interrupt-map = <0 0 0 0 &pci_express 0>,
+> -				<0 0 0 1 &pci_express 1>,
+> -				<0 0 0 2 &pci_express 2>,
+> -				<0 0 0 3 &pci_express 3>;
+> +		interrupt-map = <0 0 0 1 &pci_express 0>,
+> +				<0 0 0 2 &pci_express 1>,
+> +				<0 0 0 3 &pci_express 2>,
+> +				<0 0 0 4 &pci_express 3>;
+
+Above you say the first 4-tuple in interrupt-map is similar to
+interrupt-map-mask, but these all look the same and they don't look
+like interrupt-map-mask.
+
+Oh, I guess you mean the "0 0 0 1" is a 4-tuple and the
+"&pci_express 0" part is the "next fields".  I would have called that
+a 6-tuple.  But I'm not a DT person, so maybe I just don't know the
+terminology.
+
+>  		ranges = < 0x83000000 0 0x00000000 0xa8000000 0 0x8000000>;
+>  
+>  	};
+> -- 
+> 2.17.1
+> 
+> 
+> -- 
+> Mobiveil INC., CONFIDENTIALITY NOTICE: This e-mail message, including any 
+> attachments, is for the sole use of the intended recipient(s) and may 
+> contain proprietary confidential or privileged information or otherwise be 
+> protected by law. Any unauthorized review, use, disclosure or distribution 
+> is prohibited. If you are not the intended recipient, please notify the 
+> sender and destroy all copies and the original message.
+
+You should try to avoid confidentiality notices like this in email to
+the public mailing lists.  I don't know whether we could apply a patch
+with this notice on it or not.
