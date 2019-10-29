@@ -2,96 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 64255E8AEF
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2019 15:38:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E531E8B49
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2019 15:56:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389406AbfJ2OiI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Oct 2019 10:38:08 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:46041 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388885AbfJ2OiI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Oct 2019 10:38:08 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 5A08D3C0582;
-        Tue, 29 Oct 2019 15:38:05 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id aAdtT_z4Yddc; Tue, 29 Oct 2019 15:37:59 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 653233C0585;
-        Tue, 29 Oct 2019 15:37:56 +0100 (CET)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 29 Oct
- 2019 15:37:56 +0100
-Date:   Tue, 29 Oct 2019 15:37:53 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-CC:     <horms@verge.net.au>, <linux-pci@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <stable@vger.kernel.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yohhei Fukui <yohhei.fukui@denso-ten.com>,
-        Asano Yasushi <yasano@jp.adit-jv.com>,
-        Steffen Pengel <spengel@jp.adit-jv.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH v4] PCI: rcar: Fix missing MACCTLR register setting in
- rcar_pcie_hw_init()
-Message-ID: <20191029143753.GA28404@vmlxhi-102.adit-jv.com>
-References: <1570769432-15358-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        id S2388899AbfJ2O4R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Oct 2019 10:56:17 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41548 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388713AbfJ2O4R (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Oct 2019 10:56:17 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 94so9971731oty.8
+        for <linux-pci@vger.kernel.org>; Tue, 29 Oct 2019 07:56:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FdV3Var4HGrWGzVusBRK79viWL5WaK8Y1u6DFBz9i7o=;
+        b=H8yLttDieWgzBqge1hgc+cyRcU+bGPRDCYOlHc3n6jLbdqzPF5vHosmJR9QPPZM/eo
+         F+r4JgjePmQKeiO4t7C2OkRM092DuIrCbNN1Cd+qczZRfbpbC7pDVMTM62hXfUp9ea+U
+         1oKIGGC5eN4XI/b3DeIBgndhqFn30BljiHXiyM52cFN0BUPbyve/o/JozyyVgl5G/rA7
+         3JD8TWOKCoQMhO4sqUaRAu4Y/Lgji5mkk7DN04fy6YJfzUj0n3HeNV+Df8v45hKgT0N2
+         Gtv5TWwjiPZChnviK2S901jH9Qs2JXfdRP8jbf0RzkdkO8tE55N5WN21SE3FifQZmULh
+         mS9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FdV3Var4HGrWGzVusBRK79viWL5WaK8Y1u6DFBz9i7o=;
+        b=QT97OLp0kxIwJyPz7183YAO6IgOSTI2Y1hqOWUB235rosE35enPYQ3dLgXaDlKbYwK
+         YyDg8qYCj7CrnYukQiOyF4sJtwwuJfq7fSkUSqrRcRNLpjzjfuqlWbPEsAH5auS+9MDT
+         +mf330bOPS8ypYY9h2lv/EZrf+lAEp0bkFVIeZ8MZATDWizffC1fUl94RgizGAsG/sGL
+         cVZxRQQoTmAwZBm0wKadeDIJqUgF7cuDXfTsa+vZq49Kzf4ExZ+8wlhvRaRehScXJ4ki
+         j5gY1ifYVkZ3U4t6nf44LC8J/rofxu3vlfsnjvsGNsjGjMYWFSNcfoLd1nK84cBcVrfK
+         OORw==
+X-Gm-Message-State: APjAAAW06cw9E3d/Qf9r8C0KfbfTugUWBBC/v1gn/IRNjRpqfVVZWM8F
+        Tnq4Qaayed/tZrw/a4IgNDCzV/NXYYpX4qBHc+0=
+X-Google-Smtp-Source: APXvYqzbIRuEziUcWOc3TS0Co0zGuzvQU/FrmRMe+o1sd6cpWlFW6fUdsfh92RzAfNXdPWut6CfC7DBtAhP/WkEOz44=
+X-Received: by 2002:a9d:5d09:: with SMTP id b9mr951104oti.44.1572360976266;
+ Tue, 29 Oct 2019 07:56:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1570769432-15358-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
-X-Originating-IP: [10.72.93.184]
+References: <CA+V-a8sCjSCgj_WKeEtxRwjF+PM392zeTQ3F3ZwQR=nPavFyXQ@mail.gmail.com>
+ <b91c3f6e-cef5-c06d-4282-84c24d616533@ti.com> <CA+V-a8tFB=giGvcLNhfTaaQ-R8svXijcoQ_QUdRMX3Hb4Ur95Q@mail.gmail.com>
+ <CA+V-a8vR+xar-TsTOiBtNfbYuP8Wb_ktuf-i7tOkQ+==rs7Rug@mail.gmail.com>
+ <1ccb98e7-837d-059a-1292-f001b4bb66c6@ti.com> <CA+V-a8tesARYDpZ8n6=DJ2DMCuykikWfXx2bKe9XPRSq1yfZgg@mail.gmail.com>
+ <CA+V-a8ugFfLaapNcQdvzHEYfyT8UajY6psc0G1K7sdAgGzpSOQ@mail.gmail.com> <196e020d-e0aa-8a8d-21da-deff05d8aa81@ti.com>
+In-Reply-To: <196e020d-e0aa-8a8d-21da-deff05d8aa81@ti.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 29 Oct 2019 14:55:50 +0000
+Message-ID: <CA+V-a8soeaeHYyV3wQw0Qa5FvHJWo1dWHdf+19PYuYa31_3uHA@mail.gmail.com>
+Subject: Re: [Query] : PCIe - Endpoint Function
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dear Shimoda-san, dear reviewers,
+On Tue, Oct 29, 2019 at 10:54 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> Hi,
+>
+> On 29/10/19 3:54 PM, Lad, Prabhakar wrote:
+> > Hi Kishon,
+> >
+> > On Tue, Oct 22, 2019 at 7:06 AM Lad, Prabhakar
+> > <prabhakar.csengg@gmail.com> wrote:
+> >>
+> >> Hi Kishon,
+> >>
+> >>
+> >> On Tue, Oct 15, 2019 at 8:53 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> >>>
+> >>> Hi Prabhakar,
+> >>>
+> >>> On 11/10/19 7:07 PM, Lad, Prabhakar wrote:
+> >>>> Hi Kishon
+> >>>>
+> >>>> On Fri, Oct 11, 2019 at 8:35 AM Lad, Prabhakar
+> >>>> <prabhakar.csengg@gmail.com> wrote:
+> >>>>>
+> >>>>> Hi Kishon,
+> >>>>>
+> >>>>> On Thu, Oct 10, 2019 at 12:32 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> >>>>>>
+> >>>>>> Hi Prabhakar,
+> >>>>>>
+> >>>>>> On 10/10/19 4:57 PM, Lad, Prabhakar wrote:
+> >>>>>>> Hello,
+> >>>>>>>
+> >>>>>>> I am currently working on adding pcie-endpoint support for a
+> >>>>>>> controller, this controller doesn't support outbound- inbound address
+> >>>>>>> translations, it has 1-1 mapping between the CPU and PCI addresses,
+> >>>>>>> the current endpoint framework is based on  outbound-inbound
+> >>>>>>> translations, what is the best approach to add this support, or is
+> >>>>>>> there any WIP already for it ?
+> >>>>>>
+> >>>>>> How will the endpoint access host buffer without outbound ATU? I assume the PCI
+> >>>>>> address reserved for endpoint is not the full 32-bit or 64-bit address space?
+> >>>>>> In that case, the endpoint cannot directly access the host buffer (unless the
+> >>>>>> host already knows the address space of the endpoint and gives the endpoint an
+> >>>>>> address in its OB address space).
+> >>>>>>
+> >>>> I lied in my previous mail.
+> >>>>
+> >>>> a] The controller needs the cpu_address before starting the link, ie
+> >>>> with the current implementation,the bars physical address in endpoint
+> >>>> are assigned
+> >>>> using dma_alloc_coherent(), but I what I actually want here is the
+> >>>> phys_addr returned by pci_epc_mem_alloc_addr().
+> >>>>
+> >>>> b] In the pci_endpoint_test driver, the pci_address sent to the
+> >>>> endpoint driver is again dma_alloc_coherent(), but the address which I
+> >>>> actually want to
+> >>>> send to endpoint is the BAR's assigned regions in the RC.
+> >>>
+> >>> The BAR assigned regions are usually used by RC to access EP memory.
+> >>> dma_alloc_coherent() is used in pci_endpoint_test to allocate buffer in host
+> >>> memory to be accessed by EP. Can you again check if statement 'b' is accurate?
+> >>>
+> >> yes you were correct, I misread the manual I have a rough driver
+> >> working now, will post as
+> >> soon as I tidy it up.
+> >>
+> > after several runs of pcitest I hit the following issue any pointers
+> > on would this be the RC/endpoint ?
+>
+> It's difficult to tell without seeing your EP controller driver. It could be a
+> ordering issue. Can you add mb() after memcpy_fromio() in pcitest (for the
+> error below)?
+>
+adding a memory barrier to doesn't help either. Ill debug further.
 
-On Fri, Oct 11, 2019 at 01:50:32PM +0900, Yoshihiro Shimoda wrote:
-> According to the R-Car Gen2/3 manual, the bit 0 of MACCTLR register
-> should be written to 0 before enabling PCIETCTLR.CFINIT because
-> the bit 0 is set to 1 on reset. To avoid unexpected behaviors from
-> this incorrect setting, this patch fixes it.
-
-Your development and reviewing effort to reach v4 is very appreciated.
-
-However, in the context of some internal reviews of this patch, we are
-having hard times reconciling the change with our (possibly incomplete
-or inaccurate) interpretation of the R-Car3 HW User’s Manual (Rev.2.00
-Jul 2019). The latter says in
-Chapter "54. PCIE Controller" / "(2) Initial Setting of PCI Express":
-
- ----snip----
- Be sure to write the initial value (= H'80FF 0000) to MACCTLR before
- enabling PCIETCTLR.CFINIT.
- ----snip----
-
-Is my assumption correct that the description of this patch is a
-rewording of the above quote from the manual or is there another more
-precise statement referring to resetting LSB only (w/o touching the
-rest of the MACCTLR bits)?
-
-If it is only the LSB which "should be written to 0 before enabling
-PCIETCTLR.CFINIT", would you agree that the statement quoted from the
-manual would better be rephrased appropriately? TIA.
-
-> 
-> Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
-> Fixes: be20bbcb0a8c ("PCI: rcar: Add the initialization of PCIe link in resume_noirq()")
-> Cc: <stable@vger.kernel.org> # v5.2+
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
--- 
-Best Regards,
-Eugeniu
+Cheers,
+--Prabhakar Lad
