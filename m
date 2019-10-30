@@ -2,39 +2,21 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DABBE99C9
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2019 11:14:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 505BFE99DC
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2019 11:21:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbfJ3KOw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Oct 2019 06:14:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49208 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfJ3KOv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Oct 2019 06:14:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1zcHzV6zD9O31in8kloh0B+z/m7z7NmzyB+w3XnQ5n0=; b=JVMN2HK7jSkTDg7jvvWFgxKps
-        33dFe9rksD72eL1C0ZfkvXpfJ7oIWUyop44jpXFaN+lYnQ/3mxpvFce4ufdn0Sea4E+vhie4e8ZL0
-        WH1oDCTKeHyNs0cOIhxponiaDB8QoLAlRPYbcV/+r8xevez0CtKtZ29hbKSoDWhX1+aZRKlPMX98y
-        hu0xBDJUAgXi1dVpRnM2pzqUcKYtIb1VdX9W+Sy7/ISv25+BNG2eGjDdeVEOnE9ehabw0CnRefgF8
-        SirU2htNWeemJs3Js0j5Z03a+ZYcQ88fvdsH73YwNiqQ2L88MfUMqJQGFfP7w3jZ0PLibDY38H7pz
-        DSWIUSqFA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPl07-0002G6-G2; Wed, 30 Oct 2019 10:14:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C3D813006D0;
-        Wed, 30 Oct 2019 11:13:48 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DCD862B4574F7; Wed, 30 Oct 2019 11:14:49 +0100 (CET)
-Date:   Wed, 30 Oct 2019 11:14:49 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
+        id S1726096AbfJ3KVD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Oct 2019 06:21:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50336 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726069AbfJ3KVD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 30 Oct 2019 06:21:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AADF4B58E;
+        Wed, 30 Oct 2019 10:20:58 +0000 (UTC)
+Date:   Wed, 30 Oct 2019 11:20:54 +0100
+From:   Michal Hocko <mhocko@kernel.org>
 To:     Yunsheng Lin <linyunsheng@huawei.com>
 Cc:     catalin.marinas@arm.com, will@kernel.org, mingo@redhat.com,
         bp@alien8.de, rth@twiddle.net, ink@jurassic.park.msu.ru,
@@ -47,18 +29,18 @@ Cc:     catalin.marinas@arm.com, will@kernel.org, mingo@redhat.com,
         anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
         robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
-        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
-        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
-        linux-mips@vger.kernel.org, rafael@kernel.org, mhocko@kernel.org,
-        gregkh@linuxfoundation.org, bhelgaas@google.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        len.brown@intel.com, axboe@kernel.dk, dledford@redhat.com,
+        jeffrey.t.kirsher@intel.com, linux-alpha@vger.kernel.org,
+        naveen.n.rao@linux.vnet.ibm.com, mwb@linux.vnet.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        tbogendoerfer@suse.de, linux-mips@vger.kernel.org,
+        rafael@kernel.org, gregkh@linuxfoundation.org, bhelgaas@google.com,
         linux-pci@vger.kernel.org, rjw@rjwysocki.net, lenb@kernel.org,
         linux-acpi@vger.kernel.org
 Subject: Re: [PATCH v7] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Message-ID: <20191030101449.GW4097@hirez.programming.kicks-ass.net>
+Message-ID: <20191030102054.GX31513@dhcp22.suse.cz>
 References: <1572428068-180880-1-git-send-email-linyunsheng@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -70,12 +52,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 05:34:28PM +0800, Yunsheng Lin wrote:
+On Wed 30-10-19 17:34:28, Yunsheng Lin wrote:
 > When passing the return value of dev_to_node() to cpumask_of_node()
 > without checking if the device's node id is NUMA_NO_NODE, there is
 > global-out-of-bounds detected by KASAN.
 > 
-> From the discussion [1], NUMA_NO_NODE really means no node affinity,
+> >From the discussion [1], NUMA_NO_NODE really means no node affinity,
 > which also means all cpus should be usable. So the cpumask_of_node()
 > should always return all cpus online when user passes the node id as
 > NUMA_NO_NODE, just like similar semantic that page allocator handles
@@ -94,11 +76,137 @@ On Wed, Oct 30, 2019 at 05:34:28PM +0800, Yunsheng Lin wrote:
 > patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
 > 
 > [1] https://lkml.org/lkml/2019/9/11/66
+
+Please do not use lkml.org links. They tend to break quite often.
+Use http://lkml.kernel.org/r/$msg_id or lore.kernel.org
+
 > Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 > Suggested-by: Michal Hocko <mhocko@kernel.org>
 > Acked-by: Michal Hocko <mhocko@suse.com>
 > Acked-by: Paul Burton <paul.burton@mips.com> # MIPS bits
+> ---
+> V7: replace -1 with NUMA_NO_NODE for mips ip27 as suggested by Paul.
+> V6: Drop the cpu_all_mask -> cpu_online_mask change for it seems a
+>     little controversial, may need deeper investigation, and rebased
+>     on the latest linux-next.
+> V5: Drop unsigned "fix" change for x86/arm64, and change comment log
+>     according to Michal's comment.
+> V4: Have all these changes in a single patch.
+> V3: Change to only handle NUMA_NO_NODE, and return cpu_online_mask
+>     for NUMA_NO_NODE case, and change the commit log to better justify
+>     the change.
+> V2: make the node id checking change to other arches too.
+> ---
+>  arch/arm64/include/asm/numa.h                    | 3 +++
+>  arch/arm64/mm/numa.c                             | 3 +++
+>  arch/mips/include/asm/mach-ip27/topology.h       | 2 +-
+>  arch/mips/include/asm/mach-loongson64/topology.h | 4 +++-
+>  arch/s390/include/asm/topology.h                 | 3 +++
+>  arch/x86/include/asm/topology.h                  | 3 +++
+>  arch/x86/mm/numa.c                               | 3 +++
+>  7 files changed, 19 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/numa.h b/arch/arm64/include/asm/numa.h
+> index 626ad01..c8a4b31 100644
+> --- a/arch/arm64/include/asm/numa.h
+> +++ b/arch/arm64/include/asm/numa.h
+> @@ -25,6 +25,9 @@ const struct cpumask *cpumask_of_node(int node);
+>  /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
+>  static inline const struct cpumask *cpumask_of_node(int node)
+>  {
+> +	if (node == NUMA_NO_NODE)
+> +		return cpu_online_mask;
+> +
+>  	return node_to_cpumask_map[node];
+>  }
+>  #endif
+> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+> index 4decf16..5ae7eea 100644
+> --- a/arch/arm64/mm/numa.c
+> +++ b/arch/arm64/mm/numa.c
+> @@ -46,6 +46,9 @@ EXPORT_SYMBOL(node_to_cpumask_map);
+>   */
+>  const struct cpumask *cpumask_of_node(int node)
+>  {
+> +	if (node == NUMA_NO_NODE)
+> +		return cpu_online_mask;
+> +
+>  	if (WARN_ON(node >= nr_node_ids))
+>  		return cpu_none_mask;
+>  
+> diff --git a/arch/mips/include/asm/mach-ip27/topology.h b/arch/mips/include/asm/mach-ip27/topology.h
+> index 965f079..db293cf 100644
+> --- a/arch/mips/include/asm/mach-ip27/topology.h
+> +++ b/arch/mips/include/asm/mach-ip27/topology.h
+> @@ -15,7 +15,7 @@ struct cpuinfo_ip27 {
+>  extern struct cpuinfo_ip27 sn_cpu_info[NR_CPUS];
+>  
+>  #define cpu_to_node(cpu)	(sn_cpu_info[(cpu)].p_nodeid)
+> -#define cpumask_of_node(node)	((node) == -1 ?				\
+> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
+>  				 cpu_all_mask :				\
+>  				 &hub_data(node)->h_cpus)
+>  struct pci_bus;
+> diff --git a/arch/mips/include/asm/mach-loongson64/topology.h b/arch/mips/include/asm/mach-loongson64/topology.h
+> index 7ff819a..e78daa6 100644
+> --- a/arch/mips/include/asm/mach-loongson64/topology.h
+> +++ b/arch/mips/include/asm/mach-loongson64/topology.h
+> @@ -5,7 +5,9 @@
+>  #ifdef CONFIG_NUMA
+>  
+>  #define cpu_to_node(cpu)	(cpu_logical_map(cpu) >> 2)
+> -#define cpumask_of_node(node)	(&__node_data[(node)]->cpumask)
+> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
+> +				 cpu_online_mask :			\
+> +				 &__node_data[(node)]->cpumask)
+>  
+>  struct pci_bus;
+>  extern int pcibus_to_node(struct pci_bus *);
+> diff --git a/arch/s390/include/asm/topology.h b/arch/s390/include/asm/topology.h
+> index cca406f..1bd2e73 100644
+> --- a/arch/s390/include/asm/topology.h
+> +++ b/arch/s390/include/asm/topology.h
+> @@ -78,6 +78,9 @@ static inline int cpu_to_node(int cpu)
+>  #define cpumask_of_node cpumask_of_node
+>  static inline const struct cpumask *cpumask_of_node(int node)
+>  {
+> +	if (node == NUMA_NO_NODE)
+> +		return cpu_online_mask;
+> +
+>  	return &node_to_cpumask_map[node];
+>  }
+>  
+> diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
+> index 4b14d23..7fa82e1 100644
+> --- a/arch/x86/include/asm/topology.h
+> +++ b/arch/x86/include/asm/topology.h
+> @@ -69,6 +69,9 @@ extern const struct cpumask *cpumask_of_node(int node);
+>  /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
+>  static inline const struct cpumask *cpumask_of_node(int node)
+>  {
+> +	if (node == NUMA_NO_NODE)
+> +		return cpu_online_mask;
+> +
+>  	return node_to_cpumask_map[node];
+>  }
+>  #endif
+> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> index 4123100e..9859acb 100644
+> --- a/arch/x86/mm/numa.c
+> +++ b/arch/x86/mm/numa.c
+> @@ -861,6 +861,9 @@ void numa_remove_cpu(int cpu)
+>   */
+>  const struct cpumask *cpumask_of_node(int node)
+>  {
+> +	if (node == NUMA_NO_NODE)
+> +		return cpu_online_mask;
+> +
+>  	if ((unsigned)node >= nr_node_ids) {
+>  		printk(KERN_WARNING
+>  			"cpumask_of_node(%d): (unsigned)node >= nr_node_ids(%u)\n",
+> -- 
+> 2.8.1
 
-Still:
-
-Nacked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+-- 
+Michal Hocko
+SUSE Labs
