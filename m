@@ -2,81 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B6A3DEA4E5
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2019 21:40:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 76738EA5A8
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2019 22:45:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbfJ3Uk4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Oct 2019 16:40:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36154 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726483AbfJ3Uk4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 30 Oct 2019 16:40:56 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C21A2080F;
-        Wed, 30 Oct 2019 20:40:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572468055;
-        bh=uDzTuuW0eeNiIMtkt7NpH65MPpTxQGR0fvDGgA3VMI4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UqNGd+ZTUpJFhDMfv4SJi/+Ag6YQuDIuqGDEH2hEJ1sXl1QquoHjHNRJcjOJgXZe5
-         cODQTCGliDN5izuvmxmqSeQlF77MS6TQqon4dFGAVw+hm+hNfjQ5yWp4VLP03VwqtJ
-         0mBFRh1OclJ7C8JEuD5pTRYODL2gC/iQGKnT5HhE=
-Date:   Wed, 30 Oct 2019 15:40:54 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, davem@davemloft.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, axboe@kernel.dk,
-        peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        id S1727186AbfJ3Vpu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Oct 2019 17:45:50 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40582 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbfJ3Vpu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Oct 2019 17:45:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5D45zdPgzpjQNOnSx9aM0/fseA7MNMJnB+IytBClieU=; b=J6LQ7VfSbXoLVh2AfMxxcO5Ev
+        jMDlrS4Ga6c/bK5wkesrM/ljWY1/1S5YWScBxAN2ddfoZzb2UAa1+vfsYmLJHpKW5LMmMFnQg4O1t
+        jcwa01gjs5mPo+dmI7jZ+KaiMmeqraf9LHhGdbSWN81n+7Ftl5/XFyFPluIdrhfXeP9f1SftrZcMr
+        32kIDpWcXB66sykrfrNRquYu7JVjRfOlh5GWXj7BPLnQwtqA+bVyuQTPurT0PxttnT/iVJH5xcYkU
+        S/1YcFyQceL8gp6n7NNZmcy74XDc8aWurib+AgQxIRdiwwJD5M9qztlbyM8Uf1Fl+FV6i8zz4BQsb
+        l4VnhbfnQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iPvmm-0003lk-5A; Wed, 30 Oct 2019 21:45:48 +0000
+Date:   Wed, 30 Oct 2019 14:45:48 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     rubini@gnudd.com, hch@infradead.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, helgaas@kernel.org,
         linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/5] PCI: pci_ids: Add Loongson IDs
-Message-ID: <20191030204054.GA247856@google.com>
+Subject: Re: [PATCH v2 2/2] x86/PCI: sta2x11: use default DMA address
+ translation
+Message-ID: <20191030214548.GC25515@infradead.org>
+References: <20191018110044.22062-1-nsaenzjulienne@suse.de>
+ <20191018110044.22062-3-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191030135347.3636-2-jiaxun.yang@flygoat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191018110044.22062-3-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Please pay attention to the "git log --oneline
-include/linux/pci_ids.h" output and make yours match, e.g.,
-
-  PCI: Add Loongson Vendor and Device IDs
-
-On Wed, Oct 30, 2019 at 09:53:43PM +0800, Jiaxun Yang wrote:
-> Add Loongson device IDs that will be used by drivers later.
+On Fri, Oct 18, 2019 at 01:00:44PM +0200, Nicolas Saenz Julienne wrote:
+> The devices found behind this PCIe chip have unusual DMA mapping
+> constraints as there is an AMBA interconnect placed in between them and
+> the different PCI endpoints. The offset between physical memory
+> addresses and AMBA's view is provided by reading a PCI config register,
+> which is saved and used whenever DMA mapping is needed.
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-
-With that change,
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> ---
->  include/linux/pci_ids.h | 4 ++++
->  1 file changed, 4 insertions(+)
+> It turns out that this DMA setup can be represented by properly setting
+> 'dma_pfn_offset', 'dma_bus_mask' and 'dma_mask' during the PCI device
+> enable fixup. And ultimately allows us to get rid of this device's
+> custom DMA functions.
 > 
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 21a572469a4e..75f3336116eb 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -148,6 +148,10 @@
->  
->  /* Vendors and devices.  Sort key: vendor first, device next. */
->  
-> +#define PCI_VENDOR_ID_LOONGSON		0x0014
-> +#define PCI_DEVICE_ID_LOONGSON_GMAC	0x7a03
-> +#define PCI_DEVICE_ID_LOONGSON_AHCI	0x7a08
-> +
->  #define PCI_VENDOR_ID_TTTECH		0x0357
->  #define PCI_DEVICE_ID_TTTECH_MC322	0x000a
->  
-> -- 
-> 2.23.0
-> 
+> Aside from the code deletion and DMA setup, sta2x11_pdev_to_mapping() is
+> moved to avoid warnings whenever CONFIG_PM is not enabled.
+
+Looks sensible to me:
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+
+But I can't tested it either, and kinda wonder if this code is actually
+still used by anyone..
