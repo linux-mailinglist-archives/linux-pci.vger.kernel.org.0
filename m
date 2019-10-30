@@ -2,157 +2,205 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 353E9E9A6F
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2019 11:55:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 041C6E9A9D
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2019 12:15:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfJ3KzC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Oct 2019 06:55:02 -0400
-Received: from mail-eopbgr1400112.outbound.protection.outlook.com ([40.107.140.112]:16256
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726184AbfJ3KzB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 30 Oct 2019 06:55:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nikVD3MiJyI4j6QZbP6QMpLuWuo8Ciuo6TxBFnqUq1PPbbzwmUtMSFXlNO8uq30CO3za2yL9JLWmvZSlnHCDp1zZIXWm801Myl5YxT4ILIJAbktEmr1GTvBtvPsWFh0hkFKVhI3vfp5BZEsEVOy+uAjm6+gu245yBAqQ1kZi4vEpGnTJz4DiDzR03qaICyS79pXQaQbrIYLBBnueeV4xvqw6Pq+Ia+ojMQ3MsQvbGyG7aWMvmzA7OYhr0l/HCjh4Wg8/CPGbHBo6XgVfAO7XORlSNN0Wq2NmKtkIYhvofeYfYBOJKANexCfmByoSFkUAopquiySKbZPGHLIKUcwqPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fTBnueVLT5wFN+5wbmvt0C5NwdxD2Eu4NzUz5Y2SZis=;
- b=lkMkePywubP58+GM/ZD9o8Rt5Bx5w2ewyuLnN6blSIlVc/RZW56jLayszZmOp/ccSNJgOU3LvlDWTsT96Tej0d/SFj3rzE1RmqGx2ZwDXixVd7sOoIH8dg/+7YmHndx9xpKzEImpsfAqILgjKzEsviyObgfXonRryEKV67/IC4GkLDyguC87h/s0Po2Xi+u8UXFVwV9vuo3em20JGVbOrO5WVRI1bysyawNII3uHFUVjqf0xv2R49ewnEnOYfHlfm9+A1EpI0Ye075+uXs+56TahXjS5D1Hndo3V/u2mxzBq0sZZs9UC0Sw4suSR5Kh9bfjwjH6F+L7CeSXcpj4lzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fTBnueVLT5wFN+5wbmvt0C5NwdxD2Eu4NzUz5Y2SZis=;
- b=rz9gnA0yFK/UkiBOY0rcAATbfWAV72vfDYgsB/74rTxRt4zS2nESwgzt4dWyO/Dk7R2nwHKK9RCDKBezwmOanrhnZ2k1vgdyWTDuecJ+CU3wHf3PMpt4LQpGAqA/8DbWdB+I2xmX2YV1dZL5O2gmwTTqotF8ZzpIuH8N3WzHLPE=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB3198.jpnprd01.prod.outlook.com (20.177.103.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.24; Wed, 30 Oct 2019 10:54:58 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::548:32de:c810:1947]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::548:32de:c810:1947%4]) with mapi id 15.20.2387.028; Wed, 30 Oct 2019
- 10:54:58 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     "REE erosca@DE.ADIT-JV.COM" <erosca@DE.ADIT-JV.COM>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "horms@verge.net.au" <horms@verge.net.au>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Yohhei Fukui <yohhei.fukui@denso-ten.com>,
-        Asano Yasushi <yasano@jp.adit-jv.com>,
-        Steffen Pengel <spengel@jp.adit-jv.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: RE: [PATCH v4] PCI: rcar: Fix missing MACCTLR register setting in
- rcar_pcie_hw_init()
-Thread-Topic: [PATCH v4] PCI: rcar: Fix missing MACCTLR register setting in
- rcar_pcie_hw_init()
-Thread-Index: AQHVf+9qjSU3Sv51RE+DQhHbHCYXz6dxzQWAgAC8WBCAAG87AIAAJ8fA
-Date:   Wed, 30 Oct 2019 10:54:58 +0000
-Message-ID: <TYAPR01MB4544F1923120021A1D6A31D8D8600@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <1570769432-15358-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20191029143753.GA28404@vmlxhi-102.adit-jv.com>
- <TYAPR01MB45441F470C83E7CAEF4D72E0D8600@TYAPR01MB4544.jpnprd01.prod.outlook.com>
- <CAMuHMdXxhrJ0bqGi3JZkjgrr7=p-_NfA7Lmd8q32=Ho4tEXw0A@mail.gmail.com>
-In-Reply-To: <CAMuHMdXxhrJ0bqGi3JZkjgrr7=p-_NfA7Lmd8q32=Ho4tEXw0A@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [150.249.235.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0d3ad0cc-f4c0-41bd-1baa-08d75d279b30
-x-ms-traffictypediagnostic: TYAPR01MB3198:
-x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-x-microsoft-antispam-prvs: <TYAPR01MB319838585A350CA844872334D8600@TYAPR01MB3198.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 02065A9E77
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39860400002)(376002)(136003)(396003)(366004)(189003)(199004)(2906002)(71190400001)(6246003)(3846002)(7416002)(6916009)(33656002)(71200400001)(256004)(6116002)(4326008)(7696005)(229853002)(52536014)(5660300002)(99286004)(86362001)(9686003)(66946007)(11346002)(14454004)(66066001)(446003)(102836004)(486006)(6506007)(74316002)(478600001)(476003)(55016002)(7736002)(6436002)(186003)(26005)(8936002)(81156014)(81166006)(305945005)(8676002)(316002)(25786009)(66476007)(76176011)(64756008)(66556008)(66446008)(54906003)(76116006);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB3198;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fJq4Luc766nQY838iICt37MbNJjNoBLszmuwWZBBPXTCalBwQjQct/zBKzvJBkCx4WC0LoWji2Rqdmz0AYzvFLHmCBl5J8opE7kBQ+dWM2vWeXZbJk1VvNvGxocB5oVkW633RbUVK5qjI7laLCbXYgIBoxNEX2rshV+DCEfO3ASJDczbZEKOhyrPfzdxjsnvOco9Gs/+50h9+zldRphH6EUwrUwLTcGEtmNm/IjQr08dJYcecZiDpJFzGaymSmhF75dL8+doIHhnvNl17aGel6HhOuyhrImZwIvowcbELacRKV6nSB+AzehUAZYQRogEF6MCermBcMQCXYF6chpRZvCzweTXD21RLQAaTGrRFXqo/RJsDQlGHZH9OLIduS2bAE1DEmn3F95DXblezQnPZ5kyxTUR3r2BXWVUpF6wL5OOv+yXNIejMrGbdCbHS+7N
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726102AbfJ3LPW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Oct 2019 07:15:22 -0400
+Received: from mga03.intel.com ([134.134.136.65]:24063 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726088AbfJ3LPW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 30 Oct 2019 07:15:22 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 04:15:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
+   d="scan'208";a="211303915"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 30 Oct 2019 04:15:17 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 30 Oct 2019 13:15:16 +0200
+Date:   Wed, 30 Oct 2019 13:15:16 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
+ spec
+Message-ID: <20191030111516.GX2593@lahna.fi.intel.com>
+References: <20191029111520.GE2593@lahna.fi.intel.com>
+ <20191029202708.GA38926@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d3ad0cc-f4c0-41bd-1baa-08d75d279b30
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2019 10:54:58.2544
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yshSKBbcn0EifbMO81HacByi4tIHUEXNiYYC+zJXxGbqdMq371IwYfzc2oEVdwQbF3hEL4ZgT2Xr6BaFzxkxfLkFVtp+3S+G0tObndJZ0iPI/ygOpjK5GJ7WfbWp3y3O
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3198
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029202708.GA38926@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogV2VkbmVz
-ZGF5LCBPY3RvYmVyIDMwLCAyMDE5IDU6MzAgUE0NCjxzbmlwPg0KPiA+ID4gWW91ciBkZXZlbG9w
-bWVudCBhbmQgcmV2aWV3aW5nIGVmZm9ydCB0byByZWFjaCB2NCBpcyB2ZXJ5IGFwcHJlY2lhdGVk
-Lg0KPiA+ID4NCj4gPiA+IEhvd2V2ZXIsIGluIHRoZSBjb250ZXh0IG9mIHNvbWUgaW50ZXJuYWwg
-cmV2aWV3cyBvZiB0aGlzIHBhdGNoLCB3ZSBhcmUNCj4gPiA+IGhhdmluZyBoYXJkIHRpbWVzIHJl
-Y29uY2lsaW5nIHRoZSBjaGFuZ2Ugd2l0aCBvdXIgKHBvc3NpYmx5IGluY29tcGxldGUNCj4gPiA+
-IG9yIGluYWNjdXJhdGUpIGludGVycHJldGF0aW9uIG9mIHRoZSBSLUNhcjMgSFcgVXNlcuKAmXMg
-TWFudWFsIChSZXYuMi4wMA0KPiA+ID4gSnVsIDIwMTkpLiBUaGUgbGF0dGVyIHNheXMgaW4NCj4g
-PiA+IENoYXB0ZXIgIjU0LiBQQ0lFIENvbnRyb2xsZXIiIC8gIigyKSBJbml0aWFsIFNldHRpbmcg
-b2YgUENJIEV4cHJlc3MiOg0KPiA+ID4NCj4gPiA+ICAtLS0tc25pcC0tLS0NCj4gPiA+ICBCZSBz
-dXJlIHRvIHdyaXRlIHRoZSBpbml0aWFsIHZhbHVlICg9IEgnODBGRiAwMDAwKSB0byBNQUNDVExS
-IGJlZm9yZQ0KPiA+ID4gIGVuYWJsaW5nIFBDSUVUQ1RMUi5DRklOSVQuDQo+ID4gPiAgLS0tLXNu
-aXAtLS0tDQo+ID4gPg0KPiA+ID4gSXMgbXkgYXNzdW1wdGlvbiBjb3JyZWN0IHRoYXQgdGhlIGRl
-c2NyaXB0aW9uIG9mIHRoaXMgcGF0Y2ggaXMgYQ0KPiA+ID4gcmV3b3JkaW5nIG9mIHRoZSBhYm92
-ZSBxdW90ZSBmcm9tIHRoZSBtYW51YWwgPHNuaXA+DQo+ID4NCj4gPiBZb3UgYXJlIGNvcnJlY3Qu
-IFNpbmNlIHRoZSByZXNldCB2YWx1ZSBvZiBNQUNDVExSIGlzIEgnODBGRiAwMDAxLCBJIHRob3Vn
-aHQNCj4gPiBjbGVhcmluZyB0aGUgTFNCIGJpdCB3YXMgZW5vdWdoLg0KPiA+IEhvd2V2ZXIsIGFz
-IHlvdXIgc2l0dWF0aW9uLCBJIHRoaW5rIEkgc2hvdWxkIGhhdmUgZGVzY3JpYmVkIHRoZSBhYm92
-ZSBxdW90ZQ0KPiA+IGZyb20gdGhlIG1hbnVhbCBhbmQgaGF2ZSBzdWNoIGEgY29kZSAod3JpdGlu
-ZyB0aGUgdmFsdWUgaW5zdGVhZCBvZiBjbGVhcmluZw0KPiA+IHRoZSBMU0Igb25seSkuDQo+ID4N
-Cj4gPiA+IElmIGl0IGlzIG9ubHkgdGhlIExTQiB3aGljaCAic2hvdWxkIGJlIHdyaXR0ZW4gdG8g
-MCBiZWZvcmUgZW5hYmxpbmcNCj4gPiA+IFBDSUVUQ1RMUi5DRklOSVQiLCB3b3VsZCB5b3UgYWdy
-ZWUgdGhhdCB0aGUgc3RhdGVtZW50IHF1b3RlZCBmcm9tIHRoZQ0KPiA+ID4gbWFudWFsIHdvdWxk
-IGJldHRlciBiZSByZXBocmFzZWQgYXBwcm9wcmlhdGVseT8gVElBLg0KPiA+DQo+ID4gQXMgSSBt
-ZW50aW9uZWQgYWJvdmUsIEkgdGhpbmsgdGhlIGFib3ZlIHF1b3RlIGZyb20gdGhlIG1hbnVhbCBp
-cyBiZXR0ZXINCj4gPiB0aGFuIHJlcGhyYXNlZC4NCj4gPg0KPiA+IFNlcmdlaSwgR2VlcnQtc2Fu
-LCBJIHRoaW5rIHdlIHNob3VsZCByZXZlcnQgdGhpcyBwYXRjaCBhbmQgZml4IGNvZGUvY29tbWl0
-DQo+ID4gbG9nIHRvIGZvbGxvdyB0aGUgbWFudWFsLiBXaGF0IGRvIHlvdSB0aGluaz8NCj4gDQo+
-IFRoZSBpbml0aWFsIHZhbHVlIG1lbnRpb25lZCBpbiB0aGUgbWFudWFsIG1ha2VzIHNlbnNlIHRv
-IG1lLg0KPiBPZiBjb3Vyc2Ugd2hlbiB1c2luZyB0aGF0LCAjZGVmaW5lcyBzaG91bGQgYmUgYWRk
-ZWQgZm9yIGJpdHMgdXNlZCwgdG8NCj4gYXZvaWQgd3JpdGluZyB0aGUgbWFnaWNhbCB2YWx1ZSAi
-MHg4MGZmMDAwMSIuDQoNClRoYW5rIHlvdSBmb3IgeW91ciByZXBseSEgU28sIEknbGwgc3VibWl0
-IHR3byBwYXRjaGVzIChyZXZlcnQgaXQgYXQgZmlyc3QNCmFuZCB0aGVuIGZpeCBhZ2FpbikgbGF0
-ZXIuDQoNCj4gSW5pdGlhbGx5LCB0aGUgImZmIiBwYXJ0IHdvcnJpZWQgbWUuICBGb3J0dW5hdGVs
-eSBzb21lIGFyY2hhZW9sb2d5IGxlYXJuZWQNCj4gbWUgdGhhdCB0aGVzZSBiaXRzIHdoZXJlIGNh
-bGxlZCAiTkZUUyIgaW4gdGhlIFNINzc4NiBIYXJkd2FyZSBVc2VyJ3MNCj4gTWFudWFsLCBhbmQg
-dXNlZCB0byBzcGVjaWZ5IHRoZSBudW1iZXIgb2YgRmFzdCBUcmFpbmluZyBTZXF1ZW5jZXMgdG8N
-Cj4gYmUgdHJhbnNmZXJyZWQgd2hlbiB0aGUgTUFDIHJldHVybnMgZnJvbSBMMCB0byBMMHMgKDYt
-LTI1NSkuDQo+IA0KPiBhcmNoL3NoL2RyaXZlcnMvcGNpL3BjaWUtc2g3Nzg2LmMgc2VlbXMgdG8g
-YmUgYXdhcmUgb2YgdGhpczoNCj4gDQo+ICAgICAgICAgLyoNCj4gICAgICAgICAgKiBTZXQgZmFz
-dCB0cmFpbmluZyBzZXF1ZW5jZXMgdG8gdGhlIG1heGltdW0gMjU1LA0KPiAgICAgICAgICAqIGFu
-ZCBlbmFibGUgTUFDIGRhdGEgc2NyYW1ibGluZy4NCj4gICAgICAgICAgKi8NCj4gICAgICAgICBk
-YXRhID0gcGNpX3JlYWRfcmVnKGNoYW4sIFNINEFfUENJRU1BQ0NUTFIpOw0KPiAgICAgICAgIGRh
-dGEgJj0gflBDSUVNQUNDVExSX1NDUl9ESVM7DQo+ICAgICAgICAgZGF0YSB8PSAoMHhmZiA8PCAx
-Nik7DQo+ICAgICAgICAgcGNpX3dyaXRlX3JlZyhjaGFuLCBkYXRhLCBTSDRBX1BDSUVNQUNDVExS
-KTsNCg0KSSBkaWRuJ3Qga25vdyB0aGF0Li4NCg0KPiBObyBpZGVhIHdoeSB0aGlzIHdhcyBkZWVt
-ZWQgbm90LXRvLWJlLW1vZGlmaWVkIGJ5IHRoZSB1c2VyIGxhdGVyDQo+IChhcyBvZiBSLUNhciBI
-MSkuDQoNClNhbWUgaGVyZS4uLg0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0K
-DQo+IEdye29ldGplLGVldGluZ31zLA0KPiANCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2Vl
-cnQNCj4gDQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGlu
-dXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFs
-IGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFj
-a2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJw
-cm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRzDQo=
+On Tue, Oct 29, 2019 at 03:27:09PM -0500, Bjorn Helgaas wrote:
+> On Tue, Oct 29, 2019 at 01:15:20PM +0200, Mika Westerberg wrote:
+> > On Mon, Oct 28, 2019 at 03:16:53PM -0500, Bjorn Helgaas wrote:
+> > > > The related hardware event is resume in this case. Can you point
+> > > > me to the actual point where you want me to put this?
+> > > 
+> > > "Resume" is a Linux software concept, so of course the PCIe spec
+> > > doesn't say anything about it.  The spec talks about delays
+> > > related to resets and device power and link state transitions, so
+> > > somehow we have to connect the Linux delay with those hardware
+> > > events.
+> > > 
+> > > Since we're talking about a transition from D3cold, this has to be
+> > > done via something external to the device such as power
+> > > regulators.  For ACPI systems that's probably hidden inside _PS0
+> > > or something similar.  That's opaque, but at least it's a hook
+> > > that says "here's where we put the device into D0".  I suggested
+> > > acpi_pci_set_power_state() as a possibility since I think that's
+> > > the lowest-level point where we have the pci_dev so we know the
+> > > current state and the new state.
+> > 
+> > I looked at how we could use acpi_pci_set_power_state() but I don't
+> > think it is possible because it is likely that only the root port
+> > has the power resource that is used to bring the link to L2 or L3.
+> > However, we would need to repeat the delay for each downstream/root
+> > port if there are multiple PCIe switches in the topology.
+> 
+> OK, I think I understand why that's a problem (correct me if I'm
+> wrong):
+> 
+>   We call pci_pm_resume_noirq() for every device, but it only calls
+>   acpi_pci_set_power_state() for devices that have _PS0 or _PR0
+>   methods.  So if the delay is in acpi_pci_set_power_state() and we
+>   have A -> B -> C where only A has _PS0, we would delay for the link
+>   to B to come up, but not for the link to C.
+
+Yes, that's correct.
+
+> I do see that we do need both delays.  In acpi_pci_set_power_state()
+> when we transition A from D3cold->D0, I assume that single _PS0
+> evaluation on A causes B to transition from D3cold->D3hot, which in
+> turn causes C to transition from D3cold->D3hot.  Is that your
+> understanding, too?
+
+Not exactly :)
+
+It is _ON() that causes the links to be retrained and it also causes the
+PERST# (reset) to be unasserted for the whole topology transitioning all
+devices into D0unitialized (default value for PMCSR PowerState field is 0).
+
+> We do know that topology in acpi_pci_set_power_state(), since we have
+> the pci_dev for A, so it seems conceivable that we could descend the
+> hierarchy and delay for each level.
+
+Right.
+
+> If the delay is in pci_pm_resume_noirq() (as in your patch), what
+> happens with a switch with several Downstream Ports?  I assume that
+> all the Downstream Ports start their transition out of D3cold
+> basically simultaneously, so we probably don't need N delays, do we?
+
+No. Actually Linux already resumes these in paraller because async
+suspend is set for them (for system suspend that is).
+
+> It seems a little messy to optimize this in pci_pm_resume_noirq().
+
+I agree.
+
+> The outline of the pci_pm_resume_noirq() part of this patch is:
+> 
+>   pci_pm_resume_noirq
+>     if (!dev->skip_bus_pm ...)   # <-- condition 1
+>       pci_pm_default_resume_early
+>         pci_power_up
+>           if (platform_pci_power_manageable())   # _PS0 or _PR0 exist?
+>             platform_pci_set_power_state
+>               pci_platform_pm->set_state
+>                 acpi_pci_set_power_state(PCI_D0) # acpi_pci_platform_pm.set_state
+>                   acpi_device_set_power(ACPI_STATE_D0) # <-- eval _PS0
+> +   if (d3cold)                  # <-- condition 2
+> +     pci_bridge_wait_for_secondary_bus
+> 
+> Another thing that niggles at me here is that the condition for
+> calling pci_bridge_wait_for_secondary_bus() is completely different
+> than the condition for changing the power state.  If we didn't change
+> the power state, there's no reason to wait, is there?
+
+Indeed, if you are talking about the dev->skip_bus_pm check there is no
+point to wait if we did not change the power state. I would assume that
+d3cold is false in that case but we could also do this for clarity:
+
+	if (!dev->skip_bus_pm && d3cold)
+		pci_bridge_wait_for_secondary_bus(...)
+
+> The outline of the pci_pm_runtime_resume() part of this patch is:
+> 
+>   pci_pm_runtime_resume
+>     pci_restore_standard_config
+>       if (dev->current_state != PCI_D0)
+>         pci_set_power_state(PCI_D0)
+>           __pci_start_power_transition
+>             pci_platform_power_transition
+>               if (platform_pci_power_manageable())   # _PS0 or _PR0 exist?
+>                 platform_pci_set_power_state
+>                   pci_platform_pm->set_state
+>                     acpi_pci_set_power_state(PCI_D0) # acpi_pci_platform_pm.set_state
+>                       acpi_device_set_power(ACPI_STATE_D0) # <-- eval _PS0
+>               pci_raw_set_power_state
+>           __pci_complete_power_transition
+> +   if (d3cold)
+> +     pci_bridge_wait_for_secondary_bus
+> 
+> In this part, the power state change is inside
+> pci_restore_standard_config(), which calls pci_set_power_state().
+> There are many other callers of pci_set_power_state(); can we be sure
+> that none of them need a delay?
+
+Since we are handling the delay when we resume the downstream port, not
+when we resume the device itself, I think the link should be up already
+and the device accessible if someone calls pci_set_power_state() for it
+(as the parent is always resumed before children).
+
+> > > But it seems that at least some ACPI firmware doesn't do those
+> > > delays, so I guess our only alternatives are to always do it in
+> > > the OS or have some sort of blacklist.  And it doesn't really seem
+> > > practical to maintain a blacklist.
+> > 
+> > I really think this is crystal clear:
+> 
+> I am agreeing with you that the OS needs to do the delays.
+> 
+> > The OS is always responsible for the delays described in the PCIe
+> > spec.
+> 
+> If the ACPI spec contained this statement, it would be useful, but I
+> haven't seen it.  It's certainly true that some combination of
+> firmware and the OS is responsible for the delays :)
+> 
+> > However, if the platform implements some of them say in _ON or _PS0
+> > methods then it can notify the OS about this by using the _DSM so
+> > the OS does not need to duplicate all of them.
+> 
+> That makes good sense, but there are other reasons for using that
+> _DSM, e.g., firmware may know that MID or similar devices are not
+> really PCI devices and don't need delays anywhere.  So the existence
+> of the _DSM by itself doesn't convince me that the OS is responsible
+> for the delays.
+
+Hmm, my interpretion of the specs is that OS is responsible for these
+delays but if you can't be convinced then how you propose we handle this
+problem? I mean there are two cases already listed in the changelog of
+this patch from a real systems that need these delays. I don't think we
+can just say people that unfortunately your system will not be supported
+by Linux because we are not convinced that OS should do these delays. ;-)
