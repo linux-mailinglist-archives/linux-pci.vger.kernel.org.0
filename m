@@ -2,150 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ADE09E94E9
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2019 02:58:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12A00E94F4
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2019 03:15:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfJ3B6q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Oct 2019 21:58:46 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5221 "EHLO huawei.com"
+        id S1726157AbfJ3CP6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Oct 2019 22:15:58 -0400
+Received: from mail-eopbgr1410090.outbound.protection.outlook.com ([40.107.141.90]:17824
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726108AbfJ3B6p (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 29 Oct 2019 21:58:45 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id BACE7FFFD70AD4B8F000;
-        Wed, 30 Oct 2019 09:58:41 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 30 Oct 2019
- 09:58:41 +0800
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     Greg KH <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-        <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
-        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
-        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
-        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
-        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
-        <rafael@kernel.org>, <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, <lenb@kernel.org>,
-        <linux-acpi@vger.kernel.org>
-References: <20190925104108.GE4553@hirez.programming.kicks-ass.net>
- <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
- <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
- <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
- <20191010073212.GB18412@dhcp22.suse.cz>
- <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
- <20191011111539.GX2311@hirez.programming.kicks-ass.net>
- <7fad58d6-5126-e8b8-a7d8-a91814da53ba@huawei.com>
- <20191012074014.GA2037204@kroah.com>
- <1ec704df-97a5-04b7-1f20-8e3db19440a3@huawei.com>
- <20191029085336.GF31513@dhcp22.suse.cz>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <6c822a7d-499a-a031-5f67-848f590d5257@huawei.com>
-Date:   Wed, 30 Oct 2019 09:58:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-In-Reply-To: <20191029085336.GF31513@dhcp22.suse.cz>
+        id S1726025AbfJ3CP5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 29 Oct 2019 22:15:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z5lnzcLtvIGouUbKnh+seJzUXnvm1IZ4XWm3DixksgUBG7pyKkcaKfkbcpmlhP3SaSOzgl3mo/mqY1ohCgj9u8ICWD2Fbkmy7UvZt3dOvc0GgQr2A1TNxr/pnx5HCAhvn1n4GwGGkIacFXOjUq/44k9KCY8XrpX428s/0KOb6+eSUmA/sfs9DQcxytQGBYd/kIyFACdnATgwXjlGxGqSc0HLcEvwu/sTyzaKorwJ4ShOKZ0PqkLS+Maw17L5xF3sLI+3EJ7pkPVmirq3CV0xsHgFTCgJhm1EJ0tS1TgjekiVBkNNBEGt5Q/x1d2hrE/smfsZGWdbnvYc1R3Q5KJqfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MT+kqWZleHarXDHLmPW8d3iUH63CNlOJFGafVym7HoM=;
+ b=VpgfVfwTFkpntFTnJz1e6JBny4qr/SrkcqbKK0aecUguJ8bHaBhXXTy4AuWtln3sNOQEjeL54eT3AA+cR51GrZ+hqQq6k3J6ZQ0taNfB1aqt0GJbI+zHLcEWfdeho1r+dHtfJqTDUpB0fqa8IquIsZZFcaMSnh1VwTbaCFj7qGP1uFd5tcI1TXcpxv/PAoNUYeluhfqnIO/DScx9Xt9aGaaSda7wfyLuC5yzFgfRAS79RbpYR8twS8q3pKd5wmOHgZYGOd0AwT/0HvT+nVsT9hWPZp/hb87jePgVnwieAknzs5fCRxeacRCLlWrwz8lRm3R8yYFqCc8CYWTb+t1Dvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MT+kqWZleHarXDHLmPW8d3iUH63CNlOJFGafVym7HoM=;
+ b=meop6vLkAWNnzQjAq69kB6kTdjtn8T3E2xuuVwGyla+QvvZtPwNAfnt5G29rsKQzhhcF8sbhtJXmOgKaARrD9RboYjjsjQan8uUrrVw5jKdFbneAuluQhUyYXYqI94nvxTVEKdVzUAqolpEi6GS6Hesu2FdYMgsvDrJr1uBwDr0=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB3344.jpnprd01.prod.outlook.com (20.178.140.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.23; Wed, 30 Oct 2019 02:15:51 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::548:32de:c810:1947]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::548:32de:c810:1947%4]) with mapi id 15.20.2387.028; Wed, 30 Oct 2019
+ 02:15:51 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     "REE erosca@DE.ADIT-JV.COM" <erosca@DE.ADIT-JV.COM>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+CC:     "horms@verge.net.au" <horms@verge.net.au>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Yohhei Fukui <yohhei.fukui@denso-ten.com>,
+        Asano Yasushi <yasano@jp.adit-jv.com>,
+        Steffen Pengel <spengel@jp.adit-jv.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        "REE erosca@DE.ADIT-JV.COM" <erosca@DE.ADIT-JV.COM>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: RE: [PATCH v4] PCI: rcar: Fix missing MACCTLR register setting in
+ rcar_pcie_hw_init()
+Thread-Topic: [PATCH v4] PCI: rcar: Fix missing MACCTLR register setting in
+ rcar_pcie_hw_init()
+Thread-Index: AQHVf+9qjSU3Sv51RE+DQhHbHCYXz6dxzQWAgAC8WBA=
+Date:   Wed, 30 Oct 2019 02:15:50 +0000
+Message-ID: <TYAPR01MB45441F470C83E7CAEF4D72E0D8600@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <1570769432-15358-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20191029143753.GA28404@vmlxhi-102.adit-jv.com>
+In-Reply-To: <20191029143753.GA28404@vmlxhi-102.adit-jv.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [150.249.235.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 47b4782f-4a3a-442e-6904-08d75cdf15ef
+x-ms-traffictypediagnostic: TYAPR01MB3344:
+x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+x-microsoft-antispam-prvs: <TYAPR01MB3344C587A508E57DC04BA7A0D8600@TYAPR01MB3344.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02065A9E77
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(346002)(39860400002)(136003)(396003)(189003)(199004)(316002)(5660300002)(2906002)(86362001)(54906003)(102836004)(52536014)(476003)(76176011)(6506007)(110136005)(486006)(446003)(26005)(11346002)(186003)(66066001)(7696005)(99286004)(33656002)(8936002)(8676002)(14454004)(7736002)(305945005)(74316002)(66556008)(25786009)(66476007)(76116006)(71190400001)(81156014)(81166006)(71200400001)(66446008)(64756008)(4326008)(229853002)(6246003)(55016002)(256004)(478600001)(6116002)(3846002)(66946007)(413944005)(9686003)(6436002)(7416002);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB3344;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IrWzozqqEwkcM+8gCwdg2pni0p9IxLoqpO1VjGJUp/vvDx4zLuxJkIS/xMs1n6xDN86Ac8dCNAOF4sFD0/L3XXAH+HP+r7AJJLymGR4MOcEAp1PQPOvnAZ/7PkzYUjD5T8Ob6OcnfhV1aGYp1SMbeqjoULc4/kCYYqy/OrgAvDAVikOGxU8k/ECAWo3D0CGKAW9qtSy+4g8LBKdgYtUnAVBFMJ5Siw2TCLJkdTtVowLUkkjXE8B95nTjg1K0U76snf5iCzqayHgsJYp3Dz4PDyHKVOjSzxmNIcunP82Ph00G6WzdZsOcEPGvt/+B01dmddxXz+HSeo476u4J6UOoXVBFcyu2sT/XtGAelJaiEFTGCAVfu7/CXc68lkaklZNmH9yimOUZ6zuNSnVhMZiPFGg4ErToD/YrMuBA2fFazKzr7ZGpdAknQCh+i6lgDvFd
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47b4782f-4a3a-442e-6904-08d75cdf15ef
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2019 02:15:50.9849
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: EbVjBKn29lSeeQRRRaWeQSkExX+1/iyeLi3r47AeUhdb3PuUHdw3cgqsUZk1prfNHoo/umLYgDHxWcz/3Qq4cm24tEHRq2Lde/WMh4M1sDrbE3dJpERI34jl/DbLxXS3
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3344
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2019/10/29 16:53, Michal Hocko wrote:
-> On Mon 28-10-19 17:20:33, Yunsheng Lin wrote:
->> On 2019/10/12 15:40, Greg KH wrote:
->>> On Sat, Oct 12, 2019 at 02:17:26PM +0800, Yunsheng Lin wrote:
->>>> add pci and acpi maintainer
->>>> cc linux-pci@vger.kernel.org and linux-acpi@vger.kernel.org
->>>>
->>>> On 2019/10/11 19:15, Peter Zijlstra wrote:
->>>>> On Fri, Oct 11, 2019 at 11:27:54AM +0800, Yunsheng Lin wrote:
->>>>>> But I failed to see why the above is related to making node_to_cpumask_map()
->>>>>> NUMA_NO_NODE aware?
->>>>>
->>>>> Your initial bug is for hns3, which is a PCI device, which really _MUST_
->>>>> have a node assigned.
->>>>>
->>>>> It not having one, is a straight up bug. We must not silently accept
->>>>> NO_NODE there, ever.
->>>>>
->>>>
->>>> I suppose you mean reporting a lack of affinity when the node of a pcie
->>>> device is not set by "not silently accept NO_NODE".
->>>
->>> If the firmware of a pci device does not provide the node information,
->>> then yes, warn about that.
->>>
->>>> As Greg has asked about in [1]:
->>>> what is a user to do when the user sees the kernel reporting that?
->>>>
->>>> We may tell user to contact their vendor for info or updates about
->>>> that when they do not know about their system well enough, but their
->>>> vendor may get away with this by quoting ACPI spec as the spec
->>>> considering this optional. Should the user believe this is indeed a
->>>> fw bug or a misreport from the kernel?
->>>
->>> Say it is a firmware bug, if it is a firmware bug, that's simple.
->>>
->>>> If this kind of reporting is common pratice and will not cause any
->>>> misunderstanding, then maybe we can report that.
->>>
->>> Yes, please do so, that's the only way those boxes are ever going to get
->>> fixed.  And go add the test to the "firmware testing" tool that is based
->>> on Linux that Intel has somewhere, to give vendors a chance to fix this
->>> before they ship hardware.
->>>
->>> This shouldn't be a big deal, we warn of other hardware bugs all the
->>> time.
->>
->> Hi, all.
->>
->> The warning for the above case has been added in [1].
->>
->> So maybe it makes sense to make node_to_cpumask_map() NUMA_NO_NODE aware
->> now?
->>
->> If Yes, this patch still can be applied to the latest linus' tree cleanly,
->> Do I need to resend it?
->>
-> 
-> By this patch you mean http://lkml.kernel.org/r/1568724534-146242-1-git-send-email-linyunsheng@huawei.com
-> right?
-
-Yes.
-
-> 
-> I would just resend it unless there is still a clear disagreement over
-> it.
-
-Ok, thanks.
-
-Will resend it to see if there is still a disagreement over it.
-
-> 
->> [1] https://lore.kernel.org/linux-pci/1571467543-26125-1-git-send-email-linyunsheng@huawei.com/
-> 
-
+RGVhciBFdWdlbml1LXNhbiwNCg0KVGhhbmsgeW91IGZvciB5b3VyIGNvbW1lbnRzIQ0KDQo+IEZy
+b206IEV1Z2VuaXUgUm9zY2EsIFNlbnQ6IFR1ZXNkYXksIE9jdG9iZXIgMjksIDIwMTkgMTE6Mzgg
+UE0NCj4gDQo+IERlYXIgU2hpbW9kYS1zYW4sIGRlYXIgcmV2aWV3ZXJzLA0KPiANCj4gT24gRnJp
+LCBPY3QgMTEsIDIwMTkgYXQgMDE6NTA6MzJQTSArMDkwMCwgWW9zaGloaXJvIFNoaW1vZGEgd3Jv
+dGU6DQo+ID4gQWNjb3JkaW5nIHRvIHRoZSBSLUNhciBHZW4yLzMgbWFudWFsLCB0aGUgYml0IDAg
+b2YgTUFDQ1RMUiByZWdpc3Rlcg0KPiA+IHNob3VsZCBiZSB3cml0dGVuIHRvIDAgYmVmb3JlIGVu
+YWJsaW5nIFBDSUVUQ1RMUi5DRklOSVQgYmVjYXVzZQ0KPiA+IHRoZSBiaXQgMCBpcyBzZXQgdG8g
+MSBvbiByZXNldC4gVG8gYXZvaWQgdW5leHBlY3RlZCBiZWhhdmlvcnMgZnJvbQ0KPiA+IHRoaXMg
+aW5jb3JyZWN0IHNldHRpbmcsIHRoaXMgcGF0Y2ggZml4ZXMgaXQuDQo+IA0KPiBZb3VyIGRldmVs
+b3BtZW50IGFuZCByZXZpZXdpbmcgZWZmb3J0IHRvIHJlYWNoIHY0IGlzIHZlcnkgYXBwcmVjaWF0
+ZWQuDQo+IA0KPiBIb3dldmVyLCBpbiB0aGUgY29udGV4dCBvZiBzb21lIGludGVybmFsIHJldmll
+d3Mgb2YgdGhpcyBwYXRjaCwgd2UgYXJlDQo+IGhhdmluZyBoYXJkIHRpbWVzIHJlY29uY2lsaW5n
+IHRoZSBjaGFuZ2Ugd2l0aCBvdXIgKHBvc3NpYmx5IGluY29tcGxldGUNCj4gb3IgaW5hY2N1cmF0
+ZSkgaW50ZXJwcmV0YXRpb24gb2YgdGhlIFItQ2FyMyBIVyBVc2Vy4oCZcyBNYW51YWwgKFJldi4y
+LjAwDQo+IEp1bCAyMDE5KS4gVGhlIGxhdHRlciBzYXlzIGluDQo+IENoYXB0ZXIgIjU0LiBQQ0lF
+IENvbnRyb2xsZXIiIC8gIigyKSBJbml0aWFsIFNldHRpbmcgb2YgUENJIEV4cHJlc3MiOg0KPiAN
+Cj4gIC0tLS1zbmlwLS0tLQ0KPiAgQmUgc3VyZSB0byB3cml0ZSB0aGUgaW5pdGlhbCB2YWx1ZSAo
+PSBIJzgwRkYgMDAwMCkgdG8gTUFDQ1RMUiBiZWZvcmUNCj4gIGVuYWJsaW5nIFBDSUVUQ1RMUi5D
+RklOSVQuDQo+ICAtLS0tc25pcC0tLS0NCj4gDQo+IElzIG15IGFzc3VtcHRpb24gY29ycmVjdCB0
+aGF0IHRoZSBkZXNjcmlwdGlvbiBvZiB0aGlzIHBhdGNoIGlzIGENCj4gcmV3b3JkaW5nIG9mIHRo
+ZSBhYm92ZSBxdW90ZSBmcm9tIHRoZSBtYW51YWwgPHNuaXA+DQoNCllvdSBhcmUgY29ycmVjdC4g
+U2luY2UgdGhlIHJlc2V0IHZhbHVlIG9mIE1BQ0NUTFIgaXMgSCc4MEZGIDAwMDEsIEkgdGhvdWdo
+dA0KY2xlYXJpbmcgdGhlIExTQiBiaXQgd2FzIGVub3VnaC4NCkhvd2V2ZXIsIGFzIHlvdXIgc2l0
+dWF0aW9uLCBJIHRoaW5rIEkgc2hvdWxkIGhhdmUgZGVzY3JpYmVkIHRoZSBhYm92ZSBxdW90ZQ0K
+ZnJvbSB0aGUgbWFudWFsIGFuZCBoYXZlIHN1Y2ggYSBjb2RlICh3cml0aW5nIHRoZSB2YWx1ZSBp
+bnN0ZWFkIG9mIGNsZWFyaW5nDQp0aGUgTFNCIG9ubHkpLiANCg0KPiBJZiBpdCBpcyBvbmx5IHRo
+ZSBMU0Igd2hpY2ggInNob3VsZCBiZSB3cml0dGVuIHRvIDAgYmVmb3JlIGVuYWJsaW5nDQo+IFBD
+SUVUQ1RMUi5DRklOSVQiLCB3b3VsZCB5b3UgYWdyZWUgdGhhdCB0aGUgc3RhdGVtZW50IHF1b3Rl
+ZCBmcm9tIHRoZQ0KPiBtYW51YWwgd291bGQgYmV0dGVyIGJlIHJlcGhyYXNlZCBhcHByb3ByaWF0
+ZWx5PyBUSUEuDQoNCkFzIEkgbWVudGlvbmVkIGFib3ZlLCBJIHRoaW5rIHRoZSBhYm92ZSBxdW90
+ZSBmcm9tIHRoZSBtYW51YWwgaXMgYmV0dGVyDQp0aGFuIHJlcGhyYXNlZC4NCg0KU2VyZ2VpLCBH
+ZWVydC1zYW4sIEkgdGhpbmsgd2Ugc2hvdWxkIHJldmVydCB0aGlzIHBhdGNoIGFuZCBmaXggY29k
+ZS9jb21taXQNCmxvZyB0byBmb2xsb3cgdGhlIG1hbnVhbC4gV2hhdCBkbyB5b3UgdGhpbms/DQoN
+CkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCj4gPg0KPiA+IEZpeGVzOiBjMjVk
+YTQ3Nzg4MDMgKCJQQ0k6IHJjYXI6IEFkZCBSZW5lc2FzIFItQ2FyIFBDSWUgZHJpdmVyIikNCj4g
+PiBGaXhlczogYmUyMGJiY2IwYThjICgiUENJOiByY2FyOiBBZGQgdGhlIGluaXRpYWxpemF0aW9u
+IG9mIFBDSWUgbGluayBpbiByZXN1bWVfbm9pcnEoKSIpDQo+ID4gQ2M6IDxzdGFibGVAdmdlci5r
+ZXJuZWwub3JnPiAjIHY1LjIrDQo+ID4gU2lnbmVkLW9mZi1ieTogWW9zaGloaXJvIFNoaW1vZGEg
+PHlvc2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBTZXJn
+ZWkgU2h0eWx5b3YgPHNlcmdlaS5zaHR5bHlvdkBjb2dlbnRlbWJlZGRlZC5jb20+DQo+ID4gUmV2
+aWV3ZWQtYnk6IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+DQo+
+IA0KPiAtLQ0KPiBCZXN0IFJlZ2FyZHMsDQo+IEV1Z2VuaXUNCg==
