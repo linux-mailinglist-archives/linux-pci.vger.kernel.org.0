@@ -2,114 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 47DCAE9B4F
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2019 13:07:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ADC21E9B84
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2019 13:28:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726175AbfJ3MHJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Oct 2019 08:07:09 -0400
-Received: from mga17.intel.com ([192.55.52.151]:20792 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbfJ3MHJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 30 Oct 2019 08:07:09 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 05:07:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
-   d="scan'208";a="211309534"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 30 Oct 2019 05:07:06 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 30 Oct 2019 14:07:05 +0200
-Date:   Wed, 30 Oct 2019 14:07:05 +0200
-From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH v9 4/4] PCI: Allow extend_bridge_window() to shrink
- resource if necessary
-Message-ID: <20191030120705.GC2593@lahna.fi.intel.com>
-References: <SL2P216MB018739B339B453DE872DB71E80610@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-MIME-Version: 1.0
+        id S1726646AbfJ3M2f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Oct 2019 08:28:35 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:46437 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbfJ3M2f (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Oct 2019 08:28:35 -0400
+Received: by mail-qk1-f195.google.com with SMTP id e66so2418813qkf.13
+        for <linux-pci@vger.kernel.org>; Wed, 30 Oct 2019 05:28:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=RWzCO2fHz2qafmXTHqGMfw05hQL7JfU2b99nb6qM24Q=;
+        b=YpggYXtaQ4inUnm3g+hl6gwyTwkQanG/b7sCQFEMdYuTGvIMqBhUMY5gZMcFQHZy6y
+         cF0LTgi2OwwLPaUTj9KImOSh0RdB/s2+eDRRFwc6dFQgHXUdn8VGNoe/v116d+Uf2avP
+         8dpNHvP2tc1HuM1DWyROKsk4LmIy/FUIvO+FxNMftXJ8zmI7dp2oeqj6SALQVh6sczCU
+         QLCoJjUbJqxutPI4YU62/TNiozHON3X0I6wT/vcSg5CGUUz1VTKzyktoFVt9Ba/39ywv
+         Oda72R5tMy7ZDaofo/wx+pheOEBl3sltgQCcw4tCvJG2zID09Q6IETVjPUzevh+cU+cc
+         mGjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=RWzCO2fHz2qafmXTHqGMfw05hQL7JfU2b99nb6qM24Q=;
+        b=iwiy5B4nAu6FVyW05XQnOVReYuWI0MrIq6OYZTPDMnzTO0ITwbGTgS83FYblfpxwLb
+         Yn63Xf3+VLMx9QJcSK5wXCfK+qVCcXFKZ8NIGIH3hfWlBP17DvtwVP/VgtazDw4EeWKn
+         wP5ERP3hYwU39+V4OlfElNYY2ACeaR3PgpoTkQIylGZdv+/xg6bzO4bcBlf40gGNszu1
+         cJ+gfRzGDsItWYd9svRM1e2RfdpgkuUCxiiXBi9HmbLrTH85jHhUkqXxnD3xwKxWDAnD
+         VdArIWbolWA8hRIJWNLe580O2rQ/+ItMiETg5zz4AoQ3VwnuAPZuA6Z/SnlevljxhK0S
+         EG7A==
+X-Gm-Message-State: APjAAAWbxCsKFB5l3JKQ3b0qG863pRut5+dE9GdJCCa8X5mSXtUa7QCp
+        GkokTTlCCThZ8MfOE6W1dScbXw==
+X-Google-Smtp-Source: APXvYqxfSjuCvheOWaJ51K5TomgwXceiXxnFoN8qONSyZ8bZ1yz8oM1frmf6sjZVcs+WXO2ot94uyQ==
+X-Received: by 2002:a37:4ed5:: with SMTP id c204mr26408804qkb.41.1572438514395;
+        Wed, 30 Oct 2019 05:28:34 -0700 (PDT)
+Received: from ?IPv6:2600:1000:b063:e143:e15a:1807:6e04:c401? ([2600:1000:b063:e143:e15a:1807:6e04:c401])
+        by smtp.gmail.com with ESMTPSA id s42sm557qtk.60.2019.10.30.05.28.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Oct 2019 05:28:33 -0700 (PDT)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SL2P216MB018739B339B453DE872DB71E80610@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v7] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Date:   Wed, 30 Oct 2019 08:28:31 -0400
+Message-Id: <1DA7B9E0-4BE2-4A9C-9B33-20EEFE3B5069@lca.pw>
+References: <20191030102800.GX4097@hirez.programming.kicks-ass.net>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
+        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, rjw@rjwysocki.net, lenb@kernel.org,
+        linux-acpi@vger.kernel.org
+In-Reply-To: <20191030102800.GX4097@hirez.programming.kicks-ass.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 03:29:21PM +0000, Nicholas Johnson wrote:
-> Remove checks for resource size in extend_bridge_window(). This is
-> necessary to allow the pci_bus_distribute_available_resources() to
-> function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
-> allocate resources. Because the kernel parameter sets the size of all
-> hotplug bridges to be the same, there are problems when nested hotplug
-> bridges are encountered. Fitting a downstream hotplug bridge with size X
-> and normal bridges with non-zero size Y into parent hotplug bridge with
-> size X is impossible, and hence the downstream hotplug bridge needs to
-> shrink to fit into its parent.
-> 
-> Add check for if bridge is extended or shrunken and adjust pci_dbg to
-> reflect this.
-> 
-> Reset the resource if its new size is zero (if we have run out of a
-> bridge window resource) to prevent the PCI resource assignment code from
-> attempting to assign a zero-sized resource.
-> 
-> Rename extend_bridge_window() to adjust_bridge_window() to reflect the
-> fact that the window can now shrink.
-> 
-> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> ---
->  drivers/pci/setup-bus.c | 23 +++++++++++++++--------
->  1 file changed, 15 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index fe8b2c715..f8cd54584 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1814,7 +1814,7 @@ void __init pci_assign_unassigned_resources(void)
->  	}
->  }
->  
-> -static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
-> +static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
->  				 struct list_head *add_list,
->  				 resource_size_t new_size)
->  {
-> @@ -1823,13 +1823,20 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
->  	if (res->parent)
->  		return;
->  
-> -	if (resource_size(res) >= new_size)
-> -		return;
-> +	if (new_size > resource_size(res)) {
-> +		add_size = new_size - resource_size(res);
-> +		pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
-> +			&add_size);
-> +	} else if (new_size < resource_size(res)) {
-> +		add_size = resource_size(res) - new_size;
-> +		pci_dbg(bridge, "bridge window %pR shrunken by %pa\n", res,
-> +			&add_size);
-> +	}
 
-Do we need to care about new_size == resource_size(res)?
 
-Also there are several calls of resource_size(res) above so probably
-worth storing it into a helper variable.
+> On Oct 30, 2019, at 6:28 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+>=20
+> It only makes 'wild' guesses when the BIOS is shit and it complains
+> about that.
+>=20
+> Or do you like you BIOS broken?
 
-> -	add_size = new_size - resource_size(res);
-> -	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res, &add_size);
->  	res->end = res->start + new_size - 1;
->  	remove_from_list(add_list, res);
-> +	if (!new_size)
-> +		reset_resource(res);
->  }
+Agree. It is the garbage in and garbage out. No need to complicate the exist=
+ing code further.=
