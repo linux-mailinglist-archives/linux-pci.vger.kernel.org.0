@@ -2,134 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E8A19EA95F
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2019 03:56:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 699A0EA97F
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2019 04:26:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfJaC4x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Oct 2019 22:56:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbfJaC4x (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 30 Oct 2019 22:56:53 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3604B20873;
-        Thu, 31 Oct 2019 02:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572490611;
-        bh=CgofPTQeAtB7ix6hkuuEnOtyruLFdF91qMc25Bi7BWc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=D88RstLWgoLlxw5O8k1/0V3YHb6ABXLHRTKjkwMqa0IrHCE5VPI8El522iA8V2S0K
-         mBnRWfLgZaTzLUPYVCv2Oa2ruABuhTkwPf7YC8NoezrDe45QfGZ7W+hNtmrWxHKW/O
-         sGjYuq1l3Ppt4WU+qwNWqiLvABQovjX5avnt0Sks=
-Date:   Wed, 30 Oct 2019 21:56:37 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Dilip Kota <eswara.kota@linux.intel.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        gustavo.pimentel@synopsys.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        martin.blumenstingl@googlemail.com,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure
- pcie link
-Message-ID: <20191031025637.GA25497@google.com>
+        id S1726414AbfJaD0L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Oct 2019 23:26:11 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60838 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726336AbfJaD0K (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 30 Oct 2019 23:26:10 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A11698C8659FB5227AE0;
+        Thu, 31 Oct 2019 11:26:07 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 31 Oct 2019
+ 11:26:05 +0800
+Subject: Re: [PATCH v7] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
+        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
+        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <mpe@ellerman.id.au>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
+        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
+        <paul.burton@mips.com>, <jhogan@kernel.org>,
+        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
+        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
+        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
+        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
+        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
+        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
+        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
+        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
+        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
+        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
+        <rafael@kernel.org>, <mhocko@kernel.org>,
+        <gregkh@linuxfoundation.org>, <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <lenb@kernel.org>, <linux-acpi@vger.kernel.org>
+References: <1572428068-180880-1-git-send-email-linyunsheng@huawei.com>
+ <20191030101449.GW4097@hirez.programming.kicks-ass.net>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <f7aa833e-3ed3-aba0-8c6e-8753a68182c2@huawei.com>
+Date:   Thu, 31 Oct 2019 11:26:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jiSKza2rM9=4=qw5UEEp6rpBkJwPHePSzikQhJF7TpLw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191030101449.GW4097@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 12:31:44AM +0100, Rafael J. Wysocki wrote:
-> On Wed, Oct 30, 2019 at 11:14 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > [+cc Heiner, Rajat]
-> >
-> > On Tue, Oct 29, 2019 at 05:31:18PM +0800, Dilip Kota wrote:
-> > > On 10/22/2019 8:59 PM, Bjorn Helgaas wrote:
-> > > > [+cc Rafael, linux-pm, beginning of discussion at
-> > > > https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
-> > > >
-> > > > On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
-> > > > > On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
-> > > > > > On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
-> > > > > > > On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
-> > > > > > > > PCIe RC driver on Intel Gateway SoCs have a requirement
-> > > > > > > > of changing link width and speed on the fly.
-> > > > > > Please add more details about why this is needed.  Since you're adding
-> > > > > > sysfs files, it sounds like it's not actually the *driver* that needs
-> > > > > > this; it's something in userspace?
-> > > > > We have use cases to change the link speed and width on the fly.
-> > > > > One is EMI check and other is power saving.  Some battery backed
-> > > > > applications have to switch PCIe link from higher GEN to GEN1 and
-> > > > > width to x1. During the cases like external power supply got
-> > > > > disconnected or broken. Once external power supply is connected then
-> > > > > switch PCIe link to higher GEN and width.
-> > > > That sounds plausible, but of course nothing there is specific to the
-> > > > Intel Gateway, so we should implement this generically so it would
-> > > > work on all hardware.
-> > > Agree.
-> > > >
-> > > > I'm not sure what the interface should look like -- should it be a
-> > > > low-level interface as you propose where userspace would have to
-> > > > identify each link of interest, or is there some system-wide
-> > > > power/performance knob that could tune all links?  Cc'd Rafael and
-> > > > linux-pm in case they have ideas.
-> > >
-> > > To my knowledge sysfs is the appropriate way to go.
-> > > If there are any other best possible knobs, will be helpful.
-> >
-> > I agree sysfs is the right place for it; my question was whether we
-> > should have files like:
-> >
-> >   /sys/.../0000:00:1f.3/pcie_speed
-> >   /sys/.../0000:00:1f.3/pcie_width
-> >
-> > as I think this patch would add (BTW, please include sample paths like
-> > the above in the commit log), or whether there should be a more global
-> > thing that would affect all the links in the system.
-> >
-> > I think the low-level files like you propose would be better because
-> > one might want to tune link performance differently for different
-> > types of devices and workloads.
-> >
-> > We also have to decide if these files should be associated with the
-> > device at the upstream or downstream end of the link.  For ASPM, the
-> > current proposal [1] has the files at the downstream end on the theory
-> > that the GPU, NIC, NVMe device, etc is the user-recognizable one.
-> > Also, neither ASPM nor link speed/width make any sense unless there
-> > *is* a device at the downstream end, so putting them there
-> > automatically makes them visible only when they're useful.
-> >
-> > Rafael had some concerns about the proposed ASPM interface [2], but I
-> > don't know what they are yet.
+On 2019/10/30 18:14, Peter Zijlstra wrote:
+> On Wed, Oct 30, 2019 at 05:34:28PM +0800, Yunsheng Lin wrote:
+>> When passing the return value of dev_to_node() to cpumask_of_node()
+>> without checking if the device's node id is NUMA_NO_NODE, there is
+>> global-out-of-bounds detected by KASAN.
+>>
+>> From the discussion [1], NUMA_NO_NODE really means no node affinity,
+>> which also means all cpus should be usable. So the cpumask_of_node()
+>> should always return all cpus online when user passes the node id as
+>> NUMA_NO_NODE, just like similar semantic that page allocator handles
+>> NUMA_NO_NODE.
+>>
+>> But we cannot really copy the page allocator logic. Simply because the
+>> page allocator doesn't enforce the near node affinity. It just picks it
+>> up as a preferred node but then it is free to fallback to any other numa
+>> node. This is not the case here and node_to_cpumask_map will only restrict
+>> to the particular node's cpus which would have really non deterministic
+>> behavior depending on where the code is executed. So in fact we really
+>> want to return cpu_online_mask for NUMA_NO_NODE.
+>>
+>> Also there is a debugging version of node_to_cpumask_map() for x86 and
+>> arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
+>> patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
+>>
+>> [1] https://lkml.org/lkml/2019/9/11/66
+>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+>> Suggested-by: Michal Hocko <mhocko@kernel.org>
+>> Acked-by: Michal Hocko <mhocko@suse.com>
+>> Acked-by: Paul Burton <paul.burton@mips.com> # MIPS bits
 > 
-> I was talking about the existing ASPM interface in sysfs.  The new one
-> I still have to review, but I'm kind of wondering what about people
-> who used the old one?  Would it be supported going forward?
+> Still:
+> 
+> Nacked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-The old one interface was enabled by CONFIG_PCIEASPM_DEBUG.  Red Hat
-doesn't enable that.  Ubuntu does.  I *thought* we heard from a
-Canonical person who said they didn't have any tools that used it, but
-I can't find that now.  I don't know about SUSE.
+It seems I still misunderstood your meaning by "We must not silently accept
+NO_NODE there" in [1].
 
-So the idea was to drop it on the theory that nobody is using it.
-Possibly that's too aggressive.
+I am not sure if there is still disagreement that the NO_NODE state for
+dev->numa_node should exist at all.
 
-Bjorn
+From the previous disscussion [2], you seem to propose to do "wild guess" or
+"fixup" for all devices(including virtual and physcial) with NO_NODE, which means
+the NO_NODE is needed anymore and should be removed when the "wild guess" or "fixup"
+is done. So maybe the reason for your nack here it is that there should be no other
+NO_NODE handling or fixing related to NO_NODE before the "wild guess" or "fixup"
+process is finished, so making node_to_cpumask_map() NUMA_NO_NODE aware is unnecessary.
+
+Or your reason for the nack is still specific to the pcie device without a numa node,
+the "wild guess" need to be done for this case before making node_to_cpumask_map()
+NUMA_NO_NODE?
+
+Please help to clarify the reason for nack. Or is there still some other reason for the
+nack I missed from the previous disscussion?
+
+Thanks.
+
+[1] https://lore.kernel.org/lkml/20191011111539.GX2311@hirez.programming.kicks-ass.net/
+[2] https://lore.kernel.org/lkml/20191014094912.GY2311@hirez.programming.kicks-ass.net/
+> 
+> .
+> 
+
