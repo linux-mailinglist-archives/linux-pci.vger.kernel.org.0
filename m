@@ -2,141 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 47C53EAC6B
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2019 10:13:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 728E5EAC93
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2019 10:36:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfJaJNT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 31 Oct 2019 05:13:19 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:47797 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbfJaJNT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 31 Oct 2019 05:13:19 -0400
-Received: from 91.217.168.176 (91.217.168.176) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 238fe852289c4eca; Thu, 31 Oct 2019 10:13:14 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Dilip Kota <eswara.kota@linux.intel.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        gustavo.pimentel@synopsys.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        martin.blumenstingl@googlemail.com,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, Linux PM <linux-pm@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure pcie link
-Date:   Thu, 31 Oct 2019 10:13:11 +0100
-Message-ID: <5652130.irlrSN52DS@kreacher>
-In-Reply-To: <20191031025637.GA25497@google.com>
-References: <20191031025637.GA25497@google.com>
+        id S1727186AbfJaJgA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 31 Oct 2019 05:36:00 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38095 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbfJaJgA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 31 Oct 2019 05:36:00 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w8so2465467plq.5
+        for <linux-pci@vger.kernel.org>; Thu, 31 Oct 2019 02:35:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DpBkpuyfEz89me+buFs+WwtT8XRjvBF3yFBftzqlsQk=;
+        b=JdLYApaHHSdUFo4j1OUWJrbghTLy5sNyEB5YolVD7rb4pjkaCXORZ6YsgpbuJrlo/V
+         tvEBmGb12tib+aqhP4RKjJlaJURPv05T12dWome0EoDMZk6g2GiuCOLpyreiYTFdP8bq
+         +xMNuDjKk97ONXGcpxwQQ2atL3vymdgSlRC2fqUwrH3+/m605N+EH8wvpFfCfltDOyEh
+         AlAVWF4FLDs9arQtYXkNFDNZyzLcnc68HEV4e5RUxtvpfuXI5feUTnUgM5YwuURQfidK
+         W1Ct8JUM3rdyYYHN2IYoDYqXYZLhWkIn+uZ3HuSvTlU4m/K1RMEm/URF2xTfWTUYBXYx
+         xciw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DpBkpuyfEz89me+buFs+WwtT8XRjvBF3yFBftzqlsQk=;
+        b=tUYkweN4O+xqFTYO4t/48ZgNwazwMvWDGAdJ2oW0EMI2XwoVfgNLzlKLvs/zFbRq5M
+         XcYsKr9pThSb11xjhxiKFT6ach5ajxINmAHD8ZS1maRB0bD7Vk6Iz+w9oTXkyioKB5Yu
+         bzLu3cRLHr7527cRJJwtf7DtmP7D6OAzS3h3IiLA8AtOBirvx1NR68zRbtDKpml+6o2J
+         AzIO137vMAhhopPMegdVL9xa+sHz/ZOxtk9Yvxwxrhw6zLXBwdu1PN/HFscGMaMGoNGk
+         68tunlPL9R+Ej0O6c95tUBmf8vXnnwCFbN338Hycnx7mzLxtnP2tsylvRNYIklxhgdYW
+         kFOg==
+X-Gm-Message-State: APjAAAXjT7XIQ7hV9VSUbqm4V0pFmWzDj9hh5aI+YgFqpp2OlTWaeh27
+        a80GHVN0l0WeBUCF/83Nzx4Ucg==
+X-Google-Smtp-Source: APXvYqwnFWHm7nPbOa+XzFm1q9aR2vjbqEZF/KUN16CVmZa8X1+clj8plDglCup4NMBtOxDqkW3Y3A==
+X-Received: by 2002:a17:902:9347:: with SMTP id g7mr5320801plp.291.1572514557950;
+        Thu, 31 Oct 2019 02:35:57 -0700 (PDT)
+Received: from starnight.endlessm-sf.com (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id b23sm5240079pju.16.2019.10.31.02.35.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 02:35:57 -0700 (PDT)
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+To:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com,
+        Jian-Hong Pan <jian-hong@endlessm.com>, stable@vger.kernel.org
+Subject: [PATCH v2] Revert "nvme: Add quirk for Kingston NVME SSD running FW E8FK11.T"
+Date:   Thu, 31 Oct 2019 17:34:09 +0800
+Message-Id: <20191031093408.9322-1-jian-hong@endlessm.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday, October 31, 2019 3:56:37 AM CET Bjorn Helgaas wrote:
-> On Thu, Oct 31, 2019 at 12:31:44AM +0100, Rafael J. Wysocki wrote:
-> > On Wed, Oct 30, 2019 at 11:14 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >
-> > > [+cc Heiner, Rajat]
-> > >
-> > > On Tue, Oct 29, 2019 at 05:31:18PM +0800, Dilip Kota wrote:
-> > > > On 10/22/2019 8:59 PM, Bjorn Helgaas wrote:
-> > > > > [+cc Rafael, linux-pm, beginning of discussion at
-> > > > > https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
-> > > > >
-> > > > > On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
-> > > > > > On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
-> > > > > > > On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
-> > > > > > > > On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
-> > > > > > > > > PCIe RC driver on Intel Gateway SoCs have a requirement
-> > > > > > > > > of changing link width and speed on the fly.
-> > > > > > > Please add more details about why this is needed.  Since you're adding
-> > > > > > > sysfs files, it sounds like it's not actually the *driver* that needs
-> > > > > > > this; it's something in userspace?
-> > > > > > We have use cases to change the link speed and width on the fly.
-> > > > > > One is EMI check and other is power saving.  Some battery backed
-> > > > > > applications have to switch PCIe link from higher GEN to GEN1 and
-> > > > > > width to x1. During the cases like external power supply got
-> > > > > > disconnected or broken. Once external power supply is connected then
-> > > > > > switch PCIe link to higher GEN and width.
-> > > > > That sounds plausible, but of course nothing there is specific to the
-> > > > > Intel Gateway, so we should implement this generically so it would
-> > > > > work on all hardware.
-> > > > Agree.
-> > > > >
-> > > > > I'm not sure what the interface should look like -- should it be a
-> > > > > low-level interface as you propose where userspace would have to
-> > > > > identify each link of interest, or is there some system-wide
-> > > > > power/performance knob that could tune all links?  Cc'd Rafael and
-> > > > > linux-pm in case they have ideas.
-> > > >
-> > > > To my knowledge sysfs is the appropriate way to go.
-> > > > If there are any other best possible knobs, will be helpful.
-> > >
-> > > I agree sysfs is the right place for it; my question was whether we
-> > > should have files like:
-> > >
-> > >   /sys/.../0000:00:1f.3/pcie_speed
-> > >   /sys/.../0000:00:1f.3/pcie_width
-> > >
-> > > as I think this patch would add (BTW, please include sample paths like
-> > > the above in the commit log), or whether there should be a more global
-> > > thing that would affect all the links in the system.
-> > >
-> > > I think the low-level files like you propose would be better because
-> > > one might want to tune link performance differently for different
-> > > types of devices and workloads.
-> > >
-> > > We also have to decide if these files should be associated with the
-> > > device at the upstream or downstream end of the link.  For ASPM, the
-> > > current proposal [1] has the files at the downstream end on the theory
-> > > that the GPU, NIC, NVMe device, etc is the user-recognizable one.
-> > > Also, neither ASPM nor link speed/width make any sense unless there
-> > > *is* a device at the downstream end, so putting them there
-> > > automatically makes them visible only when they're useful.
-> > >
-> > > Rafael had some concerns about the proposed ASPM interface [2], but I
-> > > don't know what they are yet.
-> > 
-> > I was talking about the existing ASPM interface in sysfs.  The new one
-> > I still have to review, but I'm kind of wondering what about people
-> > who used the old one?  Would it be supported going forward?
-> 
-> The old one interface was enabled by CONFIG_PCIEASPM_DEBUG.  Red Hat
-> doesn't enable that.  Ubuntu does.  I *thought* we heard from a
-> Canonical person who said they didn't have any tools that used it, but
-> I can't find that now.  I don't know about SUSE.
-> 
-> So the idea was to drop it on the theory that nobody is using it.
-> Possibly that's too aggressive.
+Since commit 253eaf4faaaa ("PCI/MSI: Fix incorrect MSI-X masking on
+resume") is merged, we can revert the previous quirk now.
 
-Well, one problem is that the "old" (actually existing) I/F has made it
-to one of my OSS EU presentation slides (I did not talk to this particular
-slide, but it is there in the deck that's available for downloading), so who
-knows who is going to use it. :-)
+This reverts commit 19ea025e1d28c629b369c3532a85b3df478cc5c6.
 
-So I guess that there's a risk that needs to be taken into consideration.
+Fixes: 19ea025e1d28 ("nvme: Add quirk for Kingston NVME SSD running FW E8FK11.T")
+Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204887
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Cc: stable@vger.kernel.org
+---
+v2:
+  Re-send for mailing failure
 
-What could be done, in principle, would be to make the new I/F depend on
-CONFIG_PCIEASPM_DEBUG being unset and provide the "old" one when it is set.
+ drivers/nvme/host/core.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-In any case, the pcie_aspm.policy module parameter cannot be dropped, because
-AFAICS there is quite a bit of user space using it (e.g. TLP).
-
-Cheers!
-
-
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index fa7ba09dca77..94bfbee1e5f7 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2404,16 +2404,6 @@ static const struct nvme_core_quirk_entry core_quirks[] = {
+ 		.vid = 0x14a4,
+ 		.fr = "22301111",
+ 		.quirks = NVME_QUIRK_SIMPLE_SUSPEND,
+-	},
+-	{
+-		/*
+-		 * This Kingston E8FK11.T firmware version has no interrupt
+-		 * after resume with actions related to suspend to idle
+-		 * https://bugzilla.kernel.org/show_bug.cgi?id=204887
+-		 */
+-		.vid = 0x2646,
+-		.fr = "E8FK11.T",
+-		.quirks = NVME_QUIRK_SIMPLE_SUSPEND,
+ 	}
+ };
+ 
+-- 
+2.23.0
 
