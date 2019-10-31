@@ -2,148 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7585EEADF3
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2019 11:57:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E9B6EAE0A
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2019 11:58:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfJaK5K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 31 Oct 2019 06:57:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:47064 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726932AbfJaK5K (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:57:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A76E446A;
-        Thu, 31 Oct 2019 03:57:09 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AB5F3F719;
-        Thu, 31 Oct 2019 03:57:05 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 10:57:01 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Christoph Hellwig <hch@infradead.org>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Ley Foon Tan <lftan@altera.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Ray Jui <rjui@broadcom.com>, rfi@lists.rocketboards.org,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Horman <horms@verge.net.au>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Tom Joseph <tjoseph@cadence.com>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v3 00/25] PCI host resource consolidation
-Message-ID: <20191031105701.GA26080@e121166-lin.cambridge.arm.com>
-References: <20191028163256.8004-1-robh@kernel.org>
+        id S1727207AbfJaK6V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 31 Oct 2019 06:58:21 -0400
+Received: from forward101o.mail.yandex.net ([37.140.190.181]:51347 "EHLO
+        forward101o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726897AbfJaK6V (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 31 Oct 2019 06:58:21 -0400
+Received: from mxback27j.mail.yandex.net (mxback27j.mail.yandex.net [IPv6:2a02:6b8:0:1619::227])
+        by forward101o.mail.yandex.net (Yandex) with ESMTP id CEB973C01509;
+        Thu, 31 Oct 2019 13:58:15 +0300 (MSK)
+Received: from iva6-6f4302ae52e5.qloud-c.yandex.net (iva6-6f4302ae52e5.qloud-c.yandex.net [2a02:6b8:c0c:9a82:0:640:6f43:2ae])
+        by mxback27j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id MqTxeuNTtt-wEaiEtox;
+        Thu, 31 Oct 2019 13:58:15 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1572519495;
+        bh=CnUEsomcZToujM6zlvvqh/M/VDXtZjPQrvhlDicaFhA=;
+        h=In-Reply-To:From:To:Subject:Cc:Date:References:Message-ID;
+        b=I6y0jQZyDWddPsb6XQzTUD9AGwNj+wzirysDdK6n3vAKco0tvXiWJXopQFW6Hul2i
+         mW3dDcFOxIOpv3/qQonhhobhPY9809zVHbCFJkYa8zuWuLcRz+phBikZ6JcovA3iv4
+         p92mVe+TLRskv3vPizha5J+XQWdjNhWgSw2CViMo=
+Authentication-Results: mxback27j.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by iva6-6f4302ae52e5.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id apLSeE0B5F-vTVigpuo;
+        Thu, 31 Oct 2019 13:58:13 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH 4/5] dt-bindings: net: document loongson.pci-gmac
+To:     Simon Horman <simon.horman@netronome.com>
+Cc:     linux-mips@vger.kernel.org, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, axboe@kernel.dk,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, bhelgaas@google.com, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20191030135347.3636-1-jiaxun.yang@flygoat.com>
+ <20191030135347.3636-5-jiaxun.yang@flygoat.com>
+ <20191031083509.GA30739@netronome.com>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <a93eedb9-8863-3802-a563-fe4955d846c3@flygoat.com>
+Date:   Thu, 31 Oct 2019 18:57:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191028163256.8004-1-robh@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191031083509.GA30739@netronome.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 11:32:31AM -0500, Rob Herring wrote:
-> This started with just dma-ranges parsing consolidation, but has expanded
-> to converting all host drivers to use pci_parse_request_of_pci_ranges()
-> rather than devm_of_pci_get_host_bridge_resources(). This series moves
-> the DT 'dma-ranges' parsing into common helpers utilizing a resource list.
-> There's no (intended) functional change in this series though I'm also
-> working on a separate series now in dt/next to improve the handling of
-> 'dma-ranges' and dma masks.
-> 
-> The last patch may need to wait if there's any new users of
-> devm_of_pci_get_host_bridge_resources.
 
-I have applied it, along with the rest of the series, with v4 for:
+ÔÚ 2019/10/31 ÏÂÎç4:35, Simon Horman Ð´µÀ:
+> Hi Jiaxun,
+>
+> thanks for your patch.
+>
+> On Wed, Oct 30, 2019 at 09:53:46PM +0800, Jiaxun Yang wrote:
+>> This binding will provide extra information for PCI enabled
+>> device.
+>>
+>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Please verify the bindings using dtbs_check as described in
+> Documentation/devicetree/writing-schema.rst
+>
+>> ---
+>>   .../net/wireless/loongson,pci-gmac.yaml       | 71 +++++++++++++++++++
+>>   1 file changed, 71 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml b/Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml
+>> new file mode 100644
+>> index 000000000000..5f764bd46735
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml
+>> @@ -0,0 +1,71 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/net/allwinner,sun7i-a20-gmac.yaml#
+> The id does not match the filename of the schema.
+>
+> i.e. the above should be:
+>
+> 	$id: http://devicetree.org/schemas/net/wireless/loongson,pci-gmac.yaml#
+>
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Loongson PCI GMAC Device Tree Bindings
+>> +
+>> +allOf:
+>> +  - $ref: "snps,dwmac.yaml#"
+> snps,dwmac.yaml# is in the parent directory relative to loongson,pci-gmac.yaml.
+> So I think the above needs to be:
+>
+> 	$ref: "../snps,dwmac.yaml#"
+>
+>> +
+>> +maintainers:
+>> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: loongson,pci-gmac
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    minItems: 1
+>> +    maxItems: 3
+>> +    items:
+>> +      - description: Combined signal for various interrupt events
+>> +      - description: The interrupt to manage the remote wake-up packet detection
+>> +      - description: The interrupt that occurs when Rx exits the LPI state
+>> +
+>> +  interrupt-names:
+>> +    minItems: 1
+>> +    maxItems: 3
+>> +    items:
+>> +      - const: macirq
+>> +      - const: eth_wake_irq
+>> +      - const: eth_lpi
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: GMAC main clock
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: stmmaceth
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - interrupt-names
+>> +  - clocks
+>> +  - clock-names
+>> +  - phy-mode
+>> +
+>> +examples:
+>> +  - |
+>> +    gmac: ethernet@ {
+> I would have expected a bus address here, f.e.:
+>
+> 	gmac: ethernet@0x00001800
+>
+>> +        compatible = "loongson,pci-irq";
+>> +        reg = <0x00001800 0 0 0 0>;
+> I think there is one to many cell in the above, perhaps it should be.
+>
+> 	reg = <0x00001800 0 0 0>;
+>
+> Also, I would expect the registers to be wider than 0, i.e. no registers.
 
-PCI: of: Add inbound resource parsing to helpers
+Hi Simon,
 
-branch pci/mmio-dma-ranges, please let me know if there is something
-I have missed.
+Thanks for your suggestions above, will fix in v1.
 
-Thanks,
-Lorenzo
+Here, the reg domain is a standard 5-cell representing a PCI device,
 
-> Only versatile has been tested (on QEMU). The rest is compiled only. A git
-> branch is here[1].
-> 
-> v3:
-> - Fix >80 char lines
-> - Rename resource_list_get_entry_of_type to resource_list_first_type
-> 
-> Rob
-> 
-> [1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git pci-ranges-cleanup-v3
-> 
-> 
-> Rob Herring (25):
->   resource: Add a resource_list_first_type helper
->   PCI: Export pci_parse_request_of_pci_ranges()
->   PCI: aardvark: Use pci_parse_request_of_pci_ranges()
->   PCI: altera: Use pci_parse_request_of_pci_ranges()
->   PCI: dwc: Use pci_parse_request_of_pci_ranges()
->   PCI: faraday: Use pci_parse_request_of_pci_ranges()
->   PCI: iproc: Use pci_parse_request_of_pci_ranges()
->   PCI: mediatek: Use pci_parse_request_of_pci_ranges()
->   PCI: mobiveil: Use pci_parse_request_of_pci_ranges()
->   PCI: rockchip: Use pci_parse_request_of_pci_ranges()
->   PCI: rockchip: Drop storing driver private outbound resource data
->   PCI: v3-semi: Use pci_parse_request_of_pci_ranges()
->   PCI: xgene: Use pci_parse_request_of_pci_ranges()
->   PCI: xilinx: Use pci_parse_request_of_pci_ranges()
->   PCI: xilinx-nwl: Use pci_parse_request_of_pci_ranges()
->   PCI: versatile: Use pci_parse_request_of_pci_ranges()
->   PCI: versatile: Remove usage of PHYS_OFFSET
->   PCI: versatile: Enable COMPILE_TEST
->   PCI: of: Add inbound resource parsing to helpers
->   PCI: ftpci100: Use inbound resources for setup
->   PCI: v3-semi: Use inbound resources for setup
->   PCI: xgene: Use inbound resources for setup
->   PCI: iproc: Use inbound resources for setup
->   PCI: rcar: Use inbound resources for setup
->   PCI: Make devm_of_pci_get_host_bridge_resources() static
-> 
->  drivers/pci/controller/Kconfig                |  2 +-
->  .../pci/controller/dwc/pcie-designware-host.c | 29 ++----
->  drivers/pci/controller/pci-aardvark.c         | 60 +------------
->  drivers/pci/controller/pci-ftpci100.c         | 79 +++++-----------
->  drivers/pci/controller/pci-host-common.c      |  2 +-
->  drivers/pci/controller/pci-v3-semi.c          | 74 +++++----------
->  drivers/pci/controller/pci-versatile.c        | 71 ++++-----------
->  drivers/pci/controller/pci-xgene.c            | 73 +++++----------
->  drivers/pci/controller/pcie-altera.c          | 41 +--------
->  drivers/pci/controller/pcie-cadence-host.c    |  2 +-
->  drivers/pci/controller/pcie-iproc-platform.c  |  9 +-
->  drivers/pci/controller/pcie-iproc.c           | 82 ++++-------------
->  drivers/pci/controller/pcie-mediatek.c        | 43 +++------
->  drivers/pci/controller/pcie-mobiveil.c        | 27 ++----
->  drivers/pci/controller/pcie-rcar.c            | 48 ++++------
->  drivers/pci/controller/pcie-rockchip-host.c   | 89 +++++++------------
->  drivers/pci/controller/pcie-rockchip.h        |  5 --
->  drivers/pci/controller/pcie-xilinx-nwl.c      | 21 ++---
->  drivers/pci/controller/pcie-xilinx.c          | 18 +---
->  drivers/pci/of.c                              | 51 +++++++++--
->  drivers/pci/pci.h                             | 13 ---
->  include/linux/pci.h                           |  9 +-
->  include/linux/resource_ext.h                  | 12 +++
->  23 files changed, 261 insertions(+), 599 deletions(-)
-> 
-> --
-> 2.20.1
+See: Documentation/devicetree/bindings/pci/pci.txt and IEEE Std 
+1275-1994,<https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/pci/pci.txt>
+
+Should I add some description?
+
+Jiaxun
+
