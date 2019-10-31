@@ -2,125 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 699A0EA97F
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2019 04:26:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6147BEA9D8
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2019 05:17:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfJaD0L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Oct 2019 23:26:11 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60838 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726336AbfJaD0K (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 30 Oct 2019 23:26:10 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A11698C8659FB5227AE0;
-        Thu, 31 Oct 2019 11:26:07 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 31 Oct 2019
- 11:26:05 +0800
-Subject: Re: [PATCH v7] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
-        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
-        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
-        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
-        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
-        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
-        <rafael@kernel.org>, <mhocko@kernel.org>,
-        <gregkh@linuxfoundation.org>, <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <lenb@kernel.org>, <linux-acpi@vger.kernel.org>
-References: <1572428068-180880-1-git-send-email-linyunsheng@huawei.com>
- <20191030101449.GW4097@hirez.programming.kicks-ass.net>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <f7aa833e-3ed3-aba0-8c6e-8753a68182c2@huawei.com>
-Date:   Thu, 31 Oct 2019 11:26:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-In-Reply-To: <20191030101449.GW4097@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="utf-8"
+        id S1726619AbfJaER1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 31 Oct 2019 00:17:27 -0400
+Received: from mx0b-00010702.pphosted.com ([148.163.158.57]:62780 "EHLO
+        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725816AbfJaER1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 31 Oct 2019 00:17:27 -0400
+X-Greylist: delayed 1412 seconds by postgrey-1.27 at vger.kernel.org; Thu, 31 Oct 2019 00:17:26 EDT
+Received: from pps.filterd (m0098778.ppops.net [127.0.0.1])
+        by mx0b-00010702.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9V3pPas026516;
+        Wed, 30 Oct 2019 22:53:53 -0500
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2050.outbound.protection.outlook.com [104.47.36.50])
+        by mx0b-00010702.pphosted.com with ESMTP id 2vxwfmcbdj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 30 Oct 2019 22:53:53 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z6/ertpqdUcnbSJYWuEwXxMXkUesyrAhjuxUUBpmHikRR+T7lou2tEj4fmyrS27lN1zmcBpLvO3n7r7R7JVzwjXM66qy4AgB9jUViv1btS3Fv6YVzOH42ei/E/kaVMrc5O1yxRdT1gwC4q9ppQTIWO898xmCq50LysruSi3pjd1l/nQlG9C0JB+oOjaK83GYPBnWCzxiv+X47/DdknQLJQILX4B+dki8fPtc3LMpNcCUaWvYiN8unfjUJ5eRux/rLPytr0KdiMXOifYH/4I6szGvhnpJvCfiltgvj+WEl5dlBGUH9HjWAbEyKz/mkHI0Jv7/DAPO5a+9l+s+P7/0Qw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jzNZdWBMlHwwGB5QGrqKHY87NXJiwV3f+/4OMxcESms=;
+ b=Nk/7K0We0kEpbix/dwV/14oKx2E+/SqVaWjlh7S+NlU0S8U90TVhk/YhvEcA1WJ1HBreTDVchzEakrywbNDCRhthArb1tBblrjb8Tpx5J1Obe1K26RwHHAEfdOn2G91+xIl4t1iqsRotAHgvPJgHkis3UkjvZIt+0M3eBzVtWcRQbAn6YsmvXMK1gh/d1BQndbyb5isgHe+lJCYCc4GxIqSk1qDmxeGlbdocSNRDjn0spL4EkH21pGR2LNCT8pXdHlOawabNZidom/meEnpsl1+LkVmTxiyaY29c0pGZJn8DRHENtmkSKPHVo2H9gYSDa9BhLOLBG7XOANZcjKobSw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=ni.com; dmarc=pass action=none header.from=ni.com; dkim=pass
+ header.d=ni.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=nio365.onmicrosoft.com; s=selector2-nio365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jzNZdWBMlHwwGB5QGrqKHY87NXJiwV3f+/4OMxcESms=;
+ b=HmlvMcw+UGfDeL4DIA8I9MmT9h7tkJ/wFzrCtvPRN0kgZHfFvmVhY2mS/p38MUMzqsbuqZMaspev618fQUJnnuCSZWN1Ze0gCVx3Ox4cDo7TkuEBkUYn4WLcuh8erL22aQty9xjaDBkZ0FLXE4SexoXw4EZMkCzzw1z6gSECma4=
+Received: from MN2PR04MB6255.namprd04.prod.outlook.com (20.178.245.75) by
+ MN2PR04MB5727.namprd04.prod.outlook.com (20.179.23.76) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.18; Thu, 31 Oct 2019 03:53:50 +0000
+Received: from MN2PR04MB6255.namprd04.prod.outlook.com
+ ([fe80::18bf:7f31:7697:b853]) by MN2PR04MB6255.namprd04.prod.outlook.com
+ ([fe80::18bf:7f31:7697:b853%7]) with mapi id 15.20.2387.028; Thu, 31 Oct 2019
+ 03:53:50 +0000
+From:   Kar Hin Ong <kar.hin.ong@ni.com>
+To:     "linux-rt-users@vger.kernel.org" <linux-rt-users@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-x86_64@vger.kernel.org" <linux-x86_64@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: "oneshot" interrupt causes another interrupt to be fired erroneously
+ in Haswell system
+Thread-Topic: "oneshot" interrupt causes another interrupt to be fired
+ erroneously in Haswell system
+Thread-Index: AdWPm6PR1RqDULWNQ4axnrJI8tA/7w==
+Date:   Thu, 31 Oct 2019 03:53:50 +0000
+Message-ID: <MN2PR04MB625541BF4ADC84690B5C45E9C3630@MN2PR04MB6255.namprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [130.164.74.17]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fe035d86-b019-4d59-de4f-08d75db5f0cc
+x-ms-traffictypediagnostic: MN2PR04MB5727:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MN2PR04MB5727816974E328FCDBE8AB0AC3630@MN2PR04MB5727.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02070414A1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(39860400002)(136003)(366004)(189003)(199004)(71200400001)(256004)(316002)(81166006)(110136005)(25786009)(71190400001)(450100002)(8936002)(6116002)(33656002)(81156014)(2201001)(2906002)(8676002)(3846002)(66446008)(66476007)(64756008)(66946007)(66556008)(76116006)(14454004)(478600001)(52536014)(966005)(2501003)(486006)(476003)(7696005)(74316002)(6306002)(6436002)(9686003)(186003)(6506007)(26005)(86362001)(99286004)(305945005)(5660300002)(66066001)(102836004)(7736002)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5727;H:MN2PR04MB6255.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: ni.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: zrg40whaHsHHB6ezfCiVOkSbOutsMS0P4KOm5ZTFbSO5ZvCLnwYTIt5I4loNdJC+HoqRWPK0nEjbetgmvUSSDY1ZgmCJK4nO9A7JlWG8A03LwPEn+fEgfAiQ5GsJDH8YAbEN9BzV8zG9A9y9fJBtT3exosGviob+MquRIvMpFFywefaPha0KFRW7nInIhlPXc5jdWcWza2693OB8lb32cK43+P7iLaJuPIIiJLtgJDQKsB5Dh2mvUqgTkyc+DT+0PLbsRZ+gBfXy9yHKGQemWqRlAMfz7W+hOFH4pae0KerkSv0KxGQUpyto1JPzqXtVdGAMza1UbPUXeX25WJ8uy80G0yuuO3HJv8ZiEEjWS0Xz3Z9cPUznAKqZnoxNbYIgQl3aOkOg3piKV7wtSlXxShK61gbog5WsHVVSpNaPkJj0cdooZix6uJMj7R8OisThr0ACCeQLnAlCcxjOAY4FAPCNeQhU4Bz2JRynBWaeeFE=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: ni.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe035d86-b019-4d59-de4f-08d75db5f0cc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Oct 2019 03:53:50.5636
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 87ba1f9a-44cd-43a6-b008-6fdb45a5204e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: knPYv2yGQcy5kPLvtMpgYo1zhnyskB9PgDvHExSW5jQoFTaxyU/y1NFpx15hK+MZN2yrOuXoViFF5xpjASEjEQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5727
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-31_01:2019-10-30,2019-10-31 signatures=0
+X-Proofpoint-Spam-Details: rule=inbound_policy_notspam policy=inbound_policy score=30
+ priorityscore=1501 malwarescore=0 mlxlogscore=822 suspectscore=0
+ phishscore=0 impostorscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0
+ spamscore=0 clxscore=1011 bulkscore=0 classifier=spam adjust=30 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1910310036
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2019/10/30 18:14, Peter Zijlstra wrote:
-> On Wed, Oct 30, 2019 at 05:34:28PM +0800, Yunsheng Lin wrote:
->> When passing the return value of dev_to_node() to cpumask_of_node()
->> without checking if the device's node id is NUMA_NO_NODE, there is
->> global-out-of-bounds detected by KASAN.
->>
->> From the discussion [1], NUMA_NO_NODE really means no node affinity,
->> which also means all cpus should be usable. So the cpumask_of_node()
->> should always return all cpus online when user passes the node id as
->> NUMA_NO_NODE, just like similar semantic that page allocator handles
->> NUMA_NO_NODE.
->>
->> But we cannot really copy the page allocator logic. Simply because the
->> page allocator doesn't enforce the near node affinity. It just picks it
->> up as a preferred node but then it is free to fallback to any other numa
->> node. This is not the case here and node_to_cpumask_map will only restrict
->> to the particular node's cpus which would have really non deterministic
->> behavior depending on where the code is executed. So in fact we really
->> want to return cpu_online_mask for NUMA_NO_NODE.
->>
->> Also there is a debugging version of node_to_cpumask_map() for x86 and
->> arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
->> patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
->>
->> [1] https://lkml.org/lkml/2019/9/11/66
->> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->> Suggested-by: Michal Hocko <mhocko@kernel.org>
->> Acked-by: Michal Hocko <mhocko@suse.com>
->> Acked-by: Paul Burton <paul.burton@mips.com> # MIPS bits
-> 
-> Still:
-> 
-> Nacked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Hi,
 
-It seems I still misunderstood your meaning by "We must not silently accept
-NO_NODE there" in [1].
+I've an Intel Haswell system running Linux kernel v4.14 with preempt_rt pat=
+ch. The system contain 2 IOAPICs: IOAPIC 1 is on the PCH where IOAPIC 2 is =
+on the CPU.
 
-I am not sure if there is still disagreement that the NO_NODE state for
-dev->numa_node should exist at all.
+I observed that whenever a PCI device is firing interrupt (INTx) to Pin 20 =
+of IOAPIC 2 (GSI 44); the kernel will receives 2 interrupts:=20
+   1. Interrupt from Pin 20 of IOAPIC 2  -> Expected
+   2. Interrupt from Pin 19 of IOAPIC 1  -> UNEXPECTED, erroneously trigger=
+ed
 
-From the previous disscussion [2], you seem to propose to do "wild guess" or
-"fixup" for all devices(including virtual and physcial) with NO_NODE, which means
-the NO_NODE is needed anymore and should be removed when the "wild guess" or "fixup"
-is done. So maybe the reason for your nack here it is that there should be no other
-NO_NODE handling or fixing related to NO_NODE before the "wild guess" or "fixup"
-process is finished, so making node_to_cpumask_map() NUMA_NO_NODE aware is unnecessary.
+The unexpected interrupt is unhandled eventually. When this scenario happen=
+ more than 99,000 times, kernel disables the interrupt line (Pin 19 of IOAP=
+IC 1) and causing device that has requested it become malfunction.
 
-Or your reason for the nack is still specific to the pcie device without a numa node,
-the "wild guess" need to be done for this case before making node_to_cpumask_map()
-NUMA_NO_NODE?
+I managed to also reproduced this issue on RHEL 8 and Ubuntu 19-04 (without=
+ preempt_rt patch) after added "threadirqs" to the kernel command line.
 
-Please help to clarify the reason for nack. Or is there still some other reason for the
-nack I missed from the previous disscussion?
+After digging further, I noticed that the said issue is happened whenever a=
+n interrupt pin on IOAPIC 2 is masked:
+ - Masking Pin 20 of IOAPIC 2 triggers Pin 19 of IOAPIC 1 =20
+ - Masking Pin 22 of IOAPIC 2 triggers Pin 18 of IOAPIC 1 =20
+
+I also noticed that kernel will explicitly mask a specific interrupt pin be=
+fore execute its handler, if the interrupt is configured as "oneshot" (i.e.=
+ threaded). See https://elixir.bootlin.com/linux/v4.14/source/kernel/irq/ch=
+ip.c#L695 =20
+This explained why it only happened on RTOS and Desktop Linux with "threadi=
+rqs" flag, because these configurations force the interrupt handler to be t=
+hreaded.
+
+From Intel Xeon Processor E5/E7 v3 Product Family External Design Specifica=
+tion (EDS), Volume One: Architecture, section 13.1 (Legacy PCI Interrupt Ha=
+ndling), it mention:
+"If the I/OxAPIC entry is masked (via the 'mask' bit in the corresponding R=
+edirection Table Entry), then the corresponding PCI Express interrupt(s) is=
+ forwarded to the legacy PCH"
+
+My interpretation is: when kernel receive a "oneshot" interrupt, it mask th=
+e line before start handling it (or sending the eoi signal).=20
+At this moment, if the interrupt line is still asserting, then the interrup=
+t signal will be routed to the IOAPIC in PCH, and hence causing another int=
+errupt to be fired erroneously. =20
+
+I would like to understand if my interpretation is make sense. If yes, shou=
+ld the "oneshot" algorithm need to be updated to support Haswell system?
 
 Thanks.
-
-[1] https://lore.kernel.org/lkml/20191011111539.GX2311@hirez.programming.kicks-ass.net/
-[2] https://lore.kernel.org/lkml/20191014094912.GY2311@hirez.programming.kicks-ass.net/
-> 
-> .
-> 
+Kar Hin Ong
 
