@@ -2,270 +2,217 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E4003EB7CD
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2019 20:10:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F76FEB883
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2019 21:42:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbfJaTKn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 31 Oct 2019 15:10:43 -0400
-Received: from mga11.intel.com ([192.55.52.93]:31964 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729296AbfJaTKm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 31 Oct 2019 15:10:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 12:10:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,252,1569308400"; 
-   d="scan'208";a="230975755"
-Received: from nsgsw-rhel7p6.lm.intel.com ([10.232.116.12])
-  by fmsmga002.fm.intel.com with ESMTP; 31 Oct 2019 12:10:41 -0700
-From:   Jon Derrick <jonathan.derrick@intel.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     <linux-pci@vger.kernel.org>, Paul McKenney <paulmck@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jon Derrick <jonathan.derrick@intel.com>
-Subject: [PATCH v2] PCI: vmd: Add indirection layer to vmd irq lists
-Date:   Thu, 31 Oct 2019 07:08:53 -0600
-Message-Id: <1572527333-6212-1-git-send-email-jonathan.derrick@intel.com>
-X-Mailer: git-send-email 1.8.3.1
+        id S1729777AbfJaUmJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 31 Oct 2019 16:42:09 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35376 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727477AbfJaUmJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 31 Oct 2019 16:42:09 -0400
+Received: by mail-wr1-f66.google.com with SMTP id l10so7740652wrb.2
+        for <linux-pci@vger.kernel.org>; Thu, 31 Oct 2019 13:42:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ewVs5CtQ7DC3g05WS9zawrxD8UKXFocxlzIj1rs+CGo=;
+        b=u0ihDxayWOgyQVQJ0HnyyQV8MdcVTSlc9z0upUFnL4td3Vz2c+ZDBdgZV+FbOVvTKB
+         KyicvBpvnE+gPjSNYOdE42ZCZimvwATHdZ0sREgteu4D1Vy2P/PLH1EujlUy3uU2YH0u
+         Ql87qI3xi74tVhTE2Hp4tNZOA4nforHEDVnKL9xidnEv7OBTGuOmJHfp4ki++RQYnJ62
+         tA9BsUqpb8FG3LxSLtnA4zsIBkAnANjIV0eO+jIbKTda3Uef/jtfp1arlnLoCUZB+KAJ
+         o8N+NHjrKPbc0yHkNaX1jlHHZGT85UoMEFRIt0LymlKx7Xk9kyvCM9LMMFF95+MSZi2i
+         2ytg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ewVs5CtQ7DC3g05WS9zawrxD8UKXFocxlzIj1rs+CGo=;
+        b=Xg9iqdFirHVSLSaBrqPLJSvabgn619Fu5VV7jLFdbwYfKK16/Y3K3uAlVGqUXJcKbp
+         flQ0MGjRS14x3hQn20hYcFi4YG8LJzd+2Emem7vWVmTvjMylNrYVM4v4XMeBNQ7BcRqE
+         oj7SoT9C55ewewj6FzhVB161uD/Fuh3s9DOZCqhytumOQXjZuwMrzVptBdL9UAUpB+gY
+         PtgRs/a2igy8fW7c5/w3EPGkLzHMhUvXl8k2e++ZWqFsjFqcFH25v4JSj4dvV64nB5PF
+         BNz8jEd0ejkTnm4YUAk7wT7+cHqDwFAhBuB9zNVxEW8UMtPhyTC7w/mOcD1U8jYRJ3Kn
+         601A==
+X-Gm-Message-State: APjAAAVKKmolcd4mYDIPT9ywmfUdnTLmd76Tt6Vwkij2Gfu8P4jhVEdW
+        ZzKB7PWK/iZq0amtX+fmdLUoOA==
+X-Google-Smtp-Source: APXvYqytoC1inlbhKyAShJk2vZ4/FrApDyUfeDB8ENq8oN9Tzf1PWk1mBfwKPUqV/Nn6LHUv3NjgQg==
+X-Received: by 2002:adf:9044:: with SMTP id h62mr7744773wrh.91.1572554525976;
+        Thu, 31 Oct 2019 13:42:05 -0700 (PDT)
+Received: from netronome.com (fred-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:a2a4:c5ff:fe4c:9ce9])
+        by smtp.gmail.com with ESMTPSA id l4sm7047929wrf.46.2019.10.31.13.42.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 13:42:05 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 21:42:03 +0100
+From:   Simon Horman <simon.horman@netronome.com>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, axboe@kernel.dk,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, bhelgaas@google.com, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 4/5] dt-bindings: net: document loongson.pci-gmac
+Message-ID: <20191031204202.GB30739@netronome.com>
+References: <20191030135347.3636-1-jiaxun.yang@flygoat.com>
+ <20191030135347.3636-5-jiaxun.yang@flygoat.com>
+ <20191031083509.GA30739@netronome.com>
+ <a93eedb9-8863-3802-a563-fe4955d846c3@flygoat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a93eedb9-8863-3802-a563-fe4955d846c3@flygoat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-With CONFIG_MAXSMP and CONFIG_PROVE_LOCKING, the size of an srcu_struct can
-grow quite large. In one compilation instance it produced a 74KiB data
-structure. These are embedded in the vmd_irq_list struct, and a N=64 allocation
-can exceed MAX_ORDER, violating reclaim rules.
+On Thu, Oct 31, 2019 at 06:57:16PM +0800, Jiaxun Yang wrote:
+> 
+> 在 2019/10/31 下午4:35, Simon Horman 写道:
+> > Hi Jiaxun,
+> > 
+> > thanks for your patch.
+> > 
+> > On Wed, Oct 30, 2019 at 09:53:46PM +0800, Jiaxun Yang wrote:
+> > > This binding will provide extra information for PCI enabled
+> > > device.
+> > > 
+> > > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> > Please verify the bindings using dtbs_check as described in
+> > Documentation/devicetree/writing-schema.rst
+> > 
+> > > ---
+> > >   .../net/wireless/loongson,pci-gmac.yaml       | 71 +++++++++++++++++++
+> > >   1 file changed, 71 insertions(+)
+> > >   create mode 100644 Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml b/Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml
+> > > new file mode 100644
+> > > index 000000000000..5f764bd46735
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml
+> > > @@ -0,0 +1,71 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/net/allwinner,sun7i-a20-gmac.yaml#
+> > The id does not match the filename of the schema.
+> > 
+> > i.e. the above should be:
+> > 
+> > 	$id: http://devicetree.org/schemas/net/wireless/loongson,pci-gmac.yaml#
+> > 
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Loongson PCI GMAC Device Tree Bindings
+> > > +
+> > > +allOf:
+> > > +  - $ref: "snps,dwmac.yaml#"
+> > snps,dwmac.yaml# is in the parent directory relative to loongson,pci-gmac.yaml.
+> > So I think the above needs to be:
+> > 
+> > 	$ref: "../snps,dwmac.yaml#"
+> > 
+> > > +
+> > > +maintainers:
+> > > +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: loongson,pci-gmac
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    minItems: 1
+> > > +    maxItems: 3
+> > > +    items:
+> > > +      - description: Combined signal for various interrupt events
+> > > +      - description: The interrupt to manage the remote wake-up packet detection
+> > > +      - description: The interrupt that occurs when Rx exits the LPI state
+> > > +
+> > > +  interrupt-names:
+> > > +    minItems: 1
+> > > +    maxItems: 3
+> > > +    items:
+> > > +      - const: macirq
+> > > +      - const: eth_wake_irq
+> > > +      - const: eth_lpi
+> > > +
+> > > +  clocks:
+> > > +    items:
+> > > +      - description: GMAC main clock
+> > > +
+> > > +  clock-names:
+> > > +    items:
+> > > +      - const: stmmaceth
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - interrupts
+> > > +  - interrupt-names
+> > > +  - clocks
+> > > +  - clock-names
+> > > +  - phy-mode
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    gmac: ethernet@ {
+> > I would have expected a bus address here, f.e.:
+> > 
+> > 	gmac: ethernet@0x00001800
+> > 
+> > > +        compatible = "loongson,pci-irq";
+> > > +        reg = <0x00001800 0 0 0 0>;
+> > I think there is one to many cell in the above, perhaps it should be.
+> > 
+> > 	reg = <0x00001800 0 0 0>;
+> > 
+> > Also, I would expect the registers to be wider than 0, i.e. no registers.
+> 
+> Hi Simon,
+> 
+> Thanks for your suggestions above, will fix in v1.
+> 
+> Here, the reg domain is a standard 5-cell representing a PCI device,
+> 
+> See: Documentation/devicetree/bindings/pci/pci.txt and IEEE Std 1275-1994,<https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/pci/pci.txt>
+> 
+> Should I add some description?
 
-  struct srcu_struct {
-          struct srcu_node   node[521];                    /*     0 75024 */
-          /* --- cacheline 1172 boundary (75008 bytes) was 16 bytes ago --- */
-          struct srcu_node *         level[4];             /* 75024    32 */
-          struct mutex       srcu_cb_mutex;                /* 75056   128 */
-          /* --- cacheline 1174 boundary (75136 bytes) was 48 bytes ago --- */
-          spinlock_t                 lock;                 /* 75184    56 */
-          /* --- cacheline 1175 boundary (75200 bytes) was 40 bytes ago --- */
-          struct mutex       srcu_gp_mutex;                /* 75240   128 */
-          /* --- cacheline 1177 boundary (75328 bytes) was 40 bytes ago --- */
-          unsigned int               srcu_idx;             /* 75368     4 */
+Thanks, sorry for missing that.
+As that is the case I think you need something like the following
+as an example that compiles.
 
-          /* XXX 4 bytes hole, try to pack */
+examples:
+  - |
+    pcie@0 {
+        reg = <0 0 0 0>;
+        #size-cells = <2>;
+        #address-cells = <3>;
+        ranges = <0 0 0 0 0 0>;
+        device_type = "pci";
 
-          long unsigned int          srcu_gp_seq;          /* 75376     8 */
-          long unsigned int          srcu_gp_seq_needed;   /* 75384     8 */
-          /* --- cacheline 1178 boundary (75392 bytes) --- */
-          long unsigned int          srcu_gp_seq_needed_exp; /* 75392     8 */
-          long unsigned int          srcu_last_gp_end;     /* 75400     8 */
-          struct srcu_data *         sda;                  /* 75408     8 */
-          long unsigned int          srcu_barrier_seq;     /* 75416     8 */
-          struct mutex       srcu_barrier_mutex;           /* 75424   128 */
-          /* --- cacheline 1180 boundary (75520 bytes) was 32 bytes ago --- */
-          struct completion  srcu_barrier_completion;      /* 75552    80 */
-          /* --- cacheline 1181 boundary (75584 bytes) was 48 bytes ago --- */
-          atomic_t                   srcu_barrier_cpu_cnt; /* 75632     4 */
+        gmac: ethernet@1800 {
+            compatible = "loongson,pci-irq";
+            reg = <0x00001800 0 0 0 0>;
+            interrupts = <12>, <13>;
+            interrupt-names = "macirq", "eth_lpi";
+            clocks =  <&clk_pch_gmac>;
+            clock-names = "stmmaceth";
+            phy-mode = "rgmii";
+        };
+    };
 
-          /* XXX 4 bytes hole, try to pack */
 
-          struct delayed_work work;                        /* 75640   152 */
 
-          /* XXX last struct has 4 bytes of padding */
 
-          /* --- cacheline 1184 boundary (75776 bytes) was 16 bytes ago --- */
-          struct lockdep_map dep_map;                      /* 75792    32 */
-
-          /* size: 75824, cachelines: 1185, members: 17 */
-          /* sum members: 75816, holes: 2, sum holes: 8 */
-          /* paddings: 1, sum paddings: 4 */
-          /* last cacheline: 48 bytes */
-  };
-
-With N=64 VMD IRQ lists, this would allocate 4.6MiB in a single call. This
-violates MAX_ORDER reclaim rules when PAGE_SIZE=4096 and
-MAX_ORDER_NR_PAGES=1024, and invokes the following warning in mm/page_alloc.c:
-
-  /*
-   * There are several places where we assume that the order value is sane
-   * so bail out early if the request is out of bound.
-   */
-  if (unlikely(order >= MAX_ORDER)) {
-  	WARN_ON_ONCE(!(gfp_mask & __GFP_NOWARN));
-  	return NULL;
-  }
-
-This patch changes the irq list array into an array of pointers to irq
-lists to avoid allocation failures with greater msix counts.
-
-This patch also reverts commit b31822277abcd7c83d1c1c0af876da9ccdf3b7d6.
-The index_from_irqs() helper was added to calculate the irq list index
-from the array of irqs, in order to shrink vmd_irq_list for performance.
-
-Due to the embedded srcu_struct within the vmd_irq_list struct having a
-varying size depending on a number of factors, the vmd_irq_list struct
-no longer guarantees optimal data structure size and granularity.
-
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
----
-Added Paul to make him aware of srcu_struct size with these options
-
-v1->v2:
-Squashed the revert into this commit
-changed n=1 kcalloc to kzalloc
-
- drivers/pci/controller/vmd.c | 47 ++++++++++++++++++++++----------------------
- 1 file changed, 24 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index a35d3f3..8bce647 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -82,6 +82,7 @@ struct vmd_irq_list {
- 	struct list_head	irq_list;
- 	struct srcu_struct	srcu;
- 	unsigned int		count;
-+	unsigned int		index;
- };
- 
- struct vmd_dev {
-@@ -91,7 +92,7 @@ struct vmd_dev {
- 	char __iomem		*cfgbar;
- 
- 	int msix_count;
--	struct vmd_irq_list	*irqs;
-+	struct vmd_irq_list	**irqs;
- 
- 	struct pci_sysdata	sysdata;
- 	struct resource		resources[3];
-@@ -108,12 +109,6 @@ static inline struct vmd_dev *vmd_from_bus(struct pci_bus *bus)
- 	return container_of(bus->sysdata, struct vmd_dev, sysdata);
- }
- 
--static inline unsigned int index_from_irqs(struct vmd_dev *vmd,
--					   struct vmd_irq_list *irqs)
--{
--	return irqs - vmd->irqs;
--}
--
- /*
-  * Drivers managing a device in a VMD domain allocate their own IRQs as before,
-  * but the MSI entry for the hardware it's driving will be programmed with a
-@@ -126,11 +121,10 @@ static void vmd_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- {
- 	struct vmd_irq *vmdirq = data->chip_data;
- 	struct vmd_irq_list *irq = vmdirq->irq;
--	struct vmd_dev *vmd = irq_data_get_irq_handler_data(data);
- 
- 	msg->address_hi = MSI_ADDR_BASE_HI;
- 	msg->address_lo = MSI_ADDR_BASE_LO |
--			  MSI_ADDR_DEST_ID(index_from_irqs(vmd, irq));
-+			  MSI_ADDR_DEST_ID(irq->index);
- 	msg->data = 0;
- }
- 
-@@ -200,7 +194,7 @@ static struct vmd_irq_list *vmd_next_irq(struct vmd_dev *vmd, struct msi_desc *d
- 	unsigned long flags;
- 
- 	if (vmd->msix_count == 1)
--		return &vmd->irqs[0];
-+		return vmd->irqs[0];
- 
- 	/*
- 	 * White list for fast-interrupt handlers. All others will share the
-@@ -210,17 +204,17 @@ static struct vmd_irq_list *vmd_next_irq(struct vmd_dev *vmd, struct msi_desc *d
- 	case PCI_CLASS_STORAGE_EXPRESS:
- 		break;
- 	default:
--		return &vmd->irqs[0];
-+		return vmd->irqs[0];
- 	}
- 
- 	raw_spin_lock_irqsave(&list_lock, flags);
- 	for (i = 1; i < vmd->msix_count; i++)
--		if (vmd->irqs[i].count < vmd->irqs[best].count)
-+		if (vmd->irqs[i]->count < vmd->irqs[best]->count)
- 			best = i;
--	vmd->irqs[best].count++;
-+	vmd->irqs[best]->count++;
- 	raw_spin_unlock_irqrestore(&list_lock, flags);
- 
--	return &vmd->irqs[best];
-+	return vmd->irqs[best];
- }
- 
- static int vmd_msi_init(struct irq_domain *domain, struct msi_domain_info *info,
-@@ -230,7 +224,7 @@ static int vmd_msi_init(struct irq_domain *domain, struct msi_domain_info *info,
- 	struct msi_desc *desc = arg->desc;
- 	struct vmd_dev *vmd = vmd_from_bus(msi_desc_to_pci_dev(desc)->bus);
- 	struct vmd_irq *vmdirq = kzalloc(sizeof(*vmdirq), GFP_KERNEL);
--	unsigned int index, vector;
-+	unsigned int vector;
- 
- 	if (!vmdirq)
- 		return -ENOMEM;
-@@ -238,8 +232,7 @@ static int vmd_msi_init(struct irq_domain *domain, struct msi_domain_info *info,
- 	INIT_LIST_HEAD(&vmdirq->node);
- 	vmdirq->irq = vmd_next_irq(vmd, desc);
- 	vmdirq->virq = virq;
--	index = index_from_irqs(vmd, vmdirq->irq);
--	vector = pci_irq_vector(vmd->dev, index);
-+	vector = pci_irq_vector(vmd->dev, vmdirq->irq->index);
- 
- 	irq_domain_set_info(domain, virq, vector, info->chip, vmdirq,
- 			    handle_untracked_irq, vmd, NULL);
-@@ -771,14 +764,22 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < vmd->msix_count; i++) {
--		err = init_srcu_struct(&vmd->irqs[i].srcu);
-+		vmd->irqs[i] = devm_kzalloc(&dev->dev, sizeof(**vmd->irqs),
-+					    GFP_KERNEL);
-+		if (!vmd->irqs[i])
-+			return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < vmd->msix_count; i++) {
-+		err = init_srcu_struct(&vmd->irqs[i]->srcu);
- 		if (err)
- 			return err;
- 
--		INIT_LIST_HEAD(&vmd->irqs[i].irq_list);
-+		INIT_LIST_HEAD(&vmd->irqs[i]->irq_list);
-+		vmd->irqs[i]->index = i;
- 		err = devm_request_irq(&dev->dev, pci_irq_vector(dev, i),
- 				       vmd_irq, IRQF_NO_THREAD,
--				       "vmd", &vmd->irqs[i]);
-+				       "vmd", vmd->irqs[i]);
- 		if (err)
- 			return err;
- 	}
-@@ -799,7 +800,7 @@ static void vmd_cleanup_srcu(struct vmd_dev *vmd)
- 	int i;
- 
- 	for (i = 0; i < vmd->msix_count; i++)
--		cleanup_srcu_struct(&vmd->irqs[i].srcu);
-+		cleanup_srcu_struct(&vmd->irqs[i]->srcu);
- }
- 
- static void vmd_remove(struct pci_dev *dev)
-@@ -823,7 +824,7 @@ static int vmd_suspend(struct device *dev)
- 	int i;
- 
- 	for (i = 0; i < vmd->msix_count; i++)
--                devm_free_irq(dev, pci_irq_vector(pdev, i), &vmd->irqs[i]);
-+                devm_free_irq(dev, pci_irq_vector(pdev, i), vmd->irqs[i]);
- 
- 	pci_save_state(pdev);
- 	return 0;
-@@ -838,7 +839,7 @@ static int vmd_resume(struct device *dev)
- 	for (i = 0; i < vmd->msix_count; i++) {
- 		err = devm_request_irq(dev, pci_irq_vector(pdev, i),
- 				       vmd_irq, IRQF_NO_THREAD,
--				       "vmd", &vmd->irqs[i]);
-+				       "vmd", vmd->irqs[i]);
- 		if (err)
- 			return err;
- 	}
--- 
-1.8.3.1
 
