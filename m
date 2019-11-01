@@ -2,179 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 20EB7EC3A0
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2019 14:26:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 926EBEC411
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2019 14:53:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfKAN0d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Nov 2019 09:26:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:35368 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbfKAN0d (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 1 Nov 2019 09:26:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C92C1F1;
-        Fri,  1 Nov 2019 06:26:32 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 780223F71E;
-        Fri,  1 Nov 2019 06:26:31 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 13:26:29 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Tom Joseph <tjoseph@cadence.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI: cadence: Refactor driver to use as a core library
-Message-ID: <20191101132629.GF9723@e119886-lin.cambridge.arm.com>
-References: <1571252912-7354-1-git-send-email-tjoseph@cadence.com>
- <20191025134658.GZ47056@e119886-lin.cambridge.arm.com>
- <MWHPR07MB385315AA79FE4E1EE8531BCBA1600@MWHPR07MB3853.namprd07.prod.outlook.com>
+        id S1727653AbfKANxu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Nov 2019 09:53:50 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33018 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbfKANxu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Nov 2019 09:53:50 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c184so7152969pfb.0
+        for <linux-pci@vger.kernel.org>; Fri, 01 Nov 2019 06:53:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=okI+WKXZnivApTS1Oqi6dD5Ms0rFCprYxF1H61WduWk=;
+        b=s6WuuRS9UmQ6B9ChUfjnoHYXwXp1kZZqoiRmCgQqN93Bs+yo8suls0CHnTTeIuXCXk
+         T6tF1vaAhgoeGXzMnI0TFa3WU5dU2Oa+ln8kNSZWqfGeaUKFwVEzh6Xs/C32RYnBCv6V
+         a98kYJ11RlUaNxpA+NSa/kfVzQK4z704joI8amhwFw3oAgT7a2u//vrqRM6L7GtLIhUo
+         VCjM8xji+KqBws35x6ZN4VksaWZ8aOH69TAWUHskmvKpdarOKiAOY8INae2bLFzu3s/N
+         80sM6OAeyKeoMNcwDMI9yZynmrPGyZ8tpyQWiyaIySGrzZCsBd/AG5gWJWzjRzIL7xKs
+         0HVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=okI+WKXZnivApTS1Oqi6dD5Ms0rFCprYxF1H61WduWk=;
+        b=ANrI8E3sBlpZO63xfXhPrPoubPhKK+wBOeqyHUYc1kahrAbBNPB/sANtc4JM6/63yx
+         ZWp/2KbJahg/6XpLXuNHYY+ArM2aa6fNxSqTpDJD5PNZAUtS7+nHDB61Pld64XUu1RTd
+         F1pykFYiponb8SRifIDH41vz9rqYiNIwsHvzL2qGs/1E+DHGdDL91NKteIRBTvqgAwg2
+         c2ebaNvFoa/R66QT+0GlUqphQIU01TT2ougcuYSluk74Ikqo/kYPUaaGiUBeXAKAetH2
+         dmqosHXKY/DzbK1uGrD7y4o9gTrgxLtjMCzDMeDAekdHDe7kwx2i9ceJK9VUgoXxD1Wy
+         /KAg==
+X-Gm-Message-State: APjAAAV1ldqeCVrprB8nZaelkFUTxjReVkd99R/ovd6pesoVwGIGpG1C
+        fb8LCDxJxTkZbZM5tCOCkA+OCSsQhtdMX/JjOJ4=
+X-Google-Smtp-Source: APXvYqzIifBfzDIuWtn9JwMyoQScOXqX5rS170Sg0OEtrVciI4As+KuRk4c74+Xwp374JvVvJSdmIgjywnHDy61GnMI=
+X-Received: by 2002:aa7:961d:: with SMTP id q29mr9978031pfg.89.1572616429853;
+ Fri, 01 Nov 2019 06:53:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MWHPR07MB385315AA79FE4E1EE8531BCBA1600@MWHPR07MB3853.namprd07.prod.outlook.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Received: by 2002:a17:90a:8a82:0:0:0:0 with HTTP; Fri, 1 Nov 2019 06:53:48
+ -0700 (PDT)
+Reply-To: eddywilliam0002@gmail.com
+From:   eddy william <crepinak.vainqueur@gmail.com>
+Date:   Fri, 1 Nov 2019 14:53:48 +0100
+Message-ID: <CAHwNn8KBuweMLd4UGpd97ovNB+AsugEpm0k9wh7AzfbeXcyZ8Q@mail.gmail.com>
+Subject: hello
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 03:03:19PM +0000, Tom Joseph wrote:
-> Hi Andrew,
-> 
->  I noticed that I missed to respond to your question here.
-> 
+Hallo
 
-> > > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> > > index fe9f9f1..cafbed0 100644
-> > > --- a/drivers/pci/controller/Kconfig
-> > > +++ b/drivers/pci/controller/Kconfig
-> > > @@ -48,6 +48,34 @@ config PCIE_CADENCE_EP
-> > >  	  endpoint mode. This PCIe controller may be embedded into many
-> > >  	  different vendors SoCs.
-> > >
-> > > +config PCIE_CADENCE_PLAT
-> > > +	bool
-> > > +
-> > > +config PCIE_CADENCE_PLAT_HOST
-> > > +	bool "Cadence PCIe platform host controller"
-> > > +	depends on OF
-> > > +	depends on PCI
-> > > +	select IRQ_DOMAIN
-> > > +	select PCIE_CADENCE
-> > > +	select PCIE_CADENCE_HOST
-> > > +	select PCIE_CADENCE_PLAT
-> > > +	help
-> > > +	  Say Y here if you want to support the Cadence PCIe platform
-> > controller in
-> > > +	  host mode. This PCIe controller may be embedded into many
-> > different
-> > > +	  vendors SoCs.
-> > > +
-> > > +config PCIE_CADENCE_PLAT_EP
-> > > +	bool "Cadence PCIe platform endpoint controller"
-> > > +	depends on OF
-> > > +	depends on PCI_ENDPOINT
-> > > +	select PCIE_CADENCE
-> > > +	select PCIE_CADENCE_EP
-> > > +	select PCIE_CADENCE_PLAT
-> > > +	help
-> > > +	  Say Y here if you want to support the Cadence PCIe  platform
-> > controller in
-> > > +	  endpoint mode. This PCIe controller may be embedded into many
-> > > +	  different vendors SoCs.
-> > > +
-> > >  endmenu
-> > >
-> > >  config PCIE_XILINX_NWL
-> > > diff --git a/drivers/pci/controller/Makefile
-> > b/drivers/pci/controller/Makefile
-> > > index d56a507..676a41e 100644
-> > > --- a/drivers/pci/controller/Makefile
-> > > +++ b/drivers/pci/controller/Makefile
-> > > @@ -2,6 +2,7 @@
-> > >  obj-$(CONFIG_PCIE_CADENCE) += pcie-cadence.o
-> > >  obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
-> > >  obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
-> > > +obj-$(CONFIG_PCIE_CADENCE_PLAT) += pcie-cadence-plat.o
-> > >  obj-$(CONFIG_PCI_FTPCI100) += pci-ftpci100.o
-> > 
-> > I think in addition to the above hunks you also need the following:
-> > 
-> > --- a/drivers/pci/controller/Kconfig
-> > +++ b/drivers/pci/controller/Kconfig
-> > @@ -28,25 +28,16 @@ config PCIE_CADENCE
-> >         bool
-> > 
-> >  config PCIE_CADENCE_HOST
-> > -       bool "Cadence PCIe host controller"
-> > +       bool
-> >         depends on OF
-> > -       depends on PCI
-> >         select IRQ_DOMAIN
-> >         select PCIE_CADENCE
-> > -       help
-> > -         Say Y here if you want to support the Cadence PCIe controller in host
-> > -         mode. This PCIe controller may be embedded into many different
-> > vendors
-> > -         SoCs.
-> > 
-> >  config PCIE_CADENCE_EP
-> > -       bool "Cadence PCIe endpoint controller"
-> > +       bool
-> >         depends on OF
-> >         depends on PCI_ENDPOINT
-> >         select PCIE_CADENCE
-> > -       help
-> > -         Say Y here if you want to support the Cadence PCIe  controller in
-> > -         endpoint mode. This PCIe controller may be embedded into many
-> > -         different vendors SoCs.
-> > 
-> >  config PCIE_CADENCE_PLAT
-> >         bool
-> > 
-> > I removed the 'depends on PCI' as you get that for free seeing as the
-> > "PCI controller drivers" menu depends on PCI.
-> > 
-> > Removing the help and text prevents anything from being shown in the
-> > Kconfig
-> > system - I think you need that here to avoid confusing the user (and to make
-> > this just like DWC).
-> > 
-> > I'm happy with the above. Though just like DWC, I find this confusing. This
-> > allows future Cadence based controller drivers to include support for the EP
-> > or host library by 'selecting PCIE_CADENCE_(HOST,EP)' resulting in those
-> > libraries being compiled in. But despite this the user can still unselect
-> > PCIE_CADENCE_PLAT_HOST which simply prevents that HOST,EP library
-> > functions
-> > from being called - i.e. to override and disable that functionality.
-> 
-> Thanks for the spotting this and for the explanation . I have corrected these in v3.
-> > 
-> > There is no reason that this needs to look like the DWC Kconfig, if there is
-> > a better way that can provide additional benefits then please feel free to
-> > change it.
+Mein Name ist Eddy William. Ich bin von Beruf Rechtsanwalt. Ich m=C3=B6chte
+Ihnen anbieten
+die n=C3=A4chsten Verwandten zu meinem Klienten. Sie erben die Summe von
+($8,5 Millionen US-Dollar)
+Dollar, die mein Kunde vor seinem Tod in der Bank gelassen hat.
+
+Mein Mandant ist ein Staatsb=C3=BCrger Ihres Landes, der mit seiner Frau
+bei einem Autounfall ums Leben gekommen ist
+und nur Sohn. Ich werde mit 50% des Gesamtfonds berechtigt sein, w=C3=A4hre=
+nd 50%
+sein f=C3=BCr dich.
+Bitte kontaktieren Sie meine private E-Mail hier f=C3=BCr weitere
+Informationen: eddywilliam0002gmail.com
+
+Vielen Dank im Voraus,
+Mr. Eddy William,
 
 
-> > > +
-> > > +	platform_set_drvdata(pdev, cdns_plat_pcie);
-> > > +	if (is_rc) {
-> > > +		if (!IS_ENABLED(CONFIG_PCIE_CADENCE_PLAT_HOST))
-> > > +			return -ENODEV;
-> > 
-> > To continue my earlier point, I haven't understood why (in the DWC case)
-> > this
-> > isn't just CONFIG_PCIE_CADENCE_HOST - i.e. why not a single CONFIG for
-> > the HOST
-> > (instead of _HOST AND _PLAT_HOST)?
-> > 
-> 
-> My understanding is that, this would be a place where SoC/platform specific code could be inserted.
-> It might not be obvious here (as there is nothing much platform specific) , but just for demo purpose.
->  
 
-Thanks for this. 
+Hello
 
-Thanks,
+My name is Eddy William I am a lawyer by profession. I wish to offer you
+the next of kin to my client. You will inherit the sum of ($8.5 Million)
+dollars my client left in the bank before his death.
 
-Andrew Murray
+My client is a citizen of your country who died in auto crash with his wife
+and only son. I will be entitled with 50% of the total fund while 50% will
+be for you.
+Please contact my private email here for more details:eddywilliam0002gmail.=
+com
+
+Many thanks in advance,
+Mr.Eddy William,
