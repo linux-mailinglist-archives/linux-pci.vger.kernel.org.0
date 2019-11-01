@@ -2,237 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E867EC465
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2019 15:12:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4A2EEC496
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2019 15:24:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbfKAOMe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Nov 2019 10:12:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:36628 "EHLO foss.arm.com"
+        id S1726958AbfKAOYF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Nov 2019 10:24:05 -0400
+Received: from mga06.intel.com ([134.134.136.31]:39707 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726710AbfKAOMe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 1 Nov 2019 10:12:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 764B8337;
-        Fri,  1 Nov 2019 07:12:33 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D1CC93F718;
-        Fri,  1 Nov 2019 07:12:32 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 14:12:30 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Tom Joseph <tjoseph@cadence.com>
-Cc:     linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] PCI: cadence: Create new folder 'cadence' and
- move all cadence files to it
-Message-ID: <20191101141230.GH9723@e119886-lin.cambridge.arm.com>
-References: <1572349512-7776-1-git-send-email-tjoseph@cadence.com>
- <1572349512-7776-3-git-send-email-tjoseph@cadence.com>
+        id S1726823AbfKAOYF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 Nov 2019 10:24:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 07:24:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,255,1569308400"; 
+   d="scan'208";a="400864714"
+Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
+  by fmsmga005.fm.intel.com with ESMTP; 01 Nov 2019 07:24:03 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.212]) by
+ ORSMSX102.amr.corp.intel.com ([169.254.3.181]) with mapi id 14.03.0439.000;
+ Fri, 1 Nov 2019 07:24:03 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "andrew.murray@arm.com" <andrew.murray@arm.com>
+CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "Paszkiewicz, Artur" <artur.paszkiewicz@intel.com>,
+        "Baldysiak, Pawel" <pawel.baldysiak@intel.com>,
+        "Fugate, David" <david.fugate@intel.com>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Busch, Keith" <keith.busch@intel.com>
+Subject: Re: [PATCH 2/3] PCI: vmd: Expose VMD details from BIOS
+Thread-Topic: [PATCH 2/3] PCI: vmd: Expose VMD details from BIOS
+Thread-Index: AQHVhHZYe7i9MHwHgU2a4PswmMHji6d22akAgAASxwA=
+Date:   Fri, 1 Nov 2019 14:24:02 +0000
+Message-ID: <d67fbc2ba322104110c70606a375facf1d21045a.camel@intel.com>
+References: <1571245488-3549-1-git-send-email-jonathan.derrick@intel.com>
+         <1571245488-3549-3-git-send-email-jonathan.derrick@intel.com>
+         <20191101131649.GE9723@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20191101131649.GE9723@e119886-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.232.115.165]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5CE6559F94481E42AC9226BAC9D2B79B@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572349512-7776-3-git-send-email-tjoseph@cadence.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 11:45:12AM +0000, Tom Joseph wrote:
-> Cadence core library files may be used by various platform drivers.
-> Add a new directory "cadence" to group all the Cadence core library files
-> and the platforms using Cadence core library.
-> 
-> Signed-off-by: Tom Joseph <tjoseph@cadence.com>
-
-I'm not very keen on the commit title, perhaps something like this
-is better:
-
-PCI: cadence: Move all files to per-device cadence directory
-
-With that (or similar) you can add:
-
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-
-(I think my dislike is the length of it, and the word 'folder' instead
-of directory).
-
-> ---
->  drivers/pci/controller/Kconfig                     | 44 +--------------------
->  drivers/pci/controller/Makefile                    |  5 +--
->  drivers/pci/controller/cadence/Kconfig             | 45 ++++++++++++++++++++++
->  drivers/pci/controller/cadence/Makefile            |  5 +++
->  .../pci/controller/{ => cadence}/pcie-cadence-ep.c |  0
->  .../controller/{ => cadence}/pcie-cadence-host.c   |  0
->  .../controller/{ => cadence}/pcie-cadence-plat.c   |  0
->  .../pci/controller/{ => cadence}/pcie-cadence.c    |  0
->  .../pci/controller/{ => cadence}/pcie-cadence.h    |  0
->  9 files changed, 52 insertions(+), 47 deletions(-)
->  create mode 100644 drivers/pci/controller/cadence/Kconfig
->  create mode 100644 drivers/pci/controller/cadence/Makefile
->  rename drivers/pci/controller/{ => cadence}/pcie-cadence-ep.c (100%)
->  rename drivers/pci/controller/{ => cadence}/pcie-cadence-host.c (100%)
->  rename drivers/pci/controller/{ => cadence}/pcie-cadence-plat.c (100%)
->  rename drivers/pci/controller/{ => cadence}/pcie-cadence.c (100%)
->  rename drivers/pci/controller/{ => cadence}/pcie-cadence.h (100%)
-> 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 57d52f6..2aab586 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -22,49 +22,6 @@ config PCI_AARDVARK
->  	 controller is part of the South Bridge of the Marvel Armada
->  	 3700 SoC.
->  
-> -menu "Cadence PCIe controllers support"
-> -
-> -config PCIE_CADENCE
-> -	bool
-> -
-> -config PCIE_CADENCE_HOST
-> -	bool
-> -	depends on OF
-> -	select IRQ_DOMAIN
-> -	select PCIE_CADENCE
-> -
-> -config PCIE_CADENCE_EP
-> -	bool
-> -	depends on OF
-> -	depends on PCI_ENDPOINT
-> -	select PCIE_CADENCE
-> -
-> -config PCIE_CADENCE_PLAT
-> -	bool
-> -
-> -config PCIE_CADENCE_PLAT_HOST
-> -	bool "Cadence PCIe platform host controller"
-> -	depends on OF
-> -	select PCIE_CADENCE_HOST
-> -	select PCIE_CADENCE_PLAT
-> -	help
-> -	  Say Y here if you want to support the Cadence PCIe platform controller in
-> -	  host mode. This PCIe controller may be embedded into many different
-> -	  vendors SoCs.
-> -
-> -config PCIE_CADENCE_PLAT_EP
-> -	bool "Cadence PCIe platform endpoint controller"
-> -	depends on OF
-> -	depends on PCI_ENDPOINT
-> -	select PCIE_CADENCE_EP
-> -	select PCIE_CADENCE_PLAT
-> -	help
-> -	  Say Y here if you want to support the Cadence PCIe  platform controller in
-> -	  endpoint mode. This PCIe controller may be embedded into many
-> -	  different vendors SoCs.
-> -
-> -endmenu
-> -
->  config PCIE_XILINX_NWL
->  	bool "NWL PCIe Core"
->  	depends on ARCH_ZYNQMP || COMPILE_TEST
-> @@ -297,4 +254,5 @@ config VMD
->  	  module will be called vmd.
->  
->  source "drivers/pci/controller/dwc/Kconfig"
-> +source "drivers/pci/controller/cadence/Kconfig"
->  endmenu
-> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-> index 676a41e..8a59829 100644
-> --- a/drivers/pci/controller/Makefile
-> +++ b/drivers/pci/controller/Makefile
-> @@ -1,8 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -obj-$(CONFIG_PCIE_CADENCE) += pcie-cadence.o
-> -obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
-> -obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
-> -obj-$(CONFIG_PCIE_CADENCE_PLAT) += pcie-cadence-plat.o
-> +obj-$(CONFIG_PCIE_CADENCE) += cadence/
->  obj-$(CONFIG_PCI_FTPCI100) += pci-ftpci100.o
->  obj-$(CONFIG_PCI_HYPERV) += pci-hyperv.o
->  obj-$(CONFIG_PCI_MVEBU) += pci-mvebu.o
-> diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
-> new file mode 100644
-> index 0000000..b76b3cf
-> --- /dev/null
-> +++ b/drivers/pci/controller/cadence/Kconfig
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +menu "Cadence PCIe controllers support"
-> +	depends on PCI
-> +
-> +config PCIE_CADENCE
-> +	bool
-> +
-> +config PCIE_CADENCE_HOST
-> +	bool
-> +	depends on OF
-> +	select IRQ_DOMAIN
-> +	select PCIE_CADENCE
-> +
-> +config PCIE_CADENCE_EP
-> +	bool
-> +	depends on OF
-> +	depends on PCI_ENDPOINT
-> +	select PCIE_CADENCE
-> +
-> +config PCIE_CADENCE_PLAT
-> +	bool
-> +
-> +config PCIE_CADENCE_PLAT_HOST
-> +	bool "Cadence PCIe platform host controller"
-> +	depends on OF
-> +	select PCIE_CADENCE_HOST
-> +	select PCIE_CADENCE_PLAT
-> +	help
-> +	  Say Y here if you want to support the Cadence PCIe platform controller in
-> +	  host mode. This PCIe controller may be embedded into many different
-> +	  vendors SoCs.
-> +
-> +config PCIE_CADENCE_PLAT_EP
-> +	bool "Cadence PCIe platform endpoint controller"
-> +	depends on OF
-> +	depends on PCI_ENDPOINT
-> +	select PCIE_CADENCE_EP
-> +	select PCIE_CADENCE_PLAT
-> +	help
-> +	  Say Y here if you want to support the Cadence PCIe  platform controller in
-> +	  endpoint mode. This PCIe controller may be embedded into many
-> +	  different vendors SoCs.
-> +
-> +endmenu
-> diff --git a/drivers/pci/controller/cadence/Makefile b/drivers/pci/controller/cadence/Makefile
-> new file mode 100644
-> index 0000000..232a3f2
-> --- /dev/null
-> +++ b/drivers/pci/controller/cadence/Makefile
-> @@ -0,0 +1,5 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +obj-$(CONFIG_PCIE_CADENCE) += pcie-cadence.o
-> +obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
-> +obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
-> +obj-$(CONFIG_PCIE_CADENCE_PLAT) += pcie-cadence-plat.o
-> diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> similarity index 100%
-> rename from drivers/pci/controller/pcie-cadence-ep.c
-> rename to drivers/pci/controller/cadence/pcie-cadence-ep.c
-> diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> similarity index 100%
-> rename from drivers/pci/controller/pcie-cadence-host.c
-> rename to drivers/pci/controller/cadence/pcie-cadence-host.c
-> diff --git a/drivers/pci/controller/pcie-cadence-plat.c b/drivers/pci/controller/cadence/pcie-cadence-plat.c
-> similarity index 100%
-> rename from drivers/pci/controller/pcie-cadence-plat.c
-> rename to drivers/pci/controller/cadence/pcie-cadence-plat.c
-> diff --git a/drivers/pci/controller/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
-> similarity index 100%
-> rename from drivers/pci/controller/pcie-cadence.c
-> rename to drivers/pci/controller/cadence/pcie-cadence.c
-> diff --git a/drivers/pci/controller/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> similarity index 100%
-> rename from drivers/pci/controller/pcie-cadence.h
-> rename to drivers/pci/controller/cadence/pcie-cadence.h
-> -- 
-> 2.2.2
-> 
+SGkgQU5kcmV3LA0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcNCg0KT24gRnJpLCAyMDE5LTExLTAx
+IGF0IDEzOjE2ICswMDAwLCBBbmRyZXcgTXVycmF5IHdyb3RlOg0KPiBPbiBXZWQsIE9jdCAxNiwg
+MjAxOSBhdCAxMTowNDo0N0FNIC0wNjAwLCBKb24gRGVycmljayB3cm90ZToNCj4gPiBXaGVuIHNv
+bWUgVk1EcyBhcmUgZW5hYmxlZCBhbmQgb3RoZXJzIGFyZSBub3QsIGl0J3MgZGlmZmljdWx0IHRv
+DQo+ID4gZGV0ZXJtaW5lIHdoaWNoIElJTyBzdGFjayBjb3JyZXNwb25kcyB0byB0aGUgZW5hYmxl
+ZCBWTUQuDQo+ID4gDQo+ID4gVG8gYXNzaXN0IHVzZXJzcGFjZSB3aXRoIG1hbmFnZW1lbnQgdGFz
+a3MsIFZNRCBCSU9TIHdpbGwgd3JpdGUgdGhlIFZNRA0KPiA+IGluc3RhbmNlIG51bWJlciBhbmQg
+c29ja2V0IG51bWJlciBpbnRvIHRoZSBmaXJzdCBlbmFibGVkIHJvb3QgcG9ydCdzIElPDQo+ID4g
+QmFzZS9MaW1pdCByZWdpc3RlcnMgcHJpb3IgdG8gT1MgaGFuZG9mZi4gVk1EIGRyaXZlciBjYW4g
+Y2FwdHVyZSB0aGlzDQo+ID4gaW5mb3JtYXRpb24gYW5kIGV4cG9zZSBpdCB0byB1c2Vyc3BhY2Uu
+DQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogSm9uIERlcnJpY2sgPGpvbmF0aGFuLmRlcnJpY2tA
+aW50ZWwuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBBbmR5IFNoZXZjaGVua28gPGFuZHJpeS5zaGV2
+Y2hlbmtvQGxpbnV4LmludGVsLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9wY2kvY29udHJv
+bGxlci92bWQuYyB8IDc5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+Ky0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA3NyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygt
+KQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jIGIv
+ZHJpdmVycy9wY2kvY29udHJvbGxlci92bWQuYw0KPiA+IGluZGV4IDk1OWM3YzcuLmRiZTFiZmYg
+MTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci92bWQuYw0KPiA+ICsrKyBi
+L2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvdm1kLmMNCj4gPiBAQCAtOTgsNiArOTgsOCBAQCBzdHJ1
+Y3Qgdm1kX2RldiB7DQo+ID4gIAlzdHJ1Y3QgaXJxX2RvbWFpbgkqaXJxX2RvbWFpbjsNCj4gPiAg
+CXN0cnVjdCBwY2lfYnVzCQkqYnVzOw0KPiA+ICAJdTgJCQlidXNuX3N0YXJ0Ow0KPiA+ICsJdTgJ
+CQlzb2NrZXRfbnI7DQo+ID4gKwl1OAkJCWluc3RhbmNlX25yOw0KPiA+ICANCj4gPiAgCXN0cnVj
+dCBkbWFfbWFwX29wcwlkbWFfb3BzOw0KPiA+ICAJc3RydWN0IGRtYV9kb21haW4JZG1hX2RvbWFp
+bjsNCj4gPiBAQCAtNTQzLDYgKzU0NSw3NCBAQCBzdGF0aWMgaW50IHZtZF9wY2lfd3JpdGUoc3Ry
+dWN0IHBjaV9idXMgKmJ1cywgdW5zaWduZWQgaW50IGRldmZuLCBpbnQgcmVnLA0KPiA+ICAJLndy
+aXRlCQk9IHZtZF9wY2lfd3JpdGUsDQo+ID4gIH07DQo+ID4gIA0KPiA+ICsvKioNCj4gPiArICog
+Zm9yX2VhY2hfdm1kX3Jvb3RfcG9ydCAtIGl0ZXJhdGUgb3ZlciBhbGwgZW5hYmxlZCBWTUQgUm9v
+dCBQb3J0cw0KPiA+ICsgKiBAdm1kOiAmc3RydWN0IHZtZF9kZXYgVk1EIGRldmljZSBkZXNjcmlw
+dG9yDQo+ID4gKyAqIEBycDogaW50IGl0ZXJhdG9yIGN1cnNvcg0KPiA+ICsgKiBAdGVtcDogdTMy
+IHRlbXBvcmFyeSB2YWx1ZSBmb3IgY29uZmlnIHJlYWQNCj4gPiArICoNCj4gPiArICogVk1EIFJv
+b3QgUG9ydHMgYXJlIGxvY2F0ZWQgaW4gdGhlIFZNRCBQQ0llIERvbWFpbiBhdCAwMDpbMC0zXS4w
+LCBhbmQgY29uZmlnDQo+ID4gKyAqIHNwYWNlIGNhbiBiZSBkZXRlcm1pbmF0ZWx5IGFjY2Vzc2Vk
+IHRocm91Z2ggdGhlIFZNRCBDb25maWcgQkFSLiBCZWNhdXNlIFZNRA0KPiA+ICsgKiBSb290IFBv
+cnRzIGNhbiBiZSBpbmRpdmlkdWFsbHkgZGlzYWJsZWQsIGl0J3MgaW1wb3J0YW50IHRvIGl0ZXJh
+dGUgZm9yIHRoZQ0KPiA+ICsgKiBmaXJzdCBlbmFibGVkIFJvb3QgUG9ydCBhcyBkZXRlcm1pbmVk
+IGJ5IHJlYWRpbmcgdGhlIFZlbmRvci9EZXZpY2UgcmVnaXN0ZXIuDQo+ID4gKyAqLw0KPiA+ICsj
+ZGVmaW5lIGZvcl9lYWNoX3ZtZF9yb290X3BvcnQodm1kLCBycCwgdGVtcCkJCQkJXA0KPiA+ICsJ
+Zm9yIChycCA9IDA7IHJwIDwgNDsgcnArKykJCQkJCVwNCj4gPiArCQlpZiAodm1kX2NmZ19yZWFk
+KHZtZCwgMCwgUENJX0RFVkZOKHJvb3RfcG9ydCwgMCksCVwNCj4gPiArCQkJCSBQQ0lfVkVORE9S
+X0lELCA0LCAmdGVtcCkgfHwJCVwNCj4gPiArCQkgICAgdGVtcCA9PSAweGZmZmZmZmZmKSB7fSBl
+bHNlDQo+IA0KPiBZb3UgbWF5IHdhbnQgdG8gY29uc2lkZXIgdXNpbmcgUENJX0VSUk9SX1JFU1BP
+TlNFIGhlcmUgaW5zdGVhZCBvZiAweGZmZmZmZmZmLg0KPiBUaG91Z2ggdGhpcyBoYXNuJ3QgeWV0
+IGJlZW4gbWVyZ2VkOg0KPiANCj4gaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wcm9qZWN0
+L2xpbnV4LXBjaS9saXN0Lz9zZXJpZXM9MTI2ODIwDQo+IA0KDQpTdXJlIGl0IHdpbGwgZml0IHRo
+aXMgY2FzZSBwZXJmZWN0bHkgb25jZSBpdCdzIG1lcmdlZA0KDQo+ID4gKw0KPiA+ICtzdGF0aWMg
+aW50IHZtZF9wYXJzZV9kb21haW4oc3RydWN0IHZtZF9kZXYgKnZtZCkNCj4gPiArew0KPiA+ICsJ
+aW50IHJvb3RfcG9ydCwgcmV0Ow0KPiA+ICsJdTMyIHRlbXAsIGlvYmFzZTsNCj4gPiArDQo+ID4g
+Kwl2bWQtPnNvY2tldF9uciA9IC0xOw0KPiA+ICsJdm1kLT5pbnN0YW5jZV9uciA9IC0xOw0KPiA+
+ICsNCj4gPiArCWZvcl9lYWNoX3ZtZF9yb290X3BvcnQodm1kLCByb290X3BvcnQsIHRlbXApIHsN
+Cj4gPiArCQlyZXQgPSB2bWRfY2ZnX3JlYWQodm1kLCAwLCBQQ0lfREVWRk4ocm9vdF9wb3J0LCAw
+KSwNCj4gPiArCQkJCSAgIFBDSV9JT19CQVNFLCAyLCAmaW9iYXNlKTsNCj4gPiArCQlpZiAocmV0
+KQ0KPiA+ICsJCQlyZXR1cm4gcmV0Ow0KPiA+ICsNCj4gPiArCQl2bWQtPnNvY2tldF9uciA9IChp
+b2Jhc2UgPj4gNCkgJiAweGY7DQo+ID4gKwkJdm1kLT5pbnN0YW5jZV9uciA9IChpb2Jhc2UgPj4g
+MTQpICYgMHgzOw0KPiANCj4gSSdtIG5vdCBmYW1pbGlhciB3aXRoIFZNRCAtIGhvd2V2ZXIgaG93
+IGNhbiB5b3UgYmUgc3VyZSB0aGF0IHRoZSBWTUQgQklPUw0KPiB3aWxsIGFsd2F5cyBwb3B1bGF0
+ZSB0aGVzZSB2YWx1ZXMgaGVyZT8gSXMgaXQgcG9zc2libGUgdGhhdCBlYXJsaWVyIEJJT1Mncw0K
+PiB3b24ndCBkbyB0aGlzIGFuZCBzb21ldGhpbmcgd2lsbCBnbyB3cm9uZyBoZXJlPw0KPiANCj4g
+SXMgdGhlcmUgYW55IHNhbml0eSBjaGVja2luZyB0aGF0IGNhbiBoYXBwZW4gaGVyZT8NCg0KWWVz
+IHRoYXQncyBlbnRpcmVseSBwb3NzaWJsZSBhbmQgd291bGQgc2hvdyBpbmRldGVybWluYXRlIHZh
+bHVlcyBpbg0KdGhhdCBjYXNlLiBJdCB3b3VsZCBiZSB1cCB0byB0aGUgdXNlciB0byB1bmRlcnN0
+YW5kIGlmIHRoZSBCSU9TDQpzdXBwb3J0cyB0aGUgbW9kZSBiZWZvcmUgcmVseWluZyBvbiB0aGUg
+ZGF0YS4NCg0KSSBhbSBpbnZlc3RpZ2F0aW5nIHRvIHNlZSBpZiB3ZSBjYW4gZG8gYSBkbWlfbWF0
+Y2ggdG8gdmVyaWZ5IHRoZSBkYXRhDQpiZWZvcmUgcHVibGlzaGluZy4NCg0KDQo+IA0KPiA+ICsN
+Cj4gPiArCQkvKiBGaXJzdCBhdmFpbGFibGUgd2lsbCBiZSB1c2VkICovDQo+ID4gKwkJYnJlYWs7
+DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0
+YXRpYyBzc2l6ZV90IHNvY2tldF9ucl9zaG93KHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gPiArCQkJ
+ICAgICAgc3RydWN0IGRldmljZV9hdHRyaWJ1dGUgKmF0dHIsIGNoYXIgKmJ1ZikNCj4gPiArew0K
+PiA+ICsJc3RydWN0IHBjaV9kZXYgKnBkZXYgPSB0b19wY2lfZGV2KGRldik7DQo+ID4gKwlzdHJ1
+Y3Qgdm1kX2RldiAqdm1kID0gcGNpX2dldF9kcnZkYXRhKHBkZXYpOw0KPiA+ICsNCj4gPiArCXJl
+dHVybiBzcHJpbnRmKGJ1ZiwgIiV1XG4iLCB2bWQtPnNvY2tldF9ucik7DQo+ID4gK30NCj4gPiAr
+c3RhdGljIERFVklDRV9BVFRSX1JPKHNvY2tldF9ucik7DQo+ID4gKw0KPiA+ICtzdGF0aWMgc3Np
+emVfdCBpbnN0YW5jZV9ucl9zaG93KHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gPiArCQkJICAgICAg
+c3RydWN0IGRldmljZV9hdHRyaWJ1dGUgKmF0dHIsIGNoYXIgKmJ1ZikNCj4gPiArew0KPiA+ICsJ
+c3RydWN0IHBjaV9kZXYgKnBkZXYgPSB0b19wY2lfZGV2KGRldik7DQo+ID4gKwlzdHJ1Y3Qgdm1k
+X2RldiAqdm1kID0gcGNpX2dldF9kcnZkYXRhKHBkZXYpOw0KPiA+ICsNCj4gPiArCXJldHVybiBz
+cHJpbnRmKGJ1ZiwgIiV1XG4iLCB2bWQtPmluc3RhbmNlX25yKTsNCj4gPiArfQ0KPiA+ICtzdGF0
+aWMgREVWSUNFX0FUVFJfUk8oaW5zdGFuY2VfbnIpOw0KPiA+ICsNCj4gPiArc3RhdGljIHN0cnVj
+dCBhdHRyaWJ1dGUgKnZtZF9kZXZfYXR0cnNbXSA9IHsNCj4gPiArCSZkZXZfYXR0cl9zb2NrZXRf
+bnIuYXR0ciwNCj4gPiArCSZkZXZfYXR0cl9pbnN0YW5jZV9uci5hdHRyLA0KPiA+ICsJTlVMTA0K
+PiA+ICt9Ow0KPiA+ICtBVFRSSUJVVEVfR1JPVVBTKHZtZF9kZXYpOw0KPiA+ICsNCj4gPiAgc3Rh
+dGljIHZvaWQgdm1kX2F0dGFjaF9yZXNvdXJjZXMoc3RydWN0IHZtZF9kZXYgKnZtZCkNCj4gPiAg
+ew0KPiA+ICAJdm1kLT5kZXYtPnJlc291cmNlW1ZNRF9NRU1CQVIxXS5jaGlsZCA9ICZ2bWQtPnJl
+c291cmNlc1sxXTsNCj4gPiBAQCAtNTgyLDYgKzY1MiwxMSBAQCBzdGF0aWMgaW50IHZtZF9lbmFi
+bGVfZG9tYWluKHN0cnVjdCB2bWRfZGV2ICp2bWQsIHVuc2lnbmVkIGxvbmcgZmVhdHVyZXMpDQo+
+ID4gIAlyZXNvdXJjZV9zaXplX3Qgb2Zmc2V0WzJdID0gezB9Ow0KPiA+ICAJcmVzb3VyY2Vfc2l6
+ZV90IG1lbWJhcjJfb2Zmc2V0ID0gMHgyMDAwOw0KPiA+ICAJc3RydWN0IHBjaV9idXMgKmNoaWxk
+Ow0KPiA+ICsJaW50IHJldDsNCj4gPiArDQo+ID4gKwlyZXQgPSB2bWRfcGFyc2VfZG9tYWluKHZt
+ZCk7DQo+ID4gKwlpZiAocmV0KQ0KPiA+ICsJCXJldHVybiByZXQ7DQo+IA0KPiBUaGlzIGFsd2F5
+cyB3aWxsIHN1Y2NlZWQuIEJ1dCB3aGF0IGhhcHBlbnMgaWYgdGhpcyBmdW5jdGlvbiByZXR1cm5z
+IHlldA0KPiBzb2NrZXRfbnIvaW5zdGFuY2VfbnIgaGFzbid0IGJlZW4gd3JpdHRlbiB0bz8gSXMg
+dGhhdCBPSz8NCj4gDQoNCkJhc2ljYWxseSBvbmx5IG9uZSBwb3NzaWJpbGl0eSB0aGF0IGNvdWxk
+IG9jY3VyIGFuZCB0aGF0J3MgaWYgdGhlIFZNRA0KaXMgZW5hYmxlZCB3aXRob3V0IGFueSBWTUQg
+Um9vdCBQb3J0cyBiZWluZyBlbmFibGVkIG9uIHRoZSBWTUQgZG9tYWluLg0KSXQncyBhbiBvZGQg
+Y29uZmlndXJhdGlvbiBidXQgaXMgdGVjaG5pY2FsbHkgdmFsaWQsIGFsdGhvdWdoIHRoZSBkb21h
+aW4NCmJlY29tZXMgdXNlbGVzcyB1bnRpbCB0aGUgdXNlciByZWJvb3RzIGFuZCBlbmFibGVzIHRo
+ZSBWTUQgUm9vdCBQb3J0cy4gDQoNClNvIGl0J3MgbW9yZS1vci1sZXNzIGltcGxpZWQgZWl0aGVy
+IHNvY2tldF9uci9pbnN0YW5jZV9uciB3aWxsIGhhdmUNCmRhdGEgb3IgdGhlIGRvbWFpbiB3b24n
+dCBiZSB1c2FibGUuDQoNClRoYW5rcywNCkpvbg0KDQoNCj4gVGhhbmtzLA0KPiANCj4gQW5kcmV3
+IE11cnJheQ0KPiANCj4gPiAgDQo+ID4gIAkvKg0KPiA+ICAJICogU2hhZG93IHJlZ2lzdGVycyBt
+YXkgZXhpc3QgaW4gY2VydGFpbiBWTUQgZGV2aWNlIGlkcyB3aGljaCBhbGxvdw0KPiA+IEBAIC01
+OTEsNyArNjY2LDYgQEAgc3RhdGljIGludCB2bWRfZW5hYmxlX2RvbWFpbihzdHJ1Y3Qgdm1kX2Rl
+diAqdm1kLCB1bnNpZ25lZCBsb25nIGZlYXR1cmVzKQ0KPiA+ICAJICovDQo+ID4gIAlpZiAoZmVh
+dHVyZXMgJiBWTURfRkVBVF9IQVNfTUVNQkFSX1NIQURPVykgew0KPiA+ICAJCXUzMiB2bWxvY2s7
+DQo+ID4gLQkJaW50IHJldDsNCj4gPiAgDQo+ID4gIAkJbWVtYmFyMl9vZmZzZXQgPSBNQjJfU0hB
+RE9XX09GRlNFVCArIE1CMl9TSEFET1dfU0laRTsNCj4gPiAgCQlyZXQgPSBwY2lfcmVhZF9jb25m
+aWdfZHdvcmQodm1kLT5kZXYsIFBDSV9SRUdfVk1MT0NLLCAmdm1sb2NrKTsNCj4gPiBAQCAtODc2
+LDcgKzk1MCw4IEBAIHN0YXRpYyBpbnQgdm1kX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+
+ID4gIAkucHJvYmUJCT0gdm1kX3Byb2JlLA0KPiA+ICAJLnJlbW92ZQkJPSB2bWRfcmVtb3ZlLA0K
+PiA+ICAJLmRyaXZlcgkJPSB7DQo+ID4gLQkJLnBtCT0gJnZtZF9kZXZfcG1fb3BzLA0KPiA+ICsJ
+CS5wbQkJPSAmdm1kX2Rldl9wbV9vcHMsDQo+ID4gKwkJLmRldl9ncm91cHMJPSB2bWRfZGV2X2dy
+b3VwcywNCj4gPiAgCX0sDQo+ID4gIH07DQo+ID4gIG1vZHVsZV9wY2lfZHJpdmVyKHZtZF9kcnYp
+Ow0KPiA+IC0tIA0KPiA+IDEuOC4zLjENCj4gPiANCg==
