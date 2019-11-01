@@ -2,295 +2,181 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 78A8AEC1A1
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2019 12:19:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4223FEC1DC
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2019 12:30:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbfKALTX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Nov 2019 07:19:23 -0400
-Received: from mga11.intel.com ([192.55.52.93]:17515 "EHLO mga11.intel.com"
+        id S1728302AbfKALaf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Nov 2019 07:30:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:34206 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729044AbfKALTX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 1 Nov 2019 07:19:23 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 04:19:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,254,1569308400"; 
-   d="scan'208";a="211768832"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 01 Nov 2019 04:19:19 -0700
-Received: by lahna (sSMTP sendmail emulation); Fri, 01 Nov 2019 13:19:18 +0200
-Date:   Fri, 1 Nov 2019 13:19:18 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
- spec
-Message-ID: <20191101111918.GL2593@lahna.fi.intel.com>
-References: <20191030111516.GX2593@lahna.fi.intel.com>
- <20191031223144.GA81598@google.com>
+        id S1725904AbfKALaf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 Nov 2019 07:30:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EB661FB;
+        Fri,  1 Nov 2019 04:30:34 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C1653F6C4;
+        Fri,  1 Nov 2019 04:30:33 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 11:30:31 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, martin.blumenstingl@googlemail.com,
+        linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Rajat Jain <rajatja@google.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure
+ pcie link
+Message-ID: <20191101113031.GC9723@e119886-lin.cambridge.arm.com>
+References: <20191031132228.GA44315@google.com>
+ <33585725-51c7-6fe5-5d92-1e7fe77ca106@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191031223144.GA81598@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <33585725-51c7-6fe5-5d92-1e7fe77ca106@linux.intel.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 05:31:44PM -0500, Bjorn Helgaas wrote:
-> On Wed, Oct 30, 2019 at 01:15:16PM +0200, Mika Westerberg wrote:
-> > On Tue, Oct 29, 2019 at 03:27:09PM -0500, Bjorn Helgaas wrote:
-> > > On Tue, Oct 29, 2019 at 01:15:20PM +0200, Mika Westerberg wrote:
-> > > > On Mon, Oct 28, 2019 at 03:16:53PM -0500, Bjorn Helgaas wrote:
-> > > > > > The related hardware event is resume in this case. Can you point
-> > > > > > me to the actual point where you want me to put this?
-> > > > > 
-> > > > > "Resume" is a Linux software concept, so of course the PCIe spec
-> > > > > doesn't say anything about it.  The spec talks about delays
-> > > > > related to resets and device power and link state transitions, so
-> > > > > somehow we have to connect the Linux delay with those hardware
-> > > > > events.
-> > > > > 
-> > > > > Since we're talking about a transition from D3cold, this has to be
-> > > > > done via something external to the device such as power
-> > > > > regulators.  For ACPI systems that's probably hidden inside _PS0
-> > > > > or something similar.  That's opaque, but at least it's a hook
-> > > > > that says "here's where we put the device into D0".  I suggested
-> > > > > acpi_pci_set_power_state() as a possibility since I think that's
-> > > > > the lowest-level point where we have the pci_dev so we know the
-> > > > > current state and the new state.
+On Fri, Nov 01, 2019 at 01:47:39PM +0800, Dilip Kota wrote:
+> 
+> On 10/31/2019 9:22 PM, Bjorn Helgaas wrote:
+> > On Thu, Oct 31, 2019 at 06:47:10PM +0800, Dilip Kota wrote:
+> > > On 10/31/2019 6:14 AM, Bjorn Helgaas wrote:
+> > > > On Tue, Oct 29, 2019 at 05:31:18PM +0800, Dilip Kota wrote:
+> > > > > On 10/22/2019 8:59 PM, Bjorn Helgaas wrote:
+> > > > > > [+cc Rafael, linux-pm, beginning of discussion at
+> > > > > > https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
+> > > > > > 
+> > > > > > On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
+> > > > > > > On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
+> > > > > > > > On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
+> > > > > > > > > On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
+> > > > > > > > > > PCIe RC driver on Intel Gateway SoCs have a requirement
+> > > > > > > > > > of changing link width and speed on the fly.
+> > > > > > > > Please add more details about why this is needed.  Since
+> > > > > > > > you're adding sysfs files, it sounds like it's not
+> > > > > > > > actually the *driver* that needs this; it's something in
+> > > > > > > > userspace?
+> > > > > > > We have use cases to change the link speed and width on the fly.
+> > > > > > > One is EMI check and other is power saving.  Some battery backed
+> > > > > > > applications have to switch PCIe link from higher GEN to GEN1 and
+> > > > > > > width to x1. During the cases like external power supply got
+> > > > > > > disconnected or broken. Once external power supply is connected then
+> > > > > > > switch PCIe link to higher GEN and width.
+> > > > > > That sounds plausible, but of course nothing there is specific to the
+> > > > > > Intel Gateway, so we should implement this generically so it would
+> > > > > > work on all hardware.
+> > > > > Agree.
+> > > > > > I'm not sure what the interface should look like -- should it be a
+> > > > > > low-level interface as you propose where userspace would have to
+> > > > > > identify each link of interest, or is there some system-wide
+> > > > > > power/performance knob that could tune all links?  Cc'd Rafael and
+> > > > > > linux-pm in case they have ideas.
+> > > > > To my knowledge sysfs is the appropriate way to go.
+> > > > > If there are any other best possible knobs, will be helpful.
+> > > > I agree sysfs is the right place for it; my question was whether we
+> > > > should have files like:
 > > > > 
-> > > > I looked at how we could use acpi_pci_set_power_state() but I don't
-> > > > think it is possible because it is likely that only the root port
-> > > > has the power resource that is used to bring the link to L2 or L3.
-> > > > However, we would need to repeat the delay for each downstream/root
-> > > > port if there are multiple PCIe switches in the topology.
-> > > 
-> > > OK, I think I understand why that's a problem (correct me if I'm
-> > > wrong):
-> > > 
-> > >   We call pci_pm_resume_noirq() for every device, but it only calls
-> > >   acpi_pci_set_power_state() for devices that have _PS0 or _PR0
-> > >   methods.  So if the delay is in acpi_pci_set_power_state() and we
-> > >   have A -> B -> C where only A has _PS0, we would delay for the link
-> > >   to B to come up, but not for the link to C.
-> > 
-> > Yes, that's correct.
-> > 
-> > > I do see that we do need both delays.  In acpi_pci_set_power_state()
-> > > when we transition A from D3cold->D0, I assume that single _PS0
-> > > evaluation on A causes B to transition from D3cold->D3hot, which in
-> > > turn causes C to transition from D3cold->D3hot.  Is that your
-> > > understanding, too?
-> > 
-> > Not exactly :)
-> > 
-> > It is _ON() that causes the links to be retrained and it also causes the
-> > PERST# (reset) to be unasserted for the whole topology transitioning all
-> > devices into D0unitialized (default value for PMCSR PowerState field is 0).
-> 
-> OK.  I guess the important thing is that a single power-on from D3cold
-> at any point in the hierarchy can power on the entire subtree rooted
-> at that point.  So if we have RP -> SUP -> SDP0..SDP7 where SDP0..SDP7
-> are Switch Downstream Ports, when we evaluate _ON for RP, PERST# will
-> be deasserted below it, and everything downstream should start the
-> process of going to D0uninitialized.
-> 
-> And we can't rely on any other hooks like _ON/_PS0 invocations for
-> SUP, SDPx, etc, where we could do additional delays.
-
-What I've seen they don't typically even have representation in ACPI.
-
-> > > If the delay is in pci_pm_resume_noirq() (as in your patch), what
-> > > happens with a switch with several Downstream Ports?  I assume that
-> > > all the Downstream Ports start their transition out of D3cold
-> > > basically simultaneously, so we probably don't need N delays, do we?
-> > 
-> > No. Actually Linux already resumes these in parallel because async
-> > suspend is set for them (for system suspend that is).
-> 
-> So I think we have something like this:
-> 
->   pci_pm_resume_noirq(RP)
->     pdev->current_state == PCI_D3cold  # HW actually in D3cold
->     _ON(RP)                            # turns on entire hierarchy
->     pci_bridge_wait_for_secondary_bus  # waits only for RP -> SUP link
-> 
->   pci_pm_resume_noirq(SUP)
->     pdev->current_state == PCI_D3cold  # HW probably in D0uninitialized
->     pci_bridge_wait_for_secondary_bus  # no wait (not a downstream port)
-> 
->   pci_pm_resume_noirq(SDP0)
->     pdev->current_state == PCI_D3cold  # HW probably in D0uninitialized
->     pci_bridge_wait_for_secondary_bus  # waits for SDP0 -> ? link
-> 
->   ...
-> 
->   pci_pm_resume_noirq(SDP7)
->     pdev->current_state == PCI_D3cold  # HW probably in D0uninitialized
->     pci_bridge_wait_for_secondary_bus  # waits for SDP7 -> ? link
-> 
-> and we have 1 delay for the Root Port plus 8 delays (one for each
-> Switch Downstream Port), and as soon as SUP has been resumed,
-> SDP0..SDP7 can be resumed simultaneously (assuming async is set for
-> them)?
-
-Yes.
-
-> I'm not a huge fan of relying on async because the asynchrony is far
-> removed from this code and really hard to figure out.  Maybe an
-> alternative would be to figure out in the pci_pm_resume_noirq(RP) path
-> how many levels of links to wait for.
-
-There is problem with this. For gen3 speeds and further we need to wait
-for the link (each link) to be activated before we delay. If we do it
-only in the root port it would need to enumerate all the ports and
-handle this which complicates it unnecessarily.
-
-You can also "guess" the delay by waiting for the worst possible time
-but I don't think that's something we want to do.
-
-> Ideally someone expert in PCIe but not in Linux would be able to look
-> at the local code and verify that it matches the spec.  If verification
-> requires extensive analysis or someone expert in *both* PCIe and
-> Linux, it makes maintenance much harder.
-
-Well whoever reads the code needs to be expert in both anyway.
-
-> > > The outline of the pci_pm_resume_noirq() part of this patch is:
-> > > 
-> > >   pci_pm_resume_noirq
-> > >     if (!dev->skip_bus_pm ...)   # <-- condition 1
-> > >       pci_pm_default_resume_early
-> > >         pci_power_up
-> > >           if (platform_pci_power_manageable())   # _PS0 or _PR0 exist?
-> > >             platform_pci_set_power_state
-> > >               pci_platform_pm->set_state
-> > >                 acpi_pci_set_power_state(PCI_D0) # acpi_pci_platform_pm.set_state
-> > >                   acpi_device_set_power(ACPI_STATE_D0) # <-- eval _PS0
-> > > +   if (d3cold)                  # <-- condition 2
-> > > +     pci_bridge_wait_for_secondary_bus
-> > > 
-> > > Another thing that niggles at me here is that the condition for
-> > > calling pci_bridge_wait_for_secondary_bus() is completely different
-> > > than the condition for changing the power state.  If we didn't change
-> > > the power state, there's no reason to wait, is there?
-> > 
-> > Indeed, if you are talking about the dev->skip_bus_pm check there is no
-> > point to wait if we did not change the power state. I would assume that
-> > d3cold is false in that case but we could also do this for clarity:
-> > 
-> > 	if (!dev->skip_bus_pm && d3cold)
-> > 		pci_bridge_wait_for_secondary_bus(...)
-> 
-> Could the wait go in pci_power_up()?  That would at least connect it
-> directly with a -> D0 transition.  Or, if that doesn't seem the right
-> place for it, could we do the following?
-> 
->   if (!(pci_dev->skip_bus_pm && pm_suspend_no_platform())) {
->     pci_pm_default_resume_early(pci_dev);
->     if (d3cold)
->       pci_bridge_wait_for_secondary_bus(pci_dev);
->   }
-> 
->   pci_fixup_device(pci_fixup_resume_early, pci_dev);
->   pcie_pme_root_status_cleanup(pci_dev);
-> 
->   if (pci_has_legacy_pm_support(pci_dev))
->     return pci_legacy_resume_early(dev);
->   ...
-
-The reason why pci_bridge_wait_for_secondary_bus() is called almost the
-last is that I figured we want to resume the root/downstream port
-completely first before we start delaying for the device downstream.
-Need to call it before port services (pciehp) is resumed, though.
-
-If you think it is fine to do the delay before we have restored
-everything I can move it inside pci_power_up() or call it after
-pci_pm_default_resume_early() as above. I think at least we should make
-sure all the saved registers are restored before so that the link
-activation check actually works.
-
-> Either way would also fix the problem that with the current patch, if
-> the device has legacy PM support, we call pci_legacy_resume_early()
-> but we don't wait for the secondary bus.
-
-True.
-
-> > > The outline of the pci_pm_runtime_resume() part of this patch is:
-> > > 
-> > >   pci_pm_runtime_resume
-> > >     pci_restore_standard_config
-> > >       if (dev->current_state != PCI_D0)
-> > >         pci_set_power_state(PCI_D0)
-> > >           __pci_start_power_transition
-> > >             pci_platform_power_transition
-> > >               if (platform_pci_power_manageable())   # _PS0 or _PR0 exist?
-> > >                 platform_pci_set_power_state
-> > >                   pci_platform_pm->set_state
-> > >                     acpi_pci_set_power_state(PCI_D0) # acpi_pci_platform_pm.set_state
-> > >                       acpi_device_set_power(ACPI_STATE_D0) # <-- eval _PS0
-> > >               pci_raw_set_power_state
-> > >           __pci_complete_power_transition
-> > > +   if (d3cold)
-> > > +     pci_bridge_wait_for_secondary_bus
-> > > 
-> > > In this part, the power state change is inside
-> > > pci_restore_standard_config(), which calls pci_set_power_state().
-> > > There are many other callers of pci_set_power_state(); can we be sure
-> > > that none of them need a delay?
-> > 
-> > Since we are handling the delay when we resume the downstream port, not
-> > when we resume the device itself, I think the link should be up already
-> > and the device accessible if someone calls pci_set_power_state() for it
-> > (as the parent is always resumed before children).
-> 
-> Ah, yeah, I guess that since all the calls I see are for non-bridge
-> devices, there would be no delay for a secondary bus.
-> 
-> This is a tangent, but there are ~140 pci_set_power_state(PCI_D0)
-> calls, mostly from .resume() methods of drivers with legacy PM.  Are
-> those even necessary?  It looks like the PCI core does this so the
-> driver wouldn't need to:
-> 
->   pci_pm_resume_noirq
->     pci_pm_default_resume_early
->       pci_power_up
->         pci_raw_set_power_state(dev, PCI_D0)   # <-- PCI core
-> 
->   pci_pm_resume
->     if (pci_has_legacy_pm_support(pci_dev))
->       pci_legacy_resume(dev)
->         drv->resume
-> 	  pci_set_power_state(PCI_D0)          # <-- driver .resume()
-
-I don't think most of them are necessary anymore.
-
-> > > > > But it seems that at least some ACPI firmware doesn't do those
-> > > > > delays, so I guess our only alternatives are to always do it in
-> > > > > the OS or have some sort of blacklist.  And it doesn't really seem
-> > > > > practical to maintain a blacklist.
+> > > >     /sys/.../0000:00:1f.3/pcie_speed
+> > > >     /sys/.../0000:00:1f.3/pcie_width
 > > > > 
-> > > > I really think this is crystal clear:
+> > > > as I think this patch would add (BTW, please include sample paths like
+> > > > the above in the commit log), or whether there should be a more global
+> > > > thing that would affect all the links in the system.
+> > > Sure, i will add them.
+> > > > I think the low-level files like you propose would be better because
+> > > > one might want to tune link performance differently for different
+> > > > types of devices and workloads.
+> > > > 
+> > > > We also have to decide if these files should be associated with the
+> > > > device at the upstream or downstream end of the link.  For ASPM, the
+> > > > current proposal [1] has the files at the downstream end on the theory
+> > > > that the GPU, NIC, NVMe device, etc is the user-recognizable one.
+> > > > Also, neither ASPM nor link speed/width make any sense unless there
+> > > > *is* a device at the downstream end, so putting them there
+> > > > automatically makes them visible only when they're useful.
+> > > This patch places the speed and width in the host controller directory.
+> > > /sys/.../xxx.pcie/pcie_speed
+> > > /sys/.../xxx.pcie/pcie_width
 > > > 
-> > > I am agreeing with you that the OS needs to do the delays.
-> 
-> Did you miss this part?  I said below that the existence of the _DSM
-> *by itself* doesn't convince me.  But I think the lack of clarity and
-> the fact that at least some firmware doesn't do it means that the OS
-> must do it.
+> > > I agree with you partially,  because i am having couple of points
+> > > making me to keep speed and width change entries in controller
+> > > directory:
+> > > 
+> > > -- For changing the speed/width with device node, software ends up
+> > >     traversing to the controller from the device and do the
+> > >     operations.
+> > > -- Change speed and width are performed at controller level,
+> > The controller is effectively a Root Complex, which may contain
+> > several Root Ports.  I have the impression that the Synopsys
+> > controller only supports a single Root Port, but that's just a detail
+> > of the Synopsys implementation.  I think it should be possible to
+> > configure the width/speed of each Root Port individually.
+> > 
+> > > -- Keeping speed and width in controller gives a perspective (to the
+> > >     user) of changing them only once irrespective of no. of devices.
+> > What if there's a switch?  If we change the width/speed of the link
+> > between the Root Port and the Switch Upstream Port, that doesn't do
+> > anything about the links from the Switch Downstream Ports.
+> I missed to evaluate the multiple root port and switch scenarios, thanks for
+> pointing it.
+> Then, placing the link speed and width change entries in the device node
+> will be appropriate.
+> Software will traverse to the respective port or bus through the device node
+> and does the changes.
+> > 
+> > > -- For speed and link change in Synopsys PCIe controller, specific
+> > >     registers need to be configured.  This prevents or complicates
+> > >     adding the speed and width change functionality in pci-sysfs or
+> > >     pci framework.
+> > Don't the Link Control and related registers in PCIe spec give us
+> > enough control to manage the link width/speed of *all* links,
+> > including those from Root Ports and Switch Downstream Ports?
+> > 
+> > If the Synopsys controller requires controller-specific registers,
+> > that sounds to me like it doesn't quite conform to the spec.  Maybe
+> > that means we would need some sort of quirk or controller callback?
+> Yes, Synopsys has specific registers configuration for link width resizing
+> and speed change.
+> I will evaluate the possible mechanism for plugging in the controller
+> specific changes to the framework.
 
-Yes, I missed this part. Sorry about that.
+According to the spec, "Software is permitted to restrict the maximum speed
+of Link operation and set the perferred Link speed by setting the value in the
+Target Link Speed field in the Upstream component." - This is the Link Control
+2 Register, and a link retrain should then be triggered.
+
+With regards to this proposed sysfs API - I wonder if this implies we should
+also disable 'Hardware Autonomous Speed Disable' to prevent a link speed
+change for device specific reasons?
+
+In my view, this means we *can* have a sysfs control for limiting the link
+speed using standard PCI means - though callbacks and quirks may be needed
+for host bridge controllers and similar.
+
+With regards to link width, I can't see any obvious software initiated means
+to change the link width (they are all RO) - though a device can change its
+own link width so long as it's 'Hardware Autonomous Width Disable' bit is
+clear. So whilst there may be some benefit for the initial links of a few
+host bridge controllers that may opt-in to some framework for this - such an
+API wouldn't benefit the majority of links in a PCI fabric. Perhaps this
+(width) should be DWC specific.
+
+Thanks,
+
+Andrew Murray
+
+> 
+> Regards,
+> Dilip
+> > 
+> > Bjorn
