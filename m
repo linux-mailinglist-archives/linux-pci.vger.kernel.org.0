@@ -2,30 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C4A2EEC496
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2019 15:24:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AFE8EC4EB
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2019 15:44:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfKAOYF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Nov 2019 10:24:05 -0400
-Received: from mga06.intel.com ([134.134.136.31]:39707 "EHLO mga06.intel.com"
+        id S1727362AbfKAOoX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Nov 2019 10:44:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:37108 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbfKAOYF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 1 Nov 2019 10:24:05 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 07:24:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,255,1569308400"; 
-   d="scan'208";a="400864714"
-Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
-  by fmsmga005.fm.intel.com with ESMTP; 01 Nov 2019 07:24:03 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.212]) by
- ORSMSX102.amr.corp.intel.com ([169.254.3.181]) with mapi id 14.03.0439.000;
- Fri, 1 Nov 2019 07:24:03 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "andrew.murray@arm.com" <andrew.murray@arm.com>
-CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        id S1727194AbfKAOoX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 Nov 2019 10:44:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C41E31F;
+        Fri,  1 Nov 2019 07:44:20 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03E173F719;
+        Fri,  1 Nov 2019 07:44:19 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 14:44:18 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
         "helgaas@kernel.org" <helgaas@kernel.org>,
         "Paszkiewicz, Artur" <artur.paszkiewicz@intel.com>,
         "Baldysiak, Pawel" <pawel.baldysiak@intel.com>,
@@ -34,137 +29,218 @@ CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "Busch, Keith" <keith.busch@intel.com>
 Subject: Re: [PATCH 2/3] PCI: vmd: Expose VMD details from BIOS
-Thread-Topic: [PATCH 2/3] PCI: vmd: Expose VMD details from BIOS
-Thread-Index: AQHVhHZYe7i9MHwHgU2a4PswmMHji6d22akAgAASxwA=
-Date:   Fri, 1 Nov 2019 14:24:02 +0000
-Message-ID: <d67fbc2ba322104110c70606a375facf1d21045a.camel@intel.com>
+Message-ID: <20191101144417.GI9723@e119886-lin.cambridge.arm.com>
 References: <1571245488-3549-1-git-send-email-jonathan.derrick@intel.com>
-         <1571245488-3549-3-git-send-email-jonathan.derrick@intel.com>
-         <20191101131649.GE9723@e119886-lin.cambridge.arm.com>
-In-Reply-To: <20191101131649.GE9723@e119886-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.232.115.165]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5CE6559F94481E42AC9226BAC9D2B79B@intel.com>
-Content-Transfer-Encoding: base64
+ <1571245488-3549-3-git-send-email-jonathan.derrick@intel.com>
+ <20191101131649.GE9723@e119886-lin.cambridge.arm.com>
+ <d67fbc2ba322104110c70606a375facf1d21045a.camel@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d67fbc2ba322104110c70606a375facf1d21045a.camel@intel.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgQU5kcmV3LA0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcNCg0KT24gRnJpLCAyMDE5LTExLTAx
-IGF0IDEzOjE2ICswMDAwLCBBbmRyZXcgTXVycmF5IHdyb3RlOg0KPiBPbiBXZWQsIE9jdCAxNiwg
-MjAxOSBhdCAxMTowNDo0N0FNIC0wNjAwLCBKb24gRGVycmljayB3cm90ZToNCj4gPiBXaGVuIHNv
-bWUgVk1EcyBhcmUgZW5hYmxlZCBhbmQgb3RoZXJzIGFyZSBub3QsIGl0J3MgZGlmZmljdWx0IHRv
-DQo+ID4gZGV0ZXJtaW5lIHdoaWNoIElJTyBzdGFjayBjb3JyZXNwb25kcyB0byB0aGUgZW5hYmxl
-ZCBWTUQuDQo+ID4gDQo+ID4gVG8gYXNzaXN0IHVzZXJzcGFjZSB3aXRoIG1hbmFnZW1lbnQgdGFz
-a3MsIFZNRCBCSU9TIHdpbGwgd3JpdGUgdGhlIFZNRA0KPiA+IGluc3RhbmNlIG51bWJlciBhbmQg
-c29ja2V0IG51bWJlciBpbnRvIHRoZSBmaXJzdCBlbmFibGVkIHJvb3QgcG9ydCdzIElPDQo+ID4g
-QmFzZS9MaW1pdCByZWdpc3RlcnMgcHJpb3IgdG8gT1MgaGFuZG9mZi4gVk1EIGRyaXZlciBjYW4g
-Y2FwdHVyZSB0aGlzDQo+ID4gaW5mb3JtYXRpb24gYW5kIGV4cG9zZSBpdCB0byB1c2Vyc3BhY2Uu
-DQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogSm9uIERlcnJpY2sgPGpvbmF0aGFuLmRlcnJpY2tA
-aW50ZWwuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBBbmR5IFNoZXZjaGVua28gPGFuZHJpeS5zaGV2
-Y2hlbmtvQGxpbnV4LmludGVsLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9wY2kvY29udHJv
-bGxlci92bWQuYyB8IDc5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-Ky0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA3NyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygt
-KQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jIGIv
-ZHJpdmVycy9wY2kvY29udHJvbGxlci92bWQuYw0KPiA+IGluZGV4IDk1OWM3YzcuLmRiZTFiZmYg
-MTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci92bWQuYw0KPiA+ICsrKyBi
-L2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvdm1kLmMNCj4gPiBAQCAtOTgsNiArOTgsOCBAQCBzdHJ1
-Y3Qgdm1kX2RldiB7DQo+ID4gIAlzdHJ1Y3QgaXJxX2RvbWFpbgkqaXJxX2RvbWFpbjsNCj4gPiAg
-CXN0cnVjdCBwY2lfYnVzCQkqYnVzOw0KPiA+ICAJdTgJCQlidXNuX3N0YXJ0Ow0KPiA+ICsJdTgJ
-CQlzb2NrZXRfbnI7DQo+ID4gKwl1OAkJCWluc3RhbmNlX25yOw0KPiA+ICANCj4gPiAgCXN0cnVj
-dCBkbWFfbWFwX29wcwlkbWFfb3BzOw0KPiA+ICAJc3RydWN0IGRtYV9kb21haW4JZG1hX2RvbWFp
-bjsNCj4gPiBAQCAtNTQzLDYgKzU0NSw3NCBAQCBzdGF0aWMgaW50IHZtZF9wY2lfd3JpdGUoc3Ry
-dWN0IHBjaV9idXMgKmJ1cywgdW5zaWduZWQgaW50IGRldmZuLCBpbnQgcmVnLA0KPiA+ICAJLndy
-aXRlCQk9IHZtZF9wY2lfd3JpdGUsDQo+ID4gIH07DQo+ID4gIA0KPiA+ICsvKioNCj4gPiArICog
-Zm9yX2VhY2hfdm1kX3Jvb3RfcG9ydCAtIGl0ZXJhdGUgb3ZlciBhbGwgZW5hYmxlZCBWTUQgUm9v
-dCBQb3J0cw0KPiA+ICsgKiBAdm1kOiAmc3RydWN0IHZtZF9kZXYgVk1EIGRldmljZSBkZXNjcmlw
-dG9yDQo+ID4gKyAqIEBycDogaW50IGl0ZXJhdG9yIGN1cnNvcg0KPiA+ICsgKiBAdGVtcDogdTMy
-IHRlbXBvcmFyeSB2YWx1ZSBmb3IgY29uZmlnIHJlYWQNCj4gPiArICoNCj4gPiArICogVk1EIFJv
-b3QgUG9ydHMgYXJlIGxvY2F0ZWQgaW4gdGhlIFZNRCBQQ0llIERvbWFpbiBhdCAwMDpbMC0zXS4w
-LCBhbmQgY29uZmlnDQo+ID4gKyAqIHNwYWNlIGNhbiBiZSBkZXRlcm1pbmF0ZWx5IGFjY2Vzc2Vk
-IHRocm91Z2ggdGhlIFZNRCBDb25maWcgQkFSLiBCZWNhdXNlIFZNRA0KPiA+ICsgKiBSb290IFBv
-cnRzIGNhbiBiZSBpbmRpdmlkdWFsbHkgZGlzYWJsZWQsIGl0J3MgaW1wb3J0YW50IHRvIGl0ZXJh
-dGUgZm9yIHRoZQ0KPiA+ICsgKiBmaXJzdCBlbmFibGVkIFJvb3QgUG9ydCBhcyBkZXRlcm1pbmVk
-IGJ5IHJlYWRpbmcgdGhlIFZlbmRvci9EZXZpY2UgcmVnaXN0ZXIuDQo+ID4gKyAqLw0KPiA+ICsj
-ZGVmaW5lIGZvcl9lYWNoX3ZtZF9yb290X3BvcnQodm1kLCBycCwgdGVtcCkJCQkJXA0KPiA+ICsJ
-Zm9yIChycCA9IDA7IHJwIDwgNDsgcnArKykJCQkJCVwNCj4gPiArCQlpZiAodm1kX2NmZ19yZWFk
-KHZtZCwgMCwgUENJX0RFVkZOKHJvb3RfcG9ydCwgMCksCVwNCj4gPiArCQkJCSBQQ0lfVkVORE9S
-X0lELCA0LCAmdGVtcCkgfHwJCVwNCj4gPiArCQkgICAgdGVtcCA9PSAweGZmZmZmZmZmKSB7fSBl
-bHNlDQo+IA0KPiBZb3UgbWF5IHdhbnQgdG8gY29uc2lkZXIgdXNpbmcgUENJX0VSUk9SX1JFU1BP
-TlNFIGhlcmUgaW5zdGVhZCBvZiAweGZmZmZmZmZmLg0KPiBUaG91Z2ggdGhpcyBoYXNuJ3QgeWV0
-IGJlZW4gbWVyZ2VkOg0KPiANCj4gaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wcm9qZWN0
-L2xpbnV4LXBjaS9saXN0Lz9zZXJpZXM9MTI2ODIwDQo+IA0KDQpTdXJlIGl0IHdpbGwgZml0IHRo
-aXMgY2FzZSBwZXJmZWN0bHkgb25jZSBpdCdzIG1lcmdlZA0KDQo+ID4gKw0KPiA+ICtzdGF0aWMg
-aW50IHZtZF9wYXJzZV9kb21haW4oc3RydWN0IHZtZF9kZXYgKnZtZCkNCj4gPiArew0KPiA+ICsJ
-aW50IHJvb3RfcG9ydCwgcmV0Ow0KPiA+ICsJdTMyIHRlbXAsIGlvYmFzZTsNCj4gPiArDQo+ID4g
-Kwl2bWQtPnNvY2tldF9uciA9IC0xOw0KPiA+ICsJdm1kLT5pbnN0YW5jZV9uciA9IC0xOw0KPiA+
-ICsNCj4gPiArCWZvcl9lYWNoX3ZtZF9yb290X3BvcnQodm1kLCByb290X3BvcnQsIHRlbXApIHsN
-Cj4gPiArCQlyZXQgPSB2bWRfY2ZnX3JlYWQodm1kLCAwLCBQQ0lfREVWRk4ocm9vdF9wb3J0LCAw
-KSwNCj4gPiArCQkJCSAgIFBDSV9JT19CQVNFLCAyLCAmaW9iYXNlKTsNCj4gPiArCQlpZiAocmV0
-KQ0KPiA+ICsJCQlyZXR1cm4gcmV0Ow0KPiA+ICsNCj4gPiArCQl2bWQtPnNvY2tldF9uciA9IChp
-b2Jhc2UgPj4gNCkgJiAweGY7DQo+ID4gKwkJdm1kLT5pbnN0YW5jZV9uciA9IChpb2Jhc2UgPj4g
-MTQpICYgMHgzOw0KPiANCj4gSSdtIG5vdCBmYW1pbGlhciB3aXRoIFZNRCAtIGhvd2V2ZXIgaG93
-IGNhbiB5b3UgYmUgc3VyZSB0aGF0IHRoZSBWTUQgQklPUw0KPiB3aWxsIGFsd2F5cyBwb3B1bGF0
-ZSB0aGVzZSB2YWx1ZXMgaGVyZT8gSXMgaXQgcG9zc2libGUgdGhhdCBlYXJsaWVyIEJJT1Mncw0K
-PiB3b24ndCBkbyB0aGlzIGFuZCBzb21ldGhpbmcgd2lsbCBnbyB3cm9uZyBoZXJlPw0KPiANCj4g
-SXMgdGhlcmUgYW55IHNhbml0eSBjaGVja2luZyB0aGF0IGNhbiBoYXBwZW4gaGVyZT8NCg0KWWVz
-IHRoYXQncyBlbnRpcmVseSBwb3NzaWJsZSBhbmQgd291bGQgc2hvdyBpbmRldGVybWluYXRlIHZh
-bHVlcyBpbg0KdGhhdCBjYXNlLiBJdCB3b3VsZCBiZSB1cCB0byB0aGUgdXNlciB0byB1bmRlcnN0
-YW5kIGlmIHRoZSBCSU9TDQpzdXBwb3J0cyB0aGUgbW9kZSBiZWZvcmUgcmVseWluZyBvbiB0aGUg
-ZGF0YS4NCg0KSSBhbSBpbnZlc3RpZ2F0aW5nIHRvIHNlZSBpZiB3ZSBjYW4gZG8gYSBkbWlfbWF0
-Y2ggdG8gdmVyaWZ5IHRoZSBkYXRhDQpiZWZvcmUgcHVibGlzaGluZy4NCg0KDQo+IA0KPiA+ICsN
-Cj4gPiArCQkvKiBGaXJzdCBhdmFpbGFibGUgd2lsbCBiZSB1c2VkICovDQo+ID4gKwkJYnJlYWs7
-DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0
-YXRpYyBzc2l6ZV90IHNvY2tldF9ucl9zaG93KHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gPiArCQkJ
-ICAgICAgc3RydWN0IGRldmljZV9hdHRyaWJ1dGUgKmF0dHIsIGNoYXIgKmJ1ZikNCj4gPiArew0K
-PiA+ICsJc3RydWN0IHBjaV9kZXYgKnBkZXYgPSB0b19wY2lfZGV2KGRldik7DQo+ID4gKwlzdHJ1
-Y3Qgdm1kX2RldiAqdm1kID0gcGNpX2dldF9kcnZkYXRhKHBkZXYpOw0KPiA+ICsNCj4gPiArCXJl
-dHVybiBzcHJpbnRmKGJ1ZiwgIiV1XG4iLCB2bWQtPnNvY2tldF9ucik7DQo+ID4gK30NCj4gPiAr
-c3RhdGljIERFVklDRV9BVFRSX1JPKHNvY2tldF9ucik7DQo+ID4gKw0KPiA+ICtzdGF0aWMgc3Np
-emVfdCBpbnN0YW5jZV9ucl9zaG93KHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gPiArCQkJICAgICAg
-c3RydWN0IGRldmljZV9hdHRyaWJ1dGUgKmF0dHIsIGNoYXIgKmJ1ZikNCj4gPiArew0KPiA+ICsJ
-c3RydWN0IHBjaV9kZXYgKnBkZXYgPSB0b19wY2lfZGV2KGRldik7DQo+ID4gKwlzdHJ1Y3Qgdm1k
-X2RldiAqdm1kID0gcGNpX2dldF9kcnZkYXRhKHBkZXYpOw0KPiA+ICsNCj4gPiArCXJldHVybiBz
-cHJpbnRmKGJ1ZiwgIiV1XG4iLCB2bWQtPmluc3RhbmNlX25yKTsNCj4gPiArfQ0KPiA+ICtzdGF0
-aWMgREVWSUNFX0FUVFJfUk8oaW5zdGFuY2VfbnIpOw0KPiA+ICsNCj4gPiArc3RhdGljIHN0cnVj
-dCBhdHRyaWJ1dGUgKnZtZF9kZXZfYXR0cnNbXSA9IHsNCj4gPiArCSZkZXZfYXR0cl9zb2NrZXRf
-bnIuYXR0ciwNCj4gPiArCSZkZXZfYXR0cl9pbnN0YW5jZV9uci5hdHRyLA0KPiA+ICsJTlVMTA0K
-PiA+ICt9Ow0KPiA+ICtBVFRSSUJVVEVfR1JPVVBTKHZtZF9kZXYpOw0KPiA+ICsNCj4gPiAgc3Rh
-dGljIHZvaWQgdm1kX2F0dGFjaF9yZXNvdXJjZXMoc3RydWN0IHZtZF9kZXYgKnZtZCkNCj4gPiAg
-ew0KPiA+ICAJdm1kLT5kZXYtPnJlc291cmNlW1ZNRF9NRU1CQVIxXS5jaGlsZCA9ICZ2bWQtPnJl
-c291cmNlc1sxXTsNCj4gPiBAQCAtNTgyLDYgKzY1MiwxMSBAQCBzdGF0aWMgaW50IHZtZF9lbmFi
-bGVfZG9tYWluKHN0cnVjdCB2bWRfZGV2ICp2bWQsIHVuc2lnbmVkIGxvbmcgZmVhdHVyZXMpDQo+
-ID4gIAlyZXNvdXJjZV9zaXplX3Qgb2Zmc2V0WzJdID0gezB9Ow0KPiA+ICAJcmVzb3VyY2Vfc2l6
-ZV90IG1lbWJhcjJfb2Zmc2V0ID0gMHgyMDAwOw0KPiA+ICAJc3RydWN0IHBjaV9idXMgKmNoaWxk
-Ow0KPiA+ICsJaW50IHJldDsNCj4gPiArDQo+ID4gKwlyZXQgPSB2bWRfcGFyc2VfZG9tYWluKHZt
-ZCk7DQo+ID4gKwlpZiAocmV0KQ0KPiA+ICsJCXJldHVybiByZXQ7DQo+IA0KPiBUaGlzIGFsd2F5
-cyB3aWxsIHN1Y2NlZWQuIEJ1dCB3aGF0IGhhcHBlbnMgaWYgdGhpcyBmdW5jdGlvbiByZXR1cm5z
-IHlldA0KPiBzb2NrZXRfbnIvaW5zdGFuY2VfbnIgaGFzbid0IGJlZW4gd3JpdHRlbiB0bz8gSXMg
-dGhhdCBPSz8NCj4gDQoNCkJhc2ljYWxseSBvbmx5IG9uZSBwb3NzaWJpbGl0eSB0aGF0IGNvdWxk
-IG9jY3VyIGFuZCB0aGF0J3MgaWYgdGhlIFZNRA0KaXMgZW5hYmxlZCB3aXRob3V0IGFueSBWTUQg
-Um9vdCBQb3J0cyBiZWluZyBlbmFibGVkIG9uIHRoZSBWTUQgZG9tYWluLg0KSXQncyBhbiBvZGQg
-Y29uZmlndXJhdGlvbiBidXQgaXMgdGVjaG5pY2FsbHkgdmFsaWQsIGFsdGhvdWdoIHRoZSBkb21h
-aW4NCmJlY29tZXMgdXNlbGVzcyB1bnRpbCB0aGUgdXNlciByZWJvb3RzIGFuZCBlbmFibGVzIHRo
-ZSBWTUQgUm9vdCBQb3J0cy4gDQoNClNvIGl0J3MgbW9yZS1vci1sZXNzIGltcGxpZWQgZWl0aGVy
-IHNvY2tldF9uci9pbnN0YW5jZV9uciB3aWxsIGhhdmUNCmRhdGEgb3IgdGhlIGRvbWFpbiB3b24n
-dCBiZSB1c2FibGUuDQoNClRoYW5rcywNCkpvbg0KDQoNCj4gVGhhbmtzLA0KPiANCj4gQW5kcmV3
-IE11cnJheQ0KPiANCj4gPiAgDQo+ID4gIAkvKg0KPiA+ICAJICogU2hhZG93IHJlZ2lzdGVycyBt
-YXkgZXhpc3QgaW4gY2VydGFpbiBWTUQgZGV2aWNlIGlkcyB3aGljaCBhbGxvdw0KPiA+IEBAIC01
-OTEsNyArNjY2LDYgQEAgc3RhdGljIGludCB2bWRfZW5hYmxlX2RvbWFpbihzdHJ1Y3Qgdm1kX2Rl
-diAqdm1kLCB1bnNpZ25lZCBsb25nIGZlYXR1cmVzKQ0KPiA+ICAJICovDQo+ID4gIAlpZiAoZmVh
-dHVyZXMgJiBWTURfRkVBVF9IQVNfTUVNQkFSX1NIQURPVykgew0KPiA+ICAJCXUzMiB2bWxvY2s7
-DQo+ID4gLQkJaW50IHJldDsNCj4gPiAgDQo+ID4gIAkJbWVtYmFyMl9vZmZzZXQgPSBNQjJfU0hB
-RE9XX09GRlNFVCArIE1CMl9TSEFET1dfU0laRTsNCj4gPiAgCQlyZXQgPSBwY2lfcmVhZF9jb25m
-aWdfZHdvcmQodm1kLT5kZXYsIFBDSV9SRUdfVk1MT0NLLCAmdm1sb2NrKTsNCj4gPiBAQCAtODc2
-LDcgKzk1MCw4IEBAIHN0YXRpYyBpbnQgdm1kX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+
-ID4gIAkucHJvYmUJCT0gdm1kX3Byb2JlLA0KPiA+ICAJLnJlbW92ZQkJPSB2bWRfcmVtb3ZlLA0K
-PiA+ICAJLmRyaXZlcgkJPSB7DQo+ID4gLQkJLnBtCT0gJnZtZF9kZXZfcG1fb3BzLA0KPiA+ICsJ
-CS5wbQkJPSAmdm1kX2Rldl9wbV9vcHMsDQo+ID4gKwkJLmRldl9ncm91cHMJPSB2bWRfZGV2X2dy
-b3VwcywNCj4gPiAgCX0sDQo+ID4gIH07DQo+ID4gIG1vZHVsZV9wY2lfZHJpdmVyKHZtZF9kcnYp
-Ow0KPiA+IC0tIA0KPiA+IDEuOC4zLjENCj4gPiANCg==
+On Fri, Nov 01, 2019 at 02:24:02PM +0000, Derrick, Jonathan wrote:
+> Hi ANdrew,
+> 
+> Thanks for the review
+> 
+> On Fri, 2019-11-01 at 13:16 +0000, Andrew Murray wrote:
+> > On Wed, Oct 16, 2019 at 11:04:47AM -0600, Jon Derrick wrote:
+> > > When some VMDs are enabled and others are not, it's difficult to
+> > > determine which IIO stack corresponds to the enabled VMD.
+> > > 
+> > > To assist userspace with management tasks, VMD BIOS will write the VMD
+> > > instance number and socket number into the first enabled root port's IO
+> > > Base/Limit registers prior to OS handoff. VMD driver can capture this
+> > > information and expose it to userspace.
+> > > 
+> > > Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > ---
+> > >  drivers/pci/controller/vmd.c | 79 ++++++++++++++++++++++++++++++++++++++++++--
+> > >  1 file changed, 77 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> > > index 959c7c7..dbe1bff 100644
+> > > --- a/drivers/pci/controller/vmd.c
+> > > +++ b/drivers/pci/controller/vmd.c
+> > > @@ -98,6 +98,8 @@ struct vmd_dev {
+> > >  	struct irq_domain	*irq_domain;
+> > >  	struct pci_bus		*bus;
+> > >  	u8			busn_start;
+> > > +	u8			socket_nr;
+> > > +	u8			instance_nr;
+> > >  
+> > >  	struct dma_map_ops	dma_ops;
+> > >  	struct dma_domain	dma_domain;
+> > > @@ -543,6 +545,74 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
+> > >  	.write		= vmd_pci_write,
+> > >  };
+> > >  
+> > > +/**
+> > > + * for_each_vmd_root_port - iterate over all enabled VMD Root Ports
+> > > + * @vmd: &struct vmd_dev VMD device descriptor
+> > > + * @rp: int iterator cursor
+> > > + * @temp: u32 temporary value for config read
+> > > + *
+> > > + * VMD Root Ports are located in the VMD PCIe Domain at 00:[0-3].0, and config
+> > > + * space can be determinately accessed through the VMD Config BAR. Because VMD
+> > > + * Root Ports can be individually disabled, it's important to iterate for the
+> > > + * first enabled Root Port as determined by reading the Vendor/Device register.
+> > > + */
+> > > +#define for_each_vmd_root_port(vmd, rp, temp)				\
+> > > +	for (rp = 0; rp < 4; rp++)					\
+> > > +		if (vmd_cfg_read(vmd, 0, PCI_DEVFN(root_port, 0),	\
+> > > +				 PCI_VENDOR_ID, 4, &temp) ||		\
+> > > +		    temp == 0xffffffff) {} else
+> > 
+> > You may want to consider using PCI_ERROR_RESPONSE here instead of 0xffffffff.
+> > Though this hasn't yet been merged:
+> > 
+> > https://patchwork.ozlabs.org/project/linux-pci/list/?series=126820
+> > 
+> 
+> Sure it will fit this case perfectly once it's merged
+> 
+> > > +
+> > > +static int vmd_parse_domain(struct vmd_dev *vmd)
+> > > +{
+> > > +	int root_port, ret;
+> > > +	u32 temp, iobase;
+> > > +
+> > > +	vmd->socket_nr = -1;
+> > > +	vmd->instance_nr = -1;
+> > > +
+> > > +	for_each_vmd_root_port(vmd, root_port, temp) {
+> > > +		ret = vmd_cfg_read(vmd, 0, PCI_DEVFN(root_port, 0),
+> > > +				   PCI_IO_BASE, 2, &iobase);
+> > > +		if (ret)
+> > > +			return ret;
+> > > +
+> > > +		vmd->socket_nr = (iobase >> 4) & 0xf;
+> > > +		vmd->instance_nr = (iobase >> 14) & 0x3;
+> > 
+> > I'm not familiar with VMD - however how can you be sure that the VMD BIOS
+> > will always populate these values here? Is it possible that earlier BIOS's
+> > won't do this and something will go wrong here?
+> > 
+> > Is there any sanity checking that can happen here?
+> 
+> Yes that's entirely possible and would show indeterminate values in
+> that case. It would be up to the user to understand if the BIOS
+> supports the mode before relying on the data.
+> 
+> I am investigating to see if we can do a dmi_match to verify the data
+> before publishing.
+
+I think that would be helpful if possible as it would simplify the
+user software - and also prevent the user ever getting garbage data.
+
+> 
+> 
+> > 
+> > > +
+> > > +		/* First available will be used */
+> > > +		break;
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static ssize_t socket_nr_show(struct device *dev,
+> > > +			      struct device_attribute *attr, char *buf)
+> > > +{
+> > > +	struct pci_dev *pdev = to_pci_dev(dev);
+> > > +	struct vmd_dev *vmd = pci_get_drvdata(pdev);
+> > > +
+> > > +	return sprintf(buf, "%u\n", vmd->socket_nr);
+> > > +}
+> > > +static DEVICE_ATTR_RO(socket_nr);
+> > > +
+> > > +static ssize_t instance_nr_show(struct device *dev,
+> > > +			      struct device_attribute *attr, char *buf)
+> > > +{
+> > > +	struct pci_dev *pdev = to_pci_dev(dev);
+> > > +	struct vmd_dev *vmd = pci_get_drvdata(pdev);
+> > > +
+> > > +	return sprintf(buf, "%u\n", vmd->instance_nr);
+> > > +}
+> > > +static DEVICE_ATTR_RO(instance_nr);
+> > > +
+> > > +static struct attribute *vmd_dev_attrs[] = {
+> > > +	&dev_attr_socket_nr.attr,
+> > > +	&dev_attr_instance_nr.attr,
+> > > +	NULL
+> > > +};
+> > > +ATTRIBUTE_GROUPS(vmd_dev);
+> > > +
+> > >  static void vmd_attach_resources(struct vmd_dev *vmd)
+> > >  {
+> > >  	vmd->dev->resource[VMD_MEMBAR1].child = &vmd->resources[1];
+> > > @@ -582,6 +652,11 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+> > >  	resource_size_t offset[2] = {0};
+> > >  	resource_size_t membar2_offset = 0x2000;
+> > >  	struct pci_bus *child;
+> > > +	int ret;
+> > > +
+> > > +	ret = vmd_parse_domain(vmd);
+> > > +	if (ret)
+> > > +		return ret;
+> > 
+> > This always will succeed. But what happens if this function returns yet
+> > socket_nr/instance_nr hasn't been written to? Is that OK?
+> > 
+> 
+> Basically only one possibility that could occur and that's if the VMD
+> is enabled without any VMD Root Ports being enabled on the VMD domain.
+> It's an odd configuration but is technically valid, although the domain
+> becomes useless until the user reboots and enables the VMD Root Ports. 
+> 
+> So it's more-or-less implied either socket_nr/instance_nr will have
+> data or the domain won't be usable.
+
+Of course in this case, the default value will be -1, which should be
+quite obvious to a user that this isn't a valid value.
+
+Thanks,
+
+Andrew Murray
+
+> 
+> Thanks,
+> Jon
+> 
+> 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > >  
+> > >  	/*
+> > >  	 * Shadow registers may exist in certain VMD device ids which allow
+> > > @@ -591,7 +666,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+> > >  	 */
+> > >  	if (features & VMD_FEAT_HAS_MEMBAR_SHADOW) {
+> > >  		u32 vmlock;
+> > > -		int ret;
+> > >  
+> > >  		membar2_offset = MB2_SHADOW_OFFSET + MB2_SHADOW_SIZE;
+> > >  		ret = pci_read_config_dword(vmd->dev, PCI_REG_VMLOCK, &vmlock);
+> > > @@ -876,7 +950,8 @@ static int vmd_resume(struct device *dev)
+> > >  	.probe		= vmd_probe,
+> > >  	.remove		= vmd_remove,
+> > >  	.driver		= {
+> > > -		.pm	= &vmd_dev_pm_ops,
+> > > +		.pm		= &vmd_dev_pm_ops,
+> > > +		.dev_groups	= vmd_dev_groups,
+> > >  	},
+> > >  };
+> > >  module_pci_driver(vmd_drv);
+> > > -- 
+> > > 1.8.3.1
+> > > 
